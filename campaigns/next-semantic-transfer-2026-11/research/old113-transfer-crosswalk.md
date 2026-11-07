@@ -298,3 +298,5 @@ Declared raw preservation, logical collision/conversion and actual selected inst
 ## M-06-A.4 — package-query slice accepted; task remains partial
 
 Installed requirements query is accepted in `12ee51b0ebcb185ede2ac94f08ded0de7694caa4`; see [bounded acceptance](m06-a4-package-query-acceptance.md). Host declarations/cited sync and the remaining consumer matrix are still required. No old113count increment follows from this slice.
+
+A4 host policy/cited sync accepted in `c24dfc6c64a2d900a05b5464f0bc510d4efda925`; see [bounded host acceptance](m06-a4-host-acceptance.md). Full host read/boot and remaining consumer support are still required; counts unchanged.

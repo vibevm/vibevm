@@ -1,0 +1,61 @@
+{
+  "task": "A4 declared host consumers architecture decision",
+  "mode": "read-only source evidence; root decision before activation",
+  "observed_at": "2026-11-07T01:26:08.561636+00:00",
+  "prototype_pin": "7fe6376ccef7f321302a8f18610fcb0c9cc2686f",
+  "source_sha256": {
+    "crates/vibe-spec/src/resolver/observation.rs": "8e8509f359b942af4934e264f19470bb740356db2585ddff619a57f4067f54ae",
+    "crates/vibe-spec/src/resolver.rs": "10a12558931b4a26120b700f150f940c3ef289b29568ecbc90887e8eab83bf7e",
+    "crates/vibe-spec/src/embed/read.rs": "fb9ff7f30ae3675f56bb2020d5e08687f47903b3ad121986a1b619182307677d",
+    "crates/vibe-spec/src/source_policy.rs": "69f832973ff90b92031c81e87b5ca231b3c69a7de090eed53e8a795ec06ef515",
+    "crates/vibe-spec/src/source_policy/host.rs": "76bcf201fb55c9633e1f707ccc22aeff6289f9131d66a994c827466db3bdbf6d",
+    "crates/vibe-facts/src/scan.rs": "6890a4963b8804da8fb9aefcf8f52a1c7a4e5f8b9dabc885155c508513926d69",
+    "crates/vibe-facts/src/scan/declared_capture.rs": "3f33473a2425d9e3ff95acff9b897e85862f2448ad9b1d111a2b31483024fa9b",
+    "crates/vibe-workspace/src/install/bootgen.rs": "9677a14221a55118a89c4099da41ba2761551357285d4f0a820d9f12b6bceab0",
+    "crates/vibe-workspace/src/boot_artifacts/inputs.rs": "477433df62265e424af1569699d690bdbf4b3dc02d6c2e094aee385165d2c16b",
+    "crates/vibe-workspace/src/boot/tests.rs": "cb04693fb601f2716623c0e012313155768fb4ed583dee86dd903582bbc3531d",
+    "crates/vibe-core/src/manifest/source_descriptor/mod.rs": "17139c650c205ba67ca46172e82a8beb14502c9c35545e141941f360cdf8f185"
+  },
+  "prototype_sha256": {
+    "crates/vibe-spec/src/resolver/lookup.rs": "5628eccbe15a4fd7ebb2eef3babd529c325fe2b7832ccf2acf50a1b89a2a75d0",
+    "crates/vibe-spec/src/resolver.rs": "5b8b6a74fb3e02c158a0591e623b18acf42b7cf6ea2668072f25487259404534",
+    "crates/vibe-spec/src/resolver/source_map.rs": "f7ede8b6bdc5b43cb0a3dd211b9e8d5523dbe6294afa330d59f847398da50527",
+    "crates/vibe-facts/src/scan.rs": "b1cec1e59f04f423301b8e58b0398d1da0239728ec0633992454ed89fa21ac8f",
+    "crates/vibe-facts/src/scan/declared/walk.rs": "13d892739237d103e729f88501bc718f423b8b93e1a9a82404dc457de09081ea",
+    "crates/vibe-workspace/src/install/bootgen.rs": "5e8ae218ec7b42245b8f6049047ebaebab6538b94c29ec5021c680e75564c30f",
+    "crates/vibe-workspace/src/install/bootgen/captured.rs": "d5fd929a93013d68e541521cc95ed079358fd6687327a4bf62ec88750908a5c2",
+    "vibevm/vibespecs/common/PROP-072-boot-observability.xml": "f6aa4a213baf6ad85a1b9b4ec76e9179646e4141c51fe5efae99910e5cf996d8"
+  },
+  "next_slice": "actual grouped host FileResolver/SectionSource native exact lookup reusing held policy capture",
+  "later_slices": [
+    "finite host facts/query inventory",
+    "classified own Simple boot",
+    "remaining docs/show/skills/check/adoption and mixed matrix"
+  ],
+  "root_decision_needed": [
+    "explicit automatic host scan/loading rule; preserve accepted package explicit-query behavior"
+  ],
+  "prohibited_shortcuts": [
+    "fake installed slot record",
+    "fake PackageMeta/ResolvedDep host",
+    "new source world",
+    "invented ungrouped coordinate",
+    "Normal inferred from XML",
+    "global census refusal"
+  ],
+  "runtime_tests_run": false,
+  "report_sha256": "6eee63e14f53be9499d3e21cce9bb238c531f3932e845938ac3b450114d0aaf8",
+  "worker_report_sha256": "fefba5a4be8dbe5cbb4fe0bf1d39f31f40d7828f96676a44a2feb023556f25d9",
+  "root_verdict": {
+    "first": "held host resolver/SectionSource read, then host facts/query and own Simple boot",
+    "automatic_own_boot": "native+scan in existing boot scope; target clarification, not asserted prototype behavior",
+    "explicit_native_lookup": "native scan or explicit",
+    "requested_facts_query": "preserve native explicit and inert raw witnesses; no blanket byte prohibition",
+    "ordinary_resource_skill": "explicit request/declaration; literal data, no managed directives",
+    "no_identity_fiction": true,
+    "prototype_evidence_independently_read": [
+      "PROP-072 SOURCE-DESCRIPTOR-GRAMMAR",
+      "facts scan m_02_c_2_cases complete_reader_keeps_large_spec_only_set and package helper"
+    ]
+  }
+}

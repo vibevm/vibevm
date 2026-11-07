@@ -1,0 +1,42 @@
+{
+  "task": "A4 host activation guard review",
+  "observed_at": "2026-11-07T00:54:22.371748+00:00",
+  "runtime_tests_run": false,
+  "promotion": false,
+  "findings": [
+    {
+      "id": "HOST-SEAL-01",
+      "state": "source-established uncovered admission; not runtime reproduced",
+      "path": "crates/vibe-cli/src/commands/progress/seal.rs",
+      "mechanism": "direct named-file read/parse skips ground and shared policy guards; ordinary explicit host text can produce seal/cache claims",
+      "smallest_discriminator": "opaque project.sources file containing literal marked fact + campaign cached verdict/stale hash; actual seal must refuse without cache/source change",
+      "fix_scope": "nearest file-owner pre-parse policy guard; preserve legacy per-file law"
+    }
+  ],
+  "source_sha256": {
+    "crates/vibe-spec/src/source_policy.rs": "c5f3e09a2683d3d7b78d41959e3312cd79dfcf9f6b4c4ffa0d59d1c5328cee31",
+    "crates/vibe-facts/src/scan.rs": "6890a4963b8804da8fb9aefcf8f52a1c7a4e5f8b9dabc885155c508513926d69",
+    "crates/vibe-facts/src/scan/declared_capture.rs": "3f33473a2425d9e3ff95acff9b897e85862f2448ad9b1d111a2b31483024fa9b",
+    "crates/vibe-spec/src/resolver/observation.rs": "8e8509f359b942af4934e264f19470bb740356db2585ddff619a57f4067f54ae",
+    "crates/vibe-doc/src/pages.rs": "2b96acda8d560116ea1dbebb30e32ae754c2605369c945bc57abe6e19322fc1a",
+    "crates/vibe-doc/src/citations.rs": "d30445ffd20ae5aaa6b024b6b30dbc4cd9186a2d28124d17da917bd1f366b220",
+    "crates/vibe-doc/src/citations/sources.rs": "9fdd2b79b534c72081b7a3d126e6731561378193a95e13ff9fcea95953545dbc",
+    "crates/vibe-doc/src/translations/borrowed.rs": "d3d8fc7eb023c50a880fd59b9ef829b5742b84c513069917c044a64fa7958025",
+    "crates/vibe-cli/src/commands/progress.rs": "11d0bf4eb910c160ae00932105967ff43ceafdbfa564ae2139bd08a42e727c8a",
+    "crates/vibe-cli/src/commands/progress/grounding.rs": "0ef497620281b31eb2c7db57f5626154f3c5d188ed2e9c751370a7235a86b9e0",
+    "crates/vibe-cli/src/commands/progress/seal.rs": "fec24d2e6a8efed8ac5fcb3c5780ed17024b9d802af65db62c9fa4c07ecf9318",
+    "crates/progress-core/src/seal.rs": "a188b6df74bab7c7c4025435d765c2a4c560037cc9d2702851815c8afd307c71",
+    "crates/vibe-cli/src/commands/tree/build/in_place.rs": "49db52c3dbf750049e2681965f748dd046fc01fad21d862d5d1211afe3d84067",
+    "crates/vibe-check/src/checks/boot_directory.rs": "3a40a1df9c2e64aa6a80391f1c1cc4db1f5fdca6c0a49282d317ad105faceeb7",
+    "crates/vibe-check/src/checks/wal_wellformed.rs": "0a35974e8c82e29048d215fb92d952448662fdce69069cb73bfb73c605986ba1",
+    "crates/vibe-cli/src/commands/show/effective.rs": "b1733a629235bc6a404c068cb9e9431b5815cabb9c85af6fd2127f4b8dd2cd99",
+    "crates/vibe-workspace/src/install/bootgen.rs": "9677a14221a55118a89c4099da41ba2761551357285d4f0a820d9f12b6bceab0",
+    "crates/vibe-workspace/src/install/source_admission.rs": "25b45b5b3dff7afaff93438dceb509cfb3111dc56df607cb8265a5de5c2f04a8",
+    "crates/vibe-install/src/source_admission.rs": "8b1d4633ba781ec17ce203eb28bc44705c0b89336095c26777cd2dc3cf84a731",
+    "crates/vibe-workspace/src/boot_artifacts/inputs.rs": "477433df62265e424af1569699d690bdbf4b3dc02d6c2e094aee385165d2c16b",
+    "crates/vibe-workspace/src/boot_artifacts/declared_sources.rs": "ee6f8cad6710628ca7f0a766e6ebeb58f0554d218b2b25dc65b86e2a78a2b23a",
+    "crates/vibe-cli/src/commands/refactor/convert_source/policy.rs": "d8b4af475884ba9305224dcbae0450424ce9e6bd8ed5d7744a4068a33017ec17"
+  },
+  "live_drift": "writer active; compare hashes after final guard edits",
+  "report_sha256": "8e948578a1a3e732230c1edeb48d7b985074b81ee24222ca07d02595ab1bb931"
+}

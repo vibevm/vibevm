@@ -1,0 +1,58 @@
+{
+  "task": "M-06-A.4 host grammar/cited sync slice",
+  "accepted": true,
+  "full_original_a4": false,
+  "commit": "c24dfc6c64a2d900a05b5464f0bc510d4efda925",
+  "committed_paths_verified": 24,
+  "contracts": [
+    "SOURCE-HOST-POLICY r1",
+    "SOURCE-HOST-SYNC r1"
+  ],
+  "behavior": [
+    "Strict optional project.sources uses shared selector and absent/empty/null semantics; legacy constructors unchanged",
+    "Finite canonical cited lookup supports directory defaults, exact overrides, raw same-stem coexistence and original physical names",
+    "All cited native sources parse/recheck before registry mutation; missing file refuses while valid missing anchor follows removal tie-break",
+    "Mandatory held policy retained for legacy and explicit snapshots; no-citation remains read-free",
+    "Progress seal guards nearest named-source policy before parse/cache claims; legacy per-file behavior preserved",
+    "Show generated lane remains available; explicit-empty skips stale authored inputs; missing legacy file diagnostic preserved",
+    "Unsupported nonempty host boot refused in existing early install admission; empty host retains generated dependency boot"
+  ],
+  "gates": {
+    "facts": 46,
+    "core_host_grammar": 1,
+    "core_descriptor_family": 9,
+    "source_policy": 12,
+    "accepted_package_query": 53,
+    "accepted_declared_boot": 14,
+    "docs_host_guard": 1,
+    "actual_cli_host": 5,
+    "cli_source_admission": 2,
+    "counts_overlap": true,
+    "static": "strict all-target Clippy,7scoped Conform,doctests,fmt/diff pass",
+    "specmap": {
+      "units": 9152,
+      "items": 5521,
+      "edges": 4670,
+      "orphan": 0,
+      "unresolved_host": 0,
+      "warnings": 44,
+      "prior_9148_units_retained": true,
+      "warning_meanings_unchanged": true
+    },
+    "wire_diff": "pass; no watched schema/formats shifted",
+    "codegen": "not applicable; no generated codec/schema changed"
+  },
+  "compatibility": "FMT-031: new TOML/Rust optional project source field; older strict readers reject it; no global dialect/record/cache epoch; grouped-name validation remains existing owner",
+  "corrections": [
+    "Initial unknown-project.sources runtime RED became real directory-default-only sync positive",
+    "Initial show blanket guard and legacy missing-file regression corrected with positives",
+    "A3 stale CLI refusal oracle corrected into real transformed-empty positive controls while original true negatives retained",
+    "Invalid-name deletion hypothesis retracted: existing manifest plane validation already refuses; first fixture oracle was wrong"
+  ],
+  "limits": [
+    "FullA4 remains partial; nonempty host boot, broad host facts/query and remaining adapters/skills/check still need actual support",
+    "Finite cited prevalidation is not a transaction/global census/hostileCAS guarantee",
+    "Unsupported physical child names are not rewritten or claimed as portable addresses",
+    "Unix special-file checks ran locally; no new Windows/macOS certification"
+  ]
+}

@@ -1,0 +1,35 @@
+{
+  "task": "A4 host sync final bounded review",
+  "observed_at": "2026-11-07T01:06:57.034713+00:00",
+  "status": "qualified evidence; no concrete blocking defect found",
+  "findings": [],
+  "runtime_tests_run": false,
+  "full_a4_acceptance": false,
+  "source_sha256": {
+    "crates/vibe-facts/src/sync.rs": "1c63999b42a5161909a68e52f893edba9699409e58029ffa8b876928b8718914",
+    "crates/vibe-facts/src/sync/declared.rs": "c8f594348954681b63655055672ef12d57a682013c9ffbd011ae7b32be15f72d",
+    "crates/vibe-facts/src/sync/m_06_a_4_cases.rs": "017a11c931b37e2ba8ac8fcc2a0c7dbab4d69d385c008f907437acca925fbaf4",
+    "crates/vibe-spec/src/source_policy.rs": "69f832973ff90b92031c81e87b5ca231b3c69a7de090eed53e8a795ec06ef515",
+    "crates/vibe-spec/src/source_policy/host.rs": "76bcf201fb55c9633e1f707ccc22aeff6289f9131d66a994c827466db3bdbf6d",
+    "crates/vibe-spec/src/source_policy/tests.rs": "e407e377a0b46072eb16471a91d7c0c4e5d303dd80fb23fc7d2039f698fd8457",
+    "crates/vibe-core/src/manifest/project.rs": "34c6f6e9443c96a07d52d03ac557a7cb9f9b2c184c3d1f73c792da615677fc65",
+    "crates/vibe-core/src/manifest/project/tests.rs": "d8494912cac00cd8b8325e739cc185d792f24c971548382ad4e2adbca0c5539e",
+    "crates/vibe-core/src/manifest/source_descriptor/mod.rs": "17139c650c205ba67ca46172e82a8beb14502c9c35545e141941f360cdf8f185",
+    "crates/vibe-cli/src/commands/progress/seal.rs": "d5868c7c5dc9be6ad29bb0c02c9f2dafd8c8fb845ad1eaab259b9df480365df8"
+  },
+  "receipt_sha256": {
+    "/tmp/nst-a4-host-facts-acceptance.log": "da900e2632933e016b8b1f6d4ebe09d07f3fb46a890e80bb2188ebe24077dab4",
+    "/tmp/nst-a4-host-core-descriptors.log": "0c7aedb069e9a56c72810d701f3c023b85efc11cd2a618265a29c51519a0ae6a",
+    "/tmp/nst-a4-host-package-query.log": "e95fe38c64adb7202756175f95af52c8fc66dfe4f7774629dd1300c5c7221810",
+    "/tmp/nst-a4-host-boot-carriers.log": "11b6f5f18c73ac8de9919ed4a1d7e2cdb3376a711cf6ad29e308378562807aeb",
+    "/tmp/nst-a4-host-cli-complete.log": "04c84f977b39b381f7744f1573a6f15fea0dccae44cbf3483282743f5435782f"
+  },
+  "resolved_prior_finding": "HOST-SEAL-01 guarded before parse, real CLI nested-policy/cache case PASS",
+  "limits": [
+    "legacy source enumeration retained, mandatory policy recheck added",
+    "finite cooperative source observation, not transaction/CAS",
+    "registry disk helper covers facts directory, not full source tree",
+    "show-effective authored boundary change still writer/root-owned"
+  ],
+  "report_sha256": "7b2509068b8b3237f2883662e4bfe2b4fd4aa20b025df57e86aef8dd074717ee"
+}

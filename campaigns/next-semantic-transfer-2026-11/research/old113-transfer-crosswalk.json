@@ -2255,12 +2255,13 @@
       "status": "partial",
       "accepted_main_features": [],
       "accepted_main_commits": [
-        "12ee51b0ebcb185ede2ac94f08ded0de7694caa4"
+        "12ee51b0ebcb185ede2ac94f08ded0de7694caa4",
+        "c24dfc6c64a2d900a05b5464f0bc510d4efda925"
       ],
       "transferred_scope": null,
-      "unmet_or_unverified": "Activate project.sources and exact cited host sync; integrate remaining facts adoption/check/docs/progress/tree/show/skill consumers; prove whole mixed-source canonical/status/void/literal-loading matrix and refresh actual tutorial/default/comment surfaces.",
-      "implemented_coverage": "Accepted A1/A2/A3 provide explicit package policy, original exact-file facts observation, held source reading, descriptor-driven materialization and bound installed compiler/boot/native/backend/replay. Existing init package link/default behavior is present. This does not bind all A4 consumers. Installed requirements query now accepted with full lock binding, effective output mapping, direct native facts parity and actual CLI/MCP.",
-      "remaining_behavior": "Activate project.sources and exact cited host sync; integrate remaining facts adoption/check/docs/progress/tree/show/skill consumers; prove whole mixed-source canonical/status/void/literal-loading matrix and refresh actual tutorial/default/comment surfaces.",
+      "unmet_or_unverified": "Implement actual declared host lookup/facts census/query/own boot and remaining facts adoption/check/docs/progress/tree/show/skill support; prove full mixed-source canonical/status/void/operation-loading matrix and update actual tutorials/default/comments.",
+      "implemented_coverage": "Accepted A1/A2/A3 provide explicit package policy, original exact-file facts observation, held source reading, descriptor-driven materialization and bound installed compiler/boot/native/backend/replay. Existing init package link/default behavior is present. This does not bind all A4 consumers. Installed requirements query now accepted with full lock binding, effective output mapping, direct native facts parity and actual CLI/MCP. Host project.sources policy, targeted cited sync, prewrite stability and activation guards accepted; generated display/empty-host behavior preserved.",
+      "remaining_behavior": "Implement actual declared host lookup/facts census/query/own boot and remaining facts adoption/check/docs/progress/tree/show/skill support; prove full mixed-source canonical/status/void/operation-loading matrix and update actual tutorials/default/comments.",
       "superseded_obligations": [
         {
           "clause": "No unclassified semantic path including all undeclared legacy input",
@@ -2301,7 +2302,8 @@
           "evidence": [
             "research/m06-a4-consumer-audit.md",
             "research/m06-a3-transfer-acceptance.md",
-            "research/m06-a4-package-query-acceptance.md"
+            "research/m06-a4-package-query-acceptance.md",
+            "research/m06-a4-host-acceptance.md"
           ]
         },
         {
