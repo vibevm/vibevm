@@ -1,0 +1,36 @@
+{
+  "task": "A4 bound boot-check adapter decision",
+  "mode": "read-only root authorization candidate",
+  "observed_at": "2026-11-07T03:42:24.082571+00:00",
+  "source_sha256": {
+    "crates/vibe-workspace/src/install/bootgen.rs": "67442cc2b63bb1465e596dbddf6101f7526a9522ee3c30125efb1101fc542cd7",
+    "crates/vibe-workspace/src/install.rs": "75d7ffe0675ec36e6c2ac4f9e348d2c6cdd6e61cae969868e072cf12adbe5b22",
+    "crates/vibe-workspace/src/install/bootgen/materialised_read.rs": "edcff2a60178e0be3022db19d4d4e71553559f09257bca1060bddf90241ab6fa",
+    "crates/vibe-workspace/src/install/bootgen/hybrid_emit.rs": "7eedea75bbab8446a44fe6fcb3469feb6028cc3ba123902ba9117e701f118b93",
+    "crates/vibe-workspace/src/install/bootgen/hybrid_emit/table.rs": "c711845aa042caac8028d210c8e7541beb47fc09993ed2e68ff9a2731a89f906",
+    "crates/vibe-workspace/src/install/bootgen/owner_plans.rs": "0b017c90bc0b9a31b9564bded80d3bbd0daf32bf4e44837f8bea85a28632c578",
+    "crates/vibe-workspace/src/install/tests_hybrid.rs": "337f0ae7bb62a6b3d0fa62c3d726a0d2386b0516a70bb180f313cc8424225d8b",
+    "crates/vibe-workspace/src/install/tests_minify_units.rs": "e0cd61238eb9dbf33f566b9de29bc3d9b5c1c3dc786c5936906900aad8b7df43",
+    "crates/vibe-cli/src/commands/check.rs": "b281433aedd1a77cc5c4519b137411ac5517ebbe3e119532211d7182e02bde4b",
+    "crates/vibe-cli/src/commands/reinstall.rs": "d98b0fcbfac8bf1710b519b75d4f6b2bbcd359349d8c8aa5b27361d03c6acf24",
+    "crates/vibe-check/src/lib.rs": "2b4c540ab99f1ef2f5cdc6cd93b19f7631ab771b1593720d27e684d2db5d339e"
+  },
+  "next_slice": "add selected-format bound verifier and visible applicable CLI refusal findings",
+  "compatibility": [
+    "legacy unbound wrapper preserved",
+    "stale warnings remain warning/exit0",
+    "applicable verifier failure proposed error/exit1",
+    "no-lock remains nonapplicable"
+  ],
+  "avoid": [
+    "generated input consumption admission",
+    "new slot parser/fingerprint law",
+    "record-derived format",
+    "new CheckId/wire schema",
+    "member-discovery expansion"
+  ],
+  "tests_run": false,
+  "report_sha256": "f55deddd3e4b24b2c3c61493b77c7c5866461b47176d8d308e3e0f11c52b8afe",
+  "worker_report_sha256": "cfc62070f85fe0e53aa2b3bbcd20f8a0fe936e1f65da1d30e348aea3ebb90dcd",
+  "root_approved": true
+}

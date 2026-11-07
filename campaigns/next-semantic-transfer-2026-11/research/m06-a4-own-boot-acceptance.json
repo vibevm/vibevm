@@ -1,0 +1,60 @@
+{
+  "task": "M-06-A.4 declared own/inherited boot slice",
+  "accepted": true,
+  "full_original_a4": false,
+  "commit": "33a680809c903a0fa0e40fbdb64640126b19296d",
+  "committed_paths_verified": 28,
+  "contracts": [
+    "SOURCE-HOST-BOOT r1",
+    "SOURCE-OPERATION-ENROLLMENT r2 target refinement"
+  ],
+  "behavior": [
+    "Immediate VibeSpec+scan inputs selected by shared precedence/media; ordinary/documentation/native explicit/outside sources not auto enrolled",
+    "Scoped original captures support grouped and ungrouped nodes without fake coordinate/record/package",
+    "Own/inherited Dynamic+Simple linkage, category/order and INDEX shape preserved; direct-read INDEX kind is not compiler static link",
+    "Shared preparation validates all known nodes before metadata/hooks/unit emission; relevant guards retained to INDEX/redirect publication including zero-static ordinary/native",
+    "Actual sealed replay retains guards through prepared publication and preserves Uncommitted/committed-prefix failure accounting",
+    "Explicit static consumer separately proves retained-media path; normal own enrollment is not mislabeled static compilation",
+    "Noneligible ambiguity does not poison boot; eligible native ambiguity/missing/invalid input refuses; legacy/empty/dependency behavior preserved"
+  ],
+  "gates": {
+    "bootgen": 51,
+    "source_admission": 9,
+    "scoped_capture": 5,
+    "new_cli_binary": 2,
+    "existing_host_cli": 5,
+    "new_native_and_own_selected_family": 10,
+    "counts_overlap": true,
+    "static": "strict core/spec/workspace all-targets Clippy plus root targeted CLI Clippy;4Conform scopes;wholefmt/diff pass",
+    "specmap": {
+      "units": 9160,
+      "items": 5534,
+      "edges": 4683,
+      "orphans": 0,
+      "unresolved_host": 0,
+      "warnings": 44,
+      "prior_9158_units_retained": true,
+      "warning_meanings_unchanged": true
+    },
+    "wire_diff": "pass; no watched schema/formats shift",
+    "codegen": "not applicable; no codec/schema registration change"
+  },
+  "corrections": [
+    "Initial fixture typing errors before real unsupported ownboot RED",
+    "Native fixture initially lacked root intersection; corrected actual owner activation",
+    "Existing structural test pointed at boot_artifacts.rs after prior A3 split; retargeted exact same invariant to compile.rs",
+    "Direct Conform missing CARGO_MANIFEST_DIR did not analyze; actual runs pass",
+    "Module split temporarily narrowed constructor visibility E0624; restored prior owner boundary and reran",
+    "Enrollment refinement generic native->VibeSpec is semantic: req r1->r2, not spec-editorial"
+  ],
+  "compatibility": [
+    "No project.format, public AuthoredBoot/INDEX/record/IR/wire change",
+    "Original source bytes/paths preserved; ungrouped provider existing",
+    "Path-only publish staging discovery remains guarded; remaining A4 integration named"
+  ],
+  "remaining": [
+    "Bound graph check and remaining adoption/docs/progress/tree/show/skills/publish staging/pattern consumers",
+    "Complete mixed-source matrix and actual tutorial/default/comment updates",
+    "Full originalA4 and campaign acceptance"
+  ]
+}

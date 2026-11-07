@@ -1,0 +1,45 @@
+{
+  "task": "A4 declared own-boot candidate review",
+  "observed_at": "2026-11-07T03:36:08.586014+00:00",
+  "status": "no concrete blocking defect found; qualified bounded evidence",
+  "findings": [],
+  "runtime_tests_run": false,
+  "full_a4_acceptance": false,
+  "source_sha256": {
+    "crates/vibe-spec/src/source_policy/authored_boot.rs": "9a7f310255b33890e689de608f632b81c3c1de7adb68832ab4deeac325537a10",
+    "crates/vibe-spec/src/source_policy/authored_boot/tests.rs": "b4290345a310037d7a20c6e665db4148d068289c4a030176d18058c63d7ccd37",
+    "crates/vibe-workspace/src/install/bootgen/own_boot.rs": "44b9c00718fba48e5c411a79c1736b1896cbafe75e82cadb31cacdffc400a19a",
+    "crates/vibe-workspace/src/boot_artifacts/declared_sources/nodes.rs": "a8129bd8a76fa9dad9b228eccba87a28cfc00c0db0d2cb26d7466f3d9dccf6b5",
+    "crates/vibe-workspace/src/boot_artifacts/declared_sources.rs": "bc39410b43be508c00304cee8476cb90b5203720738401ce232ab07a97468340",
+    "crates/vibe-workspace/src/install/source_admission.rs": "71ca62c1788fb401ef71c3f01ac2080a5474c6cfe4985dbf83a060e2af9e2f77",
+    "crates/vibe-workspace/src/install/bootgen.rs": "67442cc2b63bb1465e596dbddf6101f7526a9522ee3c30125efb1101fc542cd7",
+    "crates/vibe-workspace/src/install/bootgen/native_managed.rs": "1ec84cc9035b1876224eac1936671a30e88ae45f497476029bb7cc54b95b2d88",
+    "crates/vibe-workspace/src/boot_artifacts.rs": "63ce007fbdce1bb487187681c8feae6b2573bef2de9ab235c553d6148f847d10",
+    "crates/vibe-workspace/src/boot_artifacts/native_managed/write.rs": "75fb9d2ab4aa4392b8ac88db663205012130c877c8ed885e14f8e4fa8cdbc72b",
+    "crates/vibe-workspace/src/install/bootgen/replay_prepare.rs": "054ac06d5979e774e647319cad6e031d142ce228053326854530401a9f1f93c4",
+    "crates/vibe-workspace/src/install/bootgen/replay_prepare/prepared.rs": "7bfd4a646ed261bb13731cf5f8cbe42b52e561f30451a6ae20296883fd8545f6",
+    "crates/vibe-workspace/src/install/bootgen/replay_publish.rs": "19ba9e11768c50884e18ac1b34b3d1086ef87586cd79ab931a03b0145ed245eb",
+    "crates/vibe-workspace/src/install/bootgen/own_boot_tests.rs": "f8d2a66f877c530123c78dc8ecdcf1b8965f4ab1b6cd03d7567c67f1986fdfd1",
+    "crates/vibe-workspace/src/install/bootgen/declared_tests/cases/native/tests/own_boot.rs": "f1c7afb2f6d6f3eb726602d7d62a423163198ac73f66d4e32243f4b0089e85b4",
+    "crates/vibe-cli/tests/cli_declared_own_boot.rs": "56e7c8021f8c6cb252ffe4acf3e30e2d832fd61e0e612b98c941fdf838a264f1"
+  },
+  "receipt_sha256": {
+    "/tmp/nst-own-boot-scope2.log": "3061ee8b35524ac4c97fe3761d09e55670e1dadb93e7b196cb2ab3f4220fba5f",
+    "/tmp/nst-own-boot-green3.log": "d3f7d7c72e8dee3c333487f6b638ee1ca4524767f1064458ad42fc0fa6737ca1",
+    "/tmp/nst-own-boot-bootgen-final.log": "a490ff9799ff8778d0b1ea1d8f1e1116e4b60297794a5ff197b5af39be93a949",
+    "/tmp/nst-own-boot-admission.log": "bd192c3fc477a9c9cb8af957d72e27358f8da100a243f88d890d92113480aeee",
+    "/tmp/nst-own-boot-cli.log": "bafd2fe438ff187c6e733a0c55fe6eb4228bb0cd348915fccc5fa0f40b904a65",
+    "/tmp/nst-own-boot-clippy-final.log": "3eb7c9187bd77343bc708e2181cc6d26bd21bd79f7f60028d253766c42d5bfcb"
+  },
+  "remaining": [
+    "writer/root final static/fmt/map/source seal",
+    "remaining full A4 consumer work"
+  ],
+  "limits": [
+    "actual own Dynamic+Simple and INDEX direct read timing preserved",
+    "cooperative finite rechecks not global CAS/rollback",
+    "native test providers not DLL/platform qualification",
+    "live source snapshot not acceptance"
+  ],
+  "report_sha256": "3b7d9009f9957e02e5adf690f9a0e61e2656f50526e0a385cb7045b4437524c9"
+}

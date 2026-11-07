@@ -2148,3 +2148,27 @@ Next own-boot design is retained in research/m06-a4-host-boot-design.md/json. Ro
 ### 2026-11-07 — finite host facts/query accepted
 
 Product commit 432761746296c7913297cb7daad1302d30fc3b4b contains17root hash-verified paths. Acceptance is research/m06-a4-host-query-acceptance.md/json; FMT033 records scope/diagnostic values without schema change. Root map/check preserves9156prior units and44warning meanings; no orphan/unresolvedhost, wire-diff passes. Source order defect and expected digest oracle correction remain explicit. FullA4 stayspartial with12/31/31/39. Next is own/inherited Simple boot enrollment with scoped captures and actual INDEX/publication checks, preserving Dynamic linkage.
+
+### 2026-11-07 — own boot contract prepared before implementation
+
+Root adopted the reviewed actual linkage design and added SOURCE-HOST-BOOT reqr1/FMT034. Automatic enrollment is VibeSpec instruction+scan in immediate boot scope; documentation/ordinary/explicit-only sources are not auto instructions. This makes the existing native-scan shorthand precise without adding project.format. Actual own/inherited Dynamic+Simple behavior is preserved; INDEX direct-read kind is a separate axis. A private prepared carrier and narrow unaddressed capture must bind selected media/bytes through early admission and final INDEX/redirect/native/replay publication, including no-static lanes. Whole-host census is deliberately not the boot input. Full A4 remains open.
+
+### 2026-11-07 — own-boot regression fixture registered
+
+The new own-boot worker registered an actual grouped/ungrouped apply-resolution fixture with native scan XML under an arbitrary suffix, native Markdown, inert directive-looking data, explicit-only native and unrelated missing input. The first invocation in /tmp/nst-own-boot-red.log stopped at test compilation (including toml::Value versus &str), so it is NOT a behavioral RED. Root requested fixture correction and an unchanged-product baseline before interpreting the result. The already approved private prepared-node/captured-input design and publication checks remain the implementation contract; no host-boot acceptance yet.
+
+### 2026-11-07 — own-boot real pipeline gates green
+
+Root inspected actual behavioral RED from old nonempty host refusal after two test typing errors were corrected. New own-boot/runtime family10PASS, scoped capture5PASS, source-admission9PASS, independent actual CLI2 plus existing host CLI5PASS, and complete bootgen51PASS now establish selection and retained publication behavior. Native fixture initially lacked root-native intersection and an XML-data test used an invalid role; those setup/oracle corrections are not product failure claims.
+
+The first full bootgen run49PASS/1FAIL exposed an unchanged structural test looking for attach_to in boot_artifacts.rs although A3 had moved that owner to boot_artifacts/compile.rs. Root approved correcting the source owner path while retaining the invariant; bootgen51 subsequently passed. This is earlier test debt, not a weakened gate. Strict Clippy passed. Initial direct Conform invocations omitted CARGO_MANIFEST_DIR and exited before analysis; worker is rerunning with the actual xtask directory, retaining both logs. No acceptance yet.
+
+Independent review confirms preparation attaches nodes even for host-only/legacy/empty cases before unit emission; zero-static ordinary/native publication rechecks are outside compiler early-return. Replay guard survives prepared publication and pretransaction drift keeps Uncommitted/committed-prefix semantics. Publish staging's unbound path-only reader remains guarded and is an explicit remaining A4 integration surface, not silently enabled by this change.
+
+Own-boot independent review retained in research/m06-a4-own-boot-review.md/json: no concrete blocking defect, actual early/node-only/zero-static/native/replay ownership and committed-prefix behavior reviewed. This source snapshot precedes the final module split. That split exposed E0624 because NodeReplayCandidate::new kept pub(super) after moving; worker restored exactly pub(in crate::install::bootgen), its needed owner visibility, and is rerunning terminal gates. No feature or permission boundary was broadened and no failing gate is described as passed. Freeze/acceptance remains pending.
+
+Root final map found SOURCE-OPERATION-ENROLLMENT content changed at unchanged r1: the own-boot instruction eligibility was narrowed from generic native to VibeSpec. This is semantic, not editorial. Root bumped that planned contract to r2; no code pins to that section existed to migrate. SOURCE-HOST-BOOT r1 is the concrete implementation contract. No spec-editorial bypass used. Root targeted CLI test Clippy also passed after the worker's scoped checks.
+
+### 2026-11-07 — declared own/inherited boot accepted
+
+Product commit 33a680809c903a0fa0e40fbdb64640126b19296d contains28root hash-verified paths:25primary, independent CLI fixture and canonical/map. Initial ownership-union check correctly caught that the peer CLI file was not inside the primary manifest; root verified its separate original hash before staging all28. Acceptance and limits are research/m06-a4-own-boot-acceptance.md/json. Map/check retains9158prior units and44warning meanings; no orphan/unresolvedhost, wire-diff passes. SOURCE-OPERATION-ENROLLMENT r2 records semantic refinement; no editorial bypass. FullA4 remainspartial and counts12/31/31/39 unchanged. Next bounded adapter is truthful boot-graph verification.
