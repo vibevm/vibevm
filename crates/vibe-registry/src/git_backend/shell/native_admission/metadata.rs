@@ -65,6 +65,15 @@ impl NativeState {
         if let Some(origin) = self.owned_origin(repo)? {
             return Ok(origin);
         }
+        if self.profile.selection.is_some() {
+            let captured = self.profile.capture_context(Some(repo))?;
+            return (if _effective {
+                captured.effective_origin
+            } else {
+                captured.recorded_origin
+            })
+            .ok_or_else(|| GitError::OriginMissing { path: repo.into() });
+        }
         // The selected installation may have a different compiled system config
         // path. Guessing /etc or ignoring includes would change warm meaning.
         // N2 must supply complete captured ambient authority before enabling it.
@@ -79,10 +88,14 @@ impl NativeState {
         if self.owned_origin(repo)?.is_some() {
             return self.with_owned(repo, |_| self.read_head(repo));
         }
-        self.local_config(repo)?;
+        if self.profile.selection.is_some() {
+            self.profile.capture_context(Some(repo))?;
+        } else {
+            self.local_config(repo)?;
+        }
         self.read_head(&repo.join(".git"))
     }
-    fn read_head(&self, git_dir: &Path) -> Result<Option<String>, GitError> {
+    pub(super) fn read_head(&self, git_dir: &Path) -> Result<Option<String>, GitError> {
         let value = text(
             Context::new(&self.profile)?
                 .run(&["rev-parse", "--verify", "HEAD"], Some(git_dir), None)?

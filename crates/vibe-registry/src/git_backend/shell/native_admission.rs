@@ -7,7 +7,11 @@ use std::{
     path::{Path, PathBuf},
     sync::{Arc, Mutex},
 };
+mod capture;
 mod context;
+pub use capture::NativeConfigSelection;
+mod materialisation;
+pub use materialisation::NativeMaterialisation;
 mod metadata;
 mod preparation;
 pub(super) use context::AdmittedCommand;
@@ -65,6 +69,7 @@ pub struct NativeGitAdmission {
     binding: Arc<crate::HttpAdmission>,
     installation: GitInstallation,
     trust: TlsTrust,
+    selection: Option<NativeConfigSelection>,
 }
 impl NativeGitAdmission {
     /// Select direct HTTPS with caller-trusted Git and TLS inputs. This does not
@@ -80,11 +85,17 @@ impl NativeGitAdmission {
             binding,
             installation,
             trust,
+            selection: None,
         }
     }
     /// The exact immutable binding also used by raw HTTP and index clients.
     pub fn http_admission(&self) -> Arc<crate::HttpAdmission> {
         Arc::clone(&self.binding)
+    }
+    /// Add immutable configuration-selection inputs for local materialisation.
+    pub fn with_config_selection(mut self, selection: NativeConfigSelection) -> Self {
+        self.selection = Some(selection);
+        self
     }
 }
 pub(super) fn unsupported(reason: &'static str) -> GitError {
@@ -176,6 +187,45 @@ struct OwnedRepository {
     config: Vec<u8>,
     origin: String,
     revision: GitPreparedRevision,
+    context: Option<capture::CapturedContext>,
+    source: Option<PathBuf>,
+    source_before: Option<materialisation::Tree>,
+    destination_bound: bool,
+}
+
+/// Acquired native objects whose final destination has not yet been selected.
+/// Only the registry can bind this consumed token after reading its actual
+/// manifest. A bound PreparedInPlace never exposes this transition.
+pub struct NativeSource {
+    state: Arc<NativeState>,
+    objects: PathBuf,
+    revision: GitPreparedRevision,
+}
+impl NativeSource {
+    pub(crate) fn revision(&self) -> &GitPreparedRevision {
+        &self.revision
+    }
+    pub(crate) fn bind(self, destination: &Path) -> Result<GitPreparedRevision, GitError> {
+        if !destination.is_absolute() {
+            return Err(unsupported("native destination must be absolute"));
+        }
+        let mut owned = self
+            .state
+            .owned
+            .lock()
+            .map_err(|_| unsupported("owned source lock poisoned"))?;
+        let value = owned
+            .get_mut(&self.objects)
+            .ok_or_else(|| unsupported("source token is no longer retained"))?;
+        if value.destination_bound || value.revision != self.revision {
+            return Err(unsupported(
+                "native source token was already bound or changed",
+            ));
+        }
+        value.destination_bound = true;
+        value.revision.destination = destination.into();
+        Ok(value.revision.clone())
+    }
 }
 #[derive(Debug)]
 pub(super) struct NativeState {
@@ -183,6 +233,27 @@ pub(super) struct NativeState {
     owned: Mutex<HashMap<PathBuf, OwnedRepository>>,
 }
 impl NativeState {
+    pub(in crate::git_backend::shell) fn acquire(
+        self: &Arc<Self>,
+        request: Preparation<'_>,
+    ) -> Result<NativeSource, GitError> {
+        if self.profile.selection.is_none() {
+            return Err(unavailable());
+        }
+        let objects = request.objects.to_owned();
+        let revision = self.prepare(request)?;
+        self.owned
+            .lock()
+            .map_err(|_| unsupported("owned source lock poisoned"))?
+            .get_mut(&objects)
+            .ok_or_else(|| unsupported("acquired source was not retained"))?
+            .destination_bound = false;
+        Ok(NativeSource {
+            state: self.clone(),
+            objects,
+            revision,
+        })
+    }
     pub(super) fn new(profile: Arc<NativeGitAdmission>) -> Self {
         Self {
             profile,

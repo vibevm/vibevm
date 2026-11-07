@@ -219,6 +219,29 @@ pub enum GitError {
 /// # Ok::<(), GitError>(())
 /// ```
 pub trait GitBackend: Send + Sync {
+    fn uses_native_materialisation(&self) -> bool {
+        false
+    }
+    /// Native-only source acquisition before the actual manifest chooses its
+    /// final cache/workspace destination. Non-native backends do no work here.
+    fn prepare_native_source(
+        &self,
+        _url: &str,
+        _reference: &str,
+        _reuse: Option<&Path>,
+        _objects: &Path,
+    ) -> Result<Option<shell::native_admission::NativeSource>, GitError> {
+        Ok(None)
+    }
+    /// Stage a retained source under an explicitly supported native profile.
+    /// None means this backend remains on its incumbent materialisation path.
+    fn stage_native_materialisation(
+        &self,
+        _objects: &Path,
+        _revision: &GitPreparedRevision,
+    ) -> Result<Option<shell::native_admission::NativeMaterialisation>, GitError> {
+        Ok(None)
+    }
     /// Check declared credential semantics before attempting registry contact.
     fn preflight_registry_auth(
         &self,

@@ -157,14 +157,20 @@ pub(super) struct PreInstallPlan<'a, 'l> {
     lifecycle: &'a MaterialiseLifecycle<'l>,
     workspace_root: &'a Path,
     deferred: Vec<ResolvedDep>,
+    checked: Vec<std::path::PathBuf>,
 }
 
 impl<'a, 'l> PreInstallPlan<'a, 'l> {
-    pub(super) fn new(lifecycle: &'a MaterialiseLifecycle<'l>, workspace_root: &'a Path) -> Self {
+    pub(super) fn new_checked(
+        lifecycle: &'a MaterialiseLifecycle<'l>,
+        workspace_root: &'a Path,
+        checked: Vec<std::path::PathBuf>,
+    ) -> Self {
         Self {
             lifecycle,
             workspace_root,
             deferred: Vec::new(),
+            checked,
         }
     }
 
@@ -224,6 +230,13 @@ impl<'a, 'l> PreInstallPlan<'a, 'l> {
     }
 
     fn rollback(&self, dep: &ResolvedDep) {
+        if self.checked.contains(&vibedeps::in_place_slot_abs_path(
+            self.workspace_root,
+            &dep.group,
+            &dep.name,
+        )) {
+            return; // The enclosing checked owner preserves unknown replacements.
+        }
         let slot = if is_in_place(dep) {
             let _ = vibedeps::remove_in_place_slot(self.workspace_root, &dep.group, &dep.name);
             vibedeps::in_place_slot_rel_path(&dep.group, &dep.name)

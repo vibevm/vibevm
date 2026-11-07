@@ -142,6 +142,17 @@ impl<'a> Context<'a> {
         cmd.args(&argv);
         reporter.run_admitted_transfer(AdmittedCommand(cmd), &argv, remote.url.as_str(), objects)
     }
+    /// A controlled conversion probe. No filter command is present in this
+    /// owned config; required-only drivers discriminate reserved value strings.
+    pub(super) fn filter_probe(&self, args: &[&str], repo: &Path) -> Result<bool, GitError> {
+        self.command(Some(repo), None)
+            .args(args)
+            .stdout(Stdio::null())
+            .stderr(Stdio::null())
+            .status()
+            .map(|s| s.success())
+            .map_err(io)
+    }
     pub(super) fn config(&self, path: &Path) -> Result<Vec<(String, String)>, GitError> {
         let path = path
             .to_str()

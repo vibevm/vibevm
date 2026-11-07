@@ -14,16 +14,28 @@ impl NativeState {
             destination,
             anonymous,
         } = request;
+        let captured = self
+            .profile
+            .selection
+            .as_ref()
+            .map(|_| self.profile.capture_context(reuse))
+            .transpose()?;
+        let source_before = reuse
+            .map(|p| materialisation::tree(&p.join(".git")))
+            .transpose()?
+            .flatten();
         let effective = if let Some(repo) = reuse {
             let effective = self.origin(repo, true)?;
-            if effective != address {
+            let captured = self.profile.capture(&effective, true)?;
+            let requested = self.profile.capture(address, anonymous)?;
+            if captured.url != requested.url {
                 return Err(unsupported(
                     "warm effective origin changed before acquisition",
                 ));
             }
-            effective
+            address.to_owned()
         } else {
-            address.into()
+            address.to_owned()
         };
         let remote = self.profile.capture(&effective, anonymous)?;
         if !objects.is_absolute() || objects.exists() {
@@ -191,6 +203,10 @@ impl NativeState {
                         config,
                         origin: remote.url.to_string(),
                         revision: revision.clone(),
+                        context: captured,
+                        source: reuse.map(Path::to_path_buf),
+                        source_before,
+                        destination_bound: true,
                     },
                 );
             Ok(revision)

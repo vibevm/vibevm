@@ -158,6 +158,17 @@ impl RegistryPackageSource {
 }
 
 impl InstallSource for RegistryPackageSource {
+    fn acquire_for_install(
+        &self,
+        pkgref: &PackageRef,
+        store_root: &Path,
+        expected_hash: Option<&str>,
+        slot: &Path,
+        progress: &vibe_core::progress::Progress,
+    ) -> Result<vibe_registry::PackageAcquisition, RegistryError> {
+        self.resolver
+            .acquire_for_install(pkgref, store_root, expected_hash, slot, progress)
+    }
     fn resolve_and_fetch(
         &self,
         pkgref: &PackageRef,

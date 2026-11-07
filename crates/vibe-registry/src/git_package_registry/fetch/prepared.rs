@@ -44,6 +44,13 @@ struct Prepared {
 #[derive(Clone)]
 #[specmark::spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-069#PACKAGE-ADMISSION")]
 pub struct PreparedInPlace(Arc<Prepared>);
+
+/// One acquired package; in-place bytes remain retained until workspace apply.
+#[derive(Debug)]
+pub enum PackageAcquisition {
+    Cached(Box<CachedPackage>),
+    InPlace(PreparedInPlace),
+}
 impl std::fmt::Debug for PreparedInPlace {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         f.debug_struct("PreparedInPlace")
@@ -149,6 +156,51 @@ impl PreparedInPlace {
         &self.0.slot
     }
 
+    /// Stage native bytes before any caller metadata publication. The returned
+    /// directory may only be published through a caller's checked undo owner.
+    #[specmark::spec(
+        implements = "spec://org.vibevm.core/vibevm/common/PROP-073#NATIVE-MATERIALISATION-LAW"
+    )]
+    pub fn stage_native(
+        &self,
+    ) -> Result<
+        Option<crate::git_backend::shell::native_admission::NativeMaterialisation>,
+        RegistryError,
+    > {
+        let p = &self.0;
+        let repository = p.slot.join(".git").exists();
+        if p.slot.exists() != p.before.present || repository != p.before.repository {
+            return Err(refusal(
+                &p.slot,
+                "destination identity changed before staging",
+            ));
+        }
+        if repository
+            && (p.backend.head_commit(&p.slot)? != p.before.head
+                || observed_origin(p.backend.as_ref(), &p.slot)? != p.before.origin)
+        {
+            return Err(refusal(
+                &p.slot,
+                "destination HEAD or origin changed before staging",
+            ));
+        }
+        let staged = self
+            .0
+            .backend
+            .stage_native_materialisation(&self.0.objects, &self.0.revision)?;
+        if let Some(staged) = &staged {
+            if Manifest::read(staged.staged_path().join(Manifest::FILENAME))? != self.0.manifest {
+                return Err(refusal(
+                    &self.0.slot,
+                    "staged manifest differs from admitted source",
+                ));
+            }
+        } else {
+            self.0.backend.preflight_materialisation()?;
+        }
+        Ok(staged)
+    }
+
     /// Apply the captured objects without resolving a source or mutable ref.
     /// HEAD/origin replacement refuses before checkout; tracked/untracked/ignored
     /// dirt is repaired by the incumbent clean owner only after admission.
@@ -240,6 +292,131 @@ impl Prepared {
     }
 }
 impl GitPerPackageRegistry {
+    fn native_credentialed_url(
+        &self,
+        origin: &str,
+        reuse: Option<&Path>,
+        primary: &str,
+        mirrors: &[String],
+    ) -> Result<String, RegistryError> {
+        if self.effective_token.is_some()
+            && let Some(repo) = reuse
+        {
+            let recorded = self.backend.recorded_origin_url(repo)?;
+            let parse = |value: &str| {
+                reqwest::Url::parse(strip_git_plus_prefix(value)).map(|url| url.origin())
+            };
+            let recorded_origin = parse(&recorded).ok();
+            let permitted = recorded_origin.is_some()
+                && parse(origin).ok() == recorded_origin
+                && std::iter::once(primary)
+                    .chain(mirrors.iter().map(String::as_str))
+                    .any(|url| parse(url).ok() == recorded_origin);
+            if !permitted {
+                return Err(GitError::NativeContext{reason:"warm token authentication cannot cross the configured credential origin"}.into());
+            }
+        }
+        Ok(self.credentialed_url(origin))
+    }
+    pub(super) fn prepare_native_attempt(
+        &self,
+        resolved: &ResolvedPackage,
+        url: &str,
+        source: &Path,
+        refresh: bool,
+        workspace_slot: Option<&Path>,
+    ) -> Result<PreparedInPlace, PreparationFailure> {
+        let acquired = (|| {
+            self.ensure_token_loaded()?;
+            let source = std::path::absolute(source).map_err(|e| io(source, e))?;
+            let reuse = (refresh && source.join(".git").exists()).then_some(source.as_path());
+            let origin = match reuse {
+                Some(source) => self.backend.origin_url(source)?,
+                None => strip_git_plus_prefix(url).to_owned(),
+            };
+            let (primary, mirrors) = self.package_urls(&resolved.group, &resolved.name)?;
+            let authenticated = self.native_credentialed_url(&origin, reuse, &primary, &mirrors)?;
+            let cache =
+                std::path::absolute(&self.cache_root).map_err(|e| io(&self.cache_root, e))?;
+            fs::create_dir_all(&cache).map_err(|e| io(&cache, e))?;
+            let temporary = tempfile::Builder::new()
+                .prefix("prepared-native-")
+                .tempdir_in(&cache)
+                .map_err(|e| io(&cache, e))?;
+            let objects = temporary.path().join("objects.git");
+            let requested = format!("v{}", resolved.version);
+            let token = self
+                .backend
+                .prepare_native_source(&authenticated, &requested, reuse, &objects)?
+                .ok_or_else(|| refusal(&source, "native source capability disappeared"))?;
+            Ok::<_, RegistryError>((temporary, objects, token, origin, requested))
+        })()
+        .map_err(PreparationFailure::acquisition)?;
+        let (temporary, objects, token, origin, requested) = acquired;
+        (|| {
+            let bytes = self.backend.file_at_commit(
+                &objects,
+                &token.revision().commit,
+                Manifest::FILENAME,
+            )?;
+            let manifest = Manifest::parse_str(
+                std::str::from_utf8(&bytes)
+                    .map_err(|_| refusal(source, "prepared manifest is not UTF-8"))?,
+            )?;
+            let package = manifest
+                .package
+                .as_ref()
+                .ok_or_else(|| refusal(source, "prepared manifest has no package identity"))?;
+            if package.group != resolved.group
+                || package.name != resolved.name
+                || package.version != resolved.version
+            {
+                return Err(refusal(
+                    source,
+                    "acquired package identity differs from resolved coordinate",
+                ));
+            }
+            let destination = if package.materialization.is_in_place() {
+                workspace_slot.unwrap_or(source)
+            } else {
+                source
+            };
+            let slot = std::path::absolute(destination).map_err(|e| io(destination, e))?;
+            let repository = slot.join(".git").exists();
+            let before = Before {
+                present: slot.exists(),
+                repository,
+                head: if repository {
+                    self.backend.head_commit(&slot)?
+                } else {
+                    None
+                },
+                origin: if repository {
+                    observed_origin(self.backend.as_ref(), &slot)?
+                } else {
+                    None
+                },
+            };
+            let revision = token.bind(&slot)?;
+            Ok(PreparedInPlace(Arc::new(Prepared {
+                registry_name: self.name.clone(),
+                _temporary: temporary,
+                objects,
+                slot,
+                backend: self.backend.clone(),
+                before,
+                refresh,
+                origin,
+                canonical: self.package_repo_url(&resolved.group, &resolved.name)?,
+                authenticated_origin: None,
+                content_hash: super::commit_content_hash(&revision.commit),
+                requested,
+                revision,
+                manifest,
+            })))
+        })()
+        .map_err(PreparationFailure::Admission)
+    }
     /// Prepare the actual existing origin, or a fresh primary/mirror source,
     /// without changing project semantics. Existing-origin acquisition writes
     /// only Git objects and FETCH_HEAD in the original repository, preserving
@@ -294,7 +471,14 @@ impl GitPerPackageRegistry {
                     .tempdir_in(&cache_root)
                     .map_err(|e| io(&cache_root, e))?;
                 let objects = temporary.path().join("objects.git");
-                let url = if authenticate {
+                let url = if self.backend.uses_native_materialisation() {
+                    self.native_credentialed_url(
+                        origin,
+                        refresh.then_some(slot.as_path()),
+                        &primary,
+                        &mirrors,
+                    )?
+                } else if authenticate {
                     self.credentialed_url(origin)
                 } else {
                     origin.to_owned()
@@ -371,8 +555,8 @@ impl GitPerPackageRegistry {
             PreparationFailure::Acquisition(error) => error,
             PreparationFailure::Admission(error) => return Err(error),
         };
-        for mirror in mirrors {
-            match attempt(strip_git_plus_prefix(&mirror), false, true) {
+        for mirror in &mirrors {
+            match attempt(strip_git_plus_prefix(mirror), false, true) {
                 Ok(value) => return Ok(value),
                 Err(PreparationFailure::Admission(error)) => return Err(error),
                 Err(PreparationFailure::Acquisition(_)) => {}
@@ -385,7 +569,7 @@ impl GitPerPackageRegistry {
 // Preserve the original RegistryError while making the source-selection phase
 // explicit. Only acquisition failure can advance to another source. All reads
 // after a returned revision belong to that acquired source's admission.
-enum PreparationFailure {
+pub(super) enum PreparationFailure {
     Acquisition(RegistryError),
     Admission(RegistryError),
 }

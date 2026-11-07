@@ -71,6 +71,32 @@ pub fn apply_resolution_with_spec_format_and_slot_lifecycle_traced(
     lifecycle: SlotLifecycleMode<'_>,
     trace: Option<&crate::compile_trace::TraceRun>,
 ) -> Result<InstallOutcome, WorkspaceError> {
+    apply_resolution_with_spec_format_and_slot_lifecycle_traced_placements(
+        workspace,
+        resolution,
+        slot_integrity,
+        spec_format,
+        slot_verifier,
+        lifecycle,
+        trace,
+        &[],
+    )
+}
+
+#[expect(
+    clippy::too_many_arguments,
+    reason = "the additive compatibility seam preserves the established apply inputs and adds only borrowed checked placements"
+)]
+pub fn apply_resolution_with_spec_format_and_slot_lifecycle_traced_placements(
+    workspace: &Workspace,
+    resolution: &[ResolvedDep],
+    slot_integrity: SlotIntegrity,
+    spec_format: SpecFormat,
+    slot_verifier: Option<&dyn SlotVerifier>,
+    lifecycle: SlotLifecycleMode<'_>,
+    trace: Option<&crate::compile_trace::TraceRun>,
+    placements: &[&dyn PreparedSlotPlacement],
+) -> Result<InstallOutcome, WorkspaceError> {
     match lifecycle {
         SlotLifecycleMode::None => apply_with_materialise_lifecycle(
             workspace,
@@ -80,6 +106,7 @@ pub fn apply_resolution_with_spec_format_and_slot_lifecycle_traced(
             slot_verifier,
             MaterialiseLifecycle::None,
             trace,
+            placements,
         ),
         SlotLifecycleMode::Callback(callback) => apply_with_materialise_lifecycle(
             workspace,
@@ -89,6 +116,7 @@ pub fn apply_resolution_with_spec_format_and_slot_lifecycle_traced(
             slot_verifier,
             MaterialiseLifecycle::Callback(callback),
             trace,
+            placements,
         ),
         SlotLifecycleMode::LegacyHooks { policy, output } => {
             let runner = ConfiguredHookRunner::new(output);
@@ -104,11 +132,16 @@ pub fn apply_resolution_with_spec_format_and_slot_lifecycle_traced(
                     runner: &runner,
                 },
                 trace,
+                placements,
             )
         }
     }
 }
 
+#[expect(
+    clippy::too_many_arguments,
+    reason = "the materialisation owner forwards the same apply inputs and checked placements while borrowing the selected lifecycle runner"
+)]
 fn apply_with_materialise_lifecycle(
     workspace: &Workspace,
     resolution: &[ResolvedDep],
@@ -117,6 +150,7 @@ fn apply_with_materialise_lifecycle(
     slot_verifier: Option<&dyn SlotVerifier>,
     lifecycle: MaterialiseLifecycle<'_>,
     trace: Option<&crate::compile_trace::TraceRun>,
+    placements: &[&dyn PreparedSlotPlacement],
 ) -> Result<InstallOutcome, WorkspaceError> {
     // A malformed instruction block aborts before any mutation.
     source_admission::validate_source_admission(workspace, resolution, spec_format)?;
@@ -130,7 +164,7 @@ fn apply_with_materialise_lifecycle(
         integrity_warnings,
         post_install_deps,
         hook_reports,
-    } = materialise_resolution_with_spec_format(
+    } = match materialise_resolution_with_prepared(
         &workspace.root,
         resolution,
         MaterialiseOptions {
@@ -141,7 +175,24 @@ fn apply_with_materialise_lifecycle(
             progress: vibe_core::progress::Progress::default(),
             rollback: Some(&mut rollback),
         },
-    )?;
+        placements,
+    ) {
+        Ok(result) => result,
+        Err(error) if !placements.is_empty() => {
+            return Err(rollback.undo(
+                error,
+                observer,
+                &placements
+                    .iter()
+                    .map(|p| {
+                        let (g, n, _) = p.coordinate();
+                        vibedeps::in_place_slot_rel_path(g, n)
+                    })
+                    .collect::<Vec<_>>(),
+            ));
+        }
+        Err(error) => return Err(error),
+    };
 
     // From here to the caller's lock write, a failure puts every slot back.
     let kept: Vec<String> = materialised.iter().chain(&skipped).cloned().collect();
@@ -250,6 +301,63 @@ where
     ) -> Result<P, WorkspaceError>,
     P: crate::extension_world::OwnerNativeCompileProvider,
 {
+    apply_resolution_with_spec_format_and_slot_lifecycle_traced_native_progress_placements(
+        workspace,
+        resolution,
+        slot_integrity,
+        spec_format,
+        slot_verifier,
+        lifecycle,
+        trace,
+        prepare,
+        run,
+        make_provider,
+        progress,
+        &[],
+    )
+}
+
+#[expect(
+    clippy::too_many_arguments,
+    reason = "the additive native sibling preserves the predecessor's independently borrowed lowering, provider and progress inputs and adds checked placements"
+)]
+pub fn apply_resolution_with_spec_format_and_slot_lifecycle_traced_native_progress_placements<
+    F,
+    G,
+    P,
+>(
+    workspace: &Workspace,
+    resolution: &[ResolvedDep],
+    slot_integrity: SlotIntegrity,
+    spec_format: SpecFormat,
+    slot_verifier: Option<&dyn SlotVerifier>,
+    lifecycle: SlotLifecycleMode<'_>,
+    trace: Option<&crate::compile_trace::TraceRun>,
+    prepare: &mut F,
+    run: crate::extension_world::OwnerRuntimeRunFacts,
+    make_provider: &mut G,
+    progress: &vibe_core::progress::Progress,
+    placements: &[&dyn PreparedSlotPlacement],
+) -> Result<NativeInstallOutcome, WorkspaceError>
+where
+    F: FnMut(
+        &Workspace,
+        &[ResolvedDep],
+    ) -> Result<
+        (
+            crate::extension_world::ExtensionWorldEpoch,
+            crate::extension_world::OwnerRuntimeLowering,
+        ),
+        WorkspaceError,
+    >,
+    G: FnMut(
+        std::collections::BTreeMap<
+            crate::extension_world::OwnerRuntimeId,
+            vibe_spec::CompilerNativePolicy,
+        >,
+    ) -> Result<P, WorkspaceError>,
+    P: crate::extension_world::OwnerNativeCompileProvider,
+{
     source_admission::validate_source_admission(workspace, resolution, spec_format)?;
     validate_redirect_blocks(workspace, resolution)?;
     let mut rollback = InstallRollback::new(&workspace.root);
@@ -258,7 +366,7 @@ where
         SlotLifecycleMode::None | SlotLifecycleMode::LegacyHooks { .. } => None,
     };
     let mut materialise = |lifecycle| {
-        materialise_resolution_with_spec_format(
+        materialise_resolution_with_prepared(
             &workspace.root,
             resolution,
             MaterialiseOptions {
@@ -269,6 +377,7 @@ where
                 progress: progress.clone(),
                 rollback: Some(&mut rollback),
             },
+            placements,
         )
     };
     let Materialised {
@@ -277,10 +386,10 @@ where
         integrity_warnings,
         post_install_deps,
         hook_reports,
-    } = match lifecycle {
-        SlotLifecycleMode::None => materialise(MaterialiseLifecycle::None)?,
+    } = match match lifecycle {
+        SlotLifecycleMode::None => materialise(MaterialiseLifecycle::None),
         SlotLifecycleMode::Callback(callback) => {
-            materialise(MaterialiseLifecycle::Callback(callback))?
+            materialise(MaterialiseLifecycle::Callback(callback))
         }
         SlotLifecycleMode::LegacyHooks { policy, output } => {
             let runner = ConfiguredHookRunner::new(output);
@@ -288,8 +397,24 @@ where
                 policy,
                 probe: &SystemProbe,
                 runner: &runner,
-            })?
+            })
         }
+    } {
+        Ok(result) => result,
+        Err(error) if !placements.is_empty() => {
+            return Err(rollback.undo(
+                error,
+                observer,
+                &placements
+                    .iter()
+                    .map(|p| {
+                        let (g, n, _) = p.coordinate();
+                        vibedeps::in_place_slot_rel_path(g, n)
+                    })
+                    .collect::<Vec<_>>(),
+            ));
+        }
+        Err(error) => return Err(error),
     };
     let kept = materialised
         .iter()

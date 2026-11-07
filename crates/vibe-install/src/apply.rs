@@ -18,7 +18,8 @@ use vibe_workspace::Workspace;
 use vibe_workspace::hooks::{HookOutput, HookPolicy, HookReport};
 use vibe_workspace::install::{
     InstallOutcome, ResolvedDep, SlotLifecycleMode,
-    apply_resolution_with_spec_format_and_slot_lifecycle_traced, run_post_install_slot_lifecycle,
+    apply_resolution_with_spec_format_and_slot_lifecycle_traced_placements,
+    run_post_install_slot_lifecycle,
 };
 use vibe_workspace::vibedeps;
 
@@ -41,6 +42,8 @@ mod file_guard;
 mod lock;
 mod metadata;
 mod native;
+#[cfg(all(test, unix))]
+mod native_materialisation_tests;
 use deferred::materialise_deferred_in_place;
 use file_guard::MetadataFiles;
 /// Commit an admitted prepared source delta without overwriting a changed
@@ -402,6 +405,21 @@ fn apply_metadata_checked<S: InstallSource + ?Sized>(
         progress,
     } = planned;
 
+    let native_placements = deferred::stage_deferred_native(&fetched, &mut resolution)?;
+    let placements: Vec<&dyn vibe_workspace::install::PreparedSlotPlacement> = native_placements
+        .iter()
+        .map(|p| p as &dyn vibe_workspace::install::PreparedSlotPlacement)
+        .collect();
+
+    for placement in &placements {
+        placement.validate().map_err(|reason| {
+            vibe_workspace::WorkspaceError::SpecMaterialization {
+                path: placement.destination().into(),
+                reason,
+            }
+        })?;
+    }
+
     // Everything from this write to the lock write is undone together: the
     // guard puts the manifest's earlier bytes back unless the apply finishes.
     if let Some(guard) = &mut files.manifest {
@@ -428,18 +446,15 @@ fn apply_metadata_checked<S: InstallSource + ?Sized>(
     // it only refreshes the source manifest and materialization provenance.
     let roots = crate::record::workspace_root_snapshot(&workspace, &resolution)?;
 
-    // 7a. PROP-022 §2.4 — perform the deferred incremental `in-place` updates
-    //     the plan held back (a re-resolve of an already-present in-place
-    //     package, which the plan refused to re-clone). Now past the operator's
-    //     confirmation, `git fetch` each live slot onto its own `.git` to the
-    //     resolved ref — transferring only changed objects rather than
-    //     re-downloading the giant — and fold the freshly-read manifest /
-    //     commit / hash back into the fetched set (→ lockfile) and the
-    //     resolution (→ boot + hooks). The slot stays the `content_dir`, so the
-    //     materialise pass reads the "already placed" signal and runs the hook
-    //     without moving anything. This extends the canonical incremental path
-    //     (`vibe update <pkg>`) to the general install re-resolve.
-    materialise_deferred_in_place(source, &workspace, &mut fetched, &mut resolution)?;
+    // Legacy deferred refresh keeps its incumbent owner. Native candidates were
+    // staged above; their slot publication joins the workspace rollback below.
+    materialise_deferred_in_place(
+        source,
+        &workspace,
+        &mut fetched,
+        &mut resolution,
+        &native_placements,
+    )?;
 
     // 8. Apply: materialise each package into vibedeps/, run each freshly
     //    populated slot's pre-install hook (PROP-020 §2.1), and regenerate
@@ -473,7 +488,7 @@ fn apply_metadata_checked<S: InstallSource + ?Sized>(
                 ))
             };
             let prepared =
-                vibe_workspace::install::apply_resolution_with_spec_format_and_slot_lifecycle_traced_native_progress(
+                vibe_workspace::install::apply_resolution_with_spec_format_and_slot_lifecycle_traced_native_progress_placements(
                     &workspace,
                     &resolution,
                     slot_integrity,
@@ -485,11 +500,12 @@ fn apply_metadata_checked<S: InstallSource + ?Sized>(
                     run,
                     &mut make_provider,
                     &progress,
-                )?;
+                    &placements,
+                ).map_err(deferred::workspace_error)?;
             (prepared.outcome, Some(prepared.carriage))
         }
         None => (
-            apply_resolution_with_spec_format_and_slot_lifecycle_traced(
+            apply_resolution_with_spec_format_and_slot_lifecycle_traced_placements(
                 &workspace,
                 &resolution,
                 slot_integrity,
@@ -497,7 +513,9 @@ fn apply_metadata_checked<S: InstallSource + ?Sized>(
                 Some(&slot_verifier),
                 lifecycle,
                 trace,
-            )?,
+                &placements,
+            )
+            .map_err(deferred::workspace_error)?,
             None,
         ),
     };

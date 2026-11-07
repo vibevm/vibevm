@@ -31,6 +31,95 @@ pub(super) enum BringIntent {
 }
 
 impl GitPerPackageRegistry {
+    /// Cache publication uses this existing bring owner. The verified candidate
+    /// is copied beside the target before a cooperative move-aside/rename; no
+    /// Git command runs against restored user configuration.
+    pub(super) fn publish_native_cache(
+        &self,
+        stage: &crate::git_backend::shell::native_admission::NativeMaterialisation,
+        destination: &Path,
+    ) -> Result<(), RegistryError> {
+        let destination = std::path::absolute(destination).map_err(|source| RegistryError::Io {
+            path: destination.into(),
+            source,
+        })?;
+        let refuse = |reason: String| RegistryError::PreparedInPlace {
+            path: destination.clone(),
+            reason,
+        };
+        if stage.destination() != destination {
+            return Err(refuse(
+                "cache candidate belongs to another destination".into(),
+            ));
+        }
+        stage.validate_before_publication()?;
+        let parent = destination
+            .parent()
+            .ok_or_else(|| refuse("cache destination has no parent".into()))?;
+        fs::create_dir_all(parent).map_err(|source| RegistryError::Io {
+            path: parent.into(),
+            source,
+        })?;
+        let temporary = tempfile::Builder::new()
+            .prefix(".native-cache-")
+            .tempdir_in(parent)
+            .map_err(|source| RegistryError::Io {
+                path: parent.into(),
+                source,
+            })?;
+        let candidate = temporary.path().join("candidate");
+        stage.copy_for_cache(&candidate)?;
+        // copy_for_cache revalidates the exact old source/destination after the
+        // potentially long copy and hash, immediately before publication.
+        let backup = temporary.path().join("previous");
+        let existed = match fs::symlink_metadata(&destination) {
+            Ok(_) => true,
+            Err(e) if e.kind() == std::io::ErrorKind::NotFound => false,
+            Err(source) => {
+                return Err(RegistryError::Io {
+                    path: destination.clone(),
+                    source,
+                });
+            }
+        };
+        if existed {
+            fs::rename(&destination, &backup).map_err(|source| RegistryError::Io {
+                path: destination.clone(),
+                source,
+            })?;
+        }
+        let publish = if fs::symlink_metadata(&destination).is_ok() {
+            Err(std::io::Error::new(
+                std::io::ErrorKind::AlreadyExists,
+                "cache destination acquired another occupant",
+            ))
+        } else {
+            fs::rename(&candidate, &destination)
+        };
+        if let Err(error) = publish {
+            if existed {
+                if fs::symlink_metadata(&destination).is_ok() {
+                    let kept = temporary.keep();
+                    return Err(refuse(format!(
+                        "cache publication failed: {error}; rollback conflict; replacement preserved, backup retained at {}",
+                        kept.display()
+                    )));
+                }
+                if let Err(undo) = fs::rename(&backup, &destination) {
+                    let kept = temporary.keep();
+                    return Err(refuse(format!(
+                        "cache publication failed: {error}; restore failed: {undo}; backup retained at {}",
+                        kept.display()
+                    )));
+                }
+            }
+            return Err(RegistryError::Io {
+                path: destination,
+                source: error,
+            });
+        }
+        Ok(())
+    }
     /// Bring the per-package clone at `clone_dir` to `refname`,
     /// dispatching on how this attempt relates to the copy already on
     /// disk. Used by [`Self::ensure_clone_against_sources`] and the

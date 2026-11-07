@@ -35,25 +35,51 @@ struct PreparedObservation {
 /// Only graph selection is mocked. Source preparation uses actual local Git.
 struct Source {
     registry: GitPerPackageRegistry,
+    store: PathBuf,
+    names: Vec<String>,
+    secondary: Option<GitPerPackageRegistry>,
     version: RefCell<semver::Version>,
     fetched: RefCell<Vec<String>>,
     prepared: RefCell<Vec<PreparedObservation>>,
     unbound_placements: Cell<usize>,
 }
 impl Source {
+    fn registry_for(&self, name: &str) -> &GitPerPackageRegistry {
+        if name == "second" {
+            self.secondary.as_ref().unwrap_or(&self.registry)
+        } else {
+            &self.registry
+        }
+    }
     fn graph(&self) -> ResolvedGraph {
         ResolvedGraph {
-            packages: vec![ResolvedNode {
-                group: Group::parse("org.vibevm").unwrap(),
-                name: "giant".into(),
-                version: self.version.borrow().clone(),
-                dependencies: vec![],
-                is_root: true,
-            }],
+            packages: self
+                .names
+                .iter()
+                .map(|name| ResolvedNode {
+                    group: Group::parse("org.vibevm").unwrap(),
+                    name: name.clone(),
+                    version: self.version.borrow().clone(),
+                    dependencies: vec![],
+                    is_root: true,
+                })
+                .collect(),
         }
     }
 }
 impl InstallSource for Source {
+    fn acquire_for_install(
+        &self,
+        pkgref: &PackageRef,
+        _store: &Path,
+        expected: Option<&str>,
+        slot: &Path,
+        _progress: &vibe_core::progress::Progress,
+    ) -> Result<vibe_registry::PackageAcquisition, RegistryError> {
+        let registry = self.registry_for(&pkgref.name);
+        let selected = registry.resolve(pkgref)?;
+        registry.fetch_for_install(&selected, &self.store, expected, slot)
+    }
     fn resolve_and_fetch(
         &self,
         pkgref: &PackageRef,
@@ -78,9 +104,9 @@ impl InstallSource for Source {
     }
     fn manifest_of(&self, pkg: &PackageRef) -> Result<Manifest, SolveError> {
         let read = || {
-            let selected = self.registry.resolve(pkg)?;
-            self.registry
-                .fetch_dep_manifest(&selected.group, &selected.name, &selected.version)
+            let registry = self.registry_for(&pkg.name);
+            let selected = registry.resolve(pkg)?;
+            registry.fetch_dep_manifest(&selected.group, &selected.name, &selected.version)
         };
         read().map_err(|e: RegistryError| {
             vibe_resolver::DepProviderError::Other(e.to_string()).into()
@@ -91,8 +117,9 @@ impl InstallSource for Source {
         pkg: &PackageRef,
         slot: &Path,
     ) -> Result<PreparedInPlace, RegistryError> {
-        let selected = self.registry.resolve(pkg)?;
-        let prepared = self.registry.prepare_in_place(&selected, slot)?;
+        let registry = self.registry_for(&pkg.name);
+        let selected = registry.resolve(pkg)?;
+        let prepared = registry.prepare_in_place(&selected, slot)?;
         self.prepared.borrow_mut().push(PreparedObservation {
             slot: prepared.slot().to_owned(),
             commit: prepared.resolved_commit().into(),
@@ -213,6 +240,7 @@ impl Fixture {
         let slot = project
             .join(vibe_core::layout::current_vibedeps_root())
             .join("org.vibevm.giant");
+        let store = temp.path().join("isolated-store");
         Self {
             _temp: temp,
             project,
@@ -220,6 +248,9 @@ impl Fixture {
             slot,
             source: Source {
                 registry,
+                store,
+                names: vec!["giant".into()],
+                secondary: None,
                 version: RefCell::new(semver::Version::parse("1.0.0").unwrap()),
                 fetched: RefCell::new(vec![]),
                 prepared: RefCell::new(vec![]),
@@ -554,3 +585,6 @@ fn selected_legacy_target_can_replace_an_old_common_definition() {
 
 #[path = "incremental_in_place/configured.rs"]
 mod configured;
+#[cfg(unix)]
+#[path = "incremental_in_place/native.rs"]
+mod native;

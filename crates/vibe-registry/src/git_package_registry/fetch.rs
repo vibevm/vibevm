@@ -10,10 +10,13 @@ specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#r
 use super::*;
 use crate::store::{self, InsertOutcome};
 
+mod identity;
+use identity::commit_content_hash;
+pub(crate) use identity::verify_store_entry_against_pin;
 mod bring;
 use bring::BringIntent;
 mod prepared;
-pub use prepared::PreparedInPlace;
+pub use prepared::{PackageAcquisition, PreparedInPlace};
 
 impl GitPerPackageRegistry {
     /// Bring the per-package clone at `package_clone_dir(kind, name)`
@@ -240,20 +243,43 @@ impl GitPerPackageRegistry {
     /// any content), the **primary's** error is surfaced — same
     /// "primary is canonical and its diagnostic is most useful"
     /// semantics as [`Self::try_lookup`].
-    #[specmark::spec(
-        deviates = "spec://core-ai-native/mechanisms/ENGINE-CONFORM-v0.1#rules",
-        reason = "no-unwrap-in-domain: primary_err is Some whenever the source loop \
-                  exhausts — the primary URL exists by package_urls' type and its \
-                  failure is recorded before any continue; lifting the primary out \
-                  of the loop (the try_lookup shape) would duplicate the three-step \
-                  per-source body this fn shares between primary and mirrors"
-    )]
     pub fn fetch_with_expected_hash(
         &self,
         resolved: &ResolvedPackage,
         store_root: &Path,
         expected_hash: Option<&str>,
     ) -> Result<CachedPackage, RegistryError> {
+        match self.fetch_acquisition(resolved, store_root, expected_hash, None)? {
+            PackageAcquisition::Cached(cached) => Ok(*cached),
+            PackageAcquisition::InPlace(prepared) => Err(RegistryError::PreparedInPlace {
+                path: prepared.slot().into(),
+                reason: "workspace-bound preparation requires the install acquisition consumer"
+                    .into(),
+            }),
+        }
+    }
+
+    /// Select once, retaining native in-place objects until checked workspace apply.
+    #[specmark::spec(
+        implements = "spec://org.vibevm.core/vibevm/common/PROP-073#NATIVE-MATERIALISATION-LAW"
+    )]
+    pub fn fetch_for_install(
+        &self,
+        resolved: &ResolvedPackage,
+        store_root: &Path,
+        expected_hash: Option<&str>,
+        workspace_slot: &Path,
+    ) -> Result<PackageAcquisition, RegistryError> {
+        self.fetch_acquisition(resolved, store_root, expected_hash, Some(workspace_slot))
+    }
+
+    fn fetch_acquisition(
+        &self,
+        resolved: &ResolvedPackage,
+        store_root: &Path,
+        expected_hash: Option<&str>,
+        workspace_slot: Option<&Path>,
+    ) -> Result<PackageAcquisition, RegistryError> {
         // PROP-002 §2.2.1 — bail before any clone work when this
         // registry is `auth = "token-env"` but the env-var resolved
         // empty.
@@ -278,7 +304,24 @@ impl GitPerPackageRegistry {
             } else {
                 BringIntent::SwitchSource
             };
-            if let Err(e) = self.bring_clone_to_ref(url, &tag, &clone_dir, intent) {
+            let native = if self.backend.uses_native_materialisation() {
+                match self.prepare_native_attempt(resolved, url, &clone_dir, i == 0, workspace_slot)
+                {
+                    Ok(prepared) => Some(prepared),
+                    Err(prepared::PreparationFailure::Admission(error)) => return Err(error),
+                    Err(prepared::PreparationFailure::Acquisition(error)) => {
+                        if i == 0 {
+                            primary_err = Some(error)
+                        }
+                        continue;
+                    }
+                }
+            } else {
+                None
+            };
+            if native.is_none()
+                && let Err(e) = self.bring_clone_to_ref(url, &tag, &clone_dir, intent)
+            {
                 if i == 0 {
                     primary_err = Some(e);
                 } else {
@@ -292,6 +335,30 @@ impl GitPerPackageRegistry {
                 }
                 continue;
             }
+            if let Some(prepared) = &native
+                && workspace_slot.is_some()
+                && prepared
+                    .manifest()
+                    .package
+                    .as_ref()
+                    .is_some_and(|p| p.materialization.is_in_place())
+                && expected_hash.is_none_or(|expected| expected == prepared.content_hash())
+            {
+                return Ok(PackageAcquisition::InPlace(native.ok_or_else(|| {
+                    RegistryError::MalformedMeta {
+                        path: clone_dir.clone(),
+                        reason: "native acquisition disappeared".into(),
+                    }
+                })?));
+            }
+            let native_stage = native
+                .as_ref()
+                .map(PreparedInPlace::stage_native)
+                .transpose()?
+                .flatten();
+            let content = native_stage
+                .as_ref()
+                .map_or(clone_dir.as_path(), |s| s.staged_path());
 
             // 2. Read the manifest from the clone to learn how the package
             //    wants to be materialised (PROP-022 §2.1) before paying any
@@ -300,7 +367,7 @@ impl GitPerPackageRegistry {
             //    submodule gitlinks (PROP-021 §2.4) and an in-place slot's
             //    identity is its commit (PROP-022 §2.5). The clone retains
             //    `.git`; the store entry is `.git`-stripped.
-            let clone_manifest_path = clone_dir.join(Manifest::FILENAME);
+            let clone_manifest_path = content.join(Manifest::FILENAME);
             let manifest = Manifest::read(&clone_manifest_path)?;
             let pkg = manifest
                 .package
@@ -309,7 +376,10 @@ impl GitPerPackageRegistry {
                     path: clone_manifest_path.clone(),
                     reason: "registry package manifest must carry a [package] table".to_string(),
                 })?;
-            let resolved_commit = self.backend.head_commit(&clone_dir)?;
+            let resolved_commit = match &native {
+                Some(prepared) => Some(prepared.resolved_commit().to_owned()),
+                None => self.backend.head_commit(&clone_dir)?,
+            };
 
             // An `in-place` package (PROP-022 §2.4) is placed as a git working
             // tree, so vibevm never walks its tree: skip the `.git`-stripped
@@ -327,7 +397,7 @@ impl GitPerPackageRegistry {
                 // equals the hash of the `.git`-stripped shippable tree
                 // the store entry will hold — no intermediate copy is
                 // needed to know what inserting would pin.
-                compute_content_hash(&clone_dir)?
+                compute_content_hash(content)?
             };
 
             // 3. Cross-source content_hash gate — BEFORE any store
@@ -372,7 +442,10 @@ impl GitPerPackageRegistry {
                     // on a drifting source: the reader of the refusal
                     // wants to know which mirror served the other bytes
                     // (`PROP-066#provenance`).
-                    fetched_from: (url != &canonical_url).then(|| url.to_string()),
+                    fetched_from: native.as_ref().map_or_else(
+                        || (url != &canonical_url).then(|| url.to_string()),
+                        |p| p.source_evidence().fetched_from,
+                    ),
                     registry_name: Some(self.name.clone()),
                     source_ref: Some(tag.clone()),
                     resolved_commit,
@@ -390,6 +463,9 @@ impl GitPerPackageRegistry {
             //    The entry path is what the resolution materialises
             //    `vibedeps/` from: the bytes flow from the STORE, not
             //    from this clone.
+            if let Some(stage) = &native_stage {
+                self.publish_native_cache(stage, &clone_dir)?;
+            }
             let mut store_reused = false;
             let cache_dir = if in_place {
                 clone_dir.clone()
@@ -448,7 +524,7 @@ impl GitPerPackageRegistry {
                     );
                 }
             }
-            return Ok(CachedPackage {
+            return Ok(PackageAcquisition::Cached(Box::new(CachedPackage {
                 recorded_source_kind: None,
                 store_reused: Some(store_reused),
                 acquisition: Some(vibe_wire::generated::shared::SourceAcquisition::GitRepository),
@@ -462,7 +538,10 @@ impl GitPerPackageRegistry {
                 // manifest and the lock keep the canonical URL, so a
                 // lock stays portable between networks and the place the
                 // bytes came from is still recoverable.
-                fetched_from: (url != &canonical_url).then(|| url.to_string()),
+                fetched_from: native.as_ref().map_or_else(
+                    || (url != &canonical_url).then(|| url.to_string()),
+                    |p| p.source_evidence().fetched_from,
+                ),
                 registry_name: Some(self.name.clone()),
                 source_ref: Some(tag.clone()),
                 resolved_commit,
@@ -472,7 +551,7 @@ impl GitPerPackageRegistry {
                 is_embedded: false,
                 is_local: false,
                 via_redirect: None,
-            });
+            })));
         }
 
         // Every URL was exhausted.
@@ -484,58 +563,13 @@ impl GitPerPackageRegistry {
             // message. Doing the rendering here would duplicate that
             // logic and lose the lockfile context the install layer
             // already carries.
-            return Ok(cached);
+            return Ok(PackageAcquisition::Cached(Box::new(cached)));
         }
-        Err(primary_err.expect("primary URL must exist"))
+        Err(primary_err.unwrap_or_else(|| RegistryError::MalformedMeta {
+            path: clone_dir,
+            reason: "source chain produced neither a package nor an acquisition error".into(),
+        }))
     }
-}
-
-/// The one entry-under-pin verification gate (PROP-010 §2.7,
-/// mismatch-is-named): re-hash the store entry and, when it no longer
-/// matches the lockfile pin, name the package and the entry. Shared by
-/// the fetch path's `AlreadyPresent` branch and the store-backed
-/// resolution's fetch short-circuit, so both apply the SAME gate, not
-/// a copy. `pub(crate)` for the multi-registry resolver's offline
-/// module; `Group`/version arrive by reference so the error carries
-/// the identity verbatim.
-pub(crate) fn verify_store_entry_against_pin(
-    entry: &Path,
-    expected: &str,
-    group: &Group,
-    name: &str,
-    version: &semver::Version,
-) -> Result<(), RegistryError> {
-    let actual = compute_content_hash(entry)?;
-    if actual != expected {
-        return Err(RegistryError::StoreEntryMismatch {
-            detail: Box::new(crate::error::StoreEntryMismatchDetail {
-                group: group.clone(),
-                name: name.to_string(),
-                version: version.clone(),
-                path: entry.to_path_buf(),
-                expected: expected.to_string(),
-                actual,
-            }),
-        });
-    }
-    Ok(())
-}
-
-/// A cheap, stable `content_hash` for an `in-place` package — `sha256` of the
-/// resolved commit, not a tree walk (PROP-022 §2.4/§2.5). The lockfile's
-/// `content_hash` field is non-optional, so an in-place slot still records a
-/// well-formed `sha256:<hex>`; identity, though, is the `resolved_commit`.
-/// An empty commit (a backend that reported none) hashes the empty string —
-/// deterministic and harmless, since in-place requires a real git source.
-fn commit_content_hash(commit: &str) -> String {
-    use sha2::{Digest, Sha256};
-    let digest = Sha256::digest(commit.as_bytes());
-    let hex = digest.iter().fold(String::new(), |mut s, b| {
-        use std::fmt::Write as _;
-        let _ = write!(&mut s, "{b:02x}");
-        s
-    });
-    format!("sha256:{hex}")
 }
 
 #[cfg(test)]

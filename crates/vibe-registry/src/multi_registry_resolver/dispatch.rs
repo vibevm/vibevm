@@ -8,6 +8,53 @@ specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#r
 use super::*;
 
 impl MultiRegistryResolver {
+    /// Consume the already selected source once, preserving special/local routes.
+    pub fn fetch_for_install(
+        &self,
+        resolution: &MultiResolution,
+        store_root: &Path,
+        expected_hash: Option<&str>,
+        slot: &Path,
+        progress: &vibe_core::progress::Progress,
+    ) -> Result<crate::PackageAcquisition, RegistryError> {
+        if !resolution.from_store
+            && !resolution.overridden
+            && !resolution.is_path_source
+            && !resolution.is_git_source
+            && resolution.via_redirect.is_none()
+            && let Some(RegistrySource::Git(registry)) = self
+                .sources
+                .iter()
+                .find(|source| Some(source.name()) == resolution.registry_name.as_deref())
+        {
+            let task = progress.task(format!(
+                "Fetching {}/{}@{}",
+                resolution.resolved.group, resolution.resolved.name, resolution.resolved.version
+            ));
+            let package = format!("{}/{}", resolution.resolved.group, resolution.resolved.name);
+            let result = crate::git_backend::transfers::observed(
+                Some(&task.progress()),
+                Some(&package),
+                Some(vibe_core::progress::transfer::Purpose::PackageClone),
+                || {
+                    registry.fetch_for_install(
+                        &resolution.resolved,
+                        store_root,
+                        expected_hash,
+                        slot,
+                    )
+                },
+            );
+            if result.is_ok() {
+                task.finish()
+            } else {
+                task.fail("package fetch failed")
+            };
+            return result;
+        }
+        self.fetch_with_expected_hash_progress(resolution, store_root, expected_hash, progress)
+            .map(|cached| crate::PackageAcquisition::Cached(Box::new(cached)))
+    }
     /// Fetch a previously-resolved package into the machine-global
     /// store. The returned [`CachedPackage`] carries lockfile-v2
     /// provenance (`registry_name` / `source_ref` / `overridden`)

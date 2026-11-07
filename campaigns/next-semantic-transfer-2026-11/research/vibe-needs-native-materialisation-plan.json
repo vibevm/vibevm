@@ -1,0 +1,503 @@
+{
+  "status": "read_only_executable_plan_not_implementation",
+  "report": "/tmp/vibe-needs-native-materialisation-plan.md",
+  "accepted_N1": "46b6297a3 (root supplied)",
+  "production_edits": false,
+  "cargo_or_public_network": false,
+  "sources": [
+    {
+      "path": "/fast/git/vibevm/crates/vibe-registry/src/git_backend/shell/native_admission.rs",
+      "sha256": "c0e736fd357636fc98d8ed710bf08b84274a3a34a5e2424ca437ddb6abf8db23",
+      "bytes": 9926
+    },
+    {
+      "path": "/fast/git/vibevm/crates/vibe-registry/src/git_backend/shell.rs",
+      "sha256": "4ab3a562cacce8a5a00360d7af73c3b9b4efa040b39b9bcb7b2b5172ed5cc6d1",
+      "bytes": 22419
+    },
+    {
+      "path": "/fast/git/vibevm/crates/vibe-registry/src/git_backend/mod.rs",
+      "sha256": "6e80ab890837bbe0bde5712fca384c08ced4692a04377d79a585ba0904a33a74",
+      "bytes": 18630
+    },
+    {
+      "path": "/fast/git/vibevm/crates/vibe-registry/src/git_package_registry/fetch/prepared.rs",
+      "sha256": "d72c38b7fc1eb8d20cef2a96e7d0bedfb3f430b17db4adc14e82c344c8f53c50",
+      "bytes": 16368
+    },
+    {
+      "path": "/fast/git/vibevm/crates/vibe-registry/src/git_package_registry/fetch/bring.rs",
+      "sha256": "44f949ac0bc4b2b22758861571fdb21c08e6846232e5d9bd34c07ea580af14d2",
+      "bytes": 8594
+    },
+    {
+      "path": "/fast/git/vibevm/crates/vibe-registry/src/git_backend/shell/native_admission/context.rs",
+      "sha256": "5aec069bf4acfedca79f7af02717baf70c8676a9841c168c4666b201dd199405",
+      "bytes": 6535
+    },
+    {
+      "path": "/fast/git/vibevm/crates/vibe-registry/src/git_backend/shell/native_admission/metadata.rs",
+      "sha256": "db6cfa076c527061c91364dc4744d9bf8522e21c04a006b574090a75547863cd",
+      "bytes": 3741
+    },
+    {
+      "path": "/fast/git/vibevm/crates/vibe-registry/src/git_backend/shell/native_admission/preparation.rs",
+      "sha256": "918cad633ed17af30a8eecacc1293134f83574c983d19b82610b846b1bf79870",
+      "bytes": 6857
+    },
+    {
+      "path": "/fast/git/vibevm/crates/vibe-install/src/apply.rs",
+      "sha256": "c48e89a4393b69e1b8ebbb0244e07ea0fe0b5ba15566205a5a1f7847f6a8f948",
+      "bytes": 23594
+    },
+    {
+      "path": "/fast/git/vibevm/crates/vibe-install/src/apply/file_guard.rs",
+      "sha256": "5bd7e537bdc23bfed22ba30b9a6f3c3b42c22ca3c33cc4ccacba3036e68791e6",
+      "bytes": 13513
+    },
+    {
+      "path": "/fast/git/vibevm/crates/vibe-install/src/apply/deferred.rs",
+      "sha256": "d412b1c4ca1ef8af62a2e37b79ad558dbc51f524ba55118e6d4529413c731e71",
+      "bytes": 1916
+    },
+    {
+      "path": "/fast/git/vibevm/crates/vibe-install/src/apply/native.rs",
+      "sha256": "cf24e998f50a1c49ccba5734ea6ae0598ee5ce815147be13516260259f110640",
+      "bytes": 2132
+    },
+    {
+      "path": "/fast/git/vibevm/crates/vibe-install/src/apply/metadata.rs",
+      "sha256": "151f595c4c1f11997bd79bf867e9a5da69b9359e39893d569a27f342f948edc2",
+      "bytes": 4393
+    },
+    {
+      "path": "/fast/git/vibevm/crates/vibe-install/src/apply/lock.rs",
+      "sha256": "decf93f0ecfe14764c94bbb020cad67050f28e0c43ded2ef4add726b61081d72",
+      "bytes": 3652
+    },
+    {
+      "path": "/fast/git/vibevm/crates/vibe-workspace/src/install.rs",
+      "sha256": "aa7ebd15b1572367671aeffcc9f05908e71c8562c09f7bc2484d6ae63ca98eba",
+      "bytes": 20215
+    },
+    {
+      "path": "/fast/git/vibevm/crates/vibe-workspace/src/install/placement.rs",
+      "sha256": "7f03e500d6c7f13e48d3a0e9e312cbf4f162e710bfc2c8d191adc991636f74e4",
+      "bytes": 1456
+    },
+    {
+      "path": "/fast/git/vibevm/crates/vibe-workspace/src/install/rollback.rs",
+      "sha256": "fb13ae568d8ebf6986e603a1bb2d47c6ab7d5aa73564109343473b801cf5b0cc",
+      "bytes": 10315
+    },
+    {
+      "path": "/fast/git/vibevm/crates/vibe-workspace/src/install/slot_lifecycle.rs",
+      "sha256": "e8447997dfdab319cce6df323d21571d30295daf346ea1c05a7bef12ce8a22e0",
+      "bytes": 9101
+    },
+    {
+      "path": "/fast/git/vibevm/crates/vibe-workspace/src/install/model.rs",
+      "sha256": "cdd80a77d732dae45987f389d5290f9aa574c410d66df7b000909e351196f644",
+      "bytes": 14206
+    },
+    {
+      "path": "/fast/git/vibevm/crates/vibe-workspace/src/install/hook_output.rs",
+      "sha256": "29b8062a1f5227826d559267c40f47662319e64137b1f6434fc5eee67cd441f3",
+      "bytes": 13350
+    },
+    {
+      "path": "/tmp/vibe-native-handoff.md",
+      "sha256": "8544db997a72240485135b7b55263bd7e055fe821787cefaa5d9f60a3ff575e3",
+      "bytes": 5105
+    },
+    {
+      "path": "/tmp/vibe-native-handoff.json",
+      "sha256": "18e9b707d9acbc18c4bfcffc66fb0657c7af5380fee7f171e5ef3baed9b939ff",
+      "bytes": 12018
+    }
+  ],
+  "evidence": [
+    {
+      "path": "/tmp/vibe-n2-materialisation-probe.py",
+      "sha256": "de68a680d7be021092a9fe8dc86dff7071ebf75d1ed5971dac340afafccd6bdd",
+      "bytes": 5685
+    },
+    {
+      "path": "/tmp/vibe-n2-materialisation-probe-v1.py",
+      "sha256": "7a750e2079170fa4850519f58e5dab008c954a358b1978a9cc9d5577571b0ff1",
+      "bytes": 5487
+    },
+    {
+      "path": "/tmp/vibe-n2-materialisation-probe-v1-failure.txt",
+      "sha256": "6b9cf9ec82771680bfce475378e387069cedf7eebe27242097f8cf6ccb5653dd",
+      "bytes": 217
+    },
+    {
+      "path": "/tmp/vibe-n2-materialisation-probe-result.json",
+      "sha256": "a9064457988438d6147cacfee0f5fd5e2c2613861584bddeb5b7a34b59dd7262",
+      "bytes": 11538
+    },
+    {
+      "path": "/tmp/vibe-n2-materialisation-probe-progress.json",
+      "sha256": "79f7cb00443a4bd564004633be5d5d9a9262a62a048b19a4fc43f43078ade33b",
+      "bytes": 9708
+    },
+    {
+      "path": "/tmp/vibe-n2-materialisation-probe.stdout",
+      "sha256": "7d27a9c29196024c4d83395a046ea9fe8663e9b1c4daf6d3b0df38a286d2d9ce",
+      "bytes": 683
+    }
+  ],
+  "experiment": {
+    "temp_root": "/tmp/vibe-n2-proof-nlda3vdj",
+    "git_version": "git version 2.53.0",
+    "selected_commit": "c1514d645798da1bdd4335f9e570c687107ad8b0",
+    "canonical_recorded": "https://127.0.0.1/original/repo.git",
+    "effective_origin": "https://127.0.0.2/rewrite/repo.git",
+    "config_capture_sha256": "a629158afdfc9b510ca9438856d099b59e95003c4f0943865d16067c8e017c95",
+    "parity": {
+      "vibe.toml": {
+        "legacy": "1b97515c9243fb9fe3a1320051c50507da5eebca6e4bff9d2d2336d6efe046ee",
+        "stage": "1b97515c9243fb9fe3a1320051c50507da5eebca6e4bff9d2d2336d6efe046ee"
+      },
+      "lf.txt": {
+        "legacy": "2751a3a2f303ad21752038085e2b8c5f98ecff61a2e4ebbd43506a941725be80",
+        "stage": "2751a3a2f303ad21752038085e2b8c5f98ecff61a2e4ebbd43506a941725be80"
+      },
+      "crlf.txt": {
+        "legacy": "4ad3ef64dfb83f7a8f789bce6f30cc1f8d18491b14db4c875309b150d2a7d213",
+        "stage": "4ad3ef64dfb83f7a8f789bce6f30cc1f8d18491b14db4c875309b150d2a7d213"
+      },
+      "default.txt": {
+        "legacy": "4ad3ef64dfb83f7a8f789bce6f30cc1f8d18491b14db4c875309b150d2a7d213",
+        "stage": "4ad3ef64dfb83f7a8f789bce6f30cc1f8d18491b14db4c875309b150d2a7d213"
+      },
+      "binary.dat": {
+        "legacy": "83483e6a1fbbdb5c962e068dd635d7fc2d860312b6ec6448ccba7315c5af1136",
+        "stage": "83483e6a1fbbdb5c962e068dd635d7fc2d860312b6ec6448ccba7315c5af1136"
+      },
+      ".gitattributes": {
+        "legacy": "cd118248c553a3c315475f4e4c35d3ba1a31c1d5f508a29910e5a14873130caf",
+        "stage": "cd118248c553a3c315475f4e4c35d3ba1a31c1d5f508a29910e5a14873130caf"
+      }
+    },
+    "external_filter_legacy_runs_and_changes_bytes": true,
+    "blind_strip_silently_changes_semantics": true,
+    "check_attr_refusal_driver_no_execution_or_target_mutation": true,
+    "receipts": [
+      {
+        "argv": [
+          "init",
+          "/tmp/vibe-n2-proof-nlda3vdj/source"
+        ],
+        "cwd": "/tmp/vibe-n2-proof-nlda3vdj",
+        "exit": 0,
+        "stdout": "Initialized empty Git repository in /tmp/vibe-n2-proof-nlda3vdj/source/.git/\n",
+        "stderr": "hint: Using 'master' as the name for the initial branch. This default branch name\nhint: will change to \"main\" in Git 3.0. To configure the initial branch name\nhint: to use in all of your new repositories, which will suppress this warning,\nhint: call:\nhint:\nhint: \tgit config --global init.defaultBranch <name>\nhint:\nhint: Names commonly chosen instead of 'master' are 'main', 'trunk' and\nhint: 'development'. The just-created branch can be renamed via this command:\nhint:\nhint: \tgit branch -m <name>\nhint:\nhint: Disable this message with \"git config set advice.defaultBranchName false\"\n"
+      },
+      {
+        "argv": [
+          "add",
+          "."
+        ],
+        "cwd": "/tmp/vibe-n2-proof-nlda3vdj/source",
+        "exit": 0,
+        "stdout": "",
+        "stderr": "warning: in the working copy of 'crlf.txt', LF will be replaced by CRLF the next time Git touches it\n"
+      },
+      {
+        "argv": [
+          "-c",
+          "user.name=Fixture",
+          "-c",
+          "user.email=f@example.invalid",
+          "commit",
+          "-m",
+          "fixture"
+        ],
+        "cwd": "/tmp/vibe-n2-proof-nlda3vdj/source",
+        "exit": 0,
+        "stdout": "[master (root-commit) c1514d6] fixture\n 6 files changed, 11 insertions(+)\n create mode 100644 .gitattributes\n create mode 100644 binary.dat\n create mode 100644 crlf.txt\n create mode 100644 default.txt\n create mode 100644 lf.txt\n create mode 100644 vibe.toml\n",
+        "stderr": ""
+      },
+      {
+        "argv": [
+          "rev-parse",
+          "HEAD"
+        ],
+        "cwd": "/tmp/vibe-n2-proof-nlda3vdj/source",
+        "exit": 0,
+        "stdout": "c1514d645798da1bdd4335f9e570c687107ad8b0\n",
+        "stderr": ""
+      },
+      {
+        "argv": [
+          "clone",
+          "--no-checkout",
+          "/tmp/vibe-n2-proof-nlda3vdj/source",
+          "/tmp/vibe-n2-proof-nlda3vdj/legacy"
+        ],
+        "cwd": "/tmp/vibe-n2-proof-nlda3vdj",
+        "exit": 0,
+        "stdout": "",
+        "stderr": "Cloning into '/tmp/vibe-n2-proof-nlda3vdj/legacy'...\ndone.\n"
+      },
+      {
+        "argv": [
+          "remote",
+          "set-url",
+          "origin",
+          "https://127.0.0.1/original/repo.git"
+        ],
+        "cwd": "/tmp/vibe-n2-proof-nlda3vdj/legacy",
+        "exit": 0,
+        "stdout": "",
+        "stderr": ""
+      },
+      {
+        "argv": [
+          "config",
+          "--null",
+          "--includes",
+          "--show-origin",
+          "--show-scope",
+          "--list"
+        ],
+        "cwd": "/tmp/vibe-n2-proof-nlda3vdj/legacy",
+        "exit": 0,
+        "stdout": "global\u0000file:/tmp/vibe-n2-proof-nlda3vdj/home/.gitconfig\u0000include.path\n/tmp/vibe-n2-proof-nlda3vdj/included.config\u0000global\u0000file:/tmp/vibe-n2-proof-nlda3vdj/included.config\u0000core.eol\nlf\u0000global\u0000file:/tmp/vibe-n2-proof-nlda3vdj/included.config\u0000core.autocrlf\nfalse\u0000global\u0000file:/tmp/vibe-n2-proof-nlda3vdj/included.config\u0000core.attributesfile\n/tmp/vibe-n2-proof-nlda3vdj/external-attributes\u0000global\u0000file:/tmp/vibe-n2-proof-nlda3vdj/included.config\u0000url.https://127.0.0.2/rewrite/.insteadof\nhttps://127.0.0.1/original/\u0000local\u0000file:.git/config\u0000core.repositoryformatversion\n0\u0000local\u0000file:.git/config\u0000core.filemode\ntrue\u0000local\u0000file:.git/config\u0000core.bare\nfalse\u0000local\u0000file:.git/config\u0000core.logallrefupdates\ntrue\u0000local\u0000file:.git/config\u0000remote.origin.url\nhttps://127.0.0.1/original/repo.git\u0000local\u0000file:.git/config\u0000remote.origin.fetch\n+refs/heads/*:refs/remotes/origin/*\u0000local\u0000file:.git/config\u0000branch.master.remote\norigin\u0000local\u0000file:.git/config\u0000branch.master.merge\nrefs/heads/master\u0000",
+        "stderr": ""
+      },
+      {
+        "argv": [
+          "remote",
+          "get-url",
+          "origin"
+        ],
+        "cwd": "/tmp/vibe-n2-proof-nlda3vdj/legacy",
+        "exit": 0,
+        "stdout": "https://127.0.0.2/rewrite/repo.git\n",
+        "stderr": ""
+      },
+      {
+        "argv": [
+          "config",
+          "--get",
+          "remote.origin.url"
+        ],
+        "cwd": "/tmp/vibe-n2-proof-nlda3vdj/legacy",
+        "exit": 0,
+        "stdout": "https://127.0.0.1/original/repo.git\n",
+        "stderr": ""
+      },
+      {
+        "argv": [
+          "checkout",
+          "--detach",
+          "--force",
+          "c1514d645798da1bdd4335f9e570c687107ad8b0"
+        ],
+        "cwd": "/tmp/vibe-n2-proof-nlda3vdj/legacy",
+        "exit": 0,
+        "stdout": "",
+        "stderr": "HEAD is now at c1514d6 fixture\n"
+      },
+      {
+        "argv": [
+          "clone",
+          "--bare",
+          "/tmp/vibe-n2-proof-nlda3vdj/source",
+          "/tmp/vibe-n2-proof-nlda3vdj/objects.git"
+        ],
+        "cwd": "/tmp/vibe-n2-proof-nlda3vdj",
+        "exit": 0,
+        "stdout": "",
+        "stderr": "Cloning into bare repository '/tmp/vibe-n2-proof-nlda3vdj/objects.git'...\ndone.\n"
+      },
+      {
+        "argv": [
+          "-c",
+          "core.autocrlf=false",
+          "-c",
+          "core.eol=lf",
+          "-c",
+          "core.attributesFile=/tmp/vibe-n2-proof-nlda3vdj/captured-attributes",
+          "-c",
+          "core.hooksPath=/tmp/vibe-n2-proof-nlda3vdj/empty",
+          "--git-dir",
+          "/tmp/vibe-n2-proof-nlda3vdj/objects.git",
+          "--work-tree",
+          "/tmp/vibe-n2-proof-nlda3vdj/stage",
+          "read-tree",
+          "c1514d645798da1bdd4335f9e570c687107ad8b0"
+        ],
+        "cwd": "/tmp/vibe-n2-proof-nlda3vdj",
+        "exit": 0,
+        "stdout": "",
+        "stderr": ""
+      },
+      {
+        "argv": [
+          "-c",
+          "core.autocrlf=false",
+          "-c",
+          "core.eol=lf",
+          "-c",
+          "core.attributesFile=/tmp/vibe-n2-proof-nlda3vdj/captured-attributes",
+          "-c",
+          "core.hooksPath=/tmp/vibe-n2-proof-nlda3vdj/empty",
+          "--git-dir",
+          "/tmp/vibe-n2-proof-nlda3vdj/objects.git",
+          "--work-tree",
+          "/tmp/vibe-n2-proof-nlda3vdj/stage",
+          "checkout-index",
+          "--all",
+          "--force",
+          "--prefix=/tmp/vibe-n2-proof-nlda3vdj/stage/"
+        ],
+        "cwd": "/tmp/vibe-n2-proof-nlda3vdj",
+        "exit": 0,
+        "stdout": "",
+        "stderr": ""
+      },
+      {
+        "argv": [
+          "config",
+          "filter.probe.smudge",
+          "/tmp/vibe-n2-proof-nlda3vdj/smudge.py"
+        ],
+        "cwd": "/tmp/vibe-n2-proof-nlda3vdj/legacy",
+        "exit": 0,
+        "stdout": "",
+        "stderr": ""
+      },
+      {
+        "argv": [
+          "config",
+          "filter.probe.required",
+          "true"
+        ],
+        "cwd": "/tmp/vibe-n2-proof-nlda3vdj/legacy",
+        "exit": 0,
+        "stdout": "",
+        "stderr": ""
+      },
+      {
+        "argv": [
+          "checkout-index",
+          "--force",
+          "default.txt"
+        ],
+        "cwd": "/tmp/vibe-n2-proof-nlda3vdj/legacy",
+        "exit": 0,
+        "stdout": "",
+        "stderr": ""
+      },
+      {
+        "argv": [
+          "--git-dir",
+          "/tmp/vibe-n2-proof-nlda3vdj/objects.git",
+          "--work-tree",
+          "/tmp/vibe-n2-proof-nlda3vdj/blind",
+          "checkout-index",
+          "--all",
+          "--force",
+          "--prefix=/tmp/vibe-n2-proof-nlda3vdj/blind/"
+        ],
+        "cwd": "/tmp/vibe-n2-proof-nlda3vdj",
+        "exit": 0,
+        "stdout": "",
+        "stderr": ""
+      },
+      {
+        "argv": [
+          "check-attr",
+          "--source=c1514d645798da1bdd4335f9e570c687107ad8b0",
+          "-z",
+          "filter",
+          "working-tree-encoding",
+          "ident",
+          "--",
+          "default.txt"
+        ],
+        "cwd": "/tmp/vibe-n2-proof-nlda3vdj/legacy",
+        "exit": 0,
+        "stdout": "default.txt\u0000filter\u0000probe\u0000default.txt\u0000working-tree-encoding\u0000unspecified\u0000default.txt\u0000ident\u0000unspecified\u0000",
+        "stderr": ""
+      },
+      {
+        "argv": [
+          "config",
+          "--null",
+          "--includes",
+          "--show-origin",
+          "--show-scope",
+          "--list"
+        ],
+        "cwd": "/tmp/vibe-n2-proof-nlda3vdj/legacy",
+        "exit": 0,
+        "stdout": "global\u0000file:/tmp/vibe-n2-proof-nlda3vdj/home/.gitconfig\u0000include.path\n/tmp/vibe-n2-proof-nlda3vdj/included.config\u0000global\u0000file:/tmp/vibe-n2-proof-nlda3vdj/included.config\u0000core.eol\nlf\u0000global\u0000file:/tmp/vibe-n2-proof-nlda3vdj/included.config\u0000core.autocrlf\nfalse\u0000global\u0000file:/tmp/vibe-n2-proof-nlda3vdj/included.config\u0000core.attributesfile\n/tmp/vibe-n2-proof-nlda3vdj/external-attributes\u0000global\u0000file:/tmp/vibe-n2-proof-nlda3vdj/included.config\u0000url.https://127.0.0.2/rewrite/.insteadof\nhttps://127.0.0.1/original/\u0000local\u0000file:.git/config\u0000core.repositoryformatversion\n0\u0000local\u0000file:.git/config\u0000core.filemode\ntrue\u0000local\u0000file:.git/config\u0000core.bare\nfalse\u0000local\u0000file:.git/config\u0000core.logallrefupdates\ntrue\u0000local\u0000file:.git/config\u0000remote.origin.url\nhttps://127.0.0.1/original/repo.git\u0000local\u0000file:.git/config\u0000remote.origin.fetch\n+refs/heads/*:refs/remotes/origin/*\u0000local\u0000file:.git/config\u0000branch.master.remote\norigin\u0000local\u0000file:.git/config\u0000branch.master.merge\nrefs/heads/master\u0000local\u0000file:.git/config\u0000filter.probe.smudge\n/tmp/vibe-n2-proof-nlda3vdj/smudge.py\u0000local\u0000file:.git/config\u0000filter.probe.required\ntrue\u0000",
+        "stderr": ""
+      },
+      {
+        "argv": [
+          "--version"
+        ],
+        "cwd": "/tmp/vibe-n2-proof-nlda3vdj",
+        "exit": 0,
+        "stdout": "git version 2.53.0\n",
+        "stderr": ""
+      }
+    ],
+    "qualification": "All local; no network or product code. Captured known supported EOL recipe replay; not a complete production capture/publication proof."
+  },
+  "experiment_exits": {
+    "initial_driver": 1,
+    "initial_git_checkout_index": 128,
+    "corrected_driver": 0
+  },
+  "proven": [
+    "selected fixture EOL/attributes checkout byte parity",
+    "actual legacy smudge transforms bytes; stripping differs",
+    "check-attr detects filter without execution or target mutation",
+    "selected Git reports include origins and effective-B distinct from recorded-A"
+  ],
+  "actual_gaps": [
+    "apply manifest publication precedes deferred materialisation refusal",
+    "FileGuard metadata only",
+    "deferred already_placed bypasses later workspace rollback capture",
+    "existing directory undo path based with no owned-after conflict receipt",
+    "warm origin capture intentionally unavailable in N1"
+  ],
+  "units": [
+    {
+      "name": "N2a",
+      "scope": "complete semantic warm/source capture and prepared scratch materialisation with live staged reader; no publication capability yet"
+    },
+    {
+      "name": "N2b",
+      "scope": "native deferred placement inside existing workspace rollback owner before mutations; retention through final lock commit"
+    }
+  ],
+  "preserved": [
+    "HTTP-only/native generic guards until exact admitted methods",
+    "unbound behavior",
+    "selected object/commit identity",
+    "source origin and unrelated warm refs/config",
+    "existing recovery owner; no new transaction engine"
+  ],
+  "required_next_proofs": [
+    "complete config/default attributes capture without guessed system paths",
+    "nonexecuting original-context metadata command profile",
+    "actual stage/publication/rollback integration tests",
+    "guarded undo conflict preserves replacement and backup",
+    "platform and supported builtin transform parity"
+  ],
+  "not_claimed": [
+    "N2 complete",
+    "N3 SSH",
+    "N4 submodules/redirects",
+    "external filter support",
+    "hostile-race CAS or process sandbox"
+  ]
+}

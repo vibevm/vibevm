@@ -45,7 +45,7 @@ pub use embedded_source::{
     lock_embedded_sources_with,
 };
 pub use git_backend::{GitBackend, GitError, ShellGit};
-pub use git_package_registry::{GitPerPackageRegistry, PreparedInPlace};
+pub use git_package_registry::{GitPerPackageRegistry, PackageAcquisition, PreparedInPlace};
 pub use git_registry::{GitMonorepoRegistry, RegistryMeta, default_cache_root};
 pub use index_client::{
     BearerToken, BindingSite, IndexAuth, IndexClient, IndexError, IndexUrlResolution,

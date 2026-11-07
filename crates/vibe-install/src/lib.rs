@@ -135,6 +135,19 @@ pub use visibility_projection::{
 /// }
 /// ```
 pub trait InstallSource {
+    /// One selected acquisition; native in-place objects remain retained until
+    /// checked workspace apply. Legacy/local implementations keep their fetch.
+    fn acquire_for_install(
+        &self,
+        pkgref: &PackageRef,
+        store_root: &Path,
+        expected_hash: Option<&str>,
+        _slot: &Path,
+        progress: &vibe_core::progress::Progress,
+    ) -> Result<vibe_registry::PackageAcquisition, RegistryError> {
+        self.resolve_and_fetch_with_progress(pkgref, store_root, expected_hash, progress)
+            .map(|cached| vibe_registry::PackageAcquisition::Cached(Box::new(cached)))
+    }
     /// Resolve `pkgref` and insert its content into the machine-global
     /// store (`~/.vibe/cache/`, PROP-010 §2.7) under `store_root`.
     /// `expected_hash` (typically the lockfile pin) lets a

@@ -61,8 +61,8 @@ mod lookup;
 mod urls;
 
 pub use auth::inject_token;
-pub use fetch::PreparedInPlace;
 pub(crate) use fetch::verify_store_entry_against_pin;
+pub use fetch::{PackageAcquisition, PreparedInPlace};
 
 /// Per-package git registry — one organization URL, many package repos under it.
 #[cell(seam = "Registry", variant = "git-per-package")]

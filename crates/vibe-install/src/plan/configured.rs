@@ -109,6 +109,22 @@ impl<S: InstallSource + ?Sized> InstallSource for PlanningSource<'_, S> {
         }
         self.source.prepare_in_place(p, slot)
     }
+    fn acquire_for_install(
+        &self,
+        p: &PackageRef,
+        store_root: &Path,
+        expected_hash: Option<&str>,
+        slot: &Path,
+        progress: &vibe_core::progress::Progress,
+    ) -> Result<vibe_registry::PackageAcquisition, RegistryError> {
+        if self.configuration.is_some() {
+            self.resolve_and_fetch_with_progress(p, store_root, expected_hash, progress)
+                .map(|cached| vibe_registry::PackageAcquisition::Cached(Box::new(cached)))
+        } else {
+            self.source
+                .acquire_for_install(p, store_root, expected_hash, slot, progress)
+        }
+    }
     fn materialise_in_place(
         &self,
         p: &PackageRef,

@@ -11,12 +11,17 @@ use vibe_workspace::vibedeps;
 /// get the caller's feature request tailored to what the package
 /// declares; transitives get the default set.
 #[specmark::spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-069#PACKAGE-ADMISSION")]
+#[expect(
+    clippy::too_many_arguments,
+    reason = "the acquisition boundary retains its existing source, solver, feature and progress inputs and adds the exact workspace destination"
+)]
 pub(super) fn fetch_node<S: InstallSource + ?Sized>(
     source: &S,
     node: &ResolvedNode,
     lockfile: &Lockfile,
     store_root: &Path,
     root_features: &FeatureRequest,
+    workspace_root: &Path,
     offline: bool,
     progress: &vibe_core::progress::Progress,
 ) -> Result<Fetched> {
@@ -24,12 +29,19 @@ pub(super) fn fetch_node<S: InstallSource + ?Sized>(
     let expected = lockfile
         .find(&node.group, &node.name)
         .map(|p| p.content_hash.clone());
-    let cached = source.resolve_and_fetch_with_progress(
+    let slot = vibedeps::in_place_slot_abs_path(workspace_root, &node.group, &node.name);
+    let cached = match source.acquire_for_install(
         &pkgref,
         store_root,
         expected.as_deref(),
+        &slot,
         progress,
-    )?;
+    )? {
+        vibe_registry::PackageAcquisition::Cached(cached) => *cached,
+        vibe_registry::PackageAcquisition::InPlace(prepared) => {
+            return fetched_prepared(node, root_features, offline, &slot, prepared);
+        }
+    };
     let configuration = source.configuration_for_node(node)?;
     crate::configuration_admission::admitted_package(
         pkgref.qualified_name(),
@@ -93,6 +105,7 @@ pub(super) fn fetch_or_defer<S: InstallSource + ?Sized>(
             lockfile,
             store_root,
             root_features,
+            workspace_root,
             offline,
             progress,
         ),
@@ -138,9 +151,20 @@ pub(super) fn try_in_place_incremental<S: InstallSource + ?Sized>(
     }
     let pkgref = exact_pinned_pkgref(node);
     let prepared = source.prepare_in_place(&pkgref, &slot)?;
+    fetched_prepared(node, root_features, offline, &slot, prepared).map(Some)
+}
+
+fn fetched_prepared(
+    node: &ResolvedNode,
+    root_features: &FeatureRequest,
+    offline: bool,
+    slot: &Path,
+    prepared: vibe_registry::PreparedInPlace,
+) -> Result<Fetched> {
+    let pkgref = exact_pinned_pkgref(node);
     if prepared.slot() != slot {
         return Err(vibe_registry::RegistryError::MalformedMeta {
-            path: slot,
+            path: slot.to_path_buf(),
             reason: "prepared in-place source belongs to another destination".into(),
         }
         .into());
@@ -165,9 +189,9 @@ pub(super) fn try_in_place_incremental<S: InstallSource + ?Sized>(
             group: node.group.clone(),
             name: node.name.clone(),
             version: node.version.clone(),
-            source_dir: slot.clone(),
+            source_dir: slot.to_path_buf(),
         },
-        cache_dir: slot,
+        cache_dir: slot.to_path_buf(),
         manifest,
         // Prospective identity is retained with its preparation; this path is
         // not consumed as materialized content until the bound apply succeeds.
@@ -184,7 +208,7 @@ pub(super) fn try_in_place_incremental<S: InstallSource + ?Sized>(
         is_local: false,
         via_redirect: None,
     };
-    Ok(Some(Fetched {
+    Ok(Fetched {
         cached,
         feature_expansion,
         meta: NodeInstallMeta {
@@ -194,7 +218,7 @@ pub(super) fn try_in_place_incremental<S: InstallSource + ?Sized>(
         embedded_sources,
         in_place: Some(prepared),
         configuration: None,
-    }))
+    })
 }
 
 /// The PROP-003 §2.6.1 conditional-dependency loop. Each pass: build

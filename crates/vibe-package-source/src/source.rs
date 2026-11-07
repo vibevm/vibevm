@@ -80,6 +80,29 @@ pub enum InstallResolver {
 }
 
 impl InstallSource for InstallResolver {
+    fn acquire_for_install(
+        &self,
+        pkgref: &PackageRef,
+        store_root: &Path,
+        expected_hash: Option<&str>,
+        slot: &Path,
+        progress: &vibe_core::progress::Progress,
+    ) -> Result<vibe_registry::PackageAcquisition, RegistryError> {
+        match self {
+            InstallResolver::Multi(registry, _) => {
+                let selected = registry.resolve_for_with_progress(
+                    pkgref,
+                    ResolutionPurpose::DownloadSource,
+                    progress,
+                )?;
+                registry.fetch_for_install(&selected, store_root, expected_hash, slot, progress)
+            }
+            // Embedded/local precedence remains its single incumbent algorithm.
+            _ => self
+                .resolve_and_fetch_with_progress(pkgref, store_root, expected_hash, progress)
+                .map(|cached| vibe_registry::PackageAcquisition::Cached(Box::new(cached))),
+        }
+    }
     /// Resolve `pkgref` and insert its content into the machine-global
     /// store under `store_root` (PROP-010 §2.7). `expected_hash`
     /// (typically the lockfile pin for `(pkgref.kind, pkgref.name,

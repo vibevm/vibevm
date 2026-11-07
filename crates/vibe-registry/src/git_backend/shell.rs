@@ -79,34 +79,8 @@ impl Default for ShellGit {
     }
 }
 
-/// Where the HTTPS read fast path's pauses go.
-///
-/// A named type rather than a bare closure field for two reasons: the
-/// backend keeps its derived [`Debug`] (a closure has nothing to print),
-/// and `anonymized_for_public` can hand its copy the very same waiting
-/// behaviour instead of quietly reverting to real time.
-#[derive(Clone)]
-pub(super) struct Sleeper(Arc<dyn Fn(Duration) + Send + Sync>);
-
-impl Sleeper {
-    /// Wait `how_long` — really, or however the test that installed this
-    /// one chooses to.
-    pub(super) fn sleep(&self, how_long: Duration) {
-        (self.0)(how_long)
-    }
-}
-
-impl Default for Sleeper {
-    fn default() -> Self {
-        Sleeper(Arc::new(std::thread::sleep))
-    }
-}
-
-impl std::fmt::Debug for Sleeper {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        f.write_str("Sleeper(..)")
-    }
-}
+mod sleeper;
+pub(super) use sleeper::Sleeper;
 
 impl ShellGit {
     // Keep the existing environment read at its recorded composition root.
@@ -222,6 +196,42 @@ impl GitBackend for ShellGit {
 
     fn preflight_materialisation(&self) -> Result<(), GitError> {
         self.admit_native()
+    }
+
+    fn stage_native_materialisation(
+        &self,
+        objects: &Path,
+        revision: &GitPreparedRevision,
+    ) -> Result<Option<native_admission::NativeMaterialisation>, GitError> {
+        self.native
+            .as_ref()
+            .map(|native| native.stage(objects, revision))
+            .transpose()
+    }
+    fn prepare_native_source(
+        &self,
+        url: &str,
+        reference: &str,
+        reuse: Option<&Path>,
+        objects: &Path,
+    ) -> Result<Option<native_admission::NativeSource>, GitError> {
+        self.native
+            .as_ref()
+            .map(|native| {
+                native.acquire(native_admission::Preparation {
+                    reporter: self,
+                    address: url,
+                    reference,
+                    reuse,
+                    objects,
+                    destination: objects,
+                    anonymous: self.force_anonymous,
+                })
+            })
+            .transpose()
+    }
+    fn uses_native_materialisation(&self) -> bool {
+        self.native.is_some()
     }
 
     fn origin_url(&self, dest: &Path) -> Result<String, GitError> {

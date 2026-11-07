@@ -371,19 +371,27 @@ pub fn ensure_gitignored(workspace_root: &Path, entry: &str) -> Result<(), Works
         Err(e) if e.kind() == std::io::ErrorKind::NotFound => String::new(),
         Err(e) => return Err(io_err(&path, e)),
     };
+    let Some(out) = render_gitignore_entry(&existing, entry) else {
+        return Ok(());
+    };
+    fs::write(&path, out).map_err(|e| io_err(&path, e))
+}
+
+/// The exact existing append rule, shared with checked native publication.
+pub(crate) fn render_gitignore_entry(existing: &str, entry: &str) -> Option<String> {
     let want = entry.trim_end_matches('/');
     if existing
         .lines()
         .any(|l| l.trim() == want || l.trim() == format!("{want}/"))
     {
-        return Ok(());
+        return None;
     }
-    let mut out = existing;
+    let mut out = existing.to_owned();
     if !out.is_empty() && !out.ends_with('\n') {
         out.push('\n');
     }
     out.push_str(&format!("{entry}/\n"));
-    fs::write(&path, out).map_err(|e| io_err(&path, e))
+    Some(out)
 }
 
 /// Move `src` to `dest`: a fast `rename` when they share a volume, else a

@@ -43,6 +43,7 @@ pub use source_admission::{validate_declared_source_operation, validate_source_a
 mod prune;
 use prune::prune_stale_slots;
 
+mod checked_placement;
 mod placement;
 use placement::{copy_mode_for, is_in_place, required_source_hash};
 
@@ -66,6 +67,7 @@ pub(crate) use bootgen::node_own_boot;
 use bootgen::validate_redirect_blocks;
 /// The boot-graph integrity check (PROP-038 §3) — public API for `vibe check`.
 pub use model::{InstallOutcome, PostInstallPlan, ResolvedDep, SlotCheck, SlotVerifier};
+pub use placement::PreparedSlotPlacement;
 
 pub use hook_output::{
     apply_resolution_with_spec_format_and_hook_output,
@@ -73,6 +75,8 @@ pub use hook_output::{
     apply_resolution_with_spec_format_and_slot_lifecycle_traced,
     apply_resolution_with_spec_format_and_slot_lifecycle_traced_native,
     apply_resolution_with_spec_format_and_slot_lifecycle_traced_native_progress,
+    apply_resolution_with_spec_format_and_slot_lifecycle_traced_native_progress_placements,
+    apply_resolution_with_spec_format_and_slot_lifecycle_traced_placements,
 };
 use hooks_run::SubtreeOutcome;
 pub use hooks_run::{
@@ -253,7 +257,23 @@ fn materialise_resolution_with_spec_format(
     resolution: &[ResolvedDep],
     options: MaterialiseOptions<'_>,
 ) -> Result<Materialised, WorkspaceError> {
+    materialise_resolution_with_prepared(workspace_root, resolution, options, &[])
+}
+
+fn materialise_resolution_with_prepared(
+    workspace_root: &Path,
+    resolution: &[ResolvedDep],
+    options: MaterialiseOptions<'_>,
+    prepared: &[&dyn PreparedSlotPlacement],
+) -> Result<Materialised, WorkspaceError> {
+    if !prepared.is_empty() && !cfg!(unix) {
+        return Err(WorkspaceError::SpecMaterialization {
+            path: workspace_root.into(),
+            reason: "checked native placement requires supported Unix file identities".into(),
+        });
+    }
     source_admission::validate_source_resolution(workspace_root, resolution, options.spec_format)?;
+    placement::validate_prepared(workspace_root, resolution, prepared)?;
     let MaterialiseOptions {
         slot_integrity,
         spec_format,
@@ -267,7 +287,14 @@ fn materialise_resolution_with_spec_format(
     let mut integrity_warnings = Vec::new();
     let mut post_install_deps = Vec::new();
     let mut hook_reports = Vec::new();
-    let mut pre_install = PreInstallPlan::new(&lifecycle, workspace_root);
+    let mut pre_install = PreInstallPlan::new_checked(
+        &lifecycle,
+        workspace_root,
+        prepared
+            .iter()
+            .map(|p| p.destination().to_owned())
+            .collect(),
+    );
     let task = progress.task("Materialising dependency slots");
     task.set_progress(0, Some(resolution.len() as u64), "packages");
     for dep in resolution {
@@ -289,6 +316,41 @@ fn materialise_resolution_with_spec_format(
             }
             let rel = vibedeps::in_place_slot_rel_path(&dep.group, &dep.name);
             let slot_abs = vibedeps::in_place_slot_abs_path(workspace_root, &dep.group, &dep.name);
+            let checked = prepared
+                .iter()
+                .find(|p| p.coordinate() == (&dep.group, dep.name.as_str(), &dep.version));
+            if let Some(checked) = checked {
+                let undo =
+                    rollback
+                        .as_deref_mut()
+                        .ok_or_else(|| WorkspaceError::SpecMaterialization {
+                            path: slot_abs.clone(),
+                            reason: "prepared native placement requires an undo owner".into(),
+                        })?;
+                checked
+                    .validate()
+                    .map_err(|reason| WorkspaceError::SpecMaterialization {
+                        path: slot_abs.clone(),
+                        reason,
+                    })?;
+                if !checked.changed() {
+                    undo.ignore_checked(workspace_root, &rel)?;
+                    skipped.push(rel);
+                    package_task.skip("in-place source unchanged");
+                    continue;
+                }
+                undo.place_checked(&slot_abs, checked.staged_path(), || checked.validate())?;
+                undo.ignore_checked(workspace_root, &rel)?;
+                if checked.changed() {
+                    post_install_deps.push(dep.clone());
+                    pre_install.run_or_defer(dep, &mut hook_reports)?;
+                    materialised.push(rel);
+                } else {
+                    skipped.push(rel);
+                }
+                package_task.finish();
+                continue;
+            }
             // The install layer may have already placed the slot directly — an
             // incremental in-place update (PROP-022 §2.4), `git fetch`-ed onto
             // the existing `.git` rather than re-cloned — signalled by the
@@ -312,7 +374,9 @@ fn materialise_resolution_with_spec_format(
                 required_source_hash(dep)?;
                 if let Some(rollback) = rollback.as_deref_mut() {
                     rollback.before_replace(&slot_abs)?;
-                    rollback.before_rewrite(&workspace_root.join(".gitignore"))?;
+                    if prepared.is_empty() {
+                        rollback.before_rewrite(&workspace_root.join(".gitignore"))?;
+                    }
                 }
                 vibedeps::materialise_in_place(
                     workspace_root,
@@ -320,7 +384,13 @@ fn materialise_resolution_with_spec_format(
                     &dep.name,
                     &dep.content_dir,
                 )?;
-                vibedeps::ensure_gitignored(workspace_root, &rel)?;
+                if !prepared.is_empty() {
+                    if let Some(undo) = rollback.as_deref_mut() {
+                        undo.ignore_checked(workspace_root, &rel)?;
+                    }
+                } else {
+                    vibedeps::ensure_gitignored(workspace_root, &rel)?;
+                }
             }
             let changed = if already_placed {
                 dep.in_place_changed.unwrap_or(true)

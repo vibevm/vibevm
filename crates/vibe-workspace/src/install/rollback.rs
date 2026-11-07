@@ -41,6 +41,12 @@ use crate::WorkspaceError;
 
 #[derive(Debug)]
 enum Step {
+    CheckedPlacement {
+        path: PathBuf,
+        stashed: Option<PathBuf>,
+        after: super::checked_placement::Tree,
+    },
+    CheckedIgnore(super::checked_placement::Ignore),
     Created(PathBuf),
     MovedAside {
         path: PathBuf,
@@ -61,6 +67,78 @@ pub(crate) struct InstallRollback {
 }
 
 impl InstallRollback {
+    /// Copy into this owner's same-volume stash before moving aside a caller
+    /// slot. The source may live on another filesystem; only owned paths rename.
+    #[specmark::spec(
+        implements = "spec://org.vibevm.core/vibevm/common/PROP-073#NATIVE-MATERIALISATION-LAW"
+    )]
+    pub(crate) fn place_checked(
+        &mut self,
+        slot: &Path,
+        source: &Path,
+        validate: impl FnOnce() -> Result<(), String>,
+    ) -> Result<(), WorkspaceError> {
+        let expected = super::checked_placement::Tree::read(source)?;
+        let candidate = self.stash_entry()?.with_extension("candidate");
+        copy_tree(source, &candidate)?;
+        let after = super::checked_placement::Tree::read(&candidate)?;
+        if !expected.same_content(&after) {
+            return Err(WorkspaceError::SpecMaterialization {
+                path: slot.into(),
+                reason: "prepared copy differs from retained source".into(),
+            });
+        }
+        if let Some(parent) = slot.parent() {
+            fs::create_dir_all(parent).map_err(|e| io_err(parent, e))?;
+        }
+        validate().map_err(|reason| WorkspaceError::SpecMaterialization {
+            path: slot.into(),
+            reason,
+        })?;
+        let stashed = match fs::symlink_metadata(slot) {
+            Ok(_) => {
+                let stash = self.stash_entry()?;
+                fs::rename(slot, &stash).map_err(|e| io_err(slot, e))?;
+                Some(stash)
+            }
+            Err(e) if e.kind() == std::io::ErrorKind::NotFound => None,
+            Err(e) => return Err(io_err(slot, e)),
+        };
+        self.steps.push(Step::CheckedPlacement {
+            path: slot.into(),
+            stashed,
+            after,
+        });
+        fs::rename(&candidate, slot).map_err(|e| io_err(slot, e))
+    }
+    pub(crate) fn ignore_checked(
+        &mut self,
+        root: &Path,
+        entry: &str,
+    ) -> Result<(), WorkspaceError> {
+        if let Some(ignore) = self.steps.iter_mut().find_map(|step| match step {
+            Step::CheckedIgnore(ignore) => Some(ignore),
+            _ => None,
+        }) {
+            return ignore
+                .publish(entry)
+                .map_err(|reason| WorkspaceError::SpecMaterialization {
+                    path: root.join(".gitignore"),
+                    reason,
+                });
+        }
+        let mut ignore = super::checked_placement::Ignore::capture(root)?;
+        if let Some(bytes) = ignore.before_bytes() {
+            let stash = self.stash_entry()?.with_extension("gitignore");
+            fs::write(&stash, bytes).map_err(|e| io_err(&stash, e))?;
+        }
+        let result = ignore.publish(entry);
+        self.steps.push(Step::CheckedIgnore(ignore));
+        result.map_err(|reason| WorkspaceError::SpecMaterialization {
+            path: root.join(".gitignore"),
+            reason,
+        })
+    }
     pub(crate) fn new(workspace_root: &Path) -> Self {
         let deps = workspace_root.join(vibe_core::layout::current_vibedeps_root());
         let stash_parent = deps
@@ -184,12 +262,46 @@ impl InstallRollback {
                 observer.rolled_back(slot);
             }
         }
-        first_error.map_or(Ok(()), Err)
+        if let Some(mut error) = first_error {
+            if let Some(stash) = self.stash.take() {
+                let path = stash.keep();
+                error.push_str(&format!("; recovery backup retained at {}", path.display()));
+            }
+            Err(error)
+        } else {
+            Ok(())
+        }
     }
 }
 
 fn undo_step(step: Step) -> Result<(), String> {
     match step {
+        Step::CheckedIgnore(ignore) => ignore.undo(),
+        Step::CheckedPlacement {
+            path,
+            stashed,
+            after,
+        } => {
+            match fs::symlink_metadata(&path) {
+                Ok(_) => {
+                    if super::checked_placement::Tree::read(&path).map_err(|e| e.to_string())?
+                        != after
+                    {
+                        return Err(format!(
+                            "{}: rollback conflict; changed replacement preserved",
+                            path.display()
+                        ));
+                    }
+                    remove_any(&path)?;
+                }
+                Err(e) if e.kind() == std::io::ErrorKind::NotFound => {}
+                Err(e) => return Err(describe(&path, e)),
+            }
+            if let Some(stashed) = stashed {
+                fs::rename(stashed, &path).map_err(|e| describe(&path, e))?;
+            }
+            Ok(())
+        }
         Step::Created(path) => {
             remove_any(&path)?;
             // A `<kind>-<name>` directory this apply created for the slot is
@@ -249,7 +361,13 @@ fn copy_tree(from: &Path, to: &Path) -> Result<(), WorkspaceError> {
             }
         }
     }
-    Ok(())
+    fs::set_permissions(
+        to,
+        fs::metadata(from)
+            .map_err(|e| io_err(from, e))?
+            .permissions(),
+    )
+    .map_err(|e| io_err(to, e))
 }
 
 #[cfg(unix)]

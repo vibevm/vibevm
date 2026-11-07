@@ -550,3 +550,6 @@ fn denied_mirror_stays_typed_after_primary_absence_and_stops_the_next_route() {
     assert!(requests.contains("/missing/"));
     assert!(!requests.contains("/public/"));
 }
+
+#[path = "materialisation_tests.rs"]
+mod materialisation_tests;

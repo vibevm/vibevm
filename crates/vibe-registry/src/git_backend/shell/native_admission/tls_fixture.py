@@ -12,6 +12,15 @@ work=root/'work';git(['init',str(work)])
 # Exceed Git's small-pack threshold so real receiving-byte progress is emitted.
 for i in range(130):(work/('transfer-'+str(i))).write_bytes(random.Random(i).randbytes(2048))
 (work/'vibe.toml').write_text("[package]\ngroup='org.fixture'\nname='demo'\nkind='feat'\nversion='1.0.0'\n")
+if os.environ.get('VIBE_N2_INSTALL_FIXTURE') in ('1','2','4'):
+ (work/'vibe.toml').write_text("[package]\ngroup='org.vibevm'\nname='giant'\nkind='feat'\nversion='1.0.0'\nmaterialization='"+('copy' if os.environ['VIBE_N2_INSTALL_FIXTURE']=='4' else 'in-place')+"'\n")
+ (work/'.gitattributes').write_text('payload.txt filter=probe\n' if os.environ['VIBE_N2_INSTALL_FIXTURE']=='1' else 'payload.txt text eol=crlf\n')
+ with (work/'.gitattributes').open('a') as f:f.write('binary.dat -text\nnested/*.txt text eol=crlf\n')
+ (work/'binary.dat').write_bytes(b'\0A\r\nB\n');(work/'nested').mkdir()
+ (work/'nested/.gitattributes').write_text('lf.txt text eol=lf\n')
+ (work/'nested/lf.txt').write_bytes(b'nested\n');(work/'nested/crlf.txt').write_bytes(b'nested\n')
+ (work/'executable.sh').write_text('#!/bin/sh\nexit 0\n');(work/'executable.sh').chmod(0o755)
+ if os.environ['VIBE_N2_INSTALL_FIXTURE']!='4':(work/'payload-link').symlink_to('payload.txt')
 git(['add','.'],work);git(['-c','user.name=Fixture','-c','user.email=f@example.invalid','commit','-m','fixture'],work);git(['tag','v1.0.0'],work)
 head=git(['rev-parse','HEAD'],work)
 web=root/'web';web.mkdir()
@@ -47,6 +56,8 @@ class Handler(http.server.SimpleHTTPRequestHandler):
   with (root/(self.server.label+'.log')).open('a') as f:f.write(self.path+'\n')
   if self.path.startswith('/smart/'):return self.smart()
   if self.path.startswith('/public/org.fixture.demo.git'):self.path=self.path.replace('/public/org.fixture.demo.git','/repo.git',1)
+  if self.path.startswith('/public/org.vibevm.giant.git'):self.path=self.path.replace('/public/org.vibevm.giant.git','/repo.git',1)
+  if self.path.startswith('/public/org.vibevm.second.git'):self.path=self.path.replace('/public/org.vibevm.second.git','/second.git',1)
   if self.server.label=='a' and self.path.startswith('/alternate.git/objects/'):
    if self.path=='/alternate.git/objects/info/http-alternates':
     data=(bu+'/repo.git/objects\n').encode();self.send_response(200);self.send_header('Content-Length',str(len(data)));self.end_headers();self.wfile.write(data);return
@@ -68,7 +79,13 @@ git(['add','.gitmodules'],work);git(['update-index','--add','--cacheinfo','16000
 git(['reset','--hard',head],work)
 (work/'payload.txt').write_text('later fixture\n');git(['add','payload.txt'],work);git(['-c','user.name=Fixture','-c','user.email=f@example.invalid','commit','-m','later HEAD'],work);current_head=git(['rev-parse','HEAD'],work)
 git(['clone','--bare',str(work),str(web/'repo.git')]);git(['update-server-info'],web/'repo.git')
-print(json.dumps({'root':str(root),'a':au,'b':bu,'ca':str(cert),'head':head,'current_head':current_head,'work':str(work)}),flush=True)
+work2=None
+if os.environ.get('VIBE_N2_INSTALL_FIXTURE') in ('1','2','4'):
+ work2=root/'second-work';git(['clone',str(work),str(work2)]);git(['reset','--hard',head],work2)
+ (work2/'vibe.toml').write_text((work2/'vibe.toml').read_text().replace("name='giant'","name='second'"))
+ git(['add','vibe.toml'],work2);git(['-c','user.name=Fixture','-c','user.email=f@example.invalid','commit','-m','second fixture'],work2);git(['tag','-f','v1.0.0'],work2)
+ git(['clone','--bare',str(work2),str(web/'second.git')]);git(['update-server-info'],web/'second.git')
+print(json.dumps({'root':str(root),'a':au,'b':bu,'ca':str(cert),'head':head,'current_head':current_head,'work':str(work),'second_work':str(work2) if work2 else None}),flush=True)
 try:sys.stdin.read()
 finally:
  for s in servers:s.shutdown();s.server_close()
