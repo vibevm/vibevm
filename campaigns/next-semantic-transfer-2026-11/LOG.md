@@ -2192,3 +2192,49 @@ Boot-check implementation now passes real CLI6 (fresh formats, corrupt/missing I
 ### 2026-11-07 — bound boot graph check accepted
 
 Product commit 04e7ccad8ead2002fd49d936e6917b8631e7006a contains10root hash-verified paths. Actual silent-clean regression is closed; accepted behavior/gates/limits are research/m06-a4-boot-check-acceptance.md/json and FMT035. Map/check preserves9160prior units and44warning meanings; existing legacy verifier pin warning moved with its module. No orphan/unresolvedhost, wire-diff passes, no schema/codegen activation. Earlier zero-test filter is excluded from proof. FullA4 stayspartial and12/31/31/39 unchanged; next facts command report/adoption adapter must preserve post-adopt rederive and prewrite checks.
+
+### 2026-11-07 — facts command adapter contract before implementation
+
+Root verified13current source hashes in the facts-command design and approved the bounded prospective-overlay/preparation seam. SOURCE-FACT-COMMANDS reqr1/FMT036 now govern next work. Report/adopt must consume accepted installed observation without Mixed/exact-file-only shortcuts, and transformed adopt must still perform real rederive. Known source/store/config/overlay failures must be preflighted before registry upserts; no temporary-registry or materialization-as-preflight shortcut. Hash meanings and late failure limits remain explicit. Full A4 still has other consumers and no task-count increment.
+
+### 2026-11-07 — actual facts report/adopt RED→GREEN
+
+Root inspected unchanged-product RED: successful Mixed install followed by facts report refusal for directory census,1FAIL in cli_facts_selected. Initial fixture failure before install used invalid void/sibling markup and was corrected; it was not the product regression. The first implemented CLI case now1PASS across Mixed/Markdown/Xml, native arbitrary suffix/directory selection and inert nonUTF8 raw same-stem resource. Expanded hash/recipe/overlay/derived consistency, prefix/keep/repeat and pre-upsert failure matrices are running; no acceptance yet.
+
+Report is an existing text-only surface, not a JSON schema. Unknown authored totals must be '?' rather than a partial/zero total, and invalid materialized sources must not be labeled missing slots. Retained rederive and preflight are under independent read-only review. Root saved accepted9162unit/44warning map baseline; fullA4/counts unchanged.
+
+### 2026-11-07 — FC-OVERLAY-ROOT-01: bind preflight to actual overlay owner
+
+Independent source review found member adoption preflight projected member registry additions while real rederive consumed workspace-root registry. Root inspected CLI root resolution and materializer load_overlay and rejected a final transformed-member refusal or an implicit change to shared-slot ownership. Preserve incumbent workspace overlay owner: root adoption uses prospective root additions; member adoption retains/checks the actual workspace overlay and writes member adoption records locally. Execute the same real point rederive; do not claim member-specific materialized views. A real divergent-root/member-status test must prove root registry unchanged and output/overlay_hash tied to actual consumed root input. Provisional refusal is being removed after coherent path verification.
+
+Other current gates reported: new facts CLI4 and existing facts7/declared13 passed, selected admission5 and pure overlay/preflight tests passed. One Conform run overlapped a Cargo build; worker explicitly excluded that receipt and is rerunning sequentially. No full acceptance or count change; root keeps actual prewrite and late-failure boundaries separate.
+
+### 2026-11-07 — member overlay owner preserved in real CLI
+
+Root inspected /tmp/nst-a4-facts-selected-member.log5PASS, including divergent root/member status fixture. Provisional transformed-member refusal was removed: selected member registry additions stay local, root registry bytes remain unchanged, and shared output/overlay_hash use the workspace registry actually consumed by retained execution. The consumed optional workspace overlay bytes are held/rechecked; root adoption still projects its own prospective additions. This closes the mismatched-preflight input design, subject to final independent review/source seal.
+
+Current runtime reports facts7, declared13, selected5 and retained admission5 passed, plus pure overlay/preflight and workspace-overlay drift units. Strict Clippy passed. Report causes are now bounded to512characters/control characters flattened into one line; a focused CLI rerun is underway before final sequential Conform/hash handback. No registry/hash/schema change or new per-member materialized view is claimed.
+
+### 2026-11-07 — facts final review and report applicability discriminator
+
+Independent refreshed review closes FC-OVERLAY-ROOT-01 against frozen10source hashes and actual member5PASS: preflight/execution workspace overlay ownership and local member registry behavior agree. Final writer reports CLI7+13+5, selected admission5, retained overlay1, prospective overlay1 and pure preflight1 plus strict Clippy/sequential Conform green. Root whole-workspace fmt check is running separately after lease return.
+
+Before map/commit, root source review identified an untested report-entry distinction: installed_packages uses is_file false as absent lock, and materialised_slot None precedes the bound read. Requested actual report controls for present nonregular/dangling lock/slot versus true absence. They must not manufacture 'no materialised slot' when selected metadata is present but invalid. This is a focused promised-report correctness audit; no cleanup or broader feature expansion is authorized, and no runtime defect is claimed before the discriminator.
+
+### 2026-11-07 — final discriminator dispatch correction
+
+Root checked live agent inventory and found facts worker already completed. Earlier send_message requests for lock/slot report applicability did not restart it; I had incorrectly treated that follow-up as running. Root now used followup_task explicitly, with sole Cargo/Conform lease and the same narrow facts perimeter. No new test receipt is claimed for the idle interval, no prior green evidence is discarded, and no duplicate worker/process was launched.
+
+### 2026-11-07 — report applicability concern disproved by actual existing path
+
+The conditional lock/slot discriminator ran on unchanged production and passed6selected tests (five new cases plus the existing formats report/adopt case). Despite the historical filename /tmp/nst-a4-facts-applicability-red.log, its exit is0 and it is NOT a RED. Existing call path rejects present nonregular/dangling lock without missing-slot prose; existing slot owner distinguishes present invalid leaf/link from genuine absence. My suspicion came from reading an isolated helper without completing the call-chain audit; no new production validation is justified. Retain the useful regression tests, identify actual refusal owner in final report, rerun affected gates and refresh the superseded test-file hash.
+
+### 2026-11-07 — report applicability root/member distinction and real fix
+
+The earlier6GREEN only established current-root behavior: composition/remap::project_required already rejects nonregular root lock via symlink_metadata. It did not prove workspace-member behavior. Worker added member-cwd cases and /tmp/nst-a4-facts-applicability-member-red.log2FAIL confirms actual shared-helper gap: malformed workspace lock became empty installed set and missing-slot prose because remap checked member cwd. Root approved a narrow installed_packages change to optional held no-follow workspace lock reading, preserving genuine absence; existing slot classifier needs no rewrite.
+
+Bounded rerun reported facts7 (including valid clean), declared13 and selected12 PASS. Root/member invalid lock cases and present invalid slot cases are now distinguished from absence. This refines—not erases—the earlier root-only non-reproduction. Final affected CLI static/Conform and refreshed source seal follow; no full acceptance/count change yet.
+
+### 2026-11-07 — selected facts report/adopt accepted
+
+Product commit 728d41319b04b2e527058ed29e77e4d88209c566 contains12root hash-verified paths. Final runtime7+13+13 plus retained/pure owner tests, strict static/sequential Conform and wholefmt pass. Map/check retains9162prior units/44warning meanings with zero orphan/unresolvedhost; wire-diff unchanged. Review and acceptance are research/m06-a4-facts-command-acceptance.md/json. Overlay owner and root/member lock distinctions are explicit; no schema or fulltransaction claim. FullA4 remains partial and counts12/31/31/39 unchanged. Next captured docs point reads, then page/borrowed census and remaining adapters.

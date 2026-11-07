@@ -1,0 +1,58 @@
+{
+  "task": "M-06-A.4 selected package facts report/adopt",
+  "accepted": true,
+  "full_original_a4": false,
+  "commit": "728d41319b04b2e527058ed29e77e4d88209c566",
+  "committed_paths_verified": 12,
+  "contract": "SOURCE-FACT-COMMANDS r1",
+  "behavior": [
+    "Versioned declared Mixed/Markdown/Xml and record-backed directory observations use independent lock identity/format and existing installed bindings",
+    "Report read-only: unavailable denominator ?, bounded cause, genuine absence distinguished from invalid root/member lock/slot",
+    "Marked/prefix/status/void/existing-indeterminate/repeat adoption preserved",
+    "Exact offline source/config/destination/prospective overlay conversion preflight before upserts; no temporary registry/materialization-as-preflight",
+    "Actual transformed rederive executes; original package/output/registry-overlay/derived hashes remain distinct",
+    "Workspace-root registry owns shared slot overlay; member registry changes stay local, preflight consumes same root input as execute",
+    "Held source/lock/record/config/destination/overlay rechecks retained; late failure explicitly may follow prior persisted additions"
+  ],
+  "gates": {
+    "actual_cli_facts": 7,
+    "actual_cli_declared": 13,
+    "actual_cli_selected_final": 13,
+    "retained_admission": 5,
+    "retained_workspace_overlay": 1,
+    "prospective_overlay": 1,
+    "pure_derivation_preflight": 1,
+    "counts_overlap": true,
+    "static": "strict all-target Clippy3crates plus final CLI rerun; sequential3Conform scopes plus finalCLI0new; wholefmt/diff pass",
+    "specmap": {
+      "units": 9164,
+      "items": 5543,
+      "edges": 4692,
+      "orphans": 0,
+      "unresolved_host": 0,
+      "warnings": 44,
+      "prior_9162_units_retained": true,
+      "warning_meanings_unchanged": true
+    },
+    "wire_diff": "pass; no watched schema/formats shifted",
+    "codegen": "not applicable; no codec/schema registration change"
+  },
+  "corrections": [
+    "Actual directory report RED after successful install -> supported formats GREEN",
+    "Unknown stage negative was invalid test premise; actual invalidUTF8 used",
+    "FC-OVERLAY-ROOT-01 member/root preflight mismatch fixed without new member refusal or overlay ownership change",
+    "Root-cwd applicability6 passed current candidate; actual member2RED fixed with nofollow workspace lock read; final valid clean/no-lock behavior preserved",
+    "Earlier overlapping Conform receipt excluded, later sequential passes retained",
+    "Root sent one followup to completed agent without waking it; actual work resumed through followup_task and no idle receipt claimed"
+  ],
+  "compatibility": [
+    "New Rust prospective-overlay/pure-preflight helpers; no registry fields/hash recipe/manifest/global-install dialect change",
+    "Report is text-only; aggregate authored ? if any unavailable, cause singleline <=512 chars",
+    "Declared in-place remains explicit provenance limitation, not fabricated binding",
+    "Workspace member does not get a new materialized view; shared slot uses workspace overlay"
+  ],
+  "remaining": [
+    "Docs/citations/agent/page census, read-only adapters/skills/publish/pattern and complete A4 mixed matrix/tutorial closure",
+    "Full original task and campaign acceptance"
+  ]
+}

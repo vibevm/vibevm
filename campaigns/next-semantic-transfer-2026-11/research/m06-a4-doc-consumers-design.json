@@ -1,0 +1,32 @@
+{
+  "task": "A4 docs/citations/agent captured-source design",
+  "mode": "read-only root decision candidate",
+  "observed_at": "2026-11-07T04:27:02.967319+00:00",
+  "first_slice": "SpecSources captured point document→citations resolve and agent read_page; actual CLI format owner",
+  "concrete_gaps": [
+    "lock selection drops hash/materialization and errors",
+    "SpecSources has no independently supplied input format",
+    "locate returns guarded path then callers reread by suffix",
+    "agent synthesizes .xml relative path",
+    "pages/borrowed explicit guards remain subsequent census work"
+  ],
+  "source_sha256": {
+    "crates/vibe-doc/src/citations/sources.rs": "9fdd2b79b534c72081b7a3d126e6731561378193a95e13ff9fcea95953545dbc",
+    "crates/vibe-doc/src/citations.rs": "d30445ffd20ae5aaa6b024b6b30dbc4cd9186a2d28124d17da917bd1f366b220",
+    "crates/vibe-doc/src/citations/anchor.rs": "e12f9958b151af23ec7579ec72092547a3607a7fd218ab31531c25e13361e736",
+    "crates/vibe-doc/src/agent.rs": "7861d33dce5404d6eba386deed6b15e1cadab0827d3848ad7e920a3a14de1f27",
+    "crates/vibe-doc/src/pages.rs": "2b96acda8d560116ea1dbebb30e32ae754c2605369c945bc57abe6e19322fc1a",
+    "crates/vibe-doc/src/translations/borrowed.rs": "d3d8fc7eb023c50a880fd59b9ef829b5742b84c513069917c044a64fa7958025",
+    "crates/vibe-doc/src/build.rs": "8bb7e1e56ab6f9cf73c15721a9d74d8cae19dda2d2b2a434340202b92d33fc43",
+    "crates/vibe-doc/Cargo.toml": "571c80719971786d1cb577782cc4fc239a658008d3d34db9d1e6ccacb6a8aef4",
+    "crates/vibe-cli/src/commands/doc/env.rs": "c060a65f8ced073c6a949301f2f0252ca9fda8c0e5c6b1997a59c9dbc9a3db2b",
+    "crates/vibe-cli/src/commands/doc.rs": "1c923218e52608f097200fa5643922d0a106656d80d7a7703d41ef22cbd75f0c",
+    "crates/vibe-cli/src/cli/doc.rs": "4e1b2b8ff05295c8585f2103d2130a27906ef29c2e8719f98f21c110f04a5540",
+    "crates/vibe-doc-server/src/lib.rs": "5723298c0be4edb1ef18ea4f110fc94a4e318d35375a67ad06bdee14b0b9f978"
+  },
+  "runtime_tests_run": false,
+  "full_a4_acceptance": false,
+  "report_sha256": "3d98f94803fdfc6a2603ea0f4ba0bba6673418f0923ef4f9de43d9a3c0267e8e",
+  "worker_report_sha256": "dc965f37ecf7c285d07b2a1e249ad6dfb64cf5ed00560ca9dbc5f76b316e61fc",
+  "root_approved": true
+}

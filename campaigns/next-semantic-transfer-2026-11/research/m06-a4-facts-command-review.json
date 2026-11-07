@@ -1,0 +1,43 @@
+{
+  "task": "A4 facts command prewrite review",
+  "observed_at": "2026-11-07T04:21:02.217344+00:00",
+  "status": "FC-OVERLAY-ROOT-01 closed; no remaining concrete blocking defect found",
+  "findings": [
+    {
+      "id": "FC-OVERLAY-ROOT-01",
+      "state": "resolved with root-approved existing workspace overlay ownership",
+      "issue": "prospective selected member registry overlay differs from workspace-root overlay consumed by actual materializer",
+      "discriminator": "actual transformed shared dependency with member cwd adoption, distinct member/root status, verify record.overlay_hash/output owner or prewrite refusal",
+      "resolution": "root adoption prospective root overlay; member adoption retained current root overlay; actual execution same workspace owner",
+      "runtime_receipt": "/tmp/nst-a4-facts-final-selected.log: member_adoption_preserves_workspace_overlay_owner PASS"
+    }
+  ],
+  "runtime_tests_run": false,
+  "full_a4_acceptance": false,
+  "source_sha256": {
+    "crates/vibe-cli/src/commands/facts.rs": "400966b8d1de0180c1b6edaefd8bce23dfc612611f50d443339a83e96d5a0c26",
+    "crates/vibe-cli/src/commands/facts/selected.rs": "d2440b873e93a7e8e4817a91123b153858fec389518dc147b3f9ff22d5eab916",
+    "crates/vibe-cli/src/commands/facts/selected/tests.rs": "eedc6ce55a4a0ebdb13492ca6f4881e54ff6713f9c5f5ed7816ff0ba7066fbd7",
+    "crates/vibe-cli/src/commands/reinstall.rs": "9b1814008a5796d39b3f5f0e5120026d9d20b7b582786a519e033e67e0c4d27d",
+    "crates/vibe-cli/tests/cli_facts_declared.rs": "11d8b2a59d2704ac6215aff181a6a70f79be1afa79fee288cc26d64fc4391c24",
+    "crates/vibe-cli/tests/cli_facts_selected.rs": "6dd3073e89efd3cf09cb19ae81eed048cdaabcd547e8092008822b89ed58da13",
+    "crates/vibe-facts/src/overlay.rs": "b3eebfade6cafa065e0ab85c608fc255a0c9f97fb476b01e9a5d8990287efd58",
+    "crates/vibe-workspace/src/vibedeps.rs": "044ef67851257b1706c8c76835e44fbe3d8add2110b79d345da0258bdd8d0883",
+    "crates/vibe-workspace/src/vibedeps/derived.rs": "0ef2c9382832034e8671f9d4a1523f436002b957e57d4f969a05656b44cd2e87",
+    "crates/vibe-workspace/src/vibedeps/derived/facts_preflight.rs": "c37317912eda76d744e78d054f890327b6843fb976d3baf0f2d3ad0355716fe5"
+  },
+  "receipt_sha256": {
+    "/tmp/nst-a4-facts-final-selected.log": "1368d8c1f9a1c185d60470e1b1bc96771d5eaf9a9e6c1af172263e7484e5d2fb",
+    "/tmp/nst-a4-facts-final-runtime.log": "35d48f5662a04c6c9a8699f374f72a8f7429c87039eee0a58f25114bd866de2c",
+    "/tmp/nst-a4-facts-retained-final.log": "317a10c6826c2254a32c4c3f84e0c2ce32bfa0011ec333ba28901ab407fb7d1a",
+    "/tmp/nst-a4-facts-unit-final.log": "d928e2a8f6b39f1343a9bbfe298f257396814abef01548a35d5e800e450bfdc1",
+    "/tmp/nst-a4-facts-overlay.log": "942f6d4e2abd9d4402f9691f63654765f584b03f672722e47362d9defb78f40e",
+    "/tmp/nst-a4-facts-preflight.log": "66af2d686f16f9076d0a59086715dbcbc6f36a52787e97c42a932d2c53917d3d"
+  },
+  "live_limit": "feature-frozen ten-path manifest matched at review; root final spec/map/commit still pending",
+  "report_sha256": "ae7c95048952e3bbf99eb63e2be6fc7e756a69096f1c292cc7e7c3782216a22b",
+  "source_seal_verified": {
+    "paths": 10,
+    "mismatches": []
+  }
+}

@@ -308,3 +308,5 @@ A4 host facts/query accepted in `432761746296c7913297cb7daad1302d30fc3b4b`; [bou
 A4 own/inherited boot accepted in `33a680809c903a0fa0e40fbdb64640126b19296d`; [bounded acceptance](m06-a4-own-boot-acceptance.md). Remaining consumers and full matrix keep A4 partial.
 
 A4 bound boot-check accepted in `04e7ccad8ead2002fd49d936e6917b8631e7006a`; [adapter acceptance](m06-a4-boot-check-acceptance.md). Remaining consumer matrix keeps A4 partial.
+
+A4 facts report/adopt accepted in `728d41319b04b2e527058ed29e77e4d88209c566`; [bounded acceptance](m06-a4-facts-command-acceptance.md). Other consumers and full mixed matrix remain.
