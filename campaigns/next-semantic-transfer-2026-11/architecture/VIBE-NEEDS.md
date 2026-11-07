@@ -55,3 +55,7 @@ VN-SOURCE-FACTS принят: generated evidence, durable app lifecycle/old unkn
 ### Real project event accepted; exact Need2 scope corrected
 
 Project event acceptedc600cb539 through the existing prepared plan/observer; current generated schema now matches packages. Full Need1 remains open. Exact original Need2 audit confirms inventory/list/describe/global-plan plus old unknown were all delivered by2df122323; standalone hosting classification was an extra condition incorrectly imposed by root, so Need2 is accepted in the documented Linux/source scope. Hosting policy/classification and project preview remain Need1/3 work. VN-APP-PROVENANCE depends on accepted SourceFacts, not on future skipped-candidate discovery; the initial dependency was unnecessarily broad. Historical222/113 unchanged.
+
+### Hosting observation accepted — 1f0b53aa0
+
+Known hosting labels now accompany project/global source reports through one pure core observer and shared report helper. Persisted facts unchanged; selected origin and differing recorded route remain distinct. This closes only the hosting-if-known reporting facet, not preference/exclusion or a no-contact guarantee. Contact audit identifies early index/raw HTTP probes, redirects/retries, warm Git origins, canonical marker fetches and submodules as actual next admission boundaries.

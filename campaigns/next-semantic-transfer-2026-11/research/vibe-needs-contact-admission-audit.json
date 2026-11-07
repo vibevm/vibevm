@@ -1,0 +1,296 @@
+{
+  "status": "read_only_inventory",
+  "report": "/tmp/vibe-needs-contact-admission-audit.md",
+  "runtime_tested": false,
+  "source_changed": false,
+  "source_hashes": [
+    {
+      "path": "/fast/git/vibevm/crates/vibe-package-source/src/builder.rs",
+      "sha256": "a262bddf65a47063986c6fbb8c46a92698fd5cfa1f0a3824ccbc9571193b3e70"
+    },
+    {
+      "path": "/fast/git/vibevm/crates/vibe-package-source/src/options.rs",
+      "sha256": "c0a6e203ee93626f6a3f4607233e926fbab8a5020788ed5006f67013fcb1d6b4"
+    },
+    {
+      "path": "/fast/git/vibevm/crates/vibe-core/src/global_registry.rs",
+      "sha256": "4da18878d996dd0ba04f0a1a682cf66c5ee85a589f330e70ad1205186825458c"
+    },
+    {
+      "path": "/fast/git/vibevm/crates/vibe-core/src/remap/locator.rs",
+      "sha256": "32bd16a80d9e8b3f23384997c62392efcd58fb391a29f93024e362bb1cfea39d"
+    },
+    {
+      "path": "/fast/git/vibevm/crates/vibe-core/src/remap/artifact.rs",
+      "sha256": "d108f8fc1b90db632c1b4040d26685d658818812ddaf7d0fd7aeb98593d94adc"
+    },
+    {
+      "path": "/fast/git/vibevm/crates/vibe-core/src/remap/row.rs",
+      "sha256": "4516b1e921ba070b4893bdb312be3ce875e8d4a45153fcdb7b401c92ded1af56"
+    },
+    {
+      "path": "/fast/git/vibevm/crates/vibe-core/src/remap/active.rs",
+      "sha256": "9b731f11d57599d8ab569f49454960bcaf1a9a023568d2ca558a0b3ee359bc6d"
+    },
+    {
+      "path": "/fast/git/vibevm/vibevm/vibespecs/common/PROP-073-source-decisions-and-operation-effects.xml",
+      "sha256": "389cbef45409ba46fe314b52ddb9b9b3fcf10715d285630bac44a4af47612b56"
+    },
+    {
+      "path": "/fast/git/vibevm/crates/vibe-registry/src/multi_registry_resolver/mod.rs",
+      "sha256": "e3fb8174c5574c725a9eff1b2d86af3733e6f02039e4ec36a8bfcee3267ee94d"
+    },
+    {
+      "path": "/fast/git/vibevm/crates/vibe-registry/src/multi_registry_resolver/clone_chain.rs",
+      "sha256": "d6531e3bdb15b35964c8be7a3b9ed82d5fc7ffcbe4728b84b8bc671715ffda26"
+    },
+    {
+      "path": "/fast/git/vibevm/crates/vibe-registry/src/multi_registry_resolver/walk.rs",
+      "sha256": "e93c9bc03e50f59a1333a0fa8ec3f204c2aca7c7c2020bcc371ffc238fd5aa9d"
+    },
+    {
+      "path": "/fast/git/vibevm/crates/vibe-registry/src/multi_registry_resolver/dispatch.rs",
+      "sha256": "6c0c6720c9f2e296c5fac59e7031a00d1a4b6c6d27b40316d6831c4231beabad"
+    },
+    {
+      "path": "/fast/git/vibevm/crates/vibe-registry/src/multi_registry_resolver/redirect_follow.rs",
+      "sha256": "5daad93f552168547dc08501585e0a3dc249ba5bd4adb4be8c14b07476920332"
+    },
+    {
+      "path": "/fast/git/vibevm/crates/vibe-registry/src/multi_registry_resolver/override_resolve.rs",
+      "sha256": "5c3715b7d921a5e7b01e060c90a90afbea260bb77d62d52c0186debf03210ae9"
+    },
+    {
+      "path": "/fast/git/vibevm/crates/vibe-registry/src/multi_registry_resolver/sources.rs",
+      "sha256": "a3be6ba3ea20408e1addf30ffb5ded26de4f055922213da14433f515af558bcb"
+    },
+    {
+      "path": "/fast/git/vibevm/crates/vibe-registry/src/multi_registry_resolver/refresh.rs",
+      "sha256": "1950e0d7316a58599ca9726076ae2e025b5fcc13dd100c9d3ca33dd799c964cf"
+    },
+    {
+      "path": "/fast/git/vibevm/crates/vibe-registry/src/multi_registry_resolver/home_refresh.rs",
+      "sha256": "d83af937c0de24c43b704e27c2189b68fdaceb8cd9b6447af7e7f9e683fda67e"
+    },
+    {
+      "path": "/fast/git/vibevm/crates/vibe-registry/src/multi_registry_resolver/offline.rs",
+      "sha256": "860603c57444c2936f0548b8f52cab9ecf38041750c1a8d0f0e50b2e28e325c7"
+    },
+    {
+      "path": "/fast/git/vibevm/crates/vibe-registry/src/multi_registry_resolver/offline_tests.rs",
+      "sha256": "66d9e33fc0876e90e84e929a2522bb830ee6eff7aeed1f3de4b91d8f9a1c56d1"
+    },
+    {
+      "path": "/fast/git/vibevm/crates/vibe-registry/src/multi_registry_resolver/test_support.rs",
+      "sha256": "0c3d908d5c52b1da468c0bddee94abbf3854bba52dfd7d610a37f1b5c69ea76b"
+    },
+    {
+      "path": "/fast/git/vibevm/crates/vibe-registry/src/git_package_registry/mod.rs",
+      "sha256": "767d7ba0e945ef4ed173097953cc5e5d76b1cd109937679e9fa48c0b6cf0b504"
+    },
+    {
+      "path": "/fast/git/vibevm/crates/vibe-registry/src/git_package_registry/lookup.rs",
+      "sha256": "bae2d15b656453728cccf68f73479baa3730f89378d955b6d124452e38b4501d"
+    },
+    {
+      "path": "/fast/git/vibevm/crates/vibe-registry/src/git_package_registry/fetch.rs",
+      "sha256": "6e9e47debaa42445c8fe9ff963e00ee1a7d9ceb3d69735632c228bdcbe3a99f4"
+    },
+    {
+      "path": "/fast/git/vibevm/crates/vibe-registry/src/git_package_registry/urls.rs",
+      "sha256": "c263bfb7c109949db739cb11463e4011fb658b6f39f03ec6cce6513c0e22c356"
+    },
+    {
+      "path": "/fast/git/vibevm/crates/vibe-registry/src/git_package_registry/auth.rs",
+      "sha256": "e3c6c59a642018e7dbb6ef947f732a0b36603635bd43ec3504df085fa6cfaae8"
+    },
+    {
+      "path": "/fast/git/vibevm/crates/vibe-registry/src/index_client/mod.rs",
+      "sha256": "7e3eaa50b351d600440c6f498d2bb6f609d08713442dce96e7ee0beec2dec12c"
+    },
+    {
+      "path": "/fast/git/vibevm/crates/vibe-registry/src/index_client/pooled.rs",
+      "sha256": "810854345e1a4ac24df65fbb901b6b289e4ec2703c5e2e2735ada2e0eee0de01"
+    },
+    {
+      "path": "/fast/git/vibevm/crates/vibe-registry/src/index_client/handshake.rs",
+      "sha256": "e648a3ed4a2e9fe29972c8ff72f37dc9437fe538f92c9bdbf273d76f00e31a35"
+    },
+    {
+      "path": "/fast/git/vibevm/crates/vibe-registry/src/index_client/locate.rs",
+      "sha256": "53fc0a4f7d964c0c6ec62003308aee5c9604ea9fbbb4a336a3f24d9e286bca90"
+    },
+    {
+      "path": "/fast/git/vibevm/crates/vibe-registry/src/index_client/auth.rs",
+      "sha256": "6580e9d2a690065ffae565222b1fdac59e8c03f9179fad5d866bedab87d12dbc"
+    },
+    {
+      "path": "/fast/git/vibevm/crates/vibe-registry/src/index_client/catalog.rs",
+      "sha256": "558ce9124ddb3d2a7a0e5ecdefb3cef9c7a4da48360bf44ac5f9776c8a5ce7a4"
+    },
+    {
+      "path": "/fast/git/vibevm/crates/vibe-registry/src/index_client/by_name.rs",
+      "sha256": "a363788eb849db10173f7442499622d49e610d8e663cb1af7fa2a8561bcd52e1"
+    },
+    {
+      "path": "/fast/git/vibevm/crates/vibe-registry/src/index_client/static_search.rs",
+      "sha256": "be597525d2b7a0ff4ad8619b122c1068acafd5d530e10f0406c959789a774e70"
+    },
+    {
+      "path": "/fast/git/vibevm/crates/vibe-registry/src/index_client/tests.rs",
+      "sha256": "21151649209d66223d58de532c7f9f99eaec6b10605565bb5797b6ff1353e287"
+    },
+    {
+      "path": "/fast/git/vibevm/crates/vibe-registry/src/git_backend/mod.rs",
+      "sha256": "50ea9ead78e3485fe2eb643665cc8e886e6690cafd806f0f396b1fda14b58927"
+    },
+    {
+      "path": "/fast/git/vibevm/crates/vibe-registry/src/git_backend/shell.rs",
+      "sha256": "cf0eee94af08755d8700288a04ca87553984da22a793783233b524d3418e9666"
+    },
+    {
+      "path": "/fast/git/vibevm/crates/vibe-registry/src/git_backend/shell/env.rs",
+      "sha256": "7074139824e9e375cbb6730cddf3cfee4a0fcb7c9748764a82f7173bfbbcb7da"
+    },
+    {
+      "path": "/fast/git/vibevm/crates/vibe-registry/src/git_backend/shell/raw_http.rs",
+      "sha256": "80a4148de29aeb333af0e8b47181d173164b9172dfe4b608f87593d44d41ff36"
+    },
+    {
+      "path": "/fast/git/vibevm/crates/vibe-registry/src/git_backend/shell/checkout.rs",
+      "sha256": "ac40955bb605ccfc9b0e0f8b372740abbbf787c09d1f1613d5dccf2fd90951e1"
+    },
+    {
+      "path": "/fast/git/vibevm/crates/vibe-registry/src/git_backend/shell/prepared.rs",
+      "sha256": "cb2f9fd1946ce94bb18b6a28a65fef227b755f95ce5033806363541570779950"
+    },
+    {
+      "path": "/fast/git/vibevm/crates/vibe-registry/src/git_backend/shell/reported.rs",
+      "sha256": "c10e90bb12aa17888ed987fd222a9fc05e2416c3229c7a3271ec44f0ffcc079d"
+    },
+    {
+      "path": "/fast/git/vibevm/crates/vibe-registry/src/git_backend/shell/tests.rs",
+      "sha256": "c7a4a10271e5fe5b67eda79553d9291d420534d376f65724beb9cf9f7f69b9a8"
+    },
+    {
+      "path": "/fast/git/vibevm/crates/vibe-registry/src/git_backend/shell/tests_pure.rs",
+      "sha256": "0dfe1e2ff1588d8763804151ca0ee26435b206c59dd7b47542f72f1138f78a16"
+    },
+    {
+      "path": "/fast/git/vibevm/crates/vibe-registry/src/git_backend/shell/raw_http/hosts.rs",
+      "sha256": "485324ad5a9de328616af1856873d362681a18be3370e1179ec669e4758d0acb"
+    },
+    {
+      "path": "/fast/git/vibevm/crates/vibe-registry/src/git_backend/shell/raw_http/retry.rs",
+      "sha256": "766a672abc253ba2c8dc40a6ad81478d0bb16fc0902704b624a1fb480f03a9f3"
+    },
+    {
+      "path": "/fast/git/vibevm/crates/vibe-registry/src/git_backend/shell/raw_http/tests.rs",
+      "sha256": "5ce3e68bf430328806fde914cf349d7c6c1b3600cfe69491831a91cf112b3f4c"
+    },
+    {
+      "path": "/fast/git/vibevm/crates/vibe-registry/src/git_package_registry/fetch/bring.rs",
+      "sha256": "3ceb29f99339c4438fd50a1ddac9b1399b8f14cc2b6197e32d148a726a78398c"
+    },
+    {
+      "path": "/fast/git/vibevm/crates/vibe-registry/src/git_package_registry/fetch/prepared.rs",
+      "sha256": "4d8c09b12aa40f42479aa087fa16c498b0275c206ed6f2c6198e5808d07ba4ee"
+    },
+    {
+      "path": "/fast/git/vibevm-app-r123/campaigns/architecture-2026-10/VIBE-NEEDS-2026-11.md",
+      "sha256": "3d26bf728bf36ca7d41505878d991e7b98e46c3588e2ff5f3297103500cd81a3"
+    }
+  ],
+  "observed_contacts": [
+    {
+      "owner": "MultiRegistryResolver::from_manifest",
+      "path": "crates/vibe-registry/src/multi_registry_resolver/mod.rs",
+      "lines": [
+        379,
+        399,
+        407
+      ],
+      "kind": "index probe before late builder setters"
+    },
+    {
+      "owner": "IndexClient",
+      "path": "crates/vibe-registry/src/index_client/mod.rs",
+      "lines": [
+        179,
+        224,
+        468
+      ],
+      "kind": "probe and pooled HTTP without explicit policy/redirect gate"
+    },
+    {
+      "owner": "raw HTTP host address",
+      "path": "crates/vibe-registry/src/git_backend/shell/raw_http/hosts.rs",
+      "lines": [
+        69,
+        78,
+        117,
+        153
+      ],
+      "kind": "github raw host rewrite and Locator refusal optimization decline"
+    },
+    {
+      "owner": "ShellGit",
+      "path": "crates/vibe-registry/src/git_backend/shell.rs",
+      "lines": [
+        200,
+        228,
+        356,
+        383,
+        506
+      ],
+      "kind": "Git/raw HTTP and anonymous clone"
+    },
+    {
+      "owner": "clone recursion",
+      "path": "crates/vibe-registry/src/git_backend/shell/checkout.rs",
+      "lines": [
+        12,
+        23,
+        157
+      ],
+      "kind": "recursive submodule managed contacts"
+    },
+    {
+      "owner": "warm checkout update",
+      "path": "crates/vibe-registry/src/git_package_registry/fetch/bring.rs",
+      "lines": [
+        53,
+        68
+      ],
+      "kind": "backend.update uses checkout origin, not loop candidate URL"
+    }
+  ],
+  "critical_obligations": [
+    "immutable policy before constructor probe",
+    "gate initial HTTP and each redirect/retry",
+    "include raw.githubusercontent.com as actual backend host surface",
+    "typed denied vs absent vs opaque vs not-probed",
+    "allow mirror when canonical excluded including marker/manifest metadata",
+    "gate actual warm checkout origin",
+    "qualify Git insteadOf/SSH/helper/proxy/config/redirect and recursive submodules",
+    "copy policy into anonymous backend and shared clients",
+    "strict fake oracle for every backend primitive"
+  ],
+  "minimal_next_atom": "bound typed HTTP admission across constructor/index/raw paths with local fake redirect tests; no public full exclusion until Git/composition coverage complete",
+  "not_a_substitute": "all Git unsupported is not final useful exclusion fulfillment",
+  "unresolved": [
+    "stable enforceable Git execution posture",
+    "composition root census outside approved source builder",
+    "settings vocabulary/merge",
+    "arbitrary recipes not process-wide egress controlled"
+  ],
+  "tests_observed_not_run": [
+    "offline_tests store reuse bootstrap_count only",
+    "shell/tests_pure anonymous backend and credential silence",
+    "shell/tests local bare repositories",
+    "index_client/tests pooling/auth",
+    "locate raw host/lookalike",
+    "redirect_follow fake hop checks",
+    "raw_http/tests host addressing and retries"
+  ]
+}

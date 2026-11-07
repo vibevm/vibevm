@@ -1,0 +1,114 @@
+{
+  "status": "bounded_design_only",
+  "report": "/tmp/vibe-needs-hosting-foundation-plan.md",
+  "runtime_tested": false,
+  "source_changed": false,
+  "accepted_baseline": {
+    "SourceFacts": "2df122323",
+    "project_event": "c600cb539",
+    "need2": "accepted per root four-obligation audit; not reopened"
+  },
+  "source_hashes": [
+    {
+      "path": "/fast/git/vibevm/crates/vibe-registry/src/source_evidence.rs",
+      "sha256": "a3a08235ca5595536c0da13972a97612cedcbb3a1cfbae50fc47108909a83877"
+    },
+    {
+      "path": "/fast/git/vibevm/crates/vibe-core/src/remap/mod.rs",
+      "sha256": "f2365ae9804ff6247a7a4b6b5d30858605e06fab3e0ad173c4cf78dbda68ffab"
+    },
+    {
+      "path": "/fast/git/vibevm/crates/vibe-core/src/remap/locator.rs",
+      "sha256": "32bd16a80d9e8b3f23384997c62392efcd58fb391a29f93024e362bb1cfea39d"
+    },
+    {
+      "path": "/fast/git/vibevm/crates/vibe-core/src/progress/transfer/record.rs",
+      "sha256": "2aac82e4375e8a90b56dbe8f59888ee969727b4c6c32a623527bc9b207cff28f"
+    },
+    {
+      "path": "/fast/git/vibevm/crates/vibe-core/src/global_registry.rs",
+      "sha256": "4da18878d996dd0ba04f0a1a682cf66c5ee85a589f330e70ad1205186825458c"
+    },
+    {
+      "path": "/fast/git/vibevm/crates/vibe-package-source/src/options.rs",
+      "sha256": "c0a6e203ee93626f6a3f4607233e926fbab8a5020788ed5006f67013fcb1d6b4"
+    },
+    {
+      "path": "/fast/git/vibevm/crates/vibe-package-source/src/builder.rs",
+      "sha256": "a262bddf65a47063986c6fbb8c46a92698fd5cfa1f0a3824ccbc9571193b3e70"
+    },
+    {
+      "path": "/fast/git/vibevm/crates/vibe-registry/src/multi_registry_resolver/mod.rs",
+      "sha256": "e3fb8174c5574c725a9eff1b2d86af3733e6f02039e4ec36a8bfcee3267ee94d"
+    },
+    {
+      "path": "/fast/git/vibevm/crates/vibe-registry/src/git_package_registry/mod.rs",
+      "sha256": "767d7ba0e945ef4ed173097953cc5e5d76b1cd109937679e9fa48c0b6cf0b504"
+    },
+    {
+      "path": "/fast/git/vibevm/crates/vibe-wire/src/generated/shared/mod.rs",
+      "sha256": "8ffacd5efce5b4a4ebbf90c3e238b3fdd10ad40869c2e9cccb00182d157302e7"
+    },
+    {
+      "path": "/fast/git/vibevm/crates/vibe-cli/src/commands/install/report.rs",
+      "sha256": "e3da1c374d23ce8c861ae316c37b0d635ba327d5bfb8d4eb1073370ec01743a2"
+    },
+    {
+      "path": "/fast/git/vibevm/campaigns/next-semantic-transfer-2026-11/research/vibe-needs-source-policy-plan.md",
+      "sha256": "5a001bed18d741345320bd07ea824f9549045ecd0e99da92aed1bf6b127f6ec8"
+    },
+    {
+      "path": "/fast/git/vibevm/campaigns/next-semantic-transfer-2026-11/research/vibe-needs-source-policy-feasibility.md",
+      "sha256": "29f16d9017c2c3eb58398b6c0386913e851381a1cfed360601dff6c384313446"
+    },
+    {
+      "path": "/fast/git/vibevm-app-r123/campaigns/architecture-2026-10/VIBE-NEEDS-2026-11.md",
+      "sha256": "3d26bf728bf36ca7d41505878d991e7b98e46c3588e2ff5f3297103500cd81a3"
+    }
+  ],
+  "first_vertical": "pure endpoint-host classifier plus derived report-only HostingView consumed by existing install plan event",
+  "persisted_contracts": "SourceEvidence and closed index5/steps3/import3 unchanged",
+  "view_fields": {
+    "selected_origin": "hosting of held canonical source_url spelling; not proof of contact",
+    "differing_acquisition_route": "hosting of held fetched_from only; absent stays absent; not socket evidence"
+  },
+  "unknowns": [
+    "missing or local source",
+    "unknown hosting on custom host",
+    "opaque SSH alias",
+    "unrecognized/custom transport spelling"
+  ],
+  "classifier_owner": "new vibe-core/src/remap/endpoint.rs re-exported by existing remap owner",
+  "consumers": [
+    "vibe-registry/src/source_evidence.rs derived report helper",
+    "vibe-cli/src/commands/install/report.rs planned.package_sources projection"
+  ],
+  "required_next_inspection": [
+    "authoritative install::e2::plan JTD/report compatibility and event test paths",
+    "crates/vibe-registry/src/index_client/mod.rs",
+    "crates/vibe-registry/src/git_backend/mod.rs",
+    "crates/vibe-core/src/progress/transfer/mod.rs",
+    "crates/vibe-core/src/remap/artifact.rs",
+    "crates/vibe-core/src/remap/row.rs",
+    "crates/vibe-core/src/remap/active.rs"
+  ],
+  "preopen_gate": {
+    "file": "crates/vibe-registry/src/multi_registry_resolver/mod.rs",
+    "lines": [
+      352,
+      379,
+      399,
+      407
+    ]
+  },
+  "constraints": [
+    "safe_remote is redaction not policy",
+    "url_is_local is offline heuristic not admission",
+    "Locator remains sole candidate-routing owner",
+    "classification never authorizes a contact",
+    "new report field needs report-reader compatibility review",
+    "no exclude/prefer CLI flags before real admission/choice",
+    "preference cannot change selected version by reordering catalog",
+    "transitive registry pins remain explicit unresolved obligation"
+  ]
+}

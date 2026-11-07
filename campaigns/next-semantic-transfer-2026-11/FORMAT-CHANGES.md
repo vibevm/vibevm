@@ -708,3 +708,9 @@ Preserve the actual live `install:plan` envelope and `packages[{package,version}
 In-place preparation currently feeds the old lock registry alias into a prospective CachedPackage even though it holds current canonical source/ref/commit. Capture the actual selected alias in the preparation owner; do not describe old registry settings as a fresh choice. Any resulting correction of the existing lock registry field must be included in acceptance evidence. No new authored vibe.toml grammar is intended.
 
 FMT-046 acceptedc600cb539: current cli-install-plan epoch2 matches live command/packages and adds optional source_evidence; old declared schema bytes retained as cli-install-plan-v1. No new runtime protocol field/command and no timing change. In-place current alias now reaches lock.registry; source URI/content identity/placement unchanged. No new vibe.toml fields or no-write preview.
+
+## FMT-047 — Derived hosting views (planned)
+
+Add optional report-only source_hosting alongside source_evidence in project install events and global app plan/list/describe, plus installed_hosting beside installed history in describe; common-configuration counterparts share the model. HostingView selected_origin and differing_acquisition_route are optional extensible label strings, derived from the corresponding held URLs only. Persisted SourceEvidence, index5/steps3/import3 schemas and contents remain unchanged. No new vibe.toml/settings/CLI flags or preference/exclusion behavior in this slice. Actual compatibility and field naming confirmed by final schema/golden review before acceptance.
+
+FMT-047 accepted1f0b53aa0: optional source_hosting across six report schemas and installed_hosting for both describe forms; open String labels, no new epoch/REGISTRY entry. SourceEvidence, all persisted inventory/work schemas/readers and existing corpora unchanged. Exact known-domain URL observations are not contact/permission facts.
