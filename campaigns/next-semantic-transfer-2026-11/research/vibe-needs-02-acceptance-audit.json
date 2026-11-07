@@ -1,0 +1,96 @@
+{
+  "task": "VIBE-NEEDS entry2 requirement-specific acceptance audit",
+  "accepted_commit": "2df122323ce85fec5eae3533c34f21ce51b6cb7c",
+  "observed_at": "2026-11-07T11:05:38.334093+00:00",
+  "verdict": "entry2 fully met in qualified Linux/source scope",
+  "unmet_entry2_obligations": [],
+  "matrix": [
+    {
+      "obligation": "Global inventory records registry, URL, ref, resolved commit, kind",
+      "status": "met",
+      "basis": "Shared optional SourceEvidence captured by source owners, cloned into Installation and durable inventory; fields absent when unobserved."
+    },
+    {
+      "obligation": "Machine-readable app list and describe return source facts",
+      "status": "met",
+      "basis": "list.source_evidence is installed history; describe.installed_source is installed history; describe.source_evidence is current authored acquisition, intentionally separate."
+    },
+    {
+      "obligation": "Pre-change installed application stays unknown; never guessed",
+      "status": "met",
+      "basis": "Legacy inventory/steps/import decode without evidence; current registry changes do not backfill history; final CLI explicit old-history and retained-steps controls pass."
+    },
+    {
+      "obligation": "Global plan-only names source",
+      "status": "met",
+      "basis": "Existing global application plan source_evidence carries registry and known URL/ref/commit/kind; ordinary and common configuration plan tests pass."
+    }
+  ],
+  "qualification": "Linux actual CLI evidence; no Windows/macOS execution claim, no project preview/event/pin/hosting/candidate completion. Root owns acceptance.",
+  "interpretation": "Entry2 source-plan cross-reference asks global plan to name source. It does not independently require implementing all of entry1 or its separate project event. Hosting is not in entry2 enumerated inventory facts; entry1 hosting is conditional if known. No permission to weaken entry1/3.",
+  "original_source": {
+    "path": "/fast/git/vibevm-app-r123/campaigns/architecture-2026-10/VIBE-NEEDS-2026-11.md",
+    "sha256": "ac738d6a53241549f162b1aecdb093f861865c26dded0387df543cfa41987403",
+    "section1_sha256": "3fb1bf7be8021271af2b5b4d93a350cce2f540eea919af108943ce6c11cc793c",
+    "section2_sha256": "b71d7db96b134b96a085cd945c35a21298c7c845edae097a235777e2f276ab1e"
+  },
+  "feature": {
+    "path": "campaigns/next-semantic-transfer-2026-11/features/VN-SOURCE-FACTS.md",
+    "sha256": "56ad77a857f011ed22e7f4f02514a22601482015a4d7cc711db381e1b8745e96"
+  },
+  "accepted_source_sha256": {
+    "crates/vibe-registry/src/source_evidence.rs": "a3a08235ca5595536c0da13972a97612cedcbb3a1cfbae50fc47108909a83877",
+    "crates/vibe-registry/src/multi_registry_resolver/dispatch.rs": "6c0c6720c9f2e296c5fac59e7031a00d1a4b6c6d27b40316d6831c4231beabad",
+    "crates/vibe-app/src/resolve.rs": "91decf707494ec5f5f88e400872a532821156d7e20753b30a9153eef976b48d4",
+    "crates/vibe-app/src/steps/state.rs": "772845c55f56571e07509e9e30f6d838c9e28e546123b629d68a6ff0a53f25b1",
+    "crates/vibe-app/src/steps/state/evidence_versions.rs": "75ac6d099e7c0f16bdf65a340f255643f1e20df4ec3fda19b0f102411359dc4c",
+    "crates/vibe-app/src/steps/work.rs": "1fd905451ac6f69f587965532d0925e1050ab1b480372ad17fa37a45e1141c18",
+    "crates/vibe-app/src/steps/runs.rs": "585cf2a10d007aa925a1df035b1cbd89fbf0fa3eadbeb0f4532793b554fc5067",
+    "crates/vibe-app/src/steps/resume.rs": "78f3fc9bb7854b30168fbb44475332d2245db1a2a966577fb2973d9c3c7b1c95",
+    "crates/vibe-app/src/operations/apply.rs": "6e4321c4d460b9608b5b8014be86af03b640bdde6f24a358afab7665aa6e425d",
+    "crates/vibe-app/src/operations/planning.rs": "735c301903ef6c66b58a4440a5a07ccb51d653f42616c230ae87df466d1f2583",
+    "crates/vibe-app/src/operations/pending/source.rs": "2d339b702b4f1dcc4d3c7e4bcec41e0a0bf896596c2c0d762fa0497f9776a947",
+    "crates/vibe-app/src/operations/pending/checkpoint.rs": "a3af66c8848e4cfc5c554b2206b06c25cdecc5d1c26b94f66ebed03312b13d08",
+    "crates/vibe-app/src/operations/pending/dependencies.rs": "8526b24b0358f249439e2468436ca4250ac807ea307d5e09f62c2a39c5a6417f",
+    "crates/vibe-app/src/operations/pending/identity.rs": "03712312034387f216960eb22ae90befb9643dc0152f7bdba5a9f38f7eef810b",
+    "crates/vibe-app/src/operations/import/document.rs": "6ba13c5adb7744e5849f67fd2dc4e58db505c1ebf6070bb62eeb66e286ac1b39",
+    "crates/vibe-app/src/operations/import/store.rs": "fc416b5513a8fa2f3f8edc716fd4cd6eb1e210ce7fde76799dd4e3d2ceded63c",
+    "crates/vibe-app/src/operations/import/full_store.rs": "e2e64f7110ad0a7f6b00dfcf2a7383232e5608770a73fab4db0a261d7ce2f7b8",
+    "crates/vibe-app/src/operations/import/receipts.rs": "2fd2505d2f3bbabf0b610d781d811157db86d4e42ba482b34d7789c90bada2c2",
+    "crates/vibe-cli/tests/cli_app_source_evidence.rs": "4a0af2c742c4f468df0e128d90a5b2039038ee40089b172ebaa8c9f54c6398e7",
+    "vibevm/vibespecs/common/PROP-073-source-decisions-and-operation-effects.xml": "f68397199850fc781cc9153dc9bfbf7db49bca549f147403894dfa1b96911d8e",
+    "crates/vibe-app/src/operations/import/bindings.rs": "8608d94969681274351a48d1e229b628343e0b70c8fdc96aec786bce9d782d66",
+    "crates/vibe-app/src/operations/import/full.rs": "a20fa19f3e4aa7a4fee417b2cbb797a64e5ba3edac279c15120c2320b55d39a3",
+    "crates/vibe-app/src/portable/continuation.rs": "b110053fb6257fec72342ca743031cc3ce77d4c19d6eff463a94cbb7380b8b2b",
+    "crates/vibe-app/src/portable/full_prepare.rs": "a575871ac3d5996bbd6fd84766061fd9ed3ef94ee9a6ba00f62e70b8bb9767c4",
+    "crates/vibe-app/src/operations/import.rs": "4aef0da2d55ce219d18318c74dcdcf58b14db4d1be4f09a699a18bfa0a23cc35",
+    "crates/vibe-app/src/portable/full_receipt_recovery_tests.rs": "480a0bb9a6b64f8f1c535d7a9b164592cdc20be77a9d2299b9543d992b771d34"
+  },
+  "receipts": [
+    {
+      "path": "/tmp/vibe-needs-source-facts-handoff.md",
+      "sha256": "d92b8454781e1c9b25215cc7da6702986c8cc593f0ba92976ae57662d338de9d"
+    },
+    {
+      "path": "/tmp/vibe-needs-source-facts-handoff.json",
+      "sha256": "7494399fb1f9d21dcd48d28c21e6c541cfb6cf68059d5d8d43bd1ff0c78b45b6"
+    },
+    {
+      "path": "/tmp/vibe-needs-source-facts-cli-embedded-refresh.log",
+      "sha256": "466d4dd934c0eac57f6a70066999bdb8fc5c5200ebd62ceeeef2114a1c3f7bd3"
+    },
+    {
+      "path": "/tmp/vibe-needs-source-facts-embedded-gates.json",
+      "sha256": "087007cc32c75939c5e3abf242f9ef0e8776eec3d27ad11d5e317a5a096ce7d0"
+    },
+    {
+      "path": "/tmp/vibe-needs-source-facts-app-final-02.log",
+      "sha256": "e4928cf9e1cc45135cc2a56134b4eacbca444c52c7a5750bc946d9643e1819d4"
+    },
+    {
+      "path": "/tmp/vibe-needs-source-facts-final-gates-02.json",
+      "sha256": "6d2aa8f8bc139be129f7fdc27d6f79abe4fb51609fff03780c8760aa45d594bb"
+    }
+  ],
+  "tests_executed_by_reviewer": false
+}

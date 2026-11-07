@@ -1,11 +1,11 @@
 {
   "schema": 1,
-  "updated_at": "2026-11-07T10:23:44.981444+00:00",
+  "updated_at": "2026-11-07T11:10:06.085333+00:00",
   "source": "/fast/git/vibevm-app-r123/campaigns/architecture-2026-10/VIBE-NEEDS-2026-11.md",
   "historical_task_count": 222,
   "historical_prototype_count": 113,
   "priority_rule": "Among equally architecture-ready tasks, VIBE-NEEDS tasks precede other campaign tasks; dependencies remain mandatory. Need1 is P1.",
-  "first_implementation": "VN-SOURCE-FACTS accepted2df122323. Next: project install:plan observation through prepared-plan/observer; policy/preview/candidate diagnostics remain open.",
+  "first_implementation": "Shared facts/app provenance accepted2df122323; actual project event acceptedc600cb539. Next source-policy foundation; candidate reasons/project no-write preview/pins/preference/exclusion still open.",
   "nodes": [
     {
       "id": "VN-SOURCE-FACTS",
@@ -39,7 +39,7 @@
         "vibe-package-source"
       ],
       "contract": "Один effective policy; preference только для одинаковой версии, pin без fallback, URL назначения проверяется независимо от label.",
-      "status": "planned"
+      "status": "active"
     },
     {
       "id": "VN-EFFECT-CONTRACT",
@@ -224,13 +224,13 @@
         2
       ],
       "depends_on": [
-        "VN-SOURCE-OBSERVATION"
+        "VN-SOURCE-FACTS"
       ],
       "owners": [
         "vibe-app index/operations"
       ],
       "contract": "Legacy unknown; continuation route и launcher source не заменяют acquisition provenance.",
-      "status": "planned"
+      "status": "accepted"
     },
     {
       "id": "VN-ACTIVATION-RECONCILE",
@@ -364,7 +364,7 @@
     {
       "id": "VN-02",
       "number": 2,
-      "status": "partial_source_evidence_accepted_hosting_pending",
+      "status": "accepted_source_inventory_list_describe_global_plan_linux_qualified",
       "foundation_nodes": [
         "VN-SOURCE-FACTS"
       ]

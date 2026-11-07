@@ -1,6 +1,6 @@
 # VN-SOURCE-FACTS — shared package-source evidence
 
-Accepted scope: one source-evidence vocabulary from existing acquisition owners into application plans, inventory, descriptions, retained work and existing lock projections. This is a foundation for VIBE-NEEDS 1–3, not acceptance of those complete requirements or any additional old113 task.
+Accepted scope: one source-evidence vocabulary from existing acquisition owners into application plans, inventory, descriptions, retained work and existing lock projections. This satisfies the four explicit obligations of VIBE-NEEDS2 (qualified Linux/source evidence); it is a foundation, not completion, for needs1/3 and does not complete an additional old113 task. The later exact-requirement audit corrected the earlier overly broad partial label; see research/vibe-needs-02-acceptance-audit.md.
 
 ## User-visible behavior
 
