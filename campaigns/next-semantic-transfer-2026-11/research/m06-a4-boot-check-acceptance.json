@@ -1,0 +1,47 @@
+{
+  "task": "M-06-A.4 bound boot graph check adapter",
+  "accepted": true,
+  "full_original_a4": false,
+  "commit": "04e7ccad8ead2002fd49d936e6917b8631e7006a",
+  "committed_paths_verified": 10,
+  "contract": "SOURCE-BOOT-CHECK r1",
+  "behavior": [
+    "Additive selected-format verifier reuses durable resolution/prepared bindings/mapped table/format-aware plans/fingerprint owner",
+    "Legacy unbound API preserved; declared format is not guessed",
+    "Missing lock remains non-applicable without irrelevant config read; valid empty epoch has no units",
+    "Stale/missing INDEX Warning keeps warning-only exit0",
+    "Applicable load/config/lock/slot/binding failure produces BootGraphIntegrity Error via normal JSON/text report and error exit",
+    "Read-only snapshots include directories/operator config; no lease/regeneration/native provider execution"
+  ],
+  "gates": {
+    "actual_cli": 6,
+    "bound_verifier": 2,
+    "legacy_and_activated_verifier": 2,
+    "native_freshness_actual": 7,
+    "zero_test_run_excluded": true,
+    "static": "strict workspace and targeted CLI Clippy,3Conform scopes,fmt/diff pass",
+    "specmap": {
+      "units": 9162,
+      "items": 5539,
+      "edges": 4688,
+      "orphans": 0,
+      "unresolved_host": 0,
+      "warnings": 44,
+      "prior_9160_units_retained": true,
+      "warning_delta": "existing unmarked tests pin follows verify_boot_graph into its new module; no new warning meaning"
+    },
+    "wire_diff": "pass; no watched schema/formats shift",
+    "codegen": "not applicable; no generated codec/schema change"
+  },
+  "corrections": [
+    "Actual old CLI returned ok:true/findings:[] for corrupt declared INDEX and selected format mismatch; real RED->GREEN",
+    "Helper split imports/test ContentHash compile errors corrected",
+    "Initial native freshness filter ran0; corrected actual7 pass, earlier command not coverage",
+    "Unused test-only import corrected with cfg(test), no allowance"
+  ],
+  "limits": [
+    "Existing INDEX fingerprint/native pending semantics, not STATIC-body cryptographic authentication",
+    "No new CheckId/schema/CLI option/member discovery",
+    "Broader host project checker and other A4 consumers remain separate"
+  ]
+}

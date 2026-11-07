@@ -1,0 +1,51 @@
+{
+  "task": "A4 residual consumer refresh",
+  "mode": "read-only source evidence, no runtime",
+  "observed_at": "2026-11-07T03:51:03.216730+00:00",
+  "accepted_base": [
+    "12ee51b0e",
+    "c24dfc6c6",
+    "d2c283e69",
+    "432761746",
+    "33a680809"
+  ],
+  "active_elsewhere": "boot graph bound verifier/check adapter",
+  "next_slices": [
+    "facts report/adoption installed binding",
+    "documentation captured-read join",
+    "read-only progress/tree/show views"
+  ],
+  "remaining_tail": [
+    "host patterns",
+    "seal mutation",
+    "publish staging",
+    "skill mixed proof",
+    "init/tutorial/root comment",
+    "final mixed consumer matrix"
+  ],
+  "source_sha256": {
+    "crates/vibe-cli/src/commands/facts.rs": "5b5765e458a8b4c15bc9a534ef59da07cf51d364689bd3b6def3b65b882ebc22",
+    "crates/vibe-cli/src/commands/facts/selected.rs": "2e6c6fd003e81724ad3ab79967cc0d93df836eb9e141210a53da3d37567f3176",
+    "crates/vibe-doc/src/pages.rs": "2b96acda8d560116ea1dbebb30e32ae754c2605369c945bc57abe6e19322fc1a",
+    "crates/vibe-doc/src/citations.rs": "d30445ffd20ae5aaa6b024b6b30dbc4cd9186a2d28124d17da917bd1f366b220",
+    "crates/vibe-doc/src/citations/sources.rs": "9fdd2b79b534c72081b7a3d126e6731561378193a95e13ff9fcea95953545dbc",
+    "crates/vibe-doc/src/citations/anchor.rs": "e12f9958b151af23ec7579ec72092547a3607a7fd218ab31531c25e13361e736",
+    "crates/vibe-doc/src/agent.rs": "7861d33dce5404d6eba386deed6b15e1cadab0827d3848ad7e920a3a14de1f27",
+    "crates/vibe-doc/src/translations/borrowed.rs": "d3d8fc7eb023c50a880fd59b9ef829b5742b84c513069917c044a64fa7958025",
+    "crates/vibe-cli/src/commands/progress/grounding.rs": "0ef497620281b31eb2c7db57f5626154f3c5d188ed2e9c751370a7235a86b9e0",
+    "crates/vibe-cli/src/commands/progress/seal.rs": "d5868c7c5dc9be6ad29bb0c02c9f2dafd8c8fb845ad1eaab259b9df480365df8",
+    "crates/vibe-cli/src/commands/tree/build/in_place.rs": "49db52c3dbf750049e2681965f748dd046fc01fad21d862d5d1211afe3d84067",
+    "crates/vibe-cli/src/commands/show/effective.rs": "fdc90631c6a9c5b312fcc08ef3b7853f8e513131df79d98acb102c716b0d7c3f",
+    "crates/vibe-spec/src/resolver/host.rs": "c821842dd64386df2bb9d42473b98b109b4ad96fd67156abb030654d74a06229",
+    "crates/vibe-workspace/src/publish/staging.rs": "29ca0d0eb9c93d3f9f877c916d8c3558f433f0087da417d4db3fe1d624b93682",
+    "crates/vibe-agent-projection/src/pkgskill/projection.rs": "79be30821dba08ab1fdf03d320f4400ff9eb7d69557ef8223729b412d399132b",
+    "crates/vibe-agent-projection/src/pkgskill/projection/binding.rs": "b60f5f8d39f618269b281ecaa9ed3d8e995ea5f04ab6842f4a1d9bf40efaeb2f",
+    "crates/vibe-cli/src/commands/init/package.rs": "1e33edac89ca544508e57cc202de68094e2cc5abf22118a523f8e45a26dd06c4",
+    "crates/vibe-cli/src/cli/init.rs": "946e82f1bba8c0bf82f48135b1cc402b313ce20ad20576c530302520bde90494",
+    "vibe.toml": "90145b617cf29e8910a71d3408fa917b26b706558afcdd0f32ef1cefc5a51260",
+    "vibevm/vibepacks/org.vibevm.core/vibevm-docs-ru/v1.0.0/vibevm/vibespecs/tutorials/markdown-and-xml.xml": "036dfcc699b01461fbb13967f5d347aac36fe6bb39317b36bc96464a3d02fb2c",
+    "vibevm/vibepacks/org.vibevm.core/vibevm-docs/v1.0.0/vibevm/vibespecs/tutorials/markdown-and-xml.xml": "830ce2d844fecb3a13d839d2c04253c8b2ee3e80f749e7d732aeabb1bd88291d"
+  },
+  "full_a4_promotion": false,
+  "report_sha256": "44545f7e8f91bdb0f1e02688b24913ae63670b6bdf7fb475edab9c45ee784862"
+}

@@ -1,0 +1,28 @@
+{
+  "task": "A4 facts command adapter design",
+  "mode": "read-only; root authorization pending",
+  "observed_at": "2026-11-07T03:57:38.283462+00:00",
+  "source_sha256": {
+    "crates/vibe-cli/src/commands/facts.rs": "5b5765e458a8b4c15bc9a534ef59da07cf51d364689bd3b6def3b65b882ebc22",
+    "crates/vibe-cli/src/commands/facts/selected.rs": "2e6c6fd003e81724ad3ab79967cc0d93df836eb9e141210a53da3d37567f3176",
+    "crates/vibe-cli/src/commands/reinstall.rs": "d98b0fcbfac8bf1710b519b75d4f6b2bbcd359349d8c8aa5b27361d03c6acf24",
+    "crates/vibe-facts/src/lib.rs": "d65e64b8831937eafc946e68e9f5a2ad47ad71f2de7300a64b871e1683728e1d",
+    "crates/vibe-facts/src/store.rs": "0e137f58ac5b0eec0411b526eb97b5e00fd6a1517f5288a60012e0d0a4fbb549",
+    "crates/vibe-facts/src/overlay.rs": "e174d72c2f8d91bf68e6a37690ba4d87c925a630527c4a4575bc9f046200d4e2",
+    "crates/vibe-facts/src/report.rs": "c4427eca6da4c55b9ad96b9d95ed2d22e5d91e8d61fce15920a3debb09084a16",
+    "crates/vibe-facts/src/scan/installed.rs": "aa2d7bd21898394e0131abccd4af46bffafcb84cc43f811b57da3a9726857f19",
+    "crates/vibe-workspace/src/vibedeps/declared_read.rs": "4812030d090da53ceebccf429f10d381c29e706c275aa97e3f3eb65a4fd48bfe",
+    "crates/vibe-workspace/src/vibedeps/derived.rs": "77c956247fdbd4872afc0f972ded335138e44550c758ac6b412d1c3b19253d53",
+    "crates/vibe-workspace/src/vibedeps/derived/materialise.rs": "c33c834063d0e8032a207f72904bcfefd2cb2269241a88165cef4dd8e62c0c62",
+    "crates/vibe-workspace/src/vibedeps/derived/declared.rs": "5cfb162d70fbd0dd24c3a3735bf83357259c530da677a39ddf63a4ac83e71d3e",
+    "crates/vibe-requirements/src/digest.rs": "af009b73e160c3282feaeb6705166745634d6129a5f0ebd41d1fb628b1066c68"
+  },
+  "proposed_read_seam": "CLI-private independent selected observation using existing prepare_declared_query_read and observe_installed_source",
+  "mutation_requirement": "prepare exact rederive/config/source/prospective overlay conversion before first upsert, then preserve actual transformed rederive",
+  "hash_contract": "original package identity, installed row bytes, materialized source witnesses, derived payload and exact registry bytes remain distinct",
+  "runtime_tests_run": false,
+  "full_a4_acceptance": false,
+  "report_sha256": "591a39553151227ee5183c8b5c025e9a86689af0aa94300861e971ad58c4be9a",
+  "worker_report_sha256": "ea5534db9c56b75a38f1f3a3f4414da5543d8c9bf0a91f73f9b3a6d5fb33a270",
+  "root_approved": true
+}

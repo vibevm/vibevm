@@ -2259,12 +2259,13 @@
         "c24dfc6c64a2d900a05b5464f0bc510d4efda925",
         "d2c283e6970432f563a9c44129daf1ada750725a",
         "432761746296c7913297cb7daad1302d30fc3b4b",
-        "33a680809c903a0fa0e40fbdb64640126b19296d"
+        "33a680809c903a0fa0e40fbdb64640126b19296d",
+        "04e7ccad8ead2002fd49d936e6917b8631e7006a"
       ],
       "transferred_scope": null,
-      "unmet_or_unverified": "Integrate bound graph check and remaining adoption/docs/progress/tree/show/skill/publish staging/pattern consumers; prove complete mixed-source/operation matrix and update tutorials/default/comments.",
-      "implemented_coverage": "Accepted A1/A2/A3 provide explicit package policy, original exact-file facts observation, held source reading, descriptor-driven materialization and bound installed compiler/boot/native/backend/replay. Existing init package link/default behavior is present. This does not bind all A4 consumers. Installed requirements query now accepted with full lock binding, effective output mapping, direct native facts parity and actual CLI/MCP. Host project.sources policy, targeted cited sync, prewrite stability and activation guards accepted; generated display/empty-host behavior preserved. Checked declared host native point/anchor/embed/compiler reading accepted, with retained evidence and installed-slot separation. Finite original host facts/requirements query now accepted with real CLI/MCP, full selected witnesses and order-independent failure classification. Declared own/inherited boot enrollment and ordinary/native/replay publication checks accepted; real grouped/ungrouped install works.",
-      "remaining_behavior": "Integrate bound graph check and remaining adoption/docs/progress/tree/show/skill/publish staging/pattern consumers; prove complete mixed-source/operation matrix and update tutorials/default/comments.",
+      "unmet_or_unverified": "Integrate remaining facts report/adoption, docs/citations/agent, progress/tree/show/skills/publish staging and host patterns; prove complete mixed-source matrix and update tutorials/default/comments. Broader host project check rules remain distinct from accepted graph adapter.",
+      "implemented_coverage": "Accepted A1/A2/A3 provide explicit package policy, original exact-file facts observation, held source reading, descriptor-driven materialization and bound installed compiler/boot/native/backend/replay. Existing init package link/default behavior is present. This does not bind all A4 consumers. Installed requirements query now accepted with full lock binding, effective output mapping, direct native facts parity and actual CLI/MCP. Host project.sources policy, targeted cited sync, prewrite stability and activation guards accepted; generated display/empty-host behavior preserved. Checked declared host native point/anchor/embed/compiler reading accepted, with retained evidence and installed-slot separation. Finite original host facts/requirements query now accepted with real CLI/MCP, full selected witnesses and order-independent failure classification. Declared own/inherited boot enrollment and ordinary/native/replay publication checks accepted; real grouped/ungrouped install works. Bound boot graph verifier/check now uses selected format and reports applicable failures instead of silent clean.",
+      "remaining_behavior": "Integrate remaining facts report/adoption, docs/citations/agent, progress/tree/show/skills/publish staging and host patterns; prove complete mixed-source matrix and update tutorials/default/comments. Broader host project check rules remain distinct from accepted graph adapter.",
       "superseded_obligations": [
         {
           "clause": "No unclassified semantic path including all undeclared legacy input",
@@ -2309,7 +2310,8 @@
             "research/m06-a4-host-acceptance.md",
             "research/m06-a4-host-read-acceptance.md",
             "research/m06-a4-host-query-acceptance.md",
-            "research/m06-a4-own-boot-acceptance.md"
+            "research/m06-a4-own-boot-acceptance.md",
+            "research/m06-a4-boot-check-acceptance.md"
           ]
         },
         {

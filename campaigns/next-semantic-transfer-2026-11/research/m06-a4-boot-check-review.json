@@ -1,0 +1,42 @@
+{
+  "task": "A4 bound boot-check read-only review",
+  "observed_at": "2026-11-07T03:55:20.321527+00:00",
+  "verdict": "no concrete blocker found; qualified bounded evidence",
+  "defects": [],
+  "runtime_tests_run_by_reviewer": false,
+  "product_edits": false,
+  "source_sha256": {
+    "crates/vibe-workspace/src/install/bootgen/verify.rs": "77669a19331a28b2bd5efb25a4eccc30d298bfcad4550b768ee5892000633258",
+    "crates/vibe-workspace/src/install/bootgen.rs": "2d5b5cac405a780aa5d397ac12a5844130491f5d15817d15e59f55ac44026305",
+    "crates/vibe-workspace/src/install.rs": "aa7ebd15b1572367671aeffcc9f05908e71c8562c09f7bc2484d6ae63ca98eba",
+    "crates/vibe-cli/src/commands/check.rs": "b2eb36f17a50fc4be902e6fcccb627ee84237df6e81d644a99639179aff0d617",
+    "crates/vibe-cli/tests/cli_declared_boot_check.rs": "8f26c5cd63ee9d37d7e1f74103c893b2d2d4dc1910129d5de15e4624a90748f6",
+    "crates/vibe-workspace/src/install/bootgen/declared_tests/cases/boot_check.rs": "98e853a07369afeeac1a332e83d89f3b1477000d6427e5b9fa817083ebb0e5b8",
+    "crates/vibe-workspace/src/install/bootgen/materialised_read.rs": "edcff2a60178e0be3022db19d4d4e71553559f09257bca1060bddf90241ab6fa",
+    "crates/vibe-workspace/src/install/bootgen/hybrid_emit.rs": "7eedea75bbab8446a44fe6fcb3469feb6028cc3ba123902ba9117e701f118b93",
+    "crates/vibe-workspace/src/install/bootgen/owner_plans.rs": "0b017c90bc0b9a31b9564bded80d3bbd0daf32bf4e44837f8bea85a28632c578",
+    "crates/vibe-cli/src/commands/reinstall.rs": "d98b0fcbfac8bf1710b519b75d4f6b2bbcd359349d8c8aa5b27361d03c6acf24"
+  },
+  "observed_tests": {
+    "cli": 6,
+    "bound_library": 2,
+    "legacy": 2,
+    "native_corrected": 7,
+    "native_earlier_filter": 0
+  },
+  "log_sha256": {
+    "/tmp/nst-a4-boot-check-green-final.log": "5c9e74649c61e13e7780b7dd2ce46caf4f103e2e1d55267a43b0905386aab5ae",
+    "/tmp/nst-a4-boot-check-unit-retry.log": "08f4b4aae85b895f6dd391804f9d95a03d18e3cd443ba42a3a6e82c66b8fa774",
+    "/tmp/nst-a4-boot-check-legacy-final.log": "d088c02a54fbb8b35dfb3a22a4a0a596be5363d05396b52f09d4421124521d76",
+    "/tmp/nst-a4-boot-check-native-corrected.log": "308029c86ecaa6cc82177556cc8de4a533ac564e924ef74eedde2c341bb1a6d4",
+    "/tmp/nst-a4-boot-check-native.log": "71a4fdcd6fc8cbde9aeee820107a9518b2fccf9f80f59a25b896758fc354de1a",
+    "/tmp/nst-a4-boot-check-clippy-cli.log": "a3407bfb4201fc065a4bbff5347c82f3464697ec311e86d72413a4576584c44c",
+    "/tmp/nst-a4-boot-check-clippy-workspace-retry.log": "959c30aa2a9323411d35e9821d21a5ac69922d1fa52b56fbd9639cdf0122c19e"
+  },
+  "limits": [
+    "Selected-format plan-frame wiring is source-verified; new runtime fixtures do not independently discriminate XML-specific activated plan versus Mixed frame",
+    "No STATIC-body authentication, global CAS or whole-A4 claim",
+    "Conform terminal verdict left to active writer/root"
+  ],
+  "report_sha256": "752001b67c2d1284ea90fab4e0f0b6de3f523729d3a9422e8b4fd179db80c925"
+}

@@ -2172,3 +2172,23 @@ Root final map found SOURCE-OPERATION-ENROLLMENT content changed at unchanged r1
 ### 2026-11-07 — declared own/inherited boot accepted
 
 Product commit 33a680809c903a0fa0e40fbdb64640126b19296d contains28root hash-verified paths:25primary, independent CLI fixture and canonical/map. Initial ownership-union check correctly caught that the peer CLI file was not inside the primary manifest; root verified its separate original hash before staging all28. Acceptance and limits are research/m06-a4-own-boot-acceptance.md/json. Map/check retains9158prior units and44warning meanings; no orphan/unresolvedhost, wire-diff passes. SOURCE-OPERATION-ENROLLMENT r2 records semantic refinement; no editorial bypass. FullA4 remainspartial and counts12/31/31/39 unchanged. Next bounded adapter is truthful boot-graph verification.
+
+### 2026-11-07 — bound graph checker contract before implementation
+
+Ownboot accepted; next bounded adapter is existing verify_boot_graph/check. Root approved additive selected-format verifier with current binding/table/fingerprint owners, visible applicable Error rather than swallowed refusal, absent-lock no-op and unchanged stale Warning law. SOURCE-BOOT-CHECK reqr1 and FMT035 are planned before code/tests. No generated-input admit call, new schema/option/member discovery or body-authentication guarantee. Remaining broad host check/docs/skills/adoption/publish staging work stays explicit.
+
+Boot-check worker confirmed the bounded decision and is adding real CLI regressions before changing the verifier. Root approved execution; no duplicate writer or Cargo job. In parallel a read-only residual A4 inventory is reconciling accepted primitives with still-guarded adoption/docs/skills/publish/pattern consumers so the remaining route is concrete, not inferred from old crosswalk text. Saved accepted9160unit/44warning map baseline for this adapter. No task-count change.
+
+### 2026-11-07 — real boot-check silent-clean regression
+
+Root inspected /tmp/nst-a4-boot-check-red.log on unchanged product: focused CLI target4tests ran2PASS/2FAIL. Fresh Mixed/Xml and no-lock controls passed. Corrupt declared unit INDEX and selected Xml→Mixed mismatch each returned exit0, JSON ok:true and findings:[], confirming the swallowed-verification failure at the actual command surface. Bound verifier/report integration is now being implemented; no weaker expected oracle is authorized.
+
+Residual A4 source audit also found the old CLI facts report still routes materialised_slot→scan_authored_facts without accepted installed binding, and adoption retains Mixed/exact-file limits. These form a later bounded facts-command adapter, not a reason to rewrite accepted requirements query. Docs and publish staging remain guarded path-only consumers; full closure route is being reconciled separately, without concurrent edits to the active check target.
+
+### 2026-11-07 — boot-check actual GREEN and zero-test correction
+
+Boot-check implementation now passes real CLI6 (fresh formats, corrupt/missing INDEX warnings, applicable failures, operator default/drift and empty/no-lock controls) and direct selected verifier2 plus incumbent legacy/activated-plan controls. Initial helper extraction had compile-only imports/ContentHash fixture corrections. The worker initially reported native freshness7 before inspecting output; that first filename-based filter actually ran0 and is explicitly not coverage. It corrected the module filter and root inspected native-corrected.log:7actual tests PASS. Static review is in progress; final Clippy test-only import cleanup retains scope and no allowance. No fullA4/count promotion.
+
+### 2026-11-07 — bound boot graph check accepted
+
+Product commit 04e7ccad8ead2002fd49d936e6917b8631e7006a contains10root hash-verified paths. Actual silent-clean regression is closed; accepted behavior/gates/limits are research/m06-a4-boot-check-acceptance.md/json and FMT035. Map/check preserves9160prior units and44warning meanings; existing legacy verifier pin warning moved with its module. No orphan/unresolvedhost, wire-diff passes, no schema/codegen activation. Earlier zero-test filter is excluded from proof. FullA4 stayspartial and12/31/31/39 unchanged; next facts command report/adoption adapter must preserve post-adopt rederive and prewrite checks.

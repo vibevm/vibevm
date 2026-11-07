@@ -306,3 +306,5 @@ A4 checked host point-reader accepted in `d2c283e6970432f563a9c44129daf1ada75072
 A4 host facts/query accepted in `432761746296c7913297cb7daad1302d30fc3b4b`; [bounded acceptance](m06-a4-host-query-acceptance.md). Own boot and remaining consumers still keep the original task partial.
 
 A4 own/inherited boot accepted in `33a680809c903a0fa0e40fbdb64640126b19296d`; [bounded acceptance](m06-a4-own-boot-acceptance.md). Remaining consumers and full matrix keep A4 partial.
+
+A4 bound boot-check accepted in `04e7ccad8ead2002fd49d936e6917b8631e7006a`; [adapter acceptance](m06-a4-boot-check-acceptance.md). Remaining consumer matrix keeps A4 partial.

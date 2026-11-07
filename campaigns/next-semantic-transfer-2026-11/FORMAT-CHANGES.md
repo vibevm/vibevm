@@ -593,3 +593,11 @@ Accepted as the own-boot slice below. Automatic own boot uses VibeSpec+scan in t
 The temporary blanket refusal for nonempty host source policy is replaced by supported scoped preparation before effects and retained checks before actual publication, including zero-static/native/replay paths. Ungrouped hosts keep the existing provider and no fabricated group. No new record/lock/IR/wire epoch or automatic rewrite of authored source bytes is planned. Accepted API/behavior evidence is recorded below.
 
 FMT-034 accepted in `33a680809c903a0fa0e40fbdb64640126b19296d`; research/m06-a4-own-boot-acceptance.md/json. The operation-enrollment contract moves r1→r2 for the explicit VibeSpec instruction rule. Nonempty host install no longer fails merely for opt-in policy; actual selected invalid input still refuses before effects. Public AuthoredBoot/INDEX/storage/wire shapes remain unchanged. Publish staging and remaining A4 consumers stay separate unfinished work.
+
+## FMT-035 — Bound boot graph check and visible inability to verify (accepted adapter)
+
+Accepted as the adapter below. An additive selected-format library verifier reuses existing binding/table/fingerprint semantics. Existing unbound verifier remains. CLI check uses the actual project/operator format rather than suffix/record guesses. No new manifest key, CheckId, wire schema or command option.
+
+Behavior change: no durable lock remains non-applicable; stale/missing unit INDEX remains Warning and warning-only exit0. Applicable load/configuration/binding/verification failures now become BootGraphIntegrity Error, JSON ok=false and error exit after normal report emission, instead of being silently discarded. Verification remains read-only with no lifecycle lease or regeneration. This does not broaden fingerprint checking into STATIC-content authentication. Final receipts and compatibility are recorded below.
+
+FMT-035 accepted in `04e7ccad8ead2002fd49d936e6917b8631e7006a`; research/m06-a4-boot-check-acceptance.md/json. The existing warning-only behavior is retained; inability to verify an applicable graph now fails visibly. No wire/manifest schema, CheckId or storage format changes.
