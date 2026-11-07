@@ -53,6 +53,14 @@ pub struct GitPreparedRevision {
 )]
 pub enum GitError {
     #[error(
+        "SSH host key rejected (violates spec://org.vibevm.core/vibevm/common/PROP-073#NATIVE-SSH; fix: verify the exact endpoint and explicitly select its trusted known-hosts input)"
+    )]
+    SshHostKeyRejected,
+    #[error(
+        "SSH authentication rejected (violates spec://org.vibevm.core/vibevm/common/PROP-073#NATIVE-SSH; fix: select an authorized identity or explicit agent for this exact endpoint)"
+    )]
+    SshAuthenticationRejected,
+    #[error(
         "native operation unavailable: {operation} (violates spec://org.vibevm.core/vibevm/common/PROP-073#NATIVE-PREPARATION; fix: use a separately supported transport or materialisation capability)"
     )]
     NativeUnavailable { operation: &'static str },
@@ -248,6 +256,15 @@ pub trait GitBackend: Send + Sync {
         _auth: vibe_core::manifest::AuthKind,
     ) -> Result<(), GitError> {
         Ok(())
+    }
+
+    /// Return an immutable capability restricted to this registry's declared
+    /// credential mechanism. Unbound backends retain their incumbent behavior.
+    fn bound_for_registry_auth(
+        &self,
+        _auth: vibe_core::manifest::AuthKind,
+    ) -> Result<Option<std::sync::Arc<dyn GitBackend>>, GitError> {
+        Ok(None)
     }
 
     /// Refuse unsupported publication before its caller creates or removes paths.

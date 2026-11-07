@@ -195,7 +195,20 @@ impl NativeGitAdmission {
             ));
         }
         if warm.is_some() {
-            captured.validate_warm_transport()?;
+            // This is data-only Git URL resolution, not ssh -G or execution
+            // of the captured SSH command. Exact profile admission precedes the
+            // narrow classification of selectors inactive/superseded for SSH.
+            let explicit_ssh = if self.ssh.is_some() {
+                let effective = read(&["remote", "get-url", "origin"])?;
+                effective.status.success()
+                    && matches!(
+                        self.capture_address(&text(effective.stdout)?, true)?,
+                        AdmittedRemote::Ssh(_)
+                    )
+            } else {
+                false
+            };
+            captured.validate_warm_transport(explicit_ssh)?;
         }
         for (name, system) in [("GIT_ATTR_SYSTEM", true), ("GIT_ATTR_GLOBAL", false)] {
             let result = read(&["var", name])?;
@@ -245,9 +258,17 @@ fn absolute_from(cwd: &Path, path: &str) -> PathBuf {
     }
 }
 impl CapturedContext {
-    fn validate_warm_transport(&self) -> Result<(), GitError> {
+    fn validate_warm_transport(&self, explicit_ssh: bool) -> Result<(), GitError> {
         for (key, value) in &self.entries {
             if value.is_empty() {
+                continue;
+            }
+            if explicit_ssh
+                && (key == "core.sshcommand"
+                    || key.starts_with("credential.")
+                    || key.starts_with("http.")
+                    || (key.starts_with("remote.") && key.ends_with(".proxy")))
+            {
                 continue;
             }
             if key.starts_with("credential.")

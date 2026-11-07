@@ -578,6 +578,8 @@ impl PreparationFailure {
         if matches!(&error, RegistryError::Git(error) if !matches!(
             error,
             GitError::ContactRefused(_)
+                | GitError::SshHostKeyRejected
+                | GitError::SshAuthenticationRejected
                 | GitError::NativeUnavailable { .. }
                 | GitError::NativeContext { .. }
                 | GitError::PreparedCheckout { .. }

@@ -26,6 +26,7 @@ pub(super) enum Remote<'a> {
     Url(&'a str),
     /// The `origin` of the repository a fetch runs in.
     Origin,
+    Admitted(&'a str, native_admission::NativeProtocol),
 }
 
 impl ShellGit {
@@ -79,12 +80,13 @@ impl ShellGit {
         url: &str,
         repository: &Path,
     ) -> Result<Output, GitError> {
+        let (command, protocol) = command.into_parts();
         self.finish_transfer(
-            command.into_command(),
+            command,
             argv,
             argv,
             None,
-            Remote::Url(url),
+            Remote::Admitted(url, protocol),
             repository,
         )
     }
@@ -158,7 +160,17 @@ impl ShellGit {
             }
             return Ok(output);
         }
-        let error = if self.native.is_some() {
+        let ssh_error = if matches!(
+            remote,
+            Remote::Admitted(_, native_admission::NativeProtocol::Ssh)
+        ) {
+            native_admission::ssh::failure(&output.stderr)
+        } else {
+            None
+        };
+        let error = if let Some(error) = ssh_error {
+            error
+        } else if self.native.is_some() {
             GitError::CommandFailed {
                 cmd: "admitted native Git transfer".into(),
                 status: output.status.code().unwrap_or(-1),
@@ -185,7 +197,7 @@ impl ShellGit {
         began: std::time::Instant,
     ) -> Transfer {
         let url = match remote {
-            Remote::Url(url) => (*url).to_owned(),
+            Remote::Url(url) | Remote::Admitted(url, _) => (*url).to_owned(),
             Remote::Origin => self.origin_url(cwd),
         };
         let scope = transfers::current();

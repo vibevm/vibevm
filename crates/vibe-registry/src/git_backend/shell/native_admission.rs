@@ -1,4 +1,4 @@
-//! Explicit direct HTTPS preparation; no ambient Git execution authority.
+//! Explicit direct HTTPS/SSH preparation; no ambient Git execution authority.
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-073#NATIVE-PREPARATION");
 use super::{GitError, GitPreparedRevision};
 use reqwest::Url;
@@ -8,6 +8,8 @@ use std::{
     sync::{Arc, Mutex},
 };
 mod capture;
+pub(super) mod ssh;
+pub use ssh::{SshAuthentication, SshProfile};
 mod context;
 pub use capture::NativeConfigSelection;
 mod materialisation;
@@ -50,7 +52,8 @@ pub enum TlsTrust {
     /// Captured PEM certificate authorities, copied only into the operation home.
     Pem(Vec<u8>),
 }
-/// Immutable HTTPS capability, distinct from HTTP-only admission.
+/// Immutable native capability, distinct from HTTP-only admission.
+/// HTTPS is selected initially; SSH requires an explicit additional profile.
 ///
 /// ```
 /// use std::{path::PathBuf, sync::Arc};
@@ -70,6 +73,7 @@ pub struct NativeGitAdmission {
     installation: GitInstallation,
     trust: TlsTrust,
     selection: Option<NativeConfigSelection>,
+    ssh: Option<SshProfile>,
 }
 impl NativeGitAdmission {
     /// Select direct HTTPS with caller-trusted Git and TLS inputs. This does not
@@ -86,6 +90,29 @@ impl NativeGitAdmission {
             installation,
             trust,
             selection: None,
+            ssh: None,
+        }
+    }
+    /// Extend this immutable capability with an exact explicitly selected SSH
+    /// endpoint, explicitly for fresh acquisition and warm refresh alike.
+    /// Historical ambient SSH configuration is replaced by this caller choice,
+    /// not captured or declared equivalent. Git origin witnesses still recheck.
+    /// No agent, identity or SSH configuration is inherited.
+    pub fn with_ssh_profile(mut self, ssh: SshProfile) -> Self {
+        self.ssh = Some(ssh);
+        self
+    }
+    pub(crate) fn preflight_registry_auth(
+        &self,
+        auth: vibe_core::manifest::AuthKind,
+    ) -> Result<(), GitError> {
+        use vibe_core::manifest::AuthKind;
+        match auth {
+            AuthKind::None | AuthKind::TokenEnv => Ok(()),
+            AuthKind::Ssh if self.ssh.is_some() => Ok(()),
+            _ => Err(unsupported(
+                "declared credential route requires a separate admitted profile",
+            )),
         }
     }
     /// The exact immutable binding also used by raw HTTP and index clients.
@@ -103,7 +130,7 @@ pub(super) fn unsupported(reason: &'static str) -> GitError {
 }
 pub(super) fn unavailable() -> GitError {
     GitError::NativeUnavailable {
-        operation: "local materialisation (N2), SSH (N3), redirects and submodules (N4)",
+        operation: "legacy native execution or an unselected phase capability",
     }
 }
 fn io(source: std::io::Error) -> GitError {
@@ -121,15 +148,51 @@ fn full_oid(s: &str) -> bool {
     matches!(s.len(), 40 | 64) && s.bytes().all(|c| c.is_ascii_hexdigit())
 }
 
-// Not publicly constructible and never Debug: the credential is operation-local.
-struct AdmittedRemote {
-    url: Url,
-    authorization: Option<String>,
+// Neither credentials nor SSH trust/key material have a Debug surface.
+#[derive(Clone, Copy)]
+pub(in crate::git_backend::shell) enum NativeProtocol {
+    Https,
+    Ssh,
+}
+enum AdmittedRemote {
+    Https {
+        url: Url,
+        authorization: Option<String>,
+    },
+    Ssh(ssh::Remote),
+}
+impl AdmittedRemote {
+    fn address(&self) -> &str {
+        match self {
+            Self::Https { url, .. } => url.as_str(),
+            Self::Ssh(remote) => &remote.address,
+        }
+    }
+    fn protocol(&self) -> NativeProtocol {
+        match self {
+            Self::Https { .. } => NativeProtocol::Https,
+            Self::Ssh(_) => NativeProtocol::Ssh,
+        }
+    }
 }
 impl NativeGitAdmission {
-    fn capture(&self, address: &str, anonymous: bool) -> Result<AdmittedRemote, GitError> {
+    // Metadata/address capture never grants use of an SSH credential.
+    fn capture_address(
+        &self,
+        address: &str,
+        reject_https_credentials: bool,
+    ) -> Result<AdmittedRemote, GitError> {
         if address.chars().any(char::is_control) {
             return Err(unsupported("control character in endpoint"));
+        }
+        if address.starts_with("ssh://") || (!address.contains("://") && address.contains(':')) {
+            let profile = self
+                .ssh
+                .as_ref()
+                .ok_or_else(|| unsupported("SSH requires an explicit selected profile"))?;
+            return profile
+                .capture(address, &self.binding)
+                .map(AdmittedRemote::Ssh);
         }
         let mut url =
             Url::parse(address).map_err(|_| unsupported("direct HTTPS endpoint required"))?;
@@ -139,7 +202,7 @@ impl NativeGitAdmission {
             ));
         }
         let authorization = if !url.username().is_empty() || url.password().is_some() {
-            if anonymous || url.username() != "x-access-token" {
+            if reject_https_credentials || url.username() != "x-access-token" {
                 return Err(unsupported("unsupported credential route"));
             }
             let password = url
@@ -170,7 +233,28 @@ impl NativeGitAdmission {
         url.set_password(None)
             .map_err(|_| unsupported("invalid endpoint authority"))?;
         self.binding.admit_address(url.as_str())?;
-        Ok(AdmittedRemote { url, authorization })
+        Ok(AdmittedRemote::Https { url, authorization })
+    }
+    fn capture_for_request(
+        &self,
+        address: &str,
+        anonymous: bool,
+        registry_auth: Option<vibe_core::manifest::AuthKind>,
+    ) -> Result<AdmittedRemote, GitError> {
+        use vibe_core::manifest::AuthKind;
+        // Address/host checks remain shared. Registry auth narrows credential
+        // use; it does not forbid credential-free HTTPS metadata reads.
+        let reject_https_credentials =
+            anonymous || registry_auth.is_some_and(|auth| !matches!(auth, AuthKind::TokenEnv));
+        let remote = self.capture_address(address, reject_https_credentials)?;
+        if matches!(remote, AdmittedRemote::Ssh(_))
+            && (anonymous || registry_auth.is_some_and(|auth| !matches!(auth, AuthKind::Ssh)))
+        {
+            return Err(unsupported(
+                "registry credential binding does not permit the selected SSH key or agent",
+            ));
+        }
+        Ok(remote)
     }
 }
 pub(super) struct Preparation<'a> {
@@ -275,10 +359,13 @@ impl NativeState {
         &self,
         address: &str,
         anonymous: bool,
+        registry_auth: Option<vibe_core::manifest::AuthKind>,
     ) -> Result<std::process::Output, GitError> {
-        let remote = self.profile.capture(address, anonymous)?;
+        let remote = self
+            .profile
+            .capture_for_request(address, anonymous, registry_auth)?;
         Context::new(&self.profile)?.run(
-            &["ls-remote", "--tags", "--", remote.url.as_str()],
+            &["ls-remote", "--tags", "--", remote.address()],
             None,
             Some(&remote),
         )
@@ -328,8 +415,8 @@ impl NativeState {
         url: &str,
     ) -> Result<(), GitError> {
         self.with_owned(objects, |owned| {
-            let requested = self.profile.capture(url, true)?;
-            if remote != "origin" || requested.url.as_str() != owned.origin {
+            let requested = self.profile.capture_address(url, true)?;
+            if remote != "origin" || requested.address() != owned.origin {
                 return Err(unsupported("owned source origin cannot be rebound"));
             }
             Ok(())
@@ -351,3 +438,9 @@ fn supported_version(version: &str) -> bool {
 }
 #[cfg(test)]
 mod tests;
+
+#[cfg(all(test, unix))]
+mod ssh_tests;
+
+#[cfg(all(test, unix))]
+mod registry_auth_tests;

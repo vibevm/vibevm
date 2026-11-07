@@ -4,12 +4,12 @@ use super::*;
 use crate::{GitBackend, ShellGit};
 use std::io::{BufRead, BufReader};
 use std::process::{Command, Stdio};
-struct Fixture {
+pub(super) struct Fixture {
     child: std::process::Child,
     info: serde_json::Value,
 }
 impl Fixture {
-    fn new() -> Self {
+    pub(super) fn new() -> Self {
         let mut child = Command::new("python3")
             .args(["-u", "-c", include_str!("tls_fixture.py")])
             .stdin(Stdio::piped())
@@ -24,7 +24,7 @@ impl Fixture {
         let info = serde_json::from_str(&line).expect("fixture must initialise successfully");
         Self { child, info }
     }
-    fn get(&self, key: &str) -> &str {
+    pub(super) fn get(&self, key: &str) -> &str {
         self.info[key].as_str().unwrap()
     }
     fn backend(&self) -> ShellGit {
@@ -35,7 +35,7 @@ impl Fixture {
         );
         ShellGit::new().with_native_admission(Arc::new(profile))
     }
-    fn contacts(&self, host: &str) -> usize {
+    pub(super) fn contacts(&self, host: &str) -> usize {
         std::fs::read_to_string(Path::new(self.get("root")).join(format!("{host}.log")))
             .unwrap_or_default()
             .lines()
@@ -437,27 +437,33 @@ fn credentials_keep_exact_origins_while_denial_uses_normalized_hosts() {
         TlsTrust::System,
     );
     assert!(matches!(
-        profile.capture("https://x-access-token:SYNTHETIC@blocked.invalid./r", false),
+        profile.capture_address("https://x-access-token:SYNTHETIC@blocked.invalid./r", false),
         Err(GitError::ContactRefused(_))
     ));
     let a = profile
-        .capture("https://x-access-token:SYNTHETIC@example.invalid/r", false)
+        .capture_address("https://x-access-token:SYNTHETIC@example.invalid/r", false)
         .unwrap();
     let dotted = profile
-        .capture("https://x-access-token:SYNTHETIC@example.invalid./r", false)
+        .capture_address("https://x-access-token:SYNTHETIC@example.invalid./r", false)
         .unwrap();
     let port = profile
-        .capture(
+        .capture_address(
             "https://x-access-token:SYNTHETIC@example.invalid:444/r",
             false,
         )
         .unwrap();
-    assert_ne!(a.url.origin(), dotted.url.origin());
-    assert_ne!(a.url.origin(), port.url.origin());
-    assert_eq!(a.url.as_str(), "https://example.invalid/r");
+    assert_ne!(
+        Url::parse(a.address()).unwrap().origin(),
+        Url::parse(dotted.address()).unwrap().origin()
+    );
+    assert_ne!(
+        Url::parse(a.address()).unwrap().origin(),
+        Url::parse(port.address()).unwrap().origin()
+    );
+    assert_eq!(a.address(), "https://example.invalid/r");
     assert!(
         profile
-            .capture("https://x-access-token:SYNTHETIC@example.invalid/r", true)
+            .capture_address("https://x-access-token:SYNTHETIC@example.invalid/r", true)
             .is_err()
     );
 }
@@ -553,3 +559,34 @@ fn denied_mirror_stays_typed_after_primary_absence_and_stops_the_next_route() {
 
 #[path = "materialisation_tests.rs"]
 mod materialisation_tests;
+
+#[test]
+fn direct_public_https_constructor_retains_useful_anonymous_preparation() {
+    let f = Fixture::new();
+    let temp = tempfile::tempdir().unwrap();
+    let registry = crate::GitPerPackageRegistry::open_single_package(
+        "public",
+        &format!("{}/repo.git", f.get("a")),
+        "main",
+        temp.path(),
+        Arc::new(f.backend()),
+        0,
+        vibe_core::manifest::AuthKind::None,
+        None,
+    )
+    .unwrap();
+    let selected = crate::ResolvedPackage {
+        group: vibe_core::Group::parse("org.fixture").unwrap(),
+        name: "demo".into(),
+        version: semver::Version::new(1, 0, 0),
+        source_dir: PathBuf::new(),
+    };
+    assert_eq!(
+        registry
+            .prepare_in_place(&selected, &temp.path().join("slot"))
+            .unwrap()
+            .resolved_commit(),
+        f.get("head")
+    );
+    assert_eq!(f.contacts("b"), 0);
+}

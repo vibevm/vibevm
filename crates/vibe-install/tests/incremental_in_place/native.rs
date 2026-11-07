@@ -238,3 +238,6 @@ fn metadata_only_commit_is_materialised_even_when_payload_is_identical() {
     assert_ne!(git(&f.slot, &["rev-parse", "HEAD"]), old);
     assert_eq!(fs::read(f.slot.join("payload.txt")).unwrap(), bytes);
 }
+
+#[path = "native_ssh.rs"]
+mod ssh;

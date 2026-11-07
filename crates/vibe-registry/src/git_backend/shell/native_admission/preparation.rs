@@ -26,9 +26,13 @@ impl NativeState {
             .flatten();
         let effective = if let Some(repo) = reuse {
             let effective = self.origin(repo, true)?;
-            let captured = self.profile.capture(&effective, true)?;
-            let requested = self.profile.capture(address, anonymous)?;
-            if captured.url != requested.url {
+            let captured = self.profile.capture_address(&effective, true)?;
+            let requested = self.profile.capture_for_request(
+                address,
+                anonymous,
+                reporter.native_registry_auth,
+            )?;
+            if captured.address() != requested.address() {
                 return Err(unsupported(
                     "warm effective origin changed before acquisition",
                 ));
@@ -37,7 +41,11 @@ impl NativeState {
         } else {
             address.to_owned()
         };
-        let remote = self.profile.capture(&effective, anonymous)?;
+        let remote = self.profile.capture_for_request(
+            &effective,
+            anonymous,
+            reporter.native_registry_auth,
+        )?;
         if !objects.is_absolute() || objects.exists() {
             return Err(unsupported(
                 "preparation requires an absent absolute owned object path",
@@ -64,7 +72,7 @@ impl NativeState {
                 "--no-recurse-submodules",
                 "--template=",
                 "--",
-                remote.url.as_str(),
+                remote.address(),
                 dest,
             ],
             None,
@@ -82,11 +90,8 @@ impl NativeState {
         };
         // Advertised refs choose a namespace without interpreting arbitrary
         // remote stderr as absence or as a redirect instruction.
-        let advertised = context.run(
-            &["ls-remote", "--", remote.url.as_str()],
-            None,
-            Some(&remote),
-        )?;
+        let advertised =
+            context.run(&["ls-remote", "--", remote.address()], None, Some(&remote))?;
         let refs = text(advertised.stdout)?;
         let name = candidates
             .into_iter()
@@ -97,7 +102,7 @@ impl NativeState {
                         .any(|line| line.split_once('\t').is_some_and(|(_, r)| r == candidate))
             })
             .ok_or_else(|| GitError::RefNotFound {
-                url: remote.url.to_string(),
+                url: remote.address().to_owned(),
                 refname: reference.into(),
             })?;
         context.transfer(
@@ -112,7 +117,7 @@ impl NativeState {
                 "--no-auto-gc",
                 "--no-write-commit-graph",
                 "--",
-                remote.url.as_str(),
+                remote.address(),
                 &name,
             ],
             Some(objects),
@@ -201,7 +206,7 @@ impl NativeState {
                     objects.into(),
                     OwnedRepository {
                         config,
-                        origin: remote.url.to_string(),
+                        origin: remote.address().to_owned(),
                         revision: revision.clone(),
                         context: captured,
                         source: reuse.map(Path::to_path_buf),

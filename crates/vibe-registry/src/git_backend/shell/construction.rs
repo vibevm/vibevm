@@ -15,6 +15,7 @@ impl ShellGit {
             binary,
             admission: None,
             native: None,
+            native_registry_auth: None,
             force_anonymous: false,
             raw_base: None,
             raw_client: OnceLock::new(),
@@ -31,6 +32,7 @@ impl ShellGit {
     )]
     pub fn with_http_admission(mut self, admission: Arc<crate::HttpAdmission>) -> Self {
         self.native = None;
+        self.native_registry_auth = None;
         self.admission = Some(admission);
         self.raw_client = OnceLock::new();
         self
@@ -44,6 +46,7 @@ impl ShellGit {
         profile: Arc<native_admission::NativeGitAdmission>,
     ) -> Self {
         self.admission = Some(profile.http_admission());
+        self.native_registry_auth = None;
         self.native = Some(Arc::new(native_admission::NativeState::new(profile)));
         self.raw_client = OnceLock::new();
         self
@@ -88,5 +91,41 @@ impl ShellGit {
     pub fn with_raw_sleeper(mut self, sleeper: impl Fn(Duration) + Send + Sync + 'static) -> Self {
         self.raw_sleeper = Sleeper(Arc::new(sleeper));
         self
+    }
+    // Preserve immutable capability/state sharing without exposing a general
+    // Clone implementation or a mutable auth slot on the shared backend.
+    pub(super) fn capability_clone(&self) -> Self {
+        Self {
+            binary: self.binary.clone(),
+            admission: self.admission.clone(),
+            native: self.native.clone(),
+            native_registry_auth: self.native_registry_auth,
+            force_anonymous: self.force_anonymous,
+            raw_base: self.raw_base.clone(),
+            raw_client: OnceLock::from(self.raw_client().cloned()),
+            raw_sleeper: self.raw_sleeper.clone(),
+            preflight_cache: OnceLock::new(),
+            transfers: Arc::clone(&self.transfers),
+        }
+    }
+    pub(super) fn registry_auth_clone(
+        &self,
+        auth: vibe_core::manifest::AuthKind,
+    ) -> Result<Option<Arc<dyn GitBackend>>, GitError> {
+        let Some(native) = &self.native else {
+            return Ok(None);
+        };
+        native.profile.preflight_registry_auth(auth)?;
+        if (self.force_anonymous || self.native_registry_auth.is_some_and(|bound| bound != auth))
+            && !matches!(auth, vibe_core::manifest::AuthKind::None)
+        {
+            return Err(native_admission::unsupported(
+                "a registry-bound or anonymous capability cannot gain a different credential mechanism",
+            ));
+        }
+        let mut cloned = self.capability_clone();
+        cloned.native_registry_auth = Some(auth);
+        cloned.force_anonymous |= matches!(auth, vibe_core::manifest::AuthKind::None);
+        Ok(Some(Arc::new(cloned)))
     }
 }

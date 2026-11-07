@@ -226,6 +226,7 @@ impl GitPerPackageRegistry {
         auth: vibe_core::manifest::AuthKind,
         token_value: Option<String>,
     ) -> Result<Self, RegistryError> {
+        let backend = bind_registry_backend(backend, auth)?;
         let normalized = normalize_url(org_url);
         let canonical_hash = short_url_hash(&normalized);
         let cache_root_owned = cache_root.to_path_buf();
@@ -286,6 +287,7 @@ impl GitPerPackageRegistry {
         auth: vibe_core::manifest::AuthKind,
         token_env_name: Option<&str>,
     ) -> Result<Self, RegistryError> {
+        let backend = bind_registry_backend(backend, auth)?;
         let normalized = normalize_url(org_url);
         let canonical_hash = short_url_hash(&normalized);
         let cache_root_owned = cache_root.to_path_buf();
@@ -471,3 +473,21 @@ fn short_url_hash(s: &str) -> String {
 #[cfg(test)]
 #[path = "test_support.rs"]
 pub(crate) mod test_support;
+
+// Direct registry constructors bind the declared credential mechanism before
+// effects. Unbound backends retain their incumbent behavior.
+fn bind_registry_backend(
+    backend: Arc<dyn GitBackend>,
+    auth: vibe_core::manifest::AuthKind,
+) -> Result<Arc<dyn GitBackend>, RegistryError> {
+    if let Some(bound) = backend.bound_for_registry_auth(auth)? {
+        return Ok(bound);
+    }
+    if backend.uses_native_materialisation() {
+        return Err(crate::GitError::NativeContext {
+            reason: "native registry requires an immutable credential-mechanism binding",
+        }
+        .into());
+    }
+    Ok(backend)
+}

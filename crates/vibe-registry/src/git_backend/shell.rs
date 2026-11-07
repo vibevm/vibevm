@@ -37,6 +37,7 @@ pub struct ShellGit {
     binary: PathBuf,
     admission: Option<Arc<crate::HttpAdmission>>,
     native: Option<Arc<native_admission::NativeState>>,
+    native_registry_auth: Option<vibe_core::manifest::AuthKind>,
     // Force the interactive-credential silencing layer on for every
     // invocation of this instance, regardless of TTY (PROP-002 §2.2.1).
     // Set on the anonymous variant a `MultiRegistryResolver` hands to a
@@ -181,17 +182,23 @@ impl ShellGit {
 
 impl GitBackend for ShellGit {
     fn preflight_registry_auth(&self, auth: vibe_core::manifest::AuthKind) -> Result<(), GitError> {
-        if self.native.is_some()
-            && !matches!(
-                auth,
-                vibe_core::manifest::AuthKind::None | vibe_core::manifest::AuthKind::TokenEnv
-            )
+        if let Some(bound) = self.native_registry_auth
+            && bound != auth
         {
             return Err(native_admission::unsupported(
-                "declared credential route requires a separate admitted profile",
+                "registry auth differs from its immutable capability binding",
             ));
         }
-        Ok(())
+        match &self.native {
+            Some(native) => native.profile.preflight_registry_auth(auth),
+            None => Ok(()),
+        }
+    }
+    fn bound_for_registry_auth(
+        &self,
+        auth: vibe_core::manifest::AuthKind,
+    ) -> Result<Option<Arc<dyn GitBackend>>, GitError> {
+        self.registry_auth_clone(auth)
     }
 
     fn preflight_materialisation(&self) -> Result<(), GitError> {
@@ -365,7 +372,7 @@ impl GitBackend for ShellGit {
         // as the peeled commit (`refs/tags/<name>^{}`). We drop the
         // peeled form's `^{}` suffix and dedupe on the resulting names.
         let output = if let Some(native) = &self.native {
-            native.tags(url, self.force_anonymous)?
+            native.tags(url, self.force_anonymous, self.native_registry_auth)?
         } else {
             self.run(&["ls-remote", "--tags", "--", url], None)?
         };
@@ -534,25 +541,12 @@ impl GitBackend for ShellGit {
     }
 
     fn anonymized_for_public(&self) -> Option<Arc<dyn GitBackend>> {
-        // A public-registry backend: same git binary, but with the
-        // interactive-credential silencing layer forced on for every
-        // invocation (PROP-002 §2.2.1). Fresh `preflight_cache` — the
-        // probe is per-instance and cheap to redo. Cannot derive `Clone`
-        // (`OnceLock` is not `Clone`), so reconstruct explicitly.
-        Some(Arc::new(ShellGit {
-            binary: self.binary.clone(),
-            admission: self.admission.clone(),
-            native: self.native.clone(),
-            force_anonymous: true,
-            raw_base: self.raw_base.clone(),
-            // The anonymous backend retains the same admission Arc, so
-            // it can share the pool built under exactly that binding.
-            // Credentials remain request-scoped.
-            raw_client: OnceLock::from(self.raw_client().cloned()),
-            raw_sleeper: self.raw_sleeper.clone(),
-            preflight_cache: OnceLock::new(),
-            transfers: Arc::clone(&self.transfers),
-        }))
+        let mut cloned = self.capability_clone();
+        cloned.force_anonymous = true;
+        if cloned.native.is_some() {
+            cloned.native_registry_auth = Some(vibe_core::manifest::AuthKind::None);
+        }
+        Some(Arc::new(cloned))
     }
 
     fn attach_transfers(&self, transfers: &vibe_core::progress::transfer::Transfers) {

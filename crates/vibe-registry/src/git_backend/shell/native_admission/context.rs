@@ -2,10 +2,10 @@
 use super::*;
 use std::process::{Command, Output, Stdio};
 // Only this module can construct a command carrying native transport authority.
-pub(in crate::git_backend::shell) struct AdmittedCommand(Command);
+pub(in crate::git_backend::shell) struct AdmittedCommand(Command, NativeProtocol);
 impl AdmittedCommand {
-    pub(in crate::git_backend::shell) fn into_command(self) -> Command {
-        self.0
+    pub(in crate::git_backend::shell) fn into_parts(self) -> (Command, NativeProtocol) {
+        (self.0, self.1)
     }
 }
 pub(super) struct Context<'a> {
@@ -27,7 +27,11 @@ impl<'a> Context<'a> {
         }
         Ok(Self { profile, root })
     }
-    fn command(&self, repo: Option<&Path>, remote: Option<&AdmittedRemote>) -> Command {
+    fn command(
+        &self,
+        repo: Option<&Path>,
+        remote: Option<&AdmittedRemote>,
+    ) -> Result<Command, GitError> {
         let root = self.root.path();
         let mut cmd = Command::new(&self.profile.installation.executable);
         cmd.env_clear()
@@ -48,7 +52,11 @@ impl<'a> Context<'a> {
             .env("LANG", "C")
             .env(
                 "GIT_ALLOW_PROTOCOL",
-                if remote.is_some() { "https" } else { "" },
+                match remote.map(AdmittedRemote::protocol) {
+                    Some(NativeProtocol::Https) => "https",
+                    Some(NativeProtocol::Ssh) => "ssh",
+                    None => "",
+                },
             )
             .env("GIT_TEMPLATE_DIR", root.join("empty"))
             .stdin(Stdio::null());
@@ -79,20 +87,26 @@ impl<'a> Context<'a> {
         if matches!(self.profile.trust, TlsTrust::Pem(_)) {
             cmd.env("GIT_SSL_CAINFO", root.join("ca.pem"));
         }
-        if let Some(remote) = remote
-            && let Some(auth) = &remote.authorization
+        if let Some(AdmittedRemote::Https {
+            url,
+            authorization: Some(auth),
+        }) = remote
         {
             // Hidden redirects are disabled, and this exact captured origin is
             // the only remote reachable by this child. Never write this config.
             cmd.env("GIT_CONFIG_COUNT", "1")
                 .env(
                     "GIT_CONFIG_KEY_0",
-                    format!(
-                        "http.{}/.extraHeader",
-                        remote.url.origin().ascii_serialization()
-                    ),
+                    format!("http.{}/.extraHeader", url.origin().ascii_serialization()),
                 )
                 .env("GIT_CONFIG_VALUE_0", format!("Authorization: {auth}"));
+        }
+        if let Some(AdmittedRemote::Ssh(remote)) = remote {
+            self.profile
+                .ssh
+                .as_ref()
+                .ok_or_else(|| unsupported("SSH profile disappeared"))?
+                .configure(&mut cmd, root, remote)?;
         }
         if let Some(repo) = repo {
             cmd.arg("--git-dir").arg(repo);
@@ -102,7 +116,7 @@ impl<'a> Context<'a> {
             use std::os::windows::process::CommandExt;
             cmd.creation_flags(0x0800_0000);
         }
-        cmd
+        Ok(cmd)
     }
     // Private to this bounded owner: callers supply only the fixed operations
     // below/metadata/preparation, never a public arbitrary-argv "safe" flag.
@@ -112,9 +126,18 @@ impl<'a> Context<'a> {
         repo: Option<&Path>,
         remote: Option<&AdmittedRemote>,
     ) -> Result<Output, GitError> {
-        let output = self.command(repo, remote).args(args).output().map_err(io)?;
+        let output = self
+            .command(repo, remote)?
+            .args(args)
+            .output()
+            .map_err(io)?;
         if output.status.success() {
             return Ok(output);
+        }
+        if matches!(remote, Some(AdmittedRemote::Ssh(_)))
+            && let Some(error) = ssh::failure(&output.stderr)
+        {
+            return Err(error);
         }
         // Remote stderr is untrusted and may reflect authorization. Do not
         // publish it from this credential-aware path, even after token scrubbing.
@@ -138,14 +161,19 @@ impl<'a> Context<'a> {
         argv.extend(args.first());
         argv.push("--progress");
         argv.extend(args.iter().skip(1));
-        let mut cmd = self.command(repo, Some(remote));
+        let mut cmd = self.command(repo, Some(remote))?;
         cmd.args(&argv);
-        reporter.run_admitted_transfer(AdmittedCommand(cmd), &argv, remote.url.as_str(), objects)
+        reporter.run_admitted_transfer(
+            AdmittedCommand(cmd, remote.protocol()),
+            &argv,
+            remote.address(),
+            objects,
+        )
     }
     /// A controlled conversion probe. No filter command is present in this
     /// owned config; required-only drivers discriminate reserved value strings.
     pub(super) fn filter_probe(&self, args: &[&str], repo: &Path) -> Result<bool, GitError> {
-        self.command(Some(repo), None)
+        self.command(Some(repo), None)?
             .args(args)
             .stdout(Stdio::null())
             .stderr(Stdio::null())

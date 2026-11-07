@@ -93,7 +93,23 @@ impl HttpAdmission {
         if !url.username().is_empty() || url.password().is_some() {
             return Err(ContactRefusal::UrlCredentials);
         }
-        if self.denied.contains(host.as_deref().unwrap_or_default()) {
+        self.admit_host(url)
+    }
+
+    /// Shared exact normalized-host predicate. Transport capabilities retain
+    /// their own scheme, credential and execution validation before using it.
+    pub(crate) fn admit_host(&self, url: &Url) -> Result<(), ContactRefusal> {
+        let host = url.host_str().and_then(normalized_host_key);
+        let endpoint = format!(
+            "{}://{}{}",
+            url.scheme(),
+            host.as_deref().unwrap_or("<opaque>"),
+            url.port().map(|p| format!(":{p}")).unwrap_or_default()
+        );
+        let host = host.ok_or_else(|| ContactRefusal::UnsupportedScheme {
+            endpoint: endpoint.clone(),
+        })?;
+        if self.denied.contains(&host) {
             return Err(ContactRefusal::ExcludedHost { endpoint });
         }
         Ok(())

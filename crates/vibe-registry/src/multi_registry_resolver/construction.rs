@@ -57,17 +57,8 @@ impl MultiRegistryResolver {
         freshness_secs: u64,
         profile: Arc<crate::git_backend::shell::native_admission::NativeGitAdmission>,
     ) -> Result<Self, RegistryError> {
-        if registries.iter().any(|reg| {
-            reg.enabled
-                && !matches!(
-                    reg.auth,
-                    vibe_core::manifest::AuthKind::None | vibe_core::manifest::AuthKind::TokenEnv
-                )
-        }) {
-            return Err(crate::GitError::NativeContext {
-                reason: "declared registry auth requires a separately admitted credential route",
-            }
-            .into());
+        for registry in registries.iter().filter(|registry| registry.enabled) {
+            profile.preflight_registry_auth(registry.auth)?;
         }
         let admission = profile.http_admission();
         let backend = Arc::new(ShellGit::new().with_native_admission(profile));
