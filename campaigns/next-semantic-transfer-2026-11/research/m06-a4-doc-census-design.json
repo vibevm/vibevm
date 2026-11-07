@@ -1,0 +1,27 @@
+{
+  "task": "A4 Doc page census/build/server design",
+  "observed_at": "2026-11-07T04:48:54.314961+00:00",
+  "mode": "read-only; point draft live; no runtime claim",
+  "prerequisites": [
+    "accepted captured point source selection",
+    "generated render producer/subject boundary repair",
+    "baseline fixture corrections separately owned"
+  ],
+  "next_slice": "selected native Doc inventory + actual build/server/borrowed/self consumers",
+  "source_sha256": {
+    "crates/vibe-doc/src/pages.rs": "2b96acda8d560116ea1dbebb30e32ae754c2605369c945bc57abe6e19322fc1a",
+    "crates/vibe-doc/src/translations/borrowed.rs": "d3d8fc7eb023c50a880fd59b9ef829b5742b84c513069917c044a64fa7958025",
+    "crates/vibe-doc/src/citations.rs": "b043740335fa965a63bb88cc5df5f56ed8b42b548a943bff96de0b83d567c3ce",
+    "crates/vibe-doc/src/build.rs": "8bb7e1e56ab6f9cf73c15721a9d74d8cae19dda2d2b2a434340202b92d33fc43",
+    "crates/vibe-doc-server/src/lib.rs": "5723298c0be4edb1ef18ea4f110fc94a4e318d35375a67ad06bdee14b0b9f978",
+    "crates/vibe-doc-server/src/routes.rs": "90a1aec9f0e0e79c11fcae41902a228016aabe460b6e94b6603b5ab0b888b4e1",
+    "crates/vibe-doc/src/citations/sources/captured.rs": "6d064e1bd7f55311bc35be3610abe4f71f675e0c36493275183c0c700c055f43",
+    "crates/vibe-doc/src/site/render.rs": "11c719df45b8ffa004007466d9808c2a64a77f1a6165c8b25fdf08872fb07bd3",
+    "crates/vibe-doc/src/site/level0/card.rs": "af7b5f1170edbc2c1d7774747043d20c52f5b4ecefadaa294a803f76c6965645",
+    "/tmp/nst-a4-doc-baseline-debt.md": "74b43dc93127cd100bbeedcf6137b00fd91610c8bca16c7ed006311a0647d3b4",
+    "/tmp/nst-a4-doc-baseline-debt.json": "57722265d2b5c24d1372540f804d2e8c94eec4592dfc9260dde4901fd2513da8"
+  },
+  "tests_run": false,
+  "full_a4_acceptance": false,
+  "report_sha256": "9cf8caf816e4bee61cf55ed825d4f4b128cfb8e051a6a079b0d24835311d1fb3"
+}

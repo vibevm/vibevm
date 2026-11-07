@@ -1,0 +1,39 @@
+{
+  "task": "A4 remaining read-only views design",
+  "mode": "read-only; no execution or promotion",
+  "observed_at": "2026-11-07T04:40:18.709077+00:00",
+  "counts": [
+    12,
+    31,
+    31,
+    39
+  ],
+  "recommendation": [
+    "tree named effective boot inputs",
+    "show selected authored/generated paths",
+    "progress explicit corpus/projection cache"
+  ],
+  "shared_prerequisite": "held original/installed selected bytes+media, operation scope remains caller-owned",
+  "excluded": [
+    "seal mutation",
+    "publish staging",
+    "active docs point writer perimeter"
+  ],
+  "source_sha256": {
+    "crates/vibe-cli/src/commands/show/effective.rs": "fdc90631c6a9c5b312fcc08ef3b7853f8e513131df79d98acb102c716b0d7c3f",
+    "crates/vibe-cli/src/commands/tree/build/in_place.rs": "49db52c3dbf750049e2681965f748dd046fc01fad21d862d5d1211afe3d84067",
+    "crates/vibe-cli/src/commands/tree/build.rs": "0c605432392bd38d73b32630ff46da8aa9d97042329ce201bef4113748784dc9",
+    "crates/vibe-cli/src/commands/progress/grounding.rs": "0ef497620281b31eb2c7db57f5626154f3c5d188ed2e9c751370a7235a86b9e0",
+    "crates/vibe-cli/src/commands/progress.rs": "11d0bf4eb910c160ae00932105967ff43ceafdbfa564ae2139bd08a42e727c8a",
+    "crates/progress-core/src/scope.rs": "053dbfc800969fc845deb574e675c462e5454aa2f9383f869030d0eec344c895",
+    "crates/progress-core/src/scope/enumerate.rs": "60fa25afabf622a4b951a90f27e424e6f775315ac176864a42bfb35f57560858",
+    "crates/vibe-cli/src/commands/progress/tests/xml_sources.rs": "2bf9744f65f7d53c211035e7732509c3ce34642cfed8f90f74cb755c7c8a2d49",
+    "crates/vibe-cli/tests/tree_fixture.rs": "960ec6ad2ac96b4bb935b21bad1db4e39998b737000b70232952b9a0117219e7",
+    "crates/vibe-cli/tests/tree_nested_attribution.rs": "2f8b5f0bcf8d7f5697594b850fe2a7395a76ab36fad0778a6bd8bfa1332bbb1c",
+    "crates/vibe-cli/tests/tree_json.rs": "ef1ad9ee65516959e2d82e51a11549998d8910248518bb372756c1b18b8ec1eb",
+    "crates/vibe-cli/tests/cli_host_sources.rs": "d0fbb146792b874f3255a4fb43354494031e12b9484d8151dd15efbdb0ab0cf4",
+    "crates/vibe-cli/tests/cli_progress_sidecar.rs": "7de2e9bd9342df690037e93bf86140f413eb187bd7cbca507b4e5b665a943185"
+  },
+  "tests_run": false,
+  "report_sha256": "3dfa22a2dc93294d8f643ba9b1ca7fb85b3681695308f9fe9c26334db660ff34"
+}

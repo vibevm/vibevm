@@ -1,5 +1,11 @@
 # A4 residual consumers after accepted own boot
 
+## Current-state correction after facts acceptance
+
+The table below is a dated audit, not the current acceptance ledger. Facts report/adopt are now accepted in `728d41319` (acceptance record: `m06-a4-facts-command-acceptance.md`); boot-check is accepted in `04e7ccad8`. Their old refusal descriptions and active-worker references below are superseded. Declared in-place provenance remains bounded. Current first implementation slice is documentation point citations/agent reads, as defined in `m06-a4-doc-consumers-design.md`; page census/borrowed joins remain subsequent work.
+
+Read-view source inspection supports the sequence **tree → show → progress**, not a shared whole-host scan. Tree already receives the exact effective boot-file set and needs captured interpretation of those selected inputs. Show separately filters arbitrary suffixes before reading and mixes authored, generated and lifecycle-written inputs. Progress has its own `progress.toml` selection, parse-cache semantics and later rereads; source classification must preserve that operation scope. Replacing any of these with an unrestricted host inventory would change behavior rather than complete the adapter. This is an implementation-order finding, not runtime acceptance.
+
 Source-only refresh, 2026-11-07. No runtime tests or task promotion. Accepted package query12ee51b0e, host sync c24dfc6c6, host point reader d2c283e69, host inventory432761746 and own boot33a680809 are the base. Root's active boot-check worker is excluded from implementation recommendations below. Earlier broad audit statements that all facts/materialization are suffix-based are obsolete.
 
 | Remaining consumer | Observed current body | Useful behavior still missing |

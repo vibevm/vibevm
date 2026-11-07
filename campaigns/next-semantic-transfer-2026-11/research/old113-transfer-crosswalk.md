@@ -310,3 +310,7 @@ A4 own/inherited boot accepted in `33a680809c903a0fa0e40fbdb64640126b19296d`; [b
 A4 bound boot-check accepted in `04e7ccad8ead2002fd49d936e6917b8631e7006a`; [adapter acceptance](m06-a4-boot-check-acceptance.md). Remaining consumer matrix keeps A4 partial.
 
 A4 facts report/adopt accepted in `728d41319b04b2e527058ed29e77e4d88209c566`; [bounded acceptance](m06-a4-facts-command-acceptance.md). Other consumers and full mixed matrix remain.
+
+A4 tutorial correction accepted `839fdd0c3`: EN/RU --link and Simple/Normal defaults plus root layout comment; exact init1PASS, no config/default change, no old113count increment.
+
+A4 captured documentation point reads accepted `7859d3e2d`; actual citations/agent/CLI support, full census and generated-render/baseline repair remain. No old113count increment.

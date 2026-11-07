@@ -1,0 +1,31 @@
+{
+  "commit": "7859d3e2dc0d94991cbc9908c6fc0b1c23b0d31f",
+  "accepted_scope": "captured citations and agent single-page reads with actual CLI composition",
+  "committed_files": 21,
+  "tests": {
+    "installed": 6,
+    "agent": 10,
+    "cli": 3,
+    "source_policy": 21,
+    "resolver": 77,
+    "doctests": [
+      83,
+      17
+    ]
+  },
+  "full_doc_lib": {
+    "passed": 568,
+    "failed": 62,
+    "new_failures": 0,
+    "green": false
+  },
+  "specmap": {
+    "units": 9166,
+    "code_items": 5549,
+    "edges": 4698,
+    "warnings": 44,
+    "old_unit_occurrences_retained": 9164
+  },
+  "full_a4_accepted": false,
+  "remaining_task": "NST-SOURCE-A4-DOC-BASELINE"
+}

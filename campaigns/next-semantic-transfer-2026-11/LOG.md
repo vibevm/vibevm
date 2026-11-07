@@ -2238,3 +2238,63 @@ Bounded rerun reported facts7 (including valid clean), declared13 and selected12
 ### 2026-11-07 — selected facts report/adopt accepted
 
 Product commit 728d41319b04b2e527058ed29e77e4d88209c566 contains12root hash-verified paths. Final runtime7+13+13 plus retained/pure owner tests, strict static/sequential Conform and wholefmt pass. Map/check retains9162prior units/44warning meanings with zero orphan/unresolvedhost; wire-diff unchanged. Review and acceptance are research/m06-a4-facts-command-acceptance.md/json. Overlay owner and root/member lock distinctions are explicit; no schema or fulltransaction claim. FullA4 remains partial and counts12/31/31/39 unchanged. Next captured docs point reads, then page/borrowed census and remaining adapters.
+
+
+### A4 documentation point slice started
+
+Confirmed facts acceptance product728d41319 and documentationf66f9e4b5; plan136 selects NST-SOURCE-A4-DOC-POINT. All previous native workers completed. Design12source hashes still match. The next implementation delegates only actual SpecSources→citations/agent point reads and trusted CLI context, preserving the existing source precedence. Root added planned SOURCE-DOC-POINT r1 and FMT037; no implementation acceptance yet. Full A4/old113 counters remain unchanged. No temporary worktree created.
+
+
+### A4 doc point: bounded seam and first regression
+
+Root inspected PreparedInstalledSource (vibe-spec resolver/declared.rs) and prepare_declared_query_read: the existing carrier already holds the observed policy, but exposes no manifest accessor. Approved a borrowed accessor to that captured policy plus the already-existing internal vibe-safefs workspace dependency in vibe-doc. This avoids a second manifest/slot parser or factory; metadata access is not a new freshness guarantee, so actual bound read/recheck remains mandatory. Worker owns this narrow lower edit and affected verification.
+
+Worker reports first meaningful current-product RED: cargo test -p vibe-doc declared_point_citation_uses_media_and_original_fullslug -- --nocapture; exit101, one executed failure (627filtered). Valid arbitrary-suffix declared XML with an ordinary XML neighbor reaches the existing path-only refusal. Receipt /tmp/nst-a4-red.log; root has not yet accepted implementation. Read-only parallel design now examines progress/tree/show, excluding seal/publish and without Cargo or source writes. This separates genuine consumer work from inventing another source-loading subsystem.
+
+Root inspected the first RED receipt and confirmed 0passed/1failed rather than counting filtered tests. A second approved seam exposes the existing held materialization-record presence probe in source_policy/host.rs for authored capture/recheck. Its implementation and existing host consumer were inspected: this avoids duplicating slot filename/control probing and preserves the distinction between a refusal cue and validated installed binding. No new provenance claim.
+
+
+### A4 read-view ordering refined from current source
+
+Read-only reviewer recommends tree→show→progress. Root inspected actual tree collect_in_place, show is_spec_source/authored_guards, and progress ground: tree already has selected boot files; show loses arbitrary suffixes before the reader; progress starts from its own scoped observed_files_reported and projection-hash cache. A generic whole-host census would widen these operations and is rejected. Updated the dated residual audit with explicit facts/boot-check supersession so old guard findings are not mistaken for current defects. No read-view implementation or acceptance yet.
+
+
+### A4 tutorials: reviewed correction awaiting focused runtime receipt
+
+Worker froze three docs-only paths; root read diff/report and verified all3hashes. EN/RU tutorials now state --link is honored and distinguish absent manifest format Simple from init scaffold Normal. Root manifest comment uses vibevm/vibepacks and removes obsolete bootstrap/default-registry prose; TOML values unchanged. Both XML syntax checks pass. Existing exact init link/default fixture requested from the Cargo lease owner; not yet claimed run. Review/evidence stored under research/m06-a4-tutorials-review.md/json.
+
+### A4 document point: first green and unresolved broad failures
+
+Worker reports the new authored citation test green. Broader vibe-doc library run reports565passed/63failed; one identified introduced diagnostic regression is being fixed. Other62 are not accepted as pre-existing until baseline evidence demonstrates their cause. Root explicitly required failure-name/cause accounting and separation of sampled baseline proof from all-case verification. No task promotion or test baseline weakening.
+
+
+### A4 docs failure comparison: exact sets, not equal totals
+
+Worker reused the retained first-RED test binary, without swapping shared sources/builds. Root compared actual panic test names in baseline and candidate logs:63each,62shared; baseline-only is the new declared citation regression, candidate-only is empty-world chain diagnostic. Thus the62 are present before this point-read production change, while one new regression is owned by this change. Equal totals alone would have hidden that exchange. Exact comparison and both logs archived in local m06-a4-doc-point evidence. Existing62 remain campaign verification debt, not waived behavior or a green full suite.
+
+Root also inspected actual captured_document integration receipt:3tests pass covering real Mixed/Xml materialization, source recheck, selected-binding failures with store present and relocated-slot refusal. This is scoped positive evidence, not CLI/agent/full-A4 acceptance.
+
+
+### A4 point review: absence and invalid source are distinct
+
+Root found declared adaptation capture mapped every native lookup failure to error while legacy missing page returned absence. Inspected capture_native and approved typed zero-candidate MissingNativeAddress, preserving errors for ambiguity and promised-file absence; only the doc adaptation path may fall back on typed absence. This completes an existing design requirement, not a relaxation of invalid selected binding. Required positive store-only control was also added to review feedback so negative fallback tests cannot pass merely because their fallback fixture is invalid. Public Rust compatibility recorded in FMT037. A separate read-only reviewer is classifying all62 baseline failures for the subsequent page/census work; no code or build concurrency added.
+
+
+### A4 verification blocked by disk exhaustion, resolved locally
+
+CLI linkage failed with mold write failure/clang Bus error; agent rerun failed writing query-cache.bin with ENOSPC. Neither was a test execution result. Root measured /fast466G/100%used and target/debug/incremental90G across2039directories. Confirmed no Cargo/rustc/mold process, paused worker builds, verified exact non-symlink local cache path, and removed/recreated only /fast/git/vibevm/target/debug/incremental under the owner's existing cleanup authorization. Cleanup exit0; /fast now380Gused/86Gavailable/82%. Dependencies, retained test binaries, source/evidence and all app paths untouched. Build lease returned to the same worker; rerun required. No goal or accepted-task status changed.
+
+
+### A4 docs baseline debt classified and explicitly scheduled
+
+Read-only report maps all62shared failures; root verified24evidence hashes and inspected production failed_manifest/build_projections and level0 card synthesise. Classification:58invalid-fixture cases,1fixture+synthetic-card boundary,2real failure-page regressions,1stale lock-field expectation. Earlier suspicion that most lacked version was too narrow: most already have version and lack required documents; exact causes are retained in research/m06-a4-doc-baseline-debt.md/json. These are not waived merely because they predate point reads. Local plan137 adds required DOC-BASELINE repair after point acceptance and tracks docs-only tutorial candidate separately. FullA4 and old113counts unchanged.
+
+
+### A4 tutorial correction accepted
+
+Commit `839fdd0c34e0dd96361cf82c5f74b3e77d9ac789` contains exactly3reviewed documentation/comment paths. Exact init fixture1PASS/11filtered; root verified all3hashes, unchanged parsed TOML configuration and XML tag/attribute topology. No source/runtime/schema/default changes. FullA4partial; old113counts12/31/31/39 unchanged. No temporary worktree created. Product documentation is committed locally; no push under NST-D8.
+
+
+### A4 captured document point slice accepted
+
+Commit `7859d3e2dc0d94991cbc9908c6fc0b1c23b0d31f`:21reviewed product/spec/map paths; root verified committed bytes against exact seal. Final target6/10/3, lower21/77, doctests83/17, Clippy/Conform/fmt pass; map9166/5549/4698,44unchangedwarnings retains9164old units. Full doc lib568/62 retains exact old62, explicitly not green and tracked for repair. FMT037 and research/m06-a4-doc-point-acceptance.md/json record compatibility and limits. Independent final review found no blocker. FullA4partial, old113counts unchanged. No worktree or public push. Next planned atom DOC-BASELINE now becomes active.

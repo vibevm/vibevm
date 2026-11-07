@@ -1,0 +1,73 @@
+{
+  "changed_files": [
+    {
+      "path": "vibe.toml",
+      "sha256": "ad0110e9a20f253b87c176fe94e9c8ca93d365d49c6f3965bfd3f2cce6cf9152"
+    },
+    {
+      "path": "vibevm/vibepacks/org.vibevm.core/vibevm-docs/v1.0.0/vibevm/vibespecs/tutorials/markdown-and-xml.xml",
+      "sha256": "669769c551041de1eeefa9f92a58213428d80bc8cb43dccf832c0f1e9890bacc"
+    },
+    {
+      "path": "vibevm/vibepacks/org.vibevm.core/vibevm-docs-ru/v1.0.0/vibevm/vibespecs/tutorials/markdown-and-xml.xml",
+      "sha256": "c6aeea16cd2360ec678d74bc27697b6519d29df1b6406caa67d3a8b03d8de923"
+    }
+  ],
+  "read_evidence": [
+    {
+      "path": "/tmp/nst-g3-rules.md",
+      "sha256": "c92cd3581e1fa756ff223441b97962bef4dd4d8e9c79a2bcf7bf96a3375e353f"
+    },
+    {
+      "path": "vibevm/vibespecs/boot/90-user.xml",
+      "sha256": "aed268136df3c0f22eea34c864529397915e520af7bbd64c00a03f7b79ae54ec"
+    },
+    {
+      "path": "campaigns/next-semantic-transfer-2026-11/research/m06-a4-residual-consumers.md",
+      "sha256": "295860a0245673d78833de4977c953be2ad213ce6fbb12805dae16617b19d7a6"
+    },
+    {
+      "path": "vibevm/vibespecs/common/PROP-072-boot-observability.xml",
+      "sha256": "8ba850e96b207a1e0632b246acb85f3f279eaead0a40bad4c358d41902b46776"
+    },
+    {
+      "path": "crates/vibe-cli/src/commands/init/package.rs",
+      "sha256": "1e33edac89ca544508e57cc202de68094e2cc5abf22118a523f8e45a26dd06c4"
+    },
+    {
+      "path": "crates/vibe-cli/src/cli/init.rs",
+      "sha256": "946e82f1bba8c0bf82f48135b1cc402b313ce20ad20576c530302520bde90494"
+    },
+    {
+      "path": "crates/vibe-cli/src/commands/init/prompts.rs",
+      "sha256": "ca7b4906f1716ae2f6d47a7eb18c1b2a3928b80f34b86d65a9d8438adbaf5eaa"
+    },
+    {
+      "path": "crates/vibe-cli/tests/cli_init_kinds.rs",
+      "sha256": "aeaaee28cc602ab8bdcc6278a492b84c22f183e765e39452da3392921c8075dc"
+    }
+  ],
+  "verification": [
+    {
+      "command": "python XML syntax/hash script",
+      "exit_code": 127,
+      "stderr": "/bin/bash: line 1: python: command not found"
+    },
+    {
+      "command": "python3 xml.etree.ElementTree.parse on the two changed tutorial XML files",
+      "exit_code": 0,
+      "stdout": "XML parse OK: 2 authored tutorial files"
+    }
+  ],
+  "tests_run": false,
+  "cargo_or_build_run": false,
+  "root_acceptance": {
+    "commit": "839fdd0c34e0dd96361cf82c5f74b3e77d9ac789",
+    "files": 3,
+    "toml_values_unchanged": true,
+    "xml_topology_unchanged": true,
+    "exact_init_tests_passed": 1,
+    "filtered_tests_not_counted": 11,
+    "full_a4_accepted": false
+  }
+}

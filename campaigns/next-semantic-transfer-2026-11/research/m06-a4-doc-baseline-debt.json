@@ -1,0 +1,468 @@
+{
+  "scope": "Read-only classification of all 62 shared baseline failures; no runtime, Cargo or product writes.",
+  "boundary": "pages::read_package observes policy before walk; observe_package_policy calls Manifest::parse_str, which performs typed deserialize AND validate. Missing manifest compatibility is distinct from present invalid manifest. Preserve this boundary.",
+  "groups": {
+    "derived": {
+      "classification": "fixture-invalid",
+      "helper": "crates/vibe-doc/src/derived/tests.rs::package (and product-change rewrite)",
+      "cause": "Both initial and rewritten manifests omit required kind and version.",
+      "recommended_fix": "Use a complete doc package and [[documents]] subject in both manifest writes; retain title changes, exact hash/size, vanished-block and invalid-reference assertions.",
+      "uncertainty": "Source inspection establishes the admission defect; downstream assertions have not been rerun after correction.",
+      "tests": [
+        {
+          "name": "derived::tests::a_block_that_left_the_pages_is_reported_rather_than_forgotten",
+          "panic_location": "crates/vibe-doc/src/derived/tests.rs:100:41",
+          "observed_failure": "accepts: SourcePolicy(SourcePolicyError { kind: InvalidManifest, root: \"/tmp/.tmp9WAwEZ/pkg\", reason: \"manifest or source policy is invalid\" })"
+        },
+        {
+          "name": "derived::tests::a_first_build_reports_every_block_as_new_and_accept_records_it",
+          "panic_location": "crates/vibe-doc/src/derived/tests.rs:49:55",
+          "observed_failure": "runs: SourcePolicy(SourcePolicyError { kind: InvalidManifest, root: \"/tmp/.tmphGlLhN/pkg\", reason: \"manifest or source policy is invalid\" })"
+        },
+        {
+          "name": "derived::tests::a_product_change_shows_up_as_a_changed_block_and_is_red",
+          "panic_location": "crates/vibe-doc/src/derived/tests.rs:84:41",
+          "observed_failure": "accepts: SourcePolicy(SourcePolicyError { kind: InvalidManifest, root: \"/tmp/.tmp6Ymyy3/pkg\", reason: \"manifest or source policy is invalid\" })"
+        },
+        {
+          "name": "derived::tests::a_reference_the_generators_cannot_build_stops_the_check_by_name",
+          "panic_location": "crates/vibe-doc/src/derived/tests.rs:120:5",
+          "observed_failure": "violates REQ spec://org.vibevm.core/vibevm/common/PROP-072#SOURCE-ADMISSION-BOUNDARY: manifest or source policy is invalid at \"/tmp/.tmpR7leeq/pkg\"; fix surface: selected root and its authored source policy"
+        },
+        {
+          "name": "derived::tests::the_record_keeps_a_hash_and_a_size_and_never_the_text",
+          "panic_location": "crates/vibe-doc/src/derived/tests.rs:68:41",
+          "observed_failure": "accepts: SourcePolicy(SourcePolicyError { kind: InvalidManifest, root: \"/tmp/.tmpizzkip/pkg\", reason: \"manifest or source policy is invalid\" })"
+        }
+      ]
+    },
+    "glossary": {
+      "classification": "fixture-invalid",
+      "helper": "crates/vibe-doc/src/glossary/tests.rs::DECLARING/package",
+      "cause": "DECLARING omits version and documents; bare manifests contain only package.name and omit group/kind/version.",
+      "recommended_fix": "Give both declared and bare variants valid doc identity/version/subject; bare means no glossary, not no package metadata. Preserve missing-page/unreadable-page and entry assertions.",
+      "uncertainty": "Source inspection establishes the admission defect; downstream assertions have not been rerun after correction.",
+      "tests": [
+        {
+          "name": "glossary::tests::a_declaration_is_read_off_the_manifest",
+          "panic_location": "crates/vibe-doc/src/glossary/tests.rs:40:37",
+          "observed_failure": "the package reads: SourcePolicy(SourcePolicyError { kind: InvalidManifest, root: \"/tmp/.tmpoSo1iU\", reason: \"manifest or source policy is invalid\" })"
+        },
+        {
+          "name": "glossary::tests::a_glossary_page_that_is_not_there_is_a_defect_and_not_a_refusal",
+          "panic_location": "crates/vibe-doc/src/glossary/tests.rs:40:37",
+          "observed_failure": "the package reads: SourcePolicy(SourcePolicyError { kind: InvalidManifest, root: \"/tmp/.tmpNqgp0P\", reason: \"manifest or source policy is invalid\" })"
+        },
+        {
+          "name": "glossary::tests::a_package_with_no_declaration_has_nothing_to_check",
+          "panic_location": "crates/vibe-doc/src/glossary/tests.rs:40:37",
+          "observed_failure": "the package reads: SourcePolicy(SourcePolicyError { kind: InvalidManifest, root: \"/tmp/.tmpY0yC7r\", reason: \"manifest or source policy is invalid\" })"
+        },
+        {
+          "name": "glossary::tests::an_entry_is_a_section_with_its_first_paragraph",
+          "panic_location": "crates/vibe-doc/src/glossary/tests.rs:40:37",
+          "observed_failure": "the package reads: SourcePolicy(SourcePolicyError { kind: InvalidManifest, root: \"/tmp/.tmp1L17qk\", reason: \"manifest or source policy is invalid\" })"
+        },
+        {
+          "name": "glossary::tests::an_entry_needs_a_term_and_a_definition",
+          "panic_location": "crates/vibe-doc/src/glossary/tests.rs:40:37",
+          "observed_failure": "the package reads: SourcePolicy(SourcePolicyError { kind: InvalidManifest, root: \"/tmp/.tmpqKiHkw\", reason: \"manifest or source policy is invalid\" })"
+        },
+        {
+          "name": "glossary::tests::an_unreadable_glossary_page_is_reported_as_one",
+          "panic_location": "crates/vibe-doc/src/glossary/tests.rs:40:37",
+          "observed_failure": "the package reads: SourcePolicy(SourcePolicyError { kind: InvalidManifest, root: \"/tmp/.tmpoBIzOp\", reason: \"manifest or source policy is invalid\" })"
+        }
+      ]
+    },
+    "manifest-doc": {
+      "classification": "fixture-invalid",
+      "helper": "crates/vibe-doc/src/manifest/tests.rs inline doc fixtures",
+      "cause": "Three inline doc fixtures have name/group/kind/version but omit mandatory [[documents]].",
+      "recommended_fix": "Add a valid subject to authorship/navigation/learning-path manifests, preserving metadata and reversed-page ordering; both learning-path writes share corrected card.",
+      "uncertainty": "Source inspection establishes the admission defect; downstream assertions have not been rerun after correction.",
+      "tests": [
+        {
+          "name": "manifest::tests::the_card_carries_who_wrote_the_prose_when_the_package_says",
+          "panic_location": "crates/vibe-doc/src/manifest/tests.rs:118:77",
+          "observed_failure": "it builds: SourcePolicy(SourcePolicyError { kind: InvalidManifest, root: \"/tmp/.tmp9mHFlA\", reason: \"manifest or source policy is invalid\" })"
+        },
+        {
+          "name": "manifest::tests::the_learning_path_is_carried_whole_and_moves_no_page",
+          "panic_location": "crates/vibe-doc/src/manifest/tests.rs:181:14",
+          "observed_failure": "the package without a path builds: SourcePolicy(SourcePolicyError { kind: InvalidManifest, root: \"/tmp/.tmp4NbbHZ\", reason: \"manifest or source policy is invalid\" })"
+        },
+        {
+          "name": "manifest::tests::the_navigation_is_carried_and_the_page_order_is_left_alone",
+          "panic_location": "crates/vibe-doc/src/manifest/tests.rs:139:77",
+          "observed_failure": "it builds: SourcePolicy(SourcePolicyError { kind: InvalidManifest, root: \"/tmp/.tmpDao42Z\", reason: \"manifest or source policy is invalid\" })"
+        }
+      ]
+    },
+    "manifest-bridge": {
+      "classification": "fixture-invalid",
+      "helper": "crates/vibe-doc/src/manifest/tests.rs::a_bridge_carries_the_two_authorships_it_keeps_apart source closure/card_of",
+      "cause": "Embedded sources use commit abc, content_hash sha256:0, and unpinned license_url. All violate EmbeddedSourceDecl::validate.",
+      "recommended_fix": "Use deterministic full lowercase Git OIDs, sha256-tree/1: plus 64 lowercase hex, and license URLs with the exact commit as a path segment; keep overlapping authors and agreeing/disagreeing licenses.",
+      "uncertainty": "Source inspection establishes the admission defect; downstream assertions have not been rerun after correction.",
+      "tests": [
+        {
+          "name": "manifest::tests::a_bridge_carries_the_two_authorships_it_keeps_apart",
+          "panic_location": "crates/vibe-doc/src/manifest/tests.rs:366:10",
+          "observed_failure": "it builds: SourcePolicy(SourcePolicyError { kind: InvalidManifest, root: \"/tmp/.tmpyVjy0N\", reason: \"manifest or source policy is invalid\" })"
+        }
+      ]
+    },
+    "manifest-kinds": {
+      "classification": "fixture-invalid-plus-product-seam",
+      "helper": "crates/vibe-doc/src/manifest/tests.rs::the_card_carries_the_kind_the_package_calls_itself_by card closure/card_of",
+      "cause": "First known invalid variant is mcp without [[mcp_server]]. Later pack is not a PackageKind, yet the test explicitly requires absence of original kind in a synthetic level-0 card. Production site/level0/card.rs::synthesise writes that pack fallback too.",
+      "recommended_fix": "Supply valid MCP fixture metadata (e.g. one valid remote HTTPS streamable-http server). Preserve the unknown-original-kind card behavior through an explicit generated-render input/card boundary; do not add pack to PackageKind or invent an original kind. Keep full typed admission for actual authored package roots.",
+      "uncertainty": "No per-variant runtime trace; source order identifies MCP as first known refusal, while pack is a separately proven latent collision. Precise generated-render carrier/API is a design decision for the page/census slice; app variant may need additional metadata under future validation.",
+      "tests": [
+        {
+          "name": "manifest::tests::the_card_carries_the_kind_the_package_calls_itself_by",
+          "panic_location": "crates/vibe-doc/src/manifest/tests.rs:366:10",
+          "observed_failure": "it builds: SourcePolicy(SourcePolicyError { kind: InvalidManifest, root: \"/tmp/.tmpulKcsq\", reason: \"manifest or source policy is invalid\" })"
+        }
+      ]
+    },
+    "prompts": {
+      "classification": "fixture-invalid",
+      "helper": "crates/vibe-doc/src/prompts/tests.rs::Package::new",
+      "cause": "Doc fixture has identity/version but no documents subject.",
+      "recommended_fix": "Add valid [[documents]] to shared fixture; keep real fake-agent subprocess, sandbox isolation, skips, sample and assert outcomes.",
+      "uncertainty": "Source inspection establishes the admission defect; downstream assertions have not been rerun after correction.",
+      "tests": [
+        {
+          "name": "prompts::tests::a_declared_skip_is_honoured_and_named",
+          "panic_location": "crates/vibe-doc/src/prompts/tests.rs:116:58",
+          "observed_failure": "the check runs: SourcePolicy(SourcePolicyError { kind: InvalidManifest, root: \"/tmp/.tmp7CX2ba\", reason: \"manifest or source policy is invalid\" })"
+        },
+        {
+          "name": "prompts::tests::a_prompt_outside_the_sample_is_skipped_and_says_so",
+          "panic_location": "crates/vibe-doc/src/prompts/tests.rs:116:58",
+          "observed_failure": "the check runs: SourcePolicy(SourcePolicyError { kind: InvalidManifest, root: \"/tmp/.tmpekTYPw\", reason: \"manifest or source policy is invalid\" })"
+        },
+        {
+          "name": "prompts::tests::a_runner_that_fails_is_failed_and_not_broken",
+          "panic_location": "crates/vibe-doc/src/prompts/tests.rs:116:58",
+          "observed_failure": "the check runs: SourcePolicy(SourcePolicyError { kind: InvalidManifest, root: \"/tmp/.tmpgEhNd2\", reason: \"manifest or source policy is invalid\" })"
+        },
+        {
+          "name": "prompts::tests::an_agent_that_does_nothing_breaks_the_assert",
+          "panic_location": "crates/vibe-doc/src/prompts/tests.rs:116:58",
+          "observed_failure": "the check runs: SourcePolicy(SourcePolicyError { kind: InvalidManifest, root: \"/tmp/.tmpLjBTkm\", reason: \"manifest or source policy is invalid\" })"
+        },
+        {
+          "name": "prompts::tests::an_illustrative_prompt_is_skipped_with_its_reason",
+          "panic_location": "crates/vibe-doc/src/prompts/tests.rs:116:58",
+          "observed_failure": "the check runs: SourcePolicy(SourcePolicyError { kind: InvalidManifest, root: \"/tmp/.tmpJ63Thl\", reason: \"manifest or source policy is invalid\" })"
+        },
+        {
+          "name": "prompts::tests::the_agent_does_the_task_and_the_page_s_asserts_judge_the_result",
+          "panic_location": "crates/vibe-doc/src/prompts/tests.rs:116:58",
+          "observed_failure": "the check runs: SourcePolicy(SourcePolicyError { kind: InvalidManifest, root: \"/tmp/.tmpgH0mmn\", reason: \"manifest or source policy is invalid\" })"
+        },
+        {
+          "name": "prompts::tests::two_prompts_on_one_fixture_cannot_see_each_other_s_work",
+          "panic_location": "crates/vibe-doc/src/prompts/tests.rs:116:58",
+          "observed_failure": "the check runs: SourcePolicy(SourcePolicyError { kind: InvalidManifest, root: \"/tmp/.tmpQpJtsn\", reason: \"manifest or source policy is invalid\" })"
+        }
+      ]
+    },
+    "site-render": {
+      "classification": "product-behavioral-regression",
+      "helper": "crates/vibe-doc/src/site/render.rs::failed_manifest/refused; tests.rs::Unreachable",
+      "cause": "Production failed_manifest emits name/group/version/title/abstract but omits required kind. The error page itself then fails source-policy admission and the promised graceful failure page never renders.",
+      "recommended_fix": "Represent failure pages through a typed generated-render input retaining original coordinate and unknown original kind. A dedicated valid synthetic doc carrier is possible only if rendered subject/card semantics stay distinct. Never guess the failed package kind, delete the guard, or turn tests into expected refusal.",
+      "uncertainty": "Observed regression is proven by baseline panic and production writer. Minimal architecture must account for level0 synthetic pack and retained metadata rather than blindly adding kind=doc (which also needs documents and changes projection semantics).",
+      "tests": [
+        {
+          "name": "site::render::tests::a_package_that_cannot_be_fetched_becomes_a_page_and_not_a_stop",
+          "panic_location": "crates/vibe-doc/src/site/render/tests.rs:204:66",
+          "observed_failure": "a page, not a refusal: SourcePolicy(SourcePolicyError { kind: InvalidManifest, root: \"/tmp/.tmp0fUcis/trees/org.example.wal@1.2.0/package\", reason: \"manifest or source policy is invalid\" })"
+        },
+        {
+          "name": "site::render::tests::a_retry_that_succeeds_replaces_the_failure_page",
+          "panic_location": "crates/vibe-doc/src/site/render/tests.rs:230:62",
+          "observed_failure": "the failure: SourcePolicy(SourcePolicyError { kind: InvalidManifest, root: \"/tmp/.tmpgqxAyV/trees/org.example.wal@1.2.0/package\", reason: \"manifest or source policy is invalid\" })"
+        }
+      ]
+    },
+    "style-glossary": {
+      "classification": "fixture-invalid",
+      "helper": "crates/vibe-doc/src/style/glossary/tests.rs::declared_glossary and standalone missing-page fixture",
+      "cause": "Both fixture manifest writers contain only [glossary], with no role; glossary is also doc-only.",
+      "recommended_fix": "Add complete doc identity/version/documents to both writes, retaining missing page and term extraction cases.",
+      "uncertainty": "Source inspection establishes the admission defect; downstream assertions have not been rerun after correction.",
+      "tests": [
+        {
+          "name": "style::glossary::tests::a_disambiguating_parenthesis_is_not_part_of_the_term",
+          "panic_location": "crates/vibe-doc/src/style/glossary/tests.rs:30:54",
+          "observed_failure": "read: SourcePolicy(SourcePolicyError { kind: InvalidManifest, root: \"/tmp/.tmpaV2CVT\", reason: \"manifest or source policy is invalid\" })"
+        },
+        {
+          "name": "style::glossary::tests::a_package_with_no_declaration_has_no_terms",
+          "panic_location": "crates/vibe-doc/src/style/glossary/tests.rs:84:54",
+          "observed_failure": "read: SourcePolicy(SourcePolicyError { kind: InvalidManifest, root: \"/tmp/.tmpq6UXFl\", reason: \"manifest or source policy is invalid\" })"
+        },
+        {
+          "name": "style::glossary::tests::the_six_ordinary_words_are_not_terms",
+          "panic_location": "crates/vibe-doc/src/style/glossary/tests.rs:30:54",
+          "observed_failure": "read: SourcePolicy(SourcePolicyError { kind: InvalidManifest, root: \"/tmp/.tmpOBa85m\", reason: \"manifest or source policy is invalid\" })"
+        },
+        {
+          "name": "style::glossary::tests::the_terms_are_the_glossary_sections_longest_first",
+          "panic_location": "crates/vibe-doc/src/style/glossary/tests.rs:30:54",
+          "observed_failure": "read: SourcePolicy(SourcePolicyError { kind: InvalidManifest, root: \"/tmp/.tmpp86mnL\", reason: \"manifest or source policy is invalid\" })"
+        }
+      ]
+    },
+    "style-terms": {
+      "classification": "fixture-invalid",
+      "helper": "crates/vibe-doc/src/style/terms/tests.rs::declared",
+      "cause": "Shared fixture manifest contains only [glossary], with no role.",
+      "recommended_fix": "Add complete doc identity/version/documents; preserve exact glossary and first-use prose assertions.",
+      "uncertainty": "Source inspection establishes the admission defect; downstream assertions have not been rerun after correction.",
+      "tests": [
+        {
+          "name": "style::terms::tests::a_code_span_between_the_term_and_its_gloss_is_part_of_the_phrase",
+          "panic_location": "crates/vibe-doc/src/style/terms/tests.rs:30:54",
+          "observed_failure": "read: SourcePolicy(SourcePolicyError { kind: InvalidManifest, root: \"/tmp/.tmp670xOy\", reason: \"manifest or source policy is invalid\" })"
+        },
+        {
+          "name": "style::terms::tests::a_comma_somewhere_else_in_the_sentence_is_not_a_gloss",
+          "panic_location": "crates/vibe-doc/src/style/terms/tests.rs:30:54",
+          "observed_failure": "read: SourcePolicy(SourcePolicyError { kind: InvalidManifest, root: \"/tmp/.tmp37n2SH\", reason: \"manifest or source policy is invalid\" })"
+        },
+        {
+          "name": "style::terms::tests::a_first_use_in_the_italics_of_a_definition_introduces_the_term",
+          "panic_location": "crates/vibe-doc/src/style/terms/tests.rs:30:54",
+          "observed_failure": "read: SourcePolicy(SourcePolicyError { kind: InvalidManifest, root: \"/tmp/.tmptqWeq8\", reason: \"manifest or source policy is invalid\" })"
+        },
+        {
+          "name": "style::terms::tests::a_first_use_linked_to_the_glossary_entry_introduces_the_term",
+          "panic_location": "crates/vibe-doc/src/style/terms/tests.rs:30:54",
+          "observed_failure": "read: SourcePolicy(SourcePolicyError { kind: InvalidManifest, root: \"/tmp/.tmplON26t\", reason: \"manifest or source policy is invalid\" })"
+        },
+        {
+          "name": "style::terms::tests::a_gloss_in_the_same_sentence_introduces_the_term",
+          "panic_location": "crates/vibe-doc/src/style/terms/tests.rs:30:54",
+          "observed_failure": "read: SourcePolicy(SourcePolicyError { kind: InvalidManifest, root: \"/tmp/.tmpdbibW6\", reason: \"manifest or source policy is invalid\" })"
+        },
+        {
+          "name": "style::terms::tests::a_link_that_comes_after_the_first_use_does_not_introduce_it",
+          "panic_location": "crates/vibe-doc/src/style/terms/tests.rs:30:54",
+          "observed_failure": "read: SourcePolicy(SourcePolicyError { kind: InvalidManifest, root: \"/tmp/.tmpiRRyAf\", reason: \"manifest or source policy is invalid\" })"
+        },
+        {
+          "name": "style::terms::tests::a_link_to_another_entry_introduces_nothing",
+          "panic_location": "crates/vibe-doc/src/style/terms/tests.rs:30:54",
+          "observed_failure": "read: SourcePolicy(SourcePolicyError { kind: InvalidManifest, root: \"/tmp/.tmprwEpmC\", reason: \"manifest or source policy is invalid\" })"
+        },
+        {
+          "name": "style::terms::tests::a_link_to_the_entry_introduces_the_term_whatever_its_text_says",
+          "panic_location": "crates/vibe-doc/src/style/terms/tests.rs:30:54",
+          "observed_failure": "read: SourcePolicy(SourcePolicyError { kind: InvalidManifest, root: \"/tmp/.tmpkoTaj4\", reason: \"manifest or source policy is invalid\" })"
+        },
+        {
+          "name": "style::terms::tests::a_term_in_the_first_paragraph_is_an_error",
+          "panic_location": "crates/vibe-doc/src/style/terms/tests.rs:30:54",
+          "observed_failure": "read: SourcePolicy(SourcePolicyError { kind: InvalidManifest, root: \"/tmp/.tmprmeJxg\", reason: \"manifest or source policy is invalid\" })"
+        },
+        {
+          "name": "style::terms::tests::containers_and_prompts_do_not_carry_a_first_use",
+          "panic_location": "crates/vibe-doc/src/style/terms/tests.rs:30:54",
+          "observed_failure": "read: SourcePolicy(SourcePolicyError { kind: InvalidManifest, root: \"/tmp/.tmptV8K3Z\", reason: \"manifest or source policy is invalid\" })"
+        },
+        {
+          "name": "style::terms::tests::only_the_first_use_on_a_page_is_judged",
+          "panic_location": "crates/vibe-doc/src/style/terms/tests.rs:30:54",
+          "observed_failure": "read: SourcePolicy(SourcePolicyError { kind: InvalidManifest, root: \"/tmp/.tmptX0gqr\", reason: \"manifest or source policy is invalid\" })"
+        },
+        {
+          "name": "style::terms::tests::the_glossary_page_is_not_judged_against_itself",
+          "panic_location": "crates/vibe-doc/src/style/terms/tests.rs:30:54",
+          "observed_failure": "read: SourcePolicy(SourcePolicyError { kind: InvalidManifest, root: \"/tmp/.tmpmrwjxK\", reason: \"manifest or source policy is invalid\" })"
+        },
+        {
+          "name": "style::terms::tests::three_terms_in_one_sentence_is_a_warning",
+          "panic_location": "crates/vibe-doc/src/style/terms/tests.rs:30:54",
+          "observed_failure": "read: SourcePolicy(SourcePolicyError { kind: InvalidManifest, root: \"/tmp/.tmp1FRGvE\", reason: \"manifest or source policy is invalid\" })"
+        }
+      ]
+    },
+    "style": {
+      "classification": "fixture-invalid",
+      "helper": "crates/vibe-doc/src/style/tests.rs::Package::declaring",
+      "cause": "Doc fixture has identity/version/i18n but omits documents.",
+      "recommended_fix": "Add valid subject in shared writer; preserve language, banned lists, glossary omission and prompt/style expectations. Unsupported-language test must still reach its intended language refusal.",
+      "uncertainty": "Source inspection establishes the admission defect; downstream assertions have not been rerun after correction.",
+      "tests": [
+        {
+          "name": "style::tests::a_lower_bar_lets_an_unfinished_corpus_run",
+          "panic_location": "crates/vibe-doc/src/style/tests.rs:77:51",
+          "observed_failure": "the check runs: SourcePolicy(SourcePolicyError { kind: InvalidManifest, root: \"/tmp/.tmpT1G5zm\", reason: \"manifest or source policy is invalid\" })"
+        },
+        {
+          "name": "style::tests::a_package_that_declares_no_glossary_is_judged_without_terms",
+          "panic_location": "crates/vibe-doc/src/style/tests.rs:77:51",
+          "observed_failure": "the check runs: SourcePolicy(SourcePolicyError { kind: InvalidManifest, root: \"/tmp/.tmpX4sVAN\", reason: \"manifest or source policy is invalid\" })"
+        },
+        {
+          "name": "style::tests::a_package_whose_language_has_no_list_is_refused",
+          "panic_location": "crates/vibe-doc/src/style/tests.rs:307:5",
+          "observed_failure": "violates REQ spec://org.vibevm.core/vibevm/common/PROP-072#SOURCE-ADMISSION-BOUNDARY: manifest or source policy is invalid at \"/tmp/.tmphz6npw\"; fix surface: selected root and its authored source policy"
+        },
+        {
+          "name": "style::tests::a_prompt_without_an_assert_on_a_scenario_page_is_an_error",
+          "panic_location": "crates/vibe-doc/src/style/tests.rs:77:51",
+          "observed_failure": "the check runs: SourcePolicy(SourcePolicyError { kind: InvalidManifest, root: \"/tmp/.tmp5MdkuB\", reason: \"manifest or source policy is invalid\" })"
+        },
+        {
+          "name": "style::tests::an_illustrative_prompt_on_an_explanation_page_is_left_alone",
+          "panic_location": "crates/vibe-doc/src/style/tests.rs:77:51",
+          "observed_failure": "the check runs: SourcePolicy(SourcePolicyError { kind: InvalidManifest, root: \"/tmp/.tmpyve3WY\", reason: \"manifest or source policy is invalid\" })"
+        },
+        {
+          "name": "style::tests::the_law_s_own_bad_page_is_caught_on_every_pair",
+          "panic_location": "crates/vibe-doc/src/style/tests.rs:77:51",
+          "observed_failure": "the check runs: SourcePolicy(SourcePolicyError { kind: InvalidManifest, root: \"/tmp/.tmpZEM3D4\", reason: \"manifest or source policy is invalid\" })"
+        },
+        {
+          "name": "style::tests::the_law_s_own_good_page_is_clean",
+          "panic_location": "crates/vibe-doc/src/style/tests.rs:77:51",
+          "observed_failure": "the check runs: SourcePolicy(SourcePolicyError { kind: InvalidManifest, root: \"/tmp/.tmpPVobpc\", reason: \"manifest or source policy is invalid\" })"
+        },
+        {
+          "name": "style::tests::the_russian_list_judges_the_russian_page",
+          "panic_location": "crates/vibe-doc/src/style/tests.rs:77:51",
+          "observed_failure": "the check runs: SourcePolicy(SourcePolicyError { kind: InvalidManifest, root: \"/tmp/.tmpIH4PYW\", reason: \"manifest or source policy is invalid\" })"
+        }
+      ]
+    },
+    "surface-diff": {
+      "classification": "fixture-invalid",
+      "helper": "crates/vibe-doc/src/surface/diff/tests.rs::package",
+      "cause": "Doc fixture has identity/version but no documents.",
+      "recommended_fix": "Add valid subject, retaining the three generated-page relationships and known diff assertions.",
+      "uncertainty": "Source inspection establishes the admission defect; downstream assertions have not been rerun after correction.",
+      "tests": [
+        {
+          "name": "surface::diff::tests::a_change_no_page_answers_to_asks_for_a_new_page",
+          "panic_location": "crates/vibe-doc/src/surface/diff/tests.rs:181:6",
+          "observed_failure": "a diff: SourcePolicy(SourcePolicyError { kind: InvalidManifest, root: \"/tmp/.tmpPac54l\", reason: \"manifest or source policy is invalid\" })"
+        },
+        {
+          "name": "surface::diff::tests::a_known_difference_names_a_known_list_of_pages",
+          "panic_location": "crates/vibe-doc/src/surface/diff/tests.rs:129:6",
+          "observed_failure": "a diff: SourcePolicy(SourcePolicyError { kind: InvalidManifest, root: \"/tmp/.tmpjqbOLi\", reason: \"manifest or source policy is invalid\" })"
+        },
+        {
+          "name": "surface::diff::tests::two_readings_of_one_surface_produce_an_empty_answer_that_says_so",
+          "panic_location": "crates/vibe-doc/src/surface/diff/tests.rs:211:6",
+          "observed_failure": "a diff: SourcePolicy(SourcePolicyError { kind: InvalidManifest, root: \"/tmp/.tmp2xEvle\", reason: \"manifest or source policy is invalid\" })"
+        }
+      ]
+    },
+    "surface-fields": {
+      "classification": "stale-expectation",
+      "helper": "crates/vibe-doc/src/surface/fields/tests.rs::a_required_member_does_not_hide_the_list",
+      "cause": "Actual Lockfile parser now lists meta/package/configurations/remap. Expected exact list omits configurations; baseline output matches current Lockfile definition.",
+      "recommended_fix": "Add configurations in parser declaration order and update wording to one required/three optional/four total. Retain exact list assertion: do not weaken to subset or change parser.",
+      "uncertainty": "No behavioral regression established; schema source and actual panic agree. Runtime confirmation remains pending.",
+      "tests": [
+        {
+          "name": "surface::fields::tests::a_required_member_does_not_hide_the_list",
+          "panic_location": "crates/vibe-doc/src/surface/fields/tests.rs:70:5",
+          "observed_failure": "assertion `left == right` failed: the top level of `vibe.lock` has one required member and two optional ones; the refusal must still name all three\n  left: Some([\"meta\", \"package\", \"configurations\", \"remap\"])\n right: Some([\"meta\", \"package\", \"remap\"])"
+        }
+      ]
+    },
+    "todo": {
+      "classification": "fixture-invalid",
+      "helper": "crates/vibe-doc/src/todo/tests.rs::package",
+      "cause": "Doc fixture has identity/version/i18n but no documents.",
+      "recommended_fix": "Add valid subject in helper, preserving all eight-number/null/queue/reading/debt expectations.",
+      "uncertainty": "Source inspection establishes the admission defect; downstream assertions have not been rerun after correction.",
+      "tests": [
+        {
+          "name": "todo::tests::a_journal_entry_owing_a_decision_is_the_seventh_number",
+          "panic_location": "crates/vibe-doc/src/todo/tests.rs:157:6",
+          "observed_failure": "a queue: SourcePolicy(SourcePolicyError { kind: InvalidManifest, root: \"/tmp/.tmpvcccf8\", reason: \"manifest or source policy is invalid\" })"
+        },
+        {
+          "name": "todo::tests::a_number_nobody_measured_is_null_and_not_zero",
+          "panic_location": "crates/vibe-doc/src/todo/tests.rs:85:46",
+          "observed_failure": "a queue: SourcePolicy(SourcePolicyError { kind: InvalidManifest, root: \"/tmp/.tmpgpRs2D\", reason: \"manifest or source policy is invalid\" })"
+        },
+        {
+          "name": "todo::tests::a_package_with_no_readings_owes_one_for_every_page",
+          "panic_location": "crates/vibe-doc/src/todo/tests.rs:102:46",
+          "observed_failure": "a queue: SourcePolicy(SourcePolicyError { kind: InvalidManifest, root: \"/tmp/.tmpx3nxUl\", reason: \"manifest or source policy is invalid\" })"
+        },
+        {
+          "name": "todo::tests::a_queue_full_of_rows_is_still_a_successful_reading",
+          "panic_location": "crates/vibe-doc/src/todo/tests.rs:195:46",
+          "observed_failure": "a queue: SourcePolicy(SourcePolicyError { kind: InvalidManifest, root: \"/tmp/.tmpJg6Vko\", reason: \"manifest or source policy is invalid\" })"
+        },
+        {
+          "name": "todo::tests::every_section_is_emitted_even_when_it_was_not_measured",
+          "panic_location": "crates/vibe-doc/src/todo/tests.rs:69:46",
+          "observed_failure": "a queue: SourcePolicy(SourcePolicyError { kind: InvalidManifest, root: \"/tmp/.tmp4Rw0Vn\", reason: \"manifest or source policy is invalid\" })"
+        },
+        {
+          "name": "todo::tests::the_debt_file_feeds_the_queue_and_the_p1_number",
+          "panic_location": "crates/vibe-doc/src/todo/tests.rs:131:6",
+          "observed_failure": "a queue: SourcePolicy(SourcePolicyError { kind: InvalidManifest, root: \"/tmp/.tmpWGlarY\", reason: \"manifest or source policy is invalid\" })"
+        },
+        {
+          "name": "todo::tests::the_json_carries_the_eight_numbers_by_the_names_the_table_uses",
+          "panic_location": "crates/vibe-doc/src/todo/tests.rs:205:46",
+          "observed_failure": "a queue: SourcePolicy(SourcePolicyError { kind: InvalidManifest, root: \"/tmp/.tmpRrRx6r\", reason: \"manifest or source policy is invalid\" })"
+        },
+        {
+          "name": "todo::tests::the_recorded_reading_gives_the_median_and_the_reconciliation_date",
+          "panic_location": "crates/vibe-doc/src/todo/tests.rs:172:46",
+          "observed_failure": "a queue: SourcePolicy(SourcePolicyError { kind: InvalidManifest, root: \"/tmp/.tmpZW1554\", reason: \"manifest or source policy is invalid\" })"
+        }
+      ]
+    }
+  },
+  "evidence_hashes": {
+    "/tmp/nst-a4-baseline-doc.log": "84dfc537faec1826ad954a61ede9c1c898c9d08b63a8f05f3d7e08f8a590fb20",
+    "/tmp/nst-a4-doc-failure-set-comparison.json": "8f8680171e7f45f570d30e888ff32ca0c1b4bce169b69320cc17381af1e67b90",
+    "crates/vibe-core/src/manifest/document.rs": "1895a8f50ffb8a685646c136465f0d1c8687bba420e41eb57d29c7c183b7b6ff",
+    "crates/vibe-core/src/manifest/document/validation.rs": "c95e79665da12a37088f8168fb3f8601ef7fce8ffb2c8c62ea5328090e1c6c35",
+    "crates/vibe-core/src/manifest/document/validation/mcp.rs": "79cdfa0ef63de677c87f3b385a63b776f5cd23ef9a50102c8f3bbd0a6eceb713",
+    "crates/vibe-core/src/manifest/lockfile.rs": "c2a389a6ae2fd6153282ab24896cf1401f2bfe6d88e4be5d9f3bafd651b36e57",
+    "crates/vibe-core/src/manifest/package/embedded_source.rs": "9d1a8c39ed91d4a029a458894c213795c831447b5eadfad6aa533adaf80b1a65",
+    "crates/vibe-core/src/manifest/package/wire.rs": "7b91527d7d7ddbfbbf3cec648c869265e272946dfb9b544b51af4c80c0ac0cc1",
+    "crates/vibe-doc/src/derived/tests.rs": "20ac89de87d20fad939fca64378fe9ea9d6fb611d987b77a5ad3f5ff07bc35bd",
+    "crates/vibe-doc/src/glossary/tests.rs": "bc22c3df8451b99cb878fb0ad7e9dbcc1923c936d0d6682b7d68b642891a891f",
+    "crates/vibe-doc/src/manifest.rs": "8823e587e06974e20378326b4b40f33b83965da039bc562292ac6df2e1c5e2f5",
+    "crates/vibe-doc/src/manifest/tests.rs": "ead978e8359c4fc8896b5048786735bf4b286198f5084a5771b07d3b0f21ed63",
+    "crates/vibe-doc/src/pages.rs": "2b96acda8d560116ea1dbebb30e32ae754c2605369c945bc57abe6e19322fc1a",
+    "crates/vibe-doc/src/prompts/tests.rs": "6082befc9315fc737102228d3991cc9059bcd3ee14b9c3612d57d330d02115c2",
+    "crates/vibe-doc/src/site/level0/card.rs": "af7b5f1170edbc2c1d7774747043d20c52f5b4ecefadaa294a803f76c6965645",
+    "crates/vibe-doc/src/site/render.rs": "11c719df45b8ffa004007466d9808c2a64a77f1a6165c8b25fdf08872fb07bd3",
+    "crates/vibe-doc/src/site/render/tests.rs": "67f1ea91b86c5bfaa91d41ec7be17ef50a5b4205fc677b9d3398f6ec4ed1c039",
+    "crates/vibe-doc/src/style/glossary/tests.rs": "98fc6c54e9d84b0db3e876b7eb29050b79546203a57f8eb9fd93b6a62de7ecf6",
+    "crates/vibe-doc/src/style/terms/tests.rs": "d9387614bf80f6922db0e61a464e8a83855c4184a983d73acb5539c188eab787",
+    "crates/vibe-doc/src/style/tests.rs": "01eaf353dfc503191085c2e105502cdcdf42091ae1f377701a8aa62e952f6add",
+    "crates/vibe-doc/src/surface/diff/tests.rs": "4be020e11dfdf2a9d9ff9cabe9918436b31273d345be9a16bf202c77675ef79a",
+    "crates/vibe-doc/src/surface/fields/tests.rs": "fcdb4faf488354160e39943538a33777d9b340229abb04404c2f329113bc53c6",
+    "crates/vibe-doc/src/todo/tests.rs": "f4e3c0d0feceed9188f4b105fd53465a8fba75597535b424e7d3ab749f39c7df",
+    "crates/vibe-spec/src/source_policy.rs": "eb9c7cd89f13136bb0a3aeb04d8fb10a8ce16a784c056c7ace4e9c60f5370f92"
+  },
+  "excluded": {
+    "baseline_only": [
+      "citations::sources::tests::declared_point_citation_uses_media_and_original_fullslug"
+    ],
+    "candidate_only": [
+      "citations::tests::an_empty_world_names_itself_in_the_refusal"
+    ]
+  },
+  "acceptance": false
+}

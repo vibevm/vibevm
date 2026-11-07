@@ -1,0 +1,141 @@
+{
+  "status": "final-no-blocker-ready-for-root-acceptance",
+  "reviewed_at": "2026-11-07T05:00:13.236771+00:00",
+  "findings": [],
+  "source_drift": [
+    {
+      "path": "crates/vibe-doc/src/citations/sources/captured.rs",
+      "previous_sha256": "6d064e1bd7f55311bc35be3610abe4f71f675e0c36493275183c0c700c055f43",
+      "current_sha256": "c9e8f7a8501b14d5321149eb3d5608dc682908339189077ca5bbe069c5aa1783"
+    },
+    {
+      "path": "crates/vibe-doc/src/agent.rs",
+      "previous_sha256": "fa088da5181241949af57abf4b39078b22a926226209f0b88ff6c1348f08399f",
+      "current_sha256": "77396b88cf83535bab15a641fb1141a00afc090544e5d515df0399c74d01ea0f"
+    },
+    {
+      "path": "crates/vibe-doc/tests/captured_document.rs",
+      "previous_sha256": "7d96d54d199d5076e74d56222a676252069b5c803ed96958fd9c475582389da0",
+      "current_sha256": "ac84ee71fab11ac18437cf5f30e23bc2c1a08510b5aaf3b73ad4b273c4d58566"
+    },
+    {
+      "path": "crates/vibe-cli/src/commands/doc/env.rs",
+      "previous_sha256": "e33c397d198c81b8bb50aea099af04d63ff22cdbdc7cd9e6cd1a138901fb4572",
+      "current_sha256": "b46323a64201a8f29f6d0c1848fec07badfc5847c6324c6fe62a20b075edc45e"
+    },
+    {
+      "path": "crates/vibe-cli/tests/cli_doc_captured.rs",
+      "previous_sha256": "8eb6ccb96ab7884b174d2d3001e6ee0a01e6ffd9fc10bdf409186dbb05a15e1b",
+      "current_sha256": "ccd0795e991034b70f34fe388e2b80beca2b19d213c423a3e780010e2b21212d"
+    },
+    {
+      "path": "crates/vibe-doc/src/citations/sources/captured.rs",
+      "previous_sha256": "c9e8f7a8501b14d5321149eb3d5608dc682908339189077ca5bbe069c5aa1783",
+      "current_sha256": "e58f39d09e8c43a570c90b036551b3b9a7f08144c53c1c4ff9c55a07cdbcde27",
+      "review": "Full file reread; successful capture doctest added; production behavior unchanged."
+    }
+  ],
+  "files": [
+    {
+      "path": "crates/vibe-doc/src/citations/sources.rs",
+      "sha256": "c7cd6e8cdb316130111554df40d233cea581c0216d38af09fc9b572e210f3cba"
+    },
+    {
+      "path": "crates/vibe-doc/src/citations/sources/captured.rs",
+      "sha256": "e58f39d09e8c43a570c90b036551b3b9a7f08144c53c1c4ff9c55a07cdbcde27"
+    },
+    {
+      "path": "crates/vibe-doc/src/citations.rs",
+      "sha256": "b043740335fa965a63bb88cc5df5f56ed8b42b548a943bff96de0b83d567c3ce"
+    },
+    {
+      "path": "crates/vibe-doc/src/agent.rs",
+      "sha256": "77396b88cf83535bab15a641fb1141a00afc090544e5d515df0399c74d01ea0f"
+    },
+    {
+      "path": "crates/vibe-doc/src/agent/tests.rs",
+      "sha256": "04235cc3df3724d5c6c481f5e66778f8a6c5286024692c0776ee0269863064f3"
+    },
+    {
+      "path": "crates/vibe-doc/src/citations/sources/tests.rs",
+      "sha256": "214a7903a09c422b5c933228b1b35afab00f83d3754d13d04a2734d7898ad669"
+    },
+    {
+      "path": "crates/vibe-doc/tests/captured_document.rs",
+      "sha256": "ac84ee71fab11ac18437cf5f30e23bc2c1a08510b5aaf3b73ad4b273c4d58566"
+    },
+    {
+      "path": "crates/vibe-spec/src/resolver/declared.rs",
+      "sha256": "7616e18791b34dbf486ae69ef14913c8a3b85e5d645cb05e6b8d56c9e9b68be1"
+    },
+    {
+      "path": "crates/vibe-spec/src/source_policy.rs",
+      "sha256": "eb9c7cd89f13136bb0a3aeb04d8fb10a8ce16a784c056c7ace4e9c60f5370f92"
+    },
+    {
+      "path": "crates/vibe-spec/src/source_policy/host.rs",
+      "sha256": "cbb20b20a774698606b8d79f6bbdb9ea5310cf1e4ba7d7fdfa194a6229b50637"
+    },
+    {
+      "path": "crates/vibe-workspace/src/vibedeps/declared_read.rs",
+      "sha256": "4812030d090da53ceebccf429f10d381c29e706c275aa97e3f3eb65a4fd48bfe"
+    },
+    {
+      "path": "crates/vibe-cli/src/commands/doc/env.rs",
+      "sha256": "b46323a64201a8f29f6d0c1848fec07badfc5847c6324c6fe62a20b075edc45e"
+    },
+    {
+      "path": "crates/vibe-cli/src/commands/doc.rs",
+      "sha256": "8f332523cbdd68108abe67c8e42b422d09a183df67c8f2439c09255a9c682de3"
+    },
+    {
+      "path": "crates/vibe-cli/src/commands/doc/site.rs",
+      "sha256": "1dd9da48d0078032fa68f7c937dfb5914370780d8f6e8e72a8bf747db759fa95"
+    },
+    {
+      "path": "crates/vibe-cli/src/commands/doc/surface.rs",
+      "sha256": "04ff225d0a4e6e4871dd960bb1cba2ba3d89041af70786a8b85576d715f9b202"
+    },
+    {
+      "path": "crates/vibe-cli/src/commands/doc/todo.rs",
+      "sha256": "757510d125bddc1a87e1206a78f87e20e3db8425f1de508bb08c105138cf3c9d"
+    },
+    {
+      "path": "crates/vibe-cli/tests/cli_doc_captured.rs",
+      "sha256": "ccd0795e991034b70f34fe388e2b80beca2b19d213c423a3e780010e2b21212d"
+    },
+    {
+      "path": "crates/vibe-spec/src/source_policy/tests.rs",
+      "sha256": "e407e377a0b46072eb16471a91d7c0c4e5d303dd80fb23fc7d2039f698fd8457"
+    }
+  ],
+  "observed_receipts": [
+    {
+      "path": "/tmp/nst-a4-installed.log",
+      "sha256": "ab024741bbe9d1c75b860614e0b6ab8d621b2c729ab8793579af6daacd6de610",
+      "observed_passed": 6,
+      "observed_failed": 0
+    },
+    {
+      "path": "/tmp/nst-a4-agent.log",
+      "sha256": "909eae0990f85b3e19a41854051aa0c71b8d61396a6b4fcbfd00c28ff1404d97",
+      "observed_passed": 10,
+      "observed_failed": 0
+    },
+    {
+      "path": "/tmp/nst-a4-cli.log",
+      "sha256": "01e938b90be070af1352b30835937b3fc618ce9a46389cc7e4de4839fd65f5b8",
+      "observed_passed": 3,
+      "observed_failed": 0
+    }
+  ],
+  "limitations": [
+    "No reviewer builds or tests executed.",
+    "Root reports all final gates complete and exact 62 pre-existing full-lib failures, zero new. Root retains acceptance.",
+    "Page census and broader borrowed joins excluded."
+  ],
+  "frozen_seal": {
+    "path": "/tmp/nst-a4-doc-point-handoff.json",
+    "sha256": "941315357cd6046299239adbfc1873e0e9c6a1082582df28d3e64747fa80add3"
+  }
+}
