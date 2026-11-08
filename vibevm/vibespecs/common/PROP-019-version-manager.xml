@@ -794,6 +794,63 @@ the built-in GitHub release page.</RELEASE-SOURCES-LEAD></p>
   outer digest against.</RELEASE-SOURCE-VERIFY>
       </facts>
     </release-sources>
+    <site-profile title="2.20 Site profile — one file configures an installation">
+      <p><SITE-PROFILE-LEAD fact="true" status="impl/done">An administrator describes a closed-network installation once, in one
+TOML **site profile** (`schema = 1`), and every developer runs `vibe self apply
+&lt;file|url&gt;`. The profile carries `name`, `[[registry]]` (with `type`),
+`[[mirror]]`, `[[override]]`, `[[remap]]`, `[source_policy]`, `[artifacts]`
+(`vibe`, `packages`), `[self]`, `[proxy]`, `[net] offline` and `[path] fix =
+"ask" | "always" | "never"`; any other key is refused. It is stored verbatim as
+its own layer, `&lt;settings-dir&gt;/site-profile.toml`, never merged into the
+user's files: every owner reads it **below** the user's own `registry.toml` /
+`config.toml` / `settings.toml` and **above** the built-in defaults.</SITE-PROFILE-LEAD></p>
+      <facts ordered="false">
+        <SITE-PROFILE-LAYER fact="true" status="impl/done">Precedence, highest first: the user's own value, the site profile,
+  the built-in default. Registries are the `site` scope of PROP-002
+  `#registry-layers` (a user registry `name` hides the site's; mirrors follow
+  the user's; overrides dedupe by `pkgref`); a site that declares registries
+  replaces the built-in GitHub/GitVerse defaults and they are not seeded into
+  `registry.toml`. `[source_policy]` layers as between PROP-073 layers (the
+  higher `prefer_hosting` wins, `exclude_hosting` accumulates). `[[remap]]` rows
+  are local-layer rows placed before the user's `settings.toml` rows, so a
+  user's row wins among equals. The release decision (`[self]` with
+  `[artifacts] vibe`) comes whole from the higher layer declaring either;
+  `[artifacts] packages` and each `[proxy]` key fall back to the site's;
+  `[net] offline` is on when either says so. Provenance names the stored
+  profile (`[self] in …/site-profile.toml`).</SITE-PROFILE-LAYER>
+        <SITE-PROFILE-APPLY fact="true" status="impl/done">`vibe self apply &lt;file|url&gt;` reads a path, a `file://` URL or an
+  `https://`/`http://` URL (through the controlled transport; refused offline),
+  validates everything — TOML shape, `schema`, registry types against their
+  urls, duplicate names, hosting selectors, remap rows, absolute drop paths, the
+  release source through its one owner — and writes nothing on any error, naming
+  the file, the key and the fix. It then stores the profile and a receipt
+  `site-profile.receipt.toml` (source, SHA-256, time, vibe version, `owns` = the
+  two files) and reports the effective installation, where to put vibe releases
+  (`&lt;drop&gt;/v&lt;version&gt;/` with this platform's exact file names for the
+  running and the next version) and package payloads (the `#drops` lookup with
+  an example), conflicts in the user's own files (a registry on an excluded
+  host, an own release source, `$VIBEVM_RELEASE_ORIGIN`) and `vibe update
+  --sources-only` as the migration step. Re-applying the same bytes from the
+  same origin writes nothing; an edited profile replaces the stored one.
+  `--dry-run` writes nothing; `--diff` adds a line diff per file; `--show`
+  prints the applied profile and the effective installation; `--remove`
+  deletes exactly the files the receipt lists (never a user's file) and leaves
+  the durable PATH alone. `--json`: `vibe-self-apply/1`.</SITE-PROFILE-APPLY>
+        <SITE-PROFILE-PATH fact="true" status="impl/done">After storing, apply runs the consented PATH step of `#path`: the
+  `--fix-path` / `--no-fix-path` flag, else `[path] fix`, else an interactive
+  question defaulting to yes on Windows and no elsewhere; unattended without a
+  flag or `always` never writes. The write is the platform persister — on
+  Windows the registry API, never PowerShell, `setx` or a child process.</SITE-PROFILE-PATH>
+        <SITE-PROFILE-BOOTSTRAP fact="true" status="impl/done">A fresh machine is set up in one step. Run from an unmanaged
+  executable (a `vibe` downloaded by hand) with no active instance, apply first
+  imports that executable as the active instance (`self import --use`
+  without durable environment changes) so the store and the shims exist. `vibe
+  self bootstrap --site &lt;file|url&gt;` (and `install.sh --site`, `install.ps1
+  -Site`, or `$VIBEVM_SITE_PROFILE`) validates the profile before installing the
+  release — from a local release drop when `--release-base` is one — and stores
+  it once the release is installed.</SITE-PROFILE-BOOTSTRAP>
+      </facts>
+    </site-profile>
   </decisions>
   <architecture title="3. Architecture — seams and cells">
     <p><req-architecture fact="true" status="spec/done">`req r2`</req-architecture></p>

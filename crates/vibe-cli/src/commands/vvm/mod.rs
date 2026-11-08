@@ -24,6 +24,7 @@ mod provenance;
 mod relocate;
 mod remove;
 pub(crate) mod selfloc;
+pub(crate) mod site;
 mod source;
 mod store;
 mod tools;
@@ -43,6 +44,7 @@ use crate::{
 use activation::{
     activate_record, ensure_activatable, run_env_cmd, run_rollback_cmd, run_use_cmd, staged,
 };
+use env::path_has_dir;
 use error::VvmError;
 use model::{InstallRecord, State, VersionId};
 use provenance::running_record;
@@ -180,6 +182,7 @@ pub fn run(ctx: &output::Context, args: VvmArgs, env: VvmEnv) -> Result<()> {
         VvmSubcommand::Source(a) => bundle::run_release_source_cmd(ctx, &env, a.command),
         VvmSubcommand::Releases(a) => bundle::run_releases_cmd(ctx, &env, a),
         VvmSubcommand::Doctor(a) => doctor::run_doctor_cmd(ctx, &env, a),
+        VvmSubcommand::Apply(a) => site::run_apply_cmd(ctx, &env, a),
         VvmSubcommand::Remove(a) => remove::run_remove_cmd(ctx, &env, a),
         VvmSubcommand::Gc(a) => {
             let task = ctx.progress().task("Garbage collecting vibevm");
@@ -583,16 +586,6 @@ fn require_tty(ctx: &output::Context, msg: &str) -> Result<(), VvmError> {
         });
     }
     Ok(())
-}
-
-/// Whether `dir` is on the `PATH` value, comparing canonicalised paths.
-fn path_has_dir(path_var: Option<&str>, dir: &Path) -> bool {
-    let Some(pv) = path_var else {
-        return false;
-    };
-    let target = dir.canonicalize();
-    std::env::split_paths(pv)
-        .any(|p| p == dir || matches!((p.canonicalize(), &target), (Ok(a), Ok(b)) if &a == b))
 }
 
 #[cfg(test)]

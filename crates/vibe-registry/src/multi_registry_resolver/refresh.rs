@@ -50,6 +50,46 @@ impl MultiRegistryResolver {
         registry_name: &str,
         report: &mut RefreshReport,
     ) -> Result<(), RegistryError> {
+        // A directory-layout registry holds every package in one place: a
+        // monorepo's clone is fetched once per sync, a localdir is read in
+        // place and has nothing to refresh (PROP-002 `#registry-type`).
+        if let Some(source) = self
+            .sources()?
+            .iter()
+            .find(|source| source.name() == registry_name)
+        {
+            match source {
+                RegistrySource::Monorepo(mono) => {
+                    let refname = mono.refname.clone();
+                    if !report
+                        .refreshed
+                        .iter()
+                        .any(|e| e.via == RefreshedVia::Registry(registry_name.to_string()))
+                    {
+                        mono.registry()?.sync()?;
+                    }
+                    report.refreshed.push(RefreshedEntry {
+                        group: entry.group.clone(),
+                        name: entry.name.to_string(),
+                        via: RefreshedVia::Registry(registry_name.to_string()),
+                        refname,
+                    });
+                    return Ok(());
+                }
+                RegistrySource::Local(_) => {
+                    report.skipped.push(SkippedEntry {
+                        group: entry.group.clone(),
+                        name: entry.name.to_string(),
+                        reason: format!(
+                            "registry `{registry_name}` is a local directory, read in place — \
+                             nothing to refresh"
+                        ),
+                    });
+                    return Ok(());
+                }
+                RegistrySource::Git(_) => {}
+            }
+        }
         let Some(reg) = self
             .registries()?
             .iter()
@@ -120,7 +160,7 @@ pub struct RefreshedEntry {
     pub refname: String,
 }
 
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub enum RefreshedVia {
     Registry(String),
     Override,

@@ -19,6 +19,7 @@ pub mod git_cli;
 pub mod manifest;
 pub mod org_cache;
 pub mod org_walk;
+pub mod tree_entry;
 
 pub use from_clones::FromClonesPackageScanner;
 pub use from_github::{

@@ -79,7 +79,9 @@ pub(in crate::commands::registry) fn run_test(
     let manifest = Manifest::read(&manifest_path)
         .with_context(|| format!("reading `{}`", manifest_path.display()))?;
 
-    require_configured(manifest.registries.len())?;
+    let effective = crate::commands::registry::effective_registries(&project_root, &manifest)?;
+    let registries = effective.registries;
+    require_configured(registries.len())?;
 
     // Build a `MultiRegistryResolver` so each registry inherits the
     // exact auth configuration the install path would use. We then
@@ -104,14 +106,14 @@ pub(in crate::commands::registry) fn run_test(
     let probe_pkgref = PackageRef::parse(PROBE_PKGREF)
         .context("internal: the hermetic probe pkgref literal must parse")?;
 
-    let mut rows: Vec<TestReportRegistry> = Vec::with_capacity(manifest.registries.len());
+    let mut rows: Vec<TestReportRegistry> = Vec::with_capacity(registries.len());
 
     // Probe each registry independently — open a single-registry
     // resolver per probe so the walk does not chain across
     // registries (we want per-registry diagnostic, not aggregate).
     let probes = ctx.progress().task("Probing configured registries");
-    probes.set_progress(0, Some(manifest.registries.len() as u64), "registries");
-    for (index, reg) in manifest.registries.iter().enumerate() {
+    probes.set_progress(0, Some(registries.len() as u64), "registries");
+    for (index, reg) in registries.iter().enumerate() {
         let probe = probes
             .progress()
             .task(format!("Probing registry {}", reg.name));
@@ -143,7 +145,7 @@ pub(in crate::commands::registry) fn run_test(
                 });
                 probes.set_progress(
                     (index + 1) as u64,
-                    Some(manifest.registries.len() as u64),
+                    Some(registries.len() as u64),
                     "registries",
                 );
                 continue;
@@ -200,6 +202,15 @@ pub(in crate::commands::registry) fn run_test(
                 Some("registry returned an unclassified failure".to_string()),
             ),
         };
+        // A directory-layout registry also reports its own index
+        // (PROP-002 `#registry-index`): current, stale (and why) or absent.
+        let note = match (status, layout_index_note(&resolver, reg)) {
+            ("reachable", Some(index)) => Some(match note {
+                Some(note) => format!("{note}; {index}"),
+                None => index,
+            }),
+            _ => note,
+        };
         rows.push(TestReportRegistry {
             name: reg.name.clone(),
             url: row_url,
@@ -214,7 +225,7 @@ pub(in crate::commands::registry) fn run_test(
         }
         probes.set_progress(
             (index + 1) as u64,
-            Some(manifest.registries.len() as u64),
+            Some(registries.len() as u64),
             "registries",
         );
     }
@@ -264,6 +275,31 @@ pub(in crate::commands::registry) fn run_test(
         rows.len()
     ));
     Ok(())
+}
+
+/// `index: current|stale (<why>)|absent` for a `monorepo` / `localdir`
+/// registry, read from the tree the probe just reached; `None` for the
+/// per-package types.
+fn layout_index_note(
+    resolver: &vibe_registry::MultiRegistryResolver,
+    reg: &vibe_core::manifest::RegistrySection,
+) -> Option<String> {
+    let source = resolver.selected_registry_source(&reg.name).ok()?;
+    let root = match source.as_ref() {
+        vibe_registry::multi_registry_resolver::RegistrySource::Local(local) => {
+            local.registry.root().to_path_buf()
+        }
+        vibe_registry::multi_registry_resolver::RegistrySource::Monorepo(mono) => {
+            mono.local().ok()?.root().to_path_buf()
+        }
+        vibe_registry::multi_registry_resolver::RegistrySource::Git(_) => return None,
+    };
+    Some(match vibe_core::layout_registry::index_state(&root).ok()? {
+        vibe_core::layout_registry::IndexState::Stale { reason } => {
+            format!("index: stale ({reason}); readers compute it in memory")
+        }
+        state => format!("index: {}", state.as_str()),
+    })
 }
 
 #[cfg(test)]

@@ -51,15 +51,20 @@ fn registry_seed_is_best_effort_and_precedes_the_fallible_load() {
     // when the context permits seeding.
     let source = include_str!("ports.rs");
     let deferred = source
-        .find("vibe_core::GlobalRegistrySource::deferred(")
+        .find("vibe_core::GlobalRegistrySource::deferred_with_site(")
         .expect("the machine registry file is loaded lazily, not eagerly");
     let path = source
         .find("vibe_core::settings::registry_config_path()")
         .expect("the real machine registry file stays the source");
+    // The applied site profile (PROP-019 `#site-profile`) is the layer
+    // beneath it, read on the same demand.
+    let site = source
+        .find("vibe_core::settings::site_profile_path()")
+        .expect("the site profile layers beneath the machine registry file");
     let defaults = source
         .find("if self.seed")
         .expect("default registries are offered only when seeding is permitted");
-    assert!(deferred < path && path < defaults);
+    assert!(deferred < path && path < site && site < defaults);
     assert!(
         !source.contains("ensure_default_global_registry()"),
         "a hosted run must not write the machine registry file"

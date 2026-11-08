@@ -59,6 +59,7 @@ fn oversized_bundle_declaration_is_rejected_before_downloader_runs() {
             version: "1.0.0".into(),
             release_base: "https://github.com/vibevm/vibevm/releases/download/v1.0.0".into(),
             force: false,
+            site: None,
         },
         &downloader,
         &bootstrap,
@@ -96,6 +97,7 @@ fn hosted_bootstrap_cross_checks_manifest_and_downloads_selected_bundle_only() {
         version: "1.0.0".into(),
         release_base: "https://github.com/vibevm/vibevm/releases/download/v1.0.0".into(),
         force: false,
+        site: None,
     };
 
     let mismatched = VvmBootstrapArgs {
@@ -103,6 +105,7 @@ fn hosted_bootstrap_cross_checks_manifest_and_downloads_selected_bundle_only() {
         version: "2.0.0".into(),
         release_base: args.release_base.clone(),
         force: false,
+        site: None,
     };
     let bootstrap = temp.path().join("vibe-bootstrap.exe");
     write_test_executable(&bootstrap, b"vibe-binary");
@@ -193,6 +196,7 @@ fn an_offline_bootstrap_is_refused_before_the_bundle_is_requested() {
             version: "1.0.0".into(),
             release_base: "https://github.com/vibevm/vibevm/releases/download/v1.0.0".into(),
             force: false,
+            site: None,
         },
         &downloader,
         &bootstrap,

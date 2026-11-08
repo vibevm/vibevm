@@ -282,6 +282,33 @@ pub enum PublishError {
     MonorepoRaceLost { repo: String, branch: String },
 
     #[error(
+        "publish refused: the registry index at `{path}` could not be projected: {message} \
+         (violates spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#registry-index; \
+         fix: repair the named file or version directory, then re-run the publish)"
+    )]
+    LayoutIndex { path: PathBuf, message: String },
+
+    #[error(
+        "publish refused: the working copy `{path}` has uncommitted changes; vibe commits into \
+         it and must not sweep them into its commit \
+         (violates spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#registry-mirror; \
+         fix: commit or stash them, then re-run)"
+    )]
+    DirtyWorkingCopy { path: PathBuf },
+
+    #[error(
+        "publish refused: `{package}` was written with Git tree {written}, but its source tree is \
+         {expected}; nothing of this batch was committed \
+         (violates spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#registry-mirror; \
+         fix: report it — the version directory must carry the source commit's tree exactly)"
+    )]
+    TreeMismatch {
+        package: String,
+        written: String,
+        expected: String,
+    },
+
+    #[error(
         "publish refused: no `RepoCreator` adapter for host `{host}`. Configured registry URL \
          points at an unsupported host; add an adapter per PROP-002 §2.10 or use a supported one \
          (today: `github.com`, `gitverse.ru`). \

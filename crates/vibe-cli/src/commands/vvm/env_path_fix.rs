@@ -9,21 +9,13 @@ specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-019#path", r = 3);
 
 use std::path::Path;
 
-use serde::{Deserialize, Serialize};
+use serde::Serialize;
 
 use super::{EnvPersister, EnvironmentObservation, Persisted, profile::PathEntryStatus};
 
-/// The site-profile `[path] fix` policy.
-#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
-#[serde(rename_all = "snake_case")]
-pub(crate) enum PathFixPolicy {
-    /// Ask when a terminal is attached; otherwise leave PATH alone.
-    Ask,
-    /// Fix without asking, attended or not.
-    Always,
-    /// Never touch the durable PATH.
-    Never,
-}
+/// The site-profile `[path] fix` policy — one vocabulary with the profile
+/// reader (`PROP-019#site-profile`).
+pub(crate) use vibe_core::site_profile::PathFixPolicy;
 
 /// Everything that decides whether the durable PATH may be changed.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]

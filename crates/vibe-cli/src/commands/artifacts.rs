@@ -31,14 +31,14 @@ struct WhereReport {
 }
 
 #[derive(Debug, Serialize)]
-struct ReleaseWhere {
-    source: &'static str,
-    location: String,
-    from: String,
+pub(crate) struct ReleaseWhere {
+    pub(crate) source: &'static str,
+    pub(crate) location: String,
+    pub(crate) from: String,
     /// The directory one release goes into, for the running version.
-    example_dir: Option<String>,
+    pub(crate) example_dir: Option<String>,
     /// The files that directory must hold for this machine.
-    files: Vec<String>,
+    pub(crate) files: Vec<String>,
 }
 
 #[derive(Debug, Serialize)]
@@ -86,8 +86,19 @@ fn run_where(ctx: &output::Context, args: ArtifactsWhereArgs, offline: bool) -> 
 }
 
 fn release_where() -> Result<ReleaseWhere> {
-    let effective = release_source::active()?;
-    let version = env!("CARGO_PKG_VERSION");
+    Ok(release_where_for(
+        &release_source::active()?,
+        env!("CARGO_PKG_VERSION"),
+    ))
+}
+
+/// Where one release `version` of this platform goes for the release
+/// source `effective` — the answer `vibe artifacts where` prints and
+/// `vibe self apply` repeats after applying a profile.
+pub(crate) fn release_where_for(
+    effective: &release_source::EffectiveReleaseSource,
+    version: &str,
+) -> ReleaseWhere {
     let target =
         crate::commands::vvm::bundle::release_source::release_target().unwrap_or("<target>");
     let files = vec![
@@ -102,13 +113,13 @@ fn release_where() -> Result<ReleaseWhere> {
         ReleaseSource::Nexus { base } => (Some(format!("{base}/v{version}")), files),
         _ => (None, Vec::new()),
     };
-    Ok(ReleaseWhere {
+    ReleaseWhere {
         source: effective.source.kind(),
         location: effective.source.location(),
         from: effective.origin.describe(),
         example_dir,
         files,
-    })
+    }
 }
 
 /// Every downloaded input of every installer option of the package.

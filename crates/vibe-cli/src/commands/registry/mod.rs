@@ -18,6 +18,8 @@ specmark::scope!("spec://org.vibevm.core/vibevm/VIBEVM-SPEC#registry");
 
 mod config;
 mod index_step;
+pub(crate) mod layout_root;
+mod mirror;
 mod publish;
 mod redirect;
 mod sync;
@@ -42,6 +44,7 @@ pub fn run(ctx: &output::Context, args: RegistryArgs, root_offline: bool) -> Res
         RegistrySubcommand::Add(sub) => config::run_add(ctx, sub),
         RegistrySubcommand::SetMirror(sub) => config::run_set_mirror(ctx, sub),
         RegistrySubcommand::Remove(sub) => config::run_remove(ctx, sub),
+        RegistrySubcommand::Mirror(sub) => mirror::run_mirror(ctx, sub, root_offline),
         RegistrySubcommand::Vendor(sub) => vendor::run_vendor(ctx, sub),
         RegistrySubcommand::Test(sub) => config::run_test(ctx, sub),
         RegistrySubcommand::Redirect(sub) => redirect::run_redirect(ctx, sub),
@@ -70,6 +73,27 @@ struct SkippedReportEntry {
     group: String,
     name: String,
     reason: String,
+}
+
+/// The effective `[[registry]]` / `[[mirror]]` / `[[override]]` rows of a
+/// project (PROP-002 `#registry-layers`): `.vibe/registry.local.toml`, then
+/// `vibe.toml`, then `~/.vibe/registry.toml` (with the applied site profile
+/// beneath it) — what resolution and `vibe registry publish` read.
+pub(crate) fn effective_registries(
+    project_root: &Path,
+    manifest: &vibe_core::manifest::Manifest,
+) -> Result<vibe_core::EffectiveRegistryConfig> {
+    use anyhow::Context as _;
+    let user =
+        vibe_core::GlobalRegistryConfig::load().context("loading `~/.vibe/registry.toml`")?;
+    let local = vibe_core::GlobalRegistryConfig::load_project_local(project_root)?;
+    Ok(vibe_core::RegistryLayers {
+        local: Some(&local),
+        project: Some(manifest),
+        user: &user,
+        site: None,
+    }
+    .merge())
 }
 
 fn resolve_project_root(path: &Path) -> Result<PathBuf> {

@@ -62,6 +62,11 @@ pub enum VvmSubcommand {
     /// Verify the install and environment; `--fix` repairs PATH and shims.
     Doctor(VvmDoctorArgs),
 
+    /// Configure this installation from one site profile: registries,
+    /// mirrors and remap rows, source policy, artifact drops, the release
+    /// source, the proxy and PATH (PROP-019 `#site-profile`).
+    Apply(VvmApplyArgs),
+
     /// Remove installed version(s) — safe by default (no wipe without
     /// `--all`; no selector opens an interactive picker).
     #[command(visible_aliases = ["rm", "del", "uninstall"])]
@@ -181,6 +186,51 @@ pub struct VvmBootstrapArgs {
     /// Install a fresh immutable #N even when bundle bytes are unchanged.
     #[arg(long)]
     pub force: bool,
+
+    /// Apply this site profile (a path or URL, as `vibe self apply` takes)
+    /// once the release is installed. It is validated before anything is
+    /// installed, so a closed-network machine is set up in one step.
+    #[arg(long, value_name = "FILE|URL")]
+    pub site: Option<String>,
+}
+
+/// `vibe self apply` (PROP-019 `#site-profile`).
+#[derive(Debug, clap::Args)]
+pub struct VvmApplyArgs {
+    /// The site profile: a path, a `file://` URL or an `https://`/`http://`
+    /// URL.
+    #[arg(
+        value_name = "FILE|URL",
+        required_unless_present_any = ["show", "remove"],
+        conflicts_with_all = ["show", "remove"]
+    )]
+    pub profile: Option<String>,
+
+    /// Validate and report what would change, writing nothing.
+    #[arg(long)]
+    pub dry_run: bool,
+
+    /// Like `--dry-run`, and print a line diff of every file that would change.
+    #[arg(long)]
+    pub diff: bool,
+
+    /// Print the effective installation: the applied profile, registries
+    /// by layer, release source, drops, source policy and proxy.
+    #[arg(long, conflicts_with_all = ["dry_run", "diff", "remove", "fix_path", "no_fix_path"])]
+    pub show: bool,
+
+    /// Remove what the last apply installed (the stored profile and its
+    /// receipt); files the user wrote are never touched.
+    #[arg(long)]
+    pub remove: bool,
+
+    /// Put the shim directory on the durable PATH without asking.
+    #[arg(long, conflicts_with = "no_fix_path")]
+    pub fix_path: bool,
+
+    /// Never change the durable PATH, whatever the profile says.
+    #[arg(long)]
+    pub no_fix_path: bool,
 }
 
 /// `vibe self source [show|set|reset]` (PROP-019 `#release-sources`).

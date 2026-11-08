@@ -26,6 +26,8 @@ enum Input {
     Ready(GlobalRegistryConfig),
     File {
         path: Option<PathBuf>,
+        /// The applied site profile beneath the file (`PROP-019#site-profile`).
+        site: Option<PathBuf>,
         missing: GlobalRegistryConfig,
         body: OnceLock<Option<String>>,
         gate: Mutex<()>,
@@ -48,8 +50,19 @@ impl GlobalRegistrySource {
     }
     /// Capture only address/default data; no filesystem observation occurs here.
     pub fn deferred(path: Option<PathBuf>, missing: GlobalRegistryConfig) -> Self {
+        Self::deferred_with_site(path, None, missing)
+    }
+    /// [`Self::deferred`] with the applied site profile layered beneath the
+    /// file (`PROP-019#site-profile`), read on the same demand. A site that
+    /// declares registries replaces `missing`'s built-in registries.
+    pub fn deferred_with_site(
+        path: Option<PathBuf>,
+        site: Option<PathBuf>,
+        missing: GlobalRegistryConfig,
+    ) -> Self {
         Self(Arc::new(Input::File {
             path,
+            site,
             missing,
             body: OnceLock::new(),
             gate: Mutex::new(()),
@@ -94,36 +107,71 @@ impl GlobalRegistrySource {
                 .map(|g| g.source_policy.clone())
                 .unwrap_or_default());
         };
-        let Some(body) = self.body()? else {
-            return Ok(missing.source_policy.clone());
+        let own = match self.body()? {
+            None => missing.source_policy.clone(),
+            Some(body) => {
+                #[derive(serde::Deserialize)]
+                struct Policy {
+                    #[serde(default)]
+                    source_policy: SourcePolicyDecl,
+                }
+                toml::from_str::<Policy>(body)
+                    .map(|p| p.source_policy)
+                    .map_err(|_| {
+                        invalid(
+                            path.as_deref().unwrap_or(Path::new("registry.toml")),
+                            "global source-policy document is malformed",
+                        )
+                    })?
+            }
         };
-        #[derive(serde::Deserialize)]
-        struct Policy {
-            #[serde(default)]
-            source_policy: SourcePolicyDecl,
-        }
-        toml::from_str::<Policy>(body)
-            .map(|p| p.source_policy)
-            .map_err(|_| {
-                invalid(
-                    path.as_deref().unwrap_or(Path::new("registry.toml")),
-                    "global source-policy document is malformed",
-                )
-            })
+        Ok(match self.site()? {
+            Some(site) => own.over(&site.source_policy),
+            None => own,
+        })
+    }
+    /// The site layer, read on demand; `None` without a stored profile.
+    fn site(&self) -> Result<Option<GlobalRegistryConfig>, GlobalRegistryError> {
+        let Input::File {
+            site: Some(path), ..
+        } = self.0.as_ref()
+        else {
+            return Ok(None);
+        };
+        Ok(crate::site_profile::installed_at(path)
+            .map_err(GlobalRegistryError::site)?
+            .map(|site| site.profile.registry_layer()))
     }
     /// Full catalog decoding is a distinct new-source/index demand.
     pub fn catalog(&self) -> Result<GlobalRegistryConfig, GlobalRegistryError> {
         match self.0.as_ref() {
             Input::Ready(value) => Ok(value.clone()),
-            Input::File { path, missing, .. } => match self.body()? {
-                None => Ok(missing.clone()),
-                Some(body) => toml::from_str(body).map_err(|_| {
-                    invalid(
-                        path.as_deref().unwrap_or(Path::new("registry.toml")),
-                        "global registry catalog is malformed",
-                    )
-                }),
-            },
+            Input::File { path, missing, .. } => {
+                let body = self.body()?;
+                let own: GlobalRegistryConfig = match body {
+                    None => missing.clone(),
+                    Some(body) => toml::from_str(body).map_err(|_| {
+                        invalid(
+                            path.as_deref().unwrap_or(Path::new("registry.toml")),
+                            "global registry catalog is malformed",
+                        )
+                    })?,
+                };
+                let Some(site) = self.site()? else {
+                    return Ok(own);
+                };
+                // The site's registries replace the built-in defaults a
+                // missing user file would otherwise contribute.
+                let own = if body.is_none() && !site.registries.is_empty() {
+                    GlobalRegistryConfig {
+                        registries: Vec::new(),
+                        ..own
+                    }
+                } else {
+                    own
+                };
+                Ok(own.over_site(&site))
+            }
         }
     }
 }

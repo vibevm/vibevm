@@ -376,6 +376,32 @@ impl MultiRegistryResolver {
                 }
             }
         }
+        // A directory-layout registry (`localdir`, `monorepo`) answers from
+        // its own index (PROP-002 `#registry-index`).
+        for source in self.sources()? {
+            let local = match source {
+                RegistrySource::Local(local) => &local.registry,
+                RegistrySource::Monorepo(mono) => match mono.local() {
+                    Ok(local) => local,
+                    Err(RegistryError::ContactRefused(refusal)) => return Err(refusal.into()),
+                    Err(e) => {
+                        tracing::debug!(
+                            target: "vibe_registry::multi_registry_resolver",
+                            package = %name,
+                            error = %e,
+                            "monorepo short-name lookup failed; skipping this registry"
+                        );
+                        continue;
+                    }
+                },
+                RegistrySource::Git(_) => continue,
+            };
+            for g in local.indexed_candidate_groups(name)? {
+                if !groups.contains(&g) {
+                    groups.push(g);
+                }
+            }
+        }
         groups.sort();
         Ok(groups)
     }

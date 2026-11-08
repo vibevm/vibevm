@@ -25,6 +25,10 @@ walkdir.workspace = true
 chrono.workspace = true
 vibe-core.workspace = true
 vibe-registry.workspace = true
+# The index of a `monorepo` / `localdir` registry is projected by the
+# index's own code (`vibe_index::layout`) and committed with the version it
+# describes. `vibe-cli` already links the crate, so the binary gains nothing.
+vibe-index.workspace = true
 vibe-wire.workspace = true
 
 [dev-dependencies]

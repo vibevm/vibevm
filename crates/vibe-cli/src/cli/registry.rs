@@ -81,6 +81,17 @@ pub enum RegistrySubcommand {
     /// computed marker is byte-identical to the stub's current marker.
     RedirectUpdate(RegistryRedirectUpdateArgs),
 
+    /// Copy an ordinary registry (per-package repositories, with or without
+    /// its index) — or another monorepo / localdir — into a `monorepo` or
+    /// `localdir` registry, keeping every version's content and content
+    /// hash and recording where it came from. The first run saves the whole
+    /// source; every later run copies only what is new (a rerun with
+    /// nothing new changes nothing). A frozen version whose content differs
+    /// is an alarm and stops the run before anything is written; a
+    /// snapshot version that moved is updated only with
+    /// `--update-snapshots`. PROP-002 `#registry-mirror`.
+    Mirror(RegistryMirrorArgs),
+
     /// Generate a local mirror directory containing every package
     /// referenced by `vibe.lock`, suitable for use as a
     /// `[[mirror]] url = "file:///<abs-path>"` for offline / air-gapped
@@ -261,6 +272,64 @@ pub struct RegistryVendorArgs {
     pub force: bool,
 
     /// Project root with `vibe.toml`. Defaults to current directory.
+    #[arg(long, default_value = ".")]
+    pub path: PathBuf,
+}
+
+#[derive(Debug, clap::Args)]
+pub struct RegistryMirrorArgs {
+    /// The registry to copy from: a `[[registry]].name` of `vibe.toml`,
+    /// `.vibe/registry.local.toml` or `~/.vibe/registry.toml` (the
+    /// built-in `vibespecs` / `vibespecs-gitverse` included).
+    pub source: String,
+
+    /// Where to copy into: the name of a `monorepo` or `localdir`
+    /// registry; a Git url (`ssh://…`, `git@host:path`, `file://…`) or the
+    /// path of a bare repository — cloned, committed and pushed (one
+    /// commit, retried once on a race); or the path of a local working
+    /// copy — committed into and not pushed (a dirty one is refused).
+    #[arg(long = "into", value_name = "TARGET")]
+    pub into: String,
+
+    /// The branch a url or bare-repository target carries the packages on.
+    /// Defaults to `main`; a named registry uses its own `ref`.
+    #[arg(long = "branch")]
+    pub branch: Option<String>,
+
+    /// The registry name recorded in a target's new index. Defaults to
+    /// the target registry's name, else the repository's name.
+    #[arg(long = "name")]
+    pub name: Option<String>,
+
+    /// Copy only this package (`<group>/<name>`); repeatable. Required
+    /// for a source without an index, whose packages cannot be listed.
+    #[arg(long = "package", value_name = "GROUP/NAME")]
+    pub packages: Vec<String>,
+
+    /// Copy only the packages of this group; repeatable.
+    #[arg(long = "group", value_name = "GROUP")]
+    pub groups: Vec<String>,
+
+    /// Replace a snapshot (not frozen) version whose content moved at the
+    /// source. Without it such a version is reported and left as it is.
+    #[arg(long = "update-snapshots")]
+    pub update_snapshots: bool,
+
+    /// Also store a `git bundle` of every tag and branch of each source
+    /// repository (`_index/mirrors/bundles/<source>/<repo>.bundle`, at most
+    /// 100 MiB each), so a reverse mirror can recreate the exact commits and
+    /// tags. Off by default: without it the tree, tag and commit facts are
+    /// kept, not the history.
+    #[arg(long = "keep-history")]
+    pub keep_history: bool,
+
+    /// List what would be copied; fetch only what is needed to decide,
+    /// write nothing.
+    #[arg(long = "dry-run")]
+    pub dry_run: bool,
+
+    /// Project directory whose registry layers name the source and target.
+    /// Outside a project only the user's registries are read.
     #[arg(long, default_value = ".")]
     pub path: PathBuf,
 }

@@ -309,3 +309,33 @@ unknown head serialises as `null` here.
 These invariants give a clean diff in git when small subsets change
 and a stable `repomd.json::files[*].sha256` for the unchanged
 files.
+
+## The index inside a layout registry {#layout-registry}
+
+A `monorepo` or `localdir` registry (`<group>/<name>/v<version>/`) keeps
+its own catalog at `<registry>/_index/` — the data directory above, with
+three differences ([PROP-005 §2.4.1](../../../vibevm/vibespecs/modules/vibe-index/PROP-005-package-index.xml)):
+
+```
+<registry>/
+├── org.corp/demo/v1.0.0/            the packages — the tree is the truth
+└── _index/
+    ├── hello.json  repomd.json  primary.jsonl(.gz)  by-name/  by-cap/  by-purl/
+    ├── listing.txt                  what the catalog was computed from
+    ├── .gitignore                   /state/* except /state/journal/
+    └── state/journal/<YYYY>-<MM>.ndjson   COMMITTED: shared by every publisher
+```
+
+- **The journal is committed** (in a monorepo, in the same commit as the
+  versions), so yanks, tombstones and provenance are shared.
+- **The projection has two inputs** (`vibe_index::layout::project`): the
+  tree decides which versions exist and what bytes they hold (a directory
+  filled by hand counts); the journal adds identity, provenance (a
+  `Published` entry, used only while its `content_hash` matches the tree),
+  yanks and tombstones.
+- **`listing.txt`** — `# vibe layout-registry listing 1`, `# journal
+  sha256:<hex>` (the digest of the journal shards), then every version path.
+  A reader uses the persisted files only while this matches the tree and
+  journal; otherwise it computes the same projection in memory
+  (`load_or_project`). `vibe registry test` reports `current`, `stale` or
+  `absent`.

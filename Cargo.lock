@@ -4969,6 +4969,7 @@ dependencies = [
  "tokio",
  "tracing",
  "vibe-core",
+ "vibe-index",
  "vibe-registry",
  "vibe-wire",
  "walkdir",

@@ -106,6 +106,35 @@ impl IndexClient {
         Ok(Some(parse_primary(&url, &body)?))
     }
 
+    /// The tombstone `by-name/<name>.json` answers with — `(reason,
+    /// superseded_by)` for a retired name, `None` for a living or unknown
+    /// one. A mirror carries these facts over (PROP-002
+    /// `#registry-mirror`): a retired name never appears in
+    /// `primary.jsonl`, so its by-name file is the only place it answers.
+    pub fn tombstone(&self, name: &str) -> Result<Option<(String, Option<String>)>, IndexError> {
+        #[derive(serde::Deserialize)]
+        struct NameFile {
+            #[serde(default)]
+            tombstone: Option<TombstoneView>,
+        }
+        #[derive(serde::Deserialize)]
+        struct TombstoneView {
+            reason: String,
+            #[serde(default)]
+            superseded_by: Option<String>,
+        }
+        let url = format!("{}/by-name/{name}.json", self.file_base());
+        let Some(body) = self.catalog_file(&url)? else {
+            return Ok(None);
+        };
+        let parsed: NameFile =
+            serde_json::from_slice(&body).map_err(|e| IndexError::Malformed {
+                url,
+                message: e.to_string(),
+            })?;
+        Ok(parsed.tombstone.map(|t| (t.reason, t.superseded_by)))
+    }
+
     /// GET one catalog file, with the fetch timeout and this client's
     /// auth plan. `Ok(None)` on 404, which is «this index does not carry
     /// that file», never «the read failed».

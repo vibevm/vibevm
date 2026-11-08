@@ -89,6 +89,18 @@ pub fn settings_toml_path() -> Option<PathBuf> {
     Some(settings_dir()?.join("settings.toml"))
 }
 
+/// The applied site profile (`PROP-019#site-profile`):
+/// `<settings-dir>/site-profile.toml`, written only by `vibe self apply`.
+pub fn site_profile_path() -> Option<PathBuf> {
+    Some(settings_dir()?.join(crate::site_profile::SITE_PROFILE_FILE))
+}
+
+/// What the last `vibe self apply` installed (`PROP-019#site-profile`):
+/// `<settings-dir>/site-profile.receipt.toml`.
+pub fn site_receipt_path() -> Option<PathBuf> {
+    Some(settings_dir()?.join(crate::site_profile::SITE_RECEIPT_FILE))
+}
+
 /// Registry-clone cache root: `<settings-dir>/registries`.
 ///
 /// Callers still let `VIBE_REGISTRY_CACHE` override this specific path;
@@ -185,6 +197,8 @@ mod tests {
             registries_cache_dir(),
             search_cache_dir(),
             aiui_dir(),
+            site_profile_path(),
+            site_receipt_path(),
         ]
         .into_iter()
         .map(|p| p.expect("home dir present in test env"))
@@ -192,7 +206,7 @@ mod tests {
         paths.extend(crate::user_config::config_file_candidates());
 
         assert!(
-            paths.len() > 6,
+            paths.len() > 8,
             "the user-config candidates dropped out of this loop — \
              the gate no longer reaches `user_config`"
         );
@@ -216,5 +230,11 @@ mod tests {
         assert!(registries_cache_dir().unwrap().ends_with("registries"));
         assert!(search_cache_dir().unwrap().ends_with("search-cache"));
         assert!(aiui_dir().unwrap().ends_with("aiui"));
+        assert!(site_profile_path().unwrap().ends_with("site-profile.toml"));
+        assert!(
+            site_receipt_path()
+                .unwrap()
+                .ends_with("site-profile.receipt.toml")
+        );
     }
 }

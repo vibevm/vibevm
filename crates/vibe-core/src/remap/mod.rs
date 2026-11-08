@@ -59,8 +59,8 @@ pub use installed::{
 };
 pub use layers::{
     Layer, LoadedSource, REGISTRY_TABLES_SOURCE, default_raw_file_rows, env_remap_files,
-    rows_from_file, rows_from_mirrors, rows_from_overrides, rows_from_registry_tables,
-    rows_from_settings,
+    rows_from_decls, rows_from_file, rows_from_mirrors, rows_from_overrides,
+    rows_from_registry_tables, rows_from_settings,
 };
 pub use location::{ByteLocation, LocationError};
 pub use locator::{Locator, RemapRefusal};

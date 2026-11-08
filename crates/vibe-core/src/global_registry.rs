@@ -59,16 +59,6 @@ pub struct GlobalRegistryConfig {
 }
 
 impl GlobalRegistryConfig {
-    /// Load from the canonical `~/.vibe/registry.toml` (through the settings
-    /// chokepoint, so `$VIBE_SETTINGS` relocates it). A missing file — or an
-    /// unresolvable settings dir — is `Ok(default)`: the layer is optional.
-    pub fn load() -> Result<Self, GlobalRegistryError> {
-        let Some(path) = crate::settings::registry_config_path() else {
-            return Ok(Self::default());
-        };
-        Self::load_from(&path)
-    }
-
     /// Like [`Self::load`] but from an explicit path (tests, ad-hoc).
     /// Missing-file is `Ok(default)`; a parse error surfaces so a malformed
     /// file is noticed rather than silently ignored.
@@ -173,6 +163,15 @@ pub fn ensure_default_global_registry() -> Result<(), GlobalRegistryError> {
     if path.exists() {
         return Ok(());
     }
+    // A site profile that declares registries replaces the built-in
+    // defaults (`PROP-019#site-profile`): seeding them into the user file
+    // would put the public hosts above the site's registries.
+    if crate::site_profile::installed()
+        .map_err(GlobalRegistryError::site)?
+        .is_some_and(|site| !site.profile.registries.is_empty())
+    {
+        return Ok(());
+    }
     let seeded = GlobalRegistryConfig {
         registries: default_registries(),
         ..GlobalRegistryConfig::default()
@@ -228,6 +227,15 @@ pub enum GlobalRegistryError {
         #[source]
         source: toml::ser::Error,
     },
+    /// The applied site profile (`PROP-019#site-profile`) is unreadable.
+    #[error(transparent)]
+    Site(Box<crate::site_profile::SiteProfileError>),
+}
+
+impl GlobalRegistryError {
+    pub(crate) fn site(error: crate::site_profile::SiteProfileError) -> Self {
+        GlobalRegistryError::Site(Box::new(error))
+    }
 }
 
 /// The merged, resolution-ready registry config: a project manifest's

@@ -38,6 +38,7 @@ mod releases;
 mod report;
 #[path = "bundle/selection.rs"]
 mod selection;
+pub(super) use download::fetch_document;
 #[cfg(test)]
 use download::{CONNECT_TIMEOUT, TOTAL_TIMEOUT, copy_download, write_download};
 use download::{
@@ -91,6 +92,14 @@ pub(super) fn run_bootstrap_cmd(
     args: VvmBootstrapArgs,
     progress: &Progress,
 ) -> Result<()> {
+    // A site profile is validated before anything is installed
+    // (`PROP-019#site-profile`): a closed-network machine is set up in one
+    // step, or not touched at all.
+    let site = args
+        .site
+        .as_deref()
+        .map(|source| super::site::prepare_profile(ctx, env, source))
+        .transpose()?;
     let executable = std::env::current_exe().context("locating the bootstrap executable")?;
     let persister = super::make_persister(env, Shell::detect(env.shell.as_deref()))?;
     let downloader = HttpDownloader::for_invocation()?;
@@ -102,7 +111,11 @@ pub(super) fn run_bootstrap_cmd(
         &executable,
         persister.as_ref(),
         progress,
-    )
+    )?;
+    match site {
+        Some(prepared) => super::site::apply_after_bootstrap(ctx, &prepared),
+        None => Ok(()),
+    }
 }
 
 fn bootstrap_with_downloader(

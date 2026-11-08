@@ -24,7 +24,6 @@ use std::collections::HashMap;
 use std::path::Path;
 
 use anyhow::{Context, Result, bail};
-use serde::Serialize;
 use vibe_core::PackageKind;
 use vibe_core::manifest::Manifest;
 use vibe_registry::search::cache::{self as search_cache, CacheKey};
@@ -38,7 +37,10 @@ use vibe_registry::{
 use crate::cli::SearchArgs;
 use crate::output;
 
+mod layout;
 mod purl;
+mod report;
+use report::*;
 
 /// Override for the GitHub REST API root used by `--full-scan`. Set
 /// in tests to a local mock; defaults to the live API when unset. The
@@ -60,67 +62,6 @@ pub struct SearchEnv {
     pub github_api_base: Option<String>,
     /// `VIBEVM_SEARCH_CACHE_DIR` — overrides `~/.vibe/search-cache/`.
     pub cache_dir: Option<String>,
-}
-
-#[derive(Debug, Serialize)]
-struct SearchReport {
-    ok: bool,
-    command: &'static str,
-    project: String,
-    query: String,
-    registries_searched: Vec<String>,
-    registries_unconfigured: Vec<String>,
-    registries_unreachable: Vec<UnreachableRegistry>,
-    registries_policy_skipped: Vec<PolicySkippedRegistry>,
-    /// Registries scanned via `--full-scan` (org-walk fallback).
-    /// Always empty when `--full-scan` is off.
-    #[serde(default, skip_serializing_if = "Vec::is_empty")]
-    registries_full_scanned: Vec<String>,
-    /// Registries `--full-scan` could not handle (non-GitHub host).
-    /// Always empty when `--full-scan` is off.
-    #[serde(default, skip_serializing_if = "Vec::is_empty")]
-    registries_full_scan_unsupported: Vec<UnreachableRegistry>,
-    hit_count: usize,
-    hits: Vec<HitRow>,
-}
-
-#[derive(Debug, Clone, Serialize)]
-struct UnreachableRegistry {
-    name: String,
-    reason: String,
-}
-
-/// A contact refusal says nothing about whether the package exists remotely.
-#[derive(Debug, Clone, Serialize)]
-struct PolicySkippedRegistry {
-    name: String,
-    observation: &'static str,
-    reason: String,
-}
-impl PolicySkippedRegistry {
-    fn refused(name: &str, refusal: &vibe_registry::ContactRefusal) -> Self {
-        Self {
-            name: name.into(),
-            observation: "unknown",
-            reason: refusal.to_string(),
-        }
-    }
-}
-
-#[derive(Debug, Serialize, Clone)]
-struct HitRow {
-    kind: String,
-    name: String,
-    latest_stable: Option<String>,
-    score: u32,
-    matched_tokens: Vec<String>,
-    description: Option<String>,
-    registry: String,
-    /// `"index"` (served from the registry's `vibe-index` server) or
-    /// `"full-scan"` (built by walking the org's repos directly).
-    /// Lets a CI consumer tell whether the search ran against a
-    /// curated index or the rate-limited fallback.
-    source: &'static str,
 }
 
 pub fn run(ctx: &output::Context, args: SearchArgs, env: SearchEnv) -> Result<()> {
@@ -153,20 +94,26 @@ pub fn run(ctx: &output::Context, args: SearchArgs, env: SearchEnv) -> Result<()
         vibe_package_source::deferred_user_registry(crate::output::seeds_default_registry()),
     )?;
 
-    if manifest.registries.is_empty() {
+    // PROP-002 `#registry-layers`: the registries a search reads are the
+    // ones resolution reads — `.vibe/registry.local.toml`, `vibe.toml`,
+    // then `~/.vibe/registry.toml` (and the applied site profile).
+    let effective = crate::commands::registry::effective_registries(&project_root, &manifest)?;
+    if effective.registries.is_empty() {
         bail!(
-            "no registry configured. Add a `[[registry]]` entry to `vibe.toml` or run `vibe search` against a project that has one."
+            "no registry configured. Add a `[[registry]]` entry to `vibe.toml` (or \
+             `~/.vibe/registry.toml`) or run `vibe search` against a project that has one."
         );
     }
 
     let target_registries: Vec<&vibe_core::manifest::RegistrySection> =
         match args.registry.as_deref() {
-            None => manifest.registries.iter().collect(),
-            Some(name) => match manifest.registry_by_name(name) {
+            None => effective.registries.iter().collect(),
+            Some(name) => match effective.registries.iter().find(|r| r.name == name) {
                 Some(r) => vec![r],
                 None => bail!(
-                    "no `[[registry]]` named `{name}` in `vibe.toml`. Configured: {}",
-                    manifest
+                    "no `[[registry]]` named `{name}` in `vibe.toml`, \
+                     `.vibe/registry.local.toml` or `~/.vibe/registry.toml`. Configured: {}",
+                    effective
                         .registries
                         .iter()
                         .map(|r| r.name.as_str())
@@ -250,6 +197,53 @@ pub fn run(ctx: &output::Context, args: SearchArgs, env: SearchEnv) -> Result<()
         } else {
             "index search"
         });
+        // A directory-layout registry carries its own index in its tree
+        // (PROP-002 `#registry-index`): read it there — or compute it in
+        // memory when it is absent or stale — instead of probing a URL.
+        if layout::is_layout(reg) {
+            match layout::search(
+                reg,
+                &effective.mirrors,
+                &operation,
+                &query,
+                kind_filter,
+                args.limit,
+                &progress,
+            ) {
+                Ok(found) => {
+                    searched.push(reg.name.clone());
+                    for hit in &found.hits {
+                        insert_hit_keep_highest(&mut by_pkg, make_hit_row(hit, &reg.name));
+                    }
+                    if let Some(note) = found.stale {
+                        component.detail(note);
+                    }
+                    component.finish();
+                }
+                Err(error) => {
+                    if let Some(reason) = error.downcast_ref::<vibe_registry::ContactRefusal>() {
+                        if matches!(reason, vibe_registry::ContactRefusal::OperationCancelled) {
+                            return Err(error);
+                        }
+                        policy_skipped.push(PolicySkippedRegistry::refused(&reg.name, reason));
+                        component.skip("registry contact refused by source policy");
+                    } else {
+                        unreachable.push(UnreachableRegistry {
+                            name: reg.name.clone(),
+                            reason: format!("{error:#}"),
+                        });
+                        component.fail("registry index could not be read");
+                        search_failed = true;
+                    }
+                }
+            }
+            registry_search.set_progress(
+                (registry_index + 1) as u64,
+                Some(target_registries.len() as u64),
+                "registries",
+            );
+            continue;
+        }
         // The B-083 ladder: env → `[[registry]].index_url` → the
         // `<registry-url>/index` default. `served_by_index` = the index
         // path answered for this registry (hits or a recorded failure);

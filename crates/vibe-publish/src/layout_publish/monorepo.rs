@@ -1,25 +1,31 @@
 //! `monorepo` publish: fetch the registry branch, write the version
-//! directory, commit, push with plain `git` (no host API, no organisation).
-//! Git serialises concurrent publishers: a non-fast-forward rejection is
-//! absorbed by one refetch and retry, then refused.
-
+//! directories and the refreshed registry index, commit once, push with
+//! plain `git` (no host API, no organisation). Git serialises concurrent
+//! publishers: a non-fast-forward rejection is absorbed by one refetch —
+//! which re-decides every version and re-projects the index from the
+//! winner's tree — and retry, then refused.
 use std::path::Path;
 
+use chrono::Utc;
 use vibe_core::cancellation::CancellationToken;
+use vibe_index::layout::LayoutIdentity;
 
-use super::{LayoutAction, LayoutPublishConfig, LayoutPublishOutcome, Staged, checkpoint, io};
+use super::{
+    BatchConfig, BatchOutcome, IndexPlan, LayoutAction, Staged, checkpoint, commit_message,
+    decide_all, io, outcomes, plan_index, write_index,
+};
 use crate::PublishError;
 use crate::git_publish::{git_command, redact_credentials, run_git_in, run_remote_git_in};
 
 const FETCHED: &str = "refs/remotes/vibe-publish/registry";
 
 pub(super) fn publish(
-    config: &LayoutPublishConfig,
+    config: &BatchConfig,
     url: &str,
     branch: &str,
-    staged: &Staged,
+    staged: &[Staged],
     cancellation: &CancellationToken,
-) -> Result<LayoutPublishOutcome, PublishError> {
+) -> Result<BatchOutcome, PublishError> {
     let work = tempfile::TempDir::new().map_err(|e| PublishError::Io {
         path: std::env::temp_dir(),
         message: format!("creating publish working tree: {e}"),
@@ -27,47 +33,49 @@ pub(super) fn publish(
     let tree = work.path();
     run_git_in(tree, &["init", "-q", &format!("--initial-branch={branch}")])?;
     ensure_identity(tree)?;
-
+    let identity = LayoutIdentity {
+        registry: config.registry.name.clone(),
+        registry_url: config.registry.url.clone(),
+        branch: Some(branch.to_string()),
+    };
     let mut retried = false;
     loop {
         checkpoint(cancellation)?;
         fetch(tree, url, branch)?;
-        let target = tree.join(staged.package.path());
-        let location = format!("{}#{}", redact_credentials(url), staged.package.path());
-        let action = staged.decide(&target, config.replace, &location)?;
-        if config.dry_run || action == LayoutAction::Unchanged {
-            return Ok(staged.outcome(action, None, retried, config.dry_run));
+        let actions = decide_all(tree, staged, |path| {
+            format!("{}#{path}", redact_credentials(url))
+        })?;
+        let at = Utc::now();
+        let plan = plan_index(tree, config, &identity, staged, &actions, at)?;
+        let unchanged = actions.iter().all(|a| *a == LayoutAction::Unchanged) && !plan.refresh;
+        if config.dry_run || unchanged {
+            return Ok(BatchOutcome {
+                items: outcomes(staged, &actions),
+                facts_recorded: if config.dry_run { plan.facts.len() } else { 0 },
+                index_refreshed: config.dry_run && plan.refresh,
+                commit: None,
+                retried,
+                dry_run: config.dry_run,
+            });
         }
-        if target.exists() {
-            std::fs::remove_dir_all(&target).map_err(|e| io(&target, "remove_dir_all", e))?;
-        }
-        crate::git_publish::copy_dir_controlled(&staged.payload, &target, cancellation)?;
-        let package = &staged.package;
-        run_git_in(tree, &["add", "-A", "--", &package.path()])?;
-        let verb = if action == LayoutAction::Replaced {
-            "replace"
-        } else {
-            "publish"
+        let facts_recorded = plan.facts.len();
+        let batch = Batch {
+            config,
+            identity: &identity,
+            staged,
         };
-        run_git_in(
-            tree,
-            &[
-                "commit",
-                "-q",
-                "-m",
-                &format!(
-                    "{verb}: {}/{}@{}",
-                    package.group, package.name, package.version
-                ),
-            ],
-        )?;
-        let commit = String::from_utf8_lossy(&run_git_in(tree, &["rev-parse", "HEAD"])?.stdout)
-            .trim()
-            .to_string();
+        let commit = commit_batch(tree, &batch, &actions, plan, at, cancellation)?;
         checkpoint(cancellation)?;
         match push(tree, url, branch)? {
             Pushed::Accepted => {
-                return Ok(staged.outcome(action, Some(commit), retried, false));
+                return Ok(BatchOutcome {
+                    items: outcomes(staged, &actions),
+                    facts_recorded,
+                    index_refreshed: true,
+                    commit: Some(commit),
+                    retried,
+                    dry_run: false,
+                });
             }
             Pushed::Behind if !retried => {
                 // Someone published first: start again from their commit.
@@ -84,9 +92,66 @@ pub(super) fn publish(
     }
 }
 
+/// One batch as a Git working tree sees it.
+pub(super) struct Batch<'a> {
+    pub config: &'a BatchConfig,
+    pub identity: &'a LayoutIdentity,
+    pub staged: &'a [Staged],
+}
+
+/// Write the changed version directories and the refreshed index into the
+/// Git working tree `tree`, stage exactly those paths and commit once.
+/// Returns the commit.
+pub(super) fn commit_batch(
+    tree: &Path,
+    batch: &Batch<'_>,
+    actions: &[LayoutAction],
+    plan: IndexPlan,
+    at: chrono::DateTime<Utc>,
+    cancellation: &CancellationToken,
+) -> Result<String, PublishError> {
+    let mut changed = Vec::new();
+    for (index, (stage, action)) in batch.staged.iter().zip(actions).enumerate() {
+        if *action == LayoutAction::Unchanged {
+            continue;
+        }
+        checkpoint(cancellation)?;
+        if let Some(git) = &stage.item.git {
+            // By tree object: staged in the index, verified, never re-added.
+            super::git_tree::insert(tree, stage, git, index)?;
+            continue;
+        }
+        let target = tree.join(stage.path());
+        if target.exists() {
+            std::fs::remove_dir_all(&target).map_err(|e| io(&target, "remove_dir_all", e))?;
+        }
+        crate::git_publish::copy_dir_controlled(&stage.payload, &target, cancellation)?;
+        changed.push(stage.path());
+    }
+    write_index(tree, batch.identity, plan, at)?;
+    // `-f`: a package's own `.gitignore` (or the repository's) must not
+    // drop any of its files — the bytes committed are the bytes hashed.
+    for chunk in changed.chunks(64) {
+        let mut args = vec!["add", "-f", "-A", "--"];
+        args.extend(chunk.iter().map(String::as_str));
+        run_git_in(tree, &args)?;
+    }
+    run_git_in(
+        tree,
+        &["add", "-A", "--", vibe_core::layout_registry::INDEX_DIR],
+    )?;
+    let message = commit_message(batch.config, batch.staged, actions);
+    run_git_in(tree, &["commit", "-q", "--allow-empty", "-m", &message])?;
+    Ok(
+        String::from_utf8_lossy(&run_git_in(tree, &["rev-parse", "HEAD"])?.stdout)
+            .trim()
+            .to_string(),
+    )
+}
+
 /// Fetch `branch` and check it out. A branch that does not exist yet (an
 /// empty repository) leaves the unborn local branch to commit onto.
-fn fetch(tree: &Path, url: &str, branch: &str) -> Result<(), PublishError> {
+pub(super) fn fetch(tree: &Path, url: &str, branch: &str) -> Result<(), PublishError> {
     let heads = run_remote_git_in(
         tree,
         &[
@@ -115,7 +180,10 @@ fn fetch(tree: &Path, url: &str, branch: &str) -> Result<(), PublishError> {
         ],
         url,
     )?;
-    run_git_in(tree, &["checkout", "-q", "-B", branch, FETCHED])?;
+    run_git_in(tree, &["checkout", "-q", "-f", "-B", branch, FETCHED])?;
+    // A retry starts from the winner's tree: nothing of the lost attempt
+    // (written versions, the re-projected index) may survive.
+    run_git_in(tree, &["clean", "-q", "-f", "-d", "-x"])?;
     Ok(())
 }
 
@@ -153,7 +221,7 @@ fn push(tree: &Path, url: &str, branch: &str) -> Result<Pushed, PublishError> {
 
 /// Commit as the user's configured Git identity; without one, as the
 /// publisher identity every other vibe publish path uses.
-fn ensure_identity(tree: &Path) -> Result<(), PublishError> {
+pub(super) fn ensure_identity(tree: &Path) -> Result<(), PublishError> {
     let configured = git_command(tree, &["config", "--get", "user.email"])
         .output()
         .map_err(|e| PublishError::Git(format!("spawning git config: {e}")))?;

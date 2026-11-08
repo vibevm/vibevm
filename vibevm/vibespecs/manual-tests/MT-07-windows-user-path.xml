@@ -66,20 +66,24 @@ vibe self doctor --fix --yes --json
 reg query HKCU\Environment /v Path</fence>
     <p><EXP-7 fact="true" status="impl/work">**Expected.** `Path    REG_SZ    %SHIMS%;C:\Tools`.</EXP-7></p>
     <facts ordered="true">
-      <STEP-8-APPLY fact="true" status="impl/plan">**`vibe self apply` with the PATH question (Phase 8).** Reset the value as in the setup, then with a site profile `corp.toml` (any valid profile; `[path]` absent):</STEP-8-APPLY>
+      <STEP-8-APPLY fact="true" status="impl/work">**`vibe self apply` with the PATH question.** Reset the value as in the setup, then, with a site profile `corp.toml` (any valid profile with `schema = 1`; `[path]` absent), run the unattended apply, the attended apply, reset the value once more, and run the unattended apply with `--fix-path`; finish with `--show` and `--remove`:</STEP-8-APPLY>
     </facts>
     <fence>vibe --unattended self apply corp.toml --json
 vibe self apply corp.toml
+reg add HKCU\Environment /v Path /t REG_EXPAND_SZ /d "^%USERPROFILE^%\mt07-marker;C:\Tools" /f
 vibe --unattended self apply corp.toml --fix-path --json
+reg query HKCU\Environment /v Path
+vibe self apply --show
+vibe self apply --remove
 reg query HKCU\Environment /v Path</fence>
-    <p><EXP-8 fact="true" status="impl/plan">**Expected.** The unattended run without `--fix-path` leaves the value untouched and reports the PATH fix as `skipped` with reason `not_interactive` and a hint naming `--fix-path`. The attended run asks whether to put `%SHIMS%` on PATH at `HKCU\Environment\Path` with **Yes** preselected; Enter applies it (`applied`, consent `interactive`). After resetting the value again, the unattended `--fix-path` run applies it with consent `flag`. In every applied case the value, kind and new-terminal behaviour match steps 3–5.</EXP-8></p>
+    <p><EXP-8 fact="true" status="impl/work">**Expected.** The unattended run without `--fix-path` stores the profile (`files[].change` `create`), leaves the value untouched and reports `path.outcome` `skipped` with `skip_reason` `not_interactive` and a `fix_hint` naming `--fix-path`. The attended run reports the profile `unchanged`, asks whether to put `%SHIMS%` on PATH at `HKCU\Environment\Path` with **Yes** preselected; Enter applies it (`applied`, consent `interactive`). After the reset, the unattended `--fix-path` run applies it with consent `flag`. In every applied case the value, kind and new-terminal behaviour match steps 3–5, and no process is created by `vibe.exe`. `--show` names the profile and the PATH as already on it; `--remove` deletes `%USERPROFILE%\.vibe\site-profile.toml` and its receipt and leaves the registry value as it is.</EXP-8></p>
   </section>
   <section title="Teardown">
     <fence>reg import "%TEMP%\mt07-env-backup.reg"
 del "%TEMP%\mt07-env-backup.reg" "%TEMP%\mt07-after-1.txt" "%TEMP%\mt07-after-2.txt"</fence>
   </section>
   <section title="Pass">
-    <p><pass-criteria fact="true" status="impl/work">On a desktop without the Environment Variables dialog or PowerShell, vibe puts its shim directory first on the user PATH only with consent, through the registry API and no child process; a new terminal started from Explorer finds `vibe`; `%USERPROFILE%` text and the `REG_EXPAND_SZ` kind survive; a re-run changes nothing; a duplicate is folded. Step 8 joins the criteria once `vibe self apply` lands. The owner signs the date below.</pass-criteria></p>
+    <p><pass-criteria fact="true" status="impl/work">On a desktop without the Environment Variables dialog or PowerShell, vibe puts its shim directory first on the user PATH only with consent, through the registry API and no child process; a new terminal started from Explorer finds `vibe`; `%USERPROFILE%` text and the `REG_EXPAND_SZ` kind survive; a re-run changes nothing; a duplicate is folded; `vibe self apply` changes PATH only with consent (interactive, `--fix-path` or `[path] fix`) and `--remove` leaves it. The owner signs the date below.</pass-criteria></p>
   </section>
   <section title="Sign-off">
     <facts ordered="false">

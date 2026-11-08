@@ -5,6 +5,7 @@ use std::path::{Path, PathBuf};
 use std::process::Command;
 
 use super::*;
+use vibe_index::journal::Event;
 
 fn package(root: &Path, version: &str, payload: &str) -> PathBuf {
     let dir = root.join(format!("src-{version}-{}", payload.len()));
@@ -22,9 +23,18 @@ fn package(root: &Path, version: &str, payload: &str) -> PathBuf {
 }
 
 fn config(source: PathBuf, target: LayoutTarget, replace: bool) -> LayoutPublishConfig {
+    let url = match &target {
+        LayoutTarget::Monorepo { url, .. } => url.clone(),
+        LayoutTarget::Localdir { root } => format!("file://{}", root.display()),
+        LayoutTarget::WorkingCopy { path } => path.display().to_string(),
+    };
     LayoutPublishConfig {
         source_dir: source,
         target,
+        registry: LayoutRegistry {
+            name: "corp".into(),
+            url,
+        },
         replace,
         dry_run: false,
     }
@@ -98,6 +108,11 @@ fn localdir_creates_then_is_immutable_unless_replaced() {
         .map(|entry| entry.unwrap().file_name().to_string_lossy().into_owned())
         .collect();
     assert_eq!(names, ["v1.0.0"]);
+    // The registry index follows every write and matches the tree.
+    assert_eq!(
+        vibe_core::layout_registry::index_state(&root).unwrap(),
+        vibe_core::layout_registry::IndexState::Current
+    );
 }
 
 #[test]
@@ -163,6 +178,17 @@ fn monorepo_push_creates_skips_identical_refuses_and_replaces() {
     publish(&config(second, target.clone(), false), &Default::default()).unwrap();
     let listing = git(&bare, &["ls-tree", "--name-only", "main", "org.corp/demo/"]);
     assert_eq!(listing, "org.corp/demo/v1.0.0\norg.corp/demo/v1.1.0");
+    // The index rides the same commit as the version it describes.
+    let changed = git(&bare, &["show", "--name-only", "--format=", "main"]);
+    assert!(
+        changed.contains("org.corp/demo/v1.1.0/payload"),
+        "{changed}"
+    );
+    assert!(changed.contains("_index/primary.jsonl"), "{changed}");
+    assert!(changed.contains("_index/listing.txt"), "{changed}");
+    assert!(changed.contains("_index/state/journal/"), "{changed}");
+    let primary = git(&bare, &["show", "main:_index/primary.jsonl"]);
+    assert_eq!(primary.lines().count(), 2, "{primary}");
 
     let changed = package(tmp.path(), "1.0.0", "two!\n");
     let refused = publish(
@@ -185,4 +211,131 @@ fn monorepo_push_creates_skips_identical_refuses_and_replaces() {
         git(&bare, &["show", "main:org.corp/demo/v1.1.0/payload"]),
         "eleven"
     );
+}
+
+fn batch(target: LayoutTarget, items: Vec<PublishItem>, facts: Vec<Event>) -> BatchConfig {
+    BatchConfig {
+        target,
+        registry: LayoutRegistry {
+            name: "corp".into(),
+            url: "ssh://git@git.corp.example/vibe.git".into(),
+        },
+        items,
+        facts,
+        files: Vec::new(),
+        message: Some("mirror: test".into()),
+        dry_run: false,
+    }
+}
+
+fn item(tree: PathBuf, version: &str) -> PublishItem {
+    PublishItem {
+        group: "org.corp".into(),
+        name: "demo".into(),
+        version: version.parse().unwrap(),
+        tree,
+        provenance: Some(Provenance {
+            source_url: "https://github.com/vibespecs/org.corp.demo.git".into(),
+            source_ref: format!("v{version}"),
+            resolved_commit: Some("c0ffee".into()),
+        }),
+        git: None,
+        replace: false,
+    }
+}
+
+fn yank(version: &str) -> Event {
+    Event::Yanked {
+        group: vibe_core::Group::parse("org.corp").unwrap(),
+        name: "demo".into(),
+        version: version.parse().unwrap(),
+        reason: "yanked at the source".into(),
+    }
+}
+
+#[test]
+fn a_batch_records_provenance_and_facts_once() {
+    let tmp = tempfile::tempdir().unwrap();
+    let root = tmp.path().join("registry");
+    fs::create_dir_all(&root).unwrap();
+    let target = LayoutTarget::Localdir { root: root.clone() };
+    let one = package(tmp.path(), "1.0.0", "one\n");
+    let two = package(tmp.path(), "1.1.0", "eleven\n");
+    let config = batch(
+        target,
+        vec![item(one, "1.0.0"), item(two, "1.1.0")],
+        vec![yank("1.0.0")],
+    );
+    let first = publish_batch(&config, &Default::default()).unwrap();
+    assert!(first.changed());
+    assert_eq!(first.facts_recorded, 3, "two publications and one yank");
+
+    let identity = vibe_index::layout::LayoutIdentity {
+        registry: "corp".into(),
+        registry_url: "ssh://git@git.corp.example/vibe.git".into(),
+        branch: None,
+    };
+    let (index, state) = vibe_index::layout::load_or_project(&root, &identity).unwrap();
+    assert_eq!(state, vibe_core::layout_registry::IndexState::Current);
+    let group = vibe_core::Group::parse("org.corp").unwrap();
+    let versions = &index.get(&group, "demo").unwrap().versions;
+    assert_eq!(
+        versions[0].source_url,
+        "https://github.com/vibespecs/org.corp.demo.git"
+    );
+    assert_eq!(versions[0].resolved_commit.as_deref(), Some("c0ffee"));
+    assert!(versions[0].yanked);
+    assert!(!versions[1].yanked);
+
+    // The same batch again changes nothing: no version, no fact, no index.
+    let journal = vibe_core::layout_registry::journal_dir(&root);
+    let before = fs::read_dir(&journal).unwrap().count();
+    let again = publish_batch(&config, &Default::default()).unwrap();
+    assert!(!again.changed(), "{again:?}");
+    assert_eq!(fs::read_dir(&journal).unwrap().count(), before);
+}
+
+#[test]
+fn a_working_copy_is_committed_into_and_a_dirty_one_refused() {
+    if Command::new("git").arg("--version").output().is_err() {
+        return;
+    }
+    let tmp = tempfile::tempdir().unwrap();
+    let wc = tmp.path().join("wc");
+    fs::create_dir_all(&wc).unwrap();
+    git(&wc, &["init", "-q", "--initial-branch=main"]);
+    git(&wc, &["config", "user.email", "t@t.invalid"]);
+    git(&wc, &["config", "user.name", "T"]);
+    fs::write(wc.join("README.md"), "registry\n").unwrap();
+    git(&wc, &["add", "README.md"]);
+    git(&wc, &["commit", "-q", "-m", "init"]);
+
+    let target = LayoutTarget::WorkingCopy { path: wc.clone() };
+    let one = package(tmp.path(), "1.0.0", "one\n");
+    let outcome = publish_batch(
+        &batch(target.clone(), vec![item(one.clone(), "1.0.0")], Vec::new()),
+        &Default::default(),
+    )
+    .unwrap();
+    let head = git(&wc, &["rev-parse", "HEAD"]);
+    assert_eq!(outcome.commit.as_deref(), Some(head.as_str()));
+    assert_eq!(git(&wc, &["log", "-1", "--format=%s"]), "mirror: test");
+    assert_eq!(
+        git(&wc, &["status", "--porcelain"]),
+        "",
+        "nothing left behind"
+    );
+
+    fs::write(wc.join("stray.txt"), "uncommitted\n").unwrap();
+    let two = package(tmp.path(), "1.1.0", "eleven\n");
+    let refused = publish_batch(
+        &batch(target, vec![item(two, "1.1.0")], Vec::new()),
+        &Default::default(),
+    )
+    .unwrap_err();
+    assert!(
+        matches!(refused, PublishError::DirtyWorkingCopy { .. }),
+        "{refused}"
+    );
+    assert_eq!(git(&wc, &["rev-parse", "HEAD"]), head);
 }

@@ -79,6 +79,7 @@ pub enum FormatId {
     CliProgressEvent,
     CliProjectCancellation,
     CliRegistryLayoutPublishReport,
+    CliRegistryMirrorReport,
     CliRegistryPublishReport,
     CliRegistrySyncReport,
     CliReinstallReport,

@@ -92,14 +92,16 @@ pub(super) fn run_sync(
         return Ok(());
     }
 
-    if manifest.registries.is_empty() {
+    let effective = super::effective_registries(&project_root, &manifest)?;
+    if effective.registries.is_empty() {
         // Empty `[[registry]]` is legal (e.g., projects that only use
         // `--registry <path>` or `[[override]]`-only setups), but
         // `registry sync` has nothing to do without `[[registry]]`
         // entries to dispatch through. Override-only refresh would
         // need its own flag; for now, surface the situation.
         ctx.summary(
-            "vibe registry sync: no `[[registry]]` entries in `vibe.toml` — nothing to refresh.",
+            "vibe registry sync: no `[[registry]]` entries in `vibe.toml`, \
+             `.vibe/registry.local.toml` or `~/.vibe/registry.toml` — nothing to refresh.",
         );
         if ctx.is_json() {
             ctx.emit_json(&SyncReport {
@@ -112,9 +114,12 @@ pub(super) fn run_sync(
         return Ok(());
     }
 
-    let mrr =
-        MultiRegistryResolver::open(&manifest.registries, &manifest.mirrors, &manifest.overrides)
-            .context("opening multi-registry resolver")?;
+    let mrr = MultiRegistryResolver::open(
+        &effective.registries,
+        &effective.mirrors,
+        &effective.overrides,
+    )
+    .context("opening multi-registry resolver")?;
 
     ctx.heading(&format!(
         "Syncing {} package clone{} referenced by lockfile",

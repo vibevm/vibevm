@@ -37,6 +37,7 @@ use std::path::{Path, PathBuf};
 
 #[path = "remap/drops.rs"]
 mod drops;
+use drops::site_layer;
 
 use anyhow::{Context, Result, bail};
 use vibe_core::manifest::{Manifest, MirrorSection, OverrideSection, RegistrySection};
@@ -75,6 +76,10 @@ pub(crate) struct RemapEnv {
     pub project_root: Option<PathBuf>,
     /// The machine `~/.vibe/registry.toml`, when the home resolves.
     pub global_registry: Option<PathBuf>,
+    /// The applied site profile `~/.vibe/site-profile.toml`
+    /// (`PROP-019#site-profile`): its registry tables sit below the user's
+    /// file, its `[[remap]]` rows below the user's `settings.toml` rows.
+    pub site_profile: Option<PathBuf>,
     /// The release source this invocation resolved — `$VIBEVM_RELEASE_ORIGIN`,
     /// `[self]` or `[artifacts] vibe` — lowered into its row by its one
     /// owner (`PROP-019#release-sources`).
@@ -85,6 +90,7 @@ pub(crate) struct RemapEnv {
 
 fn build_selected(env: &RemapEnv, catalog: bool) -> Result<(Locator, Vec<String>)> {
     let mut warnings = Vec::new();
+    let site = site_layer(env, &mut warnings);
     let mut sources = vec![LoadedSource {
         layer: Layer::UserPackage,
         source: "built-in".into(),
@@ -118,7 +124,7 @@ fn build_selected(env: &RemapEnv, catalog: bool) -> Result<(Locator, Vec<String>
     // into exactly this slot (`Locator::with_registry_tables`), so a
     // `[[mirror]]` ranks the same on `install` as on `registry list`.
     let (registries, mirrors, overrides) = if catalog {
-        registry_tables(env, &mut warnings)
+        registry_tables(env, site.as_ref(), &mut warnings)
     } else {
         (Vec::new(), Vec::new(), Vec::new())
     };
@@ -133,6 +139,17 @@ fn build_selected(env: &RemapEnv, catalog: bool) -> Result<(Locator, Vec<String>
         ),
         policy: Default::default(),
     });
+
+    // The site profile's rows come before the user's own settings files:
+    // within the local layer the later row wins among equals, so a row a
+    // user wrote beats the administrator's (`PROP-019#site-profile`).
+    if let Some(site) = &site {
+        match site.profile.remap_rows(&site.path.display().to_string()) {
+            Ok(loaded) if !loaded.rows.is_empty() => sources.push(loaded),
+            Ok(_) => {}
+            Err(error) => warnings.push(error.to_string()),
+        }
+    }
 
     for (path, label) in settings_files(env) {
         match optional_settings(&path, &label) {
@@ -230,10 +247,12 @@ fn optional_settings(path: &Path, label: &str) -> Result<Option<LoadedSource>, S
 
 /// The effective registry tables: the project manifest's merged with the
 /// machine-global file's, exactly as resolution merges them (PROP-002
-/// §2.2.2). Both layers are optional; a failure to read either is a
-/// warning and an absent table.
+/// §2.2.2), with the applied site profile beneath the machine file
+/// (`PROP-019#site-profile`). Every layer is optional; a failure to read
+/// one is a warning and an absent table.
 fn registry_tables(
     env: &RemapEnv,
+    site: Option<&vibe_core::site_profile::InstalledSiteProfile>,
     warnings: &mut Vec<String>,
 ) -> (
     Vec<RegistrySection>,
@@ -278,11 +297,12 @@ fn registry_tables(
             }
         }
     });
+    let site = site.map(|site| site.profile.registry_layer());
     let effective = vibe_core::RegistryLayers {
         local: local.as_ref(),
         project: project.as_ref(),
         user: &global,
-        site: None,
+        site: site.as_ref(),
     }
     .merge();
     (effective.registries, effective.mirrors, effective.overrides)
@@ -321,12 +341,16 @@ pub(crate) fn install(ctx: &crate::output::Context, inputs: Inputs<'_>) -> Resul
         user_settings: vibe_core::settings::settings_toml_path(),
         project_root,
         global_registry: vibe_core::settings::registry_config_path(),
+        site_profile: vibe_core::settings::site_profile_path(),
         release: None,
         packages_drop: None,
     };
     let mut drop_warnings = Vec::new();
-    let (release, packages_drop) =
-        drops::artifact_drops(inputs.release_origin.as_deref(), &mut drop_warnings);
+    let (release, packages_drop) = drops::artifact_drops(
+        inputs.release_origin.as_deref(),
+        env.site_profile.as_deref(),
+        &mut drop_warnings,
+    );
     env.release = release;
     env.packages_drop = packages_drop;
     let (locator, warnings) = build_selected(&env, super::needs_global_registry(inputs.command))?;

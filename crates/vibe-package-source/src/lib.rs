@@ -42,7 +42,7 @@ pub use builder::{
     build_install_resolver_with_operation, build_install_resolver_with_progress,
     build_install_resolver_with_sources,
 };
-pub use factory::{deferred_user_registry, source_operation};
+pub use factory::{deferred_user_registry, registry_resolver, source_operation};
 pub use operation::{OperationHttpClient, SourceHttpError, SourceOperation};
 pub use options::{PackageSourceOptions, SourceStorage};
 pub use qualified::{PackageQualifier, RefusesQualification, RegistryPackageSource};

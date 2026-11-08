@@ -32,6 +32,61 @@ pub fn project_local_registry_path(project_root: &Path) -> PathBuf {
 }
 
 impl GlobalRegistryConfig {
+    /// Load from the canonical `~/.vibe/registry.toml` (through the settings
+    /// chokepoint, so `$VIBE_SETTINGS` relocates it). A missing file — or an
+    /// unresolvable settings dir — is `Ok(default)`: the layer is optional.
+    ///
+    /// The applied site profile (`PROP-019#site-profile`) is layered
+    /// beneath the file ([`Self::over_site`]): a reader sees the user's
+    /// registries first and the site's after them. An editor of the user
+    /// file reads it with [`Self::load_from`] instead, so the site's rows
+    /// are never written into it.
+    pub fn load() -> Result<Self, GlobalRegistryError> {
+        let own = match crate::settings::registry_config_path() {
+            Some(path) => Self::load_from(&path)?,
+            None => Self::default(),
+        };
+        match crate::site_profile::installed().map_err(GlobalRegistryError::site)? {
+            Some(site) => Ok(own.over_site(&site.profile.registry_layer())),
+            None => Ok(own),
+        }
+    }
+
+    /// This (user) layer over the site layer (`PROP-002#registry-layers`):
+    /// a registry name declared here hides the site's, mirrors concatenate
+    /// user first, overrides dedupe by `pkgref` in the user's favour, the
+    /// source policy layers by [`crate::manifest::SourcePolicyDecl::over`];
+    /// `[index]` is the user's alone.
+    ///
+    /// ```
+    /// use vibe_core::GlobalRegistryConfig;
+    /// let user: GlobalRegistryConfig =
+    ///     toml::from_str("[[registry]]\nname='corp'\nurl='file:///mine'\n").unwrap();
+    /// let site: GlobalRegistryConfig = toml::from_str(
+    ///     "[[registry]]\nname='corp'\nurl='file:///site'\n[[registry]]\nname='extra'\nurl='file:///x'\n",
+    /// )
+    /// .unwrap();
+    /// let merged = user.over_site(&site);
+    /// assert_eq!(merged.registries[0].url, "file:///mine");
+    /// assert_eq!(merged.registries[1].name, "extra");
+    /// ```
+    pub fn over_site(&self, site: &GlobalRegistryConfig) -> GlobalRegistryConfig {
+        let merged = RegistryLayers {
+            local: None,
+            project: None,
+            user: self,
+            site: Some(site),
+        }
+        .merge();
+        GlobalRegistryConfig {
+            registries: merged.registries,
+            mirrors: merged.mirrors,
+            overrides: merged.overrides,
+            index: self.index.clone(),
+            source_policy: self.source_policy.over(&site.source_policy),
+        }
+    }
+
     /// Load the project-local override of `project_root`. Same grammar as
     /// `~/.vibe/registry.toml`; a missing file is the empty layer.
     pub fn load_project_local(project_root: &Path) -> Result<Self, GlobalRegistryError> {

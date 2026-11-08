@@ -136,5 +136,93 @@ pub fn deferred_user_registry(seed_defaults: bool) -> GlobalRegistrySource {
             ..Default::default()
         }
     };
-    GlobalRegistrySource::deferred(vibe_core::settings::registry_config_path(), missing)
+    GlobalRegistrySource::deferred_with_site(
+        vibe_core::settings::registry_config_path(),
+        vibe_core::settings::site_profile_path(),
+        missing,
+    )
+}
+
+/// A resolver over exactly the named `registries` (with `mirrors` for their
+/// clone chains), opened through the operation's controlled transport,
+/// source policy and remap Locator exactly as an install's walk is — for a
+/// registry-management command that addresses particular registries rather
+/// than a project's whole catalog (`vibe registry mirror` reading its
+/// source, `vibe search` reading a directory-layout registry). Nothing is
+/// contacted until the resolver is asked.
+///
+/// ```no_run
+/// use vibe_core::manifest::{Manifest, RegistrySection};
+/// use vibe_package_source::{
+///     PackageSourceOptions, deferred_user_registry, registry_resolver, source_operation,
+/// };
+///
+/// let operation = source_operation(
+///     &PackageSourceOptions::default(),
+///     &Manifest::default(),
+///     std::path::Path::new("."),
+///     deferred_user_registry(false),
+/// )?;
+/// let source: RegistrySection = toml::from_str("name='corp'\nurl='file:///srv/vibe'\n")?;
+/// let resolver = registry_resolver(
+///     &operation,
+///     vec![source],
+///     Vec::new(),
+///     false,
+///     &vibe_core::progress::Progress::default(),
+/// )?;
+/// # let _ = resolver;
+/// # Ok::<(), anyhow::Error>(())
+/// ```
+pub fn registry_resolver(
+    operation: &SourceOperation,
+    registries: Vec<vibe_core::manifest::RegistrySection>,
+    mirrors: Vec<vibe_core::manifest::MirrorSection>,
+    offline: bool,
+    progress: &vibe_core::progress::Progress,
+) -> Result<MultiRegistryResolver> {
+    let cache = vibe_registry::default_cache_root()?;
+    let metadata = operation.transport.acquisition_root.join("metadata-store");
+    let provider = Arc::new(FixedDeclarations {
+        operation: operation.clone(),
+        registries,
+        mirrors,
+    });
+    Ok(
+        MultiRegistryResolver::from_deferred_catalog(provider, operation.backend(), cache, 3600)
+            .with_source_policy_provider(operation.policy.clone())
+            .with_metadata_store_root(metadata)
+            .with_offline(offline)
+            .with_progress(progress.clone()),
+    )
+}
+
+struct FixedDeclarations {
+    operation: SourceOperation,
+    registries: Vec<vibe_core::manifest::RegistrySection>,
+    mirrors: Vec<vibe_core::manifest::MirrorSection>,
+}
+
+impl vibe_registry::multi_registry_resolver::RegistryCatalogProvider for FixedDeclarations {
+    fn declarations(
+        &self,
+    ) -> std::result::Result<
+        vibe_registry::multi_registry_resolver::RegistryDeclarations,
+        vibe_registry::RegistryError,
+    > {
+        let _policy = self.operation.policy.policy()?;
+        let admission = if self.operation.controlled()? {
+            Some(self.operation.admission()?)
+        } else {
+            None
+        };
+        Ok(
+            vibe_registry::multi_registry_resolver::RegistryDeclarations {
+                registries: self.registries.clone(),
+                mirrors: self.mirrors.clone(),
+                overrides: Vec::new(),
+                admission,
+            },
+        )
+    }
 }

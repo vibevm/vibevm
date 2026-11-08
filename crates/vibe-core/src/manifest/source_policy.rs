@@ -153,6 +153,38 @@ impl SourcePolicyDecl {
     pub fn is_empty(&self) -> bool {
         self.prefer_hosting.is_none() && self.exclude_hosting.is_empty()
     }
+
+    /// This declaration layered over a lower one (`PROP-019#site-profile`):
+    /// the higher explicit preference replaces the lower one, exclusions
+    /// accumulate (each selector once, higher layer first) — the same law
+    /// [`EffectiveSourcePolicy::merge`] applies between its layers.
+    ///
+    /// ```
+    /// use vibe_core::manifest::{HostingSelector, SourcePolicyDecl};
+    /// let site = SourcePolicyDecl {
+    ///     prefer_hosting: Some(vec![HostingSelector::Gitverse]),
+    ///     exclude_hosting: vec![HostingSelector::Github, HostingSelector::Gitverse],
+    /// };
+    /// let user = SourcePolicyDecl { prefer_hosting: None, exclude_hosting: vec![HostingSelector::Github] };
+    /// let merged = user.over(&site);
+    /// assert_eq!(merged.prefer_hosting, Some(vec![HostingSelector::Gitverse]));
+    /// assert_eq!(merged.exclude_hosting, vec![HostingSelector::Github, HostingSelector::Gitverse]);
+    /// ```
+    pub fn over(&self, lower: &SourcePolicyDecl) -> SourcePolicyDecl {
+        let mut exclude_hosting = self.exclude_hosting.clone();
+        for selector in &lower.exclude_hosting {
+            if !exclude_hosting.contains(selector) {
+                exclude_hosting.push(selector.clone());
+            }
+        }
+        SourcePolicyDecl {
+            prefer_hosting: self
+                .prefer_hosting
+                .clone()
+                .or_else(|| lower.prefer_hosting.clone()),
+            exclude_hosting,
+        }
+    }
     fn validate(&self) -> Result<(), SourcePolicyError> {
         for values in [
             self.prefer_hosting.as_deref().unwrap_or(&[]),

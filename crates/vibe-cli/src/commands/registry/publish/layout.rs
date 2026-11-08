@@ -8,7 +8,9 @@ use std::path::{Path, PathBuf};
 
 use anyhow::{Context, Result, anyhow, bail};
 use vibe_core::manifest::{Manifest, RegistrySection};
-use vibe_publish::layout_publish::{LayoutAction, LayoutPublishConfig, LayoutTarget, publish};
+use vibe_publish::layout_publish::{
+    LayoutAction, LayoutPublishConfig, LayoutRegistry, LayoutTarget, publish,
+};
 use vibe_wire::generated::registry_layout_publish_report::{
     LayoutAction as WireAction, LayoutMode, RegistryLayoutPublishReport,
 };
@@ -41,6 +43,12 @@ pub(super) fn run(
             ),
         ),
         LayoutTarget::Localdir { root } => (LayoutMode::Localdir, root.display().to_string()),
+        LayoutTarget::WorkingCopy { path } => {
+            bail!(
+                "internal: `vibe registry publish` never targets a working copy (`{}`)",
+                path.display()
+            )
+        }
     };
     ctx.heading(&format!(
         "Publishing {} → {} registry `{}` at {shown}{}",
@@ -55,6 +63,10 @@ pub(super) fn run(
     let config = LayoutPublishConfig {
         source_dir,
         target,
+        registry: LayoutRegistry {
+            name: registry.name.clone(),
+            url: registry.url.clone(),
+        },
         replace: args.replace,
         dry_run: args.dry_run,
     };

@@ -10,11 +10,17 @@ irm https://vibevm.org/install.ps1 | iex
 
 .EXAMPLE
 & ([scriptblock]::Create((irm https://vibevm.org/install.ps1))) -Force
+
+.EXAMPLE
+& ([scriptblock]::Create((irm https://vibevm.org/install.ps1))) -Site D:\corp\vibe\corp.toml
+Applies the site profile (`vibe self apply`) once installed; it is validated
+before anything is installed. Defaults to $env:VIBEVM_SITE_PROFILE when set.
 #>
 [CmdletBinding()]
 param(
     [string]$Version,
-    [switch]$Force
+    [switch]$Force,
+    [string]$Site
 )
 
 Set-StrictMode -Version Latest
@@ -239,7 +245,8 @@ function Read-VibeReleaseManifest {
 function Invoke-VibeInstall {
     param(
         [string]$RequestedVersion,
-        [switch]$ForceInstall
+        [switch]$ForceInstall,
+        [string]$SiteProfile
     )
 
     if ($RequestedVersion -and -not (Test-VibeSemVer $RequestedVersion)) {
@@ -296,6 +303,9 @@ function Invoke-VibeInstall {
         if ($ForceInstall) {
             $bootstrapArguments += '--force'
         }
+        if ($SiteProfile) {
+            $bootstrapArguments += @('--site', $SiteProfile)
+        }
         & $bootstrapPath @bootstrapArguments
         if ($LASTEXITCODE -ne 0) {
             Throw-VibeInstallError "verified bootstrap exited with status $LASTEXITCODE"
@@ -312,5 +322,6 @@ function Invoke-VibeInstall {
 }
 
 if ($env:VIBEVM_INSTALL_TEST_MODE -ne '1') {
-    Invoke-VibeInstall -RequestedVersion $Version -ForceInstall:$Force
+    $siteProfile = if ($Site) { $Site } else { $env:VIBEVM_SITE_PROFILE }
+    Invoke-VibeInstall -RequestedVersion $Version -ForceInstall:$Force -SiteProfile $siteProfile
 }

@@ -16,7 +16,7 @@ use super::store::VersionStore;
 
 #[path = "env_profile.rs"]
 mod profile;
-pub(crate) use profile::{Effectiveness, EnvironmentObservation, ProbeStatus};
+pub(crate) use profile::{Effectiveness, EnvironmentObservation, PathEntryStatus, ProbeStatus};
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, serde::Serialize)]
 #[serde(rename_all = "snake_case")]
@@ -38,7 +38,10 @@ use rc_io::write_rc_atomic_at;
 use rc_io::{read_rc_file, rebuild, set_or_add, split_block, write_rc_atomic};
 #[path = "env_path_fix.rs"]
 mod path_fix;
-pub(crate) use path_fix::{PathFixConsent, ensure_shim_dir_on_durable_path};
+pub(crate) use path_fix::{
+    ConsentSource, PathFixConsent, PathFixDecision, PathFixObservation, PathFixOutcome,
+    PathFixPolicy, SkipReason, decide, ensure_shim_dir_on_durable_path,
+};
 #[path = "env_registry.rs"]
 mod registry;
 pub(crate) use registry::{
@@ -50,6 +53,16 @@ mod shim;
 pub(crate) use shim::{shim_statuses, write_shims};
 #[cfg(test)]
 use shim::{write_shim_atomic, write_shim_atomic_at, write_shim_atomic_using};
+
+/// Whether `dir` is on the `PATH` value, comparing canonicalised paths.
+pub(crate) fn path_has_dir(path_var: Option<&str>, dir: &Path) -> bool {
+    let Some(pv) = path_var else {
+        return false;
+    };
+    let target = dir.canonicalize();
+    std::env::split_paths(pv)
+        .any(|p| p == dir || matches!((p.canonicalize(), &target), (Ok(a), Ok(b)) if &a == b))
+}
 
 fn posix_quote(value: &str) -> String {
     format!("'{}'", value.replace('\'', "'\"'\"'"))

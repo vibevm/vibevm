@@ -36,9 +36,16 @@ Install an explicit release or force a fresh local generation:
   curl -fsSL https://vibevm.org/install.sh | bash -s -- --version 1.0.0
   curl -fsSL https://vibevm.org/install.sh | bash -s -- --force
 
+Install and configure a closed-network machine from its site profile:
+  VIBEVM_RELEASE_ORIGIN=https://mirror.corp.example/vibevm/releases \
+    bash install.sh --site /srv/vibe/corp.toml
+
 Options:
   --version VERSION  Install an explicit SemVer release.
   --force            Reinstall even when the downloaded bytes are unchanged.
+  --site FILE|URL    Apply this site profile (`vibe self apply`) once installed;
+                     it is validated before anything is installed. Default:
+                     $VIBEVM_SITE_PROFILE when set.
   -h, --help         Show this help.
 EOF
 }
@@ -255,6 +262,7 @@ vibe_install_cleanup() {
 vibe_install_main() {
     vibe_install_requested_version=''
     vibe_install_force=0
+    vibe_install_site="${VIBEVM_SITE_PROFILE:-}"
 
     while [ "$#" -gt 0 ]; do
         case "$1" in
@@ -266,6 +274,11 @@ vibe_install_main() {
             --force)
                 vibe_install_force=1
                 shift
+                ;;
+            --site)
+                [ "$#" -ge 2 ] || vibe_install_fail '--site requires a file or URL'
+                vibe_install_site=$2
+                shift 2
                 ;;
             -h|--help)
                 vibe_install_usage
@@ -367,6 +380,9 @@ vibe_install_main() {
         --release-base "$vibe_install_release_base"
     if [ "$vibe_install_force" -eq 1 ]; then
         set -- "$@" --force
+    fi
+    if [ -n "$vibe_install_site" ]; then
+        set -- "$@" --site "$vibe_install_site"
     fi
     "$vibe_install_bootstrap_path" "$@" || {
         vibe_install_status=$?

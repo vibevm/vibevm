@@ -89,8 +89,9 @@ fn prepare(
     let format = super::resolve_spec_format(&manifest, policy.spec_format_default);
     // Missing global configuration gets the same ordinary default catalog in
     // memory. It never seeds registry.toml, and an explicit empty file stays empty.
-    let global = vibe_core::GlobalRegistrySource::deferred(
+    let global = vibe_core::GlobalRegistrySource::deferred_with_site(
         vibe_core::settings::registry_config_path(),
+        vibe_core::settings::site_profile_path(),
         if seed_default_registry {
             GlobalRegistryConfig {
                 registries: vibe_core::default_registries(),

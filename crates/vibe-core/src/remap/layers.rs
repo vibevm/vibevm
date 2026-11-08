@@ -24,7 +24,8 @@ use specmark::spec;
 use crate::manifest::{MirrorSection, OverrideSection, RegistrySection};
 
 use super::row::{
-    Provenance, RemapFileDecl, RemapKey, RemapParseError, RemapRow, RemapTarget, UnmatchedPolicy,
+    Provenance, RemapFileDecl, RemapKey, RemapParseError, RemapRow, RemapTarget, RowDecl,
+    UnmatchedPolicy,
 };
 
 /// The four layers of `PROP-066#layers`, lowest precedence first.
@@ -129,6 +130,35 @@ pub fn rows_from_file(path: &Path, layer: Layer) -> Result<LoadedSource, RemapPa
         source,
     })?;
     rows_from_decl(decl, layer, shown)
+}
+
+/// Validate already-parsed `[[remap]]` rows — the rows a site profile
+/// carries (`PROP-019#site-profile`) — and tag them with their provenance,
+/// exactly as a remap file's rows are.
+///
+/// ```
+/// use vibe_core::remap::{rows_from_decls, Layer, RowDecl};
+///
+/// let row: RowDecl = toml::from_str(
+///     "prefix = 'https://example.invalid/'\nurl = 'https://mirror.corp.example/'",
+/// ).unwrap();
+/// let loaded = rows_from_decls(vec![row], Layer::Local, "site-profile.toml").unwrap();
+/// assert_eq!(loaded.rows.len(), 1);
+/// ```
+#[spec(documents = "spec://org.vibevm.core/vibevm/common/PROP-066#layers")]
+pub fn rows_from_decls(
+    rows: Vec<RowDecl>,
+    layer: Layer,
+    source: impl Into<String>,
+) -> Result<LoadedSource, RemapParseError> {
+    rows_from_decl(
+        RemapFileDecl {
+            remap: rows,
+            policy: Default::default(),
+        },
+        layer,
+        source.into(),
+    )
 }
 
 /// Read the `[[remap]]` rows and `[policy]` table out of an already

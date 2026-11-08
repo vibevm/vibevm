@@ -101,7 +101,7 @@ pub fn run(ctx: &output::Context, args: InitArgs) -> Result<()> {
     };
 
     // Load user config for defaults (last_author).
-    let mut user_config = UserConfig::load().unwrap_or_default();
+    let mut user_config = UserConfig::load_own().unwrap_or_default();
 
     // Determine if interactive prompts should run.
     let interactive = console::user_attended() && !ctx.is_json() && !ctx.is_unattended();

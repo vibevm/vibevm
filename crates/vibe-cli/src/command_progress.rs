@@ -347,6 +347,7 @@ pub(crate) fn policy(command: &Command, terminal_attached: bool) -> CommandPolic
             | RegistrySubcommand::Redirect(_)
             | RegistrySubcommand::RedirectSync(_)
             | RegistrySubcommand::RedirectUpdate(_)
+            | RegistrySubcommand::Mirror(_)
             | RegistrySubcommand::Vendor(_) => FiniteFallback("Command registry"),
             RegistrySubcommand::Remove(remove) => match &remove.target {
                 RegistryRemoveTarget::Registry(_) | RegistryRemoveTarget::Mirror(_) => {
@@ -375,6 +376,7 @@ pub(crate) fn policy(command: &Command, terminal_attached: bool) -> CommandPolic
             VvmSubcommand::Use(_) => FiniteFallback("Command self use"),
             VvmSubcommand::Rollback => FiniteFallback("Command self rollback"),
             VvmSubcommand::Doctor(_) => FiniteFallback("Command self doctor"),
+            VvmSubcommand::Apply(_) => FiniteFallback("Command self apply"),
             VvmSubcommand::Remove(_) => FiniteFallback("Command self remove"),
             VvmSubcommand::Relocate(_) => FiniteFallback("Command self relocate"),
             VvmSubcommand::Ls

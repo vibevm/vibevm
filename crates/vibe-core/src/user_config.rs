@@ -309,15 +309,75 @@ impl UserConfig {
         canonical
     }
 
-    /// Read the user-level config from the [`Self::default_path`].
-    /// Missing-file is `Ok(UserConfig::default())` — the layer is
-    /// optional. Parse errors surface so the operator notices a
-    /// malformed file rather than silently ignoring it.
+    /// The **effective** user-level configuration: the file at
+    /// [`Self::default_path`] layered over the applied site profile
+    /// (`PROP-019#site-profile`, [`Self::over_site`]). Missing files are
+    /// defaults — both layers are optional. Parse errors surface so the
+    /// operator notices a malformed file rather than silently ignoring it.
+    ///
+    /// A command that edits and saves the user's file reads it with
+    /// [`Self::load_own`], so no site value is ever written into it.
     pub fn load() -> Result<Self, UserConfigError> {
+        let own = Self::load_own()?;
+        match crate::site_profile::installed().map_err(|e| UserConfigError::Site(Box::new(e)))? {
+            Some(site) => Ok(own.over_site(&site.profile)),
+            None => Ok(own),
+        }
+    }
+
+    /// The user's own file at [`Self::default_path`], without the site
+    /// layer — what an editor loads before [`Self::save`].
+    pub fn load_own() -> Result<Self, UserConfigError> {
         let Some(path) = Self::default_path() else {
             return Ok(UserConfig::default());
         };
         Self::load_from(&path)
+    }
+
+    /// This (user) configuration over a site profile
+    /// (`PROP-019#site-profile`). The release decision — `[self]` together
+    /// with `[artifacts] vibe` — comes whole from the higher layer that
+    /// declares either, so a user's own drop is never outranked by the
+    /// site's `[self]`; `[artifacts] packages` and each `[proxy]` key fall
+    /// back to the site's value; `[net] offline` is on when either says so.
+    ///
+    /// ```
+    /// use vibe_core::site_profile::SiteProfile;
+    /// use vibe_core::user_config::{ReleaseSourceKind, UserConfig};
+    ///
+    /// let site = SiteProfile::parse(
+    ///     "schema = 1\n[self]\nsource = 'nexus'\nurl = 'https://nexus.corp.example/vibe'\n\
+    ///      [artifacts]\npackages = '/srv/drop'\n[proxy]\nhttps = 'http://proxy:3128'\n",
+    ///     "corp.toml",
+    /// )
+    /// .unwrap();
+    /// let effective = UserConfig::default().over_site(&site);
+    /// assert_eq!(effective.self_source.source, Some(ReleaseSourceKind::Nexus));
+    /// assert_eq!(effective.proxy.https.as_deref(), Some("http://proxy:3128"));
+    ///
+    /// // A user's own release drop keeps the release decision.
+    /// let mine: UserConfig = toml::from_str("[artifacts]\nvibe = '/home/me/drop'\n").unwrap();
+    /// let effective = mine.over_site(&site);
+    /// assert_eq!(effective.self_source.source, None);
+    /// assert_eq!(effective.artifacts.packages.unwrap().to_str(), Some("/srv/drop"));
+    /// ```
+    pub fn over_site(mut self, site: &crate::site_profile::SiteProfile) -> UserConfig {
+        if self.self_source.is_default() && self.artifacts.vibe.is_none() {
+            self.self_source = site.self_source.clone();
+            self.artifacts.vibe = site.artifacts.vibe.clone();
+        }
+        if self.artifacts.packages.is_none() {
+            self.artifacts.packages = site.artifacts.packages.clone();
+        }
+        let proxy = &mut self.proxy;
+        proxy.https = proxy.https.take().or_else(|| site.proxy.https.clone());
+        proxy.http = proxy.http.take().or_else(|| site.proxy.http.clone());
+        proxy.no_proxy = proxy
+            .no_proxy
+            .take()
+            .or_else(|| site.proxy.no_proxy.clone());
+        self.net.offline |= site.net.offline;
+        self
     }
 
     /// Like [`Self::load`] but reads from an explicit path. Used by
@@ -418,6 +478,9 @@ pub enum UserConfigError {
         #[source]
         source: toml::ser::Error,
     },
+    /// The applied site profile (`PROP-019#site-profile`) is unreadable.
+    #[error(transparent)]
+    Site(Box<crate::site_profile::SiteProfileError>),
 }
 
 /// The ordered on-disk user-config candidates: exactly one,

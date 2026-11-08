@@ -19,11 +19,11 @@ use clap::Parser;
 
 use vibe_core::Group;
 
-use crate::content_hash::compute_content_hash;
 use crate::error::{Error, Result};
 use crate::index::memory::{WriteCtx, default_generator};
 use crate::journal::{Event, JournalRecord, append, default_dir, project, replay};
 use crate::scanner::manifest as mfst;
+use crate::scanner::tree_entry::{EntrySource, entry_from_tree};
 use crate::types::{NamingConvention, PackageKind, VersionEntry};
 
 #[derive(Debug, Parser)]
@@ -94,64 +94,27 @@ pub fn add(args: Args) -> Result<VersionEntry> {
     let pkg_root = args.manifest.parent().unwrap_or(std::path::Path::new("."));
 
     let kind = mfst::package_kind(pkg.kind);
-    let group = pkg.group.clone();
-    let name = pkg.name.clone();
-    let version = pkg.version.clone();
-
-    let content_hash = compute_content_hash(pkg_root)?;
-    let source_ref = args.r#ref.unwrap_or_else(|| format!("v{version}"));
+    let source_ref = args.r#ref.unwrap_or_else(|| format!("v{}", pkg.version));
     let source_url = args.repo_url.unwrap_or_else(|| {
-        compose_default_repo_url(&index.registry_url, &index.naming, &kind, &group, &name)
+        compose_default_repo_url(
+            &index.registry_url,
+            &index.naming,
+            &kind,
+            &pkg.group,
+            &pkg.name,
+        )
     });
-    let files_count = walkdir::WalkDir::new(pkg_root)
-        .into_iter()
-        .filter_map(|e| e.ok())
-        .filter(|e| e.file_type().is_file())
-        .count() as u32;
-
-    let entry = VersionEntry {
-        schema_version: VersionEntry::SCHEMA_VERSION,
-        kind,
-        group,
-        name,
-        version,
-        content_hash,
-        source_url,
-        source_ref,
-        resolved_commit: args.commit,
-        registry: index.registry.clone(),
-        workspace_origin: mfst::workspace_origin_from(&manifest.origin),
-        license: pkg.license.clone(),
-        authors: pkg.authors.clone(),
-        description: pkg.description.clone(),
-        homepage: pkg.homepage.clone(),
-        keywords: pkg.keywords.clone(),
-        describes: pkg.describes.as_ref().map(|p| p.to_string()),
-        title: pkg.title.clone(),
-        abstract_: pkg.abstract_text.clone(),
-        documents: mfst::documents_from(&manifest.documents),
-        documentation: mfst::documentation_from(&manifest.documentation),
-        translates: mfst::translates_from(&manifest.translates),
-        media: mfst::media_from(&manifest.media),
-        bridge: pkg.bridge,
-        embedded_sources: mfst::embedded_sources_from(&manifest.embedded_sources),
-        compatibility: mfst::compatibility_from(&manifest.compatibility),
-        provides: mfst::provides_from(&manifest.provides),
-        requires: mfst::requires_from(&manifest.requires),
-        requires_any: mfst::requires_any_from(&manifest.requires_any),
-        obsoletes: mfst::obsoletes_from(&manifest.obsoletes),
-        conflicts: mfst::conflicts_from(&manifest.conflicts),
-        features: mfst::features_from(&manifest.features),
-        subskills: mfst::collect_subskills(pkg_root)?,
-        i18n: mfst::i18n_from(&manifest.i18n),
-        boot_snippet: mfst::boot_snippet_from(&manifest.boot_snippet),
-        files_count,
-        must_understand: Vec::new(),
-        yanked: false,
-        frozen: pkg.frozen,
-        indexed_at: at,
-        indexed_by: format!("vibe-index {}", env!("CARGO_PKG_VERSION")),
-    };
+    let entry = entry_from_tree(
+        pkg_root,
+        EntrySource {
+            source_url,
+            source_ref,
+            resolved_commit: args.commit,
+            registry: index.registry.clone(),
+            indexed_at: at,
+            indexed_by: default_generator(),
+        },
+    )?;
 
     // Truth first (PROP-044 `##LAW-NO-UNRECOVERABLE`), the `init`
     // order: the fact lands in the journal before the derived catalog

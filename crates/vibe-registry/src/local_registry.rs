@@ -142,6 +142,49 @@ impl LocalRegistry {
         Ok(groups)
     }
 
+    /// The short-name candidates as the registry's own index answers them
+    /// (PROP-002 `#registry-index`): the persisted
+    /// `_index/by-name/<name>.json` while its listing matches the tree — a
+    /// retired name then answers with no candidate — otherwise the
+    /// directory listing of [`Self::candidate_groups`], which is what the
+    /// projection of a tree without journal facts holds.
+    pub fn indexed_candidate_groups(&self, name: &str) -> Result<Vec<Group>, RegistryError> {
+        use vibe_core::layout_registry::{IndexState, index_dir, index_state};
+        #[derive(serde::Deserialize)]
+        struct NameFile {
+            #[serde(default)]
+            packages: Vec<NamePackage>,
+        }
+        #[derive(serde::Deserialize)]
+        struct NamePackage {
+            group: Group,
+        }
+        let state = index_state(&self.root).map_err(|source| RegistryError::Io {
+            path: self.root.clone(),
+            source,
+        })?;
+        if state != IndexState::Current {
+            return self.candidate_groups(name);
+        }
+        let path = index_dir(&self.root)
+            .join("by-name")
+            .join(format!("{name}.json"));
+        let bytes = match fs::read(&path) {
+            Ok(bytes) => bytes,
+            Err(error) if error.kind() == std::io::ErrorKind::NotFound => return Ok(Vec::new()),
+            Err(source) => return Err(RegistryError::Io { path, source }),
+        };
+        let parsed: NameFile =
+            serde_json::from_slice(&bytes).map_err(|e| RegistryError::MalformedMeta {
+                path: path.clone(),
+                reason: e.to_string(),
+            })?;
+        let mut groups: Vec<Group> = parsed.packages.into_iter().map(|p| p.group).collect();
+        groups.sort();
+        groups.dedup();
+        Ok(groups)
+    }
+
     /// Pick the highest version that satisfies `req`.
     pub fn resolve(&self, pkgref: &PackageRef) -> Result<ResolvedPackage, RegistryError> {
         let group = pkgref

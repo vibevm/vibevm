@@ -155,6 +155,14 @@ impl SourceOperation {
         let binding = self.admission()?;
         Ok(self.controlled()?.then_some(binding))
     }
+    /// The operation's effective source policy (preferences and the
+    /// excluded hostings), for a command that contacts a source itself.
+    pub fn source_policy(
+        &self,
+    ) -> Result<Arc<vibe_core::manifest::EffectiveSourcePolicy>, RegistryError> {
+        use vibe_registry::source_policy_provider::SourcePolicyProvider as _;
+        self.policy.policy()
+    }
     pub fn source_choice_mode(&self) -> SourceChoiceMode {
         self.policy.source_choice_mode()
     }

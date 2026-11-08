@@ -181,8 +181,9 @@ impl RegistryEnvironment for HostedRegistryEnvironment {
     fn prepare(&self) -> Result<RegistryEnvironmentSnapshot> {
         Ok(RegistryEnvironmentSnapshot {
             embedded_root: self.embedded_root.clone(),
-            global: vibe_core::GlobalRegistrySource::deferred(
+            global: vibe_core::GlobalRegistrySource::deferred_with_site(
                 vibe_core::settings::registry_config_path(),
+                vibe_core::settings::site_profile_path(),
                 if self.seed {
                     vibe_core::GlobalRegistryConfig {
                         registries: vibe_core::default_registries(),

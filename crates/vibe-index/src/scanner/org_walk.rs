@@ -18,11 +18,11 @@ use chrono::Utc;
 use semver::Version;
 use vibe_core::Group;
 
-use crate::content_hash::compute_content_hash;
 use crate::error::{Error, Result};
 use crate::index::checkpoint::{Checkpoint, RepoSnapshot};
 use crate::scanner::git_cli;
 use crate::scanner::manifest as mfst;
+use crate::scanner::tree_entry::{EntrySource, entry_from_tree};
 use crate::types::{NamingConvention, PackageKind, VersionEntry};
 
 #[derive(Debug, Clone)]
@@ -213,73 +213,35 @@ fn build_entry(
     let snapshot = workspace.path().join("snapshot");
     git_cli::materialise_at_ref(repo, tag, &snapshot)?;
 
+    // The manifest's identity names the repo it is published under; the
+    // tag names the version (a tag and a manifest that disagree keep the
+    // tag's number, as they always have).
     let manifest_bytes = std::fs::read(snapshot.join("vibe.toml")).map_err(|e| Error::Io {
         path: snapshot.join("vibe.toml"),
         message: e.to_string(),
     })?;
     let manifest = mfst::parse_manifest(&manifest_bytes)?;
     let pkg = mfst::require_package(&manifest)?;
-
-    let content_hash = compute_content_hash(&snapshot)?;
-    let resolved_commit = git_cli::resolve_commit(repo, tag).ok();
-    let files_count = count_files(&snapshot)? as u32;
-
-    let kind = mfst::package_kind(pkg.kind);
-    let _ = repo_name; // dir name kept for diagnostics; not part of the entry.
-
-    let subskills = mfst::collect_subskills(&snapshot)?;
-
     let source_url = source_url_for(
         &opts.registry_url,
         &opts.naming,
-        &kind,
+        &mfst::package_kind(pkg.kind),
         &pkg.group,
         &pkg.name,
     );
-
-    let entry = VersionEntry {
-        schema_version: VersionEntry::SCHEMA_VERSION,
-        kind,
-        group: pkg.group.clone(),
-        name: pkg.name.clone(),
-        version: version.clone(),
-        content_hash,
-        source_url,
-        source_ref: tag.to_string(),
-        resolved_commit,
-        registry: opts.registry.clone(),
-        workspace_origin: mfst::workspace_origin_from(&manifest.origin),
-        license: pkg.license.clone(),
-        authors: pkg.authors.clone(),
-        description: pkg.description.clone(),
-        homepage: pkg.homepage.clone(),
-        keywords: pkg.keywords.clone(),
-        describes: pkg.describes.as_ref().map(|p| p.to_string()),
-        title: pkg.title.clone(),
-        abstract_: pkg.abstract_text.clone(),
-        documents: mfst::documents_from(&manifest.documents),
-        documentation: mfst::documentation_from(&manifest.documentation),
-        translates: mfst::translates_from(&manifest.translates),
-        media: mfst::media_from(&manifest.media),
-        bridge: pkg.bridge,
-        embedded_sources: mfst::embedded_sources_from(&manifest.embedded_sources),
-        compatibility: mfst::compatibility_from(&manifest.compatibility),
-        provides: mfst::provides_from(&manifest.provides),
-        requires: mfst::requires_from(&manifest.requires),
-        requires_any: mfst::requires_any_from(&manifest.requires_any),
-        obsoletes: mfst::obsoletes_from(&manifest.obsoletes),
-        conflicts: mfst::conflicts_from(&manifest.conflicts),
-        features: mfst::features_from(&manifest.features),
-        subskills,
-        i18n: mfst::i18n_from(&manifest.i18n),
-        boot_snippet: mfst::boot_snippet_from(&manifest.boot_snippet),
-        files_count,
-        must_understand: Vec::new(),
-        yanked: false,
-        frozen: pkg.frozen,
-        indexed_at: opts.indexed_at,
-        indexed_by: opts.generator.clone(),
-    };
+    let _ = repo_name; // dir name kept for diagnostics; not part of the entry.
+    let mut entry = entry_from_tree(
+        &snapshot,
+        EntrySource {
+            source_url,
+            source_ref: tag.to_string(),
+            resolved_commit: git_cli::resolve_commit(repo, tag).ok(),
+            registry: opts.registry.clone(),
+            indexed_at: opts.indexed_at,
+            indexed_by: opts.generator.clone(),
+        },
+    )?;
+    entry.version = version;
     Ok(entry)
 }
 
@@ -298,19 +260,6 @@ fn source_url_for(
     let repo = naming.repo_name(kind, group, name);
     let trimmed = registry_url.trim_end_matches('/');
     format!("{trimmed}/{repo}.git")
-}
-
-fn count_files(dir: &Path) -> Result<usize> {
-    let mut count = 0;
-    for entry in walkdir::WalkDir::new(dir)
-        .into_iter()
-        .filter_map(|e| e.ok())
-    {
-        if entry.file_type().is_file() {
-            count += 1;
-        }
-    }
-    Ok(count)
 }
 
 #[cfg(test)]

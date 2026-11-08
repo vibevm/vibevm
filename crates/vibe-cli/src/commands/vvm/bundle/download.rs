@@ -14,10 +14,8 @@ use std::time::Duration;
 
 use anyhow::{Context, Result, bail};
 use specmark::spec;
-#[cfg(test)]
-use vibe_core::progress::Progress;
-use vibe_core::progress::ProgressTask;
 use vibe_core::progress::transfer::{self, Destination, Purpose, TransferReader, TransferRecord};
+use vibe_core::progress::{Progress, ProgressTask};
 
 use vibe_core::remap::ByteLocation;
 use vibe_publish::token::Token;
@@ -194,6 +192,31 @@ impl Downloader for HttpDownloader {
     fn admission(&self) -> Option<Arc<HttpAdmission>> {
         self.admission.clone()
     }
+}
+
+/// Read one small remote document — a site profile
+/// (`PROP-019#site-profile`) — through this invocation's controlled
+/// transport, the release downloader's: its source policy, HTTP admission
+/// and `[proxy]` apply. Returns the bytes and the URL as it may be shown.
+pub(in crate::commands::vvm) fn fetch_document(
+    url: &str,
+    maximum_bytes: u64,
+    progress: &Progress,
+) -> Result<(Vec<u8>, String)> {
+    let shown = safe_url(url);
+    let downloader = HttpDownloader::for_invocation()?;
+    let scratch = tempfile::tempdir().context("creating a scratch directory for the download")?;
+    let destination = scratch.path().join("document");
+    let task = progress.task("Fetching the site profile");
+    task.detail(shown.clone());
+    if let Err(error) = downloader.download(url, &destination, maximum_bytes, None, &task) {
+        task.fail("download failed");
+        return Err(error);
+    }
+    task.finish();
+    let bytes =
+        std::fs::read(&destination).with_context(|| format!("reading the downloaded `{shown}`"))?;
+    Ok((bytes, shown))
 }
 
 /// Copy a release file from a local drop (`PROP-066#locations`): bounded
