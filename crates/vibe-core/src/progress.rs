@@ -106,6 +106,8 @@ pub enum ProgressEventKind {
         /// samples of a download (`PROP-068#stream`).
         transfer: Option<String>,
         rate_bps: Option<u64>,
+        /// Successful logical writes of this transfer only; absent if unobserved.
+        disk_written_bytes: Option<u64>,
     },
     Detail {
         message: String,
@@ -158,7 +160,7 @@ pub struct Requires {
 /// ```
 /// use vibe_core::progress::TransferEnd;
 ///
-/// let end = TransferEnd { id: "7:1".into(), bytes: 10, total: Some(10), peak_bps: 40 };
+/// let end = TransferEnd { id: "7:1".into(), bytes: 10, total: Some(10), peak_bps: 40, disk_written_bytes: None };
 /// assert_eq!(end.total, Some(end.bytes));
 /// ```
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -167,6 +169,7 @@ pub struct TransferEnd {
     pub bytes: u64,
     pub total: Option<u64>,
     pub peak_bps: u64,
+    pub disk_written_bytes: Option<u64>,
 }
 
 /// A child-operation diagnostic that remains visible in ordinary human mode.
@@ -423,6 +426,7 @@ impl ProgressTask {
                 unit: unit.to_owned(),
                 transfer: None,
                 rate_bps: None,
+                disk_written_bytes: None,
             });
         }
     }

@@ -105,7 +105,8 @@
         "x-wire-order": [
           "at",
           "bytes",
-          "rate_bps"
+          "rate_bps",
+          "disk_written_bytes"
         ]
       },
       "properties": {
@@ -117,6 +118,15 @@
         },
         "rate_bps": {
           "ref": "count"
+        }
+      },
+      "optionalProperties": {
+        "disk_written_bytes": {
+          "metadata": {
+            "x-default": null,
+            "description": "Canonical unsigned decimal u64 string: ASCII digits only, no leading zeros except 0. Cumulative successful logical disk writes per transfer ID; absent means unknown. Not network bytes, retained size or physical I/O."
+          },
+          "ref": "disk_written_count"
         }
       }
     },
@@ -167,7 +177,8 @@
           "average_bps",
           "series",
           "bucket_seconds",
-          "written"
+          "written",
+          "disk_written_bytes"
         ]
       },
       "properties": {
@@ -320,7 +331,21 @@
             "x-default": null,
             "description": "A git transfer's size on disk after the operation (the clone's .git/objects): its received bytes are reported, not counted (PROP-068#journal)."
           }
+        },
+        "disk_written_bytes": {
+          "metadata": {
+            "x-default": null,
+            "description": "Canonical unsigned decimal u64 string: ASCII digits only, no leading zeros except 0. Cumulative successful logical disk writes per transfer ID; absent means unknown. Not network bytes, retained size or physical I/O."
+          },
+          "ref": "disk_written_count"
         }
+      }
+    },
+    "disk_written_count": {
+      "type": "string",
+      "metadata": {
+        "x-rust-type": "vibe_core::wire_decimal::DecimalU64",
+        "description": "Canonical unsigned decimal u64 logical write count; shared scalar validates exact spelling and range."
       }
     }
   }

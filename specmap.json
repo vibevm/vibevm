@@ -6615,79 +6615,87 @@
       "item_kind": "schema",
       "line": 1,
       "symbol": "progress_event",
-      "end_line": 84
+      "end_line": 337
     },
     {
       "crate_name": "<schema>",
       "file": "schemas/progress_event.jtd.json",
       "item_kind": "schema-def",
-      "line": 68,
+      "line": 299,
       "symbol": "progress_event::count",
-      "end_line": 74
+      "end_line": 305
     },
     {
       "crate_name": "<schema>",
       "file": "schemas/progress_event.jtd.json",
       "item_kind": "schema-def",
-      "line": 56,
+      "line": 254,
       "symbol": "progress_event::destination",
-      "end_line": 56
+      "end_line": 264
     },
     {
       "crate_name": "<schema>",
       "file": "schemas/progress_event.jtd.json",
       "item_kind": "schema-def",
-      "line": 75,
+      "line": 329,
+      "symbol": "progress_event::disk_written_count",
+      "end_line": 335
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/progress_event.jtd.json",
+      "item_kind": "schema-def",
+      "line": 306,
       "symbol": "progress_event::kind",
-      "end_line": 78
+      "end_line": 319
     },
     {
       "crate_name": "<schema>",
       "file": "schemas/progress_event.jtd.json",
       "item_kind": "schema-def",
-      "line": 79,
+      "line": 320,
       "symbol": "progress_event::level",
-      "end_line": 82
+      "end_line": 328
     },
     {
       "crate_name": "<schema>",
       "file": "schemas/progress_event.jtd.json",
       "item_kind": "schema-def",
-      "line": 57,
+      "line": 265,
       "symbol": "progress_event::precision",
-      "end_line": 57
+      "end_line": 273
     },
     {
       "crate_name": "<schema>",
       "file": "schemas/progress_event.jtd.json",
       "item_kind": "schema-def",
-      "line": 55,
+      "line": 240,
       "symbol": "progress_event::purpose",
-      "end_line": 55
+      "end_line": 253
     },
     {
       "crate_name": "<schema>",
       "file": "schemas/progress_event.jtd.json",
       "item_kind": "schema-def",
-      "line": 58,
+      "line": 274,
       "symbol": "progress_event::requires",
-      "end_line": 67
+      "end_line": 298
     },
     {
       "crate_name": "<schema>",
       "file": "schemas/progress_event.jtd.json",
       "item_kind": "schema-def",
-      "line": 54,
+      "line": 231,
       "symbol": "progress_event::transfer_kind",
-      "end_line": 54
+      "end_line": 239
     },
     {
       "crate_name": "<schema>",
       "file": "schemas/progress_event.jtd.json",
       "item_kind": "schema-def",
-      "line": 31,
+      "line": 136,
       "symbol": "progress_event::transfer_record",
-      "end_line": 53
+      "end_line": 230
     },
     {
       "crate_name": "<schema>",
@@ -8215,87 +8223,95 @@
       "item_kind": "schema",
       "line": 1,
       "symbol": "transfer_event",
-      "end_line": 380
+      "end_line": 413
     },
     {
       "crate_name": "<schema>",
       "file": "schemas/transfer_event.jtd.json",
       "item_kind": "schema-def",
-      "line": 164,
+      "line": 182,
       "symbol": "transfer_event::bucket",
-      "end_line": 179
+      "end_line": 197
     },
     {
       "crate_name": "<schema>",
       "file": "schemas/transfer_event.jtd.json",
       "item_kind": "schema-def",
-      "line": 84,
+      "line": 92,
       "symbol": "transfer_event::count",
-      "end_line": 90
+      "end_line": 98
     },
     {
       "crate_name": "<schema>",
       "file": "schemas/transfer_event.jtd.json",
       "item_kind": "schema-def",
-      "line": 114,
+      "line": 122,
       "symbol": "transfer_event::destination",
-      "end_line": 124
+      "end_line": 132
     },
     {
       "crate_name": "<schema>",
       "file": "schemas/transfer_event.jtd.json",
       "item_kind": "schema-def",
-      "line": 367,
+      "line": 405,
+      "symbol": "transfer_event::disk_written_count",
+      "end_line": 411
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/transfer_event.jtd.json",
+      "item_kind": "schema-def",
+      "line": 393,
       "symbol": "transfer_event::event_kind",
-      "end_line": 378
+      "end_line": 404
     },
     {
       "crate_name": "<schema>",
       "file": "schemas/transfer_event.jtd.json",
       "item_kind": "schema-def",
-      "line": 134,
+      "line": 142,
       "symbol": "transfer_event::outcome",
-      "end_line": 143
+      "end_line": 151
     },
     {
       "crate_name": "<schema>",
       "file": "schemas/transfer_event.jtd.json",
       "item_kind": "schema-def",
-      "line": 125,
+      "line": 133,
       "symbol": "transfer_event::precision",
-      "end_line": 133
+      "end_line": 141
     },
     {
       "crate_name": "<schema>",
       "file": "schemas/transfer_event.jtd.json",
       "item_kind": "schema-def",
-      "line": 100,
+      "line": 108,
       "symbol": "transfer_event::purpose",
-      "end_line": 113
+      "end_line": 121
     },
     {
       "crate_name": "<schema>",
       "file": "schemas/transfer_event.jtd.json",
       "item_kind": "schema-def",
-      "line": 180,
+      "line": 198,
       "symbol": "transfer_event::record",
-      "end_line": 366
+      "end_line": 392
     },
     {
       "crate_name": "<schema>",
       "file": "schemas/transfer_event.jtd.json",
       "item_kind": "schema-def",
-      "line": 144,
+      "line": 152,
       "symbol": "transfer_event::sample",
-      "end_line": 163
+      "end_line": 181
     },
     {
       "crate_name": "<schema>",
       "file": "schemas/transfer_event.jtd.json",
       "item_kind": "schema-def",
-      "line": 91,
+      "line": 99,
       "symbol": "transfer_event::transfer_kind",
-      "end_line": 99
+      "end_line": 107
     },
     {
       "crate_name": "<schema>",
@@ -8303,71 +8319,79 @@
       "item_kind": "schema",
       "line": 1,
       "symbol": "transfer_record",
+      "end_line": 318
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/transfer_record.jtd.json",
+      "item_kind": "schema-def",
+      "line": 294,
+      "symbol": "transfer_record::bucket",
+      "end_line": 309
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/transfer_record.jtd.json",
+      "item_kind": "schema-def",
+      "line": 204,
+      "symbol": "transfer_record::count",
+      "end_line": 210
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/transfer_record.jtd.json",
+      "item_kind": "schema-def",
+      "line": 234,
+      "symbol": "transfer_record::destination",
+      "end_line": 244
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/transfer_record.jtd.json",
+      "item_kind": "schema-def",
+      "line": 310,
+      "symbol": "transfer_record::disk_written_count",
+      "end_line": 316
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/transfer_record.jtd.json",
+      "item_kind": "schema-def",
+      "line": 254,
+      "symbol": "transfer_record::outcome",
+      "end_line": 263
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/transfer_record.jtd.json",
+      "item_kind": "schema-def",
+      "line": 245,
+      "symbol": "transfer_record::precision",
+      "end_line": 253
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/transfer_record.jtd.json",
+      "item_kind": "schema-def",
+      "line": 220,
+      "symbol": "transfer_record::purpose",
+      "end_line": 233
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/transfer_record.jtd.json",
+      "item_kind": "schema-def",
+      "line": 264,
+      "symbol": "transfer_record::sample",
       "end_line": 293
     },
     {
       "crate_name": "<schema>",
       "file": "schemas/transfer_record.jtd.json",
       "item_kind": "schema-def",
-      "line": 276,
-      "symbol": "transfer_record::bucket",
-      "end_line": 291
-    },
-    {
-      "crate_name": "<schema>",
-      "file": "schemas/transfer_record.jtd.json",
-      "item_kind": "schema-def",
-      "line": 196,
-      "symbol": "transfer_record::count",
-      "end_line": 202
-    },
-    {
-      "crate_name": "<schema>",
-      "file": "schemas/transfer_record.jtd.json",
-      "item_kind": "schema-def",
-      "line": 226,
-      "symbol": "transfer_record::destination",
-      "end_line": 236
-    },
-    {
-      "crate_name": "<schema>",
-      "file": "schemas/transfer_record.jtd.json",
-      "item_kind": "schema-def",
-      "line": 246,
-      "symbol": "transfer_record::outcome",
-      "end_line": 255
-    },
-    {
-      "crate_name": "<schema>",
-      "file": "schemas/transfer_record.jtd.json",
-      "item_kind": "schema-def",
-      "line": 237,
-      "symbol": "transfer_record::precision",
-      "end_line": 245
-    },
-    {
-      "crate_name": "<schema>",
-      "file": "schemas/transfer_record.jtd.json",
-      "item_kind": "schema-def",
-      "line": 212,
-      "symbol": "transfer_record::purpose",
-      "end_line": 225
-    },
-    {
-      "crate_name": "<schema>",
-      "file": "schemas/transfer_record.jtd.json",
-      "item_kind": "schema-def",
-      "line": 256,
-      "symbol": "transfer_record::sample",
-      "end_line": 275
-    },
-    {
-      "crate_name": "<schema>",
-      "file": "schemas/transfer_record.jtd.json",
-      "item_kind": "schema-def",
-      "line": 203,
+      "line": 211,
       "symbol": "transfer_record::transfer_kind",
-      "end_line": 211
+      "end_line": 219
     },
     {
       "crate_name": "<schema>",
@@ -8375,15 +8399,15 @@
       "item_kind": "schema",
       "line": 1,
       "symbol": "transfers_listing",
-      "end_line": 327
+      "end_line": 352
     },
     {
       "crate_name": "<schema>",
       "file": "schemas/transfers_listing.jtd.json",
       "item_kind": "schema-def",
-      "line": 123,
+      "line": 133,
       "symbol": "transfers_listing::bucket",
-      "end_line": 138
+      "end_line": 148
     },
     {
       "crate_name": "<schema>",
@@ -8400,6 +8424,14 @@
       "line": 73,
       "symbol": "transfers_listing::destination",
       "end_line": 83
+    },
+    {
+      "crate_name": "<schema>",
+      "file": "schemas/transfers_listing.jtd.json",
+      "item_kind": "schema-def",
+      "line": 344,
+      "symbol": "transfers_listing::disk_written_count",
+      "end_line": 350
     },
     {
       "crate_name": "<schema>",
@@ -8429,9 +8461,9 @@
       "crate_name": "<schema>",
       "file": "schemas/transfers_listing.jtd.json",
       "item_kind": "schema-def",
-      "line": 139,
+      "line": 149,
       "symbol": "transfers_listing::record",
-      "end_line": 325
+      "end_line": 343
     },
     {
       "crate_name": "<schema>",
@@ -8439,7 +8471,7 @@
       "item_kind": "schema-def",
       "line": 103,
       "symbol": "transfers_listing::sample",
-      "end_line": 122
+      "end_line": 132
     },
     {
       "crate_name": "<schema>",
@@ -11194,6 +11226,15 @@
       "symbol": "vibe_app::installer::fetch",
       "end_line": 5,
       "fingerprint": "tok1:8501a8d22febb91c0e050a32cbb28d42295cbcb5b7180018ab482ee7fb94edf2"
+    },
+    {
+      "crate_name": "vibe-app",
+      "file": "crates/vibe-app/src/installer/fetch.rs",
+      "item_kind": "fn",
+      "line": 48,
+      "symbol": "vibe_app::installer::fetch::fetch_verified",
+      "end_line": 141,
+      "fingerprint": "tok1:263db902e036c919e878b95b252dc1d919db9c83ed4c464a0cfc7c95f876cdbd"
     },
     {
       "crate_name": "vibe-app",
@@ -21169,6 +21210,15 @@
     },
     {
       "crate_name": "vibe-cli",
+      "file": "crates/vibe-cli/tests/cli_transfers.rs",
+      "item_kind": "fn",
+      "line": 213,
+      "symbol": "vibe_cli::tests::cli_transfers::a_download_is_streamed_listed_watched_and_kept",
+      "end_line": 371,
+      "fingerprint": "tok1:cccb9be7efc22dc882fe383f3dacfd857580b60081f5599749be44e1aa3e8355"
+    },
+    {
+      "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/tests/cli_visibility_lanes.rs",
       "item_kind": "mod",
       "line": 1,
@@ -25203,19 +25253,118 @@
       "crate_name": "vibe-core",
       "file": "crates/vibe-core/src/progress/transfer.rs",
       "item_kind": "struct",
-      "line": 175,
+      "line": 179,
       "symbol": "vibe_core::progress::transfer::Transfer",
-      "end_line": 189,
-      "fingerprint": "tok1:f034e338d70adf8dd06c1575070f74a30bc35f96bbc646d3d7810d2f2a13acf1"
+      "end_line": 194,
+      "fingerprint": "tok1:8ff5bc67b57962c657989cdc1514dd9ea8df4f1addf156eede244ba0e3d84a10"
     },
     {
       "crate_name": "vibe-core",
       "file": "crates/vibe-core/src/progress/transfer.rs",
       "item_kind": "struct",
-      "line": 399,
+      "line": 412,
       "symbol": "vibe_core::progress::transfer::TransferReader",
-      "end_line": 410,
-      "fingerprint": "tok1:81272c2c7c3a1e9d3c67e5bde7dac49fa71d3961a43bb81975d56200098bc860"
+      "end_line": 423,
+      "fingerprint": "tok1:53259770feddbc4f4e56c88e9013c977a112ddae66f02f8695d64d51e2cae7e5"
+    },
+    {
+      "crate_name": "vibe-core",
+      "file": "crates/vibe-core/src/progress/transfer/disk.rs",
+      "item_kind": "mod",
+      "line": 4,
+      "symbol": "vibe_core::progress::transfer::disk",
+      "end_line": 4,
+      "fingerprint": "tok1:2b5e173b7330470adbda1d2a0e2dc465f2687007ec619a6bc0c2789afa99f2c3"
+    },
+    {
+      "crate_name": "vibe-core",
+      "file": "crates/vibe-core/src/progress/transfer/disk.rs",
+      "item_kind": "impl",
+      "line": 51,
+      "symbol": "vibe_core::progress::transfer::disk::<impl Write for TransferWriter<W>>",
+      "end_line": 62,
+      "fingerprint": "tok1:493868dcab06f27d1ed23975024451a4fc99daccda793a84d9fd6ffc4a269154"
+    },
+    {
+      "crate_name": "vibe-core",
+      "file": "crates/vibe-core/src/progress/transfer/disk/tests.rs",
+      "item_kind": "fn",
+      "line": 238,
+      "symbol": "vibe_core::progress::transfer::disk::tests::a_new_transfer_id_has_a_new_counter_even_for_the_same_url",
+      "end_line": 258,
+      "fingerprint": "tok1:69f2e8be74c842326f3747b8afa4d56bb8bd608298601ac00324abe28dae7a14"
+    },
+    {
+      "crate_name": "vibe-core",
+      "file": "crates/vibe-core/src/progress/transfer/disk/tests.rs",
+      "item_kind": "fn",
+      "line": 120,
+      "symbol": "vibe_core::progress::transfer::disk::tests::failed_or_zero_writes_and_failed_flush_do_not_invent_bytes",
+      "end_line": 153,
+      "fingerprint": "tok1:0a3ee465acd6e4bb538add9125a8d476f7a000f82661b5571848ff8f3195aacc"
+    },
+    {
+      "crate_name": "vibe-core",
+      "file": "crates/vibe-core/src/progress/transfer/disk/tests.rs",
+      "item_kind": "fn",
+      "line": 75,
+      "symbol": "vibe_core::progress::transfer::disk::tests::finish_flushes_exact_counter_and_parent_is_not_an_aggregate",
+      "end_line": 118,
+      "fingerprint": "tok1:5f016d2d1a05ede5aeae1343fd2778669d859e8f7221a2e87376dbb0c9b7a053"
+    },
+    {
+      "crate_name": "vibe-core",
+      "file": "crates/vibe-core/src/progress/transfer/disk/tests.rs",
+      "item_kind": "fn",
+      "line": 260,
+      "symbol": "vibe_core::progress::transfer::disk::tests::implicit_drop_closes_writer_before_terminal_report",
+      "end_line": 313,
+      "fingerprint": "tok1:6359ad32d68daf6c0bc8b8c82ccfedd7335451732778f9d5d50eafd6f1ddb11a"
+    },
+    {
+      "crate_name": "vibe-core",
+      "file": "crates/vibe-core/src/progress/transfer/disk/tests.rs",
+      "item_kind": "fn",
+      "line": 315,
+      "symbol": "vibe_core::progress::transfer::disk::tests::journal_and_samples_use_the_same_lossless_decimal_boundary",
+      "end_line": 352,
+      "fingerprint": "tok1:4255751abafc5dfad5fec2537c1ba93658f88f0f18183d260068090256c9c7a8"
+    },
+    {
+      "crate_name": "vibe-core",
+      "file": "crates/vibe-core/src/progress/transfer/disk/tests.rs",
+      "item_kind": "fn",
+      "line": 42,
+      "symbol": "vibe_core::progress::transfer::disk::tests::successful_partial_writes_survive_failure_interruption_and_drop",
+      "end_line": 73,
+      "fingerprint": "tok1:7c7e3793e416c08419f6b0538e47cf92b92addaf91c8e6bb9301c5914a882903"
+    },
+    {
+      "crate_name": "vibe-core",
+      "file": "crates/vibe-core/src/progress/transfer/disk/tests.rs",
+      "item_kind": "fn",
+      "line": 155,
+      "symbol": "vibe_core::progress::transfer::disk::tests::unknown_legacy_and_uninstrumented_transfers_stay_absent",
+      "end_line": 189,
+      "fingerprint": "tok1:321a3efc16136e3062fe4775ce3e998a246e63804179e59c0384d1d86b79dbaa"
+    },
+    {
+      "crate_name": "vibe-core",
+      "file": "crates/vibe-core/src/progress/transfer/disk/tests.rs",
+      "item_kind": "fn",
+      "line": 223,
+      "symbol": "vibe_core::progress::transfer::disk::tests::unrepresentable_counter_becomes_unknown_without_failing_successful_write",
+      "end_line": 236,
+      "fingerprint": "tok1:0a1c233d114985e0a86fb5e6b40b506ebe55d208ffb717633e184dc39d4b772d"
+    },
+    {
+      "crate_name": "vibe-core",
+      "file": "crates/vibe-core/src/progress/transfer/disk/tests.rs",
+      "item_kind": "fn",
+      "line": 191,
+      "symbol": "vibe_core::progress::transfer::disk::tests::watch_preserves_same_millisecond_disk_only_samples_and_terminal_counter",
+      "end_line": 221,
+      "fingerprint": "tok1:50e88af0cf2dcfa4abc766704d8451cc8742fdace23868ec18b7b37e5848d9d8"
     },
     {
       "crate_name": "vibe-core",
@@ -26170,6 +26319,51 @@
       "symbol": "vibe_core::visibility::tests",
       "end_line": 1,
       "fingerprint": "tok1:842ec1c19df79fd2a14b6f422093b0b6c99cfe33f288c121adda83ac2fe072fc"
+    },
+    {
+      "crate_name": "vibe-core",
+      "file": "crates/vibe-core/src/wire_decimal.rs",
+      "item_kind": "mod",
+      "line": 11,
+      "symbol": "vibe_core::wire_decimal",
+      "end_line": 11,
+      "fingerprint": "tok1:c4f6d4cbeb947835e8825ba66639ac5e4b56e573d6c5c79b5da9d28abbf5b4bc"
+    },
+    {
+      "crate_name": "vibe-core",
+      "file": "crates/vibe-core/src/wire_decimal.rs",
+      "item_kind": "fn",
+      "line": 24,
+      "symbol": "vibe_core::wire_decimal::deserialize",
+      "end_line": 36,
+      "fingerprint": "tok1:4bdae1a15110cdcce7cf7e43e33b5424f5376d1b11709a6c456b52cbcb571a2e"
+    },
+    {
+      "crate_name": "vibe-core",
+      "file": "crates/vibe-core/src/wire_decimal.rs",
+      "item_kind": "fn",
+      "line": 15,
+      "symbol": "vibe_core::wire_decimal::serialize",
+      "end_line": 22,
+      "fingerprint": "tok1:8589e0409b64ff997ed330fcfe07294042e285f684ac7100e1e15fc88ae35b1b"
+    },
+    {
+      "crate_name": "vibe-core",
+      "file": "crates/vibe-core/src/wire_decimal.rs",
+      "item_kind": "fn",
+      "line": 123,
+      "symbol": "vibe_core::wire_decimal::tests::reads_only_canonical_decimal_strings",
+      "end_line": 146,
+      "fingerprint": "tok1:5361b46a1a24b417bc4f1392693054830d75cbf3110bab2e5b866cb38590bb15"
+    },
+    {
+      "crate_name": "vibe-core",
+      "file": "crates/vibe-core/src/wire_decimal.rs",
+      "item_kind": "fn",
+      "line": 108,
+      "symbol": "vibe_core::wire_decimal::tests::writes_canonical_decimal_strings_for_the_full_u64_domain",
+      "end_line": 121,
+      "fingerprint": "tok1:36c8031e2a3943846bbe529d8675bfd9052e8f036039c7e7a4f9fbbf36c66e38"
     },
     {
       "crate_name": "vibe-doc",
@@ -29523,9 +29717,9 @@
       "crate_name": "vibe-index",
       "file": "crates/vibe-index/src/types/wire_decimal.rs",
       "item_kind": "mod",
-      "line": 16,
+      "line": 2,
       "symbol": "vibe_index::types::wire_decimal",
-      "end_line": 16,
+      "end_line": 2,
       "fingerprint": "tok1:5cd37479f727211c71f73c50e6e711ad2714cf2ccac58e6a7b2c3973db3e2d8b"
     },
     {
@@ -48087,6 +48281,42 @@
       "fingerprint": "tok1:65d530917b9816a50bfb81cd80f66318020c603905e26917e8763f4eaa4b2174"
     },
     {
+      "crate_name": "vibe-wire",
+      "file": "crates/vibe-wire/tests/transfer_disk_observation.rs",
+      "item_kind": "mod",
+      "line": 2,
+      "symbol": "vibe_wire::tests::transfer_disk_observation",
+      "end_line": 2,
+      "fingerprint": "tok1:2b5e173b7330470adbda1d2a0e2dc465f2687007ec619a6bc0c2789afa99f2c3"
+    },
+    {
+      "crate_name": "vibe-wire",
+      "file": "crates/vibe-wire/tests/transfer_disk_observation.rs",
+      "item_kind": "fn",
+      "line": 8,
+      "symbol": "vibe_wire::tests::transfer_disk_observation::legacy_absence_remains_absence_and_preserves_serialization_order",
+      "end_line": 17,
+      "fingerprint": "tok1:6f4a261ddb5d84732bafe82c58987b0621110264e029d56834a96c0cae808f0e"
+    },
+    {
+      "crate_name": "vibe-wire",
+      "file": "crates/vibe-wire/tests/transfer_disk_observation.rs",
+      "item_kind": "fn",
+      "line": 47,
+      "symbol": "vibe_wire::tests::transfer_disk_observation::observational_readers_stay_permissive_but_the_counter_is_an_integer",
+      "end_line": 64,
+      "fingerprint": "tok1:6bdd218cf66d318f7e6ba9e9874f63e5414b74c8d6f8f83930169387cf0f4a05"
+    },
+    {
+      "crate_name": "vibe-wire",
+      "file": "crates/vibe-wire/tests/transfer_disk_observation.rs",
+      "item_kind": "fn",
+      "line": 19,
+      "symbol": "vibe_wire::tests::transfer_disk_observation::zero_and_partial_counts_survive_every_existing_projection",
+      "end_line": 45,
+      "fingerprint": "tok1:b58d1f9f555ac725502c4d2bdd13226a4bf185b857f6f61c3589f7d4a39dd4e7"
+    },
+    {
       "crate_name": "vibe-workspace",
       "file": "crates/vibe-workspace/src/lib.rs",
       "item_kind": "mod",
@@ -54541,6 +54771,14 @@
       "line": 5,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-068#coverage",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-app/src/installer/fetch.rs",
+      "from_symbol": "vibe_app::installer::fetch::fetch_verified",
+      "line": 51,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-068#disk-writes",
       "verb": "implements"
     },
     {
@@ -63670,6 +63908,14 @@
       "verb": "verifies"
     },
     {
+      "file": "crates/vibe-cli/tests/cli_transfers.rs",
+      "from_symbol": "vibe_cli::tests::cli_transfers::a_download_is_streamed_listed_watched_and_kept",
+      "line": 214,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-068#disk-writes",
+      "verb": "verifies"
+    },
+    {
       "file": "crates/vibe-cli/tests/cli_visibility_lanes.rs",
       "from_symbol": "vibe_cli::tests::cli_visibility_lanes",
       "line": 1,
@@ -67334,7 +67580,7 @@
     {
       "file": "crates/vibe-core/src/progress/transfer.rs",
       "from_symbol": "vibe_core::progress::transfer::Transfer",
-      "line": 178,
+      "line": 182,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-068#transfer",
       "verb": "documents"
@@ -67342,10 +67588,98 @@
     {
       "file": "crates/vibe-core/src/progress/transfer.rs",
       "from_symbol": "vibe_core::progress::transfer::TransferReader",
-      "line": 405,
+      "line": 418,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-068#sampling",
       "verb": "documents"
+    },
+    {
+      "file": "crates/vibe-core/src/progress/transfer/disk.rs",
+      "from_symbol": "vibe_core::progress::transfer::disk",
+      "line": 4,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-068#disk-writes",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-core/src/progress/transfer/disk.rs",
+      "from_symbol": "vibe_core::progress::transfer::disk::<impl Write for TransferWriter<W>>",
+      "line": 51,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-068#disk-writes",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-core/src/progress/transfer/disk/tests.rs",
+      "from_symbol": "vibe_core::progress::transfer::disk::tests::a_new_transfer_id_has_a_new_counter_even_for_the_same_url",
+      "line": 239,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-068#disk-writes",
+      "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-core/src/progress/transfer/disk/tests.rs",
+      "from_symbol": "vibe_core::progress::transfer::disk::tests::failed_or_zero_writes_and_failed_flush_do_not_invent_bytes",
+      "line": 121,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-068#disk-writes",
+      "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-core/src/progress/transfer/disk/tests.rs",
+      "from_symbol": "vibe_core::progress::transfer::disk::tests::finish_flushes_exact_counter_and_parent_is_not_an_aggregate",
+      "line": 76,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-068#disk-writes",
+      "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-core/src/progress/transfer/disk/tests.rs",
+      "from_symbol": "vibe_core::progress::transfer::disk::tests::implicit_drop_closes_writer_before_terminal_report",
+      "line": 261,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-068#disk-writes",
+      "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-core/src/progress/transfer/disk/tests.rs",
+      "from_symbol": "vibe_core::progress::transfer::disk::tests::journal_and_samples_use_the_same_lossless_decimal_boundary",
+      "line": 316,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-044#M-WIDE-INTEGERS-AS-STRINGS",
+      "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-core/src/progress/transfer/disk/tests.rs",
+      "from_symbol": "vibe_core::progress::transfer::disk::tests::successful_partial_writes_survive_failure_interruption_and_drop",
+      "line": 43,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-068#disk-writes",
+      "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-core/src/progress/transfer/disk/tests.rs",
+      "from_symbol": "vibe_core::progress::transfer::disk::tests::unknown_legacy_and_uninstrumented_transfers_stay_absent",
+      "line": 156,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-068#disk-writes",
+      "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-core/src/progress/transfer/disk/tests.rs",
+      "from_symbol": "vibe_core::progress::transfer::disk::tests::unrepresentable_counter_becomes_unknown_without_failing_successful_write",
+      "line": 224,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-068#disk-writes",
+      "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-core/src/progress/transfer/disk/tests.rs",
+      "from_symbol": "vibe_core::progress::transfer::disk::tests::watch_preserves_same_millisecond_disk_only_samples_and_terminal_counter",
+      "line": 192,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-068#disk-writes",
+      "verb": "verifies"
     },
     {
       "file": "crates/vibe-core/src/progress/transfer/journal.rs",
@@ -68194,6 +68528,46 @@
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-050#example",
       "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-core/src/wire_decimal.rs",
+      "from_symbol": "vibe_core::wire_decimal",
+      "line": 11,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-044#M-WIDE-INTEGERS-AS-STRINGS",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-core/src/wire_decimal.rs",
+      "from_symbol": "vibe_core::wire_decimal::deserialize",
+      "line": 25,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-044#M-WIDE-INTEGERS-AS-STRINGS",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-core/src/wire_decimal.rs",
+      "from_symbol": "vibe_core::wire_decimal::serialize",
+      "line": 17,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-044#M-WIDE-INTEGERS-AS-STRINGS",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-core/src/wire_decimal.rs",
+      "from_symbol": "vibe_core::wire_decimal::tests::reads_only_canonical_decimal_strings",
+      "line": 124,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-044#M-WIDE-INTEGERS-AS-STRINGS",
+      "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-core/src/wire_decimal.rs",
+      "from_symbol": "vibe_core::wire_decimal::tests::writes_canonical_decimal_strings_for_the_full_u64_domain",
+      "line": 109,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-044#M-WIDE-INTEGERS-AS-STRINGS",
+      "verb": "verifies"
     },
     {
       "file": "crates/vibe-doc/src/lib.rs",
@@ -71316,7 +71690,7 @@
     {
       "file": "crates/vibe-index/src/types/wire_decimal.rs",
       "from_symbol": "vibe_index::types::wire_decimal",
-      "line": 16,
+      "line": 2,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#layout",
       "verb": "implements"
@@ -88319,6 +88693,38 @@
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-044#MANIFEST-MIGRATION-TRANSPORT",
       "verb": "verifies",
       "pinned_r": 2
+    },
+    {
+      "file": "crates/vibe-wire/tests/transfer_disk_observation.rs",
+      "from_symbol": "vibe_wire::tests::transfer_disk_observation",
+      "line": 2,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-068#disk-writes",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-wire/tests/transfer_disk_observation.rs",
+      "from_symbol": "vibe_wire::tests::transfer_disk_observation::legacy_absence_remains_absence_and_preserves_serialization_order",
+      "line": 9,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-068#disk-writes",
+      "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-wire/tests/transfer_disk_observation.rs",
+      "from_symbol": "vibe_wire::tests::transfer_disk_observation::observational_readers_stay_permissive_but_the_counter_is_an_integer",
+      "line": 48,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-068#disk-writes",
+      "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-wire/tests/transfer_disk_observation.rs",
+      "from_symbol": "vibe_wire::tests::transfer_disk_observation::zero_and_partial_counts_survive_every_existing_projection",
+      "line": 20,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-068#disk-writes",
+      "verb": "verifies"
     },
     {
       "file": "crates/vibe-workspace/src/lib.rs",
@@ -116811,7 +117217,7 @@
     },
     {
       "anchor": "root",
-      "content_hash": "sha256:602123331d9d92fe742ebf7fb5c6dd7f14494634cfb260b5e574ce0969b953ed",
+      "content_hash": "sha256:90650ff2debb884d1c3b78fdf226ad22d0292598935c23423103078e9683c519",
       "doc_path": "common/PROP-068",
       "file": "vibevm/vibespecs/common/PROP-068-transfers.xml",
       "heading": "PROP-068 — Transfers: every download as data, sampled, journaled and watchable",
@@ -116838,10 +117244,10 @@
     },
     {
       "anchor": "transfer",
-      "content_hash": "sha256:35133301bcafc9bfe3b874ea3846323ff1c3c63ca6ba16f4178cdf8ad36e15f0",
+      "content_hash": "sha256:6d51fa6c4e4bf041e79facf0ce3f1153aa162961bc1673e1a1b400ce4a46506c",
       "doc_path": "common/PROP-068",
       "file": "vibevm/vibespecs/common/PROP-068-transfers.xml",
-      "heading": "A transfer has: `id` — `<pid>:<n>`, the process and its running count, unique on the machine for as long as the journal keeps it; `kind` — `http` (a response body vibe reads and counts itself) or `git` (a clone or fetch the git binary performs, whose progress vibe reads from git's own reporting); `url` — the source with credentials, query and fragment removed, never a token; `purpose` — one of the closed vocabulary of `#purpose`; `package` — the package key the bytes are for, when there is one (`org.vibevm.apps/vim@9.1.0`), and `step` — the installer step id, when a step asked; `destination` — `store` (the machine store or the registry cache), `cache` (the application cache of `PROP-065#sources`), `work` (a kept work directory), `home` (the vibe home of `self update`); `total` — the size in bytes when the server announced it or the manifest declared it, absent otherwise and allowed to appear later; `started` — the wall-clock instant, RFC 3339 with milliseconds; `pid` and `command` — the process and the command line's verb (`install -g`, `cache add`, `self update`) that owns it; `batch` — the run the command belongs to, the run record's id for `install -g`, `update -g`, `modify` and `app`-driven installs (`PROP-065#runs`) and `<pid>` otherwise, so the transfers of one installation (its sources and its requirements' clones) group under one id; `precision` — `counted` when vibe counted the bytes it wrote, `reported` when it relayed what git reported (`#git`). @status:spec/done",
+      "heading": "A transfer has: `id` — `<pid>:<n>`, the process and its running count, unique on the machine for as long as the journal keeps it; `kind` — `http` (a response body vibe reads and counts itself) or `git` (a clone or fetch the git binary performs, whose progress vibe reads from git's own reporting); `url` — the source with credentials, query and fragment removed, never a token; `purpose` — one of the closed vocabulary of `#purpose`; `package` — the package key the bytes are for, when there is one (`org.vibevm.apps/vim@9.1.0`), and `step` — the installer step id, when a step asked; `destination` — `store` (the machine store or the registry cache), `cache` (the application cache of `PROP-065#sources`), `work` (a kept work directory), `home` (the vibe home of `self update`); `total` — the size in bytes when the server announced it or the manifest declared it, absent otherwise and allowed to appear later; `started` — the wall-clock instant, RFC 3339 with milliseconds; `pid` and `command` — the process and the command line's verb (`install -g`, `cache add`, `self update`) that owns it; `batch` — the run the command belongs to, the run record's id for `install -g`, `update -g`, `modify` and `app`-driven installs (`PROP-065#runs`) and `<pid>` otherwise, so the transfers of one installation (its sources and its requirements' clones) group under one id; `precision` — `counted` when vibe counted bytes returned by its input reader, `reported` when it relayed what git reported (`#git`). @status:spec/done",
       "line": 8,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-068#transfer"
     },
@@ -116856,12 +117262,21 @@
     },
     {
       "anchor": "sampling",
-      "content_hash": "sha256:7f3e65652e27f28b83c0d740703bb468db525b4baea2878b5849252859218776",
+      "content_hash": "sha256:674a7e40c335eb66d28f407f350ddb8b2053527d9cae0d8e7cb793d2ac576aa5",
       "doc_path": "common/PROP-068",
       "file": "vibevm/vibespecs/common/PROP-068-transfers.xml",
-      "heading": "A transfer produces a **sample** — `{at, bytes, rate_bps}` with `at` the wall clock in RFC 3339 with milliseconds, `bytes` the cumulative count and `rate_bps` the bytes of the last second divided by that second (0 for the first sample) — at its start (`bytes = 0`), then whenever 250 ms have passed since the previous sample or 1 MiB has arrived since it, whichever comes first, and at its end. A sample is taken on the thread that moves the bytes, after the bytes it counts are written, so a reader never sees a count ahead of the file. The cadence is a constant of the wrapper, not a flag: a finer cadence costs the stream and the journal more than a graph can show, a coarser one shows a stalled download late; the shell confirmed 250 ms against its one-bar-per-second graph. @status:spec/done",
+      "heading": "A transfer produces a **sample** — `{at, bytes, rate_bps}` with `at` the wall clock in RFC 3339 with milliseconds, `bytes` the cumulative count and `rate_bps` the bytes of the last second divided by that second (0 for the first sample) — at its start (`bytes = 0`), then whenever 250 ms have passed since the previous sample or 1 MiB has arrived since it, whichever comes first, and at its end. The input reader settles a previous read at the next read or explicit terminal call. Input bytes alone do not prove successful disk writes; the independent optional counter of `#disk-writes` observes the owned writer. The cadence is a constant of the wrapper, not a flag: a finer cadence costs the stream and the journal more than a graph can show, a coarser one shows a stalled download late; the shell confirmed 250 ms against its one-bar-per-second graph. @status:spec/done",
       "line": 10,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-068#sampling"
+    },
+    {
+      "anchor": "disk-writes",
+      "content_hash": "sha256:271434a7ea43acab9bde5d61f3131936e51dc40920c3469d7f8ac4be62d25e49",
+      "doc_path": "common/PROP-068",
+      "file": "vibevm/vibespecs/common/PROP-068-transfers.xml",
+      "heading": "An instrumented transfer additionally carries optional `disk_written_bytes`, a canonical unsigned decimal u64 string (PROP-044#M-WIDE-INTEGERS-AS-STRINGS), an exact cumulative count in bytes of successful logical `Write` return values at its owned unbuffered file writer. It starts at known zero when the writer is attached, not merely when a transfer or command starts; every successful short write contributes its returned count even if a later write, validation, sync, cancellation or cleanup fails. Failed/unperformed bytes contribute nothing. Rewrites count again; deleting a partial file never subtracts bytes. This is not network `bytes`, final retained `written`, physical disk I/O, flush/fsync success or operation-wide disk usage. Missing instrumentation, legacy records and unrepresentable overflow remain absent/unknown, never invented zero. A new transfer ID resets the count; `continues` does not carry an earlier counter. The owned writer and reader form one pair consumed before terminal reporting. The existing sampler copies this counter into each subsequent sample, active entry, listing last sample, watch event and terminal/history record; finish, fail, interruption and drop flush a final observation. Existing sampling cadence is retained; no independent timer/service or disk-rate field is introduced. Consumers derive rates from counter differences and timestamps, and deduplicate stream/watch by transfer ID; parent task counters are not aggregates and must not be summed with children. The first instrumented vertical is installer HTTP source/archive/native-input cache writes; memory-only index reads, uninstrumented release writers, native/external Git and local copy/extraction remain unknown. HTTP cache hits do not manufacture a transfer or zero-write record. Optional epoch-1 output evolution requires the explicit compatibility decision recorded in the format ledger; old permissive Rust readers may ignore the new field, but strict validators require updated schemas. @status:spec/plan",
+      "line": 11,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-068#disk-writes"
     },
     {
       "anchor": "stream",
@@ -116869,16 +117284,16 @@
       "doc_path": "common/PROP-068",
       "file": "vibevm/vibespecs/common/PROP-068-transfers.xml",
       "heading": "For the tool that started the command, a transfer is a task of the progress stream of `PROP-060#MACHINE-STREAM` (`vibe-progress-event/1`, additive): every line of the transfer's task carries `transfer` = the id — the same one the journal uses, so a reader that listens to both glues them instead of doubling — and its `start` line carries beside it a `transfer_record` object with the fields of `#transfer` except `pid` and `command` (the stream's own process is known to its reader; one member cannot be an object on one line and a string on the next, which is why the record has a name of its own); the task is a child of the step that asked for the bytes; each sample is a `measurement` line with `completed = bytes`, `total` when known, `unit = \"bytes\"` and `rate_bps`, stamped as the sample is taken; its `finish` line carries `completed`, `total`, `transfer` and `peak_bps` as the final figures, and a `fail` line carries the same figures as far as it got with the message naming the cause (`interrupted` when the command was). No line computes a rate. Under the human renderer the transfer's task draws no row of its own: it is the running block of its step, with `12.40 MiB of 40.10 MiB · 2.10 MiB/s` as its metadata (`PROP-067#meta`, `PROP-065#display`), the bytes in the bar's own units and the rate the sample's `rate_bps`, so the screen and the stream agree. @status:spec/done",
-      "line": 11,
+      "line": 12,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-068#stream"
     },
     {
       "anchor": "journal",
-      "content_hash": "sha256:d07a96cd707cd92c936af3fca96d5378d57f4d4bdf9045d860c8367e2bd7427b",
+      "content_hash": "sha256:875af24d5a3f8fc85b75803259a64a6b9d28386d226ffcd50d7a76e7e20c8d0e",
       "doc_path": "common/PROP-068",
       "file": "vibevm/vibespecs/common/PROP-068-transfers.xml",
-      "heading": "For any tool on the machine, the wrapper also keeps a **journal** under the settings root (`PROP-059#index` names the root): `transfers/active/<pid>-<n>.json` — the transfer's fields, `peak_bps` so far and its samples of the last five minutes, rewritten at every sample by writing a temporary file beside and renaming over (on Windows too — `MoveFileEx` with replace), removed at the end; `transfers/history.jsonl` — one line per finished or failed transfer, appended at the end, with the fields, the outcome (`finished` | `failed` with the message | `interrupted`), the totals (`bytes`, `elapsed_ms`, `average_bps`, `peak_bps` over one-second buckets) and `series` — the per-second buckets `[{second, bytes}]` from start to end, capped at 3600 entries (a longer transfer keeps one bucket per `ceil(n/3600)` seconds and says so in `bucket_seconds`); the file keeps the last 7 days or the last 500 entries, whichever is smaller, trimmed at each append; a `git` transfer's entry adds `written` — the size on disk after the clone — because its received bytes are reported, not counted (a `counted` transfer wrote exactly what it received, so one figure serves); `transfers/revision` — a counter bumped at every change of the active set, the same device `PROP-059#launcher-runtime` uses so a watcher polls one small file. A process that dies leaves its active file behind; a reader treats an active file whose `pid` is gone (`PROP-059#launcher-runtime`'s liveness check) as `interrupted` and `vibe transfers` moves it to history on the next listing. The five-minute window is the screen's graph horizon; the 3600-bucket cap keeps a finished entry under a few tens of kilobytes. @status:spec/done",
-      "line": 12,
+      "heading": "For any tool on the machine, the wrapper also keeps a **journal** under the settings root (`PROP-059#index` names the root): `transfers/active/<pid>-<n>.json` — the transfer's fields, `peak_bps` so far and its samples of the last five minutes, rewritten at every sample by writing a temporary file beside and renaming over (on Windows too — `MoveFileEx` with replace), removed at the end; `transfers/history.jsonl` — one line per finished or failed transfer, appended at the end, with the fields, the outcome (`finished` | `failed` with the message | `interrupted`), the totals (`bytes`, `elapsed_ms`, `average_bps`, `peak_bps` over one-second buckets) and `series` — the per-second buckets `[{second, bytes}]` from start to end, capped at 3600 entries (a longer transfer keeps one bucket per `ceil(n/3600)` seconds and says so in `bucket_seconds`); the file keeps the last 7 days or the last 500 entries, whichever is smaller, trimmed at each append; a `git` transfer's entry adds `written` — the size on disk after the clone — because its received bytes are reported, not counted (received bytes and logical writes remain separate even for a counted transfer); `transfers/revision` — a counter bumped at every change of the active set, the same device `PROP-059#launcher-runtime` uses so a watcher polls one small file. A process that dies leaves its active file behind; a reader treats an active file whose `pid` is gone (`PROP-059#launcher-runtime`'s liveness check) as `interrupted` and `vibe transfers` moves it to history on the next listing. The five-minute window is the screen's graph horizon; the 3600-bucket cap keeps a finished entry under a few tens of kilobytes. @status:spec/done",
+      "line": 13,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-068#journal"
     },
     {
@@ -116887,7 +117302,7 @@
       "doc_path": "common/PROP-068",
       "file": "vibevm/vibespecs/common/PROP-068-transfers.xml",
       "heading": "`vibe transfers [--json]` lists the active transfers with their last sample and the recent history (newest first, the last 50 entries unless `--since <duration|timestamp>` names a window; `--package` takes `group/name` or a full key and `--purpose P` filters both sections) under protocol `vibe-transfers/1`; an active entry carries its last sample as `last`; it is the shell's downloads page in one document. `vibe transfers watch --json` first writes one `started` line, with the record and the last sample, for every transfer already active when it connects — a reader that attaches while downloads run, or after its own restart, misses nothing and never has to stitch a listing to a stream across a gap — then streams one line per sample of every active transfer and one line per change of the active set (`started`, `finished`, `failed`, `interrupted`), read from the journal every 250 ms, until its stdin closes (`vibe-transfer-event/1`); it never starts or stops a transfer. In every line `bytes` is the cumulative count since the transfer began, never an increment, and `total` is the record's. A transfer that begins and ends between two reads still gets its `started` line before its end, read from the history; like the listing, `watch` moves the active file of a gone process to the history and reports it `interrupted`. `vibe transfers history --json [--since] [--package]` is the history alone; `vibe transfers clear-history` empties it and closes with a trailer (`--json` answers the emptied listing). The human forms draw PROP-067 lists: a rule per section, one row per transfer with `package · purpose · 12.4 MB of 40.1 MB · 2.1 MB/s`, and the history with `bytes · time · average`. Nothing here asks; nothing here changes an installation. @status:spec/done",
-      "line": 13,
+      "line": 14,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-068#verbs"
     },
     {
@@ -116896,7 +117311,7 @@
       "doc_path": "common/PROP-068",
       "file": "vibevm/vibespecs/common/PROP-068-transfers.xml",
       "heading": "Every HTTP transfer goes through the one wrapper, so a rate limit is one token bucket there: `[transfer] limit = \"5 MB/s\"` in the user-level config (the file `PROP-030` names; the shell's Settings → Market writes it) applies to the sum of the process's HTTP transfers, read once at the composition root; `limit = \"0\"` or no key means none. A git transfer is not limited (git has no portable throttle a child's config honours) and its entry says `limited = false`; an HTTP entry under a limit says `limited = true` and names the figure in `limit_bps`. A limit that does not read (`\"fast\"`) is said once on stderr and ignored; units are decimal (`KB`, `MB`, `GB`) or binary (`KiB`, `MiB`, `GiB`), with or without `/s`. There is no flag: the limit is a machine setting, not a run's. @status:spec/done",
-      "line": 14,
+      "line": 15,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-068#limit"
     },
     {
@@ -116905,7 +117320,7 @@
       "doc_path": "common/PROP-068",
       "file": "vibevm/vibespecs/common/PROP-068-transfers.xml",
       "heading": "A transfer is not paused on its own: a download belongs to the command that runs it, and the command is interrupted and resumed as `PROP-065#cancellation` and `#resume` say (`vibe app stop` for a launcher is a different thing). An interrupted transfer's history entry says `interrupted` and names the command's resume line in `resume`, so a downloads screen can offer \"Resume\" without knowing the command; a resumed download is a new transfer whose entry names the previous one in `continues`. Partial files are the step's business (`PROP-065#sources` keeps or discards them); the journal does not promise that bytes already received are reused. @status:spec/done",
-      "line": 15,
+      "line": 16,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-068#pause"
     },
     {
@@ -116914,7 +117329,7 @@
       "doc_path": "common/PROP-068",
       "file": "vibevm/vibespecs/common/PROP-068-transfers.xml",
       "heading": "The wrapper is `vibe_core::progress::transfer` (a reader adapter over any `Read` plus the task and the journal), and these places use it: the fetch of `[[sources]]`, `archive` and `native` inputs in `vibe-app` (`installer/fetch.rs`), the release download of `self install|update` (`vvm/bundle/download.rs`), and the catalog files of the index client (`vibe-registry/index_client`, journaled once the resolver holding the client receives the invocation's progress). A new download that does not go through the wrapper is a defect. @status:spec/done",
-      "line": 16,
+      "line": 17,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-068#coverage"
     },
     {
@@ -116923,7 +117338,7 @@
       "doc_path": "common/PROP-068",
       "file": "vibevm/vibespecs/common/PROP-068-transfers.xml",
       "heading": "The git clone and fetch of the registry backend (`git_backend/shell/checkout.rs`, through `shell/reported.rs`) use it through `#git`. A test (`vibe-cli`, `composition/transfers/coverage_tests.rs`) lists every file of `crates/*/src` that sends an HTTP request or begins a counted transfer, and every argument list that runs `git clone` or `git fetch`, and names each as wrapped or exempt with one line of why: the publish side, which uploads; the LLM transport, which is not a download; the doc shell's fetch; the aiui control client; the remap probe's HEAD requests; the index scanner of `vibe-index`, which runs on a server; the VVM build pipeline's checkout of vibe's own source; and the metadata reads of resolution and search (the single-manifest HTTPS read that stands in for `git archive`, the index handshake and per-package lookups, `search --full-scan`). A new reader fails the test until it is wrapped or listed, and a listed one that is wrapped or gone fails it too. @status:spec/done",
-      "line": 17,
+      "line": 18,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-068#coverage-git"
     },
     {
@@ -116932,7 +117347,7 @@
       "doc_path": "common/PROP-068",
       "file": "vibevm/vibespecs/common/PROP-068-transfers.xml",
       "heading": "A clone or fetch runs the git binary; vibe adds `--progress` and reads git's lines on stderr as they arrive, split on `\\r` and `\\n` (`Receiving objects: 45% (900/2000), 12.30 MiB | 2.10 MiB/s`, or `Unpacking objects:` for a fetch small enough that git unpacks it loose), turning each line that names a size into a sample whose `bytes` is git's reported figure scaled from its binary unit, so the sample is `precision: \"reported\"` and its `total` is unknown until git says `100%` (the final figure becomes `total`); `Resolving deltas` adds no bytes, and a clone that recurses into submodules adds each repository's pass to the ones before. Git prints at its own cadence, about every 100 ms while bytes move; vibe does not smooth it. The transfer begins with git's first sized line and is dated from the start of the git process, so a fetch that moves nothing leaves no transfer and the bytes before the first line are not drawn as a burst. The transfer's `url` is the remote, reduced (`safe_remote`: a URL as `#redaction` says, the user of an scp-like remote removed, a local path as it is); `purpose` is `package-clone`, or `index-file` for an index served from a git host; `package` is `group/name` when the task that observes the clone knows it, and the transfer is that task's child on the stream. Its history entry adds `written`, the size of the repository's `.git/objects` after the operation, and says `limited: false`. The progress lines stay out of the stderr an error reports. @status:spec/done",
-      "line": 18,
+      "line": 19,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-068#git"
     },
     {
@@ -116941,7 +117356,7 @@
       "doc_path": "common/PROP-068",
       "file": "vibevm/vibespecs/common/PROP-068-transfers.xml",
       "heading": "A transfer never records a credential: the URL is written through the same reduction `self update` already uses (`safe_url`: user, password, query and fragment removed), the journal is `0600` on Unix, and a `remap`-rewritten source (`PROP-066`) records the URL actually fetched, not the one the manifest named, with `remapped_from` naming the latter so a reader can show both. @status:spec/done",
-      "line": 19,
+      "line": 20,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-068#redaction"
     },
     {
@@ -116950,16 +117365,16 @@
       "doc_path": "common/PROP-068",
       "file": "vibevm/vibespecs/common/PROP-068-transfers.xml",
       "heading": "In the terminal nothing new is drawn by default: the running step's block shows `12.4 MB of 40.1 MB · 2.1 MB/s` as today, and `vibe transfers` is the listing a user asks for. Under `--plain` a transfer leaves its end line only, as a child of its step's block (the plain renderer writes every block once, when it ends); the run log keeps no line of it. The desktop shell draws the graph; The shell's Activity screen (Architect, R127) draws, from `vibe transfers watch --json`, a NETWORK tile (the latest `rate_bps` summed over active transfers), a PEAK tile (the operation's peak), a per-second graph over the last five minutes normalised to the peak, and a byte line `Downloading data · 121.4 MB / 2.2 GB` with its own bar and ETA beside the operation's step percentage; at rest, the same tiles at zero and the day's totals (bytes, downloads) from the history; per-transfer rows stay in the step panel. The ETA and the day's sums are the shell's arithmetic. @status:spec/done",
-      "line": 20,
+      "line": 21,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-068#display"
     },
     {
       "anchor": "schemas",
-      "content_hash": "sha256:bd1f22629c9806a88da120181216f03a7bdab5173e2d785bf6cdf49021d4bbfc",
+      "content_hash": "sha256:2e21cd3a3d3f133fd48c6027daa603e1035866a0c52b480e7620eff1e5621716",
       "doc_path": "common/PROP-068",
       "file": "vibevm/vibespecs/common/PROP-068-transfers.xml",
-      "heading": "`transfer_record.jtd.json` (the fields of `#transfer` with `limit_bps` beside `limited`, the `resume` line and `continues` of `#pause`, the outcome and totals of `#journal`, `series`, and the `last` sample a listing adds), `transfers_listing.jtd.json` (`vibe-transfers/1`: `{protocol, home, active: [record + last sample], history: [record]}`), `transfer_event.jtd.json` (`vibe-transfer-event/1`: `{protocol, at, event: sample | started | finished | failed | interrupted, id, batch, bytes?, total?, rate_bps?, peak_bps?, record?}` — `record` on `started`, the totals on the three ends), and, on `progress_event.jtd.json`, `transfer` (the id) on every line of a transfer's task, the `transfer_record` object on its `start`, `rate_bps` on `measurement`, and `peak_bps` on `finish`/`fail`. The active file is a `transfer_record` with `samples: [{at, bytes, rate_bps}]`. The three record definitions are one shape written three times, since a JTD document cannot refer to another. @status:spec/done",
-      "line": 21,
+      "heading": "`transfer_record.jtd.json` (the fields of `#transfer` with `limit_bps` beside `limited`, the `resume` line and `continues` of `#pause`, the outcome and totals of `#journal`, `series`, and the `last` sample a listing adds), `transfers_listing.jtd.json` (`vibe-transfers/1`: `{protocol, home, active: [record + last sample], history: [record]}`), `transfer_event.jtd.json` (`vibe-transfer-event/1`: `{protocol, at, event: sample | started | finished | failed | interrupted, id, batch, bytes?, total?, rate_bps?, peak_bps?, record?}` — `record` on `started`, the totals on the three ends), and, on `progress_event.jtd.json`, `transfer` (the id) on every line of a transfer's task, the `transfer_record` object on its `start`, `rate_bps` on `measurement`, and `peak_bps` on `finish`/`fail`. The active file is a `transfer_record` with `samples: [{at, bytes, rate_bps, disk_written_bytes?}]`; the optional disk counter also appears on progress measurements/ends, transfer records and watch events. It retains the separate meaning specified in `#disk-writes`. The three record definitions are one shape written three times, since a JTD document cannot refer to another. @status:spec/done",
+      "line": 22,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-068#schemas"
     },
     {
@@ -116968,7 +117383,7 @@
       "doc_path": "common/PROP-068",
       "file": "vibevm/vibespecs/common/PROP-068-transfers.xml",
       "heading": "A fixture HTTP server that serves a 16 MiB body at a throttled rate; `vibe install -g` of a package whose `[[sources]]` names it, under `--progress-format json`: the `start` line carries the `transfer` object, the `measurement` lines arrive at the cadence with monotonic `bytes` and `at`, the `finish` line carries the total; during the run `vibe transfers --json` from another process lists it with a last sample no older than 500 ms, and `vibe transfers watch --json` streams its samples; after it, `history.jsonl` has one entry with `series` whose sum equals `bytes`; a killed process leaves an active file that the next listing turns into an `interrupted` entry; `[transfer] limit` holds the average within 20 % of the limit over the run; and a run that downloads nothing leaves no journal (`crates/vibe-cli/tests/cli_transfers.rs`). @status:spec/done",
-      "line": 22,
+      "line": 23,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-068#acceptance"
     },
     {
@@ -116977,7 +117392,7 @@
       "doc_path": "common/PROP-068",
       "file": "vibevm/vibespecs/common/PROP-068-transfers.xml",
       "heading": "A `git+file://` per-package registry carrying a few hundred KiB of incompressible bytes; `vibe cache add` of its package under `--progress-format json`: a `start` line whose `transfer_record` says `kind: \"git\"`, `precision: \"reported\"`, beneath the package's own row, `measurement` lines with `rate_bps`, a `finish` line with the total; the history entry says `reported` with `written > 0`; a second warm-up, whose fetch moves nothing, adds no transfer (`crates/vibe-cli/tests/cli_transfers.rs`, and the backend alone in `crates/vibe-registry/tests/git_transfers.rs`); the coverage test of `#coverage-git` names every reader of a response body. @status:spec/done",
-      "line": 23,
+      "line": 24,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-068#acceptance-git"
     },
     {
@@ -116986,7 +117401,7 @@
       "doc_path": "common/PROP-068",
       "file": "vibevm/vibespecs/common/PROP-068-transfers.xml",
       "heading": "**Samples, not rates.** A rate depends on the window; two tools computing it the same way from the same samples agree, two tools reading a rate vibe chose do not. **Two sinks from one wrapper.** The attached stream serves the runner; the journal serves the machine, like Steam's downloads page shows every download whoever started it. **The journal is files, not a daemon.** The shell polls `revision` as it does for launchers; no socket, no service. **Git is reported, not counted.** Reading git's progress is honest about its precision; counting pack bytes ourselves would mean a git implementation in vibe. **No pause of a transfer alone.** The command owns the download; interrupt and resume already exist and the journal names the resume line. @status:spec/done",
-      "line": 24,
+      "line": 25,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-068#decisions"
     },
     {
@@ -116995,7 +117410,7 @@
       "doc_path": "common/PROP-068",
       "file": "vibevm/vibespecs/common/PROP-068-transfers.xml",
       "heading": "2026-11-01 — drafted on the owner's request: transfer, purpose, sampling, stream, journal, verbs, limit, pause, coverage, git, redaction, display, schemas, acceptance, decisions; the same day Architect's answers fixed the cadence (250 ms / 1 MiB), `rate_bps` per sample and `peak_bps` per transfer, the five-minute active window, 7 days / 500 entries of history, `batch` = the run id, the config-only rate limit, and `vibe transfers watch` as the shell's primary feed; `watch` opens with a `started` line per transfer already active, and `bytes` is cumulative everywhere. 2026-11-01 — built without `#git`: the wrapper, the stream members, the journal, the verbs and the limit; `#stream` and `#schemas` name the start's record `transfer_record` beside `transfer` = the id on every line (one JTD member cannot be both), the human panel shows the sample's rate in the bar's units, the record gains `limit_bps`, `resume` and `continues`, a listing's active entry carries `last`, `watch` sweeps gone processes and replays a transfer that began and ended between reads; `#coverage` and `#acceptance` split their git halves into `#coverage-git` and `#acceptance-git`. 2026-11-01 — `#git` built: clones and fetches of the registry backend are reported transfers of the task that observes them, journaled with `written`, beginning at git's first sized line (also `Unpacking objects`) and dated from git's start; `#coverage-git` is a test with its allow-list, which also names the metadata reads of resolution and search; the document is done. @status:spec/done",
-      "line": 25,
+      "line": 26,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-068#changelog"
     },
     {

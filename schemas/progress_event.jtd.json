@@ -1,68 +1,299 @@
 {
   "metadata": {
     "description": "One progress observation of an invocation as a JSON line on stderr under --progress-format json: emission sequence, timestamp, task identity and parent, the closed event kind, the task label, the requirement a start installs and the measurement or message the kind carries, and on the task of a download the transfer id, its record on the start, the rate of a measurement and the peak of an end (PROP-068#stream).",
-    "spec": { "implements": "spec://org.vibevm.core/vibevm/common/PROP-060#MACHINE-STREAM" },
-    "rustOptions": { "package": "vibe_wire::progress_event" },
+    "spec": {
+      "implements": "spec://org.vibevm.core/vibevm/common/PROP-060#MACHINE-STREAM"
+    },
+    "rustOptions": {
+      "package": "vibe_wire::progress_event"
+    },
     "x-rust-type": "ProgressEvent",
-    "x-wire-order": ["protocol", "seq", "at", "task", "parent", "kind", "label", "requires", "completed", "total", "unit", "level", "message", "transfer", "transfer_record", "rate_bps", "peak_bps"]
+    "x-wire-order": [
+      "protocol",
+      "seq",
+      "at",
+      "task",
+      "parent",
+      "kind",
+      "label",
+      "requires",
+      "completed",
+      "total",
+      "unit",
+      "level",
+      "message",
+      "transfer",
+      "transfer_record",
+      "rate_bps",
+      "peak_bps",
+      "disk_written_bytes"
+    ]
   },
   "properties": {
-    "protocol": { "type": "string" },
-    "seq": { "ref": "count" },
-    "at": { "type": "string" },
-    "task": { "ref": "count" },
-    "kind": { "ref": "kind" }
+    "protocol": {
+      "type": "string"
+    },
+    "seq": {
+      "ref": "count"
+    },
+    "at": {
+      "type": "string"
+    },
+    "task": {
+      "ref": "count"
+    },
+    "kind": {
+      "ref": "kind"
+    }
   },
   "optionalProperties": {
-    "parent": { "ref": "count", "metadata": { "x-default": null } },
-    "label": { "type": "string", "metadata": { "x-default": null } },
-    "requires": { "ref": "requires", "metadata": { "x-default": null, "description": "Only on the start of a task that installs a requirement of another package (PROP-065#app-dependencies), in the words of the plan's dependencies[]." } },
-    "completed": { "ref": "count", "metadata": { "x-default": null } },
-    "total": { "ref": "count", "metadata": { "x-default": null } },
-    "unit": { "type": "string", "metadata": { "x-default": null } },
-    "level": { "ref": "level", "metadata": { "x-default": null } },
-    "message": { "type": "string", "metadata": { "x-default": null } },
-    "transfer": { "type": "string", "metadata": { "x-default": null, "description": "The transfer id (PROP-068#stream) on the start, measurement, finish and fail of a download's task; the journal under the settings root uses the same id." } },
-    "transfer_record": { "ref": "transfer_record", "metadata": { "x-default": null, "description": "Only on the start of a download's task: the transfer's record without pid and command." } },
-    "rate_bps": { "ref": "count", "metadata": { "x-default": null, "description": "On a download's measurement: the bytes of the last second over that second." } },
-    "peak_bps": { "ref": "count", "metadata": { "x-default": null, "description": "On a download's finish and fail: the peak of its per-second rates." } }
+    "parent": {
+      "ref": "count",
+      "metadata": {
+        "x-default": null
+      }
+    },
+    "label": {
+      "type": "string",
+      "metadata": {
+        "x-default": null
+      }
+    },
+    "requires": {
+      "ref": "requires",
+      "metadata": {
+        "x-default": null,
+        "description": "Only on the start of a task that installs a requirement of another package (PROP-065#app-dependencies), in the words of the plan's dependencies[]."
+      }
+    },
+    "completed": {
+      "ref": "count",
+      "metadata": {
+        "x-default": null
+      }
+    },
+    "total": {
+      "ref": "count",
+      "metadata": {
+        "x-default": null
+      }
+    },
+    "unit": {
+      "type": "string",
+      "metadata": {
+        "x-default": null
+      }
+    },
+    "level": {
+      "ref": "level",
+      "metadata": {
+        "x-default": null
+      }
+    },
+    "message": {
+      "type": "string",
+      "metadata": {
+        "x-default": null
+      }
+    },
+    "transfer": {
+      "type": "string",
+      "metadata": {
+        "x-default": null,
+        "description": "The transfer id (PROP-068#stream) on the start, measurement, finish and fail of a download's task; the journal under the settings root uses the same id."
+      }
+    },
+    "transfer_record": {
+      "ref": "transfer_record",
+      "metadata": {
+        "x-default": null,
+        "description": "Only on the start of a download's task: the transfer's record without pid and command."
+      }
+    },
+    "rate_bps": {
+      "ref": "count",
+      "metadata": {
+        "x-default": null,
+        "description": "On a download's measurement: the bytes of the last second over that second."
+      }
+    },
+    "peak_bps": {
+      "ref": "count",
+      "metadata": {
+        "x-default": null,
+        "description": "On a download's finish and fail: the peak of its per-second rates."
+      }
+    },
+    "disk_written_bytes": {
+      "metadata": {
+        "x-default": null,
+        "description": "Canonical unsigned decimal u64 string: ASCII digits only, no leading zeros except 0. Cumulative successful logical disk writes per transfer ID; absent means unknown. Not network bytes, retained size or physical I/O."
+      },
+      "ref": "disk_written_count"
+    }
   },
   "definitions": {
     "transfer_record": {
-      "metadata": { "x-wire-order": ["id", "batch", "kind", "url", "purpose", "package", "step", "destination", "total", "started", "precision", "limited", "limit_bps", "remapped_from", "resume", "continues"] },
+      "metadata": {
+        "x-wire-order": [
+          "id",
+          "batch",
+          "kind",
+          "url",
+          "purpose",
+          "package",
+          "step",
+          "destination",
+          "total",
+          "started",
+          "precision",
+          "limited",
+          "limit_bps",
+          "remapped_from",
+          "resume",
+          "continues"
+        ]
+      },
       "properties": {
-        "id": { "type": "string" },
-        "batch": { "type": "string" },
-        "kind": { "ref": "transfer_kind" },
-        "url": { "type": "string" },
-        "purpose": { "ref": "purpose" },
-        "destination": { "ref": "destination" },
-        "started": { "type": "string" },
-        "precision": { "ref": "precision" },
-        "limited": { "type": "boolean" }
+        "id": {
+          "type": "string"
+        },
+        "batch": {
+          "type": "string"
+        },
+        "kind": {
+          "ref": "transfer_kind"
+        },
+        "url": {
+          "type": "string"
+        },
+        "purpose": {
+          "ref": "purpose"
+        },
+        "destination": {
+          "ref": "destination"
+        },
+        "started": {
+          "type": "string"
+        },
+        "precision": {
+          "ref": "precision"
+        },
+        "limited": {
+          "type": "boolean"
+        }
       },
       "optionalProperties": {
-        "package": { "type": "string", "metadata": { "x-default": null } },
-        "step": { "type": "string", "metadata": { "x-default": null } },
-        "total": { "ref": "count", "metadata": { "x-default": null } },
-        "limit_bps": { "ref": "count", "metadata": { "x-default": null } },
-        "remapped_from": { "type": "string", "metadata": { "x-default": null } },
-        "resume": { "type": "string", "metadata": { "x-default": null } },
-        "continues": { "type": "string", "metadata": { "x-default": null } }
+        "package": {
+          "type": "string",
+          "metadata": {
+            "x-default": null
+          }
+        },
+        "step": {
+          "type": "string",
+          "metadata": {
+            "x-default": null
+          }
+        },
+        "total": {
+          "ref": "count",
+          "metadata": {
+            "x-default": null
+          }
+        },
+        "limit_bps": {
+          "ref": "count",
+          "metadata": {
+            "x-default": null
+          }
+        },
+        "remapped_from": {
+          "type": "string",
+          "metadata": {
+            "x-default": null
+          }
+        },
+        "resume": {
+          "type": "string",
+          "metadata": {
+            "x-default": null
+          }
+        },
+        "continues": {
+          "type": "string",
+          "metadata": {
+            "x-default": null
+          }
+        }
       }
     },
-    "transfer_kind": { "enum": ["http", "git"], "metadata": { "x-vocabulary": "closed" } },
-    "purpose": { "enum": ["package-source", "archive", "native-input", "package-clone", "release-bundle", "index-file", "other"], "metadata": { "x-vocabulary": "closed" } },
-    "destination": { "enum": ["store", "cache", "work", "home"], "metadata": { "x-vocabulary": "closed" } },
-    "precision": { "enum": ["counted", "reported"], "metadata": { "x-vocabulary": "closed" } },
+    "transfer_kind": {
+      "enum": [
+        "http",
+        "git"
+      ],
+      "metadata": {
+        "x-vocabulary": "closed"
+      }
+    },
+    "purpose": {
+      "enum": [
+        "package-source",
+        "archive",
+        "native-input",
+        "package-clone",
+        "release-bundle",
+        "index-file",
+        "other"
+      ],
+      "metadata": {
+        "x-vocabulary": "closed"
+      }
+    },
+    "destination": {
+      "enum": [
+        "store",
+        "cache",
+        "work",
+        "home"
+      ],
+      "metadata": {
+        "x-vocabulary": "closed"
+      }
+    },
+    "precision": {
+      "enum": [
+        "counted",
+        "reported"
+      ],
+      "metadata": {
+        "x-vocabulary": "closed"
+      }
+    },
     "requires": {
-      "metadata": { "x-wire-order": ["key", "scope", "step"] },
+      "metadata": {
+        "x-wire-order": [
+          "key",
+          "scope",
+          "step"
+        ]
+      },
       "properties": {
-        "key": { "type": "string" },
-        "scope": { "type": "string" }
+        "key": {
+          "type": "string"
+        },
+        "scope": {
+          "type": "string"
+        }
       },
       "optionalProperties": {
-        "step": { "type": "string", "metadata": { "x-default": null } }
+        "step": {
+          "type": "string",
+          "metadata": {
+            "x-default": null
+          }
+        }
       }
     },
     "count": {
@@ -73,12 +304,34 @@
       }
     },
     "kind": {
-      "enum": ["start", "measurement", "detail", "diagnostic", "finish", "skip", "fail"],
-      "metadata": { "x-vocabulary": "closed" }
+      "enum": [
+        "start",
+        "measurement",
+        "detail",
+        "diagnostic",
+        "finish",
+        "skip",
+        "fail"
+      ],
+      "metadata": {
+        "x-vocabulary": "closed"
+      }
     },
     "level": {
-      "enum": ["warning", "error"],
-      "metadata": { "x-vocabulary": "closed" }
+      "enum": [
+        "warning",
+        "error"
+      ],
+      "metadata": {
+        "x-vocabulary": "closed"
+      }
+    },
+    "disk_written_count": {
+      "type": "string",
+      "metadata": {
+        "x-rust-type": "vibe_core::wire_decimal::DecimalU64",
+        "description": "Canonical unsigned decimal u64 logical write count; shared scalar validates exact spelling and range."
+      }
     }
   }
 }

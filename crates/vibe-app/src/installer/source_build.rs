@@ -391,6 +391,32 @@ mod tests {
         let hit = plain(&cache, &package, &source, true).unwrap();
         assert_eq!(hit.file, cached);
         assert_eq!(hit.extract, None);
+        // A verified cache hit never constructs a download writer, even when
+        // the command supplied transfer sinks. It must not invent a zero row.
+        let journal = vibe_core::progress::transfer::TransferJournal::new(dir.path());
+        let progress = vibe_core::progress::Progress::default().with_transfers(Some(
+            vibe_core::progress::transfer::Transfers::new(Some(journal.clone()), None, "test"),
+        ));
+        let task = progress.task("cached source");
+        let watch = super::super::FetchWatch {
+            task: Some(&task),
+            ..Default::default()
+        };
+        let (_, served) = fetch(
+            &cache,
+            &package,
+            &source,
+            true,
+            &watch,
+            &Locator::default(),
+            &Artifact::new(vibe_core::remap::ArtifactKind::AppInput),
+        )
+        .unwrap();
+        task.finish();
+        assert!(served.is_none());
+        assert!(journal.active().is_empty());
+        assert!(journal.history().is_empty());
+        assert!(!journal.root().exists());
     }
 
     #[test]

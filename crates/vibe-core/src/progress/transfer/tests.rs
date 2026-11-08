@@ -135,11 +135,13 @@ fn an_orphaned_active_file_becomes_interrupted_and_a_watch_sees_everything() {
             at: orphan.record.started.clone(),
             bytes: 10,
             rate_bps: 0,
+            disk_written_bytes: None,
         },
         Sample {
             at: clock::format_millis(clock::parse_millis(&orphan.record.started).unwrap() + 1500),
             bytes: 30,
             rate_bps: 20,
+            disk_written_bytes: None,
         },
     ];
     journal.opened(&orphan);

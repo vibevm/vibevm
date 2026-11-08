@@ -39,6 +39,13 @@ pub struct TransferEvent {
     /// On failed and interrupted.
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub message: Option<String>,
+
+    /// Canonical unsigned decimal u64 string: ASCII digits only, no leading
+    /// zeros except 0. Cumulative successful logical disk writes per transfer
+    /// ID; absent means unknown. Not network bytes, retained size or physical
+    /// I/O.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub disk_written_bytes: Option<DiskWrittenCount>,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
@@ -66,6 +73,10 @@ pub enum Destination {
     #[serde(rename = "work")]
     Work,
 }
+
+/// Canonical unsigned decimal u64 logical write count; shared scalar validates
+/// exact spelling and range.
+pub type DiskWrittenCount = vibe_core::wire_decimal::DecimalU64;
 
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 pub enum EventKind {
@@ -218,6 +229,13 @@ pub struct Record {
     /// 068#journal).
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub written: Option<Count>,
+
+    /// Canonical unsigned decimal u64 string: ASCII digits only, no leading
+    /// zeros except 0. Cumulative successful logical disk writes per transfer
+    /// ID; absent means unknown. Not network bytes, retained size or physical
+    /// I/O.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub disk_written_bytes: Option<DiskWrittenCount>,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
@@ -227,6 +245,13 @@ pub struct Sample {
     pub bytes: Count,
 
     pub rate_bps: Count,
+
+    /// Canonical unsigned decimal u64 string: ASCII digits only, no leading
+    /// zeros except 0. Cumulative successful logical disk writes per transfer
+    /// ID; absent means unknown. Not network bytes, retained size or physical
+    /// I/O.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub disk_written_bytes: Option<DiskWrittenCount>,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]

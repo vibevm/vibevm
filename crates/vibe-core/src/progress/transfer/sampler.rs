@@ -45,6 +45,13 @@ pub struct Sample {
     pub bytes: u64,
     #[serde(default)]
     pub rate_bps: u64,
+    /// Cumulative successful logical writes; missing means unobserved.
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        with = "crate::wire_decimal::optional"
+    )]
+    pub disk_written_bytes: Option<u64>,
 }
 
 /// The bytes that arrived during one bucket of a finished transfer;
@@ -108,7 +115,17 @@ impl Sampler {
     /// Take a sample. The first one has rate 0; every later one divides the
     /// bytes since the last sample at least a second old (the start, while
     /// the transfer is younger) by the time since it.
+    #[cfg(test)]
     pub(crate) fn take(&mut self, since: Duration, bytes: u64) -> Sample {
+        self.take_observed(since, bytes, None)
+    }
+
+    pub(crate) fn take_observed(
+        &mut self,
+        since: Duration,
+        bytes: u64,
+        disk_written_bytes: Option<u64>,
+    ) -> Sample {
         let rate_bps = match self.base(since) {
             None => 0,
             Some((at, counted)) => {
@@ -125,6 +142,7 @@ impl Sampler {
             at: format_millis(self.started_ms + since.as_millis() as u64),
             bytes,
             rate_bps,
+            disk_written_bytes,
         };
         self.window.push_back((since, sample.clone()));
         while self
@@ -148,6 +166,12 @@ impl Sampler {
                 .copied()
                 .unwrap_or(first),
         )
+    }
+
+    pub(crate) fn disk_written_bytes(&self) -> Option<u64> {
+        self.window
+            .back()
+            .and_then(|(_, sample)| sample.disk_written_bytes)
     }
 
     pub(crate) fn peak(&self) -> u64 {

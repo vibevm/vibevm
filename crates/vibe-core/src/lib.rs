@@ -36,6 +36,7 @@ pub mod timestamp;
 pub mod user_config;
 pub mod values;
 pub mod visibility;
+pub mod wire_decimal;
 
 pub use capability_ref::{CapabilityName, CapabilityNamespace, CapabilityRef};
 pub use content_hash::ContentHash;

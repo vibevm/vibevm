@@ -211,6 +211,7 @@ fn history(user: &UserScratch) -> Vec<Value> {
 }
 
 #[test]
+#[specmark::spec(verifies = "spec://org.vibevm.core/vibevm/common/PROP-068#disk-writes")]
 fn a_download_is_streamed_listed_watched_and_kept() {
     let user = UserScratch::new();
     let root = tempfile::tempdir().unwrap();
@@ -233,6 +234,16 @@ fn a_download_is_streamed_listed_watched_and_kept() {
     let active = &listed["active"][0];
     assert_eq!(active["id"], id, "{listed}");
     assert_eq!(active["purpose"], "package-source");
+    assert!(
+        active["disk_written_bytes"]
+            .as_str()
+            .and_then(|value| value.parse::<u64>().ok())
+            > Some(0)
+    );
+    assert_eq!(
+        active["disk_written_bytes"],
+        active["last"]["disk_written_bytes"]
+    );
     let age = chrono::Utc::now().timestamp_millis() - millis(&active["last"]["at"]);
     assert!(age <= 500, "the last sample is {age} ms old");
 
@@ -266,6 +277,19 @@ fn a_download_is_streamed_listed_watched_and_kept() {
             .all(|line| line["event"] == "sample" && line["protocol"] == "vibe-transfer-event/1")
     );
     assert!(opening[2]["bytes"].as_u64() >= opening[1]["bytes"].as_u64());
+    assert!(
+        opening
+            .iter()
+            .all(|event| event["disk_written_bytes"].is_string())
+    );
+    assert!(opening.windows(2).all(|pair| {
+        pair[0]["disk_written_bytes"]
+            .as_str()
+            .and_then(|value| value.parse::<u64>().ok())
+            <= pair[1]["disk_written_bytes"]
+                .as_str()
+                .and_then(|value| value.parse::<u64>().ok())
+    }));
     eprintln!("LISTING {}", serde_json::to_string(&listed).unwrap());
     for line in &opening {
         eprintln!("WATCH {line}");
@@ -298,6 +322,23 @@ fn a_download_is_streamed_listed_watched_and_kept() {
         assert!((0..=600).contains(&gap), "a sample {gap} ms after the last");
         assert!(pair[1]["rate_bps"].is_u64() && pair[1]["unit"] == "bytes");
     }
+    let disk: Vec<u64> = samples
+        .iter()
+        .filter_map(|line| {
+            line["disk_written_bytes"]
+                .as_str()
+                .and_then(|value| value.parse::<u64>().ok())
+        })
+        .collect();
+    assert_eq!(disk.first(), Some(&0));
+    assert!(disk.windows(2).all(|pair| pair[0] <= pair[1]));
+    assert_eq!(finish["disk_written_bytes"], (16 * MIB).to_string());
+    assert!(
+        seen.iter()
+            .filter(|line| line["transfer"].is_null())
+            .all(|line| line.get("disk_written_bytes").is_none()),
+        "parent tasks are not duplicate aggregates"
+    );
     assert_eq!(finish["completed"], 16 * MIB);
     assert_eq!(finish["total"], 16 * MIB);
     assert!(finish["peak_bps"].as_u64() > Some(0));
@@ -312,6 +353,7 @@ fn a_download_is_streamed_listed_watched_and_kept() {
     let entry = &kept[0];
     assert_eq!(entry["outcome"], "finished");
     assert_eq!(entry["bytes"], 16 * MIB);
+    assert_eq!(entry["disk_written_bytes"], (16 * MIB).to_string());
     let sum: u64 = entry["series"]
         .as_array()
         .unwrap()
@@ -551,6 +593,11 @@ fn a_package_clone_is_a_reported_transfer_of_its_row() {
     assert_eq!(entry["command"], "cache add");
     assert_eq!(entry["bytes"], finish["completed"]);
     assert!(entry["written"].as_u64() > Some(0), "{entry}");
+    assert!(
+        entry.get("disk_written_bytes").is_none(),
+        "reported Git retained size is not logical writes"
+    );
+    assert!(finish.get("disk_written_bytes").is_none());
     let clones = |kept: &[Value]| kept.iter().filter(|entry| entry["kind"] == "git").count();
     assert_eq!(clones(&kept), 1);
 

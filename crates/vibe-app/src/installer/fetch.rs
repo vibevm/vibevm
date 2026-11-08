@@ -48,6 +48,7 @@ impl TransferFacts {
 /// Copy a declared installer source into `destination`, verifying its
 /// SHA-256 and its declared size. A source is an `https://` URL or a path
 /// under `package_root`.
+#[specmark::spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-068#disk-writes")]
 pub(crate) fn fetch_verified(
     source: &str,
     sha256: &str,
@@ -95,8 +96,20 @@ pub(crate) fn fetch_verified(
         if let Some(declared) = watch.remapped_from {
             record = record.remapped_from(declared);
         }
-        let mut reader = transfer::begin(record, watch.task).reader(input);
-        let result = copy_chunks(&mut reader, output, source, destination, watch);
+        let mut reader = transfer::begin(record, watch.task)
+            .reader(input)
+            .with_disk_writer(output);
+        let result = {
+            let (input, output) = reader.parts();
+            copy_chunks(input, output, source, destination, watch)
+        }
+        .and_then(|result| {
+            reader.sync_all().map_err(|error| {
+                let _ = fs::remove_file(destination);
+                io("writing", destination, error)
+            })?;
+            Ok(result)
+        });
         match &result {
             Ok(_) => reader.finish(),
             Err(InstallerError::Interrupted { .. }) => reader.interrupted(),
@@ -107,7 +120,12 @@ pub(crate) fn fetch_verified(
         // A package file is not a download (`PROP-068#transfer`): it is
         // copied and verified, with one measurement for the step's bar.
         let mut input = input;
-        let (copied, digest) = copy_chunks(&mut input, output, source, destination, watch)?;
+        let mut output = output;
+        let (copied, digest) = copy_chunks(&mut input, &mut output, source, destination, watch)?;
+        output.sync_all().map_err(|error| {
+            let _ = fs::remove_file(destination);
+            io("writing", destination, error)
+        })?;
         if let Some(task) = watch.task {
             task.set_progress(copied, watch.size, "bytes");
         }
@@ -128,7 +146,7 @@ pub(crate) fn fetch_verified(
 /// bytes copied and their SHA-256.
 fn copy_chunks(
     input: &mut dyn Read,
-    mut output: File,
+    output: &mut dyn Write,
     source: &str,
     destination: &Path,
     watch: &FetchWatch<'_>,
@@ -170,9 +188,6 @@ fn copy_chunks(
             .write_all(&buffer[..read])
             .map_err(|error| stop(io("writing", destination, error)))?;
     }
-    output
-        .sync_all()
-        .map_err(|error| stop(io("writing", destination, error)))?;
     Ok((total, hex(&hash.finalize())))
 }
 
@@ -274,5 +289,6 @@ mod tests {
         assert_eq!(entry.record.batch, "20261101T100000.000Z");
         assert_eq!(entry.record.step.as_deref(), Some("fetch"));
         assert_eq!(entry.bytes, 7);
+        assert_eq!(entry.disk_written_bytes, Some(7));
     }
 }

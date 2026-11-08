@@ -68,6 +68,7 @@ impl ProgressObserver for MachineRenderer {
             transfer_record: None,
             rate_bps: None,
             peak_bps: None,
+            disk_written_bytes: None,
         };
         let terminal = matches!(
             event.kind,
@@ -102,6 +103,7 @@ impl ProgressObserver for MachineRenderer {
                 unit,
                 transfer,
                 rate_bps,
+                disk_written_bytes,
             } => {
                 line.kind = wire::Kind::Measurement;
                 line.completed = Some(completed);
@@ -109,6 +111,8 @@ impl ProgressObserver for MachineRenderer {
                 line.unit = Some(unit);
                 line.transfer = transfer;
                 line.rate_bps = rate_bps;
+                line.disk_written_bytes =
+                    disk_written_bytes.map(vibe_core::wire_decimal::DecimalU64::new);
             }
             ProgressEventKind::Detail { message } => {
                 line.message = Some(sanitize_progress_text(&message));
@@ -158,6 +162,9 @@ fn end_figures(line: &mut wire::ProgressEvent, transfer: Option<TransferEnd>) {
         line.unit = Some("bytes".into());
         line.transfer = Some(end.id);
         line.peak_bps = Some(end.peak_bps);
+        line.disk_written_bytes = end
+            .disk_written_bytes
+            .map(vibe_core::wire_decimal::DecimalU64::new);
     }
 }
 

@@ -25,11 +25,15 @@
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-068#transfer");
 
 mod clock;
+mod disk;
 mod journal;
 mod limit;
 mod record;
 mod sampler;
 mod watch;
+
+use disk::DiskWrites;
+pub use disk::{TransferIo, TransferWriter};
 
 pub use journal::{Outcome, TransferEntry, TransferJournal};
 pub use limit::TransferLimit;
@@ -185,6 +189,7 @@ pub struct Transfer {
     started: Instant,
     bytes: u64,
     written: Option<u64>,
+    disk_writes: Option<DiskWrites>,
     ended: bool,
 }
 
@@ -234,6 +239,7 @@ impl Transfer {
             started: began,
             bytes: 0,
             written: None,
+            disk_writes: None,
             ended: false,
         };
         transfer.sample(Duration::ZERO);
@@ -265,7 +271,7 @@ impl Transfer {
         }
     }
 
-    /// Count `bytes` that just arrived, after they were written.
+    /// Count bytes returned by the input reader. This is not evidence of a disk write.
     fn arrived(&mut self, bytes: u64) {
         if let Some(limit) = &self.limit {
             limit.take(bytes);
@@ -312,7 +318,11 @@ impl Transfer {
     }
 
     fn sample(&mut self, since: Duration) {
-        let sample = self.sampler.take(since, self.bytes);
+        let sample = self.sampler.take_observed(
+            since,
+            self.bytes,
+            self.disk_writes.as_ref().and_then(DiskWrites::bytes),
+        );
         if let Some(state) = self.task.as_ref().and_then(|task| task.state.as_ref())
             && state.is_active()
         {
@@ -322,6 +332,7 @@ impl Transfer {
                 unit: "bytes".to_owned(),
                 transfer: Some(self.record.id.clone()),
                 rate_bps: Some(sample.rate_bps),
+                disk_written_bytes: sample.disk_written_bytes,
             });
         }
     }
@@ -332,6 +343,7 @@ impl Transfer {
             peak_bps: self.sampler.peak(),
             samples: self.sampler.samples(),
             written: self.written,
+            disk_written_bytes: self.sampler.disk_written_bytes(),
             ..TransferEntry::active(self.record.clone())
         }
     }
@@ -362,6 +374,7 @@ impl Transfer {
             bytes: self.bytes,
             total: self.record.total,
             peak_bps: self.sampler.peak(),
+            disk_written_bytes: self.disk_writes.as_ref().and_then(DiskWrites::bytes),
         };
         if let Some(state) = self.task.as_ref().and_then(|task| task.state.as_ref()) {
             state.terminate(match (outcome, &message) {
@@ -400,8 +413,8 @@ impl Drop for Transfer {
 /// [`Self::fail`] or [`Self::interrupted`], or, dropped, as failed.
 ///
 /// The bytes of one read are counted when the caller comes back for the
-/// next one (or ends the transfer), which is after it wrote them: a reader
-/// of the journal never sees a count ahead of the file (`#sampling`).
+/// next one (or ends the transfer). This reader cannot prove filesystem writes;
+/// use [`Self::with_disk_writer`] at an owned writer boundary for that metric.
 #[spec(documents = "spec://org.vibevm.core/vibevm/common/PROP-068#sampling")]
 pub struct TransferReader<R> {
     transfer: Transfer,
@@ -410,6 +423,35 @@ pub struct TransferReader<R> {
 }
 
 impl<R> TransferReader<R> {
+    /// Bind an owned, unbuffered logical disk sink to this transfer. Only
+    /// successful `Write` return values count; cleanup never subtracts them.
+    /// The pair owns both halves, so its terminal methods consume the writer.
+    /// Uninstrumented readers retain an absent disk counter.
+    ///
+    /// ```
+    /// use std::io::{Read, Write};
+    /// use vibe_core::progress::transfer::{Destination, Purpose, Transfer, TransferRecord};
+    /// let file = tempfile::tempfile().unwrap();
+    /// let transfer = Transfer::begin(TransferRecord::http(Purpose::Other,
+    ///     "https://example.test/body", Destination::Cache), None, None);
+    /// let mut io = transfer.reader(&b"abc"[..]).with_disk_writer(file);
+    /// let (reader, writer) = io.parts();
+    /// let mut bytes = [0; 3];
+    /// reader.read_exact(&mut bytes).unwrap();
+    /// writer.write_all(&bytes).unwrap();
+    /// io.sync_all().unwrap();
+    /// io.finish();
+    /// ```
+    pub fn with_disk_writer<W: io::Write>(mut self, writer: W) -> TransferIo<R, W> {
+        let writes = DiskWrites::new();
+        self.transfer.disk_writes = Some(writes.clone());
+        self.transfer.sample(self.transfer.started.elapsed());
+        if let Some(journal) = &self.transfer.journal {
+            journal.sampled(&self.transfer.entry());
+        }
+        TransferIo::new(self, writer, writes)
+    }
+
     pub fn transfer(&self) -> &Transfer {
         &self.transfer
     }

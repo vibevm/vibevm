@@ -33,6 +33,7 @@ fn hierarchy_and_explicit_parent_counting_are_observable() {
             unit: "files".to_string(),
             transfer: None,
             rate_bps: None,
+            disk_written_bytes: None,
         }
     );
     assert_eq!(events[4].task_id, parent.id());
@@ -44,6 +45,7 @@ fn hierarchy_and_explicit_parent_counting_are_observable() {
             unit: "packages".to_string(),
             transfer: None,
             rate_bps: None,
+            disk_written_bytes: None,
         }
     );
 }

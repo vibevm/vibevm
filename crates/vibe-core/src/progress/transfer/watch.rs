@@ -60,6 +60,7 @@ pub struct TransferEvent {
     pub total: Option<u64>,
     pub rate_bps: Option<u64>,
     pub peak_bps: Option<u64>,
+    pub disk_written_bytes: Option<u64>,
     pub record: Option<TransferRecord>,
     pub message: Option<String>,
 }
@@ -75,6 +76,7 @@ impl TransferEvent {
             total: None,
             rate_bps: None,
             peak_bps: None,
+            disk_written_bytes: None,
             record: None,
             message: None,
         }
@@ -88,6 +90,7 @@ impl TransferEvent {
             total: entry.record.total,
             rate_bps: Some(last.map_or(0, |sample| sample.rate_bps)),
             peak_bps: Some(entry.peak_bps),
+            disk_written_bytes: entry.disk_written_bytes,
             record: Some(entry.record.clone()),
             ..Self::bare(
                 TransferEventKind::Started,
@@ -108,10 +111,31 @@ impl TransferEvent {
             bytes: Some(entry.bytes),
             total: entry.record.total,
             peak_bps: Some(entry.peak_bps),
+            disk_written_bytes: entry.disk_written_bytes,
             message: entry.message.clone(),
             ..Self::bare(kind, &entry.record.id, &entry.record.batch)
         }
     }
+}
+
+#[derive(Clone, Default)]
+struct SampleIdentity {
+    at: String,
+    bytes: u64,
+    disk_written_bytes: Option<u64>,
+}
+impl SampleIdentity {
+    fn of(sample: &super::Sample) -> Self {
+        Self {
+            at: sample.at.clone(),
+            bytes: sample.bytes,
+            disk_written_bytes: sample.disk_written_bytes,
+        }
+    }
+}
+struct WatchedTransfer {
+    last: SampleIdentity,
+    batch: String,
 }
 
 /// The state of one watch between two reads of the journal.
@@ -127,10 +151,10 @@ impl TransferEvent {
 /// ```
 pub struct TransferWatch<'a> {
     journal: &'a TransferJournal,
-    /// Active transfers by id: the `(at, bytes)` of the last sample
+    /// Active transfers by id: the `(at, bytes, disk_written_bytes)` of the last sample
     /// emitted — both, since two samples can share a millisecond — and the
     /// batch.
-    active: BTreeMap<String, ((String, u64), String)>,
+    active: BTreeMap<String, WatchedTransfer>,
     /// Ids whose history line was already read.
     ended: BTreeSet<String>,
     revision: u64,
@@ -157,10 +181,15 @@ impl<'a> TransferWatch<'a> {
         let last = entry
             .samples
             .last()
-            .map(|s| (s.at.clone(), s.bytes))
+            .map(SampleIdentity::of)
             .unwrap_or_default();
-        self.active
-            .insert(entry.record.id.clone(), (last, entry.record.batch.clone()));
+        self.active.insert(
+            entry.record.id.clone(),
+            WatchedTransfer {
+                last,
+                batch: entry.record.batch.clone(),
+            },
+        );
         TransferEvent::started(entry)
     }
 
@@ -170,25 +199,30 @@ impl<'a> TransferWatch<'a> {
         let mut events = Vec::new();
         for entry in &live {
             let id = &entry.record.id;
-            let Some((last, _)) = self.active.get_mut(id) else {
+            let Some(watched) = self.active.get_mut(id) else {
                 events.push(self.track(entry));
                 continue;
             };
-            let since = last.clone();
-            for sample in entry
+            let since = watched.last.clone();
+            let offset = entry
                 .samples
                 .iter()
-                .filter(|s| (s.at.as_str(), s.bytes) > (since.0.as_str(), since.1))
-            {
+                .rposition(|sample| {
+                    (sample.at.as_str(), sample.bytes, sample.disk_written_bytes)
+                        == (since.at.as_str(), since.bytes, since.disk_written_bytes)
+                })
+                .map_or(0, |index| index + 1);
+            for sample in &entry.samples[offset..] {
                 events.push(TransferEvent {
                     at: sample.at.clone(),
                     bytes: Some(sample.bytes),
                     total: entry.record.total,
                     rate_bps: Some(sample.rate_bps),
+                    disk_written_bytes: sample.disk_written_bytes,
                     peak_bps: Some(entry.peak_bps),
                     ..TransferEvent::bare(TransferEventKind::Sample, id, &entry.record.batch)
                 });
-                *last = (sample.at.clone(), sample.bytes);
+                watched.last = SampleIdentity::of(sample);
             }
         }
         let present: BTreeSet<&String> = live.iter().map(|entry| &entry.record.id).collect();
@@ -216,11 +250,11 @@ impl<'a> TransferWatch<'a> {
         // Gone without a history line: the end was not written, which is
         // what an interrupted transfer looks like from here.
         for id in gone {
-            if let Some((_, batch)) = self.active.remove(&id) {
+            if let Some(watched) = self.active.remove(&id) {
                 events.push(TransferEvent::bare(
                     TransferEventKind::Interrupted,
                     &id,
-                    &batch,
+                    &watched.batch,
                 ));
             }
         }

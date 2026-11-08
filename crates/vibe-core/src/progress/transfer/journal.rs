@@ -85,6 +85,13 @@ pub struct TransferEntry {
     /// the figure a disk-usage reader would see beside it.
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub written: Option<u64>,
+    /// Logical successful writes, not final size or physical disk traffic.
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        with = "crate::wire_decimal::optional"
+    )]
+    pub disk_written_bytes: Option<u64>,
 }
 
 impl TransferEntry {
@@ -103,6 +110,7 @@ impl TransferEntry {
             series: Vec::new(),
             bucket_seconds: None,
             written: None,
+            disk_written_bytes: None,
         }
     }
 
@@ -127,6 +135,9 @@ impl TransferEntry {
                 *slot += sample.bytes.saturating_sub(previous);
             }
             previous = previous.max(sample.bytes);
+        }
+        if let Some(sample) = &last {
+            self.disk_written_bytes = sample.disk_written_bytes;
         }
         self.bytes = last.map_or(self.bytes, |sample| sample.bytes);
         self.message = Some(format!(

@@ -228,6 +228,7 @@ fn event_line(event: &TransferEvent) -> Result<transfer_event::TransferEvent> {
         Some(record) => Some(wire(&TransferEntry {
             bytes: event.bytes.unwrap_or(0),
             peak_bps: event.peak_bps.unwrap_or(0),
+            disk_written_bytes: event.disk_written_bytes,
             ..TransferEntry::active(record.clone())
         })?),
     };
@@ -241,6 +242,9 @@ fn event_line(event: &TransferEvent) -> Result<transfer_event::TransferEvent> {
         total: event.total,
         rate_bps: event.rate_bps,
         peak_bps: event.peak_bps,
+        disk_written_bytes: event
+            .disk_written_bytes
+            .map(vibe_core::wire_decimal::DecimalU64::new),
         record,
         message: event.message.clone(),
     })
