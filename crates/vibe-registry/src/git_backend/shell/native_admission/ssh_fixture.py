@@ -1,5 +1,5 @@
 # Isolated authenticated SSH fixture; server StrictModes=no for /tmp ancestry only.
-import os,pathlib,subprocess,tempfile,socket,time,json,shlex,threading,select,hashlib,pwd
+import os,pathlib,subprocess,tempfile,socket,time,json,shlex,threading,select,hashlib,pwd,fcntl,stat
 fixture_root=pathlib.Path(tempfile.mkdtemp(prefix='vibe-n3-test-'));fixture_root.chmod(0o700)
 fixture_home=fixture_root/'home';fixture_home.mkdir(mode=0o700); EMPTY=fixture_root/'empty';EMPTY.write_text('')
 fixture_user=pwd.getpwuid(os.getuid()).pw_name
@@ -25,6 +25,17 @@ bare=fixture_home/'repo.git';ok(['/usr/bin/git','clone','--bare',str(work),str(b
 # ensures its noninteractive startup sees only fixture paths, not real profiles.
 forced=fixture_root/'serve.py'
 write_script(forced,"#!/usr/bin/python3\nimport os,sys,shlex\nfrom pathlib import Path\nroot=Path("+repr(str(fixture_root))+")\n(root/'server-home-observed').write_text(os.environ.get('HOME',''))\nargs=shlex.split(os.environ.get('SSH_ORIGINAL_COMMAND',''))\nif args not in [['git-upload-pack',str(root/'home/repo.git')],['git-upload-pack','repo.git'],['git-upload-pack',str(root/'home/repo.git/org.fixture.demo.git')]]:sys.exit(91)\nos.execve('/usr/bin/git-upload-pack',['git-upload-pack',str(root/'home/repo.git')],"+repr(ENV)+")\n")
+# Coordinate only pair allocation/readiness and teardown; test traffic remains
+# parallel. A readiness connection must never belong to another fixture's sshd.
+lock_root=pathlib.Path(tempfile.gettempdir())/('vibe-ssh-fixture-lock-'+str(os.getuid()))
+try:lock_root.mkdir(mode=0o700)
+except FileExistsError:pass
+owner=lock_root.lstat()
+if not stat.S_ISDIR(owner.st_mode) or owner.st_uid!=os.getuid() or owner.st_mode&0o077:raise RuntimeError('unsafe owned fixture lock directory')
+lock_fd=os.open(lock_root/'ports.lock',os.O_CREAT|os.O_RDWR|os.O_NOFOLLOW|os.O_NONBLOCK,0o600)
+owner=os.fstat(lock_fd)
+if not stat.S_ISREG(owner.st_mode) or owner.st_uid!=os.getuid() or owner.st_nlink!=1 or owner.st_mode&0o077:raise RuntimeError('unsafe owned fixture port lock')
+fcntl.flock(lock_fd,fcntl.LOCK_EX)
 sock=socket.socket();sock.bind(('127.0.0.1',0));PORT=sock.getsockname()[1];sock.close()
 def server(host,label):
  cfg=fixture_root/('sshd-'+label+'.config');log=fixture_root/('sshd-'+label+'.log')
@@ -62,6 +73,7 @@ SetEnv HOME={fixture_home} BASH_ENV={EMPTY} ENV={EMPTY}
  child=subprocess.Popen(['/usr/sbin/sshd','-D','-e','-f',str(cfg)],env=ENV,stdin=subprocess.DEVNULL,stdout=f,stderr=f);children.append(child)
  for _ in range(50):
   if child.poll() is not None:raise RuntimeError('isolated sshd exited '+str(child.returncode)+': '+log.read_text())
+  if f'Server listening on {host} port {PORT}' not in log.read_text():time.sleep(.02);continue
   try:
    with socket.create_connection((host,PORT),timeout=.1):return
   except OSError:time.sleep(.02)
@@ -115,6 +127,7 @@ def probe(name,args,config,cwd=fixture_root):
  row={'name':name,'exit':p.returncode,'A_connections':connections('a')-before[0],'B_connections':connections('b')-before[1],'stdout':p.stdout.decode(),'stderr':p.stderr.decode()};rows.append(row);return row
 try:
  server('127.0.0.1','a');server('127.0.0.2','b');time.sleep(.2)
+ fcntl.flock(lock_fd,fcntl.LOCK_UN)
  # A private explicitly addressed agent, never the operator's agent.
  agent_socket=fixture_root/'agent.sock';agent_log=(fixture_root/'agent.log').open('wb');logs.append(agent_log)
  agent=subprocess.Popen(['/usr/bin/ssh-agent','-D','-a',str(agent_socket)],env=ENV,stdin=subprocess.DEVNULL,stdout=agent_log,stderr=agent_log);children.append(agent)
@@ -130,9 +143,11 @@ try:
  import sys
  sys.stdin.read()
 finally:
+ fcntl.flock(lock_fd,fcntl.LOCK_EX)
  for child in children:
   if child.poll() is None:child.terminate()
  for child in children:
   try:child.wait(timeout=5)
   except subprocess.TimeoutExpired:child.kill();child.wait()
  for f in logs:f.close()
+ fcntl.flock(lock_fd,fcntl.LOCK_UN);os.close(lock_fd)

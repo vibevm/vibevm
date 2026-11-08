@@ -21,8 +21,14 @@ pub struct SshProfile {
     host: String,
     user: String,
     port: u16,
-    known_hosts: Vec<u8>,
-    authentication: SshAuthentication,
+    mode: Mode,
+}
+enum Mode {
+    Direct {
+        known_hosts: Vec<u8>,
+        authentication: SshAuthentication,
+    },
+    Captured(Box<super::ssh_config::Configured>),
 }
 impl std::fmt::Debug for SshProfile {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
@@ -72,13 +78,36 @@ impl SshProfile {
             host,
             user,
             port,
-            known_hosts,
-            authentication,
+            mode: Mode::Direct {
+                known_hosts,
+                authentication,
+            },
         })
     }
+    pub(super) fn captured(
+        executable: PathBuf,
+        host: String,
+        user: String,
+        port: u16,
+        configured: super::ssh_config::Configured,
+    ) -> Self {
+        Self {
+            executable,
+            host,
+            user,
+            port,
+            mode: Mode::Captured(Box::new(configured)),
+        }
+    }
     pub(super) fn same_endpoint(&self, other: &Self) -> bool {
-        (self.host.as_str(), self.user.as_str(), self.port)
-            == (other.host.as_str(), other.user.as_str(), other.port)
+        match (&self.mode, &other.mode) {
+            (Mode::Captured(a), Mode::Captured(b)) => a.same_authored(b),
+            (Mode::Direct { .. }, Mode::Direct { .. }) => {
+                (self.host.as_str(), self.user.as_str(), self.port)
+                    == (other.host.as_str(), other.user.as_str(), other.port)
+            }
+            _ => false,
+        }
     }
     pub(super) fn capture_candidate(
         &self,
@@ -86,6 +115,21 @@ impl SshProfile {
         binding: &crate::HttpAdmission,
         profile_index: usize,
     ) -> Result<Option<Remote>, GitError> {
+        if let Mode::Captured(configured) = &self.mode {
+            if !configured.matches(address)? {
+                return Ok(None);
+            }
+            let authority = Url::parse(&format!("ssh://{}:{}/", self.host, self.port))
+                .map_err(|_| unsupported("invalid captured SSH authority"))?;
+            binding.admit_host(&authority)?;
+            return Ok(Some(Remote {
+                binding: ProfileBinding::Direct(profile_index),
+                address: address.into(),
+                host: self.host.clone(),
+                user: self.user.clone(),
+                port: self.port,
+            }));
+        }
         let (host, user, port, path) = if address.starts_with("ssh://") {
             let url = Url::parse(address).map_err(|_| unsupported("invalid SSH URL"))?;
             if url.password().is_some() || url.query().is_some() || url.fragment().is_some() {
@@ -130,7 +174,7 @@ impl SshProfile {
             return Ok(None);
         }
         Ok(Some(Remote {
-            profile_index,
+            binding: ProfileBinding::Direct(profile_index),
             address: address.to_owned(),
             host,
             user,
@@ -157,41 +201,54 @@ impl SshProfile {
                 ffi::OsStrExt,
                 fs::{FileTypeExt, OpenOptionsExt},
             };
-            let known = root.join("known_hosts");
-            std::fs::write(&known, &self.known_hosts).map_err(io)?;
             let mut config = format!(
-                "Host *\n HostName {}\n User {}\n Port {}\n UserKnownHostsFile {}\n GlobalKnownHostsFile {}\n StrictHostKeyChecking yes\n BatchMode yes\n PasswordAuthentication no\n KbdInteractiveAuthentication no\n GSSAPIAuthentication no\n HostbasedAuthentication no\n CanonicalizeHostname no\n VerifyHostKeyDNS no\n ProxyCommand none\n ProxyJump none\n PermitLocalCommand no\n ForwardAgent no\n ForwardX11 no\n ClearAllForwardings yes\n ControlMaster no\n ControlPath none\n UpdateHostKeys no\n RequestTTY no\n ConnectTimeout 10\n",
+                "Host *\n HostName {}\n User {}\n Port {}\n StrictHostKeyChecking yes\n BatchMode yes\n PasswordAuthentication no\n KbdInteractiveAuthentication no\n GSSAPIAuthentication no\n HostbasedAuthentication no\n CanonicalizeHostname no\n VerifyHostKeyDNS no\n ProxyCommand none\n ProxyJump none\n PermitLocalCommand no\n ForwardAgent no\n ForwardX11 no\n ClearAllForwardings yes\n ControlMaster no\n ControlPath none\n UpdateHostKeys no\n RequestTTY no\n ConnectTimeout 10\n",
                 remote.host.trim_start_matches('[').trim_end_matches(']'),
                 remote.user,
-                remote.port,
-                config_path(&known)?,
-                config_path(&root.join("config"))?
+                remote.port
             );
-            match &self.authentication {
-                SshAuthentication::Key(bytes) => {
-                    let identity = root.join("ssh-identity");
-                    let mut file = std::fs::OpenOptions::new()
-                        .write(true)
-                        .create(true)
-                        .truncate(true)
-                        .mode(0o600)
-                        .open(&identity)
-                        .map_err(io)?;
-                    file.write_all(bytes).map_err(io)?;
+            match &self.mode {
+                Mode::Captured(configured) => configured.configure(command, root, &mut config)?,
+                Mode::Direct {
+                    known_hosts,
+                    authentication,
+                } => {
+                    let known = root.join("known_hosts");
+                    std::fs::write(&known, known_hosts).map_err(io)?;
                     config.push_str(&format!(
-                        " IdentityFile {}\n IdentitiesOnly yes\n IdentityAgent none\n",
-                        config_path(&identity)?
+                        " UserKnownHostsFile {}\n GlobalKnownHostsFile {}\n",
+                        config_path(&known)?,
+                        config_path(&root.join("config"))?
                     ));
-                }
-                SshAuthentication::AgentSocket(path) => {
-                    if !std::fs::metadata(path).map_err(io)?.file_type().is_socket() {
-                        return Err(unsupported("selected SSH agent endpoint is not a socket"));
+                    match authentication {
+                        SshAuthentication::Key(bytes) => {
+                            let identity = root.join("ssh-identity");
+                            let mut file = std::fs::OpenOptions::new()
+                                .write(true)
+                                .create(true)
+                                .truncate(true)
+                                .mode(0o600)
+                                .open(&identity)
+                                .map_err(io)?;
+                            file.write_all(bytes).map_err(io)?;
+                            config.push_str(&format!(
+                                " IdentityFile {}\n IdentitiesOnly yes\n IdentityAgent none\n",
+                                config_path(&identity)?
+                            ));
+                        }
+                        SshAuthentication::AgentSocket(path) => {
+                            if !std::fs::metadata(path).map_err(io)?.file_type().is_socket() {
+                                return Err(unsupported(
+                                    "selected SSH agent endpoint is not a socket",
+                                ));
+                            }
+                            config.push_str(&format!(
+                                " IdentityFile none\n IdentitiesOnly no\n IdentityAgent {}\n",
+                                config_path(path)?
+                            ));
+                            command.env("SSH_AUTH_SOCK", path);
+                        }
                     }
-                    config.push_str(&format!(
-                        " IdentityFile none\n IdentitiesOnly no\n IdentityAgent {}\n",
-                        config_path(path)?
-                    ));
-                    command.env("SSH_AUTH_SOCK", path);
                 }
             }
             let selected = root.join("ssh_config");
@@ -214,20 +271,51 @@ impl SshProfile {
     }
 }
 pub(super) struct Remote {
-    pub(super) profile_index: usize,
+    binding: ProfileBinding,
     pub(super) address: String,
     host: String,
     user: String,
     port: u16,
 }
-fn user_name(user: &str) -> bool {
+enum ProfileBinding {
+    Direct(usize),
+    Captured(Arc<SshProfile>),
+}
+impl Remote {
+    pub(super) fn configure(
+        &self,
+        profiles: &[SshProfile],
+        command: &mut Command,
+        root: &Path,
+    ) -> Result<(), GitError> {
+        match &self.binding {
+            ProfileBinding::Direct(index) => profiles
+                .get(*index)
+                .ok_or_else(|| unsupported("captured SSH profile disappeared"))?
+                .configure(command, root, self),
+            ProfileBinding::Captured(profile) => profile.configure(command, root, self),
+        }
+    }
+}
+pub(super) fn captured_remote(
+    profile: Arc<SshProfile>,
+    address: &str,
+    binding: &crate::HttpAdmission,
+) -> Result<Remote, GitError> {
+    let mut remote = profile
+        .capture_candidate(address, binding, 0)?
+        .ok_or_else(|| unsupported("captured SSH address changed"))?;
+    remote.binding = ProfileBinding::Captured(profile);
+    Ok(remote)
+}
+pub(super) fn user_name(user: &str) -> bool {
     !user.is_empty()
         && !user.starts_with('-')
         && user
             .bytes()
             .all(|b| b.is_ascii_alphanumeric() || b"._-".contains(&b))
 }
-fn direct_host(host: &str) -> bool {
+pub(super) fn direct_host(host: &str) -> bool {
     host.is_ascii()
         && (host.contains('.') || host.starts_with('['))
         && host
@@ -235,7 +323,7 @@ fn direct_host(host: &str) -> bool {
             .all(|b| b.is_ascii_alphanumeric() || b".-:[]".contains(&b))
         && vibe_core::remap::endpoint::normalized_host_key(host).is_some()
 }
-fn repository_path(path: &str) -> bool {
+pub(super) fn repository_path(path: &str) -> bool {
     !path.is_empty()
         && !path.starts_with('-')
         && path
@@ -243,7 +331,7 @@ fn repository_path(path: &str) -> bool {
             .all(|b| b.is_ascii_alphanumeric() || b"/._-~".contains(&b))
 }
 #[cfg(unix)]
-fn config_path(path: &Path) -> Result<String, GitError> {
+pub(super) fn config_path(path: &Path) -> Result<String, GitError> {
     let path = path
         .to_str()
         .ok_or_else(|| unsupported("SSH path is not UTF-8"))?;

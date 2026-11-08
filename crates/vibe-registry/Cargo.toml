@@ -25,6 +25,8 @@ serde_json.workspace = true
 toml.workspace = true
 reqwest.workspace = true
 tempfile.workspace = true
+glob.workspace = true
+libc.workspace = true
 
 [dev-dependencies]
 axum.workspace = true

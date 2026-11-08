@@ -102,11 +102,7 @@ impl<'a> Context<'a> {
                 .env("GIT_CONFIG_VALUE_0", format!("Authorization: {auth}"));
         }
         if let Some(AdmittedRemote::Ssh(remote)) = remote {
-            self.profile
-                .ssh
-                .get(remote.profile_index)
-                .ok_or_else(|| unsupported("captured SSH profile disappeared"))?
-                .configure(&mut cmd, root, remote)?;
+            remote.configure(&self.profile.ssh, &mut cmd, root)?;
         }
         if let Some(repo) = repo {
             cmd.arg("--git-dir").arg(repo);

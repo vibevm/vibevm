@@ -210,7 +210,7 @@ impl NativeGitAdmission {
             // This is data-only Git URL resolution, not ssh -G or execution
             // of the captured SSH command. An old destination is only observed
             // here; chosen requests separately require exact profile admission.
-            let explicit_ssh = if !self.ssh.is_empty() {
+            let explicit_ssh = if !self.ssh.is_empty() || self.ssh_configuration.is_some() {
                 let effective = read(&["remote", "get-url", "origin"])?;
                 let address = text(effective.stdout)?;
                 effective.status.success()
@@ -219,7 +219,7 @@ impl NativeGitAdmission {
             } else {
                 false
             };
-            captured.validate_warm_transport(explicit_ssh)?;
+            captured.validate_warm_transport(explicit_ssh, !self.ssh.is_empty())?;
         }
         for (name, system) in [("GIT_ATTR_SYSTEM", true), ("GIT_ATTR_GLOBAL", false)] {
             let result = read(&["var", name])?;
@@ -272,13 +272,17 @@ fn absolute_from(cwd: &Path, path: &str) -> PathBuf {
     }
 }
 impl CapturedContext {
-    fn validate_warm_transport(&self, explicit_ssh: bool) -> Result<(), GitError> {
+    fn validate_warm_transport(
+        &self,
+        explicit_ssh: bool,
+        explicit_direct: bool,
+    ) -> Result<(), GitError> {
         for (key, value) in &self.entries {
             if value.is_empty() {
                 continue;
             }
             if explicit_ssh
-                && (key == "core.sshcommand"
+                && ((explicit_direct && key == "core.sshcommand")
                     || key.starts_with("credential.")
                     || key.starts_with("http.")
                     || (key.starts_with("remote.") && key.ends_with(".proxy")))

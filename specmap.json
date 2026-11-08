@@ -38539,6 +38539,240 @@
     },
     {
       "crate_name": "vibe-registry",
+      "file": "crates/vibe-registry/src/git_backend/shell/native_admission/ssh_config.rs",
+      "item_kind": "mod",
+      "line": 2,
+      "symbol": "vibe_registry::git_backend::shell::native_admission::ssh_config",
+      "end_line": 2,
+      "fingerprint": "tok1:524517ffa8bcb83c23450eb70bce037b13912af3746d3aae2272968a0e4e6b36"
+    },
+    {
+      "crate_name": "vibe-registry",
+      "file": "crates/vibe-registry/src/git_backend/shell/native_admission/ssh_config.rs",
+      "item_kind": "fn",
+      "line": 73,
+      "symbol": "vibe_registry::git_backend::shell::native_admission::ssh_config::SshConfigSelection::capture",
+      "end_line": 86,
+      "fingerprint": "tok1:bdf8564a3d72f9f7f79fe8ef76dd9186d1cb02e9d675957e0afd8211c390cb64"
+    },
+    {
+      "crate_name": "vibe-registry",
+      "file": "crates/vibe-registry/src/git_backend/shell/native_admission/ssh_config.rs",
+      "item_kind": "fn",
+      "line": 164,
+      "symbol": "vibe_registry::git_backend::shell::native_admission::ssh_config::SshConfiguration::preflight_address",
+      "end_line": 182,
+      "fingerprint": "tok1:a646205dda1513b1e74277ab712eed10db8821e4d9ca36c4dafcc44d8a6d141b"
+    },
+    {
+      "crate_name": "vibe-registry",
+      "file": "crates/vibe-registry/src/git_backend/shell/native_admission/ssh_config.rs",
+      "item_kind": "fn",
+      "line": 183,
+      "symbol": "vibe_registry::git_backend::shell::native_admission::ssh_config::SshConfiguration::profile",
+      "end_line": 194,
+      "fingerprint": "tok1:f12380b4e20c0d285f245372e89268976da7d6e8895f102f8df53b8632a07297"
+    },
+    {
+      "crate_name": "vibe-registry",
+      "file": "crates/vibe-registry/src/git_backend/shell/native_admission/ssh_config/inputs.rs",
+      "item_kind": "mod",
+      "line": 2,
+      "symbol": "vibe_registry::git_backend::shell::native_admission::ssh_config::inputs",
+      "end_line": 2,
+      "fingerprint": "tok1:524517ffa8bcb83c23450eb70bce037b13912af3746d3aae2272968a0e4e6b36"
+    },
+    {
+      "crate_name": "vibe-registry",
+      "file": "crates/vibe-registry/src/git_backend/shell/native_admission/ssh_config/inputs.rs",
+      "item_kind": "fn",
+      "line": 80,
+      "symbol": "vibe_registry::git_backend::shell::native_admission::ssh_config::inputs::Frozen::capture",
+      "end_line": 127,
+      "fingerprint": "tok1:dc113c5b760dd4ea91f20b0b77661f7d8133ecb2cc4bf4dd9575410a8ab86d70"
+    },
+    {
+      "crate_name": "vibe-registry",
+      "file": "crates/vibe-registry/src/git_backend/shell/native_admission/ssh_config/policy_tests.rs",
+      "item_kind": "mod",
+      "line": 3,
+      "symbol": "vibe_registry::git_backend::shell::native_admission::ssh_config::policy_tests",
+      "end_line": 3,
+      "fingerprint": "tok1:524517ffa8bcb83c23450eb70bce037b13912af3746d3aae2272968a0e4e6b36"
+    },
+    {
+      "crate_name": "vibe-registry",
+      "file": "crates/vibe-registry/src/git_backend/shell/native_admission/ssh_config/policy_tests.rs",
+      "item_kind": "fn",
+      "line": 37,
+      "symbol": "vibe_registry::git_backend::shell::native_admission::ssh_config::policy_tests::captured_environment_agent_is_used_only_when_not_disabled_and_host_key_alias_is_preserved",
+      "end_line": 93,
+      "fingerprint": "tok1:3a42c29618bef9192fe290172035d0c3dd38ece5cd76060748bb82520b9ce065"
+    },
+    {
+      "crate_name": "vibe-registry",
+      "file": "crates/vibe-registry/src/git_backend/shell/native_admission/ssh_config/policy_tests.rs",
+      "item_kind": "fn",
+      "line": 177,
+      "symbol": "vibe_registry::git_backend::shell::native_admission::ssh_config::policy_tests::excluded_effective_alias_precedes_missing_credentials_and_trust_in_both_paths",
+      "end_line": 209,
+      "fingerprint": "tok1:8bb45b13210a1d1361d1e230adb458fc45a63132cdacfbddfe71b482a732d5d7"
+    },
+    {
+      "crate_name": "vibe-registry",
+      "file": "crates/vibe-registry/src/git_backend/shell/native_admission/ssh_config/policy_tests.rs",
+      "item_kind": "fn",
+      "line": 5,
+      "symbol": "vibe_registry::git_backend::shell::native_admission::ssh_config::policy_tests::selected_address_family_and_source_binding_do_not_fall_back_to_any_route",
+      "end_line": 36,
+      "fingerprint": "tok1:d774dd23edf2e0b23540db09598d5ee26e841b01d985323c78f692e18480ca73"
+    },
+    {
+      "crate_name": "vibe-registry",
+      "file": "crates/vibe-registry/src/git_backend/shell/native_admission/ssh_config/policy_tests.rs",
+      "item_kind": "fn",
+      "line": 95,
+      "symbol": "vibe_registry::git_backend::shell::native_admission::ssh_config::policy_tests::selected_cipher_mac_and_kex_exclusions_fail_actual_negotiation",
+      "end_line": 121,
+      "fingerprint": "tok1:5124deca2f45d78b4ecaca89f595877fafe4055ce9c2d12b38ff95ee76bd02d0"
+    },
+    {
+      "crate_name": "vibe-registry",
+      "file": "crates/vibe-registry/src/git_backend/shell/native_admission/ssh_config/policy_tests.rs",
+      "item_kind": "fn",
+      "line": 122,
+      "symbol": "vibe_registry::git_backend::shell::native_admission::ssh_config::policy_tests::selected_minimum_rsa_size_restricts_existing_identity",
+      "end_line": 150,
+      "fingerprint": "tok1:d24c2635937831f89cc457cd2bfe9c5d69121a2538ee1fc72ed2a79dbeafbf7e"
+    },
+    {
+      "crate_name": "vibe-registry",
+      "file": "crates/vibe-registry/src/git_backend/shell/native_admission/ssh_config/policy_tests.rs",
+      "item_kind": "fn",
+      "line": 152,
+      "symbol": "vibe_registry::git_backend::shell::native_admission::ssh_config::policy_tests::unsafe_original_config_permissions_are_not_repaired_by_freezing",
+      "end_line": 175,
+      "fingerprint": "tok1:ff0460408a110ee11abad73fe7b6bbb3a638684c2fec58aa14cf2e2220c757bb"
+    },
+    {
+      "crate_name": "vibe-registry",
+      "file": "crates/vibe-registry/src/git_backend/shell/native_admission/ssh_config/tests.rs",
+      "item_kind": "fn",
+      "line": 246,
+      "symbol": "vibe_registry::git_backend::shell::native_admission::ssh_config::tests::active_commands_and_disabled_publickey_refuse_before_contact_but_inactive_proxy_is_harmless",
+      "end_line": 307,
+      "fingerprint": "tok1:6b1295725f9c30c6b0eddaedd28f362b221d1d2e0e36cb308b4a45a70c444516"
+    },
+    {
+      "crate_name": "vibe-registry",
+      "file": "crates/vibe-registry/src/git_backend/shell/native_admission/ssh_config/tests.rs",
+      "item_kind": "fn",
+      "line": 337,
+      "symbol": "vibe_registry::git_backend::shell::native_admission::ssh_config::tests::config_fifo_oversize_and_recheck_refuse_without_unbounded_read",
+      "end_line": 380,
+      "fingerprint": "tok1:8b40362b652a7e1f933c7e7dfdf74448dfa5474104dad4820ac93a4062c43db6"
+    },
+    {
+      "crate_name": "vibe-registry",
+      "file": "crates/vibe-registry/src/git_backend/shell/native_admission/ssh_config/tests.rs",
+      "item_kind": "fn",
+      "line": 83,
+      "symbol": "vibe_registry::git_backend::shell::native_admission::ssh_config::tests::default_identity_and_selected_home_trust_authenticate_without_key_setup_api",
+      "end_line": 94,
+      "fingerprint": "tok1:0169982f02a2aa49ea2aa26fb91e9840bffb6db0e45cc440b1135384cb202c59"
+    },
+    {
+      "crate_name": "vibe-registry",
+      "file": "crates/vibe-registry/src/git_backend/shell/native_admission/ssh_config/tests.rs",
+      "item_kind": "fn",
+      "line": 382,
+      "symbol": "vibe_registry::git_backend::shell::native_admission::ssh_config::tests::encrypted_identity_uses_permitted_loaded_agent_and_never_prompts_without_it",
+      "end_line": 440,
+      "fingerprint": "tok1:02240d7bd2bf4d6e5e00569c6439a7d83c4a1446be3fde4a8215732fea4baad4"
+    },
+    {
+      "crate_name": "vibe-registry",
+      "file": "crates/vibe-registry/src/git_backend/shell/native_admission/ssh_config/tests.rs",
+      "item_kind": "fn",
+      "line": 217,
+      "symbol": "vibe_registry::git_backend::shell::native_admission::ssh_config::tests::identities_only_keeps_agent_restricted_to_selected_public_identity",
+      "end_line": 245,
+      "fingerprint": "tok1:0172a989e9c4afaa18584a3ef77fd76a85d0bdf4526dc6bfcd3b2724fbc9febb"
+    },
+    {
+      "crate_name": "vibe-registry",
+      "file": "crates/vibe-registry/src/git_backend/shell/native_admission/ssh_config/tests.rs",
+      "item_kind": "fn",
+      "line": 487,
+      "symbol": "vibe_registry::git_backend::shell::native_admission::ssh_config::tests::identity_and_include_addition_witnesses_refuse_changed_inputs",
+      "end_line": 538,
+      "fingerprint": "tok1:cb8e2d95e633289f103d470e34573777b7f018eed88f92ca28911b482523ba69"
+    },
+    {
+      "crate_name": "vibe-registry",
+      "file": "crates/vibe-registry/src/git_backend/shell/native_admission/ssh_config/tests.rs",
+      "item_kind": "fn",
+      "line": 441,
+      "symbol": "vibe_registry::git_backend::shell::native_admission::ssh_config::tests::immutable_config_lowers_newly_selected_addresses_and_refuses_effective_denied_host",
+      "end_line": 486,
+      "fingerprint": "tok1:639d90d88f4fe2e70d67a442ef020009e257a7699fcce7f38b5ad3bda532411e"
+    },
+    {
+      "crate_name": "vibe-registry",
+      "file": "crates/vibe-registry/src/git_backend/shell/native_admission/ssh_config/tests.rs",
+      "item_kind": "fn",
+      "line": 95,
+      "symbol": "vibe_registry::git_backend::shell::native_admission::ssh_config::tests::ordered_includes_scalar_precedence_and_url_overrides_match_safe_openssh",
+      "end_line": 193,
+      "fingerprint": "tok1:90d5a7104cf8f9fbab65eb8887c03cbabc244b7ecb2de23c9772634d8bab1a13"
+    },
+    {
+      "crate_name": "vibe-registry",
+      "file": "crates/vibe-registry/src/git_backend/shell/native_admission/ssh_config/tests.rs",
+      "item_kind": "fn",
+      "line": 12,
+      "symbol": "vibe_registry::git_backend::shell::native_admission::ssh_config::tests::ordinary_custom_identity_and_hostname_capture_authenticates",
+      "end_line": 42,
+      "fingerprint": "tok1:46f8313291f15c67eb51f2e203ced5ebaa7f8a574a1e86508ade9ac9582c02bb"
+    },
+    {
+      "crate_name": "vibe-registry",
+      "file": "crates/vibe-registry/src/git_backend/shell/native_admission/ssh_config/tests.rs",
+      "item_kind": "fn",
+      "line": 308,
+      "symbol": "vibe_registry::git_backend::shell::native_admission::ssh_config::tests::selected_algorithm_restrictions_are_replayed_not_replaced_by_defaults",
+      "end_line": 336,
+      "fingerprint": "tok1:e1bed8601f9b74ff97207114a7e08d126eac7f32adb8b15c1c96064d1ed3c587"
+    },
+    {
+      "crate_name": "vibe-registry",
+      "file": "crates/vibe-registry/src/git_backend/shell/native_admission/ssh_config/values.rs",
+      "item_kind": "mod",
+      "line": 2,
+      "symbol": "vibe_registry::git_backend::shell::native_admission::ssh_config::values",
+      "end_line": 2,
+      "fingerprint": "tok1:524517ffa8bcb83c23450eb70bce037b13912af3746d3aae2272968a0e4e6b36"
+    },
+    {
+      "crate_name": "vibe-registry",
+      "file": "crates/vibe-registry/src/git_backend/shell/native_admission/ssh_config/values.rs",
+      "item_kind": "fn",
+      "line": 157,
+      "symbol": "vibe_registry::git_backend::shell::native_admission::ssh_config::values::profile",
+      "end_line": 350,
+      "fingerprint": "tok1:53c2a8a03cec035bb69b9667e86ffa027350fbed94e7d641f97e0b316969dc6a"
+    },
+    {
+      "crate_name": "vibe-registry",
+      "file": "crates/vibe-registry/src/git_backend/shell/native_admission/ssh_config/witness.rs",
+      "item_kind": "mod",
+      "line": 2,
+      "symbol": "vibe_registry::git_backend::shell::native_admission::ssh_config::witness",
+      "end_line": 2,
+      "fingerprint": "tok1:524517ffa8bcb83c23450eb70bce037b13912af3746d3aae2272968a0e4e6b36"
+    },
+    {
+      "crate_name": "vibe-registry",
       "file": "crates/vibe-registry/src/git_backend/shell/native_admission/ssh_tests.rs",
       "item_kind": "fn",
       "line": 112,
@@ -79035,6 +79269,214 @@
       "verb": "implements"
     },
     {
+      "file": "crates/vibe-registry/src/git_backend/shell/native_admission/ssh_config.rs",
+      "from_symbol": "vibe_registry::git_backend::shell::native_admission::ssh_config",
+      "line": 2,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-073#SSH-CONFIG-CAPTURE",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-registry/src/git_backend/shell/native_admission/ssh_config.rs",
+      "from_symbol": "vibe_registry::git_backend::shell::native_admission::ssh_config::SshConfigSelection::capture",
+      "line": 74,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-073#SSH-CONFIG-CAPTURE-LAW",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-registry/src/git_backend/shell/native_admission/ssh_config.rs",
+      "from_symbol": "vibe_registry::git_backend::shell::native_admission::ssh_config::SshConfiguration::preflight_address",
+      "line": 172,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-073#SSH-CONFIG-CAPTURE-LAW",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-registry/src/git_backend/shell/native_admission/ssh_config.rs",
+      "from_symbol": "vibe_registry::git_backend::shell::native_admission::ssh_config::SshConfiguration::profile",
+      "line": 183,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-073#SSH-CONFIG-CAPTURE-LAW",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-registry/src/git_backend/shell/native_admission/ssh_config/inputs.rs",
+      "from_symbol": "vibe_registry::git_backend::shell::native_admission::ssh_config::inputs",
+      "line": 2,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-073#SSH-CONFIG-CAPTURE",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-registry/src/git_backend/shell/native_admission/ssh_config/inputs.rs",
+      "from_symbol": "vibe_registry::git_backend::shell::native_admission::ssh_config::inputs::Frozen::capture",
+      "line": 80,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-073#SSH-CONFIG-CAPTURE-LAW",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-registry/src/git_backend/shell/native_admission/ssh_config/policy_tests.rs",
+      "from_symbol": "vibe_registry::git_backend::shell::native_admission::ssh_config::policy_tests",
+      "line": 3,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-073#SSH-CONFIG-CAPTURE",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-registry/src/git_backend/shell/native_admission/ssh_config/policy_tests.rs",
+      "from_symbol": "vibe_registry::git_backend::shell::native_admission::ssh_config::policy_tests::captured_environment_agent_is_used_only_when_not_disabled_and_host_key_alias_is_preserved",
+      "line": 38,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-073#SSH-CONFIG-CAPTURE-LAW",
+      "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-registry/src/git_backend/shell/native_admission/ssh_config/policy_tests.rs",
+      "from_symbol": "vibe_registry::git_backend::shell::native_admission::ssh_config::policy_tests::excluded_effective_alias_precedes_missing_credentials_and_trust_in_both_paths",
+      "line": 178,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-073#SSH-CONFIG-CAPTURE-LAW",
+      "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-registry/src/git_backend/shell/native_admission/ssh_config/policy_tests.rs",
+      "from_symbol": "vibe_registry::git_backend::shell::native_admission::ssh_config::policy_tests::selected_address_family_and_source_binding_do_not_fall_back_to_any_route",
+      "line": 6,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-073#SSH-CONFIG-CAPTURE-LAW",
+      "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-registry/src/git_backend/shell/native_admission/ssh_config/policy_tests.rs",
+      "from_symbol": "vibe_registry::git_backend::shell::native_admission::ssh_config::policy_tests::selected_cipher_mac_and_kex_exclusions_fail_actual_negotiation",
+      "line": 96,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-073#SSH-CONFIG-CAPTURE-LAW",
+      "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-registry/src/git_backend/shell/native_admission/ssh_config/policy_tests.rs",
+      "from_symbol": "vibe_registry::git_backend::shell::native_admission::ssh_config::policy_tests::selected_minimum_rsa_size_restricts_existing_identity",
+      "line": 123,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-073#SSH-CONFIG-CAPTURE-LAW",
+      "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-registry/src/git_backend/shell/native_admission/ssh_config/policy_tests.rs",
+      "from_symbol": "vibe_registry::git_backend::shell::native_admission::ssh_config::policy_tests::unsafe_original_config_permissions_are_not_repaired_by_freezing",
+      "line": 153,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-073#SSH-CONFIG-CAPTURE-LAW",
+      "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-registry/src/git_backend/shell/native_admission/ssh_config/tests.rs",
+      "from_symbol": "vibe_registry::git_backend::shell::native_admission::ssh_config::tests::active_commands_and_disabled_publickey_refuse_before_contact_but_inactive_proxy_is_harmless",
+      "line": 247,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-073#SSH-CONFIG-CAPTURE-LAW",
+      "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-registry/src/git_backend/shell/native_admission/ssh_config/tests.rs",
+      "from_symbol": "vibe_registry::git_backend::shell::native_admission::ssh_config::tests::config_fifo_oversize_and_recheck_refuse_without_unbounded_read",
+      "line": 338,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-073#SSH-CONFIG-CAPTURE-LAW",
+      "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-registry/src/git_backend/shell/native_admission/ssh_config/tests.rs",
+      "from_symbol": "vibe_registry::git_backend::shell::native_admission::ssh_config::tests::default_identity_and_selected_home_trust_authenticate_without_key_setup_api",
+      "line": 84,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-073#SSH-CONFIG-CAPTURE-LAW",
+      "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-registry/src/git_backend/shell/native_admission/ssh_config/tests.rs",
+      "from_symbol": "vibe_registry::git_backend::shell::native_admission::ssh_config::tests::encrypted_identity_uses_permitted_loaded_agent_and_never_prompts_without_it",
+      "line": 383,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-073#SSH-CONFIG-CAPTURE-LAW",
+      "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-registry/src/git_backend/shell/native_admission/ssh_config/tests.rs",
+      "from_symbol": "vibe_registry::git_backend::shell::native_admission::ssh_config::tests::identities_only_keeps_agent_restricted_to_selected_public_identity",
+      "line": 218,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-073#SSH-CONFIG-CAPTURE-LAW",
+      "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-registry/src/git_backend/shell/native_admission/ssh_config/tests.rs",
+      "from_symbol": "vibe_registry::git_backend::shell::native_admission::ssh_config::tests::identity_and_include_addition_witnesses_refuse_changed_inputs",
+      "line": 488,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-073#SSH-CONFIG-CAPTURE-LAW",
+      "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-registry/src/git_backend/shell/native_admission/ssh_config/tests.rs",
+      "from_symbol": "vibe_registry::git_backend::shell::native_admission::ssh_config::tests::immutable_config_lowers_newly_selected_addresses_and_refuses_effective_denied_host",
+      "line": 442,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-073#SSH-CONFIG-CAPTURE-LAW",
+      "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-registry/src/git_backend/shell/native_admission/ssh_config/tests.rs",
+      "from_symbol": "vibe_registry::git_backend::shell::native_admission::ssh_config::tests::ordered_includes_scalar_precedence_and_url_overrides_match_safe_openssh",
+      "line": 96,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-073#SSH-CONFIG-CAPTURE-LAW",
+      "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-registry/src/git_backend/shell/native_admission/ssh_config/tests.rs",
+      "from_symbol": "vibe_registry::git_backend::shell::native_admission::ssh_config::tests::ordinary_custom_identity_and_hostname_capture_authenticates",
+      "line": 13,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-073#SSH-CONFIG-CAPTURE-LAW",
+      "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-registry/src/git_backend/shell/native_admission/ssh_config/tests.rs",
+      "from_symbol": "vibe_registry::git_backend::shell::native_admission::ssh_config::tests::selected_algorithm_restrictions_are_replayed_not_replaced_by_defaults",
+      "line": 309,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-073#SSH-CONFIG-CAPTURE-LAW",
+      "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-registry/src/git_backend/shell/native_admission/ssh_config/values.rs",
+      "from_symbol": "vibe_registry::git_backend::shell::native_admission::ssh_config::values",
+      "line": 2,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-073#SSH-CONFIG-CAPTURE",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-registry/src/git_backend/shell/native_admission/ssh_config/values.rs",
+      "from_symbol": "vibe_registry::git_backend::shell::native_admission::ssh_config::values::profile",
+      "line": 157,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-073#SSH-CONFIG-CAPTURE-LAW",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-registry/src/git_backend/shell/native_admission/ssh_config/witness.rs",
+      "from_symbol": "vibe_registry::git_backend::shell::native_admission::ssh_config::witness",
+      "line": 2,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-073#SSH-CONFIG-CAPTURE",
+      "verb": "implements"
+    },
+    {
       "file": "crates/vibe-registry/src/git_backend/shell/native_admission/ssh_tests.rs",
       "from_symbol": "vibe_registry::git_backend::shell::native_admission::ssh_tests::direct_key_and_explicit_agent_acquire_exact_objects_and_use_n2_staging",
       "line": 113,
@@ -117303,12 +117745,30 @@
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-073#NATIVE-SSH-LAW"
     },
     {
+      "anchor": "SSH-CONFIG-CAPTURE",
+      "content_hash": "sha256:78cfffabf6fa606f49ed12a71613c557475739ba1a464157bf7cb66e502c3540",
+      "doc_path": "common/PROP-073",
+      "file": "vibevm/vibespecs/common/PROP-073-source-decisions-and-operation-effects.xml",
+      "heading": "Ordinary user SSH inputs for an already selected source",
+      "line": 41,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-073#SSH-CONFIG-CAPTURE"
+    },
+    {
+      "anchor": "SSH-CONFIG-CAPTURE-LAW",
+      "content_hash": "sha256:0b82c19ee44e3daed8dfd5b66710cc4adb55f950bf34482e998e991cabcefe99",
+      "doc_path": "common/PROP-073",
+      "file": "vibevm/vibespecs/common/PROP-073-source-decisions-and-operation-effects.xml",
+      "heading": "The source owner chooses the address first: current registry for new packages, locked source for locked packages. User SSH configuration supplies authentication, trust and explicitly captured endpoint meaning for that address; it cannot substitute the current registry for a locked source. A captured-config profile is distinct from explicit-direct authority. Selected OpenSSH may evaluate only an audited frozen configuration closure: unexamined includes, executable match conditions and unsupported active routing cannot execute or contact a host during discovery. Supported ordinary Host/include precedence, URL overrides, ordered identity files together with the permitted agent, IdentitiesOnly and known-host selection retain their meaning. Effective destinations are admitted before contact. Missing trust or credentials and unsupported active configuration produce explicit redacted failures, never an alternate transport. Existing keys and agent setup are reused without writing private keys into Vibe settings. Captured input witnesses are checked before use; caller publication retains existing checked recovery. Actual isolated authentication and configuration-parity tests are required; parser output alone is not proof of useful SSH integration. @status:spec/done",
+      "line": 42,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-073#SSH-CONFIG-CAPTURE-LAW"
+    },
+    {
       "anchor": "NATIVE-ROUTES",
       "content_hash": "sha256:47eb1abc06b289be2537440488e561a5f6176bb3743f7b2a7f2d5fd7acfa7110",
       "doc_path": "common/PROP-073",
       "file": "vibevm/vibespecs/common/PROP-073-source-decisions-and-operation-effects.xml",
       "heading": "Admitted alternatives, relocation and recursive Git sources",
-      "line": 41,
+      "line": 46,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-073#NATIVE-ROUTES",
       "kind": "req",
       "revision": 1
@@ -117319,7 +117779,7 @@
       "doc_path": "common/PROP-073",
       "file": "vibevm/vibespecs/common/PROP-073-source-decisions-and-operation-effects.xml",
       "heading": "Source-selection owners may skip a concretely excluded route and try independently admitted alternatives without converting lower-level refusal into absence or an ungated fallback. The actual serving route is retained across lookup, redirect-marker reads and acquisition, separately from canonical source identity. Package redirects use the target owner's bound backend and credential authority. Initial HTTPS relocation follows the normal Git initial-request model through the bounded HTTP owner, preserves sticky cross-origin credential stripping and validated endpoint meaning, and leaves opaque native auto-follow disabled. Captured native PEM trust may be reused; bundled HTTP roots must never silently stand in for the selected Git installation's system trust, so that mode requires separately explicit HTTP discovery trust while direct native System requests remain supported. Every recursive child is selected from retained parent gitlink and module data, admitted before contact and acquired at its exact object identity. Original module URLs, selected raw URLs and warm recorded origins must be validated before rewriting can conceal unsupported URL credentials in derived repository metadata. Malformed authority-bearing URL input refuses rather than becoming an opaque rewrite alias; ordinary SSH usernames and supported relative/SCP addresses retain their meaning. Immutable authored Git objects are not rewritten to erase their input. Safe unique mount paths, captured warm overrides and explicit credential ceilings remain; missing, corrupt, unsafe or unqualified children refuse before caller publication. Parent and complete child trees stage together and publish through the existing checked workspace undo, with foreign-state conflict preservation. Allowed-route and authenticated recursive successes, relative-URL parity, denied-descendant zero-contact and whole-tree recovery require actual execution before acceptance. Public preference/exclusion settings are separate work. @status:spec/done",
-      "line": 43,
+      "line": 48,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-073#NATIVE-ROUTES-LAW"
     },
     {
@@ -117328,7 +117788,7 @@
       "doc_path": "common/PROP-073",
       "file": "vibevm/vibespecs/common/PROP-073-source-decisions-and-operation-effects.xml",
       "heading": "Explicit preview and cancellation boundaries",
-      "line": 46,
+      "line": 51,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-073#OPERATION-EFFECTS",
       "kind": "req",
       "revision": 1
@@ -117339,7 +117799,7 @@
       "doc_path": "common/PROP-073",
       "file": "vibevm/vibespecs/common/PROP-073-source-decisions-and-operation-effects.xml",
       "heading": "Operation planning separates source resolution, acquisition effects and product publication. A read-only preview does not silently inherit cache/config/temp writes from existing acquisition; unsupported metadata access is an explicit limitation until the shared provider supports the requested effect contract. Apply uses captured decisions or reports/replans drift rather than promising a mutable ref is unchanged. Cancellation requests and stopped outcomes are distinct. Before product publication, cooperative cancellation preserves project state; during owned local publication use existing guarded recovery. Completed or unknown external effects and rollback conflicts are reported truthfully, never labeled successful restoration. Reuse lifecycle and progress owners rather than create a parallel orchestrator. Logical successful-write counters are distinct from received bytes, retained file size and physical disk I/O. @status:spec/plan",
-      "line": 48,
+      "line": 53,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-073#OPERATION-EFFECTS-LAW"
     },
     {

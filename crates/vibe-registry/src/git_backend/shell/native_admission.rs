@@ -8,6 +8,8 @@ use std::{
     sync::{Arc, Mutex},
 };
 mod capture;
+mod ssh_config;
+pub use ssh_config::{SshConfigSelection, SshConfiguration};
 mod child_layout;
 pub(super) mod ssh;
 pub use ssh::{SshAuthentication, SshProfile};
@@ -78,6 +80,7 @@ pub struct NativeGitAdmission {
     trust: TlsTrust,
     selection: Option<NativeConfigSelection>,
     ssh: Vec<SshProfile>,
+    ssh_configuration: Option<Arc<SshConfiguration>>,
     discovery: Option<HttpDiscoveryTrust>,
 }
 impl NativeGitAdmission {
@@ -96,6 +99,7 @@ impl NativeGitAdmission {
             trust,
             selection: None,
             ssh: Vec::new(),
+            ssh_configuration: None,
             discovery: None,
         }
     }
@@ -122,6 +126,12 @@ impl NativeGitAdmission {
         self.ssh = profiles;
         Ok(self)
     }
+    /// Bind audited ordinary SSH inputs for each source selected later by the
+    /// existing registry/lock/gitlink owners. This creates no ambient cache.
+    pub fn with_ssh_configuration(mut self, configuration: Arc<SshConfiguration>) -> Self {
+        self.ssh_configuration = Some(configuration);
+        self
+    }
     pub(crate) fn preflight_registry_auth(
         &self,
         auth: vibe_core::manifest::AuthKind,
@@ -129,7 +139,7 @@ impl NativeGitAdmission {
         use vibe_core::manifest::AuthKind;
         match auth {
             AuthKind::None | AuthKind::TokenEnv => Ok(()),
-            AuthKind::Ssh if !self.ssh.is_empty() => Ok(()),
+            AuthKind::Ssh if !self.ssh.is_empty() || self.ssh_configuration.is_some() => Ok(()),
             _ => Err(unsupported(
                 "declared credential route requires a separate admitted profile",
             )),
@@ -212,6 +222,13 @@ impl NativeGitAdmission {
                     && selected.replace(remote).is_some()
                 {
                     return Err(unsupported("ambiguous exact SSH grants for this address"));
+                }
+            }
+            if let Some(configuration) = &self.ssh_configuration {
+                let profile = Arc::new(configuration.profile(address, &self.binding)?);
+                let remote = ssh::captured_remote(profile, address, &self.binding)?;
+                if selected.replace(remote).is_some() {
+                    return Err(unsupported("explicit and captured SSH grants overlap"));
                 }
             }
             return selected
