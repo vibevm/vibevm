@@ -84,7 +84,30 @@ pub fn install_skill(
     project_root: Option<&Path>,
     dry_run: bool,
 ) -> Result<SkillInstallReport> {
-    install_skill_with(agent, scope, project_root, dry_run, true)
+    install_skill_adopting(
+        agent,
+        scope,
+        project_root,
+        vibe_agent_projection::activation::BuiltinAdoption::explicit("vibe mcp install"),
+        dry_run,
+    )
+}
+
+/// Explicit builtin SKILL.md registration under a stated adoption policy
+/// (PROP-073 managed activation): `vibe mcp install` adopts identical
+/// unreceipted bytes, `vibe mcp install --force` also replaces stale
+/// unreceipted bytes an older vibe wrote, and `vibe mcp upgrade` adopts
+/// identical bytes only. A refused stale target surfaces as
+/// [`vibe_agent_projection::pkgskill::PackageSkillError::Unowned`].
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-073#MANAGED-ACTIVATION")]
+pub fn install_skill_adopting(
+    agent: Agent,
+    scope: Scope,
+    project_root: Option<&Path>,
+    adoption: vibe_agent_projection::activation::BuiltinAdoption,
+    dry_run: bool,
+) -> Result<SkillInstallReport> {
+    install_skill_with(agent, scope, project_root, dry_run, Some(adoption))
 }
 
 /// Refresh or observe existing ownership without adopting unreceipted files.
@@ -95,7 +118,7 @@ pub fn refresh_skill(
     project_root: Option<&Path>,
     dry_run: bool,
 ) -> Result<SkillInstallReport> {
-    install_skill_with(agent, scope, project_root, dry_run, false)
+    install_skill_with(agent, scope, project_root, dry_run, None)
 }
 
 fn install_skill_with(
@@ -103,7 +126,7 @@ fn install_skill_with(
     scope: Scope,
     project_root: Option<&Path>,
     dry_run: bool,
-    explicit: bool,
+    adoption: Option<vibe_agent_projection::activation::BuiltinAdoption>,
 ) -> Result<SkillInstallReport> {
     let agent_str = agent.as_str().to_string();
     let scope_str = scope.as_str();
@@ -124,12 +147,13 @@ fn install_skill_with(
 
     let desired =
         std::collections::BTreeMap::from([("SKILL.md".into(), SKILL_TEMPLATE.as_bytes().to_vec())]);
-    let row = if explicit {
-        vibe_agent_projection::pkgskill::register_builtin_skill_snapshot(
+    let row = if let Some(adoption) = adoption {
+        vibe_agent_projection::pkgskill::adopt_builtin_skill_snapshot(
             agent,
             scope,
             project_root,
             &desired,
+            adoption,
             dry_run,
         )?
     } else {
@@ -186,6 +210,37 @@ mod tests {
         // A second run sees identical bytes → unchanged.
         let r2 = install_skill(Agent::ClaudeCode, Scope::Project, Some(dir.path()), false).unwrap();
         assert_eq!(r2.status, "unchanged");
+    }
+
+    /// A SKILL.md an older (pre-receipt) vibe wrote with stale bytes is
+    /// refused by plain explicit install and replaced only under `--force`.
+    #[test]
+    fn stale_legacy_skill_needs_forced_adoption() {
+        use vibe_agent_projection::activation::BuiltinAdoption;
+        let dir = tempfile::tempdir().unwrap();
+        let skill = dir.path().join(".claude/skills/vibevm/SKILL.md");
+        fs::create_dir_all(skill.parent().unwrap()).unwrap();
+        fs::write(&skill, "stale content").unwrap();
+        let refusal =
+            install_skill(Agent::ClaudeCode, Scope::Project, Some(dir.path()), false).unwrap_err();
+        assert!(
+            refusal.to_string().contains("vibe mcp install --force"),
+            "{refusal}"
+        );
+        assert_eq!(fs::read_to_string(&skill).unwrap(), "stale content");
+        let forced = install_skill_adopting(
+            Agent::ClaudeCode,
+            Scope::Project,
+            Some(dir.path()),
+            BuiltinAdoption::forced("vibe mcp install"),
+            false,
+        )
+        .unwrap();
+        assert_eq!(forced.status, "adopted");
+        assert_eq!(fs::read_to_string(&skill).unwrap(), SKILL_TEMPLATE);
+        let again =
+            install_skill(Agent::ClaudeCode, Scope::Project, Some(dir.path()), false).unwrap();
+        assert_eq!(again.status, "unchanged");
     }
 
     #[test]

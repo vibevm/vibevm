@@ -35,6 +35,81 @@ fn json_entry_argv(entry: &serde_json::Value) -> Vec<String> {
     v
 }
 
+/// `vibe mcp install --what both` for Claude Code at project scope: writes
+/// the receipt-owned builtin `vibevm` entry and SKILL.md.
+fn install_builtin_claude(user: &UserScratch, project: &Path) {
+    user.vibe()
+        .arg("mcp")
+        .arg("install")
+        .arg("--path")
+        .arg(project)
+        .arg("--agent")
+        .arg("claude")
+        .arg("--scope")
+        .arg("project")
+        .arg("--what")
+        .arg("both")
+        .assert()
+        .success();
+}
+
+/// Simulate a receipt-backed install written by an older vibe release:
+/// both the config entry and its receipt payload carry the old launch
+/// shape, so the receipt still proves vibe wrote exactly those bytes.
+fn age_receipted_builtin_entry(project: &Path) {
+    let old = serde_json::json!({ "command": "old-binary", "args": [] });
+    let config = project.join(".mcp.json");
+    let mut doc: serde_json::Value =
+        serde_json::from_str(&fs::read_to_string(&config).unwrap()).unwrap();
+    doc["mcpServers"]["vibevm"] = old.clone();
+    fs::write(&config, serde_json::to_string_pretty(&doc).unwrap()).unwrap();
+    let receipt = project.join(".mcp.json.vibevm-mcp.json");
+    let mut owned: serde_json::Value =
+        serde_json::from_str(&fs::read_to_string(&receipt).unwrap()).unwrap();
+    owned["entries"]["vibevm"]["payload"] = old;
+    fs::write(&receipt, serde_json::to_string_pretty(&owned).unwrap()).unwrap();
+}
+
+/// Same for the SKILL.md: stale bytes on disk and the matching digest in
+/// its ownership receipt.
+fn age_receipted_builtin_skill(project: &Path) {
+    use sha2::Digest;
+    let stale = "stale content";
+    fs::write(project.join(".claude/skills/vibevm/SKILL.md"), stale).unwrap();
+    let receipt = project.join(".claude/skills/.vibevm.vibe-skill-receipt.toml");
+    let mut owned: toml::Value = toml::from_str(&fs::read_to_string(&receipt).unwrap()).unwrap();
+    let files = owned["file"].as_array_mut().unwrap();
+    let skill = files
+        .iter_mut()
+        .find(|file| file["path"].as_str() == Some("SKILL.md"))
+        .unwrap();
+    skill["sha256"] = toml::Value::String(format!("{:x}", sha2::Sha256::digest(stale)));
+    fs::write(&receipt, toml::to_string(&owned).unwrap()).unwrap();
+}
+
+/// Plant the pre-receipt shape every project set up by an older vibe has:
+/// a stale builtin `vibevm` entry beside a foreign one, plus a stale
+/// SKILL.md, and no ownership receipt for either.
+fn plant_unreceipted_legacy_builtin(project: &Path) -> (PathBuf, String, PathBuf) {
+    let config = project.join(".mcp.json");
+    let original = r#"{ "keep": "me", "mcpServers": { "vibevm": { "command": "old-binary", "args": [] }, "other": { "command": "other-bin", "args": [] } } }"#;
+    fs::write(&config, original).unwrap();
+    let skill = project.join(".claude/skills/vibevm/SKILL.md");
+    fs::create_dir_all(skill.parent().unwrap()).unwrap();
+    fs::write(&skill, "stale content").unwrap();
+    (config, original.to_string(), skill)
+}
+
+/// The `(agent, scope) == (claude, project)` row of a report array.
+fn claude_project_row<'a>(v: &'a serde_json::Value, key: &str) -> &'a serde_json::Value {
+    v[key]
+        .as_array()
+        .unwrap()
+        .iter()
+        .find(|r| r["agent"] == "claude" && r["scope"] == "project")
+        .unwrap_or_else(|| panic!("claude project row in `{key}`: {v}"))
+}
+
 /// Build a per-package git registry where `flow-wal` carries TWO
 /// tagged versions: `v0.1.0` (from the in-tree fixture, content
 /// rewritten so the project file the test asserts on lives at a
@@ -1355,6 +1430,102 @@ fn mcp_install_force_writes_even_without_marker() {
 }
 
 #[test]
+fn mcp_install_force_adopts_stale_unreceipted_legacy_entry() {
+    let user = UserScratch::new();
+    let project = tempfile::tempdir().unwrap();
+    user.init_project(project.path());
+    fs::create_dir_all(project.path().join(".claude")).unwrap();
+    let (config, original, skill) = plant_unreceipted_legacy_builtin(project.path());
+    let install = |force: bool| {
+        let mut cmd = user.vibe();
+        cmd.arg("--json")
+            .arg("mcp")
+            .arg("install")
+            .arg("--path")
+            .arg(project.path())
+            .arg("--agent")
+            .arg("claude")
+            .arg("--scope")
+            .arg("project")
+            .arg("--what")
+            .arg("both");
+        if force {
+            cmd.arg("--force");
+        }
+        cmd.output().unwrap()
+    };
+
+    // Without --force the stale unreceipted entry stays a refusal.
+    let refused = install(false);
+    assert!(!refused.status.success());
+    let stderr = String::from_utf8_lossy(&refused.stderr);
+    assert!(stderr.contains("vibe mcp install --force"), "{stderr}");
+    assert_eq!(fs::read_to_string(&config).unwrap(), original);
+    assert_eq!(fs::read_to_string(&skill).unwrap(), "stale content");
+
+    // --force explicitly adopts and replaces only the builtin entry.
+    let out = install(true);
+    assert!(
+        out.status.success(),
+        "stderr: {}",
+        String::from_utf8_lossy(&out.stderr)
+    );
+    let v: serde_json::Value = serde_json::from_slice(&out.stdout).unwrap();
+    let mcp = claude_project_row(&v, "results");
+    assert_eq!(mcp["status"], "adopted", "{mcp}");
+    assert!(
+        mcp["note"].as_str().unwrap().contains("old-binary"),
+        "{mcp}"
+    );
+    let skill_row = claude_project_row(&v, "skill_results");
+    assert_eq!(skill_row["status"], "adopted", "{skill_row}");
+    assert!(
+        skill_row["note"].as_str().unwrap().contains("sha256"),
+        "{skill_row}"
+    );
+    let parsed: serde_json::Value =
+        serde_json::from_str(&fs::read_to_string(&config).unwrap()).unwrap();
+    assert_eq!(
+        json_entry_argv(&parsed["mcpServers"]["vibevm"]),
+        expected_vibevm_argv()
+    );
+    assert_eq!(parsed["keep"], "me");
+    assert_eq!(parsed["mcpServers"]["other"]["command"], "other-bin");
+    assert_eq!(
+        fs::read_to_string(&skill).unwrap(),
+        vibe_mcp::install::SKILL_TEMPLATE
+    );
+    let receipt: serde_json::Value = serde_json::from_str(
+        &fs::read_to_string(project.path().join(".mcp.json.vibevm-mcp.json")).unwrap(),
+    )
+    .unwrap();
+    assert!(receipt["entries"].get("other").is_none());
+    assert!(receipt["entries"]["vibevm"]["pending_previous"].is_null());
+
+    // Now receipt-owned: an ordinary upgrade sees nothing stale.
+    let out = user
+        .vibe()
+        .arg("--json")
+        .arg("mcp")
+        .arg("upgrade")
+        .arg("--path")
+        .arg(project.path())
+        .arg("--scope")
+        .arg("project")
+        .arg("--agent")
+        .arg("claude")
+        .output()
+        .unwrap();
+    assert!(out.status.success());
+    let v: serde_json::Value = serde_json::from_slice(&out.stdout).unwrap();
+    assert_eq!(claude_project_row(&v, "results")["status"], "unchanged");
+    assert_eq!(
+        claude_project_row(&v, "skill_results")["status"],
+        "unchanged"
+    );
+}
+
+#[test]
 fn mcp_install_what_both_writes_skill_md_for_claude() {
     let user = UserScratch::new();
     let project = tempfile::tempdir().unwrap();
@@ -2137,16 +2308,13 @@ fn mcp_upgrade_detects_drift_and_rewrites_to_current() {
     user.init_project(project.path());
     fs::create_dir_all(project.path().join(".claude")).unwrap();
 
-    // Plant a stale vibevm block + stale SKILL.md by hand.
+    // A receipt-backed install that an older vibe wrote: upgrade owns these
+    // bytes (their receipt matches) and must refresh them to the template.
+    install_builtin_claude(&user, project.path());
+    age_receipted_builtin_entry(project.path());
+    age_receipted_builtin_skill(project.path());
     let config_path = project.path().join(".mcp.json");
-    fs::write(
-        &config_path,
-        r#"{ "mcpServers": { "vibevm": { "command": "old-binary", "args": [] } } }"#,
-    )
-    .unwrap();
     let skill_path = project.path().join(".claude/skills/vibevm/SKILL.md");
-    fs::create_dir_all(skill_path.parent().unwrap()).unwrap();
-    fs::write(&skill_path, "stale content").unwrap();
 
     let out = user
         .vibe()
@@ -2167,21 +2335,8 @@ fn mcp_upgrade_detects_drift_and_rewrites_to_current() {
         String::from_utf8_lossy(&out.stderr)
     );
     let v: serde_json::Value = serde_json::from_slice(&out.stdout).unwrap();
-
-    let claude_mcp = v["results"]
-        .as_array()
-        .unwrap()
-        .iter()
-        .find(|r| r["agent"] == "claude" && r["scope"] == "project")
-        .unwrap();
-    assert_eq!(claude_mcp["status"], "updated");
-    let claude_skill = v["skill_results"]
-        .as_array()
-        .unwrap()
-        .iter()
-        .find(|r| r["agent"] == "claude" && r["scope"] == "project")
-        .unwrap();
-    assert_eq!(claude_skill["status"], "updated");
+    assert_eq!(claude_project_row(&v, "results")["status"], "updated");
+    assert_eq!(claude_project_row(&v, "skill_results")["status"], "updated");
 
     // Verify on-disk state was actually refreshed.
     let written = fs::read_to_string(&config_path).unwrap();
@@ -2201,12 +2356,16 @@ fn mcp_upgrade_dry_run_does_not_write() {
     user.init_project(project.path());
     fs::create_dir_all(project.path().join(".claude")).unwrap();
 
+    install_builtin_claude(&user, project.path());
+    age_receipted_builtin_entry(project.path());
     let config_path = project.path().join(".mcp.json");
-    let original = r#"{ "mcpServers": { "vibevm": { "command": "old", "args": [] } } }"#;
-    fs::write(&config_path, original).unwrap();
+    let receipt_path = project.path().join(".mcp.json.vibevm-mcp.json");
+    let original = fs::read_to_string(&config_path).unwrap();
+    let original_receipt = fs::read_to_string(&receipt_path).unwrap();
 
     let out = user
         .vibe()
+        .arg("--json")
         .arg("mcp")
         .arg("upgrade")
         .arg("--path")
@@ -2219,9 +2378,123 @@ fn mcp_upgrade_dry_run_does_not_write() {
         .arg("--dry-run")
         .output()
         .unwrap();
-    assert!(out.status.success());
-    // File untouched.
+    assert!(
+        out.status.success(),
+        "stderr: {}",
+        String::from_utf8_lossy(&out.stderr)
+    );
+    let v: serde_json::Value = serde_json::from_slice(&out.stdout).unwrap();
+    assert_eq!(claude_project_row(&v, "results")["status"], "would-update");
+    // Config and receipt untouched.
     assert_eq!(fs::read_to_string(&config_path).unwrap(), original);
+    assert_eq!(fs::read_to_string(&receipt_path).unwrap(), original_receipt);
+}
+
+#[test]
+fn mcp_upgrade_reports_unreceipted_legacy_entries_unmanaged() {
+    let user = UserScratch::new();
+    let project = tempfile::tempdir().unwrap();
+    user.init_project(project.path());
+    fs::create_dir_all(project.path().join(".claude")).unwrap();
+    let (config, original, skill) = plant_unreceipted_legacy_builtin(project.path());
+
+    for dry_run in [true, false] {
+        let mut cmd = user.vibe();
+        cmd.arg("--json")
+            .arg("mcp")
+            .arg("upgrade")
+            .arg("--path")
+            .arg(project.path())
+            .arg("--scope")
+            .arg("project")
+            .arg("--agent")
+            .arg("claude");
+        if dry_run {
+            cmd.arg("--dry-run");
+        }
+        let out = cmd.output().unwrap();
+        assert!(
+            out.status.success(),
+            "dry_run={dry_run} stderr: {}",
+            String::from_utf8_lossy(&out.stderr)
+        );
+        let v: serde_json::Value = serde_json::from_slice(&out.stdout).unwrap();
+        for key in ["results", "skill_results"] {
+            let row = claude_project_row(&v, key);
+            assert_eq!(row["status"], "unmanaged", "{key}: {row}");
+            assert!(
+                row["note"]
+                    .as_str()
+                    .unwrap()
+                    .contains("vibe mcp install --force"),
+                "{key}: {row}"
+            );
+        }
+        // Stale unreceipted bytes are never claimed or rewritten by upgrade.
+        assert_eq!(fs::read_to_string(&config).unwrap(), original);
+        assert_eq!(fs::read_to_string(&skill).unwrap(), "stale content");
+        assert!(!project.path().join(".mcp.json.vibevm-mcp.json").exists());
+        assert!(
+            !project
+                .path()
+                .join(".claude/skills/.vibevm.vibe-skill-receipt.toml")
+                .exists()
+        );
+    }
+}
+
+#[test]
+fn mcp_upgrade_adopts_byte_canonical_legacy_entries() {
+    let user = UserScratch::new();
+    let project = tempfile::tempdir().unwrap();
+    user.init_project(project.path());
+    fs::create_dir_all(project.path().join(".claude")).unwrap();
+    // A pre-receipt vibe wrote exactly the current bytes: upgrade, an
+    // explicit refresh of vibe's own entries, adopts them unchanged.
+    let argv = expected_vibevm_argv();
+    let config = project.path().join(".mcp.json");
+    let entry = serde_json::json!({ "command": argv[0], "args": argv[1..] });
+    fs::write(
+        &config,
+        serde_json::json!({ "mcpServers": { "vibevm": entry } }).to_string(),
+    )
+    .unwrap();
+    let skill = project.path().join(".claude/skills/vibevm/SKILL.md");
+    fs::create_dir_all(skill.parent().unwrap()).unwrap();
+    fs::write(&skill, vibe_mcp::install::SKILL_TEMPLATE).unwrap();
+
+    let out = user
+        .vibe()
+        .arg("--json")
+        .arg("mcp")
+        .arg("upgrade")
+        .arg("--path")
+        .arg(project.path())
+        .arg("--scope")
+        .arg("project")
+        .arg("--agent")
+        .arg("claude")
+        .output()
+        .unwrap();
+    assert!(
+        out.status.success(),
+        "stderr: {}",
+        String::from_utf8_lossy(&out.stderr)
+    );
+    let v: serde_json::Value = serde_json::from_slice(&out.stdout).unwrap();
+    assert_eq!(claude_project_row(&v, "results")["status"], "adopted");
+    assert_eq!(claude_project_row(&v, "skill_results")["status"], "adopted");
+    assert!(project.path().join(".mcp.json.vibevm-mcp.json").is_file());
+    assert!(
+        project
+            .path()
+            .join(".claude/skills/.vibevm.vibe-skill-receipt.toml")
+            .is_file()
+    );
+    assert_eq!(
+        fs::read_to_string(&skill).unwrap(),
+        vibe_mcp::install::SKILL_TEMPLATE
+    );
 }
 
 #[test]
@@ -2366,17 +2639,21 @@ fn mcp_uninstall_preserves_foreign_keys() {
     user.init_project(project.path());
     fs::create_dir_all(project.path().join(".claude")).unwrap();
 
-    // Plant a config with both vibevm and another server.
+    // Plant a pre-receipt config with the byte-canonical vibevm entry (as an
+    // older vibe wrote it) beside another server. Uninstall is explicit, so
+    // it adopts the canonical entry and removes only that key.
     let config = project.path().join(".mcp.json");
+    let argv = expected_vibevm_argv();
     fs::write(
         &config,
-        r#"{
-          "preexisting": "keep-me",
-          "mcpServers": {
-            "vibevm": { "command": "vibe", "args": ["mcp", "serve"] },
-            "other": { "command": "other-bin", "args": [] }
-          }
-        }"#,
+        serde_json::json!({
+            "preexisting": "keep-me",
+            "mcpServers": {
+                "vibevm": { "command": argv[0], "args": argv[1..] },
+                "other": { "command": "other-bin", "args": [] }
+            }
+        })
+        .to_string(),
     )
     .unwrap();
 
@@ -2398,6 +2675,8 @@ fn mcp_uninstall_preserves_foreign_keys() {
     assert_eq!(parsed["preexisting"], "keep-me");
     assert!(parsed["mcpServers"].get("vibevm").is_none());
     assert_eq!(parsed["mcpServers"]["other"]["command"], "other-bin");
+    // The transient adoption receipt is gone with the last owned entry.
+    assert!(!project.path().join(".mcp.json.vibevm-mcp.json").exists());
 }
 
 #[test]
@@ -2570,34 +2849,66 @@ fn mcp_status_reports_per_agent_state() {
 #[test]
 fn mcp_status_reports_skill_drift() {
     let user = UserScratch::new();
-    let project = tempfile::tempdir().unwrap();
-    user.init_project(project.path());
-    fs::create_dir_all(project.path().join(".claude")).unwrap();
 
-    // Plant a stale skill file by hand.
-    let skill_path = project.path().join(".claude/skills/vibevm/SKILL.md");
+    // Pre-receipt stale SKILL.md: read-only status reports a per-row
+    // conflict with the adoption hint instead of aborting.
+    let legacy = tempfile::tempdir().unwrap();
+    user.init_project(legacy.path());
+    fs::create_dir_all(legacy.path().join(".claude")).unwrap();
+    let skill_path = legacy.path().join(".claude/skills/vibevm/SKILL.md");
     fs::create_dir_all(skill_path.parent().unwrap()).unwrap();
     fs::write(&skill_path, "stale content").unwrap();
-
     let out = user
         .vibe()
         .arg("--json")
         .arg("mcp")
         .arg("status")
         .arg("--path")
-        .arg(project.path())
+        .arg(legacy.path())
         .output()
         .unwrap();
-    assert!(out.status.success());
+    assert!(
+        out.status.success(),
+        "stderr: {}",
+        String::from_utf8_lossy(&out.stderr)
+    );
     let v: serde_json::Value = serde_json::from_slice(&out.stdout).unwrap();
-    let claude_skill = v["skill_results"]
-        .as_array()
-        .unwrap()
-        .iter()
-        .find(|r| r["agent"] == "claude" && r["scope"] == "project")
-        .expect("claude project skill entry present");
-    // Stale on-disk content → would-update.
-    assert_eq!(claude_skill["status"], "would-update");
+    let claude_skill = claude_project_row(&v, "skill_results");
+    assert_eq!(claude_skill["status"], "conflict");
+    assert!(
+        claude_skill["note"]
+            .as_str()
+            .unwrap()
+            .contains("vibe mcp install --force"),
+        "{claude_skill}"
+    );
+    assert_eq!(fs::read_to_string(&skill_path).unwrap(), "stale content");
+
+    // Receipt-backed stale SKILL.md (an older vibe's owned bytes) → would-update.
+    let owned = tempfile::tempdir().unwrap();
+    user.init_project(owned.path());
+    fs::create_dir_all(owned.path().join(".claude")).unwrap();
+    install_builtin_claude(&user, owned.path());
+    age_receipted_builtin_skill(owned.path());
+    let out = user
+        .vibe()
+        .arg("--json")
+        .arg("mcp")
+        .arg("status")
+        .arg("--path")
+        .arg(owned.path())
+        .output()
+        .unwrap();
+    assert!(
+        out.status.success(),
+        "stderr: {}",
+        String::from_utf8_lossy(&out.stderr)
+    );
+    let v: serde_json::Value = serde_json::from_slice(&out.stdout).unwrap();
+    assert_eq!(
+        claude_project_row(&v, "skill_results")["status"],
+        "would-update"
+    );
 }
 
 #[test]

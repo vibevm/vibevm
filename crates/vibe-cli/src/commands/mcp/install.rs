@@ -483,7 +483,7 @@ fn walk_install(
     project_root: Option<&Path>,
     what: What,
     assume_yes: bool,
-    _force: bool,
+    force: bool,
     dry_run: bool,
 ) -> Result<(Vec<AgentInstallReport>, Vec<SkillInstallReport>)> {
     let mut results: Vec<AgentInstallReport> = Vec::new();
@@ -500,11 +500,14 @@ fn walk_install(
                 let path = agent.config_path(concrete_scope, project_root)?;
                 if let Some(path) = path {
                     let payload = agent.build_mcp_entry();
-                    let outcome = if dry_run {
-                        preview_install_mcp(*agent, concrete_scope, &path, &payload)?
-                    } else {
-                        apply_install_mcp(*agent, concrete_scope, &path, &payload)?
-                    };
+                    let outcome = install_builtin_mcp(
+                        *agent,
+                        concrete_scope,
+                        &path,
+                        &payload,
+                        force,
+                        dry_run,
+                    )?;
                     results.push(outcome);
                     // ---- Package-declared servers (PROP-027 §2.4) ----
                     // Project scope only: the {project_root} substitution
@@ -540,7 +543,13 @@ fn walk_install(
             }
             // ---- SKILL.md ----
             if what.includes_skill() {
-                let outcome = install_skill(*agent, concrete_scope, project_root, dry_run)?;
+                let outcome = vibe_mcp::install::install_skill_adopting(
+                    *agent,
+                    concrete_scope,
+                    project_root,
+                    install_adoption(force),
+                    dry_run,
+                )?;
                 skill_results.push(outcome);
             }
         }

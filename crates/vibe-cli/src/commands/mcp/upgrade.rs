@@ -3,6 +3,7 @@
 
 use super::*;
 use crate::output::language::Glyph;
+use vibe_agent_projection::activation::BuiltinAdoption;
 
 // ---------------------------------------------------------------------------
 // upgrade — scan known places + refresh stale to current template
@@ -68,8 +69,12 @@ pub(super) fn run_upgrade(ctx: &output::Context, args: McpUpgradeArgs) -> Result
     // not `--dry-run`.
     let (preview_results, preview_skill) =
         walk_upgrade(&agents, scope, project_root.as_deref(), what, true)?;
-    let needs_change = preview_results.iter().any(|r| r.status == "would-update")
-        || preview_skill.iter().any(|r| r.status == "would-update");
+    let needs_change = preview_results
+        .iter()
+        .any(|r| matches!(r.status, "would-update" | "would-adopt"))
+        || preview_skill
+            .iter()
+            .any(|r| matches!(r.status, "would-update" | "would-adopt"));
 
     if !args.dry_run && needs_change {
         // Confirm only on real TTY without a skip-flag (see the
@@ -83,11 +88,11 @@ pub(super) fn run_upgrade(ctx: &output::Context, args: McpUpgradeArgs) -> Result
                 print_upgrade_results(ctx, true, &preview_results, &preview_skill);
                 let stale = preview_results
                     .iter()
-                    .filter(|r| r.status == "would-update")
+                    .filter(|r| matches!(r.status, "would-update" | "would-adopt"))
                     .count()
                     + preview_skill
                         .iter()
-                        .filter(|r| r.status == "would-update")
+                        .filter(|r| matches!(r.status, "would-update" | "would-adopt"))
                         .count();
                 crate::output::prompts::confirm(
                     &format!(
@@ -127,11 +132,21 @@ pub(super) fn run_upgrade(ctx: &output::Context, args: McpUpgradeArgs) -> Result
     if ctx.is_quiet() {
         let stale = results
             .iter()
-            .filter(|r| matches!(r.status, "would-update" | "updated"))
+            .filter(|r| {
+                matches!(
+                    r.status,
+                    "would-update" | "updated" | "would-adopt" | "adopted"
+                )
+            })
             .count()
             + skill_results
                 .iter()
-                .filter(|r| matches!(r.status, "would-update" | "updated"))
+                .filter(|r| {
+                    matches!(
+                        r.status,
+                        "would-update" | "updated" | "would-adopt" | "adopted"
+                    )
+                })
                 .count();
         let verb = if args.dry_run {
             "previewed"
@@ -248,15 +263,27 @@ fn upgrade_mcp_entry(
             )),
         });
     }
-    // vibevm block present — fall through to the install-time
-    // diff/apply. `decide_action` returns `unchanged` / `updated`,
-    // never `created` here (we just confirmed the file exists, but
-    // the block-level absent case maps to `updated` from
-    // decide_action which we explicitly handle above).
-    if dry_run {
-        package_registration::register_builtin(agent, scope, config_path, &payload, true)
-    } else {
-        package_registration::register_builtin(agent, scope, config_path, &payload, false)
+    // vibevm block present — refresh the receipt-owned entry. Upgrade is
+    // an explicit command for vibe's own entries, so a byte-canonical
+    // unreceipted entry an older vibe wrote is adopted; a stale one is
+    // reported per row as `unmanaged` (with the `--force` hint) instead of
+    // aborting the scan of every other place.
+    match package_registration::register_builtin_explicit(
+        agent,
+        scope,
+        config_path,
+        &payload,
+        BuiltinAdoption::explicit("vibe mcp upgrade"),
+        dry_run,
+    ) {
+        Err(error) if is_unreceipted_builtin_refusal(&error) => Ok(AgentInstallReport {
+            agent: agent.as_str().to_string(),
+            scope: scope.as_str(),
+            config_path: machine_json_path(config_path),
+            status: "unmanaged",
+            note: Some(package_registration::UNRECEIPTED_HINT.into()),
+        }),
+        outcome => outcome,
     }
 }
 
@@ -292,10 +319,22 @@ fn upgrade_skill(
             note: Some("SKILL.md does not exist; use `vibe mcp install` to create".into()),
         }));
     }
-    // Reuse install_skill — it already has the decide-then-apply
-    // logic and returns `unchanged` / `updated` for existing files.
-    let outcome = vibe_mcp::install::refresh_skill(agent, scope, project_root, dry_run)?;
-    Ok(Some(outcome))
+    // Explicit refresh: receipt-owned bytes are reconciled to the current
+    // template, byte-canonical legacy bytes are adopted, and a stale
+    // unreceipted SKILL.md is reported `unmanaged` with the `--force` hint.
+    match vibe_mcp::install::install_skill_adopting(
+        agent,
+        scope,
+        project_root,
+        BuiltinAdoption::explicit("vibe mcp upgrade"),
+        dry_run,
+    ) {
+        Ok(outcome) => Ok(Some(outcome)),
+        Err(error) if is_unreceipted_builtin_refusal(&error) => {
+            unreceipted_skill_row(agent, scope, project_root, "unmanaged").map(Some)
+        }
+        Err(error) => Err(error),
+    }
 }
 
 fn print_upgrade_results(

@@ -1,8 +1,27 @@
 //! Durable activation stays in the existing ownership receipt.
 use super::*;
-use vibe_agent_projection::activation::ActivationIntent;
+use vibe_agent_projection::activation::{ActivationIntent, BuiltinAdoption};
 
 pub(super) const BUILTIN_PACKAGE: &str = "org.vibevm.core/vibevm";
+
+/// Ownership refusals for the builtin `vibevm` MCP entry. Typed so read-only
+/// and refresh commands (`status`, `upgrade`) can report a per-entry
+/// conflict instead of aborting the whole command.
+#[derive(Debug, thiserror::Error)]
+#[specmark::spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-073#MANAGED-ACTIVATION")]
+pub(in crate::commands::mcp) enum BuiltinOwnershipError {
+    #[error(
+        "MCP name `vibevm` in `{config}` has no ownership receipt and differs from the canonical entry; refusing to overwrite \
+         (violates spec://org.vibevm.core/vibevm/common/PROP-073#MANAGED-ACTIVATION; \
+          fix: it was written by an older vibe or another tool — run `vibe mcp install --force` to adopt and replace it, \
+          or remove the entry by hand)"
+    )]
+    UnreceiptedDiffers { config: String },
+}
+
+/// The note every legacy-ownership conflict row carries.
+pub(in crate::commands::mcp) const UNRECEIPTED_HINT: &str =
+    "unreceipted entry written by an older vibe; run `vibe mcp install --force` to adopt it";
 
 pub(in crate::commands::mcp) fn builtin_server() -> DeclaredMcpServer {
     DeclaredMcpServer {
@@ -92,7 +111,6 @@ pub(in crate::commands::mcp) fn remove_builtin(
     config: &Path,
     dry_run: bool,
 ) -> Result<AgentInstallReport> {
-    let server = builtin_server();
     let receipt = read_receipt(config)?;
     if receipt.entries.contains_key(SERVER_NAME) {
         return remove_selected(
@@ -117,10 +135,13 @@ pub(in crate::commands::mcp) fn remove_builtin(
             note: None,
         });
     }
+    // Uninstall is explicit: byte-canonical legacy bytes are adopted (and
+    // then removed); a differing unreceipted entry stays a typed refusal.
     let payload = agent.build_mcp_entry();
-    register_one(agent, scope, config, &server, &payload, true)?;
+    let adoption = BuiltinAdoption::explicit("vibe mcp uninstall");
+    register_builtin_explicit(agent, scope, config, &payload, adoption, true)?;
     if !dry_run {
-        register_one(agent, scope, config, &server, &payload, false)?;
+        register_builtin_explicit(agent, scope, config, &payload, adoption, false)?;
         return remove_builtin(agent, scope, config, false);
     }
     Ok(AgentInstallReport {
@@ -132,61 +153,113 @@ pub(in crate::commands::mcp) fn remove_builtin(
     })
 }
 
-/// Only an explicit install/register request may adopt identical unreceipted builtin bytes.
+/// Whether the builtin `vibevm` entry is present but carries no ownership
+/// receipt row — the shape every project set up by a pre-receipt vibe has.
+pub(in crate::commands::mcp) fn builtin_unreceipted(agent: Agent, config: &Path) -> Result<bool> {
+    Ok(!read_receipt(config)?.entries.contains_key(SERVER_NAME)
+        && current_entry(agent, config, SERVER_NAME)?.is_some())
+}
+
+/// Only an explicit command may adopt an unreceipted builtin entry.
+///
+/// Identical canonical bytes are adopted under any explicit command; a stale
+/// entry an older vibe wrote is replaced only under [`BuiltinAdoption::force`]
+/// (`vibe mcp install --force`), and only for the builtin `vibevm` key. The
+/// replaced entry is journaled as the receipt's `pending_previous` across the
+/// publish — the same recovery protocol every receipt-owned rewrite uses —
+/// and reported in the row's note.
 #[specmark::spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-073#MANAGED-ACTIVATION")]
 pub(in crate::commands::mcp) fn register_builtin_explicit(
     agent: Agent,
     scope: Scope,
     config: &Path,
     payload: &ConfigPayload,
+    adoption: BuiltinAdoption,
     dry_run: bool,
 ) -> Result<AgentInstallReport> {
     let mut batch = PublicationBatch::default();
     batch.capture_config(config)?;
-    let mut receipt = read_receipt(config)?;
+    let receipt = read_receipt(config)?;
     let canonical = payload_json(payload)?;
     let current = current_entry(agent, config, SERVER_NAME)?;
-    if !receipt.entries.contains_key(SERVER_NAME) && current.is_some() {
-        if current.as_ref() != Some(&canonical) {
-            bail!(
-                "unreceipted builtin MCP entry differs; preserve and reconcile it before explicit registration"
-            );
+    let Some(current) = current.filter(|_| !receipt.entries.contains_key(SERVER_NAME)) else {
+        return register_builtin(agent, scope, config, payload, dry_run);
+    };
+    let stale = current != canonical;
+    if stale && !adoption.force {
+        return Err(BuiltinOwnershipError::UnreceiptedDiffers {
+            config: machine_json_path(config),
         }
-        if !dry_run {
-            let server = builtin_server();
-            receipt.entries.insert(
-                SERVER_NAME.into(),
-                OwnedEntry {
-                    package: server.package,
-                    version: Some(server.version),
-                    payload: Some(canonical),
-                    retracted: false,
-                    pending_previous: None,
-                    activation: Some(ActivationIntent {
-                        enabled: true,
-                        actor: None,
-                        provenance: "vibe mcp install:explicit-adoption".into(),
-                    }),
-                },
-            );
-            let result = (|| {
-                batch.capture_config(config)?;
-                batch.receipt(config, &receipt)?;
-                batch.capture_config(config)
-            })();
-            if let Err(error) = result {
-                return Err(batch.failed(error, "explicit builtin registration"));
-            }
-        }
-        return Ok(AgentInstallReport {
-            agent: agent.as_str().into(),
-            scope: scope.as_str(),
-            config_path: machine_json_path(config),
-            status: if dry_run { "would-adopt" } else { "adopted" },
-            note: Some("new ownership by explicit registration; prior author unknown".into()),
-        });
+        .into());
     }
-    register_builtin(agent, scope, config, payload, dry_run)
+    if !dry_run {
+        let result = adopt_builtin(
+            agent,
+            config,
+            receipt,
+            canonical,
+            stale.then_some(&current),
+            adoption,
+            &mut batch,
+        );
+        if let Err(error) = result {
+            return Err(batch.failed(error, "explicit builtin registration"));
+        }
+    }
+    let note = if stale {
+        format!(
+            "new ownership by forced registration; replaced unreceipted entry written by an older vibe: {}",
+            serde_json::to_string(&current)?
+        )
+    } else {
+        "new ownership by explicit registration; prior author unknown".into()
+    };
+    Ok(AgentInstallReport {
+        agent: agent.as_str().into(),
+        scope: scope.as_str(),
+        config_path: machine_json_path(config),
+        status: if dry_run { "would-adopt" } else { "adopted" },
+        note: Some(note),
+    })
+}
+
+/// Publish the adoption receipt, and for a stale entry the canonical bytes,
+/// journaling the replaced entry as `pending_previous` until the config
+/// publish is confirmed.
+fn adopt_builtin(
+    agent: Agent,
+    config: &Path,
+    mut receipt: Receipt,
+    canonical: serde_json::Value,
+    replaced: Option<&serde_json::Value>,
+    adoption: BuiltinAdoption,
+    batch: &mut PublicationBatch,
+) -> Result<()> {
+    let server = builtin_server();
+    let rendered = replaced
+        .map(|_| render_projection(agent, config, SERVER_NAME, Some(&canonical)))
+        .transpose()?;
+    receipt.entries.insert(
+        SERVER_NAME.into(),
+        OwnedEntry {
+            package: server.package,
+            version: Some(server.version),
+            payload: Some(canonical),
+            retracted: false,
+            pending_previous: replaced.cloned(),
+            activation: Some(adoption.intent(replaced.is_some())),
+        },
+    );
+    batch.capture_config(config)?;
+    batch.receipt(config, &receipt)?;
+    if let Some(rendered) = rendered {
+        batch.write(config, rendered.as_bytes())?;
+        if let Some(row) = receipt.entries.get_mut(SERVER_NAME) {
+            row.pending_previous = None;
+        }
+        batch.receipt(config, &receipt)?;
+    }
+    batch.capture_config(config)
 }
 
 #[specmark::spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-073#MANAGED-ACTIVATION")]

@@ -63,7 +63,7 @@ use vibe_mcp::agent_config::{
     merge_json, merge_toml, read_json, read_toml, strip_json_entry, strip_toml_entry,
 };
 use vibe_mcp::agents::{Agent, ConfigFormat, ConfigPayload, Scope, What, detect_agents};
-use vibe_mcp::install::{AgentInstallReport, SkillInstallReport, install_skill};
+use vibe_mcp::install::{AgentInstallReport, SkillInstallReport};
 use vibe_mcp::{Server, ServerContext};
 
 use crate::cli::{
@@ -322,22 +322,68 @@ fn run_serve(args: McpServeArgs, runtime: McpRuntime) -> Result<()> {
 // MCP-entry decide / preview / apply / merge — JSON + TOML
 // ---------------------------------------------------------------------------
 
-pub(super) fn preview_install_mcp(
+/// Explicit builtin `vibevm` MCP-entry registration for `vibe mcp install`.
+/// `force` lets the install adopt and replace a stale unreceipted entry an
+/// older vibe wrote; without it such an entry stays a typed refusal.
+pub(super) fn install_builtin_mcp(
     agent: Agent,
     scope: Scope,
     config_path: &Path,
     payload: &ConfigPayload,
+    force: bool,
+    dry_run: bool,
 ) -> Result<AgentInstallReport> {
-    package_registration::register_builtin_explicit(agent, scope, config_path, payload, true)
+    package_registration::register_builtin_explicit(
+        agent,
+        scope,
+        config_path,
+        payload,
+        install_adoption(force),
+        dry_run,
+    )
 }
 
-pub(super) fn apply_install_mcp(
+/// The adoption policy `vibe mcp install [--force]` applies to unreceipted
+/// builtin entries (MCP entry and SKILL.md alike).
+pub(super) fn install_adoption(force: bool) -> vibe_agent_projection::activation::BuiltinAdoption {
+    if force {
+        vibe_agent_projection::activation::BuiltinAdoption::forced("vibe mcp install")
+    } else {
+        vibe_agent_projection::activation::BuiltinAdoption::explicit("vibe mcp install")
+    }
+}
+
+/// The per-row report for a builtin SKILL.md that has no ownership receipt
+/// and cannot be claimed by the running command.
+pub(super) fn unreceipted_skill_row(
     agent: Agent,
     scope: Scope,
-    config_path: &Path,
-    payload: &ConfigPayload,
-) -> Result<AgentInstallReport> {
-    package_registration::register_builtin_explicit(agent, scope, config_path, payload, false)
+    project_root: Option<&Path>,
+    status: &'static str,
+) -> Result<SkillInstallReport> {
+    Ok(SkillInstallReport {
+        agent: agent.as_str().to_string(),
+        scope: scope.as_str(),
+        path: agent
+            .skill_path(scope, project_root)?
+            .map(|path| machine_json_path(&path)),
+        status,
+        note: Some(package_registration::UNRECEIPTED_HINT.into()),
+    })
+}
+
+/// Whether `error` is a refusal to claim a builtin `vibevm` MCP entry or
+/// SKILL.md that carries no ownership receipt (written by an older vibe).
+/// Read-only and refresh commands report such an entry per row instead of
+/// aborting.
+pub(super) fn is_unreceipted_builtin_refusal(error: &anyhow::Error) -> bool {
+    error
+        .downcast_ref::<package_registration::BuiltinOwnershipError>()
+        .is_some()
+        || matches!(
+            error.downcast_ref::<vibe_agent_projection::pkgskill::PackageSkillError>(),
+            Some(vibe_agent_projection::pkgskill::PackageSkillError::Unowned { .. })
+        )
 }
 
 // ---------------------------------------------------------------------------

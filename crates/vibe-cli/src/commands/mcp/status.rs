@@ -126,6 +126,7 @@ pub(super) fn run_status(ctx: &output::Context, args: McpStatusArgs) -> Result<(
                     &package_registration::builtin_server(),
                 )?);
                 let payload = agent.build_mcp_entry();
+                let legacy = package_registration::builtin_unreceipted(agent, &path)?;
                 results.push(
                     package_registration::register_builtin(agent, scope, &path, &payload, true)
                         .unwrap_or_else(|_| AgentInstallReport {
@@ -133,7 +134,11 @@ pub(super) fn run_status(ctx: &output::Context, args: McpStatusArgs) -> Result<(
                             scope: scope.as_str(),
                             config_path: machine_json_path(&path),
                             status: "conflict",
-                            note: Some("ownership differs; inspect managed_builtin".into()),
+                            note: Some(if legacy {
+                                package_registration::UNRECEIPTED_HINT.into()
+                            } else {
+                                "ownership differs; inspect managed_builtin".into()
+                            }),
                         }),
                 );
             }
@@ -143,8 +148,20 @@ pub(super) fn run_status(ctx: &output::Context, args: McpStatusArgs) -> Result<(
             // would-create / would-update / unchanged.
             if agent.supports_skill() && agent.skill_path(scope, project_root.as_deref())?.is_some()
             {
-                let outcome =
-                    vibe_mcp::install::refresh_skill(agent, scope, project_root.as_deref(), true)?;
+                // Read-only: an unreceipted legacy SKILL.md is a per-row
+                // conflict, never an abort of the whole status report.
+                let outcome = match vibe_mcp::install::refresh_skill(
+                    agent,
+                    scope,
+                    project_root.as_deref(),
+                    true,
+                ) {
+                    Ok(outcome) => outcome,
+                    Err(error) if is_unreceipted_builtin_refusal(&error) => {
+                        unreceipted_skill_row(agent, scope, project_root.as_deref(), "conflict")?
+                    }
+                    Err(error) => return Err(error),
+                };
                 skill_results.push(outcome);
             }
         }

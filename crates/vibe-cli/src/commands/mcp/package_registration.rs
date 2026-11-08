@@ -425,8 +425,9 @@ mod transaction;
 use transaction::{Mutation, PublicationBatch};
 mod activation;
 pub(super) use activation::{
-    admit_activation, builtin_server, register_builtin, register_builtin_explicit, remove_builtin,
-    retain_known_intent, set_activation,
+    BuiltinOwnershipError, UNRECEIPTED_HINT, admit_activation, builtin_server, builtin_unreceipted,
+    register_builtin, register_builtin_explicit, remove_builtin, retain_known_intent,
+    set_activation,
 };
 mod lifecycle;
 mod register;

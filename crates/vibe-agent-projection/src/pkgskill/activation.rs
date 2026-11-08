@@ -271,24 +271,67 @@ pub fn register_builtin_skill_snapshot(
     desired: &BTreeMap<String, Vec<u8>>,
     dry_run: bool,
 ) -> anyhow::Result<PackageSkillReport> {
+    adopt_builtin_skill_snapshot(
+        agent,
+        scope,
+        project,
+        desired,
+        crate::activation::BuiltinAdoption::explicit("vibe mcp install"),
+        dry_run,
+    )
+}
+
+/// Explicit builtin registration with a stated adoption policy.
+///
+/// An unreceipted `vibevm` skill target is claimed only by an explicit
+/// command: byte-identical canonical content is adopted as-is; stale
+/// content is replaced only under [`BuiltinAdoption::force`], and only when
+/// every file in the target is one the builtin skill itself ships (a target
+/// carrying any other file is never claimed). The replaced `SKILL.md` digest
+/// is reported. Files are written before the receipt so an interrupted
+/// forced adoption leaves canonical unreceipted bytes that a plain explicit
+/// registration adopts, never a receipt that claims bytes not on disk.
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-073#MANAGED-ACTIVATION")]
+pub fn adopt_builtin_skill_snapshot(
+    agent: Agent,
+    scope: Scope,
+    project: Option<&Path>,
+    desired: &BTreeMap<String, Vec<u8>>,
+    adoption: crate::activation::BuiltinAdoption,
+    dry_run: bool,
+) -> anyhow::Result<PackageSkillReport> {
     let (target, path) = paths(agent, scope, project, "vibevm")?;
     let prior = read_standalone_receipt(&path, "vibevm")?;
     let current = snapshot_dir(&target)?;
-    if prior.is_none() && current.is_some() {
-        if current.as_ref() != Some(desired) {
-            anyhow::bail!(
-                "unreceipted builtin skill differs; preserve and reconcile before explicit registration"
-            );
+    if let (None, Some(current)) = (&prior, &current) {
+        let identical = current == desired;
+        if !identical && !adoption.force {
+            return Err(PackageSkillError::Unowned {
+                path: target.clone(),
+                reason: "unreceipted builtin skill differs from the canonical template; refusing to overwrite".into(),
+            }
+            .into());
         }
+        if let Some(extra) = current.keys().find(|rel| !desired.contains_key(*rel)) {
+            return Err(PackageSkillError::Unowned {
+                path: target.join(extra),
+                reason: "unreceipted builtin skill target holds a file the builtin skill never ships; refusing to adopt it even under --force".into(),
+            }
+            .into());
+        }
+        let replaced: Vec<String> = current
+            .iter()
+            .filter(|(rel, bytes)| desired.get(*rel) != Some(*bytes))
+            .map(|(rel, bytes)| format!("{rel} sha256 {}", digest_bytes(bytes)))
+            .collect();
         if !dry_run {
+            if !identical {
+                reconcile_standalone_files(&target, None, desired)?;
+            }
             let mut receipt = standalone_receipt("vibevm", desired);
             receipt.schema = 2;
             receipt.provider = Some("org.vibevm.core/vibevm".into());
-            receipt.activation = Some(ActivationIntent {
-                enabled: true,
-                actor: None,
-                provenance: "vibe mcp install:explicit-adoption".into(),
-            });
+            receipt.activation = Some(adoption.intent(!identical));
             write_standalone_receipt(&path, &receipt)?;
             validate_standalone_ownership(
                 &target,
@@ -297,13 +340,21 @@ pub fn register_builtin_skill_snapshot(
                 desired,
             )?;
         }
+        let note = if replaced.is_empty() {
+            "new ownership by explicit registration; prior author unknown".to_string()
+        } else {
+            format!(
+                "new ownership by forced registration; replaced unreceipted content written by an older vibe ({})",
+                replaced.join(", ")
+            )
+        };
         return Ok(PackageSkillReport {
             skill: "vibevm".into(),
             agent: agent.as_str().into(),
             scope: scope.as_str(),
             path: Some(machine_json_path(&target)),
             status: if dry_run { "would-adopt" } else { "adopted" },
-            note: Some("new ownership by explicit registration; prior author unknown".into()),
+            note: Some(note),
         });
     }
     Ok(install_managed_skill_snapshot(

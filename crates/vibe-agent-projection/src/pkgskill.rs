@@ -36,8 +36,8 @@ mod activation;
 mod snapshot;
 pub use activation::{
     SkillActivationStatus, SkillActivationTarget, admit_managed_skill_activation,
-    change_managed_skill_activation, install_managed_skill_snapshot, managed_skill_status,
-    register_builtin_skill_snapshot, retain_managed_skill_activation,
+    adopt_builtin_skill_snapshot, change_managed_skill_activation, install_managed_skill_snapshot,
+    managed_skill_status, register_builtin_skill_snapshot, retain_managed_skill_activation,
 };
 
 #[path = "pkgskill/standalone.rs"]
@@ -105,6 +105,19 @@ pub enum PackageSkillError {
           fix: use a contained normal path with no symlink, junction, or reparse ancestor)"
     )]
     UnsafePath { path: PathBuf, reason: String },
+
+    /// A pre-existing skill target that carries no Vibe ownership receipt,
+    /// or whose bytes differ from what an explicit adoption may claim. This
+    /// is an ownership refusal, not a path-safety fault, so its fix names the
+    /// explicit adoption step instead of a path rewrite.
+    #[error(
+        "unowned skill target `{path}`: {reason} \
+         (violates spec://org.vibevm.core/vibevm/common/PROP-073#MANAGED-ACTIVATION; \
+          fix: the target has no Vibe ownership receipt (an older vibe or another tool wrote it); \
+          for the builtin `vibevm` skill run `vibe mcp install --force` to adopt and replace it, \
+          otherwise move the target aside and rerun)"
+    )]
+    Unowned { path: PathBuf, reason: String },
 
     /// A path or entry name the OS accepts but this projection cannot spell
     /// faithfully. Both fields are already-escaped [`EscapedOsPath`] values,

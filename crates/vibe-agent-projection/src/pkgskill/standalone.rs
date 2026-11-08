@@ -159,7 +159,7 @@ pub(super) fn validate_standalone_ownership(
     desired: &BTreeMap<String, Vec<u8>>,
 ) -> Result<(), PackageSkillError> {
     if current.is_some() && prior.is_none() {
-        return Err(PackageSkillError::UnsafePath {
+        return Err(PackageSkillError::Unowned {
             path: target.to_path_buf(),
             reason: "refusing foreign pre-existing skill target without a Vibe ownership receipt"
                 .into(),
@@ -198,7 +198,7 @@ pub(super) fn validate_standalone_uninstall(
     prior: Option<&StandaloneSkillReceipt>,
 ) -> Result<(), PackageSkillError> {
     if current.is_some() && prior.is_none() {
-        return Err(PackageSkillError::UnsafePath {
+        return Err(PackageSkillError::Unowned {
             path: target.to_path_buf(),
             reason: "refusing to uninstall foreign pre-existing skill target without a Vibe ownership receipt"
                 .into(),

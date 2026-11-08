@@ -123,7 +123,10 @@ pub struct McpInstallArgs {
     /// Force-write even when no agent is detected in the project
     /// tree / on this machine (useful when the agent's marker dir
     /// is not yet present but the operator wants the config
-    /// provisioned).
+    /// provisioned). Also explicitly adopts and replaces a stale
+    /// builtin `vibevm` MCP entry / SKILL.md that an older vibe wrote
+    /// without an ownership receipt (only that builtin entry; other
+    /// keys are never touched). The replaced bytes are reported.
     #[arg(long)]
     pub force: bool,
 }
