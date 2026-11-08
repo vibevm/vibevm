@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "updated_at": "2026-11-07T13:58:34.260329+00:00",
+  "updated_at": "2026-11-08T12:09:05.186072+00:00",
   "source": "/fast/git/vibevm-app-r123/campaigns/architecture-2026-10/VIBE-NEEDS-2026-11.md",
   "historical_task_count": 222,
   "historical_prototype_count": 113,
@@ -39,7 +39,7 @@
         "vibe-package-source"
       ],
       "contract": "Один effective policy; preference только для одинаковой версии, pin без fallback, URL назначения проверяется независимо от label.",
-      "status": "active"
+      "status": "accepted"
     },
     {
       "id": "VN-EFFECT-CONTRACT",
@@ -57,7 +57,7 @@
         "vibe-orchestrator"
       ],
       "contract": "Read-only preview отделён от acquisition; cancelled не подменяет recovery-required/committed external effects.",
-      "status": "planned"
+      "status": "accepted"
     },
     {
       "id": "VN-ACTIVATION-INTENT",
@@ -72,7 +72,7 @@
         "MCP ownership receipts"
       ],
       "contract": "Ключ package+entry+agent+scope, provenance выбора, не package feature toggle.",
-      "status": "planned"
+      "status": "accepted"
     },
     {
       "id": "VN-ENV-POLICY",
@@ -88,7 +88,7 @@
         "doctor"
       ],
       "contract": "Shims/current отдельно от PATH и advisory HOME; process PATH, profile block и login-effect evidence различаются.",
-      "status": "planned"
+      "status": "accepted"
     },
     {
       "id": "VN-SCAFFOLD-INPUT",
@@ -104,7 +104,7 @@
         "vibe-app select"
       ],
       "contract": "Переиспользовать существующие installer/choice types; не выдумывать checksum или второй wizard.",
-      "status": "planned"
+      "status": "accepted"
     },
     {
       "id": "VN-SOURCE-OBSERVATION",
@@ -123,7 +123,7 @@
         "CachedPackage"
       ],
       "contract": "Наблюдавшийся кандидат отличается от excluded/not-probed; commit только если наблюдён.",
-      "status": "active"
+      "status": "accepted"
     },
     {
       "id": "VN-CONTACT-ADMISSION",
@@ -142,7 +142,7 @@
         "managed transports"
       ],
       "contract": "Не контактировать с запрещённым hosting; неподдерживаемая непрозрачная маршрутизация не считается безопасной.",
-      "status": "planned"
+      "status": "accepted"
     },
     {
       "id": "VN-PREVIEW-INPUT",
@@ -159,7 +159,7 @@
         "existing registry/source providers"
       ],
       "contract": "Не называть существующий cache-writing acquisition режимом без записей; никаких install hooks.",
-      "status": "planned"
+      "status": "accepted"
     },
     {
       "id": "VN-DISK-COUNTER",
@@ -175,7 +175,7 @@
         "PROP-068 transfer owner"
       ],
       "contract": "После успешного write, monotonic; unknown для неинструментированных путей, не received bytes и не final size.",
-      "status": "planned"
+      "status": "accepted"
     },
     {
       "id": "VN-SOURCE-CHOICE",
@@ -195,7 +195,7 @@
         "MultiRegistryResolver"
       ],
       "contract": "Сохранить unconfigured version semantics; конфликт входящих pins — typed failure.",
-      "status": "planned"
+      "status": "accepted"
     },
     {
       "id": "VN-PROJECT-PLAN",
@@ -214,7 +214,7 @@
         "vibe-orchestrator"
       ],
       "contract": "Тот же solve/conditional/configuration owner; непробированные причины не выдумываются.",
-      "status": "planned"
+      "status": "accepted"
     },
     {
       "id": "VN-APP-PROVENANCE",
@@ -248,7 +248,7 @@
         "deploy recovery"
       ],
       "contract": "Install/update/apply сохраняют desired-off; чужие правки не перезаписываются.",
-      "status": "planned"
+      "status": "accepted"
     },
     {
       "id": "VN-CANCEL-APPLY",
@@ -265,7 +265,7 @@
         "install lease/FileGuard"
       ],
       "contract": "До публикации — без изменений проекта; после irreversible boundary — честный outcome, не фиктивный rollback.",
-      "status": "planned"
+      "status": "accepted"
     },
     {
       "id": "VN-ENV-ACTIVATION",
@@ -283,7 +283,7 @@
         "RcFilePersister"
       ],
       "contract": "Одна политика охватывает PATH и advisory HOME; profile inspection не исполняет произвольный startup code.",
-      "status": "planned"
+      "status": "accepted"
     },
     {
       "id": "VN-SCAFFOLD",
@@ -299,7 +299,7 @@
         "existing init app/kinds"
       ],
       "contract": "Проверка до записи, repeat сохраняет authored bytes, все outcomes перечислены.",
-      "status": "planned"
+      "status": "accepted"
     },
     {
       "id": "VN-SURFACES",
@@ -329,7 +329,7 @@
         "existing CLI/events"
       ],
       "contract": "Поставлять по независимым вертикалям; общий узел не блокирует готовую поверхность ожиданием всех остальных.",
-      "status": "planned"
+      "status": "accepted"
     },
     {
       "id": "VN-COMPAT-CHECK",
@@ -354,7 +354,7 @@
     {
       "id": "VN-01",
       "number": 1,
-      "status": "audited_not_accepted",
+      "status": "accepted_linux_qualified",
       "foundation_nodes": [
         "VN-SOURCE-FACTS",
         "VN-SOURCE-POLICY",
@@ -372,7 +372,7 @@
     {
       "id": "VN-03",
       "number": 3,
-      "status": "audited_not_accepted",
+      "status": "accepted_linux_qualified",
       "foundation_nodes": [
         "VN-SOURCE-FACTS",
         "VN-SOURCE-POLICY"
@@ -381,7 +381,7 @@
     {
       "id": "VN-04",
       "number": 4,
-      "status": "audited_not_accepted",
+      "status": "accepted_linux_qualified",
       "foundation_nodes": [
         "VN-ACTIVATION-INTENT"
       ]
@@ -389,7 +389,7 @@
     {
       "id": "VN-05",
       "number": 5,
-      "status": "audited_not_accepted",
+      "status": "accepted_linux_qualified",
       "foundation_nodes": [
         "VN-EFFECT-CONTRACT"
       ]
@@ -397,7 +397,7 @@
     {
       "id": "VN-06",
       "number": 6,
-      "status": "audited_not_accepted",
+      "status": "accepted_linux_qualified",
       "foundation_nodes": [
         "VN-SCAFFOLD-INPUT"
       ]
@@ -405,7 +405,7 @@
     {
       "id": "VN-07",
       "number": 7,
-      "status": "audited_not_accepted",
+      "status": "accepted_linux_qualified",
       "foundation_nodes": [
         "VN-EFFECT-CONTRACT"
       ]
@@ -413,7 +413,7 @@
     {
       "id": "VN-08",
       "number": 8,
-      "status": "audited_not_accepted",
+      "status": "accepted_linux_qualified",
       "foundation_nodes": [
         "VN-ENV-POLICY"
       ]
