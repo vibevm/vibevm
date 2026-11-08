@@ -40,12 +40,26 @@ pub(crate) enum PathEntryStatus {
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize)]
 #[serde(rename_all = "snake_case")]
 pub(crate) enum ProbeStatus {
+    /// No consent: neither `--probe-login-shell` nor an interactive yes.
     NotRun,
+    /// The login shell ran and reported its PATH.
+    Ran,
+    /// The login shell ran but exited unsuccessfully or printed no PATH.
+    Failed,
+    /// The login shell did not finish within the probe deadline; it was killed.
+    TimedOut,
+    /// No probe exists for this target (no `$SHELL`, Windows registry target).
+    Unsupported,
 }
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize)]
 #[serde(rename_all = "snake_case")]
 pub(crate) enum Effectiveness {
+    /// Not probed, or the probe could not observe a PATH.
     Unknown,
+    /// The login shell's PATH contains the managed shim directory.
+    Effective,
+    /// The login shell's PATH lacks the managed shim directory.
+    NotEffective,
 }
 
 /// Exact target observation; correctness names the managed PATH entry only.

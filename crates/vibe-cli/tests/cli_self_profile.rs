@@ -223,3 +223,51 @@ fn doctor_fix_requires_explicit_consent_and_does_not_claim_process_path_repaired
         "unknown"
     );
 }
+
+/// Owner decision 2026-11-08 (Need 8): the login-shell probe runs only with
+/// consent — `--probe-login-shell` for non-interactive callers. A real
+/// `bash -l` in an isolated HOME reads `.bash_profile`, not `.bashrc`, so the
+/// managed `.bashrc` block is not in effect until a profile sources it.
+#[test]
+#[specmark::spec(verifies = "spec://org.vibevm.core/vibevm/common/PROP-019#path", r = 3)]
+fn consented_login_probe_reports_whether_the_managed_path_reaches_login_shells() {
+    if !Path::new("/bin/bash").is_file() {
+        eprintln!("skipping: /bin/bash is not available");
+        return;
+    }
+    let base = tempfile::tempdir().unwrap();
+    let home = tempfile::tempdir().unwrap();
+    let source = tempfile::tempdir().unwrap();
+    let executable = payload(source.path());
+    let first = import(base.path(), home.path(), &executable, &["--use", "--yes"]);
+    assert!(first.status.success(), "{first:?}");
+    let doctor = |flags: &[&str]| {
+        report(
+            &command(base.path(), home.path())
+                .args(["--json", "--unattended", "self", "doctor"])
+                .args(flags)
+                .output()
+                .unwrap(),
+        )["durable_environment"]
+            .clone()
+    };
+    let unconsented = doctor(&[]);
+    assert_eq!(unconsented["login_probe"], "not_run");
+    assert_eq!(unconsented["login_effectiveness"], "unknown");
+
+    let probed = doctor(&["--probe-login-shell"]);
+    assert_eq!(probed["login_probe"], "ran");
+    assert_eq!(
+        probed["login_effectiveness"], "not_effective",
+        "a login bash does not read .bashrc on its own"
+    );
+
+    fs::write(
+        home.path().join(".bash_profile"),
+        "[ -f \"$HOME/.bashrc\" ] && . \"$HOME/.bashrc\"\n",
+    )
+    .unwrap();
+    let sourced = doctor(&["--probe-login-shell"]);
+    assert_eq!(sourced["login_probe"], "ran");
+    assert_eq!(sourced["login_effectiveness"], "effective");
+}

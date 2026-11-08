@@ -156,6 +156,10 @@ pub(super) fn run_doctor_cmd(
     let shim_dir = store.shim_dir();
     let on_path = path_has_dir(env.path_var.as_deref(), &shim_dir);
     let mut durable_environment = environment::observe(env, &shim_dir);
+    let probe_login = environment::login_probe_consent(ctx, args.probe_login_shell);
+    if probe_login {
+        environment::probe_login_shell(env, &shim_dir, &mut durable_environment);
+    }
     let active = match store.active() {
         Ok(active) => active,
         Err(error) => {
@@ -259,6 +263,9 @@ pub(super) fn run_doctor_cmd(
             match result {
                 Ok(()) => {
                     durable_environment = environment::observe(env, &shim_dir);
+                    if probe_login {
+                        environment::probe_login_shell(env, &shim_dir, &mut durable_environment);
+                    }
                     remaining_problems = remaining_problems.saturating_sub(shim_problems);
                     fixed = true;
                     repair.finish();

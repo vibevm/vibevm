@@ -280,6 +280,13 @@ pub struct VvmDoctorArgs {
     /// Skip the confirmation prompt for `--fix`.
     #[arg(short = 'y', long, alias = "assume-yes")]
     pub yes: bool,
+
+    /// Run your login shell (`$SHELL -l`) once to report whether its PATH
+    /// includes the vibe shims. It executes your shell startup files. An
+    /// interactive run asks first; this flag is the consent for unattended and
+    /// non-terminal callers, which otherwise report `not_run`.
+    #[arg(long)]
+    pub probe_login_shell: bool,
 }
 
 #[derive(Debug, clap::Args)]

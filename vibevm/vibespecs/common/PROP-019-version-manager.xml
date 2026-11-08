@@ -313,7 +313,8 @@ four layers:</ACTIVATION-LAW></p>
   excluded, it does not open a durable environment target. Current process
   PATH is observed separately and is never reported repaired by a durable edit.</RULE-CONSENT>
         <DOCTOR-DURABLE-OBSERVATION fact="true" status="spec/done">Doctor uses the same persister and shell target selection as repair,
-  without modifying or sourcing startup files. Its additive `durable_environment`
+  without modifying startup files, and sources them only through the consented
+  login probe below. Its additive `durable_environment`
   JSON object names target kind/path and selected shell, observation status,
   managed-block state, managed PATH-entry correctness, probe status and login
   effectiveness. Rc inspection uses the existing no-follow reader and one
@@ -324,10 +325,19 @@ four layers:</ACTIVATION-LAW></p>
   describes only the exact managed PATH line (or independently read raw Windows
   user PATH), not arbitrary surrounding shell behavior. Windows reports its
   registry target, with managed block not-applicable, through the existing raw
-  registry reader; tests do not write the actual registry. `login_probe` remains
-  `not_run` and `login_effectiveness` remains `unknown`: managed-block presence,
+  registry reader; tests do not write the actual registry. Managed-block presence,
   successful persistence and a Finder-like process PATH do not prove a login
-  shell's effective environment. The inline doctor serializer is the JSON
+  shell's effective environment, so without consent `login_probe` is `not_run`
+  and `login_effectiveness` is `unknown`. With consent — `--probe-login-shell`,
+  or a yes to the question an interactive, attended terminal asks (default no) —
+  doctor runs the caller's absolute `$SHELL` once as a login shell with no stdin,
+  stderr discarded and a ten-second deadline, reads only one marked PATH line
+  and reports `ran` with `effective` or `not_effective` according to whether
+  that PATH contains the shim directory; `failed`, `timed_out` (the shell is
+  killed) and `unsupported` (no absolute `$SHELL`, PowerShell, Windows) leave
+  effectiveness `unknown`. Unattended or non-terminal runs without the flag
+  never ask and never run the shell (owner decision 2026-11-08: running login
+  startup files is a user-visible effect and needs explicit consent). The inline doctor serializer is the JSON
   owner; existing `shim_dir_on_path` continues to describe only the invoking
   process, including after repair. Durable observation is informational: it
   does not introduce a requirement to use a managed block when the environment

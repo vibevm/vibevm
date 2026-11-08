@@ -16,7 +16,7 @@ use super::store::VersionStore;
 
 #[path = "env_profile.rs"]
 mod profile;
-pub(crate) use profile::EnvironmentObservation;
+pub(crate) use profile::{Effectiveness, EnvironmentObservation, ProbeStatus};
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, serde::Serialize)]
 #[serde(rename_all = "snake_case")]
