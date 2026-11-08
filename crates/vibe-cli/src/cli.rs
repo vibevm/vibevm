@@ -16,6 +16,7 @@ use clap::{Parser, Subcommand};
 mod agent;
 mod agentic;
 mod aiui;
+mod artifacts;
 mod cache;
 mod doc;
 mod explain;
@@ -48,6 +49,7 @@ mod workspace;
 
 pub use agentic::*;
 pub use aiui::*;
+pub use artifacts::*;
 pub use cache::*;
 pub use doc::*;
 pub use explain::*;

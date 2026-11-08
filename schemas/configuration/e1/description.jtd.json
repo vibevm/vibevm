@@ -941,6 +941,8 @@
           "name",
           "url",
           "path",
+          "drop",
+          "file",
           "sha256",
           "size",
           "extract"
@@ -968,6 +970,18 @@
           }
         },
         "path": {
+          "type": "string",
+          "metadata": {
+            "x-default": null
+          }
+        },
+        "drop": {
+          "type": "string",
+          "metadata": {
+            "x-default": null
+          }
+        },
+        "file": {
           "type": "string",
           "metadata": {
             "x-default": null

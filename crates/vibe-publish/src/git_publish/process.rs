@@ -22,7 +22,7 @@ pub(super) fn git_command_in_temp(args: &[&str]) -> Command {
     cmd
 }
 
-pub(super) fn run_remote_git_in(
+pub(crate) fn run_remote_git_in(
     cwd: &Path,
     args: &[&str],
     clone_url: &str,
@@ -68,7 +68,7 @@ pub(super) fn classify_remote_output(
     )))
 }
 
-pub(super) fn run_git_in(cwd: &Path, args: &[&str]) -> Result<Output, PublishError> {
+pub(crate) fn run_git_in(cwd: &Path, args: &[&str]) -> Result<Output, PublishError> {
     let output = git_command(cwd, args).output().map_err(|e| {
         PublishError::Git(format!("spawning git {}: {e}", join_args_redacted(args)))
     })?;
@@ -191,7 +191,7 @@ fn join_args_redacted(args: &[&str]) -> String {
     parts.join(" ")
 }
 
-pub(super) fn git_command(cwd: &Path, args: &[&str]) -> Command {
+pub(crate) fn git_command(cwd: &Path, args: &[&str]) -> Command {
     let mut cmd = Command::new("git");
     cmd.args(args);
     cmd.current_dir(cwd);

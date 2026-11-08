@@ -8,6 +8,7 @@ specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-059#child-output");
 
 pub mod archive;
 mod child;
+mod drop;
 mod fetch;
 pub mod native;
 pub mod programs;
@@ -19,12 +20,15 @@ use std::io;
 use std::path::{Path, PathBuf};
 
 use vibe_core::progress::ProgressTask;
-use vibe_core::remap::{Artifact, Candidate, Locator, RemapTarget, Resolution};
+use vibe_core::remap::{
+    Artifact, ByteLocation, Candidate, Locator, PathLookup, RemapRow, RemapTarget, Resolution,
+};
 
 use crate::error::InstallerError;
 
 pub(crate) use child::{ChildIo, Relay, Released, run_attached, run_child};
 pub use child::{Interrupt, StepLogs, StepPanel};
+pub(crate) use drop::{copy_from_drop, copy_from_drop_named};
 pub(crate) use fetch::{TransferFacts, fetch_verified};
 
 /// What one fetch reports and refuses (`PROP-065#sizes`): the declared
@@ -152,6 +156,20 @@ pub(crate) fn fetch_located(
     let mut first_exclusion = None;
     for candidate in &candidates {
         let outcome = match &candidate.target {
+            // One location rule (`PROP-066#locations`): a `file://` target
+            // is read like a `path` target, never handed to HTTP.
+            RemapTarget::Url(url) if url.to_ascii_lowercase().starts_with("file://") => {
+                match ByteLocation::parse(url) {
+                    Ok(ByteLocation::Local(path)) => {
+                        copy_verified(&path, sha256, filename, destination)
+                    }
+                    Ok(ByteLocation::Remote(_)) => continue,
+                    Err(error) => Err(InstallerError::Fetch {
+                        source_ref: url.clone(),
+                        reason: error.to_string(),
+                    }),
+                }
+            }
             RemapTarget::Url(url) => {
                 let watch = FetchWatch {
                     remapped_from: (url != declared).then_some(declared),
@@ -159,7 +177,23 @@ pub(crate) fn fetch_located(
                 };
                 fetch_verified(url, sha256, package_root, destination, offline, &watch)
             }
-            RemapTarget::Path(root) => copy_verified(root, sha256, filename, destination),
+            RemapTarget::Path(root) => {
+                let row = candidate.row.as_ref().and_then(|row| locator.row(row));
+                match row {
+                    Some(row) if row.lookup == PathLookup::PackageDrop => {
+                        copy_from_drop(root, artifact, sha256, destination)
+                    }
+                    // A mirror row joined the URL remainder onto its
+                    // directory; the directory itself is still searched
+                    // by digest, as it always was.
+                    Some(RemapRow {
+                        target: RemapTarget::Path(original),
+                        ..
+                    }) if original != root => copy_verified(root, sha256, filename, destination)
+                        .or_else(|_| copy_verified(original, sha256, filename, destination)),
+                    _ => copy_verified(root, sha256, filename, destination),
+                }
+            }
             // The Locator never puts a refusal in a candidate list.
             RemapTarget::Deny => continue,
         };
@@ -188,7 +222,12 @@ pub(crate) fn fetch_located(
         }
     }
     if let Some(refusal) = first_exclusion {
-        return Err(InstallerError::ContactRefused(refusal));
+        // A drop or mirror that missed explains more than the excluded
+        // origin does: what file to put where comes first.
+        if failures.is_empty() {
+            return Err(InstallerError::ContactRefused(refusal));
+        }
+        failures.push(format!("declared origin: {refusal}"));
     }
     // When every candidate was refused for the same reason — the network
     // posture — the posture is the answer, not a list of four URLs that

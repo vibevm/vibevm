@@ -1,6 +1,6 @@
 //! Operation-owned deferred declarations, policy and backend construction.
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-073#LOCKED-SOURCE");
-use crate::builder::effective_registry_config;
+use crate::builder::{effective_registry_config, project_local_layer};
 use crate::{PackageSourceOptions, SourceOperation};
 use anyhow::{Context, Result, bail};
 use std::{path::Path, sync::Arc};
@@ -29,6 +29,7 @@ pub(super) fn open_multi_from(
     let provider = Arc::new(Declarations {
         operation: operation.clone(),
         manifest: manifest.clone(),
+        project_root: project_root.to_path_buf(),
         offline,
     });
     let mut resolver =
@@ -51,6 +52,7 @@ pub(super) fn open_multi_from(
 struct Declarations {
     operation: SourceOperation,
     manifest: Manifest,
+    project_root: std::path::PathBuf,
     offline: bool,
 }
 impl vibe_registry::multi_registry_resolver::RegistryCatalogProvider for Declarations {
@@ -68,7 +70,13 @@ impl vibe_registry::multi_registry_resolver::RegistryCatalogProvider for Declara
                 reason: "current registry catalog cannot be decoded".into(),
             }
         })?;
-        let effective = effective_registry_config(&self.manifest, &global, self.offline);
+        let local = project_local_layer(&self.project_root).map_err(|error| {
+            vibe_registry::RegistryError::MalformedMeta {
+                path: vibe_core::project_local_registry_path(&self.project_root),
+                reason: format!("{error:#}"),
+            }
+        })?;
+        let effective = effective_registry_config(&self.manifest, &global, &local, self.offline);
         let admission = if self.operation.controlled()? {
             Some(self.operation.admission()?)
         } else {

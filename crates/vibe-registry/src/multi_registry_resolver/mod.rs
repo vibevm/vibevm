@@ -50,8 +50,8 @@ use crate::git_backend::{GitBackend, GitError, ShellGit};
 use crate::git_package_registry::GitPerPackageRegistry;
 use crate::registry_cache::{DEFAULT_FRESHNESS_SECS, default_cache_root, strip_git_plus_prefix};
 use crate::{
-    CachedPackage, InPlaceMaterialised, LocalRegistry, RegistryError, ResolvedPackage,
-    compute_content_hash, store,
+    CachedPackage, GitMonorepoRegistry, InPlaceMaterialised, LocalRegistry, RegistryError,
+    ResolvedPackage, compute_content_hash, store,
 };
 
 mod attempt;
@@ -82,7 +82,7 @@ pub(crate) use clone_chain::clone_chain;
 pub use home_refresh::RegistryRefresh;
 pub use refresh::{RefreshReport, RefreshedEntry, RefreshedVia, SkippedEntry};
 pub use resolution::{MultiResolution, ResolvedPathDep};
-pub use source::{LocalRegistrySource, RegistrySource};
+pub use source::{LocalRegistrySource, MonorepoRegistrySource, RegistrySource, localdir_path};
 pub(crate) use source::{is_local_directory_url, local_path_from_url};
 pub use walk::ResolutionPurpose;
 

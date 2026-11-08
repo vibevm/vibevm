@@ -17,6 +17,9 @@ use serde::{Deserialize, Serialize};
 
 use crate::error::{Error, Result};
 
+mod registry_type;
+pub use registry_type::{RegistryType, RegistryTypeError};
+
 /// `[project]` — the identity of a non-publishable consumer node.
 ///
 /// A `vibe.toml` carrying this table is a plain project; one carrying
@@ -178,6 +181,13 @@ pub struct RegistrySection {
     /// `[[mirror]]` / `[[override]]` entries at this registry.
     pub name: String,
 
+    /// Backend family (PROP-002 `#registry-type`): `github`, `gitverse`,
+    /// `git`, `monorepo` or `localdir`, case-insensitive on input and
+    /// written lower-case. Absent means inferred from `url` — see
+    /// [`RegistrySection::effective_type`].
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub r#type: Option<RegistryType>,
+
     /// Organization-root URL. Generic git URL — any scheme `git` accepts
     /// (`git@host:…`, `ssh://…`, `https://…`, `file://…`).
     pub url: String,
@@ -331,7 +341,7 @@ pub fn registry_token_env_name(source: &str, explicit: Option<&str>) -> Option<S
 /// `https://host/path` / `ssh://host/path` (URL-shape) and
 /// `git@host:path` (scp-shape). Returns `None` for shapes we can't
 /// extract a host from (e.g. `file://`).
-fn registry_host(url: &str) -> Option<&str> {
+pub(crate) fn registry_host(url: &str) -> Option<&str> {
     for prefix in ["https://", "http://", "ssh://", "git+ssh://"] {
         if let Some(rest) = url.strip_prefix(prefix) {
             return rest.split('/').next()?.split('@').next_back();

@@ -35,23 +35,22 @@ specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-066#layers");
 
 use std::path::{Path, PathBuf};
 
+#[path = "remap/drops.rs"]
+mod drops;
+
 use anyhow::{Context, Result, bail};
 use vibe_core::manifest::{Manifest, MirrorSection, OverrideSection, RegistrySection};
 use vibe_core::remap::{
     Layer, LoadedSource, Locator, default_raw_file_rows, env_remap_files, rows_from_file,
-    rows_from_mirrors, rows_from_overrides, rows_from_settings,
+    rows_from_settings,
 };
 
 /// The release origin `install.sh` / `install.ps1` declare and the
-/// `vibe self` URLs of `commands::vvm::bundle` are built from. Named here
-/// because this is where `$VIBEVM_RELEASE_ORIGIN` becomes a row; keep the
-/// three spellings in step.
-pub(crate) const CANONICAL_RELEASE_ORIGIN: &str = "https://github.com/vibevm/vibevm/releases";
-
-/// The environment variable the install scripts already honour, read here
-/// so a bootstrap started by one of them inherits the same redirection its
-/// own downloads used (`PROP-066#locator`).
-pub(crate) const RELEASE_ORIGIN_ENV: &str = "VIBEVM_RELEASE_ORIGIN";
+/// `vibe self` URLs of `commands::vvm::bundle` are built from; owned by the
+/// release-source resolver (`PROP-019#release-sources`).
+pub(crate) use crate::commands::vvm::bundle::release_source::{
+    CANONICAL_RELEASE_ORIGIN, RELEASE_ORIGIN_ENV,
+};
 
 /// What the Locator is built from. The two environment values arrive as
 /// parameters, so the CLI's one sanctioned ambient-env root keeps every
@@ -76,8 +75,12 @@ pub(crate) struct RemapEnv {
     pub project_root: Option<PathBuf>,
     /// The machine `~/.vibe/registry.toml`, when the home resolves.
     pub global_registry: Option<PathBuf>,
-    /// `$VIBEVM_RELEASE_ORIGIN`, when the operator set it.
-    pub release_origin: Option<String>,
+    /// The release source this invocation resolved — `$VIBEVM_RELEASE_ORIGIN`,
+    /// `[self]` or `[artifacts] vibe` — lowered into its row by its one
+    /// owner (`PROP-019#release-sources`).
+    pub release: Option<crate::commands::vvm::bundle::release_source::EffectiveReleaseSource>,
+    /// `[artifacts] packages` and the file that declared it (`PROP-066#drops`).
+    pub packages_drop: Option<(PathBuf, String)>,
 }
 
 fn build_selected(env: &RemapEnv, catalog: bool) -> Result<(Locator, Vec<String>)> {
@@ -110,6 +113,10 @@ fn build_selected(env: &RemapEnv, catalog: bool) -> Result<(Locator, Vec<String>
         }
     }
 
+    // A verb that reads no registry catalog up front still gets this
+    // source, empty: the catalog it demands later composes its own tables
+    // into exactly this slot (`Locator::with_registry_tables`), so a
+    // `[[mirror]]` ranks the same on `install` as on `registry list`.
     let (registries, mirrors, overrides) = if catalog {
         registry_tables(env, &mut warnings)
     } else {
@@ -117,8 +124,13 @@ fn build_selected(env: &RemapEnv, catalog: bool) -> Result<(Locator, Vec<String>
     };
     sources.push(LoadedSource {
         layer: Layer::Local,
-        source: "[[mirror]] / [[override]]".into(),
-        rows: mirror_and_override_rows(&registries, &mirrors, &overrides),
+        source: vibe_core::remap::REGISTRY_TABLES_SOURCE.into(),
+        rows: vibe_core::remap::rows_from_registry_tables(
+            &registries,
+            &mirrors,
+            &overrides,
+            Layer::Local,
+        ),
         policy: Default::default(),
     });
 
@@ -130,32 +142,29 @@ fn build_selected(env: &RemapEnv, catalog: bool) -> Result<(Locator, Vec<String>
         }
     }
 
-    // `$VIBEVM_RELEASE_ORIGIN` is an invocation-layer row, which is what
-    // it has always been in substance: `install.sh` and `install.ps1`
-    // declare it and build every download from it, and the `vibe self`
-    // they bootstrap has to agree with them or the first `self update`
-    // would go back to the public host the operator just replaced. As a
-    // row it is also visible in `vibe remap list` and explainable, which
-    // an environment variable alone never was.
-    if let Some(origin) = env
-        .release_origin
-        .as_deref()
-        .map(str::trim)
-        .filter(|origin| !origin.is_empty() && *origin != CANONICAL_RELEASE_ORIGIN)
-    {
-        let row = vibe_core::remap::RemapRow {
-            key: vibe_core::remap::RemapKey::Prefix(CANONICAL_RELEASE_ORIGIN.to_owned()),
-            target: vibe_core::remap::RemapTarget::Url(origin.to_owned()),
-            scope: None,
-            reason: Some(format!("${RELEASE_ORIGIN_ENV}")),
-            from: vibe_core::remap::Provenance::new(Layer::Invocation, RELEASE_ORIGIN_ENV, 0),
-            from_package: None,
-            target_ref: None,
-            only: None,
-        };
+    // The artifact drops (`PROP-066#drops`): the package drop is the
+    // weakest local row for application inputs; the release source is one
+    // row from its one owner — `$VIBEVM_RELEASE_ORIGIN` keeps its
+    // invocation-layer row, so the `vibe self` the install scripts
+    // bootstrap agrees with them, and `[self]` / `[artifacts] vibe` are
+    // local rows. As rows they are visible in `vibe remap list` and
+    // explainable, which an environment variable alone never was.
+    if let Some((drop, declared_in)) = &env.packages_drop {
         sources.push(LoadedSource {
-            layer: Layer::Invocation,
-            source: RELEASE_ORIGIN_ENV.into(),
+            layer: Layer::Local,
+            source: vibe_core::remap::drop::PACKAGES_DROP_SOURCE.into(),
+            rows: vec![vibe_core::remap::drop::package_drop_row(
+                drop,
+                Layer::Local,
+                declared_in,
+            )],
+            policy: Default::default(),
+        });
+    }
+    if let Some(row) = env.release.as_ref().and_then(|release| release.row()) {
+        sources.push(LoadedSource {
+            layer: row.from.layer,
+            source: row.from.source.clone(),
             rows: vec![row],
             policy: Default::default(),
         });
@@ -219,29 +228,6 @@ fn optional_settings(path: &Path, label: &str) -> Result<Option<LoadedSource>, S
     Ok(Some(loaded))
 }
 
-/// PROP-002's tables as rows: the mirrors first, then the overrides, so an
-/// `[[override]]`'s `package` key is the later row of the pair as well as
-/// the more specific one.
-fn mirror_and_override_rows(
-    registries: &[RegistrySection],
-    mirrors: &[MirrorSection],
-    overrides: &[OverrideSection],
-) -> Vec<vibe_core::remap::RemapRow> {
-    let mut rows = rows_from_mirrors(mirrors, registries, Layer::Local, "[[mirror]]");
-    let offset = rows.len();
-    for (position, mut row) in rows_from_overrides(overrides, Layer::Local, "[[override]]")
-        .into_iter()
-        .enumerate()
-    {
-        // One source, one index sequence: the layer's tie-break is "the
-        // later row", and two sources sharing a `LoadedSource` must not
-        // both start at zero.
-        row.from.index = offset + position;
-        rows.push(row);
-    }
-    rows
-}
-
 /// The effective registry tables: the project manifest's merged with the
 /// machine-global file's, exactly as resolution merges them (PROP-002
 /// §2.2.2). Both layers are optional; a failure to read either is a
@@ -281,13 +267,25 @@ fn registry_tables(
                 }
             }
         });
-    match project {
-        Some(manifest) => {
-            let effective = vibe_core::merge_effective(&manifest, &global);
-            (effective.registries, effective.mirrors, effective.overrides)
+    // PROP-002 `#registry-layers`: the project-local override is a layer of
+    // its own, above the project manifest.
+    let local = env.project_root.as_deref().and_then(|root| {
+        match vibe_core::GlobalRegistryConfig::load_project_local(root) {
+            Ok(config) => Some(config),
+            Err(error) => {
+                warnings.push(error.to_string());
+                None
+            }
         }
-        None => (global.registries, global.mirrors, global.overrides),
+    });
+    let effective = vibe_core::RegistryLayers {
+        local: local.as_ref(),
+        project: project.as_ref(),
+        user: &global,
+        site: None,
     }
+    .merge();
+    (effective.registries, effective.mirrors, effective.overrides)
 }
 
 /// Build the invocation's remap Locator and install it
@@ -316,17 +314,23 @@ pub(crate) fn install(ctx: &crate::output::Context, inputs: Inputs<'_>) -> Resul
         _ => std::env::current_dir().ok(),
     };
     let accepted = accepted_offers(ctx, &inputs, project_root.as_deref())?;
-    let env = RemapEnv {
+    let mut env = RemapEnv {
         accepted,
         flags: inputs.flags.to_vec(),
         env: inputs.env_list,
         user_settings: vibe_core::settings::settings_toml_path(),
         project_root,
         global_registry: vibe_core::settings::registry_config_path(),
-        release_origin: inputs.release_origin,
+        release: None,
+        packages_drop: None,
     };
+    let mut drop_warnings = Vec::new();
+    let (release, packages_drop) =
+        drops::artifact_drops(inputs.release_origin.as_deref(), &mut drop_warnings);
+    env.release = release;
+    env.packages_drop = packages_drop;
     let (locator, warnings) = build_selected(&env, super::needs_global_registry(inputs.command))?;
-    for warning in warnings {
+    for warning in drop_warnings.into_iter().chain(warnings) {
         eprintln!(
             "{}",
             crate::output::language::warning(&format!("remap layer skipped: {warning}"))

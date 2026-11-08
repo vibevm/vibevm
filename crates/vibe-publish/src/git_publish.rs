@@ -24,10 +24,8 @@ mod process;
 #[cfg(test)]
 use process::is_concurrent_ref_rejection;
 pub use process::redact_credentials;
-use process::{
-    classify_remote_output, git_command_in_temp, push_with_classification, run_git_in,
-    run_remote_git_in,
-};
+use process::{classify_remote_output, git_command_in_temp, push_with_classification};
+pub(crate) use process::{git_command, run_git_in, run_remote_git_in};
 
 mod submodules;
 pub use submodules::SubmoduleProvenance;
@@ -537,6 +535,7 @@ pub fn shallow_clone(clone_url: &str) -> Result<TempDir, PublishError> {
 /// depth: populated submodule bytes become ordinary files, so shipping the
 /// declarations would leave a dangling and misleading Git boundary.
 mod payload;
+pub(crate) use payload::copy_dir_controlled;
 use payload::*;
 
 #[cfg(test)]

@@ -402,6 +402,7 @@ fn a_wildcard_mirror_becomes_one_prefix_row_per_declared_registry() {
 
     let registry = |name: &str, url: &str| RegistrySection {
         name: name.into(),
+        r#type: None,
         url: url.into(),
         r#ref: "main".into(),
         naming: NamingConvention::Fqdn,

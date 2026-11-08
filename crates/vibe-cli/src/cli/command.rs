@@ -234,6 +234,11 @@ pub enum Command {
     /// the history, and a live feed (PROP-068).
     Transfers(TransfersArgs),
 
+    /// The artifact drops of this machine (PROP-066 `#drops`):
+    /// `vibe artifacts where [<package>]` prints where vibe releases and
+    /// package payloads are expected, by exact file name.
+    Artifacts(ArtifactsArgs),
+
     /// The registry of what this project can invoke: every `[[binary]]` and
     /// every `[[mcp_server]]` the installed packages declare, in one table.
     /// The boot lane already names which language disciplines are installed;

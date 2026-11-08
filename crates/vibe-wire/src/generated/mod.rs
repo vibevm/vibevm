@@ -85,6 +85,7 @@ pub mod package_skill;
 pub mod package_skill_receipt;
 pub mod progress_event;
 pub mod project_cancellation;
+pub mod registry_layout_publish_report;
 pub mod registry_publish_report;
 pub mod registry_sync_report;
 pub mod reinstall_report;

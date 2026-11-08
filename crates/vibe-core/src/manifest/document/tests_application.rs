@@ -555,7 +555,7 @@ script = "recipes/build.sh"
         (
             "path = \"patches/fix.patch\"",
             "path = \"patches/fix.patch\"\nurl = \"https://example.com/x\"",
-            "exactly one of url or path",
+            "exactly one of url, path or drop",
         ),
         (
             "path = \"patches/fix.patch\"",

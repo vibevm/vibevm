@@ -235,6 +235,15 @@ impl MultiRegistryResolver {
                 cached.registry_name = resolution.registry_name.clone();
                 Ok(cached)
             }
+            // A monorepo package is a subdirectory of the operation's clone;
+            // the fetch records registry, branch and commit (PROP-002
+            // `#registry-type`).
+            RegistrySource::Monorepo(mono) => {
+                let mut cached =
+                    crate::Registry::fetch(mono.registry()?, &resolution.resolved, store_root)?;
+                cached.registry_name = resolution.registry_name.clone();
+                Ok(cached)
+            }
         }
     }
 
@@ -285,10 +294,12 @@ impl MultiRegistryResolver {
                 slot,
                 resolution.selected_route.as_ref(),
             ),
-            RegistrySource::Local(_) => Err(RegistryError::InPlaceUnsupported {
-                group: resolution.resolved.group.clone(),
-                name: resolution.resolved.name.clone(),
-            }),
+            RegistrySource::Local(_) | RegistrySource::Monorepo(_) => {
+                Err(RegistryError::InPlaceUnsupported {
+                    group: resolution.resolved.group.clone(),
+                    name: resolution.resolved.name.clone(),
+                })
+            }
         }
     }
 
@@ -326,10 +337,12 @@ impl MultiRegistryResolver {
         // is `InPlaceUnsupported` — same posture as `--registry <path>`.
         match src {
             RegistrySource::Git(reg) => reg.materialise_in_place(&resolution.resolved, slot),
-            RegistrySource::Local(_) => Err(RegistryError::InPlaceUnsupported {
-                group: resolution.resolved.group.clone(),
-                name: resolution.resolved.name.clone(),
-            }),
+            RegistrySource::Local(_) | RegistrySource::Monorepo(_) => {
+                Err(RegistryError::InPlaceUnsupported {
+                    group: resolution.resolved.group.clone(),
+                    name: resolution.resolved.name.clone(),
+                })
+            }
         }
     }
 

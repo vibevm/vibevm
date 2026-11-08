@@ -298,6 +298,62 @@ pub fn rows_from_overrides(
         .collect()
 }
 
+/// The source label the PROP-002 registry tables load under, in a CLI
+/// Locator and in every catalog that composes its tables onto one
+/// ([`crate::remap::Locator::with_registry_tables`]).
+pub const REGISTRY_TABLES_SOURCE: &str = "[[mirror]] / [[override]]";
+
+/// PROP-002's `[[mirror]]` and `[[override]]` tables as the one local-layer
+/// source the Locator holds for them (`PROP-066#layers`): the mirrors
+/// first, then the overrides, numbered as one sequence so the layer's
+/// "later row" tie-break sees one source rather than two starting at zero.
+///
+/// This is the single owner of that lowering: the composition root builds
+/// the invocation's Locator with it, and a registry catalog that reads its
+/// tables on demand composes them onto the active Locator with it, so a
+/// `[[mirror]]` means the same thing on every command.
+///
+/// ```
+/// use vibe_core::manifest::{MirrorSection, OverrideSection};
+/// use vibe_core::remap::{rows_from_registry_tables, Layer};
+///
+/// let mirrors = [MirrorSection {
+///     publication: Default::default(),
+///     of: "vibespecs".into(),
+///     url: "https://nexus.corp.example/vibespecs".into(),
+///     priority: 0,
+/// }];
+/// let overrides = [OverrideSection {
+///     pkgref: "org.example/wal".into(),
+///     source_url: "https://github.com/me/fork".into(),
+///     r#ref: None,
+///     reason: None,
+/// }];
+/// let rows = rows_from_registry_tables(&[], &mirrors, &overrides, Layer::Local);
+/// assert_eq!(rows.len(), 2);
+/// assert_eq!(rows[0].key.kind(), "registry");
+/// assert_eq!(rows[1].key.kind(), "package");
+/// assert_eq!(rows[1].from.index, 1);
+/// ```
+#[spec(documents = "spec://org.vibevm.core/vibevm/common/PROP-066#layers")]
+pub fn rows_from_registry_tables(
+    registries: &[RegistrySection],
+    mirrors: &[MirrorSection],
+    overrides: &[OverrideSection],
+    layer: Layer,
+) -> Vec<RemapRow> {
+    let mut rows = rows_from_mirrors(mirrors, registries, layer, "[[mirror]]");
+    let offset = rows.len();
+    for (position, mut row) in rows_from_overrides(overrides, layer, "[[override]]")
+        .into_iter()
+        .enumerate()
+    {
+        row.from.index = offset + position;
+        rows.push(row);
+    }
+    rows
+}
+
 /// The rows the raw-file fast path reads from by default
 /// (`PROP-066#locator`): the hardcoded host table of PROP-002's HTTPS
 /// single-file read becomes ordinary `prefix` rows of the lowest layer, so
@@ -381,5 +437,6 @@ fn row(key: RemapKey, target: RemapTarget, reason: Option<String>, from: Provena
         from,
         target_ref: None,
         only: None,
+        lookup: super::row::PathLookup::Mirror,
     }
 }

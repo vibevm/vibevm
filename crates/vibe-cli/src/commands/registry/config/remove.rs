@@ -3,15 +3,17 @@
 
 specmark::scope!("spec://org.vibevm.core/vibevm/VIBEVM-SPEC#registry");
 
-use anyhow::{Context, Result, bail};
+use anyhow::{Result, bail};
 use serde::Serialize;
-use vibe_core::manifest::{Manifest, MirrorSection};
+use vibe_core::RegistryScope;
+use vibe_core::manifest::MirrorSection;
 
 use crate::cli::{
     RegistryRemoveArgs, RegistryRemoveMirrorArgs, RegistryRemoveRegistryArgs, RegistryRemoveTarget,
 };
-use crate::commands::registry::resolve_project_root;
 use crate::output;
+
+use super::scope::{ScopeFile, parse_scope};
 
 #[derive(Debug, Serialize)]
 struct RemoveReport {
@@ -37,23 +39,12 @@ pub(in crate::commands::registry) fn run_remove(
 }
 
 fn run_remove_registry(ctx: &output::Context, args: RegistryRemoveRegistryArgs) -> Result<()> {
-    let project_root = resolve_project_root(&args.path)?;
-    let manifest_path = project_root.join(Manifest::FILENAME);
-    if !manifest_path.exists() {
-        bail!(
-            "no `vibe.toml` in `{}`; run `vibe init` first",
-            project_root.display()
-        );
-    }
-    let mut manifest = Manifest::read(&manifest_path)
-        .with_context(|| format!("reading `{}`", manifest_path.display()))?;
+    let scope = parse_scope(args.scope.as_deref())?.unwrap_or(RegistryScope::Project);
+    let mut file = ScopeFile::open(scope, &args.path)?;
+    let manifest_path = file.path().to_path_buf();
 
-    if manifest.registry_by_name(&args.name).is_none() {
-        let known: Vec<&str> = manifest
-            .registries
-            .iter()
-            .map(|r| r.name.as_str())
-            .collect();
+    if !file.registries().iter().any(|r| r.name == args.name) {
+        let known: Vec<&str> = file.registries().iter().map(|r| r.name.as_str()).collect();
         let known_text = if known.is_empty() {
             "(none configured)".to_string()
         } else {
@@ -72,8 +63,8 @@ fn run_remove_registry(ctx: &output::Context, args: RegistryRemoveRegistryArgs) 
     // the manifest would still be parseable but operationally nonsense.
     // Wildcard `of = "*"` mirrors are fine; they apply to whatever
     // registries exist.
-    let orphaned: Vec<&MirrorSection> = manifest
-        .mirrors
+    let orphaned: Vec<&MirrorSection> = file
+        .mirrors()
         .iter()
         .filter(|m| m.of == args.name)
         .collect();
@@ -87,11 +78,9 @@ fn run_remove_registry(ctx: &output::Context, args: RegistryRemoveRegistryArgs) 
         );
     }
 
-    manifest.registries.retain(|r| r.name != args.name);
-
-    manifest
-        .write(&manifest_path)
-        .with_context(|| format!("writing `{}`", manifest_path.display()))?;
+    file.registries_mut().retain(|r| r.name != args.name);
+    file.save()?;
+    let remaining = file.registries().len();
 
     if ctx.is_json() {
         ctx.emit_json(&RemoveReport {
@@ -99,42 +88,34 @@ fn run_remove_registry(ctx: &output::Context, args: RegistryRemoveRegistryArgs) 
             command: "registry:remove",
             target: "registry",
             identity: args.name.clone(),
-            total_registries: manifest.registries.len(),
-            total_mirrors: manifest.mirrors.len(),
+            total_registries: remaining,
+            total_mirrors: file.mirrors().len(),
         })?;
         return Ok(());
     }
 
-    ctx.step(&format!("Removed `[[registry]]` `{}`", args.name));
+    ctx.step(&format!(
+        "Removed `[[registry]]` `{}` from `{}`",
+        args.name,
+        manifest_path.display()
+    ));
     ctx.summary(&format!(
         "\nvibe registry remove: {} registr{} remain.",
-        manifest.registries.len(),
-        if manifest.registries.len() == 1 {
-            "y"
-        } else {
-            "ies"
-        }
+        remaining,
+        if remaining == 1 { "y" } else { "ies" }
     ));
     Ok(())
 }
 
 fn run_remove_mirror(ctx: &output::Context, args: RegistryRemoveMirrorArgs) -> Result<()> {
-    let project_root = resolve_project_root(&args.path)?;
-    let manifest_path = project_root.join(Manifest::FILENAME);
-    if !manifest_path.exists() {
-        bail!(
-            "no `vibe.toml` in `{}`; run `vibe init` first",
-            project_root.display()
-        );
-    }
-    let mut manifest = Manifest::read(&manifest_path)
-        .with_context(|| format!("reading `{}`", manifest_path.display()))?;
+    let scope = parse_scope(args.scope.as_deref())?.unwrap_or(RegistryScope::Project);
+    let mut file = ScopeFile::open(scope, &args.path)?;
+    let manifest_path = file.path().to_path_buf();
 
-    let before = manifest.mirrors.len();
-    manifest
-        .mirrors
+    let before = file.mirrors().len();
+    file.mirrors_mut()
         .retain(|m| !(m.of == args.of && m.url == args.url));
-    let after = manifest.mirrors.len();
+    let after = file.mirrors().len();
 
     if before == after {
         bail!(
@@ -156,9 +137,7 @@ fn run_remove_mirror(ctx: &output::Context, args: RegistryRemoveMirrorArgs) -> R
         ));
     }
 
-    manifest
-        .write(&manifest_path)
-        .with_context(|| format!("writing `{}`", manifest_path.display()))?;
+    file.save()?;
 
     if ctx.is_json() {
         ctx.emit_json(&RemoveReport {
@@ -166,8 +145,8 @@ fn run_remove_mirror(ctx: &output::Context, args: RegistryRemoveMirrorArgs) -> R
             command: "registry:remove",
             target: "mirror",
             identity: format!("{}:{}", args.of, args.url),
-            total_registries: manifest.registries.len(),
-            total_mirrors: manifest.mirrors.len(),
+            total_registries: file.registries().len(),
+            total_mirrors: file.mirrors().len(),
         })?;
         return Ok(());
     }
@@ -178,8 +157,8 @@ fn run_remove_mirror(ctx: &output::Context, args: RegistryRemoveMirrorArgs) -> R
     ));
     ctx.summary(&format!(
         "\nvibe registry remove: {} mirror{} remain.",
-        manifest.mirrors.len(),
-        if manifest.mirrors.len() == 1 { "" } else { "s" }
+        file.mirrors().len(),
+        if file.mirrors().len() == 1 { "" } else { "s" }
     ));
     Ok(())
 }

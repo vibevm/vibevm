@@ -8,6 +8,7 @@ specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-068#coverage");
 use std::fs;
 use std::io::{self, Read};
 use std::path::{Path, PathBuf};
+use std::sync::Arc;
 use std::sync::atomic::{AtomicU64, Ordering};
 use std::time::Duration;
 
@@ -17,6 +18,10 @@ use specmark::spec;
 use vibe_core::progress::Progress;
 use vibe_core::progress::ProgressTask;
 use vibe_core::progress::transfer::{self, Destination, Purpose, TransferReader, TransferRecord};
+
+use vibe_core::remap::ByteLocation;
+use vibe_publish::token::Token;
+use vibe_registry::HttpAdmission;
 
 use super::super::store::VersionStore;
 
@@ -32,7 +37,13 @@ pub(super) fn download_path(store: &VersionStore, name: &str) -> PathBuf {
     ))
 }
 
+/// A remote release URL with a nonce query, because every release URL a
+/// running installation reads is mutable; a local location is returned
+/// unchanged — a file name has no cache to bust (`PROP-066#locations`).
 pub(super) fn cache_busted(url: &str) -> String {
+    if !matches!(ByteLocation::parse(url), Ok(ByteLocation::Remote(_))) {
+        return url.to_owned();
+    }
     let nonce = REQUEST_NONCE.fetch_add(1, Ordering::Relaxed);
     format!(
         "{url}?vvm_nonce={}-{}-{nonce}",
@@ -58,9 +69,57 @@ pub(super) trait Downloader {
         expected_bytes: Option<u64>,
         progress: &ProgressTask,
     ) -> Result<()>;
+
+    /// The same download carrying a bearer token to its origin — a
+    /// GitVerse asset that is not public. A downloader without a token
+    /// path downloads anonymously.
+    fn download_authorized(
+        &self,
+        url: &str,
+        destination: &Path,
+        maximum_bytes: u64,
+        expected_bytes: Option<u64>,
+        progress: &ProgressTask,
+        token: Option<&Token>,
+    ) -> Result<()> {
+        let _ = token;
+        self.download(url, destination, maximum_bytes, expected_bytes, progress)
+    }
+
+    /// The source policy the release-list client must also obey; `None`
+    /// is the uncontrolled posture.
+    fn admission(&self) -> Option<Arc<HttpAdmission>> {
+        None
+    }
 }
 
-pub(super) struct HttpDownloader;
+/// The real release downloader (`PROP-019#release-sources`): local
+/// locations are copied, remote ones go through the invocation's
+/// controlled transport — its source policy (`exclude_hosting`), HTTP
+/// admission and `[proxy]` — never through a private client.
+pub(super) struct HttpDownloader {
+    http: vibe_package_source::OperationHttpClient,
+    admission: Option<Arc<HttpAdmission>>,
+}
+
+impl HttpDownloader {
+    /// The downloader of this invocation, under the user's source policy.
+    pub(super) fn for_invocation() -> Result<Self> {
+        Self::new(&crate::commands::app::global::source_operation(
+            Default::default(),
+        )?)
+    }
+
+    /// A downloader under one operation's policy.
+    pub(super) fn new(operation: &vibe_package_source::SourceOperation) -> Result<Self> {
+        Ok(Self {
+            http: operation.http_client(TOTAL_TIMEOUT),
+            admission: operation
+                .http_admission()
+                .context("establishing the source policy for release downloads")?,
+        })
+    }
+}
 
 #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-060#SELF-STAGES")]
 impl Downloader for HttpDownloader {
@@ -76,27 +135,100 @@ impl Downloader for HttpDownloader {
             fs::create_dir_all(parent)
                 .with_context(|| format!("creating download directory `{}`", parent.display()))?;
         }
-        let client = reqwest::blocking::Client::builder()
-            .user_agent(format!("vibevm/{}", env!("CARGO_PKG_VERSION")))
-            .connect_timeout(CONNECT_TIMEOUT)
-            .timeout(TOTAL_TIMEOUT)
-            .build()
-            .context("building anonymous GitHub release client")?;
-        let mut response = client
-            .get(url)
-            .header(reqwest::header::ACCEPT, "application/octet-stream")
-            .header(reqwest::header::CACHE_CONTROL, "no-cache")
-            .header(reqwest::header::PRAGMA, "no-cache")
-            .send()
-            .and_then(reqwest::blocking::Response::error_for_status)
-            .with_context(|| format!("downloading `{url}`"))?;
+        let remote = match ByteLocation::parse(url)? {
+            ByteLocation::Local(path) => {
+                return copy_local(&path, destination, maximum_bytes, expected_bytes, progress);
+            }
+            ByteLocation::Remote(remote) => remote,
+        };
+        let cancellation = progress.progress().cancellation().clone();
+        let mut response = self
+            .http
+            .get_anonymous(&remote, &cancellation)
+            .with_context(|| format!("downloading `{}`", safe_url(&remote)))?;
+        if !response.status().is_success() {
+            bail!(
+                "downloading `{}` answered {}",
+                safe_url(&remote),
+                response.status()
+            );
+        }
         let total = expected_bytes.or_else(|| response.content_length());
         let record =
-            TransferRecord::http(Purpose::ReleaseBundle, url, Destination::Home).total(total);
+            TransferRecord::http(Purpose::ReleaseBundle, &remote, Destination::Home).total(total);
         let reader = transfer::begin(record, Some(progress)).reader(&mut response);
         write_download_observed(destination, maximum_bytes, reader)
             .with_context(|| format!("writing download `{}`", destination.display()))?;
         Ok(())
+    }
+
+    fn download_authorized(
+        &self,
+        url: &str,
+        destination: &Path,
+        maximum_bytes: u64,
+        expected_bytes: Option<u64>,
+        progress: &ProgressTask,
+        token: Option<&Token>,
+    ) -> Result<()> {
+        let Some(token) = token else {
+            return self.download(url, destination, maximum_bytes, expected_bytes, progress);
+        };
+        let client = super::api::ApiClient::new(self.admission.clone())?;
+        let accept = [("Accept", "application/octet-stream")];
+        let Some((mut response, shown)) = client.send(url, &accept, Some(token))? else {
+            bail!("`{}` does not exist", safe_url(url));
+        };
+        let total = expected_bytes.or_else(|| response.content_length());
+        let record =
+            TransferRecord::http(Purpose::ReleaseBundle, url, Destination::Home).total(total);
+        let reader = transfer::begin(record, Some(progress)).reader(&mut response);
+        write_download_observed(destination, maximum_bytes, reader).with_context(|| {
+            format!(
+                "writing download `{}` from `{shown}`",
+                destination.display()
+            )
+        })
+    }
+
+    fn admission(&self) -> Option<Arc<HttpAdmission>> {
+        self.admission.clone()
+    }
+}
+
+/// Copy a release file from a local drop (`PROP-066#locations`): bounded
+/// like a download, into a new file that a failure never leaves behind.
+fn copy_local(
+    source: &Path,
+    destination: &Path,
+    maximum_bytes: u64,
+    expected_bytes: Option<u64>,
+    progress: &ProgressTask,
+) -> Result<()> {
+    let mut input = fs::File::open(source).with_context(|| {
+        format!(
+            "reading `{}` from the release drop \
+             (violates spec://org.vibevm.core/vibevm/common/PROP-019#release-sources; \
+              fix: put the release's files there — `vibe artifacts where` prints the names)",
+            source.display()
+        )
+    })?;
+    let mut output = fs::OpenOptions::new()
+        .write(true)
+        .create_new(true)
+        .open(destination)
+        .with_context(|| format!("creating `{}`", destination.display()))?;
+    let result = copy_download(&mut input, &mut output, maximum_bytes);
+    drop(output);
+    match result {
+        Ok(copied) => {
+            progress.set_progress(copied, expected_bytes, "bytes");
+            Ok(())
+        }
+        Err(error) => {
+            let _ = fs::remove_file(destination);
+            Err(error)
+        }
     }
 }
 

@@ -276,7 +276,7 @@
       }
     },
     "source_input": {
-      "metadata": { "x-wire-order": ["name", "url", "path", "sha256", "size", "extract"] },
+      "metadata": { "x-wire-order": ["name", "url", "path", "drop", "file", "sha256", "size", "extract"] },
       "properties": {
         "name": { "type": "string" },
         "sha256": { "type": "string" }
@@ -285,6 +285,8 @@
         "size": { "ref": "byte_count", "metadata": { "x-default": null } },
         "url": { "type": "string", "metadata": { "x-default": null } },
         "path": { "type": "string", "metadata": { "x-default": null } },
+        "drop": { "type": "string", "metadata": { "x-default": null } },
+        "file": { "type": "string", "metadata": { "x-default": null } },
         "extract": { "type": "boolean", "metadata": { "x-default": null } }
       }
     },

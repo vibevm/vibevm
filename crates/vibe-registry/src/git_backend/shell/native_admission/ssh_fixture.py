@@ -21,10 +21,13 @@ ok(['/usr/bin/git','add','.'],work);ok(['/usr/bin/git','-c','user.name=Fixture',
 HEAD=ok(['/usr/bin/git','rev-parse','HEAD'],work);ok(['/usr/bin/git','tag','v1.0.0'],work)
 (work/'payload').write_text('SSH updated fixture\n');(work/'vibe.toml').write_text((work/'vibe.toml').read_text().replace('1.0.0','1.1.0'));ok(['/usr/bin/git','add','.'],work);ok(['/usr/bin/git','-c','user.name=Fixture','-c','user.email=f@example.invalid','commit','-m','update'],work);ok(['/usr/bin/git','tag','v1.1.0'],work);UPDATED=ok(['/usr/bin/git','rev-parse','HEAD'],work)
 bare=fixture_home/'repo.git';ok(['/usr/bin/git','clone','--bare',str(work),str(bare)])
+# VIBE_SSH_FIXTURE_WRITABLE=1 also admits git-receive-pack on the same one
+# repository (monorepo publish tests); every other command stays refused.
+WRITABLE=os.environ.get('VIBE_SSH_FIXTURE_WRITABLE')=='1'
 # sshd invokes the account shell with -c. Explicit SetEnv HOME/BASH_ENV/ENV
 # ensures its noninteractive startup sees only fixture paths, not real profiles.
 forced=fixture_root/'serve.py'
-write_script(forced,"#!/usr/bin/python3\nimport os,sys,shlex\nfrom pathlib import Path\nroot=Path("+repr(str(fixture_root))+")\n(root/'server-home-observed').write_text(os.environ.get('HOME',''))\nargs=shlex.split(os.environ.get('SSH_ORIGINAL_COMMAND',''))\nif args not in [['git-upload-pack',str(root/'home/repo.git')],['git-upload-pack','repo.git'],['git-upload-pack',str(root/'home/repo.git/org.fixture.demo.git')]]:sys.exit(91)\nos.execve('/usr/bin/git-upload-pack',['git-upload-pack',str(root/'home/repo.git')],"+repr(ENV)+")\n")
+write_script(forced,"#!/usr/bin/python3\nimport os,sys,shlex\nfrom pathlib import Path\nroot=Path("+repr(str(fixture_root))+")\n(root/'server-home-observed').write_text(os.environ.get('HOME',''))\nargs=shlex.split(os.environ.get('SSH_ORIGINAL_COMMAND',''))\n"+("if args in [['git-receive-pack',str(root/'home/repo.git')],['git-receive-pack','repo.git']]:os.execve('/usr/bin/git-receive-pack',['git-receive-pack',str(root/'home/repo.git')],"+repr(ENV)+")\n" if WRITABLE else "")+"if args not in [['git-upload-pack',str(root/'home/repo.git')],['git-upload-pack','repo.git'],['git-upload-pack',str(root/'home/repo.git/org.fixture.demo.git')]]:sys.exit(91)\nos.execve('/usr/bin/git-upload-pack',['git-upload-pack',str(root/'home/repo.git')],"+repr(ENV)+")\n")
 # Coordinate only pair allocation/readiness and teardown; test traffic remains
 # parallel. A readiness connection must never belong to another fixture's sshd.
 lock_root=pathlib.Path(tempfile.gettempdir())/('vibe-ssh-fixture-lock-'+str(os.getuid()))

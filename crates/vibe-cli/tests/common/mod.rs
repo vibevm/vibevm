@@ -29,6 +29,9 @@ pub mod hosted_slot;
 pub mod http_dir;
 /// The leftover check of cancelled and rolled-back operations.
 pub mod leftovers;
+/// The owned loopback sshd serving one writable monorepo registry.
+#[cfg(unix)]
+pub mod ssh_monorepo;
 /// The R3.4 failure reds' git-backed `org.demo/tools` fixture.
 pub mod trace_failure_slot;
 

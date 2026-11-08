@@ -49,7 +49,7 @@ pub(crate) fn source_filename(source: &SourceInputDecl) -> Result<String, Instal
             .file_name()
             .map(|name| name.to_string_lossy().into_owned())
             .unwrap_or_default(),
-        (None, None) => String::new(),
+        (None, None) => source.file.clone().unwrap_or_default(),
     };
     let single = archive::portable_path(&raw).is_ok_and(|path| path.components().count() == 1)
         && raw != "."
@@ -164,6 +164,22 @@ pub(crate) fn fetch(
             }
             file
         }
+        (None, None) if source.drop.is_some() => {
+            let directory = cache_root.join(&sha256);
+            let cached = directory.join(&filename);
+            if digest_of(&cached).ok().as_deref() != Some(sha256.as_str()) {
+                let partial = directory.join(format!(".{filename}.{}.part", std::process::id()));
+                served = Some(named(
+                    from_package_drop(locator, artifact, &filename, &sha256, &partial)?,
+                    &source.name,
+                ));
+                fs::rename(&partial, &cached).map_err(|source| {
+                    let _ = fs::remove_file(&partial);
+                    super::io("caching", &cached, source)
+                })?;
+            }
+            cached
+        }
         (None, None) => {
             return Err(layout(
                 &source.name,
@@ -180,6 +196,47 @@ pub(crate) fn fetch(
         },
         served,
     ))
+}
+
+/// An author-side `drop = "packages"` input (`PROP-066#drops-author`):
+/// the file is looked for in every configured `[artifacts] packages` drop,
+/// highest layer first, by the drop convention, and verified against its
+/// digest. No drop configured is a refusal naming the setting.
+fn from_package_drop(
+    locator: &Locator,
+    artifact: &Artifact,
+    filename: &str,
+    sha256: &str,
+    destination: &Path,
+) -> Result<super::ServedBy, InstallerError> {
+    let drops = locator.package_drops();
+    let package = artifact.package.as_deref();
+    let mut failures = Vec::new();
+    for drop in &drops {
+        match super::copy_from_drop_named(drop, package, Some(filename), sha256, destination) {
+            Ok(()) => {
+                return Ok(super::ServedBy {
+                    input: artifact.step.clone().unwrap_or_default(),
+                    target: drop.display().to_string(),
+                    row: None,
+                });
+            }
+            Err(error @ InstallerError::Digest { .. }) => return Err(error),
+            Err(error) => failures.push(error.to_string()),
+        }
+    }
+    Err(InstallerError::Fetch {
+        source_ref: format!("drop:packages/{filename}"),
+        reason: if drops.is_empty() {
+            "the input declares `drop = \"packages\"` but this machine configures no \
+             `[artifacts] packages` drop (violates \
+             spec://org.vibevm.core/vibevm/common/PROP-066#drops-author; fix: set \
+             `[artifacts] packages = \"<dir>\"` in ~/.vibe/config.toml and put the file there)"
+                .to_owned()
+        } else {
+            failures.join("; ")
+        },
+    })
 }
 
 /// Name the served record after the `sources` entry rather than the step,
@@ -309,6 +366,8 @@ mod tests {
             name: name.into(),
             url: url.map(Into::into),
             path: path.map(PathBuf::from),
+            drop: None,
+            file: None,
             sha256: sha256.into(),
             size: None,
             extract: None,

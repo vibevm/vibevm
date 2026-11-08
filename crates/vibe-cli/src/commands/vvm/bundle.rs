@@ -18,10 +18,22 @@ use super::model::{InstallRecord, Kind, Origin};
 use super::{VvmEnv, output, provenance, store::VersionStore};
 use crate::cli::{ForcedKind, VvmBootstrapArgs, VvmInstallArgs, VvmReinstallArgs, VvmUpdateArgs};
 
+#[path = "bundle/api.rs"]
+mod api;
 #[path = "bundle/archive.rs"]
 mod archive;
+#[path = "bundle/lane.rs"]
+mod lane;
+use lane::{
+    ReleaseManifest, located_distribution, read_release, refuse_remote_offline,
+    report_withdrawn_release,
+};
 #[path = "bundle/download.rs"]
 mod download;
+#[path = "bundle/release_source.rs"]
+pub(crate) mod release_source;
+#[path = "bundle/releases.rs"]
+mod releases;
 #[path = "bundle/report.rs"]
 mod report;
 #[path = "bundle/selection.rs"]
@@ -31,36 +43,25 @@ use download::{CONNECT_TIMEOUT, TOTAL_TIMEOUT, copy_download, write_download};
 use download::{
     DownloadCleanup, Downloader, HttpDownloader, cache_busted, download_path, safe_url,
 };
+pub(super) use release_source_view::{run_release_source_cmd, run_releases_cmd};
+#[path = "bundle/release_source_view.rs"]
+mod release_source_view;
+use releases::{Newest, ReleaseDir, Releases};
 use report::{ActivationReport, emit_outcome};
 pub(super) use report::{report_if_current, report_source_if_current};
-use selection::{current_target, read_aggregate, select_platform, validated_release_base};
+pub(in crate::commands::vvm) use selection::current_target;
+use selection::{read_aggregate, select_platform, validated_release_base};
+use vibe_publish::token::Token;
 
 pub(super) fn installed_bundle_intact(store: &VersionStore, record: &InstallRecord) -> bool {
     archive::installed_bundle_intact(store, record)
 }
 
-const GITHUB_RELEASE_ROOT: &str = "https://github.com/vibevm/vibevm/releases/download";
-/// GitHub's stable alias for whatever release is newest right now. It is the
-/// one address from which a running installation can learn that a version
-/// beyond its own exists — every other release URL names a version already
-/// known (PROP-019 `##CMD-UPDATE`).
-const GITHUB_NEWEST_RELEASE_MANIFEST: &str =
-    "https://github.com/vibevm/vibevm/releases/latest/download/DISTRIBUTIONS.json";
-
-/// The release base or `DISTRIBUTIONS.json` location to actually read
-/// (`PROP-066#locator`): the Locator's winning candidate for the declared
-/// one, or a refusal before any connection. The second half of the answer
-/// is whether a row produced it — `validated_release_base` keeps its
-/// strict GitHub check only for a base nobody remapped.
-fn located_distribution(declared: &str) -> Result<(String, bool)> {
-    let locator = vibe_core::remap::active();
-    let artifact = vibe_core::remap::Artifact::new(vibe_core::remap::ArtifactKind::Distribution)
-        .with_url(declared);
-    let chosen = locator.choose_url(&artifact)?;
-    Ok((chosen.clone(), chosen != declared))
-}
-
 struct RemoteContext<'a> {
+    /// The release source this invocation resolved (`PROP-019#release-sources`).
+    source: release_source::EffectiveReleaseSource,
+    /// The Locator its row lives in.
+    locator: &'a vibe_core::remap::Locator,
     ctx: &'a output::Context,
     env: &'a VvmEnv,
     store: &'a VersionStore,
@@ -92,11 +93,12 @@ pub(super) fn run_bootstrap_cmd(
 ) -> Result<()> {
     let executable = std::env::current_exe().context("locating the bootstrap executable")?;
     let persister = super::make_persister(env, Shell::detect(env.shell.as_deref()))?;
+    let downloader = HttpDownloader::for_invocation()?;
     bootstrap_with_downloader(
         ctx,
         env,
         &args,
-        &HttpDownloader,
+        &downloader,
         &executable,
         persister.as_ref(),
         progress,
@@ -123,6 +125,8 @@ fn bootstrap_with_downloader(
     let release_base = validated_release_base(&declared_base, &platform.tag, from_remap)?;
     install_selected(
         &RemoteContext {
+            source: release_source::active()?,
+            locator: vibe_core::remap::active(),
             ctx,
             env,
             store: &store,
@@ -132,7 +136,8 @@ fn bootstrap_with_downloader(
             progress,
         },
         platform,
-        &release_base,
+        &ReleaseDir::Base(release_base),
+        None,
         args.force,
     )
     .map(|_| ())
@@ -184,15 +189,17 @@ pub(super) fn run_reinstall_cmd(
     if let Some(record) = running_binary_record(&store)? {
         binary_release_version(&record)?;
         let persister = super::make_persister(env, Shell::detect(env.shell.as_deref()))?;
+        let downloader = HttpDownloader::for_invocation()?;
         return install_release_version(
             &remote_context(
                 ctx,
                 env,
                 &store,
+                &downloader,
                 persister.as_ref(),
                 "self:reinstall",
                 progress,
-            ),
+            )?,
             &record.id,
             true,
         )
@@ -276,8 +283,17 @@ pub(super) fn install_newest_release(
     progress: &Progress,
 ) -> Result<()> {
     let persister = super::make_persister(env, Shell::detect(env.shell.as_deref()))?;
+    let downloader = HttpDownloader::for_invocation()?;
     move_to_newest_release(
-        &remote_context(ctx, env, store, persister.as_ref(), command, progress),
+        &remote_context(
+            ctx,
+            env,
+            store,
+            &downloader,
+            persister.as_ref(),
+            command,
+            progress,
+        )?,
         record,
         force,
     )
@@ -295,22 +311,36 @@ fn move_to_newest_release(
     force: bool,
 ) -> Result<()> {
     let installed = binary_release_version(record)?;
-    let newest_manifest = located_distribution(GITHUB_NEWEST_RELEASE_MANIFEST)?.0;
-    let aggregate = fetch_aggregate(remote, &newest_manifest)
-        .context("learning the newest published release")?;
-    let newest = semver::Version::parse(&aggregate.version)
-        .with_context(|| format!("reading newest release version `{}`", aggregate.version))?;
+    let api = api::ApiClient::new(remote.downloader.admission())?;
+    let releases = Releases::new(&remote.source, &api, remote.locator)?;
+    let token = releases.token.clone();
+    let (manifest, dir, newest) = match releases.newest()? {
+        Newest::Alias(newest_manifest) => {
+            let aggregate = fetch_aggregate(remote, &newest_manifest, None)
+                .context("learning the newest published release")?;
+            let newest = semver::Version::parse(&aggregate.version).with_context(|| {
+                format!("reading newest release version `{}`", aggregate.version)
+            })?;
+            let dir = releases.dir(&newest)?;
+            (ReleaseManifest::Aggregate(aggregate), dir, newest)
+        }
+        Newest::Listed(newest) => {
+            let dir = releases.dir(&newest)?;
+            let (manifest, dir) = read_release(remote, &dir, &newest, token.as_ref())
+                .context("learning the newest published release")?;
+            (manifest, dir, newest)
+        }
+    };
     let selection = remote.progress.task("Selecting release");
     selection.detail(format!("installed {installed}; newest {newest}"));
     selection.finish();
     if newest < installed {
         return report_withdrawn_release(remote, record, &installed, &newest);
     }
-    let platform = select_platform(&aggregate, &newest.to_string(), current_target()?)?;
-    let release_base = located_distribution(&format!("{GITHUB_RELEASE_ROOT}/v{newest}"))?.0;
+    let platform = manifest.platform(&newest.to_string(), current_target()?)?;
     if newest > installed {
         remote.ctx.hint(&format!("updating {installed} → {newest}"));
-        install_selected(remote, platform, &release_base, force)?;
+        install_selected(remote, platform, &dir, token.as_ref(), force)?;
         return Ok(());
     }
     // Said before the install, because its trailer is the last block: it
@@ -318,60 +348,23 @@ fn move_to_newest_release(
     remote.ctx.hint(&format!(
         "newest release is still {newest}; reinstalled only if it was rebuilt since this install"
     ));
-    install_selected(remote, platform, &release_base, force)?;
+    install_selected(remote, platform, &dir, token.as_ref(), force)?;
     Ok(())
-}
-
-/// The newest release is older than the installed one: nothing is fetched and
-/// nothing moves. Human output is the one line that explains it; a `--json`
-/// caller still gets the ordinary envelope, reporting the running instance as
-/// the reused, active one — because that is exactly what it now is.
-fn report_withdrawn_release(
-    remote: &RemoteContext<'_>,
-    record: &InstallRecord,
-    installed: &semver::Version,
-    newest: &semver::Version,
-) -> Result<()> {
-    remote.ctx.summary(&format!(
-        "newest release is {newest}, older than the installed {installed} — staying on \
-         {installed}; `vibe self install {newest}` goes back deliberately"
-    ));
-    if !remote.ctx.is_json() {
-        return Ok(());
-    }
-    let outcome = archive::InstallOutcome {
-        record: record.clone(),
-        home: remote
-            .store
-            .instance_dir(&record.version_id(), record.instance),
-        reused: true,
-    };
-    emit_outcome(
-        remote.ctx,
-        remote.command,
-        &outcome,
-        &ActivationReport {
-            path_on_current_process: super::path_has_dir(
-                remote.env.path_var.as_deref(),
-                &remote.store.shim_dir(),
-            ),
-            durable_path_changed: false,
-            advisory_home_warning: None,
-        },
-    )
 }
 
 /// Install one named release version from its own release directory —
 /// `self install X.Y.Z` and `self reinstall`. Returns whether an existing
 /// immutable instance was reused.
 fn install_release_version(remote: &RemoteContext<'_>, version: &str, force: bool) -> Result<bool> {
-    let release_base = located_distribution(&format!("{GITHUB_RELEASE_ROOT}/v{version}"))?.0;
-    let aggregate = fetch_aggregate(
-        remote,
-        &format!("{release_base}/{DISTRIBUTION_AGGREGATE_MANIFEST_FILENAME}"),
-    )?;
-    let platform = select_platform(&aggregate, version, current_target()?)?;
-    install_selected(remote, platform, &release_base, force)
+    let parsed = semver::Version::parse(version)
+        .with_context(|| format!("invalid release version `{version}`"))?;
+    let api = api::ApiClient::new(remote.downloader.admission())?;
+    let releases = Releases::new(&remote.source, &api, remote.locator)?;
+    let token = releases.token.clone();
+    let dir = releases.dir(&parsed)?;
+    let (manifest, dir) = read_release(remote, &dir, &parsed, token.as_ref())?;
+    let platform = manifest.platform(version, current_target()?)?;
+    install_selected(remote, platform, &dir, token.as_ref(), force)
 }
 
 pub(super) fn install_binary_version(
@@ -383,51 +376,60 @@ pub(super) fn install_binary_version(
     progress: &Progress,
 ) -> Result<()> {
     let persister = super::make_persister(env, Shell::detect(env.shell.as_deref()))?;
+    let downloader = HttpDownloader::for_invocation()?;
     install_release_version(
         &remote_context(
             ctx,
             env,
             store,
+            &downloader,
             persister.as_ref(),
             "self:install",
             progress,
-        ),
+        )?,
         version,
         force,
     )
     .map(|_| ())
 }
 
-/// The context every release-lane verb runs in: the real HTTP downloader, the
-/// resolved store, and the command label its report carries.
+/// The context every release-lane verb runs in: the invocation's
+/// downloader, the resolved store, and the command label its report carries.
 fn remote_context<'a>(
     ctx: &'a output::Context,
     env: &'a VvmEnv,
     store: &'a VersionStore,
+    downloader: &'a dyn Downloader,
     persister: &'a dyn EnvPersister,
     command: &'a str,
     progress: &'a Progress,
-) -> RemoteContext<'a> {
-    RemoteContext {
+) -> Result<RemoteContext<'a>> {
+    Ok(RemoteContext {
+        source: release_source::active()?,
+        locator: vibe_core::remap::active(),
         ctx,
         env,
         store,
-        downloader: &HttpDownloader,
+        downloader,
         persister,
         command,
         progress,
-    }
+    })
 }
 
 /// Fetch and parse one aggregate manifest, cache-busted because every release
 /// URL a running installation reads is mutable.
-fn fetch_aggregate(remote: &RemoteContext<'_>, url: &str) -> Result<AggregateDistributionManifest> {
+fn fetch_aggregate(
+    remote: &RemoteContext<'_>,
+    url: &str,
+    token: Option<&Token>,
+) -> Result<AggregateDistributionManifest> {
     // The release lane's FIRST request, and so the offline posture's first
     // and usually only refusal: nothing has been written, locked or
     // allocated yet. It is also why an already-installed release is no
     // rescue under the posture — the only thing that could recognise one is
     // this manifest, and reading it is the very act being refused.
-    remote.env.refuse_offline(remote.command, url)?;
+    refuse_remote_offline(remote, url)?;
     let task = remote.progress.task("Fetching release metadata");
     task.detail(format!("GET {}", safe_url(url)));
     task.set_progress(0, None, "bytes");
@@ -436,12 +438,13 @@ fn fetch_aggregate(remote: &RemoteContext<'_>, url: &str) -> Result<AggregateDis
         task.fail("release metadata destination was rejected");
         return Err(error.into());
     }
-    if let Err(error) = remote.downloader.download(
+    if let Err(error) = remote.downloader.download_authorized(
         &cache_busted(url),
         &manifest_path,
         DISTRIBUTION_AGGREGATE_MANIFEST_MAX_BYTES,
         None,
         &task,
+        token,
     ) {
         task.fail("release metadata download failed");
         return Err(error);
@@ -467,7 +470,8 @@ fn fetch_aggregate(remote: &RemoteContext<'_>, url: &str) -> Result<AggregateDis
 fn install_selected(
     remote: &RemoteContext<'_>,
     platform: &PlatformDistributionFragment,
-    release_base: &str,
+    dir: &ReleaseDir,
+    token: Option<&Token>,
     force: bool,
 ) -> Result<bool> {
     let existing = remote.progress.task("Checking installed generation");
@@ -501,16 +505,12 @@ fn install_selected(
         existing.detail("no intact generation matches the published bundle");
         existing.finish();
     }
-    let bundle_url = format!(
-        "{}/{}",
-        release_base.trim_end_matches('/'),
-        platform.asset.name
-    );
+    let bundle_url = dir.asset(&platform.asset.name)?;
     // The bundle is the lane's only other request. Getting here means the
     // release is NOT already held from these exact bytes, so there is
     // nothing local left to satisfy the verb with and an offline run says
     // so — before the download path is even allocated.
-    remote.env.refuse_offline(remote.command, &bundle_url)?;
+    refuse_remote_offline(remote, &bundle_url)?;
     let download = remote.progress.task("Downloading release bundle");
     download.detail(format!("GET {}", safe_url(&bundle_url)));
     download.set_progress(0, Some(platform.asset.size), "bytes");
@@ -519,12 +519,13 @@ fn install_selected(
         download.fail("release bundle destination was rejected");
         return Err(error.into());
     }
-    if let Err(error) = remote.downloader.download(
+    if let Err(error) = remote.downloader.download_authorized(
         &cache_busted(&bundle_url),
         &bundle_path,
         platform.asset.size,
         Some(platform.asset.size),
         &download,
+        token,
     ) {
         download.fail("release bundle download failed");
         return Err(error);

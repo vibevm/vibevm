@@ -147,6 +147,7 @@ mod fixtures {
     pub(crate) fn registry_section(name: &str, url: &str) -> RegistrySection {
         RegistrySection {
             name: name.to_string(),
+            r#type: None,
             url: url.to_string(),
             r#ref: "main".to_string(),
             naming: NamingConvention::Fqdn,
@@ -164,6 +165,7 @@ mod fixtures {
     ) -> RegistrySection {
         RegistrySection {
             name: name.to_string(),
+            r#type: None,
             url: url.to_string(),
             r#ref: "main".to_string(),
             naming: NamingConvention::Fqdn,

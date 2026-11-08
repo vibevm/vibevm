@@ -37,9 +37,11 @@ specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-066#purpose");
 pub mod active;
 pub mod artifact;
 pub mod consent;
+pub mod drop;
 pub mod endpoint;
 pub mod installed;
 pub mod layers;
+pub mod location;
 pub mod locator;
 pub mod package;
 pub mod providers;
@@ -56,9 +58,11 @@ pub use installed::{
     package_dir, packages_dir,
 };
 pub use layers::{
-    Layer, LoadedSource, default_raw_file_rows, env_remap_files, rows_from_file, rows_from_mirrors,
-    rows_from_overrides, rows_from_settings,
+    Layer, LoadedSource, REGISTRY_TABLES_SOURCE, default_raw_file_rows, env_remap_files,
+    rows_from_file, rows_from_mirrors, rows_from_overrides, rows_from_registry_tables,
+    rows_from_settings,
 };
+pub use location::{ByteLocation, LocationError};
 pub use locator::{Locator, RemapRefusal};
 pub use package::{KeptRow, RemapPackage, RemapSection, RowIdentity, strictest_policy};
 pub use providers::{
@@ -66,8 +70,8 @@ pub use providers::{
     reachability_path,
 };
 pub use row::{
-    PolicySection, Provenance, RemapFileDecl, RemapKey, RemapParseError, RemapRow, RemapScope,
-    RemapTarget, RowDecl, UnmatchedPolicy,
+    PathLookup, PolicySection, Provenance, RemapFileDecl, RemapKey, RemapParseError, RemapRow,
+    RemapScope, RemapTarget, RowDecl, UnmatchedPolicy,
 };
 
 /// The error code a refused fetch carries (`PROP-066#row`): the fetch was
@@ -87,6 +91,12 @@ mod tests;
 #[path = "tests_packages.rs"]
 mod tests_packages;
 
+#[cfg(test)]
+#[path = "tests_drops.rs"]
+mod tests_drops;
+#[cfg(test)]
+#[path = "tests_registry_tables.rs"]
+mod tests_registry_tables;
 #[cfg(test)]
 #[path = "tests_source_precedence.rs"]
 mod tests_source_precedence;

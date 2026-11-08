@@ -193,7 +193,12 @@ impl MultiRegistryResolver {
                     &resolution.resolved,
                     resolution.selected_route.as_ref(),
                 ),
-                RegistrySource::Local(ls) => read_local_dep_manifest(ls, group, name, version),
+                RegistrySource::Local(ls) => {
+                    read_local_dep_manifest(&ls.registry, group, name, version)
+                }
+                RegistrySource::Monorepo(mono) => {
+                    read_local_dep_manifest(mono.local()?, group, name, version)
+                }
             };
         }
         let mut last_err: Option<RegistryError> = None;
@@ -203,7 +208,12 @@ impl MultiRegistryResolver {
                     &resolution.resolved,
                     resolution.selected_route.as_ref(),
                 ),
-                RegistrySource::Local(ls) => read_local_dep_manifest(ls, group, name, version),
+                RegistrySource::Local(ls) => {
+                    read_local_dep_manifest(&ls.registry, group, name, version)
+                }
+                RegistrySource::Monorepo(mono) => mono
+                    .local()
+                    .and_then(|local| read_local_dep_manifest(local, group, name, version)),
             };
             match tried {
                 Ok(m) => return Ok(m),

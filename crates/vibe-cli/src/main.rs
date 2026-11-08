@@ -395,6 +395,7 @@ fn run() -> ExitCode {
             ),
             Command::Progress(args) => commands::progress::run(&ctx, args),
             Command::Transfers(args) => commands::transfers::run(&ctx, args),
+            Command::Artifacts(args) => commands::artifacts::run(&ctx, args, cli.offline),
             Command::Tools { json } => {
                 let cwd = std::env::current_dir().unwrap_or_else(|_| ".".into());
                 commands::tools::run(&ctx, &cwd, json)

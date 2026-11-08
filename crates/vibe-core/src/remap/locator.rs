@@ -20,7 +20,7 @@ use specmark::spec;
 
 use super::artifact::{Artifact, Candidate, Explanation, Resolution, RowMatch, RowRef};
 use super::layers::{Layer, LoadedSource};
-use super::row::{RemapKey, RemapRow, RemapScope, RemapTarget, UnmatchedPolicy};
+use super::row::{PathLookup, RemapKey, RemapRow, RemapScope, RemapTarget, UnmatchedPolicy};
 
 /// The resolution point built once per invocation from the layers
 /// (`PROP-066#locator`).
@@ -55,7 +55,7 @@ use super::row::{RemapKey, RemapRow, RemapScope, RemapTarget, UnmatchedPolicy};
 pub struct Locator {
     rows: Vec<RemapRow>,
     // Constructor-owned parallel order; public provenance stays source-local.
-    source_ordinals: Vec<usize>,
+    pub(super) source_ordinals: Vec<usize>,
     registries: Vec<(String, String)>,
     policy: UnmatchedPolicy,
     sources: Vec<(Layer, String, UnmatchedPolicy)>,
@@ -101,7 +101,7 @@ impl Locator {
         rows: Vec<RemapRow>,
         registries: Vec<(String, String)>,
     ) -> Self {
-        let label = "[[mirror]] / [[override]]";
+        let label = super::layers::REGISTRY_TABLES_SOURCE;
         let mut inserted = false;
         let mut sources = Vec::new();
         for (ordinal, (layer, source, policy)) in self.sources.iter().enumerate() {
@@ -448,7 +448,7 @@ impl Locator {
                 Some(prefix.clone())
             }
         };
-        let target = resolve_target(&row.target, matched_prefix.as_deref(), artifact);
+        let target = resolve_target(row, matched_prefix.as_deref(), artifact);
         let prefix_len = match &row.key {
             RemapKey::Prefix(prefix) => prefix.len(),
             _ => 0,
@@ -485,19 +485,24 @@ struct Found {
 }
 
 /// Apply a row's target to one artifact. For a key that matched a prefix
-/// the matched prefix is replaced literally; for every other key the
-/// target is the whole new location.
+/// the matched prefix is replaced literally by a `url` target, and the
+/// remainder is joined onto a `path` target — a directory that mirrors the
+/// URL layout (`PROP-066#drops`). For every other key, and for a package
+/// drop, the target is the whole new location.
 fn resolve_target(
-    target: &RemapTarget,
+    row: &RemapRow,
     matched_prefix: Option<&str>,
     artifact: &Artifact,
 ) -> RemapTarget {
-    match (target, matched_prefix) {
-        (RemapTarget::Url(replacement), Some(prefix)) => {
-            let url = artifact.url.as_deref().unwrap_or_default();
+    let url = artifact.url.as_deref().unwrap_or_default();
+    match (&row.target, matched_prefix, row.lookup) {
+        (RemapTarget::Url(replacement), Some(prefix), _) => {
             RemapTarget::Url(format!("{replacement}{}", &url[prefix.len()..]))
         }
-        (other, _) => other.clone(),
+        (RemapTarget::Path(root), Some(prefix), PathLookup::Mirror) => {
+            RemapTarget::Path(super::drop::join_remainder(root, &url[prefix.len()..]))
+        }
+        (other, _, _) => other.clone(),
     }
 }
 

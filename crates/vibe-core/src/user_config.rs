@@ -51,7 +51,11 @@ use std::sync::Once;
 use serde::{Deserialize, Serialize};
 use specmark::spec;
 
+mod artifacts;
+mod proxy;
 mod transfer;
+pub use artifacts::{ArtifactsConfig, ReleaseSourceKind, SelfConfig, UnknownReleaseSource};
+pub use proxy::ProxyConfig;
 pub use transfer::TransferConfig;
 
 /// Parsed `<settings-dir>/config.toml` (canonical `~/.vibe/config.toml`).
@@ -109,88 +113,20 @@ pub struct UserConfig {
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub llm: Option<LlmConfig>,
 
-    /// `[proxy]` — the one proxy table every HTTP client and every child
-    /// `git` reads (`PROP-066#locator`).
+    /// `[proxy]` — the one proxy table every HTTP client and child `git` reads (`PROP-066#locator`).
     #[serde(default, skip_serializing_if = "ProxyConfig::is_default")]
     pub proxy: ProxyConfig,
 
     /// `[transfer]` — the download rate limit (`PROP-068#limit`).
     #[serde(default, skip_serializing_if = "TransferConfig::is_default")]
     pub transfer: TransferConfig,
-}
-
-/// `[proxy]` section — the one place a proxy is configured
-/// (`PROP-066#locator`).
-///
-/// A corporate network that allows one artifact store usually allows it
-/// through one proxy, and before this table every client in the workspace
-/// had to be told separately (or not at all). The three keys are the
-/// familiar ones, so an operator who already knows `HTTPS_PROXY` knows
-/// this file: [`ProxyConfig::https`] and [`ProxyConfig::http`] are proxy
-/// URLs, and [`ProxyConfig::no_proxy`] is the usual comma-separated
-/// bypass list. Both halves of a fetch read the same three names: the
-/// CLI's composition root promotes the table into the process environment
-/// as `HTTPS_PROXY` / `HTTP_PROXY` / `NO_PROXY`, which is what `reqwest`
-/// consults for every client vibe builds and what a child `git`
-/// inherits — so the two cannot disagree, and no client is told
-/// separately.
-///
-/// A variable already set in the environment wins: this table is a
-/// default for a machine, never an override of what an operator exported
-/// for one shell.
-///
-/// ```
-/// use vibe_core::user_config::ProxyConfig;
-///
-/// let p: ProxyConfig = toml::from_str(
-///     "https = \"http://proxy.corp.example:3128\"\nno_proxy = \"localhost,.corp.example\"",
-/// )
-/// .unwrap();
-/// assert_eq!(p.https.as_deref(), Some("http://proxy.corp.example:3128"));
-/// assert!(!p.is_default());
-/// // The all-empty table is the default, and is skipped on write.
-/// assert!(ProxyConfig::default().is_default());
-/// // The promoted environment is exactly the keys that are set.
-/// assert_eq!(p.child_env(), [
-///     ("HTTPS_PROXY", "http://proxy.corp.example:3128".to_owned()),
-///     ("NO_PROXY", "localhost,.corp.example".to_owned()),
-/// ]);
-/// ```
-#[derive(Debug, Default, Clone, PartialEq, Eq, Deserialize, Serialize)]
-#[serde(deny_unknown_fields)]
-pub struct ProxyConfig {
-    /// Proxy for `https://` requests, exported as `HTTPS_PROXY`.
-    #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub https: Option<String>,
-    /// Proxy for `http://` requests, exported as `HTTP_PROXY`.
-    #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub http: Option<String>,
-    /// Hosts that bypass the proxy, exported as `NO_PROXY`.
-    #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub no_proxy: Option<String>,
-}
-
-impl ProxyConfig {
-    /// `true` for the all-empty table — lets the serializer skip
-    /// `[proxy]` entirely on a config that never set it.
-    pub fn is_default(&self) -> bool {
-        *self == ProxyConfig::default()
-    }
-
-    /// The `(name, value)` pairs the table promotes, for the keys that are
-    /// set. The conventional uppercase spellings: `reqwest`, `git` and
-    /// `curl` read both cases, and the uppercase one is what a reader
-    /// expects to see in a process listing.
-    pub fn child_env(&self) -> Vec<(&'static str, String)> {
-        [
-            ("HTTPS_PROXY", &self.https),
-            ("HTTP_PROXY", &self.http),
-            ("NO_PROXY", &self.no_proxy),
-        ]
-        .into_iter()
-        .filter_map(|(name, value)| value.clone().map(|value| (name, value)))
-        .collect()
-    }
+    /// `[artifacts]` — the hand-filled artifact drops (`PROP-066#drops`);
+    /// `[self]` below — the release source (`PROP-019#release-sources`).
+    #[serde(default, skip_serializing_if = "ArtifactsConfig::is_default")]
+    pub artifacts: ArtifactsConfig,
+    #[serde(rename = "self")]
+    #[serde(default, skip_serializing_if = "SelfConfig::is_default")]
+    pub self_source: SelfConfig,
 }
 
 /// `[install]` section — install-behaviour settings (PROP-011 §5.2).
@@ -410,7 +346,8 @@ impl UserConfig {
         self.save_to(&path)
     }
 
-    /// Save to an explicit path (tests, ad-hoc).
+    /// Save to an explicit path, keeping an existing file's comments and
+    /// unchanged bytes ([`crate::toml_preserve::render_preserving`]).
     pub fn save_to(&self, path: &Path) -> Result<(), UserConfigError> {
         if let Some(parent) = path.parent() {
             std::fs::create_dir_all(parent).map_err(|source| UserConfigError::Io {
@@ -418,14 +355,18 @@ impl UserConfig {
                 source,
             })?;
         }
-        let body = toml::to_string_pretty(self).map_err(|source| UserConfigError::Serialize {
+        let io = |source| UserConfigError::Io {
             path: path.to_path_buf(),
             source,
-        })?;
-        std::fs::write(path, body).map_err(|source| UserConfigError::Io {
-            path: path.to_path_buf(),
-            source,
-        })
+        };
+        let existing = crate::global_registry::read_existing(path).map_err(io)?;
+        let body = crate::toml_preserve::render_preserving(existing.as_deref(), self).map_err(
+            |source| UserConfigError::Serialize {
+                path: path.to_path_buf(),
+                source,
+            },
+        )?;
+        std::fs::write(path, body).map_err(io)
     }
 }
 

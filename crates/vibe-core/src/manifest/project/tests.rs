@@ -175,6 +175,7 @@ fn naming_convention_repo_name() {
 fn resolve_token_env_name_derives_from_host() {
     let r = RegistrySection {
         name: "r".into(),
+        r#type: None,
         url: "https://gitlab.company.com/vibespecs".into(),
         r#ref: "main".into(),
         naming: NamingConvention::KindName,
@@ -193,6 +194,7 @@ fn resolve_token_env_name_derives_from_host() {
 fn resolve_token_env_name_honours_explicit_override() {
     let r = RegistrySection {
         name: "r".into(),
+        r#type: None,
         url: "https://gitlab.company.com/vibespecs".into(),
         r#ref: "main".into(),
         naming: NamingConvention::KindName,
@@ -211,6 +213,7 @@ fn resolve_token_env_name_honours_explicit_override() {
 fn resolve_token_env_name_handles_scp_form() {
     let r = RegistrySection {
         name: "r".into(),
+        r#type: None,
         url: "git@gitlab.company.com:vibespecs".into(),
         r#ref: "main".into(),
         naming: NamingConvention::KindName,
@@ -306,6 +309,7 @@ bogus = 1
 fn resolve_token_env_name_returns_none_for_file_url() {
     let r = RegistrySection {
         name: "r".into(),
+        r#type: None,
         url: "file:///tmp/registry".into(),
         r#ref: "main".into(),
         naming: NamingConvention::KindName,

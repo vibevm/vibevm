@@ -152,7 +152,7 @@ impl GitBackend for FakeGit {
 
 #[test]
 #[verifies("spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-001#registry-trait")]
-fn git_registry_clones_once_and_serves_git_shaped_source_uris() {
+fn git_registry_clones_once_and_serves_monorepo_source_urls() {
     let tmp = tempdir().unwrap();
     let upstream = tmp.path().join("upstream");
     fs::create_dir_all(&upstream).unwrap();
@@ -177,7 +177,7 @@ fn git_registry_clones_once_and_serves_git_shaped_source_uris() {
     assert!(git.cache_dir().join("meta.toml").exists());
 
     // Resolve + fetch through the seam: delegation to the local layout
-    // for discovery, git-shaped `source_uri` on the way out.
+    // for discovery, the verbatim registry url plus package path out.
     let reg: &dyn Registry = &git;
     let resolved = reg
         .resolve(&PackageRef::parse("org.vibevm/wal@0.1.0").unwrap())
@@ -188,7 +188,7 @@ fn git_registry_clones_once_and_serves_git_shaped_source_uris() {
     let cached = reg.fetch(&resolved, &pkg_cache).unwrap();
     assert_eq!(
         cached.source_uri,
-        "git+ssh://git@gitverse.ru/anarchic/vibespecs.git#org.vibevm/wal/v0.1.0"
+        "git@gitverse.ru:anarchic/vibespecs.git#org.vibevm/wal/v0.1.0"
     );
     assert!(cached.cache_dir.join("vibe.toml").exists());
     assert!(cached.content_hash.starts_with("sha256:"));

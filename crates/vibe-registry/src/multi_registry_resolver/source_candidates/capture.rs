@@ -120,7 +120,7 @@ impl MultiRegistryResolver {
                 resolution.selected_route = Some(route);
                 Ok(manifest)
             }
-            RegistrySource::Local(_) => {
+            RegistrySource::Local(_) | RegistrySource::Monorepo(_) => {
                 Manifest::read(resolution.resolved.source_dir.join(Manifest::FILENAME))
                     .map_err(RegistryError::from)
             }

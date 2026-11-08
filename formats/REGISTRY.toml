@@ -539,6 +539,14 @@ foreign_parsers = "many"
 corpus = "none"
 sunset = "none"
 
+[format.cli-registry-layout-publish-report]
+epoch = 1
+schema = "schemas/registry_layout_publish_report.jtd.json"
+recoverable = true
+foreign_parsers = "many"
+corpus = "none"
+sunset = "none"
+
 [format.cli-registry-sync-report]
 epoch = 1
 schema = "schemas/registry_sync_report.jtd.json"

@@ -9,7 +9,7 @@ specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-019#surface");
 
 mod activation;
 mod builder;
-mod bundle;
+pub(crate) mod bundle;
 mod doctor;
 mod embedded;
 pub(crate) mod env;
@@ -177,7 +177,8 @@ pub fn run(ctx: &output::Context, args: VvmArgs, env: VvmEnv) -> Result<()> {
         VvmSubcommand::Ls => provenance::run_ls_cmd(ctx, &env),
         VvmSubcommand::Current => provenance::run_current_cmd(ctx, &env),
         VvmSubcommand::Which(a) => provenance::run_which_cmd(ctx, &env, a),
-        VvmSubcommand::Source => provenance::run_source_cmd(ctx, &env),
+        VvmSubcommand::Source(a) => bundle::run_release_source_cmd(ctx, &env, a.command),
+        VvmSubcommand::Releases(a) => bundle::run_releases_cmd(ctx, &env, a),
         VvmSubcommand::Doctor(a) => doctor::run_doctor_cmd(ctx, &env, a),
         VvmSubcommand::Remove(a) => remove::run_remove_cmd(ctx, &env, a),
         VvmSubcommand::Gc(a) => {

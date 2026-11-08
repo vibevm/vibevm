@@ -3,16 +3,81 @@
 
 specmark::scope!("spec://org.vibevm.core/vibevm/VIBEVM-SPEC#registry");
 
-use anyhow::{Context, Result, bail};
+use std::path::Path;
+
+use anyhow::{Context, Result};
 use serde::Serialize;
-use vibe_core::manifest::Manifest;
+use vibe_core::manifest::{Manifest, MirrorSection, OverrideSection, RegistrySection};
+use vibe_core::{GlobalRegistryConfig, RegistryLayers, RegistryScope};
 use vibe_publish::{extract_host_segment, extract_org_segment};
 
 use crate::cli::RegistryListArgs;
 use crate::commands::registry::resolve_project_root;
 use crate::output;
 
-use super::{ListReportMirror, ListReportRegistry, adapter_for_host};
+use super::scope::{ScopeFile, parse_scope};
+use super::{ListReportMirror, ListReportRegistry, adapter_for, naming_label};
+
+/// The rows one `vibe registry list` renders.
+struct View {
+    label: String,
+    rows: Vec<(RegistryScope, RegistrySection)>,
+    mirrors: Vec<MirrorSection>,
+    overrides: Vec<OverrideSection>,
+}
+
+fn one_layer(file: ScopeFile) -> View {
+    View {
+        label: format!("`{}`", file.path().display()),
+        rows: file
+            .registries()
+            .iter()
+            .map(|row| (file.scope(), row.clone()))
+            .collect(),
+        mirrors: file.mirrors().to_vec(),
+        overrides: match &file {
+            ScopeFile::Project { manifest, .. } => manifest.overrides.clone(),
+            ScopeFile::Config { config, .. } => config.overrides.clone(),
+        },
+    }
+}
+
+/// The effective view across every layer (PROP-002 `#registry-layers`):
+/// the project-local override and `vibe.toml` when run inside a project,
+/// then `~/.vibe/registry.toml`.
+fn merged(path: &Path) -> Result<View> {
+    let root = resolve_project_root(path)?;
+    let manifest_path = root.join(Manifest::FILENAME);
+    let project = if manifest_path.exists() {
+        Some(
+            Manifest::read(&manifest_path)
+                .with_context(|| format!("reading `{}`", manifest_path.display()))?,
+        )
+    } else {
+        None
+    };
+    let local = match &project {
+        Some(_) => Some(GlobalRegistryConfig::load_project_local(&root)?),
+        None => None,
+    };
+    let user = match vibe_core::settings::registry_config_path() {
+        Some(path) => GlobalRegistryConfig::load_from(&path)?,
+        None => GlobalRegistryConfig::default(),
+    };
+    let layers = RegistryLayers {
+        local: local.as_ref(),
+        project: project.as_ref(),
+        user: &user,
+        site: None,
+    };
+    let effective = layers.merge();
+    Ok(View {
+        label: "any declaration layer".to_string(),
+        rows: layers.origins(),
+        mirrors: effective.mirrors,
+        overrides: effective.overrides,
+    })
+}
 
 #[derive(Debug, Serialize)]
 struct ListReport {
@@ -37,34 +102,32 @@ pub(in crate::commands::registry) fn run_list(
     ctx: &output::Context,
     args: RegistryListArgs,
 ) -> Result<()> {
-    let project_root = resolve_project_root(&args.path)?;
-    let manifest_path = project_root.join(Manifest::FILENAME);
-    if !manifest_path.exists() {
-        bail!(
-            "no `vibe.toml` in `{}`; run `vibe init` first",
-            project_root.display()
-        );
-    }
-    let manifest = Manifest::read(&manifest_path)
-        .with_context(|| format!("reading `{}`", manifest_path.display()))?;
+    let view = match parse_scope(args.scope.as_deref())? {
+        Some(scope) => one_layer(ScopeFile::open(scope, &args.path)?),
+        None => merged(&args.path)?,
+    };
 
-    let mut registries: Vec<ListReportRegistry> = Vec::with_capacity(manifest.registries.len());
-    for reg in &manifest.registries {
-        let host = extract_host_segment(&reg.url).unwrap_or_else(|_| String::from("?"));
-        let org = extract_org_segment(&reg.url).unwrap_or_else(|_| String::from("?"));
-        let adapter = adapter_for_host(&host).map(String::from);
-        let naming_label = match reg.naming {
-            vibe_core::manifest::NamingConvention::Fqdn => "fqdn",
-            vibe_core::manifest::NamingConvention::KindName => "kind-name",
-            vibe_core::manifest::NamingConvention::Name => "name",
-            vibe_core::manifest::NamingConvention::KindSlashName => "kind/name",
-        }
-        .to_string();
+    let mut registries: Vec<ListReportRegistry> = Vec::with_capacity(view.rows.len());
+    for (scope, reg) in &view.rows {
+        let kind = reg.effective_type();
+        let (host, org) = if kind == vibe_core::manifest::RegistryType::Localdir {
+            (String::from("(local directory)"), String::new())
+        } else {
+            (
+                extract_host_segment(&reg.url).unwrap_or_else(|_| String::from("?")),
+                extract_org_segment(&reg.url).unwrap_or_else(|_| String::from("?")),
+            )
+        };
+        let adapter = adapter_for(kind, &host).map(String::from);
         // Mirrors targeted at this registry by name, plus the wildcard
-        // `*` mirrors that apply to any registry. `mirrors_for` already
-        // returns them sorted by priority ascending.
-        let mirrors: Vec<ListReportMirror> = manifest
-            .mirrors_for(&reg.name)
+        // `*` mirrors that apply to any registry, sorted by priority.
+        let mut targeted: Vec<&MirrorSection> = view
+            .mirrors
+            .iter()
+            .filter(|m| m.of == reg.name || m.of == "*")
+            .collect();
+        targeted.sort_by_key(|m| m.priority);
+        let mirrors: Vec<ListReportMirror> = targeted
             .into_iter()
             .map(|m| ListReportMirror {
                 of: m.of.clone(),
@@ -74,9 +137,11 @@ pub(in crate::commands::registry) fn run_list(
             .collect();
         registries.push(ListReportRegistry {
             name: reg.name.clone(),
+            registry_type: kind.as_str().to_string(),
+            scope: Some(scope.as_str().to_string()),
             url: reg.url.clone(),
             refname: reg.r#ref.clone(),
-            naming: naming_label,
+            naming: naming_label(reg.naming).to_string(),
             host,
             org,
             adapter,
@@ -84,7 +149,7 @@ pub(in crate::commands::registry) fn run_list(
         });
     }
 
-    let all_mirrors: Vec<ListReportMirror> = manifest
+    let all_mirrors: Vec<ListReportMirror> = view
         .mirrors
         .iter()
         .map(|m| ListReportMirror {
@@ -93,7 +158,7 @@ pub(in crate::commands::registry) fn run_list(
             priority: m.priority,
         })
         .collect();
-    let overrides: Vec<ListReportOverride> = manifest
+    let overrides: Vec<ListReportOverride> = view
         .overrides
         .iter()
         .map(|o| ListReportOverride {
@@ -116,10 +181,11 @@ pub(in crate::commands::registry) fn run_list(
     }
 
     if registries.is_empty() {
-        ctx.summary(
-            "No `[[registry]]` entries in `vibe.toml`. Use `--registry <path>` on \
-             `vibe install` for a local-directory source, or add a `[[registry]]` block.",
-        );
+        ctx.summary(&format!(
+            "No `[[registry]]` entries in {}. Use `--registry <path>` on \
+             `vibe install` for a local-directory source, or `vibe registry add`.",
+            view.label
+        ));
         return Ok(());
     }
 
@@ -135,10 +201,12 @@ pub(in crate::commands::registry) fn run_list(
             .map(|a| format!("adapter: {a}"))
             .unwrap_or_else(|| "adapter: none (publish unsupported)".to_string());
         println!(
-            "  {}. {}{}\n     url:     {}\n     org:     {}\n     host:    {} ({})\n     naming:  {}\n     ref:     {}",
+            "  {}. {}{}\n     type:    {}\n     scope:   {}\n     url:     {}\n     org:     {}\n     host:    {} ({})\n     naming:  {}\n     ref:     {}",
             i + 1,
             reg.name,
             primary_marker,
+            reg.registry_type,
+            reg.scope.as_deref().unwrap_or("-"),
             reg.url,
             reg.org,
             reg.host,

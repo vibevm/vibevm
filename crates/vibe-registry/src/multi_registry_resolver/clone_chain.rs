@@ -9,20 +9,23 @@
 //! order preserved — and a `prefix`, `registry` or `package` row reaches
 //! the clone the same way, which is the whole point of the PROP.
 //!
-//! Two Locators can answer: the invocation's, when the composition root
-//! installed one (it already carries the mirror and override rows of the
-//! effective registry config), and otherwise one derived here from the
-//! `mirrors` this resolver was handed. The second is what keeps a library
-//! caller and every existing registry test working untouched, and it is
-//! never both: whichever Locator answers holds the mirror rows exactly
-//! once.
+//! The Locator that answers is the invocation's with this catalog's own
+//! registry tables composed into its `[[mirror]] / [[override]]` slot
+//! (`Locator::with_registry_tables`, one lowering owned by
+//! `vibe_core::remap::rows_from_registry_tables`). The composition root
+//! reads the tables up front only for catalog verbs; every other verb
+//! demands them here, so a `[[mirror]]` serves `vibe install` exactly as
+//! it serves `vibe registry list` — whatever `[[remap]]`, drop or release
+//! rows the invocation also carries — and the mirror rows are present
+//! exactly once. Without an installed Locator (a library caller, a unit
+//! test) the composition is over the empty Locator and the mirror tables
+//! alone answer.
 
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-066#locator");
 
 use vibe_core::manifest::{MirrorSection, RegistrySection};
 use vibe_core::remap::{
-    Artifact, ArtifactKind, Layer, LoadedSource, Locator, RemapTarget, Resolution, UnmatchedPolicy,
-    rows_from_mirrors,
+    Artifact, ArtifactKind, Layer, RemapTarget, Resolution, rows_from_registry_tables,
 };
 
 use crate::RegistryError;
@@ -43,13 +46,13 @@ pub(crate) fn clone_chain_scoped(
     mirrors: &[MirrorSection],
     registries: &[RegistrySection],
 ) -> Result<Vec<crate::git_package_registry::PublicationRoute>, RegistryError> {
-    let derived;
-    let locator = if vibe_core::remap::active().is_empty() {
-        derived = derive(mirrors, registries);
-        &derived
-    } else {
-        vibe_core::remap::active()
-    };
+    let locator = vibe_core::remap::active().with_registry_tables(
+        rows_from_registry_tables(registries, mirrors, &[], Layer::Local),
+        registries
+            .iter()
+            .map(|registry| (registry.name.clone(), registry.url.clone()))
+            .collect(),
+    );
     let artifact = Artifact::new(ArtifactKind::RegistryClone).with_url(&registry.url);
     match locator.locate(&artifact) {
         Resolution::Candidates(candidates) => Ok(candidates
@@ -92,24 +95,6 @@ pub(crate) fn clone_chain_scoped(
     }
 }
 
-/// A Locator over nothing but the `[[mirror]]` tables this resolver was
-/// handed — the answer when no invocation installed one.
-fn derive(mirrors: &[MirrorSection], registries: &[RegistrySection]) -> Locator {
-    let source = "[[mirror]]";
-    Locator::from_sources(
-        vec![LoadedSource {
-            layer: Layer::Local,
-            source: source.into(),
-            rows: rows_from_mirrors(mirrors, registries, Layer::Local, source),
-            policy: UnmatchedPolicy::Allow,
-        }],
-        registries
-            .iter()
-            .map(|registry| (registry.name.clone(), registry.url.clone()))
-            .collect(),
-    )
-}
-
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -118,6 +103,7 @@ mod tests {
     fn registry(name: &str, url: &str) -> RegistrySection {
         RegistrySection {
             name: name.into(),
+            r#type: None,
             url: url.into(),
             r#ref: "main".into(),
             naming: NamingConvention::Fqdn,

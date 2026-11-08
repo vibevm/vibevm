@@ -8,7 +8,7 @@ pub(super) fn copy_dir(src: &Path, dst: &Path) -> Result<(), PublishError> {
         &vibe_core::cancellation::CancellationToken::default(),
     )
 }
-pub(super) fn copy_dir_controlled(
+pub(crate) fn copy_dir_controlled(
     src: &Path,
     dst: &Path,
     cancellation: &vibe_core::cancellation::CancellationToken,

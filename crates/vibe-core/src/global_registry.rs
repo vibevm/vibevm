@@ -86,8 +86,11 @@ impl GlobalRegistryConfig {
         })
     }
 
-    /// Write to an explicit path (tests, ad-hoc). Creates the parent
-    /// directory if it does not exist.
+    /// Write to an explicit path. Creates the parent directory if it does
+    /// not exist. An existing file keeps its comments and the bytes of
+    /// every table and key this value did not change
+    /// ([`crate::toml_preserve::render_preserving`]), so `vibe registry
+    /// add|remove --scope user|local` edits a hand-written file in place.
     pub fn write_to(&self, path: &Path) -> Result<(), GlobalRegistryError> {
         if let Some(parent) = path.parent() {
             std::fs::create_dir_all(parent).map_err(|source| GlobalRegistryError::Io {
@@ -95,15 +98,29 @@ impl GlobalRegistryConfig {
                 source,
             })?;
         }
-        let body =
-            toml::to_string_pretty(self).map_err(|source| GlobalRegistryError::Serialize {
+        let existing = read_existing(path).map_err(|source| GlobalRegistryError::Io {
+            path: path.to_path_buf(),
+            source,
+        })?;
+        let body = crate::toml_preserve::render_preserving(existing.as_deref(), self).map_err(
+            |source| GlobalRegistryError::Serialize {
                 path: path.to_path_buf(),
                 source,
-            })?;
+            },
+        )?;
         std::fs::write(path, body).map_err(|source| GlobalRegistryError::Io {
             path: path.to_path_buf(),
             source,
         })
+    }
+}
+
+/// The current text of a file about to be rewritten; absent is `None`.
+pub(crate) fn read_existing(path: &Path) -> std::io::Result<Option<String>> {
+    match std::fs::read_to_string(path) {
+        Ok(text) => Ok(Some(text)),
+        Err(error) if error.kind() == std::io::ErrorKind::NotFound => Ok(None),
+        Err(error) => Err(error),
     }
 }
 
@@ -117,6 +134,7 @@ pub fn default_registries() -> Vec<RegistrySection> {
     vec![
         RegistrySection {
             name: crate::manifest::DEFAULT_REGISTRY_NAME.to_string(),
+            r#type: None,
             url: crate::manifest::DEFAULT_REGISTRY_URL.to_string(),
             r#ref: crate::manifest::DEFAULT_REGISTRY_REF.to_string(),
             naming: crate::manifest::NamingConvention::Fqdn,
@@ -127,6 +145,7 @@ pub fn default_registries() -> Vec<RegistrySection> {
         },
         RegistrySection {
             name: crate::manifest::DEFAULT_REGISTRY_GITVERSE_NAME.to_string(),
+            r#type: None,
             url: crate::manifest::DEFAULT_REGISTRY_GITVERSE_URL.to_string(),
             r#ref: crate::manifest::DEFAULT_REGISTRY_REF.to_string(),
             naming: crate::manifest::NamingConvention::Name,
@@ -303,47 +322,13 @@ pub fn merge_effective(
     project: &Manifest,
     global: &GlobalRegistryConfig,
 ) -> EffectiveRegistryConfig {
-    use std::collections::HashSet;
-
-    let mut registries = project.registries.clone();
-    let have: HashSet<String> = registries.iter().map(|r| r.name.clone()).collect();
-    registries.extend(
-        global
-            .registries
-            .iter()
-            .filter(|r| !have.contains(&r.name))
-            .cloned(),
-    );
-
-    let mut mirrors = project
-        .mirrors
-        .iter()
-        .cloned()
-        .map(|mut mirror| {
-            mirror.publication = crate::RoutePublication::Project;
-            mirror
-        })
-        .collect::<Vec<_>>();
-    mirrors.extend(global.mirrors.iter().cloned().map(|mut mirror| {
-        mirror.publication = crate::RoutePublication::Local;
-        mirror
-    }));
-
-    let mut overrides = project.overrides.clone();
-    let have_ov: HashSet<String> = overrides.iter().map(|o| o.pkgref.clone()).collect();
-    overrides.extend(
-        global
-            .overrides
-            .iter()
-            .filter(|o| !have_ov.contains(&o.pkgref))
-            .cloned(),
-    );
-
-    EffectiveRegistryConfig {
-        registries,
-        mirrors,
-        overrides,
+    layers::RegistryLayers {
+        local: None,
+        project: Some(project),
+        user: global,
+        site: None,
     }
+    .merge()
 }
 
 /// Whether a registry / mirror / override URL is **local** — resolvable
@@ -588,7 +573,11 @@ mod tests {
     }
 }
 
+mod layers;
 mod source;
+pub use layers::{
+    PROJECT_LOCAL_REGISTRY_FILE, RegistryLayers, RegistryScope, project_local_registry_path,
+};
 pub use source::GlobalRegistrySource;
 
 #[cfg(test)]

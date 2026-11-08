@@ -29,6 +29,7 @@ pub mod agent;
 pub mod agentic;
 pub mod aiui;
 pub mod app;
+pub mod artifacts;
 pub mod bin;
 pub mod cache;
 pub mod check;

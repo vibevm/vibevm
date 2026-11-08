@@ -138,6 +138,21 @@ pub enum RegistryError {
     )]
     BadLocalRegistryUrl { url: String },
 
+    /// A monorepo registry declared with `auth = "token-env"`.
+    #[error(
+        "registry `{registry}` is a monorepo with `auth = \"token-env\"`, which a single-repository \
+         clone does not inject (violates spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#registry-type; \
+         fix: use an SSH url with `auth = \"ssh\"` (keys from ~/.ssh) or `auth = \"credential-helper\"`)"
+    )]
+    MonorepoTokenAuth { registry: String },
+
+    /// A `[[registry]]` whose declared `type` contradicts its url.
+    #[error(transparent)]
+    RegistryType {
+        #[from]
+        source: vibe_core::manifest::RegistryTypeError,
+    },
+
     #[error(transparent)]
     Core(#[from] vibe_core::Error),
 

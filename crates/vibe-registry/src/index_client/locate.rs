@@ -249,6 +249,7 @@ mod tests {
     fn ladder_section(name: &str, url: &str, index_url: Option<&str>) -> RegistrySection {
         RegistrySection {
             name: name.to_string(),
+            r#type: None,
             url: url.to_string(),
             r#ref: "main".to_string(),
             naming: NamingConvention::Fqdn,

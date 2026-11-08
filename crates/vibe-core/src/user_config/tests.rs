@@ -477,3 +477,31 @@ fn a_config_planted_at_the_former_location_is_never_resolved() {
     assert!(!stdout.contains(PLANTED_MARKER), "contents on stdout");
     assert!(!stderr.contains(PLANTED_MARKER), "contents on stderr");
 }
+
+/// `[artifacts]` and `[self]` round-trip, the source type is
+/// case-insensitive on read and lower-case on write
+/// (`PROP-019#release-sources`, `PROP-066#drops`).
+#[test]
+fn artifacts_and_self_sections_round_trip() {
+    let cfg: UserConfig = toml::from_str(
+        "[artifacts]\nvibe = \"/srv/rel\"\npackages = \"/srv/pay\"\n\
+         [self]\nsource = \"LocalDir\"\npath = \"/srv/rel\"\n",
+    )
+    .unwrap();
+    assert_eq!(
+        cfg.self_source.source,
+        Some(super::ReleaseSourceKind::Localdir)
+    );
+    assert_eq!(
+        cfg.artifacts.packages.as_deref(),
+        Some(std::path::Path::new("/srv/pay"))
+    );
+    let rendered = toml::to_string_pretty(&cfg).unwrap();
+    assert!(rendered.contains("[self]"), "{rendered}");
+    assert!(rendered.contains("source = \"localdir\""), "{rendered}");
+    assert!(rendered.contains("[artifacts]"), "{rendered}");
+    let back: UserConfig = toml::from_str(&rendered).unwrap();
+    assert_eq!(back, cfg);
+    let unknown = toml::from_str::<UserConfig>("[self]\nsource = \"s3\"\n").unwrap_err();
+    assert!(unknown.to_string().contains("unknown release source type"));
+}

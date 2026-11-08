@@ -21,6 +21,7 @@ pub(crate) const TOP_LEVEL_COMMANDS: &[&str] = &[
     "agentic",
     "aiui",
     "app",
+    "artifacts",
     "bin",
     "build",
     "cache",
@@ -379,8 +380,9 @@ pub(crate) fn policy(command: &Command, terminal_attached: bool) -> CommandPolic
             VvmSubcommand::Ls
             | VvmSubcommand::Current
             | VvmSubcommand::Which(_)
-            | VvmSubcommand::Source
+            | VvmSubcommand::Source(_)
             | VvmSubcommand::Env(_) => FastMetadata,
+            VvmSubcommand::Releases(_) => FiniteFallback("Command self releases"),
         },
         Command::Tools { .. } => FiniteFallback("Command tools"),
         Command::Bin { cmd } => match cmd {
@@ -395,6 +397,7 @@ pub(crate) fn policy(command: &Command, terminal_attached: bool) -> CommandPolic
         Command::Specmap(_) => FiniteFallback("Command specmap"),
         Command::Trace { .. } => TerminalPassthrough,
         Command::Vars(_) => FastMetadata,
+        Command::Artifacts(_) => FiniteFallback("Command artifacts"),
         Command::Transfers(args) => match args.command {
             Some(crate::cli::TransfersCommand::Watch) => PersistentProtocol,
             _ => FastMetadata,

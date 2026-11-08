@@ -5,13 +5,12 @@ specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#r
 use super::*;
 
 pub(super) fn read_local_dep_manifest(
-    ls: &super::super::LocalRegistrySource,
+    registry: &LocalRegistry,
     group: &Group,
     name: &str,
     version: &semver::Version,
 ) -> Result<Manifest, RegistryError> {
-    let path = ls
-        .registry
+    let path = registry
         .root()
         .join(group.as_str())
         .join(name)

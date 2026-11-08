@@ -45,6 +45,8 @@ fn drive_with_persister<T>(
     let ctx = quiet();
     let progress = Progress::default();
     call(&RemoteContext {
+        source: Default::default(),
+        locator: vibe_core::remap::active(),
         ctx: &ctx,
         env,
         store,
@@ -191,7 +193,10 @@ fn already_current_requires_the_full_active_version_and_instance_identity() {
 /// A machine already holding `fixture`'s release as its running binary
 /// instance — the state every `update` / `reinstall` case starts from.
 #[cfg(test)]
-fn seed_machine(temp: &Path, fixture: &Fixture) -> (VersionStore, VvmEnv, InstallRecord) {
+pub(super) fn seed_machine(
+    temp: &Path,
+    fixture: &Fixture,
+) -> (VersionStore, VvmEnv, InstallRecord) {
     let store = VersionStore::new(temp.join("opt"));
     let env = VvmEnv {
         root: Some(temp.join("opt")),
@@ -206,7 +211,7 @@ fn seed_machine(temp: &Path, fixture: &Fixture) -> (VersionStore, VvmEnv, Instal
     (store, env, record)
 }
 
-fn bundle_for(temp: &Path, version: semver::Version, payload: &[u8]) -> Fixture {
+pub(super) fn bundle_for(temp: &Path, version: semver::Version, payload: &[u8]) -> Fixture {
     write_versioned_bundle(temp, version, payload, payload, &source_zip(None), false)
 }
 

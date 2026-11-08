@@ -361,6 +361,7 @@ fn write_and_read_roundtrip_on_disk() {
     let mut m = Manifest::new_project("disk-demo", "0.1.0");
     m.registries.push(RegistrySection {
         name: "vibespecs".into(),
+        r#type: None,
         url: "https://github.com/vibespecs".into(),
         r#ref: "main".into(),
         naming: super::super::NamingConvention::KindName,

@@ -277,6 +277,7 @@ fn resolve_halts_on_auth_failed_against_authenticated_registry() {
     // any `auth != None` halts on AuthFailed.
     let auth_section = RegistrySection {
         name: "internal".to_string(),
+        r#type: None,
         url: "https://internal.example.com/vibespecs".to_string(),
         r#ref: "main".to_string(),
         naming: NamingConvention::Fqdn,

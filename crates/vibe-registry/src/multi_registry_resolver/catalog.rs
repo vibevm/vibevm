@@ -66,7 +66,7 @@ impl Opened {
             .iter()
             .filter_map(|source| match source {
                 RegistrySource::Git(registry) => Some(registry.clone()),
-                RegistrySource::Local(_) => None,
+                RegistrySource::Local(_) | RegistrySource::Monorepo(_) => None,
             })
             .collect();
         Self {
@@ -300,25 +300,47 @@ fn construct_source(
     freshness_secs: u64,
     admission: &Option<Arc<crate::HttpAdmission>>,
 ) -> Result<RegistrySource, RegistryError> {
-    // A `[[registry]]` url with an explicit `file:` scheme (the
-    // documented local-directory form, e.g. `file:///C:/repos/app`)
-    // is served straight off the filesystem by `LocalRegistry` —
-    // never git-cloned — so a plain on-disk directory works as a
-    // registry (PROP-002 §2.2.2). A bare path or a `git+` transport
-    // (`git+file://`, `git+https://`) stays on the git-clone backend:
-    // those are local/remote *git* repos to clone, the historical
-    // behaviour the multi-registry tests and local-git workflows
-    // rely on. (`url_is_local` is a wider predicate used by the
-    // separate `--offline` filter; the backend choice is narrower —
-    // `file:` only.) `naming` / `auth` / `mirrors` / `index_client`
-    // are git-only knobs and do not apply to a LocalRegistry.
-    if is_local_directory_url(&reg.url) {
+    // PROP-002 `#registry-type`: the declared (or inferred) type picks the
+    // backend. `localdir` is served straight off the filesystem by
+    // `LocalRegistry` — never git-cloned. Without a `type`, exactly the
+    // explicit `file:` urls infer `localdir` (the historical rule); a bare
+    // path or a `git+` transport stays a local/remote *git* repository to
+    // clone unless declared `localdir`. (`url_is_local` is the wider
+    // `--offline` predicate.) `naming` / `mirrors` / `index_client` are
+    // per-package knobs and do not apply to a directory.
+    let kind = reg.checked_type()?;
+    if kind == vibe_core::manifest::RegistryType::Localdir {
         let path = local_path_from_url(&reg.url)?;
         return Ok(RegistrySource::Local(LocalRegistrySource {
             name: reg.name.clone(),
             url: reg.url.clone(),
             registry: LocalRegistry::new(path)?,
         }));
+    }
+    if kind == vibe_core::manifest::RegistryType::Monorepo {
+        // One repository, cloned through the same Locator chain a
+        // per-package registry uses; the candidates are whole-repository
+        // URLs, tried after the canonical one.
+        let candidates = super::clone_chain::clone_chain_scoped(reg, mirrors, registries)?
+            .into_iter()
+            .map(|route| route.url)
+            .collect();
+        let auth = crate::resolve_registry_auth(crate::RegistryAuthInput::SelectedRegistry(reg))?;
+        if auth.kind == vibe_core::manifest::AuthKind::TokenEnv {
+            return Err(RegistryError::MonorepoTokenAuth {
+                registry: reg.name.clone(),
+            });
+        }
+        return Ok(RegistrySource::Monorepo(Arc::new(
+            MonorepoRegistrySource::new(
+                reg,
+                auth.kind,
+                candidates,
+                cache_root,
+                backend.clone(),
+                freshness_secs,
+            ),
+        )));
     }
     // PROP-066 `#locator`: the clone chain is the Locator's
     // candidate list for this registry, not a second redirection

@@ -146,7 +146,7 @@ fn local_sources(mrr: &MultiRegistryResolver) -> Result<Vec<String>> {
         .iter()
         .filter_map(|source| match source {
             RegistrySource::Local(local) => Some(local.name.clone()),
-            RegistrySource::Git(_) => None,
+            RegistrySource::Git(_) | RegistrySource::Monorepo(_) => None,
         })
         .collect())
 }

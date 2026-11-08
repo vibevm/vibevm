@@ -8,6 +8,7 @@ mod add;
 mod list;
 mod mirror;
 mod remove;
+mod scope;
 mod test;
 
 #[cfg(test)]
@@ -26,6 +27,14 @@ use vibe_core::manifest::NamingConvention;
 #[derive(Debug, Serialize)]
 struct ListReportRegistry {
     name: String,
+    /// Effective backend family (PROP-002 `#registry-type`) — declared or
+    /// inferred from the url.
+    #[serde(rename = "type")]
+    registry_type: String,
+    /// Declaration layer the row came from (`local`, `project`, `user`,
+    /// `site`).
+    #[serde(skip_serializing_if = "Option::is_none")]
+    scope: Option<String>,
     url: String,
     #[serde(rename = "ref")]
     refname: String,
@@ -62,6 +71,29 @@ fn adapter_for_host(host: &str) -> Option<&'static str> {
         return Some("gitverse");
     }
     None
+}
+
+/// The publish adapter a registry of this type dispatches to; `None` for a
+/// generic `git` registry (publish there needs `--repo-url`).
+fn adapter_for(kind: vibe_core::manifest::RegistryType, host: &str) -> Option<&'static str> {
+    use vibe_core::manifest::RegistryType;
+    match kind {
+        RegistryType::Github | RegistryType::Gitverse => {
+            adapter_for_host(host).or(Some(kind.as_str()))
+        }
+        RegistryType::Monorepo | RegistryType::Localdir => Some(kind.as_str()),
+        RegistryType::Git => None,
+    }
+}
+
+/// The `vibe.toml` spelling of a naming convention.
+fn naming_label(naming: NamingConvention) -> &'static str {
+    match naming {
+        NamingConvention::Fqdn => "fqdn",
+        NamingConvention::KindName => "kind-name",
+        NamingConvention::Name => "name",
+        NamingConvention::KindSlashName => "kind/name",
+    }
 }
 
 /// Parse the `--naming` CLI argument. Mirrors the serde `rename`s on

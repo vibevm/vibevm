@@ -27,7 +27,6 @@ use vibe_core::timestamp;
 use vibe_core::{Group, PackageRef};
 
 use crate::git_backend::{GitBackend, ShellGit};
-use crate::registry_cache::strip_git_plus_prefix;
 pub use crate::registry_cache::{DEFAULT_FRESHNESS_SECS, default_cache_root, normalize_url};
 use crate::{
     CachedPackage, LocalRegistry, Registry, RegistryError, ResolvedPackage, compute_content_hash,
@@ -53,10 +52,21 @@ pub struct RegistryMeta {
 pub struct GitMonorepoRegistry {
     backend: Arc<dyn GitBackend>,
     url: String,
+    /// The candidate the current clone was made from — the canonical `url`
+    /// unless a `[[mirror]]` / remap row served it (`PROP-066#provenance`).
+    served_url: String,
+    /// `[[registry]].name` this clone serves, recorded as the lockfile
+    /// `registry` (PROP-002 `#registry-type`).
+    name: Option<String>,
     refname: String,
     cache_dir: PathBuf,
     clone_dir: PathBuf,
     local: LocalRegistry,
+    /// The commit of an operation-owned snapshot (controlled transport),
+    /// which has no `.git` to ask.
+    snapshot_commit: Option<String>,
+    /// Keeps an operation-owned snapshot alive for the registry's lifetime.
+    _snapshot: Option<tempfile::TempDir>,
 }
 
 impl GitMonorepoRegistry {
@@ -87,6 +97,22 @@ impl GitMonorepoRegistry {
         backend: Arc<dyn GitBackend>,
         freshness_secs: u64,
     ) -> Result<Self, RegistryError> {
+        Self::open_routes(url, &[], refname, cache_root, backend, freshness_secs)
+    }
+
+    /// [`Self::open_with`] with alternative clone candidates (the remap
+    /// Locator's `[[mirror]]` / row targets for this repository): a fresh
+    /// clone tries `url` first, then each candidate in order. The cache is
+    /// keyed by the canonical `url`, so a mirror-made clone is the same
+    /// cache entry.
+    pub fn open_routes(
+        url: &str,
+        candidates: &[String],
+        refname: &str,
+        cache_root: &Path,
+        backend: Arc<dyn GitBackend>,
+        freshness_secs: u64,
+    ) -> Result<Self, RegistryError> {
         fs::create_dir_all(cache_root).map_err(|source| RegistryError::Io {
             path: cache_root.to_path_buf(),
             source,
@@ -106,17 +132,11 @@ impl GitMonorepoRegistry {
 
         let existing_meta = read_meta_if_present(&meta_path)?;
         let needs_clone = !clone_dir.join(".git").exists();
+        let mut served_url = url.to_string();
 
         if needs_clone {
-            // Clean up any half-populated clone dir from a prior failure.
-            if clone_dir.exists() {
-                fs::remove_dir_all(&clone_dir).map_err(|source| RegistryError::Io {
-                    path: clone_dir.clone(),
-                    source,
-                })?;
-            }
-            tracing::info!(target: "vibe_registry", url = %normalized, dest = %clone_dir.display(), "cloning registry");
-            backend.bootstrap(strip_git_plus_prefix(url), refname, &clone_dir)?;
+            served_url =
+                clone_first_reachable(backend.as_ref(), url, candidates, refname, &clone_dir)?;
             write_meta(&meta_path, &normalized, refname, &full_hash)?;
         } else if should_pull(existing_meta.as_ref(), freshness_secs) {
             tracing::info!(target: "vibe_registry", url = %normalized, "updating registry (cache stale)");
@@ -130,11 +150,74 @@ impl GitMonorepoRegistry {
         Ok(GitMonorepoRegistry {
             backend,
             url: url.to_string(),
+            served_url,
+            name: None,
             refname: refname.to_string(),
             cache_dir,
             clone_dir,
             local,
+            snapshot_commit: None,
+            _snapshot: None,
         })
+    }
+
+    /// Open the registry under a controlled transport, where only the
+    /// backend's native preparation may contact a remote (PROP-073
+    /// `#NATIVE-PREPARATION`): `refname` is captured into operation-owned
+    /// objects and its verified tree copied into a snapshot directory that
+    /// lives as long as this value. Candidates are tried in order, as for
+    /// [`Self::open_routes`].
+    pub fn open_native(
+        url: &str,
+        candidates: &[String],
+        refname: &str,
+        cache_root: &Path,
+        backend: Arc<dyn GitBackend>,
+    ) -> Result<Self, RegistryError> {
+        fs::create_dir_all(cache_root).map_err(|source| RegistryError::Io {
+            path: cache_root.to_path_buf(),
+            source,
+        })?;
+        let cache = std::path::absolute(cache_root).map_err(|source| RegistryError::Io {
+            path: cache_root.to_path_buf(),
+            source,
+        })?;
+        let snapshot = tempfile::Builder::new()
+            .prefix("monorepo-native-")
+            .tempdir_in(&cache)
+            .map_err(|source| RegistryError::Io {
+                path: cache.clone(),
+                source,
+            })?;
+        let mut first_error = None;
+        for (attempt, candidate) in std::iter::once(url)
+            .chain(candidates.iter().map(String::as_str))
+            .enumerate()
+        {
+            let work = snapshot.path().join(attempt.to_string());
+            match native_snapshot(backend.as_ref(), candidate, refname, &work) {
+                Ok((tree, commit)) => {
+                    let local = LocalRegistry::new(tree.clone())?;
+                    return Ok(GitMonorepoRegistry {
+                        backend,
+                        url: url.to_string(),
+                        served_url: candidate.to_string(),
+                        name: None,
+                        refname: refname.to_string(),
+                        cache_dir: snapshot.path().to_path_buf(),
+                        clone_dir: tree,
+                        local,
+                        snapshot_commit: Some(commit),
+                        _snapshot: Some(snapshot),
+                    });
+                }
+                Err(error) => {
+                    tracing::warn!(target: "vibe_registry", url = %candidate, %error, "registry snapshot candidate failed");
+                    first_error.get_or_insert(error);
+                }
+            }
+        }
+        Err(first_error.unwrap_or_else(|| RegistryError::MissingRoot(snapshot.path().into())))
     }
 
     /// Force a `git fetch` + reset regardless of freshness. Invoked by
@@ -153,8 +236,32 @@ impl GitMonorepoRegistry {
         Ok(())
     }
 
+    /// Record the `[[registry]].name` this clone serves.
+    pub fn with_name(mut self, name: impl Into<String>) -> Self {
+        self.name = Some(name.into());
+        self
+    }
+
     pub fn url(&self) -> &str {
         &self.url
+    }
+
+    /// The local-directory view of the clone.
+    pub fn local(&self) -> &LocalRegistry {
+        &self.local
+    }
+
+    /// The commit the clone (or snapshot) holds.
+    pub fn head_commit(&self) -> Result<Option<String>, RegistryError> {
+        if let Some(commit) = &self.snapshot_commit {
+            return Ok(Some(commit.clone()));
+        }
+        Ok(self.backend.head_commit(&self.clone_dir)?)
+    }
+
+    /// The candidate url that served the clone.
+    pub fn served_url(&self) -> &str {
+        &self.served_url
     }
 
     pub fn refname(&self) -> &str {
@@ -214,12 +321,13 @@ impl Registry for GitMonorepoRegistry {
             });
         }
 
-        let source_uri = source_uri_for_git(
+        let source_uri = monorepo_source_url(
             &self.url,
             &resolved.group,
             &resolved.name,
-            &resolved.version.to_string(),
+            &resolved.version,
         );
+        let resolved_commit = self.head_commit()?;
 
         Ok(CachedPackage {
             locked_selection: None,
@@ -232,14 +340,15 @@ impl Registry for GitMonorepoRegistry {
             manifest,
             content_hash,
             source_uri,
-            // Nothing redirected this fetch (`PROP-066#provenance`).
-            fetched_from: None,
-            // The legacy monorepo registry pre-dates the per-package /
-            // multi-registry / override schema; lockfile-v2 provenance
-            // fields stay blank for content fetched through this path.
-            registry_name: None,
-            source_ref: None,
-            resolved_commit: None,
+            // A mirror- or remap-served clone is recorded beside the
+            // canonical repository (`PROP-066#provenance`).
+            fetched_from: (self.served_url != self.url).then(|| self.served_url.clone()),
+            // Provenance of a monorepo row (PROP-002 `#registry-type`): the
+            // registry, the branch it was read on and the exact commit, so
+            // replay reads the same subpath at the same commit.
+            registry_name: self.name.clone(),
+            source_ref: Some(self.refname.clone()),
+            resolved_commit,
             overridden: false,
             is_git_source: false,
             is_path_source: false,
@@ -321,6 +430,48 @@ fn current_epoch_secs() -> Option<u64> {
         .map(|d| d.as_secs())
 }
 
+/// The lock `source_url` of a package read from a monorepo registry
+/// (PROP-002 `#registry-type`): the registry url verbatim, then
+/// `#<group>/<name>/v<version>` naming the package directory inside it. The
+/// url is kept byte-for-byte (an scp-form `git@host:path` stays
+/// home-relative) so replay clones exactly the declared repository.
+///
+/// ```
+/// use vibe_core::Group;
+/// use vibe_registry::git_registry::{monorepo_source_url, parse_monorepo_source_url};
+///
+/// let group = Group::parse("org.corp").unwrap();
+/// let version = semver::Version::new(1, 2, 0);
+/// let url = monorepo_source_url("git@git.corp:tools/vibe.git", &group, "demo", &version);
+/// assert_eq!(url, "git@git.corp:tools/vibe.git#org.corp/demo/v1.2.0");
+/// assert_eq!(
+///     parse_monorepo_source_url(&url),
+///     Some(("git@git.corp:tools/vibe.git", "org.corp/demo/v1.2.0")),
+/// );
+/// assert_eq!(parse_monorepo_source_url("https://github.com/o/r.git"), None);
+/// ```
+pub fn monorepo_source_url(
+    url: &str,
+    group: &Group,
+    name: &str,
+    version: &semver::Version,
+) -> String {
+    format!("{url}#{}", monorepo_package_path(group, name, version))
+}
+
+/// `<group>/<name>/v<version>` — a package's directory inside a monorepo or
+/// local-directory registry.
+pub fn monorepo_package_path(group: &Group, name: &str, version: &semver::Version) -> String {
+    format!("{}/{name}/v{version}", group.as_str())
+}
+
+/// Split a [`monorepo_source_url`] into the repository url and the package
+/// directory; `None` when the value carries no `#<path>` fragment.
+pub fn parse_monorepo_source_url(source_url: &str) -> Option<(&str, &str)> {
+    let (repository, path) = source_url.rsplit_once('#')?;
+    (!repository.is_empty() && path.split('/').count() == 3).then_some((repository, path))
+}
+
 /// `git+ssh://git@host/owner/repo.git#<group>/<name>/v<ver>` etc.
 /// Preserves the original transport in the scheme prefix. The fragment
 /// is keyed by `(group, name)` identity — the group-native shape after
@@ -376,6 +527,10 @@ fn to_uri_body(url: &str) -> String {
     }
     t.to_string()
 }
+
+#[path = "git_registry/acquire.rs"]
+mod acquire;
+use acquire::{clone_first_reachable, native_snapshot};
 
 #[cfg(test)]
 #[path = "git_registry/tests.rs"]

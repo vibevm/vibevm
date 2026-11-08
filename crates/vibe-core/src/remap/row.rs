@@ -262,6 +262,30 @@ pub struct RemapRow {
     /// it, so it is not part of the written form.
     #[serde(skip)]
     pub only: Option<super::ArtifactKind>,
+    /// How a `path` target is searched (`PROP-066#drops`). Every row
+    /// written in TOML is [`PathLookup::Mirror`]; only the lowering of an
+    /// `[artifacts] packages` drop produces [`PathLookup::PackageDrop`].
+    #[serde(skip)]
+    pub lookup: PathLookup,
+}
+
+/// How the bytes behind a `path` target are found (`PROP-066#drops`).
+///
+/// ```
+/// use vibe_core::remap::PathLookup;
+///
+/// assert_eq!(PathLookup::default(), PathLookup::Mirror);
+/// ```
+#[derive(Debug, Clone, Copy, Default, PartialEq, Eq, Serialize)]
+#[serde(rename_all = "kebab-case")]
+pub enum PathLookup {
+    /// The directory mirrors the declared URL: a `prefix` key's remainder
+    /// is joined onto it, and `<path>/<sha256>/<filename>` is searched too.
+    #[default]
+    Mirror,
+    /// An `[artifacts] packages` drop, searched by the package convention
+    /// of [`crate::remap::drop::package_lookup`].
+    PackageDrop,
 }
 
 impl RemapRow {
@@ -399,6 +423,7 @@ impl RowDecl {
             from,
             target_ref: None,
             only: None,
+            lookup: PathLookup::Mirror,
         })
     }
 }

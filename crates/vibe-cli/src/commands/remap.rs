@@ -174,6 +174,12 @@ fn asked_about(args: &RemapExplainArgs) -> Artifact {
     let mut artifact = Artifact::new(ArtifactKind::AppInput);
     match digest {
         Some(digest) => artifact = artifact.with_digest(digest),
+        // A `vibe self` release URL is asked about as the distribution it
+        // is, so the release-source row (`PROP-019#release-sources`), which
+        // routes distributions only, shows in the chain.
+        None if what.starts_with(crate::composition::remap::CANONICAL_RELEASE_ORIGIN) => {
+            artifact = Artifact::new(ArtifactKind::Distribution).with_url(what);
+        }
         None => artifact = artifact.with_url(what),
     }
     if let Some(package) = &args.package {

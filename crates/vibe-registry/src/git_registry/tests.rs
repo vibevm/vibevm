@@ -155,8 +155,13 @@ fn resolve_and_fetch_produce_git_source_uri() {
         r.fetch(&resolved, &pkg_cache).unwrap().store_reused,
         Some(true)
     );
-    assert!(cached.source_uri.starts_with("git+ssh://"));
-    assert!(cached.source_uri.ends_with("#org.vibevm/wal/v0.1.0"));
+    // The registry url verbatim plus the package directory (PROP-002
+    // `#registry-type`): an scp-form url stays home-relative.
+    assert_eq!(
+        cached.source_uri,
+        "git@gitverse.ru:anarchic/vibespecs.git#org.vibevm/wal/v0.1.0"
+    );
+    assert_eq!(cached.source_ref.as_deref(), Some("main"));
 }
 
 /// Test-only fixtures behind their own `#[cfg(test)]` marker: fact

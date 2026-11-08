@@ -114,8 +114,8 @@ pub use package::{
 pub use project::{
     ActiveSection, AuthKind, DEFAULT_REGISTRY_GITVERSE_NAME, DEFAULT_REGISTRY_GITVERSE_URL,
     DEFAULT_REGISTRY_NAME, DEFAULT_REGISTRY_REF, DEFAULT_REGISTRY_URL, LlmSection, MirrorSection,
-    NamingConvention, OverrideSection, ProjectSection, RegistrySection, SpecFormat,
-    registry_token_env_name,
+    NamingConvention, OverrideSection, ProjectSection, RegistrySection, RegistryType,
+    RegistryTypeError, SpecFormat, registry_token_env_name,
 };
 pub use redirect::{RedirectFile, RedirectSection, RefPolicy, parse_redirect_bytes};
 pub use run_command::{RunCommandDecl, RunCommandHandler};

@@ -66,29 +66,26 @@ pub(super) fn select_platform<'a>(
 /// to check it, so an operator's typo must not become an origin.
 ///
 /// A base a **remap row produced** (`from_remap`, `PROP-066#locator`) is
-/// accepted for any `https://` or `file://` location instead. The row is
-/// data the user wrote or accepted on this machine, it is listed by
-/// `vibe remap list` and explained by `vibe remap explain`, and every
-/// asset read from it is still verified against the aggregate manifest's
-/// own digests and sizes — which is the check that was ever load-bearing.
-/// Refusing a non-GitHub base there would refuse the whole point of
-/// PROP-066: a closed network has no github.com to be canonical about.
-/// `http://` stays refused in both regimes.
+/// accepted for any location the one location rule reads
+/// (`PROP-066#locations`): `https://`, `http://` or `file://` (a `path`
+/// target arrives as a `file://` URL). The row is data the user wrote or
+/// accepted on this machine, it is listed by `vibe remap list` and
+/// explained by `vibe remap explain`, and every asset read from it is still
+/// verified against the aggregate manifest's own digests and sizes — which
+/// is the check that was ever load-bearing. Refusing a non-GitHub base
+/// there would refuse the whole point of PROP-066: a closed network has no
+/// github.com to be canonical about. `update` and `install` read the same
+/// spellings, so the three verbs share one rule.
 pub(super) fn validated_release_base(
     raw: &str,
     expected_tag: &str,
     from_remap: bool,
 ) -> Result<String> {
-    let url = reqwest::Url::parse(raw).context("parsing --release-base URL")?;
     if from_remap {
-        if !matches!(url.scheme(), "https" | "file") {
-            bail!(
-                "a remapped release base must be an `https://` or `file://` location, not                  `{}` (violates spec://org.vibevm.core/vibevm/common/PROP-066#locator)",
-                url.scheme()
-            );
-        }
+        vibe_core::remap::ByteLocation::parse(raw)?;
         return Ok(raw.trim_end_matches('/').to_string());
     }
+    let url = reqwest::Url::parse(raw).context("parsing --release-base URL")?;
     if url.scheme() != "https"
         || url.host_str() != Some("github.com")
         || !url.username().is_empty()
@@ -103,7 +100,7 @@ pub(super) fn validated_release_base(
     Ok(raw.trim_end_matches('/').to_string())
 }
 
-pub(super) fn current_target() -> Result<&'static str> {
+pub(in crate::commands::vvm) fn current_target() -> Result<&'static str> {
     match (std::env::consts::ARCH, std::env::consts::OS) {
         ("x86_64", "windows") => Ok("x86_64-pc-windows-msvc"),
         ("x86_64", "linux") if cfg!(target_env = "musl") => Ok("x86_64-unknown-linux-musl"),

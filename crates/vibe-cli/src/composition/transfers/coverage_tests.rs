@@ -37,6 +37,11 @@ const EXEMPT: &[(&str, Reader, &str)] = &[
         "the doc shell's fetch of the reader's page shell, asked of the operator each time (PROP-057)",
     ),
     (
+        "vibe-cli/src/commands/vvm/bundle/api.rs",
+        Reader::Http,
+        "release-list JSON documents of GitHub, GitVerse and Nexus (PROP-019#release-sources), not a download; asset bytes go through download.rs",
+    ),
+    (
         "vibe-cli/src/commands/remap/probe.rs",
         Reader::Http,
         "the remap probe's HEAD requests: no body is read",
@@ -75,6 +80,11 @@ const EXEMPT: &[(&str, Reader, &str)] = &[
         "vibe-publish/src/git_publish.rs",
         Reader::Git,
         "the publish side, which uploads: it fetches only the branch it pushes onto",
+    ),
+    (
+        "vibe-publish/src/layout_publish/monorepo.rs",
+        Reader::Git,
+        "the publish side, which uploads: it shallow-fetches only the branch it pushes onto, from the same url, so a remap or mirror must not move it (PROP-002#REGISTRY-TYPE-PUBLISH)",
     ),
     (
         "vibe-publish/src/github.rs",

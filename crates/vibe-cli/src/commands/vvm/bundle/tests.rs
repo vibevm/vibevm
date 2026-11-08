@@ -392,3 +392,6 @@ mod release_tests;
 
 #[path = "integrity_tests.rs"]
 mod integrity_tests;
+
+#[path = "tests/drops.rs"]
+mod drop_tests;

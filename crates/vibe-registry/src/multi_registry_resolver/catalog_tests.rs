@@ -3,6 +3,7 @@ use super::*;
 fn local(name: &str, root: &Path) -> RegistrySection {
     RegistrySection {
         name: name.into(),
+        r#type: None,
         url: format!("file://{}", root.display()),
         r#ref: "main".into(),
         naming: Default::default(),

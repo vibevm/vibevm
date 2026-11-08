@@ -51,8 +51,13 @@ pub enum VvmSubcommand {
     /// Print the active instance's `vibe`, `vibe-index`, or source path.
     Which(VvmWhichArgs),
 
-    /// Print exactly the source tree used by the running/active instance.
-    Source,
+    /// Print exactly the source tree used by the running/active instance;
+    /// `show`, `set` and `reset` manage where releases come from instead.
+    Source(VvmSourceArgs),
+
+    /// List the releases the release source offers, newest first, marking
+    /// the installed and the active one.
+    Releases(VvmReleasesArgs),
 
     /// Verify the install and environment; `--fix` repairs PATH and shims.
     Doctor(VvmDoctorArgs),
@@ -176,6 +181,53 @@ pub struct VvmBootstrapArgs {
     /// Install a fresh immutable #N even when bundle bytes are unchanged.
     #[arg(long)]
     pub force: bool,
+}
+
+/// `vibe self source [show|set|reset]` (PROP-019 `#release-sources`).
+#[derive(Debug, clap::Args)]
+pub struct VvmSourceArgs {
+    #[command(subcommand)]
+    pub command: Option<VvmSourceCommand>,
+}
+
+#[derive(Debug, clap::Subcommand)]
+pub enum VvmSourceCommand {
+    /// Show the release source `self update|install|releases` read from,
+    /// where that choice came from, and the remap row it lowers to.
+    Show,
+    /// Choose the release source and store it in `[self]` of
+    /// `~/.vibe/config.toml`. Types are case-insensitive.
+    Set(VvmSourceSetArgs),
+    /// Forget the `[self]` choice: back to the `[artifacts] vibe` drop when
+    /// one is declared, else GitHub.
+    Reset,
+}
+
+#[derive(Debug, clap::Args)]
+pub struct VvmSourceSetArgs {
+    /// `github`, `gitverse`, `nexus` or `localdir`.
+    #[arg(value_name = "TYPE")]
+    pub kind: String,
+
+    /// `nexus`: the base URL holding `v<version>/<asset>`; `gitverse`: the
+    /// repository web URL (default `https://gitverse.ru/vibevm/vibevm`).
+    #[arg(long, value_name = "URL", conflicts_with = "path")]
+    pub url: Option<String>,
+
+    /// `localdir`: the release drop directory (default `[artifacts] vibe`).
+    #[arg(long, value_name = "DIR")]
+    pub path: Option<PathBuf>,
+
+    /// `gitverse`: the REST API base (default `https://api.<host>`).
+    #[arg(long, value_name = "URL")]
+    pub api: Option<String>,
+}
+
+#[derive(Debug, clap::Args)]
+pub struct VvmReleasesArgs {
+    /// List every release, not only the newest ten.
+    #[arg(long)]
+    pub all: bool,
 }
 
 #[derive(Debug, clap::Args)]

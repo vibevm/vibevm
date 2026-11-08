@@ -101,6 +101,7 @@ impl Registry {
     pub fn as_section(&self) -> vibe_core::manifest::RegistrySection {
         vibe_core::manifest::RegistrySection {
             name: self.name.clone(),
+            r#type: None,
             url: self.url.clone(),
             r#ref: DEFAULT_REGISTRY_REF.to_string(),
             naming: self.naming,

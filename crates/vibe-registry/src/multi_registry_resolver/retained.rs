@@ -20,12 +20,6 @@ impl MultiRegistryResolver {
                 }
             })?;
             let source = self.selected_registry_source(name)?;
-            let RegistrySource::Local(local) = source.as_ref() else {
-                return Err(RegistryError::MalformedMeta {
-                    path: "retained-source".into(),
-                    reason: "Git token has no observed metadata route".into(),
-                });
-            };
             if Manifest::read(resolution.resolved.source_dir.join(Manifest::FILENAME))? != *manifest
             {
                 return Err(RegistryError::MalformedMeta {
@@ -33,7 +27,22 @@ impl MultiRegistryResolver {
                     reason: "retained local manifest changed".into(),
                 });
             }
-            let mut cached = local.registry.fetch(&resolution.resolved, store)?;
+            // A directory registry or a monorepo clone/snapshot of this
+            // operation: the bytes were read where they were selected.
+            let mut cached = match source.as_ref() {
+                RegistrySource::Monorepo(mono) => {
+                    crate::Registry::fetch(mono.registry()?, &resolution.resolved, store)?
+                }
+                RegistrySource::Local(local) => {
+                    local.registry.fetch(&resolution.resolved, store)?
+                }
+                RegistrySource::Git(_) => {
+                    return Err(RegistryError::MalformedMeta {
+                        path: "retained-source".into(),
+                        reason: "Git token has no observed metadata route".into(),
+                    });
+                }
+            };
             cached.registry_name = resolution.registry_name.clone();
             if let Some(expected) = expected {
                 crate::git_package_registry::verify_store_entry_against_pin(

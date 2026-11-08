@@ -104,6 +104,25 @@ impl MultiRegistryResolver {
                             Err(other) => return Err(other),
                         }
                     }
+                    super::RegistrySource::Monorepo(mono) => {
+                        task.detail(format!("checking monorepo registry {}", mono.name));
+                        match mono
+                            .local()
+                            .and_then(|local| local.list_versions(group, name))
+                        {
+                            Ok(versions) if !versions.is_empty() => return Ok(versions),
+                            Ok(_) => continue,
+                            Err(RegistryError::UnknownPackage { .. }) => continue,
+                            Err(RegistryError::Git(crate::git_backend::GitError::AuthFailed {
+                                ..
+                            })) if mono.auth == vibe_core::manifest::AuthKind::None
+                                && !self.strict_auth =>
+                            {
+                                continue;
+                            }
+                            Err(other) => return Err(other),
+                        }
+                    }
                 }
             }
         }
@@ -225,7 +244,7 @@ impl MultiRegistryResolver {
             None => self.sources()?.iter().collect(),
         };
         for src in sources {
-            if self.offline && matches!(src, RegistrySource::Git(_)) {
+            if self.offline && matches!(src, RegistrySource::Git(_) | RegistrySource::Monorepo(_)) {
                 return Err(RegistryError::OfflinePackageUnavailable {
                     group: group.clone(),
                     name: pkgref.name.to_string(),
@@ -368,6 +387,67 @@ impl MultiRegistryResolver {
                                 return Ok(resolution);
                             }
                             return Err(err);
+                        }
+                        Err(other) => return Err(other),
+                    }
+                }
+                RegistrySource::Monorepo(mono) => {
+                    task.detail(format!("checking monorepo registry {}", mono.name));
+                    match mono.local().and_then(|local| local.resolve(pkgref)) {
+                        Ok(resolved) => {
+                            let source_url = crate::git_registry::monorepo_source_url(
+                                &mono.url,
+                                &resolved.group,
+                                &resolved.name,
+                                &resolved.version,
+                            );
+                            return Ok(MultiResolution {
+                                direct: None,
+                                locked: None,
+                                selected_route: None,
+                                resolved,
+                                registry_name: Some(mono.name.clone()),
+                                source_url,
+                                source_ref: Some(mono.refname.clone()),
+                                overridden: false,
+                                is_git_source: false,
+                                is_path_source: false,
+                                via_redirect: None,
+                                from_store: false,
+                                redirect_target_auth: vibe_core::manifest::AuthKind::None,
+                                redirect_target_token_env: None,
+                            });
+                        }
+                        Err(RegistryError::UnknownPackage { .. }) => {
+                            attempts.push(RegistryWalkAttempt {
+                                name: mono.name.clone(),
+                                url: mono.url.clone(),
+                                auth: mono.auth,
+                                status: WalkAttemptStatus::NotFound,
+                            });
+                            continue;
+                        }
+                        Err(err @ RegistryError::NoMatchingVersion { .. }) => {
+                            if registry_filter.is_none()
+                                && let Some(resolution) =
+                                    self.store_availability_fallback(pkgref, group)
+                            {
+                                return Ok(resolution);
+                            }
+                            return Err(err);
+                        }
+                        Err(RegistryError::Git(crate::git_backend::GitError::AuthFailed {
+                            ..
+                        })) if mono.auth == vibe_core::manifest::AuthKind::None
+                            && !self.strict_auth =>
+                        {
+                            attempts.push(RegistryWalkAttempt {
+                                name: mono.name.clone(),
+                                url: mono.url.clone(),
+                                auth: mono.auth,
+                                status: WalkAttemptStatus::Public401,
+                            });
+                            continue;
                         }
                         Err(other) => return Err(other),
                     }

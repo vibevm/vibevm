@@ -68,6 +68,7 @@ fn declared(
     } else {
         vec![RegistrySection {
             name: "test".into(),
+            r#type: None,
             url: "git@host:registry".into(),
             r#ref: "main".into(),
             naming: NamingConvention::Fqdn,

@@ -377,6 +377,7 @@ fn resolve_registry_sections(args: &InitArgs) -> Vec<RegistrySection> {
     if let Some(url) = &args.registry_url {
         return vec![RegistrySection {
             name: DEFAULT_REGISTRY_NAME.to_string(),
+            r#type: None,
             url: url.clone(),
             r#ref: args
                 .registry_ref

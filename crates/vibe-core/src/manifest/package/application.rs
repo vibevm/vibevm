@@ -2,6 +2,7 @@
 
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-059#declaration");
 
+mod drop_inputs;
 mod environment;
 mod icon_files;
 mod launcher;
@@ -148,6 +149,14 @@ pub struct SourceInputDecl {
     pub url: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub path: Option<PathBuf>,
+    /// `drop = "packages"`: the input is a file an administrator places in
+    /// the machine's `[artifacts] packages` drop, named by [`Self::file`]
+    /// and found by the drop convention (`PROP-066#drops-author`).
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub drop: Option<String>,
+    /// The file name looked for in the drop; only with [`Self::drop`].
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub file: Option<String>,
     pub sha256: String,
     /// The declared size in bytes (`PROP-065#sizes`).
     #[serde(default, skip_serializing_if = "Option::is_none")]

@@ -10,7 +10,7 @@ use std::path::{Path, PathBuf};
 
 use anyhow::{Context, Result, anyhow, bail};
 use vibe_core::manifest::Manifest;
-use vibe_core::{EffectiveRegistryConfig, GlobalRegistryConfig, merge_effective};
+use vibe_core::{EffectiveRegistryConfig, GlobalRegistryConfig};
 use vibe_registry::LocalRegistry;
 use vibe_resolver::EmbeddedPrecedence;
 
@@ -46,10 +46,30 @@ fn validate_solver(flag: Option<&str>) -> Result<Option<&'static str>> {
 pub(super) fn effective_registry_config(
     manifest: &Manifest,
     global: &GlobalRegistryConfig,
+    local: &GlobalRegistryConfig,
     offline: bool,
 ) -> EffectiveRegistryConfig {
-    let eff = merge_effective(manifest, global);
+    // PROP-002 `#registry-layers`: the project-local override sits above
+    // the project manifest, the machine file below it.
+    let eff = vibe_core::RegistryLayers {
+        local: Some(local),
+        project: Some(manifest),
+        user: global,
+        site: None,
+    }
+    .merge();
     if offline { eff.local_only() } else { eff }
+}
+
+/// The project-local override layer `<project_root>/.vibe/registry.local.toml`
+/// (PROP-002 `#registry-layers`); a missing file is the empty layer.
+pub(super) fn project_local_layer(project_root: &Path) -> Result<GlobalRegistryConfig> {
+    GlobalRegistryConfig::load_project_local(project_root).with_context(|| {
+        format!(
+            "loading `{}`",
+            vibe_core::project_local_registry_path(project_root).display()
+        )
+    })
 }
 
 /// Canonicalise and strip the Windows UNC (`\\?\`) prefix where present —
@@ -158,8 +178,13 @@ pub fn any_package_source(
     {
         return true;
     }
+    // A malformed local override still counts as a declared source: the
+    // build path reports the file with its own diagnostic.
+    let Ok(local) = project_local_layer(project_root) else {
+        return true;
+    };
     declared_source_available(
-        &effective_registry_config(manifest, global, offline),
+        &effective_registry_config(manifest, global, &local, offline),
         manifest,
         options,
         offline,
@@ -381,7 +406,8 @@ pub fn build_install_resolver_with_operation(
     // `~/.vibe/registry.toml` (project-first, PROP-002 §2.2.2), narrowed to
     // local-only sources under the offline posture (§2.2.2.1). Computed once,
     // shared.
-    let effective = effective_registry_config(manifest, global, offline);
+    let local_layer = project_local_layer(project_root)?;
+    let effective = effective_registry_config(manifest, global, &local_layer, offline);
 
     // PROP-030 §3.3: build the local-registry family. Project-local
     // (`<project_root>/vibevm/vibepacks/`) is discovered from the current project —

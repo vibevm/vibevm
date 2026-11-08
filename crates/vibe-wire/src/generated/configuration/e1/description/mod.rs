@@ -547,6 +547,12 @@ pub struct SourceInput {
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub path: Option<String>,
 
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub drop: Option<String>,
+
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub file: Option<String>,
+
     pub sha256: String,
 
     #[serde(default, skip_serializing_if = "Option::is_none")]

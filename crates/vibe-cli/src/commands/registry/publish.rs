@@ -6,7 +6,7 @@ specmark::scope!("spec://org.vibevm.core/vibevm/VIBEVM-SPEC#registry");
 use anyhow::{Context, Result, anyhow, bail};
 use serde::Serialize;
 use vibe_core::manifest::{
-    DEFAULT_REGISTRY_NAME, DEFAULT_REGISTRY_URL, Manifest, NamingConvention,
+    DEFAULT_REGISTRY_NAME, DEFAULT_REGISTRY_URL, Manifest, NamingConvention, RegistryType,
 };
 use vibe_publish::{
     PublishConfig, Publisher, creator_for_url, extract_host_segment, extract_org_segment,
@@ -18,6 +18,8 @@ use crate::output;
 
 use super::index_step::{self, IndexCheckoutReport, Release};
 use super::{observed_stage, resolve_project_root};
+
+mod layout;
 
 #[derive(Debug, Serialize)]
 struct PublishReport {
@@ -102,23 +104,43 @@ pub(super) fn run_publish(ctx: &output::Context, args: RegistryPublishArgs) -> R
         return run_publish_direct(ctx, &args, direct_url, index_checkout);
     }
 
-    if manifest.registries.is_empty() {
+    // PROP-002 `#registry-layers`: the publish target is chosen from the
+    // same effective declarations resolution reads — the project-local
+    // override, `vibe.toml` and the user's `~/.vibe/registry.toml`.
+    let user =
+        vibe_core::GlobalRegistryConfig::load().context("loading `~/.vibe/registry.toml`")?;
+    let local = vibe_core::GlobalRegistryConfig::load_project_local(&project_root)?;
+    let effective = vibe_core::RegistryLayers {
+        local: Some(&local),
+        project: Some(&manifest),
+        user: &user,
+        site: None,
+    }
+    .merge();
+    if effective.registries.is_empty() {
         bail!(
-            "no `[[registry]]` entries in `{}`. `vibe registry publish` needs a target registry, \
+            "no `[[registry]]` entries in `{}`, `.vibe/registry.local.toml` or \
+             `~/.vibe/registry.toml`. `vibe registry publish` needs a target registry, \
              or pass `--repo-url <git-url>` to push directly to a known repo without an API call.",
             manifest_path.display()
         );
     }
 
     let registry_section = match &args.registry {
-        Some(name) => manifest.registry_by_name(name).ok_or_else(|| {
-            anyhow!(
-                "no `[[registry]]` named `{name}` in `{}`",
-                manifest_path.display()
-            )
-        })?,
-        None => manifest
-            .primary_registry()
+        Some(name) => effective
+            .registries
+            .iter()
+            .find(|row| &row.name == name)
+            .ok_or_else(|| {
+                anyhow!(
+                    "no `[[registry]]` named `{name}` in `{}`, `.vibe/registry.local.toml` or \
+                     `~/.vibe/registry.toml`",
+                    manifest_path.display()
+                )
+            })?,
+        None => effective
+            .registries
+            .first()
             .ok_or_else(|| anyhow!("no `[[registry]]` configured"))?,
     };
 
@@ -128,6 +150,30 @@ pub(super) fn run_publish(ctx: &output::Context, args: RegistryPublishArgs) -> R
         .canonicalize()
         .with_context(|| format!("source path `{}`", args.source.display()))?;
     let source_dir = crate::commands::init::strip_unc_public(source_dir);
+
+    // PROP-002 `#registry-type`: the registry type picks the publish path.
+    match registry_section.checked_type()? {
+        RegistryType::Monorepo => {
+            let target = vibe_publish::layout_publish::LayoutTarget::Monorepo {
+                url: registry_section.url.clone(),
+                branch: registry_section.r#ref.clone(),
+            };
+            return layout::run(ctx, &args, registry_section, target, source_dir);
+        }
+        RegistryType::Localdir => {
+            let target = vibe_publish::layout_publish::LayoutTarget::Localdir {
+                root: vibe_registry::localdir_path(&registry_section.url)?,
+            };
+            return layout::run(ctx, &args, registry_section, target, source_dir);
+        }
+        RegistryType::Git => {
+            // A generic Git server has no API vibe drives: publish into the
+            // package's existing repository under the registry url.
+            let url = layout::package_repo_url(registry_section, &source_dir)?;
+            return run_publish_direct(ctx, &args, &url, index_checkout);
+        }
+        RegistryType::Github | RegistryType::Gitverse => {}
+    }
 
     // Pick the host adapter from the registry URL's host segment per
     // PROP-002 §2.10. `creator_for_url` returns a boxed `RepoCreator`
@@ -149,7 +195,10 @@ pub(super) fn run_publish(ctx: &output::Context, args: RegistryPublishArgs) -> R
     // GitHub stays the canonical publish target; resolve-time reads
     // against GitVerse continue to work via `MultiRegistryResolver`.
     let host_lower = host.to_ascii_lowercase();
-    if host_lower == "gitverse.ru" || host_lower.ends_with(".gitverse.ru") {
+    if registry_section.effective_type() == RegistryType::Gitverse
+        || host_lower == "gitverse.ru"
+        || host_lower.ends_with(".gitverse.ru")
+    {
         let reason = format!(
             "GitVerse publishing is not implemented yet — the GitVerse public API does not \
              expose org-scoped repository creation, so `vibe registry publish` cannot drive \

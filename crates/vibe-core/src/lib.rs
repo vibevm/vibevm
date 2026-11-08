@@ -34,6 +34,7 @@ pub mod rel_path;
 pub mod remap;
 pub mod settings;
 pub mod timestamp;
+pub mod toml_preserve;
 pub mod user_config;
 pub mod values;
 pub mod visibility;
@@ -44,7 +45,8 @@ pub use content_hash::ContentHash;
 pub use error::{Error, Result, SafeTomlParseError};
 pub use global_registry::{
     EffectiveRegistryConfig, GlobalRegistryConfig, GlobalRegistryError, GlobalRegistrySource,
-    default_registries, ensure_default_global_registry, merge_effective, url_is_local,
+    PROJECT_LOCAL_REGISTRY_FILE, RegistryLayers, RegistryScope, default_registries,
+    ensure_default_global_registry, merge_effective, project_local_registry_path, url_is_local,
 };
 pub use host_owner::{HOST_OWNER, HostOwner, HostSegmentError};
 pub use index_checkout::IndexCheckoutSection;

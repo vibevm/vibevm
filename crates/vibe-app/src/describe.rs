@@ -365,6 +365,8 @@ fn describe_step(step: &StepDecl) -> wire::Step {
                     name: source.name.clone(),
                     url: source.url.clone(),
                     path: source.path.as_deref().and_then(text),
+                    drop: source.drop.clone(),
+                    file: source.file.clone(),
                     sha256: source.sha256.clone(),
                     size: source.size,
                     extract: source.extract,

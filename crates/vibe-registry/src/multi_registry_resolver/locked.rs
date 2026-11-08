@@ -383,6 +383,8 @@ impl MultiRegistryResolver {
                 (resolved.version, Some(resolved.source_dir))
             } else if Self::updates_explicit_ref(row) {
                 (self.held_ref_version(row)?, None)
+            } else if let Some(repository) = monorepo::monorepo_repository(row) {
+                (self.monorepo_resolve(pkg, row, repository)?, None)
             } else if row.source_kind == Some(SourceKind::Registry) {
                 (
                     self.locked_registry(&selection)?.resolve(pkg)?.version,
@@ -405,6 +407,9 @@ impl MultiRegistryResolver {
                     }
                 } else if Self::updates_explicit_ref(row) {
                     selection.row.source_ref = Some(self.held_update_reference(row)?);
+                } else if let Some(repository) = monorepo::monorepo_repository(row) {
+                    // Same repository and branch; the new version's directory.
+                    Self::retarget_monorepo_row(&mut selection.row, repository);
                 } else {
                     selection.row.source_ref = Some(format!("v{}", selection.row.version));
                 }
@@ -470,6 +475,9 @@ impl MultiRegistryResolver {
         if Self::updates_explicit_ref(row) {
             return Ok(vec![self.held_ref_version(row)?]);
         }
+        if let Some(repository) = monorepo::monorepo_repository(row) {
+            return self.monorepo_versions(row, repository);
+        }
         if row.source_kind != Some(SourceKind::Registry) {
             return Err(refusal(
                 "legacy source family is ambiguous for version update; replay remains supported",
@@ -512,6 +520,11 @@ impl MultiRegistryResolver {
             selection.apply_evidence(&mut cached);
             return Ok(crate::PackageAcquisition::Cached(Box::new(cached)));
         }
+        if let Some(repository) = monorepo::monorepo_repository(&selection.row) {
+            return self
+                .fetch_locked_monorepo(resolution, selection, store_root, repository)
+                .map(|cached| crate::PackageAcquisition::Cached(Box::new(cached)));
+        }
         if self.offline {
             return Err(refusal(
                 "locked bytes are absent from the verified offline store",
@@ -549,6 +562,12 @@ impl MultiRegistryResolver {
                 "offline in-place recovery requires retained Git objects",
             ));
         }
+        if monorepo::monorepo_repository(&selection.row).is_some() {
+            return Err(RegistryError::InPlaceUnsupported {
+                group: selection.row.group.clone(),
+                name: selection.row.name.to_string(),
+            });
+        }
         let registry = self.locked_registry(selection)?;
         // Plain replay preserves local modifications; an explicit version update
         // resets the held slot exactly as an ordinary in-place update does.
@@ -561,5 +580,6 @@ impl MultiRegistryResolver {
 
 mod directory;
 mod explicit;
+mod monorepo;
 pub use explicit::LockedUpdateAvailability;
 mod reference;

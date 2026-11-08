@@ -2,16 +2,17 @@
 
 specmark::scope!("spec://org.vibevm.core/vibevm/VIBEVM-SPEC#registry");
 
-use anyhow::{Context, Result, anyhow, bail};
+use anyhow::{Result, anyhow, bail};
 use serde::Serialize;
-use vibe_core::manifest::{Manifest, NamingConvention, RegistrySection};
+use vibe_core::RegistryScope;
+use vibe_core::manifest::{NamingConvention, RegistrySection, RegistryType};
 use vibe_publish::{extract_host_segment, extract_org_segment};
 
 use crate::cli::RegistryAddArgs;
-use crate::commands::registry::resolve_project_root;
 use crate::output;
 
-use super::{ListReportMirror, ListReportRegistry, adapter_for_host, parse_naming};
+use super::scope::{ScopeFile, parse_scope, parse_type};
+use super::{ListReportMirror, ListReportRegistry, adapter_for, naming_label, parse_naming};
 
 #[derive(Debug, Serialize)]
 struct AddReport {
@@ -29,36 +30,21 @@ pub(in crate::commands::registry) fn run_add(
     ctx: &output::Context,
     args: RegistryAddArgs,
 ) -> Result<()> {
-    let project_root = resolve_project_root(&args.path)?;
-    let manifest_path = project_root.join(Manifest::FILENAME);
-    if !manifest_path.exists() {
-        bail!(
-            "no `vibe.toml` in `{}`; run `vibe init` first",
-            project_root.display()
-        );
-    }
-    let mut manifest = Manifest::read(&manifest_path)
-        .with_context(|| format!("reading `{}`", manifest_path.display()))?;
+    let scope = parse_scope(args.scope.as_deref())?.unwrap_or(RegistryScope::Project);
+    let declared_type = parse_type(args.registry_type.as_deref())?;
+    let mut file = ScopeFile::open(scope, &args.path)?;
 
     // Validation: name must not collide with an existing registry.
-    if manifest.registry_by_name(&args.name).is_some() {
+    if file.registries().iter().any(|r| r.name == args.name) {
         bail!(
             "a `[[registry]]` named `{}` already exists in `{}`. Pick a different name or remove the existing entry first.",
             args.name,
-            manifest_path.display()
+            file.path().display()
         );
     }
     if args.name.trim().is_empty() {
         bail!("registry name must be non-empty");
     }
-
-    // Validation: URL must shape-parse for both org and host
-    // segmentation. If either fails, the URL is unusable as a
-    // `[[registry]].url` regardless of host adapter availability.
-    let host =
-        extract_host_segment(&args.url).map_err(|e| anyhow!("registry URL `{}`: {e}", args.url))?;
-    let org =
-        extract_org_segment(&args.url).map_err(|e| anyhow!("registry URL `{}`: {e}", args.url))?;
 
     let naming = match args.naming.as_deref() {
         Some(s) => parse_naming(s)?,
@@ -99,6 +85,7 @@ pub(in crate::commands::registry) fn run_add(
 
     let new = RegistrySection {
         name: args.name.clone(),
+        r#type: declared_type,
         url: args.url.clone(),
         r#ref: args.registry_ref.unwrap_or_else(|| "main".to_string()),
         naming,
@@ -107,36 +94,46 @@ pub(in crate::commands::registry) fn run_add(
         enabled: true,
         index_url: None,
     };
+    let kind = new.checked_type()?;
+    if args.naming.is_some() && matches!(kind, RegistryType::Monorepo | RegistryType::Localdir) {
+        bail!(
+            "--naming applies only to per-package registries; a `{kind}` registry lays packages \
+             out as `<group>/<name>/v<version>/`"
+        );
+    }
+
+    // Validation: a Git URL must shape-parse for both org and host
+    // segmentation; a local directory has neither.
+    let (host, org) = if kind == RegistryType::Localdir {
+        (String::from("(local directory)"), String::new())
+    } else {
+        (
+            extract_host_segment(&args.url)
+                .map_err(|e| anyhow!("registry URL `{}`: {e}", args.url))?,
+            extract_org_segment(&args.url)
+                .map_err(|e| anyhow!("registry URL `{}`: {e}", args.url))?,
+        )
+    };
 
     vibe_registry::resolve_registry_auth(vibe_registry::RegistryAuthInput::SelectedRegistry(&new))?;
     match position_label {
-        "primary" => manifest.registries.insert(0, new.clone()),
-        "append" => manifest.registries.push(new.clone()),
-        _ => unreachable!("validated above"),
+        "primary" => file.registries_mut().insert(0, new.clone()),
+        _ => file.registries_mut().push(new.clone()),
     }
+    file.save()?;
 
-    manifest
-        .write(&manifest_path)
-        .with_context(|| format!("writing `{}`", manifest_path.display()))?;
-
-    let naming_label = match new.naming {
-        NamingConvention::Fqdn => "fqdn",
-        NamingConvention::KindName => "kind-name",
-        NamingConvention::Name => "name",
-        NamingConvention::KindSlashName => "kind/name",
-    }
-    .to_string();
-    let adapter = adapter_for_host(&host).map(String::from);
-
+    let adapter = adapter_for(kind, &host).map(String::from);
     let registry_view = ListReportRegistry {
         name: new.name.clone(),
+        registry_type: kind.as_str().to_string(),
+        scope: Some(file.scope().as_str().to_string()),
         url: new.url.clone(),
         refname: new.r#ref.clone(),
-        naming: naming_label.clone(),
+        naming: naming_label(new.naming).to_string(),
         host: host.clone(),
         org: org.clone(),
         adapter: adapter.clone(),
-        mirrors: manifest
+        mirrors: file
             .mirrors_for(&new.name)
             .into_iter()
             .map(|m| ListReportMirror {
@@ -146,6 +143,7 @@ pub(in crate::commands::registry) fn run_add(
             })
             .collect(),
     };
+    let total = file.registries().len();
 
     if ctx.is_json() {
         ctx.emit_json(&AddReport {
@@ -153,7 +151,7 @@ pub(in crate::commands::registry) fn run_add(
             command: "registry:add",
             registry: registry_view,
             position: position_label.to_string(),
-            total_registries: manifest.registries.len(),
+            total_registries: total,
         })?;
         return Ok(());
     }
@@ -165,23 +163,22 @@ pub(in crate::commands::registry) fn run_add(
     };
     let adapter_text = adapter
         .as_deref()
-        .map(|a| format!(" (adapter: {a})"))
-        .unwrap_or_else(|| {
-            " (adapter: none — `vibe registry publish` won't dispatch here)".to_string()
-        });
+        .map(|a| format!(" (publish: {a})"))
+        .unwrap_or_else(|| " (publish: unsupported)".to_string());
     ctx.step(&format!(
-        "Added `[[registry]]` `{}`{} → {} on host {}{}",
-        new.name, position_text, new.url, host, adapter_text
+        "Added `[[registry]]` `{}` (type {kind}, scope {}){} → {}{}",
+        new.name,
+        file.scope().as_str(),
+        position_text,
+        new.url,
+        adapter_text
     ));
     ctx.summary(&format!(
-        "\nvibe registry add: `{}` registered ({} total registr{}).",
+        "\nvibe registry add: `{}` registered in `{}` ({} total registr{}).",
         new.name,
-        manifest.registries.len(),
-        if manifest.registries.len() == 1 {
-            "y"
-        } else {
-            "ies"
-        },
+        file.path().display(),
+        total,
+        if total == 1 { "y" } else { "ies" },
     ));
     Ok(())
 }

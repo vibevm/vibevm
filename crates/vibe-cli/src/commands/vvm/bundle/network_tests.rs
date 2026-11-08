@@ -243,6 +243,8 @@ fn a_named_release_uses_mutable_assets_and_force_allocates_a_fresh_instance() {
     let ctx = quiet();
     let progress = Progress::default();
     let remote = RemoteContext {
+        source: Default::default(),
+        locator: vibe_core::remap::active(),
         ctx: &ctx,
         env: &env,
         store: &store,

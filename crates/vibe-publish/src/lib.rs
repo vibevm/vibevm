@@ -38,6 +38,7 @@ pub mod git_publish;
 pub mod github;
 pub mod github_release;
 pub mod gitverse;
+pub mod layout_publish;
 mod orchestrator;
 pub mod post_hook;
 pub mod redirect_sync;
@@ -263,6 +264,22 @@ pub enum PublishError {
         expected_org: String,
         attempted_org: String,
     },
+
+    #[error(
+        "publish refused: `{package}` already exists at `{location}` with different content; \
+         a published version directory is immutable \
+         (violates spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#registry-type; \
+         fix: bump the package version, or pass `--replace` to overwrite it deliberately)"
+    )]
+    VersionExists { package: String, location: String },
+
+    #[error(
+        "publish refused: `{repo}` branch `{branch}` moved twice while publishing (another \
+         publisher won both races); nothing of this publish was pushed \
+         (violates spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#registry-type; \
+         fix: re-run `vibe registry publish`)"
+    )]
+    MonorepoRaceLost { repo: String, branch: String },
 
     #[error(
         "publish refused: no `RepoCreator` adapter for host `{host}`. Configured registry URL \

@@ -935,6 +935,87 @@ fn install_from_git_registry() {
     // walks the lockfile to refresh per-package clones.
 }
 
+/// A `[[mirror]]` serves a plain `vibe install` even when the invocation's
+/// Locator already carries other rows — a `[[remap]]` row for an unrelated
+/// prefix and the `[artifacts] packages` drop row. The registry's own URL
+/// does not exist, so only the mirror can have served the package.
+///
+/// Regression: the clone chain used to build its mirror rows only when the
+/// active Locator was empty, and on a non-catalog verb the composition root
+/// had loaded no registry tables, so every mirror was silently ignored.
+#[test]
+#[verifies("spec://org.vibevm.core/vibevm/common/PROP-066#locator")]
+fn a_mirror_serves_install_beside_remap_and_drop_rows() {
+    if !git_available() {
+        eprintln!("skipping a_mirror_serves_install_beside_remap_and_drop_rows: git not on PATH");
+        return;
+    }
+    let outer = tempfile::tempdir().unwrap();
+    let mirror_root = make_per_package_registry(&outer.path().join("mirror"));
+    let canonical = outer.path().join("canonical-does-not-exist");
+    let drop = outer.path().join("drop");
+    fs::create_dir_all(&drop).unwrap();
+    let user = UserScratch::new();
+    let project = tempfile::tempdir().unwrap();
+    user.init_project(project.path());
+
+    let slashed = |path: &std::path::Path| path.to_string_lossy().replace('\\', "/");
+    fs::write(
+        project.path().join("vibe.toml"),
+        format!(
+            "[project]\nname = \"demo\"\nversion = \"0.0.1\"\n\n\
+             [[registry]]\nname = \"default\"\nurl = \"git+file://{}\"\n\n\
+             [[mirror]]\nof = \"default\"\nurl = \"git+file://{}\"\n",
+            slashed(&canonical),
+            slashed(&mirror_root)
+        ),
+    )
+    .unwrap();
+    fs::write(
+        user.settings.join("settings.toml"),
+        "[[remap]]\nprefix = \"https://unrelated.example/\"\nurl = \"https://elsewhere.example/\"\n",
+    )
+    .unwrap();
+    fs::write(
+        user.settings.join("config.toml"),
+        format!("[artifacts]\npackages = \"{}\"\n", slashed(&drop)),
+    )
+    .unwrap();
+
+    // The three rows really are in the invocation's Locator.
+    let listed = user
+        .vibe()
+        .current_dir(project.path())
+        .args(["remap", "list"])
+        .output()
+        .unwrap();
+    let listed_text = String::from_utf8_lossy(&listed.stdout);
+    assert!(listed.status.success(), "{listed_text}");
+    assert!(listed_text.contains("unrelated.example"), "{listed_text}");
+    assert!(
+        listed_text.contains("[artifacts] packages"),
+        "{listed_text}"
+    );
+
+    user.vibe()
+        .current_dir(project.path())
+        .arg("install")
+        .arg("org.vibevm.world/wal")
+        .arg("--path")
+        .arg(project.path())
+        .arg("--assume-yes")
+        .assert()
+        .success();
+    let slot = project
+        .path()
+        .join(common::slot_dir("org.vibevm.world.wal", "1.0.0"));
+    assert!(slot.join("vibe.toml").is_file(), "{}", slot.display());
+    let lock_text = fs::read_to_string(project.path().join("vibe.lock")).unwrap();
+    let lock: vibe_core::manifest::Lockfile = toml::from_str(&lock_text).unwrap();
+    assert_eq!(lock.packages.len(), 1);
+    assert_eq!(lock.packages[0].registry.as_deref(), Some("default"));
+}
+
 #[test]
 #[verifies(
     "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#git-source",

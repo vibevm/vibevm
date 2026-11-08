@@ -7,6 +7,7 @@ use std::path::{Component, Path};
 
 use crate::manifest::{FieldError, FieldPath, declarant_path, is_command_name, is_portable_token};
 
+use super::drop_inputs;
 pub(super) use super::site::Site;
 use super::*;
 
@@ -543,8 +544,10 @@ pub(super) fn validate_sources(
                 format!("{table}.sources.name `{}` is duplicated", source.name),
             ));
         }
-        match (&source.url, &source.path) {
-            (Some(url), None) => {
+        drop_inputs::validate_file_without_drop(source, &row)?;
+        match (&source.url, &source.path, &source.drop) {
+            (None, None, Some(_)) => drop_inputs::validate_drop_input(source, &row)?,
+            (Some(url), None, None) => {
                 if !credential_free_http(url) {
                     return Err(row.refuse(
                         "url",
@@ -555,7 +558,7 @@ pub(super) fn validate_sources(
                     ));
                 }
             }
-            (None, Some(path)) => {
+            (None, Some(path), None) => {
                 declarant_path(path).map_err(|fault| {
                     row.refuse(
                         "path",
@@ -571,7 +574,7 @@ pub(super) fn validate_sources(
                 return Err(FieldError::new(
                     row.at.clone(),
                     format!(
-                        "{table}.sources `{}` must declare exactly one of url or path",
+                        "{table}.sources `{}` must declare exactly one of url, path or drop",
                         source.name
                     ),
                 ));

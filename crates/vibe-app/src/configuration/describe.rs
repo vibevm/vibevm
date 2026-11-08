@@ -182,7 +182,10 @@ row!(PublicCommand, [name, launcher]);
 row!(Requirement, [package, scope]);
 vocabulary!(Result, [External, Owned]);
 vocabulary!(Scope, [Build, Runtime]);
-row!(SourceInput, [name, url, path, sha256, size, extract]);
+row!(
+    SourceInput,
+    [name, url, path, drop, file, sha256, size, extract]
+);
 row!(
     Step,
     [

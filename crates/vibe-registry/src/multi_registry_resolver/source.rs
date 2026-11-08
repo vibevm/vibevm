@@ -34,6 +34,97 @@ pub enum RegistrySource {
     /// Local-directory registry: a filesystem root laid out
     /// `<root>/<group>/<name>/v<version>/`, read with no git.
     Local(LocalRegistrySource),
+    /// Single-repository registry (`type = "monorepo"`, PROP-002
+    /// `#registry-type`): one Git repository whose `ref` carries every
+    /// package as `<group>/<name>/v<version>/`, cloned on first use.
+    Monorepo(Arc<MonorepoRegistrySource>),
+}
+
+/// The monorepo flavour of a [`RegistrySource`]. Construction makes no
+/// contact; the clone (through the remap Locator's candidates and the
+/// operation's Git backend, hence its source policy and admission) happens
+/// on the first read and is reused for the rest of the operation.
+pub struct MonorepoRegistrySource {
+    pub name: String,
+    pub url: String,
+    pub refname: String,
+    pub auth: vibe_core::manifest::AuthKind,
+    candidates: Vec<String>,
+    cache_root: PathBuf,
+    backend: Arc<dyn GitBackend>,
+    freshness_secs: u64,
+    opened: std::sync::OnceLock<GitMonorepoRegistry>,
+    gate: std::sync::Mutex<()>,
+}
+
+impl MonorepoRegistrySource {
+    pub(crate) fn new(
+        reg: &RegistrySection,
+        auth: vibe_core::manifest::AuthKind,
+        candidates: Vec<String>,
+        cache_root: &Path,
+        backend: Arc<dyn GitBackend>,
+        freshness_secs: u64,
+    ) -> Self {
+        MonorepoRegistrySource {
+            name: reg.name.clone(),
+            url: reg.url.clone(),
+            refname: reg.r#ref.clone(),
+            auth,
+            candidates,
+            cache_root: cache_root.to_path_buf(),
+            backend,
+            freshness_secs,
+            opened: std::sync::OnceLock::new(),
+            gate: std::sync::Mutex::new(()),
+        }
+    }
+
+    /// The cloned registry, cloning or refreshing it on first use.
+    pub fn registry(&self) -> Result<&GitMonorepoRegistry, RegistryError> {
+        if let Some(opened) = self.opened.get() {
+            return Ok(opened);
+        }
+        let _guard = self.gate.lock().map_err(|_| RegistryError::MalformedMeta {
+            path: self.cache_root.clone(),
+            reason: "monorepo registry clone lock poisoned".into(),
+        })?;
+        if self.opened.get().is_none() {
+            let cache = self.cache_root.join("monorepo");
+            // A controlled transport admits only native preparation.
+            let opened = if self.backend.native_materialisation_for(&self.url)? {
+                GitMonorepoRegistry::open_native(
+                    &self.url,
+                    &self.candidates,
+                    &self.refname,
+                    &cache,
+                    Arc::clone(&self.backend),
+                )?
+            } else {
+                GitMonorepoRegistry::open_routes(
+                    &self.url,
+                    &self.candidates,
+                    &self.refname,
+                    &cache,
+                    Arc::clone(&self.backend),
+                    self.freshness_secs,
+                )?
+            }
+            .with_name(&self.name);
+            let _ = self.opened.set(opened);
+        }
+        self.opened
+            .get()
+            .ok_or_else(|| RegistryError::MalformedMeta {
+                path: self.cache_root.clone(),
+                reason: "monorepo registry clone produced no registry".into(),
+            })
+    }
+
+    /// The clone's local-directory view.
+    pub fn local(&self) -> Result<&LocalRegistry, RegistryError> {
+        self.registry().map(GitMonorepoRegistry::local)
+    }
 }
 
 /// The local-directory flavour of a [`RegistrySource`] — a [`LocalRegistry`]
@@ -56,6 +147,7 @@ impl RegistrySource {
         match self {
             RegistrySource::Git(g) => g.name(),
             RegistrySource::Local(ls) => &ls.name,
+            RegistrySource::Monorepo(mono) => &mono.name,
         }
     }
 
@@ -65,19 +157,17 @@ impl RegistrySource {
         match self {
             RegistrySource::Git(g) => g.org_url(),
             RegistrySource::Local(ls) => &ls.url,
+            RegistrySource::Monorepo(mono) => &mono.url,
         }
     }
 }
 
-/// Whether a `[[registry]]` url names a **local-directory** registry — an
-/// explicit `file:` scheme (`file:///C:/x`, `file:///home/x`). This is the
-/// backend-choice predicate: only a `file:` url opens a [`LocalRegistry`]
-/// (filesystem monorepo). A bare path (no scheme) and a `git+` transport
-/// (`git+file://`, `git+https://`) stay on the git-clone backend — they are
-/// local/remote *git* repos, the historical behaviour. (The wider
-/// [`url_is_local`] is the `--offline` filter's predicate — it also keeps bare
-/// paths and `git+file://`, since they need no network; the backend choice is
-/// narrower on purpose.)
+/// Whether a url names a **local directory** by an explicit `file:` scheme
+/// (`file:///C:/x`, `file:///home/x`) — the shape a held directory-registry
+/// lock row records, and the url shape a `[[registry]]` without `type`
+/// infers as `localdir` (`RegistryType::infer`). A bare path and a `git+`
+/// transport are not directories here. (The wider [`url_is_local`] is the
+/// `--offline` filter's predicate.)
 pub(crate) fn is_local_directory_url(url: &str) -> bool {
     url.trim().to_ascii_lowercase().starts_with("file:")
 }
@@ -118,6 +208,18 @@ pub(crate) fn local_path_from_url(url: &str) -> Result<PathBuf, RegistryError> {
         });
     }
     Ok(path)
+}
+
+/// The directory a `localdir` registry url names (`file:///…` or a plain
+/// path) — the public face of the path rule the resolver uses, so a
+/// publisher writes exactly where resolution reads.
+///
+/// ```
+/// let path = vibe_registry::localdir_path("file:///srv/vibe").unwrap();
+/// assert_eq!(path, std::path::PathBuf::from("/srv/vibe"));
+/// ```
+pub fn localdir_path(url: &str) -> Result<PathBuf, RegistryError> {
+    local_path_from_url(url)
 }
 
 /// Drop the POSIX-style leading slash before a Windows drive letter:

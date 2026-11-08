@@ -402,6 +402,18 @@
             "x-default": null
           }
         },
+        "drop": {
+          "type": "string",
+          "metadata": {
+            "x-default": null
+          }
+        },
+        "file": {
+          "type": "string",
+          "metadata": {
+            "x-default": null
+          }
+        },
         "extract": {
           "type": "boolean",
           "metadata": {

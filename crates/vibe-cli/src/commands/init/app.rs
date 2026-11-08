@@ -138,6 +138,8 @@ pub(super) fn prepare(
                             name: "source".into(),
                             url: Some(url),
                             path: None,
+                            drop: None,
+                            file: None,
                             sha256,
                             size: None,
                             extract: None,

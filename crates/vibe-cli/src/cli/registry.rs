@@ -285,6 +285,12 @@ pub struct RegistryListArgs {
     /// Project root with `vibe.toml`. Defaults to current directory.
     #[arg(long, default_value = ".")]
     pub path: PathBuf,
+
+    /// Show one declaration layer only: `project`, `local` or `user`.
+    /// Without it the effective rows of every layer are listed, each with
+    /// the layer it came from.
+    #[arg(long = "scope")]
+    pub scope: Option<String>,
 }
 
 #[derive(Debug, clap::Args)]
@@ -336,6 +342,18 @@ pub struct RegistryAddArgs {
     #[arg(long = "token-env")]
     pub token_env: Option<String>,
 
+    /// Backend family: `github`, `gitverse`, `git`, `monorepo` or
+    /// `localdir` (case-insensitive). Omitted, it is inferred from the URL;
+    /// `monorepo` is never inferred. PROP-002 `#registry-type`.
+    #[arg(long = "type")]
+    pub registry_type: Option<String>,
+
+    /// Declaration layer: `project` (`vibe.toml`, default), `local`
+    /// (`.vibe/registry.local.toml`, never committed) or `user`
+    /// (`~/.vibe/registry.toml`). PROP-002 `#registry-layers`.
+    #[arg(long = "scope")]
+    pub scope: Option<String>,
+
     /// Project root with `vibe.toml`. Defaults to current directory.
     #[arg(long, default_value = ".")]
     pub path: PathBuf,
@@ -385,6 +403,12 @@ pub struct RegistryRemoveRegistryArgs {
     /// `[[registry]].name` to remove.
     pub name: String,
 
+    /// Declaration layer: `project` (`vibe.toml`, default), `local`
+    /// (`.vibe/registry.local.toml`, never committed) or `user`
+    /// (`~/.vibe/registry.toml`). PROP-002 `#registry-layers`.
+    #[arg(long = "scope")]
+    pub scope: Option<String>,
+
     /// Project root with `vibe.toml`. Defaults to current directory.
     #[arg(long, default_value = ".")]
     pub path: PathBuf,
@@ -397,6 +421,12 @@ pub struct RegistryRemoveMirrorArgs {
 
     /// `[[mirror]].url` of the entry to remove (exact match).
     pub url: String,
+
+    /// Declaration layer: `project` (`vibe.toml`, default), `local`
+    /// (`.vibe/registry.local.toml`, never committed) or `user`
+    /// (`~/.vibe/registry.toml`). PROP-002 `#registry-layers`.
+    #[arg(long = "scope")]
+    pub scope: Option<String>,
 
     /// Project root with `vibe.toml`. Defaults to current directory.
     #[arg(long, default_value = ".")]
@@ -442,4 +472,10 @@ pub struct RegistryPublishArgs {
     /// commit stays local for the maintainer to review and push.
     #[arg(long = "push-index")]
     pub push_index: bool,
+
+    /// Overwrite an existing version directory of a `monorepo` or
+    /// `localdir` registry whose content differs. Without it a published
+    /// version is immutable (identical content is a no-op).
+    #[arg(long = "replace")]
+    pub replace: bool,
 }

@@ -91,6 +91,8 @@ mod tests {
             name: name.into(),
             url: url.map(Into::into),
             path: url.is_none().then(|| name.into()),
+            drop: None,
+            file: None,
             sha256: sha256.into(),
             size,
             extract: None,
