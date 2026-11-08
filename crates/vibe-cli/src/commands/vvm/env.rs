@@ -36,6 +36,9 @@ use rc_io::BLOCK_BEGIN;
 #[cfg(test)]
 use rc_io::write_rc_atomic_at;
 use rc_io::{read_rc_file, rebuild, set_or_add, split_block, write_rc_atomic};
+#[path = "env_path_fix.rs"]
+mod path_fix;
+pub(crate) use path_fix::{PathFixConsent, ensure_shim_dir_on_durable_path};
 #[path = "env_registry.rs"]
 mod registry;
 pub(crate) use registry::{

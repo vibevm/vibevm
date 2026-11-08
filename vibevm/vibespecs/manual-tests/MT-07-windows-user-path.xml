@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spec xmlns="https://vibevm.org/spec/1">
+  <title>Durable user PATH on native Windows (PROP-019 §2.6) — HKCU without the GUI, consent, REG_EXPAND_SZ, idempotence</title>
+  <p><purpose fact="true" status="impl/work">**Purpose.** On Linux the Windows persister's logic runs against an in-memory user registry (`crates/vibe-cli/src/commands/vvm/env_registry_tests.rs`, `env_path_fix_tests.rs`): prepend the shim directory, dedupe case-insensitively, keep `%USERPROFILE%`-style text unexpanded, keep the value kind, write nothing when already canonical. What no fixture reaches is the real `HKCU\Environment` written through `RegSetValueExW`, the `WM_SETTINGCHANGE` broadcast that lets a terminal opened from Explorer see the change without logging off, and a corporate desktop where neither the Environment Variables dialog nor PowerShell is available. The owner proves these here, on a real Windows machine, before a release that ships the corporate-env campaign (`campaigns/corporate-env-2026-11/PLAN.md` §3.5, Phase 8).</purpose></p>
+  <p><isolation-note fact="true" status="impl/work">The test edits the operator's real `HKCU\Environment\Path`. Step 0 exports it and the last step imports it back. Every command runs in `cmd.exe`, because PowerShell is commonly blocked on the machines this protects; `reg.exe` is used only by the operator to set up and observe, never by vibe.</isolation-note></p>
+  <section title="Preconditions">
+    <facts ordered="false">
+      <PRE-HOST fact="true" status="impl/work">Windows 10/11 x86_64, a standard (non-administrator) user. Best: a managed desktop where the user cannot open the Environment Variables dialog (`rundll32 sysdm.cpl,EditEnvironmentVariables` is refused) and PowerShell is blocked. Without one, simulate in a test account with the local policy *User Configuration → Administrative Templates → Control Panel → Prohibit access to Control Panel and PC settings* and a software-restriction rule for `powershell.exe` / `pwsh.exe`.</PRE-HOST>
+      <PRE-BINARIES fact="true" status="impl/work">`vibe.exe` built from the revision under test (`cargo build -p vibe-cli --bins`, or the release archive), imported as a managed instance so the store and the stable shims exist: `vibe.exe self import --use`. Its shim directory is the `shim_dir` field of `vibe self doctor --json`; below it is written `%SHIMS%`.</PRE-BINARIES>
+      <PRE-PROCMON fact="true" status="impl/work">Optional: Sysinternals Process Monitor with a *Process Create* filter on parent `vibe.exe`, to observe that no child process is started.</PRE-PROCMON>
+    </facts>
+  </section>
+  <section title="Setup">
+    <fence>reg export HKCU\Environment "%TEMP%\mt07-env-backup.reg" /y
+vibe self doctor --json
+set SHIMS=&lt;the shim_dir value printed above&gt;
+reg add HKCU\Environment /v Path /t REG_EXPAND_SZ /d "^%USERPROFILE^%\mt07-marker;C:\Tools" /f
+reg query HKCU\Environment /v Path</fence>
+    <p><EXP-SETUP fact="true" status="impl/work">**Expected.** The query shows `Path    REG_EXPAND_SZ    %USERPROFILE%\mt07-marker;C:\Tools` with the `%USERPROFILE%` text literal (the carets kept `cmd.exe` from expanding it). The Environment Variables dialog cannot be opened on this desktop.</EXP-SETUP></p>
+  </section>
+  <section title="Steps">
+    <facts ordered="true">
+      <STEP-1-OBSERVE fact="true" status="impl/work">**Read-only observation.**</STEP-1-OBSERVE>
+    </facts>
+    <fence>vibe self doctor --json</fence>
+    <p><EXP-1 fact="true" status="impl/work">**Expected.** `durable_environment.target_kind` is `windows_registry`, `target` is `HKCU\Environment\Path`, `observation` is `present`, `path_entry` is `different` (the shim directory is not the first entry). Nothing is written: `reg query HKCU\Environment /v Path` is unchanged.</EXP-1></p>
+    <facts ordered="true">
+      <STEP-2-NO-CONSENT fact="true" status="impl/work">**No consent, no write.**</STEP-2-NO-CONSENT>
+    </facts>
+    <fence>vibe --unattended self doctor --fix --json
+reg query HKCU\Environment /v Path</fence>
+    <p><EXP-2 fact="true" status="impl/work">**Expected.** The repair is refused (unattended mode alone is not consent; the message names `--yes`) and the registry value is byte-identical to the setup.</EXP-2></p>
+    <facts ordered="true">
+      <STEP-3-APPLY fact="true" status="impl/work">**Consented repair through the registry API.**</STEP-3-APPLY>
+    </facts>
+    <fence>vibe self doctor --fix --yes --json
+reg query HKCU\Environment /v Path &gt; "%TEMP%\mt07-after-1.txt"
+type "%TEMP%\mt07-after-1.txt"</fence>
+    <p><EXP-3 fact="true" status="impl/work">**Expected.** `fixed` is `true` and `durable_environment.path_entry` is `correct`. The value reads `%SHIMS%;%USERPROFILE%\mt07-marker;C:\Tools`: the shim directory first, the `%USERPROFILE%` entry still unexpanded text, the kind still `REG_EXPAND_SZ`. Process Monitor (if used) records no process created by `vibe.exe` — no `setx`, `reg`, `cmd` or PowerShell.</EXP-3></p>
+    <facts ordered="true">
+      <STEP-4-NEW-TERMINAL fact="true" status="impl/work">**A new terminal sees vibe without logging off.** Open a new `cmd.exe` from the Start menu or Win+R (both started by Explorer, which received `WM_SETTINGCHANGE`).</STEP-4-NEW-TERMINAL>
+    </facts>
+    <fence>where vibe
+vibe --version
+echo %PATH%</fence>
+    <p><EXP-4 fact="true" status="impl/work">**Expected.** `where vibe` lists `%SHIMS%\vibe.exe` first; `vibe --version` prints the version under test; the process PATH carries the expanded `C:\Users\…\mt07-marker` entry, which proves the value was stored as `REG_EXPAND_SZ`. The terminal that ran step 3 keeps its old PATH, as the doctor's `process_path_refresh_needed` said.</EXP-4></p>
+    <facts ordered="true">
+      <STEP-5-IDEMPOTENT fact="true" status="impl/work">**Idempotent re-run.**</STEP-5-IDEMPOTENT>
+    </facts>
+    <fence>vibe self doctor --fix --yes --json
+reg query HKCU\Environment /v Path &gt; "%TEMP%\mt07-after-2.txt"
+fc "%TEMP%\mt07-after-1.txt" "%TEMP%\mt07-after-2.txt"</fence>
+    <p><EXP-5 fact="true" status="impl/work">**Expected.** `fc` reports no differences: the second run finds the value canonical and writes nothing.</EXP-5></p>
+    <facts ordered="true">
+      <STEP-6-DEDUPE fact="true" status="impl/work">**A differently spelled duplicate is folded.** Append the shim directory in upper case with a trailing backslash, then repair.</STEP-6-DEDUPE>
+    </facts>
+    <fence>reg add HKCU\Environment /v Path /t REG_EXPAND_SZ /d "^%USERPROFILE^%\mt07-marker;C:\Tools;&lt;%SHIMS% in upper case&gt;\" /f
+vibe self doctor --fix --yes --json
+reg query HKCU\Environment /v Path</fence>
+    <p><EXP-6 fact="true" status="impl/work">**Expected.** The value is again `%SHIMS%;%USERPROFILE%\mt07-marker;C:\Tools`: the shim directory appears exactly once, first; the other entries keep their bytes and order.</EXP-6></p>
+    <facts ordered="true">
+      <STEP-7-REG-SZ fact="true" status="impl/work">**A `REG_SZ` value stays `REG_SZ`.**</STEP-7-REG-SZ>
+    </facts>
+    <fence>reg add HKCU\Environment /v Path /t REG_SZ /d "C:\Tools" /f
+vibe self doctor --fix --yes --json
+reg query HKCU\Environment /v Path</fence>
+    <p><EXP-7 fact="true" status="impl/work">**Expected.** `Path    REG_SZ    %SHIMS%;C:\Tools`.</EXP-7></p>
+    <facts ordered="true">
+      <STEP-8-APPLY fact="true" status="impl/plan">**`vibe self apply` with the PATH question (Phase 8).** Reset the value as in the setup, then with a site profile `corp.toml` (any valid profile; `[path]` absent):</STEP-8-APPLY>
+    </facts>
+    <fence>vibe --unattended self apply corp.toml --json
+vibe self apply corp.toml
+vibe --unattended self apply corp.toml --fix-path --json
+reg query HKCU\Environment /v Path</fence>
+    <p><EXP-8 fact="true" status="impl/plan">**Expected.** The unattended run without `--fix-path` leaves the value untouched and reports the PATH fix as `skipped` with reason `not_interactive` and a hint naming `--fix-path`. The attended run asks whether to put `%SHIMS%` on PATH at `HKCU\Environment\Path` with **Yes** preselected; Enter applies it (`applied`, consent `interactive`). After resetting the value again, the unattended `--fix-path` run applies it with consent `flag`. In every applied case the value, kind and new-terminal behaviour match steps 3–5.</EXP-8></p>
+  </section>
+  <section title="Teardown">
+    <fence>reg import "%TEMP%\mt07-env-backup.reg"
+del "%TEMP%\mt07-env-backup.reg" "%TEMP%\mt07-after-1.txt" "%TEMP%\mt07-after-2.txt"</fence>
+  </section>
+  <section title="Pass">
+    <p><pass-criteria fact="true" status="impl/work">On a desktop without the Environment Variables dialog or PowerShell, vibe puts its shim directory first on the user PATH only with consent, through the registry API and no child process; a new terminal started from Explorer finds `vibe`; `%USERPROFILE%` text and the `REG_EXPAND_SZ` kind survive; a re-run changes nothing; a duplicate is folded. Step 8 joins the criteria once `vibe self apply` lands. The owner signs the date below.</pass-criteria></p>
+  </section>
+  <section title="Sign-off">
+    <facts ordered="false">
+      <SIGNOFF-OWNER fact="true" status="impl/work">[ ] Owner sign-off on native Windows (date / initials): ______</SIGNOFF-OWNER>
+    </facts>
+  </section>
+</spec>

@@ -25,38 +25,75 @@ pub(crate) enum RegistryValueKind {
 }
 
 /// One raw `HKCU\Environment` value, read without expanding `%VAR%`.
-#[derive(Debug)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub(crate) struct RawUserVar {
     pub(crate) value: String,
     pub(crate) kind: RegistryValueKind,
 }
 
-/// A Windows persister: edits the raw values in `HKCU\Environment`, preserving
-/// `REG_SZ` versus `REG_EXPAND_SZ`, then broadcasts `WM_SETTINGCHANGE`.
-/// Registry I/O is never exercised by gate tests because it mutates real user
-/// state; the pure PATH transformation carries the test coverage, and an
-/// opt-in test below round-trips a scratch value on a Windows host.
-pub(crate) struct WindowsEnvPersister;
+/// Raw access to the user's environment variables: the seam that lets the
+/// Windows persister's logic run against an in-memory store on any host.
+/// Every write keeps the kind the caller names; nothing expands `%VAR%`.
+pub(crate) trait UserRegistry {
+    /// Read one raw value; `None` when it is absent.
+    fn get_raw(&self, name: &str) -> Result<Option<RawUserVar>>;
+    /// Write one raw value with its kind and announce the change.
+    fn set_raw(&self, name: &str, value: &str, kind: RegistryValueKind) -> Result<()>;
+}
 
-impl EnvPersister for WindowsEnvPersister {
-    fn inspect_path(&self, dir: &Path) -> super::EnvironmentObservation {
-        super::profile::inspect_registry(get_user_var_raw("Path"), dir)
+/// The real `HKCU\Environment`: direct registry API calls followed by the
+/// `WM_SETTINGCHANGE` broadcast, with no child process.
+pub(crate) struct Hkcu;
+
+impl UserRegistry for Hkcu {
+    fn get_raw(&self, name: &str) -> Result<Option<RawUserVar>> {
+        get_user_var_raw(name)
     }
+    fn set_raw(&self, name: &str, value: &str, kind: RegistryValueKind) -> Result<()> {
+        set_user_var_raw(name, value, kind)
+    }
+}
+
+/// The persister logic over any [`UserRegistry`]: prepend the shim directory
+/// to the raw user `Path` (deduping normalized equivalents case-insensitively
+/// and keeping every other entry byte-for-byte, `%USERPROFILE%` text
+/// included), preserve `REG_SZ` versus `REG_EXPAND_SZ`, and write nothing
+/// when the value is already canonical.
+pub(crate) struct RegistryEnvPersister<R> {
+    registry: R,
+}
+
+impl<R: UserRegistry> RegistryEnvPersister<R> {
+    pub(crate) fn new(registry: R) -> Self {
+        Self { registry }
+    }
+
+    #[cfg(test)]
+    pub(crate) fn registry(&self) -> &R {
+        &self.registry
+    }
+}
+
+impl<R: UserRegistry> EnvPersister for RegistryEnvPersister<R> {
+    fn inspect_path(&self, dir: &Path) -> super::EnvironmentObservation {
+        super::profile::inspect_registry(self.registry.get_raw("Path"), dir)
+    }
+
     fn set_vibevm_home(&self, home: &Path) -> Result<Persisted> {
         let target = home.display().to_string();
-        let current = get_user_var_raw("VIBEVM_HOME")?;
+        let current = self.registry.get_raw("VIBEVM_HOME")?;
         if current.as_ref().is_some_and(|value| value.value == target) {
             return Ok(Persisted::Unchanged);
         }
         let kind = current
             .map(|value| value.kind)
             .unwrap_or(RegistryValueKind::String);
-        set_user_var_raw("VIBEVM_HOME", &target, kind)?;
+        self.registry.set_raw("VIBEVM_HOME", &target, kind)?;
         Ok(Persisted::Changed)
     }
 
     fn ensure_on_path(&self, dir: &Path) -> Result<Persisted> {
-        let current = get_user_var_raw("Path")?;
+        let current = self.registry.get_raw("Path")?;
         let raw = current
             .as_ref()
             .map(|value| value.value.as_str())
@@ -69,7 +106,7 @@ impl EnvPersister for WindowsEnvPersister {
                 let kind = current
                     .map(|value| value.kind)
                     .unwrap_or(RegistryValueKind::ExpandString);
-                set_user_var_raw("Path", &next, kind)?;
+                self.registry.set_raw("Path", &next, kind)?;
                 Ok(Persisted::Changed)
             }
         }
@@ -79,6 +116,94 @@ impl EnvPersister for WindowsEnvPersister {
         "open a new terminal (the registry change reaches new processes)".to_string()
     }
 }
+
+/// The Windows persister: [`RegistryEnvPersister`] over the real
+/// [`Hkcu`]. Registry I/O is never exercised by gate tests because it
+/// mutates real user state; the logic is covered through an in-memory
+/// [`UserRegistry`], and an opt-in test round-trips a scratch value on a
+/// Windows host.
+pub(crate) struct WindowsEnvPersister;
+
+impl WindowsEnvPersister {
+    fn real() -> RegistryEnvPersister<Hkcu> {
+        RegistryEnvPersister::new(Hkcu)
+    }
+}
+
+impl EnvPersister for WindowsEnvPersister {
+    fn inspect_path(&self, dir: &Path) -> super::EnvironmentObservation {
+        Self::real().inspect_path(dir)
+    }
+    fn set_vibevm_home(&self, home: &Path) -> Result<Persisted> {
+        Self::real().set_vibevm_home(home)
+    }
+    fn ensure_on_path(&self, dir: &Path) -> Result<Persisted> {
+        Self::real().ensure_on_path(dir)
+    }
+    fn activation_hint(&self) -> String {
+        Self::real().activation_hint()
+    }
+}
+
+/// An in-memory user environment for tests: names compare
+/// case-insensitively as on Windows, values and kinds are kept verbatim, and
+/// every write is counted so idempotence is observable.
+#[cfg(test)]
+#[derive(Default)]
+pub(crate) struct MemoryRegistry {
+    values: std::cell::RefCell<std::collections::BTreeMap<String, RawUserVar>>,
+    writes: std::cell::Cell<usize>,
+}
+
+#[cfg(test)]
+impl MemoryRegistry {
+    pub(crate) fn with(values: &[(&str, &str, RegistryValueKind)]) -> Self {
+        let registry = Self::default();
+        for (name, value, kind) in values {
+            registry.values.borrow_mut().insert(
+                name.to_ascii_uppercase(),
+                RawUserVar {
+                    value: (*value).to_string(),
+                    kind: *kind,
+                },
+            );
+        }
+        registry
+    }
+
+    pub(crate) fn value(&self, name: &str) -> Option<RawUserVar> {
+        self.values
+            .borrow()
+            .get(&name.to_ascii_uppercase())
+            .cloned()
+    }
+
+    pub(crate) fn writes(&self) -> usize {
+        self.writes.get()
+    }
+}
+
+#[cfg(test)]
+impl UserRegistry for MemoryRegistry {
+    fn get_raw(&self, name: &str) -> Result<Option<RawUserVar>> {
+        Ok(self.value(name))
+    }
+    fn set_raw(&self, name: &str, value: &str, kind: RegistryValueKind) -> Result<()> {
+        self.values.borrow_mut().insert(
+            name.to_ascii_uppercase(),
+            RawUserVar {
+                value: value.to_string(),
+                kind,
+            },
+        );
+        self.writes.set(self.writes.get() + 1);
+        Ok(())
+    }
+}
+
+#[cfg(test)]
+#[path = "env_registry_tests.rs"]
+mod tests;
 
 #[cfg(windows)]
 #[allow(unsafe_code)]

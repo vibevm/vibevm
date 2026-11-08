@@ -257,7 +257,15 @@ pub(super) fn run_doctor_cmd(
                 let _lock = super::install::InstallLock::acquire(&store)?;
                 env::write_shims(&store)?;
                 let shell = env::Shell::detect(env.shell.as_deref());
-                make_persister(env, shell)?.ensure_on_path(&shim_dir)?;
+                let persister = make_persister(env, shell)?;
+                // Consent came from `confirm_fix`; the shared core writes
+                // only when the durable target lacks the shim directory.
+                env::ensure_shim_dir_on_durable_path(
+                    &*persister,
+                    &shim_dir,
+                    &env::PathFixConsent::granted(),
+                    &mut |_, _| false,
+                )?;
                 Ok(())
             })();
             match result {
