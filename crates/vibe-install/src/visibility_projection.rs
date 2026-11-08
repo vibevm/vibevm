@@ -11,7 +11,6 @@ use vibe_resolver::{
     SolveError, VersionEnumerator,
 };
 
-use crate::InstallSource;
 use crate::error::{Error, Result};
 use crate::record::exact_pinned_pkgref;
 
@@ -59,12 +58,6 @@ pub struct ProjectionInput<'a> {
 pub struct Projection {
     pub analysis: Analysis,
     pub blocked_edges: BTreeSet<(NodeId, NodeId)>,
-}
-
-pub(crate) struct EffectiveResolution {
-    pub graph: ResolvedGraph,
-    pub analysis: Analysis,
-    pub iterations: usize,
 }
 
 /// Project a solved graph onto the consumer root's effective set.
@@ -151,58 +144,6 @@ fn edge_contributes(
     analyze(&isolated, root).effective.contains_key(target)
 }
 
-pub(crate) fn resolve_effective<S: InstallSource + ?Sized>(
-    source: &S,
-    roots: &[PackageRef],
-    root_manifest: &Manifest,
-    root_id: &str,
-    initial_graph: ResolvedGraph,
-) -> Result<EffectiveResolution> {
-    const MAX_ITERATIONS: usize = 4;
-
-    let mut graph = initial_graph;
-    let mut blocked = BTreeSet::new();
-    for iteration in 1..=MAX_ITERATIONS {
-        let manifest_of = |pkgref: &PackageRef| source.manifest_of(pkgref);
-        let projection = project(&ProjectionInput {
-            root_manifest,
-            root_id: root_id.to_string(),
-            graph: &graph,
-            manifest_of: &manifest_of,
-        })?;
-        let newly_blocked: BTreeSet<_> = projection
-            .blocked_edges
-            .difference(&blocked)
-            .cloned()
-            .collect();
-        if newly_blocked.is_empty() {
-            prune_graph(&mut graph, &projection.analysis);
-            return Ok(EffectiveResolution {
-                graph,
-                analysis: projection.analysis,
-                iterations: iteration,
-            });
-        }
-        if iteration == MAX_ITERATIONS {
-            let unstable: Vec<String> = newly_blocked
-                .iter()
-                .flat_map(|(from, to)| [from.clone(), to.clone()])
-                .collect::<BTreeSet<_>>()
-                .into_iter()
-                .collect();
-            return Err(visibility_error(format!(
-                "visibility strictness did not converge within {MAX_ITERATIONS} iterations; \
-                 unstable nodes: {unstable:?}"
-            )));
-        }
-        blocked.extend(newly_blocked);
-        graph = source.solve_masked(roots, &blocked)?;
-    }
-    Err(visibility_error(format!(
-        "visibility strictness did not converge within {MAX_ITERATIONS} iterations"
-    )))
-}
-
 fn declaration_from_manifest(manifest: &Manifest) -> Result<NodeDecl> {
     let mut edges: Vec<EdgeDecl> = manifest
         .requires
@@ -266,7 +207,7 @@ fn node_id(group: &Group, name: &str) -> NodeId {
     format!("{group}/{name}")
 }
 
-fn visibility_error(reason: String) -> Error {
+pub(crate) fn visibility_error(reason: String) -> Error {
     Error::Solve(
         DepProviderError::Other(format!(
             "{reason} (violates spec://org.vibevm.core/vibevm/common/PROP-050#resolver; \
@@ -276,7 +217,7 @@ fn visibility_error(reason: String) -> Error {
     )
 }
 
-fn prune_graph(graph: &mut ResolvedGraph, analysis: &Analysis) {
+pub(crate) fn prune_graph(graph: &mut ResolvedGraph, analysis: &Analysis) {
     graph.packages.retain(|node| {
         analysis
             .effective

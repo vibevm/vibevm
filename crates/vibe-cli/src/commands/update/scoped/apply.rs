@@ -32,8 +32,9 @@ use vibe_lifecycle::RunMetadata;
 use vibe_workspace::Workspace;
 use vibe_workspace::compile_trace::TraceRun;
 use vibe_workspace::install::{
-    ResolvedDep, SlotLifecycleMode, materialise_subtree_with_spec_format_and_slot_lifecycle,
-    regenerate_boot_from_traced, run_post_install_slot_lifecycle,
+    InstallRollback, ResolvedDep, SlotLifecycleMode,
+    materialise_subtree_with_spec_format_and_slot_lifecycle, regenerate_boot_from_traced,
+    run_post_install_slot_lifecycle,
 };
 
 use crate::commands::compile_trace::{RegisteredReportDraft, carry_measured};
@@ -43,7 +44,6 @@ use crate::commands::install::{
 use crate::output;
 
 use super::super::draft::{UpdateDraft, UpdateIdentity};
-use super::super::inputs::locked_package;
 use super::measured::Measured;
 use super::{Resolved, SCOPED_INTEGRITY, SourceHashes, prune_superseded};
 
@@ -71,6 +71,8 @@ pub(super) struct ScopedApply<'a> {
     pub(super) updated: &'a [Resolved],
     pub(super) lockfile: &'a mut Lockfile,
     pub(super) old_lock: &'a Lockfile,
+    pub(super) planned_lock: Lockfile,
+    pub(super) records: vibe_install::ProjectRecordPublication,
     pub(super) lanes_before: &'a [(String, Option<u64>)],
     /// The command's ONE agent backend.
     pub(super) agent: &'a std::sync::Arc<dyn vibe_lifecycle::AgentBackend>,
@@ -96,6 +98,8 @@ pub(super) fn apply(ctx: &output::Context, inputs: ScopedApply<'_>) -> Result<Up
         updated,
         lockfile,
         old_lock,
+        mut planned_lock,
+        records,
         lanes_before,
         agent,
     } = inputs;
@@ -103,14 +107,31 @@ pub(super) fn apply(ctx: &output::Context, inputs: ScopedApply<'_>) -> Result<Up
     vibe_install::configuration_admission::workspace_inputs(workspace, project_root, manifest)?;
     vibe_install::configuration_admission::resolved_packages(full_world)?;
 
+    records.validate_before_publication()?;
+
+    // PROP-073 `#OPERATION-EFFECTS-LAW`: a stop acknowledged here has written
+    // nothing; from the prune on, every slot change and the boot
+    // regeneration go through `rollback` and are undone together until the
+    // lock is published.
+    let token = ctx.progress().cancellation().clone();
+    let cancellation = &token;
+    cancellation.checkpoint()?;
+    cancellation.publishing();
+    let mut undo = Undo {
+        rollback: InstallRollback::new(&workspace.root),
+        lifecycle,
+        cancellation,
+        materialised: Vec::new(),
+    };
+
     // Remove every superseded slot, recording each real removal as it happens.
     // The transfer into the run is unconditional and comes BEFORE the `?`: a
-    // prune that fails half-way has still deleted whatever it deleted, and the
-    // run — which every later `progress()` is read from — must already own that
-    // list when the error propagates.
+    // prune that fails half-way has still moved aside whatever it moved, and
+    // the run — which every later `progress()` is read from — must already own
+    // that list when the error propagates (and the undo below empties it).
     let pruning = ctx.progress().task("Pruning superseded package slots");
     pruning.set_progress(0, Some(updated.len() as u64), "packages");
-    let pruned = prune_superseded(workspace, lockfile, updated, measured);
+    let pruned = prune_superseded(workspace, lockfile, updated, measured, &mut undo.rollback);
     lifecycle.record_pruned(measured.pruned().to_vec());
     match pruned {
         Ok(()) => {
@@ -119,7 +140,7 @@ pub(super) fn apply(ctx: &output::Context, inputs: ScopedApply<'_>) -> Result<Up
         }
         Err(error) => {
             pruning.fail("slot pruning failed");
-            return Err(error);
+            return Err(undo.restore(measured, error));
         }
     }
 
@@ -135,10 +156,13 @@ pub(super) fn apply(ctx: &output::Context, inputs: ScopedApply<'_>) -> Result<Up
         spec_format,
         Some(source_hashes),
         lifecycle,
+        &mut undo.rollback,
     );
     // A hosted row parked. That is a durable handoff, not a failure — and it
     // belongs to THIS command: `vibe update` reports `update`, its own run,
-    // and `resume: vibe update`. It never impersonates install.
+    // and `resume: vibe update`. It never impersonates install. The tree the
+    // park observed is the one it resumes over, so the undo log is dropped —
+    // committed — exactly as before the prune joined it.
     if let Some(delegation) = lifecycle.parked() {
         materialising.skip("waiting for the hosting agent");
         crate::commands::lifecycle::check_delegation(&delegation)?;
@@ -162,9 +186,13 @@ pub(super) fn apply(ctx: &output::Context, inputs: ScopedApply<'_>) -> Result<Up
         }
         Err(error) => {
             materialising.fail("package materialisation failed");
-            return Err(error);
+            return Err(undo.restore(measured, error));
         }
     };
+    undo.materialised = subtree.materialised.clone();
+    if let Err(stop) = cancellation.checkpoint() {
+        return Err(undo.restore(measured, stop.into()));
+    }
 
     // Regenerate every node's boot from the complete provisional world and the
     // new `vibedeps/` state. The partial `resolution` above is only the set
@@ -174,20 +202,23 @@ pub(super) fn apply(ctx: &output::Context, inputs: ScopedApply<'_>) -> Result<Up
     // recorder keeps these compiles in the same run as everything else this
     // invocation did.
     let boot = ctx.progress().task("Regenerating workspace boot artifacts");
-    let nodes_regenerated =
-        match regenerate_boot_from_traced(workspace, full_world, spec_format, trace)
-            .context("regenerating boot artifacts")
-        {
-            Ok(nodes) => {
-                boot.set_progress(nodes.len() as u64, Some(nodes.len() as u64), "nodes");
-                boot.finish();
-                nodes
-            }
-            Err(error) => {
-                boot.fail("boot regeneration failed");
-                return Err(error);
-            }
-        };
+    let nodes_regenerated = match undo
+        .rollback
+        .regenerate_boot(workspace, full_world, || {
+            regenerate_boot_from_traced(workspace, full_world, spec_format, trace)
+        })
+        .context("regenerating boot artifacts")
+    {
+        Ok(nodes) => {
+            boot.set_progress(nodes.len() as u64, Some(nodes.len() as u64), "nodes");
+            boot.finish();
+            nodes
+        }
+        Err(error) => {
+            boot.fail("boot regeneration failed");
+            return Err(undo.restore(measured, error));
+        }
+    };
 
     // The scoped update's own complete record, assembled from what each step
     // really returned: the subtree pass's slot lists, the removals measured
@@ -204,35 +235,23 @@ pub(super) fn apply(ctx: &output::Context, inputs: ScopedApply<'_>) -> Result<Up
         nodes_regenerated,
     });
 
-    // Replace each subtree package's lockfile entry, carrying the
-    // install-scoped metadata (features / language) the version bump does
-    // not change.
-    for (cached, deps, _, embedded_sources) in updated {
-        let old = lockfile.find(&cached.resolved.group, &cached.resolved.name);
-        let entry = locked_package(cached, deps, old, embedded_sources);
-        match lockfile
-            .packages
-            .iter()
-            .position(|p| p.group == entry.group && p.name == entry.name)
-        {
-            Some(i) => lockfile.packages[i] = entry,
-            None => lockfile.packages.push(entry),
-        }
+    if planned_lock != *old_lock {
+        planned_lock.meta.generated_at = crate::commands::init::current_timestamp_utc();
     }
-    // Re-read the updated rows as requirers (PROP-065 `#app-dependencies`).
-    lockfile.record_app_requirements(|row| {
-        updated
-            .iter()
-            .map(|(cached, ..)| cached)
-            .find(|cached| cached.resolved.group == row.group && cached.resolved.name == row.name)
-            .map(|cached| &cached.manifest)
-    });
-    lockfile.meta.generated_at = crate::commands::init::current_timestamp_utc();
+    *lockfile = planned_lock;
     let recording = ctx.progress().task("Recording updated dependency lock");
-    if let Err(error) = lockfile.write(workspace.lockfile_path()) {
-        recording.fail("lockfile recording failed");
-        return Err(error.into());
+    if let Err(stop) = cancellation.checkpoint() {
+        recording.skip("operation cancelled");
+        return Err(undo.restore(measured, stop.into()));
     }
+    // `publish` undoes its own lock/report writes when it fails.
+    if let Err(error) = records.publish(lockfile) {
+        recording.fail("lockfile recording failed");
+        return Err(undo.restore(measured, error.into()));
+    }
+    // The lock is durable: the update is committed, and its undo log goes.
+    drop(undo);
+    cancellation.committed();
     recording.finish();
 
     // PROP-050 ##VERIFY-LOCK-DIFF — the closure diff after the apply is
@@ -249,6 +268,7 @@ pub(super) fn apply(ctx: &output::Context, inputs: ScopedApply<'_>) -> Result<Up
         &lane_sizes(&workspace.root),
     );
 
+    cancellation.checkpoint()?;
     if let Some(plan) = subtree.take_post_install_plan() {
         let callbacks = ctx.progress().task("Running package callbacks");
         let ran = run_post_install_slot_lifecycle(plan, SlotLifecycleMode::Callback(lifecycle));
@@ -305,6 +325,50 @@ pub(super) fn apply(ctx: &output::Context, inputs: ScopedApply<'_>) -> Result<Up
         rows,
         None,
     ))
+}
+
+/// The scoped update's uncommitted slot changes: the prune and the subtree
+/// materialisation, recorded in one [`InstallRollback`]. Dropping it is the
+/// commit; [`Undo::restore`] puts the previous tree back.
+struct Undo<'a> {
+    rollback: InstallRollback,
+    lifecycle: &'a InstallSlotLifecycle,
+    cancellation: &'a vibe_core::cancellation::CancellationToken,
+    /// The slots the materialise pass placed, once it returned them.
+    materialised: Vec<String>,
+}
+
+impl Undo<'_> {
+    /// Restore the previous slots and boot artifacts and return `error`, the failure (or
+    /// acknowledged stop) that asked for it. A complete restore empties the
+    /// run's prune record and classifies a stop's publication as `restored`;
+    /// an incomplete one leaves it `recovery-required` and names the retained
+    /// backup in the error.
+    fn restore(mut self, measured: &mut Measured, error: anyhow::Error) -> anyhow::Error {
+        let observer: &dyn vibe_workspace::install::SlotLifecycle = self.lifecycle;
+        match self.rollback.restore(Some(observer), &self.materialised) {
+            Ok(()) => {
+                measured.restore_pruned();
+                self.lifecycle.record_pruned(Vec::new());
+                self.cancellation.restored();
+                error
+            }
+            Err(reason) => error.context(ScopedRollbackFailed { reason }),
+        }
+    }
+}
+
+/// The scoped update stopped before its lock was published and could not put
+/// the dependency tree back.
+#[derive(Debug, thiserror::Error)]
+#[error(
+    "restoring the dependency tree after the scoped update stopped also failed: {reason} \
+     (violates spec://org.vibevm.core/vibevm/VIBEVM-SPEC#install-workflow-in-detail; \
+     fix: inspect that path, restore the slot from the retained backup, then run \
+     `vibe update` again)"
+)]
+struct ScopedRollbackFailed {
+    reason: String,
 }
 
 /// The park draft, built the same way at both park sites.

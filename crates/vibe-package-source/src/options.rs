@@ -36,6 +36,10 @@ use std::path::PathBuf;
 /// ```
 #[derive(Debug, Clone, Default, PartialEq, Eq)]
 pub struct PackageSourceOptions {
+    /// Explicit operation-owned write roots, with an independently readable existing store.
+    pub storage: Option<SourceStorage>,
+    /// Invocation layer of the shared source policy; absence preserves project/user values.
+    pub source_policy: vibe_core::manifest::SourcePolicyDecl,
     /// An explicit local-directory registry path (`--registry <path>`),
     /// overriding the declared/embedded discovery entirely.
     pub registry: Option<PathBuf>,
@@ -68,4 +72,26 @@ pub struct PackageSourceOptions {
     /// declaration for this run (the M1.15 `--git` flag). The manifest's
     /// own git-source entries are read by the builder regardless.
     pub has_git_source_flag: bool,
+}
+
+/// The operation owns acquisition_root and its lifetime. Metadata acquisition
+/// never writes read_only_store; normal installation may omit this override.
+///
+/// ```
+/// use vibe_package_source::{PackageSourceOptions, SourceStorage};
+///
+/// let root = std::env::temp_dir().join("vibe-preview-scratch");
+/// let options = PackageSourceOptions {
+///     storage: Some(SourceStorage {
+///         acquisition_root: root.clone(),
+///         read_only_store: None,
+///     }),
+///     ..Default::default()
+/// };
+/// assert_eq!(options.storage.unwrap().acquisition_root, root);
+/// ```
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct SourceStorage {
+    pub acquisition_root: PathBuf,
+    pub read_only_store: Option<PathBuf>,
 }

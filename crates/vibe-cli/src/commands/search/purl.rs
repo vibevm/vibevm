@@ -17,7 +17,7 @@ use vibe_registry::{
 
 use crate::output;
 
-use super::{UnreachableRegistry, truncate};
+use super::{PolicySkippedRegistry, UnreachableRegistry, truncate};
 
 #[derive(Debug, Serialize)]
 struct PurlReport {
@@ -28,6 +28,7 @@ struct PurlReport {
     registries_searched: Vec<String>,
     registries_unconfigured: Vec<String>,
     registries_unreachable: Vec<UnreachableRegistry>,
+    registries_policy_skipped: Vec<PolicySkippedRegistry>,
     hit_count: usize,
     hits: Vec<PurlHitRow>,
 }
@@ -46,7 +47,9 @@ pub(super) fn run_purl_lookup(
     project_root: &Path,
     target_registries: &[&vibe_core::manifest::RegistrySection],
     purl: &str,
+    operation: &vibe_package_source::SourceOperation,
 ) -> Result<()> {
+    let mut policy_skipped = Vec::new();
     let mut searched: Vec<String> = Vec::new();
     let mut unconfigured: Vec<String> = Vec::new();
     let mut unreachable: Vec<UnreachableRegistry> = Vec::new();
@@ -69,13 +72,46 @@ pub(super) fn run_purl_lookup(
                 continue;
             }
         };
+        if source == IndexUrlSource::Default
+            && vibe_registry::resolve_registry_auth(
+                vibe_registry::RegistryAuthInput::SelectedRegistry(reg),
+            )?
+            .is_ssh_source()
+        {
+            unconfigured.push(reg.name.clone());
+            continue;
+        }
         // A2-INDEXAUTH — authenticate with the registry's own
         // credentials, and tell a refused (401/403) probe apart from a
         // missing index so the operator sees the real reason in
         // `UnreachableRegistry.reason`.
-        let auth = IndexAuth::for_registry(reg, &base);
-        let client = match IndexClient::probe(&base, auth) {
-            ProbeOutcome::Found(c) => c,
+        let probe = match operation.http_admission()? {
+            Some(binding) => match binding.check_address(&base) {
+                Ok(()) => IndexClient::probe_with_admission(
+                    &base,
+                    IndexAuth::for_registry(reg, &base)?,
+                    binding,
+                ),
+                Err(reason) => Err(vibe_registry::IndexError::ContactRefused(reason)),
+            },
+            None => Ok(IndexClient::probe(
+                &base,
+                IndexAuth::for_registry(reg, &base)?,
+            )),
+        };
+        let probe = match probe {
+            Ok(value) => value,
+            Err(vibe_registry::IndexError::ContactRefused(reason)) => {
+                if matches!(reason, vibe_registry::ContactRefusal::OperationCancelled) {
+                    return Err(reason.into());
+                }
+                policy_skipped.push(PolicySkippedRegistry::refused(&reg.name, &reason));
+                continue;
+            }
+            Err(error) => return Err(error.into()),
+        };
+        let client = match probe {
+            ProbeOutcome::Found(c) => *c,
             ProbeOutcome::Refused { reason } => {
                 unreachable.push(UnreachableRegistry {
                     name: reg.name.clone(),
@@ -110,6 +146,12 @@ pub(super) fn run_purl_lookup(
                         .or_insert_with(|| make_purl_row(&hit, &reg.name));
                 }
             }
+            Err(vibe_registry::IndexError::ContactRefused(reason)) => {
+                if matches!(reason, vibe_registry::ContactRefusal::OperationCancelled) {
+                    return Err(reason.into());
+                }
+                policy_skipped.push(PolicySkippedRegistry::refused(&reg.name, &reason));
+            }
             Err(e) => {
                 unreachable.push(UnreachableRegistry {
                     name: reg.name.clone(),
@@ -135,6 +177,7 @@ pub(super) fn run_purl_lookup(
         registries_searched: searched.clone(),
         registries_unconfigured: unconfigured.clone(),
         registries_unreachable: unreachable.clone(),
+        registries_policy_skipped: policy_skipped.clone(),
         hit_count: hits.len(),
         hits: hits.clone(),
     };
@@ -144,6 +187,12 @@ pub(super) fn run_purl_lookup(
         return Ok(());
     }
 
+    for skipped in &policy_skipped {
+        eprintln!(
+            "policy skipped {} (availability unknown): {}",
+            skipped.name, skipped.reason
+        );
+    }
     if ctx.is_quiet() {
         ctx.summary(&format!(
             "vibe search --purl: {} hit{} across {} registry{}",

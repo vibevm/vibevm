@@ -177,9 +177,17 @@ fn a_forced_reinstall_refuses_bytes_the_lock_does_not_pin_and_update_moves_the_l
         "{human_err}"
     );
 
-    // `vibe update` re-resolves and records the new bytes in both places.
+    // A plain update keeps the locked source and its pinned bytes (PROP-073
+    // `#UPDATE-SOURCE-RESELECTION`); the explicit reselection the refusal
+    // names re-resolves and records the new bytes in both places.
     user.vibe()
-        .args(["update", "org.example/my-skills", "--assume-yes", "--path"])
+        .args([
+            "update",
+            "org.example/my-skills",
+            "--reselect-source",
+            "--assume-yes",
+            "--path",
+        ])
         .arg(project.path())
         .assert()
         .success();

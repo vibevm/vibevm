@@ -179,6 +179,39 @@ pub struct HandlerRuntime<'a> {
 }
 
 impl HandlerRuntime<'_> {
+    pub(crate) fn admit_preparation(
+        &self,
+        row: &ExtensionRegistryRow,
+        mode: &vibe_wire::generated::lifecycle::e1::context::RunAgentMode,
+    ) -> Result<(), String> {
+        if *mode == vibe_wire::generated::lifecycle::e1::context::RunAgentMode::Agent
+            && matches!(&row.declaration().handler, ExtensionHandler::Agent { .. })
+        {
+            if let Some(token) = self.process.cancellation() {
+                token.checkpoint().map_err(|error| error.to_string())?;
+            }
+            return Ok(());
+        }
+        self.admit_control(row)
+    }
+
+    pub(crate) fn admit_control(&self, row: &ExtensionRegistryRow) -> Result<(), String> {
+        let Some(token) = self.process.cancellation() else {
+            return Ok(());
+        };
+        token.checkpoint().map_err(|error| error.to_string())?;
+        if matches!(
+            &row.declaration().handler,
+            ExtensionHandler::Native { .. } | ExtensionHandler::Agent { .. }
+        ) {
+            return Err(format!(
+                "handler {} has no cooperative stop capability; --stop-file cannot supervise this provider; no provider call started",
+                row.declaration().handler.kind()
+            ));
+        }
+        Ok(())
+    }
+
     /// The state-blind entry: an agent row has no fingerprint-bound
     /// preparation here, so it is prepared on the spot. Only the untracked
     /// paths reach this; the freshness-aware runner always passes the exact
@@ -214,6 +247,11 @@ impl HandlerRuntime<'_> {
         context: &Context,
         prepared: Option<&PreparedAgent>,
     ) -> Result<(Reply, HandlerStreams), HandlerError> {
+        self.admit_control(row)
+            .map_err(|reason| HandlerError::Process {
+                key: execution_key.to_owned(),
+                reason,
+            })?;
         match &row.declaration().handler {
             ExtensionHandler::Script { base } => {
                 self.script(row, target, execution_key, context, base)
@@ -382,13 +420,15 @@ impl HandlerRuntime<'_> {
         name: &str,
     ) -> Result<(Reply, HandlerStreams), HandlerError> {
         let key = execution_key.to_string();
-        let artifact =
-            self.binary
-                .resolve_or_build(row, name)
-                .map_err(|reason| HandlerError::Binary {
-                    key: key.clone(),
-                    reason,
-                })?;
+        let resolved = if let Some(cancellation) = self.process.cancellation() {
+            self.binary.resolve_for_controlled(row, name, cancellation)
+        } else {
+            self.binary.resolve_or_build(row, name)
+        };
+        let artifact = resolved.map_err(|reason| HandlerError::Binary {
+            key: key.clone(),
+            reason,
+        })?;
         let artifact = contained_existing(provider_root(row), &artifact, &key)?;
         let scratch = verified_scratch(context, &key)?;
         write_atomic_json(&scratch, "context.json", context)
@@ -449,143 +489,8 @@ impl HandlerRuntime<'_> {
     }
 }
 
-fn provider_root(row: &ExtensionRegistryRow) -> &Path {
-    match row.provider() {
-        ExtensionProvider::Dependency(provider) => &provider.root,
-        ExtensionProvider::Host(provider) => &provider.root,
-    }
-}
-
-fn verified_scratch(context: &Context, key: &str) -> Result<PathBuf, HandlerError> {
-    let advertised = Path::new(&context.io.scratch);
-    let run_id = advertised
-        .parent()
-        .and_then(Path::file_name)
-        .and_then(|name| name.to_str())
-        .ok_or_else(|| HandlerError::Scratch {
-            key: key.into(),
-            reason: "scratch has no run component".into(),
-        })?;
-    let actual = execution_scratch(Path::new(&context.project.root), run_id, key)
-        .map_err(|error| scratch_error(key, error))?;
-    let expected = advertised
-        .canonicalize()
-        .map_err(|error| HandlerError::Scratch {
-            key: key.into(),
-            reason: error.to_string(),
-        })?;
-    if actual != expected {
-        return Err(HandlerError::Scratch {
-            key: key.into(),
-            reason: "advertised scratch does not match key digest".into(),
-        });
-    }
-    Ok(actual)
-}
-
-fn contained_existing(root: &Path, path: &Path, key: &str) -> Result<PathBuf, HandlerError> {
-    let root = root
-        .canonicalize()
-        .map_err(|error| HandlerError::UnsafePath {
-            key: key.into(),
-            path: root.display().to_string(),
-            reason: error.to_string(),
-        })?;
-    let path = path
-        .canonicalize()
-        .map_err(|error| HandlerError::UnsafePath {
-            key: key.into(),
-            path: path.display().to_string(),
-            reason: error.to_string(),
-        })?;
-    if !path.starts_with(&root) {
-        return Err(HandlerError::UnsafePath {
-            key: key.into(),
-            path: path.display().to_string(),
-            reason: "canonical path escapes provider root".into(),
-        });
-    }
-    Ok(path)
-}
-
-fn script_env(
-    row: &ExtensionRegistryRow,
-    target: Option<&SlotTarget>,
-    context: &Context,
-    context_path: &Path,
-    reply: &Path,
-) -> std::collections::BTreeMap<std::ffi::OsString, std::ffi::OsString> {
-    let executable = std::env::current_exe()
-        .map(|path| machine_path(&path))
-        .unwrap_or_else(|_| "vibe".to_string());
-    let (group, name, version, kind, dir) = if let Some(target) = target {
-        (
-            target.group.clone(),
-            target.name.clone(),
-            target.version.clone(),
-            target.kind.clone(),
-            target.root.clone(),
-        )
-    } else {
-        match row.provider() {
-            ExtensionProvider::Dependency(provider) => (
-                provider.id.group().to_string(),
-                provider.id.name().to_string(),
-                provider.version.clone(),
-                provider.kind.to_string(),
-                machine_path(&provider.root),
-            ),
-            ExtensionProvider::Host(provider) => (
-                "__host__".into(),
-                provider.identity.to_string(),
-                provider.version.clone(),
-                provider
-                    .kind
-                    .map(|kind| kind.to_string())
-                    .unwrap_or_else(|| "project".into()),
-                machine_path(&provider.root),
-            ),
-        }
-    };
-    let hook_phase = match row.declaration().point {
-        ExtensionPoint::Slot(SlotPoint::PreInstall) => "pre-install",
-        ExtensionPoint::Slot(SlotPoint::PostInstall) => "post-install",
-        _ => "phase",
-    };
-    minimal_environment([
-        ("VIBE_PACKAGE_GROUP".into(), group),
-        ("VIBE_PACKAGE_NAME".into(), name),
-        ("VIBE_PACKAGE_VERSION".into(), version),
-        ("VIBE_PACKAGE_KIND".into(), kind),
-        ("VIBE_PACKAGE_DIR".into(), dir),
-        ("VIBE_HOOK_PHASE".into(), hook_phase.into()),
-        ("VIBE_PROJECT_ROOT".into(), context.project.root.clone()),
-        ("VIBE_EXECUTABLE".into(), executable),
-        ("VIBE_EXTENSION_PROVIDER".into(), row.provider().to_string()),
-        ("VIBE_CONTEXT".into(), machine_path(context_path)),
-        ("VIBE_REPLY".into(), machine_path(reply)),
-    ])
-}
-
-fn streams(output: ProcessOutput) -> HandlerStreams {
-    HandlerStreams {
-        stdout: String::from_utf8_lossy(&output.stdout).into_owned(),
-        stderr: String::from_utf8_lossy(&output.stderr).into_owned(),
-        stdout_truncated: output.stdout_truncated,
-        stderr_truncated: output.stderr_truncated,
-    }
-}
-
-fn scratch_error(key: &str, error: ScratchError) -> HandlerError {
-    HandlerError::Scratch {
-        key: key.into(),
-        reason: error.to_string(),
-    }
-}
-
-fn machine_path(path: &Path) -> String {
-    path.to_string_lossy().replace('\\', "/")
-}
+mod helpers;
+use helpers::*;
 
 #[cfg(test)]
 mod tests;

@@ -36,9 +36,11 @@ use crate::{CachedPackage, Registry, RegistryError, ResolvedPackage, compute_con
 ///     .unwrap();
 /// assert!(cached.content_hash.starts_with("sha256:"));
 /// ```
+#[derive(Clone)]
 #[cell(seam = "Registry", variant = "local")]
 pub struct LocalRegistry {
     root: PathBuf,
+    pub(crate) candidate_owner: std::sync::Arc<()>,
 }
 
 impl LocalRegistry {
@@ -47,7 +49,10 @@ impl LocalRegistry {
         if !root.is_dir() {
             return Err(RegistryError::MissingRoot(root));
         }
-        Ok(LocalRegistry { root })
+        Ok(LocalRegistry {
+            root,
+            candidate_owner: std::sync::Arc::new(()),
+        })
     }
 
     pub fn root(&self) -> &Path {
@@ -219,6 +224,8 @@ impl LocalRegistry {
         let source_uri = source_uri_for_local(&resolved.source_dir);
 
         Ok(CachedPackage {
+            locked_selection: None,
+            route_publication: vibe_core::RoutePublication::Local,
             recorded_source_kind: None,
             store_reused: Some(reused),
             acquisition: Some(vibe_wire::generated::shared::SourceAcquisition::Directory),
@@ -265,7 +272,7 @@ impl Registry for LocalRegistry {
     }
 }
 
-fn source_uri_for_local(path: &Path) -> String {
+pub(crate) fn source_uri_for_local(path: &Path) -> String {
     let mut s = path.to_string_lossy().replace('\\', "/");
     // Ensure a leading `/` on Windows paths like `C:/Users/…` so the URI has
     // the `file:///C:/Users/...` shape.

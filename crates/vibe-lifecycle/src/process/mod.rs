@@ -11,7 +11,9 @@ use std::time::Duration;
 use specmark::spec;
 use thiserror::Error;
 
+mod controlled;
 mod scratch;
+pub use controlled::ControlledProcessRunner;
 use scratch::create_unique_file;
 pub use scratch::{
     PendingReply, ScratchError, allocate_pending_reply, allocate_run_id, execution_scratch,
@@ -88,6 +90,11 @@ pub enum ProcessError {
 /// ```
 #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-054#H-SCRIPT")]
 pub trait ProcessRunner: Send + Sync {
+    /// Explicit control bound to this invocation; absent retains legacy execution.
+    fn cancellation(&self) -> Option<&vibe_core::cancellation::CancellationToken> {
+        None
+    }
+
     fn run(&self, spec: &ProcessSpec) -> Result<ProcessOutput, ProcessError>;
 }
 

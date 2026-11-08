@@ -45,7 +45,7 @@ pub(super) enum HandshakeProbe {
 /// 401/403 is the private-index refusal exactly as on the `repomd`
 /// path (A2-INDEXAUTH), reusing the regime-aware guidance text.
 pub(super) fn probe_candidate(
-    client: &reqwest::blocking::Client,
+    client: &crate::http_admission::ManagedHttpClient,
     candidate: &str,
     auth: &IndexAuth,
     admission: Option<&crate::HttpAdmission>,
@@ -82,6 +82,9 @@ pub(super) fn probe_candidate(
     };
     let body = match resp.bytes() {
         Ok(body) => body,
+        Err(crate::http_admission::HttpGetError::Refused(refusal)) => {
+            return Err(super::IndexError::ContactRefused(refusal));
+        }
         // The request succeeded but the body did not arrive — a
         // transport failure, not a statement by the index; fall
         // through like any connect-fail.

@@ -52,6 +52,10 @@ impl<P: DepProvider> NaiveDepSolver<P> {
         NaiveDepSolver { provider }
     }
 
+    pub fn into_inner(self) -> P {
+        self.provider
+    }
+
     pub fn provider(&self) -> &P {
         &self.provider
     }
@@ -108,11 +112,10 @@ impl<P: DepProvider> DepSolver for NaiveDepSolver<P> {
                 )
             })
             .collect();
-        Ok(crate::build_resolved_graph(
-            &root_keys,
-            chosen,
-            &state.declared_obsolete,
-        ))
+        let before = crate::build_resolved_graph(&root_keys, chosen.clone(), &Default::default());
+        let graph = crate::build_resolved_graph(&root_keys, chosen, &state.declared_obsolete);
+        self.provider.observe_selected_before_projection(&before)?;
+        Ok(graph)
     }
 }
 
@@ -346,3 +349,13 @@ fn handle_disjunction(
 #[cfg(test)]
 #[path = "naive/tests.rs"]
 mod tests;
+
+impl<P: crate::SourceCandidateProvider> NaiveDepSolver<P> {
+    /// Retain neutral source metadata without changing the explicitly chosen cell.
+    pub fn solve_source_aware(
+        &self,
+        request: &crate::SourceSolveRequest<'_>,
+    ) -> Result<crate::SourceResolvedGraph, SolveError> {
+        crate::source_solve::solve_legacy_cell(&self.provider, request, false)
+    }
+}

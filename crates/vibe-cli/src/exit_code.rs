@@ -92,6 +92,12 @@ pub fn as_exit_code(err: &anyhow::Error) -> ExitCode {
     // and the same class `remap_denied` already carries.
     for cause in err.chain() {
         if cause
+            .downcast_ref::<vibe_core::manifest::LockedRemapSourceError>()
+            .is_some()
+        {
+            return ExitCode::from(USAGE);
+        }
+        if cause
             .downcast_ref::<crate::commands::remap::ConsentRequired>()
             .is_some()
             || cause

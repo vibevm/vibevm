@@ -13,8 +13,6 @@ specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-actions/PROP-039#in
 
 use std::future::Future;
 use std::pin::Pin;
-use std::sync::Arc;
-use std::sync::atomic::{AtomicBool, Ordering};
 
 use thiserror::Error;
 
@@ -152,27 +150,7 @@ impl Default for GrantedScope {
     }
 }
 
-/// A minimal cooperative cancellation flag threaded through [`invoke`]
-/// (PROP-039 §7.1). Cloneable and shared: cancelling one handle cancels all.
-#[derive(Debug, Clone, Default)]
-pub struct CancellationToken(Arc<AtomicBool>);
-
-impl CancellationToken {
-    /// A fresh, un-cancelled token.
-    pub fn new() -> Self {
-        CancellationToken::default()
-    }
-
-    /// Request cancellation. Idempotent.
-    pub fn cancel(&self) {
-        self.0.store(true, Ordering::SeqCst);
-    }
-
-    /// Whether cancellation has been requested.
-    pub fn is_cancelled(&self) -> bool {
-        self.0.load(Ordering::SeqCst)
-    }
-}
+pub use vibe_core::cancellation::CancellationToken;
 
 /// Invoke the action at `addr` (PROP-039 §7.1).
 ///

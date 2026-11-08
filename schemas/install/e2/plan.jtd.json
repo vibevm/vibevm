@@ -1,26 +1,255 @@
 {
   "metadata": {
-    "description": "The live project install:plan observation. Acquired package facts are captured before confirmation, then emitted through the existing deferred terminal stream; parked runs suppress previews. Planning may already acquire source/cache data. This is not a read-only preview or an interception point before apply.",
-    "spec": { "implements": "spec://org.vibevm.core/vibevm/common/PROP-073#SOURCE-EVIDENCE-PROJECT-EVENTS" },
-    "rustOptions": { "package": "vibe_wire::install::e2::plan" },
+    "description": "Project install source plan. The ordinary live event may follow source/cache acquisition and is deferred until its existing terminal boundary. Project --plan-only emits this document directly after metadata-only preparation and owned scratch cleanup, without project/HOME/persistent-cache publication. Candidate observations and decisions are distinct; no future payload acquisition is invented.",
+    "spec": {
+      "implements": "spec://org.vibevm.core/vibevm/common/PROP-073#SOURCE-EVIDENCE-PROJECT-EVENTS"
+    },
+    "rustOptions": {
+      "package": "vibe_wire::install::e2::plan"
+    },
     "x-rust-type": "InstallPlan",
-    "x-vocabularies": ["source_evidence", "hosting_view"],
-    "x-wire-order": ["command", "packages"]
+    "x-vocabularies": [
+      "source_evidence",
+      "hosting_view"
+    ],
+    "x-wire-order": [
+      "command",
+      "packages",
+      "preview_complete",
+      "remaps"
+    ]
   },
   "properties": {
-    "command": { "type": "string", "metadata": { "description": "Always install:plan." } },
-    "packages": { "elements": { "ref": "plan_entry" }, "metadata": { "x-empty": "emit" } }
+    "command": {
+      "type": "string",
+      "metadata": {
+        "description": "Always install:plan."
+      }
+    },
+    "packages": {
+      "elements": {
+        "ref": "plan_entry"
+      },
+      "metadata": {
+        "x-empty": "emit"
+      }
+    }
   },
   "definitions": {
     "plan_entry": {
-      "metadata": { "x-wire-order": ["package", "version", "source_evidence", "source_hosting"] },
+      "metadata": {
+        "x-wire-order": [
+          "package",
+          "version",
+          "source_evidence",
+          "source_hosting",
+          "source_candidates"
+        ]
+      },
       "properties": {
-        "package": { "type": "string", "metadata": { "description": "The group/name coordinate, without a version." } },
-        "version": { "type": "string" }
+        "package": {
+          "type": "string",
+          "metadata": {
+            "description": "The group/name coordinate, without a version."
+          }
+        },
+        "version": {
+          "type": "string"
+        }
       },
       "optionalProperties": {
-        "source_hosting": { "ref": "hosting_view", "metadata": { "x-default": null } },
-        "source_evidence": { "ref": "source_evidence", "metadata": { "x-default": null, "x-reader-projection": "permissive", "description": "Held source-owner observations; absent in older live packages rows means unknown." } }
+        "source_hosting": {
+          "ref": "hosting_view",
+          "metadata": {
+            "x-default": null
+          }
+        },
+        "source_evidence": {
+          "ref": "source_evidence",
+          "metadata": {
+            "x-default": null,
+            "x-reader-projection": "permissive",
+            "description": "Held source-owner observations; absent in older live packages rows means unknown."
+          }
+        },
+        "source_candidates": {
+          "elements": {
+            "ref": "source_candidate"
+          },
+          "metadata": {
+            "x-default": null,
+            "description": "Held operation-local candidate observations and final decision reasons; absent for older producers, never reconstructed from current configuration.",
+            "x-empty": "preserve"
+          }
+        }
+      }
+    },
+    "source_candidate": {
+      "properties": {
+        "source_evidence": {
+          "ref": "source_evidence",
+          "metadata": {
+            "x-reader-projection": "permissive"
+          }
+        },
+        "observation": {
+          "ref": "candidate_observation"
+        },
+        "decision": {
+          "ref": "candidate_decision"
+        }
+      },
+      "optionalProperties": {
+        "versions": {
+          "elements": {
+            "type": "string"
+          },
+          "metadata": {
+            "x-default": null,
+            "x-empty": "preserve"
+          }
+        },
+        "failure": {
+          "ref": "candidate_failure",
+          "metadata": {
+            "x-default": null
+          }
+        },
+        "pinned_registry": {
+          "type": "string",
+          "metadata": {
+            "x-default": null
+          }
+        },
+        "excluded_endpoint": {
+          "type": "string",
+          "metadata": {
+            "x-default": null
+          }
+        },
+        "constraint": {
+          "type": "string",
+          "metadata": {
+            "x-default": null
+          }
+        }
+      }
+    },
+    "candidate_observation": {
+      "metadata": {
+        "x-vocabulary": "open"
+      },
+      "enum": [
+        "unknown-observation",
+        "not-probed",
+        "available",
+        "no-matching-version",
+        "not-found",
+        "unavailable"
+      ]
+    },
+    "candidate_decision": {
+      "metadata": {
+        "x-vocabulary": "open"
+      },
+      "enum": [
+        "eligible",
+        "selected",
+        "excluded-by-pin",
+        "excluded-host",
+        "disabled",
+        "version-rejected",
+        "lower-preference",
+        "not-selected"
+      ]
+    },
+    "candidate_failure": {
+      "metadata": {
+        "x-vocabulary": "open"
+      },
+      "enum": [
+        "transport",
+        "authentication",
+        "invalid-metadata",
+        "unsupported",
+        "trust",
+        "source-unavailable"
+      ]
+    },
+    "remap_plan_entry": {
+      "properties": {
+        "package": {
+          "type": "string"
+        },
+        "outcome": {
+          "ref": "remap_plan_outcome"
+        }
+      },
+      "optionalProperties": {
+        "version": {
+          "type": "string",
+          "metadata": {
+            "x-default": null
+          }
+        },
+        "source_evidence": {
+          "ref": "source_evidence",
+          "metadata": {
+            "x-default": null,
+            "x-reader-projection": "permissive"
+          }
+        },
+        "source_candidates": {
+          "elements": {
+            "ref": "source_candidate"
+          },
+          "metadata": {
+            "x-default": null,
+            "x-empty": "preserve"
+          }
+        },
+        "input_required": {
+          "ref": "remap_input_required",
+          "metadata": {
+            "x-default": null
+          }
+        }
+      }
+    },
+    "remap_plan_outcome": {
+      "metadata": {
+        "x-vocabulary": "open"
+      },
+      "enum": [
+        "offer-only",
+        "needs-input"
+      ]
+    },
+    "remap_input_required": {
+      "metadata": {
+        "x-vocabulary": "open"
+      },
+      "enum": [
+        "missing-locked-source"
+      ]
+    }
+  },
+  "optionalProperties": {
+    "preview_complete": {
+      "type": "boolean",
+      "metadata": {
+        "x-default": null,
+        "description": "Present only for standalone project preview: true only when package closure and separately required remap actions have metadata decisions. False requires the named remap input; absent live events do not assert whole-command completeness."
+      }
+    },
+    "remaps": {
+      "elements": {
+        "ref": "remap_plan_entry"
+      },
+      "metadata": {
+        "x-default": null,
+        "description": "Project required remap offers, resolved after the package plan without activating their rows or changing consent.",
+        "x-empty": "preserve"
       }
     }
   }

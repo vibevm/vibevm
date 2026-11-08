@@ -12,6 +12,7 @@ pub(super) fn run(
 ) -> Result<Option<i32>> {
     let settings = global::settings_root()?;
     let packages = Packages {
+        operation: global::source_operation(Default::default())?,
         settings: settings.clone(),
         registry: None,
         embedded: args.registry.clone(),
@@ -60,7 +61,7 @@ pub(super) fn run(
     let agents = AgentSetup::new(ctx, None, false)?;
     let show = global::plan_printer(ctx);
     let display = StepDisplay::open(ctx, &AppStepArgs::default());
-    let observe = Observation::new(ctx, true, &display)?;
+    let observe = Observation::new(ctx, true, &display)?.with_source_operation(&packages.operation);
     let operation = OperationContext {
         agent: agents.hooks(),
         resolver: Some(&resolver),

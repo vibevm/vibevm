@@ -40,32 +40,20 @@ use crate::slot_verify::RegistrySlotVerifier;
 mod deferred;
 mod file_guard;
 mod lock;
+mod lock_publication;
+pub use lock_publication::LockPublication;
+mod project_records;
+pub use project_records::{ProjectRecordCapture, ProjectRecordPublication};
 mod metadata;
 mod native;
 #[cfg(all(test, unix))]
 mod native_materialisation_tests;
 use deferred::materialise_deferred_in_place;
 use file_guard::MetadataFiles;
-/// Commit an admitted prepared source delta without overwriting a changed
-/// selected manifest. The caller owns candidate admission before this write.
-#[specmark::spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-069#PACKAGE-ADMISSION")]
-pub fn publish_admitted_manifest(root: &Path, before: &Manifest, after: &Manifest) -> Result<()> {
-    file_guard::publish_admitted_manifest(root, before, after)
-}
-/// Publish a known legacy empty lock through the same owned metadata boundary
-/// used by apply, before a regenerated-world callback rereads it.
-#[specmark::spec(
-    implements = "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#LF-CONFIGURED-STATE"
-)]
-pub fn publish_empty_legacy_lock(
-    root: &Path,
-    expected_schema: u32,
-    replacement: &vibe_core::manifest::Lockfile,
-) -> Result<()> {
-    file_guard::publish_empty_legacy_lock(root, expected_schema, replacement)
-}
+mod publication;
 use metadata::apply_with_spec_format_and_slot_lifecycle;
 use native::NativeApplyPreparation;
+pub use publication::{publish_admitted_manifest, publish_empty_legacy_lock};
 
 /// What [`apply`] did — the caller renders it.
 #[derive(Debug)]
@@ -403,8 +391,10 @@ fn apply_metadata_checked<S: InstallSource + ?Sized>(
         // there — a value that is about to be stale must not be consulted.
         workspace: _pre_apply_workspace,
         progress,
+        source_candidates: _,
     } = planned;
 
+    progress.checkpoint()?;
     let native_placements = deferred::stage_deferred_native(&fetched, &mut resolution)?;
     let placements: Vec<&dyn vibe_workspace::install::PreparedSlotPlacement> = native_placements
         .iter()
@@ -420,6 +410,8 @@ fn apply_metadata_checked<S: InstallSource + ?Sized>(
         })?;
     }
 
+    progress.checkpoint()?;
+    progress.cancellation().publishing();
     // Everything from this write to the lock write is undone together: the
     // guard puts the manifest's earlier bytes back unless the apply finishes.
     if let Some(guard) = &mut files.manifest {
@@ -483,9 +475,10 @@ fn apply_metadata_checked<S: InstallSource + ?Sized>(
                 })
             };
             let mut make_provider = |policies| {
-                Ok(vibe_lifecycle::native::ArtifactCompilerNativeProvider::new(
-                    platform, policies,
-                ))
+                Ok(
+                    vibe_lifecycle::native::ArtifactCompilerNativeProvider::new(platform, policies)
+                        .with_cancellation(progress.cancellation().clone()),
+                )
             };
             let prepared =
                 vibe_workspace::install::apply_resolution_with_spec_format_and_slot_lifecycle_traced_native_progress_placements(
@@ -536,17 +529,23 @@ fn apply_metadata_checked<S: InstallSource + ?Sized>(
     //       written the install is not durable: a failure undoes this apply's
     //       slot changes, and the guards put the three files back.
     let lockfile_path = workspace.lockfile_path();
-    let recorded = lock::record_lock(
-        &mut lockfile,
-        lock::LockInputs {
-            fetched: &fetched,
-            resolution: &resolution,
-            language_chain: &language_chain,
-            roots: &roots,
-            lockfile_path: &lockfile_path,
-        },
-        files,
-    );
+    let recorded = progress
+        .checkpoint()
+        .map_err(Error::from)
+        .and_then(|()| {
+            lock::record_lock(
+                &mut lockfile,
+                lock::LockInputs {
+                    fetched: &fetched,
+                    resolution: &resolution,
+                    language_chain: &language_chain,
+                    roots: &roots,
+                    lockfile_path: &lockfile_path,
+                },
+                files,
+            )
+        })
+        .and_then(|()| progress.checkpoint().map_err(Error::from));
     if let Err(error) = recorded {
         let error = files.undo_records(error);
         let observer =
@@ -561,6 +560,7 @@ fn apply_metadata_checked<S: InstallSource + ?Sized>(
     }
     outcome.commit();
     files.disarm();
+    progress.cancellation().committed();
     record_task.finish();
 
     // 11. PROP-020 §2.1 — post-install hooks run once the package is durable
@@ -573,6 +573,7 @@ fn apply_metadata_checked<S: InstallSource + ?Sized>(
     if let Some(observer) = observer {
         observer.record_complete(InstallProgress::complete(&outcome));
     }
+    progress.checkpoint()?;
     let post_install_reports = match outcome.take_post_install_plan() {
         Some(plan) => run_post_install_slot_lifecycle(plan, lifecycle)?,
         None => Vec::new(),

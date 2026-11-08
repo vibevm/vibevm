@@ -66,6 +66,15 @@ pub fn observed<T>(
                 .cloned(),
         ),
     });
+    let progress = progress.map(|progress| {
+        if progress.cancellation().has_control() {
+            return progress;
+        }
+        match previous.progress.as_ref() {
+            Some(parent) => progress.with_cancellation(parent.cancellation().clone()),
+            None => progress,
+        }
+    });
     let next = Scope {
         progress: progress.or_else(|| previous.progress.clone()),
         package: package
@@ -101,6 +110,19 @@ pub fn observed<T>(
 /// ```
 pub fn observe_by_default(progress: Progress) {
     SCOPE.with(|scope| scope.borrow_mut().progress = Some(progress));
+}
+
+/// Clone the control already attached to this thread's transfer observation.
+/// ```
+/// let control=vibe_registry::git_backend::transfers::invocation_control();
+/// let _=control.checkpoint();
+/// ```
+pub fn invocation_control() -> vibe_core::cancellation::CancellationToken {
+    current()
+        .progress
+        .unwrap_or_default()
+        .cancellation()
+        .clone()
 }
 
 #[cfg(test)]

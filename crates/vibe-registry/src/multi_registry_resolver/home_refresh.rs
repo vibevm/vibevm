@@ -16,8 +16,8 @@ use super::*;
 /// What [`MultiRegistryResolver::refresh_cached_clones`] did for one
 /// registry: the clones it brought to the newest release tag, the ones it
 /// left and why, and whether the registry's index answered its handshake
-/// when this resolver was opened (the handshake is re-asked on every open,
-/// so opening the resolver IS the index half of the refresh).
+/// during this explicit refresh (ordinary held-source replay does not
+/// initialize unrelated registry indexes).
 #[derive(Debug, Clone)]
 pub struct RegistryRefresh {
     pub registry: String,
@@ -40,14 +40,14 @@ impl MultiRegistryResolver {
     /// form does, so a half-refreshed home is never reported as done.
     pub fn refresh_cached_clones(&self) -> Result<Vec<RegistryRefresh>, RegistryError> {
         let mut out = Vec::new();
-        for reg in &self.registries {
+        for reg in self.registries()? {
             if reg.is_single_package() {
                 continue;
             }
             let mut refresh = RegistryRefresh {
                 registry: reg.name().to_string(),
                 registry_ref: reg.org_ref().to_string(),
-                index: reg.index_client().is_some(),
+                index: reg.discover_index()?.is_some(),
                 clones: Vec::new(),
                 skipped: Vec::new(),
             };

@@ -10,7 +10,7 @@ use std::fs;
 struct Fixture {
     user: UserScratch,
     project: tempfile::TempDir,
-    _registry: tempfile::TempDir,
+    registry: tempfile::TempDir,
 }
 impl Fixture {
     fn install(format: &str) -> Self {
@@ -36,7 +36,7 @@ impl Fixture {
         Self {
             user,
             project,
-            _registry: registry,
+            registry,
         }
     }
     fn command(&self, args: &[&str]) -> std::process::Output {
@@ -205,7 +205,14 @@ fn unavailable_or_invalid_selected_input_never_publishes_registry() {
     ] {
         let f = Fixture::install("markdown");
         match failure {
-            "store" => fs::remove_dir_all(f.user.settings.join("cache")).unwrap(),
+            // Unavailable means neither the machine store nor the locked
+            // source can supply the pinned bytes: a held local-directory
+            // source re-supplies a missing store entry (PROP-073
+            // `#LOCKED-SOURCE-LAW`), so both are removed.
+            "store" => {
+                fs::remove_dir_all(f.user.settings.join("cache")).unwrap();
+                fs::remove_dir_all(f.registry.path().join("org.example/selected")).unwrap();
+            }
             "config" => {
                 fs::write(f.project.path().join("vibe.toml"), "[broken").unwrap();
             }

@@ -231,6 +231,7 @@ struct ProgressInner {
 /// ```
 #[derive(Clone, Default)]
 pub struct Progress {
+    cancellation: crate::cancellation::CancellationToken,
     inner: Option<Arc<ProgressInner>>,
     parent_id: Option<TaskId>,
     /// The invocation's journal, limit and verb for downloads; carried even
@@ -249,6 +250,18 @@ impl fmt::Debug for Progress {
 }
 
 impl Progress {
+    /// Carry the invocation's cooperative control even without an observer.
+    pub fn with_cancellation(mut self, token: crate::cancellation::CancellationToken) -> Self {
+        self.cancellation = token;
+        self
+    }
+    pub fn cancellation(&self) -> &crate::cancellation::CancellationToken {
+        &self.cancellation
+    }
+    pub fn checkpoint(&self) -> Result<(), crate::cancellation::Cancelled> {
+        self.cancellation.checkpoint()
+    }
+
     /// Creates an invocation-owned progress tree backed by `observer`.
     pub fn new(observer: Arc<dyn ProgressObserver + Send + Sync>) -> Self {
         Self {
@@ -257,6 +270,7 @@ impl Progress {
                 next_id: AtomicU64::new(1),
             })),
             parent_id: None,
+            cancellation: Default::default(),
             transfers: None,
         }
     }
@@ -300,7 +314,7 @@ impl Progress {
         transfer: Option<Box<transfer::TransferRecord>>,
     ) -> ProgressTask {
         let Some(inner) = &self.inner else {
-            return ProgressTask::inert(self.transfers.clone());
+            return ProgressTask::inert(self.transfers.clone(), self.cancellation.clone());
         };
         let state = Arc::new(TaskState {
             inner: Arc::clone(inner),
@@ -317,6 +331,7 @@ impl Progress {
         ProgressTask {
             state: Some(state),
             transfers: self.transfers.clone(),
+            cancellation: self.cancellation.clone(),
         }
     }
 }
@@ -369,6 +384,7 @@ impl TaskState {
 /// ```
 #[must_use = "dropping an unfinished progress task reports it as stopped"]
 pub struct ProgressTask {
+    cancellation: crate::cancellation::CancellationToken,
     state: Option<Arc<TaskState>>,
     transfers: Option<transfer::Transfers>,
 }
@@ -383,10 +399,14 @@ impl fmt::Debug for ProgressTask {
 }
 
 impl ProgressTask {
-    fn inert(transfers: Option<transfer::Transfers>) -> Self {
+    fn inert(
+        transfers: Option<transfer::Transfers>,
+        cancellation: crate::cancellation::CancellationToken,
+    ) -> Self {
         Self {
             state: None,
             transfers,
+            cancellation,
         }
     }
 
@@ -400,12 +420,15 @@ impl ProgressTask {
     /// Returns a progress handle whose new tasks are children of this task.
     pub fn progress(&self) -> Progress {
         let Some(state) = &self.state else {
-            return Progress::default().with_transfers(self.transfers.clone());
+            return Progress::default()
+                .with_transfers(self.transfers.clone())
+                .with_cancellation(self.cancellation.clone());
         };
         Progress {
             inner: Some(Arc::clone(&state.inner)),
             parent_id: Some(state.id),
             transfers: self.transfers.clone(),
+            cancellation: self.cancellation.clone(),
         }
     }
 

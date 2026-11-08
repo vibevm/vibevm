@@ -59,21 +59,78 @@ struct SystemCargoBuildRunner;
 
 impl CargoBuildRunner for SystemCargoBuildRunner {
     fn run(&self, invocation: &CargoBuildInvocation) -> io::Result<bool> {
-        let mut command = Command::new("cargo");
-        command
-            .arg("build")
-            .arg("--release")
-            .arg("--manifest-path")
-            .arg(&invocation.manifest_path)
-            .arg("--bin")
-            .arg(&invocation.binary_name)
-            .env_clear()
-            .envs(invocation.environment.iter().cloned());
-        if invocation.output == BuildOutput::Quiet {
-            command.stdout(Stdio::null()).stderr(Stdio::null());
-        }
-        command.status().map(|status| status.success())
+        cargo_command(invocation)
+            .status()
+            .map(|status| status.success())
     }
+}
+
+fn cargo_command(invocation: &CargoBuildInvocation) -> Command {
+    let mut command = Command::new("cargo");
+    command
+        .arg("build")
+        .arg("--release")
+        .arg("--manifest-path")
+        .arg(&invocation.manifest_path)
+        .arg("--bin")
+        .arg(&invocation.binary_name)
+        .env_clear()
+        .envs(invocation.environment.iter().cloned());
+    if invocation.output == BuildOutput::Quiet {
+        command.stdout(Stdio::null()).stderr(Stdio::null());
+    }
+    command
+}
+
+struct ControlledCargoBuildRunner<'a>(&'a vibe_core::cancellation::CancellationToken);
+impl CargoBuildRunner for ControlledCargoBuildRunner<'_> {
+    fn run(&self, invocation: &CargoBuildInvocation) -> io::Result<bool> {
+        use command_group::CommandGroup;
+        self.0.checkpoint().map_err(io::Error::other)?;
+        let mut command = cargo_command(invocation);
+        command.stdin(Stdio::null());
+        let mut child = command.group_spawn()?;
+        loop {
+            if self.0.checkpoint().is_err() {
+                child.kill()?;
+                child.wait()?;
+                return Err(io::Error::other(vibe_core::cancellation::Cancelled));
+            }
+            if let Some(status) = child.try_wait()? {
+                self.0.checkpoint().map_err(io::Error::other)?;
+                return Ok(status.success());
+            }
+            std::thread::sleep(std::time::Duration::from_millis(25));
+        }
+    }
+}
+
+/// Same authorized build owner, with an owned child group/job and truthful
+/// uncertainty about Cargo/build-script writes outside the install receipt.
+pub fn build_binary_authorized_controlled(
+    bin: &DeclaredBinary,
+    authorization: BuildAuthorization,
+    output: BuildOutput,
+    cancellation: &vibe_core::cancellation::CancellationToken,
+) -> Result<(), BinsError> {
+    authorize_build(bin, authorization)?;
+    cancellation
+        .checkpoint()
+        .map_err(|error| BinsError::CargoSpawn {
+            name: bin.decl.name.clone(),
+            detail: error.to_string(),
+        })?;
+    let parent_environment = std::env::vars_os().collect::<Vec<_>>();
+    let toolchain = system_cargo_toolchain(&parent_environment);
+    cancellation.mark_unowned_effects();
+    build_binary_inner_with_runner(
+        bin,
+        authorization,
+        output,
+        &ControlledCargoBuildRunner(cancellation),
+        parent_environment,
+        toolchain,
+    )
 }
 
 /// The PROP-020-shaped consent gate retained for direct binary builds.
@@ -343,5 +400,35 @@ mod environment_tests {
             std::env::split_paths(derived_lib_value).collect::<Vec<_>>(),
             [derived_library]
         );
+    }
+}
+
+#[cfg(all(test, unix))]
+mod controlled_build_tests {
+    use super::*;
+    use std::os::unix::fs::PermissionsExt;
+    #[test]
+    fn cargo_owner_stops_the_selected_child_and_its_build_script_group() {
+        let temporary = tempfile::tempdir().unwrap();
+        let cargo = temporary.path().join("cargo");
+        std::fs::write(&cargo, "#!/bin/sh\n/bin/sleep 30 & wait\n").unwrap();
+        std::fs::set_permissions(&cargo, std::fs::Permissions::from_mode(0o700)).unwrap();
+        let invocation = CargoBuildInvocation {
+            manifest_path: temporary.path().join("Cargo.toml"),
+            binary_name: "test".into(),
+            environment: vec![("PATH".into(), temporary.path().as_os_str().to_owned())],
+            output: BuildOutput::Quiet,
+        };
+        let token = vibe_core::cancellation::CancellationToken::new();
+        let signal = token.clone();
+        let cancel = std::thread::spawn(move || {
+            std::thread::sleep(std::time::Duration::from_millis(150));
+            signal.cancel();
+        });
+        let started = std::time::Instant::now();
+        assert!(ControlledCargoBuildRunner(&token).run(&invocation).is_err());
+        cancel.join().unwrap();
+        assert!(token.acknowledged());
+        assert!(started.elapsed() < std::time::Duration::from_secs(2));
     }
 }

@@ -29,18 +29,28 @@ specmark::scope!("spec://org.vibevm.core/vibevm/VIBEVM-SPEC#install-workflow-in-
 
 mod builder;
 pub(crate) mod cells;
+mod factory;
+mod operation;
 mod options;
 mod project_local;
 mod qualified;
 mod source;
+mod transport;
 
 pub use builder::{
-    any_package_source, build_install_resolver, build_install_resolver_with_progress,
+    InstallResolverRequest, any_package_source, build_install_resolver,
+    build_install_resolver_with_operation, build_install_resolver_with_progress,
+    build_install_resolver_with_sources,
 };
-pub use options::PackageSourceOptions;
+pub use factory::{deferred_user_registry, source_operation};
+pub use operation::{OperationHttpClient, SourceHttpError, SourceOperation};
+pub use options::{PackageSourceOptions, SourceStorage};
 pub use qualified::{PackageQualifier, RefusesQualification, RegistryPackageSource};
 pub use source::InstallResolver;
 
 #[cfg(test)]
 #[path = "fence_tests.rs"]
 mod fence_tests;
+
+#[cfg(test)]
+mod operation_tests;

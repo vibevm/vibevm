@@ -116,7 +116,16 @@ pub(in crate::commands::registry) fn run_test(
             .progress()
             .task(format!("Probing registry {}", reg.name));
         let row_url = reg.url.clone();
-        let row_auth_label = reg.auth.as_str();
+        let effective = vibe_registry::resolve_registry_auth(
+            vibe_registry::RegistryAuthInput::SelectedRegistry(reg),
+        );
+        let row_auth_label = match &effective {
+            Ok(auth) => auth.kind.as_str(),
+            Err(_) => reg
+                .auth
+                .map(vibe_core::manifest::AuthKind::as_str)
+                .unwrap_or("transport-default"),
+        };
         let single = std::slice::from_ref(reg);
         let resolver = match MultiRegistryResolver::open(single, &[], &[]) {
             Ok(r) => r,
@@ -158,20 +167,21 @@ pub(in crate::commands::registry) fn run_test(
                 )),
             ),
             Err(RegistryError::Git(GitError::AuthFailed { .. })) => {
-                let hint = match reg.auth {
-                    vibe_core::manifest::AuthKind::None => {
+                let hint = match effective.as_ref().map(|auth| auth.kind) {
+                    Ok(vibe_core::manifest::AuthKind::None) => {
                         "host returned 401/403; if this registry is private, change `auth` to \
                          `token-env` / `credential-helper` / `ssh` and provide credentials"
                     }
-                    vibe_core::manifest::AuthKind::TokenEnv => {
+                    Ok(vibe_core::manifest::AuthKind::TokenEnv) => {
                         "host rejected the token from the configured env-var; check token scope and freshness"
                     }
-                    vibe_core::manifest::AuthKind::CredentialHelper => {
+                    Ok(vibe_core::manifest::AuthKind::CredentialHelper) => {
                         "system credential helper did not produce valid credentials"
                     }
-                    vibe_core::manifest::AuthKind::Ssh => {
+                    Ok(vibe_core::manifest::AuthKind::Ssh) => {
                         "ssh-agent / keys did not authorise the connection"
                     }
+                    Err(_) => "invalid selected-source auth declaration",
                 };
                 ("auth-required", Some(hint.to_string()))
             }

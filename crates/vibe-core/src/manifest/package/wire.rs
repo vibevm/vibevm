@@ -193,6 +193,12 @@ enum RequiresPackageEntryWire {
 #[derive(Debug, Serialize, Deserialize, Default)]
 #[serde(deny_unknown_fields)]
 pub(in crate::manifest::package) struct InlinePackageDepWire {
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        deserialize_with = "declared_registry_pin"
+    )]
+    pub(in crate::manifest::package) registry: Option<crate::manifest::RegistryPin>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub(in crate::manifest::package) version: Option<VersionFieldWire>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
@@ -235,6 +241,12 @@ pub(in crate::manifest::package) enum VersionFieldWire {
     Constraint(String),
     /// `version.var = "core"` — a `[workspace.versions]` placeholder.
     Var { var: String },
+}
+
+fn declared_registry_pin<'de, D: Deserializer<'de>>(
+    deserializer: D,
+) -> std::result::Result<Option<crate::manifest::RegistryPin>, D::Error> {
+    crate::manifest::RegistryPin::deserialize(deserializer).map(Some)
 }
 
 mod requires;

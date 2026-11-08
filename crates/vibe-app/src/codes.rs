@@ -93,6 +93,7 @@ codes!(STORAGE, StorageError [] {
 });
 
 codes!(RESOLVE, ResolveError [] {
+    SourcePolicy => "source_policy_failed", Failure, "the source owner refused or could not establish the operation policy";
     ConfigurationUnsupported => "configuration_unsupported", Refusal, "this operation does not yet evaluate common configuration";
     Coordinate => "coordinate_invalid", Refusal, "the package coordinate is malformed";
     Registry => "registry_failed", Failure, "resolving the package from its registry failed";
@@ -105,6 +106,9 @@ codes!(RESOLVE, ResolveError [] {
 });
 
 codes!(INSTALLER, InstallerError [] {
+    Cancelled => "operation_cancelled", Failure, "the requested operation stop was observed at a safe boundary";
+    ContactRefused => "source_contact_refused", Failure, "a managed source destination was refused before that destination was contacted";
+    SourcePolicy => "source_policy_unavailable", Failure, "operation source policy could not be established before a managed request";
     Spawn => "spawn_failed", Failure, "a child process could not be started";
     Exited => "child_exited", Failure, "a child process exited unsuccessfully";
     Fetch => "fetch_failed", Failure, "an installer source could not be fetched";

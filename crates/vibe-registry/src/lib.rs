@@ -31,6 +31,8 @@ pub mod git_package_registry;
 pub mod git_registry;
 pub mod http_admission;
 pub mod index_client;
+pub mod source_candidates;
+pub mod source_policy_provider;
 pub use http_admission::{ContactRefusal, HttpAdmission};
 mod local_registry;
 pub mod multi_registry_resolver;
@@ -45,6 +47,7 @@ pub use embedded_source::{
     lock_embedded_sources_with,
 };
 pub use git_backend::{GitBackend, GitError, ShellGit};
+mod registry_auth;
 pub use git_package_registry::{
     GitPerPackageRegistry, PackageAcquisition, PreparedInPlace, RegistryRoute,
 };
@@ -60,6 +63,7 @@ pub use multi_registry_resolver::{
     RefreshedVia, RegistryRefresh, RegistryWalkAttempt, ResolutionPurpose, ResolvedPathDep,
     SkippedEntry, WalkAttemptStatus,
 };
+pub use registry_auth::{RegistryAuthInput, ResolvedRegistryAuth, resolve_registry_auth};
 
 /// Uniform surface over all registry backends — [`LocalRegistry`] and
 /// [`GitMonorepoRegistry`] both implement this trait. `vibe-install` and
@@ -182,6 +186,8 @@ pub struct ResolvedPackage {
 /// )
 /// .unwrap();
 /// let cached = CachedPackage {
+///     locked_selection: None,
+///     route_publication: vibe_core::RoutePublication::Local,
 ///     recorded_source_kind: None,
 ///     store_reused: None,
 ///     acquisition: None,
@@ -212,6 +218,11 @@ pub struct ResolvedPackage {
 #[derive(Debug, Clone)]
 pub struct CachedPackage {
     /// Selection kind retained by the lock when acquisition reads the store.
+    /// Explicit held source authority. Some preserves even an absent source kind;
+    /// None retains the incumbent new-source/store evidence rules.
+    pub locked_selection: Option<crate::multi_registry_resolver::LockedSelection>,
+    /// Runtime report scope; never authority to select a source or send credentials.
+    pub route_publication: vibe_core::RoutePublication,
     pub recorded_source_kind: Option<vibe_core::manifest::SourceKind>,
     /// Whether the acquisition reused an existing store entry, when observed.
     pub store_reused: Option<bool>,
@@ -303,7 +314,7 @@ pub struct CachedPackage {
 }
 
 mod source_evidence;
-pub use source_evidence::{locked_source_evidence, source_hosting};
+pub use source_evidence::{binding_source_evidence, locked_source_evidence, source_hosting};
 
 impl CachedPackage {
     /// A `CachedPackage` always holds a publishable `[package]` manifest.
@@ -379,7 +390,9 @@ mod error;
 mod hash_recipe;
 mod shippable;
 
-pub use error::{AllVersionsUnusableDetail, RegistryError, StoreEntryMismatchDetail};
+pub use error::{
+    AllVersionsUnusableDetail, LockedContentMismatchDetail, RegistryError, StoreEntryMismatchDetail,
+};
 // The ordering half of the recipe is public for the same reason `vibe-index`
 // publishes its copy: the property "recipe 1's order does not depend on the
 // host separator" is provable only against a function callable without a

@@ -45,19 +45,12 @@ pub struct Fetched {
 /// Load the workspace lockfile, or an empty one stamped with the
 /// caller's identity when none exists yet.
 ///
-/// An explicitly recognized pre-configuration schema1–6 reads as *empty* here, not as
-/// an error: `vibe install` is the regeneration path the schema policy names
-/// («the fix is always to regenerate with `vibe install`»), so it must never
-/// refuse to run because the artifact it is about to rewrite is outdated.
-/// Schema7/8 are read faithfully; malformed or future state is never discarded.
-/// Every other reader keeps strict version admission.
+/// Existing unsupported schemas refuse instead of silently losing their
+/// source constraints. Only an absent lock begins an unlocked selection.
 pub(crate) fn load_or_empty_lockfile(root: &Path, generated_by: &str) -> Result<Lockfile> {
     let path = root.join(Lockfile::FILENAME);
     if path.exists() {
-        match Lockfile::read(&path) {
-            Err(vibe_core::Error::UnsupportedLockfile { found: 1..=6, .. }) => {}
-            other => return Ok(other?),
-        }
+        return Ok(Lockfile::read(&path)?);
     }
     Ok(Lockfile::empty(
         generated_by.to_string(),
@@ -102,25 +95,20 @@ pub(crate) fn tailor_feature_request(
     }
 }
 
-/// Build the [`ActivationContext`] from the set of fetched packages
-/// plus project state. Walks every package's manifest once to populate
-/// `present`, `provides`, and `describes_types`. Sets `project_root`
-/// for `if_files` glob matching and `language_chain` for
-/// `if_language`.
-pub(crate) fn build_activation_context<'a, I>(
-    cached: I,
+/// The same conditional context before payload acquisition. Only admitted
+/// package manifests supply capabilities; no cache directory is required.
+pub(crate) fn build_activation_context_from_manifests<'a>(
+    manifests: impl IntoIterator<Item = &'a Manifest>,
     project_root: &Path,
     language_chain: &[String],
-) -> Result<ActivationContext>
-where
-    I: IntoIterator<Item = &'a CachedPackage>,
-{
+) -> Result<ActivationContext> {
     let mut ctx = ActivationContext {
         project_root: Some(project_root.to_path_buf()),
         language_chain: language_chain.to_vec(),
         ..Default::default()
     };
-    for c in cached {
+    for manifest in manifests {
+        let package = manifest.require_package()?;
         // The conditional-dep `context(<key>)` predicate matches an
         // opaque present-set token; for a package the token is the
         // `<kind>:<name>` tag (PROP-003 §2.6.1), consistent with the
@@ -129,17 +117,17 @@ where
         // Both shapes are `:`-qualified by construction, so the parse
         // can only fail on a malformed manifest that slipped past
         // validation — which deserves the loud exit, not a silent skip.
-        let kind_tag =
-            CapabilityTag::parse(format!("{}:{}", c.package_meta().kind, c.resolved.name))
-                .map_err(|source| Error::CapabilityTag {
-                    package: c.resolved.name.clone(),
-                    source,
-                })?;
+        let kind_tag = CapabilityTag::parse(format!("{}:{}", package.kind, package.name)).map_err(
+            |source| Error::CapabilityTag {
+                package: package.name.to_string(),
+                source,
+            },
+        )?;
         ctx.add_present(kind_tag);
-        for cap in &c.manifest.provides.capabilities {
+        for cap in &manifest.provides.capabilities {
             let qualified =
                 CapabilityTag::parse(cap.qualified()).map_err(|source| Error::CapabilityTag {
-                    package: c.resolved.name.clone(),
+                    package: package.name.to_string(),
                     source,
                 })?;
             let is_interface = qualified.as_str().starts_with("interface:");
@@ -148,7 +136,7 @@ where
                 ctx.add_provides(qualified);
             }
         }
-        if let Some(purl) = &c.package_meta().describes {
+        if let Some(purl) = &package.describes {
             ctx.describes_types.insert(purl.purl_type.clone());
         }
     }
@@ -163,17 +151,18 @@ mod lock_regeneration_tests {
     /// install is the regeneration verb and may never refuse to run because
     /// the artifact it is about to rewrite is outdated (PROP-050 W2 landing).
     #[test]
-    fn unsupported_schema_lock_reads_as_empty() {
+    fn unsupported_schema_lock_preserves_source_constraints_by_refusing() {
         let dir = tempfile::tempdir().expect("tempdir");
         std::fs::write(
             dir.path().join("vibe.lock"),
             "[meta]\ngenerated_by = \"vibe old\"\ngenerated_at = \"2026-01-01T00:00:00Z\"\nschema_version = 5\n",
         )
         .expect("write v5 lock");
-        let lock = load_or_empty_lockfile(dir.path(), "vibe test").expect("reads as empty");
-        assert!(lock.packages.is_empty());
-        assert!(lock.configurations.is_empty());
-        // Empty legacy-only regeneration retains schema7; schema8 carries configuration.
-        assert_eq!(lock.meta.schema_version, 7);
+        let before = std::fs::read(dir.path().join("vibe.lock")).expect("original lock");
+        assert!(load_or_empty_lockfile(dir.path(), "vibe test").is_err());
+        assert_eq!(
+            before,
+            std::fs::read(dir.path().join("vibe.lock")).expect("retained lock")
+        );
     }
 }

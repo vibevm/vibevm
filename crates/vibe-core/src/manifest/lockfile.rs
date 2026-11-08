@@ -39,10 +39,15 @@ use super::{Materialization, read_toml, write_toml};
 /// Latest supported lock schema. Schema7 remains readable without inventing
 /// original requests; schema8 carries common package configuration. Ordinary
 /// legacy-only writes retain7. Rich locks cannot be regenerated as empty.
-pub const CURRENT_SCHEMA_VERSION: u32 = 8;
+pub const CURRENT_SCHEMA_VERSION: u32 = 9;
+/// First epoch carrying common package configuration (minimum reader 1.0.12
+/// for epoch9 remap source bindings; configuration-only epoch8 is unchanged).
+pub const CONFIGURATION_SCHEMA_VERSION: u32 = 8;
 /// Legacy effective-only lock, still read and written when lossless.
 pub const LEGACY_SCHEMA_VERSION: u32 = 7;
 mod configuration;
+mod remap_source;
+pub use remap_source::{LockedRemapSource, LockedRemapSourceError};
 mod io;
 
 fn is_false(b: &bool) -> bool {
@@ -110,6 +115,10 @@ pub struct Lockfile {
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
 pub struct LockedRemap {
+    /// Authoritative source binding, introduced in schema9 (reader/writer 1.0.12).
+    /// Absent legacy facts require explicit input; neither alias nor home cache fills them.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub source: Option<LockedRemapSource>,
     /// `<group>/<name>` — the key the acceptance ledger names it by.
     pub package: String,
     /// The resolved version.
@@ -234,7 +243,7 @@ pub struct VirtualCapabilityRecord {
 /// "#).unwrap();
 /// assert_eq!(p.source_kind, Some(SourceKind::Path));
 /// ```
-#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, Serialize, Deserialize)]
 #[serde(rename_all = "lowercase")]
 pub enum SourceKind {
     /// Resolved through the `[[registry]]` walk.

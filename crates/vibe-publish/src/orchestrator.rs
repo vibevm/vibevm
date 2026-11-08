@@ -162,6 +162,51 @@ impl<'c, C: RepoCreator + ?Sized> Publisher<'c, C> {
     ///
     /// The canonical call shape is the [`Publisher`] type's doctest above.
     pub fn publish(&self, config: &PublishConfig) -> Result<PublishOutcome, PublishError> {
+        self.publish_controlled(
+            config,
+            &vibe_core::cancellation::CancellationToken::default(),
+        )
+    }
+
+    /// Stop future effects at owner checkpoints; accepted remote writes are never undone.
+    pub fn publish_controlled(
+        &self,
+        config: &PublishConfig,
+        cancellation: &vibe_core::cancellation::CancellationToken,
+    ) -> Result<PublishOutcome, PublishError> {
+        let mut creation = "not-started";
+        let mut push = "not-started";
+        let result = self.publish_inner(config, cancellation, &mut creation, &mut push);
+        if cancellation.acknowledged() {
+            if let Err(error @ PublishError::Cancelled { .. }) = result {
+                return Err(error);
+            }
+            return Err(PublishError::Cancelled {
+                repository_creation: creation.into(),
+                release_push: push.into(),
+                reason: result
+                    .err()
+                    .map(|error| error.to_string())
+                    .unwrap_or_default(),
+            });
+        }
+        result
+    }
+
+    fn publish_inner(
+        &self,
+        config: &PublishConfig,
+        cancellation: &vibe_core::cancellation::CancellationToken,
+        creation: &mut &'static str,
+        push: &mut &'static str,
+    ) -> Result<PublishOutcome, PublishError> {
+        let check = || {
+            cancellation
+                .checkpoint()
+                .map_err(|error| PublishError::Git(error.to_string()))
+        };
+        check()?;
+
         // Step 1: read the package manifest. `publish` only operates on
         // a publishable `[package]` manifest; a `[project]`-only or
         // `[workspace]`-only `vibe.toml` is rejected as source-invalid.
@@ -209,7 +254,15 @@ impl<'c, C: RepoCreator + ?Sized> Publisher<'c, C> {
             let submodules = if config.dry_run {
                 git_publish::inspect_submodules(&config.source_dir)?
             } else {
-                git_publish::push_release(&config.source_dir, direct_url, &tag, &name, &version)?
+                git_publish::push_release_controlled(
+                    &config.source_dir,
+                    direct_url,
+                    &tag,
+                    &name,
+                    &version,
+                    cancellation,
+                    push,
+                )?
             };
             return Ok(PublishOutcome {
                 kind,
@@ -247,7 +300,11 @@ impl<'c, C: RepoCreator + ?Sized> Publisher<'c, C> {
         let validated_org = self.creator.validate_scope(&org_segment)?;
 
         // Step 3: figure out repo presence.
-        let exists = self.creator.repo_exists(&validated_org, &repo_name)?;
+        check()?;
+        let exists =
+            self.creator
+                .repo_exists_controlled(&validated_org, &repo_name, cancellation)?;
+        check()?;
         let mut created_repo = false;
 
         let repo_info = if exists {
@@ -274,9 +331,19 @@ impl<'c, C: RepoCreator + ?Sized> Publisher<'c, C> {
                 default_branch: Some("main".to_string()),
                 homepage: meta.homepage.clone(),
             };
-            let info = self
-                .creator
-                .create_repo(&validated_org, &repo_name, &opts)?;
+            check()?;
+            *creation = "unknown";
+            let created = self.creator.create_repo_controlled(
+                &validated_org,
+                &repo_name,
+                &opts,
+                cancellation,
+            );
+            if created.is_ok() {
+                *creation = "completed";
+            }
+            check()?;
+            let info = created?;
             created_repo = true;
             info
         };
@@ -293,7 +360,15 @@ impl<'c, C: RepoCreator + ?Sized> Publisher<'c, C> {
             git_publish::inspect_submodules(&config.source_dir)?
         } else {
             let push_url = self.creator.push_url(&validated_org, &repo_name);
-            git_publish::push_release(&config.source_dir, &push_url, &tag, &name, &version)?
+            git_publish::push_release_controlled(
+                &config.source_dir,
+                &push_url,
+                &tag,
+                &name,
+                &version,
+                cancellation,
+                push,
+            )?
         };
 
         Ok(PublishOutcome {

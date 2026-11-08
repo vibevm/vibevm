@@ -58,7 +58,7 @@ pub struct ShellGit {
     // the lock means the client could not be built at all — then there
     // is no fast path and every read goes to git, which is the same
     // answer as "not a host we know".
-    raw_client: OnceLock<Option<reqwest::blocking::Client>>,
+    raw_client: OnceLock<Option<crate::http_admission::ManagedHttpClient>>,
     // Where the fast path's pauses between retries go. Real time in
     // production; a test hands in a recorder, so a suite that asserts
     // the backoff schedule never spends it.
@@ -80,6 +80,7 @@ impl Default for ShellGit {
     }
 }
 
+pub mod controlled;
 mod sleeper;
 pub(super) use sleeper::Sleeper;
 
@@ -91,17 +92,6 @@ impl ShellGit {
             .unwrap_or_else(|| PathBuf::from("git"))
     }
 
-    /// The shared HTTP client of the read fast path, built on first use.
-    ///
-    /// `None` when it could not be built — a broken TLS backend, not a
-    /// transient condition, so the failed attempt is cached like any
-    /// other and the reads all go to git instead of re-paying it.
-    fn raw_client(&self) -> Option<&reqwest::blocking::Client> {
-        self.raw_client
-            .get_or_init(|| raw_http::build_client(self.admission.as_deref()))
-            .as_ref()
-    }
-
     fn admit_native(&self) -> Result<(), GitError> {
         if self.native.is_some() {
             return Err(native_admission::unavailable());
@@ -110,27 +100,6 @@ impl ShellGit {
             return Err(crate::ContactRefusal::NativeTransportUnavailable.into());
         }
         Ok(())
-    }
-
-    /// Verify that the configured git binary responds to `--version`.
-    ///
-    /// Caches the result on this instance. Subsequent calls are free.
-    pub fn preflight(&self) -> Result<(), GitError> {
-        if let Some(native) = &self.native {
-            return native.preflight();
-        }
-        self.admit_native()?;
-        let ok = *self.preflight_cache.get_or_init(|| {
-            let mut cmd = Command::new(&self.binary);
-            apply_common_env(&mut cmd, self.force_anonymous);
-            cmd.arg("--version");
-            cmd.output().map(|o| o.status.success()).unwrap_or(false)
-        });
-        if ok {
-            Ok(())
-        } else {
-            Err(GitError::NotInstalled)
-        }
     }
 
     fn run(&self, args: &[&str], cwd: Option<&Path>) -> Result<Output, GitError> {
@@ -147,10 +116,14 @@ impl ShellGit {
 
         tracing::debug!(target: "vibe_registry::git", argv = ?render_argv(&self.binary, args), cwd = ?cwd, "running git");
 
-        let output = cmd.output().map_err(|e| GitError::Io {
-            cmd: render_argv(&self.binary, args),
-            source: e,
-        })?;
+        let output = controlled::output(
+            &mut cmd,
+            super::transfers::current()
+                .progress
+                .unwrap_or_default()
+                .cancellation(),
+        )
+        .map_err(|e| controlled::git_error(e, render_argv(&self.binary, args)))?;
         if output.status.success() {
             return Ok(output);
         }
@@ -173,10 +146,14 @@ impl ShellGit {
 
         tracing::debug!(target: "vibe_registry::git", argv = ?render_argv(&self.binary, args), cwd = ?cwd, "running git (raw)");
 
-        cmd.output().map_err(|e| GitError::Io {
-            cmd: render_argv(&self.binary, args),
-            source: e,
-        })
+        controlled::output(
+            &mut cmd,
+            super::transfers::current()
+                .progress
+                .unwrap_or_default()
+                .cancellation(),
+        )
+        .map_err(|e| controlled::git_error(e, render_argv(&self.binary, args)))
     }
 }
 
@@ -186,6 +163,12 @@ impl GitBackend for ShellGit {
             .as_ref()
             .map(|native| native.serving_endpoint(objects))
             .transpose()
+    }
+    fn preflight_selected_address(&self, address: &str) -> Result<(), GitError> {
+        match &self.native {
+            Some(native) => native.profile.preflight_selected_address(address),
+            None => Ok(()),
+        }
     }
     fn preflight_registry_auth(&self, auth: vibe_core::manifest::AuthKind) -> Result<(), GitError> {
         if let Some(bound) = self.native_registry_auth
@@ -228,20 +211,30 @@ impl GitBackend for ShellGit {
         reuse: Option<&Path>,
         objects: &Path,
     ) -> Result<Option<native_admission::NativeSource>, GitError> {
-        self.native
-            .as_ref()
-            .map(|native| {
-                native.acquire(native_admission::Preparation {
-                    reporter: self,
-                    address: url,
-                    reference,
-                    reuse,
-                    objects,
-                    destination: objects,
-                    anonymous: self.force_anonymous,
-                })
-            })
-            .transpose()
+        native_admission::acquire_source(
+            self,
+            url,
+            reference,
+            reuse,
+            objects,
+            native_admission::SourceAddress::WarmOrigin,
+        )
+    }
+    fn prepare_pinned_native_source(
+        &self,
+        url: &str,
+        reference: &str,
+        reuse: Option<&Path>,
+        objects: &Path,
+    ) -> Result<Option<native_admission::NativeSource>, GitError> {
+        native_admission::acquire_source(
+            self,
+            url,
+            reference,
+            reuse,
+            objects,
+            native_admission::SourceAddress::Pinned,
+        )
     }
     fn uses_native_materialisation(&self) -> bool {
         self.native.is_some()
@@ -351,9 +344,17 @@ impl GitBackend for ShellGit {
     }
 
     fn working_tree_dirty(&self, dest: &Path) -> Result<bool, GitError> {
+        if let Some(native) = &self.native {
+            return native.working_tree_dirty(dest);
+        }
         self.preflight()?;
+        // A dirtiness probe must not write the checkout: without
+        // `--no-optional-locks` `git status` refreshes `.git/index`'s stat
+        // cache, which is a change to the slot a refusal promises to leave
+        // untouched (the native twin pins `GIT_OPTIONAL_LOCKS=0` likewise).
         let output = self.run(
             &[
+                "--no-optional-locks",
                 "status",
                 "--porcelain=v1",
                 "-z",
@@ -404,12 +405,10 @@ impl GitBackend for ShellGit {
     fn fetch_file_at_ref(&self, url: &str, refname: &str, path: &str) -> Result<Vec<u8>, GitError> {
         if let Some(native) = &self.native {
             native.preflight()?;
-            let temporary = tempfile::tempdir().map_err(|source| GitError::Io {
-                cmd: "preparing native file read".into(),
-                source,
-            })?;
+            let temporary = native.profile.temporary("native-file-")?;
             let objects = temporary.path().join("objects.git");
             let revision = native.prepare(native_admission::Preparation {
+                source_address: native_admission::SourceAddress::WarmOrigin,
                 reporter: self,
                 address: url,
                 reference: refname,
@@ -487,33 +486,7 @@ impl GitBackend for ShellGit {
                 path: normalized,
             });
         }
-        if combined_lc.contains("operation not supported by protocol")
-            || combined_lc.contains("upload-archive")
-                && (combined_lc.contains("not permitted")
-                    || combined_lc.contains("not allowed")
-                    || combined_lc.contains("disabled"))
-        {
-            return Err(GitError::ArchiveUnsupported {
-                url: without_userinfo(url),
-            });
-        }
-        // GitHub disables `upload-archive` server-side. The HTTPS smart
-        // protocol response is `HTTP 422` with the local git complaining
-        // `expected ACK/NAK, got a flush packet` (verified 2026-04-29).
-        // Treat that pattern as ArchiveUnsupported so callers fall back
-        // to a clone — the same path other Gitea-clones / Forgejo /
-        // SourceHut take when they don't expose `upload-archive` either.
-        if (combined_lc.contains("http 422") || combined_lc.contains("error: 422"))
-            && combined_lc.contains("git archive")
-        {
-            return Err(GitError::ArchiveUnsupported {
-                url: without_userinfo(url),
-            });
-        }
-        if combined_lc.contains("git archive")
-            && combined_lc.contains("expected ack/nak")
-            && combined_lc.contains("flush packet")
-        {
+        if archive_unsupported(&combined_lc) {
             return Err(GitError::ArchiveUnsupported {
                 url: without_userinfo(url),
             });

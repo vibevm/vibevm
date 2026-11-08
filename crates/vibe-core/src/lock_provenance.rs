@@ -1,20 +1,9 @@
-//! `vibe.lock.provenance` — where the bytes of each locked package
-//! actually came from (`PROP-066#provenance`).
+//! Project-recorded acquisition facts beside the shared lock.
 //!
-//! PROP-066 asks for `fetched_from` beside `source_url` on every
-//! `[[package]]` row of `vibe.lock`, on the understanding that an older
-//! vibe would ignore a field it does not know. It would not: every
-//! lockfile struct carries `#[serde(deny_unknown_fields)]`, so a lock
-//! written with the extra key would make an older binary fail to read the
-//! lock at all — the one file a project cannot afford to make
-//! unreadable. The PROP's own fallback applies: the fact is recorded in
-//! this sidecar instead, which an older vibe never opens.
-//!
-//! The sidecar is **provenance, not identity**. It is written beside the
-//! lock, it is regenerated on every install, and nothing resolves,
-//! verifies or materialises from it: deleting it loses a record of where
-//! bytes came from and changes nothing about what is installed. That is
-//! also why its absence is never an error.
+//! These historical report rows are not current-machine acquisition evidence
+//! and never select, verify or materialise a source. Runtime/user/invocation
+//! routes belong to operation evidence and user-local journals. An unchanged
+//! canonical selection may retain these rows without claiming a new contact.
 
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-066#provenance");
 
@@ -91,10 +80,7 @@ pub struct LockProvenance {
 }
 
 impl LockProvenance {
-    /// Whether anything was recorded. An install where every package came
-    /// from its canonical origin records nothing, and the sidecar is then
-    /// removed rather than written empty: an empty file would claim to be
-    /// a record of a run that had nothing to record.
+    /// Whether the optional project-recorded report contains any rows.
     pub fn is_empty(&self) -> bool {
         self.packages.is_empty()
     }
@@ -112,6 +98,19 @@ impl LockProvenance {
             return Ok(Self::default());
         }
         read_toml(path)
+    }
+
+    /// Decode a captured project-recorded report, never an acquisition grant.
+    /// ```
+    /// let record=vibe_core::lock_provenance::LockProvenance::parse_str("# no recorded rows").unwrap();
+    /// assert!(record.is_empty());
+    /// ```
+    pub fn parse_str(text: &str) -> Result<Self> {
+        toml::from_str(text).map_err(|_| Error::InvalidLockfile {
+            reason:
+                "vibe.lock.provenance is malformed; retain it rather than guessing recorded rows"
+                    .into(),
+        })
     }
 
     /// Prepare the exact sorted sidecar text from captured decoration.

@@ -26,7 +26,7 @@ use process::is_concurrent_ref_rejection;
 pub use process::redact_credentials;
 use process::{
     classify_remote_output, git_command_in_temp, push_with_classification, run_git_in,
-    run_remote_git_in, staged_tree_changed,
+    run_remote_git_in,
 };
 
 mod submodules;
@@ -64,6 +64,43 @@ pub fn push_release(
     Ok(submodules)
 }
 
+pub(crate) fn push_release_controlled(
+    source_dir: &Path,
+    clone_url: &str,
+    tag: &str,
+    package_name: &str,
+    version: &semver::Version,
+    cancellation: &vibe_core::cancellation::CancellationToken,
+    effect: &mut &'static str,
+) -> Result<Vec<SubmoduleProvenance>, PublishError> {
+    let check = || {
+        cancellation
+            .checkpoint()
+            .map_err(|error| PublishError::Git(error.to_string()))
+    };
+    check()?;
+    let submodules = submodules::inspect_controlled(source_dir, cancellation)?;
+    let result = push_release_inner_controlled(
+        source_dir,
+        clone_url,
+        tag,
+        package_name,
+        version,
+        |_| {
+            check()?;
+            *effect = "unknown";
+            Ok(())
+        },
+        cancellation,
+    );
+    if result.is_ok() && *effect == "unknown" {
+        *effect = "completed";
+    }
+    check()?;
+    result?;
+    Ok(submodules)
+}
+
 /// Inspect the submodules that a publish would flatten, without changing the
 /// source or a remote. Used to make dry-run reporting match real publication.
 pub fn inspect_submodules(source_dir: &Path) -> Result<Vec<SubmoduleProvenance>, PublishError> {
@@ -88,7 +125,46 @@ fn push_release_inner<F>(
 where
     F: FnOnce(&Path) -> Result<(), PublishError>,
 {
-    let snapshot = release_ref_snapshot(clone_url, tag)?;
+    push_release_inner_controlled(
+        source_dir,
+        clone_url,
+        tag,
+        package_name,
+        version,
+        before_push,
+        &vibe_core::cancellation::CancellationToken::default(),
+    )
+}
+
+fn push_release_inner_controlled<F>(
+    source_dir: &Path,
+    clone_url: &str,
+    tag: &str,
+    package_name: &str,
+    version: &semver::Version,
+    before_push: F,
+    cancellation: &vibe_core::cancellation::CancellationToken,
+) -> Result<(), PublishError>
+where
+    F: FnOnce(&Path) -> Result<(), PublishError>,
+{
+    cancellation
+        .checkpoint()
+        .map_err(|error| PublishError::Git(error.to_string()))?;
+    let run_git_in =
+        |cwd: &Path, args: &[&str]| process::run_git_controlled(cwd, args, cancellation);
+    let run_remote_git_in = |cwd: &Path, args: &[&str], url: &str| {
+        process::run_remote_controlled(cwd, args, url, cancellation)
+    };
+    let rev_parse = |cwd: &Path, reference: &str| -> Result<String, PublishError> {
+        let output = run_git_in(cwd, &["rev-parse", "--verify", reference])?;
+        let oid = String::from_utf8_lossy(&output.stdout).trim().to_owned();
+        if oid.is_empty() {
+            return Err(PublishError::Git("empty controlled object id".into()));
+        }
+        Ok(oid)
+    };
+    let snapshot = release_ref_snapshot_controlled(clone_url, tag, cancellation)?;
     let staging = TempDir::new().map_err(|e| PublishError::Io {
         path: std::env::temp_dir(),
         message: format!("creating publish staging dir: {e}"),
@@ -135,12 +211,15 @@ where
     // Replace the checkout payload wholesale. This is what makes a
     // republished tree exact rather than merely overlaying new files on
     // top of stale bytes from the previous release.
+    cancellation
+        .checkpoint()
+        .map_err(|error| PublishError::Git(error.to_string()))?;
     clear_payload_tree(staging_path)?;
-    copy_dir(source_dir, staging_path)?;
+    copy_dir_controlled(source_dir, staging_path, cancellation)?;
     run_git_in(staging_path, &["add", "-A"])?;
 
     let tree_changed = if snapshot.main.is_some() {
-        staged_tree_changed(staging_path)?
+        process::staged_tree_changed_controlled(staging_path, cancellation)?
     } else {
         true
     };
@@ -163,12 +242,16 @@ where
     run_git_in(staging_path, &["tag", "-f", "-a", tag, "-m", &tag_msg])?;
 
     before_push(staging_path)?;
-    push_release_refs(staging_path, clone_url, tag, &snapshot)?;
+    push_release_refs(staging_path, clone_url, tag, &snapshot, cancellation)?;
 
     Ok(())
 }
 
-fn release_ref_snapshot(clone_url: &str, tag: &str) -> Result<ReleaseRefSnapshot, PublishError> {
+fn release_ref_snapshot_controlled(
+    clone_url: &str,
+    tag: &str,
+    cancellation: &vibe_core::cancellation::CancellationToken,
+) -> Result<ReleaseRefSnapshot, PublishError> {
     let main_ref = "refs/heads/main";
     let tag_ref = format!("refs/tags/{tag}");
     let peeled_tag_ref = format!("{tag_ref}^{{}}");
@@ -180,7 +263,11 @@ fn release_ref_snapshot(clone_url: &str, tag: &str) -> Result<ReleaseRefSnapshot
         tag_ref.as_str(),
         peeled_tag_ref.as_str(),
     ];
-    let output = git_command_in_temp(&args).output().map_err(|e| {
+    let output = vibe_registry::git_backend::shell::controlled::output(
+        &mut git_command_in_temp(&args),
+        cancellation,
+    )
+    .map_err(|e| {
         PublishError::Git(format!(
             "spawning git ls-remote {}: {e}",
             redact_credentials(clone_url)
@@ -216,6 +303,7 @@ fn push_release_refs(
     clone_url: &str,
     tag: &str,
     snapshot: &ReleaseRefSnapshot,
+    cancellation: &vibe_core::cancellation::CancellationToken,
 ) -> Result<(), PublishError> {
     let main_lease = format!(
         "--force-with-lease=refs/heads/main:{}",
@@ -240,7 +328,21 @@ fn push_release_refs(
         "HEAD:refs/heads/main",
         tag_refspec.as_str(),
     ];
-    push_with_classification(staging_path, &args, clone_url)
+    let output = vibe_registry::git_backend::shell::controlled::output(
+        &mut process::git_command(staging_path, &args),
+        cancellation,
+    )
+    .map_err(|error| PublishError::Git(format!("controlled release push: {error}")))?;
+    if !output.status.success()
+        && process::is_concurrent_ref_rejection(
+            &String::from_utf8_lossy(&output.stderr).to_lowercase(),
+        )
+    {
+        return Err(PublishError::ConcurrentUpdate {
+            repo: redact_credentials(clone_url),
+        });
+    }
+    process::classify_remote_output(&output, clone_url, "push")
 }
 
 /// Initialise a temp git repo, copy `source_dir` contents into it, commit
@@ -434,127 +536,8 @@ pub fn shallow_clone(clone_url: &str) -> Result<TempDir, PublishError> {
 /// Recursively copy `src` → `dst`. Skips `.git` and `.gitmodules` at any
 /// depth: populated submodule bytes become ordinary files, so shipping the
 /// declarations would leave a dangling and misleading Git boundary.
-fn copy_dir(src: &Path, dst: &Path) -> Result<(), PublishError> {
-    std::fs::create_dir_all(dst).map_err(|e| PublishError::Io {
-        path: dst.to_path_buf(),
-        message: format!("create_dir_all: {e}"),
-    })?;
-    for entry in walk(src)? {
-        let path = entry;
-        let rel = path
-            .strip_prefix(src)
-            .map_err(|_| PublishError::Io {
-                path: path.clone(),
-                message: format!("walked path escaped its copy root `{}`", src.display()),
-            })?
-            .to_path_buf();
-        if rel.components().any(|c| {
-            c.as_os_str() == std::ffi::OsStr::new(".git")
-                || c.as_os_str() == std::ffi::OsStr::new(".gitmodules")
-        }) {
-            continue;
-        }
-        let target = dst.join(&rel);
-        if path.is_dir() {
-            std::fs::create_dir_all(&target).map_err(|e| PublishError::Io {
-                path: target.clone(),
-                message: format!("create_dir_all: {e}"),
-            })?;
-        } else if path.is_file() {
-            if let Some(parent) = target.parent() {
-                std::fs::create_dir_all(parent).map_err(|e| PublishError::Io {
-                    path: parent.to_path_buf(),
-                    message: format!("create_dir_all: {e}"),
-                })?;
-            }
-            std::fs::copy(&path, &target).map_err(|e| PublishError::Io {
-                path: target.clone(),
-                message: format!("copy: {e}"),
-            })?;
-        }
-    }
-    Ok(())
-}
-
-/// Manual recursive walk; avoids pulling `walkdir` into this crate's
-/// runtime deps for one helper.
-fn walk(root: &Path) -> Result<Vec<std::path::PathBuf>, PublishError> {
-    let mut out = Vec::new();
-    let mut stack = vec![root.to_path_buf()];
-    while let Some(p) = stack.pop() {
-        if p.is_dir() {
-            let entries = std::fs::read_dir(&p).map_err(|e| PublishError::Io {
-                path: p.clone(),
-                message: format!("read_dir: {e}"),
-            })?;
-            for entry in entries {
-                let entry = entry.map_err(|e| PublishError::Io {
-                    path: p.clone(),
-                    message: format!("read_dir entry: {e}"),
-                })?;
-                let path = entry.path();
-                stack.push(path.clone());
-                if path.is_file() {
-                    out.push(path);
-                }
-            }
-        } else if p.is_file() {
-            out.push(p);
-        }
-    }
-    Ok(out)
-}
-
-fn clear_payload_tree(staging_path: &Path) -> Result<(), PublishError> {
-    // This helper is intentionally destructive only inside the freshly
-    // initialised temp repository. Requiring its `.git` sentinel makes an
-    // accidental call against a source/package directory fail closed.
-    if !staging_path.join(".git").is_dir() {
-        return Err(PublishError::Git(format!(
-            "refusing to clear publish staging directory without `.git`: {}",
-            staging_path.display()
-        )));
-    }
-    let entries = std::fs::read_dir(staging_path).map_err(|e| PublishError::Io {
-        path: staging_path.to_path_buf(),
-        message: format!("reading publish staging directory: {e}"),
-    })?;
-    for entry in entries {
-        let entry = entry.map_err(|e| PublishError::Io {
-            path: staging_path.to_path_buf(),
-            message: format!("reading publish staging entry: {e}"),
-        })?;
-        if entry.file_name() == std::ffi::OsStr::new(".git") {
-            continue;
-        }
-        let path = entry.path();
-        let file_type = entry.file_type().map_err(|e| PublishError::Io {
-            path: path.clone(),
-            message: format!("reading file type: {e}"),
-        })?;
-        let result = if file_type.is_dir() {
-            std::fs::remove_dir_all(&path)
-        } else {
-            std::fs::remove_file(&path)
-        };
-        result.map_err(|e| PublishError::Io {
-            path,
-            message: format!("clearing previous release payload: {e}"),
-        })?;
-    }
-    Ok(())
-}
-
-fn rev_parse(cwd: &Path, reference: &str) -> Result<String, PublishError> {
-    let output = run_git_in(cwd, &["rev-parse", "--verify", reference])?;
-    let oid = String::from_utf8_lossy(&output.stdout).trim().to_string();
-    if oid.is_empty() {
-        return Err(PublishError::Git(format!(
-            "git rev-parse returned an empty object id for `{reference}`"
-        )));
-    }
-    Ok(oid)
-}
+mod payload;
+use payload::*;
 
 #[cfg(test)]
 #[path = "git_publish/tests.rs"]

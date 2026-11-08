@@ -20,6 +20,9 @@ use vibe_resolver::{
 use vibe_workspace::hooks::HookPolicy;
 use vibe_workspace::install::ResolvedDep;
 
+#[path = "support/retained.rs"]
+mod retained;
+
 const GROUP: &str = "org.test";
 
 struct PackageFixture {
@@ -27,7 +30,11 @@ struct PackageFixture {
     directory: PathBuf,
 }
 
+/// Fixture packages live in a real directory registry
+/// (`<registry>/<group>/<name>/v<version>/vibe.toml`); planning solves it
+/// through the production local-registry cell.
 struct TestSource {
+    registry: PathBuf,
     packages: BTreeMap<(String, semver::Version), PackageFixture>,
     fetches: RefCell<Vec<String>>,
     masked_solves: Cell<usize>,
@@ -96,6 +103,39 @@ impl VersionEnumerator for TestProvider<'_> {
 }
 
 impl InstallSource for TestSource {
+    fn source_solve_limits(&self) -> Result<vibe_resolver::SourceSolveLimits, SolveError> {
+        retained::limits()
+    }
+
+    fn solve_metadata(
+        &self,
+        request: &vibe_resolver::SourceSolveRequest<'_>,
+    ) -> Result<vibe_resolver::SourceResolvedGraph, SolveError> {
+        if !request.blocked.is_empty() {
+            self.masked_solves.set(self.masked_solves.get() + 1);
+        } else if let Some(graph) = self.initial_graph.borrow().clone() {
+            return self.injected_initial(request, graph);
+        }
+        retained::solve(&self.registry, request)
+    }
+
+    fn acquire_candidate_for_install(
+        &self,
+        candidate: &vibe_registry::source_candidates::RetainedSourceCandidate,
+        store_root: &Path,
+        expected_hash: Option<&str>,
+        slot: &Path,
+        progress: &vibe_core::progress::Progress,
+    ) -> Result<vibe_registry::PackageAcquisition, RegistryError> {
+        self.acquire_for_install(
+            &retained::exact(candidate),
+            store_root,
+            expected_hash,
+            slot,
+            progress,
+        )
+    }
+
     fn resolve_and_fetch(
         &self,
         pkgref: &PackageRef,
@@ -111,6 +151,8 @@ impl InstallSource for TestSource {
             .unwrap();
         self.fetches.borrow_mut().push(pkgref.qualified_name());
         Ok(CachedPackage {
+            locked_selection: None,
+            route_publication: vibe_core::RoutePublication::Local,
             recorded_source_kind: None,
             store_reused: None,
             acquisition: None,
@@ -176,6 +218,77 @@ impl InstallSource for TestSource {
     }
 }
 
+impl TestSource {
+    /// The injected first-pass graph, bound to retained metadata for exactly
+    /// its nodes. Each node's metadata comes from a real registry solve that
+    /// masks one injected edge of ANOTHER parent, so the node's own manifest
+    /// view stays unmasked — the same unmasked manifests the injected graph
+    /// was paired with before.
+    fn injected_initial(
+        &self,
+        request: &vibe_resolver::SourceSolveRequest<'_>,
+        graph: ResolvedGraph,
+    ) -> Result<vibe_resolver::SourceResolvedGraph, SolveError> {
+        let edges: Vec<(String, String)> = graph
+            .packages
+            .iter()
+            .flat_map(|parent| {
+                parent.dependencies.iter().map(move |target| {
+                    (
+                        format!("{}/{}", parent.group, parent.name),
+                        target.qualified_name(),
+                    )
+                })
+            })
+            .collect();
+        let mut selected = BTreeMap::new();
+        for node in &graph.packages {
+            let coordinate = format!("{}/{}", node.group, node.name);
+            let masks = std::iter::once(BTreeSet::new()).chain(
+                edges
+                    .iter()
+                    .filter(|(parent, _)| parent != &coordinate)
+                    .map(|edge| BTreeSet::from([edge.clone()])),
+            );
+            let metadata = masks
+                .filter_map(|blocked| {
+                    let solved = retained::solve(
+                        &self.registry,
+                        &vibe_resolver::SourceSolveRequest {
+                            roots: request.roots,
+                            held_roots: request.held_roots,
+                            authoritative_locked: request.authoritative_locked,
+                            activated: request.activated,
+                            limits: request.limits,
+                            configuration: request.configuration,
+                            blocked: &blocked,
+                        },
+                    )
+                    .ok()?;
+                    solved
+                        .selected
+                        .get(&(node.group.clone(), node.name.clone()))
+                        .filter(|metadata| metadata.candidate.version() == &node.version)
+                        .cloned()
+                })
+                .next()
+                .ok_or_else(|| {
+                    DepProviderError::Other(format!(
+                        "no registry solve retains injected {coordinate}@{}",
+                        node.version
+                    ))
+                })?;
+            selected.insert((node.group.clone(), node.name.clone()), metadata);
+        }
+        Ok(vibe_resolver::SourceResolvedGraph {
+            graph,
+            selected_before_projection: selected.clone(),
+            selected,
+            active_edges: Vec::new(),
+        })
+    }
+}
+
 struct Fixture {
     _temp: TempDir,
     root: PathBuf,
@@ -194,9 +307,11 @@ impl Fixture {
             ),
         )
         .unwrap();
+        let registry = temp.path().join("registry");
+        fs::create_dir_all(&registry).unwrap();
         let mut fixtures = BTreeMap::new();
         for (name, version, tail) in packages {
-            let directory = temp.path().join("registry").join(name).join(version);
+            let directory = registry.join(GROUP).join(name).join(format!("v{version}"));
             fs::create_dir_all(&directory).unwrap();
             let text = format!(
                 "[package]\ngroup = \"{GROUP}\"\nname = \"{name}\"\nkind = \"flow\"\nversion = \"{version}\"\n{tail}"
@@ -217,6 +332,7 @@ impl Fixture {
             _temp: temp,
             root,
             source: TestSource {
+                registry,
                 packages: fixtures,
                 fetches: RefCell::new(Vec::new()),
                 masked_solves: Cell::new(0),

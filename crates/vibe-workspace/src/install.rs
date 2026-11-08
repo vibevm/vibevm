@@ -53,7 +53,7 @@ pub mod model;
 mod rollback;
 mod slot_lifecycle;
 mod subtree;
-use rollback::InstallRollback;
+pub use rollback::InstallRollback;
 pub use subtree::{
     materialise_subtree, materialise_subtree_with_spec_format,
     materialise_subtree_with_spec_format_and_slot_lifecycle,
@@ -211,7 +211,7 @@ struct MaterialiseOptions<'a> {
     lifecycle: MaterialiseLifecycle<'a>,
     progress: vibe_core::progress::Progress,
     /// The apply's undo log, when the caller can still undo the slots it
-    /// places; `None` for a scoped update, which has no later step to fail.
+    /// places; a scoped update hands in the log its prune already wrote to.
     rollback: Option<&'a mut InstallRollback>,
 }
 

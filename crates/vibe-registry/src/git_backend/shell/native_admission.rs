@@ -1,4 +1,4 @@
-//! Explicit direct HTTPS/SSH preparation; no ambient Git execution authority.
+//! Explicit direct HTTP(S)/SSH preparation; no ambient Git execution authority.
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-073#NATIVE-PREPARATION");
 use super::{GitError, GitPreparedRevision};
 use reqwest::Url;
@@ -14,7 +14,9 @@ mod child_layout;
 pub(super) mod ssh;
 pub use ssh::{SshAuthentication, SshProfile};
 mod context;
+mod operation_inputs;
 pub use capture::NativeConfigSelection;
+pub use operation_inputs::{SshConfigurationProvider, TlsTrust, TlsTrustProvider};
 mod materialisation;
 pub use materialisation::NativeMaterialisation;
 mod gitlinks;
@@ -50,14 +52,6 @@ impl GitInstallation {
         })
     }
 }
-/// Explicit TLS trust input. Verification is always enabled.
-#[derive(Debug)]
-pub enum TlsTrust {
-    /// The trusted Git installation's system certificate store.
-    System,
-    /// Captured PEM certificate authorities, copied only into the operation home.
-    Pem(Vec<u8>),
-}
 /// Immutable native capability, distinct from HTTP-only admission.
 /// HTTPS is selected initially; SSH requires an explicit additional profile.
 ///
@@ -81,11 +75,16 @@ pub struct NativeGitAdmission {
     selection: Option<NativeConfigSelection>,
     ssh: Vec<SshProfile>,
     ssh_configuration: Option<Arc<SshConfiguration>>,
+    ssh_provider: Option<Arc<dyn SshConfigurationProvider>>,
+    acquisition_root: Option<PathBuf>,
     discovery: Option<HttpDiscoveryTrust>,
 }
 impl NativeGitAdmission {
-    /// Select direct HTTPS with caller-trusted Git and TLS inputs. This does not
-    /// authorize legacy checkout, SSH, redirects or recursive submodules.
+    /// Select direct HTTPS with caller-trusted Git and TLS inputs. A configured
+    /// plain `http://` endpoint is admitted under the same address, redirect,
+    /// proxy and credential controls, without TLS and never with credentials.
+    /// This does not authorize legacy checkout, SSH, redirects or recursive
+    /// submodules.
     /// Native execution requires Git 2.53 or newer; the bounded recipe is
     /// integration-tested with 2.53.0, independently of legacy Git support.
     pub fn direct_https(
@@ -100,6 +99,8 @@ impl NativeGitAdmission {
             selection: None,
             ssh: Vec::new(),
             ssh_configuration: None,
+            ssh_provider: None,
+            acquisition_root: None,
             discovery: None,
         }
     }
@@ -139,7 +140,12 @@ impl NativeGitAdmission {
         use vibe_core::manifest::AuthKind;
         match auth {
             AuthKind::None | AuthKind::TokenEnv => Ok(()),
-            AuthKind::Ssh if !self.ssh.is_empty() || self.ssh_configuration.is_some() => Ok(()),
+            AuthKind::Ssh
+                if !self.ssh.is_empty()
+                    || (self.ssh_configuration.is_some() || self.ssh_provider.is_some()) =>
+            {
+                Ok(())
+            }
             _ => Err(unsupported(
                 "declared credential route requires a separate admitted profile",
             )),
@@ -181,124 +187,20 @@ fn full_oid(s: &str) -> bool {
 // Neither credentials nor SSH trust/key material have a Debug surface.
 #[derive(Clone, Copy)]
 pub(in crate::git_backend::shell) enum NativeProtocol {
+    /// Plain HTTP the caller configured; admitted like HTTPS but without TLS.
+    Http,
     Https,
     Ssh,
 }
-enum AdmittedRemote {
-    Https {
-        url: Url,
-        authorization: Option<String>,
-    },
-    Ssh(ssh::Remote),
-}
-impl AdmittedRemote {
-    fn address(&self) -> &str {
-        match self {
-            Self::Https { url, .. } => url.as_str(),
-            Self::Ssh(remote) => &remote.address,
-        }
-    }
-    fn protocol(&self) -> NativeProtocol {
-        match self {
-            Self::Https { .. } => NativeProtocol::Https,
-            Self::Ssh(_) => NativeProtocol::Ssh,
-        }
-    }
-}
-impl NativeGitAdmission {
-    // Metadata/address capture never grants use of an SSH credential.
-    fn capture_address(
-        &self,
-        address: &str,
-        reject_https_credentials: bool,
-    ) -> Result<AdmittedRemote, GitError> {
-        if address.chars().any(char::is_control) {
-            return Err(unsupported("control character in endpoint"));
-        }
-        if address.starts_with("ssh://") || (!address.contains("://") && address.contains(':')) {
-            let mut selected = None;
-            for (index, profile) in self.ssh.iter().enumerate() {
-                if let Some(remote) = profile.capture_candidate(address, &self.binding, index)?
-                    && selected.replace(remote).is_some()
-                {
-                    return Err(unsupported("ambiguous exact SSH grants for this address"));
-                }
-            }
-            if let Some(configuration) = &self.ssh_configuration {
-                let profile = Arc::new(configuration.profile(address, &self.binding)?);
-                let remote = ssh::captured_remote(profile, address, &self.binding)?;
-                if selected.replace(remote).is_some() {
-                    return Err(unsupported("explicit and captured SSH grants overlap"));
-                }
-            }
-            return selected
-                .map(AdmittedRemote::Ssh)
-                .ok_or_else(|| unsupported("SSH endpoint requires one exact selected profile"));
-        }
-        let mut url =
-            Url::parse(address).map_err(|_| unsupported("direct HTTPS endpoint required"))?;
-        if url.scheme() != "https" || url.query().is_some() || url.fragment().is_some() {
-            return Err(unsupported(
-                "only direct HTTPS without query or fragment is supported",
-            ));
-        }
-        let authorization = if !url.username().is_empty() || url.password().is_some() {
-            if reject_https_credentials || url.username() != "x-access-token" {
-                return Err(unsupported("unsupported credential route"));
-            }
-            let password = url
-                .password()
-                .ok_or_else(|| unsupported("token credential is incomplete"))?;
-            // Existing token-env injection uses literal tokens. Encoded/ambiguous
-            // userinfo is not silently reinterpreted as a different password.
-            if password.contains('%') {
-                return Err(unsupported("encoded token credential is unsupported"));
-            }
-            let client = reqwest::blocking::Client::new();
-            let request = client
-                .get("https://127.0.0.1/")
-                .basic_auth("x-access-token", Some(password))
-                .build()
-                .map_err(|_| unsupported("invalid token credential"))?;
-            Some(
-                request.headers()[reqwest::header::AUTHORIZATION]
-                    .to_str()
-                    .map_err(|_| unsupported("invalid token header"))?
-                    .to_owned(),
-            )
-        } else {
-            None
-        };
-        url.set_username("")
-            .map_err(|_| unsupported("invalid endpoint authority"))?;
-        url.set_password(None)
-            .map_err(|_| unsupported("invalid endpoint authority"))?;
-        self.binding.admit_address(url.as_str())?;
-        Ok(AdmittedRemote::Https { url, authorization })
-    }
-    fn capture_for_request(
-        &self,
-        address: &str,
-        anonymous: bool,
-        registry_auth: Option<vibe_core::manifest::AuthKind>,
-    ) -> Result<AdmittedRemote, GitError> {
-        use vibe_core::manifest::AuthKind;
-        // Address/host checks remain shared. Registry auth narrows credential
-        // use; it does not forbid credential-free HTTPS metadata reads.
-        let reject_https_credentials =
-            anonymous || registry_auth.is_some_and(|auth| !matches!(auth, AuthKind::TokenEnv));
-        let remote = self.capture_address(address, reject_https_credentials)?;
-        if matches!(remote, AdmittedRemote::Ssh(_))
-            && (anonymous || registry_auth.is_some_and(|auth| !matches!(auth, AuthKind::Ssh)))
-        {
-            return Err(unsupported(
-                "registry credential binding does not permit the selected SSH key or agent",
-            ));
-        }
-        Ok(remote)
-    }
+mod address;
+use address::AdmittedRemote;
+#[derive(Clone, Copy, PartialEq, Eq)]
+pub(super) enum SourceAddress {
+    WarmOrigin,
+    Pinned,
 }
 pub(super) struct Preparation<'a> {
+    pub source_address: SourceAddress,
     pub reporter: &'a super::ShellGit,
     pub address: &'a str,
     pub reference: &'a str,
@@ -537,3 +439,8 @@ mod relocation_tests;
 
 #[cfg(all(test, unix))]
 mod mixed_gitlink_tests;
+#[cfg(all(test, unix))]
+mod status_tests;
+
+mod acquisition;
+pub(super) use acquisition::acquire_source;

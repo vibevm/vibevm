@@ -218,6 +218,13 @@ impl LifecycleRun {
                 return Err(self.checkpoint_preparation_failure(execution, phase, started, failure));
             }
         };
+        if let Err(reason) = runtime.admit_preparation(execution.row(), &envelope.run.agent_mode) {
+            let failure = LifecycleRunError::ControlUnavailable {
+                key: key.clone(),
+                reason,
+            };
+            return Err(self.checkpoint_preparation_failure(execution, phase, started, failure));
+        }
         // Credential-free preparation FIRST: an agent row's contract, its
         // provider-pinned address and the exact resolved prompt bytes are all
         // decided before the freshness question is asked, so the same bytes
@@ -363,6 +370,14 @@ impl LifecycleRun {
         if let Some(prepared) = prepared.as_ref()
             && envelope.run.agent_mode == RunAgentMode::Agent
         {
+            if let Some(token) = runtime.process.cancellation() {
+                token
+                    .checkpoint()
+                    .map_err(|error| LifecycleRunError::ControlUnavailable {
+                        key: execution.key(),
+                        reason: error.to_string(),
+                    })?;
+            }
             return self.delegated_transition(
                 execution,
                 envelope,
@@ -565,21 +580,9 @@ impl LifecycleRun {
     }
 }
 
-fn failed_transition(envelope: Context, source: DispatchError) -> LifecycleRunError {
-    let transition = FailedExecutionTransition {
-        envelope,
-        message: source.to_string(),
-        streams: source.streams().cloned().unwrap_or_default(),
-    };
-    LifecycleRunError::FailedTransition {
-        transition: Box::new(transition),
-        source: Box::new(source),
-    }
-}
-
-fn elapsed_ms(started: Instant) -> u32 {
-    u32::try_from(started.elapsed().as_millis()).unwrap_or(u32::MAX)
-}
+#[path = "runner/transition.rs"]
+mod transition;
+use transition::{elapsed_ms, failed_transition};
 
 #[path = "runner/error.rs"]
 mod error;

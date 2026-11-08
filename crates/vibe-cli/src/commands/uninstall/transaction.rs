@@ -114,6 +114,13 @@ fn apply_recording(
     let manifest_path = project.join(Manifest::FILENAME);
     inspect(root, &lock_path, false)?;
     inspect(root, &manifest_path, false)?;
+    let before_lock = Lockfile::read(&lock_path)?;
+    let mut report = Some(vibe_install::ProjectRecordPublication::capture(
+        root,
+        &before_lock,
+        lock,
+        &[],
+    )?);
     let staging = tempfile::Builder::new()
         .prefix(".vibe-uninstall-")
         .tempdir_in(root)?;
@@ -164,6 +171,9 @@ fn apply_recording(
             record_file(&prepared, &record.path)
                 .with_context(|| format!("recording `{}`", record.path.display()))?;
             record.changed = true;
+        }
+        if let Some(report) = report.take() {
+            report.publish_provenance()?;
         }
         Ok(())
     })();

@@ -74,6 +74,84 @@ pub fn locked_source_evidence(record: &vibe_core::manifest::LockedPackage) -> So
     }
 }
 
+/// Report captured source-binding facts only; metadata discovery is not payload acquisition.
+/// Held missing kind stays unknown. URL credentials/query are removed by the existing owner.
+pub fn binding_source_evidence(
+    binding: &vibe_core::manifest::CanonicalSourceBinding,
+) -> SourceEvidence {
+    use vibe_core::manifest::CanonicalSourceBinding as B;
+    let mut evidence = SourceEvidence {
+        registry: None,
+        source_url: None,
+        source_ref: None,
+        resolved_commit: None,
+        source_kind: None,
+        via_redirect: None,
+        fetched_from: None,
+        acquisition: None,
+        store_reused: None,
+    };
+    match binding {
+        B::Registry {
+            registry,
+            source_url,
+        } => {
+            evidence.registry = Some(registry.to_string());
+            evidence.source_url = Some(safe_remote(source_url.as_str()));
+            evidence.source_kind = Some(SourceSelectionKind::Registry);
+        }
+        B::DirectoryRegistry { root }
+        | B::Local { root }
+        | B::Embedded { root }
+        | B::Path { root } => {
+            evidence.source_url = Some(safe_remote(&crate::local_registry::source_uri_for_local(
+                root,
+            )));
+            evidence.source_kind = Some(match binding {
+                B::DirectoryRegistry { .. } => SourceSelectionKind::Registry,
+                B::Local { .. } => SourceSelectionKind::Local,
+                B::Embedded { .. } => SourceSelectionKind::Embedded,
+                _ => SourceSelectionKind::Path,
+            });
+        }
+        B::Git {
+            source_url,
+            source_ref,
+        }
+        | B::Override {
+            source_url,
+            source_ref,
+        } => {
+            evidence.source_url = Some(safe_remote(source_url.as_str()));
+            evidence.source_ref = source_ref.clone();
+            evidence.source_kind = Some(if matches!(binding, B::Git { .. }) {
+                SourceSelectionKind::Git
+            } else {
+                SourceSelectionKind::Override
+            });
+        }
+        B::Locked {
+            registry,
+            source_url,
+            source_ref,
+            source_kind,
+            resolved_commit,
+            via_redirect,
+            ..
+        } => {
+            evidence.registry = registry.clone();
+            evidence.source_url = Some(safe_remote(source_url.as_str()));
+            evidence.source_ref = source_ref.clone();
+            evidence.source_kind = source_kind.map(selection);
+            evidence.resolved_commit = resolved_commit.clone();
+            evidence.via_redirect = via_redirect
+                .as_ref()
+                .map(|source| safe_remote(source.as_str()));
+        }
+    }
+    evidence
+}
+
 impl CachedPackage {
     /// The existing lock selection vocabulary, independent of transport.
     ///
@@ -89,6 +167,9 @@ impl CachedPackage {
     /// assert_eq!(kind, Some(vibe_core::manifest::SourceKind::Registry));
     /// ```
     pub fn source_kind(&self) -> Option<SourceKind> {
+        if let Some(held) = &self.locked_selection {
+            return held.source_row().source_kind;
+        }
         if self.acquisition == Some(vibe_wire::generated::shared::SourceAcquisition::Store) {
             return self.recorded_source_kind;
         }
@@ -123,7 +204,7 @@ impl CachedPackage {
     /// assert_eq!(evidence.source_url, Some(vibe_core::progress::transfer::safe_remote(&cached.source_uri)));
     /// ```
     pub fn source_evidence(&self) -> SourceEvidence {
-        SourceEvidence {
+        let mut evidence = SourceEvidence {
             registry: self.registry_name.clone(),
             source_url: Some(safe_remote(&self.source_uri)),
             source_ref: self.source_ref.clone(),
@@ -133,7 +214,11 @@ impl CachedPackage {
             fetched_from: self.fetched_from.as_deref().map(safe_remote),
             store_reused: self.store_reused,
             acquisition: self.acquisition.clone(),
+        };
+        if let Some(held) = &self.locked_selection {
+            held.project_evidence(&mut evidence);
         }
+        evidence
     }
 }
 

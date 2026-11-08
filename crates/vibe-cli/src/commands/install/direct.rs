@@ -263,7 +263,22 @@ fn execute_after_open(
     let failed_root = selection.root().to_path_buf();
     let confirm_gate = super::CliConfirmGate::with_scope(ctx, args.assume_yes, &failed_root, scope);
     let install_observer = super::CliInstallObserver::new(ctx, None).with_progress(ctx.progress());
-    let sources = super::CliPackageSourceFactory { args: &args };
+    // `vibe update -g mcp:<pkg>` is an explicit version update of the held
+    // user-project root: it selects a newer version at the locked endpoint
+    // (PROP-073 `#LOCKED-SOURCE`), never a source reset. Every other route
+    // through this executor replays the lock.
+    let update_locked = matches!(
+        scope,
+        ConfirmationScope::UserProject {
+            action: UserProjectAction::Update,
+            ..
+        }
+    );
+    let sources = super::CliPackageSourceFactory {
+        update_locked,
+        reselect_sources: false,
+        args: &args,
+    };
     let manifest_mutation = super::CliGitSourceMutation { args: &args };
     let environment = super::CliRegistryEnvironment::new(move || embedded_root);
     // The ONE injected backend, from the snapshot this command already read

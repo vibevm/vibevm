@@ -215,7 +215,20 @@ pub fn vendor_packages(
             });
             continue;
         };
-        let Some(reg) = resolver.registries().iter().find(|r| r.name() == reg_name) else {
+        let Some(reg) = resolver
+            .registries()
+            .map_err(|source| VendorError::Refresh {
+                group: entry.group.to_string(),
+                name: entry.name.to_string(),
+                refname: entry
+                    .source_ref
+                    .clone()
+                    .unwrap_or_else(|| format!("v{}", entry.version)),
+                source: Box::new(source),
+            })?
+            .iter()
+            .find(|r| r.name() == reg_name)
+        else {
             skipped.push(SkippedPackage {
                 group: entry.group.to_string(),
                 name: entry.name.to_string(),

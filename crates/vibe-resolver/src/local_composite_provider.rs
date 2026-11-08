@@ -64,6 +64,15 @@ impl<'a> DepProvider for LocalCompositeDepProvider<'a> {
         implements = "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-030#project-local"
     )]
     fn resolve_version(&self, pkgref: &PackageRef) -> Result<semver::Version, DepProviderError> {
+        if let Some(group) = &pkgref.group {
+            let providers = self.source_ordered();
+            if let Some(owner) = providers
+                .iter()
+                .find(|p| p.has_locked_coordinate(group, pkgref.name.as_str()))
+            {
+                return owner.resolve_version(pkgref);
+            }
+        }
         resolve_first(&self.ordered(), |p| p.resolve_version(pkgref))
     }
 
@@ -76,6 +85,13 @@ impl<'a> DepProvider for LocalCompositeDepProvider<'a> {
         name: &str,
         version: &semver::Version,
     ) -> Result<Manifest, DepProviderError> {
+        let providers = self.source_ordered();
+        if let Some(owner) = providers
+            .iter()
+            .find(|p| p.has_locked_coordinate(group, name))
+        {
+            return owner.fetch_manifest(group, name, version);
+        }
         resolve_first(&self.ordered(), |p| p.fetch_manifest(group, name, version))
     }
 }
@@ -95,6 +111,13 @@ impl<'a> VersionEnumerator for LocalCompositeDepProvider<'a> {
         group: &Group,
         name: &str,
     ) -> Result<Vec<semver::Version>, DepProviderError> {
+        let providers = self.source_ordered();
+        if let Some(owner) = providers
+            .iter()
+            .find(|p| p.has_locked_coordinate(group, name))
+        {
+            return owner.list_versions(group, name);
+        }
         union_versions(&self.ordered(), group, name)
     }
 }
@@ -115,6 +138,7 @@ fn is_absent(err: &DepProviderError) -> bool {
         DepProviderError::UnknownPackage { .. }
             | DepProviderError::NoMatchingVersion { .. }
             | DepProviderError::AggregateNotFound { .. }
+            | DepProviderError::OfflineUnavailable { .. }
     )
 }
 
@@ -169,6 +193,66 @@ fn union_versions(
     all.sort();
     all.dedup();
     Ok(all)
+}
+
+impl LocalCompositeDepProvider<'_> {
+    fn source_ordered(&self) -> Vec<&dyn crate::SourceCandidateProvider> {
+        self.providers
+            .iter()
+            .map(|p| p as &dyn crate::SourceCandidateProvider)
+            .collect()
+    }
+}
+impl crate::SourceCandidateProvider for LocalCompositeDepProvider<'_> {
+    fn has_locked_coordinate(&self, group: &Group, name: &str) -> bool {
+        self.source_ordered()
+            .iter()
+            .any(|p| p.has_locked_coordinate(group, name))
+    }
+    fn source_choice_mode(&self) -> vibe_registry::source_candidates::SourceChoiceMode {
+        crate::source_composition::mode(&self.source_ordered())
+    }
+    fn retain_default_candidate(
+        &self,
+        group: &Group,
+        name: &str,
+        version: &semver::Version,
+    ) -> Result<vibe_registry::source_candidates::RetainedCandidateObservation, DepProviderError>
+    {
+        crate::source_composition::first(&self.source_ordered(), group, name, |p| {
+            p.retain_default_candidate(group, name, version)
+        })
+    }
+    fn respects_locked_selection(
+        &self,
+        candidate: &vibe_registry::source_candidates::RetainedSourceCandidate,
+        locked: &vibe_core::manifest::LockedPackage,
+    ) -> Result<bool, DepProviderError> {
+        let providers = self.source_ordered();
+        match providers
+            .iter()
+            .find(|p| p.has_locked_coordinate(&locked.group, locked.name.as_str()))
+        {
+            Some(owner) => owner.respects_locked_selection(candidate, locked),
+            None => Ok(false),
+        }
+    }
+    fn source_inventory(
+        &self,
+        group: &Group,
+        name: &str,
+        scope: vibe_registry::source_candidates::CandidateInventoryScope,
+        limits: &vibe_registry::source_candidates::SourceInventoryLimits,
+    ) -> Result<vibe_registry::source_candidates::SourceCandidateInventory, DepProviderError> {
+        crate::source_composition::inventory(
+            &self.source_ordered(),
+            group,
+            name,
+            scope,
+            limits,
+            false,
+        )
+    }
 }
 
 #[cfg(test)]

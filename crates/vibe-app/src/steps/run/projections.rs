@@ -62,3 +62,24 @@ impl Run<'_> {
             .collect()
     }
 }
+
+use super::StepKind;
+/// The task label of one step (`PROP-065#display`): its id, its kind and
+/// its title, the same row a step panel and the event stream carry. A
+/// renderer collapses the column gap along with every other run of
+/// whitespace it sanitises away.
+pub(crate) fn step_label(step: &vibe_core::manifest::StepDecl) -> String {
+    format!("{} ({})  {}", step.id, step.kind.name(), step.title)
+}
+
+/// The step kinds that run a child of their own, and therefore write the
+/// output log a failure's tail comes from (`PROP-065#display`).
+pub(super) fn writes_log(kind: &StepKind) -> bool {
+    matches!(
+        kind,
+        StepKind::Recipe { .. }
+            | StepKind::Shell { .. }
+            | StepKind::Native { .. }
+            | StepKind::Agent { .. }
+    )
+}

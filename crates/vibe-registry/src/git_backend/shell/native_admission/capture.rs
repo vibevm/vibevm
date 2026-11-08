@@ -117,7 +117,18 @@ impl NativeGitAdmission {
             command.arg("--git-dir").arg(git_dir);
         }
         command.args(args);
-        let output = command.output().map_err(io)?;
+        let control = crate::git_backend::transfers::current()
+            .progress
+            .unwrap_or_default()
+            .cancellation()
+            .clone();
+        let output = crate::git_backend::shell::controlled::output(&mut command, &control)
+            .map_err(|error| {
+                crate::git_backend::shell::controlled::git_error(
+                    error,
+                    "captured Git metadata reader".into(),
+                )
+            })?;
         if output.status.success() || output.status.code() == Some(1) {
             return Ok(output);
         }
@@ -145,13 +156,8 @@ impl NativeGitAdmission {
         // semantics for relative HOME/config selectors.
         let fresh = warm
             .is_none()
-            .then(|| {
-                tempfile::Builder::new()
-                    .prefix("vibe-config-read-")
-                    .tempdir()
-            })
-            .transpose()
-            .map_err(io)?;
+            .then(|| self.temporary("vibe-config-read-"))
+            .transpose()?;
         let git_dir = fresh.as_ref().map(|root| root.path().join("absent.git"));
         let read = |args: &[&str]| self.metadata(cwd, args, git_dir.as_deref());
         let config = read(&[
@@ -210,7 +216,9 @@ impl NativeGitAdmission {
             // This is data-only Git URL resolution, not ssh -G or execution
             // of the captured SSH command. An old destination is only observed
             // here; chosen requests separately require exact profile admission.
-            let explicit_ssh = if !self.ssh.is_empty() || self.ssh_configuration.is_some() {
+            let explicit_ssh = if !self.ssh.is_empty()
+                || (self.ssh_configuration.is_some() || self.ssh_provider.is_some())
+            {
                 let effective = read(&["remote", "get-url", "origin"])?;
                 let address = text(effective.stdout)?;
                 effective.status.success()
@@ -272,7 +280,7 @@ fn absolute_from(cwd: &Path, path: &str) -> PathBuf {
     }
 }
 impl CapturedContext {
-    fn validate_warm_transport(
+    pub(super) fn validate_warm_transport(
         &self,
         explicit_ssh: bool,
         explicit_direct: bool,

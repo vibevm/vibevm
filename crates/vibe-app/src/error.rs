@@ -129,6 +129,12 @@ pub enum StorageError {
 #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-059#installer-separation")]
 #[spec(documents = "spec://org.vibevm.core/vibevm/common/PROP-059#installer-separation")]
 pub enum InstallerError {
+    #[error(transparent)]
+    Cancelled(#[from] vibe_core::cancellation::Cancelled),
+    #[error(transparent)]
+    ContactRefused(vibe_registry::ContactRefusal),
+    #[error(transparent)]
+    SourcePolicy(vibe_registry::RegistryError),
     #[error(
         "starting {what} failed: {reason} (violates spec://org.vibevm.core/vibevm/common/PROP-059#child-output; \
          fix: check that the interpreter or installer program exists)"

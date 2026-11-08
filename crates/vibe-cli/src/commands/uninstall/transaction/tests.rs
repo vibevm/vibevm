@@ -146,3 +146,39 @@ fn incomplete_rollback_keeps_staged_payload_and_exact_recovery_location() {
         f.original_manifest
     );
 }
+
+#[test]
+#[specmark::spec(verifies = "spec://org.vibevm.core/vibevm/common/PROP-066#provenance")]
+fn uninstall_prunes_project_record_and_report_conflict_restores_its_world() {
+    let f = Fixture::new();
+    let sidecar = f.dir.path().join("vibe.lock.provenance");
+    fs::write(&sidecar,"[[package]]\npackage='org.test/a'\nversion='1.0.0'\nfetched_from='https://project.example/a'\n").unwrap();
+    apply(f.dir.path(), f.dir.path(), &f.plan, &f.pruned, &f.manifest).unwrap();
+    assert!(!sidecar.exists());
+    let f = Fixture::new();
+    let sidecar = f.dir.path().join("vibe.lock.provenance");
+    fs::write(&sidecar,"[[package]]\npackage='org.test/a'\nversion='1.0.0'\nfetched_from='https://project.example/a'\n").unwrap();
+    let mut records = 0;
+    let result = apply_recording(
+        f.dir.path(),
+        f.dir.path(),
+        &f.plan,
+        &f.pruned,
+        &f.manifest,
+        |from, to| {
+            fs::rename(from, to)?;
+            records += 1;
+            if records == 2 {
+                fs::write(&sidecar, "foreign report\n")?;
+            }
+            Ok(())
+        },
+    );
+    assert!(result.is_err());
+    assert_eq!(
+        fs::read(f.dir.path().join("vibe.lock")).unwrap(),
+        f.original_lock
+    );
+    assert_eq!(fs::read_to_string(sidecar).unwrap(), "foreign report\n");
+    assert!(f.slot.join("payload").exists());
+}

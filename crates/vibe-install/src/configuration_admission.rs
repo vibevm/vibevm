@@ -273,10 +273,49 @@ pub(crate) fn retained_before_planning<S: crate::InstallSource + ?Sized>(
     workspace: &Workspace,
     lock: &vibe_core::manifest::Lockfile,
 ) -> Result<()> {
-    if lock.meta.schema_version != vibe_core::manifest::CURRENT_SCHEMA_VERSION {
+    if !matches!(
+        lock.meta.schema_version,
+        vibe_core::manifest::CONFIGURATION_SCHEMA_VERSION
+            | vibe_core::manifest::CURRENT_SCHEMA_VERSION
+    ) {
         return Ok(());
     }
     let store = vibe_registry::store::store_root()?;
+    retained_with_stores(source, workspace, lock, Some(&store), &store)
+}
+
+pub(crate) fn retained_for_preview<S: crate::InstallSource + ?Sized>(
+    source: &S,
+    workspace: &Workspace,
+    lock: &vibe_core::manifest::Lockfile,
+    storage: crate::PreviewSourceStorage<'_>,
+) -> Result<()> {
+    if !storage.acquisition_store.is_absolute() {
+        return Err(Error::PreviewStorageRequired);
+    }
+    retained_with_stores(
+        source,
+        workspace,
+        lock,
+        storage.read_only_store,
+        storage.acquisition_store,
+    )
+}
+
+fn retained_with_stores<S: crate::InstallSource + ?Sized>(
+    source: &S,
+    workspace: &Workspace,
+    lock: &vibe_core::manifest::Lockfile,
+    read_store: Option<&Path>,
+    acquisition_store: &Path,
+) -> Result<()> {
+    if !matches!(
+        lock.meta.schema_version,
+        vibe_core::manifest::CONFIGURATION_SCHEMA_VERSION
+            | vibe_core::manifest::CURRENT_SCHEMA_VERSION
+    ) {
+        return Ok(());
+    }
     for package in &lock.packages {
         let key = format!("{}/{}", package.group, package.name);
         let slot = if package.materialization.is_in_place() {
@@ -296,13 +335,15 @@ pub(crate) fn retained_before_planning<S: crate::InstallSource + ?Sized>(
         let manifest = if slot.is_dir() {
             Manifest::read(slot.join(Manifest::FILENAME))?
         } else {
-            let entry = vibe_registry::store::entry_dir(
-                &store,
-                &package.group,
-                &package.name,
-                &package.version,
-            );
-            if entry.is_dir() {
+            let entry = read_store.map(|store| {
+                vibe_registry::store::entry_dir(
+                    store,
+                    &package.group,
+                    &package.name,
+                    &package.version,
+                )
+            });
+            if let Some(entry) = entry.filter(|entry| entry.is_dir()) {
                 let recipe = if package
                     .content_hash
                     .starts_with(vibe_registry::RecipeId::Tree1.label())
@@ -329,7 +370,7 @@ pub(crate) fn retained_before_planning<S: crate::InstallSource + ?Sized>(
             } else {
                 let cached = source.resolve_and_fetch(
                     &package.as_package_ref()?,
-                    &store,
+                    acquisition_store,
                     Some(&package.content_hash),
                 )?;
                 if cached.content_hash != package.content_hash.as_str() {
@@ -416,3 +457,6 @@ pub(crate) fn unchanged_inputs(
     }
     Ok(())
 }
+
+#[cfg(test)]
+mod retained_tests;

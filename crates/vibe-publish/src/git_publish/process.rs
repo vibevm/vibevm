@@ -22,24 +22,6 @@ pub(super) fn git_command_in_temp(args: &[&str]) -> Command {
     cmd
 }
 
-pub(super) fn staged_tree_changed(cwd: &Path) -> Result<bool, PublishError> {
-    let args = ["diff", "--cached", "--quiet", "--exit-code", "HEAD", "--"];
-    let output = git_command(cwd, &args).output().map_err(|e| {
-        PublishError::Git(format!("spawning git {}: {e}", join_args_redacted(&args)))
-    })?;
-    match output.status.code() {
-        Some(0) => Ok(false),
-        Some(1) => Ok(true),
-        _ => {
-            let stderr = redact_credentials(String::from_utf8_lossy(&output.stderr).trim());
-            Err(PublishError::Git(format!(
-                "git {} failed: {stderr}",
-                join_args_redacted(&args)
-            )))
-        }
-    }
-}
-
 pub(super) fn run_remote_git_in(
     cwd: &Path,
     args: &[&str],
@@ -209,7 +191,7 @@ fn join_args_redacted(args: &[&str]) -> String {
     parts.join(" ")
 }
 
-fn git_command(cwd: &Path, args: &[&str]) -> Command {
+pub(super) fn git_command(cwd: &Path, args: &[&str]) -> Command {
     let mut cmd = Command::new("git");
     cmd.args(args);
     cmd.current_dir(cwd);
@@ -221,4 +203,79 @@ fn git_command(cwd: &Path, args: &[&str]) -> Command {
         cmd.creation_flags(0x0800_0000); // CREATE_NO_WINDOW
     }
     cmd
+}
+
+pub(super) fn run_git_controlled(
+    cwd: &Path,
+    args: &[&str],
+    token: &vibe_core::cancellation::CancellationToken,
+) -> Result<Output, PublishError> {
+    let output =
+        vibe_registry::git_backend::shell::controlled::output(&mut git_command(cwd, args), token)
+            .map_err(|error| {
+            PublishError::Git(format!(
+                "controlled git {}: {error}",
+                join_args_redacted(args)
+            ))
+        })?;
+    if !output.status.success() {
+        return Err(PublishError::Git(format!(
+            "git {} failed: {}",
+            join_args_redacted(args),
+            redact_credentials(String::from_utf8_lossy(&output.stderr).trim())
+        )));
+    }
+    Ok(output)
+}
+pub(super) fn run_remote_controlled(
+    cwd: &Path,
+    args: &[&str],
+    url: &str,
+    token: &vibe_core::cancellation::CancellationToken,
+) -> Result<Output, PublishError> {
+    let output =
+        vibe_registry::git_backend::shell::controlled::output(&mut git_command(cwd, args), token)
+            .map_err(|error| PublishError::Git(format!("controlled remote git: {error}")))?;
+    classify_remote_output(&output, url, args.first().copied().unwrap_or("operation"))?;
+    Ok(output)
+}
+pub(super) fn staged_tree_changed_controlled(
+    cwd: &Path,
+    token: &vibe_core::cancellation::CancellationToken,
+) -> Result<bool, PublishError> {
+    let args = ["diff", "--cached", "--quiet", "--exit-code", "HEAD", "--"];
+    let output =
+        vibe_registry::git_backend::shell::controlled::output(&mut git_command(cwd, &args), token)
+            .map_err(|error| PublishError::Git(error.to_string()))?;
+    match output.status.code() {
+        Some(0) => Ok(false),
+        Some(1) => Ok(true),
+        _ => Err(PublishError::Git("controlled staged diff failed".into())),
+    }
+}
+pub(super) fn copy_controlled(
+    source: &Path,
+    target: &Path,
+    token: &vibe_core::cancellation::CancellationToken,
+) -> Result<(), PublishError> {
+    use std::io::{Read, Write};
+    let failed = |error: std::io::Error| PublishError::Io {
+        path: target.to_owned(),
+        message: error.to_string(),
+    };
+    let mut input = std::fs::File::open(source).map_err(failed)?;
+    let mut output = std::fs::File::create(target).map_err(failed)?;
+    let mut buffer = [0; 65536];
+    loop {
+        token
+            .checkpoint()
+            .map_err(|error| PublishError::Git(error.to_string()))?;
+        let count = input.read(&mut buffer).map_err(failed)?;
+        if count == 0 {
+            break;
+        }
+        output.write_all(&buffer[..count]).map_err(failed)?;
+    }
+    std::fs::set_permissions(target, input.metadata().map_err(failed)?.permissions())
+        .map_err(failed)
 }

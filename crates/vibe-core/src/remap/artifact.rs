@@ -175,6 +175,17 @@ pub struct Candidate {
     pub row: Option<RowRef>,
 }
 
+impl Candidate {
+    /// Publication scope belongs to the selected row, not a URL coincidence.
+    pub fn publication_scope(&self) -> crate::RoutePublication {
+        self.row
+            .as_ref()
+            .map_or(crate::RoutePublication::Local, |row| {
+                row.provenance.publication
+            })
+    }
+}
+
 /// What the Locator answers: an ordered candidate list, or a refusal
 /// before any connection (`PROP-066#locator`, `PROP-066#policy`).
 ///

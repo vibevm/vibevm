@@ -16,6 +16,7 @@ impl NativeState {
         child_layout: Option<capture::ManagedChild>,
     ) -> Result<GitPreparedRevision, GitError> {
         let Preparation {
+            source_address,
             reporter,
             address,
             reference,
@@ -40,7 +41,11 @@ impl NativeState {
             .map(|p| materialisation::tree(&capture::selected_git_dir(p, child_layout.as_ref())))
             .transpose()?
             .flatten();
-        let effective = if let Some(repo) = reuse {
+        let effective = if source_address == SourceAddress::Pinned {
+            // Warm config/attributes/children remain captured and witnessed above;
+            // their recorded/effective root origin is not contact authority.
+            address.to_owned()
+        } else if let Some(repo) = reuse {
             let effective = if let Some(context) = &captured {
                 context
                     .effective_origin

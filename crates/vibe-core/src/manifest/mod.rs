@@ -26,9 +26,15 @@ mod lockfile;
 mod mechanism;
 mod migration;
 mod source_descriptor;
+mod source_policy;
 pub use source_descriptor::{
     SelectedSource, SourceDescriptor, SourceInterpretation, SourceLoading, SourceRole,
     SourceSelectionError, SourceSelector, select_source_rows,
+};
+pub use source_policy::{
+    CanonicalSourceBinding, EffectiveSourcePolicy, HostingSelector, RegistryPin, SourcePolicyDecl,
+    SourcePolicyError, validate_locked_registry_pin, validate_new_registry_pin,
+    validate_registry_aliases,
 };
 mod package;
 mod plane;
@@ -67,8 +73,9 @@ pub use extension::{
 };
 pub use field_path::{FieldError, FieldPath};
 pub use lockfile::{
-    CURRENT_SCHEMA_VERSION, LockedEmbeddedSource, LockedPackage, LockedRemap, LockedRequirer,
-    LockedSubskill, Lockfile, LockfileMeta, SourceKind, VirtualCapabilityRecord,
+    CONFIGURATION_SCHEMA_VERSION, CURRENT_SCHEMA_VERSION, LEGACY_SCHEMA_VERSION,
+    LockedEmbeddedSource, LockedPackage, LockedRemap, LockedRemapSource, LockedRemapSourceError,
+    LockedRequirer, LockedSubskill, Lockfile, LockfileMeta, SourceKind, VirtualCapabilityRecord,
 };
 pub use mechanism::{
     HOST_OWNER, MechanismDecl, MechanismFreshness, MechanismFreshnessParseError, MechanismKey,
@@ -108,6 +115,7 @@ pub use project::{
     ActiveSection, AuthKind, DEFAULT_REGISTRY_GITVERSE_NAME, DEFAULT_REGISTRY_GITVERSE_URL,
     DEFAULT_REGISTRY_NAME, DEFAULT_REGISTRY_REF, DEFAULT_REGISTRY_URL, LlmSection, MirrorSection,
     NamingConvention, OverrideSection, ProjectSection, RegistrySection, SpecFormat,
+    registry_token_env_name,
 };
 pub use redirect::{RedirectFile, RedirectSection, RefPolicy, parse_redirect_bytes};
 pub use run_command::{RunCommandDecl, RunCommandHandler};

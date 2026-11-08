@@ -30,6 +30,8 @@ mod draft;
 mod events;
 mod global_mcp;
 mod observer;
+mod preview;
+pub(crate) use preview::run as run_preview;
 mod report;
 mod resolver;
 
@@ -44,10 +46,11 @@ pub(crate) use global_mcp::{
     uninstall as run_global_mcp_uninstall, update as run_global_mcp_update, user_project_root,
 };
 pub(crate) use observer::{CliInstallObserver, CliRegistryEnvironment, LifecycleSlotObserver};
+pub(crate) use report::candidate_rows as source_candidate_rows;
 pub(crate) use report::{HookReportPresentation, LifecycleHookView};
 pub(crate) use resolver::{
     CliGitSourceMutation, CliPackageSourceFactory, InstallResolver, any_package_source,
-    build_install_resolver,
+    build_install_resolver, build_install_resolver_deferred,
 };
 pub(crate) use vibe_install::exact_pinned_pkgref;
 

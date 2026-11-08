@@ -130,6 +130,8 @@ pub fn run(
     let confirm_gate =
         super::install::CliConfirmGate::new(&child, install_args.assume_yes, &failed_root);
     let sources = CliPackageSourceFactory {
+        update_locked: false,
+        reselect_sources: false,
         args: &install_args,
     };
     let environment = CliRegistryEnvironment::new(prepare_install);
@@ -379,6 +381,8 @@ fn execute(
     let confirm_gate =
         super::install::CliConfirmGate::new(&child, install_args.assume_yes, &failed_root);
     let sources = CliPackageSourceFactory {
+        update_locked: false,
+        reselect_sources: false,
         args: &install_args,
     };
     let environment = CliRegistryEnvironment::new(prepare_install);

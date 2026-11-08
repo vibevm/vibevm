@@ -45,14 +45,11 @@ use vibe_install::{InstallProgress, InstallSource};
 use vibe_registry::CachedPackage;
 use vibe_workspace::Workspace;
 use vibe_workspace::compile_trace::TraceRun;
-use vibe_workspace::install::{ResolvedDep, SlotCheck, SlotVerifier};
+use vibe_workspace::install::{InstallRollback, ResolvedDep, SlotCheck, SlotVerifier};
 use vibe_workspace::vibedeps;
 
 use crate::commands::compile_trace::{self, CommandExit, RegisteredReportDraft, carry_measured};
-use crate::commands::install::{
-    any_package_source, build_install_resolver, exact_pinned_pkgref, lane_sizes,
-    resolve_spec_format,
-};
+use crate::commands::install::{exact_pinned_pkgref, lane_sizes, resolve_spec_format};
 use crate::commands::short_name;
 use crate::exit_code::InstallError;
 use crate::output;
@@ -162,53 +159,57 @@ fn run(
     // `--offline` / `VIBE_OFFLINE` / user-config `[net].offline`. A scoped
     // offline update with no local source fails in `build_install_resolver`
     // with the same actionable bail `vibe install --offline` gives.
-    let global = vibe_core::GlobalRegistryConfig::load()?;
     let install_args = install_args_from(&args);
-
-    // The refusal is owed to the ONE question the resolver itself asks — can
-    // ANYTHING serve this project — and never to the project manifest alone.
-    // A project declaring no `[[registry]]` of its own still resolves: the
-    // machine-global `~/.vibe/registry.toml` is merged into the effective set
-    // project-first (PROP-002 `##GLOBAL-REGISTRY-FILE` /
-    // `##MERGE-PROJECT-FIRST`) — the shape recommended for configuring a whole
-    // machine — and so do a project-local packages root, a source build's
-    // embedded registry (PROP-030 §3.3), a declared git source and, under the
-    // offline posture, the warm machine store (PROP-010 §2.5–§2.6). Reading
-    // `manifest.registries` here refused every such project: it could install
-    // and never update.
-    //
-    // The OFFLINE posture keeps its own refusal, the one the note above
-    // promises: `build_install_resolver`'s `--offline` bail names every local
-    // source and the `vibe cache add` warm-up, which is strictly more useful
-    // to an operator with no network than a message about registry files.
-    if !offline
-        && !any_package_source(
+    // Availability follows retained source selection or demanded catalog, not an
+    // eager snapshot of unrelated current registry entries. A plain update
+    // replays held sources and needs no configured registry; an explicit source
+    // reselection does, and refuses with the places an operator can fix it.
+    // The offline posture keeps the resolver's own, more specific bail.
+    if (args.reselect_source || args.sources_only) && !offline {
+        let global = vibe_core::GlobalRegistryConfig::load()?;
+        if !crate::commands::install::any_package_source(
             &install_args,
             &manifest,
             embedded_root.as_deref(),
             &project_root,
             &global,
             offline,
-        )
-    {
-        bail!(
-            "no `[[registry]]` configured in `{}` or in `~/.vibe/registry.toml` — \
-             `vibe update` re-fetches from the registry.",
-            project_root.join(Manifest::FILENAME).display(),
-        );
+        ) {
+            bail!(
+                "no `[[registry]]` configured in `{}` or in `~/.vibe/registry.toml` — \
+                 `vibe update` cannot choose a source again without one.",
+                project_root.join(Manifest::FILENAME).display(),
+            );
+        }
     }
 
-    let roots = qualify_roots(&args.packages, &manifest, &lockfile)?;
+    let roots = if args.sources_only {
+        source_only_roots(&args.packages, &lockfile)?
+    } else {
+        qualify_roots(&args.packages, &manifest, &lockfile)?
+    };
+    let record_capture =
+        vibe_install::ProjectRecordPublication::capture_before(&workspace.root, &old_lock)?;
 
-    let resolver = build_install_resolver(
+    let resolver = crate::commands::install::build_install_resolver_deferred(
         &install_args,
         &manifest,
         embedded_root.as_deref(),
         &project_root,
-        &global,
         offline,
         &lockfile.packages,
-    )?;
+    )?
+    .with_locked_checkouts(vibe_install::locked_checkout_paths(
+        &workspace.root,
+        &lockfile.packages,
+    ))
+    .with_locked_updates();
+    let resolver = if args.reselect_source || args.sources_only {
+        let keys: Vec<String> = roots.iter().map(PackageRef::qualified_name).collect();
+        resolver.with_reselected_sources(&keys)
+    } else {
+        resolver
+    };
 
     ctx.heading(&format!(
         "Re-resolving {} package{}…",
@@ -273,7 +274,6 @@ fn run(
                 group: node.group.clone(),
                 name: node.name.clone(),
                 version: node.version.clone(),
-                registry: old.registry.clone(),
                 dependencies: node.dependencies.clone(),
             });
             package.skip("deferred to in-place refresh");
@@ -301,9 +301,13 @@ fn run(
     // set itself was moved into the staging below.
     let resolved = updated.len() + pending_in_place.len();
     let full_world = stage::preflight_world(workspace, &lockfile, &updated, &pending_in_place)?;
+    let (planned_lock, records) =
+        stage::prepare_records(record_capture, &lockfile, &updated, &pending_in_place)?;
     if !confirm(ctx, &args, resolved)? {
         return Err(InstallError::UserDeclined.into());
     }
+
+    records.validate_before_publication()?;
 
     // ---- region 2: the first project semantic mutation ----------------------------
     let mut measured = Measured::default();
@@ -362,6 +366,8 @@ fn run(
             updated: &staged.updated,
             lockfile: &mut lockfile,
             old_lock: &old_lock,
+            planned_lock,
+            records,
             lanes_before: &lanes_before,
             agent: &agent,
         },
@@ -388,6 +394,47 @@ fn run(
 /// `vibe update` refreshes an installed package, so a bare short name resolves
 /// against `vibe.lock` alone — no index, no network — and a name not locked
 /// fails here with a clear "not installed".
+/// `vibe update --sources-only`: the named locked packages (or every locked
+/// package) pinned to their exact locked versions, so only source selection
+/// can change.
+fn source_only_roots(packages: &[String], lockfile: &Lockfile) -> Result<Vec<PackageRef>> {
+    let selected: Vec<&vibe_core::manifest::LockedPackage> = if packages.is_empty() {
+        lockfile.packages.iter().collect()
+    } else {
+        let mut rows = Vec::with_capacity(packages.len());
+        for raw in packages {
+            let pkgref = PackageRef::parse(raw).with_context(|| format!("parsing `{raw}`"))?;
+            let pkgref = short_name::qualify_locked(&pkgref, lockfile)?;
+            let row = pkgref
+                .group
+                .as_ref()
+                .and_then(|group| lockfile.find(group, &pkgref.name))
+                .with_context(|| {
+                    format!("package `{pkgref}` is not locked; `--sources-only` changes only locked sources")
+                })?;
+            rows.push(row);
+        }
+        rows
+    };
+    if selected.is_empty() {
+        bail!("`vibe.lock` holds no package; `--sources-only` has nothing to refresh");
+    }
+    selected
+        .into_iter()
+        .map(|row| {
+            let exact = semver::VersionReq::parse(&format!("={}", row.version))
+                .with_context(|| format!("locked version of `{}/{}`", row.group, row.name))?;
+            PackageRef::new(
+                None,
+                Some(row.group.clone()),
+                row.name.to_string(),
+                VersionSpec::Req(exact),
+            )
+            .with_context(|| format!("locked coordinate `{}/{}`", row.group, row.name))
+        })
+        .collect()
+}
+
 fn qualify_roots(
     packages: &[String],
     manifest: &Manifest,
@@ -475,11 +522,16 @@ fn confirm(ctx: &output::Context, args: &crate::cli::UpdateArgs, total: usize) -
 /// resolution, and stays true whether or not the stale slot could be deleted.
 /// `pruned` conversely names only removals that REALLY removed something — a
 /// slot already absent, or an unversioned in-place one, deleted nothing.
+///
+/// Each removal moves the slot aside into `rollback` (same volume, a rename)
+/// rather than deleting it, so a later failure or acknowledged stop before the
+/// lock is published can put the superseded slot back.
 fn prune_superseded(
     workspace: &Workspace,
     lockfile: &Lockfile,
     updated: &[Resolved],
     measured: &mut Measured,
+    rollback: &mut InstallRollback,
 ) -> Result<()> {
     for (cached, _, _, _) in updated {
         let name = &cached.resolved.name;
@@ -496,9 +548,20 @@ fn prune_superseded(
         ));
         if !cached.package_meta().materialization.is_in_place() {
             let group = &cached.package_meta().group;
-            let removed = vibedeps::remove_slot(&workspace.root, group, name, &old_v)
-                .context("removing the superseded vibedeps/ slot")?;
-            if removed {
+            let slot = vibedeps::slot_abs_path(&workspace.root, group, name, &old_v);
+            if slot.exists() {
+                // A slot is a directory. Moving aside whatever else sits at
+                // its path would succeed where the delete it replaces refused.
+                if !slot.is_dir() {
+                    return Err(vibe_workspace::WorkspaceError::Io {
+                        path: slot,
+                        reason: "the superseded slot path is not a directory".into(),
+                    })
+                    .context("removing the superseded vibedeps/ slot");
+                }
+                rollback
+                    .remove(&slot)
+                    .context("removing the superseded vibedeps/ slot")?;
                 measured.record_pruned(vibedeps::slot_rel_path(group, name, &old_v));
             }
         }

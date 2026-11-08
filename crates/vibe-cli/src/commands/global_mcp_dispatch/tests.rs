@@ -113,7 +113,7 @@ impl Harness {
                     seed_default_registry: false,
                 },
             ),
-            Command::Install(args) => run_install(&ctx, args, None, true),
+            Command::Install(args) => run_install(&ctx, args, None, true, false),
             Command::Uninstall(args) => run_uninstall(&ctx, args, true),
             Command::Update(args) => run_update(&ctx, args, None, true),
             _ => bail!("unsupported test command"),

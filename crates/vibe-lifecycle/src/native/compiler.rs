@@ -38,6 +38,7 @@ use admission::ArtifactAccess;
 /// One borrowed compiler-native execution epoch backed by retained ARTIFACTs.
 #[spec(documents = "spec://org.vibevm.core/vibevm/common/PROP-054#COMPILE-NATIVE-ONLY")]
 pub struct ArtifactCompilerNativeInvoker<'a> {
+    cancellation: vibe_core::cancellation::CancellationToken,
     all_compile_rows: Box<[&'a ExtensionRegistryRow]>,
     native_candidates: Box<[&'a ExtensionRegistryRow]>,
     selected_project_root: &'a Path,
@@ -122,6 +123,7 @@ impl<'a> ArtifactCompilerNativeInvoker<'a> {
         access: ArtifactAccess,
     ) -> Self {
         Self {
+            cancellation: Default::default(),
             all_compile_rows: all_compile_rows.to_vec().into_boxed_slice(),
             native_candidates: native_candidates.to_vec().into_boxed_slice(),
             selected_project_root,
@@ -225,6 +227,14 @@ impl<'a> ArtifactCompilerNativeInvoker<'a> {
         config: &BTreeMap<String, Option<serde_json::Value>>,
         expected_implementation: vibe_spec::CompilerNativeImplementationDigest,
     ) -> Result<PreparedRow<'row>, CompilerNativeInvokerError> {
+        self.cancellation
+            .checkpoint()
+            .map_err(|error| failed(error.to_string()))?;
+        if self.cancellation.has_control() {
+            return Err(failed(
+                "selected in-process native compiler has no cooperative stop capability; no native build or invocation started",
+            ));
+        }
         let order = usize::try_from(manager_order)
             .map_err(|_| failed(format!("compile row order {manager_order} is not an index")))?;
         let row = self.all_compile_rows.get(order).copied().ok_or_else(|| {
@@ -393,18 +403,26 @@ impl CompilerNativeFactBinding for ArtifactCompilerNativeInvoker<'_> {
 /// Lifecycle implementation of workspace's lazy owner-binding port.
 #[spec(documents = "spec://org.vibevm.core/vibevm/common/PROP-054#BOOTSTRAP-ORDER")]
 pub struct ArtifactCompilerNativeProvider {
+    cancellation: vibe_core::cancellation::CancellationToken,
     platform: NativePlatform,
     policies: BTreeMap<OwnerRuntimeId, CompilerNativePolicy>,
     access: ArtifactAccess,
 }
 
 impl ArtifactCompilerNativeProvider {
+    /// Carry the stop contract to the selected compiler call; unselected native rows do not refuse.
+    pub fn with_cancellation(mut self, token: vibe_core::cancellation::CancellationToken) -> Self {
+        self.cancellation = token;
+        self
+    }
+
     #[must_use]
     pub fn new(
         platform: NativePlatform,
         policies: BTreeMap<OwnerRuntimeId, CompilerNativePolicy>,
     ) -> Self {
         Self {
+            cancellation: Default::default(),
             platform,
             policies,
             access: ArtifactAccess::Published,
@@ -423,6 +441,7 @@ impl ArtifactCompilerNativeProvider {
             }
         })?;
         Ok(Self {
+            cancellation: Default::default(),
             platform,
             policies,
             access,
@@ -471,6 +490,12 @@ impl CompilerNativeReplayFactory for ArtifactCompilerNativeReplayFactory {
 }
 
 impl OwnerNativeCompileProvider for ArtifactCompilerNativeProvider {
+    fn cancellation(&self) -> Option<&vibe_core::cancellation::CancellationToken> {
+        self.cancellation
+            .has_control()
+            .then_some(&self.cancellation)
+    }
+
     type Binding<'owner> = ArtifactCompilerNativeInvoker<'owner>;
 
     fn bind<'owner>(
@@ -496,7 +521,7 @@ impl OwnerNativeCompileProvider for ArtifactCompilerNativeProvider {
                 reason: "no injected compiler-native policy exists for this owner".to_owned(),
             }
         })?;
-        let invoker = ArtifactCompilerNativeInvoker::from_parts(
+        let mut invoker = ArtifactCompilerNativeInvoker::from_parts(
             rows.compile(),
             rows.native(),
             owner.selected_root(),
@@ -510,6 +535,7 @@ impl OwnerNativeCompileProvider for ArtifactCompilerNativeProvider {
             &run.run_id,
             self.access.clone(),
         );
+        invoker.cancellation = self.cancellation.clone();
         Ok(OwnerNativeCompileBinding::new(invoker, policy))
     }
 }

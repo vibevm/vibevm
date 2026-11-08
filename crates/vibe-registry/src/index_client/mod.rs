@@ -76,8 +76,8 @@ pub struct IndexClient {
     server_base: String,
     auth: IndexAuth,
     admission: Option<Arc<HttpAdmission>>,
-    file_client: OnceLock<Result<reqwest::blocking::Client, String>>,
-    server_client: OnceLock<Result<reqwest::blocking::Client, String>>,
+    file_client: OnceLock<Result<crate::http_admission::ManagedHttpClient, String>>,
+    server_client: OnceLock<Result<crate::http_admission::ManagedHttpClient, String>>,
     /// `repomd.json` as first read in this invocation — the yardstick a
     /// `by-name` file is checked against (`by_name`). `None` inside means
     /// the manifest could not be read, which leaves the check silent.
@@ -142,7 +142,7 @@ pub enum IndexError {
 ///   from a missing one.
 #[derive(Debug)]
 pub enum ProbeOutcome {
-    Found(IndexClient),
+    Found(Box<IndexClient>),
     Absent,
     Refused { reason: String },
 }
@@ -231,7 +231,7 @@ impl IndexClient {
                         target: "vibe_registry::index_client",
                         "probe succeeded via handshake at {candidate}"
                     );
-                    return Ok(ProbeOutcome::Found(IndexClient {
+                    return Ok(ProbeOutcome::Found(Box::new(IndexClient {
                         file_base,
                         server_base: trimmed.to_string(),
                         auth,
@@ -240,7 +240,7 @@ impl IndexClient {
                         server_client: OnceLock::new(),
                         repomd: OnceLock::new(),
                         transfers: OnceLock::new(),
-                    }));
+                    })));
                 }
                 handshake::HandshakeProbe::Refused { reason } => {
                     return Ok(ProbeOutcome::Refused { reason });
@@ -256,7 +256,7 @@ impl IndexClient {
             match Self::get_with(&client, client.get(&url), &url, &auth, admission.as_deref()) {
                 Ok(resp) if resp.status().is_success() => {
                     tracing::debug!(target: "vibe_registry::index_client", "probe succeeded at {url}");
-                    return Ok(ProbeOutcome::Found(IndexClient {
+                    return Ok(ProbeOutcome::Found(Box::new(IndexClient {
                         file_base: candidate,
                         server_base: trimmed.to_string(),
                         auth,
@@ -265,7 +265,7 @@ impl IndexClient {
                         server_client: OnceLock::new(),
                         repomd: OnceLock::new(),
                         transfers: OnceLock::new(),
-                    }));
+                    })));
                 }
                 Ok(resp) => {
                     let status = resp.status().as_u16();
@@ -344,33 +344,38 @@ impl IndexClient {
 
     fn get(
         &self,
-        client: &reqwest::blocking::Client,
+        client: &crate::http_admission::ManagedHttpClient,
         request: reqwest::blocking::RequestBuilder,
         url: &str,
-    ) -> Result<reqwest::blocking::Response, IndexError> {
+    ) -> Result<crate::http_admission::ManagedResponse, IndexError> {
         Self::get_with(client, request, url, &self.auth, self.admission.as_deref())
     }
 
     fn get_with(
-        client: &reqwest::blocking::Client,
+        client: &crate::http_admission::ManagedHttpClient,
         mut request: reqwest::blocking::RequestBuilder,
         url: &str,
         auth: &IndexAuth,
         admission: Option<&HttpAdmission>,
-    ) -> Result<reqwest::blocking::Response, IndexError> {
+    ) -> Result<crate::http_admission::ManagedResponse, IndexError> {
         if admission.is_some()
             && attaches_authorization(url, auth)
             && let Some(headers) = auth.header_map()
         {
             request = request.headers(headers);
         }
-        http_admission::get(client, request, url, admission).map_err(|error| match error {
+        http_admission::get(client, request, url, admission)
+            .map_err(|error| Self::body_error(url, error))
+    }
+
+    fn body_error(url: &str, error: HttpGetError) -> IndexError {
+        match error {
             HttpGetError::Refused(refusal) => IndexError::ContactRefused(refusal),
-            HttpGetError::Transport(error) => IndexError::Http {
+            error => IndexError::Http {
                 url: url.to_owned(),
                 message: error.to_string(),
             },
-        })
+        }
     }
 
     pub fn file_base(&self) -> &str {
@@ -434,10 +439,9 @@ impl IndexClient {
         if !status.is_success() {
             return Err(self.classify_failure(url, status.as_u16()));
         }
-        let body = resp.bytes().map_err(|e| IndexError::Http {
-            url: url.clone(),
-            message: e.to_string(),
-        })?;
+        let body = resp
+            .bytes()
+            .map_err(|error| Self::body_error(&url, error))?;
         let parsed: PurlLookupResults =
             serde_json::from_slice(&body).map_err(|e| IndexError::Malformed {
                 url: url.clone(),
@@ -491,10 +495,9 @@ impl IndexClient {
         if !status.is_success() {
             return Err(self.classify_failure(url, status.as_u16()));
         }
-        let body = resp.bytes().map_err(|e| IndexError::Http {
-            url: url.clone(),
-            message: e.to_string(),
-        })?;
+        let body = resp
+            .bytes()
+            .map_err(|error| Self::body_error(&url, error))?;
         let parsed: SearchResults =
             serde_json::from_slice(&body).map_err(|e| IndexError::Malformed {
                 url: url.clone(),
@@ -548,19 +551,19 @@ impl IndexClient {
         auth: &IndexAuth,
         base_url: &str,
         admission: Option<&HttpAdmission>,
-    ) -> Result<reqwest::blocking::Client, reqwest::Error> {
-        let mut builder = reqwest::blocking::Client::builder()
-            .user_agent(concat!("vibe-registry/", env!("CARGO_PKG_VERSION")))
-            .timeout(timeout);
-        if admission.is_some() {
-            return http_admission::bound_builder(builder).build();
-        }
-        if attaches_authorization(base_url, auth)
-            && let Some(headers) = auth.header_map()
-        {
-            builder = builder.default_headers(headers);
-        }
-        builder.build()
+    ) -> Result<crate::http_admission::ManagedHttpClient, reqwest::Error> {
+        let headers = if admission.is_none() && attaches_authorization(base_url, auth) {
+            auth.header_map().unwrap_or_default()
+        } else {
+            reqwest::header::HeaderMap::new()
+        };
+        crate::http_admission::ManagedHttpClient::captured(
+            timeout,
+            Some(concat!("vibe-registry/", env!("CARGO_PKG_VERSION"))),
+            headers,
+            admission.cloned().map(Arc::new),
+            None,
+        )
     }
 }
 

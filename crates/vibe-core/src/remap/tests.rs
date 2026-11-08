@@ -398,14 +398,14 @@ fn explain_lists_every_matching_row_in_winning_order() {
 #[test]
 #[verifies("spec://org.vibevm.core/vibevm/common/PROP-066#layers")]
 fn a_wildcard_mirror_becomes_one_prefix_row_per_declared_registry() {
-    use crate::manifest::{AuthKind, MirrorSection, NamingConvention, RegistrySection};
+    use crate::manifest::{MirrorSection, NamingConvention, RegistrySection};
 
     let registry = |name: &str, url: &str| RegistrySection {
         name: name.into(),
         url: url.into(),
         r#ref: "main".into(),
         naming: NamingConvention::Fqdn,
-        auth: AuthKind::None,
+        auth: None,
         token_env: None,
         enabled: true,
         index_url: None,
@@ -415,6 +415,7 @@ fn a_wildcard_mirror_becomes_one_prefix_row_per_declared_registry() {
         registry("b", "https://gitverse.ru/b"),
     ];
     let mirrors = [MirrorSection {
+        publication: Default::default(),
         of: "*".into(),
         url: "https://nexus.corp.example/all".into(),
         priority: 0,
@@ -433,11 +434,13 @@ fn mirror_priority_orders_the_chain_so_the_head_still_wins() {
 
     let mirrors = [
         MirrorSection {
+            publication: Default::default(),
             of: "vibespecs".into(),
             url: "https://second/".into(),
             priority: 5,
         },
         MirrorSection {
+            publication: Default::default(),
             of: "vibespecs".into(),
             url: "https://first/".into(),
             priority: 0,

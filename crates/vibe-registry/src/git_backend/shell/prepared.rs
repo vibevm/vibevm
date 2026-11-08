@@ -65,6 +65,7 @@ pub(super) fn prepare(
 ) -> Result<GitPreparedRevision, GitError> {
     if let Some(native) = &git.native {
         return native.prepare(super::native_admission::Preparation {
+            source_address: super::native_admission::SourceAddress::WarmOrigin,
             reporter: git,
             address: url,
             reference,

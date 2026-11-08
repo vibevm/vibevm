@@ -44,6 +44,7 @@ use super::{
 #[path = "native_managed/replay.rs"]
 mod replay;
 pub(crate) use replay::compile_static_owner_managed_with_source;
+mod control;
 mod write;
 pub(crate) use write::write_boot_artifacts_owner_managed_with_sources;
 #[cfg(test)]
@@ -241,6 +242,21 @@ fn compile_static_owner_managed_using<P: OwnerNativeCompileProvider>(
     injected_overlay: Option<&BTreeMap<PathBuf, Arc<[u8]>>>,
     finalizer: PendingFinalizer,
 ) -> Result<Option<OwnerManagedStaticCompile>, WorkspaceError> {
+    let control = provider
+        .as_ref()
+        .and_then(|provider| provider.cancellation())
+        .cloned();
+    let checkpoint = || {
+        control.as_ref().map_or(Ok(()), |token| {
+            token
+                .checkpoint()
+                .map_err(|error| WorkspaceError::InlineCompile {
+                    lane: static_path(spec_format).into(),
+                    reason: error.to_string(),
+                })
+        })
+    };
+    checkpoint()?;
     let entries = boot.static_entries().collect::<Vec<_>>();
     if entries.is_empty() {
         return Ok(None);
@@ -287,6 +303,12 @@ fn compile_static_owner_managed_using<P: OwnerNativeCompileProvider>(
             reason: error.to_string(),
         })?,
     );
+    let source = control::ControlledSource {
+        source,
+        control: control.as_ref(),
+    };
+    let source = &source;
+    checkpoint()?;
     let owner_id = owner.runtime().id().clone();
     let has_native = owner.runtime().has_compiler_native_intersection()?;
 
@@ -294,6 +316,7 @@ fn compile_static_owner_managed_using<P: OwnerNativeCompileProvider>(
         let scope = acquire(&mode);
         let result = compile_builtin(plan, source, mode, scope.as_ref(), static_path(spec_format));
         finish_artifact_scope(scope.as_ref(), &result);
+        checkpoint()?;
         return result.map(|artifact| {
             Some(OwnerManagedStaticCompile {
                 artifact: OwnerManagedArtifact::Builtin(artifact),
@@ -330,6 +353,7 @@ fn compile_static_owner_managed_using<P: OwnerNativeCompileProvider>(
         )
     });
     finish_scope(scope.as_ref(), &result);
+    checkpoint()?;
     result.map(|outcome| {
         Some(OwnerManagedStaticCompile {
             artifact: OwnerManagedArtifact::Native(outcome),
@@ -347,7 +371,7 @@ fn acquire(mode: &OwnerNativeCompileMode<'_>) -> Option<crate::compile_trace::Tr
 
 fn compile_builtin(
     plan: ArtifactPlan,
-    source: &BootSectionSource,
+    source: &impl vibe_spec::SectionSource,
     mode: OwnerNativeCompileMode<'_>,
     scope: Option<&crate::compile_trace::TraceScope>,
     lane: &str,
@@ -367,7 +391,7 @@ fn compile_builtin(
 
 fn compile_native<B: crate::extension_world::CompilerNativeFactBinding>(
     plan: ArtifactPlan,
-    source: &BootSectionSource,
+    source: &impl vibe_spec::SectionSource,
     binding: &B,
     policy: vibe_spec::CompilerNativePolicy,
     mode: &OwnerNativeCompileMode<'_>,

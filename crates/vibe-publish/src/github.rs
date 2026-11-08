@@ -78,7 +78,7 @@ pub struct GithubRepoCreator {
     /// any operation against a different org.
     expected_org: String,
     token: Token,
-    client: reqwest::blocking::Client,
+    client: vibe_registry::http_admission::ManagedHttpClient,
 }
 
 impl GithubRepoCreator {
@@ -97,13 +97,12 @@ impl GithubRepoCreator {
         api_base: &str,
         host_name: &str,
     ) -> Result<Self, PublishError> {
-        let client = reqwest::blocking::Client::builder()
-            .timeout(Duration::from_secs(30))
-            .build()
-            .map_err(|e| PublishError::HttpFailed {
-                host: host_name.to_string(),
-                message: format!("constructing HTTP client: {e}"),
-            })?;
+        let client =
+            vibe_registry::http_admission::ManagedHttpClient::legacy(Duration::from_secs(30))
+                .map_err(|e| PublishError::HttpFailed {
+                    host: host_name.to_string(),
+                    message: format!("constructing HTTP client: {e}"),
+                })?;
         Ok(GithubRepoCreator {
             api_base: api_base.trim_end_matches('/').to_string(),
             host_name: host_name.to_string(),
@@ -176,16 +175,98 @@ impl RepoCreator for GithubRepoCreator {
     }
 
     fn repo_exists(&self, org: &ValidatedOrg, name: &str) -> Result<bool, PublishError> {
+        self.repo_exists_with_control(
+            org,
+            name,
+            &vibe_core::cancellation::CancellationToken::default(),
+        )
+    }
+    fn create_repo(
+        &self,
+        org: &ValidatedOrg,
+        name: &str,
+        opts: &CreateOpts,
+    ) -> Result<RepoInfo, PublishError> {
+        self.create_repo_with_control(
+            org,
+            name,
+            opts,
+            &vibe_core::cancellation::CancellationToken::default(),
+        )
+    }
+    fn repo_exists_controlled(
+        &self,
+        org: &ValidatedOrg,
+        name: &str,
+        token: &vibe_core::cancellation::CancellationToken,
+    ) -> Result<bool, PublishError> {
+        self.repo_exists_with_control(org, name, token)
+    }
+    fn create_repo_controlled(
+        &self,
+        org: &ValidatedOrg,
+        name: &str,
+        opts: &CreateOpts,
+        token: &vibe_core::cancellation::CancellationToken,
+    ) -> Result<RepoInfo, PublishError> {
+        self.create_repo_with_control(org, name, opts, token)
+    }
+}
+impl GithubRepoCreator {
+    fn request_controlled(
+        &self,
+        method: reqwest::Method,
+        url: &str,
+        body: Option<Vec<u8>>,
+        token: &vibe_core::cancellation::CancellationToken,
+    ) -> Result<vibe_registry::http_admission::ManagedResponse, PublishError> {
+        let mut headers = reqwest::header::HeaderMap::new();
+        let invalid = |_: reqwest::header::InvalidHeaderValue| PublishError::HttpFailed {
+            host: self.host_name.clone(),
+            message: "invalid publisher request header".into(),
+        };
+        headers.insert(
+            reqwest::header::AUTHORIZATION,
+            self.auth_header().parse().map_err(invalid)?,
+        );
+        headers.insert(
+            reqwest::header::ACCEPT,
+            GITHUB_ACCEPT.parse().map_err(invalid)?,
+        );
+        headers.insert(
+            "x-github-api-version",
+            GITHUB_API_VERSION.parse().map_err(invalid)?,
+        );
+        headers.insert(
+            reqwest::header::USER_AGENT,
+            user_agent().parse().map_err(invalid)?,
+        );
+        if body.is_some() {
+            headers.insert(
+                reqwest::header::CONTENT_TYPE,
+                reqwest::header::HeaderValue::from_static("application/json"),
+            );
+        }
+        self.client
+            .execute_legacy(method, url, headers, body, token)
+            .map_err(|error| match error {
+                vibe_registry::http_admission::HttpGetError::Transport(error) => {
+                    classify_send_error(error, &self.host_name)
+                }
+                error => PublishError::HttpFailed {
+                    host: self.host_name.clone(),
+                    message: error.to_string(),
+                },
+            })
+    }
+    fn repo_exists_with_control(
+        &self,
+        org: &ValidatedOrg,
+        name: &str,
+        cancellation: &vibe_core::cancellation::CancellationToken,
+    ) -> Result<bool, PublishError> {
         let url = format!("{}/repos/{}/{}", self.api_base, org.as_str(), name);
-        let res = self
-            .client
-            .get(&url)
-            .header(reqwest::header::AUTHORIZATION, self.auth_header())
-            .header(reqwest::header::ACCEPT, GITHUB_ACCEPT)
-            .header("X-GitHub-Api-Version", GITHUB_API_VERSION)
-            .header(reqwest::header::USER_AGENT, user_agent())
-            .send()
-            .map_err(|e| classify_send_error(e, &self.host_name))?;
+        let res = self.request_controlled(reqwest::Method::GET, &url, None, cancellation)?;
         let status = res.status();
         if status.is_success() {
             return Ok(true);
@@ -207,11 +288,12 @@ impl RepoCreator for GithubRepoCreator {
         }
     }
 
-    fn create_repo(
+    fn create_repo_with_control(
         &self,
         org: &ValidatedOrg,
         name: &str,
         opts: &CreateOpts,
+        cancellation: &vibe_core::cancellation::CancellationToken,
     ) -> Result<RepoInfo, PublishError> {
         let url = format!("{}/orgs/{}/repos", self.api_base, org.as_str());
         let description = normalize_description(opts.description.as_deref());
@@ -225,21 +307,27 @@ impl RepoCreator for GithubRepoCreator {
             has_projects: false,
             has_wiki: false,
         };
-        let res = self
-            .client
-            .post(&url)
-            .header(reqwest::header::AUTHORIZATION, self.auth_header())
-            .header(reqwest::header::ACCEPT, GITHUB_ACCEPT)
-            .header("X-GitHub-Api-Version", GITHUB_API_VERSION)
-            .header(reqwest::header::USER_AGENT, user_agent())
-            .json(&body)
-            .send()
-            .map_err(|e| classify_send_error(e, &self.host_name))?;
+        let bytes = serde_json::to_vec(&body).map_err(|error| PublishError::HttpFailed {
+            host: self.host_name.clone(),
+            message: error.to_string(),
+        })?;
+        let res =
+            self.request_controlled(reqwest::Method::POST, &url, Some(bytes), cancellation)?;
         let status = res.status();
         if status.is_success() {
-            let parsed: RepoResponse = res.json().map_err(|e| PublishError::HttpFailed {
-                host: self.host_name.clone(),
-                message: format!("parsing create-repo response: {e}"),
+            let parsed: RepoResponse = res.json().map_err(|error| {
+                if cancellation.acknowledged() {
+                    PublishError::Cancelled {
+                        repository_creation: "completed".into(),
+                        release_push: "not-started".into(),
+                        reason: "create-repo accepted; response metadata interrupted".into(),
+                    }
+                } else {
+                    PublishError::HttpFailed {
+                        host: self.host_name.clone(),
+                        message: format!("parsing create-repo response: {error}"),
+                    }
+                }
             })?;
             // Public clone URL we surface to humans — HTTPS by default,
             // SSH if HTTPS is missing. The token-credentialed push URL

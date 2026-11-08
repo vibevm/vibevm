@@ -86,7 +86,7 @@ url = "https://github.com/vibespecs"
     let r: RegistrySection = toml::from_str(raw).unwrap();
     assert_eq!(r.r#ref, DEFAULT_REGISTRY_REF);
     assert_eq!(r.naming, NamingConvention::Fqdn);
-    assert_eq!(r.auth, AuthKind::None);
+    assert_eq!(r.auth, None);
     assert!(r.token_env.is_none());
     assert!(r.enabled); // on by default
     // Defaults skip on serialize — no spurious diffs.
@@ -120,8 +120,13 @@ fn auth_kind_variants_roundtrip() {
     ] {
         let raw = format!("name = \"r\"\nurl = \"https://x/y\"\nauth = \"{raw_value}\"\n");
         let r: RegistrySection = toml::from_str(&raw).unwrap();
-        assert_eq!(r.auth, expected);
-        let back: RegistrySection = toml::from_str(&toml::to_string_pretty(&r).unwrap()).unwrap();
+        assert_eq!(r.auth, Some(expected));
+        let rendered = toml::to_string_pretty(&r).unwrap();
+        assert!(
+            rendered.contains(&format!("auth = \"{raw_value}\"")),
+            "{rendered}"
+        );
+        let back: RegistrySection = toml::from_str(&rendered).unwrap();
         assert_eq!(r, back);
     }
 }
@@ -173,7 +178,7 @@ fn resolve_token_env_name_derives_from_host() {
         url: "https://gitlab.company.com/vibespecs".into(),
         r#ref: "main".into(),
         naming: NamingConvention::KindName,
-        auth: AuthKind::TokenEnv,
+        auth: Some(AuthKind::TokenEnv),
         token_env: None,
         enabled: true,
         index_url: None,
@@ -191,7 +196,7 @@ fn resolve_token_env_name_honours_explicit_override() {
         url: "https://gitlab.company.com/vibespecs".into(),
         r#ref: "main".into(),
         naming: NamingConvention::KindName,
-        auth: AuthKind::TokenEnv,
+        auth: Some(AuthKind::TokenEnv),
         token_env: Some("MY_CUSTOM_TOKEN".to_string()),
         enabled: true,
         index_url: None,
@@ -209,7 +214,7 @@ fn resolve_token_env_name_handles_scp_form() {
         url: "git@gitlab.company.com:vibespecs".into(),
         r#ref: "main".into(),
         naming: NamingConvention::KindName,
-        auth: AuthKind::Ssh,
+        auth: Some(AuthKind::Ssh),
         token_env: None,
         enabled: true,
         index_url: None,
@@ -304,7 +309,7 @@ fn resolve_token_env_name_returns_none_for_file_url() {
         url: "file:///tmp/registry".into(),
         r#ref: "main".into(),
         naming: NamingConvention::KindName,
-        auth: AuthKind::TokenEnv,
+        auth: Some(AuthKind::TokenEnv),
         token_env: None,
         enabled: true,
         index_url: None,
@@ -361,5 +366,114 @@ fn m_06_a_4_project_sources_presence_and_strict_grammar() {
             .unwrap()
             .sources
             .is_none()
+    );
+}
+
+#[test]
+#[specmark::spec(
+    verifies = "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#registry-auth"
+)]
+fn registry_auth_presence_is_declaration_data_independent_of_transport() {
+    for url in [
+        "https://example.invalid/org",
+        "ssh://git@example.invalid/org",
+        "git@example.invalid:org",
+        "file:///fixture/registry",
+    ] {
+        let base = format!("name='r'\nurl='{url}'\n");
+        let omitted: RegistrySection = toml::from_str(&base).unwrap();
+        let restricted: RegistrySection = toml::from_str(&format!("{base}auth='none'\n")).unwrap();
+        assert_eq!(omitted.auth, None);
+        assert_eq!(restricted.auth, Some(AuthKind::None));
+        assert_ne!(omitted, restricted);
+        for row in [omitted, restricted] {
+            let rendered = toml::to_string(&row).unwrap();
+            assert_eq!(rendered.contains("auth ="), row.auth.is_some());
+            assert_eq!(toml::from_str::<RegistrySection>(&rendered).unwrap(), row);
+            let json = serde_json::to_value(&row).unwrap();
+            assert_eq!(json.get("auth").is_some(), row.auth.is_some());
+            assert_eq!(
+                serde_json::from_value::<RegistrySection>(json).unwrap(),
+                row
+            );
+        }
+    }
+    // AuthKind's package/redirect/backend default remains unchanged.
+    assert_eq!(AuthKind::default(), AuthKind::None);
+}
+
+#[test]
+#[specmark::spec(
+    verifies = "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#registry-auth"
+)]
+fn present_registry_auth_rejects_null_and_non_enum_values() {
+    for auth in [
+        serde_json::Value::Null,
+        serde_json::json!(false),
+        serde_json::json!(0),
+        serde_json::json!([]),
+        serde_json::json!({}),
+        serde_json::json!("auto"),
+    ] {
+        let value =
+            serde_json::json!({"name":"r","url":"ssh://git@example.invalid/org","auth":auth});
+        assert!(serde_json::from_value::<RegistrySection>(value).is_err());
+    }
+}
+
+#[test]
+#[specmark::spec(
+    verifies = "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#global-config"
+)]
+fn project_and_global_registry_roundtrips_preserve_auth_presence() {
+    let rows = "[[registry]]\nname='omitted'\nurl='ssh://git@example.invalid/org'\n[[registry]]\nname='restricted'\nurl='ssh://git@example.invalid/org'\nauth='none'\n";
+    let project = super::super::Manifest::parse_str(&format!(
+        "[project]\nname='host'\nversion='1.0.0'\n{rows}"
+    ))
+    .unwrap();
+    assert_eq!(project.registries[0].auth, None);
+    assert_eq!(project.registries[1].auth, Some(AuthKind::None));
+    let rendered = project.render_with_comments(None).unwrap();
+    assert_eq!(
+        super::super::Manifest::parse_str(&rendered).unwrap(),
+        project
+    );
+    let global: crate::GlobalRegistryConfig = toml::from_str(rows).unwrap();
+    let dir = tempfile::tempdir().unwrap();
+    let path = dir.path().join("registry.toml");
+    global.write_to(&path).unwrap();
+    assert_eq!(
+        crate::GlobalRegistryConfig::load_from(&path).unwrap(),
+        global
+    );
+    let encoded: toml::Value = toml::from_str(&std::fs::read_to_string(path).unwrap()).unwrap();
+    assert!(encoded["registry"][0].get("auth").is_none());
+    assert_eq!(encoded["registry"][1]["auth"].as_str(), Some("none"));
+}
+
+#[test]
+#[specmark::spec(
+    verifies = "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#global-config"
+)]
+fn project_shadow_keeps_auth_omission_and_restriction_distinct() {
+    for (project_auth, global_auth, expected) in [
+        ("", "auth='none'\n", None),
+        ("auth='none'\n", "", Some(AuthKind::None)),
+    ] {
+        let section = "[[registry]]\nname='same'\nurl='ssh://git@example.invalid/org'\n";
+        let project = super::super::Manifest::parse_str(&format!(
+            "[project]\nname='host'\nversion='1.0.0'\n{section}{project_auth}"
+        ))
+        .unwrap();
+        let global: crate::GlobalRegistryConfig =
+            toml::from_str(&format!("{section}{global_auth}")).unwrap();
+        let effective = crate::merge_effective(&project, &global);
+        assert_eq!(effective.registries.len(), 1);
+        assert_eq!(effective.registries[0].auth, expected);
+    }
+    assert!(
+        crate::default_registries()
+            .iter()
+            .all(|row| row.auth.is_none())
     );
 }

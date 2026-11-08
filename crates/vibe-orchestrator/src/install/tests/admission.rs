@@ -11,6 +11,25 @@ use vibe_resolver::{ResolvedGraph, SolveError};
 
 struct FreshSource;
 impl vibe_install::InstallSource for FreshSource {
+    fn source_solve_limits(&self) -> Result<vibe_resolver::SourceSolveLimits, SolveError> {
+        panic!("Fresh must not solve")
+    }
+    fn solve_metadata(
+        &self,
+        _: &vibe_resolver::SourceSolveRequest<'_>,
+    ) -> Result<vibe_resolver::SourceResolvedGraph, SolveError> {
+        panic!("Fresh must not solve")
+    }
+    fn acquire_candidate_for_install(
+        &self,
+        _: &vibe_registry::source_candidates::RetainedSourceCandidate,
+        _: &Path,
+        _: Option<&str>,
+        _: &Path,
+        _: &vibe_core::progress::Progress,
+    ) -> Result<vibe_registry::PackageAcquisition, RegistryError> {
+        panic!("Fresh must not fetch")
+    }
     fn resolve_and_fetch(
         &self,
         _: &PackageRef,

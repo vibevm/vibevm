@@ -132,6 +132,27 @@ pub fn extract_org_segment(org_url: &str) -> Result<String, PublishError> {
 #[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#publish")]
 pub enum PublishError {
     #[error(
+        "publisher `{host}` does not expose cooperative control for {operation}; no new remote call was started \
+         (violates spec://org.vibevm.core/vibevm/common/PROP-073#PROJECT-COOPERATIVE-STOP; \
+         fix: publish to a host that supports cooperative control, or run the publish without a stop control)"
+    )]
+    ControlUnavailable {
+        host: String,
+        operation: &'static str,
+    },
+
+    #[error(
+        "publication cancelled; repository creation: {repository_creation}; release push: {release_push}; {reason} \
+         (violates spec://org.vibevm.core/vibevm/common/PROP-073#OPERATION-EFFECTS-LAW; \
+         fix: inspect the reported repository and release effects, then rerun the publish)"
+    )]
+    Cancelled {
+        repository_creation: String,
+        release_push: String,
+        reason: String,
+    },
+
+    #[error(
         "publish refused: source directory `{path}` does not look like a vibevm package — \
          {reason} \
          (violates spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#publish; \

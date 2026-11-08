@@ -5,6 +5,8 @@ specmark::scope!(
 
 #[path = "root_constraints/fixture.rs"]
 mod fixture;
+#[path = "support/retained.rs"]
+mod retained;
 #[path = "root_constraints/review_cases.rs"]
 mod review_cases;
 use fixture::*;

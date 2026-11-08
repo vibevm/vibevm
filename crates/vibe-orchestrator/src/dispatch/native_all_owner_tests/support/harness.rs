@@ -7,7 +7,7 @@ impl RegistryEnvironment for Harness {
     fn prepare(&self) -> anyhow::Result<RegistryEnvironmentSnapshot> {
         Ok(RegistryEnvironmentSnapshot {
             embedded_root: None,
-            global: vibe_core::GlobalRegistryConfig::load()?,
+            global: vibe_core::GlobalRegistryConfig::load()?.into(),
         })
     }
 }
@@ -26,6 +26,27 @@ impl PackageSource for DummySource {
 }
 
 impl vibe_install::InstallSource for DummySource {
+    fn source_solve_limits(
+        &self,
+    ) -> Result<vibe_resolver::SourceSolveLimits, vibe_resolver::SolveError> {
+        unreachable!("fresh fixture never solves")
+    }
+    fn solve_metadata(
+        &self,
+        _: &vibe_resolver::SourceSolveRequest<'_>,
+    ) -> Result<vibe_resolver::SourceResolvedGraph, vibe_resolver::SolveError> {
+        unreachable!("fresh fixture never solves")
+    }
+    fn acquire_candidate_for_install(
+        &self,
+        _: &vibe_registry::source_candidates::RetainedSourceCandidate,
+        _: &Path,
+        _: Option<&str>,
+        _: &Path,
+        _: &vibe_core::progress::Progress,
+    ) -> Result<vibe_registry::PackageAcquisition, vibe_registry::RegistryError> {
+        unreachable!("fresh fixture never fetches")
+    }
     fn resolve_and_fetch(
         &self,
         _: &PackageRef,

@@ -202,6 +202,7 @@ fn rows_from_decl(
 /// use vibe_core::remap::{rows_from_mirrors, Layer};
 ///
 /// let mirrors = [MirrorSection {
+///     publication: Default::default(),
 ///     of: "vibespecs".into(),
 ///     url: "https://nexus.corp.example/vibespecs".into(),
 ///     priority: 0,
@@ -235,7 +236,7 @@ pub fn rows_from_mirrors(
                     RemapKey::Prefix(registry.url.clone()),
                     RemapTarget::Url(mirror.url.clone()),
                     reason.clone(),
-                    Provenance::new(layer, source.clone(), rows.len()),
+                    Provenance::new(layer, source.clone(), rows.len()).catalog(mirror.publication),
                 ));
             }
             continue;
@@ -244,7 +245,7 @@ pub fn rows_from_mirrors(
             RemapKey::Registry(mirror.of.clone()),
             RemapTarget::Url(mirror.url.clone()),
             reason,
-            Provenance::new(layer, source.clone(), rows.len()),
+            Provenance::new(layer, source.clone(), rows.len()).catalog(mirror.publication),
         ));
     }
     rows
@@ -288,7 +289,8 @@ pub fn rows_from_overrides(
                     .reason
                     .clone()
                     .or_else(|| Some("`[[override]]` source pin".to_owned())),
-                Provenance::new(layer, source.clone(), index),
+                Provenance::new(layer, source.clone(), index)
+                    .catalog(crate::RoutePublication::Local),
             );
             built.target_ref = entry.r#ref.clone();
             built

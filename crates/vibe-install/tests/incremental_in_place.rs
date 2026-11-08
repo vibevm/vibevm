@@ -23,6 +23,9 @@ use vibe_registry::{
 use vibe_resolver::{FeatureRequest, ResolvedGraph, ResolvedNode, SolveError};
 use vibe_workspace::hooks::HookPolicy;
 
+#[path = "support/retained.rs"]
+mod retained;
+
 #[derive(Debug, Clone)]
 struct PreparedObservation {
     slot: PathBuf,
@@ -33,10 +36,18 @@ struct PreparedObservation {
 }
 
 /// Only graph selection is mocked. Source preparation uses actual local Git.
+/// The mocked selection (every name at the current version) is mirrored as a
+/// metadata-only directory registry at `metadata`, read from the actual Git
+/// manifests, so planning's retained-metadata solve observes the same graph.
 struct Source {
     registry: GitPerPackageRegistry,
     store: PathBuf,
+    metadata: PathBuf,
+    lock: PathBuf,
     names: Vec<String>,
+    /// Further metadata-only packages (relative manifest path, body) that a
+    /// fixture manifest requires outside the mocked Git selection.
+    extra_metadata: RefCell<Vec<(PathBuf, String)>>,
     secondary: Option<GitPerPackageRegistry>,
     version: RefCell<semver::Version>,
     fetched: RefCell<Vec<String>>,
@@ -50,6 +61,35 @@ impl Source {
         } else {
             &self.registry
         }
+    }
+    /// Rebuild the metadata mirror of the mocked selection from actual manifests.
+    fn mirror_metadata(&self, root: &Path) -> Result<(), SolveError> {
+        let other = |error: String| SolveError::from(vibe_resolver::DepProviderError::Other(error));
+        if root.exists() {
+            fs::remove_dir_all(root).map_err(|e| other(e.to_string()))?;
+        }
+        let version = self.version.borrow().clone();
+        for name in &self.names {
+            let manifest = self.manifest_of(
+                &PackageRef::parse(&format!("org.vibevm/{name}@={version}")).unwrap(),
+            )?;
+            let dir = root
+                .join("org.vibevm")
+                .join(name)
+                .join(format!("v{version}"));
+            fs::create_dir_all(&dir).map_err(|e| other(e.to_string()))?;
+            manifest
+                .write(dir.join(Manifest::FILENAME))
+                .map_err(|e| other(e.to_string()))?;
+        }
+        for (relative, body) in self.extra_metadata.borrow().iter() {
+            let path = root.join(relative);
+            if let Some(parent) = path.parent() {
+                fs::create_dir_all(parent).map_err(|e| other(e.to_string()))?;
+            }
+            fs::write(&path, body).map_err(|e| other(e.to_string()))?;
+        }
+        Ok(())
     }
     fn graph(&self) -> ResolvedGraph {
         ResolvedGraph {
@@ -67,7 +107,82 @@ impl Source {
         }
     }
 }
+/// Selection is mocked: like the incumbent mocked solve, the metadata mirror
+/// does not re-adjudicate lock rows recorded from the actual Git source (a
+/// directory registry never owns a Git-recorded row).
+fn mocked_selection<'a>(
+    request: &vibe_resolver::SourceSolveRequest<'a>,
+) -> vibe_resolver::SourceSolveRequest<'a> {
+    vibe_resolver::SourceSolveRequest {
+        roots: request.roots,
+        held_roots: request.held_roots,
+        authoritative_locked: &[],
+        activated: request.activated,
+        limits: request.limits,
+        configuration: request.configuration,
+        blocked: request.blocked,
+    }
+}
+
+/// The incumbent acquisition dispatch for one exact coordinate: an existing
+/// locked in-place slot with a readable `[package]` base is refreshed through
+/// the source's `prepare_in_place`; everything else uses `acquire_for_install`.
+fn incumbent_acquire<S: InstallSource + ?Sized>(
+    source: &S,
+    lock: &Path,
+    pkgref: &PackageRef,
+    store: &Path,
+    expected: Option<&str>,
+    slot: &Path,
+    progress: &vibe_core::progress::Progress,
+) -> Result<vibe_registry::PackageAcquisition, RegistryError> {
+    let locked_in_place = lock.exists()
+        && Lockfile::read(lock).is_ok_and(|lock| {
+            pkgref.group.as_ref().is_some_and(|group| {
+                lock.find(group, pkgref.name.as_str())
+                    .is_some_and(|old| old.materialization.is_in_place())
+            })
+        });
+    let base = slot.join(".git").exists()
+        && Manifest::read(slot.join(Manifest::FILENAME)).is_ok_and(|m| m.package.is_some());
+    if locked_in_place && base {
+        source
+            .prepare_in_place(pkgref, slot)
+            .map(vibe_registry::PackageAcquisition::InPlace)
+    } else {
+        source.acquire_for_install(pkgref, store, expected, slot, progress)
+    }
+}
+
 impl InstallSource for Source {
+    fn source_solve_limits(&self) -> Result<vibe_resolver::SourceSolveLimits, SolveError> {
+        retained::limits()
+    }
+    fn solve_metadata(
+        &self,
+        request: &vibe_resolver::SourceSolveRequest<'_>,
+    ) -> Result<vibe_resolver::SourceResolvedGraph, SolveError> {
+        self.mirror_metadata(&self.metadata)?;
+        retained::solve(&self.metadata, &mocked_selection(request))
+    }
+    fn acquire_candidate_for_install(
+        &self,
+        candidate: &vibe_registry::source_candidates::RetainedSourceCandidate,
+        store: &Path,
+        expected: Option<&str>,
+        slot: &Path,
+        progress: &vibe_core::progress::Progress,
+    ) -> Result<vibe_registry::PackageAcquisition, RegistryError> {
+        incumbent_acquire(
+            self,
+            &self.lock,
+            &retained::exact(candidate),
+            store,
+            expected,
+            slot,
+            progress,
+        )
+    }
     fn acquire_for_install(
         &self,
         pkgref: &PackageRef,
@@ -241,6 +356,8 @@ impl Fixture {
             .join(vibe_core::layout::current_vibedeps_root())
             .join("org.vibevm.giant");
         let store = temp.path().join("isolated-store");
+        let metadata = temp.path().join("metadata");
+        let lock = project.join("vibe.lock");
         Self {
             _temp: temp,
             project,
@@ -249,7 +366,10 @@ impl Fixture {
             source: Source {
                 registry,
                 store,
+                metadata,
+                lock,
                 names: vec!["giant".into()],
+                extra_metadata: RefCell::new(vec![]),
                 secondary: None,
                 version: RefCell::new(semver::Version::parse("1.0.0").unwrap()),
                 fetched: RefCell::new(vec![]),
@@ -527,6 +647,14 @@ fn deferred_common_refusal(source_input: bool) {
         "\n[configuration]\n"
     };
     f.publish("1.1.0", declaration);
+    if source_input {
+        // The configured edge targets a real, resolvable package: the refusal
+        // under test is the unsupported input, not an unsatisfiable graph.
+        f.source.extra_metadata.borrow_mut().push((
+            PathBuf::from("org.example/dep/v1.0.0").join(Manifest::FILENAME),
+            "[package]\ngroup='org.example'\nname='dep'\nkind='flow'\nversion='1.0.0'\n".into(),
+        ));
+    }
     let before = worktree(&f.project);
     let config = fs::read(f.slot.join(".git/config")).unwrap();
     let error = f.plan().unwrap_err();
@@ -541,10 +669,11 @@ fn deferred_common_refusal(source_input: bool) {
         },
         "{error}"
     );
-    assert_eq!(
-        f.source.prepared.borrow().len(),
-        1,
-        "object preparation precedes actual target admission"
+    // The retained-metadata planner admits the selected candidate's actual
+    // manifest before acquisition, so the refusal needs no object preparation.
+    assert!(
+        f.source.prepared.borrow().is_empty(),
+        "actual target admission precedes any object preparation"
     );
     assert_eq!(git(&f.slot, &["rev-parse", "HEAD"]), old);
     assert_eq!(worktree(&f.project), before);

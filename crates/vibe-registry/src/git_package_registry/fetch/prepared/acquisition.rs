@@ -24,7 +24,7 @@ impl GitPerPackageRegistry {
         primary: &str,
         mirrors: &[String],
     ) -> Result<String, RegistryError> {
-        if self.effective_token.is_some()
+        if self.auth == vibe_core::manifest::AuthKind::TokenEnv
             && let Some(repo) = reuse
         {
             let recorded = self.backend.recorded_origin_url(repo)?;
@@ -41,7 +41,7 @@ impl GitPerPackageRegistry {
                 return Err(GitError::NativeContext{reason:"warm token authentication cannot cross the configured credential origin"}.into());
             }
         }
-        Ok(self.credentialed_url(origin))
+        self.selected_credentialed_url(origin)
     }
     pub(in crate::git_package_registry::fetch) fn prepare_native_attempt(
         &self,
@@ -54,13 +54,26 @@ impl GitPerPackageRegistry {
         let acquired = (|| {
             self.ensure_token_loaded()?;
             let source = std::path::absolute(source).map_err(|e| io(source, e))?;
-            let reuse = (refresh && source.join(".git").exists()).then_some(source.as_path());
-            let origin = match reuse {
+            let preserved = if self.locked_source {
+                workspace_slot
+                    .filter(|slot| slot.join(".git").exists())
+                    .unwrap_or(source.as_path())
+            } else {
+                source.as_path()
+            };
+            let reuse = ((refresh || self.locked_source) && preserved.join(".git").exists())
+                .then_some(preserved);
+            let origin = match reuse.filter(|_| !self.locked_source) {
                 Some(source) => self.backend.origin_url(source)?,
                 None => strip_git_plus_prefix(url).to_owned(),
             };
             let (primary, mirrors) = self.package_urls(&resolved.group, &resolved.name)?;
-            let authenticated = self.native_credentialed_url(&origin, reuse, &primary, &mirrors)?;
+            let authenticated = self.native_credentialed_url(
+                &origin,
+                reuse.filter(|_| !self.locked_source),
+                &primary,
+                &mirrors,
+            )?;
             let cache =
                 std::path::absolute(&self.cache_root).map_err(|e| io(&self.cache_root, e))?;
             fs::create_dir_all(&cache).map_err(|e| io(&cache, e))?;
@@ -70,10 +83,18 @@ impl GitPerPackageRegistry {
                 .map_err(|e| io(&cache, e))?;
             let objects = temporary.path().join("objects.git");
             let requested = self.package_reference(resolved);
-            let token = self
-                .backend
-                .prepare_native_source(&authenticated, &requested, reuse, &objects)?
-                .ok_or_else(|| refusal(&source, "native source capability disappeared"))?;
+            let token = if self.locked_source {
+                self.backend.prepare_pinned_native_source(
+                    &authenticated,
+                    &requested,
+                    reuse,
+                    &objects,
+                )?
+            } else {
+                self.backend
+                    .prepare_native_source(&authenticated, &requested, reuse, &objects)?
+            }
+            .ok_or_else(|| refusal(&source, "native source capability disappeared"))?;
             Ok::<_, RegistryError>((temporary, objects, token, origin, requested))
         })()
         .map_err(PreparationFailure::acquisition)?;
@@ -124,6 +145,9 @@ impl GitPerPackageRegistry {
             };
             let revision = token.bind(&slot)?;
             Ok(PreparedInPlace(Arc::new(Prepared {
+                locked_selection: None,
+                route_publication: self.source_publication,
+                direct_kind: None,
                 registry_name: self.name.clone(),
                 via_redirect: None,
                 serving_endpoint: self.backend.prepared_serving_endpoint(&objects)?,

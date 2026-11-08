@@ -13,10 +13,36 @@ use vibe_core::user_config::TransferConfig;
 use crate::cli::Cli;
 use crate::output;
 
+/// Select the existing transfer posture at this command composition boundary.
+pub(crate) fn attach_for_command(
+    ctx: output::Context,
+    config: &TransferConfig,
+    command: &crate::cli::Command,
+) -> output::Context {
+    if crate::composition::project_preview(command) {
+        attach_preview(ctx, config)
+    } else {
+        attach(ctx, config)
+    }
+}
+
 /// Attach the invocation's transfers to `ctx`. A limit that does not read
 /// is said once and ignored rather than refusing the command: the setting
 /// belongs to the machine, and the command was not asked about it.
 pub(crate) fn attach(ctx: output::Context, config: &TransferConfig) -> output::Context {
+    attach_with_journal(ctx, config, true)
+}
+
+/// Preview retains progress and rate limits without opening a durable journal.
+pub(crate) fn attach_preview(ctx: output::Context, config: &TransferConfig) -> output::Context {
+    attach_with_journal(ctx, config, false)
+}
+
+fn attach_with_journal(
+    ctx: output::Context,
+    config: &TransferConfig,
+    record: bool,
+) -> output::Context {
     let limit = TransferLimit::from_config(config).unwrap_or_else(|reason| {
         eprintln!(
             "{}",
@@ -24,7 +50,11 @@ pub(crate) fn attach(ctx: output::Context, config: &TransferConfig) -> output::C
         );
         None
     });
-    let journal = vibe_core::settings::settings_dir().map(|root| TransferJournal::new(&root));
+    let journal = if record {
+        vibe_core::settings::settings_dir().map(|root| TransferJournal::new(&root))
+    } else {
+        None
+    };
     let verb = verb(std::env::args_os());
     let transfers = Transfers::new(journal, limit, verb);
     // Every clone of the invocation is journaled, whether or not the path

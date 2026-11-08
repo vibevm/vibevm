@@ -152,7 +152,7 @@ pub fn registry_feed(registry: &Registry) -> Result<(Vec<Pair>, String)> {
         }
     };
     let client = match IndexClient::probe(&base, vibe_registry::index_client::IndexAuth::None) {
-        ProbeOutcome::Found(client) => client,
+        ProbeOutcome::Found(client) => *client,
         ProbeOutcome::Absent => {
             return Err(DocError::Site {
                 message: format!(

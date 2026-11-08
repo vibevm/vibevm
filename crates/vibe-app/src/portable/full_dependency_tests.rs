@@ -122,6 +122,7 @@ fn context<'a>(
     resolver: &'a dyn Fn(&str) -> Result<ResolvedPackage, AppError>,
 ) -> OperationContext<'a> {
     OperationContext {
+        http_client: None,
         import_scope: None,
         settings: &home.settings,
         json: false,

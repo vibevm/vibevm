@@ -9,6 +9,7 @@ use crate::commands;
 use crate::output;
 use vibe_core::user_config::UserConfig;
 
+pub(crate) mod cancellation;
 pub(crate) mod remap;
 pub(crate) mod transfers;
 
@@ -94,17 +95,25 @@ mod tests;
 /// `vars` / `tree` / `term` don't resolve packages, so they skip the seed
 /// check. This is advisory — `ensure_default_global_registry` is a cheap
 /// file-existence check regardless.
+/// The no-publication project route, selected before startup side effects.
+pub(crate) fn project_preview(cmd: &crate::cli::Command) -> bool {
+    matches!(cmd, crate::cli::Command::Install(args) if args.plan_only && !args.global)
+}
+
 pub(crate) fn needs_global_registry(cmd: &crate::cli::Command) -> bool {
+    if project_preview(cmd) {
+        return false;
+    }
     use crate::cli::Command;
     matches!(
         cmd,
         Command::Init(_)
-            | Command::Install(_)
-            | Command::Update(_)
-            | Command::Reinstall(_)
             | Command::Outdated(_)
             | Command::Search(_)
             | Command::Registry(_)
             | Command::Cache(_)
     )
 }
+
+mod outcome;
+pub(crate) use outcome::finish;

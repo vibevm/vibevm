@@ -34,7 +34,7 @@ fn failure(path: &Path, reason: impl std::fmt::Display) -> Error {
 }
 
 impl FileGuard {
-    fn capture(path: &Path) -> Result<Self> {
+    pub(super) fn capture(path: &Path) -> Result<Self> {
         let parent_path = path
             .parent()
             .ok_or_else(|| failure(path, "metadata has no parent"))?;
@@ -86,7 +86,7 @@ impl FileGuard {
             })
     }
 
-    pub(super) fn publish(&mut self, after: Option<&str>) -> Result<()> {
+    pub(super) fn recheck(&self) -> Result<()> {
         let cap = self.before.as_ref().map_or(0, |s| s.bytes.len());
         if self.observe(cap)? != self.before {
             return Err(failure(
@@ -94,6 +94,10 @@ impl FileGuard {
                 "before-state changed before publication; left untouched",
             ));
         }
+        Ok(())
+    }
+    pub(super) fn publish(&mut self, after: Option<&str>) -> Result<()> {
+        self.recheck()?;
         let mode = self.before.as_ref().and_then(|s| s.unix_mode);
         match after {
             Some(text) => {
@@ -202,7 +206,7 @@ impl FileGuard {
         Ok(())
     }
 
-    fn disarm(&mut self) {
+    pub(super) fn disarm(&mut self) {
         self.change = None;
     }
 }
@@ -334,7 +338,7 @@ impl MetadataFiles {
     }
 }
 
-fn combine<const N: usize>(primary: Error, guards: [&mut FileGuard; N]) -> Error {
+pub(super) fn combine<const N: usize>(primary: Error, guards: [&mut FileGuard; N]) -> Error {
     let conflicts: Vec<_> = guards
         .into_iter()
         .filter_map(|guard| guard.undo().err())
@@ -391,4 +395,37 @@ pub(crate) fn publish_empty_legacy_lock(
         .map_err(|error| combine(error, [&mut guard]))?;
     guard.disarm();
     Ok(())
+}
+
+#[cfg(test)]
+mod cancellation_tests {
+    use super::*;
+    #[test]
+    fn cancelled_publication_restores_owned_metadata() {
+        let dir = tempfile::tempdir().unwrap();
+        let path = dir.path().join("vibe.toml");
+        std::fs::write(&path, "old").unwrap();
+        let mut guard = FileGuard::capture(&path).unwrap();
+        guard.publish(Some("new")).unwrap();
+        let token = vibe_core::cancellation::CancellationToken::new();
+        token.cancel();
+        assert!(token.checkpoint().is_err());
+        guard.undo().unwrap();
+        assert_eq!(std::fs::read_to_string(&path).unwrap(), "old");
+    }
+    #[test]
+    fn cancelled_publication_preserves_a_foreign_replacement() {
+        let dir = tempfile::tempdir().unwrap();
+        let path = dir.path().join("vibe.toml");
+        std::fs::write(&path, "old").unwrap();
+        let mut guard = FileGuard::capture(&path).unwrap();
+        guard.publish(Some("new")).unwrap();
+        std::fs::remove_file(&path).unwrap();
+        std::fs::write(&path, "foreign").unwrap();
+        let token = vibe_core::cancellation::CancellationToken::new();
+        token.cancel();
+        assert!(token.checkpoint().is_err());
+        assert!(guard.undo().is_err());
+        assert_eq!(std::fs::read_to_string(&path).unwrap(), "foreign");
+    }
 }

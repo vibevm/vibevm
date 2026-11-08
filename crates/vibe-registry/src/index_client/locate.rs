@@ -227,7 +227,7 @@ fn explicit_step(raw: Option<&str>, source: IndexUrlSource) -> Option<IndexUrlRe
 #[cfg(test)]
 mod tests {
     use super::*;
-    use vibe_core::manifest::{AuthKind, NamingConvention};
+    use vibe_core::manifest::NamingConvention;
 
     #[test]
     fn registry_env_suffix_uppercases() {
@@ -252,7 +252,7 @@ mod tests {
             url: url.to_string(),
             r#ref: "main".to_string(),
             naming: NamingConvention::Fqdn,
-            auth: AuthKind::None,
+            auth: None,
             token_env: None,
             enabled: true,
             index_url: index_url.map(|s| s.to_string()),

@@ -26,6 +26,7 @@ use super::*;
 /// a filesystem tree), so they cannot be wrapped one as the other; the
 /// resolver dispatches per variant on the four core operations
 /// (list / resolve / fetch-dep-manifest / fetch).
+#[derive(Clone)]
 pub enum RegistrySource {
     /// Remote (or local-git) org-root registry: `<org>/<group>.<name>.git`
     /// per-package repos, versions by `git ls-remote` tags.
@@ -40,6 +41,7 @@ pub enum RegistrySource {
 /// (the registry `name`, used to dispatch a fetch back to the source that
 /// resolved it, and the original `url`, used for the failure-discriminator
 /// attempts and the lockfile `source_url`).
+#[derive(Clone)]
 pub struct LocalRegistrySource {
     pub name: String,
     pub url: String,

@@ -33,6 +33,8 @@ mod compile_plan_tests;
 mod hybrid_emit;
 #[cfg(test)]
 use hybrid_emit::build_unit_table;
+/// The slot whose unit lane a resolved package's emission writes.
+pub(crate) use hybrid_emit::unit_slot_rel_path;
 use hybrid_emit::{
     append_hoisted, build_unit_table_bound, emit_package_units, verify_fingerprints,
 };

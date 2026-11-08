@@ -250,10 +250,7 @@ impl NativeState {
         } else {
             None
         };
-        let temporary = tempfile::Builder::new()
-            .prefix("vibe-native-stage-")
-            .tempdir()
-            .map_err(io)?;
+        let temporary = self.profile.temporary("vibe-native-stage-")?;
         let stage = temporary.path().join("checkout");
         fs::create_dir(&stage).map_err(io)?;
         let git = stage.join(".git");

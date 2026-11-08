@@ -75,6 +75,7 @@ struct Sinks {
     journal: Option<TransferJournal>,
     limit: Option<TransferLimit>,
     command: String,
+    cancellation: crate::cancellation::CancellationToken,
 }
 
 impl Transfers {
@@ -87,9 +88,18 @@ impl Transfers {
             journal,
             limit,
             command: command.into(),
+            cancellation: Default::default(),
         }))
     }
 
+    pub fn with_cancellation(&self, cancellation: crate::cancellation::CancellationToken) -> Self {
+        Self(Arc::new(Sinks {
+            journal: self.0.journal.clone(),
+            limit: self.0.limit.clone(),
+            command: self.0.command.clone(),
+            cancellation,
+        }))
+    }
     pub fn journal(&self) -> Option<&TransferJournal> {
         self.0.journal.as_ref()
     }
@@ -121,6 +131,14 @@ impl Transfers {
         began: Instant,
     ) -> Transfer {
         record.command = self.0.command.clone();
+        let inherited = match progress {
+            Some(progress) if progress.cancellation().has_control() => progress.clone(),
+            _ => progress
+                .cloned()
+                .unwrap_or_default()
+                .with_cancellation(self.0.cancellation.clone()),
+        };
+        let progress = Some(&inherited);
         Transfer::open(
             record,
             progress,
@@ -355,7 +373,18 @@ impl Transfer {
 
     /// The transfer stopped on `message`.
     pub fn fail(mut self, message: impl Into<String>) {
-        self.end(Outcome::Failed, Some(message.into()));
+        let stopped = self
+            .task
+            .as_ref()
+            .is_some_and(|task| task.progress().cancellation().acknowledged());
+        self.end(
+            if stopped {
+                Outcome::Interrupted
+            } else {
+                Outcome::Failed
+            },
+            Some(message.into()),
+        );
     }
 
     /// The command was interrupted while the transfer ran.
@@ -479,6 +508,9 @@ impl<R> TransferReader<R> {
 
 impl<R: Read> Read for TransferReader<R> {
     fn read(&mut self, buffer: &mut [u8]) -> io::Result<usize> {
+        if let Some(task) = &self.transfer.task {
+            task.progress().checkpoint().map_err(io::Error::other)?;
+        }
         let pending = std::mem::take(&mut self.pending);
         if pending > 0 {
             self.transfer.arrived(pending);

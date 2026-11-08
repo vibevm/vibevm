@@ -216,13 +216,22 @@ fn the_unit_write_path_publishes_only_through_the_transaction_manager() {
     );
 
     let manager = include_str!("../../boot_artifacts/publication.rs");
-    let wrapper_start = manager
-        .find("fn publish_unit_artifacts")
-        .expect("the manager owns the unit publication wrapper");
-    let wrapper = &manager[wrapper_start..];
-    let wrapper = &wrapper[..wrapper.find("\n}").expect("the wrapper closes")];
+    let body = |signature: &str| {
+        let start = manager
+            .find(signature)
+            .expect("the manager owns the unit publication wrapper");
+        let body = &manager[start..];
+        &body[..body.find("\n}").expect("the wrapper closes")]
+    };
+    // The uncontrolled wrapper delegates to the controlled entry, which adds
+    // cancellation checkpoints to the same crash-recoverable transaction.
     assert!(
-        wrapper.contains("transaction::write_production_with_selectors"),
+        body("fn publish_unit_artifacts(").contains("publish_unit_artifacts_controlled("),
+        "the unit wrapper must delegate to the controlled publication"
+    );
+    assert!(
+        body("fn publish_unit_artifacts_controlled(")
+            .contains("transaction::write_controlled_with_selectors"),
         "the unit wrapper must route through the crash-recoverable transaction"
     );
 }

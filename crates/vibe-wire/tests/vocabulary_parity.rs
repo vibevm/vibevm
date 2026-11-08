@@ -353,7 +353,7 @@ fn package_kind_copies_match_the_declared_domain() {
     prose(
         &mut drift,
         "vibe search --kind help",
-        "crates/vibe-cli/src/cli/pkg.rs",
+        "crates/vibe-cli/src/cli/pkg/discovery.rs",
         &format!("Restrict results to a single package kind ({ticked})."),
     );
     prose(

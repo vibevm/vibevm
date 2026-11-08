@@ -133,6 +133,14 @@ fn env_unattended() -> bool {
         .is_some_and(|s| matches!(s.as_str(), "1" | "true" | "yes" | "on"))
 }
 
+/// Whether a missing `~/.vibe/registry.toml` reads as the default registry
+/// pair: `false` exactly when `VIBE_NO_DEFAULT_REGISTRY` is present. Read here,
+/// at the CLI composition root, so `vibe-package-source` takes the posture as
+/// an explicit input instead of reading the ambient environment.
+pub(crate) fn seeds_default_registry() -> bool {
+    std::env::var_os("VIBE_NO_DEFAULT_REGISTRY").is_none()
+}
+
 /// Resolve the unattended posture: CLI flag wins; otherwise consult
 /// the env-var. There is no provenance enum for this — the value is
 /// boolean and the source rarely matters in practice (logs carry
@@ -337,10 +345,16 @@ impl Context {
     /// Rendering policy stays invocation-owned and is not reconstructed.
     pub fn with_progress_scope(&self, progress: Progress) -> Self {
         let mut scoped = self.clone();
+        // A context with no renderer and no machine stream (`--quiet`,
+        // `--json`, `--no-progress`) observes nothing, but the scope still
+        // carries the invocation's cooperative stop and transfer journal.
         scoped.progress = if scoped.progress_renderer.is_some() || scoped.machine_progress {
             progress
         } else {
+            let transfers = progress.transfers().cloned();
             Progress::default()
+                .with_cancellation(progress.cancellation().clone())
+                .with_transfers(transfers)
         };
         scoped
     }
@@ -365,7 +379,8 @@ impl Context {
     pub fn quiet_child(&self) -> Self {
         let mut child = self.clone();
         child.suppress_output = true;
-        child.progress = Progress::default();
+        child.progress =
+            Progress::default().with_cancellation(self.progress.cancellation().clone());
         child.progress_renderer = None;
         child.machine_progress = false;
         child

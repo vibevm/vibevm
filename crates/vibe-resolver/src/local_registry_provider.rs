@@ -17,16 +17,44 @@ use crate::{DepProvider, DepProviderError, VersionEnumerator};
 #[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#solver")]
 pub struct LocalRegistryDepProvider<'a> {
     registry: &'a LocalRegistry,
+    source_kind: vibe_registry::source_candidates::LocalCandidateKind,
+    held: Option<&'a vibe_registry::MultiRegistryResolver>,
 }
 
 impl<'a> LocalRegistryDepProvider<'a> {
+    /// Retain explicit source mode and authoritative held owner at composition.
+    pub fn with_source_context(
+        registry: &'a LocalRegistry,
+        source_kind: vibe_registry::source_candidates::LocalCandidateKind,
+        held: Option<&'a vibe_registry::MultiRegistryResolver>,
+    ) -> Self {
+        Self {
+            registry,
+            source_kind,
+            held,
+        }
+    }
+    fn held_for(&self, group: &Group, name: &str) -> Option<&vibe_registry::MultiRegistryResolver> {
+        self.held
+            .filter(|owner| owner.has_locked_package(group, name))
+    }
+
     pub fn new(registry: &'a LocalRegistry) -> Self {
-        LocalRegistryDepProvider { registry }
+        LocalRegistryDepProvider {
+            registry,
+            source_kind: vibe_registry::source_candidates::LocalCandidateKind::ExplicitRegistry,
+            held: None,
+        }
     }
 }
 
 impl<'a> DepProvider for LocalRegistryDepProvider<'a> {
     fn resolve_version(&self, pkgref: &PackageRef) -> Result<semver::Version, DepProviderError> {
+        if let Some(group) = &pkgref.group
+            && let Some(owner) = self.held_for(group, pkgref.name.as_str())
+        {
+            return crate::MultiRegistryDepProvider::new(owner).resolve_version(pkgref);
+        }
         match self.registry.resolve(pkgref) {
             Ok(r) => Ok(r.version),
             Err(RegistryError::UnknownPackage { group, name }) => {
@@ -49,6 +77,10 @@ impl<'a> DepProvider for LocalRegistryDepProvider<'a> {
         name: &str,
         version: &semver::Version,
     ) -> Result<Manifest, DepProviderError> {
+        if let Some(owner) = self.held_for(group, name) {
+            return crate::MultiRegistryDepProvider::new(owner)
+                .fetch_manifest(group, name, version);
+        }
         let dir: PathBuf = self
             .registry
             .root()
@@ -86,6 +118,9 @@ impl<'a> VersionEnumerator for LocalRegistryDepProvider<'a> {
         group: &Group,
         name: &str,
     ) -> Result<Vec<semver::Version>, DepProviderError> {
+        if let Some(owner) = self.held_for(group, name) {
+            return crate::MultiRegistryDepProvider::new(owner).list_versions(group, name);
+        }
         match self.registry.list_versions(group, name) {
             Ok(versions) => Ok(versions),
             Err(RegistryError::UnknownPackage { group, name }) => {
@@ -99,6 +134,60 @@ impl<'a> VersionEnumerator for LocalRegistryDepProvider<'a> {
                 })
             }
             Err(other) => Err(DepProviderError::Other(other.to_string())),
+        }
+    }
+}
+
+impl crate::SourceCandidateProvider for LocalRegistryDepProvider<'_> {
+    fn has_locked_coordinate(&self, group: &Group, name: &str) -> bool {
+        self.held_for(group, name).is_some()
+    }
+    fn source_choice_mode(&self) -> vibe_registry::source_candidates::SourceChoiceMode {
+        self.held.map_or(
+            vibe_registry::source_candidates::SourceChoiceMode::LegacyKnown,
+            |owner| owner.source_choice_mode(),
+        )
+    }
+    fn retain_default_candidate(
+        &self,
+        group: &Group,
+        name: &str,
+        version: &semver::Version,
+    ) -> Result<vibe_registry::source_candidates::RetainedCandidateObservation, DepProviderError>
+    {
+        match self.held_for(group, name) {
+            Some(owner) => owner.retain_default_candidate(group, name, version),
+            None => self
+                .registry
+                .retain_default_candidate(group, name, version, self.source_kind),
+        }
+        .map_err(crate::source_candidates::source_registry_error)
+    }
+    fn source_inventory(
+        &self,
+        group: &Group,
+        name: &str,
+        scope: vibe_registry::source_candidates::CandidateInventoryScope,
+        limits: &vibe_registry::source_candidates::SourceInventoryLimits,
+    ) -> Result<vibe_registry::source_candidates::SourceCandidateInventory, DepProviderError> {
+        match self.held_for(group, name) {
+            Some(owner) => owner.candidate_inventory(group, name, limits, scope),
+            None => self
+                .registry
+                .candidate_inventory(group, name, self.source_kind, limits, scope),
+        }
+        .map_err(crate::source_candidates::source_registry_error)
+    }
+    fn respects_locked_selection(
+        &self,
+        candidate: &vibe_registry::source_candidates::RetainedSourceCandidate,
+        locked: &vibe_core::manifest::LockedPackage,
+    ) -> Result<bool, DepProviderError> {
+        match self.held_for(&locked.group, locked.name.as_str()) {
+            Some(owner) => owner
+                .respects_locked_selection(candidate, locked)
+                .map_err(crate::source_candidates::source_registry_error),
+            None => Ok(false),
         }
     }
 }

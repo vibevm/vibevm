@@ -2,17 +2,189 @@
 
 use serde::{Deserialize, Serialize};
 
-/// The live project install:plan observation. Acquired package facts are
-/// captured before confirmation, then emitted through the existing deferred
-/// terminal stream; parked runs suppress previews. Planning may already acquire
-/// source/cache data. This is not a read-only preview or an interception point
-/// before apply.
+/// Project install source plan. The ordinary live event may follow source/cache
+/// acquisition and is deferred until its existing terminal boundary. Project
+/// --plan-only emits this document directly after metadata-only preparation and
+/// owned scratch cleanup, without project/HOME/persistent-cache publication.
+/// Candidate observations and decisions are distinct; no future payload
+/// acquisition is invented.
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 pub struct InstallPlan {
     /// Always install:plan.
     pub command: String,
 
     pub packages: Vec<PlanEntry>,
+
+    /// Present only for standalone project preview: true only when package
+    /// closure and separately required remap actions have metadata decisions.
+    /// False requires the named remap input; absent live events do not assert
+    /// whole-command completeness.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub preview_complete: Option<bool>,
+
+    /// Project required remap offers, resolved after the package plan without
+    /// activating their rows or changing consent.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub remaps: Option<Vec<RemapPlanEntry>>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub enum CandidateDecision {
+    Disabled,
+    Eligible,
+    ExcludedByPin,
+    ExcludedHost,
+    LowerPreference,
+    NotSelected,
+    Selected,
+    VersionRejected,
+    /// A value this build does not know. The string is preserved
+    /// verbatim across a read/write cycle, so an older reader never
+    /// silently drops or rewrites a newer writer's vocabulary
+    /// (PROP-044 §4.2a).
+    Unknown(String),
+}
+
+impl Serialize for CandidateDecision {
+    fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        let wire: &str = match self {
+            CandidateDecision::Disabled => "disabled",
+            CandidateDecision::Eligible => "eligible",
+            CandidateDecision::ExcludedByPin => "excluded-by-pin",
+            CandidateDecision::ExcludedHost => "excluded-host",
+            CandidateDecision::LowerPreference => "lower-preference",
+            CandidateDecision::NotSelected => "not-selected",
+            CandidateDecision::Selected => "selected",
+            CandidateDecision::VersionRejected => "version-rejected",
+            CandidateDecision::Unknown(value) => value.as_str(),
+        };
+        serializer.serialize_str(wire)
+    }
+}
+
+impl<'de> Deserialize<'de> for CandidateDecision {
+    fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        let wire = String::deserialize(deserializer)?;
+        Ok(match wire.as_str() {
+            "disabled" => CandidateDecision::Disabled,
+            "eligible" => CandidateDecision::Eligible,
+            "excluded-by-pin" => CandidateDecision::ExcludedByPin,
+            "excluded-host" => CandidateDecision::ExcludedHost,
+            "lower-preference" => CandidateDecision::LowerPreference,
+            "not-selected" => CandidateDecision::NotSelected,
+            "selected" => CandidateDecision::Selected,
+            "version-rejected" => CandidateDecision::VersionRejected,
+            _ => CandidateDecision::Unknown(wire),
+        })
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub enum CandidateFailure {
+    Authentication,
+    InvalidMetadata,
+    SourceUnavailable,
+    Transport,
+    Trust,
+    Unsupported,
+    /// A value this build does not know. The string is preserved
+    /// verbatim across a read/write cycle, so an older reader never
+    /// silently drops or rewrites a newer writer's vocabulary
+    /// (PROP-044 §4.2a).
+    Unknown(String),
+}
+
+impl Serialize for CandidateFailure {
+    fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        let wire: &str = match self {
+            CandidateFailure::Authentication => "authentication",
+            CandidateFailure::InvalidMetadata => "invalid-metadata",
+            CandidateFailure::SourceUnavailable => "source-unavailable",
+            CandidateFailure::Transport => "transport",
+            CandidateFailure::Trust => "trust",
+            CandidateFailure::Unsupported => "unsupported",
+            CandidateFailure::Unknown(value) => value.as_str(),
+        };
+        serializer.serialize_str(wire)
+    }
+}
+
+impl<'de> Deserialize<'de> for CandidateFailure {
+    fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        let wire = String::deserialize(deserializer)?;
+        Ok(match wire.as_str() {
+            "authentication" => CandidateFailure::Authentication,
+            "invalid-metadata" => CandidateFailure::InvalidMetadata,
+            "source-unavailable" => CandidateFailure::SourceUnavailable,
+            "transport" => CandidateFailure::Transport,
+            "trust" => CandidateFailure::Trust,
+            "unsupported" => CandidateFailure::Unsupported,
+            _ => CandidateFailure::Unknown(wire),
+        })
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub enum CandidateObservation {
+    Available,
+    NoMatchingVersion,
+    NotFound,
+    NotProbed,
+    Unavailable,
+    UnknownObservation,
+    /// A value this build does not know. The string is preserved
+    /// verbatim across a read/write cycle, so an older reader never
+    /// silently drops or rewrites a newer writer's vocabulary
+    /// (PROP-044 §4.2a).
+    Unknown(String),
+}
+
+impl Serialize for CandidateObservation {
+    fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        let wire: &str = match self {
+            CandidateObservation::Available => "available",
+            CandidateObservation::NoMatchingVersion => "no-matching-version",
+            CandidateObservation::NotFound => "not-found",
+            CandidateObservation::NotProbed => "not-probed",
+            CandidateObservation::Unavailable => "unavailable",
+            CandidateObservation::UnknownObservation => "unknown-observation",
+            CandidateObservation::Unknown(value) => value.as_str(),
+        };
+        serializer.serialize_str(wire)
+    }
+}
+
+impl<'de> Deserialize<'de> for CandidateObservation {
+    fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        let wire = String::deserialize(deserializer)?;
+        Ok(match wire.as_str() {
+            "available" => CandidateObservation::Available,
+            "no-matching-version" => CandidateObservation::NoMatchingVersion,
+            "not-found" => CandidateObservation::NotFound,
+            "not-probed" => CandidateObservation::NotProbed,
+            "unavailable" => CandidateObservation::Unavailable,
+            "unknown-observation" => CandidateObservation::UnknownObservation,
+            _ => CandidateObservation::Unknown(wire),
+        })
+    }
 }
 
 pub use crate::generated::shared::HostingView;
@@ -32,9 +204,135 @@ pub struct PlanEntry {
 
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub source_hosting: Option<HostingView>,
+
+    /// Held operation-local candidate observations and final decision
+    /// reasons; absent for older producers, never reconstructed from current
+    /// configuration.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub source_candidates: Option<Vec<SourceCandidate>>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub enum RemapInputRequired {
+    MissingLockedSource,
+    /// A value this build does not know. The string is preserved
+    /// verbatim across a read/write cycle, so an older reader never
+    /// silently drops or rewrites a newer writer's vocabulary
+    /// (PROP-044 §4.2a).
+    Unknown(String),
+}
+
+impl Serialize for RemapInputRequired {
+    fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        let wire: &str = match self {
+            RemapInputRequired::MissingLockedSource => "missing-locked-source",
+            RemapInputRequired::Unknown(value) => value.as_str(),
+        };
+        serializer.serialize_str(wire)
+    }
+}
+
+impl<'de> Deserialize<'de> for RemapInputRequired {
+    fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        let wire = String::deserialize(deserializer)?;
+        Ok(match wire.as_str() {
+            "missing-locked-source" => RemapInputRequired::MissingLockedSource,
+            _ => RemapInputRequired::Unknown(wire),
+        })
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+pub struct RemapPlanEntry {
+    pub outcome: RemapPlanOutcome,
+
+    pub package: String,
+
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub input_required: Option<RemapInputRequired>,
+
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub source_candidates: Option<Vec<SourceCandidate>>,
+
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    #[serde(deserialize_with = "__reader_projection::deserialize_source_evidence_2")]
+    pub source_evidence: Option<SourceEvidence>,
+
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub version: Option<String>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub enum RemapPlanOutcome {
+    NeedsInput,
+    OfferOnly,
+    /// A value this build does not know. The string is preserved
+    /// verbatim across a read/write cycle, so an older reader never
+    /// silently drops or rewrites a newer writer's vocabulary
+    /// (PROP-044 §4.2a).
+    Unknown(String),
+}
+
+impl Serialize for RemapPlanOutcome {
+    fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        let wire: &str = match self {
+            RemapPlanOutcome::NeedsInput => "needs-input",
+            RemapPlanOutcome::OfferOnly => "offer-only",
+            RemapPlanOutcome::Unknown(value) => value.as_str(),
+        };
+        serializer.serialize_str(wire)
+    }
+}
+
+impl<'de> Deserialize<'de> for RemapPlanOutcome {
+    fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        let wire = String::deserialize(deserializer)?;
+        Ok(match wire.as_str() {
+            "needs-input" => RemapPlanOutcome::NeedsInput,
+            "offer-only" => RemapPlanOutcome::OfferOnly,
+            _ => RemapPlanOutcome::Unknown(wire),
+        })
+    }
 }
 
 pub use crate::generated::shared::SourceAcquisition;
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+pub struct SourceCandidate {
+    pub decision: CandidateDecision,
+
+    pub observation: CandidateObservation,
+
+    #[serde(deserialize_with = "__reader_projection::deserialize_source_evidence_1")]
+    pub source_evidence: SourceEvidence,
+
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub constraint: Option<String>,
+
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub excluded_endpoint: Option<String>,
+
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub failure: Option<CandidateFailure>,
+
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub pinned_registry: Option<String>,
+
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub versions: Option<Vec<String>>,
+}
 
 pub use crate::generated::shared::SourceEvidence;
 
@@ -147,6 +445,30 @@ mod __reader_projection {
     }
 
     pub(super) fn deserialize_source_evidence_0<'de, D>(
+        deserializer: D,
+    ) -> Result<Option<crate::generated::shared::SourceEvidence>, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        let mut value = serde::de::DeserializeSeed::deserialize(NoDuplicateValue, deserializer)?;
+        prune_source_evidence(&mut value);
+        serde_json::from_value(value)
+            .map(Some)
+            .map_err(<D::Error as serde::de::Error>::custom)
+    }
+
+    pub(super) fn deserialize_source_evidence_1<'de, D>(
+        deserializer: D,
+    ) -> Result<crate::generated::shared::SourceEvidence, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        let mut value = serde::de::DeserializeSeed::deserialize(NoDuplicateValue, deserializer)?;
+        prune_source_evidence(&mut value);
+        serde_json::from_value(value).map_err(<D::Error as serde::de::Error>::custom)
+    }
+
+    pub(super) fn deserialize_source_evidence_2<'de, D>(
         deserializer: D,
     ) -> Result<Option<crate::generated::shared::SourceEvidence>, D::Error>
     where

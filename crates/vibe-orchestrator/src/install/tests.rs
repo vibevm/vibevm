@@ -180,7 +180,7 @@ impl RegistryEnvironment for CountingEnvironment {
         let global = vibe_core::GlobalRegistryConfig::load()?;
         Ok(RegistryEnvironmentSnapshot {
             embedded_root,
-            global,
+            global: global.into(),
         })
     }
 }

@@ -8,21 +8,6 @@ use vibe_core::PackageRef;
 use vibe_core::manifest::{Lockfile, Manifest, SpecFormat};
 use vibe_workspace::{Workspace, vibedeps};
 
-use crate::error::{Error, Result};
-use crate::fetched::Fetched;
-
-pub(super) fn refuse_read_only_kinds(fetched: &[Fetched]) -> Result<()> {
-    for node in fetched {
-        let meta = node.cached.package_meta();
-        if meta.kind.is_read_only() {
-            return Err(Error::DocNotInstalled {
-                coordinate: format!("{}/{}", meta.group, meta.name),
-            });
-        }
-    }
-    Ok(())
-}
-
 pub(super) fn migrate_selected_node(
     workspace: &mut Workspace,
     project_root: &Path,

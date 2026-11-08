@@ -33,30 +33,38 @@ impl NativeGitAdmission {
         };
         if url.query().is_some() || url.fragment().is_some() {
             return Err(unsupported(
-                "native HTTPS base query/fragment is not a relocatable repository identity",
+                "native HTTP(S) base query/fragment is not a relocatable repository identity",
             ));
         }
-        let pem = match (&self.discovery, &self.trust) {
-            (Some(HttpDiscoveryTrust::Pem(bytes)), _) | (None, TlsTrust::Pem(bytes)) => {
-                Some(bytes.as_slice())
-            }
-            (Some(HttpDiscoveryTrust::BundledWebPkiRoots), _) => None,
-            (None, TlsTrust::System) => return Ok(AdmittedRemote::Https { url, authorization }),
+        // Plain HTTP needs no TLS trust for discovery, so its initial redirect
+        // chain is always observed and admitted hop by hop before Git runs.
+        let plain = url.scheme() == "http";
+        let native_pem = if self.discovery.is_none() {
+            self.selected_pem()?
+        } else {
+            None
         };
-        let mut builder =
-            crate::http_admission::bound_builder(reqwest::blocking::Client::builder())
-                .timeout(std::time::Duration::from_secs(30));
-        if let Some(pem) = pem {
-            builder = builder.tls_built_in_root_certs(false);
-            for certificate in reqwest::Certificate::from_pem_bundle(pem)
-                .map_err(|_| unsupported("invalid captured HTTP discovery trust"))?
-            {
-                builder = builder.add_root_certificate(certificate);
-            }
-        }
-        let client = builder
-            .build()
-            .map_err(|_| unsupported("HTTP discovery client could not be constructed"))?;
+        let pem = match &self.discovery {
+            Some(HttpDiscoveryTrust::Pem(bytes)) => Some(bytes.as_slice()),
+            Some(HttpDiscoveryTrust::BundledWebPkiRoots) => None,
+            None => match native_pem.as_ref() {
+                Some(bytes) => Some(bytes.as_slice()),
+                None if plain => None,
+                None => return Ok(AdmittedRemote::Https { url, authorization }),
+            },
+        };
+        let roots = pem
+            .map(reqwest::Certificate::from_pem_bundle)
+            .transpose()
+            .map_err(|_| unsupported("invalid captured HTTP discovery trust"))?;
+        let client = crate::http_admission::ManagedHttpClient::captured(
+            std::time::Duration::from_secs(30),
+            None,
+            reqwest::header::HeaderMap::new(),
+            Some(std::sync::Arc::new(self.binding.as_ref().clone())),
+            roots,
+        )
+        .map_err(|_| unsupported("HTTP discovery client could not be constructed"))?;
         let mut advertisement = url.clone();
         advertisement.set_path(&format!("{}/info/refs", url.path().trim_end_matches('/')));
         advertisement.set_query(Some("service=git-upload-pack"));
@@ -76,7 +84,8 @@ impl NativeGitAdmission {
             crate::http_admission::HttpGetError::Refused(refusal) => {
                 GitError::ContactRefused(refusal)
             }
-            crate::http_admission::HttpGetError::Transport(_) => GitError::NetworkUnreachable {
+            crate::http_admission::HttpGetError::Transport(_)
+            | crate::http_admission::HttpGetError::Io(_) => GitError::NetworkUnreachable {
                 url: url.to_string(),
             },
         })?;
@@ -107,7 +116,9 @@ impl NativeGitAdmission {
             .strip_suffix("/info/refs")
             .ok_or_else(|| unsupported("initial Git redirect has no service-preserving base"))?
             .to_owned();
-        if final_url.scheme() != "https"
+        // An HTTP origin may upgrade to HTTPS; HTTPS never downgrades
+        // (the managed redirect chain already refused that hop).
+        if !(final_url.scheme() == "https" || (plain && final_url.scheme() == "http"))
             || final_url.query() != Some("service=git-upload-pack")
             || final_url.fragment().is_some()
         {
@@ -130,11 +141,16 @@ impl NativeGitAdmission {
         // Native Git subsequently validates the full advertisement and objects.
         let mut reader = std::io::BufReader::new(observed.response.take(MAX_SERVICE_PREFIX + 1));
         let mut body = Vec::new();
-        reader
-            .read_until(b'\n', &mut body)
-            .map_err(|_| GitError::NetworkUnreachable {
-                url: url.to_string(),
-            })?;
+        reader.read_until(b'\n', &mut body).map_err(|error| {
+            match crate::http_admission::HttpGetError::from_io(error) {
+                crate::http_admission::HttpGetError::Refused(refusal) => {
+                    GitError::ContactRefused(refusal)
+                }
+                _ => GitError::NetworkUnreachable {
+                    url: url.to_string(),
+                },
+            }
+        })?;
         if body.len() as u64 > MAX_SERVICE_PREFIX {
             return Err(unsupported(
                 "Git service advertisement metadata prefix exceeds its bound",
@@ -142,9 +158,14 @@ impl NativeGitAdmission {
         }
         if smart && body == b"001e# service=git-upload-pack\n" {
             let mut flush = [0; 4];
-            reader
-                .read_exact(&mut flush)
-                .map_err(|_| unsupported("Git service advertisement is incomplete"))?;
+            reader.read_exact(&mut flush).map_err(|error| {
+                match crate::http_admission::HttpGetError::from_io(error) {
+                    crate::http_admission::HttpGetError::Refused(refusal) => {
+                        GitError::ContactRefused(refusal)
+                    }
+                    _ => unsupported("Git service advertisement is incomplete"),
+                }
+            })?;
             body.extend_from_slice(&flush);
         }
         if !valid_advertisement(&body, smart) {

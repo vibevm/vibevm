@@ -58,7 +58,7 @@ pub(crate) fn fetch_verified(
     watch: &FetchWatch<'_>,
 ) -> Result<(), InstallerError> {
     let fetch_error = |reason: String| InstallerError::Fetch {
-        source_ref: source.into(),
+        source_ref: shown_source(source, watch),
         reason,
     };
     // An undeclared size still gives a bar when the server announces one
@@ -67,17 +67,40 @@ pub(crate) fn fetch_verified(
     let (input, announced): (Box<dyn Read>, Option<u64>) = if remote {
         if offline {
             return Err(InstallerError::Offline {
-                source_ref: source.into(),
+                source_ref: shown_source(source, watch),
             });
         }
-        let response = reqwest::blocking::Client::builder()
-            .timeout(Duration::from_secs(600))
-            .build()
-            .and_then(|client| client.get(source).send())
-            .and_then(reqwest::blocking::Response::error_for_status)
-            .map_err(|error| fetch_error(error.to_string()))?;
-        let announced = response.content_length();
-        (Box::new(response), announced)
+        if let Some(client) = watch.http_client {
+            let cancellation = watch
+                .task
+                .map(|task| task.progress().cancellation().clone())
+                .unwrap_or_default();
+            let response =
+                client
+                    .get_anonymous(source, &cancellation)
+                    .map_err(|error| match error {
+                        vibe_package_source::SourceHttpError::Policy(error) => {
+                            InstallerError::SourcePolicy(error)
+                        }
+                        vibe_package_source::SourceHttpError::Transport(error) => {
+                            managed_error(source, error)
+                        }
+                    })?;
+            if !response.status().is_success() {
+                return Err(fetch_error(format!("HTTP status {}", response.status())));
+            }
+            let announced = response.content_length();
+            (Box::new(response), announced)
+        } else {
+            let response = reqwest::blocking::Client::builder()
+                .timeout(Duration::from_secs(600))
+                .build()
+                .and_then(|client| client.get(source).send())
+                .and_then(reqwest::blocking::Response::error_for_status)
+                .map_err(|error| fetch_error(error.to_string()))?;
+            let announced = response.content_length();
+            (Box::new(response), announced)
+        }
     } else {
         let path = package_file(package_root, source).map_err(fetch_error)?;
         let file = File::open(&path).map_err(|error| fetch_error(error.to_string()))?;
@@ -112,7 +135,9 @@ pub(crate) fn fetch_verified(
         });
         match &result {
             Ok(_) => reader.finish(),
-            Err(InstallerError::Interrupted { .. }) => reader.interrupted(),
+            Err(InstallerError::Interrupted { .. } | InstallerError::Cancelled(_)) => {
+                reader.interrupted()
+            }
             Err(error) => reader.fail(error.to_string()),
         }
         result?.1
@@ -134,7 +159,7 @@ pub(crate) fn fetch_verified(
     if digest != sha256.to_ascii_lowercase() {
         let _ = fs::remove_file(destination);
         return Err(InstallerError::Digest {
-            source_ref: source.into(),
+            source_ref: shown_source(source, watch),
         });
     }
     Ok(())
@@ -159,6 +184,11 @@ fn copy_chunks(
     let mut buffer = [0u8; 64 * 1024];
     let mut total = 0u64;
     loop {
+        if let Some(task) = watch.task {
+            task.progress()
+                .checkpoint()
+                .map_err(|error| stop(InstallerError::Cancelled(error)))?;
+        }
         if watch
             .interrupt
             .is_some_and(|interrupt| interrupt.poll(None))
@@ -168,10 +198,19 @@ fn copy_chunks(
             }));
         }
         let read = input.read(&mut buffer).map_err(|error| {
-            stop(InstallerError::Fetch {
-                source_ref: source.into(),
-                reason: error.to_string(),
-            })
+            if watch.http_client.is_some()
+                && (source.starts_with("https://") || source.starts_with("http://"))
+            {
+                stop(managed_error(
+                    source,
+                    vibe_registry::http_admission::HttpGetError::from_io(error),
+                ))
+            } else {
+                stop(InstallerError::Fetch {
+                    source_ref: shown_source(source, watch),
+                    reason: error.to_string(),
+                })
+            }
         })?;
         if read == 0 {
             break;
@@ -179,7 +218,7 @@ fn copy_chunks(
         total += read as u64;
         if let Some(declared) = watch.size.filter(|declared| total > *declared) {
             return Err(stop(InstallerError::Oversize {
-                source_ref: source.into(),
+                source_ref: shown_source(source, watch),
                 declared,
             }));
         }
@@ -189,6 +228,33 @@ fn copy_chunks(
             .map_err(|error| stop(io("writing", destination, error)))?;
     }
     Ok((total, hex(&hash.finalize())))
+}
+
+fn managed_error(
+    source: &str,
+    error: vibe_registry::http_admission::HttpGetError,
+) -> InstallerError {
+    use vibe_registry::http_admission::HttpGetError;
+    let reason = match error {
+        HttpGetError::Refused(vibe_registry::ContactRefusal::OperationCancelled) => {
+            return InstallerError::Cancelled(vibe_core::cancellation::Cancelled);
+        }
+        HttpGetError::Refused(refusal) => return InstallerError::ContactRefused(refusal),
+        HttpGetError::Transport(error) => error.without_url().to_string(),
+        HttpGetError::Io(error) => error.to_string(),
+    };
+    InstallerError::Fetch {
+        source_ref: vibe_core::progress::transfer::safe_remote(source),
+        reason,
+    }
+}
+
+fn shown_source(source: &str, watch: &FetchWatch<'_>) -> String {
+    if watch.http_client.is_some() {
+        vibe_core::progress::transfer::safe_remote(source)
+    } else {
+        source.into()
+    }
 }
 
 #[cfg(test)]

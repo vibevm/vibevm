@@ -10,7 +10,12 @@ fn a_real_project_local_manifest_dependency_is_resolved_and_materialised() {
     write_registry_package(project.path(), "org.hosted", "tool", "0.1.0");
 
     let output = run(&context(project.path()), "install").unwrap();
-    assert!(!output.is_error());
+    assert!(
+        !output.is_error(),
+        "{}\n{}",
+        output.structured(),
+        output.text()
+    );
     let report = report(&output);
     assert!(report.ok);
     assert_eq!(report.steps.last().unwrap().phase, "install");

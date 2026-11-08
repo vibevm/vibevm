@@ -223,7 +223,7 @@ fn a_first_run_with_an_absent_global_registry_needs_no_retry() {
             );
             Ok(RegistryEnvironmentSnapshot {
                 embedded_root: None,
-                global: vibe_core::GlobalRegistryConfig::load()?,
+                global: vibe_core::GlobalRegistryConfig::load()?.into(),
             })
         }
     }

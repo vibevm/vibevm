@@ -37,16 +37,40 @@ pub(crate) fn proxy_image() -> Result<PathBuf> {
     Ok(exe.with_file_name(crate::commands::vvm::APP_PROXY_BINARY_NAME))
 }
 
-/// Resolve one app package: an explicit `--registry` is the whole source;
-/// a developer's embedded registry (PROP-030 `#precedence`) is first in the
-/// chain and a package it does not carry falls through to the configured
-/// global registries, which are the source otherwise.
-pub(crate) fn resolve_package(
+pub(crate) fn source_operation(
+    invocation: vibe_core::manifest::SourcePolicyDecl,
+) -> Result<vibe_package_source::SourceOperation> {
+    source_operation_for_project(None, invocation)
+}
+
+/// The caller supplies the already selected project, never inferred from app-home paths.
+pub(crate) fn source_operation_for_project(
+    project_root: Option<&Path>,
+    invocation: vibe_core::manifest::SourcePolicyDecl,
+) -> Result<vibe_package_source::SourceOperation> {
+    let manifest = match project_root {
+        Some(root) => vibe_core::manifest::Manifest::read(root.join("vibe.toml"))?,
+        None => vibe_core::manifest::Manifest::default(),
+    };
+    let cwd = std::env::current_dir()?;
+    vibe_package_source::source_operation(
+        &vibe_package_source::PackageSourceOptions {
+            source_policy: invocation,
+            ..Default::default()
+        },
+        &manifest,
+        project_root.unwrap_or(&cwd),
+        vibe_package_source::deferred_user_registry(crate::output::seeds_default_registry()),
+    )
+}
+
+pub(crate) fn resolve_package_with_operation(
     settings: &SettingsRoot,
     registry: Option<&Path>,
     embedded_root: Option<&Path>,
     spelling: &str,
     offline: bool,
+    operation: &vibe_package_source::SourceOperation,
 ) -> Result<ResolvedPackage> {
     if let Some(root) = registry {
         let local = open_local(root)?;
@@ -65,8 +89,10 @@ pub(crate) fn resolve_package(
             return Ok(resolved);
         }
     }
-    Ok(vibe_app::from_global(settings.path(), spelling, offline)
-        .map_err(vibe_app::AppError::from)?)
+    Ok(
+        vibe_app::from_global_with_operation(settings.path(), spelling, offline, operation)
+            .map_err(vibe_app::AppError::from)?,
+    )
 }
 
 fn open_local(root: &Path) -> Result<vibe_registry::LocalRegistry> {
@@ -82,6 +108,7 @@ mod source_tests;
 /// registry as the requested package, otherwise the configured registries
 /// (PROP-065 `#app-dependencies`: requirements resolve like any package).
 pub(crate) struct Packages {
+    pub(crate) operation: vibe_package_source::SourceOperation,
     pub(crate) settings: SettingsRoot,
     pub(crate) registry: Option<PathBuf>,
     pub(crate) embedded: Option<PathBuf>,
@@ -98,19 +125,21 @@ impl Packages {
         }
     }
     pub(crate) fn resolve(&self, spelling: &str) -> Result<ResolvedPackage, vibe_app::AppError> {
-        resolve_package(
+        resolve_package_with_operation(
             &self.settings,
             self.registry.as_deref(),
             self.embedded.as_deref(),
             spelling,
             self.offline,
+            &self.operation,
         )
-        .map_err(|error| {
-            vibe_app::ResolveError::Registry {
+        .map_err(|error| match error.downcast::<vibe_app::AppError>() {
+            Ok(error) => error,
+            Err(error) => vibe_app::ResolveError::Registry {
                 spelling: spelling.into(),
                 reason: format!("{error:#}"),
             }
-            .into()
+            .into(),
         })
     }
 }
@@ -135,6 +164,7 @@ type Notice = Box<dyn Fn(&str)>;
 /// only; the human renderer keeps showing child output as before) and the
 /// caught signals of a mutating command.
 pub(crate) struct Observation<'d> {
+    pub(crate) http_client: vibe_package_source::OperationHttpClient,
     pub(crate) progress: Progress,
     pub(crate) signals: Option<Signals>,
     /// The durable user environment env steps change (PROP-065 `#env-step`).
@@ -157,6 +187,8 @@ impl<'d> Observation<'d> {
         display: &'d StepDisplay,
     ) -> Result<Self> {
         Ok(Self {
+            http_client: source_operation(Default::default())?
+                .http_client(std::time::Duration::from_secs(600)),
             // Every human renderer draws the steps as blocks (PROP-067
             // `#collapse`, `#plain`); a run with none observes nothing but
             // the machine stream.
@@ -164,7 +196,9 @@ impl<'d> Observation<'d> {
                 ctx.progress()
             } else {
                 // Unrendered, still journaled (`PROP-068#journal`).
-                Progress::default().with_transfers(ctx.transfers())
+                Progress::default()
+                    .with_transfers(ctx.transfers())
+                    .with_cancellation(ctx.progress().cancellation().clone())
             },
             signals: if mutating {
                 Some(Signals::install().context("catching interrupt signals")?)
@@ -180,6 +214,14 @@ impl<'d> Observation<'d> {
                 .then(|| Box::new(|text: &str| asking(|| notice(text))) as Notice),
             display,
         })
+    }
+
+    pub(crate) fn with_source_operation(
+        mut self,
+        operation: &vibe_package_source::SourceOperation,
+    ) -> Self {
+        self.http_client = operation.http_client(std::time::Duration::from_secs(600));
+        self
     }
 
     fn notice(&self) -> Option<&dyn Fn(&str)> {
@@ -215,6 +257,7 @@ pub(super) fn operation<'a>(
 ) -> OperationContext<'a> {
     let attended = attended(ctx);
     OperationContext {
+        http_client: Some(&observe.http_client),
         import_scope: None,
         settings,
         json: ctx.is_json(),
@@ -343,12 +386,14 @@ pub fn install(
     let offline = root_offline || args.offline;
     let settings = settings_root()?;
     let proxy_image = proxy_image()?;
-    let resolved = resolve_package(
+    let source_operation = source_operation(args.source_policy.declaration())?;
+    let resolved = resolve_package_with_operation(
         &settings,
         args.registry.as_deref(),
         embedded_root.as_deref(),
         &args.packages[0],
         offline,
+        &source_operation,
     )?;
     let choice = InstallChoice {
         platform: args.platform,
@@ -361,6 +406,7 @@ pub fn install(
     };
     let agents = AgentSetup::new(ctx, args.agent.as_deref(), args.assume_yes)?;
     let packages = Packages {
+        operation: source_operation.clone(),
         settings: settings.clone(),
         registry: args.registry.clone(),
         embedded: embedded_root.clone(),
@@ -369,7 +415,8 @@ pub fn install(
     let resolver = |spelling: &str| packages.resolve(spelling);
     if args.plan_only {
         let flat = StepDisplay::flat();
-        let observe = Observation::new(ctx, false, &flat)?;
+        let observe =
+            Observation::new(ctx, false, &flat)?.with_source_operation(&packages.operation);
         let operation = OperationContext {
             agent: agents.hooks(),
             resolver: Some(&resolver),
@@ -381,7 +428,7 @@ pub fn install(
     }
     let show = plan_printer(ctx);
     let display = StepDisplay::open(ctx, &args.steps);
-    let observe = Observation::new(ctx, true, &display)?;
+    let observe = Observation::new(ctx, true, &display)?.with_source_operation(&packages.operation);
     let outcome = display.around(ctx, || {
         let operation = OperationContext {
             agent: agents.hooks(),
@@ -411,14 +458,23 @@ pub fn update(
         bail!("global update received project-only package flags");
     }
     let settings = settings_root()?;
-    let resolved = resolve_package(
+    let source_operation = source_operation(args.source_policy.declaration())?;
+    let resolved = resolve_package_with_operation(
         &settings,
         args.registry.as_deref(),
         embedded_root.as_deref(),
         &args.packages[0],
         root_offline,
+        &source_operation,
     )?;
-    let outcome = update_one(ctx, &args, embedded_root, root_offline, &resolved)?;
+    let outcome = update_one(
+        ctx,
+        &args,
+        embedded_root,
+        root_offline,
+        &resolved,
+        &source_operation,
+    )?;
     render(ctx, &outcome)
 }
 
@@ -430,6 +486,7 @@ pub(crate) fn update_one(
     embedded_root: Option<PathBuf>,
     root_offline: bool,
     resolved: &ResolvedPackage,
+    source_operation: &vibe_package_source::SourceOperation,
 ) -> Result<vibe_app::Outcome> {
     let settings = settings_root()?;
     let proxy_image = proxy_image()?;
@@ -444,6 +501,7 @@ pub(crate) fn update_one(
     };
     let agents = AgentSetup::new(ctx, args.agent.as_deref(), args.assume_yes)?;
     let packages = Packages {
+        operation: source_operation.clone(),
         settings: settings.clone(),
         registry: args.registry.clone(),
         embedded: embedded_root,
@@ -452,7 +510,7 @@ pub(crate) fn update_one(
     let resolver = |spelling: &str| packages.resolve(spelling);
     let show = plan_printer(ctx);
     let display = StepDisplay::open(ctx, &args.steps);
-    let observe = Observation::new(ctx, true, &display)?;
+    let observe = Observation::new(ctx, true, &display)?.with_source_operation(&packages.operation);
     let outcome = display.around(ctx, || {
         let operation = OperationContext {
             agent: agents.hooks(),

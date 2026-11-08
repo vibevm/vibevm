@@ -9,6 +9,8 @@ use thiserror::Error;
 #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-059#installer-options")]
 #[spec(documents = "spec://org.vibevm.core/vibevm/common/PROP-059#installer-options")]
 pub enum ResolveError {
+    #[error(transparent)]
+    SourcePolicy(#[from] vibe_registry::RegistryError),
     #[error(
         "this operation does not yet evaluate common configuration for `{package}` scope `{scope}` (violates REQ spec://org.vibevm.core/vibevm/common/PROP-069#AUTHORED-SCOPES; fix surface: connect common configuration evaluation before this application operation)"
     )]

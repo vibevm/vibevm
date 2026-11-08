@@ -4436,6 +4436,7 @@ dependencies = [
  "serde_json",
  "thiserror 2.0.18",
  "tokio",
+ "vibe-core",
 ]
 
 [[package]]
@@ -4593,6 +4594,7 @@ dependencies = [
  "anyhow",
  "core-ai-native-specmark",
  "indexmap",
+ "libc",
  "progress-core",
  "semver",
  "serde",
@@ -4769,6 +4771,7 @@ dependencies = [
 name = "vibe-lifecycle"
 version = "1.0.11"
 dependencies = [
+ "command-group",
  "core-ai-native-specmark",
  "getrandom 0.3.4",
  "glob",
@@ -4932,6 +4935,7 @@ version = "1.0.11"
 dependencies = [
  "anyhow",
  "core-ai-native-specmark",
+ "libc",
  "tempfile",
  "toml 0.9.12+spec-1.1.0",
  "vibe-core",
@@ -4973,6 +4977,7 @@ version = "1.0.11"
 dependencies = [
  "anyhow",
  "axum",
+ "command-group",
  "core-ai-native-specmark",
  "glob",
  "libc",
@@ -5165,6 +5170,7 @@ dependencies = [
 name = "vibe-workspace"
 version = "1.0.11"
 dependencies = [
+ "command-group",
  "core-ai-native-specmark",
  "glob",
  "libc",

@@ -141,6 +141,7 @@ pub(super) fn present_resolution(ctx: &output::Context, planned: &vibe_install::
                 version: version.to_string(),
                 source_hosting: vibe_registry::source_hosting(Some(&evidence)),
                 source_evidence: Some(evidence),
+                source_candidates: planned.package_candidates(group, name).map(candidate_rows),
             })
             .collect();
         // The plan is a PREVIEW, deferred like every other one: a run that
@@ -149,6 +150,8 @@ pub(super) fn present_resolution(ctx: &output::Context, planned: &vibe_install::
         let _ = ctx.defer_json_plan(&InstallPlan {
             command: "install:plan".into(),
             packages,
+            preview_complete: None,
+            remaps: None,
         });
         return;
     }
@@ -330,3 +333,6 @@ pub(crate) fn phase_rows(
         })
         .collect()
 }
+
+mod candidates;
+pub(crate) use candidates::candidate_rows;

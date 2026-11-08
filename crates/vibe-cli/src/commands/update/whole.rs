@@ -146,6 +146,8 @@ fn run(
     let install_observer =
         install::CliInstallObserver::new(ctx, None).with_progress(ctx.progress());
     let sources = install::CliPackageSourceFactory {
+        update_locked: true,
+        reselect_sources: args.reselect_source,
         args: &install_args,
     };
     let policy = install_args.policy(offline, &user_config);

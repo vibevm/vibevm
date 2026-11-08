@@ -49,6 +49,38 @@ impl VersionEnumerator for Mixed<'_> {
     }
 }
 impl InstallSource for Mixed<'_> {
+    fn source_solve_limits(&self) -> Result<vibe_resolver::SourceSolveLimits, SolveError> {
+        retained::limits()
+    }
+    /// One metadata registry: the local packages plus the Git-mirrored giant.
+    fn solve_metadata(
+        &self,
+        request: &vibe_resolver::SourceSolveRequest<'_>,
+    ) -> Result<vibe_resolver::SourceResolvedGraph, SolveError> {
+        let root = self.git.metadata.with_file_name("mixed-metadata");
+        self.git.mirror_metadata(&root)?;
+        copy_tree(self.local.root(), &root)
+            .map_err(|e| SolveError::from(DepProviderError::Other(e.to_string())))?;
+        retained::solve(&root, &mocked_selection(request))
+    }
+    fn acquire_candidate_for_install(
+        &self,
+        candidate: &vibe_registry::source_candidates::RetainedSourceCandidate,
+        store: &Path,
+        expected: Option<&str>,
+        slot: &Path,
+        progress: &vibe_core::progress::Progress,
+    ) -> Result<vibe_registry::PackageAcquisition, RegistryError> {
+        incumbent_acquire(
+            self,
+            &self.git.lock,
+            &retained::exact(candidate),
+            store,
+            expected,
+            slot,
+            progress,
+        )
+    }
     fn solve(&self, r: &[PackageRef]) -> Result<ResolvedGraph, SolveError> {
         self.git.solve(r)
     }
@@ -92,6 +124,20 @@ impl InstallSource for Mixed<'_> {
     ) -> Result<InPlaceMaterialised, RegistryError> {
         self.git.materialise_in_place(p, slot)
     }
+}
+
+fn copy_tree(from: &Path, to: &Path) -> std::io::Result<()> {
+    for entry in fs::read_dir(from)? {
+        let entry = entry?;
+        let target = to.join(entry.file_name());
+        if entry.file_type()?.is_dir() {
+            fs::create_dir_all(&target)?;
+            copy_tree(&entry.path(), &target)?;
+        } else {
+            fs::copy(entry.path(), target)?;
+        }
+    }
+    Ok(())
 }
 
 #[test]

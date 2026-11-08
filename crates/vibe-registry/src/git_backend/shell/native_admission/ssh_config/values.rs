@@ -308,6 +308,12 @@ pub(super) fn profile(
                 if !p.is_absolute() {
                     return Err(unsupported("relative SSH trust path is unsupported"));
                 }
+                // `/dev/null` is the standard spelling of "no trust from this
+                // list": it contributes nothing and is never opened. Every
+                // other non-regular file is still refused by the witness.
+                if p == Path::new("/dev/null") {
+                    continue;
+                }
                 if let Some(bytes) = witness.content(&p)? {
                     trust.push((kind.into(), bytes));
                 }

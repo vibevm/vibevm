@@ -11,6 +11,7 @@ homepage.workspace = true
 description = "Workspace discovery and the multi-package member model for vibevm"
 
 [dependencies]
+command-group = "=5.0.1"
 specmark.workspace = true
 # The PROP-045 projection dispatch: an XML-materialised boot snippet enters
 # the static splice as its canonical MD projection (##BOOT-LANE-SCOPE,

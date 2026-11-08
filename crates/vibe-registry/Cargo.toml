@@ -11,6 +11,8 @@ homepage.workspace = true
 description = "Registry fetch, cache, and resolution for vibevm packages"
 
 [dependencies]
+tokio.workspace = true
+command-group = "=5.0.1"
 specmark.workspace = true
 vibe-core.workspace = true
 vibe-wire.workspace = true

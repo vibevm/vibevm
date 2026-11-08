@@ -26,6 +26,8 @@ fn the_composition_has_exactly_its_accepted_lower_dependencies() {
         .collect::<BTreeSet<_>>();
     let expected = BTreeSet::from([
         "anyhow",
+        "libc",
+        "tempfile",
         "specmark",
         "vibe-core",
         "vibe-install",

@@ -61,6 +61,11 @@ pub struct Locator {
     sources: Vec<(Layer, String, UnmatchedPolicy)>,
 }
 
+#[derive(Clone, Copy)]
+enum RegistryBinding<'a> {
+    Current,
+    Held(Option<&'a str>),
+}
 impl Locator {
     /// Build the Locator from the loaded sources and the declared
     /// registries (`name`, `url`), which is what a `registry = …` row is
@@ -87,6 +92,60 @@ impl Locator {
             policy,
             sources: seen,
         }
+    }
+
+    /// Replace only catalog-generated local rows for a newly demanded catalog.
+    /// Other sources retain their order, provenance, policy and consent.
+    pub fn with_registry_tables(
+        &self,
+        rows: Vec<RemapRow>,
+        registries: Vec<(String, String)>,
+    ) -> Self {
+        let label = "[[mirror]] / [[override]]";
+        let mut inserted = false;
+        let mut sources = Vec::new();
+        for (ordinal, (layer, source, policy)) in self.sources.iter().enumerate() {
+            if source == label && *layer == Layer::Local {
+                sources.push(LoadedSource {
+                    layer: *layer,
+                    source: source.clone(),
+                    policy: *policy,
+                    rows: rows.clone(),
+                });
+                inserted = true;
+            } else {
+                if !inserted && matches!(layer, Layer::Local | Layer::Invocation) {
+                    sources.push(LoadedSource {
+                        layer: Layer::Local,
+                        source: label.into(),
+                        policy: UnmatchedPolicy::Allow,
+                        rows: rows.clone(),
+                    });
+                    inserted = true;
+                }
+                sources.push(LoadedSource {
+                    layer: *layer,
+                    source: source.clone(),
+                    policy: *policy,
+                    rows: self
+                        .rows
+                        .iter()
+                        .zip(&self.source_ordinals)
+                        .filter(|(_, owner)| **owner == ordinal)
+                        .map(|(row, _)| row.clone())
+                        .collect(),
+                });
+            }
+        }
+        if !inserted {
+            sources.push(LoadedSource {
+                layer: Layer::Local,
+                source: label.into(),
+                policy: UnmatchedPolicy::Allow,
+                rows,
+            });
+        }
+        Self::from_sources(sources, registries)
     }
 
     /// Every row the Locator holds, in load order.
@@ -121,7 +180,9 @@ impl Locator {
     /// declared origin last, or the refusal (`PROP-066#locator`).
     #[spec(documents = "spec://org.vibevm.core/vibevm/common/PROP-066#locator")]
     pub fn locate(&self, artifact: &Artifact) -> Resolution {
-        let matched = self.matching(artifact);
+        self.locate_matches(artifact, self.matching(artifact))
+    }
+    fn locate_matches(&self, artifact: &Artifact, matched: Vec<Found>) -> Resolution {
         if matched.is_empty() {
             if self.policy == UnmatchedPolicy::Deny {
                 return Resolution::Denied {
@@ -220,14 +281,38 @@ impl Locator {
     /// ```
     #[spec(documents = "spec://org.vibevm.core/vibevm/common/PROP-066#locator")]
     pub fn choose_url(&self, artifact: &Artifact) -> Result<String, RemapRefusal> {
-        match self.locate(artifact) {
-            Resolution::Candidates(candidates) => match candidates.first() {
-                Some(candidate) => Ok(candidate.target.display()),
-                // Only an artifact with no declared URL and no matching
-                // row can land here, and such a caller has nothing to
-                // fetch in the first place.
-                None => Err(self.refusal(None, None, artifact)),
-            },
+        self.choose_candidate(artifact)
+            .map(|candidate| candidate.target.display())
+    }
+    /// Select once while retaining the winning row's existing provenance.
+    pub fn choose_candidate(&self, artifact: &Artifact) -> Result<Candidate, RemapRefusal> {
+        self.chosen(self.locate(artifact), artifact)
+    }
+    /// A held alias comes from the lock, never today's registry table. Catalog
+    /// rows are excluded; the same matcher/order/consent/policy still applies.
+    pub fn choose_operator_candidate(
+        &self,
+        artifact: &Artifact,
+        held_registry: Option<&str>,
+    ) -> Result<Candidate, RemapRefusal> {
+        self.chosen(
+            self.locate_matches(
+                artifact,
+                self.matching_bound(artifact, RegistryBinding::Held(held_registry)),
+            ),
+            artifact,
+        )
+    }
+    fn chosen(
+        &self,
+        resolution: Resolution,
+        artifact: &Artifact,
+    ) -> Result<Candidate, RemapRefusal> {
+        match resolution {
+            Resolution::Candidates(candidates) => candidates
+                .into_iter()
+                .next()
+                .ok_or_else(|| self.refusal(None, None, artifact)),
             Resolution::Denied { row, reason } => Err(self.refusal(row, reason, artifact)),
         }
     }
@@ -278,6 +363,9 @@ impl Locator {
     /// later source-local row index. Provenance indexes are never renumbered.
     #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-066#precedence")]
     fn matching(&self, artifact: &Artifact) -> Vec<Found> {
+        self.matching_bound(artifact, RegistryBinding::Current)
+    }
+    fn matching_bound(&self, artifact: &Artifact, binding: RegistryBinding<'_>) -> Vec<Found> {
         debug_assert_eq!(self.rows.len(), self.source_ordinals.len());
         let mut found: Vec<Found> = self
             .rows
@@ -285,7 +373,10 @@ impl Locator {
             .zip(&self.source_ordinals)
             .enumerate()
             .filter_map(|(position, (row, ordinal))| {
-                self.match_one(position, *ordinal, row, artifact)
+                if matches!(binding, RegistryBinding::Held(_)) && row.from.catalog {
+                    return None;
+                }
+                self.match_one(position, *ordinal, row, artifact, binding)
             })
             .collect();
         found.sort_by_key(|found| std::cmp::Reverse(found.rank));
@@ -299,6 +390,7 @@ impl Locator {
         source_ordinal: usize,
         row: &RemapRow,
         artifact: &Artifact,
+        binding: RegistryBinding<'_>,
     ) -> Option<Found> {
         if !scope_applies(row.scope.as_ref(), artifact) {
             return None;
@@ -323,23 +415,29 @@ impl Locator {
                 None
             }
             RemapKey::Registry(name) => {
-                let url = artifact.url.as_deref()?;
-                let base = self
-                    .registries
-                    .iter()
-                    .find(|(declared, _)| declared == name)
-                    .map(|(_, base)| base.as_str())?;
-                if !url.starts_with(base) {
-                    return None;
+                match binding {
+                    RegistryBinding::Held(Some(held)) if held == name => {}
+                    RegistryBinding::Held(_) => return None,
+                    RegistryBinding::Current => {
+                        let url = artifact.url.as_deref()?;
+                        let base = self
+                            .registries
+                            .iter()
+                            .find(|(declared, _)| declared == name)
+                            .map(|(_, base)| base.as_str())?;
+                        if !url.starts_with(base) {
+                            return None;
+                        }
+                        // The registry's base is how the row is *matched* — every
+                        // URL that registry resolves to starts with it. It is not
+                        // a prefix rewrite: `PROP-066#row` gives prefix
+                        // replacement to the `prefix` key alone, and for every
+                        // other key the target is the whole new location. That is
+                        // also what PROP-002's `[[mirror]]` always meant — a
+                        // mirror URL is another org root, and the per-package path
+                        // is appended to it by the caller, not by the Locator.
+                    }
                 }
-                // The registry's base is how the row is *matched* — every
-                // URL that registry resolves to starts with it. It is not
-                // a prefix rewrite: `PROP-066#row` gives prefix
-                // replacement to the `prefix` key alone, and for every
-                // other key the target is the whole new location. That is
-                // also what PROP-002's `[[mirror]]` always meant — a
-                // mirror URL is another org root, and the per-package path
-                // is appended to it by the caller, not by the Locator.
                 None
             }
             RemapKey::Prefix(prefix) => {
@@ -490,3 +588,7 @@ pub enum RemapRefusal {
         reason: String,
     },
 }
+
+#[cfg(test)]
+#[path = "locator/publication_tests.rs"]
+mod publication_tests;

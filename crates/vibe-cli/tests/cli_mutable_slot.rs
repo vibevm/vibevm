@@ -123,7 +123,11 @@ fn in_project_file_registry_skips_unchanged_then_reconciles_one_changed_file() {
     fs::write(&registry_changed, &edited).unwrap();
 
     let third = install_json(&user, project.path(), &registry, false);
-    assert_eq!(third["materialised"].as_array().unwrap().len(), 1);
+    assert_eq!(
+        third["materialised"].as_array().unwrap().len(),
+        1,
+        "{third:#}"
+    );
     assert!(third["skipped"].as_array().unwrap().is_empty());
     let after = recorded_mtimes(&slot);
     let changed_paths = payload_mtimes

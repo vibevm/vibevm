@@ -243,7 +243,7 @@ fn probe_reads_handshake_first_and_selects_the_world_of_its_epoch() {
     let mock = spawn_mock(canned);
     let outcome = IndexClient::probe(&mock.base_url, IndexAuth::None);
     let client = match outcome {
-        ProbeOutcome::Found(c) => c,
+        ProbeOutcome::Found(c) => *c,
         other => panic!("expected Found, got {other:?}"),
     };
     // `path == "."` must NOT grow a `/.` tail on the base.
@@ -279,7 +279,7 @@ fn probe_without_handshake_keeps_todays_repomd_path() {
     let mock = spawn_mock(canned);
     let outcome = IndexClient::probe(&mock.base_url, IndexAuth::None);
     let client = match outcome {
-        ProbeOutcome::Found(c) => c,
+        ProbeOutcome::Found(c) => *c,
         other => panic!("expected Found, got {other:?}"),
     };
     assert_eq!(client.file_base(), mock.base_url.trim_end_matches('/'));
@@ -478,7 +478,7 @@ fn probe_refines_the_base_by_a_non_dot_world_path() {
     let mock = spawn_mock(canned);
     let outcome = IndexClient::probe(&mock.base_url, IndexAuth::None);
     let client = match outcome {
-        ProbeOutcome::Found(c) => c,
+        ProbeOutcome::Found(c) => *c,
         other => panic!("expected Found, got {other:?}"),
     };
     let refined = format!("{}/e2", mock.base_url.trim_end_matches('/'));

@@ -95,6 +95,44 @@ impl NativeState {
         }
         self.read_head(&repo.join(".git"))
     }
+    /// Local working-tree status for an untrusted checkout. The owned context
+    /// pins `core.fsmonitor=false`, an empty hooks directory, empty global and
+    /// system config and `GIT_OPTIONAL_LOCKS=0`; the checkout's own config is
+    /// admitted exactly as for [`Self::head`], so no filter, include or helper
+    /// it names can run. Untracked and ignored files count as modifications.
+    pub(in crate::git_backend::shell) fn working_tree_dirty(
+        &self,
+        repo: &Path,
+    ) -> Result<bool, GitError> {
+        if self.owned_origin(repo)?.is_some() {
+            return Err(unsupported(
+                "an owned object store has no working tree to inspect",
+            ));
+        }
+        if self.profile.selection.is_some() {
+            self.profile.capture_context(Some(repo))?;
+        } else {
+            self.local_config(repo)?;
+        }
+        let worktree = std::path::absolute(repo).map_err(io)?;
+        let worktree = worktree
+            .to_str()
+            .ok_or_else(|| unsupported("checkout path is not UTF-8"))?;
+        let output = Context::new(&self.profile)?.run(
+            &[
+                "--work-tree",
+                worktree,
+                "status",
+                "--porcelain=v1",
+                "-z",
+                "--untracked-files=normal",
+                "--ignored=matching",
+            ],
+            Some(&repo.join(".git")),
+            None,
+        )?;
+        Ok(!output.stdout.is_empty())
+    }
     pub(super) fn read_head(&self, git_dir: &Path) -> Result<Option<String>, GitError> {
         let value = text(
             Context::new(&self.profile)?

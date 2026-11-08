@@ -43,6 +43,7 @@ use zone_projection::{unit_provenance, zone_to_effective};
 #[path = "hybrid_emit/table.rs"]
 mod table;
 use table::slot_rel_path;
+pub(crate) use table::slot_rel_path as unit_slot_rel_path;
 pub(super) use table::{build_unit_table, build_unit_table_bound};
 
 /// Emit per-unit boot artifacts (PROP-038 §2.1) for every materialised package

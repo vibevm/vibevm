@@ -163,8 +163,13 @@ pub struct LlmSection {
 /// "#).unwrap();
 /// assert_eq!(r.name, "vibespecs");
 /// assert_eq!(r.naming, NamingConvention::Fqdn); // default convention
-/// assert_eq!(r.auth, AuthKind::None);           // default auth
+/// assert_eq!(r.auth, None);                     // omitted declaration
 /// assert!(r.enabled);                           // on unless `enabled = false`
+/// let explicit: RegistrySection = toml::from_str(
+///     "name='restricted'\nurl='ssh://git@example.invalid/org'\nauth='none'\n",
+/// ).unwrap();
+/// assert_eq!(explicit.auth, Some(AuthKind::None));
+/// assert!(toml::to_string(&explicit).unwrap().contains("auth = \"none\""));
 /// ```
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
@@ -188,12 +193,16 @@ pub struct RegistrySection {
     #[serde(default, skip_serializing_if = "NamingConvention::is_default")]
     pub naming: NamingConvention,
 
-    /// Authentication regime for fetching from this registry. See
-    /// [PROP-002 §2.2.1](../../../vibevm/vibespecs/modules/vibe-registry/PROP-002-decentralized-registry.xml#registry-auth).
-    /// Default `none`: public read, no credential prompts in scripted runs,
-    /// 401 → walk to next registry.
-    #[serde(default, skip_serializing_if = "AuthKind::is_default")]
-    pub auth: AuthKind,
+    /// Authentication declaration, preserving omission separately from an
+    /// explicit `none` restriction. Transport-aware resolution belongs to the
+    /// composition owner; parsing does not infer credentials from the URL.
+    /// `Some(AuthKind::None)` always serializes as `auth = "none"`.
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        deserialize_with = "declared_registry_auth"
+    )]
+    pub auth: Option<AuthKind>,
 
     /// Override env-var name for `auth = "token-env"`. Default
     /// (when omitted) is derived from the registry host —
@@ -219,6 +228,17 @@ pub struct RegistrySection {
     /// `vibe_registry::index_client::resolve_index_url`.
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub index_url: Option<String>,
+}
+
+// Missing fields use serde's default; a present value must be an AuthKind.
+// In particular, explicit JSON null must not become an omitted declaration.
+fn declared_registry_auth<'de, D>(
+    deserializer: D,
+) -> std::result::Result<Option<AuthKind>, D::Error>
+where
+    D: serde::Deserializer<'de>,
+{
+    AuthKind::deserialize(deserializer).map(Some)
 }
 
 /// Authentication regime per `[[registry]]`. See PROP-002 §2.2.1 for
@@ -281,22 +301,30 @@ impl RegistrySection {
     /// `VIBEVM_REGISTRY_TOKEN_<HOST_UPPER>` with `.` and `-` mapped to
     /// `_`. Returns `None` when the URL has no parseable host.
     pub fn resolve_token_env_name(&self) -> Option<String> {
-        if let Some(explicit) = &self.token_env {
-            return Some(explicit.clone());
-        }
-        let host = registry_host(&self.url)?;
-        let mut sanitised = String::with_capacity(host.len());
-        for ch in host.chars() {
-            match ch {
-                '.' | '-' => sanitised.push('_'),
-                other if other.is_ascii_alphanumeric() || other == '_' => {
-                    sanitised.push(other.to_ascii_uppercase());
-                }
-                _ => return None,
-            }
-        }
-        Some(format!("VIBEVM_REGISTRY_TOKEN_{sanitised}"))
+        registry_token_env_name(&self.url, self.token_env.as_deref())
     }
+}
+
+/// Derive only an environment variable NAME for the actual selected source.
+/// ```
+/// assert_eq!(vibe_core::manifest::registry_token_env_name("https://example.invalid/org", None).as_deref(), Some("VIBEVM_REGISTRY_TOKEN_EXAMPLE_INVALID"));
+/// ```
+pub fn registry_token_env_name(source: &str, explicit: Option<&str>) -> Option<String> {
+    if let Some(explicit) = explicit {
+        return Some(explicit.to_owned());
+    }
+    let host = registry_host(source)?;
+    let mut sanitised = String::with_capacity(host.len());
+    for ch in host.chars() {
+        match ch {
+            '.' | '-' => sanitised.push('_'),
+            other if other.is_ascii_alphanumeric() || other == '_' => {
+                sanitised.push(other.to_ascii_uppercase());
+            }
+            _ => return None,
+        }
+    }
+    Some(format!("VIBEVM_REGISTRY_TOKEN_{sanitised}"))
 }
 
 /// Best-effort host extraction from a registry URL. Handles both
@@ -418,6 +446,9 @@ impl NamingConvention {
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
 pub struct MirrorSection {
+    /// Runtime declaration origin retained before merge/order; never a TOML key.
+    #[serde(skip)]
+    pub publication: crate::RoutePublication,
     /// Target registry name (matches a `[[registry]].name`) or `"*"` for
     /// any registry.
     pub of: String,

@@ -324,6 +324,7 @@ impl NativeState {
             let absorbed = child_layout.is_some();
             let revision = self.prepare_tree(
                 Preparation {
+                    source_address: SourceAddress::WarmOrigin,
                     reporter,
                     address: &raw_url,
                     reference: &oid,

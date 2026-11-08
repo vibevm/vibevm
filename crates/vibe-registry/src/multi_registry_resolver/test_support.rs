@@ -95,7 +95,15 @@ mod fixtures {
                 }
             }
             fs::create_dir_all(dest.join(".git")).unwrap();
+            // A real clone records its origin; warm direct-source refreshes
+            // compare it before choosing refresh over a source switch.
+            fs::write(dest.join(".git/fake-origin"), url).unwrap();
             Ok(())
+        }
+        fn recorded_origin_url(&self, dest: &Path) -> Result<String, GitError> {
+            fs::read_to_string(dest.join(".git/fake-origin")).map_err(|_| GitError::OriginMissing {
+                path: dest.to_path_buf(),
+            })
         }
         fn update(&self, _dest: &Path, _refname: &str) -> Result<(), GitError> {
             *self.update_calls.lock().unwrap() += 1;
@@ -142,7 +150,7 @@ mod fixtures {
             url: url.to_string(),
             r#ref: "main".to_string(),
             naming: NamingConvention::Fqdn,
-            auth: vibe_core::manifest::AuthKind::None,
+            auth: None,
             token_env: None,
             enabled: true,
             index_url: None,
@@ -159,7 +167,7 @@ mod fixtures {
             url: url.to_string(),
             r#ref: "main".to_string(),
             naming: NamingConvention::Fqdn,
-            auth: vibe_core::manifest::AuthKind::TokenEnv,
+            auth: Some(vibe_core::manifest::AuthKind::TokenEnv),
             token_env: Some(env_var.to_string()),
             enabled: true,
             index_url: None,

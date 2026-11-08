@@ -11,6 +11,7 @@ homepage.workspace = true
 description = "Frontend-agnostic, addressable action system for vibevm (PROP-039)"
 
 [dependencies]
+vibe-core.workspace = true
 specmark.workspace = true
 thiserror.workspace = true
 serde.workspace = true

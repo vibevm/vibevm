@@ -158,6 +158,24 @@ impl BinaryBackend for WorkspaceBinaryBackend {
         &self,
         row: &vibe_lifecycle::ExtensionRegistryRow,
         name: &str,
+    ) -> std::result::Result<std::path::PathBuf, String> {
+        self.resolve(row, name, None)
+    }
+    fn resolve_for_controlled(
+        &self,
+        row: &vibe_lifecycle::ExtensionRegistryRow,
+        name: &str,
+        cancellation: &vibe_core::cancellation::CancellationToken,
+    ) -> std::result::Result<std::path::PathBuf, String> {
+        self.resolve(row, name, Some(cancellation))
+    }
+}
+impl WorkspaceBinaryBackend {
+    fn resolve(
+        &self,
+        row: &vibe_lifecycle::ExtensionRegistryRow,
+        name: &str,
+        cancellation: Option<&vibe_core::cancellation::CancellationToken>,
     ) -> Result<std::path::PathBuf, String> {
         let (binary, home) = match row.provider() {
             vibe_lifecycle::ExtensionProvider::Dependency(provider) => (
@@ -191,15 +209,26 @@ impl BinaryBackend for WorkspaceBinaryBackend {
         };
         let binary = binary.map_err(|error| error.to_string())?;
         if !binary.artifact().exists() {
-            vibe_workspace::bins::build_binary_authorized_with_output(
-                &binary,
-                vibe_workspace::bins::BuildAuthorization::InstalledExtension { home },
-                if self.quiet {
-                    vibe_workspace::bins::BuildOutput::Quiet
-                } else {
-                    vibe_workspace::bins::BuildOutput::Inherit
-                },
-            )
+            let authorization =
+                vibe_workspace::bins::BuildAuthorization::InstalledExtension { home };
+            let output = if self.quiet {
+                vibe_workspace::bins::BuildOutput::Quiet
+            } else {
+                vibe_workspace::bins::BuildOutput::Inherit
+            };
+            match cancellation {
+                Some(token) => vibe_workspace::bins::build_binary_authorized_controlled(
+                    &binary,
+                    authorization,
+                    output,
+                    token,
+                ),
+                None => vibe_workspace::bins::build_binary_authorized_with_output(
+                    &binary,
+                    authorization,
+                    output,
+                ),
+            }
             .map_err(|error| error.to_string())?;
         }
         Ok(binary.artifact())

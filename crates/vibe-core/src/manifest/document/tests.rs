@@ -364,7 +364,7 @@ fn write_and_read_roundtrip_on_disk() {
         url: "https://github.com/vibespecs".into(),
         r#ref: "main".into(),
         naming: super::super::NamingConvention::KindName,
-        auth: super::super::AuthKind::None,
+        auth: None,
         token_env: None,
         enabled: true,
         index_url: None,

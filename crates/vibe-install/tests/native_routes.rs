@@ -26,7 +26,56 @@ struct Source {
     resolver: MultiRegistryResolver,
     store: PathBuf,
 }
+/// The double wraps a real multi-registry resolver, so planning's retained
+/// metadata solve and exact-candidate acquisition use that resolver's own
+/// production relation (the `Multi` cell), never a re-resolution by name.
+/// The resolver is built once without lock rows, so the lock is not replayed.
 impl InstallSource for Source {
+    fn source_solve_limits(&self) -> Result<vibe_resolver::SourceSolveLimits, SolveError> {
+        Ok(vibe_resolver::SourceSolveLimits::standard_operation())
+    }
+    fn solve_metadata(
+        &self,
+        request: &vibe_resolver::SourceSolveRequest<'_>,
+    ) -> Result<vibe_resolver::SourceResolvedGraph, SolveError> {
+        // Like the incumbent per-root solve, this resolver holds no lock rows,
+        // so it does not re-adjudicate the project lock's recorded selection.
+        let unlocked = vibe_resolver::SourceSolveRequest {
+            roots: request.roots,
+            held_roots: request.held_roots,
+            authoritative_locked: &[],
+            activated: request.activated,
+            limits: request.limits,
+            configuration: request.configuration,
+            blocked: request.blocked,
+        };
+        vibe_resolver::ResolvoDepSolver::new(vibe_resolver::MultiRegistryDepProvider::new(
+            &self.resolver,
+        ))
+        .solve_source_aware(&unlocked)
+    }
+    fn acquire_candidate_for_install(
+        &self,
+        candidate: &vibe_registry::source_candidates::RetainedSourceCandidate,
+        _: &Path,
+        expected: Option<&str>,
+        slot: &Path,
+        progress: &vibe_core::progress::Progress,
+    ) -> Result<PackageAcquisition, RegistryError> {
+        if incremental_base(candidate, slot) {
+            let exact = PackageRef::parse(&format!(
+                "{}/{}@={}",
+                candidate.group(),
+                candidate.name(),
+                candidate.version()
+            ))?;
+            return self
+                .prepare_in_place(&exact, slot)
+                .map(PackageAcquisition::InPlace);
+        }
+        self.resolver
+            .fetch_candidate_for_install(candidate, &self.store, expected, slot, progress)
+    }
     fn resolve_and_fetch(
         &self,
         p: &PackageRef,
@@ -104,6 +153,27 @@ impl InstallSource for Source {
             reason: format!("unexpected unbound operation for {p}"),
         })
     }
+}
+/// The incumbent dispatch: a locked in-place package whose existing slot has a
+/// readable `[package]` base is refreshed through the double's own
+/// `prepare_in_place`; the owning workspace lock is the slot's nearest
+/// ancestor `vibe.lock`.
+fn incremental_base(
+    candidate: &vibe_registry::source_candidates::RetainedSourceCandidate,
+    slot: &Path,
+) -> bool {
+    let locked_in_place = slot
+        .ancestors()
+        .map(|dir| dir.join("vibe.lock"))
+        .find(|lock| lock.is_file())
+        .and_then(|lock| Lockfile::read(lock).ok())
+        .is_some_and(|lock| {
+            lock.find(candidate.group(), candidate.name())
+                .is_some_and(|old| old.materialization.is_in_place())
+        });
+    locked_in_place
+        && slot.join(".git").exists()
+        && Manifest::read(slot.join(Manifest::FILENAME)).is_ok_and(|m| m.package.is_some())
 }
 struct Server(std::process::Child);
 impl Drop for Server {
@@ -241,3 +311,6 @@ fn denied_primary_allowed_mirror_completes_public_plan_and_install() {
 
 #[path = "native_routes/recursive.rs"]
 mod recursive;
+
+#[path = "native_routes/direct.rs"]
+mod direct;

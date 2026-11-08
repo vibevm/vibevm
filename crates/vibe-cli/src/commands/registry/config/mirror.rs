@@ -102,6 +102,7 @@ pub(in crate::commands::registry) fn run_set_mirror(
     }
 
     let new = MirrorSection {
+        publication: Default::default(),
         of: args.of.clone(),
         url: args.url.clone(),
         priority: args.priority,

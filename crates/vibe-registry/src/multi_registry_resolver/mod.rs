@@ -55,20 +55,29 @@ use crate::{
 };
 
 mod attempt;
+mod catalog;
+pub use catalog::{RegistryCatalogProvider, RegistryDeclarations};
 mod clone_chain;
 mod construction;
+mod direct;
 mod dispatch;
+mod retained;
+pub use direct::DirectSourceLease;
 mod home_refresh;
+mod locked;
 mod offline;
+pub use locked::LockedSelection;
 mod override_resolve;
 mod redirect_follow;
 mod refresh;
 mod resolution;
 mod source;
+mod source_candidates;
 mod sources;
 mod walk;
 
 pub use attempt::{RegistryWalkAttempt, WalkAttemptStatus};
+#[cfg(test)]
 pub(crate) use clone_chain::clone_chain;
 pub use home_refresh::RegistryRefresh;
 pub use refresh::{RefreshReport, RefreshedEntry, RefreshedVia, SkippedEntry};
@@ -86,14 +95,7 @@ pub const DEFAULT_OVERRIDE_REF: &str = "main";
 /// instances plus the cross-cutting `[[mirror]]` and `[[override]]`
 /// layers from `vibe.toml`.
 pub struct MultiRegistryResolver {
-    registries: Vec<Arc<GitPerPackageRegistry>>,
-    /// The ordered walk list — git and local sources interleaved in the
-    /// declared `[[registry]]` order. The four core operations
-    /// (list / resolve / fetch-dep-manifest / fetch) iterate this; the
-    /// git-only operations (index short-name, refresh, vendor clone-dir)
-    /// stay on `registries`, the denormalised git subset, since a local
-    /// directory has no index / git-refresh / per-package clone.
-    sources: Vec<RegistrySource>,
+    catalog: catalog::Catalog,
     mirrors: Vec<MirrorSection>,
     overrides: HashMap<String, OverrideSection>,
     /// Git-source declarations from `[requires.packages]` table-form
@@ -108,6 +110,8 @@ pub struct MultiRegistryResolver {
     /// declaration.
     path_packages: HashMap<String, ResolvedPathDep>,
     backend: Arc<dyn GitBackend>,
+    policy_provider: Option<Arc<dyn crate::source_policy_provider::SourcePolicyProvider>>,
+    metadata_store_root: Option<PathBuf>,
     cache_root: PathBuf,
     /// Strict-auth posture — when `true`, a 401 / 403 against a
     /// public (`auth = "none"`) registry is treated as a halt
@@ -134,6 +138,7 @@ pub struct MultiRegistryResolver {
     /// whole store layer does; production callers pass
     /// [`store::store_root`].
     store_root: Option<PathBuf>,
+    candidate_owner: Arc<()>,
     /// The project's lockfile entries, keyed by `<group>/<name>` — the
     /// provenance channel for store-backed resolutions: a store hit is
     /// authoritative for AVAILABILITY, but `source_uri` still comes
@@ -142,6 +147,15 @@ pub struct MultiRegistryResolver {
     /// wire value would be an owner act). Toggled by
     /// [`MultiRegistryResolver::with_locked_packages`].
     locked: HashMap<String, vibe_core::manifest::LockedPackage>,
+    locked_updates: bool,
+    project_overrides: HashMap<String, OverrideSection>,
+    locked_checkouts: HashMap<String, PathBuf>,
+    /// `vibe reinstall --force`: held replay acquires from the locked source
+    /// instead of reusing a verified store entry.
+    forced_refetch: bool,
+    /// Held coordinates whose locked directory is a mutable in-workspace
+    /// working tree: refreshed from that directory, never from the store.
+    mutable_locked: std::collections::HashSet<String>,
     /// Invocation-owned observation tree. Default is inert; construction
     /// roots opt in with [`Self::with_progress`].
     progress: vibe_core::progress::Progress,
@@ -163,30 +177,30 @@ impl MultiRegistryResolver {
         backend: Arc<dyn GitBackend>,
         cache_root: PathBuf,
     ) -> Self {
-        let registries = sources
-            .iter()
-            .filter_map(|s| match s {
-                RegistrySource::Git(g) => Some(Arc::clone(g)),
-                RegistrySource::Local(_) => None,
-            })
-            .collect();
         let overrides = overrides
             .into_iter()
             .map(|o| (o.pkgref.clone(), o))
             .collect();
         MultiRegistryResolver {
-            registries,
-            sources,
+            catalog: catalog::Catalog::opened(sources),
             mirrors,
             overrides,
             git_packages: HashMap::new(),
             path_packages: HashMap::new(),
             backend,
+            policy_provider: None,
+            metadata_store_root: None,
             cache_root,
             strict_auth: false,
             offline: false,
             store_root: None,
+            candidate_owner: Arc::new(()),
             locked: HashMap::new(),
+            locked_updates: false,
+            project_overrides: HashMap::new(),
+            locked_checkouts: HashMap::new(),
+            forced_refetch: false,
+            mutable_locked: Default::default(),
             progress: vibe_core::progress::Progress::default(),
             misses: walk::RemoteMisses::default(),
         }
@@ -198,9 +212,10 @@ impl MultiRegistryResolver {
         // invocation's journal reaches their catalog downloads from here
         // (`PROP-068#coverage`).
         if let Some(transfers) = progress.transfers() {
-            for client in self.registries.iter().filter_map(|r| r.index_client()) {
-                client.attach_transfers(transfers);
+            for registry in self.catalog.initialized_registries() {
+                registry.attach_index_transfers(transfers.clone());
             }
+            self.catalog.attach_selected_transfers(transfers);
             // …and the clones no observation surrounds (`PROP-068#git`);
             // the public registries' anonymous backends share its journal.
             self.backend.attach_transfers(transfers);
@@ -217,6 +232,7 @@ impl MultiRegistryResolver {
     /// Keyed by `<group>/<name>` qualified-name (PROP-008) so a
     /// `pkgref.qualified_name()` lookup hits.
     pub fn with_git_packages(mut self, deps: Vec<GitPackageDep>) -> Self {
+        self.candidate_owner = Arc::new(());
         self.git_packages = deps
             .into_iter()
             .map(|d| (format!("{}/{}", d.group, d.name), d))
@@ -237,6 +253,7 @@ impl MultiRegistryResolver {
     /// already computed by the workspace layer; the resolver does no
     /// filesystem path arithmetic itself.
     pub fn with_path_packages(mut self, deps: Vec<ResolvedPathDep>) -> Self {
+        self.candidate_owner = Arc::new(());
         self.path_packages = deps
             .into_iter()
             .map(|d| (format!("{}/{}", d.group, d.name), d))
@@ -252,6 +269,7 @@ impl MultiRegistryResolver {
     /// Toggle strict-auth posture (see field docs / PROP-002 §2.3.1
     /// strict-auth corollary). Builder-style consume-and-return.
     pub fn with_strict_auth(mut self, strict: bool) -> Self {
+        self.candidate_owner = Arc::new(());
         self.strict_auth = strict;
         self
     }
@@ -264,6 +282,7 @@ impl MultiRegistryResolver {
     /// hard error with an actionable message (PROP-010 §2.5,
     /// `OFFLINE-HARD-ERROR`). Builder-style consume-and-return.
     pub fn with_offline(mut self, offline: bool) -> Self {
+        self.candidate_owner = Arc::new(());
         self.offline = offline;
         self
     }
@@ -279,6 +298,7 @@ impl MultiRegistryResolver {
     /// isolate the store by parameter — the same discipline the whole
     /// store layer uses; production callers pass `store::store_root()?`.
     pub fn with_store_root(mut self, root: PathBuf) -> Self {
+        self.candidate_owner = Arc::new(());
         self.store_root = Some(root);
         self
     }
@@ -289,6 +309,7 @@ impl MultiRegistryResolver {
     /// existing lock record; a package in no registry and in no lock
     /// entry is NOT rescued by the store. Builder-style.
     pub fn with_locked_packages(mut self, locked: Vec<vibe_core::manifest::LockedPackage>) -> Self {
+        self.candidate_owner = Arc::new(());
         self.locked = locked
             .into_iter()
             .map(|p| (format!("{}/{}", p.group, p.name), p))
@@ -302,15 +323,15 @@ impl MultiRegistryResolver {
         self.strict_auth
     }
 
-    pub fn registries(&self) -> &[Arc<GitPerPackageRegistry>] {
-        &self.registries
+    pub fn registries(&self) -> Result<&[Arc<GitPerPackageRegistry>], RegistryError> {
+        self.catalog.registries(self)
     }
 
     /// The ordered walk list — git and local-directory sources in declared
     /// `[[registry]]` order. The four core operations iterate this; the
     /// git-only operations use [`Self::registries`] (the git subset).
-    pub fn sources(&self) -> &[RegistrySource] {
-        &self.sources
+    pub fn sources(&self) -> Result<&[RegistrySource], RegistryError> {
+        self.catalog.sources(self)
     }
 
     /// Index-backed short-name candidate enumeration (PROP-008 §2.6).
@@ -328,8 +349,8 @@ impl MultiRegistryResolver {
     /// `len() == 0` means no index carried the name.
     pub fn resolve_name_candidates(&self, name: &str) -> Result<Vec<Group>, RegistryError> {
         let mut groups: Vec<Group> = Vec::new();
-        for reg in &self.registries {
-            let Some(client) = reg.index_client() else {
+        for reg in self.registries()? {
+            let Some(client) = reg.discover_index()? else {
                 continue;
             };
             match client.name_candidates(name) {
@@ -355,24 +376,60 @@ impl MultiRegistryResolver {
         Ok(groups)
     }
 
-    pub fn mirrors(&self) -> &[MirrorSection] {
-        &self.mirrors
+    pub fn with_source_policy_provider(
+        mut self,
+        provider: Arc<dyn crate::source_policy_provider::SourcePolicyProvider>,
+    ) -> Self {
+        self.candidate_owner = Arc::new(());
+        self.policy_provider = Some(provider);
+        self
     }
-
-    pub fn overrides(&self) -> &HashMap<String, OverrideSection> {
-        &self.overrides
+    pub fn source_choice_mode(&self) -> crate::source_candidates::SourceChoiceMode {
+        self.policy_provider.as_ref().map_or(
+            crate::source_candidates::SourceChoiceMode::LegacyKnown,
+            |p| p.source_choice_mode(),
+        )
     }
-
-    /// Mirrors targeting the named registry (plus any wildcard `of = "*"`
-    /// entries), sorted by `priority` ascending.
-    pub fn mirrors_for(&self, registry_name: &str) -> Vec<&MirrorSection> {
-        let mut v: Vec<&MirrorSection> = self
-            .mirrors
+    /// One retained source owner; unrelated rows are not opened.
+    pub fn selected_registry_source(
+        &self,
+        name: &str,
+    ) -> Result<Arc<RegistrySource>, RegistryError> {
+        self.catalog.selected(self, name)
+    }
+    /// Declared rows, including disabled entries; no source is opened.
+    pub fn declared_registry_rows(&self) -> Result<Vec<RegistrySection>, RegistryError> {
+        self.catalog.declared_registry_rows(self)
+    }
+    pub fn source_policy_for_new_selection(
+        &self,
+    ) -> Result<Arc<vibe_core::manifest::EffectiveSourcePolicy>, RegistryError> {
+        match &self.policy_provider {
+            Some(provider) => provider.policy(),
+            None => Ok(Arc::new(
+                vibe_core::manifest::EffectiveSourcePolicy::default(),
+            )),
+        }
+    }
+    pub fn with_metadata_store_root(mut self, root: PathBuf) -> Self {
+        self.candidate_owner = Arc::new(());
+        self.metadata_store_root = Some(root);
+        self
+    }
+    pub fn mirrors(&self) -> Result<&[MirrorSection], RegistryError> {
+        self.catalog.mirrors(self)
+    }
+    pub fn overrides(&self) -> Result<&HashMap<String, OverrideSection>, RegistryError> {
+        self.catalog.overrides(self)
+    }
+    pub fn mirrors_for(&self, registry_name: &str) -> Result<Vec<&MirrorSection>, RegistryError> {
+        let mut values: Vec<_> = self
+            .mirrors()?
             .iter()
             .filter(|m| m.of == registry_name || m.of == "*")
             .collect();
-        v.sort_by_key(|m| m.priority);
-        v
+        values.sort_by_key(|m| m.priority);
+        Ok(values)
     }
 }
 
@@ -415,3 +472,6 @@ mod offline_tests;
 #[cfg(test)]
 #[path = "tests.rs"]
 mod tests;
+
+#[cfg(test)]
+mod catalog_tests;

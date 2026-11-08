@@ -1,7 +1,6 @@
 //! Freeze and audit Include input before the selected OpenSSH evaluator runs.
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-073#SSH-CONFIG-CAPTURE");
 use super::*;
-use std::io::Read;
 use std::process::{Command, Stdio};
 pub(super) struct Frozen {
     _root: tempfile::TempDir,
@@ -81,10 +80,16 @@ impl Frozen {
         implements = "spec://org.vibevm.core/vibevm/common/PROP-073#SSH-CONFIG-CAPTURE-LAW"
     )]
     pub(super) fn capture(input: &SshConfigSelection) -> Result<Self, GitError> {
-        let root = tempfile::Builder::new()
-            .prefix("vibe-ssh-config-")
-            .tempdir()
-            .map_err(io)?;
+        let mut builder = tempfile::Builder::new();
+        builder.prefix("vibe-ssh-config-");
+        let root = match &input.acquisition_root {
+            None => builder.tempdir(),
+            Some(path) => {
+                std::fs::create_dir_all(path).map_err(io)?;
+                builder.tempdir_in(path)
+            }
+        }
+        .map_err(io)?;
         let mut witness = Witness::default();
         let mut count = Budget { files: 0, bytes: 0 };
         let mut combined = String::new();
@@ -279,32 +284,25 @@ pub(super) fn evaluate(
         command.arg("-p").arg(port.to_string());
     }
     command.arg("--").arg(&authority.host);
-    let mut child = command.spawn().map_err(io)?;
-    let stdout = child
-        .stdout
-        .take()
-        .ok_or_else(|| unsupported("SSH evaluator has no stdout"))?;
-    let reader = std::thread::spawn(move || {
-        let mut bytes = Vec::new();
-        stdout.take(262145).read_to_end(&mut bytes).map(|_| bytes)
-    });
-    let started = std::time::Instant::now();
-    let status = loop {
-        if let Some(status) = child.try_wait().map_err(io)? {
-            break status;
-        }
-        if started.elapsed() > std::time::Duration::from_secs(5) {
-            let _ = child.kill();
-            let _ = child.wait();
-            let _ = reader.join();
-            return Err(unsupported("SSH config evaluation exceeded its time bound"));
-        }
-        std::thread::sleep(std::time::Duration::from_millis(5));
-    };
-    let bytes = reader
-        .join()
-        .map_err(|_| unsupported("SSH evaluator reader failed"))?
-        .map_err(io)?;
+    let control = crate::git_backend::transfers::current()
+        .progress
+        .unwrap_or_default()
+        .cancellation()
+        .clone();
+    let output = crate::git_backend::shell::controlled::bounded_output(
+        &mut command,
+        &control,
+        std::time::Duration::from_secs(5),
+        262144,
+    )
+    .map_err(|error| {
+        crate::git_backend::shell::controlled::git_error(
+            error,
+            "audited SSH config evaluator".into(),
+        )
+    })?;
+    let status = output.status;
+    let bytes = output.stdout;
     if !status.success() || bytes.len() > 262144 {
         return Err(unsupported(
             "audited SSH config evaluation failed or exceeded its output bound",

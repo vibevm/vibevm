@@ -13,9 +13,14 @@ use vibe_install::{InstallRequest, InstallSource, NullObserver, Plan};
 use vibe_registry::{CachedPackage, InPlaceMaterialised, RegistryError, ResolvedPackage};
 use vibe_resolver::{FeatureRequest, ResolvedGraph, ResolvedNode, SolveError};
 use vibe_workspace::hooks::HookPolicy;
+
+#[path = "support/retained.rs"]
+mod retained;
 const BEFORE: &str = "[project]\nname='rollback-probe'\nversion='0.1.0'\n";
 const FAILURE_EXIT: i32 = 37;
 const PACKAGE: &str = "[package]\ngroup='org.vibevm'\nname='giant'\nversion='1.0.0'\nkind='feat'\n";
+/// The fixture package's directory inside its temp directory registry.
+const GIANT_DIR: &str = "org.vibevm/giant/v1.0.0";
 #[derive(Clone, Copy, Debug)]
 enum Case {
     Unchanged,
@@ -31,6 +36,9 @@ struct Source {
     declaration: String,
 }
 impl Source {
+    fn package_dir(&self) -> PathBuf {
+        self.cache.path().join(GIANT_DIR)
+    }
     fn calls(&self) -> usize {
         fs::read_to_string(self.root.join("hook-calls"))
             .unwrap_or_default()
@@ -58,6 +66,31 @@ fn identity(path: &Path) -> Value {
 }
 
 impl InstallSource for Source {
+    fn source_solve_limits(&self) -> Result<vibe_resolver::SourceSolveLimits, SolveError> {
+        retained::limits()
+    }
+    fn solve_metadata(
+        &self,
+        request: &vibe_resolver::SourceSolveRequest<'_>,
+    ) -> Result<vibe_resolver::SourceResolvedGraph, SolveError> {
+        retained::solve(self.cache.path(), request)
+    }
+    fn acquire_candidate_for_install(
+        &self,
+        candidate: &vibe_registry::source_candidates::RetainedSourceCandidate,
+        store_root: &Path,
+        expected_hash: Option<&str>,
+        slot: &Path,
+        progress: &vibe_core::progress::Progress,
+    ) -> Result<vibe_registry::PackageAcquisition, RegistryError> {
+        self.acquire_for_install(
+            &retained::exact(candidate),
+            store_root,
+            expected_hash,
+            slot,
+            progress,
+        )
+    }
     fn resolve_and_fetch(
         &self,
         p: &PackageRef,
@@ -65,6 +98,8 @@ impl InstallSource for Source {
         _: Option<&str>,
     ) -> Result<CachedPackage, RegistryError> {
         Ok(CachedPackage {
+            locked_selection: None,
+            route_publication: vibe_core::RoutePublication::Local,
             recorded_source_kind: None,
             store_reused: None,
             acquisition: None,
@@ -72,12 +107,12 @@ impl InstallSource for Source {
                 group: p.group.clone().unwrap(),
                 name: p.name.to_string(),
                 version: "1.0.0".parse().unwrap(),
-                source_dir: self.cache.path().to_owned(),
+                source_dir: self.package_dir(),
             },
-            cache_dir: self.cache.path().to_owned(),
+            cache_dir: self.package_dir(),
             manifest: Manifest::parse_str(&self.declaration).unwrap(),
-            content_hash: vibe_registry::compute_content_hash(self.cache.path()).unwrap(),
-            source_uri: format!("file://{}", self.cache.path().display()),
+            content_hash: vibe_registry::compute_content_hash(&self.package_dir()).unwrap(),
+            source_uri: format!("file://{}", self.package_dir().display()),
             fetched_from: None,
             registry_name: None,
             source_ref: None,
@@ -223,8 +258,9 @@ fn prepared(case: Case) -> (tempfile::TempDir, Source, Box<vibe_install::Planned
     write(root, "hook-fixture-marker", "exact rollback fixture");
     let cache = tempfile::tempdir().unwrap();
     let declaration = format!("{PACKAGE}\n[hooks]\npre-install='hooks/interleave'\n");
-    write(cache.path(), "vibe.toml", &declaration);
-    write(cache.path(), "payload.txt", "actual cached copy source");
+    let package = cache.path().join(GIANT_DIR);
+    write(&package, "vibe.toml", &declaration);
+    write(&package, "payload.txt", "actual cached copy source");
     let program = std::env::current_exe().unwrap();
     let script = format!(
         "set -eu\nVIBE_UNDO_FIXTURE_ROOT={} VIBE_UNDO_FIXTURE_MARKER={} VIBE_UNDO_FIXTURE_CASE={} {} --ignored --exact hook_fixture_interleaving --nocapture --test-threads=1\nexit {}\n",
@@ -238,7 +274,7 @@ fn prepared(case: Case) -> (tempfile::TempDir, Source, Box<vibe_install::Planned
             FAILURE_EXIT
         }
     );
-    write(cache.path(), "hooks/interleave.sh", &script);
+    write(&package, "hooks/interleave.sh", &script);
     let source = Source {
         root: root.to_owned(),
         cache,

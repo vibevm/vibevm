@@ -21,21 +21,62 @@ use vibe_install::{InstallRequest, InstallSource, NullObserver, Plan};
 use vibe_registry::{CachedPackage, RegistryError, ResolvedPackage, compute_content_hash};
 use vibe_resolver::{FeatureRequest, ResolvedGraph, ResolvedNode, SolveError};
 
-/// Serves one fixture package out of a temp tree, with a real content
+#[path = "support/retained.rs"]
+mod retained;
+
+/// Serves one fixture package out of a temp directory registry
+/// (`<fixtures>/org.vibevm.core/<name>/v0.1.0`), with a real content
 /// hash — the same shape the other planning tests use.
 struct FixtureSource {
     fixtures: PathBuf,
     served: String,
 }
 
+impl FixtureSource {
+    fn package_dir(&self, name: &str) -> PathBuf {
+        self.fixtures
+            .join("org.vibevm.core")
+            .join(name)
+            .join("v0.1.0")
+    }
+}
+
 impl InstallSource for FixtureSource {
+    fn source_solve_limits(&self) -> Result<vibe_resolver::SourceSolveLimits, SolveError> {
+        retained::limits()
+    }
+
+    fn solve_metadata(
+        &self,
+        request: &vibe_resolver::SourceSolveRequest<'_>,
+    ) -> Result<vibe_resolver::SourceResolvedGraph, SolveError> {
+        retained::solve(&self.fixtures, request)
+    }
+
+    fn acquire_candidate_for_install(
+        &self,
+        candidate: &vibe_registry::source_candidates::RetainedSourceCandidate,
+        store_root: &Path,
+        expected_hash: Option<&str>,
+        slot: &Path,
+        progress: &vibe_core::progress::Progress,
+    ) -> Result<vibe_registry::PackageAcquisition, RegistryError> {
+        self.acquire_for_install(
+            &retained::exact(candidate),
+            store_root,
+            expected_hash,
+            slot,
+            progress,
+        )
+    }
+
     fn resolve_and_fetch(
         &self,
         pkgref: &PackageRef,
         _store_root: &Path,
         _expected_hash: Option<&str>,
     ) -> Result<CachedPackage, RegistryError> {
-        let dir = self.fixtures.join(pkgref.name.to_string());
+        let dir = self.package_dir(pkgref.name.as_str());
         let manifest = Manifest::read(dir.join(Manifest::FILENAME)).map_err(|e| {
             RegistryError::MalformedMeta {
                 path: dir.join(Manifest::FILENAME),
@@ -50,6 +91,8 @@ impl InstallSource for FixtureSource {
             .clone();
         let content_hash = compute_content_hash(&dir)?;
         Ok(CachedPackage {
+            locked_selection: None,
+            route_publication: vibe_core::RoutePublication::Local,
             recorded_source_kind: None,
             store_reused: None,
             acquisition: None,
@@ -89,10 +132,7 @@ impl InstallSource for FixtureSource {
     }
 
     fn manifest_of(&self, pkg: &PackageRef) -> Result<Manifest, SolveError> {
-        let path = self
-            .fixtures
-            .join(pkg.name.to_string())
-            .join(Manifest::FILENAME);
+        let path = self.package_dir(pkg.name.as_str()).join(Manifest::FILENAME);
         Manifest::read(path)
             .map_err(|error| vibe_resolver::DepProviderError::Other(error.to_string()).into())
     }
@@ -117,8 +157,8 @@ impl InstallSource for FixtureSource {
 /// A project asking for one package of the given kind.
 fn project_requiring(kind: &str, name: &str) -> (TempDir, PathBuf, FixtureSource) {
     let outer = TempDir::new().unwrap();
-    let fixtures = outer.path().to_path_buf();
-    let slot = fixtures.join(name);
+    let fixtures = outer.path().join("registry");
+    let slot = fixtures.join("org.vibevm.core").join(name).join("v0.1.0");
     fs::create_dir_all(&slot).unwrap();
     // Documentation owes a card and a subject (PROP-057 §§4, 7), so the
     // fixture is a manifest that would PASS validation — the refusal
@@ -211,7 +251,7 @@ fn installing_an_app_package_is_not_refused() {
 #[test]
 fn common_package_configuration_refuses_before_apply_instead_of_empty_legacy_success() {
     let (_outer, project, source) = project_requiring("flow", "configured");
-    let path = source.fixtures.join("configured/vibe.toml");
+    let path = source.package_dir("configured").join("vibe.toml");
     let text = fs::read_to_string(&path).unwrap() + "\n[configuration]\n";
     fs::write(&path, &text).unwrap();
     assert!(Manifest::read(&path).unwrap().configuration.is_some());
@@ -236,6 +276,31 @@ fn common_package_configuration_refuses_before_apply_instead_of_empty_legacy_suc
 fn fetched_transitive_source_input_cannot_be_ignored_before_apply() {
     struct Transitive(FixtureSource);
     impl InstallSource for Transitive {
+        fn source_solve_limits(&self) -> Result<vibe_resolver::SourceSolveLimits, SolveError> {
+            self.0.source_solve_limits()
+        }
+        fn solve_metadata(
+            &self,
+            request: &vibe_resolver::SourceSolveRequest<'_>,
+        ) -> Result<vibe_resolver::SourceResolvedGraph, SolveError> {
+            self.0.solve_metadata(request)
+        }
+        fn acquire_candidate_for_install(
+            &self,
+            candidate: &vibe_registry::source_candidates::RetainedSourceCandidate,
+            store_root: &Path,
+            expected_hash: Option<&str>,
+            slot: &Path,
+            progress: &vibe_core::progress::Progress,
+        ) -> Result<vibe_registry::PackageAcquisition, RegistryError> {
+            self.0.acquire_candidate_for_install(
+                candidate,
+                store_root,
+                expected_hash,
+                slot,
+                progress,
+            )
+        }
         fn resolve_and_fetch(
             &self,
             p: &PackageRef,
@@ -295,7 +360,7 @@ fn fetched_transitive_source_input_cannot_be_ignored_before_apply() {
         ),
         ("leaf", ""),
     ] {
-        let dir = fixture.fixtures.join(name);
+        let dir = fixture.package_dir(name);
         fs::create_dir_all(&dir).unwrap();
         fs::write(dir.join("vibe.toml"),format!("[package]\ngroup='org.vibevm.core'\nname='{name}'\nversion='0.1.0'\nkind='flow'\n{requires}")).unwrap();
     }

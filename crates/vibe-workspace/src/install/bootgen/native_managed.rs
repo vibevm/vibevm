@@ -85,6 +85,10 @@ pub(crate) fn regenerate_boot_from_bound_native<P: OwnerNativeCompileProvider>(
         .map(|(package, _)| package.clone())
         .collect();
     let emitted_units = with_static_set(&table);
+    let controlled = provider
+        .as_ref()
+        .and_then(|provider| provider.cancellation())
+        .is_some();
     let mut has_native_units = false;
     for (owner, runtime) in epoch.lowered().units() {
         if emitted_units.contains(&(owner.group().clone(), owner.name().to_string()))
@@ -94,7 +98,7 @@ pub(crate) fn regenerate_boot_from_bound_native<P: OwnerNativeCompileProvider>(
             break;
         }
     }
-    let (with_static, unit_native, unit_candidates) = if has_native_units {
+    let (with_static, unit_native, unit_candidates) = if has_native_units || controlled {
         emit_package_units_bound(
             &workspace.root,
             &self_coord,

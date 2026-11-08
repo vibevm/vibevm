@@ -4,7 +4,7 @@ specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-060#PACKAGE-RESOLUTI
 
 use super::*;
 use std::sync::{Arc, Mutex};
-use vibe_core::manifest::{AuthKind, NamingConvention, RegistrySection};
+use vibe_core::manifest::{NamingConvention, RegistrySection};
 use vibe_core::progress::{Progress, ProgressEvent, ProgressEventKind, ProgressObserver};
 use vibe_registry::{GitBackend, GitError};
 
@@ -71,7 +71,7 @@ fn declared(
             url: "git@host:registry".into(),
             r#ref: "main".into(),
             naming: NamingConvention::Fqdn,
-            auth: AuthKind::None,
+            auth: None,
             token_env: None,
             enabled: true,
             index_url: None,

@@ -107,9 +107,24 @@ const EXEMPT: &[(&str, Reader, &str)] = &[
         "the index server's per-package lookup replies; the catalog files are wrapped",
     ),
     (
-        "vibe-registry/src/search/full_scan.rs",
+        "vibe-registry/src/search/full_scan/client.rs",
         Reader::Http,
         "`vibe search --full-scan`: a host's listing read for a search, not a download",
+    ),
+    (
+        "vibe-registry/src/http_admission/response.rs",
+        Reader::Http,
+        "the admission's cancellable response bridge: it streams only what its caller reads; each body consumer is classified separately",
+    ),
+    (
+        "vibe-package-source/src/operation.rs",
+        Reader::Http,
+        "operation-scoped client adapter returns an unread response; its body consumer (the installer fetch) is wrapped",
+    ),
+    (
+        "vibe-registry/src/git_backend/shell/native_admission/relocation.rs",
+        Reader::Http,
+        "smart-HTTP discovery probe: reads at most the service-advertisement prefix before the counted Git transfer runs",
     ),
 ];
 
@@ -249,6 +264,9 @@ fn sends_http(text: &str) -> bool {
         || text.contains("http_admission::get(")
         || text.contains("IndexClient::get_with(")
         || text.contains("Self::get_with(")
+        || text.contains(".execute_legacy(")
+        || text.contains(".get_anonymous(")
+        || text.contains("http_admission::get_observed(")
 }
 
 fn wraps_git(relative: &str, text: &str) -> bool {
@@ -263,6 +281,9 @@ fn delegated_readers_remain_covered_at_their_body_owner() {
         "crate::http_admission::get(client, request, url, admission)",
         "super::IndexClient::get_with(client, request, url, auth, admission)",
         "Self::get_with(client, request, url, auth, admission)",
+        "client.execute_legacy(method, url, headers, body, token)",
+        "client.get_anonymous(address, cancellation)",
+        "crate::http_admission::get_observed(&client, request, url, &binding)",
     ] {
         assert!(sends_http(call), "delegated reader missed: {call}");
     }
@@ -278,7 +299,7 @@ fn delegated_readers_remain_covered_at_their_body_owner() {
         std::fs::read_to_string(crates_root().join("vibe-registry/src/http_admission.rs"))
             .expect("HTTP admission owner");
     let production = admission.split("#[cfg(test)]").next().unwrap();
-    assert!(production.contains("Result<Response, HttpGetError>"));
+    assert!(production.contains("Result<ManagedResponse, HttpGetError>"));
     for body_read in [".bytes(", ".text(", ".json(", ".copy_to("] {
         assert!(
             !production.contains(body_read),

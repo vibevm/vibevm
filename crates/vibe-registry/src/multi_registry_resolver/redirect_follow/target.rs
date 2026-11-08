@@ -28,7 +28,7 @@ impl MultiRegistryResolver {
         // `sources` is the existing enabled/Locator-built registry walk; its
         // candidate chains already contain the selected remap/mirror policy.
         let mut grant = None;
-        for source in &self.sources {
+        for source in self.sources()? {
             if let RegistrySource::Git(registry) = source
                 && registry.contains_candidate(group, name, url)?
             {

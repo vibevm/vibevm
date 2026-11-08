@@ -297,6 +297,10 @@ pub struct Manifest {
     #[serde(default, rename = "registry", skip_serializing_if = "Vec::is_empty")]
     pub registries: Vec<RegistrySection>,
 
+    /// Operation source preference and contact exclusions, never imported from dependencies.
+    #[serde(default, skip_serializing_if = "super::SourcePolicyDecl::is_empty")]
+    pub source_policy: super::SourcePolicyDecl,
+
     /// `[[mirror]]` — transparent fallback URLs per registry.
     #[serde(default, rename = "mirror", skip_serializing_if = "Vec::is_empty")]
     pub mirrors: Vec<MirrorSection>,

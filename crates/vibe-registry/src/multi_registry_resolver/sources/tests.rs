@@ -61,7 +61,10 @@ fn resolve_dispatches_to_git_source_short_circuiting_registries() {
     let store = tempdir().unwrap();
     assert_eq!(r.fetch(&m, store.path()).unwrap().store_reused, Some(false));
     assert_eq!(r.fetch(&m, store.path()).unwrap().store_reused, Some(true));
+    // A retained direct-source lease refuses a resolution retargeted after
+    // selection, so the override-shaped fetch is exercised unretained.
     let mut override_resolution = m.clone();
+    override_resolution.direct = None;
     override_resolution.is_git_source = false;
     override_resolution.overridden = true;
     let override_store = tempdir().unwrap();

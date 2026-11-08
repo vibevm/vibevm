@@ -329,7 +329,7 @@ fn probe_returns_found_when_repomd_responds() {
     let mock = spawn_mock(canned);
     let outcome = IndexClient::probe(&mock.base_url, IndexAuth::None);
     let client = match outcome {
-        ProbeOutcome::Found(c) => c,
+        ProbeOutcome::Found(c) => *c,
         other => panic!("expected Found, got {other:?}"),
     };
     assert_eq!(client.file_base(), mock.base_url.trim_end_matches('/'));

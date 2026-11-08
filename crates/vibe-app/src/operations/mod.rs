@@ -65,6 +65,8 @@ use apply::Applied;
 #[derive(Clone, Copy)]
 #[spec(documents = "spec://org.vibevm.core/vibevm/common/PROP-059#commands")]
 pub struct OperationContext<'a> {
+    /// Shared lazy managed-contact owner of this operation, never reloaded from payload metadata.
+    pub http_client: Option<&'a vibe_package_source::OperationHttpClient>,
     /// Immutable public bindings of one verified finite import, with ephemeral scoped answers.
     pub import_scope: Option<&'a crate::ImportScope<'a>>,
     pub settings: &'a SettingsRoot,

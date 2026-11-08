@@ -22,7 +22,7 @@ impl Lockfile {
     }
 
     fn admit(lockfile: Self) -> Result<Self> {
-        if lockfile.meta.schema_version < CURRENT_SCHEMA_VERSION
+        if lockfile.meta.schema_version < CONFIGURATION_SCHEMA_VERSION
             && !lockfile.configurations.is_empty()
         {
             return Err(crate::Error::InvalidLockfile {
@@ -31,13 +31,14 @@ impl Lockfile {
         }
         if !matches!(
             lockfile.meta.schema_version,
-            LEGACY_SCHEMA_VERSION | CURRENT_SCHEMA_VERSION
+            LEGACY_SCHEMA_VERSION | CONFIGURATION_SCHEMA_VERSION | CURRENT_SCHEMA_VERSION
         ) {
             return Err(crate::error::Error::UnsupportedLockfile {
                 found: lockfile.meta.schema_version,
                 expected: CURRENT_SCHEMA_VERSION,
             });
         }
+        lockfile.validate_remap_sources()?;
         // `find`/`find_mut`/`remove` below treat `(group, name)` as a
         // unique key — first match wins. A lockfile carrying duplicate
         // identities would make those lookups silently

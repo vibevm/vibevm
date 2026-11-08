@@ -92,6 +92,28 @@ fn parse_octal_handles_padded_sizes() {
 }
 
 #[test]
+fn archive_over_smart_http_without_subservice_falls_back_to_clone() {
+    // Git 2.53 against a plain smart-HTTP server that does not expose
+    // `git-upload-archive`; the shallow-clone fallback must run.
+    let stderr = "fatal: can't connect to subservice git-upload-archive\n";
+    assert!(archive_unsupported(&stderr.to_lowercase()));
+    // The pre-existing refusal shapes stay classified.
+    assert!(archive_unsupported(
+        "fatal: remote error: upload-archive is disabled"
+    ));
+    assert!(archive_unsupported(
+        "fatal: git archive: protocol error: expected ack/nak, got a flush packet"
+    ));
+    // Unrelated transport failures are not archive refusals.
+    assert!(!archive_unsupported(
+        "fatal: unable to access 'https://x/': could not resolve host: x"
+    ));
+    assert!(!archive_unsupported(
+        "fatal: can't connect to subservice git-receive-pack"
+    ));
+}
+
+#[test]
 fn classify_repo_not_found_message() {
     // GitHub / Gitea-shape 404 surfaces a verbatim "Repository not
     // found." line from the remote helper; that's the substring

@@ -71,6 +71,8 @@ impl Provides {
 pub struct Requires {
     /// Registry-resolved package dependencies.
     pub packages: Vec<PackageRef>,
+    /// Explicit edge registry aliases. Only active selected edges constrain a solve.
+    pub registry_pins: BTreeMap<String, crate::manifest::RegistryPin>,
     /// Abstract capability requirements (RPM-family `Requires:` semantics).
     pub capabilities: Vec<CapabilityRef>,
     /// `[requires.remaps]` — the remap packages this project asks every
@@ -123,8 +125,24 @@ pub struct Requires {
 }
 
 impl Requires {
+    /// The registry alias declared on this exact requiring edge.
+    ///
+    /// ```
+    /// use vibe_core::{Group, manifest::Requires};
+    /// let requires: Requires = toml::from_str("[packages]\n\"org.example/p\"={version=\"^1\",registry=\"team\"}").unwrap();
+    /// assert_eq!(requires.declared_registry(&Group::parse("org.example").unwrap(), "p").unwrap().as_str(), "team");
+    /// ```
+    pub fn declared_registry(
+        &self,
+        group: &Group,
+        name: &str,
+    ) -> Option<&crate::manifest::RegistryPin> {
+        self.registry_pins.get(&link_key(group, name))
+    }
+
     pub fn is_empty(&self) -> bool {
-        self.packages.is_empty()
+        self.registry_pins.is_empty()
+            && self.packages.is_empty()
             && self.capabilities.is_empty()
             && self.remaps.is_empty()
             && self.git_packages.is_empty()

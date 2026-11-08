@@ -38,6 +38,8 @@ pub(crate) use vibe_package_source::InstallResolver;
 pub(crate) fn package_source_options(args: &InstallArgs) -> PackageSourceOptions {
     PackageSourceOptions {
         registry: args.registry.clone(),
+        source_policy: args.source_policy.declaration(),
+        storage: None,
         solver: args.solver.clone(),
         auth_required: args.auth_required,
         prefer_embedded: args.prefer_embedded,
@@ -104,3 +106,26 @@ pub(crate) fn any_package_source(
 #[cfg(test)]
 #[path = "flag_tests.rs"]
 mod flag_tests;
+
+/// Common install-family adapter with no current-catalog read during construction.
+pub(crate) fn build_install_resolver_deferred(
+    args: &InstallArgs,
+    manifest: &Manifest,
+    embedded_root: Option<&Path>,
+    project_root: &Path,
+    offline: bool,
+    locked: &[LockedPackage],
+) -> Result<InstallResolver> {
+    vibe_package_source::build_install_resolver_with_sources(
+        vibe_package_source::InstallResolverRequest {
+            options: &package_source_options(args),
+            manifest,
+            embedded_root,
+            project_root,
+            offline,
+            locked,
+            progress: &vibe_core::progress::Progress::default(),
+        },
+        vibe_package_source::deferred_user_registry(crate::output::seeds_default_registry()),
+    )
+}

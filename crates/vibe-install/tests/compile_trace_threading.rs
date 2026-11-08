@@ -30,20 +30,58 @@ use vibe_wire::generated::compiler_trace_index::e1::index::{
 use vibe_wire::generated::lifecycle::e1::context::RunAgentMode;
 use vibe_workspace::compile_trace::{TraceLimits, TraceRun};
 
+#[path = "support/retained.rs"]
+mod retained;
+
 /// One immutable fixture package carrying a boot snippet, served from a temp
-/// tree with a real content hash.
+/// directory registry (`<fixtures>/org.vibevm/<name>/v1.0.0`) with a real
+/// content hash.
 struct FixtureSource {
     fixtures: PathBuf,
 }
 
+impl FixtureSource {
+    fn package_dir(&self, name: &str) -> PathBuf {
+        self.fixtures.join("org.vibevm").join(name).join("v1.0.0")
+    }
+}
+
 impl InstallSource for FixtureSource {
+    fn source_solve_limits(&self) -> Result<vibe_resolver::SourceSolveLimits, SolveError> {
+        retained::limits()
+    }
+
+    fn solve_metadata(
+        &self,
+        request: &vibe_resolver::SourceSolveRequest<'_>,
+    ) -> Result<vibe_resolver::SourceResolvedGraph, SolveError> {
+        retained::solve(&self.fixtures, request)
+    }
+
+    fn acquire_candidate_for_install(
+        &self,
+        candidate: &vibe_registry::source_candidates::RetainedSourceCandidate,
+        store_root: &Path,
+        expected_hash: Option<&str>,
+        slot: &Path,
+        progress: &vibe_core::progress::Progress,
+    ) -> Result<vibe_registry::PackageAcquisition, RegistryError> {
+        self.acquire_for_install(
+            &retained::exact(candidate),
+            store_root,
+            expected_hash,
+            slot,
+            progress,
+        )
+    }
+
     fn resolve_and_fetch(
         &self,
         pkgref: &PackageRef,
         _store_root: &Path,
         _expected_hash: Option<&str>,
     ) -> Result<CachedPackage, RegistryError> {
-        let dir = self.fixtures.join(pkgref.name.to_string());
+        let dir = self.package_dir(pkgref.name.as_str());
         let manifest = Manifest::read(dir.join(Manifest::FILENAME)).map_err(|e| {
             RegistryError::MalformedMeta {
                 path: dir.join(Manifest::FILENAME),
@@ -58,6 +96,8 @@ impl InstallSource for FixtureSource {
             .clone();
         let content_hash = compute_content_hash(&dir)?;
         Ok(CachedPackage {
+            locked_selection: None,
+            route_publication: vibe_core::RoutePublication::Local,
             recorded_source_kind: None,
             store_reused: None,
             acquisition: None,
@@ -97,10 +137,7 @@ impl InstallSource for FixtureSource {
     }
 
     fn manifest_of(&self, pkg: &PackageRef) -> Result<Manifest, SolveError> {
-        let path = self
-            .fixtures
-            .join(pkg.name.to_string())
-            .join(Manifest::FILENAME);
+        let path = self.package_dir(pkg.name.as_str()).join(Manifest::FILENAME);
         Manifest::read(path)
             .map_err(|error| vibe_resolver::DepProviderError::Other(error.to_string()).into())
     }
@@ -126,16 +163,17 @@ impl InstallSource for FixtureSource {
 /// compiles a static lane), plus the fixture package that feeds it.
 fn project_with_static_lane() -> (TempDir, PathBuf, FixtureSource) {
     let outer = TempDir::new().unwrap();
-    let fixtures = outer.path().to_path_buf();
-    fs::create_dir_all(fixtures.join("bootlib/boot")).unwrap();
+    let fixtures = outer.path().join("registry");
+    let bootlib = fixtures.join("org.vibevm/bootlib/v1.0.0");
+    fs::create_dir_all(bootlib.join("boot")).unwrap();
     fs::write(
-        fixtures.join("bootlib/vibe.toml"),
+        bootlib.join("vibe.toml"),
         "[package]\ngroup = \"org.vibevm\"\nname = \"bootlib\"\nkind = \"flow\"\n\
          version = \"1.0.0\"\n\n[boot_snippet]\nsource = \"boot/bootlib.md\"\n",
     )
     .unwrap();
-    fs::create_dir_all(fixtures.join("bootlib/boot")).unwrap();
-    fs::write(fixtures.join("bootlib/boot/bootlib.md"), "# bootlib boot\n").unwrap();
+    fs::create_dir_all(bootlib.join("boot")).unwrap();
+    fs::write(bootlib.join("boot/bootlib.md"), "# bootlib boot\n").unwrap();
 
     let project = outer.path().join("project");
     fs::create_dir_all(&project).unwrap();

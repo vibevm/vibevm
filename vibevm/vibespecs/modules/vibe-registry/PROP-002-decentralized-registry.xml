@@ -53,12 +53,12 @@ naming = "fqdn"</fence>
       <p><REGISTRY-WALK-ORDER fact="true" status="impl/done" action="continue" actionstage="doc" audience="user">Resolution: the solver iterates registries in array order; the first that has a satisfying match for a pkgref wins. Versions of the same pkgref are **not** unioned across registries — this prevents a lower-trust registry from influencing resolve when a higher-trust one already has a valid answer. Array order is absolute, so a local `file://` registry is never consulted ahead of an earlier remote one; instead, within one run a remote's «not here» for a pkgref — a missing package, or a public registry's 401 / 403 that the walk passes (§2.3.1) — is remembered and replayed, so each remote is asked about a package once per run however many walks the install makes (B-199). A hit, a missing version or a halting failure is never remembered.</REGISTRY-WALK-ORDER></p>
     </registry-model>
     <registry-auth title="2.2.1 Per-registry authentication">
-      <p><registry-auth-req fact="true" status="impl/done">`req r1`</registry-auth-req></p>
+      <p><registry-auth-req fact="true" status="spec/plan">`req r2`</registry-auth-req></p>
       <p><AUTH-REGIMES fact="true" status="impl/done" action="continue" actionstage="doc" audience="user">**Decision.** Each `[[registry]]` declares its authentication regime via an `auth` field. Four variants:</AUTH-REGIMES></p>
       <fence lang="toml">[[registry]]
 name   = "vibespecs"
 url    = "https://github.com/vibespecs"
-auth   = "none"                                  # default; public read-only
+auth   = "none"                                  # explicit anonymous access
 
 [[registry]]
 name      = "internal"
@@ -74,7 +74,7 @@ auth = "credential-helper"                       # opt in to system git credenti
 [[registry]]
 name = "ssh-mirror"
 url  = "git@host.example.com:vibespecs"
-auth = "ssh"                                     # ssh-agent / keys; URL must be ssh-form</fence>
+auth = "ssh"                                     # permits selected SSH key/agent authentication</fence>
       <table>
         <tr>
           <td>`auth` value</td>
@@ -82,7 +82,7 @@ auth = "ssh"                                     # ssh-agent / keys; URL must be
           <td>When to use</td>
         </tr>
         <tr>
-          <td><ROW-AUTH-NONE fact="true" status="impl/done">`none` (default)</ROW-AUTH-NONE></td>
+          <td><ROW-AUTH-NONE fact="true" status="spec/plan">`none` (explicit restriction)</ROW-AUTH-NONE></td>
           <td><ROW-AUTH-NONE-WHAT-VIBEVM-DOES fact="true" status="impl/done">Read-only HTTPS or `file://`. **No** credentials are sent; `git ls-remote` / `clone` / `fetch` run with `credential.helper` and `core.askPass` reset to empty **unconditionally — regardless of TTY** (so GUI / GCM popups are never raised for a public registry). A public registry sends no credentials, so a 401 / 403 is not a login failure — it means "no public answer here": the resolver classifies the registry as absent and walks to the next entry, same fall-through as 404.</ROW-AUTH-NONE-WHAT-VIBEVM-DOES></td>
           <td><ROW-AUTH-NONE-WHEN-TO-USE fact="true" status="impl/done">Public registries (the default for both `vibespecs` and `vibespecs-gitverse`).</ROW-AUTH-NONE-WHEN-TO-USE></td>
         </tr>
@@ -98,7 +98,7 @@ auth = "ssh"                                     # ssh-agent / keys; URL must be
         </tr>
         <tr>
           <td><ROW-AUTH-SSH fact="true" status="impl/done">`ssh`</ROW-AUTH-SSH></td>
-          <td><ROW-AUTH-SSH-WHAT-VIBEVM-DOES fact="true" status="impl/done">URL must be ssh-form (`git@host:org`, `ssh://...`). Authentication is delegated to the system ssh-agent and keys. Vibe does not touch ssh config, does not ask for passphrases — if a passphrase prompt appears, that is the operator's ssh-agent decision.</ROW-AUTH-SSH-WHAT-VIBEVM-DOES></td>
+          <td><ROW-AUTH-SSH-WHAT-VIBEVM-DOES fact="true" status="spec/plan">Permits SSH authentication for the selected admitted SSH address (`git@host:org`, `ssh://...`), using the operator's configured identities, agent and trust. Anonymous HTTPS discovery remains possible: a credential mechanism ceiling is not a requirement that every lookup use that mechanism. Controlled operations use the supported captured SSH profile from PROP-073#SSH-CONFIG-CAPTURE-LAW; unsupported active settings refuse instead of being silently approximated. No private key is added to project or registry declarations. Ordinary uncontrolled transport retains its existing behavior.</ROW-AUTH-SSH-WHAT-VIBEVM-DOES></td>
           <td><ROW-AUTH-SSH-WHEN-TO-USE fact="true" status="impl/done">The classic developer workflow on personal machines with ssh keys configured.</ROW-AUTH-SSH-WHEN-TO-USE></td>
         </tr>
       </table>
@@ -185,6 +185,7 @@ sinks it straight into an HTTP header value. So every error, log line and derive
 debug rendering along the whole chain is safe by construction rather than by
 everyone remembering.</INDEX-AUTH-THE-TOKEN-IS-STRUCTURALLY-UNPRINTABLE></p>
       </index-auth>
+      <p><AUTH-DECLARATION-PRESENCE fact="true" status="spec/plan">Registry auth omission is distinct from explicit none. Omitted auth defaults to ssh for a selected SSH-form source and none for HTTPS/local sources; explicit none must survive serialization and prohibits credential use. Package and redirect auth defaults are unchanged. Lower declaration semantics only after selecting the source owner, then admit the actual endpoint before accessing credential inputs. Locked source identity does not borrow an edited current registry alias as authority. Actual CLI integration and compatibility are tracked by PROP-073#LOCKED-SOURCE-LAW and campaign FMT-054; this revision is not accepted merely because the internal SSH capability is available.</AUTH-DECLARATION-PRESENCE></p>
     </registry-auth>
     <global-config title="2.2.2 Machine-global registry config: `~/.vibe/registry.toml`">
       <p><global-config-req fact="true" status="impl/done">`req r1`</global-config-req></p>

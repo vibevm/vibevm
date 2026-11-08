@@ -52,6 +52,9 @@ fn prune_requires(requires: &mut Requires, targets: &BTreeSet<String>) {
     });
     requires.links.retain(|target, _| !targets.contains(target));
     requires
+        .registry_pins
+        .retain(|target, _| !targets.contains(target));
+    requires
         .optional
         .retain(|target, _| !targets.contains(target));
     requires

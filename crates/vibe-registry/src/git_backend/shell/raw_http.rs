@@ -85,7 +85,7 @@ const READ_TIMEOUT_SECS: u64 = 10;
     implements = "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#RAW-READ-FAST-PATH"
 )]
 pub(super) fn try_read(
-    client: &reqwest::blocking::Client,
+    client: &crate::http_admission::ManagedHttpClient,
     admission: Option<&crate::HttpAdmission>,
     base_override: Option<&str>,
     sleeper: &super::Sleeper,
@@ -93,6 +93,16 @@ pub(super) fn try_read(
     refname: &str,
     path: &str,
 ) -> Option<Result<Vec<u8>, GitError>> {
+    let cancellation = crate::git_backend::transfers::current()
+        .progress
+        .unwrap_or_default()
+        .cancellation()
+        .clone();
+    if cancellation.checkpoint().is_err() {
+        return Some(Err(GitError::ContactRefused(
+            crate::ContactRefusal::OperationCancelled,
+        )));
+    }
     let read = address(base_override, url, refname, path)?;
 
     // Ask, and — for the two answers that are about the moment rather
@@ -102,6 +112,11 @@ pub(super) fn try_read(
     let mut waited = Duration::ZERO;
     let mut refusal = None;
     for attempt in 1..=retry::MAX_ATTEMPTS {
+        if cancellation.checkpoint().is_err() {
+            return Some(Err(GitError::ContactRefused(
+                crate::ContactRefusal::OperationCancelled,
+            )));
+        }
         let asked = match attempt_read(client, admission, &read, refname, path) {
             Attempt::Settled(outcome) => return outcome,
             Attempt::Again { status, after } => {
@@ -160,7 +175,7 @@ enum Attempt {
 /// read decides it cannot explain what it got, and the line it prints is
 /// the one an operator reads when a package took the long way round.
 fn attempt_read(
-    client: &reqwest::blocking::Client,
+    client: &crate::http_admission::ManagedHttpClient,
     admission: Option<&crate::HttpAdmission>,
     read: &AddressedRead,
     refname: &str,
@@ -189,14 +204,38 @@ fn attempt_read(
         Err(crate::http_admission::HttpGetError::Transport(e)) => {
             return transport_failure(&read.url, &e, "https read failed");
         }
+        Err(crate::http_admission::HttpGetError::Io(_)) => return Attempt::Settled(None),
     };
     let status = response.status().as_u16();
     // Before the body: reading it consumes the response, headers and all.
     let after = retry::retry_after(response.headers());
-    let body = match response.bytes() {
-        Ok(b) => b,
-        Err(e) => return transport_failure(&read.url, &e, "https read body failed"),
-    };
+    let cancellation = crate::git_backend::transfers::current()
+        .progress
+        .unwrap_or_default()
+        .cancellation()
+        .clone();
+    let mut response = response;
+    let mut body = Vec::new();
+    let mut chunk = [0_u8; 16384];
+    loop {
+        if cancellation.checkpoint().is_err() {
+            return Attempt::Settled(Some(Err(GitError::ContactRefused(
+                crate::ContactRefusal::OperationCancelled,
+            ))));
+        }
+        match std::io::Read::read(&mut response, &mut chunk) {
+            Ok(0) => break,
+            Ok(count) => body.extend_from_slice(&chunk[..count]),
+            Err(error) => {
+                return match crate::http_admission::HttpGetError::from_io(error) {
+                    crate::http_admission::HttpGetError::Refused(refusal) => {
+                        Attempt::Settled(Some(Err(GitError::ContactRefused(refusal))))
+                    }
+                    _ => Attempt::Settled(None),
+                };
+            }
+        }
+    }
 
     if (200..300).contains(&status) {
         if let Some(bytes) = (read.host.read_body)(&body) {
@@ -314,16 +353,14 @@ fn names_fixed_content(refname: &str) -> bool {
 /// read goes to git.
 pub(super) fn build_client(
     admission: Option<&crate::HttpAdmission>,
-) -> Option<reqwest::blocking::Client> {
-    let builder = reqwest::blocking::Client::builder()
-        .user_agent(concat!("vibe-registry/", env!("CARGO_PKG_VERSION")))
-        .timeout(Duration::from_secs(READ_TIMEOUT_SECS));
-    let builder = if admission.is_some() {
-        crate::http_admission::bound_builder(builder)
-    } else {
-        builder
-    };
-    match builder.build() {
+) -> Option<crate::http_admission::ManagedHttpClient> {
+    match crate::http_admission::ManagedHttpClient::captured(
+        Duration::from_secs(READ_TIMEOUT_SECS),
+        Some(concat!("vibe-registry/", env!("CARGO_PKG_VERSION"))),
+        reqwest::header::HeaderMap::new(),
+        admission.cloned().map(std::sync::Arc::new),
+        None,
+    ) {
         Ok(client) => Some(client),
         Err(e) => {
             tracing::debug!(
@@ -349,3 +386,16 @@ mod retry;
 #[cfg(test)]
 #[path = "raw_http/tests.rs"]
 mod tests;
+
+impl super::ShellGit {
+    /// The shared HTTP client of the read fast path, built on first use.
+    ///
+    /// `None` when it could not be built — a broken TLS backend, not a
+    /// transient condition, so the failed attempt is cached like any
+    /// other and the reads all go to git instead of re-paying it.
+    pub(super) fn raw_client(&self) -> Option<&crate::http_admission::ManagedHttpClient> {
+        self.raw_client
+            .get_or_init(|| build_client(self.admission.as_deref()))
+            .as_ref()
+    }
+}

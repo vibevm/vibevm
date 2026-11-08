@@ -26,10 +26,16 @@ impl From<Requires> for RequiresWire {
                 .group
                 .as_ref()
                 .and_then(|g| r.optional.get(&link_key(g, p.name.as_str())).copied());
+            let registry = p
+                .group
+                .as_ref()
+                .and_then(|g| r.registry_pins.get(&link_key(g, p.name.as_str())))
+                .cloned();
             let constraint = version_spec_to_constraint_str(&p.version);
             // A registry dep carrying per-edge metadata needs the inline
             // form so every explicit declaration survives round-trip.
-            let value = if link.is_some()
+            let value = if registry.is_some()
+                || link.is_some()
                 || access.is_some()
                 || friend.is_some()
                 || exclude.is_some()
@@ -38,6 +44,7 @@ impl From<Requires> for RequiresWire {
             {
                 RequiresPackageEntryWire::Inline(Box::new(InlinePackageDepWire {
                     version: Some(VersionFieldWire::Constraint(constraint)),
+                    registry,
                     link,
                     access,
                     friend,
@@ -54,6 +61,7 @@ impl From<Requires> for RequiresWire {
         for g in &r.git_packages {
             let key = wire_key(g.kind, Some(&g.group), &g.name);
             let inline = InlinePackageDepWire {
+                registry: None,
                 version: g
                     .version
                     .as_ref()
@@ -109,6 +117,7 @@ impl From<Requires> for RequiresWire {
             let key = wire_key(v.kind, Some(&v.group), &v.name);
             let inline = InlinePackageDepWire {
                 version: Some(VersionFieldWire::Var { var: v.var.clone() }),
+                registry: r.registry_pins.get(&link_key(&v.group, &v.name)).cloned(),
                 link: r.links.get(&link_key(&v.group, &v.name)).copied(),
                 access: r.accesses.get(&link_key(&v.group, &v.name)).copied(),
                 friend: r.friend_flags.get(&link_key(&v.group, &v.name)).copied(),
@@ -153,6 +162,7 @@ impl TryFrom<RequiresWire> for Requires {
         let mut excludes: BTreeMap<String, Vec<String>> = BTreeMap::new();
         let mut configurations = BTreeMap::new();
         let mut optional = BTreeMap::new();
+        let mut registry_pins = BTreeMap::new();
         for (key, entry) in w.packages {
             let (kind, group, name) = parse_pkgref_key(&key).map_err(|e| e.to_string())?;
             match entry {
@@ -164,6 +174,14 @@ impl TryFrom<RequiresWire> for Requires {
                     );
                 }
                 RequiresPackageEntryWire::Inline(inline) => {
+                    if let Some(pin) = &inline.registry {
+                        if inline.path.is_some() || inline.git.is_some() {
+                            return Err(format!(
+                                "source_policy_source_conflict: registry pin on `{key}` cannot accompany path or git"
+                            ));
+                        }
+                        registry_pins.insert(link_key(&group, &name), pin.clone());
+                    }
                     if let Some(value) = inline.optional {
                         optional.insert(link_key(&group, &name), value);
                     }
@@ -257,6 +275,7 @@ impl TryFrom<RequiresWire> for Requires {
         }
         Ok(Requires {
             packages,
+            registry_pins,
             capabilities: w.capabilities,
             remaps,
             git_packages,
@@ -355,235 +374,4 @@ fn version_spec_to_constraint_str(spec: &VersionSpec) -> String {
 }
 
 #[cfg(test)]
-mod tests {
-    use super::*;
-
-    /// Parse a bare `Requires` from a TOML body whose top-level keys are
-    /// `packages` / `capabilities` (i.e. the inside of a `[requires]` table).
-    fn requires_from_toml(body: &str) -> Requires {
-        toml::from_str(body).unwrap()
-    }
-
-    /// The canonical group every fixture package in these tests belongs to.
-    fn org() -> Group {
-        Group::parse("org.vibevm").unwrap()
-    }
-
-    #[test]
-    fn requires_map_bare_constraint_parses() {
-        let r = requires_from_toml(
-            r#"[packages]
-"org.vibevm/wal" = "^0.3"
-"org.vibevm/auth" = "*"
-"#,
-        );
-        assert_eq!(r.packages.len(), 2);
-        assert!(r.git_packages.is_empty());
-        // BTreeMap ordering: org.vibevm/auth < org.vibevm/wal alphabetically.
-        assert_eq!(r.packages[0].qualified_name(), "org.vibevm/auth");
-        assert_eq!(r.packages[1].qualified_name(), "org.vibevm/wal");
-    }
-
-    #[test]
-    fn requires_inline_table_with_version_parses() {
-        let r = requires_from_toml(
-            r#"[packages]
-"org.vibevm/wal" = { version = "^0.3" }
-"#,
-        );
-        assert_eq!(r.packages.len(), 1);
-        assert_eq!(r.packages[0].qualified_name(), "org.vibevm/wal");
-        assert!(r.git_packages.is_empty());
-    }
-
-    #[test]
-    fn registry_inline_rejects_git_fields() {
-        let err = toml::from_str::<Requires>(
-            r#"[packages]
-"org.vibevm/bad" = { version = "^0.3", tag = "v1" }
-"#,
-        )
-        .unwrap_err();
-        assert!(err.to_string().contains("without `git`"));
-    }
-
-    #[test]
-    fn rejects_at_in_pkgref_key() {
-        let err = toml::from_str::<Requires>(
-            r#"[packages]
-"org.vibevm/wal@^0.3" = "*"
-"#,
-        )
-        .unwrap_err();
-        assert!(
-            err.to_string()
-                .contains("must be the value, not part of the key")
-        );
-    }
-
-    #[test]
-    fn requires_round_trips_through_serialize() {
-        let original = requires_from_toml(
-            r#"capabilities = ["db:any@>=1.0"]
-
-[packages]
-"flow:org.vibevm/internal" = { git = "https://github.com/me/flow-internal", tag = "v0.1.0", auth = "token-env", token_env = "MY" }
-"org.vibevm/wal" = "^0.3"
-"#,
-        );
-        let rendered = toml::to_string_pretty(&original).unwrap();
-        let back: Requires = toml::from_str(&rendered).unwrap();
-        assert_eq!(back.packages.len(), 1);
-        assert_eq!(back.git_packages.len(), 1);
-        assert_eq!(back.git_packages[0].name, "internal");
-        assert_eq!(back.capabilities.len(), 1);
-        assert_eq!(original, back);
-    }
-
-    // --- PROP-009 §2.4 — the `link` inclusion type on wire entries ------
-
-    #[test]
-    fn requires_link_on_registry_dep_parses() {
-        let r = requires_from_toml(
-            r#"[packages]
-"org.vibevm/wal" = { version = "^0.3", link = "static" }
-"#,
-        );
-        assert_eq!(r.packages.len(), 1);
-        assert_eq!(r.link_for(&org(), "wal"), LinkType::Static);
-    }
-
-    #[test]
-    fn requires_link_dynamic_parses() {
-        let r = requires_from_toml(
-            r#"[packages]
-"org.vibevm/rust" = { version = "^2.0", link = "dynamic" }
-"#,
-        );
-        assert_eq!(r.link_for(&org(), "rust"), LinkType::Dynamic);
-    }
-
-    #[test]
-    fn requires_link_absent_is_static() {
-        let r = requires_from_toml(
-            r#"[packages]
-"org.vibevm/wal" = "^0.3"
-"#,
-        );
-        assert!(r.links.is_empty());
-        assert_eq!(r.link_for(&org(), "wal"), LinkType::Dynamic);
-    }
-
-    #[test]
-    fn requires_explicit_static_link_is_stored() {
-        // An explicit `link = "dynamic"` is kept, not folded into "absent":
-        // the loading-model precedence (PROP-009 §2.4) lets it override a
-        // workspace default, so the explicit choice must survive — and it
-        // survives a serialize round-trip as an inline table.
-        let r = requires_from_toml(
-            r#"[packages]
-"org.vibevm/wal" = { version = "^0.3", link = "dynamic" }
-"#,
-        );
-        assert_eq!(r.declared_link(&org(), "wal"), Some(LinkType::Dynamic));
-        assert_eq!(r.link_for(&org(), "wal"), LinkType::Dynamic);
-        let back: Requires = toml::from_str(&toml::to_string_pretty(&r).unwrap()).unwrap();
-        assert_eq!(back.declared_link(&org(), "wal"), Some(LinkType::Dynamic));
-    }
-
-    #[test]
-    fn requires_declared_link_is_none_when_unspecified() {
-        // A bare entry declares no `link` — `declared_link` is `None`,
-        // while `link_for` applies the `static` default.
-        let r = requires_from_toml(
-            r#"[packages]
-"org.vibevm/wal" = "^0.3"
-"#,
-        );
-        assert_eq!(r.declared_link(&org(), "wal"), None);
-        assert_eq!(r.link_for(&org(), "wal"), LinkType::Dynamic);
-    }
-
-    #[test]
-    fn requires_link_on_git_source_parses() {
-        let r = requires_from_toml(
-            r#"[packages]
-"org.vibevm/internal" = { git = "https://github.com/me/flow-internal", tag = "v0.1.0", link = "dynamic" }
-"#,
-        );
-        assert_eq!(r.git_packages.len(), 1);
-        assert_eq!(r.link_for(&org(), "internal"), LinkType::Dynamic);
-    }
-
-    #[test]
-    fn requires_link_on_path_source_parses() {
-        let r = requires_from_toml(
-            r#"[packages]
-"org.vibevm/wal" = { path = "../flow-wal", link = "static" }
-"#,
-        );
-        assert_eq!(r.path_packages.len(), 1);
-        assert_eq!(r.link_for(&org(), "wal"), LinkType::Static);
-    }
-
-    #[test]
-    fn requires_link_on_var_dep_parses() {
-        let r = requires_from_toml(
-            r#"[packages]
-"org.vibevm/wal" = { version.var = "core", link = "dynamic" }
-"#,
-        );
-        assert_eq!(r.var_packages.len(), 1);
-        assert_eq!(r.link_for(&org(), "wal"), LinkType::Dynamic);
-    }
-
-    #[test]
-    fn requires_link_rejects_unknown_value() {
-        let err = toml::from_str::<Requires>(
-            r#"[packages]
-"org.vibevm/wal" = { version = "^0.3", link = "weird" }
-"#,
-        )
-        .unwrap_err();
-        assert!(
-            err.to_string().contains("variant") || err.to_string().contains("link"),
-            "{err}"
-        );
-    }
-
-    #[test]
-    fn requires_registry_link_renders_as_inline_table() {
-        // A registry dep with a non-default link cannot use the bare-string
-        // form — it must serialise as an inline table so `link` survives.
-        let r = requires_from_toml(
-            r#"[packages]
-"org.vibevm/wal" = { version = "^0.3", link = "static" }
-"#,
-        );
-        let rendered = toml::to_string_pretty(&r).unwrap();
-        assert!(rendered.contains("link = \"static\""), "{rendered}");
-    }
-
-    #[test]
-    fn requires_link_round_trips_across_all_source_kinds() {
-        let original = requires_from_toml(
-            r#"[packages]
-"org.vibevm/wal" = { version = "^0.3", link = "static" }
-"org.vibevm/internal" = { git = "https://github.com/me/flow-internal", tag = "v0.1.0", link = "dynamic" }
-"org.vibevm/auth" = { path = "../feat-auth", link = "dynamic" }
-"org.vibevm/rust" = { version.var = "core", link = "static" }
-"org.vibevm/plain" = "^0.1"
-"#,
-        );
-        let rendered = toml::to_string_pretty(&original).unwrap();
-        let back: Requires = toml::from_str(&rendered).unwrap();
-        assert_eq!(original, back);
-        // Four declared links survive; the bare entry stays implicitly dynamic.
-        assert_eq!(back.links.len(), 4);
-        assert_eq!(back.link_for(&org(), "wal"), LinkType::Static);
-        assert_eq!(back.link_for(&org(), "internal"), LinkType::Dynamic);
-        assert_eq!(back.link_for(&org(), "auth"), LinkType::Dynamic);
-        assert_eq!(back.link_for(&org(), "rust"), LinkType::Static);
-        assert_eq!(back.link_for(&org(), "plain"), LinkType::Dynamic);
-    }
-}
+mod tests;

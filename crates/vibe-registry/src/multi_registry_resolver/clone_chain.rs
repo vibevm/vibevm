@@ -27,14 +27,22 @@ use vibe_core::remap::{
 
 use crate::RegistryError;
 
-/// The alternative clone URLs to try for `registry`, most-winning first
-/// and never including the registry's own URL (the git layer appends that
-/// itself as the origin).
+/// The alternative clone URLs only, for tests written against the URL list.
+#[cfg(test)]
 pub(crate) fn clone_chain(
     registry: &RegistrySection,
     mirrors: &[MirrorSection],
     registries: &[RegistrySection],
 ) -> Result<Vec<String>, RegistryError> {
+    clone_chain_scoped(registry, mirrors, registries)
+        .map(|routes| routes.into_iter().map(|route| route.url).collect())
+}
+
+pub(crate) fn clone_chain_scoped(
+    registry: &RegistrySection,
+    mirrors: &[MirrorSection],
+    registries: &[RegistrySection],
+) -> Result<Vec<crate::git_package_registry::PublicationRoute>, RegistryError> {
     let derived;
     let locator = if vibe_core::remap::active().is_empty() {
         derived = derive(mirrors, registries);
@@ -48,14 +56,22 @@ pub(crate) fn clone_chain(
             .into_iter()
             .filter(|candidate| candidate.row.is_some())
             .filter_map(|candidate| match candidate.target {
-                RemapTarget::Url(url) => Some(url),
+                RemapTarget::Url(url) => Some(crate::git_package_registry::PublicationRoute {
+                    url,
+                    publication: candidate
+                        .row
+                        .as_ref()
+                        .map_or(vibe_core::RoutePublication::Local, |row| {
+                            row.provenance.publication
+                        }),
+                }),
                 // A `path` target is a directory of artifacts laid out by
                 // digest, which is not a git clone; the chain skips it and
                 // the local-registry leg of `from_manifest` is what reads
                 // a directory as a registry.
                 RemapTarget::Path(_) | RemapTarget::Deny => None,
             })
-            .filter(|url| url != &registry.url)
+            .filter(|route| route.url != registry.url)
             .collect()),
         Resolution::Denied { row, reason } => Err(RegistryError::RemapDenied {
             registry: registry.name.clone(),
@@ -97,7 +113,7 @@ fn derive(mirrors: &[MirrorSection], registries: &[RegistrySection]) -> Locator 
 #[cfg(test)]
 mod tests {
     use super::*;
-    use vibe_core::manifest::{AuthKind, NamingConvention};
+    use vibe_core::manifest::NamingConvention;
 
     fn registry(name: &str, url: &str) -> RegistrySection {
         RegistrySection {
@@ -105,7 +121,7 @@ mod tests {
             url: url.into(),
             r#ref: "main".into(),
             naming: NamingConvention::Fqdn,
-            auth: AuthKind::None,
+            auth: None,
             token_env: None,
             enabled: true,
             index_url: None,
@@ -117,11 +133,13 @@ mod tests {
         let declared = [registry("vibespecs", "https://github.com/vibespecs")];
         let mirrors = [
             MirrorSection {
+                publication: Default::default(),
                 of: "vibespecs".into(),
                 url: "https://second.example/vibespecs".into(),
                 priority: 5,
             },
             MirrorSection {
+                publication: Default::default(),
                 of: "vibespecs".into(),
                 url: "https://first.example/vibespecs".into(),
                 priority: 0,
@@ -144,6 +162,7 @@ mod tests {
             registry("b", "https://gitverse.ru/b"),
         ];
         let mirrors = [MirrorSection {
+            publication: Default::default(),
             of: "*".into(),
             url: "https://nexus.example/all".into(),
             priority: 0,

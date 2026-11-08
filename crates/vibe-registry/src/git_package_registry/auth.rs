@@ -7,6 +7,106 @@ specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#r
 use super::*;
 
 impl GitPerPackageRegistry {
+    /// Open selected catalog credentials without reading a token for an undemanded source.
+    #[allow(clippy::too_many_arguments)]
+    pub fn open_with_deferred_auth(
+        name: &str,
+        org_url: &str,
+        org_ref: &str,
+        naming: NamingConvention,
+        mirror_urls: Vec<String>,
+        cache_root: &Path,
+        backend: Arc<dyn GitBackend>,
+        freshness_secs: u64,
+        auth: vibe_core::manifest::AuthKind,
+        token_env_name: Option<&str>,
+    ) -> Result<Self, RegistryError> {
+        let mut registry = Self::open_with_explicit_token(
+            name,
+            org_url,
+            org_ref,
+            naming,
+            mirror_urls,
+            cache_root,
+            backend,
+            freshness_secs,
+            auth,
+            None,
+        )?;
+        registry.token_env_name = token_env_name.map(str::to_owned);
+        registry.deferred_token = Some(Arc::new(std::sync::OnceLock::new()));
+        Ok(registry)
+    }
+
+    /// Direct selected-source counterpart; source authority has already been chosen by the caller.
+    #[allow(clippy::too_many_arguments)]
+    pub fn open_single_package_with_deferred_auth(
+        synthetic_name: &str,
+        repo_url: &str,
+        repo_ref: &str,
+        cache_root: &Path,
+        backend: Arc<dyn GitBackend>,
+        freshness_secs: u64,
+        auth: vibe_core::manifest::AuthKind,
+        token_env_name: Option<&str>,
+    ) -> Result<Self, RegistryError> {
+        let mut registry = Self::open_with_deferred_auth(
+            synthetic_name,
+            repo_url,
+            repo_ref,
+            NamingConvention::Fqdn,
+            Vec::new(),
+            cache_root,
+            backend,
+            freshness_secs,
+            auth,
+            token_env_name,
+        )?;
+        registry.single_package_url = Some(repo_url.into());
+        Ok(registry)
+    }
+
+    /// Check the selected route before demand-capturing its immutable token.
+    /// This does not grant a marker or redirect a different credential ceiling.
+    pub(crate) fn selected_credentialed_url(&self, source: &str) -> Result<String, RegistryError> {
+        // Incumbent package/redirect constructors retain their captured-token behavior.
+        if self.deferred_token.is_none() {
+            return Ok(self.credentialed_url(source));
+        }
+        self.backend.preflight_selected_address(source)?;
+        self.backend.preflight_registry_auth(self.auth)?;
+        let ssh = crate::registry_auth::ssh_source(source).map_err(|reason| {
+            crate::registry_auth::declaration_error(&self.name, source, reason)
+        })?;
+        if ssh && self.auth != vibe_core::manifest::AuthKind::Ssh {
+            return Err(GitError::NativeContext {
+                reason: "selected SSH route requires SSH credential permission",
+            }
+            .into());
+        }
+        if self.auth == vibe_core::manifest::AuthKind::TokenEnv && source.starts_with("https://") {
+            if let Some(captured) = &self.deferred_token {
+                captured.get_or_init(|| {
+                    self.token_env_name
+                        .clone()
+                        .or_else(|| self.derive_default_token_env_name())
+                        .and_then(|name| read_token_env(&name))
+                });
+            }
+            if self.effective_token_value().is_none() {
+                return Err(RegistryError::MissingToken {
+                    registry: self.name.clone(),
+                    env_var: self
+                        .token_env_name
+                        .clone()
+                        .or_else(|| self.derive_default_token_env_name())
+                        .unwrap_or_else(|| "VIBEVM_REGISTRY_TOKEN_<HOST>".into()),
+                });
+            }
+        }
+        Ok(inject_token(source, self.effective_token_value()))
+    }
+
     /// The `auth` regime the registry was opened with — read by
     /// `MultiRegistryResolver` to decide between walk-to-next-registry
     /// (on `AuthKind::None` + 401) and halt-with-actionable-error
@@ -21,7 +121,7 @@ impl GitPerPackageRegistry {
     /// with the same outcome a few seconds later.
     pub fn token_env_required_but_absent(&self) -> bool {
         matches!(self.auth, vibe_core::manifest::AuthKind::TokenEnv)
-            && self.effective_token.is_none()
+            && self.effective_token_value().is_none()
     }
 
     /// Pre-flight check at the entry of every public method that
@@ -33,6 +133,9 @@ impl GitPerPackageRegistry {
     /// registry section, otherwise the host-derived default per
     /// `RegistrySection::resolve_token_env_name`.
     pub(super) fn ensure_token_loaded(&self) -> Result<(), RegistryError> {
+        if self.deferred_token.is_some() {
+            return Ok(());
+        }
         self.backend.preflight_registry_auth(self.auth)?;
         if !self.token_env_required_but_absent() {
             return Ok(());
@@ -85,7 +188,11 @@ impl GitPerPackageRegistry {
     /// `ensure_token_loaded` is what enforces presence at entry to
     /// every git-driving public method).
     pub fn effective_token_value(&self) -> Option<&str> {
-        self.effective_token.as_deref()
+        self.deferred_token
+            .as_ref()
+            .and_then(|value| value.get())
+            .and_then(|value| value.as_deref())
+            .or(self.effective_token.as_deref())
     }
 }
 
@@ -360,3 +467,6 @@ mod tests {
         assert_eq!(remote, "origin");
     }
 }
+
+#[cfg(test)]
+mod deferred_tests;

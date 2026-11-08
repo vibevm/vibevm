@@ -48,7 +48,8 @@ mod source_admission;
 mod visibility_projection;
 
 pub use apply::{
-    ApplyReport, PreparedApplyReport, SlotLifecycleSeams, apply, apply_with_spec_format,
+    ApplyReport, LockPublication, PreparedApplyReport, ProjectRecordCapture,
+    ProjectRecordPublication, SlotLifecycleSeams, apply, apply_with_spec_format,
     apply_with_spec_format_and_hook_output, apply_with_spec_format_and_lifecycle_observed,
     apply_with_spec_format_and_lifecycle_observed_traced,
     apply_with_spec_format_and_lifecycle_observed_traced_prepared, publish_admitted_manifest,
@@ -62,8 +63,9 @@ pub use lifecycle::{
     SlotLifecyclePlan, SlotLifecyclePlanEntry, SlotLifecycleReport,
 };
 pub use plan::{
-    InstallRequest, Plan, PlannedInstall, freshness_prepared, plan, plan_prepared_with_spec_format,
-    plan_prepared_without_publication, plan_with_spec_format,
+    InstallPreview, InstallRequest, Plan, PlannedInstall, PreviewSourceStorage, freshness_prepared,
+    plan, plan_prepared_with_spec_format, plan_prepared_without_publication, plan_with_spec_format,
+    preview_has_requirements, preview_prepared,
 };
 pub use record::{
     exact_pinned_pkgref, finalize_pkgref_for_manifest, merge_manifest_requires,
@@ -135,6 +137,44 @@ pub use visibility_projection::{
 /// }
 /// ```
 pub trait InstallSource {
+    /// Whether this exact request replays held source authority. Default sources
+    /// retain their existing incremental preparation path.
+    fn replays_locked_source(&self, _pkgref: &PackageRef) -> bool {
+        false
+    }
+
+    /// Explicit operation resource budget; unsupported source modes refuse.
+    fn source_solve_limits(&self) -> Result<vibe_resolver::SourceSolveLimits, SolveError> {
+        Err(vibe_resolver::DepProviderError::Other(
+            "selected source/solver has no metadata operation budget".into(),
+        )
+        .into())
+    }
+
+    /// Resolve and retain metadata without acquiring a payload. Implementations
+    /// must not fall back to semver-only selection or an unconstrained fetch.
+    fn solve_metadata(
+        &self,
+        _request: &vibe_resolver::SourceSolveRequest<'_>,
+    ) -> Result<vibe_resolver::SourceResolvedGraph, SolveError> {
+        Err(vibe_resolver::DepProviderError::Other(
+            "selected source/solver has no retained metadata relation".into(),
+        )
+        .into())
+    }
+
+    /// Acquire exactly the operation-owned candidate retained by metadata solve.
+    fn acquire_candidate_for_install(
+        &self,
+        _candidate: &vibe_registry::source_candidates::RetainedSourceCandidate,
+        _store_root: &Path,
+        _expected_hash: Option<&str>,
+        _slot: &Path,
+        _progress: &vibe_core::progress::Progress,
+    ) -> Result<vibe_registry::PackageAcquisition, RegistryError> {
+        Err(RegistryError::MalformedMeta { path: _slot.into(), reason: "selected source does not support retained-candidate acquisition; no name/version fallback is allowed".into() })
+    }
+
     /// One selected acquisition; native in-place objects remain retained until
     /// checked workspace apply. Legacy/local implementations keep their fetch.
     fn acquire_for_install(
@@ -249,4 +289,55 @@ pub trait InstallSource {
         pkgref: &PackageRef,
         slot: &Path,
     ) -> Result<InPlaceMaterialised, RegistryError>;
+}
+
+/// Held coordinates whose locked source is an in-workspace `file://`
+/// working tree (PROP-011 §2.6): mutable, so each install refreshes them from
+/// that same directory instead of replaying the held hash. `in-place` giants
+/// are excluded; they refresh through `vibe update`.
+///
+/// ```
+/// // An empty held lock has nothing to refresh from the workspace.
+/// let rows: Vec<vibe_core::manifest::LockedPackage> = Vec::new();
+/// let mutable = vibe_install::mutable_locked_sources(std::path::Path::new("."), &rows);
+/// assert!(mutable.is_empty());
+/// ```
+pub fn mutable_locked_sources(
+    root: &std::path::Path,
+    rows: &[vibe_core::manifest::LockedPackage],
+) -> Vec<String> {
+    rows.iter()
+        .filter(|row| {
+            !row.materialization.is_in_place()
+                && vibe_workspace::freshness::is_in_workspace_file_source(
+                    row.source_url.as_str(),
+                    root,
+                )
+        })
+        .map(|row| format!("{}/{}", row.group, row.name))
+        .collect()
+}
+
+/// Workspace-owned checkout addresses passed to source observation, never persisted.
+/// ```
+/// let paths = vibe_install::locked_checkout_paths(std::path::Path::new("."), &[]);
+/// assert!(paths.is_empty());
+/// ```
+pub fn locked_checkout_paths(
+    root: &std::path::Path,
+    rows: &[vibe_core::manifest::LockedPackage],
+) -> std::collections::HashMap<String, std::path::PathBuf> {
+    rows.iter()
+        .filter(|row| row.materialization.is_in_place())
+        .map(|row| {
+            (
+                format!("{}/{}", row.group, row.name),
+                vibe_workspace::vibedeps::in_place_slot_abs_path(
+                    root,
+                    &row.group,
+                    row.name.as_str(),
+                ),
+            )
+        })
+        .collect()
 }

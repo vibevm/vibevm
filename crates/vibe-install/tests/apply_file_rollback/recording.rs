@@ -9,13 +9,41 @@ pub(super) struct MirrorSource {
 }
 
 impl MirrorSource {
+    fn package_dir(&self) -> PathBuf {
+        self.cache.path().join(GIANT_DIR)
+    }
     pub(super) fn add_declaration(&mut self, tail: &str) {
         self.declaration.push_str(tail);
-        fs::write(self.cache.path().join("vibe.toml"), &self.declaration).unwrap();
+        fs::write(self.package_dir().join("vibe.toml"), &self.declaration).unwrap();
     }
 }
 
 impl InstallSource for MirrorSource {
+    fn source_solve_limits(&self) -> Result<vibe_resolver::SourceSolveLimits, SolveError> {
+        retained::limits()
+    }
+    fn solve_metadata(
+        &self,
+        request: &vibe_resolver::SourceSolveRequest<'_>,
+    ) -> Result<vibe_resolver::SourceResolvedGraph, SolveError> {
+        retained::solve(self.cache.path(), request)
+    }
+    fn acquire_candidate_for_install(
+        &self,
+        candidate: &vibe_registry::source_candidates::RetainedSourceCandidate,
+        store_root: &Path,
+        expected_hash: Option<&str>,
+        slot: &Path,
+        progress: &vibe_core::progress::Progress,
+    ) -> Result<vibe_registry::PackageAcquisition, RegistryError> {
+        self.acquire_for_install(
+            &retained::exact(candidate),
+            store_root,
+            expected_hash,
+            slot,
+            progress,
+        )
+    }
     fn solve(&self, _: &[PackageRef]) -> Result<ResolvedGraph, SolveError> {
         Ok(graph())
     }
@@ -36,6 +64,10 @@ impl InstallSource for MirrorSource {
         _: Option<&str>,
     ) -> Result<CachedPackage, RegistryError> {
         Ok(CachedPackage {
+            locked_selection: None,
+            // The synthetic mirror is a project-declared route, so its
+            // observation reaches the nonempty provenance publication.
+            route_publication: vibe_core::RoutePublication::Project,
             recorded_source_kind: None,
             store_reused: None,
             acquisition: None,
@@ -43,11 +75,11 @@ impl InstallSource for MirrorSource {
                 group: p.group.clone().unwrap(),
                 name: p.name.to_string(),
                 version: "1.0.0".parse().unwrap(),
-                source_dir: self.cache.path().to_owned(),
+                source_dir: self.package_dir(),
             },
-            cache_dir: self.cache.path().to_owned(),
+            cache_dir: self.package_dir(),
             manifest: self.manifest_of(p).unwrap(),
-            content_hash: vibe_registry::compute_content_hash(self.cache.path()).unwrap(),
+            content_hash: vibe_registry::compute_content_hash(&self.package_dir()).unwrap(),
             source_uri: "https://example.test/canonical".into(),
             fetched_from: Some("file:///synthetic/mirror".into()),
             registry_name: None,
@@ -81,8 +113,9 @@ pub(super) fn fixture(workspace: bool) -> (tempfile::TempDir, MirrorSource, Path
     };
     write(&selected, "vibe.toml", BEFORE);
     let cache = tempfile::tempdir().unwrap();
-    write(cache.path(), "vibe.toml", PACKAGE);
-    write(cache.path(), "payload.txt", "SYNTHETIC_PACKAGE_PAYLOAD");
+    let package = cache.path().join(GIANT_DIR);
+    write(&package, "vibe.toml", PACKAGE);
+    write(&package, "payload.txt", "SYNTHETIC_PACKAGE_PAYLOAD");
     let source = MirrorSource {
         cache,
         declaration: PACKAGE.into(),

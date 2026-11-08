@@ -35,7 +35,7 @@ impl GitPerPackageRegistry {
     ) -> Result<Manifest, RegistryError> {
         self.ensure_token_loaded()?;
         let plain_url = self.package_repo_url(group, name)?;
-        let fetch_url = self.credentialed_url(&plain_url);
+        let fetch_url = self.selected_credentialed_url(&plain_url)?;
         let bytes = match self
             .backend
             .fetch_file_at_ref(&fetch_url, refname, Manifest::FILENAME)
@@ -95,15 +95,15 @@ impl GitPerPackageRegistry {
         group: &Group,
         name: &str,
         f: F,
-    ) -> Result<(T, String), RegistryError>
+    ) -> Result<(T, PublicationRoute), RegistryError>
     where
         F: Fn(&str) -> Result<T, RegistryError>,
     {
-        let (primary, mirrors) = self.package_urls(group, name)?;
+        let (primary, mirrors) = self.package_candidates(group, name)?;
         let mut first_error = None;
         let mut excluded = None;
         for url in std::iter::once(primary).chain(mirrors) {
-            match f(&url) {
+            match f(&url.url) {
                 Ok(value) => return Ok((value, url)),
                 Err(error)
                     if self.backend.uses_native_materialisation() && excluded_route(&error) =>
@@ -136,7 +136,7 @@ impl GitPerPackageRegistry {
         let read = |url: &str| {
             self.backend
                 .fetch_file_at_ref(
-                    &self.credentialed_url(strip_git_plus_prefix(url)),
+                    &self.selected_credentialed_url(strip_git_plus_prefix(url))?,
                     reference,
                     path,
                 )
@@ -158,7 +158,7 @@ impl GitPerPackageRegistry {
         self.try_lookup(group, name, |url| {
             self.backend
                 .fetch_file_at_ref(
-                    &self.credentialed_url(strip_git_plus_prefix(url)),
+                    &self.selected_credentialed_url(strip_git_plus_prefix(url))?,
                     reference,
                     path,
                 )
@@ -212,14 +212,14 @@ impl GitPerPackageRegistry {
         &self,
         group: &Group,
         name: &str,
-    ) -> Result<(Vec<IndexVersion>, Option<String>), RegistryError> {
+    ) -> Result<(Vec<IndexVersion>, Option<PublicationRoute>), RegistryError> {
         // Index fast path (PROP-005 §2.10 slice 10). When the
         // registry has an upstream index attached, query it first.
         // 200 → return versions; 404 → fall through to git path
         // (UnknownPackage from the index does not authoritatively
         // mean "absent" — the index may be stale); other errors →
         // also fall through with a debug-level log.
-        if let Some(client) = &self.index_client {
+        if let Some(client) = self.discover_index()? {
             match client.list_version_entries(group, name) {
                 Ok(Some(entries)) => {
                     tracing::debug!(
@@ -266,10 +266,9 @@ impl GitPerPackageRegistry {
         let backend = Arc::clone(&self.backend);
         let owned_group = group.clone();
         let owned_name = name.to_owned();
-        let token = self.effective_token.clone();
         self.try_lookup_with_route(group, name, move |url| {
             let plain = strip_git_plus_prefix(url);
-            let fetch_url = inject_token(plain, token.as_deref());
+            let fetch_url = self.selected_credentialed_url(plain)?;
             let tags = backend.list_tags(&fetch_url).map_err(|e| match e {
                 GitError::RepoNotFound { .. } => RegistryError::UnknownPackage {
                     group: owned_group.clone(),
@@ -332,7 +331,9 @@ impl GitPerPackageRegistry {
             version,
             source_dir: self.package_clone_dir(group, pkgref.name.as_str()),
         };
-        let route = route.map(|url| RegistryRoute::selected(self, &resolved, url));
+        let route = route
+            .map(|url| RegistryRoute::selected(self, &resolved, url))
+            .transpose()?;
         Ok((resolved, route))
     }
 
@@ -548,7 +549,9 @@ mod contact_refusal_tests {
             cache.path(),
             Arc::new(crate::ShellGit::new()),
             0,
-            section.auth,
+            crate::resolve_registry_auth(crate::RegistryAuthInput::SelectedRegistry(&section))
+                .unwrap()
+                .kind,
             None,
         )
         .unwrap();

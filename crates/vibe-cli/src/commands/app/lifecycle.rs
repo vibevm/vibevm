@@ -37,6 +37,7 @@ pub(crate) fn modify(
     args: ModifyArgs<'_>,
     embedded_root: Option<&Path>,
     offline: bool,
+    source_operation: &vibe_package_source::SourceOperation,
 ) -> Result<()> {
     let user = global::settings_root()?;
     let index = Index::load(home)?;
@@ -44,6 +45,7 @@ pub(crate) fn modify(
     let package = &record.package;
     let exact = format!("{}/{}@={}", package.group, package.name, package.version);
     let packages = Packages {
+        operation: source_operation.clone(),
         settings: user,
         registry: args.registry.map(Path::to_path_buf),
         embedded: embedded_root.map(Path::to_path_buf),
@@ -67,7 +69,7 @@ pub(crate) fn modify(
     let resolver = |spelling: &str| packages.resolve(spelling);
     let show = global::plan_printer(ctx);
     let flat = StepDisplay::flat();
-    let observe = Observation::new(ctx, true, &flat)?;
+    let observe = Observation::new(ctx, true, &flat)?.with_source_operation(&packages.operation);
     let outcome = flat.around(ctx, || {
         let operation = OperationContext {
             agent: agents.hooks(),
@@ -89,8 +91,10 @@ pub(crate) fn outdated(
     registry: Option<&Path>,
     embedded_root: Option<&Path>,
     offline: bool,
+    source_operation: &vibe_package_source::SourceOperation,
 ) -> Result<()> {
     let packages = Packages {
+        operation: source_operation.clone(),
         settings: global::settings_root()?,
         registry: registry.map(Path::to_path_buf),
         embedded: embedded_root.map(Path::to_path_buf),
@@ -138,10 +142,11 @@ pub(crate) fn autoremove(
     home: &SettingsRoot,
     plan_only: bool,
     offline: bool,
+    source_operation: &vibe_package_source::SourceOperation,
 ) -> Result<()> {
     let proxy_image = global::proxy_image()?;
     let flat = StepDisplay::flat();
-    let observe = Observation::new(ctx, true, &flat)?;
+    let observe = Observation::new(ctx, true, &flat)?.with_source_operation(source_operation);
     let removal = flat.around(ctx, || {
         let operation = OperationContext {
             chooser: None,
@@ -164,6 +169,7 @@ pub(crate) fn update_all(
 ) -> Result<()> {
     super::configuration::preload(&mut args.steps.choice)?;
     let settings = global::settings_root()?;
+    let source_operation = global::source_operation(args.source_policy.declaration())?;
     let index = Index::load(&settings)?;
     let mut seen = std::collections::BTreeSet::new();
     let mut skipped = Vec::new();
@@ -185,12 +191,13 @@ pub(crate) fn update_all(
             skipped.push(spelling);
             continue;
         }
-        let resolved = global::resolve_package(
+        let resolved = global::resolve_package_with_operation(
             &settings,
             args.registry.as_deref(),
             embedded_root.as_deref(),
             &spelling,
             offline,
+            &source_operation,
         )?;
         let installed_newest = index
             .installations
@@ -220,7 +227,14 @@ pub(crate) fn update_all(
         args.platform = choice.platform;
         args.arch = choice.arch;
         args.installer = choice.installer;
-        let outcome = global::update_one(ctx, &args, embedded_root.clone(), offline, &resolved)?;
+        let outcome = global::update_one(
+            ctx,
+            &args,
+            embedded_root.clone(),
+            offline,
+            &resolved,
+            &source_operation,
+        )?;
         render(ctx, &outcome)?;
         updated += 1;
     }

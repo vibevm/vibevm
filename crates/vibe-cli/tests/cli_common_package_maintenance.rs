@@ -235,6 +235,12 @@ impl Fixture {
                 && diagnostic.contains("PROP-069#PERSISTENCE"),
             "force-input" => diagnostic.contains(&format!("retained input changed (`{PACKAGE}` original configuration is not recorded in vibe.lock)"))
                 && diagnostic.contains("PROP-069#EFFECT-CONSUMERS"),
+            // PROP-073 `#LOCKED-SOURCE-LAW`: an ordinary install that would
+            // replace the held selection now refuses before candidate
+            // admission, so the common refusal is never reached; the
+            // pre-effect boundary asserted below is unchanged.
+            "install" => diagnostic.contains(&format!("held lock fixes `{PACKAGE}` at 1.0.0"))
+                && diagnostic.contains("PROP-073#LOCKED-SOURCE-LAW"),
             _ => false,
         };
         let refused = !output.status.success()

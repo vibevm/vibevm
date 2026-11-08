@@ -29,8 +29,12 @@ struct Candidate {
     hash: String,
 }
 
+/// Candidates live on disk in a real directory registry
+/// (`<registry>/<group>/<name>/v<version>/vibe.toml`); planning solves it
+/// through the production local-registry cell.
 #[derive(Default)]
 pub struct Source {
+    registry: PathBuf,
     candidates: BTreeMap<(String, Version), Candidate>,
     pub solves: RefCell<Vec<Vec<PackageRef>>>,
     pub fetches: RefCell<Vec<PackageRef>>,
@@ -82,6 +86,50 @@ impl VersionEnumerator for Provider<'_> {
 }
 
 impl InstallSource for Source {
+    fn source_solve_limits(&self) -> Result<vibe_resolver::SourceSolveLimits, SolveError> {
+        crate::retained::limits()
+    }
+
+    fn solve_metadata(
+        &self,
+        request: &vibe_resolver::SourceSolveRequest<'_>,
+    ) -> Result<vibe_resolver::SourceResolvedGraph, SolveError> {
+        self.solves.borrow_mut().push(request.held_roots.to_vec());
+        // This double is a plain directory registry with no held-source
+        // owner: like the old double, lock respect is the planner's held
+        // roots, not a replay of the (synthetic) recorded source identity,
+        // which a held-owner-less local provider always refuses.
+        crate::retained::solve(
+            &self.registry,
+            &vibe_resolver::SourceSolveRequest {
+                roots: request.roots,
+                held_roots: request.held_roots,
+                authoritative_locked: &[],
+                activated: request.activated,
+                limits: request.limits,
+                configuration: request.configuration,
+                blocked: request.blocked,
+            },
+        )
+    }
+
+    fn acquire_candidate_for_install(
+        &self,
+        candidate: &vibe_registry::source_candidates::RetainedSourceCandidate,
+        store_root: &Path,
+        expected_hash: Option<&str>,
+        slot: &Path,
+        progress: &vibe_core::progress::Progress,
+    ) -> Result<vibe_registry::PackageAcquisition, RegistryError> {
+        self.acquire_for_install(
+            &crate::retained::exact(candidate),
+            store_root,
+            expected_hash,
+            slot,
+            progress,
+        )
+    }
+
     fn solve(&self, roots: &[PackageRef]) -> Result<ResolvedGraph, SolveError> {
         self.solves.borrow_mut().push(roots.to_vec());
         ResolvoDepSolver::new(Provider(self)).solve(roots)
@@ -113,6 +161,8 @@ impl InstallSource for Source {
         let version = Provider(self).resolve_version(p).unwrap();
         let c = &self.candidates[&(p.qualified_name(), version.clone())];
         Ok(CachedPackage {
+            locked_selection: None,
+            route_publication: vibe_core::RoutePublication::Local,
             recorded_source_kind: None,
             store_reused: None,
             acquisition: None,
@@ -152,7 +202,7 @@ impl InstallSource for Source {
 }
 
 pub struct Fixture {
-    temp: TempDir,
+    _temp: TempDir,
     pub root: PathBuf,
     pub source: Source,
 }
@@ -175,15 +225,25 @@ impl Fixture {
                 &format!("[project]\ngroup='{GROUP}'\nname='{name}'\nversion='1.0.0'\n{tail}"),
             );
         }
+        let registry = temp.path().join("candidates");
+        fs::create_dir_all(&registry).unwrap();
         Self {
-            temp,
+            _temp: temp,
             root,
-            source: Source::default(),
+            source: Source {
+                registry,
+                ..Source::default()
+            },
         }
     }
 
     pub fn add(&mut self, name: &str, version: &str, tail: &str) {
-        let path = self.temp.path().join("candidates").join(name).join(version);
+        let path = self
+            .source
+            .registry
+            .join(GROUP)
+            .join(name)
+            .join(format!("v{version}"));
         let text = format!(
             "[package]\ngroup='{GROUP}'\nname='{name}'\nkind='flow'\nversion='{version}'\n{tail}"
         );

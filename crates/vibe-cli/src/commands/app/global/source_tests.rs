@@ -4,6 +4,11 @@ specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-073#SOURCE-EVIDENCE"
 use super::*;
 use vibe_wire::generated::shared::{SourceAcquisition, SourceSelectionKind};
 
+/// The production source operation with no invocation source policy.
+fn operation() -> vibe_package_source::SourceOperation {
+    source_operation(Default::default()).unwrap()
+}
+
 fn seed(root: &Path, version: &str) {
     let package = root.join(format!("org.example/demo/v{version}"));
     std::fs::create_dir_all(&package).unwrap();
@@ -18,19 +23,27 @@ fn embedded_source_evidence_keeps_explicit_registry_precedence() {
     seed(&embedded, "1.0.0");
     seed(&explicit, "2.0.0");
     let settings = SettingsRoot::new(&scratch.path().join("settings"));
-    let result =
-        resolve_package(&settings, None, Some(&embedded), "org.example/demo", true).unwrap();
+    let result = resolve_package_with_operation(
+        &settings,
+        None,
+        Some(&embedded),
+        "org.example/demo",
+        true,
+        &operation(),
+    )
+    .unwrap();
     assert_eq!(result.package.version, "1.0.0");
     let evidence = result.source_evidence.unwrap();
     assert_eq!(evidence.source_kind, Some(SourceSelectionKind::Embedded));
     assert_eq!(evidence.acquisition, Some(SourceAcquisition::Directory));
     assert_eq!(evidence.registry, None);
-    let result = resolve_package(
+    let result = resolve_package_with_operation(
         &settings,
         Some(&explicit),
         Some(&embedded),
         "org.example/demo",
         true,
+        &operation(),
     )
     .unwrap();
     assert_eq!(result.package.version, "2.0.0");

@@ -174,7 +174,16 @@ pub(crate) fn publish_unit_artifacts(
     static_bytes: Option<&[u8]>,
     spec_format: SpecFormat,
 ) -> Result<(), WorkspaceError> {
-    transaction::write_production_with_selectors(
+    publish_unit_artifacts_controlled(boot_dir, index_text, static_bytes, spec_format, None)
+}
+pub(crate) fn publish_unit_artifacts_controlled(
+    boot_dir: &Path,
+    index_text: &str,
+    static_bytes: Option<&[u8]>,
+    spec_format: SpecFormat,
+    control: Option<&vibe_core::cancellation::CancellationToken>,
+) -> Result<(), WorkspaceError> {
+    transaction::write_controlled_with_selectors(
         transaction::ArtifactWrite {
             index_path: &boot_dir.join(INDEX_FILE),
             index_bytes: index_text.as_bytes(),
@@ -183,6 +192,7 @@ pub(crate) fn publish_unit_artifacts(
             stale_path: &boot_dir.join(stale_static_file(spec_format)),
         },
         // No selector work: a package slot writes no redirect blocks.
+        control,
         |_| Ok(()),
     )
 }

@@ -57,15 +57,29 @@ pub use selection::{PreparedSelection, ProvenSelection, SelectedManifest};
 
 use outcome::fresh_run;
 
+/// The run-scoped facts one native-world regeneration reads: the trace, the
+/// invocation's identity, the mutation lease and the cancellable progress.
+struct NativeRunScope<'a> {
+    trace: Option<&'a TraceRun>,
+    metadata: &'a RunMetadata,
+    lease: &'a LifecycleLease,
+    progress: &'a vibe_core::progress::Progress,
+}
+
 fn regenerate_native_world(
     project_root: &std::path::Path,
     workspace: &vibe_workspace::Workspace,
     resolution: &[vibe_workspace::install::ResolvedDep],
     spec_format: vibe_core::manifest::SpecFormat,
-    trace: Option<&TraceRun>,
-    metadata: &RunMetadata,
-    lease: &LifecycleLease,
+    scope: NativeRunScope<'_>,
 ) -> Result<(Vec<String>, outcome::NativeInstallContext)> {
+    let NativeRunScope {
+        trace,
+        metadata,
+        lease,
+        progress,
+    } = scope;
+    progress.checkpoint()?;
     vibe_install::configuration_admission::resolved_packages(resolution)?;
     let (world, lowering, sidecar) =
         crate::world::prepare_owner_runtime_inputs(project_root, workspace, resolution)?;
@@ -78,9 +92,10 @@ fn regenerate_native_world(
         created_at: metadata.started.clone(),
     };
     let mut make_provider = |policies| {
-        Ok(vibe_lifecycle::native::ArtifactCompilerNativeProvider::new(
-            platform, policies,
-        ))
+        Ok(
+            vibe_lifecycle::native::ArtifactCompilerNativeProvider::new(platform, policies)
+                .with_cancellation(progress.cancellation().clone()),
+        )
     };
     let (nodes, carriage) = vibe_workspace::install::regenerate_boot_from_traced_native(
         workspace,
@@ -244,6 +259,7 @@ pub fn execute_prepared(
 
     let spec_format = resolve_spec_format(&manifest, spec_format_default);
     let progress = observer.progress();
+    progress.checkpoint()?;
 
     // The SURFACE's own source-mutation epoch, at exactly the position it has
     // always occupied: after the manifest and the tree are consumed, before the
@@ -314,7 +330,9 @@ pub fn execute_prepared(
         && (lockfile_snapshot.meta.schema_version < vibe_core::manifest::CURRENT_SCHEMA_VERSION
             || lockfile_snapshot.packages.is_empty())
     {
+        progress.checkpoint()?;
         observer.narrate(InstallNarration::EmptyWorld);
+        progress.cancellation().publishing();
         if manifest != authored_before {
             vibe_install::publish_admitted_manifest(&project_root, &authored_before, &manifest)?;
         }
@@ -327,11 +345,16 @@ pub fn execute_prepared(
             &workspace,
             &[],
             spec_format,
-            trace,
-            &run_metadata,
-            &lease,
+            NativeRunScope {
+                trace,
+                metadata: &run_metadata,
+                lease: &lease,
+                progress: &progress,
+            },
         )
         .context("regenerating boot artifacts for the empty world")?;
+        progress.cancellation().committed();
+        progress.checkpoint()?;
         boot_task.set_progress(nodes.len() as u64, Some(nodes.len() as u64), "nodes");
         boot_task.finish();
         lifecycle_run.native = Some(native);
@@ -381,6 +404,7 @@ pub fn execute_prepared(
             manifest: &manifest,
             embedded_root: environment.embedded_root.as_deref(),
             project_root: &project_root,
+            workspace_root: &workspace.root,
             global: &environment.global,
             offline,
             locked: &lockfile_snapshot.packages,
@@ -417,11 +441,14 @@ pub fn execute_prepared(
         )?;
         (plan, Some(resolver))
     };
+    progress.checkpoint()?;
     match plan {
         Plan::Fresh => {
             // PROP-011 §2.2 — application is just a whole-tree boot
             // regeneration (cheap, self-healing — §2.4).
+            progress.checkpoint()?;
             observer.narrate(InstallNarration::FreshLock);
+            progress.cancellation().publishing();
             let boot_task = progress.task("Regenerating boot artifacts from the fresh lock");
             // The one workspace snapshot this command owns. Nothing between
             // its read and here mutated the tree — the fresh fast path
@@ -443,11 +470,16 @@ pub fn execute_prepared(
                 &workspace,
                 &resolution,
                 spec_format,
-                trace,
-                &run_metadata,
-                &lease,
+                NativeRunScope {
+                    trace,
+                    metadata: &run_metadata,
+                    lease: &lease,
+                    progress: &progress,
+                },
             )
             .context("regenerating boot artifacts from the materialised state")?;
+            progress.cancellation().committed();
+            progress.checkpoint()?;
             boot_task.set_progress(nodes.len() as u64, Some(nodes.len() as u64), "nodes");
             boot_task.finish();
             lifecycle_run.native = Some(native);

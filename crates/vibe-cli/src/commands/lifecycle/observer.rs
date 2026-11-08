@@ -45,6 +45,10 @@ impl<'a> CliRunObserver<'a> {
 }
 
 impl RunObserver for CliRunObserver<'_> {
+    fn cancellation(&self) -> vibe_core::cancellation::CancellationToken {
+        self.ctx.progress().cancellation().clone()
+    }
+
     fn observe_phase_started(&self, phase: &str) {
         let Ok(mut observed) = self.progress.lock() else {
             return;

@@ -63,6 +63,9 @@ impl<'a> DepProvider for MultiRegistryDepProvider<'a> {
                 summary,
                 attempts,
             }),
+            Err(other @ RegistryError::OfflinePackageUnavailable { .. }) => {
+                Err(DepProviderError::offline_unavailable(other))
+            }
             Err(other) => Err(DepProviderError::Other(other.to_string())),
         }
     }
@@ -91,6 +94,9 @@ impl<'a> DepProvider for MultiRegistryDepProvider<'a> {
                     name,
                     constraint: req,
                 })
+            }
+            Err(other @ RegistryError::OfflinePackageUnavailable { .. }) => {
+                Err(DepProviderError::offline_unavailable(other))
             }
             Err(other) => Err(DepProviderError::Other(other.to_string())),
         }
@@ -129,7 +135,60 @@ impl<'a> VersionEnumerator for MultiRegistryDepProvider<'a> {
                 summary,
                 attempts,
             }),
+            Err(other @ RegistryError::OfflinePackageUnavailable { .. }) => {
+                Err(DepProviderError::offline_unavailable(other))
+            }
             Err(other) => Err(DepProviderError::Other(other.to_string())),
         }
+    }
+}
+
+impl crate::SourceCandidateProvider for MultiRegistryDepProvider<'_> {
+    fn has_locked_coordinate(&self, group: &Group, name: &str) -> bool {
+        self.resolver.has_locked_package(group, name)
+    }
+    fn source_choice_mode(&self) -> vibe_registry::source_candidates::SourceChoiceMode {
+        self.resolver.source_choice_mode()
+    }
+    fn retain_default_candidate(
+        &self,
+        group: &Group,
+        name: &str,
+        version: &semver::Version,
+    ) -> Result<vibe_registry::source_candidates::RetainedCandidateObservation, DepProviderError>
+    {
+        self.resolver
+            .retain_default_candidate(group, name, version)
+            .map_err(crate::source_candidates::source_registry_error)
+    }
+    fn validate_registry_pin(
+        &self,
+        group: &Group,
+        name: &str,
+        pin: &vibe_core::manifest::RegistryPin,
+    ) -> Result<(), DepProviderError> {
+        self.resolver
+            .validate_registry_pin(group, name, pin)
+            .map_err(crate::source_candidates::source_registry_error)
+    }
+    fn source_inventory(
+        &self,
+        group: &Group,
+        name: &str,
+        scope: vibe_registry::source_candidates::CandidateInventoryScope,
+        limits: &vibe_registry::source_candidates::SourceInventoryLimits,
+    ) -> Result<vibe_registry::source_candidates::SourceCandidateInventory, DepProviderError> {
+        self.resolver
+            .candidate_inventory(group, name, limits, scope)
+            .map_err(crate::source_candidates::source_registry_error)
+    }
+    fn respects_locked_selection(
+        &self,
+        candidate: &vibe_registry::source_candidates::RetainedSourceCandidate,
+        locked: &vibe_core::manifest::LockedPackage,
+    ) -> Result<bool, DepProviderError> {
+        self.resolver
+            .respects_locked_selection(candidate, locked)
+            .map_err(crate::source_candidates::source_registry_error)
     }
 }

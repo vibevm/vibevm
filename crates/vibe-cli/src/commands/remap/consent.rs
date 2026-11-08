@@ -166,6 +166,41 @@ pub(crate) fn resolve(
     Ok(home.accepted())
 }
 
+/// Select exactly the invocation's answered offers without changing the ledger.
+/// Preview reports unanswered consent through the existing question envelope.
+pub(crate) fn preview(
+    ctx: &output::Context,
+    home: &RemapHome,
+    flags: &ConsentFlags,
+    offline: bool,
+) -> Result<Vec<RemapPackage>> {
+    let mut selected = home.accepted();
+    if flags.reject {
+        return Ok(selected);
+    }
+    let pending = home.pending();
+    let unanswered: Vec<_> = pending
+        .iter()
+        .filter(|offer| !flags.accepts(&offer.key))
+        .collect();
+    if !unanswered.is_empty() {
+        let keys: Vec<_> = unanswered.iter().map(|offer| offer.key.as_str()).collect();
+        if ctx.is_json() {
+            ctx.emit_json(&offer_document(&unanswered, home, offline))?;
+        }
+        return Err(ConsentRequired {
+            count: keys.len(),
+            what: "remap package offer(s)",
+            packages: keys.join(", "),
+            accept: format!("vibe remap accept {}", keys.join(" ")),
+            reject: format!("vibe remap reject {}", keys.join(" ")),
+        }
+        .into());
+    }
+    selected.extend(pending);
+    Ok(selected)
+}
+
 /// Whether this run may ask: a terminal, not `--json`, not `--unattended`.
 fn attended(ctx: &output::Context) -> bool {
     !ctx.is_json() && !ctx.is_unattended() && console::user_attended()

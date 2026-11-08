@@ -51,15 +51,24 @@ pub fn run(
     let explicit_path = args.path.is_some();
     let project_root = home::selected_project(args.path.as_deref())?;
     let app_home = home::select(args.global, project_root.as_deref())?;
+    let source_project = match &app_home {
+        home::AppHome::Project { root, .. } => Some(root.as_path()),
+        home::AppHome::User(_) => None,
+    };
+    // Deferred construction: source-free app views do not read policy or catalog files.
+    let policy_operation =
+        || global::source_operation_for_project(source_project, Default::default());
     match args.command {
         AppCommand::Installers { package, registry } => {
             let settings = global::settings_root()?;
-            let resolved = global::resolve_package(
+            let source_operation = policy_operation()?;
+            let resolved = global::resolve_package_with_operation(
                 &settings,
                 registry.as_deref(),
                 embedded_root,
                 &package,
                 offline,
+                &source_operation,
             )?;
             let listing = vibe_app::options_listing(&package, &resolved.options);
             if ctx.is_json() {
@@ -80,18 +89,22 @@ pub fn run(
             agent,
         } => {
             let settings = global::settings_root()?;
-            let resolved = global::resolve_package(
+            let source_operation = policy_operation()?;
+            let resolved = global::resolve_package_with_operation(
                 &settings,
                 registry.as_deref(),
                 embedded_root,
                 &package,
                 offline,
+                &source_operation,
             )?;
             let proxy_image = global::proxy_image()?;
             let flat = display::StepDisplay::flat();
-            let observe = global::Observation::new(ctx, false, &flat)?;
+            let observe = global::Observation::new(ctx, false, &flat)?
+                .with_source_operation(&source_operation);
             let agents = agents::AgentSetup::new(ctx, agent.as_deref(), false)?;
             let packages = global::Packages {
+                operation: observe.http_client.source_operation().clone(),
                 settings: settings.clone(),
                 registry: registry.clone(),
                 embedded: embedded_root.map(Path::to_path_buf),
@@ -145,6 +158,7 @@ pub fn run(
             &operation,
             parameters,
             offline,
+            &policy_operation()?,
         ),
         AppCommand::Runs { package, prune } => {
             records::runs(ctx, app_home.settings(), &package, prune)?;
@@ -190,6 +204,7 @@ pub fn run(
                 },
                 embedded_root,
                 offline,
+                &policy_operation()?,
             )?;
             Ok(None)
         }
@@ -200,6 +215,7 @@ pub fn run(
                 registry.as_deref(),
                 embedded_root,
                 offline,
+                &policy_operation()?,
             )?;
             Ok(None)
         }
@@ -262,16 +278,25 @@ pub fn run(
             Ok(None)
         }
         AppCommand::Autoremove { plan_only } => {
-            lifecycle::autoremove(ctx, app_home.settings(), plan_only, offline)?;
+            lifecycle::autoremove(
+                ctx,
+                app_home.settings(),
+                plan_only,
+                offline,
+                &policy_operation()?,
+            )?;
             Ok(None)
         }
         AppCommand::Steps { package, registry } => {
             describe::show(
                 ctx,
-                registry.as_deref(),
-                embedded_root,
+                describe::DescribeSource {
+                    registry: registry.as_deref(),
+                    embedded_root,
+                    offline,
+                    operation: &policy_operation()?,
+                },
                 &package,
-                offline,
                 true,
                 false,
             )?;
@@ -284,10 +309,13 @@ pub fn run(
         } => {
             describe::show(
                 ctx,
-                registry.as_deref(),
-                embedded_root,
+                describe::DescribeSource {
+                    registry: registry.as_deref(),
+                    embedded_root,
+                    offline,
+                    operation: &policy_operation()?,
+                },
                 &package,
-                offline,
                 false,
                 configuration,
             )?;

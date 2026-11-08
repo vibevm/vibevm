@@ -40,6 +40,12 @@ mod fetched {
 #[path = "../src/slot_verify.rs"]
 mod production_slot_verify;
 
+#[path = "support/retained.rs"]
+mod retained;
+
+/// The temp directory registry under the fixture root, beside the project.
+const REGISTRY: &str = "registry";
+
 /// An [`InstallSource`] serving two immutable fixture packages from temp
 /// trees with REAL `vibe-registry` content hashes — the fixture dir is
 /// both `cache_dir` and the materialisation source, exactly the shape a
@@ -70,14 +76,69 @@ impl PlanObserver for ObservedPlan {
     }
 }
 
+impl FixtureSource {
+    fn registry(&self) -> PathBuf {
+        self.fixtures.join(REGISTRY)
+    }
+
+    fn package_dir(&self, name: &str) -> PathBuf {
+        self.registry().join("org.vibevm").join(name).join("v1.0.0")
+    }
+}
+
 impl InstallSource for FixtureSource {
+    fn source_solve_limits(&self) -> Result<vibe_resolver::SourceSolveLimits, SolveError> {
+        retained::limits()
+    }
+
+    fn solve_metadata(
+        &self,
+        request: &vibe_resolver::SourceSolveRequest<'_>,
+    ) -> Result<vibe_resolver::SourceResolvedGraph, SolveError> {
+        self.solves.fetch_add(1, Ordering::SeqCst);
+        // This fixture source never held lock authority: its legacy `solve`
+        // ignored `vibe.lock` and served the immutable fixture graph. A plain
+        // explicit directory registry has no held owner able to replay the
+        // fixture's synthetic lock rows, so the reinstall solve keeps that
+        // historical non-authoritative shape instead of refusing every row.
+        retained::solve(
+            &self.registry(),
+            &vibe_resolver::SourceSolveRequest {
+                roots: request.roots,
+                held_roots: request.held_roots,
+                authoritative_locked: &[],
+                activated: request.activated,
+                limits: request.limits,
+                configuration: request.configuration,
+                blocked: request.blocked,
+            },
+        )
+    }
+
+    fn acquire_candidate_for_install(
+        &self,
+        candidate: &vibe_registry::source_candidates::RetainedSourceCandidate,
+        store_root: &Path,
+        expected_hash: Option<&str>,
+        slot: &Path,
+        progress: &vibe_core::progress::Progress,
+    ) -> Result<vibe_registry::PackageAcquisition, RegistryError> {
+        self.acquire_for_install(
+            &retained::exact(candidate),
+            store_root,
+            expected_hash,
+            slot,
+            progress,
+        )
+    }
+
     fn resolve_and_fetch(
         &self,
         pkgref: &PackageRef,
         _store_root: &Path,
         _expected_hash: Option<&str>,
     ) -> Result<CachedPackage, RegistryError> {
-        let dir = self.fixtures.join(pkgref.name.to_string());
+        let dir = self.package_dir(pkgref.name.as_str());
         let manifest = Manifest::read(dir.join(Manifest::FILENAME)).map_err(|e| {
             RegistryError::MalformedMeta {
                 path: dir.join(Manifest::FILENAME),
@@ -96,6 +157,8 @@ impl InstallSource for FixtureSource {
             .unwrap_or_else(|| Group::parse("org.vibevm").unwrap());
         let content_hash = compute_content_hash(&dir)?;
         Ok(CachedPackage {
+            locked_selection: None,
+            route_publication: vibe_core::RoutePublication::Local,
             recorded_source_kind: None,
             store_reused: None,
             acquisition: None,
@@ -128,10 +191,7 @@ impl InstallSource for FixtureSource {
     }
 
     fn manifest_of(&self, pkg: &PackageRef) -> Result<Manifest, SolveError> {
-        let path = self
-            .fixtures
-            .join(pkg.name.to_string())
-            .join(Manifest::FILENAME);
+        let path = self.package_dir(pkg.name.as_str()).join(Manifest::FILENAME);
         Manifest::read(path)
             .map_err(|error| vibe_resolver::DepProviderError::Other(error.to_string()).into())
     }
@@ -168,7 +228,7 @@ fn fixture_pkg(fixtures: &Path, name: &str, body: &str) {
     };
     write(
         fixtures,
-        &format!("{name}/vibe.toml"),
+        &format!("{REGISTRY}/org.vibevm/{name}/v1.0.0/vibe.toml"),
         &format!(
             "[package]\ngroup = \"org.vibevm\"\nname = \"{name}\"\nkind = \"flow\"\nversion = \"1.0.0\"\n{requires}"
         ),
@@ -176,7 +236,7 @@ fn fixture_pkg(fixtures: &Path, name: &str, body: &str) {
     write(
         fixtures,
         &format!(
-            "{name}/{}/flows/{name}/SPEC.md",
+            "{REGISTRY}/org.vibevm/{name}/v1.0.0/{}/flows/{name}/SPEC.md",
             vibe_core::machine_json_path(&vibe_core::layout::current_specs_root())
         ),
         body,

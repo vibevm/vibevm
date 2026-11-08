@@ -3,6 +3,34 @@ specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#r
 use super::*;
 
 impl GitPerPackageRegistry {
+    pub(crate) fn native_source_for(&self, address: &str) -> Result<bool, GitError> {
+        self.backend.preflight_selected_address(address)?;
+        self.backend.native_materialisation_for(address)
+    }
+    pub(crate) fn ensure_selected_clone(
+        &self,
+        reference: &str,
+        destination: &Path,
+    ) -> Result<(), RegistryError> {
+        let address = self.org_url.as_str();
+        let refresh = destination.join(".git").exists()
+            && self.backend.recorded_origin_url(destination)? == strip_git_plus_prefix(address);
+        self.bring_clone_to_ref(
+            address,
+            reference,
+            destination,
+            if refresh {
+                BringIntent::RefreshExisting
+            } else {
+                BringIntent::SwitchSource
+            },
+        )
+    }
+
+    pub(crate) fn with_locked_source(mut self) -> Self {
+        self.locked_source = true;
+        self
+    }
     /// Fetch the resolved package into the machine-global store.
     /// Clones (or updates) the per-package repo at the requested tag,
     /// then — once a source is accepted — inserts the `.git`-stripped
@@ -122,5 +150,47 @@ impl GitPerPackageRegistry {
         route: Option<&RegistryRoute>,
     ) -> Result<PackageAcquisition, RegistryError> {
         self.fetch_acquisition(resolved, store_root, expected_hash, workspace_slot, route)
+    }
+}
+
+impl GitPerPackageRegistry {
+    pub(crate) fn fetch_locked_selection(
+        mut self,
+        resolved: &ResolvedPackage,
+        store: &Path,
+        expected: Option<&str>,
+        slot: Option<&Path>,
+    ) -> Result<PackageAcquisition, RegistryError> {
+        self.locked_source = true;
+        self.fetch_acquisition(resolved, store, expected, slot, None)
+    }
+    /// Replay (`preserve_modifications`) refuses a modified held slot; an
+    /// explicit version update resets it as an ordinary in-place update does.
+    pub(crate) fn prepare_locked_selection(
+        mut self,
+        resolved: &ResolvedPackage,
+        slot: &Path,
+        preserve_modifications: bool,
+    ) -> Result<PreparedInPlace, RegistryError> {
+        self.locked_source = true;
+        if preserve_modifications
+            && slot.join(".git").exists()
+            && self.backend.working_tree_dirty(slot)?
+        {
+            return Err(RegistryError::PreparedInPlace {
+                path: slot.into(),
+                reason: "locked replay preserves local checkout modifications".into(),
+            });
+        }
+        if self.backend.uses_native_materialisation() {
+            let target = self.package_repo_url(&resolved.group, &resolved.name)?;
+            return self
+                .prepare_native_attempt(resolved, &target, slot, false, Some(slot))
+                .map_err(|error| match error {
+                    prepared::PreparationFailure::Acquisition(error)
+                    | prepared::PreparationFailure::Admission(error) => error,
+                });
+        }
+        self.prepare_in_place_on_route(resolved, slot, None)
     }
 }

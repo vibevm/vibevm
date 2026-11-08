@@ -8,7 +8,9 @@ use tempfile::{NamedTempFile, TempPath};
 
 mod durable_io;
 use durable_io::*;
+mod control;
 mod detailed;
+pub(super) use control::write_controlled_with_selectors;
 pub(crate) use detailed::{DetailedTransactionFailure, TransactionFailureDisposition};
 mod journal;
 use journal::*;
@@ -107,6 +109,14 @@ pub(crate) fn write_production_detailed(
 pub(super) fn preflight_artifact_roles(write: ArtifactWrite<'_>) -> Result<(), WorkspaceError> {
     let _ = common_parent(&write)?;
     validate_artifact_roles(write.index_path, write.static_path, write.stale_path)
+}
+
+/// The transaction journal still pending in `parent`, if any: a directory
+/// whose recovery has not run is that journal's to settle, not a caller's.
+pub(super) fn pending_journal(parent: &Path) -> Option<PathBuf> {
+    [journal_path(parent), rollback_journal_path(parent)]
+        .into_iter()
+        .find(|path| fs::symlink_metadata(path).is_ok())
 }
 
 pub(super) fn with_boot_lock<T>(

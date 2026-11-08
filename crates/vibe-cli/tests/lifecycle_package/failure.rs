@@ -46,7 +46,12 @@ handler = { kind = "script", base = "scripts/after" }
         .unwrap();
     assert!(!output.status.success());
     let documents = json_documents(&output.stdout);
-    assert_eq!(documents.len(), 2, "{documents:#?}");
+    assert_eq!(
+        documents.len(),
+        2,
+        "{documents:#?}\n{}",
+        String::from_utf8_lossy(&output.stderr)
+    );
     assert_eq!(documents[1]["ok"], false);
     let rows = documents[1]["contributions"].as_array().unwrap();
     assert_eq!(rows.len(), 1, "{rows:#?}");

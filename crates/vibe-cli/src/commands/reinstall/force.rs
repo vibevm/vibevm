@@ -35,7 +35,7 @@ use vibe_workspace::install::{
 
 use crate::cli::ReinstallArgs;
 use crate::commands::compile_trace::{RegisteredReportDraft, carry_measured};
-use crate::commands::install::{LifecycleSlotObserver, build_install_resolver};
+use crate::commands::install::LifecycleSlotObserver;
 use crate::exit_code::InstallError;
 use crate::output;
 
@@ -126,17 +126,18 @@ pub(super) fn run(ctx: &output::Context, inputs: Forced<'_>) -> Result<Reinstall
     // mirrors, overrides and git-source declarations are root-level — taken
     // from the tree this command already loaded rather than re-read. The
     // offline posture arrives already resolved by the owner.
-    let global = vibe_core::GlobalRegistryConfig::load()?;
-    let resolver = build_install_resolver(
+    let resolver = crate::commands::install::build_install_resolver_deferred(
         &resolver_args(),
         &workspace.root_manifest,
         embedded_root,
         &workspace.root,
-        &global,
         offline,
         &lockfile.packages,
     )
-    .context("building the install resolver")?;
+    .context("building the install resolver")?
+    // `--force` promises a fresh fetch from each locked source, so held replay
+    // must not satisfy it from a verified store entry.
+    .with_forced_refetch();
 
     // Re-fetch every locked package at its exact pinned version — no
     // re-resolution, the lockfile decides the version. The recorded
@@ -165,6 +166,7 @@ pub(super) fn run(ctx: &output::Context, inputs: Forced<'_>) -> Result<Reinstall
         let pkgref = exact_pkgref(locked.kind, &locked.group, &locked.name, &locked.version)?;
         let cached = match resolver
             .resolve_and_fetch(&pkgref, &store_root, Some(&locked.content_hash))
+            .map_err(pin::held_hash_refusal)
             .with_context(|| {
                 format!(
                     "re-fetching `{}/{}@{}` from source",

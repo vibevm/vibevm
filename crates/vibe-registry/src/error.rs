@@ -39,6 +39,8 @@ use crate::git_backend::GitError;
 )]
 pub enum RegistryError {
     #[error(transparent)]
+    SourcePolicy(#[from] vibe_core::manifest::SourcePolicyError),
+    #[error(transparent)]
     Index(crate::IndexError),
     #[error(transparent)]
     ContactRefused(#[from] crate::ContactRefusal),
@@ -161,6 +163,15 @@ pub enum RegistryError {
     )]
     MalformedMeta { path: PathBuf, reason: String },
 
+    #[error(
+        "auth declaration for `{registry}` at {endpoint}: {reason}; violates REQ spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#registry-auth; fix surface: selected-source auth/token_env declaration"
+    )]
+    AuthDeclaration {
+        registry: String,
+        endpoint: String,
+        reason: String,
+    },
+
     /// Registry is declared `auth = "token-env"` (PROP-002 §2.2.1) but
     /// the resolved env-var is empty / unset. Surfaces before any git
     /// invocation so the operator gets an actionable hint pointing at
@@ -244,6 +255,19 @@ pub enum RegistryError {
         detail: Box<StoreEntryMismatchDetail>,
     },
 
+    /// A held lock row was replayed from its locked source, but the bytes
+    /// that source produced no longer hash to the row's `content_hash`
+    /// (PROP-073 `#LOCKED-SOURCE-LAW`). Typed so a caller that owns its own
+    /// refusal vocabulary (`vibe reinstall --force`) can name it exactly.
+    #[error(
+        "locked source: {detail} \
+         (violates spec://org.vibevm.core/vibevm/common/PROP-073#LOCKED-SOURCE-LAW; \
+          fix: restore the locked source or explicitly update its version)"
+    )]
+    LockedContentMismatch {
+        detail: Box<LockedContentMismatchDetail>,
+    },
+
     /// An offline resolution reached the end of its local sources —
     /// the machine store and every local (`file://`) registry — without
     /// the requested package (PROP-010 §2.5, `OFFLINE-HARD-ERROR`): a
@@ -315,6 +339,28 @@ impl std::fmt::Display for StoreEntryMismatchDetail {
             self.path.display(),
             self.actual,
             self.expected,
+        )
+    }
+}
+
+/// The structured payload of [`RegistryError::LockedContentMismatch`]:
+/// the held coordinate, the hash its lock row pins and the hash its
+/// locked source now produces.
+#[derive(Debug)]
+pub struct LockedContentMismatchDetail {
+    pub group: String,
+    pub name: String,
+    pub version: semver::Version,
+    pub expected: String,
+    pub actual: String,
+}
+
+impl std::fmt::Display for LockedContentMismatchDetail {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(
+            f,
+            "acquired content of `{}/{}@{}` hashes to {}, but the held lock row pins {}",
+            self.group, self.name, self.version, self.actual, self.expected,
         )
     }
 }

@@ -39,7 +39,7 @@ pub(crate) fn verify_store_entry_against_pin(
 /// well-formed `sha256:<hex>`; identity, though, is the `resolved_commit`.
 /// An empty commit (a backend that reported none) hashes the empty string —
 /// deterministic and harmless, since in-place requires a real git source.
-pub(super) fn commit_content_hash(commit: &str) -> String {
+pub(crate) fn commit_content_hash(commit: &str) -> String {
     use sha2::{Digest, Sha256};
     let digest = Sha256::digest(commit.as_bytes());
     let hex = digest.iter().fold(String::new(), |mut s, b| {

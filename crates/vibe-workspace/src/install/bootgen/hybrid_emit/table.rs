@@ -135,7 +135,7 @@ fn build_unit_table_with<E>(
 /// The dependency-slot path (workspace-root-relative, forward-slashed) for a
 /// resolved dependency — its versioned slot, or its unversioned in-place slot
 /// (PROP-022 §2.4).
-pub(super) fn slot_rel_path(dep: &ResolvedDep) -> String {
+pub(crate) fn slot_rel_path(dep: &ResolvedDep) -> String {
     let in_place = dep
         .manifest
         .package

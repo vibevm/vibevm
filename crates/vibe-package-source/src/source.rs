@@ -35,13 +35,19 @@ use crate::cells::{
 /// // `Debug` (it holds live registry handles).
 /// fn name_of(resolver: &InstallResolver) -> &'static str {
 ///     match resolver {
-///         InstallResolver::Local(..) => "local",
+///         InstallResolver::Local(..) | InstallResolver::LockedLocal { .. } => "local",
 ///         InstallResolver::Multi(..) => "multi",
 ///         InstallResolver::Embedded { .. } => "embedded",
 ///     }
 /// }
 /// ```
 pub enum InstallResolver {
+    /// Explicit local discovery with held sources taking priority per coordinate.
+    LockedLocal {
+        local: LocalRegistry,
+        held: Box<MultiRegistryResolver>,
+        solver: Option<&'static str>,
+    },
     /// The local-directory registry plus the optional solver cell
     /// name threaded through to the R-001 selection seam.
     Local(LocalRegistry, Option<&'static str>),
@@ -80,6 +86,118 @@ pub enum InstallResolver {
 }
 
 impl InstallSource for InstallResolver {
+    fn source_solve_limits(
+        &self,
+    ) -> Result<vibe_resolver::SourceSolveLimits, vibe_resolver::SolveError> {
+        Ok(vibe_resolver::SourceSolveLimits::standard_operation())
+    }
+    fn solve_metadata(
+        &self,
+        request: &vibe_resolver::SourceSolveRequest<'_>,
+    ) -> Result<vibe_resolver::SourceResolvedGraph, vibe_resolver::SolveError> {
+        let (cell, solver) = self.cell_selection();
+        let flags = selection_flags(cell, solver);
+        crate::cells::solve_metadata_cell(&flags, self, request)
+    }
+    fn acquire_candidate_for_install(
+        &self,
+        candidate: &vibe_registry::source_candidates::RetainedSourceCandidate,
+        store_root: &Path,
+        expected_hash: Option<&str>,
+        slot: &Path,
+        progress: &vibe_core::progress::Progress,
+    ) -> Result<vibe_registry::PackageAcquisition, RegistryError> {
+        use vibe_core::manifest::CanonicalSourceBinding;
+        let local_root = match candidate.binding() {
+            CanonicalSourceBinding::DirectoryRegistry { root }
+            | CanonicalSourceBinding::Local { root }
+            | CanonicalSourceBinding::Embedded { root } => Some(root),
+            _ => None,
+        };
+        match self {
+            Self::Local(local, _) => local.fetch_candidate_for_install(
+                candidate,
+                store_root,
+                expected_hash,
+                slot,
+                progress,
+            ),
+            Self::LockedLocal { local, held, .. } => {
+                if held.has_locked_package(candidate.group(), candidate.name())
+                    || local_root.is_none()
+                {
+                    held.fetch_candidate_for_install(
+                        candidate,
+                        store_root,
+                        expected_hash,
+                        slot,
+                        progress,
+                    )
+                } else {
+                    local.fetch_candidate_for_install(
+                        candidate,
+                        store_root,
+                        expected_hash,
+                        slot,
+                        progress,
+                    )
+                }
+            }
+            Self::Multi(owner, _) => owner.fetch_candidate_for_install(
+                candidate,
+                store_root,
+                expected_hash,
+                slot,
+                progress,
+            ),
+            Self::Embedded {
+                locals, declared, ..
+            } => {
+                if let Some(owner) = declared
+                    .as_deref()
+                    .filter(|owner| owner.has_locked_package(candidate.group(), candidate.name()))
+                {
+                    return owner.fetch_candidate_for_install(
+                        candidate,
+                        store_root,
+                        expected_hash,
+                        slot,
+                        progress,
+                    );
+                }
+                if let Some(root) = local_root
+                    && let Some(local) = locals.iter().find(|local| local.root() == root)
+                {
+                    return local.fetch_candidate_for_install(
+                        candidate,
+                        store_root,
+                        expected_hash,
+                        slot,
+                        progress,
+                    );
+                }
+                if let Some(owner) = declared.as_deref() {
+                    return owner.fetch_candidate_for_install(
+                        candidate,
+                        store_root,
+                        expected_hash,
+                        slot,
+                        progress,
+                    );
+                }
+                Err(RegistryError::MalformedMeta {
+                    path: slot.into(),
+                    reason: "retained source has no matching operation owner".into(),
+                })
+            }
+        }
+    }
+
+    fn replays_locked_source(&self, pkg: &PackageRef) -> bool {
+        self.held_for(pkg)
+            .is_some_and(|held| held.replays_locked_source(pkg))
+    }
+
     fn acquire_for_install(
         &self,
         pkgref: &PackageRef,
@@ -88,6 +206,14 @@ impl InstallSource for InstallResolver {
         slot: &Path,
         progress: &vibe_core::progress::Progress,
     ) -> Result<vibe_registry::PackageAcquisition, RegistryError> {
+        if let Some(held) = self.held_for(pkgref) {
+            let selected = held.resolve_for_with_progress(
+                pkgref,
+                ResolutionPurpose::DownloadSource,
+                progress,
+            )?;
+            return held.fetch_for_install(&selected, store_root, expected_hash, slot, progress);
+        }
         match self {
             InstallResolver::Multi(registry, _) => {
                 let selected = registry.resolve_for_with_progress(
@@ -208,6 +334,10 @@ impl InstallSource for InstallResolver {
         pkgref: &PackageRef,
         slot: &std::path::Path,
     ) -> Result<vibe_registry::PreparedInPlace, RegistryError> {
+        if let Some(held) = self.held_for(pkgref) {
+            let selected = held.resolve_for(pkgref, ResolutionPurpose::CheckoutSource)?;
+            return held.prepare_in_place(&selected, slot);
+        }
         let unsupported = || {
             let group = pkgref
                 .group
@@ -219,7 +349,7 @@ impl InstallSource for InstallResolver {
             })
         };
         match self {
-            InstallResolver::Local(..) => unsupported(),
+            InstallResolver::Local(..) | InstallResolver::LockedLocal { .. } => unsupported(),
             InstallResolver::Multi(registry, _) => {
                 let resolution = registry.resolve_for(pkgref, ResolutionPurpose::CheckoutSource)?;
                 registry.prepare_in_place(&resolution, slot)
@@ -241,11 +371,15 @@ impl InstallSource for InstallResolver {
         pkgref: &PackageRef,
         slot: &std::path::Path,
     ) -> Result<vibe_registry::InPlaceMaterialised, RegistryError> {
+        if let Some(held) = self.held_for(pkgref) {
+            let selected = held.resolve_for(pkgref, ResolutionPurpose::CheckoutSource)?;
+            return held.prepare_in_place(&selected, slot)?.materialise();
+        }
         match self {
             // A local-directory registry has no git backend — in-place needs
             // a real git source to clone and incrementally update (PROP-022
             // §2.4).
-            InstallResolver::Local(..) => {
+            InstallResolver::Local(..) | InstallResolver::LockedLocal { .. } => {
                 let group = pkgref
                     .group
                     .clone()
@@ -293,203 +427,7 @@ impl InstallSource for InstallResolver {
     }
 }
 
-impl InstallResolver {
-    fn resolve_and_fetch_inner(
-        &self,
-        pkgref: &PackageRef,
-        store_root: &Path,
-        expected_hash: Option<&str>,
-        progress: Option<&vibe_core::progress::Progress>,
-    ) -> Result<CachedPackage, RegistryError> {
-        match self {
-            InstallResolver::Local(r, _) => {
-                let resolved = r.resolve(pkgref)?;
-                r.fetch(&resolved, store_root)
-            }
-            InstallResolver::Multi(m, _) => {
-                let resolution = match progress {
-                    Some(progress) => m.resolve_for_with_progress(
-                        pkgref,
-                        ResolutionPurpose::DownloadSource,
-                        progress,
-                    )?,
-                    None => m.resolve_for(pkgref, ResolutionPurpose::DownloadSource)?,
-                };
-                match progress {
-                    Some(progress) => m.fetch_with_expected_hash_progress(
-                        &resolution,
-                        store_root,
-                        expected_hash,
-                        progress,
-                    ),
-                    None => m.fetch_with_expected_hash(&resolution, store_root, expected_hash),
-                }
-            }
-            InstallResolver::Embedded {
-                locals,
-                project_local_count,
-                declared,
-                precedence,
-                ..
-            } => {
-                let fetch_local = || -> Result<CachedPackage, RegistryError> {
-                    // Walk the local family in order (project-local first,
-                    // then vibe-embedded). The first local that serves the
-                    // coordinate wins; an absence falls through to the next;
-                    // any real failure halts. Provenance tagging:
-                    //   index < project_local_count → is_local (portable,
-                    //     per-project packages/ — PROP-030 §3.3)
-                    //   else → is_embedded (machine-local, vibe's in-tree
-                    //     packages — PROP-030 §2)
-                    // so the lock records the right source_kind and the
-                    // reproducibility guard fires only for the vibe-embedded
-                    // half.
-                    let mut last_absent: Option<RegistryError> = None;
-                    for (idx, local) in locals.iter().enumerate() {
-                        match local.resolve(pkgref) {
-                            Ok(resolved) => {
-                                let mut cached = local.fetch(&resolved, store_root)?;
-                                if idx < *project_local_count {
-                                    cached.is_local = true;
-                                } else {
-                                    cached.is_embedded = true;
-                                }
-                                return Ok(cached);
-                            }
-                            Err(e) if is_registry_absent(&e) => {
-                                last_absent = Some(e);
-                            }
-                            Err(e) => return Err(e),
-                        }
-                    }
-                    // `last_absent` is always `Some` when `locals` is
-                    // non-empty (every local either Ok's or sets it). The
-                    // empty-`locals` case is forbidden by the construction
-                    // path (build_install_resolver returns Embedded only
-                    // when !locals.is_empty()). Fall through to the
-                    // declared walk with the typed absence; if somehow
-                    // neither is set, propagate as a generic "not here".
-                    match last_absent {
-                        Some(e) => Err(e),
-                        None => Err(RegistryError::UnqualifiedPkgref(pkgref.to_string())),
-                    }
-                };
-                let fetch_declared = || -> Result<CachedPackage, RegistryError> {
-                    match declared {
-                        Some(m) => {
-                            let resolution = match progress {
-                                Some(progress) => m.resolve_for_with_progress(
-                                    pkgref,
-                                    ResolutionPurpose::DownloadSource,
-                                    progress,
-                                )?,
-                                None => m.resolve_for(pkgref, ResolutionPurpose::DownloadSource)?,
-                            };
-                            match progress {
-                                Some(progress) => m.fetch_with_expected_hash_progress(
-                                    &resolution,
-                                    store_root,
-                                    expected_hash,
-                                    progress,
-                                ),
-                                None => m.fetch_with_expected_hash(
-                                    &resolution,
-                                    store_root,
-                                    expected_hash,
-                                ),
-                            }
-                        }
-                        None => {
-                            let group = pkgref.group.clone().ok_or_else(|| {
-                                RegistryError::UnqualifiedPkgref(pkgref.to_string())
-                            })?;
-                            Err(RegistryError::UnknownPackage {
-                                group,
-                                name: pkgref.name.to_string(),
-                            })
-                        }
-                    }
-                };
-                // Fetch in precedence order, falling through only a genuine
-                // "not here" (a real failure halts).
-                match precedence {
-                    vibe_resolver::EmbeddedPrecedence::EmbeddedFirst => match fetch_local() {
-                        Err(e) if is_registry_absent(&e) => fetch_declared(),
-                        other => other,
-                    },
-                    vibe_resolver::EmbeddedPrecedence::EmbeddedLast => match fetch_declared() {
-                        Err(e) if is_registry_absent(&e) => fetch_local(),
-                        other => other,
-                    },
-                }
-            }
-        }
-    }
-
-    /// The selected `(ProviderCell, solver override)` pair — the one flag
-    /// decision all three solve-path methods share (R-001: decided in the
-    /// cells module, only routed here).
-    fn cell_selection(&self) -> (ProviderCell, Option<&'static str>) {
-        match self {
-            InstallResolver::Local(_, s) => (ProviderCell::Local, *s),
-            InstallResolver::Multi(_, s) => (ProviderCell::Multi, *s),
-            InstallResolver::Embedded { solver, .. } => (ProviderCell::Embedded, *solver),
-        }
-    }
-
-    /// The borrowed [`ProviderResource`] this resolver's variant owns — the
-    /// one routing shape `solve` / `manifest_of` / `solve_masked` all hand to
-    /// the cells module's construction sites (R-001).
-    fn provider_resource(&self) -> ProviderResource<'_> {
-        match self {
-            InstallResolver::Local(r, _) => ProviderResource::Local(r),
-            InstallResolver::Multi(m, _) => ProviderResource::Multi(m),
-            InstallResolver::Embedded {
-                locals,
-                declared,
-                precedence,
-                short_circuit,
-                ..
-            } => ProviderResource::Embedded {
-                locals: locals.iter().collect(),
-                declared: declared.as_deref(),
-                precedence: *precedence,
-                short_circuit: *short_circuit,
-            },
-        }
-    }
-
-    /// Enumerate every `group` that publishes a package of the bare
-    /// `name` — the candidate set short-name resolution (PROP-008
-    /// §2.6) walks. The local-directory path scans the registry tree;
-    /// the multi-registry path walks each registry's index. The result
-    /// is de-duplicated and sorted; `len() > 1` is a collision. Not
-    /// part of [`InstallSource`]: qualification is the surface's input
-    /// boundary, reached through [`crate::PackageQualifier`].
-    pub fn candidate_groups(&self, name: &str) -> Result<Vec<Group>> {
-        match self {
-            InstallResolver::Local(r, _) => Ok(r.candidate_groups(name)?),
-            InstallResolver::Multi(m, _) => Ok(m.resolve_name_candidates(name)?),
-            InstallResolver::Embedded {
-                locals, declared, ..
-            } => {
-                // The local family is a Vec: union candidate_groups across
-                // every local (project-local + vibe-embedded), then layer in
-                // the declared walk, then sort + dedup.
-                let mut groups = Vec::new();
-                for local in locals {
-                    groups.extend(local.candidate_groups(name)?);
-                }
-                if let Some(m) = declared {
-                    groups.extend(m.resolve_name_candidates(name)?);
-                }
-                groups.sort_by(|a, b| a.as_str().cmp(b.as_str()));
-                groups.dedup();
-                Ok(groups)
-            }
-        }
-    }
-}
+mod operations;
 
 /// The registry errors that mean "this source does not serve the
 /// coordinate" — the embedded/declared composition falls through these and
@@ -506,3 +444,5 @@ pub(crate) fn is_registry_absent(err: &RegistryError) -> bool {
 #[cfg(test)]
 #[path = "source_progress_tests.rs"]
 mod progress_tests;
+
+mod locked;

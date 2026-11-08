@@ -183,7 +183,8 @@ impl<F: FnOnce() -> Option<PathBuf>> RegistryEnvironment for CliRegistryEnvironm
         // fresh machine has none…
         let embedded_root = seed();
         // …and only THEN load, so the load sees whatever the seed just wrote.
-        let global = vibe_core::GlobalRegistryConfig::load()?;
+        let global =
+            vibe_package_source::deferred_user_registry(crate::output::seeds_default_registry());
         Ok(RegistryEnvironmentSnapshot {
             embedded_root,
             global,

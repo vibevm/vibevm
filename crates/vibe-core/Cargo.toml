@@ -11,6 +11,7 @@ homepage.workspace = true
 description = "Core types, manifest schemas, and graph model for vibevm"
 
 [dependencies]
+libc.workspace = true
 specmark.workspace = true
 # Shared structural artifact-need vocabulary, not rollup or scheduler authority.
 progress-core.workspace = true

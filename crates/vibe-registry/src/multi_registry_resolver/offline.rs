@@ -34,7 +34,7 @@ impl MultiRegistryResolver {
         pkgref: &PackageRef,
         group: &Group,
     ) -> Result<MultiResolution, RegistryError> {
-        for src in &self.sources {
+        for src in self.sources()? {
             let RegistrySource::Local(ls) = src else {
                 // A git registry is a network source — under the
                 // offline posture it is not entered at all.
@@ -42,11 +42,18 @@ impl MultiRegistryResolver {
             };
             match ls.registry.resolve(pkgref) {
                 Ok(resolved) => {
+                    // Same exact package-directory identity as the online
+                    // local walk and the local acquisition owner, so an
+                    // offline plan names the source the install records.
+                    let source_url =
+                        crate::local_registry::source_uri_for_local(&resolved.source_dir);
                     return Ok(MultiResolution {
+                        direct: None,
+                        locked: None,
                         selected_route: None,
                         resolved,
                         registry_name: Some(ls.name.clone()),
-                        source_url: ls.url.clone(),
+                        source_url,
                         source_ref: None,
                         overridden: false,
                         is_git_source: false,
@@ -103,6 +110,8 @@ impl MultiRegistryResolver {
         }
         let entry = store::lookup_at(root, group, locked.name.as_str(), &locked.version)?;
         Some(MultiResolution {
+            direct: None,
+            locked: None,
             selected_route: None,
             resolved: ResolvedPackage {
                 group: locked.group.clone(),
@@ -158,6 +167,8 @@ impl MultiRegistryResolver {
             )?;
         }
         Ok(CachedPackage {
+            locked_selection: None,
+            route_publication: vibe_core::RoutePublication::Local,
             recorded_source_kind: self
                 .locked
                 .get(&format!(
@@ -193,7 +204,7 @@ impl MultiRegistryResolver {
 /// `Latest` accepts the pin (offline resolution is computed against
 /// the store as of its last refresh — PROP-010 §2.6); a requirement
 /// must match it outright.
-fn version_matches(req: &VersionSpec, pinned: &semver::Version) -> bool {
+pub(super) fn version_matches(req: &VersionSpec, pinned: &semver::Version) -> bool {
     match req {
         VersionSpec::Latest => true,
         VersionSpec::Req(r) => r.matches(pinned),

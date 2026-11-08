@@ -14,19 +14,33 @@ use vibe_wire::generated::application_describe::ApplicationDescribe;
 use super::global;
 use crate::output;
 
+/// Where `show` resolves its package from: an explicit local registry or the
+/// operation's sources, with the embedded root and the offline posture.
+pub(super) struct DescribeSource<'a> {
+    pub registry: Option<&'a Path>,
+    pub embedded_root: Option<&'a Path>,
+    pub offline: bool,
+    pub operation: &'a vibe_package_source::SourceOperation,
+}
+
 /// Resolve `package` and print its steps as written (`steps_only`) or the
 /// describe outline; `--json` prints the describe document for both.
 pub(super) fn show(
     ctx: &output::Context,
-    registry: Option<&Path>,
-    embedded_root: Option<&Path>,
+    source: DescribeSource<'_>,
     package: &str,
-    offline: bool,
     steps_only: bool,
     configuration: bool,
 ) -> Result<()> {
     let settings = global::settings_root()?;
-    let resolved = global::resolve_package(&settings, registry, embedded_root, package, offline)?;
+    let resolved = global::resolve_package_with_operation(
+        &settings,
+        source.registry,
+        source.embedded_root,
+        package,
+        source.offline,
+        source.operation,
+    )?;
     if configuration {
         let mut document = vibe_app::configuration::describe(&resolved);
         document.installed_source = vibe_app::Index::load(&settings)?

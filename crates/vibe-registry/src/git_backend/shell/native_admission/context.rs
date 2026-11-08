@@ -14,17 +14,11 @@ pub(super) struct Context<'a> {
 }
 impl<'a> Context<'a> {
     pub(super) fn new(profile: &'a NativeGitAdmission) -> Result<Self, GitError> {
-        let root = tempfile::Builder::new()
-            .prefix("vibe-native-")
-            .tempdir()
-            .map_err(io)?;
+        let root = profile.temporary("vibe-native-")?;
         for dir in ["home", "empty", "hooks"] {
             std::fs::create_dir(root.path().join(dir)).map_err(io)?;
         }
         std::fs::write(root.path().join("config"), b"").map_err(io)?;
-        if let TlsTrust::Pem(bytes) = &profile.trust {
-            std::fs::write(root.path().join("ca.pem"), bytes).map_err(io)?;
-        }
         Ok(Self { profile, root })
     }
     fn command(
@@ -53,6 +47,7 @@ impl<'a> Context<'a> {
             .env(
                 "GIT_ALLOW_PROTOCOL",
                 match remote.map(AdmittedRemote::protocol) {
+                    Some(NativeProtocol::Http) => "http",
                     Some(NativeProtocol::Https) => "https",
                     Some(NativeProtocol::Ssh) => "ssh",
                     None => "",
@@ -84,7 +79,10 @@ impl<'a> Context<'a> {
             "core.attributesFile={}",
             root.join("config").display()
         ));
-        if matches!(self.profile.trust, TlsTrust::Pem(_)) {
+        if matches!(remote, Some(AdmittedRemote::Https { url, .. }) if url.scheme() == "https")
+            && let Some(bytes) = self.profile.selected_pem()?
+        {
+            std::fs::write(root.join("ca.pem"), bytes.as_slice()).map_err(io)?;
             cmd.env("GIT_SSL_CAINFO", root.join("ca.pem"));
         }
         if let Some(AdmittedRemote::Https {
@@ -122,11 +120,20 @@ impl<'a> Context<'a> {
         repo: Option<&Path>,
         remote: Option<&AdmittedRemote>,
     ) -> Result<Output, GitError> {
-        let output = self
-            .command(repo, remote)?
-            .args(args)
-            .output()
-            .map_err(io)?;
+        let mut command = self.command(repo, remote)?;
+        command.args(args);
+        let control = crate::git_backend::transfers::current()
+            .progress
+            .unwrap_or_default()
+            .cancellation()
+            .clone();
+        let output = crate::git_backend::shell::controlled::output(&mut command, &control)
+            .map_err(|error| {
+                crate::git_backend::shell::controlled::git_error(
+                    error,
+                    "admitted native Git operation".into(),
+                )
+            })?;
         if output.status.success() {
             return Ok(output);
         }

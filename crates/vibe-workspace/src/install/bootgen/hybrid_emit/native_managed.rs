@@ -201,7 +201,17 @@ pub(in crate::install::bootgen) fn emit_package_units_bound<P: OwnerNativeCompil
         let static_bytes = compiled
             .as_ref()
             .map(|compiled| compiled.artifact().bytes());
-        boot_artifacts::publish_unit_artifacts(&boot_dir, &index_text, static_bytes, spec_format)?;
+        let control = provider
+            .as_ref()
+            .and_then(|provider| provider.cancellation())
+            .cloned();
+        boot_artifacts::publication::publish_unit_artifacts_controlled(
+            &boot_dir,
+            &index_text,
+            static_bytes,
+            spec_format,
+            control.as_ref(),
+        )?;
         if let Some(compiled) = compiled {
             let (_, native, _) = compiled.into_parts();
             if let Some(native) = native {

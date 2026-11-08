@@ -168,6 +168,38 @@ impl ValidatedOrg {
 /// ));
 /// ```
 pub trait RepoCreator {
+    /// Explicit controlled read; legacy adapters cannot claim cancellable network work.
+    fn repo_exists_controlled(
+        &self,
+        org: &ValidatedOrg,
+        name: &str,
+        token: &vibe_core::cancellation::CancellationToken,
+    ) -> Result<bool, PublishError> {
+        if token.has_control() {
+            return Err(PublishError::ControlUnavailable {
+                host: self.host_name().into(),
+                operation: "repository discovery",
+            });
+        }
+        self.repo_exists(org, name)
+    }
+    /// Explicit controlled create; an unknown adapter refuses before remote mutation.
+    fn create_repo_controlled(
+        &self,
+        org: &ValidatedOrg,
+        name: &str,
+        opts: &CreateOpts,
+        token: &vibe_core::cancellation::CancellationToken,
+    ) -> Result<RepoInfo, PublishError> {
+        if token.has_control() {
+            return Err(PublishError::ControlUnavailable {
+                host: self.host_name().into(),
+                operation: "repository creation",
+            });
+        }
+        self.create_repo(org, name, opts)
+    }
+
     /// Human-readable host name for error messages.
     fn host_name(&self) -> &str;
 

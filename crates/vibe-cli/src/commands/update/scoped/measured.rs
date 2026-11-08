@@ -81,6 +81,12 @@ impl Measured {
         self.pruned.sort();
     }
 
+    /// The prune was undone: every slot it moved aside is back, so none of
+    /// them is a path this run deleted any more.
+    pub(super) fn restore_pruned(&mut self) {
+        self.pruned.clear();
+    }
+
     pub(super) fn bumps(&self) -> &[String] {
         &self.bumps
     }

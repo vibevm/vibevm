@@ -79,6 +79,9 @@ fn list_and_project_dry_run_keep_the_exact_json_contract_and_library_parity() {
             "count": 1,
             "skills": [{
                 "name": "demo",
+                // The owning package's identity (added with managed skill
+                // activation, 3d2a5d8a1), the coordinate enable/disable name.
+                "package": "org.example/skill-cli",
                 "origin": "project",
                 "source": vibe_core::machine_json_path(&source),
                 "description": "Demo skill",

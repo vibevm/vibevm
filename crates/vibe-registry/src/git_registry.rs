@@ -222,6 +222,8 @@ impl Registry for GitMonorepoRegistry {
         );
 
         Ok(CachedPackage {
+            locked_selection: None,
+            route_publication: vibe_core::RoutePublication::Local,
             recorded_source_kind: None,
             store_reused: Some(reused),
             acquisition: Some(vibe_wire::generated::shared::SourceAcquisition::GitRepository),

@@ -62,7 +62,10 @@ use compile::compile_static_artifact_with_plans;
 pub(crate) use compile::render_static_observed;
 mod normal;
 use declared_sources::{BootSectionSource, DeclaredBootSources};
+/// The held inverse of one regeneration until its operation commits.
+mod inverse;
 pub(crate) mod transaction;
+pub(crate) use inverse::BootImages;
 
 pub(crate) mod native_managed;
 pub use native_managed::OwnerNativeCompileContinuation;

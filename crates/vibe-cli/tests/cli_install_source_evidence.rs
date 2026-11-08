@@ -69,7 +69,11 @@ fn project_event_retains_source_for_the_whole_closure_and_observed_reuse() {
             let facts = &row["source_evidence"];
             assert_eq!(facts["registry"], "selected");
             assert_eq!(facts["source_kind"], "registry");
-            assert_eq!(facts["acquisition"], "directory");
+            // The first install reads the registry directory; the repeat replays
+            // the locked selection from its verified store entry without
+            // contacting the directory (PROP-073 `#LOCKED-SOURCE-LAW`).
+            let acquisition = if reused { "store" } else { "directory" };
+            assert_eq!(facts["acquisition"], acquisition);
             assert_eq!(facts["store_reused"], reused);
             assert!(
                 facts["source_url"]

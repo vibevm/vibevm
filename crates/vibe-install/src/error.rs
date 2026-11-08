@@ -12,6 +12,22 @@ pub type Result<T, E = Error> = std::result::Result<T, E>;
 #[derive(Debug, Error)]
 #[spec(implements = "spec://org.vibevm.core/vibevm/VIBEVM-SPEC#install-workflow-in-detail")]
 pub enum Error {
+    #[error(
+        "held lock fixes `{package}` at {held_version}, which does not satisfy {requirement}; ordinary install/preview cannot replace that selection from the current catalog (violates spec://org.vibevm.core/vibevm/common/PROP-073#LOCKED-SOURCE-LAW; fix: revise the requirement or explicitly update the held source): {source}"
+    )]
+    HeldSourceConstraint {
+        package: String,
+        held_version: String,
+        requirement: String,
+        #[source]
+        source: Box<vibe_resolver::SolveError>,
+    },
+    #[error(
+        "preview metadata requires an explicit absolute scratch acquisition store (violates spec://org.vibevm.core/vibevm/common/PROP-073#OPERATION-EFFECTS-LAW; fix: supply the operation-owned preview storage grant, never a persistent-store fallback)"
+    )]
+    PreviewStorageRequired,
+    #[error(transparent)]
+    Cancelled(#[from] vibe_core::cancellation::Cancelled),
     #[error(transparent)]
     PackageConfiguration(#[from] vibe_core::manifest::PackageConfigurationError),
 

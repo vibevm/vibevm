@@ -20,7 +20,7 @@ impl std::fmt::Debug for IndexClient {
 }
 
 impl IndexClient {
-    pub(super) fn file_client(&self) -> Result<&reqwest::blocking::Client, &str> {
+    pub(super) fn file_client(&self) -> Result<&crate::http_admission::ManagedHttpClient, &str> {
         self.file_client
             .get_or_init(|| {
                 Self::build_bound_client(
@@ -35,7 +35,7 @@ impl IndexClient {
             .map_err(String::as_str)
     }
 
-    pub(super) fn server_client(&self) -> Result<&reqwest::blocking::Client, &str> {
+    pub(super) fn server_client(&self) -> Result<&crate::http_admission::ManagedHttpClient, &str> {
         self.server_client
             .get_or_init(|| {
                 Self::build_bound_client(

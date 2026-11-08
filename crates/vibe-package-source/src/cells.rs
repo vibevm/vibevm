@@ -384,6 +384,85 @@ pub(crate) fn solve_configured_cell(
     .into())
 }
 
+/// Source-aware selection stays at the existing cell-selection boundary.
+pub(crate) fn solve_metadata_cell(
+    flags: &SelectionFlags,
+    source: &crate::source::InstallResolver,
+    request: &vibe_resolver::SourceSolveRequest<'_>,
+) -> Result<vibe_resolver::SourceResolvedGraph, vibe_resolver::SolveError> {
+    use crate::source::InstallResolver;
+    use vibe_registry::source_candidates::LocalCandidateKind;
+    fn selected<P: vibe_resolver::SourceCandidateProvider>(
+        flags: &SelectionFlags,
+        provider: P,
+        request: &vibe_resolver::SourceSolveRequest<'_>,
+    ) -> Result<vibe_resolver::SourceResolvedGraph, vibe_resolver::SolveError> {
+        match flags.solver.value {
+            "resolvo" => ResolvoDepSolver::new(provider).solve_source_aware(request),
+            "naive" => NaiveDepSolver::new(provider).solve_source_aware(request),
+            "sat" => SatDepSolver::new(provider).solve_source_aware(request),
+            other => Err(vibe_resolver::SolveError::SourceSolverUnsupported { solver: other }),
+        }
+    }
+    match source {
+        InstallResolver::Local(local, _) => selected(
+            flags,
+            LocalRegistryDepProvider::with_source_context(
+                local,
+                LocalCandidateKind::ExplicitRegistry,
+                None,
+            ),
+            request,
+        ),
+        InstallResolver::LockedLocal { local, held, .. } => selected(
+            flags,
+            LocalRegistryDepProvider::with_source_context(
+                local,
+                LocalCandidateKind::ExplicitRegistry,
+                Some(held),
+            ),
+            request,
+        ),
+        InstallResolver::Multi(owner, _) => {
+            selected(flags, MultiRegistryDepProvider::new(owner), request)
+        }
+        InstallResolver::Embedded {
+            locals,
+            project_local_count,
+            declared,
+            precedence,
+            short_circuit,
+            ..
+        } => {
+            let local_providers = locals
+                .iter()
+                .enumerate()
+                .map(|(index, local)| {
+                    LocalRegistryDepProvider::with_source_context(
+                        local,
+                        if index < *project_local_count {
+                            LocalCandidateKind::ProjectLocal
+                        } else {
+                            LocalCandidateKind::Embedded
+                        },
+                        declared.as_deref(),
+                    )
+                })
+                .collect();
+            selected(
+                flags,
+                EmbeddedDepProvider::new(
+                    LocalCompositeDepProvider::new(local_providers),
+                    declared.as_deref().map(MultiRegistryDepProvider::new),
+                    *precedence,
+                    *short_circuit,
+                ),
+                request,
+            )
+        }
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;

@@ -54,6 +54,8 @@ pub enum RemapCommand {
     /// offer, and place its artifacts into the machine store and the
     /// application download cache.
     Import(RemapImportArgs),
+    /// Verify an explicit source for one held project remap without adopting or activating it.
+    BindSource(RemapBindSourceArgs),
 }
 
 #[derive(Debug, Args)]
@@ -135,4 +137,16 @@ pub struct RemapImportArgs {
     /// A directory written by `vibe remap export`.
     #[arg(value_name = "DIR")]
     pub dir: std::path::PathBuf,
+}
+
+#[derive(Debug, Args)]
+pub struct RemapBindSourceArgs {
+    /// Held group/name; its version and content hash remain fixed.
+    pub package: String,
+    /// TOML source binding with canonical source_url and ref/commit for Git.
+    #[arg(long, value_name = "FILE")]
+    pub source: std::path::PathBuf,
+    /// Project or member whose owning workspace holds the remap lock.
+    #[arg(long, default_value = ".")]
+    pub path: std::path::PathBuf,
 }

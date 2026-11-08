@@ -145,6 +145,7 @@ pub(super) fn import(
     // `--registry` comes first and a package it does not carry falls
     // through to the configured registries — the embedded-registry rule.
     let packages = Packages {
+        operation: global::source_operation(Default::default())?,
         settings: settings.clone(),
         registry: None,
         embedded: args.registry.clone(),
@@ -255,7 +256,8 @@ pub(super) fn import(
         let resolver = |name: &str| packages.resolve(name);
         let show = global::plan_printer(ctx);
         let display = StepDisplay::open(ctx, &AppStepArgs::default());
-        let observe = Observation::new(ctx, true, &display)?;
+        let observe =
+            Observation::new(ctx, true, &display)?.with_source_operation(&packages.operation);
         display.around(ctx, || {
             let operation = OperationContext {
                 agent: agents.hooks(),
@@ -424,6 +426,7 @@ fn resume_import(
     let agents = AgentSetup::for_import_resume(ctx, &inspected)?;
     let info = &inspected.context;
     let packages = Packages {
+        operation: global::source_operation(Default::default())?,
         settings: settings.clone(),
         registry: match &info.lookup {
             Lookup::Registry(r) => Some(r.root.clone().into()),
@@ -448,7 +451,7 @@ fn resume_import(
     };
     let proxy = global::proxy_image()?;
     let display = StepDisplay::flat();
-    let observe = Observation::new(ctx, true, &display)?;
+    let observe = Observation::new(ctx, true, &display)?.with_source_operation(&packages.operation);
     let show = global::plan_printer(ctx);
     let result = display.around(ctx, || {
         let operation = OperationContext {

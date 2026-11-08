@@ -67,7 +67,8 @@ fn in_place_mirror_audit_survives_recording_noop_and_failed_apply() {
     let source = Source {
         resolver: MultiRegistryResolver::from_manifest_with_native_admission(
             &manifest.registries,
-            &manifest.mirrors,
+            &vibe_core::merge_effective(&manifest, &vibe_core::GlobalRegistryConfig::default())
+                .mirrors,
             &[],
             root.path().join("registry"),
             0,

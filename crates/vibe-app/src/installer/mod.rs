@@ -34,6 +34,7 @@ pub(crate) use fetch::{TransferFacts, fetch_verified};
 /// (`PROP-068#redaction`).
 #[derive(Clone, Copy, Default)]
 pub(crate) struct FetchWatch<'a> {
+    pub http_client: Option<&'a vibe_package_source::OperationHttpClient>,
     pub size: Option<u64>,
     pub task: Option<&'a ProgressTask>,
     pub interrupt: Option<&'a dyn Interrupt>,
@@ -125,7 +126,11 @@ pub(crate) fn fetch_located(
     let candidates = match locator.locate(artifact) {
         Resolution::Denied { row, reason } => {
             return Err(InstallerError::RemapDenied {
-                source_ref: declared.into(),
+                source_ref: if watch.http_client.is_some() {
+                    vibe_core::progress::transfer::safe_remote(declared)
+                } else {
+                    declared.into()
+                },
                 row: row.map_or_else(
                     || "the active `[policy] unmatched = \"deny\"`".to_owned(),
                     |row| {
@@ -144,6 +149,7 @@ pub(crate) fn fetch_located(
     };
     let mut failures: Vec<String> = Vec::new();
     let mut all_offline = true;
+    let mut first_exclusion = None;
     for candidate in &candidates {
         let outcome = match &candidate.target {
             RemapTarget::Url(url) => {
@@ -159,22 +165,49 @@ pub(crate) fn fetch_located(
         };
         match outcome {
             Ok(()) => return Ok(served(candidate, locator, artifact)),
+            Err(InstallerError::ContactRefused(
+                refusal @ vibe_registry::ContactRefusal::ExcludedHost { .. },
+            )) => {
+                all_offline = false;
+                first_exclusion.get_or_insert(refusal);
+            }
+            Err(
+                error @ (InstallerError::ContactRefused(_)
+                | InstallerError::SourcePolicy(_)
+                | InstallerError::Cancelled(_)),
+            ) => return Err(error),
             Err(error) => {
                 all_offline &= matches!(error, InstallerError::Offline { .. });
-                failures.push(format!("{}: {error}", candidate.target.display()));
+                let target = if watch.http_client.is_some() {
+                    vibe_core::progress::transfer::safe_remote(&candidate.target.display())
+                } else {
+                    candidate.target.display()
+                };
+                failures.push(format!("{target}: {error}"));
             }
         }
+    }
+    if let Some(refusal) = first_exclusion {
+        return Err(InstallerError::ContactRefused(refusal));
     }
     // When every candidate was refused for the same reason — the network
     // posture — the posture is the answer, not a list of four URLs that
     // all said so.
     if all_offline && !failures.is_empty() {
         return Err(InstallerError::Offline {
-            source_ref: declared.into(),
+            source_ref: if watch.http_client.is_some() {
+                vibe_core::progress::transfer::safe_remote(declared)
+            } else {
+                declared.into()
+            },
         });
     }
     Err(InstallerError::Fetch {
-        source_ref: declared.into(),
+        source_ref: if watch.http_client.is_some() {
+            vibe_core::progress::transfer::safe_remote(declared)
+        } else {
+            declared.into()
+        },
         reason: if failures.is_empty() {
             "no candidate source was available".to_owned()
         } else {

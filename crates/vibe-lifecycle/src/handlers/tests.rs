@@ -579,3 +579,6 @@ fn artifact_path_cannot_exit_and_reenter_with_parent_components() {
 
 #[path = "native_tests.rs"]
 mod native;
+
+#[path = "control_tests.rs"]
+mod control;

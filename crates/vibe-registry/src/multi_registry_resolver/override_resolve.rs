@@ -27,7 +27,26 @@ impl MultiRegistryResolver {
             .r#ref
             .clone()
             .unwrap_or_else(|| DEFAULT_OVERRIDE_REF.to_string());
-        let manifest = self.read_override_manifest(&ovr.source_url, &refname)?;
+        // This map contains only independently selected root/user overrides;
+        // dependency Git declarations retain their own explicit auth ceiling.
+        let auth = crate::resolve_registry_auth(crate::RegistryAuthInput::OperatorSource {
+            auth: None,
+            token_env: None,
+            source_url: &ovr.source_url,
+        })?;
+        let direct = self.retain_direct_source(direct::DirectSourceInput {
+            group,
+            name: pkgref.name.as_str(),
+            canonical: &ovr.source_url,
+            physical: &ovr.source_url,
+            publication: vibe_core::RoutePublication::Local,
+            reference: &refname,
+            execution_reference: &refname,
+            kind: direct::DirectKind::Override,
+            auth: auth.kind,
+            token_env: auth.token_env_name.as_deref(),
+        })?;
+        let manifest = direct.manifest();
         let meta = manifest
             .require_package()
             .map_err(|e| RegistryError::MalformedMeta {
@@ -53,12 +72,15 @@ impl MultiRegistryResolver {
             version: meta.version.clone(),
             source_dir: self.override_clone_dir(group, pkgref.name.as_str()),
         };
+        let recorded_reference = direct.reference().to_owned();
         Ok(MultiResolution {
+            direct: Some(direct),
+            locked: None,
             selected_route: None,
             resolved,
             registry_name: None,
             source_url: ovr.source_url.clone(),
-            source_ref: Some(refname),
+            source_ref: Some(recorded_reference),
             overridden: true,
             is_git_source: false,
             is_path_source: false,
@@ -66,28 +88,6 @@ impl MultiRegistryResolver {
             from_store: false,
             redirect_target_auth: vibe_core::manifest::AuthKind::None,
             redirect_target_token_env: None,
-        })
-    }
-
-    /// Read `vibe.toml` at the override's pinned URL/ref through the
-    /// git backend's archive fetch.
-    pub(super) fn read_override_manifest(
-        &self,
-        url: &str,
-        refname: &str,
-    ) -> Result<Manifest, RegistryError> {
-        let bytes = self.backend.fetch_file_at_ref(
-            strip_git_plus_prefix(url),
-            refname,
-            Manifest::FILENAME,
-        )?;
-        let text = String::from_utf8(bytes).map_err(|e| RegistryError::MalformedMeta {
-            path: PathBuf::from(format!("{url}@{refname}:{}", Manifest::FILENAME)),
-            reason: format!("invalid UTF-8: {e}"),
-        })?;
-        Manifest::parse_str(&text).map_err(|e| RegistryError::MalformedMeta {
-            path: PathBuf::from(format!("{url}@{refname}:{}", Manifest::FILENAME)),
-            reason: e.to_string(),
         })
     }
 }

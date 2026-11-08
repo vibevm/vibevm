@@ -78,6 +78,10 @@ pub fn materialise_subtree_with_spec_format(
 /// Format-aware scoped materialisation under exactly one slot-lifecycle
 /// callback. Production update paths use this instead of the legacy hook
 /// runner so `[hooks]` sugar and explicit slot contributions cannot double.
+///
+/// Every slot change is recorded in `rollback`, the caller's undo log that
+/// already holds its prune, so the caller can restore the previous tree when
+/// a later step fails or a stop is acknowledged before its lock is published.
 pub fn materialise_subtree_with_spec_format_and_slot_lifecycle(
     workspace_root: &Path,
     resolution: &[ResolvedDep],
@@ -85,6 +89,7 @@ pub fn materialise_subtree_with_spec_format_and_slot_lifecycle(
     spec_format: SpecFormat,
     slot_verifier: Option<&dyn SlotVerifier>,
     lifecycle: &dyn SlotLifecycle,
+    rollback: &mut InstallRollback,
 ) -> Result<SubtreeOutcome, WorkspaceError> {
     let Materialised {
         materialised,
@@ -101,7 +106,7 @@ pub fn materialise_subtree_with_spec_format_and_slot_lifecycle(
             slot_verifier,
             lifecycle: MaterialiseLifecycle::Callback(lifecycle),
             progress: vibe_core::progress::Progress::default(),
-            rollback: None,
+            rollback: Some(rollback),
         },
     )?;
     Ok(SubtreeOutcome {

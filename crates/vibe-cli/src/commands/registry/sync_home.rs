@@ -92,7 +92,7 @@ pub(super) fn run_sync_home(ctx: &output::Context, root_offline: bool) -> Result
                     || mrr.refresh_cached_clones(),
                 )
                 .context("refreshing the cached package clones")?;
-                Ok((walked, local_sources(&mrr)))
+                Ok((walked, local_sources(&mrr)?))
             });
     let (walked, locals) = match refreshed {
         Ok(found) => {
@@ -140,14 +140,15 @@ pub(super) fn run_sync_home(ctx: &output::Context, root_offline: bool) -> Result
     Ok(())
 }
 
-fn local_sources(mrr: &MultiRegistryResolver) -> Vec<String> {
-    mrr.sources()
+fn local_sources(mrr: &MultiRegistryResolver) -> Result<Vec<String>> {
+    Ok(mrr
+        .sources()?
         .iter()
         .filter_map(|source| match source {
             RegistrySource::Local(local) => Some(local.name.clone()),
             RegistrySource::Git(_) => None,
         })
-        .collect()
+        .collect())
 }
 
 fn registry_skip(registry: &str, reason: &str) -> SkippedHomeEntry {

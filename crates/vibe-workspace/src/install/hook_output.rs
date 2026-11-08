@@ -197,7 +197,10 @@ fn apply_with_materialise_lifecycle(
     // From here to the caller's lock write, a failure puts every slot back.
     let kept: Vec<String> = materialised.iter().chain(&skipped).cloned().collect();
     let finished = prune_stale_slots(&workspace.root, &kept, &mut rollback).and_then(|pruned| {
-        regenerate_boot_from_traced(workspace, resolution, spec_format, trace)
+        rollback
+            .regenerate_boot(workspace, resolution, || {
+                regenerate_boot_from_traced(workspace, resolution, spec_format, trace)
+            })
             .map(|nodes| (pruned, nodes))
     });
     let (pruned, nodes_regenerated) = match finished {
@@ -508,7 +511,7 @@ where
     let (world, lowering) = prepare(workspace, resolution)?;
     let boot_task = progress.task("Generating boot artifacts");
     boot_task.set_progress(0, Some(workspace.iter_nodes().count() as u64), "nodes");
-    let (nodes_regenerated, carriage) =
+    let (nodes_regenerated, carriage) = rollback.regenerate_boot(workspace, resolution, || {
         super::bootgen::regenerate_boot_from_traced_native_prepared(
             workspace,
             resolution,
@@ -518,7 +521,8 @@ where
             lowering,
             run,
             make_provider,
-        )?;
+        )
+    })?;
     boot_task.set_progress(
         nodes_regenerated.len() as u64,
         Some(nodes_regenerated.len() as u64),

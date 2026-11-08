@@ -17,7 +17,12 @@
 //!   inside a slot refuse a second link, and a pre-install script may rewrite
 //!   a slot file in place;
 //! - a file the apply rewrites (the `.gitignore` an in-place slot is added
-//!   to) is snapshotted and written back.
+//!   to) is snapshotted and written back;
+//! - a boot regeneration run through [`InstallRollback::regenerate_boot`]
+//!   records the generated boot files it may rewrite before and after it
+//!   runs; undo puts back only the ones it changed, and only while they still
+//!   hold the bytes it wrote, so the boot lanes and managed blocks describe
+//!   the restored tree, never the stopped one.
 //!
 //! The stash is one temporary directory beside the dependency root, on the
 //! same volume so a move is a rename. Dropping the log without undoing it is
@@ -56,11 +61,17 @@ enum Step {
         path: PathBuf,
         before: Option<Vec<u8>>,
     },
+    BootArtifacts(crate::boot_artifacts::BootImages),
 }
 
 /// Every reversible change one apply made, in order.
+///
+/// Public so a scoped `vibe update`, which prunes superseded slots itself
+/// before its subtree materialisation, records that prune in the same log
+/// and can put the tree back when the update stops or fails before its lock
+/// is published. Dropping it is the commit.
 #[derive(Debug)]
-pub(crate) struct InstallRollback {
+pub struct InstallRollback {
     stash_parent: PathBuf,
     stash: Option<TempDir>,
     steps: Vec<Step>,
@@ -139,7 +150,7 @@ impl InstallRollback {
             reason,
         })
     }
-    pub(crate) fn new(workspace_root: &Path) -> Self {
+    pub fn new(workspace_root: &Path) -> Self {
         let deps = workspace_root.join(vibe_core::layout::current_vibedeps_root());
         let stash_parent = deps
             .parent()
@@ -175,7 +186,7 @@ impl InstallRollback {
     }
 
     /// Remove `dir` by stashing it, so undo can put it back.
-    pub(crate) fn remove(&mut self, dir: &Path) -> Result<(), WorkspaceError> {
+    pub fn remove(&mut self, dir: &Path) -> Result<(), WorkspaceError> {
         self.move_aside(dir)
     }
 
@@ -191,6 +202,37 @@ impl InstallRollback {
             before,
         });
         Ok(())
+    }
+
+    /// Run `regenerate` — one boot regeneration over `resolution` — with its
+    /// inverse in this log. Every node's boot lane and agent instruction
+    /// files, and every resolved package's unit lane, are recorded first; what
+    /// the regeneration left is recorded after it, whether it succeeded or
+    /// failed, so an undo restores exactly the files it changed.
+    pub fn regenerate_boot<T>(
+        &mut self,
+        workspace: &crate::Workspace,
+        resolution: &[super::ResolvedDep],
+        regenerate: impl FnOnce() -> Result<T, WorkspaceError>,
+    ) -> Result<T, WorkspaceError> {
+        let nodes = workspace
+            .iter_nodes()
+            .map(|(rel, _)| workspace.node_abs_path(rel))
+            .collect::<Vec<_>>();
+        let units = resolution
+            .iter()
+            .map(|dep| {
+                workspace
+                    .root
+                    .join(super::bootgen::unit_slot_rel_path(dep))
+                    .join(vibe_core::layout::current_boot_dir())
+            })
+            .collect::<Vec<_>>();
+        let mut images = crate::boot_artifacts::BootImages::capture(nodes, units)?;
+        let result = regenerate();
+        images.settle();
+        self.steps.push(Step::BootArtifacts(images));
+        result
     }
 
     fn move_aside(&mut self, path: &Path) -> Result<(), WorkspaceError> {
@@ -246,7 +288,10 @@ impl InstallRollback {
         }
     }
 
-    pub(crate) fn restore(
+    /// Undo every recorded change, newest first, and tell `observer` that each
+    /// of `materialised` is no longer a change this apply made. On failure the
+    /// stash is retained and its path named in the returned reason.
+    pub fn restore(
         &mut self,
         observer: Option<&dyn SlotLifecycle>,
         materialised: &[String],
@@ -276,6 +321,7 @@ impl InstallRollback {
 
 fn undo_step(step: Step) -> Result<(), String> {
     match step {
+        Step::BootArtifacts(images) => images.restore(),
         Step::CheckedIgnore(ignore) => ignore.undo(),
         Step::CheckedPlacement {
             path,

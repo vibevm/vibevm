@@ -42,7 +42,7 @@ use tempfile::tempdir;
 use tokio::net::TcpListener;
 
 use vibe_core::Group;
-use vibe_core::manifest::{AuthKind, NamingConvention, RegistrySection};
+use vibe_core::manifest::{NamingConvention, RegistrySection};
 use vibe_registry::git_backend::GitBackend;
 use vibe_registry::{GitError, MultiRegistryResolver};
 
@@ -198,7 +198,7 @@ fn section(name: &str, url: &str, index_url: Option<&str>) -> RegistrySection {
         url: url.to_string(),
         r#ref: "main".to_string(),
         naming: NamingConvention::Fqdn,
-        auth: AuthKind::None,
+        auth: None,
         token_env: None,
         enabled: true,
         index_url: index_url.map(|s| s.to_string()),

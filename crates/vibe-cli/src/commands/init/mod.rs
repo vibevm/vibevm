@@ -383,7 +383,7 @@ fn resolve_registry_sections(args: &InitArgs) -> Vec<RegistrySection> {
                 .clone()
                 .unwrap_or_else(|| DEFAULT_REGISTRY_REF.to_string()),
             naming: NamingConvention::Fqdn,
-            auth: vibe_core::manifest::AuthKind::None,
+            auth: None,
             token_env: None,
             enabled: true,
             index_url: None,

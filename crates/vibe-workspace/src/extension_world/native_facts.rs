@@ -95,6 +95,11 @@ impl<B> OwnerNativeCompileBinding<B> {
 /// }
 /// ```
 pub trait OwnerNativeCompileProvider {
+    /// Invocation control is not part of compiler plans or their semantic digest.
+    fn cancellation(&self) -> Option<&vibe_core::cancellation::CancellationToken> {
+        None
+    }
+
     type Binding<'owner>: CompilerNativeFactBinding + 'owner;
 
     fn bind<'owner>(

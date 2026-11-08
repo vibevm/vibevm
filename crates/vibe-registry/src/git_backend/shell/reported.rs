@@ -110,11 +110,20 @@ impl ShellGit {
             cmd: render_argv(&binary, argv),
             source,
         };
+        let cancellation = transfers::current()
+            .progress
+            .unwrap_or_default()
+            .cancellation()
+            .clone();
+        cancellation
+            .checkpoint()
+            .map_err(|_| GitError::ContactRefused(crate::ContactRefusal::OperationCancelled))?;
         let began = std::time::Instant::now();
-        let mut child = cmd.spawn().map_err(spawn_error)?;
+        let mut child =
+            super::controlled::spawn_transfer(&mut cmd, &cancellation).map_err(spawn_error)?;
         // stdout is drained beside stderr so neither pipe can fill and
         // stall git while the other is being read.
-        let stdout = child.stdout.take().map(|mut pipe| {
+        let stdout = child.inner().stdout.take().map(|mut pipe| {
             std::thread::spawn(move || {
                 let mut bytes = Vec::new();
                 let _ = pipe.read_to_end(&mut bytes);
@@ -123,26 +132,56 @@ impl ShellGit {
         });
         let mut relay = Relay::default();
         let mut stderr = Vec::new();
-        if let Some(pipe) = child.stderr.take() {
-            for_each_segment(pipe, |segment| {
-                if let Some(receipt) = Receipt::parse(segment) {
-                    let figure = relay.cumulative(receipt.bytes);
-                    let total = receipt.whole.then_some(figure);
-                    relay
-                        .transfer
-                        .get_or_insert_with(|| self.begin_transfer(&remote, cwd, began))
-                        .reported(figure, total);
+        let (segments, receiver) = std::sync::mpsc::sync_channel(32);
+        let stderr_reader = child.inner().stderr.take().map(|pipe| {
+            std::thread::spawn(move || {
+                for_each_segment(pipe, |segment| {
+                    let _ = segments.send(segment.to_owned());
+                });
+            })
+        });
+        let mut cancelled = false;
+        loop {
+            if cancellation.checkpoint().is_err() {
+                cancelled = true;
+                stop_child(&mut child).map_err(spawn_error)?;
+                break;
+            }
+            match receiver.recv_timeout(std::time::Duration::from_millis(50)) {
+                Ok(segment) => {
+                    if let Some(receipt) = Receipt::parse(&segment) {
+                        let figure = relay.cumulative(receipt.bytes);
+                        let total = receipt.whole.then_some(figure);
+                        relay
+                            .transfer
+                            .get_or_insert_with(|| self.begin_transfer(&remote, cwd, began))
+                            .reported(figure, total);
+                    }
+                    if !is_progress(&segment) {
+                        stderr.extend_from_slice(segment.as_bytes());
+                        stderr.push(b'\n');
+                    }
                 }
-                if !is_progress(segment) {
-                    stderr.extend_from_slice(segment.as_bytes());
-                    stderr.push(b'\n');
-                }
-            });
+                Err(std::sync::mpsc::RecvTimeoutError::Timeout) => continue,
+                Err(std::sync::mpsc::RecvTimeoutError::Disconnected) => break,
+            }
+        }
+        drop(receiver);
+        if let Some(reader) = stderr_reader {
+            let _ = reader.join();
         }
         let status = child.wait().map_err(spawn_error)?;
         let stdout = stdout
             .and_then(|reader| reader.join().ok())
             .unwrap_or_default();
+        if cancelled {
+            if let Some(transfer) = relay.transfer {
+                transfer.interrupted();
+            }
+            return Err(GitError::ContactRefused(
+                crate::ContactRefusal::OperationCancelled,
+            ));
+        }
         let output = Output {
             status,
             stdout,
@@ -333,6 +372,11 @@ fn size_on_disk(root: &Path) -> u64 {
         .filter(std::fs::Metadata::is_file)
         .map(|metadata| metadata.len())
         .sum()
+}
+
+/// Stop the owned Unix process group or Windows job before reaping it.
+fn stop_child(child: &mut super::controlled::TransferChild) -> std::io::Result<()> {
+    child.kill()
 }
 
 #[cfg(test)]

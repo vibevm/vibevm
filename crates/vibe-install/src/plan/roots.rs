@@ -11,12 +11,13 @@ use vibe_resolver::SolveError;
 use vibe_workspace::Workspace;
 
 use crate::error::{Error, Result};
-use crate::fetched::Fetched;
 
 pub(super) struct ConsumerRequirement {
     consumer: String,
     requirement: PackageRef,
     configuration: Option<vibe_core::manifest::ConfigurationIntentDecl>,
+    registry_pin: Option<vibe_core::manifest::RegistryPin>,
+    site: vibe_resolver::source_edges::RequirementSite,
 }
 
 pub(super) struct RootRequirements {
@@ -74,7 +75,13 @@ impl RootRequirements {
     ) -> Result<Self> {
         let mut declarations: Vec<_> = requests
             .iter()
-            .map(|requirement| ConsumerRequirement {
+            .enumerate()
+            .map(|(index, requirement)| ConsumerRequirement {
+                site: vibe_resolver::source_edges::RequirementSite::ExplicitRequest(index),
+                registry_pin: workspace
+                    .iter_nodes()
+                    .find(|(rel, _)| *rel == selected)
+                    .and_then(|(_, node)| registry_pin(&node.requires, requirement)),
                 consumer: format!("{selected}/vibe.toml (explicit request)"),
                 requirement: requirement.clone(),
                 configuration: workspace
@@ -89,12 +96,14 @@ impl RootRequirements {
             })
             .collect();
         for (rel, node) in workspace.iter_nodes() {
-            for requirement in &node.requires.packages {
+            for (index, requirement) in node.requires.packages.iter().enumerate() {
                 if rel == selected && requests.iter().any(|r| same_package(r, requirement)) {
                     continue;
                 }
                 declarations.push(ConsumerRequirement {
                     consumer: format!("{rel}/vibe.toml"),
+                    site: vibe_resolver::source_edges::RequirementSite::Requires(index),
+                    registry_pin: registry_pin(&node.requires, requirement),
                     requirement: requirement.clone(),
                     configuration: node
                         .requires
@@ -108,6 +117,10 @@ impl RootRequirements {
             for git in &node.requires.git_packages {
                 declarations.push(ConsumerRequirement {
                     consumer: format!("{rel}/vibe.toml (git source)"),
+                    site: vibe_resolver::source_edges::RequirementSite::Requires(
+                        declarations.len(),
+                    ),
+                    registry_pin: None,
                     configuration: node
                         .requires
                         .configurations
@@ -123,6 +136,58 @@ impl RootRequirements {
             }
         }
         Ok(Self { declarations })
+    }
+
+    /// Preserve exact consumer occurrence and pin ownership before flattening.
+    pub(super) fn source_edges(&self) -> Vec<vibe_resolver::RootRequirement> {
+        use vibe_resolver::source_candidates::{EdgeId, EdgeOwner};
+        use vibe_resolver::source_edges::{
+            OriginalRequirement, RequirementActivation, RequirementAlternative,
+        };
+        self.declarations
+            .iter()
+            .map(|declaration| {
+                let site = declaration.site.clone();
+                vibe_resolver::RootRequirement {
+                    id: EdgeId {
+                        owner: EdgeOwner::Root {
+                            consumer: declaration.consumer.clone(),
+                        },
+                        site: site.clone(),
+                    },
+                    requirement: OriginalRequirement {
+                        site,
+                        // Root authority is the actual collected operation occurrence.
+                        // Do not reinterpret the legacy collector's raw optional flag.
+                        activation: RequirementActivation::Mandatory,
+                        alternatives: vec![RequirementAlternative {
+                            reference: declaration.requirement.clone(),
+                            registry_pin: declaration.registry_pin.clone(),
+                        }],
+                    },
+                }
+            })
+            .collect()
+    }
+    pub(super) fn check_metadata_kinds(
+        &self,
+        selected: &std::collections::BTreeMap<
+            (vibe_core::Group, String),
+            vibe_resolver::CandidateMetadata,
+        >,
+    ) -> Result<()> {
+        for declaration in &self.declarations {
+            if let Some(group) = &declaration.requirement.group
+                && let Some(metadata) =
+                    selected.get(&(group.clone(), declaration.requirement.name.to_string()))
+            {
+                self.check_kind(
+                    &declaration.requirement,
+                    metadata.candidate.manifest().require_package()?.kind,
+                )?;
+            }
+        }
+        Ok(())
     }
 
     pub(super) fn configuration_inputs(
@@ -213,18 +278,6 @@ impl RootRequirements {
         }
         Ok(())
     }
-
-    pub(super) fn check_fetched_kinds(&self, fetched: &[Fetched]) -> Result<()> {
-        for d in &self.declarations {
-            if let Some(found) = fetched.iter().find(|f| {
-                d.requirement.group.as_ref() == Some(&f.cached.resolved.group)
-                    && d.requirement.name == f.cached.resolved.name
-            }) {
-                self.check_kind(&d.requirement, found.cached.package_meta().kind)?;
-            }
-        }
-        Ok(())
-    }
 }
 
 /// Old snapshots have no consumer ownership. Only unambiguous duplicate rows
@@ -235,4 +288,15 @@ pub(super) fn migration_roots(lock: &Lockfile) -> Result<Vec<PackageRef>> {
 
 pub(super) fn raw_has_declarations(manifest: &Manifest) -> bool {
     !manifest.requires.is_empty()
+}
+
+fn registry_pin(
+    requires: &vibe_core::manifest::Requires,
+    reference: &PackageRef,
+) -> Option<vibe_core::manifest::RegistryPin> {
+    reference
+        .group
+        .as_ref()
+        .and_then(|group| requires.declared_registry(group, reference.name.as_str()))
+        .cloned()
 }

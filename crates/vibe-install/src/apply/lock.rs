@@ -15,6 +15,7 @@ pub(super) struct LockInputs<'a> {
     pub(super) lockfile_path: &'a std::path::Path,
 }
 
+#[specmark::spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-073#LOCKED-SOURCE-LAW")]
 pub(super) fn record_lock(
     lockfile: &mut Lockfile,
     inputs: LockInputs<'_>,
@@ -27,6 +28,7 @@ pub(super) fn record_lock(
         roots,
         lockfile_path,
     } = inputs;
+    let previous = lockfile.clone();
     // 9. Rebuild the lockfile from the fresh resolution — an install
     //    re-resolves the whole graph, so the recorded package set is
     //    replaced wholesale.
@@ -64,7 +66,6 @@ pub(super) fn record_lock(
         ));
     }
     record_app_requirements(lockfile, fetched);
-    lockfile.meta.generated_at = vibe_core::timestamp::now_utc();
     if !language_chain.is_empty() && language_chain != ["en"] {
         lockfile.meta.language_chain = language_chain.to_vec();
     }
@@ -82,9 +83,24 @@ pub(super) fn record_lock(
     replace_root_dependencies(lockfile, roots);
 
     files.check_lock_path(lockfile_path)?;
-    let lock_text = lockfile.render_with_comments(files.lock.previous_text()?)?;
-    let provenance = crate::record::fetch_provenance(fetched)
-        .render_with_comments(files.provenance.previous_text()?)?;
+    // Equality is checked before assigning generation metadata. The captured
+    // raw text also preserves comments, ordering and historical formatting.
+    let lock_text = if *lockfile == previous {
+        files.lock.previous_text()?.map(str::to_owned)
+    } else {
+        lockfile.meta.generated_at = vibe_core::timestamp::now_utc();
+        None
+    };
+    let lock_text = match lock_text {
+        Some(original) => original,
+        None => lockfile.render_with_comments(files.lock.previous_text()?)?,
+    };
+    let provenance = crate::record::merge_fetch_provenance(
+        fetched,
+        &previous,
+        lockfile,
+        files.provenance.previous_text()?,
+    )?;
     files.lock.publish(Some(&lock_text))?;
     files.provenance.publish(provenance.as_deref())?;
     Ok(())

@@ -101,6 +101,10 @@ impl PackageQualifier for CliQualifier {
 /// one consumer, and it is this factory.
 pub(crate) struct CliPackageSourceFactory<'a> {
     pub(crate) args: &'a InstallArgs,
+    pub(crate) update_locked: bool,
+    /// `vibe update --all --reselect-source`: every held coordinate chooses its
+    /// source again from the current registry configuration.
+    pub(crate) reselect_sources: bool,
 }
 
 impl PackageSourceFactory for CliPackageSourceFactory<'_> {
@@ -109,16 +113,41 @@ impl PackageSourceFactory for CliPackageSourceFactory<'_> {
         input: PackageSourceBuild<'_>,
     ) -> Result<Box<dyn vibe_orchestrator::ports::PackageSource>> {
         let options = package_source_options(self.args);
-        let resolver = vibe_package_source::build_install_resolver_with_progress(
-            &options,
-            input.manifest,
-            input.embedded_root,
-            input.project_root,
-            input.global,
-            input.offline,
-            input.locked,
-            input.progress,
+        let resolver = vibe_package_source::build_install_resolver_with_sources(
+            vibe_package_source::InstallResolverRequest {
+                options: &options,
+                manifest: input.manifest,
+                embedded_root: input.embedded_root,
+                project_root: input.project_root,
+                offline: input.offline,
+                locked: input.locked,
+                progress: input.progress,
+            },
+            input.global.clone(),
         )?;
+        let resolver = resolver.with_locked_checkouts(vibe_install::locked_checkout_paths(
+            input.workspace_root,
+            input.locked,
+        ));
+        let resolver = resolver.with_mutable_locked_sources(&vibe_install::mutable_locked_sources(
+            input.workspace_root,
+            input.locked,
+        ));
+        let resolver = if self.update_locked {
+            resolver.with_locked_updates()
+        } else {
+            resolver
+        };
+        let resolver = if self.reselect_sources {
+            let keys: Vec<String> = input
+                .locked
+                .iter()
+                .map(|row| format!("{}/{}", row.group, row.name))
+                .collect();
+            resolver.with_reselected_sources(&keys)
+        } else {
+            resolver
+        };
         Ok(Box::new(RegistryPackageSource::new(
             resolver,
             Box::new(CliQualifier),

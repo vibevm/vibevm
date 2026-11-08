@@ -1,34 +1,23 @@
-//! The planning phase — derive the effective root set, run the depsolver,
-//! fetch and feature-pin every node, expand conditional dependencies to a
-//! fixed point, and shape the resolution the caller confirms before
-//! [`apply`](crate::apply) mutates anything beyond the recorded migration writes.
+//! The planning phase — derive roots and one source-bound metadata closure,
+//! including visibility, configuration and conditional activation. Preview
+//! returns that selection; installation acquires its exact retained candidates
+//! before [`apply`](crate::apply) publishes project state.
 
 specmark::scope!("spec://org.vibevm.core/vibevm/VIBEVM-SPEC#install-workflow-in-detail");
 
 use std::collections::BTreeSet;
 use std::path::{Path, PathBuf};
 
+use vibe_core::PackageRef;
 use vibe_core::manifest::{Lockfile, Manifest, SpecFormat};
-use vibe_core::visibility::{Analysis, ProvenanceRule};
-use vibe_core::{ContentHash, PackageRef};
-use vibe_registry::store;
-use vibe_registry::{CachedPackage, ResolvedPackage};
-use vibe_resolver::{
-    FeatureRequest, ResolvedNode, conditional::ConditionalPredicate, expand_features,
-};
+use vibe_resolver::FeatureRequest;
 use vibe_workspace::Workspace;
-use vibe_workspace::freshness::is_in_workspace_file_source;
 use vibe_workspace::install::ResolvedDep;
 
+use crate::InstallSource;
 use crate::error::{Error, Result};
 use crate::events::{PlanEvent, PlanObserver};
-use crate::fetched::{
-    Fetched, NodeInstallMeta, build_activation_context, build_language_chain,
-    load_or_empty_lockfile, tailor_feature_request,
-};
-use crate::record::exact_pinned_pkgref;
-use crate::visibility_projection::resolve_effective;
-use crate::{InstallSource, events};
+use crate::fetched::{Fetched, build_language_chain, load_or_empty_lockfile};
 
 /// What the caller asked to install. `roots` is empty for the
 /// install-from-manifest shape; when non-empty, every pkgref is
@@ -89,6 +78,10 @@ pub struct PlannedInstall {
     /// snapshot of a tree the command is midway through changing.
     pub(crate) workspace: Workspace,
     pub(crate) progress: vibe_core::progress::Progress,
+    pub(crate) source_candidates: std::collections::BTreeMap<
+        (vibe_core::Group, String),
+        Vec<vibe_registry::source_candidates::SourceCandidateObservation>,
+    >,
 }
 
 /// Plan an install transaction over `source` for the project at
@@ -193,10 +186,65 @@ pub fn plan_prepared_without_publication<S: InstallSource + ?Sized>(
     project_root: &Path,
     manifest: &mut Manifest,
     workspace: &mut Workspace,
-    mut request: InstallRequest,
+    request: InstallRequest,
     spec_format: SpecFormat,
     observer: &dyn PlanObserver,
 ) -> Result<Plan> {
+    let before = manifest.clone();
+    let previous_workspace = workspace.clone();
+    let result = match prepare_metadata_plan(
+        source,
+        project_root,
+        manifest,
+        workspace,
+        request,
+        spec_format,
+        observer,
+        PlanningPurpose::Apply,
+    )? {
+        None => Ok(Plan::Fresh),
+        Some(prepared) => {
+            acquire_prepared_metadata(source, prepared).map(|plan| Plan::Ready(Box::new(plan)))
+        }
+    };
+    if result.is_err() {
+        *manifest = before;
+        *workspace = previous_workspace;
+    }
+    result
+}
+
+#[derive(Clone, Copy)]
+enum PlanningPurpose<'a> {
+    Apply,
+    Preview(&'a Lockfile, PreviewSourceStorage<'a>),
+}
+
+struct PreparedMetadata {
+    project_root: PathBuf,
+    request: InstallRequest,
+    manifest: Manifest,
+    lockfile: Lockfile,
+    language_chain: Vec<String>,
+    workspace: Workspace,
+    progress: vibe_core::progress::Progress,
+    closure: metadata::MetadataClosure,
+    /// The operation's configured-candidate snapshot. Acquisition re-binds it
+    /// so payload admission keeps the same configured boundary as the solve.
+    configuration: Option<vibe_resolver::configuration::ConfigurationSnapshot>,
+}
+
+#[allow(clippy::too_many_arguments)]
+fn prepare_metadata_plan<S: InstallSource + ?Sized>(
+    source: &S,
+    project_root: &Path,
+    manifest: &mut Manifest,
+    workspace: &mut Workspace,
+    mut request: InstallRequest,
+    spec_format: SpecFormat,
+    observer: &dyn PlanObserver,
+    purpose: PlanningPurpose<'_>,
+) -> Result<Option<PreparedMetadata>> {
     let selected = roots::selected_node(workspace, project_root)?;
     crate::configuration_admission::workspace_inputs_for_install(
         workspace,
@@ -204,8 +252,20 @@ pub fn plan_prepared_without_publication<S: InstallSource + ?Sized>(
         manifest,
     )?;
     request.roots = roots::unique_requests(&request.roots)?;
-    let lockfile = load_or_empty_lockfile(&workspace.root, &request.generated_by)?;
-    crate::configuration_admission::retained_before_planning(source, workspace, &lockfile)?;
+    let lockfile = match purpose {
+        PlanningPurpose::Apply => load_or_empty_lockfile(&workspace.root, &request.generated_by)?,
+        PlanningPurpose::Preview(snapshot, _) => snapshot.clone(),
+    };
+    match purpose {
+        PlanningPurpose::Apply => {
+            crate::configuration_admission::retained_before_planning(source, workspace, &lockfile)?
+        }
+        PlanningPurpose::Preview(_, storage) => {
+            crate::configuration_admission::retained_for_preview(
+                source, workspace, &lockfile, storage,
+            )?
+        }
+    }
     let before_migration = manifest.clone();
     let mut workspace_before_migration = None;
 
@@ -253,15 +313,17 @@ pub fn plan_prepared_without_publication<S: InstallSource + ?Sized>(
         let source = &planning_source;
         let roots = requirements.authored();
         let root_count = requirements.package_count();
+        let root_edges = requirements.source_edges();
 
         // ##EMPTY-REQUIRES-IS-A-NO-OP (PROP-011, the 2026-08-24 ruling): zero
         // dependencies is a fresh project, not an error — regenerate the boot
         // artifacts of the empty world and report the fresh shape.
-        if roots.is_empty() {
-            return Ok(Plan::Fresh);
+        if roots.is_empty() && matches!(purpose, PlanningPurpose::Apply) {
+            return Ok(None);
         }
 
         let progress = observer.progress();
+        progress.checkpoint()?;
         let resolution_task = progress.task("Resolving dependencies");
         resolution_task.detail(format!(
             "{} root package{} from {} consumer declarations",
@@ -287,7 +349,7 @@ pub fn plan_prepared_without_publication<S: InstallSource + ?Sized>(
         // lockfile-respecting: a fresh lock is honoured verbatim, with no
         // version drift inside a constraint. An explicit
         // `vibe install <pkgref>` always runs the full pipeline.
-        if request.roots.is_empty() {
+        if request.roots.is_empty() && matches!(purpose, PlanningPurpose::Apply) {
             match freshness_prepared(
                 project_root,
                 manifest,
@@ -298,7 +360,7 @@ pub fn plan_prepared_without_publication<S: InstallSource + ?Sized>(
             )? {
                 vibe_workspace::freshness::Freshness::Fresh => {
                     resolution_task.skip("vibe.lock is fresh");
-                    return Ok(Plan::Fresh);
+                    return Ok(None);
                 }
                 vibe_workspace::freshness::Freshness::Stale(reason) => {
                     observer.on(PlanEvent::Reresolving {
@@ -313,195 +375,89 @@ pub fn plan_prepared_without_publication<S: InstallSource + ?Sized>(
             }
         }
 
-        // 2. Run the depsolver.
-        observer.on(PlanEvent::ResolvingRoots { roots: root_count });
-        let mut strict_roots = solve_roots.clone();
-        let graph = match source.solve(&solve_roots) {
-            Ok(graph) => graph,
-            Err(e) if solve_roots != roots => {
-                // PROP-011 §5.3 — the pin-held set over-constrained: a
-                // changed dependency is incompatible with a held pin. Fall
-                // back to a full, free re-resolve.
-                observer.on(PlanEvent::HeldPinsConflicted {
-                    error: e.to_string(),
-                });
-                strict_roots.clone_from(&roots);
-                match source.solve(&roots) {
-                    Ok(graph) => graph,
-                    Err(error) => {
-                        resolution_task.fail("dependency resolution failed");
-                        return Err(requirements.solve_error(error));
-                    }
-                }
-            }
-            Err(e) => {
-                resolution_task.fail("dependency resolution failed");
-                return Err(requirements.solve_error(e));
-            }
-        };
-
         let root_id = visibility_root_id(manifest);
-        let effective = resolve_effective(source, &strict_roots, manifest, &root_id, graph)
-            .map_err(|e| requirements.contextualize(e))?;
-        let graph = effective.graph;
-        let mut visibility_analysis = effective.analysis;
-        let _visibility_iterations = effective.iterations;
-
-        if graph.packages.len() > root_count {
-            observer.on(PlanEvent::GraphSolved {
-                roots: root_count,
-                total: graph.packages.len(),
-            });
+        let closure = metadata::resolve_metadata_closure(
+            source,
+            metadata::MetadataPlanningInput {
+                workspace,
+                root_manifest: manifest,
+                roots: &roots,
+                root_edges: &root_edges,
+                held_roots: &solve_roots,
+                lockfile: &lockfile,
+                root_features: &request.features,
+                language_chain: &language_chain,
+                project_root,
+                root_id: &root_id,
+                observer,
+            },
+        )
+        .map_err(|error| {
+            // Completion is explicit: a refused solve reports failure, while a
+            // cancellation keeps the task's honest `Stopped` drop outcome.
+            if !matches!(error, Error::Cancelled(_)) {
+                resolution_task.fail("dependency resolution failed");
+            }
+            requirements.contextualize(error)
+        })?;
+        for selected in closure.selected.values() {
+            progress.checkpoint()?;
+            let package = selected.candidate.manifest().require_package()?;
+            if package.kind.is_read_only() {
+                return Err(Error::DocNotInstalled {
+                    coordinate: format!("{}/{}", package.group, package.name),
+                });
+            }
+            crate::configuration_admission::admitted_package(
+                format!("{}/{}", package.group, package.name),
+                selected.candidate.manifest(),
+                selected.configuration.as_ref(),
+            )?;
         }
-        resolution_task.detail(format!(
-            "selected {} package{} before conditional expansion",
-            graph.packages.len(),
-            if graph.packages.len() == 1 { "" } else { "s" }
-        ));
-        resolution_task.finish();
-
-        // 3. Phase one — fetch every node, pin features per node. We need
-        //    the full graph + every fetched manifest before we can build
-        //    the activation context, since context probes (`if_present`,
-        //    `if_provides`, `if_describes_match`) depend on the union of
-        //    capabilities, interfaces, and PURLs across the graph.
-        //
-        //    Fetched payload lands in the machine-global store
-        //    (`~/.vibe/cache/`, PROP-010 §2.7) — resolved here, once per
-        //    plan, through the settings chokepoint. The project no longer
-        //    has a `.vibe/cache/` copy: the store IS the source
-        //    `vibedeps/` materialises from.
-        let store_root = store::store_root()?;
-        let mut fetched: Vec<Fetched> = Vec::with_capacity(graph.packages.len());
-        let fetch_task = progress.task("Fetching package content");
-        for node in graph.iter() {
-            fetch_task.detail(format!("{}/{}@{}", node.group, node.name, node.version));
-            fetched.push(fetch_or_defer(
-                source,
-                node,
-                &lockfile,
-                &store_root,
-                &request.features,
-                &workspace.root,
-                request.offline,
-                &fetch_task.progress(),
-            )?);
-            fetch_task.set_progress(fetched.len() as u64, None, "packages");
-        }
-
-        // The read-only kind stops here, before anything is materialised.
-        // A package's kind lives inside its own bytes, so this is the first
-        // point in the install where it is known at all — and the last one
-        // before `apply` writes a slot (PROP-057
-        // `##KIND-DOC-NOT-INSTALLED`).
-        refuse_read_only_kinds(&fetched)?;
-
-        // Visibility check: warn if a requested feature was accepted by no
-        // root package.
+        progress.checkpoint()?;
+        requirements.check_metadata_kinds(&closure.selected)?;
         if !request.features.explicit.is_empty() {
-            let accepted: BTreeSet<&str> = fetched
-                .iter()
-                .filter(|f| f.meta.is_root)
-                .flat_map(|f| f.feature_expansion.active_features.iter())
-                .map(|s| s.as_str())
+            let accepted: BTreeSet<&str> = closure
+                .graph
+                .roots()
+                .filter_map(|node| {
+                    closure
+                        .feature_expansions
+                        .get(&(node.group.clone(), node.name.clone()))
+                })
+                .flat_map(|features| features.active_features.iter().map(String::as_str))
                 .collect();
-            let unmatched: Vec<String> = request
+            let unmatched = request
                 .features
                 .explicit
                 .iter()
-                .filter(|f| !accepted.contains(f.as_str()))
+                .filter(|feature| !accepted.contains(feature.as_str()))
                 .cloned()
-                .collect();
+                .collect::<Vec<_>>();
             if !unmatched.is_empty() {
                 observer.on(PlanEvent::FeaturesUnmatched {
                     features: unmatched,
                 });
             }
         }
-
-        // 4. Conditional dependency expansion — fixed-point loop.
-        expand_conditional_deps(
-            source,
-            &roots,
-            &strict_roots,
-            &lockfile,
-            &store_root,
-            project_root,
-            &workspace.root,
-            &language_chain,
-            &request.features,
-            request.offline,
-            manifest,
-            &root_id,
-            &mut fetched,
-            &mut visibility_analysis,
-            observer,
-            &fetch_task,
-        )
-        .map_err(|e| requirements.contextualize(e))?;
-        requirements.check_fetched_kinds(&fetched)?;
-        fetch_task.set_progress(fetched.len() as u64, Some(fetched.len() as u64), "packages");
-        fetch_task.finish();
-
-        // 5. Build the resolution — every fetched package as a
-        //    `ResolvedDep` the workspace orchestrator materialises. The
-        //    loading model materialises a package's tree verbatim, so the
-        //    per-file activation context is no longer consulted at install
-        //    time.
-        let resolution: Vec<ResolvedDep> = fetched
-            .iter()
-            .map(|f| {
-                let coordinate = format!("{}/{}", f.cached.resolved.group, f.cached.resolved.name);
-                let provenance = visibility_analysis.effective.get(&coordinate);
-                ResolvedDep {
-                    kind: f.cached.package_meta().kind,
-                    group: f.cached.resolved.group.clone(),
-                    name: f.cached.resolved.name.clone(),
-                    version: f.cached.resolved.version.clone(),
-                    content_dir: f.cached.cache_dir.clone(),
-                    source_hash: Some(ContentHash::from_validated(f.cached.content_hash.clone())),
-                    embedded_sources: f.embedded_sources.clone(),
-                    manifest: f.cached.manifest.clone(),
-                    // A `[requires.packages]` dependency pkgref is
-                    // group-qualified (PROP-008 §2.6).
-                    requires: f
-                        .meta
-                        .dependencies
-                        .iter()
-                        .filter_map(|p| p.group.clone().map(|g| (g, p.name.to_string())))
-                        .collect(),
-                    admitted_by: provenance.map(|witness| match witness.rule {
-                        ProvenanceRule::RootEdge => "root-edge".to_string(),
-                        ProvenanceRule::PublicChain => "public-chain".to_string(),
-                        ProvenanceRule::FriendsChain => "friends-chain".to_string(),
-                    }),
-                    via_override: provenance.and_then(|witness| witness.via_override.clone()),
-                    // Mutable iff an in-workspace `file://` self-hosting source (§2.6).
-                    source_mutable: is_in_workspace_file_source(
-                        &f.cached.source_uri,
-                        &workspace.root,
-                    ),
-                    in_place_changed: None,
-                    configuration: f.configuration.clone(),
-                }
-            })
-            .collect();
-
-        let planned = PlannedInstall {
-            project_root: project_root.to_path_buf(),
+        let selected_count = closure.graph.packages.len();
+        resolution_task.detail(format!(
+            "selected {} package{}",
+            selected_count,
+            if selected_count == 1 { "" } else { "s" }
+        ));
+        resolution_task.finish();
+        Ok(Some(PreparedMetadata {
+            project_root: project_root.to_owned(),
             request,
             manifest: manifest.clone(),
             lockfile,
             language_chain,
-            fetched,
-            resolution,
-            // A value, not a rediscovery: apply and the slot lifecycle work on the
-            // exact tree that produced this plan.
             workspace: workspace.clone(),
             progress,
-        };
-        crate::configuration_admission::planned(&planned)?;
-        Ok(Plan::Ready(Box::new(planned)))
+            closure,
+            configuration: planning_source.configuration,
+        }))
     })();
     if result.is_err()
         && let Some(original_workspace) = workspace_before_migration
@@ -512,15 +468,22 @@ pub fn plan_prepared_without_publication<S: InstallSource + ?Sized>(
     result
 }
 
+mod acquire;
+use acquire::acquire_prepared_metadata;
+mod metadata;
+mod preview;
+pub use preview::{
+    InstallPreview, PreviewSourceStorage, preview_has_requirements, preview_prepared,
+};
+
 /// The acquisition half of planning — fetch/defer helpers and the
 /// conditional-dependency expansion, split along the seam when the
 /// migration pushed the file past the 600-line budget.
 mod fetch;
-use fetch::{expand_conditional_deps, fetch_or_defer};
 
 mod roots;
 mod selection;
-use selection::{migrate_selected_node, refuse_read_only_kinds, visibility_root_id};
+use selection::{migrate_selected_node, visibility_root_id};
 
 mod configured;
 

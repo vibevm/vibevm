@@ -320,6 +320,13 @@ fn resolver_binds_before_probe_and_keeps_index_denial_through_git_fallback() {
         0,
         binding(&["127.0.0.1"]),
     );
+    let denied = denied.unwrap();
+    assert_eq!(
+        a.count(),
+        0,
+        "construction must not probe an undemanded index"
+    );
+    let denied = denied.list_versions(&vibe_core::Group::parse("org.example").unwrap(), "p");
     assert!(matches!(
         denied,
         Err(crate::RegistryError::ContactRefused(
@@ -336,7 +343,7 @@ fn resolver_binds_before_probe_and_keeps_index_denial_through_git_fallback() {
         binding(&["127.0.0.2"]),
     )
     .unwrap();
-    let result = resolver.registries()[0]
+    let result = resolver.registries().unwrap()[0]
         .list_versions(&vibe_core::Group::parse("org.example").unwrap(), "p");
     assert!(matches!(
         result,

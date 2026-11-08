@@ -83,6 +83,16 @@ fn locked_hash(project: &Path) -> String {
         .unwrap_or_else(|| panic!("`org.example/my-skills` must be locked in {project:?}"))
 }
 
+/// The fixture package's `content_hash` inside raw `vibe.lock` bytes.
+fn locked_hash_bytes(lock: &[u8]) -> String {
+    let lock = Lockfile::parse_str(std::str::from_utf8(lock).unwrap()).unwrap();
+    lock.packages
+        .iter()
+        .find(|package| package.name.as_str() == "my-skills")
+        .map(|package| package.content_hash.as_str().to_string())
+        .expect("fixture package is locked")
+}
+
 /// Seed `<settings>/registry.toml` with one `file://` registry — the
 /// machine-wide configuration, with nothing in the project's own `vibe.toml`.
 fn seed_machine_registry(user: &UserScratch, registry: &Path) {
@@ -97,7 +107,8 @@ fn seed_machine_registry(user: &UserScratch, registry: &Path) {
 }
 
 /// A project whose registries come ONLY from the machine file installs AND
-/// updates. The update re-fetches the edited package, materialises the new
+/// updates. A plain update keeps the locked source; `--reselect-source`
+/// re-fetches the edited package, materialises the new
 /// bytes, and records the same `content_hash` a fresh install of the edited
 /// package records — the two paths cannot disagree about what the registry
 /// currently serves.
@@ -139,10 +150,43 @@ fn a_project_whose_registries_come_from_the_machine_file_can_update() {
     // The package's author edits it, at the same version.
     write_package(&registry, "second");
 
+    // A plain update keeps the locked source and its pinned bytes: the same
+    // version is not a new selection (owner decision 2026-11-08, PROP-073
+    // `#UPDATE-SOURCE-RESELECTION`).
+    let held_lock = fs::read(project.path().join(Lockfile::FILENAME)).unwrap();
     let out = user
         .vibe()
         .arg("update")
         .arg("org.example/my-skills")
+        .arg("--path")
+        .arg(project.path())
+        .arg("--assume-yes")
+        .output()
+        .unwrap();
+    assert!(
+        out.status.success(),
+        "a plain update over a held source must succeed\nstdout:\n{}\nstderr:\n{}",
+        String::from_utf8_lossy(&out.stdout),
+        String::from_utf8_lossy(&out.stderr),
+    );
+    assert!(
+        fs::read_to_string(slot_rules(project.path()))
+            .unwrap()
+            .contains("first"),
+        "a plain update must not take unpinned same-version bytes"
+    );
+    assert_eq!(
+        locked_hash_bytes(&held_lock),
+        locked_hash(project.path()),
+        "a plain update keeps the pinned content hash"
+    );
+
+    // An explicit reselection chooses the source again from the machine file.
+    let out = user
+        .vibe()
+        .arg("update")
+        .arg("org.example/my-skills")
+        .arg("--reselect-source")
         .arg("--path")
         .arg(project.path())
         .arg("--assume-yes")
@@ -203,13 +247,26 @@ fn a_project_with_no_registry_anywhere_is_still_refused() {
         .assert()
         .success();
 
-    // The machine file goes away — now nothing can serve this project.
+    // The machine file goes away — now no registry configuration can choose
+    // a source. The locked source itself still exists, and a plain update
+    // replays it (owner decision 2026-11-08); only an explicit reselection
+    // needs a configured source and must refuse.
     fs::remove_file(user.settings.join("registry.toml")).unwrap();
+
+    user.vibe()
+        .arg("update")
+        .arg("org.example/my-skills")
+        .arg("--path")
+        .arg(project.path())
+        .arg("--assume-yes")
+        .assert()
+        .success();
 
     let out = user
         .vibe()
         .arg("update")
         .arg("org.example/my-skills")
+        .arg("--reselect-source")
         .arg("--path")
         .arg(project.path())
         .arg("--assume-yes")
@@ -217,7 +274,7 @@ fn a_project_with_no_registry_anywhere_is_still_refused() {
         .unwrap();
     assert!(
         !out.status.success(),
-        "with no source anywhere the update must refuse\nstdout:\n{}",
+        "with no configured source a source reselection must refuse\nstdout:\n{}",
         String::from_utf8_lossy(&out.stdout),
     );
     let stderr = String::from_utf8_lossy(&out.stderr);
@@ -231,5 +288,110 @@ fn a_project_with_no_registry_anywhere_is_still_refused() {
     assert!(
         stderr.contains("~/.vibe/registry.toml"),
         "the refusal must name the machine file too:\n{stderr}"
+    );
+}
+
+/// The locked row of the fixture package, read from the project's lock.
+fn locked_row(project: &Path) -> vibe_core::manifest::LockedPackage {
+    Lockfile::read(project.join(Lockfile::FILENAME))
+        .unwrap()
+        .packages
+        .into_iter()
+        .find(|package| package.name.as_str() == "my-skills")
+        .expect("fixture package is locked")
+}
+
+/// Owner request 2026-11-08: one command refreshes where locked packages come
+/// from after the machine `registry.toml` changes, without moving versions.
+/// Moving the machine file from registry A to an identical registry B moves
+/// the locked source to B; the version and pinned bytes stay; a later plain
+/// install replays B. A target registry without the locked version refuses
+/// and leaves the lock untouched.
+#[test]
+fn sources_only_moves_locked_sources_to_the_current_registry_and_keeps_versions() {
+    let user = UserScratch::new();
+    let outer_a = tempfile::tempdir().unwrap();
+    let outer_b = tempfile::tempdir().unwrap();
+    let registry_a = make_registry(outer_a.path(), "same");
+    let registry_b = make_registry(outer_b.path(), "same");
+    seed_machine_registry(&user, &registry_a);
+    let project = tempfile::tempdir().unwrap();
+    user.init_project(project.path());
+    user.vibe()
+        .arg("install")
+        .arg("org.example/my-skills")
+        .arg("--path")
+        .arg(project.path())
+        .arg("--assume-yes")
+        .assert()
+        .success();
+    let before = locked_row(project.path());
+    assert!(
+        before
+            .source_url
+            .to_string()
+            .contains(&*outer_a.path().to_string_lossy()),
+        "fixture: installed from registry A, got {}",
+        before.source_url
+    );
+
+    seed_machine_registry(&user, &registry_b);
+    let out = user
+        .vibe()
+        .arg("update")
+        .arg("--sources-only")
+        .arg("--path")
+        .arg(project.path())
+        .arg("--assume-yes")
+        .output()
+        .unwrap();
+    assert!(
+        out.status.success(),
+        "sources-only refresh must succeed\nstdout:\n{}\nstderr:\n{}",
+        String::from_utf8_lossy(&out.stdout),
+        String::from_utf8_lossy(&out.stderr),
+    );
+    let after = locked_row(project.path());
+    assert!(
+        after
+            .source_url
+            .to_string()
+            .contains(&*outer_b.path().to_string_lossy()),
+        "the locked source must move to registry B, got {}",
+        after.source_url
+    );
+    assert_eq!(after.version, before.version, "versions never move");
+    assert_eq!(
+        after.content_hash, before.content_hash,
+        "identical content keeps the same pinned hash"
+    );
+
+    // Registry B loses the locked version; registry A is configured again.
+    // The refresh refuses rather than choosing another version, and the lock
+    // stays byte-identical.
+    fs::remove_dir_all(registry_b.join("org.example")).unwrap();
+    let lock_bytes = fs::read(project.path().join(Lockfile::FILENAME)).unwrap();
+    let empty = tempfile::tempdir().unwrap();
+    let registry_c = empty.path().join("registry");
+    fs::create_dir_all(&registry_c).unwrap();
+    seed_machine_registry(&user, &registry_c);
+    let out = user
+        .vibe()
+        .arg("update")
+        .arg("--sources-only")
+        .arg("--path")
+        .arg(project.path())
+        .arg("--assume-yes")
+        .output()
+        .unwrap();
+    assert!(
+        !out.status.success(),
+        "a registry without the locked version must refuse\nstdout:\n{}",
+        String::from_utf8_lossy(&out.stdout),
+    );
+    assert_eq!(
+        fs::read(project.path().join(Lockfile::FILENAME)).unwrap(),
+        lock_bytes,
+        "a refused refresh leaves vibe.lock byte-identical"
     );
 }

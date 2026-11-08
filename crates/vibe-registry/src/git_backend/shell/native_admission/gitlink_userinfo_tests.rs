@@ -144,6 +144,7 @@ fn assert_raw_rewrite_refused(scheme: &str, malformed: bool) {
     let remote = profile.capture_for_request(&clean, false, None).unwrap();
     let result = state.prepare_tree(
         Preparation {
+            source_address: SourceAddress::WarmOrigin,
             reporter: &git,
             address: &raw,
             reference: f.get("head"),

@@ -129,3 +129,26 @@ impl ShellGit {
         Ok(Some(Arc::new(cloned)))
     }
 }
+
+impl ShellGit {
+    /// Verify that the configured git binary responds to `--version`.
+    ///
+    /// Caches the result on this instance. Subsequent calls are free.
+    pub fn preflight(&self) -> Result<(), GitError> {
+        if let Some(native) = &self.native {
+            return native.preflight();
+        }
+        self.admit_native()?;
+        let ok = *self.preflight_cache.get_or_init(|| {
+            let mut cmd = Command::new(&self.binary);
+            apply_common_env(&mut cmd, self.force_anonymous);
+            cmd.arg("--version");
+            cmd.output().map(|o| o.status.success()).unwrap_or(false)
+        });
+        if ok {
+            Ok(())
+        } else {
+            Err(GitError::NotInstalled)
+        }
+    }
+}

@@ -179,6 +179,12 @@ impl RemapScope {
 /// ```
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 pub struct Provenance {
+    /// Runtime report visibility; omitted from existing wire documents.
+    #[serde(skip)]
+    pub publication: crate::RoutePublication,
+    /// Catalog-generated mirror/override rows cannot retarget a held source.
+    #[serde(skip)]
+    pub catalog: bool,
     /// The layer of `PROP-066#layers` this row belongs to.
     pub layer: Layer,
     /// The file that declared it, or the package that offers it.
@@ -188,9 +194,16 @@ pub struct Provenance {
 }
 
 impl Provenance {
+    pub fn catalog(mut self, publication: crate::RoutePublication) -> Self {
+        self.catalog = true;
+        self.publication = publication;
+        self
+    }
     /// Build a provenance from its three parts.
     pub fn new(layer: Layer, source: impl Into<String>, index: usize) -> Self {
         Provenance {
+            publication: crate::RoutePublication::Local,
+            catalog: false,
             layer,
             source: source.into(),
             index,

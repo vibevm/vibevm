@@ -11,6 +11,8 @@ homepage.workspace = true
 description = "The one production package-source composition - the InstallResolver dispatch, its R-001 cell-selection registry, and the qualified orchestrator source shared by every surface"
 
 [dependencies]
+libc.workspace = true
+tempfile.workspace = true
 anyhow.workspace = true
 specmark.workspace = true
 vibe-core.workspace = true
@@ -22,7 +24,6 @@ vibe-registry.workspace = true
 vibe-resolver.workspace = true
 
 [dev-dependencies]
-tempfile.workspace = true
 # The dependency exact-set RED parses this crate's own Cargo.toml.
 toml.workspace = true
 # Linking this isolates the test process's per-user settings home before the

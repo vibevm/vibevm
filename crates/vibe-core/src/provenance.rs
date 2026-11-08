@@ -100,3 +100,29 @@ provenance_newtype!(
     TraceId,
     "The trace ID of the LLM run that emitted a virtual capability (PROP-003 §2.5.3) — links a lockfile record into the `vibe build` audit log."
 );
+
+/// Runtime report visibility, never source/contact/authentication authority.
+/// ```
+/// assert_eq!(vibe_core::RoutePublication::default(), vibe_core::RoutePublication::Local);
+/// ```
+#[derive(Debug, Clone, Copy, Default, PartialEq, Eq)]
+pub enum RoutePublication {
+    /// User/invocation/unknown observations belong only to this operation.
+    #[default]
+    Local,
+    /// A selected route was explicitly declared in shared project policy.
+    Project,
+}
+impl RoutePublication {
+    /// An unanticipated serving endpoint may reduce visibility, never increase it.
+    pub fn observed(self, selected: &str, actual: &str) -> Self {
+        if self == Self::Project
+            && crate::progress::transfer::safe_remote(selected)
+                == crate::progress::transfer::safe_remote(actual)
+        {
+            Self::Project
+        } else {
+            Self::Local
+        }
+    }
+}

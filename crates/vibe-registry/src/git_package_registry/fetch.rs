@@ -12,11 +12,12 @@ use crate::store::{self, InsertOutcome};
 
 mod api;
 mod identity;
-use identity::commit_content_hash;
+pub(crate) use identity::commit_content_hash;
 pub(crate) use identity::verify_store_entry_against_pin;
 mod bring;
 use bring::BringIntent;
 mod prepared;
+pub(crate) use prepared::RetainedNativePackage;
 pub use prepared::{PackageAcquisition, PreparedInPlace};
 
 impl GitPerPackageRegistry {
@@ -66,11 +67,19 @@ impl GitPerPackageRegistry {
         // Primary outside the mirror loop — its error is a plain value.
         // The primary attempt refreshes the existing copy in place; a
         // failure surfaces without touching the copy.
-        let primary_err =
-            match self.bring_clone_to_ref(&primary, refname, dest, BringIntent::RefreshExisting) {
-                Ok(()) => return Ok(primary),
-                Err(e) => e,
-            };
+        let primary_err = match self.bring_clone_to_ref(
+            &primary,
+            refname,
+            dest,
+            if self.locked_source {
+                BringIntent::SwitchSource
+            } else {
+                BringIntent::RefreshExisting
+            },
+        ) {
+            Ok(()) => return Ok(primary),
+            Err(e) => e,
+        };
         for (i, url) in mirrors.iter().enumerate() {
             // A mirror serves a DIFFERENT source than the copy on disk
             // — the switch clones beside and swaps in only on success.
@@ -184,11 +193,13 @@ impl GitPerPackageRegistry {
         self.ensure_token_loaded()?;
         let canonical_url = self.package_repo_url(&resolved.group, &resolved.name)?;
         let tag = self.package_reference(resolved);
-        let (primary, mirrors) = self.package_urls(&resolved.group, &resolved.name)?;
+        let primary = canonical_url.clone();
         let clone_dir = self.package_clone_dir(&resolved.group, &resolved.name);
 
-        let mut candidates: Vec<String> = std::iter::once(primary.clone())
-            .chain(mirrors.iter().cloned())
+        let (selected_primary, selected_mirrors) =
+            self.package_candidates(&resolved.group, &resolved.name)?;
+        let mut candidates: Vec<PublicationRoute> = std::iter::once(selected_primary)
+            .chain(selected_mirrors)
             .collect();
         if let Some(route) = route {
             let selected = route.validate(self, resolved)?.to_owned();
@@ -196,28 +207,36 @@ impl GitPerPackageRegistry {
             // keep the legacy primary/mirror fallback order. Native candidates
             // retain their explicitly admitted route and checked switch logic.
             if self.backend.uses_native_materialisation() || !clone_dir.join(".git").exists() {
-                candidates.retain(|url| url != &selected);
-                candidates.insert(0, selected);
+                candidates.retain(|candidate| candidate.url != selected);
+                candidates.insert(
+                    0,
+                    PublicationRoute {
+                        url: selected,
+                        publication: route.publication_scope(),
+                    },
+                );
             }
         }
         let mut excluded = None;
         let mut primary_err: Option<RegistryError> = None;
         let mut last_cached: Option<CachedPackage> = None;
 
-        for (i, url) in candidates.iter().enumerate() {
+        for (i, candidate) in candidates.iter().enumerate() {
+            let url = &candidate.url;
             // 1. Bring the local clone to `tag` from this URL. The
             //    first attempt refreshes whatever copy is already on
             //    disk (in place, never deleted on failure); every
             //    later attempt serves a different source and is a
             //    switch — clone beside, swap in only on success
             //    (PROP-010 §2.6).
-            let intent = if i == 0 {
+            let intent = if i == 0 && !self.locked_source {
                 BringIntent::RefreshExisting
             } else {
                 BringIntent::SwitchSource
             };
             let native = if self.backend.uses_native_materialisation() {
                 let refresh = i == 0
+                    && !self.locked_source
                     && (route.is_none()
                         || !clone_dir.join(".git").exists()
                         || self.backend.recorded_origin_url(&clone_dir)?
@@ -229,7 +248,7 @@ impl GitPerPackageRegistry {
                     refresh,
                     workspace_slot,
                 ) {
-                    Ok(prepared) => Some(prepared),
+                    Ok(prepared) => Some(prepared.with_publication(candidate.publication, url)?),
                     Err(prepared::PreparationFailure::Admission(error))
                         if excluded_route(&error) =>
                     {
@@ -354,6 +373,10 @@ impl GitPerPackageRegistry {
                 // next attempt's clone, without deleting anything on
                 // the way (PROP-010 §2.6).
                 last_cached = Some(CachedPackage {
+                    locked_selection: None,
+                    route_publication: native
+                        .as_ref()
+                        .map_or(candidate.publication, PreparedInPlace::publication_scope),
                     recorded_source_kind: None,
                     store_reused: None,
                     acquisition: Some(
@@ -451,6 +474,10 @@ impl GitPerPackageRegistry {
                 }
             }
             return Ok(PackageAcquisition::Cached(Box::new(CachedPackage {
+                locked_selection: None,
+                route_publication: native
+                    .as_ref()
+                    .map_or(candidate.publication, PreparedInPlace::publication_scope),
                 recorded_source_kind: None,
                 store_reused: Some(store_reused),
                 acquisition: Some(vibe_wire::generated::shared::SourceAcquisition::GitRepository),

@@ -288,7 +288,7 @@ pub(crate) fn locked_package_from_fetched(
 ) -> LockedPackage {
     let c = &f.cached;
     let source_kind = c.source_kind();
-    LockedPackage {
+    let mut row = LockedPackage {
         kind: c.package_meta().kind,
         group: c.resolved.group.clone(),
         name: PackageName::from_validated(c.resolved.name.clone()),
@@ -323,7 +323,20 @@ pub(crate) fn locked_package_from_fetched(
         // Record the package's declared materialization so destructive ops
         // and the guard (PROP-022 §2.6) recognise an in-place slot.
         materialization: c.package_meta().materialization,
+    };
+    if let Some(held) = &c.locked_selection {
+        let selected = held.source_row();
+        row.registry = selected.registry.clone();
+        row.source_url = selected.source_url.clone();
+        row.source_ref = selected.source_ref.clone();
+        row.source_kind = selected.source_kind;
+        row.overridden = selected.overridden;
+        row.via_redirect = selected.via_redirect.clone();
+        if let Some(replayed) = held.replayed_row() {
+            row.resolved_commit = replayed.resolved_commit.clone();
+        }
     }
+    row
 }
 
 /// Note on every lock row the locked application packages that require it
@@ -340,23 +353,14 @@ pub(crate) fn record_app_requirements(lockfile: &mut Lockfile, fetched: &[Fetche
 /// Where the bytes of each locked package actually came from
 /// (`PROP-066#provenance`).
 ///
-/// `fetched_from` was to sit on the `[[package]]` row beside the canonical
-/// `source_url`, on the understanding that an older vibe ignores a field
-/// it does not know. It does not: every lockfile struct carries
-/// `deny_unknown_fields`, so the extra key would make an older binary
-/// unable to read the lock at all — the one file a project cannot afford
-/// to make unreadable. The PROP's own fallback applies, and the fact goes
-/// into the sidecar `vibe.lock.provenance`, which an older vibe never
-/// opens, is regenerated on every install, and is resolved from by
-/// nothing: deleting it loses a record and changes nothing about what is
-/// installed. A run where every package came from its canonical origin
-/// records nothing, and the sidecar is then removed rather than written
-/// empty.
+/// New shared-report observations require explicit project publication scope.
+/// Local/unknown routes remain in CachedPackage::source_evidence for this run.
 #[specmark::spec(documents = "spec://org.vibevm.core/vibevm/common/PROP-066#provenance")]
 pub(crate) fn fetch_provenance(fetched: &[Fetched]) -> LockProvenance {
     LockProvenance {
         packages: fetched
             .iter()
+            .filter(|f| f.cached.route_publication == vibe_core::RoutePublication::Project)
             .filter_map(|f| {
                 Some(FetchedFrom {
                     package: format!(
@@ -365,7 +369,9 @@ pub(crate) fn fetch_provenance(fetched: &[Fetched]) -> LockProvenance {
                         f.cached.resolved.name
                     ),
                     version: f.cached.resolved.version.to_string(),
-                    fetched_from: f.cached.fetched_from.clone()?,
+                    fetched_from: vibe_core::progress::transfer::safe_remote(
+                        f.cached.fetched_from.as_deref()?,
+                    ),
                     row: None,
                 })
             })
@@ -466,3 +472,6 @@ mod tests {
         assert_eq!(lockfile.meta.root_dependencies[1], added);
     }
 }
+
+mod provenance;
+pub(crate) use provenance::{merge_cached_provenance, merge_fetch_provenance, same_selection_set};

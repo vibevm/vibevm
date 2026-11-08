@@ -117,8 +117,8 @@ pub use portable::{
 pub use portable::{FullImportPreview, export_portable, preview_full_import, selected_import_keys};
 pub use proxies::{proxy_file_name, sync as sync_proxies, sync_locked as sync_proxies_locked};
 pub use resolve::{
-    ResolvedPackage, from_global, from_local_registry, from_manifest, local_registry_carries,
-    qualified_ref,
+    ResolvedPackage, from_global, from_global_with_operation, from_local_registry, from_manifest,
+    local_registry_carries, qualified_ref,
 };
 pub use select::{
     Choice, Chooser, InstallChoice, detected_arch, detected_platform, options_listing,

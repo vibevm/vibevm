@@ -45,14 +45,25 @@ fn hosted_ports_capture_and_never_claim_an_immediate_machine_failure() {
 
 #[test]
 fn registry_seed_is_best_effort_and_precedes_the_fallible_load() {
+    // The hosted environment writes no registry document: the machine
+    // `registry.toml` is read lazily (and fails when malformed and demanded),
+    // and the built-in defaults are only an in-memory fallback, offered only
+    // when the context permits seeding.
     let source = include_str!("ports.rs");
-    let seed = source
-        .find("let _ = vibe_core::ensure_default_global_registry();")
-        .expect("the optional default is attempted without becoming a veto");
-    let load = source
-        .find("vibe_core::GlobalRegistryConfig::load()?")
-        .expect("the real config load remains fallible");
-    assert!(seed < load, "seed-before-load is the registry epoch law");
+    let deferred = source
+        .find("vibe_core::GlobalRegistrySource::deferred(")
+        .expect("the machine registry file is loaded lazily, not eagerly");
+    let path = source
+        .find("vibe_core::settings::registry_config_path()")
+        .expect("the real machine registry file stays the source");
+    let defaults = source
+        .find("if self.seed")
+        .expect("default registries are offered only when seeding is permitted");
+    assert!(deferred < path && path < defaults);
+    assert!(
+        !source.contains("ensure_default_global_registry()"),
+        "a hosted run must not write the machine registry file"
+    );
 }
 
 #[test]

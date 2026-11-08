@@ -116,7 +116,7 @@ impl Lockfile {
     pub(crate) fn for_write(&self) -> Result<Self> {
         if !matches!(
             self.meta.schema_version,
-            LEGACY_SCHEMA_VERSION | CURRENT_SCHEMA_VERSION
+            LEGACY_SCHEMA_VERSION | CONFIGURATION_SCHEMA_VERSION | CURRENT_SCHEMA_VERSION
         ) {
             return Err(crate::Error::UnsupportedLockfile {
                 found: self.meta.schema_version,
@@ -124,11 +124,14 @@ impl Lockfile {
             });
         }
         let mut value = self.clone();
-        value.meta.schema_version = if value.configurations.is_empty() {
+        value.meta.schema_version = if value.remaps.iter().any(|row| row.source.is_some()) {
+            CURRENT_SCHEMA_VERSION
+        } else if value.configurations.is_empty() {
             LEGACY_SCHEMA_VERSION
         } else {
-            CURRENT_SCHEMA_VERSION
+            CONFIGURATION_SCHEMA_VERSION
         };
+        value.validate_remap_sources()?;
         value.validate_configurations()?;
         Ok(value)
     }

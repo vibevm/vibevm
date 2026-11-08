@@ -12,6 +12,9 @@ use vibe_resolver::{
     SolveError, configuration::ConfigurationSnapshot,
 };
 
+#[path = "support/retained.rs"]
+mod retained;
+
 struct DriftingSource {
     registry: LocalRegistry,
     owner: std::path::PathBuf,
@@ -19,6 +22,31 @@ struct DriftingSource {
     cache: std::path::PathBuf,
 }
 impl InstallSource for DriftingSource {
+    fn source_solve_limits(&self) -> Result<vibe_resolver::SourceSolveLimits, SolveError> {
+        retained::limits()
+    }
+    fn solve_metadata(
+        &self,
+        request: &vibe_resolver::SourceSolveRequest<'_>,
+    ) -> Result<vibe_resolver::SourceResolvedGraph, SolveError> {
+        retained::solve(self.registry.root(), request)
+    }
+    fn acquire_candidate_for_install(
+        &self,
+        candidate: &vibe_registry::source_candidates::RetainedSourceCandidate,
+        store_root: &Path,
+        expected_hash: Option<&str>,
+        slot: &Path,
+        progress: &vibe_core::progress::Progress,
+    ) -> Result<vibe_registry::PackageAcquisition, RegistryError> {
+        self.acquire_for_install(
+            &retained::exact(candidate),
+            store_root,
+            expected_hash,
+            slot,
+            progress,
+        )
+    }
     fn solve(&self, roots: &[PackageRef]) -> Result<ResolvedGraph, SolveError> {
         ResolvoDepSolver::new(LocalRegistryDepProvider::new(&self.registry)).solve(roots)
     }

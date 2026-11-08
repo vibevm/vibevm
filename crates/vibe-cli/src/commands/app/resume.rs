@@ -16,10 +16,12 @@ pub(super) fn run(
     operation: &str,
     parameters: Vec<(String, String)>,
     offline: bool,
+    source_operation: &vibe_package_source::SourceOperation,
 ) -> Result<Option<i32>> {
     let info = vibe_app::resume_info(home, key, operation)?;
     let agents = AgentSetup::for_resume(ctx, &info)?;
     let packages = global::Packages {
+        operation: source_operation.clone(),
         settings: global::settings_root()?,
         registry: match &info.lookup {
             vibe_wire::generated::shared::ApplicationPendingLookup::Registry(r) => {
@@ -51,7 +53,7 @@ pub(super) fn run(
     };
     let proxy = global::proxy_image()?;
     let flat = StepDisplay::flat();
-    let observe = Observation::new(ctx, true, &flat)?;
+    let observe = Observation::new(ctx, true, &flat)?.with_source_operation(&packages.operation);
     let show = global::plan_printer(ctx);
     let request = ResumeRequest {
         key: key.into(),

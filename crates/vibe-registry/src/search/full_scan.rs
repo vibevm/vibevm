@@ -25,13 +25,15 @@
 
 specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#registry-model");
 
-use std::time::Duration;
-
-use serde::Deserialize;
 use specmark::spec;
 use thiserror::Error;
 use vibe_core::PackageKind;
 use vibe_core::manifest::{Manifest, PackageMeta};
+
+mod client;
+mod requests;
+use client::{ScanClient, build_client};
+use requests::{fetch_package_manifest, list_org_repos};
 
 const REQUEST_TIMEOUT_SECS: u64 = 15;
 const PER_PAGE: u32 = 100;
@@ -47,6 +49,8 @@ const MAX_REPOS_PER_SCAN: usize = 500;
 #[allow(dead_code)] // NotGitHub / NoOrgInUrl reserved for future host detection paths
 #[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#registry-model")]
 pub enum FullScanError {
+    #[error(transparent)]
+    ContactRefused(#[from] crate::ContactRefusal),
     #[error(
         "registry URL `{url}` does not point at a GitHub organisation \
          (violates spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#registry-model; \
@@ -135,7 +139,46 @@ pub fn full_scan_github_org(
     if query_tokens.is_empty() {
         return Ok(Vec::new());
     }
-    let client = build_client()?;
+    full_scan_with_client(
+        org,
+        api_base,
+        token,
+        query_tokens,
+        kind_filter,
+        build_client(None)?,
+    )
+}
+
+/// Shared bound scan: initial GET, pagination and manifest reads retain one admission.
+pub fn full_scan_github_org_with_admission(
+    org: &str,
+    api_base: &str,
+    token: Option<&str>,
+    query_tokens: &[String],
+    kind_filter: Option<PackageKind>,
+    admission: std::sync::Arc<crate::HttpAdmission>,
+) -> Result<Vec<FullScanHit>, FullScanError> {
+    if query_tokens.is_empty() {
+        return Ok(Vec::new());
+    }
+    full_scan_with_client(
+        org,
+        api_base,
+        token,
+        query_tokens,
+        kind_filter,
+        build_client(Some(admission))?,
+    )
+}
+
+fn full_scan_with_client(
+    org: &str,
+    api_base: &str,
+    token: Option<&str>,
+    query_tokens: &[String],
+    kind_filter: Option<PackageKind>,
+    client: ScanClient,
+) -> Result<Vec<FullScanHit>, FullScanError> {
     let repos = list_org_repos(&client, api_base, org, token)?;
     let mut hits: Vec<FullScanHit> = Vec::new();
     for repo in repos.into_iter().take(MAX_REPOS_PER_SCAN) {
@@ -152,6 +195,7 @@ pub fn full_scan_github_org(
                 // silently truncating results.
                 return Err(FullScanError::Status { status, url });
             }
+            Err(error @ FullScanError::ContactRefused(_)) => return Err(error),
             Err(_) => continue, // transient — skip this repo
         };
         // A `vibe.toml` without a `[package]` table (project- or
@@ -187,88 +231,6 @@ pub fn full_scan_github_org(
     Ok(hits)
 }
 
-fn build_client() -> std::result::Result<reqwest::blocking::Client, FullScanError> {
-    reqwest::blocking::Client::builder()
-        .user_agent(concat!("vibe-cli/", env!("CARGO_PKG_VERSION")))
-        .timeout(Duration::from_secs(REQUEST_TIMEOUT_SECS))
-        .build()
-        .map_err(|e| FullScanError::Http {
-            url: "<client-build>".into(),
-            message: e.to_string(),
-        })
-}
-
-#[derive(Debug, Deserialize, Clone)]
-struct RepoEntry {
-    name: String,
-    #[serde(default)]
-    fork: bool,
-    #[serde(default)]
-    archived: bool,
-}
-
-fn list_org_repos(
-    client: &reqwest::blocking::Client,
-    api_base: &str,
-    org: &str,
-    token: Option<&str>,
-) -> std::result::Result<Vec<RepoEntry>, FullScanError> {
-    let mut page = 1u32;
-    let mut all = Vec::new();
-    loop {
-        let url = format!(
-            "{}/orgs/{}/repos?per_page={}&page={}",
-            api_base.trim_end_matches('/'),
-            org,
-            PER_PAGE,
-            page
-        );
-        let mut req = client
-            .get(&url)
-            .header("Accept", "application/vnd.github+json")
-            .header("X-GitHub-Api-Version", "2022-11-28");
-        if let Some(t) = token {
-            req = req.bearer_auth(t);
-        }
-        let resp = req.send().map_err(|e| FullScanError::Http {
-            url: url.clone(),
-            message: e.to_string(),
-        })?;
-        let status = resp.status();
-        if !status.is_success() {
-            return Err(FullScanError::Status {
-                url,
-                status: status.as_u16(),
-            });
-        }
-        let link_header = resp
-            .headers()
-            .get("link")
-            .and_then(|v| v.to_str().ok())
-            .map(|s| s.to_string());
-        let bytes = resp.bytes().map_err(|e| FullScanError::Http {
-            url: url.clone(),
-            message: e.to_string(),
-        })?;
-        let page_repos: Vec<RepoEntry> =
-            serde_json::from_slice(&bytes).map_err(|e| FullScanError::Malformed {
-                url: url.clone(),
-                message: e.to_string(),
-            })?;
-        all.extend(page_repos);
-        if all.len() >= MAX_REPOS_PER_SCAN {
-            break;
-        }
-        match link_header.as_deref().and_then(parse_next_link) {
-            Some(_) => {
-                page += 1;
-            }
-            None => break,
-        }
-    }
-    Ok(all)
-}
-
 /// Lift the `next` URL out of a GitHub `Link:` header. Returns `None`
 /// when there is no `rel="next"` entry.
 pub fn parse_next_link(link_header: &str) -> Option<String> {
@@ -282,119 +244,6 @@ pub fn parse_next_link(link_header: &str) -> Option<String> {
         return Some(trimmed[lt + 1..gt].to_string());
     }
     None
-}
-
-#[derive(Debug, Deserialize)]
-struct ContentsResponse {
-    encoding: String,
-    content: String,
-}
-
-fn fetch_package_manifest(
-    client: &reqwest::blocking::Client,
-    api_base: &str,
-    owner: &str,
-    repo: &str,
-    token: Option<&str>,
-) -> std::result::Result<Option<Manifest>, FullScanError> {
-    let url = format!(
-        "{}/repos/{}/{}/contents/vibe.toml",
-        api_base.trim_end_matches('/'),
-        owner,
-        repo
-    );
-    let mut req = client
-        .get(&url)
-        .header("Accept", "application/vnd.github+json")
-        .header("X-GitHub-Api-Version", "2022-11-28");
-    if let Some(t) = token {
-        req = req.bearer_auth(t);
-    }
-    let resp = req.send().map_err(|e| FullScanError::Http {
-        url: url.clone(),
-        message: e.to_string(),
-    })?;
-    let status = resp.status();
-    if status.as_u16() == 404 {
-        return Ok(None);
-    }
-    if !status.is_success() {
-        return Err(FullScanError::Status {
-            url,
-            status: status.as_u16(),
-        });
-    }
-    let body: ContentsResponse =
-        resp.json::<ContentsResponse>()
-            .map_err(|e| FullScanError::Malformed {
-                url: url.clone(),
-                message: e.to_string(),
-            })?;
-    if body.encoding != "base64" {
-        return Err(FullScanError::Malformed {
-            url,
-            message: format!("expected base64-encoded body, got `{}`", body.encoding),
-        });
-    }
-    let cleaned: String = body
-        .content
-        .chars()
-        .filter(|c: &char| !c.is_whitespace())
-        .collect();
-    let bytes = decode_base64(&cleaned).map_err(|e| FullScanError::Malformed {
-        url: url.clone(),
-        message: format!("base64 decode: {e}"),
-    })?;
-    let toml_str = std::str::from_utf8(&bytes).map_err(|e| FullScanError::Malformed {
-        url: url.clone(),
-        message: format!("utf-8 decode: {e}"),
-    })?;
-    let manifest = Manifest::parse_str(toml_str).map_err(|e| FullScanError::Malformed {
-        url: url.clone(),
-        message: format!("toml parse: {e}"),
-    })?;
-    Ok(Some(manifest))
-}
-
-/// Tiny standard-base64 decoder. Avoids pulling the `base64` crate
-/// for one call site. Pads `=`-trailing input as expected; rejects
-/// any non-base64 character.
-fn decode_base64(input: &str) -> std::result::Result<Vec<u8>, &'static str> {
-    fn val(c: u8) -> Result<u32, &'static str> {
-        match c {
-            b'A'..=b'Z' => Ok((c - b'A') as u32),
-            b'a'..=b'z' => Ok((c - b'a' + 26) as u32),
-            b'0'..=b'9' => Ok((c - b'0' + 52) as u32),
-            b'+' => Ok(62),
-            b'/' => Ok(63),
-            _ => Err("invalid character"),
-        }
-    }
-    let bytes = input.as_bytes();
-    if !bytes.len().is_multiple_of(4) {
-        return Err("length not multiple of 4");
-    }
-    let mut out = Vec::with_capacity(bytes.len() / 4 * 3);
-    let mut i = 0;
-    while i < bytes.len() {
-        let q = &bytes[i..i + 4];
-        let pad0 = q[2] == b'=';
-        let pad1 = q[3] == b'=';
-        let v0 = val(q[0])?;
-        let v1 = val(q[1])?;
-        let v2 = if pad0 { 0 } else { val(q[2])? };
-        let v3 = if pad1 { 0 } else { val(q[3])? };
-        let n = (v0 << 18) | (v1 << 12) | (v2 << 6) | v3;
-        out.push((n >> 16) as u8);
-        if !pad0 {
-            out.push(((n >> 8) & 0xff) as u8);
-        }
-        if !pad1 {
-            out.push((n & 0xff) as u8);
-        }
-        i += 4;
-    }
-    Ok(out)
 }
 
 /// Score a manifest against a list of (already-lowercase) query
@@ -438,114 +287,4 @@ fn score_manifest(
 }
 
 #[cfg(test)]
-mod tests {
-    use super::*;
-
-    #[test]
-    fn detect_github_org_extracts_first_path_segment() {
-        assert_eq!(
-            detect_github_org("https://github.com/vibespecs"),
-            Some("vibespecs".into())
-        );
-        assert_eq!(
-            detect_github_org("https://github.com/vibespecs/"),
-            Some("vibespecs".into())
-        );
-        assert_eq!(
-            detect_github_org("https://github.com/vibespecs/extra/path"),
-            Some("vibespecs".into())
-        );
-    }
-
-    #[test]
-    fn detect_github_org_returns_none_for_non_github_hosts() {
-        assert!(detect_github_org("https://gitverse.ru/anarchic").is_none());
-        assert!(detect_github_org("https://gitlab.com/foo").is_none());
-    }
-
-    #[test]
-    fn detect_github_org_returns_none_when_org_segment_is_missing() {
-        assert!(detect_github_org("https://github.com").is_none());
-        assert!(detect_github_org("https://github.com/").is_none());
-    }
-
-    #[test]
-    fn parse_next_link_extracts_next_url() {
-        let header = r#"<https://api.github.com/orgs/x/repos?page=2>; rel="next", <https://api.github.com/orgs/x/repos?page=5>; rel="last""#;
-        assert_eq!(
-            parse_next_link(header).as_deref(),
-            Some("https://api.github.com/orgs/x/repos?page=2")
-        );
-    }
-
-    #[test]
-    fn parse_next_link_returns_none_when_no_next_rel() {
-        let header = r#"<https://api.github.com/orgs/x/repos?page=5>; rel="last""#;
-        assert!(parse_next_link(header).is_none());
-    }
-
-    #[test]
-    fn decode_base64_roundtrips_simple_input() {
-        let body = b"hello world";
-        // standard base64 of "hello world" is "aGVsbG8gd29ybGQ="
-        let encoded = "aGVsbG8gd29ybGQ=";
-        let decoded = decode_base64(encoded).unwrap();
-        assert_eq!(decoded, body);
-    }
-
-    #[test]
-    fn decode_base64_handles_double_pad() {
-        let body = b"any";
-        let encoded = "YW55"; // 3 bytes => no pad
-        assert_eq!(decode_base64(encoded).unwrap(), body);
-        let body2 = b"a";
-        let encoded2 = "YQ=="; // 1 byte => double pad
-        assert_eq!(decode_base64(encoded2).unwrap(), body2);
-    }
-
-    /// Manual encoder mirrors the integration-test fixture so that a
-    /// regression in either side surfaces locally instead of in
-    /// tests/cli_search.rs.
-    fn encode_base64_for_test(input: &[u8]) -> String {
-        const TABLE: &[u8] = b"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
-        let mut out = String::with_capacity(input.len().div_ceil(3) * 4);
-        let mut i = 0;
-        while i < input.len() {
-            let b0 = input[i];
-            let b1 = if i + 1 < input.len() { input[i + 1] } else { 0 };
-            let b2 = if i + 2 < input.len() { input[i + 2] } else { 0 };
-            let n = ((b0 as u32) << 16) | ((b1 as u32) << 8) | (b2 as u32);
-            out.push(TABLE[((n >> 18) & 0x3f) as usize] as char);
-            out.push(TABLE[((n >> 12) & 0x3f) as usize] as char);
-            if i + 1 < input.len() {
-                out.push(TABLE[((n >> 6) & 0x3f) as usize] as char);
-            } else {
-                out.push('=');
-            }
-            if i + 2 < input.len() {
-                out.push(TABLE[(n & 0x3f) as usize] as char);
-            } else {
-                out.push('=');
-            }
-            i += 3;
-        }
-        out
-    }
-
-    #[test]
-    fn decode_base64_round_trips_arbitrary_byte_ranges() {
-        for body in [
-            b"".to_vec(),
-            b"a".to_vec(),
-            b"hi".to_vec(),
-            b"abc".to_vec(),
-            b"hello world".to_vec(),
-            b"vibe.toml".to_vec(),
-            (0..=255u8).collect::<Vec<u8>>(),
-        ] {
-            let encoded = encode_base64_for_test(&body);
-            let decoded = decode_base64(&encoded).unwrap();
-            assert_eq!(decoded, body, "round-trip failed for {body:?}");
-        }
-    }
-}
+mod tests;

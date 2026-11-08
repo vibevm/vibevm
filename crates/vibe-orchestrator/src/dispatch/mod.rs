@@ -4,7 +4,7 @@ specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-054#ENGINE-ALGORITHM
 use anyhow::Result;
 use std::sync::Arc;
 use vibe_lifecycle::handlers::{HandlerRuntime, NativeBackend, PackageBindingBackend};
-use vibe_lifecycle::process::SystemProcessRunner;
+use vibe_lifecycle::process::{ControlledProcessRunner, ProcessRunner};
 
 use vibe_lifecycle::{
     AgentBackend, ExecutionReuse, HandlerExecution, LifecycleLease, LifecycleRun,
@@ -156,7 +156,14 @@ fn dispatch_measured(
     let package_binding = ProjectPackageBindingBackend::new(plan);
     let native_candidates = plan.native_candidates.iter().collect::<Vec<_>>();
     let native = native_backend(plan, metadata, &native_candidates)?;
-    let runtime = runtime(observer, &package_binding, &native, agent.as_ref());
+    let process = ControlledProcessRunner::new(observer.cancellation());
+    let runtime = runtime(
+        observer,
+        &package_binding,
+        &native,
+        agent.as_ref(),
+        &process,
+    );
     let mut outcome = DispatchOutcome {
         reports: Vec::with_capacity(plan.executions.len()),
         parked: None,
@@ -465,52 +472,8 @@ fn dispatch_measured(
 /// Scope comes from the typed tag the engine recorded, never from parsing the
 /// execution key or a task filename: a `slot`-scoped row belongs to the slot
 /// plan and is invisible to this phase plan, so it is left alone here.
-fn reconcile_removed_parks(
-    run: &mut LifecycleRun,
-    plan: &RitualPlan,
-    reports: &mut Vec<LifecycleContributionReport>,
-) -> Result<()> {
-    let planned: std::collections::BTreeSet<String> = plan
-        .executions
-        .iter()
-        .map(|execution| execution.row.key().to_string())
-        .collect();
-    let project_root = std::path::PathBuf::from(&plan.project.root);
-    for (key, record) in run.delegated_rows() {
-        if record.scope != Some(ExecutionRecordScope::Phase) || planned.contains(&key) {
-            continue;
-        }
-        let Some(message) = run.cancel_delegated(&key, &project_root)? else {
-            continue;
-        };
-        // Report ONLY what survives the declaration's removal. The row's own
-        // persisted phase is authoritative, so the point is exact; everything
-        // else — who provided it, at which tier, under what reference — died
-        // with the declaration, and a host row that vanished never had a
-        // `dependency` tier to begin with. Naming a sentinel is honest; naming
-        // the first surviving execution's phase, or guessing `dependency`,
-        // invents provenance the cancelled row cannot corroborate.
-        reports.push(LifecycleContributionReport {
-            flagged: None,
-            handler: "agent".into(),
-            key,
-            message: Some(message),
-            stderr: None,
-            stderr_truncated: None,
-            stdout: None,
-            stdout_truncated: None,
-            point: format!("phase:{}", record.phase),
-            phase: record.phase,
-            provider: REMOVED_DECLARATION.into(),
-            reference: Some(REMOVED_DECLARATION.into()),
-            slot_target: None,
-            status: "cancelled".into(),
-            tier: UNKNOWN_PROVENANCE.into(),
-            version: None,
-        });
-    }
-    Ok(())
-}
+mod parks;
+use parks::reconcile_removed_parks;
 
 fn state_status(status: &ExecutionRecordStatus) -> &'static str {
     match status {
@@ -557,13 +520,13 @@ fn runtime<'a>(
     package_binding: &'a dyn PackageBindingBackend,
     native: &'a dyn NativeBackend,
     agent: &'a dyn AgentBackend,
+    process: &'a dyn ProcessRunner,
 ) -> HandlerRuntime<'a> {
-    static PROCESS: SystemProcessRunner = SystemProcessRunner;
     static BINARY_INHERIT: WorkspaceBinaryBackend = WorkspaceBinaryBackend { quiet: false };
     static BINARY_QUIET: WorkspaceBinaryBackend = WorkspaceBinaryBackend { quiet: true };
     static PROBE: vibe_workspace::hooks::SystemProbe = vibe_workspace::hooks::SystemProbe;
     HandlerRuntime {
-        process: &PROCESS,
+        process,
         binary: if observer.binary_quiet() {
             &BINARY_QUIET
         } else {

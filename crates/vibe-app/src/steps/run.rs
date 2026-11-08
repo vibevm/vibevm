@@ -33,25 +33,8 @@ mod continuation;
 mod environment;
 mod projections;
 
-/// The task label of one step (`PROP-065#display`): its id, its kind and
-/// its title, the same row a step panel and the event stream carry. A
-/// renderer collapses the column gap along with every other run of
-/// whitespace it sanitises away.
-pub(crate) fn step_label(step: &vibe_core::manifest::StepDecl) -> String {
-    format!("{} ({})  {}", step.id, step.kind.name(), step.title)
-}
-
-/// The step kinds that run a child of their own, and therefore write the
-/// output log a failure's tail comes from (`PROP-065#display`).
-fn writes_log(kind: &StepKind) -> bool {
-    matches!(
-        kind,
-        StepKind::Recipe { .. }
-            | StepKind::Shell { .. }
-            | StepKind::Native { .. }
-            | StepKind::Agent { .. }
-    )
-}
+pub(crate) use projections::step_label;
+use projections::writes_log;
 
 /// The flags one run applies to every step.
 pub(crate) struct RunFlags {
@@ -272,7 +255,8 @@ impl<'a> Run<'a> {
     pub fn close(&mut self, error: Option<&AppError>) {
         let outcome = match error {
             None => RunOutcome::Done,
-            Some(AppError::Step(StepError::Interrupted { .. })) => RunOutcome::Interrupted,
+            Some(AppError::Step(StepError::Interrupted { .. }))
+            | Some(AppError::Installer(InstallerError::Cancelled(_))) => RunOutcome::Interrupted,
             Some(AppError::Agent(AgentError::Parked(_))) => RunOutcome::Delegated,
             Some(_) => RunOutcome::Failed,
         };
@@ -284,6 +268,10 @@ impl<'a> Run<'a> {
     /// Stop before the next step (or placement) when an interrupt arrived
     /// while no child was running; the step is recorded `interrupted`.
     fn check_interrupt(&mut self, next: Option<&PlannedStep>) -> Result<(), AppError> {
+        self.ctx
+            .progress
+            .checkpoint()
+            .map_err(InstallerError::Cancelled)?;
         if !self
             .ctx
             .interrupt
@@ -404,7 +392,12 @@ impl<'a> Run<'a> {
             // `step_failed`.
             if matches!(
                 error,
-                AppError::Installer(InstallerError::RemapDenied { .. })
+                AppError::Installer(
+                    InstallerError::RemapDenied { .. }
+                        | InstallerError::ContactRefused(_)
+                        | InstallerError::SourcePolicy(_)
+                        | InstallerError::Cancelled(_)
+                )
             ) {
                 task.fail(error.to_string());
                 return match phase {
@@ -522,6 +515,7 @@ impl<'a> Run<'a> {
         let served = std::cell::RefCell::new(Vec::new());
         let transfer = transfer_facts(self.record.as_ref(), self.command, &package_key, &step.id);
         let cx = StepContext {
+            http_client: ctx.http_client,
             work: &self.work,
             package_root: &self.resolved.root,
             cache_root: &cache_root,
@@ -579,9 +573,9 @@ impl<'a> Run<'a> {
             }
             Err(error) => {
                 state.outcome = match &error {
-                    AppError::Installer(InstallerError::Interrupted { .. }) => {
-                        StepOutcome::Interrupted
-                    }
+                    AppError::Installer(
+                        InstallerError::Interrupted { .. } | InstallerError::Cancelled(_),
+                    ) => StepOutcome::Interrupted,
                     AppError::Agent(AgentError::Parked(_)) => StepOutcome::Delegated,
                     _ => StepOutcome::Failed,
                 };

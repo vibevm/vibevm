@@ -197,7 +197,7 @@ impl MultiRegistryResolver {
             group: group.clone(),
             name: pkgref.name.to_string(),
             version: target_meta.version.clone(),
-            source_dir: if self.backend.uses_native_materialisation() {
+            source_dir: if self.backend.native_materialisation_for(&target_url)? {
                 target_reg.checkout_directory(group, pkgref.name.as_str())
             } else {
                 self.redirect_clone_dir(group, pkgref.name.as_str())
@@ -206,6 +206,8 @@ impl MultiRegistryResolver {
         let selected_route =
             Some(target_reg.retain_redirect_route(&resolved, &target_url, &target_ref)?);
         Ok(MultiResolution {
+            direct: None,
+            locked: None,
             selected_route,
             resolved,
             // Registry name from the stub layer — that's the surface
@@ -247,7 +249,10 @@ impl MultiRegistryResolver {
         store_root: &Path,
         _expected_hash: Option<&str>,
     ) -> Result<CachedPackage, RegistryError> {
-        if self.backend.uses_native_materialisation() {
+        if self
+            .backend
+            .native_materialisation_for(&resolution.source_url)?
+        {
             return match self.acquire_redirect(resolution, store_root, _expected_hash, None)? {
                 crate::PackageAcquisition::Cached(cached) => Ok(*cached),
                 crate::PackageAcquisition::InPlace(prepared) => {
@@ -321,6 +326,8 @@ impl MultiRegistryResolver {
         }
 
         Ok(CachedPackage {
+            locked_selection: None,
+            route_publication: vibe_core::RoutePublication::Local,
             recorded_source_kind: None,
             store_reused: Some(reused),
             acquisition: Some(vibe_wire::generated::shared::SourceAcquisition::GitRepository),

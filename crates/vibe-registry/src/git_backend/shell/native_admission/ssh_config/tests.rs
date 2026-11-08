@@ -336,6 +336,57 @@ fn selected_algorithm_restrictions_are_replayed_not_replaced_by_defaults() {
 }
 #[test]
 #[specmark::spec(verifies = "spec://org.vibevm.core/vibevm/common/PROP-073#SSH-CONFIG-CAPTURE-LAW")]
+fn dev_null_global_trust_means_no_trust_but_other_special_files_are_refused() {
+    let f = Fixture::new();
+    let (_root, home) = setup(&f);
+    let config = |global: &str| {
+        format!(
+            "Host source-alias
+HostName 127.0.0.1
+User {}
+Port {}
+IdentityFile {}
+IdentityAgent none
+UserKnownHostsFile {}/.ssh/known_hosts
+GlobalKnownHostsFile {global}
+",
+            f.get("user"),
+            f.port(),
+            f.get("key"),
+            home.display()
+        )
+    };
+    write_fixture(home.join(".ssh/config"), config("/dev/null")).unwrap();
+    assert_eq!(
+        backend(&home, None).list_tags(&address(&f)).unwrap(),
+        ["v1.0.0", "v1.1.0"]
+    );
+    // Only the  idiom is admitted; another device stays refused
+    // before any contact.
+    write_fixture(home.join(".ssh/config"), config("/dev/zero")).unwrap();
+    let before = f.contacts("a");
+    let refused = SshConfigSelection::new("/usr/bin/ssh".into(), home.clone(), None)
+        .unwrap()
+        .capture()
+        .and_then(|config| {
+            ShellGit::new()
+                .with_native_admission(Arc::new(
+                    NativeGitAdmission::direct_https(
+                        Arc::new(crate::HttpAdmission::new(["127.0.0.2"]).unwrap()),
+                        GitInstallation::trusted("/usr/bin/git".into(), "/usr/lib/git-core".into())
+                            .unwrap(),
+                        TlsTrust::System,
+                    )
+                    .with_ssh_configuration(Arc::new(config)),
+                ))
+                .list_tags(&address(&f))
+        });
+    let error = refused.unwrap_err().to_string();
+    assert!(error.contains("not a bounded regular file"), "{error}");
+    assert_eq!(f.contacts("a"), before);
+}
+#[test]
+#[specmark::spec(verifies = "spec://org.vibevm.core/vibevm/common/PROP-073#SSH-CONFIG-CAPTURE-LAW")]
 fn config_fifo_oversize_and_recheck_refuse_without_unbounded_read() {
     let f = Fixture::new();
     let (root, home) = setup(&f);

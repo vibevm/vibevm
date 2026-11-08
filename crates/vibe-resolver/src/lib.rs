@@ -51,12 +51,10 @@
 
 #![forbid(unsafe_code)]
 
-use std::collections::{HashMap, HashSet, VecDeque};
-
 use specmark::spec;
 use thiserror::Error;
 use vibe_core::manifest::Manifest;
-use vibe_core::{Group, PackageRef, VersionSpec};
+use vibe_core::{Group, PackageRef};
 
 pub mod activation;
 pub mod conditional;
@@ -66,6 +64,13 @@ pub mod fixpoint_model;
 pub mod local_composite_provider;
 pub mod local_registry_provider;
 pub mod multi_registry_provider;
+pub mod source_candidates;
+pub mod source_edges;
+mod source_solve;
+pub use source_candidates::{
+    CandidateKey, CandidateMetadata, HistoricalActivation, RootRequirement,
+    SourceCandidateProvider, SourceResolvedGraph, SourceSolveLimits, SourceSolveRequest,
+};
 pub mod naive;
 pub mod resolvo_engine;
 pub mod sat;
@@ -217,6 +222,15 @@ impl ResolvedGraph {
 /// ```
 #[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#solver")]
 pub trait DepProvider {
+    /// Observe a successfully selected graph before the incumbent obsoletes view.
+    /// Default is inert; retained metadata adapters use it only as solve evidence.
+    fn observe_selected_before_projection(
+        &self,
+        _graph: &ResolvedGraph,
+    ) -> Result<(), DepProviderError> {
+        Ok(())
+    }
+
     /// Pick a concrete version satisfying `pkgref.version` from the
     /// available versions of `(pkgref.kind, pkgref.name)`. Implementors
     /// fan out to multi-registry / mirror / override resolution as
@@ -365,6 +379,19 @@ pub trait DepSolver {
 )]
 pub enum DepProviderError {
     #[error(transparent)]
+    SourcePolicy(#[from] vibe_core::manifest::SourcePolicyError),
+    #[error(
+        "violates REQ spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#solver: retained metadata count {observed} exceeds {limit}; fix surface: operation source budget"
+    )]
+    SourceMetadataLimit { observed: usize, limit: usize },
+
+    #[error(
+        "source-aware dependency discovery requires a fresh retained-candidate solve before acquisition \
+         (violates spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#solver; \
+         fix surface: restart the solve over the retained source candidates)"
+    )]
+    SourceAwareRestart,
+    #[error(transparent)]
     Configuration(#[from] vibe_core::manifest::PackageConfigurationError),
 
     #[error(
@@ -406,6 +433,22 @@ pub enum DepProviderError {
         attempts: Vec<vibe_registry::RegistryWalkAttempt>,
     },
 
+    /// The offline posture (PROP-010 `#offline`): this provider's local
+    /// sources and the machine store do not hold the coordinate. Composition
+    /// treats it as this family's absence so an earlier or later local family
+    /// (a project-local `vibepacks/`) can still serve it; when no family does,
+    /// it is the verdict. `message` is the registry's own sentence.
+    #[error(
+        "{message} \
+         (violates spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#failure-discriminator; \
+         fix: act on the underlying provider failure named in the message)"
+    )]
+    OfflineUnavailable {
+        group: Group,
+        name: String,
+        message: String,
+    },
+
     #[error(
         "{0} \
          (violates spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#failure-discriminator; \
@@ -414,127 +457,33 @@ pub enum DepProviderError {
     Other(String),
 }
 
+impl DepProviderError {
+    /// Carry a registry's offline miss as [`Self::OfflineUnavailable`]; any
+    /// other registry error stays [`Self::Other`].
+    pub(crate) fn offline_unavailable(error: vibe_registry::RegistryError) -> Self {
+        let message = error.to_string();
+        match error {
+            vibe_registry::RegistryError::OfflinePackageUnavailable { group, name, .. } => {
+                Self::OfflineUnavailable {
+                    group,
+                    name,
+                    message,
+                }
+            }
+            _ => Self::Other(message),
+        }
+    }
+}
+
 // Solver-side failures live in `error::SolveError` (re-exported above as
 // `pub use error::SolveError`), so the public error surface is addressable
 // independently of the solver machinery in this file.
 
-// ---------------------------------------------------------------------------
-// Helpers used by both the naive impl and (eventually) the resolvo impl.
-// ---------------------------------------------------------------------------
+// Helpers used by every solver cell live in `solver_support` (split for
+// the file-length budget; same items, same `crate::` paths).
+mod solver_support;
+pub(crate) use solver_support::{
+    Chosen, ChosenEntry, EnqueuedPkg, SolverState, build_resolved_graph, version_satisfies,
+};
 
-/// Per-(group,name) state the solver accumulates as it walks. `pub(crate)`
-/// rather than module-private so the multiple solver impls in this crate
-/// share one definition.
-pub(crate) struct SolverState {
-    pub chosen: HashMap<(Group, String), ChosenEntry>,
-    pub providers_index: HashMap<String, Vec<(Group, String, semver::Version)>>,
-    pub declared_conflicts: HashSet<(Group, String)>,
-    pub declared_obsolete: HashSet<(Group, String)>,
-    pub queue: VecDeque<EnqueuedPkg>,
-}
-
-pub(crate) struct ChosenEntry {
-    pub version: semver::Version,
-    pub manifest: Manifest,
-    pub direct_deps: Vec<PackageRef>,
-    pub is_root: bool,
-}
-
-pub(crate) struct EnqueuedPkg {
-    pub pkgref: PackageRef,
-    pub via: Option<String>,
-    pub is_root: bool,
-}
-
-impl SolverState {
-    pub(crate) fn new() -> Self {
-        SolverState {
-            chosen: HashMap::new(),
-            providers_index: HashMap::new(),
-            declared_conflicts: HashSet::new(),
-            declared_obsolete: HashSet::new(),
-            queue: VecDeque::new(),
-        }
-    }
-}
-
-/// `true` iff the version satisfies the spec.
-pub(crate) fn version_satisfies(spec: &VersionSpec, version: &semver::Version) -> bool {
-    spec.matches(version)
-}
-
-/// One solver-chosen package, reduced to what the output builder needs.
-/// Both `NaiveDepSolver` and `ResolvoDepSolver` collapse their internal
-/// state into this before calling [`build_resolved_graph`].
-pub(crate) struct Chosen {
-    pub version: semver::Version,
-    pub direct_deps: Vec<PackageRef>,
-    pub is_root: bool,
-}
-
-/// Build the final [`ResolvedGraph`] from a solver's choices — the single
-/// home of the output contract (PROP-017 §2.3): drop obsoleted entries,
-/// list roots first in input order then the rest sorted for determinism,
-/// and exact-pin every dependency edge to the version chosen for it. Both
-/// solver cells route through here, so they produce byte-identical graphs
-/// — which is exactly what the differential oracle asserts.
-pub(crate) fn build_resolved_graph(
-    root_order: &[(Group, String)],
-    mut chosen: HashMap<(Group, String), Chosen>,
-    obsolete: &HashSet<(Group, String)>,
-) -> ResolvedGraph {
-    for ob in obsolete {
-        chosen.remove(ob);
-    }
-
-    let mut packages: Vec<ResolvedNode> = Vec::with_capacity(chosen.len());
-    // Roots first, input order preserved.
-    for (group, name) in root_order {
-        if let Some(entry) = chosen.remove(&(group.clone(), name.clone())) {
-            packages.push(node_from_chosen(group.clone(), name.clone(), entry, true));
-        }
-    }
-    // The rest, sorted by (group, name) for a deterministic tail.
-    let mut rest: Vec<((Group, String), Chosen)> = chosen.into_iter().collect();
-    rest.sort_by(|a, b| (a.0.0.as_str(), a.0.1.as_str()).cmp(&(b.0.0.as_str(), b.0.1.as_str())));
-    for ((group, name), entry) in rest {
-        packages.push(node_from_chosen(group, name, entry, false));
-    }
-
-    // Exact-pin every dependency reference to the chosen version, so a
-    // later `vibe install` off this lockfile reproduces it bit-for-bit.
-    let resolved_versions: HashMap<(Group, String), semver::Version> = packages
-        .iter()
-        .map(|n| ((n.group.clone(), n.name.clone()), n.version.clone()))
-        .collect();
-    for node in packages.iter_mut() {
-        for dep in node.dependencies.iter_mut() {
-            if let Some(group) = dep.group.clone()
-                && let Some(version) = resolved_versions.get(&(group, dep.name.to_string()))
-                && let Ok(req) = semver::VersionReq::parse(&format!("={version}"))
-            {
-                *dep = PackageRef {
-                    kind: dep.kind,
-                    group: dep.group.clone(),
-                    name: dep.name.clone(),
-                    version: VersionSpec::Req(req),
-                };
-            }
-        }
-        // Two requirements of one package pin to the same reference.
-        let mut seen = HashSet::new();
-        node.dependencies.retain(|dep| seen.insert(dep.to_string()));
-    }
-
-    ResolvedGraph { packages }
-}
-
-fn node_from_chosen(group: Group, name: String, entry: Chosen, is_root: bool) -> ResolvedNode {
-    ResolvedNode {
-        group,
-        name,
-        version: entry.version,
-        dependencies: entry.direct_deps,
-        is_root: is_root || entry.is_root,
-    }
-}
+mod source_composition;

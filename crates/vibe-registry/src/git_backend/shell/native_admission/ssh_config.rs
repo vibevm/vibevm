@@ -22,6 +22,7 @@ pub struct SshConfigSelection {
     user: PathBuf,
     system: Option<PathBuf>,
     environment: BTreeMap<String, String>,
+    acquisition_root: Option<PathBuf>,
 }
 impl std::fmt::Debug for SshConfigSelection {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
@@ -48,6 +49,7 @@ impl SshConfigSelection {
             home,
             system,
             environment: BTreeMap::new(),
+            acquisition_root: None,
         })
     }
     /// Select an alternate ordinary user configuration without changing HOME.
@@ -68,6 +70,13 @@ impl SshConfigSelection {
             return Err(unsupported("invalid SSH expansion input"));
         }
         self.environment.insert(key.into(), value);
+        Ok(self)
+    }
+    pub fn with_acquisition_root(mut self, root: PathBuf) -> Result<Self, GitError> {
+        if !root.is_absolute() {
+            return Err(unsupported("SSH acquisition root must be absolute"));
+        }
+        self.acquisition_root = Some(root);
         Ok(self)
     }
     /// Audit and freeze the complete supported Include closure before -G can run.

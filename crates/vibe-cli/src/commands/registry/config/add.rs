@@ -71,15 +71,16 @@ pub(in crate::commands::registry) fn run_add(
     };
 
     let auth = match args.auth.as_deref() {
-        None | Some("none") => vibe_core::manifest::AuthKind::None,
-        Some("token-env") => vibe_core::manifest::AuthKind::TokenEnv,
-        Some("credential-helper") => vibe_core::manifest::AuthKind::CredentialHelper,
-        Some("ssh") => vibe_core::manifest::AuthKind::Ssh,
+        None => None,
+        Some("none") => Some(vibe_core::manifest::AuthKind::None),
+        Some("token-env") => Some(vibe_core::manifest::AuthKind::TokenEnv),
+        Some("credential-helper") => Some(vibe_core::manifest::AuthKind::CredentialHelper),
+        Some("ssh") => Some(vibe_core::manifest::AuthKind::Ssh),
         Some(other) => bail!(
             "unknown --auth `{other}` — must be `none`, `token-env`, `credential-helper`, or `ssh`"
         ),
     };
-    if matches!(auth, vibe_core::manifest::AuthKind::TokenEnv) && args.token_env.is_none() {
+    if matches!(auth, Some(vibe_core::manifest::AuthKind::TokenEnv)) && args.token_env.is_none() {
         // No --token-env supplied: that's fine, the resolver will derive
         // the default name from the registry's host. But warn the
         // operator so they don't get a confusing "env-var not set" error
@@ -89,10 +90,10 @@ pub(in crate::commands::registry) fn run_add(
             "auth=token-env without explicit --token-env; will derive from host on resolve"
         );
     }
-    if args.token_env.is_some() && !matches!(auth, vibe_core::manifest::AuthKind::TokenEnv) {
+    if args.token_env.is_some() && !matches!(auth, Some(vibe_core::manifest::AuthKind::TokenEnv)) {
         bail!(
             "--token-env is only meaningful with --auth token-env; got --auth {:?}",
-            auth.as_str()
+            auth.map(vibe_core::manifest::AuthKind::as_str)
         );
     }
 
@@ -107,6 +108,7 @@ pub(in crate::commands::registry) fn run_add(
         index_url: None,
     };
 
+    vibe_registry::resolve_registry_auth(vibe_registry::RegistryAuthInput::SelectedRegistry(&new))?;
     match position_label {
         "primary" => manifest.registries.insert(0, new.clone()),
         "append" => manifest.registries.push(new.clone()),

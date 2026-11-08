@@ -33,6 +33,7 @@ fn runtime_refuses_programmatic_plan_collisions_without_values_or_work_publicati
     let settings = SettingsRoot::new(&root.path().join("settings"));
     let progress = vibe_core::progress::Progress::default();
     let ctx = OperationContext {
+        http_client: None,
         import_scope: None,
         settings: &settings,
         json: false,

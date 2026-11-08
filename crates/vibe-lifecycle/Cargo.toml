@@ -11,6 +11,7 @@ homepage.workspace = true
 description = "Deterministic lifecycle phase model and request chaining for vibe"
 
 [dependencies]
+command-group = "=5.0.1"
 glob.workspace = true
 getrandom.workspace = true
 libc.workspace = true

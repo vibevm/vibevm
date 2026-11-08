@@ -241,3 +241,6 @@ fn metadata_only_commit_is_materialised_even_when_payload_is_identical() {
 
 #[path = "native_ssh.rs"]
 mod ssh;
+
+#[path = "locked_source.rs"]
+mod locked_source;

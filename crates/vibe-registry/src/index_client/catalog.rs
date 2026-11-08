@@ -139,10 +139,10 @@ impl IndexClient {
             }
             Err(e) => {
                 reader.fail(e.to_string());
-                Err(IndexError::Http {
-                    url: url.to_string(),
-                    message: e.to_string(),
-                })
+                Err(Self::body_error(
+                    url,
+                    crate::http_admission::HttpGetError::from_io(e),
+                ))
             }
         }
     }

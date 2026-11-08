@@ -75,7 +75,9 @@ pub fn run(
     // the whole declared graph through the install substrate; anything else
     // moves exactly the named subtree. Both are `vibe update`, both report the
     // update root, and both borrow the SAME recorder.
-    let whole = args.all || args.packages.is_empty();
+    // `--sources-only` always pins exact locked versions per package, which is
+    // the scoped path's root model, even when it names no package.
+    let whole = !args.sources_only && (args.all || args.packages.is_empty());
     let execution = Execution {
         args,
         embedded_root,

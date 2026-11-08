@@ -210,9 +210,9 @@ impl GitPerPackageRegistry {
             })?;
         }
         let plain_url = strip_git_plus_prefix(url);
-        let fetch_url = inject_token(plain_url, self.effective_token.as_deref());
+        let fetch_url = self.selected_credentialed_url(plain_url)?;
         self.backend.bootstrap(&fetch_url, refname, dest)?;
-        if self.effective_token.is_some() {
+        if self.effective_token_value().is_some() {
             self.backend.set_remote_url(dest, "origin", plain_url)?;
         }
         Ok(())

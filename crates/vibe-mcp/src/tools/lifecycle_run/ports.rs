@@ -137,15 +137,22 @@ pub(crate) struct HostedPackageSourceFactory;
 
 impl PackageSourceFactory for HostedPackageSourceFactory {
     fn build(&self, input: PackageSourceBuild<'_>) -> Result<Box<dyn PackageSource>> {
-        let resolver = vibe_package_source::build_install_resolver(
-            &vibe_package_source::PackageSourceOptions::default(),
-            input.manifest,
-            input.embedded_root,
-            input.project_root,
-            input.global,
-            input.offline,
+        let resolver = vibe_package_source::build_install_resolver_with_sources(
+            vibe_package_source::InstallResolverRequest {
+                options: &vibe_package_source::PackageSourceOptions::default(),
+                manifest: input.manifest,
+                embedded_root: input.embedded_root,
+                project_root: input.project_root,
+                offline: input.offline,
+                locked: input.locked,
+                progress: input.progress,
+            },
+            input.global.clone(),
+        )?
+        .with_locked_checkouts(vibe_install::locked_checkout_paths(
+            input.workspace_root,
             input.locked,
-        )?;
+        ));
         Ok(Box::new(vibe_package_source::RegistryPackageSource::new(
             resolver,
             Box::new(vibe_package_source::RefusesQualification),
@@ -153,14 +160,9 @@ impl PackageSourceFactory for HostedPackageSourceFactory {
     }
 }
 
-/// The hosted registry environment: seed-then-load, once, entirely from
-/// the context's decided facts. When the context permits seeding, the
-/// default global registry is attempted BEFORE the machine-global config
-/// load (the same order the CLI's closure owns); no ambient environment
-/// is read. Seeding is best-effort just like the CLI startup path: an
-/// unwritable optional default must not veto a project-local/declared source.
-/// The subsequent config load remains fallible inside the executed install
-/// phase and therefore becomes a structured lifecycle failure.
+/// Capture the hosted context's default catalog choice without reading or
+/// writing a registry document. The shared source owner observes policy/catalog
+/// only when selected contact or new-name discovery actually demands it.
 pub(crate) struct HostedRegistryEnvironment {
     embedded_root: Option<PathBuf>,
     seed: bool,
@@ -177,12 +179,19 @@ impl HostedRegistryEnvironment {
 
 impl RegistryEnvironment for HostedRegistryEnvironment {
     fn prepare(&self) -> Result<RegistryEnvironmentSnapshot> {
-        if self.seed {
-            let _ = vibe_core::ensure_default_global_registry();
-        }
         Ok(RegistryEnvironmentSnapshot {
             embedded_root: self.embedded_root.clone(),
-            global: vibe_core::GlobalRegistryConfig::load()?,
+            global: vibe_core::GlobalRegistrySource::deferred(
+                vibe_core::settings::registry_config_path(),
+                if self.seed {
+                    vibe_core::GlobalRegistryConfig {
+                        registries: vibe_core::default_registries(),
+                        ..Default::default()
+                    }
+                } else {
+                    Default::default()
+                },
+            ),
         })
     }
 }

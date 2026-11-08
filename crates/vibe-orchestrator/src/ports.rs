@@ -23,7 +23,7 @@ use std::path::{Path, PathBuf};
 use std::sync::Arc;
 
 use anyhow::Result;
-use vibe_core::GlobalRegistryConfig;
+use vibe_core::GlobalRegistrySource;
 use vibe_core::manifest::{LockedPackage, Lockfile, Manifest};
 use vibe_lifecycle::RunMetadata;
 use vibe_lifecycle::process::StreamMode;
@@ -42,6 +42,11 @@ use crate::RitualPlan;
 /// fn takes(_: &dyn RunObserver) {}
 /// ```
 pub trait RunObserver: Send + Sync {
+    /// Invocation control; existing hosted adapters remain inert until attached.
+    fn cancellation(&self) -> vibe_core::cancellation::CancellationToken {
+        Default::default()
+    }
+
     /// Observe a phase when it first reaches executable work. Default no-op
     /// keeps hosted and test adapters source-compatible.
     fn observe_phase_started(&self, _phase: &str) {}
@@ -233,8 +238,8 @@ pub trait RegistryEnvironment {
 pub struct RegistryEnvironmentSnapshot {
     /// The in-tree `packages/` root of a source install, when there is one.
     pub embedded_root: Option<PathBuf>,
-    /// The machine-global registry configuration, loaded AFTER the seed.
-    pub global: GlobalRegistryConfig,
+    /// Invocation-owned global source, observed only when selected work demands it.
+    pub global: GlobalRegistrySource,
 }
 
 /// Borrowed inputs at the one package-source construction point.
@@ -251,8 +256,10 @@ pub struct PackageSourceBuild<'a> {
     pub embedded_root: Option<&'a Path>,
     /// The one canonical selection of this command's project root.
     pub project_root: &'a Path,
-    /// The machine-global registry configuration this command loaded.
-    pub global: &'a GlobalRegistryConfig,
+    /// Owning workspace for dependency slots; may differ from the selected member.
+    pub workspace_root: &'a Path,
+    /// Ready or deferred global registry snapshot owned by this command.
+    pub global: &'a GlobalRegistrySource,
     /// The resolved offline posture.
     pub offline: bool,
     /// The pre-apply lockfile's members, as the provenance channel.

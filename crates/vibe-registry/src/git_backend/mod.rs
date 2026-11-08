@@ -17,6 +17,7 @@ use std::path::Path;
 use specmark::spec;
 use thiserror::Error;
 
+pub mod deferred;
 pub mod shell;
 pub mod transfers;
 
@@ -235,6 +236,10 @@ pub trait GitBackend: Send + Sync {
     fn uses_native_materialisation(&self) -> bool {
         false
     }
+    /// Resolve deferred guarantee selection without initializing the executable.
+    fn native_materialisation_for(&self, _address: &str) -> Result<bool, GitError> {
+        Ok(self.uses_native_materialisation())
+    }
     /// Native-only source acquisition before the actual manifest chooses its
     /// final cache/workspace destination. Non-native backends do no work here.
     fn prepare_native_source(
@@ -246,6 +251,22 @@ pub trait GitBackend: Send + Sync {
     ) -> Result<Option<shell::native_admission::NativeSource>, GitError> {
         Ok(None)
     }
+    /// Acquire a held endpoint while retaining warm checkout metadata separately.
+    /// Unsupported backends must not silently reinterpret the warm origin.
+    fn prepare_pinned_native_source(
+        &self,
+        _url: &str,
+        _reference: &str,
+        _reuse: Option<&Path>,
+        _objects: &Path,
+    ) -> Result<Option<shell::native_admission::NativeSource>, GitError> {
+        if self.uses_native_materialisation() {
+            return Err(GitError::NativeUnavailable {
+                operation: "pinned source acquisition with warm metadata",
+            });
+        }
+        Ok(None)
+    }
     /// Stage a retained source under an explicitly supported native profile.
     /// None means this backend remains on its incumbent materialisation path.
     fn stage_native_materialisation(
@@ -255,6 +276,13 @@ pub trait GitBackend: Send + Sync {
     ) -> Result<Option<shell::native_admission::NativeMaterialisation>, GitError> {
         Ok(None)
     }
+    /// Check the selected authored endpoint before credential lookup. No contact or
+    /// ambient configuration evaluation is permitted here. Final backend admission
+    /// still validates effective endpoints and credential use independently.
+    fn preflight_selected_address(&self, _address: &str) -> Result<(), GitError> {
+        Ok(())
+    }
+
     /// Check declared credential semantics before attempting registry contact.
     fn preflight_registry_auth(
         &self,

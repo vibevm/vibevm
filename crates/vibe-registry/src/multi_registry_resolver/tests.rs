@@ -17,21 +17,25 @@ fn mirrors_for_filters_and_sorts() {
 
     let mirrors = vec![
         MirrorSection {
+            publication: Default::default(),
             of: "vibespecs".to_string(),
             url: "https://a".to_string(),
             priority: 2,
         },
         MirrorSection {
+            publication: Default::default(),
             of: "vibespecs".to_string(),
             url: "https://b".to_string(),
             priority: 1,
         },
         MirrorSection {
+            publication: Default::default(),
             of: "*".to_string(),
             url: "https://catchall".to_string(),
             priority: 99,
         },
         MirrorSection {
+            publication: Default::default(),
             of: "other".to_string(),
             url: "https://unrelated".to_string(),
             priority: 0,
@@ -45,7 +49,7 @@ fn mirrors_for_filters_and_sorts() {
         fake,
     );
 
-    let m = r.mirrors_for("vibespecs");
+    let m = r.mirrors_for("vibespecs").unwrap();
     assert_eq!(m.len(), 3);
     assert_eq!(m[0].url, "https://b");
     assert_eq!(m[1].url, "https://a");
@@ -71,21 +75,25 @@ fn mirrors_for_filters_and_sorts() {
 fn mirrors_again() -> Vec<MirrorSection> {
     vec![
         MirrorSection {
+            publication: Default::default(),
             of: "vibespecs".to_string(),
             url: "https://a".to_string(),
             priority: 2,
         },
         MirrorSection {
+            publication: Default::default(),
             of: "vibespecs".to_string(),
             url: "https://b".to_string(),
             priority: 1,
         },
         MirrorSection {
+            publication: Default::default(),
             of: "*".to_string(),
             url: "https://catchall".to_string(),
             priority: 99,
         },
         MirrorSection {
+            publication: Default::default(),
             of: "other".to_string(),
             url: "https://unrelated".to_string(),
             priority: 0,
@@ -139,12 +147,12 @@ fn local_directory_registry_resolves_and_fetches_without_git() {
 
     // The local source is NOT in the git subset; it is a `Local` source.
     assert_eq!(
-        r.registries().len(),
+        r.registries().unwrap().len(),
         0,
         "git subset empty — a local dir is not git"
     );
-    assert_eq!(r.sources().len(), 1);
-    assert!(matches!(r.sources()[0], RegistrySource::Local(_)));
+    assert_eq!(r.sources().unwrap().len(), 1);
+    assert!(matches!(r.sources().unwrap()[0], RegistrySource::Local(_)));
 
     let g = Group::parse(group).unwrap();
     let versions = r.list_versions(&g, name).unwrap();
@@ -153,7 +161,13 @@ fn local_directory_registry_resolves_and_fetches_without_git() {
     let pkgref = PackageRef::parse(&format!("{group}/{name}@0.1.0")).unwrap();
     let resolution = r.resolve(&pkgref).unwrap();
     assert_eq!(resolution.registry_name.as_deref(), Some("local"));
-    assert_eq!(resolution.source_url, url);
+    // The exact package directory, the same identity local acquisition and a
+    // per-package Git registry record — not the registry root.
+    assert_eq!(
+        resolution.source_url,
+        crate::local_registry::source_uri_for_local(&resolution.resolved.source_dir)
+    );
+    assert!(resolution.source_url.starts_with(&url));
     assert!(
         resolution.source_ref.is_none(),
         "no git ref for a local source"
@@ -187,6 +201,7 @@ fn git_transport_url_stays_on_the_git_backend_not_local() {
     );
     assert!(
         r.sources()
+            .unwrap()
             .iter()
             .all(|s| !matches!(s, RegistrySource::Local(_))),
         "git+file:// is a git transport — must stay on the git backend, not LocalRegistry"
@@ -212,6 +227,7 @@ fn bare_path_url_stays_on_the_git_backend_not_local() {
     );
     assert!(
         r.sources()
+            .unwrap()
             .iter()
             .all(|s| !matches!(s, RegistrySource::Local(_))),
         "a bare path (no scheme) is a git registry historically — only file:// opens LocalRegistry"

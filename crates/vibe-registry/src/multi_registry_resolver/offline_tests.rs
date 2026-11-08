@@ -20,11 +20,20 @@ use super::test_support::*;
 use super::*;
 use crate::vendor::file_url_for_dir;
 
+/// A placeholder held hash for rows whose bytes are never acquired.
+const UNACQUIRED: &str = "sha256:1111111111111111111111111111111111111111111111111111111111111111";
+
 /// A lockfile entry for `org.vibevm/wal` at `version`, served from
 /// `source_url` — the provenance the store-backed resolution re-uses.
 /// Built by TOML so the test states the wire shape, not 20 struct
-/// fields.
-fn locked_wal(version: &str, source_url: &str) -> vibe_core::manifest::LockedPackage {
+/// fields. Held replay verifies acquired bytes against `content_hash`
+/// (PROP-073#LOCKED-SOURCE-LAW), so a row whose bytes are read passes
+/// the entry's real hash.
+fn locked_wal(
+    version: &str,
+    source_url: &str,
+    content_hash: &str,
+) -> vibe_core::manifest::LockedPackage {
     toml::from_str(&format!(
         r#"
 kind = "flow"
@@ -34,7 +43,7 @@ version = "{version}"
 registry = "vibespecs"
 source_url = "{source_url}"
 source_ref = "v{version}"
-content_hash = "sha256:1111111111111111111111111111111111111111111111111111111111111111"
+content_hash = "{content_hash}"
 "#
     ))
     .unwrap()
@@ -83,6 +92,7 @@ fn offline_resolves_and_fetches_from_the_store_with_zero_registries() {
     let cache = tempdir().unwrap();
     let store_root = tempdir().unwrap();
     let entry = seed_store_entry(store_root.path(), "0.2.0", "store bytes\n");
+    let hash = crate::compute_content_hash(&entry).unwrap();
     let fake = Arc::new(FakeBackend::default());
 
     let r = build_resolver(cache.path(), vec![], vec![], vec![], fake.clone())
@@ -91,6 +101,7 @@ fn offline_resolves_and_fetches_from_the_store_with_zero_registries() {
         .with_locked_packages(vec![locked_wal(
             "0.2.0",
             "https://registry.example/wal.git",
+            &hash,
         )]);
 
     // The solver's candidate set: the store's locked version.
@@ -119,9 +130,14 @@ fn offline_resolves_and_fetches_from_the_store_with_zero_registries() {
     assert!(cached.content_hash.starts_with("sha256:"));
     assert_eq!(cached.store_reused, Some(true));
     assert_eq!(cached.source_kind(), None);
-    let mut known = locked_wal("0.2.0", "https://registry.example/wal.git");
+    let mut known = locked_wal("0.2.0", "https://registry.example/wal.git", &hash);
     known.source_kind = Some(vibe_core::manifest::SourceKind::Override);
+    // The held selection travels with its resolution, so the recorded kind
+    // is observed through a resolution of the lock that carries it.
     let r = r.with_locked_packages(vec![known]);
+    let resolution = r
+        .resolve(&PackageRef::parse("org.vibevm/wal@=0.2.0").unwrap())
+        .unwrap();
     let known = r
         .fetch_with_expected_hash(&resolution, store_root.path(), None)
         .unwrap();
@@ -135,21 +151,41 @@ fn offline_resolves_and_fetches_from_the_store_with_zero_registries() {
 
 /// PROP-010 §2.5 (`OFFLINE-HARD-ERROR`): an offline miss is a hard
 /// error that names the package and version and hands the operator the
-/// three recovery recipes — never a silent degrade.
+/// three recovery recipes — never a silent degrade. The recipe miss is the
+/// unheld path: a held row selects its locked source without a walk
+/// (PROP-073#LOCKED-SOURCE-LAW), so its offline miss is the acquisition
+/// refusal below, still with zero network.
 #[test]
 fn offline_miss_is_a_hard_error_naming_the_package_and_recipes() {
     let cache = tempdir().unwrap();
     let store_root = tempdir().unwrap(); // warm for nothing: no entries
     let fake = Arc::new(FakeBackend::default());
 
-    let r = build_resolver(cache.path(), vec![], vec![], vec![], fake)
-        .with_offline(true)
-        .with_store_root(store_root.path().to_path_buf())
-        .with_locked_packages(vec![locked_wal(
-            "0.2.0",
-            "https://registry.example/wal.git",
-        )]);
+    let offline = || {
+        build_resolver(cache.path(), vec![], vec![], vec![], fake.clone())
+            .with_offline(true)
+            .with_store_root(store_root.path().to_path_buf())
+    };
+    let r = offline().with_locked_packages(vec![locked_wal(
+        "0.2.0",
+        "https://registry.example/wal.git",
+        UNACQUIRED,
+    )]);
+    let held = r
+        .resolve(&PackageRef::parse("org.vibevm/wal@=0.2.0").unwrap())
+        .unwrap();
+    assert!(held.locked.is_some() && !held.from_store);
+    let refused = r
+        .fetch_with_expected_hash(&held, store_root.path(), None)
+        .unwrap_err()
+        .to_string();
+    assert!(
+        refused.contains("locked bytes are absent from the verified offline store"),
+        "held offline miss names the absent locked bytes: {refused}"
+    );
+    assert_eq!(fake.bootstrap_count(), 0, "zero network for the held miss");
 
+    let r = offline();
     let err = r
         .resolve(&PackageRef::parse("org.vibevm/wal@=0.2.0").unwrap())
         .unwrap_err();
@@ -183,14 +219,16 @@ fn offline_miss_is_a_hard_error_naming_the_package_and_recipes() {
 /// THE canonical rule of `A-CACHE-HIT-IS-AUTHORITATIVE-FOR-AVAILABILITY`
 /// (PROP-010 §2.6): a version that was installed earlier (lock entry +
 /// store entry), then deleted from the serving registry, still
-/// installs — the registry answered "no such version", and the store
-/// outranks that silence. Online posture throughout.
+/// installs. The held row replays its locked identity from the verified
+/// store entry before any registry is asked (PROP-073#LOCKED-SOURCE-LAW),
+/// so the registry's silence cannot matter. Online posture throughout.
 #[test]
 fn availability_fallback_resolves_a_version_the_registry_dropped() {
     let cache = tempdir().unwrap();
     let store_root = tempdir().unwrap();
     let outer = tempdir().unwrap();
     let entry = seed_store_entry(store_root.path(), "0.2.0", "store bytes\n");
+    let hash = crate::compute_content_hash(&entry).unwrap();
     // The registry now serves only 0.1.0 — 0.2.0 was deleted upstream
     // after the install that warmed the store and wrote the lock.
     let reg_url = seed_local_registry(outer.path(), &["0.1.0"]);
@@ -207,6 +245,7 @@ fn availability_fallback_resolves_a_version_the_registry_dropped() {
     .with_locked_packages(vec![locked_wal(
         "0.2.0",
         "https://registry.example/wal.git",
+        &hash,
     )]);
 
     let resolution = r
@@ -232,11 +271,10 @@ fn availability_fallback_resolves_a_version_the_registry_dropped() {
 /// absence — the store must not mask it. Here the registry host
 /// answers 401/403 (`AuthFailed`) and the resolver runs with
 /// `strict_auth`, so the walk HALTS on the auth error exactly as it
-/// did before the store existed — even though the store + lock entry
-/// could serve the package. (A `RepoNotFound` host, by contrast, is
-/// classified "no answer here" and walks on — on THAT shape the store
-/// fallback is contractually correct, and the canonical test above
-/// covers it.)
+/// did before the store existed — even though the store holds bytes at
+/// that coordinate. The walk is the unheld path: with a lock row the
+/// registry is never asked (PROP-073#LOCKED-SOURCE-LAW), which the
+/// first half pins.
 #[test]
 fn an_operational_error_is_not_masked_by_the_store() {
     let cache = tempdir().unwrap();
@@ -249,16 +287,30 @@ fn an_operational_error_is_not_masked_by_the_store() {
     // be seeded there.
     fake.seed_auth_failure("https://auth.example/vibespecs/org.vibevm.wal.git");
 
-    let r = build_resolver(
-        cache.path(),
-        vec![registry_section("vibespecs", url)],
-        vec![],
-        vec![],
-        fake,
-    )
-    .with_strict_auth(true)
-    .with_store_root(store_root.path().to_path_buf())
-    .with_locked_packages(vec![locked_wal("0.2.0", "https://auth.example/wal.git")]);
+    let strict = || {
+        build_resolver(
+            cache.path(),
+            vec![registry_section("vibespecs", url)],
+            vec![],
+            vec![],
+            fake.clone(),
+        )
+        .with_strict_auth(true)
+        .with_store_root(store_root.path().to_path_buf())
+    };
+    let r = strict();
+    let held = strict()
+        .with_locked_packages(vec![locked_wal(
+            "0.2.0",
+            "https://auth.example/wal.git",
+            UNACQUIRED,
+        )])
+        .resolve(&PackageRef::parse("org.vibevm/wal@=0.2.0").unwrap())
+        .unwrap();
+    assert_eq!(
+        held.source_url, "https://auth.example/wal.git",
+        "a held row selects its locked source, never the failing registry"
+    );
 
     let err = r
         .resolve(&PackageRef::parse("org.vibevm/wal@=0.2.0").unwrap())

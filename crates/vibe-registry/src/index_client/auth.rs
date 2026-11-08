@@ -92,13 +92,23 @@ impl IndexAuth {
     /// [`IndexAuth::plan`] so it is unit-testable without mutating
     /// process env (forbidden under `#![forbid(unsafe_code)]` on
     /// edition 2024+, where `std::env::set_var` is `unsafe`).
-    pub fn for_registry(reg: &RegistrySection, base_url: &str) -> IndexAuth {
-        let token = if matches!(reg.auth, AuthKind::TokenEnv) {
-            resolve_env_token(reg)
-        } else {
-            None
-        };
-        Self::plan(token, reg.auth, base_url.starts_with("https://"))
+    pub fn for_registry(
+        reg: &RegistrySection,
+        base_url: &str,
+    ) -> Result<IndexAuth, crate::RegistryError> {
+        let resolved =
+            crate::resolve_registry_auth(crate::RegistryAuthInput::SelectedRegistry(reg))?;
+        let token =
+            if matches!(resolved.kind, AuthKind::TokenEnv) && base_url.starts_with("https://") {
+                resolve_env_token(resolved.token_env_name.as_deref())
+            } else {
+                None
+            };
+        Ok(Self::plan(
+            token,
+            resolved.kind,
+            base_url.starts_with("https://"),
+        ))
     }
 
     /// Pure decision: given a resolved token (already read from env),
@@ -179,9 +189,8 @@ pub(super) fn refusal_reason(base: &str, status: u16, auth: &IndexAuth) -> Strin
 /// `token_env` override wins, otherwise the host-derived default from
 /// [`RegistrySection::resolve_token_env_name`]. Returns `None` for an
 /// absent or whitespace-only value.
-fn resolve_env_token(reg: &RegistrySection) -> Option<String> {
-    reg.resolve_token_env_name()
-        .and_then(|var| std::env::var(&var).ok())
+fn resolve_env_token(name: Option<&str>) -> Option<String> {
+    name.and_then(|var| std::env::var(var).ok())
         .map(|v| v.trim().to_string())
         .filter(|v| !v.is_empty())
 }
@@ -285,7 +294,7 @@ mod tests {
     #[test]
     fn for_registry_ssh_is_http_incapable() {
         assert!(matches!(
-            IndexAuth::for_registry(&reg(AuthKind::Ssh), "https://idx.example.com"),
+            IndexAuth::for_registry(&reg(AuthKind::Ssh), "https://idx.example.com").unwrap(),
             IndexAuth::HttpIncapable("ssh")
         ));
     }
@@ -293,7 +302,7 @@ mod tests {
     #[test]
     fn for_registry_none_is_none() {
         assert!(matches!(
-            IndexAuth::for_registry(&reg(AuthKind::None), "https://idx.example.com"),
+            IndexAuth::for_registry(&reg(AuthKind::None), "https://idx.example.com").unwrap(),
             IndexAuth::None
         ));
     }

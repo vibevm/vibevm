@@ -398,7 +398,7 @@ impl RegistryEnvironment for CountingEnvironment {
         self.prepares.fetch_add(1, Ordering::SeqCst);
         Ok(RegistryEnvironmentSnapshot {
             embedded_root: None,
-            global: vibe_core::GlobalRegistryConfig::load()?,
+            global: vibe_core::GlobalRegistryConfig::load()?.into(),
         })
     }
 }

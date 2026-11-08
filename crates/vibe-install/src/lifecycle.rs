@@ -10,7 +10,7 @@ use vibe_core::lifecycle::{ExtensionPoint, SlotPoint};
 use vibe_core::manifest::MechanismRoutes;
 use vibe_lifecycle::handlers::{BinaryBackend, HandlerRuntime, HandlerStreams};
 use vibe_lifecycle::native::{ArtifactNativeBackend, NativeBuildExecution, NativePlatform};
-use vibe_lifecycle::process::{StreamMode, SystemProcessRunner};
+use vibe_lifecycle::process::StreamMode;
 use vibe_lifecycle::{
     Delegation, DependencyExtensionSource, DependencyProviderId, DispatchError, ExecutionReuse,
     ExtensionProvider, ExtensionRegistryRow, HandlerExecution, HostIdentity, LifecycleRunError,
@@ -64,6 +64,7 @@ pub struct SlotLifecycleReport {
 pub(crate) const PARKED_SENTINEL: &str = "@vibe/lifecycle/parked";
 
 pub struct InstallSlotLifecycle {
+    cancellation: vibe_core::cancellation::CancellationToken,
     installed: Vec<DependencyExtensionSource>,
     plan: SlotLifecyclePlan,
     native_candidates: Vec<ExtensionRegistryRow>,
@@ -262,8 +263,10 @@ impl InstallSlotLifecycle {
             offline: self.offline,
             created_at: &self.created_at,
         });
+        let process =
+            vibe_lifecycle::process::ControlledProcessRunner::new(self.cancellation.clone());
         let runtime = HandlerRuntime {
-            process: &SystemProcessRunner,
+            process: &process,
             binary: &binary,
             native: &native,
             package_binding: &vibe_lifecycle::NoPackageBindingBackend,
@@ -359,6 +362,24 @@ impl BinaryBackend for WorkspaceBinaryBackend {
         row: &vibe_lifecycle::ExtensionRegistryRow,
         name: &str,
     ) -> std::result::Result<PathBuf, String> {
+        self.resolve(row, name, None)
+    }
+    fn resolve_for_controlled(
+        &self,
+        row: &vibe_lifecycle::ExtensionRegistryRow,
+        name: &str,
+        cancellation: &vibe_core::cancellation::CancellationToken,
+    ) -> std::result::Result<PathBuf, String> {
+        self.resolve(row, name, Some(cancellation))
+    }
+}
+impl WorkspaceBinaryBackend {
+    fn resolve(
+        &self,
+        row: &vibe_lifecycle::ExtensionRegistryRow,
+        name: &str,
+        cancellation: Option<&vibe_core::cancellation::CancellationToken>,
+    ) -> std::result::Result<PathBuf, String> {
         let (binary, home) = match row.provider() {
             ExtensionProvider::Dependency(provider) => (
                 vibe_workspace::bins::find_binary_in_provider_slot(
@@ -391,15 +412,26 @@ impl BinaryBackend for WorkspaceBinaryBackend {
         };
         let binary = binary.map_err(|error| error.to_string())?;
         if !binary.artifact().exists() {
-            vibe_workspace::bins::build_binary_authorized_with_output(
-                &binary,
-                vibe_workspace::bins::BuildAuthorization::InstalledExtension { home },
-                if self.output == StreamMode::Inherit {
-                    vibe_workspace::bins::BuildOutput::Inherit
-                } else {
-                    vibe_workspace::bins::BuildOutput::Quiet
-                },
-            )
+            let authorization =
+                vibe_workspace::bins::BuildAuthorization::InstalledExtension { home };
+            let output = if self.output == StreamMode::Inherit {
+                vibe_workspace::bins::BuildOutput::Inherit
+            } else {
+                vibe_workspace::bins::BuildOutput::Quiet
+            };
+            match cancellation {
+                Some(token) => vibe_workspace::bins::build_binary_authorized_controlled(
+                    &binary,
+                    authorization,
+                    output,
+                    token,
+                ),
+                None => vibe_workspace::bins::build_binary_authorized_with_output(
+                    &binary,
+                    authorization,
+                    output,
+                ),
+            }
             .map_err(|error| error.to_string())?;
         }
         Ok(binary.artifact())

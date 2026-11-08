@@ -15,16 +15,50 @@ use super::*;
 ///
 /// The artifact carries the dependency's `group/name`, so a `package` row
 /// redirects one dependency without touching the rest.
-fn located_git_source(dep: &GitPackageDep) -> Result<String, RegistryError> {
+fn located_git_source(
+    dep: &GitPackageDep,
+) -> Result<crate::git_package_registry::PublicationRoute, RegistryError> {
     let artifact = vibe_core::remap::Artifact::new(vibe_core::remap::ArtifactKind::GitSourceDep)
         .with_url(&dep.url)
         .with_package(format!("{}/{}", dep.group, dep.name));
     vibe_core::remap::active()
-        .choose_url(&artifact)
+        .choose_candidate(&artifact)
+        .map(|chosen| crate::git_package_registry::PublicationRoute {
+            url: chosen.target.display(),
+            publication: chosen.publication_scope(),
+        })
         .map_err(|refusal| RegistryError::MalformedMeta {
             path: PathBuf::from(dep.url.clone()),
             reason: refusal.to_string(),
         })
+}
+
+/// A declared git source with the default `auth = "none"` keeps its incumbent
+/// meaning on an SSH address: the transport's own key agent / SSH config is the
+/// credential, exactly as before credential ceilings were bound
+/// (spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#registry-auth).
+/// The default is indistinguishable from omission, so it lowers the same way
+/// an omitted declaration does; an active source policy still decides through
+/// the backend's `preflight_registry_auth`. Explicit mechanisms are unchanged.
+fn declared_git_source_auth(
+    dep: &GitPackageDep,
+    physical: &str,
+) -> Result<vibe_core::manifest::AuthKind, RegistryError> {
+    if dep.auth != vibe_core::manifest::AuthKind::None {
+        return Ok(dep.auth);
+    }
+    let ssh = crate::registry_auth::ssh_source(physical).map_err(|reason| {
+        crate::registry_auth::declaration_error(
+            &format!("git source {}/{}", dep.group, dep.name),
+            physical,
+            reason,
+        )
+    })?;
+    Ok(if ssh {
+        vibe_core::manifest::AuthKind::Ssh
+    } else {
+        vibe_core::manifest::AuthKind::None
+    })
 }
 
 impl MultiRegistryResolver {
@@ -40,20 +74,26 @@ impl MultiRegistryResolver {
         pkgref: &PackageRef,
         dep: &GitPackageDep,
     ) -> Result<MultiResolution, RegistryError> {
-        let synthetic_name = format!("git-source-{}-{}", dep.group, dep.name);
         let refname = dep.ref_kind.as_str().to_string();
         let clone_url = located_git_source(dep)?;
-        let reg = GitPerPackageRegistry::open_single_package(
-            &synthetic_name,
-            &clone_url,
-            &refname,
-            &self.cache_root,
-            Arc::clone(&self.backend),
-            DEFAULT_FRESHNESS_SECS,
-            dep.auth,
-            dep.token_env.as_deref(),
-        )?;
-        let manifest = reg.fetch_manifest_at_ref(&dep.group, &dep.name, &refname)?;
+        let execution_reference = match &dep.ref_kind {
+            vibe_core::manifest::GitRefKind::Branch(branch) => format!("refs/heads/{branch}"),
+            vibe_core::manifest::GitRefKind::Tag(tag) => format!("refs/tags/{tag}"),
+            vibe_core::manifest::GitRefKind::Rev(revision) => revision.clone(),
+        };
+        let direct = self.retain_direct_source(direct::DirectSourceInput {
+            group: &dep.group,
+            name: pkgref.name.as_str(),
+            canonical: &dep.url,
+            physical: &clone_url.url,
+            publication: clone_url.publication,
+            reference: &refname,
+            execution_reference: &execution_reference,
+            kind: direct::DirectKind::Git,
+            auth: declared_git_source_auth(dep, &clone_url.url)?,
+            token_env: dep.token_env.as_deref(),
+        })?;
+        let manifest = direct.manifest();
         let meta = manifest
             .require_package()
             .map_err(|e| RegistryError::MalformedMeta {
@@ -92,12 +132,15 @@ impl MultiRegistryResolver {
             version: meta.version.clone(),
             source_dir: self.git_source_clone_dir(&dep.group, pkgref.name.as_str()),
         };
+        let recorded_reference = direct.reference().to_owned();
         Ok(MultiResolution {
+            direct: Some(direct),
+            locked: None,
             selected_route: None,
             resolved,
             registry_name: None,
             source_url: dep.url.clone(),
-            source_ref: Some(refname),
+            source_ref: Some(recorded_reference),
             overridden: false,
             is_git_source: true,
             is_path_source: false,
@@ -164,6 +207,8 @@ impl MultiRegistryResolver {
             source_dir: dep.package_dir.clone(),
         };
         Ok(MultiResolution {
+            direct: None,
+            locked: None,
             selected_route: None,
             resolved,
             registry_name: None,
@@ -224,23 +269,40 @@ impl MultiRegistryResolver {
         // injection + scrub. The synthetic registry's clone path is
         // not used here — we clone into our own `__git_sources__`
         // sub-tree so the cache stays organised by resolution mode.
-        let synthetic_name = format!("git-source-{group}-{name}");
-        let clone_url = located_git_source(dep)?;
-        let reg = GitPerPackageRegistry::open_single_package(
-            &synthetic_name,
-            &clone_url,
-            &refname,
-            &self.cache_root,
-            Arc::clone(&self.backend),
-            DEFAULT_FRESHNESS_SECS,
-            dep.auth,
-            dep.token_env.as_deref(),
-        )?;
+        let legacy_registry;
+        let reg = if let Some(lease) = &resolution.direct {
+            lease.registry()
+        } else {
+            let clone_url = located_git_source(dep)?;
+            legacy_registry = GitPerPackageRegistry::open_single_package(
+                &format!("git-source-{group}-{name}"),
+                &clone_url.url,
+                &refname,
+                &self.cache_root,
+                self.backend.clone(),
+                DEFAULT_FRESHNESS_SECS,
+                dep.auth,
+                dep.token_env.as_deref(),
+            )?;
+            &legacy_registry
+        };
         let plain_url = reg.package_repo_url(group, name)?;
         let credentialed = reg.credentialed_url(&plain_url);
 
         let clone_dir = self.git_source_clone_dir(group, name);
-        ensure_clone_at(self.backend.as_ref(), &credentialed, &refname, &clone_dir)?;
+        if resolution.direct.is_some() {
+            reg.ensure_selected_clone(reg.org_ref(), &clone_dir)?;
+        } else {
+            ensure_clone_at(self.backend.as_ref(), &credentialed, &refname, &clone_dir)?;
+        }
+        if let Some(lease) = &resolution.direct
+            && Manifest::read(clone_dir.join(Manifest::FILENAME))? != *lease.manifest()
+        {
+            return Err(RegistryError::MalformedMeta {
+                path: clone_dir.join(Manifest::FILENAME),
+                reason: "direct source manifest changed after selection".into(),
+            });
+        }
         // Token-discipline (M1.14): scrub any credentialed URL from
         // the freshly-bootstrapped `.git/config` so the token does not
         // persist on disk. Best-effort — if the backend has no
@@ -276,7 +338,10 @@ impl MultiRegistryResolver {
             });
         }
 
+        let resolved_commit = self.backend.head_commit(&clone_dir)?;
         Ok(CachedPackage {
+            locked_selection: None,
+            route_publication: vibe_core::RoutePublication::Local,
             recorded_source_kind: None,
             store_reused: Some(reused),
             acquisition: Some(vibe_wire::generated::shared::SourceAcquisition::GitRepository),
@@ -294,7 +359,7 @@ impl MultiRegistryResolver {
             fetched_from: None,
             registry_name: None,
             source_ref: Some(refname),
-            resolved_commit: None,
+            resolved_commit,
             overridden: false,
             is_git_source: true,
             is_path_source: false,
@@ -336,6 +401,8 @@ impl MultiRegistryResolver {
         let content_hash = compute_content_hash(&package_dir)?;
 
         Ok(CachedPackage {
+            locked_selection: None,
+            route_publication: vibe_core::RoutePublication::Local,
             recorded_source_kind: None,
             store_reused: Some(false),
             acquisition: Some(vibe_wire::generated::shared::SourceAcquisition::Directory),

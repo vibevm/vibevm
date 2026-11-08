@@ -33,6 +33,7 @@ pub(crate) struct Installed {
     pub(crate) offer: RemapPackage,
     /// The registry that served it.
     pub(crate) registry: Option<String>,
+    pub(crate) source: vibe_core::manifest::LockedRemapSource,
 }
 
 /// The resolver a remap install uses: `--registry <dir>` when the operator
@@ -42,8 +43,13 @@ pub(crate) struct Installed {
 /// other package and an operator with no project still has to be able to
 /// install one.
 fn resolver(args: &InstallArgs, offline: bool) -> Result<InstallResolver> {
-    let global = GlobalRegistryConfig::load()
-        .map_err(|error| anyhow!("loading ~/.vibe/registry.toml: {error}"))?;
+    resolver_with_locked(args, offline, &[])
+}
+fn resolver_with_locked(
+    args: &InstallArgs,
+    offline: bool,
+    locked: &[vibe_core::manifest::LockedPackage],
+) -> Result<InstallResolver> {
     let root = args
         .path
         .canonicalize()
@@ -54,7 +60,9 @@ fn resolver(args: &InstallArgs, offline: bool) -> Result<InstallResolver> {
         .then(|| Manifest::read(root.join(Manifest::FILENAME)))
         .transpose()?
         .unwrap_or_default();
-    build_install_resolver(args, &manifest, None, &root, &global, offline, &[])
+    crate::commands::install::build_install_resolver_deferred(
+        args, &manifest, None, &root, offline, locked,
+    )
 }
 
 /// A resolver over one `file://` directory — what `vibe remap import`
@@ -74,6 +82,7 @@ pub(crate) fn local_resolver(dir: &Path) -> Result<InstallResolver> {
 /// anything into a manifest here.
 fn inert_args() -> InstallArgs {
     InstallArgs {
+        source_policy: Default::default(),
         packages: Vec::new(),
         global: true,
         agent: None,
@@ -174,6 +183,14 @@ pub(crate) fn adopt(
     pkgref: &PackageRef,
     registry_hint: Option<&str>,
 ) -> Result<Installed> {
+    let (cached, offer) = fetch_offer(resolver, store_root, pkgref)?;
+    adopt_cached(home, &cached, offer, registry_hint)
+}
+fn fetch_offer(
+    resolver: &InstallResolver,
+    store_root: &Path,
+    pkgref: &PackageRef,
+) -> Result<(vibe_registry::CachedPackage, RemapPackage)> {
     let cached = resolver
         .resolve_and_fetch(pkgref, store_root, None)
         .with_context(|| format!("fetching the remap package `{}`", pkgref.qualified_name()))?;
@@ -195,6 +212,47 @@ pub(crate) fn adopt(
                 pkgref.qualified_name()
             )
         })?;
+    // This is actual canonical acquisition state, not report-only source evidence.
+    source_binding(&cached).locked_package()?;
+    Ok((cached, offer))
+}
+fn source_binding(cached: &vibe_registry::CachedPackage) -> vibe_core::manifest::LockedRemap {
+    use vibe_core::manifest::{LockedRemap, LockedRemapSource};
+    let mut binding = LockedRemap {
+        package: format!("{}/{}", cached.resolved.group, cached.resolved.name),
+        version: cached.resolved.version.to_string(),
+        content_hash: cached.content_hash.clone(),
+        registry: cached.registry_name.clone(),
+        source: Some(LockedRemapSource {
+            source_url: vibe_core::SourceUrl::new(cached.source_uri.clone()),
+            source_ref: cached.source_ref.clone(),
+            resolved_commit: cached.resolved_commit.clone(),
+            source_kind: cached.source_kind(),
+            overridden: cached.overridden,
+            via_redirect: cached.via_redirect.clone(),
+        }),
+    };
+    if let Some(held) = &cached.locked_selection
+        && let Some(row) = held.replayed_row()
+    {
+        binding.registry = row.registry.clone();
+        binding.source = Some(LockedRemapSource {
+            source_url: row.source_url.clone(),
+            source_ref: row.source_ref.clone(),
+            resolved_commit: row.resolved_commit.clone(),
+            source_kind: row.source_kind,
+            overridden: row.overridden,
+            via_redirect: row.via_redirect.clone(),
+        });
+    }
+    binding
+}
+fn adopt_cached(
+    home: &mut RemapHome,
+    cached: &vibe_registry::CachedPackage,
+    offer: RemapPackage,
+    registry_hint: Option<&str>,
+) -> Result<Installed> {
     // The tree is copied into the home so `remap export` can hand the
     // package on and `remap list` can show the offer with no registry in
     // reach — a closed network is exactly where the registry is gone.
@@ -213,7 +271,14 @@ pub(crate) fn adopt(
         registry: registry.clone(),
         installed: crate::commands::init::current_timestamp_utc(),
     });
-    Ok(Installed { offer, registry })
+    let source = source_binding(cached)
+        .source
+        .ok_or_else(|| anyhow!("acquired remap has no source binding"))?;
+    Ok(Installed {
+        offer,
+        registry,
+        source,
+    })
 }
 
 /// The home's copy of one installed package's tree.
@@ -256,31 +321,83 @@ pub(crate) fn adopt_project_requirements(
     manifest: &Manifest,
     lockfile: &mut Lockfile,
     offline: bool,
+    workspace_requirements: &[PackageRef],
 ) -> Result<usize> {
+    let retained = workspace_requirements
+        .iter()
+        .map(PackageRef::qualified_name)
+        .collect::<std::collections::BTreeSet<_>>();
     if manifest.requires.remaps.is_empty() {
-        lockfile.remaps.clear();
+        lockfile
+            .remaps
+            .retain(|row| retained.contains(&row.package));
         return Ok(0);
     }
-    let resolver = resolver(args, offline)?;
+    // Missing legacy authority is diagnosed for the entire demanded remap set
+    // before resolver construction, acquisition, or home mutation.
+    let locked = manifest
+        .requires
+        .remaps
+        .iter()
+        .filter_map(|request| {
+            lockfile
+                .remaps
+                .iter()
+                .find(|row| row.package == request.qualified_name())
+        })
+        .map(vibe_core::manifest::LockedRemap::locked_package)
+        .collect::<std::result::Result<Vec<_>, _>>()?;
+    let resolver = resolver_with_locked(args, offline, &locked)?;
     let store_root = vibe_registry::store_root().context("resolving the machine store root")?;
+    let fetched = manifest
+        .requires
+        .remaps
+        .iter()
+        .map(|pkgref| fetch_offer(&resolver, &store_root, pkgref))
+        .collect::<Result<Vec<_>>>()?;
+    for (cached, _) in &fetched {
+        let key = format!("{}/{}", cached.resolved.group, cached.resolved.name);
+        for request in workspace_requirements
+            .iter()
+            .filter(|request| request.qualified_name() == key)
+        {
+            if !request.version.matches(&cached.resolved.version) {
+                bail!(
+                    "selected remap `{key}` does not satisfy every authored workspace requirement; source binding left unchanged"
+                );
+            }
+        }
+    }
     let mut home = RemapHome::open()?;
     let mut pinned = Vec::new();
     {
         let _lock = home.lock()?;
-        for pkgref in &manifest.requires.remaps {
-            let installed = adopt(&resolver, &store_root, &mut home, pkgref, None)?;
+        for (cached, offer) in fetched {
+            let installed = adopt_cached(&mut home, &cached, offer, None)?;
             pinned.push(vibe_core::manifest::LockedRemap {
                 package: installed.offer.key.clone(),
                 version: installed.offer.version.clone(),
                 content_hash: installed.offer.content_hash.clone(),
                 registry: installed.registry.clone(),
+                source: Some(installed.source),
             });
         }
         home.save()?;
     }
     pinned.sort_by(|left, right| left.package.cmp(&right.package));
     let count = pinned.len();
-    lockfile.remaps = pinned;
+    lockfile
+        .remaps
+        .retain(|row| retained.contains(&row.package));
+    for row in pinned {
+        lockfile
+            .remaps
+            .retain(|existing| existing.package != row.package);
+        lockfile.remaps.push(row);
+    }
+    lockfile
+        .remaps
+        .sort_by(|left, right| left.package.cmp(&right.package));
     Ok(count)
 }
 
@@ -352,3 +469,58 @@ fn report(ctx: &output::Context, home: &RemapHome, installed: &[Installed]) -> R
     }
     Ok(())
 }
+
+/// Diagnose missing demanded authority before project installation or consent writes.
+pub(crate) fn preflight_project_sources(selected: &Path) -> Result<()> {
+    let manifest_path = selected.join(Manifest::FILENAME);
+    if !manifest_path.exists() {
+        return Ok(());
+    }
+    // An unreadable manifest declares no remap authority to admit; the
+    // command's own single read reports it inside its funnel, after the run
+    // identity is selected (PROP-054 trace activation), so it is not
+    // pre-empted here.
+    let Ok(manifest) = Manifest::read(&manifest_path) else {
+        return Ok(());
+    };
+    if manifest.requires.remaps.is_empty() {
+        return Ok(());
+    }
+    let workspace = owning_workspace(selected)?;
+    let path = workspace.root.join(Lockfile::FILENAME);
+    match std::fs::symlink_metadata(&path) {
+        Err(error) if error.kind() == std::io::ErrorKind::NotFound => return Ok(()),
+        Err(error) => return Err(error.into()),
+        Ok(_) => {}
+    }
+    let lock = Lockfile::read(&path)?;
+    for request in &manifest.requires.remaps {
+        if let Some(row) = lock
+            .remaps
+            .iter()
+            .find(|row| row.package == request.qualified_name())
+        {
+            row.locked_package()?;
+        }
+    }
+    Ok(())
+}
+
+/// Parent workspace owns the lock; a legacy misplaced child lock is not migrated.
+pub(crate) fn owning_workspace(selected: &Path) -> Result<vibe_workspace::Workspace> {
+    let selected = selected.canonicalize()?;
+    let workspace = vibe_workspace::Workspace::discover(&selected)?;
+    if selected != workspace.root {
+        match std::fs::symlink_metadata(selected.join(Lockfile::FILENAME)) {
+            Ok(_) => bail!(
+                "misplaced member vibe.lock: preserve it and explicitly reconcile with the owning workspace lock before remap acquisition"
+            ),
+            Err(error) if error.kind() == std::io::ErrorKind::NotFound => {}
+            Err(error) => return Err(error.into()),
+        }
+    }
+    Ok(workspace)
+}
+
+mod preview;
+pub(crate) use preview::preview_project_requirements;

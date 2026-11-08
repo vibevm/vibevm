@@ -84,6 +84,7 @@ fn context<'a>(
     facts: HostFacts<'a>,
 ) -> OperationContext<'a> {
     OperationContext {
+        http_client: None,
         import_scope: None,
         settings,
         json: false,

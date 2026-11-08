@@ -61,7 +61,11 @@ pub(crate) struct RemapEnv {
     /// first: the user home's accepted offers, then the ones the project
     /// requires (`PROP-066#layers`). Empty until consent says otherwise,
     /// which is what makes an offer an offer.
-    pub accepted: Vec<(Layer, vibe_core::remap::RemapPackage)>,
+    pub accepted: Vec<(
+        Layer,
+        vibe_core::remap::RemapPackage,
+        vibe_core::RoutePublication,
+    )>,
     /// `--remap <file>`, in the order given.
     pub flags: Vec<PathBuf>,
     /// The raw `VIBE_REMAP` value, if the variable is set and non-empty.
@@ -76,12 +80,7 @@ pub(crate) struct RemapEnv {
     pub release_origin: Option<String>,
 }
 
-/// Build the invocation's Locator from `env` and the project manifest.
-///
-/// Warnings about optional layers are returned rather than printed, so the
-/// caller decides where they go and `--json` keeps one envelope.
-#[specmark::spec(documents = "spec://org.vibevm.core/vibevm/common/PROP-066#layers")]
-pub(crate) fn build(env: &RemapEnv) -> Result<(Locator, Vec<String>)> {
+fn build_selected(env: &RemapEnv, catalog: bool) -> Result<(Locator, Vec<String>)> {
     let mut warnings = Vec::new();
     let mut sources = vec![LoadedSource {
         layer: Layer::UserPackage,
@@ -94,9 +93,14 @@ pub(crate) fn build(env: &RemapEnv) -> Result<(Locator, Vec<String>)> {
     // a package's rows are the weakest thing that is not built in, so a
     // local row or a `--remap` file always wins over an offer
     // (`PROP-066#layers`).
-    for (layer, package) in &env.accepted {
+    for (layer, package, publication) in &env.accepted {
         match package.loaded(*layer) {
-            Ok(loaded) => sources.push(loaded),
+            Ok(mut loaded) => {
+                for row in &mut loaded.rows {
+                    row.from.publication = *publication;
+                }
+                sources.push(loaded);
+            }
             // A malformed row inside an accepted package is a warning and
             // an absent layer, not a dead command: `vibe check` is where
             // a package's rows are judged, and refusing every install
@@ -106,7 +110,11 @@ pub(crate) fn build(env: &RemapEnv) -> Result<(Locator, Vec<String>)> {
         }
     }
 
-    let (registries, mirrors, overrides) = registry_tables(env, &mut warnings);
+    let (registries, mirrors, overrides) = if catalog {
+        registry_tables(env, &mut warnings)
+    } else {
+        (Vec::new(), Vec::new(), Vec::new())
+    };
     sources.push(LoadedSource {
         layer: Layer::Local,
         source: "[[mirror]] / [[override]]".into(),
@@ -295,7 +303,18 @@ fn registry_tables(
 /// operator named it on this command line and a run that quietly fetched
 /// from the public hosts instead would be the worst possible answer.
 pub(crate) fn install(ctx: &crate::output::Context, inputs: Inputs<'_>) -> Result<()> {
-    let project_root = std::env::current_dir().ok();
+    if let crate::cli::Command::Install(args) = inputs.command
+        && !args.global
+        && !args.plan_only
+    {
+        crate::commands::remap::packages::preflight_project_sources(&args.path)?;
+    }
+    let project_root = match inputs.command {
+        crate::cli::Command::Install(args) if !args.global && args.plan_only => {
+            Some(crate::commands::install::resolve_project_root(&args.path)?)
+        }
+        _ => std::env::current_dir().ok(),
+    };
     let accepted = accepted_offers(ctx, &inputs, project_root.as_deref())?;
     let env = RemapEnv {
         accepted,
@@ -306,7 +325,7 @@ pub(crate) fn install(ctx: &crate::output::Context, inputs: Inputs<'_>) -> Resul
         global_registry: vibe_core::settings::registry_config_path(),
         release_origin: inputs.release_origin,
     };
-    let (locator, warnings) = build(&env)?;
+    let (locator, warnings) = build_selected(&env, super::needs_global_registry(inputs.command))?;
     for warning in warnings {
         eprintln!(
             "{}",
@@ -352,17 +371,29 @@ fn accepted_offers(
     ctx: &crate::output::Context,
     inputs: &Inputs<'_>,
     project_root: Option<&Path>,
-) -> Result<Vec<(Layer, vibe_core::remap::RemapPackage)>> {
+) -> Result<
+    Vec<(
+        Layer,
+        vibe_core::remap::RemapPackage,
+        vibe_core::RoutePublication,
+    )>,
+> {
     // Admit the project layer before opening or mutating the consent owner.
     let required = project_required(project_root)?;
+    if vibe_core::settings::settings_dir().is_none() {
+        return Ok(Vec::new());
+    }
     let mut home = match crate::commands::remap::RemapHome::open() {
         Ok(home) => home,
         // No resolvable home is no accepted package, which is the
         // pre-PROP-066 behaviour exactly; a command that needs the home
         // (`remap accept`) reports the missing home itself.
+        Err(error) if crate::composition::project_preview(inputs.command) => return Err(error),
         Err(_) => return Ok(Vec::new()),
     };
-    let accepted = if asks_about_offers(&home, inputs) {
+    let accepted = if crate::composition::project_preview(inputs.command) {
+        crate::commands::remap::preview_consent(ctx, &home, &inputs.consent, inputs.offline)?
+    } else if asks_about_offers(&home, inputs) {
         crate::commands::remap::resolve_consent(ctx, &mut home, &inputs.consent, inputs.offline)?
     } else {
         // A verb that applies no offer asks nothing and refuses nothing:
@@ -378,12 +409,21 @@ fn accepted_offers(
     Ok(accepted
         .into_iter()
         .map(|package| {
-            let layer = if required.iter().any(|key| key == &package.key) {
+            let layer = if required.iter().any(|row| row.package == package.key) {
                 Layer::ProjectPackage
             } else {
                 Layer::UserPackage
             };
-            (layer, package)
+            let publication = if required.iter().any(|row| {
+                row.package == package.key
+                    && row.version == package.version
+                    && row.content_hash == package.content_hash
+            }) {
+                vibe_core::RoutePublication::Project
+            } else {
+                vibe_core::RoutePublication::Local
+            };
+            (layer, package, publication)
         })
         .collect())
 }
@@ -392,7 +432,7 @@ fn accepted_offers(
 /// genuinely absent project/lock or a core-classified legacy epoch1..6 contributes
 /// the historical empty layer. Malformed, rich-invalid and future locks refuse.
 #[specmark::spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-066#layers-packages")]
-fn project_required(project_root: Option<&Path>) -> Result<Vec<String>> {
+fn project_required(project_root: Option<&Path>) -> Result<Vec<vibe_core::manifest::LockedRemap>> {
     let Some(root) = project_root else {
         return Ok(Vec::new());
     };
@@ -427,7 +467,7 @@ fn project_required(project_root: Option<&Path>) -> Result<Vec<String>> {
             ));
         }
     };
-    Ok(lockfile.remaps.into_iter().map(|row| row.package).collect())
+    Ok(lockfile.remaps)
 }
 
 /// Whether an unanswered remap offer is a question for this run

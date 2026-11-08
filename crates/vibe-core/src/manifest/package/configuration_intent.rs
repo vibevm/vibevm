@@ -20,6 +20,21 @@ impl Requires {
                 }
             }
         }
+        for key in self.registry_pins.keys() {
+            let registry_edge = self
+                .packages
+                .iter()
+                .any(|edge| edge.qualified_name() == *key)
+                || self
+                    .var_packages
+                    .iter()
+                    .any(|edge| format!("{}/{}", edge.group, edge.name) == *key);
+            if !registry_edge {
+                return Err(format!(
+                    "registry pin for `{key}` has no registry-resolved requires edge"
+                ));
+            }
+        }
         for key in self.optional.keys() {
             if !declared.contains(key) {
                 return Err(format!(

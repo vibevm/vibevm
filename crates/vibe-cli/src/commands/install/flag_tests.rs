@@ -30,6 +30,7 @@ use super::*;
 /// one field at a time.
 fn base_args() -> InstallArgs {
     InstallArgs {
+        source_policy: Default::default(),
         packages: Vec::new(),
         global: false,
         agent: None,
@@ -148,6 +149,8 @@ fn the_projection_copies_exactly_the_ten_builder_fields() {
     assert_eq!(
         projected,
         PackageSourceOptions {
+            source_policy: Default::default(),
+            storage: None,
             registry: Some(PathBuf::from("C:/reg")),
             solver: Some("sat".into()),
             auth_required: true,

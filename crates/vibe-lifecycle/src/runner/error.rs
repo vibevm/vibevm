@@ -19,6 +19,11 @@ use super::FailedExecutionTransition;
 #[spec(documents = "spec://org.vibevm.core/vibevm/common/PROP-054#PHASE-STATE-HOME")]
 pub enum LifecycleRunError {
     #[error(
+        "lifecycle control unavailable for `{key}`: {reason} (governed by spec://org.vibevm.core/vibevm/common/PROP-073#OPERATION-EFFECTS-LAW; fix: select a provider with cooperative control or invoke without the stop contract)"
+    )]
+    ControlUnavailable { key: String, reason: String },
+
+    #[error(
         "lifecycle envelope preparation failed for `{key}`: {source} \
          (governed by spec://org.vibevm.core/vibevm/common/PROP-054#ENVELOPE-LAW; \
           fix: correct the named execution's configuration and rerun)"

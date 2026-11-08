@@ -23,6 +23,38 @@ pub struct SubmoduleProvenance {
 /// gitlink is visible, the checkout must be clean and exactly at its indexed
 /// commit; otherwise no SHA truthfully identifies the bytes being copied.
 pub fn inspect(source_dir: &Path) -> Result<Vec<SubmoduleProvenance>, PublishError> {
+    inspect_controlled(
+        source_dir,
+        &vibe_core::cancellation::CancellationToken::default(),
+    )
+}
+pub(super) fn inspect_controlled(
+    source_dir: &Path,
+    cancellation: &vibe_core::cancellation::CancellationToken,
+) -> Result<Vec<SubmoduleProvenance>, PublishError> {
+    let probe = |cwd: &Path, args: &[&str]| -> Result<Option<Output>, PublishError> {
+        let result = vibe_registry::git_backend::shell::controlled::output(
+            &mut command(cwd, args),
+            cancellation,
+        );
+        cancellation
+            .checkpoint()
+            .map_err(|error| PublishError::Git(error.to_string()))?;
+        Ok(result.ok().filter(|output| output.status.success()))
+    };
+    let required = |cwd: &Path, args: &[&str]| -> Result<Output, PublishError> {
+        let output = vibe_registry::git_backend::shell::controlled::output(
+            &mut command(cwd, args),
+            cancellation,
+        )
+        .map_err(|error| PublishError::Git(error.to_string()))?;
+        if !output.status.success() {
+            return Err(PublishError::Git(
+                "controlled submodule provenance read failed".into(),
+            ));
+        }
+        Ok(output)
+    };
     let Some(index) = probe(source_dir, &["ls-files", "--stage", "-z"])? else {
         return Ok(Vec::new());
     };
@@ -78,27 +110,6 @@ pub fn inspect(source_dir: &Path) -> Result<Vec<SubmoduleProvenance>, PublishErr
     }
     submodules.sort_by(|left, right| left.path.cmp(&right.path));
     Ok(submodules)
-}
-
-fn probe(cwd: &Path, args: &[&str]) -> Result<Option<Output>, PublishError> {
-    match command(cwd, args).output() {
-        Ok(output) if output.status.success() => Ok(Some(output)),
-        Ok(_) | Err(_) => Ok(None),
-    }
-}
-
-fn required(cwd: &Path, args: &[&str]) -> Result<Output, PublishError> {
-    let output = command(cwd, args)
-        .output()
-        .map_err(|error| PublishError::Git(format!("spawning git {}: {error}", args.join(" "))))?;
-    if !output.status.success() {
-        return Err(PublishError::Git(format!(
-            "git {} failed while verifying submodule provenance: {}",
-            args.join(" "),
-            String::from_utf8_lossy(&output.stderr).trim()
-        )));
-    }
-    Ok(output)
 }
 
 fn command(cwd: &Path, args: &[&str]) -> Command {

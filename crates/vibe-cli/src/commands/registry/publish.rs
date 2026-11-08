@@ -213,8 +213,8 @@ pub(super) fn run_publish(ctx: &output::Context, args: RegistryPublishArgs) -> R
 
     let outcome = observed_stage(ctx, "Staging and publishing registry package", || {
         Publisher::new(creator.as_ref())
-            .publish(&config)
-            .map_err(|e| anyhow!("{e}"))
+            .publish_controlled(&config, ctx.progress().cancellation())
+            .map_err(anyhow::Error::from)
     })?;
 
     // Optional post-publish hook — POST the freshly-built entry to a
@@ -222,6 +222,24 @@ pub(super) fn run_publish(ctx: &output::Context, args: RegistryPublishArgs) -> R
     // env vars; the hook stays dormant when either VIBEVM_INDEX_URL_<R>
     // or VIBEVM_INDEX_TOKEN_<R> is unset. Hook failures are warnings,
     // never fail the publish itself (PROP-005 §2.14).
+    if let Err(error) = ctx.progress().checkpoint() {
+        return Err(vibe_publish::PublishError::Cancelled {
+            repository_creation: if outcome.created_repo && !outcome.dry_run {
+                "completed"
+            } else {
+                "not-started"
+            }
+            .into(),
+            release_push: if outcome.dry_run {
+                "not-started"
+            } else {
+                "completed"
+            }
+            .into(),
+            reason: error.to_string(),
+        }
+        .into());
+    }
     let hook_report = if outcome.dry_run {
         // Dry-runs do not push real bytes; suppress the hook.
         vibe_publish::HookReport::dormant()
@@ -237,6 +255,24 @@ pub(super) fn run_publish(ctx: &output::Context, args: RegistryPublishArgs) -> R
         }
         report
     };
+    if let Err(error) = ctx.progress().checkpoint() {
+        return Err(vibe_publish::PublishError::Cancelled {
+            repository_creation: if outcome.created_repo && !outcome.dry_run {
+                "completed"
+            } else {
+                "not-started"
+            }
+            .into(),
+            release_push: if outcome.dry_run {
+                "not-started"
+            } else {
+                "completed"
+            }
+            .into(),
+            reason: error.to_string(),
+        }
+        .into());
+    }
     let index_report = index_step::run(
         ctx,
         index_checkout,
@@ -354,12 +390,30 @@ fn run_publish_direct(
 
     let outcome = observed_stage(ctx, "Staging and publishing package to git", || {
         Publisher::new(&creator)
-            .publish(&config)
-            .map_err(|e| anyhow!("{e}"))
+            .publish_controlled(&config, ctx.progress().cancellation())
+            .map_err(anyhow::Error::from)
     })?;
     // The checkout carries its own registry identity, so unlike the HTTP
     // hook (keyed by a `[[registry]]` name this path does not have) the
     // step runs here too; the entry records the URL without credentials.
+    if let Err(error) = ctx.progress().checkpoint() {
+        return Err(vibe_publish::PublishError::Cancelled {
+            repository_creation: if outcome.created_repo && !outcome.dry_run {
+                "completed"
+            } else {
+                "not-started"
+            }
+            .into(),
+            release_push: if outcome.dry_run {
+                "not-started"
+            } else {
+                "completed"
+            }
+            .into(),
+            reason: error.to_string(),
+        }
+        .into());
+    }
     let index_report = index_step::run(
         ctx,
         index_checkout,

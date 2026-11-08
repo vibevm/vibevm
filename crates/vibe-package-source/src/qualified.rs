@@ -158,6 +158,34 @@ impl RegistryPackageSource {
 }
 
 impl InstallSource for RegistryPackageSource {
+    fn source_solve_limits(
+        &self,
+    ) -> Result<vibe_resolver::SourceSolveLimits, vibe_resolver::SolveError> {
+        self.resolver.source_solve_limits()
+    }
+    fn solve_metadata(
+        &self,
+        request: &vibe_resolver::SourceSolveRequest<'_>,
+    ) -> Result<vibe_resolver::SourceResolvedGraph, vibe_resolver::SolveError> {
+        self.resolver.solve_metadata(request)
+    }
+    fn acquire_candidate_for_install(
+        &self,
+        candidate: &vibe_registry::source_candidates::RetainedSourceCandidate,
+        store_root: &Path,
+        expected_hash: Option<&str>,
+        slot: &Path,
+        progress: &vibe_core::progress::Progress,
+    ) -> Result<vibe_registry::PackageAcquisition, RegistryError> {
+        self.resolver.acquire_candidate_for_install(
+            candidate,
+            store_root,
+            expected_hash,
+            slot,
+            progress,
+        )
+    }
+
     fn acquire_for_install(
         &self,
         pkgref: &PackageRef,
@@ -221,6 +249,9 @@ impl InstallSource for RegistryPackageSource {
         self.resolver.solve_masked(roots, blocked)
     }
 
+    fn replays_locked_source(&self, pkgref: &PackageRef) -> bool {
+        self.resolver.replays_locked_source(pkgref)
+    }
     fn prepare_in_place(
         &self,
         pkgref: &PackageRef,

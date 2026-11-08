@@ -81,6 +81,7 @@ fn stamp_lock_hash_mismatch(payload: &mut Value, err: &anyhow::Error) {
 pub(super) fn stamp_structured_error(payload: &mut Value, err: &anyhow::Error) {
     stamp_app_error(payload, err);
     stamp_lock_hash_mismatch(payload, err);
+    stamp_source_policy(payload, err);
     // Walk the anyhow chain looking for a known structured error
     // variant. Today the only match is
     // `DepProviderError::AggregateNotFound` (registry walk
@@ -126,5 +127,157 @@ pub(super) fn stamp_structured_error(payload: &mut Value, err: &anyhow::Error) {
             }
             return;
         }
+    }
+}
+
+/// A typed source-policy failure or contact refusal found in an error chain.
+enum SourceCause<'a> {
+    Policy(&'a vibe_core::manifest::SourcePolicyError),
+    Refusal(&'a vibe_registry::ContactRefusal),
+}
+
+fn registry_source(error: &vibe_registry::RegistryError) -> Option<SourceCause<'_>> {
+    match error {
+        vibe_registry::RegistryError::SourcePolicy(policy) => Some(SourceCause::Policy(policy)),
+        vibe_registry::RegistryError::ContactRefused(reason) => Some(SourceCause::Refusal(reason)),
+        _ => None,
+    }
+}
+
+fn provider_source(error: &vibe_resolver::DepProviderError) -> Option<SourceCause<'_>> {
+    match error {
+        vibe_resolver::DepProviderError::SourcePolicy(policy) => Some(SourceCause::Policy(policy)),
+        _ => None,
+    }
+}
+
+fn installer_source(error: &vibe_app::InstallerError) -> Option<SourceCause<'_>> {
+    match error {
+        vibe_app::InstallerError::ContactRefused(reason) => Some(SourceCause::Refusal(reason)),
+        vibe_app::InstallerError::SourcePolicy(error) => registry_source(error),
+        _ => None,
+    }
+}
+
+fn resolve_source(error: &vibe_app::ResolveError) -> Option<SourceCause<'_>> {
+    match error {
+        vibe_app::ResolveError::SourcePolicy(error) => registry_source(error),
+        _ => None,
+    }
+}
+
+/// `#[error(transparent)]` wrappers forward `source()` past their payload,
+/// so the application wrappers are matched explicitly instead of by chain.
+fn source_cause<'a>(cause: &'a (dyn std::error::Error + 'static)) -> Option<SourceCause<'a>> {
+    if let Some(policy) = cause.downcast_ref::<vibe_core::manifest::SourcePolicyError>() {
+        return Some(SourceCause::Policy(policy));
+    }
+    if let Some(reason) = cause.downcast_ref::<vibe_registry::ContactRefusal>() {
+        return Some(SourceCause::Refusal(reason));
+    }
+    if let Some(error) = cause.downcast_ref::<vibe_registry::RegistryError>() {
+        return registry_source(error);
+    }
+    if let Some(error) = cause.downcast_ref::<vibe_resolver::DepProviderError>() {
+        return provider_source(error);
+    }
+    if let Some(error) = cause.downcast_ref::<vibe_resolver::SolveError>() {
+        return match error {
+            vibe_resolver::SolveError::Provider(provider) => provider_source(provider),
+            _ => None,
+        };
+    }
+    if let Some(error) = cause.downcast_ref::<vibe_app::InstallerError>() {
+        return installer_source(error);
+    }
+    if let Some(error) = cause.downcast_ref::<vibe_app::ResolveError>() {
+        return resolve_source(error);
+    }
+    match cause.downcast_ref::<vibe_app::AppError>() {
+        Some(vibe_app::AppError::Installer(error)) => installer_source(error),
+        Some(vibe_app::AppError::Resolve(error)) => resolve_source(error),
+        _ => None,
+    }
+}
+
+/// Machine discriminators use typed source errors, never fragments of Display text.
+fn stamp_source_policy(payload: &mut Value, error: &anyhow::Error) {
+    for cause in error.chain() {
+        match source_cause(cause) {
+            Some(SourceCause::Policy(policy)) => {
+                payload["code"] = Value::String(policy.code().into());
+                payload["error_kind"] = Value::String("source_policy".into());
+                if let vibe_core::manifest::SourcePolicyError::ResourceLimit { actual, limit } =
+                    policy
+                {
+                    payload["actual"] = serde_json::json!(actual);
+                    payload["limit"] = serde_json::json!(limit);
+                }
+                return;
+            }
+            Some(SourceCause::Refusal(reason)) => {
+                payload["code"] = Value::String(
+                    match reason {
+                        vibe_registry::ContactRefusal::ExcludedHost { .. } => {
+                            "source_host_excluded"
+                        }
+                        vibe_registry::ContactRefusal::OperationCancelled => "operation_cancelled",
+                        _ => "source_contact_refused",
+                    }
+                    .into(),
+                );
+                payload["error_kind"] = Value::String("source_contact_refusal".into());
+                return;
+            }
+            None => {}
+        }
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    fn stamped(error: anyhow::Error) -> Value {
+        let mut payload = serde_json::json!({});
+        stamp_structured_error(&mut payload, &error);
+        payload
+    }
+
+    #[test]
+    fn app_wrapped_exclusion_reports_the_same_code_as_install() {
+        let refusal = || vibe_registry::ContactRefusal::ExcludedHost {
+            endpoint: "http://127.0.0.1/".into(),
+        };
+        let installer =
+            vibe_app::AppError::Installer(vibe_app::InstallerError::ContactRefused(refusal()));
+        assert_eq!(stamped(installer.into())["code"], "source_host_excluded");
+        let nested = vibe_app::AppError::Installer(vibe_app::InstallerError::SourcePolicy(
+            vibe_registry::RegistryError::ContactRefused(refusal()),
+        ));
+        assert_eq!(stamped(nested.into())["code"], "source_host_excluded");
+        let resolve = vibe_app::AppError::Resolve(vibe_app::ResolveError::SourcePolicy(
+            vibe_registry::RegistryError::ContactRefused(
+                vibe_registry::ContactRefusal::RedirectLimit,
+            ),
+        ));
+        let payload = stamped(resolve.into());
+        assert_eq!(payload["code"], "source_contact_refused");
+        assert_eq!(payload["error_kind"], "source_contact_refusal");
+    }
+
+    #[test]
+    fn app_wrapped_policy_error_reports_its_policy_code() {
+        let error = vibe_app::AppError::Resolve(vibe_app::ResolveError::SourcePolicy(
+            vibe_registry::RegistryError::SourcePolicy(
+                vibe_core::manifest::SourcePolicyError::UnknownRegistry {
+                    package: "org.policy/demo".into(),
+                    registry: "missing".into(),
+                },
+            ),
+        ));
+        let payload = stamped(error.into());
+        assert_eq!(payload["code"], "source_policy_unknown_registry");
+        assert_eq!(payload["error_kind"], "source_policy");
     }
 }

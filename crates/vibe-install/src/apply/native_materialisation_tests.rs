@@ -17,6 +17,27 @@ use vibe_resolver::{FeatureRequest, ResolvedGraph, SolveError};
 
 struct NoResolution;
 impl InstallSource for NoResolution {
+    fn source_solve_limits(
+        &self,
+    ) -> std::result::Result<vibe_resolver::SourceSolveLimits, SolveError> {
+        panic!("apply must not solve")
+    }
+    fn solve_metadata(
+        &self,
+        _: &vibe_resolver::SourceSolveRequest<'_>,
+    ) -> std::result::Result<vibe_resolver::SourceResolvedGraph, SolveError> {
+        panic!("apply must not solve")
+    }
+    fn acquire_candidate_for_install(
+        &self,
+        _: &vibe_registry::source_candidates::RetainedSourceCandidate,
+        _: &Path,
+        _: Option<&str>,
+        _: &Path,
+        _: &vibe_core::progress::Progress,
+    ) -> std::result::Result<vibe_registry::PackageAcquisition, RegistryError> {
+        panic!("apply must retain its source")
+    }
     fn resolve_and_fetch(
         &self,
         _: &PackageRef,
@@ -134,6 +155,8 @@ fn exercise(filter: bool) {
     };
     let prepared = registry.prepare_in_place(&selected, &slot).unwrap();
     let cached = CachedPackage {
+        locked_selection: None,
+        route_publication: vibe_core::RoutePublication::Local,
         recorded_source_kind: None,
         store_reused: None,
         acquisition: None,
@@ -198,6 +221,7 @@ fn exercise(filter: bool) {
         resolution,
         workspace: Workspace::load(&project).unwrap(),
         progress: Default::default(),
+        source_candidates: Default::default(),
     };
     // Keep the old inode alive; atomic publish+undo cannot accidentally reuse it.
     let original = fs::File::open(&manifest_path).unwrap();

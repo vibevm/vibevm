@@ -22,7 +22,7 @@ mod provider;
 use build::prepare_build_output_ignores;
 pub use build::{
     BinaryProviderHome, BuildAuthorization, BuildOutput, build_binary, build_binary_authorized,
-    build_binary_authorized_with_output, consent_to_build,
+    build_binary_authorized_controlled, build_binary_authorized_with_output, consent_to_build,
 };
 pub use provider::{find_binary_in_authored_package_root, find_binary_in_provider_slot};
 

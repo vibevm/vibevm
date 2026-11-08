@@ -7,8 +7,10 @@
 //! one gate that holds for every source kind sits here, after the fetch has
 //! put the new bytes in the machine store and before anything reaches
 //! `vibedeps/`: the hash the source produced must be the hash the lock pins.
-//! A package whose source moved on is `vibe update`'s business, because only
-//! update re-resolves and re-records.
+//! A package whose source moved on is `vibe update --reselect-source`'s
+//! business: a plain update keeps the locked source and its pinned bytes
+//! (PROP-073 `#UPDATE-SOURCE-RESELECTION`), and only the explicit reselection
+//! re-resolves and re-records.
 
 specmark::scope!("spec://org.vibevm.core/vibevm/VIBEVM-SPEC#lockfile-schema");
 
@@ -21,7 +23,7 @@ use vibe_registry::CachedPackage;
     "lock_hash_mismatch: the source of `{group}/{name}@{version}` now hashes to {actual}, \
      but vibe.lock pins {expected}; nothing was copied into vibedeps/ \
      (violates spec://org.vibevm.core/vibevm/VIBEVM-SPEC#lockfile-schema; \
-      fix: `vibe update {group}/{name}`)"
+      fix: `vibe update {group}/{name} --reselect-source`)"
 )]
 pub(crate) struct LockHashMismatch {
     pub(crate) group: String,
@@ -56,6 +58,23 @@ pub(super) fn require_locked_bytes(
     .into())
 }
 
+/// The locked-source replay's own held-hash refusal (PROP-073) is this
+/// command's `lock_hash_mismatch`: the same fact, so it carries the same
+/// stable code and fix. Every other resolver failure passes through.
+pub(super) fn held_hash_refusal(error: vibe_registry::RegistryError) -> anyhow::Error {
+    match error {
+        vibe_registry::RegistryError::LockedContentMismatch { detail } => LockHashMismatch {
+            group: detail.group,
+            name: detail.name,
+            version: detail.version,
+            expected: detail.expected,
+            actual: detail.actual,
+        }
+        .into(),
+        other => other.into(),
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -77,7 +96,7 @@ mod tests {
         assert!(text.contains("org.example/my-skills@0.1.0"), "{text}");
         assert!(text.contains("sha256:aaaa") && text.contains("sha256:bbbb"));
         assert!(
-            text.contains("`vibe update org.example/my-skills`"),
+            text.contains("`vibe update org.example/my-skills --reselect-source`"),
             "{text}"
         );
     }
@@ -90,7 +109,7 @@ mod tests {
             refusal
                 .fix
                 .iter()
-                .any(|line| line == "vibe update org.example/my-skills"),
+                .any(|line| line == "vibe update org.example/my-skills --reselect-source"),
             "{:?}",
             refusal.fix
         );

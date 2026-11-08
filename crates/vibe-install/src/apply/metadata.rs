@@ -58,6 +58,7 @@ pub(super) fn apply_with_spec_format_and_slot_lifecycle<S: InstallSource + ?Size
         &before_manifest,
         manifest_changed,
     )?;
+    let cancellation = planned.progress.cancellation().clone();
     super::apply_metadata_checked(
         source,
         planned,
@@ -70,7 +71,26 @@ pub(super) fn apply_with_spec_format_and_slot_lifecycle<S: InstallSource + ?Size
         workspace,
         &mut files,
     )
-    .map_err(|error| files.undo_all(error))
+    .map_err(|error| {
+        let error = files.undo_all(error);
+        // An acknowledged stop is `restored` exactly when every owned undo
+        // succeeded, whichever owner observed the stop (a hook, a checkpoint,
+        // or the cancellable boot publication).
+        if cancellation.acknowledged() && !restoration_failed(&error) {
+            cancellation.restored();
+        }
+        error
+    })
+}
+
+/// Whether undoing owned publication itself failed: guarded metadata files
+/// that could not be put back, or the slot/boot rollback log.
+fn restoration_failed(error: &Error) -> bool {
+    matches!(
+        error,
+        Error::RollbackFailed { .. }
+            | Error::Workspace(vibe_workspace::WorkspaceError::InstallRollback { .. })
+    )
 }
 
 fn prepare_manifest(planned: &mut PlannedInstall) -> Result<bool> {

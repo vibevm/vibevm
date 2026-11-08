@@ -149,6 +149,12 @@ pub(super) fn inline_to_git_dep(
     url: String,
     inline: InlinePackageDepWire,
 ) -> Result<GitPackageDep> {
+    if inline.registry.is_some() {
+        return Err(Error::BadDependencyDecl {
+            input: link_key(&group, &name),
+            reason: "registry pin cannot accompany a direct path or Git source".into(),
+        });
+    }
     let key_for_err = link_key(&group, &name);
     let ref_kind = match (inline.tag, inline.branch, inline.rev) {
         (Some(t), None, None) => GitRefKind::Tag(t),
@@ -188,6 +194,12 @@ pub(super) fn inline_to_path_dep(
     path: String,
     inline: InlinePackageDepWire,
 ) -> Result<PathPackageDep> {
+    if inline.registry.is_some() {
+        return Err(Error::BadDependencyDecl {
+            input: link_key(&group, &name),
+            reason: "registry pin cannot accompany a direct path or Git source".into(),
+        });
+    }
     let key_for_err = link_key(&group, &name);
     if inline.git.is_some()
         || inline.tag.is_some()

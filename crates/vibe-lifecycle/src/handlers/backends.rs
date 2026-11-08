@@ -79,6 +79,19 @@ impl NativeBackend for NoNativeBackend {
 /// ```
 #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-054#H-BINARY")]
 pub trait BinaryBackend: Send + Sync {
+    /// Resolve/build through an explicit cooperative owner; unqualified backends refuse.
+    fn resolve_for_controlled(
+        &self,
+        _row: &ExtensionRegistryRow,
+        _name: &str,
+        _cancellation: &vibe_core::cancellation::CancellationToken,
+    ) -> Result<PathBuf, String> {
+        Err(
+            "binary backend has no cancellable build or effect-free existing-artifact resolution"
+                .into(),
+        )
+    }
+
     fn resolve_or_build(&self, row: &ExtensionRegistryRow, name: &str) -> Result<PathBuf, String>;
 }
 

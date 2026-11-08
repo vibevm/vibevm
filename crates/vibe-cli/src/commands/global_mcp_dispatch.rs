@@ -23,9 +23,13 @@ pub(crate) fn run_install(
     args: InstallArgs,
     embedded_root: Option<PathBuf>,
     offline: bool,
+    seed_default_registry: bool,
 ) -> Result<()> {
     if !args.global {
         refuse_configuration_input(&args.steps.choice, "workspace package acquisition")?;
+        if args.plan_only {
+            return install::run_preview(ctx, args, embedded_root, offline, seed_default_registry);
+        }
         // PROP-066 `#layers-packages`: a project's `[requires.remaps]` is
         // resolved and pinned in the lock like any other requirement, and
         // recorded in this user's home as an offer — so every clone of
@@ -109,24 +113,32 @@ fn pin_project_remaps(
     path: &std::path::Path,
     offline: bool,
 ) -> Result<()> {
-    let root = path.canonicalize().unwrap_or_else(|_| path.to_path_buf());
-    let lock_path = root.join(vibe_core::manifest::Lockfile::FILENAME);
-    let manifest_path = root.join(vibe_core::manifest::Manifest::FILENAME);
+    let selected = path.canonicalize().unwrap_or_else(|_| path.to_path_buf());
+    let workspace = remap::packages::owning_workspace(&selected)?;
+    let lock_path = workspace.root.join(vibe_core::manifest::Lockfile::FILENAME);
+    let manifest_path = selected.join(vibe_core::manifest::Manifest::FILENAME);
     if !lock_path.exists() || !manifest_path.exists() {
         return Ok(());
     }
-    let manifest = vibe_core::manifest::Manifest::read(&manifest_path)
-        .with_context(|| format!("reading `{}`", manifest_path.display()))?;
-    let mut lockfile = vibe_core::manifest::Lockfile::read(&lock_path)
-        .with_context(|| format!("reading `{}`", lock_path.display()))?;
+    let manifest = vibe_core::manifest::Manifest::read(&manifest_path)?;
+    let publication = vibe_install::LockPublication::capture(&workspace.root)?;
+    let mut lockfile = publication.lockfile().clone();
+    let workspace_requirements = std::iter::once(&workspace.root_manifest)
+        .chain(workspace.members.iter().map(|member| &member.manifest))
+        .flat_map(|manifest| manifest.requires.remaps.iter().cloned())
+        .collect::<Vec<_>>();
     let before = lockfile.remaps.clone();
-    let count = remap::adopt_project_requirements(args, &manifest, &mut lockfile, offline)?;
+    let count = remap::adopt_project_requirements(
+        args,
+        &manifest,
+        &mut lockfile,
+        offline,
+        &workspace_requirements,
+    )?;
     if lockfile.remaps == before {
         return Ok(());
     }
-    lockfile
-        .write(&lock_path)
-        .with_context(|| format!("writing `{}`", lock_path.display()))?;
+    publication.publish(&lockfile)?;
     if count > 0 && !ctx.is_json() && !ctx.is_quiet() {
         ctx.step(&format!(
             "{count} remap package(s) required by this project are offered in your home —              `vibe remap list` shows their rows"

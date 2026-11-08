@@ -21,8 +21,12 @@ use vibe_core::manifest::{Lockfile, Manifest};
 use vibe_core::progress::{Progress, ProgressEvent, ProgressEventKind, ProgressObserver};
 use vibe_core::{PackageRef, VersionSpec};
 use vibe_install::{InstallRequest, InstallSource, NullObserver, Plan, PlanEvent, PlanObserver};
-use vibe_registry::{CachedPackage, RegistryError};
-use vibe_resolver::{FeatureRequest, ResolvedGraph, SolveError};
+use vibe_registry::source_candidates::RetainedSourceCandidate;
+use vibe_registry::{CachedPackage, PackageAcquisition, RegistryError};
+use vibe_resolver::{
+    FeatureRequest, ResolvedGraph, SolveError, SourceResolvedGraph, SourceSolveLimits,
+    SourceSolveRequest,
+};
 use vibe_workspace::Workspace;
 
 /// A source that RECORDS the root set planning handed it, then refuses.
@@ -66,16 +70,44 @@ struct StartCheckingSource {
     started: Arc<AtomicBool>,
 }
 
-impl InstallSource for StartCheckingSource {
-    fn solve(&self, _roots: &[PackageRef]) -> Result<ResolvedGraph, SolveError> {
+impl StartCheckingSource {
+    fn refuse(&self) -> SolveError {
         assert!(
             self.started.load(Ordering::SeqCst),
             "progress must start before the blocking resolver call"
         );
-        Err(SolveError::CapabilityUnmet {
+        SolveError::CapabilityUnmet {
             capability: "expected refusal".into(),
             requirer: "progress fixture".into(),
-        })
+        }
+    }
+}
+
+impl InstallSource for StartCheckingSource {
+    fn source_solve_limits(&self) -> Result<SourceSolveLimits, SolveError> {
+        Ok(SourceSolveLimits::standard_operation())
+    }
+
+    fn solve_metadata(
+        &self,
+        _request: &SourceSolveRequest<'_>,
+    ) -> Result<SourceResolvedGraph, SolveError> {
+        Err(self.refuse())
+    }
+
+    fn acquire_candidate_for_install(
+        &self,
+        _candidate: &RetainedSourceCandidate,
+        _store_root: &Path,
+        _expected_hash: Option<&str>,
+        _slot: &Path,
+        _progress: &Progress,
+    ) -> Result<PackageAcquisition, RegistryError> {
+        unreachable!()
+    }
+
+    fn solve(&self, _roots: &[PackageRef]) -> Result<ResolvedGraph, SolveError> {
+        Err(self.refuse())
     }
 
     fn resolve_and_fetch(
@@ -119,10 +151,9 @@ impl RecordingSource {
     fn every_root(&self) -> BTreeSet<String> {
         self.solves().into_iter().flatten().collect()
     }
-}
 
-impl InstallSource for RecordingSource {
-    fn solve(&self, roots: &[PackageRef]) -> Result<ResolvedGraph, SolveError> {
+    /// Record one solve's roots, then refuse it.
+    fn record(&self, roots: &[PackageRef]) -> SolveError {
         let mut seen: Vec<String> = roots
             .iter()
             .map(|root| match root.group.as_ref() {
@@ -132,10 +163,44 @@ impl InstallSource for RecordingSource {
             .collect();
         seen.sort();
         self.solves.lock().unwrap().push(seen);
-        Err(SolveError::CapabilityUnmet {
+        SolveError::CapabilityUnmet {
             capability: "recorded".to_string(),
             requirer: "the prepared-planning red".to_string(),
-        })
+        }
+    }
+}
+
+impl InstallSource for RecordingSource {
+    fn source_solve_limits(&self) -> Result<SourceSolveLimits, SolveError> {
+        Ok(SourceSolveLimits::standard_operation())
+    }
+
+    /// The held root set is what the legacy `solve(roots)` received. This
+    /// source consumes no package configuration, so a configured request takes
+    /// the legacy configured route, which refuses before any solve is recorded.
+    fn solve_metadata(
+        &self,
+        request: &SourceSolveRequest<'_>,
+    ) -> Result<SourceResolvedGraph, SolveError> {
+        if let Some(snapshot) = request.configuration {
+            self.solve_configured(request.held_roots, snapshot, request.blocked)?;
+        }
+        Err(self.record(request.held_roots))
+    }
+
+    fn acquire_candidate_for_install(
+        &self,
+        _candidate: &RetainedSourceCandidate,
+        _store_root: &Path,
+        _expected_hash: Option<&str>,
+        _slot: &Path,
+        _progress: &Progress,
+    ) -> Result<PackageAcquisition, RegistryError> {
+        unreachable!("the solve above refuses before anything is acquired")
+    }
+
+    fn solve(&self, roots: &[PackageRef]) -> Result<ResolvedGraph, SolveError> {
+        Err(self.record(roots))
     }
 
     fn resolve_and_fetch(

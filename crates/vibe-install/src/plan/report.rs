@@ -37,3 +37,22 @@ impl PlannedInstall {
         })
     }
 }
+
+impl PlannedInstall {
+    /// Retained candidate reasons from the same metadata selection as acquisition.
+    ///
+    /// ```no_run
+    /// # fn read(plan: &vibe_install::PlannedInstall, group: &vibe_core::Group) {
+    /// let _reasons = plan.package_candidates(group, "demo");
+    /// # }
+    /// ```
+    pub fn package_candidates(
+        &self,
+        group: &vibe_core::Group,
+        name: &str,
+    ) -> Option<&[vibe_registry::source_candidates::SourceCandidateObservation]> {
+        self.source_candidates
+            .get(&(group.clone(), name.to_owned()))
+            .map(Vec::as_slice)
+    }
+}

@@ -167,7 +167,7 @@ fn catalog() -> String {
 
 fn probe(mock: &Mock) -> IndexClient {
     match IndexClient::probe(&mock.base_url, IndexAuth::None) {
-        ProbeOutcome::Found(client) => client,
+        ProbeOutcome::Found(client) => *client,
         other => panic!("the mirror must be found through its handshake, got {other:?}"),
     }
 }

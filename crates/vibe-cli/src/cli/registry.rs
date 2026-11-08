@@ -322,11 +322,12 @@ pub struct RegistryAddArgs {
     pub position: String,
 
     /// Authentication regime for fetching from this registry. One of
-    /// `none` (default; public read), `token-env` (read token from
+    /// `none` (explicit public-only restriction), `token-env` (read token from
     /// `VIBEVM_REGISTRY_TOKEN_<HOST>` or the explicit `--token-env`
     /// override), `credential-helper` (opt in to system git credential
     /// helpers; GUI prompts allowed), `ssh` (URL must be ssh-form,
     /// auth via ssh-agent / keys). See PROP-002 §2.2.1.
+    /// Omission retains the selected transport default; it is not explicit none.
     #[arg(long = "auth")]
     pub auth: Option<String>,
 

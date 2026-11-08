@@ -12,6 +12,9 @@ struct Before {
 }
 struct Prepared {
     registry_name: String,
+    route_publication: vibe_core::RoutePublication,
+    direct_kind: Option<vibe_core::manifest::SourceKind>,
+    locked_selection: Option<crate::multi_registry_resolver::LockedSelection>,
     via_redirect: Option<String>,
     _temporary: tempfile::TempDir,
     objects: PathBuf,
@@ -118,7 +121,7 @@ impl PreparedInPlace {
         };
         let canonical = safe_remote(&self.0.canonical);
         let actual = safe_remote(self.0.serving_endpoint.as_deref().unwrap_or(&self.0.origin));
-        SourceEvidence {
+        let mut evidence = SourceEvidence {
             registry: Some(self.0.registry_name.clone()),
             fetched_from: (actual != canonical).then_some(actual),
             source_url: Some(canonical),
@@ -128,7 +131,19 @@ impl PreparedInPlace {
             acquisition: Some(SourceAcquisition::GitRepository),
             store_reused: Some(false),
             via_redirect: self.0.via_redirect.clone(),
+        };
+        if let Some(kind) = self.0.direct_kind {
+            evidence.registry = None;
+            evidence.source_kind = Some(match kind {
+                vibe_core::manifest::SourceKind::Git => SourceSelectionKind::Git,
+                vibe_core::manifest::SourceKind::Override => SourceSelectionKind::Override,
+                _ => SourceSelectionKind::Registry,
+            });
         }
+        if let Some(held) = &self.0.locked_selection {
+            held.project_evidence(&mut evidence);
+        }
+        evidence
     }
     /// Actual prospective manifest read from the retained commit object.
     #[specmark::spec(
@@ -359,10 +374,13 @@ impl GitPerPackageRegistry {
         // a checked source switch before trying that existing origin.
         let native = self.backend.uses_native_materialisation();
         let refresh_first = repository
+            && !self.locked_source
             && (!native
                 || selected
                     .is_none_or(|url| recorded.as_deref() == Some(strip_git_plus_prefix(url))));
         let requested = self.package_reference(resolved);
+        let publication = route.map_or(self.source_publication, RegistryRoute::publication_scope);
+        let publication_origin = selected.unwrap_or(&primary).to_owned();
         let known_origin = if repository {
             observed_origin(self.backend.as_ref(), &slot)?
         } else {
@@ -408,7 +426,7 @@ impl GitPerPackageRegistry {
                         &mirrors,
                     )?
                 } else if authenticate {
-                    self.credentialed_url(origin)
+                    self.selected_credentialed_url(origin)?
                 } else {
                     origin.to_owned()
                 };
@@ -455,6 +473,9 @@ impl GitPerPackageRegistry {
                     ));
                 }
                 Ok(PreparedInPlace(Arc::new(Prepared {
+                    locked_selection: None,
+                    route_publication: publication.observed(&publication_origin, origin),
+                    direct_kind: None,
                     registry_name: self.name.clone(),
                     via_redirect: None,
                     serving_endpoint: self.backend.prepared_serving_endpoint(&objects)?,
@@ -463,7 +484,7 @@ impl GitPerPackageRegistry {
                     slot: slot.clone(),
                     backend: self.backend.clone(),
                     before: before.clone(),
-                    refresh,
+                    refresh: refresh || (self.locked_source && repository),
                     origin: applied_origin,
                     canonical: primary.clone(),
                     authenticated_origin: (url != origin).then_some(url),
@@ -561,3 +582,8 @@ impl PreparationFailure {
 
 #[cfg(test)]
 mod tests;
+
+mod locked_evidence;
+
+mod retained;
+pub(crate) use retained::RetainedNativePackage;

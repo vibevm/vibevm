@@ -12,7 +12,7 @@ use std::path::Path;
 
 use anyhow::{Result, bail};
 use vibe_core::PackageRef;
-use vibe_core::manifest::{LockedPackage, Lockfile, SourceKind};
+use vibe_core::manifest::{LockedPackage, Lockfile};
 use vibe_registry::CachedPackage;
 
 use crate::cli::{InstallArgs, UpdateArgs};
@@ -22,6 +22,7 @@ use crate::cli::{InstallArgs, UpdateArgs};
 /// `--registry` / `--git` / feature flags, so those default off.
 pub(super) fn install_args_from(args: &UpdateArgs) -> InstallArgs {
     InstallArgs {
+        source_policy: args.source_policy.clone(),
         packages: Vec::new(),
         global: false,
         agent: None,
@@ -77,16 +78,8 @@ pub(super) fn locked_package(
     old: Option<&LockedPackage>,
     embedded_sources: &[vibe_core::manifest::LockedEmbeddedSource],
 ) -> LockedPackage {
-    let source_kind = if cached.overridden {
-        SourceKind::Override
-    } else if cached.is_path_source {
-        SourceKind::Path
-    } else if cached.is_git_source {
-        SourceKind::Git
-    } else {
-        SourceKind::Registry
-    };
-    LockedPackage {
+    let source_kind = cached.source_kind();
+    let mut row = LockedPackage {
         kind: cached.package_meta().kind,
         group: cached.resolved.group.clone(),
         name: vibe_core::PackageName::from_validated(cached.resolved.name.clone()),
@@ -107,7 +100,7 @@ pub(super) fn locked_package(
         admitted_by: old.and_then(|package| package.admitted_by.clone()),
         via_override: old.and_then(|package| package.via_override.clone()),
         overridden: cached.overridden,
-        source_kind: Some(source_kind),
+        source_kind,
         via_redirect: cached.via_redirect.clone(),
         features: old.map(|o| o.features.clone()).unwrap_or_default(),
         subskills_active: old.map(|o| o.subskills_active.clone()).unwrap_or_default(),
@@ -120,7 +113,20 @@ pub(super) fn locked_package(
         // A version bump does not change how the package is materialised —
         // carry the freshly-fetched manifest's declared mode (PROP-022 §2.1).
         materialization: cached.package_meta().materialization,
+    };
+    if let Some(held) = &cached.locked_selection {
+        let selected = held.source_row();
+        row.registry = selected.registry.clone();
+        row.source_url = selected.source_url.clone();
+        row.source_ref = selected.source_ref.clone();
+        row.source_kind = selected.source_kind;
+        row.overridden = selected.overridden;
+        row.via_redirect = selected.via_redirect.clone();
+        if let Some(replayed) = held.replayed_row() {
+            row.resolved_commit = replayed.resolved_commit.clone();
+        }
     }
+    row
 }
 
 pub(super) fn load_lockfile(root: &Path) -> Result<Lockfile> {

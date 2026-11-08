@@ -17,6 +17,7 @@
 
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-066#commands");
 
+mod bind_source;
 pub(crate) mod bundle;
 mod consent;
 mod diagnostics;
@@ -28,7 +29,9 @@ mod transport;
 mod uninstall;
 mod verbs;
 
-pub(crate) use consent::{ConsentFlags, ConsentRequired, resolve as resolve_consent};
+pub(crate) use consent::{
+    ConsentFlags, ConsentRequired, preview as preview_consent, resolve as resolve_consent,
+};
 pub(crate) use home::RemapHome;
 pub(crate) use packages::{
     adopt_project_requirements, claims as claims_install, install as install_packages,
@@ -90,6 +93,7 @@ pub(crate) fn run(
         RemapCommand::Test(test) => probe::run(ctx, locator, test, offline).map(|_| ()),
         RemapCommand::Export(export) => transport::export(ctx, export),
         RemapCommand::Import(import) => transport::import(ctx, import, accept_remap),
+        RemapCommand::BindSource(binding) => bind_source::run(ctx, binding, offline),
     }
 }
 

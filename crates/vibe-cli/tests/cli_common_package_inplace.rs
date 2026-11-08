@@ -136,9 +136,10 @@ fn publish(repo: &Path, name: &str, version: &str, common: bool) -> String {
 
 #[derive(Debug, Serialize)]
 struct PreparedFetch {
+    /// The package whose locked repository this fetch contacted.
+    package: String,
     source: String,
     reference: String,
-    repository: String,
 }
 struct Fixture {
     _temp: Option<tempfile::TempDir>,
@@ -235,9 +236,12 @@ impl Fixture {
         assert_eq!(git(&slot, &["check-ignore", "ignored.tmp"]), "ignored.tmp");
     }
     fn run(&self, label: &str, args: &[&str]) -> Output {
+        self.run_at(label, args, &self.project)
+    }
+    fn run_at(&self, label: &str, args: &[&str], selected: &Path) -> Output {
         let trace = self.root.join(format!("evidence/{label}.git-trace.jsonl"));
         let mut cmd = self.user.vibe();
-        cmd.current_dir(&self.project)
+        cmd.current_dir(selected)
             .env("HOME", self.root.join("home"))
             .env("USERPROFILE", self.root.join("home"))
             .env("GIT_CONFIG_NOSYSTEM", "1")
@@ -263,7 +267,7 @@ impl Fixture {
             .args(args)
             .args([
                 "--path",
-                self.project.to_str().unwrap(),
+                selected.to_str().unwrap(),
                 "--assume-yes",
                 "--unattended",
                 "--json",
@@ -318,55 +322,37 @@ impl Fixture {
             })
         })
     }
+    /// Candidate preparation fetches, in invocation order. A held in-place
+    /// row is prepared from its locked source URL, never from whatever the
+    /// slot's `origin` currently names (PROP-073#LOCKED-SOURCE-LAW), so each
+    /// fetch is attributed by the locked repository it addressed.
     fn prepared_fetches(&self, label: &str) -> Vec<PreparedFetch> {
         let text = fs::read_to_string(self.root.join(format!("evidence/{label}.git-trace.jsonl")))
             .unwrap();
-        let events = text
-            .lines()
+        text.lines()
             .map(|line| serde_json::from_str::<Value>(line).unwrap())
-            .collect::<Vec<_>>();
-        // Native fetch is performed in the original slot context. Trace2's
-        // def_repo event supplies that repository even when argv has no -C.
-        let repositories = events
-            .iter()
-            .filter(|event| event["event"] == "def_repo")
-            .filter_map(|event| {
-                Some((
-                    event["sid"].as_str()?.to_owned(),
-                    event["worktree"].as_str()?.to_owned(),
-                ))
-            })
-            .collect::<BTreeMap<_, _>>();
-        events
-            .iter()
             .filter_map(|event| {
                 if event["event"] != "start" {
-                    return None;
-                }
-                let repository = repositories.get(event["sid"].as_str()?)?;
-                if !self
-                    .names
-                    .iter()
-                    .any(|name| self.slot(name) == Path::new(repository))
-                {
                     return None;
                 }
                 let argv = event["argv"]
                     .as_array()?
                     .iter()
                     .filter_map(Value::as_str)
+                    .map(str::to_owned)
                     .collect::<Vec<_>>();
-                let fetch = argv.iter().position(|arg| *arg == "fetch")?;
-                let separator = argv[fetch + 1..].iter().position(|arg| *arg == "--")? + fetch + 1;
-                // Preparation uses the original named remote. Apply may later
-                // fetch captured local objects; that is not another selection.
-                if argv.get(separator + 1) != Some(&"origin") {
-                    return None;
-                }
+                let fetch = argv.iter().position(|arg| arg == "fetch")?;
+                let separator = argv[fetch + 1..].iter().position(|arg| arg == "--")? + fetch + 1;
+                let source = argv.get(separator + 1)?.clone();
+                let package = self.names.iter().find(|name| {
+                    source
+                        .trim_end_matches('/')
+                        .ends_with(self.repo(name).canonicalize().unwrap().to_str().unwrap())
+                })?;
                 Some(PreparedFetch {
-                    source: argv.get(separator + 1)?.to_string(),
-                    reference: argv.get(separator + 2)?.to_string(),
-                    repository: repository.clone(),
+                    package: package.clone(),
+                    source,
+                    reference: argv.get(separator + 2)?.clone(),
                 })
             })
             .collect()
@@ -471,9 +457,8 @@ fn scoped_common_inplace_target_refuses_without_checkout_clean_or_project_writes
     publish(&f.repo("inplace-common"), "inplace-common", "1.1.0", true);
     f.dirty("inplace-common");
     let prepared = f.refuse_unchanged("common", &["update", "org.vibevm/inplace-common"]);
-    assert_eq!(prepared.len(), 1);
-    assert_eq!(prepared[0].source, "origin");
-    assert_eq!(Path::new(&prepared[0].repository), f.slot("inplace-common"));
+    assert_eq!(prepared.len(), 1, "{prepared:?}");
+    assert_eq!(prepared[0].package, "inplace-common");
 }
 
 #[test]
@@ -495,16 +480,8 @@ fn later_common_target_refuses_before_earlier_legacy_checkout_moves() {
         2,
         "both selected candidates must actually be prepared: {prepared:?}"
     );
-    assert_eq!(
-        Path::new(&prepared[0].repository),
-        f.slot("z-first"),
-        "{prepared:?}"
-    );
-    assert_eq!(
-        Path::new(&prepared[1].repository),
-        f.slot("a-later"),
-        "{prepared:?}"
-    );
+    assert_eq!(prepared[0].package, "z-first", "{prepared:?}");
+    assert_eq!(prepared[1].package, "a-later", "{prepared:?}");
 }
 
 #[test]
@@ -539,21 +516,25 @@ fn legacy_inplace_control_updates_real_commit_and_preserves_repository() {
     assert_eq!(f.prepared_fetches("legacy").len(), 1);
 }
 
+/// Formerly `actual_checkout_origin_is_admitted_instead_of_unrelated_legacy_metadata`:
+/// a held in-place row once followed the slot's retargeted `origin`. Under the
+/// locked-source law (owner decision 2026-11-08) the lock row, not a mutable
+/// checkout remote, is the source under decision: the explicit update prepares
+/// the locked repository's v1.1.0 (legacy, no common configuration) and the
+/// alternate origin's common v1.1.0 is never contacted.
 #[test]
-#[specmark::spec(verifies = "spec://org.vibevm.core/vibevm/common/PROP-069#PACKAGE-ADMISSION")]
-fn actual_checkout_origin_is_admitted_instead_of_unrelated_legacy_metadata() {
+#[specmark::spec(verifies = "spec://org.vibevm.core/vibevm/common/PROP-073#LOCKED-SOURCE-LAW")]
+fn locked_source_is_admitted_instead_of_a_retargeted_checkout_origin() {
     let name = "origin-split";
     let f = Fixture::new(&[name]);
-    publish(&f.repo(name), name, "1.1.0", false);
+    let locked = Lockfile::read(f.project.join("vibe.lock"))
+        .unwrap()
+        .packages[0]
+        .source_url
+        .clone();
+    let wanted = publish(&f.repo(name), name, "1.1.0", false);
     let alternate = f.root.join("alternate-origin.git");
     publish(&alternate, name, "1.1.0", true);
-    let metadata = git(&f.repo(name), &["show", "v1.1.0:vibe.toml"]);
-    assert!(
-        Manifest::parse_str(&metadata)
-            .unwrap()
-            .configuration
-            .is_none()
-    );
     let actual = git(&alternate, &["show", "v1.1.0:vibe.toml"]);
     assert!(
         Manifest::parse_str(&actual)
@@ -566,15 +547,28 @@ fn actual_checkout_origin_is_admitted_instead_of_unrelated_legacy_metadata() {
         &["remote", "set-url", "origin", alternate.to_str().unwrap()],
     );
     f.dirty(name);
-    let prepared = f.refuse_unchanged("origin", &["update", "org.vibevm/origin-split"]);
-    assert_eq!(prepared.len(), 1);
-    assert_eq!(prepared[0].source, "origin");
-    assert_eq!(
-        git(&f.slot(name), &["remote", "get-url", "origin"]),
-        alternate.to_str().unwrap()
+    let output = f.run("origin", &["update", "org.vibevm/origin-split"]);
+    f.success(&output);
+    assert_eq!(git(&f.slot(name), &["rev-parse", "HEAD"]), wanted);
+    let lock = Lockfile::read(f.project.join("vibe.lock")).unwrap();
+    assert_eq!(lock.packages[0].source_url, locked);
+    assert_eq!(lock.packages[0].version.to_string(), "1.1.0");
+    let prepared = f.prepared_fetches("origin");
+    assert_eq!(prepared.len(), 1, "{prepared:?}");
+    assert!(prepared[0].reference.contains("refs/tags/v1.1.0"));
+    let trace = fs::read_to_string(f.root.join("evidence/origin.git-trace.jsonl")).unwrap();
+    assert!(
+        !trace.contains(alternate.to_str().unwrap()),
+        "the retargeted checkout origin was contacted"
     );
 }
 
 #[cfg(test)]
 #[path = "cli_common_package_inplace/git_source.rs"]
 mod git_source;
+
+#[path = "cli_common_package_inplace/locked_source.rs"]
+mod locked_source;
+
+#[path = "cli_common_package_inplace/provenance_admission.rs"]
+mod provenance_admission;

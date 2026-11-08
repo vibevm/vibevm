@@ -13,6 +13,7 @@
 //! synchronous vibevm provider drives it with no async runtime.
 
 mod capabilities;
+pub(crate) use capabilities::verify as verify_source_capabilities;
 mod provider;
 mod version_set;
 
@@ -229,8 +230,12 @@ impl<P: VersionEnumerator> ResolvoDepSolver<P> {
                 // verified against the selected set — the clean
                 // CapabilityUnmet verdict (PROP-017 §3).
                 capabilities::verify(&selected)?;
+                let before_projection =
+                    build_resolved_graph(&root_order, chosen.clone(), &HashSet::new());
                 let graph = build_resolved_graph(&root_order, chosen, &obsolete);
                 self.provider.validate_selected(&graph)?;
+                self.provider
+                    .observe_selected_before_projection(&before_projection)?;
                 Ok(graph)
             }
             Err(UnsolvableOrCancelled::Unsolvable(conflict)) => Err(SolveError::Unsatisfiable {
@@ -277,3 +282,13 @@ impl<P: VersionEnumerator> ResolvoDepSolver<P> {
 #[cfg(test)]
 #[path = "tests.rs"]
 mod tests;
+
+impl<P: crate::SourceCandidateProvider> ResolvoDepSolver<P> {
+    /// Select exact retained source candidates through this same resolvo engine.
+    pub fn solve_source_aware(
+        &self,
+        request: &crate::SourceSolveRequest<'_>,
+    ) -> Result<crate::SourceResolvedGraph, SolveError> {
+        crate::source_solve::solve(&self.provider, request)
+    }
+}

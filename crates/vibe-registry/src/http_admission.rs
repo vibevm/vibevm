@@ -5,14 +5,19 @@ specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-073#HTTP-ADMISSION")
 
 use reqwest::{
     Url,
-    blocking::{Client, ClientBuilder, RequestBuilder, Response},
+    blocking::{Client, ClientBuilder, RequestBuilder},
     header::{AUTHORIZATION, COOKIE, LOCATION, PROXY_AUTHORIZATION, REFERER},
 };
 use std::collections::BTreeSet;
+mod client;
+mod response;
+use client::HttpClient;
+pub use client::ManagedHttpClient;
+pub use response::ManagedResponse;
 use vibe_core::remap::endpoint::normalized_host_key;
 
 /// An immutable set of exact, already URL-normalized HTTP host keys.
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub struct HttpAdmission {
     denied: BTreeSet<String>,
 }
@@ -21,6 +26,20 @@ pub struct HttpAdmission {
 #[derive(Debug, Clone, PartialEq, Eq, thiserror::Error)]
 #[specmark::spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-073#HTTP-ADMISSION-LAW")]
 pub enum ContactRefusal {
+    #[error(
+        "controlled HTTP requires the retained managed client factory (violates spec://org.vibevm.core/vibevm/common/PROP-073#HTTP-ADMISSION-LAW; fix: build the controlled client through the operation's retained managed client factory)"
+    )]
+    ControlUnavailable,
+    #[error(
+        "controlled HTTP refuses an unsupported request body or bound-policy bypass (violates spec://org.vibevm.core/vibevm/common/PROP-073#HTTP-ADMISSION-LAW; fix: send a supported request through the bound managed client)"
+    )]
+    UnsupportedControlledRequest,
+
+    #[error(
+        "registry HTTP request cancelled before the next admitted network operation (violates spec://org.vibevm.core/vibevm/common/PROP-073#OPERATION-EFFECTS-LAW; fix: rerun the operation without requesting a stop)"
+    )]
+    OperationCancelled,
+
     #[error(
         "excluded HTTP endpoint {endpoint} (violates spec://org.vibevm.core/vibevm/common/PROP-073#HTTP-ADMISSION-LAW; fix: use an admitted HTTP endpoint or a separately supported transport capability)"
     )]
@@ -72,6 +91,32 @@ impl HttpAdmission {
 
     /// Preserve refusal before URL-building APIs can turn unsupported syntax
     /// into an ordinary construction error.
+    /// Check only a selected Git endpoint's host before transport/config lowering.
+    /// This grants no HTTP request capability or alternate protocol execution.
+    pub fn check_git_host(&self, address: &str) -> Result<(), crate::GitError> {
+        let raw = address.strip_prefix("git+").unwrap_or(address);
+        let parsed = if raw.contains("://") {
+            raw.to_owned()
+        } else {
+            let authority = if let Some(end) = raw.find("]:") {
+                &raw[..=end]
+            } else {
+                raw.split_once(':').map_or(raw, |(host, _)| host)
+            };
+            let host = authority
+                .rsplit_once('@')
+                .map_or(authority, |(_, host)| host);
+            format!("ssh://{host}/")
+        };
+        let url = reqwest::Url::parse(&parsed).map_err(|_| crate::GitError::NativeContext {
+            reason: "invalid selected Git endpoint",
+        })?;
+        self.admit_host(&url).map_err(Into::into)
+    }
+    pub fn check_address(&self, address: &str) -> Result<(), ContactRefusal> {
+        self.admit_address(address)
+    }
+
     pub(crate) fn admit_address(&self, address: &str) -> Result<(), ContactRefusal> {
         let parsed = Url::parse(address).map_err(|_| ContactRefusal::UnsupportedScheme {
             endpoint: "<invalid HTTP address>".into(),
@@ -118,11 +163,13 @@ impl HttpAdmission {
 
 #[derive(Debug, thiserror::Error)]
 #[specmark::spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-073#HTTP-ADMISSION-LAW")]
-pub(crate) enum HttpGetError {
+pub enum HttpGetError {
     #[error(transparent)]
     Refused(#[from] ContactRefusal),
     #[error(transparent)]
     Transport(#[from] reqwest::Error),
+    #[error(transparent)]
+    Io(std::io::Error),
 }
 
 /// Bound pools never follow a hidden redirect or inherit a proxy/retry policy.
@@ -137,7 +184,7 @@ pub(crate) fn bound_builder(builder: ClientBuilder) -> ClientBuilder {
 /// Successful managed GET plus facts observed across its whole redirect chain.
 /// No credentials or request headers are retained in this observation.
 pub(crate) struct BoundGet {
-    pub(crate) response: Response,
+    pub(crate) response: ManagedResponse,
     /// Sticky even if a later redirect returns to the initial exact URL origin.
     /// True means subsequent requests must not reattach the initial credentials.
     pub(crate) crossed_origin: bool,
@@ -146,32 +193,69 @@ pub(crate) struct BoundGet {
 
 /// Execute a fully addressed GET, admitting each explicit network attempt.
 pub(crate) fn get(
-    client: &Client,
+    client: &impl HttpClient,
     request: RequestBuilder,
     address: &str,
     admission: Option<&HttpAdmission>,
-) -> Result<Response, HttpGetError> {
-    let Some(admission) = admission else {
-        return Ok(request.send()?);
-    };
-    Ok(get_observed(client, request, address, admission)?.response)
+) -> Result<ManagedResponse, HttpGetError> {
+    let token = crate::git_backend::transfers::current()
+        .progress
+        .unwrap_or_default()
+        .cancellation()
+        .clone();
+    get_controlled(client, request, address, admission, &token)
 }
-
-/// Execute a bound GET and retain redirect facts beyond the final response URL.
-/// The client must use `bound_builder`: automatic redirects, proxies and hidden
-/// retries would bypass this driver's observation as well as its admission.
-/// This observation is only for the manually driven bound path; never supply
-/// an automatic-redirect client.
+fn get_controlled(
+    client: &impl HttpClient,
+    request: RequestBuilder,
+    address: &str,
+    admission: Option<&HttpAdmission>,
+    token: &vibe_core::cancellation::CancellationToken,
+) -> Result<ManagedResponse, HttpGetError> {
+    if let Some(admission) = admission {
+        return Ok(get_observed_controlled(client, request, address, admission, token)?.response);
+    }
+    send(client, request, token)
+}
+fn send(
+    client: &impl HttpClient,
+    request: RequestBuilder,
+    token: &vibe_core::cancellation::CancellationToken,
+) -> Result<ManagedResponse, HttpGetError> {
+    token
+        .checkpoint()
+        .map_err(|_| ContactRefusal::OperationCancelled)?;
+    if !token.has_control() {
+        return request
+            .send()
+            .map(ManagedResponse::Blocking)
+            .map_err(Into::into);
+    }
+    let asynchronous = client
+        .asynchronous()
+        .ok_or(ContactRefusal::ControlUnavailable)?;
+    response::send(asynchronous, request.build()?, token)
+}
 pub(crate) fn get_observed(
-    client: &Client,
+    client: &impl HttpClient,
     request: RequestBuilder,
     address: &str,
     admission: &HttpAdmission,
 ) -> Result<BoundGet, HttpGetError> {
-    // reqwest may reject a hostless scheme or convert userinfo into Basic
-    // auth before build succeeds. Admit the owner's address first, so neither
-    // transformation can erase the typed refusal. The built URL is checked
-    // again below, including every query-composed request and redirect.
+    let token = crate::git_backend::transfers::current()
+        .progress
+        .unwrap_or_default()
+        .cancellation()
+        .clone();
+    get_observed_controlled(client, request, address, admission, &token)
+}
+fn get_observed_controlled(
+    client: &impl HttpClient,
+    request: RequestBuilder,
+    address: &str,
+    admission: &HttpAdmission,
+    token: &vibe_core::cancellation::CancellationToken,
+) -> Result<BoundGet, HttpGetError> {
     admission.admit_address(address)?;
     let request = request.build()?;
     let mut url = request.url().clone();
@@ -179,8 +263,15 @@ pub(crate) fn get_observed(
     headers.remove(REFERER);
     let mut crossed_origin = false;
     for followed in 0..=10 {
+        token
+            .checkpoint()
+            .map_err(|_| ContactRefusal::OperationCancelled)?;
         admission.admit(&url)?;
-        let response = client.get(url.clone()).headers(headers.clone()).send()?;
+        let response = send(
+            client,
+            client.blocking().get(url.clone()).headers(headers.clone()),
+            token,
+        )?;
         if !matches!(response.status().as_u16(), 301 | 302 | 303 | 307 | 308) {
             return Ok(BoundGet {
                 response,
@@ -201,9 +292,26 @@ pub(crate) fn get_observed(
             .join(location)
             .map_err(|_| ContactRefusal::InvalidRedirect)?;
         crossed_origin |= redirect_headers(&url, &next, &mut headers)?;
+        // Drop joins the prior response worker before another request starts.
+        drop(response);
         url = next;
     }
     Err(ContactRefusal::RedirectLimit.into())
+}
+impl HttpGetError {
+    pub fn from_io(error: std::io::Error) -> Self {
+        let kind = error.kind();
+        match error.into_inner() {
+            Some(inner) if inner.is::<vibe_core::cancellation::Cancelled>() => {
+                Self::Refused(ContactRefusal::OperationCancelled)
+            }
+            Some(inner) => match inner.downcast::<Self>() {
+                Ok(error) => *error,
+                Err(error) => Self::Io(std::io::Error::new(kind, error)),
+            },
+            None => Self::Io(std::io::Error::new(kind, "managed response read failed")),
+        }
+    }
 }
 
 fn redirect_headers(
@@ -352,3 +460,7 @@ mod tests {
         assert!(headers.is_empty());
     }
 }
+
+#[cfg(test)]
+#[path = "http_admission/cancellation_tests.rs"]
+mod cancellation_tests;

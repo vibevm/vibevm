@@ -11,13 +11,15 @@ use std::path::{Path, PathBuf};
 use anyhow::{Context, Result, anyhow, bail};
 use vibe_core::manifest::Manifest;
 use vibe_core::{EffectiveRegistryConfig, GlobalRegistryConfig, merge_effective};
-use vibe_registry::{LocalRegistry, MultiRegistryResolver};
+use vibe_registry::LocalRegistry;
 use vibe_resolver::EmbeddedPrecedence;
 
-use crate::PackageSourceOptions;
 use crate::cells::local_registry;
+use crate::factory::{open_multi_from, source_operation};
 use crate::project_local::project_packages_root;
 use crate::source::InstallResolver;
+use crate::{PackageSourceOptions, SourceOperation};
+use vibe_core::GlobalRegistrySource;
 
 /// Validate the solver flag into the cell name the R-001 selection
 /// seam accepts; `None` keeps the built-in default (resolvo).
@@ -41,7 +43,7 @@ fn validate_solver(flag: Option<&str>) -> Result<Option<&'static str>> {
 /// config order lives in one place up there). `global` is loaded once at
 /// the composition root and passed in, so this stays a pure, testable
 /// transform.
-fn effective_registry_config(
+pub(super) fn effective_registry_config(
     manifest: &Manifest,
     global: &GlobalRegistryConfig,
     offline: bool,
@@ -164,33 +166,6 @@ pub fn any_package_source(
     )
 }
 
-/// Open the declared multi-registry walk from a precomputed effective config —
-/// shared by the plain multi-registry path and the embedded composition.
-fn open_multi_from(
-    eff: &EffectiveRegistryConfig,
-    manifest: &Manifest,
-    options: &PackageSourceOptions,
-    offline: bool,
-    locked: &[vibe_core::manifest::LockedPackage],
-    progress: &vibe_core::progress::Progress,
-) -> Result<MultiRegistryResolver> {
-    // PROP-010 §2.6 — the store is threaded in as a builder parameter
-    // (never resolved per call) so the resolver's store reads stay
-    // isolated under `$VIBE_SETTINGS` in tests.
-    let store_root =
-        vibe_registry::store::store_root().context("resolving the machine package store root")?;
-    Ok(
-        MultiRegistryResolver::open(&eff.registries, &eff.mirrors, &eff.overrides)
-            .context("opening multi-registry resolver")?
-            .with_strict_auth(options.auth_required)
-            .with_git_packages(manifest.requires.git_packages.clone())
-            .with_offline(offline)
-            .with_store_root(store_root)
-            .with_locked_packages(locked.to_vec())
-            .with_progress(progress.clone()),
-    )
-}
-
 /// Build the install resolver for this invocation — the ONE construction
 /// entry every surface shares (the CLI projects its grammar onto
 /// [`PackageSourceOptions`]; a hosted surface passes the default).
@@ -269,6 +244,96 @@ pub fn build_install_resolver_with_progress(
     locked: &[vibe_core::manifest::LockedPackage],
     progress: &vibe_core::progress::Progress,
 ) -> Result<InstallResolver> {
+    let operation = source_operation(
+        options,
+        manifest,
+        project_root,
+        GlobalRegistrySource::ready(global.clone()),
+    )?;
+    build_install_resolver_with_operation(
+        InstallResolverRequest {
+            options,
+            manifest,
+            embedded_root,
+            project_root,
+            offline,
+            locked,
+            progress,
+        },
+        &operation,
+    )
+}
+
+/// The invocation-scoped inputs every install-resolver construction reads:
+/// the projected options, the selected manifest and roots, and the
+/// resolved offline posture, held lock and progress handle.
+///
+/// ```no_run
+/// use std::path::Path;
+/// use vibe_core::{manifest::Manifest, progress::Progress};
+/// use vibe_package_source::{
+///     InstallResolverRequest, PackageSourceOptions, build_install_resolver_with_sources,
+///     deferred_user_registry,
+/// };
+///
+/// let options = PackageSourceOptions::default();
+/// let manifest = Manifest::default();
+/// let progress = Progress::default();
+/// let request = InstallResolverRequest {
+///     options: &options,
+///     manifest: &manifest,
+///     embedded_root: None,
+///     project_root: Path::new("/work/project"),
+///     offline: true,
+///     locked: &[],
+///     progress: &progress,
+/// };
+/// // `Copy`: one request feeds both the operation and the resolver build.
+/// let _resolver = build_install_resolver_with_sources(request, deferred_user_registry(true))?;
+/// # Ok::<(), anyhow::Error>(())
+/// ```
+#[derive(Clone, Copy)]
+pub struct InstallResolverRequest<'a> {
+    pub options: &'a PackageSourceOptions,
+    pub manifest: &'a Manifest,
+    pub embedded_root: Option<&'a Path>,
+    pub project_root: &'a Path,
+    pub offline: bool,
+    pub locked: &'a [vibe_core::manifest::LockedPackage],
+    pub progress: &'a vibe_core::progress::Progress,
+}
+
+/// Deferred sibling used by project/global operations and preview.
+pub fn build_install_resolver_with_sources(
+    request: InstallResolverRequest<'_>,
+    global: GlobalRegistrySource,
+) -> Result<InstallResolver> {
+    let operation = source_operation(
+        request.options,
+        request.manifest,
+        request.project_root,
+        global,
+    )?;
+    build_install_resolver_with_operation(request, &operation)
+}
+
+pub fn build_install_resolver_with_operation(
+    request: InstallResolverRequest<'_>,
+    operation: &SourceOperation,
+) -> Result<InstallResolver> {
+    let InstallResolverRequest {
+        options,
+        manifest,
+        embedded_root,
+        project_root,
+        offline,
+        locked,
+        progress,
+    } = request;
+    // This is only a pure availability hint. Deferred global data is NOT empty.
+    let known_global = operation.policy.global.known().cloned().unwrap_or_default();
+    let global = &known_global;
+    let deferred_global = operation.policy.global.known().is_none();
     let solver = validate_solver(options.solver.as_deref())?;
     if options.prefer_embedded && options.no_prefer_embedded {
         bail!("--prefer-embedded and --no-prefer-embedded are mutually exclusive");
@@ -289,7 +354,27 @@ pub fn build_install_resolver_with_progress(
         let p = strip_unc(p);
         let local = local_registry(p.clone())
             .map_err(|e| anyhow!("failed to open registry at `{}`: {e}", p.display()))?;
-        return Ok(InstallResolver::Local(local, solver));
+        if locked.is_empty()
+            && operation.source_choice_mode()
+                == vibe_registry::source_candidates::SourceChoiceMode::LegacyKnown
+        {
+            return Ok(InstallResolver::Local(local, solver));
+        }
+        // Explicit discovery controls new names only. Held endpoints are opened
+        // without importing the current catalog into their source identity.
+        return Ok(InstallResolver::LockedLocal {
+            local,
+            solver,
+            held: Box::new(open_multi_from(
+                manifest,
+                options,
+                offline,
+                locked,
+                project_root,
+                progress,
+                operation,
+            )?),
+        });
     }
 
     // The declared walk: project `[[registry]]` merged with the machine-global
@@ -339,11 +424,17 @@ pub fn build_install_resolver_with_progress(
         // github/gitverse walk is dropped — no host is contacted, no
         // credential prompt is possible. The declared walk is `None` only
         // when no registry survives.
-        let declared = if effective.registries.is_empty() {
+        let declared = if effective.registries.is_empty() && locked.is_empty() && !deferred_global {
             None
         } else {
             Some(Box::new(open_multi_from(
-                &effective, manifest, options, offline, locked, progress,
+                manifest,
+                options,
+                offline,
+                locked,
+                project_root,
+                progress,
+                operation,
             )?))
         };
         let precedence = if options.no_prefer_embedded {
@@ -369,7 +460,10 @@ pub fn build_install_resolver_with_progress(
     // the resolver, and the Multi path handles an empty declared set for it),
     // or, under the offline posture, the warm machine store, which is a
     // resolution source in its own right (PROP-010 §2.6).
-    if !declared_source_available(&effective, manifest, options, offline) {
+    if !deferred_global
+        && locked.is_empty()
+        && !declared_source_available(&effective, manifest, options, offline)
+    {
         // The project-local registry, named as the live layout spells it —
         // `vibevm/vibepacks/` today (`vibe_core::layout`), so the recipe
         // cannot go stale against a directory the tool no longer reads.
@@ -399,7 +493,13 @@ pub fn build_install_resolver_with_progress(
 
     Ok(InstallResolver::Multi(
         Box::new(open_multi_from(
-            &effective, manifest, options, offline, locked, progress,
+            manifest,
+            options,
+            offline,
+            locked,
+            project_root,
+            progress,
+            operation,
         )?),
         solver,
     ))

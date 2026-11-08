@@ -1,7 +1,7 @@
 //! Producer-level reds for the durable prefix a scoped update measures.
 //!
 //! These drive the REAL producers — `prune_superseded` against a real
-//! workspace and real `vibedeps::remove_slot` calls, and the exact draft
+//! workspace and its real undo-logged slot removals, and the exact draft
 //! composition the two failure regions use — rather than the accumulator type
 //! on its own. A test that only exercised [`Measured`] would stay green
 //! through a producer that collected its removals into a local vector and
@@ -34,6 +34,8 @@ fn package_manifest(group: &str, name: &str, version: &str) -> Manifest {
 fn cached(group: &str, name: &str, version: &str) -> CachedPackage {
     let dir = std::path::PathBuf::from("/fixture");
     CachedPackage {
+        locked_selection: None,
+        route_publication: vibe_core::RoutePublication::Local,
         recorded_source_kind: None,
         store_reused: None,
         acquisition: None,
@@ -126,8 +128,15 @@ fn a_prune_that_fails_half_way_keeps_the_slots_it_really_removed() {
         ),
     ];
     let mut measured = Measured::default();
-    let error = prune_superseded(&workspace, &lockfile, &updated, &mut measured)
-        .expect_err("the second removal cannot succeed");
+    let mut rollback = InstallRollback::new(&workspace.root);
+    let error = prune_superseded(
+        &workspace,
+        &lockfile,
+        &updated,
+        &mut measured,
+        &mut rollback,
+    )
+    .expect_err("the second removal cannot succeed");
     assert!(
         format!("{error:#}").contains("superseded"),
         "the failure keeps its own words: {error:#}",
@@ -176,6 +185,56 @@ fn a_prune_that_fails_half_way_keeps_the_slots_it_really_removed() {
     assert_eq!(report.version_bumps.len(), 2);
 }
 
+/// An ordinary failure after the prune puts the superseded slot back: the
+/// prune moved it aside into the update's undo log, and restoring that log
+/// returns the exact bytes to the exact path.
+#[test]
+fn a_restored_prune_puts_the_superseded_slot_back() {
+    let dir = tempfile::tempdir().unwrap();
+    let workspace = workspace_at(dir.path());
+    let old = cached("org.demo", "kept", "0.1.0");
+    let lockfile = locked_at(std::slice::from_ref(&old));
+    let superseded = slot(&workspace, &old);
+    std::fs::create_dir_all(&superseded).unwrap();
+    std::fs::write(superseded.join("payload.txt"), "previous").unwrap();
+    let updated: Vec<Resolved> = vec![(
+        cached("org.demo", "kept", "0.2.0"),
+        Vec::new(),
+        None,
+        Vec::new(),
+    )];
+
+    let mut measured = Measured::default();
+    let mut rollback = InstallRollback::new(&workspace.root);
+    prune_superseded(
+        &workspace,
+        &lockfile,
+        &updated,
+        &mut measured,
+        &mut rollback,
+    )
+    .expect("the superseded slot moves aside");
+    assert!(
+        !superseded.exists(),
+        "the prune really took it off the tree"
+    );
+    assert_eq!(measured.pruned().len(), 1);
+
+    rollback
+        .restore(None, &[])
+        .expect("the stash puts the slot back");
+    assert_eq!(
+        std::fs::read_to_string(superseded.join("payload.txt")).unwrap(),
+        "previous",
+        "the previous slot is back, byte for byte",
+    );
+    measured.restore_pruned();
+    assert!(
+        measured.pruned().is_empty(),
+        "nothing this run deleted remains deleted"
+    );
+}
+
 /// A prune that removes nothing records nothing — `pruned` names paths this run
 /// really deleted, not paths it considered.
 #[test]
@@ -192,7 +251,15 @@ fn an_absent_superseded_slot_is_not_reported_as_pruned() {
     )];
 
     let mut measured = Measured::default();
-    prune_superseded(&workspace, &lockfile, &updated, &mut measured).expect("nothing to remove");
+    let mut rollback = InstallRollback::new(&workspace.root);
+    prune_superseded(
+        &workspace,
+        &lockfile,
+        &updated,
+        &mut measured,
+        &mut rollback,
+    )
+    .expect("nothing to remove");
     assert!(measured.pruned().is_empty());
     assert_eq!(measured.bumps().len(), 1, "the bump still happened");
 }

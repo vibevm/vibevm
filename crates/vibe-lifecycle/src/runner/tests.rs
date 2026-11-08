@@ -590,3 +590,6 @@ fn a_successful_cancellation_with_a_failed_cleanup_names_a_named_orphan() {
         "a failed cleanup removes nothing: what sits at the task path survives",
     );
 }
+
+#[path = "control_tests.rs"]
+mod control;

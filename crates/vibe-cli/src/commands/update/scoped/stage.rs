@@ -35,9 +35,90 @@ pub(super) struct PendingInPlace {
     pub(super) group: Group,
     pub(super) name: String,
     pub(super) version: semver::Version,
-    pub(super) registry: Option<String>,
     pub(super) dependencies: Vec<PackageRef>,
     pub(super) embedded_sources: Vec<vibe_core::manifest::LockedEmbeddedSource>,
+}
+
+impl PendingInPlace {
+    // Metadata-only: retained preparation owns the prospective bytes until stage.
+    fn record_projection(&self) -> CachedPackage {
+        let evidence = self.prepared.source_evidence();
+        let source_kind = self.prepared.recorded_source_kind();
+        CachedPackage {
+            locked_selection: self.prepared.locked_selection().cloned(),
+            route_publication: self.prepared.publication_scope(),
+            recorded_source_kind: source_kind,
+            store_reused: evidence.store_reused,
+            acquisition: evidence.acquisition,
+            resolved: ResolvedPackage {
+                group: self.group.clone(),
+                name: self.name.clone(),
+                version: self.version.clone(),
+                source_dir: self.prepared.slot().to_path_buf(),
+            },
+            cache_dir: self.prepared.slot().to_path_buf(),
+            manifest: self.prepared.manifest().clone(),
+            content_hash: self.prepared.content_hash().to_owned(),
+            source_uri: self.prepared.source_uri().to_owned(),
+            // An in-place slot is placed through the same clone chain as
+            // any other fetch; which candidate served it is recorded by
+            // that chain, not re-derived here (`PROP-066#provenance`).
+            fetched_from: evidence.fetched_from,
+            registry_name: evidence.registry,
+            source_ref: Some(self.prepared.source_ref().to_owned()),
+            resolved_commit: Some(self.prepared.resolved_commit().to_owned()),
+            overridden: source_kind == Some(vibe_core::manifest::SourceKind::Override),
+            is_git_source: source_kind == Some(vibe_core::manifest::SourceKind::Git),
+            is_path_source: false,
+            is_embedded: false,
+            is_local: false,
+            via_redirect: evidence.via_redirect,
+        }
+    }
+}
+pub(super) fn prepare_records(
+    capture: vibe_install::ProjectRecordCapture,
+    base: &Lockfile,
+    updated: &[Resolved],
+    pending: &[PendingInPlace],
+) -> Result<(Lockfile, vibe_install::ProjectRecordPublication)> {
+    let mut prospective = updated.to_vec();
+    prospective.extend(pending.iter().map(|pending| {
+        (
+            pending.record_projection(),
+            pending.dependencies.clone(),
+            None,
+            pending.embedded_sources.clone(),
+        )
+    }));
+    let mut planned = base.clone();
+    for (cached, deps, _, embedded) in &prospective {
+        let old = planned.find(&cached.resolved.group, &cached.resolved.name);
+        let entry = super::super::inputs::locked_package(cached, deps, old, embedded);
+        match planned
+            .packages
+            .iter()
+            .position(|row| row.group == entry.group && row.name == entry.name)
+        {
+            Some(index) => planned.packages[index] = entry,
+            None => planned.packages.push(entry),
+        }
+    }
+    planned.record_app_requirements(|row| {
+        prospective
+            .iter()
+            .map(|(cached, ..)| cached)
+            .find(|cached| cached.resolved.group == row.group && cached.resolved.name == row.name)
+            .map(|cached| &cached.manifest)
+    });
+    let records = capture.prepare(
+        &planned,
+        &prospective
+            .iter()
+            .map(|(cached, ..)| cached)
+            .collect::<Vec<_>>(),
+    )?;
+    Ok((planned, records))
 }
 
 /// What the staging region produced: the run, and the world it runs over.
@@ -99,7 +180,6 @@ pub(super) fn stage(
             .progress()
             .task(format!("Refreshing {}/{}", p.group, p.name));
         vibe_install::configuration_admission::package_manifest(&p.pkgref, p.prepared.manifest())?;
-        let slot = p.prepared.slot().to_path_buf();
         let placed = match p
             .prepared
             .materialise()
@@ -118,39 +198,17 @@ pub(super) fn stage(
             vibedeps::in_place_slot_rel_path(&p.group, &p.name),
             placed.changed,
         );
+        if placed.changed {
+            // Outside the apply's undo log: a later stop cannot honestly be
+            // classified as not-started or restored.
+            ctx.progress().cancellation().mark_unowned_effects();
+        }
         vibedeps::ensure_gitignored(
             &workspace.root,
             &vibedeps::in_place_slot_rel_path(&p.group, &p.name),
         )
         .context("gitignoring the in-place slot")?;
-        let cached = CachedPackage {
-            recorded_source_kind: None,
-            store_reused: None,
-            acquisition: None,
-            resolved: ResolvedPackage {
-                group: p.group.clone(),
-                name: p.name.clone(),
-                version: p.version.clone(),
-                source_dir: slot.clone(),
-            },
-            cache_dir: slot,
-            manifest: placed.manifest,
-            content_hash: placed.content_hash,
-            source_uri: placed.source_uri,
-            // An in-place slot is placed through the same clone chain as
-            // any other fetch; which candidate served it is recorded by
-            // that chain, not re-derived here (`PROP-066#provenance`).
-            fetched_from: None,
-            registry_name: p.registry,
-            source_ref: Some(placed.source_ref),
-            resolved_commit: placed.resolved_commit,
-            overridden: false,
-            is_git_source: false,
-            is_path_source: false,
-            is_embedded: false,
-            is_local: false,
-            via_redirect: None,
-        };
+        let cached = p.record_projection();
         updated.push((
             cached,
             p.dependencies,
@@ -212,7 +270,10 @@ pub(super) fn stage(
             )),
         },
         lease.clone(),
-    )?;
+    )?
+    // The invocation's `--stop-file`: hooks this run spawns are watched, and a
+    // stop they request is acknowledged at the apply's checkpoints.
+    .with_cancellation(ctx.progress().cancellation().clone());
     Ok(Staged {
         lifecycle: slot_lifecycle,
         full_world,

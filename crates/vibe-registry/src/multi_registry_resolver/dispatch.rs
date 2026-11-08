@@ -17,6 +17,12 @@ impl MultiRegistryResolver {
         slot: &Path,
         progress: &vibe_core::progress::Progress,
     ) -> Result<crate::PackageAcquisition, RegistryError> {
+        if let Some(locked) = &resolution.locked {
+            return self.fetch_locked(resolution, locked, store_root, Some(slot));
+        }
+        if resolution.direct.is_some() {
+            return self.acquire_direct_source(resolution, store_root, expected_hash, Some(slot));
+        }
         if resolution.via_redirect.is_some() && !resolution.from_store {
             return self.acquire_redirect(resolution, store_root, expected_hash, Some(slot));
         }
@@ -26,7 +32,7 @@ impl MultiRegistryResolver {
             && !resolution.is_git_source
             && resolution.via_redirect.is_none()
             && let Some(RegistrySource::Git(registry)) = self
-                .sources
+                .sources()?
                 .iter()
                 .find(|source| Some(source.name()) == resolution.registry_name.as_deref())
         {
@@ -147,6 +153,24 @@ impl MultiRegistryResolver {
         store_root: &Path,
         expected_hash: Option<&str>,
     ) -> Result<CachedPackage, RegistryError> {
+        if let Some(locked) = &resolution.locked {
+            return match self.fetch_locked(resolution, locked, store_root, None)? {
+                crate::PackageAcquisition::Cached(cached) => Ok(*cached),
+                crate::PackageAcquisition::InPlace(_) => Err(RegistryError::MalformedMeta {
+                    path: PathBuf::from(Lockfile::FILENAME),
+                    reason: "cache acquisition returned a workspace-bound preparation".into(),
+                }),
+            };
+        }
+        if resolution.direct.is_some() {
+            return match self.acquire_direct_source(resolution, store_root, expected_hash, None)? {
+                crate::PackageAcquisition::Cached(cached) => Ok(*cached),
+                crate::PackageAcquisition::InPlace(_) => Err(RegistryError::MalformedMeta {
+                    path: PathBuf::from("direct-source"),
+                    reason: "cache acquisition returned workspace preparation".into(),
+                }),
+            };
+        }
         // Store-backed resolution (PROP-010 §2.6): the entry IS the
         // content source — serve its bytes off disk, with no source
         // walk and no network; a pin, when present, is verified with
@@ -175,7 +199,7 @@ impl MultiRegistryResolver {
                     name: resolution.resolved.name.clone(),
                 })?;
         let src = self
-            .sources
+            .sources()?
             .iter()
             .find(|s| s.name() == registry_name)
             .ok_or_else(|| RegistryError::UnknownPackage {
@@ -224,9 +248,17 @@ impl MultiRegistryResolver {
         resolution: &MultiResolution,
         slot: &Path,
     ) -> Result<crate::PreparedInPlace, RegistryError> {
+        if let Some(locked) = &resolution.locked {
+            return self.prepare_locked(resolution, locked, slot);
+        }
+        if resolution.direct.is_some() {
+            return self.prepare_direct_source(resolution, slot);
+        }
         if resolution.via_redirect.is_some()
             && !resolution.from_store
-            && self.backend.uses_native_materialisation()
+            && self
+                .backend
+                .native_materialisation_for(&resolution.source_url)?
         {
             return self.prepare_redirect(resolution, slot);
         }
@@ -240,7 +272,7 @@ impl MultiRegistryResolver {
         }
         let registry = resolution.registry_name.as_deref();
         let source = self
-            .sources
+            .sources()?
             .iter()
             .find(|source| Some(source.name()) == registry)
             .ok_or_else(|| RegistryError::UnknownPackage {
@@ -267,6 +299,12 @@ impl MultiRegistryResolver {
         resolution: &MultiResolution,
         slot: &Path,
     ) -> Result<InPlaceMaterialised, RegistryError> {
+        if let Some(locked) = &resolution.locked {
+            return self.prepare_locked(resolution, locked, slot)?.materialise();
+        }
+        if resolution.direct.is_some() {
+            return self.prepare_direct_source(resolution, slot)?.materialise();
+        }
         let registry_name =
             resolution
                 .registry_name
@@ -276,7 +314,7 @@ impl MultiRegistryResolver {
                     name: resolution.resolved.name.clone(),
                 })?;
         let src = self
-            .sources
+            .sources()?
             .iter()
             .find(|s| s.name() == registry_name)
             .ok_or_else(|| RegistryError::UnknownPackage {
@@ -295,7 +333,7 @@ impl MultiRegistryResolver {
         }
     }
 
-    fn fetch_override(
+    pub(super) fn fetch_override(
         &self,
         resolution: &MultiResolution,
         store_root: &Path,
@@ -309,7 +347,21 @@ impl MultiRegistryResolver {
         let name = resolution.resolved.name.as_str();
 
         let clone_dir = self.override_clone_dir(group, name);
-        ensure_clone_at(self.backend.as_ref(), url, &refname, &clone_dir)?;
+        if let Some(lease) = &resolution.direct {
+            lease
+                .registry()
+                .ensure_selected_clone(&refname, &clone_dir)?;
+        } else {
+            ensure_clone_at(self.backend.as_ref(), url, &refname, &clone_dir)?;
+        }
+        if let Some(lease) = &resolution.direct
+            && Manifest::read(clone_dir.join(Manifest::FILENAME))? != *lease.manifest()
+        {
+            return Err(RegistryError::MalformedMeta {
+                path: clone_dir.join(Manifest::FILENAME),
+                reason: "override manifest changed after selection".into(),
+            });
+        }
 
         // Hash the clone directly (the recipe skips `.git`), then insert
         // write-once into the machine store — an already-present entry is
@@ -336,7 +388,10 @@ impl MultiRegistryResolver {
             });
         }
 
+        let resolved_commit = self.backend.head_commit(&clone_dir)?;
         Ok(CachedPackage {
+            locked_selection: None,
+            route_publication: vibe_core::RoutePublication::Local,
             recorded_source_kind: None,
             store_reused: Some(reused),
             acquisition: Some(vibe_wire::generated::shared::SourceAcquisition::GitRepository),
@@ -354,7 +409,7 @@ impl MultiRegistryResolver {
             fetched_from: None,
             registry_name: None,
             source_ref: Some(refname),
-            resolved_commit: None,
+            resolved_commit,
             overridden: true,
             is_git_source: false,
             is_path_source: false,

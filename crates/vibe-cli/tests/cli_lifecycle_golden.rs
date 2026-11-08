@@ -521,7 +521,7 @@ config = { message = "GOLDEN-INSTALL" }
 
     let mut expected = golden(
         r#"[
-{"command":"install:plan","packages":[{"package":"org.goldenpkg/hooked","version":"0.1.0","source_evidence":{"source_url":"<fixture-source>","source_kind":"registry","acquisition":"directory","store_reused":false}}]},
+{"command":"install:plan","packages":[{"package":"org.goldenpkg/hooked","version":"0.1.0","source_evidence":{"source_url":"<fixture-source>","source_kind":"registry","acquisition":"directory","store_reused":false},"source_candidates":[{"decision":"selected","observation":"available","source_evidence":{"source_url":"<fixture-registry>","source_kind":"registry"},"versions":["0.1.0"]}]}]},
 {"chain":["validate","install"],"command":"lifecycle:plan","contributions":[
  {"handler":"script","key":"org.goldenpkg/hooked#@vibe/hooks/pre-install@slot(org.goldenpkg/hooked@0.1.0)","phase":"install","point":"slot:pre-install","provider":"org.goldenpkg/hooked","tier":"dependency","reference":"org.goldenpkg/hooked#@vibe/hooks/pre-install","slot_target":{"group":"org.goldenpkg","kind":"tool","name":"hooked","root":"<project>/vibevm/vibedeps/org.goldenpkg.hooked/0.1.0","version":"0.1.0"},"version":"0.1.0"},
  {"handler":"script","key":"org.goldenpkg/hooked#@vibe/hooks/post-install@slot(org.goldenpkg/hooked@0.1.0)","phase":"install","point":"slot:post-install","provider":"org.goldenpkg/hooked","tier":"dependency","reference":"org.goldenpkg/hooked#@vibe/hooks/post-install","slot_target":{"group":"org.goldenpkg","kind":"tool","name":"hooked","root":"<project>/vibevm/vibedeps/org.goldenpkg.hooked/0.1.0","version":"0.1.0"},"version":"0.1.0"}],
@@ -541,6 +541,14 @@ config = { message = "GOLDEN-INSTALL" }
         vibe_core::progress::transfer::safe_remote(&format!(
             "file://{}",
             package.to_string_lossy().replace('\\', "/")
+        ))
+        .into();
+    // `--plan-only`'s source-candidate rows (FMT record: install-plan
+    // `source_candidates`) name the registry the selected candidate came from.
+    expected[0]["packages"][0]["source_candidates"][0]["source_evidence"]["source_url"] =
+        vibe_core::progress::transfer::safe_remote(&format!(
+            "file://{}",
+            registry.path().to_string_lossy().replace('\\', "/")
         ))
         .into();
     assert_eq!(

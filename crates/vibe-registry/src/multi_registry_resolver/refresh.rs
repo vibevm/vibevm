@@ -50,7 +50,11 @@ impl MultiRegistryResolver {
         registry_name: &str,
         report: &mut RefreshReport,
     ) -> Result<(), RegistryError> {
-        let Some(reg) = self.registries.iter().find(|r| r.name() == registry_name) else {
+        let Some(reg) = self
+            .registries()?
+            .iter()
+            .find(|r| r.name() == registry_name)
+        else {
             report.skipped.push(SkippedEntry {
                 group: entry.group.clone(),
                 name: entry.name.to_string(),

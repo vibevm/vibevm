@@ -36,14 +36,166 @@ pub struct ConfigurationSnapshot {
     versions: RefCell<BTreeMap<(Group, String), VersionObservation>>,
     candidates: RefCell<BTreeMap<Coordinate, Candidate>>,
     source_errors: RefCell<BTreeMap<Coordinate, DepProviderError>>,
+    source_candidates: RefCell<std::collections::HashMap<(crate::CandidateKey, String), Candidate>>,
 }
 impl ConfigurationSnapshot {
+    /// A selected package edge into a coordinate that carries consumer
+    /// configuration input cannot be merged yet: refuse it instead of
+    /// letting the bare edge disappear behind the authored configuration
+    /// (PROP-069 `#CONSUMER-MERGE`). Every solve path applies this check.
+    pub(crate) fn refuse_unmerged_incoming_edges(
+        &self,
+        graph: &ResolvedGraph,
+    ) -> Result<(), DepProviderError> {
+        for parent in graph.iter() {
+            for edge in &parent.dependencies {
+                if self
+                    .inputs
+                    .get(&edge.qualified_name())
+                    .is_some_and(|inputs| inputs.values().any(Option::is_some))
+                {
+                    return Err(DepProviderError::Configuration(
+                        PackageConfigurationError::Unsupported {
+                            package: edge.qualified_name(),
+                            reason: format!(
+                                "incoming package edge from `{}/{}` needs candidate-conditioned consumer merging",
+                                parent.group, parent.name
+                            ),
+                        },
+                    ));
+                }
+            }
+        }
+        Ok(())
+    }
+    fn evaluate_candidate(&self, group: &Group, name: &str, original: Manifest) -> Candidate {
+        let package = format!("{group}/{name}");
+        let supplied = self.inputs.get(&package);
+        let unsupported = |reason: &str| PackageConfigurationError::Unsupported {
+            package: package.clone(),
+            reason: reason.into(),
+        };
+        let evaluated = if original.configuration.is_some() {
+            match supplied {
+                None => Err(unsupported(
+                    "no fixed actual workspace consumer configures this candidate",
+                )),
+                Some(inputs) if inputs.values().any(Option::is_none) => Err(unsupported(
+                    "an actual incoming consumer has no configuration answer",
+                )),
+                Some(inputs) => {
+                    let inputs = inputs
+                        .iter()
+                        .filter_map(|(consumer, input)| {
+                            input.clone().map(|i| (consumer.clone(), i))
+                        })
+                        .collect();
+                    PackageConfiguration::evaluate(&original, &inputs).map(Some)
+                }
+            }
+        } else if supplied.is_some_and(|inputs| inputs.values().any(Option::is_some)) {
+            Err(unsupported(
+                "incoming configuration targets a package without a common definition",
+            ))
+        } else if original.requires.optional.values().any(|value| *value)
+            || !original.requires.configurations.is_empty()
+        {
+            Err(unsupported(
+                "optional or configured outgoing declarations lack a supported owner configuration",
+            ))
+        } else {
+            Ok(None)
+        };
+        let view = match &evaluated {
+            Ok(Some(record)) => record.project(&original),
+            Ok(None) => Ok(original.clone()),
+            Err(PackageConfigurationError::NeedsSelection { .. }) => {
+                // Candidate viability uses only unconditional requirements.
+                // No partial selection is ever returned to an effect owner.
+                let mut mandatory = original.clone();
+                mandatory.requires.packages.retain(|p| {
+                    !original
+                        .requires
+                        .optional
+                        .get(&p.qualified_name())
+                        .copied()
+                        .unwrap_or(false)
+                });
+                mandatory.configuration = None;
+                Ok(mandatory)
+            }
+            Err(error) => Err(error.clone()),
+        };
+        Candidate {
+            original,
+            evaluated,
+            view,
+        }
+    }
+    /// Source-aware metadata is keyed by both retained binding and manifest witness.
+    pub(crate) fn retained_source(
+        &self,
+        source: &vibe_registry::source_candidates::RetainedSourceCandidate,
+    ) -> Result<
+        (
+            Manifest,
+            Option<PackageConfiguration>,
+            Option<PackageConfigurationError>,
+        ),
+        DepProviderError,
+    > {
+        let key = (
+            crate::CandidateKey::of(source),
+            source.metadata_digest().to_owned(),
+        );
+        if !self.source_candidates.borrow().contains_key(&key) {
+            let candidate =
+                self.evaluate_candidate(source.group(), source.name(), source.manifest().clone());
+            self.source_candidates
+                .borrow_mut()
+                .insert(key.clone(), candidate);
+        }
+        let candidates = self.source_candidates.borrow();
+        let candidate = candidates.get(&key).ok_or_else(|| {
+            DepProviderError::Other("retained configured candidate disappeared".into())
+        })?;
+        let view = match project(candidate) {
+            Ok(view) => view,
+            Err(DepProviderError::Configuration(
+                error @ PackageConfigurationError::Incompatible { .. },
+            )) => return Err(DepProviderError::Configuration(error)),
+            Err(DepProviderError::Configuration(_)) => {
+                // Candidate viability uses known unconditional requirements;
+                // the selected result must still surface the retained error.
+                let mut mandatory = candidate.original.clone();
+                mandatory.requires.packages.retain(|reference| {
+                    !candidate
+                        .original
+                        .requires
+                        .optional
+                        .get(&reference.qualified_name())
+                        .copied()
+                        .unwrap_or(false)
+                });
+                mandatory.configuration = None;
+                mandatory
+            }
+            Err(error) => return Err(error),
+        };
+        Ok((
+            view,
+            candidate.evaluated.clone().ok().flatten(),
+            candidate.evaluated.clone().err(),
+        ))
+    }
+
     pub fn new(inputs: PackageConfigurationInputs) -> Self {
         Self {
             inputs,
             versions: RefCell::new(BTreeMap::new()),
             candidates: RefCell::new(BTreeMap::new()),
             source_errors: RefCell::new(BTreeMap::new()),
+            source_candidates: RefCell::new(std::collections::HashMap::new()),
         }
     }
     /// The same snapshot backs the provider callbacks and selected output. Only
@@ -144,26 +296,7 @@ impl<P: VersionEnumerator> DepProvider for ConfiguredProvider<'_, P> {
                 return Err(DepProviderError::Configuration(error.clone()));
             }
         }
-        for parent in graph.iter() {
-            for edge in &parent.dependencies {
-                if self
-                    .snapshot
-                    .inputs
-                    .get(&edge.qualified_name())
-                    .is_some_and(|inputs| inputs.values().any(Option::is_some))
-                {
-                    return Err(DepProviderError::Configuration(
-                        PackageConfigurationError::Unsupported {
-                            package: edge.qualified_name(),
-                            reason: format!(
-                                "incoming package edge from `{}/{}` needs candidate-conditioned consumer merging",
-                                parent.group, parent.name
-                            ),
-                        },
-                    ));
-                }
-            }
-        }
+        self.snapshot.refuse_unmerged_incoming_edges(graph)?;
         self.source.validate_selected(graph)
     }
     fn fetch_manifest(
@@ -187,71 +320,11 @@ impl<P: VersionEnumerator> DepProvider for ConfiguredProvider<'_, P> {
                     return Err(error);
                 }
             };
-            let package = format!("{group}/{name}");
-            let supplied = self.snapshot.inputs.get(&package);
-            let unsupported = |reason: &str| PackageConfigurationError::Unsupported {
-                package: package.clone(),
-                reason: reason.into(),
-            };
-            let evaluated = if original.configuration.is_some() {
-                match supplied {
-                    None => Err(unsupported(
-                        "no fixed actual workspace consumer configures this candidate",
-                    )),
-                    Some(inputs) if inputs.values().any(Option::is_none) => Err(unsupported(
-                        "an actual incoming consumer has no configuration answer",
-                    )),
-                    Some(inputs) => {
-                        let inputs = inputs
-                            .iter()
-                            .filter_map(|(consumer, input)| {
-                                input.clone().map(|i| (consumer.clone(), i))
-                            })
-                            .collect();
-                        PackageConfiguration::evaluate(&original, &inputs).map(Some)
-                    }
-                }
-            } else if supplied.is_some_and(|inputs| inputs.values().any(Option::is_some)) {
-                Err(unsupported(
-                    "incoming configuration targets a package without a common definition",
-                ))
-            } else if original.requires.optional.values().any(|value| *value)
-                || !original.requires.configurations.is_empty()
-            {
-                Err(unsupported(
-                    "optional or configured outgoing declarations lack a supported owner configuration",
-                ))
-            } else {
-                Ok(None)
-            };
-            let view = match &evaluated {
-                Ok(Some(record)) => record.project(&original),
-                Ok(None) => Ok(original.clone()),
-                Err(PackageConfigurationError::NeedsSelection { .. }) => {
-                    // Candidate viability uses only unconditional requirements.
-                    // No partial selection is ever returned to an effect owner.
-                    let mut mandatory = original.clone();
-                    mandatory.requires.packages.retain(|p| {
-                        !original
-                            .requires
-                            .optional
-                            .get(&p.qualified_name())
-                            .copied()
-                            .unwrap_or(false)
-                    });
-                    mandatory.configuration = None;
-                    Ok(mandatory)
-                }
-                Err(error) => Err(error.clone()),
-            };
-            self.snapshot.candidates.borrow_mut().insert(
-                key.clone(),
-                Candidate {
-                    original,
-                    evaluated,
-                    view,
-                },
-            );
+            let candidate = self.snapshot.evaluate_candidate(group, name, original);
+            self.snapshot
+                .candidates
+                .borrow_mut()
+                .insert(key.clone(), candidate);
         }
         let mut manifest = project(&self.snapshot.candidates.borrow()[&key])?;
         let owner = format!("{group}/{name}");

@@ -14,6 +14,7 @@
 #![forbid(unsafe_code)]
 specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#capability");
 
+pub mod cancellation;
 pub mod capabilities;
 pub mod capability_ref;
 pub mod configuration;
@@ -42,11 +43,11 @@ pub use capability_ref::{CapabilityName, CapabilityNamespace, CapabilityRef};
 pub use content_hash::ContentHash;
 pub use error::{Error, Result, SafeTomlParseError};
 pub use global_registry::{
-    EffectiveRegistryConfig, GlobalRegistryConfig, GlobalRegistryError, default_registries,
-    ensure_default_global_registry, merge_effective, url_is_local,
+    EffectiveRegistryConfig, GlobalRegistryConfig, GlobalRegistryError, GlobalRegistrySource,
+    default_registries, ensure_default_global_registry, merge_effective, url_is_local,
 };
 pub use host_owner::{HOST_OWNER, HostOwner, HostSegmentError};
 pub use index_checkout::IndexCheckoutSection;
 pub use package_ref::{Group, PackageKind, PackageName, PackageRef, VersionSpec};
-pub use provenance::{SourceUrl, TraceId};
+pub use provenance::{RoutePublication, SourceUrl, TraceId};
 pub use rel_path::{RelPath, machine_json_path};

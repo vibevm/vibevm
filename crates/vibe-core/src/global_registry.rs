@@ -50,6 +50,12 @@ pub struct GlobalRegistryConfig {
     /// `[index]` — a maintainer's local checkout of the git-hosted index.
     #[serde(default, skip_serializing_if = "IndexCheckoutSection::is_unset")]
     pub index: IndexCheckoutSection,
+    /// User operation policy; merged field-wise at source composition, not copied into projects.
+    #[serde(
+        default,
+        skip_serializing_if = "crate::manifest::SourcePolicyDecl::is_empty"
+    )]
+    pub source_policy: crate::manifest::SourcePolicyDecl,
 }
 
 impl GlobalRegistryConfig {
@@ -108,14 +114,13 @@ impl GlobalRegistryConfig {
 /// machine instead of per-project, so a project's `vibe.toml` stays clean of
 /// registry boilerplate (PROP-002 §2.2.2 `#global-config`).
 pub fn default_registries() -> Vec<RegistrySection> {
-    use crate::manifest::AuthKind;
     vec![
         RegistrySection {
             name: crate::manifest::DEFAULT_REGISTRY_NAME.to_string(),
             url: crate::manifest::DEFAULT_REGISTRY_URL.to_string(),
             r#ref: crate::manifest::DEFAULT_REGISTRY_REF.to_string(),
             naming: crate::manifest::NamingConvention::Fqdn,
-            auth: AuthKind::None,
+            auth: None,
             token_env: None,
             enabled: true,
             index_url: None,
@@ -125,7 +130,7 @@ pub fn default_registries() -> Vec<RegistrySection> {
             url: crate::manifest::DEFAULT_REGISTRY_GITVERSE_URL.to_string(),
             r#ref: crate::manifest::DEFAULT_REGISTRY_REF.to_string(),
             naming: crate::manifest::NamingConvention::Name,
-            auth: AuthKind::None,
+            auth: None,
             token_env: None,
             enabled: true,
             index_url: None,
@@ -310,8 +315,19 @@ pub fn merge_effective(
             .cloned(),
     );
 
-    let mut mirrors = project.mirrors.clone();
-    mirrors.extend(global.mirrors.iter().cloned());
+    let mut mirrors = project
+        .mirrors
+        .iter()
+        .cloned()
+        .map(|mut mirror| {
+            mirror.publication = crate::RoutePublication::Project;
+            mirror
+        })
+        .collect::<Vec<_>>();
+    mirrors.extend(global.mirrors.iter().cloned().map(|mut mirror| {
+        mirror.publication = crate::RoutePublication::Local;
+        mirror
+    }));
 
     let mut overrides = project.overrides.clone();
     let have_ov: HashSet<String> = overrides.iter().map(|o| o.pkgref.clone()).collect();
@@ -460,7 +476,10 @@ mod tests {
         // The remote global registry is present, searched after the project's.
         assert_eq!(eff.registries[1].name, "extra");
         assert_eq!(eff.registries[1].url, "https://gitverse.ru/me/extra");
-        assert_eq!(eff.registries[1].auth, crate::manifest::AuthKind::TokenEnv);
+        assert_eq!(
+            eff.registries[1].auth,
+            Some(crate::manifest::AuthKind::TokenEnv)
+        );
         // Online the remote survives; under `--offline` (local_only) every
         // remote — the project's and the global's alike — is dropped.
         assert!(eff.local_only().registries.is_empty());
@@ -568,3 +587,10 @@ mod tests {
         assert!(p.exists());
     }
 }
+
+mod source;
+pub use source::GlobalRegistrySource;
+
+#[cfg(test)]
+#[path = "global_registry/source_tests.rs"]
+mod source_tests;

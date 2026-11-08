@@ -60,10 +60,11 @@ mod fetch;
 mod lookup;
 mod route;
 pub use route::RegistryRoute;
-pub(crate) use route::excluded_route;
+pub(crate) use route::{PublicationRoute, excluded_route};
 mod urls;
 
 pub use auth::inject_token;
+pub(crate) use fetch::RetainedNativePackage;
 pub(crate) use fetch::verify_store_entry_against_pin;
 pub use fetch::{PackageAcquisition, PreparedInPlace};
 
@@ -90,6 +91,8 @@ pub struct GitPerPackageRegistry {
     /// (Modern git ≥ 2.31 also redacts passwords from its own
     /// stderr; we rely on that as the second line of defence.)
     effective_token: Option<String>,
+    /// Demand-captured token for selected-source constructors; shared by configured routes.
+    deferred_token: Option<Arc<std::sync::OnceLock<Option<String>>>>,
     /// The env-var name the registry would consult under
     /// `auth = TokenEnv`. Held verbatim so a `MissingToken` error
     /// surfaces the exact name the operator typed in `vibe.toml` /
@@ -108,7 +111,8 @@ pub struct GitPerPackageRegistry {
     /// (`list_versions`, `fetch_dep_manifest` archive path) — the
     /// fetch/clone path stays primary-only until cross-source
     /// `content_hash` verification lands.
-    mirror_urls: Vec<String>,
+    mirror_urls: Vec<PublicationRoute>,
+    source_publication: vibe_core::RoutePublication,
     /// When `Some`, this registry holds **exactly one package** at the
     /// given URL — `package_repo_url(group, name)` returns this verbatim
     /// without applying `naming` to compose `<org>/<group>.<name>.git`.
@@ -116,12 +120,15 @@ pub struct GitPerPackageRegistry {
     /// table-form (PROP-002 §2.4.1). When `None`, this is a normal
     /// multi-package registry and naming applies as before.
     single_package_url: Option<String>,
+    locked_source: bool,
     /// Optional upstream index — when set, `list_versions` queries
     /// it before falling back to `git ls-remote`. PROP-005 §2.10
     /// slice 10. The fetch path is unaffected: `content_hash` is
     /// still verified at fetch time per [PROP-002 §2.1] regardless
     /// of how versions were enumerated.
-    index_client: Option<crate::index_client::IndexClient>,
+    index_client: std::sync::OnceLock<Option<crate::index_client::IndexClient>>,
+    index_discovery: Option<index_discovery::IndexDiscovery>,
+    index_transfers: std::sync::OnceLock<vibe_core::progress::transfer::Transfers>,
     /// Implicit-update freshness TTL — reserved for the next commit, where
     /// per-package `meta.toml` files track `last_synced_at`. Stored now so
     /// callers parameterising it do not need to thread it through later.
@@ -246,12 +253,20 @@ impl GitPerPackageRegistry {
             naming,
             auth,
             effective_token: token_value.filter(|s| !s.trim().is_empty()),
+            deferred_token: None,
             token_env_name: None,
             cache_root: cache_root_owned,
             canonical_hash,
-            mirror_urls,
+            mirror_urls: mirror_urls
+                .into_iter()
+                .map(PublicationRoute::local)
+                .collect(),
+            source_publication: vibe_core::RoutePublication::Local,
             single_package_url: None,
-            index_client: None,
+            locked_source: false,
+            index_client: std::sync::OnceLock::new(),
+            index_discovery: None,
+            index_transfers: std::sync::OnceLock::new(),
             freshness_secs,
         })
     }
@@ -325,12 +340,20 @@ impl GitPerPackageRegistry {
             naming,
             auth,
             effective_token,
+            deferred_token: None,
             token_env_name: token_env_name.map(|s| s.to_string()),
             cache_root: cache_root_owned,
             canonical_hash,
-            mirror_urls,
+            mirror_urls: mirror_urls
+                .into_iter()
+                .map(PublicationRoute::local)
+                .collect(),
+            source_publication: vibe_core::RoutePublication::Local,
             single_package_url: None,
-            index_client: None,
+            locked_source: false,
+            index_client: std::sync::OnceLock::new(),
+            index_discovery: None,
+            index_transfers: std::sync::OnceLock::new(),
             freshness_secs,
         })
     }
@@ -386,12 +409,12 @@ impl GitPerPackageRegistry {
     /// before falling back to `git ls-remote`. Returns the modified
     /// registry for chaining. Slice 10.
     pub fn with_index_client(mut self, client: crate::index_client::IndexClient) -> Self {
-        self.index_client = Some(client);
+        self.index_client = std::sync::OnceLock::from(Some(client));
         self
     }
 
     pub fn index_client(&self) -> Option<&crate::index_client::IndexClient> {
-        self.index_client.as_ref()
+        self.index_client.get().and_then(Option::as_ref)
     }
 
     pub fn name(&self) -> &str {
@@ -461,6 +484,16 @@ impl Registry for GitPerPackageRegistry {
 /// hashing rule pinned in PROP-001 §2.4 / PROP-002 §2.6 — same identity
 /// shape as the monorepo `GitMonorepoRegistry` uses for its registry-level cache
 /// directories.
+/// Read one registry token variable, trimmed; empty reads as absent. This
+/// file is the git transport's sanctioned token-resolution root, so the
+/// demand-captured (deferred) route in `auth.rs` reads through here too.
+pub(super) fn read_token_env(name: &str) -> Option<String> {
+    std::env::var(name)
+        .ok()
+        .map(|value| value.trim().to_owned())
+        .filter(|value| !value.is_empty())
+}
+
 fn short_url_hash(s: &str) -> String {
     let mut h = Sha256::new();
     h.update(s.as_bytes());
@@ -494,3 +527,7 @@ fn bind_registry_backend(
     }
     Ok(backend)
 }
+
+pub(crate) use fetch::commit_content_hash as locked_commit_hash;
+
+mod index_discovery;

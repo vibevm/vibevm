@@ -8,6 +8,7 @@
 
 specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#registry-model");
 
+use std::sync::Arc;
 use vibe_core::VersionSpec;
 use vibe_core::{Group, PackageKind};
 
@@ -18,6 +19,10 @@ use crate::ResolvedPackage;
 /// short-circuited via an override.
 #[derive(Debug, Clone)]
 pub struct MultiResolution {
+    /// Exact direct source owner retained across metadata and acquisition.
+    pub direct: Option<Arc<super::DirectSourceLease>>,
+    /// Complete held source selection, independent of the current catalog.
+    pub locked: Option<super::LockedSelection>,
     pub resolved: ResolvedPackage,
     /// Retained concrete candidate, distinct from canonical lock provenance.
     /// This runtime-only record grants neither contact nor credential authority.

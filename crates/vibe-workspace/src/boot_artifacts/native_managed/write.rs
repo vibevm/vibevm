@@ -101,6 +101,10 @@ fn write_boot_artifacts_owner_managed_using<P: OwnerNativeCompileProvider>(
     provider: Option<&mut P>,
     finalizer: PendingFinalizer,
 ) -> Result<(WrittenArtifacts, Option<OwnerNativeCompileContinuation>), WorkspaceError> {
+    let control = provider
+        .as_ref()
+        .and_then(|provider| provider.cancellation())
+        .cloned();
     let has_static = boot.static_entries().next().is_some();
     let acquisition = trace
         .filter(|_| has_static)
@@ -133,7 +137,7 @@ fn write_boot_artifacts_owner_managed_using<P: OwnerNativeCompileProvider>(
     if let Some(sources) = sources {
         sources.recheck_node(node_dir)?;
     }
-    let redirects = transaction::write_production_with_selectors(
+    let redirects = transaction::write_controlled_with_selectors(
         transaction::ArtifactWrite {
             index_path: &index,
             index_bytes: index_text.as_bytes(),
@@ -141,6 +145,7 @@ fn write_boot_artifacts_owner_managed_using<P: OwnerNativeCompileProvider>(
             static_bytes,
             stale_path: &stale_path,
         },
+        control.as_ref(),
         |transaction| {
             redirect::write_redirect_blocks_with_transaction(node_dir, spec_format, transaction)
         },

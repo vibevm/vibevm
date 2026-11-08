@@ -51,7 +51,7 @@ impl GitPerPackageRegistry {
     /// vibe never logs the resulting URL outside the spawned-process
     /// boundary.
     pub fn credentialed_url(&self, plain_url: &str) -> String {
-        match (&self.effective_token, plain_url) {
+        match (self.effective_token_value(), plain_url) {
             (Some(token), url)
                 if url.starts_with("https://") && !url.contains("x-access-token:") =>
             {
@@ -76,25 +76,53 @@ impl GitPerPackageRegistry {
     /// Group-native (PROP-008): `repo_name` is called with `kind = None`
     /// — the registry resolves by `(group, name)`. A legacy `kind-*`
     /// naming convention surfaces a [`RegistryError::Core`].
+    pub(super) fn package_candidates(
+        &self,
+        group: &Group,
+        name: &str,
+    ) -> Result<(PublicationRoute, Vec<PublicationRoute>), RegistryError> {
+        let primary = PublicationRoute {
+            url: self.package_repo_url(group, name)?,
+            publication: self.source_publication,
+        };
+        if self.single_package_url.is_some() {
+            return Ok((primary, Vec::new()));
+        }
+        let repo = self
+            .naming
+            .repo_name(None, group, name)
+            .map_err(RegistryError::Core)?;
+        let mirrors = self
+            .mirror_urls
+            .iter()
+            .map(|route| PublicationRoute {
+                url: format!("{}/{}.git", route.url.trim_end_matches('/'), repo),
+                publication: route.publication,
+            })
+            .collect();
+        Ok((primary, mirrors))
+    }
     pub(super) fn package_urls(
         &self,
         group: &Group,
         name: &str,
     ) -> Result<(String, Vec<String>), RegistryError> {
-        if let Some(url) = &self.single_package_url {
-            return Ok((url.clone(), Vec::new()));
-        }
-        let repo_name = self
-            .naming
-            .repo_name(None, group, name)
-            .map_err(RegistryError::Core)?;
-        let primary = format!("{}/{}.git", self.org_url.trim_end_matches('/'), repo_name);
-        let mirrors = self
-            .mirror_urls
-            .iter()
-            .map(|mirror| format!("{}/{}.git", mirror.trim_end_matches('/'), repo_name))
-            .collect();
-        Ok((primary, mirrors))
+        let (primary, mirrors) = self.package_candidates(group, name)?;
+        Ok((
+            primary.url,
+            mirrors.into_iter().map(|route| route.url).collect(),
+        ))
+    }
+    pub(crate) fn with_mirror_publication(mut self, routes: Vec<PublicationRoute>) -> Self {
+        self.mirror_urls = routes;
+        self
+    }
+    pub(crate) fn with_source_publication(
+        mut self,
+        publication: vibe_core::RoutePublication,
+    ) -> Self {
+        self.source_publication = publication;
+        self
     }
 }
 

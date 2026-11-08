@@ -23,7 +23,7 @@ fn disabled_registry_is_skipped_by_the_resolver() {
     off.enabled = false;
     let resolver = build_resolver(cache.path(), vec![on, off], vec![], vec![], backend);
     // The disabled `off` is absent; only the enabled `on` was built.
-    assert_eq!(resolver.registries().len(), 1);
+    assert_eq!(resolver.registries().unwrap().len(), 1);
 }
 
 #[test]
@@ -151,14 +151,17 @@ fn resolve_strict_auth_halts_on_public_401_instead_of_walking() {
     // Primary public registry returns AuthFailed; secondary has
     // the package. With strict_auth on, the resolver must NOT
     // walk to the secondary.
-    fake.seed_auth_failure("git@host:org-a/org.vibevm.wal.git");
-    fake.seed_tags("git@host:org-b/org.vibevm.wal.git", vec!["v0.5.0".into()]);
+    fake.seed_auth_failure("https://host/org-a/org.vibevm.wal.git");
+    fake.seed_tags(
+        "https://host/org-b/org.vibevm.wal.git",
+        vec!["v0.5.0".into()],
+    );
 
     let r = build_resolver(
         cache.path(),
         vec![
-            registry_section("public-a", "git@host:org-a"),
-            registry_section("public-b", "git@host:org-b"),
+            registry_section("public-a", "https://host/org-a"),
+            registry_section("public-b", "https://host/org-b"),
         ],
         vec![],
         vec![],
@@ -194,14 +197,17 @@ fn resolve_walks_past_auth_failed_when_registry_is_public() {
     // First registry: returns AuthFailed (think GitVerse-style 401
     // for a missing public repo). Second registry: serves the
     // package.
-    fake.seed_auth_failure("git@host:org-a/org.vibevm.wal.git");
-    fake.seed_tags("git@host:org-b/org.vibevm.wal.git", vec!["v0.5.0".into()]);
+    fake.seed_auth_failure("https://host/org-a/org.vibevm.wal.git");
+    fake.seed_tags(
+        "https://host/org-b/org.vibevm.wal.git",
+        vec!["v0.5.0".into()],
+    );
 
     let r = build_resolver(
         cache.path(),
         vec![
-            registry_section("public-a", "git@host:org-a"),
-            registry_section("public-b", "git@host:org-b"),
+            registry_section("public-a", "https://host/org-a"),
+            registry_section("public-b", "https://host/org-b"),
         ],
         vec![],
         vec![],
@@ -274,7 +280,7 @@ fn resolve_halts_on_auth_failed_against_authenticated_registry() {
         url: "https://internal.example.com/vibespecs".to_string(),
         r#ref: "main".to_string(),
         naming: NamingConvention::Fqdn,
-        auth: vibe_core::manifest::AuthKind::CredentialHelper,
+        auth: Some(vibe_core::manifest::AuthKind::CredentialHelper),
         token_env: None,
         enabled: true,
         index_url: None,

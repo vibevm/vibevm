@@ -79,6 +79,13 @@ impl<'a, P: DepProvider> BoundedProvider<'a, P> {
 }
 
 impl<'a, P: DepProvider> DepProvider for BoundedProvider<'a, P> {
+    fn observe_selected_before_projection(
+        &self,
+        graph: &ResolvedGraph,
+    ) -> Result<(), DepProviderError> {
+        self.inner.observe_selected_before_projection(graph)
+    }
+
     fn resolve_version(&self, pkgref: &PackageRef) -> Result<semver::Version, DepProviderError> {
         self.inner.resolve_version(&self.bounded_ref(pkgref)?)
     }
@@ -279,6 +286,16 @@ where
         }
     }
     false
+}
+
+impl<P: crate::SourceCandidateProvider> SatDepSolver<P> {
+    /// Keep chronological backtracking for neutral metadata; never switch silently.
+    pub fn solve_source_aware(
+        &self,
+        request: &crate::SourceSolveRequest<'_>,
+    ) -> Result<crate::SourceResolvedGraph, SolveError> {
+        crate::source_solve::solve_legacy_cell(&self.provider, request, true)
+    }
 }
 
 #[cfg(test)]

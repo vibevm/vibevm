@@ -142,7 +142,11 @@ fn remotes_that_lack_a_local_package_are_asked_once_per_run() {
     for _ in 0..2 {
         let served = install_walks(&r);
         assert_eq!(served.registry_name.as_deref(), Some("local"));
-        assert_eq!(served.source_url, local_url);
+        assert_eq!(
+            served.source_url,
+            crate::local_registry::source_uri_for_local(&served.resolved.source_dir)
+        );
+        assert!(served.source_url.starts_with(&local_url));
     }
     assert_eq!(backend.tag_calls(ONE), 1);
     assert_eq!(backend.tag_calls(TWO), 1);
@@ -187,18 +191,32 @@ fn an_earlier_remote_that_holds_the_package_still_shadows_the_local_one() {
     verifies = "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#failure-discriminator"
 )]
 fn a_public_refusal_is_remembered_but_a_strict_auth_halt_is_not() {
+    // A public refusal needs an `auth = "none"` registry. An SSH-form row with
+    // omitted auth now lowers to `ssh` (PROP-002#AUTH-DECLARATION-PRESENCE),
+    // so the refusing remote is the anonymous HTTPS spelling of `one`.
+    const PUBLIC: &str = "https://host/one/org.vibevm.wal.git";
     let (_root, local_url) = local_registry();
     let pkg = PackageRef::parse("org.vibevm/wal@^1.0").unwrap();
     for strict in [false, true] {
         let cache = tempfile::tempdir().unwrap();
         let backend = Arc::new(Counting::default());
-        backend.fake.seed_auth_failure(ONE);
-        let r = resolver(
-            cache.path(),
-            &local_url,
+        backend.fake.seed_auth_failure(PUBLIC);
+        let mut public = registry_section("one", "https://host/one");
+        public.index_url = Some("none".into());
+        let r = MultiRegistryResolver::from_manifest(
+            &[
+                public,
+                registry_section("two", "git@host:two"),
+                registry_section("local", &local_url),
+            ],
+            &[],
+            &[],
+            cache.path().to_path_buf(),
             backend.clone(),
-            Arc::new(Recording::default()),
+            DEFAULT_FRESHNESS_SECS,
         )
+        .unwrap()
+        .with_progress(Progress::new(Arc::new(Recording::default())))
         .with_strict_auth(strict);
         for _ in 0..2 {
             let outcome = r.resolve(&pkg);
@@ -213,6 +231,6 @@ fn a_public_refusal_is_remembered_but_a_strict_auth_halt_is_not() {
         }
         // Walked past on `auth = "none"`: asked once. Halting under strict
         // auth: asked again, so the operator sees the live answer each time.
-        assert_eq!(backend.tag_calls(ONE), if strict { 2 } else { 1 });
+        assert_eq!(backend.tag_calls(PUBLIC), if strict { 2 } else { 1 });
     }
 }

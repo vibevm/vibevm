@@ -30,6 +30,27 @@ use crate::DepProviderError;
 #[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#capability")]
 #[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-resolver/PROP-017#unsatisfiable")]
 pub enum SolveError {
+    #[error(
+        "violates REQ spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#solver: selected solver `{solver}` does not implement source-choice constraints; fix surface: explicitly select resolvo"
+    )]
+    SourceSolverUnsupported { solver: &'static str },
+    #[error(
+        "violates REQ spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#solver: source-aware model resource {resource:?} requires {observed} but the operation cap is {limit}; fix surface: source operation budget or dependency scope"
+    )]
+    SourceModelLimit {
+        resource: crate::source_candidates::SourceModelResource,
+        observed: usize,
+        limit: usize,
+    },
+    #[error(
+        "violates REQ spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#solver: source metadata is incomplete for {packages:?}; no unsatisfiability proof is claimed; fix surface: admitted registry observations"
+    )]
+    SourceModelIncomplete { packages: Vec<String> },
+    #[error(
+        "violates REQ spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#solver: invalid retained source model: {reason}; fix surface: candidate/edge metadata projection"
+    )]
+    SourceModelInvalid { reason: String },
+
     #[error(transparent)]
     Provider(#[from] DepProviderError),
 

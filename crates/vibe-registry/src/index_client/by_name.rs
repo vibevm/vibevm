@@ -79,10 +79,9 @@ impl IndexClient {
         if !status.is_success() {
             return Err(self.classify_failure(url, status.as_u16()));
         }
-        let body = resp.bytes().map_err(|e| IndexError::Http {
-            url: url.clone(),
-            message: e.to_string(),
-        })?;
+        let body = resp
+            .bytes()
+            .map_err(|error| Self::body_error(&url, error))?;
         if !self.by_name_is_current(name, &body)? {
             return Ok(None);
         }
@@ -125,10 +124,9 @@ impl IndexClient {
         if !status.is_success() {
             return Err(self.classify_failure(url, status.as_u16()));
         }
-        let body = resp.bytes().map_err(|e| IndexError::Http {
-            url: url.clone(),
-            message: e.to_string(),
-        })?;
+        let body = resp
+            .bytes()
+            .map_err(|error| Self::body_error(&url, error))?;
         let parsed: NameEntryView =
             serde_json::from_slice(&body).map_err(|e| IndexError::Malformed {
                 url: url.clone(),

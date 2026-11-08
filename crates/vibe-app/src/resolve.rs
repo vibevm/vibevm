@@ -142,19 +142,53 @@ pub fn from_local_registry(
 }
 
 /// Resolve through the configured global registries into the package store.
+///
+/// `seed_default_registry` is the caller's composition-root reading of the
+/// `VIBE_NO_DEFAULT_REGISTRY` posture; this crate reads no environment.
 pub fn from_global(
     settings_root: &Path,
     spelling: &str,
     offline: bool,
+    seed_default_registry: bool,
+) -> Result<ResolvedPackage, ResolveError> {
+    let synthetic = Manifest::parse_str("[project]\nname='global-application'\nversion='1.0.0'\n")
+        .map_err(|error| ResolveError::Registry {
+            spelling: spelling.into(),
+            reason: error.to_string(),
+        })?;
+    let options = vibe_package_source::PackageSourceOptions {
+        no_prefer_local: true,
+        no_default_registry: true,
+        ..Default::default()
+    };
+    let operation = vibe_package_source::source_operation(
+        &options,
+        &synthetic,
+        settings_root,
+        vibe_package_source::deferred_user_registry(seed_default_registry),
+    )
+    .map_err(
+        |error| match error.downcast::<vibe_registry::RegistryError>() {
+            Ok(error) => ResolveError::SourcePolicy(error),
+            Err(error) => ResolveError::Registry {
+                spelling: spelling.into(),
+                reason: format!("{error:#}"),
+            },
+        },
+    )?;
+    from_global_with_operation(settings_root, spelling, offline, &operation)
+}
+pub fn from_global_with_operation(
+    settings_root: &Path,
+    spelling: &str,
+    offline: bool,
+    operation: &vibe_package_source::SourceOperation,
 ) -> Result<ResolvedPackage, ResolveError> {
     let requested = qualified_ref(spelling)?;
     let failed = |reason: String| ResolveError::Registry {
         spelling: spelling.into(),
         reason,
     };
-    vibe_core::ensure_default_global_registry().map_err(|error| failed(error.to_string()))?;
-    let global =
-        vibe_core::GlobalRegistryConfig::load().map_err(|error| failed(error.to_string()))?;
     let synthetic =
         Manifest::parse_str("[project]\nname = \"global-application\"\nversion = \"1.0.0\"\n")
             .map_err(|error| failed(error.to_string()))?;
@@ -163,20 +197,28 @@ pub fn from_global(
         no_default_registry: true,
         ..Default::default()
     };
-    let resolver = vibe_package_source::build_install_resolver(
-        &options,
-        &synthetic,
-        None,
-        settings_root,
-        &global,
-        offline,
-        &[],
+    let resolver = vibe_package_source::build_install_resolver_with_operation(
+        vibe_package_source::InstallResolverRequest {
+            options: &options,
+            manifest: &synthetic,
+            embedded_root: None,
+            project_root: settings_root,
+            offline,
+            locked: &[],
+            progress: &vibe_core::progress::Progress::default(),
+        },
+        operation,
     )
-    .map_err(|error| failed(format!("{error:#}")))?;
-    let store = vibe_registry::store::store_root().map_err(|error| failed(error.to_string()))?;
+    .map_err(
+        |error| match error.downcast::<vibe_registry::RegistryError>() {
+            Ok(error) => ResolveError::SourcePolicy(error),
+            Err(error) => failed(format!("{error:#}")),
+        },
+    )?;
+    let store = vibe_registry::store::store_root().map_err(ResolveError::SourcePolicy)?;
     let cached = resolver
         .resolve_and_fetch(&requested, &store, None)
-        .map_err(|error| failed(error.to_string()))?;
+        .map_err(ResolveError::SourcePolicy)?;
     let root = canonical_dir(&cached.cache_dir).map_err(&failed)?;
     let coordinate = PackageCoordinate {
         group: cached.resolved.group.to_string(),

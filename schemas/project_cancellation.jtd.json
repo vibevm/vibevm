@@ -1,0 +1,77 @@
+{
+  "metadata": {
+    "description": "Cooperative project stop acknowledgement with owned publication and external-effect facts; emitted on stdout and machine stderr.",
+    "spec": {
+      "implements": "spec://org.vibevm.core/vibevm/common/PROP-073#OPERATION-EFFECTS-LAW"
+    },
+    "rustOptions": {
+      "package": "vibe_wire::project_cancellation"
+    },
+    "x-rust-type": "ProjectCancellation"
+  },
+  "properties": {
+    "protocol": {
+      "enum": [
+        "vibe-project-cancellation/1"
+      ],
+      "metadata": {
+        "x-vocabulary": "closed"
+      }
+    },
+    "outcome": {
+      "enum": [
+        "cancelled"
+      ],
+      "metadata": {
+        "x-vocabulary": "closed"
+      }
+    },
+    "publication": {
+      "enum": [
+        "not-started",
+        "restored",
+        "recovery-required",
+        "committed"
+      ],
+      "metadata": {
+        "x-vocabulary": "closed"
+      }
+    },
+    "cache_writes": {
+      "enum": [
+        "none",
+        "possible"
+      ],
+      "metadata": {
+        "x-vocabulary": "closed"
+      }
+    },
+    "external_effects": {
+      "properties": {
+        "repository_creation": {
+          "ref": "effect"
+        },
+        "release_push": {
+          "ref": "effect"
+        }
+      }
+    },
+    "error": {
+      "type": "string",
+      "nullable": true
+    }
+  },
+  "definitions": {
+    "effect": {
+      "enum": [
+        "not-started",
+        "completed",
+        "unknown",
+        "not-classified"
+      ],
+      "metadata": {
+        "x-vocabulary": "closed"
+      }
+    }
+  }
+}

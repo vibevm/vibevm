@@ -71,6 +71,7 @@ struct SearchReport {
     registries_searched: Vec<String>,
     registries_unconfigured: Vec<String>,
     registries_unreachable: Vec<UnreachableRegistry>,
+    registries_policy_skipped: Vec<PolicySkippedRegistry>,
     /// Registries scanned via `--full-scan` (org-walk fallback).
     /// Always empty when `--full-scan` is off.
     #[serde(default, skip_serializing_if = "Vec::is_empty")]
@@ -87,6 +88,23 @@ struct SearchReport {
 struct UnreachableRegistry {
     name: String,
     reason: String,
+}
+
+/// A contact refusal says nothing about whether the package exists remotely.
+#[derive(Debug, Clone, Serialize)]
+struct PolicySkippedRegistry {
+    name: String,
+    observation: &'static str,
+    reason: String,
+}
+impl PolicySkippedRegistry {
+    fn refused(name: &str, refusal: &vibe_registry::ContactRefusal) -> Self {
+        Self {
+            name: name.into(),
+            observation: "unknown",
+            reason: refusal.to_string(),
+        }
+    }
 }
 
 #[derive(Debug, Serialize, Clone)]
@@ -124,6 +142,17 @@ pub fn run(ctx: &output::Context, args: SearchArgs, env: SearchEnv) -> Result<()
         }
     };
 
+    let source_options = vibe_package_source::PackageSourceOptions {
+        source_policy: args.source_policy.declaration(),
+        ..Default::default()
+    };
+    let operation = vibe_package_source::source_operation(
+        &source_options,
+        &manifest,
+        &project_root,
+        vibe_package_source::deferred_user_registry(crate::output::seeds_default_registry()),
+    )?;
+
     if manifest.registries.is_empty() {
         bail!(
             "no registry configured. Add a `[[registry]]` entry to `vibe.toml` or run `vibe search` against a project that has one."
@@ -155,7 +184,13 @@ pub fn run(ctx: &output::Context, args: SearchArgs, env: SearchEnv) -> Result<()
             );
         }
         let lookup = progress.task("Looking up package URL");
-        let result = purl::run_purl_lookup(ctx, &project_root, &target_registries, purl_norm);
+        let result = purl::run_purl_lookup(
+            ctx,
+            &project_root,
+            &target_registries,
+            purl_norm,
+            &operation,
+        );
         if result.is_ok() {
             lookup.finish();
         } else {
@@ -197,6 +232,7 @@ pub fn run(ctx: &output::Context, args: SearchArgs, env: SearchEnv) -> Result<()
     let mut searched: Vec<String> = Vec::new();
     let mut unconfigured: Vec<String> = Vec::new();
     let mut unreachable: Vec<UnreachableRegistry> = Vec::new();
+    let mut policy_skipped = Vec::new();
     let mut full_scanned: Vec<String> = Vec::new();
     let mut full_scan_unsupported: Vec<UnreachableRegistry> = Vec::new();
     let mut by_pkg: HashMap<(PackageKind, String), HitRow> = HashMap::new();
@@ -223,6 +259,14 @@ pub fn run(ctx: &output::Context, args: SearchArgs, env: SearchEnv) -> Result<()
         let served_by_index = match resolve_index_url(reg) {
             IndexUrlResolution::Disabled => false,
             IndexUrlResolution::Url { base, source } => 'index: {
+                if source == IndexUrlSource::Default
+                    && vibe_registry::resolve_registry_auth(
+                        vibe_registry::RegistryAuthInput::SelectedRegistry(reg),
+                    )?
+                    .is_ssh_source()
+                {
+                    break 'index false;
+                }
                 let cache_key = CacheKey {
                     registry: &reg.name,
                     query: &query,
@@ -243,9 +287,35 @@ pub fn run(ctx: &output::Context, args: SearchArgs, env: SearchEnv) -> Result<()
                 // credentials, and tell a refused (401/403) probe apart
                 // from a missing index so the operator sees the real
                 // reason in `UnreachableRegistry.reason`.
-                let auth = IndexAuth::for_registry(reg, &base);
-                let client = match IndexClient::probe(&base, auth) {
-                    ProbeOutcome::Found(c) => c,
+                let probe = match operation.http_admission()? {
+                    Some(binding) => match binding.check_address(&base) {
+                        Ok(()) => IndexClient::probe_with_admission(
+                            &base,
+                            IndexAuth::for_registry(reg, &base)?,
+                            binding,
+                        ),
+                        Err(reason) => Err(vibe_registry::IndexError::ContactRefused(reason)),
+                    },
+                    None => Ok(IndexClient::probe(
+                        &base,
+                        IndexAuth::for_registry(reg, &base)?,
+                    )),
+                };
+                let probe = match probe {
+                    Ok(value) => value,
+                    Err(vibe_registry::IndexError::ContactRefused(reason)) => {
+                        if matches!(reason, vibe_registry::ContactRefusal::OperationCancelled) {
+                            return Err(reason.into());
+                        }
+                        policy_skipped.push(PolicySkippedRegistry::refused(&reg.name, &reason));
+                        component.skip("index contact refused by source policy");
+                        component_failed = true;
+                        break 'index true;
+                    }
+                    Err(error) => return Err(error.into()),
+                };
+                let client = match probe {
+                    ProbeOutcome::Found(c) => *c,
                     ProbeOutcome::Refused { reason } => {
                         unreachable.push(UnreachableRegistry {
                             name: reg.name.clone(),
@@ -288,6 +358,14 @@ pub fn run(ctx: &output::Context, args: SearchArgs, env: SearchEnv) -> Result<()
                             insert_hit_keep_highest(&mut by_pkg, make_hit_row(&hit, &reg.name));
                         }
                     }
+                    Err(vibe_registry::IndexError::ContactRefused(reason)) => {
+                        if matches!(reason, vibe_registry::ContactRefusal::OperationCancelled) {
+                            return Err(reason.into());
+                        }
+                        policy_skipped.push(PolicySkippedRegistry::refused(&reg.name, &reason));
+                        component.skip("index contact refused by source policy");
+                        component_failed = true;
+                    }
                     Err(e) => {
                         unreachable.push(UnreachableRegistry {
                             name: reg.name.clone(),
@@ -303,7 +381,13 @@ pub fn run(ctx: &output::Context, args: SearchArgs, env: SearchEnv) -> Result<()
         };
         if !served_by_index {
             if full_scan {
-                match run_full_scan_for_registry(&query, kind_filter, reg, &github_api_base) {
+                match run_full_scan_for_registry(
+                    &query,
+                    kind_filter,
+                    reg,
+                    &github_api_base,
+                    &operation,
+                ) {
                     Ok(hits) => {
                         full_scanned.push(reg.name.clone());
                         for h in hits {
@@ -314,13 +398,26 @@ pub fn run(ctx: &output::Context, args: SearchArgs, env: SearchEnv) -> Result<()
                         }
                         component.finish();
                     }
-                    Err(reason) => {
-                        full_scan_unsupported.push(UnreachableRegistry {
-                            name: reg.name.clone(),
-                            reason,
-                        });
-                        component.fail("registry full scan failed or is unsupported");
-                        search_failed = true;
+                    Err(error) => {
+                        if matches!(
+                            error.downcast_ref::<vibe_registry::ContactRefusal>(),
+                            Some(vibe_registry::ContactRefusal::OperationCancelled)
+                        ) {
+                            return Err(error);
+                        }
+                        if let Some(reason) = error.downcast_ref::<vibe_registry::ContactRefusal>()
+                        {
+                            policy_skipped.push(PolicySkippedRegistry::refused(&reg.name, reason));
+                            component.skip("full scan contact refused by source policy");
+                        } else {
+                            let reason = error.to_string();
+                            full_scan_unsupported.push(UnreachableRegistry {
+                                name: reg.name.clone(),
+                                reason,
+                            });
+                            component.fail("registry full scan failed or is unsupported");
+                            search_failed = true;
+                        }
                     }
                 }
             } else {
@@ -358,6 +455,7 @@ pub fn run(ctx: &output::Context, args: SearchArgs, env: SearchEnv) -> Result<()
         registries_searched: searched.clone(),
         registries_unconfigured: unconfigured.clone(),
         registries_unreachable: unreachable.clone(),
+        registries_policy_skipped: policy_skipped.clone(),
         registries_full_scanned: full_scanned.clone(),
         registries_full_scan_unsupported: full_scan_unsupported.clone(),
         hit_count: hits.len(),
@@ -404,6 +502,12 @@ pub fn run(ctx: &output::Context, args: SearchArgs, env: SearchEnv) -> Result<()
     }
     for u in &unreachable {
         println!("  unreachable: {} — {}", u.name, u.reason);
+    }
+    for skipped in &policy_skipped {
+        println!(
+            "  policy skipped {} (availability unknown): {}",
+            skipped.name, skipped.reason
+        );
     }
     for u in &full_scan_unsupported {
         println!("  full-scan unsupported: {} — {}", u.name, u.reason);
@@ -456,100 +560,5 @@ pub fn run(ctx: &output::Context, args: SearchArgs, env: SearchEnv) -> Result<()
     Ok(())
 }
 
-fn make_hit_row(hit: &SearchHit, registry: &str) -> HitRow {
-    HitRow {
-        kind: hit.kind.to_string(),
-        name: hit.name.clone(),
-        latest_stable: hit.latest_stable.as_ref().map(|v| v.to_string()),
-        score: hit.score,
-        matched_tokens: hit.matched_tokens.clone(),
-        description: hit.description.clone(),
-        registry: registry.to_string(),
-        source: "index",
-    }
-}
-
-fn make_full_scan_hit_row(hit: &FullScanHit, registry: &str) -> HitRow {
-    HitRow {
-        kind: hit.kind.to_string(),
-        name: hit.name.clone(),
-        // Full-scan reads HEAD, not the latest tag — so what we
-        // report is the manifest's declared version. Operators see
-        // it under `latest_stable` for shape parity with the index
-        // path; the underlying semver is still correct.
-        latest_stable: Some(hit.version.to_string()),
-        score: hit.score,
-        matched_tokens: hit.matched_tokens.clone(),
-        description: hit.description.clone(),
-        registry: registry.to_string(),
-        source: "full-scan",
-    }
-}
-
-fn insert_hit_keep_highest(by_pkg: &mut HashMap<(PackageKind, String), HitRow>, row: HitRow) {
-    let kind: PackageKind = row.kind.parse().unwrap_or(PackageKind::Flow);
-    let key = (kind, row.name.clone());
-    match by_pkg.get_mut(&key) {
-        Some(existing) => {
-            if row.score > existing.score {
-                *existing = row;
-            }
-        }
-        None => {
-            by_pkg.insert(key, row);
-        }
-    }
-}
-
-fn run_full_scan_for_registry(
-    query: &str,
-    kind_filter: Option<PackageKind>,
-    reg: &vibe_core::manifest::RegistrySection,
-    api_base: &str,
-) -> std::result::Result<Vec<FullScanHit>, String> {
-    let Some(org) = search_full_scan::detect_github_org(&reg.url) else {
-        return Err(format!(
-            "host of `{}` is not `github.com` (only GitHub orgs supported by --full-scan v0)",
-            reg.url
-        ));
-    };
-    let token = vibe_publish::token::load_token_for_host("github.com")
-        .ok()
-        .map(|t| t.value().to_string());
-    let token_ref = token.as_deref();
-    let query_tokens = query::tokenise_query(query);
-    if query_tokens.is_empty() {
-        return Err("query has no searchable tokens after stopword filtering".into());
-    }
-    search_full_scan::full_scan_github_org(&org, api_base, token_ref, &query_tokens, kind_filter)
-        .map_err(|e| format!("{e}"))
-}
-
-fn truncate(s: &str, max: usize) -> String {
-    if s.chars().count() <= max {
-        s.to_string()
-    } else {
-        let mut out: String = s.chars().take(max.saturating_sub(1)).collect();
-        out.push('…');
-        out
-    }
-}
-
-fn resolve_project_root(path: &Path) -> Result<std::path::PathBuf> {
-    let canonical = path
-        .canonicalize()
-        .with_context(|| format!("canonicalizing `{}`", path.display()))?;
-    let stripped = super::init::strip_unc_public(canonical);
-    if !stripped.join(Manifest::FILENAME).exists() {
-        bail!(
-            "no `vibe.toml` in `{}`; run `vibe init` first",
-            stripped.display()
-        );
-    }
-    Ok(stripped)
-}
-
-fn load_project_manifest(root: &Path) -> Result<Manifest> {
-    let path = root.join(Manifest::FILENAME);
-    Ok(Manifest::read(&path)?)
-}
+mod support;
+use support::*;

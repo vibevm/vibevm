@@ -39,7 +39,7 @@ impl InstallSlotLifecycle {
         // The plan's OWN workspace. This constructor runs inside apply, after
         // the plan already read the tree once; discovering again here would
         // re-read a tree the apply is midway through rewriting.
-        Self::from_projection_observed_prepared(
+        Ok(Self::from_projection_observed_prepared(
             &planned.project_root,
             &planned.manifest,
             &planned.resolution,
@@ -49,7 +49,19 @@ impl InstallSlotLifecycle {
             streams,
             seams,
             lease,
-        )
+        )?
+        .with_cancellation(planned.progress.cancellation().clone()))
+    }
+
+    /// Watch the invocation's caller-owned stop request in every process this
+    /// run spawns (PROP-073 `#OPERATION-EFFECTS-LAW`). A constructor leaves an
+    /// inert token, so a command that owns a stop request attaches it here.
+    pub fn with_cancellation(
+        mut self,
+        cancellation: vibe_core::cancellation::CancellationToken,
+    ) -> Self {
+        self.cancellation = cancellation;
+        self
     }
 
     /// Compatibility: discovers once, then delegates to the prepared sibling.
@@ -186,6 +198,7 @@ impl InstallSlotLifecycle {
         // declaration is gone from the plan this run just built.
         let cancelled = reconcile_removed_slot_parks(&run, &plan, &workspace.root)?;
         Ok(Self {
+            cancellation: Default::default(),
             installed,
             plan,
             native_candidates,

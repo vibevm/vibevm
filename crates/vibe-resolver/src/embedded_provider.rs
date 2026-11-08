@@ -104,6 +104,15 @@ impl<'a> EmbeddedDepProvider<'a> {
 impl<'a> DepProvider for EmbeddedDepProvider<'a> {
     #[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-030#precedence")]
     fn resolve_version(&self, pkgref: &PackageRef) -> Result<semver::Version, DepProviderError> {
+        if let Some(group) = &pkgref.group {
+            let providers = self.source_ordered();
+            if let Some(owner) = providers
+                .iter()
+                .find(|p| p.has_locked_coordinate(group, pkgref.name.as_str()))
+            {
+                return owner.resolve_version(pkgref);
+            }
+        }
         resolve_first(&self.ordered(), |p| p.resolve_version(pkgref))
     }
 
@@ -114,6 +123,13 @@ impl<'a> DepProvider for EmbeddedDepProvider<'a> {
         name: &str,
         version: &semver::Version,
     ) -> Result<Manifest, DepProviderError> {
+        let providers = self.source_ordered();
+        if let Some(owner) = providers
+            .iter()
+            .find(|p| p.has_locked_coordinate(group, name))
+        {
+            return owner.fetch_manifest(group, name, version);
+        }
         resolve_first(&self.ordered(), |p| p.fetch_manifest(group, name, version))
     }
 }
@@ -127,6 +143,13 @@ impl<'a> VersionEnumerator for EmbeddedDepProvider<'a> {
         group: &Group,
         name: &str,
     ) -> Result<Vec<semver::Version>, DepProviderError> {
+        let providers = self.source_ordered();
+        if let Some(owner) = providers
+            .iter()
+            .find(|p| p.has_locked_coordinate(group, name))
+        {
+            return owner.list_versions(group, name);
+        }
         if self.short_circuit {
             // PROP-030 §3.1: stop at the first provider that serves the
             // coordinate (embedded, under embedded-first ordering) so a
@@ -168,6 +191,7 @@ fn is_absent(err: &DepProviderError) -> bool {
         DepProviderError::UnknownPackage { .. }
             | DepProviderError::NoMatchingVersion { .. }
             | DepProviderError::AggregateNotFound { .. }
+            | DepProviderError::OfflineUnavailable { .. }
     )
 }
 
@@ -257,6 +281,82 @@ fn first_served_versions(
     Err(last_absent.unwrap_or_else(|| {
         DepProviderError::Other("embedded composition consulted no providers".into())
     }))
+}
+
+impl EmbeddedDepProvider<'_> {
+    fn source_ordered(&self) -> Vec<&dyn crate::SourceCandidateProvider> {
+        match (self.declared.as_ref(), self.precedence) {
+            (Some(d), EmbeddedPrecedence::EmbeddedFirst) => vec![&self.embedded, d],
+            (Some(d), EmbeddedPrecedence::EmbeddedLast) => vec![d, &self.embedded],
+            (None, _) => vec![&self.embedded],
+        }
+    }
+}
+impl crate::SourceCandidateProvider for EmbeddedDepProvider<'_> {
+    fn has_locked_coordinate(&self, group: &Group, name: &str) -> bool {
+        self.source_ordered()
+            .iter()
+            .any(|p| p.has_locked_coordinate(group, name))
+    }
+    fn source_choice_mode(&self) -> vibe_registry::source_candidates::SourceChoiceMode {
+        crate::source_composition::mode(&self.source_ordered())
+    }
+    fn retain_default_candidate(
+        &self,
+        group: &Group,
+        name: &str,
+        version: &semver::Version,
+    ) -> Result<vibe_registry::source_candidates::RetainedCandidateObservation, DepProviderError>
+    {
+        crate::source_composition::first(&self.source_ordered(), group, name, |p| {
+            p.retain_default_candidate(group, name, version)
+        })
+    }
+    fn validate_registry_pin(
+        &self,
+        group: &Group,
+        name: &str,
+        pin: &vibe_core::manifest::RegistryPin,
+    ) -> Result<(), DepProviderError> {
+        // Named aliases live only in the declared catalog; the embedded
+        // registry carries none.
+        match self.declared.as_ref() {
+            Some(declared) => {
+                crate::SourceCandidateProvider::validate_registry_pin(declared, group, name, pin)
+            }
+            None => Ok(()),
+        }
+    }
+    fn respects_locked_selection(
+        &self,
+        candidate: &vibe_registry::source_candidates::RetainedSourceCandidate,
+        locked: &vibe_core::manifest::LockedPackage,
+    ) -> Result<bool, DepProviderError> {
+        let providers = self.source_ordered();
+        match providers
+            .iter()
+            .find(|p| p.has_locked_coordinate(&locked.group, locked.name.as_str()))
+        {
+            Some(owner) => owner.respects_locked_selection(candidate, locked),
+            None => Ok(false),
+        }
+    }
+    fn source_inventory(
+        &self,
+        group: &Group,
+        name: &str,
+        scope: vibe_registry::source_candidates::CandidateInventoryScope,
+        limits: &vibe_registry::source_candidates::SourceInventoryLimits,
+    ) -> Result<vibe_registry::source_candidates::SourceCandidateInventory, DepProviderError> {
+        crate::source_composition::inventory(
+            &self.source_ordered(),
+            group,
+            name,
+            scope,
+            limits,
+            self.short_circuit,
+        )
+    }
 }
 
 #[cfg(test)]

@@ -33,6 +33,7 @@ const ALLOW_LISTED_GROUP: &str = "org.vibevm";
 /// The selection and consent flags one materialisation applies to every app
 /// dependency it installs.
 struct Materialise<'a> {
+    source_policy: vibe_core::manifest::SourcePolicyDecl,
     verb: &'static str,
     request: InstallRequest,
     /// What the materialisation shows of its children (PROP-065
@@ -76,6 +77,7 @@ pub(crate) fn install(
     } else {
         Vec::new()
     };
+    let source_policy = args.source_policy.declaration();
     install::run_direct(ctx, args, embedded_root, root_offline)?;
     let Some(root) = home::project_at(&path)? else {
         return Ok(());
@@ -83,6 +85,7 @@ pub(crate) fn install(
     materialise(
         ctx,
         &Materialise {
+            source_policy,
             verb: "install",
             request,
             display: &display,
@@ -112,6 +115,7 @@ pub(crate) fn update(
     };
     let display = StepDisplay::open(ctx, &args.steps);
     let flags = Materialise {
+        source_policy: args.source_policy.declaration(),
         verb: "update",
         request: InstallRequest {
             purge_previous: args.purge_previous,
@@ -140,7 +144,13 @@ pub(crate) fn uninstall(
     let installed = installed_app_dependency(root, &settings, &args.package)?;
     let mut outcomes = Vec::new();
     let flat = StepDisplay::flat();
-    let observe = Observation::new(ctx, true, &flat)?;
+    let source_operation = vibe_package_source::source_operation(
+        &vibe_package_source::PackageSourceOptions::default(),
+        &Manifest::read(root.join("vibe.toml"))?,
+        root,
+        vibe_package_source::deferred_user_registry(crate::output::seeds_default_registry()),
+    )?;
+    let observe = Observation::new(ctx, true, &flat)?.with_source_operation(&source_operation);
     if !installed.is_empty() {
         let proxy_image = global::proxy_image()?;
         let operation = OperationContext {
@@ -220,7 +230,19 @@ fn materialise(ctx: &output::Context, flags: &Materialise<'_>) -> Result<()> {
     if locked.is_empty() && !settings.path().join("applications").exists() {
         return Ok(());
     }
-    let observe = Observation::new(ctx, true, flags.display)?;
+    let manifest: Manifest =
+        toml::from_str(&std::fs::read_to_string(flags.root.join("vibe.toml"))?)?;
+    let source_operation = vibe_package_source::source_operation(
+        &vibe_package_source::PackageSourceOptions {
+            source_policy: flags.source_policy.clone(),
+            ..Default::default()
+        },
+        &manifest,
+        flags.root,
+        vibe_package_source::deferred_user_registry(crate::output::seeds_default_registry()),
+    )?;
+    let observe =
+        Observation::new(ctx, true, flags.display)?.with_source_operation(&source_operation);
     install_pending(ctx, flags, &settings, &locked, &observe)?;
     for outcome in remove_unrecorded(ctx, flags.root, &settings, flags.offline, &observe)? {
         ctx.summary(&format!(

@@ -231,7 +231,7 @@ fn empty_lockfile_has_v7_defaults() {
     let lf = Lockfile::empty("vibe 0.1.0-dev", "2026-05-21T00:00:00Z");
     assert_eq!(lf.meta.schema_version, LEGACY_SCHEMA_VERSION);
     assert_eq!(LEGACY_SCHEMA_VERSION, 7);
-    assert_eq!(CURRENT_SCHEMA_VERSION, 8);
+    assert_eq!(CURRENT_SCHEMA_VERSION, 9);
     assert!(lf.meta.solver.is_none());
     assert!(lf.packages.is_empty());
 

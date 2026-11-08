@@ -141,6 +141,29 @@ pub(super) fn classify_stderr_message(
 /// scp-style `git@host:org/repo.git` has no `://` and is returned
 /// untouched — that `git` is an ssh account name, not a secret, and
 /// removing it would make the URL wrong rather than safe.
+/// Whether a lowercased `git archive --remote` failure means the server does
+/// not offer `upload-archive`, so the caller may fall back to a shallow clone.
+///
+/// GitHub disables `upload-archive` server-side: the HTTPS smart protocol
+/// answers `HTTP 422`, or the local git complains `expected ACK/NAK, got a
+/// flush packet` (verified 2026-04-29). Git 2.53 against a plain smart-HTTP
+/// server reports `fatal: can't connect to subservice git-upload-archive`.
+/// Gitea / Forgejo / SourceHut refusals take the same fallback.
+pub(super) fn archive_unsupported(combined_lc: &str) -> bool {
+    combined_lc.contains("operation not supported by protocol")
+        || combined_lc.contains("upload-archive")
+            && (combined_lc.contains("not permitted")
+                || combined_lc.contains("not allowed")
+                || combined_lc.contains("disabled")
+                || combined_lc.contains("can't connect to subservice")
+                || combined_lc.contains("cannot connect to subservice"))
+        || (combined_lc.contains("http 422") || combined_lc.contains("error: 422"))
+            && combined_lc.contains("git archive")
+        || combined_lc.contains("git archive")
+            && combined_lc.contains("expected ack/nak")
+            && combined_lc.contains("flush packet")
+}
+
 pub(super) fn without_userinfo(url: &str) -> String {
     let Some((scheme, rest)) = url.split_once("://") else {
         return url.to_string();
