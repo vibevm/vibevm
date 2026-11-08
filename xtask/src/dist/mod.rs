@@ -66,6 +66,36 @@ pub(crate) enum DistCommand {
         version: String,
     },
 
+    /// Mirror one complete, verified release onto GitVerse. A separate explicit
+    /// step: no other command runs it.
+    GitversePublish {
+        #[arg(long)]
+        version: String,
+
+        /// Read the complete asset set from this directory instead of the
+        /// published GitHub release.
+        #[arg(long)]
+        from_dir: Option<PathBuf>,
+
+        /// Print the planned requests; load no token and send nothing to GitVerse.
+        #[arg(long)]
+        dry_run: bool,
+
+        /// Replace a same-named GitVerse asset whose bytes differ (refused otherwise).
+        #[arg(long)]
+        replace: bool,
+
+        /// GitVerse API base URL (an on-prem GitVerse's API root).
+        #[arg(long, default_value = release::gitverse::DEFAULT_GITVERSE_API_BASE)]
+        api_base: String,
+
+        #[arg(long, default_value = release::gitverse::DEFAULT_GITVERSE_OWNER)]
+        owner: String,
+
+        #[arg(long, default_value = release::gitverse::DEFAULT_GITVERSE_REPO)]
+        repo: String,
+    },
+
     /// Verify all remote assets, publish DISTRIBUTIONS.json, and optionally publish the release.
     Finalize {
         #[arg(long)]
@@ -142,6 +172,26 @@ pub(crate) fn run_dist(repo_root: &Path, command: DistCommand) -> Result<()> {
             release::upload_built(repo_root, &target, &out_dir)
         }
         DistCommand::Status { version } => release::status(repo_root, &version),
+        DistCommand::GitversePublish {
+            version,
+            from_dir,
+            dry_run,
+            replace,
+            api_base,
+            owner,
+            repo,
+        } => release::gitverse::publish(
+            repo_root,
+            &release::gitverse::GitverseOptions {
+                version,
+                from_dir,
+                dry_run,
+                replace,
+                api_base,
+                owner,
+                repo,
+            },
+        ),
         DistCommand::Finalize { version, publish } => {
             release::finalize(repo_root, &version, publish)
         }

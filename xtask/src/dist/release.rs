@@ -29,6 +29,7 @@ use super::snapshot::{GitIdentity, committed_identity, read_commit_file};
 const GITHUB_OWNER: &str = "vibevm";
 const GITHUB_REPO: &str = "vibevm";
 
+pub(crate) mod gitverse;
 mod local;
 mod status;
 #[cfg(test)]

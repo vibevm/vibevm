@@ -8,7 +8,7 @@ use vibe_publish::{
     DistributionComponentName, DistributionSourceArchive, GithubGitObject,
 };
 
-const COMMIT: &str = "0123456789abcdef0123456789abcdef01234567";
+pub(super) const COMMIT: &str = "0123456789abcdef0123456789abcdef01234567";
 const TREE: &str = "89abcdef0123456789abcdef0123456789abcdef";
 
 struct MockHost {
@@ -188,7 +188,7 @@ fn release(draft: bool) -> GithubRelease {
     }
 }
 
-fn platform(target: &str) -> (PlatformDistributionFragment, Vec<u8>, Vec<u8>, Vec<u8>) {
+pub(super) fn platform(target: &str) -> (PlatformDistributionFragment, Vec<u8>, Vec<u8>, Vec<u8>) {
     let version = Version::parse("1.0.0").unwrap();
     let vibe = format!("vibe:{target}").into_bytes();
     let index = format!("vibe-index:{target}").into_bytes();

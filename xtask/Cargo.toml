@@ -26,6 +26,8 @@ rust-ai-native-conform-frontend.workspace = true
 rust-ai-native-cli.workspace = true
 vibe-index.workspace = true
 vibe-publish.workspace = true
+# `dist gitverse-publish` talks to the GitVerse release API directly.
+reqwest.workspace = true
 zip.workspace = true
 sha2.workspace = true
 vibe-core.workspace = true

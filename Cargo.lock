@@ -5967,6 +5967,7 @@ dependencies = [
  "clap",
  "core-ai-native-conform",
  "core-ai-native-specmap",
+ "reqwest 0.12.28",
  "rust-ai-native-cli",
  "rust-ai-native-conform",
  "rust-ai-native-conform-frontend",
