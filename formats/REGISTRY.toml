@@ -809,11 +809,11 @@ corpus = "formats/corpora/compiler_trace_index/e1"
 sunset = "none"
 
 [format.package-skill-receipt]
-epoch = 1
-schema = "schemas/package_skill_receipt.jtd.json"
+epoch = 2
+schema = "schemas/package_skill/e2/receipt.jtd.json"
 recoverable = false
 foreign_parsers = "none"
-corpus = "formats/corpora/package-skills/e1"
+corpus = "formats/corpora/package-skills/e2"
 sunset = "none"
 
 # ── OpenAI-compatible provider wire (2 JTD), PROP-000 §16 / PROP-054 §6.4 ─
@@ -1724,4 +1724,40 @@ recoverable = false
 foreign_parsers = "none"
 unknown_fields = "deny"
 corpus = "formats/corpora/application/e1"
+sunset = "none"
+
+# Frozen predecessor; new writers require runtime receipt schema 3.
+[format.package-skill-receipt-v1]
+epoch = 1
+schema = "schemas/package_skill_receipt.jtd.json"
+recoverable = false
+foreign_parsers = "none"
+corpus = "formats/corpora/package-skills/e1"
+sunset = "none"
+
+[format.mcp-registration-receipt]
+epoch = 1
+schema = "schemas/mcp_registration_receipt.jtd.json"
+recoverable = false
+foreign_parsers = "none"
+unknown_fields = "deny"
+corpus = "none"
+sunset = "none"
+
+[format.standalone-skill-receipt]
+epoch = 1
+schema = "schemas/standalone_skill_receipt.jtd.json"
+recoverable = false
+foreign_parsers = "none"
+unknown_fields = "deny"
+corpus = "none"
+sunset = "none"
+
+[format.cli-agent-activation]
+epoch = 1
+schema = "schemas/agent_activation_report.jtd.json"
+recoverable = true
+foreign_parsers = "many"
+unknown_fields = "allow"
+corpus = "none"
 sunset = "none"

@@ -23,6 +23,7 @@ struct StatusReport {
     /// Package-declared servers (PROP-027 §2.4) and their lifecycle
     /// state: registered where, artifact built or the build recipe.
     pkg_servers: Vec<PkgServerStatus>,
+    managed_builtin: Vec<package_registration::RegistrationStatus>,
 }
 
 #[derive(Debug, Clone, Serialize)]
@@ -109,6 +110,7 @@ pub(super) fn run_status(ctx: &output::Context, args: McpStatusArgs) -> Result<(
         .filter(|p| p.join(Manifest::FILENAME).exists());
     let detected = detect_agents(project_root.as_deref());
     let mut results: Vec<AgentInstallReport> = Vec::new();
+    let mut managed_builtin = Vec::new();
     let mut skill_results: Vec<SkillInstallReport> = Vec::new();
     for agent in Agent::ALL.iter().copied() {
         for scope in [Scope::Project, Scope::User] {
@@ -117,8 +119,23 @@ pub(super) fn run_status(ctx: &output::Context, args: McpStatusArgs) -> Result<(
             }
             // MCP-config preview.
             if let Some(path) = agent.config_path(scope, project_root.as_deref())? {
+                managed_builtin.push(package_registration::registration_status(
+                    agent,
+                    scope,
+                    &path,
+                    &package_registration::builtin_server(),
+                )?);
                 let payload = agent.build_mcp_entry();
-                results.push(preview_install_mcp(agent, scope, &path, &payload)?);
+                results.push(
+                    package_registration::register_builtin(agent, scope, &path, &payload, true)
+                        .unwrap_or_else(|_| AgentInstallReport {
+                            agent: agent.as_str().into(),
+                            scope: scope.as_str(),
+                            config_path: machine_json_path(&path),
+                            status: "conflict",
+                            note: Some("ownership differs; inspect managed_builtin".into()),
+                        }),
+                );
             }
             // Skill preview — only for agents that load skills + have
             // a path for this scope. install_skill with dry_run=true
@@ -126,7 +143,8 @@ pub(super) fn run_status(ctx: &output::Context, args: McpStatusArgs) -> Result<(
             // would-create / would-update / unchanged.
             if agent.supports_skill() && agent.skill_path(scope, project_root.as_deref())?.is_some()
             {
-                let outcome = install_skill(agent, scope, project_root.as_deref(), true)?;
+                let outcome =
+                    vibe_mcp::install::refresh_skill(agent, scope, project_root.as_deref(), true)?;
                 skill_results.push(outcome);
             }
         }
@@ -149,6 +167,7 @@ pub(super) fn run_status(ctx: &output::Context, args: McpStatusArgs) -> Result<(
         results: results.clone(),
         skill_results: skill_results.clone(),
         pkg_servers: pkg_servers.clone(),
+        managed_builtin,
     };
     if ctx.is_json() {
         ctx.emit_json(&report)?;

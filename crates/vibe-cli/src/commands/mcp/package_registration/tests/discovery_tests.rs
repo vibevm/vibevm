@@ -45,8 +45,8 @@ fn native_discovery_distinguishes_owned_present_missing_changed_pending_and_fore
             Agent::QwenCode => {
                 let mut receipt = read_receipt(&config).unwrap();
                 let entry = receipt.entries.get_mut("fpf").unwrap();
-                entry.pending_previous = Some(entry.payload.clone());
-                entry.payload = serde_json::json!({"httpUrl":"https://next.example"});
+                entry.pending_previous = entry.payload.clone();
+                entry.payload = Some(serde_json::json!({"httpUrl":"https://next.example"}));
                 write_receipt(&config, &receipt).unwrap();
             }
             _ => {}
@@ -76,13 +76,15 @@ fn native_discovery_distinguishes_owned_present_missing_changed_pending_and_fore
         .config_path_with_dirs(Scope::User, None, &dirs)
         .unwrap()
         .unwrap();
-    let mut receipt = Receipt::default();
+    let mut receipt = empty_receipt();
     receipt.entries.insert(
         "fpf".into(),
         OwnedEntry {
+            activation: None,
+            retracted: false,
             package: "other/package".into(),
             version: None,
-            payload: serde_json::json!({}),
+            payload: Some(serde_json::json!({})),
             pending_previous: None,
         },
     );

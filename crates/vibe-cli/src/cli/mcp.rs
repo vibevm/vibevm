@@ -17,6 +17,10 @@ pub struct McpArgs {
 
 #[derive(Debug, Subcommand)]
 pub enum McpSubcommand {
+    /// Enable one managed entry without reinstalling its package.
+    Enable(McpActivationArgs),
+    /// Retain the package and durable off intent, retracting only owned projection.
+    Disable(McpActivationArgs),
     /// Run the MCP server over stdio. Blocks until the client
     /// disconnects (EOF on stdin).
     Serve(McpServeArgs),
@@ -234,4 +238,24 @@ pub struct McpServeArgs {
     /// restart.
     #[arg(long, default_value = ".")]
     pub path: PathBuf,
+}
+
+#[derive(Debug, clap::Args)]
+pub struct McpActivationArgs {
+    /// Exact server name (vibevm selects the builtin entry).
+    pub name: String,
+    /// Owning installed package; required except for the builtin vibevm server.
+    #[arg(long)]
+    pub package: Option<String>,
+    #[arg(long, default_value = ".")]
+    pub path: PathBuf,
+    #[arg(long)]
+    pub agent: String,
+    #[arg(long, default_value = "project")]
+    pub scope: String,
+    /// Caller-supplied attribution, not an authenticated OS identity.
+    #[arg(long)]
+    pub actor: Option<String>,
+    #[arg(long)]
+    pub dry_run: bool,
 }

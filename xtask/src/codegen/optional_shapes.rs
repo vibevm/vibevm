@@ -93,6 +93,8 @@ pub(super) fn apply_optional_shapes(
 /// both sides carry, and the thing a scalar's policy is read against.
 #[derive(Clone, Copy, Debug, PartialEq, Eq, PartialOrd, Ord)]
 enum ShapeClass {
+    /// Empty JTD form, emitted by the pinned generator as unboxed Option<Value>.
+    Any,
     /// A `type` form: string, boolean, timestamp, a number.
     Scalar,
     /// An `enum` form: one closed vocabulary value.
@@ -110,6 +112,7 @@ impl ShapeClass {
     /// The word the refusals spell for this class.
     fn as_str(self) -> &'static str {
         match self {
+            ShapeClass::Any => "arbitrary JSON",
             ShapeClass::Scalar => "scalar",
             ShapeClass::Vocabulary => "vocabulary",
             ShapeClass::Structure => "structure",
@@ -362,6 +365,16 @@ fn site_decision(
             )
         }
         ShapeClass::Collection => unreachable!("required collection refs returned above"),
+        ShapeClass::Any => {
+            if site.node.get("metadata").and_then(|m| m.get("x-default")) != Some(&Value::Null) {
+                bail!(
+                    "schema {}: optional arbitrary JSON field `{}` requires explicit x-default:null",
+                    schema.display(),
+                    site.path
+                );
+            }
+            Decision::OptionValue
+        }
         ShapeClass::Scalar => scalar_decision(site, schema)?,
         ShapeClass::Vocabulary => vocabulary_decision(site, schema)?,
     };
@@ -414,9 +427,9 @@ fn resolve_form<'a>(
 /// Classify a resolved form by its JTD shape: a `type` form is a scalar,
 /// an `enum` is a vocabulary, and a `properties` / `optionalProperties`
 /// form is a structure, and a `discriminator` is a tagged union. Anything
-/// else — including an empty form — has no rule in this pass and refuses rather than passes for
+/// else has no rule in this pass and refuses rather than passes for
 /// processed: the tally would otherwise catch it as a bare count, which
-/// names nothing.
+/// names nothing. Empty JTD is recognized only with an explicit site policy.
 fn classify_form(form: &Map<String, Value>, path: &str, schema: &Path) -> Result<ShapeClass> {
     if form.contains_key("type") {
         return Ok(ShapeClass::Scalar);
@@ -430,7 +443,13 @@ fn classify_form(form: &Map<String, Value>, path: &str, schema: &Path) -> Result
     if form.contains_key("discriminator") {
         return Ok(ShapeClass::Union);
     }
-    let shape = "no JTD form at all";
+    if form
+        .keys()
+        .all(|key| matches!(key.as_str(), "metadata" | "nullable"))
+    {
+        return Ok(ShapeClass::Any);
+    }
+    let shape = "no supported JTD form";
     bail!(
         "schema {}: the optional field `{}` resolves to {shape} — the pass \
          has no shape rule for it (an optional vocabulary, a tagged union or \

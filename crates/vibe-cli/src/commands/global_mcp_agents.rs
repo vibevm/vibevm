@@ -77,6 +77,7 @@ fn uninstall_choices(
             let states: Vec<_> = [
                 (status.registered, "installed"),
                 (status.missing, "missing"),
+                (status.disabled, "disabled"),
                 (status.changed, "changed"),
                 (status.pending, "pending"),
             ]
@@ -149,6 +150,7 @@ mod tests {
         let statuses = [super::super::mcp::GlobalAgentRegistration {
             agent: Agent::Cursor,
             registered: 0,
+            disabled: 0,
             missing: 2,
             changed: 0,
             pending: 0,
@@ -168,6 +170,7 @@ mod tests {
             GlobalAgentRegistration {
                 agent: Agent::ClaudeCode,
                 registered: 1,
+                disabled: 0,
                 missing: 1,
                 changed: 0,
                 pending: 0,
@@ -175,6 +178,7 @@ mod tests {
             GlobalAgentRegistration {
                 agent: Agent::Codex,
                 registered: 0,
+                disabled: 0,
                 missing: 0,
                 changed: 1,
                 pending: 1,

@@ -1,0 +1,120 @@
+{
+  "metadata": {
+    "description": "Epoch-2 project skill receipt; schema 3 retains per-agent desired activation through projection retraction.",
+    "spec": {
+      "implements": "spec://org.vibevm.core/vibevm/common/PROP-054#PHASE-PACKAGE"
+    },
+    "rustOptions": {
+      "package": "vibe_wire::package_skill::e2::receipt"
+    },
+    "x-vocabularies": [
+      "activation_intent"
+    ],
+    "x-rust-type": "PackageSkillReceipt"
+  },
+  "properties": {
+    "schema": {
+      "type": "uint32"
+    },
+    "binding": {
+      "elements": {
+        "ref": "package_skill_binding"
+      },
+      "metadata": {
+        "x-empty": "emit"
+      }
+    }
+  },
+  "optionalProperties": {
+    "applying": {
+      "ref": "package_skill_applying"
+    }
+  },
+  "definitions": {
+    "package_skill_applying": {
+      "properties": {
+        "key": {
+          "type": "string"
+        },
+        "nonce": {
+          "type": "string"
+        },
+        "binding": {
+          "elements": {
+            "ref": "package_skill_binding"
+          },
+          "metadata": {
+            "x-empty": "emit"
+          }
+        }
+      }
+    },
+    "package_skill_binding": {
+      "metadata": {
+        "spec": {
+          "documents": "spec://org.vibevm.core/vibevm/common/PROP-018#PROJECTION-DEF"
+        }
+      },
+      "properties": {
+        "key": {
+          "type": "string"
+        },
+        "provider": {
+          "type": "string"
+        },
+        "skill": {
+          "type": "string"
+        },
+        "source_snapshot": {
+          "type": "string"
+        },
+        "target": {
+          "elements": {
+            "ref": "package_skill_target"
+          },
+          "metadata": {
+            "x-empty": "emit"
+          }
+        }
+      },
+      "optionalProperties": {
+        "activation": {
+          "values": {
+            "ref": "activation_intent"
+          },
+          "metadata": {
+            "x-empty": "omit"
+          }
+        }
+      }
+    },
+    "package_skill_target": {
+      "properties": {
+        "agent": {
+          "type": "string"
+        },
+        "path": {
+          "type": "string"
+        },
+        "file": {
+          "elements": {
+            "ref": "package_skill_file"
+          },
+          "metadata": {
+            "x-empty": "emit"
+          }
+        }
+      }
+    },
+    "package_skill_file": {
+      "properties": {
+        "path": {
+          "type": "string"
+        },
+        "sha256": {
+          "type": "string"
+        }
+      }
+    }
+  }
+}

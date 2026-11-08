@@ -1,0 +1,19 @@
+{
+  "binding": [
+    {
+      "key": "@vibe/package/skill/org.demo/tools/review",
+      "provider": "org.demo/tools",
+      "skill": "review",
+      "source_snapshot": "sha256:abc",
+      "target": [],
+      "activation": {
+        "claude": {
+          "enabled": false,
+          "actor": "operator",
+          "provenance": "vibe skill disable"
+        }
+      }
+    }
+  ],
+  "schema": 3
+}

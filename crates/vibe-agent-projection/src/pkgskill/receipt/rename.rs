@@ -4,7 +4,7 @@
 use std::collections::BTreeMap;
 
 use anyhow::{Result, bail};
-use vibe_wire::generated::package_skill_receipt::PackageSkillBinding as ReceiptBinding;
+use vibe_wire::generated::package_skill::e2::receipt::PackageSkillBinding as ReceiptBinding;
 
 use super::containment::{FoldKey, fold_key};
 

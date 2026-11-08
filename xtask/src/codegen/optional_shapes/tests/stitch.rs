@@ -207,8 +207,8 @@ fn the_same_key_with_different_decisions_refuses() -> Result<()> {
     Ok(())
 }
 
-/// The real vocabulary home retains104 baseline canonical sites plus14 later
-/// compiler/source-display sites,19 public portable sites and3 required-nullable
+/// The real vocabulary home retains104 baseline canonical sites plus15 later
+/// compiler/source-display/activation sites,19 public portable sites and3 required-nullable
 /// fields in the full-import work owners. The original53 plus configuration51
 /// remain unchanged. This walks definitions, not public app-work schemas;
 /// repeated compatible keys count at each declared site.
@@ -242,6 +242,7 @@ fn the_real_vocabulary_home_walks_to_its_sites() -> Result<()> {
         "closure_ir_v2",
         "source_evidence",
         "hosting_view",
+        "activation_intent",
     ];
     let baseline = old
         .iter()
@@ -261,6 +262,7 @@ fn the_real_vocabulary_home_walks_to_its_sites() -> Result<()> {
     );
     for (owner, expected) in [
         ("closure_ir_v2", vec!["pending_embeds", "pending_sources"]),
+        ("activation_intent", vec!["actor"]),
         (
             "source_evidence",
             vec![
@@ -296,12 +298,12 @@ fn the_real_vocabulary_home_walks_to_its_sites() -> Result<()> {
     }
     assert_eq!(
         shapes(json!({"definitions":old}))?.sites,
-        118,
-        "baseline104 plus compiler3, source evidence9 and hosting2"
+        119,
+        "baseline104 plus compiler3, source evidence9, hosting2 and activation actor1"
     );
     assert_eq!(
         shapes(json!({"definitions":public_and_old}))?.sites,
-        137,
+        138,
         "public portable vocabulary still adds exactly19 transformation sites"
     );
     for (owner, fields) in [
@@ -320,7 +322,7 @@ fn the_real_vocabulary_home_walks_to_its_sites() -> Result<()> {
     }
     let doc_shapes = shapes(json!({ "definitions": home }))?;
     assert_eq!(
-        doc_shapes.sites, 140,
+        doc_shapes.sites, 141,
         "the real shared home includes every promoted optional site"
     );
     Ok(())

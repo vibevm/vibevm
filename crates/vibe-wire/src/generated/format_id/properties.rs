@@ -26,6 +26,7 @@ impl FormatId {
         FormatId::BootArtifactTransaction,
         FormatId::ChangeManifest,
         FormatId::ChangeWork,
+        FormatId::CliAgentActivation,
         FormatId::CliAgentList,
         FormatId::CliAgentPresets,
         FormatId::CliApplicationAlternatives,
@@ -136,6 +137,7 @@ impl FormatId {
         FormatId::Lockfile,
         FormatId::Manifest,
         FormatId::McpLifecycleTasks,
+        FormatId::McpRegistrationReceipt,
         FormatId::McpTools,
         FormatId::MigrationApplicationJournal,
         FormatId::MigrationOperationReport,
@@ -159,6 +161,7 @@ impl FormatId {
         FormatId::NativePackageRequest,
         FormatId::NativeReply,
         FormatId::PackageSkillReceipt,
+        FormatId::PackageSkillReceiptV1,
         FormatId::RemapBundle,
         FormatId::RemapConsent,
         FormatId::RemapProviders,
@@ -172,6 +175,7 @@ impl FormatId {
         FormatId::ScrapeTransactionOwner,
         FormatId::ScrapeVerificationHealthEvidence,
         FormatId::SlotRecord,
+        FormatId::StandaloneSkillReceipt,
     ];
 
     /// The registry id, verbatim (e.g. `cli-init-report`).
@@ -198,6 +202,7 @@ impl FormatId {
             FormatId::BootArtifactTransaction => "boot-artifact-transaction",
             FormatId::ChangeManifest => "change-manifest",
             FormatId::ChangeWork => "change-work",
+            FormatId::CliAgentActivation => "cli-agent-activation",
             FormatId::CliAgentList => "cli-agent-list",
             FormatId::CliAgentPresets => "cli-agent-presets",
             FormatId::CliApplicationAlternatives => "cli-application-alternatives",
@@ -308,6 +313,7 @@ impl FormatId {
             FormatId::Lockfile => "lockfile",
             FormatId::Manifest => "manifest",
             FormatId::McpLifecycleTasks => "mcp-lifecycle-tasks",
+            FormatId::McpRegistrationReceipt => "mcp-registration-receipt",
             FormatId::McpTools => "mcp-tools",
             FormatId::MigrationApplicationJournal => "migration-application-journal",
             FormatId::MigrationOperationReport => "migration-operation-report",
@@ -331,6 +337,7 @@ impl FormatId {
             FormatId::NativePackageRequest => "native-package-request",
             FormatId::NativeReply => "native-reply",
             FormatId::PackageSkillReceipt => "package-skill-receipt",
+            FormatId::PackageSkillReceiptV1 => "package-skill-receipt-v1",
             FormatId::RemapBundle => "remap-bundle",
             FormatId::RemapConsent => "remap-consent",
             FormatId::RemapProviders => "remap-providers",
@@ -344,6 +351,7 @@ impl FormatId {
             FormatId::ScrapeTransactionOwner => "scrape-transaction-owner",
             FormatId::ScrapeVerificationHealthEvidence => "scrape-verification-health-evidence",
             FormatId::SlotRecord => "slot-record",
+            FormatId::StandaloneSkillReceipt => "standalone-skill-receipt",
         }
     }
 
@@ -371,6 +379,7 @@ impl FormatId {
             FormatId::BootArtifactTransaction => 1,
             FormatId::ChangeManifest => 1,
             FormatId::ChangeWork => 1,
+            FormatId::CliAgentActivation => 1,
             FormatId::CliAgentList => 1,
             FormatId::CliAgentPresets => 1,
             FormatId::CliApplicationAlternatives => 1,
@@ -481,6 +490,7 @@ impl FormatId {
             FormatId::Lockfile => 1,
             FormatId::Manifest => 1,
             FormatId::McpLifecycleTasks => 1,
+            FormatId::McpRegistrationReceipt => 1,
             FormatId::McpTools => 1,
             FormatId::MigrationApplicationJournal => 1,
             FormatId::MigrationOperationReport => 1,
@@ -503,7 +513,8 @@ impl FormatId {
             FormatId::NativePackageReply => 1,
             FormatId::NativePackageRequest => 1,
             FormatId::NativeReply => 1,
-            FormatId::PackageSkillReceipt => 1,
+            FormatId::PackageSkillReceipt => 2,
+            FormatId::PackageSkillReceiptV1 => 1,
             FormatId::RemapBundle => 1,
             FormatId::RemapConsent => 1,
             FormatId::RemapProviders => 1,
@@ -517,6 +528,7 @@ impl FormatId {
             FormatId::ScrapeTransactionOwner => 3,
             FormatId::ScrapeVerificationHealthEvidence => 2,
             FormatId::SlotRecord => 1,
+            FormatId::StandaloneSkillReceipt => 1,
         }
     }
 
@@ -544,6 +556,7 @@ impl FormatId {
             FormatId::BootArtifactTransaction => false,
             FormatId::ChangeManifest => false,
             FormatId::ChangeWork => false,
+            FormatId::CliAgentActivation => true,
             FormatId::CliAgentList => true,
             FormatId::CliAgentPresets => true,
             FormatId::CliApplicationAlternatives => true,
@@ -654,6 +667,7 @@ impl FormatId {
             FormatId::Lockfile => false,
             FormatId::Manifest => false,
             FormatId::McpLifecycleTasks => true,
+            FormatId::McpRegistrationReceipt => false,
             FormatId::McpTools => true,
             FormatId::MigrationApplicationJournal => false,
             FormatId::MigrationOperationReport => true,
@@ -677,6 +691,7 @@ impl FormatId {
             FormatId::NativePackageRequest => true,
             FormatId::NativeReply => true,
             FormatId::PackageSkillReceipt => false,
+            FormatId::PackageSkillReceiptV1 => false,
             FormatId::RemapBundle => true,
             FormatId::RemapConsent => true,
             FormatId::RemapProviders => true,
@@ -690,6 +705,7 @@ impl FormatId {
             FormatId::ScrapeTransactionOwner => false,
             FormatId::ScrapeVerificationHealthEvidence => false,
             FormatId::SlotRecord => true,
+            FormatId::StandaloneSkillReceipt => false,
         }
     }
 
@@ -717,6 +733,7 @@ impl FormatId {
             FormatId::BootArtifactTransaction => ForeignParsers::None,
             FormatId::ChangeManifest => ForeignParsers::Ours,
             FormatId::ChangeWork => ForeignParsers::Ours,
+            FormatId::CliAgentActivation => ForeignParsers::Many,
             FormatId::CliAgentList => ForeignParsers::Many,
             FormatId::CliAgentPresets => ForeignParsers::Many,
             FormatId::CliApplicationAlternatives => ForeignParsers::Many,
@@ -827,6 +844,7 @@ impl FormatId {
             FormatId::Lockfile => ForeignParsers::Ours,
             FormatId::Manifest => ForeignParsers::Many,
             FormatId::McpLifecycleTasks => ForeignParsers::Many,
+            FormatId::McpRegistrationReceipt => ForeignParsers::None,
             FormatId::McpTools => ForeignParsers::Many,
             FormatId::MigrationApplicationJournal => ForeignParsers::Many,
             FormatId::MigrationOperationReport => ForeignParsers::Many,
@@ -850,6 +868,7 @@ impl FormatId {
             FormatId::NativePackageRequest => ForeignParsers::Many,
             FormatId::NativeReply => ForeignParsers::None,
             FormatId::PackageSkillReceipt => ForeignParsers::None,
+            FormatId::PackageSkillReceiptV1 => ForeignParsers::None,
             FormatId::RemapBundle => ForeignParsers::Many,
             FormatId::RemapConsent => ForeignParsers::Ours,
             FormatId::RemapProviders => ForeignParsers::Ours,
@@ -863,6 +882,7 @@ impl FormatId {
             FormatId::ScrapeTransactionOwner => ForeignParsers::None,
             FormatId::ScrapeVerificationHealthEvidence => ForeignParsers::None,
             FormatId::SlotRecord => ForeignParsers::None,
+            FormatId::StandaloneSkillReceipt => ForeignParsers::None,
         }
     }
 
@@ -890,6 +910,7 @@ impl FormatId {
             FormatId::BootArtifactTransaction => UnknownFields::Deny,
             FormatId::ChangeManifest => UnknownFields::Deny,
             FormatId::ChangeWork => UnknownFields::Deny,
+            FormatId::CliAgentActivation => UnknownFields::Allow,
             FormatId::CliAgentList => UnknownFields::Allow,
             FormatId::CliAgentPresets => UnknownFields::Allow,
             FormatId::CliApplicationAlternatives => UnknownFields::Allow,
@@ -1000,6 +1021,7 @@ impl FormatId {
             FormatId::Lockfile => UnknownFields::Allow,
             FormatId::Manifest => UnknownFields::Allow,
             FormatId::McpLifecycleTasks => UnknownFields::Allow,
+            FormatId::McpRegistrationReceipt => UnknownFields::Deny,
             FormatId::McpTools => UnknownFields::Allow,
             FormatId::MigrationApplicationJournal => UnknownFields::Deny,
             FormatId::MigrationOperationReport => UnknownFields::Deny,
@@ -1023,6 +1045,7 @@ impl FormatId {
             FormatId::NativePackageRequest => UnknownFields::Allow,
             FormatId::NativeReply => UnknownFields::Deny,
             FormatId::PackageSkillReceipt => UnknownFields::Deny,
+            FormatId::PackageSkillReceiptV1 => UnknownFields::Deny,
             FormatId::RemapBundle => UnknownFields::Allow,
             FormatId::RemapConsent => UnknownFields::Allow,
             FormatId::RemapProviders => UnknownFields::Allow,
@@ -1036,6 +1059,7 @@ impl FormatId {
             FormatId::ScrapeTransactionOwner => UnknownFields::Deny,
             FormatId::ScrapeVerificationHealthEvidence => UnknownFields::Deny,
             FormatId::SlotRecord => UnknownFields::Deny,
+            FormatId::StandaloneSkillReceipt => UnknownFields::Deny,
         }
     }
 }

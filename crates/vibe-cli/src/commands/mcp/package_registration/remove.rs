@@ -10,6 +10,31 @@ pub(super) fn remove_selected(
     only_server: Option<&str>,
     dry_run: bool,
 ) -> Result<Vec<AgentInstallReport>> {
+    let mut batch = PublicationBatch::default();
+    remove_selected_in(
+        agent,
+        scope,
+        config,
+        package,
+        only_server,
+        Mutation {
+            dry_run,
+            batch: &mut batch,
+        },
+    )
+    .map_err(|error| batch.failed(error, "MCP unregistration"))
+}
+
+pub(super) fn remove_selected_in(
+    agent: Agent,
+    scope: Scope,
+    config: &Path,
+    package: &str,
+    only_server: Option<&str>,
+    mutation: Mutation<'_>,
+) -> Result<Vec<AgentInstallReport>> {
+    let Mutation { dry_run, batch } = mutation;
+    batch.capture_config(config)?;
     let selected = server_filter(only_server)?;
     let coordinate = normalized_coordinate(package)?;
     let requested_version = selector_exact_version(package)?;
@@ -39,8 +64,8 @@ pub(super) fn remove_selected(
     }
     for name in &names {
         let current = current_entry(agent, config, name)?;
-        let expected = &receipt.entries[name].payload;
-        if current.as_ref() != Some(expected) && current.is_some() {
+        let expected = receipt.entries[name].expected();
+        if current.as_ref() != expected && current.is_some() {
             bail!(
                 "MCP name `{name}` was changed outside vibe in `{}`; refusing to remove",
                 config.display()
@@ -55,14 +80,14 @@ pub(super) fn remove_selected(
                     ConfigFormat::Json => {
                         let mut stripped = strip_json_entry(config, agent.mcp_section_key(), name)?;
                         vibe_mcp::pkg_servers::unmark_managed(&mut stripped, name);
-                        atomic_write(
+                        batch.write(
                             config,
                             (serde_json::to_string_pretty(&stripped)? + "\n").as_bytes(),
                         )?;
                     }
                     ConfigFormat::Toml => {
                         let stripped = strip_toml_entry(config, agent.mcp_section_key(), name)?;
-                        atomic_write(config, toml::to_string_pretty(&stripped)?.as_bytes())?;
+                        batch.write(config, toml::to_string_pretty(&stripped)?.as_bytes())?;
                     }
                 }
             }
@@ -70,9 +95,9 @@ pub(super) fn remove_selected(
         }
         let path = receipt_path(config)?;
         if receipt.entries.is_empty() {
-            fs::remove_file(path)?;
+            batch.remove(&path)?;
         } else {
-            write_receipt(config, &receipt)?;
+            batch.receipt(config, &receipt)?;
         }
     }
     for name in names {
@@ -206,4 +231,69 @@ fn legacy_removal_candidates(
         candidates.push(server);
     }
     Ok(candidates)
+}
+
+/// Declaration churn retracts projection, retaining any explicit activation intent.
+/// Explicit uninstall continues to remove the complete ownership row.
+pub(super) fn retire_vanished_in(
+    agent: Agent,
+    scope: Scope,
+    config: &Path,
+    package: &str,
+    name: &str,
+    mutation: Mutation<'_>,
+) -> Result<Vec<AgentInstallReport>> {
+    let Mutation { dry_run, batch } = mutation;
+    batch.capture_config(config)?;
+    let mut receipt = read_receipt(config)?;
+    let Some(prior) = receipt.entries.get(name).cloned() else {
+        return Ok(Vec::new());
+    };
+    if prior.package != normalized_coordinate(package)? {
+        bail!("vanished MCP entry belongs to another package");
+    }
+    if prior.activation.is_none() {
+        return remove_selected_in(
+            agent,
+            scope,
+            config,
+            package,
+            Some(&exact_server_filter(&[name.into()])?),
+            Mutation { dry_run, batch },
+        );
+    }
+    let current = current_entry(agent, config, name)?;
+    if current.is_some() && current.as_ref() != prior.expected() {
+        bail!("vanished MCP projection changed outside vibe; preserving it and intent");
+    }
+    if !dry_run {
+        let mut retained = prior;
+        retained.retracted = true;
+        retained.pending_previous = current.clone();
+        receipt.entries.insert(name.into(), retained);
+        batch.receipt(config, &receipt)?;
+        if current.is_some() {
+            batch.write(
+                config,
+                activation::render_projection(agent, config, name, None)?.as_bytes(),
+            )?;
+        }
+        if let Some(row) = receipt.entries.get_mut(name) {
+            row.pending_previous = None;
+        }
+        batch.receipt(config, &receipt)?;
+    }
+    Ok(vec![AgentInstallReport {
+        agent: agent.as_str().into(),
+        scope: scope.as_str(),
+        config_path: machine_json_path(config),
+        status: if dry_run {
+            "would-retain-intent"
+        } else {
+            "retained-intent"
+        },
+        note: Some(format!(
+            "declaration `{name}` absent; activation intent retained"
+        )),
+    }])
 }

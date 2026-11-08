@@ -6,7 +6,7 @@ use std::collections::BTreeMap;
 use std::fs;
 use std::path::Path;
 
-use vibe_wire::generated::package_skill_receipt::PackageSkillFile as ReceiptFile;
+use vibe_wire::generated::package_skill::e2::receipt::PackageSkillFile as ReceiptFile;
 
 use super::nofollow::Project;
 use super::stage::Stage;
@@ -296,7 +296,7 @@ fn write_receipt_refuses_a_value_the_strict_reader_would_reject() {
     let mut applying = receipt.binding.clone();
     applying[0].target[0].file[0].path = "trailing.".into();
     intent.applying = Some(
-        vibe_wire::generated::package_skill_receipt::PackageSkillApplying {
+        vibe_wire::generated::package_skill::e2::receipt::PackageSkillApplying {
             binding: applying,
             key: bindings[0].identity(),
             nonce: fresh_nonce(),
@@ -344,7 +344,7 @@ fn a_refused_write_never_creates_the_project_directory() {
     let mut invalid_intent = super::state::empty_receipt();
     invalid_intent.binding = vec![row.clone()];
     invalid_intent.applying = Some(
-        vibe_wire::generated::package_skill_receipt::PackageSkillApplying {
+        vibe_wire::generated::package_skill::e2::receipt::PackageSkillApplying {
             binding: vec![row.clone()],
             key: bindings[0].identity(),
             nonce: "not-a-hex-nonce".into(),

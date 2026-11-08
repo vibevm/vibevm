@@ -41,6 +41,7 @@ pub struct ProjectSkillTarget {
 #[derive(Debug, Clone)]
 #[spec(documents = "spec://org.vibevm.core/vibevm/common/PROP-054#PHASE-PACKAGE")]
 pub struct ProjectSkillBinding {
+    pub activation: BTreeMap<String, crate::activation::ActivationIntent>,
     pub skill: DeclaredSkill,
     pub targets: Vec<ProjectSkillTarget>,
     pub source_snapshot: String,
@@ -216,12 +217,14 @@ fn lower_one_binding(project_root: &Path, skill: DeclaredSkill) -> Result<Projec
         }
     }
     let source_snapshot = selected_snapshot_digest(selected_files.as_ref());
-    Ok(ProjectSkillBinding {
+    let binding = ProjectSkillBinding {
+        activation: BTreeMap::new(),
         skill,
         targets,
         source_snapshot,
         selected_files,
-    })
+    };
+    receipt::effective_binding(project_root, binding)
 }
 
 pub fn reconcile_project_skill_binding(

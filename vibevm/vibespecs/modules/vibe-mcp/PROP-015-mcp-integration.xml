@@ -276,7 +276,7 @@ agent-aware but format-generic:</CONFIG-SHAPE-DECL></p>
       </facts>
     </agent-config>
     <skill title="2.6 Skill materialisation">
-      <p><req-skill fact="true" status="impl/done">`req r2`</req-skill></p>
+      <p><req-skill fact="true" status="impl/done">`req r3`</req-skill></p>
       <p><SKILL-MANIFEST fact="true" status="impl/done" action="continue" actionstage="doc" audience="user">**Decision.** For agents that support a skill manifest (Claude Code,
 OpenCode, Codex, Qwen Code — not the JSON-config-only Cursor / Claude Code Desktop),
 `vibe mcp install` also writes a `SKILL.md` describing how to use vibevm
@@ -285,15 +285,13 @@ through the MCP tools.</SKILL-MANIFEST></p>
         <SKILL-BODY-DATA fact="true" status="impl/done">The skill body is **data, not code** — a vendored
   template (`include_str!`) rendered into each agent's skill directory
   (`.&lt;agent&gt;/skills/vibevm/SKILL.md`).</SKILL-BODY-DATA>
-        <SKILL-IDEMPOTENT fact="true" status="impl/done">Writing is idempotent: identical
-  content is left untouched (`unchanged`); a divergent file is updated.</SKILL-IDEMPOTENT>
+        <SKILL-IDEMPOTENT fact="true" status="impl/done">Writing is idempotent under receipt ownership: unchanged owned content is retained, an owned package update reconciles its managed files, and foreign modifications refuse instead of being overwritten. Explicit disabled intent prevents reinstall or upgrade from recreating the projection. Explicit registration alone may adopt an identical canonical builtin with a reported new ownership decision; status, disable and automatic refresh cannot infer ownership from equal bytes. The shared contract is [PROP-073#MANAGED-ACTIVATION](../../common/PROP-073-source-decisions-and-operation-effects.xml#MANAGED-ACTIVATION).</SKILL-IDEMPOTENT>
       </facts>
     </skill>
     <lifecycle title="2.7 The integration lifecycle">
-      <p><req-lifecycle fact="true" status="impl/done">`req r1`</req-lifecycle></p>
+      <p><req-lifecycle fact="true" status="impl/done">`req r2`</req-lifecycle></p>
       <p><LIFECYCLE-MATRIX fact="true" status="impl/done" action="continue" actionstage="doc" audience="user">**Decision.** The agent-integration command family is a coherent
-lifecycle over the (agent × scope) matrix, every verb idempotent and
-every mutating verb offering `--dry-run` and a confirmation:</LIFECYCLE-MATRIX></p>
+lifecycle over the (agent × scope) matrix. Install, upgrade and uninstall retain their preview and confirmation policies; explicit enable/disable follow the managed-activation contract below. Dry-run does not write:</LIFECYCLE-MATRIX></p>
       <facts ordered="false">
         <VERB-INSTALL fact="true" status="impl/done">**`install`** — detect (or accept a filter), preview, confirm, write
   MCP entries and skills.</VERB-INSTALL>
@@ -305,6 +303,7 @@ every mutating verb offering `--dry-run` and a confirmation:</LIFECYCLE-MATRIX><
       <p><LIFECYCLE-REPORTS fact="true" status="impl/done">Per-(agent, scope) outcomes are reported as structured records
 (`AgentInstallReport` / `SkillInstallReport`) the CLI renders or emits as
 JSON.</LIFECYCLE-REPORTS></p>
+      <p><LIFECYCLE-ACTIVATION fact="true" status="impl/done">Per-entry enable/disable retains installed packages and a durable desired state in existing ownership records. Install and upgrade honor that state; explicit uninstall removes managed ownership under its own contract. Status and mutation JSON distinguish desired state, actual projection and caller-asserted provenance. Conflict is not successful disable. Multiple selections admit all owners before intent writes and retain admitted intents before projection reconciliation, following PROP-073#MANAGED-ACTIVATION. Dry-run remains read-only. Native disabled representations are adapter-qualified; otherwise only owned projections are retracted.</LIFECYCLE-ACTIVATION></p>
     </lifecycle>
     <skill-include title="2.8 Selective skill projection">
       <p><req-skill-include fact="true" status="impl/done">`req r1`</req-skill-include></p>

@@ -53,6 +53,8 @@ pub(super) fn presets(
             }),
     );
 
+    // The lower owner retains activation intent and filters disabled agent targets.
+    // These exact targets enter both preset identity and emitted artifacts.
     let bindings = lower_project_skill_bindings(selected, inputs)
         .context("lowering authenticated project-scope package skill bindings")?;
     let desired = bindings

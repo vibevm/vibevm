@@ -18,6 +18,8 @@ pub(super) fn standalone_receipt(
 ) -> StandaloneSkillReceipt {
     StandaloneSkillReceipt {
         schema: STANDALONE_RECEIPT_SCHEMA,
+        provider: None,
+        activation: None,
         skill: skill_name.to_string(),
         file: desired
             .iter()
@@ -58,13 +60,25 @@ pub(super) fn read_standalone_receipt(
             path: path.to_path_buf(),
             reason: format!("standalone ownership receipt is malformed: {error}"),
         })?;
-    if parsed.schema != STANDALONE_RECEIPT_SCHEMA || parsed.skill != skill_name {
+    if !matches!(parsed.schema, 1 | 2) || parsed.skill != skill_name {
         return Err(PackageSkillError::UnsafePath {
             path: path.to_path_buf(),
             reason: format!(
                 "standalone ownership receipt does not identify schema {STANDALONE_RECEIPT_SCHEMA} skill `{skill_name}`"
             ),
         });
+    }
+    if parsed.schema == 1 && (parsed.activation.is_some() || parsed.provider.is_some()) {
+        return Err(PackageSkillError::UnsafePath {
+            path: path.into(),
+            reason: "activation metadata requires standalone receipt schema 2".into(),
+        });
+    }
+    if let Some(intent) = &parsed.activation {
+        crate::activation::validate(intent).map_err(|e| PackageSkillError::UnsafePath {
+            path: path.into(),
+            reason: e.to_string(),
+        })?;
     }
     receipt::judge_selection(parsed.file.iter().map(|file| file.path.as_str())).map_err(
         |fault| PackageSkillError::UnsafePath {
@@ -95,10 +109,39 @@ pub(super) fn write_standalone_receipt(
         path: path.to_path_buf(),
         reason: format!("cannot encode standalone ownership receipt: {error}"),
     })?;
-    fs::write(path, encoded).map_err(|source| PackageSkillError::Write {
-        path: path.to_path_buf(),
+    let parent = path.parent().ok_or_else(|| PackageSkillError::UnsafePath {
+        path: path.into(),
+        reason: "receipt lacks parent".into(),
+    })?;
+    fs::create_dir_all(parent).map_err(|source| PackageSkillError::Write {
+        path: parent.into(),
         source,
-    })
+    })?;
+    let project =
+        vibe_safefs::Project::open(parent).map_err(|e| PackageSkillError::UnsafePath {
+            path: parent.into(),
+            reason: e.to_string(),
+        })?;
+    let name =
+        path.file_name()
+            .and_then(|n| n.to_str())
+            .ok_or_else(|| PackageSkillError::UnsafePath {
+                path: path.into(),
+                reason: "unportable receipt filename".into(),
+            })?;
+    let directory = project
+        .dir(&[], false)
+        .map_err(|e| PackageSkillError::UnsafePath {
+            path: parent.into(),
+            reason: e.to_string(),
+        })?;
+    project
+        .write_atomic_in(&directory, name, encoded.as_bytes())
+        .map(|_| ())
+        .map_err(|e| PackageSkillError::UnsafePath {
+            path: path.into(),
+            reason: e.into_report().to_string(),
+        })
 }
 
 pub(super) fn owned_map(receipt: &StandaloneSkillReceipt) -> BTreeMap<&str, &str> {
@@ -129,6 +172,7 @@ pub(super) fn validate_standalone_ownership(
     for (path, expected) in &owned {
         if let Some(bytes) = current.get(*path)
             && digest_bytes(bytes) != *expected
+            && desired.get(*path) != Some(bytes)
         {
             return Err(PackageSkillError::UnsafePath {
                 path: target.join(path),

@@ -210,13 +210,15 @@ fn pending_receipt_recovers_interrupted_url_replacement() {
     let server = remote();
     let payload = server_payload(Agent::Codex, dir.path(), &server, false).unwrap();
     let old = serde_json::json!({"url": "https://old.example/mcp"});
-    let mut receipt = Receipt::default();
+    let mut receipt = empty_receipt();
     receipt.entries.insert(
         "fpf".into(),
         OwnedEntry {
+            activation: None,
+            retracted: false,
             package: server.package.clone(),
             version: Some(server.version.clone()),
-            payload: payload_json(&payload).unwrap(),
+            payload: Some(payload_json(&payload).unwrap()),
             pending_previous: Some(old),
         },
     );
@@ -388,3 +390,9 @@ fn exact_server_selector_preserves_literal_comma_names_through_removal() {
 }
 
 mod discovery_tests;
+
+#[path = "tests/activation_tests.rs"]
+mod activation_tests;
+
+#[path = "tests/rollback_tests.rs"]
+mod rollback_tests;

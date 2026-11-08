@@ -5,7 +5,7 @@ use std::collections::{BTreeMap, BTreeSet};
 use std::path::Path;
 
 use anyhow::{Context, Result, bail};
-use vibe_wire::generated::package_skill_receipt::{
+use vibe_wire::generated::package_skill::e2::receipt::{
     PackageSkillApplying, PackageSkillBinding as ReceiptBinding,
     PackageSkillTarget as ReceiptTarget,
 };
@@ -267,7 +267,7 @@ fn publish(
     project: &Project,
     stage: Option<&Stage>,
     directory: &Pinned,
-    file: &vibe_wire::generated::package_skill_receipt::PackageSkillFile,
+    file: &vibe_wire::generated::package_skill::e2::receipt::PackageSkillFile,
 ) -> Result<()> {
     let Some(stage) = stage else {
         bail!(
@@ -420,11 +420,11 @@ fn report(key: &str, agent: &str, path: &str, status: &'static str) -> PackageSk
 
 fn empty_with(
     bindings: &[ReceiptBinding],
-) -> vibe_wire::generated::package_skill_receipt::PackageSkillReceipt {
-    vibe_wire::generated::package_skill_receipt::PackageSkillReceipt {
+) -> vibe_wire::generated::package_skill::e2::receipt::PackageSkillReceipt {
+    vibe_wire::generated::package_skill::e2::receipt::PackageSkillReceipt {
         applying: None,
         binding: bindings.to_vec(),
-        schema: 2,
+        schema: 3,
     }
 }
 

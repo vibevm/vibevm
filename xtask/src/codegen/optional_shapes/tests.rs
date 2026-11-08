@@ -412,3 +412,73 @@ mod union;
 #[cfg(test)]
 #[path = "tests/null_alias.rs"]
 mod null_alias;
+
+#[test]
+fn arbitrary_json_optional_and_required_nullable_keep_exact_site_tally() -> Result<()> {
+    let src = r#"#[derive(Serialize, Deserialize)]
+pub struct Receipt {
+    pub payload: Option<Value>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub pending_previous: Option<Value>,
+}
+"#;
+    let doc = json!({"properties":{"payload":{"nullable":true}},"optionalProperties":{"pending_previous":{"metadata":{"x-default":null}}}});
+    let shapes = decisions_from_doc(&doc, Path::new("receipt.json"))?;
+    assert_eq!(shapes.sites, 2);
+    let rendered = apply_with_shapes(src, "receipt/mod.rs", &shapes)?;
+    assert!(rendered.contains("required_nullable::deserialize"));
+    assert!(rendered.contains("#[serde(default, skip_serializing_if = \"Option::is_none\")]"));
+    assert_eq!(rendered.matches("Option<Value>").count(), 2);
+    assert!(
+        decisions_from_doc(
+            &json!({"optionalProperties":{"payload":{}}}),
+            Path::new("receipt.json")
+        )
+        .is_err()
+    );
+    assert!(
+        apply_with_shapes(
+            &src.replace("    pub pending_previous: Option<Value>,\n", ""),
+            "receipt/mod.rs",
+            &shapes
+        )
+        .is_err()
+    );
+    Ok(())
+}
+
+#[test]
+fn arbitrary_json_serde_missing_null_and_values_follow_generated_shape() {
+    mod required {
+        pub fn deserialize<'de, D, T>(d: D) -> std::result::Result<Option<T>, D::Error>
+        where
+            D: serde::Deserializer<'de>,
+            T: serde::Deserialize<'de>,
+        {
+            Option::<T>::deserialize(d)
+        }
+        use serde::Deserialize;
+    }
+    #[derive(Debug, PartialEq, serde::Serialize, serde::Deserialize)]
+    struct Receipt {
+        #[serde(deserialize_with = "required::deserialize")]
+        payload: Option<serde_json::Value>,
+        #[serde(default, skip_serializing_if = "Option::is_none")]
+        pending_previous: Option<serde_json::Value>,
+    }
+    assert!(serde_json::from_str::<Receipt>("{}").is_err());
+    let null: Receipt = serde_json::from_str(r#"{"payload":null}"#).unwrap();
+    assert_eq!(null.payload, None);
+    assert_eq!(null.pending_previous, None);
+    for value in [
+        json!(true),
+        json!(7),
+        json!("text"),
+        json!([1, null]),
+        json!({"command":"tool","env":{"X":null}}),
+    ] {
+        let input = json!({"payload":value,"pending_previous":value});
+        let parsed: Receipt = serde_json::from_value(input.clone()).unwrap();
+        assert_eq!(serde_json::to_value(parsed).unwrap(), input);
+    }
+}

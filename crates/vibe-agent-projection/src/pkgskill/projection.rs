@@ -18,10 +18,14 @@ use vibe_core::manifest::{
 use vibe_core::{ContentHash, Group, PackageKind, PackageName};
 use vibe_workspace::Workspace;
 
-use super::{
-    PackageSkillError, PackageSkillReport, install_package_skill_selecting, uninstall_package_skill,
-};
+#[cfg(test)]
+use super::PackageSkillError;
+use super::{PackageSkillReport, uninstall_package_skill};
 use crate::agents::{Agent, Scope};
+
+#[path = "projection/operations.rs"]
+mod operations;
+pub use operations::declared_skill_activation_status;
 
 #[path = "projection/documentation.rs"]
 mod documentation;
@@ -139,6 +143,7 @@ impl DeclaredSkillProvider {
 
 #[derive(Debug, Clone)]
 struct ProjectionTask {
+    provider: String,
     agent: Agent,
     scope: Scope,
     name: String,
@@ -153,6 +158,7 @@ pub struct DeclaredSkillFilter<'a> {
     names: &'a [String],
     agent: Option<&'a str>,
     offline: bool,
+    provider: Option<&'a str>,
 }
 
 impl<'a> DeclaredSkillFilter<'a> {
@@ -161,7 +167,14 @@ impl<'a> DeclaredSkillFilter<'a> {
             names,
             agent,
             offline: false,
+            provider: None,
         }
+    }
+
+    #[spec(documents = "spec://org.vibevm.core/vibevm/common/PROP-073#MANAGED-ACTIVATION")]
+    pub fn with_provider(mut self, provider: &'a str) -> Self {
+        self.provider = Some(provider);
+        self
     }
 
     pub fn with_offline(mut self, offline: bool) -> Self {
@@ -176,6 +189,7 @@ impl<'a> DeclaredSkillFilter<'a> {
             names: &[],
             agent: None,
             offline: false,
+            provider: None,
         }
     }
 }
@@ -236,59 +250,28 @@ pub struct DeclaredSkillProjection {
     tasks: Vec<ProjectionTask>,
 }
 
-impl DeclaredSkillProjection {
-    pub fn install(&self, dry_run: bool) -> Result<Vec<PackageSkillReport>> {
-        self.install_with(dry_run, install_package_skill_selecting)
-    }
-
-    pub fn uninstall(&self, dry_run: bool) -> Result<Vec<PackageSkillReport>> {
-        let mut reports = Vec::with_capacity(self.tasks.len());
-        for task in &self.tasks {
-            reports.push(uninstall_package_skill(
-                task.agent,
-                task.scope,
-                Some(&self.project_root),
-                &task.name,
-                dry_run,
-            )?);
-        }
-        Ok(reports)
-    }
-
-    fn install_with<F>(&self, dry_run: bool, mut project_one: F) -> Result<Vec<PackageSkillReport>>
-    where
-        F: FnMut(
-            Agent,
-            Scope,
-            Option<&Path>,
-            &str,
-            &Path,
-            &[String],
-            bool,
-        ) -> Result<PackageSkillReport, PackageSkillError>,
-    {
-        let mut reports = Vec::with_capacity(self.tasks.len());
-        for task in &self.tasks {
-            reports.push(project_one(
-                task.agent,
-                task.scope,
-                Some(&self.project_root),
-                &task.name,
-                &task.source,
-                &task.include,
-                dry_run,
-            )?);
-        }
-        Ok(reports)
-    }
-}
-
 /// Discover, select, agent-filter, and scope-expand declared skills into one
 /// reusable ordered projection plan.
 pub fn prepare_declared_skill_projection(
     project_root: &Path,
     filter: &DeclaredSkillFilter<'_>,
     scope: Scope,
+) -> Result<DeclaredSkillProjection> {
+    prepare_declared_skill_plan(project_root, filter, scope, true)
+}
+#[spec(documents = "spec://org.vibevm.core/vibevm/common/PROP-073#MANAGED-ACTIVATION")]
+pub fn prepare_declared_skill_activation(
+    project_root: &Path,
+    filter: &DeclaredSkillFilter<'_>,
+    scope: Scope,
+) -> Result<DeclaredSkillProjection> {
+    prepare_declared_skill_plan(project_root, filter, scope, false)
+}
+fn prepare_declared_skill_plan(
+    project_root: &Path,
+    filter: &DeclaredSkillFilter<'_>,
+    scope: Scope,
+    content: bool,
 ) -> Result<DeclaredSkillProjection> {
     // Keep standalone diagnostic precedence byte-compatible: CLI agent
     // syntax was validated before workspace discovery in the original
@@ -301,7 +284,11 @@ pub fn prepare_declared_skill_projection(
     let selected: Vec<DeclaredSkill> = all
         .into_iter()
         .filter(|skill| {
-            filter.names.is_empty() || filter.names.iter().any(|name| name == &skill.decl.name)
+            filter
+                .provider
+                .is_none_or(|provider| provider == skill.provider.identity())
+                && (filter.names.is_empty()
+                    || filter.names.iter().any(|name| name == &skill.decl.name))
         })
         .collect();
     if selected.is_empty() {
@@ -311,16 +298,21 @@ pub fn prepare_declared_skill_projection(
     let scopes = scope.expand();
     let mut tasks = Vec::new();
     for mut skill in selected {
-        hydrate_declared_skill(&mut skill, filter.offline)?;
-        super::receipt::ensure_no_follow_walk(&skill.source_root, &skill.source, true)
-            .with_context(|| format!("unsafe source for declared skill `{}`", skill.decl.name))?;
-        if skill.source.exists() {
-            let selected = super::snapshot_source(&skill.source, &skill.decl.include)?;
-            super::validate_skill_frontmatter(&skill.decl.name, &skill.source, &selected)?;
+        if content {
+            hydrate_declared_skill(&mut skill, filter.offline)?;
+            super::receipt::ensure_no_follow_walk(&skill.source_root, &skill.source, true)
+                .with_context(|| {
+                    format!("unsafe source for declared skill `{}`", skill.decl.name)
+                })?;
+            if skill.source.exists() {
+                let selected = super::snapshot_source(&skill.source, &skill.decl.include)?;
+                super::validate_skill_frontmatter(&skill.decl.name, &skill.source, &selected)?;
+            }
         }
         for agent in skill_agents(&skill.decl, &requested_agents)? {
             for concrete_scope in &scopes {
                 tasks.push(ProjectionTask {
+                    provider: skill.provider.identity(),
                     agent,
                     scope: *concrete_scope,
                     name: skill.decl.name.clone(),
@@ -520,14 +512,10 @@ pub fn project_declared_skills_project_scope(
     filter: &DeclaredSkillFilter<'_>,
     dry_run: bool,
 ) -> Result<Vec<PackageSkillReport>> {
-    project_declared_skills_project_scope_with(
-        project_root,
-        filter,
-        dry_run,
-        install_package_skill_selecting,
-    )
+    prepare_declared_skill_projection(project_root, filter, Scope::Project)?.install(dry_run)
 }
 
+#[cfg(test)]
 fn project_declared_skills_project_scope_with<F>(
     project_root: &Path,
     filter: &DeclaredSkillFilter<'_>,

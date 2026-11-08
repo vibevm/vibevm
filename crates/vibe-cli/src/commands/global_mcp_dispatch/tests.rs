@@ -104,6 +104,15 @@ impl Harness {
                 .with_progress_scope(Progress::new(observer));
         }
         match cli.command {
+            Command::Mcp(args) => crate::commands::mcp::run(
+                &ctx,
+                args,
+                crate::commands::mcp::McpRuntime {
+                    root_offline: true,
+                    embedded_registry_root: None,
+                    seed_default_registry: false,
+                },
+            ),
             Command::Install(args) => run_install(&ctx, args, None, true),
             Command::Uninstall(args) => run_uninstall(&ctx, args, true),
             Command::Update(args) => run_update(&ctx, args, None, true),
@@ -560,3 +569,7 @@ fn human_global_url_install_and_update_need_no_materialization_confirmation() {
     assert_eq!(harness.names(Agent::Codex), ["a"]);
     assert!(harness.slot("1.0.1").exists());
 }
+
+#[cfg(test)]
+#[path = "tests/activation.rs"]
+mod activation;

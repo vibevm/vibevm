@@ -16,6 +16,8 @@
 //! must meet the schema's site count exactly — the same tally that
 //! keeps the sibling passes honest.
 
+mod unboxed_json;
+
 use std::collections::{BTreeMap, BTreeSet};
 
 use anyhow::{Result, bail};
@@ -88,6 +90,12 @@ pub(super) fn apply_with_shapes(src: &str, file: &str, shapes: &OptionalShapes) 
 
         if text.starts_with("#[") && text.ends_with(']') {
             attrs.push((line, chunk, text));
+            continue;
+        }
+
+        if unboxed_json::emit_unboxed_json((body, chunk), &attrs, shapes, file, line, &mut out)? {
+            found += 1;
+            attrs.clear();
             continue;
         }
 

@@ -1,0 +1,68 @@
+{
+  "metadata": {
+    "description": "Existing adjacent MCP ownership receipt. Schema2 requires vibe>=1.0.12 for mutation; predecessor readers cannot preserve activation on downgrade.",
+    "rustOptions": {
+      "package": "vibe_wire::mcp_registration_receipt"
+    },
+    "x-vocabularies": [
+      "activation_intent"
+    ],
+    "spec": {
+      "implements": "spec://org.vibevm.core/vibevm/common/PROP-073#MANAGED-ACTIVATION"
+    },
+    "x-rust-type": "McpRegistrationReceipt"
+  },
+  "optionalProperties": {
+    "schema": {
+      "type": "uint32",
+      "metadata": {
+        "x-default": null
+      }
+    },
+    "entries": {
+      "values": {
+        "ref": "owned_entry"
+      },
+      "metadata": {
+        "x-empty": "emit"
+      }
+    }
+  },
+  "definitions": {
+    "owned_entry": {
+      "properties": {
+        "package": {
+          "type": "string"
+        },
+        "payload": {
+          "nullable": true
+        }
+      },
+      "optionalProperties": {
+        "version": {
+          "type": "string",
+          "metadata": {
+            "x-default": null
+          }
+        },
+        "pending_previous": {
+          "metadata": {
+            "x-default": null
+          }
+        },
+        "activation": {
+          "ref": "activation_intent",
+          "metadata": {
+            "x-default": null
+          }
+        },
+        "retracted": {
+          "type": "boolean",
+          "metadata": {
+            "x-default": false
+          }
+        }
+      }
+    }
+  }
+}

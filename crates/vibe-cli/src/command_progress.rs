@@ -222,6 +222,8 @@ pub(crate) fn policy(command: &Command, terminal_attached: bool) -> CommandPolic
         Command::Search(_) => FiniteFallback("Command search"),
         Command::Mcp(args) => match &args.command {
             McpSubcommand::Serve(_) => PersistentProtocol,
+            McpSubcommand::Enable(_) => FiniteFallback("Command mcp enable"),
+            McpSubcommand::Disable(_) => FiniteFallback("Command mcp disable"),
             McpSubcommand::Install(_) => FiniteFallback("Command mcp install"),
             McpSubcommand::Status(_) => FiniteFallback("Command mcp status"),
             McpSubcommand::Upgrade(_) => FiniteFallback("Command mcp upgrade"),
@@ -257,6 +259,9 @@ pub(crate) fn policy(command: &Command, terminal_attached: bool) -> CommandPolic
         },
         Command::Skill(args) => match &args.command {
             SkillSubcommand::List(_) => FastMetadata,
+            SkillSubcommand::Status(_) => FastMetadata,
+            SkillSubcommand::Enable(_) => FiniteFallback("Command skill enable"),
+            SkillSubcommand::Disable(_) => FiniteFallback("Command skill disable"),
             SkillSubcommand::Install(_) => FiniteFallback("Command skill install"),
             SkillSubcommand::Uninstall(_) => FiniteFallback("Command skill uninstall"),
         },

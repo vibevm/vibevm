@@ -3,11 +3,8 @@
 //! changed or unreceipted entry is operator-owned and is never overwritten.
 
 use super::*;
-use serde::{Deserialize, Serialize};
+use serde::Serialize;
 use std::collections::BTreeMap;
-use std::fs::OpenOptions;
-use std::io::Write;
-use std::sync::atomic::{AtomicU64, Ordering};
 use vibe_workspace::bins::DeclaredMcpServer;
 
 #[derive(Debug, Clone, Serialize)]
@@ -17,6 +14,9 @@ pub(super) struct RegistrationStatus {
     pub(super) config_path: String,
     /// `registered`, `pending`, `missing`, `changed`, `foreign`, or `absent`.
     pub(super) state: &'static str,
+    pub(super) desired_enabled: bool,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub(super) activation: Option<vibe_agent_projection::activation::ActivationIntent>,
 }
 
 pub(super) fn registration_status(
@@ -27,9 +27,33 @@ pub(super) fn registration_status(
 ) -> Result<RegistrationStatus> {
     let current = current_entry(agent, config, &server.decl.name)?;
     let receipt = read_receipt(config)?;
+    let owned = receipt
+        .entries
+        .get(&server.decl.name)
+        .filter(|owned| owned.package == server.package);
     let state = match (receipt.entries.get(&server.decl.name), current.as_ref()) {
+        (Some(owned), current)
+            if owned.package == server.package
+                && !vibe_agent_projection::activation::desired_enabled(
+                    owned.activation.as_ref(),
+                )
+                && owned.disabled_projection(agent, current) =>
+        {
+            "disabled"
+        }
         (Some(owned), Some(value))
-            if owned.package == server.package && value == &owned.payload =>
+            if owned.package == server.package
+                && !vibe_agent_projection::activation::desired_enabled(
+                    owned.activation.as_ref(),
+                )
+                && Some(value) == owned.payload.as_ref() =>
+        {
+            "pending"
+        }
+        (Some(owned), Some(value))
+            if owned.package == server.package
+                && !owned.retracted
+                && Some(value) == owned.payload.as_ref() =>
         {
             "registered"
         }
@@ -49,23 +73,38 @@ pub(super) fn registration_status(
         scope: scope.as_str(),
         config_path: machine_json_path(config),
         state,
+        desired_enabled: vibe_agent_projection::activation::desired_enabled(
+            owned.and_then(|o| o.activation.as_ref()),
+        ),
+        activation: owned.and_then(|o| o.activation.clone()),
     })
 }
 
-#[derive(Debug, Default, Serialize, Deserialize)]
-struct Receipt {
-    #[serde(default)]
-    entries: BTreeMap<String, OwnedEntry>,
+use vibe_wire::generated::mcp_registration_receipt::{
+    McpRegistrationReceipt as Receipt, OwnedEntry,
+};
+
+trait OwnedProjection {
+    fn expected(&self) -> Option<&serde_json::Value>;
+    fn disabled_projection(&self, agent: Agent, current: Option<&serde_json::Value>) -> bool;
 }
 
-#[derive(Debug, Clone, Serialize, Deserialize)]
-struct OwnedEntry {
-    package: String,
-    #[serde(default, skip_serializing_if = "Option::is_none")]
-    version: Option<String>,
-    payload: serde_json::Value,
-    #[serde(default, skip_serializing_if = "Option::is_none")]
-    pending_previous: Option<serde_json::Value>,
+impl OwnedProjection for OwnedEntry {
+    fn expected(&self) -> Option<&serde_json::Value> {
+        if self.retracted {
+            None
+        } else {
+            self.payload.as_ref()
+        }
+    }
+    fn disabled_projection(&self, agent: Agent, current: Option<&serde_json::Value>) -> bool {
+        current == self.expected()
+            && (self.retracted
+                || (matches!(agent, Agent::OpenCode | Agent::Codex)
+                    && self.payload.as_ref().is_some_and(|p| {
+                        p.get("enabled") == Some(&serde_json::Value::Bool(false))
+                    })))
+    }
 }
 
 fn receipt_path(config: &Path) -> Result<PathBuf> {
@@ -78,74 +117,56 @@ fn receipt_path(config: &Path) -> Result<PathBuf> {
 fn read_receipt(config: &Path) -> Result<Receipt> {
     let path = receipt_path(config)?;
     if !checked_file_exists(&path)? {
-        return Ok(Receipt::default());
+        return Ok(empty_receipt());
     }
     let text =
         fs::read_to_string(&path).with_context(|| format!("reading `{}`", path.display()))?;
-    serde_json::from_str(&text).with_context(|| format!("parsing `{}`", path.display()))
-}
-
-fn write_receipt(config: &Path, receipt: &Receipt) -> Result<()> {
-    let path = receipt_path(config)?;
-    let text = serde_json::to_string_pretty(receipt)? + "\n";
-    atomic_write(&path, text.as_bytes())
-}
-
-static TEMP_COUNTER: AtomicU64 = AtomicU64::new(0);
-
-/// A complete config or receipt is made visible by a same-directory rename.
-/// This prevents a killed process from leaving a truncated user config.
-fn atomic_write(path: &Path, bytes: &[u8]) -> Result<()> {
-    let original_permissions = if checked_file_exists(path)? {
-        Some(fs::metadata(path)?.permissions())
-    } else {
-        None
-    };
-    let parent = path
-        .parent()
-        .ok_or_else(|| anyhow::anyhow!("path has no parent: `{}`", path.display()))?;
-    fs::create_dir_all(parent)?;
-    let name = path
-        .file_name()
-        .ok_or_else(|| anyhow::anyhow!("path has no file name"))?
-        .to_string_lossy();
-    let temporary = parent.join(format!(
-        ".{name}.vibevm-{}.{}.tmp",
-        std::process::id(),
-        TEMP_COUNTER.fetch_add(1, Ordering::Relaxed)
-    ));
-    let result = (|| -> Result<()> {
-        let mut file = OpenOptions::new()
-            .write(true)
-            .create_new(true)
-            .open(&temporary)?;
-        // A new receipt/config must not inherit a permissive umask on Unix.
-        #[cfg(unix)]
-        if original_permissions.is_none() {
-            use std::os::unix::fs::PermissionsExt;
-            fs::set_permissions(&temporary, fs::Permissions::from_mode(0o600))?;
-        }
-        if let Some(permissions) = original_permissions {
-            fs::set_permissions(&temporary, permissions)?;
-        }
-        file.write_all(bytes)?;
-        file.sync_all()?;
-        fs::rename(&temporary, path)
-            .with_context(|| format!("replacing `{}` atomically", path.display()))?;
-        Ok(())
-    })();
-    if result.is_err() {
-        let _ = fs::remove_file(&temporary);
+    let receipt: Receipt = serde_json::from_str(&text)
+        .map_err(|_| anyhow::anyhow!("malformed MCP ownership receipt at `{}`", path.display()))?;
+    if !matches!(receipt.schema.unwrap_or(1), 1 | 2) {
+        bail!(
+            "unsupported MCP receipt schema {}; requires vibe >= 1.0.12",
+            receipt.schema.unwrap_or(1)
+        );
     }
-    result
+    for entry in receipt.entries.values() {
+        if entry.payload.is_none() {
+            bail!("MCP receipt lacks a native payload; refusing ownership");
+        }
+        if let Some(intent) = &entry.activation {
+            vibe_agent_projection::activation::validate(intent)?;
+        }
+        if receipt.schema.unwrap_or(1) == 1 && (entry.activation.is_some() || entry.retracted) {
+            bail!("MCP activation requires receipt schema 2");
+        }
+    }
+    Ok(receipt)
 }
 
+fn encode_receipt(receipt: &Receipt) -> Result<Vec<u8>> {
+    let mut wire = serde_json::to_value(receipt)?;
+    wire["schema"] = 2.into();
+    Ok((serde_json::to_string_pretty(&wire)? + "\n").into_bytes())
+}
+
+#[cfg(test)]
+fn write_receipt(config: &Path, receipt: &Receipt) -> Result<()> {
+    PublicationBatch::default().receipt(config, receipt)
+}
+
+#[cfg(test)]
+fn atomic_write(path: &Path, bytes: &[u8]) -> Result<()> {
+    PublicationBatch::default().write(path, bytes)
+}
+
+#[cfg(test)]
 #[derive(Clone)]
 struct Snapshot {
     path: PathBuf,
     before: Option<Vec<u8>>,
 }
 
+#[cfg(test)]
 fn snapshot(path: PathBuf) -> Result<Snapshot> {
     let before = if checked_file_exists(&path)? {
         Some(fs::read(&path)?)
@@ -153,17 +174,6 @@ fn snapshot(path: PathBuf) -> Result<Snapshot> {
         None
     };
     Ok(Snapshot { path, before })
-}
-
-fn restore(snapshot: &Snapshot) -> Result<()> {
-    match &snapshot.before {
-        Some(bytes) => atomic_write(&snapshot.path, bytes),
-        None if checked_file_exists(&snapshot.path)? => {
-            fs::remove_file(&snapshot.path)?;
-            Ok(())
-        }
-        None => Ok(()),
-    }
 }
 
 fn payload_json(payload: &ConfigPayload) -> Result<serde_json::Value> {
@@ -223,7 +233,7 @@ fn checked_file_exists(path: &Path) -> Result<bool> {
     }
 }
 
-fn server_payload(
+pub(super) fn server_payload(
     agent: Agent,
     root: &Path,
     server: &DeclaredMcpServer,
@@ -404,6 +414,20 @@ fn ensure_requested_version(package: &str, installed: &str) -> Result<()> {
     Ok(())
 }
 
+fn empty_receipt() -> Receipt {
+    Receipt {
+        entries: BTreeMap::new(),
+        schema: None,
+    }
+}
+
+mod transaction;
+use transaction::{Mutation, PublicationBatch};
+mod activation;
+pub(super) use activation::{
+    admit_activation, builtin_server, register_builtin, register_builtin_explicit, remove_builtin,
+    retain_known_intent, set_activation,
+};
 mod lifecycle;
 mod register;
 mod remove;

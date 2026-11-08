@@ -129,7 +129,7 @@ fn final_cas_refuses_a_changed_plan_with_the_same_key_and_nonce() {
     let mut tampered = receipt.clone();
     let mut changed = applying.clone();
     changed.binding[0].target[0].file.push(
-        vibe_wire::generated::package_skill_receipt::PackageSkillFile {
+        vibe_wire::generated::package_skill::e2::receipt::PackageSkillFile {
             path: "EXTRA.md".into(),
             sha256: format!("sha256:{}", "0".repeat(64)),
         },
@@ -219,10 +219,10 @@ fn removed_target_recreated_before_finalize_refuses_without_promotion() {
         before: receipt.binding.clone(),
         after: Vec::new(),
     };
-    let mut intent = vibe_wire::generated::package_skill_receipt::PackageSkillReceipt {
+    let mut intent = vibe_wire::generated::package_skill::e2::receipt::PackageSkillReceipt {
         applying: None,
         binding: plan.before.clone(),
-        schema: 2,
+        schema: 3,
     };
     intent.applying = Some(plan.applying());
     write_receipt(&project_cap, &intent).unwrap();
@@ -400,10 +400,10 @@ fn changed_row_scoping_recovery_leaves_unrelated_tampered_targets_alone() {
             plan.required_stage_digests().is_empty(),
             "a removal-only plan retaining another binding requires no stage"
         );
-        let mut intent = vibe_wire::generated::package_skill_receipt::PackageSkillReceipt {
+        let mut intent = vibe_wire::generated::package_skill::e2::receipt::PackageSkillReceipt {
             applying: None,
             binding: plan.before.clone(),
-            schema: 2,
+            schema: 3,
         };
         intent.applying = Some(plan.applying());
         write_receipt(&project_cap, &intent).unwrap();

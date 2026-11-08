@@ -19,7 +19,6 @@ use crate::agents::{Agent, Scope};
 // The shared dry-run status vocabulary moved down with the package-skill
 // projection (R7.4 §5); the SKILL.md writer consumes the one lower
 // implementation rather than re-spelling it here.
-use vibe_agent_projection::preview_status;
 
 /// Bytes of the `vibevm` SKILL.md template, vendored at compile time.
 pub const SKILL_TEMPLATE: &str = include_str!("skill_template.md");
@@ -85,6 +84,27 @@ pub fn install_skill(
     project_root: Option<&Path>,
     dry_run: bool,
 ) -> Result<SkillInstallReport> {
+    install_skill_with(agent, scope, project_root, dry_run, true)
+}
+
+/// Refresh or observe existing ownership without adopting unreceipted files.
+#[spec(documents = "spec://org.vibevm.core/vibevm/common/PROP-073#MANAGED-ACTIVATION")]
+pub fn refresh_skill(
+    agent: Agent,
+    scope: Scope,
+    project_root: Option<&Path>,
+    dry_run: bool,
+) -> Result<SkillInstallReport> {
+    install_skill_with(agent, scope, project_root, dry_run, false)
+}
+
+fn install_skill_with(
+    agent: Agent,
+    scope: Scope,
+    project_root: Option<&Path>,
+    dry_run: bool,
+    explicit: bool,
+) -> Result<SkillInstallReport> {
     let agent_str = agent.as_str().to_string();
     let scope_str = scope.as_str();
 
@@ -102,25 +122,33 @@ pub fn install_skill(
         });
     };
 
-    let body = SKILL_TEMPLATE;
-    let path_str = machine_json_path(&path);
-    let base = decide_skill_action(&path, body)?;
-    let final_status = preview_status(base, dry_run);
-
-    if !dry_run && final_status != "unchanged" {
-        if let Some(parent) = path.parent() {
-            fs::create_dir_all(parent)
-                .with_context(|| format!("creating skill dir `{}`", parent.display()))?;
-        }
-        fs::write(&path, body).with_context(|| format!("writing skill `{}`", path.display()))?;
-    }
-
+    let desired =
+        std::collections::BTreeMap::from([("SKILL.md".into(), SKILL_TEMPLATE.as_bytes().to_vec())]);
+    let row = if explicit {
+        vibe_agent_projection::pkgskill::register_builtin_skill_snapshot(
+            agent,
+            scope,
+            project_root,
+            &desired,
+            dry_run,
+        )?
+    } else {
+        vibe_agent_projection::pkgskill::install_managed_skill_snapshot(
+            agent,
+            scope,
+            project_root,
+            Some("org.vibevm.core/vibevm"),
+            "vibevm",
+            &desired,
+            dry_run,
+        )?
+    };
     Ok(SkillInstallReport {
         agent: agent_str,
         scope: scope_str,
-        path: Some(path_str),
-        status: final_status,
-        note: None,
+        path: Some(machine_json_path(&path)),
+        status: row.status,
+        note: row.note,
     })
 }
 

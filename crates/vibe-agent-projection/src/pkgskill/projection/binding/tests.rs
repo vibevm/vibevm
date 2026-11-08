@@ -147,7 +147,7 @@ fn dual_alias_source_selection_refuses_with_zero_mutation() {
     assert!(!target.join("Maße.md").exists());
     assert!(!target.join("MASSE.md").exists());
     assert_eq!(fs::read(&receipt_path).unwrap(), committed);
-    let receipt: vibe_wire::generated::package_skill_receipt::PackageSkillReceipt =
+    let receipt: vibe_wire::generated::package_skill::e2::receipt::PackageSkillReceipt =
         toml::from_str(&String::from_utf8(committed).unwrap()).unwrap();
     assert!(receipt.applying.is_none(), "no `applying` receipt exists");
 }
@@ -215,7 +215,7 @@ fn nfc_and_nfd_source_spellings_refuse_before_stage_or_intent() {
     assert!(!target.join("cafe\u{301}.md").exists());
     assert!(!project.path().join(".vibe/package-skills/staged").exists());
     assert_eq!(fs::read(&receipt_path).unwrap(), committed);
-    let receipt: vibe_wire::generated::package_skill_receipt::PackageSkillReceipt =
+    let receipt: vibe_wire::generated::package_skill::e2::receipt::PackageSkillReceipt =
         toml::from_str(&String::from_utf8(committed).unwrap()).unwrap();
     assert!(receipt.applying.is_none(), "no `applying` receipt exists");
 }

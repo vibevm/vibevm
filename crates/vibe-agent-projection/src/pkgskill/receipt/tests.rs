@@ -78,7 +78,7 @@ pub(super) fn begin_interrupted(
     canonicalize_receipt(&mut receipt);
     let mut intent = before;
     intent.applying = Some(
-        vibe_wire::generated::package_skill_receipt::PackageSkillApplying {
+        vibe_wire::generated::package_skill::e2::receipt::PackageSkillApplying {
             binding: receipt.binding.clone(),
             key: binding.identity(),
             nonce: stage.nonce.clone(),

@@ -23,6 +23,9 @@ use crate::output;
 
 pub fn run(ctx: &output::Context, args: SkillArgs, offline: bool) -> Result<()> {
     match args.command {
+        SkillSubcommand::Enable(sub) => activation::run(ctx, sub, Some(true), offline),
+        SkillSubcommand::Disable(sub) => activation::run(ctx, sub, Some(false), offline),
+        SkillSubcommand::Status(sub) => activation::run(ctx, sub, None, offline),
         SkillSubcommand::List(sub) => run_list(ctx, sub),
         SkillSubcommand::Install(sub) => run_install(ctx, sub, offline),
         SkillSubcommand::Uninstall(sub) => run_uninstall(ctx, sub, offline),
@@ -98,6 +101,7 @@ fn run_list(ctx: &output::Context, args: SkillListArgs) -> Result<()> {
                 );
                 serde_json::json!({
                     "name": s.decl.name,
+                    "package": s.provider.identity(),
                     "origin": s.origin,
                     "source": source,
                     "description": s.decl.description,
@@ -214,3 +218,5 @@ fn run_uninstall(ctx: &output::Context, args: SkillUninstallArgs, offline: bool)
     ctx.summary(&format!("{} removal(s) processed.", results.len()));
     emit_reports(ctx, "skill:uninstall", &project_root, &results)
 }
+
+mod activation;

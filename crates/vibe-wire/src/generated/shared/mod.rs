@@ -58,6 +58,20 @@ pub struct AbsorptionStatePlanned {
 #[serde(deny_unknown_fields)]
 pub struct AbsorptionStateUnplanned {}
 
+/// Explicit desired activation, independent of observed projection. Actor is
+/// caller-supplied provenance, never authentication. Missing legacy intent
+/// means default enabled with unknown actor.
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct ActivationIntent {
+    pub enabled: bool,
+
+    pub provenance: String,
+
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub actor: Option<String>,
+}
+
 /// Effective agent delivery mode after inherit has been resolved.
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 pub enum ApplicationAgentMode {

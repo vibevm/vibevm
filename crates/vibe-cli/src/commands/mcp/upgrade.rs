@@ -197,6 +197,21 @@ fn upgrade_mcp_entry(
     // upgrade is a no-op. We report `not-installed` rather than
     // creating it (that would be `install`'s job).
     let payload = agent.build_mcp_entry();
+    let owned = package_registration::registration_status(
+        agent,
+        scope,
+        config_path,
+        &package_registration::builtin_server(),
+    )?;
+    if !owned.desired_enabled {
+        return package_registration::register_builtin(
+            agent,
+            scope,
+            config_path,
+            &payload,
+            dry_run,
+        );
+    }
     if !config_path.exists() {
         return Ok(AgentInstallReport {
             agent: agent.as_str().to_string(),
@@ -239,9 +254,9 @@ fn upgrade_mcp_entry(
     // the block-level absent case maps to `updated` from
     // decide_action which we explicitly handle above).
     if dry_run {
-        preview_install_mcp(agent, scope, config_path, &payload)
+        package_registration::register_builtin(agent, scope, config_path, &payload, true)
     } else {
-        apply_install_mcp(agent, scope, config_path, &payload)
+        package_registration::register_builtin(agent, scope, config_path, &payload, false)
     }
 }
 
@@ -258,6 +273,16 @@ fn upgrade_skill(
         // for agents that have no skill loader).
         return Ok(None);
     };
+    let activation = vibe_agent_projection::pkgskill::managed_skill_status(
+        agent,
+        scope,
+        project_root,
+        "org.vibevm.core/vibevm",
+        "vibevm",
+    )?;
+    if !activation.desired_enabled {
+        return vibe_mcp::install::refresh_skill(agent, scope, project_root, dry_run).map(Some);
+    }
     if !path.exists() {
         return Ok(Some(SkillInstallReport {
             agent: agent.as_str().to_string(),
@@ -269,7 +294,7 @@ fn upgrade_skill(
     }
     // Reuse install_skill — it already has the decide-then-apply
     // logic and returns `unchanged` / `updated` for existing files.
-    let outcome = install_skill(agent, scope, project_root, dry_run)?;
+    let outcome = vibe_mcp::install::refresh_skill(agent, scope, project_root, dry_run)?;
     Ok(Some(outcome))
 }
 

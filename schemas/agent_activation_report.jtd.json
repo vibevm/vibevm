@@ -1,0 +1,85 @@
+{
+  "metadata": {
+    "description": "Managed activation command/status observation. Desired intent is separate from disk state, not proof of client runtime use. Actor is caller-supplied, not authentication.",
+    "x-rust-type": "AgentActivationReport",
+    "rustOptions": {
+      "package": "vibe_wire::agent_activation_report"
+    },
+    "x-vocabularies": [
+      "activation_intent"
+    ],
+    "spec": {
+      "implements": "spec://org.vibevm.core/vibevm/common/PROP-073#MANAGED-ACTIVATION"
+    }
+  },
+  "properties": {
+    "protocol": {
+      "type": "string"
+    },
+    "ok": {
+      "type": "boolean"
+    },
+    "command": {
+      "type": "string"
+    },
+    "dry_run": {
+      "type": "boolean"
+    },
+    "results": {
+      "elements": {
+        "ref": "activation_row"
+      },
+      "metadata": {
+        "x-empty": "emit"
+      }
+    }
+  },
+  "optionalProperties": {
+    "requested": {
+      "ref": "activation_intent",
+      "metadata": {
+        "x-default": null,
+        "x-reader-projection": "permissive"
+      }
+    }
+  },
+  "definitions": {
+    "activation_row": {
+      "properties": {
+        "package": {
+          "type": "string"
+        },
+        "entry": {
+          "type": "string"
+        },
+        "agent": {
+          "type": "string"
+        },
+        "scope": {
+          "type": "string"
+        },
+        "observed": {
+          "type": "string"
+        },
+        "desired_enabled": {
+          "type": "boolean"
+        }
+      },
+      "optionalProperties": {
+        "activation": {
+          "ref": "activation_intent",
+          "metadata": {
+            "x-default": null,
+            "x-reader-projection": "permissive"
+          }
+        },
+        "representation": {
+          "type": "string",
+          "metadata": {
+            "x-default": null
+          }
+        }
+      }
+    }
+  }
+}

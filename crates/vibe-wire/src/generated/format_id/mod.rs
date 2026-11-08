@@ -40,6 +40,7 @@ pub enum FormatId {
     BootArtifactTransaction,
     ChangeManifest,
     ChangeWork,
+    CliAgentActivation,
     CliAgentList,
     CliAgentPresets,
     CliApplicationAlternatives,
@@ -150,6 +151,7 @@ pub enum FormatId {
     Lockfile,
     Manifest,
     McpLifecycleTasks,
+    McpRegistrationReceipt,
     McpTools,
     MigrationApplicationJournal,
     MigrationOperationReport,
@@ -173,6 +175,7 @@ pub enum FormatId {
     NativePackageRequest,
     NativeReply,
     PackageSkillReceipt,
+    PackageSkillReceiptV1,
     RemapBundle,
     RemapConsent,
     RemapProviders,
@@ -186,6 +189,7 @@ pub enum FormatId {
     ScrapeTransactionOwner,
     ScrapeVerificationHealthEvidence,
     SlotRecord,
+    StandaloneSkillReceipt,
 }
 
 /// How many independent parsers read a format — the second policy axis

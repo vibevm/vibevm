@@ -19,6 +19,11 @@ pub struct SkillArgs {
 
 #[derive(Debug, Subcommand)]
 pub enum SkillSubcommand {
+    /// Durable per-entry activation for a managed skill; package stays installed.
+    Enable(SkillActivationArgs),
+    Disable(SkillActivationArgs),
+    /// Desired intent and current owned projection, without mutation.
+    Status(SkillActivationArgs),
     /// List the skills declared by installed packages (and the project
     /// itself) that `vibe skill install` can project into agents.
     /// Read-only.
@@ -101,4 +106,21 @@ pub struct SkillUninstallArgs {
     /// Skip the apply confirm prompt. `--assume-yes` is an alias.
     #[arg(long, alias = "assume-yes")]
     pub yes: bool,
+}
+
+#[derive(Debug, clap::Args)]
+pub struct SkillActivationArgs {
+    pub name: String,
+    #[arg(long)]
+    pub package: String,
+    #[arg(long, default_value = ".")]
+    pub path: PathBuf,
+    #[arg(long)]
+    pub agent: String,
+    #[arg(long, default_value = "project")]
+    pub scope: String,
+    #[arg(long)]
+    pub actor: Option<String>,
+    #[arg(long)]
+    pub dry_run: bool,
 }

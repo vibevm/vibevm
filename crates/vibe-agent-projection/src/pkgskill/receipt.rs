@@ -2,6 +2,13 @@
 //! R1-style per-file reconciliation for the automatic project-scope
 //! package-skill binding.
 
+#[path = "receipt/activation.rs"]
+mod activation;
+pub(crate) use activation::{
+    effective_binding, project_activation, project_intent, project_intent_for_target,
+    project_remove, project_status, project_subset,
+};
+
 #[path = "receipt/containment.rs"]
 mod containment;
 #[path = "receipt/nofollow.rs"]
@@ -47,3 +54,7 @@ mod transaction_red_tests;
 #[cfg(test)]
 #[path = "receipt/stage_residue_tests.rs"]
 mod stage_residue_tests;
+
+#[cfg(test)]
+#[path = "receipt/activation_tests.rs"]
+mod activation_tests;

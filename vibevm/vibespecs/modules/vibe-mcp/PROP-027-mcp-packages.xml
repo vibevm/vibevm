@@ -114,7 +114,7 @@ description = "Official FPF MCP service"</fence>
       </facts>
     </exact-pin>
     <registration title="2.4 Registration: `vibe mcp install` learns packages">
-      <p><req-registration fact="true" status="impl/done">`req r6`</req-registration></p>
+      <p><req-registration fact="true" status="impl/done">`req r7`</req-registration></p>
       <p><REG-TODAY fact="true" status="impl/done">`vibe mcp install` today writes vibevm's own server into agent configs
 (PROP-015).</REG-TODAY></p>
       <p><REG-PACKAGE-DISCOVERY fact="true" status="impl/done" action="continue" actionstage="doc" audience="user">The no-selector command retains its established
@@ -157,6 +157,7 @@ visibly instead of succeeding with no entry.</REG-PACKAGE-DISCOVERY></p>
         <REG-DIRECTORY-AUTHORITY fact="true" status="spec/done">Global MCP registration, ownership discovery, refresh and removal share explicitly supplied invocation-owned user directories. Production resolves the native operating-system home/config directories once; tests inject temporary directories without relying on environment overrides of Windows KnownFolders. Tests must never read or modify the developer's real client configuration. The compatibility path API retains its existing native resolution and client-specific path shapes.</REG-DIRECTORY-AUTHORITY>
         <REG-USER-PROJECT-MATERIALISATION fact="true" status="spec/done">The known service user-project used by global MCP install/update materialises packages automatically, with a normal human notice naming the package count, current-user scope and full actual dependency destination. It asks no separate materialisation question and does not mention internal boot artifacts in that notice. The CLI carries this service scope explicitly; a directory name or path resemblance never grants automatic installation. Concrete-project installation retains default-No confirmation and names its full actual destination. Existing explicit yes, unattended and JSON behavior remains. Automatic user-project materialisation does not rewrite invocation flags or silently approve agent/server choices or local MCP binary consent.</REG-USER-PROJECT-MATERIALISATION>
       </facts>
+      <p><REG-ACTIVATION fact="true" status="impl/done">Package MCP registration retains explicit enabled/disabled intent by the existing package/server/agent/scope identity. Update removes vanished native projections but retains explicit intent as a tombstone; a declaration reintroduced later inherits that intent. It does not register unrelated new server names. Disable keeps the installed package; explicit unregister/uninstall remains the separate ownership-removal operation. Native client disabled fields and guarded retraction follow [PROP-073#MANAGED-ACTIVATION](../../common/PROP-073-source-decisions-and-operation-effects.xml#MANAGED-ACTIVATION); observations distinguish active, disabled, missing, changed and pending without claiming running-client use.</REG-ACTIVATION></p>
     </registration>
     <consent title="2.5 Consent: registration is the same trust act as building">
       <p><req-consent fact="true" status="impl/done">`req r2`</req-consent></p>

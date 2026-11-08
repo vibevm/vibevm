@@ -185,7 +185,7 @@ pub(super) fn run_install(ctx: &output::Context, args: McpInstallArgs) -> Result
         .any(|r| matches!(r.status, "would-create" | "would-update" | "would-adopt"))
         || preview_skill
             .iter()
-            .any(|r| matches!(r.status, "would-create" | "would-update"));
+            .any(|r| matches!(r.status, "would-create" | "would-update" | "would-adopt"));
 
     if !args.dry_run && needs_change {
         // Confirmation gating: skip the prompt when the operator
@@ -210,7 +210,7 @@ pub(super) fn run_install(ctx: &output::Context, args: McpInstallArgs) -> Result
                 .count();
             let skill_count = preview_skill
                 .iter()
-                .filter(|r| matches!(r.status, "would-create" | "would-update"))
+                .filter(|r| matches!(r.status, "would-create" | "would-update" | "would-adopt"))
                 .count();
             crate::output::prompts::confirm(
                 &format!(
@@ -266,7 +266,7 @@ pub(super) fn run_install(ctx: &output::Context, args: McpInstallArgs) -> Result
             .count();
         let skill_written = skill_results
             .iter()
-            .filter(|r| matches!(r.status, "created" | "updated"))
+            .filter(|r| matches!(r.status, "created" | "updated" | "adopted"))
             .count();
         let verb = if args.dry_run { "previewed" } else { "written" };
         ctx.summary(&format!(

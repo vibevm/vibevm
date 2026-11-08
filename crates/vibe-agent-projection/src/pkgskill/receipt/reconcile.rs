@@ -40,7 +40,7 @@ fn reconcile_with_receipt(
     project: &Project,
     project_root: &Path,
     binding: &ProjectSkillBinding,
-    before: vibe_wire::generated::package_skill_receipt::PackageSkillReceipt,
+    before: vibe_wire::generated::package_skill::e2::receipt::PackageSkillReceipt,
 ) -> Result<Vec<PackageSkillReport>> {
     // Plan-time safety re-check: the authored source stays inside its
     // declaring provider's root, and every target stays inside the selected
@@ -53,10 +53,26 @@ fn reconcile_with_receipt(
     .with_context(|| format!("unsafe source for `{}`", binding.skill.decl.name))?;
 
     let key = binding.identity();
+    let recorded = before.binding.iter().find(|row| row.key == key);
+    if recorded
+        .map(|row| &row.activation)
+        .cloned()
+        .unwrap_or_default()
+        != binding.activation
+    {
+        bail!("skill activation changed after planning; replan before projecting");
+    }
     let expected = binding
         .selected_files
         .as_ref()
-        .map(|files| receipt_binding(binding, files));
+        .map(|files| receipt_binding(binding, files))
+        .or_else(|| {
+            (!binding.activation.is_empty()).then(|| {
+                let mut row = receipt_binding(binding, &Default::default());
+                row.target.clear();
+                row
+            })
+        });
     let mut after = before.clone();
     after.binding.retain(|row| row.key != key);
     if let Some(expected) = &expected {
@@ -208,13 +224,22 @@ pub(crate) fn reconcile_vanished(
     let stale = receipt
         .binding
         .iter()
-        .filter(|row| !desired.contains(&row.key))
+        .filter(|row| {
+            !desired.contains(&row.key) && (!row.target.is_empty() || row.activation.is_empty())
+        })
         .count();
     if stale == 0 {
         return Ok(Vec::new());
     }
     let mut after = receipt.clone();
-    after.binding.retain(|row| desired.contains(&row.key));
+    after
+        .binding
+        .retain(|row| desired.contains(&row.key) || !row.activation.is_empty());
+    for row in &mut after.binding {
+        if !desired.contains(&row.key) {
+            row.target.clear();
+        }
+    }
     canonicalize_receipt(&mut after);
     let plan = Plan {
         key: PROJECT_SKILL_RECONCILE_KEY.to_string(),

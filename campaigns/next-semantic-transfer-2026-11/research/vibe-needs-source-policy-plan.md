@@ -145,8 +145,25 @@ Use isolated settings/HOME, owned HTTPS/SSH fixtures and actual `vibe` subproces
 - Include same-name project/global precedence, local/file/embedded controls, dirty/divergent in-place state, moved ref or content mismatch, legacy-lock handling, and rollback. Deleting the optional provenance report must not change resolution.
 - Two developer configurations sharing one lock must not create different lock bytes solely due to local settings. Cache-hit success alone is not proof of transport acquisition: force cold/new-package cases and count endpoint contacts.
 
-This is an authorized next implementation, not delivered behavior. N3 is accepted; N4 requires its final provenance correction and acceptance first. No new public TOML key or wire schema is declared by this plan. Actual format changes must be logged before publication.
+The public transport scenario is authorized but not yet delivered. Internal N3/N4 are accepted (N4: ce6fcebab); ordinary captured SSH support is accepted as an internal foundation (84f5a19d7). Public factory/auth/locked-source integration remains a candidate pending combined compilation and actual-command acceptance. This plan itself does not declare a new public format; candidate auth declaration semantics are tracked separately in FMT-054. Actual format changes must be logged before publication.
 
 ### Owner-confirmed preview effect boundary
 
 2026-11-08: project `--plan-only` leaves project, HOME and persistent cache unchanged. A separate operation-owned temporary directory is explicitly allowed and must be cleaned on success, failure and cancellation. Use that capability for cold Git/SSH metadata; do not call mutating install/app/remap wrappers and then pretend rollback was read-only. Existing cached data may be read without in-place refresh. JSON/report documentation must describe this boundary, not claim zero filesystem syscalls.
+
+
+### Integration failure causes observed on 2026-11-08
+
+These findings concern the current transfer candidates. They are not evidence that the same bugs existed in the pinned prototype, and they must not be attributed to it without a matching historical source trace.
+
+| Observed mechanism | Why a local change looked plausible | Required correction and evidence state |
+| --- | --- | --- |
+| Deferred catalog added while two source-policy checks still read the old override field | Each component used a valid-looking field, but they no longer read the same declarations | Use the lazy declaration owner in both checks; verify actual resolution against its claimed binding before metadata access. Registry-v3 source review closes the defect; execution is pending. |
+| A project override setter retained the old candidate-owner identity | Setter changed inputs without invalidating already selected work | Reset the existing owner token like other source-affecting setters; test stale acquisition refuses before writes. Source correction reviewed, test unrun. |
+| Deployment inverse used only content digest | Matching content was treated as proof that the current object was published by this operation | Carry stage-minted publication identity into guarded undo; same-byte foreign replacement is the discriminating test. Candidate correction still pending. |
+| Projection conflict occurred before durable desired intent was written | Verification and user choice were treated as one successful-or-failed operation | Admit exact managed identity first, retain the request, then reconcile and report conflict separately. Do not acquire ownership of unknown entries. Core/deployment corrections are in progress. |
+| CLI reused mutating-request dry-run as admission before the corrected intent-first API | The inner operation retained intent correctly, but its wrapper refused on projection conflict before calling it | Keep an admission-only all-target check, then persist known-owner requests before reconciliation; prove the actual command, not only the inner API. Correction pending. |
+| Preview reused retained-configuration admission with its old persistent-store destination | The top-level preview owned scratch, but a nested metadata helper still selected its own write destination | Thread the same preview storage capability through the existing helper; test cold locked packages without configuration receipts and snapshot HOME/cache. Candidate correction pending. |
+| Nested test runner created a new HOME per child CLI invocation | Each process was individually isolated, but multi-command scenario state vanished between calls | Preserve the outer sandbox for nested invocations. CLI3 passed after runner-only repair; product ownership checks were not weakened. |
+
+The recurring architectural problem is duplicated or conflated authority: declaration versus cached field, selected source versus display label, durable user intent versus current projection, content equality versus published-object ownership. Reusing the existing owner is necessary but insufficient unless every caller preserves its contract. Independent reviews caught these composition defects before release; green helper tests alone did not establish complete user scenarios.

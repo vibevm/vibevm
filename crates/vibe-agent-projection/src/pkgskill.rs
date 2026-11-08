@@ -15,7 +15,7 @@ use std::collections::BTreeMap;
 use std::fs;
 use std::path::{Path, PathBuf};
 
-use serde::{Deserialize, Serialize};
+use serde::Serialize;
 use sha2::{Digest, Sha256};
 use specmark::spec;
 use thiserror::Error;
@@ -30,8 +30,16 @@ mod projection;
 #[path = "pkgskill/receipt.rs"]
 mod receipt;
 
+#[path = "pkgskill/activation.rs"]
+mod activation;
 #[path = "pkgskill/snapshot.rs"]
 mod snapshot;
+pub use activation::{
+    SkillActivationStatus, SkillActivationTarget, admit_managed_skill_activation,
+    change_managed_skill_activation, install_managed_skill_snapshot, managed_skill_status,
+    register_builtin_skill_snapshot, retain_managed_skill_activation,
+};
+
 #[path = "pkgskill/standalone.rs"]
 mod standalone;
 use snapshot::*;
@@ -42,12 +50,12 @@ pub use projection::{
     DeclaredSkill, DeclaredSkillFilter, DeclaredSkillProjection, DeclaredSkillProvider,
     PROJECT_SKILL_PREFIX, PROJECT_SKILL_RECONCILE_KEY, PROJECT_SKILL_RECOVER_KEY,
     ProjectSkillBinding, ProjectSkillProviderInput, ProjectSkillTarget, collect_declared_skills,
-    collect_project_skill_bindings, lower_project_skill_bindings,
-    prepare_declared_skill_projection, probe_project_skill_binding,
-    probe_recovered_project_skill_bindings, probe_vanished_project_skill_bindings,
-    project_declared_skills_project_scope, project_skill_receipt_exists,
-    reconcile_project_skill_binding, reconcile_vanished_project_skill_bindings,
-    recover_project_skill_bindings,
+    collect_project_skill_bindings, declared_skill_activation_status, lower_project_skill_bindings,
+    prepare_declared_skill_activation, prepare_declared_skill_projection,
+    probe_project_skill_binding, probe_recovered_project_skill_bindings,
+    probe_vanished_project_skill_bindings, project_declared_skills_project_scope,
+    project_skill_receipt_exists, reconcile_project_skill_binding,
+    reconcile_vanished_project_skill_bindings, recover_project_skill_bindings,
 };
 
 /// The vibe-skill projection layer's failure surface (PROP-018 §2.5):
@@ -121,21 +129,9 @@ pub enum PackageSkillError {
 
 const STANDALONE_RECEIPT_SCHEMA: u32 = 1;
 
-#[derive(Debug, Clone, Serialize, Deserialize)]
-#[serde(deny_unknown_fields)]
-struct StandaloneSkillReceipt {
-    schema: u32,
-    skill: String,
-    #[serde(default)]
-    file: Vec<StandaloneOwnedFile>,
-}
-
-#[derive(Debug, Clone, Serialize, Deserialize)]
-#[serde(deny_unknown_fields)]
-struct StandaloneOwnedFile {
-    path: String,
-    sha256: String,
-}
+use vibe_wire::generated::standalone_skill_receipt::{
+    OwnedFile as StandaloneOwnedFile, StandaloneSkillReceipt,
+};
 
 /// Per-(skill, agent, scope) outcome of projecting a package skill — the
 /// structured record `vibe skill` renders or emits as JSON.
@@ -234,7 +230,6 @@ pub fn install_package_skill_selecting(
             reason: error.to_string(),
         }
     })?;
-    let path_str = machine_json_path(&target);
 
     let source_exists = source
         .try_exists()
@@ -247,7 +242,7 @@ pub fn install_package_skill_selecting(
             skill: skill_name.to_string(),
             agent: agent_str,
             scope: scope_str,
-            path: Some(path_str),
+            path: Some(machine_json_path(&target)),
             status: "skipped",
             note: Some(format!("skill source `{}` not found", source.display())),
         });
@@ -255,51 +250,15 @@ pub fn install_package_skill_selecting(
 
     let desired = snapshot_source(source, include)?;
     validate_skill_frontmatter(skill_name, source, &desired)?;
-    let current = snapshot_dir(&target)?;
-    let receipt_path = standalone_receipt_path(&root, skill_name);
-    let prior = read_standalone_receipt(&receipt_path, skill_name)?;
-    validate_standalone_ownership(&target, current.as_ref(), prior.as_ref(), &desired)?;
-    let desired_receipt = standalone_receipt(skill_name, &desired);
-    let action = if current.is_none() && prior.is_none() {
-        "created"
-    } else if owned_projection_matches(current.as_ref(), prior.as_ref(), &desired)
-        && prior.as_ref().is_some_and(|receipt| {
-            receipt
-                .file
-                .iter()
-                .map(|file| (&file.path, &file.sha256))
-                .eq(desired_receipt
-                    .file
-                    .iter()
-                    .map(|file| (&file.path, &file.sha256)))
-        })
-    {
-        "unchanged"
-    } else {
-        "updated"
-    };
-
-    let status = crate::preview_status(action, dry_run);
-
-    if !dry_run && status != "unchanged" {
-        receipt::ensure_no_follow_walk(containment_root, &target, true).map_err(|error| {
-            PackageSkillError::UnsafePath {
-                path: target.clone(),
-                reason: error.to_string(),
-            }
-        })?;
-        reconcile_standalone_files(&target, prior.as_ref(), &desired)?;
-        write_standalone_receipt(&receipt_path, &desired_receipt)?;
-    }
-
-    Ok(PackageSkillReport {
-        skill: skill_name.to_string(),
-        agent: agent_str,
-        scope: scope_str,
-        path: Some(path_str),
-        status,
-        note: None,
-    })
+    install_managed_skill_snapshot(
+        agent,
+        scope,
+        project_root,
+        None,
+        skill_name,
+        &desired,
+        dry_run,
+    )
 }
 
 /// Remove a projected skill from one agent + scope — the `vibe skill

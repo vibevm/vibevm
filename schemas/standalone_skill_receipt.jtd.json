@@ -1,0 +1,57 @@
+{
+  "metadata": {
+    "description": "Existing adjacent standalone skill receipt; schema2 binds provider and desired activation. Legacy schema1 has unknown provider and actor.",
+    "rustOptions": {
+      "package": "vibe_wire::standalone_skill_receipt"
+    },
+    "x-vocabularies": [
+      "activation_intent"
+    ],
+    "spec": {
+      "implements": "spec://org.vibevm.core/vibevm/common/PROP-073#MANAGED-ACTIVATION"
+    },
+    "x-rust-type": "StandaloneSkillReceipt"
+  },
+  "properties": {
+    "schema": {
+      "type": "uint32"
+    },
+    "skill": {
+      "type": "string"
+    }
+  },
+  "optionalProperties": {
+    "provider": {
+      "type": "string",
+      "metadata": {
+        "x-default": null
+      }
+    },
+    "activation": {
+      "ref": "activation_intent",
+      "metadata": {
+        "x-default": null
+      }
+    },
+    "file": {
+      "elements": {
+        "ref": "owned_file"
+      },
+      "metadata": {
+        "x-empty": "omit"
+      }
+    }
+  },
+  "definitions": {
+    "owned_file": {
+      "properties": {
+        "path": {
+          "type": "string"
+        },
+        "sha256": {
+          "type": "string"
+        }
+      }
+    }
+  }
+}

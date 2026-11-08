@@ -195,7 +195,7 @@ pub(crate) fn run_uninstall(
     match install::run_global_mcp_uninstall(ctx, args) {
         Ok(()) => mcp::report_global_uninstall(ctx, &removal),
         Err(error) => {
-            mcp::restore_global_package(&removal).with_context(|| {
+            mcp::restore_global_package(&mut removal).with_context(|| {
                 format!(
                     "global MCP package removal failed: {error}; restoring agent registrations also failed"
                 )

@@ -9,7 +9,7 @@ use sha2::{Digest, Sha256};
 use vibe_core::manifest::SkillDecl;
 use vibe_core::{Group, PackageName, machine_json_path};
 use vibe_wire::generated::lifecycle_state::StateArtifact;
-use vibe_wire::generated::package_skill_receipt::{
+use vibe_wire::generated::package_skill::e2::receipt::{
     PackageSkillApplying, PackageSkillBinding as ReceiptBinding, PackageSkillFile as ReceiptFile,
     PackageSkillReceipt, PackageSkillTarget as ReceiptTarget,
 };
@@ -19,7 +19,7 @@ use super::nofollow::Project;
 use crate::agents::{Agent, Scope};
 use crate::pkgskill::{PROJECT_SKILL_PREFIX, PROJECT_SKILL_RECONCILE_KEY, ProjectSkillBinding};
 
-const SCHEMA: u32 = 2;
+const SCHEMA: u32 = 3;
 const RECEIPT_FILE: &str = "package-skills.toml";
 
 pub(crate) fn receipt_exists_project_root(project_root: &Path) -> Result<bool> {
@@ -54,7 +54,9 @@ pub(crate) fn probe_binding(
         .iter()
         .find(|row| row.key == binding.identity());
     let Some(files) = binding.selected_files.as_ref() else {
-        return Ok(actual.is_none() && artifacts.is_empty());
+        return Ok(artifacts.is_empty()
+            && actual
+                .is_none_or(|row| row.target.is_empty() && row.activation == binding.activation));
     };
     let expected = receipt_binding(binding, files);
     if actual != Some(&expected) || !artifacts_match(binding, artifacts) {
@@ -79,10 +81,10 @@ pub(crate) fn probe_vanished(
     };
     Ok(receipt.applying.is_none()
         && artifacts.is_empty()
-        && receipt
-            .binding
-            .iter()
-            .all(|binding| desired.contains(&binding.key)))
+        && receipt.binding.iter().all(|binding| {
+            desired.contains(&binding.key)
+                || (binding.target.is_empty() && !binding.activation.is_empty())
+        }))
 }
 
 pub(crate) fn probe_recovered(project_root: &Path, artifacts: &[StateArtifact]) -> Result<bool> {
@@ -109,13 +111,23 @@ pub(super) fn read_receipt(project: &Project) -> Result<Option<PackageSkillRecei
             vibe.join(RECEIPT_FILE).display()
         )
     })?;
-    if receipt.schema != SCHEMA {
+    if !matches!(receipt.schema, 2 | 3) {
         bail!(
-            "unsupported package-skill receipt schema {} in `{}`; this build supports schema {SCHEMA} (remove the stale cache and rerun)",
+            "unsupported package-skill receipt schema {} in `{}`; this build supports schemas 2 and 3; preserve this ownership/activation receipt and use a compatible VibeVM version",
             receipt.schema,
             vibe.join(RECEIPT_FILE).display()
         );
     }
+    if receipt.schema == 2
+        && receipt
+            .binding
+            .iter()
+            .chain(receipt.applying.iter().flat_map(|a| &a.binding))
+            .any(|b| !b.activation.is_empty())
+    {
+        bail!("activation requires package-skill schema 3");
+    }
+    receipt.schema = SCHEMA;
     validate_receipt(project.root_path(), &receipt)?;
     canonicalize_receipt(&mut receipt);
     Ok(Some(receipt))
@@ -216,6 +228,7 @@ pub(super) fn receipt_binding(
         })
         .collect::<Vec<_>>();
     ReceiptBinding {
+        activation: binding.activation.clone(),
         key: binding.identity(),
         provider: binding.skill.provider.identity(),
         skill: binding.skill.decl.name.clone(),
@@ -350,6 +363,13 @@ fn validate_bindings(project_root: &Path, bindings: &[ReceiptBinding]) -> Result
             );
         }
         validate_digest_or_missing(&binding.source_snapshot)?;
+        for (agent, intent) in &binding.activation {
+            let parsed = Agent::parse_filter(agent)?;
+            if parsed.len() != 1 || parsed[0].as_str() != agent {
+                bail!("activation key must be one canonical agent");
+            }
+            crate::activation::validate(intent)?;
+        }
         let mut agents = BTreeSet::new();
         for target in &binding.target {
             if !agents.insert(target.agent.as_str()) {
@@ -422,11 +442,20 @@ fn validate_transition(before: &[ReceiptBinding], applying: &PackageSkillApplyin
         .map(|binding| (binding.key.as_str(), binding))
         .collect::<BTreeMap<_, _>>();
     if applying.key == PROJECT_SKILL_RECONCILE_KEY {
-        if after
-            .iter()
-            .any(|(key, binding)| before.get(key).copied() != Some(*binding))
-        {
-            bail!("vanished-binding applying intent may only remove receipt rows");
+        if after.iter().any(|(key, binding)| {
+            let Some(prior) = before.get(key).copied() else {
+                return true;
+            };
+            if prior == *binding {
+                return false;
+            }
+            let mut tombstone = prior.clone();
+            tombstone.target.clear();
+            binding.activation.is_empty() || **binding != tombstone
+        }) {
+            bail!(
+                "vanished-binding intent may only remove projections or retain unchanged activation tombstones"
+            );
         }
     } else {
         let unchanged = before

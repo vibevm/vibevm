@@ -299,70 +299,7 @@ fn uninstall_mcp_entry(
     config_path: &Path,
     dry_run: bool,
 ) -> Result<AgentInstallReport> {
-    if !config_path.exists() {
-        return Ok(AgentInstallReport {
-            agent: agent.as_str().to_string(),
-            scope: scope.as_str(),
-            config_path: machine_json_path(config_path),
-            status: "not-installed",
-            note: Some("config file does not exist".into()),
-        });
-    }
-    let section = agent.mcp_section_key();
-    let has_block = match agent.config_format() {
-        ConfigFormat::Json => read_json(config_path)?
-            .get(section)
-            .and_then(|v| v.get(SERVER_NAME))
-            .is_some(),
-        ConfigFormat::Toml => read_toml(config_path)?
-            .get(section)
-            .and_then(|v| v.as_table())
-            .and_then(|t| t.get(SERVER_NAME))
-            .is_some(),
-    };
-    if !has_block {
-        return Ok(AgentInstallReport {
-            agent: agent.as_str().to_string(),
-            scope: scope.as_str(),
-            config_path: machine_json_path(config_path),
-            status: "not-installed",
-            note: Some(format!("no `{SERVER_NAME}` entry in {section}")),
-        });
-    }
-
-    if dry_run {
-        return Ok(AgentInstallReport {
-            agent: agent.as_str().to_string(),
-            scope: scope.as_str(),
-            config_path: machine_json_path(config_path),
-            status: "would-remove",
-            note: Some(format!("drop `{SERVER_NAME}` from {section}")),
-        });
-    }
-
-    match agent.config_format() {
-        ConfigFormat::Json => {
-            let stripped = strip_json_entry(config_path, section, SERVER_NAME)?;
-            let serialized = serde_json::to_string_pretty(&stripped)
-                .with_context(|| "serializing stripped JSON config")?;
-            fs::write(config_path, serialized + "\n")
-                .with_context(|| format!("writing `{}`", config_path.display()))?;
-        }
-        ConfigFormat::Toml => {
-            let stripped = strip_toml_entry(config_path, section, SERVER_NAME)?;
-            let serialized = toml::to_string_pretty(&stripped)
-                .with_context(|| "serializing stripped TOML config")?;
-            fs::write(config_path, serialized)
-                .with_context(|| format!("writing `{}`", config_path.display()))?;
-        }
-    }
-    Ok(AgentInstallReport {
-        agent: agent.as_str().to_string(),
-        scope: scope.as_str(),
-        config_path: machine_json_path(config_path),
-        status: "removed",
-        note: Some(format!("dropped `{SERVER_NAME}` from {section}")),
-    })
+    package_registration::remove_builtin(agent, scope, config_path, dry_run)
 }
 
 /// Remove receipt-owned entries and exact, unchanged legacy sidecar entries.
@@ -393,36 +330,19 @@ fn uninstall_skill(
     let Some(path) = agent.skill_path(scope, project_root)? else {
         return Ok(None);
     };
-    if !path.exists() {
-        return Ok(Some(SkillInstallReport {
-            agent: agent.as_str().to_string(),
-            scope: scope.as_str(),
-            path: Some(machine_json_path(&path)),
-            status: "not-installed",
-            note: Some("SKILL.md does not exist".into()),
-        }));
-    }
-    if dry_run {
-        return Ok(Some(SkillInstallReport {
-            agent: agent.as_str().to_string(),
-            scope: scope.as_str(),
-            path: Some(machine_json_path(&path)),
-            status: "would-remove",
-            note: Some("delete SKILL.md (and parent vibevm/ dir if empty)".into()),
-        }));
-    }
-    fs::remove_file(&path).with_context(|| format!("removing SKILL.md `{}`", path.display()))?;
-    // Try to remove the parent `vibevm/` skill dir if it became empty.
-    // Best-effort — don't fail uninstall if the dir has stragglers.
-    if let Some(parent) = path.parent() {
-        let _ = fs::remove_dir(parent);
-    }
+    let row = vibe_agent_projection::pkgskill::uninstall_package_skill(
+        agent,
+        scope,
+        project_root,
+        "vibevm",
+        dry_run,
+    )?;
     Ok(Some(SkillInstallReport {
-        agent: agent.as_str().to_string(),
-        scope: scope.as_str(),
+        agent: row.agent,
+        scope: row.scope,
         path: Some(machine_json_path(&path)),
-        status: "removed",
-        note: None,
+        status: row.status,
+        note: row.note,
     }))
 }
 

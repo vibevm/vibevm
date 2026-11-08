@@ -93,6 +93,8 @@ pub(crate) struct McpRuntime {
 
 pub fn run(ctx: &output::Context, args: McpArgs, runtime: McpRuntime) -> Result<()> {
     match args.command {
+        McpSubcommand::Enable(sub) => activation::run(ctx, sub, true),
+        McpSubcommand::Disable(sub) => activation::run(ctx, sub, false),
         McpSubcommand::Serve(sub) => run_serve(sub, runtime),
         McpSubcommand::Install(sub) => install::run_install(ctx, sub),
         McpSubcommand::Status(sub) => status::run_status(ctx, sub),
@@ -264,8 +266,8 @@ pub(crate) fn unregister_global_package(removal: &mut GlobalMcpRemoval) -> Resul
     package_registration::apply_global_removal(&mut removal.plan)
 }
 
-pub(crate) fn restore_global_package(removal: &GlobalMcpRemoval) -> Result<()> {
-    package_registration::restore_global_removal(&removal.plan)
+pub(crate) fn restore_global_package(removal: &mut GlobalMcpRemoval) -> Result<()> {
+    package_registration::restore_global_removal(&mut removal.plan)
 }
 
 pub(crate) fn report_global_uninstall(
@@ -320,67 +322,13 @@ fn run_serve(args: McpServeArgs, runtime: McpRuntime) -> Result<()> {
 // MCP-entry decide / preview / apply / merge — JSON + TOML
 // ---------------------------------------------------------------------------
 
-pub(super) fn decide_action(
-    agent: Agent,
-    config_path: &Path,
-    payload: &ConfigPayload,
-) -> Result<(&'static str, Option<String>)> {
-    if !config_path.exists() {
-        return Ok(("created", Some("file does not exist yet".into())));
-    }
-    let section = agent.mcp_section_key();
-    match (payload, agent.config_format()) {
-        (ConfigPayload::Json(entry), ConfigFormat::Json) => {
-            let existing = read_json(config_path)?;
-            let existing_entry = existing.get(section).and_then(|v| v.get(SERVER_NAME));
-            match existing_entry {
-                Some(e) if e == entry => Ok(("unchanged", None)),
-                Some(_) => Ok(("updated", Some(format!("{section}/{SERVER_NAME} differs")))),
-                None => Ok(("updated", Some(format!("{section}/{SERVER_NAME} absent")))),
-            }
-        }
-        (ConfigPayload::Toml(entry), ConfigFormat::Toml) => {
-            let existing = read_toml(config_path)?;
-            let existing_entry = existing
-                .get(section)
-                .and_then(|v| v.as_table())
-                .and_then(|t| t.get(SERVER_NAME));
-            match existing_entry {
-                Some(e) if e == entry => Ok(("unchanged", None)),
-                Some(_) => Ok((
-                    "updated",
-                    Some(format!("[{section}.{SERVER_NAME}] differs")),
-                )),
-                None => Ok(("updated", Some(format!("[{section}.{SERVER_NAME}] absent")))),
-            }
-        }
-        _ => bail!(
-            "internal: agent `{}` config_format/payload mismatch",
-            agent.as_str()
-        ),
-    }
-}
-
 pub(super) fn preview_install_mcp(
     agent: Agent,
     scope: Scope,
     config_path: &Path,
     payload: &ConfigPayload,
 ) -> Result<AgentInstallReport> {
-    let (status, note) = decide_action(agent, config_path, payload)?;
-    let dry = match status {
-        "unchanged" => "unchanged",
-        "created" => "would-create",
-        "updated" => "would-update",
-        other => other,
-    };
-    Ok(AgentInstallReport {
-        agent: agent.as_str().to_string(),
-        scope: scope.as_str(),
-        config_path: machine_json_path(config_path),
-        status: dry,
-        note,
-    })
+    package_registration::register_builtin_explicit(agent, scope, config_path, payload, true)
 }
 
 pub(super) fn apply_install_mcp(
@@ -389,47 +337,7 @@ pub(super) fn apply_install_mcp(
     config_path: &Path,
     payload: &ConfigPayload,
 ) -> Result<AgentInstallReport> {
-    let (status, note) = decide_action(agent, config_path, payload)?;
-    if status == "unchanged" {
-        return Ok(AgentInstallReport {
-            agent: agent.as_str().to_string(),
-            scope: scope.as_str(),
-            config_path: machine_json_path(config_path),
-            status: "unchanged",
-            note,
-        });
-    }
-    if let Some(parent) = config_path.parent() {
-        fs::create_dir_all(parent)
-            .with_context(|| format!("creating dir `{}`", parent.display()))?;
-    }
-    match (payload, agent.config_format()) {
-        (ConfigPayload::Json(entry), ConfigFormat::Json) => {
-            let merged = merge_json(config_path, agent.mcp_section_key(), SERVER_NAME, entry)?;
-            let serialized = serde_json::to_string_pretty(&merged)
-                .with_context(|| "serializing merged JSON config")?;
-            fs::write(config_path, serialized + "\n")
-                .with_context(|| format!("writing `{}`", config_path.display()))?;
-        }
-        (ConfigPayload::Toml(entry), ConfigFormat::Toml) => {
-            let merged = merge_toml(config_path, agent.mcp_section_key(), SERVER_NAME, entry)?;
-            let serialized = toml::to_string_pretty(&merged)
-                .with_context(|| "serializing merged TOML config")?;
-            fs::write(config_path, serialized)
-                .with_context(|| format!("writing `{}`", config_path.display()))?;
-        }
-        _ => bail!(
-            "internal: agent `{}` config_format/payload mismatch",
-            agent.as_str()
-        ),
-    }
-    Ok(AgentInstallReport {
-        agent: agent.as_str().to_string(),
-        scope: scope.as_str(),
-        config_path: machine_json_path(config_path),
-        status,
-        note,
-    })
+    package_registration::register_builtin_explicit(agent, scope, config_path, payload, false)
 }
 
 // ---------------------------------------------------------------------------
@@ -459,6 +367,7 @@ pub(super) fn resolve_project_root_required(path: &Path) -> Result<PathBuf> {
     Ok(stripped)
 }
 
+mod activation;
 mod install;
 mod install_prompts;
 mod package_registration;

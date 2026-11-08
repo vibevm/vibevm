@@ -24,6 +24,7 @@
 #![forbid(unsafe_code)]
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-018#vibe-skill");
 
+pub mod activation;
 pub mod agents;
 pub mod pkgskill;
 
