@@ -9,6 +9,19 @@ use std::fs;
 use std::path::Path;
 use vibe_core::manifest::{Lockfile, SpecFormat};
 
+pub(super) struct ProjectCreation {
+    pub role: &'static str,
+    pub name: String,
+    pub path: String,
+    pub outcomes: Vec<Outcome>,
+}
+
+impl ProjectCreation {
+    pub fn report(&self, ctx: &output::Context) -> Result<()> {
+        report(ctx, self.role, &self.name, &self.path, &self.outcomes)
+    }
+}
+
 pub(super) fn resolve_name(args: &InitArgs, path: &Path) -> Result<String> {
     if let Some(n) = &args.name {
         return Ok(n.clone());
@@ -86,6 +99,17 @@ pub(super) fn report(
     display_root: &str,
     outcomes: &[Outcome],
 ) -> Result<()> {
+    let mut rows: Vec<Outcome> = Vec::new();
+    for outcome in outcomes {
+        if let Some(previous) = rows.iter_mut().find(|row| row.path == outcome.path) {
+            if outcome.action == Action::Created {
+                previous.action = Action::Created;
+            }
+        } else {
+            rows.push(outcome.clone());
+        }
+    }
+    let outcomes = rows.as_slice();
     let created = outcomes
         .iter()
         .filter(|o| o.action == Action::Created)
@@ -160,17 +184,15 @@ pub(super) fn boot_00_core_template(project_name: &str) -> String {
 
 pub(super) const ROOT_GITIGNORE_TEMPLATE: &str = include_str!("../../../templates/root-gitignore");
 pub(super) fn generate_boot_artifacts(ctx: &output::Context, path: &Path) -> Result<Vec<Outcome>> {
-    // The generated boot manifest plus the three root launcher docs —
-    // every path the init step announces, with the manifest routed
-    // through the layout module so the R4 flip moves it for free.
-    let artifacts: [std::path::PathBuf; 4] = [
+    // Include the publication owner's coordination file and optional static
+    // lane: JSON reports the complete written footprint, not just boot text.
+    let mut artifacts = vec![
         vibe_core::layout::current_boot_index(),
+        vibe_core::layout::current_boot_dir().join(vibe_core::layout::BOOT_ARTIFACTS_LOCK),
         std::path::PathBuf::from("CLAUDE.md"),
         std::path::PathBuf::from("AGENTS.md"),
         std::path::PathBuf::from("GEMINI.md"),
     ];
-    let preexisting: Vec<bool> = artifacts.iter().map(|f| path.join(f).exists()).collect();
-
     let workspace = vibe_workspace::Workspace::load(path)
         .with_context(|| "loading the new project to generate its boot artifacts")?;
     // Package creation can regenerate an existing host. Keep its declared
@@ -180,14 +202,32 @@ pub(super) fn generate_boot_artifacts(ctx: &output::Context, path: &Path) -> Res
         .consumer_node()
         .and_then(|node| node.spec_format)
         .unwrap_or(SpecFormat::Mixed);
+    artifacts.push(
+        vibe_core::layout::current_boot_dir()
+            .join(vibe_workspace::boot_artifacts::static_file(spec_format)),
+    );
+    let preexisting: Vec<bool> = artifacts.iter().map(|f| path.join(f).exists()).collect();
     vibe_workspace::install::regenerate_boot_with_spec_format(&workspace, spec_format)
         .with_context(|| "generating the boot artifacts")?;
 
     let mut outcomes = Vec::with_capacity(artifacts.len());
     for (artifact, &existed) in artifacts.iter().zip(&preexisting) {
+        if !path.join(artifact).is_file() {
+            continue;
+        }
+        let coordination = artifact
+            .file_name()
+            .is_some_and(|name| name == vibe_core::layout::BOOT_ARTIFACTS_LOCK);
         let rel = display_pathbuf(artifact);
         if existed {
-            ctx.skipped(&rel, "regenerated");
+            ctx.skipped(
+                &rel,
+                if coordination {
+                    "retained"
+                } else {
+                    "regenerated"
+                },
+            );
         } else {
             ctx.created(&rel);
         }
@@ -198,7 +238,11 @@ pub(super) fn generate_boot_artifacts(ctx: &output::Context, path: &Path) -> Res
             } else {
                 Action::Created
             },
-            reason: "boot artifact",
+            reason: if coordination {
+                "boot coordination file"
+            } else {
+                "boot artifact"
+            },
         });
     }
     Ok(outcomes)

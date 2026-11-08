@@ -229,14 +229,20 @@ fn init_json_output_parses() {
     let v: serde_json::Value = serde_json::from_str(&stdout).expect("stdout must be valid JSON");
     assert_eq!(v["ok"], true);
     assert_eq!(v["command"], "init");
-    // 10 files created by default: the two boot snippets, vibe.toml,
+    // 11 files created by default: the two boot snippets, vibe.toml,
     // vibe.lock (manifest + lockfile), .vibe/.gitignore, .gitignore
     // (root), and the 4 generated boot artifacts — the boot manifest
     // plus the managed `<vibevm>` block in CLAUDE.md / AGENTS.md /
     // GEMINI.md (PROP-009 / PROP-012). The WAL is NOT created — it's a
-    // project convention.
-    assert_eq!(v["created"], 10);
+    // project convention. The publication owner's coordination file is
+    // also part of the actual written footprint, and must be reported.
+    assert_eq!(v["created"], 11);
     assert_eq!(v["kept"], 0);
+    let lock = common::boot_rel(vibe_core::layout::BOOT_ARTIFACTS_LOCK);
+    let rows = v["outcomes"].as_array().unwrap();
+    assert_eq!(rows.len(), 11);
+    assert_eq!(rows.iter().filter(|row| row["path"] == lock).count(), 1);
+    assert!(path.join(lock).is_file());
 }
 
 #[test]

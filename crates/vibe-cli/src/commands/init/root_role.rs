@@ -24,6 +24,7 @@ pub(super) struct RootPlan {
     pub role: InitType,
     pub fields: ProjectFields,
     pub manifest: Manifest,
+    pub app: Option<super::app::Scaffold>,
 }
 
 pub(super) fn plan(
@@ -85,11 +86,17 @@ pub(super) fn plan(
     if let Some(group) = &group {
         validate_group(group)?;
     }
-    let manifest = new_manifest(args, role, group.as_deref(), kind, &fields)?;
+    let app = super::app::prepare(
+        &args.app,
+        (role == InitType::Package).then_some(kind),
+        &fields.name,
+    )?;
+    let manifest = new_manifest(args, role, group.as_deref(), kind, &fields, app.as_ref())?;
     Ok(RootPlan {
         role,
         fields,
         manifest,
+        app,
     })
 }
 
@@ -184,6 +191,7 @@ fn new_manifest(
     group: Option<&str>,
     kind: PackageKind,
     fields: &ProjectFields,
+    app: Option<&super::app::Scaffold>,
 ) -> Result<Manifest> {
     let mut manifest = Manifest {
         active: args
@@ -240,6 +248,9 @@ fn new_manifest(
                 );
                 manifest.package = Some(toml::Value::Table(table).try_into()?);
                 super::kinds::declare_in_root(&mut manifest, kind, group, &fields.name)?;
+                if let Some(app) = app {
+                    app.declare(&mut manifest);
+                }
             }
         }
     }
@@ -307,6 +318,8 @@ fn existing(args: &InitArgs, manifest: Manifest) -> Result<RootPlan> {
     let requested = prompts::project_fields_from_args(args, &name, &UserConfig::default());
     validate_fields(&requested, role == InitType::Package)?;
     super::package::requested_kind(args)?;
+    let app = super::app::existing(&args.app, &manifest, &name)?;
+    manifest.validate()?;
     Ok(RootPlan {
         role,
         fields: ProjectFields {
@@ -318,6 +331,7 @@ fn existing(args: &InitArgs, manifest: Manifest) -> Result<RootPlan> {
             format,
         },
         manifest,
+        app,
     })
 }
 
@@ -402,8 +416,15 @@ mod tests {
         assert_eq!(group, "org.example");
         assert_eq!(selected.name, "package-name");
         assert_eq!(selected.version, "0.1.0");
-        let manifest =
-            new_manifest(&args(), role, Some(&group), PackageKind::Tool, &selected).unwrap();
+        let manifest = new_manifest(
+            &args(),
+            role,
+            Some(&group),
+            PackageKind::Tool,
+            &selected,
+            None,
+        )
+        .unwrap();
         assert_eq!(manifest.require_package().unwrap().name, "package-name");
     }
 
@@ -473,6 +494,7 @@ mod tests {
                 Some("org.example"),
                 kind,
                 &fields(),
+                None,
             )
             .unwrap();
             let roundtrip =
@@ -498,6 +520,7 @@ mod tests {
             Some("org.example"),
             PackageKind::Mcp,
             &fields(),
+            None,
         )
         .unwrap();
         assert_eq!(mcp.mcp_servers.len(), 1);
@@ -509,6 +532,7 @@ mod tests {
             Some("org.example"),
             PackageKind::Remap,
             &fields(),
+            None,
         )
         .unwrap();
         let [row] = remap.remap.rows.as_slice() else {
@@ -526,6 +550,7 @@ mod tests {
             Some("org.example"),
             PackageKind::Tool,
             &fields(),
+            None,
         )
         .unwrap();
         let roundtrip = Manifest::parse_str(&toml::to_string_pretty(&manifest).unwrap()).unwrap();

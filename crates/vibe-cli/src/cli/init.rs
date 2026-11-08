@@ -114,4 +114,70 @@ pub struct InitArgs {
     /// (doc, remap) refuse the flag.
     #[arg(long, value_enum)]
     pub link: Option<InitLink>,
+
+    /// Application authoring choices (only for app packages).
+    #[command(flatten)]
+    pub app: InitAppArgs,
+}
+
+/// The supported authoring paths, lowered to existing installer steps.
+#[derive(Debug, Clone, Copy, PartialEq, Eq, clap::ValueEnum)]
+pub enum InitAppWay {
+    Recipe,
+    Source,
+    Prebuilt,
+}
+
+/// Container format for an explicitly supplied prebuilt archive.
+#[derive(Debug, Clone, Copy, PartialEq, Eq, clap::ValueEnum)]
+pub enum InitAppArchive {
+    Zip,
+    TarGz,
+}
+
+/// Inputs from a creation surface; these declare an installer, never run it.
+#[derive(Debug, Clone, Default, clap::Args)]
+pub struct InitAppArgs {
+    /// Stable application slot id; defaults to the package name.
+    #[arg(long = "app-id")]
+    pub id: Option<String>,
+    /// Target platform: linux, macos or windows; defaults to the detected host.
+    #[arg(long = "app-platform")]
+    pub platform: Option<String>,
+    /// Target architecture token; defaults to the detected host architecture.
+    #[arg(long = "app-arch")]
+    pub arch: Option<String>,
+    /// Recipe (default), verified source plus build recipe, or prebuilt archive.
+    #[arg(long = "app-install-way", value_enum)]
+    pub way: Option<InitAppWay>,
+    /// Input URL: HTTP(S) for source; HTTPS for prebuilt. No download during init.
+    #[arg(long = "app-source-url")]
+    pub source_url: Option<String>,
+    /// Actual 64-hex SHA-256 of the supplied input; never inferred or fabricated.
+    #[arg(long = "app-source-sha256")]
+    pub source_sha256: Option<String>,
+    /// Prebuilt archive container (required for --app-install-way prebuilt).
+    #[arg(long = "app-archive-format", value_enum)]
+    pub archive: Option<InitAppArchive>,
+    /// Optional relative payload directory inside the prebuilt archive.
+    #[arg(long = "app-payload-root")]
+    pub payload_root: Option<PathBuf>,
+    /// Single-line recipe body in the TARGET shell; required for source builds.
+    /// It must put the relocatable result in VIBE_OUT. Init only writes it.
+    #[arg(long = "app-build-command")]
+    pub build_command: Option<String>,
+}
+
+impl InitAppArgs {
+    pub(crate) fn is_supplied(&self) -> bool {
+        self.id.is_some()
+            || self.platform.is_some()
+            || self.arch.is_some()
+            || self.way.is_some()
+            || self.source_url.is_some()
+            || self.source_sha256.is_some()
+            || self.archive.is_some()
+            || self.payload_root.is_some()
+            || self.build_command.is_some()
+    }
 }

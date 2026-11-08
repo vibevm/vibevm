@@ -46,6 +46,7 @@ pub(super) struct PreparedPackage {
     kind: PackageKind,
     link: &'static str,
     translation: Option<Translation>,
+    app: Option<super::app::Scaffold>,
 }
 
 /// Collect and validate all nested-package choices before creating its container.
@@ -94,12 +95,34 @@ pub(super) fn prepare_package(
     // The project container is created after this returns, so a manifest
     // that would not validate must be refused here, not after the folder
     // exists.
-    scaffold_manifest_text(group, name, link, &fields, kind, translation.as_ref())?;
+    let app = super::app::prepare(&args.app, Some(kind), name)?;
+    scaffold_manifest_text(
+        group,
+        name,
+        link,
+        &fields,
+        kind,
+        translation.as_ref(),
+        app.as_ref(),
+    )?;
+    let existing = root
+        .join(vibe_core::layout::current_packages_root())
+        .join(group)
+        .join(name)
+        .join(format!("v{}", fields.version))
+        .join(Manifest::FILENAME);
+    if args.app.is_supplied()
+        && existing.exists()
+        && let Some(app) = &app
+    {
+        app.check_existing(&Manifest::read(existing)?)?;
+    }
     Ok(PreparedPackage {
         fields,
         kind,
         link,
         translation,
+        app,
     })
 }
 
@@ -111,6 +134,7 @@ pub(super) fn create_package_in_project(
     name: &str,
     user_config: &mut UserConfig,
     prepared: PreparedPackage,
+    mut outcomes: Vec<Outcome>,
 ) -> Result<()> {
     let path = canonical_no_unc(project_path)?;
     if !path.join(Manifest::FILENAME).exists() {
@@ -121,6 +145,7 @@ pub(super) fn create_package_in_project(
         kind,
         link,
         translation,
+        app,
     } = prepared;
     prompts::maybe_save_author(user_config, &fields.authors);
     ctx.heading(&format!(
@@ -128,7 +153,7 @@ pub(super) fn create_package_in_project(
         path.display()
     ));
 
-    let mut outcomes = create_package_dirs_from_fields(
+    outcomes.extend(create_package_dirs_from_fields(
         ctx,
         &path,
         group,
@@ -137,7 +162,8 @@ pub(super) fn create_package_in_project(
         &fields,
         kind,
         translation.as_ref(),
-    )?;
+        app.as_ref(),
+    )?);
 
     // Regenerate boot artifacts. Documentation contributes none — it
     // never enters a boot lane (PROP-057 `##KIND-DOC-MUST-NOT-EXECUTE`)
@@ -184,6 +210,7 @@ fn create_package_dirs_from_fields(
     fields: &ProjectFields,
     package_kind: PackageKind,
     translation: Option<&Translation>,
+    app: Option<&super::app::Scaffold>,
 ) -> Result<Vec<Outcome>> {
     let version = &fields.version;
     let pkg_dir = project_root
@@ -192,7 +219,7 @@ fn create_package_dirs_from_fields(
         .join(name)
         .join(format!("v{version}"));
     let manifest_text =
-        scaffold_manifest_text(group, name, link, fields, package_kind, translation)?;
+        scaffold_manifest_text(group, name, link, fields, package_kind, translation, app)?;
 
     // Documentation is not a tool package with other words in it: no
     // boot lane, no snippet, and a card its siblings do not owe.
@@ -293,13 +320,8 @@ fn create_package_dirs_from_fields(
     // An application package plans only with the recipe its manifest
     // names; the manifest text above declares it whenever it was written
     // fresh, and a kept manifest is the author's to keep consistent.
-    if package_kind == PackageKind::App && manifest_written {
-        outcomes.extend(super::app::create_app_files(
-            ctx,
-            project_root,
-            &pkg_dir,
-            name,
-        )?);
+    if manifest_written && let Some(app) = app {
+        outcomes.extend(app.create_files(ctx, project_root, &pkg_dir)?);
     }
     if package_kind == PackageKind::Mcp && manifest_written {
         outcomes.extend(super::kinds::create_mcp_files(
@@ -340,11 +362,12 @@ fn scaffold_manifest_text(
     fields: &ProjectFields,
     package_kind: PackageKind,
     translation: Option<&Translation>,
+    app: Option<&super::app::Scaffold>,
 ) -> Result<String> {
     let text = if package_kind == PackageKind::Doc {
         doc::manifest_text(group, name, fields, translation)
     } else {
-        tool_manifest_text(group, name, link, fields, package_kind)
+        tool_manifest_text(group, name, link, fields, package_kind, app)?
     };
     Manifest::parse_str(&text)
         .and_then(|manifest| manifest.validate())
@@ -362,7 +385,8 @@ fn tool_manifest_text(
     link: &str,
     fields: &ProjectFields,
     package_kind: PackageKind,
-) -> String {
+    app: Option<&super::app::Scaffold>,
+) -> Result<String> {
     let kind = package_kind.as_str();
     let authors_line = if fields.authors.is_empty() {
         String::new()
@@ -386,7 +410,7 @@ fn tool_manifest_text(
             category = boot_category(package_kind),
         )
     };
-    format!(
+    Ok(format!(
         "[package]\ngroup = \"{group}\"\nname = \"{name}\"\nkind = \"{kind}\"\n\
          version = \"{version}\"\nepoch = 1\n{authors_line}\
          license = {license}\ndescription = {description}\nformat = \"{format}\"\n\
@@ -395,6 +419,9 @@ fn tool_manifest_text(
         license = super::kinds::toml_literal(&fields.license),
         description = super::kinds::toml_literal(&fields.description),
         format = fields.format,
-        tail = super::kinds::manifest_tail(package_kind, group, name),
-    )
+        tail = match app {
+            Some(app) => app.manifest_tail()?,
+            None => super::kinds::manifest_tail(package_kind, group, name),
+        },
+    ))
 }

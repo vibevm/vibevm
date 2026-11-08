@@ -50,7 +50,7 @@ pub use cache::*;
 pub use doc::*;
 pub use explain::*;
 pub use extensions::*;
-pub use init::{InitArgs, InitType};
+pub use init::{InitAppArchive, InitAppArgs, InitAppWay, InitArgs, InitType};
 pub use inspect::*;
 pub use lifecycle::*;
 pub use mcp::*;

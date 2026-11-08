@@ -58,6 +58,18 @@ pub fn run(ctx: &output::Context, args: InitArgs) -> Result<()> {
         );
     }
 
+    if matches!(mode, InitMode::Group) && args.app.is_supplied() {
+        return Err(app::refused(
+            "application authoring choices require an app package, not init group",
+        ));
+    }
+
+    if args.app.is_supplied() && args.kind.as_deref().is_some_and(|kind| kind != "app") {
+        return Err(app::refused(
+            "application authoring choices cannot accompany a non-app --kind",
+        ));
+    }
+
     // Extract pkgref/group and path from positionals.
     let (pkgref, path) = match mode {
         InitMode::Project => {
@@ -96,7 +108,8 @@ pub fn run(ctx: &output::Context, args: InitArgs) -> Result<()> {
 
     match mode {
         InitMode::Project => {
-            create_project(ctx, &args, &project_path, &mut user_config, interactive)?;
+            create_project(ctx, &args, &project_path, &mut user_config, interactive)?
+                .report(ctx)?;
         }
         InitMode::Package => {
             let pkgref =
@@ -119,7 +132,10 @@ pub fn run(ctx: &output::Context, args: InitArgs) -> Result<()> {
                 interactive,
             )?;
             // Ensure the container only after the package fields are valid.
-            ensure_project_exists(ctx, &args, &project_path, &mut user_config, interactive)?;
+            let outcomes =
+                ensure_project_exists(ctx, &args, &project_path, &mut user_config, interactive)?
+                    .map(|created| created.outcomes)
+                    .unwrap_or_default();
             package::create_package_in_project(
                 ctx,
                 &project_path,
@@ -127,12 +143,17 @@ pub fn run(ctx: &output::Context, args: InitArgs) -> Result<()> {
                 &name,
                 &mut user_config,
                 prepared,
+                outcomes,
             )?;
         }
         InitMode::Group => {
             let group_str = pkgref.context("`vibe init group` requires a group name")?;
             validate_group(&group_str)?;
-            ensure_project_exists(ctx, &args, &project_path, &mut user_config, interactive)?;
+            if let Some(created) =
+                ensure_project_exists(ctx, &args, &project_path, &mut user_config, interactive)?
+            {
+                created.report(ctx)?;
+            }
             package::create_group_in_project(ctx, &project_path, &group_str)?;
         }
     }
@@ -154,7 +175,7 @@ fn ensure_project_exists(
     project_path: &Path,
     user_config: &mut UserConfig,
     interactive: bool,
-) -> Result<()> {
+) -> Result<Option<helpers::ProjectCreation>> {
     let path = if project_path.as_os_str() == "." {
         std::env::current_dir().unwrap_or_default()
     } else {
@@ -177,9 +198,16 @@ fn ensure_project_exists(
         container_args.translates = None;
         // The link belongs to the nested package, not to its container.
         container_args.link = None;
-        create_project(ctx, &container_args, project_path, user_config, interactive)?;
+        container_args.app = Default::default();
+        return Ok(Some(create_project(
+            ctx,
+            &container_args,
+            project_path,
+            user_config,
+            interactive,
+        )?));
     }
-    Ok(())
+    Ok(None)
 }
 
 /// Create a full root (vibe.toml + spec tree + boot artifacts).
@@ -189,7 +217,7 @@ fn create_project(
     project_path: &Path,
     user_config: &mut UserConfig,
     interactive: bool,
-) -> Result<()> {
+) -> Result<helpers::ProjectCreation> {
     use helpers::*;
 
     // Plan identity and validate every field before directory or user-settings writes.
@@ -274,10 +302,8 @@ fn create_project(
                 "package README",
             )?);
         }
-        if package_meta.kind == vibe_core::PackageKind::App
-            && app::declares_scaffold(&plan.manifest)
-        {
-            outcomes.extend(app::create_app_files(ctx, &path, &path, &fields.name)?);
+        if let Some(app) = &plan.app {
+            outcomes.extend(app.create_files(ctx, &path, &path)?);
         }
         if package_meta.kind == vibe_core::PackageKind::Mcp
             && kinds::declares_mcp_scaffold(&plan.manifest, &fields.name)
@@ -316,8 +342,12 @@ fn create_project(
     // 6. Generate boot artifacts.
     outcomes.extend(generate_boot_artifacts(ctx, &path)?);
 
-    report(ctx, role, &fields.name, &display_root, &outcomes)?;
-    Ok(())
+    Ok(helpers::ProjectCreation {
+        role,
+        name: fields.name,
+        path: display_root,
+        outcomes,
+    })
 }
 
 // ==== Utilities ==========================================================

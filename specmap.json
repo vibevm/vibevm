@@ -15474,10 +15474,19 @@
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/commands/init/app.rs",
       "item_kind": "mod",
-      "line": 19,
+      "line": 3,
       "symbol": "vibe_cli::commands::init::app",
-      "end_line": 19,
+      "end_line": 3,
       "fingerprint": "tok1:504ab250e714842caa4ee25415ecd30d075dfc9344001e85cb7dcb7a0fb87383"
+    },
+    {
+      "crate_name": "vibe-cli",
+      "file": "crates/vibe-cli/src/commands/init/app.rs",
+      "item_kind": "fn",
+      "line": 71,
+      "symbol": "vibe_cli::commands::init::app::prepare",
+      "end_line": 190,
+      "fingerprint": "tok1:6f20de21530aab24fcbeb2179a46fdb4afe05afe17f29957cface1f6b0c2c3a1"
     },
     {
       "crate_name": "vibe-cli",
@@ -20559,18 +20568,18 @@
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/tests/cli_init.rs",
       "item_kind": "fn",
-      "line": 441,
+      "line": 447,
       "symbol": "vibe_cli::tests::cli_init::vibe_check_accepts_a_valid_builtin_log_extension",
-      "end_line": 464,
+      "end_line": 470,
       "fingerprint": "tok1:ba33fecec7b25529830608bb9f4675dbee62b6f3d8a3b676fce78f5f9cf75715"
     },
     {
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/tests/cli_init.rs",
       "item_kind": "fn",
-      "line": 466,
+      "line": 472,
       "symbol": "vibe_cli::tests::cli_init::vibe_check_rejects_and_names_an_unknown_nested_extension_field",
-      "end_line": 487,
+      "end_line": 493,
       "fingerprint": "tok1:3f9942f74422f432cc52e1769c984e44c5b86a8cdefc7d346951515df3b4ebe0"
     },
     {
@@ -20590,6 +20599,24 @@
       "symbol": "vibe_cli::tests::cli_init_app::root_app_package_checks_and_plans_as_scaffolded",
       "end_line": 126,
       "fingerprint": "tok1:e17796be68ef95dff6ab2770c2be86b9f65f41f0e8dd6be8049e35a1f1fd0de1"
+    },
+    {
+      "crate_name": "vibe-cli",
+      "file": "crates/vibe-cli/tests/cli_init_app.rs",
+      "item_kind": "fn",
+      "line": 198,
+      "symbol": "vibe_cli::tests::cli_init_app::selected_app_scaffolds_share_models_and_report_all_root_and_nested_files",
+      "end_line": 404,
+      "fingerprint": "tok1:b1c8dffcab15c181ed7eb5cd0ece25eaea4af54f35fc7957cf0cccb41bfb01b8"
+    },
+    {
+      "crate_name": "vibe-cli",
+      "file": "crates/vibe-cli/tests/cli_init_app.rs",
+      "item_kind": "fn",
+      "line": 406,
+      "symbol": "vibe_cli::tests::cli_init_app::unsupported_app_authoring_inputs_refuse_before_root_or_container_writes",
+      "end_line": 495,
+      "fingerprint": "tok1:9650a5f6ecc2f5fde347abe44a86c76b4553f5f75ce4281658389830b646f548"
     },
     {
       "crate_name": "vibe-cli",
@@ -58342,7 +58369,15 @@
     {
       "file": "crates/vibe-cli/src/commands/init/app.rs",
       "from_symbol": "vibe_cli::commands::init::app",
-      "line": 19,
+      "line": 3,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-059#declaration",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-cli/src/commands/init/app.rs",
+      "from_symbol": "vibe_cli::commands::init::app::prepare",
+      "line": 72,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-059#declaration",
       "verb": "implements"
@@ -63006,7 +63041,7 @@
     {
       "file": "crates/vibe-cli/tests/cli_init.rs",
       "from_symbol": "vibe_cli::tests::cli_init::vibe_check_accepts_a_valid_builtin_log_extension",
-      "line": 442,
+      "line": 448,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#CONTRIB-GRAMMAR",
       "verb": "verifies"
@@ -63014,7 +63049,7 @@
     {
       "file": "crates/vibe-cli/tests/cli_init.rs",
       "from_symbol": "vibe_cli::tests::cli_init::vibe_check_rejects_and_names_an_unknown_nested_extension_field",
-      "line": 467,
+      "line": 473,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-054#CONTRIB-GRAMMAR",
       "verb": "verifies"
@@ -63031,6 +63066,22 @@
       "file": "crates/vibe-cli/tests/cli_init_app.rs",
       "from_symbol": "vibe_cli::tests::cli_init_app::root_app_package_checks_and_plans_as_scaffolded",
       "line": 100,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-059#declaration",
+      "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-cli/tests/cli_init_app.rs",
+      "from_symbol": "vibe_cli::tests::cli_init_app::selected_app_scaffolds_share_models_and_report_all_root_and_nested_files",
+      "line": 199,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-059#declaration",
+      "verb": "verifies"
+    },
+    {
+      "file": "crates/vibe-cli/tests/cli_init_app.rs",
+      "from_symbol": "vibe_cli::tests::cli_init_app::unsupported_app_authoring_inputs_refuse_before_root_or_container_writes",
+      "line": 407,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-059#declaration",
       "verb": "verifies"
@@ -115158,7 +115209,7 @@
     },
     {
       "anchor": "root",
-      "content_hash": "sha256:cdfc7b60e910cc25918fa8cac40fcfc450127edbf0c5cd1225867437e351e3d4",
+      "content_hash": "sha256:08d925662ba4b921dac94260e7be2198b4d0774fae8d75f82ef3fe8f000c3956",
       "doc_path": "common/PROP-059",
       "file": "vibevm/vibespecs/common/PROP-059-user-applications.xml",
       "heading": "PROP-059 — User applications: install, launch, alternatives, storage libraries",
@@ -115194,10 +115245,10 @@
     },
     {
       "anchor": "declaration",
-      "content_hash": "sha256:1daebd98062d3354178404fbf94d9adc4da4356b87a63ee941db4630cc43c225",
+      "content_hash": "sha256:ffea874cdada6e1ef625afe120052c8455f335f8917c990a408e0927b14a15e0",
       "doc_path": "common/PROP-059",
       "file": "vibevm/vibespecs/common/PROP-059-user-applications.xml",
-      "heading": "An app package has `[package] kind = \"app\"` and no `[project]` table. `[application]` carries `id` (the slot name, a portable token) and optional `portable` (default `true`). Installation choices live only in `[[installer_options]]`; a package with none is a valid product that `vibe install -g` refuses as not globally installable. Package-author names, never heuristics, supply displayed platform and installer names. The retired fields `installer_package`, `runtime`, `entry`, `commands`, `distribution` and the `[application_source]` table are no longer parsed. `vibe init --kind app`, in its root and its nested form, scaffolds a package that plans as written: `[application]` with `id` set to the package name, one `[[installer_options]]` (`id = \"main\"`) for the host platform and architecture holding one `recipe` step `build` that runs `recipes/build.sh` with `posix_sh` (`recipes/build.ps1` with `windows_powershell` on Windows), that script, and an empty `icons/` directory; no launcher is written and nothing new is asked. Every refusal of the application validators names its field as a TOML path — table names as the manifest writes them, array elements by zero-based index, the leaf field last (`installer_options[1].steps[0].sha256`) — beside its sentence, which stays as it was; `vibe check --json` reports that path as the finding's `field` (`spec://org.vibevm.core/vibevm/VIBEVM-SPEC#linter`). @status:spec/done",
+      "heading": "An app package has `[package] kind = \"app\"` and no `[project]` table. `[application]` carries `id` (the slot name, a portable token) and optional `portable` (default `true`). Installation choices live only in `[[installer_options]]`; a package with none is a valid product that `vibe install -g` refuses as not globally installable. Package-author names, never heuristics, supply displayed platform and installer names. The retired fields `installer_package`, `runtime`, `entry`, `commands`, `distribution` and the `[application_source]` table are no longer parsed. Without app-specific authoring flags, `vibe init --kind app`, in its root and its nested form, scaffolds a package that plans as written: `[application]` with `id` set to the package name, one `[[installer_options]]` (`id = \"main\"`) for the host platform and architecture holding one `recipe` step `build` that runs `recipes/build.sh` with `posix_sh` (`recipes/build.ps1` with `windows_powershell` on Windows), that script, and an empty `icons/` directory; no launcher is written and nothing new is asked. Creation surfaces may supply `--app-id`, `--app-platform` (`linux`, `macos`, `windows`), `--app-arch` and `--app-install-way recipe|source|prebuilt` in either form. Defaults use the existing installer selection detector; explicit target platform determines recipe dialect, even when it differs from the scaffold host. The first option keeps id `main`. `recipe` permits an authored `--app-build-command`; `source` requires that command plus `--app-source-url` and its actual `--app-source-sha256`, and lowers to existing `sources` then `recipe` steps. The source name is `source`; extraction follows the incumbent source-input format and the recipe must place a relocatable payload in `VIBE_OUT`. `prebuilt` requires an HTTPS `--app-source-url`, actual SHA-256 and `--app-archive-format zip|tar-gz`, optionally `--app-payload-root`; it lowers to one existing `archive` step and writes no build script. No source is fetched and no command is executed during init; hashes and build commands are never invented. Unsupported or incoherent choices, app flags on other kinds and invalid complete manifests refuse before creating the root/container or saving author defaults. Re-init preserves authored manifests/scripts; a supplied scaffold selection that differs from existing application tables refuses. No new application manifest grammar or installer execution model is introduced (`PROP-065#steps`, `#kinds`). JSON emits one existing init-report envelope for a nested creation, including its newly-created container, with one outcome per file written or retained; repeated boot regeneration rows are combined without losing the original Created action. Every refusal of the application validators names its field as a TOML path — table names as the manifest writes them, array elements by zero-based index, the leaf field last (`installer_options[1].steps[0].sha256`) — beside its sentence, which stays as it was; `vibe check --json` reports that path as the finding's `field` (`spec://org.vibevm.core/vibevm/VIBEVM-SPEC#linter`). @status:spec/done",
       "line": 10,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-059#declaration"
     },
