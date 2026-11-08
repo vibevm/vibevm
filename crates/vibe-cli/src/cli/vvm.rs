@@ -138,9 +138,20 @@ pub struct VvmImportArgs {
     #[arg(long, value_name = "PROFILE", default_value = "release")]
     pub profile: String,
 
-    /// Activate the imported instance and write the stable shims.
+    /// Activate the imported instance and write the stable shims. Durable
+    /// PATH and advisory HOME remain unchanged unless --yes is explicit.
     #[arg(long = "use")]
     pub activate: bool,
+
+    /// Consent to durable PATH and advisory VIBEVM_HOME updates with --use.
+    /// Unattended mode alone does not grant this consent.
+    #[arg(short = 'y', long, alias = "assume-yes")]
+    pub yes: bool,
+
+    /// Preserve durable user environment even with --yes: shell rc files on
+    /// Unix, HKCU environment values on Windows. Shims/current still activate.
+    #[arg(long)]
+    pub no_profile: bool,
 
     /// Compatibility flag; distinct payloads now always become a fresh
     /// immutable local #N while the mutable tag keeps the same version label.

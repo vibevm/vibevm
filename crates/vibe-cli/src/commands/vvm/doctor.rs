@@ -21,7 +21,9 @@ use super::model::{InstallRecord, Origin};
 use super::provenance::{self, RunningIdentity};
 use super::source as source_tree;
 use super::tools;
-use super::{VvmEnv, bundle, confirm, make_persister, path_has_dir};
+use super::{VvmEnv, bundle, make_persister, path_has_dir};
+#[path = "doctor_environment.rs"]
+mod environment;
 
 fn needs_build_tools(origin: Option<Origin>) -> bool {
     origin != Some(Origin::Binary)
@@ -153,6 +155,7 @@ pub(super) fn run_doctor_cmd(
     tool_checks.finish();
     let shim_dir = store.shim_dir();
     let on_path = path_has_dir(env.path_var.as_deref(), &shim_dir);
+    let mut durable_environment = environment::observe(env, &shim_dir);
     let active = match store.active() {
         Ok(active) => active,
         Err(error) => {
@@ -242,7 +245,7 @@ pub(super) fn run_doctor_cmd(
 
     if args.fix {
         let confirmed = ctx.suspend_progress(|| {
-            confirm(ctx, args.yes, "Write shims and put the shim dir on PATH?")
+            environment::confirm_fix(ctx, args.yes, durable_environment.target.as_deref())
         })?;
         let repair = progress.task("Repairing self installation");
         if confirmed {
@@ -255,8 +258,8 @@ pub(super) fn run_doctor_cmd(
             })();
             match result {
                 Ok(()) => {
-                    remaining_problems =
-                        remaining_problems.saturating_sub(usize::from(!on_path) + shim_problems);
+                    durable_environment = environment::observe(env, &shim_dir);
+                    remaining_problems = remaining_problems.saturating_sub(shim_problems);
                     fixed = true;
                     repair.finish();
                 }
@@ -289,6 +292,8 @@ pub(super) fn run_doctor_cmd(
             })).collect::<Vec<_>>(),
             "shim_dir": shim_dir.display().to_string(),
             "shim_dir_on_path": on_path,
+            "process_path_refresh_needed": !on_path,
+            "durable_environment": durable_environment,
             "shims": final_shim_statuses.iter().map(|(name, ok)| serde_json::json!({
                 "name": name, "ok": ok,
             })).collect::<Vec<_>>(),
@@ -323,6 +328,12 @@ pub(super) fn run_doctor_cmd(
     }
 
     ctx.heading("vibe self doctor");
+    ctx.step(&format!("durable environment target: {} ({:?}); observation {:?}, managed block {:?}, PATH entry {:?}; login effectiveness unknown (not probed)",
+        durable_environment.target.as_deref().unwrap_or("unavailable"), durable_environment.shell,
+        durable_environment.observation, durable_environment.managed_block, durable_environment.path_entry));
+    if let Some(error) = &durable_environment.error {
+        ctx.diagnostic(error);
+    }
     for t in &tools {
         match (&t.version, build_tools_required) {
             (Some(v), false) => ctx.step(&format!(
@@ -432,7 +443,10 @@ pub(super) fn run_doctor_cmd(
     }
 
     if fixed {
-        ctx.summary("fixed: shims written, shim dir ensured on PATH (open a new shell).");
+        ctx.summary("repair completed: shims written and durable PATH requested; current process PATH is unchanged, login effectiveness was not probed.");
+        if !on_path {
+            ctx.hint("refresh the launcher/terminal environment and recheck PATH; a correct durable entry does not require repeated profile repair");
+        }
     }
 
     if remaining_problems == 0 {

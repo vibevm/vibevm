@@ -241,7 +241,7 @@ fn run_import_cmd(ctx: &output::Context, env: &VvmEnv, args: VvmImportArgs) -> R
         staged(ctx, "Activating imported version", |task| {
             task.detail(format!("selector: {}", outcome.record.selector()));
             ensure_activatable(&store, &outcome.record)?;
-            activate_record(ctx, env, &store, &outcome.record, "self:import")
+            activation::activate_import_record(ctx, env, &store, &outcome.record, &args)
         })?;
         activation::activation_trailer(ctx, &store, &outcome.record, "self:import");
     }

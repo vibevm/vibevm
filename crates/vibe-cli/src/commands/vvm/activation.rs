@@ -99,12 +99,56 @@ pub(super) fn activate_record(
     record: &InstallRecord,
     command: &str,
 ) -> Result<()> {
+    activate_record_with_policy(
+        ctx,
+        env,
+        store,
+        record,
+        command,
+        env::DurableEnvironmentPolicy::Update,
+    )
+}
+
+#[specmark::spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-019#CMD-IMPORT")]
+#[specmark::spec(
+    implements = "spec://org.vibevm.core/vibevm/common/PROP-019#path",
+    r = 3
+)]
+pub(super) fn activate_import_record(
+    ctx: &output::Context,
+    env: &VvmEnv,
+    store: &VersionStore,
+    record: &InstallRecord,
+    args: &VvmImportArgs,
+) -> Result<()> {
+    let policy = if args.yes && !args.no_profile {
+        env::DurableEnvironmentPolicy::Update
+    } else {
+        env::DurableEnvironmentPolicy::Preserve
+    };
+    activate_record_with_policy(ctx, env, store, record, "self:import", policy)
+}
+
+fn activate_record_with_policy(
+    ctx: &output::Context,
+    env: &VvmEnv,
+    store: &VersionStore,
+    record: &InstallRecord,
+    command: &str,
+    policy: env::DurableEnvironmentPolicy,
+) -> Result<()> {
     let id = record.version_id();
     let home = store.instance_dir(&id, record.instance);
     let shell = env::Shell::detect(env.shell.as_deref());
-    let persister = make_persister(env, shell)?;
+    let persister = match policy {
+        env::DurableEnvironmentPolicy::Preserve => None,
+        env::DurableEnvironmentPolicy::Update => Some(make_persister(env, shell)?),
+    };
     let path_ready = path_has_dir(env.path_var.as_deref(), &store.shim_dir());
-    let activated = env::activate_instance(store, &home, persister.as_ref())?;
+    let activated = match persister.as_deref() {
+        Some(persister) => env::activate_instance(store, &home, persister)?,
+        None => env::activate_without_environment(store, &home)?,
+    };
 
     if ctx.is_json() {
         return ctx.emit_json(&serde_json::json!({
@@ -116,16 +160,20 @@ pub(super) fn activate_record(
             "home": home.display().to_string(),
             "path_on_current_process": path_ready,
             "durable_path_changed": activated.path == env::Persisted::Changed,
+            "durable_environment_policy": policy,
             "advisory_home_warning": activated.advisory_home_warning,
         }));
     }
     // What the switch means for this shell, as dim remarks; the trailer the
     // caller writes once its own progress row has finished is the last block.
-    ctx.hint("switched live; the next vibe in this shell uses it");
+    ctx.hint("live pointer switched; the managed shims now select this instance");
     if path_ready {
         ctx.hint("PATH is ready in this process");
-    } else {
+    } else if let Some(persister) = &persister {
         ctx.hint(&format!("external tools: {}", persister.activation_hint()));
+    } else {
+        ctx.hint("durable environment preserved; the shim directory is not on this process PATH");
+        ctx.hint("to request a durable PATH update: vibe self doctor --fix --yes");
     }
     if let Some(warning) = activated.advisory_home_warning {
         ctx.diagnostic(&format!(

@@ -1,3 +1,4 @@
+specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-019#path", r = 3);
 use std::fs::{self, OpenOptions};
 use std::io::{Read, Write};
 use std::path::Path;
@@ -103,22 +104,82 @@ pub(super) fn write_rc_atomic_at(
 
 /// Split a file into (text before the managed block, the block's inner
 /// lines, text after the block). No block yields an empty managed section.
-pub(super) fn split_block(text: &str) -> (String, Vec<String>, String) {
-    if let (Some(begin), Some(end)) = (text.find(BLOCK_BEGIN), text.find(BLOCK_END))
-        && begin < end
-    {
-        let pre = text[..begin].to_string();
-        let inner = &text[begin + BLOCK_BEGIN.len()..end];
+pub(super) fn split_block(text: &str) -> Result<(String, Vec<String>, String)> {
+    if let Some(span) = block_span(text)? {
+        let pre = text[..span.begin].to_string();
+        let inner = &text[span.inner_begin..span.inner_end];
         let block = inner
             .lines()
             .map(str::trim)
             .filter(|line| !line.is_empty())
             .map(str::to_string)
             .collect();
-        let post = text[end + BLOCK_END.len()..].to_string();
-        return (pre, block, post);
+        let post = text[span.end..].to_string();
+        return Ok((pre, block, post));
     }
-    (text.to_string(), Vec::new(), String::new())
+    Ok((text.to_string(), Vec::new(), String::new()))
+}
+
+struct BlockSpan {
+    begin: usize,
+    inner_begin: usize,
+    inner_end: usize,
+    end: usize,
+}
+
+/// One pair of complete marker lines is the only managed-block envelope.
+/// Broken, embedded or duplicate markers are never repaired by guessing ownership.
+#[specmark::spec(
+    implements = "spec://org.vibevm.core/vibevm/common/PROP-019#path",
+    r = 3
+)]
+fn block_span(text: &str) -> Result<Option<BlockSpan>> {
+    let mut opening = None;
+    let mut result = None;
+    let mut offset = 0;
+    for line in text.split_inclusive('\n') {
+        let content = line.trim_end_matches(['\r', '\n']);
+        let content = if offset == 0 {
+            content.strip_prefix('\u{feff}').unwrap_or(content)
+        } else {
+            content
+        };
+        let bom = if offset == 0 && line.starts_with('\u{feff}') {
+            '\u{feff}'.len_utf8()
+        } else {
+            0
+        };
+        if content == BLOCK_BEGIN && opening.is_none() && result.is_none() {
+            opening = Some((offset + bom, offset + line.len()));
+        } else if content == BLOCK_END && result.is_none() {
+            let Some((begin, inner_begin)) = opening.take() else {
+                return malformed_block();
+            };
+            result = Some(BlockSpan {
+                begin,
+                inner_begin,
+                inner_end: offset,
+                end: offset + line.len(),
+            });
+        } else if content.contains(BLOCK_BEGIN) || content.contains(BLOCK_END) {
+            return malformed_block();
+        }
+        offset += line.len();
+    }
+    if opening.is_some() {
+        return malformed_block();
+    }
+    Ok(result)
+}
+
+fn malformed_block<T>() -> Result<T> {
+    bail!(
+        "violates REQ spec://org.vibevm.core/vibevm/common/PROP-019#path: malformed or duplicate managed profile markers; fix surface: inspect the existing profile block before requesting a repair"
+    )
+}
+
+pub(super) fn managed_block_present(text: &str) -> Result<bool> {
+    Ok(block_span(text)?.is_some())
 }
 
 /// Replace the block line beginning with `prefix`, or append `line`.
@@ -135,28 +196,24 @@ pub(super) fn set_or_add(block: &mut Vec<String>, prefix: &str, line: &str) -> b
     }
 }
 
-pub(super) fn rebuild(pre: &str, block: &[String], post: &str) -> String {
+#[specmark::spec(
+    implements = "spec://org.vibevm.core/vibevm/common/PROP-019#path",
+    r = 3
+)]
+pub(super) fn rebuild(pre: &str, block: &[String], post: &str, newline: &str) -> String {
     if block.is_empty() {
         return format!("{pre}{post}");
     }
-    let pre = pre.trim_end_matches('\n');
-    let post = post.trim_start_matches('\n');
-    let mut out = String::new();
-    if !pre.is_empty() {
-        out.push_str(pre);
-        out.push('\n');
+    let mut out = pre.to_string();
+    if !pre.is_empty() && pre != "\u{feff}" && !pre.ends_with('\n') {
+        out.push_str(newline);
     }
     out.push_str(BLOCK_BEGIN);
-    out.push('\n');
-    out.push_str(&block.join("\n"));
-    out.push('\n');
+    out.push_str(newline);
+    out.push_str(&block.join(newline));
+    out.push_str(newline);
     out.push_str(BLOCK_END);
-    out.push('\n');
-    if !post.is_empty() {
-        out.push_str(post);
-        if !post.ends_with('\n') {
-            out.push('\n');
-        }
-    }
+    out.push_str(newline);
+    out.push_str(post);
     out
 }

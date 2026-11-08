@@ -81,7 +81,7 @@ the repo's `rust-toolchain.toml` (the pin VVM honours when building).</related><
       </facts>
     </standalone>
     <surface title="2.2 Command surface — `vibe self` (+ `vibe vars`)">
-      <p><req-surface fact="true" status="spec/done">`req r7`</req-surface></p>
+      <p><req-surface fact="true" status="spec/done">`req r8`</req-surface></p>
       <p><SELF-NAMING fact="true" status="spec/done">`vibe self` — named after rustup's `self` (a tool that manages its own
 versions), and unambiguous where `man` collided with the Unix manual page:</SELF-NAMING></p>
       <facts ordered="false">
@@ -135,8 +135,13 @@ versions), and unambiguous where `man` collided with the Unix manual page:</SELF
   idempotence: same tag + same digest reuses the instance; same mutable tag +
   different digest creates a new local `#N` beside the preserved old one.
   `--replace-candidate` remains compatibility spelling. Optional `--commit`, `--profile`
-  (default `release`); inactive by default — `--use` runs the same complete
-  shim/PATH/pointer/advisory-HOME activation as every other lane.</CMD-IMPORT>
+  (default `release`); inactive by default. `--use` writes stable shims and
+  switches the live pointer, preserving the durable environment by default.
+  Explicit `--yes` additionally authorizes the existing durable PATH and
+  advisory-HOME activation; unattended posture alone is not that consent.
+  `--no-profile` overrides `--yes` and suppresses both durable writes: rc-file
+  edits on Unix and HKCU environment edits on Windows. It does not suppress
+  managed shims/current and does not change the build-metadata `--profile`.</CMD-IMPORT>
         <CMD-BOOTSTRAP fact="true" status="impl/done">`self bootstrap --manifest DISTRIBUTIONS.json --version X.Y.Z
   --release-base URL` is the narrow machine-facing cold-start verb. It verifies
   the temporary bootstrap against the aggregate, downloads one bounded native
@@ -273,7 +278,7 @@ four layers:</ACTIVATION-LAW></p>
       </facts>
     </activation>
     <path title="2.6 PATH and durable environment management">
-      <p><req-path fact="true" status="spec/done">`req r2`</req-path></p>
+      <p><req-path fact="true" status="spec/done">`req r3`</req-path></p>
       <p><ENV-MGMT-LEAD fact="true" status="spec/done">VVM detects OS and shell and manages durable settings under strict rules:</ENV-MGMT-LEAD></p>
       <facts ordered="false">
         <PATH-SHIM-DIR fact="true" status="spec/done" action="continue" actionstage="doc" audience="user">**The shim dir on `PATH`** (stable; set once).</PATH-SHIM-DIR>
@@ -297,12 +302,43 @@ four layers:</ACTIVATION-LAW></p>
   sent with `SendMessageTimeoutW`, with no shell or other child process; the earlier `[Environment]` API form silently expanded references
   and lost the kind. POSIX: a marked block in the detected shell's rc —
   bash/zsh/fish/`.profile`),</RULE-OS-AWARE>
-        <RULE-CONSENT fact="true" status="impl/done">and **consent + honesty** (interactive maintenance uses confirm / `-y` /
-  `self doctor --fix`; executing the native bootstrap one-liner is itself the
-  explicit install consent). Output says whether PATH was already live or only
-  durable for new shells. Activation writes stable PATH first, flips `current`
-  second, and updates advisory `VIBEVM_HOME` last, so a failure cannot point the
-  durable version variable ahead of the live selector.</RULE-CONSENT>
+        <RULE-CONSENT fact="true" status="spec/done">and **consent + honesty**. Import activation preserves the durable
+  environment unless explicitly granted by `--yes`; `--no-profile` wins over
+  that grant on every OS. `self doctor --fix` requires explicit `--yes` or an
+  affirmative interactive answer; unattended posture alone never grants a
+  durable-profile repair. Executing the native bootstrap one-liner remains
+  explicit install consent, and other activation callers retain their existing
+  policy. When durable updates are authorized, activation writes stable PATH
+  first, flips `current` second, and updates advisory `VIBEVM_HOME` last; when
+  excluded, it does not open a durable environment target. Current process
+  PATH is observed separately and is never reported repaired by a durable edit.</RULE-CONSENT>
+        <DOCTOR-DURABLE-OBSERVATION fact="true" status="spec/done">Doctor uses the same persister and shell target selection as repair,
+  without modifying or sourcing startup files. Its additive `durable_environment`
+  JSON object names target kind/path and selected shell, observation status,
+  managed-block state, managed PATH-entry correctness, probe status and login
+  effectiveness. Rc inspection uses the existing no-follow reader and one
+  complete marker-pair parser: missing, unavailable, malformed and duplicate
+  states are distinct; repair refuses malformed markers or duplicate managed
+  assignments rather than guessing ownership. Foreign prefix/suffix bytes,
+  BOM and CRLF are preserved by the shared atomic writer. A correct entry
+  describes only the exact managed PATH line (or independently read raw Windows
+  user PATH), not arbitrary surrounding shell behavior. Windows reports its
+  registry target, with managed block not-applicable, through the existing raw
+  registry reader; tests do not write the actual registry. `login_probe` remains
+  `not_run` and `login_effectiveness` remains `unknown`: managed-block presence,
+  successful persistence and a Finder-like process PATH do not prove a login
+  shell's effective environment. The inline doctor serializer is the JSON
+  owner; existing `shim_dir_on_path` continues to describe only the invoking
+  process, including after repair. Durable observation is informational: it
+  does not introduce a requirement to use a managed block when the environment
+  is configured externally. Existing runtime problem categories remain;
+  durable repair does not erase a missing current-process PATH finding.
+  `process_path_refresh_needed` reports that invoking-process absence, not proof
+  that restarting alone will repair shell configuration. After a successful
+  durable repair, a remaining process PATH problem still causes a nonzero
+  exit. Clients should use the durable observation to avoid repeatedly asking
+  for profile consent when the entry is already correct; refresh the launcher
+  or terminal environment and recheck instead.</DOCTOR-DURABLE-OBSERVATION>
         <RULE-INJECTABLE-SEAM fact="true" status="spec/done">The durable writer is an injectable seam so tests exercise the POSIX rc
   path in a temp file and never mutate the real machine.</RULE-INJECTABLE-SEAM>
       </facts>
@@ -430,7 +466,7 @@ their provenance record; the managed `src/.mirror` clone is VVM's to drop.</EXTE
       </facts>
     </gc>
     <introspection title="2.11 Introspection — `doctor`, `ls`, `current`, `which`, `env`">
-      <p><req-introspection fact="true" status="spec/done">`req r2`</req-introspection></p>
+      <p><req-introspection fact="true" status="spec/done">`req r3`</req-introspection></p>
       <facts ordered="false">
         <DOCTOR-VERIFIES fact="true" status="impl/done">`self doctor` verifies end to end: both generated stable shims have their
   expected content/mode and their directory is on `PATH`; every source-built

@@ -452,8 +452,9 @@ impl Context {
 
     /// True when `--unattended` was passed on the CLI or
     /// `VIBE_UNATTENDED` resolves truthy in the environment. Mutating
-    /// subcommands treat this as an implicit "yes" for every
-    /// confirmation prompt and refuse to open any interactive wizard.
+    /// subcommands generally treat this as an implicit "yes" and refuse
+    /// interactive wizards. Durable-environment consent boundaries such as
+    /// self import and self doctor --fix still require their explicit grant.
     pub fn is_unattended(&self) -> bool {
         self.unattended
     }

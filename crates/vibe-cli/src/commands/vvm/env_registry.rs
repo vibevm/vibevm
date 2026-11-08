@@ -5,6 +5,7 @@
 //! depended on the execution policy and quoting, and failed outright when
 //! PATH could not resolve the shell (B-226).
 
+specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-019#path", r = 3);
 use std::path::Path;
 
 use anyhow::Result;
@@ -38,6 +39,9 @@ pub(crate) struct RawUserVar {
 pub(crate) struct WindowsEnvPersister;
 
 impl EnvPersister for WindowsEnvPersister {
+    fn inspect_path(&self, dir: &Path) -> super::EnvironmentObservation {
+        super::profile::inspect_registry(get_user_var_raw("Path"), dir)
+    }
     fn set_vibevm_home(&self, home: &Path) -> Result<Persisted> {
         let target = home.display().to_string();
         let current = get_user_var_raw("VIBEVM_HOME")?;

@@ -14,6 +14,21 @@ use anyhow::{Context, Result, bail};
 
 use super::store::VersionStore;
 
+#[path = "env_profile.rs"]
+mod profile;
+pub(crate) use profile::EnvironmentObservation;
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq, serde::Serialize)]
+#[serde(rename_all = "snake_case")]
+#[specmark::spec(
+    implements = "spec://org.vibevm.core/vibevm/common/PROP-019#path",
+    r = 3
+)]
+pub(crate) enum DurableEnvironmentPolicy {
+    Preserve,
+    Update,
+}
+
 #[path = "env_rc.rs"]
 mod rc_io;
 #[cfg(test)]
@@ -50,7 +65,8 @@ fn powershell_quote(value: &str) -> String {
 // ---------------------------------------------------------------------------
 
 /// A login shell, for rc-file selection and `eval`-line syntax (PROP-019 §2.6).
-#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, serde::Serialize)]
+#[serde(rename_all = "snake_case")]
 pub(crate) enum Shell {
     Bash,
     Zsh,
@@ -117,7 +133,7 @@ impl Shell {
         }
     }
 
-    /// The rc file this shell sources at startup, under `home`.
+    /// The managed rc target under `home`; this does not prove it is sourced.
     pub(crate) fn rc_path(self, home: &Path) -> PathBuf {
         match self {
             Shell::Fish => home.join(".config").join("fish").join("config.fish"),
@@ -149,11 +165,27 @@ pub(crate) trait EnvPersister {
     fn ensure_on_path(&self, dir: &Path) -> Result<Persisted>;
     /// How to apply the change to the *current* shell now.
     fn activation_hint(&self) -> String;
+    /// Observe the same durable target without changing it or executing a shell.
+    fn inspect_path(&self, _dir: &Path) -> EnvironmentObservation {
+        EnvironmentObservation::unavailable("this persister does not expose inspection".into())
+    }
 }
 
 pub(crate) struct ActivationOutcome {
     pub path: Persisted,
     pub advisory_home_warning: Option<String>,
+}
+
+/// Activate only managed shims and the live pointer; no durable env target is opened.
+#[specmark::spec(
+    implements = "spec://org.vibevm.core/vibevm/common/PROP-019#path",
+    r = 3
+)]
+pub(crate) fn activate_without_environment(
+    store: &VersionStore,
+    home: &Path,
+) -> Result<ActivationOutcome> {
+    activate(store, home, None)
 }
 
 /// The one activation transaction used by use/rollback/bootstrap/update:
@@ -164,12 +196,22 @@ pub(crate) fn activate_instance(
     home: &Path,
     persister: &dyn EnvPersister,
 ) -> Result<ActivationOutcome> {
+    activate(store, home, Some(persister))
+}
+
+fn activate(
+    store: &VersionStore,
+    home: &Path,
+    persister: Option<&dyn EnvPersister>,
+) -> Result<ActivationOutcome> {
     write_shims(store)?;
-    let path = persister.ensure_on_path(&store.shim_dir())?;
+    let path = match persister {
+        Some(persister) => persister.ensure_on_path(&store.shim_dir())?,
+        None => Persisted::Unchanged,
+    };
     store.write_current(home)?;
     let advisory_home_warning = persister
-        .set_vibevm_home(home)
-        .err()
+        .and_then(|persister| persister.set_vibevm_home(home).err())
         .map(|error| error.to_string());
     Ok(ActivationOutcome {
         path,
@@ -193,7 +235,12 @@ impl RcFilePersister {
     /// changed.
     fn upsert(&self, prefix: &str, line: &str) -> Result<Persisted> {
         let (text, permissions) = read_rc_file(&self.rc_path)?;
-        let (pre, mut block, post) = split_block(&text);
+        let (pre, mut block, post) = split_block(&text)?;
+        if block.iter().filter(|line| line.starts_with(prefix)).count() > 1 {
+            bail!(
+                "violates REQ spec://org.vibevm.core/vibevm/common/PROP-019#path: duplicate managed environment assignments; fix surface: inspect the existing profile block before requesting a repair"
+            );
+        }
         if !set_or_add(&mut block, prefix, line) {
             return Ok(Persisted::Unchanged);
         }
@@ -203,7 +250,13 @@ impl RcFilePersister {
         }
         write_rc_atomic(
             &self.rc_path,
-            rebuild(&pre, &block, &post).as_bytes(),
+            rebuild(
+                &pre,
+                &block,
+                &post,
+                if text.contains("\r\n") { "\r\n" } else { "\n" },
+            )
+            .as_bytes(),
             permissions,
         )?;
         Ok(Persisted::Changed)
@@ -211,6 +264,9 @@ impl RcFilePersister {
 }
 
 impl EnvPersister for RcFilePersister {
+    fn inspect_path(&self, dir: &Path) -> EnvironmentObservation {
+        profile::inspect_rc(&self.rc_path, self.shell, dir)
+    }
     fn set_vibevm_home(&self, home: &Path) -> Result<Persisted> {
         let home = home.display().to_string();
         let (prefix, line) = match self.shell {
@@ -227,17 +283,7 @@ impl EnvPersister for RcFilePersister {
     }
 
     fn ensure_on_path(&self, dir: &Path) -> Result<Persisted> {
-        let dir = dir.display().to_string();
-        let (prefix, line) = match self.shell {
-            Shell::Fish => (
-                "fish_add_path",
-                format!("fish_add_path {}", fish_quote(&dir)),
-            ),
-            _ => (
-                "export PATH=",
-                format!("export PATH={}:$PATH", posix_quote(&dir)),
-            ),
-        };
+        let (prefix, line) = managed_path_line(self.shell, dir);
         self.upsert(prefix, &line)
     }
 
@@ -246,6 +292,20 @@ impl EnvPersister for RcFilePersister {
             "source `{}` (or open a new shell) to apply now",
             self.rc_path.display()
         )
+    }
+}
+
+fn managed_path_line(shell: Shell, dir: &Path) -> (&'static str, String) {
+    let dir = dir.display().to_string();
+    match shell {
+        Shell::Fish => (
+            "fish_add_path",
+            format!("fish_add_path {}", fish_quote(&dir)),
+        ),
+        _ => (
+            "export PATH=",
+            format!("export PATH={}:$PATH", posix_quote(&dir)),
+        ),
     }
 }
 

@@ -134,7 +134,7 @@ fn atomic_rc_writer_never_deletes_an_unowned_colliding_temp() {
 }
 
 #[test]
-#[verifies("spec://org.vibevm.core/vibevm/common/PROP-019#path", r = 2)]
+#[verifies("spec://org.vibevm.core/vibevm/common/PROP-019#path", r = 3)]
 fn rc_persister_is_idempotent_and_repoints() {
     let tmp = tempfile::tempdir().unwrap();
     let rc = tmp.path().join(".bashrc");
@@ -249,7 +249,7 @@ fn rc_persister_rejects_symlink_without_touching_target() {
 }
 
 #[test]
-#[verifies("spec://org.vibevm.core/vibevm/common/PROP-019#path", r = 2)]
+#[verifies("spec://org.vibevm.core/vibevm/common/PROP-019#path", r = 3)]
 fn path_with_prefix_moves_shim_dir_to_front() {
     assert_eq!(
         path_with_prefix(r"C:\u\.cargo\bin;C:\u\opt\bin", r"C:\u\opt\bin").as_deref(),
@@ -268,7 +268,7 @@ fn path_with_prefix_moves_shim_dir_to_front() {
 
 #[test]
 #[cfg(windows)]
-#[verifies("spec://org.vibevm.core/vibevm/common/PROP-019#path", r = 2)]
+#[verifies("spec://org.vibevm.core/vibevm/common/PROP-019#path", r = 3)]
 fn path_core_expands_deduplicates_and_preserves_unrelated_raw_entries() {
     let cwd = Path::new(r"C:\work");
     let lookup = |name: &str| {
@@ -294,7 +294,7 @@ fn path_core_expands_deduplicates_and_preserves_unrelated_raw_entries() {
 
 #[test]
 #[cfg(windows)]
-#[verifies("spec://org.vibevm.core/vibevm/common/PROP-019#path", r = 2)]
+#[verifies("spec://org.vibevm.core/vibevm/common/PROP-019#path", r = 3)]
 fn path_core_compares_full_lexical_paths_and_keeps_expandable_text_raw() {
     let cwd = Path::new(r"C:\work");
     let current = r".\shim\;%USERPROFILE%\go\bin";

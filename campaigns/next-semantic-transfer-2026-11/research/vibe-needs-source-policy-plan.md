@@ -146,3 +146,7 @@ Use isolated settings/HOME, owned HTTPS/SSH fixtures and actual `vibe` subproces
 - Two developer configurations sharing one lock must not create different lock bytes solely due to local settings. Cache-hit success alone is not proof of transport acquisition: force cold/new-package cases and count endpoint contacts.
 
 This is an authorized next implementation, not delivered behavior. N3 is accepted; N4 requires its final provenance correction and acceptance first. No new public TOML key or wire schema is declared by this plan. Actual format changes must be logged before publication.
+
+### Owner-confirmed preview effect boundary
+
+2026-11-08: project `--plan-only` leaves project, HOME and persistent cache unchanged. A separate operation-owned temporary directory is explicitly allowed and must be cleaned on success, failure and cancellation. Use that capability for cold Git/SSH metadata; do not call mutating install/app/remap wrappers and then pretend rollback was read-only. Existing cached data may be read without in-place refresh. JSON/report documentation must describe this boundary, not claim zero filesystem syscalls.
