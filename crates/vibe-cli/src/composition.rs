@@ -10,6 +10,7 @@ use crate::output;
 use vibe_core::user_config::UserConfig;
 
 pub(crate) mod cancellation;
+pub(crate) mod native_helper;
 pub(crate) mod remap;
 pub(crate) mod transfers;
 

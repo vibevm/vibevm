@@ -325,7 +325,9 @@ pub(super) fn preflight_world(
     vibe_install::configuration_admission::resolved_packages(&world)?;
     Ok(world)
 }
-fn project_rows(workspace: &Workspace, updated: &[Resolved]) -> Vec<ResolvedDep> {
+/// The resolved subtree as the materialise pass consumes it — pure, so the
+/// no-op probe reads the same rows the apply would place.
+pub(super) fn project_rows(workspace: &Workspace, updated: &[Resolved]) -> Vec<ResolvedDep> {
     updated
         .iter()
         .map(

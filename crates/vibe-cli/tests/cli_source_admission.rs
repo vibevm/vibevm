@@ -77,13 +77,11 @@ fn declared_install_refuses_before_requested_metadata_and_lifecycle_effects() {
         );
         let mut after = inventory(project.path());
         // The outer coordination lease precedes the authoritative snapshot.
-        // Its empty lock and fresh empty identity directory are infrastructure,
-        // not lifecycle execution publication. Never ignore the .vibe subtree.
-        for rel in [".vibe", ".vibe/lifecycle"] {
-            let key = PathBuf::from(rel);
-            if !before.contains_key(&key) {
-                assert_eq!(after.remove(&key), Some(None));
-            }
+        // Its empty lock is infrastructure, not lifecycle execution
+        // publication. Never ignore the .vibe subtree.
+        let created = PathBuf::from(".vibe");
+        if !before.contains_key(&created) {
+            assert_eq!(after.remove(&created), Some(None));
         }
         let lock = PathBuf::from(".vibe/lifecycle.lock");
         assert!(
@@ -93,28 +91,14 @@ fn declared_install_refuses_before_requested_metadata_and_lifecycle_effects() {
                 .is_symlink()
         );
         assert_eq!(after.remove(&lock), Some(Some(Vec::new())));
-        let runs: Vec<_> = after
-            .keys()
-            .filter(|path| {
-                path.parent() == Some(Path::new(".vibe/lifecycle")) && !before.contains_key(*path)
-            })
-            .cloned()
-            .collect();
-        assert_eq!(runs.len(), 1);
-        let run = &runs[0];
-        let name = run.file_name().unwrap().to_str().unwrap();
-        assert_eq!(name.len(), 32);
-        assert!(
-            name.bytes()
-                .all(|byte| byte.is_ascii_digit() || (b'a'..=b'f').contains(&byte))
-        );
-        assert!(
-            fs::symlink_metadata(project.path().join(run))
-                .unwrap()
-                .file_type()
-                .is_dir()
-        );
-        assert_eq!(after.remove(run), Some(None));
+        // FMT-069: the refused run removes its own `.vibe/lifecycle/<run>/`
+        // scratch and the empty directory it created for it.
+        if !before.contains_key(&PathBuf::from(".vibe/lifecycle")) {
+            assert!(
+                !project.path().join(".vibe/lifecycle").exists(),
+                "{target}/{boot}: the refused run left its scratch behind: {after:?}"
+            );
+        }
         assert_eq!(
             after, before,
             "{target}/{boot}: product publication before admission"

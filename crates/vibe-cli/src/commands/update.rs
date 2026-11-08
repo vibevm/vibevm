@@ -1,8 +1,10 @@
 //! `vibe update [<pkgref>...] [--all]` — re-resolve and re-materialise.
 //!
-//! `vibe update` with no arguments, or `--all`, re-resolves the whole
-//! declared graph — exactly the `vibe install` from-manifest path, so it
-//! delegates there.
+//! `vibe update` with no arguments, or `--all`, is a scoped update over
+//! every declared root of the workspace ([`all`]): each locked version may
+//! move within its declared constraint, at its locked source. A resumed
+//! parked run, an empty or missing lock and a declared-but-unlocked root are
+//! the install substrate's own shapes and still delegate there.
 //!
 //! `vibe update <pkgref>...` is **scoped**: only the named packages — and
 //! the transitive subtree each pulls — are re-resolved against their
@@ -30,6 +32,7 @@
 
 specmark::scope!("spec://org.vibevm.core/vibevm/VIBEVM-SPEC#command-summary");
 
+mod all;
 mod draft;
 mod inputs;
 pub(crate) mod lifecycle;
@@ -64,6 +67,7 @@ pub fn run(
         user_config,
         offline,
         metadata,
+        adopted,
         selection,
         trace,
     } = prepare::prepare(ctx, &args, root_offline)?;
@@ -71,13 +75,14 @@ pub fn run(
     // own clones, while this one lives to the end of the command — through
     // the final report and the trace finalisation.
     let lease_owner = lease.clone();
-    // The ONE decision this boundary makes. `--all` (or no packages) re-resolves
-    // the whole declared graph through the install substrate; anything else
-    // moves exactly the named subtree. Both are `vibe update`, both report the
-    // update root, and both borrow the SAME recorder.
-    // `--sources-only` always pins exact locked versions per package, which is
-    // the scoped path's root model, even when it names no package.
-    let whole = !args.sources_only && (args.all || args.packages.is_empty());
+    // The ONE decision this boundary makes. A named update moves exactly the
+    // named subtree; `--all` (or no packages) moves every declared root
+    // through the same scoped region, unless the request is one only the
+    // install substrate serves (see [`all`]). `--sources-only` always pins
+    // exact locked versions per package, which is the scoped path's root
+    // model, even when it names no package. Every shape is `vibe update`,
+    // reports the update root, and borrows the SAME recorder.
+    let every = args.all || args.packages.is_empty();
     let execution = Execution {
         args,
         embedded_root,
@@ -86,11 +91,33 @@ pub fn run(
         user_config,
         selection,
         metadata,
+        adopted,
     };
-    let exit = if whole {
-        whole::execute_after_open(ctx, execution, trace.recorder())
+    let roots = if execution.args.sources_only || !every {
+        Some(all::Roots::Named)
     } else {
-        scoped::execute_after_open(ctx, execution, trace.recorder())
+        match all::route(&execution) {
+            all::AllRoute::Scoped(roots) => Some(all::Roots::All(roots)),
+            all::AllRoute::Whole => None,
+        }
+    };
+    let exit = match roots {
+        Some(roots) => {
+            // The whole path's install core discards its own failed run's
+            // scratch; the scoped path owns its run here.
+            let scratch = vibe_orchestrator::RunScratch::fresh(
+                &execution.lease,
+                &execution.metadata,
+                execution.adopted,
+            );
+            let exit = scoped::execute_after_open(ctx, execution, roots, trace.recorder());
+            scratch.settle(matches!(
+                exit,
+                crate::commands::compile_trace::CommandExit::Failed { .. }
+            ));
+            exit
+        }
+        None => whole::execute_after_open(ctx, execution, trace.recorder()),
     };
     // Consumes the owner: finishes the index, drops the last handle (and with
     // it the cooperative lock), and returns the member to attach.
@@ -121,6 +148,9 @@ pub(super) struct Execution {
     /// manifest snapshot taken at it, and the tree built from THAT snapshot.
     pub(super) selection: crate::commands::install::PreparedSelection,
     pub(super) metadata: vibe_lifecycle::RunMetadata,
+    /// Whether the run identity was adopted from a parked run — see
+    /// [`prepare::PreparedUpdate::adopted`].
+    pub(super) adopted: bool,
 }
 
 /// The injected instant. Both the supersession pass and the finish read time

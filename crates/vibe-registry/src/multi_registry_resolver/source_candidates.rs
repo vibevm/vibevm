@@ -123,7 +123,9 @@ impl MultiRegistryResolver {
             && selection.source_row().source_url == row.source_url
             && selection.source_row().version == row.version;
         Ok(selection.original_row() == row
-            && (self.locked_updates || mutable_refresh || selection.replayed_row() == Some(row)))
+            && (self.updates_locked(&key)
+                || mutable_refresh
+                || selection.replayed_row() == Some(row)))
     }
 }
 

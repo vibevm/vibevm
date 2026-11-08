@@ -202,16 +202,28 @@ impl SshConfiguration {
         values::profile(self.clone(), authority, &output)
     }
 }
+/// One captured SSH endpoint. Everything but the authored authority feeds the
+/// owned client configuration, which only the Unix launcher writes; elsewhere
+/// the launcher refuses, so those fields exist on Unix alone.
 pub(super) struct Configured {
+    #[cfg(unix)]
     owner: Arc<SshConfiguration>,
     authored: Authority,
+    #[cfg(unix)]
     identities: Vec<String>,
+    #[cfg(unix)]
     agent: String,
+    #[cfg(unix)]
     identities_only: bool,
+    #[cfg(unix)]
     client_options: Vec<(String, String)>,
+    #[cfg(unix)]
     trust: Vec<(String, Vec<u8>)>,
+    #[cfg(unix)]
     host_key_alias: Option<String>,
+    #[cfg(unix)]
     check_host_ip: bool,
+    #[cfg(unix)]
     witness: Witness,
 }
 impl Configured {
@@ -221,6 +233,12 @@ impl Configured {
     pub(super) fn same_authored(&self, other: &Self) -> bool {
         self.authored == other.authored
     }
+    /// The caller-trusted OpenSSH installation this capture selected.
+    #[cfg(unix)]
+    pub(super) fn executable(&self) -> &Path {
+        &self.owner.selected.executable
+    }
+    #[cfg(unix)]
     pub(super) fn configure(
         &self,
         command: &mut std::process::Command,

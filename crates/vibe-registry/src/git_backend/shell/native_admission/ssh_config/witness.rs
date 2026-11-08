@@ -47,21 +47,24 @@ fn metadata_stamp(metadata: &std::fs::Metadata) -> Stamp {
         ),
     }
 }
+/// The open options of one bounded, non-blocking SSH input read. Only Unix is
+/// qualified: elsewhere this is the capture's runtime refusal.
+#[cfg(unix)]
+fn bounded_read_options() -> Result<std::fs::OpenOptions, GitError> {
+    use std::os::unix::fs::OpenOptionsExt;
+    let mut options = std::fs::OpenOptions::new();
+    options.read(true).custom_flags(libc::O_NONBLOCK);
+    Ok(options)
+}
+#[cfg(not(unix))]
+fn bounded_read_options() -> Result<std::fs::OpenOptions, GitError> {
+    Err(unsupported(
+        "bounded SSH configuration reads are not qualified on this platform",
+    ))
+}
 fn read_content(path: &Path) -> Result<Option<Content>, GitError> {
     use std::io::Read;
-    let mut options = std::fs::OpenOptions::new();
-    options.read(true);
-    #[cfg(unix)]
-    {
-        use std::os::unix::fs::OpenOptionsExt;
-        options.custom_flags(libc::O_NONBLOCK);
-    }
-    #[cfg(not(unix))]
-    {
-        return Err(unsupported(
-            "bounded SSH configuration reads are not qualified on this platform",
-        ));
-    }
+    let options = bounded_read_options()?;
     let file = match options.open(path) {
         Ok(file) => file,
         Err(e) if e.kind() == std::io::ErrorKind::NotFound => return Ok(None),
@@ -116,24 +119,33 @@ impl Witness {
         self.files.insert(path.into(), data);
         Ok(bytes)
     }
+    #[cfg(unix)]
     pub(super) fn config_permissions(
         &self,
         path: &Path,
         owned_root: &Path,
     ) -> Result<(), GitError> {
-        #[cfg(unix)]
+        use std::os::unix::fs::MetadataExt;
+        let uid = u64::from(std::fs::metadata(owned_root).map_err(io)?.uid());
+        if let Some(Some(content)) = self.files.get(path)
+            && ((content.stamp.unix.2 != uid && content.stamp.unix.2 != 0)
+                || content.stamp.unix.3 & 0o022 != 0)
         {
-            use std::os::unix::fs::MetadataExt;
-            let uid = u64::from(std::fs::metadata(owned_root).map_err(io)?.uid());
-            if let Some(Some(content)) = self.files.get(path)
-                && ((content.stamp.unix.2 != uid && content.stamp.unix.2 != 0)
-                    || content.stamp.unix.3 & 0o022 != 0)
-            {
-                return Err(unsupported(
-                    "original SSH config ownership or permissions are unsafe",
-                ));
-            }
+            return Err(unsupported(
+                "original SSH config ownership or permissions are unsafe",
+            ));
         }
+        Ok(())
+    }
+    /// Ownership and mode bits are Unix facts. Elsewhere no content was ever
+    /// read — [`bounded_read_options`] refused first — so there is nothing to
+    /// judge.
+    #[cfg(not(unix))]
+    pub(super) fn config_permissions(
+        &self,
+        _path: &Path,
+        _owned_root: &Path,
+    ) -> Result<(), GitError> {
         Ok(())
     }
     pub(super) fn identity(&mut self, path: &Path) -> Result<bool, GitError> {

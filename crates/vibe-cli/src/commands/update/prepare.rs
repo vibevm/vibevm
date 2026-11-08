@@ -47,6 +47,9 @@ pub(super) struct PreparedUpdate {
     /// did.
     pub(super) offline: bool,
     pub(super) metadata: RunMetadata,
+    /// Whether this invocation ADOPTED a parked run's identity — a resume,
+    /// which the install substrate's persisted continuation serves.
+    pub(super) adopted: bool,
     /// The ONE selected-world provenance bundle: the canonical root, the
     /// manifest snapshot taken at it, and the tree built from THAT snapshot.
     /// One value rather than three fields, so the executed region cannot be
@@ -107,8 +110,10 @@ pub(super) fn prepare(
         started: prelude.identity.started.clone(),
         selected: prelude.selected.clone(),
     };
+    let adopted = prelude.identity.adopted;
     let trace = prelude.prepare_trace(&super::now);
     Ok(PreparedUpdate {
+        adopted,
         lease: prelude.lease,
         user_config,
         offline,

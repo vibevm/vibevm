@@ -123,7 +123,17 @@ pub struct UserScratch {
 impl UserScratch {
     /// A fresh, empty per-user scratch home.
     pub fn new() -> Self {
-        let root = tempfile::tempdir().expect("scratch user home");
+        Self::from_root(tempfile::tempdir().expect("scratch user home"))
+    }
+
+    /// A fresh scratch home created under `parent` rather than the caller's
+    /// `TMPDIR`, for a test whose output depends on the length of the
+    /// settings path (a display that shortens paths to a fixed width).
+    pub fn new_in(parent: &Path) -> Self {
+        Self::from_root(tempfile::tempdir_in(parent).expect("scratch user home"))
+    }
+
+    fn from_root(root: tempfile::TempDir) -> Self {
         let settings = root.path().join("settings");
         let cache = root.path().join("cache");
         let search_cache = root.path().join("search-cache");

@@ -25,7 +25,13 @@ type FreeFn = unsafe extern "C" fn(*mut u8, usize);
 pub(crate) trait LibraryHandle: Send + Sync {
     fn abi(&self) -> u32;
     fn manifest_bytes(&self, path: &str) -> Result<Vec<u8>, NativeLoadError>;
-    fn invoke(&self, request: &[u8], owner: Arc<dyn LibraryHandle>) -> CallResult;
+    /// One raw ABI call. Only an out-of-process transport can fail before
+    /// the plugin answers; the in-process call is infallible.
+    fn invoke(
+        &self,
+        request: &[u8],
+        owner: Arc<dyn LibraryHandle>,
+    ) -> Result<CallResult, NativeLoadError>;
 }
 
 pub(crate) trait LibraryOpener: Send + Sync {
@@ -34,6 +40,17 @@ pub(crate) trait LibraryOpener: Send + Sync {
         canonical_path: &std::path::Path,
         display_path: &str,
     ) -> Result<Arc<dyn LibraryHandle>, NativeLoadError>;
+
+    /// Record the parent-admitted bytes of one canonical image. The
+    /// in-process opener loads the caller's already-verified path directly.
+    fn admit_image(
+        &self,
+        _canonical_path: &std::path::Path,
+        _digest: &str,
+        _bytes: u64,
+    ) -> Result<(), NativeLoadError> {
+        Ok(())
+    }
 }
 
 pub(crate) struct SystemOpener;
@@ -146,7 +163,11 @@ impl LibraryHandle for LoadedLibrary {
         })
     }
 
-    fn invoke(&self, request: &[u8], owner: Arc<dyn LibraryHandle>) -> CallResult {
+    fn invoke(
+        &self,
+        request: &[u8],
+        owner: Arc<dyn LibraryHandle>,
+    ) -> Result<CallResult, NativeLoadError> {
         let mut pointer = std::ptr::null_mut();
         let mut len = 0usize;
         // SAFETY: The function pointer has the frozen ABI signature. Request
@@ -161,11 +182,11 @@ impl LibraryHandle for LoadedLibrary {
         };
         let response = NonNull::new(pointer)
             .map(|pointer| PublishedResponse::native(pointer, len, self.free, owner));
-        CallResult {
+        Ok(CallResult {
             status,
             response,
             len,
-        }
+        })
     }
 }
 
@@ -180,6 +201,8 @@ pub(crate) struct PublishedResponse {
     len: usize,
     free: Option<FreeFn>,
     _owner: Option<Arc<dyn LibraryHandle>>,
+    /// Bytes already copied out of a helper process; never plugin memory.
+    owned: Option<Box<[u8]>>,
     #[cfg(test)]
     _fake_bytes: Option<Box<[u8]>>,
     #[cfg(test)]
@@ -198,6 +221,23 @@ impl PublishedResponse {
             len,
             free: Some(free),
             _owner: Some(owner),
+            owned: None,
+            #[cfg(test)]
+            _fake_bytes: None,
+            #[cfg(test)]
+            fake_free_count: None,
+        }
+    }
+
+    /// A response whose plugin allocation was already copied and freed by
+    /// the helper that owns the library.
+    pub(crate) fn owned(bytes: Vec<u8>) -> Self {
+        Self {
+            pointer: NonNull::dangling(),
+            len: bytes.len(),
+            free: None,
+            _owner: None,
+            owned: Some(bytes.into_boxed_slice()),
             #[cfg(test)]
             _fake_bytes: None,
             #[cfg(test)]
@@ -206,6 +246,9 @@ impl PublishedResponse {
     }
 
     pub(crate) fn bytes(&self) -> &[u8] {
+        if let Some(owned) = &self.owned {
+            return owned;
+        }
         // SAFETY: Callers validate nonzero, fixed-cap and isize-safe length
         // before asking for bytes. ABI 1 assigns readability of this exact pair
         // to the host until the guard frees it.
@@ -230,6 +273,7 @@ impl PublishedResponse {
             len: reported_len,
             free: None,
             _owner: Some(owner),
+            owned: None,
             _fake_bytes: Some(bytes),
             fake_free_count: Some(free_count),
         }

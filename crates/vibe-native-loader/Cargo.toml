@@ -13,6 +13,8 @@ description = "Cached safe host loader for VibeVM native extension ABI 1"
 [dependencies]
 libloading.workspace = true
 serde_json.workspace = true
+# The operation helper re-validates the parent-admitted image digest.
+sha2.workspace = true
 specmark.workspace = true
 thiserror.workspace = true
 vibe-core.workspace = true

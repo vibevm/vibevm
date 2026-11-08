@@ -129,6 +129,28 @@ pub struct PreparedNativeMechanism {
     pub image: PathBuf,
     pub digest: String,
     pub bytes: u64,
+    /// The operation stop this image's calls answer to; see
+    /// [`PreparedNativeMechanisms::with_cancellation`].
+    pub(crate) control: NativeControl,
+}
+
+/// The operation control carried beside a prepared image. It never takes part
+/// in carriage equality: two carriages of the same images are the same work.
+#[derive(Clone, Default)]
+pub(crate) struct NativeControl(vibe_core::cancellation::CancellationToken);
+
+impl PartialEq for NativeControl {
+    fn eq(&self, _: &Self) -> bool {
+        true
+    }
+}
+
+impl Eq for NativeControl {}
+
+impl std::fmt::Debug for NativeControl {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        f.write_str("NativeControl")
+    }
 }
 
 #[derive(Debug, Clone, Default, PartialEq, Eq)]
@@ -146,16 +168,35 @@ impl PreparedNativeMechanism {
         &self,
         binding: &NativeMechanismBinding,
     ) -> Result<NativeMechanism, NativeLoadError> {
-        super::process_loader().admit_mechanism(
-            &self.image,
-            &binding.pin,
-            &binding.descriptor_id,
-            &binding.key,
-        )
+        // A controlled operation without a helper keeps today's in-process call.
+        let runtime =
+            super::helper::NativeRuntime::select(&self.control.0, super::process_loader())
+                .unwrap_or(super::helper::NativeRuntime::InProcess(
+                    super::process_loader(),
+                ));
+        runtime
+            .admit(&self.image, &self.digest, self.bytes)?
+            .admit_mechanism(
+                &self.image,
+                &binding.pin,
+                &binding.descriptor_id,
+                &binding.key,
+            )
     }
 }
 
 impl PreparedNativeMechanisms {
+    /// Run every later admission and call of these images under `token`'s
+    /// operation helper when that operation is controlled
+    /// (spec://org.vibevm.core/vibevm/common/PROP-073#NATIVE-STOP-LAW).
+    #[must_use]
+    pub fn with_cancellation(mut self, token: &vibe_core::cancellation::CancellationToken) -> Self {
+        for entry in &mut self.entries {
+            entry.control = NativeControl(token.clone());
+        }
+        self
+    }
+
     pub(crate) fn binding_for(
         &self,
         role: vibe_core::manifest::MechanismRole,
@@ -544,6 +585,7 @@ fn finish(
             image,
             digest: file.digest,
             bytes: file.bytes,
+            control: NativeControl::default(),
         });
     }
     Ok(PreparedNativeMechanisms { entries })

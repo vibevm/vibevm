@@ -1,6 +1,7 @@
 //! Payload-free catalog admission and admitted compiler invocation.
 
 use super::*;
+use crate::native::helper::NativeRuntime;
 use crate::process::execution_scratch;
 
 #[derive(Clone)]
@@ -183,6 +184,24 @@ fn invoke_admitted(
 }
 
 impl ArtifactCompilerNativeInvoker<'_> {
+    /// The in-process loader, or this operation's helper when controlled.
+    pub(in crate::native) fn runtime(&self) -> Result<NativeRuntime, CompilerNativeInvokerError> {
+        NativeRuntime::select(&self.cancellation, self.loader).ok_or_else(|| {
+            failed(
+                "selected in-process native compiler has no cooperative stop capability; no native build or invocation started",
+            )
+        })
+    }
+
+    #[cfg(test)]
+    pub(in crate::native) fn with_cancellation_for_test(
+        mut self,
+        token: vibe_core::cancellation::CancellationToken,
+    ) -> Self {
+        self.cancellation = token;
+        self
+    }
+
     fn invoke_unadmitted(
         &self,
         prepared: PreparedCall<'_>,
@@ -217,17 +236,21 @@ impl ArtifactCompilerNativeInvoker<'_> {
                     )));
                 }
             };
+        let (digest, bytes) = (artifact.digest.clone(), artifact.bytes);
         let image = self.access.image(
             self.selected_project_root,
             artifact,
             &prepared.qualified_key,
         )?;
-        self.loader
-            .invoke_compile(NativeCompileInvocation {
-                library: &image,
-                extension_id: &prepared.row.declaration().id,
-                point: prepared.point,
-                request: encoded,
+        self.runtime()?
+            .admit(&image, &digest, bytes)
+            .and_then(|loader| {
+                loader.invoke_compile(NativeCompileInvocation {
+                    library: &image,
+                    extension_id: &prepared.row.declaration().id,
+                    point: prepared.point,
+                    request: encoded,
+                })
             })
             .map_err(|error| {
                 failed(format!(

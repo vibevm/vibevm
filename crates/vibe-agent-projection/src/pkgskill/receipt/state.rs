@@ -27,6 +27,13 @@ pub(crate) fn receipt_exists_project_root(project_root: &Path) -> Result<bool> {
     receipt_exists(&project)
 }
 
+/// Read an existing receipt only to judge it: malformed or unsupported
+/// content refuses with the same error the recovery owner reports.
+pub(crate) fn check_receipt_project_root(project_root: &Path) -> Result<()> {
+    let project = Project::open(project_root)?;
+    read_receipt(&project).map(|_| ())
+}
+
 fn receipt_exists(project: &Project) -> Result<bool> {
     let Ok(vibe) = project.dir(&[".vibe"], false) else {
         return Ok(false);

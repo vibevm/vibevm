@@ -3,7 +3,7 @@ specmark::scope!(
     "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-035#URI-OBSERVED-SOURCE-READ"
 );
 use super::*;
-use crate::{Authority, SelfCoordinate};
+use crate::SelfCoordinate;
 use std::fs;
 
 #[cfg(test)]
@@ -69,7 +69,7 @@ fn redirected_layout_and_derived_package_slot_are_not_root_aliases() {
             fs::create_dir(root.path().join("vibedeps")).unwrap();
             std::os::unix::fs::symlink(outside.path(), root.path().join("vibedeps/org.demo.dep"))
                 .unwrap();
-            addr.authority = Authority::Package {
+            addr.authority = crate::Authority::Package {
                 group: "org.demo".into(),
                 name: "dep".into(),
                 version: Some("1.0.0".into()),

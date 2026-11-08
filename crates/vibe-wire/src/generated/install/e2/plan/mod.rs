@@ -26,6 +26,12 @@ pub struct InstallPlan {
     /// activating their rows or changing consent.
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub remaps: Option<Vec<RemapPlanEntry>>,
+
+    /// Every hosting this operation would contact, derived from the source
+    /// evidence and candidate observations already in this document (no extra
+    /// contact); absent for older producers means unknown.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub hostings: Option<Vec<OperationHosting>>,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -188,6 +194,8 @@ impl<'de> Deserialize<'de> for CandidateObservation {
 }
 
 pub use crate::generated::shared::HostingView;
+
+pub use crate::generated::shared::OperationHosting;
 
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 pub struct PlanEntry {

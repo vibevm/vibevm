@@ -16,7 +16,12 @@ impl std::fmt::Debug for SshAuthentication {
 }
 /// Caller-trusted OpenSSH plus exact credential/trust destination. Fields are
 /// private and cannot be populated by deserializing a package manifest.
+///
+/// The launcher-only fields (the executable, the direct trust and
+/// authentication, a remote's resolved endpoint) exist on Unix alone: only the
+/// Unix launcher is qualified, and elsewhere [`SshProfile::configure`] refuses.
 pub struct SshProfile {
+    #[cfg(unix)]
     executable: PathBuf,
     host: String,
     user: String,
@@ -25,7 +30,9 @@ pub struct SshProfile {
 }
 enum Mode {
     Direct {
+        #[cfg(unix)]
         known_hosts: Vec<u8>,
+        #[cfg(unix)]
         authentication: SshAuthentication,
     },
     Captured(Box<super::ssh_config::Configured>),
@@ -74,25 +81,28 @@ impl SshProfile {
             _ => (),
         }
         Ok(Self {
+            #[cfg(unix)]
             executable,
             host,
             user,
             port,
             mode: Mode::Direct {
+                #[cfg(unix)]
                 known_hosts,
+                #[cfg(unix)]
                 authentication,
             },
         })
     }
     pub(super) fn captured(
-        executable: PathBuf,
         host: String,
         user: String,
         port: u16,
         configured: super::ssh_config::Configured,
     ) -> Self {
         Self {
-            executable,
+            #[cfg(unix)]
+            executable: configured.executable().to_path_buf(),
             host,
             user,
             port,
@@ -125,8 +135,11 @@ impl SshProfile {
             return Ok(Some(Remote {
                 binding: ProfileBinding::Direct(profile_index),
                 address: address.into(),
+                #[cfg(unix)]
                 host: self.host.clone(),
+                #[cfg(unix)]
                 user: self.user.clone(),
+                #[cfg(unix)]
                 port: self.port,
             }));
         }
@@ -176,105 +189,113 @@ impl SshProfile {
         Ok(Some(Remote {
             binding: ProfileBinding::Direct(profile_index),
             address: address.to_owned(),
+            #[cfg(unix)]
             host,
+            #[cfg(unix)]
             user,
+            #[cfg(unix)]
             port,
         }))
     }
+    /// Only the Unix OpenSSH launcher is qualified; elsewhere this refuses
+    /// before anything is written or spawned.
+    #[cfg(not(unix))]
+    pub(super) fn configure(
+        &self,
+        _command: &mut Command,
+        _root: &Path,
+        _remote: &Remote,
+    ) -> Result<(), GitError> {
+        Err(unsupported(
+            "this SSH profile requires a separately proved platform launcher",
+        ))
+    }
+    #[cfg(unix)]
     pub(super) fn configure(
         &self,
         command: &mut Command,
         root: &Path,
         remote: &Remote,
     ) -> Result<(), GitError> {
-        #[cfg(not(unix))]
-        {
-            let _ = (command, root, remote);
-            return Err(unsupported(
-                "this SSH profile requires a separately proved platform launcher",
-            ));
-        }
-        #[cfg(unix)]
-        {
-            use std::io::Write;
-            use std::os::unix::{
-                ffi::OsStrExt,
-                fs::{FileTypeExt, OpenOptionsExt},
-            };
-            let mut config = format!(
-                "Host *\n HostName {}\n User {}\n Port {}\n StrictHostKeyChecking yes\n BatchMode yes\n PasswordAuthentication no\n KbdInteractiveAuthentication no\n GSSAPIAuthentication no\n HostbasedAuthentication no\n CanonicalizeHostname no\n VerifyHostKeyDNS no\n ProxyCommand none\n ProxyJump none\n PermitLocalCommand no\n ForwardAgent no\n ForwardX11 no\n ClearAllForwardings yes\n ControlMaster no\n ControlPath none\n UpdateHostKeys no\n RequestTTY no\n ConnectTimeout 10\n",
-                remote.host.trim_start_matches('[').trim_end_matches(']'),
-                remote.user,
-                remote.port
-            );
-            match &self.mode {
-                Mode::Captured(configured) => configured.configure(command, root, &mut config)?,
-                Mode::Direct {
-                    known_hosts,
-                    authentication,
-                } => {
-                    let known = root.join("known_hosts");
-                    std::fs::write(&known, known_hosts).map_err(io)?;
-                    config.push_str(&format!(
-                        " UserKnownHostsFile {}\n GlobalKnownHostsFile {}\n",
-                        config_path(&known)?,
-                        config_path(&root.join("config"))?
-                    ));
-                    match authentication {
-                        SshAuthentication::Key(bytes) => {
-                            let identity = root.join("ssh-identity");
-                            let mut file = std::fs::OpenOptions::new()
-                                .write(true)
-                                .create(true)
-                                .truncate(true)
-                                .mode(0o600)
-                                .open(&identity)
-                                .map_err(io)?;
-                            file.write_all(bytes).map_err(io)?;
-                            config.push_str(&format!(
-                                " IdentityFile {}\n IdentitiesOnly yes\n IdentityAgent none\n",
-                                config_path(&identity)?
-                            ));
+        use std::io::Write;
+        use std::os::unix::{
+            ffi::OsStrExt,
+            fs::{FileTypeExt, OpenOptionsExt},
+        };
+        let mut config = format!(
+            "Host *\n HostName {}\n User {}\n Port {}\n StrictHostKeyChecking yes\n BatchMode yes\n PasswordAuthentication no\n KbdInteractiveAuthentication no\n GSSAPIAuthentication no\n HostbasedAuthentication no\n CanonicalizeHostname no\n VerifyHostKeyDNS no\n ProxyCommand none\n ProxyJump none\n PermitLocalCommand no\n ForwardAgent no\n ForwardX11 no\n ClearAllForwardings yes\n ControlMaster no\n ControlPath none\n UpdateHostKeys no\n RequestTTY no\n ConnectTimeout 10\n",
+            remote.host.trim_start_matches('[').trim_end_matches(']'),
+            remote.user,
+            remote.port
+        );
+        match &self.mode {
+            Mode::Captured(configured) => configured.configure(command, root, &mut config)?,
+            Mode::Direct {
+                known_hosts,
+                authentication,
+            } => {
+                let known = root.join("known_hosts");
+                std::fs::write(&known, known_hosts).map_err(io)?;
+                config.push_str(&format!(
+                    " UserKnownHostsFile {}\n GlobalKnownHostsFile {}\n",
+                    config_path(&known)?,
+                    config_path(&root.join("config"))?
+                ));
+                match authentication {
+                    SshAuthentication::Key(bytes) => {
+                        let identity = root.join("ssh-identity");
+                        let mut file = std::fs::OpenOptions::new()
+                            .write(true)
+                            .create(true)
+                            .truncate(true)
+                            .mode(0o600)
+                            .open(&identity)
+                            .map_err(io)?;
+                        file.write_all(bytes).map_err(io)?;
+                        config.push_str(&format!(
+                            " IdentityFile {}\n IdentitiesOnly yes\n IdentityAgent none\n",
+                            config_path(&identity)?
+                        ));
+                    }
+                    SshAuthentication::AgentSocket(path) => {
+                        if !std::fs::metadata(path).map_err(io)?.file_type().is_socket() {
+                            return Err(unsupported("selected SSH agent endpoint is not a socket"));
                         }
-                        SshAuthentication::AgentSocket(path) => {
-                            if !std::fs::metadata(path).map_err(io)?.file_type().is_socket() {
-                                return Err(unsupported(
-                                    "selected SSH agent endpoint is not a socket",
-                                ));
-                            }
-                            config.push_str(&format!(
-                                " IdentityFile none\n IdentitiesOnly no\n IdentityAgent {}\n",
-                                config_path(path)?
-                            ));
-                            command.env("SSH_AUTH_SOCK", path);
-                        }
+                        config.push_str(&format!(
+                            " IdentityFile none\n IdentitiesOnly no\n IdentityAgent {}\n",
+                            config_path(path)?
+                        ));
+                        command.env("SSH_AUTH_SOCK", path);
                     }
                 }
             }
-            let selected = root.join("ssh_config");
-            std::fs::write(&selected, config).map_err(io)?;
-            let executable = std::str::from_utf8(self.executable.as_os_str().as_bytes())
-                .map_err(|_| unsupported("SSH executable path is not UTF-8"))?;
-            let config = selected
-                .to_str()
-                .ok_or_else(|| unsupported("owned SSH config path is not UTF-8"))?;
-            // Only caller-trusted executable and owned config paths enter this
-            // fixed shell prefix. Package addresses are never interpolated here.
-            command
-                .env(
-                    "GIT_SSH_COMMAND",
-                    format!("{} -F {}", shell_quote(executable)?, shell_quote(config)?),
-                )
-                .env("GIT_SSH_VARIANT", "ssh");
-            Ok(())
         }
+        let selected = root.join("ssh_config");
+        std::fs::write(&selected, config).map_err(io)?;
+        let executable = std::str::from_utf8(self.executable.as_os_str().as_bytes())
+            .map_err(|_| unsupported("SSH executable path is not UTF-8"))?;
+        let config = selected
+            .to_str()
+            .ok_or_else(|| unsupported("owned SSH config path is not UTF-8"))?;
+        // Only caller-trusted executable and owned config paths enter this
+        // fixed shell prefix. Package addresses are never interpolated here.
+        command
+            .env(
+                "GIT_SSH_COMMAND",
+                format!("{} -F {}", shell_quote(executable)?, shell_quote(config)?),
+            )
+            .env("GIT_SSH_VARIANT", "ssh");
+        Ok(())
     }
 }
 pub(super) struct Remote {
     binding: ProfileBinding,
     pub(super) address: String,
+    #[cfg(unix)]
     host: String,
+    #[cfg(unix)]
     user: String,
+    #[cfg(unix)]
     port: u16,
 }
 enum ProfileBinding {
@@ -330,7 +351,6 @@ pub(super) fn repository_path(path: &str) -> bool {
             .bytes()
             .all(|b| b.is_ascii_alphanumeric() || b"/._-~".contains(&b))
 }
-#[cfg(unix)]
 pub(super) fn config_path(path: &Path) -> Result<String, GitError> {
     let path = path
         .to_str()

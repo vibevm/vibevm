@@ -55,6 +55,11 @@ pub struct ApplicationPlan {
 
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub source_hosting: Option<HostingView>,
+
+    /// Every hosting this plan would contact, derived from its captured source
+    /// evidence (no extra contact); absent for older producers means unknown.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub hostings: Option<Vec<OperationHosting>>,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
@@ -132,6 +137,8 @@ pub struct License {
 
     pub accepted: bool,
 }
+
+pub use crate::generated::shared::OperationHosting;
 
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 pub struct Package {

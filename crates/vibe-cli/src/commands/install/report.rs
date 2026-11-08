@@ -147,12 +147,13 @@ pub(super) fn present_resolution(ctx: &output::Context, planned: &vibe_install::
         // The plan is a PREVIEW, deferred like every other one: a run that
         // parks emits its handoff document alone, and a run that completes
         // flushes this first, exactly as before.
-        let _ = ctx.defer_json_plan(&InstallPlan {
+        let _ = ctx.defer_json_plan(&hostings::with_hostings(InstallPlan {
             command: "install:plan".into(),
             packages,
             preview_complete: None,
             remaps: None,
-        });
+            hostings: None,
+        }));
         return;
     }
     if ctx.is_quiet() {
@@ -336,3 +337,4 @@ pub(crate) fn phase_rows(
 
 mod candidates;
 pub(crate) use candidates::candidate_rows;
+pub(crate) mod hostings;

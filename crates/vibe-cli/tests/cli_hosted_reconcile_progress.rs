@@ -483,7 +483,16 @@ fn packages_resolved_counts_the_graph_not_the_slots_that_moved() {
         .collect();
     std::fs::write(&manifest, widened).unwrap();
 
-    // FRESH: the lock is already current, so nothing is resolved at all.
+    // RESOLVED, NOTHING MOVED: the lock is already the newest the widened
+    // constraints admit. `--all` still re-resolves every declared root
+    // (B-234: it no longer replays the lock like a plain install), so it
+    // resolved the whole graph and bumped nothing — the count is the graph's,
+    // not the number of slots that moved. Nothing would move, so nothing is
+    // written: no slot, no boot artifact, no lock byte (FMT-074).
+    let lock_before = std::fs::read(project.path().join("vibe.lock")).unwrap();
+    let boot_index = project.path().join(vibe_core::layout::current_boot_index());
+    let boot_before = std::fs::read(&boot_index).unwrap();
+    let boot_modified = std::fs::metadata(&boot_index).unwrap().modified().unwrap();
     let fresh = user
         .vibe()
         .args(["update", "--all", "--json", "--assume-yes"])
@@ -494,16 +503,38 @@ fn packages_resolved_counts_the_graph_not_the_slots_that_moved() {
         .unwrap();
     assert_ok(&fresh);
     let report: UpdateReport = serde_json::from_value(sole_root(&fresh.stdout, "update")).unwrap();
-    assert!(report.unchanged, "the fresh fast path ran: {report:?}");
     assert!(report.complete, "{report:?}");
     assert_eq!(
-        report.packages_resolved, 0,
-        "the fresh path skips resolution, so it resolved nothing: {report:?}",
+        report.packages_resolved, 2,
+        "the run resolved BOTH declared packages: {report:?}",
     );
-    assert!(report.materialised.is_empty(), "{report:?}");
+    assert!(
+        report.version_bumps.is_empty(),
+        "and moved neither: {report:?}"
+    );
+    assert!(report.pruned.is_empty(), "{report:?}");
+    assert!(
+        report.unchanged,
+        "a resolution that moves nothing is the unchanged no-op: {report:?}"
+    );
+    assert!(
+        report.materialised.is_empty(),
+        "and re-materialises no slot: {report:?}"
+    );
     assert!(
         !report.nodes_regenerated.is_empty(),
-        "boot is still regenerated on the fresh path: {report:?}",
+        "boot is regenerated over the unchanged world: {report:?}",
+    );
+    assert_eq!(
+        std::fs::read(project.path().join("vibe.lock")).unwrap(),
+        lock_before,
+        "nothing moved, so the lock is byte-identical",
+    );
+    assert_eq!(std::fs::read(&boot_index).unwrap(), boot_before);
+    assert_eq!(
+        std::fs::metadata(&boot_index).unwrap().modified().unwrap(),
+        boot_modified,
+        "and a regeneration that changes no byte rewrites no boot file",
     );
 
     // RESOLVED BUT NOT MATERIALISED: a whole-graph update that parks at the

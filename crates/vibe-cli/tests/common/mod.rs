@@ -25,6 +25,10 @@ pub mod app_registry;
 pub mod fake_agent;
 pub mod hook_slot;
 pub mod hosted_slot;
+/// A plain-HTTP directory server (dumb-HTTP Git fixtures).
+pub mod http_dir;
+/// The leftover check of cancelled and rolled-back operations.
+pub mod leftovers;
 /// The R3.4 failure reds' git-backed `org.demo/tools` fixture.
 pub mod trace_failure_slot;
 

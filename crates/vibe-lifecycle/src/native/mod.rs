@@ -9,6 +9,7 @@ mod cargo;
 mod compiler;
 mod compiler_facts;
 mod error;
+mod helper;
 mod mechanism;
 mod package_execution;
 mod path;
@@ -31,6 +32,10 @@ use crate::handlers::{NativeBackend, NativeBackendRequest};
 
 pub use compiler::{ArtifactCompilerNativeInvoker, ArtifactCompilerNativeProvider};
 pub use error::NativeArtifactError;
+pub use helper::{
+    NativeHelperCommand, NativeHelperError, attach_native_helper, install_native_helper,
+    native_helper_entry, native_plugin_effects,
+};
 pub use mechanism::{
     NativeMechanismArtifactClaim, NativeMechanismBinding, NativeMechanismPlan,
     NativeMechanismPreflight, PreparedNativeMechanism, PreparedNativeMechanisms,
@@ -40,6 +45,8 @@ pub use platform::NativePlatform;
 pub use projection::{
     NativeArtifactRecordRoot, NativeSourceGroupProjection, project_native_source_groups,
 };
+/// The hidden argv mode word of the trusted native helper.
+pub use vibe_native_loader::helper::HELPER_MODE_ARG as NATIVE_HELPER_MODE_ARG;
 
 use build_provider::{SelectedBuildProvider, select_build_provider};
 use cargo::build_cdylib;
@@ -143,6 +150,7 @@ pub fn enabled_native_candidates(registry: &ExtensionRegistry) -> Vec<ExtensionR
 pub struct ArtifactNativeBackend<'a> {
     execution: NativeBuildExecution<'a>,
     loader: &'static NativeLoader,
+    cancellation: vibe_core::cancellation::CancellationToken,
 }
 
 impl<'a> ArtifactNativeBackend<'a> {
@@ -151,11 +159,24 @@ impl<'a> ArtifactNativeBackend<'a> {
         Self {
             execution,
             loader: process_loader(),
+            cancellation: Default::default(),
         }
+    }
+
+    /// Bind the operation stop; a controlled call then runs in that
+    /// operation's helper process (spec://org.vibevm.core/vibevm/common/PROP-073#NATIVE-STOP-LAW).
+    #[must_use]
+    pub fn with_cancellation(mut self, token: vibe_core::cancellation::CancellationToken) -> Self {
+        self.cancellation = token;
+        self
     }
 }
 
 impl NativeBackend for ArtifactNativeBackend<'_> {
+    fn stop_capable(&self) -> bool {
+        helper::stop_capable(&self.cancellation)
+    }
+
     fn invoke(
         &self,
         request: NativeBackendRequest<'_>,
@@ -169,7 +190,12 @@ impl NativeBackend for ArtifactNativeBackend<'_> {
             artifact.bytes,
         )
         .map_err(|error| error.to_string())?;
-        self.loader
+        let runtime = helper::NativeRuntime::select(&self.cancellation, self.loader).ok_or_else(|| {
+            "selected native plugin has no cooperative stop capability: no trusted helper executable is installed; no native load or invocation started".to_owned()
+        })?;
+        runtime
+            .admit(&image, &artifact.digest, artifact.bytes)
+            .map_err(|error| error.to_string())?
             .invoke(NativeInvocation {
                 library: &image,
                 extension_id: request.extension_id,

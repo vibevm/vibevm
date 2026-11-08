@@ -88,6 +88,17 @@ impl Fixture {
     }
 }
 
+/// The scratch home of a capture, under a short root of fixed length.
+///
+/// A failed step's log path is shortened in the middle to a fixed width
+/// (PROP-067 `#meta`), so which components of `<settings>/…` survive depends
+/// on how long the settings path is. Under the caller's `TMPDIR` that length
+/// is the caller's; under `/tmp` with tempfile's fixed-length random name it
+/// is the same on every Linux machine, and the golden compares exactly.
+fn user() -> UserScratch {
+    UserScratch::new_in(Path::new("/tmp"))
+}
+
 /// Stdout then stderr, as a terminal shows a run whose streams it merged
 /// in the order the blocks were written: every capture here writes its
 /// blocks to one stream or ends its stderr before its stdout begins.
@@ -109,7 +120,7 @@ fn screen(output: &Output, user: &UserScratch, fixture: &Fixture) -> String {
 #[test]
 fn the_unattended_install_its_listing_and_its_plan_read_as_the_goldens() {
     let fixture = Fixture::new();
-    let user = UserScratch::new();
+    let user = user();
     let plan = fixture.app(&user, &["app", "plan", "org.example/noisy"]);
     assert!(plan.status.success());
     golden("app-plan", &screen(&plan, &user, &fixture));
@@ -139,7 +150,7 @@ fn the_unattended_install_its_listing_and_its_plan_read_as_the_goldens() {
 #[test]
 fn a_failed_step_and_a_refusal_read_as_the_goldens() {
     let fixture = Fixture::new();
-    let user = UserScratch::new();
+    let user = user();
     let failed = fixture.app(
         &user,
         &[
@@ -171,7 +182,7 @@ fn a_failed_step_and_a_refusal_read_as_the_goldens() {
 #[test]
 fn the_remap_listing_reads_as_its_golden() {
     let fixture = Fixture::new();
-    let user = UserScratch::new();
+    let user = user();
     let listed = fixture.vibe(&user, &["--offline", "remap", "list"]);
     assert!(listed.status.success());
     golden("remap-list", &screen(&listed, &user, &fixture));

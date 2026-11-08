@@ -200,10 +200,16 @@ impl HandlerRuntime<'_> {
             return Ok(());
         };
         token.checkpoint().map_err(|error| error.to_string())?;
-        if matches!(
-            &row.declaration().handler,
-            ExtensionHandler::Native { .. } | ExtensionHandler::Agent { .. }
-        ) {
+        let supervised = match &row.declaration().handler {
+            // A native call is admitted only through a helper-process backend
+            // the stop can kill and reap (PROP-073#NATIVE-STOP-LAW).
+            ExtensionHandler::Native { .. } => self.native.stop_capable(),
+            // A paid agent call is admitted only through a backend that can
+            // close its in-flight request on the stop.
+            ExtensionHandler::Agent { .. } => self.agent.supports_control(),
+            _ => true,
+        };
+        if !supervised {
             return Err(format!(
                 "handler {} has no cooperative stop capability; --stop-file cannot supervise this provider; no provider call started",
                 row.declaration().handler.kind()
@@ -306,9 +312,15 @@ impl HandlerRuntime<'_> {
                         &owned
                     }
                 };
-                crate::agent::execute(self.agent, execution_key, context, prepared)
-                    .map(|reply| (reply, HandlerStreams::default()))
-                    .map_err(agent_error)
+                crate::agent::execute(
+                    self.agent,
+                    execution_key,
+                    context,
+                    prepared,
+                    self.process.cancellation(),
+                )
+                .map(|reply| (reply, HandlerStreams::default()))
+                .map_err(agent_error)
             }
             other => Err(HandlerError::Process {
                 key: row.key().to_string(),

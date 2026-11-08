@@ -210,7 +210,7 @@ pub(super) fn profile(
     if !matches!(family, "any" | "inet" | "inet6") {
         return Err(unsupported("unrecognized selected SSH address family"));
     }
-    let mut client_options = vec![("addressfamily".into(), family.into())];
+    let mut client_options: Vec<(String, String)> = vec![("addressfamily".into(), family.into())];
     for key in [
         "pubkeyacceptedalgorithms",
         "hostkeyalgorithms",
@@ -243,7 +243,7 @@ pub(super) fn profile(
     };
     let input = &owner.selected;
     let mut witness = Witness::default();
-    let mut identities = Vec::new();
+    let mut identities: Vec<String> = Vec::new();
     let mut any_identity = false;
     for value in fields.get("identityfile").into_iter().flatten() {
         if value == "none" {
@@ -269,7 +269,7 @@ pub(super) fn profile(
         identities.push(text.into());
     }
     let raw_agent = scalar(&fields, "identityagent").unwrap_or("SSH_AUTH_SOCK");
-    let agent = if raw_agent == "none" {
+    let agent: String = if raw_agent == "none" {
         "none".into()
     } else {
         let value = if raw_agent == "SSH_AUTH_SOCK" {
@@ -297,7 +297,7 @@ pub(super) fn profile(
             "SSH identity files are unavailable and no agent is selected",
         ));
     }
-    let mut trust = Vec::new();
+    let mut trust: Vec<(String, Vec<u8>)> = Vec::new();
     for kind in ["userknownhostsfile", "globalknownhostsfile"] {
         for values in fields.get(kind).into_iter().flatten() {
             for value in inputs::words(values)? {
@@ -335,22 +335,25 @@ pub(super) fn profile(
         return Err(unsupported("unsupported SSH HostKeyAlias"));
     }
     let configured = Configured {
+        #[cfg(unix)]
         owner: owner.clone(),
         authored,
+        #[cfg(unix)]
         identities,
+        #[cfg(unix)]
         agent,
+        #[cfg(unix)]
         identities_only: scalar(&fields, "identitiesonly") == Some("yes"),
+        #[cfg(unix)]
         client_options,
+        #[cfg(unix)]
         trust,
+        #[cfg(unix)]
         host_key_alias: alias,
+        #[cfg(unix)]
         check_host_ip: scalar(&fields, "checkhostip") == Some("yes"),
+        #[cfg(unix)]
         witness,
     };
-    Ok(SshProfile::captured(
-        input.executable.clone(),
-        host,
-        user,
-        port,
-        configured,
-    ))
+    Ok(SshProfile::captured(host, user, port, configured))
 }

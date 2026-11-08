@@ -1,6 +1,5 @@
 //! Bounded owned numeric-loopback fixture; no detached listener survives a test.
 use std::{
-    fs,
     io::{Read, Write},
     net::TcpListener,
     sync::{
@@ -12,6 +11,8 @@ use std::{
 };
 enum Reply {
     Body(Vec<u8>),
+    // Served only by `directory`, which only the Unix-only hosting cases use.
+    #[cfg(unix)]
     Missing,
     #[cfg(unix)]
     Redirect(String),
@@ -34,6 +35,8 @@ impl Server {
             Reply::Redirect(format!("{target}{request}"))
         })
     }
+    /// Serve the files under `root`; the Unix-only hosting cases use it.
+    #[cfg(unix)]
     pub(super) fn directory(host: &str, root: std::path::PathBuf) -> Self {
         Self::respond(host, move |request| {
             let path = request
@@ -44,7 +47,7 @@ impl Server {
             if path.split('/').any(|segment| segment == "..") {
                 return Reply::Missing;
             }
-            fs::read(root.join(path)).map_or(Reply::Missing, Reply::Body)
+            std::fs::read(root.join(path)).map_or(Reply::Missing, Reply::Body)
         })
     }
     fn respond(host: &str, response: impl Fn(&str) -> Reply + Send + 'static) -> Self {
@@ -69,6 +72,7 @@ impl Server {
                         let requested = line.split_whitespace().nth(1).unwrap_or("");
                         let (status, location, body) = match response(requested) {
                             Reply::Body(body) => ("200 OK", String::new(), body),
+                            #[cfg(unix)]
                             Reply::Missing => ("404 Not Found", String::new(), Vec::new()),
                             #[cfg(unix)]
                             Reply::Redirect(target) => {

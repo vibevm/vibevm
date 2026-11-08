@@ -344,7 +344,14 @@ pub(super) fn plan_request(
 /// `vibe app plan` and `install --plan-only`: JSON or text on stdout.
 pub(crate) fn render_plan(ctx: &output::Context, plan: &Plan) -> Result<()> {
     if ctx.is_json() {
-        return ctx.emit_json(&plan.to_wire()?);
+        let mut wire = plan.to_wire()?;
+        let mut hostings = crate::commands::install::report::hostings::Hostings::default();
+        hostings.selected(
+            &format!("{}/{}", wire.package.group, wire.package.name),
+            wire.source_evidence.as_ref(),
+        );
+        wire.hostings = Some(hostings.finish());
+        return ctx.emit_json(&wire);
     }
     ctx.block(&super::plan_text::render(plan, ctx.invoked_by()));
     Ok(())

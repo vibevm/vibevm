@@ -27,6 +27,7 @@ mod admission;
 mod error;
 #[allow(unsafe_code)]
 mod ffi;
+pub mod helper;
 mod mechanism_call;
 
 pub use error::NativeLoadError;
@@ -460,7 +461,6 @@ impl NativeLoader {
         Ok(library)
     }
 
-    #[cfg(test)]
     fn with_opener(opener: Arc<dyn LibraryOpener>) -> Self {
         Self {
             cache: Mutex::new(HashMap::new()),
@@ -506,7 +506,7 @@ fn invoke_admitted(
     request: &[u8],
     path: &str,
 ) -> Result<ffi::PublishedResponse, NativeLoadError> {
-    let call = library.invoke(request, Arc::clone(library));
+    let call = library.invoke(request, Arc::clone(library))?;
     admitted_response(call, path)
 }
 

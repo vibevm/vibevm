@@ -13,11 +13,12 @@ use thiserror::Error;
 
 mod controlled;
 mod scratch;
+pub(crate) mod session;
 pub use controlled::ControlledProcessRunner;
 use scratch::create_unique_file;
 pub use scratch::{
-    PendingReply, ScratchError, allocate_pending_reply, allocate_run_id, execution_scratch,
-    is_valid_run_id, write_atomic_json,
+    PendingReply, ScratchError, allocate_pending_reply, allocate_run_id, discard_run_scratch,
+    execution_scratch, is_valid_run_id, write_atomic_json,
 };
 
 pub const STREAM_CAP: usize = 1024 * 1024;

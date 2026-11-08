@@ -155,7 +155,8 @@ fn dispatch_measured(
 ) -> Result<DispatchOutcome> {
     let package_binding = ProjectPackageBindingBackend::new(plan);
     let native_candidates = plan.native_candidates.iter().collect::<Vec<_>>();
-    let native = native_backend(plan, metadata, &native_candidates)?;
+    let native = native_backend(plan, metadata, &native_candidates)?
+        .with_cancellation(observer.cancellation());
     let process = ControlledProcessRunner::new(observer.cancellation());
     let runtime = runtime(
         observer,
@@ -188,7 +189,8 @@ fn dispatch_measured(
     let deploy_work = targets
         .as_ref()
         .is_some_and(|targets| targets.deploy.is_some() && !targets.deploy_targets.is_empty());
-    let mut fences = mechanism::Fences::arm(targets, plan, &metadata.chain);
+    let mut fences =
+        mechanism::Fences::arm(targets, plan, &metadata.chain, observer.cancellation());
     let empty_build_at = empty_phase_boundary(plan, &metadata.chain, vibe_lifecycle::Phase::Build);
     let empty_package_at =
         empty_phase_boundary(plan, &metadata.chain, vibe_lifecycle::Phase::Package);

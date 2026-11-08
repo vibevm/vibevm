@@ -118,6 +118,42 @@ pub fn allocate_run_id(project_root: &Path) -> Result<String, ScratchError> {
     })
 }
 
+/// Remove the scratch of a run whose operation ended without publishing it:
+/// `.vibe/lifecycle/<run>/` and, when that leaves it empty, the
+/// `.vibe/lifecycle/` it sat in. A run that delegated work to an agent keeps
+/// its scratch, because the resume adopts the same run (PROP-054
+/// `#REF-AGENT-RESUME`); so does anything behind a link or outside the
+/// selected project.
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-054#ENVELOPE-LAW")]
+pub fn discard_run_scratch(project_root: &Path, run_id: &str) -> Result<(), ScratchError> {
+    if !is_valid_run_id(run_id) {
+        return Err(ScratchError::Unsafe {
+            path: project_root.into(),
+            reason: "run id must be 32 lowercase hex characters".into(),
+        });
+    }
+    let root = project_root
+        .canonicalize()
+        .map_err(|source| ScratchError::Io {
+            path: project_root.into(),
+            source,
+        })?;
+    let vibe = root.join(".vibe");
+    let base = vibe.join("lifecycle");
+    let run = base.join(run_id);
+    let outbox = vibe.join("agentic").join("outbox").join(run_id);
+    if fs::symlink_metadata(&run).is_err() || fs::symlink_metadata(&outbox).is_ok() {
+        return Ok(());
+    }
+    for component in [&vibe, &base, &run] {
+        verify_component(component)?;
+    }
+    fs::remove_dir_all(&run).map_err(|source| ScratchError::Io { path: run, source })?;
+    // Only an empty directory goes: another run's scratch keeps it.
+    let _ = fs::remove_dir(&base);
+    Ok(())
+}
+
 /// The shape every durable run identity has: 32 lowercase hex characters.
 /// Owned here because this module mints run ids; the state store, the outbox
 /// path and adoption all judge identity through this one predicate.

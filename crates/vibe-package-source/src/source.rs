@@ -198,6 +198,14 @@ impl InstallSource for InstallResolver {
             .is_some_and(|held| held.replays_locked_source(pkg))
     }
 
+    fn locked_update_availability(
+        &self,
+        pkg: &PackageRef,
+    ) -> Result<Option<vibe_registry::LockedUpdateAvailability>, RegistryError> {
+        self.held_for(pkg)
+            .map_or(Ok(None), |held| held.locked_update_availability(pkg))
+    }
+
     fn acquire_for_install(
         &self,
         pkgref: &PackageRef,

@@ -268,3 +268,89 @@ fn checked_rename_failure_after_stash_restores_old_directory_and_modes() {
     );
     assert_eq!(tree(&slot), before);
 }
+
+/// An undone first install leaves no empty `vibedeps/` behind: every
+/// directory the apply created for a slot goes with it, and a directory that
+/// another writer filled meanwhile stays.
+#[test]
+fn an_undo_removes_the_empty_directories_the_apply_created_for_its_slots() {
+    let ws = TempDir::new().unwrap();
+    fs::create_dir_all(ws.path().join("vibevm")).unwrap();
+    let before = tree(ws.path());
+    let deps = ws.path().join(vibe_core::layout::current_vibedeps_root());
+
+    let mut rollback = InstallRollback::new(ws.path());
+    let created = deps.join("org.example.first/1.0.0");
+    rollback.before_reconcile(&created).unwrap();
+    write(&created.join("a.md"), "a");
+    let stopped = || WorkspaceError::IndexRender {
+        reason: "stop".into(),
+    };
+    let error = rollback.undo(stopped(), None, &[]);
+    assert!(
+        matches!(error, WorkspaceError::IndexRender { .. }),
+        "{error}"
+    );
+    assert_eq!(tree(ws.path()), before);
+
+    let mut rollback = InstallRollback::new(ws.path());
+    rollback.before_reconcile(&created).unwrap();
+    write(&created.join("a.md"), "a");
+    let foreign = deps.join("foreign.txt");
+    write(&foreign, "kept");
+    let _ = rollback.undo(stopped(), None, &[]);
+    assert!(!created.exists());
+    assert_eq!(fs::read_to_string(&foreign).unwrap(), "kept");
+}
+
+/// A completed step's effect the operation adopted, recording its undo.
+struct Adopted(std::sync::Arc<std::sync::atomic::AtomicUsize>, bool);
+
+impl vibe_core::cancellation::CompletedEffect for Adopted {
+    fn undo(self: Box<Self>) -> Result<(), String> {
+        self.0.fetch_add(1, std::sync::atomic::Ordering::SeqCst);
+        if self.1 {
+            Err("docs/out.md: changed replacement preserved".into())
+        } else {
+            Ok(())
+        }
+    }
+}
+
+#[test]
+fn a_stopped_restore_also_undoes_the_operations_completed_step_effects() {
+    let ws = TempDir::new().unwrap();
+    let undone = std::sync::Arc::new(std::sync::atomic::AtomicUsize::new(0));
+    let token = vibe_core::cancellation::CancellationToken::new();
+    token.publishing();
+    token.adopt_completed_effect(Box::new(Adopted(undone.clone(), false)));
+
+    // A failure that is not a stop (a park, an ordinary error) keeps the
+    // completed step's effects: the resume runs over them.
+    let mut rollback = InstallRollback::new(ws.path()).with_cancellation(token.clone());
+    rollback.restore(None, &[]).unwrap();
+    assert_eq!(undone.load(std::sync::atomic::Ordering::SeqCst), 0);
+    assert!(token.has_completed_effects());
+
+    token.cancel();
+    assert!(token.checkpoint().is_err());
+    let mut rollback = InstallRollback::new(ws.path()).with_cancellation(token.clone());
+    rollback.restore(None, &[]).unwrap();
+    assert_eq!(undone.load(std::sync::atomic::Ordering::SeqCst), 1);
+    assert!(!token.has_completed_effects());
+}
+
+#[test]
+fn a_preserved_foreign_replacement_fails_the_restore_and_names_it() {
+    let ws = TempDir::new().unwrap();
+    let undone = std::sync::Arc::new(std::sync::atomic::AtomicUsize::new(0));
+    let token = vibe_core::cancellation::CancellationToken::new();
+    token.publishing();
+    token.adopt_completed_effect(Box::new(Adopted(undone.clone(), true)));
+    token.cancel();
+    assert!(token.checkpoint().is_err());
+    let mut rollback = InstallRollback::new(ws.path()).with_cancellation(token.clone());
+    let reason = rollback.restore(None, &[]).unwrap_err();
+    assert!(reason.contains("docs/out.md"), "{reason}");
+    assert_eq!(token.publication_state(), "recovery-required");
+}

@@ -26,6 +26,8 @@ impl Plan {
         Ok(wire::ApplicationPlan {
             source_hosting: vibe_registry::source_hosting(self.source_evidence.as_ref()),
             source_evidence: self.source_evidence.clone(),
+            // The CLI aggregates contacted hostings from this evidence.
+            hostings: None,
             protocol: "vibe-app-plan/1".into(),
             package: wire::Package {
                 group: self.package.group.clone(),

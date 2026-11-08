@@ -8,7 +8,7 @@ use vibe_wire::generated::llm::openai_compatible::e1::chat_response::ChatRespons
 
 use crate::{
     ApiKey, ChatInput, ChatOutput, ChatRole, ChatTransport, ChatUsage, Endpoint, LLMProvider,
-    ProviderError, ReqwestChatTransport,
+    ProviderError, ReqwestChatTransport, TransportError, TransportResponse,
 };
 
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-054#AGENT-CLI");
@@ -73,17 +73,21 @@ impl std::fmt::Debug for OpenAiCompatibleProvider {
     }
 }
 
-impl LLMProvider for OpenAiCompatibleProvider {
-    fn chat(&self, input: &ChatInput) -> Result<ChatOutput, ProviderError> {
+impl OpenAiCompatibleProvider {
+    /// One exchange through `post`, the only place the two execution modes
+    /// differ; request encoding and the strict response mapping are shared.
+    fn exchange(
+        &self,
+        input: &ChatInput,
+        post: impl FnOnce(&[u8]) -> Result<TransportResponse, TransportError>,
+    ) -> Result<ChatOutput, ProviderError> {
         let request = ChatRequest {
             model: self.model.clone(),
             messages: input.messages().iter().map(message_to_wire).collect(),
             stream: false,
         };
         let body = serde_json::to_vec(&request).map_err(|_| ProviderError::RequestEncoding)?;
-        let response = self
-            .transport
-            .post_json(&self.endpoint, self.api_key.as_ref(), &body)?;
+        let response = post(&body)?;
         if !(200..300).contains(&response.status()) {
             return Err(ProviderError::HttpStatus {
                 status: response.status(),
@@ -121,6 +125,31 @@ impl LLMProvider for OpenAiCompatibleProvider {
             choice.message.content,
             usage,
         ))
+    }
+}
+
+impl LLMProvider for OpenAiCompatibleProvider {
+    fn chat(&self, input: &ChatInput) -> Result<ChatOutput, ProviderError> {
+        self.exchange(input, |body| {
+            self.transport
+                .post_json(&self.endpoint, self.api_key.as_ref(), body)
+        })
+    }
+
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-073#OPERATION-EFFECTS-LAW")]
+    fn chat_controlled(
+        &self,
+        input: &ChatInput,
+        cancellation: &vibe_core::cancellation::CancellationToken,
+    ) -> Result<ChatOutput, ProviderError> {
+        self.exchange(input, |body| {
+            self.transport.post_json_controlled(
+                &self.endpoint,
+                self.api_key.as_ref(),
+                body,
+                cancellation,
+            )
+        })
     }
 }
 

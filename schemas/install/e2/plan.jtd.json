@@ -10,13 +10,15 @@
     "x-rust-type": "InstallPlan",
     "x-vocabularies": [
       "source_evidence",
-      "hosting_view"
+      "hosting_view",
+      "operation_hosting"
     ],
     "x-wire-order": [
       "command",
       "packages",
       "preview_complete",
-      "remaps"
+      "remaps",
+      "hostings"
     ]
   },
   "properties": {
@@ -250,6 +252,16 @@
         "x-default": null,
         "description": "Project required remap offers, resolved after the package plan without activating their rows or changing consent.",
         "x-empty": "preserve"
+      }
+    },
+    "hostings": {
+      "elements": {
+        "ref": "operation_hosting"
+      },
+      "metadata": {
+        "x-default": null,
+        "x-empty": "preserve",
+        "description": "Every hosting this operation would contact, derived from the source evidence and candidate observations already in this document (no extra contact); absent for older producers means unknown."
       }
     }
   }

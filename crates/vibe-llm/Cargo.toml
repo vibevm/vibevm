@@ -15,6 +15,7 @@ reqwest.workspace = true
 serde_json.workspace = true
 specmark.workspace = true
 thiserror.workspace = true
+tokio.workspace = true
 vibe-core.workspace = true
 vibe-wire.workspace = true
 

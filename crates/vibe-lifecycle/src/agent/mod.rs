@@ -29,6 +29,7 @@ mod hosted;
 mod prompt;
 mod resolver;
 mod result;
+mod stop;
 
 use std::path::Path;
 
@@ -46,6 +47,7 @@ pub use prompt::{PromptRequest, ResolvedPrompt};
 pub(crate) use prompt::{system_prose, user_prose};
 pub use resolver::SelectedWorldPromptResolver;
 pub use result::{ResultPlan, probe_outputs};
+use stop::{cancelled, local_clause, retained_fix, stop_at};
 
 /// Everything the backend is told about one agent execution. It carries prose
 /// only: no credential, no endpoint and no token path ever enters a prompt.
@@ -126,7 +128,29 @@ pub trait AgentBackend: Send + Sync {
 
     /// Perform the one paid call. Reached only after every guard passed.
     fn complete(&self, request: &AgentRequest) -> Result<AgentCompletion, String>;
+
+    /// Whether [`Self::complete_controlled`] can close its in-flight paid
+    /// request on an acknowledged operation stop. Consulted before any
+    /// preparation, so a backend that cannot is refused before it spends.
+    fn supports_control(&self) -> bool {
+        false
+    }
+
+    /// The paid call under an operation stop: close the in-flight provider
+    /// request as soon as `cancellation` is acknowledged, never retry it, and
+    /// record its provider-side effect on the token. Reached only when
+    /// [`Self::supports_control`] is true.
+    fn complete_controlled(
+        &self,
+        _request: &AgentRequest,
+        _cancellation: &vibe_core::cancellation::CancellationToken,
+    ) -> Result<AgentCompletion, String> {
+        Err(NO_CONTROL.into())
+    }
 }
+
+const NO_CONTROL: &str = "this agent backend cannot interrupt an in-flight provider request, \
+     so it refuses to start one under an operation stop; no provider call started";
 
 /// The refusing default. A selected agent contribution is never silently
 /// skipped: without a configured backend it fails with the remediation
@@ -258,6 +282,25 @@ pub enum AgentError {
           fix: nothing was written; rerun once the provider honours the exact JSON contract)"
     )]
     Result { reason: String },
+    #[error(
+        "agent execution stopped {stage}; provider-side effect: {remote}; {} \
+         (governed by spec://org.vibevm.core/vibevm/common/PROP-073#OPERATION-EFFECTS-LAW; \
+          fix: vibe never retries a paid request — check provider usage before rerunning \
+          the stopped operation{})",
+        local_clause(restored, retained),
+        retained_fix(retained)
+    )]
+    Cancelled {
+        /// Where the stop was observed, in operator words.
+        stage: String,
+        /// The token's aggregate provider-side effect (`not-started`,
+        /// `completed` or `unknown`).
+        remote: String,
+        /// Owned outputs this execution published and then put back.
+        restored: Vec<String>,
+        /// Outputs left in place because the inverse met foreign state.
+        retained: Vec<String>,
+    },
     #[error(
         "declared output `{path}` {reason}. {}{}{} \
          (governed by spec://org.vibevm.core/vibevm/common/PROP-054#REPLY-SHAPE; \
@@ -437,24 +480,53 @@ fn preflight_outputs(
 /// The paid half. Reached only for a non-fresh execution, and only with the
 /// exact bytes [`prepare`] already bound into the fingerprint.
 #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-054#AGENT-CLI")]
+///
+/// Under an operation stop (`cancellation` is `Some`) the stop is honoured at
+/// every boundary of the paid call: before it is sent, while it is in flight
+/// (the backend closes the request), after it returns and before anything is
+/// written, and between output files — where the owned files already
+/// published are put back. The provider-side effect stays on the token; no
+/// local restore claims to have undone it.
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-073#OPERATION-EFFECTS-LAW")]
 pub(crate) fn execute(
     backend: &dyn AgentBackend,
     key: &str,
     context: &Context,
     prepared: &PreparedAgent,
+    cancellation: Option<&vibe_core::cancellation::CancellationToken>,
 ) -> Result<Reply, AgentError> {
-    let completion = backend
-        .complete(&AgentRequest {
-            key: key.to_string(),
-            phase: context.run.phase.clone(),
-            system: prompt::system_prose(),
-            user: prompt::user_prose(&prepared.instructions, context, &prepared.contract),
-        })
-        .map_err(|reason| AgentError::Provider { reason })?;
+    let request = AgentRequest {
+        key: key.to_string(),
+        phase: context.run.phase.clone(),
+        system: prompt::system_prose(),
+        user: prompt::user_prose(&prepared.instructions, context, &prepared.contract),
+    };
+    let completion = match cancellation {
+        None => backend
+            .complete(&request)
+            .map_err(|reason| AgentError::Provider { reason })?,
+        Some(token) => {
+            stop_at(token, "before the provider request was sent")?;
+            let completion = backend.complete_controlled(&request, token);
+            if token.acknowledged() {
+                return Err(cancelled(token, "while the provider request was in flight"));
+            }
+            let completion = completion.map_err(|reason| AgentError::Provider { reason })?;
+            stop_at(
+                token,
+                "after the provider answered, before any declared output was written",
+            )?;
+            completion
+        }
+    };
     // The complete result is proven before any of it is applied. The provider
     // supplied only content: the rows themselves were prevalidated.
     let plan = ResultPlan::parse(&completion.text, &prepared.contract, &prepared.planned)?;
-    let artifacts = plan.apply(Path::new(&context.project.root))?;
+    let root = Path::new(&context.project.root);
+    let artifacts = match cancellation {
+        None => plan.apply(root)?,
+        Some(token) => plan.apply_controlled(root, token)?,
+    };
     Ok(Reply {
         artifacts,
         envelope: 1,

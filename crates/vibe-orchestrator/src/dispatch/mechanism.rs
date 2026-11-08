@@ -262,6 +262,8 @@ pub(crate) fn lower_binaries(
 pub(super) struct Fences<'targets> {
     targets: MechanismTargets<'targets>,
     prepared_native: vibe_lifecycle::native::PreparedNativeMechanisms,
+    /// The dispatch's operation stop; native mechanism calls answer to it.
+    cancellation: vibe_core::cancellation::CancellationToken,
     build: Option<usize>,
     package: Option<usize>,
     deploy: Option<usize>,
@@ -274,6 +276,7 @@ impl<'targets> Fences<'targets> {
         targets: Option<MechanismTargets<'targets>>,
         plan: &RitualPlan,
         chain: &[String],
+        cancellation: vibe_core::cancellation::CancellationToken,
     ) -> Option<Self> {
         let targets = targets?;
         let build = fence(plan, chain, Phase::Build);
@@ -284,6 +287,7 @@ impl<'targets> Fences<'targets> {
         Some(Self {
             targets,
             prepared_native: Default::default(),
+            cancellation,
             build,
             package,
             deploy,
@@ -311,7 +315,8 @@ impl<'targets> Fences<'targets> {
             platform,
             self.targets.offline,
             self.targets.created_at,
-        )?;
+        )?
+        .with_cancellation(&self.cancellation);
         if let Some(native) = native.filter(|native| !native.replay_is_empty()) {
             let mut factory = platform.replay_factory();
             native

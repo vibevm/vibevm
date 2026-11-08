@@ -201,3 +201,133 @@ fn plain_http_registry_works_under_an_unrelated_exclusion_and_never_contacts_an_
     assert!(redirector.count() > 0);
     assert_eq!(registry.count(), admitted);
 }
+/// A served directory of dumb-HTTP Git repositories, one per `org.policy`
+/// package name, each tagged `v1.0.0`.
+fn served_packages(files: &Path, names: &[&str]) -> std::path::PathBuf {
+    let served = files.join("served");
+    fs::create_dir_all(&served).unwrap();
+    for name in names {
+        let work = files.join(format!("work-{name}"));
+        fs::create_dir_all(&work).unwrap();
+        git(&work, &["init", "-b", "main"]);
+        fs::write(
+            work.join("vibe.toml"),
+            format!("[package]\ngroup='org.policy'\nname='{name}'\nversion='1.0.0'\nkind='tool'\n"),
+        )
+        .unwrap();
+        git(&work, &["add", "vibe.toml"]);
+        git(&work, &["commit", "-m", "fixture"]);
+        git(&work, &["tag", "v1.0.0"]);
+        let repo = served.join(format!("org.policy.{name}.git"));
+        git(
+            &work,
+            &[
+                "clone",
+                "--bare",
+                work.to_str().unwrap(),
+                repo.to_str().unwrap(),
+            ],
+        );
+        git(&repo, &["update-server-info"]);
+    }
+    served
+}
+fn plan_hostings(user: &UserScratch, project: &Path, excluded: Option<&str>) -> Vec<Value> {
+    let mut command = user.vibe();
+    command
+        .current_dir(project)
+        .env("HOME", &user.settings)
+        .env("GIT_CONFIG_NOSYSTEM", "1")
+        .env("GIT_CONFIG_GLOBAL", "/dev/null")
+        .args([
+            "install",
+            "--plan-only",
+            "--json",
+            "--no-default-registry",
+            "--path",
+        ])
+        .arg(project);
+    if let Some(excluded) = excluded {
+        command.args(["--exclude-hosting", excluded]);
+    }
+    for key in [
+        "HTTP_PROXY",
+        "HTTPS_PROXY",
+        "ALL_PROXY",
+        "http_proxy",
+        "https_proxy",
+        "all_proxy",
+    ] {
+        command.env_remove(key);
+    }
+    let output = command.output().unwrap();
+    success(&output);
+    assert!(!project.join("vibe.lock").exists(), "a plan writes no lock");
+    let plan: Value = serde_json::from_slice(&output.stdout).unwrap();
+    let _: vibe_wire::generated::install::e2::plan::InstallPlan =
+        serde_json::from_value(plan.clone()).expect("canonical reader decodes the plan");
+    plan["hostings"].as_array().unwrap().clone()
+}
+#[test]
+#[specmark::spec(verifies = "spec://org.vibevm.core/vibevm/common/PROP-073#HOSTING-OBSERVATION")]
+fn project_plan_lists_every_hosting_it_would_contact_and_marks_an_excluded_one() {
+    let files = tempfile::tempdir().unwrap();
+    let a = Server::directory(
+        "127.0.0.1",
+        served_packages(&files.path().join("a"), &["demo"]),
+    );
+    let b = Server::directory(
+        "127.0.0.2",
+        served_packages(&files.path().join("b"), &["demo", "other"]),
+    );
+    let user = quiet_user();
+    let project = tempfile::tempdir().unwrap();
+    fs::write(project.path().join("vibe.toml"),format!("[project]\nname='hostings'\nversion='1.0.0'\n[requires.packages]\n'org.policy/demo'='*'\n'org.policy/other'='*'\n[[registry]]\nname='a'\nurl='{}'\nindex_url='none'\n[[registry]]\nname='b'\nurl='{}'\nindex_url='none'\n",a.url,b.url)).unwrap();
+    let rows = plan_hostings(&user, project.path(), None);
+    let summary: Vec<_> = rows
+        .iter()
+        .map(|row| {
+            (
+                row["hosting"].as_str().unwrap(),
+                row["excluded"].as_bool().unwrap(),
+            )
+        })
+        .collect();
+    assert_eq!(
+        summary,
+        [("host:127.0.0.1", false), ("host:127.0.0.2", false)],
+        "{rows:?}"
+    );
+    assert!(
+        rows[0]["packages"]
+            .as_array()
+            .unwrap()
+            .contains(&"org.policy/demo".into())
+    );
+    assert!(
+        rows[1]["packages"]
+            .as_array()
+            .unwrap()
+            .contains(&"org.policy/other".into())
+    );
+    assert!(a.count() > 0 && b.count() > 0);
+    // The switch's effect before the press: host A is listed as excluded and
+    // receives zero contacts; B serves the whole closure.
+    let contacted = a.count();
+    let rows = plan_hostings(&user, project.path(), Some("host:127.0.0.1"));
+    let excluded = rows
+        .iter()
+        .find(|row| row["hosting"] == "host:127.0.0.1")
+        .unwrap_or_else(|| panic!("the excluded hosting is listed: {rows:?}"));
+    assert_eq!(excluded["excluded"], true);
+    let admitted = rows
+        .iter()
+        .find(|row| row["hosting"] == "host:127.0.0.2")
+        .unwrap();
+    assert_eq!(admitted["excluded"], false);
+    assert_eq!(
+        a.count(),
+        contacted,
+        "an excluded hosting has zero contacts"
+    );
+}

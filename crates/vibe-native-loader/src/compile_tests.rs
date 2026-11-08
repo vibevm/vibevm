@@ -63,7 +63,11 @@ impl ffi::LibraryHandle for FakeLibrary {
         Ok(self.manifest.clone())
     }
 
-    fn invoke(&self, request: &[u8], owner: Arc<dyn ffi::LibraryHandle>) -> ffi::CallResult {
+    fn invoke(
+        &self,
+        request: &[u8],
+        owner: Arc<dyn ffi::LibraryHandle>,
+    ) -> Result<ffi::CallResult, NativeLoadError> {
         self.invoke_count.fetch_add(1, Ordering::SeqCst);
         self.requests
             .lock()
@@ -78,11 +82,11 @@ impl ffi::LibraryHandle for FakeLibrary {
         let response = call.bytes.map(|bytes| {
             ffi::PublishedResponse::fake(bytes, call.len, Arc::clone(&self.free_count), owner)
         });
-        ffi::CallResult {
+        Ok(ffi::CallResult {
             status: call.status,
             response,
             len: call.len,
-        }
+        })
     }
 }
 

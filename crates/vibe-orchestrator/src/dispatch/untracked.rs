@@ -41,7 +41,8 @@ pub fn dispatch_plan_untracked(
     let mut reports = Vec::with_capacity(plan.executions.len());
     let package_binding = ProjectPackageBindingBackend::new(plan);
     let native_candidates = plan.native_candidates.iter().collect::<Vec<_>>();
-    let native = native_backend(plan, &metadata, &native_candidates)?;
+    let native = native_backend(plan, &metadata, &native_candidates)?
+        .with_cancellation(observer.cancellation());
     let process = vibe_lifecycle::process::ControlledProcessRunner::new(observer.cancellation());
     let runtime = runtime(
         observer,

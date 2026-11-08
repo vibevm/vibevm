@@ -244,10 +244,24 @@ impl<'a, 'l> PreInstallPlan<'a, 'l> {
             let _ = vibedeps::remove_slot(self.workspace_root, &dep.group, &dep.name, &dep.version);
             vibedeps::slot_rel_path(&dep.group, &dep.name, &dep.version)
         };
+        prune_empty_slot_parents(self.workspace_root, &slot);
         // The slot is gone again: an observer that already recorded it as
         // materialised must not keep reporting a change the tree no longer has.
         if let MaterialiseLifecycle::Callback(callback) = self.lifecycle {
             callback.rolled_back(&slot);
+        }
+    }
+}
+
+/// After a rolled-back slot is gone, the directories that only held it go
+/// too: `vibedeps/<group>.<name>/`, then the dependency root itself, each
+/// only while empty, so a slot another package or writer left keeps them.
+fn prune_empty_slot_parents(workspace_root: &std::path::Path, slot_rel: &str) {
+    let deps = workspace_root.join(vibe_core::layout::current_vibedeps_root());
+    let slot = workspace_root.join(slot_rel);
+    for dir in slot.ancestors().skip(1) {
+        if !dir.starts_with(&deps) || std::fs::remove_dir(dir).is_err() {
+            return;
         }
     }
 }

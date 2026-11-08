@@ -32,7 +32,7 @@ mod global_mcp;
 mod observer;
 mod preview;
 pub(crate) use preview::run as run_preview;
-mod report;
+pub(crate) mod report;
 mod resolver;
 
 pub(crate) use closure_diff::{emit_closure_diff, lane_sizes};

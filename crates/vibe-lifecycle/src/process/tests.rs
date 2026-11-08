@@ -220,3 +220,31 @@ fn a_busy_executable_is_retried_until_it_spawns_and_the_last_failure_is_kept() {
     assert_eq!(missing.unwrap_err().kind(), std::io::ErrorKind::NotFound);
     assert_eq!(calls.get(), 1, "any other failure is reported at once");
 }
+
+#[test]
+fn discarding_a_run_removes_only_its_scratch_and_keeps_a_delegated_one() {
+    let dir = tempfile::tempdir().unwrap();
+    let kept = allocate_run_id(dir.path()).unwrap();
+    let stopped = allocate_run_id(dir.path()).unwrap();
+    let scratch = execution_scratch(dir.path(), &stopped, "slot").unwrap();
+    write_atomic_json(&scratch, "context.json", &serde_json::json!({})).unwrap();
+    discard_run_scratch(dir.path(), &stopped).unwrap();
+    let base = dir.path().join(".vibe/lifecycle");
+    assert!(!base.join(&stopped).exists());
+    assert!(base.join(&kept).is_dir(), "another run's scratch stays");
+
+    let parked = allocate_run_id(dir.path()).unwrap();
+    std::fs::create_dir_all(dir.path().join(".vibe/agentic/outbox").join(&parked)).unwrap();
+    discard_run_scratch(dir.path(), &parked).unwrap();
+    assert!(
+        base.join(&parked).is_dir(),
+        "a delegated run keeps its scratch"
+    );
+
+    std::fs::remove_dir(base.join(&kept)).unwrap();
+    std::fs::remove_dir(base.join(&parked)).unwrap();
+    let last = allocate_run_id(dir.path()).unwrap();
+    discard_run_scratch(dir.path(), &last).unwrap();
+    assert!(!base.exists(), "an emptied lifecycle directory goes too");
+    assert!(discard_run_scratch(dir.path(), "NOT-HEX").is_err());
+}

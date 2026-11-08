@@ -32,8 +32,8 @@ use vibe_lifecycle::agent::{
     SelectedWorldPromptResolver,
 };
 use vibe_llm::{
-    ChatInput, ChatMessage, ChatRole, LLMProvider, ReqwestChatTransport, SystemCredentialReader,
-    resolve_effective_config,
+    ChatInput, ChatMessage, ChatOutput, ChatRole, LLMProvider, ProviderError, ReqwestChatTransport,
+    SystemCredentialReader, resolve_effective_config,
 };
 use vibe_orchestrator::RunPrelude;
 
@@ -88,6 +88,39 @@ impl AgentBackend for CliAgentBackend {
 
     #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-054#AGENT-CLI")]
     fn complete(&self, request: &AgentRequest) -> Result<AgentCompletion, String> {
+        self.call(request, |provider, input| provider.chat(input))
+    }
+
+    /// The production transport closes its in-flight request on the stop.
+    fn supports_control(&self) -> bool {
+        true
+    }
+
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-073#OPERATION-EFFECTS-LAW")]
+    fn complete_controlled(
+        &self,
+        request: &AgentRequest,
+        cancellation: &vibe_core::cancellation::CancellationToken,
+    ) -> Result<AgentCompletion, String> {
+        // A stop that is already acknowledged reads no configuration and no
+        // credential, and builds no transport.
+        cancellation
+            .checkpoint()
+            .map_err(|error| error.to_string())?;
+        self.call(request, |provider, input| {
+            provider.chat_controlled(input, cancellation)
+        })
+    }
+}
+
+impl CliAgentBackend {
+    /// One provider call through `chat`, the only part the two execution
+    /// modes do not share.
+    fn call(
+        &self,
+        request: &AgentRequest,
+        chat: impl FnOnce(&dyn LLMProvider, &ChatInput) -> Result<ChatOutput, ProviderError>,
+    ) -> Result<AgentCompletion, String> {
         let provider = self.provider()?;
         let input = ChatInput::new(vec![
             ChatMessage::new(ChatRole::System, request.system.clone()),
@@ -96,7 +129,7 @@ impl AgentBackend for CliAgentBackend {
         .map_err(|error| error.to_string())?;
         // `ProviderError` is already body-free and key-free by construction;
         // rendering it here adds no provider bytes to the lifecycle failure.
-        let output = provider.chat(&input).map_err(|error| error.to_string())?;
+        let output = chat(provider.as_ref(), &input).map_err(|error| error.to_string())?;
         Ok(AgentCompletion {
             text: output.content().to_string(),
             usage: output.usage().map(|usage| AgentUsage {

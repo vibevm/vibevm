@@ -107,7 +107,7 @@ pub(super) fn place_atomically(
     }
 }
 
-#[cfg(test)]
+#[cfg(all(test, unix))]
 fn place_observed(
     observation: &SourceObservation,
     source: &Path,
@@ -272,11 +272,11 @@ pub(super) mod inject {
     }
 }
 
-#[cfg(test)]
+// Every case drives Unix identities and permission bits.
+#[cfg(all(test, unix))]
 mod tests {
     use super::*;
 
-    #[cfg(unix)]
     #[test]
     fn observed_hardlink_identity_or_mode_drift_does_not_replace_destination_or_chmod_source() {
         use std::os::unix::fs::PermissionsExt;
@@ -318,7 +318,6 @@ mod tests {
         }
     }
 
-    #[cfg(unix)]
     #[test]
     fn refused_hardlink_attempt_falls_back_to_captured_copy_with_original_mode() {
         use std::os::unix::fs::{MetadataExt, PermissionsExt};

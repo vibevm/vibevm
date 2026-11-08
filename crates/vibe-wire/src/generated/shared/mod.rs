@@ -4352,6 +4352,26 @@ pub struct ObsoletesEntry {
     pub packages: Vec<String>,
 }
 
+/// One hosting an operation would contact, aggregated only from the plan's
+/// captured source evidence and candidate observations; building it contacts
+/// nothing. hosting is the --prefer-hosting/--exclude-hosting key (github,
+/// gitverse or host:HOST); excluded means operation policy refused it, so it
+/// receives zero contacts.
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+pub struct OperationHosting {
+    pub hosting: String,
+
+    pub excluded: bool,
+
+    /// Credential-redacted source URLs observed for this hosting, sorted and
+    /// unique.
+    pub endpoints: Vec<String>,
+
+    /// group/name coordinates whose selected or candidate source is on this
+    /// hosting, sorted and unique.
+    pub packages: Vec<String>,
+}
+
 /// One rename together with the origin whose namespace produced it
 /// (`OriginRename`).
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]

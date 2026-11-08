@@ -66,7 +66,7 @@ pub use direct::DirectSourceLease;
 mod home_refresh;
 mod locked;
 mod offline;
-pub use locked::LockedSelection;
+pub use locked::{LockedSelection, LockedUpdateAvailability};
 mod override_resolve;
 mod redirect_follow;
 mod refresh;
@@ -148,6 +148,9 @@ pub struct MultiRegistryResolver {
     /// [`MultiRegistryResolver::with_locked_packages`].
     locked: HashMap<String, vibe_core::manifest::LockedPackage>,
     locked_updates: bool,
+    /// Held coordinates an explicit install request moves to a new version at
+    /// their locked source (`vibe install <pkg>@<req>`), never reselected.
+    locked_update_keys: std::collections::HashSet<String>,
     project_overrides: HashMap<String, OverrideSection>,
     locked_checkouts: HashMap<String, PathBuf>,
     /// `vibe reinstall --force`: held replay acquires from the locked source
@@ -197,6 +200,7 @@ impl MultiRegistryResolver {
             candidate_owner: Arc::new(()),
             locked: HashMap::new(),
             locked_updates: false,
+            locked_update_keys: Default::default(),
             project_overrides: HashMap::new(),
             locked_checkouts: HashMap::new(),
             forced_refetch: false,

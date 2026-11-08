@@ -1,6 +1,15 @@
 //! Portable stop-file and publication-boundary integration.
+//!
+//! Every cancelled or rolled-back scenario here also runs the leftover
+//! check (`common::leftovers`): the project including `.vibe/`, the
+//! command's own HOME and TMPDIR, the settings and both caches are
+//! snapshotted before and after, and nothing may differ but the entries of
+//! [`ALLOWED`].
 mod common;
 use common::UserScratch;
+use common::leftovers::{
+    Allowed, Entry, Isolation, Snapshot, Watched, assert_complete_store, assert_no_leftovers,
+};
 use std::collections::BTreeMap;
 use std::fs;
 use std::path::{Path, PathBuf};
@@ -16,6 +25,92 @@ fn copy(source: &Path, target: &Path) {
         } else {
             fs::copy(path, output).unwrap();
         }
+    }
+}
+
+fn is_hook_stop_file(path: &Path, _: Option<&Entry>) -> bool {
+    path == Path::new(".vibe/cancel-request")
+}
+
+fn is_run_record(path: &Path, after: Option<&Entry>) -> bool {
+    path == Path::new(".vibe/lifecycle.toml") && after.is_some()
+}
+
+fn is_empty_lease_lock(path: &Path, after: Option<&Entry>) -> bool {
+    path == Path::new(".vibe/lifecycle.lock")
+        && matches!(after, Some(Entry::File(bytes)) if bytes.is_empty())
+}
+
+/// An entry of a content store; [`assert_clean`] checks each store is
+/// made of complete objects only.
+fn is_store_object(path: &Path, after: Option<&Entry>) -> bool {
+    after.is_some()
+        && (path.starts_with("cache")
+            || path == Path::new(".native")
+            || path.starts_with(".native/metadata-store"))
+}
+
+/// What a cancelled or rolled-back project operation may leave changed.
+/// Each entry cites where the record is documented; nothing else may
+/// remain.
+const ALLOWED: &[Allowed] = &[
+    // The caller's stop control, written by the test's own hook. PROP-073
+    // `#PROJECT-COOPERATIVE-STOP`: "vibe does not remove that caller
+    // control file".
+    Allowed {
+        root: "project",
+        matches: is_hook_stop_file,
+        why: ".vibe/cancel-request — the caller-owned stop file (PROP-073 #PROJECT-COOPERATIVE-STOP)",
+    },
+    // The run record of the stopped or failed run: PROP-054 `#OBS-RUN-RECORD`
+    // "Every run leaves a record", kept in `.vibe/lifecycle.toml`
+    // (`#REF-LIFECYCLE-TOML`). A failed hook's `fail` row is how the next
+    // run knows what happened.
+    Allowed {
+        root: "project",
+        matches: is_run_record,
+        why: ".vibe/lifecycle.toml — the durable run record (PROP-054 #OBS-RUN-RECORD, #REF-LIFECYCLE-TOML)",
+    },
+    // The coordination lease's lock file, empty. PROP-072
+    // `#SOURCE-INSTALL-BOUNDARY`: "its empty lifecycle.lock … may remain".
+    Allowed {
+        root: "project",
+        matches: is_empty_lease_lock,
+        why: ".vibe/lifecycle.lock, empty — the lease lock (PROP-072 #SOURCE-INSTALL-BOUNDARY)",
+    },
+    // Verified, complete downloaded content: PROP-073
+    // `#PROJECT-COOPERATIVE-STOP` "Completed cache objects may remain
+    // reusable" (Need 5: downloaded content may be kept in the cache).
+    Allowed {
+        root: "settings",
+        matches: is_store_object,
+        why: "cache/<group>/<name>/v<version> with its .sha256 — a complete store object (PROP-073 #PROJECT-COOPERATIVE-STOP)",
+    },
+    Allowed {
+        root: "registry-cache",
+        matches: is_store_object,
+        why: ".native/metadata-store/<group>/<name>/v<version> with its .sha256 — a complete metadata object (PROP-073 #PROJECT-COOPERATIVE-STOP)",
+    },
+];
+
+/// The roots the cancelled command may write: its isolation's HOME and
+/// TMPDIR, the user scratch, and the whole project.
+fn watched(isolation: &Isolation, user: &UserScratch, project: &Path) -> Watched {
+    isolation.watched(user).root("project", project)
+}
+
+/// The cancelled command, with its own HOME and TMPDIR.
+fn isolated(user: &UserScratch, isolation: &Isolation) -> assert_cmd::Command {
+    let mut command = user.vibe();
+    isolation.apply(&mut command);
+    command
+}
+
+fn assert_clean(watched: &Watched, before: &Snapshot) {
+    assert_no_leftovers(before, &watched.snapshot(), ALLOWED);
+    for store in watched.roots_named(&["settings", "registry-cache"]) {
+        assert_complete_store(&store.join("cache"));
+        assert_complete_store(&store.join(".native/metadata-store"));
     }
 }
 
@@ -112,8 +207,10 @@ fn existing_stop_file_preserves_manifest_for_install_and_update() {
         let outer = tempfile::tempdir().unwrap();
         let stop = outer.path().join("stop");
         fs::write(&stop, "").unwrap();
-        let output = user
-            .vibe()
+        let isolation = Isolation::new(outer.path());
+        let watched = watched(&isolation, &user, project.path());
+        let baseline = watched.snapshot();
+        let output = isolated(&user, &isolation)
             .args([verb, "--json", "--assume-yes", "--stop-file"])
             .arg(&stop)
             .arg("--path")
@@ -126,6 +223,7 @@ fn existing_stop_file_preserves_manifest_for_install_and_update() {
         assert_eq!(report["publication"], "not-started");
         assert_eq!(fs::read(project.path().join("vibe.toml")).unwrap(), before);
         assert!(stop.exists());
+        assert_clean(&watched, &baseline);
     }
 }
 
@@ -145,8 +243,10 @@ fn stop_requested_by_preinstall_hook_rolls_back_owned_project_publication() {
     .unwrap();
     let ps = fs::read_to_string(package.join("hooks/pre.ps1")).unwrap();
     fs::write(package.join("hooks/pre.ps1"), format!("{ps}\nSet-Content -LiteralPath (Join-Path $env:VIBE_PROJECT_ROOT '.vibe/cancel-request') -Value stop\n")).unwrap();
-    let output = user
-        .vibe()
+    let isolation = Isolation::new(_outer.path());
+    let watched = watched(&isolation, &user, project.path());
+    let baseline = watched.snapshot();
+    let output = isolated(&user, &isolation)
         .args([
             "install",
             "org.example/hooked@=0.1.0",
@@ -177,6 +277,7 @@ fn stop_requested_by_preinstall_hook_rolls_back_owned_project_publication() {
             .join(common::slot_dir("org.example.hooked", "0.1.0"))
             .exists()
     );
+    assert_clean(&watched, &baseline);
 }
 
 #[test]
@@ -258,12 +359,13 @@ fn update_cancel_restores_old_manifest_lock_and_installed_slot() {
     let ps = fs::read_to_string(next.join("hooks/pre.ps1")).unwrap();
     fs::write(next.join("hooks/pre.ps1"),format!("{ps}\nSet-Content -LiteralPath (Join-Path $env:VIBE_PROJECT_ROOT '.vibe/cancel-request') -Value stop\n")).unwrap();
     let stop = project.path().join(".vibe/cancel-request");
-    let output = user
-        .vibe()
+    let isolation = Isolation::new(_outer.path());
+    let watched = watched(&isolation, &user, project.path());
+    let baseline = watched.snapshot();
+    let output = isolated(&user, &isolation)
         .args([
             "update",
-            // A named update really moves the version; `--all` has not bumped
-            // versions since 1.0.11 (BACKLOG), which would make the stop untested.
+            // A named update keeps the test on one package's version move.
             "org.example/hooked",
             "--exact",
             "--json",
@@ -302,6 +404,7 @@ fn update_cancel_restores_old_manifest_lock_and_installed_slot() {
             .join(common::slot_dir("org.example.hooked", "0.1.1"))
             .exists()
     );
+    assert_clean(&watched, &baseline);
 }
 
 /// Desktop ApplyManifest is install with no coordinates, --offline and a
@@ -356,8 +459,10 @@ fn apply_saved_manifest_cancel_keeps_saved_bytes_and_prior_installed_world() {
     let saved = fs::read(&manifest_path).unwrap();
     let stop = project.path().join(".vibe/cancel-request");
     fs::create_dir_all(stop.parent().unwrap()).unwrap();
-    let output = user
-        .vibe()
+    let isolation = Isolation::new(_outer.path());
+    let watched = watched(&isolation, &user, project.path());
+    let baseline = watched.snapshot();
+    let output = isolated(&user, &isolation)
         .args([
             "install",
             "--offline",
@@ -383,6 +488,7 @@ fn apply_saved_manifest_cancel_keeps_saved_bytes_and_prior_installed_world() {
     assert_eq!(documents.last().unwrap()["publication"], "restored");
     assert_eq!(fs::read(&manifest_path).unwrap(), saved);
     assert_eq!(snapshot(project.path()), before);
+    assert_clean(&watched, &baseline);
 }
 
 #[test]
@@ -391,8 +497,10 @@ fn install_stop_after_boot_regeneration_restores_boot_lanes_and_agent_files() {
     let (_outer, user, project, registry) = setup(Fixture::Timing);
     let stop = stop_after_boot_regeneration(project.path());
     let before = snapshot(project.path());
-    let output = user
-        .vibe()
+    let isolation = Isolation::new(_outer.path());
+    let watched = watched(&isolation, &user, project.path());
+    let baseline = watched.snapshot();
+    let output = isolated(&user, &isolation)
         .args([
             "install",
             "org.example/hooked@=0.1.0",
@@ -409,6 +517,7 @@ fn install_stop_after_boot_regeneration_restores_boot_lanes_and_agent_files() {
         .unwrap();
     assert_cancelled_and_restored(&output);
     assert_unchanged(project.path(), &before);
+    assert_clean(&watched, &baseline);
 }
 
 #[test]
@@ -436,8 +545,10 @@ fn update_stop_after_boot_regeneration_restores_boot_lanes_and_agent_files() {
     fs::write(next.join("vibe.toml"), declaration).unwrap();
     let stop = stop_after_boot_regeneration(project.path());
     let before = snapshot(project.path());
-    let output = user
-        .vibe()
+    let isolation = Isolation::new(_outer.path());
+    let watched = watched(&isolation, &user, project.path());
+    let baseline = watched.snapshot();
+    let output = isolated(&user, &isolation)
         .args([
             "update",
             "org.example/hooked",
@@ -453,4 +564,287 @@ fn update_stop_after_boot_regeneration_restores_boot_lanes_and_agent_files() {
         .unwrap();
     assert_cancelled_and_restored(&output);
     assert_unchanged(project.path(), &before);
+    assert_clean(&watched, &baseline);
+}
+
+/// A pre-install hook that fails rolls the install back (PROP-020 §2.5);
+/// the rollback leaves nothing behind either.
+#[test]
+fn failed_preinstall_hook_rollback_leaves_no_leftovers() {
+    use common::hook_slot::{Fixture, setup};
+    let (outer, user, project, registry) = setup(Fixture::PreFail);
+    let before = fs::read(project.path().join("vibe.toml")).unwrap();
+    let isolation = Isolation::new(outer.path());
+    let watched = watched(&isolation, &user, project.path());
+    let baseline = watched.snapshot();
+    let output = isolated(&user, &isolation)
+        .args([
+            "install",
+            "org.example/hooked@=0.1.0",
+            "--json",
+            "--assume-yes",
+        ])
+        .arg("--registry")
+        .arg(&registry)
+        .arg("--path")
+        .arg(project.path())
+        .output()
+        .unwrap();
+    assert!(
+        !output.status.success(),
+        "{}",
+        String::from_utf8_lossy(&output.stderr)
+    );
+    assert_ne!(output.status.code(), Some(130));
+    assert_eq!(fs::read(project.path().join("vibe.toml")).unwrap(), before);
+    assert_clean(&watched, &baseline);
+}
+
+/// A cancelled preview publishes nothing and writes no cache.
+#[test]
+fn cancelled_preview_leaves_no_leftovers() {
+    use common::hook_slot::{Fixture, setup};
+    let (outer, user, project, registry) = setup(Fixture::Timing);
+    let stop = outer.path().join("stop");
+    fs::write(&stop, "").unwrap();
+    let isolation = Isolation::new(outer.path());
+    let watched = watched(&isolation, &user, project.path());
+    let baseline = watched.snapshot();
+    let output = isolated(&user, &isolation)
+        .args([
+            "install",
+            "org.example/hooked@=0.1.0",
+            "--plan-only",
+            "--json",
+            "--stop-file",
+        ])
+        .arg(&stop)
+        .arg("--registry")
+        .arg(&registry)
+        .arg("--path")
+        .arg(project.path())
+        .output()
+        .unwrap();
+    assert_eq!(
+        output.status.code(),
+        Some(130),
+        "stdout={}\nstderr={}",
+        String::from_utf8_lossy(&output.stdout),
+        String::from_utf8_lossy(&output.stderr)
+    );
+    let docs = common::hook_slot::documents(&output.stdout);
+    assert_eq!(docs.last().unwrap()["outcome"], "cancelled");
+    assert_eq!(docs.last().unwrap()["cache_writes"], "none");
+    assert!(stop.exists());
+    assert_clean(&watched, &baseline);
+}
+
+/// Ctrl-C on an attended terminal asks before it stops (PROP-073
+/// `#PROJECT-COOPERATIVE-STOP`). Each run is driven through a real
+/// pseudo-terminal by Python's `pty` module: the pre-install hook signals
+/// that it runs and waits for a go file, the driver types Ctrl-C into the
+/// terminal — so the terminal's own `SIGINT` reaches the whole foreground
+/// group, hook included — waits for the question, answers it, and releases
+/// the hook.
+#[cfg(target_os = "linux")]
+mod attended {
+    use super::*;
+
+    const DRIVER: &str = r#"
+import os, pty, select, sys, time
+ready, go, answer, transcript = sys.argv[1:5]
+argv = sys.argv[5:]
+pid, fd = pty.fork()
+if pid == 0:
+    os.environ["TERM"] = "xterm"
+    os.execvp(argv[0], argv)
+seen = b""
+def pump(seconds):
+    global seen
+    end = time.time() + seconds
+    while time.time() < end:
+        r, _, _ = select.select([fd], [], [], 0.05)
+        if r:
+            try:
+                chunk = os.read(fd, 65536)
+            except OSError:
+                return False
+            if not chunk:
+                return False
+            seen += chunk
+    return True
+def until(check, what):
+    end = time.time() + 120
+    while not check():
+        if time.time() > end:
+            open(transcript, "wb").write(seen)
+            sys.exit("timed out waiting for " + what)
+        pump(0.05)
+until(lambda: os.path.exists(ready), "the hook")
+os.write(fd, b"\x03")
+until(lambda: b"Stop the operation?" in seen, "the question")
+os.write(fd, answer.encode())
+# The answer is read before the hook may finish.
+until(lambda: seen.rfind(b"Stop the operation?") < max(seen.rfind(b"yes"), seen.rfind(b"no")), "the answer")
+open(go, "w").close()
+status = None
+end = time.time() + 300
+while status is None and time.time() < end:
+    pump(0.05)
+    done, code = os.waitpid(pid, os.WNOHANG)
+    if done:
+        status = code
+while pump(0.2):
+    pass
+open(transcript, "wb").write(seen)
+if status is None:
+    sys.exit("vibe did not exit")
+sys.exit(os.waitstatus_to_exitcode(status) % 256)
+"#;
+
+    /// The pre-install hook: say it runs, then wait to be released. It does
+    /// not guard against Ctrl-C: it runs as a supervised lifecycle child in
+    /// a process group of its own, so the terminal's Ctrl-C reaches vibe
+    /// alone and the hook keeps running while the question is asked.
+    fn hook(package: &Path, ready: &Path, go: &Path) {
+        let shell = fs::read_to_string(package.join("hooks/pre.sh")).unwrap();
+        fs::write(
+            package.join("hooks/pre.sh"),
+            format!(
+                "{shell}\nprintf ready > '{}'\nwhile [ ! -f '{}' ]; do sleep 0.05; done\n",
+                ready.display(),
+                go.display()
+            ),
+        )
+        .unwrap();
+    }
+
+    struct Run {
+        code: Option<i32>,
+        transcript: String,
+    }
+
+    fn drive(
+        user: &UserScratch,
+        isolation: &Isolation,
+        outer: &Path,
+        answer: &str,
+        args: &[&std::ffi::OsStr],
+    ) -> Run {
+        let driver = outer.join("driver.py");
+        fs::write(&driver, DRIVER).unwrap();
+        let transcript = outer.join(format!("transcript-{answer}"));
+        let output = std::process::Command::new("python3")
+            .arg(&driver)
+            .arg(outer.join("ready"))
+            .arg(outer.join("go"))
+            .arg(answer)
+            .arg(&transcript)
+            .arg(assert_cmd::cargo::cargo_bin("vibe"))
+            .args(args)
+            .envs(isolation.envs())
+            .env(vibe_core::settings::SETTINGS_DIR_ENV, &user.settings)
+            .env(vibe_test_support::REGISTRY_CACHE_ENV, &user.cache)
+            .env(vibe_test_support::SEARCH_CACHE_ENV, &user.search_cache)
+            .env("VIBE_NO_DEFAULT_REGISTRY", "1")
+            .env_remove("VIBE_UNATTENDED")
+            .env_remove("CI")
+            .output()
+            .unwrap();
+        let transcript =
+            String::from_utf8_lossy(&fs::read(&transcript).unwrap_or_default()).into_owned();
+        assert!(
+            output.stderr.is_empty(),
+            "the driver failed: {}\n{transcript}",
+            String::from_utf8_lossy(&output.stderr)
+        );
+        Run {
+            code: output.status.code(),
+            transcript,
+        }
+    }
+
+    fn install_args<'a>(registry: &'a Path, project: &'a Path) -> Vec<&'a std::ffi::OsStr> {
+        vec![
+            "install".as_ref(),
+            "org.example/hooked@=0.1.0".as_ref(),
+            "--assume-yes".as_ref(),
+            "--registry".as_ref(),
+            registry.as_os_str(),
+            "--path".as_ref(),
+            project.as_os_str(),
+        ]
+    }
+
+    #[test]
+    fn yes_stops_with_130_and_restores_the_project() {
+        use common::hook_slot::{Fixture, setup};
+        let (outer, user, project, registry) = setup(Fixture::Timing);
+        let package = registry.join("org.example/hooked/v0.1.0");
+        hook(
+            &package,
+            &outer.path().join("ready"),
+            &outer.path().join("go"),
+        );
+        let before = fs::read(project.path().join("vibe.toml")).unwrap();
+        let isolation = Isolation::new(outer.path());
+        let watched = watched(&isolation, &user, project.path());
+        let baseline = watched.snapshot();
+        let run = drive(
+            &user,
+            &isolation,
+            outer.path(),
+            "y",
+            &install_args(&registry, project.path()),
+        );
+        assert_eq!(run.code, Some(130), "{}", run.transcript);
+        assert!(
+            run.transcript.contains("Stop the operation?"),
+            "{}",
+            run.transcript
+        );
+        assert_eq!(fs::read(project.path().join("vibe.toml")).unwrap(), before);
+        assert!(
+            !project
+                .path()
+                .join(common::slot_dir("org.example.hooked", "0.1.0"))
+                .exists()
+        );
+        assert_clean(&watched, &baseline);
+    }
+
+    #[test]
+    fn no_continues_the_operation_to_success() {
+        use common::hook_slot::{Fixture, setup};
+        let (outer, user, project, registry) = setup(Fixture::Timing);
+        let package = registry.join("org.example/hooked/v0.1.0");
+        hook(
+            &package,
+            &outer.path().join("ready"),
+            &outer.path().join("go"),
+        );
+        let isolation = Isolation::new(outer.path());
+        let run = drive(
+            &user,
+            &isolation,
+            outer.path(),
+            "n",
+            &install_args(&registry, project.path()),
+        );
+        assert_eq!(run.code, Some(0), "{}", run.transcript);
+        assert!(
+            run.transcript.contains("Stop the operation?"),
+            "{}",
+            run.transcript
+        );
+        assert!(
+            project
+                .path()
+                .join(common::slot_dir("org.example.hooked", "0.1.0"))
+                .is_dir(),
+            "{}",
+            run.transcript
+        );
+        assert!(project.path().join("vibe.lock").is_file());
+    }
 }

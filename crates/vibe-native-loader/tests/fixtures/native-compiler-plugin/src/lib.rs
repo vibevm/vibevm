@@ -46,6 +46,7 @@ pub fn fixture_manifest() -> Manifest {
             ("compiler-minify", "compile:emitted"),
             ("compiler-counter", "compile:pass"),
             ("compiler-schema-one", "compile:pass"),
+            ("compiler-sleep", "compile:pass"),
         ]
         .into_iter()
         .map(|(id, point)| ManifestExtension {
@@ -111,6 +112,15 @@ pub fn handle(request: CompileRequest) -> CompileReply {
             message: Some("deterministic compiler failure".to_owned()),
         })),
         "compiler-panic" => panic!("deterministic compiler fixture panic"),
+        // A synchronous call that only a process-level stop can interrupt.
+        "compiler-sleep" => {
+            std::thread::sleep(std::time::Duration::from_secs(30));
+            CompileReply::Ok(Box::new(CompileReplyOk {
+                envelope: 2,
+                payload: request.payload,
+                message: Some("handled compiler-sleep".to_owned()),
+            }))
+        }
         "compiler-manager-source" => match request.payload {
             Ir::SourceDocument(mut payload) => {
                 payload

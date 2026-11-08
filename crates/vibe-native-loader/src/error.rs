@@ -256,4 +256,29 @@ pub enum NativeLoadError {
         "native reply envelope is {actual}, expected 1, for `{path}` (violates spec://org.vibevm.core/vibevm/common/PROP-054#REF-WIRE-NATIVE; fix: return a Reply with envelope 1)"
     )]
     ReplyEnvelope { path: String, actual: u32 },
+    /// A helper-hosted open named an image the parent never admitted.
+    #[error(
+        "native image `{path}` was not admitted by the parent before helper load (violates spec://org.vibevm.core/vibevm/common/PROP-073#NATIVE-STOP-LAW; fix: resolve and verify the artifact in the parent, then record its digest before invoking it)"
+    )]
+    HelperImageUnadmitted { path: String },
+    /// The operation helper found different bytes than the parent admitted.
+    #[error(
+        "native image `{path}` failed helper revalidation before load ({reason}) (violates spec://org.vibevm.core/vibevm/common/PROP-073#NATIVE-STOP-LAW; fix: republish the immutable load image and rerun the operation)"
+    )]
+    HelperImageChanged { path: String, reason: String },
+    /// The private helper channel broke or carried a malformed frame.
+    #[error(
+        "native helper transport failed: {reason} (violates spec://org.vibevm.core/vibevm/common/PROP-073#NATIVE-STOP-LAW; fix: rerun the operation; a helper that died during a call may have left unknown plugin effects)"
+    )]
+    HelperTransport { reason: String },
+    /// An acknowledged stop arrived before this helper call was sent.
+    #[error(
+        "native plugin call not started: operation stop was acknowledged first (governed by spec://org.vibevm.core/vibevm/common/PROP-073#NATIVE-STOP-LAW; fix: rerun the operation without requesting a stop)"
+    )]
+    HelperStoppedBeforeCall,
+    /// An acknowledged stop terminated the operation-owned helper.
+    #[error(
+        "native plugin call stopped: {reason}; the helper process tree was killed and reaped, and native plugin effects are unknown because termination is not rollback (governed by spec://org.vibevm.core/vibevm/common/PROP-073#NATIVE-STOP-LAW; fix: inspect external effects of the plugin before rerunning the operation)"
+    )]
+    HelperCancelled { reason: String },
 }

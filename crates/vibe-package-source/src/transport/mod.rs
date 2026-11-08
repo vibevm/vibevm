@@ -52,6 +52,18 @@ impl TransportInputs {
             .to_owned()
     }
 }
+/// Only Unix is qualified for controlled native preparation; elsewhere this is
+/// the runtime refusal, before anything is discovered, with no legacy fallback.
+#[cfg(unix)]
+fn qualified_native_platform() -> Result<(), GitError> {
+    Ok(())
+}
+#[cfg(not(unix))]
+fn qualified_native_platform() -> Result<(), GitError> {
+    Err(unsupported(
+        "controlled native preparation is not qualified on this platform; no legacy fallback",
+    ))
+}
 struct Factory {
     operation: SourceOperation,
     ssh: Arc<SelectedSsh>,
@@ -59,12 +71,7 @@ struct Factory {
 }
 impl Factory {
     fn native(&self) -> Result<ShellGit, GitError> {
-        #[cfg(not(unix))]
-        {
-            return Err(unsupported(
-                "controlled native preparation is not qualified on this platform; no legacy fallback",
-            ));
-        }
+        qualified_native_platform()?;
         let input = &self.operation.transport;
         let (binary, helpers) = installation::git(input)?;
         let mut selection = NativeConfigSelection::new(input.cwd.clone(), input.home()?)?;

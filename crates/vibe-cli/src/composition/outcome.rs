@@ -9,7 +9,7 @@ pub(crate) fn finish(
     preview_only: bool,
 ) -> ExitCode {
     if result.is_err() && cancellation.acknowledged() {
-        let external = match result
+        let mut external = match result
             .as_ref()
             .err()
             .and_then(|error| error.downcast_ref::<vibe_publish::PublishError>())
@@ -25,6 +25,12 @@ pub(crate) fn finish(
                 serde_json::json!({"repository_creation": "not-classified", "release_push": "not-classified"})
             }
         };
+        // A paid LLM request is a remote effect no local restore undoes; it is
+        // reported beside publication, never folded into it.
+        external["llm"] = cancellation.llm_effect().into();
+        // Killing the native helper is not rollback of what a plugin did
+        // (spec://org.vibevm.core/vibevm/common/PROP-073#NATIVE-STOP-LAW).
+        external["native"] = vibe_lifecycle::native::native_plugin_effects(cancellation).into();
         let report = serde_json::json!({
             "protocol": "vibe-project-cancellation/1", "outcome": "cancelled",
             "publication": cancellation.publication_state(),

@@ -31,6 +31,8 @@ fn local_source_reaches_plan_inventory_and_description() {
     ));
     assert_eq!(plan["source_evidence"]["source_kind"], "registry");
     assert_eq!(plan["source_evidence"]["acquisition"], "directory");
+    // A local directory source is no hosting: the plan says it contacts none.
+    assert_eq!(plan["hostings"], serde_json::json!([]));
     ok(&apps.app(&["install", "-g"], "org.example/source", &[]));
     let row = apps.listed("org.example/source@1.0.0");
     assert_eq!(row["source_evidence"], plan["source_evidence"]);

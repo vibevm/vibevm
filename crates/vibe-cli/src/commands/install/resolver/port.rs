@@ -107,6 +107,36 @@ pub(crate) struct CliPackageSourceFactory<'a> {
     pub(crate) reselect_sources: bool,
 }
 
+/// Held coordinates an explicit `vibe install <pkg>@<req>` moves to a new
+/// version at their locked source, like `cargo add pkg@2`
+/// (spec://org.vibevm.core/vibevm/common/PROP-073#LOCKED-SOURCE-LAW, owner
+/// decision 2026-11-08). Only explicit roots with an explicit constraint the
+/// held version does not satisfy qualify: a bare `vibe install`, a request the
+/// lock already satisfies, a `--git` declaration and every package the
+/// install merely carries keep strict replay. The source is never reselected.
+pub(crate) fn explicit_version_moves(
+    args: &InstallArgs,
+    locked: &[vibe_core::manifest::LockedPackage],
+) -> Vec<String> {
+    if args.git.is_some() {
+        return Vec::new();
+    }
+    args.packages
+        .iter()
+        .filter_map(|raw| PackageRef::parse(raw).ok())
+        .filter(|pkg| matches!(pkg.version, vibe_core::VersionSpec::Req(_)))
+        .filter_map(|pkg| {
+            let mut held = locked.iter().filter(|row| {
+                row.name == pkg.name && pkg.group.as_ref().is_none_or(|group| *group == row.group)
+            });
+            let row = held.next()?;
+            // An ambiguous short name is refused by qualification; never guess.
+            (held.next().is_none() && !pkg.version.matches(&row.version))
+                .then(|| format!("{}/{}", row.group, row.name))
+        })
+        .collect()
+}
+
 impl PackageSourceFactory for CliPackageSourceFactory<'_> {
     fn build(
         &self,
@@ -136,7 +166,12 @@ impl PackageSourceFactory for CliPackageSourceFactory<'_> {
         let resolver = if self.update_locked {
             resolver.with_locked_updates()
         } else {
-            resolver
+            let moved = explicit_version_moves(self.args, input.locked);
+            if moved.is_empty() {
+                resolver
+            } else {
+                resolver.with_locked_updates_for(&moved)
+            }
         };
         let resolver = if self.reselect_sources {
             let keys: Vec<String> = input

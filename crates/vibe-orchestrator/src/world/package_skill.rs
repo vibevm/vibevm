@@ -6,8 +6,8 @@ use std::path::Path;
 use anyhow::{Context, Result, bail};
 use vibe_agent_projection::pkgskill::{
     DeclaredSkillProvider, PROJECT_SKILL_RECONCILE_KEY, PROJECT_SKILL_RECOVER_KEY,
-    ProjectSkillBinding, ProjectSkillProviderInput, lower_project_skill_bindings,
-    project_skill_receipt_exists,
+    ProjectSkillBinding, ProjectSkillProviderInput, check_project_skill_receipt,
+    lower_project_skill_bindings, project_skill_receipt_exists,
 };
 use vibe_core::lifecycle::{ExtensionPoint, Phase, PhasePoint};
 use vibe_core::manifest::{
@@ -53,6 +53,21 @@ pub(super) fn presets(
             }),
     );
 
+    let receipt_exists = project_skill_receipt_exists(selected)?;
+    if receipt_exists && check_project_skill_receipt(selected).is_err() {
+        // PROP-054 `#FAILURE-BY-PHASE`: an unreadable receipt is the
+        // recovery row's refusal, reported in the package phase ahead of
+        // every later contribution. Planning therefore lowers nothing whose
+        // retained activation it cannot know, and plans the recovery row
+        // alone; that row reads the same receipt and fails with its error.
+        let recovery = SyntheticPresetSource {
+            key: ExtensionKey::authored(RECOVER_KEY),
+            provider: ExtensionProvider::Host(host.clone()),
+            declaration: recovery_declaration(),
+        };
+        return Ok((vec![recovery], BTreeMap::new(), BTreeSet::new()));
+    }
+
     // The lower owner retains activation intent and filters disabled agent targets.
     // These exact targets enter both preset identity and emitted artifacts.
     let bindings = lower_project_skill_bindings(selected, inputs)
@@ -62,7 +77,7 @@ pub(super) fn presets(
         .map(ProjectSkillBinding::identity)
         .collect::<BTreeSet<_>>();
     let mut presets = Vec::with_capacity(bindings.len() + 2);
-    if project_skill_receipt_exists(selected)? {
+    if receipt_exists {
         // Engine rows: recovery of a durable applying transaction first, then
         // the vanished-binding sweep — both ahead of every ordinary binding
         // and both beyond host disable control.

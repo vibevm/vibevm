@@ -71,6 +71,7 @@ pub use record::{
     exact_pinned_pkgref, finalize_pkgref_for_manifest, merge_manifest_requires,
     merge_root_dependencies, record_git_source,
 };
+pub use slot_verify::resolution_slots_verified;
 pub use visibility_projection::{
     FilteringDepProvider, Projection, ProjectionInput, metadata_manifest, project,
     solve_with_visibility_mask,
@@ -141,6 +142,16 @@ pub trait InstallSource {
     /// retain their existing incremental preparation path.
     fn replays_locked_source(&self, _pkgref: &PackageRef) -> bool {
         false
+    }
+
+    /// For an explicit request this operation moves at its held source: that
+    /// source and whether it serves an admitted version. Default sources hold
+    /// no lock and report `None`.
+    fn locked_update_availability(
+        &self,
+        _pkgref: &PackageRef,
+    ) -> Result<Option<vibe_registry::LockedUpdateAvailability>, RegistryError> {
+        Ok(None)
     }
 
     /// Explicit operation resource budget; unsupported source modes refuse.

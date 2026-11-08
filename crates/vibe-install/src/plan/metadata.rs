@@ -376,6 +376,18 @@ fn explain_held_failure<S: InstallSource + ?Sized>(
             }
             let reference = &root.requirement.alternatives[0].reference;
             if !source.replays_locked_source(reference) {
+                // An explicit version move stays at the held source; when
+                // that source cannot serve the request, name it and the fix.
+                if let Ok(Some(held)) = source.locked_update_availability(reference)
+                    && !held.available
+                {
+                    return Error::HeldSourceVersionUnavailable {
+                        package: reference.qualified_name(),
+                        requirement: reference.version.to_string(),
+                        locked_source: held.source,
+                        source: Box::new(error),
+                    };
+                }
                 continue;
             }
             if let Some(group) = &reference.group

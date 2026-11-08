@@ -73,10 +73,25 @@ pub(super) fn apply_with_spec_format_and_slot_lifecycle<S: InstallSource + ?Size
     )
     .map_err(|error| {
         let error = files.undo_all(error);
+        if !cancellation.acknowledged() {
+            return error;
+        }
+        // A stop rolls back the outputs of agent steps that completed earlier
+        // in this install too: they are the operation's pre-commit effects,
+        // undone through their receipt-checked inverse (PROP-073
+        // `#OPERATION-EFFECTS-LAW`); a foreign replacement is preserved and
+        // named, and the install is then never reported `restored`.
+        let error = match cancellation.undo_completed_effects() {
+            Ok(()) => error,
+            Err(reason) => Error::RollbackFailed {
+                primary: Box::new(error),
+                reason,
+            },
+        };
         // An acknowledged stop is `restored` exactly when every owned undo
         // succeeded, whichever owner observed the stop (a hook, a checkpoint,
         // or the cancellable boot publication).
-        if cancellation.acknowledged() && !restoration_failed(&error) {
+        if !restoration_failed(&error) {
             cancellation.restored();
         }
         error

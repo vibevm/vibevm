@@ -121,7 +121,9 @@ impl UnitReplayCandidate {
 
 pub(crate) enum BootReplaySet {
     Empty,
-    Sealed(SealedBootReplay),
+    // Boxed: the sealed replay is far larger than the empty marker, and the
+    // set travels by value through the install's boot pipeline.
+    Sealed(Box<SealedBootReplay>),
 }
 
 pub(crate) struct SealedBootReplay {
@@ -343,13 +345,13 @@ pub(super) fn seal_replay_set(
             "a direct Pending owner has no retained replay recipe",
         ));
     }
-    Ok(BootReplaySet::Sealed(SealedBootReplay {
+    Ok(BootReplaySet::Sealed(Box::new(SealedBootReplay {
         sources: candidates.sources,
         token: epoch.replay_token(),
         workspace_root: candidates.workspace_root,
         self_coord: candidates.self_coord,
         lanes,
-    }))
+    })))
 }
 
 #[cfg(test)]

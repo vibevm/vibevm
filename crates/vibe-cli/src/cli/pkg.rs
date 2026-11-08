@@ -358,8 +358,10 @@ pub struct UpdateArgs {
     #[arg(long)]
     pub registry: Option<PathBuf>,
 
-    /// Update every package in the lockfile. Mutually exclusive with
-    /// `<packages>`.
+    /// Update every package in the lockfile: each declared root moves to the
+    /// newest version its constraint allows, at its locked source, and its
+    /// dependencies follow. The default when no package is named. Mutually
+    /// exclusive with `<packages>`.
     #[arg(long, conflicts_with = "packages")]
     pub all: bool,
 
@@ -408,9 +410,9 @@ pub struct UpdateArgs {
     /// Refresh only where locked packages come from: choose each source again
     /// from the current registry configuration while keeping every locked
     /// version exactly. Applies to the named packages, or to every package in
-    /// `vibe.lock` when none is named. A source that lacks the locked version
-    /// fails the update; no other version is substituted.
-    #[arg(long, conflicts_with_all = ["reselect_source", "exact", "all"])]
+    /// `vibe.lock` when none is named (or with `--all`). A source that lacks
+    /// the locked version fails the update; no other version is substituted.
+    #[arg(long, conflicts_with_all = ["reselect_source", "exact"])]
     pub sources_only: bool,
 
     /// Strict authentication gate — same semantics as

@@ -63,6 +63,11 @@ fn manifest() -> Manifest {
                 ir_schema: None,
             },
             ManifestExtension {
+                id: "slot-pre-sleep".to_owned(),
+                point: "slot:pre-install".to_owned(),
+                ir_schema: None,
+            },
+            ManifestExtension {
                 id: "slot-post-fixture".to_owned(),
                 point: "slot:post-install".to_owned(),
                 ir_schema: None,
@@ -79,6 +84,10 @@ fn manifest() -> Manifest {
 fn handle(context: Context) -> Reply {
     if context.execution.id.ends_with("-panic") {
         panic!("deterministic fixture panic");
+    }
+    if context.execution.id.ends_with("-sleep") {
+        // A synchronous call only a process-level stop can interrupt.
+        std::thread::sleep(std::time::Duration::from_secs(30));
     }
     let status = if context.execution.id.ends_with("-skip") {
         ReplyStatus::Skip

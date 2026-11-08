@@ -30,6 +30,8 @@ specmark::scope!("spec://org.vibevm.core/vibevm/VIBEVM-SPEC#command-summary");
 
 mod apply;
 mod measured;
+mod noop;
+mod roots;
 mod stage;
 #[cfg(test)]
 mod tests;
@@ -40,7 +42,7 @@ use std::path::Path;
 use anyhow::{Context, Result, bail};
 use vibe_core::manifest::{Lockfile, Manifest};
 use vibe_core::user_config::SlotIntegrity;
-use vibe_core::{Group, PackageRef, VersionSpec};
+use vibe_core::{Group, PackageRef};
 use vibe_install::{InstallProgress, InstallSource};
 use vibe_registry::CachedPackage;
 use vibe_workspace::Workspace;
@@ -50,15 +52,16 @@ use vibe_workspace::vibedeps;
 
 use crate::commands::compile_trace::{self, CommandExit, RegisteredReportDraft, carry_measured};
 use crate::commands::install::{exact_pinned_pkgref, lane_sizes, resolve_spec_format};
-use crate::commands::short_name;
 use crate::exit_code::InstallError;
 use crate::output;
 
 use super::Execution;
+use super::all::Roots;
 use super::draft::{UpdateDraft, UpdateIdentity};
 use super::inputs::{install_args_from, load_lockfile};
 
 use measured::Measured;
+use roots::{qualify_roots, source_only_roots};
 use stage::{PendingInPlace, Stage, stage};
 
 /// One re-resolved package: what was fetched, what it requires, and — for an
@@ -88,10 +91,11 @@ impl SlotVerifier for SourceHashes {
 pub(super) fn execute_after_open(
     ctx: &output::Context,
     execution: Execution,
+    roots: Roots,
     trace: Option<&TraceRun>,
 ) -> CommandExit<RegisteredReportDraft> {
     let identity = UpdateIdentity::from_args(execution.selection.root(), &execution.args);
-    match run(ctx, execution, trace) {
+    match run(ctx, execution, roots, trace) {
         Ok(draft) => {
             let parked = draft.delegation.is_some();
             let draft = RegisteredReportDraft::Update(Box::new(draft));
@@ -120,6 +124,7 @@ pub(super) fn execute_after_open(
 fn run(
     ctx: &output::Context,
     execution: Execution,
+    roots: Roots,
     trace: Option<&TraceRun>,
 ) -> Result<UpdateDraft> {
     let Execution {
@@ -130,6 +135,7 @@ fn run(
         user_config,
         selection,
         metadata,
+        adopted: _,
     } = execution;
     let identity = UpdateIdentity::from_args(selection.root(), &args);
     // The bundle PROVEN, in the historical order: the stored manifest result
@@ -183,10 +189,11 @@ fn run(
         }
     }
 
-    let roots = if args.sources_only {
-        source_only_roots(&args.packages, &lockfile)?
-    } else {
-        qualify_roots(&args.packages, &manifest, &lockfile)?
+    let every = matches!(roots, Roots::All(_));
+    let roots = match roots {
+        Roots::All(roots) => roots,
+        Roots::Named if args.sources_only => source_only_roots(&args.packages, &lockfile)?,
+        Roots::Named => qualify_roots(&args.packages, &manifest, &lockfile)?,
     };
     let record_capture =
         vibe_install::ProjectRecordPublication::capture_before(&workspace.root, &old_lock)?;
@@ -205,7 +212,17 @@ fn run(
     ))
     .with_locked_updates();
     let resolver = if args.reselect_source || args.sources_only {
-        let keys: Vec<String> = roots.iter().map(PackageRef::qualified_name).collect();
+        // `--all` chooses again for every locked coordinate, the closure
+        // included — "every package in the lockfile".
+        let keys: Vec<String> = if every {
+            lockfile
+                .packages
+                .iter()
+                .map(|row| format!("{}/{}", row.group, row.name))
+                .collect()
+        } else {
+            roots.iter().map(PackageRef::qualified_name).collect()
+        };
         resolver.with_reselected_sources(&keys)
     } else {
         resolver
@@ -303,6 +320,31 @@ fn run(
     let full_world = stage::preflight_world(workspace, &lockfile, &updated, &pending_in_place)?;
     let (planned_lock, records) =
         stage::prepare_records(record_capture, &lockfile, &updated, &pending_in_place)?;
+    // A no-op `--all` stops here, before the confirmation and before region 2:
+    // no slot or lock byte would move, so only boot is regenerated (change-only)
+    // and the report is `unchanged`.
+    if every
+        && let Some(draft) = noop::unchanged_draft(
+            ctx,
+            &noop::NoopProbe {
+                workspace,
+                lease: &lease,
+                old_lock: &old_lock,
+                planned_lock: &planned_lock,
+                updated: &updated,
+                pending_in_place: &pending_in_place,
+                spec_format,
+            },
+            noop::NoopBoot {
+                full_world: &full_world,
+                trace,
+            },
+            &identity,
+            resolved,
+        )?
+    {
+        return Ok(draft);
+    }
     if !confirm(ctx, &args, resolved)? {
         return Err(InstallError::UserDeclined.into());
     }
@@ -386,104 +428,6 @@ fn run(
             )))
         })
     })
-}
-
-/// Each named package must already be installed; re-resolve it against its
-/// original root constraint so a caret bumps within range.
-///
-/// `vibe update` refreshes an installed package, so a bare short name resolves
-/// against `vibe.lock` alone — no index, no network — and a name not locked
-/// fails here with a clear "not installed".
-/// `vibe update --sources-only`: the named locked packages (or every locked
-/// package) pinned to their exact locked versions, so only source selection
-/// can change.
-fn source_only_roots(packages: &[String], lockfile: &Lockfile) -> Result<Vec<PackageRef>> {
-    let selected: Vec<&vibe_core::manifest::LockedPackage> = if packages.is_empty() {
-        lockfile.packages.iter().collect()
-    } else {
-        let mut rows = Vec::with_capacity(packages.len());
-        for raw in packages {
-            let pkgref = PackageRef::parse(raw).with_context(|| format!("parsing `{raw}`"))?;
-            let pkgref = short_name::qualify_locked(&pkgref, lockfile)?;
-            let row = pkgref
-                .group
-                .as_ref()
-                .and_then(|group| lockfile.find(group, &pkgref.name))
-                .with_context(|| {
-                    format!("package `{pkgref}` is not locked; `--sources-only` changes only locked sources")
-                })?;
-            rows.push(row);
-        }
-        rows
-    };
-    if selected.is_empty() {
-        bail!("`vibe.lock` holds no package; `--sources-only` has nothing to refresh");
-    }
-    selected
-        .into_iter()
-        .map(|row| {
-            let exact = semver::VersionReq::parse(&format!("={}", row.version))
-                .with_context(|| format!("locked version of `{}/{}`", row.group, row.name))?;
-            PackageRef::new(
-                None,
-                Some(row.group.clone()),
-                row.name.to_string(),
-                VersionSpec::Req(exact),
-            )
-            .with_context(|| format!("locked coordinate `{}/{}`", row.group, row.name))
-        })
-        .collect()
-}
-
-fn qualify_roots(
-    packages: &[String],
-    manifest: &Manifest,
-    lockfile: &Lockfile,
-) -> Result<Vec<PackageRef>> {
-    let mut roots: Vec<PackageRef> = Vec::with_capacity(packages.len());
-    for raw in packages {
-        let pkgref = PackageRef::parse(raw).with_context(|| format!("parsing `{raw}`"))?;
-        let pkgref = short_name::qualify_locked(&pkgref, lockfile)?;
-        let group = match pkgref.group.as_ref() {
-            Some(g) => g.clone(),
-            None => bail!(
-                "`{pkgref}` resolved without a group — internal: `qualify_locked` should qualify"
-            ),
-        };
-        if lockfile.find(&group, &pkgref.name).is_none() {
-            bail!(
-                "package `{group}/{}` is not installed — `vibe update` only refreshes installed \
-                 packages; use `vibe install {group}/{}` to add it.",
-                pkgref.name,
-                pkgref.name,
-            );
-        }
-        // The constraint to re-resolve against: the manifest `[requires]`
-        // declaration is authoritative — the operator edits it to widen a
-        // pin before updating — and the lockfile's `root_dependencies`
-        // mirror is only the fallback.
-        let constraint = manifest
-            .requires
-            .packages
-            .iter()
-            .find(|r| r.group.as_ref() == Some(&group) && r.name == pkgref.name)
-            .or_else(|| {
-                lockfile
-                    .meta
-                    .root_dependencies
-                    .iter()
-                    .find(|r| r.group.as_ref() == Some(&group) && r.name == pkgref.name)
-            })
-            .map(|r| r.version.clone())
-            .unwrap_or(VersionSpec::Latest);
-        roots.push(PackageRef::new(
-            pkgref.kind,
-            Some(group),
-            pkgref.name,
-            constraint,
-        )?);
-    }
-    Ok(roots)
 }
 
 fn confirm(ctx: &output::Context, args: &crate::cli::UpdateArgs, total: usize) -> Result<bool> {

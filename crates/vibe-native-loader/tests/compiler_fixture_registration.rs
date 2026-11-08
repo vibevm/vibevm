@@ -22,6 +22,7 @@ fn compiler_fixture_keeps_abi_one_with_current_and_controlled_old_schema_rows() 
             "compiler-minify",
             "compiler-counter",
             "compiler-schema-one",
+            "compiler-sleep",
         ]
     );
     assert!(

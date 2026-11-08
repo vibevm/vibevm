@@ -5,11 +5,11 @@ specmark::scope!(
 use std::collections::BTreeMap;
 use std::fs;
 use std::path::Path;
-use vibe_core::{ContentHash, Group};
+use vibe_core::Group;
 use vibe_spec::{
     FileResolver, FsSectionSource, SectionSource, SelectedPackage, SelfCoordinate, SpecAddress,
 };
-use vibe_workspace::vibedeps::{self, CopyMode};
+use vibe_workspace::vibedeps;
 
 #[cfg(test)]
 fn write(path: &Path, text: &str) {
@@ -54,14 +54,14 @@ fn actual_hardlink_materialization_reads_md_and_xml_without_cow() {
         write(&original.path().join(&document), body);
         let group = Group::parse("org.demo").unwrap();
         let version = semver::Version::parse("1.0.0").unwrap();
-        let hash = ContentHash::parse(&format!("sha256:{}", "1".repeat(64))).unwrap();
+        let hash = vibe_core::ContentHash::parse(&format!("sha256:{}", "1".repeat(64))).unwrap();
         vibedeps::materialise_with(
             workspace.path(),
             &group,
             "dep",
             &version,
             original.path(),
-            CopyMode::Hardlink,
+            vibedeps::CopyMode::Hardlink,
             &hash,
         )
         .unwrap();

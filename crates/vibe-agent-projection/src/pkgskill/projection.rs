@@ -36,10 +36,11 @@ mod binding;
 pub use binding::{
     PROJECT_SKILL_PREFIX, PROJECT_SKILL_RECONCILE_KEY, PROJECT_SKILL_RECOVER_KEY,
     ProjectSkillBinding, ProjectSkillProviderInput, ProjectSkillTarget,
-    collect_project_skill_bindings, lower_project_skill_bindings, probe_project_skill_binding,
-    probe_recovered_project_skill_bindings, probe_vanished_project_skill_bindings,
-    project_skill_receipt_exists, reconcile_project_skill_binding,
-    reconcile_vanished_project_skill_bindings, recover_project_skill_bindings,
+    check_project_skill_receipt, collect_project_skill_bindings, lower_project_skill_bindings,
+    probe_project_skill_binding, probe_recovered_project_skill_bindings,
+    probe_vanished_project_skill_bindings, project_skill_receipt_exists,
+    reconcile_project_skill_binding, reconcile_vanished_project_skill_bindings,
+    recover_project_skill_bindings,
 };
 
 /// A package or project `[[skill]]` declaration lowered to its absolute

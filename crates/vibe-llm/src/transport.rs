@@ -3,10 +3,13 @@ use std::time::Duration;
 
 use reqwest::header::{AUTHORIZATION, CONTENT_TYPE};
 use specmark::spec;
+use vibe_core::cancellation::CancellationToken;
 
 use crate::{ApiKey, Endpoint};
 
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-000#token-secrecy");
+
+mod controlled;
 
 /// Maximum accepted 2xx Chat Completions body. The transport reads at most
 /// one byte beyond it to distinguish an exact-limit body from overflow.
@@ -53,18 +56,43 @@ pub trait ChatTransport: Send + Sync {
         api_key: Option<&ApiKey>,
         body: &[u8],
     ) -> Result<TransportResponse, TransportError>;
+
+    /// The same exchange under an operation stop. A stop-capable transport
+    /// closes the in-flight request as soon as `cancellation` is
+    /// acknowledged and returns [`TransportError::Cancelled`]; it never
+    /// retries. The default refuses a controlled token before any contact
+    /// (an adapter without its own interruption cannot honour the stop) and
+    /// delegates to [`Self::post_json`] otherwise.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-073#OPERATION-EFFECTS-LAW")]
+    fn post_json_controlled(
+        &self,
+        endpoint: &Endpoint,
+        api_key: Option<&ApiKey>,
+        body: &[u8],
+        cancellation: &CancellationToken,
+    ) -> Result<TransportResponse, TransportError> {
+        if cancellation.has_control() {
+            return Err(TransportError::ControlUnavailable);
+        }
+        self.post_json(endpoint, api_key, body)
+    }
 }
 
 /// Production blocking transport. Redirects are disabled at client creation,
 /// once, for every request this transport can issue, and every client this
 /// type builds is time-bounded: [`CHAT_CONNECT_TIMEOUT`] on establishing the
 /// connection and [`CHAT_REQUEST_TIMEOUT`] on the whole exchange, connection
-/// through the completed response body.
+/// through the completed response body. Each blocking client has an async
+/// twin captured by the same factory with the same policy; the twins serve
+/// only [`ChatTransport::post_json_controlled`], so a stop can close the
+/// in-flight request instead of waiting for it. No client retries a request.
 #[derive(Debug, Clone)]
 #[spec(documents = "spec://org.vibevm.core/vibevm/common/PROP-000#TS-BOUNDARIES")]
 pub struct ReqwestChatTransport {
     remote_client: reqwest::blocking::Client,
     direct_loopback_client: reqwest::blocking::Client,
+    remote_controlled: reqwest::Client,
+    direct_loopback_controlled: reqwest::Client,
 }
 
 impl ReqwestChatTransport {
@@ -93,8 +121,27 @@ impl ReqwestChatTransport {
         let build = |no_proxy: bool| {
             let builder = reqwest::blocking::Client::builder()
                 .redirect(reqwest::redirect::Policy::none())
+                .retry(reqwest::retry::never())
                 .connect_timeout(connect_timeout)
                 .timeout(request_timeout);
+            if no_proxy {
+                builder.no_proxy()
+            } else {
+                builder
+            }
+            .build()
+            .map_err(|_| TransportError::ClientBuild)
+        };
+        // The controlled twins carry the identical redirect, retry, proxy and
+        // timeout policy. Idle pooling is off: each controlled exchange owns
+        // its runtime, and a pooled connection must not outlive it.
+        let build_controlled = |no_proxy: bool| {
+            let builder = reqwest::Client::builder()
+                .redirect(reqwest::redirect::Policy::none())
+                .retry(reqwest::retry::never())
+                .connect_timeout(connect_timeout)
+                .timeout(request_timeout)
+                .pool_max_idle_per_host(0);
             if no_proxy {
                 builder.no_proxy()
             } else {
@@ -106,8 +153,28 @@ impl ReqwestChatTransport {
         Ok(Self {
             remote_client: build(false)?,
             direct_loopback_client: build(true)?,
+            remote_controlled: build_controlled(false)?,
+            direct_loopback_controlled: build_controlled(true)?,
         })
     }
+}
+
+/// The sole Authorization attachment point, shared by both execution modes:
+/// immediately before send, and only on an endpoint that accepts a key.
+fn authorization(
+    endpoint: &Endpoint,
+    api_key: Option<&ApiKey>,
+) -> Result<Option<reqwest::header::HeaderValue>, TransportError> {
+    let Some(api_key) = api_key else {
+        return Ok(None);
+    };
+    if !endpoint.accepts_api_key() {
+        return Err(TransportError::CredentialRequiresHttps);
+    }
+    api_key
+        .bearer_header()
+        .map(Some)
+        .map_err(|_| TransportError::InvalidAuthorizationHeader)
 }
 
 impl ChatTransport for ReqwestChatTransport {
@@ -128,14 +195,7 @@ impl ChatTransport for ReqwestChatTransport {
             .header(CONTENT_TYPE, "application/json")
             .body(body.to_vec());
 
-        // The sole Authorization attachment point: immediately before send.
-        if let Some(api_key) = api_key {
-            if !endpoint.accepts_api_key() {
-                return Err(TransportError::CredentialRequiresHttps);
-            }
-            let header = api_key
-                .bearer_header()
-                .map_err(|_| TransportError::InvalidAuthorizationHeader)?;
+        if let Some(header) = authorization(endpoint, api_key)? {
             request = request.header(AUTHORIZATION, header);
         }
 
@@ -158,6 +218,36 @@ impl ChatTransport for ReqwestChatTransport {
             Vec::new()
         };
         Ok(TransportResponse::new(status, None, body))
+    }
+
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-073#OPERATION-EFFECTS-LAW")]
+    fn post_json_controlled(
+        &self,
+        endpoint: &Endpoint,
+        api_key: Option<&ApiKey>,
+        body: &[u8],
+        cancellation: &CancellationToken,
+    ) -> Result<TransportResponse, TransportError> {
+        if !cancellation.has_control() {
+            return self.post_json(endpoint, api_key, body);
+        }
+        cancellation
+            .checkpoint()
+            .map_err(|_| TransportError::Cancelled)?;
+        let client = if endpoint.is_literal_loopback() {
+            &self.direct_loopback_controlled
+        } else {
+            &self.remote_controlled
+        };
+        let mut request = client
+            .post(endpoint.as_url().clone())
+            .header(CONTENT_TYPE, "application/json")
+            .body(body.to_vec());
+        if let Some(header) = authorization(endpoint, api_key)? {
+            request = request.header(AUTHORIZATION, header);
+        }
+        let request = request.build().map_err(|_| TransportError::RequestFailed)?;
+        controlled::exchange(client, request, cancellation)
     }
 }
 
@@ -234,6 +324,20 @@ pub enum TransportError {
          fix: reduce provider output size or select a bounded text model)"
     )]
     ResponseTooLarge { limit: usize },
+    #[error(
+        "this LLM transport cannot interrupt an in-flight request, so it refuses to start one \
+         under an operation stop; no provider request was sent \
+         (violates spec://org.vibevm.core/vibevm/common/PROP-073#OPERATION-EFFECTS-LAW; \
+         fix: use the production OpenAI-compatible transport or run without --stop-file)"
+    )]
+    ControlUnavailable,
+    #[error(
+        "the LLM request was closed by an acknowledged operation stop and was not retried; \
+         the provider may already have accepted and billed it \
+         (governed by spec://org.vibevm.core/vibevm/common/PROP-073#OPERATION-EFFECTS-LAW; \
+         fix: check provider usage before rerunning the stopped operation)"
+    )]
+    Cancelled,
 }
 
 #[cfg(test)]

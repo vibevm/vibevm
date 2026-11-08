@@ -4,8 +4,8 @@
     "spec": { "implements": "spec://org.vibevm.core/vibevm/common/PROP-065#plan" },
     "rustOptions": { "package": "vibe_wire::application_plan" },
     "x-rust-type": "ApplicationPlan",
-    "x-vocabularies": ["source_evidence", "hosting_view"],
-    "x-wire-order": ["protocol", "package", "option", "platform", "arch", "result", "appRoot", "profile", "features", "parameters", "license", "downloadBytes", "unknownSizes", "dependencies", "steps", "warnings", "source_evidence", "source_hosting"]
+    "x-vocabularies": ["source_evidence", "hosting_view", "operation_hosting"],
+    "x-wire-order": ["protocol", "package", "option", "platform", "arch", "result", "appRoot", "profile", "features", "parameters", "license", "downloadBytes", "unknownSizes", "dependencies", "steps", "warnings", "source_evidence", "source_hosting", "hostings"]
   },
   "properties": {
     "protocol": { "type": "string" },
@@ -23,6 +23,7 @@
   },
   "optionalProperties": {
         "source_hosting": { "ref": "hosting_view", "metadata": { "x-default": null } },
+        "hostings": { "elements": { "ref": "operation_hosting" }, "metadata": { "x-default": null, "x-empty": "preserve", "description": "Every hosting this plan would contact, derived from its captured source evidence (no extra contact); absent for older producers means unknown." } },
         "source_evidence": { "ref": "source_evidence", "metadata": { "x-default": null, "x-reader-projection": "permissive" } },
     "dependencies": { "elements": { "ref": "dependency" }, "metadata": { "x-empty": "omit", "description": "The required application packages (PROP-065#app-dependencies), each ahead of the step that needs it; an entry without `step` is required by the option and precedes every step." } },
     "appRoot": { "type": "string", "metadata": { "x-default": null } },

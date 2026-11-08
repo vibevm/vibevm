@@ -50,9 +50,15 @@ enum Step {
         path: PathBuf,
         stashed: Option<PathBuf>,
         after: super::checked_placement::Tree,
+        /// Ancestors this apply created for the placement, deepest first.
+        ancestors: Vec<PathBuf>,
     },
     CheckedIgnore(super::checked_placement::Ignore),
-    Created(PathBuf),
+    Created {
+        path: PathBuf,
+        /// Ancestors missing when the creation was recorded, deepest first.
+        ancestors: Vec<PathBuf>,
+    },
     MovedAside {
         path: PathBuf,
         stashed: PathBuf,
@@ -75,6 +81,10 @@ pub struct InstallRollback {
     stash_parent: PathBuf,
     stash: Option<TempDir>,
     steps: Vec<Step>,
+    /// The operation whose completed step effects (an agent step's published
+    /// outputs) join this log: undone with it when a stop rolls the operation
+    /// back — see [`Self::with_cancellation`].
+    cancellation: Option<vibe_core::cancellation::CancellationToken>,
 }
 
 impl InstallRollback {
@@ -99,6 +109,7 @@ impl InstallRollback {
                 reason: "prepared copy differs from retained source".into(),
             });
         }
+        let ancestors = missing_ancestors(slot);
         if let Some(parent) = slot.parent() {
             fs::create_dir_all(parent).map_err(|e| io_err(parent, e))?;
         }
@@ -119,6 +130,7 @@ impl InstallRollback {
             path: slot.into(),
             stashed,
             after,
+            ancestors,
         });
         fs::rename(&candidate, slot).map_err(|e| io_err(slot, e))
     }
@@ -160,14 +172,37 @@ impl InstallRollback {
             stash_parent,
             stash: None,
             steps: Vec::new(),
+            cancellation: None,
         }
+    }
+
+    /// Own the completed step effects `cancellation`'s operation adopted
+    /// ([`vibe_core::cancellation::CancellationToken::adopt_completed_effect`]):
+    /// when an acknowledged stop asks [`Self::restore`] to put the tree back,
+    /// those effects are undone first, newest first, each through its own
+    /// receipt-checked inverse, so a later stop restores an earlier completed
+    /// agent step's outputs together with the slots and boot files. A foreign
+    /// replacement is preserved and named in the restore failure.
+    #[specmark::spec(
+        implements = "spec://org.vibevm.core/vibevm/common/PROP-073#OPERATION-EFFECTS-LAW"
+    )]
+    #[must_use]
+    pub fn with_cancellation(
+        mut self,
+        cancellation: vibe_core::cancellation::CancellationToken,
+    ) -> Self {
+        self.cancellation = Some(cancellation);
+        self
     }
 
     /// Before `slot` is reconciled in place: a missing slot is recorded as
     /// created, a present one is copied into the stash.
     pub(crate) fn before_reconcile(&mut self, slot: &Path) -> Result<(), WorkspaceError> {
         if fs::symlink_metadata(slot).is_err() {
-            self.steps.push(Step::Created(slot.to_path_buf()));
+            self.steps.push(Step::Created {
+                path: slot.to_path_buf(),
+                ancestors: missing_ancestors(slot),
+            });
             return Ok(());
         }
         let stashed = self.stash_entry()?;
@@ -237,7 +272,10 @@ impl InstallRollback {
 
     fn move_aside(&mut self, path: &Path) -> Result<(), WorkspaceError> {
         if fs::symlink_metadata(path).is_err() {
-            self.steps.push(Step::Created(path.to_path_buf()));
+            self.steps.push(Step::Created {
+                path: path.to_path_buf(),
+                ancestors: missing_ancestors(path),
+            });
             return Ok(());
         }
         let stashed = self.stash_entry()?;
@@ -297,6 +335,16 @@ impl InstallRollback {
         materialised: &[String],
     ) -> Result<(), String> {
         let mut first_error = None;
+        // A failure that is not a stop keeps a completed step's outputs (a
+        // park resumes over them); only an acknowledged stop rolls them back.
+        if let Some(token) = self
+            .cancellation
+            .as_ref()
+            .filter(|token| token.acknowledged())
+            && let Err(error) = token.undo_completed_effects()
+        {
+            first_error = Some(error);
+        }
         for step in std::mem::take(&mut self.steps).into_iter().rev() {
             if let Err(error) = undo_step(step) {
                 first_error.get_or_insert(error);
@@ -327,6 +375,7 @@ fn undo_step(step: Step) -> Result<(), String> {
             path,
             stashed,
             after,
+            ancestors,
         } => {
             match fs::symlink_metadata(&path) {
                 Ok(_) => {
@@ -343,18 +392,20 @@ fn undo_step(step: Step) -> Result<(), String> {
                 Err(e) if e.kind() == std::io::ErrorKind::NotFound => {}
                 Err(e) => return Err(describe(&path, e)),
             }
-            if let Some(stashed) = stashed {
-                fs::rename(stashed, &path).map_err(|e| describe(&path, e))?;
+            match stashed {
+                Some(stashed) => fs::rename(stashed, &path).map_err(|e| describe(&path, e))?,
+                None => remove_created_ancestors(&ancestors),
             }
             Ok(())
         }
-        Step::Created(path) => {
+        Step::Created { path, ancestors } => {
             remove_any(&path)?;
             // A `<kind>-<name>` directory this apply created for the slot is
             // empty again; one that held other versions is left alone.
             if let Some(parent) = path.parent() {
                 let _ = fs::remove_dir(parent);
             }
+            remove_created_ancestors(&ancestors);
             Ok(())
         }
         Step::MovedAside { path, stashed } => {
@@ -368,6 +419,28 @@ fn undo_step(step: Step) -> Result<(), String> {
             Some(bytes) => fs::write(&path, bytes).map_err(|error| describe(&path, error)),
             None => remove_any(&path),
         },
+    }
+}
+
+/// The ancestors of `path` that do not exist yet, deepest first: what an
+/// apply that creates `path` also creates, and what its undo removes again.
+fn missing_ancestors(path: &Path) -> Vec<PathBuf> {
+    path.ancestors()
+        .skip(1)
+        .take_while(|dir| !dir.as_os_str().is_empty() && fs::symlink_metadata(dir).is_err())
+        .map(Path::to_path_buf)
+        .collect()
+}
+
+/// Remove the directories an undone creation made, deepest first, each only
+/// while it is empty: anything another writer put there keeps it.
+fn remove_created_ancestors(ancestors: &[PathBuf]) {
+    for dir in ancestors {
+        match fs::remove_dir(dir) {
+            Ok(()) => {}
+            Err(error) if error.kind() == std::io::ErrorKind::NotFound => {}
+            Err(_) => return,
+        }
     }
 }
 

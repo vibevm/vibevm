@@ -138,6 +138,7 @@ fn run(
         user_config,
         selection,
         metadata,
+        adopted: _,
     } = execution;
     let identity = UpdateIdentity::from_args(selection.root(), &args);
     let install_args = install_args_from(&args);

@@ -202,9 +202,9 @@ impl MultiRegistryResolver {
     /// # }
     /// ```
     pub fn replays_locked_source(&self, pkg: &PackageRef) -> bool {
-        !self.locked_updates && self.locked.contains_key(&pkg.qualified_name())
+        let key = pkg.qualified_name();
+        !self.updates_locked(&key) && self.locked.contains_key(&key)
     }
-
     /// ```
     /// # fn bind(r: vibe_registry::MultiRegistryResolver) {
     /// let _r = r.with_locked_checkouts(std::collections::HashMap::new());
@@ -377,7 +377,7 @@ impl MultiRegistryResolver {
             row: row.clone(),
             revision: LockedRevision::Replay,
         };
-        if self.locked_updates {
+        if self.updates_locked(&format!("{}/{}", row.group, row.name)) {
             let (version, directory) = if let Some(directory) = self.locked_directory(row)? {
                 let resolved = self.resolve_locked_directory(pkg, row, &directory)?;
                 (resolved.version, Some(resolved.source_dir))
@@ -457,7 +457,7 @@ impl MultiRegistryResolver {
         &self,
         row: &LockedPackage,
     ) -> Result<Vec<semver::Version>, RegistryError> {
-        if !self.locked_updates {
+        if !self.updates_locked(&format!("{}/{}", row.group, row.name)) {
             return Ok(vec![row.version.clone()]);
         }
         if let Some(directory) = self.locked_directory(row)? {
@@ -560,4 +560,6 @@ impl MultiRegistryResolver {
 }
 
 mod directory;
+mod explicit;
+pub use explicit::LockedUpdateAvailability;
 mod reference;

@@ -141,22 +141,6 @@ fn recheck_directory(
     Ok(())
 }
 
-#[cfg(test)]
-pub(super) mod inject {
-    use std::{cell::RefCell, path::Path};
-    type Hook = Box<dyn FnOnce(&Path)>;
-    thread_local! { static BEFORE: RefCell<Option<Hook>> = const { RefCell::new(None) }; }
-    pub(in crate::vibedeps) fn arm(hook: Hook) {
-        BEFORE.with(|slot| *slot.borrow_mut() = Some(hook));
-    }
-    pub(super) fn run(path: &Path) {
-        let hook = BEFORE.with(|slot| slot.borrow_mut().take());
-        if let Some(hook) = hook {
-            hook(path);
-        }
-    }
-}
-
 fn selected_nonregular(package: &PackageMeta, path: &str) -> Result<bool, WorkspaceError> {
     if !matches!(
         package.select_source(path).map_err(|error| refused(
@@ -179,6 +163,24 @@ fn selected_nonregular(package: &PackageMeta, path: &str) -> Result<bool, Worksp
                     .strip_prefix(path)
                     .is_some_and(|suffix| suffix.starts_with('/'))
         }))
+}
+
+#[cfg(test)]
+pub(super) mod inject {
+    use std::{cell::RefCell, path::Path};
+    type Hook = Box<dyn FnOnce(&Path)>;
+    thread_local! { static BEFORE: RefCell<Option<Hook>> = const { RefCell::new(None) }; }
+    // Armed only by the Unix-only directory-swap red below.
+    #[cfg(unix)]
+    pub(in crate::vibedeps) fn arm(hook: Hook) {
+        BEFORE.with(|slot| *slot.borrow_mut() = Some(hook));
+    }
+    pub(super) fn run(path: &Path) {
+        let hook = BEFORE.with(|slot| slot.borrow_mut().take());
+        if let Some(hook) = hook {
+            hook(path);
+        }
+    }
 }
 
 #[cfg(all(test, unix))]

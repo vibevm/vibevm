@@ -49,8 +49,9 @@ pub use exact_path::EscapedOsPath;
 pub use projection::{
     DeclaredSkill, DeclaredSkillFilter, DeclaredSkillProjection, DeclaredSkillProvider,
     PROJECT_SKILL_PREFIX, PROJECT_SKILL_RECONCILE_KEY, PROJECT_SKILL_RECOVER_KEY,
-    ProjectSkillBinding, ProjectSkillProviderInput, ProjectSkillTarget, collect_declared_skills,
-    collect_project_skill_bindings, declared_skill_activation_status, lower_project_skill_bindings,
+    ProjectSkillBinding, ProjectSkillProviderInput, ProjectSkillTarget,
+    check_project_skill_receipt, collect_declared_skills, collect_project_skill_bindings,
+    declared_skill_activation_status, lower_project_skill_bindings,
     prepare_declared_skill_activation, prepare_declared_skill_projection,
     probe_project_skill_binding, probe_recovered_project_skill_bindings,
     probe_vanished_project_skill_bindings, project_declared_skills_project_scope,

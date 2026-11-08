@@ -243,7 +243,11 @@ fn compiler_adapter_source_fence_excludes_forbidden_planes() {
     assert!(!source.contains("config: projected"));
     assert!(source.contains("publish_load_image"));
     assert!(source.contains(".admit_compile(&image"));
-    assert!(admission.contains("self.loader\n            .invoke_compile"));
+    // The call goes through the invoker's own runtime: its process loader, or
+    // the operation's helper loader when controlled (PROP-073#NATIVE-STOP-LAW).
+    assert!(admission.contains("NativeRuntime::select(&self.cancellation, self.loader)"));
+    assert!(admission.contains("self.runtime()?\n            .admit(&image, &digest, bytes)"));
+    assert!(admission.contains("loader.invoke_compile(NativeCompileInvocation {"));
     assert!(admission.contains("fn invoke_admitted("));
     assert!(admission.contains(".compiler()\n        .invoke(request)"));
     assert!(admission.contains("library: &image"));

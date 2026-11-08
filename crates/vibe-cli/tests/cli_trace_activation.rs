@@ -190,8 +190,8 @@ fn quiet_keeps_exactly_one_line_with_and_without_the_flag() {
 ///
 /// The mutation is the proof: the file is corrupted before the command runs,
 /// so every claim below is about a command that could not have read a sound
-/// manifest at any point. It must still select an identity (the run directory
-/// is allocated), open NO trace storage (there is no sound workspace to name
+/// manifest at any point. It must still select an identity (the trace member
+/// names its run, whose scratch the failure then removes), open NO trace storage (there is no sound workspace to name
 /// one), report the request honestly as `unavailable`, and fail with the error
 /// its own read produced — consumed inside the funnel, after the identity.
 #[test]
@@ -221,10 +221,6 @@ fn a_malformed_selected_manifest_is_read_once_and_its_error_reaches_the_funnel()
         String::from_utf8_lossy(&output.stderr),
     );
     assert!(
-        !lifecycle_run_dirs(project.path()).is_empty(),
-        "the identity was selected before that error was consumed",
-    );
-    assert!(
         !trace_dir(project.path()).exists(),
         "no trace storage opens without a sound workspace to name its root",
     );
@@ -239,5 +235,16 @@ fn a_malformed_selected_manifest_is_read_once_and_its_error_reaches_the_funnel()
     assert!(
         !trace["warnings"].as_array().unwrap().is_empty(),
         "and it says why",
+    );
+    let run_id = trace["run_id"].as_str().unwrap_or_default();
+    assert!(
+        run_id.len() == 32 && run_id.bytes().all(|b| b.is_ascii_hexdigit()),
+        "the identity was selected before that error was consumed: {root}",
+    );
+    // FMT-069: the failed run removes its own `.vibe/lifecycle/<run>/`
+    // scratch; the identity it selected survives only in the report.
+    assert!(
+        lifecycle_run_dirs(project.path()).is_empty(),
+        "the failed run left its scratch behind",
     );
 }

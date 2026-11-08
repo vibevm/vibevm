@@ -143,6 +143,12 @@ impl<S: InstallSource + ?Sized> InstallSource for PlanningSource<'_, S> {
     fn replays_locked_source(&self, pkgref: &PackageRef) -> bool {
         self.source.replays_locked_source(pkgref)
     }
+    fn locked_update_availability(
+        &self,
+        pkgref: &PackageRef,
+    ) -> Result<Option<vibe_registry::LockedUpdateAvailability>, RegistryError> {
+        self.source.locked_update_availability(pkgref)
+    }
     fn prepare_in_place(
         &self,
         p: &PackageRef,

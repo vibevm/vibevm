@@ -118,7 +118,7 @@ pub(super) fn apply(ctx: &output::Context, inputs: ScopedApply<'_>) -> Result<Up
     cancellation.checkpoint()?;
     cancellation.publishing();
     let mut undo = Undo {
-        rollback: InstallRollback::new(&workspace.root),
+        rollback: InstallRollback::new(&workspace.root).with_cancellation(cancellation.clone()),
         lifecycle,
         cancellation,
         materialised: Vec::new(),

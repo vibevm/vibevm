@@ -149,3 +149,18 @@ fn known_legacy_empty_publication_is_supported_and_preserves_decoration() {
             .contains("# operator decoration")
     );
 }
+
+#[test]
+fn the_lock_path_check_accepts_only_the_captured_lock() {
+    let (temp, mut files) = fixture();
+    files
+        .check_lock_path(&temp.path().join("vibe.lock"))
+        .unwrap();
+    assert!(
+        files
+            .check_lock_path(&temp.path().join("moved").join("vibe.lock"))
+            .is_err(),
+        "a lock under a different parent is refused"
+    );
+    files.disarm();
+}

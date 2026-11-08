@@ -49,6 +49,12 @@ pub struct NativeBackendRequest<'a> {
 /// ```
 #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-054#REF-WIRE-NATIVE")]
 pub trait NativeBackend: Send + Sync {
+    /// Whether a controlled operation can stop this backend's calls; only a
+    /// helper-process backend can (spec://org.vibevm.core/vibevm/common/PROP-073#NATIVE-STOP-LAW).
+    fn stop_capable(&self) -> bool {
+        false
+    }
+
     fn invoke(&self, request: NativeBackendRequest<'_>) -> Result<NativeReply, String>;
 }
 

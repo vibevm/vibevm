@@ -25,6 +25,7 @@ mod lease;
 mod outcome;
 mod ready;
 mod resume;
+mod scratch;
 mod selection;
 mod world_projection;
 
@@ -53,6 +54,7 @@ pub use outcome::{
 pub use resume::{
     ResumeOutcome, ResumeRequest, ResumedInstall, own_resume, prefixed, resume_slot_continuation,
 };
+pub use scratch::RunScratch;
 pub use selection::{PreparedSelection, ProvenSelection, SelectedManifest};
 
 use outcome::fresh_run;
@@ -185,6 +187,21 @@ pub fn execute_prepared(
     // this execution loaded and, on a `--git` run, mutated in place. Named and
     // typed rather than a closure: a `FnOnce` could capture a whole rendering
     // context, which is exactly what this boundary exists to refuse.
+    after_durable_world: &mut dyn AfterDurableWorld,
+) -> Result<InstallRun> {
+    let scratch = RunScratch::fresh(&execution.lease, &execution.metadata, false);
+    let result = execute_owned(execution, after_durable_world);
+    scratch.settle(result.as_ref().is_err_and(|error| {
+        !matches!(
+            error.downcast_ref::<vibe_install::Error>(),
+            Some(vibe_install::Error::Delegated { .. })
+        )
+    }));
+    result
+}
+
+fn execute_owned(
+    execution: InstallExecution<'_>,
     after_durable_world: &mut dyn AfterDurableWorld,
 ) -> Result<InstallRun> {
     let InstallExecution {

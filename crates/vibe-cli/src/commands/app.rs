@@ -17,7 +17,7 @@ mod export;
 mod facts;
 pub(crate) mod global;
 pub(crate) mod home;
-mod interrupt;
+pub(crate) mod interrupt;
 mod launch;
 mod lifecycle;
 mod menu;

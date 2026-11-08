@@ -159,6 +159,22 @@ impl ChatUsage {
 #[spec(documents = "spec://org.vibevm.core/vibevm/common/PROP-054#AGENT-CLI")]
 pub trait LLMProvider: Send + Sync {
     fn chat(&self, input: &ChatInput) -> Result<ChatOutput, ProviderError>;
+
+    /// The same call under an operation stop: a stop-capable provider closes
+    /// its in-flight request when `cancellation` is acknowledged and never
+    /// retries it. The default refuses a controlled token before any contact
+    /// and delegates to [`Self::chat`] otherwise.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-073#OPERATION-EFFECTS-LAW")]
+    fn chat_controlled(
+        &self,
+        input: &ChatInput,
+        cancellation: &vibe_core::cancellation::CancellationToken,
+    ) -> Result<ChatOutput, ProviderError> {
+        if cancellation.has_control() {
+            return Err(crate::TransportError::ControlUnavailable.into());
+        }
+        self.chat(input)
+    }
 }
 
 /// Safe provider failures. No variant retains an API key or response body.

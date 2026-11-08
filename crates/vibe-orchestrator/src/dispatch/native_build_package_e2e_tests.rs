@@ -167,6 +167,7 @@ impl Fixture {
                 deploy: None,
             },
             prepared_native: Default::default(),
+            cancellation: Default::default(),
             build: Some(0),
             package: Some(0),
             deploy: None,

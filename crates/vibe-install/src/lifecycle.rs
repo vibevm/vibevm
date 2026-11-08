@@ -262,7 +262,8 @@ impl InstallSlotLifecycle {
             platform: self.native_platform,
             offline: self.offline,
             created_at: &self.created_at,
-        });
+        })
+        .with_cancellation(self.cancellation.clone());
         let process =
             vibe_lifecycle::process::ControlledProcessRunner::new(self.cancellation.clone());
         let runtime = HandlerRuntime {

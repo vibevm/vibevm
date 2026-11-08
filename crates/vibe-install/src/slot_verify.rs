@@ -54,6 +54,26 @@ impl RegistrySlotVerifier {
         }
     }
 
+    /// Build the expected-hash table from a resolution's OWN recorded source
+    /// hashes — the lock pin each row carries — for a caller that holds no
+    /// fetched set. A row without a hash is absent and verifies as
+    /// [`SlotCheck::Unverifiable`].
+    fn from_resolution(resolution: &[ResolvedDep]) -> Self {
+        Self {
+            expected: resolution
+                .iter()
+                .filter_map(|dep| {
+                    dep.source_hash.as_ref().map(|hash| {
+                        (
+                            (dep.group.clone(), dep.name.clone()),
+                            hash.as_str().to_owned(),
+                        )
+                    })
+                })
+                .collect(),
+        }
+    }
+
     fn verify_legacy_mixed(&self, dep: &ResolvedDep, slot_abs: &Path) -> SlotCheck {
         let Some(expected) = self.expected.get(&(dep.group.clone(), dep.name.clone())) else {
             return SlotCheck::Unverifiable;
@@ -262,6 +282,42 @@ impl SlotVerifier for RegistrySlotVerifier {
             },
         }
     }
+}
+
+/// Whether every row of `resolution` already sits in its versioned slot under
+/// `workspace_root` with exactly the content the row names — the slot record,
+/// its recorded payload and the effective `spec_format` all verified against
+/// the row's own `source_hash` (PROP-011 §2.3/§5.2).
+///
+/// The proof a no-op `vibe update --all` needs before it may skip
+/// re-materialisation: `true` means placing the resolution again would change
+/// no slot byte. Conservative by construction — a row with no hash, a mutable
+/// in-workspace source, an in-place row, an absent slot, or any verdict other
+/// than [`SlotCheck::Verified`] answers `false`, and the caller then performs
+/// the ordinary apply.
+#[must_use]
+pub fn resolution_slots_verified(
+    workspace_root: &Path,
+    resolution: &[ResolvedDep],
+    spec_format: SpecFormat,
+) -> bool {
+    let verifier = RegistrySlotVerifier::from_resolution(resolution);
+    resolution.iter().all(|dep| {
+        if dep.source_mutable || dep.source_hash.is_none() || dep.in_place_changed.is_some() {
+            return false;
+        }
+        let slot = vibe_workspace::vibedeps::slot_abs_path(
+            workspace_root,
+            &dep.group,
+            &dep.name,
+            &dep.version,
+        );
+        slot.is_dir()
+            && matches!(
+                verifier.verify_slot_for_format(dep, &slot, spec_format),
+                SlotCheck::Verified
+            )
+    })
 }
 
 fn live_overlay_hash(slot: &Path) -> Option<String> {

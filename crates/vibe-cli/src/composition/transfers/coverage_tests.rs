@@ -67,6 +67,11 @@ const EXEMPT: &[(&str, Reader, &str)] = &[
         "the LLM transport: a model's reply is not a download",
     ),
     (
+        "vibe-llm/src/transport/controlled.rs",
+        Reader::Http,
+        "the controlled (stoppable, async) LLM transport: a model's reply is not a download",
+    ),
+    (
         "vibe-publish/src/git_publish.rs",
         Reader::Git,
         "the publish side, which uploads: it fetches only the branch it pushes onto",

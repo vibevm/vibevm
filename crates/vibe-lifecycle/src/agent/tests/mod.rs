@@ -8,6 +8,8 @@
 #[cfg(test)]
 mod contract;
 #[cfg(test)]
+mod control;
+#[cfg(test)]
 mod hosted;
 #[cfg(test)]
 mod plan;
@@ -42,7 +44,7 @@ fn prepared_run(
     let row = row(config_toml, prompt);
     let context = context(project, &row);
     let prepared = prepare(backend, &row, &context)?.expect("an agent row prepares");
-    let reply = execute(backend, KEY, &context, &prepared)?;
+    let reply = execute(backend, KEY, &context, &prepared, None)?;
     Ok((prepared, reply))
 }
 

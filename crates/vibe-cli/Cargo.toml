@@ -144,6 +144,8 @@ tar.workspace = true
 walkdir.workspace = true
 indicatif = { workspace = true, features = ["in_memory"] }
 vibe-native-loader-compiler-fixture = { path = "../vibe-native-loader/tests/fixtures/native-compiler-plugin" }
+# The blocking slot hook a stop must interrupt through the native helper.
+vibe-native-loader-fixture = { path = "../vibe-native-loader/tests/fixtures/native-plugin" }
 vibe-native-loader-json-backend-fixture = { path = "../vibe-native-loader/tests/fixtures/native-json-backend" }
 assert_cmd.workspace = true
 # The lease-ordering red arms safefs' `before_lock` race hook to rewrite the

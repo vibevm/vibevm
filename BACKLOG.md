@@ -170,6 +170,16 @@ An **id**, the **`spec://…#ANCHOR`** it came from where one exists, a one-line
 
 ## P2 — the next wave drains from here {#p2}
 
+### B-237 — откат прерванной операции не переживает падение процесса {#b-237}
+
+| | |
+|---|---|
+| @fact:B237-ANCHOR **anchor** | `crates/vibe-workspace/src/install/rollback.rs` (`InstallRollback`), `crates/vibe-workspace/src/boot_artifacts/inverse.rs` (`BootImages`) |
+| @fact:B237-LOCATOR **locator** | отмена до записи lock восстанавливает слоты, boot и agent-файлы из журнала в памяти; если процесс упадёт посреди восстановления, следующий запуск `vibe` его не продолжит. Тот же класс: если упадёт сам `vibe`, helper-процесс native-плагинов завершается по EOF stdin, но его scratch-каталог остаётся |
+| @fact:B237-SEVERITY **severity** | P3 — окно узкое (падение во время самого отката), обычная отмена и ошибки восстанавливаются полностью |
+| @fact:B237-DISPOSITION **disposition** | `open` — решение владельца 2026-11-08: durable журнал отката «не сейчас, а когда-нибудь в будущем» |
+| @fact:B237-FILED **filed by** | центральная сессия VIBE-NEEDS, 2026-11-08 |
+
 ### B-236 — битый receipt package-skills обрывает регенерацию boot, а не шаг recover {#b-236}
 
 | | |
@@ -177,7 +187,7 @@ An **id**, the **`spec://…#ANCHOR`** it came from where one exists, a one-line
 | @fact:B236-ANCHOR **anchor** | `crates/vibe-orchestrator/src/world/package_skill.rs:59` — `lower_project_skill_bindings` читает `.vibe/package-skills.toml` при планировании presets |
 | @fact:B236-LOCATOR **locator** | тест `cli_lifecycle_package::lifecycle_package::failure::package_binding_failure_stops_every_later_contribution` красный с `3d2a5d8a1` (управляемая активация): повреждённый receipt останавливает регенерацию boot, вместо того чтобы упасть шагом recover в фазе package |
 | @fact:B236-SEVERITY **severity** | P2 — отказ правильный, но не в той фазе (PROP-054 `#FAILURE-BY-PHASE`); пользователь видит другую ошибку и другую точку восстановления |
-| @fact:B236-DISPOSITION **disposition** | `open` — решение по дизайну активации: читать receipt лениво в фазе package или явно признать раннюю проверку и обновить тест |
+| @fact:B236-DISPOSITION **disposition** | `fixed` 2026-11-08 — планирование presets (`crates/vibe-orchestrator/src/world/package_skill.rs`) сначала судит существующий receipt через `check_project_skill_receipt` (`vibe-agent-projection`); нечитаемый receipt не обрывает планирование и регенерацию boot, а планирует только строку recover, которая в фазе package читает тот же receipt и падает с тем же отказом, останавливая все последующие вклады (PROP-054 `#FAILURE-BY-PHASE`); тест не ослаблен |
 | @fact:B236-FILED **filed by** | центральная сессия VIBE-NEEDS, 2026-11-08 (финальный гейт) |
 
 ### B-235 — `vibe remap bind-source` не проверен на локальном Git-источнике {#b-235}
@@ -187,7 +197,7 @@ An **id**, the **`spec://…#ANCHOR`** it came from where one exists, a one-line
 | @fact:B235-ANCHOR **anchor** | `crates/vibe-cli/tests/cli_remap_bind_source.rs` — `only_explicit_new_binding_records_newly_observed_git_commit` (`#[ignore]`) |
 | @fact:B235-LOCATOR **locator** | `bind-source` всегда работает в контролируемом транспорте, а тот допускает только HTTPS/SSH (и http после FMT-066); тестовый `git+file://` источник отвергается до контакта |
 | @fact:B235-SEVERITY **severity** | P3 — поведение для реальных HTTPS/SSH источников покрыто, не покрыта только запись наблюдённого коммита для новой привязки |
-| @fact:B235-DISPOSITION **disposition** | `open` — перевести тест на HTTPS Git-фикстуру (есть `tls_fixture.py` в `vibe-registry`, нужна передача CA в CLI) |
+| @fact:B235-DISPOSITION **disposition** | `fixed` 2026-11-08 — тест снова включён: связываемый источник раздаётся как dumb-HTTP Git (bare-клон + `update-server-info`) через `crates/vibe-cli/tests/common/http_dir.rs`; контролируемый транспорт допускает `http://` (FMT-066), исходные утверждения сохранены, плюс проверка, что HTTP-эндпоинт действительно опрошен |
 | @fact:B235-FILED **filed by** | центральная сессия VIBE-NEEDS, 2026-11-08 |
 
 ### B-234 — `vibe update --all` не поднимает ни одной версии {#b-234}
@@ -197,7 +207,7 @@ An **id**, the **`spec://…#ANCHOR`** it came from where one exists, a one-line
 | @fact:B234-ANCHOR **anchor** | `crates/vibe-cli/src/commands/update/whole.rs` — «`--all` re-resolves the whole declared graph through the install substrate» |
 | @fact:B234-LOCATOR **locator** | проект с `"org.example/p" = "^0.1.0"` в lock на 0.1.0, в registry появилась 0.1.1: `vibe update --all --json` отвечает `packages_resolved: 0`, `unchanged: true`; `vibe update org.example/p` поднимает до 0.1.1. Воспроизводится на установленной 1.0.11 и на текущем дереве |
 | @fact:B234-SEVERITY **severity** | P2 — `--help` обещает «Update every package in the lockfile», а команда молча ничего не делает и сообщает успех |
-| @fact:B234-DISPOSITION **disposition** | `open` — whole-путь держит версии lock, как обычный install; нужен тот же выбор корней, что у scoped update, для всех строк lock |
+| @fact:B234-DISPOSITION **disposition** | `fixed` 2026-11-08 (FMT-068) — `--all` и голый `vibe update` идут через scoped-путь с корнями = все объявленные корни workspace (`crates/vibe-cli/src/commands/update/all.rs`); install-подложка остаётся только для возобновления парковки, пустого/отсутствующего lock и незалоченного объявленного корня. Тесты: `crates/vibe-cli/tests/cli_update_all.rs` |
 | @fact:B234-FILED **filed by** | центральная сессия VIBE-NEEDS, 2026-11-08 (найдено при разборе теста отмены update) |
 
 

@@ -46,6 +46,11 @@ pub(crate) fn promoted_env_names() -> &'static BTreeSet<String> {
 }
 
 fn main() -> ExitCode {
+    // The hidden native helper mode precedes every ordinary boot step.
+    if let Some(exit) = composition::native_helper::entry() {
+        return exit;
+    }
+    composition::native_helper::install();
     // clap's derived builders keep every subcommand's temporaries in one
     // frame, and a debug build of a CLI this wide needs more than the 1 MiB
     // a Windows main thread owns: `vibe --version` overflowed there the day
@@ -128,7 +133,7 @@ fn run() -> ExitCode {
     let preview_only =
         matches!(&cli.command, Command::Install(args) if !args.global && args.plan_only);
     let ctx = composition::transfers::attach_for_command(ctx, &transfer_config, &cli.command);
-    let (ctx, cancellation) =
+    let (ctx, cancellation, stop_input) =
         match composition::cancellation::for_command(&ctx, &cli.command, cli.stop_file.clone()) {
             Ok(value) => value,
             Err(error) => {
@@ -427,6 +432,7 @@ fn run() -> ExitCode {
         }
     };
 
+    stop_input.settle(&ctx, &cancellation);
     command_activity.complete(result.is_ok());
     composition::finish(&ctx, &cancellation, result, preview_only)
 }

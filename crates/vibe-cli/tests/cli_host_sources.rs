@@ -250,32 +250,21 @@ fn host_missing_selected_boot_refuses_before_writes_and_empty_keeps_dependency_b
                 "{result:?}"
             );
             let mut after = inventory(root.path());
-            for rel in [".vibe", ".vibe/lifecycle"] {
-                let path = PathBuf::from(rel);
-                if !before.contains_key(&path) {
-                    assert_eq!(after.remove(&path), Some(None));
-                }
+            let created = PathBuf::from(".vibe");
+            if !before.contains_key(&created) {
+                assert_eq!(after.remove(&created), Some(None));
             }
             assert_eq!(
                 after.remove(&PathBuf::from(".vibe/lifecycle.lock")),
                 Some(Some(Vec::new()))
             );
-            let runs = after
-                .keys()
-                .filter(|path| {
-                    path.parent() == Some(Path::new(".vibe/lifecycle"))
-                        && !before.contains_key(*path)
-                })
-                .cloned()
-                .collect::<Vec<_>>();
-            assert_eq!(runs.len(), 1);
-            let name = runs[0].file_name().unwrap().to_str().unwrap();
-            assert_eq!(name.len(), 32);
+            // FMT-069: a refused run removes its own `.vibe/lifecycle/<run>/`
+            // scratch and the empty directory it created for it; only the
+            // empty lease lock remains.
             assert!(
-                name.bytes()
-                    .all(|c| c.is_ascii_digit() || (b'a'..=b'f').contains(&c))
+                !root.path().join(".vibe/lifecycle").exists(),
+                "the refused run left its scratch behind: {after:?}"
             );
-            assert_eq!(after.remove(&runs[0]), Some(None));
             assert_eq!(after, before);
         }
     }

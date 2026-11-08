@@ -39,6 +39,17 @@ impl InstallResolver {
         }
     }
 
+    /// Move only these explicit install roots' held versions at their locked
+    /// sources (`vibe install <pkg>@<req>`); every other held row replays.
+    /// ```
+    /// # fn install(source: vibe_package_source::InstallResolver) {
+    /// let _source = source.with_locked_updates_for(&["org.example/demo".to_string()]);
+    /// # }
+    /// ```
+    pub fn with_locked_updates_for(self, keys: &[String]) -> Self {
+        self.map_held(|held| held.with_locked_updates_for(keys.iter().cloned()))
+    }
+
     /// Choose the named held coordinates' sources again through the current
     /// registry configuration (`vibe update --reselect-source`).
     /// ```

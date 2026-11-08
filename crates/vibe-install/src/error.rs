@@ -23,6 +23,16 @@ pub enum Error {
         source: Box<vibe_resolver::SolveError>,
     },
     #[error(
+        "`{package}` {requirement} is not available at its locked source {locked_source}; install moves a held version only at the source vibe.lock records and never chooses another (violates spec://org.vibevm.core/vibevm/common/PROP-073#LOCKED-SOURCE-LAW; fix: `vibe update {package} --reselect-source` to choose the source again, or request a version that source serves): {source}"
+    )]
+    HeldSourceVersionUnavailable {
+        package: String,
+        requirement: String,
+        locked_source: String,
+        #[source]
+        source: Box<vibe_resolver::SolveError>,
+    },
+    #[error(
         "preview metadata requires an explicit absolute scratch acquisition store (violates spec://org.vibevm.core/vibevm/common/PROP-073#OPERATION-EFFECTS-LAW; fix: supply the operation-owned preview storage grant, never a persistent-store fallback)"
     )]
     PreviewStorageRequired,

@@ -32,7 +32,8 @@ pub(super) use containment::{
 pub(crate) use reconcile::{reconcile_binding, reconcile_vanished};
 pub(crate) use recover::recover_pending;
 pub(crate) use state::{
-    probe_binding, probe_recovered, probe_vanished, receipt_exists_project_root,
+    check_receipt_project_root, probe_binding, probe_recovered, probe_vanished,
+    receipt_exists_project_root,
 };
 
 #[cfg(test)]

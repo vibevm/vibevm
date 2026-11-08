@@ -261,6 +261,14 @@ pub fn project_skill_receipt_exists(project_root: &Path) -> Result<bool> {
     receipt::receipt_exists_project_root(project_root)
 }
 
+/// Judge an existing receipt without acting on it: `Err` when it is
+/// malformed or of an unsupported schema. A planner uses this to hand the
+/// refusal to the recovery row of the package phase instead of failing
+/// while it plans (PROP-054 `#FAILURE-BY-PHASE`).
+pub fn check_project_skill_receipt(project_root: &Path) -> Result<()> {
+    receipt::check_receipt_project_root(project_root)
+}
+
 /// Finish any durable applying transaction before ordinary bindings run.
 pub fn recover_project_skill_bindings(project_root: &Path) -> Result<Vec<PackageSkillReport>> {
     receipt::recover_pending(project_root)

@@ -769,3 +769,80 @@ fn transformed_verifier_rejects_a_live_overlay_hash_divergence() {
         SlotCheck::DivergedDetail { ref reason } if reason.contains("overlay_hash")
     ));
 }
+
+/// The resolution's ResolvedDep rows for the two fixture packages, each
+/// carrying its own fetched `source_hash` — the shape a no-op
+/// `vibe update --all` holds before it decides whether to apply.
+fn resolution_rows(source: &FixtureSource, outer: &Path) -> Vec<ResolvedDep> {
+    ["org.vibevm/pkg-a", "org.vibevm/pkg-b"]
+        .into_iter()
+        .map(|spec| {
+            let cached = source
+                .resolve_and_fetch(&PackageRef::parse(spec).unwrap(), outer, None)
+                .unwrap();
+            ResolvedDep {
+                kind: cached.package_meta().kind,
+                group: cached.resolved.group.clone(),
+                name: cached.resolved.name.clone(),
+                version: cached.resolved.version.clone(),
+                content_dir: cached.cache_dir.clone(),
+                source_hash: Some(ContentHash::from_validated(cached.content_hash.clone())),
+                embedded_sources: Vec::new(),
+                manifest: cached.manifest.clone(),
+                requires: Vec::new(),
+                admitted_by: None,
+                via_override: None,
+                source_mutable: false,
+                in_place_changed: None,
+                configuration: None,
+            }
+        })
+        .collect()
+}
+
+/// `resolution_slots_verified` proves an untouched resolution needs no
+/// re-materialisation, and refuses that proof for a tampered payload, an
+/// absent slot, a row without a hash and a mutable source.
+#[test]
+fn resolution_slots_verified_accepts_only_byte_identical_slots() {
+    let (source, outer, project) = installed_project(SlotIntegrity::Verify);
+    let rows = resolution_rows(&source, outer.path());
+    assert!(
+        production_slot_verify::resolution_slots_verified(&project, &rows, SpecFormat::Mixed),
+        "an untouched installed resolution verifies",
+    );
+    assert!(
+        !production_slot_verify::resolution_slots_verified(&project, &rows, SpecFormat::Xml),
+        "a different effective format is not a no-op",
+    );
+
+    let mut unhashed = rows.clone();
+    unhashed[0].source_hash = None;
+    assert!(!production_slot_verify::resolution_slots_verified(
+        &project,
+        &unhashed,
+        SpecFormat::Mixed
+    ));
+    let mut mutable = rows.clone();
+    mutable[1].source_mutable = true;
+    assert!(!production_slot_verify::resolution_slots_verified(
+        &project,
+        &mutable,
+        SpecFormat::Mixed
+    ));
+
+    let spec_b = project
+        .join(SLOT_B)
+        .join(vibe_core::layout::current_specs_root())
+        .join("flows/pkg-b/SPEC.md");
+    fs::write(&spec_b, "# TAMPERED content\n").unwrap();
+    assert!(
+        !production_slot_verify::resolution_slots_verified(&project, &rows, SpecFormat::Mixed),
+        "a tampered payload is not a no-op",
+    );
+    fs::remove_dir_all(project.join(SLOT_B)).unwrap();
+    assert!(
+        !production_slot_verify::resolution_slots_verified(&project, &rows, SpecFormat::Mixed),
+        "an absent slot is not a no-op",
+    );
+}

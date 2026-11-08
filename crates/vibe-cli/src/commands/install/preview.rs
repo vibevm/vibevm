@@ -141,6 +141,12 @@ fn prepare(
         .with_locked_checkouts(vibe_install::locked_checkout_paths(
             &workspace.root,
             &locked.packages,
+        ))
+        // The plan shows exactly what the install would do, including an
+        // explicit version move at a held source.
+        .with_locked_updates_for(&super::resolver::explicit_version_moves(
+            args,
+            &locked.packages,
         ));
         let roots = args
             .packages
@@ -213,12 +219,13 @@ fn prepare(
         )
     });
     ctx.progress().checkpoint()?;
-    Ok(InstallPlan {
+    Ok(super::report::hostings::with_hostings(InstallPlan {
         command: "install:plan".into(),
         packages,
         preview_complete: Some(complete),
         remaps: Some(remaps),
-    })
+        hostings: None,
+    }))
 }
 
 /// An unavailable settings home means there is no old store to read, not a

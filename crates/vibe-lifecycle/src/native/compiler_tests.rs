@@ -551,6 +551,10 @@ fn current_prebuilt_with_source_fallback_projects_no_cargo_group() {
 #[path = "compiler_fixture_tests.rs"]
 mod fixture_tests;
 
+#[cfg(test)]
+#[path = "compiler_helper_tests.rs"]
+mod helper_tests;
+
 #[path = "compiler_coherence_tests.rs"]
 mod coherence_tests;
 

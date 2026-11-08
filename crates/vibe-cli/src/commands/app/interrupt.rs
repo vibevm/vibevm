@@ -131,8 +131,11 @@ mod unix {
     }
 }
 
+/// The console control handler, shared with the project operation's stop
+/// input (`crate::composition::cancellation`), which needs Ctrl-C and
+/// Ctrl-Break apart.
 #[cfg(windows)]
-mod windows {
+pub(crate) mod windows {
     use std::io;
     use std::sync::atomic::{AtomicBool, Ordering};
 
@@ -143,11 +146,21 @@ mod windows {
         fn SetConsoleCtrlHandler(handler_routine: HandlerRoutine, add: i32) -> i32;
     }
 
-    static RECEIVED: AtomicBool = AtomicBool::new(false);
+    static INTERRUPT: AtomicBool = AtomicBool::new(false);
+    static BREAK: AtomicBool = AtomicBool::new(false);
 
     /// Whether a console control event arrived since the last call.
     pub(super) fn take() -> bool {
-        RECEIVED.swap(false, Ordering::SeqCst)
+        let (interrupt, brk) = take_split();
+        interrupt || brk
+    }
+
+    /// Whether Ctrl-C, and whether Ctrl-Break, arrived since the last call.
+    pub(crate) fn take_split() -> (bool, bool) {
+        (
+            INTERRUPT.swap(false, Ordering::SeqCst),
+            BREAK.swap(false, Ordering::SeqCst),
+        )
     }
 
     #[specmark::spec(
@@ -155,22 +168,27 @@ mod windows {
         reason = "unsafe-gate: SetConsoleCtrlHandler requires a system-ABI callback; this one only records Ctrl-C / Ctrl-Break in a static flag (spec://org.vibevm.core/vibevm/common/PROP-065#cancellation)."
     )]
     unsafe extern "system" fn console_control(event: u32) -> i32 {
-        if matches!(event, 0 | 1) {
-            RECEIVED.store(true, Ordering::SeqCst);
-            1
-        } else {
-            0
+        match event {
+            0 => {
+                INTERRUPT.store(true, Ordering::SeqCst);
+                1
+            }
+            1 => {
+                BREAK.store(true, Ordering::SeqCst);
+                1
+            }
+            _ => 0,
         }
     }
 
-    pub(super) struct Console;
+    pub(crate) struct Console;
 
     impl Console {
         #[specmark::spec(
             deviates = "spec://core-ai-native/mechanisms/ENGINE-CONFORM-v0.1#rules",
             reason = "unsafe-gate: registers the static callback above; no borrowed state outlives it (spec://org.vibevm.core/vibevm/common/PROP-065#cancellation)."
         )]
-        pub(super) fn install() -> io::Result<Self> {
+        pub(crate) fn install() -> io::Result<Self> {
             // SAFETY: the callback is static, has the required ABI and is
             // removed by the guard's drop.
             if unsafe { SetConsoleCtrlHandler(Some(console_control), 1) } == 0 {

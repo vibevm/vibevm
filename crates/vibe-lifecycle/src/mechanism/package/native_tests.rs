@@ -102,6 +102,7 @@ fn entry(pin: &str) -> PreparedNativeMechanism {
         image: PathBuf::from("C:/provider/package.dll"),
         digest: "a".repeat(64),
         bytes: 1,
+        control: Default::default(),
     }
 }
 

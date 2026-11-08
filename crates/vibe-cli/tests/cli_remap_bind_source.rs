@@ -106,7 +106,9 @@ impl Fixture {
             .env("USERPROFILE", &self.home)
             .env("GIT_CONFIG_GLOBAL", "/dev/null")
             .env("GIT_CONFIG_NOSYSTEM", "1")
-            .env("GIT_ALLOW_PROTOCOL", "file")
+            // `http` for the dumb-HTTP Git fixture an ordinary (uncontrolled)
+            // replay clones with the system git.
+            .env("GIT_ALLOW_PROTOCOL", "file:http")
             .env_remove("VIBE_REMAP")
             .args(args)
             .args(["--unattended", "--json", "--reject-remap"])
@@ -243,7 +245,6 @@ fn member_binding_uses_parent_lock_and_diagnoses_a_misplaced_child_lock() {
 }
 
 #[test]
-#[ignore = "explicit Git binding now runs on the controlled native transport, which admits only HTTPS/SSH (spec://org.vibevm.core/vibevm/common/PROP-073#NATIVE-PREPARATION); this local git+file fixture is refused before binding, and no CLI-level HTTPS Git fixture exists yet — re-enable on one (BACKLOG B-235)"]
 #[specmark::spec(verifies = "spec://org.vibevm.core/vibevm/common/PROP-073#LOCKED-SOURCE-LAW")]
 fn only_explicit_new_binding_records_newly_observed_git_commit() {
     let f = Fixture::new();
@@ -278,14 +279,40 @@ fn only_explicit_new_binding_records_newly_observed_git_commit() {
     git(&["add", "."]);
     git(&["commit", "-m", "fixture source"]);
     let commit = git(&["rev-parse", "HEAD"]);
+    // Explicit binding runs on the controlled native transport, which admits
+    // HTTP/HTTPS/SSH and never a local `file://` Git endpoint
+    // (PROP-073 #NATIVE-PREPARATION): serve a bare clone over dumb HTTP.
+    let served = f.home.join("served");
+    let repo = served.join("policy.git");
+    git(&[
+        "clone",
+        "--bare",
+        f.source.to_str().unwrap(),
+        repo.to_str().unwrap(),
+    ]);
+    let bare = std::process::Command::new("git")
+        .current_dir(&repo)
+        .args(["update-server-info"])
+        .output()
+        .unwrap();
+    assert!(
+        bare.status.success(),
+        "{}",
+        String::from_utf8_lossy(&bare.stderr)
+    );
+    let server = common::http_dir::DirectoryServer::new(served);
     write(
         &f.binding,
         &format!(
-            "source_url='git+file://{}'\nsource_ref='main'\nsource_kind='git'\n",
-            f.source.display()
+            "source_url='git+{}/policy.git'\nsource_ref='main'\nsource_kind='git'\n",
+            server.url
         ),
     );
     success(f.bind(&f.project));
+    assert!(
+        server.count() > 0,
+        "the binding is witnessed at the HTTP endpoint"
+    );
     let path = f.project.join("vibe.lock");
     let mut lock = Lockfile::read(&path).unwrap();
     assert_eq!(

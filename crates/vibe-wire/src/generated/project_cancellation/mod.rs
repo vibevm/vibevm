@@ -16,6 +16,20 @@ pub struct ProjectCancellationExternalEffects {
     pub release_push: Effect,
 
     pub repository_creation: Effect,
+
+    /// Aggregate provider-side effect of paid LLM requests this operation
+    /// dispatched: unknown while a request was interrupted or unresolved (it
+    /// may have been accepted and billed), completed when every request was
+    /// answered. Absent in documents written before this field existed.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub llm: Option<Effect>,
+
+    /// Effects of native plugins this operation loaded or invoked in its helper
+    /// process: unknown once a plugin may have run, because killing the helper
+    /// is not rollback; not-started when no native plugin was loaded. Absent in
+    /// documents written before this field existed.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub native: Option<Effect>,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]

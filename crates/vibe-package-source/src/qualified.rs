@@ -252,6 +252,12 @@ impl InstallSource for RegistryPackageSource {
     fn replays_locked_source(&self, pkgref: &PackageRef) -> bool {
         self.resolver.replays_locked_source(pkgref)
     }
+    fn locked_update_availability(
+        &self,
+        pkgref: &PackageRef,
+    ) -> Result<Option<vibe_registry::LockedUpdateAvailability>, RegistryError> {
+        self.resolver.locked_update_availability(pkgref)
+    }
     fn prepare_in_place(
         &self,
         pkgref: &PackageRef,

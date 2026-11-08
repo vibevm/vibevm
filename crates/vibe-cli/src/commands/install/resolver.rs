@@ -25,7 +25,7 @@ use crate::cli::InstallArgs;
 
 mod git_source_flag;
 mod port;
-pub(crate) use port::{CliGitSourceMutation, CliPackageSourceFactory};
+pub(crate) use port::{CliGitSourceMutation, CliPackageSourceFactory, explicit_version_moves};
 // The shared resolver type, re-exported under this module's historical
 // path for the sibling commands that name it (`short_name`, cache,
 // reinstall, update).

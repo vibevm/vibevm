@@ -28,6 +28,8 @@ use vibe_wire::generated::llm::openai_compatible::e1::agent_result::AgentResult;
 use super::AgentError;
 use super::contract::OutputContract;
 
+mod controlled;
+
 /// Cap on the assistant document. A create result is file bodies, not a
 /// stream; 8 MiB matches the envelope cap the process handlers already use.
 const RESULT_CAP: usize = 8 * 1024 * 1024;
@@ -123,6 +125,18 @@ impl ResultPlan {
             rows,
             planned: planned.to_vec(),
         })
+    }
+
+    /// [`Self::apply`] under an operation stop: the same per-file atomic
+    /// publication, with a stop between files putting the already-published
+    /// owned files back through their checked inverse.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-073#OPERATION-EFFECTS-LAW")]
+    pub(crate) fn apply_controlled(
+        &self,
+        project_root: &Path,
+        cancellation: &vibe_core::cancellation::CancellationToken,
+    ) -> Result<Vec<ReplyArtifact>, AgentError> {
+        controlled::apply(self, project_root, cancellation)
     }
 
     /// Publish every validated row and return this plan's **own** prevalidated

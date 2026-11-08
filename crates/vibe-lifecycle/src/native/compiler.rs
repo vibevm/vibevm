@@ -230,7 +230,7 @@ impl<'a> ArtifactCompilerNativeInvoker<'a> {
         self.cancellation
             .checkpoint()
             .map_err(|error| failed(error.to_string()))?;
-        if self.cancellation.has_control() {
+        if self.cancellation.has_control() && !super::helper::stop_capable(&self.cancellation) {
             return Err(failed(
                 "selected in-process native compiler has no cooperative stop capability; no native build or invocation started",
             ));
@@ -361,14 +361,18 @@ impl<'a> ArtifactCompilerNativeInvoker<'a> {
                 )));
             }
         };
+        let (digest, bytes) = (artifact.digest.clone(), artifact.bytes);
         let image = self.access.image(
             self.selected_project_root,
             artifact,
             &prepared.qualified_key,
         )?;
         let compiler = self
-            .loader
-            .admit_compile(&image, &prepared.row.declaration().id, prepared.point)
+            .runtime()?
+            .admit(&image, &digest, bytes)
+            .and_then(|loader| {
+                loader.admit_compile(&image, &prepared.row.declaration().id, prepared.point)
+            })
             .map_err(|error| {
                 failed(format!(
                     "compile row `{}` loader: {error}",
