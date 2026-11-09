@@ -6,6 +6,11 @@ Regime at writing (`formats/EPOCHS.toml`, 2026-11-10): `public = false`, `break_
 
 Design authority for all of it: `spec://org.vibevm.core/vibevm/common/PROP-075#FORMAT-CHANGES`.
 
+**Id ranges.** `AV-FMT-001`…`AV-FMT-020` are the ids `PLAN.md` assigned to the phases while
+planning; a phase fills its own. Ids from **`AV-FMT-101`** up are for a format a phase turned
+out to need and the plan did not foresee, so two phases running concurrently cannot pick the
+same number. P5a's own unforeseen records are `AV-FMT-101` and `AV-FMT-102`.
+
 ## AV-FMT-001 — `[package] template` and the `[template]` table (Phase 1)
 
 Status: **delivered 2026-11-10** (phase P1). As implemented it matches the
@@ -119,7 +124,7 @@ Status: **planned**.
 
 ## AV-FMT-011 — `[[application.version_file]]` (Phase 5a)
 
-Status: **planned**.
+Status: **done** 2026-11-10.
 
 - `[format.manifest]`, epoch **1 → 1**. Optional rows; absent means byte-identical.
 - `format = "plain"` with `names` (an ordered array of file names, `[".nvmrc", ".node-version"]`): the first non-empty, non-comment line, trimmed, with `#` and a CR tolerated, read as a version requirement **or** a channel name.
@@ -127,11 +132,15 @@ Status: **planned**.
 - Nothing else is a format: `.python-version` is a `plain` row, and `package.json` `engines` is not read.
 - Precedence, highest first: an explicit `--use SLOT=VER` / `SLOT@VER`; the project's `vibe.toml` requirement on that application package; the nearest declared version file, searched from the working directory upward and stopping at the project root, ties inside one directory broken by the `names` declaration order; the slot's global default; a slot that is off stays off.
 - A version file naming a version that is not installed is **not** an error for a listing or a prompt hook: it is reported as `not installed` with the exact install command.
-- Resolutions are cached by the modification time and size of every file consulted, in the new `<home>/cache/version-files.json`.
+- Resolutions are cached by the modification time and size of every file consulted, in the new `<home>/cache/version-files.json` — now its own registered format, `AV-FMT-102`.
+- **As built:** the rows are a tagged union on `format`, so a member of one format is unknown to the other; a name must be one plain file name of one directory; two rows never claim the same file and a package declares at most one `tool-versions` key. Every refusal names its field as a TOML path in the sentence itself (`application.version_file[1].names: …`).
+- **As built:** a single leading `v` is tolerated before a requirement (`v22.23.4`), because that is the spelling `.nvmrc` files carry; the authored spelling is kept in every report. A channel name parses, but only `latest` and `stable` lower in this phase (over the installed set, with no network); every other channel is reported `unresolved_channel` until P2.
+- **As built:** the declaration is retained beside the index rather than inside it — `AV-FMT-101`.
+- **As built:** a requirement several installed versions satisfy resolves to the newest; `selection_required` is raised only when several distinct installations share that newest version.
 
 ## AV-FMT-012 — `vibe app env` and `vibe-app-env/1` (Phase 5a)
 
-Status: **planned**. New command, new format.
+Status: **done** 2026-11-10. New command, new format.
 
 - New record `[format.cli-application-env]`, epoch **1**, `schema = "schemas/application_env.jtd.json"`, in-document protocol tag `vibe-app-env/1`.
 - `vibe app env [--use SLOT=VER]… [--project] [--shell bash|zsh|fish|pwsh|cmd|posix] [--unset] [--json]` prints, on stdout and nothing else, the lines that switch the current shell. It sets exactly `PATH` (this selection's payload directories prepended, the withdrawn slots' link directories removed, composed by the same function `vibe shell` uses) and `VIBE_APP_USE`.
@@ -139,15 +148,21 @@ Status: **planned**. New command, new format.
 - The existing `Shell` enum of `vibe self env` (`crates/vibe-cli/src/commands/vvm/env.rs`) is promoted to a shared module and gains a `Cmd` variant; `vibe self env`'s output is unchanged, asserted by a golden test written **before** the move. This remains the one place in the tree that writes shell syntax.
 - Invariant, asserted directly against the library: for one selection, `vibe app env` and `vibe shell --use` produce the same `PATH` and the same `VIBE_APP_USE`.
 - `--json` answers the resolved selection, the composed PATH as an array and the variables as a table, for a client that sets the environment itself.
+- **As built:** `[format.cli-application-env]`, epoch 1, `schemas/application_env.jtd.json`, protocol tag `vibe-app-env/1`. Each selection carries its `source` (`flag`, `project_requirement`, `version_file`, `slot_default`, `slot_off`, `none`), its `state` (`selected`, `not_installed`, `off`, `unresolved_channel`, `ambiguous`), the requirement as authored, the key and version it resolved to, the version file that decided it, the `.tool-versions` versions it did not use, the candidates nothing narrowed, and the exact install command for a version that is not installed.
+- **As built:** stdout carries the lines and nothing else; every notice goes to **stderr**, so a prompt hook's `eval` cannot choke on one.
+- **As built:** `--project` **retracts** as well as applies — a selection the inherited `VIBE_APP_USE` carries and this resolution does not re-apply is taken out of PATH, which is what lets the hook undo on leaving a project.
+- **As built:** the `Shell` enum moved to `crates/vibe-cli/src/shell_syntax.rs` and gained `Cmd`, `set_line` and `unset_line`; `vibe self env`'s bytes are pinned by a golden test written before the move.
 
 ## AV-FMT-013 — `vibe hook <shell>` (Phase 5a)
 
-Status: **planned**. New command. No wire format.
+Status: **done** 2026-11-10. New command. No wire format.
 
 - `vibe hook bash|zsh|fish|pwsh [--print] [--yes]` writes one managed block (`MANAGED-BLOCKS-PROTOCOL`) into that shell's rc file — the same mechanism and the same consent PROP-065 `#env-step` already uses for `env.sh`, never a byte outside the block — and `--print` writes it to stdout instead. cmd gets no hook; `vibe shell` is the way there.
 - The block registers a function on `PROMPT_COMMAND` (bash), `precmd` (zsh), `--on-variable PWD` (fish) or the prompt function (pwsh). It keeps the last resolved directory and the applied lines in a shell variable; an unchanged `$PWD` returns immediately with builtins only. On a change it walks up with the shell's own file test over the name list the installed packages declare — the block is regenerated when that declared set changes, so the walk is a fixed number of builtin tests — and calls `vibe app env --project --shell X` once, and only when a candidate file exists or a previous selection must be undone.
 - **Cost budget, as a checkable gate:** zero subprocesses on a prompt in an unchanged directory and on a `cd` into a directory with no candidate version file; at most one `vibe` invocation on a `cd` that has one; that invocation makes no network call, no registry call and no index-server read, and completes in under 50 ms warm, measured by a fixture.
 - A hook never installs, never downloads, never writes the index and never fails the prompt: a version that is not installed prints one line naming the exact install command and leaves the shell as it was.
+- **As built:** the block's markers are its own (`# >>> vibe application versions …`), beside the `env`-step block of PROP-065 `#env-step`, which the same `BlockMarkers` machinery now serves generically. A write asks in an attended terminal and refuses `consent_required` unattended without `--yes`; `--print` always writes to stdout and touches no file. `pwsh`'s startup file is its profile (`~/.config/powershell/Microsoft.PowerShell_profile.ps1`), not `.profile`.
+- **Measured:** `cli_hook_linux::hook_spawns_nothing_in_an_unchanged_directory` counts the invocations of a `vibe` shim on PATH: **0** on a `cd` into a directory with no candidate file, **0** for two prompts in an unchanged directory, **1** on a `cd` into a directory that has one. The warm cost of that one call is **21 ms** in a debug build (process floor 24 ms), against a 50 ms budget — `LOG.md`, spike S4.
 
 ## AV-FMT-014 — `vibe app versions` and `vibe-app-versions/1` (Phase 5b)
 
@@ -209,3 +224,48 @@ Status: **planned**. New authored documents; no vibe wire format.
 - `conformance/vibenvm/nvm-tests.allow`: the recorded subset of the pinned nvm-sh `test/fast/` suite that runs offline against the shim. Reusing nvm's own tests is a bonus, never the gate — the pinned suite is *near*-offline, not offline, and has no suite-wide mirror override.
 - `conformance/vibenvm/normalise.rules`: the declared, mechanical normalisations — sandbox paths to `<HOME>`, the tool root to `<TOOLROOT>`, ANSI SGR stripped, `\d+(\.\d+)?(ms|s)` to `<T>`, a listed set of progress and notice line regexes dropped, version lists sorted. **Observation records are compared field by field; stdout and stderr text are not compared at all** unless a case opts in, and then only after these rules. No model's judgement enters the verdict.
 - Verdict = exit code: `0` every case passed and coverage complete; `1` a differential mismatch (naming case, step, field, both values); `2` coverage incomplete (naming each uncovered pair) or an unapproved exclusion; `3` a harness error (mirror digest mismatch, a non-loopback connection attempt, a missing pinned tag).
+
+## AV-FMT-101 — `applications/version-files.json`, the declared version files (Phase 5a)
+
+Status: **done** 2026-11-10. New format, not foreseen by `PLAN.md`.
+
+- New record `[format.application-version-files]`, epoch **1**,
+  `schema = "schemas/application_version_files.jtd.json"`, `recoverable = true`,
+  `foreign_parsers = "none"`, `unknown_fields = "deny"`, `corpus = "none"`. In-document
+  protocol tag `vibe-app-version-files/1`.
+- `<settings>/applications/version-files.json`: one entry per installation key, each with its
+  slot and the `[[application.version_file]]` rows its package declares.
+- **Why beside the index and not inside it.** PROP-075 `#ACTIVATION-HOOK` requires the hook's one
+  call to read the home's index and the version files only, so the declarations must be retained
+  by the home. Retaining them in the `Installation` record would move the inventory to
+  `vibe-user-applications/7`, which needs the `vibe-app-proxy` admission PROP-059
+  `#proxy-index-upgrade` requires — and that whole move is `AV-FMT-017`, assigned to phase P2.
+  A sibling document keeps the index at `/6`, so every existing PATH proxy goes on reading it.
+- Derived state, kept consistent by construction: `Index::load` reads the sidecar into the
+  records, every publication rewrites it from them, a key the sidecar names and the index does
+  not is ignored, and an empty declared set removes the document rather than writing an empty
+  one. A missing or corrupt document is an empty declared set — the slot then simply has no
+  version file, which is what keeps a prompt hook from failing. Losing it costs a reinstall of
+  the application, which is why it is `recoverable` but not rebuildable from the home alone.
+- Recorded in PROP-075 `#P5A-AS-BUILT` (1).
+
+## AV-FMT-102 — `cache/version-files.json`, the resolution cache (Phase 5a)
+
+Status: **done** 2026-11-10. New format, not foreseen by `PLAN.md`.
+
+- New record `[format.application-version-file-cache]`, epoch **1**,
+  `schema = "schemas/application_version_file_cache.jtd.json"`, `recoverable = true`,
+  `foreign_parsers = "none"`, `unknown_fields = "deny"`, `corpus = "none"`. In-document
+  protocol tag `vibe-app-version-file-cache/1`.
+- `<home>/cache/version-files.json`: one entry per directory resolved, carrying the project root
+  the search stopped at, a fingerprint of the declared set, every path consulted with its
+  modification time and size **or its recorded absence**, the selection that resulted, the faults
+  reported, and when the entry was last a hit.
+- A hit needs the same directory, the same project root, the same declared set, every file that
+  existed still unchanged and every file that was absent still absent — which is what makes a
+  repeated `cd` between two project directories two cache hits (PROP-075 `#ACTIVATION-HOOK`). The
+  cache is bounded to the 64 least-recently-used directories.
+- A pure cache: a corrupt, unreadable or unwritable document is ignored and costs one re-read,
+  never an error. This is the document PROP-075 `#VERSION-FILE-FORMATS` names as "cached by the
+  modification time and size of the files consulted"; it is registered because it is persisted.
+- Recorded in PROP-075 `#P5A-AS-BUILT` (2).

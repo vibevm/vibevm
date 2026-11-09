@@ -215,10 +215,13 @@ Run them with the isolated runner the repo uses
   `rebuild --check` and `wire-diff`, and confirm the
   `formats/corpora/index/e1` golden bytes are unchanged when the member is
   absent. If they are not, the index change becomes an epoch bump.
-- **S4 — the hook's cost.** Measure warm `vibe app env --project` (target
-  < 50 ms) and prototype the builtin-only fast path in bash, zsh and fish.
-  If `vibe app env` cannot be made that cheap, the hook caches harder or
-  `ACTIVATION-HOOK`'s budget is renegotiated with the owner before P5a.
+- **S4 — the hook's cost.** **Done 2026-11-10; the budget is met and nothing
+  was renegotiated.** Builtin-only fast path in bash: 15 µs on an unchanged
+  `$PWD`, 205 µs for a 24-test upward walk, zero subprocesses in both. The one
+  `vibe app env --project` call: **21 ms warm** in a debug build against a
+  24 ms process floor and a 50 ms budget. zsh and fish are not installed on
+  this host, so their generated bodies are covered by unit tests on the text
+  and by shell tests that skip loudly. Numbers and method: `LOG.md`.
 - **S5 — proxy protocol /7.** *(done 2026-11-10 — confirmed on all three
   counts; `LOG.md`.)* Confirm that a home with no template
   installation still writes `vibe-user-applications/6`, that
@@ -485,10 +488,19 @@ the network denied** is the only honest proof that the snapshot is complete.
 
 **Parallel.** Needs P1 and P2. Independent of P3, P5, P6.
 
-### P5a — version files, `app env`, `vibe hook`, `app exec` — **L**
+### P5a — version files, `app env`, `vibe hook`, `app exec` — **L** — **DONE 2026-11-10**
 
 **Goal.** Per-project version selection, shell activation and run-one-command,
 none of which needs a template at all.
+
+**As built.** The nine amendments are PROP-075 `#P5A-AS-BUILT`; the two
+formats the plan did not foresee are `AV-FMT-101` (the declared version files
+beside the index, because retaining them *in* it would drag `AV-FMT-017`'s
+`/7` move out of P2) and `AV-FMT-102` (the resolution cache). Channel lowering
+beyond the reserved `latest` / `stable` belongs to P2, so
+`#VERSION-FILE-FORMATS` and `#VERSION-EXEC-SPELLING` are `impl/work`. The CLI
+test target is `cli_app_env_activation`, not `cli_app_env`: that name was
+already taken by the PROP-065 env-step fixture.
 
 **Files.** `crates/vibe-core/src/manifest/package/application.rs` +
 `…/application/validation.rs` (`[[application.version_file]]`);
@@ -533,11 +545,11 @@ on a `cd` into a version-file directory (must be 1), and asserts
 **Acceptance.**
 ```sh
 cargo test -p vibe-app -p vibe-core --offline --locked
-cargo test -p vibe-cli --test cli_app_env --offline --locked
+cargo test -p vibe-cli --test cli_app_env_activation --offline --locked
 cargo test -p vibe-cli --test cli_app_exec --offline --locked
 cargo test -p vibe-cli --test cli_hook_linux --offline --locked
 # the budget, as a command:
-cargo test -p vibe-cli --test cli_hook_linux hook_spawns_nothing_in_an_unchanged_directory -- --exact
+cargo test -p vibe-cli --test cli_hook_linux hook_spawns_nothing_in_an_unchanged_directory
 ```
 
 **Risks.** The hook is the only thing in this campaign that runs on every
@@ -715,7 +727,10 @@ concurrently once P2 lands.
 - **P4** A client with only the mirrored registry configured and all
   non-loopback traffic denied installs a snapshotted Node version.
 - **P5a** The prompt hook spawns zero processes on a prompt in an unchanged
-  directory, measured.
+  directory, measured. **Held (2026-11-10):** zero on an unchanged prompt,
+  zero on a `cd` with no candidate file, exactly one on a `cd` that has one —
+  counted by a shim named `vibe` on PATH in
+  `cli_hook_linux::hook_spawns_nothing_in_an_unchanged_directory`.
 - **P7** The mapping yields exactly the three new vibe features
   `PROP-075#VIBENVM-GAPS` names, and no fourth is discovered while writing the
   cases. *This is the campaign's central claim: nvm's surface is absorbed by

@@ -193,3 +193,84 @@ reported unparseable by `vibe check`'s manifest-validity cell (a lone variable
 in a typed numeric field would have to be admitted by the typed manifest
 layer). Neither real package needs it; filed here rather than in `BACKLOG.md`
 because it is this campaign's own follow-up.
+## 2026-11-10 — spike S4 (the hook's cost): the budget is met, nothing renegotiated
+
+Measured on this machine (Linux, 32 cores) with a **debug** `vibe` (454 MB binary), which is
+the pessimistic case: a release build is smaller and starts faster.
+
+**Part A — the builtin-only fast path** (`bash` 5.x, no subprocess at all; the prototype is the
+same shape the generated block uses, 20 000 iterations each, timed with the `$EPOCHREALTIME`
+builtin):
+
+| case | cost |
+| --- | --- |
+| prompt in an unchanged `$PWD` (early return) | **15 µs** |
+| `cd`, no candidate file anywhere up the tree (8 dirs × 3 names = 24 builtin `[ -f ]` tests) | **205 µs** |
+| `cd` into a directory that has one | **67 µs** |
+
+Zero subprocesses in every case: the body uses only `[`, parameter expansion and array
+iteration. zsh and fish were not installed on this host, so their bodies are covered by the
+unit tests on the generated text plus the gracefully-skipping shell tests.
+
+**Part B — the one `vibe` call** a `cd` with a candidate file makes, against a home with two
+versions of a `path_dirs` runtime installed and a `.runtime-version` four directories up
+(40 iterations each):
+
+| command | warm |
+| --- | --- |
+| `vibe --version` (process floor) | 24 ms |
+| `vibe app env --project --shell bash` | **21 ms** |
+| the same with the resolution cache deleted before each call | 33 ms |
+
+The resolution itself is inside the process floor's noise: what the budget pays for is starting
+a debug `vibe`, not resolving a version. **The `< 50 ms` budget of
+`PROP-075#ACTIVATION-HOOK` is met with better than 2× headroom, so neither the budget nor the
+hook design was renegotiated.** The first measurement, taken before P5a existed, used
+`vibe app alternatives <slot> --json` as the nearest existing analogue (16 ms against an 11 ms
+floor) and agreed.
+
+The budget is now a test, not a measurement:
+`cargo test -p vibe-cli --test cli_hook_linux hook_spawns_nothing_in_an_unchanged_directory`
+puts a counting shim named `vibe` on PATH and asserts 0 / 0 / 1 invocations for the three cases
+above.
+
+## 2026-11-10 — phase P5a implemented
+
+`[[application.version_file]]`, the upward search with its mtime+size cache, the activation
+precedence, `vibe app env`, `vibe hook bash|zsh|fish|pwsh`, `vibe app exec` and the promotion of
+the `Shell` enum out of `commands/vvm/`. `AV-FMT-011`, `AV-FMT-012`, `AV-FMT-013` filled;
+`AV-FMT-101` and `AV-FMT-102` added for two home documents the plan did not foresee. PROP-075
+gained `#P5A-AS-BUILT` with the nine amendments; `#VERSION-FILES`, `#ACTIVATION`,
+`#VERSION-EXEC`, `#ACTIVATION-ENV-OUTPUT` and `#ACTIVATION-HOOK` are `impl/done`, and
+`#VERSION-FILE-FORMATS` and `#VERSION-EXEC-SPELLING` are `impl/work` because channel lowering
+beyond `latest` / `stable` belongs to P2.
+
+Facts a later session would otherwise re-derive:
+
+- **The declared version files could not go in the application index.** `#ACTIVATION-HOOK` wants
+  the hook's one call to read the home's index and the version files only, so the home must
+  retain the declarations — but adding them to `Installation` moves the inventory to
+  `vibe-user-applications/7`, which drags in the whole of `AV-FMT-017` (a new `application/e6`
+  schema generation, its corpus, a `/6 → /7` promotion, and the `vibe-app-proxy` admission
+  PROP-059 `#proxy-index-upgrade` requires) — P2's deliverable, not P5a's. The sidecar
+  `applications/version-files.json` (`AV-FMT-101`) keeps the index at `/6` and every existing
+  proxy working. `PLAN.md` §4 P5a's file list did not name `crates/vibe-app/src/index.rs`, which
+  is consistent with the sidecar and not with retaining the rows in the record.
+- **`commands::app::home::project_at` does not walk up.** It answers "is *this* directory a
+  project", for the project-home scope of PROP-059 `#project-scope`. A version-file search needs
+  the nearest *ancestor* holding a `vibe.toml`, so `commands::app::env::enclosing_project` is a
+  second, different resolver. Confusing the two makes the search run to the filesystem root from
+  inside a project.
+- **An installation key and a channel both carry a `/`.** `org.example/node@22.0.0` and
+  `lts/jod` are told apart by the `@`, never by the slash; the first attempt read `lts/jod` as a
+  key and refused `not_installed`.
+- **`[requires]` is a TOML *table*, not an array**: `[requires.packages]` with
+  `"org.example/runtime" = "=1.0.0"`. A project fixture also needs `version` under `[project]`.
+- **`cargo xtask check-codegen` diffs the generated tree against `git`, not against disk.** With
+  a new schema staged but not committed it reports drift that a `cargo xtask codegen` cannot fix;
+  commit, then check.
+- **`tools/jtd-codegen/jtd-codegen` is git-ignored**, so a fresh worktree has no code generator
+  until the binary is copied in from another checkout.
+- **The test target `cli_app_env` was already taken** by the PROP-065 env-step fixture
+  (`crates/vibe-cli/tests/cli_app_env.rs`). P5a's CLI test is `cli_app_env_activation`, and
+  `PLAN.md` §4's acceptance line for P5a is amended to name it.
