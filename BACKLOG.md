@@ -170,6 +170,16 @@ An **id**, the **`spec://…#ANCHOR`** it came from where one exists, a one-line
 
 ## P2 — the next wave drains from here {#p2}
 
+### B-238 — часть тестов vibe-app, vibe-registry и vvm красная на настоящем Windows {#b-238}
+
+| | |
+|---|---|
+| @fact:B238-ANCHOR **anchor** | `crates/vibe-app` (14 тестов), `crates/vibe-registry` (4 теста), тесты источников релизов в `crates/vibe-cli/src/commands/vvm` (2 теста) |
+| @fact:B238-LOCATOR **locator** | прогон на Windows 11 2026-11-09 (корпоративная кампания, `campaigns/corporate-env-2026-11/LOG.md`): эти тесты падают на Windows одинаково на закоммиченном дереве до работы и после неё; ещё 1–2 loopback-HTTP теста vibe-registry сбрасываются под параллельной нагрузкой и проходят в один поток. Интеграционные CLI-наборы собираются только под Unix, поэтому на Windows их заменял сквозной прогон |
+| @fact:B238-SEVERITY **severity** | P2 — сквозной сценарий закрытой сети на Windows проходит, но набор тестов на Windows не зелёный и не прогоняется регулярно, так что регрессии Windows ловятся только вручную |
+| @fact:B238-DISPOSITION **disposition** | `open` — разобрать по причинам (Unix-допущения тестов против настоящих дефектов), починить настоящие дефекты, сделать Windows-прогон регулярным |
+| @fact:B238-FILED **filed by** | центральная сессия, корпоративная кампания, 2026-11-09 |
+
 ### B-237 — откат прерванной операции не переживает падение процесса {#b-237}
 
 | | |
