@@ -51,12 +51,45 @@ impl Machine {
             .env_remove("VIBE_UNATTENDED")
             .env_remove("VIBEVM_RELEASE_ORIGIN")
             .env_remove("VIBEVM_USER_CONFIG")
-            .env_remove("VIBE_OFFLINE");
+            .env_remove("VIBE_OFFLINE")
+            // `pac = "system"` is resolved on every host now
+            // (PROP-068 `#proxy-system`), and its lowest source is the
+            // environment: an exported `https_proxy` of the developer
+            // who runs the suite would otherwise answer, and so would a
+            // fixture left over from another test.
+            .env_remove("VIBEVM_SYSTEM_PROXY_FIXTURE")
+            .env_remove("VIBEVM_SYSTEM_PROXY_OS");
+        for name in [
+            "https_proxy",
+            "HTTPS_PROXY",
+            "http_proxy",
+            "HTTP_PROXY",
+            "all_proxy",
+            "ALL_PROXY",
+            "no_proxy",
+            "NO_PROXY",
+        ] {
+            command.env_remove(name);
+        }
         command
     }
 
     fn run(&self, args: &[&str]) -> Output {
         self.cmd().args(args).output().unwrap()
+    }
+
+    /// `run`, with the proxy-configuration seam of PROP-068
+    /// `#proxy-system` pointed at a fixture directory: `<dir>/gsettings`,
+    /// `<dir>/kioslaverc`, `<dir>/scutil-proxy`, `<dir>/dns-domains` and
+    /// `<dir>/wpad` stand in for this machine's own desktop, and
+    /// `kind` names the resolution order to run.
+    fn run_as_host(&self, args: &[&str], kind: &str, fixture: &Path) -> Output {
+        self.cmd()
+            .env("VIBEVM_SYSTEM_PROXY_OS", kind)
+            .env("VIBEVM_SYSTEM_PROXY_FIXTURE", fixture)
+            .args(args)
+            .output()
+            .unwrap()
     }
 
     fn apply(&self, profile: &Path, extra: &[&str]) -> Value {
@@ -370,9 +403,10 @@ fn an_invalid_profile_is_refused_naming_file_key_and_fix_and_writes_nothing() {
 }
 
 /// A profile written for Windows desktops validates on a Linux box: a UNC
-/// release drop is absolute (not "relative"), and both it and
-/// `[proxy] pac = "system"` are accepted with a warning that only a Windows
-/// host can use them (PROP-019 `#site-profile`).
+/// release drop is absolute (not "relative") and is accepted with a
+/// warning that only a Windows host can read it (PROP-019
+/// `#site-profile`). `[proxy] pac = "system"` carries no such warning any
+/// more — it is resolved on every host (PROP-068 `#proxy-system`).
 #[test]
 fn a_windows_profile_validates_here_with_windows_only_warnings() {
     let machine = Machine::new();
@@ -397,8 +431,8 @@ fn a_windows_profile_validates_here_with_windows_only_warnings() {
         "{stderr}"
     );
     assert!(
-        stderr.contains("proxy.pac") && stderr.contains("works only on Windows"),
-        "{stderr}"
+        !stderr.contains("works only on Windows"),
+        "`pac = \"system\"` is resolved on this host too: {stderr}"
     );
     assert!(!machine.settings("site-profile.toml").exists());
 }
@@ -992,12 +1026,9 @@ fn the_environment_beats_the_user_file_and_the_user_file_beats_the_site() {
     );
 }
 
-/// `pac = "system"` is resolved by vibe, so `--show` says what it resolved
-/// to and which setting answered — and on a host that is not Windows, that
-/// there is nothing to read (PROP-068 `#proxy-system`). The `[proxy]`
-/// table's own keys still read back exactly as written.
-#[test]
-fn a_system_pac_is_reported_as_resolved_or_as_unresolvable_here() {
+/// A site profile with `pac = "system"`, stored once and read back by
+/// every case below.
+fn system_pac_machine() -> Machine {
     let machine = Machine::new();
     machine.import_active();
     let site = tempfile::tempdir().unwrap();
@@ -1008,35 +1039,146 @@ fn a_system_pac_is_reported_as_resolved_or_as_unresolvable_here() {
         + "\n[proxy]\nmode = \"px\"\npac = \"windows\"\nno_proxy = \".corp.example\"\n";
     let profile = write_profile(site.path(), &body);
     machine.apply(&profile, &[]);
+    machine
+}
 
-    let shown = json(&machine.run(&["--json", "self", "apply", "--show"]));
+/// `pac = "system"` is resolved by vibe, so `--show` says what it
+/// resolved to and which source answered — and when nothing on the host
+/// configures a proxy, that the Linux desktops and the environment were
+/// all looked at and found empty (PROP-068 `#proxy-system`). The
+/// `[proxy]` table's own keys still read back exactly as written.
+#[test]
+fn a_system_pac_is_reported_as_resolved_or_as_unresolvable_here() {
+    let machine = system_pac_machine();
+    // An empty fixture directory IS a host with nothing configured: no
+    // `gsettings`, no `kioslaverc`, and `cmd()` removed the proxy
+    // variables.
+    let bare = tempfile::tempdir().unwrap();
+
+    let shown =
+        json(&machine.run_as_host(&["--json", "self", "apply", "--show"], "unix", bare.path()));
     let proxy = &shown["effective"]["proxy"];
     // The alias is accepted and read as the one kind `system` names.
     assert_eq!(proxy["pac"], "windows", "{proxy}");
     assert_eq!(proxy["pac_kind"], "system", "{proxy}");
     assert_eq!(proxy["pac_origin"], "site profile", "{proxy}");
     let resolved = proxy["pac_resolved"].as_str().expect("resolved or why not");
-    if cfg!(windows) {
-        assert!(
-            resolved.starts_with("system \u{2192} "),
-            "the resolution names what px will be given: {resolved}"
-        );
-    } else {
-        assert!(
-            resolved.contains("not Windows") && resolved.contains("fix:"),
-            "{resolved}"
-        );
+    for part in [
+        "GNOME settings",
+        "KDE settings",
+        "environment https_proxy",
+        "fix:",
+    ] {
+        assert!(resolved.contains(part), "{part} missing from: {resolved}");
     }
     // The default revocation setting is reported as such and prints nothing.
     assert_eq!(proxy["revocation"], "check", "{proxy}");
     assert_eq!(proxy["revocation_origin"], "default", "{proxy}");
-    let text = ok(&machine.run(&["self", "apply", "--show"]));
+    let text = String::from_utf8_lossy(
+        &machine
+            .run_as_host(&["self", "apply", "--show"], "unix", bare.path())
+            .stdout,
+    )
+    .into_owned();
     assert!(
         text.contains("proxy pac: windows (system, from site profile)"),
         "{text}"
     );
     assert!(text.contains(resolved), "{text}");
     assert!(!text.contains("proxy revocation:"), "{text}");
+}
+
+/// A Linux host whose GNOME desktop is set to "automatic proxy
+/// configuration": `pac = "system"` resolves to the PAC URL GNOME names,
+/// which is the `--pac=<url>` px is started with, and every report says
+/// the setting it came from (PROP-068 `#proxy-system`).
+#[test]
+fn a_gnome_auto_configuration_resolves_to_the_pac_url_it_names() {
+    let machine = system_pac_machine();
+    let fixture = tempfile::tempdir().unwrap();
+    fs::write(
+        fixture.path().join("gsettings"),
+        "org.gnome.system.proxy autoconfig-url 'https://pac.example.corp/proxy.pac'\n\
+         org.gnome.system.proxy ignore-hosts ['localhost', '*.corp.example']\n\
+         org.gnome.system.proxy mode 'auto'\n",
+    )
+    .unwrap();
+
+    let shown = json(&machine.run_as_host(
+        &["--json", "self", "apply", "--show"],
+        "unix",
+        fixture.path(),
+    ));
+    assert_eq!(
+        shown["effective"]["proxy"]["pac_resolved"],
+        "system \u{2192} https://pac.example.corp/proxy.pac · bypass localhost,*.corp.example \
+         (from GNOME settings)",
+        "{shown}"
+    );
+    let text = String::from_utf8_lossy(
+        &machine
+            .run_as_host(&["self", "apply", "--show"], "unix", fixture.path())
+            .stdout,
+    )
+    .into_owned();
+    assert!(
+        text.contains("system \u{2192} https://pac.example.corp/proxy.pac"),
+        "{text}"
+    );
+    assert!(text.contains("from GNOME settings"), "{text}");
+}
+
+/// The same host, with the macOS order: the network settings of the
+/// current network service name a fixed proxy, and that is what px is
+/// given as `--proxy` (PROP-068 `#proxy-system`).
+#[test]
+fn the_macos_network_settings_resolve_to_the_proxy_they_name() {
+    let machine = system_pac_machine();
+    let fixture = tempfile::tempdir().unwrap();
+    fs::write(
+        fixture.path().join("scutil-proxy"),
+        "<dictionary> {\n  ExceptionsList : <array> {\n    0 : *.corp.example\n  }\n\
+         \x20 HTTPSEnable : 1\n  HTTPSPort : 8080\n  HTTPSProxy : proxy.example.corp\n}\n",
+    )
+    .unwrap();
+
+    let shown = json(&machine.run_as_host(
+        &["--json", "self", "apply", "--show"],
+        "macos",
+        fixture.path(),
+    ));
+    assert_eq!(
+        shown["effective"]["proxy"]["pac_resolved"],
+        "system \u{2192} proxy proxy.example.corp:8080 · bypass *.corp.example \
+         (from macOS network settings)",
+        "{shown}"
+    );
+}
+
+/// The lowest source: an exported `https_proxy` with no desktop
+/// configuration at all, reported as the variable it came from
+/// (PROP-068 `#proxy-system`).
+#[test]
+fn an_exported_https_proxy_is_the_last_source_and_is_named() {
+    let machine = system_pac_machine();
+    let bare = tempfile::tempdir().unwrap();
+    let shown = json(
+        &machine
+            .cmd()
+            .env("VIBEVM_SYSTEM_PROXY_OS", "unix")
+            .env("VIBEVM_SYSTEM_PROXY_FIXTURE", bare.path())
+            .env("https_proxy", "http://proxy.example.corp:8080")
+            .env("no_proxy", ".corp.example")
+            .args(["--json", "self", "apply", "--show"])
+            .output()
+            .unwrap(),
+    );
+    assert_eq!(
+        shown["effective"]["proxy"]["pac_resolved"],
+        "system \u{2192} proxy proxy.example.corp:8080 · bypass .corp.example \
+         (from environment https_proxy)",
+        "{shown}"
+    );
 }
 
 /// `[proxy] revocation` is a `[proxy]` key like any other: the site sets
@@ -1108,4 +1250,520 @@ fn the_revocation_setting_is_reported_with_the_layer_that_chose_it() {
     );
     let shown = common::wire::checked(&ok(&output));
     assert_eq!(shown["effective"]["proxy"]["revocation"], "best-effort");
+}
+
+/// The pinned px of this build, its store directory under `root` and the
+/// companion asset this platform needs — `None` when the pin has no px
+/// here, the one case the step has nothing to do.
+fn px_pin(root: &Path) -> Option<(PathBuf, PathBuf, String)> {
+    let pin = vibe_net::px_store::PxPin::embedded();
+    let asset = vibe_net::px_store::running_target().and_then(|target| pin.asset(target))?;
+    let store = root
+        .join("opt")
+        .join("vibevm")
+        .join("tools")
+        .join("px")
+        .join(&pin.version);
+    Some((
+        store.clone(),
+        store.join(&asset.executable),
+        pin.release_asset_name(asset),
+    ))
+}
+
+/// A profile that selects px (`PROP-019#companion-tools`, B-251): the
+/// release zip carries no px, so apply names the gap and the repair on
+/// every run until the companion is in the store — and once it is, says
+/// so and changes nothing. The px the step reports is always the store of
+/// the install root this profile chooses.
+#[test]
+fn a_profile_selecting_px_reports_the_missing_companion_until_it_is_there() {
+    let machine = Machine::new();
+    machine.import_active();
+    let site = tempfile::tempdir().unwrap();
+    for dir in ["registry", "releases", "payloads"] {
+        fs::create_dir_all(site.path().join(dir)).unwrap();
+    }
+    let body = corp_profile(site.path(), Some("never"))
+        + "\n[proxy]\nmode = \"px\"\nupstream = \"proxy.example.corp:8080\"\n";
+    let profile = write_profile(site.path(), &body);
+    let Some((store, program, asset)) = px_pin(machine.base.path()) else {
+        eprintln!("skipping: the pin has no px for this platform");
+        return;
+    };
+
+    // A dry run says what it would find, and writes nothing.
+    let planned = machine.apply(&profile, &["--dry-run"]);
+    assert_eq!(planned["px"]["needed"], true, "{planned}");
+    assert_eq!(planned["px"]["planned"], true, "{planned}");
+    assert_eq!(planned["px"]["outcome"], "missing", "{planned}");
+    assert_eq!(planned["px"]["store"], store.display().to_string());
+    assert_eq!(planned["px"]["asset"], asset);
+    assert!(!store.exists(), "a dry run writes nothing");
+
+    // Apply: the profile is applied (exit 0) and the gap is a warning
+    // naming the asset, the store and the repair.
+    let applied = machine.apply(&profile, &[]);
+    assert_eq!(applied["px"]["outcome"], "missing", "{applied}");
+    assert_eq!(applied["px"]["planned"], false);
+    assert_eq!(applied["px"]["program"], Value::Null);
+    let fix = applied["px"]["fix"].as_str().expect("the repair");
+    assert!(fix.contains(&asset), "{fix}");
+    assert!(fix.contains("vibe self px install --from"), "{fix}");
+    assert!(fix.contains(&store.display().to_string()), "{fix}");
+    let warnings: Vec<&str> = applied["warnings"]
+        .as_array()
+        .unwrap()
+        .iter()
+        .map(|warning| warning.as_str().unwrap())
+        .collect();
+    assert!(
+        warnings.contains(&fix),
+        "the warning is the repair: {warnings:?}"
+    );
+
+    // The human summary says it where a person looks, not only as a grey
+    // skipped line.
+    let mut human = machine.cmd();
+    human.args(["--unattended", "self", "apply"]).arg(&profile);
+    let output = human.output().unwrap();
+    let text = ok(&output);
+    assert!(text.contains("px: NOT INSTALLED"), "{text}");
+    assert!(text.contains("proxy mode: px"), "{text}");
+    let stderr = String::from_utf8_lossy(&output.stderr);
+    assert!(stderr.contains("vibe self px install --from"), "{stderr}");
+
+    // The operator puts px in the store (here by hand; `vibe self px
+    // install` and the apply step itself verify it against the pin).
+    fs::create_dir_all(&store).unwrap();
+    fs::write(&program, "fake px").unwrap();
+    let ready = machine.apply(&profile, &[]);
+    assert_eq!(ready["px"]["outcome"], "already_installed", "{ready}");
+    assert_eq!(ready["px"]["program"], program.display().to_string());
+    assert_eq!(ready["px"]["fix"], Value::Null);
+    assert!(
+        ready["warnings"]
+            .as_array()
+            .unwrap()
+            .iter()
+            .all(|warning| !warning.as_str().unwrap().contains("px is not installed")),
+        "{ready}"
+    );
+    // And the run after that is the same run: idempotent.
+    let again = machine.apply(&profile, &[]);
+    assert_eq!(again["px"], ready["px"]);
+    let text = ok(&machine
+        .cmd()
+        .args(["--unattended", "self", "apply"])
+        .arg(&profile)
+        .output()
+        .unwrap());
+    assert!(text.contains("px: already installed"), "{text}");
+    assert!(!text.contains("NOT INSTALLED"), "{text}");
+}
+
+/// The px step reads the store of the install root the profile declares,
+/// not the one this process happens to run under (`PROP-019#install-root`).
+#[test]
+fn the_px_step_follows_the_profiles_install_root() {
+    let machine = Machine::new();
+    let allowed = tempfile::tempdir().unwrap();
+    import_active_in(&machine, allowed.path());
+    let site = tempfile::tempdir().unwrap();
+    fs::create_dir_all(site.path().join("releases")).unwrap();
+    let profile = write_profile(
+        site.path(),
+        &format!(
+            "schema = 1\nname = \"corp\"\n\n[self]\ninstall_root = \"{}\"\n\
+             \n[proxy]\nmode = \"px\"\nupstream = \"proxy.example.corp:8080\"\n",
+            allowed.path().display()
+        ),
+    );
+    let Some((store, _, _)) = px_pin(allowed.path()) else {
+        eprintln!("skipping: the pin has no px for this platform");
+        return;
+    };
+
+    let applied = json(
+        &machine
+            .cmd()
+            .env_remove("VIBEVM_INSTALL_ROOT")
+            .args(["--json", "--unattended", "self", "apply"])
+            .arg(&profile)
+            .args(["--no-fix-path"])
+            .output()
+            .unwrap(),
+    );
+    assert_eq!(
+        applied["px"]["store"],
+        store.display().to_string(),
+        "{applied}"
+    );
+    assert_eq!(applied["px"]["needed"], true);
+}
+
+/// `[proxy] px_path` names the operator's own px, so the companion store
+/// is not vibe's business and the step says nothing about it.
+#[test]
+fn a_profile_naming_its_own_px_asks_nothing_of_the_companion_store() {
+    let machine = Machine::new();
+    machine.import_active();
+    let site = tempfile::tempdir().unwrap();
+    fs::create_dir_all(site.path().join("releases")).unwrap();
+    let own = site.path().join("px");
+    fs::write(&own, "#!/bin/sh\nexit 0\n").unwrap();
+    fs::set_permissions(&own, fs::Permissions::from_mode(0o755)).unwrap();
+    let body = corp_profile(site.path(), Some("never"))
+        + &format!(
+            "\n[proxy]\nmode = \"px\"\nupstream = \"proxy.example.corp:8080\"\npx_path = \"{}\"\n",
+            own.display()
+        );
+    let profile = write_profile(site.path(), &body);
+
+    let applied = machine.apply(&profile, &[]);
+    assert_eq!(applied["px"]["outcome"], "not_needed", "{applied}");
+    assert_eq!(applied["px"]["needed"], false);
+    assert_eq!(applied["px"]["fix"], Value::Null);
+    let text = ok(&machine
+        .cmd()
+        .args(["--unattended", "self", "apply"])
+        .arg(&profile)
+        .output()
+        .unwrap());
+    assert!(!text.contains("px:"), "{text}");
+}
+
+/// `vibe self px status` with a px mode and no px is not a success: it
+/// reports, then refuses, the way `vibe self doctor` does with an
+/// unresolved problem (`PROP-019#companion-tools`, B-251).
+#[test]
+fn px_status_refuses_when_a_px_route_has_no_px() {
+    let machine = Machine::new();
+    machine.import_active();
+    let site = tempfile::tempdir().unwrap();
+    fs::create_dir_all(site.path().join("releases")).unwrap();
+    let body = corp_profile(site.path(), Some("never"))
+        + "\n[proxy]\nmode = \"px\"\nupstream = \"proxy.example.corp:8080\"\n";
+    machine.apply(&write_profile(site.path(), &body), &[]);
+    let Some((store, program, asset)) = px_pin(machine.base.path()) else {
+        eprintln!("skipping: the pin has no px for this platform");
+        return;
+    };
+    // An empty PATH, so a px this machine happens to carry cannot answer.
+    let empty = tempfile::tempdir().unwrap();
+    let status = || {
+        machine
+            .cmd()
+            .env("PATH", empty.path())
+            .args(["--json", "self", "px", "status"])
+            .output()
+            .unwrap()
+    };
+
+    let output = status();
+    assert!(!output.status.success(), "a px route with no px is not ok");
+    let doc: Value = serde_json::from_str(&String::from_utf8_lossy(&output.stdout)).unwrap();
+    assert_eq!(doc["ok"], false, "{doc}");
+    assert_eq!(doc["needed"], true, "{doc}");
+    assert_eq!(doc["in_store"], false, "{doc}");
+    assert_eq!(doc["program"], Value::Null, "{doc}");
+    assert_eq!(doc["asset"], asset, "{doc}");
+    let stderr = String::from_utf8_lossy(&output.stderr);
+    assert!(stderr.contains("vibe self px install --from"), "{stderr}");
+
+    // With px in the store, the same verb is a plain success.
+    fs::create_dir_all(&store).unwrap();
+    fs::write(&program, "fake px").unwrap();
+    let output = status();
+    assert!(
+        output.status.success(),
+        "{}",
+        String::from_utf8_lossy(&output.stderr)
+    );
+    let doc: Value = serde_json::from_str(&String::from_utf8_lossy(&output.stdout)).unwrap();
+    assert_eq!(doc["ok"], true, "{doc}");
+    assert_eq!(doc["in_store"], true, "{doc}");
+    assert_eq!(doc["program"], program.display().to_string(), "{doc}");
+
+    // Without a px route at all, a store without px is merely a fact.
+    fs::remove_file(&program).unwrap();
+    let output = machine
+        .cmd()
+        .env("PATH", empty.path())
+        .env("VIBEVM_PROXY_MODE", "none")
+        .args(["--json", "self", "px", "status"])
+        .output()
+        .unwrap();
+    assert!(
+        output.status.success(),
+        "{}",
+        String::from_utf8_lossy(&output.stderr)
+    );
+    let doc: Value = serde_json::from_str(&String::from_utf8_lossy(&output.stdout)).unwrap();
+    assert_eq!(doc["ok"], true, "{doc}");
+    assert_eq!(doc["needed"], false, "{doc}");
+    assert_eq!(doc["in_store"], false, "{doc}");
+}
+
+/// `[self] install_root = "~"` — the one path a profile cannot write out
+/// in full, because it is a different directory on every machine that
+/// reads it (`PROP-019#install-root`). It expands against the same home
+/// `~/.vibe` comes from, so one profile puts vibe in each developer's
+/// `~/opt` with shims at `~/opt/bin`; `~user` and a relative root are
+/// refused by name.
+#[test]
+fn an_install_root_of_tilde_lands_in_this_users_home() {
+    let machine = Machine::new();
+    let site = tempfile::tempdir().unwrap();
+    fs::create_dir_all(site.path().join("releases")).unwrap();
+    let profile = write_profile(
+        site.path(),
+        "schema = 1\nname = \"corp\"\n\n[self]\ninstall_root = \"~\"\n",
+    );
+    let home = machine.home.path();
+    let apply = |extra: &[&str]| {
+        let mut command = machine.cmd();
+        command
+            .env_remove("VIBEVM_INSTALL_ROOT")
+            .args(["--json", "--unattended", "self", "apply"])
+            .arg(&profile)
+            .args(extra);
+        command.output().unwrap()
+    };
+
+    // A dry run already names the expanded directory and its shims.
+    let planned = json(&apply(&["--dry-run"]));
+    let root = &planned["effective"]["install_root"];
+    assert_eq!(root["path"], home.display().to_string(), "{planned}");
+    assert_eq!(
+        root["shim_dir"],
+        home.join("opt").join("bin").display().to_string()
+    );
+    assert_eq!(
+        root["data_dir"],
+        home.join("opt").join("vibevm").display().to_string()
+    );
+    assert!(
+        root["from"]
+            .as_str()
+            .unwrap()
+            .starts_with("[self] install_root in"),
+        "{root}"
+    );
+    assert_eq!(
+        planned["path"]["shim_dir"],
+        home.join("opt").join("bin").display().to_string()
+    );
+
+    // And an apply puts the shims there.
+    import_active_in(&machine, home);
+    let applied = json(&apply(&["--fix-path"]));
+    assert_eq!(
+        applied["effective"]["install_root"]["path"],
+        home.display().to_string()
+    );
+    assert!(
+        home.join("opt").join("bin").join("vibe").is_file(),
+        "the shims live under the expanded home"
+    );
+    let shown = ok(&machine
+        .cmd()
+        .env_remove("VIBEVM_INSTALL_ROOT")
+        .args(["--unattended", "self", "apply", "--show"])
+        .output()
+        .unwrap());
+    assert!(
+        shown.contains(&format!("install root: {}", home.display())),
+        "{shown}"
+    );
+    assert!(!shown.contains("install root: ~"), "{shown}");
+}
+
+/// Another account's home and a relative directory are both refused, in a
+/// profile and in the user's own `config.toml`
+/// (`PROP-019#install-root`).
+#[test]
+fn an_install_root_vibe_cannot_resolve_is_refused_by_name() {
+    let machine = Machine::new();
+    let site = tempfile::tempdir().unwrap();
+    fs::create_dir_all(site.path().join("releases")).unwrap();
+
+    for (written, expected) in [("~bob/opt", "another account"), ("opt", "relative")] {
+        let dir = site.path().join(written.replace(['/', '~'], "_"));
+        fs::create_dir_all(&dir).unwrap();
+        let profile = write_profile(
+            &dir,
+            &format!("schema = 1\nname = \"corp\"\n\n[self]\ninstall_root = \"{written}\"\n"),
+        );
+        let output = machine
+            .cmd()
+            .args(["--unattended", "self", "apply"])
+            .arg(&profile)
+            .output()
+            .unwrap();
+        assert!(!output.status.success(), "`{written}` must be refused");
+        let stderr = String::from_utf8_lossy(&output.stderr);
+        assert!(stderr.contains("self.install_root"), "{stderr}");
+        assert!(stderr.contains(written), "{stderr}");
+        assert!(!machine.settings("site-profile.toml").exists());
+        let _ = expected;
+    }
+
+    // The user's own file is refused where the root is resolved, naming
+    // the written value and the fix.
+    fs::write(
+        machine.settings("config.toml"),
+        "[self]\ninstall_root = \"~bob/opt\"\n",
+    )
+    .unwrap();
+    let output = machine
+        .cmd()
+        .env_remove("VIBEVM_INSTALL_ROOT")
+        .args(["--unattended", "self", "apply", "--show"])
+        .output()
+        .unwrap();
+    assert!(!output.status.success());
+    let stderr = String::from_utf8_lossy(&output.stderr);
+    assert!(stderr.contains("~bob/opt"), "{stderr}");
+    assert!(stderr.contains("another account's home"), "{stderr}");
+}
+
+/// `vibe self px install --from <file>` installs whatever px the operator
+/// names, and `vibe self px status` then says exactly which bytes are
+/// there — the path, what the program reports, where vibe read it and the
+/// SHA-256 it measured. Nothing is checked against a digest (owner
+/// decision 2026-11-09, `PROP-019#companion-tools`).
+#[test]
+fn px_install_from_a_local_file_takes_any_px_and_status_names_the_bytes() {
+    let machine = Machine::new();
+    machine.import_active();
+    let files = tempfile::tempdir().unwrap();
+    // A px of the operator's own: a program that answers `--version`.
+    let own = files.path().join("px-of-my-own");
+    fs::write(&own, "#!/bin/sh\necho 'px my-own 9.9.9'\n").unwrap();
+    fs::set_permissions(&own, fs::Permissions::from_mode(0o755)).unwrap();
+    let sha256 = {
+        use sha2::{Digest, Sha256};
+        format!("{:x}", Sha256::digest(fs::read(&own).unwrap()))
+    };
+
+    let installed = json_plain(
+        &machine
+            .cmd()
+            .args(["--json", "self", "px", "install", "--from"])
+            .arg(&own)
+            .output()
+            .unwrap(),
+    );
+    assert_eq!(installed["ok"], true, "{installed}");
+    assert_eq!(installed["sha256"], sha256, "{installed}");
+    assert_eq!(installed["source"], own.display().to_string());
+    assert_eq!(installed["px_version"], "px my-own 9.9.9", "{installed}");
+    let program = PathBuf::from(installed["installed"].as_str().unwrap());
+    assert!(program.is_file(), "{}", program.display());
+    assert!(
+        program.starts_with(machine.base.path()),
+        "the store under this install root: {}",
+        program.display()
+    );
+
+    // Status reports those exact bytes, with no verdict about them.
+    let output = machine
+        .cmd()
+        .args(["self", "px", "status"])
+        .output()
+        .unwrap();
+    let text = ok(&output);
+    assert!(text.contains(&program.display().to_string()), "{text}");
+    assert!(text.contains(&format!("sha256: {sha256}")), "{text}");
+    assert!(text.contains("reports: px my-own 9.9.9"), "{text}");
+    assert!(!text.to_lowercase().contains("verif"), "{text}");
+    let doc = json_plain(
+        &machine
+            .cmd()
+            .args(["--json", "self", "px", "status"])
+            .output()
+            .unwrap(),
+    );
+    assert_eq!(doc["in_store"], true, "{doc}");
+    assert_eq!(doc["sha256"], sha256, "{doc}");
+    assert_eq!(doc["ok"], true, "{doc}");
+
+    // A second install of the same file changes nothing; `--force` replaces.
+    let again = json_plain(
+        &machine
+            .cmd()
+            .args(["--json", "self", "px", "install", "--from"])
+            .arg(&own)
+            .output()
+            .unwrap(),
+    );
+    assert_eq!(again["installed"], program.display().to_string());
+}
+
+/// The artifact drops may start at the reader's home too
+/// (`PROP-066#drops`): a profile that says `packages = "~/opt/drop/packages"`
+/// resolves to this user's own drop — it is not the relative path such a
+/// value used to be read as and ignored.
+#[test]
+fn artifact_drops_may_start_at_the_readers_own_home() {
+    let machine = Machine::new();
+    machine.import_active();
+    let site = tempfile::tempdir().unwrap();
+    let home = machine.home.path();
+    for dir in ["opt/drop/packages", "opt/drop/releases"] {
+        fs::create_dir_all(home.join(dir)).unwrap();
+    }
+    let profile = write_profile(
+        site.path(),
+        "schema = 1\nname = \"corp\"\n\n[artifacts]\nvibe = \"~/opt/drop/releases\"\n\
+         packages = \"~/opt/drop/packages\"\n\n[self]\nsource = \"localdir\"\n",
+    );
+
+    let applied = machine.apply(&profile, &["--no-fix-path"]);
+    assert_eq!(
+        applied["effective"]["packages_drop"],
+        home.join("opt/drop/packages").display().to_string(),
+        "{applied}"
+    );
+    assert_eq!(
+        applied["effective"]["release"]["location"],
+        home.join("opt/drop/releases").display().to_string(),
+        "{applied}"
+    );
+    assert!(
+        applied["warnings"]
+            .as_array()
+            .unwrap()
+            .iter()
+            .all(|warning| !warning.as_str().unwrap().contains("is relative")),
+        "{applied}"
+    );
+
+    // The stored profile keeps the `~` the administrator wrote: the next
+    // machine to apply it has a different home.
+    let stored = fs::read_to_string(machine.settings("site-profile.toml")).unwrap();
+    assert!(
+        stored.contains("packages = \"~/opt/drop/packages\""),
+        "{stored}"
+    );
+
+    // And every reader of the drops resolves it the same way.
+    let where_to_put = json(&machine.run(&["--json", "artifacts", "where"]));
+    assert_eq!(
+        where_to_put["packages"],
+        home.join("opt/drop/packages").display().to_string(),
+        "{where_to_put}"
+    );
+    let shown = ok(&machine.run(&["self", "apply", "--show"]));
+    assert!(
+        shown.contains(&home.join("opt/drop/packages").display().to_string()),
+        "{shown}"
+    );
+    assert!(!shown.contains("~/opt/drop"), "{shown}");
+}
+
+/// A `--json` document that is not a registered wire type.
+fn json_plain(output: &Output) -> Value {
+    serde_json::from_str(&ok(output)).unwrap()
 }

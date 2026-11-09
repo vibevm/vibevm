@@ -11,10 +11,15 @@ use super::SiteProfile;
 impl SiteProfile {
     /// What a valid profile names that only a Windows host can use, when it
     /// is checked on another host (`windows = false`): a Windows drive or
-    /// UNC path, which is accepted and stored but read only on Windows, and
-    /// `[proxy] pac = "system"`, which reads the Windows Internet Options.
+    /// UNC path, which is accepted and stored but read only on Windows.
     /// Each note names the key and what happens on this host; empty on
     /// Windows.
+    ///
+    /// `[proxy] pac = "system"` is **not** one of them: since
+    /// `PROP-068#proxy-system` resolves it on every host — the Windows
+    /// Internet Options, the macOS network settings, the Linux desktops
+    /// and the environment — a profile that asks for it is as usable
+    /// here as it is there.
     ///
     /// ```
     /// use vibe_core::site_profile::SiteProfile;
@@ -24,9 +29,9 @@ impl SiteProfile {
     /// )
     /// .unwrap();
     /// let notes = profile.windows_only_notes(false);
-    /// assert_eq!(notes.len(), 2);
+    /// assert_eq!(notes.len(), 1);
     /// assert!(notes[0].contains("artifacts.vibe"));
-    /// assert!(notes[1].contains("proxy.pac"));
+    /// assert!(notes.iter().all(|note| !note.contains("proxy.pac")));
     /// assert!(profile.windows_only_notes(true).is_empty());
     /// ```
     pub fn windows_only_notes(&self, windows: bool) -> Vec<String> {
@@ -49,18 +54,6 @@ impl SiteProfile {
                     path.display()
                 ));
             }
-        }
-        if self.proxy.pac.as_deref().is_some_and(|pac| {
-            matches!(
-                crate::user_config::PacSource::parse(pac),
-                Ok(crate::user_config::PacSource::System)
-            )
-        }) {
-            notes.push(
-                "`proxy.pac = \"system\"` reads the Windows Internet Options: it works only \
-                 on Windows — on this host give the PAC URL or an absolute PAC file path"
-                    .to_owned(),
-            );
         }
         notes
     }
@@ -101,4 +94,26 @@ pub fn is_windows_absolute(path: &Path) -> bool {
         && bytes[1] == b':'
         && matches!(bytes[2], b'/' | b'\\'))
         || text.starts_with("\\\\")
+}
+
+/// A path rooted at the reader's own home: `~`, `~/<rest>`, and `~\<rest>`
+/// on Windows (`PROP-019#install-root`). Such a path is per-user absolute
+/// — it names one directory on every machine that reads the profile — so a
+/// profile may carry it where it may not carry a relative path; `~user` is
+/// not one of these, and is refused with its own reason.
+///
+/// ```
+/// use std::path::Path;
+/// use vibe_core::site_profile::starts_at_home;
+/// assert!(starts_at_home(Path::new("~")));
+/// assert!(starts_at_home(Path::new("~/opt")));
+/// assert!(!starts_at_home(Path::new("~bob/opt")));
+/// assert!(!starts_at_home(Path::new("opt")));
+/// assert!(!starts_at_home(Path::new("/srv/vibe")));
+/// ```
+pub fn starts_at_home(path: &Path) -> bool {
+    matches!(
+        path.components().next(),
+        Some(std::path::Component::Normal(first)) if first == std::ffi::OsStr::new("~")
+    )
 }

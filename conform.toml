@@ -139,6 +139,17 @@ env_roots = [
     # then `tools/px/` beside the running executable, then `px` on $PATH —
     # the same standing as the git-binary discovery; only this read is ambient.
     "crates/vibe-net/src/px.rs",
+    # `pac = "system"` off Windows (PROP-068 `#proxy-system`): reading the
+    # environment IS this file's job — `https_proxy` / `http_proxy` /
+    # `all_proxy` / `no_proxy` are a proxy-configuration source of their own,
+    # the lowest one in the Unix and macOS orders, and `$XDG_CONFIG_HOME` /
+    # `$HOME` locate KDE's `kioslaverc` (vibe's settings-dir chokepoint
+    # resolves `~/.vibe`, not the desktop's configuration directory). The two
+    # test-seam variables of the same law are read at the same boundary. The
+    # orders, the parsers and the string reductions are pure functions in
+    # `vibe-core` over an injected seam; this is the only ambient read in the
+    # crate besides the px locator above.
+    "crates/vibe-net/src/system_proxy/unix.rs",
     # Step conditions and needs of an application installer (PROP-065
     # `#conditions`): `command_present` / `command:NAME` read $PATH and
     # `env_present` reads one variable exactly here; `vibe-app` receives the

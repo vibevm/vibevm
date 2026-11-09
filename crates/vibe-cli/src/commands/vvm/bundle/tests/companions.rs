@@ -1,9 +1,9 @@
-//! px in the shared tool store (PROP-019 `#companion-tools`): the pinned
-//! archive is verified against the pin and unpacked into
-//! `<root>/vibevm/tools/px/<version>/`; a release without it installs as
-//! before; bytes under the pinned name that are not the pinned archive stop
-//! the command before activation; the error of a missing px names the store
-//! and the asset.
+//! px in the shared tool store (PROP-019 `#companion-tools`): the archive
+//! is unpacked into `<root>/vibevm/tools/px/<version>/` with the
+//! provenance record beside it; a release without it installs as before;
+//! any px the operator supplies is taken as it is, while bytes that are
+//! not a px at all still stop the command before activation; the error of
+//! a missing px names the store and the asset.
 
 #![cfg(test)]
 
@@ -139,7 +139,7 @@ fn tar_gz(entries: &[(&str, &[u8])]) -> Vec<u8> {
 
 #[test]
 #[specmark::spec(verifies = "spec://org.vibevm.core/vibevm/common/PROP-019#companion-tools")]
-fn a_pinned_archive_of_either_kind_is_verified_and_unpacked_into_the_versioned_store() {
+fn an_archive_of_either_kind_is_unpacked_into_the_versioned_store_with_its_record() {
     let temp = tempfile::tempdir().unwrap();
     let root = temp.path().join("opt/vibevm/tools/px");
     let zip = zip_bytes(&[
@@ -148,19 +148,26 @@ fn a_pinned_archive_of_either_kind_is_verified_and_unpacked_into_the_versioned_s
         ("LICENSE.txt", b"MIT".as_slice()),
     ]);
     let (pin, asset) = pin_for(&zip, "zip", "px.exe");
-    let program = companions::install_bytes(&root, &pin, &asset, &zip).unwrap();
+    let program = companions::install_bytes(&root, &pin, &asset, &zip, "the drop").unwrap();
     assert_eq!(program, root.join("0.0.1-test/px.exe"));
     assert_eq!(std::fs::read(&program).unwrap(), b"px for windows");
     assert!(root.join("0.0.1-test/Lib/x.pyd").is_file());
     assert!(root.join("0.0.1-test/NOTICE").is_file());
-    assert_eq!(companions::installed(&root, &pin, &asset), Some(program));
+    // The record states the provenance: where the bytes were read and the
+    // SHA-256 vibe measured of them — information, never a gate
+    // (owner decision 2026-11-09).
+    let found = companions::installed(&root).expect("the store offers px");
+    assert_eq!(found.program, program);
+    assert_eq!(found.source.as_deref(), Some("the drop"));
+    assert_eq!(found.sha256.as_deref(), Some(asset.sha256.as_str()));
+    assert!(found.installed_at.is_some());
 
     let gz = tar_gz(&[
         ("./px", b"px for linux".as_slice()),
         ("./LICENSE.txt", b"MIT".as_slice()),
     ]);
     let (pin, asset) = pin_for(&gz, "tar.gz", "px");
-    let program = companions::install_bytes(&root, &pin, &asset, &gz).unwrap();
+    let program = companions::install_bytes(&root, &pin, &asset, &gz, "the drop").unwrap();
     assert_eq!(std::fs::read(&program).unwrap(), b"px for linux");
     #[cfg(unix)]
     {
@@ -172,33 +179,47 @@ fn a_pinned_archive_of_either_kind_is_verified_and_unpacked_into_the_versioned_s
     }
 }
 
+/// px is the operator's choice and vibe does not pin its content (owner
+/// decision 2026-11-09): a digest that does not match the pin file's is
+/// NOT a refusal. What still stops an installation is bytes that are not
+/// a px at all — an archive that escapes its directory, or one with no px
+/// program in it.
 #[test]
 #[specmark::spec(verifies = "spec://org.vibevm.core/vibevm/common/PROP-019#companion-tools")]
-fn bytes_that_are_not_the_pinned_archive_or_escape_are_refused_and_leave_nothing() {
+fn an_archive_whose_digest_is_not_the_pins_installs_anyway_and_records_what_it_was() {
     let temp = tempfile::tempdir().unwrap();
     let root = temp.path().join("store");
     let good = zip_bytes(&[("px.exe", b"px".as_slice())]);
     let (pin, asset) = pin_for(&good, "zip", "px.exe");
-    let error = companions::install_bytes(&root, &pin, &asset, b"another archive").unwrap_err();
-    assert!(error.to_string().contains("integrity mismatch"), "{error}");
-    assert!(
-        error.to_string().contains("PROP-019#companion-tools"),
-        "{error}"
+    let other = zip_bytes(&[("px.exe", b"a px of my own".as_slice())]);
+    let program = companions::install_bytes(&root, &pin, &asset, &other, "mine.zip").unwrap();
+    assert_eq!(std::fs::read(&program).unwrap(), b"a px of my own");
+    let found = companions::installed(&root).expect("installed");
+    assert_eq!(
+        found.sha256.as_deref(),
+        Some(companions::measure(&other).as_str())
     );
+    assert_ne!(found.sha256.as_deref(), Some(asset.sha256.as_str()));
+
     for bytes in [
         zip_bytes(&[("../evil", b"x".as_slice())]),
         zip_bytes(&[("README", b"x".as_slice())]),
     ] {
+        let temp = tempfile::tempdir().unwrap();
+        let root = temp.path().join("store");
         let (pin, asset) = pin_for(&bytes, "zip", "px.exe");
-        assert!(companions::install_bytes(&root, &pin, &asset, &bytes).is_err());
+        assert!(
+            companions::install_bytes(&root, &pin, &asset, &bytes, "mine.zip").is_err(),
+            "bytes that are not a px are still refused"
+        );
         assert!(!root.join(&pin.version).exists());
+        assert!(!temp.path().join("evil").exists());
     }
-    assert!(!temp.path().join("evil").exists());
 }
 
 #[test]
 #[specmark::spec(verifies = "spec://org.vibevm.core/vibevm/common/PROP-019#companion-tools")]
-fn a_release_without_px_installs_as_before_and_wrong_px_bytes_stop_it() {
+fn a_release_without_px_installs_as_before_and_unusable_px_bytes_stop_it() {
     // No px asset: the bundle installs and activates, the store stays empty.
     let temp = tempfile::tempdir().unwrap();
     let fixture = super::release_tests::bundle_for(
@@ -222,8 +243,10 @@ fn a_release_without_px_installs_as_before_and_wrong_px_bytes_stop_it() {
             .any(|url| url.contains(&name))
     );
 
-    // Bytes under the pinned name that are not the pinned archive: refused
-    // before activation.
+    // A digest that is not the pin file's is no longer a refusal (owner
+    // decision 2026-11-09) — but bytes that are not an archive at all
+    // cannot be unpacked, and a release source serving those still stops
+    // the install before activation.
     let temp = tempfile::tempdir().unwrap();
     let fixture = super::release_tests::bundle_for(
         temp.path(),
@@ -233,10 +256,7 @@ fn a_release_without_px_installs_as_before_and_wrong_px_bytes_stop_it() {
     let server_wrong = server(temp.path(), &fixture, Some((&name, b"not px")));
     let (store, env) = machine(temp.path());
     let error = install(&store, &env, &server_wrong).unwrap_err();
-    assert!(
-        format!("{error:#}").contains("integrity mismatch"),
-        "{error:#}"
-    );
+    assert!(format!("{error:#}").contains("px archive"), "{error:#}");
     assert!(store.active().unwrap().is_none());
 }
 
@@ -342,10 +362,10 @@ fn a_drop_serves_px_to_any_installation_from_its_version_directory_or_root() {
     assert_eq!(tried.len(), 1);
 }
 
-/// A release unpacked by hand: the pinned px archive beside the imported
-/// binary, or in `tools/px/` there, is placed in the shared store; its
-/// absence is reported, and bytes under the pinned name that are not the
-/// pinned archive stop the import.
+/// A release unpacked by hand: the px archive beside the imported binary,
+/// or in `tools/px/` there, is placed in the shared store; its absence is
+/// reported, and the bytes are installed as they are — a px from the
+/// operator's own files is their choice (owner decision 2026-11-09).
 #[test]
 #[specmark::spec(verifies = "spec://org.vibevm.core/vibevm/common/PROP-019#companion-tools")]
 fn px_beside_an_unpacked_release_is_placed_in_the_store() {
@@ -377,9 +397,142 @@ fn px_beside_an_unpacked_release_is_placed_in_the_store() {
         PxOutcome::AlreadyInstalled(program)
     );
 
+    // A different archive under the same name is installed, not refused;
+    // what it was is recorded.
     let other = tempfile::tempdir().unwrap();
     let (fresh, _) = machine(other.path());
-    std::fs::write(other.path().join(&name), b"not the pinned archive").unwrap();
-    let error = px_beside_with(&fresh, &pin, other.path(), &progress).unwrap_err();
-    assert!(error.to_string().contains("integrity mismatch"), "{error}");
+    let mine = zip_bytes(&[("px.exe", b"a px of my own".as_slice())]);
+    std::fs::write(other.path().join(&name), &mine).unwrap();
+    let placed = px_beside_with(&fresh, &pin, other.path(), &progress).unwrap();
+    let PxOutcome::Installed { program, .. } = placed else {
+        panic!("{placed:?}");
+    };
+    assert_eq!(std::fs::read(&program).unwrap(), b"a px of my own");
+    assert_eq!(
+        companions::installed(&companions::store_root(&fresh)).and_then(|found| found.sha256),
+        Some(companions::measure(&mine))
+    );
+
+    // Bytes that are not a px at all are still refused.
+    let junk = tempfile::tempdir().unwrap();
+    let (empty, _) = machine(junk.path());
+    std::fs::write(junk.path().join(&name), b"not an archive").unwrap();
+    assert!(px_beside_with(&empty, &pin, junk.path(), &progress).is_err());
+}
+
+/// `vibe self px install --from <archive|directory|executable>`: ANY px
+/// the operator names is installed — a zip, a tar.gz, a directory they
+/// unpacked themselves, or the program alone — of any version, on any
+/// target, including one the pin has no default asset for. Nothing is
+/// checked against a digest; the SHA-256 is measured and recorded so the
+/// report can name the exact bytes (owner decision 2026-11-09).
+#[test]
+#[specmark::spec(verifies = "spec://org.vibevm.core/vibevm/common/PROP-019#companion-tools")]
+fn any_local_px_is_installed_and_recorded_whatever_its_shape_or_target() {
+    let temp = tempfile::tempdir().unwrap();
+    let (store, _) = machine(temp.path());
+    let root = companions::store_root(&store);
+    let files = temp.path().join("files");
+    std::fs::create_dir_all(&files).unwrap();
+    let pin = PxPin::embedded();
+
+    // A zip named `px-<version>-<target>.zip` lands in that version's
+    // directory, so an operator's px and a default one can live together.
+    let zip = zip_bytes(&[("px.exe", b"zipped px".as_slice())]);
+    let named = match vibe_net::px_store::running_target() {
+        Some(target) => files.join(format!("px-9.9.9-{target}.zip")),
+        None => files.join("px.zip"),
+    };
+    std::fs::write(&named, &zip).unwrap();
+    let placed = companions::install_local(&store, pin, &named, false).unwrap();
+    let PxOutcome::Installed { program, .. } = placed else {
+        panic!("{placed:?}");
+    };
+    assert_eq!(std::fs::read(&program).unwrap(), b"zipped px");
+    let found = vibe_net::px_store::stored_in(program.parent().unwrap()).unwrap();
+    assert_eq!(
+        found.sha256.as_deref(),
+        Some(companions::measure(&zip).as_str())
+    );
+    assert_eq!(
+        found.source.as_deref(),
+        Some(named.display().to_string().as_str())
+    );
+    if vibe_net::px_store::running_target().is_some() {
+        assert!(
+            program.starts_with(root.join("9.9.9")),
+            "{}",
+            program.display()
+        );
+    }
+
+    // The same file again changes nothing; `--force` replaces it.
+    assert!(matches!(
+        companions::install_local(&store, pin, &named, false).unwrap(),
+        PxOutcome::AlreadyInstalled(_)
+    ));
+    assert!(matches!(
+        companions::install_local(&store, pin, &named, true).unwrap(),
+        PxOutcome::Installed { .. }
+    ));
+
+    // A tar.gz whose px sits in a subdirectory is found.
+    let gz = tar_gz(&[("px-0.1/px", b"tarred px".as_slice())]);
+    let tarred = files.join("mine.tar.gz");
+    std::fs::write(&tarred, &gz).unwrap();
+    let placed = companions::install_local(&store, pin, &tarred, false).unwrap();
+    let PxOutcome::Installed { program, .. } = placed else {
+        panic!("{placed:?}");
+    };
+    assert_eq!(std::fs::read(&program).unwrap(), b"tarred px");
+    assert!(
+        program.starts_with(root.join(vibe_net::px_store::CUSTOM_VERSION)),
+        "a name that states no version is `custom`: {}",
+        program.display()
+    );
+
+    // The program alone.
+    let bare = files.join("px-of-my-own");
+    std::fs::write(&bare, b"bare px").unwrap();
+    let placed = companions::install_local(&store, pin, &bare, true).unwrap();
+    let PxOutcome::Installed { program, .. } = placed else {
+        panic!("{placed:?}");
+    };
+    assert_eq!(std::fs::read(&program).unwrap(), b"bare px");
+    assert_eq!(program.file_name().unwrap(), vibe_net::PX_EXE);
+
+    // A directory the operator unpacked themselves.
+    let unpacked = files.join("unpacked");
+    std::fs::create_dir_all(unpacked.join("bin")).unwrap();
+    std::fs::write(unpacked.join("bin").join(vibe_net::PX_EXE), b"unpacked px").unwrap();
+    std::fs::write(unpacked.join("README"), b"notes").unwrap();
+    let placed = companions::install_local(&store, pin, &unpacked, true).unwrap();
+    let PxOutcome::Installed { program, .. } = placed else {
+        panic!("{placed:?}");
+    };
+    assert_eq!(std::fs::read(&program).unwrap(), b"unpacked px");
+    // The whole layout is copied, and the program is found inside it.
+    let directory = root.join(vibe_net::px_store::CUSTOM_VERSION);
+    assert_eq!(program, directory.join("bin").join(vibe_net::PX_EXE));
+    assert!(directory.join("README").is_file());
+
+    // And a target the pin has no default asset for is no obstacle: the
+    // same call with a pin that offers nothing installs the same px.
+    let no_asset = PxPin {
+        assets: Vec::new(),
+        ..pin.clone()
+    };
+    assert!(companions::pinned_asset(&no_asset).is_none());
+    let placed = companions::install_local(&store, &no_asset, &bare, true).unwrap();
+    assert!(matches!(placed, PxOutcome::Installed { .. }), "{placed:?}");
+
+    // What is not a px at all is still refused, by name.
+    let junk = files.join("notes.txt");
+    std::fs::write(&junk, b"this is not px").unwrap();
+    let error = companions::install_local(&store, pin, &files.join("missing"), false).unwrap_err();
+    assert!(format!("{error:#}").contains("missing"), "{error:#}");
+    let error = companions::install_local(&store, pin, &unpacked.join("README"), true);
+    // A single file with no archive magic is taken as the program itself,
+    // which is the operator's call to make.
+    assert!(error.is_ok(), "{error:?}");
 }

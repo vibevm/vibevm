@@ -131,7 +131,11 @@ pub fn diagnose(session: &Arc<NetworkSession>, target: &url::Url, timeout: Durat
             Ok(program) => match session.px_address() {
                 Ok(address) => checks.push(Check::ok(
                     "px",
-                    format!("`{}` started on {address}", program.display()),
+                    format!(
+                        "`{}` started on {address}{}",
+                        program.display(),
+                        px_provenance(&program)
+                    ),
                 )),
                 Err(error) => {
                     checks.push(Check::fail("px", error.to_string(), "see the cause above"));
@@ -511,4 +515,28 @@ pub fn pac_check(session: &Arc<NetworkSession>, timeout: Duration) -> Option<Che
             fix,
         ),
     })
+}
+
+/// What vibe recorded about the px it installed: the file it read and the
+/// SHA-256 it measured of those bytes, plus what the program answers to
+/// `--version`. Information, never a verdict — px is not checked against
+/// any digest (`PROP-019#companion-tools`). Empty for a px vibe did not
+/// install (`px_path`, PATH, an older store).
+fn px_provenance(program: &std::path::Path) -> String {
+    let Some(found) = crate::px_store::store_root()
+        .and_then(|root| crate::px_store::stored_record(root, program))
+    else {
+        return String::new();
+    };
+    let mut out = String::new();
+    if let Some(version) = &found.version {
+        out.push_str(&format!(" · {version}"));
+    }
+    if let Some(sha256) = found.sha256.as_deref().filter(|sha| !sha.is_empty()) {
+        out.push_str(&format!(" · sha256 {sha256}"));
+    }
+    if let Some(source) = &found.source {
+        out.push_str(&format!(" · read from `{source}`"));
+    }
+    out
 }

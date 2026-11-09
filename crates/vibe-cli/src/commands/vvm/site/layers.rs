@@ -11,7 +11,7 @@ specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-019#site-profile");
 use std::path::{Path, PathBuf};
 
 use vibe_core::site_profile::InstalledSiteProfile;
-use vibe_core::user_config::UserConfig;
+use vibe_core::user_config::{InstallRootError, UserConfig};
 
 use crate::commands::vvm::bundle::release_source::{self, EffectiveReleaseSource};
 
@@ -67,8 +67,14 @@ impl ConfigLayers {
     /// layer — the user file's into `own_warnings`, the site profile's into
     /// `site_warnings` — so the composition root never fails a command over
     /// an optional file and can report each once.
+    /// `home` resolves the per-user paths a layer may root at `~` — the
+    /// artifact drops, `[self] path`, `[self] install_root` — against the
+    /// same home directory `~/.vibe` comes from, so one site profile can
+    /// name each reader's own directories (`PROP-019#install-root`,
+    /// `PROP-066#drops`). The files keep the `~` they were written with.
     pub(crate) fn load(
         site_path: Option<&Path>,
+        home: Option<&Path>,
         own_warnings: &mut Vec<String>,
         site_warnings: &mut Vec<String>,
     ) -> Self {
@@ -89,9 +95,12 @@ impl ConfigLayers {
             None => None,
         };
         Self {
-            own,
+            own: own.with_home(home),
             own_path,
-            site,
+            site: site.map(|site| InstalledSiteProfile {
+                profile: site.profile.with_home(home),
+                path: site.path,
+            }),
         }
     }
 
@@ -111,30 +120,40 @@ impl ConfigLayers {
     /// profile's, then `~/.vibe`. The store lives at `<base>/opt`, so the
     /// shims an operator puts on PATH are `<base>/opt/bin`.
     ///
-    /// `None` only when nothing names a base and no home directory
+    /// A declared root is `~`-expanded against the same `home` the
+    /// built-in `~/.vibe` default is read from, so one profile can say
+    /// `install_root = "~"` and every reader gets vibe in their own
+    /// `~/opt`; a declared root that names no directory — `~user`, or a
+    /// relative path, read from wherever a command happens to run — is
+    /// refused by name rather than silently taken as written.
+    ///
+    /// `Ok(None)` only when nothing names a base and no home directory
     /// resolves — the same state in which the version manager has no root
     /// at all.
     pub(crate) fn install_base(
         &self,
         env_override: Option<&Path>,
         home: Option<&Path>,
-    ) -> Option<(PathBuf, InstallBaseOrigin)> {
+    ) -> Result<Option<(PathBuf, InstallBaseOrigin)>, InstallRootError> {
         if let Some(base) = env_override {
-            return Some((base.to_path_buf(), InstallBaseOrigin::Environment));
+            return Ok(Some((base.to_path_buf(), InstallBaseOrigin::Environment)));
         }
-        if let Some(base) = &self.own.self_source.install_root {
+        if let Some(base) = self.own.self_source.install_root_at(home) {
             let file = self
                 .own_path
                 .clone()
                 .unwrap_or_else(|| PathBuf::from("config.toml"));
-            return Some((base.clone(), InstallBaseOrigin::Declared(file)));
+            return Ok(Some((base?, InstallBaseOrigin::Declared(file))));
         }
         if let Some(site) = &self.site
-            && let Some(base) = &site.profile.self_source.install_root
+            && let Some(base) = site.profile.self_source.install_root_at(home)
         {
-            return Some((base.clone(), InstallBaseOrigin::Declared(site.path.clone())));
+            return Ok(Some((
+                base?,
+                InstallBaseOrigin::Declared(site.path.clone()),
+            )));
         }
-        home.map(|home| (home.join(".vibe"), InstallBaseOrigin::BuiltIn))
+        Ok(home.map(|home| (home.join(".vibe"), InstallBaseOrigin::BuiltIn)))
     }
 
     /// The effective release source and the file that decided it
@@ -154,7 +173,9 @@ impl ConfigLayers {
     }
 
     /// The effective `[artifacts] packages` drop and the file that declared
-    /// it. A relative drop is refused with a warning naming that file.
+    /// it. A relative drop is refused with a warning naming that file; a
+    /// drop written `~/<rest>` was resolved when the layer was read, so it
+    /// is absolute here (`PROP-066#drops`).
     pub(crate) fn packages_drop(&self, warnings: &mut Vec<String>) -> Option<(PathBuf, String)> {
         let (drop, declared_in) = match (&self.own.artifacts.packages, &self.site) {
             (Some(drop), _) => (

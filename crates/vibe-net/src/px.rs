@@ -129,9 +129,15 @@ pub fn bundled_px_candidates() -> Vec<PathBuf> {
     out
 }
 
-/// The px to run: `px_path` when the configuration names one, else the
-/// one this installation carries, else `px` on PATH.
-pub(crate) fn locate(settings: &PxSettings) -> Result<PathBuf, PxError> {
+/// The px to run: `px_path` when the configuration names one, then the
+/// installation's shared px store, then `tools/px/` beside the running
+/// binary, then `px` on PATH (`PROP-019#companion-tools`).
+///
+/// Public so a report can say which px the route would actually run —
+/// `vibe self px status` asks exactly this question and must not call a
+/// store without the pinned copy a failure when `px_path` or PATH answers
+/// (`PROP-019#companion-tools`).
+pub fn locate(settings: &PxSettings) -> Result<PathBuf, PxError> {
     let mut searched = Vec::new();
     if let Some(path) = &settings.path {
         if path.is_file() {
@@ -142,11 +148,13 @@ pub(crate) fn locate(settings: &PxSettings) -> Result<PathBuf, PxError> {
             hint: "make `[proxy] px_path` name an existing px executable".into(),
         });
     }
-    // Beside the running binary (older releases), then the versioned store
-    // every installation kind shares (PROP-019 `#companion-tools`).
-    for candidate in bundled_px_candidates()
+    // The store every installation kind shares, then `tools/px/` beside
+    // the running binary (an older release's layout) — the store first,
+    // because that is where the operator's own `vibe self px install`
+    // puts px (PROP-019 `#companion-tools`).
+    for candidate in crate::px_store::stored_executable()
         .into_iter()
-        .chain(crate::px_store::stored_executable())
+        .chain(bundled_px_candidates())
     {
         if candidate.is_file() {
             return Ok(candidate);

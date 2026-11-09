@@ -147,6 +147,7 @@ fn store(ctx: &output::Context, mut table: SelfConfig) -> Result<()> {
     let site_path = vibe_core::settings::site_profile_path();
     let layers = crate::commands::vvm::site::ConfigLayers::load(
         site_path.as_deref(),
+        dirs::home_dir().as_deref(),
         &mut Vec::new(),
         &mut Vec::new(),
     );

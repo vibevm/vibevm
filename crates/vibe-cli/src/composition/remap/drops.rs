@@ -24,8 +24,14 @@ pub(super) fn artifact_drops(
     use crate::commands::vvm::bundle::release_source;
     // The site profile's warning is the Locator's to report: it reads the
     // same file for its rows.
-    let layers =
-        crate::commands::vvm::site::ConfigLayers::load(site_profile, warnings, &mut Vec::new());
+    // The composition root resolves this invocation's home once; a layer
+    // that roots a drop at `~` is read against it (`PROP-066#drops`).
+    let layers = crate::commands::vvm::site::ConfigLayers::load(
+        site_profile,
+        dirs::home_dir().as_deref(),
+        warnings,
+        &mut Vec::new(),
+    );
     let resolved = layers.release(release_origin);
     if let Err(error) = &resolved {
         warnings.push(error.to_string());

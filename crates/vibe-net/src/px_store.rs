@@ -37,13 +37,21 @@ pub struct PxPin {
 pub struct PinnedAsset {
     pub target: String,
     pub url: String,
+    /// The digest the pin file records for the upstream archive, or empty.
+    /// Information only — nothing vibe installs is refused over it.
     pub sha256: String,
     pub archive: String,
     pub executable: String,
 }
 
 impl PxPin {
-    /// Parse a pin; `None` when it is not one (schema 1, digests present).
+    /// Parse a pin; `None` when it is not one (schema 1, each asset
+    /// naming its target, url, archive kind and executable).
+    ///
+    /// `sha256` is read when the file carries it and is pure
+    /// information: vibe does not check px against it, here or anywhere
+    /// (owner decision 2026-11-09, `PROP-019#companion-tools`), so a pin
+    /// that drops the digests is still a pin.
     pub fn parse(text: &str) -> Option<Self> {
         let table: toml::Table = toml::from_str(text).ok()?;
         let text = |table: &toml::Table, key: &str| -> Option<String> {
@@ -55,7 +63,7 @@ impl PxPin {
             assets.push(PinnedAsset {
                 target: text(asset, "target")?,
                 url: text(asset, "url")?,
-                sha256: text(asset, "sha256")?,
+                sha256: text(asset, "sha256").unwrap_or_default(),
                 archive: text(asset, "archive")?,
                 executable: text(asset, "executable")?,
             });
@@ -67,16 +75,15 @@ impl PxPin {
             homepage: text(&table, "homepage")?,
             license: text(&table, "license")?,
             license_url: text(&table, "license_url")?,
-            license_sha256: text(&table, "license_sha256")?,
+            license_sha256: text(&table, "license_sha256").unwrap_or_default(),
             notice: text(&table, "notice")?,
             assets,
         };
         (pin.schema == 1
-            && pin.assets.iter().all(|asset| {
-                asset.sha256.len() == 64
-                    && asset.sha256.bytes().all(|b| b.is_ascii_hexdigit())
-                    && matches!(asset.archive.as_str(), "zip" | "tar.gz")
-            }))
+            && pin
+                .assets
+                .iter()
+                .all(|asset| matches!(asset.archive.as_str(), "zip" | "tar.gz")))
         .then_some(pin)
     }
 
@@ -142,17 +149,138 @@ pub fn store_root() -> Option<&'static Path> {
     STORE.get().map(PathBuf::as_path)
 }
 
-/// The directory the pinned px for `asset` occupies in `root`.
+/// The directory the px of `pin`'s version occupies in `root`.
 pub fn stored_dir(root: &Path, pin: &PxPin) -> PathBuf {
     root.join(&pin.version)
 }
 
-/// Where the pinned px executable for this build lives in the store, if
-/// both the store and the pin for this target are known.
-pub fn stored_executable() -> Option<PathBuf> {
+/// The store directory of a px whose version nothing names — a bare
+/// executable, or an archive not spelled `px-<version>-<target>.<ext>`.
+pub const CUSTOM_VERSION: &str = "custom";
+
+/// The provenance record vibe writes beside every px it installs.
+pub const RECORD_FILE: &str = "PX.toml";
+
+/// One px in the store, with what vibe knows about where it came from.
+///
+/// px is the operator's choice and vibe does not pin its content (owner
+/// decision 2026-11-09, `PROP-019#companion-tools`), so the record is
+/// provenance, never a gate: the file vibe read, the SHA-256 it measured
+/// while reading it, when that was, and what the program says its version
+/// is.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct InstalledPx {
+    /// The px executable, absolute.
+    pub program: PathBuf,
+    /// The store directory holding it; its name is the version.
+    pub directory: PathBuf,
+    /// The file or directory vibe read, as it was named.
+    pub source: Option<String>,
+    /// The SHA-256 vibe measured of those bytes. Information only.
+    pub sha256: Option<String>,
+    /// When it was installed (RFC 3339).
+    pub installed_at: Option<String>,
+    /// `px --version`, when the program answered.
+    pub version: Option<String>,
+}
+
+/// The record's text, for the writer that installs px.
+pub fn record_text(
+    executable: &str,
+    source: &str,
+    sha256: &str,
+    installed_at: &str,
+    version: Option<&str>,
+) -> String {
+    let quote = |value: &str| value.replace('\\', "\\\\").replace('"', "\\\"");
+    let mut out = String::from("# Written by vibe; px is not checked against any digest.\n");
+    out.push_str("schema = 1\n");
+    out.push_str(&format!("executable = \"{}\"\n", quote(executable)));
+    out.push_str(&format!("source = \"{}\"\n", quote(source)));
+    out.push_str(&format!("sha256 = \"{}\"\n", quote(sha256)));
+    out.push_str(&format!("installed_at = \"{}\"\n", quote(installed_at)));
+    if let Some(version) = version {
+        out.push_str(&format!("version = \"{}\"\n", quote(version)));
+    }
+    out
+}
+
+/// The px in one store directory: its record when vibe wrote one, else the
+/// executable found by name (a store filled by an older vibe).
+pub fn stored_in(directory: &Path) -> Option<InstalledPx> {
+    let record = std::fs::read_to_string(directory.join(RECORD_FILE))
+        .ok()
+        .and_then(|text| text.parse::<toml::Table>().ok());
+    let field = |key: &str| -> Option<String> {
+        record
+            .as_ref()?
+            .get(key)?
+            .as_str()
+            .map(str::to_owned)
+            .filter(|value| !value.is_empty())
+    };
+    let named = field("executable").map(|relative| directory.join(relative));
+    let program = named
+        .into_iter()
+        .chain([
+            directory.join(crate::PX_EXE),
+            directory.join("px"),
+            directory.join("px.exe"),
+        ])
+        .find(|path| path.is_file())?;
+    Some(InstalledPx {
+        program,
+        directory: directory.to_path_buf(),
+        source: field("source"),
+        sha256: field("sha256"),
+        installed_at: field("installed_at"),
+        version: field("version"),
+    })
+}
+
+/// Every px in `root`, the pinned version's first, then `custom`, then the
+/// rest newest-looking first — so the order a lookup takes is the same on
+/// every machine.
+pub fn stored_all(root: &Path) -> Vec<InstalledPx> {
     let pin = PxPin::embedded();
-    let asset = pin.asset(running_target()?)?;
-    Some(stored_dir(store_root()?, pin).join(&asset.executable))
+    let mut names: Vec<String> = std::fs::read_dir(root)
+        .into_iter()
+        .flatten()
+        .flatten()
+        .filter(|entry| entry.file_type().is_ok_and(|kind| kind.is_dir()))
+        .map(|entry| entry.file_name().to_string_lossy().into_owned())
+        .collect();
+    names.sort();
+    names.reverse();
+    let rank = |name: &String| match name.as_str() {
+        version if version == pin.version => 0,
+        CUSTOM_VERSION => 1,
+        _ => 2,
+    };
+    names.sort_by_key(rank);
+    names
+        .iter()
+        .filter_map(|name| stored_in(&root.join(name)))
+        .collect()
+}
+
+/// The px the store offers, if it holds one.
+pub fn stored(root: &Path) -> Option<InstalledPx> {
+    stored_all(root).into_iter().next()
+}
+
+/// What the store records about the px at `program` — whichever version
+/// directory holds it, and however deep inside. `None` for a px the store
+/// did not install (`px_path`, PATH, `tools/px/` beside the binary).
+pub fn stored_record(root: &Path, program: &Path) -> Option<InstalledPx> {
+    stored_all(root)
+        .into_iter()
+        .find(|found| found.program == program)
+}
+
+/// Where the px executable of the registered store lives, if it holds one.
+pub fn stored_executable() -> Option<PathBuf> {
+    stored(store_root()?).map(|installed| installed.program)
 }
 
 /// What a missing px is told to the user: the store directory, the asset
@@ -169,10 +297,15 @@ pub fn missing_hint() -> String {
     match asset {
         Some(asset) => format!(
             "run `vibe self px install` to put px {} into `{store}` — it reads `{asset}` from \
-             the release source or from the release drop (`[artifacts] vibe`)",
+             the release source or from the release drop (`[artifacts] vibe`), or \
+             `vibe self px install --from <archive|directory|executable>` to install a px of \
+             your own",
             pin.version
         ),
-        None => format!("px {} has no release asset for `{target}`", pin.version),
+        None => format!(
+            "px has no default build for `{target}`; install one of your own with \
+             `vibe self px install --from <archive|directory|executable>`"
+        ),
     }
 }
 
@@ -206,28 +339,66 @@ mod tests {
             toml::from_str("mode = 'px'\nupstream = 'proxy.example.invalid:8080'").unwrap();
         let route = vibe_core::net::ProxyRoute::from_config(&config).unwrap();
         let settings = route.px().unwrap().clone();
-        let Some(program) = stored_executable() else {
-            // No pinned px for this platform: nothing to find.
+        let pin = PxPin::embedded();
+        let Some(target) = running_target() else {
+            // No default asset for this platform: nothing to name.
             return;
         };
-        if crate::px::locate(&settings).is_ok_and(|found| found != program) {
-            // A px on PATH or beside the test binary wins; not this test's case.
+        // The store is empty, so the miss names the store, the default
+        // asset and the repair.
+        assert_eq!(stored_executable(), None);
+        if crate::px::locate(&settings).is_ok() {
+            // A px on PATH or beside the test binary wins; not this
+            // test's case.
             return;
         }
         let missing = crate::px::locate(&settings).unwrap_err().to_string();
-        let pin = PxPin::embedded();
-        let asset = pin.asset(running_target().unwrap()).unwrap();
         assert!(missing.contains("vibe self px install"), "{missing}");
-        assert!(
-            missing.contains(&pin.release_asset_name(asset)),
-            "{missing}"
-        );
-        assert!(
-            missing.contains(&stored_dir(store_root().unwrap(), pin).display().to_string()),
-            "{missing}"
-        );
-        std::fs::create_dir_all(program.parent().unwrap()).unwrap();
+        if let Some(asset) = pin.asset(target) {
+            assert!(
+                missing.contains(&pin.release_asset_name(asset)),
+                "{missing}"
+            );
+            assert!(
+                missing.contains(&stored_dir(store_root().unwrap(), pin).display().to_string()),
+                "{missing}"
+            );
+        }
+
+        // A px in the store is then what the lookup finds — whichever
+        // version directory holds it, and whatever its name inside
+        // (`PROP-019#companion-tools`).
+        let directory = stored_dir(store_root().unwrap(), pin);
+        let program = directory.join(crate::PX_EXE);
+        std::fs::create_dir_all(&directory).unwrap();
         std::fs::write(&program, b"px").unwrap();
+        assert_eq!(stored_executable(), Some(program.clone()));
         assert_eq!(crate::px::locate(&settings).unwrap(), program);
+
+        // A px of the operator's own, recorded with its provenance, is
+        // found the same way — the record names the executable inside the
+        // directory, and nothing says anything about a digest.
+        std::fs::remove_dir_all(&directory).unwrap();
+        let custom = store_root().unwrap().join(CUSTOM_VERSION);
+        std::fs::create_dir_all(custom.join("bin")).unwrap();
+        let mine = custom.join("bin").join(crate::PX_EXE);
+        std::fs::write(&mine, b"my px").unwrap();
+        std::fs::write(
+            custom.join(RECORD_FILE),
+            record_text(
+                &format!("bin/{}", crate::PX_EXE),
+                "/home/me/px.zip",
+                "abc123",
+                "2026-11-09T00:00:00Z",
+                Some("px 9.9.9"),
+            ),
+        )
+        .unwrap();
+        let found = stored(store_root().unwrap()).expect("the store offers px");
+        assert_eq!(found.program, mine);
+        assert_eq!(found.source.as_deref(), Some("/home/me/px.zip"));
+        assert_eq!(found.sha256.as_deref(), Some("abc123"));
+        assert_eq!(found.version.as_deref(), Some("px 9.9.9"));
+        assert_eq!(crate::px::locate(&settings).unwrap(), mine);
     }
 }

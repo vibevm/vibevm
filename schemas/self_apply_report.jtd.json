@@ -22,6 +22,7 @@
       "where",
       "path",
       "imported",
+      "px",
       "next_steps",
       "warnings"
     ]
@@ -93,6 +94,13 @@
       "nullable": true,
       "metadata": {
         "description": "The running executable imported as the active instance, when apply ran from an unmanaged binary; `null` otherwise."
+      }
+    },
+    "px": {
+      "ref": "px_step",
+      "nullable": true,
+      "metadata": {
+        "description": "The px companion step (PROP-019 `#companion-tools`): what apply did about px, because a profile that selects `[proxy] mode = \"px\"` is useless without it; `null` when the action does not reach the step (`show`, `remove`)."
       }
     },
     "next_steps": {
@@ -978,6 +986,83 @@
             "description": "The import has not happened yet — this is a `dry-run`."
           }
         }
+      }
+    },
+    "px_step": {
+      "metadata": {
+        "x-wire-order": [
+          "needed",
+          "outcome",
+          "store",
+          "asset",
+          "program",
+          "fix",
+          "planned"
+        ],
+        "description": "The px companion step of `vibe self apply` (PROP-019 `#companion-tools`): a profile selecting `[proxy] mode = \"px\"` configures a route that cannot work without px, so apply makes sure the pinned px is in the installation's tool store — the one under the install root this profile chooses — and says so even when it could not.",
+        "spec": {
+          "implements": "spec://org.vibevm.core/vibevm/common/PROP-019#companion-tools"
+        }
+      },
+      "properties": {
+        "needed": {
+          "type": "boolean",
+          "metadata": {
+            "description": "The effective `[proxy]` route after this profile runs the vibe-managed px, so the companion is required."
+          }
+        },
+        "outcome": {
+          "ref": "px_outcome",
+          "metadata": {
+            "description": "What the step found or did."
+          }
+        },
+        "store": {
+          "type": "string",
+          "metadata": {
+            "description": "The tool-store directory this px version occupies, under the install root the profile chooses."
+          }
+        },
+        "asset": {
+          "type": "string",
+          "nullable": true,
+          "metadata": {
+            "description": "The companion asset file name this target needs (`px-<px version>-<target>.<zip|tar.gz>`); `null` when the pin has no build for this platform."
+          }
+        },
+        "program": {
+          "type": "string",
+          "nullable": true,
+          "metadata": {
+            "description": "The px executable in the store; `null` when px is not there — including on a `dry-run` that would have installed it."
+          }
+        },
+        "fix": {
+          "type": "string",
+          "nullable": true,
+          "metadata": {
+            "description": "The repair, when px is needed and absent; `null` when there is nothing to fix. Also the text of the corresponding `warnings` entry."
+          }
+        },
+        "planned": {
+          "type": "boolean",
+          "metadata": {
+            "description": "The step wrote nothing — this is a `dry-run`, and `outcome` says what it would do."
+          }
+        }
+      }
+    },
+    "px_outcome": {
+      "enum": [
+        "not_needed",
+        "already_installed",
+        "installed",
+        "missing",
+        "no_target"
+      ],
+      "metadata": {
+        "x-vocabulary": "closed",
+        "description": "The px companion step's verdict. `not_needed` — the effective route does not run the managed px (another mode, or `[proxy] px_path` names the px to run), so the store is not consulted; `already_installed` — the pinned px was in the store; `installed` — it was placed there from beside the running executable (`would be` on a `dry-run`); `missing` — px is needed and is not there, which `fix` repairs; `no_target` — the pin has no px build for this platform. Closed: automation decides from it whether the machine's px mode can work."
       }
     }
   }

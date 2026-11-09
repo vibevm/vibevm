@@ -330,24 +330,7 @@ impl SiteProfile {
             )
         })?;
         self.remap_rows(origin)?;
-        for (key, path) in [
-            ("artifacts.vibe", self.artifacts.vibe.as_ref()),
-            ("artifacts.packages", self.artifacts.packages.as_ref()),
-            ("self.path", self.self_source.path.as_ref()),
-            ("self.install_root", self.self_source.install_root.as_ref()),
-            ("proxy.ca_file", self.proxy.ca_file.as_ref()),
-            ("proxy.px_path", self.proxy.px_path.as_ref()),
-        ] {
-            if let Some(path) = path
-                && !is_absolute_anywhere(path)
-            {
-                return Err(invalid(
-                    key.into(),
-                    &format!("`{}` is relative", path.display()),
-                    "give an absolute directory (a profile is read on every machine)",
-                ));
-            }
-        }
+        home_paths::check(self).map_err(|(key, reason, fix)| invalid(key.into(), &reason, fix))?;
         for (key, value) in [
             ("self.url", self.self_source.url.as_deref()),
             ("self.api", self.self_source.api.as_deref()),
@@ -551,9 +534,11 @@ impl SiteReceipt {
     }
 }
 
+#[path = "site_profile/home_paths.rs"]
+mod home_paths;
 #[path = "site_profile/windows_paths.rs"]
 mod windows_paths;
-pub use windows_paths::{is_absolute_anywhere, is_windows_absolute};
+pub use windows_paths::{is_absolute_anywhere, is_windows_absolute, starts_at_home};
 
 #[cfg(test)]
 #[path = "site_profile/tests.rs"]

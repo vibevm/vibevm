@@ -25,7 +25,7 @@ use super::ConfigLayers;
 use super::diff::line_diff;
 use super::layers::InstallBaseOrigin;
 use super::report::{self, COMMAND, PROTOCOL};
-use super::steps::{import_running_if_unmanaged, path_step};
+use super::steps::{import_running_if_unmanaged, path_step, px_step};
 use super::view::{conflict_warnings, effective, where_to_put};
 use crate::cli::VvmApplyArgs;
 use crate::output;
@@ -95,8 +95,31 @@ pub(in crate::commands::vvm) fn run_apply_cmd(
         Some((base, _)) => VersionStore::new(base.join("opt")),
         None => env.store()?,
     };
-    let mut report = install_profile(&prepared, dry_run, args.diff, install_root.clone())?;
+    let mut report = install_profile(
+        &prepared,
+        env.home.as_deref(),
+        dry_run,
+        args.diff,
+        install_root.clone(),
+    )?;
     report.imported = import_running_if_unmanaged(ctx, dry_run, &store)?;
+    // The px companion (`PROP-019#companion-tools`), after the import and
+    // whether or not it ran: a profile that selects px configures a route
+    // that cannot work without px, and the release zip does not carry it.
+    let px = px_step(
+        &store,
+        selects_managed_px(&report),
+        dry_run,
+        report
+            .imported
+            .as_ref()
+            .is_some_and(|imported| !imported.planned),
+        &ctx.progress(),
+    )?;
+    if let Some(fix) = &px.fix {
+        report.warnings.push(fix.clone());
+    }
+    report.px = Some(px);
     // A root the environment already names, or the built-in default, needs
     // no durable write; one a file declares does, or the next terminal
     // resolves another installation.
@@ -138,7 +161,11 @@ pub(in crate::commands::vvm) fn prepare_profile(
     // The release source is checked here too, by its one owner, so an
     // unusable `[self]` is refused before anything is stored.
     if profile.declares_release_source() {
-        release_source::resolve(None, &profile.user_config_layer(), Some(Path::new(&origin)))
+        // Against the layer as it will read: a drop written `~/<rest>` is
+        // this reader's own directory, not a relative path
+        // (`PROP-066#drops`).
+        let layer = profile.with_home(env.home.as_deref()).user_config_layer();
+        release_source::resolve(None, &layer, Some(Path::new(&origin)))
             .map_err(|error| {
                 anyhow!(
                     "`{origin}`: the release source (`[self]` / `[artifacts] vibe`) is unusable: {error}"
@@ -203,6 +230,7 @@ fn read_source(ctx: &output::Context, env: &VvmEnv, source: &str) -> Result<(Vec
 /// same origin write nothing.
 fn install_profile(
     prepared: &PreparedProfile,
+    home: Option<&Path>,
     dry_run: bool,
     with_diff: bool,
     install_root: Option<(PathBuf, InstallBaseOrigin)>,
@@ -266,16 +294,22 @@ fn install_profile(
         write_atomic(&files.receipt, receipt_text.as_bytes())?;
     }
 
+    // The layers as they will read: a `~`-rooted drop or install root is
+    // resolved against this invocation's home, so the report names the
+    // directory, not the `~` the file keeps (`PROP-019#install-root`,
+    // `PROP-066#drops`).
     let site = InstalledSiteProfile {
         path: files.profile.clone(),
-        profile: prepared.profile.clone(),
+        profile: prepared.profile.with_home(home),
     };
     let mut own_warnings = Vec::new();
     let layers = ConfigLayers {
-        own: UserConfig::load_own().unwrap_or_else(|error| {
-            own_warnings.push(error.to_string());
-            UserConfig::default()
-        }),
+        own: UserConfig::load_own()
+            .unwrap_or_else(|error| {
+                own_warnings.push(error.to_string());
+                UserConfig::default()
+            })
+            .with_home(home),
         own_path: UserConfig::default_path(),
         site: Some(site),
     };
@@ -313,8 +347,24 @@ fn install_profile(
         where_: Some(where_to_put),
         path: None,
         imported: None,
+        px: None,
         next_steps,
         warnings,
+    })
+}
+
+/// Whether the installation, as it reads after this profile, runs the
+/// vibe-managed px (`PROP-019#companion-tools`, `PROP-068#proxy-px`).
+///
+/// The question is asked of the report's own effective `[proxy]` row —
+/// the one computation that already layered the user's file over this
+/// profile and let `$VIBEVM_PROXY_MODE` outrank both — so the step and the
+/// `proxy mode:` line the same report prints can never disagree.
+/// `px_path` naming an px of the operator's own takes the companion lane
+/// out of the picture.
+fn selects_managed_px(report: &SelfApplyReport) -> bool {
+    report.effective.as_ref().is_some_and(|effective| {
+        effective.proxy.mode.as_deref() == Some("px") && effective.proxy.px_path.is_none()
     })
 }
 
@@ -329,14 +379,16 @@ fn applying_install_base(
     env: &VvmEnv,
 ) -> Result<Option<(PathBuf, InstallBaseOrigin)>> {
     let applying = ConfigLayers {
-        own: UserConfig::load_own().unwrap_or_default(),
+        own: UserConfig::load_own()
+            .unwrap_or_default()
+            .with_home(env.home.as_deref()),
         own_path: UserConfig::default_path(),
         site: Some(InstalledSiteProfile {
             path: Files::resolve()?.profile,
-            profile: prepared.profile.clone(),
+            profile: prepared.profile.with_home(env.home.as_deref()),
         }),
     };
-    Ok(applying.install_base(env.install_root_env.as_deref(), env.home.as_deref()))
+    Ok(applying.install_base(env.install_root_env.as_deref(), env.home.as_deref())?)
 }
 
 /// Record the PATH step's outcome in the receipt (for `--show`).
@@ -383,7 +435,10 @@ pub(in crate::commands::vvm) fn apply_after_bootstrap(
     // The bootstrap installed and activated the instance itself; the report
     // still names the install root every later command will resolve.
     let install_root = applying_install_base(prepared, env)?;
-    report::emit(&install_profile(prepared, false, false, install_root)?, ctx)
+    report::emit(
+        &install_profile(prepared, env.home.as_deref(), false, false, install_root)?,
+        ctx,
+    )
 }
 
 fn change(path: &Path, old: Option<&str>, new: Option<&str>, with_diff: bool) -> FileChange {

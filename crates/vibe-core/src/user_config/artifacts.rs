@@ -11,7 +11,7 @@
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-066#drops");
 
 use std::fmt;
-use std::path::PathBuf;
+use std::path::{Path, PathBuf};
 use std::str::FromStr;
 
 use serde::{Deserialize, Deserializer, Serialize, Serializer};
@@ -189,10 +189,216 @@ pub struct SelfConfig {
     pub install_root: Option<PathBuf>,
 }
 
+/// Why a configured per-user path — `[self] install_root`, `[self] path`,
+/// an `[artifacts]` drop — names no directory on this machine
+/// (`PROP-019#install-root`).
+///
+/// Each message names the value as the operator wrote it and the fix, so
+/// the refusal points at the key in their own file rather than at a
+/// resolved path they never typed.
+///
+/// ```
+/// use std::path::Path;
+/// use vibe_core::user_config::{InstallRootError, install_root_at};
+///
+/// let home = Path::new("/home/me");
+/// let error = install_root_at(Path::new("~bob/opt"), Some(home)).unwrap_err();
+/// assert!(matches!(error, InstallRootError::OtherUser { .. }));
+/// assert!(error.to_string().contains("another account's home"));
+/// assert!(error.to_string().contains("PROP-019#install-root"));
+///
+/// let relative = install_root_at(Path::new("opt"), Some(home)).unwrap_err();
+/// assert!(matches!(relative, InstallRootError::Relative { .. }));
+/// assert!(relative.to_string().contains("fix:"));
+/// ```
+#[derive(Debug, Clone, PartialEq, Eq, thiserror::Error)]
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-019#install-root")]
+pub enum InstallRootError {
+    #[error(
+        "`[self] install_root = \"{written}\"` names another account's home, which vibe does not \
+         resolve (violates spec://org.vibevm.core/vibevm/common/PROP-019#install-root; \
+          fix: write `~` for your own home, or the directory in full)"
+    )]
+    OtherUser { written: String },
+    #[error(
+        "`[self] install_root = \"{written}\"` starts at the home directory, and this run has no \
+         home to expand it to (violates spec://org.vibevm.core/vibevm/common/PROP-019#install-root; \
+          fix: set {home_var}, or write the directory in full)"
+    )]
+    NoHome {
+        written: String,
+        home_var: &'static str,
+    },
+    #[error(
+        "`[self] install_root = \"{written}\"` is relative, and an install root is read from \
+         wherever a command happens to run (violates \
+         spec://org.vibevm.core/vibevm/common/PROP-019#install-root; \
+          fix: give an absolute directory, or `~`/`~/<dir>` for one under your home)"
+    )]
+    Relative { written: String },
+}
+
+/// The variable a `~` is expanded from, named in the refusal of a `~` with
+/// no home to expand.
+pub(crate) const HOME_VAR: &str = if cfg!(windows) { "USERPROFILE" } else { "HOME" };
+
+/// A configured path that may start at the operator's home, resolved
+/// against `home` (`PROP-019#install-root`).
+///
+/// A site profile is read on every machine, so the one directory that
+/// cannot be written out in full is the reader's own home: a profile for
+/// Macs and Linux boxes declares `install_root = "~"` and vibe lives in
+/// `~/opt`, with its shims at `~/opt/bin`, for every developer who applies
+/// it. `~` and `~/<rest>` — and `~\<rest>` on Windows, where that is the
+/// separator a person types — expand; `~user` is refused, because vibe
+/// resolves nobody else's home; every other path is returned exactly as
+/// written, absolute or not.
+///
+/// `home` is the home the caller already resolved — the same one `~/.vibe`
+/// is read from — never an ambient read of this function's own. The public
+/// surface over it is [`install_root_at`], whose doctest shows the shapes;
+/// `the_home_prefix_is_expanded_and_only_that` pins every case.
+pub(crate) fn expand_home(path: &Path, home: Option<&Path>) -> Result<PathBuf, InstallRootError> {
+    let mut components = path.components();
+    let Some(std::path::Component::Normal(first)) = components.next() else {
+        // Rooted, or a Windows prefix: nothing to expand.
+        return Ok(path.to_path_buf());
+    };
+    if !first.to_string_lossy().starts_with('~') {
+        return Ok(path.to_path_buf());
+    }
+    let written = path.display().to_string();
+    if first != std::ffi::OsStr::new("~") {
+        return Err(InstallRootError::OtherUser { written });
+    }
+    let home = home.ok_or(InstallRootError::NoHome {
+        written,
+        home_var: HOME_VAR,
+    })?;
+    let mut out = home.to_path_buf();
+    out.extend(components);
+    Ok(out)
+}
+
+/// A configured install root, expanded and checked: `~`-rooted against
+/// `home`, and refused when it names no one directory on this machine
+/// (`PROP-019#install-root`).
+///
+/// ```
+/// use std::path::{Path, PathBuf};
+/// use vibe_core::user_config::install_root_at;
+///
+/// let home = PathBuf::from("/home/me");
+/// assert_eq!(
+///     install_root_at(Path::new("~"), Some(&home)).unwrap(),
+///     home
+/// );
+/// // A Windows drive path is absolute on every host, as in a profile.
+/// assert!(install_root_at(Path::new(r"C:\Work"), None).is_ok());
+/// assert!(install_root_at(Path::new("opt"), Some(&home)).is_err());
+/// ```
+pub fn install_root_at(path: &Path, home: Option<&Path>) -> Result<PathBuf, InstallRootError> {
+    let expanded = expand_home(path, home)?;
+    if !crate::site_profile::is_absolute_anywhere(&expanded) {
+        return Err(InstallRootError::Relative {
+            written: path.display().to_string(),
+        });
+    }
+    Ok(expanded)
+}
+
+/// The per-user paths a configured layer may root at the reader's own
+/// home, expanded against `home` (`PROP-019#install-root`, `PROP-066#drops`).
+///
+/// A site profile is read on every machine, so the directories that cannot
+/// be written out in full are the ones under the reader's home: a profile
+/// for Macs and Linux boxes says `install_root = "~"`, `packages =
+/// "~/opt/drop/packages"` and gets each developer's own. The file keeps the
+/// `~` it was written with; only what is read into memory is resolved.
+/// A path that cannot be resolved — `~user` — is left exactly as written,
+/// so the reader that needs it refuses by name instead of this helper
+/// guessing (`SiteProfile::validate`, `ConfigLayers::install_base`,
+/// `packages_drop`, the release source).
+pub(crate) fn home_expanded(path: &Path, home: Option<&Path>) -> PathBuf {
+    expand_home(path, home).unwrap_or_else(|_| path.to_path_buf())
+}
+
+impl ArtifactsConfig {
+    /// This table with its drops resolved against `home`.
+    #[must_use]
+    pub fn with_home(&self, home: Option<&Path>) -> Self {
+        ArtifactsConfig {
+            vibe: self.vibe.as_deref().map(|path| home_expanded(path, home)),
+            packages: self
+                .packages
+                .as_deref()
+                .map(|path| home_expanded(path, home)),
+        }
+    }
+}
+
+impl SelfConfig {
+    /// This table with its per-user paths resolved against `home`.
+    #[must_use]
+    pub fn with_home(&self, home: Option<&Path>) -> Self {
+        SelfConfig {
+            path: self.path.as_deref().map(|path| home_expanded(path, home)),
+            install_root: self
+                .install_root
+                .as_deref()
+                .map(|path| home_expanded(path, home)),
+            ..self.clone()
+        }
+    }
+}
+
+use crate::user_config::UserConfig;
+
+impl UserConfig {
+    /// This configuration with its per-user paths — the artifact drops,
+    /// `[self] path` and `[self] install_root` — resolved against `home`
+    /// (`PROP-019#install-root`, `PROP-066#drops`). The file on disk keeps
+    /// the `~` it was written with; only what is read into memory is
+    /// resolved, so this value is never saved back.
+    ///
+    /// ```
+    /// use std::path::{Path, PathBuf};
+    /// use vibe_core::user_config::UserConfig;
+    ///
+    /// let mut config = UserConfig::default();
+    /// config.artifacts.packages = Some(PathBuf::from("~/opt/drop/packages"));
+    /// let home = PathBuf::from("/home/me");
+    /// assert_eq!(
+    ///     config.with_home(Some(&home)).artifacts.packages.as_deref(),
+    ///     Some(home.join("opt/drop/packages").as_path())
+    /// );
+    /// ```
+    #[must_use]
+    pub fn with_home(&self, home: Option<&Path>) -> Self {
+        UserConfig {
+            artifacts: self.artifacts.with_home(home),
+            self_source: self.self_source.with_home(home),
+            ..self.clone()
+        }
+    }
+}
+
 impl SelfConfig {
     /// `true` for the all-empty table, skipped on write.
     pub fn is_default(&self) -> bool {
         *self == SelfConfig::default()
+    }
+
+    /// The declared install root as a directory on this machine
+    /// (`PROP-019#install-root`): `~`-rooted values expanded against
+    /// `home`, anything that names no directory refused.
+    pub fn install_root_at(
+        &self,
+        home: Option<&Path>,
+    ) -> Option<Result<PathBuf, InstallRootError>> {
+        self.install_root
+            .as_deref()
+            .map(|root| install_root_at(root, home))
     }
 
     /// `true` when the table says nothing about WHERE RELEASES COME FROM.

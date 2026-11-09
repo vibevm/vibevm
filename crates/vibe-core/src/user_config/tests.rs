@@ -505,3 +505,44 @@ fn artifacts_and_self_sections_round_trip() {
     let unknown = toml::from_str::<UserConfig>("[self]\nsource = \"s3\"\n").unwrap_err();
     assert!(unknown.to_string().contains("unknown release source type"));
 }
+
+/// The leading `~` of a configured per-user path, and nothing else: `~`
+/// and `~/<rest>` resolve against the home the caller already resolved,
+/// `~user` is refused because vibe resolves nobody else's home, and every
+/// other path comes back exactly as written (`PROP-019#install-root`,
+/// `PROP-066#drops`).
+#[test]
+#[specmark::spec(verifies = "spec://org.vibevm.core/vibevm/common/PROP-019#install-root")]
+fn the_home_prefix_is_expanded_and_only_that() {
+    use super::artifacts::expand_home;
+    use std::path::{Path, PathBuf};
+
+    let home = PathBuf::from("/home/me");
+    assert_eq!(expand_home(Path::new("~"), Some(&home)).unwrap(), home);
+    assert_eq!(
+        expand_home(Path::new("~/opt"), Some(&home)).unwrap(),
+        home.join("opt")
+    );
+    assert_eq!(
+        expand_home(Path::new("~/opt/drop/packages"), Some(&home)).unwrap(),
+        home.join("opt/drop/packages")
+    );
+    // Untouched: absolute, Windows-absolute, and a relative path that is
+    // somebody else's problem to refuse.
+    for written in ["/srv/vibe", r"C:\Work", r"\\server\share\vibe", "opt"] {
+        assert_eq!(
+            expand_home(Path::new(written), Some(&home)).unwrap(),
+            PathBuf::from(written),
+            "`{written}` is not a home-rooted path"
+        );
+    }
+    // A file whose own name begins with `~` is not `~` either.
+    assert!(matches!(
+        expand_home(Path::new("~bob/opt"), Some(&home)),
+        Err(super::InstallRootError::OtherUser { .. })
+    ));
+    assert!(matches!(
+        expand_home(Path::new("~"), None),
+        Err(super::InstallRootError::NoHome { .. })
+    ));
+}

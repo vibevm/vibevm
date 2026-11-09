@@ -72,14 +72,25 @@ pub(crate) fn run_vars(
 /// [`UserConfig::load`] layers them. The `~/.vibe` default belongs to
 /// `resolve_root`, which owns the `/opt` suffix too.
 ///
+/// A declared `~` / `~/<dir>` is expanded against the home directory
+/// `~/.vibe` itself is read from (`PROP-019#install-root`), so a site
+/// profile written for Macs and Linux boxes can say `install_root = "~"`
+/// and vibe lives in each reader's own `~/opt`.
+///
 /// A config that cannot be parsed has already been reported once at
 /// startup, so this rung falls back to its own absence rather than failing
-/// a second command over an optional file.
+/// a second command over an optional file — and so does a declared root
+/// that names no directory, which `vibe self apply` and `vibe self apply
+/// --show` refuse by name where the operator wrote it.
 pub(crate) fn install_base_override() -> Option<std::path::PathBuf> {
     if let Some(base) = super::read_env_opt(commands::vvm::VIBEVM_INSTALL_ROOT_ENV) {
         return Some(base.into());
     }
-    UserConfig::load().ok()?.self_source.install_root
+    UserConfig::load()
+        .ok()?
+        .self_source
+        .install_root_at(dirs::home_dir().as_deref())?
+        .ok()
 }
 
 /// The installation `vibe self …` acts on, and the one `vibe tool px

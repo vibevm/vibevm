@@ -53,6 +53,13 @@ pub struct SelfApplyReport {
     #[serde(deserialize_with = "crate::behaviour::required_nullable::deserialize")]
     pub imported: Option<Imported>,
 
+    /// The px companion step (PROP-019 `#companion-tools`): what apply did
+    /// about px, because a profile that selects `[proxy] mode = "px"` is
+    /// useless without it; `null` when the action does not reach the step
+    /// (`show`, `remove`).
+    #[serde(deserialize_with = "crate::behaviour::required_nullable::deserialize")]
+    pub px: Option<PxStep>,
+
     /// What the operator does next. Required member: an absent key would make
     /// the document invalid by this same schema (rule R21).
     pub next_steps: Vec<String>,
@@ -578,6 +585,71 @@ pub struct ProxyRow {
     /// Which layer chose it: `default`, `site profile`, `user config` or
     /// `VIBEVM_PROXY_REVOCATION`.
     pub revocation_origin: String,
+}
+
+/// The px companion step's verdict. `not_needed` — the effective route does
+/// not run the managed px (another mode, or `[proxy] px_path` names the px to
+/// run), so the store is not consulted; `already_installed` — the pinned px
+/// was in the store; `installed` — it was placed there from beside the running
+/// executable (`would be` on a `dry-run`); `missing` — px is needed and is not
+/// there, which `fix` repairs; `no_target` — the pin has no px build for this
+/// platform. Closed: automation decides from it whether the machine's px mode
+/// can work.
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+pub enum PxOutcome {
+    #[serde(rename = "already_installed")]
+    AlreadyInstalled,
+
+    #[serde(rename = "installed")]
+    Installed,
+
+    #[serde(rename = "missing")]
+    Missing,
+
+    #[serde(rename = "no_target")]
+    NoTarget,
+
+    #[serde(rename = "not_needed")]
+    NotNeeded,
+}
+
+/// The px companion step of `vibe self apply` (PROP-019 `#companion-tools`): a
+/// profile selecting `[proxy] mode = "px"` configures a route that cannot work
+/// without px, so apply makes sure the pinned px is in the installation's tool
+/// store — the one under the install root this profile chooses — and says so
+/// even when it could not.
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+pub struct PxStep {
+    /// The effective `[proxy]` route after this profile runs the vibe-managed
+    /// px, so the companion is required.
+    pub needed: bool,
+
+    /// What the step found or did.
+    pub outcome: PxOutcome,
+
+    /// The tool-store directory this px version occupies, under the install
+    /// root the profile chooses.
+    pub store: String,
+
+    /// The companion asset file name this target needs (`px-<px
+    /// version>-<target>.<zip|tar.gz>`); `null` when the pin has no build for
+    /// this platform.
+    #[serde(deserialize_with = "crate::behaviour::required_nullable::deserialize")]
+    pub asset: Option<String>,
+
+    /// The px executable in the store; `null` when px is not there — including
+    /// on a `dry-run` that would have installed it.
+    #[serde(deserialize_with = "crate::behaviour::required_nullable::deserialize")]
+    pub program: Option<String>,
+
+    /// The repair, when px is needed and absent; `null` when there is nothing
+    /// to fix. Also the text of the corresponding `warnings` entry.
+    #[serde(deserialize_with = "crate::behaviour::required_nullable::deserialize")]
+    pub fix: Option<String>,
+
+    /// The step wrote nothing — this is a `dry-run`, and `outcome` says what it
+    /// would do.
+    pub planned: bool,
 }
 
 /// One effective `[[registry]]` and the layer it came from.

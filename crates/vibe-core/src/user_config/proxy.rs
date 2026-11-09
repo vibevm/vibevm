@@ -69,9 +69,9 @@ pub struct ProxyConfig {
     /// `mode = "px"`: where the PAC file comes from — an `http(s)://` URL px
     /// fetches (it must be reachable without the proxy it configures), a
     /// local file (an absolute path or `file:///…`), or `system` (alias
-    /// `windows`): the logged-in Windows user's proxy configuration, which
-    /// vibe reads itself and turns into the explicit `--pac=<url>` px is
-    /// given. See [`PacSource`].
+    /// `windows`): whatever proxy configuration this operating system is
+    /// configured with, which vibe reads itself and turns into the
+    /// explicit `--pac=<url>` px is given. See [`PacSource`].
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub pac: Option<String>,
     /// `mode = "px"`: the upstream proxy px authenticates to (`--proxy`),
@@ -225,17 +225,21 @@ pub enum PacSource {
     Url(String),
     /// A local file, as px reads it (`--pac=<path or file:// URL>`).
     File(String),
-    /// The logged-in Windows user's proxy configuration, resolved by vibe
-    /// into the explicit `--pac=<url>` (or `--proxy=<host:port>`) px is
-    /// given — never left to px's own detection
-    /// (`vibe_core::net::system_proxy`, `PROP-068#proxy-px`). Windows only.
+    /// Whatever proxy configuration this operating system is configured
+    /// with — the logged-in Windows user's Internet Options, the macOS
+    /// network settings of the current network service, or the Linux
+    /// desktops and then the environment — resolved by vibe into the
+    /// explicit `--pac=<url>` (or `--proxy=<host:port>`) px is given, and
+    /// never left to px's own detection
+    /// (`vibe_core::net::system_proxy`, `PROP-068#proxy-system`).
     System,
 }
 
 impl PacSource {
     /// The spellings of [`PacSource::System`]: `system` is canonical and
-    /// `windows` an accepted alias, since what is read is the Windows
-    /// proxy configuration and nothing else.
+    /// what every report prints; `windows` is an accepted alias, from
+    /// when the Windows Internet Options were the only configuration
+    /// vibe could read.
     pub const SYSTEM_SPELLINGS: &'static [&'static str] = &["system", "windows"];
 
     /// Parse a `pac` value; a relative path is refused (px would read it

@@ -27,8 +27,9 @@ pub mod system_proxy;
 pub use system_proxy::{
     CONNECTION_AUTO_CONFIG_URL, CONNECTION_AUTO_DETECT, CONNECTION_DIRECT, CONNECTION_PROXY,
     ConnectionSettings, IeProxyConfig, SystemProxy, SystemProxyError, SystemProxyOrigin,
-    WindowsProxySource, bypass_list, installed_source, parse_connection_settings, pick_upstream,
-    resolve_with,
+    UnixProxySource, WindowsProxySource, bypass_list, installed_mac_source, installed_source,
+    installed_unix_source, looks_like_pac, parse_connection_settings, pick_upstream,
+    resolve_mac_with, resolve_unix_with, resolve_with,
 };
 
 /// Why a `[proxy]` table cannot become a route. Cites the spec and the fix.
@@ -193,20 +194,11 @@ impl ProxyRoute {
                     .pac
                     .as_deref()
                     .map(|raw| {
-                        let source = PacSource::parse(raw).map_err(|fix| ProxyRouteError::Invalid {
+                        PacSource::parse(raw).map_err(|fix| ProxyRouteError::Invalid {
                             key: "proxy.pac",
                             reason: format!("`{raw}` is not a PAC location"),
                             fix,
-                        })?;
-                        if source == PacSource::System && !cfg!(windows) {
-                            return Err(ProxyRouteError::Invalid {
-                                key: "proxy.pac",
-                                reason: "`system` reads the Windows Internet Options; this is not Windows"
-                                    .into(),
-                                fix: "give the PAC URL or an absolute PAC file path, or `upstream`",
-                            });
-                        }
-                        Ok(source)
+                        })
                     })
                     .transpose()?,
                 pac_origin: if cfg.pac.is_some() {

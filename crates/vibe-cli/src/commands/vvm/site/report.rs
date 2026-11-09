@@ -12,7 +12,7 @@ specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-019#site-profile");
 use vibe_wire::generated::self_apply_report::{
     ConsentSource, Effective, EnvBlockStatus, EnvEffectiveness, EnvObservationStatus,
     EnvPathEntryStatus, EnvProbeStatus, EnvTargetKind, EnvironmentObservation, LoginShell,
-    PathFixOutcome, PathReport, SelfApplyReport, SkipReason, WhereToPut,
+    PathFixOutcome, PathReport, PxStep, SelfApplyReport, SkipReason, WhereToPut,
 };
 
 use crate::commands::vvm::bundle::release_source::kind_label;
@@ -208,6 +208,9 @@ fn text(report: &SelfApplyReport) -> String {
             ),
         );
     }
+    if let Some(px) = &report.px {
+        px_text(px, &mut out);
+    }
     if let Some(effective) = &report.effective {
         effective_text(effective, &mut out);
     }
@@ -221,6 +224,37 @@ fn text(report: &SelfApplyReport) -> String {
         line(&mut out, &format!("next: {step}"));
     }
     out.trim_end().to_owned()
+}
+
+/// The px companion step (`PROP-019#companion-tools`): one line, and for
+/// a px the profile needs and the machine has not got, the repair — the
+/// line the operator missed when the only trace was a grey `skipped`.
+fn px_text(px: &PxStep, out: &mut String) {
+    use vibe_wire::generated::self_apply_report::PxOutcome;
+    let line = match (&px.outcome, px.planned) {
+        (PxOutcome::NotNeeded, _) => return,
+        (PxOutcome::AlreadyInstalled, _) => px
+            .program
+            .as_deref()
+            .map(|program| format!("px: already installed (`{program}`)")),
+        (PxOutcome::Installed, false) => px
+            .program
+            .as_deref()
+            .map(|program| format!("px: installed `{program}`")),
+        (PxOutcome::Installed, true) => Some(format!(
+            "px: would be installed into `{}`",
+            px.store.clone()
+        )),
+        (PxOutcome::Missing | PxOutcome::NoTarget, planned) => Some(format!(
+            "px: NOT INSTALLED{} — {}",
+            if planned { " (and would not be)" } else { "" },
+            px.fix.as_deref().unwrap_or("px is needed and is not there")
+        )),
+    };
+    if let Some(line) = line {
+        out.push_str(&line);
+        out.push('\n');
+    }
 }
 
 /// The wire value of one file change, spelled for a human.

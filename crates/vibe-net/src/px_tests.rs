@@ -44,14 +44,29 @@ fn settings(pac: Option<PacSource>, upstream: Option<&str>) -> PxSettings {
     }
 }
 
-/// Installed for the body of one test and removed after it. The
-/// installed source is process-global, so these tests take turns.
+/// The installed source is process-global, and `resolve` reads the
+/// Windows seam before the others — so every test that installs one takes
+/// its turn on this lock, whichever seam it installs.
+static TURN: std::sync::Mutex<()> = std::sync::Mutex::new(());
+
+/// Installed for the body of one test and removed after it.
 fn with_source<T>(source: IeProxyConfig, body: impl FnOnce() -> T) -> T {
-    static TURN: std::sync::Mutex<()> = std::sync::Mutex::new(());
     let _turn = TURN.lock().unwrap_or_else(|poisoned| poisoned.into_inner());
     system_proxy::install_source(Some(Arc::new(Stub(source))));
     let out = body();
     system_proxy::install_source(None);
+    out
+}
+
+/// The same, for a non-Windows host's settings.
+fn with_unix_source<T>(
+    source: Arc<dyn vibe_core::net::UnixProxySource>,
+    body: impl FnOnce() -> T,
+) -> T {
+    let _turn = TURN.lock().unwrap_or_else(|poisoned| poisoned.into_inner());
+    system_proxy::install_unix_source(Some(source));
+    let out = body();
+    system_proxy::install_unix_source(None);
     out
 }
 
@@ -141,5 +156,62 @@ fn a_configured_pac_is_unchanged() {
     assert_eq!(
         route_args(&settings(Some(file), None), None).unwrap(),
         vec!["--pac=/etc/corp/proxy.pac".to_owned()]
+    );
+}
+
+/// A Linux desktop set to "automatic proxy configuration" is resolved by
+/// vibe exactly as a Windows one is, and px is handed the same explicit
+/// `--pac` (`PROP-068#proxy-system`). The desktop comes from the
+/// [`vibe_core::net::UnixProxySource`] seam, so the case runs on every
+/// host.
+#[test]
+fn a_gnome_auto_configuration_becomes_an_explicit_pac_argument() {
+    /// A GNOME desktop in `mode 'auto'`, and nothing else.
+    #[derive(Debug)]
+    struct Gnome;
+    impl vibe_core::net::UnixProxySource for Gnome {
+        fn gnome_settings(&self) -> Result<Option<String>, String> {
+            Ok(Some(
+                "org.gnome.system.proxy autoconfig-url 'https://pac.example.corp/proxy.pac'\n\
+                 org.gnome.system.proxy ignore-hosts ['localhost', '*.corp.example']\n\
+                 org.gnome.system.proxy mode 'auto'\n"
+                    .to_owned(),
+            ))
+        }
+    }
+
+    let args = with_unix_source(Arc::new(Gnome), || {
+        route_args(&settings(Some(PacSource::System), None), None)
+    });
+    assert_eq!(
+        args.unwrap(),
+        vec![
+            "--pac=https://pac.example.corp/proxy.pac".to_owned(),
+            "--noproxy=localhost,*.corp.example".to_owned(),
+        ]
+    );
+}
+
+/// Nothing configured on a Linux host: px is not started, and the refusal
+/// names every source that was looked at (`PROP-068#proxy-system`).
+#[test]
+fn an_unconfigured_unix_host_stops_px_with_every_source_named() {
+    /// A host with no desktop and no proxy variables.
+    #[derive(Debug)]
+    struct Bare;
+    impl vibe_core::net::UnixProxySource for Bare {}
+
+    let error = with_unix_source(Arc::new(Bare), || {
+        route_args(&settings(Some(PacSource::System), None), None).unwrap_err()
+    });
+    assert!(matches!(error, PxError::SystemProxy(_)), "{error}");
+    let text = error.to_string();
+    assert!(
+        text.contains("GNOME settings") && text.contains("KDE settings"),
+        "{text}"
+    );
+    assert!(
+        text.contains("environment https_proxy") && text.contains("fix:"),
+        "{text}"
     );
 }

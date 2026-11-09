@@ -51,10 +51,11 @@ use std::sync::Once;
 use serde::{Deserialize, Serialize};
 use specmark::spec;
 
-mod artifacts;
+pub(crate) mod artifacts;
 mod proxy;
 mod transfer;
 pub use artifacts::{ArtifactsConfig, ReleaseSourceKind, SelfConfig, UnknownReleaseSource};
+pub use artifacts::{InstallRootError, install_root_at};
 pub use proxy::{PX_OWNED_ARGS, PacSource, ProxyConfig, ProxyMode, RevocationCheck};
 pub use transfer::TransferConfig;
 

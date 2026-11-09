@@ -187,7 +187,7 @@ pub fn run(ctx: &output::Context, args: VvmArgs, env: VvmEnv) -> Result<()> {
         VvmSubcommand::Source(a) => bundle::run_release_source_cmd(ctx, &env, a.command),
         VvmSubcommand::Releases(a) => bundle::run_releases_cmd(ctx, &env, a),
         VvmSubcommand::Doctor(a) => doctor::run_doctor_cmd(ctx, &env, a),
-        VvmSubcommand::Px(a) => observed(ctx, "px", |p| bundle::run_px(ctx, &env, a, p)),
+        VvmSubcommand::Px(a) => bundle::run_px(ctx, &env, a),
         VvmSubcommand::Apply(a) => site::run_apply_cmd(ctx, &env, a),
         VvmSubcommand::Remove(a) => remove::run_remove_cmd(ctx, &env, a),
         VvmSubcommand::Gc(a) => {

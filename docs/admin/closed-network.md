@@ -305,24 +305,26 @@ revocation`). `no_proxy` применяется и к `vibe dl --proxy <url>`.
 ```toml
 [proxy]
 mode = "px"
-pac  = "https://pac.example.corp/proxy.pac"   # или абсолютный путь, или file:///…, или "system" (только Windows)
+pac  = "https://pac.example.corp/proxy.pac"   # или абсолютный путь, или file:///…, или "system" (настройки ОС)
 # upstream = "proxy.example.corp:8080"        # вместо pac — конкретный вышестоящий прокси
 # px_port  = 3129                              # фиксированный порт на loopback (без подбора)
 # px_path  = "/opt/px/px"                      # свой исполняемый px
 ```
 
-#### `pac = "system"` — настройки прокси Windows, прочитанные самим vibe
+#### `pac = "system"` — настройки прокси операционной системы, прочитанные самим vibe
 
 На корпоративном ноутбуке адрес PAC-файла обычно лежит внутри двоичного
 значения `DefaultConnectionSettings` (ветка `Connections` в параметрах
 обозревателя), а отдельного значения `AutoConfigURL` нет. px, запущенный без
 `--pac`, в такой конфигурации не находит ничего, и запросы не проходят.
-Поэтому `pac = "system"` означает: **vibe сам читает настройки прокси
-текущего пользователя Windows и запускает px с явным `--pac=<url>`** (или с
+Поэтому `pac = "system"` означает: **vibe сам читает настройки прокси этой
+операционной системы и запускает px с явным `--pac=<url>`** (или с
 `--proxy=<host:port>`, если настроен конкретный прокси, а не PAC-файл).
-Настройки читаются при каждом запуске px — их могли изменить.
+Настройки читаются при каждом запуске px — их могли изменить. Это работает на
+любой системе: Windows, macOS, Linux и другие Unix — у каждой свой порядок
+поиска, и в отчёте всегда назван источник, который ответил.
 
-Порядок поиска (побеждает первое найденное):
+Порядок поиска **в Windows** (побеждает первое найденное):
 
 1. Групповая политика: значение `AutoConfigURL` в
    `HKCU\Software\Policies\Microsoft\Windows\CurrentVersion\Internet Settings`,
@@ -342,11 +344,48 @@ pac  = "https://pac.example.corp/proxy.pac"   # или абсолютный пу
    прочитанные настройки и что делать: задать `pac = "<адрес PAC>"`,
    абсолютный путь к PAC-файлу или `upstream = "host:port"`.
 
+Порядок поиска **в macOS** — настройки прокси текущего сетевого сервиса,
+как их отдаёт `SCDynamicStoreCopyProxies` (те же данные печатает
+`scutil --proxy`): `ProxyAutoConfigEnable` + `ProxyAutoConfigURLString` →
+адрес PAC; `ProxyAutoDiscoveryEnable` → автоопределение (WPAD, ниже);
+`HTTPSEnable` + `HTTPSProxy` + `HTTPSPort` (иначе тройка `HTTP*`) →
+`upstream` для px; `ExceptionsList` → `--noproxy`. Затем — переменные
+окружения (ниже), затем отказ. Выключенный `…Enable` игнорируется ровно так
+же, как его игнорирует сама macOS.
+
+Порядок поиска **в Linux и других Unix** (побеждает первое найденное):
+
+1. GNOME / GTK — `gsettings list-recursively org.gnome.system.proxy`:
+   `mode 'auto'` → `autoconfig-url` (пусто → WPAD), `mode 'manual'` → `host`
+   и `port` схемы `https` (иначе `http`), `ignore-hosts` → `--noproxy`.
+2. KDE — секция `[Proxy Settings]` в `$XDG_CONFIG_HOME/kioslaverc`:
+   `ProxyType` 2 → `Proxy Config Script`, 3 → WPAD, 1 → `httpsProxy`
+   (иначе `httpProxy`), 4 → отдать решение переменным окружения;
+   `NoProxyFor` → `--noproxy`.
+3. Переменные окружения — `https_proxy`/`HTTPS_PROXY`, затем
+   `http_proxy`/`HTTP_PROXY`, затем `all_proxy`/`ALL_PROXY`; значение
+   сводится к `host:port`, поэтому логин и пароль из него отбрасываются и
+   никуда не печатаются; `no_proxy` → `--noproxy`. Адрес на loopback
+   пропускается — это собственный px самого vibe.
+4. Ничего не найдено — px **не** запускается, а в сообщении перечислены все
+   просмотренные источники и что делать.
+
+**Автоопределение (WPAD)** — когда настройки просят «определить
+автоматически» и адреса не называют: vibe берёт доменные суффиксы поиска
+DNS хоста (`search` / `domain` в `/etc/resolv.conf`), строит
+`http://wpad.<домен>/wpad.dat`, поднимаясь по меткам, и запрашивает их по
+очереди напрямую с коротким таймаутом. Побеждает первый ответ `200`, в теле
+которого есть `FindProxyForURL`. Подъём **никогда не доходит до публичного
+суффикса** — остаётся не меньше двух меток, то есть `wpad.example.com`
+спрашивается, а `wpad.com` нет. Не более шести адресов за раз.
+
 Что получилось, видно в отчётах: `vibe dl --test-proxy` (строка `pac`),
 `vibe self doctor --network` и `vibe self apply --show` печатают
 `system → https://pac.example.corp/proxy.pac (from user Internet Options)` —
-адрес и настройку, которая ответила. Написание `windows` принимается как
-синоним `system`. На не-Windows `system` по-прежнему отвергается.
+адрес и источник, который ответил: `from GNOME settings`,
+`from KDE settings`, `from macOS network settings`,
+`from environment https_proxy`, `from WPAD discovery`. Написание `windows`
+принимается как синоним `system`.
 
 #### `revocation` — проверка отзыва сертификатов (Windows)
 
@@ -382,13 +421,40 @@ rustls и онлайн-проверку отзыва не делают, а px д
 туннелирует (`CONNECT`) — ключ им не нужен и до них не доходит.
 
 px ставится из дропа релизов: положите `px-0.11.0-<T>.*` (см. §3.1) и
-выполните `vibe self px install` (или `--from <файл>`); `vibe self px status`
-показывает, установлен ли он. Порядок поиска px: `px_path` → `tools/px/` рядом
-с vibe → хранилище vibe → `PATH`.
+выполните `vibe self px install`; `vibe self px status` показывает, установлен
+ли он. Порядок поиска px: `px_path` → хранилище vibe → `tools/px/` рядом с
+vibe → `PATH`.
 
-Не выполнялось здесь: реальный запуск px и вход через PAC (нет px-архива с
-закреплённым SHA-256 и нет корпоративного прокси). Выполнено: разбор всех
-вариантов `pac`/`upstream`/`px_port` профилем и диагностика отсутствующего px.
+**Подойдёт любой px (решение владельца 2026-11-09).** vibe нигде не сверяет px
+с SHA-256 — ни скачанный из источника релизов или дропа, ни найденный рядом с
+`vibe`, ни указанный вручную. Файл закрепления (`xtask/dist/px.toml`) говорит
+только, какой px брать **по умолчанию**. `vibe self px install --from
+<архив|каталог|исполняемый файл>` берёт `.zip`, `.tar.gz`, распакованный
+каталог или сам `px`/`px.exe` — любой версии и для любой платформы, включая
+те, для которых готового ассета нет (`x86_64-apple-darwin`); `--force`
+заменяет. Всё лежит в одном хранилище
+`<install root>/opt/vibevm/tools/px/<версия>/` (`custom`, если версия в имени
+не указана), рядом — `PX.toml`: откуда прочитан файл, какой SHA-256 измерен,
+когда и что отвечает `px --version`. Это **справка, а не проверка**: ни
+`status`, ни `doctor` не ставят на px метку «проверен». Отказ остаётся только
+для того, что px вообще не является: архив не распаковывается, выходит за свой
+каталог или не содержит программы `px`.
+
+`vibe self apply` сам доустанавливает px, если применяемый профиль выбирает
+`[proxy] mode = "px"`: архив рядом с `vibe` (или в `tools/px/` там же)
+попадает в хранилище того install root, который выбирает профиль — в том числе
+при повторном `vibe self apply`, так что достаточно положить архив и запустить
+команду ещё раз. Если px так и нет, в итоге команды стоит `px: NOT INSTALLED` и
+предупреждение с именем ассета, каталогом хранилища и
+`vibe self px install --from <каталог-или-zip>`; код выхода остаётся 0 —
+профиль применён. `vibe self px status` при `mode = "px"` и полном отсутствии
+px (хранилище, `px_path`, рядом с vibe, `PATH`) печатает отчёт и возвращает
+ненулевой код, как `vibe self doctor` с неустранённой проблемой.
+
+Не выполнялось здесь: реальный запуск px и вход через PAC (нет настоящего
+px-архива и нет корпоративного прокси). Выполнено: разбор всех вариантов
+`pac`/`upstream`/`px_port` профилем, установка px из локальных файлов и
+диагностика отсутствующего px.
 
 ### 5.2a. px для других инструментов: `vibe tool px`
 
@@ -494,7 +560,7 @@ vibe self doctor --network https://repo.example.corp/
 | `dns … does not resolve` (`dl_dns`) | 6 | Имя не разрешается; если наружу резолвит только прокси — настройте `[proxy]`, проверьте `no_proxy` |
 | таймаут соединения | 7 | Прокси или узел недоступен по сети (не выполнялось здесь: в песочнице без сети соединение отвергается сразу) |
 | `px present … px is not installed` | 5 (21) | `vibe self px install` (§5.2) или `VIBEVM_PROXY_MODE=none` |
-| `pac … found no proxy in the Windows configuration …` | 5 (21) | `pac = "system"`, но в параметрах обозревателя прокси не настроен. В сообщении перечислено, что прочитано; задайте `pac`/`upstream` (§5.2) |
+| `pac … found no proxy in …` | 5 (21) | `pac = "system"`, но прокси не настроен ни в одном источнике этой ОС. В сообщении перечислено, что прочитано; задайте `pac`/`upstream` (§5.2) |
 | `CRYPT_E_NO_REVOCATION_CHECK (0x80092012)` / `CRYPT_E_REVOCATION_OFFLINE (0x80092013)` | 13 (22) | Не удаётся проверить отзыв сертификата: CRL/OCSP вскрывающего CA недостижимы. `revocation = "best-effort"` (§5.2) |
 
 Прочие коды `vibe dl`: 3 — запрет `--offline`, 4 — политика источников,
@@ -562,7 +628,7 @@ install_root = "/opt/work"
 [proxy]
 mode = "px"
 pac = "https://pac.example.corp/proxy.pac"
-# pac = "system"            # (Windows) настройки прокси пользователя, читает сам vibe — §5.2
+# pac = "system"            # настройки прокси этой ОС, читает сам vibe — §5.2
 no_proxy = "localhost,127.0.0.1,.example.corp"
 ca_file = "/mnt/vibe/certs/corp-root-ca.pem"
 # Проверка отзыва сертификатов для дочернего git на schannel (Windows), §5.2:
@@ -586,7 +652,8 @@ fix = "always"
 `packages = '\\fileserver\vibe\payloads'`, `install_root = "C:/Work"`, в TOML —
 в одинарных кавычках. На Linux и macOS `--dry-run` такого профиля проходит:
 UNC- и `C:`-пути принимаются с предупреждением, что прочитать их может только
-Windows; так же предупреждается `pac = "system"`.
+Windows. `pac = "system"` предупреждения больше не вызывает — он читается на
+любой системе (§5.2).
 
 ### 6.2. Применение и проверка
 

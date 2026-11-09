@@ -26,6 +26,7 @@ clones from when run outside a source tree), [PROP-000 §7](PROP-000.xml#registr
 and [PROP-000 §20](PROP-000.xml#token-secrecy) (the publish token VVM never
 touches), [`VIBEVM-SPEC.md`](../../VIBEVM-SPEC.md) (CLI-first posture), and
 the repo's `rust-toolchain.toml` (the pin VVM honours when building).</related></p>
+  <p><changelog fact="true" status="spec/done">2026-11-09 — `#companion-tools` gains `##COMPANION-TOOLS-APPLY`: `vibe self apply` ensures px whenever the applied profile's effective route selects the vibe-managed px, after the self-import and whether or not it ran, in the tool store of the install root that profile chooses; a px still absent is a named warning with the asset and `vibe self px install --from &lt;directory-or-zip&gt;` in the summary and in the report's new `px` member, at exit 0, and `vibe self px status` refuses a px mode with no px anywhere (corporate-environment campaign, [`BACKLOG.md#b-251`](../../../BACKLOG.md#b-251)). 2026-11-09 — `#companion-tools` gains `##COMPANION-TOOLS-ANY-PX` and `##COMPANION-TOOLS-LAW` / `##COMPANION-TOOLS-DECISION` are amended for it (owner decision): vibe never refuses px over a SHA-256 on any install or download path, the pin only says which px to fetch by default, `vibe self px install --from &lt;archive|directory|executable&gt;` takes any px on any target, one store holds every version with `custom` for an unnamed one, the lookup is `px_path` &#8594; store &#8594; beside the binary &#8594; PATH, and every installed px carries a `PX.toml` provenance record that `vibe self px status` prints (source, measured SHA-256, `px --version`) with no verified/unverified verdict. 2026-11-09 — `#install-root` gains `##INSTALL-ROOT-HOME`: a declared `install_root` may start at the reader's own home (`~`, `~/&lt;rest&gt;`, and `~\&lt;rest&gt;` on Windows), expanded where the layer is read and never stored expanded, so one profile puts vibe in every developer's `~/opt`; the same rule governs `[artifacts] vibe`, `[artifacts] packages` (PROP-066 `#drops`, amended) and `[self] path`, so a drop written `~/opt/drop/packages` is this reader's own directory and not the relative path it used to be ignored as; `~user` and a relative value are refused by the key that carries them (owner request).</changelog></p>
   <motivation title="1. Motivation">
     <problem title="1.1 The problem — vibevm cannot install itself">
       <facts ordered="false">
@@ -819,8 +820,60 @@ the built-in GitHub release page.</RELEASE-SOURCES-LEAD></p>
     </release-sources>
     <companion-tools title="2.19.1 Companion tools — px beside the bundle">
       <p><companion-tools-req fact="true" status="impl/done">`req r1`</companion-tools-req></p>
-      <p><COMPANION-TOOLS-LAW fact="true" status="impl/done">The px pin `xtask/dist/px.toml` (version, per-target upstream archive, SHA-256) is embedded in every vibe build, release or source. A release carries, beside its bundle, the pinned upstream archive of each target as its own asset `px-&lt;px version&gt;-&lt;target&gt;.&lt;zip|tar.gz&gt;`, byte for byte, and lists it in `TOOLS.json` (wire format `distribution-tools-manifest`). px is installed once per px version into the installation's tool store `&lt;install root&gt;/opt/vibevm/tools/px/&lt;px version&gt;/`, shared by every instance, release or source build. It is read from the configured release source exactly like a bundle — GitHub, GitVerse, Nexus or the release drop (`[artifacts] vibe`, its version directories and its root; the closed-network case, where reaching the internet itself needs px) — and its SHA-256 is always checked against the embedded pin before it is unpacked. A fresh release install, update, reinstall or bootstrap places it after the bundle is verified; a source install places it when px mode is configured; `vibe self px install [--from PATH] [--force]` places it on request and `vibe self px status` shows the pin, the asset name, the store directory and what is installed. The px lookup is `[proxy] px_path`, then `tools/px/` beside the running binary, then the store, then PATH; a missing px names the store directory, the asset file this target needs and `vibe self px install`. A source without the asset is reported on the progress line and never fails an install; bytes that differ from the pin stop the command before activation. A reused instance is not touched and costs no download.</COMPANION-TOOLS-LAW></p>
-      <p><COMPANION-TOOLS-DECISION fact="true" status="impl/done">**Decision:** px is a separate release asset, the pinned upstream archive itself, verified against the pin every vibe embeds, and stored per px version outside any instance. **Why:** the owner intends px "in the build" for every installation kind (2026-11-09), including a vibe built from source, which has no release bundle. vibe 1.0.11 — the version in the field — reads `DISTRIBUTIONS.json` and `DISTRIBUTION.json` with closed shapes: run against test manifests it refused a top-level `tools` member, a per-platform member and a sixth platform entry, and it refuses any extra file in a bundle. A companion asset is invisible to it, so a new release updates existing installations and new installations gain px; the one pin means a release, a drop and a source build agree on the bytes. `cargo xtask dist px` stages px and writes the asset with its listing; `dist upload` adds the pair to the draft; `dist finalize` verifies every pair and publishes `TOOLS.json`. The GitVerse mirror (`dist gitverse-publish`) does not copy companion assets yet: a GitVerse-sourced install reports px as absent.</COMPANION-TOOLS-DECISION></p>
+      <p><COMPANION-TOOLS-LAW fact="true" status="impl/done">The px pin `xtask/dist/px.toml` (version, per-target upstream archive, SHA-256) is embedded in every vibe build, release or source. A release carries, beside its bundle, the pinned upstream archive of each target as its own asset `px-&lt;px version&gt;-&lt;target&gt;.&lt;zip|tar.gz&gt;`, byte for byte, and lists it in `TOOLS.json` (wire format `distribution-tools-manifest`). px is installed once per px version into the installation's tool store `&lt;install root&gt;/opt/vibevm/tools/px/&lt;px version&gt;/`, shared by every instance, release or source build. It is read from the configured release source exactly like a bundle — GitHub, GitVerse, Nexus or the release drop (`[artifacts] vibe`, its version directories and its root; the closed-network case, where reaching the internet itself needs px). **vibe does not pin px&apos;s content** (owner decision 2026-11-09, `##COMPANION-TOOLS-ANY-PX`): the pin file says WHICH px to fetch by default — version, per-target asset name and URL — and its `sha256` is metadata, never a gate, on any path. A fresh release install, update, reinstall or bootstrap places px after the bundle is verified; a source install places it when px mode is configured; `vibe self px install [--from PATH] [--force]` places it on request, and `vibe self px status` shows what is installed with the provenance vibe recorded. The px lookup is `[proxy] px_path`, then the installation&apos;s shared store, then `tools/px/` beside the running binary, then PATH — the store before the binary&apos;s neighbours, because that is where an operator&apos;s own `vibe self px install` puts px; a missing px names the store directory, the asset file this target needs, `vibe self px install` and its `--from`. A source without the asset is reported on the progress line and never fails an install. A reused instance is not touched and costs no download.</COMPANION-TOOLS-LAW></p>
+      <p><COMPANION-TOOLS-ANY-PX fact="true" status="impl/done">**Any px works: vibe never refuses px over a digest.** Owner
+decision 2026-11-09. px is a third-party proxy bridge the operator chooses, not
+a part of vibe, and a network that needs px needs whichever px actually
+authenticates there — another version, a build of their own, a px for a target
+the pin has no default asset for (`x86_64-apple-darwin`). So **no install or
+download path checks px against a SHA-256**: not the companion asset fetched
+from the release source or the drop, not the archive found beside the running or
+imported `vibe`, not `vibe self px install --from`. The pin file
+(`xtask/dist/px.toml`) keeps saying which px to fetch BY DEFAULT — version,
+per-target asset name and URL — and its `sha256` is metadata a release manifest
+may carry and nothing reads as a gate; a pin that drops the digests is still a
+pin. `vibe self px install --from &lt;archive|directory|executable&gt;` takes a
+`.zip`, a `.tar.gz`, a directory the operator unpacked themselves, or the px
+program alone, finds the `px` / `px.exe` inside it, and installs it; `--force`
+replaces. One store holds all of them: `&lt;install root&gt;/opt/vibevm/tools/px/&lt;version&gt;/`,
+the version taken from an asset named `px-&lt;version&gt;-&lt;target&gt;.&lt;ext&gt;`
+and `custom` when nothing names one, so a default px and an operator&apos;s own
+sit side by side and the lookup order of `##COMPANION-TOOLS-LAW` finds either.
+What vibe does instead of refusing is **record and show**: beside every px it
+installs it writes `PX.toml` — the file or directory it read, the SHA-256 it
+measured of those bytes, when that was, and what the program answers to
+`--version` — and `vibe self px status` (with `--json`) prints exactly that. No
+part of that is a verdict: there is no `verified` flag and no warning about one,
+because nothing was promised about the content. Bytes that are not a px REMAIN
+refused — an archive vibe cannot unpack, one that escapes its directory, one
+with no `px` program in it — because that is a broken payload, not a different
+px.</COMPANION-TOOLS-ANY-PX></p>
+      <p><COMPANION-TOOLS-APPLY fact="true" status="impl/done">**A profile that selects px gets px.** `[proxy] mode = "px"`
+configures a route that cannot carry one byte without px, and the release zip
+does not carry px — it is the companion asset above, which an operator puts
+beside `vibe` by hand. `vibe self apply` therefore runs a px step after the
+self-import of `#site-profile` and **whether or not that import ran**: when the
+effective `[proxy]` route after the profile runs the vibe-managed px (`px_path`
+naming the operator&apos;s own px takes the companion lane out of the question),
+the archive beside the running executable — or in `tools/px/` there — is placed
+in the tool store of the install root THIS profile chooses, on one progress line,
+with its provenance recorded and nothing refused over a digest
+(`##COMPANION-TOOLS-ANY-PX`). px already there is left alone, so the
+apply after that changes nothing; adding the archive and re-running installs
+it, which a step reached only through the import could not do. px still absent
+is the one state a person must not have to read out of a grey `skipped` line:
+the summary says `px: NOT INSTALLED` and a warning names the asset file this
+target needs, the store directory and `vibe self px install --from
+&lt;directory-or-zip&gt;` — in the human report, on stderr and as the report&apos;s
+own `px` member (`vibe-self-apply/1`, `px.outcome` / `px.fix`). The exit code
+stays 0: the profile WAS applied, and the gap is the installation&apos;s, not the
+command&apos;s. `--dry-run` answers the same question and writes nothing. `vibe
+self px status` is the same truth on request: a px mode with no px anywhere —
+not in the store, not at `px_path`, not beside the binary, not on PATH — is
+reported and then refused with a non-zero exit, as `vibe self doctor` refuses
+with an unresolved problem; a store without the pinned copy while `px_path` or
+PATH answers is a fact, not a failure.</COMPANION-TOOLS-APPLY></p>
+      <p><COMPANION-TOOLS-DECISION fact="true" status="impl/done">**Decision:** px is a separate release asset, the upstream archive itself, named by the pin every vibe embeds and stored per px version outside any instance. **Why:** the owner intends px "in the build" for every installation kind (2026-11-09), including a vibe built from source, which has no release bundle. vibe 1.0.11 — the version in the field — reads `DISTRIBUTIONS.json` and `DISTRIBUTION.json` with closed shapes: run against test manifests it refused a top-level `tools` member, a per-platform member and a sixth platform entry, and it refuses any extra file in a bundle. A companion asset is invisible to it, so a new release updates existing installations and new installations gain px; the one pin means a release, a drop and a source build agree on WHICH px they fetch by default — not, since 2026-11-09, that any of them refuse another. `cargo xtask dist px` stages px and writes the asset with its listing; `dist upload` adds the pair to the draft; `dist finalize` verifies every pair and publishes `TOOLS.json`. The GitVerse mirror (`dist gitverse-publish`) does not copy companion assets yet: a GitVerse-sourced install reports px as absent.</COMPANION-TOOLS-DECISION></p>
     </companion-tools>
     <site-profile title="2.20 Site profile — one file configures an installation">
       <p><SITE-PROFILE-LEAD fact="true" status="impl/done">An administrator describes a closed-network installation once, in one
@@ -891,6 +944,26 @@ pointer are `&lt;base&gt;/opt/vibevm`. A declared value must be absolute (a
 Windows drive or UNC path counts when the profile is validated on any
 host).</INSTALL-ROOT-LEAD></p>
       <facts ordered="false">
+        <INSTALL-ROOT-HOME fact="true" status="impl/done">**A declared root may start at the reader&apos;s own home.** The one
+  directory a site profile cannot write out in full is the home of whoever
+  applies it, and that is exactly the root a Mac or Linux site wants: a profile
+  declares `install_root = "~"` and every developer who applies it gets vibe in
+  their own `~/opt`, with the shims `~/opt/bin` the PATH step puts on PATH.
+  `~`, `~/&lt;rest&gt;` — and `~\&lt;rest&gt;` on Windows, where that is the
+  separator a person types — are therefore accepted wherever an absolute
+  directory is, because such a path names one directory on every machine that
+  reads it. It is expanded where the base is resolved, against the same home
+  directory the `~/.vibe` default comes from, and is never stored expanded: the
+  profile and `config.toml` keep the `~` the operator wrote, so one file keeps
+  working on every machine. `~user` is refused — vibe resolves nobody else&apos;s
+  home — and so is a relative root, which would otherwise be read from wherever
+  a command happened to run; both refusals name the value as written and the
+  fix, at `vibe self apply`, at `--show` and when the profile is
+  validated. **The same rule governs a layer's other per-user paths** —
+  `[artifacts] vibe`, `[artifacts] packages` (PROP-066 `#drops`) and `[self]
+  path`: each is resolved against that home wherever the layer is read, so one
+  profile can name every drop under `~` while `vibe artifacts where`, the
+  release source and `--show` print the resolved directory.</INSTALL-ROOT-HOME>
         <INSTALL-ROOT-NOT-RELEASES fact="true" status="impl/done">`[self] install_root` is not part of the release decision of
   `#release-sources`: `[self]` with `[artifacts] vibe` still comes whole from
   the higher layer declaring either, while the install root layers on its own.

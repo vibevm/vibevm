@@ -7,10 +7,12 @@
 //! settings: the Windows reader is replaced through the
 //! [`vibe_core::net::system_proxy`] seam, the PAC is served by a thread
 //! in this process, and the proxy the PAC names is another thread that
-//! answers the one request. Windows only, because a route with
-//! `pac = "system"` is refused elsewhere; the resolution order itself is
-//! tested on every host in `vibe-core`, and the px arguments in
-//! `vibe-net`'s own unit tests.
+//! answers the one request. Windows only, because the reader this case
+//! replaces is the Windows one and the run needs a real px; the three
+//! resolution orders themselves — Windows, macOS and the Linux desktops
+//! — are tested on every host in `vibe-core`, the px arguments in
+//! `vibe-net`'s own unit tests, and the whole `vibe` over a stated
+//! desktop configuration in `vibe-cli`'s `cli_self_apply`.
 #![cfg(windows)]
 
 use std::{

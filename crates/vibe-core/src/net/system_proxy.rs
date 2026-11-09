@@ -30,175 +30,6 @@ pub const POLICY_SUBKEY: &str =
 /// blob are the fallbacks when the WinHTTP API answers nothing.
 pub const USER_SUBKEY: &str = r"Software\Microsoft\Windows\CurrentVersion\Internet Settings";
 
-/// Which Windows setting answered (`PROP-068#proxy-system`). Reported beside
-/// the resolved location, so a user who disagrees with the answer knows
-/// which setting to change.
-///
-/// ```
-/// use vibe_core::net::SystemProxyOrigin;
-/// // The policy outranks the user's own choice, so it is the first the
-/// // resolution reports and the first it reads.
-/// assert_eq!(SystemProxyOrigin::PolicyUser.as_str(), "policy HKCU");
-/// assert_eq!(
-///     SystemProxyOrigin::ConnectionSettings.as_str(),
-///     "user Internet Options DefaultConnectionSettings"
-/// );
-/// ```
-#[derive(Debug, Clone, Copy, PartialEq, Eq)]
-pub enum SystemProxyOrigin {
-    /// `HKCU\…\Policies\…\Internet Settings` `AutoConfigURL`.
-    PolicyUser,
-    /// `HKLM\…\Policies\…\Internet Settings` `AutoConfigURL`.
-    PolicyMachine,
-    /// `WinHttpGetIEProxyConfigForCurrentUser` — the user's configuration
-    /// as Windows itself exposes it, the `Connections` blob included.
-    InternetOptions,
-    /// The `AutoConfigURL` value of the user's Internet Settings, read
-    /// directly because the API answered nothing.
-    AutoConfigUrlValue,
-    /// The `DefaultConnectionSettings` blob, parsed directly because the
-    /// API answered nothing.
-    ConnectionSettings,
-    /// `WinHttpDetectAutoProxyConfigUrl` (DHCP then DNS A) — the
-    /// configuration asks for auto-detection and names no URL.
-    Wpad,
-}
-
-impl SystemProxyOrigin {
-    /// The phrase a report prints after `from`.
-    ///
-    /// ```
-    /// use vibe_core::net::SystemProxyOrigin;
-    /// assert_eq!(SystemProxyOrigin::PolicyMachine.as_str(), "policy HKLM");
-    /// assert_eq!(SystemProxyOrigin::InternetOptions.as_str(), "user Internet Options");
-    /// assert_eq!(SystemProxyOrigin::Wpad.as_str(), "WPAD");
-    /// ```
-    pub fn as_str(self) -> &'static str {
-        match self {
-            SystemProxyOrigin::PolicyUser => "policy HKCU",
-            SystemProxyOrigin::PolicyMachine => "policy HKLM",
-            SystemProxyOrigin::InternetOptions => "user Internet Options",
-            SystemProxyOrigin::AutoConfigUrlValue => "user Internet Options AutoConfigURL",
-            SystemProxyOrigin::ConnectionSettings => {
-                "user Internet Options DefaultConnectionSettings"
-            }
-            SystemProxyOrigin::Wpad => "WPAD",
-        }
-    }
-}
-
-/// The route the current user's Windows proxy configuration describes:
-/// exactly one of a PAC location or a fixed upstream proxy, the bypass
-/// list the same setting carried, and which setting answered.
-///
-/// ```
-/// use vibe_core::net::{SystemProxy, SystemProxyOrigin};
-/// let resolved = SystemProxy {
-///     pac_url: Some("https://pac.example.corp/proxy.pac".into()),
-///     upstream: None,
-///     bypass: None,
-///     origin: SystemProxyOrigin::InternetOptions,
-/// };
-/// // What px is given, and the one phrase every report prints.
-/// assert_eq!(resolved.pac_url.as_deref(), Some("https://pac.example.corp/proxy.pac"));
-/// assert!(resolved.describe().starts_with("system \u{2192} https://pac.example.corp"));
-/// ```
-#[derive(Debug, Clone, PartialEq, Eq)]
-pub struct SystemProxy {
-    /// The PAC URL px is given as `--pac=<url>`.
-    pub pac_url: Option<String>,
-    /// The fixed upstream proxy px is given as `--proxy=<host:port>`,
-    /// when the configuration names one instead of a PAC file.
-    pub upstream: Option<String>,
-    /// The configuration's bypass list, in vibe's `no_proxy` spelling
-    /// ([`bypass_list`]); `None` when it named none.
-    pub bypass: Option<String>,
-    /// Which setting answered.
-    pub origin: SystemProxyOrigin,
-}
-
-impl SystemProxy {
-    /// `system → <what px is given> (from <setting>)` — the one phrase
-    /// every report prints.
-    ///
-    /// ```
-    /// use vibe_core::net::{SystemProxy, SystemProxyOrigin};
-    /// let pac = SystemProxy {
-    ///     pac_url: Some("https://pac.example.corp/proxy.pac".into()),
-    ///     upstream: None,
-    ///     bypass: None,
-    ///     origin: SystemProxyOrigin::InternetOptions,
-    /// };
-    /// assert_eq!(
-    ///     pac.describe(),
-    ///     "system → https://pac.example.corp/proxy.pac (from user Internet Options)"
-    /// );
-    /// let fixed = SystemProxy {
-    ///     pac_url: None,
-    ///     upstream: Some("proxy.example.corp:8080".into()),
-    ///     bypass: Some(".corp.example".into()),
-    ///     origin: SystemProxyOrigin::ConnectionSettings,
-    /// };
-    /// assert_eq!(
-    ///     fixed.describe(),
-    ///     "system → proxy proxy.example.corp:8080 · bypass .corp.example \
-    ///      (from user Internet Options DefaultConnectionSettings)"
-    /// );
-    /// ```
-    pub fn describe(&self) -> String {
-        let what = match (&self.pac_url, &self.upstream) {
-            (Some(url), _) => url.clone(),
-            (None, Some(upstream)) => format!("proxy {upstream}"),
-            (None, None) => "nothing".to_owned(),
-        };
-        let bypass = self
-            .bypass
-            .as_deref()
-            .map(|list| format!(" · bypass {list}"))
-            .unwrap_or_default();
-        format!("system → {what}{bypass} (from {})", self.origin.as_str())
-    }
-}
-
-/// Why `pac = "system"` could not be resolved. Each message names what
-/// was checked and the fix, and carries no credential.
-///
-/// ```
-/// use vibe_core::net::SystemProxyError;
-/// let error = SystemProxyError::NotConfigured {
-///     checked: vec!["HKCU\\…\\Internet Settings AutoConfigURL: not set".into()],
-/// };
-/// let text = error.to_string();
-/// assert!(text.contains("AutoConfigURL: not set"), "{text}");
-/// assert!(text.contains("PROP-068#proxy-system") && text.contains("fix:"), "{text}");
-/// assert!(SystemProxyError::NotWindows.to_string().contains("not Windows"));
-/// ```
-#[derive(Debug, Clone, PartialEq, Eq, thiserror::Error)]
-#[specmark::spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-068#proxy-system")]
-pub enum SystemProxyError {
-    #[error(
-        "`[proxy] pac = \"system\"` reads the Windows proxy configuration of the logged-in \
-         user; this host is not Windows \
-         (violates spec://org.vibevm.core/vibevm/common/PROP-068#proxy-system; \
-          fix: set `[proxy] pac = \"<your PAC URL>\"` or an absolute PAC file path, or \
-          `[proxy] upstream = \"host:port\"`)"
-    )]
-    NotWindows,
-    #[error(
-        "`[proxy] pac = \"system\"` found no proxy in the Windows configuration of the \
-         logged-in user: {} \
-         (violates spec://org.vibevm.core/vibevm/common/PROP-068#proxy-system; \
-          fix: set `[proxy] pac = \"<your PAC URL>\"` or an absolute PAC file path, or \
-          `[proxy] upstream = \"host:port\"`; or configure the proxy in Windows \
-          Internet Options and rerun)",
-        checked.join("; ")
-    )]
-    NotConfigured {
-        /// Every setting that was read, in order, with what it said.
-        checked: Vec<String>,
-    },
-}
-
 /// The current user's Windows proxy configuration as
 /// `WinHttpGetIEProxyConfigForCurrentUser` returns it.
 ///
@@ -547,7 +378,11 @@ pub fn resolve_with(source: &dyn WindowsProxySource) -> Result<SystemProxy, Syst
     }
 
     // 5. Nothing.
-    Err(SystemProxyError::NotConfigured { checked })
+    Err(SystemProxyError::NotConfigured {
+        looked_in: report::WINDOWS_SCOPE.0,
+        configure_hint: report::WINDOWS_SCOPE.1,
+        checked,
+    })
 }
 
 mod connection_settings;
@@ -556,6 +391,23 @@ pub use connection_settings::{
     ConnectionSettings, bypass_list, parse_connection_settings, pick_upstream,
 };
 
+mod report;
+pub use report::{SystemProxy, SystemProxyError, SystemProxyOrigin};
+
+mod desktop;
+mod macos;
+mod unix;
+mod wpad;
+pub use unix::{
+    UnixProxySource, install_mac_source, install_unix_source, installed_mac_source,
+    installed_unix_source, resolve_mac_with, resolve_unix_with,
+};
+pub use wpad::looks_like_pac;
+
 #[cfg(test)]
 #[path = "system_proxy/tests.rs"]
 mod tests;
+
+#[cfg(test)]
+#[path = "system_proxy/unix_tests.rs"]
+mod unix_tests;

@@ -241,7 +241,7 @@ fn nothing_configured_names_every_setting_that_was_read() {
         ..Default::default()
     })
     .unwrap_err();
-    let SystemProxyError::NotConfigured { checked } = &error else {
+    let SystemProxyError::NotConfigured { checked, .. } = &error else {
         panic!("{error}");
     };
     assert_eq!(checked.len(), 5, "{checked:?}");

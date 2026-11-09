@@ -56,10 +56,15 @@ pub(super) fn show(ctx: &output::Context, env: &VvmEnv) -> Result<()> {
         .map(|site| site.profile.path_fix())
         .unwrap_or_default();
     let mut own_warnings = Vec::new();
-    let layers = ConfigLayers::load(Some(&files.profile), &mut own_warnings, &mut warnings);
+    let layers = ConfigLayers::load(
+        Some(&files.profile),
+        env.home.as_deref(),
+        &mut own_warnings,
+        &mut warnings,
+    );
     warnings.extend(own_warnings);
     let active = release_source::active();
-    let install_root = layers.install_base(env.install_root_env.as_deref(), env.home.as_deref());
+    let install_root = layers.install_base(env.install_root_env.as_deref(), env.home.as_deref())?;
     let effective = effective(&layers, Some(active), install_root.clone(), &mut warnings)?;
     let where_to_put = where_to_put(&layers, &mut warnings);
     // `--show` reports the PATH step of the root the files name, which is
@@ -82,6 +87,7 @@ pub(super) fn show(ctx: &output::Context, env: &VvmEnv) -> Result<()> {
             where_: Some(where_to_put),
             path: Some(path),
             imported: None,
+            px: None,
             next_steps: Vec::new(),
             warnings,
         },
@@ -177,6 +183,7 @@ pub(super) fn remove(ctx: &output::Context, dry_run: bool, with_diff: bool) -> R
             where_: None,
             path: None,
             imported: None,
+            px: None,
             next_steps,
             warnings,
         },

@@ -90,6 +90,12 @@ fn each_invalid_value_is_refused_naming_file_key_and_fix() {
             "schema = 1\n[self]\ninstall_root = 'opt'\n",
             "self.install_root",
         ),
+        // Another account's home is not a directory vibe resolves, while
+        // `~` is per-user absolute and accepted (the test below).
+        (
+            "schema = 1\n[self]\ninstall_root = '~bob/opt'\n",
+            "self.install_root",
+        ),
         (
             "schema = 1\n[[registry]]\nname='a'\nurl='file:///a'\n[[registry]]\nname='a'\nurl='file:///b'\n",
             "registry[1].name",
@@ -335,5 +341,51 @@ fn an_install_root_alone_is_not_a_release_source_decision() {
     assert_eq!(
         merged.self_source.install_root.as_deref(),
         Some(std::path::Path::new("/home/me/vibe"))
+    );
+}
+
+/// `[self] install_root = "~"` is the one path a profile may root at the
+/// reader's own home: it names one directory on every machine that applies
+/// the profile, which is exactly what a profile needs
+/// (`PROP-019#install-root`). It validates here and is expanded where the
+/// root is resolved — never stored expanded, because the profile is read
+/// by every machine.
+#[test]
+#[verifies("spec://org.vibevm.core/vibevm/common/PROP-019#site-profile")]
+fn an_install_root_may_start_at_the_readers_own_home() {
+    let home = std::path::PathBuf::from("/home/me");
+    for written in ["~", "~/opt", "~/work/vibe"] {
+        let profile = SiteProfile::parse(
+            &format!("schema = 1\n[self]\ninstall_root = '{written}'\n"),
+            "corp.toml",
+        )
+        .unwrap_or_else(|error| panic!("`{written}`: {error}"));
+        assert_eq!(
+            profile.self_source.install_root.as_deref(),
+            Some(std::path::Path::new(written)),
+            "stored exactly as written"
+        );
+        let resolved = profile
+            .self_source
+            .install_root_at(Some(&home))
+            .expect("declared")
+            .expect("resolvable");
+        assert!(resolved.starts_with(&home), "{}", resolved.display());
+        assert_eq!(
+            resolved,
+            written
+                .strip_prefix("~/")
+                .map_or_else(|| home.clone(), |rest| home.join(rest))
+        );
+    }
+    // No home to expand against is its own refusal, not a path called `~`.
+    let profile =
+        SiteProfile::parse("schema = 1\n[self]\ninstall_root = '~'\n", "corp.toml").unwrap();
+    assert!(
+        profile
+            .self_source
+            .install_root_at(None)
+            .expect("declared")
+            .is_err()
     );
 }
