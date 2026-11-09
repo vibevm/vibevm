@@ -22,8 +22,8 @@ use vibe_check::{
     DocTranslationCheck, FactsSyncCheck, FeaturesGraphCheck, I18nCoverageCheck,
     LocalSourceFreshnessCheck, LockSlotHashCheck, LockfileFilesCheck, ManifestEpochCheck,
     ManifestValidityCheck, RedirectBlockCheck, ReviewAgingCheck, Severity,
-    SnippetPresuppositionCheck, SubskillStructureCheck, VisibilityHygieneCheck, WalFreshnessCheck,
-    WalWellformedCheck, all_checks, check_project,
+    SnippetPresuppositionCheck, SubskillStructureCheck, TemplateRenderCheck,
+    VisibilityHygieneCheck, WalFreshnessCheck, WalWellformedCheck, all_checks, check_project,
 };
 
 /// 2026-05-04T12:00:00Z — a frozen clock, so freshness / aging math
@@ -113,6 +113,7 @@ fn each_cell_reports_its_own_check_id() {
         (Box::new(DocMediaCheck), CheckId::DocMedia),
         (Box::new(ApplicationIconsCheck), CheckId::ApplicationIcons),
         (Box::new(LockSlotHashCheck), CheckId::LockSlotHash),
+        (Box::new(TemplateRenderCheck), CheckId::TemplateRender),
     ];
     assert_eq!(cells.len(), CheckId::all().len(), "one cell per CheckId");
     for (cell, expected) in &cells {
@@ -151,6 +152,7 @@ fn all_checks_registers_every_cell_in_dispatch_order() {
             CheckId::DocMedia,
             CheckId::ApplicationIcons,
             CheckId::LockSlotHash,
+            CheckId::TemplateRender,
         ]
     );
 }
@@ -267,4 +269,61 @@ handler = { kind = "builtin", name = "log", mystery = true }
     let message = &report.findings[0].message;
     assert!(message.contains("unknown field"), "{message}");
     assert!(message.contains("mystery"), "{message}");
+}
+
+/// The template cell's own oracle (PROP-075 §2): a sound template yields
+/// nothing, and a template whose skeleton render is not a manifest yields
+/// one error naming the field the render produced.
+#[test]
+fn template_render_cell_judges_a_template_by_rendering_it() {
+    let sound = concat!(
+        "[package]\nname = \"tool\"\ngroup = \"org.example\"\nkind = \"app\"\n",
+        "version = \"1.0.0\"\nepoch = 1\ntemplate = true\n\n",
+        "[application]\nid = \"tool\"\n\n",
+        "[template.versions]\nkind = \"list\"\n\n",
+        "[[template.versions.item]]\nversion = \"3.1.4\"\n\n",
+        "[template.digests]\nkind = \"sha256sums\"\n",
+        "url = \"https://e.invalid/{version}/SHASUMS256.txt\"\n\n",
+        "[[installer_options]]\nid = \"linux-x64\"\nname = \"tool {version}\"\n",
+        "platform = \"linux\"\nplatform_name = \"Linux\"\narch = \"x86_64\"\n",
+        "path_dirs = [\"bin\"]\n\n",
+        "[[installer_options.steps]]\nid = \"unpack\"\ntitle = \"Unpack {version}\"\n",
+        "kind = \"archive\"\nformat = \"tar_gz\"\n",
+        "source = \"https://e.invalid/tool-{version}-{platform}.tar.gz\"\n",
+        "sha256 = \"{sha256:tool-{version}-{platform}.tar.gz}\"\n",
+    );
+    let cell = TemplateRenderCheck;
+    assert_eq!(cell.id(), CheckId::TemplateRender);
+
+    let clean = tempdir().unwrap();
+    write_minimal_project(clean.path());
+    fs::write(clean.path().join("vibe.toml"), sound).unwrap();
+    let mut report = CheckReport::default();
+    cell.run(clean.path(), &opts(), &mut report);
+    assert!(report.findings.is_empty(), "got: {:?}", report.findings);
+
+    let broken = tempdir().unwrap();
+    write_minimal_project(broken.path());
+    fs::write(
+        broken.path().join("vibe.toml"),
+        sound.to_string() + "payload_root = \"/absolute/{version}\"\n",
+    )
+    .unwrap();
+    let mut report = CheckReport::default();
+    cell.run(broken.path(), &opts(), &mut report);
+    assert_eq!(
+        report.count(Severity::Error),
+        1,
+        "got: {:?}",
+        report.findings
+    );
+    let finding = &report.findings[0];
+    assert_eq!(finding.check, CheckId::TemplateRender);
+    assert_eq!(
+        finding.field.as_deref(),
+        Some("installer_options[0].steps[0].payload_root"),
+        "{}",
+        finding.message
+    );
+    assert!(finding.message.contains("3.1.4"), "{}", finding.message);
 }

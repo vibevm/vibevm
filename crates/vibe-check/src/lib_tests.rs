@@ -56,6 +56,7 @@ fn registration_matches_the_historical_dispatch_order() {
             CheckId::DocMedia,
             CheckId::ApplicationIcons,
             CheckId::LockSlotHash,
+            CheckId::TemplateRender,
         ]
     );
 }

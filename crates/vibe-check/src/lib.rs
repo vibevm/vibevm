@@ -64,8 +64,8 @@ pub use checks::{
     DocMediaCheck, DocPackageContractCheck, DocTranslationCheck, FactsSyncCheck,
     FeaturesGraphCheck, I18nCoverageCheck, LocalSourceFreshnessCheck, LockSlotHashCheck,
     LockfileFilesCheck, ManifestEpochCheck, ManifestValidityCheck, RedirectBlockCheck,
-    ReviewAgingCheck, SnippetPresuppositionCheck, SubskillStructureCheck, VisibilityHygieneCheck,
-    WalFreshnessCheck, WalWellformedCheck,
+    ReviewAgingCheck, SnippetPresuppositionCheck, SubskillStructureCheck, TemplateRenderCheck,
+    VisibilityHygieneCheck, WalFreshnessCheck, WalWellformedCheck,
 };
 
 /// Stable identifier for a single check. Used in [`Finding::check`]
@@ -160,6 +160,11 @@ pub enum CheckId {
     /// its package's `content_hash` in `vibe.lock`: the project describes
     /// two different payloads. Error; remedy `vibe update <group>/<name>`.
     LockSlotHash,
+    /// PROP-075 §2 — a template package whose skeleton render of a probe
+    /// version is not a valid manifest. Offline by construction: a
+    /// `{meta.…}` variable, which only the real version record answers,
+    /// leaves the render *unchecked* with a warning rather than broken.
+    TemplateRender,
 }
 
 impl CheckId {
@@ -188,6 +193,7 @@ impl CheckId {
             CheckId::ApplicationIcons => "application_icons",
             CheckId::BootGraphIntegrity => "boot_graph_integrity",
             CheckId::LockSlotHash => "lock_slot_hash",
+            CheckId::TemplateRender => "template_render",
         }
     }
 
@@ -219,6 +225,7 @@ impl CheckId {
             CheckId::DocMedia,
             CheckId::ApplicationIcons,
             CheckId::LockSlotHash,
+            CheckId::TemplateRender,
         ]
     }
 }
@@ -468,7 +475,7 @@ pub trait Check {
 /// use vibe_check::{CheckId, all_checks};
 ///
 /// let checks = all_checks();
-/// assert_eq!(checks.len(), 22);
+/// assert_eq!(checks.len(), 23);
 /// assert_eq!(checks[0].id(), CheckId::ManifestValidity);
 /// ```
 pub fn all_checks() -> Vec<Box<dyn Check>> {
@@ -495,6 +502,7 @@ pub fn all_checks() -> Vec<Box<dyn Check>> {
         Box::new(DocMediaCheck),
         Box::new(ApplicationIconsCheck),
         Box::new(LockSlotHashCheck),
+        Box::new(TemplateRenderCheck),
     ]
 }
 

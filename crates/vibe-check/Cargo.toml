@@ -19,6 +19,9 @@ vibe-facts.workspace = true
 vibe-specdoc.workspace = true
 vibe-spec.workspace = true
 vibe-core.workspace = true
+# The pure renderer of PROP-075: the template check renders a skeleton and
+# reads it back with the ordinary manifest rules. No network, no registry.
+vibe-template.workspace = true
 vibe-registry.workspace = true
 vibe-resolver.workspace = true
 # The slot record's one reader: the lock-and-slot hash check compares what

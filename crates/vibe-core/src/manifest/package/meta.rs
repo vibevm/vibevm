@@ -126,6 +126,17 @@ pub struct PackageMeta {
     /// records the content as stewarded-not-authored and surfaces provenance.
     /// Default `false`.
     pub bridge: bool,
+    /// `[package].template` — `true` marks this manifest a **template**: a
+    /// manifest written once with variables plus a declared `[template]`
+    /// table saying where its versions and digests come from (PROP-075
+    /// `#TEMPLATE-FLAG`). The property is never inferred from a version
+    /// spelling, a name suffix or a repository name — only this key sets
+    /// it. The package's own `version` is the revision of the template,
+    /// independent of the versions it produces. Default `false`, omitted
+    /// from serialisation when false, so every existing manifest is
+    /// byte-identical. Admitted only on `kind = "app"` today.
+    pub template: bool,
+
     /// `[package].format` — the PROP-035 §3 package format. `simple` (the
     /// default) is carried whole, directive-free; `normal` opts into the
     /// contract/source split and the spec compiler, so a `static`-linked

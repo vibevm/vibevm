@@ -2,6 +2,10 @@
 
 **Status:** planned 2026-11-10; written against `main` at `7d495d137`. Campaign
 node `APP-VERSIONS`: starts after `CORP-ENV` closes, before `SYS-PROMPT`.
+**Phase 0 spikes S1, S2, S3 and S5 ran 2026-11-10 and phase P1 is
+implemented** — the answers and what they changed are in `LOG.md`, and the
+facts P1 delivers are `impl/done` in PROP-075. S4 and S6 are still open; S4
+belongs with P5a and S6 with P7.
 Phase 0 (spikes) and Phases 5a / 6 may run while `CORP-ENV` finishes, because
 their files are disjoint from it.
 Cold start: read this file, then `LOG.md` in this directory, then
@@ -185,20 +189,28 @@ Each spike answers one question that would change the shape of a later phase.
 Run them with the isolated runner the repo uses
 (`python3 /fast/vibevm-test-tmp/claude-int/run_test.py <label> …`).
 
-- **S1 — the renderer on the real manifest.** Turn
+- **S1 — the renderer on the real manifest.** *(done 2026-11-10 — all four
+  questions answered yes; `LOG.md`.)* Turn
   `/fast/git/vibe-pkg-node`'s `vibe.toml` into a template by hand and render
   `24.22.2` with `toml_edit`. Questions: can `{platform}` / `{arch}` be bound
   per `[[installer_options]]` row by descent alone; does the lone-variable
   numeric coercion work as a node replacement; does
   `Manifest::parse_str(rendered)` accept it; and is the output byte-identical
-  to the committed `vibe.toml` modulo the generator's provenance header?
+  to the committed `vibe.toml` modulo the generator's provenance header **and
+  the `size` lines** — the loss PROP-075 `#TEMPLATE-DIGEST-SOURCE` records,
+  because nodejs.org publishes digests but no sizes?
   *That last comparison is the whole correctness proof of P1 and P3.*
-- **S2 — one choke point.** Instrument `MultiRegistryResolver::list_versions`
+- **S2 — one choke point.** *(done 2026-11-10 — no fifth call site; the four
+  PROP-075 `#TEMPLATE-DOMAIN-SEAM` names are exactly the ones the three paths
+  use, and which of them a path uses depends on the path; `LOG.md`.)*
+  Instrument `MultiRegistryResolver::list_versions`
   and `fetch_manifest_inner` with a tracing span, then run `vibe install -g
   --plan-only` and a project `vibe install`, both against a local registry, and
   confirm both paths pass through. If `install -g` reaches a registry without
   going through those two, P2 gains a fifth call site.
-- **S3 — the shared index vocabulary.** Add an optional `template: boolean` to
+- **S3 — the shared index vocabulary.** *(done 2026-11-10 — the golden bytes
+  do not move, so AV-FMT-003 stays epoch 1 → 1; `LOG.md`.)* Add an optional
+  `template: boolean` to
   `version_entry`, run `cargo xtask codegen`, `check-codegen`,
   `rebuild --check` and `wire-diff`, and confirm the
   `formats/corpora/index/e1` golden bytes are unchanged when the member is
@@ -207,7 +219,8 @@ Run them with the isolated runner the repo uses
   < 50 ms) and prototype the builtin-only fast path in bash, zsh and fish.
   If `vibe app env` cannot be made that cheap, the hook caches harder or
   `ACTIVATION-HOOK`'s budget is renegotiated with the owner before P5a.
-- **S5 — proxy protocol /7.** Confirm that a home with no template
+- **S5 — proxy protocol /7.** *(done 2026-11-10 — confirmed on all three
+  counts; `LOG.md`.)* Confirm that a home with no template
   installation still writes `vibe-user-applications/6`, that
   `vibe-app-proxy --supports-index vibe-user-applications/7` plumbing is a
   one-line set change, and that the admission list is the only gate
@@ -229,21 +242,30 @@ final phase runs the full workspace suite plus `tools/self-check.sh`. Each
 phase is one or a few atomic commits, and every user-visible change gets an
 `AV-FMT-NNN` entry in this directory's `FORMAT-CHANGES.md`.
 
-### P1 — template manifest, pure rendering, validation — **M**
+### P1 — template manifest, pure rendering, validation — **M** — *delivered 2026-11-10*
 
 **Goal.** `[package] template = true` and `[template]` parse, validate and
 render, with no resolver, registry, network or filesystem involvement at all.
 
-**Files.** New crate `crates/vibe-template/` (`render.rs` — no `std::fs`, no
-`vibe-net`, enforced by a unit test over the crate's dependency list; and
-`source.rs` — parse `[template]` and parse fetched documents into pure inputs).
+**Files, as delivered.** New crate `crates/vibe-template/` (`error.rs`;
+`render.rs` with `render/grammar.rs` and `render/substitute.rs` — no `std::fs`,
+no `vibe-net`, pinned by `tests/purity.rs` over the crate's dependency table
+*and* its sources; `source.rs` — the typed `[template]` read out of a template
+document plus fetched version/digest documents turned into pure inputs;
+`tests/node_golden.rs` with `tests/fixtures/node/`).
 `crates/vibe-core/src/manifest/package/meta.rs` + `…/package/wire.rs` (the
 `template` flag, all four sites); `…/manifest/document.rs`,
 `…/package/visibility.rs`, `…/visibility/conversion.rs` (the `[template]`
-table); a new `…/package/template.rs` for the typed section;
-`…/manifest/document/validation.rs` (the refusals, each naming its TOML path);
-`crates/vibe-check/src/checks/` (one new check: a template whose skeleton
-render of its own newest source version does not validate).
+table); a new `…/package/template.rs` (+ `template/validation.rs`,
+`template/tests.rs`) for the typed section;
+`…/manifest/document/validation.rs` and the new
+`…/document/validation/template.rs` (the refusals, each naming its TOML path);
+`…/package/application.rs` (`template_optional` on `[[installer_options]]`),
+`…/application/site.rs` + `…/application/validation.rs` +
+`…/application/step_validation.rs` (the digest-field exemption, carried on
+`Site`); `crates/vibe-check/src/checks/template_render.rs` (the new check),
+`crates/vibe-check/src/lib.rs` + `…/checks/mod.rs` (the `CheckId` and the
+registration), `conform.toml` (the new crate, gated); `Cargo.toml`.
 
 **New types.** `TemplateSection { versions: VersionSource, digests: DigestSource,
 channels: Vec<ChannelRule>, version_list_ttl: Option<Duration> }`;
@@ -265,27 +287,36 @@ coercion, a `{` that opens nothing, a `{meta.…}` resolving to an array, a
 digest variable outside a digest-bearing field, `template_optional` dropping a
 row, a missing digest for a non-optional row, `{platform}` outside an installer
 option. Property test: rendering is deterministic — the same inputs give
-byte-identical output, which is the generator's own stated invariant. Golden
-test: the real Node template rendered at `24.22.2` and `22.23.4` equals the two
-committed `vibe.toml` files from `/fast/git/vibe-pkg-node`, modulo the
-generator's provenance header (fixtures copied into
-`crates/vibe-template/tests/fixtures/`). Manifest-layer tests: the flag and the
+byte-identical output, which is the generator's own stated invariant
+(`rendering_is_deterministic_over_many_inputs`, 36 renders, no two alike).
+Golden test: the real Node template rendered at `24.22.2` and `22.23.4` equals
+the two committed `vibe.toml` files from `/fast/git/vibe-pkg-node`, modulo the
+generator's provenance header **and the `size` lines** (fixtures copied into
+`crates/vibe-template/tests/fixtures/`, provenance in that directory's
+`README.md`; the test asserts the count of stripped `size` lines so no second
+divergence hides in the normalisation). Manifest-layer tests: the flag and the
 table round-trip; `[template]` without the flag refuses; the flag on a non-`app`
-kind refuses; every refusal names a TOML path.
+kind refuses; every refusal names a TOML path. Purity test: `vibe-template`'s
+own dependency table and sources reach no filesystem, socket, clock, child
+process or registry.
 
 **Acceptance.**
 ```sh
-cargo test -p vibe-template -p vibe-core --offline --locked
+cargo test -p vibe-template -p vibe-core -p vibe-check --offline --locked
 # the golden comparison must be in that run and must be exact:
-cargo test -p vibe-template renders_the_committed_node_manifests -- --exact --nocapture
+cargo test -p vibe-template --test node_golden renders_the_committed_node_manifests -- --exact
 ```
 
-**Risks.** The numeric coercion is the one place a `toml_edit` descent replaces
-a typed node rather than a string; S1 settles it. `{platform}` scoping is the
-other — if per-row binding is awkward, the fallback is to drop `{platform}` /
-`{arch}` from the grammar entirely (neither real package needs them, because
-upstream target spellings are not vibe's) and amend
-`PROP-075#TEMPLATE-VARIABLE-GRAMMAR`.
+**Risks, as they turned out.** Both are closed. The numeric coercion works —
+the renderer replaces the whole TOML node — but a template that uses it does
+not deserialise into the typed `Manifest`, so the renderer reads the document
+as TOML text and the `[template]` table on its own; recorded in the new
+`PROP-075#TEMPLATE-DOCUMENT-READING`, which also names the one visible
+consequence (`vibe check`'s manifest-validity cell reports such a template as
+unparseable; admitting a lone variable in a typed numeric field is a separate,
+later change to the typed layer, and neither real package needs it).
+`{platform}` / `{arch}` bind per row by descent alone, so the fallback of
+dropping them from the grammar was not taken.
 
 **Parallel.** With P5a and P6.
 
@@ -671,7 +702,10 @@ concurrently once P2 lands.
 
 - **P1** The template renders the two committed `/fast/git/vibe-pkg-node`
   manifests byte-for-byte modulo the generator's header. *If false, the
-  variable grammar is wrong, not the manifests.*
+  variable grammar is wrong, not the manifests.* **Held, with the claim
+  narrowed by one recorded loss: modulo the header *and* the `size` lines,
+  which nodejs.org does not publish (PROP-075 `#TEMPLATE-DIGEST-SOURCE`,
+  AV-FMT-006). Nothing else differs, for either version.**
 - **P2** The template layer is four call sites and one new module; no file
   under `crates/vibe-resolver/src/resolvo_engine/` changes except
   `version_set.rs`.

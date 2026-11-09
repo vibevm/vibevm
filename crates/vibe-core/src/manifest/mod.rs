@@ -103,14 +103,16 @@ pub use package::application::{
 };
 pub use package::{
     ABSTRACT_LIMIT, AccessLevel, AllowFriendsOverride, ApplicationDecl, Authorship, BinaryDecl,
-    BootCategory, BootSnippet, BootSnippetFragment, Compatibility, ConditionalTarget,
-    ConflictsList, DocumentationDecl, DocumentsDecl, EmbeddedSourceAuth, EmbeddedSourceDecl,
-    EmbeddedSourceKind, FeaturesTable, GitPackageDep, GitRefKind, GlossaryDecl, HooksDecl,
-    LinkType, MCP_ARG_VARS, Materialization, McpServerDecl, MediaDecl, NavigationChapterDecl,
-    NavigationDecl, NavigationSectionDecl, Obsoletes, OverrideEntry, OverrideTable, OverrideTarget,
-    PackageFormat, PackageMeta, PathPackageDep, Provides, PublishPosture, Recommends, Requires,
-    RequiresAny, SkillDecl, SkillResourceDecl, SourceExport, Suggests, TargetOs, TranslatesDecl,
-    VarRegistryDep, VisibilityMeta, WhenCondition,
+    BootCategory, BootSnippet, BootSnippetFragment, CHANNEL_NAME_RULE, ChannelRule, Compatibility,
+    ConditionalTarget, ConflictsList, DigestSource, DocumentationDecl, DocumentsDecl,
+    EmbeddedSourceAuth, EmbeddedSourceDecl, EmbeddedSourceKind, FeaturesTable, GitPackageDep,
+    GitRefKind, GlossaryDecl, HooksDecl, LinkType, MCP_ARG_VARS, Materialization, McpServerDecl,
+    MediaDecl, NavigationChapterDecl, NavigationDecl, NavigationSectionDecl, Obsoletes,
+    OverrideEntry, OverrideTable, OverrideTarget, PackageFormat, PackageMeta, PathPackageDep,
+    PrereleasePolicy, Provides, PublishPosture, Recommends, Requires, RequiresAny, Scalar,
+    SkillDecl, SkillResourceDecl, SourceExport, Suggests, TargetOs, TemplateSection,
+    TranslatesDecl, Ttl, VarRegistryDep, VersionItem, VersionSource, VisibilityMeta, WhenCondition,
+    channel_name_is_valid,
 };
 pub use project::{
     ActiveSection, AuthKind, DEFAULT_REGISTRY_GITVERSE_NAME, DEFAULT_REGISTRY_GITVERSE_URL,

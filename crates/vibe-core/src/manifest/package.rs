@@ -44,6 +44,7 @@ mod mcp_server;
 mod meta;
 mod skill;
 mod source_export;
+mod template;
 mod weak_deps;
 mod when;
 mod wire;
@@ -66,6 +67,10 @@ pub use mcp_server::{MCP_ARG_VARS, McpServerDecl};
 pub use meta::PackageMeta;
 pub use skill::{SkillDecl, SkillResourceDecl};
 pub use source_export::SourceExport;
+pub use template::{
+    CHANNEL_NAME_RULE, ChannelRule, DigestSource, PrereleasePolicy, Scalar, TemplateSection, Ttl,
+    VersionItem, VersionSource, channel_name_is_valid,
+};
 pub use weak_deps::{Recommends, Suggests};
 pub use when::WhenCondition;
 

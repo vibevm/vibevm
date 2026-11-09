@@ -98,6 +98,7 @@ fn package_meta_as_package_ref_pins_exact() {
         materialization: Materialization::default(),
         bridge: false,
         format: PackageFormat::default(),
+        template: false,
     };
     let r = meta.as_package_ref().unwrap();
     assert_eq!(r.kind, Some(PackageKind::Flow));

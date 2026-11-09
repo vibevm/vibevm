@@ -21,6 +21,8 @@ mod mcp;
 mod navigation;
 #[path = "validation/remap.rs"]
 mod remap;
+#[path = "validation/template.rs"]
+mod template;
 
 impl Manifest {
     /// Enforce the role rules: `[project]` ⊕ `[package]`; at least one role
@@ -55,61 +57,30 @@ impl Manifest {
         }
 
         if !has_package {
-            let mut offenders: Vec<&str> = Vec::new();
-            if self.application.is_some() {
-                offenders.push("[application]");
-            }
-            if !self.installer_options.is_empty() {
-                offenders.push("[[installer_options]]");
-            }
-            if self.boot_snippet.is_some() {
-                offenders.push("[boot_snippet]");
-            }
-            if !self.provides.is_empty() {
-                offenders.push("[provides]");
-            }
-            if !self.requires_any.is_empty() {
-                offenders.push("[[requires_any]]");
-            }
-            if !self.obsoletes.is_empty() {
-                offenders.push("[obsoletes]");
-            }
-            if !self.conflicts.is_empty() {
-                offenders.push("[conflicts]");
-            }
-            if !self.recommends.is_empty() {
-                offenders.push("[recommends]");
-            }
-            if !self.suggests.is_empty() {
-                offenders.push("[suggests]");
-            }
-            if !self.embedded_sources.is_empty() {
-                offenders.push("[[embedded_source]]");
-            }
-            if !self.skills.is_empty() {
-                offenders.push("[[skill]]");
-            }
-            if !self.binaries.is_empty() {
-                offenders.push("[[binary]]");
-            }
-            if !self.mcp_servers.is_empty() {
-                offenders.push("[[mcp_server]]");
-            }
-            if !self.hooks.is_empty() {
-                offenders.push("[hooks]");
-            }
-            if !self.compatibility.is_empty() {
-                offenders.push("[compatibility]");
-            }
-            if self.configuration.is_some() {
-                offenders.push("[configuration]");
-            }
-            if !self.features.is_empty() {
-                offenders.push("[features]");
-            }
-            if !self.conditional_deps.is_empty() {
-                offenders.push("[target]");
-            }
+            let offenders: Vec<&str> = [
+                (self.template.is_some(), "[template]"),
+                (self.application.is_some(), "[application]"),
+                (!self.installer_options.is_empty(), "[[installer_options]]"),
+                (self.boot_snippet.is_some(), "[boot_snippet]"),
+                (!self.provides.is_empty(), "[provides]"),
+                (!self.requires_any.is_empty(), "[[requires_any]]"),
+                (!self.obsoletes.is_empty(), "[obsoletes]"),
+                (!self.conflicts.is_empty(), "[conflicts]"),
+                (!self.recommends.is_empty(), "[recommends]"),
+                (!self.suggests.is_empty(), "[suggests]"),
+                (!self.embedded_sources.is_empty(), "[[embedded_source]]"),
+                (!self.skills.is_empty(), "[[skill]]"),
+                (!self.binaries.is_empty(), "[[binary]]"),
+                (!self.mcp_servers.is_empty(), "[[mcp_server]]"),
+                (!self.hooks.is_empty(), "[hooks]"),
+                (!self.compatibility.is_empty(), "[compatibility]"),
+                (self.configuration.is_some(), "[configuration]"),
+                (!self.features.is_empty(), "[features]"),
+                (!self.conditional_deps.is_empty(), "[target]"),
+            ]
+            .into_iter()
+            .filter_map(|(present, table)| present.then_some(table))
+            .collect();
             if !offenders.is_empty() {
                 return Err(Error::InvalidManifest {
                     reason: format!(
@@ -123,7 +94,9 @@ impl Manifest {
         if let Some(application) = &self.application {
             application.validate()?;
         }
-        self.validate_installer_options()?;
+        self.validate_template()?;
+        let template = self.is_template();
+        self.validate_installer_options(template)?;
         self.requires
             .validate_configuration_metadata()
             .map_err(|reason| Error::InvalidManifest { reason })?;
@@ -244,7 +217,7 @@ impl Manifest {
 
     /// The rules across `[[installer_options]]` rows; each row's own rules
     /// are its `validate`. Every refusal names its field.
-    fn validate_installer_options(&self) -> Result<()> {
+    fn validate_installer_options(&self, template: bool) -> Result<()> {
         let options = FieldPath::root().table("installer_options");
         if !self.installer_options.is_empty() && self.application.is_none() {
             return Err(FieldError::new(
@@ -270,7 +243,7 @@ impl Manifest {
         let mut arch_names = std::collections::BTreeMap::<(&str, &str), &str>::new();
         for (index, option) in self.installer_options.iter().enumerate() {
             let at = options.index(index);
-            option.validate(&at)?;
+            option.validate(&at, template)?;
             if !option_ids.insert(option.id.as_str()) {
                 return Err(FieldError::new(
                     at.field("id"),
@@ -305,6 +278,7 @@ impl Manifest {
                     .into());
                 }
             }
+            template::refuse_stray_optional(option, template, &at)?;
             let mut launcher_ids = std::collections::BTreeSet::new();
             let mut has_default = false;
             for (position, launcher) in option.launchers.iter().enumerate() {

@@ -4566,6 +4566,7 @@ dependencies = [
  "vibe-resolver",
  "vibe-spec",
  "vibe-specdoc",
+ "vibe-template",
  "vibe-workspace",
  "walkdir",
 ]
@@ -5212,6 +5213,21 @@ dependencies = [
  "pulldown-cmark",
  "quick-xml",
  "tempfile",
+]
+
+[[package]]
+name = "vibe-template"
+version = "1.0.11"
+dependencies = [
+ "core-ai-native-specmark",
+ "semver",
+ "serde",
+ "serde_json",
+ "sha2",
+ "thiserror 2.0.18",
+ "toml 0.9.12+spec-1.1.0",
+ "toml_edit 0.23.10+spec-1.0.0",
+ "vibe-core",
 ]
 
 [[package]]

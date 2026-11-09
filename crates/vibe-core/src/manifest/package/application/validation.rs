@@ -14,7 +14,7 @@ use super::*;
 
 impl InstallerOptionDecl {
     /// Validate one option; `at` is its address, `installer_options[i]`.
-    pub(crate) fn validate(&self, at: &FieldPath) -> Result<(), FieldError> {
+    pub(crate) fn validate(&self, at: &FieldPath, template: bool) -> Result<(), FieldError> {
         let refuse = |name: &str, message: String| FieldError::new(at.field(name), message);
         if !is_portable_token(&self.id) {
             return Err(refuse(
@@ -87,7 +87,7 @@ impl InstallerOptionDecl {
                 ),
             ));
         }
-        let option = Site::new("[[installer_options]]", at.clone());
+        let option = Site::new("[[installer_options]]", at.clone()).templated(template);
         if let Some(command) = &self.pre_install {
             validate_shell_command(command, &option, "pre_install")?;
         }
@@ -114,7 +114,7 @@ impl InstallerOptionDecl {
                         ),
                     ));
                 }
-                method.validate(&at.table("installation"))?;
+                method.validate(&at.table("installation"), template)?;
             }
             (None, false) => {}
             (Some(_), false) => {
@@ -136,7 +136,7 @@ impl InstallerOptionDecl {
                 ));
             }
         }
-        self.validate_steps(at)?;
+        self.validate_steps(at, template)?;
         self.validate_launchers_from(at)?;
         let mut public_names = BTreeSet::new();
         for (index, command) in self.public_commands.iter().enumerate() {
@@ -245,9 +245,9 @@ impl ApplicationDecl {
 
 impl InstallerMethod {
     /// Validate the shorthand method; `at` is `installer_options[i].installation`.
-    pub(crate) fn validate(&self, at: &FieldPath) -> Result<(), FieldError> {
+    pub(crate) fn validate(&self, at: &FieldPath, template: bool) -> Result<(), FieldError> {
         let table = "[installer_options.installation]";
-        let site = Site::new(table, at.clone());
+        let site = Site::new(table, at.clone()).templated(template);
         let table = site.prose;
         match self {
             Self::Shell {
@@ -379,16 +379,28 @@ pub(super) fn validate_source(value: &str, site: &Site<'_>) -> Result<(), FieldE
 }
 
 pub(super) fn validate_sha256(value: &str, site: &Site<'_>) -> Result<(), FieldError> {
-    if value.len() != 64 || !value.bytes().all(|byte| byte.is_ascii_hexdigit()) {
-        return Err(site.refuse(
-            "sha256",
-            format!(
-                "{}.sha256 must be a 64-digit hexadecimal digest",
-                site.prose
-            ),
-        ));
+    if value.len() == 64 && value.bytes().all(|byte| byte.is_ascii_hexdigit()) {
+        return Ok(());
     }
-    Ok(())
+    // In a template manifest the digest-bearing fields hold a `{sha256:…}`
+    // variable that only the render can resolve, so the digest grammar is
+    // exempt here and the variable grammar is `vibe-template`'s (PROP-075
+    // `#TEMPLATE-TWO-STAGE`).
+    if site.template && value.starts_with("{sha256:") && value.ends_with('}') {
+        return Ok(());
+    }
+    Err(site.refuse(
+        "sha256",
+        format!(
+            "{}.sha256 must be a 64-digit hexadecimal digest{}",
+            site.prose,
+            if site.template {
+                " or a `{sha256:FILE}` template variable"
+            } else {
+                ""
+            }
+        ),
+    ))
 }
 
 /// The messages always say `app_root`; a caller whose root is another
@@ -429,7 +441,7 @@ pub(super) fn validate_command_root(value: &str, site: &Site<'_>) -> Result<(), 
     Ok(())
 }
 
-fn credential_free_https(value: &str) -> bool {
+pub(in crate::manifest::package) fn credential_free_https(value: &str) -> bool {
     let Some(rest) = value.strip_prefix("https://") else {
         return false;
     };

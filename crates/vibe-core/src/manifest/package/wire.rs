@@ -75,6 +75,8 @@ struct PackageMetaWire {
     bridge: bool,
     #[serde(default, skip_serializing_if = "PackageFormat::is_default")]
     format: PackageFormat,
+    #[serde(default, skip_serializing_if = "is_false")]
+    template: bool,
 }
 
 // An absent key is None; a present null is invalid, never an absent policy.
@@ -132,6 +134,7 @@ impl From<PackageMeta> for PackageMetaWire {
             materialization: value.materialization,
             bridge: value.bridge,
             format: value.format,
+            template: value.template,
         }
     }
 }
@@ -162,6 +165,7 @@ impl From<PackageMetaWire> for PackageMeta {
             materialization: value.materialization,
             bridge: value.bridge,
             format: value.format,
+            template: value.template,
         }
     }
 }

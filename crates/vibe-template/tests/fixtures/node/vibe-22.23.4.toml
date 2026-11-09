@@ -1,0 +1,339 @@
+# Rendered by org.vibevm.node/vibevm-package-generator 1.0.0 (vibevm-generate-package-node). Do not edit.
+# input SHASUMS256.txt sha256 = c90c3f1478fda8308b22cc1a1b0dc536169196444e67ee8b5c582fd351d02bce
+# input SIZES sha256 = a787b9c9674e31d7d2b132992beb58c5dc3f745121585ee9c974a33be9ca00c3
+# re-render: vibevm-generate-package-node --node 22.23.4 SHASUMS256.txt SIZES > vibe.toml
+[package]
+name = "node"
+group = "org.vibevm.node"
+kind = "app"
+version = "22.23.4"
+epoch = 1
+format = "normal"
+authors = ["Oleg Chirukhin"]
+license = "UPL-1.0"
+description = "Node.js 22.23.4, the official upstream build, as a portable Vibe application putting node, npm and npx on PATH"
+keywords = ["node", "nodejs", "javascript", "runtime", "npm", "application"]
+homepage = "https://nodejs.org/"
+
+[compatibility]
+min_vibe_version = "1.0.12"
+requires_kinds = []
+
+[application]
+id = "node"
+keywords = ["node", "nodejs", "npm", "javascript"]
+
+
+[[installer_options]]
+id = "linux-x64"
+name = "Node.js 22.23.4"
+platform = "linux"
+platform_name = "Linux (glibc)"
+arch = "x86_64"
+arch_name = "Intel/AMD 64-bit"
+path_dirs = ["bin"]
+
+[[installer_options.steps]]
+id = "node"
+title = "Download and unpack the Node.js 22.23.4 runtime"
+kind = "archive"
+format = "tar_gz"
+source = "https://nodejs.org/dist/v22.23.4/node-v22.23.4-linux-x64.tar.gz"
+sha256 = "b8492284c76a54baf58d61668dd0e41ee0fc98adabf9503d30f05d08f55b4406"
+size = 56807066
+payload_root = "node-v22.23.4-linux-x64"
+
+[[installer_options.launchers]]
+id = "node"
+name = "node"
+description = "The Node.js runtime"
+executable = "bin/node"
+kind = "command"
+default = true
+
+[[installer_options.launchers]]
+id = "npm"
+name = "npm"
+description = "The npm package manager"
+executable = "bin/node"
+args = ["$app_root/lib/node_modules/npm/bin/npm-cli.js"]
+kind = "command"
+
+[[installer_options.launchers]]
+id = "npx"
+name = "npx"
+description = "Run a command from an npm package"
+executable = "bin/node"
+args = ["$app_root/lib/node_modules/npm/bin/npx-cli.js"]
+kind = "command"
+
+
+
+[[installer_options]]
+id = "linux-arm64"
+name = "Node.js 22.23.4"
+platform = "linux"
+platform_name = "Linux (glibc)"
+arch = "aarch64"
+arch_name = "ARM 64-bit"
+path_dirs = ["bin"]
+
+[[installer_options.steps]]
+id = "node"
+title = "Download and unpack the Node.js 22.23.4 runtime"
+kind = "archive"
+format = "tar_gz"
+source = "https://nodejs.org/dist/v22.23.4/node-v22.23.4-linux-arm64.tar.gz"
+sha256 = "f7a1e486dbc8b286847815b477d4fb5e9fb963ed4489c3e1588853d685f589f9"
+size = 56697252
+payload_root = "node-v22.23.4-linux-arm64"
+
+[[installer_options.launchers]]
+id = "node"
+name = "node"
+description = "The Node.js runtime"
+executable = "bin/node"
+kind = "command"
+default = true
+
+[[installer_options.launchers]]
+id = "npm"
+name = "npm"
+description = "The npm package manager"
+executable = "bin/node"
+args = ["$app_root/lib/node_modules/npm/bin/npm-cli.js"]
+kind = "command"
+
+[[installer_options.launchers]]
+id = "npx"
+name = "npx"
+description = "Run a command from an npm package"
+executable = "bin/node"
+args = ["$app_root/lib/node_modules/npm/bin/npx-cli.js"]
+kind = "command"
+
+
+
+[[installer_options]]
+id = "linux-musl-x64"
+name = "Node.js 22.23.4"
+platform = "linux-musl"
+platform_name = "Linux (musl: Alpine and others)"
+arch = "x86_64"
+arch_name = "Intel/AMD 64-bit"
+path_dirs = ["bin"]
+
+[[installer_options.steps]]
+id = "node"
+title = "Download and unpack the Node.js 22.23.4 runtime"
+kind = "archive"
+format = "tar_gz"
+source = "https://nodejs.org/dist/v22.23.4/node-v22.23.4-linux-x64-musl.tar.gz"
+sha256 = "63189402eaa222aabf51b4983e512592131cd2d4a9efc3ad9bf291fe74e3e4de"
+size = 59432087
+payload_root = "node-v22.23.4-linux-x64-musl"
+
+[[installer_options.launchers]]
+id = "node"
+name = "node"
+description = "The Node.js runtime"
+executable = "bin/node"
+kind = "command"
+default = true
+
+[[installer_options.launchers]]
+id = "npm"
+name = "npm"
+description = "The npm package manager"
+executable = "bin/node"
+args = ["$app_root/lib/node_modules/npm/bin/npm-cli.js"]
+kind = "command"
+
+[[installer_options.launchers]]
+id = "npx"
+name = "npx"
+description = "Run a command from an npm package"
+executable = "bin/node"
+args = ["$app_root/lib/node_modules/npm/bin/npx-cli.js"]
+kind = "command"
+
+
+
+[[installer_options]]
+id = "macos-x64"
+name = "Node.js 22.23.4"
+platform = "macos"
+platform_name = "macOS"
+arch = "x86_64"
+arch_name = "Intel 64-bit"
+path_dirs = ["bin"]
+
+[[installer_options.steps]]
+id = "node"
+title = "Download and unpack the Node.js 22.23.4 runtime"
+kind = "archive"
+format = "tar_gz"
+source = "https://nodejs.org/dist/v22.23.4/node-v22.23.4-darwin-x64.tar.gz"
+sha256 = "efcc2b0db6f94bf53eddb038fe2b370277a042bd29e4f19b8f8e23598795b819"
+size = 51190214
+payload_root = "node-v22.23.4-darwin-x64"
+
+[[installer_options.launchers]]
+id = "node"
+name = "node"
+description = "The Node.js runtime"
+executable = "bin/node"
+kind = "command"
+default = true
+
+[[installer_options.launchers]]
+id = "npm"
+name = "npm"
+description = "The npm package manager"
+executable = "bin/node"
+args = ["$app_root/lib/node_modules/npm/bin/npm-cli.js"]
+kind = "command"
+
+[[installer_options.launchers]]
+id = "npx"
+name = "npx"
+description = "Run a command from an npm package"
+executable = "bin/node"
+args = ["$app_root/lib/node_modules/npm/bin/npx-cli.js"]
+kind = "command"
+
+
+
+[[installer_options]]
+id = "macos-arm64"
+name = "Node.js 22.23.4"
+platform = "macos"
+platform_name = "macOS"
+arch = "aarch64"
+arch_name = "Apple silicon"
+path_dirs = ["bin"]
+
+[[installer_options.steps]]
+id = "node"
+title = "Download and unpack the Node.js 22.23.4 runtime"
+kind = "archive"
+format = "tar_gz"
+source = "https://nodejs.org/dist/v22.23.4/node-v22.23.4-darwin-arm64.tar.gz"
+sha256 = "c9e1dbc748b33ed2d14f42445191ecaf14c56259c7a9a26d0042c49ec2b66428"
+size = 49996369
+payload_root = "node-v22.23.4-darwin-arm64"
+
+[[installer_options.launchers]]
+id = "node"
+name = "node"
+description = "The Node.js runtime"
+executable = "bin/node"
+kind = "command"
+default = true
+
+[[installer_options.launchers]]
+id = "npm"
+name = "npm"
+description = "The npm package manager"
+executable = "bin/node"
+args = ["$app_root/lib/node_modules/npm/bin/npm-cli.js"]
+kind = "command"
+
+[[installer_options.launchers]]
+id = "npx"
+name = "npx"
+description = "Run a command from an npm package"
+executable = "bin/node"
+args = ["$app_root/lib/node_modules/npm/bin/npx-cli.js"]
+kind = "command"
+
+
+
+[[installer_options]]
+id = "windows-x64"
+name = "Node.js 22.23.4"
+platform = "windows"
+platform_name = "Windows"
+arch = "x86_64"
+arch_name = "Intel/AMD 64-bit"
+path_dirs = ["."]
+
+[[installer_options.steps]]
+id = "node"
+title = "Download and unpack the Node.js 22.23.4 runtime"
+kind = "archive"
+format = "zip"
+source = "https://nodejs.org/dist/v22.23.4/node-v22.23.4-win-x64.zip"
+sha256 = "cbc74b5e0982c9dbb41525fd8fb5dcd32fbee237863f7829072f4639a1ce5f20"
+size = 35604229
+payload_root = "node-v22.23.4-win-x64"
+
+[[installer_options.launchers]]
+id = "node"
+name = "node"
+description = "The Node.js runtime"
+executable = "node.exe"
+kind = "command"
+default = true
+
+[[installer_options.launchers]]
+id = "npm"
+name = "npm"
+description = "The npm package manager"
+executable = "node.exe"
+args = ["$app_root/node_modules/npm/bin/npm-cli.js"]
+kind = "command"
+
+[[installer_options.launchers]]
+id = "npx"
+name = "npx"
+description = "Run a command from an npm package"
+executable = "node.exe"
+args = ["$app_root/node_modules/npm/bin/npx-cli.js"]
+kind = "command"
+
+
+
+[[installer_options]]
+id = "windows-arm64"
+name = "Node.js 22.23.4"
+platform = "windows"
+platform_name = "Windows"
+arch = "aarch64"
+arch_name = "ARM 64-bit"
+path_dirs = ["."]
+
+[[installer_options.steps]]
+id = "node"
+title = "Download and unpack the Node.js 22.23.4 runtime"
+kind = "archive"
+format = "zip"
+source = "https://nodejs.org/dist/v22.23.4/node-v22.23.4-win-arm64.zip"
+sha256 = "a8b8cd79cbbb3062435f449591d98dd63730bbbf30ce2d7cc3a6376c236cb111"
+size = 31332011
+payload_root = "node-v22.23.4-win-arm64"
+
+[[installer_options.launchers]]
+id = "node"
+name = "node"
+description = "The Node.js runtime"
+executable = "node.exe"
+kind = "command"
+default = true
+
+[[installer_options.launchers]]
+id = "npm"
+name = "npm"
+description = "The npm package manager"
+executable = "node.exe"
+args = ["$app_root/node_modules/npm/bin/npm-cli.js"]
+kind = "command"
+
+[[installer_options.launchers]]
+id = "npx"
+name = "npx"
+description = "Run a command from an npm package"
+executable = "node.exe"
+args = ["$app_root/node_modules/npm/bin/npx-cli.js"]
+kind = "command"
+

@@ -1,0 +1,33 @@
+[package]
+name = "vibe-template"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+authors.workspace = true
+license-file.workspace = true
+publish.workspace = true
+repository.workspace = true
+homepage.workspace = true
+description = "The pure template-manifest renderer of PROP-075: TOML text in, TOML text out"
+
+# The dependency list IS the purity contract of PROP-075
+# `#TEMPLATE-RENDER-LOCATION`: no transport, no filesystem, no registry, no
+# resolver. `tests/purity.rs` asserts this table and the crate's own sources
+# against that list, so a later edit cannot widen it quietly.
+[dependencies]
+specmark.workspace = true
+# The typed `[template]` declaration and its refusals live with the manifest
+# layer; this crate renders what that declaration describes.
+vibe-core.workspace = true
+serde.workspace = true
+# A `kind = "json"` version source and a `kind = "json"` digest source are
+# fetched documents parsed into pure inputs here.
+serde_json.workspace = true
+semver.workspace = true
+sha2.workspace = true
+thiserror.workspace = true
+toml.workspace = true
+# The one TOML-text-to-TOML-text engine of the manifest layer, already used
+# for comment decoration and codemods, so a render preserves an author's
+# formatting exactly.
+toml_edit.workspace = true

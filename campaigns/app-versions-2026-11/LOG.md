@@ -40,3 +40,156 @@ which cost a survey to find:
 
 Open to the owner: `PROP-075#OWNER-QUESTIONS` Q1–Q5. Only Q1 (row-by-row
 approval of the proposed nvm exclusions) blocks a phase, and only P7.
+
+## 2026-11-10 — phase 0 spikes S1, S2, S3, S5
+
+Run on `main` at `7d495d137` with the repository's isolated runner
+(`python3 /fast/vibevm-test-tmp/claude-int/run_test.py …`). Every spike's
+instrumentation and schema probe was reverted afterwards; the working tree
+holds only P1's product work.
+
+**S1 — the renderer on the real manifest. All four questions: yes.**
+The template was authored by hand from the committed `v24.22.2` manifest and
+lives at `crates/vibe-template/tests/fixtures/node/vibe.toml` (that
+directory's `README.md` records how every fixture was derived).
+
+- `{platform}` / `{arch}` bind per `[[installer_options]]` row by descent
+  alone: the renderer reads the row's own `platform` / `arch` string values
+  before walking its subtree, and refuses the two variables anywhere else by
+  naming the TOML path. The fallback of dropping them from the grammar was
+  not needed.
+- The lone-variable numeric coercion works: the renderer replaces the whole
+  `toml_edit` node with a typed value, so `size = "{size:…}"` renders
+  `size = 1234`, not `size = "1234"`. **But** a template that uses it does not
+  deserialise into the typed `Manifest` (a string where a `u64` is expected),
+  so the renderer reads the document as TOML text and the `[template]` table
+  on its own. Recorded as `PROP-075#TEMPLATE-DOCUMENT-READING`, with the one
+  visible consequence: `vibe check`'s manifest-validity cell reports such a
+  template as unparseable, and admitting a lone variable in a typed numeric
+  field is a separate, later change to the typed layer that neither real
+  package needs.
+- `Manifest::parse_str(rendered)` accepts the output for both versions, and
+  the render strips `[package].template`, the `[template]` table and every
+  `template_optional` key, so the rendered document carries no template
+  vocabulary at all.
+- **Byte-identity holds, modulo the generator's four-line provenance header
+  *and* the seven `size` lines** — the loss `#TEMPLATE-DIGEST-SOURCE` already
+  records. Nothing else differs, for `24.22.2` or `22.23.4`. The test strips
+  exactly those and asserts the count of stripped `size` lines, so a second
+  silent divergence cannot hide in the normalisation. PLAN.md §5's prediction
+  P1 and §3's S1 question were amended to say so.
+
+Two further decisions the spike forced, both in
+`#TEMPLATE-DOCUMENT-READING`: the render rewrites `[package].version` to the
+produced version (the template's own `version` is the template revision, so no
+variable may spell it), and a skeleton render writes sixty-four zeros —
+`vibe_template::SKELETON_DIGEST` — plus `0` for a size, which is a *valid*
+digest and therefore needs no validator exemption for the skeleton path.
+`{meta.PATH}` was narrowed to a string, an integer or a boolean: an array, a
+table, `null` and a non-integral number are refusals naming the path, which
+keeps the typed section comparable and a rendered number exact.
+
+**S2 — one choke point. No fifth call site; the four PROP-075
+`#TEMPLATE-DOMAIN-SEAM` names are the right four, but which of them a path
+uses depends on the path.** Measured with `eprintln!` probes in
+`MultiRegistryResolver::{list_versions_in_registry, resolve_in_registry,
+fetch_manifest_inner}`, `MultiRegistryResolver::fetch` and
+`LocalRegistry::{list_versions, resolve}`, driven from a throwaway
+`crates/vibe-cli/tests/cli_s2_choke_point.rs` over the `AppRegistry` fixture.
+
+- `vibe install -g org.example/tool --registry DIR --plan-only` reaches
+  **only** `LocalRegistry::resolve` and `LocalRegistry::list_versions`. It
+  does **not** touch `MultiRegistryResolver` at all — `vibe-app`'s
+  `resolve::from_local_registry` is a separate path from
+  `resolve::from_global_with_operation`. That is precisely why
+  `#TEMPLATE-DOMAIN-SEAM` names `LocalRegistry::{list_versions, resolve}` as
+  its fourth site; without that site the whole `--registry DIR` surface would
+  silently see no template.
+- `vibe install -g org.example/tool --plan-only` against a **configured**
+  `file://` `localdir` registry (written into `<settings>/registry.toml`)
+  reaches `MultiRegistryResolver::resolve_in_registry` **and**
+  `fetch_manifest_inner`, each of which delegates down to
+  `LocalRegistry::{resolve, list_versions}`.
+- A project `vibe install --assume-yes` of an exactly pinned requirement
+  reaches `list_versions_in_registry` and `resolve_in_registry`, and **not**
+  `fetch_manifest_inner`: the depsolver's manifest adapter is reached by the
+  configured global path, not by an exact pin whose resolution already carries
+  the manifest.
+
+So the template layer must be wired at all four, and P2's prediction
+("four call sites and one new module") stands. The instrumented test was
+deleted with the probes.
+
+**S3 — the shared index vocabulary. The golden bytes do not move, so
+AV-FMT-003 stays epoch 1 → 1.** An optional `template: boolean` was added to
+`version_entry` in `formats/vocabularies.json` and `cargo xtask codegen` run.
+
+- The generated field is `pub template: bool` with
+  `#[serde(default, skip_serializing_if = "std::ops::Not::not")]`, so an
+  absent member is byte-identical.
+- `formats/corpora/index/e1` was byte-for-byte unchanged (md5 of the 18
+  files' md5s identical before and after codegen), and
+  `cargo xtask rebuild --check formats/corpora/index/e1` reported the catalog
+  byte-identical to its journal's projection (16 files).
+- `cargo xtask wire-diff` was green (exit 0, REPORTING): shift classes
+  **schema 0, corpus 0, other formats 1** — only `formats/vocabularies.json`
+  itself moved.
+- `cargo xtask check-codegen` requires the regenerated
+  `crates/vibe-wire/src/generated/shared/mod.rs` to be committed together with
+  the schema change, **plus exactly two struct-literal sites**:
+  `crates/vibe-wire/src/behaviour/records.rs` and
+  `crates/vibe-index/src/scanner/tree_entry.rs` (where the value is
+  `pkg.template`). That is P2's complete mechanical cost for AV-FMT-003.
+
+Everything was reverted; `formats/`, `crates/vibe-wire/` and
+`crates/vibe-index/` are untouched by P1.
+
+**S5 — proxy protocol /7. Confirmed on all three counts.**
+
+- The writer writes **the lowest protocol that carries what the home
+  retains** (`Index::minimum_reader`, ladder 3/4/5/6 keyed on
+  `requires_reader_four` / `source_evidence` / `requires_reader_six`), so a
+  home with no `/7`-only data never writes `/7`. The existing fixture
+  `cli_app_proxy_index_versions::installing_common_configuration_keeps_legacy_and_rich_path_commands_working`
+  shows that ladder live: a home that only retains a configuration writes
+  `/5`, not `/6`.
+- `vibe-app-proxy --supports-index` is one closed `match` arm list
+  (`crates/vibe-cli/src/bin/vibe-app-proxy.rs`, the `"vibe-user-applications/3"
+  | …/4 | …/5 | …/6` pattern): adding `/7` is one line there and one line in
+  the reader's admission `match`
+  (`crates/vibe-cli/src/bin/vibe-app-proxy/index.rs`), plus the new `e6`
+  wire module. `--probe` keeps answering `vibe-app-proxy/2` — the proxy
+  protocol and the index protocol are separate tags.
+- Those two `match` arms are the **only** gate: nothing else in the proxy
+  inspects the protocol string (`proxies/ownership.rs` matches only the
+  family prefix `vibe-user-applications/` to classify an image as ours).
+  Verified green: `cargo test -p vibe-cli --test
+  cli_app_proxy_index_versions` — 3 passed, including
+  `original_image_reports_exact_reader_capabilities_without_changing_probe`
+  (`/3`…`/6` echoed, `/999` refused).
+
+## 2026-11-10 — phase P1 implemented
+
+`AV-FMT-001` delivered. New crate `crates/vibe-template` (pure render: TOML
+text in, TOML text out, purity pinned by `tests/purity.rs`), the manifest
+`[package] template` flag, the typed `[template]` section with its refusals
+each naming a TOML path, `template_optional` on `[[installer_options]]`, the
+digest-field exemption that admits a `{sha256:FILE}` variable in a template
+manifest only, and the `template_render` check in `vibe check`. The golden
+proof is `cargo test -p vibe-template --test node_golden`.
+
+Facts moved to `impl/done` in PROP-075: `#TEMPLATE-FLAG`,
+`#TEMPLATE-VERSIONS`, `#TEMPLATE-VARIABLES`, `#TEMPLATE-SPELLING`,
+`#TEMPLATE-SOURCE-KINDS`, `#TEMPLATE-SELECTOR`, `#TEMPLATE-DIGEST-SOURCE`,
+`#TEMPLATE-VARIABLE-GRAMMAR`, `#TEMPLATE-OPTION-GATING`,
+`#TEMPLATE-RENDER-LOCATION`, `#TEMPLATE-TWO-STAGE`, plus the new
+`#TEMPLATE-DOCUMENT-READING`. The spec XML was validated by the PROP-045
+projector (`vibe_specdoc::project_spec_text` → `XmlProjected`), since
+`vibe check` does not read the dialect — the gap this log recorded when the
+campaign was planned.
+
+Carried forward, not done: a template that uses the numeric coercion is
+reported unparseable by `vibe check`'s manifest-validity cell (a lone variable
+in a typed numeric field would have to be admitted by the typed manifest
+layer). Neither real package needs it; filed here rather than in `BACKLOG.md`
+because it is this campaign's own follow-up.

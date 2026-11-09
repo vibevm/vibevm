@@ -38,6 +38,7 @@ members = [
     "crates/vibe-publish",
     "crates/vibe-spec",
     "crates/vibe-specdoc",
+    "crates/vibe-template",
     "crates/vibe-test-support",
     "crates/vibe-trace",
     "crates/vibe-wire",
@@ -77,6 +78,7 @@ default-members = [
     "crates/vibe-publish",
     "crates/vibe-spec",
     "crates/vibe-specdoc",
+    "crates/vibe-template",
     "crates/vibe-test-support",
     "crates/vibe-trace",
     "crates/vibe-wire",
@@ -141,6 +143,9 @@ vibe-package-source = { path = "crates/vibe-package-source", version = "1.0.11" 
 vibe-check = { path = "crates/vibe-check", version = "1.0.11" }
 vibe-publish = { path = "crates/vibe-publish", version = "1.0.11" }
 vibe-spec = { path = "crates/vibe-spec", version = "1.0.11" }
+# The PROP-075 pure template renderer: TOML text in, TOML text out, with no
+# filesystem, no transport and no registry anywhere in its dependency list.
+vibe-template = { path = "crates/vibe-template", version = "1.0.11" }
 # The PROP-045 pivot crate: document IR + MD/XML frontends and backends.
 vibe-specdoc = { path = "crates/vibe-specdoc", version = "1.0.11" }
 # Test-only: linking it isolates the test process's per-user settings home

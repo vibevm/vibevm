@@ -15,6 +15,11 @@ pub(super) struct Site<'a> {
     pub prose: &'a str,
     pub at: FieldPath,
     pub whole: bool,
+    /// Whether the declaration being judged belongs to a **template**
+    /// manifest (PROP-075 `#TEMPLATE-FLAG`), in which case a
+    /// digest-bearing field may hold a `{sha256:…}` variable instead of a
+    /// digest. Only the digest validators read it.
+    pub template: bool,
 }
 
 impl<'a> Site<'a> {
@@ -23,6 +28,7 @@ impl<'a> Site<'a> {
             prose,
             at,
             whole: false,
+            template: false,
         }
     }
 
@@ -31,7 +37,14 @@ impl<'a> Site<'a> {
             prose,
             at,
             whole: true,
+            template: false,
         }
+    }
+
+    /// The same site, judged inside a template manifest or not.
+    pub(super) fn templated(mut self, template: bool) -> Self {
+        self.template = template;
+        self
     }
 
     /// The address of something under this site, or the site itself when

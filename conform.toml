@@ -76,6 +76,7 @@ gated = [
     "vibe-safefs",
     "vibe-registry",
     "vibe-requirements",
+    "vibe-template",
     "vibe-workspace",
     "vibe-check",
     "vibe-publish",
@@ -93,6 +94,7 @@ gated = [
 gated_pub_doctest = [
     "vibe-app",
     "vibe-core",
+    "vibe-template",
     "vibe-ext",
     "vibe-extension-registry",
     "vibe-lifecycle",

@@ -8,15 +8,30 @@ Design authority for all of it: `spec://org.vibevm.core/vibevm/common/PROP-075#F
 
 ## AV-FMT-001 — `[package] template` and the `[template]` table (Phase 1)
 
-Status: **planned**.
+Status: **delivered 2026-11-10** (phase P1). As implemented it matches the
+entry below, with four clarifications recorded in
+`spec://org.vibevm.core/vibevm/common/PROP-075#TEMPLATE-DOCUMENT-READING`:
+the render rewrites `[package].version` to the produced version and removes
+`[package].template`, the `[template]` table and every `template_optional`
+key, so a rendered manifest carries no template vocabulary; a template
+document is read as TOML text and its `[template]` table deserialised on its
+own, because the numeric-coercion spelling (`size = "{size:…}"`) puts a string
+where the typed manifest wants a number; a skeleton render writes sixty-four
+zeros into every digest-bearing field, which is a valid digest and so needs no
+validator exemption; and `{meta.PATH}` admits a string, an integer or a
+boolean, refusing an array, a table, `null` and a non-integral number by
+naming the path. `[template] version_list_ttl` is admitted as a
+`<count><s|m|h>` duration on the table itself (the user-config default stays
+AV-FMT-005, phase P2).
 
 - `[format.manifest]` (`schema = "none"`, authored TOML, `foreign_parsers = "many"`), epoch **1 → 1**. Every addition is optional and omitted when absent, so existing manifests serialise byte-identically.
 - New `[package] template` boolean, default `false`. Admitted only on `kind = "app"` in this campaign; any other kind refuses with a message naming the restriction. Touches `PackageMeta`, `PackageMetaWire` (`deny_unknown_fields`) and both `From` arms.
 - New top-level table `[template]`, which must be added to `Manifest`, to `ManifestWire` (`deny_unknown_fields`) and to both `TryFrom` arms, or the table is refused as unknown. Members: `[template.versions]` (`kind = "json" | "list"`, with `url`, `select`, `version_field`, `strip_prefix`, `min`, `max`, `prerelease` for `json`, and `[[template.versions.item]]` rows of `version` + free `meta` for `list`), `[template.digests]` (`kind = "sha256sums" | "json"`, with `url` and, for `json`, `select`, `file_field`, `digest_field`, `size_field`), `[[template.channel]]` rows (`rule = "truthy"` with `name`, or `rule = "value"` with `prefix`; both with `from`), and optional `version_list_ttl`.
 - New optional `template_optional` boolean on `[[installer_options]]`: such a row is dropped from the rendered manifest when a digest variable it references has no value for that version; without it, a missing digest is a render error.
 - Refusals, each naming its field as a TOML path (PROP-059 `#declaration`): `[template]` without `template = true`; `template = true` without `[template]`; `template = true` on a non-`app` kind; a digest variable outside the digest-bearing fields; `{platform}` / `{arch}` outside an `[[installer_options]]` row; a `{meta.…}` path resolving to an array or object; a `{size:…}` variable with a digest source that carries no sizes; a `{` opening no known variable.
-- `vibe check` gains one check: a template whose skeleton render of its own newest source version does not validate.
-- Rendering itself is not a format: it is a pure function in the new crate `vibe-template`, producing TOML text that the ordinary `Manifest::parse_str` reads.
+- `vibe check` gains one check, `template_render`: a template whose skeleton render does not validate as an ordinary manifest is an error naming the rendered field. The check is **offline by construction**, so it renders a probe version — the newest declared `[[template.versions.item]]` of a `list` source, the declared `min` of a `json` source, else `1.0.0` — and a template whose grammar needs a `{meta.…}` value only the fetched version document carries is reported *unchecked* (a warning), never broken.
+- Rendering itself is not a format: it is a pure function in the new crate `vibe-template`, producing TOML text that the ordinary `Manifest::parse_str` reads. Its purity is a test, not a comment: `crates/vibe-template/tests/purity.rs` pins the crate's dependency table to a declared list and refuses `std::fs`, `std::net`, `std::env`, `std::process`, `std::time`, `include_str!`, `vibe_net`, `vibe_registry` and `vibe_resolver` anywhere in its sources.
+- **Visible loss, the same one AV-FMT-006 records:** a template over a `sha256sums` digest source cannot carry `size`, so a manifest rendered from the Node template is the committed one minus its `size` lines. `{size:FILE}` with a source that carries no sizes is a refusal rather than a zero.
 
 ## AV-FMT-002 — lockfile: `[template]` per package, `via_channel`, schema 10 (Phase 2)
 

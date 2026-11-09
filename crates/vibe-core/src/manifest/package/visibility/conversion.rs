@@ -42,6 +42,7 @@ impl TryFrom<ManifestWire> for Manifest {
         Ok(Self {
             project: wire.project,
             package: wire.package,
+            template: wire.template,
             application: wire.application,
             installer_options: wire.installer_options,
             workspace: wire.workspace,
@@ -129,6 +130,7 @@ impl TryFrom<Manifest> for ManifestWire {
         Ok(Self {
             project: manifest.project,
             package: manifest.package,
+            template: manifest.template,
             application: manifest.application,
             installer_options: manifest.installer_options,
             workspace: manifest.workspace,

@@ -88,6 +88,13 @@ pub struct Manifest {
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub package: Option<PackageMeta>,
 
+    /// `[template]` — where a template package's produced versions and
+    /// digests come from (PROP-075 `#TEMPLATE-SPELLING`). Legal only
+    /// beside `[package] template = true`, and refused without it, so the
+    /// table and the flag cannot disagree.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub template: Option<super::TemplateSection>,
+
     /// `[application]` — optional package-owned user-local application metadata.
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub application: Option<ApplicationDecl>,

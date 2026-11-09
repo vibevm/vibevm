@@ -16,7 +16,7 @@ use super::*;
 
 impl InstallerOptionDecl {
     /// Every rule of `PROP-065` that can be checked without the host.
-    pub(super) fn validate_steps(&self, at: &FieldPath) -> Result<(), FieldError> {
+    pub(super) fn validate_steps(&self, at: &FieldPath, template: bool) -> Result<(), FieldError> {
         let option = &self.id;
         let names = self.validate_wizard(at)?;
         let option_table = format!("[[installer_options]] `{option}`");
@@ -28,7 +28,9 @@ impl InstallerOptionDecl {
         let mut authored = 0;
         for step in &steps {
             let table = format!("[[installer_options.steps]] `{}`", step.id);
-            let site = self.step_site(step, &table, at, &mut authored);
+            let site = self
+                .step_site(step, &table, at, &mut authored)
+                .templated(template);
             if !step_ids.insert(step.id.as_str()) {
                 return Err(site.refuse(
                     "id",

@@ -348,6 +348,14 @@ pub struct InstallerOptionDecl {
     /// `public_commands`, `path_dirs`, or both.
     #[serde(default, skip_serializing_if = "Vec::is_empty")]
     pub path_dirs: Vec<String>,
+    /// `template_optional` — in a template manifest (PROP-075
+    /// `#TEMPLATE-OPTION-GATING`), this row is **dropped** from the
+    /// rendered manifest when a digest variable it references has no value
+    /// for the produced version, instead of failing the render. Legal only
+    /// beside `[package] template = true`, and never present in a rendered
+    /// manifest: the render removes it.
+    #[serde(default, skip_serializing_if = "std::ops::Not::not")]
+    pub template_optional: bool,
 }
 
 /// Strict package-only `[application]` metadata: the slot name, the
@@ -388,3 +396,7 @@ fn is_portable_default(value: &bool) -> bool {
 }
 
 pub(crate) use wizard_validation::validate_parameter;
+
+// The one HTTPS-shape test of the manifest layer, shared with the
+// `[template]` validators beside this module.
+pub(in crate::manifest::package) use validation::credential_free_https;
