@@ -1,0 +1,207 @@
+{
+  "metadata": {
+    "description": "Version 1 machine answer of vibe app env --json: the resolved per-slot selection with the source that decided it, the composed PATH as an array, and the variables to set and unset, for a client that sets the environment itself instead of evaluating printed lines.",
+    "spec": {
+      "implements": "spec://org.vibevm.core/vibevm/common/PROP-075#ACTIVATION-ENV-OUTPUT"
+    },
+    "rustOptions": {
+      "package": "vibe_wire::application_env"
+    },
+    "x-rust-type": "ApplicationEnv",
+    "x-wire-order": [
+      "protocol",
+      "shell",
+      "unset",
+      "project",
+      "selections",
+      "path",
+      "variables",
+      "cleared",
+      "notices"
+    ]
+  },
+  "properties": {
+    "protocol": {
+      "type": "string"
+    },
+    "shell": {
+      "ref": "shell"
+    },
+    "unset": {
+      "type": "boolean"
+    },
+    "selections": {
+      "elements": {
+        "ref": "selection"
+      },
+      "metadata": {
+        "x-empty": "emit"
+      }
+    },
+    "path": {
+      "elements": {
+        "type": "string"
+      },
+      "metadata": {
+        "x-empty": "emit"
+      }
+    },
+    "variables": {
+      "values": {
+        "type": "string"
+      },
+      "metadata": {
+        "x-empty": "emit"
+      }
+    },
+    "cleared": {
+      "elements": {
+        "type": "string"
+      },
+      "metadata": {
+        "x-empty": "emit",
+        "description": "The variables the lines unset."
+      }
+    }
+  },
+  "definitions": {
+    "shell": {
+      "enum": [
+        "bash",
+        "zsh",
+        "fish",
+        "pwsh",
+        "cmd",
+        "posix"
+      ],
+      "metadata": {
+        "x-vocabulary": "closed"
+      }
+    },
+    "source": {
+      "enum": [
+        "flag",
+        "project_requirement",
+        "version_file",
+        "slot_default",
+        "slot_off",
+        "none"
+      ],
+      "metadata": {
+        "x-vocabulary": "closed",
+        "description": "What decided this slot's version, highest precedence first (PROP-075 #VERSION-FILE-FORMATS)."
+      }
+    },
+    "state": {
+      "enum": [
+        "selected",
+        "not_installed",
+        "off",
+        "unresolved_channel",
+        "ambiguous"
+      ],
+      "metadata": {
+        "x-vocabulary": "closed"
+      }
+    },
+    "selection": {
+      "metadata": {
+        "x-wire-order": [
+          "slot",
+          "source",
+          "state",
+          "requested",
+          "key",
+          "version",
+          "file",
+          "unused",
+          "candidates",
+          "install"
+        ]
+      },
+      "properties": {
+        "slot": {
+          "type": "string"
+        },
+        "source": {
+          "ref": "source"
+        },
+        "state": {
+          "ref": "state"
+        }
+      },
+      "optionalProperties": {
+        "requested": {
+          "type": "string",
+          "metadata": {
+            "description": "The requirement or channel as it was authored.",
+            "x-default": null
+          }
+        },
+        "key": {
+          "type": "string",
+          "metadata": {
+            "description": "The installation key the selection resolved to.",
+            "x-default": null
+          }
+        },
+        "version": {
+          "type": "string",
+          "metadata": {
+            "x-default": null
+          }
+        },
+        "file": {
+          "type": "string",
+          "metadata": {
+            "description": "The version file that decided it, when the source is a version file.",
+            "x-default": null
+          }
+        },
+        "unused": {
+          "elements": {
+            "type": "string"
+          },
+          "metadata": {
+            "x-empty": "omit",
+            "description": "The versions a .tool-versions line listed after the one taken."
+          }
+        },
+        "candidates": {
+          "elements": {
+            "type": "string"
+          },
+          "metadata": {
+            "x-empty": "omit",
+            "description": "The installation keys that matched, when nothing narrowed the request."
+          }
+        },
+        "install": {
+          "type": "string",
+          "metadata": {
+            "description": "The exact command that would supply a version that is not installed.",
+            "x-default": null
+          }
+        }
+      }
+    }
+  },
+  "optionalProperties": {
+    "project": {
+      "type": "string",
+      "metadata": {
+        "description": "The project root the selection was resolved in, when --project found one.",
+        "x-default": null
+      }
+    },
+    "notices": {
+      "elements": {
+        "type": "string"
+      },
+      "metadata": {
+        "x-empty": "omit",
+        "description": "What the resolution reported and did not fail on: an unreadable version file, a line that is neither a requirement nor a channel."
+      }
+    }
+  }
+}

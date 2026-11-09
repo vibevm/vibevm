@@ -49,6 +49,7 @@ pub enum FormatId {
     CliApplicationAlternatives,
     CliApplicationCollections,
     CliApplicationDescribe,
+    CliApplicationEnv,
     CliApplicationErrors,
     CliApplicationEvents,
     CliApplicationExported,

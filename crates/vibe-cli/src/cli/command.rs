@@ -39,6 +39,11 @@ pub enum Command {
     #[command(long_about = shell::LONG_ABOUT)]
     Shell(ShellArgs),
 
+    /// Install a prompt hook that applies the project's application
+    /// versions on directory change (PROP-075 `#ACTIVATION-HOOK`): one
+    /// managed block in that shell's startup file, and nothing outside it.
+    Hook(HookArgs),
+
     /// Show which remap rows are active and why one fetch resolves where
     /// it does (PROP-066).
     Remap(RemapArgs),

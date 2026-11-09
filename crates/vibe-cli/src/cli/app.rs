@@ -545,6 +545,24 @@ pub enum AppCommand {
     /// List the providers of a slot, its default and the commands each provides.
     Alternatives { slot: String },
 
+    /// Print the lines that switch the current shell to a selection
+    /// (PROP-075 `#ACTIVATION-ENV-OUTPUT`): `PATH` with the chosen
+    /// installations' payload directories in front, and `VIBE_APP_USE`.
+    ///
+    /// Stdout carries the lines and nothing else, so
+    /// `eval "$(vibe app env --use node=22.23.4)"` puts a shell in the same
+    /// state `vibe shell --use node=22.23.4` does. With `--shell cmd` the
+    /// lines are bare `NAME=VALUE` pairs, because cmd has no `eval`; the one
+    /// incantation that consumes them is
+    /// `for /f "usebackq tokens=1,* delims==" %a in (`vibe app env --shell cmd`) do @set "%a=%b"`.
+    Env(AppEnvArgs),
+
+    /// Run one command with a slot's chosen version first on PATH, without
+    /// changing any default, state or file (PROP-075
+    /// `#VERSION-EXEC-SPELLING`). `--` is required before the command, so a
+    /// flag of the command is never read as vibe's.
+    Exec(AppExecArgs),
+
     /// Run the declared default launcher, or ask in an interactive terminal.
     /// With `--json` the launcher is started detached and the answer names
     /// its process id, command line and log instead of waiting for it
@@ -560,3 +578,7 @@ pub enum AppCommand {
         args: Vec<String>,
     },
 }
+
+#[path = "app_activation.rs"]
+mod activation;
+pub use activation::{AppEnvArgs, AppExecArgs, HookArgs};

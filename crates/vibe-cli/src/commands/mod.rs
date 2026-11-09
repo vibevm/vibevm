@@ -50,6 +50,7 @@ pub mod friends;
 pub(crate) mod global_mcp_agents;
 pub(crate) mod global_mcp_choices;
 pub(crate) mod global_mcp_dispatch;
+pub mod hook;
 pub mod init;
 pub mod install;
 pub mod lifecycle;

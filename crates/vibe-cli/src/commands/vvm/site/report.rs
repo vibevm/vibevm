@@ -86,12 +86,15 @@ fn environment(observation: env::EnvironmentObservation) -> EnvironmentObservati
             env::TargetKind::Unavailable => EnvTargetKind::Unavailable,
         },
         target: observation.target,
-        shell: observation.shell.map(|shell| match shell {
-            env::Shell::Bash => LoginShell::Bash,
-            env::Shell::Zsh => LoginShell::Zsh,
-            env::Shell::Fish => LoginShell::Fish,
-            env::Shell::Pwsh => LoginShell::Pwsh,
-            env::Shell::Posix => LoginShell::Posix,
+        // `and_then`, not `map`: cmd is not a login shell with an rc file
+        // this step could have read, so there is nothing to report for it.
+        shell: observation.shell.and_then(|shell| match shell {
+            env::Shell::Bash => Some(LoginShell::Bash),
+            env::Shell::Zsh => Some(LoginShell::Zsh),
+            env::Shell::Fish => Some(LoginShell::Fish),
+            env::Shell::Pwsh => Some(LoginShell::Pwsh),
+            env::Shell::Posix => Some(LoginShell::Posix),
+            env::Shell::Cmd => None,
         }),
         observation: match observation.observation {
             env::ObservationStatus::Present => EnvObservationStatus::Present,

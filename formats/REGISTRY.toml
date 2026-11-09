@@ -400,6 +400,17 @@ foreign_parsers = "many"
 corpus = "none"
 sunset = "none"
 
+# `vibe app env --json` (PROP-075 `#ACTIVATION-ENV-OUTPUT`): the resolved
+# per-slot selection, the composed PATH and the variables, for a client that
+# sets the environment itself instead of evaluating printed lines.
+[format.cli-application-env]
+epoch = 1
+schema = "schemas/application_env.jtd.json"
+recoverable = true
+foreign_parsers = "many"
+corpus = "none"
+sunset = "none"
+
 # ── User-local application durable/exchange records, PROP-059 ───────────────
 [format.application-index]
 epoch = 5

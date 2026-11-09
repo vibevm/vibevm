@@ -5,9 +5,35 @@
 use std::fs;
 use std::path::{Path, PathBuf};
 
-pub(super) const BEGIN: &str =
-    "# >>> vibe applications environment (managed by vibe, do not edit) >>>";
-pub(super) const END: &str = "# <<< vibe applications environment <<<";
+/// The markers that delimit one managed block of a shell startup file
+/// (`MANAGED-BLOCKS-PROTOCOL`). Every byte outside them is kept as it was,
+/// so two owners keep two blocks in one file without seeing each other.
+#[specmark::spec(
+    documents = "spec://org.vibevm.world/managed-blocks/flows/managed-blocks/MANAGED-BLOCKS-PROTOCOL#root"
+)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct BlockMarkers {
+    pub begin: &'static str,
+    pub end: &'static str,
+}
+
+/// The block of the application `env` step (`PROP-065#env-step`).
+pub const ENV_BLOCK: BlockMarkers = BlockMarkers {
+    begin: "# >>> vibe applications environment (managed by vibe, do not edit) >>>",
+    end: "# <<< vibe applications environment <<<",
+};
+
+/// The block of the application version prompt hook
+/// (`PROP-075#ACTIVATION-HOOK`).
+pub const HOOK_BLOCK: BlockMarkers = BlockMarkers {
+    begin: "# >>> vibe application versions (managed by vibe, do not edit) >>>",
+    end: "# <<< vibe application versions <<<",
+};
+
+#[cfg(test)]
+pub(super) const BEGIN: &str = ENV_BLOCK.begin;
+#[cfg(test)]
+pub(super) const END: &str = ENV_BLOCK.end;
 
 /// The startup files under `home` that receive the block, each with
 /// whether it uses fish syntax: `~/.profile` always, the others when they
@@ -28,18 +54,18 @@ pub(super) fn startup_files(home: &Path) -> Vec<(PathBuf, bool)> {
 }
 
 /// The text of the block around `body`.
-fn block(body: &str) -> String {
-    format!("{BEGIN}\n{body}\n{END}\n")
+fn block(markers: BlockMarkers, body: &str) -> String {
+    format!("{}\n{body}\n{}\n", markers.begin, markers.end)
 }
 
 /// The byte range of the block in `text`, end-of-line included.
-fn find(text: &str) -> Option<(usize, usize)> {
+fn find(markers: BlockMarkers, text: &str) -> Option<(usize, usize)> {
     let start = text
-        .match_indices(BEGIN)
+        .match_indices(markers.begin)
         .map(|(index, _)| index)
         .find(|index| *index == 0 || text.as_bytes()[index - 1] == b'\n')?;
-    let end_marker = text[start..].find(END)? + start;
-    let mut end = end_marker + END.len();
+    let end_marker = text[start..].find(markers.end)? + start;
+    let mut end = end_marker + markers.end.len();
     if text[end..].starts_with("\r\n") {
         end += 2;
     } else if text[end..].starts_with('\n') {
@@ -93,12 +119,13 @@ fn write(path: &Path, text: &str) -> Result<(), String> {
     })
 }
 
-/// Make `path` hold exactly one block around `body`.
-pub(super) fn ensure(path: &Path, body: &str) -> Result<(), String> {
+/// Make `path` hold exactly one block of `markers` around `body`, leaving
+/// every byte outside that block as it was.
+pub fn ensure_block(markers: BlockMarkers, path: &Path, body: &str) -> Result<(), String> {
     let path = target(path);
     let current = read(&path)?.unwrap_or_default();
-    let wanted = block(body);
-    let next = match find(&current) {
+    let wanted = block(markers, body);
+    let next = match find(markers, &current) {
         Some((start, end)) if current[start..end] == wanted => return Ok(()),
         Some((start, end)) => format!("{}{wanted}{}", &current[..start], &current[end..]),
         None if current.is_empty() || current.ends_with('\n') => format!("{current}{wanted}"),
@@ -107,14 +134,36 @@ pub(super) fn ensure(path: &Path, body: &str) -> Result<(), String> {
     write(&path, &next)
 }
 
-/// Remove the block from `path`, if it holds one.
-pub(super) fn remove(path: &Path) -> Result<(), String> {
+/// Remove the block of `markers` from `path`, if it holds one.
+pub fn remove_block(markers: BlockMarkers, path: &Path) -> Result<(), String> {
     let path = target(path);
     let Some(current) = read(&path)? else {
         return Ok(());
     };
-    let Some((start, end)) = find(&current) else {
+    let Some((start, end)) = find(markers, &current) else {
         return Ok(());
     };
     write(&path, &format!("{}{}", &current[..start], &current[end..]))
+}
+
+/// Whether `path` holds a block of `markers`.
+pub fn has_block(markers: BlockMarkers, path: &Path) -> bool {
+    read(&target(path))
+        .ok()
+        .flatten()
+        .is_some_and(|text| find(markers, &text).is_some())
+}
+
+/// The shell startup files of `home` that take a managed block, each with
+/// whether it uses fish syntax.
+pub fn managed_startup_files(home: &Path) -> Vec<(PathBuf, bool)> {
+    startup_files(home)
+}
+
+pub(super) fn ensure(path: &Path, body: &str) -> Result<(), String> {
+    ensure_block(ENV_BLOCK, path, body)
+}
+
+pub(super) fn remove(path: &Path) -> Result<(), String> {
+    remove_block(ENV_BLOCK, path)
 }

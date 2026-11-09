@@ -8,7 +8,7 @@
 
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-065#env-step");
 
-mod blocks;
+pub mod blocks;
 
 use std::fs;
 use std::path::{Path, PathBuf};

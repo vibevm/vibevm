@@ -16,6 +16,7 @@ pub mod application;
 pub mod application_alternatives;
 pub mod application_collections;
 pub mod application_describe;
+pub mod application_env;
 pub mod application_errors;
 pub mod application_events;
 pub mod application_exported;

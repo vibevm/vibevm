@@ -12,7 +12,9 @@ mod catalog;
 mod configuration;
 mod describe;
 pub(crate) mod display;
+pub(crate) mod env;
 pub(crate) mod environment;
+mod exec;
 mod export;
 pub(crate) mod facts;
 pub(crate) mod global;
@@ -29,6 +31,7 @@ mod records;
 mod report;
 mod resume;
 mod runtime;
+pub(crate) mod session;
 mod views;
 mod wizard;
 
@@ -420,6 +423,11 @@ pub fn run(
             alternatives::alternatives(ctx, app_home.settings(), &slot)?;
             Ok(None)
         }
+        AppCommand::Env(args) => {
+            env::run(ctx, args)?;
+            Ok(None)
+        }
+        AppCommand::Exec(args) => exec::run(ctx, args),
         AppCommand::Run {
             package,
             launcher_id,

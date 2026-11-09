@@ -85,6 +85,10 @@ pub use codes::{ErrorClass, ErrorCode, error_codes};
 pub use derive::{derive_launchers, hicolor as hicolor_icon_set, import_desktop};
 pub use describe::describe;
 pub use desktop::{DesktopFile, exec_words};
+pub use environment::blocks::{
+    BlockMarkers, ENV_BLOCK, HOOK_BLOCK, ensure_block, has_block, managed_startup_files,
+    remove_block,
+};
 pub use environment::{ProfileEnvironment, UserEnvironment, recorded_environment};
 pub use error::{
     AppError, InstallerError, LaunchError, ResolveError, StateError, StepError, StorageError,

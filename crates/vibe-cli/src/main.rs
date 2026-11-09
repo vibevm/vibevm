@@ -23,6 +23,7 @@ mod env_allowlist;
 mod exit_code;
 mod output;
 mod registry;
+mod shell_syntax;
 
 use env_allowlist::partition_env_promotions;
 
@@ -293,6 +294,7 @@ fn run() -> ExitCode {
             ),
             Command::Aiui(args) => commands::aiui::run(&ctx, args),
             Command::Shell(args) => commands::shell::run(&ctx, args),
+            Command::Hook(args) => commands::hook::run(&ctx, args),
             Command::Storage(args) => commands::storage::run(&ctx, args),
             Command::Agent(args) => commands::agent::run(&ctx, args),
             Command::Term(args) => commands::term::run(&ctx, args),

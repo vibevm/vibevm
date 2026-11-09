@@ -180,7 +180,12 @@ pub(crate) fn policy(command: &Command, terminal_attached: bool) -> CommandPolic
             | crate::cli::AppCommand::Work { .. }
             | crate::cli::AppCommand::Errors
             | crate::cli::AppCommand::Outdated { .. }
-            | crate::cli::AppCommand::Alternatives { .. } => FastMetadata,
+            | crate::cli::AppCommand::Alternatives { .. }
+            // One home index and the version files of one directory are
+            // read; the lines go to stdout and nothing may draw beside
+            // them, because a shell evaluates them (PROP-075
+            // `#ACTIVATION-ENV-OUTPUT`).
+            | crate::cli::AppCommand::Env(_) => FastMetadata,
             // One file of the home is read or replaced; nothing to show.
             crate::cli::AppCommand::Collection { .. }
             | crate::cli::AppCommand::Pin { .. }
@@ -196,9 +201,10 @@ pub(crate) fn policy(command: &Command, terminal_attached: bool) -> CommandPolic
             | crate::cli::AppCommand::Unhold { .. }
             | crate::cli::AppCommand::Rollback { .. } => FiniteFallback("Command app state"),
             crate::cli::AppCommand::Autoremove { .. } => FiniteFallback("Command app autoremove"),
-            crate::cli::AppCommand::Run { .. } | crate::cli::AppCommand::Start { .. } => {
-                TerminalPassthrough
-            }
+            crate::cli::AppCommand::Run { .. }
+            | crate::cli::AppCommand::Start { .. }
+            // The command replaces this process and owns the terminal.
+            | crate::cli::AppCommand::Exec(_) => TerminalPassthrough,
             crate::cli::AppCommand::Running | crate::cli::AppCommand::Export(_) => FastMetadata,
             // Each row is an ordinary `install -g` with its step panel.
             crate::cli::AppCommand::Import(_) => InteractiveFallback("Command app import"),
@@ -246,6 +252,9 @@ pub(crate) fn policy(command: &Command, terminal_attached: bool) -> CommandPolic
             AiuiSubcommand::Scrollbar(_) => FiniteFallback("Command aiui scrollbar"),
         },
         Command::Term(_) | Command::Frame(_) | Command::Shell(_) => TerminalPassthrough,
+        // One startup file is read and replaced, or the block goes to
+        // stdout; nothing to show either way.
+        Command::Hook(_) => FastMetadata,
         Command::Storage(args) => match &args.command {
             StorageCommand::List => FastMetadata,
             StorageCommand::Add { .. } => FiniteFallback("Command storage add"),
