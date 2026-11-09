@@ -347,18 +347,69 @@ pub(super) fn place(
 
 /// What the installed program says its version is, when it answers at all.
 /// A px that cannot be run is still installed: the field is simply absent.
+///
+/// px has no `--version`: an unknown flag starts it as a proxy server that
+/// never exits. `--help` prints `Px vX.Y.Z` on its first line and exits, and
+/// the call is bounded anyway, so a px of any shape can never hang the
+/// install: past [`VERSION_PROBE_LIMIT`] the child is killed and the version
+/// is simply not recorded.
 fn program_version(program: &Path) -> Option<String> {
-    let output = std::process::Command::new(program)
-        .arg("--version")
-        .output()
-        .ok()?;
-    let text = String::from_utf8_lossy(if output.stdout.is_empty() {
-        &output.stderr
-    } else {
-        &output.stdout
-    });
-    let line = text.lines().next()?.trim();
+    let text = bounded_output(program, &["--help"], VERSION_PROBE_LIMIT)?;
+    let line = text
+        .lines()
+        .map(str::trim)
+        .find(|line| line.starts_with("Px v") || line.starts_with("px v"))
+        .or_else(|| text.lines().map(str::trim).find(|line| !line.is_empty()))?;
     (!line.is_empty()).then(|| line.chars().take(120).collect())
+}
+
+/// How long the version probe may run before the child is killed.
+const VERSION_PROBE_LIMIT: std::time::Duration = std::time::Duration::from_secs(5);
+
+/// Run `program args…` with no stdin and return stdout (or stderr when stdout
+/// is empty), or `None` when it cannot start or does not exit within `limit`
+/// — then it is killed and reaped, never left running.
+fn bounded_output(program: &Path, args: &[&str], limit: std::time::Duration) -> Option<String> {
+    use std::io::Read;
+    use std::process::{Command, Stdio};
+    let mut child = Command::new(program)
+        .args(args)
+        .stdin(Stdio::null())
+        .stdout(Stdio::piped())
+        .stderr(Stdio::piped())
+        .spawn()
+        .ok()?;
+    let mut stdout = child.stdout.take()?;
+    let mut stderr = child.stderr.take()?;
+    let out = std::thread::spawn(move || {
+        let mut buffer = Vec::new();
+        let _ = stdout.read_to_end(&mut buffer);
+        buffer
+    });
+    let err = std::thread::spawn(move || {
+        let mut buffer = Vec::new();
+        let _ = stderr.read_to_end(&mut buffer);
+        buffer
+    });
+    let deadline = std::time::Instant::now() + limit;
+    let exited = loop {
+        match child.try_wait() {
+            Ok(Some(_)) => break true,
+            Ok(None) if std::time::Instant::now() < deadline => {
+                std::thread::sleep(std::time::Duration::from_millis(50));
+            }
+            _ => break false,
+        }
+    };
+    if !exited {
+        let _ = child.kill();
+        let _ = child.wait();
+        return None;
+    }
+    let stdout = out.join().unwrap_or_default();
+    let stderr = err.join().unwrap_or_default();
+    let bytes = if stdout.is_empty() { stderr } else { stdout };
+    Some(String::from_utf8_lossy(&bytes).into_owned())
 }
 
 /// The px program inside an unpacked tree: the shallowest file named `px`
@@ -507,4 +558,46 @@ fn contained(name: &str) -> Result<Option<PathBuf>> {
         }
     }
     Ok((!out.as_os_str().is_empty()).then_some(out))
+}
+
+#[cfg(all(test, unix))]
+mod version_probe_tests {
+    use std::os::unix::fs::PermissionsExt;
+    use std::time::{Duration, Instant};
+
+    use super::{bounded_output, program_version};
+
+    fn script(dir: &std::path::Path, name: &str, body: &str) -> std::path::PathBuf {
+        let path = dir.join(name);
+        std::fs::write(&path, format!("#!/bin/sh\n{body}\n")).unwrap();
+        std::fs::set_permissions(&path, std::fs::Permissions::from_mode(0o755)).unwrap();
+        path
+    }
+
+    #[test]
+    fn the_px_help_line_is_the_recorded_version() {
+        let dir = tempfile::tempdir().unwrap();
+        let px = script(
+            dir.path(),
+            "px",
+            "echo 'Px v0.11.0'; echo; echo 'An HTTP proxy server'",
+        );
+        assert_eq!(program_version(&px).as_deref(), Some("Px v0.11.0"));
+    }
+
+    #[test]
+    fn a_program_that_never_exits_is_killed_and_records_no_version() {
+        let dir = tempfile::tempdir().unwrap();
+        // what px 0.11 does with an argument it does not know: serve forever
+        let px = script(dir.path(), "px", "echo serving; exec sleep 600");
+        let started = Instant::now();
+        assert_eq!(
+            bounded_output(&px, &["--help"], Duration::from_millis(300)),
+            None
+        );
+        assert!(
+            started.elapsed() < Duration::from_secs(10),
+            "the probe must not wait for the server"
+        );
+    }
 }
