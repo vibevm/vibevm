@@ -327,3 +327,52 @@ fn path_without_removes_only_the_equivalent_entry_and_keeps_raw_text() {
         Some("")
     );
 }
+
+#[test]
+#[verifies("spec://org.vibevm.core/vibevm/common/PROP-019#activation", r = 2)]
+fn self_env_lines_are_exactly_these_bytes_for_every_shell() {
+    // The golden form of `vibe self env --shell X`, byte for byte, so
+    // promoting `Shell` into a shared module (PROP-075
+    // `#ACTIVATION-ENV-OUTPUT`) cannot change what `vibe self env` prints.
+    let home = Path::new("/opt/vibevm/versions/branch/it's main");
+    for (shell, expected) in [
+        (
+            Shell::Bash,
+            "export VIBEVM_SHELL_HOME='/opt/vibevm/versions/branch/it'\"'\"'s main'; \
+             export VIBEVM_HOME='/opt/vibevm/versions/branch/it'\"'\"'s main'",
+        ),
+        (
+            Shell::Zsh,
+            "export VIBEVM_SHELL_HOME='/opt/vibevm/versions/branch/it'\"'\"'s main'; \
+             export VIBEVM_HOME='/opt/vibevm/versions/branch/it'\"'\"'s main'",
+        ),
+        (
+            Shell::Posix,
+            "export VIBEVM_SHELL_HOME='/opt/vibevm/versions/branch/it'\"'\"'s main'; \
+             export VIBEVM_HOME='/opt/vibevm/versions/branch/it'\"'\"'s main'",
+        ),
+        (
+            Shell::Fish,
+            "set -gx VIBEVM_SHELL_HOME '/opt/vibevm/versions/branch/it\\'s main'; \
+             set -gx VIBEVM_HOME '/opt/vibevm/versions/branch/it\\'s main'",
+        ),
+        (
+            Shell::Pwsh,
+            "$env:VIBEVM_SHELL_HOME = '/opt/vibevm/versions/branch/it''s main'; \
+             $env:VIBEVM_HOME = '/opt/vibevm/versions/branch/it''s main'",
+        ),
+    ] {
+        assert_eq!(shell.export_line(home), expected, "{shell:?}");
+    }
+    // And the rc target each shell owns.
+    let home = Path::new("/home/dev");
+    for (shell, expected) in [
+        (Shell::Bash, "/home/dev/.bashrc"),
+        (Shell::Zsh, "/home/dev/.zshrc"),
+        (Shell::Fish, "/home/dev/.config/fish/config.fish"),
+        (Shell::Posix, "/home/dev/.profile"),
+        (Shell::Pwsh, "/home/dev/.profile"),
+    ] {
+        assert_eq!(shell.rc_path(home), Path::new(expected), "{shell:?}");
+    }
+}
