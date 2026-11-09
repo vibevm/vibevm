@@ -410,6 +410,34 @@ unknown_fields = "deny"
 corpus = "formats/corpora/application/e5"
 sunset = "none"
 
+# The version files the home's installed applications declare
+# (PROP-075 `#VERSION-FILE-FORMATS`), kept beside the index as
+# `applications/version-files.json` rather than inside it, so the index wire
+# and every existing PATH proxy stay at `vibe-user-applications/6`. Derived
+# from the installed packages' manifests: a lost document costs a reinstall of
+# the application, so it is recoverable but not rebuildable from the home.
+[format.application-version-files]
+epoch = 1
+schema = "schemas/application_version_files.jtd.json"
+recoverable = true
+foreign_parsers = "none"
+unknown_fields = "deny"
+corpus = "none"
+sunset = "none"
+
+# The version-file search's resolution cache, `cache/version-files.json`
+# (PROP-075 `#VERSION-FILE-FORMATS`, `#ACTIVATION-HOOK`): keyed by the
+# modification time and size of every file consulted. A pure cache — deleting
+# it costs one re-read — and read only by vibe.
+[format.application-version-file-cache]
+epoch = 1
+schema = "schemas/application_version_file_cache.jtd.json"
+recoverable = true
+foreign_parsers = "none"
+unknown_fields = "deny"
+corpus = "none"
+sunset = "none"
+
 # The kept work directory's exact continuation state (PROP-065 `#execution`).
 # Generation, publication and uncertain retirement evidence cannot be rebuilt
 # by restarting installation; read only by vibe.

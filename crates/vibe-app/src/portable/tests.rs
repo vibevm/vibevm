@@ -73,6 +73,7 @@ fn installed(option: &str, features: &[&str]) -> Index {
             launchers: vec![],
             public_commands: vec![],
             path_dirs: Vec::new(),
+            version_file: Vec::new(),
             commands: Default::default(),
             features: features.iter().map(|id| (*id).to_owned()).collect(),
             parameters: BTreeMap::new(),

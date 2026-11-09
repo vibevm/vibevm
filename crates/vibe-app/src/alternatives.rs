@@ -324,6 +324,7 @@ mod tests {
                 })
                 .collect(),
             path_dirs: Vec::new(),
+            version_file: Vec::new(),
             commands: AuthoredCommands::default(),
             features: Vec::new(),
             parameters: Default::default(),

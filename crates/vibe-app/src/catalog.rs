@@ -202,6 +202,7 @@ mod tests {
                 ],
                 public_commands: Vec::new(),
                 path_dirs: Vec::new(),
+                version_file: Vec::new(),
                 commands: AuthoredCommands::default(),
                 features: Vec::new(),
                 parameters: Default::default(),

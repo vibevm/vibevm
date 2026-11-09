@@ -35,6 +35,8 @@ pub enum FormatId {
     ApplicationSteps,
     ApplicationStepsV1,
     ApplicationStepsV2,
+    ApplicationVersionFileCache,
+    ApplicationVersionFiles,
     AppsManifest,
     AppsManifestV1,
     ArtifactRecord,

@@ -1,0 +1,158 @@
+{
+  "metadata": {
+    "description": "The resolution cache of the version-file search: one entry per directory resolved, carrying every path consulted with its modification time and size (or its absence) and the selection that resulted, so a repeated prompt in a known directory parses nothing. Pure cache: deleting it costs one re-read.",
+    "spec": {
+      "implements": "spec://org.vibevm.core/vibevm/common/PROP-075#VERSION-FILE-FORMATS"
+    },
+    "rustOptions": {
+      "package": "vibe_wire::application_version_file_cache"
+    },
+    "x-rust-type": "ApplicationVersionFileCache",
+    "x-wire-order": [
+      "protocol",
+      "entries"
+    ]
+  },
+  "properties": {
+    "protocol": {
+      "type": "string"
+    },
+    "entries": {
+      "elements": {
+        "ref": "entry"
+      },
+      "metadata": {
+        "x-empty": "emit"
+      }
+    }
+  },
+  "definitions": {
+    "consulted": {
+      "metadata": {
+        "description": "One path the search tested. An absent file is recorded too: it must still be absent for the entry to be a hit.",
+        "x-wire-order": [
+          "path",
+          "modified",
+          "size"
+        ]
+      },
+      "properties": {
+        "path": {
+          "type": "string"
+        }
+      },
+      "optionalProperties": {
+        "modified": {
+          "type": "string",
+          "metadata": {
+            "description": "The modification time in nanoseconds since the Unix epoch, as a decimal string; absent when the file did not exist.",
+            "x-default": null
+          }
+        },
+        "size": {
+          "type": "string",
+          "metadata": {
+            "description": "The size in bytes as a decimal string; absent when the file did not exist.",
+            "x-default": null
+          }
+        }
+      }
+    },
+    "selection": {
+      "metadata": {
+        "x-wire-order": [
+          "slot",
+          "path",
+          "authored",
+          "unused"
+        ]
+      },
+      "properties": {
+        "slot": {
+          "type": "string"
+        },
+        "path": {
+          "type": "string"
+        },
+        "authored": {
+          "type": "string"
+        }
+      },
+      "optionalProperties": {
+        "unused": {
+          "elements": {
+            "type": "string"
+          },
+          "metadata": {
+            "x-empty": "omit",
+            "description": "The versions a .tool-versions line listed after the one that was taken."
+          }
+        }
+      }
+    },
+    "entry": {
+      "metadata": {
+        "x-wire-order": [
+          "directory",
+          "stop",
+          "declared",
+          "consulted",
+          "found",
+          "faults",
+          "used"
+        ]
+      },
+      "properties": {
+        "directory": {
+          "type": "string"
+        },
+        "declared": {
+          "type": "string",
+          "metadata": {
+            "description": "A fingerprint of the declared version-file rows the entry was resolved against; a change invalidates it."
+          }
+        },
+        "consulted": {
+          "elements": {
+            "ref": "consulted"
+          },
+          "metadata": {
+            "x-empty": "emit"
+          }
+        },
+        "found": {
+          "elements": {
+            "ref": "selection"
+          },
+          "metadata": {
+            "x-empty": "emit"
+          }
+        },
+        "used": {
+          "type": "string",
+          "metadata": {
+            "description": "When the entry was last a hit, RFC 3339, so the cache can be bounded by least-recent use."
+          }
+        }
+      },
+      "optionalProperties": {
+        "stop": {
+          "type": "string",
+          "metadata": {
+            "description": "The project root the upward search stopped at, when the directory was inside a project.",
+            "x-default": null
+          }
+        },
+        "faults": {
+          "elements": {
+            "type": "string"
+          },
+          "metadata": {
+            "x-empty": "omit",
+            "description": "A version file that could not be read or whose line is neither a requirement nor a channel; reported, never fatal."
+          }
+        }
+      }
+    }
+  }
+}

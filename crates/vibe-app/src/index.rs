@@ -12,7 +12,7 @@ use std::path::PathBuf;
 use specmark::spec;
 use vibe_core::manifest::{
     IconDecl, InstallerMethod, InstallerOptionDecl, LauncherDecl, PublicCommandDecl,
-    RequirementScope, ShellInterpreter, StepPhase,
+    RequirementScope, ShellInterpreter, StepPhase, VersionFileDecl,
 };
 use vibe_wire::generated::application::e5::index as wire;
 
@@ -192,6 +192,15 @@ pub struct Installation {
     /// The payload directories this installation asks to be exposed whole
     /// on PATH, in search order (`PROP-059#path-directories`).
     pub path_dirs: Vec<String>,
+    /// The version files this installation's package declares
+    /// (`PROP-075#VERSION-FILE-FORMATS`). Persisted **beside** the index in
+    /// `applications/version-files.json`, not inside it, so a home that
+    /// declares one does not force a new index protocol on PATH proxies
+    /// that cannot read it (`PROP-059#proxy-index-upgrade`): [`Index::load`]
+    /// fills this field from that sidecar and every publication rewrites it
+    /// from these records. [`Index::parse`], which has no home to read,
+    /// leaves it empty.
+    pub version_file: Vec<VersionFileDecl>,
     /// The authored commands of a method-form option.
     pub commands: AuthoredCommands,
     /// The chosen features (`PROP-065#features`).
@@ -323,7 +332,35 @@ impl Index {
             path: path.display().to_string(),
             reason,
         };
-        Self::parse_with_protocol(&bytes).map_err(invalid)
+        let (mut index, protocol) = Self::parse_with_protocol(&bytes).map_err(invalid)?;
+        // The declared version files live beside the index
+        // (`PROP-075#VERSION-FILE-FORMATS`); a key the sidecar names and the
+        // index does not is ignored, so the two cannot diverge.
+        let declared = crate::versionfile::Declared::load(settings);
+        for (key, record) in &mut index.installations {
+            if let Some((_, rows)) = declared.installations.get(key) {
+                record.version_file = rows.clone();
+            }
+        }
+        Ok((index, protocol))
+    }
+
+    /// The declared version files of these records, in the shape the sidecar
+    /// beside the index persists (`PROP-075#VERSION-FILE-FORMATS`).
+    pub(crate) fn declared_version_files(&self) -> crate::versionfile::Declared {
+        crate::versionfile::Declared {
+            installations: self
+                .installations
+                .iter()
+                .filter(|(_, record)| !record.version_file.is_empty())
+                .map(|(key, record)| {
+                    (
+                        key.clone(),
+                        (record.slot.clone(), record.version_file.clone()),
+                    )
+                })
+                .collect(),
+        }
     }
 
     /// Read the exact protocol's closed schema; loading never writes a migration.

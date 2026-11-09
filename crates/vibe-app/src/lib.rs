@@ -21,6 +21,7 @@
 
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-059#library-first");
 
+mod activation;
 mod agents;
 mod alternatives;
 mod catalog;
@@ -53,7 +54,12 @@ mod session;
 mod settings;
 mod steps;
 mod storage;
+mod versionfile;
 
+pub use activation::{
+    Activation, ActivationRequest, ProjectRequirement, SlotSelection, Source as ActivationSource,
+    State as ActivationState, resolve as resolve_activation, slot_default,
+};
 pub use agents::{
     AgentDefinition, AgentError, AgentHooks, AgentNotice, AgentPrompt, AgentSource, AgentsConfig,
     ConsentPrompt, Delivery, ExternalAgent, Invocation, PLACEHOLDERS, ParkedStep, Placeholders,
@@ -144,6 +150,14 @@ pub use storage::{
     Availability, DEFAULT_LIBRARY, INSTALL_ROOT_LIBRARY, LIBRARY_MARKER, Library, LibraryMarker,
     Moved, Storage, StorageConfig, add as storage_add, attach as storage_attach, create_library,
     detach as storage_detach, gc as storage_gc, listing as storage_list, relocate as storage_move,
+};
+pub use versionfile::{
+    CACHE_PROTOCOL as VERSION_FILE_CACHE_PROTOCOL, Consulted as VersionFileConsulted,
+    Declared as DeclaredVersionFiles, Found as VersionFileFound, RequestKind,
+    Search as VersionFileSearch, ToolVersions, VERSION_FILES_PROTOCOL, VersionRequest,
+    cache_path as version_files_cache_path, clear_cache as clear_version_file_cache,
+    declared_path as declared_version_files_path, is_channel_name, plain_line,
+    resolve as resolve_version_files, search as search_version_files, tool_versions,
 };
 
 pub use operations::import_full;

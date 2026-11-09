@@ -296,6 +296,14 @@ impl SettingsRoot {
         self.root.join("cache").join("app-runs")
     }
 
+    /// `<home>/cache/version-files.json`: the version-file search's
+    /// resolution cache, keyed by the modification time and size of every
+    /// file consulted (`PROP-075#VERSION-FILE-FORMATS`). A pure cache —
+    /// deleting it costs one re-read.
+    pub fn version_files_cache_path(&self) -> PathBuf {
+        self.root.join("cache").join("version-files.json")
+    }
+
     /// `<settings>/agents.toml`, the agent hook registry (`PROP-064`). The
     /// caller reads it from the user home also when installing into a
     /// project home, so a project inherits the user's agents.

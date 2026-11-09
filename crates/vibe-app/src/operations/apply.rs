@@ -210,6 +210,7 @@ pub(super) fn apply(
             launchers,
             public_commands: option.public_commands.clone(),
             path_dirs: option.path_dirs.clone(),
+            version_file: selected.resolved.application.version_file.clone(),
             commands,
             features: plan.features.clone(),
             parameters: plan

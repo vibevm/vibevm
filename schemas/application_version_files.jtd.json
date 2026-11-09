@@ -1,0 +1,82 @@
+{
+  "metadata": {
+    "description": "The version files the installed applications of one home declare: the rows of [[application.version_file]] kept beside the application index, one entry per installation key, so activation and the prompt hook know which file names to look for without reading a package tree.",
+    "spec": {
+      "implements": "spec://org.vibevm.core/vibevm/common/PROP-075#VERSION-FILE-FORMATS"
+    },
+    "rustOptions": {
+      "package": "vibe_wire::application_version_files"
+    },
+    "x-rust-type": "ApplicationVersionFiles",
+    "x-wire-order": [
+      "protocol",
+      "installations"
+    ]
+  },
+  "properties": {
+    "protocol": {
+      "type": "string"
+    },
+    "installations": {
+      "values": {
+        "ref": "declaration"
+      },
+      "metadata": {
+        "x-empty": "emit"
+      }
+    }
+  },
+  "definitions": {
+    "row": {
+      "discriminator": "format",
+      "mapping": {
+        "plain": {
+          "metadata": {
+            "description": "A one-line version file named by the package; the declaration order of `names` breaks a tie inside one directory."
+          },
+          "properties": {
+            "names": {
+              "elements": {
+                "type": "string"
+              },
+              "metadata": {
+                "x-empty": "emit"
+              }
+            }
+          }
+        },
+        "tool-versions": {
+          "metadata": {
+            "description": "asdf's .tool-versions with this package's key."
+          },
+          "properties": {
+            "key": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    },
+    "declaration": {
+      "metadata": {
+        "x-wire-order": [
+          "slot",
+          "rows"
+        ]
+      },
+      "properties": {
+        "slot": {
+          "type": "string"
+        },
+        "rows": {
+          "elements": {
+            "ref": "row"
+          },
+          "metadata": {
+            "x-empty": "emit"
+          }
+        }
+      }
+    }
+  }
+}

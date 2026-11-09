@@ -42,6 +42,7 @@ fn sample() -> Index {
             launcher: "main".into(),
         }],
         path_dirs: Vec::new(),
+        version_file: Vec::new(),
         commands: AuthoredCommands::default(),
         features: Vec::new(),
         parameters: Default::default(),
@@ -67,6 +68,7 @@ fn sample() -> Index {
         portable: false,
         public_commands: Vec::new(),
         path_dirs: Vec::new(),
+        version_file: Vec::new(),
         commands: AuthoredCommands {
             uninstall: Some("sudo apt-get remove editor".into()),
             force_uninstall: Some("sudo apt-get purge editor".into()),

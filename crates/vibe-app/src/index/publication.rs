@@ -67,6 +67,10 @@ impl Index {
         bytes.push(b'\n');
         crate::proxies::before_publication(settings, self, image)?;
         write_atomic(&path, &bytes)?;
+        // Rewritten from these records on every publication, so an
+        // uninstalled key stops being declared without a second mechanism
+        // (`PROP-075#VERSION-FILE-FORMATS`).
+        self.declared_version_files().save(settings)?;
         crate::catalog::bump_revision(settings, event).map(|_| ())
     }
 }

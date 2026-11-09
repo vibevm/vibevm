@@ -29,6 +29,7 @@ fn record(name: &str, slot: &str, dirs: &[&str], root: &Path) -> Installation {
         launchers: Vec::new(),
         public_commands: Vec::new(),
         path_dirs: dirs.iter().map(|dir| (*dir).to_owned()).collect(),
+        version_file: Vec::new(),
         commands: AuthoredCommands::default(),
         features: Vec::new(),
         parameters: Default::default(),

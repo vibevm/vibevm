@@ -272,6 +272,10 @@ pub(super) fn installation_from_wire(record: wire::Installation) -> Result<Insta
             })
             .collect(),
         path_dirs: record.path_dirs,
+        // Not part of the index wire: the sidecar beside it carries the
+        // declared version files, and `Index::load` fills them in
+        // (`PROP-075#VERSION-FILE-FORMATS`).
+        version_file: Vec::new(),
         commands: AuthoredCommands {
             uninstall: record.commands.uninstall,
             force_uninstall: record.commands.force_uninstall,
