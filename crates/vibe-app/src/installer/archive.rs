@@ -1,6 +1,7 @@
-//! Zip and tar.gz payload extraction. Only plain files and directories with
-//! portable, non-traversing, case-unique relative names are accepted; links
-//! and special entries are refused.
+//! Zip and tar.gz payload extraction. Plain files and directories with
+//! portable, non-traversing, case-unique relative names are accepted, and
+//! so are symbolic links that stay inside the payload (`links`); hard
+//! links and special entries are refused.
 
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-059#installer-separation");
 
@@ -14,6 +15,9 @@ use vibe_core::manifest::is_windows_unsafe_component;
 
 use crate::error::InstallerError;
 
+mod links;
+pub use links::LinkMode;
+
 /// The archive container of an owned archive method.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 #[spec(documents = "spec://org.vibevm.core/vibevm/common/PROP-059#installer-separation")]
@@ -22,27 +26,57 @@ pub enum ArchiveFormat {
     TarGz,
 }
 
+/// What an extraction could not carry over as declared: one line per link
+/// the platform's [`LinkMode`] left out.
+#[derive(Debug, Clone, Default, PartialEq, Eq)]
+#[spec(documents = "spec://org.vibevm.core/vibevm/common/PROP-059#installer-separation")]
+pub struct Extracted {
+    pub notes: Vec<String>,
+}
+
 /// Extract `archive` into the new directory `destination`, then keep only
 /// `payload_root` (when declared) as the payload: the selected subtree is
-/// what `destination` holds on success.
+/// what `destination` holds on success. Links are made the platform's way
+/// ([`LinkMode::native`]).
 pub fn extract(
     archive: &Path,
     format: ArchiveFormat,
     payload_root: Option<&Path>,
     destination: &Path,
-) -> Result<(), InstallerError> {
+) -> Result<Extracted, InstallerError> {
+    extract_with(
+        archive,
+        format,
+        payload_root,
+        destination,
+        LinkMode::native(),
+    )
+}
+
+/// [`extract`] with an explicit [`LinkMode`], so both modes are testable
+/// on every platform.
+pub fn extract_with(
+    archive: &Path,
+    format: ArchiveFormat,
+    payload_root: Option<&Path>,
+    destination: &Path,
+    mode: LinkMode,
+) -> Result<Extracted, InstallerError> {
     let name = destination
         .file_name()
         .map(|name| name.to_string_lossy().into_owned())
         .unwrap_or_default();
     let unpacked = destination.with_file_name(format!("{name}.unpack"));
     fs::create_dir(&unpacked).map_err(|source| super::io("creating", &unpacked, source))?;
-    let result = unpack(archive, format, &unpacked).and_then(|files| {
+    let result = unpack(archive, format, &unpacked).and_then(|(files, found)| {
         if files == 0 {
             return Err(refuse("the archive contains no files"));
         }
-        let selected = match payload_root {
-            Some(root) => unpacked.join(portable_path(&root.to_string_lossy())?),
+        let base = payload_root
+            .map(|root| portable_path(&root.to_string_lossy()))
+            .transpose()?;
+        let selected = match &base {
+            Some(root) => unpacked.join(root),
             None => unpacked.clone(),
         };
         if !selected.is_dir() {
@@ -50,17 +84,26 @@ pub fn extract(
                 "the declared payload_root is not a directory of the archive",
             ));
         }
+        let notes = links::place(&selected, base.as_deref(), &found, mode)?;
         fs::rename(&selected, destination)
-            .map_err(|source| super::io("placing payload", destination, source))
+            .map_err(|source| super::io("placing payload", destination, source))?;
+        Ok(Extracted { notes })
     });
     let _ = fs::remove_dir_all(&unpacked);
     result
 }
 
-fn unpack(archive: &Path, format: ArchiveFormat, root: &Path) -> Result<usize, InstallerError> {
+/// Write every plain entry under `root`; links are collected, checked for
+/// names like files, and created only after all plain entries exist.
+fn unpack(
+    archive: &Path,
+    format: ArchiveFormat,
+    root: &Path,
+) -> Result<(usize, Vec<links::Link>), InstallerError> {
     let open = || File::open(archive).map_err(|source| super::io("opening", archive, source));
     let mut names = Names::default();
     let mut files = 0;
+    let mut found = Vec::new();
     match format {
         ArchiveFormat::Zip => {
             let mut zip = zip::ZipArchive::new(open()?)
@@ -79,8 +122,15 @@ fn unpack(archive: &Path, format: ArchiveFormat, root: &Path) -> Result<usize, I
                     names.check(&name, true)?;
                     continue;
                 }
+                if kind == Some(0o120000) {
+                    let path = names.check(&name, false)?;
+                    let size = entry.size();
+                    let target = link_target(&mut entry, size, &name)?;
+                    found.push(links::Link { path, name, target });
+                    continue;
+                }
                 if kind.is_some_and(|kind| kind != 0o100000) {
-                    return Err(refuse(&format!("`{name}` is a link or special entry")));
+                    return Err(refuse(&format!("`{name}` is a special entry")));
                 }
                 let path = names.check(&name, false)?;
                 let size = entry.size();
@@ -116,8 +166,20 @@ fn unpack(archive: &Path, format: ArchiveFormat, root: &Path) -> Result<usize, I
                     names.check(&name, true)?;
                     continue;
                 }
+                if kind == tar::EntryType::Symlink {
+                    let path = names.check(&name, false)?;
+                    let target = entry
+                        .link_name()
+                        .map_err(|error| refuse(&format!("unreadable tar link: {error}")))?
+                        .ok_or_else(|| refuse(&format!("link `{name}` has no target")))?
+                        .to_str()
+                        .ok_or_else(|| refuse(&format!("link `{name}` target is not UTF-8")))?
+                        .to_owned();
+                    found.push(links::Link { path, name, target });
+                    continue;
+                }
                 if !kind.is_file() {
-                    return Err(refuse(&format!("`{name}` is a link or special entry")));
+                    return Err(refuse(&format!("`{name}` is a hard link or special entry")));
                 }
                 let path = names.check(&name, false)?;
                 let size = entry.size();
@@ -127,7 +189,20 @@ fn unpack(archive: &Path, format: ArchiveFormat, root: &Path) -> Result<usize, I
             }
         }
     }
-    Ok(files)
+    Ok((files, found))
+}
+
+/// A zip link stores its target as the entry's contents.
+fn link_target(input: &mut impl Read, size: u64, name: &str) -> Result<String, InstallerError> {
+    if size > links::MAX_TARGET_BYTES {
+        return Err(refuse(&format!("link `{name}` has an oversized target")));
+    }
+    let mut target = String::new();
+    input
+        .take(links::MAX_TARGET_BYTES)
+        .read_to_string(&mut target)
+        .map_err(|_| refuse(&format!("link `{name}` target is not UTF-8")))?;
+    Ok(target)
 }
 
 /// Duplicate and case-conflict detection across all entries.
@@ -238,128 +313,4 @@ fn refuse(reason: &str) -> InstallerError {
 }
 
 #[cfg(test)]
-mod tests {
-    use super::*;
-    use std::io::Write;
-    use zip::write::SimpleFileOptions;
-
-    fn zip_with(entries: &[(&str, &[u8])]) -> (tempfile::TempDir, PathBuf) {
-        let dir = tempfile::tempdir().unwrap();
-        let path = dir.path().join("payload.zip");
-        let mut zip = zip::ZipWriter::new(File::create(&path).unwrap());
-        for (name, bytes) in entries {
-            zip.start_file(*name, SimpleFileOptions::default().unix_permissions(0o755))
-                .unwrap();
-            zip.write_all(bytes).unwrap();
-        }
-        zip.finish().unwrap();
-        (dir, path)
-    }
-
-    #[test]
-    fn zip_payload_root_is_selected() {
-        let (dir, archive) = zip_with(&[("app/bin/tool", b"tool"), ("app/README", b"r")]);
-        let destination = dir.path().join("out");
-        extract(
-            &archive,
-            ArchiveFormat::Zip,
-            Some(Path::new("app")),
-            &destination,
-        )
-        .unwrap();
-        assert_eq!(fs::read(destination.join("bin/tool")).unwrap(), b"tool");
-        assert!(!dir.path().join("out.unpack").exists());
-    }
-
-    #[test]
-    fn unsafe_entries_are_refused() {
-        for entries in [
-            vec![("../escape", b"x".as_slice())],
-            vec![("a/CON", b"x".as_slice())],
-            vec![
-                ("Bin/tool", b"x".as_slice()),
-                ("bin/other", b"y".as_slice()),
-            ],
-            vec![("c:/x", b"x".as_slice())],
-        ] {
-            let (dir, archive) = zip_with(&entries);
-            let destination = dir.path().join("out");
-            assert!(
-                extract(&archive, ArchiveFormat::Zip, None, &destination).is_err(),
-                "{entries:?}"
-            );
-            assert!(!destination.exists());
-        }
-    }
-
-    #[test]
-    fn tar_gz_links_are_refused_and_files_extract() {
-        let dir = tempfile::tempdir().unwrap();
-        let path = dir.path().join("payload.tar.gz");
-        let encoder = flate2::write::GzEncoder::new(
-            File::create(&path).unwrap(),
-            flate2::Compression::fast(),
-        );
-        let mut tar = tar::Builder::new(encoder);
-        let mut header = tar::Header::new_gnu();
-        header.set_size(4);
-        header.set_mode(0o755);
-        header.set_cksum();
-        tar.append_data(&mut header, "bin/tool", b"tool".as_slice())
-            .unwrap();
-        tar.into_inner().unwrap().finish().unwrap();
-        let destination = dir.path().join("out");
-        extract(&path, ArchiveFormat::TarGz, None, &destination).unwrap();
-        assert_eq!(fs::read(destination.join("bin/tool")).unwrap(), b"tool");
-
-        let linked = dir.path().join("link.tar.gz");
-        let encoder = flate2::write::GzEncoder::new(
-            File::create(&linked).unwrap(),
-            flate2::Compression::fast(),
-        );
-        let mut tar = tar::Builder::new(encoder);
-        let mut header = tar::Header::new_gnu();
-        header.set_entry_type(tar::EntryType::Symlink);
-        header.set_size(0);
-        header.set_cksum();
-        tar.append_link(&mut header, "bin/evil", "/etc/passwd")
-            .unwrap();
-        tar.into_inner().unwrap().finish().unwrap();
-        assert!(
-            extract(
-                &linked,
-                ArchiveFormat::TarGz,
-                None,
-                &dir.path().join("out2")
-            )
-            .is_err()
-        );
-
-        // A PAX global header, as GitHub's tarballs carry, is metadata and
-        // never refused as a special entry.
-        let pax = dir.path().join("pax.tar.gz");
-        let encoder =
-            flate2::write::GzEncoder::new(File::create(&pax).unwrap(), flate2::Compression::fast());
-        let mut tar = tar::Builder::new(encoder);
-        let mut header = tar::Header::new_ustar();
-        header.set_entry_type(tar::EntryType::XGlobalHeader);
-        header.set_size(20);
-        header.set_cksum();
-        tar.append_data(
-            &mut header,
-            "pax_global_header",
-            b"52 comment=abcdef12\n".as_slice(),
-        )
-        .unwrap();
-        let mut header = tar::Header::new_gnu();
-        header.set_size(4);
-        header.set_mode(0o644);
-        header.set_cksum();
-        tar.append_data(&mut header, "repo-1.0/README", b"read".as_slice())
-            .unwrap();
-        tar.into_inner().unwrap().finish().unwrap();
-        let out3 = dir.path().join("out3");
-        extract(&pax, ArchiveFormat::TarGz, None, &out3).unwrap();
-        assert_eq!(fs::read(out3.join("repo-1.0/README")).unwrap(), b"read");
-    }
-}
+mod tests;

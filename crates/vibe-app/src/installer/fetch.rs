@@ -101,7 +101,7 @@ pub(crate) fn fetch_verified(
                 .build()
                 .and_then(|client| client.get(source).send())
                 .and_then(reqwest::blocking::Response::error_for_status)
-                .map_err(|error| fetch_error(error.to_string()))?;
+                .map_err(|error| fetch_error(with_causes(&error)))?;
             let announced = response.content_length();
             (Box::new(response), announced)
         }
@@ -244,13 +244,32 @@ fn managed_error(
             return InstallerError::Cancelled(vibe_core::cancellation::Cancelled);
         }
         HttpGetError::Refused(refusal) => return InstallerError::ContactRefused(refusal),
-        HttpGetError::Transport(error) => error.without_url().to_string(),
+        HttpGetError::Transport(error) => with_causes(&error.without_url()),
         HttpGetError::Io(error) => error.to_string(),
     };
     InstallerError::Fetch {
         source_ref: vibe_core::progress::transfer::safe_remote(source),
         reason,
     }
+}
+
+/// The error and every cause behind it, `: `-joined. An HTTP client's own
+/// message is only the operation ("error sending request"); what went
+/// wrong — a reset during the TLS handshake, a refused connection — is in
+/// its causes (`PROP-059#installer-separation`: the failure names its
+/// cause). A cause whose text the message already carries is not repeated.
+fn with_causes(error: &dyn std::error::Error) -> String {
+    let mut text = error.to_string();
+    let mut cause = error.source();
+    while let Some(next) = cause {
+        let part = next.to_string();
+        if !part.is_empty() && !text.contains(&part) {
+            text.push_str(": ");
+            text.push_str(&part);
+        }
+        cause = next.source();
+    }
+    text
 }
 
 fn shown_source(source: &str, watch: &FetchWatch<'_>) -> String {
@@ -293,6 +312,38 @@ mod tests {
             }
         });
         format!("http://{address}/mirror/payload.bin")
+    }
+
+    /// A connection the server closes without an answer is reported with
+    /// the cause the HTTP client only carries in its error chain, not as
+    /// the bare "error sending request".
+    #[test]
+    fn a_failed_request_names_its_cause() {
+        let listener = TcpListener::bind("127.0.0.1:0").unwrap();
+        let address = listener.local_addr().unwrap();
+        std::thread::spawn(move || {
+            for stream in listener.incoming().filter_map(Result::ok) {
+                drop(stream);
+            }
+        });
+        let home = tempfile::tempdir().unwrap();
+        let source = format!("http://{address}/payload.bin");
+        let error = fetch_verified(
+            &source,
+            &"0".repeat(64),
+            home.path(),
+            &home.path().join("out"),
+            false,
+            &FetchWatch::default(),
+        )
+        .unwrap_err();
+        let InstallerError::Fetch { reason, .. } = error else {
+            panic!("expected a fetch failure, got {error:?}");
+        };
+        let (_, after) = reason
+            .split_once("error sending request")
+            .unwrap_or_else(|| panic!("unexpected reason: {reason}"));
+        assert!(after.contains(": "), "the cause is missing: {reason}");
     }
 
     /// A remapped input is journaled as fetched from the mirror, naming

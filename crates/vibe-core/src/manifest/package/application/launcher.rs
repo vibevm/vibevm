@@ -32,6 +32,47 @@ pub const MENU_CATEGORIES: [&str; 13] = [
 /// with it (`%f`, `%F`, `%u`, `%U` of a desktop entry).
 pub const ARG_PLACEHOLDERS: [&str; 4] = ["{file}", "{files}", "{url}", "{urls}"];
 
+/// The prefix of a launcher `executable` that names a command resolved on
+/// PATH when the launcher runs, instead of a file in the installed payload
+/// (`PROP-065#launcher-command`). The same spelling a step's
+/// `needs = ["command:NAME"]` uses.
+pub const LAUNCHER_COMMAND_PREFIX: &str = "command:";
+
+/// The command a `command:NAME` executable names, or `None` when the
+/// executable is an ordinary payload-relative template.
+///
+/// ```
+/// use vibe_core::manifest::launcher_command;
+///
+/// assert_eq!(launcher_command("command:node"), Some("node"));
+/// assert_eq!(launcher_command("$app_bin/node"), None);
+/// ```
+pub fn launcher_command(executable: &str) -> Option<&str> {
+    executable.strip_prefix(LAUNCHER_COMMAND_PREFIX)
+}
+
+/// Whether `name` is a bare command name: nonempty, no directory
+/// separator, no template variable, no whitespace and no control
+/// character. A launcher command is looked up on PATH, so it may never
+/// carry a path of its own.
+///
+/// ```
+/// use vibe_core::manifest::is_launcher_command_name;
+///
+/// assert!(is_launcher_command_name("node"));
+/// assert!(!is_launcher_command_name("bin/node"));
+/// assert!(!is_launcher_command_name("$app_bin"));
+/// assert!(!is_launcher_command_name(""));
+/// ```
+pub fn is_launcher_command_name(name: &str) -> bool {
+    !name.is_empty()
+        && !name
+            .chars()
+            .any(|ch| matches!(ch, '/' | '\\' | '$' | ':') || ch.is_whitespace() || ch.is_control())
+        && name != "."
+        && name != ".."
+}
+
 /// What a launcher opens: a window of its own, a full-screen terminal
 /// program, or a console program that reads arguments and prints.
 ///

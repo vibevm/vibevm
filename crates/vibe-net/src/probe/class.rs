@@ -131,7 +131,9 @@ impl FailureClass {
             Self::NameMismatch => {
                 "the certificate is for another name: use the host name the certificate names, or ask the server's owner to fix it"
             }
-            Self::Tls => "check the server's TLS configuration and the system clock",
+            Self::Tls => {
+                "check the server's TLS configuration and the system clock; a connection closed during the handshake usually means a filter on this network refuses the host: configure `[proxy]`, or take the file from an artifact drop"
+            }
             Self::HttpClient => "check the URL and whether it needs a token",
             Self::HttpServer => "the server failed; retry later or ask its owner",
             Self::Redirect => "download the final URL directly",

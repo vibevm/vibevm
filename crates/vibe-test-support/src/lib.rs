@@ -156,6 +156,10 @@ impl UserScratch {
         cmd.env(vibe_core::settings::SETTINGS_DIR_ENV, &self.settings);
         cmd.env(REGISTRY_CACHE_ENV, &self.cache);
         cmd.env(SEARCH_CACHE_ENV, &self.search_cache);
+        // An install root inherited from the developer's shell would move
+        // every application command out of this scratch (PROP-019
+        // `#install-root`); a test that wants one sets it on the command.
+        cmd.env_remove("VIBEVM_INSTALL_ROOT");
         cmd
     }
 

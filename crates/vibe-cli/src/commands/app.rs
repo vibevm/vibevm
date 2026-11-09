@@ -387,6 +387,11 @@ pub fn run(
                 ctx.emit_json(&listing)?;
             } else {
                 print_list(&listing, ctx.is_quiet());
+                if let home::AppHome::User(settings) = &app_home
+                    && !ctx.is_quiet()
+                {
+                    println!("\n{}", views::places(settings).join("\n"));
+                }
             }
             Ok(None)
         }

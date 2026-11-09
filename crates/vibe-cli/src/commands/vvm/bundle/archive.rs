@@ -25,10 +25,13 @@ use source_extract::extract_source_archive;
 pub(super) use source_extract::{collision_key, safe_source_path, special_file_mode};
 #[path = "file_verify.rs"]
 mod file_verify;
+#[path = "unpacked.rs"]
+mod unpacked;
 use file_verify::{
     copy_and_hash_bounded, copy_bounded, hash_regular_exact, open_hashed_regular_exact,
     read_regular_bounded,
 };
+pub(in crate::commands::vvm) use unpacked::{UnpackedRequest, import_unpacked};
 
 use super::super::model::{InstallRecord, Kind, Origin, Profile, VersionId};
 use super::super::placer;
@@ -39,7 +42,7 @@ const README_FILENAME: &str = "README.md";
 const MAX_DOCUMENT_BYTES: u64 = 4 * 1024 * 1024;
 
 #[derive(Debug)]
-pub(super) struct InstallOutcome {
+pub(in crate::commands::vvm) struct InstallOutcome {
     pub record: InstallRecord,
     pub home: PathBuf,
     pub reused: bool,

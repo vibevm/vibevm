@@ -137,10 +137,31 @@ fn store(ctx: &output::Context, mut table: SelfConfig) -> Result<()> {
     // editor is not allowed to forget it.
     table.install_root = config.self_source.install_root.clone();
     config.self_source = table;
-    let resolved = release_source::resolve(None, &config, Some(&path))?;
+    release_source::resolve(None, &config, Some(&path))?;
     config
         .save_to(&path)
         .with_context(|| format!("writing `{}`", path.display()))?;
+    // What is in effect now is the user's file over the applied site
+    // profile (`PROP-019#site-profile`): after a reset the site's `[self]`
+    // decides again, and the report names it, not the built-in default.
+    let site_path = vibe_core::settings::site_profile_path();
+    let layers = crate::commands::vvm::site::ConfigLayers::load(
+        site_path.as_deref(),
+        &mut Vec::new(),
+        &mut Vec::new(),
+    );
+    let resolved = layers.release(None)?;
+    if let (
+        Some(site),
+        SourceOrigin::SelfTable(Some(from)) | SourceOrigin::ArtifactsDrop(Some(from)),
+    ) = (site_path.as_deref(), &resolved.origin)
+        && from == site
+    {
+        ctx.hint(
+            "the applied site profile decides the release source; `vibe self source set` \
+             overrides it for this user, `vibe self apply --remove` removes the profile",
+        );
+    }
     if matches!(
         release_source::active(),
         Ok(EffectiveReleaseSource {

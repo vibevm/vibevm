@@ -65,3 +65,38 @@ fn a_plain_error_is_its_own_headline() {
     assert_eq!(refusal.headline, "outer: inner");
     assert!(refusal.fix.is_empty() && refusal.see.is_none());
 }
+
+#[test]
+fn a_cause_behind_a_bare_tail_still_reaches_the_why_and_fixes_are_not_repeated() {
+    // The shape of a drop miss whose declared origin source policy excludes
+    // (`PROP-066#drops`, `PROP-073#HTTP-ADMISSION-LAW`): the origin's
+    // refusal sits behind a cause that is only a tail, and both causes carry
+    // the same installer-source fix.
+    let err = anyhow::anyhow!(
+        "step_failed: step `codkit` (archive) failed \
+         (violates spec://s#failure; fix: correct the cause below): \
+         fetching `https://github.com/o/r/a.tar.gz` failed: the drop holds no `a.tar.gz` \
+         (violates spec://s#drops; `vibe artifacts where` prints the expected locations) \
+         (violates spec://s#source; fix: check the URL or the package-relative path); \
+         declared origin: excluded HTTP endpoint https://github.com \
+         (violates spec://s#admission; fix: use an admitted HTTP endpoint) \
+         (violates spec://s#source; fix: check the URL or the package-relative path)"
+    );
+    let refusal = refusal_of(&err);
+    assert_eq!(refusal.code.as_deref(), Some("step_failed"));
+    assert_eq!(
+        refusal.why.as_deref(),
+        Some(
+            "fetching `https://github.com/o/r/a.tar.gz` failed: the drop holds no `a.tar.gz`; \
+             declared origin: excluded HTTP endpoint https://github.com"
+        )
+    );
+    assert_eq!(
+        refusal.fix,
+        [
+            "check the URL or the package-relative path",
+            "use an admitted HTTP endpoint",
+            "correct the cause below"
+        ]
+    );
+}

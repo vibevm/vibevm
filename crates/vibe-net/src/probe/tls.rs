@@ -3,7 +3,6 @@
 //! set accepted it.
 
 use super::der::summarize;
-use super::hop::io_class;
 use super::*;
 use rustls::client::WebPkiServerVerifier;
 use rustls::client::danger::{HandshakeSignatureValid, ServerCertVerified, ServerCertVerifier};
@@ -159,12 +158,8 @@ pub(super) fn handshake(
             Some(rustls::Error::InvalidCertificate(CertificateError::UnknownIssuer)) => fail(
                 FailureClass::UntrustedCertificate,
                 format!(
-                    "unable to get local issuer certificate: the chain ends at `{issuer}`, which neither the system store{} trusts",
-                    if extra.is_some() {
-                        " nor `[proxy] ca_file`"
-                    } else {
-                        ""
-                    }
+                    "unable to get local issuer certificate: the chain ends at `{issuer}`, {}",
+                    untrusted_by(extra.is_some())
                 ),
             ),
             Some(rustls::Error::InvalidCertificate(
@@ -177,7 +172,7 @@ pub(super) fn handshake(
                 ),
             ),
             Some(other) => fail(FailureClass::Tls, other.to_string()),
-            None => fail(io_class(&error), format!("TLS handshake: {error}")),
+            None => handshake_io_failure(&error),
         };
         return Err(Failure {
             detail: if summaries.is_empty() {
@@ -239,4 +234,79 @@ fn attribute(
         return Some(TrustSource::CaFile);
     }
     None
+}
+
+/// Who refused the issuer an untrusted chain ends at: the system store, and
+/// `[proxy] ca_file` when one is configured.
+fn untrusted_by(ca_file: bool) -> &'static str {
+    if ca_file {
+        "which neither the system store nor `[proxy] ca_file` trusts"
+    } else {
+        "which the system store does not trust"
+    }
+}
+
+/// The failure of a handshake the transport ended, after the TCP connection
+/// itself was made: a timeout stays a timeout; a reset or an early close is
+/// the TLS phase's, since the server or a filter on the path refused the
+/// session for this name (PROP-068 `#dl`). It is not a refused connection.
+fn handshake_io_failure(error: &std::io::Error) -> Failure {
+    use std::io::ErrorKind;
+    match error.kind() {
+        ErrorKind::TimedOut | ErrorKind::WouldBlock => fail(
+            FailureClass::ConnectTimeout,
+            format!("TLS handshake: {error}"),
+        ),
+        ErrorKind::ConnectionReset
+        | ErrorKind::ConnectionAborted
+        | ErrorKind::UnexpectedEof
+        | ErrorKind::BrokenPipe => fail(
+            FailureClass::Tls,
+            format!(
+                "TLS handshake: the connection was closed before the handshake finished ({error}); \
+                 the server, or a filter on the network path, refused the session for this name"
+            ),
+        ),
+        _ => fail(FailureClass::Tls, format!("TLS handshake: {error}")),
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use std::io::{Error, ErrorKind};
+
+    #[test]
+    fn a_reset_during_the_handshake_is_a_tls_failure_not_a_refused_connection() {
+        for kind in [
+            ErrorKind::ConnectionReset,
+            ErrorKind::ConnectionAborted,
+            ErrorKind::UnexpectedEof,
+        ] {
+            let failure = handshake_io_failure(&Error::new(kind, "closed by the remote host"));
+            assert_eq!(failure.class, FailureClass::Tls, "{kind:?}");
+            assert!(
+                failure
+                    .detail
+                    .contains("closed before the handshake finished"),
+                "{}",
+                failure.detail
+            );
+        }
+    }
+
+    #[test]
+    fn the_untrusted_issuer_sentence_reads_with_and_without_a_ca_file() {
+        assert_eq!(untrusted_by(false), "which the system store does not trust");
+        assert_eq!(
+            untrusted_by(true),
+            "which neither the system store nor `[proxy] ca_file` trusts"
+        );
+    }
+
+    #[test]
+    fn a_timeout_during_the_handshake_stays_a_timeout() {
+        let failure = handshake_io_failure(&Error::new(ErrorKind::TimedOut, "timed out"));
+        assert_eq!(failure.class, FailureClass::ConnectTimeout);
+    }
 }

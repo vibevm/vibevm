@@ -123,6 +123,49 @@ pub(super) fn install_from_dirs(
     Ok(PxOutcome::Unavailable { asset: name, tried })
 }
 
+/// Place the pinned px from a release unpacked by hand: its archive under
+/// the pinned name, beside the binary or in `tools/px/` there. Nothing else
+/// in the directory is read. Bytes that are not the pinned archive stop the
+/// command, as they do from any release source.
+pub(super) fn install_beside(store: &VersionStore, pin: &PxPin, dir: &Path) -> Result<PxOutcome> {
+    let Some(asset) = pinned_asset(pin) else {
+        return Ok(PxOutcome::NoTarget);
+    };
+    let name = pin.release_asset_name(asset);
+    let candidates = [dir.join(&name), dir.join("tools").join("px").join(&name)];
+    let Some(path) = candidates
+        .iter()
+        .find(|path| fs::symlink_metadata(path).is_ok_and(|meta| meta.is_file()))
+    else {
+        return Ok(PxOutcome::Unavailable {
+            asset: name,
+            tried: candidates
+                .iter()
+                .map(|path| path.display().to_string())
+                .collect(),
+        });
+    };
+    let root = store_root(store);
+    if let Some(program) = installed(&root, pin, asset) {
+        return Ok(PxOutcome::AlreadyInstalled(program));
+    }
+    let (file, _) = crate::commands::vvm::store::open_regular_no_follow(path)
+        .with_context(|| format!("reading `{}`", path.display()))?;
+    let mut bytes = Vec::new();
+    file.take(DISTRIBUTION_TOOL_ASSET_MAX_BYTES.saturating_add(1))
+        .read_to_end(&mut bytes)
+        .with_context(|| format!("reading `{}`", path.display()))?;
+    if bytes.len() as u64 > DISTRIBUTION_TOOL_ASSET_MAX_BYTES {
+        bail!("`{}` exceeds the px archive bound", path.display());
+    }
+    store.guard_mutation_path(&root)?;
+    let program = install_bytes(&root, pin, asset, &bytes)?;
+    Ok(PxOutcome::Installed {
+        program,
+        from: path.display().to_string(),
+    })
+}
+
 /// Verify `bytes` against the pin and unpack them into the store as
 /// `<root>/<version>/`, replacing an older copy only once the new one is
 /// complete. Returns the executable.

@@ -463,11 +463,11 @@ pub fn run(ctx: &output::Context, args: SearchArgs, env: SearchEnv) -> Result<()
 
     if ctx.is_quiet() {
         ctx.summary(&format!(
-            "vibe search: {} hit{} across {} registry{}",
+            "vibe search: {} hit{} across {} registr{}",
             hits.len(),
             if hits.len() == 1 { "" } else { "s" },
             searched.len(),
-            if searched.len() == 1 { "" } else { "s" },
+            if searched.len() == 1 { "y" } else { "ies" },
         ));
         return Ok(());
     }
@@ -545,11 +545,11 @@ pub fn run(ctx: &output::Context, args: SearchArgs, env: SearchEnv) -> Result<()
     }
     println!();
     ctx.summary(&format!(
-        "{} hit{} across {} registry{}",
+        "{} hit{} across {} registr{}",
         hits.len(),
         if hits.len() == 1 { "" } else { "s" },
         searched.len(),
-        if searched.len() == 1 { "" } else { "s" },
+        if searched.len() == 1 { "y" } else { "ies" },
     ));
     Ok(())
 }

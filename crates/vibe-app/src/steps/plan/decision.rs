@@ -181,7 +181,7 @@ fn need_met(
                 .iter()
                 .all(|source| source.url.is_none() || source_cached(input.settings, source)),
             StepKind::Archive { source, sha256, .. } | StepKind::Native { source, sha256, .. } => {
-                input_local(work, step, source, sha256)
+                input_local(input.settings, work, step, source, sha256)
             }
             _ => false,
         },

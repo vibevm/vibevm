@@ -123,7 +123,8 @@ pub(crate) fn run(cx: &StepContext<'_>, step: &StepDecl) -> Result<AuthoredComma
                     Ok(fetched)
                 })
                 .collect::<Result<Vec<_>, AppError>>()?;
-            source_build::lay_out(&cx.work.join("sources"), &fetched)?;
+            let notes = source_build::lay_out(&cx.work.join("sources"), &fetched)?;
+            report_notes(cx, &notes);
         }
         StepKind::Archive {
             format,
@@ -137,7 +138,7 @@ pub(crate) fn run(cx: &StepContext<'_>, step: &StepDecl) -> Result<AuthoredComma
                 ArchiveFormatDecl::Zip => ArchiveFormat::Zip,
                 ArchiveFormatDecl::TarGz => ArchiveFormat::TarGz,
             };
-            extract_into(
+            let notes = extract_into(
                 cx.work,
                 &step.id,
                 &file,
@@ -145,6 +146,7 @@ pub(crate) fn run(cx: &StepContext<'_>, step: &StepDecl) -> Result<AuthoredComma
                 payload_root.as_deref(),
                 &out,
             )?;
+            report_notes(cx, &notes);
         }
         StepKind::Recipe {
             interpreter,
@@ -318,8 +320,24 @@ fn verified_input(
     Ok(file)
 }
 
+/// Tell the step's log and progress what an extraction left out (an
+/// archive link this platform does not materialise).
+fn report_notes(cx: &StepContext<'_>, notes: &[String]) {
+    for note in notes {
+        if let Some(task) = cx.io.task {
+            task.diagnostic(vibe_core::progress::ProgressDiagnosticLevel::Warning, note);
+        }
+        if let Some(log) = cx.io.log {
+            use std::io::Write;
+            if let Ok(mut file) = fs::OpenOptions::new().create(true).append(true).open(log) {
+                let _ = writeln!(file, "note: {note}");
+            }
+        }
+    }
+}
+
 /// The first archive becomes `$VIBE_OUT`; a later one merges into it and
-/// may not overwrite an existing entry.
+/// may not overwrite an existing entry. Returns the extraction's notes.
 fn extract_into(
     work: &Path,
     id: &str,
@@ -327,31 +345,32 @@ fn extract_into(
     format: ArchiveFormat,
     payload_root: Option<&Path>,
     out: &Path,
-) -> Result<(), InstallerError> {
+) -> Result<Vec<String>, InstallerError> {
     let empty = fs::read_dir(out).map_or(true, |mut entries| entries.next().is_none());
     if empty {
         if out.exists() {
             fs::remove_dir(out).map_err(|source| io("clearing", out, source))?;
         }
-        return archive::extract(file, format, payload_root, out);
+        return Ok(archive::extract(file, format, payload_root, out)?.notes);
     }
     let unpacked = work.join(format!("unpack-{id}"));
     if unpacked.exists() {
         fs::remove_dir_all(&unpacked).map_err(|source| io("clearing", &unpacked, source))?;
     }
-    archive::extract(file, format, payload_root, &unpacked)?;
+    let notes = archive::extract(file, format, payload_root, &unpacked)?.notes;
     let entries = fs::read_dir(&unpacked).map_err(|source| io("reading", &unpacked, source))?;
     for entry in entries {
         let entry = entry.map_err(|source| io("reading", &unpacked, source))?;
         let target = out.join(entry.file_name());
-        if target.exists() {
+        if fs::symlink_metadata(&target).is_ok() {
             return Err(InstallerError::Archive {
                 reason: format!("`{}` already exists in $VIBE_OUT", target.display()),
             });
         }
         fs::rename(entry.path(), &target).map_err(|source| io("placing", &target, source))?;
     }
-    fs::remove_dir_all(&unpacked).map_err(|source| io("clearing", &unpacked, source))
+    fs::remove_dir_all(&unpacked).map_err(|source| io("clearing", &unpacked, source))?;
+    Ok(notes)
 }
 
 /// Copy a package-relative file or directory to `<base>/<to>`, both

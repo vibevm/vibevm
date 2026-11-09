@@ -423,7 +423,8 @@ pub struct VvmDoctorArgs {
     #[arg(long)]
     pub probe_login_shell: bool,
 
-    /// Diagnose the network route to URL (default `https://github.com/`):
+    /// Diagnose the network route to URL (default `https://gmail.com`, as
+    /// `vibe dl --test-proxy`):
     /// px present and started, `px --test`, `CONNECT` through the proxy,
     /// TLS with the trust set. Without this flag the diagnosis runs only
     /// when `[proxy]` configures a proxy or a CA file (PROP-068#proxy).

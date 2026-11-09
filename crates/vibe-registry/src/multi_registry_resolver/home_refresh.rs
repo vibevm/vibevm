@@ -15,16 +15,29 @@ use super::*;
 
 /// What [`MultiRegistryResolver::refresh_cached_clones`] did for one
 /// registry: the clones it brought to the newest release tag, the ones it
-/// left and why, and whether the registry's index answered its handshake
-/// during this explicit refresh (ordinary held-source replay does not
-/// initialize unrelated registry indexes).
+/// left and why, and how the registry's catalog was refreshed during this
+/// explicit refresh (ordinary held-source replay does not initialize
+/// unrelated registry indexes).
 #[derive(Debug, Clone)]
 pub struct RegistryRefresh {
     pub registry: String,
     pub registry_ref: String,
-    pub index: bool,
+    pub catalog: RefreshCatalog,
     pub clones: Vec<RefreshedEntry>,
     pub skipped: Vec<SkippedEntry>,
+}
+
+/// How one registry's catalog was refreshed.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum RefreshCatalog {
+    /// A per-package registry whose index answered its handshake.
+    Index,
+    /// A per-package registry without an index: its tags are the catalog.
+    Tags,
+    /// A `monorepo` registry: its one repository was fetched at `ref`, and
+    /// the tree (with its `_index/`) is the catalog (PROP-002
+    /// `#registry-type`).
+    Repository,
 }
 
 impl MultiRegistryResolver {
@@ -47,7 +60,11 @@ impl MultiRegistryResolver {
             let mut refresh = RegistryRefresh {
                 registry: reg.name().to_string(),
                 registry_ref: reg.org_ref().to_string(),
-                index: reg.discover_index()?.is_some(),
+                catalog: if reg.discover_index()?.is_some() {
+                    RefreshCatalog::Index
+                } else {
+                    RefreshCatalog::Tags
+                },
                 clones: Vec::new(),
                 skipped: Vec::new(),
             };
@@ -84,6 +101,22 @@ impl MultiRegistryResolver {
                 });
             }
             out.push(refresh);
+        }
+        // A monorepo's catalog is its one clone: fetching its branch is the
+        // whole refresh. The clone is brought up to date only when this
+        // resolver was opened without a freshness window
+        // ([`MultiRegistryResolver::open_refreshing`]).
+        for source in self.sources()? {
+            if let RegistrySource::Monorepo(mono) = source {
+                mono.registry()?;
+                out.push(RegistryRefresh {
+                    registry: mono.name.clone(),
+                    registry_ref: mono.refname.clone(),
+                    catalog: RefreshCatalog::Repository,
+                    clones: Vec::new(),
+                    skipped: Vec::new(),
+                });
+            }
         }
         Ok(out)
     }

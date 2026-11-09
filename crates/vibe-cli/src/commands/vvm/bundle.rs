@@ -21,9 +21,9 @@ use crate::cli::{ForcedKind, VvmBootstrapArgs, VvmInstallArgs, VvmReinstallArgs,
 #[path = "bundle/api.rs"]
 pub(crate) mod api;
 #[path = "bundle/archive.rs"]
-mod archive;
+pub(super) mod archive; // `self import` installs an unpacked release through it
 mod companions;
-mod px_lane;
+pub(super) mod px_lane;
 pub(super) use px_lane::{ensure_px_after_source_install as px_after_source, run_px_cmd as run_px};
 #[path = "bundle/lane.rs"]
 mod lane;

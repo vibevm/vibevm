@@ -312,3 +312,54 @@ fn icon_files_are_checked_against_the_package_tree() {
     assert!(check("icon = \"share/app.svg\"\n", "menu = true").is_empty());
     assert!(check("icon = \"share/none.svg\"\n", "")[0].contains("[application] icon"));
 }
+
+/// A launcher `executable` may name a command resolved on PATH at launch
+/// instead of a payload file (`PROP-065#launcher-command`): the name must
+/// be bare, and the template and containment rules do not apply to it.
+#[test]
+fn a_command_executable_must_name_a_bare_command() {
+    use crate::manifest::{is_launcher_command_name, launcher_command};
+
+    let with = |executable: &str| {
+        format!(
+            "{HEAD}{OPTION}{INSTALLATION}[[installer_options.launchers]]\n\
+             id = \"main\"\nname = \"Demo\"\nkind = \"command\"\nexecutable = \"{executable}\"\n"
+        )
+    };
+
+    let parsed = Manifest::parse_str(&with("command:node")).unwrap();
+    let launcher = &parsed.installer_options[0].launchers[0];
+    assert_eq!(launcher.executable, "command:node");
+    assert_eq!(launcher_command(&launcher.executable), Some("node"));
+    // The spelling survives a round trip through the manifest.
+    let again = Manifest::parse_str(&toml::to_string(&parsed).unwrap()).unwrap();
+    assert_eq!(
+        again.installer_options[0].launchers[0].executable,
+        "command:node"
+    );
+
+    // A payload path is not a command, and neither is a template or a
+    // name that could not be looked up on PATH.
+    for bad in [
+        "command:bin/node",
+        "command:../node",
+        "command:$app_bin",
+        "command:",
+        "command:a b",
+        "command:node:1",
+        "command:node\\exe",
+    ] {
+        let message = refused(&with(bad));
+        assert!(
+            message.contains("must name a bare command after `command:`"),
+            "{bad}: {message}"
+        );
+        assert!(message.contains("[[launchers]] `main`"), "{bad}: {message}");
+    }
+
+    // An ordinary executable keeps the template rules: an absolute literal
+    // path and a `..` escape are still refused there.
+    assert!(launcher_command("$app_bin/node").is_none());
+    assert!(refused(&with("/usr/bin/node")).contains("absolute"));
+    assert!(is_launcher_command_name("node") && !is_launcher_command_name("bin/node"));
+}

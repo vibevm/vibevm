@@ -14,7 +14,9 @@ use anyhow::Result;
 use sha2::{Digest, Sha256};
 use specmark::spec;
 use vibe_core::manifest::{StepKind, steps_of};
-use vibe_core::remap::drop::{bundle_file_name, package_lookup, release_dir, url_file_name};
+use vibe_core::remap::drop::{
+    bundle_file_name, package_lookup, release_dir, shown_path, url_file_name,
+};
 use vibe_wire::generated::artifacts_where_report::{
     ArtifactsWhereReport, DropStatus, InputWhere, ReleaseWhere,
 };
@@ -48,7 +50,7 @@ fn run_where(ctx: &output::Context, args: ArtifactsWhereArgs, offline: bool) -> 
     let report = ArtifactsWhereReport {
         protocol: PROTOCOL.to_owned(),
         release,
-        packages: drop.as_ref().map(|path| path.display().to_string()),
+        packages: drop.as_deref().map(shown_path),
         inputs,
     };
     if ctx.is_json() {
@@ -79,10 +81,7 @@ pub(crate) fn release_where_for(
         bundle_file_name(version, target),
     ];
     let (example_dir, files) = match &effective.source {
-        ReleaseSource::Localdir { path } => (
-            Some(release_dir(path, version).display().to_string()),
-            files,
-        ),
+        ReleaseSource::Localdir { path } => (Some(shown_path(&release_dir(path, version))), files),
         ReleaseSource::Nexus { base } => (Some(format!("{base}/v{version}")), files),
         _ => (None, Vec::new()),
     };
@@ -155,7 +154,7 @@ fn package_inputs(
                     file,
                     sha256: sha256.to_ascii_lowercase(),
                     url,
-                    searched: searched.iter().map(|p| p.display().to_string()).collect(),
+                    searched: searched.iter().map(|p| shown_path(p)).collect(),
                     status,
                 });
             }

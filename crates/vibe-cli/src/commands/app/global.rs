@@ -20,14 +20,21 @@ use super::wizard::{chooser, feature_chooser, license_prompt, parameter_prompt};
 use crate::cli::{AppChoiceArgs, AppStepArgs, InstallArgs, UninstallArgs, UpdateArgs};
 use crate::output;
 
-/// The current user's settings root, resolved once at this boundary.
+/// The current user's settings root, resolved once at this boundary, with
+/// the install root store its applications follow.
 pub(crate) fn settings_root() -> Result<SettingsRoot> {
     let root = vibe_core::settings::settings_dir().ok_or_else(|| {
         anyhow::anyhow!(
             "the Vibe settings root is unavailable; set VIBE_SETTINGS or make the user home resolvable"
         )
     })?;
-    Ok(SettingsRoot::new(&root))
+    let settings = SettingsRoot::new(&root);
+    // Applications follow the install root vibe itself lives under, so
+    // their commands sit beside vibe's shims (PROP-019 `#install-root`).
+    Ok(match crate::composition::app_install_store() {
+        Some(store) => settings.with_install_root(&store),
+        None => settings,
+    })
 }
 
 /// The `vibe-app-proxy` image shipped beside the running `vibe` executable;

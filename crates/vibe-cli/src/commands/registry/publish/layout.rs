@@ -99,6 +99,14 @@ pub(super) fn run(
         ctx.step("The branch moved during the publish; refetched and retried once.");
     }
     let what = match (outcome.dry_run, outcome.action) {
+        // An identical version may still refresh a stale `_index/`; the
+        // report says so instead of claiming nothing was written.
+        (true, LayoutAction::Unchanged) if outcome.index_refreshed => {
+            "already holds identical content; only the registry index would be refreshed"
+        }
+        (false, LayoutAction::Unchanged) if outcome.index_refreshed => {
+            "already holds identical content; only the registry index was refreshed"
+        }
         (_, LayoutAction::Unchanged) => "already holds identical content; nothing written",
         (true, LayoutAction::Created) => "would be created",
         (true, LayoutAction::Replaced) => "would be replaced",

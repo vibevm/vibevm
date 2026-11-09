@@ -247,9 +247,11 @@ fn named(mut served: super::ServedBy, input: &str) -> super::ServedBy {
 }
 
 /// `<sources>/<name>/` holds the extracted archive or the file itself; a
-/// stale directory of the same name is replaced.
-pub(crate) fn lay_out(sources: &Path, fetched: &[Fetched]) -> Result<(), InstallerError> {
+/// stale directory of the same name is replaced. Returns the notes of the
+/// extracted archives (links this platform could not materialise).
+pub(crate) fn lay_out(sources: &Path, fetched: &[Fetched]) -> Result<Vec<String>, InstallerError> {
     fs::create_dir_all(sources).map_err(|source| super::io("creating", sources, source))?;
+    let mut notes = Vec::new();
     for input in fetched {
         let destination = sources.join(&input.name);
         if destination.exists() {
@@ -257,7 +259,9 @@ pub(crate) fn lay_out(sources: &Path, fetched: &[Fetched]) -> Result<(), Install
                 .map_err(|source| super::io("clearing", &destination, source))?;
         }
         match input.extract {
-            Some(format) => archive::extract(&input.file, format, None, &destination)?,
+            Some(format) => {
+                notes.extend(archive::extract(&input.file, format, None, &destination)?.notes);
+            }
             None => {
                 fs::create_dir(&destination)
                     .map_err(|source| super::io("creating", &destination, source))?;
@@ -267,7 +271,7 @@ pub(crate) fn lay_out(sources: &Path, fetched: &[Fetched]) -> Result<(), Install
             }
         }
     }
-    Ok(())
+    Ok(notes)
 }
 
 /// The child that runs a package-relative recipe script.

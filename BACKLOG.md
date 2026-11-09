@@ -170,6 +170,46 @@ An **id**, the **`spec://…#ANCHOR`** it came from where one exists, a one-line
 
 ## P2 — the next wave drains from here {#p2}
 
+### B-242 — `vibe validate` на голом дереве пакета пишет `.vibe/lifecycle.*` в само дерево пакета {#b-242}
+
+| | |
+|---|---|
+| @fact:B242-ANCHOR **anchor** | правило отката `lease_root` в `crates/vibe-orchestrator/src/install/lease.rs:20-37` (spec://org.vibevm.core/vibevm/common/PROP-054#ENGINE-ALGORITHM); тесты, закрепляющие поведение, — `crates/vibe-cli/tests/cli_lifecycle_lease.rs:274,296,369` |
+| @fact:B242-LOCATOR **locator** | codkit challenge 2026-11-09: `vibe validate` в каталоге пакета вне какого-либо workspace берёт аренду жизненного цикла с корнем в самом каталоге (обнаружение workspace не удалось — откат на выбранный корень) и создаёт там `.vibe/lifecycle.*`; проверка манифеста, по смыслу только читающая, оставляет состояние в исходниках пакета, и оно попадает в его дерево (и в публикацию, если его не исключить) |
+| @fact:B242-SEVERITY **severity** | P2 — читающая команда загрязняет дерево пакета; автор пакета вынужден чистить или игнорировать `.vibe/` |
+| @fact:B242-DISPOSITION **disposition** | `open` — решение владельца: (a) `vibe validate` на голом дереве пакета делает только читающую проверку манифеста и никогда не входит в аренду жизненного цикла; (b) поправить PROP-054, чтобы дерево вне любого workspace получало собственный дом состояния на корень в пользовательском каталоге состояния |
+| @fact:B242-FILED **filed by** | worker, codkit challenge, 2026-11-09 |
+
+### B-241 — `vibe app list` в проекте показывает только домашний каталог проекта; общего вида с глобальными приложениями нет {#b-241}
+
+| | |
+|---|---|
+| @fact:B241-ANCHOR **anchor** | `crates/vibe-cli/src/commands/app/home.rs` (`select`, `choose`), `crates/vibe-cli/src/commands/app.rs` (`AppCommand::List`) |
+| @fact:B241-LOCATOR **locator** | codkit challenge 2026-11-09 (`campaigns/corporate-env-2026-11/LOG.md`): внутри каталога с `vibe.toml` `vibe app list` перечисляет только `vibevm/vibeopt`; глобальные приложения видны лишь при `-g`, который переключает дом, а не добавляет его. Проектный список не говорит, что в пользовательском доме есть установки, и вид «оба дома сразу» (как `vibe shell` кладёт на PATH обе `opt/bin`) отсутствует |
+| @fact:B241-SEVERITY **severity** | P2 — пользователь в проекте не видит, что глобальная команда (например `codkit`) установлена и лежит на PATH, и ищет её не там |
+| @fact:B241-DISPOSITION **disposition** | `open` — решить форму: строка-подсказка о глобальных установках в проектном списке, или флаг вида «оба дома» с колонкой дома |
+| @fact:B241-FILED **filed by** | worker, codkit challenge, 2026-11-09 |
+
+### B-240 — у платформы нет оси libc: на musl-хосте выбирается glibc-вариант {#b-240}
+
+| | |
+|---|---|
+| @fact:B240-ANCHOR **anchor** | выбор варианта установщика по `platform`/`arch` в `crates/vibe-app` (`HostFacts`, `select`) |
+| @fact:B240-LOCATOR **locator** | codkit challenge 2026-11-09: на musl-системе (Alpine) vibe определяет платформу `linux` и берёт glibc-вариант; пакет codkit поэтому кладёт musl-сборку под отдельную платформу `linux-musl`, которую нужно выбрать руками (`--platform linux-musl`) |
+| @fact:B240-SEVERITY **severity** | P2 — на musl-хосте установка по умолчанию даёт нерабочий бинарник, и каждый пакет изобретает своё имя платформы для musl |
+| @fact:B240-DISPOSITION **disposition** | `open` — добавить определение libc хоста и ось (`libc = "gnu" \| "musl"`) в выбор варианта, с откатом на вариант без оси |
+| @fact:B240-FILED **filed by** | worker, codkit challenge, 2026-11-09 |
+
+### B-239 — `needs = ["network"]` отказывает под `--offline`, даже когда все входы шага лежат в drop {#b-239}
+
+| | |
+|---|---|
+| @fact:B239-ANCHOR **anchor** | проверка `needs` шага установщика (`need_unmet`) в `crates/vibe-app/src/steps` |
+| @fact:B239-LOCATOR **locator** | codkit challenge 2026-11-09: шаг с `needs = ["network"]` (соглашение `org.vibevm.apps/mingw-w64`) отказывает под `--offline` с `need_unmet`, хотя каждый его вход уже лежит в `[artifacts] packages` drop или в кэше и сеть не понадобится; пакет codkit поэтому не объявляет потребность в сети вовсе |
+| @fact:B239-SEVERITY **severity** | P2 — честное объявление потребности в сети ломает офлайн-установку из drop в закрытой сети; авторы пакетов вынуждены её не объявлять |
+| @fact:B239-DISPOSITION **disposition** | `open` — считать `network` выполненной, когда каждый вход шага разрешается локально (drop, кэш, путь пакета), до запуска шага |
+| @fact:B239-FILED **filed by** | worker, codkit challenge, 2026-11-09 |
+
 ### B-238 — часть тестов vibe-app, vibe-registry и vvm красная на настоящем Windows {#b-238}
 
 | | |

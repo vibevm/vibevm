@@ -52,7 +52,19 @@ impl LauncherDecl {
                 ),
             ));
         }
-        if !self.executable.is_empty() {
+        if let Some(name) = launcher_command(&self.executable) {
+            // A command resolved on PATH at launch, not a payload file
+            // (`PROP-065#launcher-command`).
+            if !is_launcher_command_name(name) {
+                return Err(refuse(
+                    "executable",
+                    format!(
+                        "[[launchers]] `{}` executable `{}` must name a bare command after `{LAUNCHER_COMMAND_PREFIX}`, with no directory separator, template variable or whitespace",
+                        self.id, self.executable
+                    ),
+                ));
+            }
+        } else if !self.executable.is_empty() {
             validate_template(
                 &self.executable,
                 "executable",

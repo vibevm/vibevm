@@ -104,21 +104,22 @@ pub(super) fn truncate(s: &str, max: usize) -> String {
     }
 }
 
+/// The directory a search runs from. It need not be a project: outside one
+/// the machine layers (`~/.vibe/registry.toml` and the applied site profile)
+/// are the registries searched (PROP-002 `#registry-layers`).
 pub(super) fn resolve_project_root(path: &Path) -> Result<std::path::PathBuf> {
     let canonical = path
         .canonicalize()
         .with_context(|| format!("canonicalizing `{}`", path.display()))?;
-    let stripped = crate::commands::init::strip_unc_public(canonical);
-    if !stripped.join(Manifest::FILENAME).exists() {
-        bail!(
-            "no `vibe.toml` in `{}`; run `vibe init` first",
-            stripped.display()
-        );
-    }
-    Ok(stripped)
+    Ok(crate::commands::init::strip_unc_public(canonical))
 }
 
+/// The project manifest, or an empty one outside a project, so the
+/// project layer simply contributes no registries.
 pub(super) fn load_project_manifest(root: &Path) -> Result<Manifest> {
     let path = root.join(Manifest::FILENAME);
+    if !path.exists() {
+        return Ok(Manifest::default());
+    }
     Ok(Manifest::read(&path)?)
 }

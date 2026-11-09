@@ -15,6 +15,7 @@ use vibe_core::manifest::is_command_name;
 use crate::error::AppError;
 use crate::settings::{MutationLock, SettingsRoot, io};
 mod ownership;
+mod pointer;
 mod upgrade;
 pub(crate) use upgrade::{CapturedImage, before_publication, for_publication};
 
@@ -186,6 +187,29 @@ pub(crate) fn sync_captured(
                     name: name.clone(),
                     path: path.display().to_string(),
                 });
+            }
+        }
+        // Proxies in an install root's `bin` find this home through the
+        // store's pointer (`PROP-019#install-root`).
+        if !wanted.is_empty() && image.is_some() {
+            pointer::ensure(settings)?;
+        }
+        // Proxies written to `<settings>/opt/bin` before the applications
+        // followed an install root keep working where they are; a released
+        // name loses its copy there too, when it is still as vibe wrote it.
+        if settings.install_root().is_some() {
+            let legacy = settings.home_proxy_dir();
+            for name in previous
+                .difference(current)
+                .filter(|name| command_name(name))
+            {
+                let file = proxy_file_name(name);
+                let path = legacy.join(&file);
+                if upgrade::regular(settings, &path)?
+                    && inventory.classify(&file, &path, image_bytes).removable()
+                {
+                    fs::remove_file(&path).map_err(|e| io("removing", &path, e))?;
+                }
             }
         }
     }

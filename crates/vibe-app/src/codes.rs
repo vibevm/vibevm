@@ -77,6 +77,8 @@ codes!(STATE, StateError [] {
     UserLaunchers => "user_launchers_invalid", Failure, "the user launcher layer launchers.toml is invalid";
     UnknownLibrary => "unknown_library", Refusal, "the named storage library is not configured";
     LibraryUnavailable => "library_unavailable", Refusal, "the storage library is not attached";
+    InstallRootMoved => "install_root_moved", Refusal, "the install-root library is listed at an earlier install root";
+    InstallRootShared => "install_root_shared", Refusal, "the install root already serves another application home";
 });
 
 codes!(STORAGE, StorageError [] {

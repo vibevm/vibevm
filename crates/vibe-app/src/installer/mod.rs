@@ -29,6 +29,7 @@ use crate::error::InstallerError;
 pub(crate) use child::{ChildIo, Relay, Released, run_attached, run_child};
 pub use child::{Interrupt, StepLogs, StepPanel};
 pub(crate) use drop::{copy_from_drop, copy_from_drop_named};
+use drop::{declared_origin_refused, first_rung};
 pub(crate) use fetch::{TransferFacts, fetch_verified};
 
 /// What one fetch reports and refuses (`PROP-065#sizes`): the declared
@@ -154,6 +155,10 @@ pub(crate) fn fetch_located(
     let mut failures: Vec<String> = Vec::new();
     let mut all_offline = true;
     let mut first_exclusion = None;
+    // The path the reader would put the file at, remembered from the drop
+    // candidate itself, so the refusal of an excluded declared origin can
+    // name it instead of advising another endpoint (`PROP-066#drops`).
+    let mut drop_rung: Option<String> = None;
     for candidate in &candidates {
         let outcome = match &candidate.target {
             // One location rule (`PROP-066#locations`): a `file://` target
@@ -181,6 +186,9 @@ pub(crate) fn fetch_located(
                 let row = candidate.row.as_ref().and_then(|row| locator.row(row));
                 match row {
                     Some(row) if row.lookup == PathLookup::PackageDrop => {
+                        if drop_rung.is_none() {
+                            drop_rung = first_rung(root, artifact, sha256);
+                        }
                         copy_from_drop(root, artifact, sha256, destination)
                     }
                     // A mirror row joined the URL remainder onto its
@@ -227,7 +235,7 @@ pub(crate) fn fetch_located(
         if failures.is_empty() {
             return Err(InstallerError::ContactRefused(refusal));
         }
-        failures.push(format!("declared origin: {refusal}"));
+        failures.push(declared_origin_refused(&refusal, drop_rung.as_deref()));
     }
     // When every candidate was refused for the same reason — the network
     // posture — the posture is the answer, not a list of four URLs that

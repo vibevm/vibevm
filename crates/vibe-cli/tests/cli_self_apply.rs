@@ -369,6 +369,40 @@ fn an_invalid_profile_is_refused_naming_file_key_and_fix_and_writes_nothing() {
     assert_eq!(machine.bashrc(), None, "PATH untouched on refusal");
 }
 
+/// A profile written for Windows desktops validates on a Linux box: a UNC
+/// release drop is absolute (not "relative"), and both it and
+/// `[proxy] pac = "system"` are accepted with a warning that only a Windows
+/// host can use them (PROP-019 `#site-profile`).
+#[test]
+fn a_windows_profile_validates_here_with_windows_only_warnings() {
+    let machine = Machine::new();
+    machine.import_active();
+    let site = tempfile::tempdir().unwrap();
+    let body = corp_profile(site.path(), None).replace(
+        &format!("vibe = \"{}/releases\"", site.path().display()),
+        "vibe = '\\\\fileserver\\vibe\\releases'",
+    ) + "\n[proxy]\nmode = \"px\"\npac = \"system\"\n";
+    let profile = write_profile(site.path(), &body);
+    let output = machine
+        .cmd()
+        .args(["--unattended", "self", "apply", "--dry-run"])
+        .arg(&profile)
+        .output()
+        .unwrap();
+    let stderr = String::from_utf8_lossy(&output.stderr).into_owned();
+    assert!(output.status.success(), "{stderr}");
+    assert!(!stderr.contains("relative"), "{stderr}");
+    assert!(
+        stderr.contains("artifacts.vibe") && stderr.contains("only a Windows host reads it"),
+        "{stderr}"
+    );
+    assert!(
+        stderr.contains("proxy.pac") && stderr.contains("works only on Windows"),
+        "{stderr}"
+    );
+    assert!(!machine.settings("site-profile.toml").exists());
+}
+
 #[test]
 fn the_user_layer_beats_the_site_and_the_site_beats_the_defaults() {
     let machine = Machine::new();
@@ -475,7 +509,22 @@ fn the_user_layer_beats_the_site_and_the_site_beats_the_defaults() {
         !config.contains("releases"),
         "no site value leaks into config.toml: {config}"
     );
-    ok(&machine.run(&["--json", "self", "source", "reset"]));
+    // The reset reports what is in effect afterwards: the site's drop,
+    // named by the site profile — not the built-in GitHub default.
+    let reset = json(&machine.run(&["--json", "self", "source", "reset"]));
+    assert_eq!(reset["source"], "localdir", "{reset}");
+    assert!(
+        reset["from"]
+            .as_str()
+            .unwrap()
+            .contains("site-profile.toml"),
+        "{reset}"
+    );
+    let reset_text = ok(&machine.run(&["self", "source", "reset"]));
+    assert!(
+        reset_text.contains("release source: localdir") && !reset_text.contains("built-in"),
+        "{reset_text}"
+    );
     let source = json(&machine.run(&["--json", "self", "source", "show"]));
     assert_eq!(source["source"], "localdir");
 

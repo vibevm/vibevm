@@ -20,7 +20,7 @@ use crate::index::{
 use crate::installer;
 use crate::resolve::{ResolvedPackage, strip_verbatim};
 use crate::steps::{Plan, Run, RunFlags, Start, StepPaths};
-use crate::storage::{DEFAULT_LIBRARY, Storage};
+use crate::storage::Storage;
 
 use super::{Command, OperationContext};
 
@@ -302,10 +302,12 @@ fn place_owned(
         Location::Owned { library, directory } => Some((library.as_str(), directory.as_str())),
         Location::External { .. } => None,
     });
-    let library = selected
-        .library
-        .or(prior_owned.map(|(library, _)| library))
-        .unwrap_or(DEFAULT_LIBRARY);
+    // A new installation follows the install root; an update stays where
+    // its record is (`PROP-019#install-root`): nothing moves unasked.
+    let library = match selected.library.or(prior_owned.map(|(library, _)| library)) {
+        Some(library) => library,
+        None => storage.fresh_library()?,
+    };
     let library_root = storage.usable(library)?;
     let slot = &selected.resolved.application.id;
     let directory = format!("apps/{slot}/{}", selected.resolved.package.directory_name());

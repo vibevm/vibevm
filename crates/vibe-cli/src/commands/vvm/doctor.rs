@@ -72,8 +72,9 @@ fn instance_layout(
     let manifest = home.join("DISTRIBUTION.json").is_file();
     let manifest_root = record.distribution_manifest_sha256.is_some();
     let placement_manifest = home.join(".vvm-manifest.toml").is_file();
+    let bundled_index = vibe_index && !placement_manifest; // an import places companions too
     let modern = record.origin == Origin::Binary
-        && (record.source_path.is_some() || vibe_index || source || source_archive || manifest);
+        && (record.source_path.is_some() || bundled_index || source || source_archive || manifest);
     let (kind, integrity) = if record.origin == Origin::Binary && modern {
         (
             if manifest_root {

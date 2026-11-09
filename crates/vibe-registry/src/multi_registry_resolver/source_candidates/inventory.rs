@@ -171,10 +171,23 @@ fn global_inventory_error(error: &RegistryError) -> bool {
             ))
     )
 }
+/// Whether a registry's answer leaves the default version domain undecided,
+/// so a later registry may still decide it (PROP-002 §2.3.1). A registry the
+/// filtered walk reports as not holding the package at all — the aggregate
+/// `PackageNotFoundEverywhere` a monorepo or a per-package Git registry
+/// returns after its version list came back empty — is an absence exactly
+/// like `UnknownPackage`, never a decision.
 fn walks_past(source: &RegistrySource, strict: bool, error: &RegistryError) -> bool {
     matches!(
         error,
         RegistryError::UnknownPackage { .. } | RegistryError::NoMatchingVersion { .. }
+    ) || matches!(
+        error,
+        RegistryError::PackageNotFoundEverywhere { attempts, .. }
+            if attempts.iter().all(|attempt| matches!(
+                attempt.status,
+                WalkAttemptStatus::NotFound | WalkAttemptStatus::Public401
+            ))
     ) || matches!(
         error,
         RegistryError::ContactRefused(crate::ContactRefusal::ExcludedHost { .. })

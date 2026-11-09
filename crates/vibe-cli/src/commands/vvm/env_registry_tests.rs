@@ -206,3 +206,39 @@ fn the_install_root_keeps_its_kind_and_skips_identical_writes() {
     // The install root and the instance pointer are different variables.
     assert!(fresh.registry().value("VIBEVM_HOME").is_none());
 }
+
+/// The closed network that runs executables only from `C:\Work`: the PATH
+/// step puts `C:\Work\opt\bin` on the durable user PATH, and the user
+/// applications' PATH proxies go to that same directory, so an installed
+/// command is on the PATH the profile fixed (PROP-019 `#install-root`).
+#[test]
+#[specmark::spec(verifies = "spec://org.vibevm.core/vibevm/common/PROP-019#install-root")]
+fn application_commands_land_in_the_directory_the_path_step_made_durable() {
+    let persister = persister(&[("Path", r"C:\Tools", RegistryValueKind::ExpandString)]);
+    let base = Path::new(r"C:\Work");
+    let store = super::super::super::store::VersionStore::new(base.join("opt"));
+    persister.set_install_root(base).unwrap();
+    persister.ensure_on_path(&store.shim_dir()).unwrap();
+
+    let settings = vibe_app::SettingsRoot::new(Path::new(r"C:\Users\me\.vibe"))
+        .with_install_root(&base.join("opt"));
+    let commands = settings.proxy_dir();
+    assert_eq!(commands, store.shim_dir());
+    assert_eq!(
+        persister.inspect_path(&commands).path_entry,
+        PathEntryStatus::Correct,
+        "the applications' command directory is the durable PATH entry"
+    );
+    let raw = path_of(&persister).unwrap();
+    assert!(
+        raw.value.starts_with(&commands.display().to_string()),
+        "{raw:?}"
+    );
+    // Without an install root the applications stay in the settings root,
+    // which the PATH step did not touch.
+    let plain = vibe_app::SettingsRoot::new(Path::new(r"C:\Users\me\.vibe"));
+    assert_ne!(
+        persister.inspect_path(&plain.proxy_dir()).path_entry,
+        PathEntryStatus::Correct
+    );
+}

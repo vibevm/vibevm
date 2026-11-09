@@ -156,3 +156,37 @@ fn byte_locations_follow_one_rule() {
     ));
     assert!(ByteLocation::of_target(&RemapTarget::Deny).is_err());
 }
+
+/// A drop path a person typed with forward slashes is joined with the
+/// platform's own separator, so a rung carries both styles; the shown form
+/// settles on one (`PROP-066#drops`). The rewrite is parameterised, so the
+/// Windows spelling is asserted on every platform.
+#[test]
+fn a_shown_drop_rung_carries_one_separator_style() {
+    use super::drop::{shown_path, with_separator};
+
+    let mixed = r"C:/users/o/ck/drop\org.vibevm.codkit\codkit\1.0.0\file.zip";
+    assert_eq!(
+        with_separator(mixed, '\\'),
+        r"C:\users\o\ck\drop\org.vibevm.codkit\codkit\1.0.0\file.zip"
+    );
+    assert_eq!(
+        with_separator(mixed, '/'),
+        "C:/users/o/ck/drop/org.vibevm.codkit/codkit/1.0.0/file.zip"
+    );
+
+    // What the miss message and `vibe artifacts where` actually print: the
+    // first rung of the convention, in this platform's one style.
+    let rungs = package_lookup(
+        Path::new("C:/users/o/ck/drop"),
+        Some("org.vibevm.codkit/codkit@1.0.0"),
+        &"ab".repeat(32),
+        Some("file.zip"),
+    );
+    let shown = shown_path(&rungs[0]);
+    let foreign = if cfg!(windows) { '/' } else { '\\' };
+    assert!(
+        !shown.contains(foreign),
+        "one separator style throughout: {shown}"
+    );
+}

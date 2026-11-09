@@ -3,7 +3,7 @@
 //! template rules without depending on that crate.
 
 use std::collections::BTreeMap;
-use std::ffi::OsString;
+use std::ffi::{OsStr, OsString};
 use std::fs;
 use std::path::{Component, Path, PathBuf};
 
@@ -79,7 +79,7 @@ pub(crate) fn resolve(exe: &Path, command: &str, session: Option<&str>) -> Resul
         .find(|launcher| launcher.id == launcher_id)
         .ok_or_else(|| format!("provider `{key}` declares no launcher `{launcher_id}`"))?;
     let root = app_root(&home, &key, record)?;
-    expand_launcher(launcher, &root, &home)
+    expand_launcher(launcher, &root, &home, Some(exe))
 }
 
 /// `slot=key;slot=key`: whitespace trimmed, empty entries ignored, a later
@@ -103,20 +103,72 @@ pub(crate) fn parse_session(text: &str) -> Result<BTreeMap<String, String>, Stri
     Ok(choices)
 }
 
-/// The nearest ancestor of the proxy's own directory holding the index.
+/// The file an install root store holds naming the home of the proxies in
+/// its `bin` (`vibe_app::HOME_POINTER`).
+const HOME_POINTER: &str = "vibe-app-home.toml";
+
+#[derive(Deserialize)]
+struct Pointer {
+    schema: u32,
+    home: PathBuf,
+}
+
+/// The proxy's home: the nearest ancestor of its own directory holding the
+/// index, or — for a proxy in an install root's `<store>/bin` — the home
+/// the store's `vibe-app-home.toml` names.
 pub(crate) fn home_of(exe: &Path) -> Result<PathBuf, String> {
     let dir = exe
         .parent()
         .ok_or_else(|| format!("`{}` has no parent directory", exe.display()))?;
-    dir.ancestors()
-        .find(|candidate| candidate.join("applications").join("index.json").is_file())
-        .map(Path::to_path_buf)
-        .ok_or_else(|| {
-            format!(
-                "no application home holds applications/index.json above `{}`",
-                dir.display()
-            )
-        })
+    let store = dir.parent();
+    for candidate in dir.ancestors() {
+        if has_index(candidate) {
+            return Ok(candidate.to_path_buf());
+        }
+        if Some(candidate) == store {
+            let pointer = candidate.join(HOME_POINTER);
+            if let Some(home) = pointed_home(&pointer)? {
+                return Ok(home);
+            }
+        }
+    }
+    Err(format!(
+        "no application home holds applications/index.json above `{}`",
+        dir.display()
+    ))
+}
+
+fn has_index(home: &Path) -> bool {
+    home.join("applications").join("index.json").is_file()
+}
+
+/// The home a store pointer names; `None` when the store has no pointer.
+fn pointed_home(pointer: &Path) -> Result<Option<PathBuf>, String> {
+    let text = match fs::read_to_string(pointer) {
+        Ok(text) => text,
+        Err(error) if error.kind() == std::io::ErrorKind::NotFound => return Ok(None),
+        Err(error) => return Err(format!("reading `{}` failed: {error}", pointer.display())),
+    };
+    let parsed: Pointer = toml::from_str(&text).map_err(|error| {
+        format!(
+            "home pointer `{}` is unreadable: {error}",
+            pointer.display()
+        )
+    })?;
+    if parsed.schema != 1 || !parsed.home.is_absolute() {
+        return Err(format!(
+            "home pointer `{}` is not a schema-1 pointer to an absolute home",
+            pointer.display()
+        ));
+    }
+    if !has_index(&parsed.home) {
+        return Err(format!(
+            "home pointer `{}` names `{}`, which holds no applications/index.json",
+            pointer.display(),
+            parsed.home.display()
+        ));
+    }
+    Ok(Some(parsed.home))
 }
 
 fn read_index(home: &Path) -> Result<index::ApplicationIndex, String> {
@@ -243,10 +295,136 @@ pub(crate) struct Vars<'a> {
     pub vibe_home: &'a Path,
 }
 
+/// The prefix of a launcher `executable` naming a command resolved on PATH
+/// at launch instead of a payload file (`PROP-065#launcher-command`); the
+/// spelling of `vibe_core::manifest::LAUNCHER_COMMAND_PREFIX`.
+const COMMAND_PREFIX: &str = "command:";
+
+/// The default Windows `PATHEXT` when the environment carries none.
+const DEFAULT_PATHEXT: &str = ".COM;.EXE;.BAT;.CMD";
+
+/// The command a `command:NAME` executable names.
+fn launcher_command(executable: &str) -> Option<&str> {
+    executable
+        .strip_prefix(COMMAND_PREFIX)
+        .filter(|name| !name.is_empty())
+}
+
+/// The `PATH` and `PATHEXT` a launcher command is looked up on, read once
+/// at the process boundary.
+pub(crate) struct CommandEnv {
+    pub path: Option<OsString>,
+    pub pathext: Option<OsString>,
+}
+
+impl CommandEnv {
+    #[specmark::spec(
+        deviates = "spec://core-ai-native/mechanisms/ENGINE-CONFORM-v0.1#rules",
+        reason = "A `command:NAME` launcher is resolved against the caller's own PATH (spec://org.vibevm.core/vibevm/common/PROP-065#launcher-command); the standalone proxy reads PATH and PATHEXT once at its process boundary and resolution receives them as values."
+    )]
+    pub(crate) fn from_env() -> Self {
+        Self {
+            path: std::env::var_os("PATH"),
+            pathext: std::env::var_os("PATHEXT"),
+        }
+    }
+}
+
+/// `name` on `env`'s PATH, never choosing `own_image` — this very proxy —
+/// so a proxy for `name` whose launcher runs `name` cannot re-enter itself.
+/// Nothing else in its directory is skipped: the proxies of the other
+/// installed applications live there, and a runtime a user installed by
+/// name is reached through exactly those. The rules mirror
+/// `vibe_app::CommandSearch`; `command_candidates` holds the `PATHEXT` half,
+/// and the first executable file wins.
+pub(crate) fn locate_command(
+    name: &str,
+    launcher: &str,
+    env: &CommandEnv,
+    own_image: Option<&Path>,
+) -> Result<PathBuf, String> {
+    let names = command_candidates(name, env.pathext.as_deref());
+    let skipped = own_image.map(resolved_path);
+    for directory in std::env::split_paths(env.path.as_deref().unwrap_or(OsStr::new(""))) {
+        if directory.as_os_str().is_empty() {
+            continue;
+        }
+        for candidate in &names {
+            let file = directory.join(candidate);
+            if !executable_file(&file) {
+                continue;
+            }
+            let file = resolved_path(&file);
+            if skipped.as_deref() == Some(file.as_path()) {
+                continue;
+            }
+            return Ok(file);
+        }
+    }
+    Err(format!(
+        "command `{name}` is not on PATH, so launcher `{launcher}` cannot run; put a `{name}` on \
+         PATH, or install an application package whose public commands include it \
+         (`vibe install -g GROUP/NAME`)"
+    ))
+}
+
+/// Off Windows the name itself; on Windows a name already ending in a
+/// listed `PATHEXT` extension as it stands, and a bare name only with each
+/// extension appended — never on its own, since Windows cannot start an
+/// extensionless file (Node's payload holds `npm` beside `npm.cmd`).
+fn command_candidates(name: &str, pathext: Option<&OsStr>) -> Vec<String> {
+    if !cfg!(windows) {
+        return vec![name.to_owned()];
+    }
+    let extensions = pathext
+        .map(|value| value.to_string_lossy().into_owned())
+        .unwrap_or_else(|| DEFAULT_PATHEXT.to_owned());
+    let listed: Vec<&str> = extensions
+        .split(';')
+        .map(str::trim)
+        .filter(|extension| extension.len() > 1 && extension.starts_with('.'))
+        .collect();
+    let lower = name.to_ascii_lowercase();
+    if listed
+        .iter()
+        .any(|extension| lower.ends_with(&extension.to_ascii_lowercase()))
+    {
+        return vec![name.to_owned()];
+    }
+    listed
+        .into_iter()
+        .map(|extension| format!("{name}{extension}"))
+        .collect()
+}
+
+fn executable_file(candidate: &Path) -> bool {
+    if !candidate.is_file() {
+        return false;
+    }
+    #[cfg(unix)]
+    let runnable = {
+        use std::os::unix::fs::PermissionsExt;
+        fs::metadata(candidate)
+            .map(|meta| meta.permissions().mode() & 0o111 != 0)
+            .unwrap_or(false)
+    };
+    #[cfg(not(unix))]
+    let runnable = true;
+    runnable
+}
+
+/// The canonical form of `path`, or the path itself when it cannot be read.
+fn resolved_path(path: &Path) -> PathBuf {
+    fs::canonicalize(path)
+        .map(strip_verbatim)
+        .unwrap_or_else(|_| path.to_path_buf())
+}
+
 fn expand_launcher(
     launcher: &index::Launcher,
     app_root: &Path,
     home: &Path,
+    own_image: Option<&Path>,
 ) -> Result<Launch, String> {
     let root = fs::canonicalize(app_root)
         .map(strip_verbatim)
@@ -255,13 +433,22 @@ fn expand_launcher(
         app_root: &root,
         vibe_home: home,
     };
-    let executable = contained(&vars, &launcher.executable, "executable")?;
-    if !executable.is_file() {
-        return Err(format!(
-            "executable `{}` is not a regular file",
-            executable.display()
-        ));
-    }
+    // A `command:NAME` executable names a command resolved on PATH when the
+    // launcher runs, not a file in the payload (`PROP-065#launcher-command`).
+    // `vibe_app::CommandSearch` holds the same rules for `vibe app run`.
+    let executable = match launcher_command(&launcher.executable) {
+        Some(name) => locate_command(name, &launcher.id, &CommandEnv::from_env(), own_image)?,
+        None => {
+            let path = contained(&vars, &launcher.executable, "executable")?;
+            if !path.is_file() {
+                return Err(format!(
+                    "executable `{}` is not a regular file",
+                    path.display()
+                ));
+            }
+            path
+        }
+    };
     let working_directory = match &launcher.working_directory {
         Some(template) => {
             let directory = contained(&vars, template, "working_directory")?;

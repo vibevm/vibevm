@@ -93,12 +93,13 @@ pub use migration::{
 pub use package::application::{
     ARG_PLACEHOLDERS, AgentMode, ArchiveFormatDecl, ChoiceDecl, Condition, ExternalResult,
     FeatureDecl, IconDecl, IconFinding, IconSet, IconSlot, InstallerMethod, InstallerOptionDecl,
-    LauncherActionDecl, LauncherDecl, LauncherKind, LauncherSource, LicenseDecl, MENU_CATEGORIES,
-    NativeFormatDecl, Need, OwnedWord, ParamEquals, ParameterDecl, ParameterType, ParameterValue,
-    ProfileDecl, PublicCommandDecl, RecipeDecl, RequirementDecl, RequirementScope,
-    RequirementTable, ResultDecl, ShellInterpreter, SourceInputDecl, StepDecl, StepEnvironment,
-    StepEnvironmentError, StepKind, StepOrigin, StepPhase, StepVar, application_requirements,
-    expand_step_template, icon_findings, png_dimensions, result_of, step_env_name, steps_of,
+    LAUNCHER_COMMAND_PREFIX, LauncherActionDecl, LauncherDecl, LauncherKind, LauncherSource,
+    LicenseDecl, MENU_CATEGORIES, NativeFormatDecl, Need, OwnedWord, ParamEquals, ParameterDecl,
+    ParameterType, ParameterValue, ProfileDecl, PublicCommandDecl, RecipeDecl, RequirementDecl,
+    RequirementScope, RequirementTable, ResultDecl, ShellInterpreter, SourceInputDecl, StepDecl,
+    StepEnvironment, StepEnvironmentError, StepKind, StepOrigin, StepPhase, StepVar,
+    application_requirements, expand_step_template, icon_findings, is_launcher_command_name,
+    launcher_command, png_dimensions, result_of, step_env_name, steps_of,
 };
 pub use package::{
     ABSTRACT_LIMIT, AccessLevel, AllowFriendsOverride, ApplicationDecl, Authorship, BinaryDecl,

@@ -1,3 +1,6 @@
 1 installed application(s)
 
   noisy  org.example/noisy@1.0.0  (steps, ready)  [default]
+
+commands: <settings>/opt/bin
+new installations: <settings>/opt/apps (library `default`)

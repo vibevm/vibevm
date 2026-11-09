@@ -17,7 +17,7 @@ use serde::Serialize;
 use vibe_core::GlobalRegistryConfig;
 use vibe_core::user_config::UserConfig;
 use vibe_registry::multi_registry_resolver::RegistrySource;
-use vibe_registry::{MultiRegistryResolver, RegistryRefresh};
+use vibe_registry::{MultiRegistryResolver, RefreshCatalog, RegistryRefresh};
 
 use crate::output;
 use crate::output::language::{Cell, Glyph, List, Meta, Role, Row};
@@ -34,7 +34,8 @@ struct HomeSyncReport {
 
 /// One registry the refresh reached. `via` says how its catalog was
 /// refreshed: `index` when the index answered its handshake, `git` when
-/// the registry has no index and its tags are the catalog.
+/// the registry has no index and its tags are the catalog, `repository`
+/// when a monorepo's one repository was fetched at its `ref`.
 #[derive(Debug, Serialize)]
 struct RefreshedRegistry {
     registry: String,
@@ -79,21 +80,24 @@ pub(super) fn run_sync_home(ctx: &output::Context, root_offline: bool) -> Result
     let task = ctx
         .progress()
         .task("Refreshing the user home's registry clones");
-    let refreshed =
-        MultiRegistryResolver::open(&global.registries, &global.mirrors, &global.overrides)
-            .context("opening the user home's registries")
-            .and_then(|mrr| {
-                // A refresh that moves bytes is a transfer of this task
-                // (`PROP-068#git`).
-                let walked = vibe_registry::git_backend::transfers::observed(
-                    Some(&task.progress()),
-                    None,
-                    None,
-                    || mrr.refresh_cached_clones(),
-                )
-                .context("refreshing the cached package clones")?;
-                Ok((walked, local_sources(&mrr)?))
-            });
+    let refreshed = MultiRegistryResolver::open_refreshing(
+        &global.registries,
+        &global.mirrors,
+        &global.overrides,
+    )
+    .context("opening the user home's registries")
+    .and_then(|mrr| {
+        // A refresh that moves bytes is a transfer of this task
+        // (`PROP-068#git`).
+        let walked = vibe_registry::git_backend::transfers::observed(
+            Some(&task.progress()),
+            None,
+            None,
+            || mrr.refresh_cached_clones(),
+        )
+        .context("refreshing the cached package clones")?;
+        Ok((walked, local_sources(&mrr)?))
+    });
     let (walked, locals) = match refreshed {
         Ok(found) => {
             task.finish();
@@ -164,7 +168,11 @@ fn refreshed_registry(refresh: &RegistryRefresh) -> RefreshedRegistry {
     RefreshedRegistry {
         registry: refresh.registry.clone(),
         refname: refresh.registry_ref.clone(),
-        via: if refresh.index { "index" } else { "git" },
+        via: match refresh.catalog {
+            RefreshCatalog::Index => "index",
+            RefreshCatalog::Tags => "git",
+            RefreshCatalog::Repository => "repository",
+        },
         clones: refresh
             .clones
             .iter()
@@ -182,15 +190,15 @@ fn draw(ctx: &output::Context, report: &HomeSyncReport) {
         .map(|r| {
             let count = r.clones.len();
             let unit = if count == 1 { "clone" } else { "clones" };
-            let catalog = if r.via == "index" {
-                "index answered"
-            } else {
-                "no index, tags read"
+            let (catalog, what) = match r.via {
+                "index" => ("index answered", format!("{count} {unit}")),
+                "repository" => ("monorepo fetched", format!("@ {}", r.refname)),
+                _ => ("no index, tags read", format!("{count} {unit}")),
             };
             r.clones.iter().fold(
                 Row::new(vec![
                     Cell::new(r.registry.clone(), Role::Accent),
-                    Cell::text(format!("{count} {unit}")),
+                    Cell::text(what),
                 ])
                 .glyph(Glyph::Done, Role::Ok)
                 .meta(vec![Meta::note(catalog)]),

@@ -308,6 +308,7 @@ fn classified_parameter_debug_redacts_only_the_secret_value() {
         license: None,
         download_bytes: 0,
         unknown_sizes: 0,
+        drop_inputs: 0,
         dependencies: vec![],
         steps: option
             .steps

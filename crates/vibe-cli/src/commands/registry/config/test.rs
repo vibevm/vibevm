@@ -129,7 +129,9 @@ pub(in crate::commands::registry) fn run_test(
                 .unwrap_or("transport-default"),
         };
         let single = std::slice::from_ref(reg);
-        let resolver = match MultiRegistryResolver::open(single, &[], &[]) {
+        // No freshness window: a probe reports the registry as it is now,
+        // so a monorepo's clone is fetched, not read as a previous run left it.
+        let resolver = match MultiRegistryResolver::open_refreshing(single, &[], &[]) {
             Ok(r) => r,
             Err(_) => {
                 probe.fail("registry configuration is invalid");

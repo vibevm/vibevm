@@ -317,7 +317,7 @@ pub(crate) fn refusal_of(err: &anyhow::Error) -> Refusal {
     let rest = text
         .get(end + 1..)
         .unwrap_or("")
-        .trim_start_matches([':', ' ']);
+        .trim_start_matches([':', ';', ' ']);
     // The cause the chain adds is a refusal of its own: its sentence is the
     // why, and its fix is the nearer one, so it comes first.
     let cause = (!rest.is_empty()).then(|| refusal_of(&anyhow::anyhow!(rest.to_owned())));
@@ -325,18 +325,33 @@ pub(crate) fn refusal_of(err: &anyhow::Error) -> Refusal {
     if let Some(cause) = &cause {
         fixes.extend(cause.fix.iter().cloned());
     }
-    fixes.extend(fix.map(fix_lines).unwrap_or_default());
+    for line in fix.map(fix_lines).unwrap_or_default() {
+        if !fixes.contains(&line) {
+            fixes.push(line);
+        }
+    }
     Refusal {
         code,
         headline: text[..start].trim_end().to_owned(),
-        why: cause
-            .filter(|cause| !cause.headline.is_empty())
-            .map(|cause| match cause.code {
-                Some(code) => format!("{code}: {}", cause.headline),
-                None => cause.headline,
-            }),
+        why: cause.and_then(Refusal::into_why),
         fix: fixes,
         see: (!see.is_empty()).then(|| see.to_owned()),
+    }
+}
+
+impl Refusal {
+    /// The refusal read as the `why` of the error that wraps it: its own
+    /// sentence (behind its code), then the causes behind it, so a deeper
+    /// cause — the declared origin a drop miss fell back to — is not lost.
+    fn into_why(self) -> Option<String> {
+        let headline = (!self.headline.is_empty()).then(|| match self.code {
+            Some(code) => format!("{code}: {}", self.headline),
+            None => self.headline,
+        });
+        match (headline, self.why) {
+            (Some(headline), Some(deeper)) => Some(format!("{headline}; {deeper}")),
+            (headline, deeper) => headline.or(deeper),
+        }
     }
 }
 

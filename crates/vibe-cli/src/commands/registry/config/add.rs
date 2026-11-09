@@ -2,17 +2,18 @@
 
 specmark::scope!("spec://org.vibevm.core/vibevm/VIBEVM-SPEC#registry");
 
-use anyhow::{Result, anyhow, bail};
+use anyhow::{Result, bail};
 use serde::Serialize;
 use vibe_core::RegistryScope;
 use vibe_core::manifest::{NamingConvention, RegistrySection, RegistryType};
-use vibe_publish::{extract_host_segment, extract_org_segment};
 
 use crate::cli::RegistryAddArgs;
 use crate::output;
 
 use super::scope::{ScopeFile, parse_scope, parse_type};
-use super::{ListReportMirror, ListReportRegistry, adapter_for, naming_label, parse_naming};
+use super::{
+    ListReportMirror, ListReportRegistry, adapter_for, display_segments, naming_label, parse_naming,
+};
 
 #[derive(Debug, Serialize)]
 struct AddReport {
@@ -102,18 +103,10 @@ pub(in crate::commands::registry) fn run_add(
         );
     }
 
-    // Validation: a Git URL must shape-parse for both org and host
-    // segmentation; a local directory has neither.
-    let (host, org) = if kind == RegistryType::Localdir {
-        (String::from("(local directory)"), String::new())
-    } else {
-        (
-            extract_host_segment(&args.url)
-                .map_err(|e| anyhow!("registry URL `{}`: {e}", args.url))?,
-            extract_org_segment(&args.url)
-                .map_err(|e| anyhow!("registry URL `{}`: {e}", args.url))?,
-        )
-    };
+    // The host and organization segments are reported, never required:
+    // only `vibe registry publish` derives an organization, and a local
+    // repository (`file://`, an absolute path) has none.
+    let (host, org) = display_segments(kind, &args.url);
 
     vibe_registry::resolve_registry_auth(vibe_registry::RegistryAuthInput::SelectedRegistry(&new))?;
     match position_label {

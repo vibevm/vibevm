@@ -341,3 +341,45 @@ fn a_drop_serves_px_to_any_installation_from_its_version_directory_or_root() {
     assert_eq!(named, pin.release_asset_name(&asset));
     assert_eq!(tried.len(), 1);
 }
+
+/// A release unpacked by hand: the pinned px archive beside the imported
+/// binary, or in `tools/px/` there, is placed in the shared store; its
+/// absence is reported, and bytes under the pinned name that are not the
+/// pinned archive stop the import.
+#[test]
+#[specmark::spec(verifies = "spec://org.vibevm.core/vibevm/common/PROP-019#companion-tools")]
+fn px_beside_an_unpacked_release_is_placed_in_the_store() {
+    use super::super::px_lane::px_beside_with;
+    let temp = tempfile::tempdir().unwrap();
+    let (store, _) = machine(temp.path());
+    let dir = temp.path().join("unpacked");
+    std::fs::create_dir_all(dir.join("tools/px")).unwrap();
+    let archive = zip_bytes(&[("px.exe", b"px beside".as_slice())]);
+    let (pin, asset) = pin_for(&archive, "zip", "px.exe");
+    let name = pin.release_asset_name(&asset);
+    let progress = Progress::default();
+
+    let absent = px_beside_with(&store, &pin, &dir, &progress).unwrap();
+    assert!(
+        matches!(absent, PxOutcome::Unavailable { .. }),
+        "{absent:?}"
+    );
+    assert!(!companions::store_root(&store).exists());
+
+    std::fs::write(dir.join("tools/px").join(&name), &archive).unwrap();
+    let placed = px_beside_with(&store, &pin, &dir, &progress).unwrap();
+    let PxOutcome::Installed { program, .. } = placed else {
+        panic!("{placed:?}");
+    };
+    assert_eq!(std::fs::read(&program).unwrap(), b"px beside");
+    assert_eq!(
+        px_beside_with(&store, &pin, &dir, &progress).unwrap(),
+        PxOutcome::AlreadyInstalled(program)
+    );
+
+    let other = tempfile::tempdir().unwrap();
+    let (fresh, _) = machine(other.path());
+    std::fs::write(other.path().join(&name), b"not the pinned archive").unwrap();
+    let error = px_beside_with(&fresh, &pin, other.path(), &progress).unwrap_err();
+    assert!(error.to_string().contains("integrity mismatch"), "{error}");
+}

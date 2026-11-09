@@ -369,3 +369,85 @@ fn the_where_report_reads_as_its_registered_wire_type() {
         common::wire::typed(&String::from_utf8_lossy(&fixture.vibe(&args).stdout));
     assert_eq!(present.inputs[0].status, DropStatus::Present);
 }
+
+/// The plan prices only what will be transferred (`PROP-065#sizes`,
+/// `PROP-066#drops`): an input the drop already holds is named as the
+/// drop's and costs nothing, while the same input absent from the drop is
+/// priced at its declared size.
+#[test]
+fn the_plan_counts_a_dropped_input_as_local_and_names_the_drop() {
+    let payload = b"from-the-drop\n";
+    let digest = sha(payload);
+    let fixture = Fixture::new(&format!(
+        "url = \"https://dist.example/rel/payload.txt\"\nsha256 = \"{digest}\"\nsize = {}",
+        payload.len()
+    ));
+    fixture.configure_drop();
+    let registry = fixture.registry.to_str().unwrap().to_owned();
+    let args = [
+        "app",
+        "plan",
+        "org.example/dropped",
+        "--registry",
+        &registry,
+    ];
+
+    let priced = fixture.vibe(&args);
+    assert!(priced.status.success(), "{}", text(&priced));
+    let priced = text(&priced);
+    assert!(priced.contains("download"), "{priced}");
+    assert!(
+        !priced.contains("[artifacts] packages drop"),
+        "nothing is in the drop yet: {priced}"
+    );
+
+    fixture.place("org.example/dropped/1.0.0/payload.txt", payload);
+    let served = fixture.vibe(&args);
+    assert!(served.status.success(), "{}", text(&served));
+    let served = text(&served);
+    assert!(
+        served.contains("1 input(s) from the [artifacts] packages drop"),
+        "{served}"
+    );
+    assert!(served.contains("0 B"), "{served}");
+}
+
+/// A drop miss whose declared origin the source policy excludes points at
+/// the drop, not at another endpoint (`PROP-066#drops`): the fix names the
+/// exact first rung, the admission law's own "use an admitted HTTP
+/// endpoint" advice is gone, and the excluded origin is never contacted.
+#[test]
+fn an_excluded_origin_behind_a_drop_miss_is_fixed_by_filling_the_drop() {
+    let payload = b"expected\n";
+    let digest = sha(payload);
+    let (url, hits) = serve(payload.to_vec());
+    let fixture = Fixture::new(&format!(
+        "url = \"{url}/payload.txt\"\nsha256 = \"{digest}\""
+    ));
+    fixture.configure_drop();
+    fs::write(
+        fixture.user.settings.join("registry.toml"),
+        "[source_policy]\nexclude_hosting=['host:127.0.0.1']\n",
+    )
+    .unwrap();
+
+    let refused = fixture.install(&[]);
+    assert!(!refused.status.success(), "{}", text(&refused));
+    let stderr = text(&refused);
+    assert_eq!(
+        hits.load(Ordering::SeqCst),
+        0,
+        "an excluded origin is refused before any connection: {stderr}"
+    );
+    let first = fixture
+        .drop_dir()
+        .join("org.example/dropped/1.0.0/payload.txt");
+    assert!(
+        stderr.contains(&format!("put the file at {}", first.display())),
+        "the fix names the exact rung: {stderr}"
+    );
+    assert!(
+        !stderr.contains("use an admitted HTTP endpoint"),
+        "the fix no longer points away from the drop: {stderr}"
+    );
+}

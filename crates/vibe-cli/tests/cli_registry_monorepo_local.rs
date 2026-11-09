@@ -331,3 +331,131 @@ fn offline_reads_a_local_monorepo_but_never_a_remote_one() {
     assert!(!output.status.success(), "offline used a remote monorepo");
     assert!(!remote.join("vibe.lock").exists());
 }
+
+/// A package held only by a `localdir` registry listed after a monorepo in
+/// the same layer resolves from the folder while `exclude_hosting` is active
+/// (PROP-002 §2.3.1): the monorepo's "not here" leaves the default version
+/// domain undecided instead of deciding it empty.
+#[test]
+#[specmark::spec(verifies = "spec://org.vibevm.core/vibevm/common/PROP-073#SOURCE-POLICY")]
+fn a_localdir_after_a_monorepo_serves_what_the_monorepo_lacks() {
+    let site = Site::new();
+    let shared = site.path("shared");
+    let team = shared.join("org.fixture/team/v1.0.0");
+    fs::create_dir_all(&team).unwrap();
+    fs::write(
+        team.join("vibe.toml"),
+        "[package]\ngroup='org.fixture'\nname='team'\nkind='feat'\nversion='1.0.0'\n",
+    )
+    .unwrap();
+    fs::write(
+        site.path("settings/registry.toml"),
+        format!(
+            "[[registry]]\nname='corp'\ntype='monorepo'\nurl='file://{}'\nref='main'\n\
+             [[registry]]\nname='shared'\ntype='localdir'\nurl='file://{}'\n\
+             [source_policy]\nexclude_hosting=['github','gitverse']\n",
+            site.path("mono.git").display(),
+            shared.display()
+        ),
+    )
+    .unwrap();
+    let project = site.path("team-consumer");
+    fs::create_dir_all(&project).unwrap();
+    fs::write(
+        project.join("vibe.toml"),
+        "[project]\nname='consumer'\nversion='1.0.0'\n\
+         [requires.packages]\n'org.fixture/team'='=1.0.0'\n",
+    )
+    .unwrap();
+    site.vibe_ok(&project, &["--unattended", "install"]);
+    let lock: toml::Value =
+        toml::from_str(&fs::read_to_string(project.join("vibe.lock")).unwrap()).unwrap();
+    let row = lock["package"]
+        .as_array()
+        .unwrap()
+        .iter()
+        .find(|row| row["name"].as_str() == Some("team"))
+        .cloned()
+        .expect("team lock row");
+    assert_eq!(row["registry"].as_str(), Some("shared"));
+}
+
+fn json_of(output: &Output) -> serde_json::Value {
+    assert!(
+        output.status.success(),
+        "{}\n{}",
+        String::from_utf8_lossy(&output.stdout),
+        String::from_utf8_lossy(&output.stderr)
+    );
+    serde_json::from_slice(&output.stdout).expect("json report")
+}
+
+/// `vibe registry test` and `vibe registry sync -g` read a monorepo as it is
+/// now, not as an earlier run's clone left it (PROP-002 `#registry-index`): a
+/// publish that commits `_index/` after a first probe reported it absent is
+/// seen by the next probe, and the home refresh fetches the monorepo and
+/// reports it.
+#[test]
+#[specmark::spec(
+    verifies = "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#registry-index"
+)]
+fn registry_test_and_sync_fetch_the_monorepo_clone() {
+    let site = Site::new();
+    site.user_registries(&format!("file://{}", site.path("mono.git").display()));
+    let project = site.project("probe", "");
+    let index_note = |site: &Site| -> String {
+        let report = json_of(&site.vibe(&project, &["--json", "registry", "test"]));
+        report["registries"][0]["note"]
+            .as_str()
+            .unwrap_or_default()
+            .to_string()
+    };
+    assert!(index_note(&site).contains("index: absent"));
+
+    let source = site.path("next");
+    write_package(&source, "1.1.0", "local monorepo v1.1.0\n");
+    let package = source.join("org.fixture/demo/v1.1.0");
+    site.vibe_ok(
+        &project,
+        &[
+            "--unattended",
+            "registry",
+            "publish",
+            package.to_str().unwrap(),
+            "--registry",
+            "corp",
+        ],
+    );
+    let note = index_note(&site);
+    assert!(note.contains("index: current"), "{note}");
+
+    let sync = json_of(&site.vibe(&project, &["--json", "registry", "sync", "-g"]));
+    let refreshed = sync["refreshed"].as_array().unwrap();
+    assert!(
+        refreshed
+            .iter()
+            .any(|row| row["registry"] == "corp" && row["via"] == "repository"),
+        "{sync}"
+    );
+}
+
+/// `vibe search` outside a project searches the machine layers — here the
+/// user's `~/.vibe/registry.toml` — instead of asking for `vibe init`
+/// (PROP-002 `#registry-layers`).
+#[test]
+#[specmark::spec(
+    verifies = "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#registry-layers"
+)]
+fn search_outside_a_project_reads_the_machine_registries() {
+    let site = Site::new();
+    site.user_registries(&format!("file://{}", site.path("mono.git").display()));
+    let elsewhere = site.path("elsewhere");
+    fs::create_dir_all(&elsewhere).unwrap();
+    let report = json_of(&site.vibe(&elsewhere, &["--json", "search", "demo"]));
+    assert!(!elsewhere.join("vibe.toml").exists());
+    let text = report.to_string();
+    assert!(
+        text.contains("\"demo\"") && text.contains("\"corp\""),
+        "{report}"
+    );
+}

@@ -79,7 +79,7 @@ mod walk;
 pub use attempt::{RegistryWalkAttempt, WalkAttemptStatus};
 #[cfg(test)]
 pub(crate) use clone_chain::clone_chain;
-pub use home_refresh::RegistryRefresh;
+pub use home_refresh::{RefreshCatalog, RegistryRefresh};
 pub use refresh::{RefreshReport, RefreshedEntry, RefreshedVia, SkippedEntry};
 pub use resolution::{MultiResolution, ResolvedPathDep};
 pub use source::{LocalRegistrySource, MonorepoRegistrySource, RegistrySource, localdir_path};

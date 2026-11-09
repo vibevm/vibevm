@@ -41,6 +41,7 @@ fn plan(steps: Vec<PlannedStep>, dependencies: Vec<PlannedDependency>) -> Plan {
         license: None,
         download_bytes: 0,
         unknown_sizes: 0,
+        drop_inputs: 0,
         dependencies,
         steps,
         warnings: vec![],
@@ -117,4 +118,24 @@ fn the_plan_opens_with_its_rule_and_lists_its_steps_with_requirements_as_childre
         "○ 3.  docs   (copy)  Copy the documentation  skipped: feature docs off"
     );
     assert!(!text.contains('`'), "no backticks in human output: {text}");
+}
+
+/// The download row prices only what will be transferred: an input the
+/// `[artifacts] packages` drop already holds is named as the drop's, and a
+/// plan whose inputs all come from the drop still says so instead of
+/// silently pricing nothing (`PROP-066#drops`).
+#[test]
+fn the_download_row_names_the_inputs_a_drop_serves() {
+    let mut served = plan(vec![], vec![]);
+    served.drop_inputs = 2;
+    let text = render(&served, None);
+    assert!(
+        text.contains("2 input(s) from the [artifacts] packages drop"),
+        "{text}"
+    );
+    assert!(text.contains("download"), "{text}");
+
+    // Nothing to download and no drop: the row stays absent.
+    let quiet = render(&plan(vec![], vec![]), None);
+    assert!(!quiet.contains("download"), "{quiet}");
 }

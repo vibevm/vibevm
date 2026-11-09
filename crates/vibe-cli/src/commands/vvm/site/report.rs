@@ -254,6 +254,24 @@ fn effective_text(effective: &Effective, out: &mut String) {
             "install root: {} ({})\n  shims on PATH: {}\n  data: {}\n",
             root.path, root.from, root.shim_dir, root.data_dir
         ));
+        // Applications follow the same root as vibe (PROP-019
+        // `#install-root`); with nothing declared they stay under the
+        // settings root, which is this default unless VIBE_SETTINGS moves it.
+        if root.from == super::layers::InstallBaseOrigin::BuiltIn.describe() {
+            out.push_str(
+                "  applications: commands and payloads under the settings root \
+                 (`~/.vibe`, or `$VIBE_SETTINGS`)\n",
+            );
+        } else {
+            out.push_str(&format!(
+                "  applications: commands in {}, payloads in {}\n",
+                root.shim_dir,
+                std::path::Path::new(&root.path)
+                    .join("opt")
+                    .join("apps")
+                    .display()
+            ));
+        }
     }
     out.push_str("registries, highest first:\n");
     if effective.registries.is_empty() {

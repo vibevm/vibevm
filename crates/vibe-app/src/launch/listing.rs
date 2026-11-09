@@ -10,7 +10,7 @@ specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-059#launcher-catalog
 
 use std::path::{Path, PathBuf};
 
-use vibe_core::manifest::{IconDecl, LauncherDecl, LauncherKind, LauncherSource};
+use vibe_core::manifest::{IconDecl, LauncherDecl, LauncherKind, LauncherSource, launcher_command};
 use vibe_wire::generated::{
     application_icon as icon_wire, application_launchers as wire,
     application_launchers_all as all_wire,
@@ -255,7 +255,13 @@ fn row(
             .and_then(|icon| wire_shape(&places.resolve(icon))),
         executable: wire::PathValue {
             template: Some(launcher.executable.clone()),
-            base: "app_root".into(),
+            // A `command:NAME` executable is resolved on PATH, not under the
+            // application root (`PROP-065#launcher-command`).
+            base: if launcher_command(&launcher.executable).is_some() {
+                "path".into()
+            } else {
+                "app_root".into()
+            },
             resolved: resolved.as_ref().map(|value| text(&value.executable)),
         },
         args: wire::ArgsValue {

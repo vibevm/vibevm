@@ -210,6 +210,9 @@ pub struct LayoutPublishOutcome {
     pub retried: bool,
     /// `sha256:` content hash of the published tree.
     pub content_hash: String,
+    /// The registry's `_index/` was rewritten (or, on a dry run, would be)
+    /// — also when the version itself was unchanged.
+    pub index_refreshed: bool,
     pub dry_run: bool,
 }
 
@@ -274,6 +277,7 @@ pub fn publish(
         commit: batch.commit,
         retried: batch.retried,
         content_hash: item.content_hash,
+        index_refreshed: batch.index_refreshed,
         dry_run: batch.dry_run,
     })
 }

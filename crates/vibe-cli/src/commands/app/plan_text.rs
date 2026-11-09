@@ -100,12 +100,21 @@ fn fields(plan: &Plan) -> String {
         };
         field("parameter", format!("{} = {value}", param.id), vec![]);
     }
-    if plan.download_bytes > 0 || plan.unknown_sizes > 0 {
+    if plan.download_bytes > 0 || plan.unknown_sizes > 0 || plan.drop_inputs > 0 {
         let mut meta = Vec::new();
         if plan.unknown_sizes > 0 {
             meta.push(Meta::Note(format!(
                 "{} input(s) of unknown size",
                 plan.unknown_sizes
+            )));
+        }
+        // An input the drop already holds is copied, not transferred, so
+        // the download it is NOT part of says where it comes from instead
+        // (`PROP-066#drops`).
+        if plan.drop_inputs > 0 {
+            meta.push(Meta::Note(format!(
+                "{} input(s) from the [artifacts] packages drop",
+                plan.drop_inputs
             )));
         }
         field("download", bytes(plan.download_bytes), meta);

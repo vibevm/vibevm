@@ -13,7 +13,7 @@ use std::path::{Path, PathBuf};
 use specmark::spec;
 use vibe_core::manifest::{
     FeatureDecl, InstallerOptionDecl, RequirementScope, ResultDecl, StepDecl, StepKind, StepPhase,
-    result_of, steps_of,
+    launcher_command, result_of, steps_of,
 };
 
 use crate::agents::AgentHooks;
@@ -27,7 +27,7 @@ use super::features::{FeatureRequest, Implied};
 use super::params::{
     LicensePrompt, ParamValue, ParameterPrompt, PlanLicense, admit_license, resolve_parameters,
 };
-use super::sizes::downloads;
+use super::sizes::{DropLookup, downloads};
 mod decision;
 use super::template::{self, Vars};
 use decision::{NO_AGENT, decide, effective_agent_mode, require};
@@ -221,6 +221,11 @@ pub struct Plan {
     pub download_bytes: u64,
     /// Inputs that will be fetched without a declared size.
     pub unknown_sizes: u32,
+    /// Inputs an `[artifacts] packages` drop already holds, which are
+    /// copied from it and downloaded from nowhere (`PROP-066#drops`). They
+    /// are not part of `download_bytes`; the plan says where they come
+    /// from instead of pricing a transfer that will not happen.
+    pub drop_inputs: u32,
     /// Required application packages in plan order: option-level first,
     /// then each running step's (`PROP-065#app-dependencies`).
     pub dependencies: Vec<PlannedDependency>,
@@ -395,7 +400,7 @@ pub(crate) fn plan(input: &PlanInput<'_>) -> Result<Plan, AppError> {
         }
         .into());
     }
-    let warnings = if skipped_agents.is_empty() {
+    let mut warnings = if skipped_agents.is_empty() {
         Vec::new()
     } else {
         vec![format!(
@@ -404,6 +409,26 @@ pub(crate) fn plan(input: &PlanInput<'_>) -> Result<Plan, AppError> {
             skipped_agents.join(", ")
         )]
     };
+    // A launcher that runs a command from PATH installs either way; the
+    // reader learns before the download that the command is missing today
+    // (`PROP-065#launcher-command`).
+    for launcher in &option.launchers {
+        let Some(name) = launcher_command(&launcher.executable) else {
+            continue;
+        };
+        if !(input.facts.command_present)(name) {
+            warnings.push(format!(
+                "launcher `{}` runs the command `{name}`, which is not on PATH; the installation \
+                 succeeds, but the launcher needs `{name}` when it runs — put one on PATH or \
+                 install an application package that provides it",
+                launcher.id
+            ));
+        }
+    }
+    // The invocation's one Locator, the same point the fetches ask and
+    // `remap_note` already reads — not an environment read of its own.
+    let drops = vibe_core::remap::active().package_drops();
+    let package_key = package.key();
     let fetched = downloads(
         steps
             .iter()
@@ -411,6 +436,10 @@ pub(crate) fn plan(input: &PlanInput<'_>) -> Result<Plan, AppError> {
             .map(|planned| &planned.step),
         input.settings,
         &work,
+        DropLookup {
+            drops: &drops,
+            package: &package_key,
+        },
     );
     Ok(Plan {
         source_evidence: input.resolved.source_evidence.clone(),
@@ -431,6 +460,7 @@ pub(crate) fn plan(input: &PlanInput<'_>) -> Result<Plan, AppError> {
         license,
         download_bytes: fetched.bytes,
         unknown_sizes: fetched.unknown,
+        drop_inputs: fetched.from_drop,
         dependencies,
         steps,
         warnings,

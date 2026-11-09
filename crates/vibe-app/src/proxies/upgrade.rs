@@ -108,10 +108,16 @@ fn query(image: &Path, directory: &Path, source: &Path, protocol: &str) -> Resul
 /// Only declared paths below the actual home are eligible. A root alias is
 /// allowed; symlinks or special files inside the owned layout are refused.
 pub(super) fn regular(settings: &SettingsRoot, path: &Path) -> Result<bool, StateError> {
+    // The install root store the applications follow is the other owned
+    // base: its `bin` holds this home's proxies (`PROP-019#install-root`).
+    let base = settings
+        .install_root()
+        .filter(|store| path.starts_with(store))
+        .unwrap_or(settings.path());
     let relative = path
-        .strip_prefix(settings.path())
+        .strip_prefix(base)
         .map_err(|_| failure(path, "proxy path is outside the selected home"))?;
-    let mut current = settings.path().to_path_buf();
+    let mut current = base.to_path_buf();
     let components: Vec<_> = relative.components().collect();
     for (i, component) in components.iter().enumerate() {
         if !matches!(component, std::path::Component::Normal(_)) {
@@ -142,6 +148,11 @@ fn existing(settings: &SettingsRoot, previous: &Index) -> Result<Vec<PathBuf>, S
     for command in crate::alternatives::reserved_names(previous) {
         if command_name(&command) {
             paths.insert(settings.proxy_dir().join(proxy_file_name(&command)));
+            // A copy left in the home's own `opt/bin` from before the
+            // install root still runs and must read the new index too.
+            if settings.install_root().is_some() {
+                paths.insert(settings.home_proxy_dir().join(proxy_file_name(&command)));
+            }
         }
     }
     for record in previous.installations.values() {
@@ -210,7 +221,9 @@ pub(crate) fn before_publication(
             .file_name()
             .and_then(|name| name.to_str())
             .unwrap_or_default();
-        if path.parent() == Some(settings.proxy_dir().as_path())
+        let shared = path.parent() == Some(settings.proxy_dir().as_path())
+            || path.parent() == Some(settings.home_proxy_dir().as_path());
+        if shared
             && !inventory
                 .classify(file, path, Some(&image.bytes))
                 .writable()

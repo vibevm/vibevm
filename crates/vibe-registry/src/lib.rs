@@ -60,8 +60,9 @@ pub use index_client::{
 pub use local_registry::LocalRegistry;
 pub use multi_registry_resolver::{
     DEFAULT_OVERRIDE_REF, LockedUpdateAvailability, MultiRegistryResolver, MultiResolution,
-    RefreshReport, RefreshedEntry, RefreshedVia, RegistryRefresh, RegistryWalkAttempt,
-    ResolutionPurpose, ResolvedPathDep, SkippedEntry, WalkAttemptStatus, localdir_path,
+    RefreshCatalog, RefreshReport, RefreshedEntry, RefreshedVia, RegistryRefresh,
+    RegistryWalkAttempt, ResolutionPurpose, ResolvedPathDep, SkippedEntry, WalkAttemptStatus,
+    localdir_path,
 };
 pub use registry_auth::{RegistryAuthInput, ResolvedRegistryAuth, resolve_registry_auth};
 

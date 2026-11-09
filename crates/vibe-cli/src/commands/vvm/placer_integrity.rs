@@ -66,7 +66,24 @@ pub(super) fn manifest_shape_valid(
     manifest: &Manifest,
 ) -> bool {
     let expected = if origin == super::super::model::Origin::Binary {
-        vec![BINARY_NAME.to_string()]
+        // A legacy import placed the executable alone at the root; an
+        // import now places `bin/vibe` and the companions found beside it.
+        let modern = manifest
+            .files
+            .iter()
+            .any(|entry| entry.rel == format!("bin/{BINARY_NAME}"));
+        if !modern {
+            vec![BINARY_NAME.to_string()]
+        } else {
+            let mut expected = vec![format!("bin/{BINARY_NAME}")];
+            for companion in [INDEX_BINARY_NAME, APP_PROXY_BINARY_NAME] {
+                let rel = format!("bin/{companion}");
+                if manifest.files.iter().any(|entry| entry.rel == rel) {
+                    expected.push(rel);
+                }
+            }
+            expected
+        }
     } else {
         vec![
             format!("bin/{BINARY_NAME}"),

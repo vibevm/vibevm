@@ -86,6 +86,24 @@ fn adapter_for(kind: vibe_core::manifest::RegistryType, host: &str) -> Option<&'
     }
 }
 
+/// The host and organization segments a registry row is reported with.
+/// Pure presentation: `vibe registry add` and `list` never refuse a row
+/// because a publish adapter could not address it (PROP-002 `#publish`
+/// derives its organization only when publishing). A local directory and a
+/// repository on this machine's filesystem have neither segment.
+fn display_segments(kind: vibe_core::manifest::RegistryType, url: &str) -> (String, String) {
+    if kind == vibe_core::manifest::RegistryType::Localdir {
+        return (String::from("(local directory)"), String::new());
+    }
+    if vibe_registry::git_backend::shell::native_admission::local_repository(url).is_some() {
+        return (String::from("(local repository)"), String::new());
+    }
+    (
+        vibe_publish::extract_host_segment(url).unwrap_or_else(|_| String::from("?")),
+        vibe_publish::extract_org_segment(url).unwrap_or_else(|_| String::from("?")),
+    )
+}
+
 /// The `vibe.toml` spelling of a naming convention.
 fn naming_label(naming: NamingConvention) -> &'static str {
     match naming {

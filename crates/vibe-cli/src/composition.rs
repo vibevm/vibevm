@@ -82,6 +82,21 @@ pub(crate) fn install_base_override() -> Option<std::path::PathBuf> {
     UserConfig::load().ok()?.self_source.install_root
 }
 
+/// The install root store the user home's applications follow
+/// (PROP-019 `#install-root`), with the precedence vibe itself resolves its
+/// root by: the running managed vibe's own root, then
+/// [`install_base_override`] (`$VIBEVM_INSTALL_ROOT`, then `[self]
+/// install_root` of the user's config over the site profile) joined with
+/// `opt`. `None` when nothing is declared: the applications then stay
+/// under the settings root, which is `~/.vibe` unless `VIBE_SETTINGS`
+/// moves it.
+pub(crate) fn app_install_store() -> Option<std::path::PathBuf> {
+    if let Some(location) = commands::vvm::derive_self(std::env::current_exe().ok().as_deref()) {
+        return Some(location.root);
+    }
+    commands::vvm::resolve_root(None, Some(install_base_override()?), None)
+}
+
 /// The offline posture `vibe self` runs under (PROP-019 `##CMD-OFFLINE`).
 ///
 /// The same ladder every registry-touching command resolves — the root

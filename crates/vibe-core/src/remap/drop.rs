@@ -103,6 +103,54 @@ pub fn url_file_name(url: &str) -> Option<String> {
     (!last.is_empty() && last != "." && last != "..").then(|| last.to_owned())
 }
 
+/// A displayed path rewritten so every separator in it is `separator`.
+///
+/// A drop configured as `C:/corp/drop` is a perfectly good path, but
+/// [`Path::join`] appends the platform's own separator to it — so a rung of
+/// the lookup below reads `C:/corp/drop\org.example\tool\1.0.0\t.tgz`, two
+/// separator styles in one path a person is being asked to create. The
+/// rewrite is pure and takes the separator as an argument, so the Windows
+/// spelling is testable on every platform; only Windows asks for it,
+/// because a backslash is an ordinary file-name character elsewhere.
+///
+/// ```
+/// use vibe_core::remap::drop::with_separator;
+///
+/// assert_eq!(
+///     with_separator("C:/corp/drop\\org.example\\t.tgz", '\\'),
+///     "C:\\corp\\drop\\org.example\\t.tgz"
+/// );
+/// assert_eq!(with_separator("/srv/drop/t.tgz", '/'), "/srv/drop/t.tgz");
+/// ```
+pub fn with_separator(shown: &str, separator: char) -> String {
+    shown
+        .chars()
+        .map(|c| if c == '/' || c == '\\' { separator } else { c })
+        .collect()
+}
+
+/// A path as this platform spells it in a message a person reads: on
+/// Windows one separator style throughout, elsewhere exactly the bytes the
+/// path holds (a backslash there is part of a file's name, not a
+/// separator).
+///
+/// ```
+/// use std::path::Path;
+/// use vibe_core::remap::drop::shown_path;
+///
+/// let joined = Path::new("drop").join("org.example").join("t.tgz");
+/// let shown = shown_path(&joined);
+/// assert!(!shown.contains(if cfg!(windows) { '/' } else { '\\' }));
+/// ```
+pub fn shown_path(path: &Path) -> String {
+    let shown = path.display().to_string();
+    if cfg!(windows) {
+        with_separator(&shown, std::path::MAIN_SEPARATOR)
+    } else {
+        shown
+    }
+}
+
 /// The ordered places a package payload is looked for in a package drop
 /// (`PROP-066#drops`): for an input of package `G/N@V` with file name `F`
 /// and digest `D`,

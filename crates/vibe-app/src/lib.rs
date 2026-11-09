@@ -96,8 +96,8 @@ pub use index::{
 pub use installer::programs::{windows_cmd, windows_powershell, windows_system_program};
 pub use installer::{Interrupt, ServedBy, ServedRow, StepLogs, StepPanel};
 pub use launch::{
-    LaunchRequest, ResolvedLauncher, TemplateVars, app_root, exit_code, expand_template,
-    icon_choice, launch_arguments, listing as launcher_listing,
+    CommandSearch, LaunchRequest, ResolvedLauncher, TemplateVars, app_root, exit_code,
+    expand_template, icon_choice, launch_arguments, listing as launcher_listing,
     listing_all as launcher_listing_all, resolve as resolve_launcher, run as run_launcher,
 };
 pub use operations::{
@@ -125,7 +125,7 @@ pub use select::{
     select_option,
 };
 pub use session::{SESSION_VARIABLE, SessionChoices};
-pub use settings::{MutationLock, PROJECT_HOME, SettingsRoot};
+pub use settings::{HOME_POINTER, MutationLock, PROJECT_HOME, SettingsRoot};
 pub use steps::{
     FeatureChooser, FeatureRequest, FeatureResolution, HostFacts, Implied, ImpliedRule,
     LicensePrompt, ParamValue, ParameterPrompt, Plan, PlanLicense, PlannedDependency, PlannedStep,
@@ -133,8 +133,8 @@ pub use steps::{
     step_env_name, work, work_import,
 };
 pub use storage::{
-    Availability, DEFAULT_LIBRARY, LIBRARY_MARKER, Library, LibraryMarker, Moved, Storage,
-    StorageConfig, add as storage_add, attach as storage_attach, create_library,
+    Availability, DEFAULT_LIBRARY, INSTALL_ROOT_LIBRARY, LIBRARY_MARKER, Library, LibraryMarker,
+    Moved, Storage, StorageConfig, add as storage_add, attach as storage_attach, create_library,
     detach as storage_detach, gc as storage_gc, listing as storage_list, relocate as storage_move,
 };
 

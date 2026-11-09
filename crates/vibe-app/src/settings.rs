@@ -3,6 +3,7 @@
 
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-059#index");
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-059#project-scope");
+specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-019#install-root");
 
 use std::fs::{self, File, OpenOptions, TryLockError};
 use std::io::Write;
@@ -37,6 +38,10 @@ pub struct SettingsRoot {
     root: PathBuf,
     cache: PathBuf,
     project: bool,
+    /// The effective install root store `<base>/opt` vibe itself lives
+    /// under, kept only when it differs from `<root>/opt`
+    /// (`PROP-019#install-root`).
+    install: Option<PathBuf>,
 }
 
 /// Held for the duration of one mutating command; dropping it releases the
@@ -66,13 +71,49 @@ impl MutationLock {
 /// The project home relative to its project root.
 pub const PROJECT_HOME: [&str; 2] = ["vibevm", "vibeopt"];
 
+/// The file in an install root store that names the application home its
+/// `bin` proxies belong to (`PROP-019#install-root`).
+pub const HOME_POINTER: &str = "vibe-app-home.toml";
+
 impl SettingsRoot {
     pub fn new(root: &Path) -> Self {
         Self {
             root: root.to_path_buf(),
             cache: root.join("cache"),
             project: false,
+            install: None,
         }
+    }
+
+    /// Make the user home's applications follow vibe's own effective install
+    /// root store `store` (`<base>/opt`, `PROP-019#install-root`): new
+    /// installations go to the `install-root` library at `store`, and the
+    /// PATH proxies to `store/bin`, beside vibe's shims. A store that is
+    /// `<settings>/opt` itself changes nothing, and a project home keeps its
+    /// own layout (`PROP-019#install-root`).
+    ///
+    /// ```
+    /// let dir = tempfile::tempdir().unwrap();
+    /// let plain = vibe_app::SettingsRoot::new(&dir.path().join("settings"));
+    /// let same = plain.clone().with_install_root(&dir.path().join("settings/opt"));
+    /// assert_eq!(same, plain);
+    /// let work = plain.with_install_root(&dir.path().join("Work/opt"));
+    /// assert_eq!(work.proxy_dir(), dir.path().join("Work/opt/bin"));
+    /// assert_eq!(work.home_proxy_dir(), dir.path().join("settings/opt/bin"));
+    /// assert_eq!(work.install_root(), Some(dir.path().join("Work/opt").as_path()));
+    /// ```
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-019#install-root")]
+    pub fn with_install_root(mut self, store: &Path) -> Self {
+        if !self.project && !same_place(store, &self.default_library_path()) {
+            self.install = Some(store.to_path_buf());
+        }
+        self
+    }
+
+    /// The install root store the applications follow, when it is not
+    /// `<settings>/opt`.
+    pub fn install_root(&self) -> Option<&Path> {
+        self.install.as_deref()
     }
 
     /// The project home `<project_root>/vibevm/vibeopt`, sharing the source
@@ -85,6 +126,7 @@ impl SettingsRoot {
                 .fold(project_root.to_path_buf(), |path, part| path.join(part)),
             cache: user.cache.clone(),
             project: true,
+            install: None,
         }
     }
 
@@ -181,9 +223,26 @@ impl SettingsRoot {
         self.root.join("opt")
     }
 
-    /// `<settings>/opt/bin`, where every reserved command has its PATH proxy.
+    /// Where every reserved command has its PATH proxy: `<store>/bin` of
+    /// the install root the applications follow, else `<settings>/opt/bin`.
     pub fn proxy_dir(&self) -> PathBuf {
+        match &self.install {
+            Some(store) => store.join("bin"),
+            None => self.home_proxy_dir(),
+        }
+    }
+
+    /// `<settings>/opt/bin`, the home's own proxy directory: the PATH proxy
+    /// directory without an install root, and where proxies written before
+    /// the applications followed one still are.
+    pub fn home_proxy_dir(&self) -> PathBuf {
         self.root.join("opt").join("bin")
+    }
+
+    /// `<store>/vibe-app-home.toml`, naming this home for the proxies in
+    /// `<store>/bin` (only with an install root).
+    pub fn home_pointer_path(&self) -> Option<PathBuf> {
+        self.install.as_ref().map(|store| store.join(HOME_POINTER))
     }
 
     /// `<settings>/cache/app-sources`: verified `source_build` downloads,
@@ -272,6 +331,16 @@ impl SettingsRoot {
             }
         }
     }
+}
+
+/// Whether two directories are the same place: equal as written, or equal
+/// once both resolve.
+pub(crate) fn same_place(a: &Path, b: &Path) -> bool {
+    a == b
+        || matches!(
+            (fs::canonicalize(a), fs::canonicalize(b)),
+            (Ok(a), Ok(b)) if a == b
+        )
 }
 
 /// How long [`SettingsRoot::lock`] keeps retrying before it refuses. A

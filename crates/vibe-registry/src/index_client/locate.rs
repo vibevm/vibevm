@@ -137,6 +137,14 @@ fn resolve_index_url_with(env: Option<String>, registry: &RegistrySection) -> In
     {
         return resolved;
     }
+    // A registry on this machine's filesystem (`file://`, an absolute path,
+    // a share) has no HTTP index to guess at: `<url>/index` would name a
+    // file path the index client cannot read, and probing it under a source
+    // policy was refused. Only an explicit `index_url` points such a
+    // registry at an index.
+    if crate::git_backend::shell::native_admission::local_repository(&registry.url).is_some() {
+        return IndexUrlResolution::Disabled;
+    }
     IndexUrlResolution::Url {
         base: github_raw_index_url(&registry.url, &registry.r#ref)
             .unwrap_or_else(|| format!("{}/index", registry.url.trim_end_matches('/'))),
@@ -279,6 +287,31 @@ mod tests {
                 source: IndexUrlSource::Env,
             }
         );
+    }
+
+    #[test]
+    #[specmark::verifies(
+        "spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#form-factor",
+        r = 2
+    )]
+    fn a_local_registry_has_no_default_index_but_keeps_an_explicit_one() {
+        for url in ["file:///srv/vibe/upstream", "/srv/vibe/upstream"] {
+            let reg = ladder_section("upstream", url, None);
+            assert_eq!(
+                resolve_index_url_with(None, &reg),
+                IndexUrlResolution::Disabled,
+                "{url}"
+            );
+            let reg = ladder_section("upstream", url, Some("https://index.example.corp"));
+            assert_eq!(
+                resolve_index_url_with(None, &reg),
+                IndexUrlResolution::Url {
+                    base: "https://index.example.corp".into(),
+                    source: IndexUrlSource::ManifestKey,
+                },
+                "{url}"
+            );
+        }
     }
 
     #[test]

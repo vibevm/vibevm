@@ -59,6 +59,23 @@ pub enum StateError {
          fix: attach or mount the library directory again)"
     )]
     LibraryUnavailable { id: String, reason: String },
+    #[error(
+        "the `install-root` storage library is listed at `{listed}`, but the install root is now `{store}` \
+         (violates spec://org.vibevm.core/vibevm/common/PROP-019#install-root; fix: set the install root back to \
+         the directory holding `{listed}`, or move each application listed there with \
+         `vibe storage move KEY default`, run `vibe storage detach install-root`, then re-run)"
+    )]
+    InstallRootMoved { listed: String, store: String },
+    #[error(
+        "the install root store `{store}` already holds the PATH proxies of the application home `{other}` \
+         (`{pointer}`) (violates spec://org.vibevm.core/vibevm/common/PROP-059#proxy; fix: give this home \
+         its own install root, or uninstall the other home's applications and delete `{pointer}`, then re-run)"
+    )]
+    InstallRootShared {
+        store: String,
+        other: String,
+        pointer: String,
+    },
 }
 
 /// `vibe storage` edits of `storage.toml`, and moves of owned installations
@@ -174,7 +191,7 @@ pub enum InstallerError {
     },
     #[error(
         "archive is unsafe or malformed: {reason} (violates spec://org.vibevm.core/vibevm/common/PROP-059#installer-separation; \
-         fix: publish an archive of plain files and directories with portable relative names)"
+         fix: publish an archive of plain files, directories and relative symbolic links that stay inside the payload, all with portable relative names)"
     )]
     Archive { reason: String },
     #[error(

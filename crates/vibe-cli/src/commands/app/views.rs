@@ -48,6 +48,58 @@ pub(super) fn print_list(listing: &Value, quiet: bool) {
     }
 }
 
+/// Where the user home's applications live (PROP-019 `#install-root`):
+/// the PATH proxy directory, the library new installations land in, and
+/// what stays at the settings root from before an install root applied.
+pub(super) fn places(settings: &vibe_app::SettingsRoot) -> Vec<String> {
+    let mut lines = vec![format!("commands: {}", settings.proxy_dir().display())];
+    let storage = vibe_app::Storage::load(settings);
+    match storage
+        .as_ref()
+        .map(|storage| (storage.fresh_library(), storage))
+    {
+        Ok((Ok(id), storage)) => {
+            if let Some(path) = storage.path_of(id) {
+                lines.push(format!(
+                    "new installations: {} (library `{id}`)",
+                    path.join("apps").display()
+                ));
+            }
+        }
+        Ok((Err(error), _)) => lines.push(format!("new installations: refused — {error}")),
+        Err(error) => lines.push(format!("new installations: unknown — {error}")),
+    }
+    if settings.install_root().is_none() {
+        return lines;
+    }
+    if let Ok(listing) = vibe_app::storage_list(settings)
+        && let Some(default) = listing
+            .libraries
+            .iter()
+            .find(|library| library.id == vibe_app::DEFAULT_LIBRARY)
+        && !default.installations.is_empty()
+    {
+        lines.push(format!(
+            "note: {} installation(s) stay in library `default` at {}; they keep working, and \
+             `vibe storage move KEY {}` moves one",
+            default.installations.len(),
+            settings.default_library_path().display(),
+            vibe_app::INSTALL_ROOT_LIBRARY
+        ));
+    }
+    let legacy = settings.home_proxy_dir();
+    let older = std::fs::read_dir(&legacy).map_or(0, |entries| entries.count());
+    if older > 0 {
+        lines.push(format!(
+            "note: {} still holds {older} older file(s); its PATH proxies keep working, and {} \
+             now holds every command",
+            legacy.display(),
+            settings.proxy_dir().display()
+        ));
+    }
+    lines
+}
+
 /// One installation: its slot, its key, how it was installed and its
 /// status, then what requires it and its state words.
 fn list_row(entry: &Value) -> Row {

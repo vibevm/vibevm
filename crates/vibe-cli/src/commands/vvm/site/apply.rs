@@ -145,6 +145,11 @@ pub(in crate::commands::vvm) fn prepare_profile(
                 )
             })?;
     }
+    // Valid, but not usable on this host: said once, at apply and at
+    // `--dry-run`, rather than discovered at the first read.
+    for note in profile.windows_only_notes(cfg!(windows)) {
+        eprintln!("{}", output::language::warning(&note));
+    }
     let sha256 = hex(&Sha256::digest(text.as_bytes()));
     Ok(PreparedProfile {
         profile,

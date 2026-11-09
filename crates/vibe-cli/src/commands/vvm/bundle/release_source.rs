@@ -227,8 +227,12 @@ pub(crate) fn resolve(
     })
 }
 
+/// A release drop must be absolute. A Windows drive or UNC path counts on
+/// every host, as in a site profile (`PROP-019#site-profile`), so a profile
+/// written for Windows desktops validates on a Linux administrator's box;
+/// only a Windows host can read such a drop.
 fn localdir(path: &Path) -> Result<ReleaseSource, ReleaseSourceError> {
-    if !path.is_absolute() {
+    if !vibe_core::site_profile::is_absolute_anywhere(path) {
         return Err(ReleaseSourceError::Location {
             kind: "localdir",
             location: path.display().to_string(),
@@ -390,6 +394,25 @@ mod tests {
             },
             ..UserConfig::default()
         }
+    }
+
+    #[test]
+    fn a_unc_or_drive_drop_is_absolute_on_every_host() {
+        for drop in [
+            r"\\server\share\releases",
+            "//server/share/releases",
+            "C:/Work/rel",
+        ] {
+            let resolved = resolve(None, &config(SelfConfig::default(), Some(drop)), None)
+                .unwrap_or_else(|error| panic!("{drop}: {error}"));
+            assert_eq!(
+                resolved.source,
+                ReleaseSource::Localdir {
+                    path: PathBuf::from(drop)
+                }
+            );
+        }
+        assert!(resolve(None, &config(SelfConfig::default(), Some("releases")), None).is_err());
     }
 
     #[test]

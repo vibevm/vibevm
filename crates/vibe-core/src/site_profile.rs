@@ -416,22 +416,6 @@ impl SiteProfile {
     }
 }
 
-/// An absolute path on this host, or a Windows drive / UNC path read on
-/// Unix (a profile written for Windows desktops is still validated on the
-/// administrator's Linux box).
-fn is_absolute_anywhere(path: &Path) -> bool {
-    if path.is_absolute() {
-        return true;
-    }
-    let text = path.to_string_lossy();
-    let bytes = text.as_bytes();
-    (bytes.len() >= 3
-        && bytes[0].is_ascii_alphabetic()
-        && bytes[1] == b':'
-        && matches!(bytes[2], b'/' | b'\\'))
-        || text.starts_with("\\\\")
-}
-
 /// The stored, applied profile and where it lives.
 ///
 /// ```
@@ -566,6 +550,10 @@ impl SiteReceipt {
         })
     }
 }
+
+#[path = "site_profile/windows_paths.rs"]
+mod windows_paths;
+pub use windows_paths::{is_absolute_anywhere, is_windows_absolute};
 
 #[cfg(test)]
 #[path = "site_profile/tests.rs"]

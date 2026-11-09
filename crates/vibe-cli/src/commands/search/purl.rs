@@ -195,11 +195,11 @@ pub(super) fn run_purl_lookup(
     }
     if ctx.is_quiet() {
         ctx.summary(&format!(
-            "vibe search --purl: {} hit{} across {} registry{}",
+            "vibe search --purl: {} hit{} across {} registr{}",
             hits.len(),
             if hits.len() == 1 { "" } else { "s" },
             searched.len(),
-            if searched.len() == 1 { "" } else { "s" },
+            if searched.len() == 1 { "y" } else { "ies" },
         ));
         return Ok(());
     }
@@ -250,11 +250,11 @@ pub(super) fn run_purl_lookup(
     }
     println!();
     ctx.summary(&format!(
-        "{} hit{} across {} registry{}",
+        "{} hit{} across {} registr{}",
         hits.len(),
         if hits.len() == 1 { "" } else { "s" },
         searched.len(),
-        if searched.len() == 1 { "" } else { "s" },
+        if searched.len() == 1 { "y" } else { "ies" },
     ));
     Ok(())
 }

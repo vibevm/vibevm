@@ -20,10 +20,16 @@ use specmark::spec;
 use vibe_core::manifest::is_portable_token;
 
 use crate::error::StateError;
-use crate::settings::{SettingsRoot, io, write_atomic};
+use crate::settings::{SettingsRoot, io, same_place, write_atomic};
 
 /// The id of the implicit library at `<settings>/opt`.
 pub const DEFAULT_LIBRARY: &str = "default";
+
+/// The id of the library at the install root store the user home's
+/// applications follow (`PROP-019#install-root`): listed in `storage.toml`
+/// on the first installation that lands there, so the PATH proxy and every
+/// older vibe resolve it like any configured library.
+pub const INSTALL_ROOT_LIBRARY: &str = "install-root";
 
 /// The marker file that proves a directory is the library it claims to be.
 pub const LIBRARY_MARKER: &str = "vibe-library.toml";
@@ -81,6 +87,19 @@ pub enum Availability {
 pub struct Storage {
     default_path: PathBuf,
     config: StorageConfig,
+    storage_path: PathBuf,
+    install: Option<InstallLibrary>,
+}
+
+/// How the install root store relates to `storage.toml`.
+#[derive(Debug, Clone, PartialEq, Eq)]
+struct InstallLibrary {
+    store: PathBuf,
+    /// The `install-root` row is in memory only, written on first use.
+    unlisted: bool,
+    /// The listed `install-root` row names another directory: the install
+    /// root changed after applications were installed under the old one.
+    listed_elsewhere: Option<PathBuf>,
 }
 
 impl Storage {
@@ -101,10 +120,65 @@ impl Storage {
             path: path.display().to_string(),
             reason,
         })?;
+        let mut config = config;
+        let install = settings.install_root().map(|store| {
+            let listed = config
+                .libraries
+                .iter()
+                .find(|library| library.id == INSTALL_ROOT_LIBRARY);
+            let listed_elsewhere = listed
+                .filter(|library| !same_place(&library.path, store))
+                .map(|library| library.path.clone());
+            let unlisted = listed.is_none();
+            if unlisted {
+                config.libraries.push(Library {
+                    id: INSTALL_ROOT_LIBRARY.into(),
+                    path: store.to_path_buf(),
+                });
+            }
+            InstallLibrary {
+                store: store.to_path_buf(),
+                unlisted,
+                listed_elsewhere,
+            }
+        });
         Ok(Self {
             default_path: settings.default_library_path(),
             config,
+            storage_path: path,
+            install,
         })
+    }
+
+    /// The library a new owned installation lands in when none is named:
+    /// `install-root` when the applications follow an install root other
+    /// than the settings root, else `default`. An `install-root` row that
+    /// still names an earlier install root is refused rather than mixed.
+    ///
+    /// ```
+    /// let dir = tempfile::tempdir().unwrap();
+    /// let plain = vibe_app::SettingsRoot::new(&dir.path().join("settings"));
+    /// assert_eq!(vibe_app::Storage::load(&plain).unwrap().fresh_library().unwrap(), "default");
+    /// let work = plain.with_install_root(&dir.path().join("Work/opt"));
+    /// let storage = vibe_app::Storage::load(&work).unwrap();
+    /// assert_eq!(storage.fresh_library().unwrap(), "install-root");
+    /// assert_eq!(storage.usable("install-root").unwrap(), dir.path().join("Work/opt"));
+    /// assert!(std::fs::read_to_string(work.storage_path()).unwrap().contains("install-root"));
+    /// ```
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-019#install-root")]
+    pub fn fresh_library(&self) -> Result<&'static str, StateError> {
+        match &self.install {
+            None => Ok(DEFAULT_LIBRARY),
+            Some(InstallLibrary {
+                store,
+                listed_elsewhere: Some(listed),
+                ..
+            }) => Err(StateError::InstallRootMoved {
+                listed: listed.display().to_string(),
+                store: store.display().to_string(),
+            }),
+            Some(_) => Ok(INSTALL_ROOT_LIBRARY),
+        }
     }
 
     pub fn config(&self) -> &StorageConfig {
@@ -161,8 +235,26 @@ impl Storage {
         let path = self
             .path_of(id)
             .ok_or_else(|| StateError::UnknownLibrary { id: id.into() })?;
-        if id == DEFAULT_LIBRARY && !path.join(LIBRARY_MARKER).exists() {
+        let implicit = id == DEFAULT_LIBRARY
+            || id == INSTALL_ROOT_LIBRARY
+                && self
+                    .install
+                    .as_ref()
+                    .is_some_and(|install| install.listed_elsewhere.is_none());
+        if implicit && !path.join(LIBRARY_MARKER).exists() {
             create_library(&path, id)?;
+        }
+        if id == INSTALL_ROOT_LIBRARY
+            && self
+                .install
+                .as_ref()
+                .is_some_and(|install| install.unlisted)
+        {
+            let text = toml::to_string(&self.config).map_err(|error| StateError::Storage {
+                path: self.storage_path.display().to_string(),
+                reason: error.to_string(),
+            })?;
+            write_atomic(&self.storage_path, text.as_bytes())?;
         }
         match self.availability(id) {
             Availability::Available => Ok(path),

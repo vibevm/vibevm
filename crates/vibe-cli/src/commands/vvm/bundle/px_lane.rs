@@ -227,3 +227,40 @@ pub(in crate::commands::vvm) fn ensure_px_after_source_install(
         ctx.diagnostic(&format!("px was not installed: {error:#}"));
     }
 }
+
+/// px from a release unpacked by hand: the pinned archive beside the
+/// imported binary (or in `tools/px/` there) is placed in the shared tool
+/// store, reported on one progress line. Its absence is not an error.
+pub(in crate::commands::vvm) fn px_beside(
+    store: &crate::commands::vvm::store::VersionStore,
+    dir: &Path,
+    progress: &Progress,
+) -> Result<companions::PxOutcome> {
+    px_beside_with(store, vibe_net::px_store::PxPin::embedded(), dir, progress)
+}
+
+pub(super) fn px_beside_with(
+    store: &crate::commands::vvm::store::VersionStore,
+    pin: &vibe_net::px_store::PxPin,
+    dir: &Path,
+    progress: &Progress,
+) -> Result<companions::PxOutcome> {
+    use companions::PxOutcome;
+    let task = progress.task("Installing px");
+    let outcome = companions::install_beside(store, pin, dir);
+    match &outcome {
+        Ok(PxOutcome::AlreadyInstalled(program)) => {
+            task.skip(format!("already in `{}`", program.display()));
+        }
+        Ok(PxOutcome::Installed { program, from }) => {
+            task.detail(format!("`{}` from `{from}`", program.display()));
+            task.finish();
+        }
+        Ok(PxOutcome::Unavailable { asset, .. }) => task.skip(format!(
+            "no `{asset}` beside the binary; `[proxy] mode = \"px\"` uses `px_path` or px on PATH"
+        )),
+        Ok(PxOutcome::NoTarget) => task.skip("px has no build for this platform"),
+        Err(_) => task.fail("px could not be installed"),
+    }
+    outcome
+}

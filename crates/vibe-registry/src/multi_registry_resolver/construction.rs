@@ -119,4 +119,24 @@ impl MultiRegistryResolver {
             DEFAULT_FRESHNESS_SECS,
         )
     }
+
+    /// [`Self::open`] for an explicit refresh or probe (`vibe registry
+    /// test`, `vibe registry sync`): no freshness window, so every clone
+    /// it opens — a monorepo's included — is fetched from its remote
+    /// rather than read as the cache last left it.
+    pub fn open_refreshing(
+        registries: &[RegistrySection],
+        mirrors: &[MirrorSection],
+        overrides: &[OverrideSection],
+    ) -> Result<Self, RegistryError> {
+        let cache_root = default_cache_root()?;
+        Self::from_manifest(
+            registries,
+            mirrors,
+            overrides,
+            cache_root,
+            Arc::new(ShellGit::new()),
+            0,
+        )
+    }
 }

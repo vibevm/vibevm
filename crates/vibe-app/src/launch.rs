@@ -10,7 +10,9 @@ use std::path::{Component, Path, PathBuf};
 use std::process::{Command, ExitStatus, Stdio};
 
 use specmark::spec;
-use vibe_core::manifest::{ARG_PLACEHOLDERS, IconDecl, LauncherDecl, LauncherKind};
+use vibe_core::manifest::{
+    ARG_PLACEHOLDERS, IconDecl, LauncherDecl, LauncherKind, launcher_command,
+};
 
 use crate::error::LaunchError;
 use crate::index::{Installation, Location};
@@ -148,14 +150,23 @@ pub fn resolve(launcher: &LauncherDecl, vars: &TemplateVars) -> Result<ResolvedL
         app_root: root.clone(),
         ..vars.clone()
     };
-    let executable = canonical(
-        &template_path(&launcher.executable, &vars)?,
-        "executable",
-        false,
-    )?;
-    if !executable.starts_with(&root) {
-        return Err("executable escapes app_root".into());
-    }
+    // A `command:NAME` executable is not a payload file: it is looked up on
+    // PATH when the launcher runs (`PROP-065#launcher-command`), so neither
+    // the template grammar nor containment under `app_root` applies to it.
+    let executable = match launcher_command(&launcher.executable) {
+        Some(name) => CommandSearch::from_env().locate(name)?,
+        None => {
+            let path = canonical(
+                &template_path(&launcher.executable, &vars)?,
+                "executable",
+                false,
+            )?;
+            if !path.starts_with(&root) {
+                return Err("executable escapes app_root".into());
+            }
+            path
+        }
+    };
     runnable(&executable)?;
     let project = vars
         .project_root
@@ -390,6 +401,11 @@ pub fn exit_code(status: ExitStatus) -> i32 {
     }
     1
 }
+
+#[path = "launch/command.rs"]
+mod command;
+
+pub use command::CommandSearch;
 
 #[path = "launch/listing.rs"]
 mod listing_form;

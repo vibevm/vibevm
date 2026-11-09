@@ -1,3 +1,5 @@
+#[cfg(unix)]
+use super::resolve::{CommandEnv, locate_command};
 use super::resolve::{Launch, Vars, expand, home_of, parse_session, resolve};
 use super::*;
 use std::fs;
@@ -110,6 +112,68 @@ fn the_default_and_the_session_choice_select_the_provider() {
     assert!(error.contains("malformed"), "{error}");
 }
 
+/// An installation in the `install-root` library of an install root store
+/// (`PROP-019#install-root`): the store's proxy finds the home through the
+/// store's pointer, and a proxy left in the home's own `opt/bin` still runs.
+#[test]
+fn a_proxy_in_an_install_root_store_finds_its_home_through_the_pointer() {
+    let (_dir, home) = home();
+    // The store lies outside the home, so the walk up finds no index.
+    let work = tempfile::tempdir().unwrap();
+    let store = fs::canonicalize(work.path()).unwrap().join("Work/opt");
+    let alpha = store.join("apps/tool/org.example.alpha@1.0.0");
+    fs::create_dir_all(alpha.join("bin")).unwrap();
+    fs::write(alpha.join("bin/tool"), "#!/bin/sh\n").unwrap();
+    fs::write(
+        store.join("vibe-library.toml"),
+        "id = \"install-root\"\ncreated = \"now\"\n",
+    )
+    .unwrap();
+    fs::write(
+        home.join("storage.toml"),
+        format!(
+            "[[library]]\nid = \"install-root\"\npath = {:?}\n",
+            store.display().to_string()
+        ),
+    )
+    .unwrap();
+    let index = home.join("applications/index.json");
+    let text = fs::read_to_string(&index).unwrap();
+    fs::write(
+        &index,
+        text.replace("\"library\":\"default\"", "\"library\":\"install-root\""),
+    )
+    .unwrap();
+    let proxy = store.join("bin/tool");
+    let error = home_of(&proxy).unwrap_err();
+    assert!(error.contains("no application home"), "{error}");
+
+    fs::write(
+        store.join("vibe-app-home.toml"),
+        "schema = 1\nhome = \"/nowhere\"\n",
+    )
+    .unwrap();
+    let error = home_of(&proxy).unwrap_err();
+    assert!(
+        error.contains("holds no applications/index.json"),
+        "{error}"
+    );
+
+    fs::write(
+        store.join("vibe-app-home.toml"),
+        format!("schema = 1\nhome = {:?}\n", home.display().to_string()),
+    )
+    .unwrap();
+    assert_eq!(home_of(&proxy).unwrap(), home);
+    let launch = resolve(&proxy, "tool", None).unwrap();
+    assert_eq!(launch.executable, alpha.join("bin/tool"));
+    let legacy = resolve(&home.join("opt/bin/tool"), "tool", None).unwrap();
+    assert_eq!(
+        legacy, launch,
+        "a proxy left in the home's opt/bin still runs"
+    );
+}
+
 #[test]
 fn a_missing_library_or_default_is_a_clear_error() {
     let (_dir, home) = home();
@@ -160,6 +224,97 @@ fn caller_arguments_follow_the_launcher_arguments_literally() {
     );
     assert!(!root.path().join("unsafe").exists());
     assert_eq!(execute(&launch, &[]).unwrap(), 0);
+}
+
+/// A `command:NAME` launcher (`PROP-065#launcher-command`): resolved on the
+/// caller's PATH, the running proxy's own image never chosen, every sibling
+/// in that same directory chosen like any other entry, and a clear error
+/// naming the command and the launcher when there is none.
+#[cfg(unix)]
+#[test]
+fn a_command_launcher_resolves_on_path_and_never_re_enters_itself() {
+    use std::os::unix::fs::PermissionsExt;
+
+    let dir = tempfile::tempdir().unwrap();
+    let root = fs::canonicalize(dir.path()).unwrap();
+    let (proxies, system) = (root.join("opt/bin"), root.join("usr/bin"));
+    fs::create_dir_all(&proxies).unwrap();
+    fs::create_dir_all(&system).unwrap();
+    let executable = |path: PathBuf| {
+        fs::write(&path, "#!/bin/sh\nexit 0\n").unwrap();
+        fs::set_permissions(&path, fs::Permissions::from_mode(0o755)).unwrap();
+        path
+    };
+    let env = |dirs: &[&Path]| CommandEnv {
+        path: Some(std::env::join_paths(dirs).unwrap()),
+        pathext: None,
+    };
+    // Every installed application's proxy shares `opt/bin`: `codkit` is the
+    // running image, `node` the managed runtime's proxy beside it.
+    let codkit = executable(proxies.join("codkit"));
+    let own_node = executable(proxies.join("node"));
+    let system_node = executable(system.join("node"));
+
+    assert_eq!(
+        locate_command("node", "codkit", &env(&[&proxies, &system]), Some(&codkit)).unwrap(),
+        own_node,
+        "a runtime installed by name is found through its own proxy; only the running image is skipped"
+    );
+    assert_eq!(
+        locate_command("node", "node", &env(&[&proxies, &system]), Some(&own_node)).unwrap(),
+        system_node,
+        "a proxy for `node` whose launcher runs `node` falls through to the host's own"
+    );
+    let error = locate_command("node", "node", &env(&[&proxies]), Some(&own_node)).unwrap_err();
+    assert!(error.contains("command `node` is not on PATH"), "{error}");
+    assert!(error.contains("launcher `node`"), "{error}");
+    assert!(error.contains("vibe install -g"), "{error}");
+    assert_eq!(
+        locate_command("node", "node", &env(&[&proxies, &system]), None).unwrap(),
+        own_node,
+        "with no image to skip the first PATH entry wins"
+    );
+    fs::set_permissions(&system_node, fs::Permissions::from_mode(0o644)).unwrap();
+    assert!(
+        locate_command("node", "node", &env(&[&system]), None).is_err(),
+        "a file without the executable bit is not a command"
+    );
+    assert!(
+        locate_command("npm", "node", &env(&[&proxies, &system]), None).is_err(),
+        "an unrelated name is not found"
+    );
+}
+
+/// The launcher record keeps the `command:` spelling, and the containment
+/// rule of `PROP-059#launcher-paths` is not applied to it: the arguments
+/// still expand under `app_root` while the executable comes from PATH.
+#[cfg(unix)]
+#[test]
+fn a_command_launcher_resolves_through_the_index_record() {
+    use std::os::unix::fs::PermissionsExt;
+
+    let (_dir, home) = home();
+    let path = home.join("applications/index.json");
+    let text = fs::read_to_string(&path).unwrap();
+    fs::write(
+        &path,
+        text.replace(
+            "\"executable\":\"$app_bin/tool\"",
+            "\"executable\":\"command:vibe-app-proxy-test-absent\"",
+        ),
+    )
+    .unwrap();
+    let proxy = home.join("opt/bin/tool");
+    fs::write(&proxy, "#!/bin/sh\n").unwrap();
+    fs::set_permissions(&proxy, fs::Permissions::from_mode(0o755)).unwrap();
+    // A name no host carries: resolution reaches the command lookup instead
+    // of the payload, and reports the command rather than a missing file.
+    let error = resolve(&proxy, "tool", None).unwrap_err();
+    assert!(
+        error.contains("command `vibe-app-proxy-test-absent` is not on PATH"),
+        "{error}"
+    );
+    assert!(error.contains("launcher `main`"), "{error}");
 }
 
 #[test]

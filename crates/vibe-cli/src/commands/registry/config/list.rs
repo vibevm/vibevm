@@ -9,14 +9,13 @@ use anyhow::{Context, Result};
 use serde::Serialize;
 use vibe_core::manifest::{Manifest, MirrorSection, OverrideSection, RegistrySection};
 use vibe_core::{GlobalRegistryConfig, RegistryLayers, RegistryScope};
-use vibe_publish::{extract_host_segment, extract_org_segment};
 
 use crate::cli::RegistryListArgs;
 use crate::commands::registry::resolve_project_root;
 use crate::output;
 
 use super::scope::{ScopeFile, parse_scope};
-use super::{ListReportMirror, ListReportRegistry, adapter_for, naming_label};
+use super::{ListReportMirror, ListReportRegistry, adapter_for, display_segments, naming_label};
 
 /// The rows one `vibe registry list` renders.
 struct View {
@@ -150,14 +149,7 @@ pub(in crate::commands::registry) fn run_list(
     let mut registries: Vec<ListReportRegistry> = Vec::with_capacity(view.rows.len());
     for (scope, reg) in &view.rows {
         let kind = reg.effective_type();
-        let (host, org) = if kind == vibe_core::manifest::RegistryType::Localdir {
-            (String::from("(local directory)"), String::new())
-        } else {
-            (
-                extract_host_segment(&reg.url).unwrap_or_else(|_| String::from("?")),
-                extract_org_segment(&reg.url).unwrap_or_else(|_| String::from("?")),
-            )
-        };
+        let (host, org) = display_segments(kind, &reg.url);
         let adapter = adapter_for(kind, &host).map(String::from);
         // Mirrors targeted at this registry by name, plus the wildcard
         // `*` mirrors that apply to any registry, sorted by priority.

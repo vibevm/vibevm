@@ -20,8 +20,9 @@ mod wizard_validation;
 pub use environment::{StepEnvironment, StepEnvironmentError, step_env_name};
 pub use icon_files::{IconFinding, icon_findings};
 pub use launcher::{
-    ARG_PLACEHOLDERS, IconDecl, IconSet, IconSlot, LauncherActionDecl, LauncherKind,
-    LauncherSource, MENU_CATEGORIES, png_dimensions,
+    ARG_PLACEHOLDERS, IconDecl, IconSet, IconSlot, LAUNCHER_COMMAND_PREFIX, LauncherActionDecl,
+    LauncherKind, LauncherSource, MENU_CATEGORIES, is_launcher_command_name, launcher_command,
+    png_dimensions,
 };
 pub use requirement::{
     RequirementDecl, RequirementScope, RequirementTable, application_requirements,

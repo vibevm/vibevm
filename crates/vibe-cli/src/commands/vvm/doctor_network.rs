@@ -8,9 +8,10 @@ specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-068#proxy");
 use std::time::Duration;
 use vibe_net::doctor::{Check, Status};
 
-/// Where the diagnosis connects when `--network` names no URL: the host the
-/// public release source and registries live on.
-pub(super) const DEFAULT_TARGET: &str = "https://github.com/";
+/// Where the diagnosis connects when `--network` names no URL: the one
+/// default target `vibe dl --test-proxy` checks too, so the two diagnoses
+/// of the same route agree (`PROP-068#proxy`, `#dl`).
+pub(super) const DEFAULT_TARGET: &str = crate::cli::DEFAULT_TEST_TARGET;
 
 /// The diagnosed steps, or `None` when there is nothing to diagnose (no
 /// route, no CA file, no `--network`).
@@ -95,4 +96,13 @@ pub(super) fn failures(checks: &[Check]) -> usize {
         .iter()
         .filter(|check| check.status == Status::Fail)
         .count()
+}
+
+#[cfg(test)]
+mod default_target_tests {
+    #[test]
+    fn the_doctor_and_dl_test_proxy_check_the_same_default_target() {
+        assert_eq!(super::DEFAULT_TARGET, "https://gmail.com");
+        assert_eq!(super::DEFAULT_TARGET, crate::cli::DEFAULT_TEST_TARGET);
+    }
 }

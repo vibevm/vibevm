@@ -179,6 +179,60 @@ fn user_and_local_scope_writes_keep_comments_and_unrelated_tables() {
     }
 }
 
+/// A per-package Git registry on this machine's filesystem is added in every
+/// scope, by `file://` url and by bare path: `registry add` does not run the
+/// publish-only organization derivation (PROP-002 `#publish`), so the row it
+/// writes is the row an administrator writes by hand.
+#[test]
+#[specmark::spec(
+    verifies = "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#registry-type"
+)]
+fn add_accepts_a_local_git_registry_in_every_scope() {
+    let user = UserScratch::new();
+    let project = tempfile::tempdir().unwrap();
+    user.init_project(project.path());
+    let upstream = project.path().join("upstream");
+    fs::create_dir_all(&upstream).unwrap();
+    for (scope, name, url) in [
+        ("user", "up-user", file_url(&upstream)),
+        ("project", "up-project", file_url(&upstream)),
+        ("local", "up-local", upstream.to_string_lossy().into_owned()),
+    ] {
+        let report = json(
+            &user
+                .vibe()
+                .args([
+                    "--json", "registry", "add", name, &url, "--type", "git", "--scope", scope,
+                    "--path",
+                ])
+                .arg(project.path())
+                .output()
+                .unwrap(),
+        );
+        assert_eq!(report["registry"]["type"], "git", "{report}");
+        assert_eq!(report["registry"]["url"], url.as_str(), "{report}");
+    }
+    let list = json(
+        &user
+            .vibe()
+            .args(["--json", "registry", "list", "--path"])
+            .arg(project.path())
+            .output()
+            .unwrap(),
+    );
+    let rows = registry_names(&list);
+    for (name, scope) in [
+        ("up-user", "user"),
+        ("up-project", "project"),
+        ("up-local", "local"),
+    ] {
+        assert!(
+            rows.contains(&(name.to_string(), "git".to_string(), scope.to_string())),
+            "{rows:?}"
+        );
+    }
+}
+
 #[test]
 fn inferred_types_are_reported_and_monorepo_is_never_inferred() {
     let user = UserScratch::new();

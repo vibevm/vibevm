@@ -167,6 +167,58 @@ fn localdir_publish_reads_the_user_registry_file_and_keeps_versions_immutable() 
     );
 }
 
+/// An identical re-publish that still rewrites a stale `_index/` says so: the
+/// version is unchanged, but the report does not claim nothing was written
+/// (PROP-002 `#registry-index`).
+#[test]
+#[specmark::spec(
+    verifies = "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#registry-index"
+)]
+fn an_unchanged_publish_that_refreshes_the_index_reports_it() {
+    let user = UserScratch::new();
+    let tmp = tempfile::tempdir().unwrap();
+    let drop = tmp.path().join("share");
+    fs::create_dir_all(&drop).unwrap();
+    let project = project(
+        tmp.path(),
+        &format!(
+            "[[registry]]\nname='share'\ntype='localdir'\nurl='file://{}'\n",
+            drop.display()
+        ),
+    );
+    let source = package(tmp.path(), "one", "1.0.0", "one\n");
+    report(&publish(&user, &project, &source, &[]));
+    let text = |user: &UserScratch| {
+        let output = user
+            .vibe()
+            .env("VIBE_NO_DEFAULT_REGISTRY", "1")
+            .args(["registry", "publish"])
+            .arg(&source)
+            .arg("--path")
+            .arg(&project)
+            .output()
+            .unwrap();
+        assert!(output.status.success(), "{output:?}");
+        format!(
+            "{}{}",
+            String::from_utf8_lossy(&output.stdout),
+            String::from_utf8_lossy(&output.stderr)
+        )
+    };
+    // Nothing stale: nothing written.
+    let quiet = text(&user);
+    assert!(quiet.contains("nothing written"), "{quiet}");
+    // A lost `_index/` is rebuilt by the identical publish, and said so.
+    fs::remove_dir_all(drop.join("_index")).unwrap();
+    let refreshed = text(&user);
+    assert!(
+        refreshed.contains("only the registry index was refreshed")
+            && !refreshed.contains("nothing written"),
+        "{refreshed}"
+    );
+    assert!(drop.join("_index/listing.txt").is_file());
+}
+
 /// Git serialises concurrent publishers: a push rejected as
 /// non-fast-forward is refetched and retried once; a second loss refuses.
 #[test]
