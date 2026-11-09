@@ -2696,3 +2696,53 @@ structure, and it goes when the file does.
 | @fact:B245-SEVERITY **severity** | P3 — cosmetic in the reported path; it would mislead anyone diagnosing a store that is not where the report says. |
 | @fact:B245-DISPOSITION **disposition** | `candidate` — resolve the store root through the same settings root every other report uses (PROP-019 `#companion-tools`). |
 | @fact:B245-FILED **filed by** | Corporate-env campaign, CORP-FMT-038 verification, 2026-11-09. |
+
+## B-246 — `cargo xtask dist px` refuses the Windows px archive's own licence {#b-246}
+
+| field | value |
+|---|---|
+| @fact:B246-WHAT **what** | The px windows-amd64 zip ships `LICENSE.txt` with CRLF line ends (1101 bytes); `xtask/dist/px.toml` pins `license_sha256` of the GitHub-raw LF form (1080 bytes). `stage_with_archive` prefers the in-archive licence, so `cargo xtask dist px --target x86_64-pc-windows-msvc` always fails with `px LICENSE does not match the pinned SHA-256` unless `--license` names the LF copy. |
+| @fact:B246-EVIDENCE **evidence** | Corporate test build on base, 2026-11-09 (deterministic). |
+| @fact:B246-SEVERITY **severity** | P2 — blocks the documented release step for the Windows px companion. |
+| @fact:B246-DISPOSITION **disposition** | `candidate` — pin the in-archive digest per asset, or prefer `license_url` and compare normalised line ends. |
+| @fact:B246-FILED **filed by** | Corporate-env campaign, Windows test-build walk, 2026-11-09. |
+
+## B-247 — a single-platform release drop cannot carry `DISTRIBUTIONS.json` {#b-247}
+
+| field | value |
+|---|---|
+| @fact:B247-WHAT **what** | With `<drop>/v1.0.12/DISTRIBUTIONS.json` holding only the Windows target, `vibe self update` and `vibe self reinstall` refuse: `aggregate must contain each supported distribution target exactly once`. Without the file they succeed (`verified against its own embedded manifest only`). `docs/admin/closed-network.md` §3.2 shows the aggregate in the drop. |
+| @fact:B247-EVIDENCE **evidence** | Corporate walk on base, 2026-11-09. |
+| @fact:B247-SEVERITY **severity** | P2 — an air-gapped Windows-only site cannot follow the guide as written. |
+| @fact:B247-DISPOSITION **disposition** | `candidate` — accept a partial aggregate for the host target in a drop (and say so in §3.2), or document zip-only drops. |
+| @fact:B247-FILED **filed by** | Corporate-env campaign, Windows test-build walk, 2026-11-09. |
+
+## B-248 — no local verb produces `DISTRIBUTIONS.json` and `TOOLS.json` {#b-248}
+
+| field | value |
+|---|---|
+| @fact:B248-WHAT **what** | `xtask dist finalize` builds both only from fragments downloaded from a GitHub draft release; a local or test build has no pipeline path to them (the corporate test build synthesised them from its own fragments). |
+| @fact:B248-EVIDENCE **evidence** | Corporate test build on base, 2026-11-09. |
+| @fact:B248-SEVERITY **severity** | P3. |
+| @fact:B248-DISPOSITION **disposition** | `candidate` — `cargo xtask dist aggregate --out-dir DIR` from fragments on disk. |
+| @fact:B248-FILED **filed by** | Corporate-env campaign, Windows test-build walk, 2026-11-09. |
+
+## B-249 — reports ignore the env-registry test seam {#b-249}
+
+| field | value |
+|---|---|
+| @fact:B249-WHAT **what** | With `VIBEVM_ENV_REGISTRY_SUBKEY` set, `self apply --show` and `self doctor` still print `HKCU\Environment\Path` while writes go to the override key. |
+| @fact:B249-EVIDENCE **evidence** | Corporate walk on base, 2026-11-09. |
+| @fact:B249-SEVERITY **severity** | P3 — misleading only in sandboxed runs. |
+| @fact:B249-DISPOSITION **disposition** | `candidate` — print the effective key. |
+| @fact:B249-FILED **filed by** | Corporate-env campaign, Windows test-build walk, 2026-11-09. |
+
+## B-250 — every first search of a fresh monorepo clone warns that its index is stale {#b-250}
+
+| field | value |
+|---|---|
+| @fact:B250-WHAT **what** | `vibe search` against a freshly cloned monorepo registry prints `WARN … the index of layout registry … is stale (the journal changed since the index was written); computing it in memory`, although the mirror wrote a current index. |
+| @fact:B250-EVIDENCE **evidence** | Corporate walk on base and the mirror check here, 2026-11-09. |
+| @fact:B250-SEVERITY **severity** | P3 — noise a corporate user will report on day one. |
+| @fact:B250-DISPOSITION **disposition** | `candidate` — compare against the journal state the clone carries, or demote to a note. |
+| @fact:B250-FILED **filed by** | Corporate-env campaign, Windows test-build walk, 2026-11-09. |
