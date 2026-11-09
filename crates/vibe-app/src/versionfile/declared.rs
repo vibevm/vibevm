@@ -17,6 +17,7 @@ use std::collections::BTreeMap;
 use std::fs;
 use std::path::PathBuf;
 
+use specmark::spec;
 use vibe_core::manifest::VersionFileDecl;
 use vibe_wire::generated::application_version_files as wire;
 
@@ -32,6 +33,7 @@ pub fn path(settings: &SettingsRoot) -> PathBuf {
 }
 
 /// The declared rows by installation key, with each key's slot.
+#[spec(documents = "spec://org.vibevm.core/vibevm/common/PROP-075#VERSION-FILE-FORMATS")]
 #[derive(Debug, Clone, Default, PartialEq, Eq)]
 pub struct Declared {
     pub installations: BTreeMap<String, (String, Vec<VersionFileDecl>)>,

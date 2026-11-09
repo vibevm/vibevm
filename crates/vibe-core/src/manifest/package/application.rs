@@ -16,6 +16,7 @@ mod template;
 mod template_validation;
 mod validation;
 mod version_file;
+mod version_file_validation;
 mod wizard;
 mod wizard_validation;
 

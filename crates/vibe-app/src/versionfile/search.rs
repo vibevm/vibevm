@@ -14,6 +14,7 @@ use std::collections::BTreeMap;
 use std::fs;
 use std::path::{Path, PathBuf};
 
+use specmark::spec;
 use vibe_core::manifest::VersionFileDecl;
 
 use super::declared::Declared;
@@ -21,6 +22,7 @@ use super::formats::{VersionRequest, plain_line, tool_versions};
 
 /// One path the search tested, with what it saw. An absent path is recorded
 /// too: the resolution is only a cache hit while it is still absent.
+#[spec(documents = "spec://org.vibevm.core/vibevm/common/PROP-075#VERSION-FILE-FORMATS")]
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct Consulted {
     pub path: PathBuf,
@@ -51,6 +53,7 @@ impl Consulted {
 }
 
 /// What one slot's nearest declared version file says.
+#[spec(documents = "spec://org.vibevm.core/vibevm/common/PROP-075#VERSION-FILE-FORMATS")]
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct Found {
     pub slot: String,
@@ -61,6 +64,7 @@ pub struct Found {
 }
 
 /// The whole outcome of one search.
+#[spec(documents = "spec://org.vibevm.core/vibevm/common/PROP-075#VERSION-FILE-FORMATS")]
 #[derive(Debug, Clone, Default, PartialEq, Eq)]
 pub struct Search {
     /// At most one per slot.

@@ -2,6 +2,7 @@
 //! (PROP-075 `#VERSION-FILE-FORMATS`). Pure text in, data out: nothing here
 //! touches the filesystem, so every shape is a unit test.
 
+use specmark::spec;
 use vibe_core::VersionSpec;
 
 /// The channel grammar of PROP-075 `#CHANNEL-SYNTAX`: `[a-z][a-z0-9.-]*`,
@@ -19,6 +20,7 @@ pub fn is_channel_name(text: &str) -> bool {
 }
 
 /// What a version file's line, or a `SLOT@VER` argument, asks for.
+#[spec(documents = "spec://org.vibevm.core/vibevm/common/PROP-075#VERSION-FILE-FORMATS")]
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub enum RequestKind {
     /// An ordinary version requirement (`22`, `^22`, `=22.23.4`, `22.x`).
@@ -30,6 +32,7 @@ pub enum RequestKind {
 
 /// One request with the spelling it was authored in, so a report can quote
 /// the file rather than a normalised form.
+#[spec(documents = "spec://org.vibevm.core/vibevm/common/PROP-075#VERSION-FILE-FORMATS")]
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct VersionRequest {
     pub authored: String,
@@ -98,6 +101,7 @@ pub fn plain_line(text: &str) -> Option<&str> {
 }
 
 /// What a `.tool-versions` file says about one key.
+#[spec(documents = "spec://org.vibevm.core/vibevm/common/PROP-075#VERSION-FILE-FORMATS")]
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct ToolVersions {
     /// The first version listed for the key — the one that is taken.

@@ -129,6 +129,7 @@ impl SlotSelection {
 }
 
 /// The whole resolution for one directory.
+#[spec(documents = "spec://org.vibevm.core/vibevm/common/PROP-075#VERSION-FILE-FORMATS")]
 #[derive(Debug, Clone, Default, PartialEq, Eq)]
 pub struct Activation {
     pub project: Option<PathBuf>,
@@ -146,6 +147,7 @@ impl Activation {
 
 /// One project requirement on an application package, as the caller read it
 /// from `vibe.toml`.
+#[spec(documents = "spec://org.vibevm.core/vibevm/common/PROP-075#VERSION-FILE-FORMATS")]
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct ProjectRequirement {
     pub group: String,
@@ -156,6 +158,7 @@ pub struct ProjectRequirement {
 }
 
 /// What to resolve.
+#[spec(documents = "spec://org.vibevm.core/vibevm/common/PROP-075#VERSION-FILE-FORMATS")]
 #[derive(Debug, Clone)]
 pub struct ActivationRequest<'a> {
     /// `SLOT=KEY`, `SLOT=VERSION`, `SLOT=CHANNEL` or `SLOT=none` entries, in

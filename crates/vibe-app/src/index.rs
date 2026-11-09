@@ -333,34 +333,8 @@ impl Index {
             reason,
         };
         let (mut index, protocol) = Self::parse_with_protocol(&bytes).map_err(invalid)?;
-        // The declared version files live beside the index
-        // (`PROP-075#VERSION-FILE-FORMATS`); a key the sidecar names and the
-        // index does not is ignored, so the two cannot diverge.
-        let declared = crate::versionfile::Declared::load(settings);
-        for (key, record) in &mut index.installations {
-            if let Some((_, rows)) = declared.installations.get(key) {
-                record.version_file = rows.clone();
-            }
-        }
+        index.read_declared_version_files(settings);
         Ok((index, protocol))
-    }
-
-    /// The declared version files of these records, in the shape the sidecar
-    /// beside the index persists (`PROP-075#VERSION-FILE-FORMATS`).
-    pub(crate) fn declared_version_files(&self) -> crate::versionfile::Declared {
-        crate::versionfile::Declared {
-            installations: self
-                .installations
-                .iter()
-                .filter(|(_, record)| !record.version_file.is_empty())
-                .map(|(key, record)| {
-                    (
-                        key.clone(),
-                        (record.slot.clone(), record.version_file.clone()),
-                    )
-                })
-                .collect(),
-        }
     }
 
     /// Read the exact protocol's closed schema; loading never writes a migration.
@@ -591,6 +565,8 @@ mod publication;
 mod upgrade;
 mod upgrade_five;
 mod upgrade_four;
+#[path = "index/version_files.rs"]
+mod version_files;
 #[path = "index/wire.rs"]
 mod wire_form;
 
