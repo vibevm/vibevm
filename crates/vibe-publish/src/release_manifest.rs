@@ -24,6 +24,20 @@
 
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-019#instances");
 
+/// The release's companion tools (`TOOLS.json`, PROP-019
+/// `#companion-tools`): px per target as its own asset, beside
+/// `DISTRIBUTIONS.json`, whose closed shape older vibe releases refuse to
+/// extend.
+pub use vibe_wire::generated::distribution_tools::{
+    CompanionAsset, CompanionTool, DistributionToolsManifest,
+};
+/// The companion manifest's asset name.
+pub const DISTRIBUTION_TOOLS_MANIFEST_FILENAME: &str = "TOOLS.json";
+/// The companion manifest's read bound.
+pub const DISTRIBUTION_TOOLS_MANIFEST_MAX_BYTES: u64 = 1024 * 1024;
+/// A companion tool's asset bound (px is a frozen Python of tens of MB).
+pub const DISTRIBUTION_TOOL_ASSET_MAX_BYTES: u64 = 256 * 1024 * 1024;
+
 pub use vibe_wire::behaviour::release_manifest::{
     AggregateDistributionManifest, BundleDistributionManifest,
     DISTRIBUTION_AGGREGATE_MANIFEST_FILENAME, DISTRIBUTION_AGGREGATE_MANIFEST_MAX_BYTES,

@@ -1,11 +1,14 @@
 use std::fs;
 use std::io::{self, Read, Write};
-use std::path::Path;
+use std::path::{Path, PathBuf};
 use std::sync::atomic::{AtomicU64, Ordering};
 
 use anyhow::{Context, Result};
 
 use super::super::store::{BINARY_NAME, INDEX_BINARY_NAME, VersionStore, open_regular_no_follow};
+
+#[path = "env_shim_ownership.rs"]
+mod ownership;
 
 static TEMP_NONCE: AtomicU64 = AtomicU64::new(1);
 
@@ -44,20 +47,64 @@ fn cmd_shim(command: &str, binary_name: &str) -> String {
     )
 }
 
-pub(crate) fn write_shims(store: &VersionStore) -> Result<()> {
-    let bin_dir = store.shim_dir();
-    store.guard_mutation_tree(&bin_dir)?;
-    fs::create_dir_all(&bin_dir).with_context(|| format!("creating `{}`", bin_dir.display()))?;
+/// One shim vibe publishes: the name it takes in the shim directory, the
+/// bytes it holds, and whether it must be executable.
+struct PlannedShim {
+    name: String,
+    path: PathBuf,
+    bytes: Vec<u8>,
+    executable: bool,
+}
+
+/// The shims vibe publishes into `bin_dir` (PROP-019 §2.5). Both forms exist
+/// on Windows — Git Bash will not resolve `.cmd`, and cmd/PowerShell will
+/// not run an extensionless script. Vibe writes no `.exe` and no `.ps1`, so
+/// it never touches one of those a foreign tool put there.
+fn planned_shims(bin_dir: &Path) -> Vec<PlannedShim> {
+    let mut planned = Vec::new();
     for (command, binary_name) in [("vibe", BINARY_NAME), ("vibe-index", INDEX_BINARY_NAME)] {
-        let posix = bin_dir.join(command);
-        store.guard_mutation_path(&posix)?;
-        write_shim_atomic(&posix, posix_shim(command, binary_name).as_bytes(), true)?;
+        planned.push(PlannedShim {
+            name: command.to_owned(),
+            path: bin_dir.join(command),
+            bytes: posix_shim(command, binary_name).into_bytes(),
+            executable: true,
+        });
         if cfg!(windows) {
-            let cmd = bin_dir.join(format!("{command}.cmd"));
-            store.guard_mutation_path(&cmd)?;
-            write_shim_atomic(&cmd, cmd_shim(command, binary_name).as_bytes(), false)?;
+            let name = format!("{command}.cmd");
+            planned.push(PlannedShim {
+                path: bin_dir.join(&name),
+                bytes: cmd_shim(command, binary_name).into_bytes(),
+                name,
+                executable: false,
+            });
         }
     }
+    planned
+}
+
+/// Publish the stable shims, refusing to touch a file vibe did not write.
+///
+/// The shim directory may be one the operator shares with their own tools
+/// (PROP-019 §2.21), so every planned name is classified against the
+/// ownership inventory *before* the first byte is written: one foreign file
+/// refuses the whole operation and leaves the directory exactly as it was.
+/// Only the leaf files vibe writes are path-guarded — the directory's other
+/// tenants, links included, are none of vibe's business.
+pub(crate) fn write_shims(store: &VersionStore) -> Result<()> {
+    let bin_dir = store.shim_dir();
+    store.guard_mutation_path(&bin_dir)?;
+    fs::create_dir_all(&bin_dir).with_context(|| format!("creating `{}`", bin_dir.display()))?;
+    let planned = planned_shims(&bin_dir);
+    let mut inventory = ownership::load(store)?;
+    for shim in &planned {
+        store.guard_mutation_path(&shim.path)?;
+        inventory.refuse_foreign(&bin_dir, &shim.name)?;
+    }
+    for shim in &planned {
+        write_shim_atomic(&shim.path, &shim.bytes, shim.executable)?;
+        inventory.record(&shim.name, &shim.bytes);
+    }
+    ownership::save(store, &inventory)?;
     Ok(())
 }
 

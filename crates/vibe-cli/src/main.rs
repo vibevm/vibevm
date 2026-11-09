@@ -141,6 +141,7 @@ fn run() -> ExitCode {
                 return ExitCode::FAILURE;
             }
         };
+    let network = vibe_net::enter(&cancellation, vibe_core::net::route().clone());
 
     // PROP-066 `#locator`: this invocation's one Locator, built and
     // installed before any command — it is write-once — and after the
@@ -372,13 +373,15 @@ fn run() -> ExitCode {
                 let vvm_env = commands::vvm::VvmEnv {
                     root: commands::vvm::resolve_root(
                         self_loc.as_ref().map(|l| l.root.clone()),
-                        read_env_opt(commands::vvm::VIBEVM_INSTALL_ROOT_ENV).map(PathBuf::from),
+                        composition::install_base_override(),
                         dirs::home_dir(),
                     ),
                     cwd: std::env::current_dir().ok(),
                     home: dirs::home_dir(),
                     shell: read_env_opt("SHELL"),
                     path_var: read_env_opt("PATH"),
+                    install_root_env: read_env_opt(commands::vvm::VIBEVM_INSTALL_ROOT_ENV)
+                        .map(PathBuf::from),
                     offline: composition::vvm_offline(cli.offline),
                     source_build_environment: commands::vvm::SOURCE_BUILD_ENVIRONMENT
                         .into_iter()
@@ -396,6 +399,7 @@ fn run() -> ExitCode {
             Command::Progress(args) => commands::progress::run(&ctx, args),
             Command::Transfers(args) => commands::transfers::run(&ctx, args),
             Command::Artifacts(args) => commands::artifacts::run(&ctx, args, cli.offline),
+            Command::Dl(args) => commands::dl::run(&ctx, args, cli.offline, cli.verbose),
             Command::Tools { json } => {
                 let cwd = std::env::current_dir().unwrap_or_else(|_| ".".into());
                 commands::tools::run(&ctx, &cwd, json)
@@ -434,6 +438,7 @@ fn run() -> ExitCode {
     };
 
     stop_input.settle(&ctx, &cancellation);
+    composition::network::finish(&ctx, network, result.is_err());
     command_activity.complete(result.is_ok());
     composition::finish(&ctx, &cancellation, result, preview_only)
 }
@@ -548,12 +553,8 @@ fn promote_user_config_env() -> vibe_core::user_config::TransferConfig {
             ))
         );
     }
-    // PROP-066 `#locator`: the one `[proxy]` table reaches every reqwest
-    // client and every child `git` by the mechanism both already read —
-    // `HTTPS_PROXY` / `HTTP_PROXY` / `NO_PROXY`. Three fixed names from a
-    // typed table, not the free-form `[env]` map, so the allowlist above
-    // neither admits nor refuses them; the live-env rule below is shared.
-    let proxy = cfg.proxy.child_env();
+    // PROP-068 `#proxy`: `[proxy]` is the route; its names promote as below.
+    let proxy = composition::network::install_route(&cfg.proxy, read_env_opt);
     let mut promoted: BTreeSet<String> = BTreeSet::new();
     for (name, value) in admitted
         .into_iter()

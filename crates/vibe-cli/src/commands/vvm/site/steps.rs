@@ -12,12 +12,18 @@ use super::super::env::{
 };
 use super::super::store::VersionStore;
 use super::super::{VvmEnv, import, install::InstallLock, make_persister, model, provenance};
-use super::report::{Imported, PathPreview, PathReport};
+use super::report;
 use crate::output;
+use vibe_wire::generated::self_apply_report::{Imported, PathPlan, PathReport};
 
 /// The PATH step (`PROP-019#path`): with consent, put the shim directory on
 /// the durable PATH through the platform persister — on Windows the
 /// registry API, never a shell. A dry run only reports the decision.
+/// `install_root` is the base a configured install root names
+/// (`PROP-019#install-root`); a performed step that was allowed to touch
+/// the durable environment also makes `$VIBEVM_INSTALL_ROOT` durable, so
+/// the next terminal resolves the same store. One consent governs both
+/// writes: a step skipped for want of consent writes neither.
 pub(super) fn path_step(
     ctx: &output::Context,
     env: &VvmEnv,
@@ -25,6 +31,7 @@ pub(super) fn path_step(
     flag: Option<bool>,
     policy: PathFixPolicy,
     dry_run: bool,
+    install_root: Option<&std::path::Path>,
 ) -> Result<PathReport> {
     let shim_dir = store.shim_dir();
     let persister = make_persister(env, Shell::detect(env.shell.as_deref()))?;
@@ -34,18 +41,27 @@ pub(super) fn path_step(
         let before = persister.inspect_path(&shim_dir);
         let on_path = before.path_entry == env::PathEntryStatus::Correct;
         let (planned, consent_source, skip_reason) = match (on_path, env::decide(&consent)) {
-            (true, _) => ("already_on_path", None, None),
-            (false, PathFixDecision::Apply(source)) => ("would_apply", Some(source), None),
-            (false, PathFixDecision::Ask { .. }) => ("would_ask", None, None),
-            (false, PathFixDecision::Skip(reason)) => ("would_skip", None, Some(reason)),
+            (true, _) => (PathPlan::AlreadyOnPath, None, None),
+            (false, PathFixDecision::Apply(source)) => (PathPlan::WouldApply, Some(source), None),
+            (false, PathFixDecision::Ask { .. }) => (PathPlan::WouldAsk, None, None),
+            (false, PathFixDecision::Skip(reason)) => (PathPlan::WouldSkip, None, Some(reason)),
         };
-        return Ok(PathReport::Planned(PathPreview {
+        // A planned step reached no persister: it carries `planned` and the
+        // target it would write, and none of a performed step's members.
+        return Ok(PathReport {
             shim_dir: shim_dir.display().to_string(),
-            planned,
-            consent: consent_source,
-            skip_reason,
+            outcome: None,
+            was_on_durable_path: None,
+            on_durable_path: None,
+            planned: Some(planned),
+            consent: consent_source.map(report::consent_source),
+            skip_reason: skip_reason.map(report::skip_reason),
+            changed: None,
+            activation_hint: None,
+            fix_hint: None,
+            durable_environment: None,
             target: before.target,
-        }));
+        });
     }
     let observation = ensure_shim_dir_on_durable_path(
         &*persister,
@@ -57,7 +73,18 @@ pub(super) fn path_step(
             })
         },
     )?;
-    Ok(PathReport::Done(observation))
+    if let Some(root) = install_root
+        && observation.outcome != env::PathFixOutcome::Skipped
+    {
+        persister.set_install_root(root).with_context(|| {
+            format!(
+                "making ${} = `{}` durable",
+                crate::commands::vvm::VIBEVM_INSTALL_ROOT_ENV,
+                root.display()
+            )
+        })?;
+    }
+    Ok(report::path_done(observation))
 }
 
 /// From an unmanaged binary — a `vibe` downloaded by hand into a closed
@@ -65,11 +92,10 @@ pub(super) fn path_step(
 /// first so the store and the stable shims exist (`self import --use`).
 pub(super) fn import_running_if_unmanaged(
     ctx: &output::Context,
-    env: &VvmEnv,
     dry_run: bool,
+    store: &VersionStore,
 ) -> Result<Option<Imported>> {
-    let store = env.store()?;
-    if provenance::running_record(&store)?.is_some() || store.active()?.is_some() {
+    if provenance::running_record(store)?.is_some() || store.active()?.is_some() {
         return Ok(None);
     }
     let executable = std::env::current_exe().context("locating the running vibe")?;
@@ -82,11 +108,11 @@ pub(super) fn import_running_if_unmanaged(
             planned: true,
         }));
     }
-    let _lock = InstallLock::acquire(&store)?;
+    let _lock = InstallLock::acquire(store)?;
     let now = chrono::Utc::now().to_rfc3339();
     let outcome = import::perform_import(
         ctx,
-        &store,
+        store,
         &import::ImportRequest {
             executable: &executable,
             tag: version,
@@ -100,7 +126,7 @@ pub(super) fn import_running_if_unmanaged(
             now: &now,
         },
     )?;
-    env::activate_without_environment(&store, &outcome.home)?;
+    env::activate_without_environment(store, &outcome.home)?;
     Ok(Some(Imported {
         executable: executable.display().to_string(),
         selector: outcome.record.selector().to_string(),

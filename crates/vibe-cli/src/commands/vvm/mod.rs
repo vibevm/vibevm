@@ -83,6 +83,11 @@ pub struct VvmEnv {
     pub shell: Option<String>,
     /// `$PATH` — to check whether the shim dir is reachable (`doctor`).
     pub path_var: Option<String>,
+    /// `$VIBEVM_INSTALL_ROOT` as inherited, before any configured value
+    /// (PROP-019 `#install-root`); `root` above is the RESOLVED directory.
+    /// This rung outranks every configured install root, which `vibe self
+    /// apply` has to know to say what decided the root it used.
+    pub install_root_env: Option<PathBuf>,
     /// The offline posture this invocation resolved: the root `--offline`
     /// flag, then `VIBE_OFFLINE`, then the user-config `[net] offline` key,
     /// layered exactly as PROP-010 `##OFFLINE-LAYERING` says and collapsed
@@ -182,6 +187,7 @@ pub fn run(ctx: &output::Context, args: VvmArgs, env: VvmEnv) -> Result<()> {
         VvmSubcommand::Source(a) => bundle::run_release_source_cmd(ctx, &env, a.command),
         VvmSubcommand::Releases(a) => bundle::run_releases_cmd(ctx, &env, a),
         VvmSubcommand::Doctor(a) => doctor::run_doctor_cmd(ctx, &env, a),
+        VvmSubcommand::Px(a) => observed(ctx, "px", |p| bundle::run_px(ctx, &env, a, p)),
         VvmSubcommand::Apply(a) => site::run_apply_cmd(ctx, &env, a),
         VvmSubcommand::Remove(a) => remove::run_remove_cmd(ctx, &env, a),
         VvmSubcommand::Gc(a) => {
@@ -403,6 +409,7 @@ fn run_install_cmd(
     {
         return Ok(());
     }
+    bundle::px_after_source(ctx, env, progress);
     let task = progress.task("Activating installed version");
     let result = activate_record(ctx, env, &store, &outcome.record, command);
     if result.is_ok() {

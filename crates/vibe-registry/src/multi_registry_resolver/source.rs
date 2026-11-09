@@ -80,8 +80,30 @@ impl MonorepoRegistrySource {
         }
     }
 
+    /// Whether the repository is read through the filesystem (a `file:`
+    /// url, an absolute path, a Windows share): it needs no network, so
+    /// `--offline` reads it like a `localdir` registry (PROP-002
+    /// `#offline-local`).
+    pub fn is_local(&self) -> bool {
+        is_local_url(&self.url)
+    }
+
+    /// The local-directory view under `--offline`: only a local repository,
+    /// and only its local remap candidates, are read. `None` when the
+    /// repository is not local.
+    pub fn offline_local(&self) -> Result<Option<&LocalRegistry>, RegistryError> {
+        if !self.is_local() {
+            return Ok(None);
+        }
+        self.open(true).map(|opened| Some(opened.local()))
+    }
+
     /// The cloned registry, cloning or refreshing it on first use.
     pub fn registry(&self) -> Result<&GitMonorepoRegistry, RegistryError> {
+        self.open(false)
+    }
+
+    fn open(&self, local_only: bool) -> Result<&GitMonorepoRegistry, RegistryError> {
         if let Some(opened) = self.opened.get() {
             return Ok(opened);
         }
@@ -91,11 +113,17 @@ impl MonorepoRegistrySource {
         })?;
         if self.opened.get().is_none() {
             let cache = self.cache_root.join("monorepo");
+            let candidates: Vec<String> = self
+                .candidates
+                .iter()
+                .filter(|candidate| !local_only || is_local_url(candidate))
+                .cloned()
+                .collect();
             // A controlled transport admits only native preparation.
             let opened = if self.backend.native_materialisation_for(&self.url)? {
                 GitMonorepoRegistry::open_native(
                     &self.url,
-                    &self.candidates,
+                    &candidates,
                     &self.refname,
                     &cache,
                     Arc::clone(&self.backend),
@@ -103,7 +131,7 @@ impl MonorepoRegistrySource {
             } else {
                 GitMonorepoRegistry::open_routes(
                     &self.url,
-                    &self.candidates,
+                    &candidates,
                     &self.refname,
                     &cache,
                     Arc::clone(&self.backend),
@@ -125,6 +153,13 @@ impl MonorepoRegistrySource {
     pub fn local(&self) -> Result<&LocalRegistry, RegistryError> {
         self.registry().map(GitMonorepoRegistry::local)
     }
+}
+
+/// Whether a repository `url` is read through the filesystem
+/// ([`crate::git_backend::shell::native_admission::local_repository`]).
+pub(crate) fn is_local_url(url: &str) -> bool {
+    crate::git_backend::shell::native_admission::local_repository(url)
+        .is_some_and(|found| found.is_ok())
 }
 
 /// The local-directory flavour of a [`RegistrySource`] — a [`LocalRegistry`]

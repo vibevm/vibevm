@@ -85,7 +85,8 @@ fn library(stem: &str) -> PathBuf {
         std::env::consts::DLL_PREFIX,
         std::env::consts::DLL_SUFFIX
     );
-    [profile, deps]
+    // `deps/` first: the copy this test binary was built with.
+    [deps, profile]
         .into_iter()
         .flat_map(|directory| std::fs::read_dir(directory).unwrap())
         .map(|entry| entry.unwrap().path())

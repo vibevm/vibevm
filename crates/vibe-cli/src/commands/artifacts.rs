@@ -11,47 +11,20 @@ specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-066#drops");
 use std::path::{Path, PathBuf};
 
 use anyhow::Result;
-use serde::Serialize;
 use sha2::{Digest, Sha256};
 use specmark::spec;
 use vibe_core::manifest::{StepKind, steps_of};
 use vibe_core::remap::drop::{bundle_file_name, package_lookup, release_dir, url_file_name};
+use vibe_wire::generated::artifacts_where_report::{
+    ArtifactsWhereReport, DropStatus, InputWhere, ReleaseWhere,
+};
 
 use crate::cli::{ArtifactsArgs, ArtifactsCommand, ArtifactsWhereArgs};
 use crate::commands::vvm::bundle::release_source::{self, ReleaseSource};
 use crate::output;
 
-/// The `--json` document of `vibe artifacts where`.
-#[derive(Debug, Serialize)]
-struct WhereReport {
-    protocol: &'static str,
-    release: ReleaseWhere,
-    packages: Option<String>,
-    inputs: Vec<InputWhere>,
-}
-
-#[derive(Debug, Serialize)]
-pub(crate) struct ReleaseWhere {
-    pub(crate) source: &'static str,
-    pub(crate) location: String,
-    pub(crate) from: String,
-    /// The directory one release goes into, for the running version.
-    pub(crate) example_dir: Option<String>,
-    /// The files that directory must hold for this machine.
-    pub(crate) files: Vec<String>,
-}
-
-#[derive(Debug, Serialize)]
-struct InputWhere {
-    option: String,
-    step: String,
-    input: String,
-    file: Option<String>,
-    sha256: String,
-    url: Option<String>,
-    searched: Vec<String>,
-    status: &'static str,
-}
+/// The JSON protocol name of the report (`cli-artifacts-where-report`).
+const PROTOCOL: &str = "vibe-artifacts-where/1";
 
 #[spec(documents = "spec://org.vibevm.core/vibevm/common/PROP-066#drops")]
 pub fn run(ctx: &output::Context, args: ArtifactsArgs, offline: bool) -> Result<()> {
@@ -72,8 +45,8 @@ fn run_where(ctx: &output::Context, args: ArtifactsWhereArgs, offline: bool) -> 
         }
         None => Vec::new(),
     };
-    let report = WhereReport {
-        protocol: "vibe-artifacts-where/1",
+    let report = ArtifactsWhereReport {
+        protocol: PROTOCOL.to_owned(),
         release,
         packages: drop.as_ref().map(|path| path.display().to_string()),
         inputs,
@@ -114,7 +87,7 @@ pub(crate) fn release_where_for(
         _ => (None, Vec::new()),
     };
     ReleaseWhere {
-        source: effective.source.kind(),
+        source: effective.source.wire_kind(),
         location: effective.source.location(),
         from: effective.origin.describe(),
         example_dir,
@@ -193,14 +166,27 @@ fn package_inputs(
 
 /// `present` when a searched rung holds the declared bytes, `mismatch`
 /// when the first file found holds others, `missing` otherwise.
-fn status(searched: &[PathBuf], sha256: &str) -> &'static str {
+fn status(searched: &[PathBuf], sha256: &str) -> DropStatus {
     match searched.iter().find(|rung| rung.is_file()) {
         Some(found) => match std::fs::read(found) {
-            Ok(bytes) if hex(&Sha256::digest(&bytes)) == sha256.to_ascii_lowercase() => "present",
-            _ => "mismatch",
+            Ok(bytes) if hex(&Sha256::digest(&bytes)) == sha256.to_ascii_lowercase() => {
+                DropStatus::Present
+            }
+            _ => DropStatus::Mismatch,
         },
-        None if searched.is_empty() => "no-drop",
-        None => "missing",
+        None if searched.is_empty() => DropStatus::NoDrop,
+        None => DropStatus::Missing,
+    }
+}
+
+/// The wire value spelled for a human; the one mapping, so the text and the
+/// JSON can never disagree.
+fn status_label(status: &DropStatus) -> &'static str {
+    match status {
+        DropStatus::Present => "present",
+        DropStatus::Mismatch => "mismatch",
+        DropStatus::Missing => "missing",
+        DropStatus::NoDrop => "no-drop",
     }
 }
 
@@ -208,11 +194,13 @@ fn hex(bytes: &[u8]) -> String {
     bytes.iter().map(|byte| format!("{byte:02x}")).collect()
 }
 
-fn render(ctx: &output::Context, report: &WhereReport, package: Option<&str>) {
+fn render(ctx: &output::Context, report: &ArtifactsWhereReport, package: Option<&str>) {
     let release = &report.release;
     let mut text = format!(
         "vibe releases: {} {} ({})",
-        release.source, release.location, release.from
+        release_source::kind_label(release.source.clone()),
+        release.location,
+        release.from
     );
     match &release.example_dir {
         Some(dir) => {
@@ -246,10 +234,10 @@ fn render(ctx: &output::Context, report: &WhereReport, package: Option<&str>) {
                 input.input,
                 input.file.as_deref().unwrap_or("<unnamed>"),
                 input.sha256,
-                input.status
+                status_label(&input.status)
             ));
             if let Some(first) = input.searched.first()
-                && input.status != "present"
+                && input.status != DropStatus::Present
             {
                 text.push_str(&format!("\n    put it at `{first}`"));
             }

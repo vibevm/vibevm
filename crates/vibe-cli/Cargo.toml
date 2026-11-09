@@ -28,6 +28,7 @@ specmark.workspace = true
 # User applications (PROP-059): install, launch, storage libraries.
 vibe-app.workspace = true
 vibe-core.workspace = true
+vibe-net.workspace = true
 # The PROP-057 documentation pipeline behind `vibe doc`.
 vibe-doc.workspace = true
 # The local reader `vibe doc serve` starts: axum lives there and never
@@ -105,6 +106,9 @@ reqwest.workspace = true
 tracing.workspace = true
 tracing-subscriber.workspace = true
 zip.workspace = true
+# The pinned px upstream archives (`tar.gz` on Linux and macOS, PROP-019 `#companion-tools`).
+flate2.workspace = true
+tar.workspace = true
 # `vibe tree` interactive TUI (PROP-036 §2.11).
 rat-salsa.workspace = true
 rat-widget.workspace = true
@@ -139,8 +143,6 @@ windows-sys = { workspace = true, features = [
 ] }
 
 [dev-dependencies]
-flate2.workspace = true
-tar.workspace = true
 walkdir.workspace = true
 indicatif = { workspace = true, features = ["in_memory"] }
 vibe-native-loader-compiler-fixture = { path = "../vibe-native-loader/tests/fixtures/native-compiler-plugin" }

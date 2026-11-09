@@ -32,13 +32,27 @@ fn fixture_library() -> PathBuf {
         std::env::consts::DLL_PREFIX,
         std::env::consts::DLL_SUFFIX
     );
-    let mut candidates = Vec::new();
-    collect_exact(profile_dir, &exact_name, &mut candidates);
-    collect_exact(&profile_dir.join("deps"), &exact_name, &mut candidates);
-    candidates.sort();
-    candidates.dedup();
-    assert_eq!(candidates.len(), 1, "one exact SDK fixture: {candidates:?}");
-    candidates.pop().expect("one fixture DLL")
+    // The build of this test writes the fixture into `deps/`; Cargo also
+    // uplifts a copy into the profile directory when the fixture crate was
+    // built on its own, which may be from an older build. `deps/` is the
+    // copy this test binary was built with, so it wins; the profile
+    // directory is used only when `deps/` has none. Each directory holds
+    // at most one exact name.
+    for directory in [profile_dir.join("deps"), profile_dir.to_path_buf()] {
+        let mut candidates = Vec::new();
+        collect_exact(&directory, &exact_name, &mut candidates);
+        assert!(
+            candidates.len() <= 1,
+            "one exact SDK fixture per directory: {candidates:?}"
+        );
+        if let Some(found) = candidates.pop() {
+            return found;
+        }
+    }
+    panic!(
+        "the SDK fixture `{exact_name}` is not built under {}",
+        profile_dir.display()
+    )
 }
 
 fn collect_exact(directory: &Path, exact_name: &str, candidates: &mut Vec<PathBuf>) {

@@ -113,6 +113,7 @@ mod fixtures {
             if self.auth_failure_urls.lock().unwrap().contains(url) {
                 return Err(GitError::AuthFailed {
                     url: url.to_string(),
+                    status: Some(401),
                 });
             }
             self.tags

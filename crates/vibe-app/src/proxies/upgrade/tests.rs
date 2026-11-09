@@ -28,7 +28,8 @@ impl Fixture {
             .join("org.example.editor@1.2.0/bin/edit");
         for path in [&global, &session] {
             fs::create_dir_all(path.parent().unwrap()).unwrap();
-            fs::write(path, b"old reader").unwrap();
+            // An older vibe's proxy: it names the index protocol it reads.
+            fs::write(path, b"old reader of vibe-user-applications/3").unwrap();
         }
         let mut next = old.clone();
         next.installations
@@ -63,8 +64,14 @@ impl Fixture {
     }
     fn unchanged(&self, bytes: &[u8]) {
         assert_eq!(fs::read(self.home.index_path()).unwrap(), bytes);
-        assert_eq!(fs::read(&self.global).unwrap(), b"old reader");
-        assert_eq!(fs::read(&self.session).unwrap(), b"old reader");
+        assert_eq!(
+            fs::read(&self.global).unwrap(),
+            b"old reader of vibe-user-applications/3"
+        );
+        assert_eq!(
+            fs::read(&self.session).unwrap(),
+            b"old reader of vibe-user-applications/3"
+        );
     }
 }
 fn event() -> HomeEvent {
@@ -217,7 +224,10 @@ fn unsafe_managed_destination_refuses_before_any_copy_or_foreign_write() {
             .publish_locked(&f.home, &event(), &lock, Some(&image))
             .is_err()
     );
-    assert_eq!(fs::read(&f.global).unwrap(), b"old reader");
+    assert_eq!(
+        fs::read(&f.global).unwrap(),
+        b"old reader of vibe-user-applications/3"
+    );
     assert_eq!(fs::read(f.home.index_path()).unwrap(), before);
     assert_eq!(fs::read(foreign).unwrap(), b"foreign");
 }

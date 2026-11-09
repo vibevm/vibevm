@@ -23,6 +23,7 @@ pub struct SshConfigSelection {
     system: Option<PathBuf>,
     environment: BTreeMap<String, String>,
     acquisition_root: Option<PathBuf>,
+    default_agent: Option<PathBuf>,
 }
 impl std::fmt::Debug for SshConfigSelection {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
@@ -50,6 +51,7 @@ impl SshConfigSelection {
             system,
             environment: BTreeMap::new(),
             acquisition_root: None,
+            default_agent: None,
         })
     }
     /// Select an alternate ordinary user configuration without changing HOME.
@@ -70,6 +72,16 @@ impl SshConfigSelection {
             return Err(unsupported("invalid SSH expansion input"));
         }
         self.environment.insert(key.into(), value);
+        Ok(self)
+    }
+    /// The agent the selected client uses when `SSH_AUTH_SOCK` is unset:
+    /// the Windows OpenSSH client's `\\.\pipe\openssh-ssh-agent`. Without
+    /// one, an unset `SSH_AUTH_SOCK` selects no agent.
+    pub fn with_default_agent(mut self, endpoint: PathBuf) -> Result<Self, GitError> {
+        if !endpoint.is_absolute() && !platform::named_pipe(&endpoint) {
+            return Err(unsupported("SSH default agent endpoint must be absolute"));
+        }
+        self.default_agent = Some(endpoint);
         Ok(self)
     }
     pub fn with_acquisition_root(mut self, root: PathBuf) -> Result<Self, GitError> {
@@ -203,27 +215,18 @@ impl SshConfiguration {
     }
 }
 /// One captured SSH endpoint. Everything but the authored authority feeds the
-/// owned client configuration, which only the Unix launcher writes; elsewhere
-/// the launcher refuses, so those fields exist on Unix alone.
+/// owned client configuration the launcher writes.
 pub(super) struct Configured {
-    #[cfg(unix)]
     owner: Arc<SshConfiguration>,
     authored: Authority,
-    #[cfg(unix)]
     identities: Vec<String>,
-    #[cfg(unix)]
     agent: String,
-    #[cfg(unix)]
     identities_only: bool,
-    #[cfg(unix)]
+    /// `(keyword, value)` exactly as the selected OpenSSH reported them.
     client_options: Vec<(String, String)>,
-    #[cfg(unix)]
     trust: Vec<(String, Vec<u8>)>,
-    #[cfg(unix)]
     host_key_alias: Option<String>,
-    #[cfg(unix)]
     check_host_ip: bool,
-    #[cfg(unix)]
     witness: Witness,
 }
 impl Configured {
@@ -234,11 +237,9 @@ impl Configured {
         self.authored == other.authored
     }
     /// The caller-trusted OpenSSH installation this capture selected.
-    #[cfg(unix)]
     pub(super) fn executable(&self) -> &Path {
         &self.owner.selected.executable
     }
-    #[cfg(unix)]
     pub(super) fn configure(
         &self,
         command: &mut std::process::Command,

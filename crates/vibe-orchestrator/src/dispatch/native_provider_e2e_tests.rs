@@ -540,7 +540,8 @@ fn fixture_library() -> PathBuf {
         std::env::consts::DLL_PREFIX,
         std::env::consts::DLL_SUFFIX
     );
-    [profile.to_path_buf(), profile.join("deps")]
+    // `deps/` first: the copy this test binary was built with.
+    [profile.join("deps"), profile.to_path_buf()]
         .into_iter()
         .flat_map(|directory| std::fs::read_dir(directory).into_iter().flatten().flatten())
         .map(|entry| entry.path())

@@ -134,6 +134,11 @@ pub struct TransferRecord {
     pub limit_bps: Option<u64>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub remapped_from: Option<String>,
+    /// The proxy the connection goes through (`PROP-068#proxy`): its
+    /// `scheme://host:port`, or `px` for the vibe-managed px; absent for a
+    /// direct connection. Never a credential.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub proxy: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub resume: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
@@ -170,6 +175,7 @@ impl TransferRecord {
 
     fn fresh(kind: TransferKind, url: String, purpose: Purpose, destination: Destination) -> Self {
         let pid = std::process::id();
+        let proxy = crate::net::route().label_for(&url);
         Self {
             id: format!("{pid}:{}", NEXT.fetch_add(1, Ordering::Relaxed)),
             batch: pid.to_string(),
@@ -187,6 +193,7 @@ impl TransferRecord {
             limited: false,
             limit_bps: None,
             remapped_from: None,
+            proxy,
             resume: None,
             continues: None,
         }

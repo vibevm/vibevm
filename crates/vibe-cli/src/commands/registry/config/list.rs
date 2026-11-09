@@ -42,9 +42,34 @@ fn one_layer(file: ScopeFile) -> View {
     }
 }
 
+/// The applied site profile's own rows (`PROP-019#site-profile`).
+fn site_layer() -> Result<View> {
+    let site = vibe_core::site_profile::installed().context("reading the applied site profile")?;
+    let (label, config) = match site {
+        Some(site) => (
+            format!("the site profile `{}`", site.path.display()),
+            site.profile.registry_layer(),
+        ),
+        None => (
+            "the site profile (none applied)".to_string(),
+            GlobalRegistryConfig::default(),
+        ),
+    };
+    Ok(View {
+        label,
+        rows: config
+            .registries
+            .iter()
+            .map(|row| (RegistryScope::Site, row.clone()))
+            .collect(),
+        mirrors: config.mirrors,
+        overrides: config.overrides,
+    })
+}
+
 /// The effective view across every layer (PROP-002 `#registry-layers`):
 /// the project-local override and `vibe.toml` when run inside a project,
-/// then `~/.vibe/registry.toml`.
+/// then `~/.vibe/registry.toml`, then the applied site profile.
 fn merged(path: &Path) -> Result<View> {
     let root = resolve_project_root(path)?;
     let manifest_path = root.join(Manifest::FILENAME);
@@ -64,11 +89,16 @@ fn merged(path: &Path) -> Result<View> {
         Some(path) => GlobalRegistryConfig::load_from(&path)?,
         None => GlobalRegistryConfig::default(),
     };
+    // The applied site profile (`PROP-019#site-profile`) is the layer
+    // below the user's own file; its rows are listed with scope `site`.
+    let site = vibe_core::site_profile::installed()
+        .context("reading the applied site profile")?
+        .map(|site| site.profile.registry_layer());
     let layers = RegistryLayers {
         local: local.as_ref(),
         project: project.as_ref(),
         user: &user,
-        site: None,
+        site: site.as_ref(),
     };
     let effective = layers.merge();
     Ok(View {
@@ -102,9 +132,19 @@ pub(in crate::commands::registry) fn run_list(
     ctx: &output::Context,
     args: RegistryListArgs,
 ) -> Result<()> {
-    let view = match parse_scope(args.scope.as_deref())? {
-        Some(scope) => one_layer(ScopeFile::open(scope, &args.path)?),
-        None => merged(&args.path)?,
+    // `--scope site` is read-only: listing it is allowed, editing is not.
+    let view = if args
+        .scope
+        .as_deref()
+        .and_then(RegistryScope::parse)
+        .is_some_and(|scope| scope == RegistryScope::Site)
+    {
+        site_layer()?
+    } else {
+        match parse_scope(args.scope.as_deref())? {
+            Some(scope) => one_layer(ScopeFile::open(scope, &args.path)?),
+            None => merged(&args.path)?,
+        }
     };
 
     let mut registries: Vec<ListReportRegistry> = Vec::with_capacity(view.rows.len());

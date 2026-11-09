@@ -90,9 +90,10 @@ impl NativeGitAdmission {
             },
         })?;
         match observed.response.status().as_u16() {
-            401 | 403 => {
+            status @ (401 | 403) => {
                 return Err(GitError::AuthFailed {
                     url: url.to_string(),
+                    status: Some(status),
                 });
             }
             404 => {

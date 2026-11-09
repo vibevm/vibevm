@@ -214,6 +214,7 @@
           "limited",
           "limit_bps",
           "remapped_from",
+          "proxy",
           "resume",
           "continues",
           "bytes",
@@ -303,6 +304,13 @@
           "metadata": {
             "x-default": null,
             "description": "The URL the manifest named when a remap row fetched another (PROP-066)."
+          }
+        },
+        "proxy": {
+          "type": "string",
+          "metadata": {
+            "x-default": null,
+            "description": "The proxy the connection went through: scheme://host:port of the configured proxy (never a credential), or px for the vibe-managed px; absent for a direct connection (PROP-068#proxy)."
           }
         },
         "resume": {

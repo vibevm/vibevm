@@ -109,6 +109,7 @@ impl ShellGit {
         // come BEFORE the subcommand — push the env / global-flag
         // layer first, then the actual git subcommand args.
         apply_common_env(&mut cmd, self.force_anonymous);
+        env::apply_network(&mut cmd, &self.binary, args, cwd)?;
         cmd.args(args);
         if let Some(d) = cwd {
             cmd.current_dir(d);
@@ -139,6 +140,7 @@ impl ShellGit {
         self.admit_native()?;
         let mut cmd = Command::new(&self.binary);
         apply_common_env(&mut cmd, self.force_anonymous);
+        env::apply_network(&mut cmd, &self.binary, args, cwd)?;
         cmd.args(args);
         if let Some(d) = cwd {
             cmd.current_dir(d);

@@ -1,0 +1,134 @@
+{
+  "metadata": {
+    "description": "The release's companion tools `TOOLS.json` (PROP-019 `#companion-tools`): per target, an executable a vibe release carries beside its bundle — px, the single-sign-on proxy bridge (PROP-068 `#proxy-px`) — as its own asset with its size and SHA-256. It sits beside `DISTRIBUTIONS.json`, whose closed shape vibe 1.0.11 and older refuse to extend; a vibe that knows this file installs each listed tool into `tools/<name>/` of the version directory after verifying the digest. Source of truth for `crates/vibe-wire/src/generated/distribution_tools/mod.rs`.",
+    "spec": {
+      "implements": "spec://org.vibevm.core/vibevm/common/PROP-019#companion-tools"
+    },
+    "rustOptions": {
+      "package": "vibe_wire::distribution_tools"
+    },
+    "x-rust-type": "DistributionToolsManifest",
+    "x-wire-order": [
+      "schema_version",
+      "product",
+      "version",
+      "tag",
+      "source_commit",
+      "tools"
+    ]
+  },
+  "properties": {
+    "schema_version": {
+      "type": "uint32",
+      "metadata": {
+        "description": "Always `1`."
+      }
+    },
+    "product": {
+      "type": "string",
+      "metadata": {
+        "description": "Always `\"vibevm\"`."
+      }
+    },
+    "version": {
+      "type": "string",
+      "metadata": {
+        "description": "The release's SemVer, as in `DISTRIBUTIONS.json`."
+      }
+    },
+    "tag": {
+      "type": "string",
+      "metadata": {
+        "description": "Exactly `v<version>`."
+      }
+    },
+    "source_commit": {
+      "type": "string",
+      "metadata": {
+        "description": "The commit the release was built from, as in `DISTRIBUTIONS.json`."
+      }
+    },
+    "tools": {
+      "elements": {
+        "ref": "companion_tool"
+      },
+      "metadata": {
+        "x-empty": "emit"
+      }
+    }
+  },
+  "definitions": {
+    "byte_count": {
+      "type": "float64",
+      "metadata": {
+        "description": "An exact non-negative byte count. JTD has no uint64 form, so generated Rust narrows the numeric form to u64 and refuses fractions, negatives and overflow.",
+        "x-rust-type": "u64"
+      }
+    },
+    "companion_asset": {
+      "metadata": {
+        "description": "The tool's release asset: a ZIP whose entries are the files of `tools/<name>/`.",
+        "x-wire-order": [
+          "name",
+          "size",
+          "digest"
+        ]
+      },
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "size": {
+          "ref": "byte_count"
+        },
+        "digest": {
+          "type": "string",
+          "metadata": {
+            "description": "Lowercase `sha256:<64 hex digits>` digest of the asset."
+          }
+        }
+      }
+    },
+    "companion_tool": {
+      "metadata": {
+        "description": "One tool for one target.",
+        "x-wire-order": [
+          "name",
+          "version",
+          "target",
+          "executable",
+          "asset"
+        ]
+      },
+      "properties": {
+        "name": {
+          "type": "string",
+          "metadata": {
+            "description": "The tool's name; it is installed into `tools/<name>/`. Today only `px`."
+          }
+        },
+        "version": {
+          "type": "string",
+          "metadata": {
+            "description": "The tool's own upstream version."
+          }
+        },
+        "target": {
+          "type": "string",
+          "metadata": {
+            "description": "The Rust target triple of the vibe build it belongs to."
+          }
+        },
+        "executable": {
+          "type": "string",
+          "metadata": {
+            "description": "The executable's file name inside `tools/<name>/` (`px.exe` on Windows)."
+          }
+        },
+        "asset": {
+          "ref": "companion_asset"
+        }
+      }
+    }
+  }
+}

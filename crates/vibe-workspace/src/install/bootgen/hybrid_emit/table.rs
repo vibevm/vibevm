@@ -1,7 +1,7 @@
 //! Selected snippet and edge composition for the package unit table.
 specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-038#units");
-use super::super as bootgen;
 use super::*;
+use crate::install::bootgen;
 
 /// Build the per-unit table (PROP-038 §2.1) from the resolution: every
 /// materialised package becomes a [`UnitInput`] whose edges carry the link

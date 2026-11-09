@@ -1,0 +1,962 @@
+{
+  "metadata": {
+    "description": "Wire format for `vibe self apply <file|url> --json` and its `--dry-run` / `--remove` / `--show` forms (`vibe-self-apply/1`, PROP-019 `#site-profile`): which file the site profile changed, how the installation reads afterwards, where an operator puts releases and payloads, and what the PATH step did or would do. Source of truth for `crates/vibe-wire/src/generated/self_apply_report/mod.rs`.",
+    "spec": {
+      "implements": "spec://org.vibevm.core/vibevm/common/PROP-000#JTD-SSOT"
+    },
+    "rustOptions": {
+      "package": "vibe_wire::self_apply_report"
+    },
+    "x-vocabularies": [
+      "release_source_kind"
+    ],
+    "x-wire-order": [
+      "protocol",
+      "ok",
+      "command",
+      "action",
+      "changed",
+      "profile",
+      "files",
+      "effective",
+      "where",
+      "path",
+      "imported",
+      "next_steps",
+      "warnings"
+    ]
+  },
+  "properties": {
+    "protocol": {
+      "type": "string",
+      "metadata": {
+        "description": "Always `\"vibe-self-apply/1\"` for this report."
+      }
+    },
+    "ok": {
+      "type": "boolean"
+    },
+    "command": {
+      "type": "string",
+      "metadata": {
+        "description": "Always `\"self:apply\"` for this report."
+      }
+    },
+    "action": {
+      "ref": "apply_action"
+    },
+    "changed": {
+      "type": "boolean",
+      "metadata": {
+        "description": "Any file changed — or, for `dry-run`, would change."
+      }
+    },
+    "profile": {
+      "ref": "profile_info",
+      "nullable": true,
+      "metadata": {
+        "description": "The profile in force after the action; `null` when none is applied (a `show` or `remove` with nothing installed)."
+      }
+    },
+    "files": {
+      "elements": {
+        "ref": "file_change"
+      },
+      "metadata": {
+        "x-empty": "emit",
+        "description": "Every file the action writes, rewrites, leaves alone or deletes. `[]` for `show`. Required member: an absent key would make the document invalid by this same schema (rule R21)."
+      }
+    },
+    "effective": {
+      "ref": "effective",
+      "nullable": true,
+      "metadata": {
+        "description": "The installation as it reads after the action; `null` when the action has nothing to report on (a `remove` with nothing installed)."
+      }
+    },
+    "where": {
+      "ref": "where_to_put",
+      "nullable": true,
+      "metadata": {
+        "description": "Where an operator puts what the closed network cannot download; `null` when nothing has to be put anywhere."
+      }
+    },
+    "path": {
+      "ref": "path_report",
+      "nullable": true,
+      "metadata": {
+        "description": "The PATH step; `null` when the action does not reach it."
+      }
+    },
+    "imported": {
+      "ref": "imported",
+      "nullable": true,
+      "metadata": {
+        "description": "The running executable imported as the active instance, when apply ran from an unmanaged binary; `null` otherwise."
+      }
+    },
+    "next_steps": {
+      "elements": {
+        "type": "string"
+      },
+      "metadata": {
+        "x-empty": "emit",
+        "description": "What the operator does next. Required member: an absent key would make the document invalid by this same schema (rule R21)."
+      }
+    },
+    "warnings": {
+      "elements": {
+        "type": "string"
+      },
+      "metadata": {
+        "x-empty": "emit",
+        "description": "Diagnostics the action emitted; also printed on stderr in the human form. Required member: an absent key would make the document invalid by this same schema (rule R21)."
+      }
+    }
+  },
+  "definitions": {
+    "apply_action": {
+      "enum": [
+        "apply",
+        "dry-run",
+        "remove",
+        "show"
+      ],
+      "metadata": {
+        "x-vocabulary": "closed",
+        "description": "Which form of the command ran: `apply` installed the profile, `dry-run` only computed the changes, `remove` deleted exactly the files apply owns, `show` reported the installed profile. Closed: automation decides from it whether the machine changed."
+      }
+    },
+    "profile_info": {
+      "metadata": {
+        "x-wire-order": [
+          "name",
+          "source",
+          "sha256",
+          "stored",
+          "applied_at"
+        ],
+        "description": "The applied site profile's identity."
+      },
+      "properties": {
+        "name": {
+          "type": "string",
+          "nullable": true,
+          "metadata": {
+            "description": "The profile's `name`, or `null` for an unnamed profile."
+          }
+        },
+        "source": {
+          "type": "string",
+          "metadata": {
+            "description": "The path or URL it was applied from."
+          }
+        },
+        "sha256": {
+          "type": "string",
+          "metadata": {
+            "description": "Digest of the profile's bytes, lower-case hex."
+          }
+        },
+        "stored": {
+          "type": "string",
+          "metadata": {
+            "description": "Where the applied copy lives (`<settings>/site-profile.toml`)."
+          }
+        },
+        "applied_at": {
+          "type": "string",
+          "nullable": true,
+          "metadata": {
+            "description": "When the stored copy was applied, from the receipt; `null` before a first apply and on a dry run."
+          }
+        }
+      }
+    },
+    "file_change": {
+      "metadata": {
+        "x-wire-order": [
+          "path",
+          "change",
+          "diff"
+        ],
+        "description": "One file the action writes or removes."
+      },
+      "properties": {
+        "path": {
+          "type": "string"
+        },
+        "change": {
+          "ref": "file_change_kind"
+        }
+      },
+      "optionalProperties": {
+        "diff": {
+          "type": "string",
+          "metadata": {
+            "x-default": null,
+            "description": "The line diff; present only with `--diff`."
+          }
+        }
+      }
+    },
+    "file_change_kind": {
+      "enum": [
+        "create",
+        "update",
+        "unchanged",
+        "delete"
+      ],
+      "metadata": {
+        "x-vocabulary": "closed",
+        "description": "What happens to the file — or, on a dry run, would happen. Closed: automation decides from it whether the machine changed."
+      }
+    },
+    "effective": {
+      "metadata": {
+        "x-wire-order": [
+          "install_root",
+          "registries",
+          "release",
+          "release_error",
+          "packages_drop",
+          "prefer_hosting",
+          "exclude_hosting",
+          "proxy",
+          "offline",
+          "site_remap_rows"
+        ],
+        "description": "The installation as the layers read it: registries highest first, the release source, the package drop, source policy, proxy and the site's remap contribution."
+      },
+      "properties": {
+        "install_root": {
+          "ref": "install_root_row",
+          "nullable": true,
+          "metadata": {
+            "description": "Where vibe keeps itself; `null` only when nothing names a base and no home directory resolves."
+          }
+        },
+        "registries": {
+          "elements": {
+            "ref": "registry_row"
+          },
+          "metadata": {
+            "x-empty": "emit",
+            "description": "The effective registries, highest layer first. Required member: an absent key would make the document invalid by this same schema (rule R21)."
+          }
+        },
+        "release": {
+          "ref": "release_row",
+          "nullable": true,
+          "metadata": {
+            "description": "The effective release source; `null` when it is unusable, and then `release_error` says why."
+          }
+        },
+        "release_error": {
+          "type": "string",
+          "nullable": true,
+          "metadata": {
+            "description": "Why the declared release source cannot be used; `null` when it can."
+          }
+        },
+        "packages_drop": {
+          "type": "string",
+          "nullable": true,
+          "metadata": {
+            "description": "The effective `[artifacts] packages` directory, or `null` when none is configured."
+          }
+        },
+        "prefer_hosting": {
+          "ref": "hosting_list",
+          "nullable": true,
+          "metadata": {
+            "description": "The source policy's `prefer_hosting`, or `null` when the policy states no preference — which is not the same as an empty preference."
+          }
+        },
+        "exclude_hosting": {
+          "elements": {
+            "type": "string"
+          },
+          "metadata": {
+            "x-empty": "emit",
+            "description": "Hostings this installation never contacts. Required member: an absent key would make the document invalid by this same schema (rule R21)."
+          }
+        },
+        "proxy": {
+          "ref": "proxy_row"
+        },
+        "offline": {
+          "type": "boolean",
+          "metadata": {
+            "description": "`[net] offline` is in force by default."
+          }
+        },
+        "site_remap_rows": {
+          "type": "uint32",
+          "metadata": {
+            "description": "How many `[[remap]]` rows the site profile contributes (`vibe remap list` shows them)."
+          }
+        }
+      }
+    },
+    "install_root_row": {
+      "metadata": {
+        "x-wire-order": ["path", "from", "shim_dir", "data_dir"],
+        "description": "The install root vibe keeps itself under (PROP-019 `#install-root`) and the input that decided it. The store lives at `<path>/opt`, so an operator who may only run executables from one directory points this at it.",
+        "spec": {
+          "implements": "spec://org.vibevm.core/vibevm/common/PROP-019#install-root"
+        }
+      },
+      "properties": {
+        "path": {
+          "type": "string",
+          "metadata": {
+            "description": "The base directory — the durable `$VIBEVM_INSTALL_ROOT`."
+          }
+        },
+        "from": {
+          "type": "string",
+          "metadata": {
+            "description": "What decided it: `$VIBEVM_INSTALL_ROOT`, `[self] install_root in <file>`, or `built-in default`."
+          }
+        },
+        "shim_dir": {
+          "type": "string",
+          "metadata": {
+            "description": "`<path>/opt/bin` — the directory that goes on PATH and holds nothing but vibe's own shims."
+          }
+        },
+        "data_dir": {
+          "type": "string",
+          "metadata": {
+            "description": "`<path>/opt/vibevm` — the instances, the state file and the live pointer."
+          }
+        }
+      }
+    },
+    "hosting_list": {
+      "elements": {
+        "type": "string"
+      },
+      "metadata": {
+        "description": "A source-policy hosting list — `github`, `gitverse` or `host:<HOST>` — in declaration order."
+      }
+    },
+    "registry_row": {
+      "metadata": {
+        "x-wire-order": [
+          "name",
+          "type",
+          "url",
+          "scope"
+        ],
+        "description": "One effective `[[registry]]` and the layer it came from."
+      },
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "type": {
+          "ref": "registry_type"
+        },
+        "url": {
+          "type": "string"
+        },
+        "scope": {
+          "ref": "registry_scope"
+        }
+      }
+    },
+    "registry_type": {
+      "enum": [
+        "github",
+        "gitverse",
+        "git",
+        "monorepo",
+        "localdir"
+      ],
+      "metadata": {
+        "x-vocabulary": "closed",
+        "description": "The effective `[[registry]].type` (PROP-002 `#registry-type`), inferred from the url when the declaration omits it. Closed: the backend and the publish path are chosen from it, so an unfamiliar value has no safe behaviour."
+      }
+    },
+    "registry_scope": {
+      "enum": [
+        "user",
+        "site",
+        "default"
+      ],
+      "metadata": {
+        "x-vocabulary": "closed",
+        "description": "Which layer declared the row: the user's `~/.vibe/registry.toml`, the applied site profile, or vibe's built-in defaults. Closed: precedence is read from it."
+      }
+    },
+    "release_row": {
+      "metadata": {
+        "x-wire-order": [
+          "source",
+          "location",
+          "from"
+        ],
+        "description": "The effective release source and the input that decided it."
+      },
+      "properties": {
+        "source": {
+          "ref": "release_source_kind"
+        },
+        "location": {
+          "type": "string",
+          "metadata": {
+            "description": "The directory, repository or base URL releases are read from."
+          }
+        },
+        "from": {
+          "type": "string",
+          "metadata": {
+            "description": "Which input decided the source."
+          }
+        }
+      }
+    },
+    "proxy_row": {
+      "metadata": {
+        "x-wire-order": [
+          "mode",
+          "mode_origin",
+          "https",
+          "http",
+          "no_proxy",
+          "pac",
+          "pac_kind",
+          "pac_origin",
+          "upstream",
+          "px_port",
+          "px_path",
+          "ca_file"
+        ],
+        "description": "The effective `[proxy]` table (PROP-068#proxy); each key is `null` when neither the user's file nor the site declares it. `mode` is the mode in force and `mode_origin` the layer that chose it."
+      },
+      "properties": {
+        "mode": {
+          "type": "string",
+          "nullable": true,
+          "metadata": {
+            "description": "`px`, `explicit` or `none`; `null` when no layer sets one and no proxy URL is set (no proxy)."
+          }
+        },
+        "mode_origin": {
+          "type": "string",
+          "metadata": {
+            "description": "Which layer chose the mode: `default`, `site profile`, `user config` or `VIBEVM_PROXY_MODE`."
+          }
+        },
+        "https": {
+          "type": "string",
+          "nullable": true
+        },
+        "http": {
+          "type": "string",
+          "nullable": true
+        },
+        "no_proxy": {
+          "type": "string",
+          "nullable": true
+        },
+        "pac": {
+          "type": "string",
+          "nullable": true,
+          "metadata": {
+            "description": "The PAC location px reads: a URL, an absolute file path, or `system`."
+          }
+        },
+        "pac_kind": {
+          "type": "string",
+          "nullable": true,
+          "metadata": {
+            "description": "`url`, `file` or `system`; `null` without a PAC."
+          }
+        },
+        "pac_origin": {
+          "type": "string",
+          "metadata": {
+            "description": "Which layer chose the PAC: `default`, `site profile`, `user config` or `VIBEVM_PROXY_PAC`."
+          }
+        },
+        "upstream": {
+          "type": "string",
+          "nullable": true,
+          "metadata": {
+            "description": "The upstream proxy px authenticates to (`host:port`)."
+          }
+        },
+        "px_port": {
+          "type": "uint32",
+          "nullable": true,
+          "metadata": {
+            "description": "The fixed loopback port for px; `null` is a free port per operation."
+          }
+        },
+        "px_path": {
+          "type": "string",
+          "nullable": true,
+          "metadata": {
+            "description": "The px executable `[proxy] px_path` names."
+          }
+        },
+        "ca_file": {
+          "type": "string",
+          "nullable": true,
+          "metadata": {
+            "description": "The PEM bundle of extra certificate authorities trusted with the system store."
+          }
+        }
+      }
+    },
+    "where_to_put": {
+      "metadata": {
+        "x-wire-order": [
+          "releases",
+          "packages"
+        ],
+        "description": "What a closed network cannot download and where it goes instead."
+      },
+      "properties": {
+        "releases": {
+          "elements": {
+            "ref": "versioned_where"
+          },
+          "metadata": {
+            "x-empty": "emit",
+            "description": "The running version's release and the next one, for a drop or raw-repository source; `[]` when releases are downloaded. Required member: an absent key would make the document invalid by this same schema (rule R21)."
+          }
+        },
+        "packages": {
+          "ref": "packages_where",
+          "nullable": true,
+          "metadata": {
+            "description": "The package payload drop, or `null` when none is configured."
+          }
+        }
+      }
+    },
+    "versioned_where": {
+      "metadata": {
+        "x-wire-order": [
+          "version",
+          "source",
+          "location",
+          "from",
+          "example_dir",
+          "files"
+        ],
+        "description": "One release directory: the version, and the `release_where` members of `vibe-artifacts-where/1` beside it in the same object (the writer flattens them, so the release source is repeated per version)."
+      },
+      "properties": {
+        "version": {
+          "type": "string"
+        },
+        "source": {
+          "ref": "release_source_kind"
+        },
+        "location": {
+          "type": "string",
+          "metadata": {
+            "description": "The directory, repository or base URL releases are read from."
+          }
+        },
+        "from": {
+          "type": "string",
+          "metadata": {
+            "description": "Which input decided the source."
+          }
+        },
+        "example_dir": {
+          "type": "string",
+          "nullable": true,
+          "metadata": {
+            "description": "The directory this version's release goes into; `null` when releases are downloaded from the source instead."
+          }
+        },
+        "files": {
+          "elements": {
+            "type": "string"
+          },
+          "metadata": {
+            "x-empty": "emit",
+            "description": "The files that directory must hold for this machine. Required member: an absent key would make the document invalid by this same schema (rule R21)."
+          }
+        }
+      }
+    },
+    "packages_where": {
+      "metadata": {
+        "x-wire-order": [
+          "dir",
+          "layout",
+          "example"
+        ],
+        "description": "The package payload drop and the convention it is searched by."
+      },
+      "properties": {
+        "dir": {
+          "type": "string"
+        },
+        "layout": {
+          "elements": {
+            "type": "string"
+          },
+          "metadata": {
+            "x-empty": "emit",
+            "description": "The searched places, highest first, as patterns. Required member: an absent key would make the document invalid by this same schema (rule R21)."
+          }
+        },
+        "example": {
+          "elements": {
+            "type": "string"
+          },
+          "metadata": {
+            "x-empty": "emit",
+            "description": "The same places for one example input. Required member: an absent key would make the document invalid by this same schema (rule R21)."
+          }
+        }
+      }
+    },
+    "path_report": {
+      "metadata": {
+        "x-wire-order": [
+          "shim_dir",
+          "outcome",
+          "was_on_durable_path",
+          "on_durable_path",
+          "planned",
+          "consent",
+          "skip_reason",
+          "changed",
+          "activation_hint",
+          "fix_hint",
+          "durable_environment",
+          "target"
+        ],
+        "description": "The PATH step, in one of two shapes the reader tells apart by key: a performed step carries `outcome` and the `durable_environment` observation it was computed from; a `dry-run` or `show` carries `planned` instead and reaches no persister. `shim_dir`, `consent` and `skip_reason` are the members both shapes always carry.",
+        "spec": {
+          "implements": "spec://org.vibevm.core/vibevm/common/PROP-019#path"
+        }
+      },
+      "properties": {
+        "shim_dir": {
+          "type": "string",
+          "metadata": {
+            "description": "The stable shim directory the step is about."
+          }
+        },
+        "consent": {
+          "ref": "consent_source",
+          "nullable": true,
+          "metadata": {
+            "description": "Who agreed to the change; `null` when nothing was changed or nothing would be."
+          }
+        },
+        "skip_reason": {
+          "ref": "skip_reason",
+          "nullable": true,
+          "metadata": {
+            "description": "Why the durable PATH was left alone; `null` when it was not."
+          }
+        }
+      },
+      "optionalProperties": {
+        "outcome": {
+          "ref": "path_fix_outcome",
+          "metadata": {
+            "x-default": null,
+            "description": "What happened to the durable PATH. Present on a performed step only."
+          }
+        },
+        "was_on_durable_path": {
+          "type": "boolean",
+          "metadata": {
+            "x-default": null,
+            "description": "The shim directory was the canonical first entry before the step. Present on a performed step only."
+          }
+        },
+        "on_durable_path": {
+          "type": "boolean",
+          "metadata": {
+            "x-default": null,
+            "description": "It is the canonical first entry after the step. Present on a performed step only."
+          }
+        },
+        "changed": {
+          "type": "boolean",
+          "metadata": {
+            "x-default": null,
+            "description": "The write changed the durable target — an equivalent but differently spelled entry can make an applied fix a no-op. Present on a performed step only."
+          }
+        },
+        "activation_hint": {
+          "type": "string",
+          "metadata": {
+            "x-default": null,
+            "description": "How to make an applied change visible in this terminal. Absent when there is nothing to activate."
+          }
+        },
+        "fix_hint": {
+          "type": "string",
+          "metadata": {
+            "x-default": null,
+            "description": "How to fix the PATH later, after a skip. Absent when nothing was skipped."
+          }
+        },
+        "durable_environment": {
+          "ref": "environment_observation",
+          "metadata": {
+            "description": "The durable target as it reads after a performed step. Absent on a `dry-run` or `show`, which contacts no persister."
+          }
+        },
+        "planned": {
+          "ref": "path_plan",
+          "metadata": {
+            "x-default": null,
+            "description": "What the step would do. Present on a `dry-run` or `show` only."
+          }
+        },
+        "target": {
+          "type": "string",
+          "metadata": {
+            "x-default": null,
+            "description": "The durable target a planned step would write (an rc file, or the Windows user environment). Absent when no target resolves."
+          }
+        }
+      }
+    },
+    "path_fix_outcome": {
+      "enum": [
+        "already_on_path",
+        "applied",
+        "skipped"
+      ],
+      "metadata": {
+        "x-vocabulary": "closed",
+        "description": "`already_on_path`: the shim directory was the canonical first entry; `applied`: the persister wrote the durable target; `skipped`: no consent, nothing written. Closed: automation decides from it whether the machine changed."
+      }
+    },
+    "path_plan": {
+      "enum": [
+        "already_on_path",
+        "would_apply",
+        "would_ask",
+        "would_skip"
+      ],
+      "metadata": {
+        "x-vocabulary": "closed",
+        "description": "What a real run would do with the consent in force: nothing (already there), write, ask a question, or leave PATH alone. Closed: automation decides from it whether an unattended apply would change PATH."
+      }
+    },
+    "consent_source": {
+      "enum": [
+        "flag",
+        "profile",
+        "interactive"
+      ],
+      "metadata": {
+        "x-vocabulary": "closed",
+        "description": "Who agreed to the durable PATH change: an explicit `--fix-path`, the site profile's `[path] fix = \"always\"`, or an interactive yes. Closed: it is the record of a consent, and an unfamiliar value would be no record at all."
+      }
+    },
+    "skip_reason": {
+      "enum": [
+        "flag_declined",
+        "profile_never",
+        "not_interactive",
+        "declined"
+      ],
+      "metadata": {
+        "x-vocabulary": "closed",
+        "description": "`flag_declined`: `--no-fix-path`; `profile_never`: the site profile says `[path] fix = \"never\"`; `not_interactive`: no terminal to ask and no flag or `always`; `declined`: the interactive answer was no. Closed: automation decides from it whether re-running could help."
+      }
+    },
+    "environment_observation": {
+      "metadata": {
+        "x-wire-order": [
+          "target_kind",
+          "target",
+          "shell",
+          "observation",
+          "managed_block",
+          "path_entry",
+          "login_probe",
+          "login_effectiveness",
+          "error"
+        ],
+        "description": "The durable environment target as this run read it. Correctness names the managed PATH entry only: neither the managed block nor registry state proves a future login PATH.",
+        "spec": {
+          "implements": "spec://org.vibevm.core/vibevm/common/PROP-019#path"
+        }
+      },
+      "properties": {
+        "target_kind": {
+          "ref": "env_target_kind"
+        },
+        "target": {
+          "type": "string",
+          "nullable": true,
+          "metadata": {
+            "description": "The rc file or user-environment key written, or `null` when no target resolves."
+          }
+        },
+        "shell": {
+          "ref": "login_shell",
+          "nullable": true,
+          "metadata": {
+            "description": "The login shell the rc file belongs to; `null` for a non-rc target."
+          }
+        },
+        "observation": {
+          "ref": "env_observation_status"
+        },
+        "managed_block": {
+          "ref": "env_block_status"
+        },
+        "path_entry": {
+          "ref": "env_path_entry_status"
+        },
+        "login_probe": {
+          "ref": "env_probe_status"
+        },
+        "login_effectiveness": {
+          "ref": "env_effectiveness"
+        },
+        "error": {
+          "type": "string",
+          "nullable": true,
+          "metadata": {
+            "description": "Why the target could not be read; `null` when it was read."
+          }
+        }
+      }
+    },
+    "env_target_kind": {
+      "enum": [
+        "rc_file",
+        "windows_registry",
+        "unavailable"
+      ],
+      "metadata": {
+        "x-vocabulary": "closed",
+        "description": "Which durable target this host writes: a shell rc file, the Windows user environment, or none that resolves. Closed: the write mechanism is chosen from it."
+      }
+    },
+    "login_shell": {
+      "enum": [
+        "bash",
+        "zsh",
+        "fish",
+        "pwsh",
+        "posix"
+      ],
+      "metadata": {
+        "x-vocabulary": "closed",
+        "description": "The login shell an rc target belongs to; `posix` is a generic POSIX shell (`.profile`, `export` syntax). Closed: the rc file and the `eval` line's syntax follow from it."
+      }
+    },
+    "env_observation_status": {
+      "enum": [
+        "present",
+        "missing",
+        "unavailable",
+        "malformed"
+      ],
+      "metadata": {
+        "x-vocabulary": "closed",
+        "description": "Whether the target itself was read: it exists, it does not exist yet, it could not be reached, or its content is not what this writer writes. Closed: a reader decides from it whether the other members mean anything."
+      }
+    },
+    "env_block_status": {
+      "enum": [
+        "present",
+        "absent",
+        "malformed",
+        "not_applicable",
+        "unknown"
+      ],
+      "metadata": {
+        "x-vocabulary": "closed",
+        "description": "The state of vibe's managed block in the target. Closed: a repair decides from it what to write."
+      }
+    },
+    "env_path_entry_status": {
+      "enum": [
+        "correct",
+        "missing",
+        "different",
+        "ambiguous",
+        "unknown"
+      ],
+      "metadata": {
+        "x-vocabulary": "closed",
+        "description": "The managed PATH entry: canonical and first, absent, present but spelled otherwise, present more than once, or unreadable. Closed: this is the one member that says whether PATH is right."
+      }
+    },
+    "env_probe_status": {
+      "enum": [
+        "not_run",
+        "ran",
+        "failed",
+        "timed_out",
+        "unsupported"
+      ],
+      "metadata": {
+        "x-vocabulary": "closed",
+        "description": "Whether a login shell was actually asked for its PATH, and how that went. Closed: a reader decides from it how much the effectiveness member is worth."
+      }
+    },
+    "env_effectiveness": {
+      "enum": [
+        "unknown",
+        "effective",
+        "not_effective"
+      ],
+      "metadata": {
+        "x-vocabulary": "closed",
+        "description": "Whether the probed login PATH contained the managed shim directory; `unknown` when no probe observed a PATH. Closed: automation decides from it whether to tell the user to open a new terminal."
+      }
+    },
+    "imported": {
+      "metadata": {
+        "x-wire-order": [
+          "executable",
+          "selector",
+          "reused",
+          "planned"
+        ],
+        "description": "The running executable imported as the active instance, when apply ran from a hand-downloaded binary with no managed instance yet."
+      },
+      "properties": {
+        "executable": {
+          "type": "string",
+          "metadata": {
+            "description": "The running executable's path."
+          }
+        },
+        "selector": {
+          "type": "string",
+          "metadata": {
+            "description": "The store selector the import landed under."
+          }
+        },
+        "reused": {
+          "type": "boolean",
+          "metadata": {
+            "description": "An install record for these bytes already existed and was reused."
+          }
+        },
+        "planned": {
+          "type": "boolean",
+          "metadata": {
+            "description": "The import has not happened yet — this is a `dry-run`."
+          }
+        }
+      }
+    }
+  }
+}

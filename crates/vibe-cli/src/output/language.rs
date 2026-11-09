@@ -17,6 +17,7 @@ mod meta;
 mod page;
 mod roles;
 mod rule;
+mod table;
 mod width;
 
 pub(crate) use block::{
@@ -26,8 +27,9 @@ pub(crate) use glyphs::{Glyph, GlyphSet, PromptGlyphs, TreeGlyphs, spinner_frame
 pub(crate) use list::{Cell, List, Row};
 pub(crate) use meta::{Meta, bytes, elapsed, join_meta, short_path};
 pub(crate) use page::{Kind, Stream, before, mark};
-pub(crate) use roles::{Role, paint, style};
+pub(crate) use roles::{Role, colour_on, paint, style};
 pub(crate) use rule::rule;
+pub(crate) use table::Table;
 pub(crate) use width::{cut, viewport};
 
 /// What the composition root decided about this invocation's terminal,

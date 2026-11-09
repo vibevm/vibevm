@@ -770,3 +770,104 @@ fn mirror_into_a_localdir_keeps_the_exact_tree() {
     assert_eq!(fs::read_link(&link).unwrap(), PathBuf::from("payload"));
     assert!(shared.join("_index/mirrors/src.toml").is_file());
 }
+
+/// The mirror's own Git children take the configured `[proxy]` route
+/// (PROP-068 `#proxy-git`). The fake proxy answers the tag listing of a
+/// plain-HTTP source with one tag, so the mirror goes on to fetch it: that
+/// fetch's `POST .../git-upload-pack` reaches the proxy only when the
+/// mirror's own `git fetch` is routed (unrouted, git would resolve the
+/// `.invalid` host directly and fail before any request).
+#[test]
+#[specmark::spec(verifies = "spec://org.vibevm.core/vibevm/common/PROP-068#proxy")]
+fn mirror_git_children_take_the_configured_proxy() {
+    use std::io::{BufRead, BufReader, Write};
+    fn pkt(line: &str) -> String {
+        format!("{:04x}{line}", line.len() + 4)
+    }
+    let listener = std::net::TcpListener::bind("127.0.0.1:0").unwrap();
+    let port = listener.local_addr().unwrap().port();
+    let (heads, seen) = std::sync::mpsc::channel::<String>();
+    std::thread::spawn(move || {
+        for stream in listener.incoming().flatten() {
+            let mut reader = BufReader::new(stream.try_clone().unwrap());
+            let mut head = String::new();
+            loop {
+                let mut line = String::new();
+                if reader.read_line(&mut line).unwrap_or(0) == 0 || line == "\r\n" {
+                    break;
+                }
+                head.push_str(&line);
+            }
+            let reply = if head.starts_with("GET ")
+                && head.contains("/info/refs?service=git-upload-pack")
+            {
+                let body = format!(
+                    "{}0000{}0000",
+                    pkt("# service=git-upload-pack\n"),
+                    pkt(&format!(
+                        "{} refs/tags/v1.0.0\0multi_ack_detailed side-band-64k\n",
+                        "1".repeat(40)
+                    ))
+                );
+                format!(
+                    "HTTP/1.1 200 OK\r\nContent-Type: application/x-git-upload-pack-advertisement\r\nContent-Length: {}\r\nConnection: close\r\n\r\n{body}",
+                    body.len()
+                )
+            } else {
+                "HTTP/1.1 403 Forbidden\r\nContent-Length: 0\r\nConnection: close\r\n\r\n"
+                    .to_owned()
+            };
+            let _ = (&stream).write_all(reply.as_bytes());
+            let _ = heads.send(head);
+        }
+    });
+    let user = UserScratch::new();
+    fs::write(
+        user.settings.join("config.toml"),
+        format!("[proxy]\nhttp = 'http://127.0.0.1:{port}'\n"),
+    )
+    .unwrap();
+    let tmp = tempfile::tempdir().unwrap();
+    let root = tmp.path();
+    let target = root.join("target.git");
+    git(
+        root,
+        &[
+            "init",
+            "-q",
+            "--bare",
+            "-b",
+            "main",
+            target.to_str().unwrap(),
+        ],
+    );
+    let project = project(
+        root,
+        &SOURCE_ROW.replace("{url}", "http://git.mirror-fixture.invalid/corp"),
+    );
+    let output = vibe(
+        &user,
+        &project,
+        &[
+            "--json",
+            "registry",
+            "mirror",
+            "src",
+            "--into",
+            target.to_str().unwrap(),
+            "--package",
+            "org.corp/demo",
+        ],
+    );
+    let heads: Vec<String> = seen.try_iter().collect();
+    assert!(
+        heads.iter().any(
+            |head| head.starts_with("POST http://git.mirror-fixture.invalid/")
+                && head.contains("/git-upload-pack ")
+                && head.to_ascii_lowercase().contains("user-agent: git/")
+        ),
+        "the mirror's fetch did not go through the proxy: {heads:?}\n{}\n{}",
+        String::from_utf8_lossy(&output.stdout),
+        String::from_utf8_lossy(&output.stderr)
+    );
+}

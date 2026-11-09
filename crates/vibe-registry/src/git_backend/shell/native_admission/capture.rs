@@ -68,6 +68,10 @@ pub(super) struct CapturedContext {
     layout: Option<ManagedChild>,
     config: Vec<u8>,
     pub(super) entries: Vec<(String, String)>,
+    /// Per entry: whether it is machine-wide (`system` scope) configuration
+    /// whose transport meaning the controlled child never replays
+    /// ([`machine_transport_exempt`]).
+    machine: Vec<bool>,
     files: BTreeMap<PathBuf, Option<Vec<u8>>>,
     pub(super) system_attributes: Vec<u8>,
     pub(super) global_attributes: Vec<u8>,
@@ -100,8 +104,6 @@ impl NativeGitAdmission {
             // replace the config used by remote/check-attr/checkout. This reader
             // observes that operation view, never the config-only override.
             .env_remove("GIT_CONFIG")
-            .env("PATH", &self.installation.helpers)
-            .env("GIT_EXEC_PATH", &self.installation.helpers)
             .env("GIT_NO_LAZY_FETCH", "1")
             .env("GIT_NO_REPLACE_OBJECTS", "1")
             .env("GIT_OPTIONAL_LOCKS", "0")
@@ -113,6 +115,7 @@ impl NativeGitAdmission {
             .env("LC_ALL", "C")
             .stdin(Stdio::null())
             .current_dir(cwd);
+        self.installation.prepare(&mut command);
         if let Some(git_dir) = git_dir {
             command.arg("--git-dir").arg(git_dir);
         }
@@ -181,6 +184,7 @@ impl NativeGitAdmission {
             layout: layout.cloned(),
             config: config.stdout.clone(),
             entries: Vec::new(),
+            machine: Vec::new(),
             files: BTreeMap::new(),
             system_attributes: Vec::new(),
             global_attributes: Vec::new(),
@@ -200,6 +204,9 @@ impl NativeGitAdmission {
                 .map_err(|_| unsupported("non-UTF-8 configuration value"))?;
             let (key, value) = value.split_once('\n').unwrap_or((value, ""));
             captured.entries.push((key.into(), value.into()));
+            captured
+                .machine
+                .push(machine_transport_exempt(row[0], cfg!(windows)));
         }
         captured.validate_layout()?;
         if warm.is_none()
@@ -271,6 +278,17 @@ impl NativeGitAdmission {
         Ok(captured)
     }
 }
+/// Whether a configuration entry of `scope` is exempt from the warm and
+/// fresh transport refusal. On Windows the `system` scope is the Git for
+/// Windows installation's own defaults (`credential.helper=manager`,
+/// `http.sslBackend`, `http.sslCAInfo`) and machine-wide policy: every
+/// installation has them, the controlled child never reads that scope
+/// (`GIT_CONFIG_NOSYSTEM`), and its proxy and trust come from vibe's own
+/// route (PROP-073 `#NATIVE-WINDOWS`). Elsewhere, and for the `global` and
+/// `local` scopes everywhere, the refusal stands.
+pub(super) fn machine_transport_exempt(scope: &[u8], windows: bool) -> bool {
+    windows && scope == b"system"
+}
 fn absolute_from(cwd: &Path, path: &str) -> PathBuf {
     let path = Path::new(path);
     if path.is_absolute() {
@@ -285,8 +303,8 @@ impl CapturedContext {
         explicit_ssh: bool,
         explicit_direct: bool,
     ) -> Result<(), GitError> {
-        for (key, value) in &self.entries {
-            if value.is_empty() {
+        for ((key, value), machine) in self.entries.iter().zip(&self.machine) {
+            if value.is_empty() || *machine {
                 continue;
             }
             if explicit_ssh
@@ -461,4 +479,64 @@ pub(super) fn validate_child_ancestors(path: &Path) -> Result<(), GitError> {
         }
     }
     Ok(())
+}
+
+#[cfg(test)]
+mod machine_scope_tests {
+    use super::*;
+
+    fn context(entries: &[(&str, &str, bool)]) -> CapturedContext {
+        CapturedContext {
+            cwd: PathBuf::from("/"),
+            warm: None,
+            layout: None,
+            config: Vec::new(),
+            entries: entries
+                .iter()
+                .map(|(k, v, _)| ((*k).into(), (*v).into()))
+                .collect(),
+            machine: entries.iter().map(|(_, _, machine)| *machine).collect(),
+            files: BTreeMap::new(),
+            system_attributes: Vec::new(),
+            global_attributes: Vec::new(),
+            info_attributes: Vec::new(),
+            effective_origin: None,
+            recorded_origin: None,
+        }
+    }
+
+    #[test]
+    #[specmark::spec(verifies = "spec://org.vibevm.core/vibevm/common/PROP-073#NATIVE-WINDOWS-LAW")]
+    fn windows_installation_defaults_do_not_refuse_but_user_transport_settings_do() {
+        assert!(machine_transport_exempt(b"system", true));
+        assert!(!machine_transport_exempt(b"system", false));
+        assert!(!machine_transport_exempt(b"global", true));
+        // Git for Windows' own system configuration.
+        let installation = [
+            ("credential.helper", "manager", true),
+            ("http.sslbackend", "schannel", true),
+            (
+                "http.sslcainfo",
+                "C:/Program Files/Git/mingw64/etc/ssl/certs/ca-bundle.crt",
+                true,
+            ),
+            ("core.autocrlf", "true", true),
+        ];
+        context(&installation)
+            .validate_warm_transport(false, false)
+            .unwrap();
+        // The same settings chosen by the user still refuse.
+        for user in [
+            ("credential.helper", "store", false),
+            ("http.proxy", "http://ambient:3128", false),
+            ("core.sshcommand", "ssh -i key", false),
+        ] {
+            assert!(
+                context(&[installation[0], user])
+                    .validate_warm_transport(false, false)
+                    .is_err(),
+                "{user:?}"
+            );
+        }
+    }
 }

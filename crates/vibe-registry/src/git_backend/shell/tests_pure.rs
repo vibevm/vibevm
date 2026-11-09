@@ -141,6 +141,62 @@ fn classify_auth_failed_message() {
     ));
 }
 
+/// An HTTPS refusal names HTTPS and its status, never the ssh-agent; an
+/// SSH refusal keeps the ssh-agent hint (PROP-002 `#registry-auth`).
+#[test]
+#[verifies("spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#registry-auth")]
+fn auth_failure_names_the_actual_transport_and_status() {
+    let https = classify_stderr_message(
+        "remote: Unauthorized\nfatal: unable to access 'https://gitverse.ru/o/r.git/': \
+         The requested URL returned error: 401",
+        "https://gitverse.ru/o/r.git".into(),
+        "REF".into(),
+    );
+    let Some(GitError::AuthFailed { status, .. }) = &https else {
+        panic!("expected AuthFailed, got {https:?}");
+    };
+    assert_eq!(*status, Some(401));
+    let text = https.unwrap().to_string();
+    assert!(
+        text.starts_with(
+            "HTTPS authentication failed (HTTP 401) for `https://gitverse.ru/o/r.git`"
+        ),
+        "{text}"
+    );
+    assert!(text.contains("read token"), "{text}");
+    assert!(!text.contains("ssh"), "{text}");
+
+    let forbidden = classify_stderr_message(
+        "fatal: unable to access 'https://h/o/r.git/': The requested URL returned error: 403",
+        "https://h/o/r.git".into(),
+        "REF".into(),
+    )
+    .unwrap();
+    assert!(forbidden.to_string().contains("(HTTP 403)"));
+
+    let ssh = classify_stderr_message(
+        "git@github.com: Permission denied (publickey).",
+        "git@github.com:o/r.git".into(),
+        "REF".into(),
+    )
+    .unwrap()
+    .to_string();
+    assert!(ssh.starts_with("SSH authentication failed for"), "{ssh}");
+    assert!(ssh.contains("ssh-agent"), "{ssh}");
+
+    let prompt = classify_stderr_message(
+        "fatal: could not read Username for 'https://gitverse.ru': terminal prompts disabled",
+        "https://gitverse.ru/o/r.git".into(),
+        "REF".into(),
+    )
+    .unwrap()
+    .to_string();
+    assert!(
+        prompt.starts_with("HTTPS authentication failed for"),
+        "{prompt}"
+    );
+}
+
 #[test]
 fn classify_credential_prompt_failure_after_silencing() {
     // PROP-002 §2.2.1: when our credential helpers are silenced

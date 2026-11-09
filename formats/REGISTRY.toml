@@ -555,6 +555,49 @@ foreign_parsers = "many"
 corpus = "none"
 sunset = "none"
 
+# `vibe self apply <file|url> --json` and its `--dry-run` / `--remove` /
+# `--show` forms (`vibe-self-apply/1`, PROP-019 `#site-profile`): what one file
+# changed about an installation in a closed network.
+[format.cli-self-apply-report]
+epoch = 1
+schema = "schemas/self_apply_report.jtd.json"
+recoverable = true
+foreign_parsers = "many"
+corpus = "none"
+sunset = "none"
+
+# `vibe self source [show] --json` (`vibe-self-source/1`) and
+# `vibe self releases --json` (`vibe-self-releases/1`), PROP-019
+# `#release-sources`: where vibe reads its own releases from, and which of them
+# the source offers. The two share the `release_source_view` vocabulary — the
+# whole of the first document, the `source` member of the second.
+[format.cli-self-source-report]
+epoch = 1
+schema = "schemas/self_source_report.jtd.json"
+recoverable = true
+foreign_parsers = "many"
+corpus = "none"
+sunset = "none"
+
+[format.cli-self-releases-report]
+epoch = 1
+schema = "schemas/self_releases_report.jtd.json"
+recoverable = true
+foreign_parsers = "many"
+corpus = "none"
+sunset = "none"
+
+# `vibe artifacts where [<package>] --json` (`vibe-artifacts-where/1`,
+# PROP-066 `#drops`): where an operator puts the vibe releases and the package
+# payloads a closed network cannot download, and what is already there.
+[format.cli-artifacts-where-report]
+epoch = 1
+schema = "schemas/artifacts_where_report.jtd.json"
+recoverable = true
+foreign_parsers = "many"
+corpus = "none"
+sunset = "none"
+
 [format.cli-registry-sync-report]
 epoch = 1
 schema = "schemas/registry_sync_report.jtd.json"
@@ -1350,6 +1393,20 @@ unknown_fields = "deny"
 corpus = "none"
 sunset = "none"
 
+# `TOOLS.json`, the companion tools beside `DISTRIBUTIONS.json` (PROP-019
+# `#companion-tools`): px per target as its own release asset. A separate
+# document because vibe 1.0.11 refuses any new member of the aggregate. Only
+# vibe reads it, after the bundle; an unreadable one means "no companion
+# tools", never a failed update, so strictness costs nothing.
+[format.distribution-tools-manifest]
+epoch = 1
+schema = "schemas/distribution_tools.jtd.json"
+recoverable = false
+foreign_parsers = "many"
+unknown_fields = "deny"
+corpus = "none"
+sunset = "none"
+
 # ── Documentation pipeline (2 records, 1 JTD), PROP-057 §10 ────────────────
 # What the documentation pipeline publishes for machines. Both are read by
 # parsers nobody here controls — the Qwik shell, search crawlers, and the
@@ -1781,6 +1838,16 @@ sunset = "none"
 [format.cli-project-cancellation]
 epoch = 1
 schema = "schemas/project_cancellation.jtd.json"
+recoverable = true
+foreign_parsers = "many"
+corpus = "none"
+sunset = "none"
+
+# `vibe dl --json` and `vibe dl --test-proxy --json` (`vibe-dl/1`, PROP-068
+# `#dl`): the route, every hop phase by phase, the classified failure.
+[format.cli-dl-report]
+epoch = 1
+schema = "schemas/dl_report.jtd.json"
 recoverable = true
 foreign_parsers = "many"
 corpus = "none"

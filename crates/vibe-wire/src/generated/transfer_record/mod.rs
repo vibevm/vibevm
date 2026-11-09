@@ -52,6 +52,12 @@ pub struct TransferRecord {
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub remapped_from: Option<String>,
 
+    /// The proxy the connection went through: scheme://host:port of the
+    /// configured proxy (never a credential), or px for the vibe-managed px;
+    /// absent for a direct connection (PROP-068#proxy).
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub proxy: Option<String>,
+
     /// The command line that resumes an interrupted command (PROP-068#pause).
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub resume: Option<String>,

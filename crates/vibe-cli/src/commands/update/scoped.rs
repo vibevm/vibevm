@@ -235,8 +235,9 @@ fn run(
     ));
     let solving = ctx.progress().task("Resolving selected package closure");
     solving.set_progress(0, Some(roots.len() as u64), "roots");
-    let graph = match resolver
-        .solve(&roots)
+    // PROP-050 `#EFFECTIVE-SET`: the same effective set install computes —
+    // a non-root package's private requirement is not resolved or fetched.
+    let graph = match vibe_install::solve_visible_graph(&resolver, &manifest, &roots)
         .context("dependency resolution failed")
     {
         Ok(graph) => {

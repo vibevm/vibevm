@@ -10,7 +10,8 @@ use vibe_publish::release_manifest::{
     DISTRIBUTION_BOOTSTRAP_MAX_BYTES, DISTRIBUTION_BUNDLE_MAX_BYTES,
     DISTRIBUTION_CMD_INSTALLER_FILENAME, DISTRIBUTION_MANIFEST_FILENAME,
     DISTRIBUTION_MANIFEST_MAX_BYTES, DISTRIBUTION_POWERSHELL_INSTALLER_FILENAME,
-    DISTRIBUTION_SOURCE_ARCHIVE_FILENAME,
+    DISTRIBUTION_SOURCE_ARCHIVE_FILENAME, DISTRIBUTION_TOOLS_MANIFEST_FILENAME,
+    DistributionToolsManifest,
 };
 use vibe_publish::{
     AggregateDistributionManifest, CreateGithubRelease, GithubGitRef, GithubMakeLatest,
@@ -29,6 +30,7 @@ use super::snapshot::{GitIdentity, committed_identity, read_commit_file};
 const GITHUB_OWNER: &str = "vibevm";
 const GITHUB_REPO: &str = "vibevm";
 
+mod companions;
 pub(crate) mod gitverse;
 mod local;
 mod status;
@@ -146,7 +148,8 @@ pub(crate) fn upload_built(repo_root: &Path, target: &str, out_dir: &Path) -> Re
         repo_root,
         &out_dir.join(bundle_asset_name(&version, target)),
         &out_dir.join(fragment_asset_name(&version, target)),
-    )
+    )?;
+    companions::upload_built(repo_root, &write_client()?, &version, &out_dir, target)
 }
 
 pub(crate) fn finalize(repo_root: &Path, raw_version: &str, publish: bool) -> Result<()> {
@@ -154,6 +157,7 @@ pub(crate) fn finalize(repo_root: &Path, raw_version: &str, publish: bool) -> Re
     let version = checked_version(repo_root, raw_version, &identity)?;
     let client = write_client()?;
     let mut verified = finalize_with(&client, &version, &identity)?;
+    companions::publish_listing(&client, &mut verified)?;
     let bytes = verified.aggregate.to_json_bytes()?;
     let aggregate_asset = client.publish_asset_owned(
         verified.release_id,
@@ -240,6 +244,8 @@ pub(crate) fn finalize(repo_root: &Path, raw_version: &str, publish: bool) -> Re
 struct VerifiedRelease {
     release_id: u64,
     aggregate: AggregateDistributionManifest,
+    /// `TOOLS.json`, when the draft carries companion tools.
+    tools: Option<DistributionToolsManifest>,
     asset_ids: BTreeMap<String, u64>,
 }
 
@@ -311,6 +317,7 @@ fn finalize_with(
         release.id,
         &[
             DISTRIBUTION_AGGREGATE_MANIFEST_FILENAME,
+            DISTRIBUTION_TOOLS_MANIFEST_FILENAME,
             DISTRIBUTION_BASH_INSTALLER_FILENAME,
             DISTRIBUTION_POWERSHELL_INSTALLER_FILENAME,
             DISTRIBUTION_CMD_INSTALLER_FILENAME,
@@ -382,9 +389,11 @@ fn finalize_with(
     }
     let aggregate = AggregateDistributionManifest::from_platforms(fragments)
         .context("assembling aggregate distribution manifest")?;
+    let tools = companions::assemble(host, &assets, &aggregate)?;
     Ok(VerifiedRelease {
         release_id: release.id,
         aggregate,
+        tools,
         asset_ids: assets
             .into_iter()
             .map(|(name, asset)| (name, asset.id))
@@ -547,6 +556,7 @@ fn validate_remote_asset_set(
     }
     let optional = BTreeSet::from([
         DISTRIBUTION_AGGREGATE_MANIFEST_FILENAME.to_string(),
+        DISTRIBUTION_TOOLS_MANIFEST_FILENAME.to_string(),
         DISTRIBUTION_BASH_INSTALLER_FILENAME.to_string(),
         DISTRIBUTION_POWERSHELL_INSTALLER_FILENAME.to_string(),
         DISTRIBUTION_CMD_INSTALLER_FILENAME.to_string(),
@@ -555,7 +565,7 @@ fn validate_remote_asset_set(
     let missing = required.difference(&actual).cloned().collect::<Vec<_>>();
     let unexpected = actual
         .difference(&required)
-        .filter(|name| !optional.contains(*name))
+        .filter(|name| !optional.contains(*name) && !companions::is_companion_asset(name))
         .cloned()
         .collect::<Vec<_>>();
     if !missing.is_empty() || !unexpected.is_empty() {

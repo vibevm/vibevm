@@ -74,7 +74,7 @@ pub use record::{
 pub use slot_verify::resolution_slots_verified;
 pub use visibility_projection::{
     FilteringDepProvider, Projection, ProjectionInput, metadata_manifest, project,
-    solve_with_visibility_mask,
+    solve_visible_graph, solve_with_visibility_mask,
 };
 
 /// The package source an install runs against — the seam between the

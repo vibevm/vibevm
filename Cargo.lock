@@ -746,6 +746,16 @@ dependencies = [
 ]
 
 [[package]]
+name = "core-foundation"
+version = "0.10.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "b2a6cd9ae233e7f62ba4e9353e81a88df7fc8a5987b8d445b4d90c879bd156f6"
+dependencies = [
+ "core-foundation-sys",
+ "libc",
+]
+
+[[package]]
 name = "core-foundation-sys"
 version = "0.8.7"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1641,6 +1651,7 @@ dependencies = [
  "hyper",
  "hyper-util",
  "rustls",
+ "rustls-native-certs",
  "tokio",
  "tokio-rustls",
  "tower-service",
@@ -2414,6 +2425,12 @@ name = "once_cell_polyfill"
 version = "1.70.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "384b8ab6d37215f3c5301a95a4accb5d64aa607f1fcb26a11b5303878451b4fe"
+
+[[package]]
+name = "openssl-probe"
+version = "0.2.2"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "7e036b411754132fd6b74e94b74e9a13c5cf606fa93d1885c35860d3060820b1"
 
 [[package]]
 name = "option-ext"
@@ -3208,6 +3225,7 @@ dependencies = [
  "pin-project-lite",
  "quinn",
  "rustls",
+ "rustls-native-certs",
  "rustls-pki-types",
  "serde",
  "serde_json",
@@ -3425,6 +3443,18 @@ dependencies = [
 ]
 
 [[package]]
+name = "rustls-native-certs"
+version = "0.8.5"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "4a073f5dc7469f984c52ad2752b63b0807745133b6de880b7b64c1ac4c48aec4"
+dependencies = [
+ "openssl-probe",
+ "rustls-pki-types",
+ "schannel",
+ "security-framework",
+]
+
+[[package]]
 name = "rustls-pki-types"
 version = "1.14.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -3479,6 +3509,15 @@ dependencies = [
 ]
 
 [[package]]
+name = "schannel"
+version = "0.1.29"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "91c1b7e4904c873ef0710c1f407dde2e6287de2bebc1bbbf7d430bb7cbffd939"
+dependencies = [
+ "windows-sys 0.61.2",
+]
+
+[[package]]
 name = "scoped-tls"
 version = "1.0.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -3489,6 +3528,29 @@ name = "scopeguard"
 version = "1.2.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "94143f37725109f92c262ed2cf5e59bce7498c01bcc1502d7b9afe439a4e9f49"
+
+[[package]]
+name = "security-framework"
+version = "3.7.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "b7f4bc775c73d9a02cde8bf7b2ec4c9d12743edf609006c7facc23998404cd1d"
+dependencies = [
+ "bitflags",
+ "core-foundation",
+ "core-foundation-sys",
+ "libc",
+ "security-framework-sys",
+]
+
+[[package]]
+name = "security-framework-sys"
+version = "2.17.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "6ce2691df843ecc5d231c0b14ece2acc3efb62c0a398c7e1d875f3983ce020e3"
+dependencies = [
+ "core-foundation-sys",
+ "libc",
+]
 
 [[package]]
 name = "semver"
@@ -4478,6 +4540,7 @@ dependencies = [
  "toml 0.9.12+spec-1.1.0",
  "vibe-core",
  "vibe-install",
+ "vibe-net",
  "vibe-package-source",
  "vibe-registry",
  "vibe-safefs",
@@ -4567,6 +4630,7 @@ dependencies = [
  "vibe-native-loader-compiler-fixture",
  "vibe-native-loader-fixture",
  "vibe-native-loader-json-backend-fixture",
+ "vibe-net",
  "vibe-orchestrator",
  "vibe-package-source",
  "vibe-publish",
@@ -4741,6 +4805,7 @@ dependencies = [
  "tracing",
  "tracing-subscriber",
  "vibe-core",
+ "vibe-net",
  "vibe-registry",
  "vibe-test-support",
  "vibe-wire",
@@ -4808,6 +4873,7 @@ dependencies = [
  "thiserror 2.0.18",
  "tokio",
  "vibe-core",
+ "vibe-net",
  "vibe-wire",
 ]
 
@@ -4906,6 +4972,25 @@ dependencies = [
 ]
 
 [[package]]
+name = "vibe-net"
+version = "1.0.11"
+dependencies = [
+ "base64",
+ "command-group",
+ "core-ai-native-specmark",
+ "reqwest 0.12.28",
+ "rustls",
+ "rustls-native-certs",
+ "tempfile",
+ "thiserror 2.0.18",
+ "toml 0.9.12+spec-1.1.0",
+ "tracing",
+ "url",
+ "vibe-core",
+ "webpki-roots",
+]
+
+[[package]]
 name = "vibe-orchestrator"
 version = "1.0.11"
 dependencies = [
@@ -4970,6 +5055,7 @@ dependencies = [
  "tracing",
  "vibe-core",
  "vibe-index",
+ "vibe-net",
  "vibe-registry",
  "vibe-wire",
  "walkdir",
@@ -4996,6 +5082,7 @@ dependencies = [
  "toml 0.9.12+spec-1.1.0",
  "tracing",
  "vibe-core",
+ "vibe-net",
  "vibe-wire",
  "walkdir",
 ]
@@ -5968,6 +6055,7 @@ dependencies = [
  "clap",
  "core-ai-native-conform",
  "core-ai-native-specmap",
+ "flate2",
  "reqwest 0.12.28",
  "rust-ai-native-cli",
  "rust-ai-native-conform",
@@ -5977,11 +6065,13 @@ dependencies = [
  "serde",
  "serde_json",
  "sha2",
+ "tar",
  "tempfile",
  "toml 0.9.12+spec-1.1.0",
  "vibe-core",
  "vibe-doc-shell",
  "vibe-index",
+ "vibe-net",
  "vibe-publish",
  "vibe-registry",
  "walkdir",

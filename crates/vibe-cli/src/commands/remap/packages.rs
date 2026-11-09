@@ -510,7 +510,13 @@ pub(crate) fn preflight_project_sources(selected: &Path) -> Result<()> {
 pub(crate) fn owning_workspace(selected: &Path) -> Result<vibe_workspace::Workspace> {
     let selected = selected.canonicalize()?;
     let workspace = vibe_workspace::Workspace::discover(&selected)?;
-    if selected != workspace.root {
+    // Both sides canonical: on Windows `canonicalize` yields the verbatim
+    // `\\?\C:\…` form, which a discovered root does not carry.
+    let root = workspace
+        .root
+        .canonicalize()
+        .unwrap_or_else(|_| workspace.root.clone());
+    if selected != root {
         match std::fs::symlink_metadata(selected.join(Lockfile::FILENAME)) {
             Ok(_) => bail!(
                 "misplaced member vibe.lock: preserve it and explicitly reconcile with the owning workspace lock before remap acquisition"

@@ -22,6 +22,11 @@ enum Reader {
 /// The readers that are not transfers, one line of why each.
 const EXEMPT: &[(&str, Reader, &str)] = &[
     (
+        "vibe-net/src/doctor.rs",
+        Reader::Http,
+        "the network diagnosis (PROP-068#proxy-doctor): a HEAD of the target and the PAC file, never a download",
+    ),
+    (
         "vibe-registry/src/http_admission.rs",
         Reader::Http,
         "shared admission transport returns an unread response; each body consumer is classified separately",
@@ -50,6 +55,16 @@ const EXEMPT: &[(&str, Reader, &str)] = &[
         "vibe-cli/src/commands/vvm/git.rs",
         Reader::Git,
         "the VVM build pipeline's checkout of vibe's own source (PROP-019), not a package",
+    ),
+    (
+        "vibe-cli/src/commands/registry/mirror/git_source.rs",
+        Reader::Git,
+        "`vibe registry mirror`'s copy into a registry: each tag is fetched into the run's scratch store and reported per version in the mirror report (PROP-002#registry-mirror); its children take the network route (`vibe_net::git::apply_for_args`)",
+    ),
+    (
+        "vibe-publish/src/layout_publish/git_tree.rs",
+        Reader::Git,
+        "a local fetch of an exact tree from the mirror's scratch store into the publish tree: no remote is contacted",
     ),
     (
         "vibe-index/src/scanner/from_github.rs",

@@ -244,7 +244,12 @@ impl MultiRegistryResolver {
             None => self.sources()?.iter().collect(),
         };
         for src in sources {
-            if self.offline && matches!(src, RegistrySource::Git(_) | RegistrySource::Monorepo(_)) {
+            let network = match src {
+                RegistrySource::Git(_) => true,
+                RegistrySource::Monorepo(mono) => !mono.is_local(),
+                RegistrySource::Local(_) => false,
+            };
+            if self.offline && network {
                 return Err(RegistryError::OfflinePackageUnavailable {
                     group: group.clone(),
                     name: pkgref.name.to_string(),

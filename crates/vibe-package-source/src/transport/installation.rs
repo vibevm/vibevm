@@ -2,6 +2,7 @@
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-073#NATIVE-PREPARATION");
 use super::*;
 use std::io::Read;
+use vibe_registry::git_backend::shell::native_admission;
 pub(super) fn executable(
     input: &TransportInputs,
     name: &std::ffi::OsStr,
@@ -55,6 +56,7 @@ pub(super) fn executable(
                 }
             }
             return std::fs::canonicalize(path)
+                .map(native_admission::platform::simplified_path)
                 .map_err(|_| unsupported("selected executable cannot be identified"));
         }
     }
@@ -87,6 +89,13 @@ pub(super) fn git(input: &TransportInputs) -> Result<(PathBuf, PathBuf), GitErro
         .env("GIT_CONFIG_GLOBAL", &empty)
         .env("GIT_CONFIG_SYSTEM", &empty)
         .env("LC_ALL", "C")
+        .envs(native_admission::platform::platform_variables(
+            input
+                .environment
+                .iter()
+                .map(|(key, value)| (key.as_os_str(), value.as_os_str())),
+            cfg!(windows),
+        ))
         .arg("--exec-path")
         .current_dir(temporary.path())
         .stdin(Stdio::null())
@@ -120,9 +129,20 @@ pub(super) fn git(input: &TransportInputs) -> Result<(PathBuf, PathBuf), GitErro
     }
     Ok((binary, helpers))
 }
-pub(super) fn ssh(
-    input: &TransportInputs,
-) -> Result<(PathBuf, Option<PathBuf>, Option<PathBuf>), GitError> {
+/// The OpenSSH client a controlled SSH child uses and how it reads its
+/// configuration.
+pub(super) struct SelectedClient {
+    pub executable: PathBuf,
+    /// A user configuration other than `<home>/.ssh/config` (`-F`).
+    pub user: Option<PathBuf>,
+    pub system: Option<PathBuf>,
+    /// The home the client itself expands `~` with, when it is not the
+    /// caller's `HOME`: the Windows OpenSSH client uses the profile directory.
+    pub home: Option<PathBuf>,
+    /// The agent the client uses when `SSH_AUTH_SOCK` is unset.
+    pub default_agent: Option<PathBuf>,
+}
+pub(super) fn ssh(input: &TransportInputs) -> Result<SelectedClient, GitError> {
     if input
         .variable("GIT_SSH_VARIANT")
         .is_some_and(|value| value != "ssh" && value != "auto")
@@ -147,20 +167,22 @@ pub(super) fn ssh(
                 "controlled SSH command override requires a separately qualified profile",
             ));
         }
-        return Ok((
-            executable(input, std::ffi::OsStr::new(parts[0]))?,
-            Some(parts[2].into()),
-            None,
-        ));
+        return Ok(SelectedClient {
+            executable: executable(input, std::ffi::OsStr::new(parts[0]))?,
+            user: Some(parts[2].into()),
+            system: None,
+            home: None,
+            default_agent: None,
+        });
     }
     if input.variable("GIT_SSH").is_some() {
         return Err(unsupported(
             "custom GIT_SSH requires a separately qualified controlled installation",
         ));
     }
-    let executable = executable(input, std::ffi::OsStr::new("ssh"))?;
     #[cfg(unix)]
     {
+        let executable = executable(input, std::ffi::OsStr::new("ssh"))?;
         let parent = executable
             .parent()
             .and_then(Path::parent)
@@ -172,14 +194,39 @@ pub(super) fn ssh(
                 "selected OpenSSH system-config layout requires qualification",
             ));
         };
-        Ok((executable, None, Some(system)))
+        Ok(SelectedClient {
+            executable,
+            user: None,
+            system: Some(system),
+            home: None,
+            default_agent: None,
+        })
     }
     #[cfg(not(unix))]
     {
-        let _ = executable;
-        Err(unsupported(
-            "controlled ordinary SSH is not qualified on this platform",
-        ))
+        // The client Git for Windows itself runs: its bundled `usr/bin/ssh`,
+        // else the `ssh` on PATH (the Windows OpenSSH client).
+        let git = executable(input, &input.git_name()).ok();
+        let bundled = git
+            .as_deref()
+            .and_then(|git| native_admission::platform::bundled_ssh(git, Path::is_file));
+        let found = match bundled {
+            Some(path) => path,
+            None => executable(input, std::ffi::OsStr::new("ssh"))?,
+        };
+        let client = native_admission::platform::windows_ssh_client(
+            found,
+            input.variable("ProgramData").map(PathBuf::from),
+            input.variable("USERPROFILE").map(PathBuf::from),
+            Path::is_file,
+        )?;
+        Ok(SelectedClient {
+            executable: client.executable,
+            user: None,
+            system: Some(client.system),
+            home: client.home,
+            default_agent: client.default_agent,
+        })
     }
 }
 pub(super) fn bounded_file(path: &Path) -> Result<Vec<u8>, GitError> {

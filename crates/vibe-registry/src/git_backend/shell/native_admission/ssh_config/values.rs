@@ -154,6 +154,53 @@ pub(super) fn endpoint(output: &str) -> Result<ResolvedEndpoint, GitError> {
     }
     Ok(ResolvedEndpoint { host, user, port })
 }
+/// The address-family, algorithm and RSA-size options the selected client
+/// reported, replayed into the owned configuration under the keywords it
+/// used.
+fn client_options(
+    fields: &BTreeMap<String, Vec<String>>,
+) -> Result<Vec<(String, String)>, GitError> {
+    let family = scalar(fields, "addressfamily")
+        .ok_or_else(|| unsupported("SSH evaluator omitted address family"))?;
+    if !matches!(family, "any" | "inet" | "inet6") {
+        return Err(unsupported("unrecognized selected SSH address family"));
+    }
+    let mut client_options: Vec<(String, String)> = vec![("addressfamily".into(), family.into())];
+    // OpenSSH before 8.5 (the Windows 10 client) names the first one
+    // `pubkeyacceptedkeytypes`; the owned configuration repeats each
+    // keyword exactly as the selected client reported it.
+    for names in [
+        &["pubkeyacceptedalgorithms", "pubkeyacceptedkeytypes"][..],
+        &["hostkeyalgorithms"],
+        &["ciphers"],
+        &["macs"],
+        &["kexalgorithms"],
+    ] {
+        let (key, value) = names
+            .iter()
+            .find_map(|key| scalar(fields, key).map(|value| (*key, value)))
+            .ok_or_else(|| unsupported("SSH evaluator omitted algorithm policy"))?;
+        if value.is_empty()
+            || !value
+                .bytes()
+                .all(|b| b.is_ascii_alphanumeric() || b"@.,_-".contains(&b))
+        {
+            return Err(unsupported("unqualified SSH algorithm policy output"));
+        }
+        client_options.push((key.into(), value.into()));
+    }
+    // `RequiredRSASize` exists since OpenSSH 9.1; an older client reports
+    // none and enforces its own compiled minimum, which is then kept.
+    if let Some(reported) = scalar(fields, "requiredrsasize") {
+        let rsa = reported
+            .parse::<u32>()
+            .ok()
+            .filter(|v| *v >= 1024)
+            .ok_or_else(|| unsupported("unqualified selected SSH RSA size policy"))?;
+        client_options.push(("requiredrsasize".into(), rsa.to_string()));
+    }
+    Ok(client_options)
+}
 #[specmark::spec(
     implements = "spec://org.vibevm.core/vibevm/common/PROP-073#SSH-CONFIG-CAPTURE-LAW"
 )]
@@ -205,35 +252,7 @@ pub(super) fn profile(
             ));
         }
     }
-    let family = scalar(&fields, "addressfamily")
-        .ok_or_else(|| unsupported("SSH evaluator omitted address family"))?;
-    if !matches!(family, "any" | "inet" | "inet6") {
-        return Err(unsupported("unrecognized selected SSH address family"));
-    }
-    let mut client_options: Vec<(String, String)> = vec![("addressfamily".into(), family.into())];
-    for key in [
-        "pubkeyacceptedalgorithms",
-        "hostkeyalgorithms",
-        "ciphers",
-        "macs",
-        "kexalgorithms",
-    ] {
-        let value = scalar(&fields, key)
-            .ok_or_else(|| unsupported("SSH evaluator omitted algorithm policy"))?;
-        if value.is_empty()
-            || !value
-                .bytes()
-                .all(|b| b.is_ascii_alphanumeric() || b"@.,_-".contains(&b))
-        {
-            return Err(unsupported("unqualified SSH algorithm policy output"));
-        }
-        client_options.push((key.into(), value.into()));
-    }
-    let rsa = scalar(&fields, "requiredrsasize")
-        .and_then(|s| s.parse::<u32>().ok())
-        .filter(|v| *v >= 1024)
-        .ok_or_else(|| unsupported("unqualified selected SSH RSA size policy"))?;
-    client_options.push(("requiredrsasize".into(), rsa.to_string()));
+    let client_options = client_options(&fields)?;
     let ResolvedEndpoint { host, user, port } = endpoint(output)?;
     let endpoint = Endpoint {
         host: &host,
@@ -273,7 +292,13 @@ pub(super) fn profile(
         "none".into()
     } else {
         let value = if raw_agent == "SSH_AUTH_SOCK" {
-            input.environment.get("SSH_AUTH_SOCK").cloned()
+            input.environment.get("SSH_AUTH_SOCK").cloned().or_else(|| {
+                input
+                    .default_agent
+                    .as_ref()
+                    .filter(|endpoint| endpoint.exists())
+                    .and_then(|endpoint| endpoint.to_str().map(str::to_owned))
+            })
         } else if raw_agent.starts_with('$') && !raw_agent.starts_with("${") {
             input.environment.get(&raw_agent[1..]).cloned()
         } else {
@@ -283,7 +308,9 @@ pub(super) fn profile(
             None => "none".into(),
             Some(value) => {
                 let p = path(&value, input, Some(&endpoint))?;
-                if !p.is_absolute() {
+                if !p.is_absolute()
+                    && !crate::git_backend::shell::native_admission::platform::named_pipe(&p)
+                {
                     return Err(unsupported("captured SSH agent path must be absolute"));
                 }
                 p.to_str()
@@ -301,7 +328,8 @@ pub(super) fn profile(
     for kind in ["userknownhostsfile", "globalknownhostsfile"] {
         for values in fields.get(kind).into_iter().flatten() {
             for value in inputs::words(values)? {
-                if value == "none" {
+                // `NUL` is the Windows spelling of `/dev/null`.
+                if value == "none" || (cfg!(windows) && value.eq_ignore_ascii_case("NUL")) {
                     continue;
                 }
                 let p = path(&value, input, Some(&endpoint))?;
@@ -335,25 +363,62 @@ pub(super) fn profile(
         return Err(unsupported("unsupported SSH HostKeyAlias"));
     }
     let configured = Configured {
-        #[cfg(unix)]
         owner: owner.clone(),
         authored,
-        #[cfg(unix)]
         identities,
-        #[cfg(unix)]
         agent,
-        #[cfg(unix)]
         identities_only: scalar(&fields, "identitiesonly") == Some("yes"),
-        #[cfg(unix)]
         client_options,
-        #[cfg(unix)]
         trust,
-        #[cfg(unix)]
         host_key_alias: alias,
-        #[cfg(unix)]
         check_host_ip: scalar(&fields, "checkhostip") == Some("yes"),
-        #[cfg(unix)]
         witness,
     };
     Ok(SshProfile::captured(host, user, port, configured))
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    const MODERN: &str = "addressfamily any\npubkeyacceptedalgorithms ssh-ed25519\nhostkeyalgorithms ssh-ed25519\nciphers aes128-ctr\nmacs hmac-sha2-256\nkexalgorithms curve25519-sha256\nrequiredrsasize 2048\n";
+
+    #[test]
+    fn modern_client_options_replay_every_reported_policy() {
+        let options = client_options(&fields(MODERN).unwrap()).unwrap();
+        let keys: Vec<_> = options.iter().map(|(k, _)| k.as_str()).collect();
+        assert_eq!(
+            keys,
+            [
+                "addressfamily",
+                "pubkeyacceptedalgorithms",
+                "hostkeyalgorithms",
+                "ciphers",
+                "macs",
+                "kexalgorithms",
+                "requiredrsasize"
+            ]
+        );
+    }
+
+    #[test]
+    #[specmark::spec(verifies = "spec://org.vibevm.core/vibevm/common/PROP-073#NATIVE-WINDOWS-LAW")]
+    fn windows_10_openssh_options_keep_their_own_keywords() {
+        // OpenSSH 8.1 (Windows 10): the pre-8.5 keyword, no RequiredRSASize.
+        let old = MODERN
+            .replace("pubkeyacceptedalgorithms", "pubkeyacceptedkeytypes")
+            .replace("requiredrsasize 2048\n", "");
+        let options = client_options(&fields(&old).unwrap()).unwrap();
+        assert!(options.iter().any(|(k, _)| k == "pubkeyacceptedkeytypes"));
+        assert!(!options.iter().any(|(k, _)| k == "pubkeyacceptedalgorithms"));
+        assert!(!options.iter().any(|(k, _)| k == "requiredrsasize"));
+        // A reported but weak or malformed size is still refused.
+        for weak in ["requiredrsasize 512\n", "requiredrsasize many\n"] {
+            let output = format!("{old}{weak}");
+            assert!(client_options(&fields(&output).unwrap()).is_err());
+        }
+        // A missing algorithm policy is still refused.
+        let missing = MODERN.replace("ciphers aes128-ctr\n", "");
+        assert!(client_options(&fields(&missing).unwrap()).is_err());
+    }
 }

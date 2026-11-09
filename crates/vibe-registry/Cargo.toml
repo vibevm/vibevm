@@ -15,6 +15,7 @@ tokio.workspace = true
 command-group = "=5.0.1"
 specmark.workspace = true
 vibe-core.workspace = true
+vibe-net.workspace = true
 vibe-wire.workspace = true
 anyhow.workspace = true
 thiserror.workspace = true

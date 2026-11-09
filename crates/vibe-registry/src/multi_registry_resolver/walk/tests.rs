@@ -173,7 +173,7 @@ fn resolve_strict_auth_halts_on_public_401_instead_of_walking() {
     let p = PackageRef::parse("org.vibevm/wal").unwrap();
     let err = r.resolve(&p).unwrap_err();
     match err {
-        RegistryError::Git(GitError::AuthFailed { url }) => {
+        RegistryError::Git(GitError::AuthFailed { url, .. }) => {
             assert!(
                 url.contains("org-a"),
                 "halt error must surface the failing registry's URL: {url}"
@@ -300,7 +300,7 @@ fn resolve_halts_on_auth_failed_against_authenticated_registry() {
     let p = PackageRef::parse("org.vibevm/wal").unwrap();
     let err = r.resolve(&p).unwrap_err();
     match err {
-        RegistryError::Git(GitError::AuthFailed { url }) => {
+        RegistryError::Git(GitError::AuthFailed { url, .. }) => {
             assert!(
                 url.contains("internal.example.com"),
                 "halt error must surface the authenticated registry's URL, got: {url}"

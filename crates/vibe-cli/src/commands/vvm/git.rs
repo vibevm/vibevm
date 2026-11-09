@@ -39,7 +39,10 @@ pub(crate) enum GitError {
 /// Run `git <args>` in `dir`, returning trimmed stdout. A non-zero exit is
 /// an error carrying git's stderr.
 pub(crate) fn run(dir: &Path, args: &[&str]) -> Result<String, GitError> {
-    let output = Command::new("git")
+    let mut command = Command::new("git");
+    // PROP-068 `#proxy-git`: the configured route, before the subcommand.
+    vibe_net::git::apply_for_args(&mut command, Path::new("git"), args, Some(dir));
+    let output = command
         .current_dir(dir)
         .args(args)
         .output()

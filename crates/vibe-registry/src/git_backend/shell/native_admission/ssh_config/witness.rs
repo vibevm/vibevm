@@ -18,6 +18,10 @@ struct Stamp {
     modified: Option<std::time::SystemTime>,
     #[cfg(unix)]
     unix: (u64, u64, u64, u32, i64, i64),
+    /// Attributes, creation and last-write times: the identity facts std
+    /// exposes on Windows (its file index is not stable API).
+    #[cfg(windows)]
+    windows: (u32, u64, u64),
 }
 fn stamp(path: &Path) -> Result<Option<Stamp>, GitError> {
     let metadata = match std::fs::metadata(path) {
@@ -33,6 +37,8 @@ fn stamp(path: &Path) -> Result<Option<Stamp>, GitError> {
 fn metadata_stamp(metadata: &std::fs::Metadata) -> Stamp {
     #[cfg(unix)]
     use std::os::unix::fs::MetadataExt;
+    #[cfg(windows)]
+    use std::os::windows::fs::MetadataExt;
     Stamp {
         size: metadata.len(),
         modified: metadata.modified().ok(),
@@ -45,26 +51,31 @@ fn metadata_stamp(metadata: &std::fs::Metadata) -> Stamp {
             metadata.ctime(),
             metadata.ctime_nsec(),
         ),
+        #[cfg(windows)]
+        windows: (
+            metadata.file_attributes(),
+            metadata.creation_time(),
+            metadata.last_write_time(),
+        ),
     }
 }
-/// The open options of one bounded, non-blocking SSH input read. Only Unix is
-/// qualified: elsewhere this is the capture's runtime refusal.
-#[cfg(unix)]
-fn bounded_read_options() -> Result<std::fs::OpenOptions, GitError> {
-    use std::os::unix::fs::OpenOptionsExt;
+/// The open options of one bounded SSH input read. On Unix the open does
+/// not block on a FIFO planted in place of a file; on Windows opening a
+/// named file never waits, and the regular-file check follows the open on
+/// every platform.
+fn bounded_read_options() -> std::fs::OpenOptions {
     let mut options = std::fs::OpenOptions::new();
-    options.read(true).custom_flags(libc::O_NONBLOCK);
-    Ok(options)
-}
-#[cfg(not(unix))]
-fn bounded_read_options() -> Result<std::fs::OpenOptions, GitError> {
-    Err(unsupported(
-        "bounded SSH configuration reads are not qualified on this platform",
-    ))
+    options.read(true);
+    #[cfg(unix)]
+    {
+        use std::os::unix::fs::OpenOptionsExt;
+        options.custom_flags(libc::O_NONBLOCK);
+    }
+    options
 }
 fn read_content(path: &Path) -> Result<Option<Content>, GitError> {
     use std::io::Read;
-    let options = bounded_read_options()?;
+    let options = bounded_read_options();
     let file = match options.open(path) {
         Ok(file) => file,
         Err(e) if e.kind() == std::io::ErrorKind::NotFound => return Ok(None),
@@ -137,9 +148,10 @@ impl Witness {
         }
         Ok(())
     }
-    /// Ownership and mode bits are Unix facts. Elsewhere no content was ever
-    /// read — [`bounded_read_options`] refused first — so there is nothing to
-    /// judge.
+    /// Ownership and mode bits are Unix facts. Windows protects a profile's
+    /// `.ssh` by its ACL, which std does not expose; it is not judged here
+    /// (PROP-073 `#NATIVE-WINDOWS`), and the content witness still detects
+    /// any change between capture and use.
     #[cfg(not(unix))]
     pub(super) fn config_permissions(
         &self,

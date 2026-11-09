@@ -66,6 +66,7 @@ impl ShellGit {
 
         let mut cmd = Command::new(&self.binary);
         apply_common_env(&mut cmd, self.force_anonymous);
+        super::env::apply_network(&mut cmd, &self.binary, &argv, cwd)?;
         cmd.args(&argv);
         if let Some(dir) = cwd {
             cmd.current_dir(dir);

@@ -1,0 +1,13 @@
+{
+  "metadata": {
+    "description": "Wire format for `vibe self source [show] --json` (`vibe-self-source/1`, PROP-019 `#release-sources`): the effective release source, the input that decided it, and the one `[[remap]]` row it installs. The whole document is the shared `release_source_view` vocabulary, which `vibe-self-releases/1` carries verbatim as its `source` member. Source of truth for `crates/vibe-wire/src/generated/self_source_report/mod.rs`.",
+    "spec": {
+      "implements": "spec://org.vibevm.core/vibevm/common/PROP-000#JTD-SSOT"
+    },
+    "rustOptions": {
+      "package": "vibe_wire::self_source_report"
+    },
+    "x-vocabularies": ["release_source_view"]
+  },
+  "ref": "release_source_view"
+}

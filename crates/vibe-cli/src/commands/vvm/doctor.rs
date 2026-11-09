@@ -21,6 +21,8 @@ use super::model::{InstallRecord, Origin};
 use super::provenance::{self, RunningIdentity};
 use super::source as source_tree;
 use super::tools;
+#[path = "doctor_network.rs"]
+mod network;
 use super::{VvmEnv, bundle, make_persister, path_has_dir};
 #[path = "doctor_environment.rs"]
 mod environment;
@@ -242,6 +244,8 @@ pub(super) fn run_doctor_cmd(
         + usize::from(running_missing)
         + instance_problems
         + shim_problems;
+    let network = network::run(&checks.progress(), args.network.as_deref())?;
+    let problems = problems + network.as_deref().map_or(0, network::failures);
     let mut remaining_problems = problems;
     let mut fixed = false;
     checks.detail(format!("problems found: {problems}"));
@@ -332,6 +336,7 @@ pub(super) fn run_doctor_cmd(
                 "upgrade": (layout.kind == "legacy-single-binary" || layout.kind == "bundle-unrooted").then_some("vibe self update --force"),
             })).collect::<Vec<_>>(),
             "embedded_registry": embedded_registry.as_ref().map(|p| p.display().to_string()),
+            "network": network.as_deref().map(network::json),
         }))?;
         if remaining_problems > 0 {
             return Err(VvmError::DoctorProblems {
@@ -455,6 +460,10 @@ pub(super) fn run_doctor_cmd(
             root.display()
         )),
         None => ctx.step("-    no embedded registry (the active version is not a source install)"),
+    }
+
+    for check in network.iter().flatten() {
+        ctx.step(&network::line(check));
     }
 
     if fixed {

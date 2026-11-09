@@ -90,6 +90,11 @@ impl NativeGitAdmission {
         }
         .map_err(io)
     }
+    /// Whether the caller selected a CA file for HTTPS instead of the
+    /// installation's own trust.
+    pub(super) fn selects_ca_file(&self) -> bool {
+        !matches!(self.trust, TlsTrust::System)
+    }
     pub(super) fn selected_pem(&self) -> Result<Option<Arc<Vec<u8>>>, GitError> {
         match &self.trust {
             TlsTrust::System => Ok(None),

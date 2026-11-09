@@ -34,7 +34,14 @@ pub(super) fn tree(path: &Path) -> Result<Option<Tree>, GitError> {
             use std::os::unix::fs::MetadataExt;
             (metadata.dev(), metadata.ino())
         };
-        #[cfg(not(unix))]
+        // Windows: creation and last-write times stand in for the inode
+        // (PROP-073 `#NATIVE-WINDOWS`); a replaced file has new ones.
+        #[cfg(windows)]
+        let identity = {
+            use std::os::windows::fs::MetadataExt;
+            (metadata.creation_time(), metadata.last_write_time())
+        };
+        #[cfg(not(any(unix, windows)))]
         let identity = (0, 0);
         let bytes = if metadata.is_file() {
             let mut file = fs::File::open(entry.path()).map_err(io)?;
@@ -196,11 +203,6 @@ impl NativeState {
         objects: &Path,
         revision: &GitPreparedRevision,
     ) -> Result<NativeMaterialisation, GitError> {
-        if !cfg!(unix) {
-            return Err(unsupported(
-                "checked native materialisation requires supported Unix file identities",
-            ));
-        }
         let owned = self.with_owned(objects, |owned| {
             if !owned.destination_bound {
                 return Err(unsupported(

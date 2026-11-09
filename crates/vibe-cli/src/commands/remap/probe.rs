@@ -452,10 +452,13 @@ fn stat(path: &Path, digest: Option<&str>) -> Result<(), String> {
 
 /// One `HEAD`, no body.
 fn head(url: &str) -> Result<(), String> {
-    let client = reqwest::blocking::Client::builder()
-        .timeout(PROBE_TIMEOUT)
-        .build()
-        .map_err(|error| error.to_string())?;
+    let client = vibe_net::http::route(
+        reqwest::blocking::Client::builder().timeout(PROBE_TIMEOUT),
+        vibe_net::http::Ambient::Inherit,
+    )
+    .map_err(|error| error.to_string())?
+    .build()
+    .map_err(|error| error.to_string())?;
     client
         .head(url)
         .send()

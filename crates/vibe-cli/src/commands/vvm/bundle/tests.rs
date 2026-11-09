@@ -256,6 +256,20 @@ fn aggregate_for(fixture: &Fixture) -> AggregateDistributionManifest {
     AggregateDistributionManifest::from_platforms(platforms).unwrap()
 }
 
+/// These release servers carry no px companion asset: its request is a 404,
+/// as on a release published before px was (PROP-019 `#companion-tools`).
+fn refuse_px(url: &str) -> anyhow::Result<()> {
+    let path = url.split('?').next().unwrap_or(url);
+    if path
+        .rsplit('/')
+        .next()
+        .is_some_and(|name| name.starts_with("px-"))
+    {
+        anyhow::bail!("`{path}` answered 404");
+    }
+    Ok(())
+}
+
 struct LocalDownloader {
     bundle: PathBuf,
     urls: RefCell<Vec<String>>,
@@ -271,6 +285,7 @@ impl Downloader for LocalDownloader {
         progress: &ProgressTask,
     ) -> anyhow::Result<()> {
         self.urls.borrow_mut().push(url.to_string());
+        refuse_px(url)?;
         if let Some(parent) = destination.parent() {
             std::fs::create_dir_all(parent)?;
         }
@@ -297,6 +312,7 @@ impl Downloader for ReleaseDownloader {
         progress: &ProgressTask,
     ) -> anyhow::Result<()> {
         self.urls.borrow_mut().push(url.to_string());
+        refuse_px(url)?;
         if let Some(parent) = destination.parent() {
             std::fs::create_dir_all(parent)?;
         }
@@ -363,6 +379,10 @@ impl FakePersister {
 }
 
 impl EnvPersister for FakePersister {
+    fn set_install_root(&self, _root: &Path) -> anyhow::Result<Persisted> {
+        Ok(Persisted::Unchanged)
+    }
+
     fn set_vibevm_home(&self, home: &Path) -> anyhow::Result<Persisted> {
         self.homes.borrow_mut().push(home.to_path_buf());
         if self.fail_home {
@@ -389,6 +409,10 @@ mod network_tests;
 
 #[path = "tests/release.rs"]
 mod release_tests;
+
+#[cfg(test)]
+#[path = "tests/companions.rs"]
+mod companion_tests;
 
 #[path = "integrity_tests.rs"]
 mod integrity_tests;

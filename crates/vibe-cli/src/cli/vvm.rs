@@ -62,6 +62,11 @@ pub enum VvmSubcommand {
     /// Verify the install and environment; `--fix` repairs PATH and shims.
     Doctor(VvmDoctorArgs),
 
+    /// The pinned px of this installation's tool store: `status` shows it,
+    /// `install` reads it from the release source or drop and verifies it
+    /// (PROP-019 `#companion-tools`).
+    Px(VvmPxArgs),
+
     /// Configure this installation from one site profile: registries,
     /// mirrors and remap rows, source policy, artifact drops, the release
     /// source, the proxy and PATH (PROP-019 `#site-profile`).
@@ -233,6 +238,34 @@ pub struct VvmApplyArgs {
     pub no_fix_path: bool,
 }
 
+/// `vibe self px [status|install]` (PROP-019 `#companion-tools`).
+#[derive(Debug, clap::Args)]
+pub struct VvmPxArgs {
+    #[command(subcommand)]
+    pub command: VvmPxCommand,
+}
+
+#[derive(Debug, clap::Subcommand)]
+pub enum VvmPxCommand {
+    /// Show the pinned px version, its asset for this platform, the store
+    /// directory and whether px is installed there.
+    Status,
+    /// Install the pinned px into the store from the release source (a
+    /// drop included), verifying it against the pin.
+    Install(VvmPxInstallArgs),
+}
+
+#[derive(Debug, clap::Args)]
+pub struct VvmPxInstallArgs {
+    /// Read the pinned archive from this file or directory instead of the
+    /// release source.
+    #[arg(long, value_name = "PATH")]
+    pub from: Option<std::path::PathBuf>,
+    /// Reinstall over an existing copy.
+    #[arg(long)]
+    pub force: bool,
+}
+
 /// `vibe self source [show|set|reset]` (PROP-019 `#release-sources`).
 #[derive(Debug, clap::Args)]
 pub struct VvmSourceArgs {
@@ -389,6 +422,13 @@ pub struct VvmDoctorArgs {
     /// non-terminal callers, which otherwise report `not_run`.
     #[arg(long)]
     pub probe_login_shell: bool,
+
+    /// Diagnose the network route to URL (default `https://github.com/`):
+    /// px present and started, `px --test`, `CONNECT` through the proxy,
+    /// TLS with the trust set. Without this flag the diagnosis runs only
+    /// when `[proxy]` configures a proxy or a CA file (PROP-068#proxy).
+    #[arg(long, value_name = "URL", num_args = 0..=1, default_missing_value = "")]
+    pub network: Option<String>,
 }
 
 #[derive(Debug, clap::Args)]

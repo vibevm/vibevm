@@ -106,22 +106,30 @@ pub(super) fn run_publish(ctx: &output::Context, args: RegistryPublishArgs) -> R
 
     // PROP-002 `#registry-layers`: the publish target is chosen from the
     // same effective declarations resolution reads — the project-local
-    // override, `vibe.toml` and the user's `~/.vibe/registry.toml`.
-    let user =
-        vibe_core::GlobalRegistryConfig::load().context("loading `~/.vibe/registry.toml`")?;
+    // override, `vibe.toml`, the user's `~/.vibe/registry.toml` and the
+    // applied site profile, each kept as its own layer.
+    let user = match vibe_core::settings::registry_config_path() {
+        Some(path) => vibe_core::GlobalRegistryConfig::load_from(&path)
+            .with_context(|| format!("loading `{}`", path.display()))?,
+        None => vibe_core::GlobalRegistryConfig::default(),
+    };
+    let site = vibe_core::site_profile::installed()
+        .context("reading the applied site profile")?
+        .map(|site| site.profile.registry_layer());
     let local = vibe_core::GlobalRegistryConfig::load_project_local(&project_root)?;
     let effective = vibe_core::RegistryLayers {
         local: Some(&local),
         project: Some(&manifest),
         user: &user,
-        site: None,
+        site: site.as_ref(),
     }
     .merge();
     if effective.registries.is_empty() {
         bail!(
-            "no `[[registry]]` entries in `{}`, `.vibe/registry.local.toml` or \
-             `~/.vibe/registry.toml`. `vibe registry publish` needs a target registry, \
-             or pass `--repo-url <git-url>` to push directly to a known repo without an API call.",
+            "no `[[registry]]` entries in `{}`, `.vibe/registry.local.toml`, \
+             `~/.vibe/registry.toml` or the applied site profile. `vibe registry publish` needs \
+             a target registry, or pass `--repo-url <git-url>` to push directly to a known repo \
+             without an API call.",
             manifest_path.display()
         );
     }
@@ -133,8 +141,8 @@ pub(super) fn run_publish(ctx: &output::Context, args: RegistryPublishArgs) -> R
             .find(|row| &row.name == name)
             .ok_or_else(|| {
                 anyhow!(
-                    "no `[[registry]]` named `{name}` in `{}`, `.vibe/registry.local.toml` or \
-                     `~/.vibe/registry.toml`",
+                    "no `[[registry]]` named `{name}` in `{}`, `.vibe/registry.local.toml`, \
+                     `~/.vibe/registry.toml` or the applied site profile",
                     manifest_path.display()
                 )
             })?,

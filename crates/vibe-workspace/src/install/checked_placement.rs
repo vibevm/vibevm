@@ -21,12 +21,6 @@ struct Entry {
 pub(super) struct Tree(BTreeMap<PathBuf, Entry>);
 impl Tree {
     pub(super) fn read(path: &Path) -> Result<Self, WorkspaceError> {
-        if !cfg!(unix) {
-            return Err(WorkspaceError::SpecMaterialization {
-                path: path.into(),
-                reason: "checked native placement requires supported Unix file identities".into(),
-            });
-        }
         fn visit(
             root: &Path,
             path: &Path,
@@ -38,7 +32,17 @@ impl Tree {
                 use std::os::unix::fs::MetadataExt;
                 ((metadata.dev(), metadata.ino()), metadata.mode())
             };
-            #[cfg(not(unix))]
+            // Windows: creation and last-write times stand in for the inode
+            // (PROP-073 `#NATIVE-WINDOWS`); a replaced file has new ones.
+            #[cfg(windows)]
+            let (identity, mode) = {
+                use std::os::windows::fs::MetadataExt;
+                (
+                    (metadata.creation_time(), metadata.last_write_time()),
+                    u32::from(metadata.permissions().readonly()),
+                )
+            };
+            #[cfg(not(any(unix, windows)))]
             let (identity, mode) = ((0, 0), u32::from(metadata.permissions().readonly()));
             let (kind, bytes) = if metadata.is_dir() {
                 (0, Vec::new())

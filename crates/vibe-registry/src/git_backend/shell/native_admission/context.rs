@@ -30,8 +30,6 @@ impl<'a> Context<'a> {
         let mut cmd = Command::new(&self.profile.installation.executable);
         cmd.env_clear()
             .current_dir(root)
-            .env("PATH", &self.profile.installation.helpers)
-            .env("GIT_EXEC_PATH", &self.profile.installation.helpers)
             .env("HOME", root.join("home"))
             .env("XDG_CONFIG_HOME", root.join("home"))
             .env("GIT_CONFIG_NOSYSTEM", "1")
@@ -50,16 +48,17 @@ impl<'a> Context<'a> {
                     Some(NativeProtocol::Http) => "http",
                     Some(NativeProtocol::Https) => "https",
                     Some(NativeProtocol::Ssh) => "ssh",
+                    Some(NativeProtocol::File) => "file",
                     None => "",
                 },
             )
             .env("GIT_TEMPLATE_DIR", root.join("empty"))
             .stdin(Stdio::null());
+        self.profile.installation.prepare(&mut cmd);
         // All entries originate here, never from inherited -c/env/config input.
         for value in [
             "credential.helper=",
             "core.askPass=",
-            "http.proxy=",
             "http.followRedirects=false",
             "http.sslVerify=true",
             "http.extraHeader=",
@@ -72,6 +71,44 @@ impl<'a> Context<'a> {
             "core.fsmonitor=false",
         ] {
             cmd.args(["-c", value]);
+        }
+        // PROP-068 `#proxy`: the configured route is the only proxy this
+        // child may use; without one, an empty `http.proxy` keeps it direct.
+        let network = match remote {
+            Some(AdmittedRemote::Https { url, .. }) => {
+                vibe_net::git::current_for_remote(url.as_str())
+                    .map_err(|_| unsupported("the configured network route is unavailable"))?
+            }
+            _ => vibe_net::git::GitNetwork::default(),
+        };
+        if !network
+            .config
+            .iter()
+            .any(|value| value.starts_with("http.proxy="))
+            && !network.env.iter().any(|(name, _)| name == "HTTPS_PROXY")
+        {
+            cmd.args(["-c", "http.proxy="]);
+        }
+        network.apply(&mut cmd);
+        if matches!(remote, Some(AdmittedRemote::Https { url, .. }) if url.scheme() == "https")
+            && let Some(backend) = platform::windows_tls_backend(
+                cfg!(windows),
+                self.profile.selects_ca_file()
+                    || network
+                        .config
+                        .iter()
+                        .any(|value| value.starts_with("http.sslCAInfo=")),
+            )
+        {
+            cmd.args(["-c", backend]);
+        }
+        if let Some(AdmittedRemote::Local { .. }) = remote {
+            // A shared repository (an NFS export, a `\\server\share`) is
+            // usually owned by another account; Git's ownership check would
+            // refuse its `upload-pack`. This child runs no hooks and reads no
+            // system or global configuration, and the repository is the one
+            // the user configured, so the check is waived for it alone.
+            cmd.args(["-c", "safe.directory=*"]);
         }
         cmd.arg("-c")
             .arg(format!("core.hooksPath={}", root.join("hooks").display()));

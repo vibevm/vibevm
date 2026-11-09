@@ -35,6 +35,42 @@ impl MultiRegistryResolver {
         group: &Group,
     ) -> Result<MultiResolution, RegistryError> {
         for src in self.sources()? {
+            if let RegistrySource::Monorepo(mono) = src {
+                // A monorepo on this machine (or a share) needs no
+                // network: read it like a `localdir` registry.
+                let Some(local) = mono.offline_local()? else {
+                    continue;
+                };
+                match local.resolve(pkgref) {
+                    Ok(resolved) => {
+                        let source_url = crate::git_registry::monorepo_source_url(
+                            &mono.url,
+                            &resolved.group,
+                            &resolved.name,
+                            &resolved.version,
+                        );
+                        return Ok(MultiResolution {
+                            direct: None,
+                            locked: None,
+                            selected_route: None,
+                            resolved,
+                            registry_name: Some(mono.name.clone()),
+                            source_url,
+                            source_ref: Some(mono.refname.clone()),
+                            overridden: false,
+                            is_git_source: false,
+                            is_path_source: false,
+                            via_redirect: None,
+                            from_store: false,
+                            redirect_target_auth: vibe_core::manifest::AuthKind::None,
+                            redirect_target_token_env: None,
+                        });
+                    }
+                    Err(RegistryError::UnknownPackage { .. })
+                    | Err(RegistryError::NoMatchingVersion { .. }) => continue,
+                    Err(other) => return Err(other),
+                }
+            }
             let RegistrySource::Local(ls) = src else {
                 // A git registry is a network source — under the
                 // offline posture it is not entered at all.

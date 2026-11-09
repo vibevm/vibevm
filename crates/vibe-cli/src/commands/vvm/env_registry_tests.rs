@@ -159,3 +159,50 @@ fn vibevm_home_keeps_its_kind_and_skips_identical_writes() {
         Some(RegistryValueKind::String)
     );
 }
+
+/// `$VIBEVM_INSTALL_ROOT` is the one durable value that decides where the
+/// whole installation lives (`PROP-019#install-root`), so it follows the
+/// same two rules as every other user variable: the kind an existing value
+/// carries is preserved — an operator's `REG_EXPAND_SZ` `%SystemDrive%\Work`
+/// must keep expanding — and an identical value is never rewritten.
+#[test]
+#[specmark::spec(
+    verifies = "spec://org.vibevm.core/vibevm/common/PROP-019#install-root",
+    r = 3
+)]
+fn the_install_root_keeps_its_kind_and_skips_identical_writes() {
+    let persister = persister(&[(
+        "VIBEVM_INSTALL_ROOT",
+        r"%SystemDrive%\Old",
+        RegistryValueKind::ExpandString,
+    )]);
+    assert_eq!(
+        persister.set_install_root(Path::new(r"C:\Work")).unwrap(),
+        Persisted::Changed
+    );
+    assert_eq!(
+        persister.registry().value("vibevm_install_root"),
+        Some(RawUserVar {
+            value: r"C:\Work".into(),
+            kind: RegistryValueKind::ExpandString,
+        })
+    );
+    assert_eq!(
+        persister.set_install_root(Path::new(r"C:\Work")).unwrap(),
+        Persisted::Unchanged
+    );
+    assert_eq!(persister.registry().writes(), 1);
+
+    // A value born here is plain: nothing in it asked to be expanded.
+    let fresh = self::persister(&[]);
+    fresh.set_install_root(Path::new(r"C:\Work")).unwrap();
+    assert_eq!(
+        fresh
+            .registry()
+            .value("VIBEVM_INSTALL_ROOT")
+            .map(|raw| raw.kind),
+        Some(RegistryValueKind::String)
+    );
+    // The install root and the instance pointer are different variables.
+    assert!(fresh.registry().value("VIBEVM_HOME").is_none());
+}

@@ -24,6 +24,7 @@ path = "src/main.rs"
 [dependencies]
 specmark.workspace = true
 vibe-core = { workspace = true }
+vibe-net = { workspace = true }
 clap = { workspace = true }
 thiserror = { workspace = true }
 serde = { workspace = true }

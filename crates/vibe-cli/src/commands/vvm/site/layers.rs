@@ -15,6 +15,43 @@ use vibe_core::user_config::UserConfig;
 
 use crate::commands::vvm::bundle::release_source::{self, EffectiveReleaseSource};
 
+/// What decided the install root (`PROP-019#install-root`).
+///
+/// The distinction is not decoration: a base the environment already names,
+/// or the built-in default, needs no durable write — only a base a FILE
+/// declares has to survive the terminal that applied it.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub(crate) enum InstallBaseOrigin {
+    /// `$VIBEVM_INSTALL_ROOT`, inherited by this invocation.
+    Environment,
+    /// `[self] install_root` in the named file — the user's own
+    /// `config.toml` or the stored site profile.
+    Declared(PathBuf),
+    /// Nothing named one: `~/.vibe`.
+    BuiltIn,
+}
+
+impl InstallBaseOrigin {
+    /// The wire and human spelling the report carries.
+    pub(crate) fn describe(&self) -> String {
+        match self {
+            InstallBaseOrigin::Environment => {
+                format!("${}", crate::commands::vvm::VIBEVM_INSTALL_ROOT_ENV)
+            }
+            InstallBaseOrigin::Declared(file) => {
+                format!("[self] install_root in {}", file.display())
+            }
+            InstallBaseOrigin::BuiltIn => "built-in default".to_owned(),
+        }
+    }
+
+    /// Whether a durable `$VIBEVM_INSTALL_ROOT` is needed for the next
+    /// terminal to resolve the same installation.
+    pub(crate) fn needs_durable_write(&self) -> bool {
+        matches!(self, InstallBaseOrigin::Declared(_))
+    }
+}
+
 /// The two configuration layers of one machine.
 #[derive(Debug, Clone, Default)]
 pub(crate) struct ConfigLayers {
@@ -62,10 +99,42 @@ impl ConfigLayers {
     /// declares neither `[self]` nor `[artifacts] vibe`, the site does.
     fn release_from_site(&self) -> Option<&InstalledSiteProfile> {
         self.site.as_ref().filter(|site| {
-            self.own.self_source.is_default()
+            self.own.self_source.release_is_default()
                 && self.own.artifacts.vibe.is_none()
                 && site.profile.declares_release_source()
         })
+    }
+
+    /// The install root vibe keeps itself under, and what decided it
+    /// (`PROP-019#install-root`): the environment variable this invocation
+    /// inherited, then the user's own `[self] install_root`, then the site
+    /// profile's, then `~/.vibe`. The store lives at `<base>/opt`, so the
+    /// shims an operator puts on PATH are `<base>/opt/bin`.
+    ///
+    /// `None` only when nothing names a base and no home directory
+    /// resolves — the same state in which the version manager has no root
+    /// at all.
+    pub(crate) fn install_base(
+        &self,
+        env_override: Option<&Path>,
+        home: Option<&Path>,
+    ) -> Option<(PathBuf, InstallBaseOrigin)> {
+        if let Some(base) = env_override {
+            return Some((base.to_path_buf(), InstallBaseOrigin::Environment));
+        }
+        if let Some(base) = &self.own.self_source.install_root {
+            let file = self
+                .own_path
+                .clone()
+                .unwrap_or_else(|| PathBuf::from("config.toml"));
+            return Some((base.clone(), InstallBaseOrigin::Declared(file)));
+        }
+        if let Some(site) = &self.site
+            && let Some(base) = &site.profile.self_source.install_root
+        {
+            return Some((base.clone(), InstallBaseOrigin::Declared(site.path.clone())));
+        }
+        home.map(|home| (home.join(".vibe"), InstallBaseOrigin::BuiltIn))
     }
 
     /// The effective release source and the file that decided it

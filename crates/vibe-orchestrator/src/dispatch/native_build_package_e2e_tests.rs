@@ -340,18 +340,22 @@ fn fixture_library(stem: &str) -> PathBuf {
         std::env::consts::DLL_PREFIX,
         std::env::consts::DLL_SUFFIX
     );
-    let matches = [profile.to_path_buf(), profile.join("deps")]
-        .into_iter()
-        .flat_map(|directory| {
-            must(std::fs::read_dir(directory), "fixture artifact directory").filter_map(Result::ok)
-        })
-        .map(|entry| entry.path())
-        .filter(|path| path.file_name().is_some_and(|name| name == exact.as_str()))
-        .collect::<Vec<_>>();
-    let [one] = matches.as_slice() else {
-        panic!("expected one `{exact}` fixture artifact, found {matches:?}")
-    };
-    one.clone()
+    // `deps/` holds the copy this test binary was built with; Cargo's
+    // uplifted profile-directory copy may be older, so it is used only when
+    // `deps/` has none. Each directory holds at most one exact name.
+    for directory in [profile.join("deps"), profile.to_path_buf()] {
+        let matches = must(std::fs::read_dir(&directory), "fixture artifact directory")
+            .filter_map(Result::ok)
+            .map(|entry| entry.path())
+            .filter(|path| path.file_name().is_some_and(|name| name == exact.as_str()))
+            .collect::<Vec<_>>();
+        match matches.as_slice() {
+            [] => continue,
+            [one] => return one.clone(),
+            _ => panic!("expected one `{exact}` fixture artifact, found {matches:?}"),
+        }
+    }
+    panic!("no `{exact}` fixture artifact under {}", profile.display())
 }
 
 fn image_identities(fences: &Fences<'_>) -> BTreeSet<(PathBuf, String)> {

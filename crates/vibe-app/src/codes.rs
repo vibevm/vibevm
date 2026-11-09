@@ -206,6 +206,7 @@ codes!(APP, AppError [Configuration, State, Catalog, Storage, Resolve, Installer
     UnknownSlot => "unknown_slot", Refusal, "the slot has no installed provider";
     NotProvider => "not_provider", Refusal, "the key does not provide the slot";
     ProxyImage => "proxy_image_missing", Refusal, "the PATH proxy image is missing";
+    ForeignProxy => "foreign_proxy_file", Refusal, "another file holds a PATH proxy's name";
     SessionChoice => "session_choice_invalid", Refusal, "a session choice is malformed";
     Launchers => "launchers_invalid", Failure, "a launcher stays incomplete after desktop-entry derivation";
 });

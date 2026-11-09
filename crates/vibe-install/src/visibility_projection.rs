@@ -207,6 +207,66 @@ fn node_id(group: &Group, name: &str) -> NodeId {
     format!("{group}/{name}")
 }
 
+/// Solve `roots` through `source` and keep exactly the consumer root's
+/// effective set (PROP-050 `#EFFECTIVE-SET`): a private (or not befriended
+/// friends-only) requirement of a non-root package is masked and the
+/// selected cell re-solved until the mask is stable, then the graph is
+/// pruned. The same law the install planner applies, for a caller that
+/// solves an explicit root set (`vibe update <pkg>`, `--sources-only`).
+///
+/// ```
+/// use std::collections::BTreeSet;
+/// use vibe_core::{PackageRef, manifest::Manifest};
+/// use vibe_resolver::{ResolvedGraph, SolveError};
+/// # struct Empty;
+/// # impl vibe_install::InstallSource for Empty {
+/// #     fn resolve_and_fetch(&self, _: &PackageRef, _: &std::path::Path, _: Option<&str>)
+/// #         -> Result<vibe_registry::CachedPackage, vibe_registry::RegistryError> { unreachable!() }
+/// #     fn solve(&self, _: &[PackageRef]) -> Result<ResolvedGraph, SolveError> { Ok(ResolvedGraph::default()) }
+/// #     fn manifest_of(&self, _: &PackageRef) -> Result<Manifest, SolveError> { unreachable!() }
+/// #     fn solve_masked(&self, _: &[PackageRef], _: &BTreeSet<(String, String)>)
+/// #         -> Result<ResolvedGraph, SolveError> { unreachable!() }
+/// #     fn materialise_in_place(&self, _: &PackageRef, _: &std::path::Path)
+/// #         -> Result<vibe_registry::InPlaceMaterialised, vibe_registry::RegistryError> { unreachable!() }
+/// # }
+/// let root = Manifest::parse_str("[project]\nname = \"demo\"\nversion = \"0.1.0\"\n").unwrap();
+/// let graph = vibe_install::solve_visible_graph(&Empty, &root, &[]).unwrap();
+/// assert!(graph.packages.is_empty());
+/// ```
+pub fn solve_visible_graph<S: crate::InstallSource + ?Sized>(
+    source: &S,
+    root_manifest: &Manifest,
+    roots: &[PackageRef],
+) -> Result<ResolvedGraph> {
+    const MAX_VISIBILITY_PASSES: usize = 4;
+    let root_id = crate::plan::visibility_root_id(root_manifest);
+    let mut blocked = BTreeSet::new();
+    let mut graph = source.solve(roots)?;
+    for _ in 0..MAX_VISIBILITY_PASSES {
+        let manifest_of = |reference: &PackageRef| source.manifest_of(reference);
+        let projection = project(&ProjectionInput {
+            root_manifest,
+            root_id: root_id.clone(),
+            graph: &graph,
+            manifest_of: &manifest_of,
+        })?;
+        let newly_blocked = projection
+            .blocked_edges
+            .difference(&blocked)
+            .cloned()
+            .collect::<BTreeSet<_>>();
+        if newly_blocked.is_empty() {
+            prune_graph(&mut graph, &projection.analysis);
+            return Ok(graph);
+        }
+        blocked.extend(newly_blocked);
+        graph = source.solve_masked(roots, &blocked)?;
+    }
+    Err(visibility_error(format!(
+        "visibility strictness did not converge within {MAX_VISIBILITY_PASSES} iterations"
+    )))
+}
+
 pub(crate) fn visibility_error(reason: String) -> Error {
     Error::Solve(
         DepProviderError::Other(format!(

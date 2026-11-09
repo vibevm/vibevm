@@ -29,11 +29,20 @@ pub mod hosted_slot;
 pub mod http_dir;
 /// The leftover check of cancelled and rolled-back operations.
 pub mod leftovers;
+/// Local TLS/HTTP servers, test CAs, a CONNECT proxy and the fake px
+/// (PROP-068 `#proxy`).
+#[cfg(unix)]
+pub mod net_fixture;
+/// The loopback Git host serving a package organisation and its
+/// repository-listing API (`vibe registry mirror`'s `api` listing).
+pub mod org_host;
 /// The owned loopback sshd serving one writable monorepo registry.
 #[cfg(unix)]
 pub mod ssh_monorepo;
 /// The R3.4 failure reds' git-backed `org.demo/tools` fixture.
 pub mod trace_failure_slot;
+/// The generated-reader oracle for a registered `--json` report.
+pub mod wire;
 
 /// `vibe()` and `UserScratch` moved into `vibe-test-support` (DRIFT-020) so
 /// `vibe-index`'s test binaries can reach them too, and — the point of the

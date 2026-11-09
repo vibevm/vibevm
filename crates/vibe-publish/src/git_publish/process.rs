@@ -11,6 +11,8 @@ use crate::PublishError;
 /// Like [`git_command`] but cwd-less — used by network-only operations.
 pub(super) fn git_command_in_temp(args: &[&str]) -> Command {
     let mut cmd = Command::new("git");
+    // PROP-068 `#proxy-git`: the configured route, before the subcommand.
+    vibe_net::git::apply_for_args(&mut cmd, std::path::Path::new("git"), args, None);
     cmd.args(args);
     cmd.env("LC_ALL", "C").env("LANG", "C");
     cmd.env("GIT_TERMINAL_PROMPT", "0");
@@ -193,6 +195,8 @@ fn join_args_redacted(args: &[&str]) -> String {
 
 pub(crate) fn git_command(cwd: &Path, args: &[&str]) -> Command {
     let mut cmd = Command::new("git");
+    // PROP-068 `#proxy-git`: the configured route, before the subcommand.
+    vibe_net::git::apply_for_args(&mut cmd, Path::new("git"), args, Some(cwd));
     cmd.args(args);
     cmd.current_dir(cwd);
     cmd.env("LC_ALL", "C").env("LANG", "C");

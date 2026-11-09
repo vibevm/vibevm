@@ -82,6 +82,10 @@ pub fn app_exit_code(class: vibe_app::ErrorClass) -> u8 {
 }
 
 pub fn as_exit_code(err: &anyhow::Error) -> ExitCode {
+    // PROP-068 `#dl`: every classified `vibe dl` failure has its own status.
+    if let Some(dl) = err.downcast_ref::<crate::commands::dl::DlError>() {
+        return ExitCode::from(dl.exit_code());
+    }
     if let Some(install_err) = err.downcast_ref::<InstallError>() {
         return ExitCode::from(install_err.exit_code());
     }

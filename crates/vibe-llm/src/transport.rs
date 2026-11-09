@@ -127,7 +127,10 @@ impl ReqwestChatTransport {
             if no_proxy {
                 builder.no_proxy()
             } else {
-                builder
+                // PROP-068 `#proxy`: the remote client follows the
+                // configured route and trusts `[proxy] ca_file`.
+                vibe_net::http::route(builder, vibe_net::http::Ambient::Inherit)
+                    .map_err(|_| TransportError::Route)?
             }
             .build()
             .map_err(|_| TransportError::ClientBuild)
@@ -145,7 +148,10 @@ impl ReqwestChatTransport {
             if no_proxy {
                 builder.no_proxy()
             } else {
-                builder
+                // PROP-068 `#proxy`: the remote client follows the
+                // configured route and trusts `[proxy] ca_file`.
+                vibe_net::http::route(builder, vibe_net::http::Ambient::Inherit)
+                    .map_err(|_| TransportError::Route)?
             }
             .build()
             .map_err(|_| TransportError::ClientBuild)
@@ -294,6 +300,12 @@ pub enum TransportError {
          fix: verify the platform TLS installation)"
     )]
     ClientBuild,
+    #[error(
+        "could not apply the `[proxy]` network route to the LLM HTTP client \
+         (violates spec://org.vibevm.core/vibevm/common/PROP-068#proxy; \
+         fix: run `vibe self doctor`, then correct `[proxy] ca_file` or the px settings it names)"
+    )]
+    Route,
     #[error(
         "the selected API key cannot be attached as an Authorization header \
          (violates spec://org.vibevm.core/vibevm/common/PROP-000#TS-BOUNDARIES; \

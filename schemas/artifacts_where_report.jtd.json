@@ -1,0 +1,158 @@
+{
+  "metadata": {
+    "description": "Wire format for `vibe artifacts where [<package>] --json` (`vibe-artifacts-where/1`, PROP-066 `#drops`): where a person puts the vibe releases and the package payloads a closed network cannot download, and whether the declared bytes are already there. Source of truth for `crates/vibe-wire/src/generated/artifacts_where_report/mod.rs`.",
+    "spec": {
+      "implements": "spec://org.vibevm.core/vibevm/common/PROP-000#JTD-SSOT"
+    },
+    "rustOptions": {
+      "package": "vibe_wire::artifacts_where_report"
+    },
+    "x-vocabularies": ["release_source_kind"],
+    "x-wire-order": ["protocol", "release", "packages", "inputs"]
+  },
+  "properties": {
+    "protocol": {
+      "type": "string",
+      "metadata": {
+        "description": "Always `\"vibe-artifacts-where/1\"` for this report."
+      }
+    },
+    "release": {
+      "ref": "release_where",
+      "metadata": {
+        "description": "Where one release of this platform goes, for the effective release source."
+      }
+    },
+    "packages": {
+      "type": "string",
+      "nullable": true,
+      "metadata": {
+        "description": "The `[artifacts] packages` drop directory, or `null` when no drop is configured."
+      }
+    },
+    "inputs": {
+      "elements": {
+        "ref": "input_where"
+      },
+      "metadata": {
+        "x-empty": "emit",
+        "description": "Every downloaded input of every installer option of the package named on the command line; `[]` when no package was named or the package downloads nothing. Required member: an absent key would make the document invalid by this same schema (rule R21)."
+      }
+    }
+  },
+  "definitions": {
+    "release_where": {
+      "metadata": {
+        "x-wire-order": ["source", "location", "from", "example_dir", "files"],
+        "description": "The effective release source and, when it is a drop or a raw repository, the directory one release goes into."
+      },
+      "properties": {
+        "source": {
+          "ref": "release_source_kind"
+        },
+        "location": {
+          "type": "string",
+          "metadata": {
+            "description": "The directory, repository or base URL releases are read from."
+          }
+        },
+        "from": {
+          "type": "string",
+          "metadata": {
+            "description": "Which input decided the source — `built-in default`, `$VIBEVM_RELEASE_ORIGIN`, `[self] in <file>` or `[artifacts] vibe in <file>`."
+          }
+        },
+        "example_dir": {
+          "type": "string",
+          "nullable": true,
+          "metadata": {
+            "description": "The directory the running version's release goes into, for a `localdir` or `nexus` source; `null` when releases are downloaded from the source instead."
+          }
+        },
+        "files": {
+          "elements": {
+            "type": "string"
+          },
+          "metadata": {
+            "x-empty": "emit",
+            "description": "The files that directory must hold for this machine; `[]` when there is no drop to fill. Required member: an absent key would make the document invalid by this same schema (rule R21)."
+          }
+        }
+      }
+    },
+    "input_where": {
+      "metadata": {
+        "x-wire-order": [
+          "option",
+          "step",
+          "input",
+          "file",
+          "sha256",
+          "url",
+          "searched",
+          "status"
+        ],
+        "description": "One downloaded input of one installer option: the places the drop is searched, in order, and what was found there."
+      },
+      "properties": {
+        "option": {
+          "type": "string",
+          "metadata": {
+            "description": "The installer option's id."
+          }
+        },
+        "step": {
+          "type": "string",
+          "metadata": {
+            "description": "The step's id."
+          }
+        },
+        "input": {
+          "type": "string",
+          "metadata": {
+            "description": "The input's name (a `sources` input) or the step's id (an `archive` / `native` source)."
+          }
+        },
+        "file": {
+          "type": "string",
+          "nullable": true,
+          "metadata": {
+            "description": "The portable file name the drop is searched for — the URL's last path segment, or an author-side `drop` input's `file`; `null` when neither names one."
+          }
+        },
+        "sha256": {
+          "type": "string",
+          "metadata": {
+            "description": "The declared digest, lower-case hex; always verified before a dropped file is used."
+          }
+        },
+        "url": {
+          "type": "string",
+          "nullable": true,
+          "metadata": {
+            "description": "The declared origin URL, or `null` for an author-side drop input."
+          }
+        },
+        "searched": {
+          "elements": {
+            "type": "string"
+          },
+          "metadata": {
+            "x-empty": "emit",
+            "description": "The drop paths looked at, highest first; `[]` when no drop is configured. Required member: an absent key would make the document invalid by this same schema (rule R21)."
+          }
+        },
+        "status": {
+          "ref": "drop_status"
+        }
+      }
+    },
+    "drop_status": {
+      "enum": ["present", "mismatch", "missing", "no-drop"],
+      "metadata": {
+        "x-vocabulary": "closed",
+        "description": "`present`: a searched path holds the declared bytes; `mismatch`: the first file found holds other bytes; `missing`: no searched path holds a file; `no-drop`: nothing was searched because no `[artifacts] packages` drop is configured. Closed: automation decides from it whether an operator still has files to copy."
+      }
+    }
+  }
+}

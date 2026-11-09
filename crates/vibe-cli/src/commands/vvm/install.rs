@@ -329,6 +329,10 @@ mod tests {
     struct FakePersister;
 
     impl EnvPersister for FakePersister {
+        fn set_install_root(&self, _root: &std::path::Path) -> Result<Persisted> {
+            Ok(Persisted::Unchanged)
+        }
+
         fn set_vibevm_home(&self, _home: &std::path::Path) -> Result<Persisted> {
             Ok(Persisted::Changed)
         }

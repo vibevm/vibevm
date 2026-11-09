@@ -534,6 +534,16 @@ pub enum AppError {
     )]
     ProxyImage { path: String },
     #[error(
+        "`{path}` is not a file vibe wrote, and `{name}` is the name of a PATH proxy in `{dir}` \
+         (violates spec://org.vibevm.core/vibevm/common/PROP-059#proxy; \
+         fix: remove or rename `{path}` yourself, or give the command another name, then re-run)"
+    )]
+    ForeignProxy {
+        dir: String,
+        name: String,
+        path: String,
+    },
+    #[error(
         "malformed session choice `{entry}`; expected SLOT=KEY entries separated by `;` \
          (violates spec://org.vibevm.core/vibevm/common/PROP-059#session-selection; fix: correct VIBE_APP_USE or the --use argument)"
     )]

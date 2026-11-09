@@ -1,0 +1,7 @@
+✓ route    https://vibe-fixture.test:<port>/a.txt via http://127.0.0.1:<port> · mode explicit (command line)
+✓ connect  proxy reachable · <ms>
+✗ CONNECT  HTTP/1.1 407 Proxy Authentication Required · <ms>
+
+✗ dl_proxy_auth  the proxy answered `HTTP/1.1 407 Proxy Authentication Required`
+  fix   the proxy wants credentials: set [proxy] mode = "px" with pac = "<your PAC URL>" (or upstream) so px signs in with your single sign-on
+  see   spec://org.vibevm.core/vibevm/common/PROP-068#dl

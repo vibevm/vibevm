@@ -6,8 +6,10 @@
 //!
 //! 1. **list** the source's versions — from its index (`primary.jsonl`,
 //!    with each version's content hash, frozen and yanked flags), from its
-//!    own tree when it is itself a layout registry, or, without an index,
-//!    from the tags of the packages `--package` names;
+//!    own tree when it is itself a layout registry, from the tags of the
+//!    packages `--package` names, or, without an index and without
+//!    `--package`, from the `v<semver>` tags of every package repository
+//!    the host's organisation listing names (`org_api`);
 //! 2. **plan** each against the target's projection: absent → copy; the
 //!    same content hash → unchanged (not even fetched); a different one →
 //!    an alarm when the version is frozen, an update with
@@ -38,6 +40,7 @@ use crate::output;
 
 mod git_source;
 mod history;
+mod org_api;
 mod plan;
 mod record;
 mod source;

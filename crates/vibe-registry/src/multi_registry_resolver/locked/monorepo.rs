@@ -33,7 +33,8 @@ impl MultiRegistryResolver {
         repository: &str,
         reference: &str,
     ) -> Result<GitMonorepoRegistry, RegistryError> {
-        if self.offline {
+        // A local repository needs no network: it is read offline too.
+        if self.offline && !super::super::source::is_local_url(repository) {
             return Err(refusal(
                 "locked monorepo bytes are absent from the verified offline store",
             ));
@@ -52,15 +53,22 @@ impl MultiRegistryResolver {
                 reason: error.to_string(),
             })?;
         let physical = chosen.target.display();
+        if self.offline && !super::super::source::is_local_url(&physical) {
+            return Err(refusal(
+                "locked monorepo bytes are absent from the verified offline store",
+            ));
+        }
         let cache = self.cache_root.join("monorepo-locked");
         if self.backend.native_materialisation_for(&physical)? {
-            return GitMonorepoRegistry::open_native(
+            let opened = GitMonorepoRegistry::open_native(
                 &physical,
                 &[],
                 reference,
                 &cache,
                 Arc::clone(&self.backend),
-            );
+            )?;
+            self.monorepo_snapshots.keep(opened.snapshot());
+            return Ok(opened);
         }
         // Freshness 0: an existing clone is always brought to `reference`.
         GitMonorepoRegistry::open_with(&physical, reference, &cache, Arc::clone(&self.backend), 0)

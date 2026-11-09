@@ -299,6 +299,16 @@ impl NativeState {
             let mut remote =
                 self.profile
                     .capture_for_request(url, anonymous, reporter.native_registry_auth)?;
+            // A gitlink is content of the repository that names it: only a
+            // repository on this machine may point at another one here. A
+            // network repository never selects a path on the reader's disk.
+            if matches!(remote, AdmittedRemote::Local { .. })
+                && !matches!(parent, AdmittedRemote::Local { .. })
+            {
+                return Err(unsupported(
+                    "a network repository's gitlink cannot select a local repository",
+                ));
+            }
             if let (
                 AdmittedRemote::Https {
                     url: parent_url,

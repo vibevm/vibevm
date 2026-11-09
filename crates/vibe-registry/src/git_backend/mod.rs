@@ -108,12 +108,19 @@ pub enum GitError {
     )]
     RepoNotFound { url: String },
 
+    /// The host refused the read for want of (valid) credentials. The
+    /// message names the transport the `url` uses and, for HTTP(S), the
+    /// status when one was observed — an HTTPS 401 is not an SSH problem.
     #[error(
-        "ssh authentication failed for `{url}` — check your ssh-agent / keys \
-         (violates spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#registry-auth; \
-          fix: load your key into ssh-agent or fix the [[registry]] auth setting)"
+        "{} (violates spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#registry-auth; fix: {})",
+        auth_failed_head(url, *status),
+        auth_failed_fix(url)
     )]
-    AuthFailed { url: String },
+    AuthFailed {
+        url: String,
+        /// The HTTP status (401 / 403) when the transport reported one.
+        status: Option<u16>,
+    },
 
     #[error(
         "unable to reach `{url}` (network or DNS error) \
@@ -169,6 +176,57 @@ pub enum GitError {
         #[source]
         source: std::io::Error,
     },
+}
+
+/// The transport a Git address uses, as an operator would name it.
+fn transport_of(url: &str) -> &'static str {
+    let raw = url.strip_prefix("git+").unwrap_or(url);
+    let lower = raw.get(..8).unwrap_or(raw).to_ascii_lowercase();
+    if lower.starts_with("https://") {
+        "HTTPS"
+    } else if lower.starts_with("http://") {
+        "HTTP"
+    } else if lower.starts_with("ssh://")
+        || (!raw.contains("://") && raw.contains(':') && !Path::new(raw).is_absolute())
+    {
+        "SSH"
+    } else {
+        "local"
+    }
+}
+
+/// The [`GitError::AuthFailed`] head: the actual transport and status.
+///
+/// ```
+/// use vibe_registry::GitError;
+/// let https = GitError::AuthFailed { url: "https://h/o/r.git".into(), status: Some(401) };
+/// assert!(https.to_string().starts_with("HTTPS authentication failed (HTTP 401)"));
+/// assert!(!https.to_string().contains("ssh-agent"));
+/// let ssh = GitError::AuthFailed { url: "git@h:o/r.git".into(), status: None };
+/// assert!(ssh.to_string().contains("ssh-agent"));
+/// ```
+fn auth_failed_head(url: &str, status: Option<u16>) -> String {
+    let status = status
+        .map(|code| format!(" (HTTP {code})"))
+        .unwrap_or_default();
+    format!(
+        "{} authentication failed{status} for `{url}`",
+        transport_of(url)
+    )
+}
+
+/// The fix that applies to the transport `url` uses.
+fn auth_failed_fix(url: &str) -> &'static str {
+    match transport_of(url) {
+        "HTTPS" | "HTTP" => {
+            "the host requires credentials for this repository: if it is private, \
+             give the registry a read token (`auth = \"token-env\"` with `token_env`), \
+             a credential helper (`auth = \"credential-helper\"`) or an SSH url; \
+             if it should be public, check the url and that the repository exists"
+        }
+        "local" => "check the repository path and its file permissions",
+        _ => "load your key into ssh-agent / check ~/.ssh, or fix the [[registry]] auth setting",
+    }
 }
 
 /// Narrow abstraction over the git operations the registry needs.

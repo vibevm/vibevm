@@ -9,7 +9,7 @@ use vibe_publish::release_manifest::{
 
 static TEMP_NONCE: AtomicU64 = AtomicU64::new(1);
 
-pub(super) fn atomic_replace(path: &Path, bytes: &[u8]) -> io::Result<()> {
+pub(crate) fn atomic_replace(path: &Path, bytes: &[u8]) -> io::Result<()> {
     let parent = path
         .parent()
         .ok_or_else(|| io::Error::new(io::ErrorKind::InvalidInput, "path has no parent"))?;

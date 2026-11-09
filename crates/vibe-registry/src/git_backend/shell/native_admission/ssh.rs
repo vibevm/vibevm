@@ -16,12 +16,7 @@ impl std::fmt::Debug for SshAuthentication {
 }
 /// Caller-trusted OpenSSH plus exact credential/trust destination. Fields are
 /// private and cannot be populated by deserializing a package manifest.
-///
-/// The launcher-only fields (the executable, the direct trust and
-/// authentication, a remote's resolved endpoint) exist on Unix alone: only the
-/// Unix launcher is qualified, and elsewhere [`SshProfile::configure`] refuses.
 pub struct SshProfile {
-    #[cfg(unix)]
     executable: PathBuf,
     host: String,
     user: String,
@@ -30,9 +25,7 @@ pub struct SshProfile {
 }
 enum Mode {
     Direct {
-        #[cfg(unix)]
         known_hosts: Vec<u8>,
-        #[cfg(unix)]
         authentication: SshAuthentication,
     },
     Captured(Box<super::ssh_config::Configured>),
@@ -81,15 +74,12 @@ impl SshProfile {
             _ => (),
         }
         Ok(Self {
-            #[cfg(unix)]
             executable,
             host,
             user,
             port,
             mode: Mode::Direct {
-                #[cfg(unix)]
                 known_hosts,
-                #[cfg(unix)]
                 authentication,
             },
         })
@@ -101,7 +91,6 @@ impl SshProfile {
         configured: super::ssh_config::Configured,
     ) -> Self {
         Self {
-            #[cfg(unix)]
             executable: configured.executable().to_path_buf(),
             host,
             user,
@@ -135,11 +124,8 @@ impl SshProfile {
             return Ok(Some(Remote {
                 binding: ProfileBinding::Direct(profile_index),
                 address: address.into(),
-                #[cfg(unix)]
                 host: self.host.clone(),
-                #[cfg(unix)]
                 user: self.user.clone(),
-                #[cfg(unix)]
                 port: self.port,
             }));
         }
@@ -189,28 +175,16 @@ impl SshProfile {
         Ok(Some(Remote {
             binding: ProfileBinding::Direct(profile_index),
             address: address.to_owned(),
-            #[cfg(unix)]
             host,
-            #[cfg(unix)]
             user,
-            #[cfg(unix)]
             port,
         }))
     }
-    /// Only the Unix OpenSSH launcher is qualified; elsewhere this refuses
-    /// before anything is written or spawned.
-    #[cfg(not(unix))]
-    pub(super) fn configure(
-        &self,
-        _command: &mut Command,
-        _root: &Path,
-        _remote: &Remote,
-    ) -> Result<(), GitError> {
-        Err(unsupported(
-            "this SSH profile requires a separately proved platform launcher",
-        ))
-    }
-    #[cfg(unix)]
+    /// Write the owned client configuration and select it for this child.
+    /// On Windows the same configuration is used; Git runs
+    /// `GIT_SSH_COMMAND` with the installation's own `sh`
+    /// (`platform::runtime_directories`), and every path is written with
+    /// forward slashes (`platform::path_text`).
     pub(super) fn configure(
         &self,
         command: &mut Command,
@@ -218,10 +192,6 @@ impl SshProfile {
         remote: &Remote,
     ) -> Result<(), GitError> {
         use std::io::Write;
-        use std::os::unix::{
-            ffi::OsStrExt,
-            fs::{FileTypeExt, OpenOptionsExt},
-        };
         let mut config = format!(
             "Host *\n HostName {}\n User {}\n Port {}\n StrictHostKeyChecking yes\n BatchMode yes\n PasswordAuthentication no\n KbdInteractiveAuthentication no\n GSSAPIAuthentication no\n HostbasedAuthentication no\n CanonicalizeHostname no\n VerifyHostKeyDNS no\n ProxyCommand none\n ProxyJump none\n PermitLocalCommand no\n ForwardAgent no\n ForwardX11 no\n ClearAllForwardings yes\n ControlMaster no\n ControlPath none\n UpdateHostKeys no\n RequestTTY no\n ConnectTimeout 10\n",
             remote.host.trim_start_matches('[').trim_end_matches(']'),
@@ -244,13 +214,14 @@ impl SshProfile {
                 match authentication {
                     SshAuthentication::Key(bytes) => {
                         let identity = root.join("ssh-identity");
-                        let mut file = std::fs::OpenOptions::new()
-                            .write(true)
-                            .create(true)
-                            .truncate(true)
-                            .mode(0o600)
-                            .open(&identity)
-                            .map_err(io)?;
+                        let mut options = std::fs::OpenOptions::new();
+                        options.write(true).create(true).truncate(true);
+                        #[cfg(unix)]
+                        {
+                            use std::os::unix::fs::OpenOptionsExt;
+                            options.mode(0o600);
+                        }
+                        let mut file = options.open(&identity).map_err(io)?;
                         file.write_all(bytes).map_err(io)?;
                         config.push_str(&format!(
                             " IdentityFile {}\n IdentitiesOnly yes\n IdentityAgent none\n",
@@ -258,7 +229,7 @@ impl SshProfile {
                         ));
                     }
                     SshAuthentication::AgentSocket(path) => {
-                        if !std::fs::metadata(path).map_err(io)?.file_type().is_socket() {
+                        if !agent_endpoint(path)? {
                             return Err(unsupported("selected SSH agent endpoint is not a socket"));
                         }
                         config.push_str(&format!(
@@ -272,17 +243,16 @@ impl SshProfile {
         }
         let selected = root.join("ssh_config");
         std::fs::write(&selected, config).map_err(io)?;
-        let executable = std::str::from_utf8(self.executable.as_os_str().as_bytes())
-            .map_err(|_| unsupported("SSH executable path is not UTF-8"))?;
-        let config = selected
-            .to_str()
+        let executable = platform::path_text(&self.executable, cfg!(windows))
+            .ok_or_else(|| unsupported("SSH executable path is not UTF-8"))?;
+        let config = platform::path_text(&selected, cfg!(windows))
             .ok_or_else(|| unsupported("owned SSH config path is not UTF-8"))?;
         // Only caller-trusted executable and owned config paths enter this
         // fixed shell prefix. Package addresses are never interpolated here.
         command
             .env(
                 "GIT_SSH_COMMAND",
-                format!("{} -F {}", shell_quote(executable)?, shell_quote(config)?),
+                format!("{} -F {}", shell_quote(&executable)?, shell_quote(&config)?),
             )
             .env("GIT_SSH_VARIANT", "ssh");
         Ok(())
@@ -291,11 +261,8 @@ impl SshProfile {
 pub(super) struct Remote {
     binding: ProfileBinding,
     pub(super) address: String,
-    #[cfg(unix)]
     host: String,
-    #[cfg(unix)]
     user: String,
-    #[cfg(unix)]
     port: u16,
 }
 enum ProfileBinding {
@@ -352,8 +319,7 @@ pub(super) fn repository_path(path: &str) -> bool {
             .all(|b| b.is_ascii_alphanumeric() || b"/._-~".contains(&b))
 }
 pub(super) fn config_path(path: &Path) -> Result<String, GitError> {
-    let path = path
-        .to_str()
+    let path = platform::path_text(path, cfg!(windows))
         .ok_or_else(|| unsupported("SSH path is not UTF-8"))?;
     if path.contains(['%', '$']) || path.chars().any(char::is_control) {
         return Err(unsupported(
@@ -365,7 +331,19 @@ pub(super) fn config_path(path: &Path) -> Result<String, GitError> {
         path.replace('\\', "\\\\").replace('"', "\\\"")
     ))
 }
-#[cfg(unix)]
+/// Whether `path` is an SSH agent endpoint: a Unix socket, or on Windows a
+/// named pipe (`\\.\pipe\...`, the Windows OpenSSH agent).
+fn agent_endpoint(path: &Path) -> Result<bool, GitError> {
+    #[cfg(unix)]
+    {
+        use std::os::unix::fs::FileTypeExt;
+        Ok(std::fs::metadata(path).map_err(io)?.file_type().is_socket())
+    }
+    #[cfg(not(unix))]
+    {
+        Ok(platform::named_pipe(path) && path.exists())
+    }
+}
 fn shell_quote(value: &str) -> Result<String, GitError> {
     if value.chars().any(char::is_control) {
         return Err(unsupported("SSH launcher path contains control syntax"));

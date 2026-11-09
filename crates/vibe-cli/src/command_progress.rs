@@ -31,6 +31,7 @@ pub(crate) const TOP_LEVEL_COMMANDS: &[&str] = &[
     "create",
     "deploy",
     "deployments",
+    "dl",
     "doc",
     "explain",
     "extensions",
@@ -371,7 +372,8 @@ pub(crate) fn policy(command: &Command, terminal_attached: bool) -> CommandPolic
             | VvmSubcommand::Bootstrap(_)
             | VvmSubcommand::Update(_)
             | VvmSubcommand::Reinstall(_)
-            | VvmSubcommand::Gc(_) => ExistingRoot,
+            | VvmSubcommand::Gc(_)
+            | VvmSubcommand::Px(_) => ExistingRoot,
             VvmSubcommand::Import(_) => FiniteFallback("Command self import"),
             VvmSubcommand::Use(_) => FiniteFallback("Command self use"),
             VvmSubcommand::Rollback => FiniteFallback("Command self rollback"),
@@ -400,6 +402,8 @@ pub(crate) fn policy(command: &Command, terminal_attached: bool) -> CommandPolic
         Command::Trace { .. } => TerminalPassthrough,
         Command::Vars(_) => FastMetadata,
         Command::Artifacts(_) => FiniteFallback("Command artifacts"),
+        // PROP-068 `#dl`: its own phase rows and the transfer bar.
+        Command::Dl(_) => ExistingRoot,
         Command::Transfers(args) => match args.command {
             Some(crate::cli::TransfersCommand::Watch) => PersistentProtocol,
             _ => FastMetadata,

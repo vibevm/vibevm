@@ -551,7 +551,8 @@ impl IndexClient {
         auth: &IndexAuth,
         base_url: &str,
         admission: Option<&HttpAdmission>,
-    ) -> Result<crate::http_admission::ManagedHttpClient, reqwest::Error> {
+    ) -> Result<crate::http_admission::ManagedHttpClient, crate::http_admission::ClientBuildError>
+    {
         let headers = if admission.is_none() && attaches_authorization(base_url, auth) {
             auth.header_map().unwrap_or_default()
         } else {

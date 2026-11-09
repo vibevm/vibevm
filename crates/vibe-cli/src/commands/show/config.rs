@@ -16,6 +16,9 @@ use crate::output;
 
 use super::resolve_project_root;
 
+mod layers;
+use layers::{ConfigSiteProfileSummary, DeclarationLayers, provenance_of};
+
 // ===================== show config =====================
 
 #[derive(Debug, Serialize)]
@@ -30,6 +33,9 @@ struct ConfigReport {
     overrides: Vec<ConfigOverride>,
     env: Vec<ConfigEnvEntry>,
     user_config: ConfigUserConfigSummary,
+    /// The applied site profile (`PROP-019#site-profile`): the layer below
+    /// the user's own files.
+    site_profile: ConfigSiteProfileSummary,
     /// Detailed resolution block for the agent-context layer. The top-
     /// level `invoked_by: "<agent>"` field stamped on every JSON
     /// envelope by `output::Context` is just the resolved value;
@@ -57,8 +63,8 @@ struct ConfigRegistry {
     #[serde(rename = "ref")]
     refname: String,
     naming: String,
-    /// `"vibe.toml"` for v0; future config layers (user-level,
-    /// CLI overrides) will surface here.
+    /// The declaration layer: `"vibe.toml"`, `".vibe/registry.local.toml"`,
+    /// `"~/.vibe/registry.toml"` or `"site-profile.toml"`.
     provenance: &'static str,
 }
 
@@ -147,38 +153,46 @@ pub(super) fn run_config(ctx: &output::Context, args: ShowConfigArgs) -> Result<
         .require_project()
         .with_context(|| format!("`{}` has no `[project]` table", manifest_path.display()))?;
 
-    let registries: Vec<ConfigRegistry> = manifest
-        .registries
-        .iter()
-        .map(|r| ConfigRegistry {
+    // Every registry declaration layer (PROP-002 `#registry-layers`), each
+    // row with the layer it came from — the site profile included
+    // (`PROP-019#site-profile`).
+    let layers = DeclarationLayers::load(&project_root)?;
+    let effective = layers.layers(&manifest);
+    let registries: Vec<ConfigRegistry> = effective
+        .origins()
+        .into_iter()
+        .map(|(scope, r)| ConfigRegistry {
             name: r.name.clone(),
             url: r.url.clone(),
             refname: r.r#ref.clone(),
             naming: naming_label(r.naming),
-            provenance: "vibe.toml",
+            provenance: provenance_of(scope),
         })
         .collect();
-    let mirrors: Vec<ConfigMirror> = manifest
-        .mirrors
-        .iter()
-        .map(|m| ConfigMirror {
+    let mut mirrors: Vec<ConfigMirror> = Vec::new();
+    let mut overrides: Vec<ConfigOverride> = Vec::new();
+    for (scope, layer_mirrors, layer_overrides) in layers.sections(&manifest) {
+        mirrors.extend(layer_mirrors.iter().map(|m| ConfigMirror {
             of: m.of.clone(),
             url: m.url.clone(),
             priority: m.priority,
-            provenance: "vibe.toml",
-        })
-        .collect();
-    let overrides: Vec<ConfigOverride> = manifest
-        .overrides
-        .iter()
-        .map(|o| ConfigOverride {
-            pkgref: o.pkgref.clone(),
-            source_url: o.source_url.clone(),
-            refname: o.r#ref.clone(),
-            reason: o.reason.clone(),
-            provenance: "vibe.toml",
-        })
-        .collect();
+            provenance: provenance_of(scope),
+        }));
+        for o in layer_overrides {
+            // Overrides dedupe by `pkgref`, the higher layer winning.
+            if overrides.iter().any(|seen| seen.pkgref == o.pkgref) {
+                continue;
+            }
+            overrides.push(ConfigOverride {
+                pkgref: o.pkgref.clone(),
+                source_url: o.source_url.clone(),
+                refname: o.r#ref.clone(),
+                reason: o.reason.clone(),
+                provenance: provenance_of(scope),
+            });
+        }
+    }
+    let site_profile = layers.site_summary.clone();
 
     // Read the user-level config layer (VIBEVM-SPEC §9.5 step 4).
     // Errors here are surfaced via `user_config_summary` rather than
@@ -281,6 +295,7 @@ pub(super) fn run_config(ctx: &output::Context, args: ShowConfigArgs) -> Result<
             overrides,
             env,
             user_config: user_config_summary,
+            site_profile,
             invoked_by_resolution: invoked_by_block,
         };
         ctx.emit_json(&payload)?;
@@ -385,6 +400,30 @@ pub(super) fn run_config(ctx: &output::Context, args: ShowConfigArgs) -> Result<
             println!(
                 "User config: (no path resolved — set HOME / VIBE_SETTINGS / VIBEVM_USER_CONFIG)"
             );
+        }
+    }
+    match &site_profile {
+        ConfigSiteProfileSummary {
+            path: Some(p),
+            loaded: true,
+            name,
+            ..
+        } => println!(
+            "Site profile: {p}  (applied{})",
+            name.as_deref()
+                .map(|name| format!(": {name}"))
+                .unwrap_or_default()
+        ),
+        ConfigSiteProfileSummary {
+            path: Some(p),
+            error: Some(err),
+            ..
+        } => println!("Site profile: {p}  (unreadable — {err})"),
+        ConfigSiteProfileSummary { path: Some(p), .. } => {
+            println!("Site profile: {p}  (none applied)")
+        }
+        ConfigSiteProfileSummary { path: None, .. } => {
+            println!("Site profile: (no settings directory resolved)")
         }
     }
     println!();

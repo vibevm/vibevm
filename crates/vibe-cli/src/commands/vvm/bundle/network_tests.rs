@@ -149,7 +149,9 @@ fn hosted_bootstrap_cross_checks_manifest_and_downloads_selected_bundle_only() {
     )
     .unwrap();
     let urls = downloader.urls.borrow();
-    assert_eq!(urls.len(), 1);
+    // The selected bundle, then the pinned px asset beside it
+    // (`PROP-019#companion-tools`) — never another platform's bundle.
+    assert_eq!(urls.len(), 2, "{urls:?}");
     assert!(
         urls[0]
             .split('?')
@@ -157,6 +159,14 @@ fn hosted_bootstrap_cross_checks_manifest_and_downloads_selected_bundle_only() {
             .is_some_and(|url| url.ends_with(&fixture.asset.name))
     );
     assert!(urls[0].contains("?vvm_nonce="));
+    assert!(
+        urls[1]
+            .split('?')
+            .next()
+            .and_then(|url| url.rsplit('/').next())
+            .is_some_and(|name| name.starts_with("px-")),
+        "{urls:?}"
+    );
     assert_eq!(persister.homes.borrow().len(), 1);
     assert_eq!(persister.paths.borrow().len(), 1);
     assert_eq!(

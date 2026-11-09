@@ -77,13 +77,18 @@ impl GitverseRepoCreator {
         api_base: &str,
         host_name: &str,
     ) -> Result<Self, PublishError> {
-        let client = reqwest::blocking::Client::builder()
-            .timeout(Duration::from_secs(30))
-            .build()
-            .map_err(|e| PublishError::HttpFailed {
-                host: host_name.to_string(),
-                message: format!("constructing HTTP client: {e}"),
-            })?;
+        let builder = vibe_net::http::route(
+            reqwest::blocking::Client::builder().timeout(Duration::from_secs(30)),
+            vibe_net::http::Ambient::Inherit,
+        )
+        .map_err(|e| PublishError::HttpFailed {
+            host: host_name.to_string(),
+            message: format!("constructing HTTP client: {e}"),
+        })?;
+        let client = builder.build().map_err(|e| PublishError::HttpFailed {
+            host: host_name.to_string(),
+            message: format!("constructing HTTP client: {e}"),
+        })?;
         Ok(GitverseRepoCreator {
             api_base: api_base.trim_end_matches('/').to_string(),
             host_name: host_name.to_string(),

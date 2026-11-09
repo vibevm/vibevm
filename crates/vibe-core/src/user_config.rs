@@ -55,7 +55,7 @@ mod artifacts;
 mod proxy;
 mod transfer;
 pub use artifacts::{ArtifactsConfig, ReleaseSourceKind, SelfConfig, UnknownReleaseSource};
-pub use proxy::ProxyConfig;
+pub use proxy::{PX_OWNED_ARGS, PacSource, ProxyConfig, ProxyMode};
 pub use transfer::TransferConfig;
 
 /// Parsed `<settings-dir>/config.toml` (canonical `~/.vibe/config.toml`).
@@ -362,20 +362,23 @@ impl UserConfig {
     /// assert_eq!(effective.artifacts.packages.unwrap().to_str(), Some("/srv/drop"));
     /// ```
     pub fn over_site(mut self, site: &crate::site_profile::SiteProfile) -> UserConfig {
-        if self.self_source.is_default() && self.artifacts.vibe.is_none() {
+        // The release decision is one pair, taken whole from the higher
+        // declaring layer; `[self] install_root` answers a different
+        // question and layers on its own, so a user who picked a release
+        // source still inherits the site's install root.
+        if self.self_source.release_is_default() && self.artifacts.vibe.is_none() {
+            let install_root = self.self_source.install_root.take();
             self.self_source = site.self_source.clone();
+            self.self_source.install_root = install_root;
             self.artifacts.vibe = site.artifacts.vibe.clone();
+        }
+        if self.self_source.install_root.is_none() {
+            self.self_source.install_root = site.self_source.install_root.clone();
         }
         if self.artifacts.packages.is_none() {
             self.artifacts.packages = site.artifacts.packages.clone();
         }
-        let proxy = &mut self.proxy;
-        proxy.https = proxy.https.take().or_else(|| site.proxy.https.clone());
-        proxy.http = proxy.http.take().or_else(|| site.proxy.http.clone());
-        proxy.no_proxy = proxy
-            .no_proxy
-            .take()
-            .or_else(|| site.proxy.no_proxy.clone());
+        self.proxy = std::mem::take(&mut self.proxy).over(&site.proxy);
         self.net.offline |= site.net.offline;
         self
     }

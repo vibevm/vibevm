@@ -266,12 +266,6 @@ fn materialise_resolution_with_prepared(
     options: MaterialiseOptions<'_>,
     prepared: &[&dyn PreparedSlotPlacement],
 ) -> Result<Materialised, WorkspaceError> {
-    if !prepared.is_empty() && !cfg!(unix) {
-        return Err(WorkspaceError::SpecMaterialization {
-            path: workspace_root.into(),
-            reason: "checked native placement requires supported Unix file identities".into(),
-        });
-    }
     source_admission::validate_source_resolution(workspace_root, resolution, options.spec_format)?;
     placement::validate_prepared(workspace_root, resolution, prepared)?;
     let MaterialiseOptions {

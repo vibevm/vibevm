@@ -17,6 +17,7 @@ specmark.workspace = true
 thiserror.workspace = true
 tokio.workspace = true
 vibe-core.workspace = true
+vibe-net.workspace = true
 vibe-wire.workspace = true
 
 [dev-dependencies]

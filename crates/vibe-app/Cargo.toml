@@ -25,6 +25,7 @@ tempfile.workspace = true
 thiserror.workspace = true
 toml.workspace = true
 vibe-core.workspace = true
+vibe-net.workspace = true
 vibe-install.workspace = true
 vibe-package-source.workspace = true
 vibe-registry.workspace = true

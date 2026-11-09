@@ -140,9 +140,17 @@ impl GithubReleaseClient {
         let secret = token.as_ref().map(Token::value);
         validate_base(api_base, secret)?;
         validate_base(upload_base, secret)?;
-        let client = Client::builder()
-            .connect_timeout(connect_timeout)
-            .timeout(transfer_timeout)
+        let builder = vibe_net::http::route(
+            Client::builder()
+                .connect_timeout(connect_timeout)
+                .timeout(transfer_timeout),
+            vibe_net::http::Ambient::Inherit,
+        )
+        .map_err(|error| GithubReleaseError::Transport {
+            operation: "client construction",
+            message: redact_optional_secret(error.to_string(), secret),
+        })?;
+        let client = builder
             .build()
             .map_err(|error| GithubReleaseError::Transport {
                 operation: "client construction",

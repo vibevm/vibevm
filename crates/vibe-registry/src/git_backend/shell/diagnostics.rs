@@ -79,7 +79,8 @@ pub(super) fn classify_stderr_message(
     //      window is dismissed (the original GCM popup case).
     //   3. Direct HTTP status codes from the underlying transport —
     //      `HTTP 401` / `HTTP 403` / `401 Unauthorized` /
-    //      `403 Forbidden`. These appear when the host returns a
+    //      `403 Forbidden`, and curl's `The requested URL returned
+    //      error: 401`. These appear when the host returns a
     //      structured response without redirecting through the
     //      credential layer (some proxies, some CI runners).
     if lc.contains("permission denied (publickey)")
@@ -87,12 +88,15 @@ pub(super) fn classify_stderr_message(
         || lc.contains("could not read username")
         || lc.contains("could not read password")
         || lc.contains("user cancelled dialog")
+        || lc.contains("returned error: 401")
+        || lc.contains("returned error: 403")
         || lc.contains("http 401")
         || lc.contains("http 403")
         || lc.contains("401 unauthorized")
         || lc.contains("403 forbidden")
     {
-        return Some(GitError::AuthFailed { url });
+        let status = observed_http_status(&lc);
+        return Some(GitError::AuthFailed { url, status });
     }
     // Network / connect-failure shapes seen in the wild from git 2.x +
     // libcurl. `failed to connect` / `could not connect to server` cover
@@ -120,6 +124,24 @@ pub(super) fn classify_stderr_message(
     }
 
     None
+}
+
+/// The HTTP refusal status git's stderr reports, if any: curl's
+/// `The requested URL returned error: 403`, or `HTTP 401` /
+/// `401 Unauthorized` shapes. `lc` is the lower-cased stderr.
+fn observed_http_status(lc: &str) -> Option<u16> {
+    [401_u16, 403].into_iter().find(|code| {
+        lc.contains(&format!("returned error: {code}"))
+            || lc.contains(&format!("http {code}"))
+            || lc.contains(&format!(
+                "{code} {}",
+                if *code == 401 {
+                    "unauthorized"
+                } else {
+                    "forbidden"
+                }
+            ))
+    })
 }
 
 /// A URL as it may be *shown*: the same URL with any userinfo removed.

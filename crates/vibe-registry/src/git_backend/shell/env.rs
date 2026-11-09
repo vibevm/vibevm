@@ -104,3 +104,24 @@ pub(super) fn should_silence_credential_helpers(force_silence: bool) -> bool {
     use std::io::IsTerminal;
     !std::io::stdin().is_terminal()
 }
+
+/// The explicit network route of a child that talks to a remote
+/// (`PROP-068#proxy-git`), from [`vibe_net::git::for_args`]. Must run
+/// before the subcommand arguments.
+pub(super) fn apply_network(
+    cmd: &mut Command,
+    binary: &std::path::Path,
+    args: &[&str],
+    cwd: Option<&std::path::Path>,
+) -> Result<(), super::GitError> {
+    let net =
+        vibe_net::git::for_args(&vibe_net::current(), binary, args, cwd).map_err(|error| {
+            super::GitError::CommandFailed {
+                cmd: "git (network route)".into(),
+                status: -1,
+                stderr: error.to_string(),
+            }
+        })?;
+    net.apply(cmd);
+    Ok(())
+}

@@ -17,6 +17,9 @@ use std::process::Output;
 
 use common::UserScratch;
 use serde_json::Value;
+use vibe_wire::generated::self_apply_report::{
+    ApplyAction, PathPlan, RegistryScope, SelfApplyReport, SkipReason,
+};
 
 const VERSION: &str = env!("CARGO_PKG_VERSION");
 
@@ -103,9 +106,10 @@ fn ok(output: &Output) -> String {
     String::from_utf8_lossy(&output.stdout).into_owned()
 }
 
+/// Every registered `--json` document these tests read goes through its
+/// generated reader (`common::wire`) before anything is asserted about it.
 fn json(output: &Output) -> Value {
-    let stdout = ok(output);
-    serde_json::from_str(&stdout).unwrap_or_else(|e| panic!("{e}: {stdout}"))
+    common::wire::checked(&ok(output))
 }
 
 /// A site profile for directories under `root`.
@@ -705,5 +709,236 @@ fn a_closed_network_machine_is_configured_by_one_profile() {
     assert_eq!(
         where_to_put["packages"],
         site.path().join("payloads").display().to_string()
+    );
+}
+
+/// `vibe-self-apply/1` is the document its registered schema describes: the
+/// closed vocabularies carry the values the command computed, and the PATH
+/// member reads as a planned step on `--show`.
+#[test]
+fn the_apply_report_reads_as_its_registered_wire_type() {
+    let machine = Machine::new();
+    machine.import_active();
+    let site = tempfile::tempdir().unwrap();
+    fs::create_dir_all(site.path().join("releases")).unwrap();
+    let profile = write_profile(site.path(), &corp_profile(site.path(), Some("never")));
+
+    let mut command = machine.cmd();
+    command
+        .args(["--json", "--unattended", "self", "apply"])
+        .arg(&profile)
+        .args(["--no-fix-path"]);
+    let applied: SelfApplyReport = common::wire::typed(&ok(&command.output().unwrap()));
+    assert_eq!(applied.protocol, "vibe-self-apply/1");
+    assert_eq!(applied.command, "self:apply");
+    assert_eq!(applied.action, ApplyAction::Apply);
+    assert!(applied.changed);
+    let path = applied.path.expect("apply reaches the PATH step");
+    assert_eq!(path.skip_reason, Some(SkipReason::FlagDeclined));
+    assert!(
+        path.planned.is_none() && path.durable_environment.is_some(),
+        "a performed step carries the observation, never a plan"
+    );
+
+    let shown: SelfApplyReport = common::wire::typed(&ok(&machine.run(&[
+        "--json",
+        "--unattended",
+        "self",
+        "apply",
+        "--show",
+    ])));
+    assert_eq!(shown.action, ApplyAction::Show);
+    let path = shown
+        .path
+        .expect("--show reports the PATH step it would take");
+    assert_eq!(path.planned, Some(PathPlan::WouldSkip));
+    assert!(
+        path.outcome.is_none() && path.durable_environment.is_none(),
+        "a planned step reaches no persister"
+    );
+    let effective = shown.effective.expect("--show reports the installation");
+    assert!(
+        effective
+            .registries
+            .iter()
+            .all(|row| row.scope != RegistryScope::Default),
+        "the site profile replaces the built-in defaults"
+    );
+}
+
+/// A tiny active instance in one install root, so `apply` does not import
+/// the (large) test binary itself.
+fn import_active_in(machine: &Machine, root: &Path) {
+    let payload = root.join("ready-vibe");
+    fs::create_dir_all(root).unwrap();
+    fs::write(&payload, "#!/bin/sh\nexit 0\n").unwrap();
+    fs::set_permissions(&payload, fs::Permissions::from_mode(0o755)).unwrap();
+    let mut command = machine.cmd();
+    command
+        .env("VIBEVM_INSTALL_ROOT", root)
+        .args(["--json", "--unattended", "self", "import"])
+        .arg(&payload)
+        .args(["--tag", "1.2.3", "--use"]);
+    ok(&command.output().unwrap());
+}
+
+/// A network that only allows executables under one directory declares it
+/// once, in the site profile: the store, the shims the PATH fix points at
+/// and the durable `$VIBEVM_INSTALL_ROOT` all follow
+/// (`PROP-019#install-root`).
+#[test]
+fn a_site_profile_chooses_the_install_root_and_makes_it_durable() {
+    let machine = Machine::new();
+    // The one allowed location, standing in for `C:\Work`.
+    let allowed = tempfile::tempdir().unwrap();
+    import_active_in(&machine, allowed.path());
+    let site = tempfile::tempdir().unwrap();
+    fs::create_dir_all(site.path().join("releases")).unwrap();
+    let profile = write_profile(
+        site.path(),
+        &format!(
+            "schema = 1\nname = \"corp\"\n\n[self]\ninstall_root = \"{}\"\n",
+            allowed.path().display()
+        ),
+    );
+
+    let mut command = machine.cmd();
+    command
+        .env_remove("VIBEVM_INSTALL_ROOT")
+        .args(["--json", "--unattended", "self", "apply"])
+        .arg(&profile)
+        .args(["--fix-path"]);
+    let applied = json(&command.output().unwrap());
+
+    let root = &applied["effective"]["install_root"];
+    assert_eq!(root["path"], allowed.path().display().to_string());
+    assert!(
+        root["from"]
+            .as_str()
+            .unwrap()
+            .starts_with("[self] install_root in"),
+        "{root}"
+    );
+    let shims = allowed.path().join("opt").join("bin");
+    assert_eq!(root["shim_dir"], shims.display().to_string());
+    assert_eq!(
+        root["data_dir"],
+        allowed
+            .path()
+            .join("opt")
+            .join("vibevm")
+            .display()
+            .to_string()
+    );
+    // The PATH step points at that root's shims, not at this process's.
+    assert_eq!(applied["path"]["shim_dir"], shims.display().to_string());
+    assert_eq!(applied["path"]["outcome"], "applied");
+    assert!(
+        shims.join("vibe").is_file(),
+        "the shims live under the root"
+    );
+
+    // Both durable writes went through the one persister, under one consent.
+    let rc = machine.bashrc().unwrap();
+    assert!(rc.contains(&shims.display().to_string()), "{rc}");
+    // The persister quotes what it writes, so the assertion names the
+    // variable and its value rather than one spelling of the line.
+    let assignment = rc
+        .lines()
+        .find(|line| line.contains("VIBEVM_INSTALL_ROOT"))
+        .unwrap_or_else(|| panic!("{rc}"));
+    assert!(
+        assignment.starts_with("export VIBEVM_INSTALL_ROOT=")
+            && assignment.contains(&allowed.path().display().to_string()),
+        "{rc}"
+    );
+
+    // Re-applying writes nothing new.
+    let mut command = machine.cmd();
+    command
+        .env_remove("VIBEVM_INSTALL_ROOT")
+        .args(["--json", "--unattended", "self", "apply"])
+        .arg(&profile)
+        .args(["--fix-path"]);
+    let again = json(&command.output().unwrap());
+    assert!(!again["changed"].as_bool().unwrap());
+    assert_eq!(machine.bashrc().unwrap(), rc);
+}
+
+/// The install root is a ladder, highest first: the inherited environment
+/// variable, the user's own `[self] install_root`, the site profile's,
+/// then `~/.vibe` (`PROP-019#install-root`).
+#[test]
+fn the_environment_beats_the_user_file_and_the_user_file_beats_the_site() {
+    let machine = Machine::new();
+    machine.import_active();
+    let allowed = tempfile::tempdir().unwrap();
+    let mine = tempfile::tempdir().unwrap();
+    let site = tempfile::tempdir().unwrap();
+    fs::create_dir_all(site.path().join("releases")).unwrap();
+    let profile = write_profile(
+        site.path(),
+        &format!(
+            "schema = 1\nname = \"corp\"\n\n[self]\ninstall_root = \"{}\"\n",
+            allowed.path().display()
+        ),
+    );
+
+    // `Machine::cmd` sets `VIBEVM_INSTALL_ROOT`, which outranks every file.
+    let applied = machine.apply(&profile, &["--no-fix-path"]);
+    assert_eq!(
+        applied["effective"]["install_root"]["path"],
+        machine.base.path().display().to_string()
+    );
+    assert_eq!(
+        applied["effective"]["install_root"]["from"],
+        "$VIBEVM_INSTALL_ROOT"
+    );
+    // Nothing was made durable: the environment already names it.
+    assert_eq!(machine.bashrc(), None);
+
+    // Without it, the applied site decides.
+    let shown = json(
+        &machine
+            .cmd()
+            .env_remove("VIBEVM_INSTALL_ROOT")
+            .args(["--json", "--unattended", "self", "apply", "--show"])
+            .output()
+            .unwrap(),
+    );
+    assert_eq!(
+        shown["effective"]["install_root"]["path"],
+        allowed.path().display().to_string()
+    );
+
+    // The user's own file beats the site, and keeps doing so after the user
+    // also picks a release source of their own.
+    let config = machine.settings("config.toml");
+    fs::write(
+        &config,
+        format!(
+            "[self]\ninstall_root = \"{}\"\nsource = \"github\"\n",
+            mine.path().display()
+        ),
+    )
+    .unwrap();
+    let shown = json(
+        &machine
+            .cmd()
+            .env_remove("VIBEVM_INSTALL_ROOT")
+            .args(["--json", "--unattended", "self", "apply", "--show"])
+            .output()
+            .unwrap(),
+    );
+    assert_eq!(
+        shown["effective"]["install_root"]["path"],
+        mine.path().display().to_string()
+    );
+    assert!(
+        shown["effective"]["install_root"]["from"]
+            .as_str()
+            .unwrap()
+            .contains("config.toml"),
+        "{shown}"
     );
 }

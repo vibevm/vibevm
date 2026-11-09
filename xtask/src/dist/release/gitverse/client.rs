@@ -301,12 +301,15 @@ pub(crate) struct GitverseClient {
 
 impl GitverseClient {
     pub(crate) fn new(endpoint: Endpoint, token: Token) -> Result<Self> {
-        let http = reqwest::blocking::Client::builder()
-            .connect_timeout(Duration::from_secs(20))
-            .timeout(Duration::from_secs(30 * 60))
-            .user_agent(concat!("vibevm-xtask/", env!("CARGO_PKG_VERSION")))
-            .build()
-            .context("constructing GitVerse HTTP client")?;
+        let http = vibe_net::http::route(
+            reqwest::blocking::Client::builder()
+                .connect_timeout(Duration::from_secs(20))
+                .timeout(Duration::from_secs(30 * 60))
+                .user_agent(concat!("vibevm-xtask/", env!("CARGO_PKG_VERSION"))),
+            vibe_net::http::Ambient::Inherit,
+        )?
+        .build()
+        .context("constructing GitVerse HTTP client")?;
         Ok(Self {
             endpoint,
             token,

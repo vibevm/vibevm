@@ -42,7 +42,7 @@ fn selected_node_manifest_mut<'a>(
     Some(&mut workspace.members[selected].manifest)
 }
 
-pub(super) fn visibility_root_id(manifest: &Manifest) -> String {
+pub(crate) fn visibility_root_id(manifest: &Manifest) -> String {
     manifest
         .consumer_node()
         .map(|node| node.coordinate())

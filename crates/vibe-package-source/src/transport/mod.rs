@@ -11,7 +11,7 @@ use std::{
 use vibe_registry::git_backend::{
     deferred::{DeferredShellGit, ShellGitFactory, TransportRequirement},
     shell::native_admission::{
-        GitInstallation, NativeConfigSelection, NativeGitAdmission, SshConfigSelection,
+        self, GitInstallation, NativeConfigSelection, NativeGitAdmission, SshConfigSelection,
         SshConfiguration, SshConfigurationProvider, TlsTrust, TlsTrustProvider,
     },
 };
@@ -33,9 +33,7 @@ impl std::fmt::Debug for TransportInputs {
 }
 impl TransportInputs {
     fn variable(&self, key: &str) -> Option<&std::ffi::OsStr> {
-        self.environment
-            .get(std::ffi::OsStr::new(key))
-            .map(OsString::as_os_str)
+        variable_in(&self.environment, key, cfg!(windows))
     }
     fn home(&self) -> Result<PathBuf, GitError> {
         self.variable("HOME")
@@ -52,13 +50,36 @@ impl TransportInputs {
             .to_owned()
     }
 }
-/// Only Unix is qualified for controlled native preparation; elsewhere this is
-/// the runtime refusal, before anything is discovered, with no legacy fallback.
-#[cfg(unix)]
+/// `key` in a captured environment. Windows names are case-insensitive
+/// (the snapshot holds `Path`, the code asks for `PATH`); an exact match
+/// wins, then the first case-insensitive one.
+fn variable_in<'a>(
+    environment: &'a BTreeMap<OsString, OsString>,
+    key: &str,
+    windows: bool,
+) -> Option<&'a std::ffi::OsStr> {
+    if let Some(value) = environment.get(std::ffi::OsStr::new(key)) {
+        return Some(value);
+    }
+    if !windows {
+        return None;
+    }
+    environment
+        .iter()
+        .find(|(name, _)| {
+            name.to_str()
+                .is_some_and(|name| name.eq_ignore_ascii_case(key))
+        })
+        .map(|(_, value)| value.as_os_str())
+}
+/// Unix and Windows are qualified for controlled native preparation
+/// (PROP-073 `#NATIVE-WINDOWS`); elsewhere this is the runtime refusal,
+/// before anything is discovered, with no legacy fallback.
+#[cfg(any(unix, windows))]
 fn qualified_native_platform() -> Result<(), GitError> {
     Ok(())
 }
-#[cfg(not(unix))]
+#[cfg(not(any(unix, windows)))]
 fn qualified_native_platform() -> Result<(), GitError> {
     Err(unsupported(
         "controlled native preparation is not qualified on this platform; no legacy fallback",
@@ -103,14 +124,16 @@ impl Factory {
         } else {
             TlsTrust::System
         };
-        let profile = NativeGitAdmission::direct_https(
-            binding,
-            GitInstallation::trusted(binary, helpers)?,
-            trust,
-        )
-        .with_config_selection(selection)
-        .with_ssh_configuration_provider(self.ssh.clone())
-        .with_acquisition_root(input.acquisition_root.clone())?;
+        let installation = GitInstallation::trusted(binary, helpers)?.with_platform_environment(
+            input
+                .environment
+                .iter()
+                .map(|(key, value)| (key.as_os_str(), value.as_os_str())),
+        );
+        let profile = NativeGitAdmission::direct_https(binding, installation, trust)
+            .with_config_selection(selection)
+            .with_ssh_configuration_provider(self.ssh.clone())
+            .with_acquisition_root(input.acquisition_root.clone())?;
         Ok(ShellGit::new().with_native_admission(Arc::new(profile)))
     }
 }
@@ -136,6 +159,13 @@ impl ShellGitFactory for Factory {
             .operation
             .admission()
             .map_err(|_| unsupported("source policy could not be captured"))?;
+        // A repository on this machine contacts no host: there is nothing to
+        // admit or exclude (PROP-073 `#SOURCE-POLICY`), and the controlled
+        // backend reads it over Git's `file` transport alone. A Windows share
+        // contacts its server, which is checked first.
+        if let Some(local) = native_admission::local_repository(raw) {
+            return local?.admit(&binding);
+        }
         if raw.starts_with("https://") {
             binding.check_address(raw)?;
             for name in [
@@ -148,11 +178,16 @@ impl ShellGitFactory for Factory {
                 "SSL_CERT_DIR",
                 "GIT_SSL_NO_VERIFY",
             ] {
-                if self
-                    .operation
-                    .transport
-                    .variable(name)
-                    .is_some_and(|value| !value.is_empty())
+                // PROP-068 `#proxy`: a configured `[proxy]` route is the
+                // qualified one — the admitted child is handed it and
+                // nothing else — so its promoted variables are not refused.
+                if !(vibe_core::net::route().is_proxied() && name.ends_with("_PROXY"))
+                    && !(vibe_core::net::route().is_proxied() && name.ends_with("_proxy"))
+                    && self
+                        .operation
+                        .transport
+                        .variable(name)
+                        .is_some_and(|value| !value.is_empty())
                 {
                     return Err(unsupported(
                         "selected HTTPS proxy or TLS environment requires a separately qualified controlled route",
@@ -178,11 +213,16 @@ impl ShellGitFactory for Factory {
                 "all_proxy",
                 "GIT_PROXY_COMMAND",
             ] {
-                if self
-                    .operation
-                    .transport
-                    .variable(name)
-                    .is_some_and(|value| !value.is_empty())
+                // PROP-068 `#proxy`: a configured `[proxy]` route is the
+                // qualified one — the admitted child is handed it and
+                // nothing else — so its promoted variables are not refused.
+                if !(vibe_core::net::route().is_proxied() && name.ends_with("_PROXY"))
+                    && !(vibe_core::net::route().is_proxied() && name.ends_with("_proxy"))
+                    && self
+                        .operation
+                        .transport
+                        .variable(name)
+                        .is_some_and(|value| !value.is_empty())
                 {
                     return Err(unsupported(
                         "selected HTTP proxy environment requires a separately qualified controlled route",
@@ -230,12 +270,19 @@ impl SshConfigurationProvider for SelectedSsh {
                 .lock()
                 .map_err(|_| unsupported("SSH input initialization lock poisoned"))?;
             if self.value.get().is_none() {
-                let (executable, user, system) = installation::ssh(&self.input)?;
+                let client = installation::ssh(&self.input)?;
+                let home = match client.home {
+                    Some(home) => home,
+                    None => self.input.home()?,
+                };
                 let mut selection =
-                    SshConfigSelection::new(executable, self.input.home()?, system)?
+                    SshConfigSelection::new(client.executable, home, client.system)?
                         .with_acquisition_root(self.input.acquisition_root.clone())?;
-                if let Some(user) = user {
+                if let Some(user) = client.user {
                     selection = selection.with_user_config(user)?;
+                }
+                if let Some(agent) = client.default_agent {
+                    selection = selection.with_default_agent(agent)?;
                 }
                 for (key, value) in &self.input.environment {
                     if let (Some(key), Some(value)) = (key.to_str(), value.to_str())
@@ -344,6 +391,25 @@ mod tests {
     }
 
     #[test]
+    #[specmark::spec(verifies = "spec://org.vibevm.core/vibevm/common/PROP-073#NATIVE-WINDOWS-LAW")]
+    fn windows_variable_names_are_found_whatever_their_case() {
+        let environment = BTreeMap::from([
+            (
+                OsString::from("Path"),
+                OsString::from(r"C:\Program Files\Git\cmd"),
+            ),
+            (OsString::from("SystemRoot"), OsString::from(r"C:\Windows")),
+        ]);
+        assert_eq!(
+            variable_in(&environment, "PATH", true),
+            Some(std::ffi::OsStr::new(r"C:\Program Files\Git\cmd"))
+        );
+        assert!(variable_in(&environment, "SystemRoot", false).is_some());
+        // Elsewhere names are exact.
+        assert_eq!(variable_in(&environment, "PATH", false), None);
+    }
+
+    #[test]
     #[specmark::spec(verifies = "spec://org.vibevm.core/vibevm/common/PROP-073#SOURCE-POLICY-LAW")]
     fn excluded_plain_http_registry_reports_its_exclusion() {
         let root = tempfile::tempdir().unwrap();
@@ -362,10 +428,39 @@ mod tests {
         factory
             .preflight("http://admitted.invalid/org/repo.git")
             .unwrap();
-        // Other schemes remain outside the controlled transport.
+        // A repository on this machine contacts no host: nothing to exclude.
+        let absolute = if cfg!(windows) {
+            "C:/srv/org/repo.git"
+        } else {
+            "/srv/org/repo.git"
+        };
+        for local in ["file:///srv/org/repo.git", absolute] {
+            factory.preflight(local).unwrap();
+        }
+        // A share contacts its server: an excluded one is refused first
+        // (PROP-073 `#NATIVE-WINDOWS`); off Windows it is no local spelling.
+        if cfg!(windows) {
+            for share in [
+                r"\\blocked.invalid\share\repo.git",
+                "file://blocked.invalid/share/repo.git",
+            ] {
+                assert!(
+                    matches!(
+                        factory.preflight(share),
+                        Err(GitError::ContactRefused(
+                            vibe_registry::ContactRefusal::ExcludedHost { .. }
+                        ))
+                    ),
+                    "{share}"
+                );
+            }
+            factory.preflight(r"\\admitted\share\repo.git").unwrap();
+        }
+        // Other schemes, and a relative path, remain outside the controlled
+        // transport.
         for refused in [
             "git://admitted.invalid/org/repo.git",
-            "file:///srv/org/repo.git",
+            "relative/org/repo.git",
             "ftp://admitted.invalid/org/repo.git",
         ] {
             assert!(

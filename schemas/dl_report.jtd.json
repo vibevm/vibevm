@@ -1,0 +1,385 @@
+{
+  "metadata": {
+    "description": "Wire format for `vibe dl --json` and `vibe dl --test-proxy --json` (`vibe-dl/1`, PROP-068 `#dl`): the route a request took, each hop of its redirect chain phase by phase (DNS, connection, the proxy's CONNECT answer, TLS with the server's chain and the trust source that accepted it, the response head), the classified failure with its fix, and the download's size and SHA-256. Never carries a credential. Source of truth for `crates/vibe-wire/src/generated/dl_report/mod.rs`.",
+    "spec": {
+      "implements": "spec://org.vibevm.core/vibevm/common/PROP-068#dl"
+    },
+    "rustOptions": {
+      "package": "vibe_wire::dl_report"
+    },
+    "x-rust-type": "DlReport",
+    "x-wire-order": [
+      "protocol",
+      "ok",
+      "url",
+      "mode",
+      "mode_origin",
+      "hops",
+      "checks",
+      "download",
+      "failure"
+    ]
+  },
+  "properties": {
+    "protocol": {
+      "type": "string",
+      "metadata": {
+        "description": "Always `\"vibe-dl/1\"`."
+      }
+    },
+    "ok": {
+      "type": "boolean"
+    },
+    "url": {
+      "type": "string",
+      "metadata": {
+        "description": "The requested URL without credentials, query or fragment."
+      }
+    },
+    "mode": {
+      "type": "string",
+      "metadata": {
+        "description": "The route mode: `direct`, `explicit` or `px`."
+      }
+    },
+    "mode_origin": {
+      "type": "string",
+      "metadata": {
+        "description": "Which layer decided the mode: `default`, `site`, `user`, `env` or `flag`."
+      }
+    },
+    "hops": {
+      "elements": {
+        "ref": "hop"
+      },
+      "metadata": {
+        "x-empty": "emit",
+        "description": "The probe's requests, first to last; a redirect adds a hop."
+      }
+    },
+    "checks": {
+      "elements": {
+        "ref": "check"
+      },
+      "metadata": {
+        "x-empty": "emit",
+        "description": "`--test-proxy`: one row per step; `[]` for a download."
+      }
+    }
+  },
+  "optionalProperties": {
+    "download": {
+      "ref": "download",
+      "metadata": {
+        "x-default": null,
+        "description": "The bytes fetched; absent when nothing was fetched."
+      }
+    },
+    "failure": {
+      "ref": "failure",
+      "metadata": {
+        "x-default": null,
+        "description": "Why the command failed; absent on success."
+      }
+    }
+  },
+  "definitions": {
+    "count": {
+      "type": "float64",
+      "metadata": {
+        "description": "An exact non-negative count. JTD has no uint64 form, so generated Rust narrows the numeric form to u64.",
+        "x-rust-type": "u64"
+      }
+    },
+    "hop": {
+      "metadata": {
+        "x-wire-order": [
+          "url",
+          "via",
+          "bypassed",
+          "addresses",
+          "connect_status",
+          "tls",
+          "status_line",
+          "headers",
+          "timings"
+        ]
+      },
+      "properties": {
+        "url": {
+          "type": "string"
+        },
+        "bypassed": {
+          "type": "boolean",
+          "metadata": {
+            "description": "A proxy is configured and `no_proxy` (or loopback) sent this host direct."
+          }
+        },
+        "addresses": {
+          "elements": {
+            "type": "string"
+          },
+          "metadata": {
+            "x-empty": "emit",
+            "description": "Resolved addresses on a direct route; `[]` through a proxy (the proxy resolves)."
+          }
+        },
+        "headers": {
+          "elements": {
+            "ref": "header"
+          },
+          "metadata": {
+            "x-empty": "emit",
+            "description": "The response headers; `Set-Cookie` values are redacted."
+          }
+        },
+        "timings": {
+          "ref": "timings"
+        }
+      },
+      "optionalProperties": {
+        "via": {
+          "type": "string",
+          "metadata": {
+            "x-default": null,
+            "description": "The proxy, `scheme://host:port` or `px http://127.0.0.1:<port>`; absent for a direct connection."
+          }
+        },
+        "connect_status": {
+          "type": "string",
+          "metadata": {
+            "x-default": null,
+            "description": "The proxy's answer to CONNECT."
+          }
+        },
+        "tls": {
+          "ref": "tls",
+          "metadata": {
+            "x-default": null
+          }
+        },
+        "status_line": {
+          "type": "string",
+          "metadata": {
+            "x-default": null,
+            "description": "The response's status line."
+          }
+        }
+      }
+    },
+    "header": {
+      "metadata": {
+        "x-wire-order": [
+          "name",
+          "value"
+        ]
+      },
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "value": {
+          "type": "string"
+        }
+      }
+    },
+    "tls": {
+      "metadata": {
+        "x-wire-order": [
+          "version",
+          "cipher",
+          "chain",
+          "trusted_by"
+        ]
+      },
+      "properties": {
+        "version": {
+          "type": "string"
+        },
+        "cipher": {
+          "type": "string"
+        },
+        "chain": {
+          "elements": {
+            "ref": "certificate"
+          },
+          "metadata": {
+            "x-empty": "emit",
+            "description": "The server's chain, leaf first."
+          }
+        }
+      },
+      "optionalProperties": {
+        "trusted_by": {
+          "type": "string",
+          "metadata": {
+            "x-default": null,
+            "description": "`system` (bundled web roots or the operating system's store) or `ca_file`."
+          }
+        }
+      }
+    },
+    "certificate": {
+      "metadata": {
+        "x-wire-order": [
+          "subject",
+          "issuer"
+        ]
+      },
+      "properties": {
+        "subject": {
+          "type": "string"
+        },
+        "issuer": {
+          "type": "string"
+        }
+      }
+    },
+    "timings": {
+      "metadata": {
+        "x-wire-order": [
+          "dns_ms",
+          "connect_ms",
+          "proxy_ms",
+          "tls_ms",
+          "request_ms"
+        ]
+      },
+      "optionalProperties": {
+        "dns_ms": {
+          "ref": "count",
+          "metadata": {
+            "x-default": null,
+            "description": "Name resolution (of the host, or of the proxy)."
+          }
+        },
+        "connect_ms": {
+          "ref": "count",
+          "metadata": {
+            "x-default": null,
+            "description": "The TCP connection."
+          }
+        },
+        "proxy_ms": {
+          "ref": "count",
+          "metadata": {
+            "x-default": null,
+            "description": "The CONNECT exchange."
+          }
+        },
+        "tls_ms": {
+          "ref": "count",
+          "metadata": {
+            "x-default": null,
+            "description": "The TLS handshake."
+          }
+        },
+        "request_ms": {
+          "ref": "count",
+          "metadata": {
+            "x-default": null,
+            "description": "Request sent to response head received."
+          }
+        }
+      }
+    },
+    "download": {
+      "metadata": {
+        "x-wire-order": [
+          "destination",
+          "bytes",
+          "sha256",
+          "status"
+        ]
+      },
+      "properties": {
+        "bytes": {
+          "ref": "count"
+        },
+        "sha256": {
+          "type": "string"
+        },
+        "status": {
+          "type": "uint16"
+        }
+      },
+      "optionalProperties": {
+        "destination": {
+          "type": "string",
+          "metadata": {
+            "x-default": null,
+            "description": "The written file; absent for `--show` / `--headers`."
+          }
+        }
+      }
+    },
+    "check": {
+      "metadata": {
+        "x-wire-order": [
+          "check",
+          "result",
+          "detail",
+          "cause",
+          "fix"
+        ]
+      },
+      "properties": {
+        "check": {
+          "type": "string"
+        },
+        "result": {
+          "type": "string",
+          "metadata": {
+            "description": "`ok`, `fail`, `warn` or `skip`."
+          }
+        },
+        "detail": {
+          "type": "string"
+        }
+      },
+      "optionalProperties": {
+        "cause": {
+          "type": "string",
+          "metadata": {
+            "x-default": null,
+            "description": "The classified cause code."
+          }
+        },
+        "fix": {
+          "type": "string",
+          "metadata": {
+            "x-default": null,
+            "description": "What to do about it."
+          }
+        }
+      }
+    },
+    "failure": {
+      "metadata": {
+        "x-wire-order": [
+          "class",
+          "exit_code",
+          "detail",
+          "fix"
+        ]
+      },
+      "properties": {
+        "class": {
+          "type": "string",
+          "metadata": {
+            "description": "A stable code such as `dl_proxy_auth` or `dl_untrusted_certificate`."
+          }
+        },
+        "exit_code": {
+          "type": "uint8"
+        },
+        "detail": {
+          "type": "string"
+        },
+        "fix": {
+          "type": "string"
+        }
+      }
+    }
+  }
+}

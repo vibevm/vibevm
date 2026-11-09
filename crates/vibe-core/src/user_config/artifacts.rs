@@ -174,11 +174,43 @@ pub struct SelfConfig {
     /// `localdir`: the release drop (default `[artifacts] vibe`).
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub path: Option<PathBuf>,
+    /// The directory vibe installs ITSELF under — the durable
+    /// `$VIBEVM_INSTALL_ROOT` (PROP-019 `#install-root`). vibe keeps its
+    /// shims at `<install_root>/opt/bin` and its data at
+    /// `<install_root>/opt/vibevm`, so a network that only permits
+    /// executables under `C:\Work` declares `install_root = "C:/Work"`.
+    /// Absent means `~/.vibe`.
+    ///
+    /// It is NOT part of the release-source decision: a user who chooses
+    /// their own `[self] source` still inherits the site's install root
+    /// ([`SelfConfig::release_is_default`] is the predicate the release
+    /// pair layers on).
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub install_root: Option<PathBuf>,
 }
 
 impl SelfConfig {
     /// `true` for the all-empty table, skipped on write.
     pub fn is_default(&self) -> bool {
         *self == SelfConfig::default()
+    }
+
+    /// `true` when the table says nothing about WHERE RELEASES COME FROM.
+    ///
+    /// `install_root` lives in the same table but answers a different
+    /// question — where vibe installs itself — and the two layer
+    /// independently, so the release pair (`[self]` + `[artifacts] vibe`,
+    /// taken whole from the higher declaring layer) must not be decided by
+    /// it. A table that carries only an `install_root` declares no release
+    /// source.
+    pub fn release_is_default(&self) -> bool {
+        let SelfConfig {
+            source,
+            url,
+            api,
+            path,
+            install_root: _,
+        } = self;
+        source.is_none() && url.is_none() && api.is_none() && path.is_none()
     }
 }

@@ -18,7 +18,7 @@ pub struct ManagedHttpClient {
 }
 impl ManagedHttpClient {
     /// Capture the existing unbound HTTP policy, for a separately authorized domain owner.
-    pub fn legacy(timeout: Duration) -> Result<Self, reqwest::Error> {
+    pub fn legacy(timeout: Duration) -> Result<Self, ClientBuildError> {
         Self::captured(timeout, None, reqwest::header::HeaderMap::new(), None, None)
     }
     /// A legacy domain request cannot bypass a source client's immutable binding.
@@ -41,7 +41,7 @@ impl ManagedHttpClient {
     }
 
     /// Anonymous bound payload reads disable implicit redirects, proxies and retries.
-    pub fn bound(timeout: Duration, binding: Arc<HttpAdmission>) -> Result<Self, reqwest::Error> {
+    pub fn bound(timeout: Duration, binding: Arc<HttpAdmission>) -> Result<Self, ClientBuildError> {
         Self::captured(
             timeout,
             None,
@@ -56,7 +56,26 @@ impl ManagedHttpClient {
         headers: reqwest::header::HeaderMap,
         binding: Option<Arc<HttpAdmission>>,
         roots: Option<Vec<reqwest::Certificate>>,
-    ) -> Result<Self, reqwest::Error> {
+    ) -> Result<Self, ClientBuildError> {
+        Self::captured_in(
+            &vibe_net::current(),
+            timeout,
+            user_agent,
+            headers,
+            binding,
+            roots,
+        )
+    }
+    /// [`Self::captured`] under an explicit network session — the seam a
+    /// proxy test drives without installing a process-wide route.
+    pub fn captured_in(
+        network: &Arc<vibe_net::NetworkSession>,
+        timeout: Duration,
+        user_agent: Option<&str>,
+        headers: reqwest::header::HeaderMap,
+        binding: Option<Arc<HttpAdmission>>,
+        roots: Option<Vec<reqwest::Certificate>>,
+    ) -> Result<Self, ClientBuildError> {
         let mut blocking = Client::builder()
             .timeout(timeout)
             .default_headers(headers.clone());
@@ -76,6 +95,18 @@ impl ManagedHttpClient {
                 .referer(false)
                 .retry(reqwest::retry::never());
         }
+        // PROP-068 `#proxy`: a bound client tunnels through the configured
+        // proxy — admission has already judged the requested host name,
+        // since the peer address is the proxy's — and never inherits an
+        // ambient proxy; an unbound one keeps the environment without
+        // `[proxy]`. Either way `[proxy] ca_file` joins the trust set.
+        let ambient = if binding.is_some() {
+            vibe_net::http::Ambient::Refuse
+        } else {
+            vibe_net::http::Ambient::Inherit
+        };
+        blocking = vibe_net::http::route_in(network, blocking, ambient)?;
+        asynchronous = vibe_net::http::route_in(network, asynchronous, ambient)?;
         if let Some(roots) = roots {
             blocking = blocking.tls_built_in_root_certs(false);
             asynchronous = asynchronous.tls_built_in_root_certs(false);
@@ -116,6 +147,16 @@ impl std::fmt::Debug for ManagedHttpClient {
             .field("bound", &self.binding.is_some())
             .finish_non_exhaustive()
     }
+}
+/// Why a managed client could not be built: the HTTP stack, or the
+/// network route (`[proxy] ca_file`, …) it must carry.
+#[derive(Debug, thiserror::Error)]
+#[specmark::spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-068#proxy")]
+pub enum ClientBuildError {
+    #[error(transparent)]
+    Http(#[from] reqwest::Error),
+    #[error(transparent)]
+    Route(#[from] vibe_net::NetError),
 }
 /// Adapter retained for existing no-control embedders; opaque clients cannot
 /// acquire new cancellation policy after construction.

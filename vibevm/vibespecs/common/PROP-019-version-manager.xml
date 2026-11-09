@@ -235,6 +235,29 @@ the environment says — so scripts never break on a stale `$VIBEVM_HOME`.</CMD-
         <INSTANCE-COUNTER fact="true" status="spec/done">`&lt;instance&gt;` is a monotonic counter (§9.4) — never a hash of the payload
   (§9.2).</INSTANCE-COUNTER>
         <SHIM-STABLE fact="true" status="spec/done">The shim dir is stable; switching repoints `current`, never the shim.</SHIM-STABLE>
+        <SHIM-DIR-SHARED fact="true" status="impl/done">**The shim dir may be shared.** On a network that allows executables only
+  under one directory (§2.21) the install base is the directory the operator
+  already keeps their tools in, so `bin/` routinely holds files vibe never
+  wrote. Vibe therefore recognises its own shims before it touches anything
+  there, in two tiers: `vibevm/shims.toml` — beside `state.toml`, never in the
+  shared directory — records every shim vibe wrote with its SHA-256, which is
+  proof of authorship and the ONLY tier a removal may ever delete; and a shim
+  is also recognised by content (its own marker, or its reference to vibe&apos;s
+  `../vibevm/current` pointer), which keeps installations older than the
+  inventory upgradable and may be rewritten in place but never deleted.</SHIM-DIR-SHARED>
+        <SHIM-FOREIGN-REFUSED fact="true" status="impl/done">**A foreign file at a shim&apos;s name is refused, never claimed.** Neither
+  recorded nor recognised means the file is somebody else&apos;s: the write stops
+  with a Class-F error naming the file, that it is not one vibe wrote, the
+  requirement and the fix (move it aside, or install under a directory of
+  vibe&apos;s own). Every planned name is classified before the first byte is
+  written, so a refusal leaves the directory exactly as it was, and
+  `self doctor --fix` refuses it the same way rather than repairing over it.
+  On Windows every spelling of a shim name is classified, because the
+  filesystem resolves `vibe.cmd` and `VIBE.CMD` as one file; vibe publishes no
+  `.exe` and no `.ps1` shim, so it never touches one a foreign tool left
+  there. No command deletes a shim: `self remove` / `uninstall`, `self gc`
+  and `self apply --remove` leave the shim directory and every file in it
+  alone.</SHIM-FOREIGN-REFUSED>
         <SOURCES-BY-REF fact="true" status="impl/done">Development/managed checkouts are held **by reference** and their untracked
   caches are never copied. A binary instance instead owns a clean tracked-file
   snapshot under its own `source/`, because shipped skills may require the
@@ -794,6 +817,11 @@ the built-in GitHub release page.</RELEASE-SOURCES-LEAD></p>
   outer digest against.</RELEASE-SOURCE-VERIFY>
       </facts>
     </release-sources>
+    <companion-tools title="2.19.1 Companion tools — px beside the bundle">
+      <p><companion-tools-req fact="true" status="impl/done">`req r1`</companion-tools-req></p>
+      <p><COMPANION-TOOLS-LAW fact="true" status="impl/done">The px pin `xtask/dist/px.toml` (version, per-target upstream archive, SHA-256) is embedded in every vibe build, release or source. A release carries, beside its bundle, the pinned upstream archive of each target as its own asset `px-&lt;px version&gt;-&lt;target&gt;.&lt;zip|tar.gz&gt;`, byte for byte, and lists it in `TOOLS.json` (wire format `distribution-tools-manifest`). px is installed once per px version into the installation's tool store `&lt;install root&gt;/opt/vibevm/tools/px/&lt;px version&gt;/`, shared by every instance, release or source build. It is read from the configured release source exactly like a bundle — GitHub, GitVerse, Nexus or the release drop (`[artifacts] vibe`, its version directories and its root; the closed-network case, where reaching the internet itself needs px) — and its SHA-256 is always checked against the embedded pin before it is unpacked. A fresh release install, update, reinstall or bootstrap places it after the bundle is verified; a source install places it when px mode is configured; `vibe self px install [--from PATH] [--force]` places it on request and `vibe self px status` shows the pin, the asset name, the store directory and what is installed. The px lookup is `[proxy] px_path`, then `tools/px/` beside the running binary, then the store, then PATH; a missing px names the store directory, the asset file this target needs and `vibe self px install`. A source without the asset is reported on the progress line and never fails an install; bytes that differ from the pin stop the command before activation. A reused instance is not touched and costs no download.</COMPANION-TOOLS-LAW></p>
+      <p><COMPANION-TOOLS-DECISION fact="true" status="impl/done">**Decision:** px is a separate release asset, the pinned upstream archive itself, verified against the pin every vibe embeds, and stored per px version outside any instance. **Why:** the owner intends px "in the build" for every installation kind (2026-11-09), including a vibe built from source, which has no release bundle. vibe 1.0.11 — the version in the field — reads `DISTRIBUTIONS.json` and `DISTRIBUTION.json` with closed shapes: run against test manifests it refused a top-level `tools` member, a per-platform member and a sixth platform entry, and it refuses any extra file in a bundle. A companion asset is invisible to it, so a new release updates existing installations and new installations gain px; the one pin means a release, a drop and a source build agree on the bytes. `cargo xtask dist px` stages px and writes the asset with its listing; `dist upload` adds the pair to the draft; `dist finalize` verifies every pair and publishes `TOOLS.json`. The GitVerse mirror (`dist gitverse-publish`) does not copy companion assets yet: a GitVerse-sourced install reports px as absent.</COMPANION-TOOLS-DECISION></p>
+    </companion-tools>
     <site-profile title="2.20 Site profile — one file configures an installation">
       <p><SITE-PROFILE-LEAD fact="true" status="impl/done">An administrator describes a closed-network installation once, in one
 TOML **site profile** (`schema = 1`), and every developer runs `vibe self apply
@@ -851,6 +879,38 @@ user's files: every owner reads it **below** the user's own `registry.toml` /
   it once the release is installed.</SITE-PROFILE-BOOTSTRAP>
       </facts>
     </site-profile>
+    <install-root title="2.21 Install root — one directory holds the whole installation">
+      <p><INSTALL-ROOT-LEAD fact="true" status="impl/done">Some networks allow executables only under one directory, so WHERE
+vibe installs itself is a declared value, not `~/.vibe`. The install base is
+resolved highest first: the running version&apos;s own root when it is managed (a
+vibe already installed never relocates itself), then `$VIBEVM_INSTALL_ROOT`,
+then `[self] install_root` — the user&apos;s own `config.toml` over the applied site
+profile — then `~/.vibe`. The store is `&lt;base&gt;/opt`, so the shims that go
+on PATH are `&lt;base&gt;/opt/bin` and the instances, state file and live
+pointer are `&lt;base&gt;/opt/vibevm`. A declared value must be absolute (a
+Windows drive or UNC path counts when the profile is validated on any
+host).</INSTALL-ROOT-LEAD></p>
+      <facts ordered="false">
+        <INSTALL-ROOT-NOT-RELEASES fact="true" status="impl/done">`[self] install_root` is not part of the release decision of
+  `#release-sources`: `[self]` with `[artifacts] vibe` still comes whole from
+  the higher layer declaring either, while the install root layers on its own.
+  A developer who keeps the public release page therefore still inherits the
+  one directory their network permits, and `vibe self source set|reset` never
+  forgets it.</INSTALL-ROOT-NOT-RELEASES>
+        <INSTALL-ROOT-DURABLE fact="true" status="impl/done">`vibe self apply` installs under the resolved base — the
+  self-import of `#site-profile`, the store and the PATH step of `#path` all
+  address `&lt;base&gt;/opt` — and makes `$VIBEVM_INSTALL_ROOT` durable
+  through the same platform persister, so the next terminal resolves the same
+  installation. One consent governs both durable writes: a PATH step skipped
+  for want of consent writes neither, and a base the environment already names
+  is not rewritten. On Windows the write is the registry API with the existing
+  value&apos;s kind preserved (`REG_EXPAND_SZ` keeps expanding), never a child
+  process.</INSTALL-ROOT-DURABLE>
+        <INSTALL-ROOT-REPORT fact="true" status="impl/done">`vibe self apply` and `--show` report the effective base, what
+  decided it, and the shim and data directories it implies
+  (`vibe-self-apply/1`, `effective.install_root`).</INSTALL-ROOT-REPORT>
+      </facts>
+    </install-root>
   </decisions>
   <architecture title="3. Architecture — seams and cells">
     <p><req-architecture fact="true" status="spec/done">`req r2`</req-architecture></p>

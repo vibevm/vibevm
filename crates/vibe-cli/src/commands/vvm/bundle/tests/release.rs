@@ -60,6 +60,10 @@ fn drive_with_persister<T>(
 struct NoActivation;
 
 impl EnvPersister for NoActivation {
+    fn set_install_root(&self, _root: &Path) -> anyhow::Result<Persisted> {
+        Ok(Persisted::Unchanged)
+    }
+
     fn set_vibevm_home(&self, _home: &Path) -> anyhow::Result<Persisted> {
         panic!("an already current update must not persist advisory HOME")
     }

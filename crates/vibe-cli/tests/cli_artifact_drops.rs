@@ -18,6 +18,9 @@ use std::sync::atomic::{AtomicUsize, Ordering};
 
 use common::UserScratch;
 use sha2::{Digest, Sha256};
+use vibe_wire::generated::artifacts_where_report::{
+    ArtifactsWhereReport, DropStatus, ReleaseSourceKind,
+};
 
 /// A loopback server that counts requests: "the server was never asked"
 /// is what distinguishes a drop that served the bytes from one that failed.
@@ -51,6 +54,12 @@ fn serve(body: Vec<u8>) -> (String, Arc<AtomicUsize>) {
 
 fn sha(bytes: &[u8]) -> String {
     format!("{:x}", Sha256::digest(bytes))
+}
+
+/// Every registered `--json` document these tests read goes through its
+/// generated reader (`common::wire`) before anything is asserted about it.
+fn where_report(stdout: &[u8]) -> serde_json::Value {
+    common::wire::checked(&String::from_utf8_lossy(stdout))
 }
 
 struct Fixture {
@@ -257,7 +266,7 @@ fn artifacts_where_prints_the_expected_locations_and_their_state() {
     ];
     let before = fixture.vibe(&args);
     assert!(before.status.success(), "{}", text(&before));
-    let report: serde_json::Value = serde_json::from_slice(&before.stdout).unwrap();
+    let report = where_report(&before.stdout);
     assert_eq!(report["packages"], fixture.drop_dir().display().to_string());
     let input = &report["inputs"][0];
     assert_eq!(input["file"], "payload.txt");
@@ -272,7 +281,7 @@ fn artifacts_where_prints_the_expected_locations_and_their_state() {
     );
     fixture.place(&format!("{digest}/payload.txt"), payload);
     let after = fixture.vibe(&args);
-    let report: serde_json::Value = serde_json::from_slice(&after.stdout).unwrap();
+    let report = where_report(&after.stdout);
     assert_eq!(report["inputs"][0]["status"], "present");
 
     // Without a package it still says where releases and payloads go.
@@ -315,4 +324,48 @@ fn an_author_side_drop_input_is_read_from_the_configured_drop_only() {
     let report: serde_json::Value = serde_json::from_slice(&listed.stdout).unwrap();
     assert_eq!(report["inputs"][0]["file"], "payload.txt");
     assert_eq!(report["inputs"][0]["status"], "present");
+}
+
+/// `vibe-artifacts-where/1` is the document its registered schema
+/// describes, with its closed `status` vocabulary and the release source
+/// that decided where releases go.
+#[test]
+fn the_where_report_reads_as_its_registered_wire_type() {
+    let payload = b"expected\n";
+    let digest = sha(payload);
+    let fixture = Fixture::new(&format!(
+        "url = \"https://dist.example/rel/payload.txt\"\nsha256 = \"{digest}\""
+    ));
+    fixture.configure_drop();
+    let registry = fixture.registry.to_str().unwrap().to_owned();
+    let args = [
+        "artifacts",
+        "where",
+        "org.example/dropped",
+        "--registry",
+        &registry,
+        "--json",
+    ];
+    let missing = fixture.vibe(&args);
+    assert!(missing.status.success(), "{}", text(&missing));
+    let report: ArtifactsWhereReport =
+        common::wire::typed(&String::from_utf8_lossy(&missing.stdout));
+    assert_eq!(report.protocol, "vibe-artifacts-where/1");
+    // No `[self]` and no `[artifacts] vibe`: releases are still downloaded.
+    assert_eq!(report.release.source, ReleaseSourceKind::Github);
+    assert_eq!(report.release.example_dir, None);
+    assert!(report.release.files.is_empty());
+    assert_eq!(
+        report.packages.as_deref(),
+        Some(fixture.drop_dir().display().to_string().as_str())
+    );
+    let input = report.inputs.first().expect("one downloaded input");
+    assert_eq!(input.file.as_deref(), Some("payload.txt"));
+    assert_eq!(input.status, DropStatus::Missing);
+    assert_eq!(input.sha256, digest);
+
+    fixture.place(&format!("{digest}/payload.txt"), payload);
+    let present: ArtifactsWhereReport =
+        common::wire::typed(&String::from_utf8_lossy(&fixture.vibe(&args).stdout));
+    assert_eq!(present.inputs[0].status, DropStatus::Present);
 }

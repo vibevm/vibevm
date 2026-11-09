@@ -19,6 +19,7 @@ use specmark::spec;
 use vibe_core::remap::drop::release_source_row;
 use vibe_core::remap::{ByteLocation, Layer, RemapKey, RemapRow, RemapTarget};
 use vibe_core::user_config::{ReleaseSourceKind, UserConfig};
+use vibe_wire::generated::shared::ReleaseSourceKind as WireSourceKind;
 
 /// The release origin `install.sh` / `install.ps1` declare.
 pub(crate) const CANONICAL_RELEASE_ORIGIN: &str = "https://github.com/vibevm/vibevm/releases";
@@ -54,16 +55,35 @@ pub(crate) enum ReleaseSource {
     Localdir { path: PathBuf },
 }
 
+/// The wire spelling of one source kind — the one place the vocabulary of
+/// `shared::ReleaseSourceKind` becomes text, so the JSON reports and the
+/// human output can never drift apart.
+pub(crate) fn kind_label(kind: WireSourceKind) -> &'static str {
+    match kind {
+        WireSourceKind::Github => "github",
+        WireSourceKind::Mirror => "mirror",
+        WireSourceKind::Gitverse => "gitverse",
+        WireSourceKind::Nexus => "nexus",
+        WireSourceKind::Localdir => "localdir",
+    }
+}
+
 impl ReleaseSource {
-    /// The type name `vibe self source` prints.
-    pub(crate) fn kind(&self) -> &'static str {
+    /// The vocabulary value every `--json` report carries for this source.
+    pub(crate) fn wire_kind(&self) -> WireSourceKind {
         match self {
-            ReleaseSource::Github => "github",
-            ReleaseSource::Origin { .. } => "mirror",
-            ReleaseSource::Gitverse { .. } => "gitverse",
-            ReleaseSource::Nexus { .. } => "nexus",
-            ReleaseSource::Localdir { .. } => "localdir",
+            ReleaseSource::Github => WireSourceKind::Github,
+            ReleaseSource::Origin { .. } => WireSourceKind::Mirror,
+            ReleaseSource::Gitverse { .. } => WireSourceKind::Gitverse,
+            ReleaseSource::Nexus { .. } => WireSourceKind::Nexus,
+            ReleaseSource::Localdir { .. } => WireSourceKind::Localdir,
         }
+    }
+
+    /// The type name `vibe self source` prints — the same vocabulary value,
+    /// spelled for a human.
+    pub(crate) fn kind(&self) -> &'static str {
+        kind_label(self.wire_kind())
     }
 
     /// The location a human is shown.

@@ -31,6 +31,7 @@ members = [
     "crates/vibe-scrape",
     "crates/vibe-llm",
     "crates/vibe-mcp",
+    "crates/vibe-net",
     "crates/vibe-orchestrator",
     "crates/vibe-package-source",
     "crates/vibe-check",
@@ -69,6 +70,7 @@ default-members = [
     "crates/vibe-scrape",
     "crates/vibe-llm",
     "crates/vibe-mcp",
+    "crates/vibe-net",
     "crates/vibe-orchestrator",
     "crates/vibe-package-source",
     "crates/vibe-check",
@@ -128,6 +130,9 @@ vibe-llm = { path = "crates/vibe-llm", version = "1.0.11" }
 vibe-safefs = { path = "crates/vibe-safefs", version = "1.0.11" }
 vibe-scrape = { path = "crates/vibe-scrape", version = "1.0.11" }
 vibe-mcp = { path = "crates/vibe-mcp", version = "1.0.11" }
+# PROP-068#proxy: the one owner of the network route every client and child
+# `git` follows — proxy, trust set (OS roots + `[proxy] ca_file`), managed px.
+vibe-net = { path = "crates/vibe-net", version = "1.0.11" }
 # The R7.4 surface-neutral application layer shared by CLI and MCP.
 vibe-orchestrator = { path = "crates/vibe-orchestrator", version = "1.0.11" }
 # The R7.4 A15a shared package-source composition: the one production
@@ -273,7 +278,9 @@ regex = "1"
 glob = "0.3"
 resolvo = "0.11"
 dirs = "5"
-reqwest = { version = "0.12", default-features = false, features = ["blocking", "json", "rustls-tls"] }
+# `rustls-tls-native-roots` (PROP-068#proxy): every client also trusts the
+# operating system's root store, where a corporate TLS-inspection CA lives.
+reqwest = { version = "0.12", default-features = false, features = ["blocking", "json", "rustls-tls", "rustls-tls-native-roots"] }
 url = "2"
 chrono = { version = "0.4", default-features = false, features = ["serde", "clock", "std"] }
 

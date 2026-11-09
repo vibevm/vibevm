@@ -141,7 +141,9 @@ Status: **in development** (uncommitted worker change, 2026-11-08). Spec: `spec:
 - `vibe self bootstrap` gains `--site <file|url>` (validated before installing, stored after); `install.sh --site FILE|URL`, `install.ps1 -Site`, or `$VIBEVM_SITE_PROFILE` pass it through. Existing installer invocations are unchanged.
 - Internal: `vibe_core::remap::rows_from_decls`; `PathFixPolicy` now lives in `vibe_core::site_profile` (re-exported by the PATH-fix entry); `commands::artifacts::release_where_for`.
 
-## CORP-FMT-014 — Mirror: exact Git trees and the reverse-mirror record (`_index/mirrors/`)
+## CORP-FMT-023 — Mirror: exact Git trees and the reverse-mirror record (`_index/mirrors/`)
+
+Renumbered from a second CORP-FMT-014 (the number was used twice) on 2026-11-09; content unchanged.
 
 Status: **in development** (uncommitted worker change, 2026-11-08). Refines CORP-FMT-013.
 
@@ -151,3 +153,131 @@ Status: **in development** (uncommitted worker change, 2026-11-08). Refines CORP
 - Report (`registry_mirror_report`): `versions[]` gains optional `tree` and `tree_verified`; new top-level `bundles` (uint32). New action `unavailable`: the source could not serve the version; the rest is copied and the run exits non-zero (before: the first failing fetch aborted the whole run).
 - Library: `PublishItem.git: Option<GitTree {repo, reference, tree}>`, `ItemOutcome.tree`, `BatchConfig.files` (extra files under `_index/` committed with the batch, written only when their bytes differ); `SourceOperation::source_policy()`.
 - Layout sources (monorepo/localdir → layout) still copy the directory (no Git tree facts; `tree` absent).
+
+## CORP-FMT-015 — Local monorepo under the controlled transport; site layer in listings; one snapshot per commit
+
+Status: **in development** (uncommitted worker change, 2026-11-08).
+
+- Controlled transport (`PROP-073#NATIVE-PREPARATION`): a `file:` url without a remote host (or `localhost`) and an absolute path are admitted as local repositories (`AdmittedRemote::Local`, `GIT_ALLOW_PROTOCOL=file`); there is no host for source policy to admit or exclude. A `file:` url naming another host, a query or fragment, is refused; a relative path is not taken as local. A gitlink resolving to a local repository is refused unless its parent repository is itself local. `--offline` is unchanged (a monorepo, local or not, is never read offline). Unix only, like the controlled transport itself.
+- Monorepo snapshots (`GitMonorepoRegistry::open_native`): a capture is shared, weakly held, by every live reader of the same canonical url at the same reference or resolved commit, provided the operation's backend still admits the url that served it. No on-disk format change.
+- `GitError::AuthFailed` gains `status: Option<u16>` (library API change); its text names the transport and status (`HTTPS authentication failed (HTTP 401) for …`) with a transport-specific fix.
+- `vibe update` (scoped / `--sources-only` / `--reselect-source`) solves through the new `vibe_install::solve_visible_graph` (PROP-050 `#EFFECTIVE-SET`), the same visibility mask and pruning the install planner applies.
+- `vibe registry list`: rows of the applied site profile carry `scope: "site"`; `--scope site` lists that layer alone (read-only; editing scopes still refuse it). `vibe show config --json` (unregistered report): `registries[]`, `mirrors[]`, `overrides[]` now come from every layer, with `provenance` one of `.vibe/registry.local.toml`, `vibe.toml`, `~/.vibe/registry.toml`, `site-profile.toml` (project rows keep `vibe.toml`); new object `site_profile {path?, loaded, name?, error?}`. `vibe registry publish` reads the user file and the site profile as separate layers (same effective target as before).
+
+## CORP-FMT-016 — `[proxy]` with source policy, OS trust + `ca_file`, git route, vibe-managed px, network diagnosis
+
+Status: **in development** (uncommitted worker change, 2026-11-08). Spec: `PROP-068#proxy`, `#proxy-trust`, `#proxy-git`, `#proxy-px`, `#proxy-doctor`.
+
+- `[proxy]` (user `config.toml` and site profile `vibe-site-profile/1`, merged key by key): new keys `mode = "explicit" | "px" | "none"`, `pac` (`http(s)://` URL, absolute path or `file:///…`, or `system` — Windows only), `upstream` (`host:port`), `px_args` (array; arguments vibe owns refused), `px_path`, `px_port` (fixed loopback port, never a fallback), `ca_file` (PEM). Absent `mode` = `explicit` when `https`/`http` is set, else no proxy. Validation errors cite `PROP-068#proxy`. The earlier `[proxy]` (`https`, `http`, `no_proxy`) reads unchanged.
+- Environment: `VIBEVM_PROXY_MODE=px|explicit|none` and `VIBEVM_PROXY_PAC` override the user's file over the site profile. `mode = "px"` / `"none"` promotes no `HTTPS_PROXY`/`HTTP_PROXY`/`NO_PROXY` into the environment (explicit mode keeps the old promotion).
+- Behaviour: with `[proxy]` the controlled source transport no longer refuses (`"selected HTTPS proxy … separately qualified controlled route"`) — it tunnels through the configured proxy with source policy judged on the requested host. Every reqwest client trusts the OS root store (reqwest `rustls-tls-native-roots`) plus `ca_file`. Child git receives `-c http.proxy` / `http.sslCAInfo` and the proxy environment explicitly.
+- Wire (additive, `cargo xtask codegen`): `transfer_record`, `transfer_event`, `transfers_listing` gain optional `proxy` (string: `scheme://host:port` or `px`). `self_apply_report` `proxy_row` gains `mode`, `mode_origin`, `pac`, `pac_kind`, `pac_origin`, `upstream`, `px_port`, `px_path`, `ca_file`. `vibe self doctor --json` gains `network` (array of `{step, status: ok|fail|skip, detail, fix}`, or `null`); new flag `--network [URL]`.
+- Distribution: new manifest `xtask/dist/px.toml` (`schema = 1`; pins px 0.11.0 per target: URL, SHA-256, archive kind, executable; LICENSE URL + SHA-256; NOTICE text) and `cargo xtask dist px --target T [--out-dir D] [--archive F] [--license F]`, which stages `D/tools/px/` (px, `LICENSE.txt`, `NOTICE`). The bundle's closed file set (`DISTRIBUTION.json`) is **not** changed yet — see the campaign LOG for why.
+- Library API: new crate `vibe-net`; `ManagedHttpClient::{legacy,bound,captured}` return `ClientBuildError` (was `reqwest::Error`), new `captured_in`; `HookError::Route`, `TransportError::Route` (vibe-llm); `vibe_core::net`, `vibe_core::user_config::{ProxyMode, PacSource}`.
+
+## CORP-FMT-017 — `vibe dl`: one download through the shared stack, its probe, `--test-proxy`
+
+Status: **in development** (uncommitted worker change, 2026-11-08). Spec: `PROP-068#dl`.
+
+- New command `vibe dl <url> <dest>` with `--force`, `--sha256 <hex>`, `--show` (body to stdout), `--headers` (status line + headers to stdout), `--proxy [<url>|px|pac=<url|file|system>]` (a proxy for this command only; without it the configured route, and with nothing configured no proxy), `--test-proxy [<url>]` (default target `https://gmail.com`) and `--no-px` (only with `--test-proxy`). Global `--stop-file` now also applies to `vibe dl`. Remap rows are not applied to `dl`.
+- Exit codes (new, `dl` only): 1 not HTTP/other · 2 usage · 3 `--offline` · 4 source policy · 5 px · 6 DNS · 7 connect timeout · 8 connection refused · 9 proxy 407 · 10 CONNECT refused · 11 untrusted certificate · 12 name mismatch · 13 other TLS · 14 HTTP 4xx · 15 HTTP 5xx · 16 SHA-256 mismatch · 17 destination exists · 18 local I/O · 19 binary body on a terminal · 20 redirect refused · 21 `--test-proxy` proxy problem · 22 `--test-proxy` target problem · 130 stopped. Refusal codes: `dl_*` (e.g. `dl_proxy_auth`, `dl_untrusted_certificate`, `dl_proxy_problem`).
+- Wire (new, `cargo xtask codegen`): `schemas/dl_report.jtd.json` (`vibe-dl/1`, format `cli-dl-report` in `formats/REGISTRY.toml`): `protocol`, `ok`, `url`, `mode`, `mode_origin`, `hops[]` (`url`, `via`, `bypassed`, `addresses`, `connect_status`, `tls{version, cipher, chain[{subject, issuer}], trusted_by}`, `status_line`, `headers[{name, value}]`, `timings{dns_ms, connect_ms, proxy_ms, tls_ms, request_ms}`), `checks[]` (`check`, `result`, `detail`, `cause`, `fix`), optional `download{destination, bytes, sha256, status}`, optional `failure{class, exit_code, detail, fix}`.
+- Library API: `vibe_net::probe` (`probe`, `px_checks`, `FailureClass`, `Probe`, `Hop`, `TlsInfo`, `TrustSource`, `summarize`, `display_url`); `vibe-net` gains direct `rustls` / `webpki-roots` dependencies (already in the lock through reqwest). The display language gains a box-drawn `Table` (`output::language::table`).
+
+## CORP-FMT-018 — The four `self` / `artifacts` JSON reports become registered wire formats
+
+Status: **in development** (uncommitted integration change, 2026-11-09).
+
+- The four JSON protocols of CORP-FMT-003/004/014 are now registered wire formats with JTD schemas, `formats/REGISTRY.toml` records (epoch 1, `recoverable = true`, `foreign_parsers = "many"`) and generated types, and each command emits the generated type instead of ad-hoc serde structs:
+  `vibe-artifacts-where/1` → `schemas/artifacts_where_report.jtd.json`, `[format.cli-artifacts-where-report]`, `vibe_wire::generated::artifacts_where_report::ArtifactsWhereReport`;
+  `vibe-self-source/1` → `schemas/self_source_report.jtd.json`, `[format.cli-self-source-report]`, `…::self_source_report::SelfSourceReport`;
+  `vibe-self-releases/1` → `schemas/self_releases_report.jtd.json`, `[format.cli-self-releases-report]`, `…::self_releases_report::SelfReleasesReport`;
+  `vibe-self-apply/1` → `schemas/self_apply_report.jtd.json`, `[format.cli-self-apply-report]`, `…::self_apply_report::SelfApplyReport`.
+- New shared vocabularies in `formats/vocabularies.json` (PROP-044 §8 G9): `release_source_kind` (`github | mirror | gitverse | nexus | localdir`, closed), `release_source_view` with `release_source_row` and `remap_layer_label`. `release_source_view` IS the `vibe-self-source/1` document, which `vibe-self-releases/1` carries verbatim under `source`, so the source schema is a root `ref` (`pub type SelfSourceReport = ReleaseSourceView;`).
+- Every member that used to be a free-form string is a closed vocabulary: `status` (`present | mismatch | missing | no-drop`), `action`, `change`, registry `type` and `scope`, the PATH step's `outcome`, `planned`, `consent`, `skip_reason`, and the durable-environment observation (`target_kind`, `shell`, `observation`, `managed_block`, `path_entry`, `login_probe`, `login_effectiveness`). Each Rust → wire mapping is one exhaustive match.
+- `remap_layer_label` records a divergence: the release source's remap row writes `user-package` / `project-package` (what `vibe remap list` prints), while `remap_listing` / `remap_explanation` write `user_package` / `project_package`. Converging them is a wire break and is tracked, not silently fixed.
+- **Bytes unchanged except one shape.** JTD cannot express an untagged union of two differently-shaped objects, so `vibe self apply`'s `path` is now one object: `shim_dir`, `consent`, `skip_reason` always present (the last two nullable); a performed step adds `outcome`, `was_on_durable_path`, `on_durable_path`, `changed`, `durable_environment`; a `dry-run` / `show` adds `planned`, `target`. Order preserves both former orders. Visible difference: `activation_hint`, `fix_hint` and `target` are omitted when valueless instead of `null` (the registered `x-default: null` policy). Everything else is byte-identical, checked against the running binary.
+- Reader gate (PROP-044 §8 G11): `crates/vibe-cli/tests/common/wire.rs` parses every `--json` document those tests read into its generated type and writes it back, failing on a lost key, an undeclared key, a `null` that became an absence, or a reordered object.
+
+## CORP-FMT-019 — A hand-downloaded vibe records the commit it was built from
+
+Status: **in development** (uncommitted worker change, 2026-11-09).
+
+- `vibe` embeds no build commit (the build script derives only `VIBE_MSRV`; `vibe --version` prints the package version), so the self-import of `vibe self apply` and `vibe self import <file>` without `--commit` recorded `commit = "unknown"`. They now read `source_commit` from the `DISTRIBUTION.json` the same release wrote beside its executables, the document the ordinary bundle install already trusts.
+- The manifest is read under the parser limit, as a regular file and no link, and believed only when it declares a `vibe` component whose `sha256:` digest is exactly the payload's bytes. Precedence: explicit `--commit`, then the manifest, then `unknown`. The resolved commit is also what the reuse check compares.
+
+## CORP-FMT-020 — `[self] install_root`: one directory holds the whole installation (PROP-019 §2.21)
+
+Status: **in development** (uncommitted worker change, 2026-11-09). Spec: `spec://org.vibevm.core/vibevm/common/PROP-019#install-root`.
+
+- New key `[self] install_root` in `~/.vibe/config.toml` and in a site profile: the durable `$VIBEVM_INSTALL_ROOT`. The store is `<root>/opt`: shims `<root>/opt/bin`, instances/state `<root>/opt/vibevm` — a network that permits executables only under `C:\Work` declares `install_root = "C:/Work"`. Absolute only (a Windows drive or UNC path counts on any host); a relative one is refused naming file, key and fix. (`VIBEVM_HOME` is a different concept: the advisory pointer at one instance.)
+- Resolution, highest first: the running version's own root when managed (an installed vibe never relocates itself), `$VIBEVM_INSTALL_ROOT`, `[self] install_root` (user `config.toml` over the site profile), `~/.vibe`. Resolved at the composition root, so every command addresses the same store.
+- Not part of the release decision: `[self]` + `[artifacts] vibe` still come whole from the higher declaring layer, while the install root layers on its own (`SelfConfig::release_is_default`); `vibe self source set|reset` keeps the key.
+- `vibe self apply` installs under the resolved base (self-import, store and PATH step all address `<base>/opt`) and makes `$VIBEVM_INSTALL_ROOT` durable through the platform persister under the same consent as the PATH write; a base the environment already names, or the built-in default, is not written. Windows: registry API, existing value kind preserved (`REG_EXPAND_SZ`), no child process; POSIX: one more line in the managed rc block.
+- Report: `vibe-self-apply/1` gains `effective.install_root { path, from, shim_dir, data_dir }` (nullable only when nothing names a base and no home resolves); `from` is `$VIBEVM_INSTALL_ROOT`, `[self] install_root in <file>`, or `built-in default`. `--show` prints the same. Additive.
+
+## CORP-FMT-021 — Mirror: listing an organisation through the host API (`listing: "api"`)
+
+Status: **in development** (uncommitted worker change, 2026-11-09). Refines CORP-FMT-013.
+
+- `vibe registry mirror <source> --into <target>` without `--package` no longer refuses a `github` / `gitverse` source that has no index: it lists the organisation's repositories through the host API (`GET <api>/orgs/<org>/repos?page=&per_page=100`, paged until a short page, at most 100 pages; `Accept: application/vnd.github+json` / `application/vnd.gitverse.object+json;version=1`), addresses each repository as `<registry url>/<repository>.git`, reads its `v<semver>` tags, and keeps it only when the `vibe.toml` at its newest such tag carries a `[package]` whose `group`, `name` and `kind` the registry's `naming` convention composes back into that very repository name (`NamingConvention::repo_name`). The coordinate always comes from the manifest, never from the repository name — the built-in `vibespecs-gitverse` registry is `naming = "name"`, whose names carry no group — and a repository whose manifest names another package (a fork, a stale rename) is dropped under every convention. Under `fqdn` the name is read first as a pre-filter, so a name the convention could not produce costs no request. Each kept package is then read exactly as `--package` reads it.
+- Report (`registry_mirror_report`): `listing` gains **`api`** (closed vocabulary; `schemas/registry_mirror_report.jtd.json`, generated `Listing::Api`). Existing documents byte-identical; `formats/REGISTRY.toml` unchanged (epoch 1).
+- Token: the registry's own declared credential first (`auth = "token-env"` with `token_env`, else `VIBEVM_REGISTRY_TOKEN_<HOST>` via `resolve_registry_auth`), then the publish chain for the **registry's** host (`VIBEVM_PUBLISH_TOKEN_<HOST>`, `VIBEVM_PUBLISH_TOKEN`, `~/.vibe/<host-prefix>.publish.token`, `~/.vibe/git.publish.token`); otherwise anonymous. Sent as a bearer to the API origin only; never printed, logged or put in an error; an unreadable token file is an error.
+- Where no listing can be read — a `git` / `monorepo` / `localdir` registry, a url naming no organisation, `--offline`, or a 401/403/404/other answer — `--package` stays required; the refusal names the status and address, whether a read token was sent (never which or its value), and every way to configure one. `api.gitverse.ru` answers 401 to every anonymous request.
+- Transport: the operation's controlled, admitted GET client — `exclude_hosting = ["gitverse"]` covers `api.gitverse.ru`. New override `VIBEVM_REGISTRY_API_<REGISTRY>`; defaults `https://api.github.com`, `https://<host>/api/v3` (GHE), `https://api.gitverse.ru`, `https://api.<host>` (on-premises).
+- Internal: `commands::registry::mirror::org_api` (+ `org_api::naming`, `source::api_listing`, `source::index_probe`); `commands::vvm::bundle::api` is the CLI's one admitted header-carrying GET client (`ApiClient::request` → `Answer`, `document`), release-lane behaviour unchanged; `GitStore::semver_tags`, `GitStore::read_blob`; test fixture `tests/common/org_host.rs`.
+
+## CORP-FMT-022 — Shim-directory ownership: vibe never overwrites or deletes a file it did not write
+
+Status: **in development** (uncommitted worker change, 2026-11-09). Spec: PROP-019 §2.4 `SHIM-DIR-SHARED`, `SHIM-FOREIGN-REFUSED`.
+
+- Context: with `[self] install_root` / `$VIBEVM_INSTALL_ROOT` (CORP-FMT-020) the shim directory `<base>/opt/bin` is routinely a directory that already holds unrelated tools. Before, `write_shims` renamed its temp over `<bin>/vibe`, `<bin>/vibe-index` (and `.cmd` on Windows) unconditionally, destroying a same-named foreign file.
+- New file `<install root>/opt/vibevm/shims.toml` (`schema = 1`, `vibe_version`, `[[shim]] name` + `sha256`), beside `state.toml`, never in the shared shim directory: the inventory of what vibe wrote, rewritten on every shim publish.
+- Two ownership tiers. **Recorded**: the inventory names the file and its digest still matches — the only tier a removal may ever delete. **Recognised**: no record, but the content carries a vibe shim signature (the `vibevm (VVM) shim` marker, or a reference to `../vibevm/current` / `..\vibevm\current`) — an older or hand-edited vibe shim; rewritable in place, never deletable. Anything else (including directories, symlinks, special or oversized files, and a recorded name replaced wholesale) is foreign.
+- A foreign file at a shim's name refuses the write: `` `<path>` is not a file vibe wrote, and `<name>` is the name of a vibe shim in `<dir>` (violates spec://org.vibevm.core/vibevm/common/PROP-019#layout; fix: remove or rename `<path>` yourself, or install under a directory of vibe's own …) ``. Affects `vibe self use`, `rollback`, `import`, `install`, `update`, `reinstall`, `bootstrap`, `self apply`'s self-import and `self doctor --fix`. Every planned name is classified before the first byte is written, so a refusal publishes nothing.
+- Generated shim bytes are unchanged, so older installations (no inventory) upgrade normally and `vibe self doctor` reports what it did before; a damaged `shims.toml` claims nothing and falls back to content recognition.
+- Windows: every spelling of a shim name is classified (`vibe.cmd` and `VIBE.CMD` are one file). Vibe publishes no `.exe` / `.ps1` shim and never touches one (a foreign `vibe.exe` would still shadow the `.cmd` shim via `PATHEXT`; not yet diagnosed).
+- No command deletes a shim: `vibe self remove`/`uninstall`, `gc --build`/`--prune-others`, `relocate`, `apply --remove` address only `<install root>/opt/vibevm/**` (and `apply --remove` its two receipt-owned settings files); the shim directory itself is never removed.
+- Behaviour fix: publishing shims no longer rejects a shim directory whose *other* entries are symlinks (the directory-tree guard is narrowed to the directory path plus each written leaf).
+
+## CORP-FMT-024 — The controlled transport on Windows (PROP-073 `#NATIVE-WINDOWS`)
+
+Status: **in development** (uncommitted integration change, 2026-11-09).
+
+- Behaviour: with any `[source_policy]` active, Windows no longer refuses every Git operation ("controlled native preparation is not qualified on this platform"). The controlled child gets the Git for Windows installation's own `mingw64/bin` and `usr/bin` (whose `sh` runs the owned `GIT_SSH_COMMAND`) on its search path and keeps only `SystemRoot`, `windir`, `SystemDrive`, `TEMP`, `TMP`, `PATHEXT`. Git for Windows 2.4x's `git-remote-https.exe` in `mingw64/bin` is accepted.
+- SSH: the client Git for Windows runs (bundled `usr/bin/ssh.exe` → `<prefix>/etc/ssh/ssh_config` + `HOME`; else the Windows OpenSSH client → `%ProgramData%\ssh\ssh_config`, the profile directory, the `\\.\pipe\openssh-ssh-agent` agent). `~/.ssh/config` with backslash paths is read; every path written to the owned config uses forward slashes; `PubkeyAcceptedKeyTypes` and a missing `RequiredRSASize` (OpenSSH < 8.5 / < 9.1) are replayed as reported (also on Unix). `NUL` is the Windows `/dev/null` in known-hosts lists.
+- HTTPS without a selected CA file uses `http.sslBackend=schannel` (the Windows store) in the controlled child.
+- Local repositories: `C:\x`, `C:/x`, `\\?\C:\x`, `file:///C:/x` are local; a share (`\\server\share\x`, `//server/share/x`, `\\?\UNC\…`, `file://server/…`, `file:////server/…`) is local to Git but its server is checked against source policy first. A local repository's child runs with `safe.directory=*` (shared repositories are owned by another account).
+- The machine-wide `system` Git config scope (Git for Windows' `credential.helper=manager`, `http.sslBackend`, `http.sslCAInfo`) no longer refuses a controlled request on Windows; `global`/`local` transport settings still refuse.
+- Not provided on Windows (stated in the spec): SSH config ownership/mode checks and inode identity of witnessed files.
+
+## CORP-FMT-025 — `--offline` reads a local monorepo
+
+Status: **in development** (uncommitted integration change, 2026-11-09). Spec: PROP-002 `MONOREPO-REGISTRY`.
+
+- A `type = "monorepo"` registry at a `file://` url, an absolute path or a Windows share is read under `--offline` like a `localdir` registry (fresh resolution, held-branch updates); only its local remap candidates are tried. A remote monorepo is still never contacted offline. Supersedes the previous "`--offline` never contacts it" for local repositories.
+
+## CORP-FMT-026 — px as a companion release asset; `TOOLS.json`; the px tool store; `vibe self px`
+
+Status: **in development** (uncommitted integration change, 2026-11-09). Spec: PROP-019 `#companion-tools`; wire format `distribution-tools-manifest` (`schemas/distribution_tools.jtd.json`, epoch 1, strict).
+
+- The px pin `xtask/dist/px.toml` is embedded in every vibe build (`vibe_net::px_store::PxPin::embedded`).
+- New release assets: `px-<px version>-<target>.<zip|tar.gz>` — the pinned upstream archive byte for byte — and its listing `px-<px version>-<target>.tool.json`, written by `cargo xtask dist px`, added to the draft by `dist upload`; `dist finalize` verifies each pair and publishes `TOOLS.json` (`schema_version`, `product`, `version`, `tag`, `source_commit`, `tools[] {name, version, target, executable, asset {name, size, digest}}`) beside an unchanged `DISTRIBUTIONS.json`.
+- Why not inside `DISTRIBUTIONS.json`: the real vibe 1.0.11 binary, given test manifests, refused a top-level member (`unknown field \`tools\``), a per-platform member, and a sixth platform entry. A companion asset is invisible to it.
+- New directory `<install root>/opt/vibevm/tools/px/<px version>/` (the unpacked archive plus `NOTICE`), shared by every instance, release or source build. Filled by fresh release installs/updates/bootstrap (after the bundle), by a source install when px mode is configured, and by `vibe self px install [--from PATH] [--force]`; read from the release source (GitHub, GitVerse, Nexus, the drop's version directories and root), always verified against the pin. `vibe self px status [--json]` (`{version, asset, store, installed}`).
+- px lookup order: `px_path` → `tools/px/` beside the binary → the store → PATH. `PxError::NotInstalled` gained `hint`: the store directory, the asset name and `vibe self px install`.
+- `vibe_net::PX_EXE` is public.
+
+## CORP-FMT-027 — `vibe app` PATH proxies respect the shared `opt/bin`
+
+Status: **in development** (uncommitted integration change, 2026-11-09). Spec: PROP-059 `#proxy`.
+
+- New file `<settings>/applications/proxies.toml` (`schema = 1`, `[[proxy]] name` + `sha256`): what `vibe app` wrote into `<settings>/opt/bin`.
+- Same tiers as CORP-FMT-022: a foreign file at a proxy name refuses the write before any change (`AppError::ForeignProxy`, code `foreign_proxy_file`); only a recorded proxy (digest match, or byte-identical to the image) is removed with its name; an older vibe's proxy (it carries `vibe-user-applications/`) is rewritten in place. Installation-private proxy directories are unaffected.
+
+## CORP-FMT-028 — Mirror fixes
+
+Status: **in development** (uncommitted integration change, 2026-11-09). Refines CORP-FMT-013/021/023.
+
+- `vibe registry mirror`'s own Git children (`ls-remote`, `fetch`) take the `[proxy]` route and CA bundle.
+- A `[[mirror]]` row of the source registry now maps the repository under the mirrored root (`<mirror>/<repo>.git`) instead of the root itself; a row naming the repository wins.

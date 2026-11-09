@@ -99,11 +99,12 @@
       "enum": [
         "index",
         "layout",
-        "tags"
+        "tags",
+        "api"
       ],
       "metadata": {
         "x-vocabulary": "closed",
-        "description": "`index`: the source registry's package index (`primary.jsonl`); `layout`: a `monorepo` / `localdir` source's own tree and index; `tags`: the `v<version>` tags of the packages named by `--package` (a source without an index). Closed: a reader decides from it whether unchanged versions were compared by the source's recorded hash or by fetching."
+        "description": "`index`: the source registry's package index (`primary.jsonl`); `layout`: a `monorepo` / `localdir` source's own tree and index; `tags`: the `v<version>` tags of the packages named by `--package` (a source without an index); `api`: the repositories the host's organisation listing names (`GET /orgs/<org>/repos` on GitHub or GitVerse), filtered to those whose name the registry's naming convention claims and that carry a `vibe.toml` with a `[package]` at a `v<version>` tag, each then read by its tags. Closed: a reader decides from it whether unchanged versions were compared by the source's recorded hash or by fetching."
       }
     },
     "target_kind": {

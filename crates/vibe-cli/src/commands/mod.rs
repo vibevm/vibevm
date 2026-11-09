@@ -39,6 +39,7 @@ pub mod clean;
 /// consumers that will use it are all in this crate.
 pub(crate) mod compile_trace;
 pub mod deploy;
+pub mod dl;
 pub mod doc;
 pub mod explain;
 pub mod extensions;

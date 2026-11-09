@@ -7,13 +7,16 @@ use std::path::PathBuf;
 use anyhow::{Context, Result};
 use sha2::{Digest, Sha256};
 use vibe_core::site_profile::{SITE_PROFILE_FILE, SITE_RECEIPT_FILE, SiteReceipt};
+use vibe_wire::generated::self_apply_report::{
+    ApplyAction, FileChange, FileChangeKind, ProfileInfo, SelfApplyReport,
+};
 
 use super::super::VvmEnv;
 use super::super::bundle::release_source;
 use super::ConfigLayers;
 use super::apply::{Files, hex, read_optional};
 use super::diff::line_diff;
-use super::report::{ApplyReport, FileChange, PROTOCOL, ProfileInfo};
+use super::report::{self, COMMAND, PROTOCOL};
 use super::steps::path_step;
 use super::view::{effective, where_to_put};
 use crate::output;
@@ -56,26 +59,34 @@ pub(super) fn show(ctx: &output::Context, env: &VvmEnv) -> Result<()> {
     let layers = ConfigLayers::load(Some(&files.profile), &mut own_warnings, &mut warnings);
     warnings.extend(own_warnings);
     let active = release_source::active();
-    let effective = effective(&layers, Some(active), &mut warnings)?;
+    let install_root = layers.install_base(env.install_root_env.as_deref(), env.home.as_deref());
+    let effective = effective(&layers, Some(active), install_root.clone(), &mut warnings)?;
     let where_to_put = where_to_put(&layers, &mut warnings);
-    let store = env.store()?;
-    let path = path_step(ctx, env, &store, None, policy, true)?;
-    ApplyReport {
-        protocol: PROTOCOL,
-        ok: true,
-        command: "self:apply",
-        action: "show",
-        changed: false,
-        profile,
-        files: Vec::new(),
-        effective: Some(effective),
-        where_to_put: Some(where_to_put),
-        path: Some(path),
-        imported: None,
-        next_steps: Vec::new(),
-        warnings,
-    }
-    .emit(ctx)
+    // `--show` reports the PATH step of the root the files name, which is
+    // not always the root this process is running under.
+    let store = match &install_root {
+        Some((base, _)) => super::super::store::VersionStore::new(base.join("opt")),
+        None => env.store()?,
+    };
+    let path = path_step(ctx, env, &store, None, policy, true, None)?;
+    report::emit(
+        &SelfApplyReport {
+            protocol: PROTOCOL.to_owned(),
+            ok: true,
+            command: COMMAND.to_owned(),
+            action: ApplyAction::Show,
+            changed: false,
+            profile,
+            files: Vec::new(),
+            effective: Some(effective),
+            where_: Some(where_to_put),
+            path: Some(path),
+            imported: None,
+            next_steps: Vec::new(),
+            warnings,
+        },
+        ctx,
+    )
 }
 
 /// `vibe self apply --remove`: delete exactly the files the receipt says
@@ -135,7 +146,7 @@ pub(super) fn remove(ctx: &output::Context, dry_run: bool, with_diff: bool) -> R
         };
         changes.push(FileChange {
             path: path.display().to_string(),
-            change: "delete",
+            change: FileChangeKind::Delete,
             diff: with_diff.then(|| line_diff(&text, "")),
         });
         if !dry_run {
@@ -149,20 +160,26 @@ pub(super) fn remove(ctx: &output::Context, dry_run: bool, with_diff: bool) -> R
             "the durable PATH was left as it is; the shim directory on it is vibe's own".to_owned(),
         );
     }
-    ApplyReport {
-        protocol: PROTOCOL,
-        ok: true,
-        command: "self:apply",
-        action: if dry_run { "dry-run" } else { "remove" },
-        changed,
-        profile,
-        files: changes,
-        effective: None,
-        where_to_put: None,
-        path: None,
-        imported: None,
-        next_steps,
-        warnings,
-    }
-    .emit(ctx)
+    report::emit(
+        &SelfApplyReport {
+            protocol: PROTOCOL.to_owned(),
+            ok: true,
+            command: COMMAND.to_owned(),
+            action: if dry_run {
+                ApplyAction::DryRun
+            } else {
+                ApplyAction::Remove
+            },
+            changed,
+            profile,
+            files: changes,
+            effective: None,
+            where_: None,
+            path: None,
+            imported: None,
+            next_steps,
+            warnings,
+        },
+        ctx,
+    )
 }

@@ -14,13 +14,17 @@ use vibe_core::site_profile::{
     SiteProfile, SiteReceipt,
 };
 use vibe_core::user_config::UserConfig;
+use vibe_wire::generated::self_apply_report::{
+    ApplyAction, FileChange, FileChangeKind, PathReport, ProfileInfo, SelfApplyReport,
+};
 
 use super::super::VvmEnv;
 use super::super::bundle::release_source;
-use super::super::env;
+use super::super::store::VersionStore;
 use super::ConfigLayers;
 use super::diff::line_diff;
-use super::report::{ApplyReport, FileChange, PROTOCOL, PathReport, ProfileInfo};
+use super::layers::InstallBaseOrigin;
+use super::report::{self, COMMAND, PROTOCOL};
 use super::steps::{import_running_if_unmanaged, path_step};
 use super::view::{conflict_warnings, effective, where_to_put};
 use crate::cli::VvmApplyArgs;
@@ -86,9 +90,20 @@ pub(in crate::commands::vvm) fn run_apply_cmd(
         _ => None,
     };
     let prepared = prepare_profile(ctx, env, source)?;
-    let mut report = install_profile(&prepared, dry_run, args.diff)?;
-    report.imported = import_running_if_unmanaged(ctx, env, dry_run)?;
-    let store = env.store()?;
+    let install_root = applying_install_base(&prepared, env)?;
+    let store = match &install_root {
+        Some((base, _)) => VersionStore::new(base.join("opt")),
+        None => env.store()?,
+    };
+    let mut report = install_profile(&prepared, dry_run, args.diff, install_root.clone())?;
+    report.imported = import_running_if_unmanaged(ctx, dry_run, &store)?;
+    // A root the environment already names, or the built-in default, needs
+    // no durable write; one a file declares does, or the next terminal
+    // resolves another installation.
+    let durable = install_root
+        .as_ref()
+        .filter(|(_, origin)| origin.needs_durable_write())
+        .map(|(base, _)| base.clone());
     report.path = Some(path_step(
         ctx,
         env,
@@ -96,11 +111,12 @@ pub(in crate::commands::vvm) fn run_apply_cmd(
         flag,
         prepared.profile.path_fix(),
         dry_run,
+        durable.as_deref(),
     )?);
     if !dry_run {
         record_path(&prepared, report.path.as_ref(), report.changed)?;
     }
-    report.emit(ctx)
+    report::emit(&report, ctx)
 }
 
 /// Read and fully validate a profile from a path, a `file://` URL or an
@@ -184,7 +200,8 @@ fn install_profile(
     prepared: &PreparedProfile,
     dry_run: bool,
     with_diff: bool,
-) -> Result<ApplyReport> {
+    install_root: Option<(PathBuf, InstallBaseOrigin)>,
+) -> Result<SelfApplyReport> {
     let files = Files::resolve()?;
     let stored = read_optional(&files.profile)?;
     let mut warnings = Vec::new();
@@ -232,11 +249,13 @@ fn install_profile(
     if unchanged {
         // Same bytes from the same origin: the receipt keeps its time too.
         for file in &mut changes {
-            file.change = "unchanged";
+            file.change = FileChangeKind::Unchanged;
             file.diff = None;
         }
     }
-    let changed = changes.iter().any(|file| file.change != "unchanged");
+    let changed = changes
+        .iter()
+        .any(|file| file.change != FileChangeKind::Unchanged);
     if changed && !dry_run {
         write_atomic(&files.profile, prepared.text.as_bytes())?;
         write_atomic(&files.receipt, receipt_text.as_bytes())?;
@@ -256,7 +275,7 @@ fn install_profile(
         site: Some(site),
     };
     warnings.extend(own_warnings);
-    let effective = effective(&layers, None, &mut warnings)?;
+    let effective = effective(&layers, None, install_root, &mut warnings)?;
     let where_to_put = where_to_put(&layers, &mut warnings);
     warnings.extend(conflict_warnings(&layers, &effective));
     let mut next_steps = Vec::new();
@@ -267,11 +286,15 @@ fn install_profile(
                 .to_owned(),
         );
     }
-    Ok(ApplyReport {
-        protocol: PROTOCOL,
+    Ok(SelfApplyReport {
+        protocol: PROTOCOL.to_owned(),
         ok: true,
-        command: "self:apply",
-        action: if dry_run { "dry-run" } else { "apply" },
+        command: COMMAND.to_owned(),
+        action: if dry_run {
+            ApplyAction::DryRun
+        } else {
+            ApplyAction::Apply
+        },
         changed,
         profile: Some(ProfileInfo {
             name: prepared.profile.name.clone(),
@@ -282,7 +305,7 @@ fn install_profile(
         }),
         files: changes,
         effective: Some(effective),
-        where_to_put: Some(where_to_put),
+        where_: Some(where_to_put),
         path: None,
         imported: None,
         next_steps,
@@ -290,25 +313,47 @@ fn install_profile(
     })
 }
 
+/// The install root `apply` is about to use, and what decided it
+/// (`PROP-019#install-root`).
+///
+/// The profile being applied is not stored yet, so the layers are assembled
+/// from it directly: the environment variable this invocation inherited,
+/// then the user's own `config.toml`, then THIS profile, then `~/.vibe`.
+fn applying_install_base(
+    prepared: &PreparedProfile,
+    env: &VvmEnv,
+) -> Result<Option<(PathBuf, InstallBaseOrigin)>> {
+    let applying = ConfigLayers {
+        own: UserConfig::load_own().unwrap_or_default(),
+        own_path: UserConfig::default_path(),
+        site: Some(InstalledSiteProfile {
+            path: Files::resolve()?.profile,
+            profile: prepared.profile.clone(),
+        }),
+    };
+    Ok(applying.install_base(env.install_root_env.as_deref(), env.home.as_deref()))
+}
+
 /// Record the PATH step's outcome in the receipt (for `--show`).
 fn record_path(prepared: &PreparedProfile, path: Option<&PathReport>, changed: bool) -> Result<()> {
-    let Some(PathReport::Done(observation)) = path else {
+    // Only a performed step is recorded: a dry run reaches no persister and
+    // carries `planned` instead of `outcome`.
+    let Some((observation, outcome)) = path.and_then(|path| {
+        let environment = path.durable_environment.as_ref()?;
+        let outcome = report::outcome_label(path.outcome.as_ref()?);
+        Some(((path, environment), outcome))
+    }) else {
         return Ok(());
     };
+    let (path, environment) = observation;
     let files = Files::resolve()?;
     let Some(mut receipt) = SiteReceipt::load_from(&files.receipt)? else {
         return Ok(());
     };
-    let outcome = match observation.outcome {
-        env::PathFixOutcome::AlreadyOnPath => "already_on_path",
-        env::PathFixOutcome::Applied => "applied",
-        env::PathFixOutcome::Skipped => "skipped",
-    }
-    .to_owned();
     let entry = ReceiptPath {
-        shim_dir: observation.shim_dir.clone(),
-        outcome,
-        target: observation.durable_environment.target.clone(),
+        shim_dir: path.shim_dir.clone(),
+        outcome: outcome.to_owned(),
+        target: environment.target.clone(),
     };
     if receipt.path.as_ref() == Some(&entry) && !changed {
         return Ok(());
@@ -327,24 +372,28 @@ fn record_path(prepared: &PreparedProfile, path: Option<&PathReport>, changed: b
 /// install. PATH was handled by the bootstrap's own activation.
 pub(in crate::commands::vvm) fn apply_after_bootstrap(
     ctx: &output::Context,
+    env: &VvmEnv,
     prepared: &PreparedProfile,
 ) -> Result<()> {
-    install_profile(prepared, false, false)?.emit(ctx)
+    // The bootstrap installed and activated the instance itself; the report
+    // still names the install root every later command will resolve.
+    let install_root = applying_install_base(prepared, env)?;
+    report::emit(&install_profile(prepared, false, false, install_root)?, ctx)
 }
 
 fn change(path: &Path, old: Option<&str>, new: Option<&str>, with_diff: bool) -> FileChange {
     let kind = match (old, new) {
-        (None, Some(_)) => "create",
-        (Some(old), Some(new)) if old == new => "unchanged",
-        (Some(_), Some(_)) => "update",
-        (Some(_), None) => "delete",
-        (None, None) => "unchanged",
+        (None, Some(_)) => FileChangeKind::Create,
+        (Some(old), Some(new)) if old == new => FileChangeKind::Unchanged,
+        (Some(_), Some(_)) => FileChangeKind::Update,
+        (Some(_), None) => FileChangeKind::Delete,
+        (None, None) => FileChangeKind::Unchanged,
     };
     FileChange {
         path: path.display().to_string(),
-        change: kind,
-        diff: (with_diff && kind != "unchanged")
+        diff: (with_diff && kind != FileChangeKind::Unchanged)
             .then(|| line_diff(old.unwrap_or(""), new.unwrap_or(""))),
+        change: kind,
     }
 }
 

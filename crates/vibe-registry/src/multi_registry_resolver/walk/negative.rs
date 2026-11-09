@@ -27,9 +27,10 @@ use super::*;
 enum Miss {
     /// The registry has no repository for the package.
     Unknown,
-    /// A public registry refused anonymously; the URL it refused on is kept
-    /// so the replayed error reads the same as the first.
-    PublicRefusal(String),
+    /// A public registry refused anonymously; the URL it refused on (and
+    /// the HTTP status, when seen) is kept so the replayed error reads the
+    /// same as the first.
+    PublicRefusal(String, Option<u16>),
 }
 
 /// Per-resolver memory of remote misses, keyed by registry name and
@@ -84,7 +85,9 @@ impl MultiRegistryResolver {
                     group: group.clone(),
                     name: name.to_string(),
                 },
-                Miss::PublicRefusal(url) => RegistryError::Git(GitError::AuthFailed { url }),
+                Miss::PublicRefusal(url, status) => {
+                    RegistryError::Git(GitError::AuthFailed { url, status })
+                }
             });
         }
         task.detail(format!("checking remote registry {}", reg.name()));
@@ -101,11 +104,11 @@ impl MultiRegistryResolver {
     fn walked_past(&self, reg: &GitPerPackageRegistry, err: &RegistryError) -> Option<Miss> {
         match err {
             RegistryError::UnknownPackage { .. } => Some(Miss::Unknown),
-            RegistryError::Git(GitError::AuthFailed { url })
+            RegistryError::Git(GitError::AuthFailed { url, status })
                 if matches!(reg.auth_kind(), vibe_core::manifest::AuthKind::None)
                     && !self.strict_auth =>
             {
-                Some(Miss::PublicRefusal(url.clone()))
+                Some(Miss::PublicRefusal(url.clone(), *status))
             }
             _ => None,
         }

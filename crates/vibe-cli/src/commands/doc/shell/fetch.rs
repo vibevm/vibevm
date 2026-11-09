@@ -105,12 +105,15 @@ impl Fetcher for HttpFetcher {
             return std::fs::write(destination, bytes)
                 .with_context(|| format!("writing `{}`", destination.display()));
         }
-        let client = reqwest::blocking::Client::builder()
-            .user_agent(format!("vibevm/{}", env!("CARGO_PKG_VERSION")))
-            .connect_timeout(CONNECT_TIMEOUT)
-            .timeout(TOTAL_TIMEOUT)
-            .build()
-            .context("building the anonymous release client")?;
+        let client = vibe_net::http::route(
+            reqwest::blocking::Client::builder()
+                .user_agent(format!("vibevm/{}", env!("CARGO_PKG_VERSION")))
+                .connect_timeout(CONNECT_TIMEOUT)
+                .timeout(TOTAL_TIMEOUT),
+            vibe_net::http::Ambient::Inherit,
+        )?
+        .build()
+        .context("building the anonymous release client")?;
         let mut response = client
             .get(url)
             .header(reqwest::header::ACCEPT, "application/octet-stream")

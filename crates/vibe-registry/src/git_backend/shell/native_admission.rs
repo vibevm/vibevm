@@ -11,6 +11,7 @@ mod capture;
 mod ssh_config;
 pub use ssh_config::{SshConfigSelection, SshConfiguration};
 mod child_layout;
+pub mod platform;
 pub(super) mod ssh;
 pub use ssh::{SshAuthentication, SshProfile};
 mod context;
@@ -33,23 +34,63 @@ pub use relocation::HttpDiscoveryTrust;
 pub struct GitInstallation {
     executable: PathBuf,
     helpers: PathBuf,
+    /// The child's whole `PATH`: the helper directory and, on Windows, the
+    /// same installation's runtime directories (`platform::runtime_directories`).
+    search_path: std::ffi::OsString,
+    /// OS startup variables a Windows child keeps (`platform::platform_variables`).
+    platform: Vec<(std::ffi::OsString, std::ffi::OsString)>,
 }
 impl GitInstallation {
     /// Capture explicitly trusted executable and builtin-helper locations.
     pub fn trusted(executable: PathBuf, helpers: PathBuf) -> Result<Self, GitError> {
-        if !executable.is_absolute()
-            || !helpers.is_absolute()
-            || !executable.is_file()
-            || !helpers.join("git-remote-https").is_file()
+        if !executable.is_absolute() || !helpers.is_absolute() || !executable.is_file() {
+            return Err(unsupported(
+                "trusted Git installation paths are unavailable",
+            ));
+        }
+        let directories = platform::runtime_directories(&helpers, cfg!(windows), Path::is_dir);
+        // Git for Windows 2.4x keeps `git-remote-https.exe` in `mingw64/bin`
+        // (its `etc/libexec-moved.txt`), which Git finds on the search path.
+        if !directories
+            .iter()
+            .any(|directory| platform::has_https_helper(directory))
         {
             return Err(unsupported(
                 "trusted Git installation paths are unavailable",
             ));
         }
+        let search_path = match directories.as_slice() {
+            [only] => only.clone().into_os_string(),
+            many => std::env::join_paths(many)
+                .map_err(|_| unsupported("trusted Git installation paths cannot be searched"))?,
+        };
         Ok(Self {
             executable,
             helpers,
+            search_path,
+            platform: Vec::new(),
         })
+    }
+    /// Keep the OS startup variables of the invocation's captured
+    /// `environment` that a Windows child needs (`SystemRoot`, `TEMP`, ...).
+    /// Elsewhere, and for every other name, nothing is kept: no ambient
+    /// Git, SSH, proxy or credential input enters this way.
+    pub fn with_platform_environment<'a>(
+        mut self,
+        environment: impl IntoIterator<Item = (&'a std::ffi::OsStr, &'a std::ffi::OsStr)>,
+    ) -> Self {
+        self.platform = platform::platform_variables(environment, cfg!(windows));
+        self
+    }
+    /// Give an already cleared child this installation's search path,
+    /// helper directory and platform variables.
+    pub(super) fn prepare(&self, command: &mut std::process::Command) {
+        command
+            .env("PATH", &self.search_path)
+            .env("GIT_EXEC_PATH", &self.helpers);
+        for (key, value) in &self.platform {
+            command.env(key, value);
+        }
     }
 }
 /// Immutable native capability, distinct from HTTP-only admission.
@@ -191,9 +232,13 @@ pub(in crate::git_backend::shell) enum NativeProtocol {
     Http,
     Https,
     Ssh,
+    /// A repository on this machine's filesystem: no network, no host to
+    /// admit or exclude, so source policy has nothing to decide.
+    File,
 }
 mod address;
 use address::AdmittedRemote;
+pub use address::{LocalRepository, local_repository, local_repository_for};
 #[derive(Clone, Copy, PartialEq, Eq)]
 pub(super) enum SourceAddress {
     WarmOrigin,

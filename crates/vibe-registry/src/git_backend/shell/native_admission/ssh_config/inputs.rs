@@ -10,6 +10,13 @@ pub(super) struct Frozen {
 /// Only structural lexical decoding is owned here; Host matching/precedence is
 /// evaluated by OpenSSH. Unsupported quoting never becomes an audit bypass.
 pub(super) fn words(line: &str) -> Result<Vec<String>, GitError> {
+    words_for(line, cfg!(windows))
+}
+/// [`words`] for a platform. On Windows a backslash before anything but
+/// `\`, `"`, `'` or whitespace is a literal path separator (`C:\Users`),
+/// exactly as every Windows OpenSSH reads it; elsewhere such an escape is
+/// still refused as unqualified.
+pub(super) fn words_for(line: &str, windows: bool) -> Result<Vec<String>, GitError> {
     let mut words = Vec::new();
     let mut word = String::new();
     let mut quoted = false;
@@ -17,12 +24,18 @@ pub(super) fn words(line: &str) -> Result<Vec<String>, GitError> {
     let mut separator = false;
     for c in line.chars() {
         if escaped {
-            if c != '\\' && c != '"' && !c.is_ascii_whitespace() {
-                return Err(unsupported("unqualified SSH configuration escape"));
-            }
-            word.push(c);
             escaped = false;
-            continue;
+            if c != '\\' && c != '"' && !c.is_ascii_whitespace() {
+                if !windows || c == '\'' {
+                    return Err(unsupported("unqualified SSH configuration escape"));
+                }
+                // A Windows path separator: the backslash stays, and this
+                // character is read as usual below.
+                word.push('\\');
+            } else {
+                word.push(c);
+                continue;
+            }
         }
         if c == '\\' {
             escaped = true;
@@ -64,6 +77,11 @@ pub(super) fn words(line: &str) -> Result<Vec<String>, GitError> {
             }
             word.push(c);
         }
+    }
+    if escaped && windows && !quoted {
+        // A trailing Windows separator (`Include C:\ssh\`) is literal.
+        word.push('\\');
+        escaped = false;
     }
     if escaped || quoted {
         return Err(unsupported(
@@ -225,6 +243,11 @@ fn freeze_file(
                 if value.chars().any(char::is_control) {
                     return Err(unsupported("SSH path contains control syntax"));
                 }
+                let value = if cfg!(windows) {
+                    value.replace('\\', "/")
+                } else {
+                    value
+                };
                 lowered.push(format!(
                     "\"{}\"",
                     value.replace('\\', "\\\\").replace('\"', "\\\"")
@@ -272,6 +295,13 @@ pub(super) fn evaluate(
         )
         .env("HOME", &input.home)
         .env("LC_ALL", "C")
+        .envs(super::super::platform::platform_variables(
+            input
+                .environment
+                .iter()
+                .map(|(k, v)| (std::ffi::OsStr::new(k), std::ffi::OsStr::new(v))),
+            cfg!(windows),
+        ))
         .args(["-G", "-F"])
         .arg(&frozen.path)
         .stdin(Stdio::null())
@@ -310,4 +340,38 @@ pub(super) fn evaluate(
     }
     String::from_utf8(bytes)
         .map_err(|_| unsupported("SSH evaluator returned non-UTF-8 configuration"))
+}
+
+#[cfg(test)]
+mod lexer_tests {
+    use super::words_for;
+
+    #[test]
+    #[specmark::spec(verifies = "spec://org.vibevm.core/vibevm/common/PROP-073#NATIVE-WINDOWS-LAW")]
+    fn windows_backslashes_are_path_separators_only_on_windows() {
+        let line = r"IdentityFile C:\Users\me\.ssh\id_ed25519";
+        assert_eq!(
+            words_for(line, true).unwrap(),
+            ["IdentityFile", r"C:\Users\me\.ssh\id_ed25519"]
+        );
+        assert!(words_for(line, false).is_err());
+        // Quoted, with a space, and a trailing separator.
+        assert_eq!(
+            words_for(r#"Include "C:\Program Files\ssh\conf.d\*""#, true).unwrap(),
+            ["Include", r"C:\Program Files\ssh\conf.d\*"]
+        );
+        assert_eq!(
+            words_for(r"Include C:\ssh\", true).unwrap(),
+            ["Include", r"C:\ssh\"]
+        );
+        // The qualified escapes keep their meaning on both platforms.
+        for windows in [false, true] {
+            assert_eq!(
+                words_for(r#"IdentityFile "a\"b" c\ d"#, windows).unwrap(),
+                ["IdentityFile", r#"a"b"#, "c d"]
+            );
+        }
+        // A quote escape is still refused.
+        assert!(words_for(r"IdentityFile a\'b", true).is_err());
+    }
 }

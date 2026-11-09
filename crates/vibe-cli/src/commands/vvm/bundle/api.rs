@@ -1,4 +1,4 @@
-//! Release-list API requests that need headers (`PROP-019#release-sources`).
+//! Host-API GET requests that need headers (`PROP-019#release-sources`).
 //!
 //! Release bytes go through the operation's controlled transport
 //! (`download.rs`). The release-list endpoints of GitHub and GitVerse need
@@ -9,6 +9,12 @@
 //! before a connection is opened, redirects are followed by hand, a token
 //! is never sent past the origin it was meant for, and the token value is
 //! never printed or logged.
+//!
+//! The same three needs arise wherever vibe asks a Git host's REST API a
+//! question, so this is the one such client in the CLI: `vibe registry
+//! mirror` lists an organisation's repositories through it
+//! (`commands::registry::mirror::org_api`). Callers that must see a
+//! non-success status rather than a message about it use [`ApiClient::request`].
 
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-019#release-sources");
 
@@ -23,35 +29,51 @@ use vibe_registry::HttpAdmission;
 const TIMEOUT: Duration = Duration::from_secs(60);
 const MAX_REDIRECTS: usize = 5;
 /// A release list is small; anything larger is not one.
-pub(super) const MAX_DOCUMENT_BYTES: u64 = 8 * 1024 * 1024;
+pub(crate) const MAX_DOCUMENT_BYTES: u64 = 8 * 1024 * 1024;
 
-/// An admitted, header-carrying GET client for release-list documents.
-pub(super) struct ApiClient {
+/// An admitted, header-carrying GET client for host-API documents.
+pub(crate) struct ApiClient {
     admission: Option<Arc<HttpAdmission>>,
     client: reqwest::blocking::Client,
 }
 
 /// What a document request answered.
-pub(super) enum Fetched {
+pub(crate) enum Fetched {
     Body(Vec<u8>),
     /// The server answered, and the document is not there (404/410).
     Absent,
 }
 
+/// What one admitted request answered, status and all — the form a caller
+/// that decides on the status itself needs (a refusal it must explain in
+/// its own words, say).
+pub(crate) enum Answer {
+    /// A success, with the address it came from (safe to print).
+    Ok(reqwest::blocking::Response, String),
+    /// Any other status, with the address it came from.
+    Status(reqwest::StatusCode, String),
+}
+
 impl ApiClient {
     /// A client under `admission` (the operation's source policy); `None`
     /// is the uncontrolled posture, where the ambient `[proxy]` applies.
-    pub(super) fn new(admission: Option<Arc<HttpAdmission>>) -> Result<Self> {
+    pub(crate) fn new(admission: Option<Arc<HttpAdmission>>) -> Result<Self> {
         let mut builder = reqwest::blocking::Client::builder()
             .user_agent(format!("vibevm/{}", env!("CARGO_PKG_VERSION")))
             .connect_timeout(super::download::CONNECT_TIMEOUT)
             .timeout(TIMEOUT)
             .redirect(reqwest::redirect::Policy::none());
-        if admission.is_some() {
-            // The controlled transport's posture: no implicit proxy hop
-            // the policy could not see.
-            builder = builder.no_proxy();
-        }
+        // The controlled transport's posture: no implicit proxy hop the
+        // policy could not see — only the configured `[proxy]` route, whose
+        // requested host admission has judged (PROP-068 `#proxy`).
+        builder = vibe_net::http::route(
+            builder,
+            if admission.is_some() {
+                vibe_net::http::Ambient::Refuse
+            } else {
+                vibe_net::http::Ambient::Inherit
+            },
+        )?;
         Ok(Self {
             admission,
             client: builder
@@ -61,7 +83,7 @@ impl ApiClient {
     }
 
     /// GET a document of at most [`MAX_DOCUMENT_BYTES`].
-    pub(super) fn get(
+    pub(crate) fn get(
         &self,
         url: &str,
         headers: &[(&str, &str)],
@@ -70,26 +92,49 @@ impl ApiClient {
         let Some((response, at)) = self.send(url, headers, token)? else {
             return Ok(Fetched::Absent);
         };
-        let mut body = Vec::new();
-        response
-            .take(MAX_DOCUMENT_BYTES + 1)
-            .read_to_end(&mut body)
-            .with_context(|| format!("reading `{at}`"))?;
-        if body.len() as u64 > MAX_DOCUMENT_BYTES {
-            bail!("`{at}` is larger than a release list");
-        }
-        Ok(Fetched::Body(body))
+        Ok(Fetched::Body(document(response, &at)?))
     }
 
     /// GET `url` with `headers`, sending `token` as a bearer only to the
     /// origin of `url`. Redirects are followed by hand, each hop admitted.
     /// `None` is a 404/410 answer; the address is returned for messages.
-    pub(super) fn send(
+    pub(crate) fn send(
         &self,
         url: &str,
         headers: &[(&str, &str)],
         token: Option<&Token>,
     ) -> Result<Option<(reqwest::blocking::Response, String)>> {
+        match self.request(url, headers, token)? {
+            Answer::Ok(response, at) => Ok(Some((response, at))),
+            Answer::Status(status, _)
+                if status == reqwest::StatusCode::NOT_FOUND
+                    || status == reqwest::StatusCode::GONE =>
+            {
+                Ok(None)
+            }
+            Answer::Status(status, at)
+                if status == reqwest::StatusCode::UNAUTHORIZED
+                    || status == reqwest::StatusCode::FORBIDDEN =>
+            {
+                bail!(
+                    "`{at}` answered {status}: the release list needs a token \
+                     (violates spec://org.vibevm.core/vibevm/common/PROP-019#release-sources; \
+                      fix: put a read token in the per-host file `~/.vibe/<host-prefix>.publish.token`, \
+                      e.g. `~/.vibe/gitverse.publish.token`)"
+                )
+            }
+            Answer::Status(status, at) => bail!("`{at}` answered {status}"),
+        }
+    }
+
+    /// [`ApiClient::send`] without the status interpretation: the caller
+    /// receives the status it did not expect and says what it means.
+    pub(crate) fn request(
+        &self,
+        url: &str,
+        headers: &[(&str, &str)],
+        token: Option<&Token>,
+    ) -> Result<Answer> {
         let mut current = reqwest::Url::parse(url).with_context(|| format!("parsing `{url}`"))?;
         let origin = current.origin();
         for _ in 0..=MAX_REDIRECTS {
@@ -127,27 +172,27 @@ impl ApiClient {
                 })?;
                 continue;
             }
-            if status == reqwest::StatusCode::NOT_FOUND || status == reqwest::StatusCode::GONE {
-                return Ok(None);
-            }
-            if status == reqwest::StatusCode::UNAUTHORIZED
-                || status == reqwest::StatusCode::FORBIDDEN
-            {
-                bail!(
-                    "`{}` answered {status}: the release list needs a token \
-                     (violates spec://org.vibevm.core/vibevm/common/PROP-019#release-sources; \
-                      fix: put a read token in the per-host file `~/.vibe/<host-prefix>.publish.token`, \
-                      e.g. `~/.vibe/gitverse.publish.token`)",
-                    safe(&current)
-                );
-            }
             if !status.is_success() {
-                bail!("`{}` answered {status}", safe(&current));
+                return Ok(Answer::Status(status, safe(&current)));
             }
-            return Ok(Some((response, safe(&current))));
+            return Ok(Answer::Ok(response, safe(&current)));
         }
         bail!("`{url}` redirected more than {MAX_REDIRECTS} times")
     }
+}
+
+/// Read a response body of at most [`MAX_DOCUMENT_BYTES`]; `at` is the
+/// address it came from, for messages.
+pub(crate) fn document(response: reqwest::blocking::Response, at: &str) -> Result<Vec<u8>> {
+    let mut body = Vec::new();
+    response
+        .take(MAX_DOCUMENT_BYTES + 1)
+        .read_to_end(&mut body)
+        .with_context(|| format!("reading `{at}`"))?;
+    if body.len() as u64 > MAX_DOCUMENT_BYTES {
+        bail!("`{at}` is larger than a release list");
+    }
+    Ok(body)
 }
 
 /// The address without userinfo, query or fragment.

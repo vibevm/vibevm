@@ -19,9 +19,12 @@ use super::{VvmEnv, output, provenance, store::VersionStore};
 use crate::cli::{ForcedKind, VvmBootstrapArgs, VvmInstallArgs, VvmReinstallArgs, VvmUpdateArgs};
 
 #[path = "bundle/api.rs"]
-mod api;
+pub(crate) mod api;
 #[path = "bundle/archive.rs"]
 mod archive;
+mod companions;
+mod px_lane;
+pub(super) use px_lane::{ensure_px_after_source_install as px_after_source, run_px_cmd as run_px};
 #[path = "bundle/lane.rs"]
 mod lane;
 use lane::{
@@ -113,7 +116,7 @@ pub(super) fn run_bootstrap_cmd(
         progress,
     )?;
     match site {
-        Some(prepared) => super::site::apply_after_bootstrap(ctx, &prepared),
+        Some(prepared) => super::site::apply_after_bootstrap(ctx, env, &prepared),
         None => Ok(()),
     }
 }
@@ -566,6 +569,7 @@ fn install_selected(
             return Err(error);
         }
     };
+    px_lane::ensure_px(remote, &px_lane::px_dirs(dir), token, false)?; // PROP-019 `#companion-tools`
     finish_install(remote, &outcome)
 }
 

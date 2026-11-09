@@ -209,11 +209,15 @@ pub fn clone_repos_into(opts: &FromGithubOptions, repos: &[Repo]) -> Result<Path
 /// Build the blocking HTTP client shared by the unconditional and
 /// conditional enumerators (same user-agent + timeout).
 fn build_client(opts: &FromGithubOptions) -> Result<reqwest::blocking::Client> {
-    reqwest::blocking::Client::builder()
-        .user_agent(USER_AGENT_VAL)
-        .timeout(opts.timeout)
-        .build()
-        .map_err(|e| Error::Malformed(format!("could not build HTTP client: {e}")))
+    vibe_net::http::route(
+        reqwest::blocking::Client::builder()
+            .user_agent(USER_AGENT_VAL)
+            .timeout(opts.timeout),
+        vibe_net::http::Ambient::Inherit,
+    )
+    .map_err(|e| Error::Malformed(format!("could not build HTTP client: {e}")))?
+    .build()
+    .map_err(|e| Error::Malformed(format!("could not build HTTP client: {e}")))
 }
 
 /// Stamp the auth header on a request when a token is configured.

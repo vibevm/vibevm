@@ -483,7 +483,8 @@ mod fetch;
 
 mod roots;
 mod selection;
-use selection::{migrate_selected_node, visibility_root_id};
+use selection::migrate_selected_node;
+pub(crate) use selection::visibility_root_id;
 
 mod configured;
 

@@ -234,6 +234,12 @@ pub enum Command {
     /// the history, and a live feed (PROP-068).
     Transfers(TransfersArgs),
 
+    /// Download one file over HTTP(S) through vibe's own network stack —
+    /// source policy, `[proxy]`, px, trust — with every phase of the route
+    /// described (PROP-068 `#dl`). `--show` / `--headers` print the body or
+    /// the response head; `--test-proxy` checks the configured proxy.
+    Dl(DlArgs),
+
     /// The artifact drops of this machine (PROP-066 `#drops`):
     /// `vibe artifacts where [<package>]` prints where vibe releases and
     /// package payloads are expected, by exact file name.

@@ -4,14 +4,18 @@
 
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-019#site-profile");
 
+use std::path::PathBuf;
+
 use anyhow::Result;
 use vibe_core::remap::drop::{package_lookup, release_dir_version};
 use vibe_core::{GlobalRegistryConfig, RegistryLayers, RegistryScope};
 
 use super::super::bundle::release_source::{self, ReleaseSource, SourceOrigin};
+use super::super::store::VersionStore;
 use super::ConfigLayers;
-use super::report::{
-    Effective, PackagesWhere, ProxyRow, RegistryRow, ReleaseRow, VersionedWhere, Where,
+use vibe_wire::generated::self_apply_report::{
+    Effective, InstallRootRow, PackagesWhere, ProxyRow, RegistryRow, RegistryScope as WireScope,
+    RegistryType, ReleaseRow, VersionedWhere, WhereToPut,
 };
 
 /// The installation as it reads with `layers`: registries by layer,
@@ -24,6 +28,7 @@ pub(super) fn effective(
     active: Option<
         Result<release_source::EffectiveReleaseSource, release_source::ReleaseSourceError>,
     >,
+    install_root: Option<(PathBuf, super::layers::InstallBaseOrigin)>,
     warnings: &mut Vec<String>,
 ) -> Result<Effective> {
     let user = match vibe_core::settings::registry_config_path() {
@@ -44,12 +49,12 @@ pub(super) fn effective(
     .origins()
     .into_iter()
     .map(|(scope, row)| RegistryRow {
-        kind: row.effective_type().to_string(),
+        type_: registry_type(row.effective_type()),
         name: row.name,
         url: row.url,
         scope: match scope {
-            RegistryScope::Site => "site",
-            _ => "user",
+            RegistryScope::Site => WireScope::Site,
+            _ => WireScope::User,
         },
     })
     .collect();
@@ -58,10 +63,10 @@ pub(super) fn effective(
             vibe_core::default_registries()
                 .into_iter()
                 .map(|row| RegistryRow {
-                    kind: row.effective_type().to_string(),
+                    type_: registry_type(row.effective_type()),
                     name: row.name,
                     url: row.url,
-                    scope: "default",
+                    scope: WireScope::Default,
                 }),
         );
     }
@@ -72,7 +77,7 @@ pub(super) fn effective(
     let (release, release_error) = match release {
         Ok(release) => (
             Some(ReleaseRow {
-                source: release.source.kind(),
+                source: release.source.wire_kind(),
                 location: release.source.location(),
                 from: release.origin.describe(),
             }),
@@ -89,6 +94,15 @@ pub(super) fn effective(
         None => layers.own.clone(),
     };
     Ok(Effective {
+        install_root: install_root.map(|(base, origin)| {
+            let store = VersionStore::new(base.join("opt"));
+            InstallRootRow {
+                path: base.display().to_string(),
+                from: origin.describe(),
+                shim_dir: store.shim_dir().display().to_string(),
+                data_dir: store.data_dir().display().to_string(),
+            }
+        }),
         registries,
         release,
         release_error,
@@ -104,23 +118,68 @@ pub(super) fn effective(
             .iter()
             .map(ToString::to_string)
             .collect(),
-        proxy: ProxyRow {
-            https: merged.proxy.https,
-            http: merged.proxy.http,
-            no_proxy: merged.proxy.no_proxy,
-        },
+        proxy: proxy_row(layers, &merged.proxy),
         offline: merged.net.offline,
-        site_remap_rows: layers
-            .site
-            .as_ref()
-            .map_or(0, |site| site.profile.remap.len()),
+        site_remap_rows: layers.site.as_ref().map_or(0, |site| {
+            u32::try_from(site.profile.remap.len()).unwrap_or(u32::MAX)
+        }),
     })
+}
+
+/// The effective `[proxy]` with the layer behind its mode and PAC
+/// (`PROP-068#proxy`). The environment switches (`VIBEVM_PROXY_MODE`,
+/// `VIBEVM_PROXY_PAC`) are this process's: they show when the installed
+/// route says it took them from there.
+fn proxy_row(layers: &ConfigLayers, merged: &vibe_core::user_config::ProxyConfig) -> ProxyRow {
+    use vibe_core::net::{ModeOrigin, effective_mode, effective_pac};
+    let site = layers.site.as_ref().map(|site| &site.profile.proxy);
+    let (mode, mut mode_origin) = effective_mode(site, &layers.own.proxy, None);
+    let mut mode = mode
+        .or_else(|| merged.effective_mode())
+        .map(|m| m.as_str().to_owned());
+    let (mut pac, mut pac_origin) = effective_pac(site, &layers.own.proxy, None);
+    let route = vibe_core::net::route();
+    if route.mode_origin() == ModeOrigin::Env {
+        mode_origin = ModeOrigin::Env;
+        mode = Some(match route.mode_name() {
+            "direct" => "none".to_owned(),
+            name => name.to_owned(),
+        });
+    }
+    if let Some(settings) = route.px()
+        && settings.pac_origin == ModeOrigin::Env
+    {
+        pac_origin = ModeOrigin::Env;
+        pac = settings.pac.as_ref().map(|source| match source {
+            vibe_core::user_config::PacSource::Url(v)
+            | vibe_core::user_config::PacSource::File(v) => v.clone(),
+            vibe_core::user_config::PacSource::System => "system".to_owned(),
+        });
+    }
+    let pac_kind = pac
+        .as_deref()
+        .and_then(|raw| vibe_core::user_config::PacSource::parse(raw).ok())
+        .map(|source| source.kind().to_owned());
+    ProxyRow {
+        mode,
+        mode_origin: mode_origin.as_str().to_owned(),
+        https: merged.https.clone(),
+        http: merged.http.clone(),
+        no_proxy: merged.no_proxy.clone(),
+        pac,
+        pac_kind,
+        pac_origin: pac_origin.as_str().to_owned(),
+        upstream: merged.upstream.clone(),
+        px_port: merged.px_port.map(u32::from),
+        px_path: merged.px_path.as_ref().map(|p| p.display().to_string()),
+        ca_file: merged.ca_file.as_ref().map(|p| p.display().to_string()),
+    }
 }
 
 /// Where releases and payloads go after this profile: the running version
 /// and the next patch for a drop or raw repository, and the package drop
 /// convention with an example (`vibe artifacts where`'s owners).
-pub(super) fn where_to_put(layers: &ConfigLayers, warnings: &mut Vec<String>) -> Where {
+pub(super) fn where_to_put(layers: &ConfigLayers, warnings: &mut Vec<String>) -> WhereToPut {
     let current = env!("CARGO_PKG_VERSION");
     let next = release_dir_version(&format!("v{current}"))
         .map(|mut version| {
@@ -138,9 +197,18 @@ pub(super) fn where_to_put(layers: &ConfigLayers, warnings: &mut Vec<String>) ->
         {
             [current.to_owned(), next]
                 .into_iter()
-                .map(|version| VersionedWhere {
-                    release: crate::commands::artifacts::release_where_for(&release, &version),
-                    version,
+                .map(|version| {
+                    let release = crate::commands::artifacts::release_where_for(&release, &version);
+                    // The writer flattens `release_where` beside the version,
+                    // so the source is repeated per release directory.
+                    VersionedWhere {
+                        version,
+                        source: release.source,
+                        location: release.location,
+                        from: release.from,
+                        example_dir: release.example_dir,
+                        files: release.files,
+                    }
                 })
                 .collect()
         }
@@ -166,7 +234,18 @@ pub(super) fn where_to_put(layers: &ConfigLayers, warnings: &mut Vec<String>) ->
             .collect(),
         }
     });
-    Where { releases, packages }
+    WhereToPut { releases, packages }
+}
+
+/// One effective registry type as the wire vocabulary spells it.
+fn registry_type(kind: vibe_core::manifest::RegistryType) -> RegistryType {
+    match kind {
+        vibe_core::manifest::RegistryType::Github => RegistryType::Github,
+        vibe_core::manifest::RegistryType::Gitverse => RegistryType::Gitverse,
+        vibe_core::manifest::RegistryType::Git => RegistryType::Git,
+        vibe_core::manifest::RegistryType::Monorepo => RegistryType::Monorepo,
+        vibe_core::manifest::RegistryType::Localdir => RegistryType::Localdir,
+    }
 }
 
 /// What in the user's own files outranks the site and defeats it: a
@@ -183,7 +262,7 @@ pub(super) fn conflict_warnings(layers: &ConfigLayers, effective: &Effective) ->
     for row in effective
         .registries
         .iter()
-        .filter(|row| row.scope == "user")
+        .filter(|row| row.scope == WireScope::User)
     {
         if let Some(selector) = excluded
             .iter()
@@ -198,7 +277,7 @@ pub(super) fn conflict_warnings(layers: &ConfigLayers, effective: &Effective) ->
         }
     }
     if site.profile.declares_release_source()
-        && (!layers.own.self_source.is_default() || layers.own.artifacts.vibe.is_some())
+        && (!layers.own.self_source.release_is_default() || layers.own.artifacts.vibe.is_some())
     {
         warnings.push(
             "your own `[self]` / `[artifacts] vibe` in config.toml outranks the site profile's \

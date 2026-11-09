@@ -87,6 +87,10 @@ fn each_invalid_value_is_refused_naming_file_key_and_fix() {
         ),
         ("schema = 1\n[self]\npath = 'rel'\n", "self.path"),
         (
+            "schema = 1\n[self]\ninstall_root = 'opt'\n",
+            "self.install_root",
+        ),
+        (
             "schema = 1\n[[registry]]\nname='a'\nurl='file:///a'\n[[registry]]\nname='a'\nurl='file:///b'\n",
             "registry[1].name",
         ),
@@ -290,4 +294,46 @@ fn the_receipt_round_trips_and_keeps_a_comment_on_rewrite() {
     let rendered = again.render(Some(&existing), &path).unwrap();
     assert!(rendered.starts_with("# kept\n"), "{rendered}");
     assert!(rendered.contains("sha256 = \"cd\""), "{rendered}");
+}
+
+/// `[self] install_root` says where vibe installs ITSELF and
+/// `[self] source` where it reads releases FROM. They layer apart
+/// (`PROP-019#install-root`): a profile that only names the install root
+/// declares no release source, so a user who keeps the public GitHub
+/// releases still inherits the one directory their network allows.
+#[test]
+#[verifies("spec://org.vibevm.core/vibevm/common/PROP-019#site-profile")]
+fn an_install_root_alone_is_not_a_release_source_decision() {
+    let profile = SiteProfile::parse(
+        "schema = 1\n[self]\ninstall_root = '/srv/vibe'\n",
+        "corp.toml",
+    )
+    .unwrap();
+    assert_eq!(
+        profile.self_source.install_root.as_deref(),
+        Some(std::path::Path::new("/srv/vibe"))
+    );
+    assert!(!profile.declares_release_source());
+
+    // The user's own release source does not cost them the site's root.
+    let mut own = crate::user_config::UserConfig::default();
+    own.self_source.source = Some(crate::user_config::ReleaseSourceKind::Github);
+    let merged = own.over_site(&profile);
+    assert_eq!(
+        merged.self_source.source,
+        Some(crate::user_config::ReleaseSourceKind::Github)
+    );
+    assert_eq!(
+        merged.self_source.install_root.as_deref(),
+        Some(std::path::Path::new("/srv/vibe"))
+    );
+
+    // A root of their own wins over the site's.
+    let mut own = crate::user_config::UserConfig::default();
+    own.self_source.install_root = Some("/home/me/vibe".into());
+    let merged = own.over_site(&profile);
+    assert_eq!(
+        merged.self_source.install_root.as_deref(),
+        Some(std::path::Path::new("/home/me/vibe"))
+    );
 }

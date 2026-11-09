@@ -108,6 +108,35 @@ impl GitStore {
         self.git(&["bundle", "list-heads", &bundle.to_string_lossy()])
     }
 
+    /// The `v<semver>` tags of the repository at `url` (already chosen by
+    /// the remap Locator and admitted by source policy), in listing
+    /// order. A tag whose name is not `v<semver>` is not a version of a
+    /// package and is left out; peeled `^{}` lines name the same tags.
+    pub(crate) fn semver_tags(&self, url: &str) -> Result<Vec<semver::Version>> {
+        let listing = self
+            .git(&["ls-remote", "--tags", "--", url])
+            .with_context(|| format!("listing the tags of `{}`", redact(url)))?;
+        let mut versions: Vec<semver::Version> = listing
+            .lines()
+            .filter_map(|line| line.split_once('\t').map(|(_, reference)| reference))
+            .filter(|reference| !reference.ends_with("^{}"))
+            .filter_map(|reference| reference.strip_prefix("refs/tags/v"))
+            .filter_map(|version| semver::Version::parse(version).ok())
+            .collect();
+        versions.sort();
+        versions.dedup();
+        Ok(versions)
+    }
+
+    /// The text of `path` in `tree`, or `None` when the tree carries no
+    /// such file. A tree is whatever the source served, so a path that is
+    /// not there is an answer about that repository — not a failure of
+    /// this run — and the caller reads it as one.
+    pub(crate) fn read_blob(&self, tree: &str, path: &str) -> Option<String> {
+        self.git_raw(&["cat-file", "-p", &format!("{tree}:{path}")])
+            .ok()
+    }
+
     /// Check out `tree` into the absent directory `dest`.
     pub(crate) fn checkout(&self, tree: &str, dest: &Path) -> Result<()> {
         std::fs::create_dir_all(dest).with_context(|| format!("creating `{}`", dest.display()))?;
@@ -172,18 +201,23 @@ impl GitStore {
     }
 
     fn git_raw(&self, args: &[&str]) -> Result<String> {
-        run(Command::new("git")
-            .arg("--git-dir")
-            .arg(self.path())
-            .args(args))
+        run(&mut self.command(args))
     }
 
     fn git_with_index(&self, index: &PathBuf, args: &[&str]) -> Result<String> {
-        run(Command::new("git")
-            .arg("--git-dir")
-            .arg(self.path())
-            .args(args)
-            .env("GIT_INDEX_FILE", index))
+        run(self.command(args).env("GIT_INDEX_FILE", index))
+    }
+
+    /// `git --git-dir <store> <args>` on the operation's network route
+    /// (PROP-068 `#proxy-git`): a remote named among `args` (the source a
+    /// `fetch` or `ls-remote` reads) gets the configured proxy and CA
+    /// bundle; a local-only call gets nothing.
+    fn command(&self, args: &[&str]) -> Command {
+        let mut command = Command::new("git");
+        command.arg("--git-dir").arg(self.path());
+        vibe_net::git::apply_for_args(&mut command, Path::new("git"), args, None);
+        command.args(args);
+        command
     }
 }
 

@@ -92,8 +92,12 @@ pub(crate) fn fetch_verified(
             let announced = response.content_length();
             (Box::new(response), announced)
         } else {
-            let response = reqwest::blocking::Client::builder()
-                .timeout(Duration::from_secs(600))
+            let builder = vibe_net::http::route(
+                reqwest::blocking::Client::builder().timeout(Duration::from_secs(600)),
+                vibe_net::http::Ambient::Inherit,
+            )
+            .map_err(|error| fetch_error(error.to_string()))?;
+            let response = builder
                 .build()
                 .and_then(|client| client.get(source).send())
                 .and_then(reqwest::blocking::Response::error_for_status)

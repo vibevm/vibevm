@@ -202,6 +202,25 @@ pub(crate) fn before_publication(
     let image = image.filter(|i| i.reader >= next.minimum_reader()).ok_or_else(|| failure(&settings.index_path(), "new index protocol publication needs a compatible proxy image for existing commands; use the application operation API"))?;
     // Preflight the entire inventory before replacing any executable. No removal
     // or new session exposure occurs here; new bytes also understand index3.
+    // A shared `opt/bin` copy is rewritten only when it is vibe's own.
+    let inventory = super::ownership::Inventory::load(settings)
+        .map_err(|e| failure(&settings.index_path(), e.to_string()))?;
+    for path in &paths {
+        let file = path
+            .file_name()
+            .and_then(|name| name.to_str())
+            .unwrap_or_default();
+        if path.parent() == Some(settings.proxy_dir().as_path())
+            && !inventory
+                .classify(file, path, Some(&image.bytes))
+                .writable()
+        {
+            return Err(failure(
+                path,
+                "not a proxy this vibe wrote; remove or rename it, then re-run",
+            ));
+        }
+    }
     for path in paths {
         if fs::read(&path).map_err(|e| io("reading proxy", &path, e))? != image.bytes {
             super::place(&path, &image.bytes).map_err(|e| failure(&path, e.to_string()))?;

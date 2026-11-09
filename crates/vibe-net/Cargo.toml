@@ -1,0 +1,36 @@
+[package]
+name = "vibe-net"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+authors.workspace = true
+license-file.workspace = true
+publish.workspace = true
+repository.workspace = true
+homepage.workspace = true
+description = "The one owner of vibevm's network route: proxy, trust set, managed px"
+
+[dependencies]
+specmark.workspace = true
+vibe-core.workspace = true
+thiserror.workspace = true
+tracing.workspace = true
+url.workspace = true
+tempfile.workspace = true
+base64.workspace = true
+reqwest.workspace = true
+# The operating system's root store, as PEM for a child `git` given an extra
+# CA file (reqwest reads the same store through its native-roots feature).
+rustls-native-certs = "0.8"
+# Process group (Unix) / job object (Windows) for the managed px, the same
+# pinned crate the native helper session uses.
+command-group = "=5.0.1"
+# The `vibe dl` diagnostic probe (PROP-068#dl): its own TLS handshake that
+# records the server chain and names which trust source accepted it. The
+# same rustls / ring / webpki-roots reqwest already links (no new crate).
+rustls = { version = "0.23", default-features = false, features = ["ring", "std", "tls12"] }
+webpki-roots = "1"
+# The embedded px pin (`xtask/dist/px.toml`, PROP-019 `#companion-tools`).
+toml.workspace = true
+
+[dev-dependencies]

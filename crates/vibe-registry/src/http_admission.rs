@@ -12,7 +12,7 @@ use std::collections::BTreeSet;
 mod client;
 mod response;
 use client::HttpClient;
-pub use client::ManagedHttpClient;
+pub use client::{ClientBuildError, ManagedHttpClient};
 pub use response::ManagedResponse;
 use vibe_core::remap::endpoint::normalized_host_key;
 
@@ -171,8 +171,17 @@ pub enum HttpGetError {
     #[error(transparent)]
     Io(std::io::Error),
 }
+impl From<ClientBuildError> for HttpGetError {
+    fn from(error: ClientBuildError) -> Self {
+        match error {
+            ClientBuildError::Http(error) => Self::Transport(error),
+            ClientBuildError::Route(error) => Self::Io(std::io::Error::other(error)),
+        }
+    }
+}
 
-/// Bound pools never follow a hidden redirect or inherit a proxy/retry policy.
+/// Bound pools never follow a hidden redirect or inherit a proxy/retry policy;
+/// the configured route is applied after this (`PROP-068#proxy`).
 pub(crate) fn bound_builder(builder: ClientBuilder) -> ClientBuilder {
     builder
         .redirect(reqwest::redirect::Policy::none())

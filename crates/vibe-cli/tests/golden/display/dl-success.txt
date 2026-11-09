@@ -1,0 +1,7 @@
+✓ route     https://127.0.0.1:<port>/a.txt direct · mode direct (default)
+✓ dns       127.0.0.1 · <ms>
+✓ connect   connected · <ms>
+✓ TLS       TLS 1.3 · trusted by ca_file · CN=vibe-fixture.test · <ms>
+✓ response  HTTP/1.1 200 OK · <ms>
+
+✻ downloaded <dir>/a-copy.txt · 6 B · sha256 5891b5b522d5df086d0ff0b110fbd9d21bb4fc7163af34d08286a2e846f6be03 · <time>

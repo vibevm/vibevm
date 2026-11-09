@@ -336,6 +336,7 @@ fn run_rejects_a_non_source_tree_target() {
         home: None,
         shell: None,
         path_var: None,
+        install_root_env: None,
         offline: false,
         source_build_environment: Vec::new(),
     };

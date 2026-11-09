@@ -302,7 +302,10 @@ pub struct RegistryMirrorArgs {
     pub name: Option<String>,
 
     /// Copy only this package (`<group>/<name>`); repeatable. Required
-    /// for a source without an index, whose packages cannot be listed.
+    /// for a source without an index whose host cannot list its
+    /// organisation's repositories either — a `git` registry, or a
+    /// `github` / `gitverse` one whose API refuses the listing (GitVerse
+    /// answers every anonymous request 401, so it needs a read token).
     #[arg(long = "package", value_name = "GROUP/NAME")]
     pub packages: Vec<String>,
 
@@ -355,9 +358,9 @@ pub struct RegistryListArgs {
     #[arg(long, default_value = ".")]
     pub path: PathBuf,
 
-    /// Show one declaration layer only: `project`, `local` or `user`.
-    /// Without it the effective rows of every layer are listed, each with
-    /// the layer it came from.
+    /// Show one declaration layer only: `project`, `local`, `user` or `site`
+    /// (the applied site profile, read-only). Without it the effective rows of
+    /// every layer are listed, each with the layer it came from.
     #[arg(long = "scope")]
     pub scope: Option<String>,
 }

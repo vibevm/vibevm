@@ -14,6 +14,7 @@ use vibe_core::manifest::is_command_name;
 
 use crate::error::AppError;
 use crate::settings::{MutationLock, SettingsRoot, io};
+mod ownership;
 mod upgrade;
 pub(crate) use upgrade::{CapturedImage, before_publication, for_publication};
 
@@ -165,18 +166,60 @@ pub(crate) fn sync_captured(
             .into());
         }
     }
+    // The shared `opt/bin` holds other tenants' files: every write is
+    // checked before the first one, and only vibe's own proxies are removed
+    // (`ownership`). An installation's private proxy directory is vibe's.
+    let shared = dir == settings.proxy_dir();
+    let mut inventory = if shared {
+        Some(ownership::Inventory::load(settings)?)
+    } else {
+        None
+    };
+    let image_bytes = image.map(|image| image.bytes.as_slice());
+    if let Some(inventory) = &inventory {
+        for name in current.iter().filter(|name| command_name(name)) {
+            let file = proxy_file_name(name);
+            let path = dir.join(&file);
+            if !inventory.classify(&file, &path, image_bytes).writable() {
+                return Err(AppError::ForeignProxy {
+                    dir: dir.display().to_string(),
+                    name: name.clone(),
+                    path: path.display().to_string(),
+                });
+            }
+        }
+    }
     for name in previous
         .difference(current)
         .filter(|name| command_name(name))
     {
-        let path = dir.join(proxy_file_name(name));
+        let file = proxy_file_name(name);
+        let path = dir.join(&file);
+        if let Some(inventory) = &mut inventory {
+            match inventory.classify(&file, &path, image_bytes) {
+                ownership::Ownership::Absent => {
+                    inventory.forget(&file);
+                    continue;
+                }
+                // Not a proxy this vibe wrote (or rewritten since): the
+                // name is released, the file is left to its owner.
+                found if !found.removable() => {
+                    inventory.forget(&file);
+                    continue;
+                }
+                _ => inventory.forget(&file),
+            }
+        }
         match fs::remove_file(&path) {
             Ok(()) => {}
             Err(e) if e.kind() == std::io::ErrorKind::NotFound => {}
             Err(e) => return Err(io("removing", &path, e).into()),
         }
     }
-    if wanted.is_empty() {
+    if wanted.is_empty() || image.is_none() {
+        if let Some(inventory) = &inventory {
+            inventory.save()?;
+        }
         return Ok(());
     }
     fs::create_dir_all(dir).map_err(|e| io("creating", dir, e))?;
@@ -184,10 +227,18 @@ pub(crate) fn sync_captured(
         return Ok(());
     };
     for path in wanted {
-        if fs::read(&path).is_ok_and(|bytes| bytes == image.bytes) {
-            continue;
+        if !fs::read(&path).is_ok_and(|bytes| bytes == image.bytes) {
+            place(&path, &image.bytes)?;
         }
-        place(&path, &image.bytes)?;
+        if let (Some(inventory), Some(file)) = (
+            &mut inventory,
+            path.file_name().and_then(|name| name.to_str()),
+        ) {
+            inventory.record(file, &image.bytes);
+        }
+    }
+    if let Some(inventory) = &inventory {
+        inventory.save()?;
     }
     Ok(())
 }
@@ -246,7 +297,9 @@ mod tests {
             assert_eq!(mode & 0o111, 0o111);
         }
 
-        fs::write(copy("a"), b"stale").unwrap();
+        // An older vibe's proxy (it names the index protocol it reads) is
+        // rewritten in place.
+        fs::write(copy("a"), b"stale vibe-user-applications/3 reader").unwrap();
         fs::write(bin.join("vibe-shim"), b"version manager").unwrap();
         fs::write(&image, b"image-2").unwrap();
         sync(&settings, &names(&["a", "b"]), &names(&["a"]), &image).unwrap();
@@ -270,8 +323,9 @@ mod tests {
         let dir = tempfile::tempdir().unwrap();
         let settings = SettingsRoot::new(dir.path());
         let image = dir.path().join("absent-proxy");
-        fs::create_dir_all(settings.proxy_dir()).unwrap();
-        fs::write(settings.proxy_dir().join(proxy_file_name("old")), b"x").unwrap();
+        let present = dir.path().join("present-proxy");
+        fs::write(&present, b"x").unwrap();
+        sync(&settings, &names(&[]), &names(&["old"]), &present).unwrap();
         let error = sync(&settings, &names(&["old"]), &names(&["new"]), &image).unwrap_err();
         assert!(error.to_string().contains("absent-proxy"), "{error}");
         assert!(!settings.proxy_dir().join(proxy_file_name("old")).exists());
@@ -284,11 +338,50 @@ mod tests {
         let missing = dir.path().join("missing");
         let invalid = names(&["vibe", "../escape"]);
         sync(&settings, &names(&[]), &invalid, &missing).unwrap();
-        fs::create_dir_all(settings.proxy_dir()).unwrap();
+        let present = dir.path().join("present");
+        fs::write(&present, b"old").unwrap();
+        sync(&settings, &names(&[]), &names(&["old"]), &present).unwrap();
         let obsolete = settings.proxy_dir().join(proxy_file_name("old"));
-        fs::write(&obsolete, b"old").unwrap();
+        assert!(obsolete.exists());
         sync(&settings, &names(&["old"]), &invalid, &missing).unwrap();
         assert!(!obsolete.exists());
         assert!(!dir.path().join("escape").exists());
+    }
+
+    #[test]
+    #[specmark::spec(verifies = "spec://org.vibevm.core/vibevm/common/PROP-059#proxy")]
+    fn a_shared_opt_bin_keeps_every_file_vibe_did_not_write() {
+        let dir = tempfile::tempdir().unwrap();
+        let settings = SettingsRoot::new(dir.path());
+        let image = dir.path().join("vibe-app-proxy");
+        fs::write(&image, b"image-1").unwrap();
+        let bin = settings.proxy_dir();
+        let copy = |name: &str| bin.join(proxy_file_name(name));
+        fs::create_dir_all(&bin).unwrap();
+        // The operator's own tool at a name an application wants.
+        fs::write(copy("tool"), b"the operator's tool").unwrap();
+        let error = sync(&settings, &names(&[]), &names(&["tool", "fresh"]), &image).unwrap_err();
+        assert!(matches!(error, AppError::ForeignProxy { .. }), "{error}");
+        assert!(error.to_string().contains("PROP-059#proxy"), "{error}");
+        assert_eq!(fs::read(copy("tool")).unwrap(), b"the operator's tool");
+        // Refused before the first write: nothing else was created.
+        assert!(!copy("fresh").exists());
+
+        // A proxy vibe wrote and the operator replaced since is not removed
+        // with its name; one still as written is.
+        sync(&settings, &names(&[]), &names(&["kept", "gone"]), &image).unwrap();
+        fs::write(copy("kept"), b"replaced by the operator").unwrap();
+        sync(&settings, &names(&["kept", "gone"]), &names(&[]), &image).unwrap();
+        assert_eq!(fs::read(copy("kept")).unwrap(), b"replaced by the operator");
+        assert!(!copy("gone").exists());
+        // The released name is no longer claimed: a later write refuses.
+        assert!(sync(&settings, &names(&[]), &names(&["kept"]), &image).is_err());
+        // The inventory lives in vibe's own directory, not in `opt/bin`.
+        assert!(ownership::inventory_path(&settings).is_file());
+        assert!(!inventory_in(&bin));
+    }
+
+    fn inventory_in(dir: &Path) -> bool {
+        dir.join("proxies.toml").exists()
     }
 }

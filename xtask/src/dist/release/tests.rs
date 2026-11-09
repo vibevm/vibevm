@@ -563,6 +563,9 @@ fn finalize_downloads_and_verifies_all_target_assets() {
     assert!(text.contains("vibe-bootstrap-aarch64-apple-darwin"));
 }
 
+#[path = "tests/companions.rs"]
+mod companions;
+
 #[path = "tests/concurrency.rs"]
 mod concurrency;
 

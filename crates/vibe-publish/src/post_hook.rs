@@ -108,6 +108,8 @@ pub enum HookError {
          fix: re-mint the index token without control or non-ASCII characters)"
     )]
     Header(String),
+    #[error(transparent)]
+    Route(#[from] vibe_net::NetError),
 }
 
 impl From<reqwest::Error> for HookError {
@@ -324,9 +326,11 @@ pub fn build_payload(
 /// POST `payload` to `<config.index_url>/v1/packages` with bearer
 /// auth. Returns the index server's status code on success.
 pub fn post_to_index(config: &HookConfig, payload: &serde_json::Value) -> Result<u16, HookError> {
-    let client = reqwest::blocking::Client::builder()
-        .timeout(config.timeout)
-        .build()?;
+    let client = vibe_net::http::route(
+        reqwest::blocking::Client::builder().timeout(config.timeout),
+        vibe_net::http::Ambient::Inherit,
+    )?
+    .build()?;
     let url = format!("{}/v1/packages", config.index_url.trim_end_matches('/'));
     let auth = HeaderValue::from_str(&format!("Bearer {}", config.token))
         .map_err(|e| HookError::Header(e.to_string()))?;

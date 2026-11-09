@@ -6,9 +6,13 @@ specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-019#release-sources"
 use std::path::PathBuf;
 
 use anyhow::{Context, Result};
-use serde::Serialize;
 use specmark::spec;
+use vibe_core::remap::Layer;
 use vibe_core::user_config::{ReleaseSourceKind, SelfConfig, UserConfig};
+use vibe_wire::generated::self_releases_report::{ReleaseRow, SelfReleasesReport};
+use vibe_wire::generated::self_source_report::{
+    ReleaseSourceRow, ReleaseSourceView, RemapLayerLabel, SelfSourceReport,
+};
 
 use super::super::model::{Kind, Origin};
 use super::super::{VvmEnv, output, provenance};
@@ -21,32 +25,34 @@ use crate::cli::{VvmReleasesArgs, VvmSourceCommand, VvmSourceSetArgs};
 /// How many releases `self releases` shows without `--all`.
 const RECENT: usize = 10;
 
-#[derive(Serialize)]
-struct SourceView {
-    protocol: &'static str,
-    source: &'static str,
-    location: String,
-    from: String,
-    row: Option<RowView>,
+/// The JSON protocol name of the source view (`cli-self-source-report`),
+/// carried inside the releases document too.
+const SOURCE_PROTOCOL: &str = "vibe-self-source/1";
+
+/// The JSON protocol name of the releases listing (`cli-self-releases-report`).
+const RELEASES_PROTOCOL: &str = "vibe-self-releases/1";
+
+/// The wire value of one remap layer; `Layer::label` is the same spelling
+/// seen by a human, and matching on the layer keeps the two in step.
+fn layer_label(layer: Layer) -> RemapLayerLabel {
+    match layer {
+        Layer::UserPackage => RemapLayerLabel::UserPackage,
+        Layer::ProjectPackage => RemapLayerLabel::ProjectPackage,
+        Layer::Local => RemapLayerLabel::Local,
+        Layer::Invocation => RemapLayerLabel::Invocation,
+    }
 }
 
-#[derive(Serialize)]
-struct RowView {
-    prefix: String,
-    target: String,
-    layer: &'static str,
-}
-
-fn view(effective: &EffectiveReleaseSource) -> SourceView {
-    SourceView {
-        protocol: "vibe-self-source/1",
-        source: effective.source.kind(),
+fn view(effective: &EffectiveReleaseSource) -> SelfSourceReport {
+    ReleaseSourceView {
+        protocol: SOURCE_PROTOCOL.to_owned(),
+        source: effective.source.wire_kind(),
         location: effective.source.location(),
         from: effective.origin.describe(),
-        row: effective.row().map(|row| RowView {
+        row: effective.row().map(|row| ReleaseSourceRow {
             prefix: row.key.what().to_owned(),
             target: row.target.display(),
-            layer: row.from.layer.label(),
+            layer: layer_label(row.from.layer),
         }),
     }
 }
@@ -75,12 +81,16 @@ fn show(ctx: &output::Context, effective: &EffectiveReleaseSource) -> Result<()>
     }
     let mut text = format!(
         "release source: {} {}\n  from  {}",
-        shown.source, shown.location, shown.from
+        release_source::kind_label(shown.source.clone()),
+        shown.location,
+        shown.from
     );
     match &shown.row {
         Some(row) => text.push_str(&format!(
             "\n  remap {} → {} ({} layer; `vibe remap explain` shows it)",
-            row.prefix, row.target, row.layer
+            row.prefix,
+            row.target,
+            layer_text(&row.layer)
         )),
         None if effective.source.kind() == "gitverse" => {
             text.push_str("\n  read through the GitVerse REST API")
@@ -108,6 +118,7 @@ fn set(ctx: &output::Context, env: &VvmEnv, args: VvmSourceSetArgs) -> Result<()
             url: args.url,
             api: args.api,
             path,
+            install_root: None,
         },
     };
     store(ctx, table)
@@ -115,12 +126,16 @@ fn set(ctx: &output::Context, env: &VvmEnv, args: VvmSourceSetArgs) -> Result<()
 
 /// Validate the new `[self]` table against the rest of the config, then
 /// write it; an unusable source is refused and nothing is written.
-fn store(ctx: &output::Context, table: SelfConfig) -> Result<()> {
+fn store(ctx: &output::Context, mut table: SelfConfig) -> Result<()> {
     let path: PathBuf = UserConfig::default_path().context(
         "no user settings directory resolves (violates spec://org.vibevm.core/vibevm/common/PROP-019#release-sources; \
          fix: set VIBE_SETTINGS or make the user home resolvable)",
     )?;
     let mut config = UserConfig::load_from(&path)?;
+    // `[self] install_root` answers a different question — where vibe
+    // installs itself (`PROP-019#install-root`) — and the release-source
+    // editor is not allowed to forget it.
+    table.install_root = config.self_source.install_root.clone();
     config.self_source = table;
     let resolved = release_source::resolve(None, &config, Some(&path))?;
     config
@@ -141,20 +156,15 @@ fn store(ctx: &output::Context, table: SelfConfig) -> Result<()> {
     show(ctx, &resolved)
 }
 
-#[derive(Serialize)]
-struct ReleasesView {
-    protocol: &'static str,
-    source: SourceView,
-    releases: Vec<ReleaseRow>,
-    truncated: bool,
-}
-
-#[derive(Serialize)]
-struct ReleaseRow {
-    version: String,
-    installed: bool,
-    active: bool,
-    running: bool,
+/// One remap layer spelled for a human — `Layer::label`'s four strings,
+/// reached through the wire vocabulary so neither side can drift.
+fn layer_text(layer: &RemapLayerLabel) -> &'static str {
+    match layer {
+        RemapLayerLabel::UserPackage => Layer::UserPackage.label(),
+        RemapLayerLabel::ProjectPackage => Layer::ProjectPackage.label(),
+        RemapLayerLabel::Local => Layer::Local.label(),
+        RemapLayerLabel::Invocation => Layer::Invocation.label(),
+    }
 }
 
 #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-019#release-sources")]
@@ -199,8 +209,8 @@ pub(in crate::commands::vvm) fn run_releases_cmd(
             }
         })
         .collect();
-    let document = ReleasesView {
-        protocol: "vibe-self-releases/1",
+    let document = SelfReleasesReport {
+        protocol: RELEASES_PROTOCOL.to_owned(),
         source: view(&effective),
         releases: rows,
         truncated: shown < total,
@@ -210,7 +220,9 @@ pub(in crate::commands::vvm) fn run_releases_cmd(
     }
     let mut text = format!(
         "releases at {} {} ({})",
-        document.source.source, document.source.location, document.source.from
+        release_source::kind_label(document.source.source.clone()),
+        document.source.location,
+        document.source.from
     );
     if document.releases.is_empty() {
         text.push_str("\n  none");

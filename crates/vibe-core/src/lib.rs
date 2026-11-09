@@ -28,6 +28,7 @@ pub mod layout_registry;
 pub mod lifecycle;
 pub mod lock_provenance;
 pub mod manifest;
+pub mod net;
 pub mod package_ref;
 pub mod progress;
 pub mod provenance;

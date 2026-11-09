@@ -11,6 +11,10 @@ use std::fs;
 use std::process::Output;
 
 use common::UserScratch;
+use vibe_wire::generated::self_releases_report::SelfReleasesReport;
+use vibe_wire::generated::self_source_report::{
+    ReleaseSourceKind, RemapLayerLabel, SelfSourceReport,
+};
 
 fn vibe(user: &UserScratch, args: &[&str]) -> Output {
     let mut command = user.vibe();
@@ -29,8 +33,10 @@ fn ok(output: &Output) -> String {
     String::from_utf8_lossy(&output.stdout).into_owned()
 }
 
+/// Every registered `--json` document these tests read goes through its
+/// generated reader (`common::wire`) before anything is asserted about it.
 fn json(output: &Output) -> serde_json::Value {
-    serde_json::from_str(&ok(output)).unwrap()
+    common::wire::checked(&ok(output))
 }
 
 #[test]
@@ -150,4 +156,42 @@ fn setting_the_source_keeps_comments_and_unrelated_tables_byte_for_byte() {
         format!("{head}{tail}"),
         "reset removes exactly the table set added"
     );
+}
+
+/// `vibe-self-source/1` and `vibe-self-releases/1` are the documents their
+/// registered schemas describe — the second carrying the first verbatim,
+/// its own `protocol` member included.
+#[test]
+fn the_source_and_releases_reports_read_as_their_registered_wire_types() {
+    let user = UserScratch::new();
+    let drop = tempfile::tempdir().unwrap();
+    let dir = drop.path().join("v1.0.11");
+    fs::create_dir_all(&dir).unwrap();
+    fs::write(dir.join("DISTRIBUTIONS.json"), b"{}").unwrap();
+    let path = drop.path().to_str().unwrap();
+
+    let shown: SelfSourceReport = common::wire::typed(&ok(&vibe(
+        &user,
+        &[
+            "--json", "self", "source", "set", "localdir", "--path", path,
+        ],
+    )));
+    assert_eq!(shown.protocol, "vibe-self-source/1");
+    assert_eq!(shown.source, ReleaseSourceKind::Localdir);
+    assert_eq!(shown.location, path);
+    let row = shown.row.expect("a localdir source installs one remap row");
+    assert_eq!(row.layer, RemapLayerLabel::Local);
+
+    let listed: SelfReleasesReport =
+        common::wire::typed(&ok(&vibe(&user, &["--json", "self", "releases"])));
+    assert_eq!(listed.protocol, "vibe-self-releases/1");
+    assert_eq!(listed.source.protocol, "vibe-self-source/1");
+    assert_eq!(listed.source.source, ReleaseSourceKind::Localdir);
+    assert!(!listed.truncated);
+    let versions: Vec<&str> = listed
+        .releases
+        .iter()
+        .map(|row| row.version.as_str())
+        .collect();
+    assert_eq!(versions, ["1.0.11"]);
 }

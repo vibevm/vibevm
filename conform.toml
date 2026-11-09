@@ -71,6 +71,7 @@ gated = [
     "vibe-lifecycle",
     "vibe-native-loader",
     "vibe-llm",
+    "vibe-net",
     "vibe-resolver",
     "vibe-safefs",
     "vibe-registry",
@@ -128,6 +129,10 @@ env_roots = [
     # and the resolved value travels down as data. The resolution itself is a
     # pure function over injected directories; only these two reads are ambient.
     "crates/vibe-cli/src/commands/deploy/clients.rs",
+    # The vibe-managed px locator (PROP-068 `#proxy-px`): `[proxy] px_path`,
+    # then `tools/px/` beside the running executable, then `px` on $PATH —
+    # the same standing as the git-binary discovery; only this read is ambient.
+    "crates/vibe-net/src/px.rs",
     # Step conditions and needs of an application installer (PROP-065
     # `#conditions`): `command_present` / `command:NAME` read $PATH and
     # `env_present` reads one variable exactly here; `vibe-app` receives the

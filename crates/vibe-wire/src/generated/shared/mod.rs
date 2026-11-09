@@ -4845,6 +4845,97 @@ pub struct QualificationStatePending {
     pub mode: CompileMode,
 }
 
+/// Where vibe release bundles are read from (PROP-019 #release-sources):
+/// `github` the public release page, `mirror` a GitHub-shaped mirror named
+/// by $VIBEVM_RELEASE_ORIGIN, `gitverse` a GitVerse instance read through its
+/// REST API, `nexus` an HTTP(S) raw repository holding `v<version>/<asset>`,
+/// `localdir` a local release drop with the same layout. Closed: a reader
+/// decides from it whether a release is downloaded or copied in by hand, and
+/// an unfamiliar value has no safe behaviour. Shared as a vocabulary because
+/// `artifacts_where_report`, `self_source_report`, `self_releases_report` and
+/// `self_apply_report` all carry it.
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+pub enum ReleaseSourceKind {
+    #[serde(rename = "github")]
+    Github,
+
+    #[serde(rename = "gitverse")]
+    Gitverse,
+
+    #[serde(rename = "localdir")]
+    Localdir,
+
+    #[serde(rename = "mirror")]
+    Mirror,
+
+    #[serde(rename = "nexus")]
+    Nexus,
+}
+
+/// The one `[[remap]]` row a non-GitHub release source installs, as `vibe remap
+/// explain` shows it (PROP-019 #release-sources).
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+pub struct ReleaseSourceRow {
+    /// The URL prefix the row matches.
+    pub prefix: String,
+
+    /// What the prefix is rewritten to — a directory, a `file://` URL or an
+    /// http(s) base.
+    pub target: String,
+
+    pub layer: RemapLayerLabel,
+}
+
+/// The effective release source and the input that decided it — the whole
+/// document of `vibe self source show --json` (`vibe-self-source/1`) and the
+/// `source` member of `vibe self releases --json` (`vibe-self-releases/1`).
+/// Shared as a vocabulary because both documents carry it verbatim, protocol
+/// name included.
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+pub struct ReleaseSourceView {
+    /// Always `"vibe-self-source/1"`, also inside the `vibe-self-releases/1`
+    /// document.
+    pub protocol: String,
+
+    pub source: ReleaseSourceKind,
+
+    /// The directory, repository or base URL releases are read from.
+    pub location: String,
+
+    /// Which input decided the source — `built-in default`,
+    /// `$VIBEVM_RELEASE_ORIGIN`, `[self] in <file>` or `[artifacts] vibe in
+    /// <file>`.
+    pub from: String,
+
+    /// The `[[remap]]` row the source installs, or `null` for `github` and for
+    /// `gitverse` (read through its REST API).
+    #[serde(deserialize_with = "crate::behaviour::required_nullable::deserialize")]
+    pub row: Option<ReleaseSourceRow>,
+}
+
+/// Which layer of PROP-066 #layers a remap row came from, lowest precedence
+/// first, spelled as `vibe remap list`'s human output spells it. Closed:
+/// precedence is computed from it, so an unfamiliar layer has no safe ordering.
+/// Note the hyphenated spelling: `remap_listing` and `remap_explanation` carry
+/// the same four layers as `user_package` / `project_package`, which is the
+/// spelling those two documents have always written; the two spellings are
+/// one register seen through two writers and converging them is a wire break,
+/// tracked rather than papered over.
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+pub enum RemapLayerLabel {
+    #[serde(rename = "invocation")]
+    Invocation,
+
+    #[serde(rename = "local")]
+    Local,
+
+    #[serde(rename = "project-package")]
+    ProjectPackage,
+
+    #[serde(rename = "user-package")]
+    UserPackage,
+}
+
 /// One origin-qualification rename (`RenameEntry`).
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]

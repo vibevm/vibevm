@@ -243,6 +243,7 @@ fn the_real_vocabulary_home_walks_to_its_sites() -> Result<()> {
         "source_evidence",
         "hosting_view",
         "activation_intent",
+        "release_source_view",
     ];
     let baseline = old
         .iter()
@@ -258,6 +259,11 @@ fn the_real_vocabulary_home_walks_to_its_sites() -> Result<()> {
     // Source evidence contributes nine optional display fields; hosting two.
     assert_eq!(
         home["closure_document_v2"]["properties"]["embeds"]["nullable"],
+        true
+    );
+    // The release-source view (CORP-FMT-018) contributes one required-nullable row.
+    assert_eq!(
+        home["release_source_view"]["properties"]["row"]["nullable"],
         true
     );
     for (owner, expected) in [
@@ -298,12 +304,12 @@ fn the_real_vocabulary_home_walks_to_its_sites() -> Result<()> {
     }
     assert_eq!(
         shapes(json!({"definitions":old}))?.sites,
-        119,
-        "baseline104 plus compiler3, source evidence9, hosting2 and activation actor1"
+        120,
+        "baseline104 plus compiler3, source evidence9, hosting2, activation actor1 and release-source row1"
     );
     assert_eq!(
         shapes(json!({"definitions":public_and_old}))?.sites,
-        138,
+        139,
         "public portable vocabulary still adds exactly19 transformation sites"
     );
     for (owner, fields) in [
@@ -322,7 +328,7 @@ fn the_real_vocabulary_home_walks_to_its_sites() -> Result<()> {
     }
     let doc_shapes = shapes(json!({ "definitions": home }))?;
     assert_eq!(
-        doc_shapes.sites, 141,
+        doc_shapes.sites, 142,
         "the real shared home includes every promoted optional site"
     );
     Ok(())

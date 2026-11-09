@@ -72,6 +72,19 @@ impl FixtureWorld {
         assert_success("vibe install", &output);
     }
 
+    fn update(&self, args: &[&str]) {
+        let output = self
+            .user
+            .vibe()
+            .args(["--json", "update", "--path"])
+            .arg(&self.project)
+            .args(args)
+            .arg("--assume-yes")
+            .output()
+            .expect("spawn vibe update");
+        assert_success("vibe update", &output);
+    }
+
     fn lock(&self) -> String {
         self.read("vibe.lock")
     }
@@ -154,6 +167,60 @@ fn private_edge_never_reaches_the_lanes() {
     );
     assert!(!static_lane.contains(W_MARKER));
     assert!(!static_lane.contains(&format!("{GROUP}/{W}")));
+}
+
+/// `vibe update --sources-only` and a scoped `vibe update <pkg>` compute
+/// the same effective set as install (PROP-050 `#EFFECTIVE-SET`): a carrier's
+/// private requirement is not re-resolved, locked or materialised.
+#[test]
+#[specmark::spec(verifies = "spec://org.vibevm.core/vibevm/common/PROP-050#EFFECTIVE-SET")]
+fn scoped_update_and_sources_only_keep_private_edges_out() {
+    const GROUP: &str = "org.w3.privateupdate";
+    const B: &str = "update-carrier-b";
+    const W: &str = "update-hidden-w";
+
+    let world = FixtureWorld::new(
+        GROUP,
+        &format!("\"{GROUP}/{B}\" = \"^1\"\n"),
+        &[
+            PackageSpec {
+                name: B,
+                requires: &format!(
+                    "\n[requires.packages]\n\"{GROUP}/{W}\" = {{ version = \"^1\", access = \"private\" }}\n"
+                ),
+                marker: "PRIVATE_UPDATE_B_MARKER",
+            },
+            PackageSpec {
+                name: W,
+                requires: "",
+                marker: "PRIVATE_UPDATE_W_MARKER",
+            },
+        ],
+    );
+    world.install();
+    let installed = world.lock();
+    assert!(lock_package_block(&installed, W).is_none());
+    let carrier = format!("{GROUP}/{B}");
+    for args in [
+        &["--sources-only"][..],
+        &[carrier.as_str()][..],
+        &["--sources-only", carrier.as_str()][..],
+    ] {
+        world.update(args);
+        let lock = world.lock();
+        assert!(
+            lock_package_block(&lock, B).is_some(),
+            "{args:?}: B stays locked"
+        );
+        assert!(
+            lock_package_block(&lock, W).is_none(),
+            "{args:?}: private W must not be locked"
+        );
+        assert!(
+            !world.slot(GROUP, W).exists(),
+            "{args:?}: private W has no slot"
+        );
+    }
 }
 
 #[test]

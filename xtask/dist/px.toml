@@ -1,0 +1,48 @@
+# px — the single-sign-on proxy bridge a vibe distribution carries as
+# `tools/px/` (PROP-068#proxy). px is NOT committed to this repository: this
+# manifest pins the upstream release, and `cargo xtask dist px` fetches the
+# asset for one target, verifies its SHA-256 against this file, and lays it
+# out with px's MIT LICENSE and a NOTICE line. Digests are the GitHub release
+# API `digest` values, re-measured on 2026-11-08.
+#
+# Upstream: https://github.com/genotrance/px (MIT, Copyright (c) 2017-2026
+# Ganesh Viswanathan). v0.11.0 is the latest stable (non-pre-release) tag.
+# There is no macOS x86_64 asset: that target uses a system px
+# (`pip install px-proxy`) named by `[proxy] px_path`.
+
+schema = 1
+name = "px"
+version = "0.11.0"
+homepage = "https://github.com/genotrance/px"
+license = "MIT"
+license_url = "https://github.com/genotrance/px/raw/refs/tags/v0.11.0/LICENSE.txt"
+license_sha256 = "573a63dafd23b9aff82fb76181d678bcc6488ad0be309458024dd57690621fa9"
+notice = "This distribution includes px 0.11.0 (https://github.com/genotrance/px), Copyright (c) 2017-2026 Ganesh Viswanathan, under the MIT License; see tools/px/LICENSE.txt."
+
+[[asset]]
+target = "x86_64-pc-windows-msvc"
+url = "https://github.com/genotrance/px/releases/download/v0.11.0/px-v0.11.0-windows-amd64.zip"
+sha256 = "4e69f56f5bad9878190a5e82b5ea18857d15ef34a04256a624a40b4458e96417"
+archive = "zip"
+executable = "px.exe"
+
+[[asset]]
+target = "x86_64-unknown-linux-gnu"
+url = "https://github.com/genotrance/px/releases/download/v0.11.0/px-v0.11.0-linux-glibc-x86_64.tar.gz"
+sha256 = "74cfb03dd302c92f34d0e14eaace479d2aa6484e1d096874043f29de0583f66d"
+archive = "tar.gz"
+executable = "px"
+
+[[asset]]
+target = "x86_64-unknown-linux-musl"
+url = "https://github.com/genotrance/px/releases/download/v0.11.0/px-v0.11.0-linux-musl-x86_64.tar.gz"
+sha256 = "2196e4e61967109543fd70f884b6e666e2c69b58a0ea163bb41e9772f7e03beb"
+archive = "tar.gz"
+executable = "px"
+
+[[asset]]
+target = "aarch64-apple-darwin"
+url = "https://github.com/genotrance/px/releases/download/v0.11.0/px-v0.11.0-mac-arm64.tar.gz"
+sha256 = "d8fe02c8a6055a1c2f279879f57f3e9775c72456986c95db9d11bfde0c58cef6"
+archive = "tar.gz"
+executable = "px"

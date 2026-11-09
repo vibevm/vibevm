@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spec xmlns="https://vibevm.org/spec/1">
+  <title>Corporate proxy with single sign-on on native Windows (PROP-068 #proxy) — vibe-managed px, PAC, the system trust store, no leftover px.exe</title>
+  <p><purpose fact="true" status="impl/work">**Purpose.** The suite proves the route on Linux against local fixtures: a forwarding proxy, a fake px, a private test CA (`crates/vibe-net/tests/px_lifecycle.rs`, `crates/vibe-registry/tests/proxy_route.rs`, `proxy_git.rs`, `crates/vibe-cli/tests/cli_proxy_px.rs`, the `vibe dl` tests). No fixture can reach a real corporate proxy that demands Negotiate/NTLM single sign-on, a real PAC file, a TLS-inspecting corporate CA that exists only in the Windows system store, or `px.exe` running as a Windows console process in a job object. The owner checks those here, on the real network, before a release that ships the corporate-env campaign (`campaigns/corporate-env-2026-11/PLAN.md`).</purpose></p>
+  <p><placeholders fact="true" status="impl/work">**Placeholders.** This document never names a real address. Below, `%PAC%` is *your PAC URL* (for example `https://pac.example.corp/proxy.pac`), `%UPSTREAM%` is your corporate proxy as `host:port` (for example `proxy.example.corp:8080`), and `%INTERNAL%` is an internal HTTPS host your PAC answers `DIRECT` for. Do not paste real addresses into a bug report; replace them with these names.</placeholders></p>
+  <p><isolation-note fact="true" status="impl/work">Every command runs in `cmd.exe` (PowerShell is commonly blocked on these machines). The test uses a separate settings home (`VIBE_SETTINGS`) and project directory, so the operator's own `~/.vibe` is untouched; the last step deletes them.</isolation-note></p>
+  <section title="Preconditions">
+    <facts ordered="false">
+      <PRE-HOST fact="true" status="impl/work">Windows 10/11 x86_64, logged on to the corporate domain (single sign-on available), no direct internet route: `curl.exe -sS -m 10 https://github.com` times out or is refused.</PRE-HOST>
+      <PRE-PX fact="true" status="impl/work">A vibe distribution whose installation carries `tools\px\px.exe` (`cargo xtask dist px --target x86_64-pc-windows-msvc --out-dir &lt;dir&gt;` stages it beside `vibe.exe`), or any px 0.11+ with `[proxy] px_path` pointing at it. Check `px.exe --pac=%PAC% --test=https://github.com` exits 0 — the same check px's own docs give.</PRE-PX>
+      <PRE-CA fact="true" status="impl/work">The corporate TLS-inspection CA is in the Windows system store (`certmgr.msc` → Trusted Root Certification Authorities), as on every managed desktop. Its PEM export is available as `%TEMP%\corp-ca.pem` for step 6.</PRE-CA>
+      <PRE-TASKLIST fact="true" status="impl/work">`tasklist /fi "imagename eq px.exe"` lists no px before the test (stop any px you run yourself, or note its PID and ignore it below).</PRE-TASKLIST>
+    </facts>
+  </section>
+  <section title="Setup">
+    <fence>set VIBE_SETTINGS=%TEMP%\mt08-settings
+mkdir "%VIBE_SETTINGS%"
+set PAC=your PAC URL
+set UPSTREAM=proxy.example.corp:8080
+(echo [proxy]&amp; echo mode = "px"&amp; echo pac = "%PAC%") &gt; "%VIBE_SETTINGS%\config.toml"
+type "%VIBE_SETTINGS%\config.toml"
+vibe self apply --show</fence>
+    <p><EXP-SETUP fact="true" status="impl/work">**Expected.** `proxy mode: px (from user config)` and `proxy pac: … (url, from user config)`.</EXP-SETUP></p>
+  </section>
+  <section title="Steps">
+    <facts ordered="true">
+      <STEP-1-TEST-PROXY fact="true" status="impl/work">**First check: `vibe dl --test-proxy`.** It runs the whole chain once against the default target (`https://gmail.com`, redirects followed and shown).</STEP-1-TEST-PROXY>
+    </facts>
+    <fence>vibe dl --test-proxy
+echo exit %ERRORLEVEL%
+tasklist /fi "imagename eq px.exe"</fence>
+    <p><EXP-1 fact="true" status="impl/work">**Expected.** The effective mode `px` and its origin, the PAC source (`url`, from user config) read successfully, px found and started, `px --test` passed, `CONNECT` answered 200, TLS verified with the issuer chain ending in the **corporate CA**, accepted by the **system** trust store, an HTTP status, timings; a short green summary; exit 0. `tasklist` lists no `px.exe` afterwards. On a failure the table names each failed step with cause and fix (a `407` means the request did not go through px / single sign-on).</EXP-1></p>
+    <facts ordered="true">
+      <STEP-2-DL fact="true" status="impl/work">**One download through px.**</STEP-2-DL>
+    </facts>
+    <fence>vibe dl https://github.com/genotrance/px/raw/refs/tags/v0.11.0/LICENSE.txt %TEMP%\mt08-license.txt
+vibe dl --headers https://github.com/
+tasklist /fi "imagename eq px.exe"</fence>
+    <p><EXP-2 fact="true" status="impl/work">**Expected.** The file is written with its byte count and SHA-256 (`573a63da…21fa9`); `--headers` prints the status line and the header table, never an `Authorization`, `Proxy-Authorization` or cookie value. No `px.exe` remains.</EXP-2></p>
+    <facts ordered="true">
+      <STEP-3-DOCTOR fact="true" status="impl/work">**`vibe self doctor` network diagnosis.**</STEP-3-DOCTOR>
+    </facts>
+    <fence>vibe self doctor
+vibe self doctor --json --network https://github.com/</fence>
+    <p><EXP-3 fact="true" status="impl/work">**Expected.** Lines `ok   network trust` (the system roots counted), `ok   network pac`, `ok   network px`, `ok   network px --test`, `ok   network connect`, `ok   network tls`; `--json` carries the same rows under `network`. No `px.exe` remains.</EXP-3></p>
+    <facts ordered="true">
+      <STEP-4-INSTALL fact="true" status="impl/work">**A real install from GitHub through px.** In an empty project directory.</STEP-4-INSTALL>
+    </facts>
+    <fence>mkdir %TEMP%\mt08-project &amp;&amp; cd /d %TEMP%\mt08-project
+vibe init --yes
+vibe add org.vibevm.world/wal
+vibe install
+vibe transfers --json
+tasklist /fi "imagename eq px.exe"</fence>
+    <p><EXP-4 fact="true" status="impl/work">**Expected.** The install succeeds; `vibe transfers --json` shows the operation's transfers with `"proxy": "px"`; no `px.exe` remains after the command.</EXP-4></p>
+    <facts ordered="true">
+      <STEP-5-CTRLC fact="true" status="impl/work">**Ctrl-C.** Start a long download and press Ctrl-C while it runs (answer "stop" when asked); then repeat and close the console window instead.</STEP-5-CTRLC>
+    </facts>
+    <fence>vibe dl https://github.com/genotrance/px/releases/download/v0.11.0/px-v0.11.0-windows-amd64.zip %TEMP%\mt08-big.zip
+tasklist /fi "imagename eq px.exe"
+dir %TEMP%\mt08-big.zip*</fence>
+    <p><EXP-5 fact="true" status="impl/work">**Expected.** After the stop: no `px.exe` in `tasklist`, and no partial `mt08-big.zip` (or its temporary file). After closing the window: within seconds no `px.exe` either (the job object ends it).</EXP-5></p>
+    <facts ordered="true">
+      <STEP-6-PAC-SOURCES fact="true" status="impl/work">**The three PAC sources.** Repeat step 1 with each: a PAC file (download your PAC once with a browser to `%TEMP%\proxy.pac`), the system settings, and a one-shot override.</STEP-6-PAC-SOURCES>
+    </facts>
+    <fence>set VIBEVM_PROXY_PAC=C:/Users/%USERNAME%/AppData/Local/Temp/proxy.pac
+vibe dl --test-proxy
+set VIBEVM_PROXY_PAC=system
+vibe dl --test-proxy
+set VIBEVM_PROXY_PAC=
+vibe dl --test-proxy --proxy pac=%PAC%</fence>
+    <p><EXP-6 fact="true" status="impl/work">**Expected.** Each run passes and names the PAC source (`file`, `system`, `url`) and its origin (`VIBEVM_PROXY_PAC`, `VIBEVM_PROXY_PAC`, `command line`). With `system`, px reads the Windows Internet Options / WPAD; if the desktop has no auto-config there, the run fails with a cause, not a hang.</EXP-6></p>
+    <facts ordered="true">
+      <STEP-7-CA-FILE fact="true" status="impl/work">**`ca_file`, and turning px off.**</STEP-7-CA-FILE>
+    </facts>
+    <fence>(echo ca_file = "%TEMP:\=/%/corp-ca.pem") &gt;&gt; "%VIBE_SETTINGS%\config.toml"
+vibe dl --test-proxy
+set VIBEVM_PROXY_MODE=none
+vibe dl https://github.com/ %TEMP%\mt08-direct.html
+vibe dl --test-proxy --no-px --proxy http://%UPSTREAM%
+set VIBEVM_PROXY_MODE=</fence>
+    <p><EXP-7 fact="true" status="impl/work">**Expected.** With `ca_file`, the TLS step still passes (the system store and the file together). With `VIBEVM_PROXY_MODE=none` the download goes direct and fails as a timeout or DNS error whose fix suggests configuring `[proxy]`, and no px is started. `--no-px` with the upstream proxy and no single sign-on fails with `407` and the fix "use mode = px".</EXP-7></p>
+  </section>
+  <section title="Teardown">
+    <fence>cd /d %TEMP%
+rmdir /s /q "%VIBE_SETTINGS%" %TEMP%\mt08-project
+del %TEMP%\mt08-license.txt %TEMP%\mt08-direct.html
+set VIBE_SETTINGS=
+tasklist /fi "imagename eq px.exe"</fence>
+  </section>
+  <section title="Pass">
+    <p><pass-criteria fact="true" status="impl/work">On a domain-joined desktop without a direct route, vibe reaches GitHub through a px it starts itself from your PAC URL, a PAC file or the system settings; TLS is verified against the corporate CA from the Windows system store (and `ca_file`); every step names its cause on failure; and no `px.exe` is left after any command, after Ctrl-C, or after closing the console.</pass-criteria></p>
+  </section>
+  <section title="Sign-off">
+    <facts ordered="false">
+      <SIGNOFF-OWNER fact="true" status="impl/work">[ ] Owner sign-off on the corporate network (date / initials): ______</SIGNOFF-OWNER>
+    </facts>
+  </section>
+</spec>

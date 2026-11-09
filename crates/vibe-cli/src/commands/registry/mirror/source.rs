@@ -5,14 +5,20 @@ specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#r
 
 use std::collections::BTreeSet;
 use std::path::{Path, PathBuf};
+use std::sync::Arc;
 
 use anyhow::{Context, Result, anyhow, bail};
 use vibe_core::Group;
 use vibe_core::manifest::{MirrorSection, RegistrySection, RegistryType};
 use vibe_index::journal::Event;
 use vibe_publish::layout_publish::Provenance;
-use vibe_registry::{IndexAuth, IndexClient, IndexUrlResolution, IndexUrlSource, ProbeOutcome};
+use vibe_registry::{HttpAdmission, IndexClient};
 use vibe_wire::generated::registry_mirror_report::Listing as ListingKind;
+
+mod api_listing;
+mod index_probe;
+
+use index_probe::{probe_index, refusal_first};
 
 use super::git_source::{self, GitStore};
 use super::plan::{Decision, Planned};
@@ -58,6 +64,11 @@ pub(super) enum SourceReader {
         denied: BTreeSet<String>,
         resolver: Box<vibe_registry::MultiRegistryResolver>,
         index: Option<Box<IndexClient>>,
+        /// The operation's contact binding in a controlled posture, which
+        /// the host-API listing requests under (`None` is the
+        /// uncontrolled posture).
+        admission: Option<Arc<HttpAdmission>>,
+        offline: bool,
     },
 }
 
@@ -102,6 +113,8 @@ impl SourceReader {
             denied,
             resolver: Box::new(resolver),
             index: index.map(Box::new),
+            admission: operation.http_admission()?,
+            offline,
         })
     }
 
@@ -206,40 +219,16 @@ impl SourceReader {
                 ..
             } => {
                 if filters.packages().is_empty() {
-                    bail!(
-                        "registry `{}` has no index that answers, so its packages cannot be \
-                         listed \
-                         (violates spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#registry-mirror; \
-                         fix: name the packages to copy with `--package <group>/<name>` — their \
-                         versions are then read from their tags — or publish an index for the \
-                         registry)",
-                        registry.name
-                    );
+                    return self.list_through_host_api(filters);
                 }
                 let mut versions = Vec::new();
                 for (group, name) in filters.packages() {
                     let group = Group::parse(group)?;
-                    let repository = format!(
-                        "{}/{}.git",
-                        registry.url.trim_end_matches('/'),
-                        registry.naming.repo_name(None, &group, name)?
-                    );
+                    let repository = repository_url(registry, &group, name)?;
                     let listed = resolver
                         .list_versions(&group, name)
                         .map_err(layout_root::refusal_first)?;
-                    for version in listed {
-                        let tag = format!("v{version}");
-                        versions.push(SourceVersion {
-                            group: group.clone(),
-                            name: name.clone(),
-                            version,
-                            content_hash: None,
-                            frozen: false,
-                            yanked: false,
-                            git: Some((repository.clone(), tag)),
-                            layout: None,
-                        });
-                    }
+                    versions.extend(tagged_versions(&repository, &group, name, listed));
                 }
                 Ok(SourceListing {
                     kind: ListingKind::Tags,
@@ -275,15 +264,7 @@ impl SourceReader {
             bail!("internal: a per-package source version without its repository");
         };
         let repo = repo_key(repository);
-        let url = remapped(registry, mirrors, repository)?;
-        if let Some(host) = git_source::url_host(&url)
-            && denied.contains(&host)
-        {
-            return Err(PolicyRefused {
-                url: vibe_publish::git_publish::redact_credentials(&url),
-            }
-            .into());
-        }
+        let url = admitted(registry, mirrors, denied, repository)?;
         let facts = store.fetch_tag(&url, &repo, tag)?;
         let dest = scratch.join(format!("{repo}-{}", version.version));
         store.checkout(&facts.tree, &dest)?;
@@ -328,17 +309,63 @@ impl SourceReader {
         else {
             bail!("internal: a layout source has no repositories");
         };
-        let url = remapped(registry, mirrors, repository)?;
-        if let Some(host) = git_source::url_host(&url)
-            && denied.contains(&host)
-        {
-            return Err(PolicyRefused {
-                url: vibe_publish::git_publish::redact_credentials(&url),
-            }
-            .into());
-        }
+        let url = admitted(registry, mirrors, denied, repository)?;
         store.bundle(&url, &repo_key(repository), out)
     }
+}
+
+/// The canonical repository of `(group, name)` in a per-package registry.
+fn repository_url(registry: &RegistrySection, group: &Group, name: &str) -> Result<String> {
+    Ok(format!(
+        "{}/{}.git",
+        registry.url.trim_end_matches('/'),
+        registry.naming.repo_name(None, group, name)?
+    ))
+}
+
+/// One `SourceVersion` per listed version of a per-package repository:
+/// the version's bytes are the repository's `v<version>` tag, and the
+/// source records no hash of them (there is no index to record one).
+fn tagged_versions(
+    repository: &str,
+    group: &Group,
+    name: &str,
+    listed: Vec<semver::Version>,
+) -> Vec<SourceVersion> {
+    listed
+        .into_iter()
+        .map(|version| SourceVersion {
+            git: Some((repository.to_string(), format!("v{version}"))),
+            group: group.clone(),
+            name: name.to_string(),
+            version,
+            content_hash: None,
+            frozen: false,
+            yanked: false,
+            layout: None,
+        })
+        .collect()
+}
+
+/// The url a repository is actually read from: through the remap Locator,
+/// then past the source-policy gate. A host the policy excludes stops the
+/// run rather than being contacted.
+fn admitted(
+    registry: &RegistrySection,
+    mirrors: &[MirrorSection],
+    denied: &BTreeSet<String>,
+    repository: &str,
+) -> Result<String> {
+    let url = remapped(registry, mirrors, repository)?;
+    if let Some(host) = git_source::url_host(&url)
+        && denied.contains(&host)
+    {
+        return Err(PolicyRefused {
+            url: vibe_publish::git_publish::redact_credentials(&url),
+        }
+        .into());
+    }
+    Ok(url)
 }
 
 /// The repository's name: the last segment of its url, without `.git`.
@@ -360,14 +387,38 @@ impl SourceVersion {
 }
 
 /// The repository url through the remap Locator (`[[remap]]` rows and the
-/// registry's `[[mirror]]` tables), as the resolver's clone chain does.
+/// registry's `[[mirror]]` tables), as the resolver's clone chain does: a
+/// `[[mirror]]` row maps the registry's root, so the root is remapped and
+/// the repository's path under it is kept. A repository outside the root
+/// is remapped as itself.
 fn remapped(registry: &RegistrySection, mirrors: &[MirrorSection], url: &str) -> Result<String> {
     use vibe_core::remap::{Artifact, ArtifactKind, Layer, rows_from_registry_tables};
     let locator = vibe_core::remap::active().with_registry_tables(
         rows_from_registry_tables(std::slice::from_ref(registry), mirrors, &[], Layer::Local),
         vec![(registry.name.clone(), registry.url.clone())],
     );
-    Ok(locator.choose_url(&Artifact::new(ArtifactKind::RegistryClone).with_url(url))?)
+    let choose =
+        |url: &str| locator.choose_url(&Artifact::new(ArtifactKind::RegistryClone).with_url(url));
+    let whole = choose(url)?;
+    let root = registry.url.trim_end_matches('/');
+    match url
+        .strip_prefix(root)
+        .and_then(|rest| rest.strip_prefix('/'))
+    {
+        Some(repository) if !repository.is_empty() => {
+            let chosen = choose(&registry.url)?;
+            let chosen = chosen.trim_end_matches('/');
+            // A row naming this repository itself wins; a row that only
+            // knows the root (the whole url collapsed onto it, or nothing
+            // matched) keeps the repository's path.
+            if whole == url || whole.trim_end_matches('/') == chosen {
+                Ok(format!("{chosen}/{repository}"))
+            } else {
+                Ok(whole)
+            }
+        }
+        _ => Ok(whole),
+    }
 }
 
 /// The source's host is excluded by source policy: the run stops.
@@ -424,53 +475,6 @@ pub(super) fn carried_facts(
     facts
 }
 
-/// The source's index, when one answers (PROP-005 `#form-factor` ladder).
-fn probe_index(
-    reg: &RegistrySection,
-    operation: &vibe_package_source::SourceOperation,
-) -> Result<Option<IndexClient>> {
-    let IndexUrlResolution::Url { base, source } = vibe_registry::resolve_index_url(reg) else {
-        return Ok(None);
-    };
-    if source == IndexUrlSource::Default
-        && vibe_registry::resolve_registry_auth(
-            vibe_registry::RegistryAuthInput::SelectedRegistry(reg),
-        )?
-        .is_ssh_source()
-    {
-        return Ok(None);
-    }
-    let probe = match operation.http_admission()? {
-        Some(binding) => {
-            binding.check_address(&base)?;
-            IndexClient::probe_with_admission(&base, IndexAuth::for_registry(reg, &base)?, binding)
-                .map_err(refusal_first)?
-        }
-        None => IndexClient::probe(&base, IndexAuth::for_registry(reg, &base)?),
-    };
-    match probe {
-        ProbeOutcome::Found(client) => Ok(Some(*client)),
-        ProbeOutcome::Absent if source == IndexUrlSource::Default => Ok(None),
-        ProbeOutcome::Absent => bail!(
-            "the index configured for registry `{}` at `{base}` does not answer \
-             (violates spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#http; \
-             fix: correct `index_url`, or set it to `none` and mirror with `--package`)",
-            reg.name
-        ),
-        ProbeOutcome::Refused { reason } => bail!(
-            "the index of registry `{}` refused the probe: {reason}",
-            reg.name
-        ),
-    }
-}
-
-fn refusal_first(error: vibe_registry::IndexError) -> anyhow::Error {
-    match error {
-        vibe_registry::IndexError::ContactRefused(refusal) => refusal.into(),
-        other => other.into(),
-    }
-}
-
 #[cfg(test)]
 impl SourceVersion {
     /// A per-package version as an index lists it.
@@ -491,5 +495,33 @@ impl SourceVersion {
             git: None,
             layout: None,
         }
+    }
+}
+
+#[cfg(test)]
+mod remap_tests {
+    use super::*;
+
+    fn registry(url: &str) -> RegistrySection {
+        toml::from_str(&format!("name = 'src'\nurl = '{url}'\n")).unwrap()
+    }
+
+    #[test]
+    #[specmark::spec(
+        verifies = "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#registry-mirror"
+    )]
+    fn a_mirror_row_keeps_the_repository_under_the_mirrored_root() {
+        let source = registry("https://github.com/vibespecs");
+        let mirrors: Vec<MirrorSection> = vec![
+            toml::from_str("of = 'src'\nurl = 'https://git.corp.example/vibespecs'\n").unwrap(),
+        ];
+        let repository = "https://github.com/vibespecs/org.vibevm.world.wal.git";
+        let chosen = remapped(&source, &mirrors, repository).unwrap();
+        assert_eq!(
+            chosen.trim_end_matches('/'),
+            "https://git.corp.example/vibespecs/org.vibevm.world.wal.git"
+        );
+        // Without a mirror the repository is its own url.
+        assert_eq!(remapped(&source, &[], repository).unwrap(), repository);
     }
 }

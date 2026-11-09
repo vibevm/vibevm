@@ -16,7 +16,10 @@ use super::store::VersionStore;
 
 #[path = "env_profile.rs"]
 mod profile;
-pub(crate) use profile::{Effectiveness, EnvironmentObservation, PathEntryStatus, ProbeStatus};
+pub(crate) use profile::{
+    BlockStatus, Effectiveness, EnvironmentObservation, ObservationStatus, PathEntryStatus,
+    ProbeStatus, TargetKind,
+};
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, serde::Serialize)]
 #[serde(rename_all = "snake_case")]
@@ -178,6 +181,13 @@ pub(crate) enum Persisted {
 /// rc-file impl in a temp dir, never mutating the real machine.
 pub(crate) trait EnvPersister {
     fn set_vibevm_home(&self, home: &Path) -> Result<Persisted>;
+    /// Make `$VIBEVM_INSTALL_ROOT` durable, so every later vibe resolves
+    /// its store under the same root (PROP-019 `#install-root`). Unlike
+    /// `set_vibevm_home` — an advisory pointer at ONE instance — this is
+    /// where the whole installation lives, and a network that only
+    /// permits executables under one directory depends on it surviving
+    /// the terminal that ran `vibe self apply`.
+    fn set_install_root(&self, root: &Path) -> Result<Persisted>;
     fn ensure_on_path(&self, dir: &Path) -> Result<Persisted>;
     /// How to apply the change to the *current* shell now.
     fn activation_hint(&self) -> String;
@@ -293,6 +303,21 @@ impl EnvPersister for RcFilePersister {
             _ => (
                 "export VIBEVM_HOME=",
                 format!("export VIBEVM_HOME={}", posix_quote(&home)),
+            ),
+        };
+        self.upsert(prefix, &line)
+    }
+
+    fn set_install_root(&self, root: &Path) -> Result<Persisted> {
+        let root = root.display().to_string();
+        let (prefix, line) = match self.shell {
+            Shell::Fish => (
+                "set -gx VIBEVM_INSTALL_ROOT",
+                format!("set -gx VIBEVM_INSTALL_ROOT {}", fish_quote(&root)),
+            ),
+            _ => (
+                "export VIBEVM_INSTALL_ROOT=",
+                format!("export VIBEVM_INSTALL_ROOT={}", posix_quote(&root)),
             ),
         };
         self.upsert(prefix, &line)

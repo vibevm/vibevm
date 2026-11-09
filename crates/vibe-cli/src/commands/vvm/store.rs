@@ -16,7 +16,7 @@ use super::model::{InstallRecord, State, VersionId};
 
 #[path = "store_guard.rs"]
 mod guard;
-pub(crate) use guard::open_regular_no_follow;
+pub(crate) use guard::{atomic_replace, open_regular_no_follow};
 
 #[derive(serde::Serialize, serde::Deserialize)]
 struct ActivationJournal {

@@ -72,6 +72,23 @@ impl<R: UserRegistry> RegistryEnvPersister<R> {
     pub(crate) fn registry(&self) -> &R {
         &self.registry
     }
+
+    /// Write one path-valued user variable, keeping the kind the existing
+    /// value carries (`REG_EXPAND_SZ` stays expandable, so an operator's
+    /// `%USERPROFILE%`-style value is not silently frozen) and writing
+    /// nothing when it already reads exactly so.
+    fn set_var(&self, name: &str, value: &Path) -> Result<Persisted> {
+        let target = value.display().to_string();
+        let current = self.registry.get_raw(name)?;
+        if current.as_ref().is_some_and(|value| value.value == target) {
+            return Ok(Persisted::Unchanged);
+        }
+        let kind = current
+            .map(|value| value.kind)
+            .unwrap_or(RegistryValueKind::String);
+        self.registry.set_raw(name, &target, kind)?;
+        Ok(Persisted::Changed)
+    }
 }
 
 impl<R: UserRegistry> EnvPersister for RegistryEnvPersister<R> {
@@ -80,16 +97,11 @@ impl<R: UserRegistry> EnvPersister for RegistryEnvPersister<R> {
     }
 
     fn set_vibevm_home(&self, home: &Path) -> Result<Persisted> {
-        let target = home.display().to_string();
-        let current = self.registry.get_raw("VIBEVM_HOME")?;
-        if current.as_ref().is_some_and(|value| value.value == target) {
-            return Ok(Persisted::Unchanged);
-        }
-        let kind = current
-            .map(|value| value.kind)
-            .unwrap_or(RegistryValueKind::String);
-        self.registry.set_raw("VIBEVM_HOME", &target, kind)?;
-        Ok(Persisted::Changed)
+        self.set_var("VIBEVM_HOME", home)
+    }
+
+    fn set_install_root(&self, root: &Path) -> Result<Persisted> {
+        self.set_var("VIBEVM_INSTALL_ROOT", root)
     }
 
     fn ensure_on_path(&self, dir: &Path) -> Result<Persisted> {
@@ -136,6 +148,9 @@ impl EnvPersister for WindowsEnvPersister {
     }
     fn set_vibevm_home(&self, home: &Path) -> Result<Persisted> {
         Self::real().set_vibevm_home(home)
+    }
+    fn set_install_root(&self, root: &Path) -> Result<Persisted> {
+        Self::real().set_install_root(root)
     }
     fn ensure_on_path(&self, dir: &Path) -> Result<Persisted> {
         Self::real().ensure_on_path(dir)

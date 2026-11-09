@@ -9,6 +9,7 @@ use clap::Subcommand;
 
 mod archive;
 mod build;
+mod px_tool;
 mod release;
 mod snapshot;
 
@@ -94,6 +95,22 @@ pub(crate) enum DistCommand {
 
         #[arg(long, default_value = release::gitverse::DEFAULT_GITVERSE_REPO)]
         repo: String,
+    },
+
+    /// Stage the pinned px release (`xtask/dist/px.toml`) as `<out-dir>/tools/px/`
+    /// for one target: fetch or take the asset, verify its SHA-256, unpack
+    /// it, add px's LICENSE and a NOTICE (PROP-068#proxy).
+    Px {
+        #[arg(long)]
+        target: String,
+        #[arg(long, default_value = "dist")]
+        out_dir: PathBuf,
+        /// A local copy of the pinned asset instead of downloading it.
+        #[arg(long)]
+        archive: Option<PathBuf>,
+        /// A local copy of px's LICENSE.txt (default: the archive's own).
+        #[arg(long)]
+        license: Option<PathBuf>,
     },
 
     /// Verify all remote assets, publish DISTRIBUTIONS.json, and optionally publish the release.
@@ -190,6 +207,20 @@ pub(crate) fn run_dist(repo_root: &Path, command: DistCommand) -> Result<()> {
                 api_base,
                 owner,
                 repo,
+            },
+        ),
+        DistCommand::Px {
+            target,
+            out_dir,
+            archive,
+            license,
+        } => px_tool::run(
+            repo_root,
+            &px_tool::Inputs {
+                target: &target,
+                out_dir: &out_dir,
+                archive: archive.as_deref(),
+                license: license.as_deref(),
             },
         ),
         DistCommand::Finalize { version, publish } => {

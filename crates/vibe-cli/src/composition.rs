@@ -11,6 +11,7 @@ use vibe_core::user_config::UserConfig;
 
 pub(crate) mod cancellation;
 pub(crate) mod native_helper;
+pub(crate) mod network;
 pub(crate) mod remap;
 pub(crate) mod transfers;
 
@@ -22,7 +23,7 @@ pub(crate) fn run_vars(
 ) -> Result<()> {
     let install_base = commands::vvm::resolve_root(
         self_location.map(|location| location.root.clone()),
-        super::read_env_opt(commands::vvm::VIBEVM_INSTALL_ROOT_ENV).map(Into::into),
+        install_base_override(),
         dirs::home_dir(),
     )
     .and_then(|root| root.parent().map(|parent| parent.display().to_string()))
@@ -62,6 +63,23 @@ pub(crate) fn run_vars(
             ),
         ],
     )
+}
+
+/// The install base every command resolves its store under, below the
+/// running version's own root (PROP-019 `#install-root`):
+/// `$VIBEVM_INSTALL_ROOT`, then the configured `[self] install_root` — the
+/// user's own `config.toml` over the applied site profile, exactly as
+/// [`UserConfig::load`] layers them. The `~/.vibe` default belongs to
+/// `resolve_root`, which owns the `/opt` suffix too.
+///
+/// A config that cannot be parsed has already been reported once at
+/// startup, so this rung falls back to its own absence rather than failing
+/// a second command over an optional file.
+pub(crate) fn install_base_override() -> Option<std::path::PathBuf> {
+    if let Some(base) = super::read_env_opt(commands::vvm::VIBEVM_INSTALL_ROOT_ENV) {
+        return Some(base.into());
+    }
+    UserConfig::load().ok()?.self_source.install_root
 }
 
 /// The offline posture `vibe self` runs under (PROP-019 `##CMD-OFFLINE`).

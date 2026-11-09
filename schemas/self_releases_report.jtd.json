@@ -1,0 +1,73 @@
+{
+  "metadata": {
+    "description": "Wire format for `vibe self releases [--all] --json` (`vibe-self-releases/1`, PROP-019 `#release-sources`): the releases the effective source offers, newest first, and which of them this machine already holds. Source of truth for `crates/vibe-wire/src/generated/self_releases_report/mod.rs`.",
+    "spec": {
+      "implements": "spec://org.vibevm.core/vibevm/common/PROP-000#JTD-SSOT"
+    },
+    "rustOptions": {
+      "package": "vibe_wire::self_releases_report"
+    },
+    "x-vocabularies": ["release_source_view"],
+    "x-wire-order": ["protocol", "source", "releases", "truncated"]
+  },
+  "properties": {
+    "protocol": {
+      "type": "string",
+      "metadata": {
+        "description": "Always `\"vibe-self-releases/1\"` for this report."
+      }
+    },
+    "source": {
+      "ref": "release_source_view",
+      "metadata": {
+        "description": "The source the listing was read from, as `vibe self source --json` reports it — its own `protocol` member included."
+      }
+    },
+    "releases": {
+      "elements": {
+        "ref": "release_row"
+      },
+      "metadata": {
+        "x-empty": "emit",
+        "description": "The listed releases, newest first; the newest ten without `--all`. `[]` when the source offers none. Required member: an absent key would make the document invalid by this same schema (rule R21)."
+      }
+    },
+    "truncated": {
+      "type": "boolean",
+      "metadata": {
+        "description": "More releases exist than are listed; `--all` lists every one."
+      }
+    }
+  },
+  "definitions": {
+    "release_row": {
+      "metadata": {
+        "x-wire-order": ["version", "installed", "active", "running"],
+        "description": "One release the source offers, and what this machine does with it."
+      },
+      "properties": {
+        "version": {
+          "type": "string"
+        },
+        "installed": {
+          "type": "boolean",
+          "metadata": {
+            "description": "A tagged release install of this version exists in the store."
+          }
+        },
+        "active": {
+          "type": "boolean",
+          "metadata": {
+            "description": "It is the active instance the shims resolve to."
+          }
+        },
+        "running": {
+          "type": "boolean",
+          "metadata": {
+            "description": "It is the instance this process is running from."
+          }
+        }
+      }
+    }
+  }
+}

@@ -52,10 +52,13 @@ fn fixture_library() -> PathBuf {
     };
     let exact_name = fixture_name();
     let mut candidates = Vec::new();
-    collect_exact(profile_dir, &exact_name, &mut candidates);
+    // `deps/` holds the copy this test binary was built with; Cargo's
+    // uplifted copy in the profile directory may be from an older build of
+    // the fixture alone, so it is used only when `deps/` has none.
     collect_exact(&profile_dir.join("deps"), &exact_name, &mut candidates);
-    candidates.sort();
-    candidates.dedup();
+    if candidates.is_empty() {
+        collect_exact(profile_dir, &exact_name, &mut candidates);
+    }
     assert_eq!(candidates.len(), 1, "one exact SDK fixture: {candidates:?}");
     candidates.pop().expect("one fixture library")
 }

@@ -29,8 +29,12 @@ vibe-publish.workspace = true
 # `dist gitverse-publish` talks to the GitVerse release API directly.
 reqwest.workspace = true
 zip.workspace = true
+# `dist px` unpacks the pinned px release archives (xtask/dist/px.toml).
+tar.workspace = true
+flate2.workspace = true
 sha2.workspace = true
 vibe-core.workspace = true
+vibe-net.workspace = true
 vibe-registry.workspace = true
 # `embed-doc-shell` writes the shell's index and its pin, and the digest
 # in both is measured by the crate that will re-measure it later — one

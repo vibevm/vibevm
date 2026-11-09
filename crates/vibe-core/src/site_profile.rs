@@ -334,6 +334,9 @@ impl SiteProfile {
             ("artifacts.vibe", self.artifacts.vibe.as_ref()),
             ("artifacts.packages", self.artifacts.packages.as_ref()),
             ("self.path", self.self_source.path.as_ref()),
+            ("self.install_root", self.self_source.install_root.as_ref()),
+            ("proxy.ca_file", self.proxy.ca_file.as_ref()),
+            ("proxy.px_path", self.proxy.px_path.as_ref()),
         ] {
             if let Some(path) = path
                 && !is_absolute_anywhere(path)
@@ -346,9 +349,6 @@ impl SiteProfile {
             }
         }
         for (key, value) in [
-            ("proxy.https", self.proxy.https.as_deref()),
-            ("proxy.http", self.proxy.http.as_deref()),
-            ("proxy.no_proxy", self.proxy.no_proxy.as_deref()),
             ("self.url", self.self_source.url.as_deref()),
             ("self.api", self.self_source.api.as_deref()),
         ] {
@@ -359,6 +359,9 @@ impl SiteProfile {
                     "give a value or drop the key",
                 ));
             }
+        }
+        if let Some((key, reason, fix)) = self.proxy.problem() {
+            return Err(invalid(key.into(), &reason, fix));
         }
         Ok(())
     }
@@ -404,7 +407,7 @@ impl SiteProfile {
 
     /// Whether the profile decides where `vibe self` reads releases from.
     pub fn declares_release_source(&self) -> bool {
-        !self.self_source.is_default() || self.artifacts.vibe.is_some()
+        !self.self_source.release_is_default() || self.artifacts.vibe.is_some()
     }
 
     /// The `[path] fix` policy, `ask` when absent.

@@ -19,6 +19,8 @@ pub(crate) fn supported(command: &Command) -> bool {
         Command::Install(args) => !args.global,
         Command::Update(args) => !args.global,
         Command::Registry(args) => matches!(&args.command, RegistrySubcommand::Publish(_)),
+        // PROP-068 `#dl`: a download is an operation a stop removes.
+        Command::Dl(_) => true,
         _ => false,
     }
 }
@@ -94,7 +96,7 @@ pub(crate) fn for_command(
     }
     if stop.is_some() {
         anyhow::bail!(
-            "--stop-file is supported only for project install/update and registry publish"
+            "--stop-file is supported only for project install/update, registry publish and dl"
         );
     }
     Ok((ctx.clone(), CancellationToken::new(), StopInput::none()))

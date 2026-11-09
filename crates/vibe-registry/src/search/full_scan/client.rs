@@ -31,7 +31,7 @@ pub(super) fn scan_http_error(
         HttpGetError::Refused(reason) => FullScanError::ContactRefused(reason),
         HttpGetError::Transport(error) => FullScanError::Http {
             url: vibe_core::progress::transfer::safe_remote(url),
-            message: error.without_url().to_string(),
+            message: error.to_string(),
         },
         HttpGetError::Io(error) => FullScanError::Http {
             url: vibe_core::progress::transfer::safe_remote(url),
@@ -51,7 +51,10 @@ pub(super) fn build_client(
     )
     .map_err(|error| FullScanError::Http {
         url: "<client-build>".into(),
-        message: error.without_url().to_string(),
+        message: match error {
+            crate::http_admission::ClientBuildError::Http(error) => error.without_url().to_string(),
+            error => error.to_string(),
+        },
     })?;
     Ok(ScanClient { client, admission })
 }
