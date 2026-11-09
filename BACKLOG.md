@@ -2746,3 +2746,13 @@ structure, and it goes when the file does.
 | @fact:B250-SEVERITY **severity** | P3 — noise a corporate user will report on day one. |
 | @fact:B250-DISPOSITION **disposition** | `candidate` — compare against the journal state the clone carries, or demote to a note. |
 | @fact:B250-FILED **filed by** | Corporate-env campaign, Windows test-build walk, 2026-11-09. |
+
+## B-251 — `self apply` in px mode finishes quietly when px was not installed {#b-251}
+
+| field | value |
+|---|---|
+| @fact:B251-WHAT **what** | The release zip carries no px (px is a separate companion asset, PROP-019 `#companion-tools`). When a user unpacks only the vibe zip and runs `vibe self apply` with a profile that sets `[proxy] mode = "px"`, the only trace is one grey line `○ Installing px · skipped: no px-…zip beside the binary`; the summary still reads `proxy mode: px` and the command exits 0. The first network command then fails. `vibe self px status` for a missing px also ends with `✓ px`. |
+| @fact:B251-EVIDENCE **evidence** | The owner missed the step in the corporate delivery, 2026-11-09; reproduced on base (unpack the zip only → `self apply` → `self px status` says not installed → `vibe self px install --from <dir>` fixes it). |
+| @fact:B251-SEVERITY **severity** | P2 — the corporate first-run path breaks silently. |
+| @fact:B251-DISPOSITION **disposition** | `candidate` — when the profile selects px and px ends up absent, `self apply` prints a warning in its summary naming `vibe self px install --from <dir-or-zip>`; `self px status` marks a missing px as a warning, not `✓`; the release README names the px asset beside the zip. |
+| @fact:B251-FILED **filed by** | Corporate-env campaign, owner feedback on the delivery, 2026-11-09. |
