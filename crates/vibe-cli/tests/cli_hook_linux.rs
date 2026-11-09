@@ -326,6 +326,33 @@ fn the_hook_never_fails_the_prompt() {
 
 #[test]
 #[specmark::spec(verifies = "spec://org.vibevm.core/vibevm/common/PROP-075#ACTIVATION-HOOK")]
+fn the_hook_keeps_the_last_commands_exit_status_for_the_prompt() {
+    let f = fixture();
+    let block = ok(&f.r.vibe(&["hook", "bash", "--print"]));
+    let inside = project(&f.r, "inside", "1.0.0");
+    // The hook runs before PS1 is expanded, so the status it returns is the
+    // `$?` a prompt shows: on every path (unchanged directory, nothing found,
+    // a `vibe` call) it must be the status of the user's last command.
+    let script = format!(
+        "{block}\n\
+         (exit 3); __vibe_versions; echo first=$?\n\
+         (exit 4); __vibe_versions; echo unchanged=$?\n\
+         cd '{inside}'; (exit 5); __vibe_versions; echo called=$?\n\
+         cd /; (exit 6); __vibe_versions; echo left=$?\n",
+        inside = inside.display(),
+    );
+    let out = in_shell(&f, "bash", &script);
+    let stdout = String::from_utf8_lossy(&out.stdout).into_owned();
+    for expected in ["first=3", "unchanged=4", "called=5", "left=6"] {
+        assert!(
+            stdout.contains(expected),
+            "{expected} missing: {stdout} {out:?}"
+        );
+    }
+}
+
+#[test]
+#[specmark::spec(verifies = "spec://org.vibevm.core/vibevm/common/PROP-075#ACTIVATION-HOOK")]
 fn the_zsh_block_runs_in_a_real_zsh_when_one_is_installed() {
     if !available("zsh") {
         eprintln!("skipped: zsh is not installed on this host");

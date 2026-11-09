@@ -131,7 +131,9 @@ enum Register {
 }
 
 /// The POSIX-shell body, shared by bash and zsh: the two differ only in how
-/// a function is registered on the prompt.
+/// a function is registered on the prompt. The function returns the status
+/// it was entered with, so a prompt that shows the last command's `$?`
+/// still sees that command's status and not the hook's.
 fn posix_body(names: &[String], register: Register) -> String {
     let shell = match register {
         Register::PromptCommand => "bash",
@@ -164,7 +166,8 @@ fn posix_body(names: &[String], register: Register) -> String {
          __vibe_version_dir=''\n\
          __vibe_version_applied=''\n\
          __vibe_versions() {{\n  \
-         [ \"$PWD\" = \"$__vibe_version_dir\" ] && return 0\n  \
+         local __vibe_version_status=$?\n  \
+         [ \"$PWD\" = \"$__vibe_version_dir\" ] && return $__vibe_version_status\n  \
          __vibe_version_dir=$PWD\n  \
          __vibe_version_found=''\n  \
          __vibe_version_walk=$PWD\n  \
@@ -181,11 +184,11 @@ fn posix_body(names: &[String], register: Register) -> String {
          [ -z \"$__vibe_version_walk\" ] && __vibe_version_walk=/\n  \
          done\n  \
          if [ -z \"$__vibe_version_found\" ] && [ -z \"$__vibe_version_applied\" ]; then\n    \
-         return 0\n  \
+         return $__vibe_version_status\n  \
          fi\n  \
          __vibe_version_applied=$__vibe_version_found\n  \
          eval \"$(command vibe app env --project --shell {shell})\" || true\n  \
-         return 0\n\
+         return $__vibe_version_status\n\
          }}\n\
          {registration}"
     )
@@ -270,7 +273,11 @@ fn pwsh_body(names: &[String]) -> String {
          $global:VibeVersionsPromptWrapped = $true\n    \
          $global:VibeVersionsOriginalPrompt = $function:prompt\n    \
          function global:prompt {{\n        \
+         $vibeOk = $?\n        \
+         $vibeExit = $global:LASTEXITCODE\n        \
          __vibe_versions\n        \
+         $global:LASTEXITCODE = $vibeExit\n        \
+         if (-not $vibeOk) {{ Write-Error '' -ErrorAction Ignore }}\n        \
          & $global:VibeVersionsOriginalPrompt\n    \
          }}\n\
          }}"
