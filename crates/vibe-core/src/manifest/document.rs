@@ -557,47 +557,32 @@ impl Manifest {
 }
 
 #[cfg(test)]
-#[path = "document/tests.rs"]
 mod tests;
 #[cfg(test)]
-#[path = "document/tests_application.rs"]
 mod tests_application;
 #[cfg(test)]
-#[path = "document/tests_documentation.rs"]
 mod tests_documentation;
 #[cfg(test)]
-#[path = "document/tests_extension_controls.rs"]
 mod tests_extension_controls;
 #[cfg(test)]
-#[path = "document/tests_extensions.rs"]
 mod tests_extensions;
 #[cfg(test)]
-#[path = "document/tests_field_paths.rs"]
 mod tests_field_paths;
 #[cfg(test)]
-#[path = "document/tests_glossary.rs"]
 mod tests_glossary;
 #[cfg(test)]
-#[path = "document/tests_mechanism_grammar.rs"]
 mod tests_mechanism_grammar;
 #[cfg(test)]
-#[path = "document/tests_menu.rs"]
 mod tests_menu;
 #[cfg(test)]
-#[path = "document/tests_requires.rs"]
 mod tests_requires;
 #[cfg(test)]
-#[path = "document/tests_run_commands.rs"]
 mod tests_run_commands;
 #[cfg(test)]
-#[path = "document/tests_steps.rs"]
 mod tests_steps;
 #[cfg(test)]
-#[path = "document/tests_version_file.rs"]
 mod tests_version_file;
 #[cfg(test)]
-#[path = "document/tests_visibility.rs"]
 mod tests_visibility;
 #[cfg(test)]
-#[path = "document/tests_wizard.rs"]
 mod tests_wizard;
