@@ -98,8 +98,9 @@ pub use package::application::{
     ParameterType, ParameterValue, ProfileDecl, PublicCommandDecl, RecipeDecl, RequirementDecl,
     RequirementScope, RequirementTable, ResultDecl, ShellInterpreter, SourceInputDecl, StepDecl,
     StepEnvironment, StepEnvironmentError, StepKind, StepOrigin, StepPhase, StepVar,
-    application_requirements, expand_step_template, icon_findings, is_launcher_command_name,
-    launcher_command, png_dimensions, result_of, step_env_name, steps_of,
+    TOOL_VERSIONS_FILE, VersionFileDecl, application_requirements, expand_step_template,
+    icon_findings, is_launcher_command_name, launcher_command, png_dimensions, result_of,
+    step_env_name, steps_of,
 };
 pub use package::{
     ABSTRACT_LIMIT, AccessLevel, AllowFriendsOverride, ApplicationDecl, Authorship, BinaryDecl,

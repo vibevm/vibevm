@@ -15,6 +15,7 @@ mod sugar;
 mod template;
 mod template_validation;
 mod validation;
+mod version_file;
 mod wizard;
 mod wizard_validation;
 
@@ -34,6 +35,7 @@ pub use steps::{
 };
 pub use sugar::{result_of, steps_of};
 pub use template::{StepVar, expand_step_template};
+pub use version_file::{TOOL_VERSIONS_FILE, VersionFileDecl};
 pub use wizard::{
     ChoiceDecl, LicenseDecl, ParameterDecl, ParameterType, ParameterValue, ProfileDecl,
 };
@@ -385,6 +387,13 @@ pub struct ApplicationDecl {
     /// whole (`PROP-065#icon`).
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub icon: Option<IconDecl>,
+    /// `[[application.version_file]]` — the per-project version files this
+    /// package understands, from the closed format set of PROP-075
+    /// `#VERSION-FILE-FORMATS`. Absent means the slot has no version file
+    /// and a project selects its version by an ordinary `vibe.toml`
+    /// requirement alone.
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub version_file: Vec<VersionFileDecl>,
 }
 
 fn portable_default() -> bool {

@@ -593,6 +593,9 @@ mod tests_run_commands;
 #[path = "document/tests_steps.rs"]
 mod tests_steps;
 #[cfg(test)]
+#[path = "document/tests_version_file.rs"]
+mod tests_version_file;
+#[cfg(test)]
 #[path = "document/tests_visibility.rs"]
 mod tests_visibility;
 #[cfg(test)]
