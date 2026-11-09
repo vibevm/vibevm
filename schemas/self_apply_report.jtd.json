@@ -429,10 +429,13 @@
           "pac",
           "pac_kind",
           "pac_origin",
+          "pac_resolved",
           "upstream",
           "px_port",
           "px_path",
-          "ca_file"
+          "ca_file",
+          "revocation",
+          "revocation_origin"
         ],
         "description": "The effective `[proxy]` table (PROP-068#proxy); each key is `null` when neither the user's file nor the site declares it. `mode` is the mode in force and `mode_origin` the layer that chose it."
       },
@@ -482,6 +485,13 @@
             "description": "Which layer chose the PAC: `default`, `site profile`, `user config` or `VIBEVM_PROXY_PAC`."
           }
         },
+        "pac_resolved": {
+          "type": "string",
+          "nullable": true,
+          "metadata": {
+            "description": "What `pac = \"system\"` resolved to on this host and the Windows setting that answered — `system \u2192 https://\u2026 (from user Internet Options)` — or the reason it could not be resolved. `null` whenever `pac` is not `system`."
+          }
+        },
         "upstream": {
           "type": "string",
           "nullable": true,
@@ -508,6 +518,18 @@
           "nullable": true,
           "metadata": {
             "description": "The PEM bundle of extra certificate authorities trusted with the system store."
+          }
+        },
+        "revocation": {
+          "type": "string",
+          "metadata": {
+            "description": "Whether a child `git` using Windows schannel checks certificate revocation: `check` (the default), `best-effort` or `off`."
+          }
+        },
+        "revocation_origin": {
+          "type": "string",
+          "metadata": {
+            "description": "Which layer chose it: `default`, `site profile`, `user config` or `VIBEVM_PROXY_REVOCATION`."
           }
         }
       }

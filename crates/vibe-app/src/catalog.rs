@@ -201,6 +201,7 @@ mod tests {
                     launcher("tool", LauncherKind::Command),
                 ],
                 public_commands: Vec::new(),
+                path_dirs: Vec::new(),
                 commands: AuthoredCommands::default(),
                 features: Vec::new(),
                 parameters: Default::default(),
@@ -211,7 +212,7 @@ mod tests {
                 lifecycle: Default::default(),
             },
         );
-        index.slots.insert("editor".into(), Some(package.key()));
+        index.set_default("editor", Some(package.key()));
         index
     }
 

@@ -15,7 +15,7 @@ use std::path::{Path, PathBuf};
 use std::process::{Command, Stdio};
 
 use anyhow::{Context, Result, bail};
-use vibe_app::{EnvOp, SESSION_VARIABLE, SessionChoices, SettingsRoot};
+use vibe_app::{EnvOp, SESSION_OFF, SESSION_VARIABLE, SessionChoices, SettingsRoot};
 
 use crate::cli::ShellArgs;
 use crate::commands::app::{global, home};
@@ -40,6 +40,30 @@ pub fn run(ctx: &output::Context, args: ShellArgs) -> Result<()> {
         bins.push(exposure.proxies.clone());
         with_choices.push(exposure.choice());
     }
+    // A session choice for a slot that exposes payload directories is the
+    // real payload, put in front of the slot's link: `--use SLOT=KEY`
+    // shadows the global default without repointing anything, and
+    // `--use SLOT=none` takes the slot's link directories out of this
+    // child's PATH so a lookup falls through to the system program
+    // (PROP-059 `#session-selection`, `#slot-off`).
+    let mut withdrawn: Vec<PathBuf> = Vec::new();
+    for entry in &args.uses {
+        let (slot, key) = entry
+            .split_once('=')
+            .map(|(slot, key)| (slot.trim(), key.trim()))
+            .unwrap_or((entry.trim(), ""));
+        for settings in &homes {
+            let index = vibe_app::Index::load(settings)?;
+            if key == SESSION_OFF {
+                withdrawn.extend(vibe_app::slot_link_dirs(settings, &index, slot));
+                continue;
+            }
+            let storage = vibe_app::Storage::load(settings)?;
+            bins.extend(vibe_app::slot_session_dirs(
+                settings, &index, &storage, key,
+            )?);
+        }
+    }
     bins.extend(home::shell_bins(args.global, project.as_deref(), &user));
     let mut recorded = Vec::new();
     for settings in &homes {
@@ -63,7 +87,7 @@ pub fn run(ctx: &output::Context, args: ShellArgs) -> Result<()> {
     for entry in with_choices.iter().chain(&args.uses) {
         choices.apply(entry)?;
     }
-    let path = compose_path(&bins, inherited_path.as_deref())?;
+    let path = compose_path(&bins, inherited_path.as_deref(), &withdrawn)?;
     let shell = parent::shell().context("selecting the interactive shell")?;
     let mut command = Command::new(&shell);
     command
@@ -136,11 +160,13 @@ fn inherited() -> (Option<OsString>, Option<OsString>) {
 }
 
 /// Put each home's `opt/bin` at the front of `inherited`, in priority order,
-/// unless the directory is already listed (compared canonically).
-fn compose_path(homes: &[PathBuf], inherited: Option<&OsStr>) -> Result<OsString> {
-    let existing: Vec<PathBuf> = inherited
-        .map(|value| std::env::split_paths(value).collect())
-        .unwrap_or_default();
+/// unless the directory is already listed (compared canonically), and leave
+/// out every directory a `--use SLOT=none` withdrew.
+fn compose_path(
+    homes: &[PathBuf],
+    inherited: Option<&OsStr>,
+    withdrawn: &[PathBuf],
+) -> Result<OsString> {
     let same = |left: &Path, right: &Path| {
         left == right
             || matches!(
@@ -148,8 +174,13 @@ fn compose_path(homes: &[PathBuf], inherited: Option<&OsStr>) -> Result<OsString
                 (Ok(left), Ok(right)) if left == right
             )
     };
+    let kept = |entry: &PathBuf| !withdrawn.iter().any(|gone| same(gone, entry));
+    let existing: Vec<PathBuf> = inherited
+        .map(|value| std::env::split_paths(value).filter(kept).collect())
+        .unwrap_or_default();
     let front: Vec<PathBuf> = homes
         .iter()
+        .filter(|home| kept(home))
         .filter(|home| !existing.iter().any(|entry| same(home, entry)))
         .cloned()
         .collect();
@@ -187,17 +218,47 @@ mod tests {
         let bin = dir.path().join("opt/bin");
         std::fs::create_dir_all(&bin).unwrap();
         let inherited = std::env::join_paths(["/usr/bin", "/bin"]).unwrap();
-        let composed = compose_path(std::slice::from_ref(&bin), Some(&inherited)).unwrap();
+        let composed = compose_path(std::slice::from_ref(&bin), Some(&inherited), &[]).unwrap();
         let entries: Vec<PathBuf> = std::env::split_paths(&composed).collect();
         assert_eq!(entries[0], bin);
         assert_eq!(entries.len(), 3);
 
         let spelled = dir.path().join("opt/./bin");
         let listed = std::env::join_paths([Path::new("/usr/bin"), spelled.as_path()]).unwrap();
-        let composed = compose_path(std::slice::from_ref(&bin), Some(&listed)).unwrap();
+        let composed = compose_path(std::slice::from_ref(&bin), Some(&listed), &[]).unwrap();
         assert_eq!(composed, listed, "an already listed home is not repeated");
 
-        let alone = compose_path(std::slice::from_ref(&bin), None).unwrap();
+        let alone = compose_path(std::slice::from_ref(&bin), None, &[]).unwrap();
         assert_eq!(PathBuf::from(alone), bin);
+    }
+
+    #[test]
+    #[specmark::spec(verifies = "spec://org.vibevm.core/vibevm/common/PROP-059#slot-off")]
+    fn a_withdrawn_slot_link_directory_is_left_out_of_the_child_path() {
+        let dir = tempfile::tempdir().unwrap();
+        let link = dir.path().join("opt/paths/node/0");
+        let bin = dir.path().join("opt/bin");
+        std::fs::create_dir_all(&link).unwrap();
+        std::fs::create_dir_all(&bin).unwrap();
+        let inherited = std::env::join_paths([link.as_path(), Path::new("/usr/bin")]).unwrap();
+        // `--use node=none`: the slot's link directory goes, everything else
+        // stays in order, and `opt/bin` still leads.
+        let composed = compose_path(
+            std::slice::from_ref(&bin),
+            Some(&inherited),
+            std::slice::from_ref(&link),
+        )
+        .unwrap();
+        let entries: Vec<PathBuf> = std::env::split_paths(&composed).collect();
+        assert_eq!(entries, vec![bin.clone(), PathBuf::from("/usr/bin")]);
+        // A withdrawn directory is not put back at the front either.
+        let composed = compose_path(
+            &[link.clone(), bin.clone()],
+            Some(&inherited),
+            std::slice::from_ref(&link),
+        )
+        .unwrap();
+        let entries: Vec<PathBuf> = std::env::split_paths(&composed).collect();
+        assert_eq!(entries, vec![bin, PathBuf::from("/usr/bin")]);
     }
 }

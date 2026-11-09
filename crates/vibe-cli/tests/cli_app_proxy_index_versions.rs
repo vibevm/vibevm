@@ -130,7 +130,15 @@ fn actual_proxy_refuses_unknown_protocol_and_nested_fields_in_both_index_version
     for record in four["installations"].as_object_mut().unwrap().values_mut() {
         record.as_object_mut().unwrap().remove("source_evidence");
     }
-    for original in [old, four, new.clone()] {
+    // Protocol6: the exposed payload directories and the slot off switch
+    // (PROP-059 `#path-directories`, `#slot-off`).
+    let mut six = new.clone();
+    six["protocol"] = "vibe-user-applications/6".into();
+    six["installations"]["org.example/rich@1.0.0"]["pathDirs"] = serde_json::json!(["bin"]);
+    for slot in six["slots"].as_object_mut().unwrap().values_mut() {
+        slot["pathEnv"] = serde_json::json!([]);
+    }
+    for original in [old, four, new.clone(), six] {
         fs::write(&path, serde_json::to_vec(&original).unwrap()).unwrap();
         assert!(
             launch(&r, "legacy-cmd").status.success(),
@@ -167,10 +175,55 @@ fn actual_proxy_refuses_unknown_protocol_and_nested_fields_in_both_index_version
         }
     }
     // Protocol3 must not admit4-only fields under a legacy tag.
-    let mut forged: Value = new;
+    let mut forged: Value = new.clone();
     forged["protocol"] = "vibe-user-applications/3".into();
     fs::write(&path, serde_json::to_vec(&forged).unwrap()).unwrap();
     assert_eq!(launch(&r, "legacy-cmd").status.code(), Some(127));
+    // Nor may an older tag admit the protocol6-only members.
+    for tag in [
+        "vibe-user-applications/3",
+        "vibe-user-applications/4",
+        "vibe-user-applications/5",
+    ] {
+        let mut forged: Value = new.clone();
+        forged["protocol"] = tag.into();
+        for record in forged["installations"]
+            .as_object_mut()
+            .unwrap()
+            .values_mut()
+        {
+            record.as_object_mut().unwrap().remove("configuration");
+            record.as_object_mut().unwrap().remove("pending");
+            record.as_object_mut().unwrap().remove("source_evidence");
+        }
+        forged["installations"]["org.example/rich@1.0.0"]["pathDirs"] = serde_json::json!(["bin"]);
+        fs::write(&path, serde_json::to_vec(&forged).unwrap()).unwrap();
+        assert_eq!(
+            launch(&r, "legacy-cmd").status.code(),
+            Some(127),
+            "{tag} must not admit pathDirs"
+        );
+        let mut forged: Value = new.clone();
+        forged["protocol"] = tag.into();
+        for record in forged["installations"]
+            .as_object_mut()
+            .unwrap()
+            .values_mut()
+        {
+            record.as_object_mut().unwrap().remove("configuration");
+            record.as_object_mut().unwrap().remove("pending");
+            record.as_object_mut().unwrap().remove("source_evidence");
+        }
+        for slot in forged["slots"].as_object_mut().unwrap().values_mut() {
+            slot["off"] = true.into();
+        }
+        fs::write(&path, serde_json::to_vec(&forged).unwrap()).unwrap();
+        assert_eq!(
+            launch(&r, "legacy-cmd").status.code(),
+            Some(127),
+            "{tag} must not admit the slot off switch"
+        );
+    }
 }
 
 #[test]
@@ -180,6 +233,7 @@ fn original_image_reports_exact_reader_capabilities_without_changing_probe() {
         "vibe-user-applications/3",
         "vibe-user-applications/4",
         "vibe-user-applications/5",
+        "vibe-user-applications/6",
     ] {
         let out = Command::new(image)
             .args(["--supports-index", protocol])

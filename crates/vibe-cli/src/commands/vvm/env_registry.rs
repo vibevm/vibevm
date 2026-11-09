@@ -39,6 +39,9 @@ pub(crate) trait UserRegistry {
     fn get_raw(&self, name: &str) -> Result<Option<RawUserVar>>;
     /// Write one raw value with its kind and announce the change.
     fn set_raw(&self, name: &str, value: &str, kind: RegistryValueKind) -> Result<()>;
+    /// Remove one value and announce the change; an absent value is
+    /// already the requested state.
+    fn delete_raw(&self, name: &str) -> Result<()>;
 }
 
 /// The real `HKCU\Environment`: direct registry API calls followed by the
@@ -51,6 +54,9 @@ impl UserRegistry for Hkcu {
     }
     fn set_raw(&self, name: &str, value: &str, kind: RegistryValueKind) -> Result<()> {
         set_user_var_raw(name, value, kind)
+    }
+    fn delete_raw(&self, name: &str) -> Result<()> {
+        delete_user_var_raw(name)
     }
 }
 
@@ -211,6 +217,11 @@ impl UserRegistry for MemoryRegistry {
                 kind,
             },
         );
+        self.writes.set(self.writes.get() + 1);
+        Ok(())
+    }
+    fn delete_raw(&self, name: &str) -> Result<()> {
+        self.values.borrow_mut().remove(&name.to_ascii_uppercase());
         self.writes.set(self.writes.get() + 1);
         Ok(())
     }

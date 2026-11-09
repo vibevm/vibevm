@@ -209,6 +209,7 @@ pub(super) fn apply(
             location,
             launchers,
             public_commands: option.public_commands.clone(),
+            path_dirs: option.path_dirs.clone(),
             commands,
             features: plan.features.clone(),
             parameters: plan

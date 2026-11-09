@@ -29,6 +29,7 @@ fn record(name: &str, mark: Mark, hidden: bool) -> Installation {
         portable: true,
         launchers: vec![],
         public_commands: vec![],
+        path_dirs: Vec::new(),
         commands: Default::default(),
         features: vec!["legacy-feature".into()],
         parameters: BTreeMap::from([("answer".into(), "legacy value".into())]),

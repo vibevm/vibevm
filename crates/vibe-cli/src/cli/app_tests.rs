@@ -189,9 +189,31 @@ fn app_list_use_alternatives_and_shell_parse() {
         panic!("expected app command");
     };
     assert!(
-        matches!(app.command, AppCommand::Use { slot, key } if slot == "editor" && key == "org.example/vim@9.1.0")
+        matches!(app.command, AppCommand::Use { slot, key, none, default }
+            if slot == "editor"
+                && key.as_deref() == Some("org.example/vim@9.1.0")
+                && !none
+                && !default)
     );
-    assert!(Cli::try_parse_from(["vibe", "app", "use", "editor"]).is_err());
+    // The slot off switch and its counterpart (PROP-059 `#slot-off`); both
+    // together is a usage error the grammar itself refuses.
+    let cli = Cli::try_parse_from(["vibe", "app", "use", "node", "--none"]).unwrap();
+    let Command::App(app) = cli.command else {
+        panic!("expected app command");
+    };
+    assert!(
+        matches!(app.command, AppCommand::Use { slot, key, none, default }
+        if slot == "node" && key.is_none() && none && !default)
+    );
+    let cli = Cli::try_parse_from(["vibe", "app", "use", "node", "--default"]).unwrap();
+    let Command::App(app) = cli.command else {
+        panic!("expected app command");
+    };
+    assert!(
+        matches!(app.command, AppCommand::Use { slot, key, none, default }
+        if slot == "node" && key.is_none() && !none && default)
+    );
+    assert!(Cli::try_parse_from(["vibe", "app", "use", "node", "--none", "--default"]).is_err());
     let cli = Cli::try_parse_from(["vibe", "shell", "-g", "--use", "a=x", "--use", "b=y"]).unwrap();
     let Command::Shell(shell) = cli.command else {
         panic!("expected shell command");

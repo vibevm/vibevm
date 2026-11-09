@@ -33,6 +33,8 @@ mod environment;
 mod error;
 mod error_catalog;
 mod error_lifecycle;
+mod error_paths;
+pub use error_paths::PathsError;
 mod export;
 mod exposure;
 mod fs_util;
@@ -42,6 +44,7 @@ mod installer;
 mod launch;
 mod operations;
 pub use operations::pending::command as resume_command;
+mod paths;
 mod portable;
 mod proxies;
 mod resolve;
@@ -58,7 +61,7 @@ pub use agents::{
     preset_table as agent_preset_table, presets as agent_presets, select_agent,
 };
 pub use alternatives::{
-    DefaultChange, listing as alternatives_listing, reserved_commands, set_default,
+    DefaultChange, listing as alternatives_listing, reserved_commands, set_default, set_slot_off,
 };
 pub use catalog::{
     ApplicationEvent, EVENTS_PROTOCOL, EventKind, EventTail, HomeEvent, LAUNCHER_KEY_SEPARATOR,
@@ -90,8 +93,8 @@ pub use exposure::{Exposure, expose_for_session};
 pub use icons::{ResolvedIcon, ResolvedIconFile};
 pub use index::{
     AcceptedLicense, ApplicationMenu, AuthoredCommands, EnvEntry, EnvOp, INDEX_PROTOCOL, Index,
-    Installation, Lifecycle, Location, Mark, Method, PackageCoordinate, Requirement, StepOutcome,
-    StepRecord, ValueKind,
+    Installation, Lifecycle, Location, Mark, Method, PackageCoordinate, Requirement, SlotState,
+    StepOutcome, StepRecord, ValueKind,
 };
 pub use installer::programs::{windows_cmd, windows_powershell, windows_system_program};
 pub use installer::{Interrupt, ServedBy, ServedRow, StepLogs, StepPanel};
@@ -103,9 +106,14 @@ pub use launch::{
 pub use operations::{
     Change, ChangeVerb, Command, InstallRequest, ModifyRequest, OperationContext, Outcome,
     PackageResolver, Removal, RemoveRequest, ResolverScope, ResumeInfo, ResumeRequest,
-    SavedSourceReader, autoremove, configuration_plan, expose, hide, hold, import_cohort,
-    import_resume_info, install, installed, list, mark, modify, outdated, plan, remove_unrecorded,
-    resume, resume_import, resume_info, rollback, uninstall, update,
+    SavedSourceReader, SlotExposure, autoremove, configuration_plan, expose, hide, hold,
+    import_cohort, import_resume_info, install, installed, list, mark, modify, outdated, plan,
+    remove_unrecorded, resume, resume_import, resume_info, rollback, uninstall, update,
+};
+pub use paths::{
+    PATH_LINK_STEP, PathSync, SlotPaths, env_tag as slot_path_env_tag,
+    path_entry as slot_path_entry, session_dirs as slot_session_dirs, slot_link_dirs,
+    sync_locked as sync_slot_paths,
 };
 pub use portable::{
     APPS_PROTOCOL, FULL_APPS_PROTOCOL, IMPORT_PROTOCOL, ImportAction, ImportCandidate,
@@ -124,7 +132,7 @@ pub use select::{
     Choice, Chooser, InstallChoice, detected_arch, detected_platform, options_listing,
     select_option,
 };
-pub use session::{SESSION_VARIABLE, SessionChoices};
+pub use session::{SESSION_OFF, SESSION_VARIABLE, SessionChoices};
 pub use settings::{HOME_POINTER, MutationLock, PROJECT_HOME, SettingsRoot};
 pub use steps::{
     FeatureChooser, FeatureRequest, FeatureResolution, HostFacts, Implied, ImpliedRule,

@@ -547,6 +547,13 @@ pub struct ProxyRow {
     /// `VIBEVM_PROXY_PAC`.
     pub pac_origin: String,
 
+    /// What `pac = "system"` resolved to on this host and the Windows setting
+    /// that answered — `system → https://… (from user Internet Options)` —
+    /// or the reason it could not be resolved. `null` whenever `pac` is not
+    /// `system`.
+    #[serde(deserialize_with = "crate::behaviour::required_nullable::deserialize")]
+    pub pac_resolved: Option<String>,
+
     /// The upstream proxy px authenticates to (`host:port`).
     #[serde(deserialize_with = "crate::behaviour::required_nullable::deserialize")]
     pub upstream: Option<String>,
@@ -563,6 +570,14 @@ pub struct ProxyRow {
     /// store.
     #[serde(deserialize_with = "crate::behaviour::required_nullable::deserialize")]
     pub ca_file: Option<String>,
+
+    /// Whether a child `git` using Windows schannel checks certificate
+    /// revocation: `check` (the default), `best-effort` or `off`.
+    pub revocation: String,
+
+    /// Which layer chose it: `default`, `site profile`, `user config` or
+    /// `VIBEVM_PROXY_REVOCATION`.
+    pub revocation_origin: String,
 }
 
 /// One effective `[[registry]]` and the layer it came from.

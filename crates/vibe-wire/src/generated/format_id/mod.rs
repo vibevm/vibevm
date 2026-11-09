@@ -30,6 +30,7 @@ pub enum FormatId {
     ApplicationIndex,
     ApplicationIndexV3,
     ApplicationIndexV4,
+    ApplicationIndexV5,
     ApplicationRun,
     ApplicationSteps,
     ApplicationStepsV1,

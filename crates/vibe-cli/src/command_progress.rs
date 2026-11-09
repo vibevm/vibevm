@@ -65,6 +65,7 @@ pub(crate) const TOP_LEVEL_COMMANDS: &[&str] = &[
     "storage",
     "term",
     "test",
+    "tool",
     "tools",
     "trace",
     "transfers",
@@ -404,6 +405,9 @@ pub(crate) fn policy(command: &Command, terminal_attached: bool) -> CommandPolic
         Command::Artifacts(_) => FiniteFallback("Command artifacts"),
         // PROP-068 `#dl`: its own phase rows and the transfer bar.
         Command::Dl(_) => ExistingRoot,
+        // PROP-068 `#proxy-tool`: `exec` hands the terminal to a child and
+        // `serve` waits for Ctrl-C — neither is a progress-bearing run.
+        Command::Tool(_) => FastMetadata,
         Command::Transfers(args) => match args.command {
             Some(crate::cli::TransfersCommand::Watch) => PersistentProtocol,
             _ => FastMetadata,

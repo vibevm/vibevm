@@ -112,6 +112,12 @@ gated_pub_doctest = [
 # file fails the gate; extending this list is a deliberate, reviewed decision.
 env_roots = [
     "crates/vibe-cli/src/main.rs",
+    # `main.rs`'s own cell, by its name and its doc line: the helpers that
+    # assemble ambient input so dispatch never touches it. `VvmEnv` — the
+    # installation `vibe self …` acts on — is built here rather than in
+    # `main.rs` only because `main.rs` has a file budget; the reads are the
+    # same ones, at the same root (PROP-019 §2.5).
+    "crates/vibe-cli/src/composition.rs",
     "crates/vibe-cli/src/output.rs",
     "crates/vibe-cli/src/commands/show/config.rs",
     "crates/vibe-cli/src/commands/tree/tui/settings.rs",

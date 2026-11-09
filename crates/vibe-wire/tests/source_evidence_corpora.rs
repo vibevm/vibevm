@@ -19,13 +19,20 @@ fn roundtrip<T: DeserializeOwned + Serialize>(path: &str) {
 }
 #[test]
 fn new_source_records_roundtrip_and_frozen_readers_refuse() {
-    use vibe_wire::generated::application::{e1, e2, e3, e4};
+    use vibe_wire::generated::application::{e1, e2, e3, e4, e5};
+    roundtrip::<e5::index::ApplicationIndex>("application/e5/index.json");
     roundtrip::<e4::index::ApplicationIndex>("application/e4/index.json");
     roundtrip::<e3::steps::StepsFile>("application/e3/steps.json");
     roundtrip::<e3::import_work::ImportWork>("application/e3/import_work.json");
     roundtrip::<e3::legacy_import_work::ImportWork>("application/e3/legacy_import_work.json");
     assert!(
         serde_json::from_slice::<e3::index::ApplicationIndex>(&bytes("application/e4/index.json"))
+            .is_err()
+    );
+    // The exposed payload directories and the slot off switch are index5's
+    // own world (PROP-059 `#path-directories`, `#slot-off`).
+    assert!(
+        serde_json::from_slice::<e4::index::ApplicationIndex>(&bytes("application/e5/index.json"))
             .is_err()
     );
     assert!(

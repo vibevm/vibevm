@@ -14,6 +14,10 @@
 //! - [`git`] is the explicit proxy and CA configuration a child `git`
 //!   receives; the user's git configuration is never written.
 //! - [`doctor`] diagnoses the route step by step.
+//! - [`system_proxy`] reads the logged-in Windows user's proxy
+//!   configuration, so `[proxy] pac = "system"` becomes the explicit
+//!   `--pac=<url>` px is given instead of a detection px has to do
+//!   itself (`PROP-068#proxy-px`).
 
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-068#proxy");
 
@@ -23,7 +27,10 @@ pub mod http;
 pub mod probe;
 mod px;
 pub mod px_store;
+#[cfg(test)]
+mod px_tests;
 mod session;
+pub mod system_proxy;
 mod trust;
 
 pub use px::{PX_EXE, PX_READY_TIMEOUT, PxError, bundled_px_candidates};

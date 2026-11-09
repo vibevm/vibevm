@@ -3,6 +3,11 @@
 //! the user's git configuration is never written. SSH remotes are not
 //! proxied: their route is the SSH client's own configuration.
 
+use std::path::Path;
+use std::sync::OnceLock;
+
+use vibe_core::user_config::RevocationCheck;
+
 use crate::{NetError, NetworkSession};
 
 /// What one child `git` that talks to a remote receives.
@@ -50,6 +55,106 @@ impl GitNetwork {
     }
 }
 
+/// The `-c` values `[proxy] revocation` adds to a child `git`
+/// (`PROP-068#proxy-revocation`).
+///
+/// `http.schannelCheckRevoke` is git's own key and git applies it only
+/// when `http.sslBackend` is `schannel`, so this changes nothing for a
+/// git built against OpenSSL and nothing at all off Windows. `check` is
+/// the default and adds nothing — the bytes a child receives are exactly
+/// what they were before the key existed.
+///
+/// `best-effort` is Git for Windows' own third value for the key (since
+/// 2.26, where it is that build's default); an upstream git parses the
+/// key as a boolean and would refuse the word outright, so it is sent
+/// only to a git that reports a Git for Windows version, and otherwise
+/// falls back to `off` with a note. `git` is the executable about to run,
+/// for that one `git --version` (asked at most once per process, and only
+/// for `best-effort` on Windows).
+///
+/// ```
+/// use vibe_core::user_config::RevocationCheck;
+/// use vibe_net::git::revocation_config;
+/// // Nothing is added by the default, on any host.
+/// assert!(revocation_config(RevocationCheck::Check, None).is_empty());
+/// if cfg!(windows) {
+///     assert_eq!(
+///         revocation_config(RevocationCheck::Off, None),
+///         vec!["http.schannelCheckRevoke=false".to_owned()]
+///     );
+/// } else {
+///     // Schannel is a Windows TLS stack: elsewhere the key is a no-op.
+///     assert!(revocation_config(RevocationCheck::Off, None).is_empty());
+/// }
+/// ```
+pub fn revocation_config(revocation: RevocationCheck, git: Option<&Path>) -> Vec<String> {
+    if !cfg!(windows) {
+        return Vec::new();
+    }
+    let value = match revocation {
+        RevocationCheck::Check => return Vec::new(),
+        RevocationCheck::Off => "false",
+        RevocationCheck::BestEffort if best_effort_supported(git) => "best-effort",
+        RevocationCheck::BestEffort => {
+            tracing::warn!(
+                "`[proxy] revocation = \"best-effort\"` needs a Git for Windows 2.26 or newer; \
+                 this git parses `http.schannelCheckRevoke` as a boolean, so revocation \
+                 checking is switched off instead"
+            );
+            "false"
+        }
+    };
+    vec![format!("http.schannelCheckRevoke={value}")]
+}
+
+/// Whether the git about to run understands `best-effort`; asked once.
+fn best_effort_supported(git: Option<&Path>) -> bool {
+    static SUPPORTED: OnceLock<bool> = OnceLock::new();
+    *SUPPORTED.get_or_init(|| {
+        let program = git.unwrap_or_else(|| Path::new("git"));
+        std::process::Command::new(program)
+            .arg("--version")
+            .output()
+            .ok()
+            .filter(|output| output.status.success())
+            .is_some_and(|output| {
+                version_takes_best_effort(&String::from_utf8_lossy(&output.stdout))
+            })
+    })
+}
+
+/// Whether a `git --version` line names a Git for Windows 2.26 or newer,
+/// the builds whose `http.schannelCheckRevoke` takes `best-effort`.
+///
+/// ```
+/// use vibe_net::git::version_takes_best_effort;
+/// assert!(version_takes_best_effort("git version 2.52.0.windows.1"));
+/// assert!(version_takes_best_effort("git version 2.26.0.windows.1\n"));
+/// assert!(version_takes_best_effort("git version 3.0.0.windows.1"));
+/// // Older Git for Windows, and every upstream build, take a boolean only.
+/// assert!(!version_takes_best_effort("git version 2.25.1.windows.1"));
+/// assert!(!version_takes_best_effort("git version 2.52.0"));
+/// assert!(!version_takes_best_effort("git version 2.47.1.msysgit.0"));
+/// assert!(!version_takes_best_effort("nonsense"));
+/// ```
+pub fn version_takes_best_effort(line: &str) -> bool {
+    let line = line.trim();
+    if !line.contains(".windows.") {
+        return false;
+    }
+    let Some(rest) = line.split_whitespace().nth(2) else {
+        return false;
+    };
+    let mut parts = rest.split('.');
+    let (Some(Ok(major)), Some(Ok(minor))) = (
+        parts.next().map(str::parse::<u32>),
+        parts.next().map(str::parse::<u32>),
+    ) else {
+        return false;
+    };
+    (major, minor) >= (2, 26)
+}
+
 /// The bypass list a child receives: the configured one plus loopback.
 fn no_proxy_env(session: &NetworkSession) -> String {
     let mut list = String::from("localhost,127.0.0.1,::1");
@@ -63,6 +168,16 @@ fn no_proxy_env(session: &NetworkSession) -> String {
 /// The configuration a child `git` talking to `remote` receives under the
 /// current route. A remote that is not HTTP(S) gets nothing.
 pub fn for_remote(session: &NetworkSession, remote: &str) -> Result<GitNetwork, NetError> {
+    for_remote_with(session, remote, None)
+}
+
+/// [`for_remote`], naming the git executable about to run so that
+/// `[proxy] revocation = "best-effort"` can ask whether it takes the word.
+pub fn for_remote_with(
+    session: &NetworkSession,
+    remote: &str,
+    git: Option<&Path>,
+) -> Result<GitNetwork, NetError> {
     let raw = remote.strip_prefix("git+").unwrap_or(remote);
     let Ok(url) = url::Url::parse(raw) else {
         return Ok(GitNetwork::default());
@@ -87,6 +202,12 @@ pub fn for_remote(session: &NetworkSession, remote: &str) -> Result<GitNetwork, 
             }
         }
         net.env.push(("NO_PROXY".to_owned(), no_proxy_env(session)));
+    }
+    if url.scheme() == "https" {
+        // Revocation is a property of the child's own TLS, not of the
+        // proxy: it is added for every HTTPS remote, proxied or not.
+        net.config
+            .extend(revocation_config(session.route().revocation(), git));
     }
     if url.scheme() == "https"
         && let Some(bundle) = session.ca_bundle()?
@@ -117,7 +238,10 @@ pub fn for_args(
     args: &[&str],
     cwd: Option<&std::path::Path>,
 ) -> Result<GitNetwork, NetError> {
-    if !session.route().is_proxied() && session.route().ca_file().is_none() {
+    if !session.route().is_proxied()
+        && session.route().ca_file().is_none()
+        && session.route().revocation() == RevocationCheck::Check
+    {
         return Ok(GitNetwork::default());
     }
     let is_http = |arg: &str| {
@@ -129,7 +253,7 @@ pub fn for_args(
         None => named_remote_url(binary, args, cwd).filter(|url| is_http(url)),
     };
     match remote {
-        Some(remote) => for_remote(session, &remote),
+        Some(remote) => for_remote_with(session, &remote, Some(binary)),
         None => Ok(GitNetwork::default()),
     }
 }

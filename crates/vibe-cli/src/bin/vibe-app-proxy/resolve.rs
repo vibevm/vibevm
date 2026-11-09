@@ -3,13 +3,18 @@
 //! template rules without depending on that crate.
 
 use std::collections::BTreeMap;
-use std::ffi::{OsStr, OsString};
+use std::ffi::OsString;
 use std::fs;
 use std::path::{Component, Path, PathBuf};
 
 use serde::Deserialize;
+#[path = "command.rs"]
+mod command;
 #[path = "index.rs"]
 mod index;
+pub(crate) use command::SKIP_VARIABLE;
+pub(crate) use command::{CommandEnv, locate_command};
+use command::{fall_through, launcher_command};
 
 const LIBRARY_MARKER: &str = "vibe-library.toml";
 const DEFAULT_LIBRARY: &str = "default";
@@ -20,6 +25,9 @@ pub(crate) struct Launch {
     pub executable: PathBuf,
     pub args: Vec<String>,
     pub working_directory: Option<PathBuf>,
+    /// The proxy directories this launch already walked past, set on the
+    /// child when a switched-off slot falls through (`PROP-059#slot-off`).
+    pub skip: Option<OsString>,
 }
 
 #[derive(Deserialize)]
@@ -39,6 +47,11 @@ struct Marker {
     id: String,
 }
 
+/// The session key that switches a slot off for one session
+/// (`PROP-059#slot-off`); an installation key always carries a `/`, so the
+/// bare word can never collide with one.
+pub(crate) const SESSION_OFF: &str = "none";
+
 /// Resolve `command` for the proxy at `exe` under the session value `session`.
 pub(crate) fn resolve(exe: &Path, command: &str, session: Option<&str>) -> Result<Launch, String> {
     let home = home_of(exe)?;
@@ -52,8 +65,18 @@ pub(crate) fn resolve(exe: &Path, command: &str, session: Option<&str>) -> Resul
             format!("command `{command}` is not reserved by any installed application")
         })?;
     let choices = parse_session(session.unwrap_or_default())?;
-    let key = match choices.get(&slot) {
-        Some(key) => key.clone(),
+    // A slot switched off — for this session or globally in the index —
+    // resolves to nothing: the proxy hands the command to the next
+    // same-named program on PATH after its own directory, so the system
+    // program is reached again (`PROP-059#slot-off`).
+    let session_choice = choices.get(&slot).map(String::as_str);
+    if session_choice == Some(SESSION_OFF)
+        || (session_choice.is_none() && index.slots.get(&slot).is_some_and(|entry| entry.off))
+    {
+        return fall_through(exe, command, &slot);
+    }
+    let key = match session_choice {
+        Some(key) => key.to_owned(),
         None => index
             .slots
             .get(&slot)
@@ -295,131 +318,6 @@ pub(crate) struct Vars<'a> {
     pub vibe_home: &'a Path,
 }
 
-/// The prefix of a launcher `executable` naming a command resolved on PATH
-/// at launch instead of a payload file (`PROP-065#launcher-command`); the
-/// spelling of `vibe_core::manifest::LAUNCHER_COMMAND_PREFIX`.
-const COMMAND_PREFIX: &str = "command:";
-
-/// The default Windows `PATHEXT` when the environment carries none.
-const DEFAULT_PATHEXT: &str = ".COM;.EXE;.BAT;.CMD";
-
-/// The command a `command:NAME` executable names.
-fn launcher_command(executable: &str) -> Option<&str> {
-    executable
-        .strip_prefix(COMMAND_PREFIX)
-        .filter(|name| !name.is_empty())
-}
-
-/// The `PATH` and `PATHEXT` a launcher command is looked up on, read once
-/// at the process boundary.
-pub(crate) struct CommandEnv {
-    pub path: Option<OsString>,
-    pub pathext: Option<OsString>,
-}
-
-impl CommandEnv {
-    #[specmark::spec(
-        deviates = "spec://core-ai-native/mechanisms/ENGINE-CONFORM-v0.1#rules",
-        reason = "A `command:NAME` launcher is resolved against the caller's own PATH (spec://org.vibevm.core/vibevm/common/PROP-065#launcher-command); the standalone proxy reads PATH and PATHEXT once at its process boundary and resolution receives them as values."
-    )]
-    pub(crate) fn from_env() -> Self {
-        Self {
-            path: std::env::var_os("PATH"),
-            pathext: std::env::var_os("PATHEXT"),
-        }
-    }
-}
-
-/// `name` on `env`'s PATH, never choosing `own_image` — this very proxy —
-/// so a proxy for `name` whose launcher runs `name` cannot re-enter itself.
-/// Nothing else in its directory is skipped: the proxies of the other
-/// installed applications live there, and a runtime a user installed by
-/// name is reached through exactly those. The rules mirror
-/// `vibe_app::CommandSearch`; `command_candidates` holds the `PATHEXT` half,
-/// and the first executable file wins.
-pub(crate) fn locate_command(
-    name: &str,
-    launcher: &str,
-    env: &CommandEnv,
-    own_image: Option<&Path>,
-) -> Result<PathBuf, String> {
-    let names = command_candidates(name, env.pathext.as_deref());
-    let skipped = own_image.map(resolved_path);
-    for directory in std::env::split_paths(env.path.as_deref().unwrap_or(OsStr::new(""))) {
-        if directory.as_os_str().is_empty() {
-            continue;
-        }
-        for candidate in &names {
-            let file = directory.join(candidate);
-            if !executable_file(&file) {
-                continue;
-            }
-            let file = resolved_path(&file);
-            if skipped.as_deref() == Some(file.as_path()) {
-                continue;
-            }
-            return Ok(file);
-        }
-    }
-    Err(format!(
-        "command `{name}` is not on PATH, so launcher `{launcher}` cannot run; put a `{name}` on \
-         PATH, or install an application package whose public commands include it \
-         (`vibe install -g GROUP/NAME`)"
-    ))
-}
-
-/// Off Windows the name itself; on Windows a name already ending in a
-/// listed `PATHEXT` extension as it stands, and a bare name only with each
-/// extension appended — never on its own, since Windows cannot start an
-/// extensionless file (Node's payload holds `npm` beside `npm.cmd`).
-fn command_candidates(name: &str, pathext: Option<&OsStr>) -> Vec<String> {
-    if !cfg!(windows) {
-        return vec![name.to_owned()];
-    }
-    let extensions = pathext
-        .map(|value| value.to_string_lossy().into_owned())
-        .unwrap_or_else(|| DEFAULT_PATHEXT.to_owned());
-    let listed: Vec<&str> = extensions
-        .split(';')
-        .map(str::trim)
-        .filter(|extension| extension.len() > 1 && extension.starts_with('.'))
-        .collect();
-    let lower = name.to_ascii_lowercase();
-    if listed
-        .iter()
-        .any(|extension| lower.ends_with(&extension.to_ascii_lowercase()))
-    {
-        return vec![name.to_owned()];
-    }
-    listed
-        .into_iter()
-        .map(|extension| format!("{name}{extension}"))
-        .collect()
-}
-
-fn executable_file(candidate: &Path) -> bool {
-    if !candidate.is_file() {
-        return false;
-    }
-    #[cfg(unix)]
-    let runnable = {
-        use std::os::unix::fs::PermissionsExt;
-        fs::metadata(candidate)
-            .map(|meta| meta.permissions().mode() & 0o111 != 0)
-            .unwrap_or(false)
-    };
-    #[cfg(not(unix))]
-    let runnable = true;
-    runnable
-}
-
-/// The canonical form of `path`, or the path itself when it cannot be read.
-fn resolved_path(path: &Path) -> PathBuf {
-    fs::canonicalize(path)
-        .map(strip_verbatim)
-        .unwrap_or_else(|_| path.to_path_buf())
-}
-
 fn expand_launcher(
     launcher: &index::Launcher,
     app_root: &Path,
@@ -471,6 +369,7 @@ fn expand_launcher(
         executable,
         args,
         working_directory,
+        skip: None,
     })
 }
 

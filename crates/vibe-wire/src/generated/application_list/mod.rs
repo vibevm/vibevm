@@ -101,6 +101,17 @@ pub struct Installation {
 
     pub default: bool,
 
+    /// This row's slot is switched off (PROP-059#slot-off): its commands
+    /// and link directories are not published, and the installation stays
+    /// installed.
+    #[serde(default, skip_serializing_if = "std::ops::Not::not")]
+    pub slot_off: bool,
+
+    /// The payload directories this installation asks to be exposed whole on
+    /// PATH (PROP-059#path-directories).
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub path_dirs: Vec<String>,
+
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub icon: Option<String>,
 

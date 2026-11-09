@@ -126,12 +126,18 @@ pub(crate) fn change(
     verb: StateVerb,
 ) -> Result<()> {
     let image = global::proxy_image()?;
+    let user_home = super::facts::user_home();
+    let environment = super::environment::for_host(home.path(), user_home.as_deref());
+    let exposure = vibe_app::SlotExposure {
+        proxy_image: &image,
+        environment: environment.as_deref(),
+    };
     let change = match verb {
-        StateVerb::Expose => vibe_app::expose(home, package, &image)?,
-        StateVerb::Hide => vibe_app::hide(home, package, &image)?,
-        StateVerb::Mark(mark) => vibe_app::mark(home, package, mark, &image)?,
-        StateVerb::Hold(held) => vibe_app::hold(home, package, held, &image)?,
-        StateVerb::Rollback => vibe_app::rollback(home, package, &image)?,
+        StateVerb::Expose => vibe_app::expose(home, package, exposure)?,
+        StateVerb::Hide => vibe_app::hide(home, package, exposure)?,
+        StateVerb::Mark(mark) => vibe_app::mark(home, package, mark, exposure)?,
+        StateVerb::Hold(held) => vibe_app::hold(home, package, held, exposure)?,
+        StateVerb::Rollback => vibe_app::rollback(home, package, exposure)?,
     };
     render_change(ctx, &change)
 }

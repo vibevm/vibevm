@@ -123,6 +123,37 @@ pub struct OperationContext<'a> {
     pub search_path: Option<&'a OsStr>,
 }
 
+/// What an operation that changes a slot's global exposure needs: the
+/// `vibe-app-proxy` image its per-command proxies are copied from, and the
+/// durable user environment its link directories go on
+/// (`PROP-059#path-directories`). Both come from the caller, which owns the
+/// process boundary.
+#[derive(Clone, Copy)]
+#[spec(documents = "spec://org.vibevm.core/vibevm/common/PROP-059#path-directories")]
+pub struct SlotExposure<'a> {
+    pub proxy_image: &'a Path,
+    pub environment: Option<&'a dyn UserEnvironment>,
+}
+
+impl<'a> SlotExposure<'a> {
+    /// The exposure of one operation context.
+    pub fn of(ctx: &OperationContext<'a>) -> Self {
+        Self {
+            proxy_image: ctx.proxy_image,
+            environment: ctx.environment,
+        }
+    }
+
+    /// An exposure with the proxy image alone: usable only where no slot
+    /// can gain or lose a payload directory on PATH.
+    pub fn image_only(proxy_image: &'a Path) -> Self {
+        Self {
+            proxy_image,
+            environment: None,
+        }
+    }
+}
+
 /// Existing package-lookup owners, retained for descendants not planned before a park.
 #[derive(Debug, Clone, Copy, Default)]
 #[specmark::spec(
@@ -276,7 +307,7 @@ fn commit(
             .remove(&old)
             .map(|record| record.package);
         if index.default_of(&slot) == Some(old.as_str()) {
-            index.slots.insert(slot.clone(), Some(key.clone()));
+            index.set_default(&slot, Some(key.clone()));
         }
     }
     if let Some(old) = supersede.filter(|old| old != &key)
@@ -285,7 +316,7 @@ fn commit(
         record.lifecycle.hidden = true;
         record.lifecycle.superseded_by = Some(key.clone());
         if index.default_of(&slot) == Some(old.as_str()) && !installation.lifecycle.hidden {
-            index.slots.insert(slot.clone(), Some(key.clone()));
+            index.set_default(&slot, Some(key.clone()));
         }
     }
     let current_default = index
@@ -303,7 +334,7 @@ fn commit(
     let app_root = crate::launch::app_root(&installation, storage).ok();
     index.installations.insert(key.clone(), installation);
     if take_default {
-        index.slots.insert(slot.clone(), Some(key.clone()));
+        index.set_default(&slot, Some(key.clone()));
     }
     normalize_slots(index);
     let changed = match command {
@@ -338,6 +369,11 @@ fn commit(
         image.as_ref(),
         lock,
     )?;
+    // Whole payload directories on PATH follow the inventory the same way
+    // (`PROP-059#path-directories`): first install of a slot creates its
+    // links and puts them on the durable PATH, an update or a modify
+    // repoints them at the new payload.
+    crate::paths::apply_locked(ctx.settings, index, storage, ctx.environment, lock)?;
     Ok(Outcome {
         command,
         slot_default: index.default_of(&slot).map(str::to_owned),
@@ -441,22 +477,25 @@ fn ensure_available(
 }
 
 /// Drop dangling and hidden defaults and slots that have no installation
-/// left.
+/// left — except a slot that still owes bookkeeping: while its link
+/// directories are on the user's durable PATH, its record is what says
+/// which entries to take out again (`PROP-059#path-directories`), so it
+/// stays until the paths reconciliation has cleared them.
 fn normalize_slots(index: &mut Index) {
     let installations = &index.installations;
-    index
-        .slots
-        .retain(|slot, _| installations.values().any(|record| &record.slot == slot));
-    for (slot, default) in &mut index.slots {
-        if default.as_ref().is_some_and(|key| {
+    index.slots.retain(|slot, state| {
+        installations.values().any(|record| &record.slot == slot) || !state.path_env.is_empty()
+    });
+    for (slot, state) in &mut index.slots {
+        if state.default.as_ref().is_some_and(|key| {
             installations
                 .get(key)
                 .is_none_or(|record| &record.slot != slot || record.lifecycle.hidden)
         }) {
-            *default = None;
+            state.default = None;
         }
     }
     for record in installations.values() {
-        index.slots.entry(record.slot.clone()).or_insert(None);
+        index.slots.entry(record.slot.clone()).or_default();
     }
 }

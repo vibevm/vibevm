@@ -13,6 +13,7 @@ mod step_validation;
 mod steps;
 mod sugar;
 mod template;
+mod template_validation;
 mod validation;
 mod wizard;
 mod wizard_validation;
@@ -339,6 +340,14 @@ pub struct InstallerOptionDecl {
     pub launchers: Vec<LauncherDecl>,
     #[serde(default, skip_serializing_if = "Vec::is_empty")]
     pub public_commands: Vec<PublicCommandDecl>,
+    /// Payload directories this option asks to be exposed whole on the
+    /// user's PATH, in the order they are searched
+    /// (`PROP-059#path-directories`). Each entry is a payload-relative
+    /// directory template contained in the application root, exactly like a
+    /// launcher executable; `.` names the root itself. An option may declare
+    /// `public_commands`, `path_dirs`, or both.
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub path_dirs: Vec<String>,
 }
 
 /// Strict package-only `[application]` metadata: the slot name, the

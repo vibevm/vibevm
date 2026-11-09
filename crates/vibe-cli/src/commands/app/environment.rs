@@ -12,8 +12,7 @@ use anyhow::Result;
 use vibe_app::{EnvEntry, EnvOp, ProfileEnvironment, UserEnvironment, ValueKind};
 
 use crate::commands::vvm::env::{
-    RawUserVar, RegistryValueKind, delete_user_var_raw, get_user_var_raw, path_with_prefix,
-    path_without, set_user_var_raw,
+    Hkcu, RawUserVar, RegistryValueKind, UserRegistry, path_with_prefix, path_without,
 };
 
 /// The environment of this host: the registry on Windows, otherwise the
@@ -21,7 +20,7 @@ use crate::commands::vvm::env::{
 /// POSIX host has no startup files to write; env steps then fail clearly.
 pub(crate) fn for_host(settings: &Path, home: Option<&Path>) -> Option<Box<dyn UserEnvironment>> {
     if cfg!(windows) {
-        return Some(Box::new(RegistryEnvironment));
+        return Some(Box::new(RegistryEnvironment::new(Hkcu)));
     }
     home.map(|home| Box::new(ProfileEnvironment::new(settings, home)) as Box<dyn UserEnvironment>)
 }
@@ -29,9 +28,21 @@ pub(crate) fn for_host(settings: &Path, home: Option<&Path>) -> Option<Box<dyn U
 /// `HKCU\Environment`: values written raw with their kind preserved (a new
 /// value is `REG_EXPAND_SZ` when it names a `%VAR%`, else `REG_SZ`), PATH
 /// edited only by prepending, every replaced value recorded so removal
-/// restores it. Registry I/O mutates real user state, so tests cover the
-/// pure transformations only.
-pub(crate) struct RegistryEnvironment;
+/// restores it.
+///
+/// The registry is reached through the [`UserRegistry`] seam of
+/// `vibe self` (PROP-019 `#path`), so the whole apply/remove round trip is
+/// covered against an in-memory environment and no test touches the real
+/// `HKCU\Environment`.
+pub(crate) struct RegistryEnvironment<R> {
+    registry: R,
+}
+
+impl<R: UserRegistry> RegistryEnvironment<R> {
+    pub(crate) fn new(registry: R) -> Self {
+        Self { registry }
+    }
+}
 
 /// The planned registry write of one entry: the variable, its new raw
 /// value (`None` deletes it) and the kind to write.
@@ -87,8 +98,14 @@ pub(crate) fn apply_write(
             kind: raw.kind,
         }),
         EnvOp::PathPrepend => {
+            // A prepend replaces nothing, so no PATH text is kept: removal
+            // edits the live value instead of restoring a snapshot, which
+            // would resurrect entries added since. The `previous_kind`
+            // recorded above stays, because it is `Some` exactly when the
+            // variable existed — which is how a removal that empties the
+            // value tells one vibe created from one that was already there
+            // (PROP-059 `#path-directories`).
             recorded.previous = None;
-            recorded.previous_kind = None;
             let raw = current.map(|raw| raw.value.as_str()).unwrap_or_default();
             path_with_prefix(raw, &value).map(|next| RegistryWrite {
                 name: "Path".into(),
@@ -101,7 +118,9 @@ pub(crate) fn apply_write(
 }
 
 /// The write that removes `entry` from `current`: a set value is restored
-/// or deleted, an unset one restored, a PATH entry taken out again.
+/// or deleted, an unset one restored, a PATH entry taken out again — and
+/// a `Path` that vibe itself created is deleted rather than left empty
+/// once its last entry is gone.
 pub(crate) fn remove_write(
     entry: &EnvEntry,
     current: Option<&RawUserVar>,
@@ -120,9 +139,15 @@ pub(crate) fn remove_write(
         EnvOp::PathPrepend => {
             let raw = current?;
             let value = entry.value.as_deref().unwrap_or_default();
-            path_without(&raw.value, value).map(|next| RegistryWrite {
+            let next = path_without(&raw.value, value)?;
+            // Nothing of the value is left. A `Path` vibe created where the
+            // user had none goes away with vibe's last entry; one that was
+            // there before — even empty — is restored exactly as it was,
+            // because deleting it would be a change vibe never made.
+            let delete = next.is_empty() && entry.previous_kind.is_none();
+            Some(RegistryWrite {
                 name: "Path".into(),
-                value: Some(next),
+                value: (!delete).then_some(next),
                 kind: raw.kind,
             })
         }
@@ -136,21 +161,26 @@ fn registry_name(entry: &EnvEntry) -> &str {
     }
 }
 
-fn perform(write: &RegistryWrite) -> Result<()> {
-    match &write.value {
-        Some(value) => set_user_var_raw(&write.name, value, write.kind),
-        None => delete_user_var_raw(&write.name),
+impl<R: UserRegistry> RegistryEnvironment<R> {
+    fn perform(&self, write: &RegistryWrite) -> Result<()> {
+        match &write.value {
+            Some(value) => self.registry.set_raw(&write.name, value, write.kind),
+            None => self.registry.delete_raw(&write.name),
+        }
     }
 }
 
-impl UserEnvironment for RegistryEnvironment {
+impl<R: UserRegistry> UserEnvironment for RegistryEnvironment<R> {
     fn apply(&self, _key: &str, entries: &[EnvEntry]) -> Result<Vec<EnvEntry>, String> {
         let mut applied = Vec::new();
         for entry in entries {
-            let current = get_user_var_raw(registry_name(entry)).map_err(|e| format!("{e:#}"))?;
+            let current = self
+                .registry
+                .get_raw(registry_name(entry))
+                .map_err(|e| format!("{e:#}"))?;
             let (write, recorded) = apply_write(entry, current.as_ref());
             if let Some(write) = write {
-                perform(&write).map_err(|error| format!("{error:#}"))?;
+                self.perform(&write).map_err(|error| format!("{error:#}"))?;
             }
             applied.push(recorded);
         }
@@ -159,9 +189,12 @@ impl UserEnvironment for RegistryEnvironment {
 
     fn remove(&self, _key: &str, entries: &[EnvEntry]) -> Result<(), String> {
         for entry in entries.iter().rev() {
-            let current = get_user_var_raw(registry_name(entry)).map_err(|e| format!("{e:#}"))?;
+            let current = self
+                .registry
+                .get_raw(registry_name(entry))
+                .map_err(|e| format!("{e:#}"))?;
             if let Some(write) = remove_write(entry, current.as_ref()) {
-                perform(&write).map_err(|error| format!("{error:#}"))?;
+                self.perform(&write).map_err(|error| format!("{error:#}"))?;
             }
         }
         Ok(())
@@ -227,6 +260,76 @@ mod tests {
         );
         let undo = remove_write(&path, Some(&after)).unwrap();
         assert_eq!(undo.value.as_deref(), Some("/usr/bin;/bin"));
+    }
+
+    /// The environment of this test, over an in-memory `HKCU\Environment`.
+    fn registry(
+        values: &[(&str, &str, RegistryValueKind)],
+    ) -> RegistryEnvironment<crate::commands::vvm::env::MemoryRegistry> {
+        RegistryEnvironment::new(crate::commands::vvm::env::MemoryRegistry::with(values))
+    }
+
+    /// The last link directory off the durable PATH takes the value with
+    /// it when the user had no `Path` of their own: an empty string is a
+    /// value vibe left behind, not the state it found
+    /// (`PROP-059#path-directories`).
+    #[test]
+    fn the_last_path_entry_deletes_a_value_vibe_created() {
+        let env = registry(&[]);
+        let entry = entry(EnvOp::PathPrepend, "PATH", Some("/opt/slot/0"));
+        let applied = env.apply("org.example/runtime@1.0.0", &[entry]).unwrap();
+        assert_eq!(
+            env.registry.value("Path").unwrap().value,
+            "/opt/slot/0",
+            "vibe created the value"
+        );
+        assert_eq!(applied[0].previous_kind, None, "there was nothing before");
+        env.remove("org.example/runtime@1.0.0", &applied).unwrap();
+        assert_eq!(env.registry.value("Path"), None, "the value is gone");
+    }
+
+    /// A `Path` that was already there is restored exactly, even when it
+    /// was empty: removing it would be a change vibe never made.
+    #[test]
+    fn the_last_path_entry_restores_a_value_that_was_already_there() {
+        for before in ["", "/usr/bin;/bin"] {
+            let env = registry(&[("Path", before, RegistryValueKind::ExpandString)]);
+            let entry = entry(EnvOp::PathPrepend, "PATH", Some("/opt/slot/0"));
+            let applied = env.apply("org.example/runtime@1.0.0", &[entry]).unwrap();
+            assert_eq!(
+                applied[0].previous_kind,
+                Some(ValueKind::ExpandString),
+                "the value existed, so its kind is recorded"
+            );
+            env.remove("org.example/runtime@1.0.0", &applied).unwrap();
+            let after = env.registry.value("Path").expect("still there");
+            assert_eq!(after.value, before, "restored byte for byte");
+            assert_eq!(after.kind, RegistryValueKind::ExpandString);
+        }
+    }
+
+    /// Both link directories of one slot: the second comes off without
+    /// touching the value, the first takes it with it.
+    #[test]
+    fn two_path_entries_of_one_slot_come_off_in_reverse() {
+        let env = registry(&[]);
+        let entries = [
+            entry(EnvOp::PathPrepend, "PATH", Some("/opt/slot/0")),
+            entry(EnvOp::PathPrepend, "PATH", Some("/opt/slot/1")),
+        ];
+        let applied = env.apply("org.example/runtime@1.0.0", &entries).unwrap();
+        assert_eq!(
+            env.registry.value("Path").unwrap().value,
+            "/opt/slot/1;/opt/slot/0"
+        );
+        assert_eq!(applied[0].previous_kind, None);
+        assert_eq!(
+            applied[1].previous_kind,
+            Some(ValueKind::ExpandString),
+            "the first entry had just created the value"
+        );
+        env.remove("org.example/runtime@1.0.0", &applied).unwrap();
+        assert_eq!(env.registry.value("Path"), None);
     }
 
     #[test]

@@ -444,6 +444,7 @@ mod tests {
             launchers_from: Vec::new(),
             launchers: Vec::new(),
             public_commands: Vec::new(),
+            path_dirs: Vec::new(),
         }
     }
 

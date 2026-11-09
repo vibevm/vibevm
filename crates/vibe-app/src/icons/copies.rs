@@ -170,6 +170,7 @@ mod tests {
                 ..LauncherDecl::default()
             }],
             public_commands: Vec::new(),
+            path_dirs: Vec::new(),
             commands: AuthoredCommands::default(),
             features: Vec::new(),
             parameters: Default::default(),

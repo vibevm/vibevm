@@ -2663,3 +2663,36 @@ structure, and it goes when the file does.
 ## 2026-11-07 · the owner's ruling relayed from vibevm-app's audit (notes/66 there)
 
 - **P1 · Remove `org.vibevm.world.zap` and `org.vibevm.zap.zap` from the public registry.** The repositories under `github.com/vibespecs` go, then their versions are **yanked from the registry's index** (`anarchic/vibespecs` and its GitHub mirror) and the index is rebuilt, so `vibe` stops offering packages that no longer download. The owner's ruling of 2026-11-07: everything of vibevm-app and Zap is closed software; `vibe` itself stays open. The `vibe-index` yank-then-reindex procedure is this repository's; the repository removals are the owner's hand.
+
+
+## B-243 — `vibe tool px exec` does not exclude a re-entry when resolving its command {#b-243}
+
+| field | value |
+|---|---|
+| @fact:B243-WHAT **what** | `vibe tool px exec -- <name>` takes the first `PATH` match for `<name>` with no exclusion (`crates/vibe-cli/src/commands/tool/which.rs`). An application package whose public command is `<name>` and whose launcher runs `vibe tool px exec -- <name>` therefore resolves its own `vibe-app-proxy` copy and recurses without end, because PROP-059 `#path-directories` puts vibe's link directories and `opt/bin` ahead of the system directories. The neighbouring `command:NAME` launcher resolution (PROP-065 `#launcher-command`) deliberately never chooses the running proxy's own image; `exec` has no equivalent guard. |
+| @fact:B243-EVIDENCE **evidence** | Demonstrated 2026-11-09 while building `org.vibevm.pxworld/pxnode`: a shim `node` earlier on `PATH` than the real one was chosen (`running .../shadow/node through the vibe-managed px on 127.0.0.1:38113`). The pxworld packages avoid it by naming their commands `pxnode` / `pxnpm` / `pxnpx` / `pxpip`, never the command they wrap, and both READMEs say why. |
+| @fact:B243-SEVERITY **severity** | P2 — no shipped package hits it, and the wrapper convention documents the rule; a third-party wrapper that ignores the convention gets an unbounded loop instead of a refusal. |
+| @fact:B243-DISPOSITION **disposition** | `candidate` — give `exec` the same self-exclusion the launcher resolution has (skip a candidate that is a `vibe-app-proxy` copy in a vibe-owned shim or link directory), or detect the loop and refuse by name. PROP-068 `#proxy-tool` would gain the rule. |
+| @fact:B243-FILED **filed by** | Corporate-env campaign, CORP-FMT-038 verification, 2026-11-09. |
+
+
+## B-244 — an index fetch through an unreachable px has no timeout {#b-244}
+
+| field | value |
+|---|---|
+| @fact:B244-WHAT **what** | With `[proxy] mode = "px"` configured and the upstream unreachable, `vibe install -g` and `vibe app installers` without `--offline` hang on the built-in registries' index fetch with no progress and no timeout — the operation never reports that the route is dead. px itself starts and answers; the `CONNECT` to the upstream is what stalls. |
+| @fact:B244-EVIDENCE **evidence** | Observed twice independently, 2026-11-09, while verifying `org.vibevm.pxworld/pxnode` and `/pxpip` against the repository's fake px (whose `--proxy` names a host that does not exist): past 120 s with no output; `--offline` returns at once. |
+| @fact:B244-SEVERITY **severity** | P3 — a misconfigured proxy is the cause, and `vibe dl --test-proxy` diagnoses it; but the symptom a user meets first is a silent hang rather than a named failure. |
+| @fact:B244-DISPOSITION **disposition** | `candidate` — give the index/metadata reads the same bounded timeout the probe uses, and classify a stalled `CONNECT` as the proxy failure it is (PROP-068 `#proxy-doctor` already has the vocabulary). |
+| @fact:B244-FILED **filed by** | Corporate-env campaign, CORP-FMT-038 verification, 2026-11-09. |
+
+
+## B-245 — `vibe self px status` reports the companion store under `$HOME`, not the settings root {#b-245}
+
+| field | value |
+|---|---|
+| @fact:B245-WHAT **what** | With `$VIBE_SETTINGS` pointing at an isolated settings root, `vibe self px status` still prints the px companion store under `$HOME/.vibe/opt/…`. The lookup itself is unaffected when `[proxy] px_path` names an executable, so the report and the behaviour can disagree. |
+| @fact:B245-EVIDENCE **evidence** | Observed 2026-11-09 while verifying `org.vibevm.pxworld/pxpip` in an isolated home (`VIBE_SETTINGS` + `HOME` both redirected). |
+| @fact:B245-SEVERITY **severity** | P3 — cosmetic in the reported path; it would mislead anyone diagnosing a store that is not where the report says. |
+| @fact:B245-DISPOSITION **disposition** | `candidate` — resolve the store root through the same settings root every other report uses (PROP-019 `#companion-tools`). |
+| @fact:B245-FILED **filed by** | Corporate-env campaign, CORP-FMT-038 verification, 2026-11-09. |

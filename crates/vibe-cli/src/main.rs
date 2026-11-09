@@ -141,7 +141,7 @@ fn run() -> ExitCode {
                 return ExitCode::FAILURE;
             }
         };
-    let network = vibe_net::enter(&cancellation, vibe_core::net::route().clone());
+    let network = vibe_net::enter(&cancellation, composition::network::route_for(&cli.command));
 
     // PROP-066 `#locator`: this invocation's one Locator, built and
     // installed before any command — it is write-once — and after the
@@ -196,6 +196,8 @@ fn run() -> ExitCode {
             None,
         )
     };
+
+    let vvm_env = || composition::vvm_env(self_loc.as_ref(), cli.offline);
 
     let result = if let Err(error) = cancellation.checkpoint() {
         Err(error.into())
@@ -367,27 +369,7 @@ fn run() -> ExitCode {
             Command::Cache(args) => commands::cache::run(&ctx, args, cli.offline),
             Command::Workspace(args) => commands::workspace::run(&ctx, args),
             Command::Vvm(args) => {
-                // The root is the running version's own (current_exe-derived)
-                // when managed, else $VIBEVM_INSTALL_ROOT/opt, else ~/.vibe/opt
-                // (PROP-019 §2.5). Ambient reads live at the composition root.
-                let vvm_env = commands::vvm::VvmEnv {
-                    root: commands::vvm::resolve_root(
-                        self_loc.as_ref().map(|l| l.root.clone()),
-                        composition::install_base_override(),
-                        dirs::home_dir(),
-                    ),
-                    cwd: std::env::current_dir().ok(),
-                    home: dirs::home_dir(),
-                    shell: read_env_opt("SHELL"),
-                    path_var: read_env_opt("PATH"),
-                    install_root_env: read_env_opt(commands::vvm::VIBEVM_INSTALL_ROOT_ENV)
-                        .map(PathBuf::from),
-                    offline: composition::vvm_offline(cli.offline),
-                    source_build_environment: commands::vvm::SOURCE_BUILD_ENVIRONMENT
-                        .into_iter()
-                        .map(|name| (name.to_owned(), std::env::var_os(name)))
-                        .collect(),
-                };
+                let vvm_env = vvm_env();
                 commands::vvm::run(&ctx, args, vvm_env)
             }
             Command::Vars(args) => composition::run_vars(
@@ -400,6 +382,19 @@ fn run() -> ExitCode {
             Command::Transfers(args) => commands::transfers::run(&ctx, args),
             Command::Artifacts(args) => commands::artifacts::run(&ctx, args, cli.offline),
             Command::Dl(args) => commands::dl::run(&ctx, args, cli.offline, cli.verbose),
+            // PROP-068 `#proxy-tool`: `exec` answers with the child's own
+            // exit code, so a wrapper fails exactly as its tool does.
+            Command::Tool(args) => {
+                let env = commands::tool::env(read_env_opt, cli.verbose);
+                match commands::tool::run(&ctx, &args, &env, vvm_env, &cancellation) {
+                    Ok(Some(code)) => {
+                        return ExitCode::from(u8::try_from(code.clamp(0, 255)).unwrap_or(1));
+                    }
+                    Ok(None) => Ok(()),
+                    Err(err) => Err(err),
+                }
+            }
+
             Command::Tools { json } => {
                 let cwd = std::env::current_dir().unwrap_or_else(|_| ".".into());
                 commands::tools::run(&ctx, &cwd, json)

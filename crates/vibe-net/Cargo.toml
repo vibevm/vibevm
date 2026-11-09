@@ -33,4 +33,14 @@ webpki-roots = "1"
 # The embedded px pin (`xtask/dist/px.toml`, PROP-019 `#companion-tools`).
 toml.workspace = true
 
+# `[proxy] pac = "system"` resolved by vibe (PROP-068 `#proxy-px`): the
+# logged-in user's proxy configuration through WinHTTP, and the two
+# Internet Settings registry reads that stand in when it answers nothing.
+[target.'cfg(windows)'.dependencies]
+windows-sys = { workspace = true, features = [
+    "Win32_Foundation",
+    "Win32_Networking_WinHttp",
+    "Win32_System_Registry",
+] }
+
 [dev-dependencies]

@@ -1,336 +1,1288 @@
 {
-  "metadata": {
-    "description": "Version 1 description of an application package from vibe app describe --json: its identity and every installer option with result, portability, launchers, public commands, features and steps as declared after the sugar mapping. Nothing is resolved or run.",
-    "spec": { "implements": "spec://org.vibevm.core/vibevm/common/PROP-065#describe" },
-    "rustOptions": { "package": "vibe_wire::application_describe" },
-    "x-rust-type": "ApplicationDescribe",
-    "x-vocabularies": ["source_evidence", "hosting_view"],
-    "x-wire-order": ["protocol", "package", "application", "options", "source_evidence", "installed_source", "source_hosting", "installed_hosting"]
+ "metadata": {
+  "description": "Version 1 description of an application package from vibe app describe --json: its identity and every installer option with result, portability, launchers, public commands, features and steps as declared after the sugar mapping. Nothing is resolved or run.",
+  "spec": {
+   "implements": "spec://org.vibevm.core/vibevm/common/PROP-065#describe"
   },
-  "properties": {
-    "protocol": { "type": "string" },
-    "package": { "ref": "package" },
-    "application": { "ref": "application" },
-    "options": { "elements": { "ref": "installer_option" }, "metadata": { "x-empty": "emit" } }
+  "rustOptions": {
+   "package": "vibe_wire::application_describe"
   },
-  "optionalProperties": {
-        "source_hosting": { "ref": "hosting_view", "metadata": { "x-default": null } },
-        "installed_hosting": { "ref": "hosting_view", "metadata": { "x-default": null } },
-        "source_evidence": { "ref": "source_evidence", "metadata": { "x-default": null, "x-reader-projection": "permissive" } },
-        "installed_source": { "ref": "source_evidence", "metadata": { "x-default": null, "x-reader-projection": "permissive" } }
+  "x-rust-type": "ApplicationDescribe",
+  "x-vocabularies": [
+   "source_evidence",
+   "hosting_view"
+  ],
+  "x-wire-order": [
+   "protocol",
+   "package",
+   "application",
+   "options",
+   "source_evidence",
+   "installed_source",
+   "source_hosting",
+   "installed_hosting"
+  ]
+ },
+ "properties": {
+  "protocol": {
+   "type": "string"
   },
-  "definitions": {
-    "package": {
-      "metadata": { "x-wire-order": ["group", "name", "version"] },
-      "properties": {
-        "group": { "type": "string" },
-        "name": { "type": "string" },
-        "version": { "type": "string" }
-      }
+  "package": {
+   "ref": "package"
+  },
+  "application": {
+   "ref": "application"
+  },
+  "options": {
+   "elements": {
+    "ref": "installer_option"
+   },
+   "metadata": {
+    "x-empty": "emit"
+   }
+  }
+ },
+ "optionalProperties": {
+  "source_hosting": {
+   "ref": "hosting_view",
+   "metadata": {
+    "x-default": null
+   }
+  },
+  "installed_hosting": {
+   "ref": "hosting_view",
+   "metadata": {
+    "x-default": null
+   }
+  },
+  "source_evidence": {
+   "ref": "source_evidence",
+   "metadata": {
+    "x-default": null,
+    "x-reader-projection": "permissive"
+   }
+  },
+  "installed_source": {
+   "ref": "source_evidence",
+   "metadata": {
+    "x-default": null,
+    "x-reader-projection": "permissive"
+   }
+  }
+ },
+ "definitions": {
+  "package": {
+   "metadata": {
+    "x-wire-order": [
+     "group",
+     "name",
+     "version"
+    ]
+   },
+   "properties": {
+    "group": {
+     "type": "string"
     },
-    "application": {
-      "metadata": { "x-wire-order": ["id", "portable", "icon", "iconSet", "menuGroup", "categories", "keywords"] },
-      "properties": {
-        "id": { "type": "string" },
-        "portable": { "type": "boolean" }
-      },
-      "optionalProperties": {
-        "icon": { "type": "string", "metadata": { "x-default": null } },
-        "iconSet": { "ref": "icon_set", "metadata": { "x-default": null } },
-        "menuGroup": { "type": "string", "metadata": { "x-default": null } },
-        "categories": { "elements": { "type": "string" }, "metadata": { "x-empty": "omit" } },
-        "keywords": { "elements": { "type": "string" }, "metadata": { "x-empty": "omit" } }
-      }
+    "name": {
+     "type": "string"
     },
-    "icon_slot": {
-      "enum": ["svg", "png", "ico", "icns", "symbolic"],
-      "metadata": { "x-vocabulary": "closed" }
+    "version": {
+     "type": "string"
+    }
+   }
+  },
+  "application": {
+   "metadata": {
+    "x-wire-order": [
+     "id",
+     "portable",
+     "icon",
+     "iconSet",
+     "menuGroup",
+     "categories",
+     "keywords"
+    ]
+   },
+   "properties": {
+    "id": {
+     "type": "string"
     },
-    "icon_file": {
-      "metadata": { "x-wire-order": ["slot", "size", "template", "path"], "description": "One file of an icon set: a package-relative file resolved to its absolute path in the package tree; a template naming the installed payload has no path before installation." },
-      "properties": {
-        "slot": { "ref": "icon_slot" },
-        "template": { "type": "string" }
-      },
-      "optionalProperties": {
-        "size": { "type": "uint32", "metadata": { "x-default": null } },
-        "path": { "type": "string", "metadata": { "x-default": null } }
-      }
+    "portable": {
+     "type": "boolean"
+    }
+   },
+   "optionalProperties": {
+    "icon": {
+     "type": "string",
+     "metadata": {
+      "x-default": null
+     }
     },
-    "icon_set": {
-      "metadata": { "x-wire-order": ["maskable", "files"] },
-      "properties": {
-        "maskable": { "type": "boolean" },
-        "files": { "elements": { "ref": "icon_file" }, "metadata": { "x-empty": "emit" } }
-      }
+    "iconSet": {
+     "ref": "icon_set",
+     "metadata": {
+      "x-default": null
+     }
     },
-    "launcher_kind": {
-      "enum": ["gui", "tui", "command"],
-      "metadata": { "x-vocabulary": "closed" }
+    "menuGroup": {
+     "type": "string",
+     "metadata": {
+      "x-default": null
+     }
     },
-    "launcher_source": {
-      "enum": ["authored", "desktop-entry"],
-      "metadata": { "x-vocabulary": "closed" }
+    "categories": {
+     "elements": {
+      "type": "string"
+     },
+     "metadata": {
+      "x-empty": "omit"
+     }
     },
-    "launcher_action": {
-      "metadata": { "x-wire-order": ["id", "name", "args", "iconSet"] },
-      "properties": {
-        "id": { "type": "string" },
-        "name": { "type": "string" },
-        "args": { "elements": { "type": "string" }, "metadata": { "x-empty": "emit" } }
-      },
-      "optionalProperties": {
-        "iconSet": { "ref": "icon_set", "metadata": { "x-default": null } }
-      }
+    "keywords": {
+     "elements": {
+      "type": "string"
+     },
+     "metadata": {
+      "x-empty": "omit"
+     }
+    }
+   }
+  },
+  "icon_slot": {
+   "enum": [
+    "svg",
+    "png",
+    "ico",
+    "icns",
+    "symbolic"
+   ],
+   "metadata": {
+    "x-vocabulary": "closed"
+   }
+  },
+  "icon_file": {
+   "metadata": {
+    "x-wire-order": [
+     "slot",
+     "size",
+     "template",
+     "path"
+    ],
+    "description": "One file of an icon set: a package-relative file resolved to its absolute path in the package tree; a template naming the installed payload has no path before installation."
+   },
+   "properties": {
+    "slot": {
+     "ref": "icon_slot"
+    },
+    "template": {
+     "type": "string"
+    }
+   },
+   "optionalProperties": {
+    "size": {
+     "type": "uint32",
+     "metadata": {
+      "x-default": null
+     }
+    },
+    "path": {
+     "type": "string",
+     "metadata": {
+      "x-default": null
+     }
+    }
+   }
+  },
+  "icon_set": {
+   "metadata": {
+    "x-wire-order": [
+     "maskable",
+     "files"
+    ]
+   },
+   "properties": {
+    "maskable": {
+     "type": "boolean"
+    },
+    "files": {
+     "elements": {
+      "ref": "icon_file"
+     },
+     "metadata": {
+      "x-empty": "emit"
+     }
+    }
+   }
+  },
+  "launcher_kind": {
+   "enum": [
+    "gui",
+    "tui",
+    "command"
+   ],
+   "metadata": {
+    "x-vocabulary": "closed"
+   }
+  },
+  "launcher_source": {
+   "enum": [
+    "authored",
+    "desktop-entry"
+   ],
+   "metadata": {
+    "x-vocabulary": "closed"
+   }
+  },
+  "launcher_action": {
+   "metadata": {
+    "x-wire-order": [
+     "id",
+     "name",
+     "args",
+     "iconSet"
+    ]
+   },
+   "properties": {
+    "id": {
+     "type": "string"
+    },
+    "name": {
+     "type": "string"
+    },
+    "args": {
+     "elements": {
+      "type": "string"
+     },
+     "metadata": {
+      "x-empty": "emit"
+     }
+    }
+   },
+   "optionalProperties": {
+    "iconSet": {
+     "ref": "icon_set",
+     "metadata": {
+      "x-default": null
+     }
+    }
+   }
+  },
+  "form": {
+   "enum": [
+    "installation",
+    "steps"
+   ],
+   "metadata": {
+    "x-vocabulary": "closed"
+   }
+  },
+  "result": {
+   "enum": [
+    "owned",
+    "external"
+   ],
+   "metadata": {
+    "x-vocabulary": "closed"
+   }
+  },
+  "phase": {
+   "enum": [
+    "prepare",
+    "finish"
+   ],
+   "metadata": {
+    "x-vocabulary": "closed"
+   }
+  },
+  "installer_option": {
+   "metadata": {
+    "x-wire-order": [
+     "id",
+     "name",
+     "platform",
+     "platformName",
+     "arch",
+     "archName",
+     "form",
+     "result",
+     "appRoot",
+     "portable",
+     "launchersFrom",
+     "launchers",
+     "publicCommands",
+     "pathDirs",
+     "features",
+     "defaultFeatures",
+     "profiles",
+     "parameters",
+     "license",
+     "requires",
+     "steps"
+    ]
+   },
+   "properties": {
+    "id": {
+     "type": "string"
+    },
+    "name": {
+     "type": "string"
+    },
+    "platform": {
+     "type": "string"
+    },
+    "platformName": {
+     "type": "string"
+    },
+    "arch": {
+     "type": "string"
     },
     "form": {
-      "enum": ["installation", "steps"],
-      "metadata": { "x-vocabulary": "closed" }
+     "ref": "form"
     },
     "result": {
-      "enum": ["owned", "external"],
-      "metadata": { "x-vocabulary": "closed" }
+     "ref": "result"
     },
-    "phase": {
-      "enum": ["prepare", "finish"],
-      "metadata": { "x-vocabulary": "closed" }
+    "portable": {
+     "type": "boolean"
     },
-    "installer_option": {
-      "metadata": { "x-wire-order": ["id", "name", "platform", "platformName", "arch", "archName", "form", "result", "appRoot", "portable", "launchersFrom", "launchers", "publicCommands", "features", "defaultFeatures", "profiles", "parameters", "license", "requires", "steps"] },
-      "properties": {
-        "id": { "type": "string" },
-        "name": { "type": "string" },
-        "platform": { "type": "string" },
-        "platformName": { "type": "string" },
-        "arch": { "type": "string" },
-        "form": { "ref": "form" },
-        "result": { "ref": "result" },
-        "portable": { "type": "boolean" },
-        "launchers": { "elements": { "ref": "launcher" }, "metadata": { "x-empty": "emit" } },
-        "publicCommands": { "elements": { "ref": "public_command" }, "metadata": { "x-empty": "emit" } },
-        "features": { "elements": { "ref": "feature" }, "metadata": { "x-empty": "emit" } },
-        "defaultFeatures": { "elements": { "type": "string" }, "metadata": { "x-empty": "emit" } },
-        "profiles": { "elements": { "ref": "profile" }, "metadata": { "x-empty": "emit" } },
-        "parameters": { "elements": { "ref": "parameter" }, "metadata": { "x-empty": "emit" } },
-        "steps": { "elements": { "ref": "step" }, "metadata": { "x-empty": "emit" } }
-      },
-      "optionalProperties": {
-        "archName": { "type": "string", "metadata": { "x-default": null } },
-        "appRoot": { "type": "string", "metadata": { "x-default": null } },
-        "launchersFrom": { "elements": { "type": "string" }, "metadata": { "x-empty": "omit", "description": "Globs relative to the application root naming the desktop entries launchers are derived from after installation (PROP-059#desktop-entries)." } },
-        "license": { "ref": "license", "metadata": { "x-default": null } },
-        "requires": { "elements": { "ref": "requirement" }, "metadata": { "x-empty": "omit" } }
-      }
+    "launchers": {
+     "elements": {
+      "ref": "launcher"
+     },
+     "metadata": {
+      "x-empty": "emit"
+     }
     },
-    "scope": {
-      "enum": ["build", "runtime"],
-      "metadata": { "x-vocabulary": "closed" }
+    "publicCommands": {
+     "elements": {
+      "ref": "public_command"
+     },
+     "metadata": {
+      "x-empty": "emit"
+     }
     },
-    "requirement": {
-      "metadata": {
-        "description": "One required application package as declared (PROP-065#app-dependencies) with its effective scope.",
-        "x-wire-order": ["package", "scope"]
-      },
-      "properties": {
-        "package": { "type": "string" },
-        "scope": { "ref": "scope" }
-      }
+    "features": {
+     "elements": {
+      "ref": "feature"
+     },
+     "metadata": {
+      "x-empty": "emit"
+     }
     },
-    "env_set": {
-      "metadata": { "x-wire-order": ["name", "value"] },
-      "properties": {
-        "name": { "type": "string" },
-        "value": { "type": "string" }
-      }
+    "defaultFeatures": {
+     "elements": {
+      "type": "string"
+     },
+     "metadata": {
+      "x-empty": "emit"
+     }
     },
-    "launcher": {
-      "metadata": { "x-wire-order": ["id", "name", "description", "executable", "args", "workingDirectory", "icon", "iconSet", "terminal", "default", "kind", "menu", "source", "categories", "keywords", "genericName", "windowClass", "mimeTypes", "names", "descriptions", "actions"] },
-      "properties": {
-        "id": { "type": "string" },
-        "name": { "type": "string" },
-        "executable": { "type": "string" },
-        "args": { "elements": { "type": "string" }, "metadata": { "x-empty": "emit" } },
-        "terminal": { "type": "boolean" },
-        "default": { "type": "boolean" },
-        "menu": { "type": "boolean" },
-        "source": { "ref": "launcher_source", "metadata": { "description": "Always authored here: launchers derived from desktop entries exist only after installation (PROP-059#desktop-entries)." } }
-      },
-      "optionalProperties": {
-        "description": { "type": "string", "metadata": { "x-default": null } },
-        "workingDirectory": { "type": "string", "metadata": { "x-default": null } },
-        "icon": { "type": "string", "metadata": { "x-default": null } },
-        "iconSet": { "ref": "icon_set", "metadata": { "x-default": null } },
-        "kind": { "ref": "launcher_kind", "metadata": { "x-default": null, "description": "Absent only in a row overriding a launcher derived from a desktop entry." } },
-        "categories": { "elements": { "type": "string" }, "metadata": { "x-empty": "omit" } },
-        "keywords": { "elements": { "type": "string" }, "metadata": { "x-empty": "omit" } },
-        "genericName": { "type": "string", "metadata": { "x-default": null } },
-        "windowClass": { "type": "string", "metadata": { "x-default": null } },
-        "mimeTypes": { "elements": { "type": "string" }, "metadata": { "x-empty": "omit" } },
-        "names": { "values": { "type": "string" }, "metadata": { "x-empty": "omit" } },
-        "descriptions": { "values": { "type": "string" }, "metadata": { "x-empty": "omit" } },
-        "actions": { "elements": { "ref": "launcher_action" }, "metadata": { "x-empty": "omit" } }
-      }
+    "profiles": {
+     "elements": {
+      "ref": "profile"
+     },
+     "metadata": {
+      "x-empty": "emit"
+     }
     },
-    "public_command": {
-      "metadata": { "x-wire-order": ["name", "launcher"] },
-      "properties": {
-        "name": { "type": "string" },
-        "launcher": { "type": "string" }
-      }
+    "parameters": {
+     "elements": {
+      "ref": "parameter"
+     },
+     "metadata": {
+      "x-empty": "emit"
+     }
     },
-    "feature": {
-      "metadata": { "x-wire-order": ["id", "name", "description", "default", "parent", "required", "requires", "exclusiveGroup"] },
-      "properties": {
-        "id": { "type": "string" },
-        "name": { "type": "string" },
-        "default": { "type": "boolean" },
-        "required": { "type": "boolean" },
-        "requires": { "elements": { "type": "string" }, "metadata": { "x-empty": "emit" } }
-      },
-      "optionalProperties": {
-        "description": { "type": "string", "metadata": { "x-default": null } },
-        "parent": { "type": "string", "metadata": { "x-default": null } },
-        "exclusiveGroup": { "type": "string", "metadata": { "x-default": null } }
-      }
+    "steps": {
+     "elements": {
+      "ref": "step"
+     },
+     "metadata": {
+      "x-empty": "emit"
+     }
+    }
+   },
+   "optionalProperties": {
+    "archName": {
+     "type": "string",
+     "metadata": {
+      "x-default": null
+     }
     },
-    "profile": {
-      "metadata": { "x-wire-order": ["id", "name", "description", "features", "default"] },
-      "properties": {
-        "id": { "type": "string" },
-        "name": { "type": "string" },
-        "features": { "elements": { "type": "string" }, "metadata": { "x-empty": "emit" } },
-        "default": { "type": "boolean" }
-      },
-      "optionalProperties": {
-        "description": { "type": "string", "metadata": { "x-default": null } }
-      }
+    "appRoot": {
+     "type": "string",
+     "metadata": {
+      "x-default": null
+     }
     },
-    "parameter_type": {
-      "enum": ["string", "bool", "integer", "choice", "path"],
-      "metadata": { "x-vocabulary": "closed" }
-    },
-    "integer": {
-      "type": "float64",
-      "metadata": {
-        "description": "An exact signed integer. JTD has no int64 form, so generated Rust narrows the numeric form to i64.",
-        "x-rust-type": "i64"
-      }
-    },
-    "choice": {
-      "metadata": { "x-wire-order": ["value", "name"] },
-      "properties": {
-        "value": { "type": "string" },
-        "name": { "type": "string" }
-      }
-    },
-    "parameter": {
-      "metadata": { "x-wire-order": ["id", "name", "description", "type", "default", "required", "min", "max", "choices", "mustExist", "secret"] },
-      "properties": {
-        "id": { "type": "string" },
-        "name": { "type": "string" },
-        "type": { "ref": "parameter_type" },
-        "required": { "type": "boolean" },
-        "choices": { "elements": { "ref": "choice" }, "metadata": { "x-empty": "emit" } },
-        "mustExist": { "type": "boolean" },
-        "secret": { "type": "boolean" }
-      },
-      "optionalProperties": {
-        "description": { "type": "string", "metadata": { "x-default": null } },
-        "default": { "type": "string", "metadata": { "x-default": null } },
-        "min": { "ref": "integer", "metadata": { "x-default": null } },
-        "max": { "ref": "integer", "metadata": { "x-default": null } }
-      }
+    "launchersFrom": {
+     "elements": {
+      "type": "string"
+     },
+     "metadata": {
+      "x-empty": "omit",
+      "description": "Globs relative to the application root naming the desktop entries launchers are derived from after installation (PROP-059#desktop-entries)."
+     }
     },
     "license": {
-      "metadata": { "x-wire-order": ["file", "name"] },
-      "properties": {
-        "file": { "type": "string" },
-        "name": { "type": "string" }
-      }
+     "ref": "license",
+     "metadata": {
+      "x-default": null
+     }
     },
-    "byte_count": {
-      "type": "float64",
-      "metadata": {
-        "description": "An exact non-negative byte count. JTD has no uint64 form, so generated Rust narrows the numeric form to u64.",
-        "x-rust-type": "u64"
-      }
+    "requires": {
+     "elements": {
+      "ref": "requirement"
+     },
+     "metadata": {
+      "x-empty": "omit"
+     }
     },
-    "param_equals": {
-      "metadata": { "x-wire-order": ["id", "value"] },
-      "properties": {
-        "id": { "type": "string" },
-        "value": { "type": "string" }
-      }
-    },
-    "condition": {
-      "metadata": { "x-wire-order": ["feature", "param", "paramEquals", "commandPresent", "filePresent", "envPresent", "agentConfigured", "offline"] },
-      "optionalProperties": {
-        "feature": { "type": "string", "metadata": { "x-default": null } },
-        "param": { "type": "string", "metadata": { "x-default": null } },
-        "paramEquals": { "ref": "param_equals", "metadata": { "x-default": null } },
-        "commandPresent": { "type": "string", "metadata": { "x-default": null } },
-        "filePresent": { "type": "string", "metadata": { "x-default": null } },
-        "envPresent": { "type": "string", "metadata": { "x-default": null } },
-        "agentConfigured": { "type": "boolean", "metadata": { "x-default": null } },
-        "offline": { "type": "boolean", "metadata": { "x-default": null } }
-      }
-    },
-    "source_input": {
-      "metadata": { "x-wire-order": ["name", "url", "path", "drop", "file", "sha256", "size", "extract"] },
-      "properties": {
-        "name": { "type": "string" },
-        "sha256": { "type": "string" }
-      },
-      "optionalProperties": {
-        "size": { "ref": "byte_count", "metadata": { "x-default": null } },
-        "url": { "type": "string", "metadata": { "x-default": null } },
-        "path": { "type": "string", "metadata": { "x-default": null } },
-        "drop": { "type": "string", "metadata": { "x-default": null } },
-        "file": { "type": "string", "metadata": { "x-default": null } },
-        "extract": { "type": "boolean", "metadata": { "x-default": null } }
-      }
-    },
-    "step": {
-      "metadata": { "x-wire-order": ["id", "title", "kind", "description", "phase", "optional", "hook", "when", "unless", "needs", "sources", "format", "source", "sha256", "size", "payloadRoot", "interpreter", "script", "command", "forceInstall", "update", "uninstall", "forceUninstall", "arguments", "forceArguments", "from", "to", "prompt", "promptFile", "mode", "required", "set", "unset", "pathPrepend", "requires"] },
-      "properties": {
-        "id": { "type": "string" },
-        "title": { "type": "string" },
-        "kind": { "type": "string" },
-        "phase": { "ref": "phase" },
-        "optional": { "type": "boolean" },
-        "when": { "elements": { "ref": "condition" }, "metadata": { "x-empty": "emit" } },
-        "unless": { "elements": { "ref": "condition" }, "metadata": { "x-empty": "emit" } },
-        "needs": { "elements": { "type": "string" }, "metadata": { "x-empty": "emit" } }
-      },
-      "optionalProperties": {
-        "description": { "type": "string", "metadata": { "x-default": null } },
-        "hook": { "type": "string", "metadata": { "x-default": null } },
-        "sources": { "elements": { "ref": "source_input" }, "metadata": { "x-empty": "omit" } },
-        "format": { "type": "string", "metadata": { "x-default": null } },
-        "source": { "type": "string", "metadata": { "x-default": null } },
-        "sha256": { "type": "string", "metadata": { "x-default": null } },
-        "size": { "ref": "byte_count", "metadata": { "x-default": null } },
-        "payloadRoot": { "type": "string", "metadata": { "x-default": null } },
-        "interpreter": { "type": "string", "metadata": { "x-default": null } },
-        "script": { "type": "string", "metadata": { "x-default": null } },
-        "command": { "type": "string", "metadata": { "x-default": null } },
-        "forceInstall": { "type": "string", "metadata": { "x-default": null } },
-        "update": { "type": "string", "metadata": { "x-default": null } },
-        "uninstall": { "type": "string", "metadata": { "x-default": null } },
-        "forceUninstall": { "type": "string", "metadata": { "x-default": null } },
-        "arguments": { "elements": { "type": "string" }, "metadata": { "x-empty": "omit" } },
-        "forceArguments": { "elements": { "type": "string" }, "metadata": { "x-empty": "preserve" } },
-        "from": { "type": "string", "metadata": { "x-default": null } },
-        "to": { "type": "string", "metadata": { "x-default": null } },
-        "prompt": { "type": "string", "metadata": { "x-default": null } },
-        "promptFile": { "type": "string", "metadata": { "x-default": null } },
-        "mode": { "type": "string", "metadata": { "x-default": null } },
-        "required": { "type": "boolean", "metadata": { "x-default": null } },
-        "set": { "elements": { "ref": "env_set" }, "metadata": { "x-empty": "omit" } },
-        "unset": { "elements": { "type": "string" }, "metadata": { "x-empty": "omit" } },
-        "pathPrepend": { "elements": { "type": "string" }, "metadata": { "x-empty": "omit" } },
-        "requires": { "elements": { "ref": "requirement" }, "metadata": { "x-empty": "omit" } }
-      }
+    "pathDirs": {
+     "elements": {
+      "type": "string"
+     },
+     "metadata": {
+      "x-empty": "omit",
+      "description": "The payload directories this option asks to be exposed whole on PATH (PROP-059#path-directories)."
+     }
     }
+   }
+  },
+  "scope": {
+   "enum": [
+    "build",
+    "runtime"
+   ],
+   "metadata": {
+    "x-vocabulary": "closed"
+   }
+  },
+  "requirement": {
+   "metadata": {
+    "description": "One required application package as declared (PROP-065#app-dependencies) with its effective scope.",
+    "x-wire-order": [
+     "package",
+     "scope"
+    ]
+   },
+   "properties": {
+    "package": {
+     "type": "string"
+    },
+    "scope": {
+     "ref": "scope"
+    }
+   }
+  },
+  "env_set": {
+   "metadata": {
+    "x-wire-order": [
+     "name",
+     "value"
+    ]
+   },
+   "properties": {
+    "name": {
+     "type": "string"
+    },
+    "value": {
+     "type": "string"
+    }
+   }
+  },
+  "launcher": {
+   "metadata": {
+    "x-wire-order": [
+     "id",
+     "name",
+     "description",
+     "executable",
+     "args",
+     "workingDirectory",
+     "icon",
+     "iconSet",
+     "terminal",
+     "default",
+     "kind",
+     "menu",
+     "source",
+     "categories",
+     "keywords",
+     "genericName",
+     "windowClass",
+     "mimeTypes",
+     "names",
+     "descriptions",
+     "actions"
+    ]
+   },
+   "properties": {
+    "id": {
+     "type": "string"
+    },
+    "name": {
+     "type": "string"
+    },
+    "executable": {
+     "type": "string"
+    },
+    "args": {
+     "elements": {
+      "type": "string"
+     },
+     "metadata": {
+      "x-empty": "emit"
+     }
+    },
+    "terminal": {
+     "type": "boolean"
+    },
+    "default": {
+     "type": "boolean"
+    },
+    "menu": {
+     "type": "boolean"
+    },
+    "source": {
+     "ref": "launcher_source",
+     "metadata": {
+      "description": "Always authored here: launchers derived from desktop entries exist only after installation (PROP-059#desktop-entries)."
+     }
+    }
+   },
+   "optionalProperties": {
+    "description": {
+     "type": "string",
+     "metadata": {
+      "x-default": null
+     }
+    },
+    "workingDirectory": {
+     "type": "string",
+     "metadata": {
+      "x-default": null
+     }
+    },
+    "icon": {
+     "type": "string",
+     "metadata": {
+      "x-default": null
+     }
+    },
+    "iconSet": {
+     "ref": "icon_set",
+     "metadata": {
+      "x-default": null
+     }
+    },
+    "kind": {
+     "ref": "launcher_kind",
+     "metadata": {
+      "x-default": null,
+      "description": "Absent only in a row overriding a launcher derived from a desktop entry."
+     }
+    },
+    "categories": {
+     "elements": {
+      "type": "string"
+     },
+     "metadata": {
+      "x-empty": "omit"
+     }
+    },
+    "keywords": {
+     "elements": {
+      "type": "string"
+     },
+     "metadata": {
+      "x-empty": "omit"
+     }
+    },
+    "genericName": {
+     "type": "string",
+     "metadata": {
+      "x-default": null
+     }
+    },
+    "windowClass": {
+     "type": "string",
+     "metadata": {
+      "x-default": null
+     }
+    },
+    "mimeTypes": {
+     "elements": {
+      "type": "string"
+     },
+     "metadata": {
+      "x-empty": "omit"
+     }
+    },
+    "names": {
+     "values": {
+      "type": "string"
+     },
+     "metadata": {
+      "x-empty": "omit"
+     }
+    },
+    "descriptions": {
+     "values": {
+      "type": "string"
+     },
+     "metadata": {
+      "x-empty": "omit"
+     }
+    },
+    "actions": {
+     "elements": {
+      "ref": "launcher_action"
+     },
+     "metadata": {
+      "x-empty": "omit"
+     }
+    }
+   }
+  },
+  "public_command": {
+   "metadata": {
+    "x-wire-order": [
+     "name",
+     "launcher"
+    ]
+   },
+   "properties": {
+    "name": {
+     "type": "string"
+    },
+    "launcher": {
+     "type": "string"
+    }
+   }
+  },
+  "feature": {
+   "metadata": {
+    "x-wire-order": [
+     "id",
+     "name",
+     "description",
+     "default",
+     "parent",
+     "required",
+     "requires",
+     "exclusiveGroup"
+    ]
+   },
+   "properties": {
+    "id": {
+     "type": "string"
+    },
+    "name": {
+     "type": "string"
+    },
+    "default": {
+     "type": "boolean"
+    },
+    "required": {
+     "type": "boolean"
+    },
+    "requires": {
+     "elements": {
+      "type": "string"
+     },
+     "metadata": {
+      "x-empty": "emit"
+     }
+    }
+   },
+   "optionalProperties": {
+    "description": {
+     "type": "string",
+     "metadata": {
+      "x-default": null
+     }
+    },
+    "parent": {
+     "type": "string",
+     "metadata": {
+      "x-default": null
+     }
+    },
+    "exclusiveGroup": {
+     "type": "string",
+     "metadata": {
+      "x-default": null
+     }
+    }
+   }
+  },
+  "profile": {
+   "metadata": {
+    "x-wire-order": [
+     "id",
+     "name",
+     "description",
+     "features",
+     "default"
+    ]
+   },
+   "properties": {
+    "id": {
+     "type": "string"
+    },
+    "name": {
+     "type": "string"
+    },
+    "features": {
+     "elements": {
+      "type": "string"
+     },
+     "metadata": {
+      "x-empty": "emit"
+     }
+    },
+    "default": {
+     "type": "boolean"
+    }
+   },
+   "optionalProperties": {
+    "description": {
+     "type": "string",
+     "metadata": {
+      "x-default": null
+     }
+    }
+   }
+  },
+  "parameter_type": {
+   "enum": [
+    "string",
+    "bool",
+    "integer",
+    "choice",
+    "path"
+   ],
+   "metadata": {
+    "x-vocabulary": "closed"
+   }
+  },
+  "integer": {
+   "type": "float64",
+   "metadata": {
+    "description": "An exact signed integer. JTD has no int64 form, so generated Rust narrows the numeric form to i64.",
+    "x-rust-type": "i64"
+   }
+  },
+  "choice": {
+   "metadata": {
+    "x-wire-order": [
+     "value",
+     "name"
+    ]
+   },
+   "properties": {
+    "value": {
+     "type": "string"
+    },
+    "name": {
+     "type": "string"
+    }
+   }
+  },
+  "parameter": {
+   "metadata": {
+    "x-wire-order": [
+     "id",
+     "name",
+     "description",
+     "type",
+     "default",
+     "required",
+     "min",
+     "max",
+     "choices",
+     "mustExist",
+     "secret"
+    ]
+   },
+   "properties": {
+    "id": {
+     "type": "string"
+    },
+    "name": {
+     "type": "string"
+    },
+    "type": {
+     "ref": "parameter_type"
+    },
+    "required": {
+     "type": "boolean"
+    },
+    "choices": {
+     "elements": {
+      "ref": "choice"
+     },
+     "metadata": {
+      "x-empty": "emit"
+     }
+    },
+    "mustExist": {
+     "type": "boolean"
+    },
+    "secret": {
+     "type": "boolean"
+    }
+   },
+   "optionalProperties": {
+    "description": {
+     "type": "string",
+     "metadata": {
+      "x-default": null
+     }
+    },
+    "default": {
+     "type": "string",
+     "metadata": {
+      "x-default": null
+     }
+    },
+    "min": {
+     "ref": "integer",
+     "metadata": {
+      "x-default": null
+     }
+    },
+    "max": {
+     "ref": "integer",
+     "metadata": {
+      "x-default": null
+     }
+    }
+   }
+  },
+  "license": {
+   "metadata": {
+    "x-wire-order": [
+     "file",
+     "name"
+    ]
+   },
+   "properties": {
+    "file": {
+     "type": "string"
+    },
+    "name": {
+     "type": "string"
+    }
+   }
+  },
+  "byte_count": {
+   "type": "float64",
+   "metadata": {
+    "description": "An exact non-negative byte count. JTD has no uint64 form, so generated Rust narrows the numeric form to u64.",
+    "x-rust-type": "u64"
+   }
+  },
+  "param_equals": {
+   "metadata": {
+    "x-wire-order": [
+     "id",
+     "value"
+    ]
+   },
+   "properties": {
+    "id": {
+     "type": "string"
+    },
+    "value": {
+     "type": "string"
+    }
+   }
+  },
+  "condition": {
+   "metadata": {
+    "x-wire-order": [
+     "feature",
+     "param",
+     "paramEquals",
+     "commandPresent",
+     "filePresent",
+     "envPresent",
+     "agentConfigured",
+     "offline"
+    ]
+   },
+   "optionalProperties": {
+    "feature": {
+     "type": "string",
+     "metadata": {
+      "x-default": null
+     }
+    },
+    "param": {
+     "type": "string",
+     "metadata": {
+      "x-default": null
+     }
+    },
+    "paramEquals": {
+     "ref": "param_equals",
+     "metadata": {
+      "x-default": null
+     }
+    },
+    "commandPresent": {
+     "type": "string",
+     "metadata": {
+      "x-default": null
+     }
+    },
+    "filePresent": {
+     "type": "string",
+     "metadata": {
+      "x-default": null
+     }
+    },
+    "envPresent": {
+     "type": "string",
+     "metadata": {
+      "x-default": null
+     }
+    },
+    "agentConfigured": {
+     "type": "boolean",
+     "metadata": {
+      "x-default": null
+     }
+    },
+    "offline": {
+     "type": "boolean",
+     "metadata": {
+      "x-default": null
+     }
+    }
+   }
+  },
+  "source_input": {
+   "metadata": {
+    "x-wire-order": [
+     "name",
+     "url",
+     "path",
+     "drop",
+     "file",
+     "sha256",
+     "size",
+     "extract"
+    ]
+   },
+   "properties": {
+    "name": {
+     "type": "string"
+    },
+    "sha256": {
+     "type": "string"
+    }
+   },
+   "optionalProperties": {
+    "size": {
+     "ref": "byte_count",
+     "metadata": {
+      "x-default": null
+     }
+    },
+    "url": {
+     "type": "string",
+     "metadata": {
+      "x-default": null
+     }
+    },
+    "path": {
+     "type": "string",
+     "metadata": {
+      "x-default": null
+     }
+    },
+    "drop": {
+     "type": "string",
+     "metadata": {
+      "x-default": null
+     }
+    },
+    "file": {
+     "type": "string",
+     "metadata": {
+      "x-default": null
+     }
+    },
+    "extract": {
+     "type": "boolean",
+     "metadata": {
+      "x-default": null
+     }
+    }
+   }
+  },
+  "step": {
+   "metadata": {
+    "x-wire-order": [
+     "id",
+     "title",
+     "kind",
+     "description",
+     "phase",
+     "optional",
+     "hook",
+     "when",
+     "unless",
+     "needs",
+     "sources",
+     "format",
+     "source",
+     "sha256",
+     "size",
+     "payloadRoot",
+     "interpreter",
+     "script",
+     "command",
+     "forceInstall",
+     "update",
+     "uninstall",
+     "forceUninstall",
+     "arguments",
+     "forceArguments",
+     "from",
+     "to",
+     "prompt",
+     "promptFile",
+     "mode",
+     "required",
+     "set",
+     "unset",
+     "pathPrepend",
+     "requires"
+    ]
+   },
+   "properties": {
+    "id": {
+     "type": "string"
+    },
+    "title": {
+     "type": "string"
+    },
+    "kind": {
+     "type": "string"
+    },
+    "phase": {
+     "ref": "phase"
+    },
+    "optional": {
+     "type": "boolean"
+    },
+    "when": {
+     "elements": {
+      "ref": "condition"
+     },
+     "metadata": {
+      "x-empty": "emit"
+     }
+    },
+    "unless": {
+     "elements": {
+      "ref": "condition"
+     },
+     "metadata": {
+      "x-empty": "emit"
+     }
+    },
+    "needs": {
+     "elements": {
+      "type": "string"
+     },
+     "metadata": {
+      "x-empty": "emit"
+     }
+    }
+   },
+   "optionalProperties": {
+    "description": {
+     "type": "string",
+     "metadata": {
+      "x-default": null
+     }
+    },
+    "hook": {
+     "type": "string",
+     "metadata": {
+      "x-default": null
+     }
+    },
+    "sources": {
+     "elements": {
+      "ref": "source_input"
+     },
+     "metadata": {
+      "x-empty": "omit"
+     }
+    },
+    "format": {
+     "type": "string",
+     "metadata": {
+      "x-default": null
+     }
+    },
+    "source": {
+     "type": "string",
+     "metadata": {
+      "x-default": null
+     }
+    },
+    "sha256": {
+     "type": "string",
+     "metadata": {
+      "x-default": null
+     }
+    },
+    "size": {
+     "ref": "byte_count",
+     "metadata": {
+      "x-default": null
+     }
+    },
+    "payloadRoot": {
+     "type": "string",
+     "metadata": {
+      "x-default": null
+     }
+    },
+    "interpreter": {
+     "type": "string",
+     "metadata": {
+      "x-default": null
+     }
+    },
+    "script": {
+     "type": "string",
+     "metadata": {
+      "x-default": null
+     }
+    },
+    "command": {
+     "type": "string",
+     "metadata": {
+      "x-default": null
+     }
+    },
+    "forceInstall": {
+     "type": "string",
+     "metadata": {
+      "x-default": null
+     }
+    },
+    "update": {
+     "type": "string",
+     "metadata": {
+      "x-default": null
+     }
+    },
+    "uninstall": {
+     "type": "string",
+     "metadata": {
+      "x-default": null
+     }
+    },
+    "forceUninstall": {
+     "type": "string",
+     "metadata": {
+      "x-default": null
+     }
+    },
+    "arguments": {
+     "elements": {
+      "type": "string"
+     },
+     "metadata": {
+      "x-empty": "omit"
+     }
+    },
+    "forceArguments": {
+     "elements": {
+      "type": "string"
+     },
+     "metadata": {
+      "x-empty": "preserve"
+     }
+    },
+    "from": {
+     "type": "string",
+     "metadata": {
+      "x-default": null
+     }
+    },
+    "to": {
+     "type": "string",
+     "metadata": {
+      "x-default": null
+     }
+    },
+    "prompt": {
+     "type": "string",
+     "metadata": {
+      "x-default": null
+     }
+    },
+    "promptFile": {
+     "type": "string",
+     "metadata": {
+      "x-default": null
+     }
+    },
+    "mode": {
+     "type": "string",
+     "metadata": {
+      "x-default": null
+     }
+    },
+    "required": {
+     "type": "boolean",
+     "metadata": {
+      "x-default": null
+     }
+    },
+    "set": {
+     "elements": {
+      "ref": "env_set"
+     },
+     "metadata": {
+      "x-empty": "omit"
+     }
+    },
+    "unset": {
+     "elements": {
+      "type": "string"
+     },
+     "metadata": {
+      "x-empty": "omit"
+     }
+    },
+    "pathPrepend": {
+     "elements": {
+      "type": "string"
+     },
+     "metadata": {
+      "x-empty": "omit"
+     }
+    },
+    "requires": {
+     "elements": {
+      "ref": "requirement"
+     },
+     "metadata": {
+      "x-empty": "omit"
+     }
+    }
+   }
   }
+ }
 }

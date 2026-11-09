@@ -32,3 +32,15 @@ vibe-registry.workspace = true
 vibe-safefs.workspace = true
 vibe-wire.workspace = true
 zip.workspace = true
+
+# A slot's link directory is a directory junction on Windows
+# (`PROP-059#path-directories`): no standard API creates one, so it is written
+# with `FSCTL_SET_REPARSE_POINT`. A Windows symbolic link would need
+# `SeCreateSymbolicLinkPrivilege`, which an ordinary user on a managed machine
+# does not have; a junction needs no privilege.
+[target.'cfg(windows)'.dependencies]
+windows-sys = { workspace = true, features = [
+    "Win32_Foundation",
+    "Win32_System_IO",
+    "Win32_System_Ioctl",
+] }

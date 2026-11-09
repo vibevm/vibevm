@@ -12,10 +12,24 @@ specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-068#proxy");
 use std::path::{Path, PathBuf};
 use std::sync::OnceLock;
 
-use crate::user_config::{PacSource, ProxyConfig, ProxyMode};
+use crate::user_config::{PacSource, ProxyConfig, ProxyMode, RevocationCheck};
 
 mod bypass;
 pub use bypass::Bypass;
+
+mod layers;
+pub use layers::{
+    MODE_ENV, ModeOrigin, PAC_ENV, REVOCATION_ENV, effective_mode, effective_pac,
+    effective_revocation,
+};
+
+pub mod system_proxy;
+pub use system_proxy::{
+    CONNECTION_AUTO_CONFIG_URL, CONNECTION_AUTO_DETECT, CONNECTION_DIRECT, CONNECTION_PROXY,
+    ConnectionSettings, IeProxyConfig, SystemProxy, SystemProxyError, SystemProxyOrigin,
+    WindowsProxySource, bypass_list, installed_source, parse_connection_settings, pick_upstream,
+    resolve_with,
+};
 
 /// Why a `[proxy]` table cannot become a route. Cites the spec and the fix.
 ///
@@ -66,100 +80,6 @@ pub struct PxSettings {
     pub path: Option<PathBuf>,
     /// A fixed loopback port (`[proxy] px_port`); `None` is a free one.
     pub port: Option<u16>,
-}
-
-/// Which layer decided the effective `[proxy] mode` (`PROP-068#proxy`).
-///
-/// ```
-/// use vibe_core::net::ModeOrigin;
-/// assert_eq!(ModeOrigin::Env.as_str(), "VIBEVM_PROXY_MODE");
-/// assert_eq!(ModeOrigin::Site.as_str(), "site profile");
-/// ```
-#[derive(Debug, Clone, Copy, PartialEq, Eq)]
-pub enum ModeOrigin {
-    /// Nothing configured a mode: the default (`explicit` when a proxy URL
-    /// is set, else no proxy).
-    Default,
-    /// The applied site profile.
-    Site,
-    /// The user's `config.toml`.
-    User,
-    /// `VIBEVM_PROXY_MODE` in the environment.
-    Env,
-    /// A one-shot command-line override (`vibe dl --no-px`).
-    Flag,
-}
-
-impl ModeOrigin {
-    pub fn as_str(self) -> &'static str {
-        match self {
-            ModeOrigin::Default => "default",
-            ModeOrigin::Site => "site profile",
-            ModeOrigin::User => "user config",
-            ModeOrigin::Env => "VIBEVM_PROXY_MODE",
-            ModeOrigin::Flag => "command line",
-        }
-    }
-}
-
-/// The effective `[proxy] mode` and the layer that set it, highest first:
-/// environment, the user's file, the site profile.
-///
-/// ```
-/// use vibe_core::net::{ModeOrigin, effective_mode};
-/// use vibe_core::user_config::{ProxyConfig, ProxyMode};
-/// let site: ProxyConfig = toml::from_str("mode='px'\npac='https://pac.example.corp/p.pac'").unwrap();
-/// let user: ProxyConfig = toml::from_str("mode='none'").unwrap();
-/// // The user turns the site's px off.
-/// assert_eq!(effective_mode(Some(&site), &user, None), (Some(ProxyMode::None), ModeOrigin::User));
-/// // The environment beats both.
-/// assert_eq!(effective_mode(Some(&site), &user, Some(ProxyMode::Explicit)), (Some(ProxyMode::Explicit), ModeOrigin::Env));
-/// assert_eq!(effective_mode(Some(&site), &ProxyConfig::default(), None), (Some(ProxyMode::Px), ModeOrigin::Site));
-/// assert_eq!(effective_mode(None, &ProxyConfig::default(), None), (None, ModeOrigin::Default));
-/// ```
-/// The effective `[proxy] pac` and its layer: `VIBEVM_PROXY_PAC`, then the
-/// user's file, then the site profile.
-///
-/// ```
-/// use vibe_core::net::{ModeOrigin, effective_pac};
-/// use vibe_core::user_config::ProxyConfig;
-/// let site: ProxyConfig = toml::from_str("pac='https://pac.example.corp/p.pac'").unwrap();
-/// assert_eq!(effective_pac(Some(&site), &ProxyConfig::default(), None).1, ModeOrigin::Site);
-/// assert_eq!(effective_pac(Some(&site), &ProxyConfig::default(), Some("system")),
-///            (Some("system".to_owned()), ModeOrigin::Env));
-/// ```
-pub fn effective_pac(
-    site: Option<&ProxyConfig>,
-    user: &ProxyConfig,
-    env: Option<&str>,
-) -> (Option<String>, ModeOrigin) {
-    if let Some(pac) = env {
-        return (Some(pac.to_owned()), ModeOrigin::Env);
-    }
-    if let Some(pac) = &user.pac {
-        return (Some(pac.clone()), ModeOrigin::User);
-    }
-    match site.and_then(|site| site.pac.clone()) {
-        Some(pac) => (Some(pac), ModeOrigin::Site),
-        None => (None, ModeOrigin::Default),
-    }
-}
-
-pub fn effective_mode(
-    site: Option<&ProxyConfig>,
-    user: &ProxyConfig,
-    env: Option<ProxyMode>,
-) -> (Option<ProxyMode>, ModeOrigin) {
-    if let Some(mode) = env {
-        return (Some(mode), ModeOrigin::Env);
-    }
-    if let Some(mode) = user.mode {
-        return (Some(mode), ModeOrigin::User);
-    }
-    if let Some(mode) = site.and_then(|site| site.mode) {
-        return (Some(mode), ModeOrigin::Site);
-    }
-    (None, ModeOrigin::Default)
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -220,6 +140,8 @@ pub struct ProxyRoute {
     bypass: Bypass,
     no_proxy: Option<String>,
     ca_file: Option<PathBuf>,
+    revocation: RevocationCheck,
+    revocation_origin: ModeOrigin,
 }
 
 impl Default for ProxyRoute {
@@ -238,6 +160,8 @@ impl ProxyRoute {
             bypass: Bypass::default(),
             no_proxy: None,
             ca_file: None,
+            revocation: RevocationCheck::Check,
+            revocation_origin: ModeOrigin::Default,
         }
     }
 
@@ -307,6 +231,12 @@ impl ProxyRoute {
             bypass: Bypass::parse(cfg.no_proxy.as_deref().unwrap_or_default()),
             no_proxy: cfg.no_proxy.clone(),
             ca_file: cfg.ca_file.clone(),
+            revocation: cfg.revocation.unwrap_or_default(),
+            revocation_origin: if cfg.revocation.is_some() {
+                ModeOrigin::User
+            } else {
+                ModeOrigin::Default
+            },
         })
     }
 
@@ -376,6 +306,64 @@ impl ProxyRoute {
     /// The extra certificate authorities (`[proxy] ca_file`).
     pub fn ca_file(&self) -> Option<&Path> {
         self.ca_file.as_deref()
+    }
+
+    /// Whether a child `git` on Windows checks certificate revocation
+    /// (`[proxy] revocation`, `PROP-068#proxy-revocation`).
+    pub fn revocation(&self) -> RevocationCheck {
+        self.revocation
+    }
+
+    /// Which layer chose the revocation setting.
+    pub fn revocation_origin(&self) -> ModeOrigin {
+        self.revocation_origin
+    }
+
+    /// This route with the revocation setting and the layer that chose it
+    /// recorded (the environment override over the user's file over the
+    /// site profile).
+    pub fn with_revocation(mut self, revocation: RevocationCheck, origin: ModeOrigin) -> Self {
+        self.revocation = revocation;
+        self.revocation_origin = origin;
+        self
+    }
+
+    /// The `https` / `http` proxy URLs of an explicit route, as written
+    /// (they may carry a credential — [`ProxyRoute::label_for`] is the
+    /// printable form). `None` unless the mode is `explicit`.
+    ///
+    /// ```
+    /// use vibe_core::net::ProxyRoute;
+    /// use vibe_core::user_config::ProxyConfig;
+    /// let cfg: ProxyConfig = toml::from_str("https = 'http://proxy.example.corp:3128'").unwrap();
+    /// let route = ProxyRoute::from_config(&cfg).unwrap();
+    /// let (https, http) = route.explicit_urls().unwrap();
+    /// assert_eq!(https.map(url::Url::to_string).as_deref(), Some("http://proxy.example.corp:3128/"));
+    /// assert!(http.is_none());
+    /// assert!(ProxyRoute::direct().explicit_urls().is_none());
+    /// ```
+    pub fn explicit_urls(&self) -> Option<(Option<&url::Url>, Option<&url::Url>)> {
+        match &self.mode {
+            Mode::Explicit { https, http } => Some((https.as_ref(), http.as_ref())),
+            _ => None,
+        }
+    }
+
+    /// This route with px bound to `port` instead of `[proxy] px_port` or
+    /// a free one (`vibe tool px --port`); nothing changes off `px` mode.
+    ///
+    /// ```
+    /// use vibe_core::net::ProxyRoute;
+    /// use vibe_core::user_config::ProxyConfig;
+    /// let cfg: ProxyConfig = toml::from_str("mode='px'\nupstream='proxy.example.corp:8080'").unwrap();
+    /// let route = ProxyRoute::from_config(&cfg).unwrap().with_px_port(3129);
+    /// assert_eq!(route.px().unwrap().port, Some(3129));
+    /// ```
+    pub fn with_px_port(mut self, port: u16) -> Self {
+        if let Mode::Px(settings) = &mut self.mode {
+            settings.port = Some(port);
+        }
+        self
     }
 
     /// The bypass list.

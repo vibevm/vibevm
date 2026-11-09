@@ -21,6 +21,9 @@ pub(crate) fn supported(command: &Command) -> bool {
         Command::Registry(args) => matches!(&args.command, RegistrySubcommand::Publish(_)),
         // PROP-068 `#dl`: a download is an operation a stop removes.
         Command::Dl(_) => true,
+        // PROP-068 `#proxy-tool`: `serve` runs until it is stopped, and
+        // `exec` lives as long as the child it lent px to.
+        Command::Tool(_) => true,
         _ => false,
     }
 }

@@ -47,7 +47,13 @@ pub fn run(ctx: &output::Context, args: StorageArgs) -> Result<()> {
             )
         }
         StorageCommand::Move { key, to } => {
-            let moved = vibe_app::storage_move(&settings, &key, &to)?;
+            // A move changes where a payload is, so a slot that exposes one
+            // of its directories on PATH has its link repointed through the
+            // durable user environment (PROP-059 `#path-directories`).
+            let user_home = super::app::facts::user_home();
+            let environment =
+                super::app::environment::for_host(settings.path(), user_home.as_deref());
+            let moved = vibe_app::storage_move(&settings, &key, &to, environment.as_deref())?;
             if ctx.is_json() {
                 return ctx.emit_json(&ApplicationStorageMove {
                     protocol: "vibe-app-storage-move/1".into(),

@@ -521,8 +521,26 @@ pub enum AppCommand {
     /// restore its launcher arrangement (PROP-059 `#portable-set`).
     Import(super::AppImportArgs),
 
-    /// Make one installation the global default provider of its slot.
-    Use { slot: String, key: String },
+    /// Make one installation the global default provider of its slot, or
+    /// switch the whole slot off and back on (PROP-059 `#slot-off`).
+    ///
+    /// `--none` removes the slot's PATH proxies and its link directories'
+    /// links, so every one of its commands falls through to the system
+    /// program; the installations, their index records and the remembered
+    /// default all stay. `--default` puts that remembered default back, and
+    /// naming a KEY both switches the slot on and makes KEY the default.
+    Use {
+        slot: String,
+        /// The installation key to make the default; omitted with `--none`
+        /// or `--default`.
+        key: Option<String>,
+        /// Switch the slot off: no proxy, no link, system program again.
+        #[arg(long, conflicts_with = "default")]
+        none: bool,
+        /// Switch the slot back on at its remembered default.
+        #[arg(long)]
+        default: bool,
+    },
 
     /// List the providers of a slot, its default and the commands each provides.
     Alternatives { slot: String },

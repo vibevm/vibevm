@@ -43,6 +43,8 @@ mod specmap;
 mod storage;
 pub use source_policy::SourcePolicyArgs;
 mod term;
+mod tool;
+pub use tool::*;
 mod transfers;
 mod vars;
 mod vvm;

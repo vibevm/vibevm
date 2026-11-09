@@ -313,12 +313,23 @@ fn effective_text(effective: &Effective, out: &mut String) {
     ));
     let pac = proxy.pac.as_ref().map(|pac| {
         format!(
-            "{pac} ({}, from {})",
+            "{pac} ({}, from {}){}",
             proxy.pac_kind.as_deref().unwrap_or("?"),
-            proxy.pac_origin
+            proxy.pac_origin,
+            // `system` resolved here: the URL px will be given and the
+            // Windows setting that answered (`PROP-068#proxy-px`).
+            proxy
+                .pac_resolved
+                .as_deref()
+                .map(|resolved| format!(" · {resolved}"))
+                .unwrap_or_default()
         )
     });
     let port = proxy.px_port.map(|port| port.to_string());
+    // Said only when a layer asked for it, so the default report reads
+    // exactly as it did before the key existed.
+    let revocation = (proxy.revocation != "check")
+        .then(|| format!("{} (from {})", proxy.revocation, proxy.revocation_origin));
     for (key, value) in [
         ("https", &proxy.https),
         ("http", &proxy.http),
@@ -328,6 +339,7 @@ fn effective_text(effective: &Effective, out: &mut String) {
         ("px_port", &port),
         ("px_path", &proxy.px_path),
         ("ca_file", &proxy.ca_file),
+        ("revocation", &revocation),
     ] {
         if let Some(value) = value {
             out.push_str(&format!("proxy {key}: {value}\n"));

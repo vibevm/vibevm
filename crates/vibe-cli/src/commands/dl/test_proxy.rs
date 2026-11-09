@@ -113,7 +113,7 @@ pub(super) fn run(ctx: &Context, args: &DlArgs, offline: bool) -> Result<()> {
     let mut rows = vec![CheckRow::ok(
         "config",
         format!(
-            "mode {} ({}) · {}{}",
+            "mode {} ({}) · {}{}{}",
             session.route().mode_name(),
             session.route().mode_origin().as_str(),
             table_origin(),
@@ -121,7 +121,20 @@ pub(super) fn run(ctx: &Context, args: &DlArgs, offline: bool) -> Result<()> {
                 .route()
                 .ca_file()
                 .map(|path| format!(" · ca_file {}", path.display()))
-                .unwrap_or_default()
+                .unwrap_or_default(),
+            // Said only when a layer asked for it: the default row stays
+            // exactly as it read before the key existed.
+            match session.route().revocation() {
+                vibe_core::user_config::RevocationCheck::Check => String::new(),
+                other => format!(
+                    " · revocation {} ({})",
+                    other.as_str(),
+                    session
+                        .route()
+                        .revocation_origin()
+                        .label(vibe_core::net::REVOCATION_ENV)
+                ),
+            }
         ),
     )];
     let host = url.host_str().unwrap_or_default();
@@ -144,9 +157,11 @@ pub(super) fn run(ctx: &Context, args: &DlArgs, offline: bool) -> Result<()> {
                 match pac {
                     vibe_core::user_config::PacSource::Url(url) => format!("url {url}"),
                     vibe_core::user_config::PacSource::File(file) => format!("file {file}"),
-                    vibe_core::user_config::PacSource::System => "system settings".to_owned(),
+                    // `system` is resolved by vibe; what it resolved to is
+                    // the check's own detail, so the name is enough here.
+                    vibe_core::user_config::PacSource::System => "system".to_owned(),
                 },
-                px.pac_origin.as_str()
+                px.pac_origin.label(vibe_core::net::PAC_ENV)
             ),
             None => format!(
                 "no PAC; upstream {}",

@@ -41,10 +41,15 @@ pub struct Moved {
 /// ```
 /// let dir = tempfile::tempdir().unwrap();
 /// let settings = vibe_app::SettingsRoot::new(dir.path());
-/// let error = vibe_app::storage_move(&settings, "org.example/tool@1.0.0", "default");
+/// let error = vibe_app::storage_move(&settings, "org.example/tool@1.0.0", "default", None);
 /// assert!(error.unwrap_err().to_string().contains("not_installed"));
 /// ```
-pub fn relocate(settings: &SettingsRoot, spelling: &str, to: &str) -> Result<Moved, AppError> {
+pub fn relocate(
+    settings: &SettingsRoot,
+    spelling: &str,
+    to: &str,
+    environment: Option<&dyn crate::environment::UserEnvironment>,
+) -> Result<Moved, AppError> {
     let held = settings.lock()?;
     let lock = &held;
     let mut index = Index::load(settings)?;
@@ -102,6 +107,15 @@ pub fn relocate(settings: &SettingsRoot, spelling: &str, to: &str) -> Result<Mov
     index.save_locked(
         settings,
         &crate::catalog::HomeEvent::about(crate::catalog::EventKind::Updated, key.clone()),
+        lock,
+    )?;
+    // The payload moved, so every link that exposes one of its directories
+    // on PATH is repointed (`PROP-059#path-directories`).
+    crate::paths::apply_locked(
+        settings,
+        &mut index,
+        &Storage::load(settings)?,
+        environment,
         lock,
     )?;
     let mut message = format!("moved {key} from library `{from}` to `{to}`");
@@ -256,6 +270,7 @@ pub(crate) mod tests {
             portable: true,
             launchers: Vec::new(),
             public_commands: Vec::new(),
+            path_dirs: Vec::new(),
             commands: AuthoredCommands::default(),
             features: Vec::new(),
             parameters: Default::default(),
@@ -293,7 +308,7 @@ pub(crate) mod tests {
     #[test]
     fn a_move_copies_renames_rewrites_and_deletes() {
         let (dir, settings) = installed_in_usb(owned_record("usb", "apps/tool/a"));
-        let moved = relocate(&settings, KEY, DEFAULT_LIBRARY).unwrap();
+        let moved = relocate(&settings, KEY, DEFAULT_LIBRARY, None).unwrap();
         assert_eq!(moved.old_app_root, dir.path().join("usb/apps/tool/a"));
         assert_eq!(moved.new_app_root, dir.path().join("home/opt/apps/tool/a"));
         assert!(moved.new_app_root.join("bin/tool").is_file());
@@ -313,7 +328,7 @@ pub(crate) mod tests {
         );
         assert!(gc(&settings, false).unwrap().orphans.is_empty());
         assert!(matches!(
-            relocate(&settings, KEY, DEFAULT_LIBRARY),
+            relocate(&settings, KEY, DEFAULT_LIBRARY, None),
             Err(AppError::Storage(StorageError::SameLibrary { .. }))
         ));
     }
@@ -325,7 +340,7 @@ pub(crate) mod tests {
         let (dir, settings) = installed_in_usb(record);
         let opt_apps = dir.path().join("home/opt/apps");
         assert!(matches!(
-            relocate(&settings, KEY, DEFAULT_LIBRARY),
+            relocate(&settings, KEY, DEFAULT_LIBRARY, None),
             Err(AppError::Storage(StorageError::NotPortable { .. }))
         ));
         assert!(fs::read_dir(&opt_apps).unwrap().next().is_none());
@@ -345,7 +360,7 @@ pub(crate) mod tests {
             )
             .unwrap();
         assert!(matches!(
-            relocate(&settings, KEY, DEFAULT_LIBRARY),
+            relocate(&settings, KEY, DEFAULT_LIBRARY, None),
             Err(AppError::Storage(StorageError::NotPortable { .. }))
         ));
 
@@ -360,20 +375,20 @@ pub(crate) mod tests {
             )
             .unwrap();
         assert!(matches!(
-            relocate(&settings, KEY, "nowhere"),
+            relocate(&settings, KEY, "nowhere", None),
             Err(AppError::State(
                 crate::error::StateError::UnknownLibrary { .. }
             ))
         ));
         fs::create_dir_all(opt_apps.join("tool/a")).unwrap();
         assert!(matches!(
-            relocate(&settings, KEY, DEFAULT_LIBRARY),
+            relocate(&settings, KEY, DEFAULT_LIBRARY, None),
             Err(AppError::Storage(StorageError::DestinationOccupied { .. }))
         ));
         fs::remove_dir_all(opt_apps.join("tool")).unwrap();
         detach(&settings, "usb").unwrap();
         assert!(matches!(
-            relocate(&settings, KEY, DEFAULT_LIBRARY),
+            relocate(&settings, KEY, DEFAULT_LIBRARY, None),
             Err(AppError::Unavailable { .. })
         ));
         assert!(fs::read_dir(&opt_apps).unwrap().next().is_none());

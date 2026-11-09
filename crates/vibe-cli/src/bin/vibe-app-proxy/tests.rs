@@ -100,6 +100,7 @@ fn the_default_and_the_session_choice_select_the_provider() {
             executable: alpha.join("bin/tool"),
             args: vec![format!("--root={}", alpha.display()), "$x".into()],
             working_directory: Some(alpha.clone()),
+            skip: None,
         }
     );
     let chosen = resolve(&proxy, "tool", Some("tool=org.example/beta@1.0.0")).unwrap();
@@ -209,6 +210,7 @@ fn caller_arguments_follow_the_launcher_arguments_literally() {
         executable: PathBuf::from("/bin/echo"),
         args: vec!["fixed value".into()],
         working_directory: Some(root.path().to_path_buf()),
+        skip: None,
     };
     let caller = [
         OsString::from("$(touch unsafe)"),

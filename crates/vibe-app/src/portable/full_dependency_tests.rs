@@ -320,7 +320,13 @@ fn compatible_existing_manual_child_is_reused_without_demotion_or_rerun() {
     let (_a, document) = source(true);
     let b = destination(true);
     b.install(CHILD1, &InstallRequest::default());
-    crate::hold(&b.settings, CHILD1, true, Path::new("unused-proxy")).unwrap();
+    crate::hold(
+        &b.settings,
+        CHILD1,
+        true,
+        crate::SlotExposure::image_only(Path::new("unused-proxy")),
+    )
+    .unwrap();
     let before_policy = Index::load(&b.settings).unwrap().installations[CHILD1]
         .lifecycle
         .clone();

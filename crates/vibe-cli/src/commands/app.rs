@@ -12,9 +12,9 @@ mod catalog;
 mod configuration;
 mod describe;
 pub(crate) mod display;
-mod environment;
+pub(crate) mod environment;
 mod export;
-mod facts;
+pub(crate) mod facts;
 pub(crate) mod global;
 pub(crate) mod home;
 pub(crate) mod interrupt;
@@ -406,8 +406,14 @@ pub fn run(
             Ok(None)
         }
         AppCommand::Import(import) => portable::import(ctx, &import, explicit_path, offline),
-        AppCommand::Use { slot, key } => {
-            alternatives::use_default(ctx, app_home.settings(), &slot, &key)?;
+        AppCommand::Use {
+            slot,
+            key,
+            none,
+            default,
+        } => {
+            let request = alternatives::UseRequest::of(key, none, default)?;
+            alternatives::use_default(ctx, app_home.settings(), &slot, request)?;
             Ok(None)
         }
         AppCommand::Alternatives { slot } => {

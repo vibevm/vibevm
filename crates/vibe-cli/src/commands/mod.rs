@@ -76,6 +76,7 @@ pub mod skill;
 pub mod specmap;
 pub mod storage;
 pub mod term;
+pub mod tool;
 pub mod tools;
 pub mod trace;
 pub mod transfers;

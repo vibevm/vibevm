@@ -142,6 +142,8 @@ fn row(
         app_root: root.ok().map(|root| path_text(&root)),
         portable: record.portable,
         default: index.default_of(&record.slot) == Some(key),
+        slot_off: index.is_off(&record.slot),
+        path_dirs: record.path_dirs.clone(),
         hidden: lifecycle.hidden,
         mark: (lifecycle.mark == Mark::Auto).then_some(wire::Mark::Auto),
         held: lifecycle.held,

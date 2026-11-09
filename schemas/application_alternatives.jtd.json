@@ -1,64 +1,162 @@
 {
-  "metadata": {
-    "description": "Version 1 machine listing from vibe app alternatives SLOT --json.",
-    "spec": {
-      "implements": "spec://org.vibevm.core/vibevm/common/PROP-059#alternatives"
-    },
-    "rustOptions": {
-      "package": "vibe_wire::application_alternatives"
-    },
-    "x-wire-order": ["protocol", "slot", "default", "providers", "commands"]
+ "metadata": {
+  "description": "Version 1 machine listing from vibe app alternatives SLOT --json.",
+  "spec": {
+   "implements": "spec://org.vibevm.core/vibevm/common/PROP-059#alternatives"
   },
-  "properties": {
-    "protocol": { "type": "string" },
-    "slot": { "type": "string" },
-    "default": { "type": "string", "nullable": true },
-    "providers": {
-      "elements": { "ref": "provider" },
-      "metadata": { "x-empty": "emit" }
+  "rustOptions": {
+   "package": "vibe_wire::application_alternatives"
+  },
+  "x-wire-order": [
+   "protocol",
+   "slot",
+   "default",
+   "off",
+   "providers",
+   "commands"
+  ]
+ },
+ "properties": {
+  "protocol": {
+   "type": "string"
+  },
+  "slot": {
+   "type": "string"
+  },
+  "default": {
+   "type": "string",
+   "nullable": true
+  },
+  "providers": {
+   "elements": {
+    "ref": "provider"
+   },
+   "metadata": {
+    "x-empty": "emit"
+   }
+  },
+  "commands": {
+   "elements": {
+    "ref": "command"
+   },
+   "metadata": {
+    "x-empty": "emit"
+   }
+  }
+ },
+ "definitions": {
+  "package": {
+   "metadata": {
+    "x-wire-order": [
+     "group",
+     "name",
+     "version"
+    ]
+   },
+   "properties": {
+    "group": {
+     "type": "string"
     },
-    "commands": {
-      "elements": { "ref": "command" },
-      "metadata": { "x-empty": "emit" }
+    "name": {
+     "type": "string"
+    },
+    "version": {
+     "type": "string"
     }
+   }
   },
-  "definitions": {
+  "status": {
+   "enum": [
+    "ready",
+    "unavailable"
+   ],
+   "metadata": {
+    "x-vocabulary": "closed"
+   }
+  },
+  "provider": {
+   "metadata": {
+    "x-wire-order": [
+     "key",
+     "package",
+     "method",
+     "status",
+     "reason",
+     "default",
+     "commands",
+     "path_dirs"
+    ]
+   },
+   "properties": {
+    "key": {
+     "type": "string"
+    },
     "package": {
-      "metadata": { "x-wire-order": ["group", "name", "version"] },
-      "properties": {
-        "group": { "type": "string" },
-        "name": { "type": "string" },
-        "version": { "type": "string" }
-      }
+     "ref": "package"
+    },
+    "method": {
+     "type": "string"
     },
     "status": {
-      "enum": ["ready", "unavailable"],
-      "metadata": { "x-vocabulary": "closed" }
+     "ref": "status"
     },
-    "provider": {
-      "metadata": { "x-wire-order": ["key", "package", "method", "status", "reason", "default", "commands"] },
-      "properties": {
-        "key": { "type": "string" },
-        "package": { "ref": "package" },
-        "method": { "type": "string" },
-        "status": { "ref": "status" },
-        "reason": { "type": "string", "nullable": true },
-        "default": { "type": "boolean" },
-        "commands": {
-          "elements": { "type": "string" },
-          "metadata": { "x-empty": "emit" }
-        }
-      }
+    "reason": {
+     "type": "string",
+     "nullable": true
     },
-    "command": {
-      "metadata": { "x-wire-order": ["name", "providers"] },
-      "properties": {
-        "name": { "type": "string" },
-        "providers": {
-          "elements": { "type": "string" },
-          "metadata": { "x-empty": "emit" }
-        }
-      }
+    "default": {
+     "type": "boolean"
+    },
+    "commands": {
+     "elements": {
+      "type": "string"
+     },
+     "metadata": {
+      "x-empty": "emit"
+     }
     }
+   },
+   "optionalProperties": {
+    "path_dirs": {
+     "elements": {
+      "type": "string"
+     },
+     "metadata": {
+      "x-empty": "omit",
+      "description": "The payload directories this provider asks to be exposed whole on PATH (PROP-059#path-directories)."
+     }
+    }
+   }
+  },
+  "command": {
+   "metadata": {
+    "x-wire-order": [
+     "name",
+     "providers"
+    ]
+   },
+   "properties": {
+    "name": {
+     "type": "string"
+    },
+    "providers": {
+     "elements": {
+      "type": "string"
+     },
+     "metadata": {
+      "x-empty": "emit"
+     }
+    }
+   }
   }
+ },
+ "optionalProperties": {
+  "off": {
+   "type": "boolean",
+   "metadata": {
+    "x-default": false,
+    "description": "The slot is switched off (PROP-059#slot-off): no link, no proxy, and a lookup falls through to the system program. `default` still names the provider the slot goes back to."
+   }
+  }
+ }
 }

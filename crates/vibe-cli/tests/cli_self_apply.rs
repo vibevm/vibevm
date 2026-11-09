@@ -991,3 +991,121 @@ fn the_environment_beats_the_user_file_and_the_user_file_beats_the_site() {
         "{shown}"
     );
 }
+
+/// `pac = "system"` is resolved by vibe, so `--show` says what it resolved
+/// to and which setting answered — and on a host that is not Windows, that
+/// there is nothing to read (PROP-068 `#proxy-system`). The `[proxy]`
+/// table's own keys still read back exactly as written.
+#[test]
+fn a_system_pac_is_reported_as_resolved_or_as_unresolvable_here() {
+    let machine = Machine::new();
+    machine.import_active();
+    let site = tempfile::tempdir().unwrap();
+    for dir in ["registry", "releases", "payloads"] {
+        fs::create_dir_all(site.path().join(dir)).unwrap();
+    }
+    let body = corp_profile(site.path(), None)
+        + "\n[proxy]\nmode = \"px\"\npac = \"windows\"\nno_proxy = \".corp.example\"\n";
+    let profile = write_profile(site.path(), &body);
+    machine.apply(&profile, &[]);
+
+    let shown = json(&machine.run(&["--json", "self", "apply", "--show"]));
+    let proxy = &shown["effective"]["proxy"];
+    // The alias is accepted and read as the one kind `system` names.
+    assert_eq!(proxy["pac"], "windows", "{proxy}");
+    assert_eq!(proxy["pac_kind"], "system", "{proxy}");
+    assert_eq!(proxy["pac_origin"], "site profile", "{proxy}");
+    let resolved = proxy["pac_resolved"].as_str().expect("resolved or why not");
+    if cfg!(windows) {
+        assert!(
+            resolved.starts_with("system \u{2192} "),
+            "the resolution names what px will be given: {resolved}"
+        );
+    } else {
+        assert!(
+            resolved.contains("not Windows") && resolved.contains("fix:"),
+            "{resolved}"
+        );
+    }
+    // The default revocation setting is reported as such and prints nothing.
+    assert_eq!(proxy["revocation"], "check", "{proxy}");
+    assert_eq!(proxy["revocation_origin"], "default", "{proxy}");
+    let text = ok(&machine.run(&["self", "apply", "--show"]));
+    assert!(
+        text.contains("proxy pac: windows (system, from site profile)"),
+        "{text}"
+    );
+    assert!(text.contains(resolved), "{text}");
+    assert!(!text.contains("proxy revocation:"), "{text}");
+}
+
+/// `[proxy] revocation` is a `[proxy]` key like any other: the site sets
+/// it, the user's file outranks the site and the environment outranks
+/// both, and `--show` names the layer (PROP-068 `#proxy-revocation`).
+#[test]
+fn the_revocation_setting_is_reported_with_the_layer_that_chose_it() {
+    let machine = Machine::new();
+    machine.import_active();
+    let site = tempfile::tempdir().unwrap();
+    for dir in ["registry", "releases", "payloads"] {
+        fs::create_dir_all(site.path().join(dir)).unwrap();
+    }
+    let body = corp_profile(site.path(), None)
+        + "\n[proxy]\nhttps = \"http://proxy.example.corp:3128\"\nrevocation = \"off\"\n";
+    let profile = write_profile(site.path(), &body);
+    machine.apply(&profile, &[]);
+
+    let shown = json(&machine.run(&["--json", "self", "apply", "--show"]));
+    assert_eq!(shown["effective"]["proxy"]["revocation"], "off");
+    assert_eq!(
+        shown["effective"]["proxy"]["revocation_origin"],
+        "site profile"
+    );
+    let text = ok(&machine.run(&["self", "apply", "--show"]));
+    assert!(
+        text.contains("proxy revocation: off (from site profile)"),
+        "{text}"
+    );
+
+    // The user's own file outranks the site.
+    fs::write(
+        machine.settings("config.toml"),
+        "[proxy]\nrevocation = \"best-effort\"\n",
+    )
+    .unwrap();
+    let shown = json(&machine.run(&["--json", "self", "apply", "--show"]));
+    assert_eq!(shown["effective"]["proxy"]["revocation"], "best-effort");
+    assert_eq!(
+        shown["effective"]["proxy"]["revocation_origin"],
+        "user config"
+    );
+
+    // And the environment outranks both; an unusable value is refused by
+    // name and ignored, leaving the files in charge.
+    let shown = json(
+        &machine
+            .cmd()
+            .env("VIBEVM_PROXY_REVOCATION", "off")
+            .args(["--json", "self", "apply", "--show"])
+            .output()
+            .unwrap(),
+    );
+    assert_eq!(shown["effective"]["proxy"]["revocation"], "off");
+    assert_eq!(
+        shown["effective"]["proxy"]["revocation_origin"],
+        "VIBEVM_PROXY_REVOCATION"
+    );
+    let output = machine
+        .cmd()
+        .env("VIBEVM_PROXY_REVOCATION", "maybe")
+        .args(["--json", "self", "apply", "--show"])
+        .output()
+        .unwrap();
+    let stderr = String::from_utf8_lossy(&output.stderr).into_owned();
+    assert!(
+        stderr.contains("VIBEVM_PROXY_REVOCATION=`maybe` is not a revocation setting"),
+        "{stderr}"
+    );
+    let shown = common::wire::checked(&ok(&output));
+    assert_eq!(shown["effective"]["proxy"]["revocation"], "best-effort");
+}

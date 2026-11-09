@@ -5,7 +5,6 @@
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-059#alternatives");
 
 use std::collections::{BTreeMap, BTreeSet};
-use std::path::Path;
 
 use specmark::spec;
 use vibe_core::manifest::PublicCommandDecl;
@@ -31,6 +30,11 @@ pub fn reserved_commands(index: &Index) -> BTreeMap<String, String> {
         .installations
         .values()
         .filter(|record| !record.lifecycle.hidden)
+        // A slot switched off publishes nothing: its commands lose their
+        // proxies, so a lookup reaches the system program again
+        // (`PROP-059#slot-off`). The reservation itself is kept in the
+        // index, so turning the slot back on restores exactly it.
+        .filter(|record| !index.is_off(&record.slot))
     {
         for command in &record.public_commands {
             reserved
@@ -82,6 +86,9 @@ pub struct DefaultChange {
     pub slot: String,
     pub previous: Option<String>,
     pub default: String,
+    /// Whether the slot is switched off after the change
+    /// (`PROP-059#slot-off`).
+    pub off: bool,
 }
 
 /// Make `key` the global default of `slot`, then synchronise the proxies.
@@ -90,14 +97,15 @@ pub struct DefaultChange {
 /// let dir = tempfile::tempdir().unwrap();
 /// let settings = vibe_app::SettingsRoot::new(dir.path());
 /// let image = dir.path().join("vibe-app-proxy");
-/// let error = vibe_app::set_default(&settings, "tool", "org.example/a@1.0.0", &image);
+/// let exposure = vibe_app::SlotExposure::image_only(&image);
+/// let error = vibe_app::set_default(&settings, "tool", "org.example/a@1.0.0", exposure);
 /// assert!(error.unwrap_err().to_string().contains("no installed provider"));
 /// ```
 pub fn set_default(
     settings: &SettingsRoot,
     slot: &str,
     key: &str,
-    proxy_image: &Path,
+    exposure: crate::SlotExposure<'_>,
 ) -> Result<DefaultChange, AppError> {
     let held = settings.lock()?;
     let lock = &held;
@@ -116,7 +124,10 @@ pub fn set_default(
     }
     let previous = index.default_of(slot).map(str::to_owned);
     let reserved = reserved_names(&index);
-    index.slots.insert(slot.to_owned(), Some(key.to_owned()));
+    index.set_default(slot, Some(key.to_owned()));
+    // Naming a provider is also the "on" switch: the user asked for this
+    // provider to be what the slot resolves to (`PROP-059#slot-off`).
+    index.slot_mut(slot).off = false;
     index.save_locked(
         settings,
         &crate::catalog::HomeEvent::about(crate::catalog::EventKind::Updated, key),
@@ -126,13 +137,76 @@ pub fn set_default(
         settings,
         &reserved,
         &reserved_names(&index),
-        proxy_image,
+        exposure.proxy_image,
+        lock,
+    )?;
+    crate::paths::apply_locked(
+        settings,
+        &mut index,
+        &Storage::load(settings)?,
+        exposure.environment,
         lock,
     )?;
     Ok(DefaultChange {
         slot: slot.to_owned(),
         previous,
         default: key.to_owned(),
+        off: false,
+    })
+}
+
+/// Switch `slot` off or back on (`PROP-059#slot-off`): off removes the
+/// slot's links and the proxies of its public commands, so every lookup
+/// falls through to the system program, and on restores both from the
+/// remembered default. Installations, index records and that default are
+/// kept either way.
+///
+/// ```
+/// let dir = tempfile::tempdir().unwrap();
+/// let settings = vibe_app::SettingsRoot::new(dir.path());
+/// let image = dir.path().join("vibe-app-proxy");
+/// let exposure = vibe_app::SlotExposure::image_only(&image);
+/// let error = vibe_app::set_slot_off(&settings, "tool", true, exposure);
+/// assert_eq!(error.unwrap_err().code(), "unknown_slot");
+/// ```
+pub fn set_slot_off(
+    settings: &SettingsRoot,
+    slot: &str,
+    off: bool,
+    exposure: crate::SlotExposure<'_>,
+) -> Result<DefaultChange, AppError> {
+    let held = settings.lock()?;
+    let lock = &held;
+    let mut index = Index::load(settings)?;
+    // An unknown slot is named, never invented.
+    providers(&index, slot)?;
+    let previous = index.default_of(slot).map(str::to_owned);
+    let reserved = reserved_names(&index);
+    index.slot_mut(slot).off = off;
+    index.save_locked(
+        settings,
+        &crate::catalog::HomeEvent::about(crate::catalog::EventKind::Updated, slot),
+        lock,
+    )?;
+    proxies::sync_locked(
+        settings,
+        &reserved,
+        &reserved_names(&index),
+        exposure.proxy_image,
+        lock,
+    )?;
+    crate::paths::apply_locked(
+        settings,
+        &mut index,
+        &Storage::load(settings)?,
+        exposure.environment,
+        lock,
+    )?;
+    Ok(DefaultChange {
+        slot: slot.to_owned(),
+        default: index.default_of(slot).unwrap_or_default().to_owned(),
+        previous,
+        off,
     })
 }
 
@@ -178,12 +252,14 @@ pub fn listing(
                     .iter()
                     .map(|command| command.name.clone())
                     .collect(),
+                path_dirs: record.path_dirs.clone(),
             }
         })
         .collect();
     Ok(wire::ApplicationAlternatives {
         protocol: "vibe-app-alternatives/1".into(),
         slot: slot.to_owned(),
+        off: index.is_off(slot),
         default: default.map(str::to_owned),
         providers: rows,
         commands: commands
@@ -247,6 +323,7 @@ mod tests {
                     launcher: "main".into(),
                 })
                 .collect(),
+            path_dirs: Vec::new(),
             commands: AuthoredCommands::default(),
             features: Vec::new(),
             parameters: Default::default(),
@@ -264,7 +341,7 @@ mod tests {
             index
                 .installations
                 .insert(record.package.key(), record.clone());
-            index.slots.entry(record.slot.clone()).or_insert(None);
+            index.slots.entry(record.slot.clone()).or_default();
         }
         index
     }
@@ -306,9 +383,7 @@ mod tests {
             record("beta", "tool", &["tool"]),
             record("gamma", "other", &[]),
         ]);
-        start
-            .slots
-            .insert("tool".into(), Some("org.example/alpha@1.0.0".into()));
+        start.set_default("tool", Some("org.example/alpha@1.0.0".into()));
         start
             .save(
                 &settings,
@@ -316,7 +391,8 @@ mod tests {
             )
             .unwrap();
 
-        let change = set_default(&settings, "tool", "org.example/beta@1.0.0", &image).unwrap();
+        let exposure = crate::SlotExposure::image_only(&image);
+        let change = set_default(&settings, "tool", "org.example/beta@1.0.0", exposure).unwrap();
         assert_eq!(change.previous.as_deref(), Some("org.example/alpha@1.0.0"));
         let saved = Index::load(&settings).unwrap();
         assert_eq!(saved.default_of("tool"), Some("org.example/beta@1.0.0"));
@@ -329,7 +405,7 @@ mod tests {
         // A second mutation right after the first: a provider of another
         // slot is refused and the default stays where the switch put it.
         assert!(matches!(
-            set_default(&settings, "tool", "org.example/gamma@1.0.0", &image),
+            set_default(&settings, "tool", "org.example/gamma@1.0.0", exposure),
             Err(AppError::NotProvider { .. })
         ));
         assert_eq!(

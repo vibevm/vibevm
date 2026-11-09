@@ -12,8 +12,11 @@ use crate::manifest::{
 };
 
 use super::icon_files::icon_slot_field;
-use super::validation::validate_template;
+use super::template_validation::validate_template;
 use super::*;
+
+/// The table every launcher template message names.
+const LAUNCHER_TABLE: &str = "[[launchers]]";
 
 impl LauncherDecl {
     /// Validate one row. `override_allowed` is true in an option with
@@ -66,6 +69,7 @@ impl LauncherDecl {
             }
         } else if !self.executable.is_empty() {
             validate_template(
+                LAUNCHER_TABLE,
                 &self.executable,
                 "executable",
                 true,
@@ -74,6 +78,7 @@ impl LauncherDecl {
         }
         if let Some(directory) = &self.working_directory {
             validate_template(
+                LAUNCHER_TABLE,
                 directory,
                 "working_directory",
                 true,
@@ -82,7 +87,7 @@ impl LauncherDecl {
         }
         for (index, arg) in self.args.iter().enumerate() {
             let arg_at = at.table("args").index(index);
-            validate_template(arg, "args", false, &arg_at)?;
+            validate_template(LAUNCHER_TABLE, arg, "args", false, &arg_at)?;
             validate_placeholders(arg, &self.id, &arg_at)?;
         }
         if let (Some(kind), Some(terminal)) = (self.kind, self.terminal)
@@ -162,7 +167,7 @@ impl LauncherDecl {
             }
             for (position, arg) in action.args.iter().enumerate() {
                 let arg_at = action_at.table("args").index(position);
-                validate_template(arg, "actions.args", false, &arg_at)?;
+                validate_template(LAUNCHER_TABLE, arg, "actions.args", false, &arg_at)?;
                 validate_placeholders(arg, &self.id, &arg_at)?;
             }
             if let Some(icon) = &action.icon {
@@ -364,7 +369,7 @@ fn validate_icon(
 ) -> Result<(), FieldError> {
     let path = |value: &str, file_at: &FieldPath| -> Result<(), FieldError> {
         if templates {
-            validate_template(value, "icon", true, file_at)
+            validate_template(LAUNCHER_TABLE, value, "icon", true, file_at)
         } else if value.contains('$') {
             Err(FieldError::new(
                 file_at.clone(),

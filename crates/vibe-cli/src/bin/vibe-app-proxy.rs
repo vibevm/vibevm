@@ -61,7 +61,8 @@ fn original(caller: &[OsString]) -> Result<i32, String> {
             Some(
                 "vibe-user-applications/3"
                 | "vibe-user-applications/4"
-                | "vibe-user-applications/5",
+                | "vibe-user-applications/5"
+                | "vibe-user-applications/6",
             ) => {
                 println!("{}", protocol.to_string_lossy());
             }
@@ -109,6 +110,12 @@ fn command_for(launch: &resolve::Launch, caller: &[OsString]) -> Command {
         .stderr(Stdio::inherit());
     if let Some(directory) = &launch.working_directory {
         command.current_dir(directory);
+    }
+    // A fall-through hands the chain it already walked to the child, so a
+    // second proxy for the same switched-off slot keeps moving forward
+    // along PATH (`PROP-059#slot-off`).
+    if let Some(skip) = &launch.skip {
+        command.env(resolve::SKIP_VARIABLE, skip);
     }
     command
 }

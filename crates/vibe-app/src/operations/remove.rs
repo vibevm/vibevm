@@ -342,7 +342,7 @@ pub(super) fn remove_with_boundary(
             [only] => Some((*only).clone()),
             _ => None,
         };
-        index.slots.insert(slot.clone(), next);
+        index.set_default(&slot, next);
         message.push_str(&match index.default_of(&slot) {
             Some(next) => format!("; slot `{slot}` default is now {next}"),
             None => format!("; slot `{slot}` has no default"),
@@ -379,6 +379,10 @@ pub(super) fn remove_with_boundary(
         ctx.proxy_image,
         lock,
     )?;
+    // The slot's links follow: the default moved to the next provider, or
+    // the last provider went and the slot's link directories leave the
+    // durable PATH (`PROP-059#path-directories`).
+    crate::paths::apply_locked(ctx.settings, &mut index, &storage, ctx.environment, lock)?;
     Ok(Outcome {
         command: Command::Uninstall,
         slot_default: index.default_of(&slot).map(str::to_owned),

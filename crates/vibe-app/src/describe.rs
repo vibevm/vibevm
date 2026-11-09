@@ -114,6 +114,7 @@ pub(crate) fn describe_option(
                 launcher: command.launcher.clone(),
             })
             .collect(),
+        path_dirs: option.path_dirs.clone(),
         features: option
             .features
             .iter()

@@ -82,6 +82,34 @@ pub(crate) fn install_base_override() -> Option<std::path::PathBuf> {
     UserConfig::load().ok()?.self_source.install_root
 }
 
+/// The installation `vibe self …` acts on, and the one `vibe tool px
+/// status` reports: the running version's own root (current_exe-derived)
+/// when managed, else `$VIBEVM_INSTALL_ROOT/opt`, else `~/.vibe/opt`
+/// (PROP-019 §2.5). Every ambient read of it belongs to this root.
+pub(crate) fn vvm_env(
+    self_location: Option<&commands::vvm::SelfLocation>,
+    cli_offline: bool,
+) -> commands::vvm::VvmEnv {
+    commands::vvm::VvmEnv {
+        root: commands::vvm::resolve_root(
+            self_location.map(|location| location.root.clone()),
+            install_base_override(),
+            dirs::home_dir(),
+        ),
+        cwd: std::env::current_dir().ok(),
+        home: dirs::home_dir(),
+        shell: super::read_env_opt("SHELL"),
+        path_var: super::read_env_opt("PATH"),
+        install_root_env: super::read_env_opt(commands::vvm::VIBEVM_INSTALL_ROOT_ENV)
+            .map(std::path::PathBuf::from),
+        offline: vvm_offline(cli_offline),
+        source_build_environment: commands::vvm::SOURCE_BUILD_ENVIRONMENT
+            .into_iter()
+            .map(|name| (name.to_owned(), std::env::var_os(name)))
+            .collect(),
+    }
+}
+
 /// The install root store the user home's applications follow
 /// (PROP-019 `#install-root`), with the precedence vibe itself resolves its
 /// root by: the running managed vibe's own root, then

@@ -80,6 +80,12 @@ const FIX_CA: &str = "the certificate is not trusted (`unable to get local issue
      corporate CA in the system store, or set `[proxy] ca_file` to its PEM file";
 const FIX_TIMEOUT: &str = "timed out: the direct route is blocked here — configure `[proxy]` \
      (`mode = \"px\"` with your PAC URL, or `https = \"http://host:port\"`)";
+/// A Windows schannel handshake that could not complete the revocation
+/// lookup: the inspecting CA's CRL / OCSP endpoints are outside the
+/// network it inspects, so the check never finishes.
+const FIX_REVOCATION: &str = "the certificate's revocation state could not be checked (the inspecting CA's CRL / OCSP \
+     endpoint is unreachable from here): set `[proxy] revocation = \"best-effort\"` (or \
+     `\"off\"`), or export `VIBEVM_PROXY_REVOCATION=best-effort`";
 
 /// Diagnose the route to `target` (an `https://` URL) in order. Stops after
 /// the first failed step: what follows cannot be judged without it.
@@ -311,9 +317,25 @@ fn tls(session: &Arc<NetworkSession>, target: &url::Url, timeout: Duration) -> C
 /// let text = "error sending request: invalid peer certificate: UnknownIssuer";
 /// assert_eq!(vibe_net::doctor::cause_of(text, false).0, "untrusted-ca");
 /// assert_eq!(vibe_net::doctor::cause_of("operation timed out", true).0, "timeout");
+/// // A Windows schannel revocation failure names the setting that fixes it.
+/// let schannel = "schannel: next InitializeSecurityContext failed: \
+///     CRYPT_E_NO_REVOCATION_CHECK (0x80092012) - The revocation function was unable to \
+///     check revocation for the certificate.";
+/// let (cause, fix) = vibe_net::doctor::cause_of(schannel, false);
+/// assert_eq!(cause, "revocation");
+/// assert!(fix.contains("`[proxy] revocation = \"best-effort\"`"), "{fix}");
+/// assert_eq!(vibe_net::doctor::cause_of("CRYPT_E_REVOCATION_OFFLINE (0x80092013)", false).0, "revocation");
 /// ```
 pub fn cause_of(chain: &str, timed_out: bool) -> (&'static str, &'static str) {
     let lower = chain.to_ascii_lowercase();
+    // Judged before the trust causes: schannel reports a revocation
+    // failure as a certificate problem, and the fix is a different key.
+    if REVOCATION_MARKERS
+        .iter()
+        .any(|marker| lower.contains(marker))
+    {
+        return ("revocation", FIX_REVOCATION);
+    }
     if lower.contains("unknownissuer")
         || lower.contains("unknown issuer")
         || lower.contains("local issuer")
@@ -331,6 +353,20 @@ pub fn cause_of(chain: &str, timed_out: bool) -> (&'static str, &'static str) {
         )
     }
 }
+
+/// What a schannel (or libcurl) handshake says when the revocation
+/// lookup could not be completed, lowercase. `CRYPT_E_NO_REVOCATION_CHECK`
+/// is `0x80092012` and `CRYPT_E_REVOCATION_OFFLINE` is `0x80092013`; git
+/// and curl print the name, the code, or both.
+pub const REVOCATION_MARKERS: &[&str] = &[
+    "crypt_e_no_revocation_check",
+    "crypt_e_revocation_offline",
+    "0x80092012",
+    "0x80092013",
+    "revocation function was unable",
+    "revocation server was offline",
+    "ssl-no-revoke",
+];
 
 fn classify(error: &reqwest::Error) -> Check {
     let mut chain = error.to_string();
@@ -350,16 +386,43 @@ fn classify(error: &reqwest::Error) -> Check {
 pub fn pac_check(session: &Arc<NetworkSession>, timeout: Duration) -> Option<Check> {
     use vibe_core::user_config::PacSource;
     let settings = session.route().px()?;
-    let origin = settings.pac_origin.as_str();
-    let body = match settings.pac.as_ref()? {
-        PacSource::System => {
-            return Some(Check::skip(
-                "pac",
-                format!(
-                    "system settings (px reads Windows Internet Options / WPAD; from {origin})"
-                ),
-            ));
-        }
+    let origin = settings.pac_origin.label(vibe_core::net::PAC_ENV);
+    // `system` is resolved by vibe, here and again when px starts, so the
+    // check reports the URL px will be given and where it came from —
+    // never "px reads the settings itself" (`PROP-068#proxy-px`).
+    let resolved = match settings.pac.as_ref()? {
+        PacSource::System => match crate::system_proxy::resolve() {
+            Ok(resolved) => Some(resolved),
+            Err(error) => {
+                return Some(Check::fail(
+                    "pac",
+                    format!("{error} · pac from {origin}"),
+                    "set `[proxy] pac` to your PAC URL or an absolute PAC file path, or                      `[proxy] upstream` to the proxy's `host:port`",
+                ));
+            }
+        },
+        _ => None,
+    };
+    let system = resolved.as_ref().map(|resolved| resolved.describe());
+    let source = match &resolved {
+        // A PAC URL the Windows settings named is fetched and read like
+        // any other, under the phrase that says where it came from.
+        Some(resolved) => match &resolved.pac_url {
+            Some(url) => PacSource::Url(url.clone()),
+            // The settings name a fixed proxy instead: there is no PAC to
+            // read, and px is given `--proxy`.
+            None => {
+                return Some(Check::skip(
+                    "pac",
+                    format!("{} · pac from {origin}", system.unwrap_or_default()),
+                ));
+            }
+        },
+        None => settings.pac.clone()?,
+    };
+    let body = match &source {
+        // Resolved above; a `system` that reaches here is impossible.
+        PacSource::System => return None,
         PacSource::File(location) => {
             let path = PacSource::File(location.clone())
                 .px_location()
@@ -414,21 +477,37 @@ pub fn pac_check(session: &Arc<NetworkSession>, timeout: Duration) -> Option<Che
             }
         }
     };
+    // What the row calls the PAC: the resolution phrase when `system`
+    // answered, else the location as configured.
+    let name = |what: String| match &system {
+        Some(resolved) => resolved.clone(),
+        None => what,
+    };
     Some(match body {
         Ok((what, bytes)) if String::from_utf8_lossy(&bytes).contains("FindProxyForURL") => {
             Check::ok(
                 "pac",
-                format!("{what} read, {} bytes (from {origin})", bytes.len()),
+                format!(
+                    "{} read, {} bytes · pac from {origin}",
+                    name(what),
+                    bytes.len()
+                ),
             )
         }
         Ok((what, _)) => Check::fail(
             "pac",
-            format!("{what} has no `FindProxyForURL` (from {origin})"),
+            format!(
+                "{} has no `FindProxyForURL` · pac from {origin}",
+                name(what)
+            ),
             "point `[proxy] pac` at the PAC file itself",
         ),
         Err((what, reason, fix)) => Check::fail(
             "pac",
-            format!("{what} could not be read: {reason} (from {origin})"),
+            format!(
+                "{} could not be read: {reason} · pac from {origin}",
+                name(what)
+            ),
             fix,
         ),
     })

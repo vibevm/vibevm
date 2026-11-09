@@ -220,6 +220,12 @@ pub struct InstallerOption {
     #[serde(rename = "publicCommands")]
     pub public_commands: Vec<PublicCommand>,
 
+    /// The payload directories this option asks to be exposed whole on PATH
+    /// (PROP-059#path-directories).
+    #[serde(rename = "pathDirs")]
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub path_dirs: Vec<String>,
+
     pub features: Vec<Feature>,
 
     #[serde(rename = "defaultFeatures")]

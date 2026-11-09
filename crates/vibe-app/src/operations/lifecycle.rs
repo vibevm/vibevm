@@ -7,14 +7,13 @@
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-059#hidden-installations");
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-065#update-and-rollback");
 
-use std::path::Path;
-
 use specmark::spec;
 
 use crate::alternatives::{check_reservation, reserved_names};
 use crate::error::AppError;
 use crate::error_lifecycle::LifecycleError;
 use crate::index::{Index, Mark};
+use crate::operations::SlotExposure;
 use crate::proxies;
 use crate::settings::SettingsRoot;
 
@@ -48,18 +47,18 @@ pub struct Change {
 /// proxies with the new reserved command set.
 fn edit(
     settings: &SettingsRoot,
-    proxy_image: &Path,
+    exposure: SlotExposure<'_>,
     spelling: &str,
     verb: ChangeVerb,
     apply: impl FnOnce(&mut Index, &str) -> Result<String, AppError>,
 ) -> Result<Change, AppError> {
-    edit_then(settings, proxy_image, spelling, verb, apply, |_, _| Ok(()))
+    edit_then(settings, exposure, spelling, verb, apply, |_, _| Ok(()))
 }
 
 /// [`edit`] with `after` run on the saved index, still under the lock.
 fn edit_then(
     settings: &SettingsRoot,
-    proxy_image: &Path,
+    exposure: SlotExposure<'_>,
     spelling: &str,
     verb: ChangeVerb,
     apply: impl FnOnce(&mut Index, &str) -> Result<String, AppError>,
@@ -68,6 +67,7 @@ fn edit_then(
     let held = settings.lock()?;
     let lock = &held;
     let mut index = Index::load(settings)?;
+    let storage = crate::storage::Storage::load(settings)?;
     let (key, record) = installed(settings, &index, spelling)?;
     let (key, slot) = (key.to_owned(), record.slot.clone());
     let reserved = reserved_names(&index);
@@ -83,9 +83,10 @@ fn edit_then(
         settings,
         &reserved,
         &reserved_names(&index),
-        proxy_image,
+        exposure.proxy_image,
         lock,
     )?;
+    crate::paths::apply_locked(settings, &mut index, &storage, exposure.environment, lock)?;
     Ok(Change {
         verb,
         slot_default: index.default_of(&slot).map(str::to_owned),
@@ -112,17 +113,18 @@ fn next_default(index: &Index, slot: &str, except: &str) -> Option<String> {
 /// let dir = tempfile::tempdir().unwrap();
 /// let settings = vibe_app::SettingsRoot::new(dir.path());
 /// let image = dir.path().join("vibe-app-proxy");
-/// let error = vibe_app::expose(&settings, "org.example/gcc", &image).unwrap_err();
+/// let exposure = vibe_app::SlotExposure::image_only(&image);
+/// let error = vibe_app::expose(&settings, "org.example/gcc", exposure).unwrap_err();
 /// assert_eq!(error.code(), "not_installed");
 /// ```
 pub fn expose(
     settings: &SettingsRoot,
     spelling: &str,
-    proxy_image: &Path,
+    exposure: SlotExposure<'_>,
 ) -> Result<Change, AppError> {
     edit(
         settings,
-        proxy_image,
+        exposure,
         spelling,
         ChangeVerb::Expose,
         |index, key| {
@@ -135,9 +137,7 @@ pub fn expose(
                 entry.lifecycle.superseded_by = None;
             }
             if index.default_of(&record.slot).is_none() {
-                index
-                    .slots
-                    .insert(record.slot.clone(), Some(key.to_owned()));
+                index.set_default(&record.slot, Some(key.to_owned()));
             }
             Ok(if was_hidden {
                 format!("exposed {key} in slot `{}`", record.slot)
@@ -153,11 +153,11 @@ pub fn expose(
 pub fn hide(
     settings: &SettingsRoot,
     spelling: &str,
-    proxy_image: &Path,
+    exposure: SlotExposure<'_>,
 ) -> Result<Change, AppError> {
     edit(
         settings,
-        proxy_image,
+        exposure,
         spelling,
         ChangeVerb::Hide,
         |index, key| {
@@ -167,7 +167,7 @@ pub fn hide(
             }
             if index.default_of(&slot) == Some(key) {
                 let next = next_default(index, &slot, key);
-                index.slots.insert(slot.clone(), next);
+                index.set_default(&slot, next);
             }
             Ok(format!(
                 "hid {key}; it stays installed and reachable with `vibe shell --with`"
@@ -181,11 +181,11 @@ pub fn mark(
     settings: &SettingsRoot,
     spelling: &str,
     mark: Mark,
-    proxy_image: &Path,
+    exposure: SlotExposure<'_>,
 ) -> Result<Change, AppError> {
     edit(
         settings,
-        proxy_image,
+        exposure,
         spelling,
         ChangeVerb::Mark,
         |index, key| {
@@ -202,14 +202,14 @@ pub fn hold(
     settings: &SettingsRoot,
     spelling: &str,
     held: bool,
-    proxy_image: &Path,
+    exposure: SlotExposure<'_>,
 ) -> Result<Change, AppError> {
     let verb = if held {
         ChangeVerb::Hold
     } else {
         ChangeVerb::Unhold
     };
-    edit(settings, proxy_image, spelling, verb, |index, key| {
+    edit(settings, exposure, spelling, verb, |index, key| {
         if let Some(entry) = index.installations.get_mut(key) {
             entry.lifecycle.held = held;
         }
@@ -226,11 +226,11 @@ pub fn hold(
 pub fn rollback(
     settings: &SettingsRoot,
     spelling: &str,
-    proxy_image: &Path,
+    exposure: SlotExposure<'_>,
 ) -> Result<Change, AppError> {
     edit_then(
         settings,
-        proxy_image,
+        exposure,
         spelling,
         ChangeVerb::Rollback,
         |index, key| {
@@ -257,9 +257,7 @@ pub fn rollback(
             let default_moves = index.default_of(&current.slot) == Some(key)
                 || index.default_of(&current.slot).is_none();
             if default_moves && !current.lifecycle.hidden {
-                index
-                    .slots
-                    .insert(current.slot.clone(), Some(previous.clone()));
+                index.set_default(&current.slot, Some(previous.clone()));
             }
             Ok(format!(
                 "rolled back {key} to {previous}; {key} is kept hidden until the next update"

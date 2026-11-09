@@ -14,13 +14,14 @@ use vibe_core::manifest::{
     IconDecl, InstallerMethod, InstallerOptionDecl, LauncherDecl, PublicCommandDecl,
     RequirementScope, ShellInterpreter, StepPhase,
 };
-use vibe_wire::generated::application::e4::index as wire;
+use vibe_wire::generated::application::e5::index as wire;
 
 use crate::error::StateError;
 use crate::settings::{SettingsRoot, io, write_atomic};
 
 /// The protocol tag of the current index format.
-pub const INDEX_PROTOCOL: &str = "vibe-user-applications/5";
+pub const INDEX_PROTOCOL: &str = "vibe-user-applications/6";
+const EVIDENCE_PROTOCOL: &str = "vibe-user-applications/5";
 const FOUR_PROTOCOL: &str = "vibe-user-applications/4";
 const LEGACY_PROTOCOL: &str = "vibe-user-applications/3";
 
@@ -188,6 +189,9 @@ pub struct Installation {
     pub portable: bool,
     pub launchers: Vec<LauncherDecl>,
     pub public_commands: Vec<PublicCommandDecl>,
+    /// The payload directories this installation asks to be exposed whole
+    /// on PATH, in search order (`PROP-059#path-directories`).
+    pub path_dirs: Vec<String>,
     /// The authored commands of a method-form option.
     pub commands: AuthoredCommands,
     /// The chosen features (`PROP-065#features`).
@@ -259,49 +263,6 @@ pub struct Requirement {
     pub step: Option<String>,
 }
 
-/// The operation of one durable environment change (`PROP-065#env-step`).
-#[derive(Debug, Clone, Copy, PartialEq, Eq)]
-#[spec(documents = "spec://org.vibevm.core/vibevm/common/PROP-065#env-step")]
-pub enum EnvOp {
-    Set,
-    Unset,
-    PathPrepend,
-}
-
-impl EnvOp {
-    /// The stable spelling (`set`, `unset`, `path_prepend`).
-    pub fn as_str(self) -> &'static str {
-        match self {
-            Self::Set => "set",
-            Self::Unset => "unset",
-            Self::PathPrepend => "path_prepend",
-        }
-    }
-}
-
-/// The registry kind of a Windows value an env step replaced.
-#[derive(Debug, Clone, Copy, PartialEq, Eq)]
-#[spec(documents = "spec://org.vibevm.core/vibevm/common/PROP-065#env-step")]
-pub enum ValueKind {
-    String,
-    ExpandString,
-}
-
-/// One applied environment change, recorded so that `uninstall` and
-/// `modify` remove exactly it (`PROP-065#env-step`).
-#[derive(Debug, Clone, PartialEq, Eq)]
-#[spec(documents = "spec://org.vibevm.core/vibevm/common/PROP-065#env-step")]
-pub struct EnvEntry {
-    pub step: String,
-    pub op: EnvOp,
-    pub name: String,
-    /// The expanded value; absent for `unset`.
-    pub value: Option<String>,
-    /// A Windows value this change replaced, restored on removal.
-    pub previous: Option<String>,
-    pub previous_kind: Option<ValueKind>,
-}
-
 /// The lifecycle state of an installation beyond its payload: hidden
 /// exposure (`PROP-059#hidden-installations`), the manual/auto mark and
 /// requirements (`PROP-065#uninstall-tree`, `#app-dependencies`), applied
@@ -322,16 +283,16 @@ pub struct Lifecycle {
     pub superseded_by: Option<String>,
 }
 
-/// The whole inventory: installations by key and each slot's default key.
+/// The whole inventory: installations by key and each slot's state.
 ///
 /// ```
-/// use vibe_app::{EventKind, HomeEvent, Index, SettingsRoot};
+/// use vibe_app::{EventKind, HomeEvent, Index, SettingsRoot, SlotState};
 ///
 /// let dir = tempfile::tempdir().unwrap();
 /// let settings = SettingsRoot::new(dir.path());
 /// let mut index = Index::load(&settings).unwrap();
 /// assert!(index.installations.is_empty());
-/// index.slots.insert("editor".into(), None);
+/// index.slots.insert("editor".into(), SlotState::default());
 /// index.save(&settings, &HomeEvent::new(EventKind::Updated)).unwrap();
 /// assert_eq!(Index::load(&settings).unwrap(), index);
 /// ```
@@ -339,7 +300,7 @@ pub struct Lifecycle {
 #[spec(documents = "spec://org.vibevm.core/vibevm/common/PROP-059#index")]
 pub struct Index {
     pub installations: BTreeMap<String, Installation>,
-    pub slots: BTreeMap<String, Option<String>>,
+    pub slots: BTreeMap<String, SlotState>,
 }
 
 impl Index {
@@ -377,14 +338,17 @@ impl Index {
         }
         let header: Header = serde_json::from_slice(bytes).map_err(|e| e.to_string())?;
         let document = match header.protocol.as_str() {
-            LEGACY_PROTOCOL => upgrade_four::promote(upgrade::promote(
+            LEGACY_PROTOCOL => upgrade_five::promote(upgrade_four::promote(upgrade::promote(
                 serde_json::from_slice::<
                     vibe_wire::generated::application::e2::index::ApplicationIndex,
                 >(bytes)
                 .map_err(|e| e.to_string())?,
+            ))),
+            FOUR_PROTOCOL => upgrade_five::promote(upgrade_four::promote(
+                serde_json::from_slice(bytes).map_err(|e| e.to_string())?,
             )),
-            FOUR_PROTOCOL => {
-                upgrade_four::promote(serde_json::from_slice(bytes).map_err(|e| e.to_string())?)
+            EVIDENCE_PROTOCOL => {
+                upgrade_five::promote(serde_json::from_slice(bytes).map_err(|e| e.to_string())?)
             }
             INDEX_PROTOCOL => serde_json::from_slice(bytes).map_err(|e| e.to_string())?,
             _ => return Err("unsupported application index protocol".into()),
@@ -393,7 +357,8 @@ impl Index {
             (
                 index,
                 match header.protocol.as_str() {
-                    INDEX_PROTOCOL => 5,
+                    INDEX_PROTOCOL => 6,
+                    EVIDENCE_PROTOCOL => 5,
                     FOUR_PROTOCOL => 4,
                     _ => 3,
                 },
@@ -408,8 +373,22 @@ impl Index {
         })
     }
 
+    /// Whether any retained data needs the current closed index6 reader:
+    /// an exposed payload directory, a slot switched off, or a slot's
+    /// applied link-directory PATH entries (`PROP-059#path-directories`,
+    /// `#slot-off`).
+    pub(crate) fn requires_reader_six(&self) -> bool {
+        self.installations.values().any(|r| !r.path_dirs.is_empty())
+            || self
+                .slots
+                .values()
+                .any(|state| state.off || !state.path_env.is_empty())
+    }
+
     pub(crate) fn minimum_reader(&self) -> u8 {
-        if self
+        if self.requires_reader_six() {
+            6
+        } else if self
             .installations
             .values()
             .any(|r| r.source_evidence.is_some())
@@ -420,10 +399,6 @@ impl Index {
         } else {
             3
         }
-    }
-
-    pub fn default_of(&self, slot: &str) -> Option<&str> {
-        self.slots.get(slot).and_then(|value| value.as_deref())
     }
 
     /// The keys of the installations whose recorded requirements name
@@ -451,7 +426,8 @@ impl Index {
     pub fn to_wire(&self) -> wire::ApplicationIndex {
         wire::ApplicationIndex {
             protocol: match self.minimum_reader() {
-                5 => INDEX_PROTOCOL,
+                6 => INDEX_PROTOCOL,
+                5 => EVIDENCE_PROTOCOL,
                 4 => FOUR_PROTOCOL,
                 _ => LEGACY_PROTOCOL,
             }
@@ -464,11 +440,13 @@ impl Index {
             slots: self
                 .slots
                 .iter()
-                .map(|(slot, default)| {
+                .map(|(slot, state)| {
                     (
                         slot.clone(),
                         wire::Slot {
-                            default: default.clone(),
+                            default: state.default.clone(),
+                            off: state.off,
+                            path_env: state.path_env.iter().map(wire_form::env_to_wire).collect(),
                         },
                     )
                 })
@@ -478,6 +456,7 @@ impl Index {
 
     pub fn from_wire(document: wire::ApplicationIndex) -> Result<Self, String> {
         if document.protocol != INDEX_PROTOCOL
+            && document.protocol != EVIDENCE_PROTOCOL
             && document.protocol != FOUR_PROTOCOL
             && document.protocol != LEGACY_PROTOCOL
         {
@@ -495,13 +474,27 @@ impl Index {
                 "protocol3 cannot retain common configuration or pending operation state".into(),
             );
         }
-        if document.protocol != INDEX_PROTOCOL
+        if (document.protocol == LEGACY_PROTOCOL || document.protocol == FOUR_PROTOCOL)
             && document
                 .installations
                 .values()
                 .any(|r| r.source_evidence.is_some())
         {
             return Err("source evidence requires application index5".into());
+        }
+        if document.protocol != INDEX_PROTOCOL
+            && (document
+                .installations
+                .values()
+                .any(|r| !r.path_dirs.is_empty())
+                || document
+                    .slots
+                    .values()
+                    .any(|slot| slot.off || !slot.path_env.is_empty()))
+        {
+            return Err(
+                "exposed payload directories and slot off state require application index6".into(),
+            );
         }
         let mut installations = BTreeMap::new();
         for (key, record) in document.installations {
@@ -515,16 +508,34 @@ impl Index {
         let slots: BTreeMap<_, _> = document
             .slots
             .into_iter()
-            .map(|(slot, value)| (slot, value.default))
+            .map(|(slot, value)| {
+                (
+                    slot,
+                    SlotState {
+                        default: value.default,
+                        off: value.off,
+                        path_env: value.path_env.into_iter().map(env_from_wire).collect(),
+                    },
+                )
+            })
             .collect();
-        for (slot, default) in &slots {
-            if let Some(key) = default
+        for (slot, state) in &slots {
+            if let Some(key) = &state.default
                 && installations
                     .get(key)
                     .is_none_or(|record| &record.slot != slot)
             {
                 return Err(format!(
                     "slot `{slot}` default `{key}` is not an installation of that slot"
+                ));
+            }
+            if state
+                .path_env
+                .iter()
+                .any(|entry| entry.op != EnvOp::PathPrepend)
+            {
+                return Err(format!(
+                    "slot `{slot}` records a link-directory environment entry that is not a PATH prepend"
                 ));
             }
         }
@@ -535,16 +546,21 @@ impl Index {
     }
 }
 
+mod env_record;
 #[path = "index/launcher_wire.rs"]
 mod launcher_wire;
 mod publication;
 #[path = "index/upgrade.rs"]
 mod upgrade;
+mod upgrade_five;
 mod upgrade_four;
 #[path = "index/wire.rs"]
 mod wire_form;
 
-use wire_form::{installation_from_wire, installation_to_wire};
+pub use env_record::{EnvEntry, EnvOp, ValueKind};
+mod slots;
+pub use slots::SlotState;
+use wire_form::{env_from_wire, installation_from_wire, installation_to_wire};
 
 #[cfg(test)]
 #[path = "index/tests.rs"]

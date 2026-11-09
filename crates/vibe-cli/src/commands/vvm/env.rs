@@ -47,10 +47,9 @@ pub(crate) use path_fix::{
 };
 #[path = "env_registry.rs"]
 mod registry;
-pub(crate) use registry::{
-    RawUserVar, RegistryValueKind, WindowsEnvPersister, delete_user_var_raw, get_user_var_raw,
-    set_user_var_raw,
-};
+#[cfg(test)]
+pub(crate) use registry::MemoryRegistry;
+pub(crate) use registry::{Hkcu, RawUserVar, RegistryValueKind, UserRegistry, WindowsEnvPersister};
 #[path = "env_shim.rs"]
 mod shim;
 pub(crate) use shim::{shim_statuses, write_shims};

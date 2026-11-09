@@ -68,9 +68,10 @@ pub struct ProxyConfig {
     pub no_proxy: Option<String>,
     /// `mode = "px"`: where the PAC file comes from — an `http(s)://` URL px
     /// fetches (it must be reachable without the proxy it configures), a
-    /// local file (an absolute path or `file:///…`), or `system`: the
-    /// operating system's proxy settings (Windows Internet Options / WPAD,
-    /// which px reads when given no `--pac`). See [`PacSource`].
+    /// local file (an absolute path or `file:///…`), or `system` (alias
+    /// `windows`): the logged-in Windows user's proxy configuration, which
+    /// vibe reads itself and turns into the explicit `--pac=<url>` px is
+    /// given. See [`PacSource`].
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub pac: Option<String>,
     /// `mode = "px"`: the upstream proxy px authenticates to (`--proxy`),
@@ -95,6 +96,70 @@ pub struct ProxyConfig {
     /// root store. Verification is never switched off.
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub ca_file: Option<PathBuf>,
+    /// Whether a child `git` using Windows schannel checks certificate
+    /// revocation: `check` (the default, today's behaviour),
+    /// `best-effort` or `off`. See [`RevocationCheck`]; it changes
+    /// nothing on a host that is not Windows and nothing about the
+    /// certificate chain itself, which is always verified.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub revocation: Option<RevocationCheck>,
+}
+
+/// Whether certificate revocation is checked on a route whose TLS runs
+/// through Windows schannel (`PROP-068#proxy-revocation`).
+///
+/// A corporate TLS-inspecting proxy re-signs every certificate with its
+/// own CA, and that CA's CRL and OCSP endpoints usually live outside the
+/// network it inspects. Schannel then cannot complete the revocation
+/// check and fails the handshake — the same failure as
+/// `curl` without `--ssl-no-revoke`. The chain is still verified against
+/// the trust set; only the revocation lookup is relaxed.
+///
+/// ```
+/// use vibe_core::user_config::RevocationCheck;
+/// assert_eq!(RevocationCheck::parse("best-effort"), Some(RevocationCheck::BestEffort));
+/// assert_eq!(RevocationCheck::parse("BEST_EFFORT"), Some(RevocationCheck::BestEffort));
+/// assert_eq!(RevocationCheck::parse("off"), Some(RevocationCheck::Off));
+/// assert_eq!(RevocationCheck::parse("check"), Some(RevocationCheck::Check));
+/// assert_eq!(RevocationCheck::parse("maybe"), None);
+/// assert_eq!(RevocationCheck::Off.as_str(), "off");
+/// // The default is exactly what vibe did before the key existed.
+/// assert_eq!(RevocationCheck::default(), RevocationCheck::Check);
+/// ```
+#[derive(Debug, Clone, Copy, Default, PartialEq, Eq, Deserialize, Serialize)]
+#[serde(rename_all = "kebab-case")]
+pub enum RevocationCheck {
+    /// Check revocation and fail the handshake when the check cannot be
+    /// completed — schannel's own default, and vibe's.
+    #[default]
+    Check,
+    /// Check revocation, but accept a certificate whose revocation state
+    /// could not be retrieved (`CURLSSLOPT_REVOKE_BEST_EFFORT`): a
+    /// certificate the CA says is revoked is still refused.
+    BestEffort,
+    /// Do not check revocation at all (`CURLSSLOPT_NO_REVOKE`).
+    Off,
+}
+
+impl RevocationCheck {
+    pub fn as_str(self) -> &'static str {
+        match self {
+            RevocationCheck::Check => "check",
+            RevocationCheck::BestEffort => "best-effort",
+            RevocationCheck::Off => "off",
+        }
+    }
+
+    /// Parse `check` / `best-effort` / `off` (the
+    /// `VIBEVM_PROXY_REVOCATION` spelling; `_` reads as `-`).
+    pub fn parse(raw: &str) -> Option<Self> {
+        match raw.trim().to_ascii_lowercase().replace('_', "-").as_str() {
+            "check" => Some(RevocationCheck::Check),
+            "best-effort" => Some(RevocationCheck::BestEffort),
+            "off" => Some(RevocationCheck::Off),
+            _ => None,
+        }
+    }
 }
 
 /// How the `[proxy]` table routes traffic (`PROP-068#proxy`).
@@ -150,6 +215,8 @@ impl ProxyMode {
 /// assert!(matches!(PacSource::parse("C:/Work/opt/proxy.pac"), Ok(PacSource::File(_))));
 /// assert!(matches!(PacSource::parse("/etc/corp/proxy.pac"), Ok(PacSource::File(_))));
 /// assert_eq!(PacSource::parse("SYSTEM"), Ok(PacSource::System));
+/// // `windows` is an accepted alias for the same thing.
+/// assert_eq!(PacSource::parse("windows"), Ok(PacSource::System));
 /// assert!(PacSource::parse("proxy.pac").is_err());
 /// ```
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -158,17 +225,27 @@ pub enum PacSource {
     Url(String),
     /// A local file, as px reads it (`--pac=<path or file:// URL>`).
     File(String),
-    /// The operating system's configured proxy / PAC / WPAD (px without
-    /// `--pac`; Windows only).
+    /// The logged-in Windows user's proxy configuration, resolved by vibe
+    /// into the explicit `--pac=<url>` (or `--proxy=<host:port>`) px is
+    /// given — never left to px's own detection
+    /// (`vibe_core::net::system_proxy`, `PROP-068#proxy-px`). Windows only.
     System,
 }
 
 impl PacSource {
+    /// The spellings of [`PacSource::System`]: `system` is canonical and
+    /// `windows` an accepted alias, since what is read is the Windows
+    /// proxy configuration and nothing else.
+    pub const SYSTEM_SPELLINGS: &'static [&'static str] = &["system", "windows"];
+
     /// Parse a `pac` value; a relative path is refused (px would read it
     /// relative to its own directory).
     pub fn parse(raw: &str) -> Result<Self, &'static str> {
         let value = raw.trim();
-        if value.eq_ignore_ascii_case("system") {
+        if Self::SYSTEM_SPELLINGS
+            .iter()
+            .any(|spelling| value.eq_ignore_ascii_case(spelling))
+        {
             return Ok(PacSource::System);
         }
         if value.starts_with("http://") || value.starts_with("https://") {
@@ -315,6 +392,7 @@ impl ProxyConfig {
         self.px_path = self.px_path.take().or_else(|| lower.px_path.clone());
         self.px_port = self.px_port.or(lower.px_port);
         self.ca_file = self.ca_file.take().or_else(|| lower.ca_file.clone());
+        self.revocation = self.revocation.or(lower.revocation);
         self
     }
 

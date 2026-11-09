@@ -17,115 +17,22 @@ use vibe_publish::release_manifest::DISTRIBUTION_SOURCE_ARCHIVE_FILENAME;
 use super::embedded;
 use super::env;
 use super::error::VvmError;
-use super::model::{InstallRecord, Origin};
+use super::model::Origin;
 use super::provenance::{self, RunningIdentity};
-use super::source as source_tree;
 use super::tools;
 #[path = "doctor_network.rs"]
 mod network;
-use super::{VvmEnv, bundle, make_persister, path_has_dir};
+use super::{VvmEnv, make_persister, path_has_dir};
 #[path = "doctor_environment.rs"]
 mod environment;
+#[path = "doctor_layout.rs"]
+mod layout;
+#[path = "doctor_paths.rs"]
+mod paths;
+use layout::{diagnostic_records, instance_layout, same_record};
 
 fn needs_build_tools(origin: Option<Origin>) -> bool {
     origin != Some(Origin::Binary)
-}
-
-struct InstanceLayout {
-    kind: &'static str,
-    vibe: bool,
-    vibe_index: bool,
-    source: bool,
-    source_archive: bool,
-    manifest: bool,
-    manifest_root: bool,
-    placement_manifest: bool,
-    integrity: bool,
-}
-
-fn instance_layout(
-    store: &super::store::VersionStore,
-    record: &super::model::InstallRecord,
-) -> InstanceLayout {
-    let home = store.instance_dir(&record.version_id(), record.instance);
-    let vibe = store
-        .binary_path(&record.version_id(), record.instance)
-        .is_file();
-    let vibe_index = store
-        .index_binary_path(&record.version_id(), record.instance)
-        .is_file();
-    let source = match record.origin {
-        Origin::Binary => store
-            .instance_source_dir(&record.version_id(), record.instance)
-            .is_dir(),
-        Origin::Managed => {
-            let mirror = store.mirror_dir();
-            mirror.join(".git").is_dir() && source_tree::find_source_root(&mirror).is_some()
-        }
-        Origin::External => record
-            .source_path
-            .as_deref()
-            .and_then(|path| source_tree::find_source_root(std::path::Path::new(path)))
-            .is_some(),
-    };
-    let source_archive = home.join(DISTRIBUTION_SOURCE_ARCHIVE_FILENAME).is_file();
-    let manifest = home.join("DISTRIBUTION.json").is_file();
-    let manifest_root = record.distribution_manifest_sha256.is_some();
-    let placement_manifest = home.join(".vvm-manifest.toml").is_file();
-    let bundled_index = vibe_index && !placement_manifest; // an import places companions too
-    let modern = record.origin == Origin::Binary
-        && (record.source_path.is_some() || bundled_index || source || source_archive || manifest);
-    let (kind, integrity) = if record.origin == Origin::Binary && modern {
-        (
-            if manifest_root {
-                "bundle"
-            } else {
-                "bundle-unrooted"
-            },
-            bundle::installed_bundle_intact(store, record),
-        )
-    } else if record.origin == Origin::Binary {
-        (
-            "legacy-single-binary",
-            super::placer::installed_files_match(store, record),
-        )
-    } else {
-        (
-            "source-build",
-            super::placer::installed_files_match(store, record),
-        )
-    };
-    InstanceLayout {
-        kind,
-        vibe,
-        vibe_index,
-        source,
-        source_archive,
-        manifest,
-        manifest_root,
-        placement_manifest,
-        integrity,
-    }
-}
-
-fn same_record(left: &InstallRecord, right: &InstallRecord) -> bool {
-    left.version_id() == right.version_id() && left.instance == right.instance
-}
-
-fn diagnostic_records(
-    active: Option<&InstallRecord>,
-    running: Option<&InstallRecord>,
-) -> Vec<(&'static str, InstallRecord)> {
-    let mut records = Vec::new();
-    if let Some(active) = active {
-        records.push(("active", active.clone()));
-    }
-    if let Some(running) = running
-        && active.is_none_or(|active| !same_record(active, running))
-    {
-        records.push(("running", running.clone()));
-    }
-    records
 }
 
 /// `vibe self doctor`: probe the required toolchain, the shim dir on PATH,
@@ -159,6 +66,10 @@ pub(super) fn run_doctor_cmd(
     let shim_dir = store.shim_dir();
     let on_path = path_has_dir(env.path_var.as_deref(), &shim_dir);
     let mut durable_environment = environment::observe(env, &shim_dir);
+    // The whole payload directories the user's applications expose on PATH
+    // are a second PATH surface, reported exactly like the shim directory
+    // (PROP-059 `#path-directories`).
+    let link_dirs = paths::observe(env.path_var.as_deref());
     let probe_login = environment::login_probe_consent(ctx, args.probe_login_shell);
     if probe_login {
         environment::probe_login_shell(env, &shim_dir, &mut durable_environment);
@@ -312,6 +223,7 @@ pub(super) fn run_doctor_cmd(
             })).collect::<Vec<_>>(),
             "shim_dir": shim_dir.display().to_string(),
             "shim_dir_on_path": on_path,
+            "application_path_dirs": paths::json(&link_dirs),
             "process_path_refresh_needed": !on_path,
             "durable_environment": durable_environment,
             "shims": final_shim_statuses.iter().map(|(name, ok)| serde_json::json!({
@@ -390,6 +302,9 @@ pub(super) fn run_doctor_cmd(
             "{} stable {name} shim",
             if *ok { "ok  " } else { "MISS" }
         ));
+    }
+    for line in paths::lines(&link_dirs) {
+        ctx.step(&line);
     }
     match &active {
         Some(r) if !active_missing => {

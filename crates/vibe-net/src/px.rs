@@ -16,7 +16,7 @@ use std::{
     process::{Command, Stdio},
     time::{Duration, Instant},
 };
-use vibe_core::net::PxSettings;
+use vibe_core::net::{PxSettings, SystemProxyError};
 use vibe_core::user_config::PacSource;
 
 /// How long px may take to accept connections after it was started.
@@ -101,6 +101,10 @@ pub enum PxError {
           fix: make the request inside the operation)"
     )]
     Closed,
+    /// `pac = "system"` could not be turned into a route: px is never
+    /// started to detect it itself, so the cause is reported instead.
+    #[error(transparent)]
+    SystemProxy(#[from] SystemProxyError),
 }
 
 /// Where vibe looks for a px it carries: `tools/px/` beside the running
@@ -166,20 +170,50 @@ pub(crate) fn locate(settings: &PxSettings) -> Result<PathBuf, PxError> {
 
 /// The route arguments of a px run: `--pac` / `--proxy`, the bypass list
 /// and the site's extra arguments.
-pub(crate) fn route_args(settings: &PxSettings, no_proxy: Option<&str>) -> Vec<String> {
+///
+/// `pac = "system"` is resolved here, per px start, and px is handed the
+/// explicit `--pac=<url>` (or `--proxy=<host:port>`) that came out — px
+/// never auto-detects, because on a managed Windows desktop its detection
+/// finds nothing (`PROP-068#proxy-px`). The settings may have changed
+/// since the last operation, so the answer is read now and not cached.
+pub(crate) fn route_args(
+    settings: &PxSettings,
+    no_proxy: Option<&str>,
+) -> Result<Vec<String>, PxError> {
     let mut args = Vec::new();
-    // px reads the operating system's settings when given no `--pac`.
-    if let Some(location) = settings.pac.as_ref().and_then(PacSource::px_location) {
-        args.push(format!("--pac={location}"));
+    let mut system_bypass = None;
+    let mut system_upstream = None;
+    match settings.pac.as_ref() {
+        Some(PacSource::System) => {
+            let resolved = crate::system_proxy::resolve()?;
+            tracing::debug!("`pac = \"system\"` resolved: {}", resolved.describe());
+            if let Some(url) = resolved.pac_url {
+                args.push(format!("--pac={url}"));
+            }
+            system_upstream = resolved.upstream;
+            system_bypass = resolved.bypass;
+        }
+        Some(source) => {
+            if let Some(location) = source.px_location() {
+                args.push(format!("--pac={location}"));
+            }
+        }
+        None => {}
     }
-    if let Some(upstream) = &settings.upstream {
+    // A configured `upstream` is the user's own word and outranks the one
+    // the Windows settings named.
+    if let Some(upstream) = settings.upstream.as_deref().or(system_upstream.as_deref()) {
         args.push(format!("--proxy={upstream}"));
     }
-    if let Some(list) = no_proxy.filter(|list| !list.trim().is_empty()) {
+    let list = no_proxy
+        .filter(|list| !list.trim().is_empty())
+        .map(str::to_owned)
+        .or(system_bypass);
+    if let Some(list) = list {
         args.push(format!("--noproxy={list}"));
     }
     args.extend(settings.args.iter().cloned());
-    args
+    Ok(args)
 }
 
 /// A free loopback port, released for px to bind.
@@ -262,7 +296,7 @@ impl PxProcess {
             format!("--port={port}"),
             "--foreground=1".to_owned(),
         ];
-        args.extend(route_args(settings, no_proxy));
+        args.extend(route_args(settings, no_proxy)?);
         let log_path = scratch.join("px.log");
         let log = std::fs::File::create(&log_path).map_err(|error| PxError::Spawn {
             program: program.to_path_buf(),
@@ -422,7 +456,7 @@ pub(crate) fn self_test(
     command
         .arg("--listen=127.0.0.1")
         .arg(format!("--port={port}"))
-        .args(route_args(settings, no_proxy))
+        .args(route_args(settings, no_proxy).map_err(|error| error.to_string())?)
         .arg(format!("--test={target}"))
         .current_dir(scratch)
         .stdin(Stdio::null())

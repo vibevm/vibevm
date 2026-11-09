@@ -4545,6 +4545,7 @@ dependencies = [
  "vibe-registry",
  "vibe-safefs",
  "vibe-wire",
+ "windows-sys 0.61.2",
  "zip",
 ]
 
@@ -4988,6 +4989,7 @@ dependencies = [
  "url",
  "vibe-core",
  "webpki-roots",
+ "windows-sys 0.61.2",
 ]
 
 [[package]]

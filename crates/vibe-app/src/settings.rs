@@ -239,6 +239,29 @@ impl SettingsRoot {
         self.root.join("opt").join("bin")
     }
 
+    /// Where every slot that exposes payload directories keeps its links:
+    /// `<store>/paths` of the install root the applications follow, else
+    /// `<settings>/opt/paths` — the sibling of [`Self::proxy_dir`], so the
+    /// two PATH surfaces live under one root (`PROP-059#path-directories`).
+    pub fn path_links_dir(&self) -> PathBuf {
+        match &self.install {
+            Some(store) => store.join("paths"),
+            None => self.root.join("opt").join("paths"),
+        }
+    }
+
+    /// `<paths>/<slot>`: the directory holding one slot's links, one per
+    /// declared payload directory.
+    pub fn slot_links_dir(&self, slot: &str) -> PathBuf {
+        self.path_links_dir().join(slot)
+    }
+
+    /// `<paths>/<slot>/<index>`: the link that exposes the slot's default
+    /// provider's payload directory number `index` on PATH.
+    pub fn slot_link_path(&self, slot: &str, index: u32) -> PathBuf {
+        self.slot_links_dir(slot).join(index.to_string())
+    }
+
     /// `<store>/vibe-app-home.toml`, naming this home for the proxies in
     /// `<store>/bin` (only with an install root).
     pub fn home_pointer_path(&self) -> Option<PathBuf> {

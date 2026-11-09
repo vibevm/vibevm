@@ -22,6 +22,33 @@ use super::{RawUserVar, RegistryValueKind};
 
 const SUBKEY: &str = "Environment";
 
+/// The one escape hatch over [`SUBKEY`]: a test on a real Windows machine
+/// names another `HKEY_CURRENT_USER` subkey so a durable-PATH write lands in
+/// a scratch key instead of the user's own environment (PROP-019 `#path`).
+/// It is read once per call, never written, and names a subkey of
+/// `HKEY_CURRENT_USER` only — so the worst it can do is make vibe's own
+/// durable-environment writes ineffective, which is what a test wants.
+pub(crate) const SUBKEY_OVERRIDE: &str = "VIBEVM_ENV_REGISTRY_SUBKEY";
+
+/// The `HKEY_CURRENT_USER` subkey the durable environment lives in: the
+/// user's own `Environment`, or the scratch key the override names.
+#[specmark::spec(
+    deviates = "spec://core-ai-native/mechanisms/ENGINE-CONFORM-v0.1#rules",
+    reason = "The durable-environment target is a process-wide fact of the host, read at the registry boundary itself so every caller of this module agrees (spec://org.vibevm.core/vibevm/common/PROP-019#path); the override exists so a test on a real Windows machine never writes the user's own environment."
+)]
+fn subkey() -> String {
+    std::env::var(SUBKEY_OVERRIDE)
+        .ok()
+        .map(|value| value.trim().to_owned())
+        .filter(|value| {
+            !value.is_empty()
+                && !value.starts_with('\\')
+                && !value.contains("..")
+                && !value.contains(':')
+        })
+        .unwrap_or_else(|| SUBKEY.to_owned())
+}
+
 /// How long one hung top-level window may hold the broadcast, in
 /// milliseconds; the value Explorer and the System dialog use.
 const BROADCAST_TIMEOUT_MS: u32 = 5000;
@@ -46,7 +73,7 @@ impl Key {
         reason = "unsafe-gate: Rust has no standard-library API for the Windows registry; the subkey is a NUL-terminated buffer that outlives the call and the returned handle is owned by this guard (spec://org.vibevm.core/vibevm/common/PROP-019#path)."
     )]
     fn open(access: REG_SAM_FLAGS) -> Result<Option<Key>> {
-        let subkey = wide(SUBKEY);
+        let subkey = wide(&subkey());
         let mut handle: HKEY = std::ptr::null_mut();
         // SAFETY: `subkey` is NUL-terminated and alive for the call; `handle`
         // is a valid out-pointer and is only used when the call succeeds.
@@ -66,7 +93,7 @@ impl Key {
         reason = "unsafe-gate: Rust has no standard-library API for the Windows registry; the subkey is a NUL-terminated buffer that outlives the call and the returned handle is owned by this guard (spec://org.vibevm.core/vibevm/common/PROP-019#path)."
     )]
     fn create() -> Result<Key> {
-        let subkey = wide(SUBKEY);
+        let subkey = wide(&subkey());
         let mut handle: HKEY = std::ptr::null_mut();
         // SAFETY: as in `open`; the handle is only used on success.
         let status = unsafe { RegCreateKeyW(HKEY_CURRENT_USER, subkey.as_ptr(), &mut handle) };
@@ -223,7 +250,7 @@ pub(crate) fn delete_user_var_raw(name: &str) -> Result<()> {
     reason = "unsafe-gate: Rust has no standard-library API for window messages; the parameter is a NUL-terminated buffer alive for the whole bounded call (spec://org.vibevm.core/vibevm/common/PROP-019#path)."
 )]
 fn broadcast() {
-    let area = wide(SUBKEY);
+    let area = wide(&subkey());
     let mut result: usize = 0;
     // SAFETY: `area` is NUL-terminated and outlives the call, which returns
     // within the timeout; `result` is a valid out-pointer.

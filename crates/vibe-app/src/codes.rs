@@ -15,6 +15,7 @@ use crate::error::{
 };
 use crate::error_catalog::CatalogError;
 use crate::error_lifecycle::LifecycleError;
+use crate::error_paths::PathsError;
 
 /// Whether an error refused the request before any effect, or a started
 /// operation failed (`PROP-065#exit-codes`).
@@ -67,6 +68,11 @@ macro_rules! codes {
         },)*];
     };
 }
+
+codes!(PATHS, PathsError [] {
+    ForeignLink => "foreign_path_link", Refusal, "another file or directory holds a slot link's name";
+    Target => "path_link_target_unsupported", Refusal, "the payload directory cannot be the target of a link on this host";
+});
 
 codes!(STATE, StateError [] {
     ProxyUpgrade => "proxy_upgrade_failed", Failure, "compatible owned PATH readers could not be established before publication";
@@ -193,7 +199,7 @@ codes!(CONFIGURATION, ConfigurationError [] {
     Invalid => "configuration_input_invalid", Refusal, "common configuration input is invalid";
 });
 
-codes!(APP, AppError [Configuration, State, Catalog, Storage, Resolve, Installer, Launch, Step, Agent, Lifecycle] {
+codes!(APP, AppError [Configuration, State, Catalog, Storage, Resolve, Installer, Launch, Step, Agent, Lifecycle, Paths] {
     NotInstalled => "not_installed", Refusal, "the application is not installed";
     AmbiguousInstallation => "ambiguous_installation", Refusal, "several installed versions match";
     ForceUnsupported => "force_unsupported", Refusal, "--force has no authored variant to run";
@@ -229,6 +235,7 @@ pub fn error_codes() -> Vec<ErrorCode> {
         STEP,
         AGENT,
         LIFECYCLE,
+        PATHS,
         LAUNCH,
         CATALOG,
         APP,

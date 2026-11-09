@@ -68,6 +68,7 @@ fn home(dir: &Path) -> SettingsRoot {
                 launcher("tool", LauncherKind::Command, false),
             ],
             public_commands: Vec::new(),
+            path_dirs: Vec::new(),
             commands: AuthoredCommands::default(),
             features: Vec::new(),
             parameters: Default::default(),
@@ -81,7 +82,7 @@ fn home(dir: &Path) -> SettingsRoot {
             lifecycle: Default::default(),
         },
     );
-    index.slots.insert("editor".into(), Some(package.key()));
+    index.set_default("editor", Some(package.key()));
     index
         .save(
             &settings,

@@ -12,6 +12,12 @@ pub struct ApplicationAlternatives {
     #[serde(deserialize_with = "crate::behaviour::required_nullable::deserialize")]
     pub default: Option<String>,
 
+    /// The slot is switched off (PROP-059#slot-off): no link, no proxy, and a
+    /// lookup falls through to the system program. `default` still names the
+    /// provider the slot goes back to.
+    #[serde(default, skip_serializing_if = "std::ops::Not::not")]
+    pub off: bool,
+
     pub providers: Vec<Provider>,
 
     pub commands: Vec<Command>,
@@ -49,6 +55,11 @@ pub struct Provider {
     pub default: bool,
 
     pub commands: Vec<String>,
+
+    /// The payload directories this provider asks to be exposed whole on PATH
+    /// (PROP-059#path-directories).
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub path_dirs: Vec<String>,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]

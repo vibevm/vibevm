@@ -1,12 +1,12 @@
 //! Conversion between the index domain model and the generated
-//! `vibe-user-applications/3` wire form. `requiredBy` is written from the
+//! `vibe-user-applications/6` wire form. `requiredBy` is written from the
 //! forward requirement edges at every save and never read back, so it
 //! cannot drift from them (`PROP-065#uninstall-tree`).
 
 use std::path::PathBuf;
 
 use vibe_core::manifest::{PublicCommandDecl, RequirementScope, ShellInterpreter, StepPhase};
-use vibe_wire::generated::application::e4::index as wire;
+use vibe_wire::generated::application::e5::index as wire;
 
 use super::launcher_wire::{icon_from_wire, icon_to_wire, launcher_from_wire, launcher_to_wire};
 use super::{
@@ -78,6 +78,7 @@ fn installation_with_reverse(value: &Installation, required_by: Vec<String>) -> 
                 launcher: command.launcher.clone(),
             })
             .collect(),
+        path_dirs: value.path_dirs.clone(),
         commands: wire::AuthoredCommands {
             uninstall: value.commands.uninstall.clone(),
             force_uninstall: value.commands.force_uninstall.clone(),
@@ -142,7 +143,7 @@ fn scope_to_wire(scope: RequirementScope) -> wire::Scope {
     }
 }
 
-fn env_to_wire(entry: &EnvEntry) -> wire::EnvEntry {
+pub(super) fn env_to_wire(entry: &EnvEntry) -> wire::EnvEntry {
     wire::EnvEntry {
         step: entry.step.clone(),
         op: match entry.op {
@@ -160,7 +161,7 @@ fn env_to_wire(entry: &EnvEntry) -> wire::EnvEntry {
     }
 }
 
-fn env_from_wire(entry: wire::EnvEntry) -> EnvEntry {
+pub(super) fn env_from_wire(entry: wire::EnvEntry) -> EnvEntry {
     EnvEntry {
         step: entry.step,
         op: match entry.op {
@@ -270,6 +271,7 @@ pub(super) fn installation_from_wire(record: wire::Installation) -> Result<Insta
                 launcher: command.launcher,
             })
             .collect(),
+        path_dirs: record.path_dirs,
         commands: AuthoredCommands {
             uninstall: record.commands.uninstall,
             force_uninstall: record.commands.force_uninstall,

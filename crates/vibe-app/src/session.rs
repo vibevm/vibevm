@@ -13,6 +13,11 @@ use crate::error::AppError;
 /// The environment variable that carries a session's provider choices.
 pub const SESSION_VARIABLE: &str = "VIBE_APP_USE";
 
+/// The choice that switches a slot off for one session
+/// (`PROP-059#slot-off`): `VIBE_APP_USE=slot=none`. An installation key
+/// always carries a `/`, so the bare word can never be one.
+pub const SESSION_OFF: &str = "none";
+
 /// Per-slot provider choices of one session; a later entry wins per slot.
 ///
 /// ```
@@ -59,9 +64,15 @@ impl SessionChoices {
         Ok(())
     }
 
-    /// The installation key chosen for `slot`, if any.
+    /// The installation key chosen for `slot`, if any; [`SESSION_OFF`]
+    /// when the session switched the slot off.
     pub fn provider(&self, slot: &str) -> Option<&str> {
         self.choices.get(slot).map(String::as_str)
+    }
+
+    /// Whether this session switched `slot` off (`PROP-059#slot-off`).
+    pub fn is_off(&self, slot: &str) -> bool {
+        self.provider(slot) == Some(SESSION_OFF)
     }
 
     pub fn is_empty(&self) -> bool {

@@ -41,6 +41,7 @@ fn sample() -> Index {
             name: "edit".into(),
             launcher: "main".into(),
         }],
+        path_dirs: Vec::new(),
         commands: AuthoredCommands::default(),
         features: Vec::new(),
         parameters: Default::default(),
@@ -65,6 +66,7 @@ fn sample() -> Index {
         },
         portable: false,
         public_commands: Vec::new(),
+        path_dirs: Vec::new(),
         commands: AuthoredCommands {
             uninstall: Some("sudo apt-get remove editor".into()),
             force_uninstall: Some("sudo apt-get purge editor".into()),
@@ -191,9 +193,10 @@ fn sample() -> Index {
         .installations
         .insert(owned.package.key(), owned.clone());
     index.installations.insert(external.package.key(), external);
-    index
-        .slots
-        .insert("editor".into(), Some(owned.package.key()));
+    index.slots.insert(
+        "editor".into(),
+        SlotState::with_default(Some(owned.package.key())),
+    );
     index
 }
 
@@ -231,6 +234,8 @@ fn save_is_atomic_and_load_rejects_inconsistent_records() {
         "other".into(),
         wire::Slot {
             default: Some("org.example/editor@1.2.0".into()),
+            off: false,
+            path_env: Vec::new(),
         },
     );
     assert!(

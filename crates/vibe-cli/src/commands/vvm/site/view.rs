@@ -156,10 +156,29 @@ fn proxy_row(layers: &ConfigLayers, merged: &vibe_core::user_config::ProxyConfig
             vibe_core::user_config::PacSource::System => "system".to_owned(),
         });
     }
-    let pac_kind = pac
+    let parsed = pac
         .as_deref()
-        .and_then(|raw| vibe_core::user_config::PacSource::parse(raw).ok())
-        .map(|source| source.kind().to_owned());
+        .and_then(|raw| vibe_core::user_config::PacSource::parse(raw).ok());
+    let pac_kind = parsed.as_ref().map(|source| source.kind().to_owned());
+    // `pac = "system"` is resolved by vibe, so the report names the URL
+    // px will be given and the Windows setting it came from — or why it
+    // could not be resolved (`PROP-068#proxy-px`).
+    let pac_resolved =
+        matches!(parsed, Some(vibe_core::user_config::PacSource::System)).then(|| {
+            match vibe_net::system_proxy::resolve() {
+                Ok(resolved) => resolved.describe(),
+                Err(error) => format!("system → unresolved: {error}"),
+            }
+        });
+    let (revocation, revocation_origin) = {
+        let route = vibe_core::net::route();
+        match route.revocation_origin() {
+            // The installed route knows the environment switch; the
+            // layers below it are read from the files, as above.
+            ModeOrigin::Env => (route.revocation(), ModeOrigin::Env),
+            _ => vibe_core::net::effective_revocation(site, &layers.own.proxy, None),
+        }
+    };
     ProxyRow {
         mode,
         mode_origin: mode_origin.as_str().to_owned(),
@@ -168,11 +187,16 @@ fn proxy_row(layers: &ConfigLayers, merged: &vibe_core::user_config::ProxyConfig
         no_proxy: merged.no_proxy.clone(),
         pac,
         pac_kind,
-        pac_origin: pac_origin.as_str().to_owned(),
+        pac_resolved,
+        pac_origin: pac_origin.label(vibe_core::net::PAC_ENV).to_owned(),
         upstream: merged.upstream.clone(),
         px_port: merged.px_port.map(u32::from),
         px_path: merged.px_path.as_ref().map(|p| p.display().to_string()),
         ca_file: merged.ca_file.as_ref().map(|p| p.display().to_string()),
+        revocation: revocation.as_str().to_owned(),
+        revocation_origin: revocation_origin
+            .label(vibe_core::net::REVOCATION_ENV)
+            .to_owned(),
     }
 }
 

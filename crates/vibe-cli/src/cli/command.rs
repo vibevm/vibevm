@@ -245,6 +245,11 @@ pub enum Command {
     /// package payloads are expected, by exact file name.
     Artifacts(ArtifactsArgs),
 
+    /// Lend a facility vibe runs for itself to a command you name: today
+    /// the vibe-managed px, so `pip`, `npm` or `curl` reach the network
+    /// through exactly the proxy vibe uses (`vibe tool px exec -- …`).
+    Tool(ToolArgs),
+
     /// The registry of what this project can invoke: every `[[binary]]` and
     /// every `[[mcp_server]]` the installed packages declare, in one table.
     /// The boot lane already names which language disciplines are installed;

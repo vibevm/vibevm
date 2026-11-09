@@ -294,8 +294,8 @@ no_proxy = "localhost,127.0.0.1,.example.corp"
 ```
 
 Ключа `url` в `[proxy]` нет (`unknown field url, expected one of mode, https,
-http, no_proxy, pac, upstream, px_args, px_path, px_port, ca_file`).
-`no_proxy` применяется и к `vibe dl --proxy <url>`.
+http, no_proxy, pac, upstream, px_args, px_path, px_port, ca_file,
+revocation`). `no_proxy` применяется и к `vibe dl --proxy <url>`.
 
 ### 5.2. px (прокси с корпоративной аутентификацией)
 
@@ -311,6 +311,76 @@ pac  = "https://pac.example.corp/proxy.pac"   # или абсолютный пу
 # px_path  = "/opt/px/px"                      # свой исполняемый px
 ```
 
+#### `pac = "system"` — настройки прокси Windows, прочитанные самим vibe
+
+На корпоративном ноутбуке адрес PAC-файла обычно лежит внутри двоичного
+значения `DefaultConnectionSettings` (ветка `Connections` в параметрах
+обозревателя), а отдельного значения `AutoConfigURL` нет. px, запущенный без
+`--pac`, в такой конфигурации не находит ничего, и запросы не проходят.
+Поэтому `pac = "system"` означает: **vibe сам читает настройки прокси
+текущего пользователя Windows и запускает px с явным `--pac=<url>`** (или с
+`--proxy=<host:port>`, если настроен конкретный прокси, а не PAC-файл).
+Настройки читаются при каждом запуске px — их могли изменить.
+
+Порядок поиска (побеждает первое найденное):
+
+1. Групповая политика: значение `AutoConfigURL` в
+   `HKCU\Software\Policies\Microsoft\Windows\CurrentVersion\Internet Settings`,
+   затем в `HKLM` по тому же пути.
+2. Настройки самого пользователя — через системный вызов
+   `WinHttpGetIEProxyConfigForCurrentUser` (он видит и значение
+   `DefaultConnectionSettings`). Если вызов не удался или ничего не вернул:
+   значение `AutoConfigURL`, а затем разбор `DefaultConnectionSettings` в
+   `HKCU\Software\Microsoft\Windows\CurrentVersion\Internet Settings`.
+3. Автоопределение (WPAD) — `WinHttpDetectAutoProxyConfigUrl` по DHCP и DNS,
+   если автоопределение включено, а адрес PAC не задан.
+4. Конкретный прокси-сервер из настроек — он становится `upstream` для px,
+   а его список исключений — `--noproxy` (только если `no_proxy` в профиле
+   не задан). Собственные `pac`, `upstream` и `no_proxy` всегда важнее
+   того, что сказала Windows.
+5. Ничего не найдено — px **не** запускается, а в сообщении перечислены все
+   прочитанные настройки и что делать: задать `pac = "<адрес PAC>"`,
+   абсолютный путь к PAC-файлу или `upstream = "host:port"`.
+
+Что получилось, видно в отчётах: `vibe dl --test-proxy` (строка `pac`),
+`vibe self doctor --network` и `vibe self apply --show` печатают
+`system → https://pac.example.corp/proxy.pac (from user Internet Options)` —
+адрес и настройку, которая ответила. Написание `windows` принимается как
+синоним `system`. На не-Windows `system` по-прежнему отвергается.
+
+#### `revocation` — проверка отзыва сертификатов (Windows)
+
+Корпоративный прокси, вскрывающий TLS, подписывает сертификаты своим CA, а
+точки распространения CRL и OCSP этого CA обычно недоступны из той же сети.
+Windows schannel тогда не может завершить проверку отзыва и обрывает
+рукопожатие — та же ошибка, из-за которой `curl` требует `--ssl-no-revoke`.
+
+```toml
+[proxy]
+revocation = "best-effort"   # "check" (по умолчанию) | "best-effort" | "off"
+```
+
+- `check` — поведение по умолчанию и точно такое же, как до появления ключа:
+  vibe ничего не добавляет дочернему `git`.
+- `best-effort` — отзыв проверяется, но сертификат принимается, если
+  состояние отзыва получить не удалось; отозванный сертификат всё равно
+  отвергается. Добавляет `-c http.schannelCheckRevoke=best-effort`.
+- `off` — проверка отзыва не выполняется вовсе
+  (`-c http.schannelCheckRevoke=false`).
+
+Разово: `VIBEVM_PROXY_REVOCATION=best-effort vibe …` (переменная важнее
+файла пользователя, он важнее профиля площадки).
+
+Цепочка сертификатов проверяется всегда — этот ключ её не отключает.
+Ключ действует только на дочерний `git`, работающий через schannel: git
+применяет `http.schannelCheckRevoke` лишь при `http.sslBackend = schannel`,
+и vibe этот выбор не меняет. Значение `best-effort` понимает Git for
+Windows 2.26 и новее (там оно и по умолчанию); обычный git считает ключ
+логическим, поэтому vibe передаёт слово только такому git, а иначе
+переходит на `off` с предупреждением. Собственные загрузки vibe используют
+rustls и онлайн-проверку отзыва не делают, а px для HTTPS только
+туннелирует (`CONNECT`) — ключ им не нужен и до них не доходит.
+
 px ставится из дропа релизов: положите `px-0.11.0-<T>.*` (см. §3.1) и
 выполните `vibe self px install` (или `--from <файл>`); `vibe self px status`
 показывает, установлен ли он. Порядок поиска px: `px_path` → `tools/px/` рядом
@@ -319,6 +389,65 @@ px ставится из дропа релизов: положите `px-0.11.0-
 Не выполнялось здесь: реальный запуск px и вход через PAC (нет px-архива с
 закреплённым SHA-256 и нет корпоративного прокси). Выполнено: разбор всех
 вариантов `pac`/`upstream`/`px_port` профилем и диагностика отсутствующего px.
+
+### 5.2a. px для других инструментов: `vibe tool px`
+
+Прокси с корпоративной аутентификацией нужен не только vibe: `pip`, `npm`,
+`cargo`, `curl` тоже должны ходить через него, и каждый настраивается
+по-своему. px — единственное на машине, что умеет здесь входить, поэтому
+vibe даёт его взаймы:
+
+```sh
+vibe tool px exec -- pip install requests
+vibe tool px exec -- npm install
+vibe tool px exec -- curl -sSf https://repo.example.corp/health
+```
+
+`exec` поднимает **тот же** px, что и обычные операции vibe (те же `pac`
+— включая разрешение `system` на Windows, §5.2 — `upstream`, `px_port`,
+`px_args`, `px_path`, тот же поиск спутника и тот же срок жизни), затем
+запускает команду, найденную на `PATH` (на Windows — с учётом `PATHEXT`,
+поэтому находится `npm.cmd`), и останавливает px, когда команда
+завершилась. **Код возврата команды становится кодом возврата vibe.**
+
+Дочернему процессу выставляются `HTTPS_PROXY`, `https_proxy`,
+`HTTP_PROXY`, `http_proxy` = `http://127.0.0.1:<порт>` и
+`NO_PROXY`/`no_proxy` = loopback плюс `no_proxy` из профиля.
+
+```sh
+# Инструмент читает переменную со своим именем — назовите её:
+vibe tool px exec --proxy-env npm_config_proxy -- npm view express
+vibe tool px exec --proxy-env PIP_PROXY -- python -m pip download six --no-deps -d .
+
+# Любая другая переменная — буквально (применяется последней):
+vibe tool px exec --env NODE_USE_SYSTEM_CA=1 -- node app.js
+
+# Фиксированный порт на loopback, если политика разрешает только один:
+vibe tool px exec --port 3129 -- pip install requests
+```
+
+Если прокси в `[proxy]` не настроен вовсе, `exec` отказывается (это и есть
+случай, для которого его вызывают) — `--allow-direct` запускает команду
+без прокси. При `mode = "explicit"` px не поднимается: команде отдаётся
+настроенный прокси как есть.
+
+Для инструмента, который vibe запустить не может (редактор, долгоживущая
+оболочка), есть `vibe tool px serve`: px работает на переднем плане до
+Ctrl-C и печатает адрес и разрешённый маршрут.
+
+```sh
+vibe tool px serve
+#   px is listening on http://127.0.0.1:52431
+#     upstream  proxy.example.corp:8080
+#     no_proxy  localhost,127.0.0.1,::1,.example.corp
+```
+
+`vibe tool px status` — тот же отчёт, что `vibe self px status`.
+
+Готовые обёртки семейства **pxworld** избавляют от набора команды руками:
+`org.vibevm.pxworld/pxnode` даёт `pxnode`/`pxnpm`/`pxnpx`, а
+`org.vibevm.pxworld/pxpip` — `pxpip`; каждая запускает соответствующий
+инструмент с `PATH` через `vibe tool px exec`.
 
 ### 5.3. Корпоративный корневой сертификат
 
@@ -365,6 +494,8 @@ vibe self doctor --network https://repo.example.corp/
 | `dns … does not resolve` (`dl_dns`) | 6 | Имя не разрешается; если наружу резолвит только прокси — настройте `[proxy]`, проверьте `no_proxy` |
 | таймаут соединения | 7 | Прокси или узел недоступен по сети (не выполнялось здесь: в песочнице без сети соединение отвергается сразу) |
 | `px present … px is not installed` | 5 (21) | `vibe self px install` (§5.2) или `VIBEVM_PROXY_MODE=none` |
+| `pac … found no proxy in the Windows configuration …` | 5 (21) | `pac = "system"`, но в параметрах обозревателя прокси не настроен. В сообщении перечислено, что прочитано; задайте `pac`/`upstream` (§5.2) |
+| `CRYPT_E_NO_REVOCATION_CHECK (0x80092012)` / `CRYPT_E_REVOCATION_OFFLINE (0x80092013)` | 13 (22) | Не удаётся проверить отзыв сертификата: CRL/OCSP вскрывающего CA недостижимы. `revocation = "best-effort"` (§5.2) |
 
 Прочие коды `vibe dl`: 3 — запрет `--offline`, 4 — политика источников,
 10 — CONNECT отклонён, 12 — имя в сертификате не совпадает, 13 — другая
@@ -431,8 +562,12 @@ install_root = "/opt/work"
 [proxy]
 mode = "px"
 pac = "https://pac.example.corp/proxy.pac"
+# pac = "system"            # (Windows) настройки прокси пользователя, читает сам vibe — §5.2
 no_proxy = "localhost,127.0.0.1,.example.corp"
 ca_file = "/mnt/vibe/certs/corp-root-ca.pem"
+# Проверка отзыва сертификатов для дочернего git на schannel (Windows), §5.2:
+# "check" (по умолчанию) | "best-effort" | "off".
+# revocation = "best-effort"
 
 # true — запретить сеть вовсе (как --offline).
 [net]

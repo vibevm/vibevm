@@ -53,6 +53,24 @@ pub(super) fn print_list(listing: &Value, quiet: bool) {
 /// what stays at the settings root from before an install root applied.
 pub(super) fn places(settings: &vibe_app::SettingsRoot) -> Vec<String> {
     let mut lines = vec![format!("commands: {}", settings.proxy_dir().display())];
+    // The second PATH surface: whole payload directories, one link per slot
+    // and declared directory (PROP-059 `#path-directories`).
+    if let Ok(index) = vibe_app::Index::load(settings) {
+        for slot in index.slots.keys() {
+            let dirs = vibe_app::slot_link_dirs(settings, &index, slot);
+            if dirs.is_empty() {
+                continue;
+            }
+            lines.push(format!(
+                "path dirs of slot `{slot}`{}: {}",
+                if index.is_off(slot) { " (off)" } else { "" },
+                dirs.iter()
+                    .map(|dir| dir.display().to_string())
+                    .collect::<Vec<_>>()
+                    .join(", ")
+            ));
+        }
+    }
     let storage = vibe_app::Storage::load(settings);
     match storage
         .as_ref()
@@ -133,6 +151,18 @@ fn list_row(entry: &Value) -> Row {
     }
     if flag("default") {
         meta.push(Meta::State("default".into()));
+    }
+    // A slot switched off keeps its installations; the row says so
+    // (PROP-059 `#slot-off`).
+    if flag("slot_off") {
+        meta.push(Meta::State("slot off".into()));
+    }
+    if entry
+        .get("path_dirs")
+        .and_then(Value::as_array)
+        .is_some_and(|dirs| !dirs.is_empty())
+    {
+        meta.push(Meta::State("path dirs".into()));
     }
     if launcher_field(entry, "mark") == "auto" {
         meta.push(Meta::State("auto".into()));

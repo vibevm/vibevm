@@ -55,7 +55,7 @@ mod artifacts;
 mod proxy;
 mod transfer;
 pub use artifacts::{ArtifactsConfig, ReleaseSourceKind, SelfConfig, UnknownReleaseSource};
-pub use proxy::{PX_OWNED_ARGS, PacSource, ProxyConfig, ProxyMode};
+pub use proxy::{PX_OWNED_ARGS, PacSource, ProxyConfig, ProxyMode, RevocationCheck};
 pub use transfer::TransferConfig;
 
 /// Parsed `<settings-dir>/config.toml` (canonical `~/.vibe/config.toml`).

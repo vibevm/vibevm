@@ -402,12 +402,12 @@ sunset = "none"
 
 # ── User-local application durable/exchange records, PROP-059 ───────────────
 [format.application-index]
-epoch = 4
-schema = "schemas/application/e4/index.jtd.json"
+epoch = 5
+schema = "schemas/application/e5/index.jtd.json"
 recoverable = false
 foreign_parsers = "none"
 unknown_fields = "deny"
-corpus = "formats/corpora/application/e4"
+corpus = "formats/corpora/application/e5"
 sunset = "none"
 
 # The kept work directory's exact continuation state (PROP-065 `#execution`).
@@ -1761,6 +1761,15 @@ recoverable = false
 foreign_parsers = "many"
 unknown_fields = "deny"
 corpus = "formats/corpora/migration-application-journal/e1"
+sunset = "none"
+
+[format.application-index-v5]
+epoch = 4
+schema = "schemas/application/e4/index.jtd.json"
+recoverable = false
+foreign_parsers = "none"
+unknown_fields = "deny"
+corpus = "formats/corpora/application/e4"
 sunset = "none"
 
 [format.application-index-v4]
