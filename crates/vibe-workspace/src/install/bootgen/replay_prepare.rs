@@ -558,6 +558,9 @@ pub(super) fn replay_error(owner: &str, reason: impl Into<String>) -> WorkspaceE
 }
 
 #[cfg(test)]
+#[path = "replay_prepare/prompt_tests.rs"]
+mod prompt_tests;
+#[cfg(test)]
 #[path = "replay_prepare/tests.rs"]
 mod tests;
 #[cfg(test)]
