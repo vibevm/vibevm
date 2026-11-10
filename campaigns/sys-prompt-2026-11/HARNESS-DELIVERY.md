@@ -341,9 +341,22 @@ means per-machine or per-day content.
 - **`AGENTS.md` limit:** a 40 KB project `AGENTS.md` was cut at 32 KiB with
   **no truncation notice**; the tail canary was absent **[V]**. The global
   `~/.codex/AGENTS.md` appeared in the same message and the observed sizes are
-  consistent with it not being charged to the project's budget. This repo's
-  entrypoint is 26,121 bytes: 6.6 KB of headroom, with the managed block at the
-  very end. `CLAUDE.md` is not read by Codex **[V]**.
+  consistent with it not being charged to the project's budget. `CLAUDE.md`
+  is not read by Codex **[V]**.
+  **Amended 2026-11-10 by two owner decisions, and both halves of this
+  measurement changed meaning.** The 32 KiB is Codex's *default*
+  `project_doc_max_bytes`, which a user's or a trusted project's config may
+  raise, so a project now declares the limit it is built for
+  (`[system_prompt.harness.codex] doc_max_bytes`,
+  `PROP-076#SYS-CODEX-DECLARED-BUDGET`) and `vibe agent codex` passes it as
+  `-c project_doc_max_bytes=<declared>`. And the managed block is no longer at
+  the very end: it is at the **top** of each instruction file
+  (`#SYS-BLOCK-AT-THE-TOP`), so a truncation costs authored prose rather than
+  the boot router. This repository's entrypoint is 27,069 bytes with the block
+  in its first ~2 KB. Re-measured offline with `codex debug prompt-input`
+  (codex-cli 0.167.0) over a 43,271-byte `AGENTS.md`: the router arrives whole
+  and the tail canary is dropped under the default limit; both arrive under
+  `-c project_doc_max_bytes=262144`.
 - **Do not use `model_instructions_file`:** it replaced the base instructions
   entirely in the rendered prompt **[V]**.
 - **Cache:** automatic prefix caching **[R]**. Session logs carry
@@ -548,8 +561,12 @@ someone else's logs.
 - The block's expected STATIC hash differs from `STATIC.xml`.
 - The lane file is older than its inputs.
 - `@` tokens in lane bytes (count and locations); refusal for `import`.
-- Entrypoint size against Codex's 32 KiB limit, and whether the managed block
-  lies inside the first 32 KiB.
+- Entrypoint size against the **declared** Codex limit
+  (`[system_prompt.harness.codex] doc_max_bytes`, default 32 KiB), the
+  authored bytes past it, and — now a formality, since the block leads the
+  file — whether the managed block lies inside it. Implemented in P4 in
+  `vibe check`'s `redirect_block` cell rather than here; what stays P5's is
+  the `vibe prompt check` report around it.
 - Mode conflicts C1–C4.
 - Nested instruction files with a managed block under the project root, and
   un-neutralised blocks in vibedeps copies.
@@ -626,7 +643,7 @@ block and its own canaries.
 | X0 | Offline, no spend: `codex debug prompt-input` through the profile | Lane is part 0 of developer item 2, both canaries present |
 | X1 | `vibe agent codex` twice, `exec --json` | Second run's `cached_input_tokens` ≥ base + lane |
 | X2 | Plain `codex` | Lane read once through the router |
-| X3 | Entrypoint padded past 32 KiB with the block at the end | Record the behaviour; expected: block lost, agent boots without the lane — confirms the size warning must be an error |
+| X3 | Entrypoint padded past the declared limit, block at the **top** | **DONE offline 2026-11-10** with `codex debug prompt-input`: router present, tail canary absent at the default limit; both present under `-c project_doc_max_bytes=262144`. The original form of this scenario (block at the end) is what motivated moving the block, and is retired |
 | N1 | From the root, make the agent open a file in the nested project | Nested lane not read; root lane not re-read |
 | O1 | Qwen, Gemini CLI, OpenCode, pi, dsh in `read` mode | Lane read once; for dsh, record the doubled entrypoint |
 | I1 | Only if import is pursued: Claude Code and Gemini CLI with the import block | Lane present once; no attempt to resolve `@spec://`; position and role recorded |
@@ -654,8 +671,8 @@ chosen over what.
 | D8 | `--exclude-dynamic-system-prompt-sections` passed by `vibe agent claude` | Yes |
 | D9 | OS detection by `vibe agent` to bake `os:` rows under `host = "portable"` | No; leave them to router rule 5 |
 | D10 | Both `vibe agent` and `vibe prompt flags` | Both; `agent` built on `flags` |
-| D11 | Entrypoint over Codex's 32 KiB: warning or refusal | Refusal when the managed block would fall outside the limit; warning within 4 KB of it |
-| D12 | PROP-009 sentence: boot order is precedence, not position | Adopt |
+| D11 | Entrypoint over Codex's 32 KiB: warning or refusal | Refusal when the managed block would fall outside the limit; warning within 4 KB of it. **Amended 2026-11-10:** the limit is the **declared** one (`SP-FMT-107`) rather than a constant, and the block moved to the top of the file (`SP-FMT-108`), so the refusal is now a guard reachable only by declaring a limit smaller than the block itself and the warning that matters counts the authored bytes past the limit |
+| D12 | PROP-009 sentence: boot order is precedence, not position | Adopt. **Done 2026-11-10:** `#SESSION-START-ORDER` carries it |
 | D13 | Authorise and budget the live run of section 10 | **AUTHORISED 2026-11-10, scoped: Claude Code only (C1–C8), before the release is published, only once `vibe agent claude` exists (P6), run by the central session as phase P9. Codex, Qwen Code, Gemini CLI, OpenCode, pi and dsh stay unauthorised; offline X0 needs no authorisation.** The recommendation was "after P7; C1–C5 and X1–X2 first" |
 
 ## 12. Placement in the campaign phases
