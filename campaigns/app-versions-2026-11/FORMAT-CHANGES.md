@@ -600,7 +600,8 @@ of such a directory is `ecosystem:<slot>:<version>:<verb>`.
 
 ## AV-FMT-028 — `~/.vibe/config.toml` `[slot.<slot>.extras.<ecosystem>]` (Phase 7c)
 
-Status: **not delivered.** Design authority:
+Status: **delivered 2026-11-10** (phase P7c), with the four amendments below the entry. The
+as-built record is `PROP-075#P7C-AS-BUILT`. Design authority:
 `spec://org.vibevm.core/vibevm/common/PROP-075#SLOT-EXTRAS`.
 
 - `[format.user-config]` (`schema = "none"`, authored TOML), epoch **1 → 1**. `UserConfig` is `deny_unknown_fields`, so the new top-level `[slot]` table must be added to the struct or a user who writes it gets a parse error.
@@ -608,13 +609,22 @@ Status: **not delivered.** Design authority:
 - **This is the first user-authored per-slot configuration in vibe**, and `crates/vibe-app/` reads no user config at all today, so the phase introduces that read as a new seam.
 - An unknown slot, an unknown ecosystem id or an unknown recommendation id is **reported once and otherwise ignored**, never an error: a hand-written settings file outlives the packages it mentions.
 - Two new flags on `vibe install -g` / `vibe update -g`: `--no-extras` (skip the user's own `add` list) and `--no-recommends` (skip the author's recommendations of both kinds — `AV-FMT-030`). A `drop` is honoured in every case, including under `--no-extras`, because a flag that declines extras must never cause **more** to be installed than the user asked for.
-- New command family `vibe app extras list|apply|add|drop|remove|self-upgrade|import`, whose `--json` answer is `AV-FMT-029`'s `vibe-app-extras/1`. **`list`, `remove` and `self-upgrade` were delivered 2026-11-10 by phase P7b** — the three verbs that need no user list; `apply`, `add`, `drop` and `import` are this phase's.
+- New command family `vibe app extras list|apply|add|drop|remove|self-upgrade|import`, whose `--json` answer is `AV-FMT-029`'s `vibe-app-extras/1`. **`list`, `remove` and `self-upgrade` were delivered 2026-11-10 by phase P7b** — the three verbs that need no user list; `apply`, `add`, `drop` and `import` are this phase's, **delivered 2026-11-10**.
+
+**As built**, with the four places the delivery differs from the record above:
+
+1. **`[slot]` is a table of tables, not a map straight to the extras.** `UserConfig.slot` is `BTreeMap<String, SlotConfig>` and `SlotConfig` carries `extras`, so a later per-slot user setting — there is no second one yet — does not have to move the user's extras list to reach the file. Both structs are `deny_unknown_fields` like every other section, so a mis-spelled `adds` or `extra` is reported rather than silently dropped.
+2. **The editors take `SLOT` first and infer the ecosystem.** The record spells them `add ITEM…` / `drop ID…`, which cannot address a table keyed by slot *and* ecosystem. Every verb of the family takes `SLOT` first; `--ecosystem` stays optional and is inferred from the user's own file (when it already names exactly one for that slot) or from the slot's current version (when it declares exactly one), and ambiguity is a refusal naming what there is — never a guess. `PROP-075#P7C-AS-BUILT` (4).
+3. **`--no-extras` is also a flag of `vibe app extras list|apply`, and `--no-recommends` is admitted there.** The record puts the two flags on `install -g` / `update -g` only. A listing that did not answer them would be a second opinion rather than a preview of the apply, so `list` and `apply` take `--no-extras` and honour the global `--no-recommends`; the family's other verbs act on a list the user typed, where neither flag decides anything, and both are still refused there. `PROP-075#P7C-AS-BUILT` (3).
+4. **A `config.toml` that will not parse is one notice and an empty list**, not a failed install: the record makes a stale *line* non-fatal and is silent about an unparseable file, and "failure never touches the runtime" decides it. The malformed file is already reported by the startup read every command performs. `PROP-075#P7C-AS-BUILT` (2).
 
 ## AV-FMT-029 — `vibe-app-extras/1` and the inventory's adapter record and weak edge (Phase 7c/7d)
 
-Status: **partly delivered 2026-11-10** — P7b delivered the format record and the half of the
-document it can fill; **P7d delivered the inventory generation and the weak edge**; the user's own
-list and the per-adapter record remain P7c's. What P7d delivered: `[format.application-index]`
+Status: **delivered 2026-11-10** — P7b delivered the format record and the half of the
+document it can fill, **P7d delivered the inventory generation and the weak edge**, and **P7c
+delivered the user's own list and the per-adapter record**, with the amendments below. The
+as-built records are `PROP-075#P7B-AS-BUILT`, `PROP-077#P7D-AS-BUILT` and
+`PROP-075#P7C-AS-BUILT`. What P7d delivered: `[format.application-index]`
 epoch **6 → 7** (`schemas/application/e7/index.jtd.json`, corpus `formats/corpora/application/e7`),
 protocol tag `vibe-user-applications/8`, the optional `weak` boolean on a `requirement` row, the
 frozen previous reader registered as `[format.application-index-v7]` (epoch 6, `e6`), the typed
@@ -622,20 +632,30 @@ frozen previous reader registered as `[format.application-index-v7]` (epoch 6, `
 its `--supports-index` answer. The writer's ladder gained one rung and nothing else, so a home with
 no weak edge keeps writing `/7` — or `/6`, or `/3`.
 
-**What P7c inherits, exactly:** the generation is paid. Its per-adapter record is added as
-**optional members of this same `e7` generation at epoch 7 → 7** — no new generation, no new
-protocol tag, no second proxy admission — and the one code change it owes beside the members is a
+**What P7c inherited, exactly — and delivered:** the generation was paid. Its per-adapter record
+went in as **optional members of this same `e7` generation at epoch 7 → 7** — no new generation,
+no new protocol tag, no second proxy admission — and the code it owed beside the members was the
 clause in `Index::requires_reader_eight` (`crates/vibe-app/src/index/protocol.rs`), which is
-written as the ladder's rung rather than as the weak edge's own predicate for that reason. The
-`vibe-app-extras/1` document's `add` / `drop` / final-list members stay P7c's at epoch 1 → 1. What P7b delivered: `[format.cli-application-extras]`,
+written as the ladder's rung rather than as the weak edge's own predicate for that reason, plus
+the matching arm of the reader's generation guard (`protocol::carries`). The exact members, per
+declared adapter: `id`, `applied` (the final list the `install` verb was last handed, verbatim and
+in order), `appliedAt`, `appliedOutcome`, `observed`, `observedAt` and `observedOutcome`, with
+`extras_outcome` a closed `done | failed | skipped` vocabulary of its own rather than a reuse of
+the step `outcome`. A record that retains **nothing** is neither written nor counted by the
+predicate, so an adapter that only ever skipped does not push a home onto the `/8` reader; and the
+`e7` corpus gained two rows, one of them carrying `; rm -rf $HOME` as an applied item, because an
+item is echoed and never parsed. The `vibe-app-extras/1` document gained its P7c members at epoch
+**1 → 1**: optional `add`, `drop`, `applied` and `applied_at` per ecosystem, optional `dropped` on
+a recommendation row, and `items` is now the **final** list rather than the author's half. What P7b delivered: `[format.cli-application-extras]`,
 `schemas/application_extras.jtd.json`, epoch **new, 1**, protocol `vibe-app-extras/1`, the answer
 of `vibe app extras list --json` — per declared adapter, which verbs the package declares, the
 author's recommendations with their **enabled** state (read off the installation's recorded chosen
 feature set), the computed list those make, and what the adapter's `list` verb observes in that
 version (`observed`, with `observed_failed` naming why an observation was not taken). The user's
-`add` and `drop`, the full final-list arithmetic and the inventory's per-adapter record are
-**not** in the document yet: P7c adds them as optional members, epoch **1 → 1**, and owns the
-`[format.application-index]` **6 → 7** move with its `vibe-app-proxy` admission. Design authority:
+`add` and `drop`, the full final-list arithmetic and the inventory's per-adapter record followed
+in P7c as optional members at epoch **1 → 1** (`dropped` beside `enabled`, because a dropped
+recommendation is not an unchosen one and only one of those is reversible with `--feature`).
+Design authority:
 `spec://org.vibevm.core/vibevm/common/PROP-075#SLOT-EXTRAS`, `#ECOSYSTEM-ADAPTER`, and
 `spec://org.vibevm.core/vibevm/common/PROP-077#APP-RECOMMENDS-MECHANICS`.
 
@@ -699,19 +719,27 @@ Status: **delivered** 2026-11-10, epoch unchanged (`1 → 1`). Design authority:
 
 **Plus one field the record did not foresee**, because the owner decided it after this record was written: the trust an untrusted dependency's contributions need before any of them runs, `spec://org.vibevm.core/vibevm/common/PROP-065#ordinary-trust`. No manifest field and no new flag: the trusted set is `agents.toml`'s `trusted_groups` unioned with PROP-020's default hook allow-list, the per-run escape is the existing `--assume-yes`, and plain `[hooks]` keeps the behaviour it measurably has (unasked — the lifecycle path consults no `HookPolicy`), so no published package changes behaviour.
 
-## AV-FMT-032 — `vibe-install-steps/1`, the ordinary package's step evidence, and `vibe app describe`'s adapters (Phase 7e/7b)
+## AV-FMT-032 — `vibe-install-steps/1`, the ordinary package's step evidence, and `vibe app describe`'s adapters (Phase 7e/7b/7c)
 
-Status: **the `vibe-install-steps/1` half is delivered** 2026-11-10 (the P7e tail), epoch **new, 1**; the `vibe app describe` half is **delivered** by phase P7b (below). P7e's first pass deliberately took the judgment, the two refusals and the trust gate alone, because everything else depends on their verdicts; the evidence record followed as its own change, since it is a new registered format with a schema, a registry row, a generated reader and a corpus. The per-contribution outcome rows it serialises already existed in memory as `SlotLifecycleReport` (carrying `skip` with its deciding condition), so the delivery was the format and the writing, not the measurement. Design authority:
+Status: **delivered** 2026-11-10 — the `vibe-install-steps/1` half by the P7e tail, epoch **new, 1**; the `vibe app describe` half by phase P7b (the declaration, below) and phase P7c (the record-sourced lists, below). P7e's first pass deliberately took the judgment, the two refusals and the trust gate alone, because everything else depends on their verdicts; the evidence record followed as its own change, since it is a new registered format with a schema, a registry row, a generated reader and a corpus. The per-contribution outcome rows it serialises already existed in memory as `SlotLifecycleReport` (carrying `skip` with its deciding condition), so the delivery was the format and the writing, not the measurement. Design authority:
 
 What P7b delivered:
 `[format.cli-application-describe]` (`schemas/application_describe.jtd.json`), epoch **1 → 1**,
 optional `ecosystems[]` **on the `application` object** — the declaration's own place in the
 document — carrying each declared adapter's id, name, description, `migration` flag, the verbs it
 declares and the author's recommendations with their items. The *last applied* and *last
-observed* lists are **not** there: they come from `AV-FMT-029`'s inventory record, which P7c
-owns, and `vibe app describe` stays a pure read of the declaration until then. Design authority:
+observed* lists were **not** there: they come from `AV-FMT-029`'s inventory record, which P7c
+owned.
+
+What P7c added to the same document, epoch **1 → 1**: optional `applied`, `appliedAt`, `observed`
+and `observedAt` on each `ecosystems[]` row, read off the installed version's retained record. The
+record above promises the two **lists**; each carries its RFC 3339 time as well, because a list
+with no date cannot tell a reader whether it is describing this version's history or a stale
+record, and the inventory already holds both (`PROP-075#P7C-AS-BUILT` (10)). `describe` still runs
+nothing: it is declaration plus retained record, and the members are absent for a package that is
+not installed. Design authority:
 `spec://org.vibevm.core/vibevm/common/PROP-065#ordinary-plan`;
-`spec://org.vibevm.core/vibevm/common/PROP-075#ECOSYSTEM-ADAPTER`.
+`spec://org.vibevm.core/vibevm/common/PROP-075#ECOSYSTEM-ADAPTER`, `#SLOT-EXTRAS`.
 
 - New format `[format.install-steps]`, `schemas/install_steps.jtd.json`, epoch **new, 1**, protocol `vibe-install-steps/1`: written as `steps.json` in `<home>/cache/install-steps/<group>/<name>/<version>/<timestamp>/`, one row per `slot:` contribution with its `id`, handler kind, outcome, reason and start/finish times, beside `logs/<id>.log`. `recoverable = true`; it is derived evidence, listed and cleaned by the ordinary cache surface, and nothing resumes from it.
 **As built (the `vibe-install-steps/1` half only), with what is narrower than the record above:**

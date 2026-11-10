@@ -1679,3 +1679,137 @@ asserts the contribution ran, and
 writes `untrusted_groups = ["org.vibevm.ai-native"]`, asserts the same install
 is refused naming the group, `untrusted_groups` and `--assume-yes`, and then
 installs `org.vibevm.node/hooked` to show the sibling group is untouched.
+
+## 2026-11-10 — P7c implemented: the user's own extras list, its apply and its editors
+
+The fifth of the six P7 units landed, in four product commits and this
+record. `[slot.<slot>.extras.<ecosystem>]` in `~/.vibe/config.toml` carries
+`add` (opaque items) and `drop` (recommendation ids); the final list is the
+author's enabled recommendations in declaration order, minus every drop,
+plus the user's `add` in their own order, de-duplicated by exact string
+first-wins; it goes into a slot's **new** version after `install -g`,
+`update -g` and `update -g --all`, once, through the P7b runner. The two
+decline flags are not the same flag: `--no-extras` skips the user's own
+`add`, `--no-recommends` (PROP-077's one global flag, consumed and not
+redefined) the author's half, and a `drop` is honoured in every case
+including under `--no-extras` — which is the clause the owner's wording
+left ambiguous and the design decided. `vibe app extras apply|add|drop|import` complete the
+family, and the inventory now keeps, per declared adapter, the last applied
+and last observed list with its time and outcome. `PROP-075#SLOT-EXTRAS`
+and `#ECOSYSTEM-ADAPTER` are `impl/done`; `AV-FMT-028`, `AV-FMT-029` and
+`AV-FMT-032` are delivered; the as-built record is `PROP-075#P7C-AS-BUILT`.
+
+**The seam the phase existed to pay, and the shape that made it cheap.**
+The plan called the first read of `UserConfig` from `crates/vibe-app/` the
+phase's real architectural cost, and it is paid where the plan said: that
+crate now reads and interprets the user's file. But the *path* arrives on
+`OperationContext` from the caller, because `vibe-app`'s own standing rule
+is that it reads no environment — the chokepoint resolving `$VIBE_SETTINGS`
+/ `VIBEVM_USER_CONFIG` stays in `vibe-cli`, beside the PATH and agent facts
+it already gathers. That is not tidiness. It makes the property the plan
+demanded a test for — "a home with no `[slot]` table behaves exactly as
+today" — **structural**: a context with no path reads nothing, so no
+command that does not consume extras changed, and no test can reach the
+operator's real `config.toml` by forgetting to isolate something.
+
+**Six things the implementation settled that the design left open.**
+
+- **"Placed a new version" is measured as a key the home did not hold.**
+  The fact says the apply follows an install that placed a new version and
+  not a reinstall of one already installed, and gives no procedure. The
+  condition is the set of installation keys captured *before* the
+  operation; the request then names *that key* rather than the slot, since
+  the slot's default is the user's to move and an install need not have
+  moved it — a `--hidden` install of a second version gets its extras in
+  its own version.
+- **The same call is a warning after an install and an exit status when
+  typed.** `vibe app extras apply` is a command the user asked for, so its
+  status follows the run. The identical call after an install reports and
+  returns nothing: the version stays installed, the slot default stays put,
+  the install's status is untouched. A package declaring no adapter at all
+  — the great majority of applications — is silent rather than warned
+  about, and that one refusal is recognised by its error **code**, never by
+  its prose.
+- **A `config.toml` that will not parse is a notice and an empty list.**
+  The fact makes a stale *line* non-fatal and is silent about an
+  unparseable file. "Failure never touches the runtime" decides it: the
+  extras list must not be able to fail an install, and the malformed file
+  is already reported by the startup read every command performs.
+- **The listing answers the same arithmetic under the same flags.** P7b's
+  half computed the author's enabled rows only, and the fact gives `list`
+  no flags. `list` now takes `--no-extras`, honours `--no-recommends`, and
+  its computed list *is* the final list — so a listing is an honest preview
+  of the apply rather than a second opinion, and `--no-recommends`'
+  admission widened to `app extras list|apply` and to those two verbs
+  only: on `remove` and `self-upgrade` it would decide nothing, and a flag
+  silently ignored is worse than a flag refused.
+- **The editors take `SLOT` first and infer the ecosystem.** The fact
+  spells them `add ITEM…` / `drop ID…`, which cannot address a table keyed
+  by slot *and* ecosystem; every verb of the family takes `SLOT` first, as
+  the other four already did. `--ecosystem` stays optional because the nvm
+  case the fact itself names reads badly with it: the user's own file
+  decides when it already holds exactly one for that slot (so a second
+  edit needs no package tree, registry or network), else the slot's current
+  version when it declares exactly one, else a refusal naming what there
+  is. Ambiguity is never guessed.
+- **A recommendation is routed by its `ecosystem` field here too, and that
+  fixed a delivered defect.** `#P7B-AS-BUILT` (3) settled that the field is
+  authoritative and that a row naming a *different* declared adapter is
+  admitted; the delivered listing nevertheless read
+  `EcosystemDecl::recommends` — the rows as authored — so such a row's item
+  would have reached the wrong adapter's `install` verb.
+  `ApplicationDecl::ecosystem_recommends_of` is now the single reader, and
+  the final list and the listing share it.
+
+**The generation was inherited finished, exactly as P7d promised.** The
+per-adapter record went in as optional members of the same `e7` generation
+at epoch 7 → 7: one clause in `Index::requires_reader_eight`, one arm of
+the reader's generation guard, two new corpus rows, no new generation, no
+new protocol tag, no second `vibe-app-proxy` admission. A record that
+retains **nothing** is neither written nor counted, so the writer and the
+predicate agree on one question and an adapter that only ever skipped
+cannot push a home onto a reader its PATH proxies may not have. A `list`
+run fills the observed half of the same record, a failed observation leaves
+the previous list standing and names itself, and `remove` / `self_upgrade`
+change what a version carries without being an apply — so they never
+rewrite the applied list, and only a fresh `list` can say what is there now.
+
+**Tests.** `vibe-core`: `user_config::slot_tests` — the table parses,
+round-trips and keeps the user's order; a home with no `[slot]` table is
+unchanged and a mis-spelled member still refuses; the editors append
+first-wins; `read_item_lines` is the `$NVM_DIR/default-packages` format;
+and a save preserves the comments of a hand-written file. `vibe-app`:
+`ecosystem::extras_tests` — the arithmetic as an eight-case table
+(including the owner-ambiguous case, that a `drop` is honoured **under
+`--no-extras`**), the three stale-line notices, the routing by `ecosystem`
+field, what a run remembers per adapter and that a skip remembers nothing,
+and `the_users_list_is_read_from_the_file_the_caller_names_and_nowhere_else`
+for the seam; `index::tests::the_writer_reaches_protocol_eight_for_an_adapter_record_too_but_not_for_an_empty_one`
+for the ladder. `vibe-cli`: the six cases of `cli_app_extras_apply` — the
+apply after a new version and not on a reinstall, the two flags apart, a
+failing apply at exit 0 with its retry and its record, the three editors
+with an `import` of a `#`-commented file, a stale settings line reported
+once with `describe` answering off the record, and a home with no `[slot]`
+table with a package that declares no adapter.
+
+**Four unrelated files reached the 600-line budget on the way** and were
+split along their own seams, which is worth recording because the seams are
+real: `user_config/location.rs` (where the file is, against parsing it —
+and now the whole ambient surface of that layer, so `conform.toml`'s env
+root narrows from `user_config.rs` to it), `index/protocol.rs` gained
+`carries` (which protocol holds which fact, which is that module's
+subject), `global/observation.rs` (the commands against what one run
+observes), and the two test modules.
+
+**What P7f's shim half can rely on.** `[slot.node.extras.npm] add = [...]`
+parses and is applied after `vibe install -g` of a new Node version, which
+is `$NVM_DIR/default-packages`; `--no-extras` is the decline, which is
+`nvm install --skip-default-packages`; `vibe app extras import node
+<file>` moves an existing nvm list over in one command; and
+`conformance/vibenvm/cases/16-default-packages.toml`'s `setup_b` was
+checked against the delivered spelling and needs no change — it writes
+exactly `[slot.node.extras.npm]` with `add = ["…"]`. What the suite still
+needs from the Node package itself is an `[[application.ecosystem]]`
+declaration with id `npm`: no package in the tree declares one yet, so the
+`globals` observation has nothing to compare until P7f (or a Node package
+change) adds it.

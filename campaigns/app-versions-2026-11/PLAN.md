@@ -1060,7 +1060,7 @@ recipe is the contract. (3) The synthesised migration entry is offered after
 version — correct for a migration, and the reason `#PACKAGE-ACTIONS` refuses to
 express a maintenance act as one; do not "fix" it here.
 
-### P7c — the user's extras list and apply-after-install — **M**
+### P7c — the user's extras list and apply-after-install — **M** — *delivered 2026-11-10*
 
 **Goal.** `[slot.<slot>.extras.<ecosystem>]` in `~/.vibe/config.toml`, the
 final-list arithmetic, the apply after `install -g` / `update -g` of a new
