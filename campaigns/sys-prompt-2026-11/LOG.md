@@ -1922,3 +1922,83 @@ claimed.**
 
 The Windows inputs digest taken from a real git checkout with `core.autocrlf=true` also matched. First Windows attempt failed in the fixture, not the product: `make-sample.sh` produced `file://C:/…`; fixed with `Path.as_uri` in `0a37aa44b`. `#SYS-DETERMINISM` moves to `impl/done`.
 
+
+## 2026-11-10 — the host-mismatch warning: `SP-FMT-101`'s last planned piece
+
+The one item the campaign tail left open as *planned* rather than measured.
+`SP-FMT-101` had delivered the two manifest keys (P1), the `target:` gate
+spelling (P2) and the fixed-host baking (P3); what remained was the sentence
+a session gets when its own operating system is not the declared `host`.
+
+**It is one function, because two would have drifted.**
+`vibe_workspace::system_prompt::host_mismatch_warning(HostChoice,
+Option<TargetOs>)` names both operating systems, says which `os:` rows the
+prefix baked in, and ends *"it is served as declared rather than refused"*.
+`vibe prompt check` and `vibe prompt prepare` both print it as a `note:`
+line and both carry it in the `warnings[]` of their `--json` document;
+`vibe-prompt-check/1` already had that field, and `vibe-prompt-prepare/1`
+gained it additively — epoch **1 → 1**, `x-empty = "emit"`, no existing
+member touched, and `wire-diff` reports the schema shift green because
+`public = false`.
+
+**The decision that took the most thought was where the session's OS comes
+from.** It is an injected field, `CheckRequest::session_os`, filled by the
+CLI from the compile-time `std::env::consts::OS` through
+`TargetOs::current()` — the same seam shape `TrackedPaths` already uses for
+the git question, and for the same reason: the answer is *about* the
+caller's machine, so a test must be able to state it instead of inheriting
+whichever host runs the suite. Two things follow and are worth stating
+plainly, because both are easy to get wrong later:
+
+- **It decides no gate.** `prepare`'s `session_target` still selects band G
+  alone. Had the warning's input been allowed to stand in for it, the
+  generator's own operating system would have started answering a session
+  gate — exactly what `#SYS-SESSION-TARGET` forbids and what the two
+  spellings `os:` and `target:` exist to prevent.
+- **Where a verb already has an explicit session-OS input, that input is the
+  session OS.** `vibe prompt prepare --session-target os=<name>` is such an
+  input, so it replaces the observed host for the warning while still
+  deciding the band by itself. `check` has no such flag and takes the host.
+
+**Three silent cases, each for its own reason, and one of them is this id's
+compatibility claim.** `host = "portable"` and an absent `host` are one
+value carrying no host decision, so a project that sets neither key never
+sees the line at all. An equal pair is the expected state. And an
+unrecognised session platform (`None`) warns about nothing: inventing a
+verdict about an unknown OS is the mistake the gate side already refuses to
+make.
+
+**Two surface decisions the spec did not make.** `#SYS-HOST-AND-TARGET`
+names `check` and `prepare`. A launch is the third place a session's own OS
+is a fact, and the worker who never runs `check` is the reader the sentence
+is for — so **`vibe agent` prints it as a stderr note**, in the weakest form
+that still informs: no flag, no document (the verb becomes the harness and
+has none), suppressed by `--quiet` like its sibling notes, printed only for
+an opted-in node, and **never** a refusal, since refusing a launch is
+precisely the failure this decision forbids. **`vibe check` deliberately
+carries none of it**: that cell reports project defects, and which machine a
+contributor is sitting at is not one — a finding every cross-platform
+collaborator sees differently from the same commit would be noise in the one
+report a developer reads without asking.
+
+**Tested at both levels, and the OS is stated at both.** Injected unit tests
+over the function and over `prompt_warnings`/`prepare_request` cover
+mismatch, match, portable and unknown. The command legs in
+`cli_prompt_matrix.rs` parameterise the **fixture** by the running host and
+no expectation by it — `session_and_other()` picks an OS this session
+certainly is not — so the suite asserts *"a mismatch warns"* and never *"on
+Linux it warns"*. They cover `check`'s human and JSON output with an `equal`
+verdict and a **zero exit**, `prepare`'s human and JSON output with the
+bands whole beside the warning, the two silent halves, and a real launch
+through an argv-recording shim that still receives its slot flag.
+
+With this, every planned piece of `SP-FMT-101` is delivered. What the
+campaign tail leaves open is unchanged otherwise: `#SYS-HARNESS-DELIVERY`
+stays `impl/work` for row C8, the unmeasured terminal UI and the six
+unauthorised harnesses; the 18 tracked instruction files still carry the
+pre-2026-11 redirect, because `vibe install` cannot complete in this
+worktree while `vibevm/vibedeps/org.vibevm.doc.web/` is absent. One item is
+newly recorded and deliberately not acted on: `vibe prompt capture` runs on
+the same host and computes the warning through `prepare_request`, but
+`vibe-prompt-capture/1` has no `warnings[]` and does not surface it — a
+second additive wire change for a verb the decision does not name.

@@ -1712,6 +1712,18 @@ ran on 2026-11-10 under exactly that scope.
   session target at all, and a session whose own OS differs from the fixed
   host is **warned about and served**, never refused. *The owner decision of
   2026-11-10, as the pair of commands that distinguishes its two modes.*
+  **Confirmed (P5, 2026-11-10), with the session's OS made an injected field
+  rather than a call**: `CheckRequest::session_os`, filled by the CLI from the
+  compile-time `std::env::consts::OS`, so the command tests parameterise the
+  *fixture* by the running host and no expectation by it — the suite asserts
+  "a mismatch warns", never "on Linux it warns". The warning rides the human
+  report and the `warnings[]` of both `--json` documents, leaves both exit
+  statuses alone (`check` is still `equal`), and decides no gate: `prepare`'s
+  `--session-target` still selects band G by itself, and where it is supplied
+  it *is* the session OS the warning is measured against. One surface was
+  added beyond the two the decision names — `vibe agent`, as a stderr note —
+  and one was deliberately left out: `vibe check`, which reports project
+  defects, not which machine a contributor is sitting at.
 - **P2** Adding `when = "target:<os>"` changes **no** row of this
   repository's `INDEX.md`, because its `[system_prompt] target` is absent and
   an absent target selects every OS. *The compatibility half of the owner

@@ -154,10 +154,36 @@ workstation building Windows software.
 
 A baked host OS is not “environment detection”: the name is read from your
 own manifest, exactly like `entrypoint`. Nothing about the generating machine
-is observed. When a session's own OS differs from a fixed `host`,
-`vibe prompt check` and `vibe prompt prepare` **warn and continue** — they do
-not refuse, because refusing would leave a cross-platform worker unable to
-read its own project's instructions.
+is observed.
+
+**A host mismatch warns and continues.** When the operating system you are
+running on differs from a fixed `host`, you get one line naming both and
+saying what the prefix carries —
+
+```
+note: `[system_prompt] host` declares `windows` and this session runs on `linux`, so the prefix bakes in the `os:windows` continuation rows and carries none for `linux`; it is served as declared rather than refused
+```
+
+— from `vibe prompt check` and from `vibe prompt prepare`, in the human
+report and in the `warnings[]` of both `--json` documents, and from
+`vibe agent` as a stderr note before your harness starts. **Nothing
+refuses**, and the exit status is untouched: `check` is still `equal` and
+`prepare` still hands back every band. Refusing would leave a
+cross-platform worker unable to read its own project's instructions.
+
+Three cases are silent, each for its own reason. `host = "portable"` and an
+absent `host` are the same value and carry no host decision, so there is
+nothing to differ from — a project that sets neither key never sees this
+line. An OS equal to the declared one is the expected state. And a platform
+this build does not name says nothing at all, for the same reason an unknown
+session gate never becomes `true`. On `vibe prompt prepare`, a
+`--session-target os=<name>` you supply **is** your statement of the
+session's OS and is what the line is measured against; it still decides the
+gated band on its own.
+
+`vibe check` does **not** carry this finding. It reports what is wrong with
+the project, and which machine you are sitting at is not a property your
+collaborators share.
 
 ## 4. The commands
 
