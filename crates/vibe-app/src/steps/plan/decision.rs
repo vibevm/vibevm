@@ -3,6 +3,7 @@ use super::*;
 use crate::error_lifecycle::LifecycleError;
 use crate::steps::params::{param_equals, param_holds};
 use crate::steps::sizes::{input_local, source_cached};
+use vibe_core::judgment;
 use vibe_core::manifest::{AgentMode, Condition, Need, RequirementDecl};
 pub(super) const NO_AGENT: &str = "no agent configured";
 pub(super) fn effective_agent_mode(
@@ -53,15 +54,29 @@ pub(super) fn decide(
     key: &str,
     provided: &[String],
 ) -> Result<Decision, AppError> {
-    for condition in &step.when {
-        if !holds(input, condition, vars, step)? {
-            return skip(format!("when `{condition}` does not hold"));
-        }
-    }
-    for condition in &step.unless {
-        if holds(input, condition, vars, step)? {
-            return skip(format!("unless `{condition}` holds"));
-        }
+    // `file_present` paths are expanded first, so this plane's typed
+    // template refusal still reaches the caller unchanged and the shared
+    // evaluator stays pure.
+    let files = expanded_files(vars, step)?;
+    let facts = judgment::ConditionFacts {
+        feature_selected: &|id| vars.features.iter().any(|chosen| chosen == id),
+        param_truthy: &|id| Ok(param_holds(input.option, vars.params, id)),
+        param_equals: &|id, value| Ok(param_equals(input.option, vars.params, id, value)),
+        command_present: input.facts.command_present,
+        file_present: &|path| {
+            Ok(files
+                .iter()
+                .find(|(declared, _)| *declared == path)
+                .is_some_and(|(_, expanded)| input.resolved.root.join(expanded).exists()))
+        },
+        env_present: input.facts.env_present,
+        agent_configured: input.agent.available(),
+        offline: input.offline,
+    };
+    if let judgment::Verdict::Skip { reason } = judgment::verdict(&step.when, &step.unless, &facts)
+        .unwrap_or_else(|reason| judgment::Verdict::Skip { reason })
+    {
+        return skip(reason);
     }
     if let StepKind::Agent { required, mode, .. } = &step.kind {
         // `PROP-064#selection`: no agent means skip, unless the step is
@@ -137,31 +152,30 @@ pub(super) fn decide(
     Ok((true, None, needed))
 }
 
-fn holds(
-    input: &PlanInput<'_>,
-    condition: &Condition,
+/// Every `file_present` path this step declares, expanded through the
+/// template layer once, so the shared evaluator asks only "does it exist".
+fn expanded_files<'s>(
     vars: &Vars<'_>,
-    step: &StepDecl,
-) -> Result<bool, AppError> {
-    Ok(match condition {
-        Condition::Feature(id) => vars.features.iter().any(|chosen| chosen == id),
-        Condition::Param(id) => param_holds(input.option, vars.params, id),
-        Condition::ParamEquals(test) => {
-            param_equals(input.option, vars.params, &test.id, &test.value)
-        }
-        Condition::CommandPresent(name) => (input.facts.command_present)(name),
-        Condition::EnvPresent(name) => (input.facts.env_present)(name),
-        Condition::AgentConfigured(value) => input.agent.available() == *value,
-        Condition::Offline(value) => input.offline == *value,
-        Condition::FilePresent(path) => {
+    step: &'s StepDecl,
+) -> Result<Vec<(&'s str, std::path::PathBuf)>, AppError> {
+    let mut files = Vec::new();
+    for condition in step.when.iter().chain(step.unless.iter()) {
+        if let Condition::FilePresent(path) = condition {
             let expanded = template::expand(path, vars, &step.id, "file_present")?;
-            input.resolved.root.join(expanded).exists()
+            files.push((path.as_str(), std::path::PathBuf::from(expanded)));
         }
-    })
+    }
+    Ok(files)
 }
 
 /// Whether a need of a running step is met on this host or by the public
 /// commands of its requirements (`PROP-065#app-dependencies`).
+///
+/// The vocabulary's meaning is `vibe_core::judgment::need_met`; what this
+/// plane adds is the one answer that plane cannot give — whether an offline
+/// run can still serve a step's own inputs from the cache, which depends on
+/// the step's kind and on an installation work directory the ordinary plane
+/// has none of.
 fn need_met(
     input: &PlanInput<'_>,
     need: &Need,
@@ -169,14 +183,8 @@ fn need_met(
     work: &Path,
     provided: &[&str],
 ) -> bool {
-    match need {
-        Need::Command(name) => {
-            provided.contains(&name.as_str()) || (input.facts.command_present)(name)
-        }
-        Need::Agent => input.agent.available(),
-        Need::Terminal => input.attended,
-        Need::Network if !input.offline => true,
-        Need::Network => match &step.kind {
+    let network = !input.offline
+        || match &step.kind {
             StepKind::Sources { sources } => sources
                 .iter()
                 .all(|source| source.url.is_none() || source_cached(input.settings, source)),
@@ -184,6 +192,16 @@ fn need_met(
                 input_local(input.settings, work, step, source, sha256)
             }
             _ => false,
+        };
+    judgment::need_met(
+        need,
+        &judgment::NeedFacts {
+            command_present: &|name| {
+                provided.contains(&name) || (input.facts.command_present)(name)
+            },
+            network,
+            agent: input.agent.available(),
+            terminal: input.attended,
         },
-    }
+    )
 }
