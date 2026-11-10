@@ -21,7 +21,8 @@ use std::path::{Path, PathBuf};
 use anyhow::Result;
 use vibe_install::{InstallProgress, SlotLifecycleReport};
 use vibe_wire::generated::install_report::{
-    InstallContributionReport, InstallDelegation, InstallReport,
+    InstallContributionReport, InstallDelegation, InstallRecommendation,
+    InstallRecommendationOutcome, InstallReport, InstallSuggestion,
 };
 use vibe_wire::generated::shared::CompileTraceReport;
 use vibe_workspace::hooks::HookReport;
@@ -42,6 +43,9 @@ pub(crate) struct InstallDraft {
     pub(crate) notices: Vec<String>,
     pub(crate) delegation: Option<InstallDelegation>,
     pub(crate) world_summary: WorldCallbackSummary,
+    /// What became of the solved closure's weak tables (PROP-077
+    /// `#PROJECT-RECOMMENDS`). Empty for a replay and for a failed draft.
+    pub(crate) weak: vibe_install::WeakDependencyReport,
 }
 
 impl InstallDraft {
@@ -63,6 +67,7 @@ impl InstallDraft {
             notices: run.notices,
             delegation: run.parked.as_ref().map(report::handoff_member),
             world_summary: run.world_summary,
+            weak: run.weak,
         }
     }
 
@@ -86,6 +91,7 @@ impl InstallDraft {
             notices: Vec::new(),
             delegation: None,
             world_summary: WorldCallbackSummary::default(),
+            weak: vibe_install::WeakDependencyReport::default(),
         }
     }
 
@@ -119,6 +125,8 @@ impl InstallDraft {
             notices: self.notices,
             hooks: hooks.typed(),
             delegation: self.delegation,
+            recommended: recommendation_rows(&self.weak),
+            suggested: suggestion_rows(&self.weak),
             trace,
         }
     }
@@ -158,8 +166,85 @@ impl InstallDraft {
             ));
             return Ok(());
         }
+        render_weak_lines(ctx, &report);
         report::render_human_progress(ctx, &progress, &hooks, world_summary, quiet_suffix);
         Ok(())
+    }
+}
+
+/// The wire rows for the closure's recommendations, in the order the plan
+/// read them.
+fn recommendation_rows(weak: &vibe_install::WeakDependencyReport) -> Vec<InstallRecommendation> {
+    weak.recommended
+        .iter()
+        .map(|row| InstallRecommendation {
+            package: row.package.clone(),
+            by: row.by.clone(),
+            outcome: match row.outcome {
+                vibe_install::RecommendationOutcome::Installed => {
+                    InstallRecommendationOutcome::Installed
+                }
+                vibe_install::RecommendationOutcome::Satisfied => {
+                    InstallRecommendationOutcome::Satisfied
+                }
+                vibe_install::RecommendationOutcome::Skipped => {
+                    InstallRecommendationOutcome::Skipped
+                }
+            },
+            reason: row.reason.clone(),
+        })
+        .collect()
+}
+
+/// The wire rows for the closure's suggestions — read, reported, installed
+/// nowhere.
+fn suggestion_rows(weak: &vibe_install::WeakDependencyReport) -> Vec<InstallSuggestion> {
+    weak.suggested
+        .iter()
+        .map(|row| InstallSuggestion {
+            package: row.package.clone(),
+            by: row.by.clone(),
+        })
+        .collect()
+}
+
+/// The human half of the weak account: what a recommendation brought in, what
+/// it did not, and the suggestions nothing installs (PROP-077
+/// `#PROJECT-RECOMMENDS`, `#SUGGESTS-UNCHANGED`). Each skip has already been
+/// named with its reason as a planning diagnostic; this is the tally.
+fn render_weak_lines(ctx: &output::Context, report: &InstallReport) {
+    let installed = report
+        .recommended
+        .iter()
+        .filter(|row| row.outcome == InstallRecommendationOutcome::Installed)
+        .map(|row| format!("`{}` (by `{}`)", row.package, row.by))
+        .collect::<Vec<_>>();
+    if !installed.is_empty() {
+        ctx.step(&format!(
+            "Recommended and installed: {}",
+            installed.join(", ")
+        ));
+    }
+    let skipped = report
+        .recommended
+        .iter()
+        .filter(|row| row.outcome == InstallRecommendationOutcome::Skipped)
+        .count();
+    if skipped > 0 {
+        ctx.step(&format!(
+            "Recommended and skipped: {skipped} (reported above; the install is unaffected)"
+        ));
+    }
+    if !report.suggested.is_empty() {
+        ctx.step(&format!(
+            "Suggested, installed nowhere: {}",
+            report
+                .suggested
+                .iter()
+                .map(|row| format!("`{}`", row.package))
+                .collect::<Vec<_>>()
+                .join(", ")
+        ));
     }
 }
 
@@ -211,6 +296,7 @@ mod refusal_tests {
             notices: Vec::new(),
             delegation: None,
             world_summary: WorldCallbackSummary::default(),
+            weak: vibe_install::WeakDependencyReport::default(),
         };
         let report = draft.into_report(Some(member.clone()));
 

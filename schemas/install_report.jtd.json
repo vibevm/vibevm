@@ -112,9 +112,77 @@
         "x-default": null,
         "description": "The shared compile-trace member (PROP-054 `##OBS-TRACE`, R3.4): present exactly when this command ran with compile tracing enabled; disabled old JSON omits it and remains readable."
       }
+    },
+    "recommended": {
+      "elements": {
+        "ref": "install_recommendation"
+      },
+      "metadata": {
+        "x-empty": "omit",
+        "description": "What became of every `[recommends]` reference of the solved closure, in package order and then declaration order (PROP-077 `#PROJECT-RECOMMENDS`). A skip never changes the exit status of the install the user asked for, and a replay resolves nothing, so it reports no rows at all."
+      }
+    },
+    "suggested": {
+      "elements": {
+        "ref": "install_suggestion"
+      },
+      "metadata": {
+        "x-empty": "omit",
+        "description": "The `[suggests]` references of the solved closure: read from the manifests already in hand, reported once, installed nowhere (PROP-077 `#SUGGESTS-UNCHANGED`). `--no-recommends` does not silence them, because they install nothing."
+      }
     }
   },
   "definitions": {
+    "install_recommendation_outcome": {
+      "metadata": {
+        "x-vocabulary": "closed",
+        "description": "What became of a project-plane recommendation: `installed` — in the resolution because the weak edge admits it; `satisfied` — in the resolution anyway, admitted by a declared edge or a root, so the strong edge is what the lock records; `skipped` — not in the resolution, with the reason."
+      },
+      "enum": ["installed", "satisfied", "skipped"]
+    },
+    "install_recommendation": {
+      "metadata": {
+        "x-wire-order": ["package", "by", "outcome", "reason"],
+        "description": "One `[recommends]` reference the solve reached: the recommended coordinate, the recommender that declared it, what became of it, and — for a skip — the one-line reason."
+      },
+      "properties": {
+        "package": {
+          "type": "string"
+        },
+        "by": {
+          "type": "string",
+          "metadata": {
+            "description": "The recommender's coordinate — the owner of the weak edge."
+          }
+        },
+        "outcome": {
+          "ref": "install_recommendation_outcome"
+        }
+      },
+      "optionalProperties": {
+        "reason": {
+          "type": "string",
+          "metadata": {
+            "x-default": null,
+            "description": "Present exactly for a skip."
+          }
+        }
+      }
+    },
+    "install_suggestion": {
+      "metadata": {
+        "x-wire-order": ["package", "by"],
+        "description": "One `[suggests]` reference and the package whose table named it. Nothing is resolved to produce it, so a suggestion of a package no registry carries still appears."
+      },
+      "properties": {
+        "package": {
+          "type": "string"
+        },
+        "by": {
+          "type": "string"
+        }
+      }
+    },
     "install_delegation": {
       "metadata": {
         "description": "The hosted handoff, duplicated deliberately from `cli-lifecycle-report`'s `lifecycle_delegation`: JTD has no cross-schema `ref`, so each registered format carries its own copy of this three-field record and a wire test pins the spellings identical."

@@ -61,6 +61,13 @@ impl PlanObserver for CtxObserver<'_> {
                 extras,
                 if extras == 1 { "" } else { "s" },
             )),
+            PlanEvent::RecommendationSkipped {
+                package,
+                by,
+                reason,
+            } => ctx.diagnostic(&format!(
+                "`{by}` recommends `{package}`, which is not installed — {reason}"
+            )),
             PlanEvent::FeaturesUnmatched { features } => ctx.diagnostic(&format!(
                 "requested feature{} {} not declared on any root package — silently ignored",
                 if features.len() == 1 { "" } else { "s" },

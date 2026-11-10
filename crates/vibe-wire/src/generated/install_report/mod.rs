@@ -68,6 +68,21 @@ pub struct InstallReport {
     #[serde(default, skip_serializing_if = "Vec::is_empty")]
     pub notices: Vec<String>,
 
+    /// What became of every `[recommends]` reference of the solved closure,
+    /// in package order and then declaration order (PROP-077 `#PROJECT-
+    /// RECOMMENDS`). A skip never changes the exit status of the install the
+    /// user asked for, and a replay resolves nothing, so it reports no rows
+    /// at all.
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub recommended: Vec<InstallRecommendation>,
+
+    /// The `[suggests]` references of the solved closure: read from the
+    /// manifests already in hand, reported once, installed nowhere (PROP-077
+    /// `#SUGGESTS-UNCHANGED`). `--no-recommends` does not silence them, because
+    /// they install nothing.
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub suggested: Vec<InstallSuggestion>,
+
     /// The shared compile-trace member (PROP-054 `##OBS-TRACE`, R3.4): present
     /// exactly when this command ran with compile tracing enabled; disabled old
     /// JSON omits it and remains readable.
@@ -152,6 +167,39 @@ pub struct InstallHookReport {
     pub note: Option<String>,
 }
 
+/// One `[recommends]` reference the solve reached: the recommended coordinate,
+/// the recommender that declared it, what became of it, and — for a skip — the
+/// one-line reason.
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+pub struct InstallRecommendation {
+    pub package: String,
+
+    /// The recommender's coordinate — the owner of the weak edge.
+    pub by: String,
+
+    pub outcome: InstallRecommendationOutcome,
+
+    /// Present exactly for a skip.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub reason: Option<String>,
+}
+
+/// What became of a project-plane recommendation: `installed` — in the
+/// resolution because the weak edge admits it; `satisfied` — in the resolution
+/// anyway, admitted by a declared edge or a root, so the strong edge is what
+/// the lock records; `skipped` — not in the resolution, with the reason.
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+pub enum InstallRecommendationOutcome {
+    #[serde(rename = "installed")]
+    Installed,
+
+    #[serde(rename = "satisfied")]
+    Satisfied,
+
+    #[serde(rename = "skipped")]
+    Skipped,
+}
+
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 pub struct InstallSlotTarget {
     pub group: String,
@@ -163,6 +211,16 @@ pub struct InstallSlotTarget {
     pub root: String,
 
     pub version: String,
+}
+
+/// One `[suggests]` reference and the package whose table named it. Nothing
+/// is resolved to produce it, so a suggestion of a package no registry carries
+/// still appears.
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+pub struct InstallSuggestion {
+    pub package: String,
+
+    pub by: String,
 }
 
 pub use crate::generated::shared::TimingRow;

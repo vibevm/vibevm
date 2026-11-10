@@ -37,8 +37,16 @@ pub fn run(_ctx: &output::Context, args: WhyArgs) -> Result<()> {
             let rule = rule_word(provenance.rule);
             let chain = provenance.path.join(" -> ");
             let via = provenance.via_override.as_deref().unwrap_or("none");
+            // A chain that crossed a recommendation says so, in the same
+            // breath as the rule that admitted it: the lock row of such a
+            // member reads `weak-chain` (PROP-077 `#PROJECT-RECOMMENDS`).
+            let weak = if provenance.weak {
+                " (weak-chain: a recommendation admits it)"
+            } else {
+                ""
+            };
             _ctx.summary(&format!(
-                "{} — present: {rule} via {chain} (override: {via})",
+                "{} — present: {rule} via {chain} (override: {via}){weak}",
                 args.coordinate
             ));
         }
