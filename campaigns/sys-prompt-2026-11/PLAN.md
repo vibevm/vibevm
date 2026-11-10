@@ -675,7 +675,7 @@ reserved (`#SYS-IMPORT-INERTNESS`) and the router alone ships first.
 
 **Parallel.** Needs P3's marker grammar. Independent of P4.
 
-### P3 — compose: deterministic assembly, segments, sidecar — **L**
+### P3 — compose: deterministic assembly, segments, sidecar — **L** — **DONE 2026-11-10**
 
 **Goal.** A pure function from `CapturedPrefixInputs` to the prefix bytes, the
 segment map and the sidecar — byte-identical for identical inputs, with no
@@ -757,6 +757,68 @@ number with a golden test is what keeps a wording change from silently moving
 every prefix digest in the world.
 
 **Parallel.** Needs P2.
+
+**As delivered.** Seven files under `crates/vibe-workspace/src/system_prompt/`,
+each owning one question: `compose.rs` (the pure prefix assembly, the segment
+map, `PrefixSettings` read off the manifest), `contract.rs` (recipe 1, pinned
+byte for byte), `markers.rs` (the marker grammar **and** its offline check),
+`lane.rs` (the agent lane), `verify.rs` (the no-recursion refusal and the
+import-inertness census), `meta.rs` (the sidecar) and one new method on
+`plan.rs` (`ContinuationPlan::resolve_host`, the fixed-host baking the two
+composers **share**). Four format records registered —
+`[format.boot-system-template]`, `[format.boot-system-prompt]`,
+`[format.boot-agent-lane]`, `[format.boot-system-meta]` — with
+`schemas/system_prompt_meta.jtd.json`, its generated wire module and one
+authored golden corpus document. Fifty-four new tests. Nothing is written and
+no command exists: that is P4 and P5.
+
+**Measured on this repository**, which is what spike S1 predicted and this
+phase was to confirm: the prefix is **278,280 bytes** (82.78% of 336,174 bytes
+of boot material, the lane alone 74.91%) and the composed agent lane is
+**312,345 bytes** (309,711 of bodies across 9 segments plus 2,634 of marker
+lines), carrying **74** `@` reference tokens of which 68 come from
+`STATIC.xml` — independently confirming the number
+`PROP-076#SYS-IMPORT-INERTNESS` was written with.
+
+**Five decisions the plan did not settle, each recorded in `FORMAT-CHANGES.md`
+and in `PROP-076`.** (1) `#SYS-SEGMENT-FRAMING`'s "the file ends with exactly
+one LF" is implemented as "the composer appends at most one and never removes
+one", because trimming an authored trailing blank line would be the rewriting
+`#SYS-NO-REWRITE-OF-AUTHORED-TEXT` forbids. (2) That makes the normalisation
+**total**, so this phase's "no two distinct input sets collide on
+`prefix_sha256`" is **false by construction** — a template `a` and a template
+`a\n` compose to identical bytes on purpose — and the property tested instead
+is the equivalence `equal bytes` ⟺ `equal digest`, with the collision pinned
+by its own named test. (3) `#SYS-NO-RECURSION`'s `@`-import verification is
+proved over **the bytes the composer itself wrote**, not over the whole
+artifact: the lane carries 68 `@spec://` tokens that `#SYS-LANE-VERBATIM`
+forbids rewriting and `#SYS-TEMPLATE-LITERAL` forbids reading as directives in
+a user's template, so what is carried is reported and what is authored is
+refused; the whole-artifact half is the standalone-`<vibevm>` and lane-marker
+refusal, which is the mechanical form of "no router". (4) The sidecar's "boot-plan
+identity the existing owner produces" **does not exist** — the unit fingerprint
+reads no file bytes and the node lane carries none — so version 1's plan
+identity is the `INDEX.md` digest plus the ordered continuation rows, and
+`node_id` was added because the markers and the router both need one spelling.
+(5) The import census counts **tokens**, not `@`-initial lines, which is the
+faithful unit for a harness that resolves references mid-line and sixteen
+larger here.
+
+**Two test-shape amendments.** The acceptance line below reads
+`system_prompt::compose::determinism`; the test is
+`system_prompt::compose::tests::determinism`, because a test function cannot
+live directly in a module whose body is a `#[path]` file. And the plan's
+"golden: the host repository's own three inputs compose to a recorded digest
+and a recorded length" is **not** what landed: `AGENTS.md` and `STATIC.xml`
+change with every resolution, so a pinned digest would fail on an unrelated
+commit and teach the next session to delete the test. What landed is the
+**composition identity** — every byte of the prefix is a body or a frame line —
+plus the printed measurement, while the thing a change must not slip past
+unnoticed, the recipe, is pinned byte for byte in `contract/tests.rs`. The
+cwd/clock/OS "dual" is likewise proved by denying the capability (a scan over
+the composer's own sources for `std::fs`, `std::env`, `std::time`,
+`current_dir`, `cfg!(target_os`, …) rather than by mutating process-global
+state inside a parallel test suite.
 
 ### P4 — publish: generated roles, the ignore file, removal — **M** — *re-planned 2026-11-10*
 
@@ -1188,10 +1250,11 @@ cost it would carry is a quiet worker holding the prefix in context, against
 ```
 P0 spikes (S1..S6)
   |
-  +--> P1 --> P2 --> P3 --> P4 --> P5 --> P6 --> P7 --> P8 --> (P9, if authorised)
-             done     |      ^                                 ^
-             done     +--> P2b                                 |
-                      +---------- (P8 drafting) ---------------+
+  +--> P1 --> P2 --> P3 --> P4 --> P5 --> P6 --> P7 --> P8 --> P9
+       done   done   done      |                                  (authorised,
+                      |        |                                   Claude Code
+                      +--> P2b |                                   only)
+                               +------- (P8 drafting) ------------^
 ```
 
 The chain is deliberately linear: every phase consumes the previous one's
@@ -1200,8 +1263,9 @@ P6's fixture work, and P2b, which needs only P3's marker grammar and is
 independent of P4) are not worth the coordination cost of a parallel branch —
 except P2b, which is kept separate because it rewrites 19 tracked files and
 wants its own review. S1–S6 are independent of each other and of
-`APP-VERSIONS`. P9 is outside the chain: it needs the owner's authorisation and
-it spends money.
+`APP-VERSIONS`. P9 is outside the chain: it spends money, and it is
+authorised narrowly — Claude Code only, before the release is published, run by
+the central session once `vibe agent claude` exists (HARNESS-DELIVERY D13).
 
 ## 5. Predictions (falsifiable)
 
@@ -1227,11 +1291,18 @@ it spends money.
   277,938 and holds **83%** of the 335,832 bytes of boot material. *Exactly
   measurable; a number outside that range means a segment was dropped or
   duplicated.* **Confirmed by hand (S1, 2026-11-10): 278,092 bytes, `+154`,
-  82.81%.** The share read "92%" when the plan was written, which was an
+  82.81%; confirmed again by the composer (P3, 2026-11-10): 278,280 bytes,
+  82.78%**, the 188 bytes over S1's hand assembly being the 136 of segment
+  framing plus the transport contract in place of the entrypoint's 830-byte
+  managed block — so no segment was dropped or duplicated.** The share read "92%" when the plan was written, which was an
   arithmetic slip corrected here and in `PROP-076#SYS-SIZE-TODAY`.
 - **P3** Two checkouts of the same commit at different paths produce
   byte-identical outputs, and a second `vibe prompt build` performs zero
   writes. *This is the whole determinism claim, and it is one command.*
+  **Half delivered (P3, 2026-11-10):** the composer is proved incapable of
+  observing a path, a clock, an environment or the host OS, and the same inputs
+  give byte-identical bytes — but the second half, "zero writes", needs a
+  writer, so it stays P4's to show.
 - **P4** The transaction role extension touches `journal.rs`, `prepare.rs`,
   `transaction.rs` and — only if S2 says so — `inverse.rs`, and **nothing**
   under `crates/vibe-workspace/src/boot/`. *If it reaches the composer, the

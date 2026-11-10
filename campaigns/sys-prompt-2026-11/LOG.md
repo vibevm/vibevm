@@ -575,3 +575,138 @@ the campaign depends on it, because every phase's own acceptance is offline.
 questions the earlier plan still listed — whether the prefix is tracked, and how
 harness adapters work — are answered above, and D13 is authorised with its
 scope stated.
+
+## 2026-11-10 — P3 compose: both artifacts exist, in memory, deterministically
+
+Seven files under `crates/vibe-workspace/src/system_prompt/`, four format
+records, one JTD schema with its generated wire module and one golden corpus
+document, 54 tests. **Nothing is written and no command exists** — publication
+is P4, the verbs are P5 — so this phase's whole output is two `Vec<u8>` and a
+sidecar, which is exactly what a pure composer should be.
+
+**The shape, and why it is seven files rather than one.** `compose.rs` is the
+pure function from `CapturedPrefixInputs` to the prefix bytes and the segment
+map. `contract.rs` is recipe 1 of the transport contract, alone, because a
+wording change there moves every prefix digest in the world and a golden test
+over one file is the whole guard. `markers.rs` owns the marker grammar **and**
+its offline check, together, because a grammar whose verifier lives elsewhere
+grows a second reading of itself. `lane.rs` composes the agent lane. `verify.rs`
+holds the two verdicts on the composed bytes that are *not* the same verdict —
+a refusal and a census — and keeping them in one file is what stops the next
+reader conflating them. `meta.rs` builds the sidecar. And
+`ContinuationPlan::resolve_host` is one method on the existing plan, which is
+how the fixed-host baking came out **shared** between the two composers instead
+of implemented twice.
+
+### Five things the plan did not settle, decided here
+
+**1. "The file ends with exactly one LF" cannot be read literally, and the
+literal reading would break a stated rule.** A body whose own tail is two
+newlines would have to be trimmed, and trimming an authored trailing blank line
+is precisely the rewriting `#SYS-NO-REWRITE-OF-AUTHORED-TEXT` forbids. So the
+composer **appends at most one LF and never removes one**. The guarantee a
+later layer actually needs — the bytes end with a newline, so a following layer
+concatenates cleanly — holds either way, and that is the guarantee
+`#SYS-LAYER-CONCATENATION` asks for.
+
+**2. That makes the plan's injectivity prediction false, and the honest
+property is the equivalence.** Because the composer supplies a missing trailing
+LF, a template `a` and a template `a\n` compose to **identical bytes** on
+purpose — so "no two distinct input sets collide on `prefix_sha256`" is false by
+construction, not by accident. The property tested is `equal bytes ⟺ equal
+digest`, over a proptest of input pairs, and the collision itself is pinned by a
+named test so nobody later "fixes" the normalisation.
+
+**3. The `@`-import verification is proved over what the composer wrote, not
+over the artifact.** `#SYS-NO-RECURSION` says the composer verifies the composed
+bytes carry no import line and no router. The second half is proved over the
+whole artifact — no exactly standalone `<vibevm>`/`</vibevm>` line, no lane
+marker line, each refusing by line number, and together that *is* "no router".
+The first half cannot be: the compiled lane of this repository carries **68**
+`@spec://` tokens that `#SYS-LANE-VERBATIM` forbids rewriting, and
+`#SYS-TEMPLATE-LITERAL` forbids reading a character in the user's own template
+as a directive. A literal whole-artifact refusal would make the feature
+unavailable to the project that specified it. So what the composer **carries**
+is reported and what the composer **authored** is refused — and the gap is
+stated out loud rather than papered over, because it is exactly why the `import`
+tier stays refused.
+
+**4. The sidecar's "boot-plan identity the existing owner produces" does not
+exist.** The only candidate is the unit fingerprint, and `#SYS-TWO-IDENTITIES`
+already records that it reads no file bytes and cannot stand in for an input
+witness — and the node lane carries no fingerprint anyway. Rather than invent
+one to fill the column, version 1's plan identity **is** the pair the fact
+already names: `index_sha256` plus the ordered continuation rows. One member was
+added for a real need: `node_id`, the node's declared `<group>/<name>`, because
+the lane markers need it now and P2b's router needs the same string, and
+deriving it twice from a manifest two phases apart is how two spellings start.
+
+**5. The import census counts tokens, not lines.** A harness that resolves `@`
+references scans the text and does not require one at the start of a line, so
+counting `@`-initial lines understates this repository's lane by sixteen. The
+unit is an `@` that opens a reference token; each site records its segment,
+line, column, token, whether it starts its line, and whether it sits inside a
+code fence. The census then **independently reproduced the spec's own number**:
+68 tokens in `STATIC.xml`, every one unfenced, 52 of them line-initial. That
+agreement is worth more than the count — `#SYS-IMPORT-INERTNESS` was written
+from a hand grep, and a second method arriving at the same 68 is evidence the
+fact is right.
+
+### Two test shapes that differ from the plan, deliberately
+
+The plan asked for a golden over "the host repository's own three inputs
+compose to a recorded digest and a recorded length". That test would fail on
+every unrelated commit that moves `AGENTS.md` or the resolution, and a test
+that fails for the wrong reason teaches the next session to delete it. What
+landed is the **composition identity** — every byte of the prefix is a body or
+a frame line — plus the measurement printed for the record, while the thing a
+change must not slip past unnoticed, the recipe text, is pinned byte for byte
+in a test of its own. Likewise the "changing the clock, the cwd and the host OS
+between two composes changes nothing" dual is proved by **denying the
+capability** — a scan over the composer's own sources for `std::fs`,
+`std::env`, `std::time`, `current_dir`, `cfg!(target_os`, … — rather than by
+mutating process-global state inside a parallel test suite. A claim about
+capability is better proved by removing the capability than by one observation
+that it was not used.
+
+The acceptance line `cargo test … system_prompt::compose::determinism --exact`
+is `system_prompt::compose::tests::determinism` as delivered: a test function
+cannot live directly in a module whose body is a `#[path]` file.
+
+### Measured, for the release note
+
+- Prefix **278,280 B** — 82.78% of 336,174 B of boot material; the lane alone
+  74.91%. Spike S1's hand assembly said 278,092; the 188-byte difference is the
+  136 B of segment framing plus the transport contract replacing the
+  entrypoint's 830-byte managed block. The 83% / 75% shares of
+  `#SYS-SIZE-TODAY` hold.
+- Composed `AGENT-LANE.md` **312,345 B** — 309,711 B of bodies across 9
+  segments plus 2,634 B of marker lines, which is the "about 310 KB"
+  `SP-FMT-103` estimated.
+- 74 `@` reference tokens in the lane, all unfenced; 68 of them from
+  `STATIC.xml`.
+
+### One thing P1 claimed and had not done
+
+`SP-FMT-001` said it added the record `[format.boot-system-template]`. It had
+not: the registry carried no such record, and `FormatId` cannot express an
+unregistered format. It is there now, with `schema = "none"`, and the id's
+status line says which phase did which half. Worth noting because the id was
+marked *delivered*, and a delivered id that is 90% delivered is the kind of
+thing only the next phase to touch the same file ever finds.
+
+### `HARNESS-DELIVERY.md` is now maintained with the spec
+
+It was a proposal; D1–D12 are adopted and D13 is authorised, so it is now a
+design document that must not drift from PROP-076. Two syncs: §8.4's command
+surface is rewritten around the **named launchers** of
+`#SYS-HARNESS-EXECUTABLE` — a kind is the flag dialect, a launcher is a name
+bound to a kind and to the argv that starts it, `[agent.launchers.<name>]` lives
+in the **user** configuration only, a project manifest that names one is a
+refusal, and `vibe agent list` prints each launcher's source so a developer can
+see which file decided which program ran — and §10/§11's D13 carries the
+authorised scope: **Claude Code only, rows C1–C8, before the release is
+published, once `vibe agent claude` exists, run by the central session as P9**.
+Codex, Qwen Code, Gemini CLI, OpenCode, pi and dsh stay unauthorised and their
+default stays `read`; the offline `codex debug prompt-input` row X0 needs no
+authorisation because it spends nothing.
