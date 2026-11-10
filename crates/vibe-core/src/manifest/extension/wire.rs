@@ -8,10 +8,13 @@ use std::path::PathBuf;
 use serde::{Deserialize, Serialize};
 use specmark::spec;
 
+use super::judgment::{REFUSED_FIELDS, SLOT_JUDGMENT};
 use super::{
     ExtensionAppliesTo, ExtensionConfig, ExtensionDecl, ExtensionHandler, ExtensionIrLevel,
     ExtensionKey, ExtensionPass, ExtensionPassKind, ExtensionUse, ExtensionWhen, ExtensionsControl,
+    SlotJudgment, parse_slot_conditions,
 };
+use crate::judgment::Need;
 use crate::lifecycle::ExtensionPoint;
 
 const POINT_GRAMMAR: &str = "spec://org.vibevm.core/vibevm/common/PROP-054#POINT-GRAMMAR";
@@ -36,6 +39,26 @@ pub(crate) struct ExtensionDeclWire {
     pass: Option<ExtensionPassWire>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     when: Option<toml::Table>,
+    // The judgment half of a `slot:` contribution (PROP-065
+    // `#ordinary-grammar`). Every one is optional and skipped when absent,
+    // so a manifest written before this grammar serialises byte-identically.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    unless: Option<toml::Table>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    title: Option<String>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    needs: Option<Vec<Need>>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    optional: Option<bool>,
+    // Admitted only so the refusal can name the field and say why, rather
+    // than reaching the author as serde's generic unknown-key message
+    // (PROP-065 `#ordinary-grammar`: refused by name, never ignored).
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    requires: Option<toml::Value>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    phase: Option<toml::Value>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    result: Option<toml::Value>,
 }
 
 /// Strict wire shape for the plural consumer-side `[extensions]` namespace.
@@ -147,6 +170,54 @@ impl TryFrom<ExtensionDeclWire> for ExtensionDecl {
                 wire.id, wire.point,
             )
         })?;
+        for (field, present, reason) in [
+            ("requires", wire.requires.is_some(), REFUSED_FIELDS[0].1),
+            ("phase", wire.phase.is_some(), REFUSED_FIELDS[1].1),
+            ("result", wire.result.is_some(), REFUSED_FIELDS[2].1),
+        ] {
+            if present {
+                return Err(format!(
+                    "[[extension]] `{}` declares field `{field}`, which this grammar refuses: \
+                     {reason} ({SLOT_JUDGMENT})",
+                    wire.id,
+                ));
+            }
+        }
+        let is_slot = matches!(point, ExtensionPoint::Slot(_));
+        // At a `slot:` point `when` is this document's closed condition
+        // vocabulary; everywhere else it stays the opaque pre-selection
+        // guard it has always been, so nothing published changes meaning.
+        let (opaque_when, judgment) = if is_slot {
+            let judgment = SlotJudgment {
+                title: wire.title,
+                when: match &wire.when {
+                    Some(table) => parse_slot_conditions(table, "when", &wire.id)?,
+                    None => Vec::new(),
+                },
+                unless: match &wire.unless {
+                    Some(table) => parse_slot_conditions(table, "unless", &wire.id)?,
+                    None => Vec::new(),
+                },
+                needs: wire.needs.unwrap_or_default(),
+                optional: wire.optional.unwrap_or(false),
+            };
+            (None, (!judgment.is_empty()).then_some(judgment))
+        } else {
+            let judgment = SlotJudgment {
+                title: wire.title,
+                when: Vec::new(),
+                unless: match &wire.unless {
+                    Some(table) => parse_slot_conditions(table, "unless", &wire.id)?,
+                    None => Vec::new(),
+                },
+                needs: wire.needs.unwrap_or_default(),
+                optional: wire.optional.unwrap_or(false),
+            };
+            (
+                wire.when.map(ExtensionWhen::from_table),
+                (!judgment.is_empty()).then_some(judgment),
+            )
+        };
         let extension = Self {
             id: wire.id,
             point,
@@ -157,8 +228,15 @@ impl TryFrom<ExtensionDeclWire> for ExtensionDecl {
             applies_to: wire.applies_to.map(Into::into),
             compiler_internals: wire.compiler_internals,
             pass: wire.pass.map(Into::into),
-            when: wire.when.map(ExtensionWhen::from_table),
+            when: opaque_when,
+            judgment,
         };
+        // NOT `extension.validate()` — the field-legality laws stay
+        // semantic, so the legacy role precedence of
+        // `semantic_extension_errors_follow_legacy_role_precedence` is
+        // unchanged. Only what must be decided to BUILD the value lives
+        // here: the condition vocabulary and the refused-by-name keys,
+        // which `deny_unknown_fields` already refused at this same layer.
         Ok(extension)
     }
 }
@@ -168,6 +246,7 @@ impl TryFrom<ExtensionDecl> for ExtensionDeclWire {
 
     fn try_from(extension: ExtensionDecl) -> Result<Self, Self::Error> {
         extension.validate()?;
+        let judgment = extension.judgment.unwrap_or_default();
         Ok(Self {
             id: extension.id,
             point: extension.point.to_string(),
@@ -178,7 +257,17 @@ impl TryFrom<ExtensionDecl> for ExtensionDeclWire {
             applies_to: extension.applies_to.map(Into::into),
             compiler_internals: extension.compiler_internals,
             pass: extension.pass.map(Into::into),
-            when: extension.when.map(ExtensionWhen::into_table),
+            when: extension
+                .when
+                .map(ExtensionWhen::into_table)
+                .or_else(|| conditions_table(&judgment.when)),
+            unless: conditions_table(&judgment.unless),
+            title: judgment.title,
+            needs: (!judgment.needs.is_empty()).then_some(judgment.needs),
+            optional: judgment.optional.then_some(true),
+            requires: None,
+            phase: None,
+            result: None,
         })
     }
 }
@@ -353,4 +442,19 @@ impl From<ExtensionIrLevel> for ExtensionIrLevelWire {
             ExtensionIrLevel::Emitted => Self::Emitted,
         }
     }
+}
+
+/// Write a parsed condition list back as the one authored table it came
+/// from — one key per condition, which is the spelling the author wrote.
+fn conditions_table(conditions: &[crate::judgment::Condition]) -> Option<toml::Table> {
+    if conditions.is_empty() {
+        return None;
+    }
+    let mut table = toml::Table::new();
+    for condition in conditions {
+        if let Ok(toml::Value::Table(single)) = toml::Value::try_from(condition) {
+            table.extend(single);
+        }
+    }
+    Some(table)
 }

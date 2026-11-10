@@ -40,6 +40,7 @@ fn world(root: &Path) -> ExtensionWorld {
                 compiler_internals: None,
                 pass: None,
                 when: None,
+                judgment: None,
             }],
             controls: ExtensionsControl::default(),
             mechanisms: vec![MechanismDecl {

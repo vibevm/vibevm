@@ -106,6 +106,7 @@ fn compiler_native_is_refused_before_the_lifecycle_backend() {
         compiler_internals: None,
         pass: None,
         when: None,
+        judgment: None,
     };
     let world = crate::ExtensionWorld {
         installed: Vec::new(),

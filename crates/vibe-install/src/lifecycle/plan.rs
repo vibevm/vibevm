@@ -133,6 +133,7 @@ fn append_target_plan(
             compiler_internals: None,
             pass: None,
             when: None,
+            judgment: None,
         });
     }
     let target = slot_target(target_dep, &target_source.provider.root);

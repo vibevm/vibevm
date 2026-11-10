@@ -179,6 +179,7 @@ fn registry_with(
         compiler_internals: None,
         pass: None,
         when: None,
+        judgment: None,
     };
     collect_extensions(ExtensionWorld {
         installed: vec![DependencyExtensionSource {

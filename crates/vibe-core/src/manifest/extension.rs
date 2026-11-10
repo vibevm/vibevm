@@ -16,9 +16,12 @@ use crate::lifecycle::{CompilePoint, ExtensionPoint};
 use crate::manifest::declarant_path::{declarant_path, declarant_path_error};
 
 mod control;
+mod judgment;
 mod pass;
 mod wire;
 pub use control::{ExtensionKey, ExtensionUse, ExtensionsControl};
+use judgment::SLOT_JUDGMENT;
+pub use judgment::{SlotJudgment, parse_slot_conditions};
 pub(crate) use wire::{ExtensionDeclWire, ExtensionHandlerWire, ExtensionsControlWire};
 
 const CONTRIB_GRAMMAR: &str = "spec://org.vibevm.core/vibevm/common/PROP-054#CONTRIB-GRAMMAR";
@@ -232,6 +235,7 @@ impl ExtensionWhen {
 ///     handler: ExtensionHandler::Builtin { name: "log".into() },
 ///     config: None, auto: None, inputs: None, applies_to: None,
 ///     compiler_internals: None, pass: None, when: None,
+///     judgment: None,
 /// };
 /// assert!(declaration.validate().is_ok());
 /// ```
@@ -248,6 +252,11 @@ pub struct ExtensionDecl {
     pub compiler_internals: Option<bool>,
     pub pass: Option<ExtensionPass>,
     pub when: Option<ExtensionWhen>,
+    /// The judgment half of a `slot:` contribution — `title`, `when` /
+    /// `unless` over the closed condition vocabulary, `needs` and
+    /// `optional` (PROP-065 `#ordinary-grammar`). `None` at every other
+    /// point, and at a `slot:` point that declared none of the four.
+    pub judgment: Option<SlotJudgment>,
 }
 
 impl ExtensionDecl {
@@ -316,6 +325,42 @@ impl ExtensionDecl {
         }
         if let Some(pass) = &self.pass {
             pass.validate(&self.id)?;
+        }
+        let is_slot = matches!(self.point, ExtensionPoint::Slot(_));
+        match (&self.judgment, is_slot) {
+            (Some(judgment), true) => {
+                judgment::refuse_variables_in(judgment, &self.id)?;
+                self.refuse_handler_variables()?;
+            }
+            (Some(judgment), false) => {
+                return Err(format!(
+                    "[[extension]] `{}` field `{}` is present at point `{}`; `title`, `when` / \
+                     `unless` over the closed condition vocabulary, `needs` and `optional` are \
+                     legal only at a `slot:` point ({SLOT_JUDGMENT})",
+                    self.id,
+                    judgment.first_declared_field(),
+                    self.point,
+                ));
+            }
+            (None, _) => {}
+        }
+        Ok(())
+    }
+
+    /// Refuse an application-plane template variable in the handler's own
+    /// authored paths, so a `slot:` contribution cannot smuggle one in
+    /// through the thing it runs.
+    fn refuse_handler_variables(&self) -> Result<(), String> {
+        let owned: Vec<String> = match &self.handler {
+            ExtensionHandler::Builtin { name } | ExtensionHandler::Binary { name } => {
+                vec![name.clone()]
+            }
+            ExtensionHandler::Script { base } => vec![base.display().to_string()],
+            ExtensionHandler::Native { .. } => Vec::new(),
+            ExtensionHandler::Agent { prompt } => vec![prompt.clone()],
+        };
+        for path in &owned {
+            judgment::refuse_variables(path, "handler", &self.id)?;
         }
         Ok(())
     }

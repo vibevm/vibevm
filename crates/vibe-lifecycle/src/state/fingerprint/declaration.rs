@@ -78,6 +78,13 @@ pub(super) fn declaration_fingerprint(
         pass,
         // Excluded: an opaque pre-selection applicability guard.
         when: _when,
+        // Excluded: the judgment half of a `slot:` contribution decides
+        // whether and in what order the row runs and how a plan prints it
+        // (`title`, `when` / `unless`, `needs`, `optional`) — plan
+        // membership and presentation, never the work delivered. Same side
+        // of the line as `auto` and the selectors, so no epoch moves
+        // (PROP-065 `##ordinary-grammar`).
+        judgment: _judgment,
     } = row.declaration();
     hash.field("point", point.to_string().as_bytes());
     hash.presence("slot_present", slot.is_some());

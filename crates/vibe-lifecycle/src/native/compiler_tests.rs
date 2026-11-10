@@ -47,6 +47,7 @@ fn declaration(
         compiler_internals: Some(true),
         pass: None,
         when: None,
+        judgment: None,
     }
 }
 

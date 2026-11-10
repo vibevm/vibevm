@@ -241,6 +241,7 @@ fn internal_declaration(id: String, config: toml::Table) -> ExtensionDecl {
         compiler_internals: None,
         pass: None,
         when: None,
+        judgment: None,
     }
 }
 

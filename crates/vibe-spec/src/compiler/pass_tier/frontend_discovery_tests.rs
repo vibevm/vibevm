@@ -44,6 +44,7 @@ fn frontend() -> ExtensionDecl {
             artifact: None,
         }),
         when: None,
+        judgment: None,
     }
 }
 

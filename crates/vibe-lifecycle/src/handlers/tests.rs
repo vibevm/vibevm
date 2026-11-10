@@ -78,6 +78,7 @@ fn row_at(root: &Path, handler: ExtensionHandler, point: &str) -> crate::Extensi
                 compiler_internals: None,
                 pass: None,
                 when: None,
+                judgment: None,
             }],
             controls: ExtensionsControl::default(),
             mechanisms: Vec::new(),
