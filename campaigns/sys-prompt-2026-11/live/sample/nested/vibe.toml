@@ -1,0 +1,7 @@
+# A nested sub-project, for the downward-discovery row (N1). It is a
+# project of its own, so its instruction file carries its own router.
+[project]
+group = "org.live"
+name = "nested"
+version = "0.1.0"
+spec_format = "markdown"

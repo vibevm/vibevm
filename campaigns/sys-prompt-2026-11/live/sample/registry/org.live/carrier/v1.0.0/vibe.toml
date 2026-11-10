@@ -1,0 +1,9 @@
+[package]
+group = "org.live"
+name = "carrier"
+kind = "flow"
+version = "1.0.0"
+format = "simple"
+
+[boot_snippet]
+source = "boot/main.md"

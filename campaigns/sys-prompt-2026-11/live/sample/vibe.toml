@@ -1,0 +1,21 @@
+# The live-check sample project (PROP-076 P9). No personal data: every
+# string here is a canary or a neutral placeholder.
+[project]
+group = "org.live"
+name = "sample"
+version = "0.1.0"
+spec_format = "markdown"
+
+[requires.packages]
+"org.live/carrier" = { version = "=1.0.0", link = "static" }
+
+[[registry]]
+name = "local"
+url = "file://REGISTRY_PATH"
+
+[system_prompt]
+# Nothing declared beyond the opt-in: `host` stays portable, `target`
+# stays every platform, and the entrypoint is the default `AGENTS.md`.
+
+[system_prompt.harness.claude]
+delivery = "launch"
