@@ -888,3 +888,141 @@ What implementing it taught, beyond the as-built record:
   directory carries no version, no catalog row and no journal fact, and on a
   monorepo it does not exist at all — the harmless side of a refusal worth
   keeping.
+
+## 2026-11-10 — the owner's P7 decisions, and the design that follows from them
+
+The campaign's last blocking question is answered and phase P7 is redesigned
+around the answer. Nothing implemented; four documentation commits.
+
+**The owner's answers.** Of the fourteen proposed nvm exclusions, **twelve are
+approved** with the reasons the design gave and **two are rejected**:
+`nvm install --skip-default-packages` and `$NVM_DIR/default-packages` are not
+gaps vibe may declare but a general feature. That answers `#OWNER-QUESTIONS`
+Q1 and Q2 and withdraws the risk P7 carried that a rejected `--only=` would
+grow the campaign by a phase. Beside it came one binding requirement —
+**nothing added for nvm may know anything about npm or Node**, because the next
+pass replaces sdkman for Java and must land on the same machinery — and four
+rulings: named user aliases stay not-done (a survey of 17 switchers found them
+built in to only 5, absent from 6, and absent from the newest tools), the Node
+source build stays a backlog item (`B-253`), `[recommends]` extends to
+application packages with a general `--no-recommends`, and PROP-065's
+multi-step installers extend to ordinary packages.
+
+**The refinement that changed the biggest piece.** The first design answered
+"default packages" with a "slot extras" feature: a package action taking a
+list, plus a user list per slot. The owner replaced it with a sharper model —
+an **ecosystem adapter** — and the replacement is better for a reason worth
+recording: it separates three layers that the first design had blurred.
+`[recommends]` is **vibe packages**; an author's recommended **ecosystem items**
+(corepack, pnpm — npm packages, not vibe packages) is a second layer; and the
+**user's own list** is a third. Layers two and three differ only in who wrote
+the list, so they share one mechanism from the adapter down, and layer two is
+modelled as PROP-065 **features** rather than as a new concept — a recommends
+row is shorthand for "a feature that adds an item to that adapter's list", so
+`--no-feature`, profiles, the attended multi-select and the recorded chosen set
+all come for free.
+
+**Five things the design decided that the decisions left open.**
+
+- **The injection rule became structural rather than advisory.** The owner's
+  rule is that item strings are opaque and are passed as separate argv
+  elements, never interpolated into a shell string. A `shell` step is an
+  authored command *string*, into which a list can only be spliced — so
+  `install` and `remove` **must** declare `kind = "recipe"`, and a `shell`
+  spelling is a validation refusal. The rule is then enforced by the grammar
+  instead of by asking every package author to quote correctly, and the
+  phase's own gate is a fixture item reading `; rm -rf $HOME`.
+- **A `list` verb answers into a file, not onto stdout.** Vibe must never parse
+  an ecosystem's listing format, and stdout carries a package manager's
+  notices. So the step writes one item per line into `VIBE_ECOSYSTEM_LIST` and
+  vibe trims and reads that, which keeps the step's output what it is — a log.
+- **The general "package action" verb is not built, and that is the decision
+  the refinement asked for.** Every maintenance act the survey found is one of
+  the adapter's four verbs: `--latest-npm` and `install-latest-npm` are
+  `self_upgrade`, `--reinstall-packages-from` is `list` then `install`, and
+  `corepack` is an *item*. A general verb would be a second spelling for the
+  same four acts. One reason to record, because it is not obvious: building it
+  on `[[application.migration]]` would have been **wrong**, not merely
+  redundant — the post-install offer is `migration_offer`, which looks for the
+  version to carry *from* and answers nothing when a slot has no earlier
+  version, so a maintenance entry expressed as a migration could never run
+  after the **first** install of a runtime, which is exactly when
+  `--latest-npm` is asked for.
+- **`--no-extras` and a `drop` had to be separated.** The owner's wording says
+  `--no-extras` skips the user's own list, and a `drop` is part of that list —
+  but a `drop` is a *withdrawal* of consent to an author recommendation, so
+  skipping it would make `--no-extras` install **more** than the user asked
+  for. A drop is therefore honoured in every case, including under
+  `--no-extras`. This is the one place the design did not follow the decision
+  literally, and it is flagged rather than buried.
+- **The `npm-globals` migration becomes the general case.** An adapter that
+  declares both `list` and `install` already *is* the migration strategy, so
+  vibe synthesises one `ecosystem:<id>` entry per adapter and the real Node
+  package drops its hand-written entry. The id namespace `ecosystem:` is
+  reserved so a synthesised entry cannot be shadowed.
+
+**Where decisions 9 and 10 went, and why not into PROP-075.** Both belong to
+the general package model, so PROP-075 would have been the wrong authority.
+
+- **PROP-077 is new**: `[recommends]` on application packages, installed
+  best-effort by the application installer after the requested package is
+  committed, recorded as a **weak** requirer edge on the existing `auto` edge
+  so no new removal mechanism is needed; and `--no-recommends` as one global
+  flag for every kind. It persists nothing — the flag changes a solve, never a
+  replay of a lock, which is why no lock field and no flapping. It also
+  records what already ships, measured rather than assumed: the resolver's
+  greedy expansion exists, the flag does not exist anywhere, and the
+  application plane never reads `[recommends]` at all because `install -g`
+  resolves exactly one package and never enters the solver.
+- **PROP-065 gains five facts** — and the design that reached them is the part
+  a later session would otherwise re-derive. The first instinct was a new
+  package-scope step table. That is wrong twice: PROP-054 `#REJ-TWO-GRAMMARS`
+  names a second extension grammar as the failure mode, and the mechanism
+  already exists — `slot:pre-install` / `slot:post-install` take **many**
+  contributions per point, each with its own id and handler, and `[hooks]` is
+  already sugar for exactly two of them (`crates/vibe-install/src/lifecycle/plan.rs`
+  builds the synthetic `ExtensionDecl`). So an ordinary package's multi-step
+  installer *is* that grammar, and what it was missing is not a declaration
+  but the **judgment half**: a `title`, conditions over the closed vocabulary,
+  a `needs` preflight that refuses before anything starts, and `optional`,
+  with a plan, a panel, per-contribution logs and an evidence record. The
+  judgment half becomes one shared library; **execution stays separate on
+  purpose**, because the application step runner is keyed to an installation
+  key, a library and a payload root an ordinary package has none of. The
+  `[[installer_options]]` refusal therefore stays, with its reason now written
+  down: an installer option is a per-platform alternative that produces a
+  payload.
+
+**Facts verified in the code while designing, with their citations, so nobody
+re-checks them.** `[[installer_options]]` is refused outside `kind = "app"` at
+`crates/vibe-core/src/manifest/document/validation.rs:224-242`, and the step
+runner is reachable only from `vibe_app::{install, update, modify}`
+(`crates/vibe-app/src/operations/apply.rs:77,116`), so no non-app package can
+reach a step today. `from == to` is admitted by the migration machinery
+(`crates/vibe-app/src/migrate.rs:125-126,294,300`) and `migration_offer` is the
+post-install offer (`:169`), whose "already carried" dedupe is at `:204-209`.
+The application install resolves exactly one package through `resolve_and_fetch`
+(`crates/vibe-app/src/resolve.rs:374`) — no solver, hence no recommends —
+while the project plane's greedy weak expansion is
+`crates/vibe-resolver/src/resolvo_engine/mod.rs:86-110,250-279`. There is **no**
+`--no-recommends` anywhere in the tree. `UserConfig` is `deny_unknown_fields`
+with exactly ten tables (`crates/vibe-core/src/user_config.rs:81-139`) and
+`crates/vibe-app/` never reads it, so the user's extras list is the **first**
+user-authored per-slot configuration and introduces that read as a new seam.
+`PROP-054`'s `slot:` family is implemented (`crates/vibe-core/src/lifecycle/point.rs:150-169`,
+`crates/vibe-core/src/manifest/extension.rs:240-253`) although its facts still
+read `spec/plan`.
+
+**Format records.** `AV-FMT-025`…`AV-FMT-032` are new, taken from the planning
+range because the plan now foresees them, and `AV-FMT-019` is **amended in
+place** rather than renumbered because it is the same flag on the same two
+commands, now carrying both version-file formats. The application inventory
+moves to `vibe-user-applications/8` once, for two phases' additions — the
+per-adapter record and the weak requirer edge — so whichever of P7c and P7d
+lands first owns the `e7` schema and the `vibe-app-proxy` admission.
+
+**One defect noticed and not acted on**: `BACKLOG.md` carries **two** entries
+numbered `B-233` — the owner's environment/meta-distribution investigation and
+"an installed application records no source". The ids are supposed to be unique
+and one of them needs renumbering; it is not touched here because another
+worker holds that file.
