@@ -30,6 +30,26 @@ pub(crate) const PROTOCOL: &str = "vibe-prompt-flags/1";
 pub(crate) fn run(ctx: &output::Context, selected: &Selected, harness: &str) -> Result<()> {
     let (kind, launcher) = resolve_kind(selected, harness)?;
     let composed = compose(selected, kind, launcher.as_ref())?;
+    // **A command whose job is to print refuses what it may not print.**
+    // `vibe agent` starts the harness anyway on exactly these reasons, with
+    // no slot flag and one loud warning; here there is no session to save,
+    // and flags pointing at a lane that is not there — or at a carrier this
+    // harness may not read — are the one answer a shell alias turns
+    // silently into a session with no lane in it (`#SYS-SOFT-LAUNCH`).
+    let composed = match composed.undeliverable {
+        Some(undeliverable) if !undeliverable.printable => {
+            bail!("{}", undeliverable.sentence());
+        }
+        Some(undeliverable) => {
+            let mut flags = composed.flags;
+            flags.notes.push(format!(
+                "{} — these flags point at the bytes on disk now",
+                undeliverable.sentence()
+            ));
+            flags
+        }
+        None => composed.flags,
+    };
     let report = wire::PromptFlagsReport {
         protocol: PROTOCOL.to_owned(),
         node: selected.node_rel.clone(),
@@ -81,25 +101,94 @@ pub(crate) fn opted_in(selected: &Selected) -> Result<bool> {
     Ok(check_node_prompt(&request)?.opted_in)
 }
 
+/// Why one kind's lane must not be put in the slot, and the command that
+/// fixes it.
+///
+/// **The same facts serve two different answers**, which is why this is a
+/// value and not a refusal. `vibe prompt flags` prints or refuses; `vibe
+/// agent` starts the harness without the carrier and warns. One cell
+/// deciding both would have to know which caller it is in
+/// (`#SYS-SOFT-LAUNCH`).
+pub(crate) struct Undeliverable {
+    /// What is wrong, as one clause.
+    pub(crate) reason: String,
+    /// What the reader does about it, as one imperative clause naming the
+    /// exact command.
+    pub(crate) fix: String,
+    /// Whether `vibe prompt flags` still prints the flags beside a note.
+    ///
+    /// True only for a lane that **exists** and is merely out of date: the
+    /// flags then point at real bytes, and a human reading them can decide
+    /// for themselves. False is a refusal there — flags pointing at a file
+    /// that is not there, or at a carrier this harness may not read, are
+    /// the one answer a shell alias turns silently into a session with no
+    /// lane in it. A *launch* never delivers either case.
+    pub(crate) printable: bool,
+}
+
+impl Undeliverable {
+    /// A reason no surface may print flags for.
+    pub(crate) fn hard(reason: String, fix: String) -> Self {
+        Self {
+            reason,
+            fix,
+            printable: false,
+        }
+    }
+
+    /// A reason `vibe prompt flags` prints beside a note, and a launch
+    /// still refuses to deliver.
+    fn printable(reason: String, fix: String) -> Self {
+        Self {
+            reason,
+            fix,
+            printable: true,
+        }
+    }
+
+    /// The one sentence both surfaces say it with.
+    pub(crate) fn sentence(&self) -> String {
+        format!("{} — {}", self.reason, self.fix)
+    }
+}
+
+/// What one kind's launch would carry for this node.
+pub(crate) struct Composed {
+    /// The flags, notes and carrier as composed over the artifacts that are
+    /// on disk now. Present even when the lane must not be delivered,
+    /// because `vibe prompt flags` prints what is there for the one reason
+    /// it may; a launch reads [`Composed::undeliverable`] first.
+    pub(crate) flags: LaunchFlags,
+    /// Why the lane must not be delivered, when it must not. `None` is a
+    /// lane this build is willing to put in the slot.
+    pub(crate) undeliverable: Option<Undeliverable>,
+}
+
 /// Compose the flags for one kind over this node's current artifacts.
 ///
 /// The lane is read from disk rather than recomposed, and a lane that is not
-/// there is a refusal naming the build: flags pointing at a file that does
-/// not exist are the one answer a launch turns silently into a session with
-/// no boot lane at all. For the same reason the kind's carrier is gated
-/// against the installed harness's version here, in the **one** code path
-/// both `vibe prompt flags` and `vibe agent` take — a carrier whose failure
-/// is silent must not be printed as a working answer either.
+/// there is **undeliverable** naming the build: flags pointing at a file
+/// that does not exist are the one answer a launch turns silently into a
+/// session with no boot lane at all. For the same reason the kind's carrier
+/// is gated against the installed harness's version here, in the **one**
+/// code path both `vibe prompt flags` and `vibe agent` take — a carrier
+/// whose failure is silent must not be printed as a working answer either.
 ///
 /// **Both of those apply only to a `launch` delivery**, which is constraint
 /// C2 of `HARNESS-DELIVERY.md` §4: a `read` harness receives nothing, so a
 /// lane it does not need and a carrier version it does not use are not its
 /// to be refused over. It answers with no flags and the one line saying why.
+///
+/// **The one refusal left here is "nothing to compose".** A node that never
+/// opted in has no lane, which is not a delivery failure but an absence of
+/// anything to deliver; `vibe agent` asks [`opted_in`] before calling this
+/// and starts the harness unchanged, so the refusal is reached only by the
+/// surface that prints (`#SYS-SOFT-LAUNCH`).
 pub(crate) fn compose(
     selected: &Selected,
     kind: HarnessKind,
     launcher: Option<&launchers::Launcher>,
-) -> Result<LaunchFlags> {
+) -> Result<Composed> {
     let tracked = selected.tracked();
     let request = selected.request(&tracked, None);
     let answer = check_node_prompt(&request)?;
@@ -119,14 +208,19 @@ pub(crate) fn compose(
     // never going to perform (`HARNESS-DELIVERY.md` §4).
     let delivery = kind.delivery(&selected.manifest);
     if delivery == HarnessDelivery::Read {
-        return Ok(launch_flags(kind, delivery, "", &answer.lane.path, "", 0));
+        return Ok(Composed {
+            flags: launch_flags(kind, delivery, "", &answer.lane.path, "", 0),
+            undeliverable: None,
+        });
     }
     if !answer.lane.present {
-        bail!(
-            "`{}` has not been generated — run `{}`",
-            answer.lane.path.display(),
-            answer.remedy()
-        );
+        return Ok(Composed {
+            flags: LaunchFlags::default(),
+            undeliverable: Some(Undeliverable::hard(
+                format!("`{}` has not been generated", answer.lane.path.display()),
+                format!("run `{}`", answer.remedy()),
+            )),
+        });
     }
     let bytes = std::fs::read_to_string(&answer.lane.path)?;
     let limit = selected.manifest.system_prompt.as_ref().map_or(
@@ -137,19 +231,32 @@ pub(crate) fn compose(
         Some(&selected.manifest),
         &vibe_spec::SelfCoordinate::new(None, String::new()),
     );
-    let mut composed = launch_flags(kind, delivery, &node_id, &answer.lane.path, &bytes, limit);
-    if let Some(note) = super::harness_version::gate(kind, launcher)? {
-        composed.notes.push(note);
-    }
-    if !answer.verdict.is_equal() {
-        composed.notes.push(format!(
-            "the lane is {} ({}) — run `{}`; these flags point at the bytes on disk now",
-            answer.verdict.as_str(),
-            answer.verdict.reasons().join("; "),
-            answer.remedy()
-        ));
-    }
-    Ok(composed)
+    let mut flags = launch_flags(kind, delivery, &node_id, &answer.lane.path, &bytes, limit);
+    // **The carrier gate first, because it is the harder answer.** A
+    // carrier this harness may not read makes the lane's own freshness
+    // beside the point, and reporting the weaker reason over the stronger
+    // one is how a reader comes to run the wrong command.
+    let undeliverable = match super::harness_version::gate(kind, launcher)? {
+        super::harness_version::Gate::Deliver(note) => {
+            flags.notes.extend(note);
+            (!answer.verdict.is_equal()).then(|| {
+                Undeliverable::printable(
+                    format!(
+                        "the lane is {} ({}), so the bytes on disk are not this node's current \
+                         lane",
+                        answer.verdict.as_str(),
+                        answer.verdict.reasons().join("; ")
+                    ),
+                    format!("run `{}`", answer.remedy()),
+                )
+            })
+        }
+        super::harness_version::Gate::Undeliverable(undeliverable) => Some(undeliverable),
+    };
+    Ok(Composed {
+        flags,
+        undeliverable,
+    })
 }
 
 /// One pasteable line. Only an argument that needs quoting gets it, so the

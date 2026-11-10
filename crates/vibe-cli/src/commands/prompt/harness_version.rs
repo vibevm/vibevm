@@ -17,49 +17,75 @@
 //! `HARNESS-DELIVERY.md` §8.5 already sanctions as the one question a
 //! read-only verb may ask a harness binary. A program that cannot be run or
 //! whose answer carries no version number yields *unknown*, which is a note
-//! and not a refusal — refusing on "cannot tell" would make the command
-//! unusable on a machine where nothing is wrong.
+//! and not a verdict against the carrier — "cannot tell" is not "wrong".
+//!
+//! **The gate decides nothing about the launch itself.** It answers
+//! "may this carrier be delivered", and the caller decides what to do with
+//! a no: `vibe prompt flags` refuses, because flags for a carrier that may
+//! not arrive are the one answer a shell alias turns silently into a
+//! session with no lane in it, while `vibe agent` starts the harness
+//! anyway, without the carrier and with one loud warning
+//! (`#SYS-SOFT-LAUNCH`).
 
-specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-076#SYS-HARNESS-DELIVERY");
+specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-076#SYS-SOFT-LAUNCH");
 
 use std::process::Command;
 
-use anyhow::{Result, bail};
+use anyhow::Result;
 use vibe_workspace::system_prompt::{
     CODEX_VERIFIED_VERSION, CarrierVerdict, HarnessKind, codex_carrier_verdict,
 };
 
 use crate::commands::agent::launchers::Launcher;
 
+use super::flags::Undeliverable;
+
+/// What the gate decided about one kind's carrier.
+pub(crate) enum Gate {
+    /// The carrier may be delivered. `Some(note)` is a sentence the caller
+    /// prints beside the flags; `None` is a verified carrier with nothing
+    /// to say.
+    Deliver(Option<String>),
+    /// The carrier's precondition failed, so it must not be delivered.
+    Undeliverable(Undeliverable),
+}
+
 /// Gate one kind's carrier against the harness this launch would start.
 ///
-/// `Ok(Some(note))` is a sentence the caller prints beside the flags;
-/// `Ok(None)` is a verified carrier with nothing to say. The refusal names
-/// the installed version, the verified one, why the difference matters and
-/// the exact table a user who has checked it themselves writes.
-pub(crate) fn gate(kind: HarnessKind, launcher: Option<&Launcher>) -> Result<Option<String>> {
+/// The reason names the installed version, the verified one, why the
+/// difference matters and the exact table a user who has checked it
+/// themselves writes.
+pub(crate) fn gate(kind: HarnessKind, launcher: Option<&Launcher>) -> Result<Gate> {
     if kind != HarnessKind::Codex {
-        return Ok(None);
+        return Ok(Gate::Deliver(None));
     }
     let name = launcher.map_or(kind.as_str(), |launcher| launcher.name.as_str());
-    match declared_or_probed(launcher) {
+    Ok(match declared_or_probed(launcher) {
         Declared::Stated(version) => match codex_carrier_verdict(&version) {
-            CarrierVerdict::Verified => Ok(None),
-            CarrierVerdict::Unverified { installed } => Ok(Some(format!(
+            CarrierVerdict::Verified => Gate::Deliver(None),
+            CarrierVerdict::Unverified { installed } => Gate::Deliver(Some(format!(
                 "`[launchers.{name}] harness_version = \"{installed}\"` says this Codex \
                  delivers `developer_instructions` from a layered profile file; vibe verified \
                  that on {CODEX_VERIFIED_VERSION} only, so the claim is yours"
             ))),
-            CarrierVerdict::Unknown { reason } => bail!(
-                "`[launchers.{name}] harness_version = \"{version}\"` is not a version number \
-                 ({reason}) — write the number `codex --version` prints, such as \
-                 \"{CODEX_VERIFIED_VERSION}\""
-            ),
+            CarrierVerdict::Unknown { reason } => Gate::Undeliverable(Undeliverable::hard(
+                format!(
+                    "`[launchers.{name}] harness_version = \"{version}\"` is not a version \
+                     number ({reason}), so vibe cannot tell whether this Codex reads the \
+                     `developer_instructions` carrier"
+                ),
+                format!(
+                    "write the number `codex --version` prints, such as \
+                     \"{CODEX_VERIFIED_VERSION}\""
+                ),
+            )),
         },
         Declared::Probed(reported) => match codex_carrier_verdict(&reported) {
-            CarrierVerdict::Verified => Ok(None),
-            CarrierVerdict::Unverified { installed } => bail!("{}", refusal(name, &installed)),
-            CarrierVerdict::Unknown { reason } => Ok(Some(format!(
+            CarrierVerdict::Verified => Gate::Deliver(None),
+            CarrierVerdict::Unverified { installed } => {
+                Gate::Undeliverable(unverified(name, &installed))
+            }
+            CarrierVerdict::Unknown { reason } => Gate::Deliver(Some(format!(
                 "this machine's Codex did not say which version it is ({reason}), so the \
                  profile carrier is unverified here; vibe verified it on \
                  {CODEX_VERIFIED_VERSION}. If `codex --version` differs from that, the lane \
@@ -67,27 +93,31 @@ pub(crate) fn gate(kind: HarnessKind, launcher: Option<&Launcher>) -> Result<Opt
                  no model"
             ))),
         },
-        Declared::Unreachable(reason) => Ok(Some(format!(
+        Declared::Unreachable(reason) => Gate::Deliver(Some(format!(
             "this machine's Codex could not be asked its version ({reason}), so the profile \
              carrier is unverified here; vibe verified it on {CODEX_VERIFIED_VERSION}"
         ))),
-    }
+    })
 }
 
-/// The refusal, as one sentence per thing the reader has to decide.
-fn refusal(name: &str, installed: &str) -> String {
-    format!(
-        "this machine's Codex is {installed} and vibe verified the launch carrier on \
-         {CODEX_VERIFIED_VERSION} only, so `vibe agent {name}` refuses rather than starting a \
-         session that may have no boot lane in it. The carrier is the configuration key \
-         `developer_instructions`, delivered through a profile file `-p` layers on top of \
-         `$CODEX_HOME/config.toml`; a Codex that does not read that key reports nothing and \
-         exits 0, which is why an unprobed version is refused instead of attempted. Two ways \
-         forward: check this version offline with `codex debug prompt-input`, which renders \
-         the prompt and calls no model — the lane must appear at the top of the second \
-         developer message — and then say so with `[launchers.{name}]`'s \
-         `harness_version = \"{installed}\"`; or start Codex yourself and pass the flags \
-         `vibe prompt flags --harness codex` prints"
+/// The unverified-version reason, as one sentence per thing the reader has
+/// to decide.
+fn unverified(name: &str, installed: &str) -> Undeliverable {
+    Undeliverable::hard(
+        format!(
+            "this machine's Codex is {installed} and vibe verified the launch carrier on \
+             {CODEX_VERIFIED_VERSION} only. The carrier is the configuration key \
+             `developer_instructions`, delivered through a profile file `-p` layers on top of \
+             `$CODEX_HOME/config.toml`; a Codex that does not read that key reports nothing \
+             and exits 0, which is why an unprobed version is not attempted"
+        ),
+        format!(
+            "check this version offline with `codex debug prompt-input`, which renders the \
+             prompt and calls no model — the lane must appear at the top of the second \
+             developer message — and then say so with `[launchers.{name}]`'s \
+             `harness_version = \"{installed}\"`; or start Codex yourself and pass the flags \
+             `vibe prompt flags --harness codex` prints"
+        ),
     )
 }
 

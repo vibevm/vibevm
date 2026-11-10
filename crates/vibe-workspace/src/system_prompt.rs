@@ -79,7 +79,7 @@ mod verify;
 
 pub use capture::{PrefixCapture, capture_node_prefix_inputs, capture_prefix_inputs};
 pub use check::{
-    ArtifactFacts, CheckRequest, CheckVerdict, NotTracked, PromptCheck, TrackedPaths,
+    ArtifactFacts, CheckRequest, CheckVerdict, NotTracked, PromptCheck, TrackedPaths, build_remedy,
     check_node_prompt, host_mismatch_warning, prompt_warnings,
 };
 pub use compose::{

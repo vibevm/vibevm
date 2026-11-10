@@ -33,7 +33,7 @@ mod prepare;
 mod resolve;
 
 pub(crate) use build::summary_line;
-pub(crate) use flags::{compose as compose_flags, opted_in};
+pub(crate) use flags::{Undeliverable, compose as compose_flags, opted_in};
 pub(crate) use resolve::{Selected, select};
 
 /// Run one regeneration and end it with the system-prompt summary line.

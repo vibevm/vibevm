@@ -281,6 +281,56 @@ block names. A slot flag of your own is then no conflict, because there is
 nothing of ours beside it. `vibe prompt flags` in such a project is still a
 refusal: there is nothing to print.
 
+### Every agent launches softly
+
+**`vibe agent` never leaves you without a session because *vibe* could not
+deliver the lane.** A launcher's job is to start a program. When safe
+delivery is impossible the harness starts with **no** slot flag and **no**
+carrier — the classic boot, which every project supports because the router
+reads the files when it finds no markers — behind one loud warning naming
+the reason and the exact command that fixes it:
+
+```
+warning: vibe cannot deliver this project's boot lane to `codex`, so the harness starts
+WITHOUT it and the agent reads its boot files from disk — the classic boot the managed
+block's router already handles.
+warning:   reason: this machine's Codex is 0.168.0 and vibe verified the launch carrier on 0.167.0 only. …
+warning:   fix: check this version offline with `codex debug prompt-input`, … and then say so with `[launchers.codex]`'s `harness_version = "0.168.0"`; …
+warning: `--quiet` does not suppress this: it is about what the agent receives, not about what vibe says.
+```
+
+| What happened | What `vibe agent <launcher>` does |
+|---|---|
+| The prefix build failed | soft launch; the older lane on disk is **not** passed |
+| The lane file is absent after that build | soft launch |
+| The lane is **stale** after that build | soft launch — the bytes on disk are not this node's current lane |
+| This directory is not a vibe project | soft launch |
+| Your Codex is a version vibe has not verified | soft launch |
+| `harness_version` is not a version number | soft launch |
+| Any kind's carrier precondition fails | soft launch |
+| The project has not opted in | starts unchanged, with a **note** — nothing to deliver is not a failure |
+| `delivery = "read"` for this kind | starts unchanged, with a **note** — the router is doing the work by design |
+| A project manifest names a launcher | **refusal** — a repository must not choose which program runs on your machine |
+| An unknown launcher name | **refusal** — vibe does not know which program to start |
+| Your own slot flag, while vibe is delivering | **refusal** — two system prompts in one slot is a session nobody chose |
+
+**`--quiet` does not suppress the warning.** `--quiet` asks for less
+narration about what vibe did; this sentence is about what the **agent
+receives** — a session without its boot lane, which you are about to spend
+tokens in.
+
+**A stale or half-written lane is never delivered.** If the build failed,
+the file on disk is the previous build's or half of this one's. Handing that
+to the agent is worse than handing it nothing, because the router cannot
+notice a lane it was given.
+
+**`vibe prompt flags` keeps refusing.** It prints flags and starts nothing,
+so there is no session to save, and flags pointing at a lane that is not
+there are the one answer a shell alias turns silently into a session with no
+lane in it. Its one exception is a **stale** lane: it prints the flags
+beside a note saying so, because they point at real bytes and you can
+decide. A launch cannot.
+
 **A resumed Claude Code session keeps the lane it started with.** Claude Code
 resends the system prompt a conversation began with, so boot files edited since
 do not arrive, and the router cannot notice — the block states the expected id
@@ -316,7 +366,9 @@ slot therefore has no `launch` tier.
 **What vibe enforces around the setting.** `vibe agent` injects **only** for
 a harness in `launch`: in `read` it passes no slot flag, writes no Codex
 carrier, does not gate on the harness's version and does not refuse a slot
-flag of your own — there is nothing for yours to collide with. `vibe prompt
+flag of your own — there is nothing for yours to collide with. And in
+`launch`, a delivery that cannot be made safely becomes the soft launch
+above rather than a refusal. `vibe prompt
 check` reports two configuration findings: your `CLAUDE.md`, `AGENTS.md` and
 `GEMINI.md` carrying **different** managed blocks, because a *per-harness*
 `delivery` only describes what a harness receives while those files are
@@ -379,12 +431,15 @@ and renders both under `-c project_doc_max_bytes=262144`.
 and a key the program does not read produces no warning, no error and no
 non-zero exit — a session that starts looking exactly right with no boot lane
 in it. So `vibe agent` and `vibe prompt flags --harness codex` ask the
-launcher's program its version and **refuse** one this build has not
-verified, naming the installed version, the verified one (`0.167.0`), the
-offline command that re-checks it, and
+launcher's program its version and will **not deliver the carrier** on one
+this build has not verified, naming the installed version, the verified one
+(`0.167.0`), the offline command that re-checks it, and
 `[launchers.<name>] harness_version`, which records your own measurement by
-number. A version that cannot be read at all is a note, not a refusal:
-“cannot tell” is not “wrong”.
+number. The two commands then part ways: `vibe agent` starts Codex **without
+the carrier**, warning loudly (the soft launch of §4), while `vibe prompt
+flags` refuses, because it prints and starts nothing. A version that cannot
+be read at all is a note and the carrier is delivered: “cannot tell” is not
+“wrong”.
 
 ### The lane's markers
 

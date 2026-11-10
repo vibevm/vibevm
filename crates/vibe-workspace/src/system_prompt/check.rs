@@ -223,11 +223,22 @@ impl PromptCheck {
     /// node. Spelled once, so every surface that prints a remedy prints the
     /// same command.
     pub fn remedy(&self) -> String {
-        if self.node_rel == "." {
-            "vibe prompt build".to_owned()
-        } else {
-            format!("vibe prompt build --node {}", self.node_rel)
-        }
+        build_remedy(&self.node_rel)
+    }
+}
+
+/// The `vibe prompt build` for one node, by its relative path alone.
+///
+/// The same sentence as [`PromptCheck::remedy`] for a caller that has no
+/// answer to ask — a launch whose *build* failed has no [`PromptCheck`] at
+/// all and still has to name the command that fixes it, and two spellings
+/// of one command is how two surfaces come to print different advice about
+/// the same node.
+pub fn build_remedy(node_rel: &str) -> String {
+    if node_rel == "." {
+        "vibe prompt build".to_owned()
+    } else {
+        format!("vibe prompt build --node {node_rel}")
     }
 }
 

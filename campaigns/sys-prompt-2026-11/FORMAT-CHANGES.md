@@ -474,3 +474,55 @@ Status: **delivered 2026-11-10** (phases P7 and P8); the P9 materials are delive
 - **The documented vocabulary cannot drift from the code.** `PLAN.md` P8 asks for an invalidation table *generated* from the enum the `Stale` reasons come from, and there is none — the reasons are rendered sentences, deliberately, because a reason that cannot be printed is a reason nobody acts on. So the test asserts the part that can silently drift: every verdict word, every verb and every generated path the guide names is the code's own spelling, read from `CheckVerdict::as_str` and `vibe_core::layout`. The table's rows correspond one-to-one with `crates/vibe-cli/tests/cli_prompt_stale.rs`'s sweep, and both documents say so.
 - **`campaigns/sys-prompt-2026-11/live/`** is the P9 sample project and its runbook: a static boot dependency so a real `STATIC.md` lane exists, authored boot sources, an entrypoint, a template and one nested sub-project with its own router and node id. **No personal data** — every string is a canary or neutral filler. Eight canaries, two of which (the template's and the entrypoint's) must be **absent** from the lane, because the slot carries the lane alone. `make-sample.sh` pads the **first** lane segment so the tail canary arrives behind the padding; verified at 0 and 200,000 bytes.
 - **`campaigns/sys-prompt-2026-11/accept.sh`** is the whole-campaign acceptance of `PLAN.md` §7: 17 steps in one `bwrap --unshare-net` sandbox, every `vibe` call under `strace -e trace=connect`, all passing. It never calls a paid API.
+
+## SP-FMT-111 — the soft launch: `vibe agent` never fails over a delivery it could not make (Phase P10)
+
+Status: **delivered 2026-11-11** (phase P10). Design authority:
+`PROP-076#SYS-SOFT-LAUNCH`. Owner directive 2026-11-11, «сделай чтобы все
+агенты запускались мягко».
+
+- **No registry record and no wire change.** Nothing new is declared, parsed
+  or serialised: this is a change of *outcome* on an existing surface, and it
+  has an id for the same reason `SP-FMT-102` and `SP-FMT-108` do — it is
+  user-visible, and it turns three documented refusals into launches. Both
+  `vibe-prompt-flags/1` and `cli-agent-list` keep their epochs untouched.
+- **`vibe agent <launcher>` starts the harness with no slot flag and no
+  carrier whenever safe delivery is impossible**, behind one loud stderr
+  warning naming the reason and the exact fix command. The causes: the
+  prefix build failed; the lane is absent after it; the lane is **stale**
+  after it; the directory is not a vibe project; a Codex version is
+  unverified, or a stated `harness_version` is not a version number; and
+  generally **any kind's carrier precondition fails** — the rule is written
+  over the precondition, so a kind added later inherits it.
+- **A stale or half-written lane is never delivered.** A failed build does
+  not fall back to the lane file that happens to be on disk: it is the
+  previous build's, or half of this one's, and the router cannot notice a
+  lane it was given.
+- **`--quiet` does not suppress the warning.** `--quiet` governs narration
+  about what vibe did; this sentence is about what the **agent receives**.
+  The two launches must not be indistinguishable at the terminal, because
+  the failure mode of the carriers this guards is already silence.
+- **What changed from `SP-FMT-109` and `SP-FMT-105`.** Three refusals those
+  ids recorded are now soft launches: the unverified-Codex refusal of
+  `SP-FMT-109`'s P6 amendment, the "is not a version number" refusal of the
+  same amendment, and `vibe prompt flags`' lane-absent refusal **as reached
+  through `vibe agent`**. The printing surface keeps every one of them.
+- **Three refusals remain**, each about something other than delivery: a
+  project manifest naming a launcher (security — a soft launch there would
+  start the program the repository chose); an unknown launcher name or an
+  `agents.toml` that will not load (vibe does not know *which program* to
+  start); and a slot flag of the user's own **while vibe is itself
+  delivering**, which is `HARNESS-DELIVERY.md` §4's constraint C2 unchanged.
+- **`vibe prompt flags` keeps refusing**, with one exception it already had:
+  a **stale** lane prints beside a note, because the flags point at real
+  bytes and a human reading them can decide. A launch cannot. The
+  composition therefore returns the reason as a **value**
+  (`Composed`/`Undeliverable`, with a `printable` flag) rather than raising
+  it — one cell deciding both answers would have to know which caller it is
+  in.
+- Tested offline against the argv-recording shims of `cli_agent_launch.rs`:
+  the unverified-Codex soft launch and its warning, the warning surviving
+  `--quiet`, a failed build launching bare while the previous lane is still
+  on disk and asserted not passed, and a non-project directory launching
+  bare. No harness is started and no model is called.
+

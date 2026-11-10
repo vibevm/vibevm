@@ -18,8 +18,20 @@
 //! 128 KiB on Linux and the whole command line at about 32,767 characters on
 //! Windows, against a lane of roughly 310 KB, so every mechanism here is
 //! file-based (`#SYS-HARNESS-DELIVERY`).
+//!
+//! **Every agent starts softly.** A launcher's job is to start a harness,
+//! and vibe's inability to deliver a lane is not a reason to leave a
+//! developer without a session. So every delivery failure — a build that
+//! failed, a lane that is absent or stale after it, a carrier precondition
+//! that did not hold — starts the harness with **no** slot flag and **no**
+//! carrier, which is the classic boot the managed block's router already
+//! handles, behind one loud warning `--quiet` does not suppress. What
+//! remains a refusal is what is not about delivery at all: a project
+//! manifest naming a launcher, an unknown launcher name, and a slot flag of
+//! the user's own when vibe is about to pass its own
+//! (`#SYS-SOFT-LAUNCH`).
 
-specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-076#SYS-HARNESS-EXECUTABLE");
+specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-076#SYS-SOFT-LAUNCH");
 
 use std::path::{Path, PathBuf};
 use std::process::Command;
@@ -28,7 +40,9 @@ use anyhow::{Context, Result, bail};
 use vibe_app::{AgentsConfig, AppError};
 use vibe_core::manifest::TargetOs;
 use vibe_workspace::boot_artifacts::build_node_prompt;
-use vibe_workspace::system_prompt::{CodexProfile, HarnessKind, host_mismatch_warning};
+use vibe_workspace::system_prompt::{
+    CodexProfile, HarnessKind, build_remedy, host_mismatch_warning,
+};
 
 use crate::commands::app::global;
 use crate::commands::prompt;
@@ -48,23 +62,68 @@ pub(crate) fn run(ctx: &output::Context, argv: Vec<String>) -> Result<()> {
     // reject the table as an unknown field, and "unknown field `agent`" is
     // not the sentence a contributor needs to read.
     launchers::refuse_project_launchers(Path::new("."))?;
-    let selected = prompt::select(&PathBuf::from("."), None)?;
     let settings = global::settings_root()?;
     let config = AgentsConfig::load(&settings).map_err(AppError::from)?;
     let launcher = launchers::resolve(&settings, &config, &name)?;
+
+    // **The workspace is opened after the launcher is resolved, and a
+    // directory that is not a project is a soft launch.** `vibe agent` is a
+    // launcher before it is a delivery mechanism, so it has to work in a
+    // scratch directory too; refusing there would be the same defect P9
+    // found in the opted-out branch, one directory wider.
+    let selected = match prompt::select(&PathBuf::from("."), None) {
+        Ok(selected) => selected,
+        Err(error) => {
+            return soft(
+                &launcher,
+                &rest,
+                &prompt::Undeliverable::hard(
+                    format!("this directory is not a vibe project ({error:#})"),
+                    "run `vibe agent` from inside a vibe project, or `vibe init` here".to_owned(),
+                ),
+            );
+        }
+    };
 
     // Recompose first, so the slot carries the files as they are now.
     let built = build_node_prompt(&selected.workspace, &selected.node_rel);
     if !ctx.is_quiet() {
         eprintln!("{}", prompt::summary_line(&built));
     }
-    built?;
+    // **A failed build is a soft launch, and never an older lane.** The
+    // file that happens to be on disk is the previous build's, or half of
+    // this one's; delivering it would put bytes in the slot that are not
+    // this project's boot lane, which is worse than delivering none.
+    if let Err(error) = built {
+        return soft(
+            &launcher,
+            &rest,
+            &prompt::Undeliverable::hard(
+                format!("the boot prefix could not be built ({error})"),
+                format!("run `{}`", build_remedy(&selected.node_rel)),
+            ),
+        );
+    }
 
     // A project that never opted in has no lane to put in the slot. That is
-    // not a reason to refuse the launch: the harness then boots exactly as
-    // it would without `vibe`, by reading the files its instruction file's
+    // not a delivery failure but an absence of anything to deliver, so it
+    // stays a note rather than a warning: the harness boots exactly as it
+    // would without `vibe`, by reading the files its instruction file's
     // block names, and a launcher stays usable in every project.
-    if !prompt::opted_in(&selected)? {
+    let opted_in = match prompt::opted_in(&selected) {
+        Ok(opted_in) => opted_in,
+        Err(error) => {
+            return soft(
+                &launcher,
+                &rest,
+                &prompt::Undeliverable::hard(
+                    format!("this node's prefix could not be read ({error:#})"),
+                    format!("run `{}`", build_remedy(&selected.node_rel)),
+                ),
+            );
+        }
+    };
+    if !opted_in {
         if !ctx.is_quiet() {
             eprintln!(
                 "note: this project has not opted in to a system prompt — starting `{name}` \
@@ -102,7 +161,28 @@ pub(crate) fn run(ctx: &output::Context, argv: Vec<String>) -> Result<()> {
         eprintln!("note: {warning}");
     }
 
-    let composed = prompt::compose_flags(&selected, launcher.kind, Some(&launcher))?;
+    // **Any answer but "deliver this" starts the harness bare.** The
+    // composition's own refusals are reached only by the surface that
+    // prints — `vibe agent` has already asked the opt-in question — so an
+    // error here is a reason nobody foresaw, and a reason nobody foresaw is
+    // still not a reason to leave a developer without a session.
+    let composed = match prompt::compose_flags(&selected, launcher.kind, Some(&launcher)) {
+        Ok(composed) => composed,
+        Err(error) => {
+            return soft(
+                &launcher,
+                &rest,
+                &prompt::Undeliverable::hard(
+                    format!("the launch flags could not be composed ({error:#})"),
+                    format!("run `{}`", build_remedy(&selected.node_rel)),
+                ),
+            );
+        }
+    };
+    if let Some(undeliverable) = &composed.undeliverable {
+        return soft(&launcher, &rest, undeliverable);
+    }
+    let composed = composed.flags;
     // **C2 — `vibe agent` injects only for a harness in `launch` delivery**,
     // so the conflict question is asked only when vibe is about to pass the
     // slot flag itself. In `read` delivery it passes none, and a user's own
@@ -125,6 +205,40 @@ pub(crate) fn run(ctx: &output::Context, argv: Vec<String>) -> Result<()> {
     let mut command: Vec<String> = launcher.command.clone();
     command.extend(composed.flags.iter().cloned());
     command.extend(rest);
+    exec(&command)
+}
+
+/// Start the harness with no slot flag and no carrier, behind one loud
+/// warning.
+///
+/// **The warning is not suppressed by `--quiet`, and that is the whole
+/// reason it is a warning rather than a note.** `--quiet` asks for less
+/// narration about what vibe did; this sentence is about what the *agent*
+/// receives — a session without its boot lane, which the developer is about
+/// to spend tokens in. Hiding it would make the two launches
+/// indistinguishable at the terminal, and the failure mode of the carriers
+/// this guards is already silence.
+///
+/// No conflict check runs here: vibe passes no slot flag, so a slot flag of
+/// the user's own conflicts with nothing — the same reasoning the opted-out
+/// and `read`-delivery branches apply (`HARNESS-DELIVERY.md` §4, C2).
+fn soft(
+    launcher: &launchers::Launcher,
+    rest: &[String],
+    undeliverable: &prompt::Undeliverable,
+) -> Result<()> {
+    eprintln!(
+        "warning: vibe cannot deliver this project's boot lane to `{}`, so the harness starts \
+         WITHOUT it and the agent reads its boot files from disk — the classic boot the managed \
+         block's router already handles.\n\
+         warning:   reason: {}\n\
+         warning:   fix: {}\n\
+         warning: `--quiet` does not suppress this: it is about what the agent receives, not \
+         about what vibe says.",
+        launcher.name, undeliverable.reason, undeliverable.fix
+    );
+    let mut command: Vec<String> = launcher.command.clone();
+    command.extend(rest.iter().cloned());
     exec(&command)
 }
 

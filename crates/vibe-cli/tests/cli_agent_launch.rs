@@ -248,24 +248,97 @@ fn codex_gets_its_profile_file_written_at_launch_and_the_declared_doc_limit() {
 }
 
 #[test]
-fn an_unverified_codex_version_refuses_rather_than_launching_without_the_lane() {
+fn an_unverified_codex_version_launches_without_the_carrier_and_warns() {
+    // **The soft launch.** A carrier vibe will not risk is not a reason to
+    // leave a developer without a session: the harness starts bare, which
+    // is the classic boot the router already handles, and the warning names
+    // the reason and the fix (`#SYS-SOFT-LAUNCH`).
     let machine = Machine::new(WRAPPER);
     machine
         .agent_reporting(&["work-codex"], "codex-cli 0.168.0")
         .assert()
-        .failure()
+        .success()
+        .stderr(predicate::str::contains("warning: vibe cannot deliver"))
         .stderr(predicate::str::contains("0.168.0"))
         .stderr(predicate::str::contains("0.167.0"))
         .stderr(predicate::str::contains("harness_version"))
         .stderr(predicate::str::contains("codex debug prompt-input"));
-    assert!(
-        !Path::new(&machine.argv_path()).exists(),
-        "a refused launch started the harness anyway"
-    );
+    // The shim records one empty line when it received no argument at all.
+    assert_eq!(machine.argv(), [""], "a soft launch passed a flag");
     assert!(
         !machine.bin.path().join("codex-home").exists(),
-        "a refused launch wrote a profile file"
+        "a soft launch wrote a profile file"
     );
+}
+
+#[test]
+fn the_soft_launch_warning_survives_quiet() {
+    // `--quiet` asks for less narration about what vibe did; this sentence
+    // is about what the *agent* receives, so it is not vibe's to suppress.
+    let machine = Machine::new(WRAPPER);
+    let mut command = machine.user.vibe();
+    machine
+        .harnessed(&mut command, "codex-cli 0.168.0")
+        .args(["--quiet", "agent", "work-codex"])
+        .assert()
+        .success()
+        .stderr(predicate::str::contains("warning: vibe cannot deliver"))
+        .stderr(predicate::str::contains("`--quiet` does not suppress this"));
+    assert_eq!(machine.argv(), [""]);
+}
+
+#[test]
+fn a_failed_build_launches_softly_and_never_delivers_the_older_lane() {
+    let machine = Machine::new(WRAPPER);
+    // One good launch, so a lane exists on disk to be wrongly delivered.
+    machine.agent(&["claude"]).assert().success();
+    assert!(machine.lane().exists());
+    let delivered = fs::read_to_string(machine.lane()).unwrap();
+
+    // Break the build without touching the generated lane: the authored
+    // template becomes a directory, which the read path refuses as not a
+    // regular file.
+    let template = machine
+        .project
+        .path()
+        .join(vibe_core::layout::current_boot_dir())
+        .join("SYSTEM-TEMPLATE.md");
+    fs::remove_file(&template).unwrap();
+    fs::create_dir(&template).unwrap();
+
+    machine
+        .agent(&["claude"])
+        .assert()
+        .success()
+        .stderr(predicate::str::contains("warning: vibe cannot deliver"))
+        .stderr(predicate::str::contains("could not be built"))
+        .stderr(predicate::str::contains("vibe prompt build"));
+    assert_eq!(
+        machine.argv(),
+        ["--no-telemetry"],
+        "a failed build still delivered a lane"
+    );
+    assert_eq!(
+        fs::read_to_string(machine.lane()).unwrap(),
+        delivered,
+        "the stale lane is still on disk — the claim is that it was not passed"
+    );
+}
+
+#[test]
+fn a_directory_that_is_not_a_project_launches_softly() {
+    let machine = Machine::new(WRAPPER);
+    let elsewhere = tempfile::tempdir().unwrap();
+    let mut command = machine.user.vibe();
+    machine
+        .harnessed(&mut command, VERIFIED)
+        .current_dir(elsewhere.path())
+        .args(["agent", "claude", "--model", "opus"])
+        .assert()
+        .success()
+        .stderr(predicate::str::contains("warning: vibe cannot deliver"))
+        .stderr(predicate::str::contains("not a vibe project"));
+    assert_eq!(machine.argv(), ["--no-telemetry", "--model", "opus"]);
 }
 
 #[test]
@@ -549,3 +622,4 @@ fn a_resumed_claude_session_is_told_it_keeps_its_old_lane() {
         .success()
         .stderr(predicate::str::contains("keeps the boot lane").not());
 }
+
