@@ -2776,42 +2776,42 @@ structure, and it goes when the file does.
 | @fact:B253-DISPOSITION **disposition** | `candidate` — owner decision 2026-11-10: recorded, not done now; until then `-s`/`-b`/`-j` stay owner-approved exclusions of the vibenvm differential suite. |
 | @fact:B253-FILED **filed by** | Owner, APP-VERSIONS P7 exclusion review, 2026-11-10. |
 
-## B-254 — PROP-020 `#trust-gate` is unreached on the path every command takes {#b-254}
+## B-258 — PROP-020 `#trust-gate` is unreached on the path every command takes {#b-258}
 
 | field | value |
 |---|---|
-| @fact:B254-WHAT **what** | On the canonical install path a `[hooks]` entry is lowered to a synthetic `slot:` script contribution and run through the lifecycle handler engine, which consults **no** `HookPolicy` and asks nothing — `crates/vibe-install/src/apply.rs` says so in as many words («install itself is consent, so this path has no `HookPolicy` or prompt surface»), and nothing in `vibe-cli` ever constructs one. PROP-020 `#trust-gate`'s allow-list (`DEFAULT_ALLOWED_GROUPS`), its attended consent question and its unattended refusal are therefore reached only by the legacy `apply` / `apply_with_spec_format` entry points, which no command uses: every published package that declares `[hooks]` runs its hook unasked. |
-| @fact:B254-EVIDENCE **evidence** | Measured while implementing PROP-065 `#ordinary-trust` (APP-VERSIONS P7e, `campaigns/app-versions-2026-11/LOG.md`, 2026-11-10) — the fact was first written claiming the two gates were behaviourally identical, the measurement falsified that, and the correction is recorded in the fact as residue: «PROP-020 `#trust-gate` is unreached on the path every command takes, which is a defect of that gate and not of this one». |
-| @fact:B254-SEVERITY **severity** | P2 — a documented trust gate no command reaches reads as protection that is not there, and the claim is in a spec a reader trusts. |
-| @fact:B254-DISPOSITION **disposition** | `candidate` — not closable silently. Gating `[hooks]` would newly **ask**, and unattended newly **refuse**, for every published package that declares one, so it needs an owner decision and a migration note; and it belongs with the unification of the two allow-lists that `#ordinary-trust` currently has to union (`trusted_groups` of `agents.toml` plus PROP-020's hook list). P7e deliberately left it rather than taking a silent widening or tightening. |
-| @fact:B254-FILED **filed by** | APP-VERSIONS P7e and its tail, 2026-11-10. |
+| @fact:B258-WHAT **what** | On the canonical install path a `[hooks]` entry is lowered to a synthetic `slot:` script contribution and run through the lifecycle handler engine, which consults **no** `HookPolicy` and asks nothing — `crates/vibe-install/src/apply.rs` says so in as many words («install itself is consent, so this path has no `HookPolicy` or prompt surface»), and nothing in `vibe-cli` ever constructs one. PROP-020 `#trust-gate`'s allow-list (`DEFAULT_ALLOWED_GROUPS`), its attended consent question and its unattended refusal are therefore reached only by the legacy `apply` / `apply_with_spec_format` entry points, which no command uses: every published package that declares `[hooks]` runs its hook unasked. |
+| @fact:B258-EVIDENCE **evidence** | Measured while implementing PROP-065 `#ordinary-trust` (APP-VERSIONS P7e, `campaigns/app-versions-2026-11/LOG.md`, 2026-11-10) — the fact was first written claiming the two gates were behaviourally identical, the measurement falsified that, and the correction is recorded in the fact as residue: «PROP-020 `#trust-gate` is unreached on the path every command takes, which is a defect of that gate and not of this one». |
+| @fact:B258-SEVERITY **severity** | P2 — a documented trust gate no command reaches reads as protection that is not there, and the claim is in a spec a reader trusts. |
+| @fact:B258-DISPOSITION **disposition** | `candidate` — not closable silently. Gating `[hooks]` would newly **ask**, and unattended newly **refuse**, for every published package that declares one, so it needs an owner decision and a migration note; and it belongs with the unification of the two allow-lists that `#ordinary-trust` currently has to union (`trusted_groups` of `agents.toml` plus PROP-020's hook list). P7e deliberately left it rather than taking a silent widening or tightening. |
+| @fact:B258-FILED **filed by** | APP-VERSIONS P7e and its tail, 2026-11-10. |
 
-## B-255 — two tests flake under parallel load {#b-255}
-
-| field | value |
-|---|---|
-| @fact:B255-WHAT **what** | `vibe-orchestrator`'s `source_and_prebuilt_compose_through_phase_and_slot_with_one_image_machine` and `vibe-cli`'s `cli_registry_mirror_templates::a_selected_template_writes_exactly_the_expected_snapshot_tree` fail intermittently when the suite runs with several test threads, and pass when rerun on their own. Neither failure has been attributed yet: a shared temp or cache path, a wall-clock or ordering assumption, and contention on one host resource are all still open. |
-| @fact:B255-EVIDENCE **evidence** | Seen while gating the APP-VERSIONS P7e tail with `--test-threads=6`, 2026-11-10; both pass in isolation. |
-| @fact:B255-SEVERITY **severity** | P3 — no product behaviour is implicated, but a flaky gate teaches contributors to rerun rather than to read, which is how a real regression gets waved through. |
-| @fact:B255-DISPOSITION **disposition** | `candidate` — find the shared resource in each (not the timing) and make the test own it, rather than serialising the suite. |
-| @fact:B255-FILED **filed by** | APP-VERSIONS P7e tail, 2026-11-10. |
-
-## B-256 — the `xtask` optional-shapes census is red on main {#b-256}
+## B-259 — two tests flake under parallel load {#b-259}
 
 | field | value |
 |---|---|
-| @fact:B256-WHAT **what** | `cargo test -p xtask codegen::optional_shapes::tests::stitch::the_real_vocabulary_home_walks_to_its_sites` fails: «the original pre-portable census is unchanged — left: 105, right: 104» (`xtask/src/codegen/optional_shapes/tests/stitch.rs:253`). The test walks `formats/vocabularies.json`, excluding the portable, full-import and named later fragments, and asserts the remaining baseline still declares exactly 104 optional sites; a fragment added to that baseline since makes 105. |
-| @fact:B256-EVIDENCE **evidence** | Verified red at `54f7574e5` on 2026-11-10 (run before touching anything, and unaffected by the P7e tail, which adds no vocabulary fragment). |
-| @fact:B256-SEVERITY **severity** | P3 — a census, not a behaviour: nothing the product does depends on the number. But it is a red gate on main, so it hides the next real drift of the same shape. |
-| @fact:B256-DISPOSITION **disposition** | `candidate` — find the fragment that joined the baseline, decide whether it belongs in the baseline or in the `later` list beside `source_evidence` and `hosting_view`, and move the number or the fragment accordingly. Do **not** simply bump 104 to 105: the exclusion lists are the thing the test is about. |
-| @fact:B256-FILED **filed by** | APP-VERSIONS P7e tail, 2026-11-10. |
+| @fact:B259-WHAT **what** | `vibe-orchestrator`'s `source_and_prebuilt_compose_through_phase_and_slot_with_one_image_machine` and `vibe-cli`'s `cli_registry_mirror_templates::a_selected_template_writes_exactly_the_expected_snapshot_tree` fail intermittently when the suite runs with several test threads, and pass when rerun on their own. Neither failure has been attributed yet: a shared temp or cache path, a wall-clock or ordering assumption, and contention on one host resource are all still open. |
+| @fact:B259-EVIDENCE **evidence** | Seen while gating the APP-VERSIONS P7e tail with `--test-threads=6`, 2026-11-10; both pass in isolation. |
+| @fact:B259-SEVERITY **severity** | P3 — no product behaviour is implicated, but a flaky gate teaches contributors to rerun rather than to read, which is how a real regression gets waved through. |
+| @fact:B259-DISPOSITION **disposition** | `candidate` — find the shared resource in each (not the timing) and make the test own it, rather than serialising the suite. |
+| @fact:B259-FILED **filed by** | APP-VERSIONS P7e tail, 2026-11-10. |
 
-## B-257 — `vvm/bundle.rs` sits exactly on the 600-line conform budget {#b-257}
+## B-260 — the `xtask` optional-shapes census is red on main {#b-260}
 
 | field | value |
 |---|---|
-| @fact:B257-WHAT **what** | `crates/vibe-cli/src/commands/vvm/bundle.rs` is **600** lines against `conform.toml`'s `max_file_lines = 600`, so the next edit of any size fails the gate and whoever makes it pays for the split. Its seams are already visible in the file: bootstrap and activation (`activate_install`, `bootstrap_with_downloader`), the running-binary and release-version reads (`running_binary_record`, `binary_release_version`), the `latest` rebuild and newest-release move (`rebuild_latest`, `move_to_newest_release`), and the remote half (`remote_context`, `fetch_aggregate`, `install_release_version`, `install_selected`, `finish_install`) — and the directory beside it already holds a dozen cells to join. |
-| @fact:B257-EVIDENCE **evidence** | Measured 2026-11-10 (`wc -l`), with conform reporting 0 new findings — the file is at the budget, not over it. |
-| @fact:B257-SEVERITY **severity** | P3 — nothing is broken, and the cost is a tax on the next contributor rather than on a user. |
-| @fact:B257-DISPOSITION **disposition** | `candidate` — split along the remote seam (`bundle/remote.rs`) before the next feature edit, as its own commit, so the split and the change are not read as one diff. |
-| @fact:B257-FILED **filed by** | APP-VERSIONS P7e tail, 2026-11-10. |
+| @fact:B260-WHAT **what** | `cargo test -p xtask codegen::optional_shapes::tests::stitch::the_real_vocabulary_home_walks_to_its_sites` fails: «the original pre-portable census is unchanged — left: 105, right: 104» (`xtask/src/codegen/optional_shapes/tests/stitch.rs:253`). The test walks `formats/vocabularies.json`, excluding the portable, full-import and named later fragments, and asserts the remaining baseline still declares exactly 104 optional sites; a fragment added to that baseline since makes 105. |
+| @fact:B260-EVIDENCE **evidence** | Verified red at `54f7574e5` on 2026-11-10 (run before touching anything, and unaffected by the P7e tail, which adds no vocabulary fragment). |
+| @fact:B260-SEVERITY **severity** | P3 — a census, not a behaviour: nothing the product does depends on the number. But it is a red gate on main, so it hides the next real drift of the same shape. |
+| @fact:B260-DISPOSITION **disposition** | `candidate` — find the fragment that joined the baseline, decide whether it belongs in the baseline or in the `later` list beside `source_evidence` and `hosting_view`, and move the number or the fragment accordingly. Do **not** simply bump 104 to 105: the exclusion lists are the thing the test is about. |
+| @fact:B260-FILED **filed by** | APP-VERSIONS P7e tail, 2026-11-10. |
+
+## B-261 — `vvm/bundle.rs` sits exactly on the 600-line conform budget {#b-261}
+
+| field | value |
+|---|---|
+| @fact:B261-WHAT **what** | `crates/vibe-cli/src/commands/vvm/bundle.rs` is **600** lines against `conform.toml`'s `max_file_lines = 600`, so the next edit of any size fails the gate and whoever makes it pays for the split. Its seams are already visible in the file: bootstrap and activation (`activate_install`, `bootstrap_with_downloader`), the running-binary and release-version reads (`running_binary_record`, `binary_release_version`), the `latest` rebuild and newest-release move (`rebuild_latest`, `move_to_newest_release`), and the remote half (`remote_context`, `fetch_aggregate`, `install_release_version`, `install_selected`, `finish_install`) — and the directory beside it already holds a dozen cells to join. |
+| @fact:B261-EVIDENCE **evidence** | Measured 2026-11-10 (`wc -l`), with conform reporting 0 new findings — the file is at the budget, not over it. |
+| @fact:B261-SEVERITY **severity** | P3 — nothing is broken, and the cost is a tax on the next contributor rather than on a user. |
+| @fact:B261-DISPOSITION **disposition** | `candidate` — split along the remote seam (`bundle/remote.rs`) before the next feature edit, as its own commit, so the split and the change are not read as one diff. |
+| @fact:B261-FILED **filed by** | APP-VERSIONS P7e tail, 2026-11-10. |
