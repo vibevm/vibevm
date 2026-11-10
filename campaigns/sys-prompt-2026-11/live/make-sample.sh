@@ -37,11 +37,16 @@ cp -r "$HERE/sample/." "$TARGET/"
 PROJECT="$(cd "$TARGET" && pwd)"
 
 # The fixture's registry URL is a placeholder, because an absolute path
-# cannot be committed. Point it at the copy.
+# cannot be committed. Point it at the copy. The URL is built by `as_uri`,
+# so a Windows path becomes `file:///C:/...` rather than the invalid
+# `file://C:/...`; on POSIX it is the same `file:///...` as before.
 python3 -I - "$PROJECT/vibe.toml" "$PROJECT/registry" <<'PY'
 import pathlib, sys
 manifest = pathlib.Path(sys.argv[1])
-manifest.write_text(manifest.read_text().replace("REGISTRY_PATH", sys.argv[2]))
+url = pathlib.Path(sys.argv[2]).resolve().as_uri()
+text = manifest.read_text()
+assert text.count("file://REGISTRY_PATH") == 1, "fixture registry placeholder"
+manifest.write_text(text.replace("file://REGISTRY_PATH", url))
 PY
 
 # Padding, when asked for. It inflates the **first** lane segment, which is
