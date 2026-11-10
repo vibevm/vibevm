@@ -417,13 +417,92 @@ means per-machine or per-day content.
 - **Verify live:** import position and role, recursion on `@spec://`, nested
   discovery trigger, de-duplication.
 
-### OpenCode — read; ambient config exists **[R-nh]**
+### OpenCode — read; the carrier works and still cannot be delivered **[V, 2026-11-11]**
 
-- `instructions` array in `opencode.json`: file-based, re-read every message,
-  ambient. The agent `prompt` key replaces the base prompt; unsuitable.
-- `<env>` with today's date precedes the instructions, so the lane's cache
-  entry dies at midnight whatever vibe does.
-- No per-launch flag known, so there is no `launch` in the strict sense.
+**Measured on OpenCode 2.2.7**, offline, against a loopback
+OpenAI-compatible provider that recorded the request body
+(`live/opencode-capture.sh`, reproducible). Four of the five claims below
+were research in the 2026-11-10 survey and **two of them were wrong**.
+
+- **The additive carrier is `OPENCODE_CONFIG_CONTENT` [V]**, an environment
+  variable holding one JSONC configuration document. Its `instructions`
+  array is *set-unioned* with the project's own rather than replacing it, it
+  writes nothing to disk, and it names **file paths** — so the lane itself
+  never leaves the file it is in. With it, the sample project's
+  204,429-byte lane arrived **byte-equal and exactly once** in a single
+  system message of 215,504 bytes, all four lane canaries present including
+  the tail, `CANARY-TEMPLATE-SLATE` absent. The **control** — the same run
+  with the variable unset — produced a 10,928-byte system prompt with the
+  lane absent and zero lane canaries, which is what makes "the carrier
+  delivered it" a measurement rather than a coincidence.
+- **The lane sits BEFORE the `<env>` date block, not after it [V] — the
+  survey had this backwards.** In the captured request the instructions
+  begin at offset 7,974 and the lane at 10,312, while `<env>` is at 214,848
+  and `Today's date` at 214,743, i.e. the last ~700 bytes of a 215 KB
+  prompt. So OpenCode's per-day text is a *suffix*, and the lane's bytes are
+  **not** invalidated at midnight. That is the opposite of the earlier
+  claim, and it is the better of the two outcomes.
+- **Blocker one: the launch's environment never reaches the session [V].**
+  OpenCode's default mode serves every session from one long-lived
+  background service on a fixed port. With `OPENCODE_CONFIG_CONTENT` set in
+  the client's environment, `opencode debug config` against the running
+  service lists the global config and **no such layer**; the same command
+  with `--standalone` lists it last. So the carrier either does not arrive,
+  or — when that launch is the one that starts the service — arrives for
+  **every session that service later serves, across projects**. Neither is
+  a per-launch delivery. The capture above needed `--standalone`, and that
+  requirement is itself the finding.
+- **Blocker two: a `task` subagent inherits it [R: source, 1.19.5].**
+  OpenCode assembles one system array per session from process-wide state
+  (`packages/opencode/src/session/prompt.ts`), and the `task` tool's child
+  session goes through the same assembly with no gate on its parent
+  (`packages/opencode/src/tool/task.ts`), so a subagent receives what the
+  primary agent received. There is no per-agent `instructions` key and no
+  primary-only switch (`packages/core/src/v1/config/agent.ts`'s `KNOWN_KEYS`
+  carries `prompt` and nothing additive). A quiet worker would get the whole
+  central prefix, which §4's row and `#SYS-WORKER-EXCLUSION` forbid — and
+  row C5's rule already says a harness whose subagents inherit the slot must
+  not have `launch` as its default. **Not re-measured at 2.2.7**: driving a
+  subagent offline needs a fake provider that emits a tool call, which this
+  run did not build. Blocker one alone is decisive.
+- **No per-launch flag, and there cannot be one [V]:** `opencode --help`,
+  `run --help` and `agent --help` carry no append-instructions argument, and
+  the agent `prompt` key *replaces* the base provider prompt, so it is not
+  an additive slot either.
+- **The carrier was also measured live, at the real size [V].** OpenCode
+  2.2.7 with `home/gpt-6.1-sol` (a declared 512,000-token context), the full
+  **204,429-byte** lane handed over by hand because vibe does not deliver
+  this carrier: the agent quoted the last `vibe:lane-end` line
+  **byte-equal**, reported all four lane canaries **including the tail** plus
+  the entrypoint's, omitted the template's, and read **no file with a tool**
+  — router rule 1 held at 204 KB. A second data point on
+  `homelocal/qwen3.8-27b` (56,000 tokens, so a **42,397-byte** lane) gave the
+  same answer.
+- **The `read` tier was measured live too, and it works [V].** On the
+  unpadded 2,570-byte sample, `vibe agent opencode` passed no flag and
+  `home/gpt-6.1-sol` read `STATIC.md`, `INDEX.md`, `00-core.md` and
+  `90-user.md` in that order, **once each**, reporting every canary — router
+  rule 4 obeyed. Asked for the last `vibe:lane-end` line it quoted the
+  block's own **format example**, which is the right answer in `read` mode:
+  there is no delivered marker, and the example is the only literal
+  occurrence. **One caveat worth keeping:** the same prompt did *not* make
+  the 27B model boot at all — it answered the self-report question literally,
+  with zero tool calls, and booted only when the prompt had work in it. So
+  that leg is a finding about model strength, not about the block, and §10's
+  rows keep the two apart.
+- **Sample sizing is itself a measurement.** OpenCode's fixed overhead,
+  measured from the capture: a 10,928-byte base system prompt (the project's
+  injected `AGENTS.md` included) plus 14,043 bytes of tool definitions over
+  12 tools — **24,971 bytes before any lane**. At a pessimistic 3 bytes per
+  token that is ~8,300 tokens, which is what let a 56,000-token model take a
+  42 KB lane with room to spare.
+- **Therefore `read`, and `launch` is undeliverable.** `vibe agent opencode`
+  starts OpenCode unchanged and the router has the agent read the boot
+  files; a project that declares `delivery = "launch"` gets the soft launch
+  of `#SYS-SOFT-LAUNCH` with both blockers named, and `vibe prompt flags
+  --harness opencode` refuses while printing what the assignment *would*
+  have been. The day OpenCode can scope `instructions` to one agent, one
+  constant and one gate arm open the tier.
 
 ### pi — launch-like slot exists but is ambient **[R-nh]**
 
@@ -449,7 +528,7 @@ means per-machine or per-day content.
 | Codex | yes, profile file | no | yes | `launch` |
 | Qwen Code | no file slot known | blocked by C3/C4 | yes | `read` |
 | Gemini CLI | no | blocked by C3/C4 | yes | `read` |
-| OpenCode | ambient only | no | yes | `read` |
+| OpenCode | carrier works, **not per-launch and not worker-safe** | no | yes | `read` |
 | pi | ambient only | no | yes | `read` |
 | dsh | no | no | yes | `read` |
 
@@ -687,7 +766,7 @@ block and its own canaries.
 | X2 | Plain `codex` | Lane read once through the router |
 | X3 | Entrypoint padded past the declared limit, block at the **top** | **DONE offline 2026-11-10** with `codex debug prompt-input`: router present, tail canary absent at the default limit; both present under `-c project_doc_max_bytes=262144`. The original form of this scenario (block at the end) is what motivated moving the block, and is retired |
 | N1 | From the root, make the agent open a file in the nested project | Nested lane not read; root lane not re-read. **PASSED 2026-11-10 [V]**: the agent read only `nested/AGENTS.md`, reported `CANARY-NESTED-TUFF` and not `CANARY-NESTED-LANE-SCORIA`, and ignored the nested block as another project's — as it also did for the `nested/CLAUDE.md` Claude Code auto-loaded beside it |
-| O1 | Qwen, Gemini CLI, OpenCode, pi, dsh in `read` mode | Lane read once; for dsh, record the doubled entrypoint |
+| O1 | Qwen, Gemini CLI, OpenCode, pi, dsh in `read` mode | Lane read once; for dsh, record the doubled entrypoint. **OpenCode run 2026-11-11, two of three legs [V], one not run.** Delivery, offline against a loopback provider: the 204,429-byte lane arrived byte-equal and exactly once through `OPENCODE_CONFIG_CONTENT`, with a control run proving the carrier was what delivered it, and the `<env>` date block **after** the lane rather than before it. The launcher: `vibe agent opencode` resolved the built-in launcher, recomposed the lane, printed the `read` note and the carrier explanation and exec'd real OpenCode 2.2.7, which started and reached model selection. **Live, OpenCode 2.2.7, two models at the owner's instruction.** On `home/gpt-6.1-sol` (512,000-token context): the full **204,429-byte** lane through the carrier came back with the last `vibe:lane-end` byte-equal, all four lane canaries including the tail, the template's absent and **no file read with a tool**; and in `read` mode on the unpadded 2,570-byte sample the agent read `STATIC.md`, `INDEX.md`, `00-core.md`, `90-user.md` in order, **once each**, quoting the block's own format example for the marker line, which is correct in that tier. On `homelocal/qwen3.8-27b` (56,000 tokens, 42,397-byte lane): the same carrier answer; and `read` mode worked only once the prompt had work in it — the one prompt alone, which asks what is in the session's context, it answered literally with zero tool calls. So that leg is a model-strength finding, not a block failure. Qwen Code, Gemini CLI, pi and dsh were not run |
 | I1 | Only if import is pursued: Claude Code and Gemini CLI with the import block | Lane present once; no attempt to resolve `@spec://`; position and role recorded |
 
 A failure of C1, C2 or X1 means `launch` for that harness defaults back to

@@ -89,7 +89,7 @@ pub use constraints::{BlockShape, delivery_constraints, manifest_block_shape, on
 pub use contract::{CURRENT_RECIPE, KNOWN_RECIPES, SuppliedSource, render_contract};
 pub use harness::{
     CODEX_VERIFIED_VERSION, CarrierVerdict, CodexProfile, HarnessKind, LaunchFlags,
-    codex_carrier_verdict, launch_flags,
+    OPENCODE_MEASURED_VERSION, codex_carrier_verdict, launch_flags, opencode_launch_blocker,
 };
 pub use lane::{ComposedLane, LaneSegment, LaneSource, compose_agent_lane};
 pub use markers::{

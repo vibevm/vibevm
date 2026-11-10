@@ -383,11 +383,69 @@ that a harness's downward discovery would also read is `vibe check`'s
 |---|---|---|---|
 | Claude Code | yes — `--append-system-prompt-file`, plus `--exclude-dynamic-system-prompt-sections` | yes | `launch` |
 | Codex | yes — `developer_instructions` at the **top level** of a launch-time profile file | yes | `launch` |
-| Qwen Code, Gemini CLI, OpenCode, pi, dsh | no file-based slot known | yes | `read` |
+| OpenCode | the carrier works and is **not deliverable** — see below | yes | `read` |
+| Qwen Code, Gemini CLI, pi, dsh | no file-based slot known | yes | `read` |
 
-The non-Claude, non-Codex rows are **research, not measured here**: those
-harnesses are not installed on the machine this was written on, so their
-delivery stays `read`.
+The Qwen Code, Gemini CLI, pi and dsh rows are **research, not measured
+here**: those harnesses are not installed on the machine this was written on,
+so their delivery stays `read`.
+
+### OpenCode
+
+`vibe agent opencode` works, and it passes nothing. The kind exists so the
+launcher exists, so `[system_prompt.harness.opencode]` can be declared
+rather than refused as an unknown field, and so `vibe prompt flags --harness
+opencode` can tell you what it would have passed and why it does not.
+
+**The carrier was found and measured.** OpenCode takes additional
+instructions through a configuration key, `instructions`, and the per-launch
+way to hand it over is the environment variable
+`OPENCODE_CONFIG_CONTENT` — a JSONC document whose `instructions` array is
+*added to* the project's own rather than replacing it, which writes nothing
+to disk, and which names **file paths**, so the lane never leaves the file it
+is in. Measured offline on **OpenCode 2.2.7** against a loopback provider
+that recorded the request: a 204,429-byte lane arrived **byte-equal and
+exactly once**, every lane canary present, the template's canary absent, and
+a control run with the variable unset carried no lane at all. The `<env>`
+block with today's date lands **after** the lane, in the last ~700 bytes of
+a 215 KB prompt — so OpenCode's per-day text does **not** invalidate the
+lane's cache entry.
+
+**Two things stop vibe from using it.**
+
+1. **The launch's environment never reaches the session.** OpenCode's
+   default mode serves every session from one long-lived background service,
+   and that process has the environment of whoever started it. So the
+   variable either does not arrive, or — when your launch is the one that
+   starts the service — arrives for *every session that service later
+   serves, across projects*. Neither is a per-launch delivery.
+2. **A `task` subagent inherits it.** OpenCode builds one instruction array
+   per session from process-wide state, and a subagent session goes through
+   the same assembly. A bounded worker would receive the whole central
+   prefix, which `#SYS-WORKER-EXCLUSION` forbids — the same rule that made
+   "do Claude Code subagents inherit the slot?" a release-blocking question.
+   (This one is read from OpenCode's source at 1.19.5, not re-measured at
+   2.2.7; the first blocker alone decides it.)
+
+So `read` is the default and a declared `launch` is **not delivered**:
+`vibe agent opencode` soft-launches with both reasons named, and `vibe prompt
+flags --harness opencode` refuses. The day OpenCode can scope `instructions`
+to one agent, the tier opens.
+
+**Both tiers were measured live** on OpenCode 2.2.7. Through the carrier,
+handed over by hand on a 512,000-token model, the whole **204,429-byte** lane
+came back with its last `vibe:lane-end` line quoted byte-equal, all four lane
+canaries including the tail, the template's absent, and **no file read with a
+tool**. In the shipped `read` mode on a 2,570-byte lane the agent read
+`STATIC.md`, `INDEX.md`, `00-core.md` and `90-user.md` in that order, once
+each — and quoted the block's own format example when asked for the last
+marker line, which is the right answer when no marker was delivered. A
+56,000-token model gave the same answers on smaller samples, sized against
+OpenCode's measured overhead of 10,928 bytes of base prompt plus 14,043 bytes
+of tool definitions over 12 tools. One thing is **not** claimed: on that
+weaker model, a question asking only what is already in the session's context
+did not make it boot at all — it obeyed the router as soon as the prompt had
+work in it, so that is about model strength rather than about the block.
 
 **The Claude Code row is measured.** On 2026-11-10, against Claude Code
 **2.1.322** on Linux in print mode: a 2,570-byte lane, a 202,349-byte one and

@@ -526,3 +526,56 @@ Status: **delivered 2026-11-11** (phase P10). Design authority:
   on disk and asserted not passed, and a non-project directory launching
   bare. No harness is started and no model is called.
 
+## SP-FMT-112 — OpenCode is a harness kind, and `[system_prompt.harness.opencode]` (Phase P10)
+
+Status: **delivered 2026-11-11** (phase P10). Design authority:
+`PROP-076#SYS-OPENCODE`. Owner directive 2026-11-11, «сделай поддержку
+opencode». **Amends `SP-FMT-105`** (whose harness table held two keys) and
+**`SP-FMT-109`** (whose built-in launchers were two).
+
+- **Manifest grammar: `[system_prompt.harness.opencode] delivery`**, optional,
+  `"launch" | "read"`, absent meaning **`read`**. `HarnessTable` has
+  `deny_unknown_fields`, so a third key is a grammar change and is recorded
+  here; it is omitted from serialisation when absent, so every manifest
+  written before this reads and writes byte for byte as it did. The key exists
+  so the declaration is **refused by name rather than ignored**, and so a
+  project can state the tier it wants the day OpenCode can scope instructions
+  to one agent.
+- **`HarnessKind` is closed at three.** `opencode` is therefore a built-in
+  launcher — `vibe agent opencode` and a row in `vibe agent list` — and
+  `vibe prompt flags --harness opencode` answers. No wire change: the
+  `cli-agent-list` and `vibe-prompt-flags/1` documents gain no member, because
+  a kind is a value in fields they already carry.
+- **`launch` for this kind is undeliverable, and that is the shipped
+  behaviour.** `vibe agent` soft-launches it under `SP-FMT-111` with both
+  blockers and the fix named; `vibe prompt flags` refuses. The reasons, with
+  how each was established, are `HARNESS-DELIVERY.md` §5's OpenCode row —
+  measured on **OpenCode 2.2.7**: the launch's environment never reaches the
+  background service that serves the session **[V]**, and a `task` subagent
+  inherits the instruction array **[R: source, 1.19.5]**.
+- **Carrier measured, not wired.** `OPENCODE_CONFIG_CONTENT`'s `instructions`
+  array delivers the lane byte-equal and exactly once, with a control run
+  proving the carrier is what delivered it, and the `<env>` date block lands
+  **after** the lane rather than before it — correcting `HARNESS-DELIVERY.md`
+  §5's research claim in the project's favour. No environment plumbing and no
+  wire member were added to carry it: a carrier that breaks
+  `#SYS-WORKER-EXCLUSION` must not be delivered, and a surface with no
+  legitimate caller is a surface that drifts.
+- **One latent defect fixed.** `HarnessKind::delivery` answered `launch` for
+  *every* kind when a node had no `[system_prompt]` table, rather than
+  delegating to the table's own per-kind default. Harmless with two file-slot
+  kinds; wrong with a third. A test over all three pins it.
+- **Both tiers measured live 2026-11-11** on OpenCode 2.2.7, two models at
+  the owner's instruction. On `home/gpt-6.1-sol` (512,000-token context): the
+  whole **204,429-byte** lane through the carrier — last marker quoted
+  byte-equal, all four lane canaries including the tail, template's absent,
+  no tool read — and the unpadded 2,570-byte lane in `read` mode, with the
+  four boot files read in `INDEX.md` order, once each. On
+  `homelocal/qwen3.8-27b` (56,000 tokens) the same, on samples sized against
+  OpenCode's measured **24,971-byte** fixed overhead. Record:
+  `live/RESULTS.md` rows O1.
+- **New campaign material, not a format:**
+  `campaigns/sys-prompt-2026-11/live/opencode-capture.sh` and
+  `opencode-fake-provider.py` reproduce the measurement. They call no model and
+  reach nothing but `127.0.0.1`, and the recorder drops the `authorization`
+  header before writing, so a capture can never carry a credential.

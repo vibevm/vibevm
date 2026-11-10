@@ -19,15 +19,16 @@ pub const CODEX_DOC_MAX_BYTES_DEFAULT: usize = 32 * 1024;
 
 /// `[system_prompt.harness]` — per-harness delivery settings.
 ///
-/// A closed table of one in this version. An unknown harness name refuses by
-/// name rather than being ignored, because a setting silently ignored is the
-/// one failure a configuration table must not have.
+/// A closed table of three in this version. An unknown harness name refuses
+/// by name rather than being ignored, because a setting silently ignored is
+/// the one failure a configuration table must not have.
 ///
 /// ```
 /// use vibe_core::manifest::HarnessTable;
 ///
 /// let empty: HarnessTable = toml::from_str("")?;
 /// assert!(empty.is_empty());
+/// assert!(toml::from_str::<HarnessTable>("[opencode]\n").is_ok());
 /// assert!(toml::from_str::<HarnessTable>("[gemini]\n").is_err());
 /// # Ok::<(), toml::de::Error>(())
 /// ```
@@ -40,6 +41,9 @@ pub struct HarnessTable {
     /// `[system_prompt.harness.codex]`.
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub codex: Option<CodexHarness>,
+    /// `[system_prompt.harness.opencode]`.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub opencode: Option<OpenCodeHarness>,
 }
 
 impl HarnessTable {
@@ -63,6 +67,7 @@ impl HarnessTable {
     /// let absent: SystemPromptSection = toml::from_str("")?;
     /// assert_eq!(absent.harness.delivery("claude"), HarnessDelivery::Launch);
     /// assert_eq!(absent.harness.delivery("codex"), HarnessDelivery::Launch);
+    /// assert_eq!(absent.harness.delivery("opencode"), HarnessDelivery::Read);
     /// assert_eq!(absent.harness.delivery("gemini"), HarnessDelivery::Read);
     ///
     /// let read: SystemPromptSection =
@@ -74,6 +79,10 @@ impl HarnessTable {
         let declared = match harness {
             "claude" => self.claude.as_ref().and_then(|claude| claude.delivery),
             "codex" => self.codex.as_ref().and_then(|codex| codex.delivery),
+            "opencode" => self
+                .opencode
+                .as_ref()
+                .and_then(|opencode| opencode.delivery),
             _ => None,
         };
         declared.unwrap_or(match harness {
@@ -101,6 +110,34 @@ impl HarnessTable {
 #[serde(deny_unknown_fields)]
 pub struct ClaudeHarness {
     /// How the lane reaches this harness. Absent means `launch`.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub delivery: Option<HarnessDelivery>,
+}
+
+/// `[system_prompt.harness.opencode]`.
+///
+/// OpenCode has **no instruction slot a launch can scope to one session**.
+/// Its only additive carrier is a configuration `instructions` array, and
+/// the configuration is read per *process*: the same array is injected into
+/// every session that process serves, `task` subagents included, which is
+/// precisely what `PROP-076#SYS-WORKER-EXCLUSION` forbids. So `read` is this
+/// harness's default and a declared `launch` delivers nothing — `vibe agent`
+/// starts OpenCode softly with the reason, and `vibe prompt flags` refuses
+/// (`#SYS-OPENCODE`). The key exists so a project can *declare* the tier it
+/// wants the day OpenCode can scope instructions to one agent, and so the
+/// declaration is refused by name rather than ignored.
+///
+/// ```
+/// use vibe_core::manifest::{HarnessDelivery, OpenCodeHarness};
+///
+/// let declared: OpenCodeHarness = toml::from_str("delivery = \"launch\"\n")?;
+/// assert_eq!(declared.delivery, Some(HarnessDelivery::Launch));
+/// # Ok::<(), toml::de::Error>(())
+/// ```
+#[derive(Debug, Clone, Default, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct OpenCodeHarness {
+    /// How the lane reaches this harness. Absent means `read`.
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub delivery: Option<HarnessDelivery>,
 }

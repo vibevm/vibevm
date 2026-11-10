@@ -51,6 +51,7 @@ impl Machine {
         let machine = Self { user, project, bin };
         machine.shim("my-claude");
         machine.shim("codex");
+        machine.shim("opencode");
         machine
     }
 
@@ -623,3 +624,90 @@ fn a_resumed_claude_session_is_told_it_keeps_its_old_lane() {
         .stderr(predicate::str::contains("keeps the boot lane").not());
 }
 
+/// OpenCode — a launcher and a dialect with **no deliverable slot**.
+///
+/// The kind exists so `vibe agent opencode` exists and
+/// `[system_prompt.harness.opencode]` is declarable; the carrier is named
+/// in the note and never passed, because OpenCode injects a configuration
+/// `instructions` array into every session its process serves, `task`
+/// subagents included (`#SYS-OPENCODE`, `#SYS-WORKER-EXCLUSION`).
+#[test]
+fn opencode_is_a_builtin_launcher() {
+    let machine = Machine::new(WRAPPER);
+    machine
+        .agent(&["list"])
+        .assert()
+        .success()
+        .stdout(predicate::str::contains(
+            "opencode (kind opencode) — opencode [built-in]",
+        ));
+}
+
+#[test]
+fn opencode_defaults_to_read_and_starts_unchanged_naming_its_carrier() {
+    let machine = Machine::new(WRAPPER);
+    machine
+        .agent(&["opencode", "run", "hello"])
+        .assert()
+        .success()
+        .stderr(predicate::str::contains("no slot flag is passed"))
+        .stderr(predicate::str::contains("OPENCODE_CONFIG_CONTENT"))
+        .stderr(predicate::str::contains("subagents included"))
+        // `read` is the default, not a warning: the router is doing the
+        // work by design, so this is a note and not a soft launch.
+        .stderr(predicate::str::contains("warning: vibe cannot deliver").not());
+    assert_eq!(machine.argv(), ["run", "hello"]);
+}
+
+#[test]
+fn a_project_declaring_launch_for_opencode_launches_softly_with_the_reason() {
+    let machine = Machine::new(WRAPPER);
+    machine.declare("[system_prompt.harness.opencode]\ndelivery = \"launch\"\n");
+    machine
+        .agent(&["opencode"])
+        .assert()
+        .success()
+        .stderr(predicate::str::contains("warning: vibe cannot deliver"))
+        .stderr(predicate::str::contains("SYS-WORKER-EXCLUSION"))
+        .stderr(predicate::str::contains("2.2.7"))
+        .stderr(predicate::str::contains("delivery = \"read\""));
+    // The shim records one empty line when it received no argument at all.
+    assert_eq!(machine.argv(), [""], "a soft launch passed a flag");
+}
+
+#[test]
+fn printing_flags_for_opencode_says_why_the_carrier_is_not_a_flag() {
+    let machine = Machine::new(WRAPPER);
+    machine
+        .user
+        .vibe()
+        .args(["prompt", "build", "--path"])
+        .arg(machine.project.path())
+        .assert()
+        .success();
+    // The default, `read`: no flags, and the note names the environment
+    // assignment the carrier would have been.
+    let mut command = machine.user.vibe();
+    machine
+        .harnessed(&mut command, VERIFIED)
+        .args(["prompt", "flags", "--harness", "opencode", "--path"])
+        .arg(machine.project.path())
+        .assert()
+        .success()
+        .stderr(predicate::str::contains("OPENCODE_CONFIG_CONTENT"))
+        .stderr(predicate::str::contains(
+            "takes no append-instructions argument",
+        ));
+    // A declared `launch` is a refusal here, where `vibe agent` launches
+    // softly: this command prints and starts nothing, so there is no
+    // session to save.
+    machine.declare("[system_prompt.harness.opencode]\ndelivery = \"launch\"\n");
+    let mut command = machine.user.vibe();
+    machine
+        .harnessed(&mut command, VERIFIED)
+        .args(["prompt", "flags", "--harness", "opencode", "--path"])
+        .arg(machine.project.path())
+        .assert()
+        .failure()
+        .stderr(predicate::str::contains("SYS-WORKER-EXCLUSION"));
+}

@@ -35,7 +35,7 @@ mod validation;
 mod harness;
 pub use harness::{
     CODEX_DOC_MAX_BYTES_DEFAULT, ClaudeHarness, CodexHarness, DocMaxBytes, HarnessDelivery,
-    HarnessTable,
+    HarnessTable, OpenCodeHarness,
 };
 
 /// `[system_prompt]` — opt-in tuning for the generated prefix.

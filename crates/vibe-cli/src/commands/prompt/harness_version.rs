@@ -34,6 +34,7 @@ use std::process::Command;
 use anyhow::Result;
 use vibe_workspace::system_prompt::{
     CODEX_VERIFIED_VERSION, CarrierVerdict, HarnessKind, codex_carrier_verdict,
+    opencode_launch_blocker,
 };
 
 use crate::commands::agent::launchers::Launcher;
@@ -56,8 +57,23 @@ pub(crate) enum Gate {
 /// difference matters and the exact table a user who has checked it
 /// themselves writes.
 pub(crate) fn gate(kind: HarnessKind, launcher: Option<&Launcher>) -> Result<Gate> {
-    if kind != HarnessKind::Codex {
-        return Ok(Gate::Deliver(None));
+    match kind {
+        HarnessKind::Claude => return Ok(Gate::Deliver(None)),
+        // **The one precondition that no version satisfies yet.** It is not
+        // asked of the installed program at all, because the blocker is in
+        // how OpenCode assembles a prompt rather than in which build does
+        // it: probing a version to refuse either way would be a subprocess
+        // spent on a decision already made (`#SYS-OPENCODE`).
+        HarnessKind::OpenCode => {
+            return Ok(Gate::Undeliverable(Undeliverable::hard(
+                opencode_launch_blocker(),
+                "declare `[system_prompt.harness.opencode] delivery = \"read\"`, which is \
+                 already this harness's default, and let the managed block's router have the \
+                 agent read the boot files"
+                    .to_owned(),
+            )));
+        }
+        HarnessKind::Codex => {}
     }
     let name = launcher.map_or(kind.as_str(), |launcher| launcher.name.as_str());
     Ok(match declared_or_probed(launcher) {

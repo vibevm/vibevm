@@ -115,12 +115,12 @@ pub use package::{
     EmbeddedSourceDecl, EmbeddedSourceKind, EntrypointChoice, EntrypointFile, FeaturesTable,
     GitPackageDep, GitRefKind, GlossaryDecl, HarnessDelivery, HarnessTable, HooksDecl, HostChoice,
     LaneForm, LinkType, MCP_ARG_VARS, Materialization, McpServerDecl, MediaDecl,
-    NavigationChapterDecl, NavigationDecl, NavigationSectionDecl, Obsoletes, OverrideEntry,
-    OverrideTable, OverrideTarget, PackageFormat, PackageMeta, PathPackageDep, PrereleasePolicy,
-    Provides, PublishPosture, Recommends, Requires, RequiresAny, Scalar, SkillDecl,
-    SkillResourceDecl, SourceExport, Suggests, SystemPromptSection, TargetOs, TargetSelection,
-    TemplateSection, TranslatesDecl, Ttl, VarRegistryDep, VersionItem, VersionSource,
-    VisibilityMeta, WhenCondition, channel_name_is_valid,
+    NavigationChapterDecl, NavigationDecl, NavigationSectionDecl, Obsoletes, OpenCodeHarness,
+    OverrideEntry, OverrideTable, OverrideTarget, PackageFormat, PackageMeta, PathPackageDep,
+    PrereleasePolicy, Provides, PublishPosture, Recommends, Requires, RequiresAny, Scalar,
+    SkillDecl, SkillResourceDecl, SourceExport, Suggests, SystemPromptSection, TargetOs,
+    TargetSelection, TemplateSection, TranslatesDecl, Ttl, VarRegistryDep, VersionItem,
+    VersionSource, VisibilityMeta, WhenCondition, channel_name_is_valid,
 };
 pub use project::{
     ActiveSection, AuthKind, DEFAULT_REGISTRY_GITVERSE_NAME, DEFAULT_REGISTRY_GITVERSE_URL,

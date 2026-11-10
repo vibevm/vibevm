@@ -23,17 +23,25 @@ specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-076#SYS-HARNESS-DELI
 
 use std::path::Path;
 
-use vibe_core::manifest::{HarnessDelivery, Manifest};
+use vibe_core::manifest::{HarnessDelivery, HarnessTable, Manifest};
 
-/// The closed set of harness kinds this version knows a launch tier for.
+/// The closed set of harness kinds this version has a flag dialect for.
+///
+/// **Membership is not a launch tier.** A kind is here when vibe knows its
+/// dialect well enough to answer "what does a launch of this pass", and
+/// `opencode`'s answer is "nothing, and here is why" — which is an answer
+/// worth having, because without the kind `vibe agent opencode` would not
+/// exist and `[system_prompt.harness.opencode]` could not be declared
+/// (`#SYS-OPENCODE`).
 ///
 /// ```
 /// use vibe_workspace::system_prompt::HarnessKind;
 ///
 /// assert_eq!(HarnessKind::parse("claude"), Some(HarnessKind::Claude));
+/// assert_eq!(HarnessKind::parse("opencode"), Some(HarnessKind::OpenCode));
 /// assert_eq!(HarnessKind::parse("gemini"), None);
 /// assert_eq!(HarnessKind::Codex.as_str(), "codex");
-/// assert_eq!(HarnessKind::ALL.len(), 2, "the set is closed at two");
+/// assert_eq!(HarnessKind::ALL.len(), 3, "the set is closed at three");
 /// ```
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum HarnessKind {
@@ -42,17 +50,26 @@ pub enum HarnessKind {
     Claude,
     /// Codex — `developer_instructions` through a launch-time profile file.
     Codex,
+    /// OpenCode — a launcher and a dialect, but **no deliverable slot**: its
+    /// only additive carrier is process-wide and reaches `task` subagents
+    /// (`#SYS-OPENCODE`).
+    OpenCode,
 }
 
 impl HarnessKind {
     /// Every kind, in the order a refusal lists them.
-    pub const ALL: [HarnessKind; 2] = [HarnessKind::Claude, HarnessKind::Codex];
+    pub const ALL: [HarnessKind; 3] = [
+        HarnessKind::Claude,
+        HarnessKind::Codex,
+        HarnessKind::OpenCode,
+    ];
 
     /// The kind's own name, which is also the manifest's harness key.
     pub fn as_str(self) -> &'static str {
         match self {
             HarnessKind::Claude => "claude",
             HarnessKind::Codex => "codex",
+            HarnessKind::OpenCode => "opencode",
         }
     }
 
@@ -76,17 +93,24 @@ impl HarnessKind {
                 "--system-prompt-file",
             ],
             HarnessKind::Codex => &["-p", "--profile"],
+            // Nothing: vibe passes this kind no flag under any delivery, so
+            // nothing of the user's could be a second one beside ours.
+            HarnessKind::OpenCode => &[],
         }
     }
 
     /// This kind's declared delivery for a node.
+    ///
+    /// A node with no `[system_prompt]` table at all takes the **table's own
+    /// per-kind default**, not one default for every kind: `launch` for the
+    /// two harnesses with a file-based slot and `read` for the rest. Reading
+    /// `Launch` for every kind here was harmless while the set held only
+    /// those two and is not once it does not.
     pub fn delivery(self, manifest: &Manifest) -> HarnessDelivery {
-        manifest
-            .system_prompt
-            .as_ref()
-            .map_or(HarnessDelivery::Launch, |section| {
-                section.harness.delivery(self.as_str())
-            })
+        manifest.system_prompt.as_ref().map_or_else(
+            || HarnessTable::default().delivery(self.as_str()),
+            |section| section.harness.delivery(self.as_str()),
+        )
     }
 }
 
@@ -136,14 +160,16 @@ pub fn launch_flags(
     codex_limit: usize,
 ) -> LaunchFlags {
     if delivery == HarnessDelivery::Read {
+        let mut notes = vec![format!(
+            "`[system_prompt.harness.{}] delivery = \"read\"`, so the harness starts \
+             unchanged and the managed block's router has the agent read the boot files \
+             itself — no slot flag is passed",
+            kind.as_str()
+        )];
+        notes.extend(no_slot_note(kind, lane));
         return LaunchFlags {
             flags: Vec::new(),
-            notes: vec![format!(
-                "`[system_prompt.harness.{}] delivery = \"read\"`, so the harness starts \
-                 unchanged and the managed block's router has the agent read the boot files \
-                 itself — no slot flag is passed",
-                kind.as_str()
-            )],
+            notes,
             profile: None,
         };
     }
@@ -180,6 +206,89 @@ pub fn launch_flags(
                 profile: Some(profile),
             }
         }
+        // **No flags, and the note says what the carrier would have been.**
+        // A caller that reaches here declared `launch` for a kind whose
+        // carrier vibe will not deliver; the composition still answers, and
+        // the carrier gate above it turns the answer into a soft launch or
+        // a refusal (`#SYS-OPENCODE`, `#SYS-SOFT-LAUNCH`).
+        HarnessKind::OpenCode => LaunchFlags {
+            flags: Vec::new(),
+            notes: no_slot_note(kind, lane).into_iter().collect(),
+            profile: None,
+        },
+    }
+}
+
+/// The OpenCode version this build measured its carrier question against.
+///
+/// Version-scoped for the same reason Codex's is: the claim is a measurement
+/// of how one program assembles a prompt, and nothing here is a floor.
+/// Unlike Codex's it does **not** gate a delivery — there is none to gate —
+/// it scopes the *findings* that keep the delivery closed.
+pub const OPENCODE_MEASURED_VERSION: &str = "2.2.7";
+
+/// Why OpenCode has no deliverable launch tier, as one sentence naming the
+/// carrier, the two blockers and the version they were measured on.
+///
+/// **The carrier itself is excellent, and that is the frustrating part.**
+/// `OPENCODE_CONFIG_CONTENT` is read as one configuration layer, its
+/// `instructions` array is *set-unioned* with the project's own rather than
+/// replacing it, and it writes nothing to disk — per-launch, additive,
+/// side-effect-free. Both blockers are about *who* ends up reading it.
+///
+/// **Blocker one: the launch's environment does not reach the session.**
+/// OpenCode's default mode hands the work to one long-lived background
+/// service on a fixed port, and that process has the environment of whoever
+/// started it. Observed on 2.2.7: with `OPENCODE_CONFIG_CONTENT` set in the
+/// client's environment, `opencode debug config` against the running
+/// service lists the global config and no such layer, while the same
+/// command with `--standalone` lists it last. So the carrier either does
+/// not arrive at all, or — when that launch is the one that starts the
+/// service — arrives for **every session the service goes on to serve**,
+/// across projects. Neither is a per-launch delivery.
+///
+/// **Blocker two: a subagent inherits it.** OpenCode assembles one system
+/// array per session from process-wide state, and the `task` tool's child
+/// session goes through the same assembly with no gate on its parent, so a
+/// `task` subagent receives what the primary agent received. A quiet worker
+/// would get the whole central prefix, which `#SYS-WORKER-EXCLUSION`
+/// forbids outright and which `#SYS-HARNESS-DELIVERY`'s row C5 already
+/// calls disqualifying: a harness whose subagents inherit the slot must not
+/// have `launch` as its default at all. There is no per-agent
+/// `instructions` key and no primary-only switch to narrow it with
+/// (`#SYS-OPENCODE`).
+pub fn opencode_launch_blocker() -> String {
+    format!(
+        "OpenCode has no instruction slot a launch can scope to one session. Its only additive \
+         carrier is the configuration key `instructions`, which vibe would hand over per launch \
+         as `OPENCODE_CONFIG_CONTENT`, and two things stop it: OpenCode's default mode serves \
+         sessions from one long-lived background service that never sees the launch's own \
+         environment, so the carrier either does not arrive or arrives for every session that \
+         service serves; and the `instructions` array is injected into **every** session a \
+         process serves, `task` subagents included, so a quiet worker would receive the whole \
+         central prefix — which `PROP-076#SYS-WORKER-EXCLUSION` forbids. Measured against \
+         OpenCode {OPENCODE_MEASURED_VERSION}"
+    )
+}
+
+/// The note a kind with no deliverable slot prints: what the carrier is,
+/// why it is not a flag, and why vibe does not use it.
+///
+/// It is printed under **both** deliveries, because the question it answers
+/// — "where would this harness's lane have gone" — does not depend on which
+/// tier the project declared.
+fn no_slot_note(kind: HarnessKind, lane: &Path) -> Option<String> {
+    match kind {
+        HarnessKind::Claude | HarnessKind::Codex => None,
+        HarnessKind::OpenCode => Some(format!(
+            "{}. The carrier could never have been a flag in any case: OpenCode takes no \
+             append-instructions argument, so the assignment would have been \
+             `OPENCODE_CONFIG_CONTENT={{\"instructions\":[\"{}\"]}}` in the launch's own \
+             environment — a path, never the lane's bytes. The agent reads the boot files \
+             itself instead",
+            opencode_launch_blocker(),
+            lane.display()
+        )),
     }
 }
 

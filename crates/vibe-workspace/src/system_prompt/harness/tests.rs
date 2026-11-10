@@ -115,9 +115,43 @@ fn read_delivery_passes_no_flag_and_says_why() {
         let answer = flags(kind, HarnessDelivery::Read);
         assert!(answer.flags.is_empty(), "{kind:?}");
         assert!(answer.profile.is_none());
-        assert_eq!(answer.notes.len(), 1);
-        assert!(answer.notes[0].contains("read"));
+        assert!(!answer.notes.is_empty(), "{kind:?}");
+        assert!(answer.notes[0].contains("read"), "{kind:?}");
     }
+}
+
+#[test]
+fn opencode_passes_no_flag_under_either_delivery_and_names_its_carrier() {
+    // **A kind with no deliverable slot is still a kind.** `vibe agent
+    // opencode` has to exist and `[system_prompt.harness.opencode]` has to
+    // be declarable; what the dialect answers is "nothing, and here is
+    // why" (`#SYS-OPENCODE`).
+    for delivery in [HarnessDelivery::Read, HarnessDelivery::Launch] {
+        let answer = flags(HarnessKind::OpenCode, delivery);
+        assert!(answer.flags.is_empty(), "{delivery:?}");
+        assert!(answer.profile.is_none(), "{delivery:?}");
+        let said = answer.notes.join(" ");
+        // The carrier is named, and so is the reason it is not delivered.
+        assert!(said.contains("OPENCODE_CONFIG_CONTENT"), "{said}");
+        assert!(said.contains("subagents included"), "{said}");
+        assert!(said.contains(OPENCODE_MEASURED_VERSION), "{said}");
+        // A path, never the lane's own bytes — the carrier would travel in
+        // the environment, and an environment is not a safer command line.
+        assert!(
+            said.contains("/w/vibevm/vibespecs/boot/AGENT-LANE.md"),
+            "{said}"
+        );
+        assert!(!said.contains("<!-- lane -->"), "{said}");
+    }
+}
+
+#[test]
+fn the_opencode_blocker_is_version_scoped_and_names_worker_exclusion() {
+    let blocker = opencode_launch_blocker();
+    assert!(blocker.contains("SYS-WORKER-EXCLUSION"), "{blocker}");
+    assert!(blocker.contains(OPENCODE_MEASURED_VERSION), "{blocker}");
+    assert!(blocker.contains("instructions"), "{blocker}");
+    assert!(blocker.contains("background service"), "{blocker}");
 }
 
 #[test]
@@ -164,4 +198,26 @@ fn a_version_that_cannot_be_read_claims_nothing_either_way() {
 fn an_unknown_kind_is_none_rather_than_a_default() {
     assert_eq!(HarnessKind::parse("qwen"), None);
     assert_eq!(HarnessKind::parse("Claude"), None, "the set is exact");
+    assert_eq!(HarnessKind::parse("OpenCode"), None, "the set is exact");
+}
+
+#[test]
+fn a_node_with_no_system_prompt_table_takes_each_kinds_own_default() {
+    // One default for every kind was harmless while the set held only the
+    // two file-slot harnesses. It is not once it does not: `opencode` would
+    // have read `launch` from a project that declared nothing at all.
+    let manifest = vibe_core::manifest::Manifest::default();
+    assert!(manifest.system_prompt.is_none());
+    assert_eq!(
+        HarnessKind::Claude.delivery(&manifest),
+        HarnessDelivery::Launch
+    );
+    assert_eq!(
+        HarnessKind::Codex.delivery(&manifest),
+        HarnessDelivery::Launch
+    );
+    assert_eq!(
+        HarnessKind::OpenCode.delivery(&manifest),
+        HarnessDelivery::Read
+    );
 }
