@@ -349,3 +349,114 @@ document is a journal fact and S3 already proved the bytes do not move); and
 template **rendering** from a per-package git registry, where the index member
 and the `template_index_required` refusal are delivered but the fetch-and-render
 path is not — every directory-shaped registry resolves templates today.
+
+## 2026-11-10 — phase P3 implemented
+
+`AV-FMT-006` delivered: `org.vibevm.node/node` is one template package.
+Outside this repository, `/fast/git/vibe-pkg-node` carries the `[template]`
+manifest at template revision `1.0.0` — commit `1a52f3d`, new tag `v1.0.0` —
+and keeps `v24.22.2` and `v22.23.4` published concretely;
+`/fast/git/vibe-pkg-node-generator` records its own supersession in its README
+(`c160ba3`). **Nothing was published or pushed**, and `org.vibevm.codkit/codkit`
+was not touched. In this repository the Node fixtures became upstream's own
+frozen documents and `crates/vibe-cli/tests/cli_template_node.rs` drives the
+channels, the optional rows and the oldest version in the `min` window through
+the real binary. No fact of PROP-075 sections 2–5 remained for P3 to move to
+`impl/done` — P1 and P2 closed every one of them — so the spec change is the
+new `#P3-AS-BUILT` (four amendments) plus the fifth `changelog` entry and a
+header that no longer claims P1 is the only implemented phase. The spec XML was
+validated by the PROP-045 projector, as P1's entry records it must be.
+
+The hand acceptance, with a throwaway `HOME` and `VIBE_SETTINGS` under
+`/fast/tmp` (the real `~/.vibe` was never read or written) and the real
+network, against a directory registry holding the committed template plus both
+concrete tags:
+
+```text
+vibe install -g org.vibevm.node/node@lts --registry <dir> --assume-yes
+  -> plan for org.vibevm.node/node@26.13.0, installer linux-x64, 1 step
+  -> installed org.vibevm.node/node@26.13.0 via installer `linux-x64`
+<settings>/opt/paths/node/0/node -v   -> v26.13.0
+<settings>/opt/paths/node/0/npm  -v   -> 11.20.0
+vibe app exec node -- node -v         -> v26.13.0
+```
+
+The `vibe app versions org.vibevm.node/node --json` line of the plan's
+acceptance was **skipped: that command is phase P5b and does not exist yet.**
+
+Facts a later session would otherwise re-derive:
+
+- **`template_optional` needed a third row, found while preparing exactly the
+  test the plan prescribed for that risk.** Measuring the frozen index for the
+  oldest version in the `min` window showed that
+  `node-v12.0.0-darwin-arm64.tar.gz` does not exist: upstream's Apple-silicon
+  archive begins at Node 16.0.0, so with `min = "12.0.0"` every release below
+  16 refuses to render unless `macos-arm64` is optional too. Measured over the
+  406 produced versions of the frozen index: `linux-x64-musl` absent from 389,
+  `osx-arm64-tar` from 132, `win-arm64-zip` from 234; all seven targets present
+  together only from 26.8.0 up. The general rule, now in the package's own boot
+  document: a row upstream stops building must *become* optional, never
+  disappear, or old versions stop installing.
+- **`files[]` in `index.json` is not what gates a row — `SHASUMS256.txt` is.**
+  The renderer drops a `template_optional` row when the *digest document* has
+  no entry for its archive, so `files[]` is a survey instrument for choosing
+  which rows to mark (which is how the three were chosen, and what the
+  planning survey measured) and not the authority for any single version. The
+  four versions whose checksum documents are frozen here agree with their
+  `files[]` records; nothing says every release does, and only the digest
+  document decides.
+- **The frozen digest documents are the retired generator's own inputs**, which
+  closes the provenance chain the golden proof was missing: upstream's
+  `SHASUMS256.txt` for 24.22.2 and 22.23.4 hash to `aec92ae9…` and
+  `c90c3f14…`, exactly the values the committed manifests' four-line provenance
+  headers record, and `node_golden.rs` asserts that equality. P1's hand-derived
+  seven-line excerpts were verified against them first (0 mismatches) and then
+  replaced. The live install confirmed the freeze from the other side: the
+  `index.json` the real run fetched hashes to the committed subset's source
+  document, `6b27fe57…`.
+- **A real upstream index can be frozen without trimming its meaning.**
+  nodejs.org writes one record per line, newest first, so the committed subset
+  is a *leading slice* — down to and including the declared `min`, plus the
+  next three records so the `min` filter is still exercised — with every kept
+  record byte-verbatim: 410 of 878 records, 175 KiB instead of 329 KiB, and
+  because the document is sorted the subset is the template's **whole** version
+  domain. Every channel answer the suite checks is therefore upstream's real
+  answer. One thing is lost with the hand-written excerpt and recorded in the
+  fixture README: upstream has no non-semver record, so the "skipped with a
+  reason" path is covered by the unit tests alone.
+- **A requirement is not a pin, and for a template that now chooses the
+  document to fetch.** `@12.0.0` is `^12.0.0` and resolved to 12.22.12 — the
+  first run of the oldest-version test failed asking for a digest document the
+  fixture deliberately does not carry. Harmless for a published package with
+  three versions; for a template whose domain is 406, an inexact spelling
+  silently moves both the release and its digest document. `@=12.0.0` is the
+  spelling that means one release.
+- **`install -g --plan-only` performs the FULL render, not the skeleton.**
+  `vibe_app::resolve::from_global_with_operation` resolves through
+  `resolve_and_fetch`, so the plan already costs the digest document and
+  materialises the rendered tree; the skeleton stage serves the depsolver's
+  `fetch_manifest`. That is what lets every case in `cli_template_node.rs` be a
+  `--plan-only` run and still assert what was rendered, and it is worth
+  remembering before reading `#TEMPLATE-TWO-STAGE` as a promise about the
+  global path.
+- **One `[[remap]]` row makes the whole Node template offline.** A `prefix` row
+  with a `path` target joins the URL remainder onto the directory
+  (`PathLookup::Mirror`), so `prefix = "https://nodejs.org/dist/"` →
+  `<dir>` serves both `index.json` and `v<version>/SHASUMS256.txt` from a tree
+  that mirrors upstream's layout. Without the remainder join, every version's
+  digest document would collide on one file name.
+- **Why the package is not published yet.** Rendering a template found in a
+  **per-package git registry** is the part of `#TEMPLATE-DISCOVERY` P2 left to
+  the phase that first needs it, and P3 does not need it: the suite and the
+  hand install both use a directory-shaped registry, which is what
+  `--registry DIR`, a `localdir` source, a `monorepo` working copy and a
+  mirrored layout registry all are. Publishing before that gap closes would
+  expose the template revision to a template-unaware client as if it were a
+  Node.js version; the revision is numbered `1.0.0`, below every produced
+  version, so even such a client prefers a real one.
+- **Disk, on this machine:** a cold `CARGO_TARGET_DIR` for this workspace does
+  not fit in the free space `/fast` had (30 GB free; the main tree's `debug/`
+  alone is 138 GB). Every cargo command of this phase therefore ran with
+  `CARGO_PROFILE_DEV_DEBUG=0` beside the mandated `CARGO_BUILD_JOBS=6`, which
+  kept the whole target directory at 4.9 GB and changes nothing a gate
+  observes.

@@ -4,6 +4,13 @@
 //! the one deliberate loss PROP-075 `#TEMPLATE-DIGEST-SOURCE` records,
 //! because nodejs.org publishes digests but no sizes.
 //!
+//! Since phase P3 the inputs are upstream's own frozen documents rather
+//! than P1's hand-derived excerpts, and the proof is therefore stronger
+//! than byte-identity of two renders: each digest document hashes to
+//! exactly the input the committed manifest's provenance header names, so
+//! the template and the retired generator are shown to render the same
+//! manifest *from the same bytes*.
+//!
 //! `tests/fixtures/node/README.md` says what every fixture is and where
 //! it came from.
 
@@ -12,6 +19,13 @@ use vibe_template::{DigestTable, Stage, VersionRecord, render, template_section,
 
 const TEMPLATE: &str = include_str!("fixtures/node/vibe.toml");
 const INDEX: &str = include_str!("fixtures/node/index-excerpt.json");
+
+/// The two versions `/fast/git/vibe-pkg-node` publishes concretely, with
+/// the manifest each of its tags carries — the golden bytes.
+const COMMITTED: [(&str, &str); 2] = [
+    ("24.22.2", include_str!("fixtures/node/vibe-24.22.2.toml")),
+    ("22.23.4", include_str!("fixtures/node/vibe-22.23.4.toml")),
+];
 
 /// The committed manifest with the generator's provenance header and its
 /// `size` lines removed, plus the number of `size` lines that were there.
@@ -39,10 +53,9 @@ fn golden(committed: &str) -> (String, usize) {
 
 fn record(section: &TemplateSection, version: &str) -> VersionRecord {
     let (records, skipped) = version_records(section, Some(INDEX)).expect("the index parses");
-    assert_eq!(
-        skipped.len(),
-        1,
-        "exactly the record whose version is not semver is skipped: {skipped:?}"
+    assert!(
+        skipped.is_empty(),
+        "upstream's own index carries no record vibe cannot read: {skipped:?}"
     );
     records
         .into_iter()
@@ -50,23 +63,26 @@ fn record(section: &TemplateSection, version: &str) -> VersionRecord {
         .unwrap_or_else(|| panic!("the index excerpt carries {version}"))
 }
 
-fn digests(version: &str) -> DigestTable {
-    let text = match version {
+/// The frozen upstream digest document of one version.
+fn digest_document(version: &str) -> &'static str {
+    match version {
         "24.22.2" => include_str!("fixtures/node/SHASUMS256-24.22.2.txt"),
         "22.23.4" => include_str!("fixtures/node/SHASUMS256-22.23.4.txt"),
+        "26.13.0" => include_str!("fixtures/node/SHASUMS256-26.13.0.txt"),
+        "12.0.0" => include_str!("fixtures/node/SHASUMS256-12.0.0.txt"),
         other => panic!("no digest fixture for {other}"),
-    };
-    DigestTable::parse_sha256sums(text).expect("the digest document parses")
+    }
+}
+
+fn digests(version: &str) -> DigestTable {
+    DigestTable::parse_sha256sums(digest_document(version)).expect("the digest document parses")
 }
 
 /// The whole claim of phase P1, as one assertion per version.
 #[test]
 fn renders_the_committed_node_manifests() {
     let section = template_section(TEMPLATE).expect("[template] reads");
-    for (version, committed) in [
-        ("24.22.2", include_str!("fixtures/node/vibe-24.22.2.toml")),
-        ("22.23.4", include_str!("fixtures/node/vibe-22.23.4.toml")),
-    ] {
+    for (version, committed) in COMMITTED {
         let (expected, sizes) = golden(committed);
         assert_eq!(sizes, 7, "{version}: one size line per installer option");
         let rendered = render(TEMPLATE, &record(&section, version), &digests(version))
@@ -219,4 +235,96 @@ fn the_skeleton_render_of_the_node_template_validates() {
         );
         assert!(rendered.toml.contains(vibe_template::SKELETON_DIGEST));
     }
+}
+
+/// The frozen digest documents are the retired generator's **own
+/// inputs**: each hashes to exactly the digest the committed manifest's
+/// provenance header records. Without this the golden comparison would
+/// only say that two renderers agree about seven digests somebody typed;
+/// with it, both are shown to render the same manifest from the same
+/// upstream bytes (campaign `AV-FMT-006`).
+#[test]
+fn the_frozen_digest_documents_are_the_generators_own_inputs() {
+    for (version, committed) in COMMITTED {
+        let declared = committed
+            .lines()
+            .find_map(|line| line.strip_prefix("# input SHASUMS256.txt sha256 = "))
+            .unwrap_or_else(|| panic!("{version}: the header records its digest-document input"));
+        let frozen = {
+            use sha2::{Digest, Sha256};
+            let mut hasher = Sha256::new();
+            hasher.update(digest_document(version).as_bytes());
+            format!("{:x}", hasher.finalize())
+        };
+        assert_eq!(
+            frozen, declared,
+            "{version}: the frozen SHASUMS256.txt is not the document the generator read"
+        );
+    }
+}
+
+/// The frozen index subset is the template's **whole** version domain, so
+/// every channel answer the suites check is upstream's real answer: the
+/// document is sorted newest-first and the subset is a leading slice of
+/// it (`tests/fixtures/node/README.md` states the selection rule).
+#[test]
+fn the_frozen_index_subset_is_the_whole_version_domain() {
+    let section = template_section(TEMPLATE).expect("[template] reads");
+    let (records, skipped) = version_records(&section, Some(INDEX)).expect("the index parses");
+    assert!(skipped.is_empty(), "{skipped:?}");
+    assert_eq!(records.len(), 406, "the produced versions of the subset");
+    assert_eq!(records.first().unwrap().version.to_string(), "26.13.0");
+    assert_eq!(records.last().unwrap().version.to_string(), "12.0.0");
+    // The two filters the subset exists to exercise: the one prerelease
+    // and the three records below the declared `min` are all gone.
+    assert!(
+        records.iter().all(|record| record.version.pre.is_empty()),
+        "the `prerelease` filter dropped v27.0.0-alpha.0.0.0"
+    );
+    assert!(
+        records
+            .iter()
+            .all(|record| record.version >= semver::Version::new(12, 0, 0)),
+        "the `min` filter dropped v11.15.0, v11.14.0 and v11.13.0"
+    );
+    // And the records still carry the metadata the channel rules read.
+    let newest = records.first().unwrap();
+    assert_eq!(newest.meta["lts"].to_string(), "Lithium");
+    assert_eq!(newest.raw, "v26.13.0");
+}
+
+/// The oldest version in the template's `min` window renders — with the
+/// three targets upstream did not build for it dropped and reported, and
+/// nothing else lost. This is the risk `PLAN.md` names for phase P3: a
+/// `template_optional` set that is wrong makes an old version render an
+/// archive that does not exist, and the golden comparison (two recent
+/// versions) cannot see it.
+#[test]
+fn the_oldest_version_in_the_min_window_drops_the_three_absent_targets() {
+    let section = template_section(TEMPLATE).expect("[template] reads");
+    let rendered = render(TEMPLATE, &record(&section, "12.0.0"), &digests("12.0.0"))
+        .expect("the three absent targets are dropped, not refused");
+    let dropped: Vec<&str> = rendered.dropped.iter().map(|row| row.id.as_str()).collect();
+    assert_eq!(
+        dropped,
+        vec!["linux-musl-x64", "macos-arm64", "windows-arm64"]
+    );
+    let manifest = Manifest::parse_str(&rendered.toml).expect("an ordinary manifest");
+    let ids: Vec<&str> = manifest
+        .installer_options
+        .iter()
+        .map(|option| option.id.as_str())
+        .collect();
+    assert_eq!(
+        ids,
+        vec!["linux-x64", "linux-arm64", "macos-x64", "windows-x64"]
+    );
+    // The rows that survived carry upstream's real digests, not zeros.
+    assert_eq!(rendered.stage, Stage::Full);
+    assert!(
+        rendered
+            .toml
+            .contains("3268466af05464a7aa698df7cc8bbeec0b8728d8779e12130ef441bb730a8059"),
+        "the linux-x64 digest of v12.0.0 is the frozen document's"
+    );
 }

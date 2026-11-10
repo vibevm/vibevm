@@ -2,10 +2,10 @@
 
 **Status:** planned 2026-11-10; written against `main` at `7d495d137`. Campaign
 node `APP-VERSIONS`: starts after `CORP-ENV` closes, before `SYS-PROMPT`.
-**Phase 0 spikes S1, S2, S3 and S5 ran 2026-11-10 and phases P1, P5a and P2 are
-implemented** — the answers and what they changed are in `LOG.md`, and the
-facts P1 delivers are `impl/done` in PROP-075. S4 and S6 are still open; S4
-belongs with P5a and S6 with P7.
+**Phase 0 spikes S1, S2, S3 and S5 ran 2026-11-10 and phases P1, P5a, P2 and P3
+are implemented** — the answers and what they changed are in `LOG.md`, and the
+facts those phases deliver are `impl/done` in PROP-075. S4 and S6 are still
+open; S4 belongs with P5a and S6 with P7.
 Phase 0 (spikes) and Phases 5a / 6 may run while `CORP-ENV` finishes, because
 their files are disjoint from it.
 Cold start: read this file, then `LOG.md` in this directory, then
@@ -423,7 +423,7 @@ resolves templates today. The eight as-built amendments are
 
 **Parallel.** Needs P1. P4, P5b and P3 all need P2.
 
-### P3 — Node as a template package, replacing the generator — **M**
+### P3 — Node as a template package, replacing the generator — **M** — *delivered 2026-11-10*
 
 **Goal.** `org.vibevm.node/node` is one template package with channels;
 the generator is retired; **codkit is untouched**.
@@ -456,12 +456,40 @@ vibe app versions org.vibevm.node/node --json | head
 vibe install -g org.vibevm.node/node@lts && node -v && npm -v
 ```
 
-**Risks.** `files[]` varies by version, so `template_optional` must be right
-on `linux-musl-x64` and `windows-arm64` or old versions render a nonexistent
-archive; the golden comparison catches it only for the two versions it covers,
-so the channel test renders the oldest version in the `min` window too.
-Node publishes no sizes, so the step panel loses its byte total — a deliberate
-loss recorded in `PROP-075#TEMPLATE-DIGEST-SOURCE` and in `AV-FMT-006`.
+**Risks, as they turned out.** The `template_optional` risk **fired**, and the
+case the plan prescribed for it is what caught it: `files[]` varies by version,
+and not only on the two rows named above — upstream's Apple-silicon archive
+begins at 16.0.0, so `macos-arm64` is a third optional row and without it every
+release below 16.0.0 (a third of the declared window) refuses to render. It
+surfaced while preparing that very case — the oldest version in the `min`
+window — which is now a test in both suites. Measured
+over the 406 produced versions: `linux-x64-musl` absent from 389,
+`osx-arm64-tar` from 132, `win-arm64-zip` from 234, all seven present together
+only from 26.8.0. The size loss is as designed and recorded.
+
+**As delivered.** The package repository carries the template at revision
+`1.0.0` (tag `v1.0.0`, commit `1a52f3d`) and keeps `v24.22.2` / `v22.23.4`
+published concretely; the generator repository records its own supersession
+(`c160ba3`). Nothing is published or pushed, for the one reason `AV-FMT-006`
+now states: rendering a template found in a per-package **git** registry is the
+part of `#TEMPLATE-DISCOVERY` P2 deferred, and P3 does not need it — the suite
+and the hand install both use directory-shaped registries. In this repository
+the fixtures became upstream's own frozen documents (a leading, byte-verbatim
+slice of `index.json` plus four verbatim `SHASUMS256.txt` files; the two golden
+ones hash to exactly the inputs the committed manifests' provenance headers
+name, which `node_golden.rs` asserts), and `cli_template_node.rs` drives six
+cases through the real binary — plus one that pins the template under test to
+the golden fixture byte for byte: `lts` → 26.13.0, `lts/jod` → 22.23.4, an
+undeclared `lts/argon` refused by name, the oldest version in the window
+rendered with four rows instead of seven, both named optional rows refused with
+`no_option` for 12.0.0 and accepted for 24.22.2, concrete-wins over the real
+published tag, and `--offline` resolving with the mirror deleted. The hand
+acceptance ran with a throwaway `HOME` / `VIBE_SETTINGS` under `/fast/tmp`:
+`vibe install -g org.vibevm.node/node@lts` installed 26.13.0 over the real
+network and `node -v` answered `v26.13.0` (`npm -v` → `11.20.0`); the
+`vibe app versions` line of the acceptance is **not** run, because that command
+is P5b and does not exist yet. The four as-built amendments are
+`PROP-075#P3-AS-BUILT`.
 
 **Parallel.** Needs P1 and P2. Independent of P4, P5, P6.
 
@@ -764,7 +792,15 @@ concurrently once P2 lands.
   where a rendered tree lives and what a channel holds.
 - **P3** `vibe install -g org.vibevm.node/node@lts` makes exactly two HTTP
   requests on a cold cache (the version list and one digest document) and one
-  payload download.
+  payload download. **Held in its observable form, not instrumented
+  (2026-11-10):** the hand install on a cold settings root ended with exactly
+  two documents cached — `versions.json` (whose recorded `sha256` is the live
+  `index.json`'s, `6b27fe57…`) and `digests/26.13.0`, nothing else — plus one
+  unpacked archive, so the layer fetched no document beyond those two and
+  rendered one version. The *request* count itself was not counted: nothing in
+  the tree instruments it, and the offline suites reach the documents through a
+  `[[remap]]` row rather than a counting server. The strict form belongs with
+  P4, which has to deny non-loopback traffic anyway.
 - **P4** A client with only the mirrored registry configured and all
   non-loopback traffic denied installs a snapshotted Node version.
 - **P5a** The prompt hook spawns zero processes on a prompt in an unchanged

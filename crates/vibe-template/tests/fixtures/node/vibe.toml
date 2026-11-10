@@ -229,6 +229,7 @@ platform_name = "macOS"
 arch = "aarch64"
 arch_name = "Apple silicon"
 path_dirs = ["bin"]
+template_optional = true
 
 [[installer_options.steps]]
 id = "node"
