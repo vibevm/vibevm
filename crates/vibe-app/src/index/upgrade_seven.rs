@@ -1,8 +1,10 @@
 //! Typed promotion of protocol7 records into the current protocol8 shape:
-//! no requirer edge becomes weak. Every edge a protocol7 home recorded is a
-//! real requirement, so a home that holds no recommendation still reads and
-//! writes `vibe-user-applications/7` (`PROP-059#proxy-index-upgrade`,
-//! `PROP-077#APP-RECOMMENDS-MECHANICS`).
+//! no requirer edge becomes weak and no installation gains an ecosystem
+//! adapter record. Every edge a protocol7 home recorded is a real
+//! requirement and no protocol7 home ever ran an adapter verb, so a home
+//! that holds neither still reads and writes `vibe-user-applications/7`
+//! (`PROP-059#proxy-index-upgrade`, `PROP-077#APP-RECOMMENDS-MECHANICS`,
+//! `PROP-075#SLOT-EXTRAS`).
 use std::collections::BTreeMap;
 use vibe_wire::generated::application::{e6::index as old, e7::index as new};
 impl Promote<vibe_wire::generated::shared::ConfigurationRecord>
@@ -133,7 +135,10 @@ row!(
         template,
         migrations,
         migrated
-    ]
+    ],
+    // No protocol7 home ever ran an ecosystem adapter, so there is nothing
+    // to promote and nothing is fabricated (`PROP-075#SLOT-EXTRAS`).
+    extras = Vec::new()
 );
 row!(
     InstallationTemplate,

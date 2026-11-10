@@ -77,6 +77,7 @@ fn installed(option: &str, features: &[&str]) -> Index {
             template: None,
             migrations: Vec::new(),
             migrated: Vec::new(),
+            extras: Vec::new(),
             commands: Default::default(),
             features: features.iter().map(|id| (*id).to_owned()).collect(),
             parameters: BTreeMap::new(),

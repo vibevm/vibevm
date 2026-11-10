@@ -1,6 +1,6 @@
 {
   "metadata": {
-    "description": "The one user-application inventory: installations by key, the directories each installation asks to be exposed whole on PATH, the template a rendered manifest was produced from, the migration entries an installation declares and the outcomes of the migrations already carried into it, whether a requirer edge is weak, and each slot's global default, off state and applied link-directory PATH entries.",
+    "description": "The one user-application inventory: installations by key, the directories each installation asks to be exposed whole on PATH, the template a rendered manifest was produced from, the migration entries an installation declares and the outcomes of the migrations already carried into it, whether a requirer edge is weak, what each declared ecosystem adapter last applied and last observed in an installation, and each slot's global default, off state and applied link-directory PATH entries.",
     "spec": {
       "implements": "spec://org.vibevm.core/vibevm/common/PROP-059#index"
     },
@@ -669,6 +669,7 @@
           "template",
           "migrations",
           "migrated",
+          "extras",
           "commands",
           "features",
           "parameters",
@@ -936,6 +937,96 @@
           "metadata": {
             "x-empty": "omit",
             "description": "The migrations already carried into this installation, newest last (PROP-075 #MIGRATION-FAILURE)."
+          }
+        },
+        "extras": {
+          "elements": {
+            "ref": "extras_record"
+          },
+          "metadata": {
+            "x-empty": "omit",
+            "description": "One record per ecosystem adapter this installation has done work for: the last applied item list, the last observed one, and their times and outcomes (PROP-075 #SLOT-EXTRAS). Absent for an installation whose package declares no adapter and for one no adapter verb has run in."
+          }
+        }
+      }
+    },
+    "extras_outcome": {
+      "enum": [
+        "done",
+        "failed",
+        "skipped"
+      ],
+      "metadata": {
+        "x-vocabulary": "closed",
+        "description": "How one adapter verb ended (PROP-075 #ECOSYSTEM-ADAPTER): `skipped` is an adapter that declares no such verb or whose list was empty, and is never an error."
+      }
+    },
+    "extras_record": {
+      "metadata": {
+        "description": "What one ecosystem adapter last did in this installation (PROP-075 #SLOT-EXTRAS). Every item string is opaque: vibe never parses, splits, quotes, escapes, validates or reorders one, and this record only ever echoes them.",
+        "x-wire-order": [
+          "id",
+          "applied",
+          "appliedAt",
+          "appliedOutcome",
+          "observed",
+          "observedAt",
+          "observedOutcome"
+        ]
+      },
+      "properties": {
+        "id": {
+          "type": "string",
+          "metadata": {
+            "description": "The adapter's opaque id, as the package wrote it."
+          }
+        }
+      },
+      "optionalProperties": {
+        "applied": {
+          "elements": {
+            "type": "string"
+          },
+          "metadata": {
+            "x-empty": "omit",
+            "description": "The final list the adapter's install verb was last handed, verbatim and in order."
+          }
+        },
+        "appliedAt": {
+          "type": "string",
+          "metadata": {
+            "x-default": null,
+            "description": "When that apply ran, RFC 3339."
+          }
+        },
+        "appliedOutcome": {
+          "ref": "extras_outcome",
+          "metadata": {
+            "x-default": null,
+            "description": "How it ended. A failure never rolls the runtime back, so this is the one place a later `vibe app describe` can still say what was not carried."
+          }
+        },
+        "observed": {
+          "elements": {
+            "type": "string"
+          },
+          "metadata": {
+            "x-empty": "omit",
+            "description": "What the adapter's list verb last saw in this installation, verbatim and in order."
+          }
+        },
+        "observedAt": {
+          "type": "string",
+          "metadata": {
+            "x-default": null,
+            "description": "When that observation was taken, RFC 3339."
+          }
+        },
+        "observedOutcome": {
+          "ref": "extras_outcome",
+          "metadata": {
+            "x-default": null,
+            "description": "How the observation ended; a failed one leaves the previous list standing and names itself here."
           }
         }
       }

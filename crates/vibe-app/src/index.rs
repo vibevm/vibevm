@@ -225,6 +225,14 @@ pub struct Installation {
     /// The migrations already carried **into** this installation, oldest
     /// first (`PROP-075#MIGRATION-FAILURE`).
     pub migrated: Vec<MigrationOutcomeRecord>,
+    /// What each declared ecosystem adapter last applied and last observed
+    /// **in this installation** (`PROP-075#SLOT-EXTRAS`): optional members
+    /// of the `vibe-user-applications/8` generation P7d paid for, so a home
+    /// that never ran an adapter verb keeps writing the lowest protocol it
+    /// can. A failing apply never rolls the runtime back, which is why this
+    /// is the only place `vibe app describe` can still say what was not
+    /// carried.
+    pub extras: Vec<ExtrasRecord>,
     /// The authored commands of a method-form option.
     pub commands: AuthoredCommands,
     /// The chosen features (`PROP-065#features`).
@@ -503,13 +511,21 @@ impl Index {
                 "template provenance and migration records require application index7".into(),
             );
         }
+        // The two facts `/8` carries, from two phases, in one guard: a weak
+        // requirer edge (`PROP-077#APP-RECOMMENDS-MECHANICS`) and an
+        // ecosystem adapter's record (`PROP-075#SLOT-EXTRAS`). Either in an
+        // older document is refused rather than dropped — a dropped weak
+        // edge would silently orphan a recommendation, and a dropped
+        // adapter record would claim a version carries nothing.
         if document.protocol != INDEX_PROTOCOL
-            && document
-                .installations
-                .values()
-                .any(|r| r.requires.iter().any(|requirement| requirement.weak))
+            && document.installations.values().any(|r| {
+                r.requires.iter().any(|requirement| requirement.weak) || !r.extras.is_empty()
+            })
         {
-            return Err("a weak requirer edge requires application index8".into());
+            return Err(
+                "a weak requirer edge and an ecosystem adapter record require application index8"
+                    .into(),
+            );
         }
         let mut installations = BTreeMap::new();
         for (key, record) in document.installations {
@@ -582,7 +598,8 @@ mod wire_form;
 
 pub use env_record::{EnvEntry, EnvOp, ValueKind};
 pub use migration::{
-    InstalledTemplate, MigrationEntryRecord, MigrationOutcomeRecord, MigrationResult,
+    ExtrasRecord, ExtrasResult, InstalledTemplate, MigrationEntryRecord, MigrationOutcomeRecord,
+    MigrationResult,
 };
 mod slots;
 pub use slots::SlotState;

@@ -71,6 +71,7 @@ fn record(version: &str, features: &[&str]) -> Installation {
         template: None,
         migrations: Vec::new(),
         migrated: Vec::new(),
+        extras: Vec::new(),
         commands: AuthoredCommands::default(),
         features: features.iter().map(|id| (*id).to_owned()).collect(),
         parameters: Default::default(),

@@ -49,6 +49,7 @@ fn home(versions: &[&str], default: Option<&str>, off: bool) -> Index {
                 template: None,
                 migrations: Vec::new(),
                 migrated: Vec::new(),
+                extras: Vec::new(),
                 commands: Default::default(),
                 features: Vec::new(),
                 parameters: BTreeMap::new(),

@@ -44,10 +44,12 @@ fn new_source_records_roundtrip_and_frozen_readers_refuse() {
         serde_json::from_slice::<e5::index::ApplicationIndex>(&bytes("application/e6/index.json"))
             .is_err()
     );
-    // The weak requirer edge is index7's own world (PROP-077
-    // `#APP-RECOMMENDS-MECHANICS`): a frozen reader must refuse a document
-    // that carries one rather than drop the attribute and read the edge as
-    // a requirement.
+    // The weak requirer edge (PROP-077 `#APP-RECOMMENDS-MECHANICS`) and the
+    // per-adapter extras record (PROP-075 `#SLOT-EXTRAS`) are index7's own
+    // world — two phases' facts in one generation: a frozen reader must
+    // refuse a document carrying either rather than drop the attribute and
+    // read the edge as a requirement, or drop the record and claim a
+    // version carries nothing.
     assert!(
         serde_json::from_slice::<e6::index::ApplicationIndex>(&bytes("application/e7/index.json"))
             .is_err()

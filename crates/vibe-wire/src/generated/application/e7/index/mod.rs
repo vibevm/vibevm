@@ -7,8 +7,9 @@ use std::collections::BTreeMap;
 /// each installation asks to be exposed whole on PATH, the template a rendered
 /// manifest was produced from, the migration entries an installation declares
 /// and the outcomes of the migrations already carried into it, whether a
-/// requirer edge is weak, and each slot's global default, off state and applied
-/// link-directory PATH entries.
+/// requirer edge is weak, what each declared ecosystem adapter last applied and
+/// last observed in an installation, and each slot's global default, off state
+/// and applied link-directory PATH entries.
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
 pub struct ApplicationIndex {
@@ -244,6 +245,63 @@ pub enum EnvOp {
     Unset,
 }
 
+/// How one adapter verb ended (PROP-075 #ECOSYSTEM-ADAPTER): `skipped` is an
+/// adapter that declares no such verb or whose list was empty, and is never
+/// an error.
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+pub enum ExtrasOutcome {
+    #[serde(rename = "done")]
+    Done,
+
+    #[serde(rename = "failed")]
+    Failed,
+
+    #[serde(rename = "skipped")]
+    Skipped,
+}
+
+/// What one ecosystem adapter last did in this installation (PROP-075 #SLOT-
+/// EXTRAS). Every item string is opaque: vibe never parses, splits, quotes,
+/// escapes, validates or reorders one, and this record only ever echoes them.
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct ExtrasRecord {
+    /// The adapter's opaque id, as the package wrote it.
+    pub id: String,
+
+    /// The final list the adapter's install verb was last handed, verbatim and
+    /// in order.
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub applied: Vec<String>,
+
+    /// When that apply ran, RFC 3339.
+    #[serde(rename = "appliedAt")]
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub applied_at: Option<String>,
+
+    /// How it ended. A failure never rolls the runtime back, so this is the one
+    /// place a later `vibe app describe` can still say what was not carried.
+    #[serde(rename = "appliedOutcome")]
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub applied_outcome: Option<ExtrasOutcome>,
+
+    /// What the adapter's list verb last saw in this installation, verbatim and
+    /// in order.
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub observed: Vec<String>,
+
+    /// When that observation was taken, RFC 3339.
+    #[serde(rename = "observedAt")]
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub observed_at: Option<String>,
+
+    /// How the observation ended; a failed one leaves the previous list
+    /// standing and names itself here.
+    #[serde(rename = "observedOutcome")]
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub observed_outcome: Option<ExtrasOutcome>,
+}
+
 /// An icon set of PROP-059#menu: path templates by slot, rasters keyed by
 /// decimal pixel size.
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
@@ -322,6 +380,13 @@ pub struct Installation {
     /// (PROP-075 #MIGRATION-FAILURE).
     #[serde(default, skip_serializing_if = "Vec::is_empty")]
     pub migrated: Vec<MigrationOutcome>,
+
+    /// One record per ecosystem adapter this installation has done work for:
+    /// the last applied item list, the last observed one, and their times
+    /// and outcomes (PROP-075 #SLOT-EXTRAS). Absent for an installation whose
+    /// package declares no adapter and for one no adapter verb has run in.
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub extras: Vec<ExtrasRecord>,
 
     pub commands: AuthoredCommands,
 

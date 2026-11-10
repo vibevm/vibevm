@@ -34,6 +34,7 @@ fn record(name: &str, mark: Mark, hidden: bool) -> Installation {
         template: None,
         migrations: Vec::new(),
         migrated: Vec::new(),
+        extras: Vec::new(),
         commands: Default::default(),
         features: vec!["legacy-feature".into()],
         parameters: BTreeMap::from([("answer".into(), "legacy value".into())]),

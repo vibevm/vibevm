@@ -33,6 +33,7 @@ fn record(name: &str, slot: &str, dirs: &[&str], root: &Path) -> Installation {
         template: None,
         migrations: Vec::new(),
         migrated: Vec::new(),
+        extras: Vec::new(),
         commands: AuthoredCommands::default(),
         features: Vec::new(),
         parameters: Default::default(),

@@ -49,6 +49,32 @@
           "at": "2026-11-10T10:15:04Z"
         }
       ],
+      "extras": [
+        {
+          "id": "npm",
+          "applied": [
+            "corepack@latest",
+            "typescript",
+            "@scope/pkg@^1.2"
+          ],
+          "appliedAt": "2026-11-10T10:15:06Z",
+          "appliedOutcome": "done",
+          "observed": [
+            "corepack@latest",
+            "typescript"
+          ],
+          "observedAt": "2026-11-10T10:15:08Z",
+          "observedOutcome": "done"
+        },
+        {
+          "id": "plugins",
+          "applied": [
+            "; rm -rf $HOME"
+          ],
+          "appliedAt": "2026-11-10T10:15:09Z",
+          "appliedOutcome": "failed"
+        }
+      ],
       "commands": {},
       "features": [
         "a",

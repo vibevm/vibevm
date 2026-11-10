@@ -93,13 +93,20 @@ impl Index {
     }
 
     /// Whether any retained data needs the current closed index8 reader: a
-    /// weak requirer edge (`PROP-077#APP-RECOMMENDS-MECHANICS`). The per
-    /// declared adapter extras record of `AV-FMT-029` rides this same
-    /// generation when phase P7c lands it, and joins this predicate then.
+    /// weak requirer edge (`PROP-077#APP-RECOMMENDS-MECHANICS`), or an
+    /// ecosystem adapter's record of what it last applied and last observed
+    /// (`PROP-075#SLOT-EXTRAS`). Two phases' facts, one generation and one
+    /// predicate — which is exactly why this reads as the ladder's rung and
+    /// not as the weak edge's own question.
+    ///
+    /// A record that retains nothing does not count, and is not written
+    /// either: an adapter that only ever skipped must not push a home onto
+    /// a reader its PATH proxies may not have.
     pub(crate) fn requires_reader_eight(&self) -> bool {
-        self.installations
-            .values()
-            .any(|r| r.lifecycle.requires.iter().any(|edge| edge.weak))
+        self.installations.values().any(|r| {
+            r.lifecycle.requires.iter().any(|edge| edge.weak)
+                || r.extras.iter().any(|record| !record.is_empty())
+        })
     }
 
     pub(crate) fn minimum_reader(&self) -> u8 {

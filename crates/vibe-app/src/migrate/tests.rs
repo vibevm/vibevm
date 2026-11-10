@@ -45,6 +45,7 @@ fn record(version: &str, entries: &[(&str, bool)]) -> Installation {
             })
             .collect(),
         migrated: Vec::new(),
+        extras: Vec::new(),
         commands: AuthoredCommands::default(),
         features: Vec::new(),
         parameters: Default::default(),

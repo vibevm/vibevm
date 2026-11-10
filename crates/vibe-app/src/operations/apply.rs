@@ -240,6 +240,14 @@ pub(super) fn apply(
                 .prior
                 .map(|prior| prior.migrated.clone())
                 .unwrap_or_default(),
+            // So does what an ecosystem adapter last applied and last
+            // observed: it is a fact about this installed version, and a
+            // reinstall of a version already installed applies nothing new
+            // (`PROP-075#SLOT-EXTRAS`).
+            extras: selected
+                .prior
+                .map(|prior| prior.extras.clone())
+                .unwrap_or_default(),
             commands,
             features: plan.features.clone(),
             parameters: plan

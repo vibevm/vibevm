@@ -331,6 +331,7 @@ mod tests {
             template: None,
             migrations: Vec::new(),
             migrated: Vec::new(),
+            extras: Vec::new(),
             commands: AuthoredCommands::default(),
             features: Vec::new(),
             parameters: Default::default(),

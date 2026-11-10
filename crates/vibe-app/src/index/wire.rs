@@ -13,10 +13,10 @@ use vibe_wire::generated::application::e7::index as wire;
 
 use super::launcher_wire::{icon_from_wire, icon_to_wire, launcher_from_wire, launcher_to_wire};
 use super::{
-    AcceptedLicense, ApplicationMenu, AuthoredCommands, EnvEntry, EnvOp, Index, Installation,
-    InstalledTemplate, Lifecycle, Location, Mark, Method, MigrationEntryRecord,
-    MigrationOutcomeRecord, MigrationResult, PackageCoordinate, Requirement, StepOutcome,
-    StepRecord, ValueKind,
+    AcceptedLicense, ApplicationMenu, AuthoredCommands, EnvEntry, EnvOp, ExtrasRecord,
+    ExtrasResult, Index, Installation, InstalledTemplate, Lifecycle, Location, Mark, Method,
+    MigrationEntryRecord, MigrationOutcomeRecord, MigrationResult, PackageCoordinate, Requirement,
+    StepOutcome, StepRecord, ValueKind,
 };
 
 pub(super) fn installation_to_wire(
@@ -118,6 +118,15 @@ fn installation_with_reverse(value: &Installation, required_by: Vec<String>) -> 
                 at: outcome.at.clone(),
             })
             .collect(),
+        // Only a record that retains something is written: an adapter
+        // that merely skipped must not push a home onto the `/8` reader
+        // (`PROP-075#SLOT-EXTRAS`).
+        extras: value
+            .extras
+            .iter()
+            .filter(|record| !record.is_empty())
+            .map(extras_to_wire)
+            .collect(),
         commands: wire::AuthoredCommands {
             uninstall: value.commands.uninstall.clone(),
             force_uninstall: value.commands.force_uninstall.clone(),
@@ -173,6 +182,48 @@ fn installation_with_reverse(value: &Installation, required_by: Vec<String>) -> 
         held: value.lifecycle.held,
         replaced: value.lifecycle.replaced.clone(),
         superseded_by: value.lifecycle.superseded_by.clone(),
+    }
+}
+
+fn extras_result_to_wire(result: ExtrasResult) -> wire::ExtrasOutcome {
+    match result {
+        ExtrasResult::Done => wire::ExtrasOutcome::Done,
+        ExtrasResult::Failed => wire::ExtrasOutcome::Failed,
+        ExtrasResult::Skipped => wire::ExtrasOutcome::Skipped,
+    }
+}
+
+fn extras_result_from_wire(result: wire::ExtrasOutcome) -> ExtrasResult {
+    match result {
+        wire::ExtrasOutcome::Done => ExtrasResult::Done,
+        wire::ExtrasOutcome::Failed => ExtrasResult::Failed,
+        wire::ExtrasOutcome::Skipped => ExtrasResult::Skipped,
+    }
+}
+
+/// One adapter's record out. Item strings are cloned and nothing else:
+/// vibe never parses, splits, quotes, escapes or reorders one.
+fn extras_to_wire(record: &ExtrasRecord) -> wire::ExtrasRecord {
+    wire::ExtrasRecord {
+        id: record.id.clone(),
+        applied: record.applied.clone(),
+        applied_at: record.applied_at.clone(),
+        applied_outcome: record.applied_outcome.map(extras_result_to_wire),
+        observed: record.observed.clone(),
+        observed_at: record.observed_at.clone(),
+        observed_outcome: record.observed_outcome.map(extras_result_to_wire),
+    }
+}
+
+fn extras_from_wire(record: wire::ExtrasRecord) -> ExtrasRecord {
+    ExtrasRecord {
+        id: record.id,
+        applied: record.applied,
+        applied_at: record.applied_at,
+        applied_outcome: record.applied_outcome.map(extras_result_from_wire),
+        observed: record.observed,
+        observed_at: record.observed_at,
+        observed_outcome: record.observed_outcome.map(extras_result_from_wire),
     }
 }
 
@@ -366,6 +417,7 @@ pub(super) fn installation_from_wire(record: wire::Installation) -> Result<Insta
                 at: outcome.at,
             })
             .collect(),
+        extras: record.extras.into_iter().map(extras_from_wire).collect(),
         commands: AuthoredCommands {
             uninstall: record.commands.uninstall,
             force_uninstall: record.commands.force_uninstall,

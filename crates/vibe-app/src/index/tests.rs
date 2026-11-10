@@ -46,6 +46,7 @@ fn sample() -> Index {
         template: None,
         migrations: Vec::new(),
         migrated: Vec::new(),
+        extras: Vec::new(),
         commands: AuthoredCommands::default(),
         features: Vec::new(),
         parameters: Default::default(),
@@ -75,6 +76,7 @@ fn sample() -> Index {
         template: None,
         migrations: Vec::new(),
         migrated: Vec::new(),
+        extras: Vec::new(),
         commands: AuthoredCommands {
             uninstall: Some("sudo apt-get remove editor".into()),
             force_uninstall: Some("sudo apt-get purge editor".into()),
@@ -381,6 +383,61 @@ fn the_writer_reaches_protocol_eight_only_for_a_weak_requirer_edge() {
     assert_eq!(Index::from_wire(document.clone()).unwrap(), index);
     // A `/8`-only fact in a `/7` document is refused rather than dropped,
     // because a dropped weak edge would silently orphan a recommendation.
+    let mut forged = document;
+    forged.protocol = "vibe-user-applications/7".into();
+    assert!(
+        Index::from_wire(forged)
+            .unwrap_err()
+            .contains("application index8")
+    );
+}
+
+/// The same rung, reached by the other phase's fact: an ecosystem
+/// adapter's record of what it last applied and last observed is the
+/// second thing `/8` carries, so one generation serves both and a home
+/// with neither keeps writing what it wrote (`PROP-075#SLOT-EXTRAS`,
+/// `AV-FMT-029`).
+#[test]
+#[specmark::spec(verifies = "spec://org.vibevm.core/vibevm/common/PROP-075#SLOT-EXTRAS")]
+fn the_writer_reaches_protocol_eight_for_an_adapter_record_too_but_not_for_an_empty_one() {
+    use crate::index::{ExtrasRecord, ExtrasResult};
+
+    assert_eq!(sample().minimum_reader(), 3);
+
+    // A record of the adapter's id and nothing else retains nothing, so it
+    // is neither written nor counted: an adapter that only ever skipped
+    // must not push a home onto a reader its PATH proxies may not have.
+    let mut index = sample();
+    let key = index.installations.keys().next().unwrap().clone();
+    index.installations.get_mut(&key).unwrap().extras = vec![ExtrasRecord::new("npm")];
+    assert_eq!(index.minimum_reader(), 3);
+    assert!(
+        index.to_wire().installations[&key].extras.is_empty(),
+        "an empty record is not written"
+    );
+
+    // One that retains a list is the `/8` fact.
+    index.installations.get_mut(&key).unwrap().extras = vec![ExtrasRecord {
+        id: "npm".into(),
+        applied: vec!["corepack@latest".into(), "; rm -rf $HOME".into()],
+        applied_at: Some("2026-11-10T10:15:06Z".into()),
+        applied_outcome: Some(ExtrasResult::Failed),
+        observed: vec!["corepack@latest".into()],
+        observed_at: Some("2026-11-10T10:15:08Z".into()),
+        observed_outcome: Some(ExtrasResult::Done),
+    }];
+    assert_eq!(index.minimum_reader(), 8);
+    let document = index.to_wire();
+    assert_eq!(document.protocol, "vibe-user-applications/8");
+    // The items are echoed, never parsed: the one a shell would mangle
+    // survives the round trip exactly.
+    assert_eq!(
+        document.installations[&key].extras[0].applied[1],
+        "; rm -rf $HOME"
+    );
+    assert_eq!(Index::from_wire(document.clone()).unwrap(), index);
+    // And a `/8`-only fact in a `/7` document is refused rather than
+    // dropped, exactly as the weak edge is.
     let mut forged = document;
     forged.protocol = "vibe-user-applications/7".into();
     assert!(
