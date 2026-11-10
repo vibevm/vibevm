@@ -20,6 +20,18 @@
 *.xz   binary
 *.wasm binary
 
+# The system-prompt determinism fixture (PROP-076 `#SYS-DETERMINISM`) is the
+# measured *input* of a byte-for-byte comparison run on Linux, macOS and
+# Windows and compared across them, so its bytes must be the same in every
+# checkout. The repository-wide `* text=auto eol=lf` above already yields LF
+# here, but through git's per-file content *heuristic*: a determinism claim
+# must not rest on a guess about whether a fixture file looks like text. An
+# explicit `text` takes the heuristic out of the argument, and
+# `live/determinism-hashes.sh` prints an `inputs` digest over this tree so a
+# checkout that changed them is diagnosed as that rather than discovered as
+# an artifact mismatch.
+campaigns/sys-prompt-2026-11/live/sample/**  text eol=lf
+
 # Linguist overrides for the GitVerse / GitHub language-stats display.
 #
 # JTD schema files are JSON underneath — without an override they're
