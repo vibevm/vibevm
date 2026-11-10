@@ -16,6 +16,9 @@
 //! that record their argv and exit, exactly as `cli_agent_launch.rs` does.
 
 use std::fs;
+// Only the launch tests need it, and they are POSIX-only: a shim that
+// records its argv is written and chmodded, which has no Windows twin here.
+#[cfg(unix)]
 use std::path::PathBuf;
 
 use predicates::prelude::*;
