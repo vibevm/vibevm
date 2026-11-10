@@ -1450,3 +1450,192 @@ the test would assert nothing.
 4. **No cache was measured.** Deliberately, and `#SYS-CACHE-FACTS` /
    `#SYS-CACHE-ECONOMICS` keep it that way: a saving needs a separate,
    separately authorised provider measurement.
+
+## 2026-11-10 — P7 qualify, P8 docs, and P9 prepared but not run
+
+The campaign's central claim is now a mechanical test, the documentation says
+only what is implemented, and the one step that spends money is prepared in
+full for the central session to run.
+
+### The reference stream, which is the whole validity of P7
+
+`PLAN.md` P7 calls the reference a reviewer's first question, and it is the
+right question: a differential test whose reference comes from the code under
+test proves that one function agrees with itself. So both readers are written
+from the **published contract** and share nothing with the composer:
+
+- the entrypoint is read whole;
+- the `STATIC.*` spelling is chosen by two `Path::exists` calls, not by
+  `resolve_static_path`;
+- `INDEX.md` is parsed **as a TOML document**, which is what the generated
+  boot block tells a reader it is, and its `[[entry]]` rows are taken in file
+  order with their `path`, `kind` and `when` verbatim;
+- the managed block's span is found by re-implementing PROP-012's standalone
+  marker rule, not by calling `locate_block`;
+- the lane's markers are split by a plain line scan, not by
+  `verify_lane_markers`;
+- the digests are computed with `sha2` in the test, so a marker's own claim is
+  checked against an independent number.
+
+There are **two** such readers, one per crate, because `vibe-cli`'s tests
+cannot reach `vibe-workspace`'s test module — and sharing one would have been
+exactly the dependency the rule forbids.
+
+**The one declared normalisation is asserted at a named byte range.** The
+managed block's span is located in the reference; the exported entrypoint
+segment must equal the reference byte for byte *before* `span.start` and byte
+for byte *after* `span.end`, with one contiguous substitution between. A
+regex over the document would have admitted a second difference somewhere
+else. The composition identity is asserted in the same test — every byte of
+`SYSTEM.md` is a frame line or a segment body, sliced from the **sidecar's**
+own offsets — so "modulo exactly one substitution" is a claim about the whole
+artifact.
+
+### Mutation, because a parity test that passes first time deserves suspicion
+
+All twelve parity tests passed on their first run. Two mutations settled
+whether that meant anything:
+
+- dropping `body.push_str(&text[end..])` in `compose.rs`'s entrypoint export
+  (the tail after the managed block) → `boot_parity_is_exact` and
+  `the_authored_entrypoint_prose_reaches_the_prefix_verbatim` fail, ten pass;
+- `for source in sources.iter().rev()` in `lane.rs` →
+  `the_delivered_lane_is_the_classic_lane_then_band_u_in_index_order` and
+  `a_node_with_no_static_lane_still_composes_a_coherent_prefix` fail, ten
+  pass.
+
+Both reverted; the tree was verified clean before the first commit. Worth
+noting what the first mutation did *not* break: with no substitution at all
+the head/tail comparison still passes (the substituted length then equals the
+span's), and what catches it is the assertion that the substituted bytes carry
+no `<vibevm>` marker. The two halves of that test are both load-bearing.
+
+### What the matrix measures that the plan did not ask for
+
+The two launch adapters are compared **to each other**, not only to the
+reference. P6 asserted that Codex's profile file carries the bytes of
+`AGENT-LANE.md` and that Claude Code's flag names that file — each against the
+artifact, which is each against itself. The matrix reads the file the slot flag
+names, splits it by markers, and compares it to the classic boot; then reads
+the profile file's top-level `developer_instructions`, and compares *those*
+bytes to the first set. A divergence between the two adapters now fails.
+
+### Three fixture facts worth not re-deriving
+
+1. **Only a dynamically linked contribution's `os:` gate reaches band G.** A
+   static link's gated fragment is decided while the lane is compiled, so a
+   fixture that gated fragments of the static carrier produced no gated INDEX
+   row at all. Band G needs one dynamic dependency per platform.
+2. **`toml::Value`'s `FromStr` is not a document parser** in the version this
+   tree pins: `index.parse::<toml::Value>()` fails with "unexpected content,
+   expected nothing" on a generated `INDEX.md`, while `toml::from_str` parses
+   it. Seven matrix tests failed on exactly that before the fix.
+3. **A changed declared `entrypoint` is reported as the entrypoint role
+   changing**, naming the new path, because the sidecar's witnesses are keyed
+   by role. The "witnesses an input that no longer contributes" branch needs
+   `entrypoint = false`; both are in the sweep.
+
+### The acceptance script, and one step that had to be reordered
+
+`accept.sh` runs 17 steps in one `bwrap --unshare-net` sandbox with every
+`vibe` call under `strace -f -e trace=connect`. The determinism step failed on
+its first run — `SYSTEM.md differs by checkout path` — and the failure was the
+script's: the step sat after the one that appends a sentence to `AGENTS.md`, so
+the two checkouts genuinely had different inputs. A diff of the two
+entrypoints showed exactly those two lines. Moved ahead of every mutation; all
+17 pass.
+
+Two steps differ from `PLAN.md` §7 by design, each in a comment beside it: the
+ownership-conflict step is adapted to P4's retirement of that refusal (a
+hand-edited untracked artifact is stale and is rebuilt; the conflict that
+survives is the git-tracked one), and "five artifacts" predates
+`AGENT-LANE.md` and the ignore file.
+
+### The Codex placement proof, offline and at the real size
+
+`codex debug prompt-input` renders the model-visible prompt and calls no
+model. With `CODEX_HOME` pointed at a scratch directory and a profile file
+carrying `developer_instructions` at its **top level**, a lane built from this
+repository's own `STATIC.xml` and its eight INDEX files — **312,345 bytes**,
+exactly the number P3 measured — arrives:
+
+```
+lane bytes 312345 · profile file bytes 318387 · parses back byte-equal: True
+exit 0
+byte-equal occurrences of the whole lane: [[2, 'content', 0, 'text']]
+head marker count 1 · tail marker count 1
+```
+
+Item 2, part 0 — the first part of the second developer item, where
+`HARNESS-DELIVERY.md` §5 said it would be. The in-suite form of this is behind
+`VIBE_PROMPT_CODEX_PROBE=1`: it spawns a third-party binary, and
+`tools/self-check.sh` must not depend on what is on a developer's `PATH`.
+
+### P8 — where the documentation went, and the one claim it could not keep
+
+`docs/system-prompt/`, in the live `docs/` tree beside the corporate-env
+campaign's admin guide, following its conventions: audience, **how verified**,
+and **"not measured here"** on every claim that was not. `docs-legacy/` is the
+archived 1.0.0 layer and takes nothing new; the doc web package renders specs
+rather than hosting hand-written guides. English, like `docs-legacy`'s
+developer docs and every campaign document, rather than the Russian of the one
+admin runbook beside it — recorded as a choice, not an oversight.
+
+P8 asks for an invalidation table **generated from the enum** the `Stale`
+reasons come from. There is no such enum: the reasons are rendered sentences,
+deliberately, because a reason that cannot be printed is a reason nobody acts
+on. So the documented table's rows correspond one-to-one with
+`cli_prompt_stale.rs`'s sweep, and what is *mechanical* is the part that can
+silently drift — `system_prompt::docs_example` asserts that every verdict
+word, every verb and every generated path the guide names is the code's own
+spelling, read from `CheckVerdict::as_str` and `vibe_core::layout`. The
+documented example template is composed by the same test, and the test asserts
+the example still demonstrates the awkward half of the literal-text claim:
+`{braces}`, a fenced example and an inline `<vibevm>` are ordinary characters,
+while an exactly standalone marker line would be a refusal.
+
+### P9 — prepared completely, run by nobody here
+
+A worker does not start an agent session or spend the owner's subscription, so
+this phase's deliverable is its materials. `live/` holds the sample project
+(no personal data; eight canaries, two of which must be **absent** from the
+lane), `make-sample.sh` (verified at 0 and 200,000 bytes: 2,570-byte and
+202,349-byte lanes, the tail canary second-to-last in both), `read-usage.sh`
+and `RUNBOOK.md`.
+
+The owner's order is in the runbook as given: short sample, then its cache
+repeat, then size, plus one classic-mode session. The reason it is an order
+and not a set: a failure on a 3 KB lane is unambiguous, while a failure at
+size could be delivery, truncation or cache alike. Two asymmetries are stated
+rather than implied — a C5 failure (a subagent seeing a lane marker) overrides
+a passing step 1, and a step 4 failure (classic mode) blocks the release
+rather than only the default.
+
+One thing the runbook adds to §10 for free: step 3's second leg asks the agent,
+on this repository, to report the `@spec://` tokens it can see **without**
+having tried to resolve any of them. The answer belongs in `RESULTS.md`
+whether it is yes or no, because it is the evidence
+`#SYS-IMPORT-INERTNESS` has been waiting for.
+
+### Open issues this phase leaves
+
+1. **The cross-operating-system half of `#SYS-DETERMINISM` is argued, not
+   measured.** Two directories on Linux are proved byte-identical, and the
+   composer is proved incapable of observing a path, a clock, an environment
+   or the host OS; the macOS and Windows legs rest on that plus
+   `.gitattributes`' pinned line endings, with only
+   `cargo check --target x86_64-pc-windows-gnu` actually run. The fact and the
+   guide both say so.
+2. **No extension-world fixture in the integration suite.** The owner-managed
+   and pending-native seams have their own prompt tests at the unit level,
+   where a provider can be supplied; an integration fixture would have to
+   build one and would be testing the provider.
+3. **`SP-FMT-008` is still deferred** — the new `CheckId` that would carry the
+   freshness verdict into the ordinary `vibe check` report. Every fact it
+   would report is reported by `vibe prompt check` today.
+4. **The worktree's `target/` directory was removed.** A first run of
+   `accept.sh` without `CARGO_TARGET_DIR` set began a cold build into it; the
+   script now passes the variable through and documents it, and the directory
+   was deleted rather than left half-built. It is a derived directory and the
+   campaign's constraint is that every build goes to the shared target, so
+   nothing is lost but the rebuild.

@@ -1265,7 +1265,7 @@ seam publishes the prefix — is
 existence (the pending pass has already published a prefix of its own) and
 fails when the prompt member or its selector is dropped.
 
-### P7 — qualify: differential boot parity and the matrix — **L**
+### P7 — qualify: differential boot parity and the matrix — **L** — **DONE 2026-11-10**
 
 **Goal.** The campaign's central claim, as a mechanical test: the prefix plus
 the executed continuation delivers the same instruction text, in the same
@@ -1328,7 +1328,93 @@ question about it.
 
 **Parallel.** Needs P5 and P6.
 
-### P8 — docs: the template, the limits, the economics — **S**
+**As delivered, 2026-11-10 — three commits, and the reference stream is the
+whole of the test's validity.** `crates/vibe-workspace/tests/system_prompt_parity.rs`
+with `system_prompt_parity/{classic,fixtures,invariants}.rs`: twelve tests over
+five fixture shapes. `classic.rs` is the reference, built from the published
+contract exactly as the construction rule demands — the entrypoint read whole,
+the `STATIC.*` spelling chosen by two `exists` calls, `INDEX.md` parsed as a
+TOML document, the marker grammar split by a line scan, PROP-012's standalone
+marker rule re-implemented, and its own SHA-256. It shares no helper with the
+code under test.
+
+The one declared normalisation is asserted at a **named byte range**: the
+managed block's own span, with both halves of the entrypoint byte-identical
+around it, so a second normalisation cannot hide anywhere. The composition
+identity is asserted in passing — every byte of the prefix is a frame line or
+a segment body, sliced from the sidecar's own offsets — which is what makes
+"modulo exactly one substitution" a statement about the whole artifact rather
+than about three slices of it.
+
+**Checked by mutation**, because a parity test that passes on its first run
+deserves suspicion: dropping `&text[end..]` in the composer's entrypoint
+export fails `boot_parity_is_exact` and
+`the_authored_entrypoint_prose_reaches_the_prefix_verbatim` and nothing else;
+reversing the lane composer's segment order fails
+`the_delivered_lane_is_the_classic_lane_then_band_u_in_index_order` and
+`a_node_with_no_static_lane_still_composes_a_coherent_prefix` and nothing
+else.
+
+`crates/vibe-cli/tests/cli_prompt_matrix.rs` (10 tests) and
+`cli_prompt_stale.rs` (6) carry the matrix through the real commands, against
+a second independent reader in `cli_prompt_matrix/world.rs` — this crate
+cannot reach vibe-workspace's test module, and sharing one would be the
+dependency the construction rule forbids. The matrix: both lane spellings;
+all three delivery tiers, with **the file Claude Code's slot flag names and
+the bytes Codex's layered profile file carries proved equal to each other and
+to the classic boot**, so a divergence between the two adapters fails rather
+than going unlooked-at; portable versus a fixed host, every session target
+selecting its own row and none selected without one; a `target:` selection
+resolved before a row exists; an `installed:` gate decided at generation; a
+member node publishing its own prefix and none of the root's; a worker scoped
+to a template-less node receiving no prefix and no central canary; and the
+classic-mode case. The sweep: eleven stale classes, each on the verdict **and**
+the sentence that names it; the refusal of a stale prefix by `prepare` and
+`capture`; the user-local canary absent from every artifact and from the
+envelope while the authored mention travels verbatim; three byte-identical
+builds; and the git-tracked artifact as an ownership conflict.
+
+`campaigns/sys-prompt-2026-11/accept.sh` is §7's script: 17 steps in one
+`bwrap --unshare-net` sandbox with every `vibe` call under
+`strace -e trace=connect`. All 17 pass.
+
+**Six deviations, each with its reason.**
+(1) The fixtures are **built programmatically** in temp directories rather
+than checked in under `tests/fixtures/system_prompt/`, which is the
+established shape in this crate (`install/tests_target_gate.rs`,
+`tests/dynamic_lane.rs`): a `ResolvedDep`'s `content_dir` is an absolute
+path, so a checked-in tree would be copied into a temp dir and have its
+resolution written in code anyway, and splitting one fixture across two
+places is how the two halves drift.
+(2) **The extension-world fixture is not here.** The owner-managed seam has
+its own prompt tests from P4 and the pending-native replay seam its own from
+P6, both at the unit level where an `OwnerNativeCompileProvider` can be
+supplied; an integration test would have to build one, and it would be
+testing the provider.
+(3) **The gated rows come from dynamically linked dependencies**, not from a
+static dependency's gated fragments: only a dynamic contribution's residual
+`os:` gate survives into an INDEX row, so a static link's gated fragment
+could never produce a band G to test.
+(4) `cli_prompt_matrix.rs` was split into two binaries (`+ cli_prompt_stale.rs`)
+and `system_prompt_parity.rs` into a module file, to stay inside the 600-line
+budget.
+(5) **The Codex placement test is behind `VIBE_PROMPT_CODEX_PROBE=1`.** It
+spawns a third-party binary, and `tools/self-check.sh` must not depend on what
+is on a developer's `PATH`. Run against codex-cli 0.167.0 it passes; a
+standalone probe at the real size puts a **312,345-byte** lane byte-equal and
+**exactly once** at item 2 part 0 of the render, head and tail markers each
+once — the position `HARNESS-DELIVERY.md` §5 predicted.
+(6) **§7's ownership-conflict step is adapted**, because P4 retired that
+refusal when the owner made the artifacts untracked: a hand-edited prefix is
+stale and a rebuild replaces it, and the conflict that survives is the
+git-tracked one. The script asserts both, each in a comment beside the step.
+
+**One thing the matrix measures that the plan did not ask for**: the two
+launch adapters are compared to **each other** as well as to the reference. A
+test that compared each to `AGENT-LANE.md` would have compared each to
+itself.
+
+### P8 — docs: the template, the limits, the economics — **S** — **DONE 2026-11-10**
 
 **Goal.** A user can write a template, understand exactly what invalidates
 their prefix, and compute whether caching saves them anything — without
@@ -1363,6 +1449,47 @@ and the page says so in its first paragraph.
 
 **Parallel.** Needs P7. Drafting may start after P3.
 
+**As delivered, 2026-11-10 — `docs/system-prompt/`, which is where this
+repository keeps user-facing documentation.** The live `docs/` tree holds the
+corporate-env campaign's admin guide, and this follows its conventions: who
+it is for, **how verified** at the top, and **"not measured here"** on every
+claim that was not — the non-Claude, non-Codex delivery rows, the macOS and
+Windows half of determinism, and every number a provider's bill would carry.
+(`docs-legacy/` is the archived 1.0.0 layer and takes nothing new; the doc web
+package under `vibevm/vibepacks/org.vibevm.doc/` renders specs rather than
+hosting hand-written guides.) Written in English, like `docs-legacy`'s
+developer documentation and every campaign document, rather than in the
+Russian of the one admin runbook beside it.
+
+Nine sections: what the three artifacts are and which is read by whom; the
+opt-in, the opt-out and why the artifacts are not committed; the whole
+`[system_prompt]` table including why `host` and `target` cannot be one key;
+the seven verbs and the effect-free contract of `check`/`prepare`, with the
+one remaining effect (`git ls-files`) stated rather than hidden; named
+launchers in the user configuration with a `claude2` wrapper as the worked
+case; the three delivery tiers with the per-harness matrix, Codex's
+`doc_max_bytes` and its version-scoped carrier, and the lane markers with
+which of their four uses is a mechanism; the limitations, including the four
+blockers that keep `import` refused; the invalidation table against the six
+verdicts; the parametric cost model with this repository's measured sizes and
+an explicit "substitute current rates"; and a six-step adoption note.
+
+`docs/system-prompt/SYSTEM-TEMPLATE.example.md` is the copyable frame, and
+`system_prompt::docs_example` pins it: it composes the documented example and
+asserts the example still demonstrates that `{braces}`, a fenced example and
+an inline `<vibevm>` are ordinary characters — while an exactly standalone
+marker line would be a refusal, which is the one nuance the guide must get
+right.
+
+**One deviation.** This phase asks for an invalidation table *generated* from
+the enum the `Stale` reasons come from, and there is none: the reasons are
+rendered sentences, deliberately, because a reason that cannot be printed is
+a reason nobody acts on. What is mechanical, and what the test asserts, is
+the part that can silently drift — every verdict word, every verb and every
+generated path the guide names is the code's own spelling, read from
+`CheckVerdict::as_str` and `vibe_core::layout`. The table's rows correspond
+one-to-one with `cli_prompt_stale.rs`'s own sweep, and both say so.
+
 **Added 2026-11-10.** The delivery modes of `HARNESS-DELIVERY.md` in
 user-facing form — the three tiers, the per-harness matrix and its recommended
 defaults, why `import` is refused in version 1, and the risks of its §9 that
@@ -1372,7 +1499,7 @@ conversation's recorded snapshot, user-local instruction files outside vibe's
 accounting, and a 310 KB lane that compaction cannot drop the way it drops tool
 results.
 
-### P9 — the live check, Claude Code only — **S** — *authorised, scoped*
+### P9 — the live check, Claude Code only — **S** — *authorised, scoped; prepared 2026-11-10, not run*
 
 *(New, 2026-11-10. `HARNESS-DELIVERY.md` §10, its decision D13, as the owner
 narrowed it the same day: **authorised for Claude Code only**, to run **before
@@ -1392,16 +1519,60 @@ whether Claude Code subagents receive `CLAUDE.md` imports — which, if they do,
 means a quiet worker would carry the prefix in context and must be recorded as
 a known cost or excluded.
 
-**Method.** A sample project in this campaign's fixtures — no personal data —
-whose lane is padded to the real size with unique canary words: one in the last
-line of `STATIC.xml`, one in each INDEX file, one in the entrypoint outside the
-block, and the last `vibe:lane-end` line as the tail canary. One nested
-sub-project with its own block and canaries, and `@spec`-style tokens in
-`STATIC`. Two or three short sessions, Claude Code only. Delivery is read from
-the answer; caching from the harness's own session logs under
-`$CLAUDE_CONFIG_DIR/projects/*.jsonl` (`cache_read_input_tokens` /
-`cache_creation_input_tokens`) — on this machine that directory is `~/.claude2`,
-not `~/.claude`.
+**Order, fixed by the owner 2026-11-10 and not negotiable.** (1) A
+super-short sample project with canary words and lane markers — prove
+delivery, and prove that the router stops the agent reading anything more.
+(2) The same again, in a new session, for the **cache read**
+(`cache_read_input_tokens` in `~/.claude2/projects/*.jsonl`). (3) Only then
+the padded 150–300 KB variant with a canary at the very end, and after that
+this repository itself. **Also** one classic-mode session — a project with no
+`[system_prompt]` and no template — to prove the router block works with no
+markers in context at all. The reason for the order is that a failure on a
+3 KB lane is unambiguous while a failure at size could be delivery,
+truncation or cache alike.
+
+**The launcher.** Every session runs through the owner's own launcher,
+`vibe agent claude2` — the wrapper that sets `CLAUDE_CONFIG_DIR=~/.claude2`
+and execs the real program — declared as `[launchers.claude2]` with
+`kind = "claude"`, `command = ["claude2"]` and `config_dir = "~/.claude2"`.
+The `config_dir` matters here and nowhere else: the wrapper sets the variable
+internally, so without it `vibe` cannot tell where the session logs are and
+the cache diagnostics would have to guess.
+
+**Prepared, 2026-11-10 (this phase's materials, not its run).**
+`campaigns/sys-prompt-2026-11/live/`:
+
+- `RUNBOOK.md` — the four owner-ordered steps plus the four rows they do not
+  cover (C5 subagent, N1 nested, C6 repeated flag, C7 resume), each with its
+  exact commands, its pass conditions, what a failure means and what it
+  changes. The one prompt is fixed and shared, so the answers compare; a step
+  with no recorded answer did not run, and `RESULTS.md` carries a verdict for
+  every row including the ones that did not.
+- `sample/` — the sample project: a static boot dependency so a real
+  `STATIC.md` lane exists, authored boot sources, an entrypoint, a template,
+  and one nested sub-project with its own router and its own node id. **No
+  personal data**: every string is a canary or neutral filler. Eight canaries,
+  each answering one question, and two of them — the template's and the
+  entrypoint's — must be **absent** from the lane, because the slot carries
+  the lane alone.
+- `make-sample.sh` — copies it out, points its registry at the copy,
+  optionally pads it to a stated size and installs. The padding inflates the
+  **first** lane segment, so the lane's own tail canary and the last
+  `vibe:lane-end` marker arrive behind that many bytes; padding the last
+  segment would move the canary and prove nothing about a truncating slot.
+  Verified at 0 and 200,000 bytes: 2,570-byte and 202,349-byte lanes, the tail
+  canary the second-to-last line of both, and neither the template nor the
+  entrypoint canary anywhere in the lane.
+- `read-usage.sh` — reads `cache_creation_input_tokens` and
+  `cache_read_input_tokens` out of the session logs, with a `--since` time so
+  one run's numbers are not mixed with an earlier session's.
+
+**Two asymmetries the runbook states rather than implies.** A C5 failure
+(a subagent that sees a lane marker) **overrides a passing step 1**, because
+a quiet worker holding the lane breaks `#SYS-WORKER-EXCLUSION` and `launch`
+must then not be Claude Code's default at all. And a step 4 failure
+(classic mode) **blocks the release** rather than only the default, because
+that is the path every project which never opted in takes.
 
 **Pass criteria and fallbacks** are the Claude Code rows (C1–C8) of
 `HARNESS-DELIVERY.md` §10; the Codex and other-harness rows are not run under
@@ -1417,10 +1588,10 @@ cost it would carry is a quiet worker holding the prefix in context, against
 P0 spikes (S1..S6)
   |
   +--> P1 --> P2 --> P3 --> P4 --> P5 --> P6 --> P7 --> P8 --> P9
-       done   done   done      |                                  (authorised,
-                      |        |                                   Claude Code
-                      +--> P2b |                                   only)
-                               +------- (P8 drafting) ------------^
+       done   done   done   done   done   done   done   done   (authorised,
+                      |                                         Claude Code
+                      +--> P2b (done)                           only; prepared,
+                                                                not run)
 ```
 
 The chain is deliberately linear: every phase consumes the previous one's
@@ -1520,7 +1691,14 @@ the central session once `vibe agent claude` exists (HARNESS-DELIVERY D13).
   normalisation and no other difference. ***This is the campaign's central
   claim: the prefix delivers what a file-reading boot delivers.*** *If a second
   normalisation is needed, the export is not boot-equivalent and the design is
-  wrong, not the test.*
+  wrong, not the test.* **Confirmed (P7, 2026-11-10).** One normalisation, at
+  the managed block's own named byte span, with both halves of the entrypoint
+  byte-identical around it and every byte of the prefix accounted for as a
+  frame line or a segment body. The composed lane likewise equals `STATIC.*`
+  then band U in INDEX order, each file verbatim, and the file Claude Code's
+  slot flag names equals the bytes Codex's profile file carries. Two mutations
+  — a dropped entrypoint tail, a reversed lane order — each fail exactly the
+  assertions that name them, so the agreement is not an artefact of the test.
 
 ## 6. Quick start (cold)
 
@@ -1551,8 +1729,9 @@ rewrites and renames files.
 
 ## 7. Acceptance script (whole campaign)
 
-To be written in P7 as `campaigns/sys-prompt-2026-11/accept.sh`, following
-`campaigns/corporate-env-2026-11/accept.sh`. It runs, in one network-isolated
+**Written in P7 as `campaigns/sys-prompt-2026-11/accept.sh`; 17 steps, all
+passing 2026-11-10.** Following `campaigns/corporate-env-2026-11/accept.sh`,
+it runs, in one network-isolated
 sandbox with a fresh HOME: create a fixture project and opt in with a template;
 `vibe install` and assert five artifacts in one commit; assert
 `vibe prompt check` is `Equal` and performs zero writes and zero connections;
@@ -1570,6 +1749,16 @@ sandbox, and any provider call.
 **It never calls a paid API.** The live cache measurement is a separate,
 separately authorised exercise (`PROP-076#SYS-OWNER-QUESTIONS` Q5) and is not
 part of this script.
+
+**Two steps differ from the paragraph above, each in a comment beside it.**
+The ownership-conflict step is adapted: P4 retired that refusal when the owner
+made the artifacts untracked, so the script asserts what the design now says —
+a hand-edited prefix is **stale** and a rebuild replaces it, while the conflict
+that survives is the git-tracked artifact, which the Rust suite covers. And
+"five artifacts" predates `AGENT-LANE.md` and the ignore file, so the step
+asserts the six paths a publication actually writes. `ACCEPT_SKIP_CARGO=1`
+skips the two steps that run the suites, and `CARGO_TARGET_DIR` is passed
+through, since otherwise those two pay a cold build.
 
 ## 8. Open points
 
