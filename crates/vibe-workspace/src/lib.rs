@@ -351,9 +351,18 @@ fn join_rel(root: &Path, rel: &str) -> PathBuf {
     }
     p
 }
-
-/// Render a path as a forward-slashed string.
-pub(crate) fn path_to_slash(p: &Path) -> String {
+/// One path, forward-slashed — the spelling every generated artifact, every
+/// witness and every marker line uses, so a Windows checkout and a POSIX one
+/// produce the same bytes.
+///
+/// ```
+/// use std::path::Path;
+/// use vibe_workspace::path_to_slash;
+///
+/// assert_eq!(path_to_slash(Path::new("vibevm/vibespecs/boot/SYSTEM.md")), "vibevm/vibespecs/boot/SYSTEM.md");
+/// assert_eq!(path_to_slash(Path::new("AGENTS.md")), "AGENTS.md");
+/// ```
+pub fn path_to_slash(p: &Path) -> String {
     p.to_string_lossy().replace('\\', "/")
 }
 

@@ -28,6 +28,16 @@ use super::TargetOs;
 #[path = "system_prompt/validation.rs"]
 mod validation;
 
+/// `[system_prompt.harness.*]` — the per-harness delivery settings, out of
+/// line along that seam: the table above is about the *prefix*, and these
+/// are about how it reaches one harness.
+#[path = "system_prompt/harness.rs"]
+mod harness;
+pub use harness::{
+    CODEX_DOC_MAX_BYTES_DEFAULT, ClaudeHarness, CodexHarness, DocMaxBytes, HarnessDelivery,
+    HarnessTable,
+};
+
 /// `[system_prompt]` — opt-in tuning for the generated prefix.
 ///
 /// ```
@@ -142,116 +152,6 @@ impl SystemPromptSection {
             .as_ref()
             .and_then(|codex| codex.doc_max_bytes)
             .map_or(CODEX_DOC_MAX_BYTES_DEFAULT, DocMaxBytes::get)
-    }
-}
-
-/// Codex's own default `project_doc_max_bytes`, and therefore the limit a
-/// project is measured against when it declares none.
-pub const CODEX_DOC_MAX_BYTES_DEFAULT: usize = 32 * 1024;
-
-/// `[system_prompt.harness]` — per-harness delivery settings.
-///
-/// A closed table of one in this version. An unknown harness name refuses by
-/// name rather than being ignored, because a setting silently ignored is the
-/// one failure a configuration table must not have.
-///
-/// ```
-/// use vibe_core::manifest::HarnessTable;
-///
-/// let empty: HarnessTable = toml::from_str("")?;
-/// assert!(empty.is_empty());
-/// assert!(toml::from_str::<HarnessTable>("[gemini]\n").is_err());
-/// # Ok::<(), toml::de::Error>(())
-/// ```
-#[derive(Debug, Clone, Default, PartialEq, Eq, Serialize, Deserialize)]
-#[serde(deny_unknown_fields)]
-pub struct HarnessTable {
-    /// `[system_prompt.harness.codex]`.
-    #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub codex: Option<CodexHarness>,
-}
-
-impl HarnessTable {
-    /// `true` when no harness declared anything.
-    pub fn is_empty(&self) -> bool {
-        *self == Self::default()
-    }
-}
-
-/// `[system_prompt.harness.codex]`.
-///
-/// Codex truncates a project instruction file at `project_doc_max_bytes` and
-/// says nothing about it, and that limit is the *harness's* setting rather
-/// than a property of the file — a user's `~/.codex/config.toml` or a trusted
-/// project's `.codex/config.toml` may raise it. So the project declares the
-/// value it is built for, and vibe measures against the declaration instead
-/// of against a constant it cannot know is current.
-///
-/// ```
-/// use vibe_core::manifest::CodexHarness;
-///
-/// let declared: CodexHarness = toml::from_str("doc_max_bytes = 65536\n")?;
-/// assert_eq!(declared.doc_max_bytes.map(|value| value.get()), Some(65_536));
-/// // Zero and negative say nothing a budget could mean.
-/// assert!(toml::from_str::<CodexHarness>("doc_max_bytes = 0\n").is_err());
-/// assert!(toml::from_str::<CodexHarness>("doc_max_bytes = -1\n").is_err());
-/// # Ok::<(), toml::de::Error>(())
-/// ```
-#[derive(Debug, Clone, Default, PartialEq, Eq, Serialize, Deserialize)]
-#[serde(deny_unknown_fields)]
-pub struct CodexHarness {
-    /// The project-instruction byte limit this project is built for. Absent
-    /// means [`CODEX_DOC_MAX_BYTES_DEFAULT`].
-    #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub doc_max_bytes: Option<DocMaxBytes>,
-}
-
-/// A positive byte budget. Validated at **deserialisation**, so a value a
-/// budget cannot mean refuses while naming its field rather than defaulting
-/// to something the author did not write.
-///
-/// ```
-/// use vibe_core::manifest::DocMaxBytes;
-///
-/// let declared: DocMaxBytes = serde_json::from_str("262144")?;
-/// assert_eq!(declared.get(), 262_144);
-/// assert!(serde_json::from_str::<DocMaxBytes>("0").is_err());
-/// # Ok::<(), serde_json::Error>(())
-/// ```
-#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
-#[serde(try_from = "i64", into = "i64")]
-pub struct DocMaxBytes(usize);
-
-impl DocMaxBytes {
-    /// The declared byte count.
-    pub fn get(self) -> usize {
-        self.0
-    }
-}
-
-impl TryFrom<i64> for DocMaxBytes {
-    type Error = String;
-
-    fn try_from(value: i64) -> Result<Self, Self::Error> {
-        if value <= 0 {
-            return Err(format!(
-                "`[system_prompt.harness.codex] doc_max_bytes` must be a positive number of \
-                 bytes, not {value}; omit the field to use Codex's own default of \
-                 {CODEX_DOC_MAX_BYTES_DEFAULT}"
-            ));
-        }
-        usize::try_from(value).map(DocMaxBytes).map_err(|_| {
-            format!(
-                "`[system_prompt.harness.codex] doc_max_bytes` is {value} bytes, past what this \
-                 platform can address"
-            )
-        })
-    }
-}
-
-impl From<DocMaxBytes> for i64 {
-    fn from(value: DocMaxBytes) -> Self {
-        i64::try_from(value.0).unwrap_or(i64::MAX)
     }
 }
 

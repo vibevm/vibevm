@@ -9,6 +9,16 @@ use anyhow::Result;
 use vibe_app::{AgentDefinition, AgentsConfig, AppError, SettingsRoot};
 
 use crate::cli::{AgentArgs, AgentCommand};
+
+/// Starting one launcher with the composed lane in its instruction slot.
+#[path = "agent/launch.rs"]
+mod launch;
+/// Agent launchers — a name bound to a harness kind and to the argv that
+/// starts it. Out of line along the PROP-064/PROP-076 seam: the definitions
+/// above configure which agent runs an installer's prompt, and a launcher
+/// configures which program a developer's own coding session starts.
+#[path = "agent/launchers.rs"]
+pub(crate) mod launchers;
 use crate::commands::app::global;
 use crate::output;
 
@@ -55,6 +65,7 @@ pub fn run(ctx: &output::Context, args: AgentArgs) -> Result<()> {
                 Ok(())
             })
         }
+        AgentCommand::Launch(argv) => launch::run(ctx, argv),
         AgentCommand::Remove { name } => edit(
             ctx,
             &settings,
@@ -86,7 +97,12 @@ fn edit(
 
 fn list(ctx: &output::Context, settings: &SettingsRoot, config: &AgentsConfig) -> Result<()> {
     let external = crate::commands::app::agents::external_registration()?;
-    let listing = vibe_app::agent_list(settings, config, external.as_ref());
+    let mut listing = vibe_app::agent_list(settings, config, external.as_ref());
+    // The launcher rows are resolved here, not in the registry: merging the
+    // user's `[launchers.*]` with the built-ins of a closed harness kind set
+    // is PROP-076's question, and the registry is PROP-064's.
+    let launchers = launchers::resolve_all(settings, config)?;
+    listing.launchers = launchers.iter().map(launchers::row).collect();
     if ctx.is_json() {
         return ctx.emit_json(&listing);
     }
@@ -125,6 +141,23 @@ fn list(ctx: &output::Context, settings: &SettingsRoot, config: &AgentsConfig) -
             external.command,
             external.args.join(" ")
         );
+    }
+    println!(
+        "  {} agent launcher(s) — `vibe agent <name>` starts one with this project's boot lane \
+         in its own instruction slot:",
+        listing.launchers.len()
+    );
+    for launcher in &listing.launchers {
+        println!(
+            "    {} (kind {}) — {} [{}]",
+            launcher.name,
+            launcher.kind,
+            launcher.command.join(" "),
+            launcher.source
+        );
+        if let Some(dir) = &launcher.config_dir {
+            println!("      config dir: {dir}");
+        }
     }
     Ok(())
 }

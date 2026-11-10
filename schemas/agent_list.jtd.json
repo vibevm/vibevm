@@ -4,7 +4,7 @@
     "spec": { "implements": "spec://org.vibevm.core/vibevm/common/PROP-064#presets" },
     "rustOptions": { "package": "vibe_wire::agent_list" },
     "x-rust-type": "AgentList",
-    "x-wire-order": ["protocol", "path", "default", "trusted_groups", "agents", "external"]
+    "x-wire-order": ["protocol", "path", "default", "trusted_groups", "agents", "external", "launchers"]
   },
   "properties": {
     "protocol": { "type": "string" },
@@ -14,7 +14,8 @@
   "optionalProperties": {
     "default": { "type": "string", "metadata": { "x-default": null } },
     "trusted_groups": { "elements": { "type": "string" }, "metadata": { "x-empty": "omit" } },
-    "external": { "ref": "external", "metadata": { "x-default": null } }
+    "external": { "ref": "external", "metadata": { "x-default": null } },
+    "launchers": { "elements": { "ref": "launcher" }, "metadata": { "x-empty": "omit" } }
   },
   "definitions": {
     "agent": {
@@ -32,6 +33,21 @@
         "env": { "values": { "type": "string" }, "metadata": { "x-empty": "omit" } },
         "extra_args": { "elements": { "type": "string" }, "metadata": { "x-empty": "omit" } },
         "problem": { "type": "string", "metadata": { "x-default": null } }
+      }
+    },
+    "launcher": {
+      "metadata": {
+        "description": "One PROP-076 agent launcher: a name bound to a harness kind and to the argv prefix that starts it. source is built-in or the exact user-config path, because a developer debugging which program ran needs to know which file decided it.",
+        "x-wire-order": ["name", "kind", "command", "config_dir", "source"]
+      },
+      "properties": {
+        "name": { "type": "string" },
+        "kind": { "type": "string" },
+        "command": { "elements": { "type": "string" }, "metadata": { "x-empty": "emit" } },
+        "source": { "type": "string" }
+      },
+      "optionalProperties": {
+        "config_dir": { "type": "string", "metadata": { "x-default": null } }
       }
     },
     "external": {

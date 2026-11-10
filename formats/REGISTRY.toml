@@ -320,6 +320,60 @@ foreign_parsers = "many"
 corpus = "none"
 sunset = "none"
 
+# ── `vibe prompt` and `vibe agent`'s launchers, PROP-076 §SYS-OPERATIONS ────
+# Five reports a shell alias, a launcher wrapper or a calling program reads,
+# so `many` foreign parsers on every one. All five are rebuildable by
+# re-running the command, which is what makes the computed policy the same as
+# every CLI report above.
+
+# `vibe prompt check [--json]` — `vibe-prompt-check/1`.
+[format.cli-prompt-check]
+epoch = 1
+schema = "schemas/prompt_check.jtd.json"
+recoverable = true
+foreign_parsers = "many"
+corpus = "none"
+sunset = "none"
+
+# `vibe prompt prepare --json` — `vibe-prompt-prepare/1`. The one place a
+# continuation row's bytes are ever digested; the sidecar holds none.
+[format.cli-prompt-prepare]
+epoch = 1
+schema = "schemas/prompt_prepare.jtd.json"
+recoverable = true
+foreign_parsers = "many"
+corpus = "none"
+sunset = "none"
+
+# `vibe prompt path [--part lane|system] --json` — `vibe-prompt-path/1`.
+[format.cli-prompt-path]
+epoch = 1
+schema = "schemas/prompt_path.jtd.json"
+recoverable = true
+foreign_parsers = "many"
+corpus = "none"
+sunset = "none"
+
+# `vibe prompt flags --harness <kind-or-launcher> --json` —
+# `vibe-prompt-flags/1`. Flags only, never a program.
+[format.cli-prompt-flags]
+epoch = 1
+schema = "schemas/prompt_flags.jtd.json"
+recoverable = true
+foreign_parsers = "many"
+corpus = "none"
+sunset = "none"
+
+# `vibe prompt build --json`, and the system-prompt half of an install
+# report — `vibe-prompt-build/1`.
+[format.cli-prompt-build]
+epoch = 1
+schema = "schemas/prompt_build.jtd.json"
+recoverable = true
+foreign_parsers = "many"
+corpus = "none"
+sunset = "none"
+
 [format.cli-agent-presets]
 epoch = 1
 schema = "schemas/agent_presets.jtd.json"

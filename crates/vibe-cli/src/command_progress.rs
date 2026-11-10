@@ -5,7 +5,7 @@ specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-060#COMMAND-COVERAGE
 use crate::cli::{
     AgentCommand, AgenticSubcommand, AiuiSubcommand, BinCmd, CacheSubcommand, Command, DocCommand,
     DocShellCommand, ExtensionsCommand, McpSubcommand, PrefsSubcommand, ProgressFormat,
-    ProgressSubcommand, RegistryRemoveTarget, RegistrySubcommand, ScrapeCommand,
+    ProgressSubcommand, PromptCommand, RegistryRemoveTarget, RegistrySubcommand, ScrapeCommand,
     ScrapeContractCommand, ShowSubcommand, SkillSubcommand, StorageCommand, VvmSubcommand,
     WorkspaceSubcommand,
 };
@@ -48,6 +48,7 @@ pub(crate) const TOP_LEVEL_COMMANDS: &[&str] = &[
     "package",
     "prefs",
     "progress",
+    "prompt",
     "query",
     "refactor",
     "registry",
@@ -276,6 +277,9 @@ pub(crate) fn policy(command: &Command, terminal_attached: bool) -> CommandPolic
             AgentCommand::Use { .. } => FiniteFallback("Command agent use"),
             AgentCommand::Add { .. } => FiniteFallback("Command agent add"),
             AgentCommand::Remove { .. } => FiniteFallback("Command agent remove"),
+            // The launched harness owns the terminal until it exits, and on
+            // a POSIX host this process is replaced by it.
+            AgentCommand::Launch(_) => TerminalPassthrough,
         },
         Command::Skill(args) => match &args.command {
             SkillSubcommand::List(_) => FastMetadata,
@@ -294,6 +298,15 @@ pub(crate) fn policy(command: &Command, terminal_attached: bool) -> CommandPolic
         Command::Update(_) => FiniteFallback("Command update"),
         Command::Reinstall(_) => FiniteFallback("Command reinstall"),
         Command::Check(_) => FiniteFallback("Command check"),
+        // `build` runs one node's compile and one transaction; the four
+        // read-only verbs open a bounded set of files and print.
+        Command::Prompt(args) => match &args.command {
+            PromptCommand::Build { .. } => FiniteFallback("Command prompt build"),
+            PromptCommand::Check { .. }
+            | PromptCommand::Prepare { .. }
+            | PromptCommand::Path { .. }
+            | PromptCommand::Flags { .. } => FastMetadata,
+        },
         Command::Doc(args) => match &args.command {
             DocCommand::Build(_) => FiniteFallback("Command doc build"),
             DocCommand::BuildSite(_) => FiniteFallback("Command doc build-site"),

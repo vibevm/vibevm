@@ -1,0 +1,41 @@
+{
+  "metadata": {
+    "description": "Version 1 freshness report of vibe prompt check --json: one verdict about the published system-prompt prefix of one node, its printable reasons, the exact build that would resolve it, the three generated artifacts as they stand, and the observations that are not freshness. A band-U edit under an unchanged plan is reported equal, because no continuation row's content is witnessed anywhere.",
+    "spec": { "implements": "spec://org.vibevm.core/vibevm/common/PROP-076#SYS-READ-ONLY-CHECK" },
+    "rustOptions": { "package": "vibe_wire::prompt_check" },
+    "x-rust-type": "PromptCheckReport",
+    "x-wire-order": ["protocol", "node", "opted_in", "verdict", "reasons", "remedy", "artifacts", "warnings"]
+  },
+  "properties": {
+    "protocol": { "type": "string" },
+    "node": { "type": "string" },
+    "opted_in": { "type": "boolean" },
+    "verdict": { "ref": "verdict" },
+    "reasons": { "elements": { "type": "string" }, "metadata": { "x-empty": "emit" } },
+    "remedy": { "type": "string" },
+    "artifacts": { "elements": { "ref": "artifact" }, "metadata": { "x-empty": "emit" } },
+    "warnings": { "elements": { "type": "string" }, "metadata": { "x-empty": "emit" } }
+  },
+  "definitions": {
+    "verdict": {
+      "metadata": { "description": "The six answers of PROP-076 #SYS-OPERATIONS-SURFACE.", "x-vocabulary": "closed" },
+      "enum": ["equal", "stale", "missing", "conflict", "unavailable", "freshness_unverifiable"]
+    },
+    "artifact": {
+      "metadata": { "x-wire-order": ["part", "path", "present", "len", "sha256"] },
+      "properties": {
+        "part": { "ref": "part" },
+        "path": { "type": "string" },
+        "present": { "type": "boolean" }
+      },
+      "optionalProperties": {
+        "len": { "type": "uint32", "metadata": { "x-default": null } },
+        "sha256": { "type": "string", "metadata": { "x-default": null } }
+      }
+    },
+    "part": {
+      "metadata": { "description": "Which generated artifact a row is about.", "x-vocabulary": "closed" },
+      "enum": ["system", "meta", "lane"]
+    }
+  }
+}

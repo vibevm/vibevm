@@ -18,7 +18,7 @@ use std::path::Path;
 
 use specmark::spec;
 
-pub use config::{AgentDefinition, AgentsConfig, agent_list, preset_table};
+pub use config::{AgentDefinition, AgentsConfig, LauncherDefinition, agent_list, preset_table};
 pub(crate) use error::io;
 pub use error::{AgentError, ParkedStep};
 pub use hooks::{AgentHooks, AgentNotice, AgentPrompt, ConsentPrompt};

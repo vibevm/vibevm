@@ -1,0 +1,20 @@
+{
+  "metadata": {
+    "description": "Version 1 answer of vibe prompt flags --json: ready-to-paste launch flags for one harness kind or named launcher. Flags only and never a program, which is what lets the output be appended to any wrapper, alias or launcher a developer already has.",
+    "spec": { "implements": "spec://org.vibevm.core/vibevm/common/PROP-076#SYS-HARNESS-EXECUTABLE" },
+    "rustOptions": { "package": "vibe_wire::prompt_flags" },
+    "x-rust-type": "PromptFlagsReport",
+    "x-wire-order": ["protocol", "node", "launcher", "kind", "delivery", "flags", "notes"]
+  },
+  "properties": {
+    "protocol": { "type": "string" },
+    "node": { "type": "string" },
+    "kind": { "type": "string" },
+    "delivery": { "type": "string" },
+    "flags": { "elements": { "type": "string" }, "metadata": { "x-empty": "emit" } },
+    "notes": { "elements": { "type": "string" }, "metadata": { "x-empty": "emit" } }
+  },
+  "optionalProperties": {
+    "launcher": { "type": "string", "metadata": { "x-default": null } }
+  }
+}

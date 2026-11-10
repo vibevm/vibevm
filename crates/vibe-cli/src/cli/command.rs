@@ -161,6 +161,11 @@ pub enum Command {
     /// Run the spec-consistency linter against the project tree.
     Check(CheckArgs),
 
+    /// Work with the cache-stable system-prompt prefix (PROP-076): build it
+    /// explicitly, report its freshness read-only, prepare one request's
+    /// bands, print an artifact's path, or print a harness's launch flags.
+    Prompt(PromptArgs),
+
     /// Work with a documentation package (PROP-057). `vibe doc check
     /// --examples` runs every documented command in a sandbox and compares
     /// its output with what the page promises, exactly.

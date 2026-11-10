@@ -323,19 +323,25 @@ pub fn run(
     // clones, while this one lives to the end of the command — through the
     // final report and the trace finalisation.
     let lease_owner = lease.clone();
-    let exit = execute_after_open(
-        ctx,
-        Execution {
-            args,
-            embedded_root,
-            offline,
-            lease,
-            user_config,
-            selection,
-            metadata,
-        },
-        trace.recorder(),
-    );
+    // A reinstall regenerates every node's boot artifacts, an opted-in
+    // node's prefix among them, and ends with one line naming what it did
+    // and where (PROP-076 `#SYS-OPERATIONS-PATH-AND-FLAGS`).
+    let project_root = args.path.clone();
+    let exit = crate::commands::prompt::reporting_the_prompt(ctx, &project_root, || {
+        execute_after_open(
+            ctx,
+            Execution {
+                args,
+                embedded_root,
+                offline,
+                lease,
+                user_config,
+                selection,
+                metadata,
+            },
+            trace.recorder(),
+        )
+    });
     // Consumes the owner: finishes the index, drops the last handle (and with
     // it the cooperative lock), and returns the member to attach.
     let finalized = compile_trace::finalize(trace, exit, &now);

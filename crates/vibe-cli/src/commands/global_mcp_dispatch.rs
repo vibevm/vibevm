@@ -39,7 +39,13 @@ pub(crate) fn run_install(
         // yet changes nothing about the fetches this run performed.
         let path = args.path.clone();
         let projected = args.clone();
-        application_project::install(ctx, args, embedded_root, offline)?;
+        // A project install publishes an opted-in node's prefix along with
+        // its other boot artifacts, and whoever builds the artifacts says
+        // what it did and where (PROP-076
+        // `#SYS-OPERATIONS-PATH-AND-FLAGS`).
+        crate::commands::prompt::reporting_the_prompt(ctx, &path, || {
+            application_project::install(ctx, args, embedded_root, offline)
+        })?;
         return pin_project_remaps(ctx, &projected, &path, offline);
     }
     if !args

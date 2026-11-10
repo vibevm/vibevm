@@ -191,3 +191,21 @@ pub(crate) fn needs_global_registry(cmd: &crate::cli::Command) -> bool {
 
 mod outcome;
 pub(crate) use outcome::finish;
+
+/// Install the tracing subscriber this invocation uses, filtered by
+/// `$VIBE_LOG`.
+///
+/// It lives beside the rest of the composition root's ambient reads rather
+/// than in `main.rs` for the one reason already recorded for `VvmEnv`:
+/// `main.rs` has a file budget, and the read is the same read at the same
+/// root.
+pub(crate) fn init_tracing() {
+    use tracing_subscriber::{EnvFilter, fmt};
+
+    let filter = EnvFilter::try_from_env("VIBE_LOG").unwrap_or_else(|_| EnvFilter::new("warn"));
+    let _ = fmt()
+        .with_env_filter(filter)
+        .with_target(false)
+        .with_writer(std::io::stderr)
+        .try_init();
+}

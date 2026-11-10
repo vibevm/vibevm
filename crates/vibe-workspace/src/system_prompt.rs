@@ -50,6 +50,8 @@ mod check;
 mod compose;
 #[path = "system_prompt/contract.rs"]
 mod contract;
+#[path = "system_prompt/harness.rs"]
+mod harness;
 #[cfg(test)]
 #[path = "system_prompt/host_repo.rs"]
 mod host_repo;
@@ -79,6 +81,7 @@ pub use compose::{
     ComposedPrefix, PrefixSettings, SEGMENT_FRAME, Segment, SegmentId, compose_prefix,
 };
 pub use contract::{CURRENT_RECIPE, KNOWN_RECIPES, SuppliedSource, render_contract};
+pub use harness::{CodexProfile, HarnessKind, LaunchFlags, launch_flags};
 pub use lane::{ComposedLane, LaneSegment, LaneSource, compose_agent_lane};
 pub use markers::{
     HASH12_LEN, LANE_BEGIN, LANE_END, LaneMarker, MarkerKind, VerifiedSegment, hash12, marker_line,

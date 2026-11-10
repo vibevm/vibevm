@@ -72,4 +72,14 @@ pub enum AgentCommand {
 
     /// Remove an agent definition; a default naming it is cleared.
     Remove { name: String },
+
+    /// Start a coding agent through one of your named launchers, with this
+    /// project's composed boot lane in the harness's own instruction slot
+    /// (PROP-076 `#SYS-HARNESS-EXECUTABLE`). `vibe agent list` names the
+    /// launchers this machine has.
+    ///
+    /// Everything after the launcher name is passed to it unchanged, so
+    /// `vibe agent claude --model opus -- -p` works.
+    #[command(external_subcommand)]
+    Launch(Vec<String>),
 }

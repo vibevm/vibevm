@@ -67,9 +67,10 @@ pub use activation::{
 };
 pub use agents::{
     AgentDefinition, AgentError, AgentHooks, AgentNotice, AgentPrompt, AgentSource, AgentsConfig,
-    ConsentPrompt, Delivery, ExternalAgent, Invocation, PLACEHOLDERS, ParkedStep, Placeholders,
-    Preset, ResolvedAgent, RunMode, SelectedAgent, agent_list, preset as agent_preset,
-    preset_table as agent_preset_table, presets as agent_presets, select_agent,
+    ConsentPrompt, Delivery, ExternalAgent, Invocation, LauncherDefinition, PLACEHOLDERS,
+    ParkedStep, Placeholders, Preset, ResolvedAgent, RunMode, SelectedAgent, agent_list,
+    preset as agent_preset, preset_table as agent_preset_table, presets as agent_presets,
+    select_agent,
 };
 pub use alternatives::{
     DefaultChange, listing as alternatives_listing, reserved_commands, set_default, set_slot_off,

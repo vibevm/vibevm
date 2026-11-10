@@ -29,6 +29,8 @@ mod mcp;
 mod pkg;
 mod prefs;
 mod progress;
+mod prompt;
+pub use prompt::*;
 mod query;
 mod registry;
 mod remap;

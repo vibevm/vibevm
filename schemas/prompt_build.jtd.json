@@ -1,0 +1,33 @@
+{
+  "metadata": {
+    "description": "Version 1 result of vibe prompt build --json and of the system-prompt half of an install report: what one build did and where. A failed build and a project that has not opted in each say so explicitly rather than staying silent.",
+    "spec": { "implements": "spec://org.vibevm.core/vibevm/common/PROP-076#SYS-OPERATIONS-PATH-AND-FLAGS" },
+    "rustOptions": { "package": "vibe_wire::prompt_build" },
+    "x-rust-type": "PromptBuildReport",
+    "x-wire-order": ["protocol", "node", "outcome", "summary", "system", "lane", "error"]
+  },
+  "properties": {
+    "protocol": { "type": "string" },
+    "node": { "type": "string" },
+    "outcome": { "ref": "outcome" },
+    "summary": { "type": "string" }
+  },
+  "optionalProperties": {
+    "system": { "ref": "artifact", "metadata": { "x-default": null } },
+    "lane": { "ref": "artifact", "metadata": { "x-default": null } },
+    "error": { "type": "string", "metadata": { "x-default": null } }
+  },
+  "definitions": {
+    "outcome": {
+      "metadata": { "description": "opted_out is a node that owns nothing; removed is a node that opted out and whose four owned paths now end absent.", "x-vocabulary": "closed" },
+      "enum": ["opted_out", "removed", "rebuilt", "unchanged", "failed"]
+    },
+    "artifact": {
+      "metadata": { "x-wire-order": ["path", "len"] },
+      "properties": {
+        "path": { "type": "string" },
+        "len": { "type": "uint32" }
+      }
+    }
+  }
+}

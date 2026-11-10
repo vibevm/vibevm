@@ -23,6 +23,9 @@ pub struct AgentList {
 
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub external: Option<External>,
+
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub launchers: Vec<Launcher>,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
@@ -59,4 +62,22 @@ pub struct External {
     pub command: String,
 
     pub args: Vec<String>,
+}
+
+/// One PROP-076 agent launcher: a name bound to a harness kind and to the argv
+/// prefix that starts it. source is built-in or the exact user-config path,
+/// because a developer debugging which program ran needs to know which file
+/// decided it.
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+pub struct Launcher {
+    pub name: String,
+
+    pub kind: String,
+
+    pub command: Vec<String>,
+
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub config_dir: Option<String>,
+
+    pub source: String,
 }

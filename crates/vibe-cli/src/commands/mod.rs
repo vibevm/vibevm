@@ -60,6 +60,7 @@ pub mod outdated;
 pub mod prefs;
 pub mod progress;
 pub mod progress_evidence;
+pub mod prompt;
 pub mod query;
 pub mod refactor;
 pub mod registry;

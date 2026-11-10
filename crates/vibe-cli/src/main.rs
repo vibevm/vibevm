@@ -80,7 +80,7 @@ fn run() -> ExitCode {
         return exit;
     }
     let transfer_config = promote_user_config_env();
-    init_tracing();
+    composition::init_tracing();
     // VVM: derive the running version from the binary's own path, and warn
     // when the inherited $VIBEVM_HOME is stale (PROP-019 §2.5).
     let self_loc = commands::vvm::derive_self(std::env::current_exe().ok().as_deref());
@@ -318,6 +318,7 @@ fn run() -> ExitCode {
                 commands::reinstall::run(&ctx, args, discover_embedded_root(), cli.offline)
             }
             Command::Check(args) => commands::check::run(&ctx, args),
+            Command::Prompt(args) => commands::prompt::run(&ctx, args),
             Command::Doc(args) => commands::doc::run(
                 &ctx,
                 args,
@@ -580,17 +581,6 @@ fn promote_user_config_env() -> vibe_core::user_config::TransferConfig {
     }
     let _ = PROMOTED_FROM_USER_CONFIG.set(promoted);
     cfg.transfer
-}
-
-fn init_tracing() {
-    use tracing_subscriber::{EnvFilter, fmt};
-
-    let filter = EnvFilter::try_from_env("VIBE_LOG").unwrap_or_else(|_| EnvFilter::new("warn"));
-    let _ = fmt()
-        .with_env_filter(filter)
-        .with_target(false)
-        .with_writer(std::io::stderr)
-        .try_init();
 }
 
 /// Read a nonempty environment override at the composition root, as required

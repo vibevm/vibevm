@@ -65,6 +65,64 @@ pub struct AgentsConfig {
     pub trusted_groups: Vec<String>,
     #[serde(default, skip_serializing_if = "BTreeMap::is_empty")]
     pub agent: BTreeMap<String, AgentDefinition>,
+    /// `[launchers.NAME]` — the PROP-076 agent launchers: a name bound to a
+    /// harness **kind** and to the argv prefix that starts it.
+    ///
+    /// **Only a user may name one, which is why this table exists here and
+    /// nowhere else.** A repository must not choose which program runs on a
+    /// contributor's machine: that is the one setting where a shared file
+    /// would let one developer's convenience execute arbitrary code on
+    /// everyone else's computer, so a project manifest that names a launcher
+    /// is a refusal (`PROP-076#SYS-HARNESS-EXECUTABLE`).
+    ///
+    /// **The spelling.** `PROP-076` writes the table as
+    /// `[agent.launchers.<name>]`, which is the path it has in a project
+    /// manifest — the spelling the refusal above names. It cannot be written
+    /// that way *here*: `[agent.<name>]` is already a PROP-064 agent
+    /// definition, so `[agent.launchers]` would be an agent called
+    /// "launchers". In this file, whose whole root is the agent
+    /// configuration, the table is `[launchers.<name>]` — the same path with
+    /// the file's own root elided.
+    #[serde(default, skip_serializing_if = "BTreeMap::is_empty")]
+    pub launchers: BTreeMap<String, LauncherDefinition>,
+}
+
+/// One `[launchers.NAME]` table as written.
+///
+/// `command` is an argv **prefix** rather than a path, so a personal wrapper
+/// may carry its own standing arguments: the motivating case is a developer
+/// who reaches a harness through a small script that sets the harness's own
+/// config directory, drops API-key variables and `exec`s the real program.
+///
+/// `config_dir` exists for one honest reason: it names where that launcher's
+/// harness keeps its session logs. A wrapper that sets `CLAUDE_CONFIG_DIR`
+/// internally makes the directory unknowable from outside — vibe sees
+/// neither the variable nor the harness's default — so a launcher may state
+/// it (`PROP-076#SYS-HARNESS-EXECUTABLE`).
+///
+/// ```
+/// let declared: vibe_app::LauncherDefinition = toml::from_str(
+///     "kind = 'claude'\ncommand = ['my-claude', '--no-telemetry']\n",
+/// )?;
+/// assert_eq!(declared.kind, "claude");
+/// assert_eq!(declared.command, ["my-claude", "--no-telemetry"]);
+/// assert_eq!(declared.config_dir, None);
+/// # Ok::<(), toml::de::Error>(())
+/// ```
+#[derive(Debug, Clone, Default, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+#[spec(documents = "spec://org.vibevm.core/vibevm/common/PROP-076#SYS-HARNESS-EXECUTABLE")]
+pub struct LauncherDefinition {
+    /// The harness kind, from the closed set. Required: a launcher with no
+    /// kind has no flag dialect, and guessing one is how a session silently
+    /// starts with no boot lane at all.
+    pub kind: String,
+    /// The argv prefix to exec. Empty means "the kind's own program".
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub command: Vec<String>,
+    /// Where this launcher's harness keeps its session logs.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub config_dir: Option<String>,
 }
 
 impl AgentsConfig {
@@ -225,6 +283,10 @@ pub fn agent_list(
     list_wire::AgentList {
         protocol: "vibe-agent-list/1".into(),
         path: settings.agents_path().display().to_string(),
+        // The launcher rows are the caller's: resolving them means merging
+        // this file's `[launchers.*]` with the built-ins of a closed harness
+        // kind set that is PROP-076's and not this crate's.
+        launchers: Vec::new(),
         default: config.default.clone(),
         trusted_groups: config.trusted_groups.clone(),
         agents: config

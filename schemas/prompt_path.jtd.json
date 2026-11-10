@@ -1,0 +1,32 @@
+{
+  "metadata": {
+    "description": "Version 1 answer of vibe prompt path --json: the absolute path of one generated system-prompt artifact with its size, digest and freshness. A stale or missing artifact is reported as stale or missing with the build that fixes it, never as an empty path, because an empty path is the one answer a shell alias turns silently into a broken launch.",
+    "spec": { "implements": "spec://org.vibevm.core/vibevm/common/PROP-076#SYS-OPERATIONS-PATH-AND-FLAGS" },
+    "rustOptions": { "package": "vibe_wire::prompt_path" },
+    "x-rust-type": "PromptPathReport",
+    "x-wire-order": ["protocol", "node", "part", "path", "present", "len", "sha256", "freshness", "remedy"]
+  },
+  "properties": {
+    "protocol": { "type": "string" },
+    "node": { "type": "string" },
+    "part": { "ref": "part" },
+    "path": { "type": "string" },
+    "present": { "type": "boolean" },
+    "freshness": { "ref": "freshness" },
+    "remedy": { "type": "string" }
+  },
+  "optionalProperties": {
+    "len": { "type": "uint32", "metadata": { "x-default": null } },
+    "sha256": { "type": "string", "metadata": { "x-default": null } }
+  },
+  "definitions": {
+    "part": {
+      "metadata": { "description": "lane is AGENT-LANE.md, what a launch delivery points at; system is the API prefix SYSTEM.md.", "x-vocabulary": "closed" },
+      "enum": ["system", "lane"]
+    },
+    "freshness": {
+      "metadata": { "description": "The verdict of vibe prompt check, verbatim.", "x-vocabulary": "closed" },
+      "enum": ["equal", "stale", "missing", "conflict", "unavailable", "freshness_unverifiable", "opted_out"]
+    }
+  }
+}
