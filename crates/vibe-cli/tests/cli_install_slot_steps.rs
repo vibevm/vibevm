@@ -11,7 +11,9 @@ mod common;
 
 use std::fs;
 
-use common::hook_slot::{Fixture, documents, install, install_unconsented, setup, slot_outcomes};
+use common::hook_slot::{
+    Fixture, documents, install, install_unconsented, select_default_agent, setup, slot_outcomes,
+};
 
 #[test]
 fn a_false_condition_is_planned_reported_skipped_and_never_run() {
@@ -130,4 +132,69 @@ fn assume_yes_is_the_per_run_escape_and_runs_the_same_contributions() {
     let outcomes = slot_outcomes(&documents(&output.stdout));
     assert_eq!(outcomes.len(), 1);
     assert_eq!(outcomes[0]["status"], "ok");
+}
+
+/// `agent_configured` is the run's real agent posture, not a constant.
+///
+/// With no agent selected the condition is false and says so. It used to be
+/// false on **every** machine, because the field was hard-coded: the
+/// lifecycle agent backend is injected per run, so the install boundary had
+/// nothing to read and wrote `false` (P7e's recorded semantic hole).
+#[test]
+fn an_agent_condition_skips_when_this_run_has_no_agent() {
+    let (_outer, user, project, registry) = setup(Fixture::JudgmentAgent);
+    let output = install(&user, project.path(), &registry);
+    assert!(
+        output.status.success(),
+        "a skipped contribution must not fail the install: {}",
+        String::from_utf8_lossy(&output.stderr),
+    );
+    let outcomes = slot_outcomes(&documents(&output.stdout));
+    assert_eq!(outcomes.len(), 1, "the row is reported, not omitted");
+    assert_eq!(outcomes[0]["status"], "skip");
+    let message = outcomes[0]["message"].as_str().unwrap_or_default();
+    assert!(
+        message.contains("agent_configured"),
+        "the skip must name the deciding condition: {message}",
+    );
+    assert!(
+        !project
+            .path()
+            .join(common::slot_dir("org.example.hooked", "0.1.0"))
+            .join("hook-order.txt")
+            .exists(),
+        "a skipped contribution must not execute",
+    );
+}
+
+/// The same package, the same condition, one agent named in `agents.toml`:
+/// the contribution runs. This is the wiring itself — the field now carries
+/// the selection of PROP-064 `#selection`, so the condition can be true.
+#[test]
+fn an_agent_condition_runs_when_the_user_has_selected_one() {
+    let (_outer, user, project, registry) = setup(Fixture::JudgmentAgent);
+    select_default_agent(&user);
+    let output = install(&user, project.path(), &registry);
+    assert!(
+        output.status.success(),
+        "the selected agent makes the condition hold: {}",
+        String::from_utf8_lossy(&output.stderr),
+    );
+    let outcomes = slot_outcomes(&documents(&output.stdout));
+    assert_eq!(outcomes.len(), 1);
+    assert_eq!(
+        outcomes[0]["status"], "ok",
+        "`agent_configured = true` must hold when an agent is configured: {:#?}",
+        outcomes[0],
+    );
+    let slot = project
+        .path()
+        .join(common::slot_dir("org.example.hooked", "0.1.0"));
+    assert_eq!(
+        fs::read_to_string(slot.join("hook-order.txt"))
+            .unwrap()
+            .trim(),
+        "post",
+        "the contribution really ran",
+    );
 }

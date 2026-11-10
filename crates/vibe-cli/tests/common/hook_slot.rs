@@ -30,6 +30,10 @@ pub enum Fixture {
     /// A judged contribution that will run, for the trust gate of
     /// PROP-065 `#ordinary-trust` to be asked about.
     JudgmentTrust,
+    /// A judged `slot:post-install` contribution gated on
+    /// `agent_configured = true`, so the run's real agent posture decides
+    /// it (PROP-065 `#ordinary-grammar`, PROP-064 `#selection`).
+    JudgmentAgent,
 }
 
 pub fn registry(root: &Path, fixture: Fixture) -> PathBuf {
@@ -87,6 +91,16 @@ id = "judged"
 point = "slot:post-install"
 title = "Judged contribution"
 handler = { kind = "script", base = "hooks/post" }
+"#
+        }
+        Fixture::JudgmentAgent => {
+            r#"
+[[extension]]
+id = "judged"
+point = "slot:post-install"
+title = "Judged contribution"
+handler = { kind = "script", base = "hooks/post" }
+when = { agent_configured = true }
 "#
         }
     };
@@ -173,8 +187,17 @@ pub fn post_package(registry: &Path, name: &str, fail: bool) {
     fs::write(package.join("hooks/post.ps1"), powershell).unwrap();
 }
 
+/// Name an agent in this scratch home's `agents.toml`, which is where the
+/// install boundary reads the run's agent posture from (PROP-064
+/// `#selection`). `codex` is a built-in preset, so the file needs no
+/// definition — and nothing is ever started: the condition asks whether an
+/// agent is configured, not that one runs.
+pub fn select_default_agent(user: &UserScratch) {
+    fs::write(user.settings.join("agents.toml"), "default = \"codex\"\n").unwrap();
+}
+
 pub fn install(user: &UserScratch, project: &Path, registry: &Path) -> std::process::Output {
-    user.vibe()
+    no_agent_env(user.vibe())
         .arg("--json")
         .arg("install")
         .arg("org.example/hooked@=0.1.0")
@@ -195,7 +218,7 @@ pub fn install_unconsented(
     project: &Path,
     registry: &Path,
 ) -> std::process::Output {
-    user.vibe()
+    no_agent_env(user.vibe())
         .arg("--json")
         .arg("install")
         .arg("org.example/hooked@=0.1.0")
@@ -205,6 +228,17 @@ pub fn install_unconsented(
         .arg(project)
         .output()
         .unwrap()
+}
+
+/// Drop the external agent registration of PROP-064
+/// `#external-registration` from the child's environment: a developer who
+/// has `VIBE_AGENT_COMMAND` exported must not make an `agent_configured`
+/// condition answer differently than it does in CI.
+fn no_agent_env(mut command: assert_cmd::Command) -> assert_cmd::Command {
+    for variable in ["VIBE_AGENT_COMMAND", "VIBE_AGENT_ARGS"] {
+        command.env_remove(variable);
+    }
+    command
 }
 
 pub fn documents(output: &[u8]) -> Vec<serde_json::Value> {
