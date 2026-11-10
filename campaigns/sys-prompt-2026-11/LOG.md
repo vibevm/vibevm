@@ -710,3 +710,106 @@ published, once `vibe agent claude` exists, run by the central session as P9**.
 Codex, Qwen Code, Gemini CLI, OpenCode, pi and dsh stay unauthorised and their
 default stays `read`; the offline `codex debug prompt-input` row X0 needs no
 authorisation because it spends nothing.
+
+## 2026-11-10 — P2b: the managed block is a router, and copies are neutralised
+
+Two commits. The block body, the expected lane id in it, the entrypoint-size
+refusal, `vibedeps/` neutralisation and three `vibe check` warnings. The
+phase's own regeneration of this repository's instruction files did **not**
+run, for an environment reason recorded below, so `SP-FMT-105` is "the router
+block delivered" rather than delivered, and the separate `chore` commit is
+outstanding.
+
+**The shape.** `boot_artifacts/redirect/router.rs` owns the generated prose
+and the `RouterFacts { node_id, static_hash12, spec_format }` it is rendered
+from; `redirect.rs` keeps the marker scan and the write.
+`vibedeps/instruction_block.rs` is the neutralisation, one function the three
+materialisation walks call. The existing `redirect_block` check cell gained
+three warnings. `system_prompt` gained `segment_hash12`.
+
+### Six decisions worth not re-deriving
+
+1. **The facts are a value, and that is the whole point.** The writer
+   computes `RouterFacts` once per generation and the prefix's prospective
+   entrypoint witness takes the *same value* through `PrefixCapture::router`.
+   P2 had already made one function answer both callers for the block body;
+   this keeps that true now that the body depends on two more facts. The
+   first run of the test suite proved why: the capture witness said
+   `project demo` while the write said `project -`, because the two sides
+   derived the node id independently. That is exactly the drift
+   `#SYS-PROSPECTIVE-ENTRYPOINT` exists to prevent, and it showed up as a
+   failing test rather than as a published block disagreeing with its own
+   witness.
+2. **One digest function, not one normalisation rule applied twice.**
+   `segment_hash12` is `hash12` over the delivered body — the LF the lane
+   composer inserts after a body that lacks one *included*, because that byte
+   lies between the markers. The lane composer now takes its own digest from
+   it too, with a `debug_assert` that the value it would have computed by
+   hand agrees. Two sides each applying "append an LF if missing" is how a
+   project ends up telling a model to re-read a lane that is current.
+3. **The node id is the manifest's own accessor.** `consumer_node()
+   .coordinate()`, with the workspace coordinate and then the reserved
+   spelling `-` behind it. `write_boot_artifacts` is reachable for a bare
+   directory that is no workspace's node, and refusing to write a boot lane
+   there over an identity question the lane does not depend on would be the
+   wrong trade; `-` is a token no manifest can produce, so the scope test
+   still fails closed. `compose.rs`'s own `[package]`-first reading was
+   replaced by that accessor — the markers, the router and the sidecar were
+   two spellings away from being three.
+4. **D11 is one measurement read at two severities.** `CodexBudget::of(end)`
+   is `Fits` / `Near` / `Truncated` against 32 KiB and a 4 KB margin. The
+   writer refuses `Truncated` before any write; the `Near` warning is
+   `vibe check`'s, because `write_boot_artifacts` has no warning channel and
+   a warning that nothing can report is not a warning.
+   `HARNESS-DELIVERY.md` §8.5 had put it in `vibe prompt check` (P5); it is
+   here instead, and the check reads the limit from vibe-workspace rather
+   than carrying a second copy of a ceiling.
+5. **A copy is never repaired.** Neutralisation replaces the block body and
+   nothing else; a copy that is not UTF-8, or whose markers are not exactly
+   one ordered pair, is placed byte for byte and left to the package that
+   published it. Rewriting someone else's malformed marker pair is precisely
+   the repair `locate_block` refuses on our own files.
+6. **No new `CheckId`.** The three findings went into the `redirect_block`
+   cell, which already owns managed blocks, so the check inventory, the cell
+   oracle and the conform manifests are untouched. `SP-FMT-008`'s "one new
+   check id" is P5's stale-prefix check and is unaffected.
+
+### One count corrected, and the census reproduced
+
+`PROP-076#SYS-NO-RECURSION` and `SP-FMT-105` were written with **19** tracked
+instruction files carrying a `<vibevm>` block. Measured over `git ls-files`:
+**18** — six directories × three names (the root, `research/rust-demo`,
+`research/ts-demo`, the `delegation-rules` copy under `vibedeps/`, and the
+`delegation-rules` and `fractality` sources under `vibepacks/`).
+`vibevm/vibepacks/org.vibevm.fractality/CLAUDE.md` and one staging fixture
+mention `<vibevm>` in prose and carry no marker pair. The new check findings
+reproduced the census independently on the live repository: **15** warnings,
+the 18 minus the root's own three, split 12 nested-block and 3
+un-neutralised-copy — which is the better kind of agreement, since the count
+was taken by one method and the warnings by another.
+
+### What stopped the regeneration
+
+`vibe install --offline --registry vibevm/vibepacks`, with the binary built
+from this branch, refuses before dependency resolution completes:
+
+> store entry for `org.vibevm.doc/web@1.0.0` at `~/.vibe/cache/org.vibevm.doc/web/v1.0.0`
+> hashes to `sha256:ca4b0d2f…`, but the lockfile pins `sha256:224000f7…`
+
+and the matching `vibevm/vibedeps/org.vibevm.doc.web/` slot is absent in this
+worktree — the same incomplete checkout spike S5 recorded. The refusal's own
+remedy, `vibe cache check --repair`, re-downloads. So the regeneration and
+its `chore` commit are outstanding, and nothing inside the markers was
+hand-edited. `vibe check` on this worktree reports the **2 pre-existing
+errors** that absent slot causes (`boot_graph_integrity`,
+`visibility_hygiene`) and 55 warnings, 15 of them this phase's.
+
+### P4 not started
+
+P4 (publication of `SYSTEM.md`, the sidecar and `AGENT-LANE.md` through the
+boot transaction, the vibe-written `.gitignore`, and the `vibe check` error
+when git tracks a generated prefix) was not begun. The worker's standing
+constraint is to stop when the build filesystem falls under 12 GB free; it
+stood at 5.4 GB after the `vibe-cli` build, with concurrent workers on the
+same disk, and P4's own gates need a JTD regeneration and a second target
+triple. The design work P4 depends on is unchanged by this phase.

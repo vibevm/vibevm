@@ -675,6 +675,42 @@ reserved (`#SYS-IMPORT-INERTNESS`) and the router alone ships first.
 
 **Parallel.** Needs P3's marker grammar. Independent of P4.
 
+**As delivered — the code, 2026-11-10, in two commits; the regeneration is
+outstanding.** `boot_artifacts/redirect/router.rs` owns the body, the
+`RouterFacts` it is rendered from, the node-id resolution and the
+instruction-file budget; `redirect.rs` keeps the marker scan and the write
+and gained the refusal; `vibedeps/instruction_block.rs` neutralises a copy's
+block through one function the three materialisation walks call; and the
+existing `redirect_block` check cell gained three warnings. `system_prompt`
+gained `segment_hash12`, the one digest both the lane markers and the
+router's expected value use, and `PrefixCapture` gained the `router` field
+so the write and the prospective witness share one value. Detail, with the
+nine decisions the plan did not settle, is `FORMAT-CHANGES.md`
+`SP-FMT-105`.
+
+**Three deviations from this phase's plan, each recorded under
+`SP-FMT-105`.** (1) The Codex-budget **warning** is `vibe check`'s rather
+than `vibe prompt check`'s, because `write_boot_artifacts` has no warning
+channel and a warning needs a report; the refusal is in the writer, over the
+same one classification. (2) The nested-block and copy findings went into the
+existing `redirect_block` cell rather than a new `CheckId`, so the check
+inventory, its oracle and the conform manifests are untouched. (3) The node
+id is the manifest's own `consumer_node().coordinate()`, with the workspace
+coordinate and then the reserved spelling `-` behind it, because
+`write_boot_artifacts` is reachable for a bare directory.
+
+**The one thing this phase did not finish.** "This rewrites the managed block
+of the tracked instruction files when `vibe install` regenerates" did not
+happen: `vibe install --offline --registry vibevm/vibepacks` refuses in this
+worktree before resolution completes — the user cache entry for
+`org.vibevm.doc/web@1.0.0` disagrees with the lockfile pin and its
+`vibedeps/org.vibevm.doc.web/` slot is absent, and the refusal's own remedy
+re-downloads. The 18 files (not 19 — see `SP-FMT-105`) therefore still carry
+the pre-2026-11 redirect, and the separate `chore` commit is outstanding.
+Nothing inside the markers was hand-edited, and `vibe check` on this
+worktree reports the 2 pre-existing `org.vibevm.doc.web` errors it reported
+before this phase, plus the phase's own 15 new warnings.
+
 ### P3 — compose: deterministic assembly, segments, sidecar — **L** — **DONE 2026-11-10**
 
 **Goal.** A pure function from `CapturedPrefixInputs` to the prefix bytes, the
