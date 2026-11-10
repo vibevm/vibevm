@@ -1515,3 +1515,94 @@ a `vibenvm.sh` under the settings root for the driver to source; that sandbox
 B's observation adapter reads the field names vibe's JSON actually uses; and
 that the `<TOOLROOT>@v<version>` layout collapse covers vibe's own layout, which
 it is written for but has only ever been exercised against nvm's.
+
+## 2026-11-10 — P7d implemented: `[recommends]` for applications and the general `--no-recommends`
+
+The fourth of the six P7 units landed, in three product commits and this
+record. An application's `[recommends]` is now installed by the application
+installer — breadth-first in declaration order over a visited set, each
+installation the ordinary one, each run after the recommender's own record is
+committed — and the companion is recorded `auto`, exposed, with a **weak**
+requirer edge. `--no-recommends` is one global flag for every package kind.
+`[suggests]` gained a voice and no behaviour. `PROP-077`'s facts are
+`impl/done` except `#SUGGESTS-UNCHANGED`, which is `impl/work` for exactly one
+clause; `AV-FMT-030` is delivered and `AV-FMT-029`'s inventory half is; the
+as-built record is `PROP-077#P7D-AS-BUILT`.
+
+**The inventory generation is paid, and P7c inherits it finished.** The P7
+design note said whichever of P7c and P7d landed first owns the
+`[format.application-index]` 6 → 7 move, the `vibe-user-applications/8` tag and
+the `vibe-app-proxy` admission PROP-059 `#proxy-index-upgrade` requires. P7d
+landed first and paid all three: `schemas/application/e7/index.jtd.json` with
+its corpus, `[format.application-index-v7]` as the frozen previous reader, the
+typed `e6 → e7` promotion that fabricates no weak edge, and the proxy's `/8`
+arm with its `--supports-index` answer. The generation's only addition is
+`weak` on a `requirement` row, so the writer's ladder gained one rung: a home
+with no recommendation goes on writing `/7`, `/6` or `/3`, and every existing
+PATH proxy goes on reading it. **P7c adds its per-adapter extras record as
+optional members of that same `e7` generation at epoch 7 → 7** — no second
+generation step, no second proxy admission — and owes one clause in
+`Index::requires_reader_eight`, which is written as the ladder's rung for
+exactly that reason.
+
+**Five things the implementation settled that the design left open.**
+
+- **`required_by` had to answer weakness.** A weak edge keeps its target out of
+  the orphan set and blocks a removal in neither direction, so one boolean
+  reverse edge could not serve both readers. `Index::required_by` now answers a
+  `ReverseEdge { owner, scope, weak }`, and an owner recording both a
+  requirement and a recommendation of one target is not weak — the strong edge
+  decides.
+- **A satisfied recommendation still records the edge, and the walk stops
+  there.** Read literally, "skipped as satisfied" would record nothing; but a
+  recommender's `requires` list is rewritten from its plan on every install, so
+  a second `install -g` would drop the edge and orphan the companion. The edge
+  is therefore recorded for a reference that ends up *present* — and the walk
+  goes no further down it, exactly as `--plan-only` goes no further, because the
+  plan must be the whole truth about the walk. The same rule means a
+  `--no-recommends` the user spent on the companion's own install is not undone
+  later by installing something that recommends it.
+- **The walk's own publication needs the proxy image.** The weak edge is the
+  first thing in a home that needs the `/8` reader, so it goes through
+  `proxies::for_publication` + `publish_locked` as a migration's record does.
+  The raw `save_locked` refuses a protocol move with existing commands rather
+  than stranding them, and that refusal is what the first run measured.
+- **The project home's consent gate is honoured by narrowing.** That gate reads
+  the lock's app rows and a recommendation is not one, so rather than inventing
+  a second gate the walk is not entered on the project-home plane unless the run
+  already carries explicit consent. Strictly stronger than the gate: without
+  consent, nothing the user did not name is installed there.
+- **The flag's path is wider than the plan's file list.** The list named the
+  resolver branch as "the only resolver change", which is true of the resolver;
+  the posture also travels through `vibe-package-source`, `vibe-install` and
+  `vibe-orchestrator` as one decided answer beside the offline posture, and the
+  seam gained `solve_without_recommends` with a masked sibling so a visibility
+  re-solve cannot bring back what the first solve declined.
+
+**One finding the phase did not act on, and deliberately.** `PROP-077`
+`#WEAK-TODAY` recorded, as `impl/done`, that the project plane already honours
+`[recommends]` through the resolver's greedy expansion. Measured end to end
+rather than at the solver seam, it does not: the recommended package enters the
+solved graph and the PROP-050 `#EFFECTIVE-SET` visibility projection then
+prunes it again — it is not a root and no manifest declares an edge to it, so
+`analyze` finds it unreachable and `prune_graph` drops it before anything is
+fetched, locked or materialised. So `[recommends]` has no observable effect on
+a project install today, by any route. `#WEAK-TODAY` is corrected in place and
+`#P7D-AS-BUILT` (9) states why this phase did not fix it: admitting a weak
+graph member into a consumer's effective set is a PROP-050 decision, not a
+reach decision, and it wants the same pass as the project plane's own
+`suggested[]` report channel. The new `cli_install_no_recommends` suite pins
+the measured behaviour so the day it changes is visible.
+
+**Tests.** `vibe-resolver`: `recommends::no_recommends_runs_the_hard_solve_and_nothing_else`
+and `…::a_solver_without_weak_expansion_answers_with_its_ordinary_solve`.
+`vibe-app`: `index::tests::the_writer_reaches_protocol_eight_only_for_a_weak_requirer_edge`
+and `…::a_weak_edge_is_reported_weak_and_an_owner_of_both_edges_is_not`.
+`vibe-wire`: the `/7` corpus round-trip and the frozen `e6` reader's refusal of
+a document carrying a weak edge, and the report's two new members. `vibe-cli`:
+the ten cases of `cli_app_recommends` (installed exposed `auto` with a weak
+edge and its idempotence, `--no-recommends`, each skip reason, a failing
+recommended install at exit 0, a cycle, transitivity, removal in both
+directions, autoremove and the manual mark, the plan's subtree and the
+suggestion line, and the plan and the walk stopping at the same place) and the two of `cli_install_no_recommends`, plus the `/8` arm
+in `cli_app_proxy_index_versions`.

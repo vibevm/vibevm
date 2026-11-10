@@ -612,9 +612,22 @@ Status: **not delivered.** Design authority:
 
 ## AV-FMT-029 — `vibe-app-extras/1` and the inventory's adapter record and weak edge (Phase 7c/7d)
 
-Status: **partly delivered 2026-11-10** (phase P7b delivered the format record and the half of
-the document it can fill; the inventory generation, the weak edge and the user's own list remain
-P7c/P7d). What P7b delivered: `[format.cli-application-extras]`,
+Status: **partly delivered 2026-11-10** — P7b delivered the format record and the half of the
+document it can fill; **P7d delivered the inventory generation and the weak edge**; the user's own
+list and the per-adapter record remain P7c's. What P7d delivered: `[format.application-index]`
+epoch **6 → 7** (`schemas/application/e7/index.jtd.json`, corpus `formats/corpora/application/e7`),
+protocol tag `vibe-user-applications/8`, the optional `weak` boolean on a `requirement` row, the
+frozen previous reader registered as `[format.application-index-v7]` (epoch 6, `e6`), the typed
+`e6 → e7` promotion that fabricates no weak edge, and the `vibe-app-proxy` admission of `/8` with
+its `--supports-index` answer. The writer's ladder gained one rung and nothing else, so a home with
+no weak edge keeps writing `/7` — or `/6`, or `/3`.
+
+**What P7c inherits, exactly:** the generation is paid. Its per-adapter record is added as
+**optional members of this same `e7` generation at epoch 7 → 7** — no new generation, no new
+protocol tag, no second proxy admission — and the one code change it owes beside the members is a
+clause in `Index::requires_reader_eight` (`crates/vibe-app/src/index/protocol.rs`), which is
+written as the ladder's rung rather than as the weak edge's own predicate for that reason. The
+`vibe-app-extras/1` document's `add` / `drop` / final-list members stay P7c's at epoch 1 → 1. What P7b delivered: `[format.cli-application-extras]`,
 `schemas/application_extras.jtd.json`, epoch **new, 1**, protocol `vibe-app-extras/1`, the answer
 of `vibe app extras list --json` — per declared adapter, which verbs the package declares, the
 author's recommendations with their **enabled** state (read off the installation's recorded chosen
@@ -634,7 +647,8 @@ version (`observed`, with `observed_failed` naming why an observation was not ta
 
 ## AV-FMT-030 — `--no-recommends`, a global flag, and `[recommends]` on the application plane (Phase 7d)
 
-Status: **not delivered.** Design authority:
+Status: **delivered 2026-11-10** (phase P7d), with the three amendments below the entry. The
+as-built record is `PROP-077#P7D-AS-BUILT`. Design authority:
 `spec://org.vibevm.core/vibevm/common/PROP-077#NO-RECOMMENDS-FLAG`, `#APP-RECOMMENDS`, `#SUGGESTS-UNCHANGED`.
 
 - **No manifest change at all**: `[recommends]` and `[suggests]` already exist and already parse for every package-role manifest. This is a reach change, not a grammar change.
@@ -642,6 +656,28 @@ Status: **not delivered.** Design authority:
 - **No lock field and no epoch step for the flag**: a project lock already records a recommended package as a non-root graph member, so a lock-replaying install is unaffected and the flag changes a solve, never a replay. There is deliberately no `--with-recommends` and no persisted setting.
 - `[format.cli-install-report]` (`schemas/install_report.jtd.json`), epoch **1 → 1**: optional `recommended[]` (installed), `skipped[]` (with the reason — not an app, no option for this platform, unsatisfiable, not carried, install failed) and `suggested[]` (reported, never installed). Existing members unchanged.
 - A failed recommended install never changes the exit status of the install the user asked for.
+
+**As built**, with the three places the delivery differs from the record above:
+
+1. **The three members land on the documents the application plane emits, not on the install
+   report.** `[format.cli-application-report]` (`schemas/application_report.jtd.json`) and
+   `[format.cli-application-plan]` (`schemas/application_plan.jtd.json`), both epoch **1 → 1**,
+   gain optional `recommended[]` and `suggested[]`. `[format.cli-install-report]` is **unchanged**:
+   its root already carries a `skipped` member that means skipped *slots*, and every skip reason
+   this entry lists (not an app, no option for this platform, unsatisfiable, not carried, install
+   failed) is an application-plane reason. Both documents omit both members when the package
+   declared nothing, so every report and plan written before this grammar serialises
+   byte-identically.
+2. **`recommended[]` and `skipped[]` are one array with an outcome, not two.** A row is
+   `{ package, by, key?, outcome, reason? }` with `outcome` ∈ `installed | satisfied | skipped |
+   planned` — one row per reference the walk reached, carrying who recommended it and, for a skip,
+   the one-line reason. `--plan-only` fills the same rows with `planned`, so the plan and the
+   report are one shape read twice rather than two shapes to keep in step.
+3. **The project plane's `suggested[]` is not delivered**, and `PROP-077#P7D-AS-BUILT` (9) states
+   why: the install report is assembled from the boundary-measured progress and the slot rows,
+   which carry no manifest, and the project plane's `[recommends]` is in any case pruned by the
+   PROP-050 `#EFFECTIVE-SET` projection before it reaches the lock — so the project-plane weak
+   surface wants one deliberate pass rather than half of it here.
 
 ## AV-FMT-031 — `[[extension]]` at a `slot:` point gains `title`, `when`/`unless`, `needs`, `optional` (Phase 7e)
 

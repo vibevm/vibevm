@@ -1074,7 +1074,8 @@ table — the struct is `deny_unknown_fields`, so without this a user who writes
 the table gets a parse error); `crates/vibe-app/src/ecosystem/` (the final-list
 computation and the apply entry point); `crates/vibe-app/src/index/wire.rs`
 and `crates/vibe-app/src/index.rs` + `schemas/application/e7/index.jtd.json`
-(the per-adapter record; the generation step is shared with P7d's weak edge);
+(the per-adapter record as optional members of the generation **P7d already
+paid**, at epoch 7 → 7);
 `crates/vibe-cli/src/commands/app/global.rs` (the call after a successful
 install, beside the existing `migrate::offer` call, and the two flags);
 `crates/vibe-cli/src/commands/app/extras.rs`.
@@ -1106,10 +1107,13 @@ cargo test -p vibe-cli --offline --locked --test cli_app_extras_apply
 in a crate whose state is otherwise entirely its own settings root is the
 phase's real architectural cost, and the alternative (a slot-keyed file beside
 `applications/index.json`) must be rejected deliberately, not by accident —
-the owner said `~/.vibe` settings. (2) The inventory move to
-`vibe-user-applications/8` needs the `vibe-app-proxy` admission PROP-059
-`#proxy-index-upgrade` requires, which `AV-FMT-017` already paid once for `/7`;
-budget for it. (3) Applying extras after an install makes the first install of
+the owner said `~/.vibe` settings. (2) **Paid by P7d (2026-11-10):** the inventory move to
+`vibe-user-applications/8`, the `e7` schema with its corpus, the frozen `/7`
+reader and the `vibe-app-proxy` admission PROP-059 `#proxy-index-upgrade`
+requires all landed with P7d's weak edge, so P7c adds its per-adapter record as
+**optional members of the same `e7` generation at epoch 7 → 7** and owes one
+clause in `Index::requires_reader_eight` — no second generation step, no second
+proxy admission (`AV-FMT-029`, `PROP-077#P7D-AS-BUILT`). (3) Applying extras after an install makes the first install of
 a runtime do ecosystem work, which lengthens it visibly — the step panel must
 show it as its own rows, or users will read the pause as a hang.
 
