@@ -532,6 +532,10 @@ mod tests;
 mod tests_installed_fragments;
 
 #[cfg(test)]
+#[path = "install/tests_target_gate.rs"]
+mod tests_target_gate;
+
+#[cfg(test)]
 #[path = "install/test_helpers.rs"]
 mod test_helpers;
 

@@ -277,9 +277,13 @@ mod cases {
         )
         .unwrap()
         .unwrap();
-        let table =
-            super::super::build_unit_table_bound(&f.workspace.root, &f.resolution, Some(&context))
-                .unwrap();
+        let table = super::super::build_unit_table_bound(
+            &f.workspace.root,
+            &f.resolution,
+            Default::default(),
+            Some(&context),
+        )
+        .unwrap();
         let world = ExtensionWorldEpoch::from_resolution(&f.workspace.root, &f.resolution).unwrap();
         let runtimes = lower_owner_runtimes(
             &f.workspace,

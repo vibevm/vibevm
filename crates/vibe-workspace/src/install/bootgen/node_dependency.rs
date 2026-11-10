@@ -18,8 +18,12 @@ pub(super) fn node_dependency_boot(
     table: &HashMap<UnitId, UnitInput>,
     with_static: &HashSet<UnitId>,
     spec_format: SpecFormat,
+    targets: TargetSelection,
 ) -> Vec<DependencyBoot> {
-    let installed = installed_identities(resolution);
+    // The same world the unit table resolved its predicates against — the
+    // caller passes one selection for the whole regeneration, so one
+    // `target:` row cannot have two verdicts (PROP-076 `#SYS-HOST-AND-TARGET`).
+    let world = super::conditions::ConditionWorld::new(resolution, targets);
     let index: HashMap<(&Group, &str), &ResolvedDep> = resolution
         .iter()
         .map(|d| ((&d.group, d.name.as_str()), d))
@@ -83,7 +87,7 @@ pub(super) fn node_dependency_boot(
                         }),
                     fragments: unit.fragments.clone(),
                 })
-                .unwrap_or_else(|| active_snippet(workspace_root, &slot, snippet, &installed));
+                .unwrap_or_else(|| active_snippet(workspace_root, &slot, snippet, &world));
             let main = active.main;
             let all_fragments = active.fragments;
             // Dynamic consumers read the compiled unit carrying its whole zone.

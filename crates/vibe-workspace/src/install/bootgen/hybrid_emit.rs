@@ -10,7 +10,7 @@ use std::fs;
 use std::path::Path;
 
 use specmark::spec;
-use vibe_core::manifest::{LinkType, SpecFormat};
+use vibe_core::manifest::{LinkType, SpecFormat, TargetSelection};
 use vibe_core::{Group, PackageName, layout};
 use vibe_extension_registry::DependencyProviderId;
 use vibe_spec::CompilePlans;

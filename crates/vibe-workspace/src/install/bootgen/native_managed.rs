@@ -61,7 +61,13 @@ pub(crate) fn regenerate_boot_from_bound_native<P: OwnerNativeCompileProvider>(
     let mut replay_candidates =
         BootReplayCandidates::new(workspace.root.clone(), self_coord.clone())
             .with_sources(sources.clone());
-    let table = super::build_unit_table_bound(&workspace.root, resolution, sources.as_ref())?;
+    let targets = super::conditions::project_targets(&workspace.root_manifest);
+    let table = super::build_unit_table_bound(
+        &workspace.root,
+        resolution,
+        targets.clone(),
+        sources.as_ref(),
+    )?;
     let versions: HashMap<UnitId, String> = resolution
         .iter()
         .map(|dependency| {
@@ -172,6 +178,7 @@ pub(crate) fn regenerate_boot_from_bound_native<P: OwnerNativeCompileProvider>(
             &table,
             &with_static,
             spec_format,
+            targets.clone(),
         );
         let mut effective = boot::compute_effective_boot(boot::NodeBootInputs {
             own_boot: &own,
@@ -244,7 +251,11 @@ pub(crate) fn fingerprint_with_pending_for_test(
     id: &UnitId,
     frame: [u8; 32],
 ) -> Option<String> {
-    let table = build_unit_table(&workspace.root, resolution);
+    let table = build_unit_table(
+        &workspace.root,
+        resolution,
+        super::conditions::project_targets(&workspace.root_manifest),
+    );
     let versions = resolution
         .iter()
         .map(|dependency| {

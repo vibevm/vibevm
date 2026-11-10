@@ -7,7 +7,7 @@ use std::fs;
 use std::path::Path;
 
 use specmark::spec;
-use vibe_core::manifest::{BootCategory, LinkType, Manifest, SpecFormat};
+use vibe_core::manifest::{BootCategory, LinkType, Manifest, SpecFormat, TargetSelection};
 use vibe_core::{Group, layout};
 
 use crate::boot::hybrid::{UnitId, UnitInput, fingerprint, hoist};
@@ -57,7 +57,7 @@ mod snippet_source;
 mod transitive;
 use node_dependency::node_dependency_boot;
 mod publication;
-use conditions::{active_snippet, installed_identities};
+use conditions::{active_snippet, project_targets};
 use publication::publish_node_boot;
 use transitive::static_transitive_closure;
 
@@ -139,7 +139,15 @@ pub fn regenerate_boot_from_traced_prepared(
         .map_err(owner_plans::world_error)?;
 
     // Compile package units first so node edges can target complete zones.
-    let table = build_unit_table_bound(&workspace.root, resolution, sources.as_ref())?;
+    // One `target:` verdict for the whole regeneration, read from the
+    // project's own authored declaration (PROP-076 `#SYS-HOST-AND-TARGET`).
+    let targets = project_targets(&workspace.root_manifest);
+    let table = build_unit_table_bound(
+        &workspace.root,
+        resolution,
+        targets.clone(),
+        sources.as_ref(),
+    )?;
     // Lower every owner before plan digests feed unit fingerprints.
     let runtimes = lower_owner_runtimes(workspace, &world, lowering)?;
     // Unit version plus its artifact-filtered owner plan drives dirty skips.
@@ -216,6 +224,7 @@ pub fn regenerate_boot_from_traced_prepared(
             &table,
             &with_static,
             spec_format,
+            targets.clone(),
         );
         let mut effective = boot::compute_effective_boot(NodeBootInputs {
             own_boot: &own,

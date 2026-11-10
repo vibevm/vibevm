@@ -41,9 +41,15 @@ fn verify_boot_graph_selected(
     )?;
     let world = ExtensionWorldEpoch::from_resolution(&workspace.root, &resolution)
         .map_err(owner_plans::world_error)?;
+    let targets = super::conditions::project_targets(&workspace.root_manifest);
     let table = match spec_format {
-        Some(_) => build_unit_table_bound(&workspace.root, &resolution, sources.as_ref())?,
-        None => build_unit_table(&workspace.root, &resolution),
+        Some(_) => build_unit_table_bound(
+            &workspace.root,
+            &resolution,
+            targets.clone(),
+            sources.as_ref(),
+        )?,
+        None => build_unit_table(&workspace.root, &resolution, targets.clone()),
     };
     let versions: HashMap<UnitId, String> = resolution
         .iter()

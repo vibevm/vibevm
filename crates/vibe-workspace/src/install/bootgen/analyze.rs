@@ -128,7 +128,9 @@ fn analyze_node_lane_using(
         &resolution,
         input_format,
     )?;
-    let table = super::build_unit_table_bound(&root, &resolution, sources.as_ref())?;
+    let targets = super::conditions::project_targets(&workspace.root_manifest);
+    let table =
+        super::build_unit_table_bound(&root, &resolution, targets.clone(), sources.as_ref())?;
     let with_static = with_static_set(&table);
     let pulls = hoist::soft_static_pulls(&table);
     let shared: HashSet<_> = pulls
@@ -183,6 +185,7 @@ fn analyze_node_lane_using(
         &table,
         &with_static,
         spec_format,
+        targets.clone(),
     );
     let mut effective = boot::compute_effective_boot(boot::NodeBootInputs {
         own_boot: &own,
@@ -295,7 +298,9 @@ fn analyze_node_lane_bound_native_using<P: OwnerNativeCompileProvider>(
         resolution,
         input_format,
     )?;
-    let table = super::build_unit_table_bound(&root, resolution, sources.as_ref())?;
+    let targets = super::conditions::project_targets(&workspace.root_manifest);
+    let table =
+        super::build_unit_table_bound(&root, resolution, targets.clone(), sources.as_ref())?;
     let with_static = with_static_set(&table);
     let pulls = hoist::soft_static_pulls(&table);
     let shared: HashSet<_> = pulls
@@ -346,6 +351,7 @@ fn analyze_node_lane_bound_native_using<P: OwnerNativeCompileProvider>(
         &table,
         &with_static,
         spec_format,
+        targets.clone(),
     );
     let mut effective = boot::compute_effective_boot(boot::NodeBootInputs {
         own_boot: &own,
@@ -440,7 +446,9 @@ fn compile_node_backend_using<P: OwnerNativeCompileProvider>(
         &resolution,
         input_format,
     )?;
-    let table = super::build_unit_table_bound(&root, &resolution, sources.as_ref())?;
+    let targets = super::conditions::project_targets(&workspace.root_manifest);
+    let table =
+        super::build_unit_table_bound(&root, &resolution, targets.clone(), sources.as_ref())?;
     let with_static = with_static_set(&table);
     let pulls = hoist::soft_static_pulls(&table);
     let shared: HashSet<_> = pulls
@@ -491,6 +499,7 @@ fn compile_node_backend_using<P: OwnerNativeCompileProvider>(
         &table,
         &with_static,
         spec_format,
+        targets.clone(),
     );
     let mut effective = boot::compute_effective_boot(boot::NodeBootInputs {
         own_boot: &own,

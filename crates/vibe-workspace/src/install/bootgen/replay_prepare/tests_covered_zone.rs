@@ -91,7 +91,11 @@ fn native_unit_bytes_follow_consumed_artifacts_and_node_pass_stays_owned() {
 fn transitive_suggested_multifragment_unit_retains_exact_generated_dependency() {
     let graph =
         crate::install::tests_epoch_world::native_freshness::native_graph_keeping_top("", "", "");
-    let table = super::super::build_unit_table(&graph.workspace.root, &graph.resolution);
+    let table = super::super::build_unit_table(
+        &graph.workspace.root,
+        &graph.resolution,
+        Default::default(),
+    );
     let with_static = super::super::hybrid_emit::with_static_set(&table);
     let dependencies = super::super::node_dependency_boot(
         &graph.workspace.root,
@@ -100,6 +104,7 @@ fn transitive_suggested_multifragment_unit_retains_exact_generated_dependency() 
         &table,
         &with_static,
         vibe_core::manifest::SpecFormat::Mixed,
+        Default::default(),
     );
     let mut effective = match crate::boot::compute_effective_boot(crate::boot::NodeBootInputs {
         own_boot: &[],

@@ -17,13 +17,14 @@ use crate::install::bootgen;
 pub(in crate::install::bootgen) fn build_unit_table(
     workspace_root: &Path,
     resolution: &[ResolvedDep],
+    targets: TargetSelection,
 ) -> HashMap<UnitId, UnitInput> {
-    let result = build_unit_table_with(workspace_root, resolution, |dep, slot, installed| {
+    let result = build_unit_table_with(workspace_root, resolution, targets, |dep, slot, world| {
         Ok::<_, std::convert::Infallible>(bootgen::active_snippet(
             workspace_root,
             slot,
             dep.manifest.boot_snippet.as_ref(),
-            installed,
+            world,
         ))
     });
     match result {
@@ -35,24 +36,22 @@ pub(in crate::install::bootgen) fn build_unit_table(
 pub(in crate::install::bootgen) fn build_unit_table_bound(
     workspace_root: &Path,
     resolution: &[ResolvedDep],
+    targets: TargetSelection,
     sources: Option<&crate::boot_artifacts::declared_sources::DeclaredBootSources>,
 ) -> Result<HashMap<UnitId, UnitInput>, WorkspaceError> {
     build_unit_table_with(
         workspace_root,
         resolution,
-        |dep, slot, installed| match sources {
-            Some(sources) => bootgen::conditions::active_snippet_bound(
-                workspace_root,
-                slot,
-                dep,
-                installed,
-                sources,
-            ),
+        targets,
+        |dep, slot, world| match sources {
+            Some(sources) => {
+                bootgen::conditions::active_snippet_bound(workspace_root, slot, dep, world, sources)
+            }
             None => Ok(bootgen::active_snippet(
                 workspace_root,
                 slot,
                 dep.manifest.boot_snippet.as_ref(),
-                installed,
+                world,
             )),
         },
     )
@@ -61,13 +60,14 @@ pub(in crate::install::bootgen) fn build_unit_table_bound(
 fn build_unit_table_with<E>(
     _workspace_root: &Path,
     resolution: &[ResolvedDep],
+    targets: TargetSelection,
     mut active: impl FnMut(
         &ResolvedDep,
         &str,
-        &HashSet<(vibe_core::Group, String)>,
+        &bootgen::conditions::ConditionWorld,
     ) -> Result<bootgen::conditions::ActiveSnippet, E>,
 ) -> Result<HashMap<UnitId, UnitInput>, E> {
-    let installed = bootgen::installed_identities(resolution);
+    let world = bootgen::conditions::ConditionWorld::new(resolution, targets);
     // The target-suggestion precedence tier: a package's own `[boot_snippet].link`.
     let suggested: HashMap<(&Group, &str), Option<LinkType>> = resolution
         .iter()
@@ -86,7 +86,7 @@ fn build_unit_table_with<E>(
             // LOGICAL resolution against the materialised slot (PROP-045
             // ##BOOT-LANE-SCOPE): the manifest names the authored form; a
             // transforming materialisation may hold the other extension.
-            let active = active(dep, &slot, &installed)?;
+            let active = active(dep, &slot, &world)?;
             let (own_boot_path, when) = match active.main {
                 Some(contribution) => (Some(contribution.path), contribution.when),
                 None => (None, None),
