@@ -66,9 +66,9 @@ KNOWN_KINDS = (
     "gate",
     "horizon",
 )
-# Keep the dependency surface plural: a plan may later carry another edge kind
-# without reopening the renderer or the page.
-EDGE_KINDS = ("depends_on",)
+# Two dependency kinds, displayed distinctly: `depends_on` is a start gate
+# inherited by descendants, `completes_after` closes only its own node.
+EDGE_KINDS = ("depends_on", "completes_after")
 NODE_FIELDS = (
     "id",
     "parent",
@@ -126,8 +126,10 @@ STRINGS: dict[str, dict[str, str]] = {
         "ui.acceptance": "Критерии приёмки",
         "ui.evidence": "Доказательства",
         "ui.mandates": "Мандаты",
-        "ui.dependsOn": "Зависит от",
-        "ui.dependents": "Зависят от него",
+        "edge.depends_on.out": "Предпосылка старта",
+        "edge.depends_on.in": "Зависят от него",
+        "edge.completes_after.out": "Завершается после",
+        "edge.completes_after.in": "Завершаются после него",
         "ui.extra": "Дополнительные поля",
         "ui.children": "Дочерние узлы",
         "ui.leaves": "листьев",
@@ -182,8 +184,10 @@ STRINGS: dict[str, dict[str, str]] = {
         "ui.acceptance": "Acceptance",
         "ui.evidence": "Evidence",
         "ui.mandates": "Mandates",
-        "ui.dependsOn": "Depends on",
-        "ui.dependents": "Dependents",
+        "edge.depends_on.out": "Starts after",
+        "edge.depends_on.in": "Blocks the start of",
+        "edge.completes_after.out": "Completes after",
+        "edge.completes_after.in": "Completion gate for",
         "ui.extra": "Extra fields",
         "ui.children": "Children",
         "ui.leaves": "leaves",
@@ -1033,11 +1037,12 @@ aside dd{margin:0;overflow-wrap:anywhere}
     });
     DATA.edge_kinds.forEach(function(kind){
       var out = (n.edges || []).filter(function(e){ return e.kind === kind; });
-      list(aside, t("ui.dependsOn"), out, function(li, edge){
+      var back = (DEPENDENTS[n.id] || []).filter(function(e){ return e.kind === kind; });
+      if (!out.length && !back.length) return;
+      list(aside, t("edge." + kind + ".out"), out, function(li, edge){
         linkTo(li, edge.to, NODES[edge.to] ? NODES[edge.to].title : "?");
       });
-      var back = (DEPENDENTS[n.id] || []).filter(function(e){ return e.kind === kind; });
-      list(aside, t("ui.dependents"), back, function(li, edge){
+      list(aside, t("edge." + kind + ".in"), back, function(li, edge){
         linkTo(li, edge.from, NODES[edge.from] ? NODES[edge.from].title : "?");
       });
     });

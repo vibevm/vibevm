@@ -17,10 +17,17 @@ ordinary verified status, and a worker uses only its packet's named inputs.
 
 @fact:TREE-SKILL-GENERIC The renderer is plan-shaped, not project-shaped: no
 project ids, layers, tabs or inventories. Any conformant plan renders — the node
-tree by `order`, the protocol's full state vocabulary, kinds, `depends_on`
-edges, mandates, acceptance and evidence. Unrecognised per-node or plan-level
+tree by `order`, the protocol's full state vocabulary, kinds, both dependency
+kinds, mandates, acceptance and evidence. Unrecognised per-node or plan-level
 fields are shown generically in the detail pane instead of being special-cased
 or dropped. @status:impl/done
+
+@fact:TREE-SKILL-EDGES Dependencies are typed edges, shown in both directions
+and named by kind, never merged: `depends_on` reads as the inherited start gate
+(«Предпосылка старта») and `completes_after` as this node's own completion gate
+(«Завершается после»), per
+[plan-hierarchy.xml#COMPLETION-GATES](../../flows/multi-user-planning/plan-hierarchy.xml).
+A kind a plan does not use takes no space in the pane. @status:impl/done
 
 @fact:TREE-SKILL-RUN Run the packaged Python 3.11+ renderer with the actual plan
 and a directory it may own. Nothing outside `--out` is written and the plan is

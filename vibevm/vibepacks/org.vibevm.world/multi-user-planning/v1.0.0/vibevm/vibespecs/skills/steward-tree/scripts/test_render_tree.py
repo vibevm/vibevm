@@ -245,8 +245,24 @@ class TreeViewerTests(unittest.TestCase):
         rows = self.nodes_of(payload)
         self.assertEqual(rows["B"]["edges"], [{"kind": "depends_on", "to": "A"}])
         self.assertEqual(rows["A"]["edges"], [])
-        self.assertIn("depends_on", payload["edge_kinds"])
-        self.assertEqual(payload["strings"]["ru"]["ui.dependsOn"], "Зависит от")
+        self.assertEqual(payload["edge_kinds"], ["depends_on", "completes_after"])
+
+    def test_the_two_dependency_kinds_are_shown_distinctly(self):
+        data = plan(node("P", kind="phase", completes_after=["X"]),
+                    node("P.1", parent="P", depends=["X"]),
+                    node("X", order=90, state="active"))
+        _, payload, _ = self.render(data)
+        rows = self.nodes_of(payload)
+        self.assertEqual(rows["P"]["edges"], [{"kind": "completes_after", "to": "X"}])
+        self.assertEqual(rows["P.1"]["edges"], [{"kind": "depends_on", "to": "X"}])
+        self.assertNotIn("completes_after", rows["P"]["extra"])
+        labels = payload["strings"]["ru"]
+        self.assertEqual(labels["edge.depends_on.out"], "Предпосылка старта")
+        self.assertEqual(labels["edge.completes_after.out"], "Завершается после")
+        self.assertNotEqual(labels["edge.depends_on.in"], labels["edge.completes_after.in"])
+        for kind in payload["edge_kinds"]:
+            for side in ("out", "in"):
+                self.assertIn(f"edge.{kind}.{side}", payload["strings"]["en"])
 
     def test_extra_node_and_plan_fields_are_surfaced_generically(self):
         data = plan(node("A", owner="team-x", attempts=3, flags=["a", "b"]),
@@ -328,6 +344,8 @@ class TreeViewerTests(unittest.TestCase):
         finally:
             process.terminate()
             process.wait(timeout=30)
+            process.stdout.close()
+            process.stderr.close()
 
 
 if __name__ == "__main__":
