@@ -245,6 +245,7 @@ codes!(VERSIONS, VersionsError [] {
     UnknownTarget => "unknown_target", Refusal, "the argument is neither a slot nor an installed package name";
     AmbiguousTarget => "ambiguous_target", Refusal, "a bare name matches several installed packages";
     UnknownChannel => "unknown_channel", Refusal, "the package declares no such channel";
+    BadPattern => "bad_version_pattern", Refusal, "the positional pattern is neither a version pattern nor a channel";
     Domain => "version_domain_unreadable", Refusal, "a package's version domain could not be read";
 });
 

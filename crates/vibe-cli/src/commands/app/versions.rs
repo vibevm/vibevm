@@ -44,6 +44,7 @@ pub(super) fn run(
     };
     let request = vibe_app::VersionsRequest {
         target: &args.target,
+        pattern: args.pattern.as_deref(),
         channel: args.channel.as_deref(),
         installed: args.installed,
         limit: args.limit,

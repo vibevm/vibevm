@@ -51,6 +51,13 @@ pub enum VersionsError {
         channels: String,
     },
     #[error(
+        "`{pattern}` is neither a version pattern nor a channel name \
+         (violates spec://org.vibevm.core/vibevm/common/PROP-075#VERSIONS-LIST-OUTPUT; \
+         fix: write a version or a prefix of one (`22`, `22.9`, `22.9.0`), a requirement \
+         (`^22`, `>=20, <23`) or a channel (`lts`, `lts/jod`))"
+    )]
+    BadPattern { pattern: String },
+    #[error(
         "the version domain of `{package}` could not be read: {reason} \
          (violates spec://org.vibevm.core/vibevm/common/PROP-075#VERSIONS-LIST; \
          fix: correct the registry configuration, or run `vibe app versions --installed` for what \

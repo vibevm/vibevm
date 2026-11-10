@@ -424,9 +424,63 @@ fn a_coordinate_names_one_package_whether_or_not_it_is_installed() {
             .iter()
             .all(|row| row.state == wire::State::Available)
     );
-    // A version pinned onto the coordinate names the same package: the
-    // listing is about the package, never about one version of it.
+    // A version pinned onto the coordinate names the same package — and
+    // narrows it, because the `@VER` a user already writes is the same
+    // filter the positional pattern is (PROP-075 `#VERSIONS-LIST-OUTPUT`).
     let listing =
         versions_listing(&index, &request("org.vibevm.node/node@22"), &node_domain()).unwrap();
     assert_eq!(listing.packages[0].package, "org.vibevm.node/node");
+    assert_eq!(listing.packages[0].total, 1);
+    assert_eq!(listing.packages[0].versions[0].version, "22.23.4");
+}
+
+#[test]
+#[specmark::spec(verifies = "spec://org.vibevm.core/vibevm/common/PROP-075#VERSIONS-LIST-OUTPUT")]
+fn a_pattern_narrows_the_listing_by_prefix_and_a_bad_one_is_refused_by_name() {
+    let index = home(&["22.23.4", "12.0.0"], Some("org.vibevm.node/node@22.23.4"));
+    let listing = |pattern: &str, installed: bool| {
+        let narrowed = VersionsRequest {
+            pattern: Some(pattern),
+            installed,
+            ..request("node")
+        };
+        versions_listing(&index, &narrowed, &node_domain()).map(|listing| {
+            listing.packages[0]
+                .versions
+                .iter()
+                .map(|row| row.version.clone())
+                .collect::<Vec<_>>()
+        })
+    };
+    // The prefix rule a version file's value follows, over both listings.
+    assert_eq!(listing("22", false).unwrap(), ["22.23.4"]);
+    assert_eq!(listing("22.23", false).unwrap(), ["22.23.4"]);
+    assert_eq!(listing("22.23.4", false).unwrap(), ["22.23.4"]);
+    assert_eq!(listing("24", false).unwrap(), ["24.22.2"]);
+    assert!(listing("23", false).unwrap().is_empty());
+    assert_eq!(listing("22", true).unwrap(), ["22.23.4"]);
+    assert!(listing("24", true).unwrap().is_empty());
+    // A requirement works as written, and a channel name narrows exactly as
+    // `--channel` does.
+    assert_eq!(listing("^22", false).unwrap(), ["22.23.4"]);
+    assert_eq!(listing("lts", false).unwrap(), ["26.13.0", "22.23.4"]);
+    assert_eq!(listing("lts/jod", false).unwrap(), ["22.23.4"]);
+    // A pattern that is neither refuses by name, before any version is
+    // listed.
+    let error = listing("22..", false).unwrap_err();
+    assert_eq!(error.code(), "bad_version_pattern");
+    assert!(error.to_string().contains("22.."), "{error}");
+    // And a channel the package does not declare is the same refusal the
+    // flag gives, because a typo must not read as an empty domain.
+    let error = listing("lts/argon", false).unwrap_err();
+    assert_eq!(error.code(), "unknown_channel");
+    assert!(error.to_string().contains("lts/argon"), "{error}");
+    // The positional pattern wins over a target's `@VER` suffix, so the one
+    // a user typed last decides.
+    let both = VersionsRequest {
+        pattern: Some("24"),
+        ..request("org.vibevm.node/node@22")
+    };
+    let listing = versions_listing(&index, &both, &node_domain()).unwrap();
+    assert_eq!(listing.packages[0].versions[0].version, "24.22.2");
 }

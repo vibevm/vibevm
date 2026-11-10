@@ -99,6 +99,13 @@ pub struct AppVersionsArgs {
     /// heading.
     pub target: String,
 
+    /// Keep only the versions this pattern selects: a version (`22.9.0`),
+    /// a prefix of one (`22`, `22.9`), a requirement (`^22`, `>=20, <23`)
+    /// or a channel (`lts`, `lts/jod`). An `@VER` suffix on the target
+    /// means the same thing.
+    #[arg(value_name = "PATTERN")]
+    pub pattern: Option<String>,
+
     /// Keep only the versions this channel holds (`lts`, `lts/jod`).
     #[arg(long, value_name = "NAME")]
     pub channel: Option<String>,

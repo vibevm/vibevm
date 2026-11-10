@@ -24,6 +24,7 @@ use vibe_wire::generated::application_versions as wire;
 use crate::error::AppError;
 use crate::error_versions::VersionsError;
 use crate::index::{Index, Installation};
+use crate::versionfile::VersionRequest;
 
 /// The protocol tag of the `--json` answer (`AV-FMT-014`).
 pub const VERSIONS_PROTOCOL: &str = "vibe-app-versions/1";
@@ -126,6 +127,12 @@ pub trait Domains {
 pub struct VersionsRequest<'a> {
     /// The `PACKAGE|SLOT` argument as it was written.
     pub target: &'a str,
+    /// The positional `[PATTERN]`: keep only the versions it selects, by
+    /// the same rule a version file's value is read with — a complete
+    /// version is itself, a partial one is a prefix, a channel name is that
+    /// channel (PROP-075 `#VERSION-FILE-VALUE`, `#VERSIONS-LIST-OUTPUT`).
+    /// A `@VER` suffix on the target is the same filter.
+    pub pattern: Option<&'a str>,
     /// `--channel NAME`: keep only the versions that channel holds.
     pub channel: Option<&'a str>,
     /// `--installed`: only the versions this home holds, and no registry.
@@ -160,10 +167,32 @@ pub fn versions_listing(
     request: &VersionsRequest<'_>,
     domains: &dyn Domains,
 ) -> Result<wire::ApplicationVersions, AppError> {
-    let (slot, headings) = resolve_target(index, request.target)?;
+    // A `@VER` suffix on the target is the same narrowing the positional
+    // pattern is, so the spelling a user already writes decides instead of
+    // being silently dropped (PROP-075 `#VERSIONS-LIST-OUTPUT`).
+    let (target, suffix) = split_target(request.target);
+    let (slot, headings) = resolve_target(index, target)?;
+    let pattern = match request.pattern.map(str::trim).filter(|p| !p.is_empty()) {
+        Some(pattern) => Some(pattern),
+        None => suffix,
+    };
+    let narrowing = match pattern {
+        Some(pattern) => Some(VersionRequest::parse_in_version_file(pattern).map_err(|_| {
+            VersionsError::BadPattern {
+                pattern: pattern.to_owned(),
+            }
+        })?),
+        None => None,
+    };
     let mut packages = Vec::with_capacity(headings.len());
     for heading in &headings {
-        packages.push(one_package(index, heading, request, domains)?);
+        packages.push(one_package(
+            index,
+            heading,
+            request,
+            narrowing.as_ref(),
+            domains,
+        )?);
     }
     let slot_state = slot.as_deref().and_then(|slot| index.slots.get(slot));
     Ok(wire::ApplicationVersions {
@@ -192,6 +221,20 @@ fn snapshot_synced(packages: &[wire::Package]) -> Option<String> {
         synced.insert(template.snapshot_synced.as_deref()?);
     }
     (synced.len() == 1).then(|| synced.iter().next().copied().unwrap_or_default().to_owned())
+}
+
+/// The `PACKAGE|SLOT` argument split from the `@VER` suffix it may carry.
+/// A channel's own `/` and a coordinate's `/` are never `@`, so the split
+/// is unambiguous.
+fn split_target(target: &str) -> (&str, Option<&str>) {
+    let target = target.trim();
+    match target.split_once('@') {
+        Some((head, tail)) => {
+            let tail = tail.trim();
+            (head.trim(), (!tail.is_empty()).then_some(tail))
+        }
+        None => (target, None),
+    }
 }
 
 /// What the `PACKAGE|SLOT` argument names: the slot, and one heading per
@@ -296,6 +339,7 @@ fn one_package(
     index: &Index,
     heading: &Heading,
     request: &VersionsRequest<'_>,
+    narrowing: Option<&VersionRequest>,
     domains: &dyn Domains,
 ) -> Result<wire::Package, VersionsError> {
     let coordinate = heading.coordinate();
@@ -318,7 +362,11 @@ fn one_package(
         origins.entry(version.clone()).or_insert(Origin::Published);
     }
 
-    let channel = match request.channel {
+    // A channel this package does not declare is the same refusal whether it
+    // was named by `--channel` or by the pattern, because a listing that
+    // answered "no versions" would be reporting a typo as an empty domain.
+    let pattern_channel = narrowing.and_then(VersionRequest::channel);
+    let channel = match request.channel.or(pattern_channel) {
         Some(name) if !domain.channels.contains_key(name) => {
             return Err(VersionsError::UnknownChannel {
                 package: coordinate,
@@ -339,6 +387,16 @@ fn one_package(
                 .is_some_and(|members| members.contains(version)),
             None => true,
         })
+        // The positional pattern's requirement half, by the rule a version
+        // file's value is read with: a complete version is itself and a
+        // partial one a prefix. Its channel half went through `channel`
+        // above, which is the one place a channel narrows.
+        .filter(
+            |(version, _)| match narrowing.and_then(VersionRequest::spec) {
+                Some(spec) => spec.matches(version),
+                None => true,
+            },
+        )
         .collect();
 
     let total = selected.len();

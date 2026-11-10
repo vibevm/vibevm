@@ -216,6 +216,67 @@ fn without_all_the_newest_twenty_are_shown_and_the_rest_counted() {
     );
 }
 
+#[test]
+#[specmark::spec(verifies = "spec://org.vibevm.core/vibevm/common/PROP-075#VERSIONS-LIST-OUTPUT")]
+fn a_pattern_narrows_the_listing_by_the_prefix_rule_a_version_file_uses() {
+    let fixture = node_fixture();
+    let versions = |extra: &[&str]| {
+        listing(&fixture, "org.vibevm.node/node", extra)
+            .pointer("/packages/0/versions")
+            .cloned()
+            .unwrap()
+            .as_array()
+            .unwrap()
+            .iter()
+            .map(|row| row["version"].as_str().unwrap().to_owned())
+            .collect::<Vec<_>>()
+    };
+    // A bare major is every version of it, newest first, and nothing else.
+    let major = versions(&["--all", "22"]);
+    assert!(major.len() > 1, "{major:?}");
+    assert!(
+        major.iter().all(|version| version.starts_with("22.")),
+        "{major:?}"
+    );
+    assert_eq!(major[0], "22.23.4");
+    // A minor prefix is that minor alone.
+    assert_eq!(versions(&["--all", "22.9"]), ["22.9.0"]);
+    // A complete version is itself, and never the newer one a caret would
+    // have reached — the same rule a version file's value follows.
+    assert_eq!(versions(&["--all", "22.9.0"]), ["22.9.0"]);
+    assert_eq!(versions(&["--all", "v22.9.0"]), ["22.9.0"]);
+    // A requirement works as written and a channel narrows as `--channel`
+    // does.
+    assert_eq!(versions(&["--all", "=22.9.0"]), ["22.9.0"]);
+    let lts = versions(&["--all", "lts/jod"]);
+    assert_eq!(lts, versions(&["--all", "--channel", "lts/jod"]));
+    assert!(!lts.is_empty() && lts.iter().all(|v| v.starts_with("22.")));
+    // An `@VER` suffix on the target is the same filter, which is the
+    // spelling that used to be accepted and then ignored.
+    assert_eq!(
+        listing(&fixture, "org.vibevm.node/node@22.9.0", &["--all"])["packages"][0]["total"],
+        1
+    );
+    // The human listing is narrowed too, with no "and N more" left over.
+    let remap = fixture.root.path().join("remap.toml");
+    let human = ok(&fixture.app(
+        &["app", "versions"],
+        "org.vibevm.node/node",
+        &["--remap", remap.to_str().unwrap(), "22.9"],
+    ));
+    assert!(human.contains("1 version(s)"), "{human}");
+    assert!(human.contains("22.9.0 (template)"), "{human}");
+    assert!(!human.contains("more"), "{human}");
+    // A pattern that is neither a version pattern nor a channel refuses by
+    // name, before any version is listed.
+    let message = failed(&fixture.app(
+        &["app", "versions"],
+        "org.vibevm.node/node",
+        &["--remap", remap.to_str().unwrap(), "22.."],
+    ));
+    assert!(message.contains("22.."), "{message}");
+}
+
 // ---------------------------------------------------------------------------
 // the local-state side: two ordinary packages that install offline
 // ---------------------------------------------------------------------------

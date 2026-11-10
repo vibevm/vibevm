@@ -297,6 +297,31 @@ fn app_list_use_alternatives_and_shell_parse() {
         .path(),
         Some(std::path::Path::new(".sdkmanrc"))
     );
+    // `vibe app versions <target> [PATTERN]` — the positional filter
+    // (PROP-075 `#VERSIONS-LIST-OUTPUT`).
+    let versions = |args: &[&str]| {
+        let Command::App(app) = Cli::try_parse_from(args).unwrap().command else {
+            panic!("expected app command");
+        };
+        match app.command {
+            AppCommand::Versions(versions) => versions,
+            other => panic!("expected app versions, got {other:?}"),
+        }
+    };
+    let narrowed = versions(&["vibe", "app", "versions", "node", "22.9"]);
+    assert_eq!(narrowed.target, "node");
+    assert_eq!(narrowed.pattern.as_deref(), Some("22.9"));
+    assert!(
+        versions(&["vibe", "app", "versions", "node"])
+            .pattern
+            .is_none()
+    );
+    // The pattern survives a flag between it and the target, and a third
+    // positional is refused rather than silently dropped.
+    let after = versions(&["vibe", "app", "versions", "node", "--installed", "22"]);
+    assert!(after.installed && after.pattern.as_deref() == Some("22"));
+    assert!(Cli::try_parse_from(["vibe", "app", "versions", "node", "22", "23"]).is_err());
+
     let cli = Cli::try_parse_from(["vibe", "shell", "-g", "--use", "a=x", "--use", "b=y"]).unwrap();
     let Command::Shell(shell) = cli.command else {
         panic!("expected shell command");
