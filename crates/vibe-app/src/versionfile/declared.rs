@@ -18,7 +18,7 @@ use std::fs;
 use std::path::PathBuf;
 
 use specmark::spec;
-use vibe_core::manifest::VersionFileDecl;
+use vibe_core::manifest::{KeyedComment, KeyedExtra, KeyedSeparator, KeyedSyntax, VersionFileDecl};
 use vibe_wire::generated::application_version_files as wire;
 
 use crate::error::StateError;
@@ -184,13 +184,38 @@ impl Declared {
     }
 }
 
+/// A declared row as the sidecar carries it. A row that is the short
+/// spelling's expansion is written as `tool-versions` again, exactly as the
+/// manifest serialises it, so a home whose packages declare only asdf's
+/// file keeps the document it already had, byte for byte
+/// (PROP-075 `#VERSION-FILE-KEYED`).
 fn to_wire(row: &VersionFileDecl) -> wire::Row {
     match row {
         VersionFileDecl::Plain { names } => wire::Row::Plain(Box::new(wire::RowPlain {
             names: names.clone(),
         })),
-        VersionFileDecl::ToolVersions { key } => {
+        VersionFileDecl::Keyed { key, .. } if row.is_tool_versions() => {
             wire::Row::ToolVersions(Box::new(wire::RowToolVersions { key: key.clone() }))
+        }
+        VersionFileDecl::Keyed { names, key, syntax } => {
+            wire::Row::Keyed(Box::new(wire::RowKeyed {
+                names: names.clone(),
+                key: key.clone(),
+                separator: match syntax.separator {
+                    KeyedSeparator::Equals => wire::RowKeyedSeparator::Equals,
+                    KeyedSeparator::Whitespace => wire::RowKeyedSeparator::Whitespace,
+                    KeyedSeparator::Colon => wire::RowKeyedSeparator::Colon,
+                },
+                comment: match syntax.comment {
+                    KeyedComment::Hash => wire::RowKeyedComment::Hash,
+                    KeyedComment::Semicolon => wire::RowKeyedComment::Semicolon,
+                    KeyedComment::None => wire::RowKeyedComment::None,
+                },
+                extra: match syntax.extra {
+                    KeyedExtra::Refuse => wire::RowKeyedExtra::Refuse,
+                    KeyedExtra::First => wire::RowKeyedExtra::First,
+                },
+            }))
         }
     }
 }
@@ -198,6 +223,26 @@ fn to_wire(row: &VersionFileDecl) -> wire::Row {
 fn from_wire(row: wire::Row) -> VersionFileDecl {
     match row {
         wire::Row::Plain(plain) => VersionFileDecl::Plain { names: plain.names },
-        wire::Row::ToolVersions(asdf) => VersionFileDecl::ToolVersions { key: asdf.key },
+        wire::Row::ToolVersions(asdf) => VersionFileDecl::tool_versions(asdf.key),
+        wire::Row::Keyed(keyed) => VersionFileDecl::Keyed {
+            names: keyed.names,
+            key: keyed.key,
+            syntax: KeyedSyntax {
+                separator: match keyed.separator {
+                    wire::RowKeyedSeparator::Equals => KeyedSeparator::Equals,
+                    wire::RowKeyedSeparator::Whitespace => KeyedSeparator::Whitespace,
+                    wire::RowKeyedSeparator::Colon => KeyedSeparator::Colon,
+                },
+                comment: match keyed.comment {
+                    wire::RowKeyedComment::Hash => KeyedComment::Hash,
+                    wire::RowKeyedComment::Semicolon => KeyedComment::Semicolon,
+                    wire::RowKeyedComment::None => KeyedComment::None,
+                },
+                extra: match keyed.extra {
+                    wire::RowKeyedExtra::Refuse => KeyedExtra::Refuse,
+                    wire::RowKeyedExtra::First => KeyedExtra::First,
+                },
+            },
+        },
     }
 }

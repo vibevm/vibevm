@@ -18,7 +18,7 @@ use specmark::spec;
 use vibe_core::manifest::VersionFileDecl;
 
 use super::declared::Declared;
-use super::formats::{VersionRequest, plain_line, tool_versions};
+use super::formats::{VersionRequest, keyed, plain_line};
 
 /// One path the search tested, with what it saw. An absent path is recorded
 /// too: the resolution is only a cache hit while it is still absent.
@@ -168,9 +168,18 @@ fn in_directory(
                     Some(line) => (line.to_owned(), Vec::new()),
                     None => continue,
                 },
-                VersionFileDecl::ToolVersions { key } => match tool_versions(&text, key) {
-                    Some(parsed) => (parsed.taken, parsed.unused),
-                    None => continue,
+                // A keyed file resolves several slots at once, each from
+                // its own key; a line whose key is another slot's is
+                // ignored and not reported, and `extra = "refuse"` makes a
+                // line with a second value a reported, unusable one
+                // (PROP-075 `#VERSION-FILE-KEYED`).
+                VersionFileDecl::Keyed { key, syntax, .. } => match keyed(&text, key, *syntax) {
+                    Ok(Some(parsed)) => (parsed.taken, parsed.unused),
+                    Ok(None) => continue,
+                    Err(reason) => {
+                        faults.push(format!("`{}`: {reason}", path.display()));
+                        continue;
+                    }
                 },
             };
             match VersionRequest::parse(&authored) {

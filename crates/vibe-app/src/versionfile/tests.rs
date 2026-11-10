@@ -1,11 +1,12 @@
-//! The two version-file formats, the upward search and the resolution cache
-//! (PROP-075 `#VERSION-FILE-FORMATS`).
+//! The version-file formats, the upward search, the resolution cache and
+//! the writer (PROP-075 `#VERSION-FILE-FORMATS`, `#VERSION-FILE-KEYED`,
+//! `#VERSION-FILE-WRITE`).
 
 use std::collections::BTreeMap;
 use std::fs;
 use std::path::Path;
 
-use vibe_core::manifest::VersionFileDecl;
+use vibe_core::manifest::{KeyedComment, KeyedExtra, KeyedSeparator, KeyedSyntax, VersionFileDecl};
 
 use super::*;
 use crate::settings::SettingsRoot;
@@ -51,23 +52,91 @@ fn a_plain_file_is_its_first_non_empty_non_comment_line() {
 }
 
 #[test]
-#[specmark::spec(verifies = "spec://org.vibevm.core/vibevm/common/PROP-075#VERSION-FILE-FORMATS")]
+#[specmark::spec(verifies = "spec://org.vibevm.core/vibevm/common/PROP-075#VERSION-FILE-KEYED")]
 fn tool_versions_takes_the_first_version_of_the_key_and_reports_the_rest() {
+    let asdf = KeyedSyntax::TOOL_VERSIONS;
+    let read = |text: &str, key: &str| keyed(text, key, asdf).unwrap();
     let text = "# the team's tools\nruby 3.3.0\nnodejs 22.23.4 20.11.0 18.19.0\npython 3.12.1\n";
-    let found = tool_versions(text, "nodejs").unwrap();
+    let found = read(text, "nodejs").unwrap();
     assert_eq!(found.taken, "22.23.4");
     assert_eq!(found.unused, ["20.11.0", "18.19.0"]);
-    assert_eq!(tool_versions(text, "ruby").unwrap().taken, "3.3.0");
-    assert!(tool_versions(text, "ruby").unwrap().unused.is_empty());
+    assert_eq!(found.line, 3);
+    assert_eq!(read(text, "ruby").unwrap().taken, "3.3.0");
+    assert!(read(text, "ruby").unwrap().unused.is_empty());
     // A key the file does not mention, a commented-out key and a key with no
     // version are all "this file says nothing about it".
-    assert_eq!(tool_versions(text, "java"), None);
-    assert_eq!(tool_versions("# nodejs 22.23.4\n", "nodejs"), None);
-    assert_eq!(tool_versions("nodejs\n", "nodejs"), None);
+    assert_eq!(read(text, "java"), None);
+    assert_eq!(read("# nodejs 22.23.4\n", "nodejs"), None);
+    assert_eq!(read("nodejs\n", "nodejs"), None);
     // CRLF and arbitrary spacing.
-    let found = tool_versions("nodejs\t22.23.4  20.11.0 # pinned\r\n", "nodejs").unwrap();
+    let found = read("nodejs\t22.23.4  20.11.0 # pinned\r\n", "nodejs").unwrap();
     assert_eq!(found.taken, "22.23.4");
     assert_eq!(found.unused, ["20.11.0"]);
+}
+
+#[test]
+#[specmark::spec(verifies = "spec://org.vibevm.core/vibevm/common/PROP-075#VERSION-FILE-KEYED")]
+fn a_keyed_file_reads_its_own_key_under_its_own_line_syntax() {
+    let equals = KeyedSyntax {
+        separator: KeyedSeparator::Equals,
+        comment: KeyedComment::Hash,
+        extra: KeyedExtra::Refuse,
+    };
+    let text = "# the team's JDK\njava=21.0.4-tem\nmaven = 3.9.9  # pinned\n";
+    let found = keyed(text, "java", equals).unwrap().unwrap();
+    assert_eq!(found.taken, "21.0.4-tem");
+    assert_eq!(found.line, 2);
+    // Another slot's key in a shared file is not a defect: it is read for
+    // that slot and ignored for this one, with no fault either way.
+    let maven = keyed(text, "maven", equals).unwrap().unwrap();
+    assert_eq!(maven.taken, "3.9.9");
+    assert_eq!(keyed(text, "gradle", equals), Ok(None));
+    // A colon separator and a semicolon comment are the other two words of
+    // the closed vocabulary.
+    let colon = KeyedSyntax {
+        separator: KeyedSeparator::Colon,
+        comment: KeyedComment::Semicolon,
+        extra: KeyedExtra::First,
+    };
+    let found = keyed("java: 21 17  ; both installed\n", "java", colon)
+        .unwrap()
+        .unwrap();
+    assert_eq!(
+        (found.taken.as_str(), found.unused.as_slice()),
+        ("21", &["17".to_owned()][..])
+    );
+    // `comment = "none"` makes a `#` part of the value rather than a
+    // comment's start.
+    let none = KeyedSyntax {
+        separator: KeyedSeparator::Equals,
+        comment: KeyedComment::None,
+        extra: KeyedExtra::First,
+    };
+    assert_eq!(
+        keyed("java=21#x\n", "java", none).unwrap().unwrap().taken,
+        "21#x"
+    );
+}
+
+#[test]
+#[specmark::spec(verifies = "spec://org.vibevm.core/vibevm/common/PROP-075#VERSION-FILE-KEYED")]
+fn a_second_value_is_taken_under_first_and_refused_under_refuse() {
+    let text = "java=21.0.4-tem extra\n";
+    let refusing = KeyedSyntax {
+        separator: KeyedSeparator::Equals,
+        comment: KeyedComment::Hash,
+        extra: KeyedExtra::Refuse,
+    };
+    let refusal = keyed(text, "java", refusing).expect_err("the line is unusable");
+    assert!(refusal.contains("line 1"), "{refusal}");
+    assert!(refusal.contains("`extra`"), "{refusal}");
+    let taking = KeyedSyntax {
+        extra: KeyedExtra::First,
+        ..refusing
+    };
+    let found = keyed(text, "java", taking).unwrap().unwrap();
+    assert_eq!(found.taken, "21.0.4-tem");
+    assert_eq!(found.unused, ["extra"]);
 }
 
 #[test]
@@ -176,12 +245,7 @@ fn two_slots_read_two_formats_in_one_walk() {
     fs::write(dir.path().join(".tool-versions"), "ruby 3.3.0\n").unwrap();
     let rows = declared(&[
         ("node", plain(&[".nvmrc"])),
-        (
-            "ruby",
-            VersionFileDecl::ToolVersions {
-                key: "ruby".to_owned(),
-            },
-        ),
+        ("ruby", VersionFileDecl::tool_versions("ruby")),
     ]);
     let found = search(dir.path(), Some(dir.path()), &rows);
     assert_eq!(found.of_slot("node").unwrap().request.authored, "22.23.4");
@@ -232,12 +296,7 @@ fn the_declared_sidecar_round_trips_and_an_empty_set_keeps_no_document() {
 
     let rows = declared(&[
         ("node", plain(&[".nvmrc", ".node-version"])),
-        (
-            "node",
-            VersionFileDecl::ToolVersions {
-                key: "nodejs".to_owned(),
-            },
-        ),
+        ("node", VersionFileDecl::tool_versions("nodejs")),
     ]);
     rows.save(&settings).unwrap();
     assert_eq!(Declared::load(&settings), rows);

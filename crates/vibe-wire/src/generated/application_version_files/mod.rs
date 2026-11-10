@@ -26,11 +26,64 @@ pub struct Declaration {
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(tag = "format")]
 pub enum Row {
+    #[serde(rename = "keyed")]
+    Keyed(Box<RowKeyed>),
+
     #[serde(rename = "plain")]
     Plain(Box<RowPlain>),
 
     #[serde(rename = "tool-versions")]
     ToolVersions(Box<RowToolVersions>),
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+pub enum RowKeyedComment {
+    #[serde(rename = "hash")]
+    Hash,
+
+    #[serde(rename = "none")]
+    None,
+
+    #[serde(rename = "semicolon")]
+    Semicolon,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+pub enum RowKeyedExtra {
+    #[serde(rename = "first")]
+    First,
+
+    #[serde(rename = "refuse")]
+    Refuse,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+pub enum RowKeyedSeparator {
+    #[serde(rename = "colon")]
+    Colon,
+
+    #[serde(rename = "equals")]
+    Equals,
+
+    #[serde(rename = "whitespace")]
+    Whitespace,
+}
+
+/// A file of key/version pairs in which each slot edits only its own line
+/// (.sdkmanrc, .tool-versions, mise.toml), with the line syntax this package
+/// declared.
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct RowKeyed {
+    pub comment: RowKeyedComment,
+
+    pub extra: RowKeyedExtra,
+
+    pub key: String,
+
+    pub names: Vec<String>,
+
+    pub separator: RowKeyedSeparator,
 }
 
 /// A one-line version file named by the package; the declaration order of
@@ -41,7 +94,9 @@ pub struct RowPlain {
     pub names: Vec<String>,
 }
 
-/// asdf's .tool-versions with this package's key.
+/// asdf's .tool-versions with this package's key — the short spelling of
+/// exactly one `keyed` row, kept in the document because a manifest that
+/// authored it serialises back to it (PROP-075#VERSION-FILE-KEYED).
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
 pub struct RowToolVersions {

@@ -1,9 +1,16 @@
-//! The two version-file formats and what one line asks for
-//! (PROP-075 `#VERSION-FILE-FORMATS`). Pure text in, data out: nothing here
-//! touches the filesystem, so every shape is a unit test.
+//! The version-file formats and what one line asks for
+//! (PROP-075 `#VERSION-FILE-FORMATS`, `#VERSION-FILE-KEYED`). Pure text in,
+//! data out: nothing here touches the filesystem, so every shape is a unit
+//! test.
+//!
+//! There is one keyed reader, because `tool-versions` is the short spelling
+//! of one `keyed` row and `vibe_core` expands it before a row reaches this
+//! module. The same line splitter answers for the writer, so what it
+//! preserves and what the reader takes can never disagree.
 
 use specmark::spec;
 use vibe_core::VersionSpec;
+use vibe_core::manifest::{KeyedExtra, KeyedSeparator, KeyedSyntax};
 
 /// The channel grammar of PROP-075 `#CHANNEL-SYNTAX`: `[a-z][a-z0-9.-]*`,
 /// optionally one `/` and a second such segment.
@@ -105,35 +112,131 @@ pub fn plain_line(text: &str) -> Option<&str> {
         .find(|line| !line.is_empty())
 }
 
-/// What a `.tool-versions` file says about one key.
-#[spec(documents = "spec://org.vibevm.core/vibevm/common/PROP-075#VERSION-FILE-FORMATS")]
+/// What a keyed version file says about one key
+/// (PROP-075 `#VERSION-FILE-KEYED`).
+#[spec(documents = "spec://org.vibevm.core/vibevm/common/PROP-075#VERSION-FILE-KEYED")]
 #[derive(Debug, Clone, PartialEq, Eq)]
-pub struct ToolVersions {
-    /// The first version listed for the key — the one that is taken.
+pub struct KeyedSelection {
+    /// The first version on the key's line — the one that is taken.
     pub taken: String,
-    /// The rest, reported as unused (PROP-075 `#VERSION-FILE-FORMATS`).
+    /// The rest, reported as unused under `extra = "first"`.
     pub unused: Vec<String>,
+    /// The 1-based line the key was found on, so a report, a refusal and
+    /// the writer can name it.
+    pub line: usize,
 }
 
-/// Read asdf's `.tool-versions` for `key`: whitespace-separated
-/// `<key> <version>…` lines, `#` comments ignored, the **first** version
-/// listed for the key taken and the rest reported as unused. A key line
-/// with no version at all is not a selection; `None` then, so the upward
-/// search keeps walking rather than failing a prompt.
-pub fn tool_versions(text: &str, key: &str) -> Option<ToolVersions> {
-    for line in text.lines() {
-        let line = line.strip_suffix('\r').unwrap_or(line);
-        let line = line.split('#').next().unwrap_or("");
-        let mut words = line.split_whitespace();
-        if words.next() != Some(key) {
-            continue;
-        }
-        let mut versions = words.map(str::to_owned);
-        let taken = versions.next()?;
-        return Some(ToolVersions {
-            taken,
-            unused: versions.collect(),
-        });
+/// One line of a keyed file as the regions a writer must keep apart, so the
+/// value can be replaced and every other byte of the line stays where it
+/// was (PROP-075 `#VERSION-FILE-WRITE`).
+#[spec(documents = "spec://org.vibevm.core/vibevm/common/PROP-075#VERSION-FILE-WRITE")]
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct KeyedLine<'a> {
+    /// The 1-based line number.
+    pub line: usize,
+    /// Everything up to the first value: the indent, the key as written,
+    /// the separator and the spacing around it.
+    pub head: &'a str,
+    /// The values, without surrounding whitespace.
+    pub values: &'a str,
+    /// Whatever follows them — the spacing and the line's comment.
+    pub tail: &'a str,
+}
+
+impl KeyedLine<'_> {
+    /// The versions this line lists after the key, in order.
+    pub fn versions(&self) -> Vec<&str> {
+        self.values.split_whitespace().collect()
     }
-    None
+
+    /// This line with `version` in place of its values, which is the whole
+    /// of a keyed write (PROP-075 `#VERSION-FILE-WRITE`).
+    pub fn rewritten(&self, version: &str) -> String {
+        format!("{}{version}{}", self.head, self.tail)
+    }
+}
+
+/// Every line of `text` that carries `key` under `syntax`, in file order. A
+/// line whose key is another slot's is not here and is **not** a fault:
+/// another key in a shared file is not a defect
+/// (PROP-075 `#VERSION-FILE-KEYED`).
+pub fn keyed_lines<'a>(text: &'a str, key: &str, syntax: KeyedSyntax) -> Vec<KeyedLine<'a>> {
+    text.lines()
+        .enumerate()
+        .filter_map(|(index, raw)| split_keyed(raw, key, syntax, index + 1))
+        .collect()
+}
+
+/// One line split at its key, or `None` when the line does not carry `key`.
+fn split_keyed<'a>(
+    raw: &'a str,
+    key: &str,
+    syntax: KeyedSyntax,
+    line: usize,
+) -> Option<KeyedLine<'a>> {
+    let raw = raw.strip_suffix('\r').unwrap_or(raw);
+    let body = match syntax.comment.character().and_then(|ch| raw.find(ch)) {
+        Some(at) => &raw[..at],
+        None => raw,
+    };
+    let start = body.len() - body.trim_start().len();
+    let after = match syntax.separator {
+        KeyedSeparator::Whitespace => {
+            let word = body[start..].split_whitespace().next()?;
+            if word != key {
+                return None;
+            }
+            start + word.len()
+        }
+        separator => {
+            let at = body.find(separator.character())?;
+            if body[start..at].trim_end() != key {
+                return None;
+            }
+            at + separator.character().len_utf8()
+        }
+    };
+    let region = &body[after..];
+    let lead = region.len() - region.trim_start().len();
+    let head = &raw[..after + lead];
+    let values = region[lead..].trim_end();
+    Some(KeyedLine {
+        line,
+        head,
+        values,
+        tail: &raw[head.len() + values.len()..],
+    })
+}
+
+/// Read a keyed file for `key`: the key's line under the declared syntax,
+/// the **first** value taken and the rest reported as unused under
+/// `extra = "first"`. `Err` is a reported, unusable line — what
+/// `extra = "refuse"` says a second value is. A key line with no value at
+/// all is not a selection; `Ok(None)` then, so the upward search keeps
+/// walking rather than failing a prompt (PROP-075 `#VERSION-FILE-KEYED`).
+pub fn keyed(text: &str, key: &str, syntax: KeyedSyntax) -> Result<Option<KeyedSelection>, String> {
+    for found in keyed_lines(text, key, syntax) {
+        let versions = found.versions();
+        let Some((taken, unused)) = versions.split_first() else {
+            continue;
+        };
+        if !unused.is_empty() && syntax.extra == KeyedExtra::Refuse {
+            return Err(format!(
+                "line {} lists {} after `{taken}` for key `{key}`, and the format declares \
+                 `extra = \"refuse\"`; the line is unusable",
+                found.line,
+                unused
+                    .iter()
+                    .map(|version| format!("`{version}`"))
+                    .collect::<Vec<_>>()
+                    .join(", ")
+            ));
+        }
+        return Ok(Some(KeyedSelection {
+            taken: (*taken).to_owned(),
+            unused: unused.iter().map(|value| (*value).to_owned()).collect(),
+            line: found.line,
+        }));
+    }
+    Ok(None)
 }

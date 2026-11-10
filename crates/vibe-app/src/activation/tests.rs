@@ -377,9 +377,7 @@ fn a_tool_versions_line_with_extra_versions_is_reported_and_not_fatal() {
     fs::write(project.join(".tool-versions"), "runtime 2.0.0 1.0.0\n").unwrap();
     let mut index = home(&["1.0.0", "2.0.0"], None, false);
     for record in index.installations.values_mut() {
-        record.version_file = vec![VersionFileDecl::ToolVersions {
-            key: "runtime".to_owned(),
-        }];
+        record.version_file = vec![VersionFileDecl::tool_versions("runtime")];
     }
     let settings = settings_with(dir.path(), &index);
     let activation = resolve(

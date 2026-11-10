@@ -47,11 +47,58 @@
         },
         "tool-versions": {
           "metadata": {
-            "description": "asdf's .tool-versions with this package's key."
+            "description": "asdf's .tool-versions with this package's key — the short spelling of exactly one `keyed` row, kept in the document because a manifest that authored it serialises back to it (PROP-075#VERSION-FILE-KEYED)."
           },
           "properties": {
             "key": {
               "type": "string"
+            }
+          }
+        },
+        "keyed": {
+          "metadata": {
+            "description": "A file of key/version pairs in which each slot edits only its own line (.sdkmanrc, .tool-versions, mise.toml), with the line syntax this package declared."
+          },
+          "properties": {
+            "names": {
+              "elements": {
+                "type": "string"
+              },
+              "metadata": {
+                "x-empty": "emit"
+              }
+            },
+            "key": {
+              "type": "string"
+            },
+            "separator": {
+              "enum": [
+                "equals",
+                "whitespace",
+                "colon"
+              ],
+              "metadata": {
+                "x-vocabulary": "closed"
+              }
+            },
+            "comment": {
+              "enum": [
+                "hash",
+                "semicolon",
+                "none"
+              ],
+              "metadata": {
+                "x-vocabulary": "closed"
+              }
+            },
+            "extra": {
+              "enum": [
+                "refuse",
+                "first"
+              ],
+              "metadata": {
+                "x-vocabulary": "closed"
+              }
             }
           }
         }

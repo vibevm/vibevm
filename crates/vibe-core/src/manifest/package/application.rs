@@ -39,7 +39,9 @@ pub use steps::{
 };
 pub use sugar::{result_of, steps_of};
 pub use template::{StepVar, expand_step_template};
-pub use version_file::{TOOL_VERSIONS_FILE, VersionFileDecl};
+pub use version_file::{
+    KeyedComment, KeyedExtra, KeyedSeparator, KeyedSyntax, TOOL_VERSIONS_FILE, VersionFileDecl,
+};
 pub use wizard::{
     ChoiceDecl, LicenseDecl, ParameterDecl, ParameterType, ParameterValue, ProfileDecl,
 };
@@ -402,7 +404,11 @@ pub struct ApplicationDecl {
     /// `#VERSION-FILE-FORMATS`. Absent means the slot has no version file
     /// and a project selects its version by an ordinary `vibe.toml`
     /// requirement alone.
-    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    #[serde(
+        default,
+        deserialize_with = "version_file::rows",
+        skip_serializing_if = "Vec::is_empty"
+    )]
     pub version_file: Vec<VersionFileDecl>,
 }
 
