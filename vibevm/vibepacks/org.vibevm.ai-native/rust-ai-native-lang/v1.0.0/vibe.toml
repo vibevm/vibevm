@@ -57,3 +57,21 @@ description = "The recurring AI-Native discipline sweep: floor gates, then the h
 name = "rust-ai-native-terraform"
 path = "vibevm/vibespecs/skills/rust-ai-native-terraform"
 description = "Adopt the AI-Native discipline on an existing Rust codebase: inventory-not-gate, the registries, characterization, then card raids crate by crate"
+
+# The next step after installing this stack, declared instead of left to the
+# reader (`B-188`, PROP-065 `#ordinary-consumer`). `vibe bin build` compiles
+# the four tools above in the materialised slot; its four prerequisites are
+# named as `needs`, so a machine without them refuses the installation up
+# front with the missing one named, instead of surfacing much later as a
+# failed `floor` gate.
+[[extension]]
+id = "build-tools"
+point = "slot:post-install"
+title = "Build the discipline tools (vibe bin build)"
+handler = { kind = "script", base = "tooling/post-install/build-tools" }
+needs = [
+  "command:cargo",
+  "command:rustfmt",
+  "command:clippy",
+  "command:cargo-nextest",
+]
