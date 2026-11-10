@@ -50,7 +50,7 @@ pub use analyze::{
 };
 
 mod materialised_read;
-pub(super) use materialised_read::read_durable_resolution;
+pub(crate) use materialised_read::read_durable_resolution;
 mod conditions;
 mod node_dependency;
 mod snippet_source;

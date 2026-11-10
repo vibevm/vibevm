@@ -57,6 +57,54 @@ impl DeclaredBootSources {
         }
         guards
     }
+    /// Observe one authored input of a prepared node under the held
+    /// workspace — the system-prompt template and the selected entrypoint,
+    /// neither of which is a boot source nor a declared source row, so
+    /// neither reaches this crate through any existing reader.
+    ///
+    /// `relative` is node-relative and forward-slashed. `None` means the
+    /// file is absent, which is an answer rather than a failure: the
+    /// template's absence is how a node declines the whole feature
+    /// (PROP-076 `#SYS-OPT-IN`).
+    ///
+    /// The node's own guard is rechecked **before and after** the read, by
+    /// the same before/after reasoning generated-input admission already
+    /// uses: a body that changed while it was being observed must be
+    /// refused, never witnessed. Nothing outside the node is reachable —
+    /// the read is held under the node's own directory capability, so a
+    /// path that climbs out of it cannot resolve
+    /// (PROP-076 `#SYS-CAPTURE-REUSE`).
+    pub(crate) fn node_input(
+        &self,
+        node_rel: &str,
+        relative: &str,
+    ) -> Result<Option<Vec<u8>>, WorkspaceError> {
+        // A node that was never prepared is a hard error, not an absence:
+        // reading an unwitnessed node would produce evidence nothing backs.
+        self.node(node_rel)?;
+        let guards = self.node_guards(node_rel);
+        for guard in &guards {
+            guard.recheck()?;
+        }
+        let components: Vec<&str> = if node_rel == "." {
+            Vec::new()
+        } else {
+            node_rel.split('/').collect()
+        };
+        let directory = self
+            .project
+            .dir(&components, false)
+            .map_err(|e| error(&self.root.join(node_rel), e))?;
+        let bytes = self
+            .project
+            .read_source_bytes_in(&directory, relative)
+            .map_err(|e| error(&self.root.join(node_rel).join(relative), e))?;
+        for guard in &guards {
+            guard.recheck()?;
+        }
+        Ok(bytes)
+    }
+
     pub(crate) fn recheck_node(&self, node_dir: &Path) -> Result<(), WorkspaceError> {
         let relative = node_dir
             .strip_prefix(&self.root)

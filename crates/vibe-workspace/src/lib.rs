@@ -43,6 +43,8 @@ pub mod hooks;
 pub mod install;
 pub mod materialization;
 pub mod publish;
+/// The cache-stable system-prompt prefix (PROP-076).
+pub mod system_prompt;
 pub mod tools;
 pub mod vibedeps;
 

@@ -369,6 +369,19 @@ pub enum WorkspaceError {
     )]
     MalformedRedirectBlock { path: PathBuf, reason: String },
 
+    /// An input of the cache-stable system-prompt prefix could not be
+    /// witnessed: a declared entrypoint that does not exist, an entrypoint
+    /// that is not UTF-8, or a reserved prefix path appearing among the
+    /// prefix's own inputs. Each names the path, and each refuses before
+    /// anything is composed or written.
+    #[error(
+        "cannot capture the system-prompt input `{}`: {reason} \
+         (violates spec://org.vibevm.core/vibevm/common/PROP-076#SYS-CAPTURE-REUSE; \
+         fix: repair that path as the reason names, then re-run)",
+        .path.display()
+    )]
+    SystemPromptCapture { path: PathBuf, reason: String },
+
     /// A package's install hook (PROP-020) failed: no usable interpreter, a
     /// spawn error, an untrusted run, or a `pre-install` non-zero exit. The
     /// wrapped hook error already carries its own Class-F `(violates …;

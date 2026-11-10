@@ -91,6 +91,7 @@ pub use format::{STATIC_FILE, STATIC_XML_FILE, resolve_static_path, static_file,
 /// The managed redirect block (PROP-012) — `<vibevm>` in `CLAUDE.md` /
 /// `AGENTS.md` / `GEMINI.md`, moved out of this cell along its seam.
 mod redirect;
+pub(crate) use redirect::project_managed_block;
 pub use redirect::{
     BLOCK_CLOSE, BLOCK_OPEN, BlockLocation, REDIRECT_FILES, locate_block, render_redirect,
     render_redirect_with_spec_format, write_redirect_blocks,

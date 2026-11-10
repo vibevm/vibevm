@@ -64,6 +64,7 @@ pub(crate) mod bootgen;
 /// the once-each topology is exercisable at the unit level (no full install).
 pub use bootgen::desubstitute_covered_units;
 pub(crate) use bootgen::node_own_boot;
+pub(crate) use bootgen::read_durable_resolution;
 use bootgen::validate_redirect_blocks;
 /// The boot-graph integrity check (PROP-038 §3) — public API for `vibe check`.
 pub use model::{InstallOutcome, PostInstallPlan, ResolvedDep, SlotCheck, SlotVerifier};

@@ -23,7 +23,7 @@ use std::collections::{BTreeMap, HashSet};
 use std::sync::Arc;
 
 use vibe_core::manifest::SpecFormat;
-use vibe_spec::{BackendId, CompileObserver, DocumentProvider, EmittedArtifact};
+use vibe_spec::{BackendId, CompileObserver, EmittedArtifact};
 
 use crate::boot;
 use crate::boot::hybrid::hoist;
@@ -39,29 +39,11 @@ use super::hybrid_emit::{append_hoisted, with_static_set};
 use super::owner_plans::world_error;
 use super::{desubstitute_covered_units, node_dependency_boot, read_durable_resolution};
 
-/// One analyzed lane: the compile's result beside its attribution side.
-#[derive(Debug, Clone)]
-pub struct AnalyzedLane {
-    /// The emitted artifact — byte-equal to what regeneration would
-    /// write, held in memory; nothing was written.
-    pub artifact: EmittedArtifact,
-    /// The typed provider that declared each plan input, in input order.
-    /// `None` marks an elided/hoisted seat whose provenance does not type
-    /// through the one grammar — an unattributable seat the analyzer
-    /// refuses rather than half-reports.
-    pub providers: Vec<Option<DocumentProvider>>,
-    /// Each input's display provenance `(origin, path)`, in input order,
-    /// for the alignment fence between the authored plan and the
-    /// compiler's returned evidence.
-    pub identities: Vec<(String, String)>,
-}
-
-pub struct AnalyzedBoundLane {
-    pub artifact: EmittedArtifact,
-    pub native: Option<boot_artifacts::OwnerNativeCompileContinuation>,
-    pub providers: Vec<Option<DocumentProvider>>,
-    pub identities: Vec<(String, String)>,
-}
+/// What one analysis returns — the result types, out of line per the
+/// file-length budget.
+#[path = "analyze/result.rs"]
+mod result;
+pub use result::{AnalyzedBoundLane, AnalyzedLane};
 
 /// Compose and compile ONE selected node's static lane under an analyzer
 /// observer, writing nothing.
