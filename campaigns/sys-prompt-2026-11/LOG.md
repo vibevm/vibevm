@@ -1052,3 +1052,224 @@ an un-neutralised dependency copy.
    prompt, so an opted-in project's staged publication writes no prefix.
    `PROP-076#SYS-OPERATIONS-SURFACE` lists that path among the ones that
    generate, and it is P5's to wire.
+
+## 2026-11-10 — P5 operations: five verbs, named launchers, and one measurement that falsified a design claim
+
+`vibe prompt build | check | prepare | path | flags` and `vibe agent
+<launcher>` exist, the two paths that rewrote `STATIC` without refreshing the
+prefix are closed, and every build ends with one summary line. The phase also
+produced the campaign's first falsified **[V]** claim, and that is the entry
+worth reading first.
+
+### `vibe prompt check` is 50–80 ms, not 330, and the reason is a design choice
+
+Spike S5 measured provider-free `analyze_node_lane` at 328–342 ms warm and set
+that as `check`'s budget. `check` does not pay it: it calls **no** analysis
+entrypoint at all. The lane segment's witness is compared against the
+**committed** `STATIC.*` on disk and the continuation plan's identity against
+the digest of the committed `INDEX.md` — both of which the generation that
+published the prefix already wrote. Whether that committed lane is itself
+behind its sources is `vibe install`'s question, not the prefix's, and
+conflating the two is exactly what would have put a compile in an API caller's
+request path.
+
+Measured on this repository (root node, 278,356-byte prefix, 312,345-byte
+lane), three consecutive warm runs of `vibe prompt check`: **0.05 s, 0.06 s,
+0.08 s**. The read-only contract is therefore stronger than
+`#SYS-READ-ONLY-CHECK` asked for: the plan wanted a provider sentinel that
+panics on invocation, and no provider can be *reached* from the check cell,
+which a test over the module's own dependency surface is cheaper to keep true
+than a sentinel.
+
+The escalation path the plan feared is not needed and is not built. What
+remains is `freshness_unverifiable`, raised when the sidecar witnesses a
+compiled lane and no `STATIC.*` is on disk — the one case where only a compile
+could reproduce the witness — and when the sidecar's protocol tag is one this
+build does not read.
+
+### Falsified: Codex's profile file does not carry `developer_instructions`
+
+`HARNESS-DELIVERY.md` §5 records, marked **[V]**, that a profile file
+`$CODEX_HOME/<name>.config.toml` selected with `-p <name>` delivered a
+250,421-character `developer_instructions` intact. **On codex-cli 0.167.0 it
+does not.** Probed offline with `codex debug prompt-input`, which renders the
+model-visible prompt input and calls no model, in an isolated `CODEX_HOME`:
+
+- `developer_instructions = "CANARY"` at the **top level** of
+  `$CODEX_HOME/config.toml` → the canary arrives.
+- `-c developer_instructions=CANARY` → the canary arrives.
+- `[profiles.myprof] developer_instructions = "CANARY"` in
+  `$CODEX_HOME/config.toml`, with `-p myprof` → the canary does **not** arrive.
+- The same table in `$CODEX_HOME/myprof.config.toml`, with `-p myprof` → the
+  canary does **not** arrive.
+- `-p definitely-not-a-profile` → exit 0, silently. An unknown profile is not
+  reported at all.
+- `[profiles.myprof] model = "gpt-5-canary"` with `-p myprof` → the render
+  fails on the unknown model, so `-p` **is** honoured; it is
+  `developer_instructions` that is not a per-profile key in this version.
+
+So the implemented Codex launch tier — the one `PROP-076#SYS-HARNESS-DELIVERY`
+and `HARNESS-DELIVERY.md` §8.4 prescribe, and the one this phase was told to
+build — writes a profile file that codex-cli 0.167.0 loads and then ignores for
+this key. The lane cannot go on a command line (128 KiB argument cap against a
+312 KB lane), and the ambient carriers are refused by decision D3, so there is
+at present **no working launch tier for Codex**. The Claude Code tier is
+unaffected and proved below.
+
+This is left as an owner decision rather than fixed from inside the phase,
+because every candidate changes a decided design: the obvious one is a
+launch-scoped `CODEX_HOME` — `vibe agent codex` creates a directory, writes a
+top-level `developer_instructions` into its `config.toml`, and launches with
+`CODEX_HOME` pointed at it — which *is* launch-scoped rather than ambient (a
+Codex started directly still reads the real home, so `#SYS-WORKER-EXCLUSION`
+holds) but writes a whole config home rather than one profile file and must
+decide what of the user's own config it carries over. That is D3/D4 territory.
+
+### What landed, and the five decisions worth not re-deriving
+
+1. **`check` compares witnesses, not sources** — see above. Six verdicts, each
+   carrying printable reasons and the exact `vibe prompt build` that resolves
+   it; `--json` is `vibe-prompt-check/1`.
+2. **The warnings are out of the verdict, deliberately.** Marker integrity, the
+   `@` census, the Codex whole-file budget and the lane's size against a stated
+   window are reported beside the verdict and never folded into `stale`. A lane
+   whose band-U bodies have drifted is *expected*, because `vibe agent`
+   recomposes it at launch — folding that into staleness would break the one
+   assertion the band model rests on. Both halves are tests.
+3. **`prepare` refuses a stale artifact rather than rebuilding one.** The task
+   framing was "rebuild or refuse"; `#SYS-READ-ONLY-CHECK` promises no writes,
+   and a command that promises none does not write. The refusal names the
+   build.
+4. **`vibe prompt path` distinguishes absent from stale.** A file that is not
+   there is a refusal naming the build — never an empty line, which is the one
+   answer a shell alias turns silently into a broken launch. A *stale* file
+   exists and is usable, so it is the path on stdout and a warning on stderr.
+   `vibe prompt check` exits non-zero on any verdict but `equal`, so a wrapper
+   cannot read a stale prefix as current.
+5. **`vibe prompt flags` writes nothing.** Decision D4 allowed it to write
+   Codex's profile file beside `vibe agent`; it does not, by the narrower rule
+   that a command whose job is to print is a command that prints. The note in
+   its answer names the command that writes the file.
+
+### Three spellings the design could not have as written
+
+- **`[launchers.<name>]`, not `[agent.launchers.<name>]`, in the user
+  configuration.** `PROP-076#SYS-HARNESS-EXECUTABLE` writes the table as
+  `[agent.launchers.<name>]`. That spelling is unavailable in
+  `<settings>/agents.toml`, whose `[agent.<name>]` tables are already PROP-064
+  agent definitions — `[agent.launchers]` would be an agent called
+  "launchers". The table is therefore `[launchers.<name>]`: the same path with
+  the file's own root elided. `[agent.launchers.*]` keeps its meaning as the
+  spelling a **project manifest** is refused for, and the refusal quotes it.
+- **The refusal of a project launcher is asked before the workspace opens.**
+  The manifest parser rejects `[agent]` as an unknown field, so the generic
+  refusal already existed; "unknown field `agent`" is not the sentence a
+  contributor needs. `vibe agent` reads `./vibe.toml` first and refuses by
+  name, listing the launcher names it found.
+- **A Codex profile name carries no dot.** The first implementation slugged
+  `org.vibevm.core/vibevm` to `vibe-org.vibevm.core-vibevm`, which in a TOML
+  table header is a *nested* path — `[profiles.vibe-org.vibevm.core-vibevm]`
+  declares `profiles > vibe-org > vibevm > core-vibevm`, and the profile `-p`
+  asks for does not exist. Caught by `tomllib` parsing the generated file
+  during the smoke run, before any test asserted it. Dots are replaced like
+  any other separator, and a test pins that the name has none.
+
+### `vibe agent` — proved against shims, never against a harness
+
+Ten offline tests in `crates/vibe-cli/tests/cli_agent_launch.rs`. Each
+launcher's `command` points at a shim in the test's own directory, reached
+through `PATH`, that records its argv and exits; no real `claude` or `codex` is
+ever started and no model is ever called. Asserted: resolution by name; a user
+launcher overriding the built-in of the same name while the other built-in
+survives; two launchers sharing a kind; the argv order (**wrapper prefix, then
+our flags, then the user's own arguments**); exactly one file flag; no argument
+carrying lane bytes; the Codex profile written at launch, parsing as TOML, with
+`developer_instructions` byte-equal to the composed lane and no `'''` literal
+block; that a build and `vibe prompt flags` each write **no** `$CODEX_HOME`;
+the unknown-name refusal listing the launchers; the unknown-kind refusal
+quoting `[launchers.<name>] kind`; the four conflicting Claude Code flags; and
+the project-manifest refusal, with nothing started.
+
+Verified against the real repository by hand, with an isolated home and a shim
+on `PATH`: `claude (kind claude) — my-claude --no-telemetry [<agents.toml>]`
+overrode the built-in, and the recorded argv was `--no-telemetry
+--append-system-prompt-file <abs lane> --exclude-dynamic-system-prompt-sections
+--model opus`.
+
+### The two seams P4 left, and what each turned out to be
+
+- **The pending-native replay.** `#SYS-TRANSACTION-ROLES` recorded that the
+  replay seam passes no prompt member "because it republishes an
+  already-prepared lane and recomposes nothing". It republishes a **changed**
+  lane — that is the whole point of a replay — so the prefix and the managed
+  block whose expected lane digest names it were both left describing the
+  previous one. Fixed: the node's prompt artifacts are composed at *preparation*
+  time, together with the managed-block selector the publication will run, and
+  committed inside the same transaction. The publisher stays consume-only, which
+  its own source test pins (it may not name `redirect`, a provider, a journal or
+  a sort), so the selector is built in `replay_prepare/prompt.rs` and handed
+  over already closed.
+- **Publish staging.** `publish/staging.rs` regenerates a staged copy's boot as
+  a standalone node and passed no prompt. Writing one there would publish a
+  prefix nobody reads: the artifacts are ignored and never committed, and a
+  consumer regenerates its own on install. The *actual* defect was the other
+  direction — `copy_tree_excluding` copied the development tree's `SYSTEM.md`,
+  `SYSTEM.meta.json`, `AGENT-LANE.md` and the boot `.gitignore` into the staged
+  copy, so a published package would have shipped a prefix describing a boot it
+  does not have. They are now excluded at the copy, alongside `.git` and
+  `.vibe`, for the same reason.
+
+### Measured, for the release note
+
+On this repository at `ef8d6fe9a`, with a 76-byte template: the prefix is
+**278,356 bytes** and the lane **312,345 bytes** — the lane figure exactly
+P3's, which is the first independent confirmation that the composer and the
+publication agree. Band U is **57,894 bytes across 8 files**, the campaign's
+own figure. `vibe prompt prepare` reports cache breakpoints at 26,497 (the end
+of the entrypoint segment), 278,356 (the end of band P) and 336,250 (the end of
+band U). A second `vibe prompt build` with nothing changed reports `unchanged`
+and writes nothing; deleting the template reports `removed` and leaves the boot
+directory with exactly the four files it had before the opt-in.
+
+### Open issues this phase leaves
+
+1. **No working Codex launch tier on codex-cli 0.167.0** — the falsification
+   above. Owner decision; the recommended shape is a launch-scoped `CODEX_HOME`.
+   `HARNESS-DELIVERY.md` §5's **[V]** for the profile carrier should be demoted
+   to a version-scoped observation.
+2. **`AGENTS.md` line 37 still carries the false positional phrase** — "the
+   boot lane in the order the generated block **at the end of this file**
+   prescribes", with the block now at the top. It is authored text and was not
+   edited. Contrary to what P4's open issue 3 expected, `vibe prompt check`
+   does **not** scan for positional phrases: a sentence's truth is not a
+   property a string match decides, and a check that flagged prose would flag
+   every project's own writing. **Owner-pending**, in all three byte-identical
+   copies.
+3. **The install summary line is a file snapshot, not a publication outcome.**
+   `vibe install` / `reinstall` read the three artifacts' digests before the
+   regeneration and classify after it. Threading one node's prompt verdict out
+   through the code that publishes every project's boot — for a line of output —
+   was judged the wrong trade. The snapshot costs three reads and says the same
+   thing; it would say `rebuilt` rather than `unchanged` if an unrelated writer
+   touched those files during the install, which nothing does.
+4. **`vibe prompt check`'s nested-block report is narrower than
+   `HARNESS-DELIVERY.md` §8.5.** It counts the managed blocks in the node's own
+   entrypoint and reports anything but exactly one; the directory walk for
+   nested projects and un-neutralised `vibedeps/` copies stays `vibe check`'s,
+   where P2b put it and where the git-backed ignore handling already lives.
+   Duplicating that walk here would be a second ignore engine.
+5. **`vibe prompt check`'s git question spawns `git ls-files`.** It is the only
+   effect either read-only verb has beyond reading files, it runs only where a
+   `.git` entry exists, and "cannot tell" is reported as unknown rather than as
+   clean. Asking git rather than carrying a second ignore engine is the same
+   choice P2b's corrected walk made.
+6. **`import` delivery is refused at deserialisation**, with its four blockers
+   in the message. `#SYS-HARNESS-DELIVERY` says "reserved and refused in
+   version 1" without saying where; refusing at parse time follows
+   `lane_form`'s precedent, so a project cannot hold a setting that parses and
+   is then ignored.
+7. **Not in this phase:** the constraints C1–C4 of `HARNESS-DELIVERY.md` §4
+   beyond the `import` refusal and the one-mode rule; the host-mismatch
+   warning; `vibe check`'s own system-prompt check id (`SP-FMT-008`); and the
+   entrypoint-copy and harness-version reports of §8.5. Each is a report
+   around facts that now exist rather than a new mechanism.

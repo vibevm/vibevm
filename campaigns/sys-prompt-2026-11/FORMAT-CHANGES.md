@@ -96,7 +96,16 @@ Status: **delivered 2026-11-10** (phase P4) — as **four** roles rather than tw
 
 ## SP-FMT-006 — `vibe prompt check`, `vibe-prompt-check/1` (Phase 5)
 
-Status: **planned**.
+Status: **delivered 2026-11-10** (phase P5), with one difference from the plan
+that is a strengthening rather than a relaxation: `check` reaches **no**
+analysis entrypoint, so no compile provider can be invoked even on a mismatch,
+and it answers in **50–80 ms** warm rather than inside S5's 328–342 ms budget.
+It compares the sidecar's input witnesses against the **committed** `STATIC.*`
+and the digest of the committed `INDEX.md`; whether that committed lane is
+behind its own sources is `vibe install`'s question, not the prefix's. The
+observations that are not freshness — marker integrity, the `@` census, the
+Codex whole-file budget, the lane's size against a stated `--model-window` —
+are reported beside the verdict and never folded into `stale`.
 
 - New record `[format.cli-prompt-check]`, epoch **1**, `schema = "schemas/prompt_check.jtd.json"` (new), `recoverable = true`, `foreign_parsers = "many"`, `corpus = "none"`, `sunset = "none"`. Protocol tag `vibe-prompt-check/1`.
 - `vibe prompt check [--node <rel>] [--json]` compares the currently admitted inputs with the published artifacts and answers one of six verdicts, each with its reasons: `equal`, `stale`, `missing`, `conflict`, `unavailable`, `freshness_unverifiable`.
@@ -107,7 +116,10 @@ Status: **planned**.
 
 ## SP-FMT-007 — `vibe prompt prepare`, `vibe-prompt-prepare/1` (Phase 5)
 
-Status: **planned**.
+Status: **delivered 2026-11-10** (phase P5). One difference: a stale artifact
+is **refused** with the exact `vibe prompt build` that fixes it rather than
+rebuilt, because `#SYS-READ-ONLY-CHECK` promises no writes and a command that
+promises none does not write.
 
 - New record `[format.cli-prompt-prepare]`, epoch **1**, `schema = "schemas/prompt_prepare.jtd.json"` (new), `recoverable = true`, `foreign_parsers = "many"`, `corpus = "none"`, `sunset = "none"`. Protocol tag `vibe-prompt-prepare/1`.
 - `vibe prompt prepare --json [--node <rel>] [--session-target os=<name>]` returns the materials of one request: the **prefix band**, the **unconditional continuation band**, the **gated continuation band** and the unresolved remainder — **separately and ordered, never concatenated** — each band's rows carrying their node-relative path, their observed bytes' SHA-256 and their length, plus the recommended cache-boundary offsets taken from the sidecar's segment map.
@@ -119,7 +131,14 @@ Status: **planned**.
 
 ## SP-FMT-008 — `vibe check` reports a stale or conflicting prefix (Phase 5)
 
-Status: **planned**.
+Status: **not delivered in P5**, deliberately deferred. `vibe prompt check`
+reports every one of these facts, exits non-zero on any verdict but `equal`,
+and names the remedy; the tracked-artifact error P4 added to the existing
+`redirect_block` cell already covers the ownership half inside `vibe check`.
+What remains is a new `CheckId` so the ordinary check report carries the
+freshness verdict too — a report around facts that now exist, and it touches
+the check inventory, the cell oracle and the conform manifests, which is a
+different kind of change from the rest of this phase.
 
 - `[format.cli-check-report]`, epoch **1 → 1**: one new `CheckId` with its finding rows; existing members unchanged.
 - A project that has opted in and whose published prefix is stale, missing its sidecar, or in ownership conflict is reported by the ordinary `vibe check`, at the severity the check inventory assigns, with the exact `vibe prompt build` that would resolve it. A project that has not opted in is not reported at all.
@@ -229,7 +248,20 @@ Status: **delivered 2026-11-10** (phase P3), including the offline check; the `v
 
 ## SP-FMT-105 — `[system_prompt.harness.<name>] delivery` and the router block (Phases 2b, 5, 6)
 
-Status: **the router block delivered 2026-11-10** (phase P2b) — its body, the expected `STATIC` id in it, the entrypoint-size refusal, `vibedeps/` neutralisation and the three `vibe check` findings around them; the `[system_prompt.harness.<name>] delivery` table and the constraints C1–C4 remain **planned** for P5, and `vibe agent` for P6. Design authority: `PROP-076#SYS-HARNESS-DELIVERY` and `#SYS-NO-RECURSION`.
+Status: **the delivery table and the launch tier delivered 2026-11-10** (phase
+P5): `[system_prompt.harness.claude]` joins `[system_prompt.harness.codex]`,
+both carrying `delivery`, with `launch` the default for the two and `read` for
+every other harness name. `import` is refused **at deserialisation**, naming
+its four blockers — following `lane_form`'s precedent, so a project cannot hold
+a setting that parses and is then ignored. A harness in `read` delivery takes
+no flag at all and `vibe prompt flags` says why. What remains planned: the
+constraints C1–C4 beyond the `import` refusal and the one-mode rule, and the
+host-mismatch warning. **And one of this id's own verified claims is
+falsified:** `HARNESS-DELIVERY.md` §5's **[V]** for the Codex profile-file
+carrier does not hold on codex-cli 0.167.0 — `developer_instructions` is not a
+per-profile key there — so the Codex launch tier is implemented as specified
+and does not deliver on that version. See `LOG.md`, 2026-11-10 P5, open issue
+1. Earlier status: **the router block delivered 2026-11-10** (phase P2b) — its body, the expected `STATIC` id in it, the entrypoint-size refusal, `vibedeps/` neutralisation and the three `vibe check` findings around them; the `[system_prompt.harness.<name>] delivery` table and the constraints C1–C4 remain **planned** for P5, and `vibe agent` for P6. Design authority: `PROP-076#SYS-HARNESS-DELIVERY` and `#SYS-NO-RECURSION`.
 
 - `[format.manifest]`, epoch **1 → 1**: a new optional table per harness, omitted when absent. Plus a rewrite of the managed block's body, which changes every `CLAUDE.md` / `AGENTS.md` / `GEMINI.md` in every project — 19 tracked files in this repository.
 - **Three delivery tiers.** `launch` (vibe hands the composed lane to the harness's own system/developer slot through `vibe agent <harness>`, before the first request), `import` (an `@path` line in the managed block), `read` (the router tells the agent to read the files with its tools). Default: `launch` for `claude` and `codex`, `read` for every other harness.
@@ -257,7 +289,26 @@ Status: **the router block delivered 2026-11-10** (phase P2b) — its body, the 
 
 ## SP-FMT-106 — `vibe prompt path`, `vibe prompt flags`, and the build summary line (Phase 5)
 
-Status: **planned** (owner decision 2026-11-10). Design authority: `PROP-076#SYS-OPERATIONS-PATH-AND-FLAGS`.
+Status: **delivered 2026-11-10** (phase P5). Design authority: `PROP-076#SYS-OPERATIONS-PATH-AND-FLAGS`.
+
+- Three records rather than two: `[format.cli-prompt-path]`,
+  `[format.cli-prompt-flags]` and `[format.cli-prompt-build]` — the summary
+  line's own `--json` form, which `vibe prompt build --json` emits and which
+  an install report can carry.
+- **`path` distinguishes absent from stale.** A file that is not there is a
+  refusal naming the build; a stale file exists and is usable, so it is the
+  path on stdout and a warning on stderr. `vibe prompt check` exits non-zero
+  on any verdict but `equal`, so a wrapper cannot read a stale prefix as
+  current.
+- **`flags` writes nothing.** Decision D4 allowed it to write Codex's profile
+  file beside `vibe agent`; it does not, by the narrower rule that a command
+  whose job is to print is a command that prints. Its note names the command
+  that writes the file, and a test asserts `$CODEX_HOME` is untouched by both
+  `flags` and a build.
+- **The install half is a file snapshot.** `vibe install` and `vibe reinstall`
+  read the three artifacts' digests before the regeneration and classify
+  after it, which is how one sentence serves both commands without threading a
+  per-node verdict out of the code that publishes every project's boot.
 
 - `[format.cli-prompt-path]`, epoch **1**, `schema = "schemas/prompt_path.jtd.json"` (new) for the `--json` form; `[format.cli-prompt-flags]`, epoch **1**, argv or JSON. Both `recoverable = true`, `foreign_parsers = "many"` (a shell alias is a consumer).
 - `vibe prompt path [--part lane|system] [--json]` prints the absolute path of a generated artifact. Two parts, because `SP-FMT-102` and `SP-FMT-103` are two artifacts: `lane` is `AGENT-LANE.md`, what a launch or import delivery points at; `system` is the API prefix. `--json` adds size, hash and freshness.
@@ -276,7 +327,7 @@ Status: **delivered 2026-11-10** (phase P4) for the declaration, both severities
 - **Both severities read the declaration** — the write path's refusal and `vibe check`'s near-limit warning are the same `CodexBudget` against the same number, which is what keeps them one measurement rather than two ceilings that drift.
 - **Two new `vibe check` warnings**, in the existing `redirect_block` cell. A declared limit above the default is only real if the Codex that runs has been told, and a Codex started directly rather than through `vibe agent codex` has not — so the warning hands over the exact line (`project_doc_max_bytes = <N>` in `~/.codex/config.toml` or a trusted project's `.codex/config.toml`). And the whole file is measured as well as the block: the authored bytes a session will not see, counted, with the remedy being the boot lane rather than a shorter instruction file.
 - **Verified offline against the real harness.** `codex debug prompt-input` (codex-cli 0.167.0) renders the model-visible prompt input and calls no model. A 43,271-byte `AGENTS.md` with the block at the top: the router canary arrives and the tail canary does not under the default limit; both arrive under `-c project_doc_max_bytes=262144`.
-- P5 carries `vibe agent codex` passing `-c project_doc_max_bytes=<declared>` on every launch — short argv, no file.
+- P5 carries `vibe agent codex` passing `-c project_doc_max_bytes=<declared>` on every launch — short argv, no file. **Delivered 2026-11-10**, and asserted against a shim that records its argv: `-p <profile> -c project_doc_max_bytes=32768` for a project that declares nothing, and the declared value when it does.
 
 ## SP-FMT-108 — the managed block moves to the top of each instruction file (Phases 4, 5)
 
@@ -288,3 +339,51 @@ Status: **delivered 2026-11-10** (phase P4), including this repository's own reg
 - **Measured on this repository.** The authored text of `AGENTS.md` / `CLAUDE.md` / `GEMINI.md` is byte-identical and in the same order after regeneration, with one blank line removed at the old seam and one added at the new one. Files 26,121 → 27,069 bytes (the router block is longer than the text it replaced).
 - **It retires spike S1's measurement**, which recorded the block as the file's own 830-byte tail at offsets 25,291..26,121 — true then, and the reason `#SYS-REDIRECT-IN-PLACE` read well. The prefix's entrypoint segment is unaffected: composition replaces the block wherever it is.
 - **And it changes what D11 measures.** The block's own end is no longer the interesting number — at roughly 2 KB it effectively always fits, and the refusal survives as a guard reachable only by declaring a limit smaller than the block itself. What a truncation costs is authored text, which is the measurement `SP-FMT-107` added.
+
+## SP-FMT-109 — `[launchers.<name>]` in the user configuration, and `vibe agent <launcher>` (Phase 5)
+
+Status: **delivered 2026-11-10** (phase P5). Design authority:
+`PROP-076#SYS-HARNESS-EXECUTABLE`.
+
+- `[format.cli-agent-list]`, epoch **1 → 1**: one new optional `launchers`
+  array, each row naming the launcher, its harness kind, its argv prefix, its
+  config directory and its **source** — built-in or the exact user-config path,
+  because a developer debugging which program ran needs to know which file
+  decided it. Existing members unchanged, and the array is omitted when empty,
+  so an older reader sees the document it already read.
+- **A launcher is a name bound to a kind and to an argv prefix, and only a user
+  may name one.** `vibe agent <launcher> [args…]` resolves the launcher by
+  name, takes its flags and delivery from its kind, and execs `command` + flags
+  + the user's own arguments — on a POSIX host by **replacing** this process,
+  so the harness owns the terminal, the signals and the exit status; on Windows
+  by spawning, waiting and exiting with the child's code.
+- **The built-ins `claude` and `codex` always exist**, each with `kind` equal to
+  its name, and a user launcher of the same name **overrides** the built-in —
+  which is how a personal wrapper takes over the plain name. Any number of
+  launchers may share a kind.
+- **The spelling in the user configuration is `[launchers.<name>]`, not
+  `[agent.launchers.<name>]`.** `PROP-076` writes the latter, and it is
+  unavailable in `<settings>/agents.toml`, whose `[agent.<name>]` tables are
+  already PROP-064 agent definitions — `[agent.launchers]` would be an agent
+  called "launchers". The table is the same path with the file's own root
+  elided. `[agent.launchers.*]` keeps its meaning as the spelling a **project
+  manifest** is refused for, quoted verbatim in that refusal.
+- **A project manifest that names a launcher is a refusal**, asked before the
+  workspace opens: the manifest parser already rejects `[agent]` as an unknown
+  field, and "unknown field `agent`" is not the sentence a contributor needs to
+  read. The refusal lists the launcher names it found and starts nothing.
+- **Three more refusals**, each naming what it read: an unknown launcher name
+  lists the launchers this machine has; an unknown kind quotes
+  `[launchers.<name>] kind` and lists the kinds; and a user argument that would
+  put a second system prompt in the slot (`--append-system-prompt-file`,
+  `--append-system-prompt`, `--system-prompt`, `--system-prompt-file` for
+  Claude Code) is refused rather than passed beside ours.
+- **The lane is recomposed at every launch** from the files then on disk, which
+  is how band U keeps its "current bytes" meaning. A launch prints the same
+  summary line a build does.
+- **A Codex profile name carries no dot.** `org.vibevm.core/vibevm` slugs to
+  `vibe-org-vibevm-core-vibevm`: in a TOML table header a dot is a *nested*
+  path, so `[profiles.vibe-org.vibevm.core-vibevm]` would declare four tables
+  and the profile `-p` asks for would not exist.
+- Tested offline against shims on `PATH` that record their argv. No real
+  `claude` or `codex` is ever started and no model is ever called.

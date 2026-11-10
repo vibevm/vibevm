@@ -993,7 +993,7 @@ the user-cache disagreement that blocked P2b. Three instruction files changed,
 at the new position, with the authored text byte-identical; the other fifteen
 tracked blocks belong to nested projects and package copies.
 
-### P5 — operations: install-time generation and `vibe prompt` — **L**
+### P5 — operations: install-time generation and `vibe prompt` — **L** — **DONE 2026-11-10**
 
 **Goal.** Generation happens inside the paths that already publish boot
 artifacts, and three explicit verbs exist: `build`, `check`, `prepare`. `check`
@@ -1095,6 +1095,37 @@ every project's boot; the golden "a project without the opt-in is byte-identical
 to before" test is the guard, and it goes in first.
 
 **Parallel.** Needs P4.
+
+**As built, 2026-11-10.** Five verbs, not three: `build`, `check`, `prepare`,
+`path`, `flags`, plus `vibe agent <launcher>` and the launcher rows in `vibe
+agent list` — `#SYS-HARNESS-EXECUTABLE` and `#SYS-OPERATIONS-PATH-AND-FLAGS`
+placed those here rather than in P6. Five new formats
+(`cli-prompt-{check,prepare,path,flags,build}`) and one amended
+(`cli-agent-list`, epoch 1 → 1, a new optional `launchers` array).
+
+Three things differ from the plan and each is recorded in `LOG.md` with its
+reason. **`check` calls no analysis entrypoint at all** — it compares the
+sidecar's witnesses against the committed `STATIC.*` and `INDEX.md`, so S5's
+328–342 ms never enters the request path and no provider can be reached even
+on a mismatch; measured **50–80 ms** warm on this repository, and the
+escalation path the risk paragraph asked for is not needed and not built.
+**`prepare` refuses a stale artifact rather than rebuilding one**, because
+`#SYS-READ-ONLY-CHECK` promises no writes. And the **install summary line is a
+file snapshot** taken around the regeneration rather than an outcome threaded
+out of the code that publishes every project's boot.
+
+The two seams P4 left are closed: the pending-native replay composes the
+node's prompt artifacts at preparation time and commits them in its own
+transaction, and publish staging stops **copying** the development tree's
+generated artifacts into a staged package — which was the real defect there,
+not the missing generation.
+
+**One design claim was falsified.** `HARNESS-DELIVERY.md` §5 records as **[V]**
+that a Codex profile file carries `developer_instructions`; on codex-cli
+0.167.0 it does not, proved offline with `codex debug prompt-input`. The
+Codex launch tier is implemented as specified and does not deliver on that
+version; the Claude Code tier is proved against a shim. Owner decision, in
+`LOG.md`'s open issue 1.
 
 ### P6 — adapters: the request envelope and cache diagnostics — **M**
 
