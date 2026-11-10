@@ -52,6 +52,7 @@ title = "Execute the compiler transform schedule"
 state = "candidate"
 zoom = "expanded"
 depends_on = ["COMPILER-4.0"]
+completes_after = ["COMPILER-4.2"]
 mandates = ["M-017"]
 acceptance = ["review complete diff", "run exact affected tests"]
 evidence = ["repo:reports/compiler-transform-candidate.md"]</fence>
@@ -64,7 +65,27 @@ home or trigger.</MANDATE-DISPOSITIONS></p>
 ready | active | candidate | accepted | blocked | deferred | dropped |
 superseded`. `candidate` means implementation exists but central acceptance is
 open. Parents close bottom-up: a parent cannot be `accepted` while a required
-descendant is non-terminal or while its own exit evidence is absent.</NODE-STATES></p>
+descendant is non-terminal, while one of its own `completes_after` gates is
+non-terminal, or while its own exit evidence is absent.</NODE-STATES></p>
+    <p><START-GATE-INHERITED fact="true" status="spec/done">`depends_on` is a
+**start** gate and is inherited: a node cannot start before its own and every
+ancestor's `depends_on` targets are terminal. This is unchanged, so every plan
+written before completion gates existed keeps its exact meaning.</START-GATE-INHERITED></p>
+    <p><COMPLETION-GATES fact="true" status="spec/done">**`completes_after`** is
+an optional per-node string array of node ids and a **completion** gate for that
+node alone. The node cannot become `accepted` while any listed node is
+non-terminal. It is **not inherited**: it does not gate starting, dispatch or
+readiness of the node or of any descendant, and children may start and be
+accepted while the gate is still open. It exists because a parent can owe a
+final step of its own — a design that generalises what its children already
+delivered, a consolidation, a migration of the surface the children built —
+which is a prerequisite of closing that node, not a prerequisite of each child;
+expressing it as `depends_on` would wrongly stall every child. An absent field
+is no gate. Both edge kinds share one acyclicity check, because a start gate and
+a completion gate can deadlock each other, and an unknown id in either is an
+invalid plan. Acceptance of a gated node still needs its evidence, its terminal
+descendants and its inherited start gates. Owner decision 2026-11-10:
+«completes_after делай».</COMPLETION-GATES></p>
   </format>
   <execution-compatibility title="Execution without a plan migration">
     <p><EXECUTION-COMPATIBILITY fact="true" status="spec/done">Working windows,
@@ -94,7 +115,8 @@ represented. Unknown detail is a named refinement node with an explicit trigger
 and boundary, not an omitted region. The plan is complete in coverage and
 progressively precise in execution.</COVERAGE-SKELETON></p>
     <p><DEPENDENCIES-EXPLICIT fact="true" status="spec/done">Every node that
-cannot start independently names `depends_on`; resource, owner-decision and
+cannot start independently names `depends_on`, and every node that cannot close
+until another finishes names `completes_after`; resource, owner-decision and
 external-state gates are first-class nodes. A linear ordering must not hide a
 dependency graph.</DEPENDENCIES-EXPLICIT></p>
   </coverage>

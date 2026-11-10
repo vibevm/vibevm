@@ -41,8 +41,11 @@ external documentation requires separately bound coordination. Read `--help`
 for the current command interface. @status:impl/done
 
 @fact:PARALLEL-SKILL-INTERPRET Inspect `ready`, `active`, `review_queue`,
-`blocked`, `conflicts` and `proposed_batches` in the JSON. Missing paths or
-resource bindings remain unknown. `policy_state` is `requires-binding` and
+`completion_gated`, `blocked`, `conflicts` and `proposed_batches` in the JSON.
+`completion_gated` is acceptance information only: a node's own
+`completes_after` withholds its acceptance and never its start, its dispatch or
+anything about its descendants, so a gated parent's children stay ready.
+Missing paths or resource bindings remain unknown. `policy_state` is `requires-binding` and
 `dispatch_authorized` is always `false`, even when explicit perimeters are
 compatible. Before an authorized dispatch, verify actual source snapshots,
 live writers/jobs, semantic independence, current resource capacity and one

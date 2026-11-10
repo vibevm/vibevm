@@ -54,7 +54,11 @@ standing campaign route. @status:impl/done
 repository state; accepted boundary; candidate/unaccepted work and surviving
 jobs; full remaining
 epic route in compressed form; expanded current frontier; blockers and the
-candidate next atom. Status reporting does not change product work, plan nodes
+candidate next atom. Separate the two dependency kinds when reporting what is
+held up: an unsatisfied `depends_on` blocks a start and is inherited by
+descendants, while an open `completes_after` withholds only that one node's
+acceptance and leaves its children ready. Canon:
+`spec://org.vibevm.world/multi-user-planning/flows/multi-user-planning/plan-hierarchy#COMPLETION-GATES`. Status reporting does not change product work, plan nodes
 or acceptance, or claim custody. Ordinary context resolution may create missing
 documented defaults and refresh stale derived goals as the boot contract
 requires; an explicitly read-only request or valid formal-offer fence instead

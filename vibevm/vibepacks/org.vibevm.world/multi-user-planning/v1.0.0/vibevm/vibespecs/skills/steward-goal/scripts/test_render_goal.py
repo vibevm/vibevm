@@ -438,5 +438,72 @@ class RendererTests(unittest.TestCase):
         self.assertEqual(result["claude_condition_utf16_units"], render_goal.utf16_units(condition))
 
 
+class CompletionGateTests(unittest.TestCase):
+    """`completes_after` is optional, validated, acyclic and never inherited."""
+
+    @staticmethod
+    def node(key: str, **overrides: object) -> dict:
+        row = {
+            "id": key, "parent": "ROOT", "order": 10, "kind": "atom",
+            "title": f"Node {key}", "state": "planned", "zoom": "expanded",
+            "depends_on": [], "mandates": [], "acceptance": ["review"], "evidence": [],
+        }
+        row.update(overrides)
+        return row
+
+    def plan(self, *nodes: dict) -> dict:
+        return {
+            "schema": 1, "plan_id": "gates", "revision": 2, "root_node": "ROOT",
+            "current_node": "ROOT", "mandate": [],
+            "node": [self.node("ROOT", parent="", kind="campaign", order=0,
+                               state="active"), *nodes],
+        }
+
+    def refusal(self, plan: dict) -> str:
+        with self.assertRaises(render_goal.GoalError) as caught:
+            render_goal.validate_plan(plan)
+        self.assertEqual(caught.exception.code, "GOAL_PLAN_INVALID")
+        return str(caught.exception)
+
+    def test_absent_field_keeps_every_older_plan_valid(self) -> None:
+        render_goal.validate_plan(self.plan(self.node("A")))
+        render_goal.validate_plan(self.plan(self.node("A", completes_after=[])))
+
+    def test_declared_gate_must_be_a_string_array_of_known_ids(self) -> None:
+        self.assertIn("must be a string array",
+                      self.refusal(self.plan(self.node("A", completes_after="B"))))
+        self.assertIn("missing completion gates",
+                      self.refusal(self.plan(self.node("A", completes_after=["GHOST"]))))
+        self.assertIn("completes after itself",
+                      self.refusal(self.plan(self.node("A", completes_after=["A"]))))
+
+    def test_start_and_completion_gates_cannot_deadlock_each_other(self) -> None:
+        deadlock = self.plan(self.node("A", depends_on=["B"]),
+                             self.node("B", order=20, completes_after=["A"]))
+        self.assertIn("cycle", self.refusal(deadlock))
+        fine = self.plan(self.node("A", completes_after=["B"]),
+                         self.node("B", order=20, depends_on=[]))
+        render_goal.validate_plan(fine)
+
+    def test_a_gate_is_not_inherited_by_descendants(self) -> None:
+        plan = self.plan(self.node("P", kind="phase", completes_after=["X"]),
+                         self.node("P.1", parent="P"),
+                         self.node("X", order=90))
+        _, _, by_id = render_goal.validate_plan(plan)
+        self.assertEqual(render_goal.completion_gates(by_id["P"]), ["X"])
+        self.assertEqual(render_goal.completion_gates(by_id["P.1"]), [])
+
+    def test_the_route_names_a_declared_gate_and_stays_silent_otherwise(self) -> None:
+        snapshot = {
+            "plan": self.plan(self.node("C", kind="campaign", completes_after=["X"]),
+                              self.node("X", order=90)),
+            "settings": {"goal_node": "C"}, "config": {}, "plan_sha": "0" * 64,
+        }
+        goal = render_goal.render(snapshot)[0].decode("utf-8")
+        self.assertIn("[C] planned — Node C; depends on: none; completes after: X", goal)
+        quiet = dict(snapshot, plan=self.plan(self.node("C", kind="campaign")))
+        self.assertNotIn("completes after", render_goal.render(quiet)[0].decode("utf-8"))
+
+
 if __name__ == "__main__":
     unittest.main()

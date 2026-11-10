@@ -80,7 +80,8 @@ their declaration order. No map/hash iteration order enters output.</ORDER></p>
   candidate is never described as complete merely because bytes exist.</PROJECT-CANDIDATES>
       <PROJECT-ROUTE fact="true" status="spec/done">**Remaining route:** every
   subtree node not in `accepted | dropped | superseded | deferred`, in pre-order,
-  with id, title, state and explicit dependencies. Ancestors remain, so a short
+  with id, title, state and explicit dependencies — its start gates always, and
+  its own completion gates when it declares any. Ancestors remain, so a short
   UI frontier cannot erase distant stages.</PROJECT-ROUTE>
       <PROJECT-DEFERRED fact="true" status="spec/done">**Deferred horizon:**
   deferred subtree nodes, with their acceptance/revisit condition. Dropped and

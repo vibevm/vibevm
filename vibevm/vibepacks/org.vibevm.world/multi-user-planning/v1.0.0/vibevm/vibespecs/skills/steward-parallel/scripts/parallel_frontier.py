@@ -59,6 +59,12 @@ def ancestor_constraints(by_id: dict, key: str) -> list[dict]:
     return result
 
 
+def completion_gates(node: dict) -> list[str]:
+    """This node's own `completes_after` ids; never inherited by descendants."""
+    value = node.get("completes_after")
+    return list(value) if isinstance(value, list) else []
+
+
 def validate_plan(plan: dict) -> tuple[dict, dict, dict]:
     require(type(plan.get("schema")) is int and plan["schema"] == SCHEMA,
             "PLAN_INVALID", "plan schema must be integer 1")
@@ -78,8 +84,11 @@ def validate_plan(plan: dict) -> tuple[dict, dict, dict]:
             cursor = by_id[cursor]["parent"]
             require(cursor in by_id, "PLAN_INVALID", f"node outside root: {key}")
     dependencies = {key: effective_dependencies(by_id, key) for key in by_id}
+    # A completion gate joins the acyclicity check but never the start gates: it
+    # closes its own node, while that node's children start and close freely.
     completion = {
-        key: deps + [child for child in children[key] if by_id[child]["state"] not in WAIVED]
+        key: deps + completion_gates(by_id[key])
+        + [child for child in children[key] if by_id[child]["state"] not in WAIVED]
         for key, deps in dependencies.items()
     }
     try:
@@ -92,6 +101,8 @@ def validate_plan(plan: dict) -> tuple[dict, dict, dict]:
             required = dependencies[key] + children[key]
             require(all(by_id[dep]["state"] in TERMINAL for dep in required),
                     "PLAN_INVALID", f"accepted with open prerequisites/children: {key}")
+            require(all(by_id[gate]["state"] in TERMINAL for gate in completion_gates(node)),
+                    "PLAN_INVALID", f"accepted before its completion gates: {key}")
     return by_id, children, dependencies
 
 
@@ -295,6 +306,11 @@ def analyze(plan: dict, tasks: dict, repo_root: str | Path, bindings: dict | Non
                 reasons.append("ANCESTOR_STATE_SUPPRESSES_DISPATCH")
             blocked.append({"id": key, "state": node["state"], "unsatisfied_dependencies": unmet,
                             "ancestor_constraints": constraints[key], "reasons": reasons})
+    gates = [{"id": key, "state": by_id[key]["state"],
+              "completion_gates": completion_gates(by_id[key]),
+              "unsatisfied_completion_gates": [gate for gate in completion_gates(by_id[key])
+                                               if by_id[gate]["state"] not in TERMINAL]}
+             for key in ordered if completion_gates(by_id[key])]
     needed = set(ready + active)
     if isinstance(bindings, dict) and isinstance(bindings.get("tasks"), list):
         needed.update(row["id"] for row in bindings["tasks"]
@@ -351,6 +367,7 @@ def analyze(plan: dict, tasks: dict, repo_root: str | Path, bindings: dict | Non
                    for key in active],
         "review_queue": review,
         "review_before_expanding": bool(review),
+        "completion_gated": gates,
         "blocked": blocked,
         "conflicts": conflicts,
         "excluded_from_batches": excluded,
@@ -361,6 +378,7 @@ def analyze(plan: dict, tasks: dict, repo_root: str | Path, bindings: dict | Non
             "Batches have no observed path/exclusive-resource collision, not proven independence.",
             "Active nodes are plan observations, not live-worker status or ownership reservations.",
             "Suppressed ancestor states exclude new dispatch; surviving active work and candidates remain visible.",
+            "A completion gate withholds its own node's acceptance; it never gates that node's start, dispatch or descendants.",
             "Unknown or shared resource capacity requires observation; no concurrency limit is inferred.",
             "External documentation and service scopes need explicit intake and coordination.",
         ],

@@ -51,6 +51,14 @@ evidence mechanics that any capable agent or human coordinator can use.
   interaction mode in `user-local-state.xml`. @status:impl/done
 - @fact:CONTENT-PLAN The lossless hierarchical plan and receding-horizon
   planning discipline in `plan-hierarchy.xml`. @status:impl/done
+- @fact:CONTENT-TWO-GATE-KINDS Two dependency kinds in `plan-hierarchy.xml`:
+  the inherited start gate `depends_on`, unchanged, and the optional per-node
+  completion gate `completes_after`, which withholds that one node's acceptance
+  without gating its start, its dispatch or its descendants. It names a parent's
+  own final step — a design that generalises what its children already
+  delivered — without stalling every child. Both kinds share one acyclicity
+  check; an absent field is no gate, so every older plan keeps its exact
+  meaning. @status:impl/done
 - @fact:CONTENT-GOAL The deterministic, user-local goal projection in
   `goal-projection.xml`: one selected campaign node, its governing mandates,
   accepted boundary, candidates, complete remaining route and closure proof;
