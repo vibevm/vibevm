@@ -33,11 +33,23 @@ value	s|@HOME@|<HOME>|g
 value	s|@MIRROR@|<MIRROR>|g
 
 # One version-manager lays its versions out as `versions/node/v22.9.0`, the
-# next as `apps/node/22.9.0`; that is a layout, not an observable. Any path
-# under the tool root collapses to `<TOOLROOT>@v<version>` plus whatever the
-# tool puts after it, so `which_node` and `owned_path` compare as what they
-# are — the directory of a specific version — without either layout winning.
-value	s|<TOOLROOT>[^,;=]*/v?([0-9]+\.[0-9]+\.[0-9]+([-+][0-9A-Za-z.-]+)?)|<TOOLROOT>@v\1|g
+# next as `apps/node/org.vibevm.node.node@22.9.0`; that is a layout, not an
+# observable. Any path under the tool root collapses to `<TOOLROOT>@v<version>`
+# plus whatever the tool puts after it, so `which_node` and `owned_path`
+# compare as what they are — the directory of a specific version — without
+# either layout winning. The version may be a path component of its own
+# (`/v22.9.0`, nvm) or the version half of a coordinate (`@22.9.0`, vibe):
+# both separators end the part that is layout.
+value	s|<TOOLROOT>[^,;=]*[/@]v?([0-9]+\.[0-9]+\.[0-9]+([-+][0-9A-Za-z.-]+)?)|<TOOLROOT>@v\1|g
+
+# --- how a version is spelled --------------------------------------------
+# nvm writes a version `v22.9.0` and vibe writes it `22.9.0`. The `v` is a
+# spelling and not an observable — nvm's own `nvm_version` adds and strips
+# it freely, and `.nvmrc` is read either way — so a leading `v` is dropped
+# wherever a version starts a field or a member of one. The tool-root rule
+# above has already produced `<TOOLROOT>@v…`, whose `v` is part of that
+# placeholder and is left alone because `@` is not a member separator.
+value	s/(^|[,;=|[:space:]])v([0-9]+\.[0-9]+\.[0-9]+)/\1\2/g
 
 # --- colour and timing ---------------------------------------------------
 value	s/\x1B\[[0-9;?]*[a-zA-Z]//g

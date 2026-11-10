@@ -127,22 +127,54 @@ a_installed() {
     printf '%s' "${out:-none}"
 }
 
+# One alias, resolved the way nvm's own `nvm_resolve_alias` resolves it:
+# an alias file may name another alias (`default` -> `lts/*` -> `lts/jod`),
+# and an alias store's internal chaining is nvm's storage, not an
+# observable. What a reader can see is what each name *resolves to*, which
+# is also the only thing the other tool can be asked for.
+a_resolve_alias() { # a_resolve_alias <name>
+    local dir="${OBS_TOOLROOT:-}/alias" value="$1" hops=0
+    while [ -n "$value" ] && [ -f "$dir/$value" ] && [ "$hops" -lt 10 ]; do
+        value="$(tr -d '\n' <"$dir/$value")"
+        hops=$((hops + 1))
+    done
+    printf '%s' "$value"
+}
+
+# Whether this sandbox holds that version installed. nvm's `default` alias
+# survives the uninstall of the version it names, and a default naming a
+# version that is gone provides nothing to a new shell — so the record
+# reports the default this home can actually give, not the string the tool
+# happens to still hold.
+a_is_installed() { # a_is_installed <version>
+    local dir="${OBS_TOOLROOT:-}/versions/node" bare="${1#v}"
+    [ -n "$bare" ] || return 1
+    [ -d "$dir/v$bare" ] || [ -d "$dir/$bare" ]
+}
+
 a_default() {
-    if [ -f "${OBS_TOOLROOT:-}/alias/default" ]; then
-        tr -d '\n' <"${OBS_TOOLROOT:-}/alias/default"
+    local value
+    value="$(a_resolve_alias default)"
+    if [ -n "$value" ] && a_is_installed "$value"; then
+        printf '%s' "$value"
     else
         printf '%s' "$ABSENT"
     fi
 }
 
 a_aliases() {
-    local dir="${OBS_TOOLROOT:-}/alias" rel out=""
+    local dir="${OBS_TOOLROOT:-}/alias" rel name out="" value
     [ -d "$dir" ] || {
         printf '%s' "none"
         return
     }
     while IFS= read -r rel; do
-        out="${out:+$out,}${rel#"$dir"/}=$(tr -d '\n' <"$rel")"
+        name="${rel#"$dir"/}"
+        value="$(a_resolve_alias "$name")"
+        if [ "$name" = default ] && ! a_is_installed "$value"; then
+            continue
+        fi
+        out="${out:+$out,}$name=$value"
     done < <(find "$dir" -type f 2>/dev/null | sort)
     printf '%s' "${out:-none}"
 }
@@ -163,64 +195,105 @@ a_globals() {
 
 # ---------------------------------------------------- sandbox B ----------
 #
-# vibe's own query surface, from the mapping of PROP-075 `#VIBENVM-MAPPING`:
-# `vibe app versions node --installed --json` is nvm's installed list,
-# `vibe app env --json` resolves the active and default version, and
-# `vibe app exec node@<v> -- npm …` reaches one version's own npm. The slot
-# has no named user aliases (they are an owner-approved exclusion), so the
-# `aliases` field reports the channels the slot resolves.
+# vibe's own query surface, read as the documents vibe actually emits:
+# `vibe app list -g --json` (`vibe-app-list/1`) is the home's inventory —
+# which versions of the slot are installed and which one is its default,
+# answered without a registry, a template or a request; `vibe app versions
+# <package> --json` (`vibe-app-versions/1`) carries the channels; and
+# `vibe app exec node@=<v> -- npm …` reaches one version's own npm, the same
+# command sandbox A runs. The slot has no named user aliases (they are an
+# owner-approved exclusion), so the `aliases` field reports the channels the
+# slot resolves, under nvm's own spelling for them.
+#
+# Every version a target names is spelled `=<version>` — vibe's exact-version
+# requirement. A bare `node@22.9.0` is a *requirement*, and would select the
+# newest installed version satisfying it, so an observation taken with it
+# would silently read a different version than the one it asked about.
 
 # Each reader is its own small program over vibe's JSON, so nothing here
 # interprets a field it was not told to read.
-B_VERSIONS_PY='
+B_INSTALLED_PY='
 import json, sys
 data = json.load(sys.stdin)
-print(sys.argv[1].join(sorted(v["version"] for v in data.get("versions", []))) or "none")
+slot = sys.argv[2]
+versions = sorted(
+    row["package"]["version"]
+    for row in data.get("installations", [])
+    if row.get("slot") == slot
+)
+print(sys.argv[1].join(versions) or "none")
 '
 B_DEFAULT_PY='
 import json, sys
 data = json.load(sys.stdin)
-print(data.get("default") or "absent")
+slot = sys.argv[2]
+for row in data.get("installations", []):
+    if row.get("slot") == slot and row.get("default"):
+        print(row["package"]["version"])
+        break
+else:
+    print("absent")
 '
+# nvm keeps one alias file per LTS line plus `lts/*` for the newest line;
+# vibe keeps no alias store at all and computes the same names from the
+# version list, newest first. `lts` is vibe's name for "the newest LTS of
+# any line", which is nvm's `lts/*`, and the two are the one name under two
+# spellings.
 B_CHANNELS_PY='
 import json, sys
 data = json.load(sys.stdin)
-pairs = sorted((data.get("channels") or {}).items())
-print(",".join(f"{name}={target}" for name, target in pairs) or "none")
+rows = []
+for package in data.get("packages", []):
+    for name, targets in (package.get("channels") or {}).items():
+        if not targets:
+            continue
+        rows.append(("lts/*" if name == "lts" else name, targets[0]))
+print(",".join(f"{name}={target}" for name, target in sorted(rows)) or "")
 '
 
-vibe_read() { # vibe_read <python-program> <separator-arg> <vibe args...>
-    local program="$1" separator="$2"
-    shift 2
-    "${VIBE_BIN:?observe.sh: VIBE_BIN is required for sandbox B}" "$@" \
-        --json 2>/dev/null | python3 -I -c "$program" "$separator" 2>/dev/null \
-        || printf '%s' "$ABSENT"
+vibe_bin() { printf '%s' "${VIBE_BIN:?observe.sh: VIBE_BIN is required for sandbox B}"; }
+
+# The home's inventory, read once per field that needs it.
+b_list_read() { # b_list_read <python-program> <separator-arg>
+    "$(vibe_bin)" app list -g --json 2>/dev/null |
+        python3 -I -c "$1" "$2" node 2>/dev/null ||
+        printf '%s' "$ABSENT"
 }
 
-b_installed() {
-    vibe_read "$B_VERSIONS_PY" "," app versions node --installed
-}
+b_installed() { b_list_read "$B_INSTALLED_PY" ","; }
 
-b_default() {
-    vibe_read "$B_DEFAULT_PY" "" app env
-}
+b_default() { b_list_read "$B_DEFAULT_PY" ""; }
 
+# The channels are asked for **offline**, so the observation never makes a
+# request of its own: it reports the names the tool knows from the version
+# list it has already fetched, which is exactly what nvm's alias store is.
+# Before any remote call both tools therefore answer `none`.
 b_aliases() {
-    vibe_read "$B_CHANNELS_PY" "" app versions node
+    local channels default out=""
+    channels="$("$(vibe_bin)" app versions org.vibevm.node/node --json --offline 2>/dev/null |
+        python3 -I -c "$B_CHANNELS_PY" 2>/dev/null)"
+    default="$(b_default)"
+    [ "$default" = "$ABSENT" ] || out="default=$default"
+    [ -z "$channels" ] || out="${out:+$out,}$channels"
+    printf '%s' "${out:-none}"
 }
 
 b_globals() {
     local versions version out=""
-    versions="$(vibe_read "$B_VERSIONS_PY" " " app versions node --installed)"
+    versions="$(b_list_read "$B_INSTALLED_PY" " ")"
     if [ "$versions" = "$ABSENT" ] || [ "$versions" = "none" ]; then
         printf '%s' "$versions"
         return
     fi
+    local one
     for version in $versions; do
-        out="${out:+$out;}$version=$(
-            "$VIBE_BIN" app exec "node@$version" -- npm ls -g --depth 0 --parseable --long \
+        one="$(
+            "$(vibe_bin)" app exec "node@=$version" -- npm ls -g --depth 0 --parseable --long \
                 2>/dev/null | sort | sed -E 's/^.*://' | grep -E '.@.' | paste -sd'|' -
         )"
+        # A version carrying nothing is `none`, as sandbox A spells it: an
+        # empty value and "no global packages" must not read differently.
+        out="${out:+$out;}$version=${one:-none}"
     done
     printf '%s' "${out:-none}"
 }

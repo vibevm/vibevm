@@ -6,14 +6,25 @@ resolving and installing through the LTS channel, and the colour switch that
 `#VIBENVM-MAPPING` maps onto the renderer's own decision. The mirror holds two
 LTS lines (Iron and Jod) and two non-LTS versions, so `--lts` and `--lts=<name>`
 resolve to different things and the difference is observable.
+
+The two whole-list spellings name nvm's own `node` flavour rather than being
+left bare, and that is a decision with a reason. A bare `nvm ls-remote` lists
+"node AND io.js", and nvm then returns the io.js half's status: against this
+suite's empty loopback io.js mirror that is **3**, so the step's exit status
+would be decided entirely by nvm's io.js category — which is an
+owner-approved accepted gap (`#VIBENVM-EXCLUSIONS-APPROVED`: "`iojs` is a dead
+product", so vibe has no category concept at all). Naming the flavour keeps a
+required pair's observable inside the surface both tools have, and covers the
+same pair: `coverage.py` reads flags only from the tokens directly after the
+subcommand, and `node` is not a flag.
 """
 wall_secs = 900
 commands = [
-  "nvm ls-remote",
+  "nvm ls-remote node",
   "nvm ls-remote 22",
   "nvm ls-remote --lts",
   "nvm ls-remote --lts=jod",
-  "nvm ls-remote --no-colors",
+  "nvm ls-remote --no-colors node",
   "nvm version-remote 22",
   "nvm version-remote --lts",
   "nvm ls --no-colors",

@@ -320,11 +320,12 @@ prepare_a() { # prepare_a <dir>
 }
 
 # Sandbox B: its own HOME and `VIBE_SETTINGS`, a remap row that sends
-# nodejs.org to the same loopback mirror (PROP-066 `#locator`), and the
-# `vibenvm` package installed from a local registry.
+# nodejs.org to the same loopback mirror (PROP-066 `#locator`), the local
+# registry declared as this home's own, and the `vibenvm` package installed
+# from it.
 prepare_b() { # prepare_b <dir>
     local dir="$1" vibe="$VIBE_BIN_ARG" registry="$VIBENVM_REGISTRY_ARG"
-    mkdir -p "$dir/project" "$dir/tmp" "$dir/.vibe" || return 1
+    mkdir -p "$dir/project" "$dir/tmp" "$dir/.vibe" "$dir/tool" || return 1
 
     cat >"$dir/.vibe/settings.toml" <<EOF
 # Written by conformance/vibenvm/run.sh for sandbox B. The remap row is the
@@ -353,7 +354,30 @@ EOF
         harness_b "no vibe binary at $vibe (build it with \`cargo build -p vibe-cli\`, or pass --vibe PATH)"
         return 1
     fi
-    env -i HOME="$dir" PATH="$SANDBOX_PATH" TMPDIR="$dir/tmp" \
+
+    # The registry as this home's own `[[registry]]`, not as a flag on one
+    # command: the shim calls `vibe install -g org.vibevm.node/node@…`
+    # exactly as a user's shell would, so the registry has to be configured
+    # rather than passed. A `localdir` registry is the plain directory
+    # layout `<group>/<name>/v<version>/` this suite publishes
+    # (PROP-002 `#registry-type`), and it is a `file://` url, so resolution
+    # reaches no host.
+    cat >"$dir/.vibe/registry.toml" <<EOF
+# Written by conformance/vibenvm/run.sh for sandbox B.
+[[registry]]
+name = "vibenvm-conformance"
+type = "localdir"
+url = "file://$registry"
+ref = "main"
+naming = "fqdn"
+EOF
+
+    # `vibe` on PATH, which is how the shim finds it and how a user has it.
+    # The directory is deliberately **outside** the tool root, so it never
+    # appears in the `owned_path` observation.
+    ln -sf "$vibe" "$dir/tool/vibe" || return 1
+
+    env -i HOME="$dir" PATH="$dir/tool:$SANDBOX_PATH" TMPDIR="$dir/tmp" \
         VIBE_SETTINGS="$dir/.vibe" \
         "$vibe" install -g org.vibevm.node/vibenvm \
         --registry "$registry" >"$dir/install.log" 2>&1 \
@@ -361,10 +385,12 @@ EOF
             harness_b "\`vibe install -g org.vibevm.node/vibenvm\` failed: $(tail -3 "$dir/install.log" | tr '\n' ' ')"
             return 1
         }
+    # The *installed* copy, never the package cache's: both carry the same
+    # bytes, and sourcing the cache would let a failed installation pass.
     local shim
-    shim="$(find "$dir/.vibe" -name 'vibenvm.sh' -type f 2>/dev/null | sort | head -1)"
+    shim="$(find "$dir/.vibe/opt" -name 'vibenvm.sh' -type f 2>/dev/null | sort | head -1)"
     if [ -z "$shim" ]; then
-        harness_b "the installed org.vibevm.node/vibenvm publishes no vibenvm.sh to source under $dir/.vibe"
+        harness_b "the installed org.vibevm.node/vibenvm publishes no vibenvm.sh to source under $dir/.vibe/opt"
         return 1
     fi
     printf '%s\n' "$shim" >"$dir/tool-init"
@@ -426,9 +452,15 @@ write_driver() { # write_driver <compiled-case> <kind> <sandbox-dir> <out-dir> <
 run_driver() { # run_driver <kind> <sandbox-dir> <out-dir> <driver> <wall_secs> <perturb>
     local kind="$1" dir="$2" out="$3" driver="$4" wall="$5" perturb="$6"
     local trace="$out/connect.trace"
+    # Each sandbox's PATH carries its own tool and nothing else: sandbox A
+    # has nvm as a sourced function, sandbox B has `vibe` as a program, and
+    # B's directory for it sits outside the tool root so it never shows up
+    # in the `owned_path` observation.
+    local sandbox_path="$SANDBOX_PATH"
+    [ "$kind" = b ] && sandbox_path="$dir/tool:$SANDBOX_PATH"
     local -a env_common=(
         "HOME=$dir"
-        "PATH=$SANDBOX_PATH"
+        "PATH=$sandbox_path"
         "TERM=dumb"
         "LANG=C"
         "LC_ALL=C"
