@@ -28,6 +28,8 @@ impl Check for RedirectBlockCheck {
         r = 1
     )]
     fn run(&self, project_root: &Path, _opts: &CheckOptions, report: &mut CheckReport) {
+        let limit = declared_codex_limit(project_root);
+        report_raised_limit(limit, report);
         for name in INSTRUCTION_FILES {
             let path = project_root.join(name);
             let content = match fs::read_to_string(&path) {
@@ -43,7 +45,7 @@ impl Check for RedirectBlockCheck {
                 );
                 continue;
             }
-            report_codex_budget(name, &content, report);
+            report_codex_budget(name, &content, limit, report);
         }
         report_discoverable_blocks(project_root, report);
     }
@@ -66,22 +68,75 @@ use discoverable::report_discoverable_blocks;
 /// margin are `vibe-workspace`'s, so there is one measurement rather than a
 /// second copy of a ceiling (owner decision D11,
 /// `PROP-076#SYS-HARNESS-DELIVERY`).
-fn report_codex_budget(name: &str, content: &str, report: &mut CheckReport) {
-    let Some(end) = block_end(content) else {
-        return;
-    };
-    let budget = vibe_workspace::boot_artifacts::CodexBudget::of(end);
-    // The past-the-limit case is a refusal in the writer, so a project can
-    // only reach it by hand-editing; reported here it is still a warning,
-    // because `vibe check` reports and never writes.
-    if let Some(message) = budget.message(name) {
+fn report_codex_budget(name: &str, content: &str, limit: usize, report: &mut CheckReport) {
+    let mut warn = |message: String| {
         report.warn(
             CheckId::RedirectBlock,
             Some(PathBuf::from(name)),
             None,
             message,
         );
+    };
+    if let Some(end) = block_end(content) {
+        let budget = vibe_workspace::boot_artifacts::CodexBudget::against(end, limit);
+        // The past-the-limit case is a refusal in the writer, so a project
+        // can only reach it by hand-editing; reported here it is still a
+        // warning, because `vibe check` reports and never writes. With the
+        // block at the top of the file it is also no longer the interesting
+        // measurement — the next one is.
+        if let Some(message) = budget.message(name) {
+            warn(message);
+        }
     }
+    // The measurement that matters once the block leads: the block always
+    // arrives, and what a truncation costs is authored text at the tail.
+    // Nothing in the prompt says so, which is why it is said here.
+    if let Some(message) =
+        vibe_workspace::boot_artifacts::CodexBudget::whole_file(name, content.len(), limit)
+    {
+        warn(message);
+    }
+}
+
+/// The Codex truncation limit this project declares, or Codex's own default
+/// when it declares none.
+fn declared_codex_limit(project_root: &Path) -> usize {
+    use vibe_core::manifest::Manifest;
+
+    Manifest::read(project_root.join(Manifest::FILENAME))
+        .ok()
+        .and_then(|manifest| manifest.system_prompt)
+        .map_or(
+            vibe_workspace::boot_artifacts::PROJECT_DOC_MAX_BYTES,
+            |section| section.codex_doc_max_bytes(),
+        )
+}
+
+/// A declared limit above Codex's own default only takes effect if the Codex
+/// that runs has been told about it.
+///
+/// `vibe agent codex` passes it on the command line, so a launch through
+/// vibe is covered. A Codex started directly is not, and it says nothing
+/// when it truncates — so the warning names the exact one-line setting that
+/// fixes it rather than describing the problem.
+fn report_raised_limit(limit: usize, report: &mut CheckReport) {
+    let default = vibe_workspace::boot_artifacts::PROJECT_DOC_MAX_BYTES;
+    if limit <= default {
+        return;
+    }
+    report.warn(
+        CheckId::RedirectBlock,
+        None,
+        None,
+        format!(
+            "`[system_prompt.harness.codex] doc_max_bytes` is {limit}, above Codex's own \
+             default of {default}. `vibe agent codex` passes `-c project_doc_max_bytes={limit}` \
+             on every launch, but a Codex started directly reads only the first {default} bytes \
+             of each instruction file and says nothing about it: add \
+             `project_doc_max_bytes = {limit}` to `~/.codex/config.toml`, or to a trusted \
+             project's `.codex/config.toml`."
+        ),
+    );
 }
 
 /// The byte offset just past a well-formed managed block's last byte, or
@@ -264,33 +319,107 @@ mod tests {
     }
 
     /// The instruction-file truncation budget, reported at the one offset
-    /// that matters: where the block ends.
+    /// that matters: where the block ends. Reachable now only by declaring
+    /// a limit the block itself does not fit under, because the block leads
+    /// the file.
     #[test]
-    fn a_block_near_the_instruction_file_limit_is_a_warning() {
+    fn a_block_near_the_declared_limit_is_a_warning() {
         let project = tempdir().unwrap();
         write_minimal_project(project.path());
-        let limit = vibe_workspace::boot_artifacts::PROJECT_DOC_MAX_BYTES;
-        let margin = vibe_workspace::boot_artifacts::PROJECT_DOC_WARN_MARGIN;
         let block = "<vibevm>\nrouter\n</vibevm>\n";
-        let padding = "x".repeat(limit - margin - block.len());
-        fs::write(
-            project.path().join("AGENTS.md"),
-            format!("{padding}\n{block}"),
-        )
-        .unwrap();
+        fs::write(project.path().join("AGENTS.md"), block).unwrap();
+        // A limit just above the block's own end puts it in the margin.
+        declare_limit(project.path(), block.len() + 1);
 
         let report = check_project(project.path(), &opts());
         let found = report
             .findings
             .iter()
-            .find(|f| f.check == CheckId::RedirectBlock)
+            .find(|f| f.check == CheckId::RedirectBlock && f.message.contains("ends at byte"))
             .unwrap_or_else(|| panic!("got: {:?}", report.findings));
         assert_eq!(found.severity, Severity::Warning);
         assert!(
-            found.message.contains("within 4 KB") && found.message.contains("32768"),
+            found.message.contains("within 4 KB")
+                && found
+                    .message
+                    .contains("[system_prompt.harness.codex] doc_max_bytes"),
             "{}",
             found.message
         );
+    }
+
+    /// The measurement that matters once the block leads: authored text at
+    /// the tail that a Codex session will not see, counted in bytes, with
+    /// the remedy being the boot lane rather than a shorter file.
+    #[test]
+    fn authored_text_past_the_declared_limit_is_a_warning_naming_the_lost_bytes() {
+        let project = tempdir().unwrap();
+        write_minimal_project(project.path());
+        let content = format!("<vibevm>\nrouter\n</vibevm>\n\n{}\n", "x".repeat(4_000));
+        fs::write(project.path().join("AGENTS.md"), &content).unwrap();
+        declare_limit(project.path(), 1_000);
+
+        let report = check_project(project.path(), &opts());
+        let found = report
+            .findings
+            .iter()
+            .find(|f| f.check == CheckId::RedirectBlock && f.message.contains("do not"))
+            .unwrap_or_else(|| panic!("got: {:?}", report.findings));
+        assert_eq!(found.severity, Severity::Warning);
+        let lost = content.len() - 1_000;
+        assert!(
+            found.message.contains(&format!("last {lost} bytes"))
+                && found.message.contains("boot lane"),
+            "{}",
+            found.message
+        );
+    }
+
+    /// A limit above Codex's own default is only real if the Codex that runs
+    /// has been told, so the warning hands over the exact line.
+    #[test]
+    fn a_raised_limit_names_the_one_line_a_direct_codex_needs() {
+        let project = tempdir().unwrap();
+        write_minimal_project(project.path());
+        fs::write(
+            project.path().join("AGENTS.md"),
+            "<vibevm>\nrouter\n</vibevm>\n",
+        )
+        .unwrap();
+        declare_limit(project.path(), 262_144);
+
+        let report = check_project(project.path(), &opts());
+        let found = report
+            .findings
+            .iter()
+            .find(|f| f.check == CheckId::RedirectBlock && f.message.contains("above Codex's own"))
+            .unwrap_or_else(|| panic!("got: {:?}", report.findings));
+        assert_eq!(found.severity, Severity::Warning);
+        assert!(
+            found.message.contains("project_doc_max_bytes = 262144")
+                && found.message.contains("~/.codex/config.toml")
+                && found.message.contains("-c project_doc_max_bytes=262144"),
+            "{}",
+            found.message
+        );
+    }
+
+    /// Append `[system_prompt.harness.codex] doc_max_bytes` to the fixture's
+    /// manifest, with the authored template its presence requires.
+    fn declare_limit(root: &std::path::Path, limit: usize) {
+        let boot = root.join(vibe_core::layout::current_boot_dir());
+        fs::create_dir_all(&boot).unwrap();
+        fs::write(
+            boot.join(vibe_core::layout::SYSTEM_TEMPLATE_MD),
+            "# frame\n",
+        )
+        .unwrap();
+        let manifest = root.join("vibe.toml");
+        let mut text = fs::read_to_string(&manifest).unwrap();
+        text.push_str(&format!(
+            "\n[system_prompt.harness.codex]\ndoc_max_bytes = {limit}\n"
+        ));
+        fs::write(&manifest, text).unwrap();
     }
 
     #[test]

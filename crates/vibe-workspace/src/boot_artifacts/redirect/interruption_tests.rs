@@ -133,6 +133,7 @@ impl SwitchFixture {
             write_redirect_blocks_with_transaction(
                 &self.root,
                 &RouterFacts::undeclared(direction.next()),
+                PROJECT_DOC_MAX_BYTES,
                 transaction,
             )
         })
@@ -221,6 +222,7 @@ fn each_redirect_error_keeps_selectors_live_and_retry_converges_both_directions(
                     write_redirect_blocks_with_faults(
                         &fixture.root,
                         &RouterFacts::undeclared(direction.next()),
+                        PROJECT_DOC_MAX_BYTES,
                         transaction,
                         &ErrorAfter(after),
                     )
@@ -275,6 +277,7 @@ fn redirect_child_helper() {
         write_redirect_blocks_with_faults(
             &fixture.root,
             &RouterFacts::undeclared(direction.next()),
+            PROJECT_DOC_MAX_BYTES,
             transaction,
             &ExitAfter(after),
         )

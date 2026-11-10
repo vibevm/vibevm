@@ -247,14 +247,23 @@ pub fn render_neutralised_block() -> String {
 /// by default — **with no notice in the rendered prompt**, measured by
 /// `HARNESS-DELIVERY.md` §5 against a 40 KB file whose tail canary simply
 /// vanished.
-pub const PROJECT_DOC_MAX_BYTES: usize = 32 * 1024;
+///
+/// It is Codex's *default*, not a law: a user's `~/.codex/config.toml` or a
+/// trusted project's `.codex/config.toml` may raise it, and `vibe agent
+/// codex` passes the declared value on the command line. So this constant is
+/// what a project is measured against when it declares nothing, and the
+/// declaration — `[system_prompt.harness.codex] doc_max_bytes` — is what it
+/// is measured against otherwise (owner decision 2026-11-10, which amends
+/// D11's constant into a default).
+pub use vibe_core::manifest::CODEX_DOC_MAX_BYTES_DEFAULT as PROJECT_DOC_MAX_BYTES;
 
-/// How close to [`PROJECT_DOC_MAX_BYTES`] the block's end may come before the
+/// How close to the declared limit the block's end may come before the
 /// budget is reported as a warning (owner decision D11).
 pub const PROJECT_DOC_WARN_MARGIN: usize = 4 * 1024;
 
-/// Where an instruction file's managed block sits against Codex's silent
-/// truncation limit (owner decision D11).
+/// Where an instruction file's managed block sits against the Codex
+/// truncation limit the project declares (owner decision D11, amended
+/// 2026-11-10 so the limit is the declared one).
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum CodexBudget {
     /// The block ends well inside the limit.
@@ -265,22 +274,58 @@ pub enum CodexBudget {
     Near {
         /// Byte offset just past the block's last byte.
         end: usize,
+        /// The limit this was measured against.
+        limit: usize,
     },
     /// The block's last byte lies past the limit, so a Codex session boots
     /// without the block at all and nothing says so. A refusal, not a note.
+    ///
+    /// Since the block sits at the **top** of the file it is reachable only
+    /// by declaring a limit smaller than the block itself, which is why the
+    /// refusal survives as a guard rather than as a thing projects meet.
     Truncated {
         /// Byte offset just past the block's last byte.
         end: usize,
+        /// The limit this was measured against.
+        limit: usize,
     },
 }
 
 impl CodexBudget {
-    /// Classify the file content `content` whose managed block ends at `end`.
+    /// Classify a managed block ending at `end` against Codex's default
+    /// limit — the measurement for a project that declares none.
+    ///
+    /// ```
+    /// use vibe_workspace::boot_artifacts::{CodexBudget, PROJECT_DOC_MAX_BYTES};
+    ///
+    /// assert_eq!(CodexBudget::of(2_048), CodexBudget::Fits);
+    /// assert!(matches!(
+    ///     CodexBudget::of(PROJECT_DOC_MAX_BYTES + 1),
+    ///     CodexBudget::Truncated { .. }
+    /// ));
+    /// ```
     pub fn of(end: usize) -> Self {
-        if end > PROJECT_DOC_MAX_BYTES {
-            CodexBudget::Truncated { end }
-        } else if end + PROJECT_DOC_WARN_MARGIN > PROJECT_DOC_MAX_BYTES {
-            CodexBudget::Near { end }
+        Self::against(end, PROJECT_DOC_MAX_BYTES)
+    }
+
+    /// Classify a managed block ending at `end` against the limit the
+    /// project declares.
+    ///
+    /// ```
+    /// use vibe_workspace::boot_artifacts::CodexBudget;
+    ///
+    /// // A raised limit makes a block that would be near the default fit.
+    /// assert_eq!(CodexBudget::against(30_000, 262_144), CodexBudget::Fits);
+    /// assert!(matches!(
+    ///     CodexBudget::against(30_000, 32_768),
+    ///     CodexBudget::Near { .. }
+    /// ));
+    /// ```
+    pub fn against(end: usize, limit: usize) -> Self {
+        if end > limit {
+            CodexBudget::Truncated { end, limit }
+        } else if end + PROJECT_DOC_WARN_MARGIN > limit {
+            CodexBudget::Near { end, limit }
         } else {
             CodexBudget::Fits
         }
@@ -293,23 +338,45 @@ impl CodexBudget {
     /// reports the `Near` case as a warning, and a reader comparing the two
     /// messages should see the same measurement.
     pub fn message(self, name: &str) -> Option<String> {
-        let (end, verdict) = match self {
+        let (end, limit, verdict) = match self {
             CodexBudget::Fits => return None,
-            CodexBudget::Near { end } => (
+            CodexBudget::Near { end, limit } => (
                 end,
-                "is within 4 KB of it — a few more authored paragraphs would push the \
+                limit,
+                "is within 4 KB of it — a few more generated lines would push the \
                  block out of a Codex session's prompt",
             ),
-            CodexBudget::Truncated { end } => (
+            CodexBudget::Truncated { end, limit } => (
                 end,
+                limit,
                 "is past it, so a Codex session reads this file truncated, loses the \
                  block entirely, and is told nothing",
             ),
         };
         Some(format!(
-            "the managed `<vibevm>` block of `{name}` ends at byte {end}, and Codex \
-             truncates a project instruction file at {PROJECT_DOC_MAX_BYTES} bytes: that {verdict}. \
-             Move authored text out of this file, or shorten it."
+            "the managed `<vibevm>` block of `{name}` ends at byte {end}, and a Codex session \
+             truncates a project instruction file at {limit} bytes: that {verdict}. Raise \
+             `[system_prompt.harness.codex] doc_max_bytes`, or shorten the block."
+        ))
+    }
+
+    /// What a Codex session will not see of a whole instruction file, or
+    /// `None` when the file fits.
+    ///
+    /// A separate measurement from the block's, and the one that matters now
+    /// that the block sits at the top: the block always arrives, and what is
+    /// lost is authored text at the tail. The remedy is not "shorten the
+    /// file" but "put the rules where a session actually reads them" — the
+    /// boot lane, which is read by file and is not truncated at all.
+    pub fn whole_file(name: &str, len: usize, limit: usize) -> Option<String> {
+        let lost = len.checked_sub(limit).filter(|lost| *lost > 0)?;
+        Some(format!(
+            "`{name}` is {len} bytes and a Codex session truncates a project instruction file \
+             at {limit}: the managed `<vibevm>` block is at the top and arrives whole, but the \
+             last {lost} bytes of authored text do not, and nothing in the prompt says so. \
+             Move those rules into the boot lane — `vibevm/vibespecs/boot/00-core.*` or \
+             `90-user.*`, which a session reads as files and no harness truncates — or raise \
+             `[system_prompt.harness.codex] doc_max_bytes`."
         ))
     }
 }

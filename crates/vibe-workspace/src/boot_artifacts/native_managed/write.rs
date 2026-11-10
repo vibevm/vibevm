@@ -144,6 +144,19 @@ fn write_boot_artifacts_owner_managed_using<P: OwnerNativeCompileProvider>(
     }
     // One generation, one set of router facts — the same rule as the builtin
     // seam, which is why the facts are a value and not a second rendering.
+    // The Codex truncation limit this node declares — the block is measured
+    // against the declaration rather than against a constant, because the
+    // limit is the harness's setting and a project may raise it
+    // (`[system_prompt.harness.codex] doc_max_bytes`).
+    let codex_limit = prompt.map_or(redirect::PROJECT_DOC_MAX_BYTES, |prompt| {
+        prompt
+            .manifest
+            .system_prompt
+            .as_ref()
+            .map_or(redirect::PROJECT_DOC_MAX_BYTES, |section| {
+                section.codex_doc_max_bytes()
+            })
+    });
     let router = redirect::RouterFacts {
         node_id: redirect::router_node_id(prompt.map(|prompt| prompt.manifest), self_coord),
         static_hash12: static_bytes.map(crate::system_prompt::segment_hash12),
@@ -174,7 +187,12 @@ fn write_boot_artifacts_owner_managed_using<P: OwnerNativeCompileProvider>(
         },
         control.as_ref(),
         |transaction| {
-            redirect::write_redirect_blocks_with_transaction(node_dir, &router, transaction)
+            redirect::write_redirect_blocks_with_transaction(
+                node_dir,
+                &router,
+                codex_limit,
+                transaction,
+            )
         },
     )?;
     let static_lane = compiled.as_ref().map(|_| static_path);

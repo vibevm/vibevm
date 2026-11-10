@@ -179,20 +179,23 @@ fn the_codex_budget_has_three_verdicts_with_one_measurement() {
     assert_eq!(
         CodexBudget::of(PROJECT_DOC_MAX_BYTES - PROJECT_DOC_WARN_MARGIN + 1),
         CodexBudget::Near {
-            end: PROJECT_DOC_MAX_BYTES - PROJECT_DOC_WARN_MARGIN + 1
+            end: PROJECT_DOC_MAX_BYTES - PROJECT_DOC_WARN_MARGIN + 1,
+            limit: PROJECT_DOC_MAX_BYTES,
         }
     );
     assert_eq!(
         CodexBudget::of(PROJECT_DOC_MAX_BYTES),
         CodexBudget::Near {
-            end: PROJECT_DOC_MAX_BYTES
+            end: PROJECT_DOC_MAX_BYTES,
+            limit: PROJECT_DOC_MAX_BYTES,
         },
         "the limit itself is the last offset that survives"
     );
     assert_eq!(
         CodexBudget::of(PROJECT_DOC_MAX_BYTES + 1),
         CodexBudget::Truncated {
-            end: PROJECT_DOC_MAX_BYTES + 1
+            end: PROJECT_DOC_MAX_BYTES + 1,
+            limit: PROJECT_DOC_MAX_BYTES,
         }
     );
     assert!(CodexBudget::Fits.message("AGENTS.md").is_none());

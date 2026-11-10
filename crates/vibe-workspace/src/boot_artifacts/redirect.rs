@@ -214,6 +214,7 @@ fn write_managed_block(path: &Path) -> Result<Option<PathBuf>, WorkspaceError> {
     write_managed_block_for(
         path,
         &RouterFacts::undeclared(SpecFormat::Mixed),
+        PROJECT_DOC_MAX_BYTES,
         "redirecttest",
     )
 }
@@ -221,6 +222,7 @@ fn write_managed_block(path: &Path) -> Result<Option<PathBuf>, WorkspaceError> {
 fn write_managed_block_for(
     path: &Path,
     facts: &RouterFacts,
+    limit: usize,
     transaction: &str,
 ) -> Result<Option<PathBuf>, WorkspaceError> {
     let existing = match safe_file::read_optional(path).map_err(|error| io_err(path, error))? {
@@ -238,7 +240,7 @@ fn write_managed_block_for(
             reason,
         }
     })?;
-    refuse_over_budget(path, &new_content)?;
+    refuse_over_budget(path, &new_content, limit)?;
     if existing.as_deref() == Some(new_content.as_str()) {
         return Ok(None);
     }
@@ -256,7 +258,7 @@ fn write_managed_block_for(
 /// `vibe check`'s — over the same [`CodexBudget`] classification, which
 /// makes the two severities one measurement read twice rather than two
 /// limits that can drift.
-fn refuse_over_budget(path: &Path, content: &str) -> Result<(), WorkspaceError> {
+fn refuse_over_budget(path: &Path, content: &str, limit: usize) -> Result<(), WorkspaceError> {
     let BlockLocation::Present { end, .. } = locate_block(content) else {
         return Ok(());
     };
@@ -264,7 +266,7 @@ fn refuse_over_budget(path: &Path, content: &str) -> Result<(), WorkspaceError> 
         .file_name()
         .and_then(|name| name.to_str())
         .unwrap_or("the instruction file");
-    let budget = CodexBudget::of(end);
+    let budget = CodexBudget::against(end, limit);
     match budget {
         CodexBudget::Truncated { .. } => Err(WorkspaceError::MalformedRedirectBlock {
             path: path.to_path_buf(),
@@ -298,6 +300,18 @@ pub fn write_redirect_blocks_for(
     node_dir: &Path,
     facts: &RouterFacts,
 ) -> Result<Vec<PathBuf>, WorkspaceError> {
+    write_redirect_blocks_bounded(node_dir, facts, PROJECT_DOC_MAX_BYTES)
+}
+
+/// Write the managed redirects of one node, measuring the block against the
+/// Codex limit the node's own manifest declares
+/// (`[system_prompt.harness.codex] doc_max_bytes`, default
+/// [`PROJECT_DOC_MAX_BYTES`]).
+pub fn write_redirect_blocks_bounded(
+    node_dir: &Path,
+    facts: &RouterFacts,
+    limit: usize,
+) -> Result<Vec<PathBuf>, WorkspaceError> {
     let boot_dir = node_dir.join(vibe_core::layout::current_boot_dir());
     let nonce = std::time::SystemTime::now()
         .duration_since(std::time::UNIX_EPOCH)
@@ -305,16 +319,17 @@ pub fn write_redirect_blocks_for(
         .as_nanos();
     let transaction = format!("redirect{}{nonce}", std::process::id());
     super::transaction::with_boot_lock(&boot_dir, || {
-        write_redirect_blocks_with_transaction(node_dir, facts, &transaction)
+        write_redirect_blocks_with_transaction(node_dir, facts, limit, &transaction)
     })
 }
 
 pub(super) fn write_redirect_blocks_with_transaction(
     node_dir: &Path,
     facts: &RouterFacts,
+    limit: usize,
     transaction: &str,
 ) -> Result<Vec<PathBuf>, WorkspaceError> {
-    write_redirect_blocks_with_faults(node_dir, facts, transaction, &NoRedirectFault)
+    write_redirect_blocks_with_faults(node_dir, facts, limit, transaction, &NoRedirectFault)
 }
 
 trait RedirectFaultInjector {
@@ -332,13 +347,14 @@ impl RedirectFaultInjector for NoRedirectFault {
 fn write_redirect_blocks_with_faults(
     node_dir: &Path,
     facts: &RouterFacts,
+    limit: usize,
     transaction: &str,
     faults: &impl RedirectFaultInjector,
 ) -> Result<Vec<PathBuf>, WorkspaceError> {
     let mut written = Vec::new();
     for (index, name) in REDIRECT_FILES.iter().enumerate() {
         let path = node_dir.join(name);
-        if let Some(path) = write_managed_block_for(&path, facts, transaction)? {
+        if let Some(path) = write_managed_block_for(&path, facts, limit, transaction)? {
             written.push(path);
         }
         faults.after_replace(index, &path)?;

@@ -432,6 +432,19 @@ fn write_boot_artifacts_inner(
     // shared with the prefix's prospective entrypoint witness: the block the
     // selector writes and the bytes the witness records must be the same
     // bytes (PROP-076 `#SYS-PROSPECTIVE-ENTRYPOINT`).
+    // The Codex truncation limit this node declares — the block is measured
+    // against the declaration rather than against a constant, because the
+    // limit is the harness's setting and a project may raise it
+    // (`[system_prompt.harness.codex] doc_max_bytes`).
+    let codex_limit = prompt.map_or(redirect::PROJECT_DOC_MAX_BYTES, |prompt| {
+        prompt
+            .manifest
+            .system_prompt
+            .as_ref()
+            .map_or(redirect::PROJECT_DOC_MAX_BYTES, |section| {
+                section.codex_doc_max_bytes()
+            })
+    });
     let router = RouterFacts {
         node_id: redirect::router_node_id(prompt.map(|prompt| prompt.manifest), self_coord),
         static_hash12: static_artifact
@@ -463,7 +476,12 @@ fn write_boot_artifacts_inner(
             prompt: prompt_payload(&publication),
         },
         |transaction| {
-            redirect::write_redirect_blocks_with_transaction(node_dir, &router, transaction)
+            redirect::write_redirect_blocks_with_transaction(
+                node_dir,
+                &router,
+                codex_limit,
+                transaction,
+            )
         },
     )?;
     let static_lane = static_artifact.map(|_| static_path);
