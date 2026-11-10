@@ -807,3 +807,49 @@ Design authority: `spec://org.vibevm.core/vibevm/common/PROP-050#WEAK-EDGES-ARE-
   runs no expansion at all and reports each reference as skipped **naming the flag**; a
   recommendation is never a root, never written into the user's `[requires]`, and never grants
   friendship. `vibe update` / `vibe reinstall` keep their own documents unchanged.
+
+## AV-FMT-106 — a version file's value is a switcher's value; `--write-version-file` on `vibe app env`; a version pattern on `vibe app versions` (the four shortfalls the nvm shim found)
+
+Status: **delivered 2026-11-11.** The campaign's close-out: `BACKLOG.md#b-262`…`#b-265`, found by
+P7f's shim and closed as one design rather than four patches, on the owner's requirement that the
+answer be «general for any SDK switcher, nvm parity proven». Design authority:
+`spec://org.vibevm.core/vibevm/common/PROP-075#VERSION-FILE-VALUE` (new),
+`#VERSION-FILE-FORMATS`, `#VERSION-FILE-WRITE` and `#VERSIONS-LIST-OUTPUT` (amended).
+
+- **Behaviour change, no format moves: a declared version file's value now means what every
+  switcher's version file means** (`#VERSION-FILE-VALUE`). A value that is a complete version
+  (`22.9.0`, `v`-prefix and semver pre-release included) selects exactly that version; a partial
+  one (`22.9`, `22`) selects the newest version whose components begin with it; a channel keeps
+  its channel meaning; every other spelling keeps the `semver::VersionReq` meaning it had. It
+  binds both formats — `plain` and `keyed`, so `.tool-versions` and `.sdkmanrc` with it — and
+  every reader: the activation behind `vibe app env` and the prompt hook, `vibe app exec` with no
+  `@VER`, and `vibe install -g` with no version. **The two readings that change:** a file holding
+  `22.9.0` selected the newest 22.x and now pins 22.9.0; a file holding `22.9` reached into 22.10
+  and now stays inside 22.9. The user recipe is to write the requirement meant (`^22.9.0`, `^22.9`),
+  which is unchanged. **The CLI spelling is deliberately untouched** — `SLOT@VER`, `PKG@VER` and
+  `--use SLOT=VER` stay requirements, and `@=22.9.0` is the pin — so no manifest, lock, index or
+  recorded requirement changes meaning. The resolution cache
+  (`vibe-app-version-file-cache/1`, `<home>/cache/version-files.json`) stores the **authored**
+  value and re-reads it by the same rule, so a cache hit and a cold read cannot disagree; a cache
+  written before this reads back with the new meaning, which is the intended one, and a cache is
+  never a reason to refuse.
+- **`vibe install -g <group>/<name>` with no version consults the declared version file**, by the
+  discovery an activation already uses: the home's own `vibe-app-version-files/1` sidecar, so no
+  new document and no new resolution order. The deciding file and the requirement it produced are
+  one stderr line in every mode. A spelling carrying an `@` is never second-guessed, and a home
+  with no provider of that slot keeps today's behaviour. No format record moves.
+- **`[format.cli-application-env]`** (`schemas/application_env.jtd.json`, `vibe-app-env/1`),
+  epoch **1 → 1**, additive: new optional `versionFile` object with `path` and `version`, the
+  same shape `vibe-application-command-report/2` and the alternatives listing already carry for
+  `AV-FMT-019`. Present only when `--write-version-file` was given and wrote; a reader that
+  ignores it sees exactly what it saw before. The flag's third home is
+  `vibe app env --use <slot>=<version> --write-version-file[=PATH]`, which changes the shell and
+  the file and **not** the slot default; it needs exactly one `--use`, and the five shapes it
+  cannot answer for are usage refusals naming the flag.
+- **`vibe app versions PACKAGE|SLOT [PATTERN]`** — one new positional, read by the rule above, over
+  the installed listing and the available one, the human rows and `--json`, applied before the
+  limit so `total` / `shown` / `more` describe the narrowed set. An `@VER` suffix on the target is
+  the same filter, which is the spelling that used to be accepted and ignored. New refusal code
+  `bad_version_pattern` in the `VERSIONS` family, and a channel the package does not declare is
+  the existing `unknown_channel` whether `--channel` or the pattern named it; `schemas/application_versions.jtd.json` is
+  **unchanged**, because the filter narrows rows the document already had.
