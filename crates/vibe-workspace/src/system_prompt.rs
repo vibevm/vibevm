@@ -50,6 +50,9 @@ mod check;
 mod compose;
 #[path = "system_prompt/contract.rs"]
 mod contract;
+#[cfg(test)]
+#[path = "system_prompt/docs_example.rs"]
+mod docs_example;
 #[path = "system_prompt/harness.rs"]
 mod harness;
 #[cfg(test)]
