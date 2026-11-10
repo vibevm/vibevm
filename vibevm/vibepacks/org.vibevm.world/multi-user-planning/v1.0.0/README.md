@@ -81,11 +81,26 @@ evidence mechanics that any capable agent or human coordinator can use.
 - @fact:CONTENT-MIGRATION The composition and migration rules for projects
   leaving `wal`/`wal-specspaces`, including the redbook exclusion recipe, in
   `migration-and-composition.xml`. @status:impl/done
-- @fact:CONTENT-SKILLS Four optional agent skills: status-only orientation,
-  explicit same-machine formal handoff, deterministic goal refresh, and
+- @fact:CONTENT-PLAN-DISPLAY The display vocabulary every viewer of a plan
+  shares, in `plan-hierarchy.xml`: the fixed state-to-bucket map that keeps
+  `candidate` («Сделано · ждёт приёмки») distinct from `accepted`, the
+  leaf-descendant counting rule, and the law that a rendered tree is derived
+  navigation carrying the validator's verdict. @status:spec/done
+- @fact:CONTENT-SKILLS Five optional agent skills: status-only orientation,
+  explicit same-machine formal handoff, deterministic goal refresh,
   `steward-parallel` for a read-only JSON frontier with readiness, conflicts,
-  candidate batches and review backlog. They are not `vibe.exe` commands.
+  candidate batches and review backlog, and `steward-tree` for a static offline
+  HTML tree of any conformant plan. They are not `vibe.exe` commands.
   @status:impl/done
+- @fact:CONTENT-TREE A generic plan viewer in
+  `vibevm/vibespecs/skills/steward-tree`: `render_tree.py --plan <plan.toml>
+  --out <dir> [--watch]` writes a self-contained `index.html` plus
+  `plan-tree.json` atomically, with no network, no build step and no
+  project-specific layer. It shows the node tree, the full state vocabulary in
+  display buckets, per-parent leaf counts, typed dependency edges and their
+  reverse direction, acceptance, evidence, mandates, unknown extra fields, and
+  the plan validator's verdict with per-node warnings. Plan text is rendered as
+  data, never as markup. @status:impl/done
 
 ## Authority boundary {#authority}
 

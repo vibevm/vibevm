@@ -149,4 +149,34 @@ with a three-row projection must read the authoritative plan before declaring
 scope or completion. “I finished the plan shown by the UI” is not a closure
 argument.</NO-THREE-STEP-STOP></p>
   </projection>
+  <display title="8. Tree display vocabulary">
+    <p><TREE-DISPLAY-BUCKETS fact="true" status="spec/done">**Display buckets.**
+A viewer maps each node state onto exactly one display bucket: `accepted` →
+accepted; `candidate` → candidate; `active` → active; `ready` → ready;
+`planned` → planned; `blocked` → blocked; `deferred` → deferred; `dropped` and
+`superseded` → closed; any other value → unknown. `accepted` and `candidate`
+never share a bucket or a label: implemented and accepted are different facts,
+so a candidate is named as done-awaiting-acceptance and never as done. A closed
+bucket is named as closed without completion. An unknown value is reported as a
+validation warning naming the node, never displayed as a readiness the plan does
+not state. Buckets are presentation only: they add no node state, no ordering
+and no authority.</TREE-DISPLAY-BUCKETS></p>
+    <p><TREE-LEAF-COUNTING fact="true" status="spec/done">**Counting rule.**
+Every per-parent count is taken over that parent's leaf descendants only. A leaf
+is a node with no children; it counts exactly once, in the bucket of its own
+state. A parent's own state is never counted in its own totals and no node is
+counted twice, so a parent's buckets always sum to its leaf-descendant total and
+the root totals equal the plan's leaf count. Collapsing, filtering and searching
+change what is displayed, never a count. Counts are arithmetic over states: they
+are not progress, not acceptance and not closure evidence.</TREE-LEAF-COUNTING></p>
+    <p><TREE-VIEWER-IS-DERIVED fact="true" status="spec/done">**A viewer is
+derived navigation.** A rendered tree is a projection like the linear projection
+above: it is written outside the plan, never read back as state, and introduces
+no node field, state or ordering of its own. It renders the verdict of this
+package's own plan validator, so a drawn tree cannot contradict the tools; nodes
+still render under a failing verdict, because an invalid plan is exactly what
+needs looking at. Dependencies are shown as typed edges, which lets a plan carry
+more than one dependency kind without changing this display law. Reference
+viewer: `spec://org.vibevm.world/multi-user-planning/skills/steward-tree#root`.</TREE-VIEWER-IS-DERIVED></p>
+  </display>
 </spec>
