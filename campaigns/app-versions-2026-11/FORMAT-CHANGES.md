@@ -10,7 +10,11 @@ Design authority for all of it: `spec://org.vibevm.core/vibevm/common/PROP-075#F
 planning; a phase fills its own. Ids from **`AV-FMT-101`** up are for a format a phase turned
 out to need and the plan did not foresee, so two phases running concurrently cannot pick the
 same number. P5a's own unforeseen records are `AV-FMT-101` and `AV-FMT-102`; P2's are
-`AV-FMT-021`…`AV-FMT-024`, taken from the planning range below 100 because P2 owns it.
+`AV-FMT-021`…`AV-FMT-024`, taken from the planning range below 100 because P2 owns it. The owner's
+decisions of 2026-11-10 redesigned phase P7 into six phases, and the formats they need are
+`AV-FMT-025`…`AV-FMT-032`, also taken from the planning range because the plan now foresees them;
+`AV-FMT-019` (`--write-version-file`) is **amended in place** rather than renumbered, because it is
+the same flag on the same two commands, now carrying both version-file formats.
 
 ## AV-FMT-001 — `[package] template` and the `[template]` table (Phase 1)
 
@@ -371,11 +375,16 @@ that owns `describe`'s document; recorded in `PROP-075#P6-AS-BUILT`. The record 
 - `[format.cli-application-describe]`, `schemas/application_describe.jtd.json`, epoch **1 → 1**. One optional member; existing documents byte-identical.
 - Optional `template { revision, produced, rendered_sha256 }` on the described package, so a graphical tool or an agent can see that the manifest it is reading was rendered and from what, plus the installer-option rows dropped by `template_optional` with the version and the missing file.
 
-## AV-FMT-019 — `--write-version-file` on `vibe app use` and `vibe install -g` (Phase 7)
+## AV-FMT-019 — `--write-version-file` on `vibe app use` and `vibe install -g` (Phase 7a)
 
-Status: **planned**.
+Status: **planned; amended 2026-11-10** by the owner's generalisation decision, which carries it to
+both version-file formats rather than `plain` alone. Design authority:
+`spec://org.vibevm.core/vibevm/common/PROP-075#VERSION-FILE-WRITE`.
 
-- No wire format. One new flag on two existing commands: it writes the resolved version into the slot's declared `plain` version file (AV-FMT-011) in the current project. This is the general feature behind nvm's `--save` / `-w`, and it exists because a version manager that reads a version file should be able to write it. It refuses to write through a symbolic link and refuses when the slot declares no `plain` version file, naming both.
+- No wire format. One new flag, `--write-version-file[=PATH]`, on two existing commands: it writes the **resolved** version — never the requirement or the channel the user typed — into the slot's declared version file, in either the `plain` or the `keyed` format (`AV-FMT-025`). This is the general feature behind nvm's `--save` / `-w`, and it exists because a version manager that reads a version file should be able to write it.
+- **Which file.** Without a value: the nearest file the `AV-FMT-011` search already found, in the directory it was found in; with no such file, the first `names` entry of the first declared row, created in the project root inside a project and in the working directory otherwise. With a value: exactly that path, whose format is decided by matching its file name against the declared `names` of every row — a path matching none is a refusal naming the path and the declared names.
+- **How each format is written.** `plain` writes the one line and nothing else. `keyed` is an **in-place edit of one line**: every other line — other keys, comments, blank lines, unknown content, the file's own line endings — is preserved byte-for-byte, the key's line is rewritten in the file's own declared separator with the spacing it had, an absent key is appended as the last line, and an absent file is created holding that one line. That is what lets two slots write one `.sdkmanrc` without either destroying the other's answer.
+- Refusals, all before any write: a path that is a symbolic link, naming it; a slot whose package declares no version file at all, naming the slot and the package; a `keyed` file carrying the key's line twice, naming both line numbers.
 
 ## AV-FMT-020 — the vibenvm conformance suite's authored documents (Phase 7)
 
@@ -500,3 +509,93 @@ document.
 - `<home>/cache/app-migrate/` is the one new directory: a migration work directory is **never**
   replaced by a later run, because it is the evidence of what was and was not carried, so each run
   of a pair takes its own timestamp and `--resume` takes the newest.
+
+## AV-FMT-025 — `[[application.version_file]] format = "keyed"` (Phase 7a)
+
+Status: **not delivered.** Design authority:
+`spec://org.vibevm.core/vibevm/common/PROP-075#VERSION-FILE-KEYED`.
+
+- `[format.manifest]` (`schema = "none"`, authored TOML), epoch **1 → 1**. Optional and omitted when absent.
+- A third `format` value beside `plain` and `tool-versions`. A `keyed` row carries `names` (an ordered array of file names), `key` (this package's key in the file), and the line syntax from a closed vocabulary: `separator` ∈ {`equals`, `whitespace`, `colon`} (no default — the author states it), `comment` ∈ {`hash` (default), `semicolon`, `none`}, and `extra` ∈ {`refuse` (default), `first`} for a line carrying more than one value after the key.
+- **`tool-versions` becomes the short spelling of exactly one `keyed` row** — `separator = "whitespace"`, `comment = "hash"`, `extra = "first"` — expanded before anything reads a file, so there is one reader and one writer and the two spellings cannot drift. The old spelling keeps working byte-for-byte.
+- Reading joins the precedence of `AV-FMT-011` unchanged, with two rules the shape forces: a line whose key is not this package's is **ignored and not reported** (another slot's key in a shared file is not a defect), and a key the home has no installed package for is likewise ignored. One file may therefore resolve several slots at once, each from its own key — which is why the format exists (`.sdkmanrc`, `.tool-versions`, `mise.toml`).
+- Refusals, each naming its TOML path: an unknown `separator` / `comment` / `extra` value; a `keyed` row with no `key`; a `keyed` row with no `separator`.
+- No wire change: `vibe-app-version-files/1` (`AV-FMT-101`) and `vibe-app-version-file-cache/1` (`AV-FMT-102`) already carry a declared row's fields as declared.
+
+## AV-FMT-026 — `[[application.ecosystem]]` and `[[application.ecosystem.recommends]]` (Phase 7b)
+
+Status: **not delivered.** Design authority:
+`spec://org.vibevm.core/vibevm/common/PROP-075#ECOSYSTEM-ADAPTER` and `#ECOSYSTEM-RECOMMENDS`.
+
+- `[format.manifest]` (`schema = "none"`, authored TOML), epoch **1 → 1**. Both tables optional and omitted when absent, so every existing manifest serialises byte-identically.
+- New `[[application.ecosystem]]` rows: `id` (an opaque token — vibe never interprets it), `name`, optional `description`, optional `migration` (boolean, default `true`), and the verbs `install` (required), `list`, `remove`, `self_upgrade`. Each verb is **exactly one `StepDecl`** restricted to `kind = "recipe" | "shell"`, `kind` required — the restriction `AV-FMT-015` already imposes on a migration side, for the same reason.
+- **`install` and `remove` must be `kind = "recipe"`**: items are appended to the step's argv as separate elements and are never interpolated into a command string, and a `shell` step is a command *string* into which a list could only be spliced. A `shell` `install` or `remove` is a validation refusal naming the field and the reason. That is what makes the injection rule structural rather than a style note.
+- New `[[application.ecosystem.recommends]]` rows: `ecosystem` (an id the package declares), `id` (a stable token), `item` (an opaque string), `default` (boolean), optional `name` / `reason`. Each row **synthesises one `[[installer_options.features]]` row with that `id` and `default` in every installer option of the package**, so `--feature` / `--no-feature`, the attended multi-select, declared profiles and the recorded chosen set (PROP-065 `#features`) all apply with no new vocabulary.
+- Refusals, each naming its TOML path: two `[[application.ecosystem]]` rows with one `id`; an `id` that is not a token; an `[[application.ecosystem]]` with no `install`; a recommends row naming an undeclared `ecosystem`; a recommends `id` colliding with an authored feature of any option; a migration entry whose `id` is in the reserved `ecosystem:` namespace.
+- New environment for an adapter verb's child, beside the ones PROP-065 `#templates` passes: `VIBE_ECOSYSTEM_ID`, `VIBE_ECOSYSTEM_ITEMS` (one item per line), `VIBE_ECOSYSTEM_ITEM_COUNT`, and `VIBE_ECOSYSTEM_LIST` (the file a `list` verb writes, one item per line). `VIBE_OUT` is **not** set and `$out` is not expandable: an adapter produces no payload.
+
+## AV-FMT-027 — `vibe-app-ecosystem/1`, the adapter run record (Phase 7b)
+
+Status: **not delivered.** Design authority:
+`spec://org.vibevm.core/vibevm/common/PROP-075#ECOSYSTEM-ADAPTER`.
+
+- New format `[format.cli-application-ecosystem]`, `schemas/application_ecosystem.jtd.json`, epoch **new, 1**, protocol tag `vibe-app-ecosystem/1`.
+- Written as `<work>/ecosystem.json` in the run's own work directory `<home>/cache/app-ecosystem/<slot>/<version>/<timestamp>/`, which is kept on success and on failure as a migration's is, and is listed and cleaned by `vibe app work` exactly as `AV-FMT-103` does for a migration.
+- Carries, per run: the slot, the installation key, the adapter id, the verb, the items asked for (verbatim, opaque), the outcome, the per-verb log path, and for a `list` verb the items observed.
+- `recoverable = true`: it is evidence of a run, and a lost record costs one re-run, never an error.
+
+## AV-FMT-028 — `~/.vibe/config.toml` `[slot.<slot>.extras.<ecosystem>]` (Phase 7c)
+
+Status: **not delivered.** Design authority:
+`spec://org.vibevm.core/vibevm/common/PROP-075#SLOT-EXTRAS`.
+
+- `[format.user-config]` (`schema = "none"`, authored TOML), epoch **1 → 1**. `UserConfig` is `deny_unknown_fields`, so the new top-level `[slot]` table must be added to the struct or a user who writes it gets a parse error.
+- `[slot.<slot>.extras.<ecosystem>]` carries `add` (an array of opaque items) and `drop` (an array of **recommendation ids**, not items — dropping is opting out of a named author recommendation).
+- **This is the first user-authored per-slot configuration in vibe**, and `crates/vibe-app/` reads no user config at all today, so the phase introduces that read as a new seam.
+- An unknown slot, an unknown ecosystem id or an unknown recommendation id is **reported once and otherwise ignored**, never an error: a hand-written settings file outlives the packages it mentions.
+- Two new flags on `vibe install -g` / `vibe update -g`: `--no-extras` (skip the user's own `add` list) and `--no-recommends` (skip the author's recommendations of both kinds — `AV-FMT-030`). A `drop` is honoured in every case, including under `--no-extras`, because a flag that declines extras must never cause **more** to be installed than the user asked for.
+- New command family `vibe app extras list|apply|add|drop|remove|self-upgrade|import`, whose `--json` answer is `AV-FMT-029`'s `vibe-app-extras/1`.
+
+## AV-FMT-029 — `vibe-app-extras/1` and the inventory's adapter record and weak edge (Phase 7c/7d)
+
+Status: **not delivered.** Design authority:
+`spec://org.vibevm.core/vibevm/common/PROP-075#SLOT-EXTRAS`, `#ECOSYSTEM-ADAPTER`, and
+`spec://org.vibevm.core/vibevm/common/PROP-077#APP-RECOMMENDS-MECHANICS`.
+
+- New format `[format.cli-application-extras]`, `schemas/application_extras.jtd.json`, epoch **new, 1**, protocol `vibe-app-extras/1`: the answer of `vibe app extras list --json` — per ecosystem, the author recommendations with their enabled state, the user's `add` and `drop`, the computed final list, and the last observed list with its time.
+- `[format.application-index]` moves **6 → 7** (`schemas/application/e7/index.jtd.json`, a new generation beside `e1..e6`), protocol tag `vibe-user-applications/8`. `Installation` gains (a) one record per declared adapter — the last applied list, the last observed list and their times and outcomes — and (b) the **weak** attribute on the requirer edge PROP-065 `#uninstall-tree` already carries, which is the whole of the new state a recommended application needs.
+- The writer still writes **the lowest protocol that carries what the home retains**, the ladder `AV-FMT-017` established, so a home with no adapter record and no weak edge keeps writing `/7`.
+- `vibe-app-proxy` must admit `/8` and answer `--supports-index` for it, which PROP-059 `#proxy-index-upgrade` requires of every generation.
+- A weak edge never blocks a removal in either direction; an installation with no strong and no weak requirer left is an orphan for `vibe app autoremove`, and one the user installed by name stays `manual` and is never autoremoved.
+
+## AV-FMT-030 — `--no-recommends`, a global flag, and `[recommends]` on the application plane (Phase 7d)
+
+Status: **not delivered.** Design authority:
+`spec://org.vibevm.core/vibevm/common/PROP-077#NO-RECOMMENDS-FLAG`, `#APP-RECOMMENDS`, `#SUGGESTS-UNCHANGED`.
+
+- **No manifest change at all**: `[recommends]` and `[suggests]` already exist and already parse for every package-role manifest. This is a reach change, not a grammar change.
+- New global flag `--no-recommends`, declared once beside `--offline` and `--refresh`. Honoured by `vibe install` / `update` of a project (the solver's greedy weak expansion is not run), `vibe install -g` / `update -g` and an application install into a project home (the recommendation walk is not entered), `vibe reinstall` of either plane, and the **ecosystem** recommendations of `AV-FMT-026`. On a command that neither solves nor installs it is a usage refusal naming the flag.
+- **No lock field and no epoch step for the flag**: a project lock already records a recommended package as a non-root graph member, so a lock-replaying install is unaffected and the flag changes a solve, never a replay. There is deliberately no `--with-recommends` and no persisted setting.
+- `[format.cli-install-report]` (`schemas/install_report.jtd.json`), epoch **1 → 1**: optional `recommended[]` (installed), `skipped[]` (with the reason — not an app, no option for this platform, unsatisfiable, not carried, install failed) and `suggested[]` (reported, never installed). Existing members unchanged.
+- A failed recommended install never changes the exit status of the install the user asked for.
+
+## AV-FMT-031 — `[[extension]]` at a `slot:` point gains `title`, `when`/`unless`, `needs`, `optional` (Phase 7e)
+
+Status: **not delivered.** Design authority:
+`spec://org.vibevm.core/vibevm/common/PROP-065#ordinary-reach` and the four facts beside it;
+`spec://org.vibevm.core/vibevm/common/PROP-054#SLOT-CONTRIBUTION-JUDGMENT`.
+
+- `[format.manifest]` (`schema = "none"`, authored TOML), epoch **1 → 1**. Four optional fields on an `[[extension]]` row, omitted when absent, so every existing manifest serialises byte-identically. `[hooks]` keeps working verbatim as the one-contribution short spelling it already is.
+- `title` (the human line a plan and a panel print), `when` / `unless` (PROP-065 `#conditions`' closed vocabulary, with `feature` and `param` reading the **package-scope** configuration PROP-069 `#AUTHORED-DEFINITIONS` already admits for every kind), `needs` (PROP-065 `#needs`, checked for every contribution that will run before anything starts, refusing the package's installation up front), `optional`.
+- **No widening of `[[installer_options]]`**: its two refusals (`requires [application] identity`, `requires [package] kind = app`) stay, and PROP-065 `#ordinary-reach` now records why — an installer option is a per-platform alternative that produces a payload, which an ordinary package has not got.
+- Fields refused **by name** on a `slot:` contribution rather than ignored: `requires` (the application dependencies of PROP-065 `#app-dependencies`), `phase` (the point already is the moment), `result`, and any template variable of `$out`, `$sources`, `$app_root` or `$app_bin`.
+- Failure keeps PROP-020's law: a failing `slot:pre-install` aborts that package's install and rolls the slot back; a failing `slot:post-install` leaves it installed and flagged. There is no `--resume` and no `--from-step` on this plane; the retry is `vibe reinstall <group>/<name>`.
+
+## AV-FMT-032 — `vibe-install-steps/1`, the ordinary package's step evidence, and `vibe app describe`'s adapters (Phase 7e/7b)
+
+Status: **not delivered.** Design authority:
+`spec://org.vibevm.core/vibevm/common/PROP-065#ordinary-plan`;
+`spec://org.vibevm.core/vibevm/common/PROP-075#ECOSYSTEM-ADAPTER`.
+
+- New format `[format.install-steps]`, `schemas/install_steps.jtd.json`, epoch **new, 1**, protocol `vibe-install-steps/1`: written as `steps.json` in `<home>/cache/install-steps/<group>/<name>/<version>/<timestamp>/`, one row per `slot:` contribution with its `id`, handler kind, outcome, reason and start/finish times, beside `logs/<id>.log`. `recoverable = true`; it is derived evidence, listed and cleaned by the ordinary cache surface, and nothing resumes from it.
+- `[format.cli-application-describe]` (`schemas/application_describe.jtd.json`), epoch **1 → 1**: optional `ecosystems[]` carrying the declared adapters (id, name, which verbs are declared) and, per adapter, the last applied and last observed item lists from `AV-FMT-029`'s record — so a GUI or an agent can say what a version carries without running anything. Independent of the still-undelivered `AV-FMT-018`, which is the template provenance in the same document.
