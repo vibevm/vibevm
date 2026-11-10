@@ -173,6 +173,131 @@ fn a_line_is_a_requirement_or_a_channel_and_a_requirement_is_tried_first() {
 }
 
 // ---------------------------------------------------------------------------
+// the switcher semantics of a version file's value
+// ---------------------------------------------------------------------------
+
+#[test]
+#[specmark::spec(verifies = "spec://org.vibevm.core/vibevm/common/PROP-075#VERSION-FILE-VALUE")]
+fn a_version_files_complete_version_pins_itself_and_a_partial_one_is_a_prefix() {
+    // The pin: as many components as a version has selects that version and
+    // nothing else, which is what a file `--write-version-file` wrote must
+    // keep meaning once a newer minor is installed.
+    for (value, want) in [
+        ("22.9.0", "=22.9.0"),
+        ("v22.9.0", "=22.9.0"),
+        (" 22.9.0 ", "=22.9.0"),
+        ("22.0.0-rc.1", "=22.0.0-rc.1"),
+    ] {
+        let parsed = VersionRequest::parse_in_version_file(value).unwrap();
+        assert_eq!(parsed.spec().unwrap().to_string(), want, "{value}");
+        assert_eq!(parsed.authored, value.trim());
+        assert!(
+            parsed
+                .spec()
+                .unwrap()
+                .matches(&semver::Version::parse(want.trim_start_matches('=')).unwrap())
+        );
+    }
+    // The prefix: fewer components select the newest version that begins
+    // with them.
+    for (value, want) in [("22.9", "~22.9"), ("22", "^22"), ("v22", "^22")] {
+        let parsed = VersionRequest::parse_in_version_file(value).unwrap();
+        assert_eq!(parsed.spec().unwrap().to_string(), want, "{value}");
+    }
+    // A full version no longer selects a newer one, and a minor prefix no
+    // longer leaks into the next minor — the two behaviour changes.
+    let pinned = VersionRequest::parse_in_version_file("22.9.0").unwrap();
+    assert!(
+        !pinned
+            .spec()
+            .unwrap()
+            .matches(&semver::Version::parse("22.11.0").unwrap())
+    );
+    let minor = VersionRequest::parse_in_version_file("22.9").unwrap();
+    assert!(
+        minor
+            .spec()
+            .unwrap()
+            .matches(&semver::Version::parse("22.9.7").unwrap())
+    );
+    assert!(
+        !minor
+            .spec()
+            .unwrap()
+            .matches(&semver::Version::parse("22.11.0").unwrap())
+    );
+    // A channel keeps its channel meaning, and every other spelling the
+    // requirement meaning it already had.
+    for channel in ["lts", "lts/jod", "latest", "stable"] {
+        let parsed = VersionRequest::parse_in_version_file(channel).unwrap();
+        assert_eq!(parsed.channel(), Some(channel));
+        assert_eq!(parsed.spelling(), channel);
+    }
+    for (value, want) in [
+        ("^22", "^22"),
+        (">=20, <23", ">=20, <23"),
+        ("22.x", "22.*"),
+        ("=22.9.0", "=22.9.0"),
+        ("*", "*"),
+    ] {
+        let parsed = VersionRequest::parse_in_version_file(value).unwrap();
+        assert_eq!(parsed.spec().unwrap().to_string(), want, "{value}");
+    }
+    // The spelling a surface taking a requirement would have to be handed
+    // round-trips to the same selection, which is what `vibe install -g`
+    // with no version relies on.
+    assert_eq!(
+        VersionRequest::parse_in_version_file("22.9.0")
+            .unwrap()
+            .spelling(),
+        "=22.9.0"
+    );
+    assert_eq!(
+        VersionRequest::parse_in_version_file("22")
+            .unwrap()
+            .spelling(),
+        "^22"
+    );
+    // A `SLOT@VER` command line is untouched: there a full version is still
+    // a requirement, because the user is asking vibe to resolve.
+    assert_eq!(
+        VersionRequest::parse("22.9.0")
+            .unwrap()
+            .spec()
+            .unwrap()
+            .to_string(),
+        "^22.9.0"
+    );
+    // Nothing is a version file's value, and an unusable one still refuses.
+    assert!(VersionRequest::parse_in_version_file("   ").is_err());
+    assert!(VersionRequest::parse_in_version_file("LTS").is_err());
+}
+
+#[test]
+#[specmark::spec(verifies = "spec://org.vibevm.core/vibevm/common/PROP-075#VERSION-FILE-VALUE")]
+fn the_switcher_semantics_reach_the_plain_and_the_keyed_reader_alike() {
+    let dir = tempfile::tempdir().unwrap();
+    fs::write(dir.path().join(".nvmrc"), "22.9.0\n").unwrap();
+    fs::write(dir.path().join(".tool-versions"), "nodejs 22.9\n").unwrap();
+    let declared = declared(&[
+        ("node", plain(&[".nvmrc"])),
+        ("tool", VersionFileDecl::tool_versions("nodejs")),
+    ]);
+    let found = search(dir.path(), None, &declared);
+    assert_eq!(
+        found.of_slot("node").unwrap().request.spelling(),
+        "=22.9.0",
+        "a plain file's complete version pins it"
+    );
+    assert_eq!(
+        found.of_slot("tool").unwrap().request.spelling(),
+        "~22.9",
+        "a keyed file's partial value is a prefix"
+    );
+    assert!(found.faults.is_empty(), "{:?}", found.faults);
+}
+
+// ---------------------------------------------------------------------------
 // the upward search
 // ---------------------------------------------------------------------------
 

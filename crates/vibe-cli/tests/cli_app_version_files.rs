@@ -259,6 +259,89 @@ fn app_use_writes_the_nearest_file_and_a_bare_flag_creates_the_first_name() {
 }
 
 #[test]
+#[specmark::spec(verifies = "spec://org.vibevm.core/vibevm/common/PROP-075#VERSION-FILE-VALUE")]
+fn a_written_version_file_pins_what_it_recorded_and_decides_a_bare_install() {
+    let r = AppRegistry::new();
+    runtime(&r, "alpha", "alpha", "1.0.0");
+    runtime(&r, "alpha", "alpha", "1.1.0");
+    install(&r, "org.example/alpha@1.1.0", &[]);
+    let dir = project(&r, "pin");
+    let registry = r.registry();
+
+    // `vibe install -g` with no version: the nearest declared file decides,
+    // and the install says which one did (`B-262`).
+    fs::write(dir.join(".alpharc"), "1.0.0\n").unwrap();
+    let output = r.vibe_in(
+        &dir,
+        &[
+            "install",
+            "-g",
+            "org.example/alpha",
+            "--registry",
+            registry.to_str().unwrap(),
+            "--offline",
+            "--unattended",
+            "--json",
+        ],
+    );
+    let said = String::from_utf8_lossy(&output.stderr).into_owned();
+    let report = json(&output);
+    assert_eq!(
+        report["installation"], "org.example/alpha@1.0.0",
+        "the file asks for 1.0.0, not the newest: {report:#}"
+    );
+    assert!(
+        said.contains(".alpharc") && said.contains("=1.0.0"),
+        "the install must name the file that decided: {said}"
+    );
+
+    // And the file keeps pinning what `--write-version-file` recorded, with
+    // a newer version installed beside it (`B-265`).
+    assert_eq!(
+        selection(&env_in(&r, &dir), "alpha")["key"],
+        "org.example/alpha@1.0.0"
+    );
+    // A partial value is a prefix: `1.0` is still 1.0.0, `1` is the newest
+    // of the major.
+    fs::write(dir.join(".alpharc"), "1.0\n").unwrap();
+    assert_eq!(
+        selection(&env_in(&r, &dir), "alpha")["key"],
+        "org.example/alpha@1.0.0"
+    );
+    fs::write(dir.join(".alpharc"), "1\n").unwrap();
+    assert_eq!(
+        selection(&env_in(&r, &dir), "alpha")["key"],
+        "org.example/alpha@1.1.0"
+    );
+
+    // The command line is untouched: `SLOT=VER` stays a requirement, so a
+    // bare `1.0.0` there still resolves to the newest that satisfies it.
+    let document = json(&r.vibe_in(&dir, &["app", "env", "--json", "--use", "alpha=1.0.0"]));
+    assert_eq!(
+        selection(&document, "alpha")["key"],
+        "org.example/alpha@1.1.0",
+        "a command line's `1.0.0` is a requirement, never a pin: {document:#}"
+    );
+
+    // A spelling that already carries a version is never second-guessed.
+    fs::write(dir.join(".alpharc"), "1.0.0\n").unwrap();
+    let report = json(&r.vibe_in(
+        &dir,
+        &[
+            "install",
+            "-g",
+            "org.example/alpha@=1.1.0",
+            "--registry",
+            registry.to_str().unwrap(),
+            "--offline",
+            "--unattended",
+            "--json",
+        ],
+    ));
+    assert_eq!(report["installation"], "org.example/alpha@1.1.0");
+}
+
+#[test]
 #[specmark::spec(verifies = "spec://org.vibevm.core/vibevm/common/PROP-075#VERSION-FILE-WRITE")]
 fn every_write_refusal_lands_before_a_byte_is_written() {
     let r = AppRegistry::new();

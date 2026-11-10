@@ -333,11 +333,15 @@ pub fn install(
     let settings = settings_root()?;
     let proxy_image = proxy_image()?;
     let source_operation = source_operation(args.source_policy.declaration())?;
+    // With no version named, the nearest declared version file decides, as
+    // `#VERSION-FILE-FORMATS`' precedence puts it directly below an explicit
+    // requirement, and the install says which file did.
+    let spelling = super::version_file::install_spelling(ctx, &settings, &args.packages[0]);
     let resolved = resolve_package_with_operation(
         &settings,
         args.registry.as_deref(),
         embedded_root.as_deref(),
-        &args.packages[0],
+        &spelling,
         offline,
         &source_operation,
     )?;

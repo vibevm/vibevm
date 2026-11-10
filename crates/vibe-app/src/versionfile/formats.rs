@@ -93,12 +93,117 @@ impl VersionRequest {
         }
     }
 
+    /// Read one **version file's** value, with the semantics every switcher
+    /// gives such a file (PROP-075 `#VERSION-FILE-VALUE`): a value that is
+    /// a complete version selects exactly that version, a partial value
+    /// selects the newest version matching that prefix, a channel name keeps
+    /// its channel meaning, and anything else is the ordinary requirement
+    /// this vibe already read.
+    ///
+    /// This is **not** what a command line means. `SLOT@VER` and
+    /// `--use SLOT=VER` stay requirements, read by [`Self::parse`]: a user
+    /// typing `@22.9.0` is asking vibe to resolve, where a file holding
+    /// `22.9.0` is recording what was chosen.
+    ///
+    /// ```
+    /// use vibe_app::VersionRequest;
+    ///
+    /// // A complete version pins exactly itself, `v` prefix and all.
+    /// let pinned = VersionRequest::parse_in_version_file("22.9.0").unwrap();
+    /// assert_eq!(pinned.spec().unwrap().to_string(), "=22.9.0");
+    /// assert_eq!(
+    ///     VersionRequest::parse_in_version_file("v22.9.0").unwrap().spec().unwrap().to_string(),
+    ///     "=22.9.0"
+    /// );
+    /// // A partial value is the newest of that prefix.
+    /// assert_eq!(
+    ///     VersionRequest::parse_in_version_file("22.9").unwrap().spec().unwrap().to_string(),
+    ///     "~22.9"
+    /// );
+    /// assert_eq!(
+    ///     VersionRequest::parse_in_version_file("22").unwrap().spec().unwrap().to_string(),
+    ///     "^22"
+    /// );
+    /// // A channel keeps its channel meaning, and anything else its own.
+    /// assert_eq!(VersionRequest::parse_in_version_file("lts/jod").unwrap().channel(), Some("lts/jod"));
+    /// assert_eq!(
+    ///     VersionRequest::parse_in_version_file(">=20, <23").unwrap().spec().unwrap().to_string(),
+    ///     ">=20, <23"
+    /// );
+    /// ```
+    pub fn parse_in_version_file(text: &str) -> Result<Self, String> {
+        let authored = text.trim().to_owned();
+        if authored.is_empty() {
+            return Err("empty version request".to_owned());
+        }
+        match prefix_select(&authored) {
+            Some(spec) => Ok(Self {
+                authored,
+                kind: RequestKind::Spec(spec),
+            }),
+            None => Self::parse(&authored),
+        }
+    }
+
     /// The version requirement this request names, if any.
     pub fn spec(&self) -> Option<&VersionSpec> {
         match &self.kind {
             RequestKind::Spec(spec) => Some(spec),
             RequestKind::Channel(_) => None,
         }
+    }
+
+    /// The spelling a command surface would have to be given to mean this
+    /// request: the canonical requirement (`=22.9.0`, `~22.9`, `^22`) or the
+    /// channel name. This is what lets a surface that resolves a version
+    /// **file** hand the answer to one that takes a requirement without
+    /// either side re-deciding what the file meant.
+    pub fn spelling(&self) -> String {
+        match &self.kind {
+            RequestKind::Spec(spec) => spec.to_string(),
+            RequestKind::Channel(name) => name.clone(),
+        }
+    }
+}
+
+/// The switcher rule of PROP-075 `#VERSION-FILE-VALUE`, over a value that
+/// is nothing but a dotted run of digits (with an optional leading `v` and
+/// an optional semver pre-release or build on a complete version): as many
+/// components as a version has pins it exactly, fewer select the newest
+/// version with that prefix. `None` for every other spelling, which keeps
+/// its own meaning.
+fn prefix_select(authored: &str) -> Option<VersionSpec> {
+    let bare = authored
+        .strip_prefix('v')
+        .filter(|rest| rest.starts_with(|c: char| c.is_ascii_digit()))
+        .unwrap_or(authored);
+    // A complete version — every component a package's versions have —
+    // selects exactly that version.
+    if semver::Version::parse(bare).is_ok() {
+        return req(&format!("={bare}"));
+    }
+    // A partial value selects the newest version whose components begin
+    // with it: `~22.9` is `22.9.*` and `^22` is `22.*.*`.
+    let fields: Vec<&str> = bare.split('.').collect();
+    if !fields
+        .iter()
+        .all(|field| !field.is_empty() && field.bytes().all(|byte| byte.is_ascii_digit()))
+    {
+        return None;
+    }
+    match fields.as_slice() {
+        [_] => req(&format!("^{bare}")),
+        [_, _] => req(&format!("~{bare}")),
+        _ => None,
+    }
+}
+
+fn req(spelling: &str) -> Option<VersionSpec> {
+    match VersionSpec::parse(spelling) {
+        Ok(spec @ VersionSpec::Req(_)) => Some(spec),
+        // A field that overflows `u64` is not a version prefix; the value
+        // keeps the meaning the ordinary parser gives it.
+        _ => None,
     }
 }
 

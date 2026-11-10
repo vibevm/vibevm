@@ -154,7 +154,10 @@ fn from_wire(entry: &wire::Entry) -> Option<Search> {
         found.push(Found {
             slot: selection.slot.clone(),
             path: PathBuf::from(&selection.path),
-            request: VersionRequest::parse(&selection.authored).ok()?,
+            // Re-read with the same version-file semantics the search
+            // used, so a cache hit and a cold read cannot disagree
+            // (PROP-075 `#VERSION-FILE-VALUE`).
+            request: VersionRequest::parse_in_version_file(&selection.authored).ok()?,
             unused: selection.unused.clone(),
         });
     }

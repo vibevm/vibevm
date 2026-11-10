@@ -182,7 +182,11 @@ fn in_directory(
                     }
                 },
             };
-            match VersionRequest::parse(&authored) {
+            // A version file's value is read with the switcher semantics
+            // of `#VERSION-FILE-VALUE`: a complete version pins exactly
+            // itself, a partial one is a prefix. A command line's `SLOT@VER`
+            // is a requirement and is read by `VersionRequest::parse`.
+            match VersionRequest::parse_in_version_file(&authored) {
                 Ok(request) => {
                     return Some(Found {
                         slot: slot.to_owned(),
