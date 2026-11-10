@@ -10,8 +10,11 @@
 //! behaviour settings of [PROP-011](../../../vibevm/vibespecs/modules/vibe-workspace/PROP-011-incremental-install.xml),
 //! `[init]` (`vibe init` prompt defaults), `[net]`, the network
 //! posture of [PROP-010](../../../vibevm/vibespecs/modules/vibe-registry/PROP-010-local-package-cache.xml)
-//! §2.5, and `[llm]`, the user-owned OpenAI-compatible provider
-//! endpoint and token-file source.
+//! §2.5, `[llm]`, the user-owned OpenAI-compatible provider
+//! endpoint and token-file source, and `[slot.<slot>.extras.<ecosystem>]`,
+//! the user's own per-slot ecosystem extras list
+//! ([PROP-075](../../../vibevm/vibespecs/common/PROP-075-template-packages-and-versions.xml)
+//! `#SLOT-EXTRAS`).
 //!
 //! Path resolution:
 //!
@@ -55,6 +58,8 @@ pub(crate) mod artifacts;
 mod init;
 mod proxy;
 pub use init::InitConfig;
+mod slot;
+pub use slot::{SlotConfig, SlotExtras, read_item_lines};
 mod template;
 pub use template::TemplateConfig;
 mod transfer;
@@ -77,6 +82,7 @@ pub use transfer::TransferConfig;
 /// assert!(cfg.llm.is_none());
 /// assert!(cfg.proxy.is_default());
 /// assert!(cfg.template.is_default());
+/// assert!(cfg.slot.is_empty());
 /// ```
 #[derive(Debug, Default, Clone, PartialEq, Eq, Deserialize, Serialize)]
 #[serde(deny_unknown_fields)]
@@ -137,6 +143,37 @@ pub struct UserConfig {
     /// before it is refetched (PROP-075 `#TEMPLATE-CACHE`).
     #[serde(default, skip_serializing_if = "TemplateConfig::is_default")]
     pub template: TemplateConfig,
+    /// `[slot.<slot>]` — the user's own per-slot settings, today just
+    /// their per-ecosystem extras list (PROP-075 `#SLOT-EXTRAS`). Keyed by
+    /// the application slot id; a slot nothing installs is kept, because a
+    /// hand-written settings file outlives the packages it mentions and the
+    /// consumer reports such a line once rather than refusing the file.
+    ///
+    /// **This struct is `deny_unknown_fields`**, so the table had to be
+    /// declared here before a user could write it at all: without it, a
+    /// `[slot.node.extras.npm]` line was a parse error on every command.
+    #[serde(default, skip_serializing_if = "BTreeMap::is_empty")]
+    pub slot: BTreeMap<String, SlotConfig>,
+}
+
+impl UserConfig {
+    /// One `[slot.<slot>.extras.<ecosystem>]` table, or `None` when the
+    /// file names neither (PROP-075 `#SLOT-EXTRAS`).
+    pub fn extras_of(&self, slot: &str, ecosystem: &str) -> Option<&SlotExtras> {
+        self.slot.get(slot)?.extras.get(ecosystem)
+    }
+
+    /// The `[slot.<slot>.extras.<ecosystem>]` table to edit, created empty
+    /// when the file holds neither — what `vibe app extras add|drop|import`
+    /// writes into before [`Self::save`].
+    pub fn extras_mut(&mut self, slot: &str, ecosystem: &str) -> &mut SlotExtras {
+        self.slot
+            .entry(slot.to_owned())
+            .or_default()
+            .extras
+            .entry(ecosystem.to_owned())
+            .or_default()
+    }
 }
 
 /// `[install]` section — install-behaviour settings (PROP-011 §5.2).
