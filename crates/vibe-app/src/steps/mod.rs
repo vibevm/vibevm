@@ -26,7 +26,7 @@ mod work;
 pub(crate) use agent::mode_of as agent_mode;
 pub(crate) use env::StepPaths;
 pub use features::{FeatureRequest, FeatureResolution, Implied, ImpliedRule, resolve_features};
-pub(crate) use kinds::{MigrationEnv, StepContext, run as run_step};
+pub(crate) use kinds::{EcosystemEnv, MigrationEnv, StepContext, run as run_step};
 pub(crate) use params::admit_license;
 pub use params::{LicensePrompt, ParamValue, ParameterPrompt, PlanLicense, step_env_name};
 pub use plan::{FeatureChooser, HostFacts, Plan, PlannedDependency, PlannedStep, RequiredBy};

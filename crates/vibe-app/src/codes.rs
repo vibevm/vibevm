@@ -160,6 +160,12 @@ codes!(STEP, StepError [] {
     MigrationRecord => "migration_record_unwritable", Failure, "the migration record cannot be written";
     MigrationFailed => "migration_failed", Failure, "a migration entry's export or import failed; the work directory is kept";
     MigrationConsent => "migration_consent_required", Refusal, "an unattended migration was not consented to with --yes";
+    EcosystemUnresolvable => "ecosystem_unresolvable", Refusal, "the package tree of the version an ecosystem verb runs in cannot be resolved";
+    NoEcosystem => "no_ecosystem", Refusal, "the slot declares no ecosystem adapter";
+    UnknownEcosystem => "unknown_ecosystem", Refusal, "--ecosystem names no declared adapter";
+    EcosystemVerbUndeclared => "ecosystem_verb_undeclared", Refusal, "the adapter declares no such verb";
+    EcosystemRecord => "ecosystem_record_unwritable", Failure, "the ecosystem run record cannot be written";
+    EcosystemFailed => "ecosystem_failed", Failure, "an ecosystem adapter verb failed; nothing was rolled back and the work directory is kept";
 });
 
 codes!(AGENT, AgentError [] {

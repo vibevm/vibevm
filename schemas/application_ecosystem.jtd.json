@@ -1,0 +1,186 @@
+{
+  "metadata": {
+    "description": "Version 1 record of one ecosystem-adapter run: the slot, the installation it configured, the verb, the run's own kept work directory, and one row per adapter the run touched — the items it was asked for verbatim, the items a list verb observed, the outcome, the step and its log, and the command that retries it. The same document is the record written as ecosystem.json inside the work directory and the answer of the commands that run a verb, so there is one format and no second mechanism. Items are opaque: vibe never parses, splits, quotes, escapes, validates or reorders them.",
+    "spec": {
+      "implements": "spec://org.vibevm.core/vibevm/common/PROP-075#ECOSYSTEM-ADAPTER"
+    },
+    "rustOptions": {
+      "package": "vibe_wire::application_ecosystem"
+    },
+    "x-rust-type": "ApplicationEcosystem",
+    "x-wire-order": [
+      "protocol",
+      "ok",
+      "slot",
+      "key",
+      "verb",
+      "work",
+      "adapters",
+      "notices"
+    ]
+  },
+  "properties": {
+    "protocol": {
+      "type": "string"
+    },
+    "ok": {
+      "type": "boolean",
+      "metadata": {
+        "description": "Every adapter the run touched succeeded; false when any failed."
+      }
+    },
+    "slot": {
+      "type": "string"
+    },
+    "key": {
+      "type": "string",
+      "metadata": {
+        "description": "The installation key the verb ran inside."
+      }
+    },
+    "verb": {
+      "ref": "verb"
+    },
+    "work": {
+      "type": "string",
+      "metadata": {
+        "description": "The run's own work directory, kept on success and on failure, listed and cleaned by `vibe app work`."
+      }
+    },
+    "adapters": {
+      "elements": {
+        "ref": "adapter"
+      },
+      "metadata": {
+        "x-empty": "emit"
+      }
+    }
+  },
+  "definitions": {
+    "verb": {
+      "enum": [
+        "install",
+        "list",
+        "remove",
+        "self_upgrade"
+      ],
+      "metadata": {
+        "x-vocabulary": "closed",
+        "description": "The four verbs of an adapter. install takes the item list as argv and is required of every adapter; list observes what one installed version carries and answers with a file; remove takes the item list as argv; self_upgrade upgrades the bundled manager itself and takes no items."
+      }
+    },
+    "outcome": {
+      "enum": [
+        "done",
+        "failed",
+        "skipped"
+      ],
+      "metadata": {
+        "x-vocabulary": "closed",
+        "description": "done the verb ran and succeeded; failed the verb ran and failed, and nothing of the runtime installation was rolled back; skipped the adapter declares no such verb, or the item list the verb would have been handed was empty."
+      }
+    },
+    "adapter": {
+      "metadata": {
+        "x-wire-order": [
+          "id",
+          "name",
+          "outcome",
+          "items",
+          "observed",
+          "step",
+          "log",
+          "reason",
+          "retry",
+          "started",
+          "finished"
+        ]
+      },
+      "properties": {
+        "id": {
+          "type": "string",
+          "metadata": {
+            "description": "The adapter's opaque id, as the package wrote it."
+          }
+        },
+        "name": {
+          "type": "string"
+        },
+        "outcome": {
+          "ref": "outcome"
+        },
+        "items": {
+          "elements": {
+            "type": "string"
+          },
+          "metadata": {
+            "x-empty": "emit",
+            "description": "The items the verb was asked for, verbatim and in order; empty for a verb that takes none."
+          }
+        }
+      },
+      "optionalProperties": {
+        "observed": {
+          "elements": {
+            "type": "string"
+          },
+          "metadata": {
+            "x-empty": "omit",
+            "description": "What a list verb observed: one trimmed nonempty line of the file it wrote. An absent or empty file is an empty list and not an error."
+          }
+        },
+        "step": {
+          "type": "string",
+          "metadata": {
+            "x-default": null,
+            "description": "The step declaration's own id, as the package wrote it."
+          }
+        },
+        "log": {
+          "type": "string",
+          "metadata": {
+            "x-default": null,
+            "description": "The output log of the verb, inside the kept work directory."
+          }
+        },
+        "reason": {
+          "type": "string",
+          "metadata": {
+            "x-default": null,
+            "description": "Why the verb failed, or why the adapter was skipped."
+          }
+        },
+        "retry": {
+          "type": "string",
+          "metadata": {
+            "x-default": null,
+            "description": "The exact command that runs this verb again."
+          }
+        },
+        "started": {
+          "type": "string",
+          "metadata": {
+            "x-default": null
+          }
+        },
+        "finished": {
+          "type": "string",
+          "metadata": {
+            "x-default": null
+          }
+        }
+      }
+    }
+  },
+  "optionalProperties": {
+    "notices": {
+      "elements": {
+        "type": "string"
+      },
+      "metadata": {
+        "x-empty": "omit",
+        "description": "What the run reported and did not fail on."
+      }
+    }
+  }
+}

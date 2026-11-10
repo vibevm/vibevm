@@ -9,7 +9,9 @@ use std::cell::RefCell;
 use std::fs;
 use std::path::{Path, PathBuf};
 
-use vibe_core::manifest::{MigrationDecl, MigrationSide, Need, StepDecl, StepPhase};
+use vibe_core::manifest::{
+    ECOSYSTEM_MIGRATION_PREFIX, MigrationDecl, MigrationSide, Need, StepDecl, StepPhase,
+};
 use vibe_wire::generated::application_migration as wire;
 
 use crate::error::{AppError, MigrationFailure, StepError};
@@ -18,7 +20,7 @@ use crate::index::{Index, MigrationEntryRecord};
 use crate::installer::{ChildIo, TransferFacts, io};
 use crate::operations::OperationContext;
 use crate::resolve::ResolvedPackage;
-use crate::steps::{MigrationEnv, StepContext, StepPaths, StepVars, run_step};
+use crate::steps::{EcosystemEnv, MigrationEnv, StepContext, StepPaths, StepVars, run_step};
 
 use super::{MigrationPlan, declared, record};
 
@@ -52,6 +54,36 @@ struct Half<'a> {
     step: &'a StepDecl,
     package_root: &'a Path,
     paths: &'a StepPaths,
+    /// The adapter this side is a verb of, when the entry is a
+    /// synthesised `ecosystem:<id>` one (PROP-075
+    /// `#ECOSYSTEM-MIGRATION`): the export is its `list` verb and the
+    /// import its `install` verb, handed exactly the items the export
+    /// observed.
+    adapter: Option<Adapter<'a>>,
+}
+
+/// The adapter half of a synthesised entry: its opaque id, the file the
+/// `list` verb writes and the `install` verb's argv is read from, and the
+/// items this side is handed.
+struct Adapter<'a> {
+    id: &'a str,
+    list: PathBuf,
+    items: Vec<String>,
+}
+
+/// One item per line, trimmed, the empty ones dropped — the only reading
+/// vibe ever does of an ecosystem's answer, and it parses no ecosystem's
+/// listing format (PROP-075 `#ECOSYSTEM-ADAPTER`). An absent or empty file
+/// is an empty list and never an error.
+pub(crate) fn observed(file: &Path) -> Vec<String> {
+    let Ok(text) = fs::read_to_string(file) else {
+        return Vec::new();
+    };
+    text.lines()
+        .map(str::trim)
+        .filter(|line| !line.is_empty())
+        .map(str::to_owned)
+        .collect()
 }
 
 impl Session<'_> {
@@ -95,6 +127,10 @@ impl Session<'_> {
             ));
         };
         let dir = self.entry_dir(&entry.id)?;
+        // A synthesised entry's two sides are the adapter's `list` and
+        // `install` verbs over one shared answer file.
+        let adapter_id = entry.id.strip_prefix(ECOSYSTEM_MIGRATION_PREFIX);
+        let list = dir.join("items");
         // `--resume` re-runs only the import when the export already
         // succeeded, the same contract `PROP-065#resume` gives an
         // installation.
@@ -111,9 +147,14 @@ impl Session<'_> {
                     step: &export.export,
                     package_root: &self.from.root,
                     paths: &self.from_paths,
+                    adapter: adapter_id.map(|id| Adapter {
+                        id,
+                        list: list.clone(),
+                        items: Vec::new(),
+                    }),
                 },
                 &dir,
-                export,
+                &export,
             )
         {
             return Ok(self.failed(record, MigrationSide::Export, &export.export, &dir, failure));
@@ -125,9 +166,14 @@ impl Session<'_> {
                 step: &import.import,
                 package_root: &self.to.root,
                 paths: &self.to_paths,
+                adapter: adapter_id.map(|id| Adapter {
+                    id,
+                    list: list.clone(),
+                    items: observed(&list),
+                }),
             },
             &dir,
-            import,
+            &import,
         ) {
             return Ok(self.failed(record, MigrationSide::Import, &import.import, &dir, failure));
         }
@@ -144,7 +190,14 @@ impl Session<'_> {
     /// entry named `state` may write a file called `state` there without
     /// colliding with its own logs.
     fn entry_dir(&self, id: &str) -> Result<PathBuf, AppError> {
-        let dir = self.work.join("logs").join(id);
+        // A synthesised id carries the reserved `ecosystem:` prefix, and a
+        // colon is not a portable path component, so the directory takes
+        // the id with its separators replaced. An authored id is a
+        // portable token and is therefore unchanged.
+        let dir = self
+            .work
+            .join("logs")
+            .join(id.replace(ECOSYSTEM_MIGRATION_PREFIX, "ecosystem-"));
         fs::create_dir_all(&dir).map_err(|source| io("creating", &dir, source))?;
         Ok(dir)
     }
@@ -235,6 +288,11 @@ impl Session<'_> {
             resume: None,
         };
         let env = half.paths.child_env(&[], &half.step.id, ctx.search_path);
+        let ecosystem = half.adapter.as_ref().map(|adapter| EcosystemEnv {
+            id: adapter.id,
+            items: &adapter.items,
+            list: &adapter.list,
+        });
         let package_key = match half.side {
             MigrationSide::Export => self.plan.from.clone(),
             MigrationSide::Import => self.plan.to.clone(),
@@ -281,6 +339,7 @@ impl Session<'_> {
             served: &served,
             transfer: &transfer,
             migration: Some(&migration),
+            ecosystem: ecosystem.as_ref(),
         };
         match run_step(&cx, half.step) {
             Ok(_) => {
@@ -316,7 +375,7 @@ fn now() -> String {
 /// The PATH front of one installation: its own proxy directory and its
 /// payload `bin`, built by the very function a step requirement uses
 /// (`PROP-065#app-dependencies`).
-pub(super) fn installation_paths(
+pub(crate) fn installation_paths(
     ctx: &OperationContext<'_>,
     index: &Index,
     key: &str,

@@ -33,6 +33,7 @@ pub(crate) use record::summary as migration_summary;
 pub use record::{
     MIGRATION_PROTOCOL, kept_runs as kept_migration_work, work_runs as slot_migration_work,
 };
+pub(crate) use run::{installation_paths, observed};
 
 /// What one migration run was asked to do. The selection is already
 /// decided: `only` holds the ids of the entries to run, and an empty
@@ -214,7 +215,7 @@ fn previous_in_slot(
 }
 
 /// One installation of `slot` by version or by whole key.
-fn installation_in_slot<'a>(
+pub(crate) fn installation_in_slot<'a>(
     index: &'a Index,
     slot: &str,
     spelling: &str,
@@ -408,16 +409,20 @@ fn resolve(
     })
 }
 
-/// The declaration of one entry in a package, by id.
-fn declared<'a>(
-    package: &'a crate::resolve::ResolvedPackage,
-    id: &str,
-) -> Option<&'a MigrationDecl> {
+/// The declaration of one entry in a package, by id: an authored
+/// `[[application.migration]]` row, or the entry vibe **synthesises** from
+/// an `[[application.ecosystem]]` adapter that declares a `list` verb —
+/// observe in the old version, re-install in the new, which already *is*
+/// the strategy `#MIGRATION` describes (PROP-075 `#ECOSYSTEM-MIGRATION`).
+/// The `ecosystem:` id namespace is reserved at validation, so a
+/// synthesised entry can never be shadowed by an authored one.
+fn declared(package: &crate::resolve::ResolvedPackage, id: &str) -> Option<MigrationDecl> {
     package
         .application
-        .migration
-        .iter()
+        .migration_entries()
+        .into_iter()
         .find(|entry| entry.id == id)
+        .map(std::borrow::Cow::into_owned)
 }
 
 #[cfg(test)]

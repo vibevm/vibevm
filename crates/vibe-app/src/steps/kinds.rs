@@ -39,6 +39,22 @@ pub(crate) struct MigrationEnv<'a> {
     pub to_version: &'a str,
 }
 
+/// What an ecosystem-adapter verb sees beside the ordinary step inputs
+/// (PROP-075 `#ECOSYSTEM-ADAPTER`): the adapter it belongs to, the items
+/// it was handed, and the file a `list` verb writes its answer into. Its
+/// presence is also what makes a step an *adapter* step: the items are
+/// appended to a `recipe`'s argv as separate elements, and there is no
+/// `VIBE_OUT` and no `VIBE_SOURCES`, because an adapter produces no
+/// payload.
+pub(crate) struct EcosystemEnv<'a> {
+    pub id: &'a str,
+    /// The items, verbatim and opaque; empty for a verb that takes none.
+    pub items: &'a [String],
+    /// `VIBE_ECOSYSTEM_LIST` — where a `list` verb writes one item per
+    /// line. Set for every verb, so one script can serve two of them.
+    pub list: &'a Path,
+}
+
 /// What a step sees: its directories, variables and the operation flags.
 pub(crate) struct StepContext<'a> {
     pub http_client: Option<&'a vibe_package_source::OperationHttpClient>,
@@ -74,6 +90,11 @@ pub(crate) struct StepContext<'a> {
     /// Present only for a migration entry's `export` or `import`
     /// (`PROP-075#MIGRATION-DECLARATION`).
     pub migration: Option<&'a MigrationEnv<'a>>,
+    /// Present only for an ecosystem adapter's verb
+    /// (`PROP-075#ECOSYSTEM-ADAPTER`). It may be set **beside**
+    /// `migration`, which is exactly what a synthesised
+    /// `ecosystem:<id>` entry is: a migration side that is an adapter verb.
+    pub ecosystem: Option<&'a EcosystemEnv<'a>>,
 }
 
 impl StepContext<'_> {
@@ -172,6 +193,15 @@ pub(crate) fn run(cx: &StepContext<'_>, step: &StepDecl) -> Result<AuthoredComma
         } => {
             let mut command = source_build::script_command(*interpreter, cx.package_root, script)?;
             command.current_dir(cx.work);
+            // The items of an `install` or `remove` verb reach the script
+            // as **separate argv elements** appended to its own argv, and
+            // are never interpolated into a command string: the script
+            // reads them as `"$@"`. This is the whole of the injection
+            // rule, and it is why those two verbs must be `recipe` steps
+            // (`PROP-075#ECOSYSTEM-ADAPTER`).
+            if let Some(ecosystem) = cx.ecosystem {
+                command.args(ecosystem.items);
+            }
             environment(cx, &mut command);
             run_child(&mut command, &what, &cx.io)?;
         }
@@ -190,13 +220,16 @@ pub(crate) fn run(cx: &StepContext<'_>, step: &StepDecl) -> Result<AuthoredComma
             } else {
                 command
             };
-            let current_dir = match (cx.migration, cx.phase) {
+            let current_dir = match (cx.migration, cx.ecosystem, cx.phase) {
                 // A migration step runs in the shared work directory, the
                 // one place both sides of an entry agree on
                 // (`PROP-075#MIGRATION-DECLARATION`).
-                (Some(migration), _) => migration.work,
-                (None, StepPhase::Prepare) => cx.package_root,
-                (None, StepPhase::Finish) => cx.app_root,
+                (Some(migration), _, _) => migration.work,
+                // An adapter verb runs in the run's own work directory
+                // (`PROP-075#ECOSYSTEM-ADAPTER`).
+                (None, Some(_), _) => cx.work,
+                (None, None, StepPhase::Prepare) => cx.package_root,
+                (None, None, StepPhase::Finish) => cx.app_root,
             };
             let mut child = shell::command(*interpreter, script, current_dir, cx.app_root)?;
             environment(cx, &mut child);
@@ -266,12 +299,33 @@ pub(crate) fn run(cx: &StepContext<'_>, step: &StepDecl) -> Result<AuthoredComma
 /// `VIBE_PACKAGE`, `VIBE_PLATFORM` and `VIBE_ARCH` — and no `VIBE_OUT` or
 /// `VIBE_SOURCES` at all, because a migration produces no payload
 /// (PROP-075 `#MIGRATION-DECLARATION`).
+///
+/// An **ecosystem adapter's** verb sees `VIBE_ECOSYSTEM_ID`,
+/// `VIBE_ECOSYSTEM_ITEMS` (one item per line), `VIBE_ECOSYSTEM_ITEM_COUNT`
+/// and `VIBE_ECOSYSTEM_LIST` (the file a `list` verb writes), also without
+/// `VIBE_OUT` and `VIBE_SOURCES`, because an adapter produces no payload
+/// either (PROP-075 `#ECOSYSTEM-ADAPTER`). The item strings are passed
+/// verbatim: nothing is quoted, escaped, split or reordered.
 fn environment(cx: &StepContext<'_>, command: &mut Command) {
     command
         .env("VIBE_PACKAGE", cx.package_root)
         .env("VIBE_PLATFORM", cx.platform)
         .env("VIBE_ARCH", cx.arch)
         .envs(cx.env.iter().map(|(name, value)| (name, value)));
+    if let Some(ecosystem) = cx.ecosystem {
+        let mut items = ecosystem.items.join("\n");
+        if !items.is_empty() {
+            items.push('\n');
+        }
+        command
+            .env("VIBE_ECOSYSTEM_ID", ecosystem.id)
+            .env("VIBE_ECOSYSTEM_ITEMS", items)
+            .env(
+                "VIBE_ECOSYSTEM_ITEM_COUNT",
+                ecosystem.items.len().to_string(),
+            )
+            .env("VIBE_ECOSYSTEM_LIST", ecosystem.list);
+    }
     if let Some(migration) = cx.migration {
         command
             .env("VIBE_WORK", migration.work)
@@ -284,6 +338,17 @@ fn environment(cx: &StepContext<'_>, command: &mut Command) {
             .env_remove("VIBE_OUT")
             .env_remove("VIBE_SOURCES")
             .env_remove("VIBE_APP_ROOT");
+        return;
+    }
+    if cx.ecosystem.is_some() {
+        // The installation the verb configures, and no payload variables:
+        // `VIBE_PACKAGE` is that version's package tree and
+        // `VIBE_APP_ROOT` its application root.
+        command
+            .env("VIBE_WORK", cx.work)
+            .env("VIBE_APP_ROOT", cx.app_root)
+            .env_remove("VIBE_OUT")
+            .env_remove("VIBE_SOURCES");
         return;
     }
     command

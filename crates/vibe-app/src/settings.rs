@@ -292,6 +292,16 @@ impl SettingsRoot {
         self.root.join("cache").join("app-migrate")
     }
 
+    /// `<home>/cache/app-ecosystem`: one directory per slot, then one per
+    /// version, then one per run — the work directory an ecosystem
+    /// adapter's verb runs in (`PROP-075#ECOSYSTEM-ADAPTER`). Kept on
+    /// success and on failure as a migration's is, because it holds the
+    /// verb's log and the answer file a `list` verb wrote; `vibe app work`
+    /// lists and cleans it.
+    pub fn app_ecosystem_dir(&self) -> PathBuf {
+        self.root.join("cache").join("app-ecosystem")
+    }
+
     /// `<home>/cache/app-proxies/<dir>/bin`: the PATH proxies of one
     /// installation's public commands, put on the PATH of a session
     /// (`vibe shell --with`) or of a requiring step instead of `opt/bin`

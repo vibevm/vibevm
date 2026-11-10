@@ -543,6 +543,7 @@ impl<'a> Run<'a> {
             served: &served,
             transfer: &transfer,
             migration: None,
+            ecosystem: None,
         };
         let result = kinds::run(&cx, step);
         // The candidates that served this step's inputs are part of the

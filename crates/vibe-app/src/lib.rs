@@ -30,6 +30,7 @@ pub mod configuration;
 mod derive;
 mod describe;
 mod desktop;
+mod ecosystem;
 mod environment;
 mod error;
 mod error_catalog;
@@ -91,6 +92,10 @@ pub use codes::{ErrorClass, ErrorCode, error_codes};
 pub use derive::{derive_launchers, hicolor as hicolor_icon_set, import_desktop};
 pub use describe::describe;
 pub use desktop::{DesktopFile, exec_words};
+pub use ecosystem::{
+    ECOSYSTEM_PROTOCOL, EXTRAS_PROTOCOL, EcosystemRequest, ecosystem_run, extras_listing,
+    kept_ecosystem_work, slot_ecosystem_work,
+};
 pub use environment::blocks::{
     BlockMarkers, ENV_BLOCK, HOOK_BLOCK, ensure_block, has_block, managed_startup_files,
     remove_block,

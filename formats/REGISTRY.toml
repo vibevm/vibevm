@@ -493,6 +493,34 @@ unknown_fields = "deny"
 corpus = "none"
 sunset = "none"
 
+# The ecosystem adapter's run record (PROP-075 `#ECOSYSTEM-ADAPTER`): the
+# `ecosystem.json` written inside the run's own kept work directory, and the
+# machine answer of the commands that run a verb. One record serves both homes
+# for the reason the migration record does — the report *is* the record, so
+# there is one format and no second mechanism. Items are carried verbatim and
+# opaque: vibe never parses, splits, quotes, escapes, validates or reorders one.
+[format.cli-application-ecosystem]
+epoch = 1
+schema = "schemas/application_ecosystem.jtd.json"
+recoverable = true
+foreign_parsers = "none"
+unknown_fields = "deny"
+corpus = "none"
+sunset = "none"
+
+# `vibe app extras list --json` (PROP-075 `#SLOT-EXTRAS`): per declared adapter
+# of one installed version, the verbs the package declares, the author's
+# recommended items with their enabled state, the list that would be installed
+# and what the adapter's `list` verb observes in that version.
+[format.cli-application-extras]
+epoch = 1
+schema = "schemas/application_extras.jtd.json"
+recoverable = true
+foreign_parsers = "many"
+unknown_fields = "deny"
+corpus = "none"
+sunset = "none"
+
 # `vibe app versions --json` (PROP-075 `#VERSIONS-LIST-OUTPUT`): one row per
 # version of a package's whole domain with its origin, channels and local
 # state, the resolved channel table, and a template's provenance.

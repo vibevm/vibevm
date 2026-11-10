@@ -217,10 +217,14 @@ pub(super) fn apply(
             // installed record is where a globally installed application's
             // provenance lives, since a global install writes no lock.
             template: installed_template(&selected.resolved.package),
+            // The authored entries and the ones vibe synthesises from the
+            // declared ecosystem adapters, so an offer after `install -g`
+            // and a later `--only ecosystem:<id>` need no package tree
+            // (PROP-075 `#MIGRATION-DECLARATION`, `#ECOSYSTEM-MIGRATION`).
             migrations: selected
                 .resolved
                 .application
-                .migration
+                .migration_entries()
                 .iter()
                 .map(|entry| MigrationEntryRecord {
                     id: entry.id.clone(),

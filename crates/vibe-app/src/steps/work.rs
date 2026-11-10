@@ -101,6 +101,7 @@ fn listing(
     // one package never selects one.
     if package.is_none() {
         entries.extend(migrations(settings));
+        entries.extend(ecosystems(settings));
     }
     if entries.is_empty()
         && let Some(spelling) = package
@@ -170,6 +171,40 @@ fn migrations(settings: &SettingsRoot) -> Vec<wire::Entry> {
                 key: summary
                     .map(|kept| kept.key)
                     .unwrap_or_else(|| format!("migrate:{}", file_name(&dir))),
+                path: dir.display().to_string(),
+                state,
+                step,
+                changed: changed(&dir),
+                bytes: parts.sources + parts.out + parts.inputs + parts.other,
+                parts,
+            }
+        })
+        .collect()
+}
+
+/// The kept ecosystem-adapter work directories of the home as listing
+/// rows (`PROP-075#ECOSYSTEM-ADAPTER`). Like a migration's, they are keyed
+/// by a slot and not by a package, so narrowing the listing to one package
+/// never selects one.
+fn ecosystems(settings: &SettingsRoot) -> Vec<wire::Entry> {
+    crate::ecosystem::kept_ecosystem_work(settings)
+        .into_iter()
+        .map(|dir| {
+            let summary = crate::ecosystem::ecosystem_summary(&dir);
+            let (state, step) = match &summary {
+                Some(kept) if kept.failed.is_some() => {
+                    (wire::EntryState::Failed, kept.failed.clone())
+                }
+                Some(_) => (wire::EntryState::Done, None),
+                None => (wire::EntryState::Unknown, None),
+            };
+            let parts = parts(&dir);
+            wire::Entry {
+                operation: None,
+                retained_for: None,
+                key: summary
+                    .map(|kept| kept.key)
+                    .unwrap_or_else(|| format!("ecosystem:{}", file_name(&dir))),
                 path: dir.display().to_string(),
                 state,
                 step,

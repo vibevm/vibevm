@@ -7,10 +7,12 @@ specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-059#principle");
 use specmark::spec;
 use thiserror::Error;
 
+mod ecosystem;
 mod migration;
 mod resolve;
 mod storage;
 mod version_file;
+pub use ecosystem::EcosystemFailure;
 pub use migration::MigrationFailure;
 pub use resolve::ResolveError;
 pub use storage::StorageError;
@@ -383,6 +385,51 @@ pub enum StepError {
         to: String,
         command: String,
     },
+    #[error(
+        "running an ecosystem verb in the slot `{slot}` needs that version's package tree, and \
+         {reason} (violates spec://org.vibevm.core/vibevm/common/PROP-075#ECOSYSTEM-ADAPTER; \
+         fix: make the version resolvable — name its registry with --registry DIR, or drop \
+         --offline so the configured registries answer)"
+    )]
+    EcosystemUnresolvable { slot: String, reason: String },
+    #[error(
+        "the slot `{slot}` declares no ecosystem adapter, so there is nothing to {verb} \
+         (violates spec://org.vibevm.core/vibevm/common/PROP-075#ECOSYSTEM-ADAPTER; fix: a \
+         runtime with no package manager of its own declares none — read \
+         `vibe app describe PACKAGE` for what it does declare)"
+    )]
+    NoEcosystem { slot: String, verb: String },
+    #[error(
+        "`--ecosystem {id}` names no adapter of the slot `{slot}`; declared: {declared} \
+         (violates spec://org.vibevm.core/vibevm/common/PROP-075#ECOSYSTEM-ADAPTER; \
+         fix: name a declared adapter, or omit --ecosystem to take every one)"
+    )]
+    UnknownEcosystem {
+        slot: String,
+        id: String,
+        declared: String,
+    },
+    #[error(
+        "the adapter `{id}` of the slot `{slot}` declares no `{verb}` verb; declared: {declared} \
+         (violates spec://org.vibevm.core/vibevm/common/PROP-075#ECOSYSTEM-ADAPTER; fix: only \
+         `install` is required of an adapter — the other three are the package's choice)"
+    )]
+    EcosystemVerbUndeclared {
+        slot: String,
+        id: String,
+        verb: String,
+        declared: String,
+    },
+    #[error(
+        "the ecosystem record of `{work}` cannot be written: {reason} (violates \
+         spec://org.vibevm.core/vibevm/common/PROP-075#ECOSYSTEM-ADAPTER; fix: make the work \
+         directory writable and run the verb again)"
+    )]
+    EcosystemRecord { work: String, reason: String },
+    /// Boxed for the reason [`Self::MigrationFailed`] is: a failed verb
+    /// carries six facts and its cause.
+    #[error(transparent)]
+    EcosystemFailed(Box<EcosystemFailure>),
 }
 
 /// Launch-point resolution and native program execution.

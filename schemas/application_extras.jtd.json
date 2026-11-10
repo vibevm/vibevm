@@ -1,0 +1,195 @@
+{
+  "metadata": {
+    "description": "Version 1 answer of vibe app extras list: per declared ecosystem adapter of one installed version, which verbs the package declares, the author's recommended items with their enabled state, the list that would be installed, and what the adapter's list verb observes in that version. Every item string is opaque: vibe never parses, splits, quotes, escapes, validates or reorders one.",
+    "spec": {
+      "implements": "spec://org.vibevm.core/vibevm/common/PROP-075#SLOT-EXTRAS"
+    },
+    "rustOptions": {
+      "package": "vibe_wire::application_extras"
+    },
+    "x-rust-type": "ApplicationExtras",
+    "x-wire-order": [
+      "protocol",
+      "slot",
+      "key",
+      "version",
+      "ecosystems",
+      "notices"
+    ]
+  },
+  "properties": {
+    "protocol": {
+      "type": "string"
+    },
+    "slot": {
+      "type": "string"
+    },
+    "key": {
+      "type": "string",
+      "metadata": {
+        "description": "The installation key the listing is about."
+      }
+    },
+    "version": {
+      "type": "string"
+    },
+    "ecosystems": {
+      "elements": {
+        "ref": "ecosystem"
+      },
+      "metadata": {
+        "x-empty": "emit"
+      }
+    }
+  },
+  "definitions": {
+    "verb": {
+      "enum": [
+        "install",
+        "list",
+        "remove",
+        "self_upgrade"
+      ],
+      "metadata": {
+        "x-vocabulary": "closed",
+        "description": "The four verbs of an adapter; install is required of every one."
+      }
+    },
+    "recommendation": {
+      "metadata": {
+        "x-wire-order": [
+          "id",
+          "name",
+          "item",
+          "default",
+          "enabled",
+          "reason"
+        ]
+      },
+      "properties": {
+        "id": {
+          "type": "string",
+          "metadata": {
+            "description": "The recommendation's own token, which is also the id of the feature it is shorthand for."
+          }
+        },
+        "name": {
+          "type": "string"
+        },
+        "item": {
+          "type": "string",
+          "metadata": {
+            "description": "The opaque item string, exactly as the author wrote it."
+          }
+        },
+        "default": {
+          "type": "boolean",
+          "metadata": {
+            "description": "The synthesised feature is selected unless the user says otherwise."
+          }
+        },
+        "enabled": {
+          "type": "boolean",
+          "metadata": {
+            "description": "The feature is in the chosen set this installation recorded, so the item is part of the list."
+          }
+        }
+      },
+      "optionalProperties": {
+        "reason": {
+          "type": "string",
+          "metadata": {
+            "x-default": null
+          }
+        }
+      }
+    },
+    "ecosystem": {
+      "metadata": {
+        "x-wire-order": [
+          "id",
+          "name",
+          "description",
+          "verbs",
+          "recommendations",
+          "items",
+          "observed",
+          "observed_failed"
+        ]
+      },
+      "properties": {
+        "id": {
+          "type": "string",
+          "metadata": {
+            "description": "The adapter's opaque id, as the package wrote it."
+          }
+        },
+        "name": {
+          "type": "string"
+        },
+        "verbs": {
+          "elements": {
+            "ref": "verb"
+          },
+          "metadata": {
+            "x-empty": "emit",
+            "description": "The verbs this adapter declares, in verb order."
+          }
+        },
+        "recommendations": {
+          "elements": {
+            "ref": "recommendation"
+          },
+          "metadata": {
+            "x-empty": "emit",
+            "description": "The author's recommended items in declaration order."
+          }
+        },
+        "items": {
+          "elements": {
+            "type": "string"
+          },
+          "metadata": {
+            "x-empty": "emit",
+            "description": "The list that would be installed, de-duplicated by exact string with the first occurrence winning."
+          }
+        }
+      },
+      "optionalProperties": {
+        "description": {
+          "type": "string",
+          "metadata": {
+            "x-default": null
+          }
+        },
+        "observed": {
+          "elements": {
+            "type": "string"
+          },
+          "metadata": {
+            "x-empty": "omit",
+            "description": "What the adapter's list verb observed in this version. Absent when the adapter declares no list verb or the observation was not taken; an absent or empty answer file is an empty list and not an error."
+          }
+        },
+        "observed_failed": {
+          "type": "string",
+          "metadata": {
+            "x-default": null,
+            "description": "Why the observation was not taken, when a declared list verb failed. The listing itself still answers."
+          }
+        }
+      }
+    }
+  },
+  "optionalProperties": {
+    "notices": {
+      "elements": {
+        "type": "string"
+      },
+      "metadata": {
+        "x-empty": "omit",
+        "description": "What the listing reported and did not fail on."
+      }
+    }
+  }
+}
