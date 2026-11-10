@@ -181,10 +181,17 @@ fn legacy_entries(node_dir: &Path, node_rel: &str) -> Result<Vec<AuthoredBoot>, 
         if !vibe_specdoc::is_spec_source(&path) {
             continue;
         }
-        // The generated artifacts are not authored boot.
-        if name == boot_artifacts::static_file(SpecFormat::Mixed)
-            || name == boot_artifacts::static_file(SpecFormat::Xml)
-            || name == boot_artifacts::INDEX_FILE
+        // Neither a generated artifact nor the authored system-prompt
+        // template is authored boot. The two roles are asked separately
+        // because only one of them is ever owned by publication: the
+        // template is reserved and preserved, never generated and never
+        // deleted (PROP-076 `#SYS-LAYOUT-RESERVATION`). Admitted here,
+        // `SYSTEM.md` would be delivered to every session a second time as
+        // an ordinary boot input and the template's text would be delivered
+        // twice (PROP-076 `#SYS-SELF-INCLUSION`).
+        let boot_relative = layout::current_boot_dir().join(&name);
+        if layout::is_generated_boot_output(&boot_relative)
+            || layout::is_reserved_boot_authored_input(&boot_relative)
         {
             continue;
         }

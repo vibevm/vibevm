@@ -226,8 +226,14 @@ pub(in crate::manifest) fn valid_source_path(path: &str) -> Result<(), String> {
     declarant_path(Path::new(path))
         .map_err(|fault| format!("source path `{path}`: {}", fault.reason()))?;
     if layout::is_reserved_boot_source(Path::new(path)) {
+        // Either a generated artifact or the authored system-prompt template
+        // (PROP-076 `#SYS-SELF-INCLUSION`). The two roles differ in who owns
+        // the file, but neither may ever be declared as a source row: an
+        // output listed in its own inputs is a self-include, and the
+        // template would be delivered twice.
         return Err(format!(
-            "source path `{path}` names a generated boot output"
+            "source path `{path}` names a reserved boot path — a generated boot output or the \
+             authored system-prompt template"
         ));
     }
     Ok(())

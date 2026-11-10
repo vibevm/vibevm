@@ -94,7 +94,14 @@ impl PackagePolicyObservation {
         let mut claims = BTreeSet::new();
         let mut identities = BTreeSet::new();
         for path in candidates {
-            if vibe_core::layout::is_generated_boot_output(Path::new(&path)) {
+            // The two generated system-prompt outputs arrive here for free,
+            // as members of the layout owner's generated list. The authored
+            // template needs its own arm: it is reserved but not generated,
+            // so it is excluded from automatic enrolment without ever being
+            // owned or removed (PROP-076 `#SYS-LAYOUT-RESERVATION`).
+            if vibe_core::layout::is_generated_boot_output(Path::new(&path))
+                || vibe_core::layout::is_reserved_boot_authored_input(Path::new(&path))
+            {
                 continue;
             }
             // The string is a diagnostic identity only, not a native coordinate.

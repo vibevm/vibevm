@@ -74,6 +74,19 @@ pub const INDEX_MD: &str = "INDEX.md";
 pub const STATIC_XML: &str = "STATIC.xml";
 /// The generated static boot lane, Markdown form.
 pub const STATIC_MD: &str = "STATIC.md";
+/// The generated cache-stable system-prompt prefix:
+/// `<specs>/boot/SYSTEM.md` (PROP-076 `#SYS-FILES`). The `.md` extension
+/// is a name, not a parse — the file's lane segment holds the compiled
+/// lane's bytes verbatim, whatever their dialect.
+pub const SYSTEM_MD: &str = "SYSTEM.md";
+/// The generated sidecar of the prefix: `<specs>/boot/SYSTEM.meta.json`,
+/// protocol `vibe-system-prompt/1` (PROP-076 `#SYS-SIDECAR`).
+pub const SYSTEM_META_JSON: &str = "SYSTEM.meta.json";
+/// The **authored** system-prompt template: `<specs>/boot/SYSTEM-TEMPLATE.md`
+/// (PROP-076 `#SYS-FILES`). Its presence is the whole opt-in. It is the one
+/// input the user writes, so it is deliberately NOT a member of
+/// [`generated_boot_paths`]: see [`is_reserved_boot_authored_input`].
+pub const SYSTEM_TEMPLATE_MD: &str = "SYSTEM-TEMPLATE.md";
 /// The transaction engine's persistent lock in the boot directory
 /// (vibe-workspace's crash-released exclusive lock). Unlike the journal
 /// and stage files it is not crash state: it survives a successful
@@ -229,14 +242,37 @@ pub fn current_boot_static_md() -> PathBuf {
     current_boot_dir().join(STATIC_MD)
 }
 
+/// The generated system-prompt prefix of the live layout
+/// (`vibevm/vibespecs/boot/SYSTEM.md` today).
+pub fn current_boot_system() -> PathBuf {
+    current_boot_dir().join(SYSTEM_MD)
+}
+
+/// The generated prefix sidecar of the live layout
+/// (`vibevm/vibespecs/boot/SYSTEM.meta.json` today).
+pub fn current_boot_system_meta() -> PathBuf {
+    current_boot_dir().join(SYSTEM_META_JSON)
+}
+
+/// The authored system-prompt template of the live layout
+/// (`vibevm/vibespecs/boot/SYSTEM-TEMPLATE.md` today).
+pub fn current_boot_system_template() -> PathBuf {
+    current_boot_dir().join(SYSTEM_TEMPLATE_MD)
+}
+
 /// Whether a package-relative path belongs to generated boot publication.
 /// Only the owned boot directory and its direct publication artifacts match.
 /// ```
 /// use std::path::Path;
 /// use vibe_core::layout;
 /// assert!(layout::is_generated_boot_output(&layout::current_boot_static_xml()));
+/// assert!(layout::is_generated_boot_output(&layout::current_boot_system()));
+/// assert!(layout::is_generated_boot_output(&layout::current_boot_system_meta()));
 /// assert!(layout::is_generated_boot_output(&layout::current_boot_dir().join(".vibe-boot-stage")));
 /// assert!(!layout::is_generated_boot_output(Path::new("data/STATIC.xml")));
+/// // The authored template is reserved, but it is NOT a generated output:
+/// // nothing owns it, nothing removes it as a stale artifact.
+/// assert!(!layout::is_generated_boot_output(&layout::current_boot_system_template()));
 /// ```
 pub fn is_generated_boot_output(relative: &std::path::Path) -> bool {
     generated_boot_paths().iter().any(|path| relative == path)
@@ -247,11 +283,49 @@ pub fn is_generated_boot_output(relative: &std::path::Path) -> bool {
                 .is_some_and(|name| name.starts_with(BOOT_PUBLICATION_PREFIX)))
 }
 
-fn generated_boot_paths() -> [PathBuf; 3] {
+/// Whether a package-relative path is the **authored** boot input the
+/// generator reserves but never owns (PROP-076 `#SYS-LAYOUT-RESERVATION`).
+///
+/// It is a separate predicate rather than a member of
+/// [`generated_boot_paths`] on purpose. The template is excluded from
+/// automatic boot enrolment and from declaration admission as a source row,
+/// but it is not generated, is not owned by publication, is never deleted as
+/// a stale output, and is preserved like any other authored file. Collapsing
+/// the two roles into one list would be the convenient mistake that loses
+/// the user's own file on a format change.
+/// ```
+/// use vibe_core::layout;
+/// assert!(layout::is_reserved_boot_authored_input(&layout::current_boot_system_template()));
+/// assert!(!layout::is_reserved_boot_authored_input(&layout::current_boot_system()));
+/// assert!(!layout::is_reserved_boot_authored_input(&layout::current_boot_index()));
+/// ```
+pub fn is_reserved_boot_authored_input(relative: &std::path::Path) -> bool {
+    relative == current_boot_system_template()
+}
+
+fn generated_boot_paths() -> [PathBuf; 5] {
     [
         current_boot_static_md(),
         current_boot_static_xml(),
         current_boot_index(),
+        current_boot_system(),
+        current_boot_system_meta(),
+    ]
+}
+
+/// Every boot path the generator reserves, in either role: the generated
+/// outputs plus the one authored input. Declaration admission refuses all of
+/// them, because a source row naming any one of them would make an output (or
+/// the template delivered twice) an ordinary boot input.
+fn reserved_boot_paths() -> [PathBuf; 6] {
+    let [static_md, static_xml, index, system, system_meta] = generated_boot_paths();
+    [
+        static_md,
+        static_xml,
+        index,
+        system,
+        system_meta,
+        current_boot_system_template(),
     ]
 }
 
@@ -264,10 +338,14 @@ fn generated_boot_paths() -> [PathBuf; 3] {
 /// assert!(!layout::is_generated_boot_output(&alias));
 /// assert!(layout::is_reserved_boot_source(&alias));
 /// assert!(!layout::is_reserved_boot_source(&layout::current_boot_dir().join("nested/.vibe-boot-note")));
+/// // The authored template is refused as a declared source in any ASCII
+/// // case spelling, although it is not a generated output.
+/// assert!(layout::is_reserved_boot_source(&layout::current_boot_dir().join("system-template.MD")));
+/// assert!(layout::is_reserved_boot_source(&layout::current_boot_dir().join("system.META.json")));
 /// ```
 pub fn is_reserved_boot_source(relative: &std::path::Path) -> bool {
     let spelling = relative.to_string_lossy().replace('\\', "/");
-    generated_boot_paths()
+    reserved_boot_paths()
         .iter()
         .any(|path| spelling.eq_ignore_ascii_case(&path.to_string_lossy().replace('\\', "/")))
         || relative.parent().is_some_and(|parent| {
@@ -342,6 +420,66 @@ mod tests {
         assert_eq!(boot_index(), boot_dir().join(INDEX_MD));
         assert_eq!(boot_static_xml(), boot_dir().join(STATIC_XML));
         assert_eq!(boot_static_md(), boot_dir().join(STATIC_MD));
+    }
+
+    #[test]
+    fn the_three_system_prompt_paths_each_hold_exactly_one_role() {
+        // PROP-076 #SYS-LAYOUT-RESERVATION: two generated outputs and one
+        // authored input. The roles are disjoint, and the authored one is
+        // reserved without ever being owned — the distinction that keeps a
+        // format change from deleting the user's own file.
+        let generated = [current_boot_system(), current_boot_system_meta()];
+        let authored = current_boot_system_template();
+        for path in &generated {
+            assert!(
+                is_generated_boot_output(path),
+                "{} is generated",
+                path.display()
+            );
+            assert!(!is_reserved_boot_authored_input(path));
+            assert!(is_reserved_boot_source(path));
+        }
+        assert!(
+            !is_generated_boot_output(&authored),
+            "the template must never be classified as a generated output"
+        );
+        assert!(is_reserved_boot_authored_input(&authored));
+        assert!(is_reserved_boot_source(&authored));
+        // Pairwise distinct, and all three live in the one boot directory —
+        // the invariant the publication transaction's common parent needs.
+        let all = [generated[0].clone(), generated[1].clone(), authored];
+        for (i, a) in all.iter().enumerate() {
+            assert_eq!(a.parent(), Some(current_boot_dir().as_path()));
+            for b in &all[i + 1..] {
+                assert_ne!(a, b);
+            }
+        }
+    }
+
+    #[test]
+    fn an_ascii_case_alias_of_every_reserved_boot_path_is_refused_as_a_source() {
+        for path in reserved_boot_paths() {
+            let name = path.file_name().unwrap().to_str().unwrap();
+            let alias = current_boot_dir().join(name.to_ascii_uppercase());
+            assert!(
+                is_reserved_boot_source(&alias),
+                "{} must be refused as a declared source row",
+                alias.display()
+            );
+        }
+    }
+
+    #[test]
+    fn the_system_prompt_names_are_composed_from_the_constants() {
+        assert_eq!(current_boot_system(), current_boot_dir().join(SYSTEM_MD));
+        assert_eq!(
+            current_boot_system_meta(),
+            current_boot_dir().join(SYSTEM_META_JSON)
+        );
+        assert_eq!(
+            current_boot_system_template(),
+            current_boot_dir().join(SYSTEM_TEMPLATE_MD)
+        );
     }
 
     #[test]

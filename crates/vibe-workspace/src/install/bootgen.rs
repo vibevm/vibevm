@@ -442,4 +442,7 @@ mod tests {
 mod declared_tests;
 
 #[cfg(test)]
+mod own_boot_system_tests;
+
+#[cfg(test)]
 mod own_boot_tests;
