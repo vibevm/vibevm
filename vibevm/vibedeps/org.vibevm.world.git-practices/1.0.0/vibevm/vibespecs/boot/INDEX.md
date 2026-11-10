@@ -10,6 +10,7 @@
 # system is <name> (windows / macos / linux), and skip it otherwise.
 
 # vibe:fp a93a827327ee8f32c30855bfc9591a310193dc4c496767332a4a088c371873b2
+# vibe:compiler-recipe compiler-artifact/2
 
 schema = 1
 static = "vibevm/vibespecs/boot/STATIC.xml"
