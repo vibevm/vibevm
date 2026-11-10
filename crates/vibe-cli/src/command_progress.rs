@@ -39,6 +39,7 @@ pub(crate) const TOP_LEVEL_COMMANDS: &[&str] = &[
     "frame",
     "friends",
     "generate",
+    "hook",
     "init",
     "install",
     "list",

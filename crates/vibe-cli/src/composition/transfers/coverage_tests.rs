@@ -137,6 +137,11 @@ const EXEMPT: &[(&str, Reader, &str)] = &[
         "the index server's per-package lookup replies; the catalog files are wrapped",
     ),
     (
+        "vibe-net/src/system_proxy/unix.rs",
+        Reader::Http,
+        "a bounded direct fetch of a WPAD/PAC script while resolving this host's proxy settings (PROP-068#proxy-system): configuration, not a download",
+    ),
+    (
         "vibe-registry/src/search/full_scan/client.rs",
         Reader::Http,
         "`vibe search --full-scan`: a host's listing read for a search, not a download",
