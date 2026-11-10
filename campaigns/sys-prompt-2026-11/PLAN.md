@@ -1393,11 +1393,26 @@ established shape in this crate (`install/tests_target_gate.rs`,
 path, so a checked-in tree would be copied into a temp dir and have its
 resolution written in code anyway, and splitting one fixture across two
 places is how the two halves drift.
-(2) **The extension-world fixture is not here.** The owner-managed seam has
-its own prompt tests from P4 and the pending-native replay seam its own from
-P6, both at the unit level where an `OwnerNativeCompileProvider` can be
-supplied; an integration test would have to build one, and it would be
-testing the provider.
+(2) ~~**The extension-world fixture is not here.**~~ — the reason it was not,
+and how the campaign tail closed it. It read: "The owner-managed seam has its
+own prompt tests from P4 and the pending-native replay seam its own from P6,
+both at the unit level where an `OwnerNativeCompileProvider` can be supplied;
+an integration test would have to build one, and it would be testing the
+provider." **Closed 2026-11-10** by answering that objection instead of
+accepting it: `tests/system_prompt_parity/extension_world.rs` supplies a
+provider that **refuses to bind** and asserts it was never bound, so no
+provider's behaviour is in the result. The policy map the seam keeps over the
+world's nodes and units is non-empty — that is the manager's bookkeeping, not
+an invocation — and every policy in it is asserted non-resolving. What the
+fixture measures is `#SYS-LANE-VERBATIM`'s own claim, which had no end-to-end
+test: the same inputs regenerated through the owner-managed seam publish
+`SYSTEM.md`, `SYSTEM.meta.json` and `AGENT-LANE.md` byte for byte as the
+builtin seam does, the sidecar's `prefix_len` still matches the prefix, the
+lane still verifies and carries no prefix frame, and a second run rewrites
+neither bytes nor modification times. No native handler is declared,
+deliberately: the seam is selected for the whole run and not per node, so a
+handler would add a cargo build and a reply codec between the inputs and the
+artifacts — exactly the test this deviation was right to refuse.
 (3) **The gated rows come from dynamically linked dependencies**, not from a
 static dependency's gated fragments: only a dynamic contribution's residual
 `os:` gate survives into an INDEX row, so a static link's gated fragment
@@ -1882,12 +1897,20 @@ belongs rather than only here:
 4. **Cross-operating-system determinism is argued, not measured** — two
    directories on Linux plus a composer proved unable to observe a path, a
    clock, an environment or the host OS, with `.gitattributes` carrying the
-   rest.
+   rest. *Amended at the campaign tail: it is now **runnable** on the two
+   unmeasured hosts — `live/determinism-hashes.sh` builds the committed
+   fixture twice offline and prints the three artifacts' SHA-256 — with the
+   Linux figures in `LOG.md`. The macOS and Windows legs stay unmeasured and
+   are the coordinator's; nothing about them is claimed here.*
 5. **`import` is refused in version 1**, with its four blockers named; the
    `@spec://` tokens the lane carries are reported, never rewritten.
-6. **`SP-FMT-008` is deferred** — the `CheckId` that would carry the freshness
-   verdict into the ordinary `vibe check` report. Every fact it would report is
-   reported by `vibe prompt check` today.
+6. ~~**`SP-FMT-008` is deferred**~~ — **delivered at the campaign tail.**
+   `CheckId::SystemPrompt` carries the freshness verdict into the ordinary
+   `vibe check` report: warning for a stale, missing or unverifiable
+   artifact with the exact `vibe prompt build`, error for a tracked one, and
+   nothing at all for a project that has not opted in and holds no leftover.
+   No `formats/` record moved — `[format.cli-check-report]`, which the id
+   named, does not exist in this repository.
 7. **A text separator is not a security boundary.** Moving repository text
    into an instruction role is a real elevation of authority, acknowledged
    rather than assumed away.

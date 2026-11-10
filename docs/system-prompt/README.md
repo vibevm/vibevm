@@ -180,6 +180,18 @@ Every build ends with one line naming what happened and where —
 `system prompt: unchanged → <path>` — and a project that has not opted in
 says so rather than staying silent.
 
+**`vibe check` carries the verdict too, under the `system_prompt` check id.**
+You do not have to know to run `vibe prompt check`: a stale, missing or
+unverifiable prefix shows up in the ordinary report, with the exact
+`vibe prompt build` that resolves it. A project with no authored
+`SYSTEM-TEMPLATE.md` and no leftover artifact is **not reported at all** —
+the feature stays invisible to a project that does not want it. Severity is
+a **warning**, because a prefix is fully derivable from committed inputs by
+one command and nothing but a program already running `vibe` reads it; a
+caller who needs a hard gate uses `vibe prompt check`'s non-zero exit. The
+one **error** is a generated artifact git tracks, which is the single state
+the no-tracking rule exists to prevent.
+
 ### `check` and `prepare` are effect-free
 
 Neither writes a product, cache, profile or config file; neither opens a
@@ -274,6 +286,20 @@ measurement.
 argument is capped at 128 KiB on Linux and the whole line at about 32,767
 characters on Windows, against a ~310 KB lane. A harness with no file-based
 slot therefore has no `launch` tier.
+
+**What vibe enforces around the setting.** `vibe agent` injects **only** for
+a harness in `launch`: in `read` it passes no slot flag, writes no Codex
+carrier, does not gate on the harness's version and does not refuse a slot
+flag of your own — there is nothing for yours to collide with. `vibe prompt
+check` reports two configuration findings: your `CLAUDE.md`, `AGENTS.md` and
+`GEMINI.md` carrying **different** managed blocks, because a *per-harness*
+`delivery` only describes what a harness receives while those files are
+byte-identical; and the same divergence seen from the harness side, since
+Gemini CLI and Qwen Code read several of those names and concatenate them, so
+one session would get two contradicting routers. Identical copies are fine
+and cost only their own bytes. A managed block **below** your project root
+that a harness's downward discovery would also read is `vibe check`'s
+`redirect_block` warning.
 
 | Harness | launch | read | recommended default |
 |---|---|---|---|
@@ -471,6 +497,18 @@ from that plus the composer's proven inability to observe the host; it is
 **not measured here** on macOS or Windows, where only
 `cargo check --target x86_64-pc-windows-gnu` and the cross-platform test
 discipline run.
+
+**It is, however, now runnable by whoever has one of those hosts.**
+`campaigns/sys-prompt-2026-11/live/determinism-hashes.sh <scratch-dir>`
+builds a committed fixture project twice, at two different paths, with
+`vibe install --offline` against a `file://` registry inside the copy — no
+network, no agent, no model — and prints the SHA-256 of the three artifacts
+plus the two-paths verdict. It prints a digest of the fixture's own **inputs**
+first, so a checkout whose bytes differ is diagnosed as that rather than
+discovered as an artifact mismatch; the fixture tree carries an explicit
+`text eol=lf` attribute so the heuristic is out of the argument. The Linux
+figures are recorded in that campaign's `LOG.md`; a macOS or Windows run that
+prints the same three hashes closes the claim.
 
 ## 8. Does caching save you anything?
 

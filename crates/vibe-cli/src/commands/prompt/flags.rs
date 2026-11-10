@@ -90,6 +90,11 @@ pub(crate) fn opted_in(selected: &Selected) -> Result<bool> {
 /// against the installed harness's version here, in the **one** code path
 /// both `vibe prompt flags` and `vibe agent` take — a carrier whose failure
 /// is silent must not be printed as a working answer either.
+///
+/// **Both of those apply only to a `launch` delivery**, which is constraint
+/// C2 of `HARNESS-DELIVERY.md` §4: a `read` harness receives nothing, so a
+/// lane it does not need and a carrier version it does not use are not its
+/// to be refused over. It answers with no flags and the one line saying why.
 pub(crate) fn compose(
     selected: &Selected,
     kind: HarnessKind,

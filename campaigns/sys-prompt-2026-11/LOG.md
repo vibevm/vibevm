@@ -1740,3 +1740,172 @@ started from: it parses, and the Markdown projection is not byte-identical back,
 which is the state `PLAN.md` §2 records since its correction. *(The P7/P8 entry
 above still quotes `byte-stable`; that is the stale reading `daaec4637`
 corrected in `PLAN.md`, and this log is append-only.)*
+
+## 2026-11-10 — the campaign tail: the four implementable leftovers
+
+P9 closed the live check and left four things named rather than done: the
+`#SYS-HARNESS-DELIVERY` constraints beyond the one-mode rule, `SP-FMT-008`,
+P7's missing extension-world fixture, and the unmeasured half of
+`#SYS-DETERMINISM`. All four are implementable offline, so all four landed,
+in four commits. This entry is what a later session would otherwise have to
+re-derive from the diff.
+
+### C1, C2 and C4 — what they mean when `import` cannot be declared
+
+The constraints are written as conditions on `import`, and `import` is
+refused at **deserialisation**: `HarnessDelivery` has two variants and no
+manifest can hold a third. The honest reading is neither "already done" nor
+"vacuous", and getting that wrong in either direction was the risk.
+
+- **C1's shape half** — every declared tier must need the same managed block,
+  because the three instruction files are kept byte-identical and one block's
+  bytes reach every harness — is `system_prompt::one_block_shape` over a
+  `BlockShape { Router, Import }`. It is **total** today. That is not left as
+  a comment: a test iterates every `HarnessDelivery` variant and asserts each
+  maps to `Router`, so the day `import` parses, *that test fails* rather than
+  the rule going quietly unenforced. The refusal text itself is exercised by
+  calling the function with a mixed shape list, which is reachable because
+  the core keys on shapes rather than on tiers. And a mixed
+  `claude = "launch"` / `codex = "read"` manifest is asserted **admissible**,
+  since §4.1 says so: both tiers share one router block.
+- **C1's premise half** is reachable now, and is C1's own clause "unless
+  byte-identity is given up". Instruction files carrying *different* managed
+  blocks make a per-harness `delivery` a statement about nothing, so
+  `vibe prompt check` reports it naming the files.
+- **C4** is §4.1's "several instruction files read by one harness" row. That
+  row **admits** identical copies — "two identical routers, same verdict",
+  duplicated bytes a stated cost — so the finding fires only on divergence,
+  where a harness reading several of those names (Gemini CLI, Qwen Code)
+  would read two contradicting routers. One scan answers both halves and
+  emits two findings, because one is about the declaration being incoherent
+  and the other about what a single session ends up holding. C4's
+  nested-discovery half is **named, not re-scanned**: it is already
+  `vibe check`'s `redirect_block` warning, and two walks of one question
+  would be two answers to it.
+- **C3** needed nothing. The lane's import-inertness is the `@`-token census
+  the same report already carries.
+- **C2** turned out to be a real defect of exactly P9's shape. `vibe agent`
+  ran the slot-flag conflict refusal *before* composing, and `compose` ran
+  the Codex version gate and the lane-presence refusal unconditionally — so a
+  `read`-delivery project could be refused, or version-gated, over a carrier
+  vibe was never going to deliver. P9 fixed the same mistake for the
+  opted-out branch and this is its sibling. Now: no slot flag, no carrier, no
+  version gate, and no conflict refusal when vibe passes nothing. The four
+  `c2_*` cases in `cli_agent_launch.rs` are positive and refusal on the same
+  project with the same user argument, which is the only way to show the
+  rule and not the absence of a rule.
+
+A malformed marker pair is deliberately **not** reported by the new scan: it
+is `redirect_block`'s error and the write path's refusal, and naming one
+defect under two constraints is how a report loses a reader.
+
+### `SP-FMT-008` — the check id, and the record that was not there
+
+`CheckId::SystemPrompt` (`system_prompt`), appended — never inserted, since
+registration order is the report's finding order. Severity splits exactly
+where PROP-076 splits it: **error** for a git-tracked artifact, which
+`#SYS-ARTIFACTS-NOT-TRACKED` states in those words, and **warning** for
+`stale` / `missing` / `unavailable` / `freshness_unverifiable`, which the spec
+does not state and the cell decides and records — a prefix is derivable from
+committed inputs by one named command, nothing but a program already running
+`vibe` reads it, and the caller who needs a hard gate has `vibe prompt
+check`'s non-zero exit. An error would fail `vibe check` for every opted-in
+project between an input edit and the next install.
+
+Two things the id got wrong and this entry corrects. **`[format.cli-check-report]`
+does not exist** in `formats/REGISTRY.toml` — `vibe check --json` is not a
+registered format here — so no record was bumped and nothing in `formats/` or
+`schemas/` moved. And the id said the change "touches the check inventory,
+the cell oracle and the conform manifests": the first two, yes
+(`CheckId::all()`, `all_checks()` and its doctested length, `lib_tests.rs`'s
+order pin, `tests/check_cells_oracle.rs`'s one-cell-per-id table), but **no
+conform manifest moved** — the cell carries its own `#[cell]` manifest like
+every sibling and the gate reports 0 new findings.
+
+"Not opted in is not reported" keeps one exception, the one the removal rule
+exists for: a project that opted **out** with an artifact still on disk is
+reported, because nothing explains that file. This repository has not opted
+in, and `vibe check` on this worktree is unchanged at its baseline.
+
+### The extension-world fixture — answering P7's objection
+
+P7's deviation was right that an integration fixture "would be testing the
+provider", so the fixture supplies a provider that **refuses to bind** and
+asserts it was never bound. The policy map the seam hands the provider
+factory is non-empty — `Collect` for the node and for the carrier unit, which
+is the manager's bookkeeping computed before anything is compiled — and every
+policy in it is asserted non-resolving. An unbound provider cannot have
+contributed a byte.
+
+What that buys is a test for `#SYS-LANE-VERBATIM`'s own claim, which had
+none: the prefix "reuses that output as one admitted segment through
+whichever of the **two publishing** seams the node's own world selected". The
+same fixture regenerated through `regenerate_boot_from_traced_native`
+publishes all three artifacts byte for byte as the builtin loop does; the
+sidecar's `prefix_len` still matches the prefix; the lane still verifies and
+carries no `vibe:prompt-segment` frame; and a second run rewrites neither
+bytes nor modification times. No native handler is declared on purpose — the
+seam is chosen for the run, not per node, so declaring one would only add a
+cargo build and a reply codec between the inputs and the artifacts.
+
+### `#SYS-DETERMINISM` — the unmeasured legs are now runnable
+
+The macOS and Windows legs stayed unmeasured partly for a reason nobody
+wrote down: the measurement existed only as two Rust tests inside this
+crate's suite, so anyone with one of those hosts would have had to rebuild
+the setup by hand. `live/determinism-hashes.sh` is the run — the committed
+`live/sample/` fixture built **twice at two different paths** through
+`make-sample.sh`, which is `vibe install --offline` against a `file://`
+registry inside the copy: no network, no agent, no model.
+
+Three decisions in it are this fact's mechanics made operational. Hashing
+goes through `python3`, which `make-sample.sh` already requires, so a
+comparison across hosts is not also a comparison of `sha256sum` against
+`shasum` against `certutil`. The **inputs** digest over the committed fixture
+tree prints first, so a checkout whose bytes differ is diagnosed as that
+rather than discovered as a mysterious artifact mismatch — the fact's
+dependence on `.gitattributes` is a premise, and a measurement states its
+premises. And the fixture tree gained an explicit `text eol=lf` attribute:
+`* text=auto eol=lf` already yields LF here, but through git's per-file
+content *heuristic*, and a determinism claim must not rest on a guess about
+whether a fixture file looks like text. Nothing in the working tree changed —
+the tree was already LF in the index.
+
+**The command, for the coordinator to run verbatim:**
+
+```sh
+VIBE=<path-to-vibe> bash campaigns/sys-prompt-2026-11/live/determinism-hashes.sh <scratch-dir> 2>/dev/null
+```
+
+**Linux figures, measured 2026-11-10 at `0e8931e36` on Linux x86_64, twice,
+at four distinct scratch paths, identical each time:**
+
+```
+inputs:            7b747743938a8d09b57f729c6d8973a80deca8f3af117275b562ebc05cd9aa51
+SYSTEM.md          9db549a7234be42f10c123cc8f0d412857b429d17793c791d93f3778ef730303
+SYSTEM.meta.json   8b1963180f4501d0b454bb52eefd4e585002b03e733b2f8f81e991a38e7ae6a1
+AGENT-LANE.md      e28c93d224427886a5af672d1194fcba8b780da13f7fba886ec9c6fab800ae4c
+two-paths:         same
+```
+
+A macOS or Windows run that prints the same three artifact hashes closes
+`#SYS-DETERMINISM`. If the `inputs` line differs there, the artifacts are
+expected to differ too and the finding is about the checkout, not about the
+composer. **Neither host was measured here, and nothing about them is
+claimed.**
+
+### What this tail leaves open
+
+1. **`#SYS-HARNESS-DELIVERY` stays `impl/work`**, now for its remaining
+   reasons alone: row C8 (Windows) did not run, the interactive terminal UI
+   is unmeasured, and six harnesses were never authorised for a live run.
+2. **`#SYS-DETERMINISM` stays `impl/work`** until the two host runs exist.
+   The script is the whole of what this session could contribute.
+3. **The host-mismatch warning of `SP-FMT-105` is still planned** — a session
+   whose OS differs from a fixed declared `host`.
+4. **The 18 tracked instruction files still carry the pre-2026-11 redirect**,
+   for the unchanged reason: `vibe install --offline --registry
+   vibevm/vibepacks` refuses in this worktree before resolution completes,
+   because `vibevm/vibedeps/org.vibevm.doc.web/` is absent here. That absence
+   is also why `vibe check` on this worktree reports **2 pre-existing
+   errors** rather than none.

@@ -131,14 +131,54 @@ promises none does not write.
 
 ## SP-FMT-008 — `vibe check` reports a stale or conflicting prefix (Phase 5)
 
-Status: **not delivered in P5**, deliberately deferred. `vibe prompt check`
-reports every one of these facts, exits non-zero on any verdict but `equal`,
-and names the remedy; the tracked-artifact error P4 added to the existing
-`redirect_block` cell already covers the ownership half inside `vibe check`.
-What remains is a new `CheckId` so the ordinary check report carries the
-freshness verdict too — a report around facts that now exist, and it touches
-the check inventory, the cell oracle and the conform manifests, which is a
-different kind of change from the rest of this phase.
+Status: **delivered 2026-11-10** (campaign tail), having been deliberately
+deferred in P5 for the reason recorded below. The deferral read: "`vibe
+prompt check` reports every one of these facts, exits non-zero on any verdict
+but `equal`, and names the remedy; the tracked-artifact error P4 added to the
+existing `redirect_block` cell already covers the ownership half inside `vibe
+check`. What remains is a new `CheckId` so the ordinary check report carries
+the freshness verdict too — a report around facts that now exist, and it
+touches the check inventory, the cell oracle and the conform manifests, which
+is a different kind of change from the rest of this phase."
+
+**As delivered, with four things settled that the id left open.**
+
+- `CheckId::SystemPrompt`, spelled `system_prompt`, **appended** to
+  `CheckId::all()` and to `all_checks()` — the registration order is the
+  report's finding order and is observable output, so a cell is appended and
+  never inserted. The cell is `crates/vibe-check/src/checks/system_prompt.rs`.
+  Touched with it: the crate root's enum, `as_str`, `all()`, `all_checks()`
+  and its doctested length, `checks/mod.rs`, `lib_tests.rs`'s order pin and
+  `tests/check_cells_oracle.rs`'s one-cell-per-id table. **No conform
+  manifest moved**: the cell carries its `#[cell(seam = "Check", variant =
+  "system-prompt")]` manifest like every sibling and the gate reports 0 new
+  findings.
+- **No registry record was bumped**, because `[format.cli-check-report]` does
+  not exist in `formats/REGISTRY.toml` — `vibe check --json` is not a
+  registered format in this repository. This id's "epoch 1 → 1" was written
+  against a record that is not there; the finding rows are an additive JSON
+  member of an unregistered report, and nothing in `formats/` or `schemas/`
+  changed.
+- **Severities, and which of them PROP-076 chose.** A tracked artifact is an
+  **error**, which `#SYS-ARTIFACTS-NOT-TRACKED` states in those words.
+  Everything else — `stale`, `missing`, `unavailable`,
+  `freshness_unverifiable` — is a **warning**, which the spec does not state
+  and the cell decides and records: a prefix is fully derivable from
+  committed inputs by one named command, nothing but a program already
+  running `vibe` reads it, and the caller who needs a hard gate has `vibe
+  prompt check`'s non-zero exit. An error would fail `vibe check` for every
+  opted-in project between an input edit and the next install, which is an
+  ordinary state rather than a defect.
+- **"Not opted in is not reported" has exactly one exception**, and it is the
+  one the removal rule exists for: a project that opted **out** and left an
+  artifact on disk is reported, because nothing then explains that file.
+  Measured on this repository, which has not opted in: `vibe check` is
+  unchanged at its pre-existing baseline, 0 new findings.
+- **One node, the project root.** vibe-check is project-file only and loads
+  no workspace; a member node's own prefix stays `vibe prompt check --node
+  <rel>`'s answer. Git tracking is asked of `git ls-files`, as the prompt
+  verbs ask it, and a directory that is no repository gets "cannot tell"
+  rather than an invented clean.
 
 - `[format.cli-check-report]`, epoch **1 → 1**: one new `CheckId` with its finding rows; existing members unchanged.
 - A project that has opted in and whose published prefix is stale, missing its sidecar, or in ownership conflict is reported by the ordinary `vibe check`, at the severity the check inventory assigns, with the exact `vibe prompt build` that would resolve it. A project that has not opted in is not reported at all.
@@ -257,8 +297,16 @@ both carrying `delivery`, with `launch` the default for the two and `read` for
 every other harness name. `import` is refused **at deserialisation**, naming
 its four blockers — following `lane_form`'s precedent, so a project cannot hold
 a setting that parses and is then ignored. A harness in `read` delivery takes
-no flag at all and `vibe prompt flags` says why. What remains planned: the
-constraints C1–C4 beyond the `import` refusal and the one-mode rule, and the
+no flag at all and `vibe prompt flags` says why. **Constraints C1, C2 and C4
+delivered 2026-11-10** (campaign tail), each with the content it has in a
+version that cannot represent `import`: C1's shape half as a function that is
+total today and *proved* total by a test over every `HarnessDelivery` variant,
+C1's byte-identity premise and C4's "several instruction files read by one
+harness" row as two `vibe prompt check` findings over one scan, C3 already
+covered by the `@`-token census, and C2 as `vibe agent`'s rule that it injects
+only for `launch` — which fixed a defect of P9's shape, a `read`-delivery
+launch being refused or version-gated over a carrier it was never going to
+deliver. Detail: `PROP-076#SYS-HARNESS-DELIVERY`. What remains planned: the
 host-mismatch warning. **And one of this id's own verified claims is
 falsified:** `HARNESS-DELIVERY.md` §5's **[V]** for the Codex profile-file
 carrier does not hold on codex-cli 0.167.0 — `developer_instructions` is not a
