@@ -98,7 +98,11 @@ impl InstallerOptionDecl {
             (Some(method), true) => {
                 let stray = if self.result.is_some() {
                     Some("result")
-                } else if !self.features.is_empty() {
+                } else if self.features.iter().any(|f| f.origin.is_authored()) {
+                    // Only the author's own rows: a feature synthesised
+                    // from `[[application.ecosystem.recommends]]` is a
+                    // property of the package and reaches a method-form
+                    // option too (PROP-075 `#ECOSYSTEM-RECOMMENDS`).
                     Some("features")
                 } else if !self.profiles.is_empty() {
                     Some("profiles")
@@ -240,6 +244,7 @@ impl ApplicationDecl {
             ));
         }
         self.validate_version_files(&at)?;
+        self.validate_ecosystems(&at)?;
         self.validate_migrations(&at)?;
         self.validate_menu(&at)
     }

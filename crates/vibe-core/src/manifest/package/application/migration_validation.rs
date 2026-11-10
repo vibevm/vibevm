@@ -9,8 +9,8 @@ specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-075#MIGRATION-DECLAR
 use std::collections::BTreeSet;
 
 use crate::manifest::{
-    ApplicationDecl, FieldError, FieldPath, MigrationDecl, StepDecl, StepKind, StepPhase,
-    is_portable_token,
+    ApplicationDecl, ECOSYSTEM_MIGRATION_PREFIX, FieldError, FieldPath, MigrationDecl, StepDecl,
+    StepKind, StepPhase, is_portable_token,
 };
 
 impl ApplicationDecl {
@@ -31,6 +31,19 @@ impl ApplicationDecl {
                 let at = row_at.field(name);
                 FieldError::new(at.clone(), format!("{at}: {message}"))
             };
+            if row.id.starts_with(ECOSYSTEM_MIGRATION_PREFIX) {
+                // The namespace is reserved so a synthesised adapter entry
+                // can never be shadowed (PROP-075 `#ECOSYSTEM-MIGRATION`).
+                return Err(refuse(
+                    "id",
+                    format!(
+                        "migration id `{}` is in the reserved `{ECOSYSTEM_MIGRATION_PREFIX}` \
+                         namespace; vibe synthesises those entries from \
+                         `[[application.ecosystem]]`",
+                        row.id
+                    ),
+                ));
+            }
             if !is_portable_token(&row.id) {
                 return Err(refuse(
                     "id",

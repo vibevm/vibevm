@@ -39,6 +39,32 @@ pub struct FeatureDecl {
     /// Exactly one member of a group is selected.
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub exclusive_group: Option<String>,
+    /// Authored in `[[installer_options.features]]`, or synthesised from
+    /// an `[[application.ecosystem.recommends]]` row (PROP-075
+    /// `#ECOSYSTEM-RECOMMENDS`). Never authored and never serialised: the
+    /// wire conversion puts the synthesised rows in on the way in and
+    /// takes them out again on the way out, so a manifest round trip is
+    /// byte-identical and the two spellings cannot drift.
+    #[serde(skip)]
+    pub origin: FeatureOrigin,
+}
+
+/// Where a feature row came from (PROP-075 `#ECOSYSTEM-RECOMMENDS`).
+#[spec(documents = "spec://org.vibevm.core/vibevm/common/PROP-075#ECOSYSTEM-RECOMMENDS")]
+#[derive(Debug, Clone, Copy, Default, PartialEq, Eq)]
+pub enum FeatureOrigin {
+    /// Written by the author in `[[installer_options.features]]`.
+    #[default]
+    Authored,
+    /// Shorthand for an `[[application.ecosystem.recommends]]` row.
+    EcosystemRecommends,
+}
+
+impl FeatureOrigin {
+    /// Whether the row is the author's own.
+    pub fn is_authored(self) -> bool {
+        matches!(self, Self::Authored)
+    }
 }
 
 /// When a step runs relative to placement or registration.

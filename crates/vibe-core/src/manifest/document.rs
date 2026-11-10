@@ -571,6 +571,8 @@ mod tests_application;
 #[cfg(test)]
 mod tests_documentation;
 #[cfg(test)]
+mod tests_ecosystem;
+#[cfg(test)]
 mod tests_extension_controls;
 #[cfg(test)]
 mod tests_extensions;

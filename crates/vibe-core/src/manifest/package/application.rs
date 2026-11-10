@@ -3,6 +3,8 @@
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-059#declaration");
 
 mod drop_inputs;
+mod ecosystem;
+mod ecosystem_validation;
 mod environment;
 mod icon_files;
 mod launcher;
@@ -22,6 +24,9 @@ mod version_file_validation;
 mod wizard;
 mod wizard_validation;
 
+pub use ecosystem::{
+    ECOSYSTEM_MIGRATION_PREFIX, EcosystemDecl, EcosystemRecommendDecl, EcosystemVerb,
+};
 pub use environment::{StepEnvironment, StepEnvironmentError, step_env_name};
 pub use icon_files::{IconFinding, icon_findings};
 pub use launcher::{
@@ -34,8 +39,9 @@ pub use requirement::{
     RequirementDecl, RequirementScope, RequirementTable, application_requirements,
 };
 pub use steps::{
-    AgentMode, ArchiveFormatDecl, Condition, ExternalResult, FeatureDecl, NativeFormatDecl, Need,
-    OwnedWord, ParamEquals, ResultDecl, StepDecl, StepKind, StepOrigin, StepPhase,
+    AgentMode, ArchiveFormatDecl, Condition, ExternalResult, FeatureDecl, FeatureOrigin,
+    NativeFormatDecl, Need, OwnedWord, ParamEquals, ResultDecl, StepDecl, StepKind, StepOrigin,
+    StepPhase,
 };
 pub use sugar::{result_of, steps_of};
 pub use template::{StepVar, expand_step_template};
@@ -399,6 +405,13 @@ pub struct ApplicationDecl {
     /// carry and `vibe app migrate` has nothing to offer.
     #[serde(default, skip_serializing_if = "Vec::is_empty")]
     pub migration: Vec<MigrationDecl>,
+    /// `[[application.ecosystem]]` — the adapters by which this runtime
+    /// installs, lists, removes and self-upgrades the packages of its own
+    /// ecosystem (PROP-075 `#ECOSYSTEM-ADAPTER`). Absent means the runtime
+    /// has no ecosystem of its own, which is the test that the mechanism is
+    /// optional.
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub ecosystem: Vec<EcosystemDecl>,
     /// `[[application.version_file]]` — the per-project version files this
     /// package understands, from the closed format set of PROP-075
     /// `#VERSION-FILE-FORMATS`. Absent means the slot has no version file

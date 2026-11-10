@@ -39,13 +39,33 @@ impl TryFrom<ManifestWire> for Manifest {
         let mechanism_routes: MechanismRoutes = wire.mechanism_routes.try_into()?;
         let artifacts = wire.artifacts.map(TryInto::try_into).transpose()?;
         let deploy = wire.deploy.map(TryInto::try_into).transpose()?;
+        // An `[[application.ecosystem.recommends]]` row is shorthand for
+        // one `[[installer_options.features]]` row in **every** option of
+        // the package, because a recommendation is a property of the
+        // package and not of one platform's archive (PROP-075
+        // `#ECOSYSTEM-RECOMMENDS`). Putting the rows in here, before
+        // anything reads an option, is what makes them ordinary rows in
+        // every respect: the fixed point of PROP-065 `#feature-tree`,
+        // `--feature` / `--no-feature`, the attended multi-select, the
+        // profiles and the recorded chosen set all apply with no new
+        // vocabulary. `TryFrom<Manifest> for ManifestWire` takes them out
+        // again, so a round trip is byte-identical.
+        let mut installer_options = wire.installer_options;
+        if let Some(application) = &wire.application {
+            let synthesised = application.synthesised_features();
+            if !synthesised.is_empty() {
+                for option in &mut installer_options {
+                    option.features.extend(synthesised.iter().cloned());
+                }
+            }
+        }
         Ok(Self {
             project: wire.project,
             package: wire.package,
             template: wire.template,
             system_prompt: wire.system_prompt,
             application: wire.application,
-            installer_options: wire.installer_options,
+            installer_options,
             workspace: wire.workspace,
             origin: wire.origin,
             requires: wire.requires,
@@ -128,13 +148,23 @@ impl TryFrom<Manifest> for ManifestWire {
         let artifacts = manifest.artifacts.map(TryInto::try_into).transpose()?;
         let deploy: Option<DeploySectionWire> =
             manifest.deploy.map(TryInto::try_into).transpose()?;
+        // The synthesised recommendation features never reach the
+        // document: the row they stand for is the only spelling an author
+        // wrote, so the two cannot drift (PROP-075
+        // `#ECOSYSTEM-RECOMMENDS`).
+        let mut installer_options = manifest.installer_options;
+        for option in &mut installer_options {
+            option
+                .features
+                .retain(|feature| feature.origin.is_authored());
+        }
         Ok(Self {
             project: manifest.project,
             package: manifest.package,
             template: manifest.template,
             system_prompt: manifest.system_prompt,
             application: manifest.application,
-            installer_options: manifest.installer_options,
+            installer_options,
             workspace: manifest.workspace,
             origin: manifest.origin,
             requires: manifest.requires,
