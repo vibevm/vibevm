@@ -40,6 +40,7 @@ fn base_args() -> InstallArgs {
         installer: None,
         library: None,
         steps: Default::default(),
+        no_extras: false,
         version_file: Default::default(),
         plan_only: false,
         hidden: false,

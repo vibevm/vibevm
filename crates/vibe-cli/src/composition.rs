@@ -180,17 +180,36 @@ pub(crate) fn project_preview(cmd: &crate::cli::Command) -> bool {
 /// it, because a flag silently ignored is worse than a flag refused
 /// (`PROP-077#NO-RECOMMENDS-FLAG`).
 pub(crate) fn admit_no_recommends(passed: bool, cmd: &crate::cli::Command) -> anyhow::Result<()> {
-    use crate::cli::Command;
+    use crate::cli::{AppCommand, Command};
     if !passed
         || matches!(
             cmd,
             Command::Install(_) | Command::Update(_) | Command::Reinstall(_)
         )
+        // `vibe app extras` asks the same question of an author's
+        // recommended **ecosystem** items: one idea with two spellings, so
+        // one flag declines both (`PROP-075#SLOT-EXTRAS`). `apply` installs
+        // them and `list` previews exactly what `apply` would do, and the
+        // family's other verbs act on a list the user typed, where the flag
+        // would mean nothing — so it is refused there as everywhere else.
+        || matches!(
+            cmd,
+            Command::App(args)
+                if matches!(
+                    &args.command,
+                    AppCommand::Extras(extras)
+                        if matches!(
+                            extras.command,
+                            crate::cli::ExtrasCommand::Apply { .. }
+                                | crate::cli::ExtrasCommand::List { .. }
+                        )
+                )
+        )
     {
         return Ok(());
     }
     Err(anyhow::anyhow!(
-        "`--no-recommends` is not available here: it decides whether vibe installs what you did not name, which only `vibe install`, `vibe update` and `vibe reinstall` — of a project or with `-g` — ever ask"
+        "`--no-recommends` is not available here: it decides whether vibe installs what you did not name, which only `vibe install`, `vibe update` and `vibe reinstall` — of a project or with `-g` — and `vibe app extras list|apply` ever ask"
     ))
 }
 

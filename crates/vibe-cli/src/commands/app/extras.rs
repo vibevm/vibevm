@@ -1,17 +1,25 @@
-//! `vibe app extras list|remove|self-upgrade`: the explicit verbs of a
-//! runtime's own package ecosystem (PROP-075 `#SLOT-EXTRAS`,
+//! `vibe app extras`: the verbs of a runtime's own package ecosystem, and
+//! the editors of the user's own list (PROP-075 `#SLOT-EXTRAS`,
 //! `#ECOSYSTEM-ADAPTER`).
 //!
-//! The library runs exactly the verb it is handed with exactly the items
-//! it is given, so this adapter's whole job is parsing, resolving the
-//! version's package tree and rendering. **Item strings pass through
-//! untouched**: they are taken from `argv` and handed to `argv`, and
-//! nothing here splits, quotes, escapes or reorders one.
+//! Three kinds of verb live here, and the split is the point. `list` and
+//! `apply` compute the final list and are the ones the two decline flags
+//! reach; `remove` and `self-upgrade` run a verb over an already-decided
+//! list; and `add`, `drop` and `import` touch **no** installation at all —
+//! they edit `~/.vibe/config.toml` and install nothing, which is why they
+//! are the only ones here that write a file.
+//!
+//! The library runs exactly the verb it is handed, and owns the
+//! arithmetic of the final list, so this adapter's job is parsing,
+//! resolving the version's package tree and rendering. **Item strings
+//! pass through untouched**: they are taken from `argv` and handed to
+//! `argv` or to the user's own file, and nothing here splits, quotes,
+//! escapes or reorders one.
 
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-075#SLOT-EXTRAS");
 
 use anyhow::Result;
-use vibe_app::{EcosystemRequest, OperationContext, SettingsRoot};
+use vibe_app::{EcosystemRequest, ExtrasApply, ExtrasPolicy, OperationContext, SettingsRoot};
 use vibe_core::manifest::EcosystemVerb;
 use vibe_wire::generated::application_ecosystem as wire;
 use vibe_wire::generated::application_extras as extras_wire;
@@ -22,6 +30,9 @@ use crate::cli::{AppExtrasArgs, ExtrasCommand, ExtrasTargetArgs};
 use crate::output;
 use crate::output::language::{Role, paint};
 
+#[path = "extras/settings.rs"]
+mod settings;
+
 pub(super) fn run(
     ctx: &output::Context,
     settings: &SettingsRoot,
@@ -30,8 +41,50 @@ pub(super) fn run(
     offline: bool,
 ) -> Result<Option<i32>> {
     match args.command {
-        ExtrasCommand::List { slot, target } => {
-            list(ctx, settings, &slot, &target, embedded_root, offline)
+        ExtrasCommand::List {
+            slot,
+            decline,
+            target,
+        } => list(
+            ctx,
+            settings,
+            &slot,
+            policy(ctx, decline.no_extras),
+            &target,
+            embedded_root,
+            offline,
+        ),
+        ExtrasCommand::Apply {
+            slot,
+            decline,
+            target,
+        } => apply(
+            ctx,
+            settings,
+            &slot,
+            policy(ctx, decline.no_extras),
+            &target,
+            embedded_root,
+            offline,
+        ),
+        ExtrasCommand::Add {
+            slot,
+            items,
+            target,
+        } => settings::add(
+            ctx,
+            settings,
+            &slot,
+            &items,
+            &target,
+            embedded_root,
+            offline,
+        ),
+        ExtrasCommand::Drop { slot, ids, target } => {
+            settings::drop(ctx, settings, &slot, &ids, &target, embedded_root, offline)
+        }
+        ExtrasCommand::Import { slot, file, target } => {
+            settings::import(ctx, settings, &slot, &file, &target, embedded_root, offline)
         }
         ExtrasCommand::Remove {
             slot,
@@ -125,28 +178,143 @@ impl<'a> Operation<'a> {
     }
 }
 
+/// The two flags, in one answer (PROP-075 `#SLOT-EXTRAS`):
+/// `--no-recommends` is the one global flag of
+/// `PROP-077#NO-RECOMMENDS-FLAG` and is read off the invocation, never
+/// redefined here; `--no-extras` is the verb's own.
+pub(super) fn policy(ctx: &output::Context, no_extras: bool) -> ExtrasPolicy {
+    ExtrasPolicy {
+        no_recommends: ctx.no_recommends(),
+        no_extras,
+    }
+}
+
 /// `vibe app extras list SLOT`: the final list and the observation.
 fn list(
     ctx: &output::Context,
     settings: &SettingsRoot,
     slot: &str,
+    policy: ExtrasPolicy,
     target: &ExtrasTargetArgs,
     embedded_root: Option<&std::path::Path>,
     offline: bool,
 ) -> Result<Option<i32>> {
     let operation = Operation::new(ctx, settings, target, embedded_root, offline)?;
     let document = operation.around(settings, offline, |cx| {
-        vibe_app::extras_listing(
-            cx,
-            slot,
-            None,
-            target.ecosystem.as_deref(),
-            true,
-            vibe_app::ExtrasPolicy::default(),
-        )
+        vibe_app::extras_listing(cx, slot, None, target.ecosystem.as_deref(), true, policy)
     })?;
     report_listing(ctx, &document)?;
     Ok(None)
+}
+
+/// `vibe app extras apply SLOT`: compute the final list and install it
+/// into the version the slot's default points at.
+///
+/// Exit status follows the run, because the user asked for exactly this;
+/// the same call made *after* an install reports a warning instead and
+/// never changes that install's status — [`after_install`].
+fn apply(
+    ctx: &output::Context,
+    settings: &SettingsRoot,
+    slot: &str,
+    policy: ExtrasPolicy,
+    target: &ExtrasTargetArgs,
+    embedded_root: Option<&std::path::Path>,
+    offline: bool,
+) -> Result<Option<i32>> {
+    let operation = Operation::new(ctx, settings, target, embedded_root, offline)?;
+    let document = operation.around(settings, offline, |cx| {
+        vibe_app::extras_apply(
+            cx,
+            &ExtrasApply {
+                slot,
+                version: None,
+                ecosystem: target.ecosystem.as_deref(),
+                policy,
+            },
+        )
+    })?;
+    report_run(ctx, &document)?;
+    Ok(Some(i32::from(!document.ok)))
+}
+
+/// What `install -g` / `update -g` run once they have placed a **new**
+/// version of a slot and written its record (PROP-075 `#SLOT-EXTRAS`).
+///
+/// It names the installation key it just placed rather than the slot's
+/// default, because the default is the user's to move and an install need
+/// not have moved it. **It never fails the install**: a refusal or a
+/// failing verb is one warning naming the retry command, the version stays
+/// installed, the slot default stays where the user put it, and the exit
+/// status is the install's own. An extra is an extra.
+pub(crate) struct AfterInstall<'a> {
+    pub slot: &'a str,
+    pub key: &'a str,
+    pub registry: Option<&'a std::path::Path>,
+    pub embedded: Option<&'a std::path::Path>,
+    pub offline: bool,
+    pub no_extras: bool,
+}
+
+pub(crate) fn after_install(
+    ctx: &output::Context,
+    settings: &SettingsRoot,
+    request: &AfterInstall<'_>,
+) {
+    let target = ExtrasTargetArgs {
+        ecosystem: None,
+        registry: request.registry.map(std::path::Path::to_path_buf),
+    };
+    let run = || -> Result<wire::ApplicationEcosystem> {
+        let operation = Operation::new(ctx, settings, &target, request.embedded, request.offline)?;
+        operation.around(settings, request.offline, |cx| {
+            vibe_app::extras_apply(
+                cx,
+                &ExtrasApply {
+                    slot: request.slot,
+                    version: Some(request.key),
+                    ecosystem: None,
+                    policy: policy(ctx, request.no_extras),
+                },
+            )
+        })
+    };
+    match run() {
+        Ok(document) => {
+            // Nothing ran: the package declares no adapter, or every list
+            // was empty. Silence is right — the install said everything.
+            if document.adapters.is_empty()
+                || document
+                    .adapters
+                    .iter()
+                    .all(|row| row.outcome == wire::Outcome::Skipped)
+            {
+                return;
+            }
+            let _ = report_run(ctx, &document);
+        }
+        Err(error) => {
+            // A package with no adapter at all is the ordinary case, not a
+            // warning — the great majority of applications — so it is the
+            // one refusal this path swallows whole, matched by code and
+            // never by its prose.
+            if error
+                .downcast_ref::<vibe_app::AppError>()
+                .is_some_and(|error| error.code() == "no_ecosystem")
+            {
+                return;
+            }
+            ctx.summary(&format!(
+                "  extras were not applied: {}; the version is installed and unchanged — retry \
+                 with {}",
+                super::report::prose(&error.to_string()),
+                paint(
+                    Role::Accent,
+                    &format!("vibe app extras apply {}", request.slot)
+                )
+            ));
+        }
+    }
 }
 
 /// `vibe app extras remove|self-upgrade SLOT`: one verb of one or every
@@ -187,17 +355,38 @@ fn report_listing(ctx: &output::Context, document: &extras_wire::ApplicationExtr
     for row in &document.ecosystems {
         ctx.summary(&format!("  {} ({})", row.name, row.id));
         for recommendation in &row.recommendations {
+            // A recommendation the user dropped is shown as dropped and
+            // not as unchosen: the two are different acts, and only one of
+            // them is reversible with `--feature`.
+            let mark = match (recommendation.enabled, recommendation.dropped) {
+                (_, true) => "[-]",
+                (true, false) => "[x]",
+                (false, false) => "[ ]",
+            };
             ctx.summary(&format!(
-                "    {} {} — {}",
-                if recommendation.enabled { "[x]" } else { "[ ]" },
+                "    {mark} {} — {} ({})",
                 paint(Role::Accent, &recommendation.item),
-                recommendation.name
+                recommendation.name,
+                recommendation.id
             ));
+        }
+        if !row.add.is_empty() {
+            ctx.summary(&format!("    yours {}", row.add.join(" ")));
         }
         if row.items.is_empty() {
             ctx.summary("    no items would be installed");
         } else {
             ctx.summary(&format!("    list {}", row.items.join(" ")));
+        }
+        if !row.applied.is_empty() {
+            ctx.summary(&format!(
+                "    last applied {}{}",
+                row.applied.join(" "),
+                row.applied_at
+                    .as_deref()
+                    .map(|at| format!(" at {at}"))
+                    .unwrap_or_default()
+            ));
         }
         match (&row.observed_failed, row.observed.is_empty()) {
             (Some(reason), _) => {
@@ -211,6 +400,11 @@ fn report_listing(ctx: &output::Context, document: &extras_wire::ApplicationExtr
                 ctx.summary(&format!("    installed {}", row.observed.join(" ")));
             }
         }
+    }
+    // A stale line in the user's own settings is reported once, here, and
+    // otherwise ignored (PROP-075 `#SLOT-EXTRAS`).
+    for notice in &document.notices {
+        ctx.summary(&format!("  note: {}", super::report::prose(notice)));
     }
     ctx.trailer(&format!(
         "vibe app extras list: slot `{}` at {}, {} ecosystem(s)",
@@ -248,6 +442,9 @@ fn report_run(ctx: &output::Context, document: &wire::ApplicationEcosystem) -> R
         if let Some(retry) = &row.retry {
             ctx.summary(&format!("    retry {}", paint(Role::Accent, retry)));
         }
+    }
+    for notice in &document.notices {
+        ctx.summary(&format!("  note: {}", super::report::prose(notice)));
     }
     if !document.work.is_empty() {
         ctx.summary(&format!(

@@ -233,6 +233,7 @@ pub(crate) fn update_all(
         args.platform = choice.platform;
         args.arch = choice.arch;
         args.installer = choice.installer;
+        let before = global::installed_keys(&settings);
         let outcome = global::update_one(
             ctx,
             &args,
@@ -242,8 +243,22 @@ pub(crate) fn update_all(
             &source_operation,
         )?;
         render(ctx, &outcome)?;
-        // A bulk update gives slots new versions too, and offers the same
-        // way: one line, never a migration (PROP-075 `#MIGRATION-FAILURE`).
+        // A bulk update gives slots new versions too, so the user's own
+        // extras go into each new one exactly once (PROP-075
+        // `#SLOT-EXTRAS`), and the migration offer is the same one line,
+        // never a migration (`#MIGRATION-FAILURE`).
+        global::apply_extras(
+            ctx,
+            &settings,
+            &before,
+            &outcome,
+            global::ExtrasAfter {
+                registry: args.registry.as_deref(),
+                embedded: embedded_root.as_deref(),
+                offline,
+                no_extras: args.no_extras,
+            },
+        );
         super::migrate::offer(ctx, &settings, &outcome.slot, &outcome.key);
         updated += 1;
     }

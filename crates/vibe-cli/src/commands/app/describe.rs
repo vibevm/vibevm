@@ -56,11 +56,16 @@ pub(super) fn show(
         return Ok(());
     }
     let mut document = vibe_app::describe(&resolved)?;
-    document.installed_source = vibe_app::Index::load(&settings)?
-        .installations
-        .get(&resolved.package.key())
-        .and_then(|r| r.source_evidence.clone());
+    let index = vibe_app::Index::load(&settings)?;
+    let installed = index.installations.get(&resolved.package.key());
+    document.installed_source = installed.and_then(|r| r.source_evidence.clone());
     document.installed_hosting = vibe_registry::source_hosting(document.installed_source.as_ref());
+    // What each declared ecosystem adapter last applied and last observed
+    // in the installed version, off the inventory's own record: nothing is
+    // run to answer `describe` (PROP-075 `#SLOT-EXTRAS`, `AV-FMT-032`).
+    if let Some(record) = installed {
+        vibe_app::describe_installed_extras(&mut document, record);
+    }
     if ctx.is_json() {
         return ctx.emit_json(&document);
     }

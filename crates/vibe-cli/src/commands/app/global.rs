@@ -7,14 +7,16 @@ use std::path::{Path, PathBuf};
 
 use anyhow::{Context, Result, bail};
 use vibe_app::{
-    FeatureRequest, HostFacts, InstallChoice, InstallRequest, Interrupt, OperationContext, Plan,
-    RemoveRequest, ResolvedPackage, SettingsRoot, Start, UserEnvironment,
+    FeatureRequest, HostFacts, InstallChoice, InstallRequest, OperationContext, Plan,
+    RemoveRequest, ResolvedPackage, SettingsRoot, Start,
 };
-use vibe_core::progress::Progress;
+
+#[path = "global/observation.rs"]
+mod observation;
+pub(crate) use observation::Observation;
 
 use super::agents::{AgentSetup, report_parked};
 use super::display::{StepDisplay, asking};
-use super::interrupt::Signals;
 use super::report::{render, render_removal, render_written};
 use super::wizard::{chooser, feature_chooser, license_prompt, parameter_prompt};
 use crate::cli::{AppChoiceArgs, AppStepArgs, InstallArgs, UninstallArgs, UpdateArgs};
@@ -164,98 +166,17 @@ pub(crate) fn host_facts() -> HostFacts<'static> {
     }
 }
 
-/// A run's one-line notice printer (PROP-065 `#work`).
-type Notice = Box<dyn Fn(&str)>;
-
-/// What one operation observes: the progress handle (the machine stream
-/// only; the human renderer keeps showing child output as before) and the
-/// caught signals of a mutating command.
-pub(crate) struct Observation<'d> {
-    pub(crate) http_client: vibe_package_source::OperationHttpClient,
-    pub(crate) progress: Progress,
-    pub(crate) signals: Option<Signals>,
-    /// The durable user environment env steps change (PROP-065 `#env-step`).
-    pub(crate) environment: Option<Box<dyn UserEnvironment>>,
-    /// The caller's PATH, behind the requirements a step sees first.
-    pub(crate) search_path: Option<std::ffi::OsString>,
-    /// The user's own `config.toml`, resolved once here because this is
-    /// the layer that owns the process boundary: `vibe-app` reads and
-    /// interprets the file but never resolves `$VIBE_SETTINGS` or
-    /// `VIBEVM_USER_CONFIG` itself (PROP-075 `#SLOT-EXTRAS`).
-    pub(crate) user_config: Option<std::path::PathBuf>,
-    /// One-line run notices on stderr, so `--json` stays one envelope
-    /// (PROP-065 `#work`); absent when the caller asked for quiet.
-    notice: Option<Notice>,
-    /// What this run shows of its children (PROP-065 `#display`); the flat
-    /// display of a command that runs no panel.
-    display: &'d StepDisplay,
-}
-
-impl<'d> Observation<'d> {
-    /// `mutating` operations catch Ctrl-C / SIGTERM (PROP-065 `#cancellation`).
-    pub(crate) fn new(
-        ctx: &output::Context,
-        mutating: bool,
-        display: &'d StepDisplay,
-    ) -> Result<Self> {
-        Ok(Self {
-            http_client: source_operation(Default::default())?
-                .http_client(std::time::Duration::from_secs(600)),
-            // Every human renderer draws the steps as blocks (PROP-067
-            // `#collapse`, `#plain`); a run with none observes nothing but
-            // the machine stream.
-            progress: if ctx.is_machine_progress() || ctx.draws_progress() {
-                ctx.progress()
-            } else {
-                // Unrendered, still journaled (`PROP-068#journal`).
-                Progress::default()
-                    .with_transfers(ctx.transfers())
-                    .with_cancellation(ctx.progress().cancellation().clone())
-            },
-            signals: if mutating {
-                Some(Signals::install().context("catching interrupt signals")?)
-            } else {
-                None
-            },
-            environment: super::environment::for_host(
-                settings_root()?.path(),
-                super::facts::user_home().as_deref(),
-            ),
-            search_path: super::facts::search_path(),
-            user_config: vibe_core::user_config::UserConfig::default_path(),
-            notice: (!ctx.is_quiet())
-                .then(|| Box::new(|text: &str| asking(|| notice(text))) as Notice),
-            display,
-        })
-    }
-
-    pub(crate) fn with_source_operation(
-        mut self,
-        operation: &vibe_package_source::SourceOperation,
-    ) -> Self {
-        self.http_client = operation.http_client(std::time::Duration::from_secs(600));
-        self
-    }
-
-    fn notice(&self) -> Option<&dyn Fn(&str)> {
-        self.notice.as_deref()
-    }
-
-    fn interrupt(&self) -> Option<&dyn Interrupt> {
-        self.signals
-            .as_ref()
-            .map(|signals| signals as &dyn Interrupt)
-    }
-}
-
-/// A run notice: a dim line between blocks.
-fn notice(text: &str) {
-    use output::language::{Kind, Role, Stream, before, paint};
-    eprintln!(
-        "{}{}",
-        before(Stream::Err, Kind::Block),
-        paint(Role::Dim, text)
-    );
+/// The installation keys a home holds **now**.
+///
+/// Captured before an operation so the caller can tell a *new* version of
+/// a slot from a reinstall of one already installed, which is the
+/// condition the extras apply turns on: the user's list goes into a
+/// version that did not exist, and never again into one that did
+/// (PROP-075 `#SLOT-EXTRAS`).
+pub(crate) fn installed_keys(settings: &SettingsRoot) -> std::collections::BTreeSet<String> {
+    vibe_app::Index::load(settings)
+        .map(|index| index.installations.into_keys().collect())
+        .unwrap_or_default()
 }
 
 /// Every application mutation's context: attended prompts only in an
@@ -455,6 +376,7 @@ pub fn install(
     let show = plan_printer(ctx);
     let display = StepDisplay::open(ctx, &args.steps);
     let observe = Observation::new(ctx, true, &display)?.with_source_operation(&packages.operation);
+    let before = installed_keys(&settings);
     let outcome = display.around(ctx, || {
         let operation = OperationContext {
             agent: agents.hooks(),
@@ -471,11 +393,67 @@ pub fn install(
     let written =
         super::version_file::write(&settings, &args.version_file, &outcome.slot, &outcome.key)?;
     render_written(ctx, &outcome, written.as_ref())?;
+    // The user's own extras go into a version that did not exist before
+    // (PROP-075 `#SLOT-EXTRAS`); a reinstall of one already installed
+    // applies nothing. It never changes this install's exit status.
+    apply_extras(
+        ctx,
+        &settings,
+        &before,
+        &outcome,
+        ExtrasAfter {
+            registry: args.registry.as_deref(),
+            embedded: embedded_root.as_deref(),
+            offline,
+            no_extras: args.no_extras,
+        },
+    );
     // The slot may have gained a version whose package declares state to
     // carry; the offer is one line and never migrates (PROP-075
     // `#MIGRATION-FAILURE`).
     super::migrate::offer(ctx, &settings, &outcome.slot, &outcome.key);
     Ok(())
+}
+
+/// Where the apply resolves the new version's package tree from, and
+/// which lists it was told to leave out.
+#[derive(Clone, Copy)]
+pub(crate) struct ExtrasAfter<'a> {
+    pub registry: Option<&'a Path>,
+    pub embedded: Option<&'a Path>,
+    pub offline: bool,
+    pub no_extras: bool,
+}
+
+/// The apply after a successful `install -g` / `update -g`, if this one
+/// placed a slot version the home did not hold (PROP-075 `#SLOT-EXTRAS`).
+///
+/// One function for both commands, because the condition and the effect
+/// are the same: a slot gained a version, so the user's list goes into it
+/// once. It never changes the exit status of the install the user asked
+/// for.
+pub(crate) fn apply_extras(
+    ctx: &output::Context,
+    settings: &SettingsRoot,
+    before: &std::collections::BTreeSet<String>,
+    outcome: &vibe_app::Outcome,
+    after: ExtrasAfter<'_>,
+) {
+    if before.contains(&outcome.key) {
+        return;
+    }
+    super::extras::after_install(
+        ctx,
+        settings,
+        &super::extras::AfterInstall {
+            slot: &outcome.slot,
+            key: &outcome.key,
+            registry: after.registry,
+            embedded: after.embedded,
+            offline: after.offline,
+            no_extras: after.no_extras,
+        },
+    );
 }
 
 pub fn update(
@@ -503,15 +481,28 @@ pub fn update(
         root_offline,
         &source_operation,
     )?;
+    let before = installed_keys(&settings);
     let outcome = update_one(
         ctx,
         &args,
-        embedded_root,
+        embedded_root.clone(),
         root_offline,
         &resolved,
         &source_operation,
     )?;
     render(ctx, &outcome)?;
+    apply_extras(
+        ctx,
+        &settings,
+        &before,
+        &outcome,
+        ExtrasAfter {
+            registry: args.registry.as_deref(),
+            embedded: embedded_root.as_deref(),
+            offline: root_offline,
+            no_extras: args.no_extras,
+        },
+    );
     super::migrate::offer(ctx, &settings, &outcome.slot, &outcome.key);
     Ok(())
 }

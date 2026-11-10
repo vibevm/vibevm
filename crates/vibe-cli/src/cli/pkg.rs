@@ -126,6 +126,17 @@ pub struct InstallArgs {
     #[command(flatten)]
     pub steps: Box<AppStepArgs>,
 
+    /// `install -g` of an application: leave out the `add` list of your own
+    /// `[slot.<slot>.extras.<ecosystem>]` when the new version's ecosystem
+    /// adapters are run (PROP-075 `#SLOT-EXTRAS`).
+    ///
+    /// Your `drop` list is still honoured, and the author's own recommended
+    /// items still arrive — `--no-recommends` is the flag that declines
+    /// those. Declining your extras must never install *more* than you
+    /// asked for.
+    #[arg(long, requires = "global")]
+    pub no_extras: bool,
+
     /// `install -g` of an application: also write the resolved version into
     /// the slot's declared version file (PROP-075 `#VERSION-FILE-WRITE`).
     #[command(flatten)]
@@ -361,7 +372,14 @@ pub struct UpdateArgs {
     #[command(flatten)]
     pub steps: Box<AppStepArgs>,
 
-    /// `install -g` of an application: also write the resolved version into
+    /// `update -g` of an application: leave out the `add` list of your own
+    /// `[slot.<slot>.extras.<ecosystem>]` when the new version's ecosystem
+    /// adapters are run (PROP-075 `#SLOT-EXTRAS`). Your `drop` list is
+    /// still honoured.
+    #[arg(long, requires = "global")]
+    pub no_extras: bool,
+
+    /// `update -g` of an application: also write the resolved version into
     /// the slot's declared version file (PROP-075 `#VERSION-FILE-WRITE`).
     #[command(flatten)]
     pub version_file: super::WriteVersionFileArgs,
