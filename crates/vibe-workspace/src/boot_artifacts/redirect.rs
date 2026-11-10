@@ -73,12 +73,17 @@ pub(crate) fn project_managed_block(
     };
     match locate_block(content) {
         BlockLocation::Malformed(reason) => Err(reason),
-        BlockLocation::Present { start, end } => {
+        // Already at the top: splice the fresh body in place, touching
+        // nothing outside the markers (PROP-012 §2.3).
+        BlockLocation::Present { start: 0, end } => {
             let mut out = String::with_capacity(content.len());
-            out.push_str(&content[..start]);
             out.push_str(&block);
             out.push_str(&content[end..]);
             Ok(out)
+        }
+        // Anywhere else: migrate it to the top, once.
+        BlockLocation::Present { start, end } => {
+            Ok(with_block_first(&block, &content[..start], &content[end..]))
         }
         BlockLocation::Absent => {
             if content.trim().is_empty() || content.trim_start().starts_with(OLD_GENERATED_HEADER) {
@@ -87,18 +92,48 @@ pub(crate) fn project_managed_block(
                 // block (PROP-012 §4).
                 Ok(block)
             } else {
-                // Co-tenant content — append the block after it, preserving
-                // every existing byte (PROP-012 §2.3).
-                let mut out = content.to_owned();
-                if !out.ends_with('\n') {
-                    out.push('\n');
-                }
-                out.push('\n');
-                out.push_str(&block);
-                Ok(out)
+                Ok(with_block_first(&block, "", content))
             }
         }
     }
+}
+
+/// The block first, then the authored text in its own order
+/// (owner decision 2026-11-10).
+///
+/// **Why the top.** Every harness that truncates a project instruction file
+/// truncates its *tail* — Codex silently, at `project_doc_max_bytes`. With
+/// the block at the end, the one thing a truncation destroyed was the boot
+/// router, and a session then had no idea the project had any boot rules at
+/// all. With the block first, a truncation costs authored prose, which is
+/// legible to its author and reportable by `vibe check`, and the router
+/// always arrives. "Everything must work in Codex" is the owner's phrasing;
+/// this is the half of it that needs no configuration.
+///
+/// **What moves and what does not.** `before` and `after` are the authored
+/// text on either side of wherever the block used to be, and they keep their
+/// own order and their own bytes. The one normalisation is the run of
+/// newlines that *separated* the block from that text: it is the block's own
+/// envelope — vibe wrote it when it appended the block — so it travels with
+/// the block instead of being left behind as a stray blank line. Every
+/// authored character is preserved; only that separator is re-made, as
+/// exactly one blank line.
+fn with_block_first(block: &str, before: &str, after: &str) -> String {
+    let before = before.trim_end_matches('\n');
+    let after = after.trim_start_matches('\n');
+    let mut out = String::with_capacity(block.len() + before.len() + after.len() + 4);
+    out.push_str(block);
+    for authored in [before, after] {
+        if authored.is_empty() {
+            continue;
+        }
+        out.push('\n');
+        out.push_str(authored);
+        if !out.ends_with('\n') {
+            out.push('\n');
+        }
+    }
+    out
 }
 
 /// Where vibevm's managed `<vibevm>` block sits in an instruction file
