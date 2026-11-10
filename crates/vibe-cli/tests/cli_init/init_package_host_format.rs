@@ -111,6 +111,12 @@ fn preserves_host(spec_format: Option<&str>, static_name: &str) {
         "a real installed package must make dependency preservation non-vacuous"
     );
     fs::write(root.join("unrelated.bin"), b"\x00UNRELATED\xff").unwrap();
+    // Authored text on both sides of the managed block, with a CRLF line to
+    // prove the author's own line endings survive. The block is written at
+    // the **top** of an instruction file since the owner decision of
+    // 2026-11-10 (`PROP-076#SYS-BLOCK-AT-THE-TOP`), so planting it in the
+    // middle like this means the next write migrates it — once — which is
+    // asserted below rather than forbidden here.
     for launcher in ["CLAUDE.md", "AGENTS.md", "GEMINI.md"] {
         let path = root.join(launcher);
         let generated = fs::read_to_string(&path).unwrap();
@@ -118,18 +124,13 @@ fn preserves_host(spec_format: Option<&str>, static_name: &str) {
     }
     let before_boot = files(&root.join(common::boot_rel("")));
     let before_packages = files(&root.join(common::packages_root()));
-    let protected: BTreeMap<_, _> = [
-        "vibe.toml",
-        "vibe.lock",
-        ".gitignore",
-        "unrelated.bin",
-        "CLAUDE.md",
-        "AGENTS.md",
-        "GEMINI.md",
-    ]
-    .into_iter()
-    .map(|path| (PathBuf::from(path), fs::read(root.join(path)).unwrap()))
-    .collect();
+    // The instruction files are **not** in this set: vibe owns the managed
+    // block inside each, and a block the fixture planted in the middle is
+    // migrated to the top. What must hold of them is asserted separately.
+    let protected: BTreeMap<_, _> = ["vibe.toml", "vibe.lock", ".gitignore", "unrelated.bin"]
+        .into_iter()
+        .map(|path| (PathBuf::from(path), fs::read(root.join(path)).unwrap()))
+        .collect();
 
     // The new package's format/link must not choose the HOST's static dialect.
     user.vibe()
@@ -194,6 +195,7 @@ fn preserves_host(spec_format: Option<&str>, static_name: &str) {
         changes.iter().all(|(_, paths)| paths.is_empty()),
         "{changes:?}"
     );
+    assert_instruction_files_migrated_once(root);
 
     let other_lane = if static_name == "STATIC.xml" {
         "STATIC.md"
@@ -228,4 +230,29 @@ fn init_package_keeps_explicit_markdown_host_and_derived_slots() {
 #[test]
 fn init_package_keeps_default_host_and_derived_slots() {
     preserves_host(None, "STATIC.md");
+}
+
+/// The managed block leads each instruction file, the authored text keeps its
+/// own order and its own line endings below it, and a second run changes
+/// nothing (`PROP-076#SYS-BLOCK-AT-THE-TOP`).
+fn assert_instruction_files_migrated_once(root: &Path) {
+    for launcher in ["CLAUDE.md", "AGENTS.md", "GEMINI.md"] {
+        let path = root.join(launcher);
+        let text = fs::read_to_string(&path).unwrap();
+        assert!(text.starts_with("<vibevm>\n"), "{launcher}: {text}");
+        assert_eq!(
+            text.matches("<vibevm>\n").count(),
+            1,
+            "{launcher} must carry exactly one block"
+        );
+        // Both authored fragments survive, in their own order, and the
+        // author's CRLF is the author's.
+        let before = text.find("OWNER BEFORE\r\n").expect(launcher);
+        let after = text.find("OWNER AFTER\n").expect(launcher);
+        assert!(before < after, "{launcher}: authored order changed");
+        assert!(
+            text.find("</vibevm>").expect(launcher) < before,
+            "{launcher}: the block must precede the authored text"
+        );
+    }
 }

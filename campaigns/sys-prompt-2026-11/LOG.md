@@ -1024,7 +1024,19 @@ an un-neutralised dependency copy.
    reported `1156 passed; 1 failed` without naming the test in the captured
    output; the same command passed on every repeat. Not touched by this
    phase's files as far as the failure could be localised, and recorded rather
-   than silently ignored.
+   than silently ignored. (Distinct from the three **real** `cli_init`
+   failures the block's move caused, which are fixed: see below.)
+
+   **The real one the move caused, and what it says.**
+   `cli_init::init_package_host_format` planted authored text on both sides of
+   the managed block and asserted the three instruction files were not
+   rewritten at all. With the block leading the file, a block in the middle is
+   migrated — once — so the contract genuinely changed and the test now
+   asserts the new one: exactly one block, leading, with both authored
+   fragments in their own order and the author's CRLF intact below it. Worth
+   noting as evidence rather than as a chore: it is the only place in the
+   whole suite where the old end-of-file position was load-bearing, which is
+   how small the blast radius of moving the block turned out to be.
 3. **This repository's own authored instruction text now carries a false
    positional phrase**, and it is the exact breakage D12 predicted. Line 37 of
    `AGENTS.md` (and its two byte-identical copies) reads "the boot lane in the
