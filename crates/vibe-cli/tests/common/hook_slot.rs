@@ -19,6 +19,17 @@ pub enum Fixture {
     Timing,
     PreFail,
     PostFail,
+    /// A judged `slot:post-install` contribution whose `when` is false, so
+    /// it must be planned, reported `skip` with the deciding condition, and
+    /// never executed (PROP-065 `#conditions`, `#ordinary-plan`).
+    JudgmentSkip,
+    /// A judged contribution that will run and needs a command this host
+    /// has not got, so the installation is refused up front
+    /// (PROP-065 `#needs`).
+    JudgmentNeed,
+    /// A judged contribution that will run, for the trust gate of
+    /// PROP-065 `#ordinary-trust` to be asked about.
+    JudgmentTrust,
 }
 
 pub fn registry(root: &Path, fixture: Fixture) -> PathBuf {
@@ -47,6 +58,35 @@ pre-install = "hooks/fail"
             r#"
 [hooks]
 post-install = "hooks/fail"
+"#
+        }
+        Fixture::JudgmentSkip => {
+            r#"
+[[extension]]
+id = "judged"
+point = "slot:post-install"
+title = "Judged contribution"
+handler = { kind = "script", base = "hooks/post" }
+when = { command_present = "no-such-command-anywhere" }
+"#
+        }
+        Fixture::JudgmentNeed => {
+            r#"
+[[extension]]
+id = "judged"
+point = "slot:post-install"
+title = "Judged contribution"
+handler = { kind = "script", base = "hooks/post" }
+needs = ["command:no-such-command-anywhere"]
+"#
+        }
+        Fixture::JudgmentTrust => {
+            r#"
+[[extension]]
+id = "judged"
+point = "slot:post-install"
+title = "Judged contribution"
+handler = { kind = "script", base = "hooks/post" }
 "#
         }
     };
@@ -143,6 +183,26 @@ pub fn install(user: &UserScratch, project: &Path, registry: &Path) -> std::proc
         .arg("--path")
         .arg(project)
         .arg("--assume-yes")
+        .output()
+        .unwrap()
+}
+
+/// The same install WITHOUT `--assume-yes`: `--json` already satisfies the
+/// package-count confirmation, so this is the posture a programmatic client
+/// has and the one the trust gate of `#ordinary-trust` answers in.
+pub fn install_unconsented(
+    user: &UserScratch,
+    project: &Path,
+    registry: &Path,
+) -> std::process::Output {
+    user.vibe()
+        .arg("--json")
+        .arg("install")
+        .arg("org.example/hooked@=0.1.0")
+        .arg("--registry")
+        .arg(registry)
+        .arg("--path")
+        .arg(project)
         .output()
         .unwrap()
 }
