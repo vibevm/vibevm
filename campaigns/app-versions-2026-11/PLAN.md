@@ -1300,7 +1300,10 @@ conformance/vibenvm/run.sh --self-test ; echo "selftest=$?"
 ```
 
 **Delivered 2026-11-11** — both halves, `verdict=0` over nine cases and
-52 of 52 required pairs, with `--self-test` 0. The two packages sandbox B
+52 of 52 required pairs, with `--self-test` 0. The four shortfalls it found
+were closed in the campaign's close-out on the same day (`B-262`–`B-265`,
+`AV-FMT-105`), and the shim was simplified onto the three new surfaces at
+revision **1.1.0** with the verdict measured 0 again. The two packages sandbox B
 installs live in their own repositories, which is why the registry is a step
 of the acceptance rather than a fixture of the suite:
 `org.vibevm.node/vibenvm` (new) and `org.vibevm.node/node` at template
@@ -1443,7 +1446,19 @@ python3 /fast/vibevm-test-tmp/claude-int/run_test.py <label> cargo test -p <crat
 
 ## 7. Acceptance script (whole campaign)
 
-To be written in P7f as `campaigns/app-versions-2026-11/accept.sh`. It runs, in
+**Written and passing, 2026-11-11** — `campaigns/app-versions-2026-11/accept.sh`,
+**thirteen legs, 13 passed / 0 failed**: the nine of the scenario below plus the
+four the owner's decisions added, in that order. It reaches no upstream host
+(the one documented mirror, served over loopback behind a `[[remap]]` row) and
+its two package prerequisites are `conformance/vibenvm/fetch-mirror.sh` and
+`conformance/vibenvm/make-registry.sh`, named in its exit-2 message. What it
+measured that this section assumed — the snapshot install needing projected
+payloads through an `[artifacts] packages` drop, and the ordinary plane's
+`--plan-only` carrying no contribution rows because PROP-065 `#ordinary-plan`
+is `impl/work` — is `PROP-075#P7-CLOSE-AS-BUILT` (6)–(7) and the LOG entry of
+that day. The description it was written against:
+
+It runs, in
 one network-isolated sandbox with a fresh HOME: install Node from the template
 at a channel; `vibe app versions`; switch with `vibe app env` and with the
 prompt hook; `vibe app exec` at a second version; migrate the global npm

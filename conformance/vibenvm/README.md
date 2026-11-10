@@ -34,6 +34,11 @@ cargo xtask vibenvm-conform ; echo "verdict=$?"
 conformance/vibenvm/run.sh --self-test ; echo "selftest=$?"
 ```
 
+The campaign's whole-campaign acceptance,
+`campaigns/app-versions-2026-11/accept.sh`, runs this suite as its ninth leg
+and takes the same two prerequisites, which is why they are commands you run
+once rather than parts of either script.
+
 `run.sh` takes the same two as flags — `--vibenvm-registry PATH` and
 `--vibe PATH` — and the environment variables exist because
 `cargo xtask vibenvm-conform` passes only `--cases` through.
