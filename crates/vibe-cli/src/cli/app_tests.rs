@@ -258,6 +258,45 @@ fn app_list_use_alternatives_and_shell_parse() {
         AppCommand::Use { key, version_file, .. }
             if key.as_deref() == Some(".sdkmanrc") && version_file.path().is_none()
     ));
+    // The same flag on `vibe app env`, which changes the shell and the file
+    // and no default (PROP-075 `#VERSION-FILE-WRITE`).
+    let env = |args: &[&str]| {
+        let Command::App(app) = Cli::try_parse_from(args).unwrap().command else {
+            panic!("expected app command");
+        };
+        match app.command {
+            AppCommand::Env(env) => env,
+            other => panic!("expected app env, got {other:?}"),
+        }
+    };
+    let saved = env(&[
+        "vibe",
+        "app",
+        "env",
+        "--use",
+        "node=22.9.0",
+        "--write-version-file",
+    ]);
+    assert!(saved.version_file.asked() && saved.version_file.path().is_none());
+    assert_eq!(saved.uses, ["node=22.9.0"]);
+    assert!(
+        !env(&["vibe", "app", "env", "--project"])
+            .version_file
+            .asked()
+    );
+    assert_eq!(
+        env(&[
+            "vibe",
+            "app",
+            "env",
+            "--use",
+            "java=21",
+            "--write-version-file=.sdkmanrc",
+        ])
+        .version_file
+        .path(),
+        Some(std::path::Path::new(".sdkmanrc"))
+    );
     let cli = Cli::try_parse_from(["vibe", "shell", "-g", "--use", "a=x", "--use", "b=y"]).unwrap();
     let Command::Shell(shell) = cli.command else {
         panic!("expected shell command");

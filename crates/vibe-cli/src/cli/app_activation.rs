@@ -64,6 +64,13 @@ pub struct AppEnvArgs {
     /// `deactivate`.
     #[arg(long, conflicts_with_all = ["uses", "project"])]
     pub unset: bool,
+
+    /// Record the version this `--use` resolved to in the slot's declared
+    /// version file, changing nothing else — nvm's `use --save`. It needs
+    /// exactly one `--use`, so which slot's file is written is said and
+    /// never guessed, and it moves no slot default.
+    #[command(flatten)]
+    pub version_file: WriteVersionFileArgs,
 }
 
 /// Flags of `vibe app exec` (PROP-075 `#VERSION-EXEC-SPELLING`).

@@ -17,6 +17,7 @@
       "path",
       "variables",
       "cleared",
+      "versionFile",
       "notices"
     ]
   },
@@ -184,6 +185,23 @@
           }
         }
       }
+    },
+    "version_file": {
+      "metadata": {
+        "description": "A written version file, reported by path with the version written.",
+        "x-wire-order": [
+          "path",
+          "version"
+        ]
+      },
+      "properties": {
+        "path": {
+          "type": "string"
+        },
+        "version": {
+          "type": "string"
+        }
+      }
     }
   },
   "optionalProperties": {
@@ -191,6 +209,13 @@
       "type": "string",
       "metadata": {
         "description": "The project root the selection was resolved in, when --project found one.",
+        "x-default": null
+      }
+    },
+    "versionFile": {
+      "ref": "version_file",
+      "metadata": {
+        "description": "The version file --write-version-file wrote and the resolved version it wrote there (PROP-075#VERSION-FILE-WRITE); absent when the flag was not given.",
         "x-default": null
       }
     },

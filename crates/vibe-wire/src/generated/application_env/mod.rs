@@ -29,6 +29,13 @@ pub struct ApplicationEnv {
     /// The variables the lines unset.
     pub cleared: Vec<String>,
 
+    /// The version file --write-version-file wrote and the resolved version
+    /// it wrote there (PROP-075#VERSION-FILE-WRITE); absent when the flag was
+    /// not given.
+    #[serde(rename = "versionFile")]
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub version_file: Option<VersionFile>,
+
     /// What the resolution reported and did not fail on: an unreadable version
     /// file, a line that is neither a requirement nor a channel.
     #[serde(default, skip_serializing_if = "Vec::is_empty")]
@@ -131,4 +138,12 @@ pub enum State {
 
     #[serde(rename = "unresolved_channel")]
     UnresolvedChannel,
+}
+
+/// A written version file, reported by path with the version written.
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+pub struct VersionFile {
+    pub path: String,
+
+    pub version: String,
 }

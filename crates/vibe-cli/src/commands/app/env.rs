@@ -38,6 +38,10 @@ pub(crate) struct Resolved {
     pub activation: Activation,
     pub path: OsString,
     pub choices: String,
+    /// The homes this resolution read, nearer first. A
+    /// `--write-version-file` writes in the one that holds the selected
+    /// installation (PROP-075 `#VERSION-FILE-WRITE`).
+    pub homes: Vec<SettingsRoot>,
 }
 
 pub(super) fn run(ctx: &output::Context, args: AppEnvArgs) -> Result<()> {
@@ -46,16 +50,96 @@ pub(super) fn run(ctx: &output::Context, args: AppEnvArgs) -> Result<()> {
         None => Shell::detect(parent_shell().as_deref()),
     };
     let resolved = resolve(shell, &args)?;
+    // The write happens after the resolution has settled and before any
+    // line is printed, so a refusal costs nothing and an `eval` never sees
+    // half an answer (PROP-075 `#VERSION-FILE-WRITE`).
+    let written = write_version_file(&resolved, &args)?;
     if ctx.is_json() {
-        return ctx.emit_json(&document(&resolved));
+        return ctx.emit_json(&document(&resolved, written.as_ref()));
     }
     for line in lines(&resolved) {
         println!("{line}");
+    }
+    // Stdout carries the lines and nothing else, so what was written is a
+    // notice like every other.
+    if let Some(written) = &written {
+        eprintln!(
+            "vibe app env: wrote {} to {}",
+            written.version,
+            written.path.display()
+        );
     }
     for notice in notices(&resolved.activation) {
         eprintln!("vibe app env: {notice}");
     }
     Ok(())
+}
+
+/// `--write-version-file[=PATH]` on `vibe app env`: nvm's `use --save`,
+/// which changes the shell and the file and **not** the global default
+/// (PROP-075 `#VERSION-FILE-WRITE`).
+///
+/// Every refusal lands before the write and names the flag, because
+/// `vibe app env` can resolve several slots in one call and a guess at
+/// which one's file to edit is exactly what the flag must not make.
+fn write_version_file(
+    resolved: &Resolved,
+    args: &AppEnvArgs,
+) -> Result<Option<vibe_app::WrittenVersionFile>> {
+    if !args.version_file.asked() {
+        return Ok(None);
+    }
+    if args.unset {
+        anyhow::bail!(
+            "--write-version-file has no version to write: `vibe app env --unset` withdraws \
+             the selection this shell carries"
+        );
+    }
+    let slot = match args.uses.as_slice() {
+        [] => anyhow::bail!(
+            "--write-version-file needs the version to record: name it with \
+             `--use <slot>=<version>`, which is what decides whose file is written"
+        ),
+        [one] => one
+            .split_once('=')
+            .map_or(one.trim(), |(slot, _)| slot.trim()),
+        many => anyhow::bail!(
+            "--write-version-file writes one slot's file and {} slots were named ({}); \
+             run it once per slot",
+            many.len(),
+            many.join(", ")
+        ),
+    };
+    let selection = resolved.activation.of_slot(slot).ok_or_else(|| {
+        anyhow::anyhow!("--write-version-file: nothing resolved for slot `{slot}`")
+    })?;
+    let key = match (selection.state, selection.key.as_deref()) {
+        (ActivationState::Selected, Some(key)) if key != vibe_app::SESSION_OFF => key,
+        (_, Some(key)) if key == vibe_app::SESSION_OFF => anyhow::bail!(
+            "--write-version-file has no version to write: `--use {slot}=none` switches the \
+             slot off for this shell"
+        ),
+        _ => anyhow::bail!(
+            "--write-version-file has no version to write: slot `{slot}` is {}{}",
+            selection.state.as_str(),
+            selection
+                .install
+                .as_deref()
+                .map(|install| format!("; run `{install}`"))
+                .unwrap_or_default()
+        ),
+    };
+    // The home that holds the installation is the home whose declared rows
+    // and whose index record describe it.
+    for settings in &resolved.homes {
+        if Index::load(settings)
+            .map(|index| index.installations.contains_key(key))
+            .unwrap_or(false)
+        {
+            return super::version_file::write(settings, &args.version_file, slot, key);
+        }
+    }
+    anyhow::bail!("--write-version-file: installation `{key}` is not recorded in any home")
 }
 
 /// The caller's `$SHELL`, read once at this process boundary.
@@ -106,6 +190,7 @@ pub(crate) fn resolve(shell: Shell, args: &AppEnvArgs) -> Result<Resolved> {
             },
             path,
             choices: String::new(),
+            homes,
         });
     }
 
@@ -189,6 +274,7 @@ pub(crate) fn resolve(shell: Shell, args: &AppEnvArgs) -> Result<Resolved> {
         activation,
         path,
         choices: choices.render(),
+        homes,
     })
 }
 
@@ -314,7 +400,10 @@ pub(crate) fn notices(activation: &Activation) -> Vec<String> {
 }
 
 /// The `vibe-app-env/1` answer.
-pub(crate) fn document(resolved: &Resolved) -> wire::ApplicationEnv {
+pub(crate) fn document(
+    resolved: &Resolved,
+    written: Option<&vibe_app::WrittenVersionFile>,
+) -> wire::ApplicationEnv {
     wire::ApplicationEnv {
         protocol: "vibe-app-env/1".to_owned(),
         shell: match resolved.shell {
@@ -361,6 +450,10 @@ pub(crate) fn document(resolved: &Resolved) -> wire::ApplicationEnv {
         } else {
             Vec::new()
         },
+        version_file: written.map(|written| wire::VersionFile {
+            path: vibe_core::machine_json_path(&written.path),
+            version: written.version.clone(),
+        }),
         notices: notices(&resolved.activation),
     }
 }

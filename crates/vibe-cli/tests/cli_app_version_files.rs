@@ -259,6 +259,85 @@ fn app_use_writes_the_nearest_file_and_a_bare_flag_creates_the_first_name() {
 }
 
 #[test]
+#[specmark::spec(verifies = "spec://org.vibevm.core/vibevm/common/PROP-075#VERSION-FILE-WRITE")]
+fn app_env_writes_the_version_file_and_moves_no_slot_default() {
+    let r = AppRegistry::new();
+    runtime(&r, "alpha", "alpha", "1.0.0");
+    runtime(&r, "alpha", "alpha", "2.0.0");
+    install(&r, "org.example/alpha@1.0.0", &[]);
+    install(&r, "org.example/alpha@2.0.0", &[]);
+    let dir = project(&r, "save");
+    // The slot default is the first install, so a write that moved it onto
+    // the version being saved would be visible.
+    let before = r.index()["slots"]["alpha"]["default"].clone();
+    assert_eq!(before, "org.example/alpha@1.0.0");
+
+    // nvm's `use --save`: this shell and the file, and nothing else.
+    let document = json(&r.vibe_in(
+        &dir,
+        &[
+            "app",
+            "env",
+            "--json",
+            "--use",
+            "alpha==2.0.0",
+            "--write-version-file",
+        ],
+    ));
+    assert_eq!(document["versionFile"]["version"], "2.0.0");
+    assert!(
+        document["versionFile"]["path"]
+            .as_str()
+            .unwrap()
+            .ends_with(".alpharc"),
+        "{document:#}"
+    );
+    assert_eq!(fs::read_to_string(dir.join(".alpharc")).unwrap(), "2.0.0\n");
+    assert_eq!(
+        selection(&document, "alpha")["key"],
+        "org.example/alpha@2.0.0"
+    );
+    assert_eq!(
+        r.index()["slots"]["alpha"]["default"],
+        before,
+        "`vibe app env` changes the shell and the file, never the default"
+    );
+
+    // Every refusal names the flag, because `app env` resolves several
+    // slots in one call and may not guess whose file to write.
+    for (args, expect) in [
+        (vec!["--project", "--write-version-file"], "--use"),
+        (vec!["--unset", "--write-version-file"], "--unset"),
+        (
+            vec![
+                "--use",
+                "alpha=1.0.0",
+                "--use",
+                "beta=1.0.0",
+                "--write-version-file",
+            ],
+            "one slot's file",
+        ),
+        (
+            vec!["--use", "alpha=none", "--write-version-file"],
+            "switches the slot off",
+        ),
+        (
+            vec!["--use", "alpha=9.9.9", "--write-version-file"],
+            "not_installed",
+        ),
+    ] {
+        let mut full = vec!["app", "env"];
+        full.extend_from_slice(&args);
+        let message = failed(&r.vibe_in(&dir, &full));
+        assert!(
+            message.contains("--write-version-file") && message.contains(expect),
+            "{args:?}: {message}"
+        );
+    }
+}
+
+#[test]
 #[specmark::spec(verifies = "spec://org.vibevm.core/vibevm/common/PROP-075#VERSION-FILE-VALUE")]
 fn a_written_version_file_pins_what_it_recorded_and_decides_a_bare_install() {
     let r = AppRegistry::new();
