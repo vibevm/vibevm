@@ -855,3 +855,178 @@ the build filesystem falls under 12 GB free; it reached 5.4 GB after the
 43 GB afterwards, which is what let these two items and the full gate set
 run, but the remaining work is a single large atomic change and was not
 worth starting against an unstable budget and a part-spent context.
+
+## 2026-11-10 — P4 landed, and two owner decisions made Codex work at any size
+
+**The transaction half of P4 is implemented.** The prefix, its sidecar, the
+agent lane and the `.gitignore` that covers them are four more production
+roles of the one publication transaction. Nothing here is a second atomicity
+story: a failure cannot leave a new prefix paired with a sidecar of another
+generation, and the interruption matrix now covers a child-process
+interruption inside a prompt write that recovers to one coherent set.
+
+**Spike S2's finding was answered structurally, which is the one thing worth
+re-reading.** S2 measured that twelve files refuse to compile and that **five
+further edits enumerate journal entries by name and are never
+compile-forced** — roll-forward, rollback, stage discard, preflight and the
+operation-level undo image — so an extension that builds could still fail to
+roll the new roles forward, fail to roll them back, leak their stage files on
+failure and leave them out of the undo. Being careful five times is not a
+fix. There is now **one** `PROMPT_MEMBERS` table — target name, member
+accessor, before role, after role — and staging, roll-forward, rollback,
+stage discard, preflight and the stage-name uniqueness check all read it;
+`recorded_stage_names`, `discard_assets` and `preflight_journal_paths` list
+nothing by name at all. A sixth role reaches every one of those sites the
+moment it joins the table. The undo image keeps a by-name list because it is
+a genuinely different list: a node publishes the four and a package unit boot
+directory does not, and that is the one place the two differ.
+
+**The ignore order is load-bearing and is stated at each place that decides
+it.** The ignore file is written **before** the artifacts it covers and
+removed **after** them, in the transaction and in the operation-level undo
+alike, because an artifact that exists before its ignore line is an artifact
+a `git add -A` commits. `inverse.rs` grew a four-way sort key for exactly
+that: restores put the ignore file first, removals put it last.
+
+**Three statements are kept apart, and collapsing any two would be a real
+bug.** `prompt: None` touches nothing and opens no prompt path — which is
+what keeps a project that never opted in byte-identical to before this
+feature existed, and is asserted by writing a stray `SYSTEM.md` into such a
+project's boot directory and finding it untouched. `PromptWrite::REMOVE` is
+the opt-out and ends the four owned paths absent inside the same commit.
+A payload publishes. The unit-lane seam and the pending-native replay seam
+both say nothing; the replay because it republishes an already-prepared lane
+and recomposes nothing (**open issue**, below).
+
+**The entrypoint refusal reached real fixtures, which is the proof capture is
+wired in.** Three P1/P2 fixtures dropped a `SYSTEM-TEMPLATE.md` into a boot
+directory without an `AGENTS.md` beside it; with publication live that is now
+`#SYS-ENTRYPOINT-ONE`'s named refusal rather than a silent empty segment, and
+the fixtures gained the entrypoint. The reserved-path test split into the two
+rules it always held: the authored template survives untouched, and the
+generated outputs are idempotent — asserted on **mtimes**, because equal
+bytes prove only that the result is right while an unchanged mtime proves no
+write happened.
+
+### Owner decision: `[system_prompt.harness.codex] doc_max_bytes`
+
+The owner's words were "everything must work in Codex", including instruction
+files larger than 32 KiB. D11's 32 KiB was written as a constant and is
+Codex's *own default* `project_doc_max_bytes`, which a user's
+`~/.codex/config.toml` or a trusted project's `.codex/config.toml` may raise —
+so measuring against the constant refused files the Codex a project actually
+runs would have read whole. The project now declares the limit it is built
+for; both severities read the declaration, which keeps them one measurement
+rather than two ceilings; `0`, a negative value and an unknown harness name
+all refuse by name. `vibe check` gained two warnings: a declared limit above
+the default naming the exact one-line Codex setting a directly-started Codex
+needs, and the authored bytes a session will not see of a whole file, with the
+boot lane as the remedy rather than a shorter instruction file.
+
+**Verified offline against the real harness, and the command is worth
+keeping.** codex-cli 0.167.0; `codex debug prompt-input` renders the
+model-visible prompt input list as JSON and calls **no** model (`codex exec`
+and anything else that reaches a model was not run). In a throwaway git
+repository holding a 43,271-byte `AGENTS.md` whose managed block is at the
+top, with an isolated `HOME` and `CODEX_HOME`:
+
+```sh
+HOME=$D/home CODEX_HOME=$D/home/.codex codex debug prompt-input
+HOME=$D/home CODEX_HOME=$D/home/.codex codex debug prompt-input -c project_doc_max_bytes=262144
+```
+
+Result: under the default limit the router canary at the top of the file is
+present and the canary on its last line is **absent**; under the override both
+are present. `CODEX_HOME` must exist or codex refuses before rendering, which
+is worth knowing before blaming the override.
+
+### Owner decision: the managed block moves to the top
+
+The same owner decision's other half, and the one that needs no
+configuration. Every harness that truncates a project instruction file
+truncates its **tail**, so with the block at the end the one thing a
+truncation destroyed was the boot router — and a session then had no idea the
+project had any boot rules at all. With the block first, a truncation costs
+authored prose, which is legible to its author and reportable.
+
+Migration happens exactly once, and the one clause worth stating is what is
+*not* byte-for-byte: the run of newlines that **separated** the block from the
+authored text is vibe's own envelope — vibe wrote it when it appended the
+block — so it travels with the block rather than being left behind as a stray
+blank line. Everything else is preserved. Measured on this repository's own
+regeneration: the authored text of all three files is byte-identical and in
+the same order, with one blank line removed at the old seam and one added at
+the new one.
+
+**This retires spike S1's measurement.** S1 recorded the managed block as
+`AGENTS.md`'s own 830-byte tail at offsets 25,291..26,121, and concluded that
+in-place substitution put the transport contract exactly where the authored
+preamble pointed. That was true of the file as it then stood; the block is now
+the file's head, the three files are 27,069 bytes each, and
+`#SYS-REDIRECT-IN-PLACE` is unaffected because composition replaces the block
+wherever it sits. It also changes what D11 measures: the block's own end is no
+longer the interesting number — at roughly 2 KB it effectively always fits,
+and the refusal survives as a guard reachable only by declaring a limit
+smaller than the block itself.
+
+### This repository's regeneration, and how the P2b blocker was routed around
+
+P2b could not regenerate because the real user cache held an
+`org.vibevm.doc/web@1.0.0` entry disagreeing with the lockfile pin. The fix is
+two things. First, **`vibe reinstall` is the narrower command**: it recomputes
+boot artifacts from the materialised tree already on disk and never
+re-resolves — no fetch, no network — which is exactly what a boot-artifact
+regeneration needs. Second, the real `~/.vibe` is not touched at all: the run
+used an isolated `HOME`, `VIBE_SETTINGS`, `VIBE_REGISTRY_CACHE` and
+`VIBEVM_SEARCH_CACHE_DIR` under `/fast/tmp/sys-regen`, and `VIBE_SETTINGS`
+relocates `~/.vibe/cache` along with everything else, which is why the stale
+entry stopped mattering.
+
+`vibe reinstall` refuses on an incomplete `vibedeps/`, and the worktree was
+missing the one slot that is untracked in the main checkout; it was copied in
+and left untracked, never committed.
+
+**Three instruction files changed, not eighteen, and that is correct.** This
+repository is one node, and `vibe reinstall` regenerates its nodes. The other
+fifteen tracked `<vibevm>` blocks are six files under `research/` (two nested
+projects) and nine under `vibevm/vibepacks/` and `vibevm/vibedeps/` — each its
+own project's regeneration, which is precisely what the router's self-scoping
+and `vibe check`'s nested-block and un-neutralised-copy warnings exist for.
+`vibe check` on the regenerated worktree: **0 errors, 55 warnings**, 15 of
+them `redirect_block`, every remaining warning pre-existing (Windows-path
+local sources recorded in `vibe.lock`, and the copied slot's hash).
+
+### Correction outside the campaign: the discoverable-block walk
+
+P2b's nested-managed-block warning reported **51** findings on this
+repository, nearly all from `.claude/worktrees/<agent>/…` — linked git
+worktrees of this same repository, part of nobody's session. Gemini CLI and
+Qwen Code honour `.gitignore` while discovering context files, so a directory
+git does not show a developer is a directory no harness reads. The check now
+**asks git** (`git ls-files --cached --others --exclude-standard` with
+`*/NAME` pathspecs) rather than carrying a second ignore engine, and — applied
+to the git answer as well as to the fallback walk, because git only recognises
+a nested repository whose gitdir still resolves and an abandoned worktree is
+exactly the case that fails — never enters a directory holding a `.git` entry.
+Without git there is no second ignore engine and the test says so rather than
+hiding it. Measured after: **15** findings, every one a real nested project or
+an un-neutralised dependency copy.
+
+### Open issues this phase leaves
+
+1. **The pending-native replay seam republishes a lane and no prefix.**
+   `install/bootgen/replay_publish.rs` passes `prompt: None`, so a replay that
+   changes `STATIC.*` leaves the node's prefix and its router's expected lane
+   digest describing the previous lane. That is a freshness question
+   (`vibe prompt check`'s `stale`), which is P5's; it is recorded here so P5
+   does not have to rediscover it.
+2. **A flaky `vibe-cli` bin test.** One run of `cargo test -p vibe-cli`
+   reported `1156 passed; 1 failed` without naming the test in the captured
+   output; the same command passed on every repeat. Not touched by this
+   phase's files as far as the failure could be localised, and recorded rather
+   than silently ignored.
+3. **The staged-publication path publishes no prefix.** `publish/staging.rs`
+   calls `write_boot_artifacts_with_spec_format` and therefore passes no node
+   prompt, so an opted-in project's staged publication writes no prefix.
+   `PROP-076#SYS-OPERATIONS-SURFACE` lists that path among the ones that
+   generate, and it is P5's to wire.

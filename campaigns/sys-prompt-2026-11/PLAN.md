@@ -856,7 +856,7 @@ the composer's own sources for `std::fs`, `std::env`, `std::time`,
 `current_dir`, `cfg!(target_os`, …) rather than by mutating process-global
 state inside a parallel test suite.
 
-### P4 — publish: generated roles, the ignore file, removal — **M** — *re-planned 2026-11-10*
+### P4 — publish: generated roles, the ignore file, removal — **M** — *re-planned 2026-11-10; delivered 2026-11-10*
 
 *(Sized M while planning; spike S2 moved it to L; the owner decision
 `PROP-076#SYS-ARTIFACTS-NOT-TRACKED` moves it back to **M**, for a reason worth
@@ -941,29 +941,57 @@ rollback path needs a new arm per role; if it does, the phase is L.
 
 **Parallel.** Needs P3.
 
-**Partially delivered 2026-11-10 — the enforcement and the roles, not the
-transaction.** Two of this phase's items landed whole, because neither
-touches the publication transaction and both are testable on their own:
+**Delivered 2026-11-10.** Every item of this phase landed, in three parts.
+
+**Already done before the transaction half** (and kept here for the record):
 the **layout roles** for the third artifact and for the ignore file
 (`layout::AGENT_LANE_MD`, `BOOT_GITIGNORE`, their accessors, and
 `current_boot_prompt_artifacts()` as the one list of the three — seven
-generated paths now, eight reserved), and the ***`vibe check` error* when
-git tracks a generated prefix**, which this phase's re-plan calls "the one
-place the decision is enforced rather than documented". Detail under
-`SP-FMT-102`.
+generated paths, eight reserved), and the ***`vibe check` error* when git
+tracks a generated prefix**, which this phase's re-plan calls "the one place
+the decision is enforced rather than documented". Detail under `SP-FMT-102`.
 
-**Outstanding, and it is the bulk of the phase.** The three
-`StageRole`s / production targets and their journal members; the schema's
-additive entries and their codegen; `ArtifactWrite`'s new payloads; staging,
-roll-forward and the **five by-name journal enumerations** spike S2 found
-that the compiler never asks about (`transaction.rs::roll_forward_core` and
-`::rollback_all`, `transaction/durable_io.rs::discard_assets` and
-`::preflight_journal_paths`, and `boot_artifacts/inverse.rs`'s
-`[INDEX_FILE, STATIC_FILE, STATIC_XML_FILE]` undo image); the `.gitignore`
-writer inside that same commit; the composition hook in both publication
-seams; the removal case; and the interruption matrix over five — now eight —
-roles. S2's inventory is unchanged by the two items above and remains the
-starting map.
+**The transaction half, as one atomic change.** Four optional journal members
+and eight `StageRole`s; `ArtifactWrite` gains one payload field whose three
+states — absent, `REMOVE`, bytes — are deliberately distinct; staging,
+roll-forward and rollback; the `.gitignore` written inside the same commit,
+first on the way in and last on the way out; `system_prompt/publish.rs`, which
+decides and composes; `boot_artifacts::prompt_publication`, the one hook both
+node seams reach; the removal case; and the interruption matrix over the new
+roles, including a child-process interruption inside a prompt write that
+recovers to one coherent set. **Spike S2's real finding is answered
+structurally rather than carefully:** its five by-name enumerations are now
+**one** `PROMPT_MEMBERS` table that staging, roll-forward, rollback, stage
+discard, preflight and the stage-name uniqueness check all read, so a sixth
+role reaches every one of them the moment it joins the table. Only the
+operation-level undo image keeps a list of its own, because it is a genuinely
+different list: a node publishes the four and a package unit does not.
+Two files were split to stay inside the 600-line budget — the apply/rollback
+core into `transaction/apply.rs` and the new role tests into
+`transaction/prompt_tests.rs`.
+
+**Two owner decisions of the same day, implemented here** (`SP-FMT-107`,
+`SP-FMT-108`), both under the owner's phrasing "everything must work in
+Codex, including instruction files larger than 32 KiB". `[system_prompt.harness.codex]
+doc_max_bytes` makes D11's 32 KiB a **default** rather than a constant — it is
+Codex's own default `project_doc_max_bytes`, which a user's or a trusted
+project's config may raise — and both the write-path refusal and
+`vibe check`'s near-limit warning read the declaration, so they stay one
+measurement. `vibe check` gains the raised-limit warning naming the exact
+one-line Codex setting and a whole-file warning counting the authored bytes a
+session will not see. And the managed block **moves to the top** of each
+instruction file, migrated exactly once, so a truncation costs authored prose
+rather than the boot router; that retires spike S1's measurement of the block
+as the file's 830-byte tail, and it is why the block's own end stopped being
+the interesting number. Verified offline against codex-cli 0.167.0 with
+`codex debug prompt-input` — see `LOG.md` for the exact command and result.
+
+**This repository's own regeneration** ran with `vibe reinstall` under an
+isolated settings home, which is the narrower command (it recomputes boot
+artifacts from the materialised tree and never re-resolves) and the way around
+the user-cache disagreement that blocked P2b. Three instruction files changed,
+at the new position, with the authored text byte-identical; the other fifteen
+tracked blocks belong to nested projects and package copies.
 
 ### P5 — operations: install-time generation and `vibe prompt` — **L**
 
@@ -1002,6 +1030,13 @@ concatenated.
 `SP-FMT-008` (the `vibe check` check id), and — added 2026-11-10 —
 `SP-FMT-106` (`vibe prompt path`, `vibe prompt flags`, the build summary line)
 and the parsing half of `SP-FMT-105` (`[system_prompt.harness.<name>]`).
+
+**Added 2026-11-10 by the owner decisions (second batch).** `vibe agent codex`
+passes `-c project_doc_max_bytes=<declared>` on every launch — short argv,
+file-free — reading `[system_prompt.harness.codex] doc_max_bytes`, which P4
+already parses and validates (`SP-FMT-107`). The offline proof that the
+override works is already recorded: `codex debug prompt-input` renders a
+43,271-byte `AGENTS.md` whole under it and truncated without it (`LOG.md`).
 
 **Added 2026-11-10 by the owner decisions.** Two more verbs and one line.
 **`vibe prompt path [--part lane|system] [--json]`** prints the absolute path of
