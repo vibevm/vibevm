@@ -331,6 +331,131 @@ names in a working boot directory before the protections of P1 exist.
   and a counting server). Question: can P6's request capture reuse one, or must
   it be built? *Decides whether P6 is M or L.*
 
+### Spikes — answers (run 2026-11-10 against `c04bda8a5`)
+
+All six ran; every piece of instrumentation was reverted and the tree was
+verified clean before P1 began. Three of them changed the design
+(`PROP-076#SYS-SIZE-TODAY`, `#SYS-SELF-INCLUSION`, `#SYS-LANE-VERBATIM` +
+`#SYS-BASELINE-CORRECTIONS` (7)) and one changed a phase's size (P4, M → L).
+
+- **S1 — the prefix, by hand. Answered; it falsified one number and confirmed
+  the in-place substitution.** Assembled from the live tree with a throwaway
+  script that re-implemented `locate_block`'s rule (an exactly standalone
+  trimmed marker line): `AGENTS.md` 26,121 bytes, `STATIC.xml` 251,817, the
+  managed block **830 bytes at offsets 25,291..26,121**. The prefix measured
+  **278,092 bytes** — exactly `277,938 − 830 + 146 (template) + 681 (draft
+  contract) + 157 (three frame lines)`, so the plan's "within a few hundred
+  bytes of 277,938" held at **+154**.
+  **The block's end offset equals the file length**: the managed block *is*
+  `AGENTS.md`'s tail. So substituting in place puts the transport contract in
+  the one position the authored preamble already points at — its first sentence
+  says to read "the boot lane in the order the generated block at the end of
+  this file prescribes" — and the 600 bytes before it are a clean section
+  boundary. Nothing reads worse; `PROP-076#SYS-REDIRECT-IN-PLACE` stands and
+  needs no renegotiation, and the no-block case is byte-identical in shape to
+  the with-block case here. `AGENTS.md`, `CLAUDE.md` and `GEMINI.md` are
+  md5-identical, confirming `#SYS-ENTRYPOINT-ONE`'s premise.
+  **Falsified:** the prefix holds **82.8%** of the 335,832 bytes of boot
+  material, not 92%. `(251,817 + 26,121) / 335,832 = 82.76%`; the 75% figure
+  for the lane alone is right. Corrected in `PROP-076#SYS-SIZE-TODAY`,
+  `FORMAT-CHANGES.md` `SP-FMT-003`, `LOG.md` and §5 below.
+- **S2 — the closed transaction role set. Answered: neither three files nor
+  six — twelve refuse to compile, and five more edits are silent. P4 is L.**
+  Two optional `entry` members (`system`, `systemMeta`) added to
+  `schemas/boot_artifact_transaction.jtd.json` regenerated cleanly through
+  `cargo xtask codegen` (no cascade elsewhere), and `cargo test -p vibe-wire`
+  stayed green — the existing corpus document
+  `formats/corpora/boot-artifact-transaction/e1/commit.toml` remains valid, so
+  `[format.boot-artifact-transaction]` moves **1 → 1** and `SP-FMT-005`'s
+  epoch question is settled. Adding the two `StageRole`s, their wire strings,
+  two target constants and four payload fields on `ArtifactWrite` made these
+  **twelve** files refuse: `transaction/prepare.rs` (the `Journal` literal),
+  `transaction.rs`, `transaction/journal.rs`, `transaction/control.rs`,
+  `boot_artifacts.rs`, `boot_artifacts/native_managed/write.rs`,
+  `boot_artifacts/publication.rs` (×2),
+  `install/bootgen/replay_publish.rs`, plus the test files
+  `transaction/tests.rs` (×2), `transaction/safety_tests.rs` (×2),
+  `transaction/lock_tests.rs`, `transaction/detailed_tests.rs`,
+  `redirect/interruption_tests.rs` and `replay_publish/tests.rs`.
+  **The real finding is what the compiler does *not* say.** Five further edits
+  are required and are not compile-forced, because each enumerates journal
+  entries *by name*: `transaction.rs::roll_forward_core` and
+  `::rollback_all`, `transaction/durable_io.rs::discard_assets` and
+  `::preflight_journal_paths`, and `boot_artifacts/inverse.rs:67`'s
+  `lane = [INDEX_FILE, STATIC_FILE, STATIC_XML_FILE]` undo image. An
+  extension that compiles can therefore still never roll the new roles
+  forward, never roll them back, leak their stage files on failure, and leave
+  them out of the operation-level undo. **Rollback needs no new inverse arm
+  per role** — `apply_rollback` is data-driven over a `JournalEntry` — but it
+  does need the two names in every by-name list. P4's risk is silence, not
+  volume, so **P4 is L**.
+- **S3 — self-inclusion, demonstrated. Answered: enrolment reproduces, the
+  recursive growth does not.** A fixture node with no `[[project.sources]]`
+  (so `legacy_entries` is the path taken), a boot directory holding
+  `00-core.md`, `20-extra.md`, `SYSTEM-TEMPLATE.md` and `SYSTEM.md`, run
+  through `apply_resolution_with_spec_format` twice.
+  **Enrolled: yes, exactly as predicted** — `INDEX.md` listed **four** rows,
+  each `kind = "static"`, including both new names. Every session would read
+  the generated prefix a second time and the template's text twice.
+  **Falsified: no recursive growth.** `lane_len = 0` on both runs and
+  `index_len = 883` on both: a node's own authored boot is forced to
+  `LinkType::Dynamic` (`boot.rs:314`/`:336`), so its bytes never enter the
+  compiled lane — the files are only *named*. The marker text appeared in no
+  generated artifact. A template written as PROP-076 says a template is
+  written — literal text in no spec dialect — was admitted **without any
+  error**, because an INDEX row is never parsed at generation time. So the
+  hazard is silent doubled delivery, not a growing artifact: quieter than
+  predicted and no less worth closing. `PROP-076#SYS-SELF-INCLUSION` amended;
+  P1's gates are unchanged in scope.
+- **S4 — which of the three compile seams this node uses. Answered: the host
+  reaches the builtin seam only, and only two of the three ever publish a
+  lane.** With the three `entries.is_empty()` gates instrumented: the real
+  host node reached `compile.rs:86` only, with 26 static inputs and a 251,817
+  byte artifact byte-equal to the committed `STATIC.xml`. Across
+  vibe-workspace's whole lib suite the builtin seam fired 206 times and the
+  owner-managed seam 208, in **disjoint** tests (a `native_managed`-filtered
+  run: owner-managed 23, builtin 0); the S3 fixture reached **no** seam,
+  because own dynamic boot leaves `static_entries()` empty.
+  **Exclusivity is structural, not statistical:** the seam is chosen once per
+  regeneration, not per node — `install/bootgen.rs:242` drives every node
+  through the builtin loop and `:262` drives every node through
+  `install/bootgen/native_managed.rs:39` instead — so no node mixes them in
+  one run. And the custom-backend seam is **not a lane publisher at all**: it
+  compiles `artifacts/<backend>` and is reached only through the
+  `compile_node_backend*` analyser queries (`analyze.rs:415`, exported from
+  `install.rs:98`), firing exactly once in the suite. **P3/P4 hook two
+  publication seams, not three** — `boot_artifacts.rs:365` and
+  `native_managed/write.rs:91`, as `SP-FMT-005` already names.
+- **S5 — the read-only preflight, measured. Answered, and it is a real
+  budget.** Provider-free `analyze_node_lane(workspace, ".", None)` on the
+  complete host checkout succeeds with **no provider**: `Ok(Some(_))`, 251,817
+  bytes, 26 inputs, **0 unattributable**. Warm timing over three consecutive
+  runs: **341.8 ms / 328.2 ms / 338.9 ms**, after a 1.08 ms `Workspace::load`.
+  That is too slow to sit unconditionally in an API caller's request path, so
+  **P5's stated risk is live**: `prepare` and `check` must answer from the
+  sidecar's witnesses and escalate to analysis only on a mismatch, and that is
+  a design decision for P5 rather than a later performance fix.
+  The spike also produced the first concrete non-freshness refusal for free:
+  on an incomplete checkout (this worktree, whose `vibedeps/org.vibevm.doc.web`
+  slot is absent) it refuses in **1.7 ms** with `selected slot no-follow
+  admission refused`, before any compile. That is a world-integrity failure,
+  so it belongs to `unavailable` with its path, never to "no lane" and never
+  to `freshness_unverifiable`. Recorded in
+  `PROP-076#SYS-READ-ONLY-CHECK`.
+- **S6 — is there a fake provider to reuse? Answered: yes, and it is already
+  better than what P6 planned to build. P6 stays M.**
+  `crates/vibe-cli/tests/common/agent_provider.rs` `MockProvider` is a
+  loopback OpenAI-compatible endpoint that counts hits **and retains the exact
+  request bodies** (`bodies: Arc<Mutex<Vec<String>>>`, kept precisely so a
+  test can prove which prompt bytes were sent), answers with a canned `usage`
+  block, and stops and joins its listener on drop. The double-injection
+  assertion of `PROP-076#SYS-NO-DOUBLE-INJECTION` is therefore a substring
+  count over `bodies()`, and the worker-profile assertion is the same call.
+  Also available and not needed here: `tests/common/http_dir.rs`
+  `DirectoryServer` (a contact-counting file server) and
+  `tests/common/net_fixture.rs` `FileServer` / `HttpServer`. P6 writes no new
+  provider fixture; it adds the envelope and the assertions.
+
 ## 4. Phases and gates
 
 Every phase after 0 ends with the same gate: targeted tests for the touched
@@ -341,7 +466,7 @@ final phase runs the full workspace suite plus `tools/self-check.sh`. Each
 phase is one or a few atomic commits, and every user-visible change gets an
 `SP-FMT-NNN` entry in this directory's `FORMAT-CHANGES.md`.
 
-### P1 — the contract: roles, reservations, refusals — **M**
+### P1 — the contract: roles, reservations, refusals — **M** — **DONE 2026-11-10**
 
 **Goal.** The three paths exist as *roles* with no generation yet: the two
 generated outputs and the one authored input are known to the layout owner, are
@@ -426,7 +551,15 @@ derived from `EffectiveBoot::dynamic_entries()` in INDEX order.
 
 **Commands.** None new.
 
-**Formats.** None.
+**Formats.** `SP-FMT-101` (the `when = "target:<os>"` gate spelling, from the
+owner decision of 2026-11-10). A third variant in the closed condition set of
+`crates/vibe-core/src/manifest/package/when.rs:71-112`, resolved at generation
+time beside `installed:` in `install/bootgen/conditions.rs:86-96` against
+`[system_prompt] target`, and therefore **never** a residual `when` — so it
+cannot reach band G and `prepare_index_body`'s `kind` expression keeps its
+present meaning. It lands here because this phase already reads
+`conditions.rs` to classify the continuation plan. Default (absent `target`)
+selects every OS, so no existing row changes.
 
 **Tests.** Unit: the plan's order equals `prepare_index_body`'s row order for
 the same `EffectiveBoot`, asserted against the function rather than against a
@@ -476,7 +609,12 @@ layer-qualified ids (`project.template`, `project.entrypoint`,
 
 **Formats.** `SP-FMT-003` (`SYSTEM.md`), `SP-FMT-004` (the sidecar,
 `vibe-system-prompt/1`), `SP-FMT-009` (the transport-contract recipe as a
-versioned surface).
+versioned surface). Also from the owner decision of 2026-11-10: under a fixed
+`[system_prompt] host` the composer resolves `os:` rows at build time and
+bakes the matching ones into the prefix, leaving band G empty; the sidecar
+records the declared `host` and `target`, which are authored manifest values
+and **not** environment detection, so `#SYS-NO-VOLATILE` and
+`#SYS-DETERMINISM` are untouched.
 
 **Tests.** Unit, purity: `compose.rs`'s own sources and dependency surface
 reach no filesystem, socket, clock, child process or environment variable —
@@ -516,7 +654,11 @@ every prefix digest in the world.
 
 **Parallel.** Needs P2.
 
-### P4 — publish: two transaction roles, stale, conflict, removal — **M**
+### P4 — publish: two transaction roles, stale, conflict, removal — **L**
+
+*(Sized M while planning; spike S2 moved it to L — see the spike answers
+in §3. Twelve files refuse to compile and five more need edits the compiler
+never asks for.)*
 
 **Goal.** The two outputs are written inside the existing boot transaction as
 one coherent generation with INDEX, STATIC and the redirects; a failure leaves
@@ -811,19 +953,39 @@ S1–S6 are independent of each other and of `APP-VERSIONS`.
   as an ordinary boot input, and a second regeneration grows the artifact
   again. *If this does not reproduce, the central hazard is smaller than
   `PROP-076#SYS-SELF-INCLUSION` claims and the fact is amended.*
+  **Half confirmed, half falsified (S3, 2026-11-10).** Enrolment reproduced
+  exactly — four INDEX rows where two were authored. The growth did not and
+  cannot: own authored boot is unconditionally dynamic, so the bytes never
+  reach the lane. The hazard is silent doubled delivery; the fact is amended
+  and P1's gates are unchanged.
 - **P3** The host repository's prefix is `26,121 + 251,817 = 277,938` bytes,
   minus the length of `AGENTS.md`'s own `<vibevm>` block, plus the template and
   the three frame lines — i.e. the prefix is within a few hundred bytes of
-  277,938 and holds **92%** of the 335,832 bytes of boot material. *Exactly
+  277,938 and holds **83%** of the 335,832 bytes of boot material. *Exactly
   measurable; a number outside that range means a segment was dropped or
-  duplicated.*
+  duplicated.* **Confirmed by hand (S1, 2026-11-10): 278,092 bytes, `+154`,
+  82.81%.** The share read "92%" when the plan was written, which was an
+  arithmetic slip corrected here and in `PROP-076#SYS-SIZE-TODAY`.
 - **P3** Two checkouts of the same commit at different paths produce
   byte-identical outputs, and a second `vibe prompt build` performs zero
   writes. *This is the whole determinism claim, and it is one command.*
 - **P4** The transaction role extension touches `journal.rs`, `prepare.rs`,
   `transaction.rs` and — only if S2 says so — `inverse.rs`, and **nothing**
   under `crates/vibe-workspace/src/boot/`. *If it reaches the composer, the
-  seam was chosen wrong.*
+  seam was chosen wrong.* **Understated (S2, 2026-11-10):** twelve files
+  refuse to compile and five more need by-name edits the compiler never asks
+  for, `inverse.rs` among them. The "nothing under `boot/`" half still holds
+  and remains the seam check.
+- **P5** Under `host = "portable"` (the default) a `prepare` with a non-empty
+  gated band and no `--session-target` refuses as unresolved input; under a
+  fixed `host` the gated band is **empty**, so the same command needs no
+  session target at all, and a session whose own OS differs from the fixed
+  host is **warned about and served**, never refused. *The owner decision of
+  2026-11-10, as the pair of commands that distinguishes its two modes.*
+- **P2** Adding `when = "target:<os>"` changes **no** row of this
+  repository's `INDEX.md`, because its `[system_prompt] target` is absent and
+  an absent target selects every OS. *The compatibility half of the owner
+  decision, measurable as a byte-identical INDEX.*
 - **P5** `vibe prompt prepare` on this repository opens exactly **11** files —
   the three prefix inputs and the eight INDEX rows — and performs zero writes
   and zero network connections. *Counted by an observer, not asserted in prose.*
@@ -890,7 +1052,15 @@ part of this script.
 
 ## 8. Open points
 
-The design's open questions are
+**Q3 is answered (owner, 2026-11-10) and is no longer open** — see
+`spec://org.vibevm.core/vibevm/common/PROP-076#SYS-HOST-AND-TARGET` and the
+decision entry in `LOG.md`. It was posed as one axis and turned out to be two:
+`[system_prompt] host` (default `"portable"`) decides whether the session's-OS
+`os:` gates stay in the gated band or are baked into the prefix, and a new
+`[system_prompt] target` plus a new `when = "target:<os>"` gate (default: every
+OS) carries the product's own platform and is always resolved at build time.
+The manifest keys landed in P1; the gate grammar lands in P2, the baking in P3,
+the host-mismatch warning in P5. The remaining questions are
 `spec://org.vibevm.core/vibevm/common/PROP-076#SYS-OWNER-QUESTIONS`, each with
 the default it takes unless the owner objects: (Q1) the unconditional INDEX band
 as a cacheable continuation rather than baked into the prefix; (Q2) the override
@@ -900,11 +1070,12 @@ rather than a target-bound one; (Q4) the entrypoint represented verbatim with
 one in-place substitution rather than filtered; (Q5) no measured provider saving
 required before the campaign closes; (Q6) both generated artifacts committed.
 
-**Which of them block a phase.** Q1 and Q3 are the band model itself: a
-rejection after P3 lands is rework, not a tweak, so they want an answer before
-P3 starts. Q4 shapes P2 and P3 the same way; S1 is designed to give the owner
-evidence for it. Q2 blocks P6's adapter contract and nothing earlier. Q6 shapes
-P4. Q5 blocks nothing and closes with P8.
+**Which of them block a phase.** Q1 is the band model itself: a rejection after
+P3 lands is rework, not a tweak, so it wants an answer before P3 starts. Q3 was
+the other half of that and is now answered. Q4 shapes P2 and P3 the same way;
+S1 gave the owner the evidence for it and it stands. Q2 blocks P6's adapter
+contract and nothing earlier. Q6 shapes P4. Q5 blocks nothing and closes with
+P8.
 
 ## 9. Log
 

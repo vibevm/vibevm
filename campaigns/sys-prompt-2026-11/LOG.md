@@ -93,7 +93,9 @@ of commands in the plan's predictions: editing `90-user.xml` leaves
   that differs by checkout.
 - **Measured sizes, the reason the feature exists.** `STATIC.xml` 251,817
   bytes, `AGENTS.md` 26,121, the eight INDEX files 57,894 — 335,832 bytes of
-  boot material, 75% of it the one compiled lane and 92% of it the prefix.
+  boot material, 75% of it the one compiled lane and 83% of it the prefix.
+  *(Corrected 2026-11-10 by spike S1: this line said 92%, an arithmetic
+  slip — 277,938 / 335,832 = 82.76%. The 75% was right.)*
 - **`SYSTEM` and `prompt` are unoccupied names.** `grep -rn 'SYSTEM'` and
   `grep -rni 'prompt'` over `boot_artifacts/` and `install/bootgen/` are empty,
   and the CLI's `Command` enum has no `Prompt` variant, so
@@ -176,3 +178,220 @@ the same way, and spike S1 is designed to give the owner evidence for it. Q2
 (override authority in the API instruction role) blocks P6 and nothing earlier.
 Q6 (both artifacts committed) shapes P4. Q5 (no measured saving required before
 close) blocks nothing.
+
+## 2026-11-10 — owner questions taken at their defaults (pending confirmation)
+
+All six questions of `PROP-076#SYS-OWNER-QUESTIONS` were taken at the
+**recommended default** the design records, so phase 0 and P1 could proceed
+without blocking on the owner. **Pending owner confirmation**, and recorded
+here so a later objection is a known cost rather than a surprise:
+
+- **Q1** the unconditional INDEX band is a **cacheable continuation**, not
+  baked into the prefix.
+- **Q2** the project layer is a **trusted application scaffold carrying
+  scoped project policy**; user-local preference material never enters the
+  prefix at all.
+- **Q3** the prefix is **portable**, with `os:` gates evaluated against an
+  explicitly supplied session target.
+- **Q4** the entrypoint is represented **verbatim**, with the one in-place
+  managed-block substitution.
+- **Q5** **no** live provider measurement is required before the campaign
+  closes.
+- **Q6** both generated artifacts are **git-tracked and marked generated**.
+
+Q1, Q3 and Q4 shape the band model and P2/P3, and `PLAN.md` §8 says a
+rejection after P3 lands is rework rather than a tweak. P1 touched none of
+them: it reserves paths and parses a table, and would survive any answer.
+Spike S1 is the evidence `PLAN.md` promised the owner for Q4 — see below.
+
+## 2026-11-10 — phase 0: spikes S1–S6 ran; three facts amended, one phase resized
+
+Full answers are `PLAN.md` §3 "Spikes — answers"; this entry is the shape of
+what changed, so a later session does not re-derive it. Every piece of
+instrumentation was reverted and `git status` was verified empty before P1
+began.
+
+**Two design facts were falsified and one refined.**
+
+1. **`#SYS-SIZE-TODAY`'s 92% was arithmetic, and wrong.** The prefix holds
+   **83%** of the 335,832 bytes of boot material, not 92%:
+   `(251,817 + 26,121) / 335,832 = 82.76%`, and the hand-assembled prefix is
+   278,092 bytes, 82.81%. The 75%-is-the-lane figure was right. The slip had
+   been copied into `PLAN.md` §5, `FORMAT-CHANGES.md` `SP-FMT-003` and this
+   log; all four are corrected. Nothing in the design depended on it.
+2. **`#SYS-SELF-INCLUSION` overstated the hazard.** Enrolment reproduced
+   exactly as predicted — a fixture boot directory with two authored snippets
+   plus the two new names produced **four** `INDEX.md` rows. But the predicted
+   **recursive growth did not occur and cannot**: a node's own authored boot
+   is forced to `LinkType::Dynamic` (`boot.rs:314`/`:336`), so its bytes never
+   enter the compiled lane and the files are only *named*. Two regenerations
+   left the lane empty and `INDEX.md` byte-identical at 883 bytes. The real
+   failure is **silent doubled delivery** — and a literal template in no spec
+   dialect was admitted *without any error*, because an INDEX row is never
+   parsed at generation time. Quieter than predicted, no less worth closing,
+   and P1's gates were unchanged in scope.
+3. **`#SYS-LANE-VERBATIM` and `#SYS-BASELINE-CORRECTIONS` (7) refined.** There
+   really are three compile seams, but only **two publish a node's STATIC
+   lane**, and they are chosen **once per regeneration rather than per node**
+   (`install/bootgen.rs:242` versus `:262`), so no node mixes them in one run.
+   The custom-backend seam compiles `artifacts/<backend>` and is reached only
+   through the `compile_node_backend*` analyser queries — it is on no
+   publication path and fired once in the whole lib suite. P3/P4 hook two
+   seams, not three.
+
+**One phase was resized: P4 is M → L.** Spike S2 added two optional journal
+members and two `StageRole`s for real. Twelve files refuse to compile
+(`prepare.rs`, `transaction.rs`, `journal.rs`, `control.rs`,
+`boot_artifacts.rs`, `native_managed/write.rs`, `publication.rs`,
+`replay_publish.rs`, plus six test files). **The finding that matters is what
+the compiler does not say:** five further edits are required and are not
+compile-forced, because each enumerates journal entries *by name* —
+`transaction.rs`'s `roll_forward_core` and `rollback_all`,
+`durable_io.rs`'s `discard_assets` and `preflight_journal_paths`, and
+`boot_artifacts/inverse.rs:67`'s `lane = [INDEX_FILE, STATIC_FILE,
+STATIC_XML_FILE]` undo image. An extension that compiles can still never roll
+the new roles forward or back, leak their stage files on failure, and omit
+them from the operation-level undo. Rollback needs **no new inverse arm per
+role** (`apply_rollback` is data-driven over a `JournalEntry`) — it needs the
+two names in every by-name list. P4's risk is silence, not volume.
+Also settled for `SP-FMT-005`: the existing corpus document stays valid with
+the two optional members, so `[format.boot-artifact-transaction]` moves
+**1 → 1** and needs no epoch break.
+
+**Two spikes confirmed the design and cost nothing.** S1: `AGENTS.md`'s
+managed block is **830 bytes at offsets 25,291..26,121** — the file's own
+tail — so substituting it in place puts the transport contract exactly where
+the authored preamble already points ("the generated block at the end of this
+file"), after a clean section boundary. Nothing reads worse;
+`#SYS-REDIRECT-IN-PLACE` stands, and that is the Q4 evidence. The three
+instruction files are md5-identical, confirming `#SYS-ENTRYPOINT-ONE`'s
+premise. S6: P6's fake provider **already exists and is better than planned**
+— `crates/vibe-cli/tests/common/agent_provider.rs` `MockProvider` is a
+loopback OpenAI-compatible endpoint that counts hits *and retains exact
+request bodies*, so the double-injection assertion is a substring count over
+`bodies()`. **P6 stays M** and writes no new provider fixture.
+
+**One measurement is a real budget.** S5: provider-free `analyze_node_lane`
+succeeds on the host node with **no provider** — 251,817 bytes, 26 inputs,
+0 unattributable, byte-equal to the committed lane — but takes **328–342 ms
+warm** over three runs. Too slow for an unconditional place in an API
+caller's request path, so **P5's stated risk is live**: `prepare` and `check`
+must answer from the sidecar's witnesses and escalate to analysis only on a
+mismatch, as a design decision in that phase rather than a later performance
+fix. The spike also yielded the first concrete `unavailable` member for
+`#SYS-READ-ONLY-CHECK` for free: an incomplete checkout refuses in 1.7 ms
+with `selected slot no-follow admission refused`, before any compile — a
+world-integrity failure, never "no lane" and never `freshness_unverifiable`.
+
+## 2026-11-10 — phase P1 landed: roles, reservations, refusals
+
+`PROP-076#SYS-LAYOUT-RESERVATION` and `#SYS-MANIFEST-TABLE` are `impl/done`;
+`#SYS-SELF-INCLUSION` is `impl/work` (gates (a), (b), (c) exist, the
+generator-side input-list refusal has no generator to bind yet). Format
+changes `SP-FMT-001` and `SP-FMT-002` are **delivered**. Nothing is generated
+and no boot directory is written — the three paths exist as *roles* only,
+which is exactly what this phase promised.
+
+**The prediction `PLAN.md` §5 made about P1 held.** No existing caller of
+`is_generated_boot_output` or `is_reserved_boot_source` needed an edit: both
+read the private path list, so all twelve inherited the two new generated
+paths at once. The layout owner is as shared as the baseline said.
+
+**Three decisions worth not re-deriving.**
+
+1. **The closed entrypoint set is spelled `EntrypointFile`, not
+   `RedirectFile`.** `PLAN.md` wrote `RedirectFile`, but
+   `vibe_core::manifest::RedirectFile` already exists and is the unrelated
+   `vibe-redirect.toml` document — the plan's name collides at the
+   `manifest` re-export. Since vibe-core cannot depend on vibe-workspace, a
+   test in `boot_artifacts/redirect/tests.rs` pins `EntrypointFile::ALL` to
+   `REDIRECT_FILES` so the two spellings of one closed set cannot drift.
+2. **Bad values refuse at deserialisation; the cross-field refusal refuses at
+   `read`.** `lane_form`/`entrypoint` follow `package/when.rs` — a value this
+   version cannot honour must refuse rather than default while the manifest
+   claims otherwise. But "`[system_prompt]` with no `SYSTEM-TEMPLATE.md`
+   beside it" needs a directory, which the path-free `Manifest::validate()`
+   has not got. It is therefore `Manifest::validate_system_prompt_beside`,
+   called from `Manifest::read`, and a manifest parsed from a *string* is
+   deliberately unchecked: inventing a directory would be worse than not
+   checking. The consequence to remember is that a `parse_str` round-trip
+   admits a table whose opt-in file is absent.
+3. **`[system_prompt]` is not a package-role section.** The prefix is a
+   property of the selected node, which may be a bare `[project]`, so the
+   table is legal on every role and deliberately **not** added to
+   `validation.rs`'s "package-role section without `[package]`" offender
+   list. A unit test states that, because the convenient mistake is to add it
+   there with the others.
+
+**One existing message changed.** `valid_source_path`'s refusal read "source
+path `X` names a generated boot output"; it now reads "names a reserved boot
+path — a generated boot output or the authored system-prompt template",
+because the first wording became inaccurate the moment a non-generated path
+joined the refusal. No test asserted on the old string.
+
+## 2026-11-10 — owner decision: two platform axes, `host` and `target` (answers Q3)
+
+The owner answered `PROP-076#SYS-OWNER-QUESTIONS` Q3 and the answer changed
+the question. Q3 asked "portable prefix with gated continuation, or
+target-bound prefix?" — one axis. It is **two**, and the second had no answer
+at all in the design:
+
+```toml
+[system_prompt]
+host   = "portable" | "linux" | "windows" | "macos"   # where the AGENT runs
+target = ["linux", ...]                                # what the PRODUCT is for
+```
+
+`host` governs the existing `when = "os:<name>"` gate, which has always meant
+the session's own operating system — a devops, shell or package-manager rule.
+`"portable"` (the default) keeps the designed behaviour: the row stays in the
+gated band for a per-session verdict. A fixed OS resolves those rows at build
+time and bakes the matching ones into the prefix, so the gated band is empty
+and `prepare` needs no session target. A session whose own OS differs from the
+fixed host is **warned about and served, never refused** — the prefix is a
+deliberate project declaration, and refusing would leave a cross-platform
+worker unable to read its own project's instructions.
+
+`target` is new in kind, not just in spelling: it introduces the gate
+`when = "target:<os>"` for a rule about the platform the *software* addresses
+— a kernel interface, WinAPI, a filesystem semantic. That is a property of the
+project and never of a session, so it is **always** resolved at build time
+whatever `host` says. Absent selects every OS, which is the compatibility
+condition: no existing project's boot changes.
+
+**The case that proves one key would have been wrong** is ordinary and worth
+keeping: a Linux workstation building Windows software. `host = "linux"`,
+`target = ["windows"]`. A single axis cannot express it, and conflating the two
+would have silently applied `apt` advice to a WinAPI rule or the reverse.
+
+**Two things to state before a later reader calls them contradictions.**
+A baked host OS is **not** a violation of `#SYS-NO-VOLATILE`'s ban on "the
+result of environment detection": nothing is detected — the name is read from
+the node's own authored manifest, exactly like `entrypoint` or `recipe`. The
+prefix stays a pure function of its declared inputs, so `#SYS-DETERMINISM`
+holds unchanged and two checkouts of one commit still produce identical bytes
+on every host. Detecting the *generating machine's* OS remains forbidden. And
+`target:` never becomes a residual `when`, so it cannot reach the gated band
+and `prepare_index_body`'s `kind` expression keeps its present meaning — the
+four-band model of `#SYS-BANDS` is untouched.
+
+**Where the work lands.** P1 (done): the two `[system_prompt]` keys, their
+closed value sets and their refusals. P2: the `when = "target:<os>"` grammar —
+a third variant in the closed set at `manifest/package/when.rs:71-112`,
+resolved at generation time beside `installed:` in
+`install/bootgen/conditions.rs:86-96`. That phase already reads `conditions.rs`
+to classify the continuation plan, so the gate belongs there. P3: baking `os:`
+rows under a fixed host, in the composer. P5: the host-mismatch warning in
+`check` and `prepare`. Format record: `SP-FMT-101`.
+
+**As implemented in P1.** `TargetOs` was reused as the closed OS set rather
+than a second enum being invented. `HostChoice::{Portable, Fixed(TargetOs)}`,
+`TargetSelection::{AllPlatforms, Only(Vec<TargetOs>)}`; both omitted from
+serialisation at their default, so a manifest that sets neither is unchanged.
+Three refusals, at deserialisation, each naming its field: an unknown or
+mis-cased OS lists all three legal systems **and** `portable` (which is not an
+OS, and is the answer a reader usually wants); `target = []` refuses, because
+an empty selection and an absent key mean **opposite** things and `[]` would
+silently drop every `target:` row — the message says to omit the key instead;
+a repeated OS refuses. The author's order inside `target` is preserved, so the
+table round-trips byte-stably.
