@@ -38,7 +38,7 @@ says otherwise.
 | N1 nested | `live-1` | Read only `nested/AGENTS.md`. `CANARY-NESTED-TUFF` present, `CANARY-NESTED-LANE-SCORIA` absent. It ignored the nested block as another project's. Claude Code also auto-loaded `nested/CLAUDE.md`, and the agent ignored that block too. | 12,707 | 36,108 | **pass** |
 | C6 repeated flag | `claude2` by hand, two `--append-system-prompt-file` | Only the **second** file's canary arrived. | — | — | recorded: **last flag wins**, the first file is dropped |
 | C7 resume | `live-1`: `00-core.md` edited and installed, then `--resume` of the step 2 session | The agent saw the **old** `00-core.md` id `cc8a3fa2cf16` (current: `2d1b478e28d7`) and not the new canary. It reported "no sign the lane is out of date": the block carries only `STATIC`'s expected id, and that id was unchanged. | 709 | 22,799 | **neither runbook pass branch** (old lane, mismatch not noticed) — recorded: **the old lane comes back, silently**. `6323e8a36` makes `vibe agent` say so on `-c/--continue/-r/--resume` |
-| C8 Windows | — | — | — | — | **not run**: no Windows host in this session |
+| C8 Windows | `c8` on Windows 11, vibe 1.0.12 (`8b8cfce52`), Claude Code 2.1.280, 202,349 B lane, launcher `command = ["C:/nvm4w/nodejs/claude.cmd"]` | `vibe prompt check` equal; `vibe agent claude -p` started the harness with the slot flags, which answered `Failed to authenticate: OAuth session expired and could not be refreshed` | 0 | 0 | **partial (2026-11-10)**: the Windows launch path works (a `.cmd` launcher, file flags, no lane bytes on the command line); delivery itself is **not measured** until the host's Claude login is renewed |
 
 ## Findings
 
