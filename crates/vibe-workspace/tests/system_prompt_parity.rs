@@ -31,6 +31,8 @@ use std::collections::BTreeSet;
 
 #[path = "system_prompt_parity/classic.rs"]
 mod classic;
+#[path = "system_prompt_parity/extension_world.rs"]
+mod extension_world;
 #[path = "system_prompt_parity/fixtures.rs"]
 mod fixtures;
 #[path = "system_prompt_parity/invariants.rs"]
