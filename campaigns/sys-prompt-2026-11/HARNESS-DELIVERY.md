@@ -1,10 +1,27 @@
 # Delivering the boot lane to coding agents — consolidated design
 
-Status: design proposal for the owner, 2026-11-10. Companion to
-`vibevm/vibespecs/common/PROP-076-system-prompt-prefix.xml` and `PLAN.md` in this
-directory. Nothing here is implemented. Nothing here was verified against a live
-model: every check below either ran offline on this machine or is marked as
-research.
+Status: **adopted**, 2026-11-10 — D1–D12 as decided and D13 authorised, narrowly
+(§11). Companion to `vibevm/vibespecs/common/PROP-076-system-prompt-prefix.xml`
+and `PLAN.md` in this directory; where the two disagree, PROP-076 governs and
+this document is corrected. Nothing here was verified against a live model:
+every check below either ran offline on this machine or is marked as research.
+
+**What is implemented, as of phase P3 (2026-11-10).** The marker grammar of §2
+and the agent lane of §1.1 are composed by
+`crates/vibe-workspace/src/system_prompt/{lane,markers}.rs`, and the offline
+check §2 promises — every begin has its end, pairs are unique, each hash matches
+its own bytes, no marker-shaped line inside a body — is
+`system_prompt::verify_lane_markers`. §3.3 is proved rather than asserted: the
+composer refuses a managed-block marker or a lane marker that reaches the
+prefix. Nothing is written yet (P4) and no command exists yet (P5, P6), so §8.4
+below describes a surface that is designed and not built.
+
+**Measured on this repository by P3**, superseding the research estimate in the
+line below: the composed `AGENT-LANE.md` is **312,345 bytes** — 309,711 of
+bodies across 9 segments plus 2,634 of marker lines — and it carries **74**
+`@`-reference tokens, all outside a code fence, of which 68 come from
+`STATIC.xml`. The composed prefix is **278,280 bytes**, 82.78% of the 336,174
+bytes of boot material, with the lane 74.91% of it.
 
 Evidence labels used throughout:
 
@@ -120,7 +137,18 @@ mechanism. A model can skip the comparison or misjudge a missing end marker in
 - `vibe prompt check` (offline): every begin has its end, pairs are unique,
   order matches INDEX, hashes match the bytes, the block's expected hash matches
   the current `STATIC.xml`, and no marker-shaped line occurs inside a segment's
-  own bytes.
+  own bytes. **Implemented in P3** as `system_prompt::verify_lane_markers`, all
+  of it but the order comparison, which only a caller holding the boot plan can
+  make. The composer runs it over its own output, so the artifact it hands back
+  is one the check has already accepted.
+
+**One detail P3 had to settle, because the grammar is only usable if the hash is
+recomputable from the delivered text alone.** The composer gives a body that
+does not end with a newline one, so that the end marker is always a line of its
+own; that byte sits *between* the markers and is therefore part of what the hash
+covers. A checker reading delivered text hashes exactly the bytes between the
+two lines and gets the number the lines carry — with no knowledge of what was on
+disk.
 - The live experiment (section 9): the agent is asked to quote the last
   `vibe:lane-end` line, which shows whether the tail arrived.
 
@@ -459,23 +487,59 @@ appended to a harness's own prompt it can contradict it ("You are …").
 
 ### 8.4 Command surface
 
-- `vibe agent <harness> [--] [args…]` — composes the lane file, checks the
-  mode constraints, starts the harness with the file-based slot, passes
-  everything after the harness name through. On Windows there is no `exec`:
-  spawn, forward the console and signals, return the child's exit code.
-  - Claude Code: `--append-system-prompt-file <abs path>` exactly once, plus
+*Revised 2026-11-10 by the owner decision `PROP-076#SYS-HARNESS-EXECUTABLE`,
+which governs. This section named the programs directly, and that conflated two
+different things: the harness **kind** is the flag dialect and the delivery
+rules, while the **launcher** is the name bound to a kind and to the argv that
+starts it. A developer who reaches a harness through a personal wrapper — one
+that sets the harness's own config directory, drops API-key variables and
+`exec`s the real program with standing flags — needs the second without
+changing the first.*
+
+- **A launcher is a named thing, and only a user may name one.**
+  `[agent.launchers.<name>]` in the **user configuration only**, with `kind`
+  (required; the closed set `claude`, `codex`, …), `command` (the argv
+  **prefix** to exec, so a wrapper may carry its own arguments) and an optional
+  `config_dir`. A project manifest that names a launcher is a **refusal**: a
+  repository must not choose which program runs on a contributor's machine.
+- The built-in launchers `claude` and `codex` always exist, each with `kind`
+  equal to its name and `command` the program of that name. A user launcher of
+  the same name **overrides** the built-in, which is how a wrapper takes over
+  the plain name. Any number of launchers may share a kind — two Claude Code
+  launchers with different `config_dir`s are ordinary configuration.
+- `vibe agent <launcher-name> [--] [args…]` — resolves the launcher **by
+  name**, takes its flags and delivery from its **kind**, composes the lane
+  file, checks the mode constraints, and execs `command` + flags + the user's
+  own arguments. On Windows there is no `exec`: spawn, forward the console and
+  signals, return the child's exit code. An unknown launcher name is a refusal
+  that **lists the available launchers**; an unknown kind is a refusal naming
+  the field.
+  - Kind `claude`: `--append-system-prompt-file <abs path>` exactly once, plus
     `--exclude-dynamic-system-prompt-sections`. Refuses when the user's
     arguments already contain `--append-system-prompt-file`, `--system-prompt`
     or `--system-prompt-file`.
-  - Codex: writes the profile file, adds `-p <profile>`.
-  - A harness in `read` or `import` mode: starts it unchanged and says so in
-    one line.
-- `vibe prompt flags --harness <name> [--format argv|json]` — composes the file
-  and prints the arguments, for aliases and for other launchers. This is the
-  path that can go stale; the expected hash is its safety net.
+  - Kind `codex`: writes the profile file, adds `-p <profile>`.
+  - A kind in `read` or `import` mode: starts it unchanged and says so in one
+    line.
+- `vibe agent list` — prints each launcher's name, kind, command, config
+  directory and **source**, built-in or the exact user-config path, because a
+  developer debugging which program ran needs to know which file decided it.
+- `vibe prompt flags --harness <name> [--format argv|json]` — accepts either a
+  kind or a launcher name, composes the file, and prints **flags only, never a
+  program**, which is what lets its output be appended to any wrapper, alias or
+  launcher a developer already has. This is the path that can go stale; the
+  expected hash is its safety net.
 - `vibe prompt check` / `vibe prompt prepare` — extended as in section 8.5.
 
 `vibe agent` should be a thin layer over `flags`, so there is one code path.
+
+**`config_dir` exists for one honest reason**: it names where that launcher's
+harness keeps its session logs, which the cache diagnostics of §10 read. A
+wrapper that sets `CLAUDE_CONFIG_DIR` internally makes the directory unknowable
+from outside, so a launcher may state it; absent that, vibe takes it from the
+environment, and absent that, the kind's documented default. **When it is still
+unknown the diagnostics say so**, rather than guessing a path and reading
+someone else's logs.
 
 ### 8.5 What `vibe prompt check` and `prepare` can warn about
 
@@ -520,7 +584,16 @@ appended to a harness's own prompt it can contradict it ("You are …").
 
 ## 10. Live-verification plan
 
-Not to be run now. Needs the owner's authorisation; uses subscriptions.
+**Authorised, narrowly (D13, 2026-11-10): Claude Code only — rows C1–C8 — and
+only once `vibe agent claude` exists, which is phase P6.** It runs **before the
+release is published**, as the campaign's final step after the qualify phase
+(`PLAN.md` P9), and it is run **by the central session**: a worker neither
+starts an agent session nor spends the owner's subscription. The Codex rows
+(X1, X2, X3), O1 and I1 stay **unauthorised**, so the rows for Codex, Qwen
+Code, Gemini CLI, OpenCode, pi and dsh remain research and their delivery
+default stays `read`. The one Codex row that needs no authorisation is **X0**,
+which is offline and spends nothing. Nothing earlier in the campaign depends on
+any of this, because every phase's own acceptance is offline.
 
 **Sample project.** A small vibe project whose lane is padded to the real size,
 with unique canary words: one in the last line of `STATIC.xml`, one in each
@@ -564,7 +637,12 @@ and must not be the default.
 
 ## 11. Owner decisions
 
-| # | Decision | Recommended default |
+**All thirteen are decided** (2026-11-10): D1–D12 adopted exactly as
+recommended, D13 authorised with the scope its row states. The third column is
+kept as the recommendation that was put, so a later reader can see what was
+chosen over what.
+
+| # | Decision | Recommended default — **decided as recommended unless the row says otherwise** |
 |---|---|---|
 | D1 | Setting shape and defaults | `[system_prompt.harness.<name>] delivery`; `launch` for `claude` and `codex`, `read` for the rest. Safe before live verification because a plain launch in `launch` mode is read mode |
 | D2 | Offer `import` in version 1? | No. Reserve the value; refuse it with a message naming C1, C3, C4 and worker exclusion. Revisit after I1 |
@@ -578,20 +656,20 @@ and must not be the default.
 | D10 | Both `vibe agent` and `vibe prompt flags` | Both; `agent` built on `flags` |
 | D11 | Entrypoint over Codex's 32 KiB: warning or refusal | Refusal when the managed block would fall outside the limit; warning within 4 KB of it |
 | D12 | PROP-009 sentence: boot order is precedence, not position | Adopt |
-| D13 | Authorise and budget the live run of section 10 | After P7; C1–C5 and X1–X2 first |
+| D13 | Authorise and budget the live run of section 10 | **AUTHORISED 2026-11-10, scoped: Claude Code only (C1–C8), before the release is published, only once `vibe agent claude` exists (P6), run by the central session as phase P9. Codex, Qwen Code, Gemini CLI, OpenCode, pi and dsh stay unauthorised; offline X0 needs no authorisation.** The recommendation was "after P7; C1–C5 and X1–X2 first" |
 
 ## 12. Placement in the campaign phases
 
 | Phase | Addition |
 |---|---|
-| P2 capture | The router block as the prospective entrypoint's managed block; expected STATIC hash; block neutralisation in vibedeps copies |
-| P3 compose | Agent lane composition and markers, beside the `SYSTEM.md` composer; fixed-host baking shared with it |
+| ~~P2 capture~~ → **P2b** | The router block as the prospective entrypoint's managed block; expected STATIC hash; block neutralisation in vibedeps copies. *Re-planned: these three arrived after P2's scope was fixed, they are not capture, and each rewrites the body of every instruction file in every project — so they are their own atom, placed after P3 where the marker and hash grammar is settled* |
+| **P3 compose — DONE 2026-11-10** | Agent lane composition and markers, beside the `SYSTEM.md` composer; fixed-host baking shared with it (`ContinuationPlan::resolve_host`, one function both composers take their rows from) |
 | P4 publish | `AGENT-LANE.md` as a generated, ignored production role |
 | P5 operations | `vibe prompt check` / `prepare` additions of section 8.5; `[system_prompt.harness.*]` parsing and C1–C4 |
-| P6 adapters | `vibe prompt flags`, `vibe agent`, the Claude Code and Codex adapters |
+| P6 adapters | `vibe prompt flags`, `vibe agent` with the named launchers of §8.4, the Claude Code and Codex adapters |
 | P7 qualify | Offline marker and block tests; `codex debug prompt-input` placement test when Codex is installed; nested-project fixtures |
 | P8 docs | The delivery modes, the limits table, the risks of section 9 |
-| After P7, separately authorised | Section 10 |
+| **P9**, authorised and scoped | Section 10, Claude Code only, by the central session, before the release is published |
 
 ## 13. Where the earlier research was wrong or incomplete
 
