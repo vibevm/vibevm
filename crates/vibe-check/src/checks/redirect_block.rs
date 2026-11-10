@@ -52,6 +52,15 @@ impl Check for RedirectBlockCheck {
 /// The agent instruction files vibevm owns a block inside (PROP-012).
 const INSTRUCTION_FILES: [&str; 3] = ["CLAUDE.md", "AGENTS.md", "GEMINI.md"];
 
+/// Which instruction files *below* the root a harness would also read, and
+/// what is wrong with each — out of line along its own seam, because "what
+/// would a harness discover" is a different question from "is this file's
+/// block well-formed" and is the only half that needs an opinion about
+/// ignore rules.
+#[path = "redirect_block/discoverable.rs"]
+mod discoverable;
+use discoverable::report_discoverable_blocks;
+
 /// How close the block's end may come to a project instruction file's
 /// truncation limit before it is worth saying so. The limit itself and its
 /// margin are `vibe-workspace`'s, so there is one measurement rather than a
@@ -75,80 +84,9 @@ fn report_codex_budget(name: &str, content: &str, report: &mut CheckReport) {
     }
 }
 
-/// Managed blocks a harness's **downward** discovery would concatenate into
-/// a session rooted here (`PROP-076#SYS-NO-RECURSION`).
-///
-/// Two findings, because two different things are wrong. A nested
-/// instruction file below the project root carries a second project's boot
-/// rules: the router scopes itself by node id, so this is a cost in tokens
-/// rather than a contradiction, and it is a warning. A copy under the live
-/// dependency root whose block is **not** neutralised is a regeneration that
-/// has not happened, and names the command that fixes it.
-fn report_discoverable_blocks(project_root: &Path, report: &mut CheckReport) {
-    let vibedeps = vibe_core::layout::current_vibedeps_root();
-    for entry in walkdir::WalkDir::new(project_root)
-        .max_depth(12)
-        .into_iter()
-        .filter_entry(|entry| !skipped(entry.file_name().to_string_lossy().as_ref()))
-        .filter_map(Result::ok)
-    {
-        let Ok(relative) = entry.path().strip_prefix(project_root) else {
-            continue;
-        };
-        if relative.components().count() < 2
-            || !entry.file_type().is_file()
-            || !relative
-                .file_name()
-                .and_then(|name| name.to_str())
-                .is_some_and(|name| INSTRUCTION_FILES.contains(&name))
-        {
-            continue;
-        }
-        let Ok(content) = fs::read_to_string(entry.path()) else {
-            continue;
-        };
-        if block_end(&content).is_none() {
-            continue;
-        }
-        let shown = relative.display().to_string().replace('\\', "/");
-        if relative.starts_with(&vibedeps) {
-            if !content.contains(vibe_workspace::boot_artifacts::NEUTRALISED_BODY) {
-                report.warn(
-                    CheckId::RedirectBlock,
-                    Some(relative.to_path_buf()),
-                    None,
-                    format!(
-                        "`{shown}` is a materialised dependency copy whose <vibevm> block is not \
-                         neutralised, so a harness that discovers instruction files downward \
-                         would read another package's boot rules as this project's: run \
-                         `vibe install` to rewrite the copy"
-                    ),
-                );
-            }
-            continue;
-        }
-        report.warn(
-            CheckId::RedirectBlock,
-            Some(relative.to_path_buf()),
-            None,
-            format!(
-                "`{shown}` carries a <vibevm> block below the project root, and a harness that \
-                 discovers instruction files downward concatenates it: the block scopes itself \
-                 to its own project, so this costs context rather than contradicting this \
-                 project's boot"
-            ),
-        );
-    }
-}
-
-/// Directories no harness discovery and no check needs to walk.
-fn skipped(name: &str) -> bool {
-    matches!(name, ".git" | "target" | "node_modules" | ".vibe")
-}
-
 /// The byte offset just past a well-formed managed block's last byte, or
 /// `None` when the file carries no block.
-fn block_end(content: &str) -> Option<usize> {
+pub(super) fn block_end(content: &str) -> Option<usize> {
     let mut offset = 0usize;
     let mut open = false;
     for line in content.split_inclusive('\n') {
