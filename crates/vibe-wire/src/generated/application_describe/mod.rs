@@ -54,6 +54,12 @@ pub struct Application {
 
     #[serde(default, skip_serializing_if = "Vec::is_empty")]
     pub keywords: Vec<String>,
+
+    /// The ecosystem adapters this package declares (PROP-075 `#ECOSYSTEM-
+    /// ADAPTER`): which verbs each one has and the author's recommended items,
+    /// so a reader can say what a version can carry without running anything.
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub ecosystems: Vec<Ecosystem>,
 }
 
 /// An exact non-negative byte count. JTD has no uint64 form, so generated Rust
@@ -97,6 +103,63 @@ pub struct Condition {
 
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub offline: Option<bool>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+pub struct Ecosystem {
+    /// The adapter's opaque id, as the package wrote it; vibe only ever echoes
+    /// it.
+    pub id: String,
+
+    pub name: String,
+
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub description: Option<String>,
+
+    /// Whether vibe synthesises the `ecosystem:<id>` migration entry from this
+    /// adapter (PROP-075 `#ECOSYSTEM-MIGRATION`).
+    pub migration: bool,
+
+    /// The verbs this adapter declares, in verb order.
+    pub verbs: Vec<EcosystemVerb>,
+
+    /// The author's recommended items, each shorthand for one installer feature
+    /// of the same id (PROP-075 `#ECOSYSTEM-RECOMMENDS`).
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub recommends: Vec<EcosystemRecommendation>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+pub struct EcosystemRecommendation {
+    /// The recommendation's own token, which is also the id of the feature it
+    /// is shorthand for.
+    pub id: String,
+
+    pub name: String,
+
+    /// The opaque item string, exactly as the author wrote it.
+    pub item: String,
+
+    pub default: bool,
+
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub reason: Option<String>,
+}
+
+/// The four verbs of an adapter; install is required of every one.
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+pub enum EcosystemVerb {
+    #[serde(rename = "install")]
+    Install,
+
+    #[serde(rename = "list")]
+    List,
+
+    #[serde(rename = "remove")]
+    Remove,
+
+    #[serde(rename = "self_upgrade")]
+    SelfUpgrade,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]

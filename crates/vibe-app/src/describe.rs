@@ -9,9 +9,9 @@ specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-065#describe");
 use std::path::Path;
 
 use vibe_core::manifest::{
-    Condition, IconDecl, InstallerOptionDecl, LauncherDecl, LauncherKind, ParameterType,
-    RequirementDecl, RequirementScope, ShellInterpreter, StepDecl, StepKind, StepOrigin, StepPhase,
-    result_of, steps_of,
+    Condition, EcosystemDecl, EcosystemVerb, IconDecl, InstallerOptionDecl, LauncherDecl,
+    LauncherKind, ParameterType, RequirementDecl, RequirementScope, ShellInterpreter, StepDecl,
+    StepKind, StepOrigin, StepPhase, result_of, steps_of,
 };
 use vibe_wire::generated::application_describe as wire;
 
@@ -461,5 +461,51 @@ pub(crate) fn describe_application(resolved: &ResolvedPackage) -> wire::Applicat
         menu_group: resolved.application.menu_group.clone(),
         categories: resolved.application.categories.clone(),
         keywords: resolved.application.keywords.clone(),
+        // The declared ecosystem adapters, so a GUI or an agent can say
+        // what a version can carry without running anything (PROP-075
+        // `#ECOSYSTEM-ADAPTER`). Nothing here runs a verb: the adapters
+        // are read off the declaration, exactly as the features are.
+        ecosystems: resolved
+            .application
+            .ecosystem
+            .iter()
+            .map(describe_ecosystem)
+            .collect(),
+    }
+}
+
+/// One declared `[[application.ecosystem]]` row: its opaque id, which
+/// verbs the package wrote, and the author's recommended items.
+#[specmark::spec(
+    implements = "spec://org.vibevm.core/vibevm/common/PROP-075#ECOSYSTEM-ADAPTER",
+    r = 1
+)]
+fn describe_ecosystem(row: &EcosystemDecl) -> wire::Ecosystem {
+    wire::Ecosystem {
+        id: row.id.clone(),
+        name: row.name.clone(),
+        description: row.description.clone(),
+        migration: row.migration,
+        verbs: row
+            .declared_verbs()
+            .into_iter()
+            .map(|verb| match verb {
+                EcosystemVerb::Install => wire::EcosystemVerb::Install,
+                EcosystemVerb::List => wire::EcosystemVerb::List,
+                EcosystemVerb::Remove => wire::EcosystemVerb::Remove,
+                EcosystemVerb::SelfUpgrade => wire::EcosystemVerb::SelfUpgrade,
+            })
+            .collect(),
+        recommends: row
+            .recommends
+            .iter()
+            .map(|recommend| wire::EcosystemRecommendation {
+                id: recommend.id.clone(),
+                name: recommend.feature_name().to_owned(),
+                item: recommend.item.clone(),
+                default: recommend.default,
+                reason: recommend.reason.clone(),
+            })
+            .collect(),
     }
 }

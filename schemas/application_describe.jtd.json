@@ -100,7 +100,8 @@
      "iconSet",
      "menuGroup",
      "categories",
-     "keywords"
+     "keywords",
+     "ecosystems"
     ]
    },
    "properties": {
@@ -144,6 +145,121 @@
      },
      "metadata": {
       "x-empty": "omit"
+     }
+    },
+    "ecosystems": {
+     "elements": {
+      "ref": "ecosystem"
+     },
+     "metadata": {
+      "x-empty": "omit",
+      "description": "The ecosystem adapters this package declares (PROP-075 `#ECOSYSTEM-ADAPTER`): which verbs each one has and the author's recommended items, so a reader can say what a version can carry without running anything."
+     }
+    }
+   }
+  },
+  "ecosystem_verb": {
+   "enum": [
+    "install",
+    "list",
+    "remove",
+    "self_upgrade"
+   ],
+   "metadata": {
+    "x-vocabulary": "closed",
+    "description": "The four verbs of an adapter; install is required of every one."
+   }
+  },
+  "ecosystem_recommendation": {
+   "metadata": {
+    "x-wire-order": [
+     "id",
+     "name",
+     "item",
+     "default",
+     "reason"
+    ]
+   },
+   "properties": {
+    "id": {
+     "type": "string",
+     "metadata": {
+      "description": "The recommendation's own token, which is also the id of the feature it is shorthand for."
+     }
+    },
+    "name": {
+     "type": "string"
+    },
+    "item": {
+     "type": "string",
+     "metadata": {
+      "description": "The opaque item string, exactly as the author wrote it."
+     }
+    },
+    "default": {
+     "type": "boolean"
+    }
+   },
+   "optionalProperties": {
+    "reason": {
+     "type": "string",
+     "metadata": {
+      "x-default": null
+     }
+    }
+   }
+  },
+  "ecosystem": {
+   "metadata": {
+    "x-wire-order": [
+     "id",
+     "name",
+     "description",
+     "migration",
+     "verbs",
+     "recommends"
+    ]
+   },
+   "properties": {
+    "id": {
+     "type": "string",
+     "metadata": {
+      "description": "The adapter's opaque id, as the package wrote it; vibe only ever echoes it."
+     }
+    },
+    "name": {
+     "type": "string"
+    },
+    "migration": {
+     "type": "boolean",
+     "metadata": {
+      "description": "Whether vibe synthesises the `ecosystem:<id>` migration entry from this adapter (PROP-075 `#ECOSYSTEM-MIGRATION`)."
+     }
+    },
+    "verbs": {
+     "elements": {
+      "ref": "ecosystem_verb"
+     },
+     "metadata": {
+      "x-empty": "emit",
+      "description": "The verbs this adapter declares, in verb order."
+     }
+    }
+   },
+   "optionalProperties": {
+    "description": {
+     "type": "string",
+     "metadata": {
+      "x-default": null
+     }
+    },
+    "recommends": {
+     "elements": {
+      "ref": "ecosystem_recommendation"
+     },
+     "metadata": {
+      "x-empty": "omit",
+      "description": "The author's recommended items, each shorthand for one installer feature of the same id (PROP-075 `#ECOSYSTEM-RECOMMENDS`)."
      }
     }
    }
