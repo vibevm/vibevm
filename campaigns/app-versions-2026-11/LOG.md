@@ -798,3 +798,93 @@ What implementing it taught:
   newer one; a version someone else already removed is the outcome the caller
   asked for, not an error. That is the one place the channel is deliberately
   permissive, and it is tested.
+
+## 2026-11-10 — phase P4, commit (c) rest: payloads, the budget, prune, the report
+
+P4 is **delivered**. `vibe registry mirror --config` now projects a
+`[[template]]` row's payloads into the package drop, weighs them against
+`[payloads] max_total` before writing a byte, shows the projection on a dry run,
+and — only when told, and only after a plan — removes what the recorded
+selection no longer matches. `AV-FMT-009` is delivered with both report arrays;
+`#MIRROR-PAYLOAD-PROJECTION`, `#MIRROR-PAYLOAD-BUDGET`, `#MIRROR-DRY-RUN-OUTPUT`,
+`#MIRROR-PRUNE` and `#MIRROR-NO-SILENT-PRUNE` are `impl/done`, and
+`PROP-075#P4-AS-BUILT` gains amendments 18–27.
+
+What implementing it taught, beyond the as-built record:
+
+- **The projection had no business being a new fetch, and proving that was the
+  design.** The fact says the mirror fetches each input "through the operation's
+  controlled transport" and verifies the digest — which is a description of the
+  installer's own Locator fetch with a different destination. Writing a second
+  reader would also have put a new line in `PROP-068#coverage`'s exemption list,
+  which is the gate that exists to notice exactly this. So `vibe-app` grew **one**
+  public entry, `fetch_declared_input`, wrapping the `fetch_located` the installer
+  already uses: the remapped candidates in winning order, the digest on whichever
+  served the bytes, the transfer journal. The mirror's own module sends no HTTP
+  request at all, so the coverage test never had to hear about it — the right
+  outcome, arrived at by not writing the code.
+- **The renders were already there, and keeping them had to be conditional.** A
+  payload projection needs each selected version's rendered manifest, which the
+  snapshot stage renders anyway. Keeping them is free for a four-version row and
+  four hundred manifests for a four-hundred-version one, so the stage keeps a
+  render **only** when the row says `payloads = true`. That one condition is what
+  makes "read the renders you already have" a saving rather than a leak.
+- **Commit (b)'s deliberate omission had to be undone, and it was right to be
+  deliberate.** (b) reported a template row where it was produced and carried
+  nothing out, on the stated ground that a carrier with one reader would be a
+  half-built wire surface. Two readers then arrived in the same commit — the
+  projection and `templates[]` — and with them the reason a row must be drawn
+  once rather than twice. The omission cost one small refactor and bought a
+  commit with no unread state in it; the reverse order would have cost a review.
+- **A declared `size` is the only thing a budget can weigh, and the report has
+  to say so.** The production Node template declares no `size` on its archive
+  steps, so its projected total is 0 bytes with N inputs of unknown size — and
+  `max_total` cannot refuse a selection it cannot measure. That is correct and it
+  is also a trap: a report that printed `0 bytes` would read as "nothing to
+  fetch". So `unknown` is a member of its own, `total_bytes` is documented as a
+  lower bound whenever it is non-zero, and the human line says
+  "(a lower bound: N input(s) declare no size)".
+- **The payload suite could not reuse the frozen Node fixtures, and that was a
+  design decision rather than a convenience.** Upstream's `SHASUMS256.txt`
+  describes real multi-megabyte release tarballs; a suite that verifies a real
+  digest of real bytes therefore cannot use them, and faking the digest would
+  have tested nothing. The fixture declares its own template over its own
+  four-kilobyte payloads and computes the digest documents from them — so the
+  verification is real, the byte counts in the budget assertions are real, and
+  the whole suite still opens no socket. The frozen fixtures stay where render
+  fidelity is the question.
+- **The closed-network proof needed an input that is copied, not extracted.** The
+  honest end of payload projection is a client installing from the drop with no
+  route to upstream, and a fabricated tar.gz cannot be extracted. The fixture's
+  template therefore carries a third installer option built from `sources` +
+  `recipe` — the shape `cli_artifact_drops` already uses — so the install really
+  runs, and the assertion is that the installed payload is byte-identical to the
+  release host's own file. It also exercised the `sources[]` arm of the input
+  reader, which the archive options do not.
+- **"Nothing is removed without `--yes`" and "nothing is written without `--yes`"
+  are different promises, and the weaker one is a lie.** The fact admits a run
+  that copies and declines to prune. But a prune plan is read against one reading
+  of the target and applied against a possibly newer one — and a run that printed
+  a plan and then changed the very tree it described would have printed a document
+  about nothing. So an unattended `--prune` without `--yes` refuses with
+  `prune_consent_required` and writes nothing at all. `--dry-run --prune` is the
+  way to see the plan with a zero exit.
+- **`pruned[]` alone cannot say whether the plan happened.** A dry run is marked
+  by `dry_run`, but an attended "no" is not a dry run and still renders a report
+  carrying the plan. So the array is the **plan** — which is what makes "never
+  silent" true for a JSON client, not only for a person — and a separate optional
+  `removed` count says how many of its rows went. That member is not in the
+  design; it is what the design's own "shown as a plan first" needs in a document.
+- **A snapshot's prune belongs to the snapshot writer.** Dropping one version
+  means three changes that have to agree: the digest file goes, `snapshot.toml`
+  loses its row, and `versions.json` is re-filtered with its `sha256` recomputed
+  over the new bytes. Computing that beside the writer would have duplicated the
+  record logic that amendments 9 and 14 already paid for, so the stage takes a
+  `prune` flag and the plan is built from the stale set it reports.
+- **A removal leaves an empty parent, and widening the channel to fix it would
+  have been the wrong trade.** `org.other/tool/` survives its last version, and
+  the channel refuses any path that is not a version directory or inside
+  `_index/` precisely so a batch cannot delete the rest of the tree. An empty
+  directory carries no version, no catalog row and no journal fact, and on a
+  monorepo it does not exist at all — the harmless side of a refusal worth
+  keeping.

@@ -496,35 +496,41 @@ is P5b and does not exist yet. The four as-built amendments are
 
 **Parallel.** Needs P1 and P2. Independent of P4, P5, P6.
 
-### P4 — mirror config, template snapshot, payload projection, prune — **L** — *commits (a) and (b) delivered 2026-11-10; (c) part-landed*
+### P4 — mirror config, template snapshot, payload projection, prune — **L** — **DONE 2026-11-10**
 
 **Goal.** `vibe registry mirror --config mirror.toml` selects declaratively,
 snapshots a template's inputs into the target's `_index/`, projects payloads
 into the drop under a budget, and prunes only when told.
 
-**Status.** The phase is three atomic commits. **(a) is landed** — the
+**As built.** All three commits are landed. **(a)** the
 `--config mirror.toml` reader with every refusal, the selection model
 replacing `Filters`, and the recorded selection in `_index/mirrors/<source>.toml`
-(`AV-FMT-007` delivered; `#MIRROR-CONFIG` and `#MIRROR-CONFIG-SCHEMA`
-`impl/done`). **(b) is landed** — the `_index/templates/` snapshot writer with
-its registered format `[format.index-templates]` and golden corpus, the
-priming by which a network-denied client renders from a snapshot, and
-`vibe app versions` reporting the snapshot's `[sync] last` (`AV-FMT-008`
-delivered; `#MIRROR-TEMPLATE-SNAPSHOT` and `#MIRROR-SNAPSHOT-LAYOUT`
-`impl/done`). **(c) is part-landed**: its structural prerequisite, the removal channel
-amendment 4 names, is in — `BatchConfig.removed` with the `Removal` /
-`RemovedVersion` types, planned and validated in `index_plan.rs` and applied
-by all three backends, so a pruned version's bytes, its index rows and its
-`Event::Removed` fact leave in ONE commit (proven on `localdir` and on a
-pushed `monorepo`). **Still open in (c):** payload projection with digest
-verification and the pre-write `max_total` budget, `--dry-run` counts and
-bytes, the `--prune` / `--prune-payloads` / `--yes` command surface with its
-plan, and the two report arrays `templates[]` / `pruned[]` (`AV-FMT-009`,
-which needs codegen and a wire-diff). No run deletes anything today:
-`#MIRROR-NO-SILENT-PRUNE` holds because the mirror passes `removed: vec![]`
-and nothing else can reach the channel.
+(`AV-FMT-007`). **(b)** the `_index/templates/` snapshot writer with its
+registered format `[format.index-templates]` and golden corpus, the priming by
+which a network-denied client renders from a snapshot, and
+`vibe app versions` reporting the snapshot's `[sync] last` (`AV-FMT-008`).
+**(c)** the removal channel (`BatchConfig.removed` with the `Removal` /
+`RemovedVersion` types, applied by all three backends so a pruned version's
+bytes, its index rows and its `Event::Removed` fact leave in ONE commit), then
+payload projection with its pre-write `max_total` budget, the `--dry-run`
+counts and bytes, the `--prune` / `--prune-payloads` / `--yes` surface with
+its plan, and `AV-FMT-009`'s two report arrays plus the `removed` count the
+design did not name. Every fact of section 3 is `impl/done`; the twenty-seven
+amendments are PROP-075 `#P4-AS-BUILT`.
 
-**What the removal channel decided** (for whoever finishes (c)): the order is
+The three that cost the most to settle, in short: **payload projection is the
+installer's own Locator fetch** with a destination the caller chooses
+(`vibe_app::fetch_declared_input`), so the digest check, the remap route and
+the transfer wrapper are the ones every install already uses and the mirror is
+not a new HTTP reader; **the projection reads the renders the snapshot stage
+already performed**, kept only for a row with `payloads = true`, which is also
+why the per-row facts commit (b) deliberately dropped had to come back as a
+carrier; and **an unanswered prune plan refuses the whole run**, because a plan
+is read against one reading of the target and applied against a possibly newer
+one, so a run that printed a plan and then changed the tree it described would
+have printed a document about nothing.
+
+**What the removal channel decided:** the order is
 **delete, then re-project**, because `vibe_index::layout::refresh` projects
 the catalog from `version_dirs(root)` — a version still on disk is projected
 straight back in, and the journal fact alone would not drop it. For a
@@ -534,7 +540,11 @@ backend where a removal can silently not happen, and it has its own test. A
 removal path is refused unless it is a `<group>/<name>/v<version>` directory
 that **spells the coordinate it claims**, or a path inside `_index/`; a path
 the tree does not hold is dropped rather than refused, because a plan is read
-against one state and applied against a possibly newer one.
+against one state and applied against a possibly newer one. A removal
+therefore takes the **version directory** and leaves an emptied
+`<group>/<name>/` behind, which carries no version, no catalog row and no
+journal fact (and on a `monorepo` is not even visible, since git tracks no
+empty directory).
 
 **Amendments decided against the code (read before implementing (b) or (c)).**
 
@@ -574,13 +584,20 @@ against one state and applied against a possibly newer one.
    versions, so `sha256` must be **recomputed over the filtered document**
    rather than carried over from the upstream fetch.
 
-**Files.** `crates/vibe-cli/src/cli/registry.rs` (`--config` ✔, `--prune`,
-`--prune-payloads`, `--yes`); `crates/vibe-cli/src/commands/registry/mirror.rs`
+**Files.** `crates/vibe-cli/src/cli/registry.rs` (`--config` ✔, `--prune` ✔,
+`--prune-payloads` ✔, `--yes` ✔); `crates/vibe-cli/src/commands/registry/mirror.rs`
 and its `mirror/{history,plan,record,source,target}.rs` (the selection model
-replacing `Filters` ✔, the recorded selection ✔, the template rows, the prune
-plan); new `mirror/config.rs` (the `mirror.toml` reader ✔) and
-`mirror/selection.rs` (what it means for a run ✔); new `mirror/templates.rs` ✔
-(snapshot writing through the existing `BatchConfig.files` channel);
+replacing `Filters` ✔, the recorded selection ✔); new `mirror/config.rs` (the
+`mirror.toml` reader ✔) and `mirror/selection.rs` (what it means for a run ✔);
+new `mirror/templates.rs` ✔ (snapshot writing through the existing
+`BatchConfig.files` channel); new `mirror/payloads.rs` ✔ with
+`payloads/report.rs` ✔ (the projection, the budget, the fetch, and both
+answers a row owes); new `mirror/prune.rs` ✔ (the refusals, the plan, its
+question and the drop's own removal); new `mirror/render.rs` ✔ (the report's
+version rows and summary, moved out so the run file keeps its budget); new
+`crates/vibe-app/src/installer/declared_input.rs` ✔ (the one public entry by
+which a caller outside an install fetches a declared input through the
+Locator);
 `crates/vibe-publish/src/layout_publish.rs` (`BatchConfig`'s removal channel,
 amendment 4) with `layout_publish/{index_plan,localdir,monorepo,working_copy}.rs`;
 `crates/vibe-registry/src/templates/snapshot.rs` ✔ (the snapshot layout, read
@@ -612,18 +629,31 @@ changed upstream digest for an already-snapshotted version stops before writing
 with the alarm; `--dry-run` writes nothing and prints the projection;
 `--prune` after narrowing prints a plan and removes nothing without `--yes`;
 a version recorded as copied from another source is never pruned.
+**As delivered**, the payload and prune suites are
+`crates/vibe-cli/tests/cli_registry_mirror_payloads.rs` (7) and
+`…/cli_registry_mirror_prune.rs` (4), plus unit suites for the projection
+arithmetic and the prune refusals. The payload fixture declares **its own**
+template over its own four-kilobyte payloads and computes the digest documents
+from them: upstream's recorded checksums describe real multi-megabyte
+tarballs, so a suite that verifies a real digest of real bytes cannot reuse
+them — and the fixture's template declares `size` on one option and not on the
+other, which is the two halves of `#MIRROR-DRY-RUN-OUTPUT`. The closed-network
+proof installs for real from the projected drop (a `sources` input, copied
+rather than extracted), with the drop configured, no remap row to the release
+host and `--offline`. The monorepo prune is checked against the **pushed bare
+repository's** `ls-tree` and its committed journal, which is the only state
+that tells a staged deletion from one that merely left the working tree.
 
-**Acceptance.**
+**Acceptance.** Green 2026-11-10, the whole phase:
 ```sh
-# commits (a) and (b), green 2026-11-10:
 cargo test -p vibe-cli --test cli_registry_mirror --offline --locked
 cargo test -p vibe-cli --test cli_registry_mirror_api --offline --locked
 cargo test -p vibe-cli --test cli_registry_mirror_config --offline --locked
 cargo test -p vibe-cli --test cli_registry_mirror_templates --offline --locked
-cargo test -p vibe-registry -p vibe-core --offline --locked
+cargo test -p vibe-cli --test cli_registry_mirror_payloads --offline --locked
+cargo test -p vibe-cli --test cli_registry_mirror_prune --offline --locked
+cargo test -p vibe-publish -p vibe-registry -p vibe-core --offline --locked
 cargo xtask check-codegen && cargo xtask wire-diff
-# commit (c):
-cargo test -p vibe-publish --offline --locked
 ```
 
 **Risks.** The test that a client installs from the snapshot **with the

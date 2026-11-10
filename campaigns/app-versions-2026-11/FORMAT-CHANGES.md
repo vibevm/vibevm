@@ -208,12 +208,17 @@ contents and the staleness rules are as written:
 
 ## AV-FMT-009 — mirror report: `templates[]`, `pruned[]` (Phase 4)
 
-Status: **planned**.
+Status: **done** 2026-11-10.
 
 - `[format.cli-registry-mirror-report]`, `schemas/registry_mirror_report.jtd.json`, epoch **1 → 1**. Both arrays are optional; every existing member is unchanged, including the `command: "registry:mirror"` discriminator and the absence of a `protocol` member.
 - `templates[]`: per `[[template]]` row — the template coordinate and revision, the versions selected with the first and last of them, the channels that resolved and to what, the installer options kept per version, the rows dropped by `template_optional` with the missing file, and, with payloads, the input count, the bytes already present in the drop, the bytes to fetch, the total and a flag for every input of unknown size.
 - `pruned[]`: per removal — what was removed, from where, and the reason that reached it.
 - Human output draws a template row as one node with its versions as children, in the display language of PROP-067 as PROP-065 `#plan` does.
+- **As built:** both arrays are optional with `x-empty: "omit"`, so a run with no `[[template]]` row and no `--prune` prints the document every mirror run before this feature printed, byte for byte. `templates[]` rides in selection order; `pruned[]` carries the **plan**, which is what makes "never silent" true for a client that reads the document rather than the printed rows.
+- **As built:** a third member the design did not name, `removed` (optional `uint32`), because `pruned[]` alone cannot say whether the plan was applied: it is zero on a dry run and zero when the plan's question was answered no, and absent without `--prune`. `dry_run` could not stand in for it — an attended "no" is not a dry run.
+- **As built:** the per-row payload facts are their own object, `payloads`, present only for a row with `payloads = true`, carrying `inputs`, `present`, `present_bytes`, `fetch_bytes`, `total_bytes`, `unknown` and `into`. `total_bytes` is a **lower bound** whenever `unknown` is non-zero — a template that declares no `size` cannot be weighed — and the member set says so rather than the document guessing. Byte counts use the established `byte_count` convention (`float64` + `x-rust-type: "u64"`, because JTD has no `uint64`).
+- **As built:** "the installer options kept per version" became a `versions[]` array of objects — `version`, and for a payload row its `installers`, `inputs` and `present` — which is the same shape the human form draws, one node per row with its versions as children.
+- **As built:** `pruned_kind` is a closed vocabulary (`version` / `snapshot` / `payload`), so automation can tell a removal that changed the registry from one that only changed the drop; the drop is the one removal that happens **after** the commit.
 
 ## AV-FMT-010 — ~~`repomd.json` `files` gains the `_index/templates/` key~~ — **withdrawn** (Phase 4)
 
