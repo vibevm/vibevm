@@ -115,7 +115,14 @@ fn declared_or_probed(launcher: Option<&Launcher>) -> Declared {
     let Some((program, standing)) = command.split_first() else {
         return Declared::Unreachable("its `command` is an empty argv prefix".to_owned());
     };
-    match Command::new(program)
+    // The same resolution the launch itself performs, or the probe would
+    // report «unreachable» for exactly the npm-installed `codex.cmd` the
+    // launch goes on to start (PROP-076 `#SYS-HARNESS-EXECUTABLE`).
+    let resolved = match crate::commands::agent::program::resolve(program) {
+        Ok(resolved) => resolved,
+        Err(error) => return Declared::Unreachable(format!("`{program} --version`: {error}")),
+    };
+    match Command::new(&resolved)
         .args(standing)
         .arg("--version")
         .output()

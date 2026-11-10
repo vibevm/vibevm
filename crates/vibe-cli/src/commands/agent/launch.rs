@@ -197,9 +197,12 @@ fn write_profile(profile: &CodexProfile) -> Result<()> {
 ///
 /// On a POSIX host this process is **replaced**, so the harness inherits the
 /// terminal, the signals and the exit status with nothing of vibe's left in
-/// the way. Windows has no `exec`: spawn, wait, and exit with the child's
-/// own code, which is the same observable contract by the only means the
-/// platform offers.
+/// the way. `execvp` searches `PATH` itself, so a bare program name needs no
+/// resolution here. Windows has no `exec`: spawn, wait, and exit with the
+/// child's own code, which is the same observable contract by the only means
+/// the platform offers — and there a bare name has to be resolved through
+/// `PATHEXT` first, or an npm-installed `claude.cmd` is «program not found»
+/// (`super::program`).
 #[cfg(unix)]
 fn exec(command: &[String]) -> Result<()> {
     use std::os::unix::process::CommandExt;
@@ -216,7 +219,12 @@ fn exec(command: &[String]) -> Result<()> {
     let (program, arguments) = command
         .split_first()
         .context("a launcher's `command` is an empty argv prefix")?;
-    let status = Command::new(program)
+    // The RESOLVED file, not the word: `Command::new("claude")` finds only
+    // `claude.exe`, and a `.bat` / `.cmd` target is handed to the standard
+    // library whole so its own CVE-2024-24576 argument escaping applies.
+    let resolved =
+        super::program::resolve(program).with_context(|| format!("starting `{program}`"))?;
+    let status = Command::new(&resolved)
         .args(arguments)
         .status()
         .with_context(|| format!("starting `{program}`"))?;
