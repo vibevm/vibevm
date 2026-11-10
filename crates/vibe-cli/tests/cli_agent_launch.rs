@@ -55,11 +55,19 @@ impl Machine {
     }
 
     /// A shim that records its argv and exits — never a real harness.
+    ///
+    /// It answers `--version` from `$SHIM_VERSION` **without** recording,
+    /// because the Codex carrier is gated on the installed version and the
+    /// probe must be answerable by a shim: a test that let the gate fall
+    /// through to the real `codex` on `PATH` would be measuring this
+    /// machine rather than the code.
     fn shim(&self, name: &str) {
         let path = self.bin.path().join(name);
         fs::write(
             &path,
-            "#!/bin/sh\nprintf '%s\\n' \"$@\" > \"$SHIM_ARGV\"\nexit 0\n",
+            "#!/bin/sh\n\
+             if [ \"$1\" = \"--version\" ]; then printf '%s\\n' \"$SHIM_VERSION\"; exit 0; fi\n\
+             printf '%s\\n' \"$@\" > \"$SHIM_ARGV\"\nexit 0\n",
         )
         .unwrap();
         let mut permissions = fs::metadata(&path).unwrap().permissions();
@@ -72,17 +80,32 @@ impl Machine {
     }
 
     fn agent(&self, args: &[&str]) -> assert_cmd::Command {
+        self.agent_reporting(args, VERIFIED)
+    }
+
+    /// A launch against a harness that reports `version` for `--version`.
+    fn agent_reporting(&self, args: &[&str], version: &str) -> assert_cmd::Command {
         let mut command = self.user.vibe();
-        command
-            .current_dir(self.project.path())
-            .env("PATH", self.path_env())
-            .env("SHIM_ARGV", self.argv_path())
-            .env("CODEX_HOME", self.bin.path().join("codex-home"))
-            .arg("agent");
+        self.harnessed(&mut command, version).arg("agent");
         for argument in args {
             command.arg(argument);
         }
         command
+    }
+
+    /// The shim environment: `PATH`, the argv sink, `$CODEX_HOME` and the
+    /// version the shims answer with.
+    fn harnessed<'a>(
+        &self,
+        command: &'a mut assert_cmd::Command,
+        version: &str,
+    ) -> &'a mut assert_cmd::Command {
+        command
+            .current_dir(self.project.path())
+            .env("PATH", self.path_env())
+            .env("SHIM_ARGV", self.argv_path())
+            .env("SHIM_VERSION", version)
+            .env("CODEX_HOME", self.bin.path().join("codex-home"))
     }
 
     fn path_env(&self) -> String {
@@ -105,6 +128,10 @@ impl Machine {
             .join("AGENT-LANE.md")
     }
 }
+
+/// What the shims answer `codex --version` with by default: the one
+/// version whose profile carrier is verified.
+const VERIFIED: &str = "codex-cli 0.167.0";
 
 const WRAPPER: &str = "[launchers.claude]\n\
                        kind = \"claude\"\n\
@@ -196,12 +223,92 @@ fn codex_gets_its_profile_file_written_at_launch_and_the_declared_doc_limit() {
     assert!(profile.exists(), "the profile file is written at launch");
     let body = fs::read_to_string(&profile).unwrap();
     let parsed: toml::Table = body.parse().expect("the carrier is valid TOML");
-    let delivered = parsed["profiles"][argv[1].as_str()]["developer_instructions"]
+    // **Top-level, not `[profiles.<name>]`.** `-p` layers this file on top
+    // of the base user config, so a table header would bury the key in a
+    // nested table codex-cli loads and never reads — measured on 0.167.0.
+    let delivered = parsed["developer_instructions"]
         .as_str()
-        .expect("the lane arrives as a string value");
+        .expect("the lane arrives as a top-level string value");
     assert_eq!(delivered, fs::read_to_string(machine.lane()).unwrap());
+    assert!(
+        !body.contains("[profiles."),
+        "the carrier was buried in a table header: {body}"
+    );
     // A basic string with escapes, never a `'''` literal block.
     assert!(!body.contains("'''"));
+}
+
+#[test]
+fn an_unverified_codex_version_refuses_rather_than_launching_without_the_lane() {
+    let machine = Machine::new(WRAPPER);
+    machine
+        .agent_reporting(&["work-codex"], "codex-cli 0.168.0")
+        .assert()
+        .failure()
+        .stderr(predicate::str::contains("0.168.0"))
+        .stderr(predicate::str::contains("0.167.0"))
+        .stderr(predicate::str::contains("harness_version"))
+        .stderr(predicate::str::contains("codex debug prompt-input"));
+    assert!(
+        !Path::new(&machine.argv_path()).exists(),
+        "a refused launch started the harness anyway"
+    );
+    assert!(
+        !machine.bin.path().join("codex-home").exists(),
+        "a refused launch wrote a profile file"
+    );
+}
+
+#[test]
+fn printing_flags_is_gated_on_the_same_version_as_launching() {
+    let machine = Machine::new(WRAPPER);
+    machine
+        .user
+        .vibe()
+        .args(["prompt", "build", "--path"])
+        .arg(machine.project.path())
+        .assert()
+        .success();
+    let mut command = machine.user.vibe();
+    machine
+        .harnessed(&mut command, "codex-cli 0.168.0")
+        .args(["prompt", "flags", "--harness", "codex", "--path"])
+        .arg(machine.project.path())
+        .assert()
+        .failure()
+        .stderr(predicate::str::contains("0.168.0"));
+}
+
+#[test]
+fn a_user_who_verified_a_newer_codex_states_the_version_by_number() {
+    // The override is a measurement, not a switch: it names the version the
+    // user checked, so the claim is attributable.
+    let machine = Machine::new(
+        "[launchers.new-codex]\n\
+         kind = \"codex\"\n\
+         command = [\"codex\"]\n\
+         harness_version = \"0.168.0\"\n",
+    );
+    machine
+        .agent_reporting(&["new-codex"], "codex-cli 0.168.0")
+        .assert()
+        .success()
+        .stderr(predicate::str::contains("the claim is yours"));
+    assert_eq!(machine.argv()[0], "-p");
+}
+
+#[test]
+fn a_codex_that_will_not_say_its_version_launches_with_a_note_and_not_a_refusal() {
+    // "Cannot tell" is not "wrong": refusing here would break every machine
+    // whose harness is reached through something that does not answer
+    // `--version`, where nothing is actually broken.
+    let machine = Machine::new(WRAPPER);
+    machine
+        .agent_reporting(&["work-codex"], "")
+        .assert()
+        .success()
+        .stderr(predicate::str::contains("did not say which version"));
+    assert_eq!(machine.argv()[0], "-p");
 }
 
 #[test]
@@ -234,12 +341,11 @@ fn flags_never_write_the_codex_profile_either() {
         .assert()
         .success();
     let home = machine.bin.path().join("codex-home");
+    let mut command = machine.user.vibe();
     machine
-        .user
-        .vibe()
+        .harnessed(&mut command, VERIFIED)
         .args(["prompt", "flags", "--harness", "codex", "--path"])
         .arg(machine.project.path())
-        .env("CODEX_HOME", &home)
         .assert()
         .success();
     assert!(!home.exists(), "`vibe prompt flags` wrote a file");

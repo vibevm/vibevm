@@ -68,7 +68,23 @@ fn codex_takes_the_profile_and_the_declared_doc_limit() {
     );
     let profile = answer.profile.expect("codex launches through a profile");
     assert_eq!(profile.file_name, "vibe-org-vibevm-demo.config.toml");
-    assert!(profile.body.contains("[profiles.vibe-org-vibevm-demo]"));
+    // `-p <name>` LAYERS the file on top of the base user config, so the
+    // key is top-level. Inside a `[profiles.<name>]` table it is a nested
+    // table codex-cli 0.167.0 loads and never reads — measured, and the
+    // reason this assertion exists at all.
+    assert!(
+        !profile.body.contains("[profiles."),
+        "a table header would make the carrier a nested table: {}",
+        profile.body
+    );
+    let parsed: toml::Table = profile.body.parse().expect("the carrier parses as TOML");
+    assert_eq!(
+        parsed
+            .get("developer_instructions")
+            .and_then(toml::Value::as_str),
+        Some(LANE),
+        "the top-level key carries the lane byte for byte"
+    );
     // A profile name with a dot in it would be a NESTED table header, and
     // the profile `-p` asks for would not exist.
     assert!(!profile.name.contains('.'), "{}", profile.name);
@@ -101,6 +117,46 @@ fn read_delivery_passes_no_flag_and_says_why() {
         assert!(answer.profile.is_none());
         assert_eq!(answer.notes.len(), 1);
         assert!(answer.notes[0].contains("read"));
+    }
+}
+
+#[test]
+fn the_carrier_verdict_is_one_measured_version_and_not_a_floor() {
+    assert_eq!(
+        codex_carrier_verdict(&format!("codex-cli {CODEX_VERIFIED_VERSION}")),
+        CarrierVerdict::Verified
+    );
+    assert_eq!(
+        codex_carrier_verdict("codex-cli v0.167.0"),
+        CarrierVerdict::Verified,
+        "a leading `v` is a spelling, not a version"
+    );
+    // Newer is NOT better here: the per-profile behaviour of this key
+    // already changed once under us, and the failure mode is silent.
+    assert_eq!(
+        codex_carrier_verdict("codex-cli 0.168.0"),
+        CarrierVerdict::Unverified {
+            installed: "0.168.0".to_owned()
+        }
+    );
+    assert_eq!(
+        codex_carrier_verdict("codex-cli 0.166.9"),
+        CarrierVerdict::Unverified {
+            installed: "0.166.9".to_owned()
+        }
+    );
+}
+
+#[test]
+fn a_version_that_cannot_be_read_claims_nothing_either_way() {
+    for reported in ["", "codex-cli", "   \n"] {
+        assert!(
+            matches!(
+                codex_carrier_verdict(reported),
+                CarrierVerdict::Unknown { .. }
+            ),
+            "{reported:?}"
+        );
     }
 }
 

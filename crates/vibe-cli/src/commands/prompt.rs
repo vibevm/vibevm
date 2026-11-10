@@ -25,6 +25,7 @@ use crate::output;
 mod build;
 mod check;
 mod flags;
+mod harness_version;
 mod path;
 mod prepare;
 mod resolve;

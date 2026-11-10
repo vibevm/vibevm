@@ -123,6 +123,20 @@ pub struct LauncherDefinition {
     /// Where this launcher's harness keeps its session logs.
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub config_dir: Option<String>,
+    /// The harness version to treat this launcher as, instead of asking the
+    /// program.
+    ///
+    /// **It exists so a measurement can be overridden by a newer
+    /// measurement, not so a gate can be switched off.** A launch carrier
+    /// that silently fails to deliver is refused on an unverified version
+    /// (`PROP-076#SYS-CODEX-PROFILE-TOP-LEVEL`), and the day a harness
+    /// releases a version vibe has not probed, the user who probed it
+    /// themselves is the only person who knows — so they say which version
+    /// this launcher is, by number, rather than asserting a blanket "trust
+    /// me". A wrong number is their statement and their risk, which is why
+    /// the field names a version and not a boolean.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub harness_version: Option<String>,
 }
 
 impl AgentsConfig {

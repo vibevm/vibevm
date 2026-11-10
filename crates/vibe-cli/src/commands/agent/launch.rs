@@ -58,7 +58,12 @@ pub(crate) fn run(ctx: &output::Context, argv: Vec<String>) -> Result<()> {
     }
     built?;
 
-    let composed = prompt::compose_flags(&selected, launcher.kind)?;
+    let composed = prompt::compose_flags(&selected, launcher.kind, Some(&launcher))?;
+    for note in &composed.notes {
+        if !ctx.is_quiet() {
+            eprintln!("note: {note}");
+        }
+    }
     if let Some(profile) = &composed.profile {
         write_profile(profile)?;
     }

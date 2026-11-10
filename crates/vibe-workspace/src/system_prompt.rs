@@ -81,7 +81,10 @@ pub use compose::{
     ComposedPrefix, PrefixSettings, SEGMENT_FRAME, Segment, SegmentId, compose_prefix,
 };
 pub use contract::{CURRENT_RECIPE, KNOWN_RECIPES, SuppliedSource, render_contract};
-pub use harness::{CodexProfile, HarnessKind, LaunchFlags, launch_flags};
+pub use harness::{
+    CODEX_VERIFIED_VERSION, CarrierVerdict, CodexProfile, HarnessKind, LaunchFlags,
+    codex_carrier_verdict, launch_flags,
+};
 pub use lane::{ComposedLane, LaneSegment, LaneSource, compose_agent_lane};
 pub use markers::{
     HASH12_LEN, LANE_BEGIN, LANE_END, LaneMarker, MarkerKind, VerifiedSegment, hash12, marker_line,

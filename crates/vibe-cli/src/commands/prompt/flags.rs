@@ -28,11 +28,11 @@ pub(crate) const PROTOCOL: &str = "vibe-prompt-flags/1";
 
 pub(crate) fn run(ctx: &output::Context, selected: &Selected, harness: &str) -> Result<()> {
     let (kind, launcher) = resolve_kind(selected, harness)?;
-    let composed = compose(selected, kind)?;
+    let composed = compose(selected, kind, launcher.as_ref())?;
     let report = wire::PromptFlagsReport {
         protocol: PROTOCOL.to_owned(),
         node: selected.node_rel.clone(),
-        launcher,
+        launcher: launcher.map(|launcher| launcher.name),
         kind: kind.as_str().to_owned(),
         delivery: kind.delivery(&selected.manifest).as_str().to_owned(),
         flags: composed.flags.clone(),
@@ -53,7 +53,10 @@ pub(crate) fn run(ctx: &output::Context, selected: &Selected, harness: &str) -> 
 /// Either a kind or a launcher name. A kind is tried first, so `--harness
 /// claude` means the dialect even on a machine with a launcher of another
 /// name bound to it.
-fn resolve_kind(selected: &Selected, harness: &str) -> Result<(HarnessKind, Option<String>)> {
+fn resolve_kind(
+    selected: &Selected,
+    harness: &str,
+) -> Result<(HarnessKind, Option<launchers::Launcher>)> {
     if let Some(kind) = HarnessKind::parse(harness) {
         return Ok((kind, None));
     }
@@ -61,7 +64,7 @@ fn resolve_kind(selected: &Selected, harness: &str) -> Result<(HarnessKind, Opti
     let settings = global::settings_root()?;
     let config = AgentsConfig::load(&settings).map_err(AppError::from)?;
     let launcher = launchers::resolve(&settings, &config, harness)?;
-    Ok((launcher.kind, Some(launcher.name)))
+    Ok((launcher.kind, Some(launcher)))
 }
 
 /// Compose the flags for one kind over this node's current artifacts.
@@ -69,8 +72,15 @@ fn resolve_kind(selected: &Selected, harness: &str) -> Result<(HarnessKind, Opti
 /// The lane is read from disk rather than recomposed, and a lane that is not
 /// there is a refusal naming the build: flags pointing at a file that does
 /// not exist are the one answer a launch turns silently into a session with
-/// no boot lane at all.
-pub(crate) fn compose(selected: &Selected, kind: HarnessKind) -> Result<LaunchFlags> {
+/// no boot lane at all. For the same reason the kind's carrier is gated
+/// against the installed harness's version here, in the **one** code path
+/// both `vibe prompt flags` and `vibe agent` take — a carrier whose failure
+/// is silent must not be printed as a working answer either.
+pub(crate) fn compose(
+    selected: &Selected,
+    kind: HarnessKind,
+    launcher: Option<&launchers::Launcher>,
+) -> Result<LaunchFlags> {
     let tracked = selected.tracked();
     let request = selected.request(&tracked, None);
     let answer = check_node_prompt(&request)?;
@@ -106,6 +116,9 @@ pub(crate) fn compose(selected: &Selected, kind: HarnessKind) -> Result<LaunchFl
         &bytes,
         limit,
     );
+    if let Some(note) = super::harness_version::gate(kind, launcher)? {
+        composed.notes.push(note);
+    }
     if !answer.verdict.is_equal() {
         composed.notes.push(format!(
             "the lane is {} ({}) — run `{}`; these flags point at the bytes on disk now",

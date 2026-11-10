@@ -39,6 +39,9 @@ pub(crate) struct Launcher {
     /// Where this launcher's harness keeps its session logs, when it is
     /// knowable at all.
     pub(crate) config_dir: Option<String>,
+    /// The harness version this launcher is declared to be, when its user
+    /// stated one instead of letting vibe ask the program.
+    pub(crate) harness_version: Option<String>,
     /// Built-in, or the exact user-config path that decided it — because a
     /// developer debugging which program ran needs to know which file did.
     pub(crate) source: String,
@@ -55,6 +58,7 @@ pub(crate) fn resolve_all(settings: &SettingsRoot, config: &AgentsConfig) -> Res
             kind,
             command: vec![kind.as_str().to_owned()],
             config_dir: None,
+            harness_version: None,
             source: "built-in".to_owned(),
         })
         .collect();
@@ -79,6 +83,7 @@ pub(crate) fn resolve_all(settings: &SettingsRoot, config: &AgentsConfig) -> Res
             kind,
             command,
             config_dir: declared.config_dir.clone(),
+            harness_version: declared.harness_version.clone(),
             source: path.clone(),
         };
         match launchers.iter_mut().find(|existing| existing.name == *name) {
