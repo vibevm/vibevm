@@ -17,7 +17,7 @@ use vibe_core::manifest::Manifest;
 use vibe_wire::generated::registry_mirror_report::Listing as ListingKind;
 
 use super::{SourceListing, SourceReader, admitted, tagged_versions};
-use crate::commands::registry::mirror::{Filters, org_api};
+use crate::commands::registry::mirror::{Selection, org_api};
 
 impl SourceReader {
     /// List a per-package source whole, without an index and without
@@ -26,7 +26,7 @@ impl SourceReader {
     /// it is and keep it only when this registry's naming convention
     /// would have published that package there. Every kept version is
     /// then read exactly as the `--package` path reads it.
-    pub(super) fn list_through_host_api(&self, filters: &Filters) -> Result<SourceListing> {
+    pub(super) fn list_through_host_api(&self, selection: &Selection) -> Result<SourceListing> {
         let SourceReader::PerPackage {
             registry,
             admission,
@@ -41,13 +41,13 @@ impl SourceReader {
         for repo in api.repositories(registry, admission.clone())? {
             // What the name alone says. Under `fqdn` that is the whole
             // coordinate, so a name the convention could not have
-            // produced — and a package the filters exclude — costs no
+            // produced — and a package the selection excludes — costs no
             // request at all.
             let claim = org_api::name_claim(registry.naming, &repo);
             match &claim {
                 org_api::NameClaim::Rejected => continue,
                 org_api::NameClaim::Coordinate(group, name)
-                    if !filters.admits(group.as_str(), name) =>
+                    if !selection.admits(group.as_str(), name) =>
                 {
                     continue;
                 }
@@ -80,7 +80,7 @@ impl SourceReader {
                 );
                 continue;
             }
-            if !filters.admits(group.as_str(), &name) {
+            if !selection.admits(group.as_str(), &name) {
                 continue;
             }
             versions.extend(tagged_versions(&repository, &group, &name, tags));

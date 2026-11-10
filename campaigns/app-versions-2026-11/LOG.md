@@ -637,3 +637,57 @@ What implementing it taught, beyond the as-built record:
   `CARGO_BUILD_JOBS=6` and `CARGO_PROFILE_DEV_DEBUG=0` returned the free space
   to 22 GB and changes nothing a gate observes. Worth doing *before* the first
   build on a shared disk, not after.
+
+## 2026-11-10 — phase P4, commit (a): the declarative mirror selection
+
+`vibe registry mirror --config mirror.toml` exists. `AV-FMT-007` is delivered;
+`#MIRROR-CONFIG` and `#MIRROR-CONFIG-SCHEMA` are `impl/done`; the four
+amendments it needed are in `AV-FMT-007` and `PROP-075#P4-AS-BUILT`. The
+phase's other two commits — **(b)** the `_index/templates/` snapshot writer and
+**(c)** payload projection, the budget and prune — are **open**, and the seven
+amendments now in `PLAN.md`'s P4 section bind them.
+
+What implementing it taught, beyond the as-built record:
+
+- **The old selection was two methods, and that is why listing did not
+  change.** `Filters` looked like a type the source side was built around; it
+  was read at exactly `admits(group, name)` and `packages()` (plus
+  `tombstone_admitted`, which is `packages()` again). Making the new
+  `Selection` a **superset of those two methods** meant `mirror/source.rs` and
+  `mirror/source/api_listing.rs` changed by rename alone — no new branch, no
+  second listing path — while `all`, the excludes, the `[[template]]` rows and
+  the payload plan ride beside them. A seam worth measuring before replacing.
+- **An empty axis cannot mean two things.** `Filters` read «no packages and no
+  groups» as «everything», which is right for a flag nobody passed. Under
+  `[select]` it is wrong: a configuration whose only content is `[[template]]`
+  rows would have selected the whole source. The fix is one early return —
+  with neither ordinary axis naming anything, only the template rows select —
+  and it costs nothing because a run with no selection at all never reaches
+  that rule: it is `all` from the start. The test that caught it was the one
+  asserting a template row does *not* admit its package's siblings.
+- **Recording a command-line flag would have been a trap, and a real test
+  found it.** The entry said «the effective selection — merged from the file
+  and the flags». Implemented literally, `--package org.corp/demo` wrote a
+  `[select]` table, and `cli_registry_mirror_api`'s third leg went red: a run
+  that had deliberately passed no `--package`, to prove the organisation-API
+  listing opens once a token is configured, now repeated the narrowing a
+  *previous* leg had recorded and listed by tags instead. That is exactly the
+  user-facing trap — `--package` also exists to make a source that can be
+  listed neither by index nor by API mirrorable one package at a time, so
+  recording it would turn a workaround into a permanent narrowing. Only a
+  `--config` selection is recorded now (`AV-FMT-007` amendment 1), which also
+  keeps the record byte-identical for every pre-`--config` workflow and so
+  keeps `schema = 1` honest.
+- **The target must be read before the source is listed.** The recorded
+  selection lives in `_index/mirrors/<source>.toml`, inside the target's tree,
+  and it decides what the source is asked for. `read_target` therefore moved
+  ahead of `reader.list`; for a `monorepo` that is the same shallow fetch, one
+  stage earlier.
+- **`WRITER_DIRS` and `repomd.json` are not on this phase's path after all.**
+  Both were read while preparing (b) and both came back the other way: the
+  whitelist describes what the index writer *produces*, and the snapshot is
+  written through `BatchConfig.files`; `listing.txt` is rendered over
+  `version_dirs`, which skips `_index` entirely, so the `Stale` risk the plan
+  carried cannot happen. `AV-FMT-008`'s last bullet is withdrawn and
+  `AV-FMT-010` is withdrawn whole. Two files the plan named are not touched,
+  and one of them was the phase's stated risk.

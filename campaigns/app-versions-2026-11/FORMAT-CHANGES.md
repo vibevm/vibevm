@@ -143,7 +143,29 @@ published or pushed** (see the last bullet for why).
 
 ## AV-FMT-007 — `mirror.toml`, declarative mirror selection, recorded selection (Phase 4)
 
-Status: **planned**.
+Status: **delivered 2026-11-10** (phase P4, commit a). As implemented it matches the entry
+below with four amendments, recorded in
+`spec://org.vibevm.core/vibevm/common/PROP-075#P4-AS-BUILT`:
+
+1. **Only a *declared* selection is recorded.** The entry below reads «the effective selection
+   — merged from the file and the flags». As built, a `--config` run records its selection and a
+   `--package` / `--group` run records nothing. The flag predates this feature and has a second
+   job — making a source that can be listed neither by index nor by organisation API mirrorable
+   one package at a time — so recording it would turn that workaround into a permanent narrowing
+   of every later bare run of that source, and would let one per-run override destroy the
+   operator's declaration. It is also what keeps the record byte-identical for every workflow
+   that predates `--config`, which is what makes `schema = 1` honest.
+2. **A `[[template]]` row against a per-package Git source is refused by name**, before anything
+   is listed or written: a snapshot is written from the template package's own tree, which only a
+   `monorepo` or `localdir` source has (`TemplateLayer::for_directory`). Rendering from a git
+   registry is deferred by `#TEMPLATE-DISCOVERY`, and the refusal names the rows and the fix.
+3. **`[select]` with only `[[template]]` rows selects exactly those packages.** The two-axis rule
+   the entry generalises reads an empty axis as unconstrained, which would have turned a
+   configuration of template rows alone into «everything». A run with no selection at all is
+   still everything; it never reaches that rule.
+4. **Three more refusals the entry did not name**, each a declaration that cannot mean what it
+   says: `newest = 0` (keeps no version of any major), `[payloads] max_total = 0` (admits no
+   payload at all) and two `[[template]]` rows for one package.
 
 - New authored document `mirror.toml` (`schema = 1`; any other value refuses, as `_index/mirrors/<source>.toml` already does). `[select]` with `all`, `groups`, `packages`, `exclude`; one `[[template]]` row per template package with `package`, `versions`, `channels`, `newest`, `platforms`, `archs`, `installers`, `payloads`; `[payloads]` with `max_total` and `into`.
 - `vibe registry mirror` gains `--config <file>`. Today's `--package` / `--group` keep working and **override** `[select]` wholesale rather than intersecting with it. `all = false` with no groups and no packages is a usage refusal, never a silent empty run. This generalises today's `Filters { packages, groups }` (exact matching, no excludes, no version ranges, no newest-N).
@@ -161,7 +183,8 @@ Status: **planned**. New format.
 - Written inside the mirror's single commit through the existing `BatchConfig.files` channel, so the snapshot's digests are fixed by the git commit itself.
 - A client never revalidates a snapshot and never contacts upstream from one. `vibe app versions` reports the snapshot's `[sync] last` so a user can see how old the list is.
 - A re-run adds versions and leaves existing ones untouched; a `digest_sha256` that changed for an already-snapshotted version stops the run before anything is written, exactly as PROP-002 `#MIRROR-RULES` stops on a changed hash of a frozen version.
-- `_index/templates/` is a new directory the index writer must own: `WRITER_DIRS` (`crates/vibe-index/src/index/mod.rs`) learns it, and the layout projection must know it so the index does not read `Stale`.
+- ~~`_index/templates/` is a new directory the index writer must own: `WRITER_DIRS` (`crates/vibe-index/src/index/mod.rs`) learns it, and the layout projection must know it so the index does not read `Stale`.~~ **Withdrawn against the code, 2026-11-10 (P4 amendments 1 and 2).** `WRITER_DIRS` is the whitelist of what `Index::write_to` itself *produces* — read by `rebuild.rs` `catalog_file_set` and `index/memory/projection_compare.rs` `projection_matches` — and the snapshot is written through `BatchConfig.files`, not by the index writer, so `_index/templates/` stays outside it exactly as `README.md`, `.gitignore` and `state/` do. Nor can it make the index read `Stale`: `listing.txt` is `render_listing(version_dirs, journal_digest)` and `version_dirs` skips `_index` altogether. The obligation this bullet created is replaced by one test: a registry that grows `_index/templates/` still reads `Fresh`.
+- `versions.json` carries the client cache's own envelope, `CachedVersionList { source_url, sha256, fetched_at, document }`. Because the snapshot restricts `document` to the selected versions, `sha256` is **recomputed over the filtered document** rather than carried over from the upstream fetch.
 
 ## AV-FMT-009 — mirror report: `templates[]`, `pruned[]` (Phase 4)
 
@@ -172,11 +195,13 @@ Status: **planned**.
 - `pruned[]`: per removal — what was removed, from where, and the reason that reached it.
 - Human output draws a template row as one node with its versions as children, in the display language of PROP-067 as PROP-065 `#plan` does.
 
-## AV-FMT-010 — `repomd.json` `files` gains the `_index/templates/` key (Phase 4)
+## AV-FMT-010 — ~~`repomd.json` `files` gains the `_index/templates/` key~~ — **withdrawn** (Phase 4)
 
-Status: **planned**.
+Status: **withdrawn 2026-11-10** by the central session. **No `templates` entry is added to `repomd.json`'s `files` map, and `[format.index-repomd]` is not touched at all** — no epoch move, no schema change, nothing for `wire-diff` to see.
 
-- `[format.index-repomd]`, `schemas/index/e1/repomd.jtd.json`, epoch **1 → 1**. The `files` member is an open map and gains one more key, exactly as it carries `by-name/` today; no shape change, no member added or removed. Note the existing break-003 rule that `file.size` is a decimal **string**.
+- The reason: the snapshot lives at a **fixed path a client already knows** (`_index/templates/<group>/<name>/`, `AV-FMT-008`), so a client needs no manifest entry to find it, and the manifest is the manifest of what the index *writer* produces. Teaching the `repomd.json` projection a new first-class input — a directory written by the mirror through `BatchConfig.files` rather than by `Index::write_to` — is a change to the index's own model and is out of this phase's scope. It is the same boundary P4 amendment 1 draws for `WRITER_DIRS`.
+- What a client does instead is read the snapshot directory directly, exactly as it reads `_index/mirrors/<source>.toml` today without a `files` entry for it. If a later phase wants the snapshot advertised in the manifest, that is a new id against `[format.index-repomd]`, not this one.
+- Nothing inherits this id. `AV-FMT-008`'s snapshot layout and `AV-FMT-009`'s report arrays are unaffected; the numbers are never reused.
 
 ## AV-FMT-011 — `[[application.version_file]]` (Phase 5a)
 

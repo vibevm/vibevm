@@ -25,7 +25,7 @@
 
 specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#registry-mirror");
 
-use std::path::PathBuf;
+use std::path::{Path, PathBuf};
 
 use anyhow::{Context, Result, anyhow, bail};
 use vibe_core::manifest::{Manifest, RegistrySection};
@@ -38,16 +38,19 @@ use vibe_wire::generated::registry_mirror_report::{MirrorAction, RegistryMirrorR
 use crate::cli::RegistryMirrorArgs;
 use crate::output;
 
+mod config;
 mod git_source;
 mod history;
 mod org_api;
 mod plan;
 mod record;
+mod selection;
 mod source;
 mod target;
 
 use history::{history_bundles, mirror_record};
 use plan::{Decision, plan_versions};
+use selection::Selection;
 use source::SourceReader;
 use target::resolve_target;
 
@@ -81,7 +84,6 @@ pub(super) fn run_mirror(
             )
         })?;
     let target = resolve_target(&args, &effective.registries)?;
-    let filters = Filters::parse(&args.packages, &args.groups)?;
 
     let operation = vibe_package_source::source_operation(
         &vibe_package_source::PackageSourceOptions::default(),
@@ -98,6 +100,31 @@ pub(super) fn run_mirror(
     ));
 
     let progress = ctx.progress();
+    // The target is read first because it is what carries the selection a
+    // bare re-run repeats (`#MIRROR-CONFIG`): what the source is asked to
+    // list depends on it.
+    let tree = super::observed_stage(ctx, "Reading the target registry", || {
+        read_target(&target.layout).map_err(anyhow::Error::from)
+    })?;
+    let (target_index, target_state) =
+        vibe_index::layout::load_or_project(tree.root(), &target.identity())
+            .context("projecting the target registry's index")?;
+    let recorded = record::MirrorRecord::read(tree.root(), &source_reg.name)?;
+    let drops: Vec<PathBuf> = vibe_core::remap::active()
+        .package_drops()
+        .into_iter()
+        .map(Path::to_path_buf)
+        .collect();
+    let selection = selection::resolve(
+        args.config.as_deref(),
+        &args.packages,
+        &args.groups,
+        recorded.as_ref().and_then(|r| r.select.as_ref()),
+        &drops,
+        local_root(&target.layout),
+    )?;
+    announce(ctx, &selection);
+
     let reader = SourceReader::open(
         &source_reg,
         &effective.mirrors,
@@ -105,14 +132,10 @@ pub(super) fn run_mirror(
         root_offline,
         &progress,
     )?;
-    let listing =
-        super::observed_stage(ctx, "Listing the source registry", || reader.list(&filters))?;
-    let tree = super::observed_stage(ctx, "Reading the target registry", || {
-        read_target(&target.layout).map_err(anyhow::Error::from)
+    refuse_templates_without_a_tree(&selection, &reader, &source_reg.name)?;
+    let listing = super::observed_stage(ctx, "Listing the source registry", || {
+        reader.list(&selection)
     })?;
-    let (target_index, target_state) =
-        vibe_index::layout::load_or_project(tree.root(), &target.identity())
-            .context("projecting the target registry's index")?;
 
     let fetch_root = tempfile::tempdir().context("creating a fetch directory")?;
     let fetching = ctx.progress().task("Fetching new versions from the source");
@@ -175,7 +198,13 @@ pub(super) fn run_mirror(
     }
     let facts = source::carried_facts(&listing, &planned, &source_reg.name);
     let scratch = tempfile::tempdir().context("creating a scratch directory")?;
-    let mut files = mirror_record(&source_reg, &planned, tree.root(), scratch.path())?;
+    let mut files = mirror_record(
+        &source_reg,
+        &planned,
+        selection.to_record(),
+        tree.root(),
+        scratch.path(),
+    )?;
     let bundles = if args.keep_history {
         history_bundles(
             ctx,
@@ -304,46 +333,75 @@ fn fact_is_new(fact: &vibe_index::journal::Event, target: &vibe_index::index::In
     }
 }
 
-/// `--package` / `--group` filters.
-#[derive(Debug, Default)]
-pub(super) struct Filters {
-    packages: Vec<(String, String)>,
-    groups: Vec<String>,
+/// Say where the selection came from, and where a payload projection
+/// would write, before anything is listed.
+///
+/// A declarative selection is otherwise invisible: an operator who ran
+/// `--config` cannot tell from the version rows alone whether the file was
+/// read, and one who ran bare cannot tell that the target's recorded
+/// selection is what narrowed the run.
+fn announce(ctx: &output::Context, selection: &Selection) {
+    match selection.origin() {
+        selection::Origin::Flags => {}
+        selection::Origin::Config => ctx.step("Selecting from `--config`"),
+        selection::Origin::Recorded => {
+            ctx.step(
+                "Selecting as the target's mirror record says, adding only what newly matches",
+            );
+        }
+    }
+    if let Some(payloads) = selection.payloads() {
+        let budget = payloads
+            .max_total
+            .map(|bytes| format!(", budget {bytes} byte(s)"))
+            .unwrap_or_else(|| ", no budget".to_string());
+        ctx.step(&format!(
+            "Projecting payloads into the drop `{}`{budget}",
+            payloads.into.display()
+        ));
+    }
 }
 
-impl Filters {
-    fn parse(packages: &[String], groups: &[String]) -> Result<Self> {
-        let mut parsed = Vec::new();
-        for raw in packages {
-            let (group, name) = raw.split_once('/').ok_or_else(|| {
-                anyhow!(
-                    "`--package {raw}` is not `<group>/<name>` \
-                     (violates spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#registry-mirror; \
-                     fix: name the package with its group, e.g. `org.vibevm.world/wal`)"
-                )
-            })?;
-            vibe_core::Group::parse(group)?;
-            parsed.push((group.to_string(), name.to_string()));
-        }
-        for group in groups {
-            vibe_core::Group::parse(group)?;
-        }
-        Ok(Filters {
-            packages: parsed,
-            groups: groups.to_vec(),
-        })
+/// The registry target's own directory, when it has one on this machine:
+/// a `localdir` root or a working copy. A `monorepo` is a url, so there is
+/// nothing local a payload drop could collide with.
+fn local_root(target: &vibe_publish::layout_publish::LayoutTarget) -> Option<&Path> {
+    use vibe_publish::layout_publish::LayoutTarget;
+    match target {
+        LayoutTarget::Localdir { root } => Some(root.as_path()),
+        LayoutTarget::WorkingCopy { path } => Some(path.as_path()),
+        LayoutTarget::Monorepo { .. } => None,
     }
+}
 
-    pub(super) fn admits(&self, group: &str, name: &str) -> bool {
-        let by_package =
-            self.packages.is_empty() || self.packages.iter().any(|(g, n)| g == group && n == name);
-        let by_group = self.groups.is_empty() || self.groups.iter().any(|g| g == group);
-        by_package && by_group
+/// A snapshot is written from a template package's own tree, which only a
+/// directory-shaped source has (`TemplateLayer::for_directory`). A
+/// per-package Git registry answers a version list with a tag list, so
+/// rendering from one is deferred (PROP-075 `#TEMPLATE-DISCOVERY`) and a
+/// `[[template]]` row against it is refused **by name**, before anything
+/// is listed or written.
+fn refuse_templates_without_a_tree(
+    selection: &Selection,
+    reader: &SourceReader,
+    source: &str,
+) -> Result<()> {
+    if selection.templates().is_empty() || matches!(reader, SourceReader::Layout(_)) {
+        return Ok(());
     }
-
-    pub(super) fn packages(&self) -> &[(String, String)] {
-        &self.packages
-    }
+    let rows = selection
+        .templates()
+        .iter()
+        .map(selection::TemplateSelection::package)
+        .collect::<Vec<_>>()
+        .join(", ");
+    bail!(
+        "the selection carries `[[template]]` row(s) for {rows}, and the source `{source}` is a \
+         per-package Git registry: a template snapshot is written from the template package's \
+         own tree, which only a `monorepo` or `localdir` source has \
+         (violates spec://org.vibevm.core/vibevm/common/PROP-075#TEMPLATE-DISCOVERY; \
+         fix: mirror the template out of a layout registry, or drop the `[[template]]` row(s) \
+         and copy the package with `[select]`)"
+    )
 }
 
 fn names(registries: &[RegistrySection]) -> String {
@@ -448,15 +506,15 @@ mod tests {
     use super::*;
 
     #[test]
-    fn filters_admit_by_package_and_group() {
-        let none = Filters::parse(&[], &[]).unwrap();
+    fn flag_selection_admits_by_package_and_group() {
+        let none = Selection::from_flags(&[], &[]).unwrap();
         assert!(none.admits("org.a", "x"));
-        let one = Filters::parse(&["org.a/x".into()], &[]).unwrap();
+        let one = Selection::from_flags(&["org.a/x".into()], &[]).unwrap();
         assert!(one.admits("org.a", "x"));
         assert!(!one.admits("org.a", "y"));
-        let group = Filters::parse(&[], &["org.b".into()]).unwrap();
+        let group = Selection::from_flags(&[], &["org.b".into()]).unwrap();
         assert!(group.admits("org.b", "z"));
         assert!(!group.admits("org.a", "x"));
-        assert!(Filters::parse(&["no-slash".into()], &[]).is_err());
+        assert!(Selection::from_flags(&["no-slash".into()], &[]).is_err());
     }
 }

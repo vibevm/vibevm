@@ -313,6 +313,16 @@ pub struct RegistryMirrorArgs {
     #[arg(long = "group", value_name = "GROUP")]
     pub groups: Vec<String>,
 
+    /// Read the selection from a `mirror.toml` (`schema = 1`): `[select]`
+    /// with `all`, `groups`, `packages` and `exclude`, one `[[template]]`
+    /// row per template package, and `[payloads]` with `max_total` and
+    /// `into`. `--package` / `--group` override `[select]` wholesale
+    /// rather than intersecting with it. Without any of the three the
+    /// selection the target recorded for this source is repeated, and
+    /// without that too everything the source carries is copied.
+    #[arg(long = "config", value_name = "FILE")]
+    pub config: Option<PathBuf>,
+
     /// Replace a snapshot (not frozen) version whose content moved at the
     /// source. Without it such a version is reported and left as it is.
     #[arg(long = "update-snapshots")]

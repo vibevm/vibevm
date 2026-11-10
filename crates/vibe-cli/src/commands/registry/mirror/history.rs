@@ -17,6 +17,7 @@ use crate::output;
 pub(super) fn mirror_record(
     source: &RegistrySection,
     planned: &[plan::Planned],
+    select: Option<record::SelectRecord>,
     target_root: &Path,
     scratch: &Path,
 ) -> Result<Vec<(String, PathBuf)>> {
@@ -38,7 +39,7 @@ pub(super) fn mirror_record(
         })
         .collect();
     let existing = record::MirrorRecord::read(target_root, &source.name)?;
-    if rows.is_empty() && existing.is_none() {
+    if rows.is_empty() && existing.is_none() && select.is_none() {
         return Ok(Vec::new());
     }
     let mut record = existing.unwrap_or_else(|| record::MirrorRecord {
@@ -56,9 +57,19 @@ pub(super) fn mirror_record(
             first: now.clone(),
             last: now.clone(),
         },
+        select: None,
         versions: Vec::new(),
     });
-    let changed = !rows.is_empty();
+    // A run that had a selection of its own records it, replacing what was
+    // there: the record names the selection the target is kept to, and a
+    // narrowed `--config` must not read as the old wider one. A bare run
+    // repeating a recorded selection passes `None` and leaves it alone
+    // (`Selection::to_record`).
+    let reselected = select.is_some() && record.select != select;
+    if let Some(select) = select {
+        record.select = Some(select);
+    }
+    let changed = !rows.is_empty() || reselected;
     record.source = record::SourceRecord {
         name: source.name.clone(),
         url: source.url.clone(),

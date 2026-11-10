@@ -496,23 +496,77 @@ is P5b and does not exist yet. The four as-built amendments are
 
 **Parallel.** Needs P1 and P2. Independent of P4, P5, P6.
 
-### P4 — mirror config, template snapshot, payload projection, prune — **L**
+### P4 — mirror config, template snapshot, payload projection, prune — **L** — *commit (a) delivered 2026-11-10; (b) and (c) open*
 
 **Goal.** `vibe registry mirror --config mirror.toml` selects declaratively,
 snapshots a template's inputs into the target's `_index/`, projects payloads
 into the drop under a budget, and prunes only when told.
 
-**Files.** `crates/vibe-cli/src/cli/registry.rs` (`--config`, `--prune`,
+**Status.** The phase is three atomic commits. **(a) is landed** — the
+`--config mirror.toml` reader with every refusal, the selection model
+replacing `Filters`, and the recorded selection in `_index/mirrors/<source>.toml`
+(`AV-FMT-007` delivered; `#MIRROR-CONFIG` and `#MIRROR-CONFIG-SCHEMA`
+`impl/done`). **(b) the `_index/templates/` snapshot writer** (its registered
+format, snapshot priming for a network-denied client, `vibe app versions`
+showing the snapshot's sync time) and **(c) payload projection, the budget,
+`--dry-run` counts and prune** are open, and the amendments below already
+bind them.
+
+**Amendments decided against the code (read before implementing (b) or (c)).**
+
+1. **`WRITER_DIRS` must *not* learn `templates`**, against what the file list
+   below and `AV-FMT-008` say. `WRITER_DIRS` (`crates/vibe-index/src/index/mod.rs:63`)
+   is the whitelist of what `Index::write_to` itself produces — consumed by
+   `rebuild.rs:151` `catalog_file_set` and `index/memory/projection_compare.rs:37`
+   `projection_matches`. The mirror writes the snapshot through
+   `BatchConfig.files`, not through the index writer, so `_index/templates/`
+   stays outside the whitelist exactly as `README.md`, `.gitignore` and
+   `state/` do. Teaching the whitelist about it would make the projection
+   comparison expect the index writer to produce a tree it never writes.
+2. **The "Stale" risk below does not exist.** `listing.txt` is
+   `render_listing(version_dirs, journal_digest)`
+   (`crates/vibe-core/src/layout_registry.rs:135`) and `version_dirs` skips
+   `_index`, so a new `_index/templates/` cannot move it. Close the risk with
+   a test proving a registry that grows `_index/templates/` still reads
+   `Fresh`, not with a projection change.
+3. **No `templates` entry in `repomd.json` `files`** (central session,
+   2026-11-10), against `AV-FMT-010`: the snapshot lives at a fixed path a
+   client already knows, and teaching the projection a new first-class input
+   is out of this phase's scope.
+4. **`BatchConfig` gains a removal channel** (e.g. `removed: Vec<String>`),
+   so prune's deletion, the index rewrite and the journal facts
+   (`Event::Removed` already exists, `crates/vibe-index/src/journal/record.rs:70`)
+   land in ONE commit — the amendment to the file list below that `#MIRROR-PRUNE`'s
+   "rewritten in the same commit as the removal" actually requires.
+5. **Snapshots only for directory-shaped sources.** `TemplateLayer::for_directory`
+   is what reads a template out of a registry, so a `[[template]]` row against a
+   per-package Git source is refused by name (`#TEMPLATE-DISCOVERY`). Landed
+   with (a).
+6. **`Filters::admits` / `Filters::packages()` was the whole seam**
+   `mirror/source.rs` read, which is why the selection model is a superset of
+   those two methods and listing did not change. Landed with (a).
+7. **`versions.json`'s envelope is `CachedVersionList { source_url, sha256,
+   fetched_at, document }`**; the snapshot restricts `document` to the selected
+   versions, so `sha256` must be **recomputed over the filtered document**
+   rather than carried over from the upstream fetch.
+
+**Files.** `crates/vibe-cli/src/cli/registry.rs` (`--config` ✔, `--prune`,
 `--prune-payloads`, `--yes`); `crates/vibe-cli/src/commands/registry/mirror.rs`
-and its `mirror/{plan,record,source,target}.rs` (the new selection model
-replacing `Filters`, the template rows, the prune plan);
-new `mirror/config.rs` (the `mirror.toml` reader) and `mirror/templates.rs`
+and its `mirror/{history,plan,record,source,target}.rs` (the selection model
+replacing `Filters` ✔, the recorded selection ✔, the template rows, the prune
+plan); new `mirror/config.rs` (the `mirror.toml` reader ✔) and
+`mirror/selection.rs` (what it means for a run ✔); new `mirror/templates.rs`
 (snapshot writing through the existing `BatchConfig.files` channel);
-`crates/vibe-index/src/index/mod.rs` (`WRITER_DIRS` learns
-`templates`), `crates/vibe-index/src/layout.rs` and the `repomd.json` `files`
-projection; `schemas/index/e1/templates.jtd.json` (new);
+`crates/vibe-publish/src/layout_publish.rs` (`BatchConfig`'s removal channel,
+amendment 4) with `layout_publish/{index_plan,localdir,monorepo,working_copy}.rs`;
+`crates/vibe-registry/src/templates/` (the snapshot layout, read and written
+from one place, and the cache priming a network-denied client renders from);
+`crates/vibe-cli/src/commands/app/versions.rs` (`snapshot_synced`, the one
+field P5b declared in the wire and left unfilled);
 `schemas/registry_mirror_report.jtd.json` (`templates[]`, `pruned[]`);
-`formats/REGISTRY.toml` (`[format.index-templates]`).
+`formats/REGISTRY.toml` (`[format.index-templates]`). **Not**
+`crates/vibe-index/src/index/mod.rs` and **not** the `repomd.json` `files`
+projection — amendments 1 and 3.
 
 **Commands.** `vibe registry mirror <source> --into <target> --config mirror.toml
 [--prune] [--prune-payloads] [--dry-run] [--yes]`.
@@ -535,16 +589,21 @@ a version recorded as copied from another source is never pruned.
 
 **Acceptance.**
 ```sh
+# commit (a), green 2026-11-10:
 cargo test -p vibe-cli --test cli_registry_mirror --offline --locked
+cargo test -p vibe-cli --test cli_registry_mirror_api --offline --locked
+cargo test -p vibe-cli --test cli_registry_mirror_config --offline --locked
+# commits (b) and (c):
 cargo test -p vibe-cli --test cli_registry_mirror_templates --offline --locked
 cargo test -p vibe-index --offline --locked
 cargo xtask check-codegen && cargo xtask wire-diff
 ```
 
-**Risks.** `_index/` has an explicit ownership whitelist and a `listing.txt`
-written last; a new directory that the projection does not know about makes the
-index read `Stale`. The test that a client installs from the snapshot **with
-the network denied** is the only honest proof that the snapshot is complete.
+**Risks.** The test that a client installs from the snapshot **with the
+network denied** is the only honest proof that the snapshot is complete.
+*(The `listing.txt` / `Stale` risk this entry carried is withdrawn —
+amendment 2 above: `version_dirs` skips `_index`, so a snapshot directory
+cannot move the listing. The withdrawal is itself to be proven by a test.)*
 
 **Parallel.** Needs P1 and P2. Independent of P3, P5, P6.
 

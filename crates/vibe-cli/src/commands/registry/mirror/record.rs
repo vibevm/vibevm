@@ -35,8 +35,59 @@ pub(super) struct MirrorRecord {
     pub schema: u32,
     pub source: SourceRecord,
     pub sync: SyncRecord,
+    /// The selection the last run that had one used, so a later bare
+    /// `vibe registry mirror <source> --into <target>` repeats it and adds
+    /// only what newly matches (PROP-075 `#MIRROR-CONFIG`). Additive: the
+    /// record's `schema` stays 1 because a reader that ignores this table
+    /// and the `[[template]]` rows beside it behaves exactly as before.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub select: Option<SelectRecord>,
     #[serde(default, rename = "version")]
     pub versions: Vec<VersionRecord>,
+}
+
+/// `[select]` and the `[[template]]` rows beside it, as recorded.
+///
+/// The spellings are the authored ones, not a lowered form: a recorded
+/// `versions = [">=22"]` is read back as the requirement it was, and a
+/// channel stays a channel so a re-run lowers it against the version list
+/// of the day rather than the one it was written on.
+#[derive(Debug, Clone, Default, PartialEq, Eq, Serialize, Deserialize)]
+pub(super) struct SelectRecord {
+    #[serde(default)]
+    pub all: bool,
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub groups: Vec<String>,
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub packages: Vec<String>,
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub exclude: Vec<String>,
+    /// Serialised as `[[select.template]]`, so the rows sit inside the
+    /// table they belong to and a `[[version]]` row after them is still
+    /// read as the record's own.
+    #[serde(default, rename = "template", skip_serializing_if = "Vec::is_empty")]
+    pub templates: Vec<TemplateRecord>,
+}
+
+/// One recorded `[[template]]` row.
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+pub(super) struct TemplateRecord {
+    /// `<group>/<name>`.
+    pub package: String,
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub versions: Vec<String>,
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub channels: Vec<String>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub newest: Option<u32>,
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub platforms: Vec<String>,
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub archs: Vec<String>,
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub installers: Vec<String>,
+    #[serde(default, skip_serializing_if = "std::ops::Not::not")]
+    pub payloads: bool,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]

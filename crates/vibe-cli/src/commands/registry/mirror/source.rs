@@ -22,7 +22,7 @@ use index_probe::{probe_index, refusal_first};
 
 use super::git_source::{self, GitStore};
 use super::plan::{Decision, Planned};
-use super::{Fetched, Filters};
+use super::{Fetched, Selection};
 use crate::commands::registry::layout_root::{self, LayoutRoot};
 
 /// One version the source offers.
@@ -118,14 +118,14 @@ impl SourceReader {
         })
     }
 
-    pub(super) fn list(&self, filters: &Filters) -> Result<SourceListing> {
+    pub(super) fn list(&self, selection: &Selection) -> Result<SourceListing> {
         match self {
             SourceReader::Layout(opened) => {
                 let (index, _) =
                     vibe_index::layout::load_or_project(opened.root(), opened.identity())?;
                 let versions = index
                     .iter_versions()
-                    .filter(|e| filters.admits(e.group.as_str(), &e.name))
+                    .filter(|e| selection.admits(e.group.as_str(), &e.name))
                     .map(|e| SourceVersion {
                         group: e.group.clone(),
                         name: e.name.clone(),
@@ -149,7 +149,7 @@ impl SourceReader {
                 let tombstones = index
                     .tombstones
                     .iter()
-                    .filter(|(name, _)| tombstone_admitted(filters, name))
+                    .filter(|(name, _)| tombstone_admitted(selection, name))
                     .map(|(name, t)| (name.clone(), t.reason.clone(), t.superseded_by.clone()))
                     .collect();
                 Ok(SourceListing {
@@ -175,7 +175,7 @@ impl SourceReader {
                 let living: BTreeSet<String> = entries.iter().map(|e| e.name.clone()).collect();
                 let versions = entries
                     .into_iter()
-                    .filter(|e| filters.admits(e.group.as_str(), &e.name))
+                    .filter(|e| selection.admits(e.group.as_str(), &e.name))
                     .map(|e| SourceVersion {
                         git: Some((e.source_url.clone(), e.source_ref.clone())),
                         group: e.group,
@@ -196,7 +196,7 @@ impl SourceReader {
                         else {
                             continue;
                         };
-                        if living.contains(name) || !tombstone_admitted(filters, name) {
+                        if living.contains(name) || !tombstone_admitted(selection, name) {
                             continue;
                         }
                         if let Some((reason, superseded_by)) =
@@ -218,11 +218,11 @@ impl SourceReader {
                 index: None,
                 ..
             } => {
-                if filters.packages().is_empty() {
-                    return self.list_through_host_api(filters);
+                if selection.packages().is_empty() {
+                    return self.list_through_host_api(selection);
                 }
                 let mut versions = Vec::new();
-                for (group, name) in filters.packages() {
+                for (group, name) in selection.packages() {
                     let group = Group::parse(group)?;
                     let repository = repository_url(registry, &group, name)?;
                     let listed = resolver
@@ -441,8 +441,8 @@ pub(crate) struct GitOrigin {
     pub facts: git_source::TagFacts,
 }
 
-fn tombstone_admitted(filters: &Filters, name: &str) -> bool {
-    filters.packages().is_empty() || filters.packages().iter().any(|(_, n)| n == name)
+fn tombstone_admitted(selection: &Selection, name: &str) -> bool {
+    selection.packages().is_empty() || selection.packages().iter().any(|(_, n)| n == name)
 }
 
 /// The source's yanks (of versions the target will hold) and its
