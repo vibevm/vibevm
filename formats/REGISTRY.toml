@@ -364,6 +364,19 @@ foreign_parsers = "many"
 corpus = "none"
 sunset = "none"
 
+# `vibe prompt capture --json` — `vibe-prompt-capture/1`. The request
+# envelope an API runner builds: which band sits in which API role, where the
+# tool block goes, where band T goes, and — only when a provider usage record
+# was supplied — that provider's own cache counters. It is a document, not a
+# request: nothing here sends anything.
+[format.cli-prompt-capture]
+epoch = 1
+schema = "schemas/prompt_request_capture.jtd.json"
+recoverable = true
+foreign_parsers = "many"
+corpus = "none"
+sunset = "none"
+
 # `vibe prompt build --json`, and the system-prompt half of an install
 # report — `vibe-prompt-build/1`.
 [format.cli-prompt-build]

@@ -97,7 +97,11 @@ fn band(member: &PreparedBand) -> wire::Band {
 /// `--session-target os=<name>`. The shape carries the axis so a later
 /// session fact needs no second flag, and an unknown selector refuses
 /// rather than becoming `true` (`#SYS-SESSION-TARGET`).
-fn parse_target(value: &str) -> Result<TargetOs> {
+///
+/// Shared with `capture`, which decides the same gated rows from the same
+/// flag: two parsers for one spelling is how the two verbs would come to
+/// disagree about what `os=` means.
+pub(super) fn parse_target(value: &str) -> Result<TargetOs> {
     let Some(name) = value.strip_prefix("os=") else {
         bail!(
             "`--session-target {value}` is not `os=<name>`; this version decides only the `os:` axis"

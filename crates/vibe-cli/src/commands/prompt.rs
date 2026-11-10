@@ -22,7 +22,9 @@ use anyhow::Result;
 use crate::cli::{PromptArgs, PromptCommand};
 use crate::output;
 
+mod adapter;
 mod build;
+mod capture;
 mod check;
 mod flags;
 mod harness_version;
@@ -70,6 +72,23 @@ pub fn run(ctx: &output::Context, args: PromptArgs) -> Result<()> {
             ctx,
             &select(&path, node.as_deref())?,
             session_target.as_deref(),
+        ),
+        PromptCommand::Capture {
+            node,
+            path,
+            session_target,
+            task,
+            with_text,
+            usage,
+        } => capture::run(
+            ctx,
+            &select(&path, node.as_deref())?,
+            capture::Request {
+                session_target: session_target.as_deref(),
+                task: task.as_deref(),
+                with_text,
+                usage: usage.as_deref(),
+            },
         ),
         PromptCommand::Path { part, node, path } => {
             path::run(ctx, &select(&path, node.as_deref())?, part)

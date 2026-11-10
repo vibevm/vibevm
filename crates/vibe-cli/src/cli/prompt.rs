@@ -66,6 +66,34 @@ pub enum PromptCommand {
         session_target: Option<String>,
     },
 
+    /// Build the request envelope an API runner sends: which band sits in
+    /// which API role, in what order, with the tool block's position and
+    /// the recommended cache boundaries. A document, never a request —
+    /// nothing here contacts a provider.
+    Capture {
+        #[arg(long, value_name = "REL")]
+        node: Option<String>,
+        #[arg(long, default_value = ".")]
+        path: PathBuf,
+        /// The session's operating system, as `os=<name>`, for band G.
+        #[arg(long, value_name = "os=<name>")]
+        session_target: Option<String>,
+        /// Band T — the caller's own task content. vibe never invents one:
+        /// absent, the envelope declares the slot and carries no message.
+        #[arg(long, value_name = "TEXT")]
+        task: Option<String>,
+        /// Include each block's bytes. Off by default, because the
+        /// envelope's structure is the answer most callers want and the
+        /// prefix alone is hundreds of kilobytes.
+        #[arg(long)]
+        with_text: bool,
+        /// A provider response already saved to disk, whose own usage
+        /// record is read back as cache diagnostics. Read from a file:
+        /// this command contacts no provider.
+        #[arg(long, value_name = "FILE")]
+        usage: Option<PathBuf>,
+    },
+
     /// Print the absolute path of a generated artifact, with its size, hash
     /// and freshness. A stale or missing artifact is reported as stale or
     /// missing with the build that fixes it, never as an empty path.

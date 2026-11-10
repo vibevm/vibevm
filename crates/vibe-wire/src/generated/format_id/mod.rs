@@ -92,6 +92,7 @@ pub enum FormatId {
     CliProgressEvent,
     CliProjectCancellation,
     CliPromptBuild,
+    CliPromptCapture,
     CliPromptCheck,
     CliPromptFlags,
     CliPromptPath,

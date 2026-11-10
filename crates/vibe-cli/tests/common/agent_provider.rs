@@ -34,6 +34,17 @@ impl MockProvider {
         Self::start(assistant_content, usize::MAX)
     }
 
+    /// A provider that answers with exactly the `usage` object given.
+    ///
+    /// The cache counters a response carries are provider-shaped data, and
+    /// a test that read them out of its own literal would be measuring
+    /// itself. This way the numbers travel the whole way — endpoint,
+    /// response body, file, `vibe prompt capture --usage` — and the
+    /// assertion is on what came back out.
+    pub fn serving_usage(assistant_content: &str, usage: serde_json::Value) -> Self {
+        Self::start_with(assistant_content, usize::MAX, usage)
+    }
+
     /// A provider that reads each request and then never answers, holding
     /// the connection until the client closes it — a paid request in flight.
     pub fn holding() -> Self {
@@ -53,11 +64,19 @@ impl MockProvider {
     }
 
     fn start(assistant_content: &str, answered: usize) -> Self {
+        Self::start_with(
+            assistant_content,
+            answered,
+            serde_json::json!({ "prompt_tokens": 42, "completion_tokens": 9, "total_tokens": 51 }),
+        )
+    }
+
+    fn start_with(assistant_content: &str, answered: usize, usage: serde_json::Value) -> Self {
         let body = serde_json::to_vec(&serde_json::json!({
             "id": "chatcmpl-create-1",
             "model": "demo-chat-model",
             "choices": [{ "message": { "role": "assistant", "content": assistant_content } }],
-            "usage": { "prompt_tokens": 42, "completion_tokens": 9, "total_tokens": 51 },
+            "usage": usage,
         }))
         .unwrap();
         let listener = TcpListener::bind("127.0.0.1:0").unwrap();

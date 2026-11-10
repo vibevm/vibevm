@@ -298,12 +298,13 @@ pub(crate) fn policy(command: &Command, terminal_attached: bool) -> CommandPolic
         Command::Update(_) => FiniteFallback("Command update"),
         Command::Reinstall(_) => FiniteFallback("Command reinstall"),
         Command::Check(_) => FiniteFallback("Command check"),
-        // `build` runs one node's compile and one transaction; the four
+        // `build` runs one node's compile and one transaction; the five
         // read-only verbs open a bounded set of files and print.
         Command::Prompt(args) => match &args.command {
             PromptCommand::Build { .. } => FiniteFallback("Command prompt build"),
             PromptCommand::Check { .. }
             | PromptCommand::Prepare { .. }
+            | PromptCommand::Capture { .. }
             | PromptCommand::Path { .. }
             | PromptCommand::Flags { .. } => FastMetadata,
         },
