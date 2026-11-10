@@ -19,10 +19,11 @@ Design record: `spec://org.vibevm.core/vibevm/common/PROP-076#root`.
 
 ## 1. What it is
 
-A vibevm project's boot is a lot of text. On this repository: the compiled
-lane `vibevm/vibespecs/boot/STATIC.xml` is about 252 KB, the entrypoint
-`AGENTS.md` about 27 KB, and the eight files `INDEX.md` names about 58 KB —
-roughly 336 KB in all, of which the lane alone is **75%**.
+A vibevm project's boot is a lot of text. Measured on this repository
+(2026-11-10): the compiled lane `vibevm/vibespecs/boot/STATIC.xml` is 251,817
+bytes, the entrypoint `AGENTS.md` 27,069, and the eight files `INDEX.md` names
+57,894 together — **336,780 bytes** of boot material, of which the lane alone
+is **74.8%** and the lane plus the entrypoint **82.8%**.
 
 Most of that changes only when packages, authored boot sources or your own
 frame change. So `vibe` generates it once, as bytes that are a pure function
@@ -34,8 +35,10 @@ of their inputs:
 | `vibevm/vibespecs/boot/AGENT-LANE.md` | the compiled lane, then every unconditional `INDEX.md` file, each wrapped in a marker pair | a coding agent's own system/developer slot |
 | `vibevm/vibespecs/boot/SYSTEM.meta.json` | the input witnesses, the segment map and the continuation plan | `vibe`, for freshness; never sent to a model |
 
-Measured on this repository: the prefix is **278,280 bytes** (82.78% of the
-boot material) and the agent lane **312,345 bytes**.
+That 82.8% is the prefix, so on this repository it is **about 278 KB** — the
+exact figure depends on your own frame, which is an input. The agent lane,
+composed from the same tree, is **312,345 bytes**: 309,711 of file bodies
+across nine segments plus 2,634 of marker lines.
 
 **The agent lane is not the prefix minus a segment.** `SYSTEM.md` is for a
 runner with no base prompt of its own, so it carries your frame and the
@@ -440,8 +443,8 @@ the dynamic and output tokens. **Substitute current rates**: every rate is
 read from your provider's current pricing, never from this document, which
 would be wrong within a quarter.
 
-What this repository's own numbers put into **L**: the prefix is 278,280
-bytes and the agent lane 312,345 bytes. A token count depends on the
+What this repository's own numbers put into **L**: a prefix of about 278 KB
+and an agent lane of 312,345 bytes. A token count depends on the
 tokenizer, so use the provider's own usage report rather than a byte-to-token
 rule of thumb — which is also why `vibe prompt capture --usage <file>` reads
 the counters out of a response instead of estimating them.

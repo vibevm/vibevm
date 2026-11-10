@@ -1639,3 +1639,21 @@ whether it is yes or no, because it is the evidence
    was deleted rather than left half-built. It is a derived directory and the
    campaign's constraint is that every build goes to the shared target, so
    nothing is lost but the rebuild.
+
+### One number re-measured after P8's first draft
+
+The guide first carried P3's prefix figure, **278,280 bytes**, as a
+measurement of this repository. It is not one any more: P4 moved the managed
+block to the top of each instruction file and the block grew, so `AGENTS.md`
+went 26,121 → **27,069** bytes and the prefix with it — P5's own run reports
+278,356 with its own short frame. The boot material is now **336,780 bytes**
+(lane 251,817 · entrypoint 27,069 · eight INDEX files 57,894), the lane's
+share **74.8%** and the lane-plus-entrypoint share **82.8%**, so
+`#SYS-SIZE-TODAY`'s 75% and 83% still hold.
+
+The guide now gives the three input sizes exactly and the prefix as "about
+278 KB — the exact figure depends on your own frame, which is an input",
+because a user's template is a term in that sum and a precise number would be
+precisely wrong for every reader. The lane's **312,345 bytes** stays exact: it
+was recomputed from this tree today, independently, by the Codex probe's own
+script, and it agrees with P3's composer to the byte.
