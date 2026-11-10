@@ -50,6 +50,7 @@ mod mirror;
 mod rebuild;
 mod specmap;
 mod sync_engines;
+mod vibenvm_conform;
 mod wire_diff;
 
 use batch_review::{BatchReviewArgs, run_batch_review};
@@ -62,6 +63,7 @@ use mirror::run_mirror;
 use rebuild::run_rebuild;
 use specmap::run_specmap;
 use sync_engines::run_sync_engines;
+use vibenvm_conform::run_vibenvm_conform;
 use wire_diff::run_wire_diff;
 
 #[derive(Parser, Debug)]
@@ -121,6 +123,26 @@ enum Cmd {
         /// Path to the debt registry, repo-relative.
         #[arg(long, default_value = rust_ai_native_cli::DEFAULT_DEBT_REGISTRY)]
         debt: String,
+    },
+
+    /// The vibenvm differential conformance suite (PROP-075
+    /// `#VIBENVM-SUITE`): the same command sequences run against the
+    /// pinned upstream nvm-sh and against vibe's `vibenvm` shim, each in
+    /// its own isolated home, shell and network namespace, from the same
+    /// local mirror of Node release files, compared observation record by
+    /// observation record. The suite's verdict is its exit code and this
+    /// command exits with it: 0 conformant and completely covered, 1 a
+    /// differential mismatch, 2 coverage incomplete, 3 a harness error.
+    /// Linux only; `conformance/vibenvm/fetch-mirror.sh` populates the
+    /// mirror once and is the only networked step.
+    VibenvmConform {
+        /// Run only the cases whose file name matches this glob.
+        #[arg(long)]
+        cases: Option<String>,
+
+        /// Re-extract `inventory.json` from the pinned `nvm.sh` first.
+        #[arg(long)]
+        update_inventory: bool,
     },
 
     /// Traceability queries over the specmap (PROP-014 §2.6). Pilot
@@ -437,6 +459,10 @@ fn main() -> Result<()> {
         Cmd::Conform {
             cmd: ConformCmd::Freeze { baseline },
         } => run_conform_freeze(&baseline),
+        Cmd::VibenvmConform {
+            cases,
+            update_inventory,
+        } => run_vibenvm_conform(&repo_root()?, cases.as_deref(), update_inventory),
         Cmd::Trace {
             cmd:
                 TraceCmd::Explain {
