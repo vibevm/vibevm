@@ -27,6 +27,7 @@ pub enum ProvenanceRule {
 ///     rule: ProvenanceRule::RootEdge,
 ///     path: vec!["org.x/root".into(), "org.x/api".into()],
 ///     via_override: None,
+///     weak: false,
 /// };
 /// assert_eq!(witness.path.len(), 2);
 /// ```
@@ -35,6 +36,13 @@ pub struct Provenance {
     pub rule: ProvenanceRule,
     pub path: Vec<NodeId>,
     pub via_override: Option<NodeId>,
+    /// `true` when this chain passes through at least one weak
+    /// (`[recommends]`) edge — the member is in the effective set only
+    /// because something recommended it, directly or above it on the path
+    /// (PROP-050 `#WEAK-EDGES-ARE-ORDINARY-EDGES`). A member reachable both
+    /// weakly and strongly records the strong chain, so the flag means
+    /// «nothing but a recommendation admits this».
+    pub weak: bool,
 }
 
 /// The friend closure, effective set, and warning diagnostics for one root.

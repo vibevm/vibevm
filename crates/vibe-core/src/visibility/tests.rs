@@ -14,6 +14,16 @@ fn edge(name: &str, access: Option<AccessLevel>, friend: Option<bool>) -> EdgeDe
         access,
         friend,
         exclude: Vec::new(),
+        weak: false,
+    }
+}
+
+/// An accepted recommendation: the ordinary defaults, plus `weak`.
+fn weak_edge(name: &str) -> EdgeDecl {
+    EdgeDecl {
+        to: id(name),
+        weak: true,
+        ..EdgeDecl::default()
     }
 }
 
@@ -425,4 +435,131 @@ fn determinism_repeat() {
         node(vec![edge("y", Some(AccessLevel::Private), None)]),
     );
     assert_eq!(analyze(&graph, &id("r")), analyze(&graph, &id("r")));
+}
+
+/// A weak edge is traversed exactly like the ordinary edge it stands beside,
+/// so a package recommended by a project dependency reaches the consumer root
+/// — and the arrival says it is weak (PROP-050
+/// `#WEAK-EDGES-ARE-ORDINARY-EDGES`).
+#[test]
+#[specmark::verifies("spec://org.vibevm.core/vibevm/common/PROP-050#WEAK-EDGES-ARE-ORDINARY-EDGES")]
+fn a_weak_edge_admits_its_target_like_an_ordinary_one() {
+    let mut graph = VisibilityGraph::default();
+    graph
+        .nodes
+        .insert(id("root"), node(vec![edge("dep", None, None)]));
+    graph.nodes.insert(
+        id("dep"),
+        node(vec![weak_edge("companion"), edge("hard", None, None)]),
+    );
+    graph
+        .nodes
+        .insert(id("companion"), node(vec![edge("below", None, None)]));
+    graph.nodes.insert(id("hard"), NodeDecl::default());
+    graph.nodes.insert(id("below"), NodeDecl::default());
+    let result = analyze(&graph, &id("root"));
+
+    let companion = result
+        .effective
+        .get(&id("companion"))
+        .expect("the recommended package is in the effective set");
+    assert!(companion.weak, "and its chain is marked weak");
+    assert_eq!(companion.rule, ProvenanceRule::PublicChain);
+    assert_eq!(companion.path, vec![id("root"), id("dep"), id("companion")]);
+    // What the recommendation stands on arrives with it, by the ordinary
+    // public rule, and is weak because nothing but the recommendation leads
+    // there.
+    assert!(
+        result
+            .effective
+            .get(&id("below"))
+            .is_some_and(|witness| witness.weak)
+    );
+    // A declared edge beside it is untouched.
+    assert!(
+        result
+            .effective
+            .get(&id("hard"))
+            .is_some_and(|witness| !witness.weak)
+    );
+}
+
+/// A weak edge grants no friendship: `friend` defaults to `false` and a
+/// recommendation carries no access mark to imply it, so the recommended
+/// package's own friends-only substance stays shut.
+#[test]
+#[specmark::verifies("spec://org.vibevm.core/vibevm/common/PROP-050#WEAK-EDGES-ARE-ORDINARY-EDGES")]
+fn a_weak_edge_grants_no_friendship() {
+    let mut graph = VisibilityGraph::default();
+    graph
+        .nodes
+        .insert(id("root"), node(vec![weak_edge("companion")]));
+    graph.nodes.insert(
+        id("companion"),
+        node(vec![edge("inner", Some(AccessLevel::FriendsOnly), None)]),
+    );
+    graph.nodes.insert(id("inner"), NodeDecl::default());
+    let result = analyze(&graph, &id("root"));
+
+    assert!(result.effective.contains_key(&id("companion")));
+    assert!(!result.closure.contains(&id("companion")));
+    assert!(!result.effective.contains_key(&id("inner")));
+}
+
+/// A package reachable both weakly and strongly records the STRONG chain,
+/// whatever order the declarations are walked in — «the strong edge decides»,
+/// as the application plane's reverse edge already answers.
+#[test]
+#[specmark::verifies("spec://org.vibevm.core/vibevm/common/PROP-050#WEAK-EDGES-ARE-ORDINARY-EDGES")]
+fn a_strong_chain_beats_a_weak_one_in_either_declaration_order() {
+    for weak_first in [true, false] {
+        let mut graph = VisibilityGraph::default();
+        let edges = if weak_first {
+            vec![edge("recommender", None, None), edge("owner", None, None)]
+        } else {
+            vec![edge("owner", None, None), edge("recommender", None, None)]
+        };
+        graph.nodes.insert(id("root"), node(edges));
+        graph
+            .nodes
+            .insert(id("recommender"), node(vec![weak_edge("shared")]));
+        graph
+            .nodes
+            .insert(id("owner"), node(vec![edge("shared", None, None)]));
+        graph.nodes.insert(id("shared"), NodeDecl::default());
+        let result = analyze(&graph, &id("root"));
+        let shared = result
+            .effective
+            .get(&id("shared"))
+            .expect("present either way");
+        assert!(
+            !shared.weak,
+            "a coordinate something requires is never reported weak (weak_first = {weak_first})"
+        );
+        assert_eq!(shared.path, vec![id("root"), id("owner"), id("shared")]);
+    }
+}
+
+/// An exclusion kills a weak chain as it kills any other: a weak edge is
+/// narrowable by the consumer exactly like the ordinary edge it imitates.
+#[test]
+#[specmark::verifies("spec://org.vibevm.core/vibevm/common/PROP-050#WEAK-EDGES-ARE-ORDINARY-EDGES")]
+fn a_weak_target_is_excludable_through_the_declaring_edge() {
+    let mut graph = VisibilityGraph::default();
+    graph.nodes.insert(
+        id("root"),
+        node(vec![EdgeDecl {
+            to: id("dep"),
+            exclude: vec![id("companion")],
+            ..EdgeDecl::default()
+        }]),
+    );
+    graph
+        .nodes
+        .insert(id("dep"), node(vec![weak_edge("companion")]));
+    graph.nodes.insert(id("companion"), NodeDecl::default());
+    let result = analyze(&graph, &id("root"));
+
+    assert!(result.effective.contains_key(&id("dep")));
+    assert!(!result.effective.contains_key(&id("companion")));
 }

@@ -18,11 +18,18 @@ struct State {
     path: Vec<NodeId>,
     layers: Vec<MaskLayer>,
     excluded: BTreeSet<NodeId>,
+    /// Whether the path that reached this state crossed a weak edge. Part of
+    /// the state key, so a node reachable both weakly and strongly keeps both
+    /// walks alive and the strong one can win the provenance.
+    weak: bool,
 }
 
 impl State {
     fn same_key(&self, other: &Self) -> bool {
-        self.node == other.node && self.layers == other.layers && self.excluded == other.excluded
+        self.node == other.node
+            && self.layers == other.layers
+            && self.excluded == other.excluded
+            && self.weak == other.weak
     }
 }
 
@@ -76,6 +83,7 @@ fn walk_graph(graph: &VisibilityGraph, root: &NodeId, closure: &BTreeSet<NodeId>
         path: vec![root.clone()],
         layers: layer_for(graph, root).into_iter().collect(),
         excluded: BTreeSet::new(),
+        weak: false,
     };
     let mut walk = Walk {
         states: vec![initial],
@@ -118,19 +126,33 @@ fn walk_graph(graph: &VisibilityGraph, root: &NodeId, closure: &BTreeSet<NodeId>
             if let Some(layer) = layer_for(graph, &edge.to) {
                 layers.push(layer);
             }
+            let weak = state.weak || edge.weak;
             let next = State {
                 node: edge.to.clone(),
                 path: path.clone(),
                 layers,
                 excluded,
+                weak,
             };
             let via_override = access_override(&state.layers, &state.node, &edge.to)
                 .map(|(declared_by, _)| declared_by.clone());
-            walk.effective.entry(edge.to.clone()).or_insert(Provenance {
+            let witness = Provenance {
                 rule,
                 path,
                 via_override,
-            });
+                weak,
+            };
+            match walk.effective.get(&edge.to) {
+                // First witness wins, as the shortest chain found by this
+                // breadth-first walk — except that a strong chain always
+                // replaces a weak one, so «weak» means «nothing but a
+                // recommendation admits this» whatever the declaration order
+                // (PROP-050 `#WEAK-EDGES-ARE-ORDINARY-EDGES`).
+                Some(known) if !(known.weak && !witness.weak) => {}
+                _ => {
+                    walk.effective.insert(edge.to.clone(), witness);
+                }
+            }
             let cycle = next.path[..next.path.len() - 1].contains(&next.node);
             if !cycle && !walk.states.iter().any(|known| known.same_key(&next)) {
                 walk.states.push(next);

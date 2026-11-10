@@ -86,10 +86,6 @@ pub fn load_installed_world(project_root: &Path) -> Result<InstalledWorld, Strin
         ));
     };
     let root_id = consumer.coordinate();
-    let root_decl =
-        node_decl_for(&root_manifest).map_err(|reason| format!("root `{root_id}`: {reason}"))?;
-    let mut graph = VisibilityGraph::default();
-    graph.nodes.insert(root_id.clone(), root_decl);
 
     let lock_path = project_root.join(Lockfile::FILENAME);
     if !lock_path.is_file() {
@@ -102,14 +98,30 @@ pub fn load_installed_world(project_root: &Path) -> Result<InstalledWorld, Strin
     let lock = Lockfile::read(&lock_path)
         .map_err(|error| format!("reading `{}`: {error}", lock_path.display()))?;
 
+    // The installed members decide which `[recommends]` references became
+    // weak edges: a recommendation that is installed is an edge of its
+    // recommender, and one that is not installed is nothing at all
+    // (PROP-050 `#WEAK-EDGES-ARE-ORDINARY-EDGES`).
+    let installed: std::collections::BTreeSet<NodeId> = lock
+        .packages
+        .iter()
+        .map(|member| format!("{}/{}", member.group, member.name))
+        .collect();
+    let present = |id: &NodeId| installed.contains(id);
+
+    let root_decl = node_decl_for(&root_manifest, &present)
+        .map_err(|reason| format!("root `{root_id}`: {reason}"))?;
+    let mut graph = VisibilityGraph::default();
+    graph.nodes.insert(root_id.clone(), root_decl);
+
     let mut unread = Vec::new();
     for member in &lock.packages {
         let node_id: NodeId = format!("{}/{}", member.group, member.name);
         let slot = slot_manifest_path(project_root, member);
         match Manifest::read(&slot) {
             Ok(manifest) => {
-                let decl =
-                    node_decl_for(&manifest).map_err(|reason| format!("`{node_id}`: {reason}"))?;
+                let decl = node_decl_for(&manifest, &present)
+                    .map_err(|reason| format!("`{node_id}`: {reason}"))?;
                 graph.nodes.insert(node_id, decl);
             }
             Err(_) => {
@@ -146,7 +158,12 @@ fn slot_manifest_path(project_root: &Path, member: &LockedPackage) -> std::path:
 /// Translate one parsed manifest into its pure graph declaration. Edge
 /// fields are the RAW declared values — the engine applies the public /
 /// `friend = false` defaults and the friends-only implication (F10).
-fn node_decl_for(manifest: &Manifest) -> Result<NodeDecl, String> {
+/// `present` answers which coordinates exist in the world being read, which
+/// is what turns an accepted `[recommends]` reference into a weak edge.
+fn node_decl_for(
+    manifest: &Manifest,
+    present: &dyn Fn(&NodeId) -> bool,
+) -> Result<NodeDecl, String> {
     let mut decl = NodeDecl::default();
     for (group, name) in manifest.requires.iter_pkgrefs() {
         // A `[requires]` entry without a group has no `<group>/<name>`
@@ -158,8 +175,10 @@ fn node_decl_for(manifest: &Manifest) -> Result<NodeDecl, String> {
             access: manifest.requires.declared_access(group, name),
             friend: manifest.requires.declared_friend(group, name),
             exclude: manifest.requires.excludes_for(group, name).to_vec(),
+            weak: false,
         });
     }
+    super::append_recommended_edges(manifest, &mut decl.edges, present);
     if let Some(visibility) = &manifest.visibility {
         decl.friends = visibility.friends.clone();
         decl.unfriend = visibility.unfriend.clone();
@@ -291,6 +310,7 @@ pub fn why(world: &InstalledWorld, target: &str) -> WhyVerdict {
             rule: ProvenanceRule::RootEdge,
             path: vec![world.root_id.clone()],
             via_override: None,
+            weak: false,
         });
     }
     if let Some(provenance) = analysis.effective.get(target) {

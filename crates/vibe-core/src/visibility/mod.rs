@@ -5,6 +5,7 @@ mod diagnostics;
 mod effective;
 mod graph;
 pub mod query;
+mod weak;
 
 pub use closure::analyze;
 pub use diagnostics::Diagnostic;
@@ -14,6 +15,7 @@ pub use query::{
     AllowFriendsState, BlockReason, BlockedEdge, FriendsReport, InstalledWorld, WhyVerdict,
     friends, load_installed_world, why,
 };
+pub use weak::append_recommended_edges;
 
 #[cfg(test)]
 mod tests;

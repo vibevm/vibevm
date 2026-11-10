@@ -28,6 +28,14 @@ pub struct EdgeDecl {
     pub access: Option<AccessLevel>,
     pub friend: Option<bool>,
     pub exclude: Vec<NodeId>,
+    /// `true` for an accepted `[recommends]` edge — a **weak** edge
+    /// (PROP-050 `#WEAK-EDGES-ARE-ORDINARY-EDGES`). It is traversed by the
+    /// same three rules as a declared one and carries the same defaults
+    /// (public presence, no friendship); the flag decides nothing about
+    /// traversal and only marks the arrival, so a lock row, `vibe why` and
+    /// the install report can say that a member is here because something
+    /// recommended it.
+    pub weak: bool,
 }
 
 impl EdgeDecl {
