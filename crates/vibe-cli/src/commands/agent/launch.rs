@@ -5,9 +5,9 @@
 //! code path that decides which flags a kind takes, and this cell adds only
 //! what printing cannot do: it recomposes the lane first, writes Codex's
 //! launch-time profile file, refuses a user argument that would conflict
-//! with the slot flag, and then becomes the harness (decision D10). In a
-//! project that has not opted in it passes no flag and starts the harness
-//! unchanged.
+//! with the slot flag, says so when this machine is not the declared
+//! `host`, and then becomes the harness (decision D10). In a project that
+//! has not opted in it passes no flag and starts the harness unchanged.
 //!
 //! **The lane is recomposed at every launch**, which is how band U keeps the
 //! "current bytes" meaning `#SYS-NO-FROZEN-INDEX` gives it: a mid-session
@@ -26,8 +26,9 @@ use std::process::Command;
 
 use anyhow::{Context, Result, bail};
 use vibe_app::{AgentsConfig, AppError};
+use vibe_core::manifest::TargetOs;
 use vibe_workspace::boot_artifacts::build_node_prompt;
-use vibe_workspace::system_prompt::{CodexProfile, HarnessKind};
+use vibe_workspace::system_prompt::{CodexProfile, HarnessKind, host_mismatch_warning};
 
 use crate::commands::app::global;
 use crate::commands::prompt;
@@ -73,6 +74,32 @@ pub(crate) fn run(ctx: &output::Context, argv: Vec<String>) -> Result<()> {
         let mut command: Vec<String> = launcher.command.clone();
         command.extend(rest);
         return exec(&command);
+    }
+
+    // **The host mismatch, as a note and nothing more.** `vibe agent`
+    // starts a session on *this* machine, so it is the one launch surface
+    // that can see what `vibe prompt check` would say about it — and a
+    // worker who never runs `check` is exactly the reader the sentence is
+    // for. PROP-076 `#SYS-HOST-AND-TARGET` names only `check` and
+    // `prepare`, so this is a deliberate addition rather than a stated
+    // requirement, and it is kept to the weakest form that still informs:
+    // stderr, no flag, no JSON document of its own (this verb has none —
+    // it becomes the harness), and never a refusal. Refusing here would be
+    // the precise failure the decision forbids, a cross-platform worker
+    // unable to start an agent in its own project.
+    let mismatch = host_mismatch_warning(
+        selected
+            .manifest
+            .system_prompt
+            .as_ref()
+            .map(|section| section.host)
+            .unwrap_or_default(),
+        TargetOs::current(),
+    );
+    if let Some(warning) = mismatch
+        && !ctx.is_quiet()
+    {
+        eprintln!("note: {warning}");
     }
 
     let composed = prompt::compose_flags(&selected, launcher.kind, Some(&launcher))?;

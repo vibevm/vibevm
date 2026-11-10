@@ -2,11 +2,12 @@
 
 use serde::{Deserialize, Serialize};
 
-/// Version 1 request materials of vibe prompt prepare --json: bands P, U
-/// and G separately and in order, each member carrying the digest of the
-/// bytes observed for this request, plus the rows no supplied session target
-/// could decide and the recommended cache-breakpoint offsets. Materials and
-/// observations only: no credentials, no model choice and no provider envelope.
+/// Version 1 request materials of vibe prompt prepare --json: bands P, U and
+/// G separately and in order, each member carrying the digest of the bytes
+/// observed for this request, plus the rows no supplied session target could
+/// decide, the recommended cache-breakpoint offsets and the observations that
+/// change no band. Materials and observations only: no credentials, no model
+/// choice and no provider envelope.
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 pub struct PromptPrepareReport {
     pub protocol: String,
@@ -25,6 +26,11 @@ pub struct PromptPrepareReport {
     pub unresolved: Vec<Unresolved>,
 
     pub cache_boundaries: Vec<u32>,
+
+    /// Observations that change no band — today the host mismatch of PROP-076
+    /// #SYS-HOST-AND-TARGET and nothing else. Never a refusal: the materials
+    /// above are complete beside it.
+    pub warnings: Vec<String>,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]

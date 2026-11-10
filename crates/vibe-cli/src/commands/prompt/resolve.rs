@@ -7,7 +7,7 @@ use std::path::{Path, PathBuf};
 use std::process::Command;
 
 use anyhow::{Context, Result, bail};
-use vibe_core::manifest::Manifest;
+use vibe_core::manifest::{Manifest, TargetOs};
 use vibe_workspace::Workspace;
 use vibe_workspace::system_prompt::{CheckRequest, TrackedPaths};
 
@@ -66,6 +66,14 @@ pub(crate) fn select(path: &Path, node: Option<&str>) -> Result<Selected> {
 
 impl Selected {
     /// The freshness request for this node.
+    ///
+    /// `session_os` is this process's own operating system, because a
+    /// `vibe prompt` verb runs in the session it is answering about. It is
+    /// `std::env::consts::OS` — a **compile-time** constant, not an
+    /// environment read and not a detection step — and it feeds exactly one
+    /// sentence, the host mismatch of `#SYS-HOST-AND-TARGET`. A verb that
+    /// takes an explicit session-OS input replaces it with that input;
+    /// nothing here decides a gate.
     pub(crate) fn request<'a>(
         &'a self,
         tracked: &'a dyn TrackedPaths,
@@ -77,6 +85,7 @@ impl Selected {
             workspace_root: &self.workspace.root,
             manifest: &self.manifest,
             model_window,
+            session_os: TargetOs::current(),
             tracked,
         }
     }

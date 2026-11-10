@@ -80,6 +80,15 @@ pub struct PreparedRequest {
     /// Recommended cache-breakpoint offsets, counted from the first byte of
     /// band P: the sidecar's own segment boundaries, then the end of band U.
     pub cache_boundaries: Vec<usize>,
+    /// Observations that do not change a band: today, the host mismatch of
+    /// [`host_mismatch_warning`](super::host_mismatch_warning) and nothing
+    /// else.
+    ///
+    /// A warning is never a refusal here. The materials above are complete
+    /// and correct whatever this list says — the mismatch tells the caller
+    /// which `os:` rows the prefix baked in, not that the request is unfit
+    /// to send (`#SYS-HOST-AND-TARGET`).
+    pub warnings: Vec<String>,
 }
 
 /// Assemble one request's materials.
@@ -88,6 +97,13 @@ pub struct PreparedRequest {
 /// A non-empty band G with none supplied leaves every gated row unresolved
 /// and never falls back to the host: an unknown selector must not become
 /// `true` (`#SYS-SESSION-TARGET`).
+///
+/// It is not the same input as [`CheckRequest::session_os`], and the two are
+/// kept apart deliberately: `session_target` decides *rows*, and nothing
+/// else may; `session_os` is what the caller observed about its own machine
+/// and feeds exactly one sentence, the host mismatch. Letting one stand in
+/// for the other is how the generator's operating system would start
+/// deciding gates.
 pub fn prepare_request(
     request: &CheckRequest<'_>,
     answer: &PromptCheck,
@@ -127,6 +143,20 @@ pub fn prepare_request(
         gated: Vec::new(),
         unresolved: Vec::new(),
         cache_boundaries: boundaries(&meta),
+        // From the node's own declaration and the session OS the caller
+        // observed — never from `session_target`, which is the gate's input
+        // and not an observation about this machine.
+        warnings: super::host_mismatch_warning(
+            request
+                .manifest
+                .system_prompt
+                .as_ref()
+                .map(|section| section.host)
+                .unwrap_or_default(),
+            request.session_os,
+        )
+        .into_iter()
+        .collect(),
     };
     for row in &meta.continuation {
         match (&row.band, &row.when) {

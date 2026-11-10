@@ -261,6 +261,128 @@ fn a_fixed_host_bakes_its_own_os_rows_and_empties_the_gated_band() {
     );
 }
 
+/// A session whose own OS differs from a fixed `host` is **warned about and
+/// served**, never refused — in the human report, in both JSON documents,
+/// and at a launch (`#SYS-HOST-AND-TARGET`).
+///
+/// The fixture is parameterised by the running host and the expectation is
+/// not: `other` is an OS this session certainly is not, whichever of the
+/// three it is, so every assertion below means the same thing on Linux,
+/// macOS and Windows.
+#[test]
+fn a_fixed_host_this_session_is_not_warns_everywhere_and_refuses_nowhere() {
+    let (session, other) = session_and_other();
+    let world = World::build(&Recipe {
+        manifest_extra: format!("\n[system_prompt]\nhost = \"{other}\"\n"),
+        ..Recipe::default()
+    });
+    let declares = format!("`[system_prompt] host` declares `{other}`");
+    let runs_on = format!("runs on `{session}`");
+
+    // `check` says it and still exits zero: the prefix is equal, and a
+    // mismatch is an observation rather than a verdict.
+    world
+        .prompt("check")
+        .assert()
+        .success()
+        .stdout(predicate::str::contains("system prompt: equal"))
+        .stdout(predicate::str::contains(declares.clone()))
+        .stdout(predicate::str::contains(runs_on.clone()))
+        .stdout(predicate::str::contains("rather than refused"));
+    let report = document(world.prompt("check").arg("--json"));
+    assert_eq!(report["verdict"], "equal");
+    assert!(
+        warned(&report, &declares),
+        "`check --json` carries the mismatch: {report}"
+    );
+
+    // `prepare` says it too, hands back every band beside it, and succeeds.
+    world
+        .prompt("prepare")
+        .assert()
+        .success()
+        .stdout(predicate::str::contains(declares.clone()))
+        .stdout(predicate::str::contains(runs_on));
+    let prepared = prepare(&world, None);
+    assert!(
+        warned(&prepared, &declares),
+        "`prepare --json` carries the mismatch: {prepared}"
+    );
+    assert!(
+        prepared["prefix"]["len"].as_u64().unwrap_or_default() > 0
+            && !prepared["unconditional"].as_array().unwrap().is_empty(),
+        "the materials are whole beside the warning: {prepared}"
+    );
+
+    // The session's own OS, stated: `--session-target` is this verb's
+    // explicit session-OS input, so naming the declared host silences the
+    // sentence without changing a band.
+    let agreed = prepare(&world, Some(other));
+    assert!(
+        agreed["warnings"].as_array().unwrap().is_empty(),
+        "a stated session OS equal to the host is silent: {agreed}"
+    );
+    assert_eq!(agreed["prefix"], prepared["prefix"]);
+    assert_eq!(agreed["unconditional"], prepared["unconditional"]);
+}
+
+/// The silent halves, so the sentence is not something every project sees:
+/// a fixed `host` this session matches, and the default `"portable"`.
+#[test]
+fn a_matching_host_and_a_portable_one_say_nothing() {
+    let (session, _) = session_and_other();
+    for extra in [
+        format!("\n[system_prompt]\nhost = \"{session}\"\n"),
+        String::new(),
+    ] {
+        let world = World::build(&Recipe {
+            manifest_extra: extra.clone(),
+            ..Recipe::default()
+        });
+        world
+            .prompt("check")
+            .assert()
+            .success()
+            .stdout(predicate::str::contains("`[system_prompt] host`").not());
+        let prepared = prepare(&world, None);
+        assert!(
+            prepared["warnings"].as_array().unwrap().is_empty(),
+            "`{extra}`: {prepared}"
+        );
+    }
+}
+
+/// `vibe agent` launches a session on *this* machine, so it says the same
+/// sentence — as a stderr note, and never as a refusal. PROP-076 names only
+/// `check` and `prepare`, so the launch keeps the weakest form that still
+/// informs: the harness starts.
+#[cfg(unix)]
+#[test]
+fn a_launch_notes_the_host_mismatch_on_stderr_and_still_starts_the_harness() {
+    let (session, other) = session_and_other();
+    let world = World::build(&Recipe {
+        manifest_extra: format!("\n[system_prompt]\nhost = \"{other}\"\n"),
+        ..Recipe::default()
+    });
+    let shims = Shims::beside(&world);
+    shims
+        .agent(&world, "claude")
+        .assert()
+        .success()
+        .stderr(predicate::str::contains(format!(
+            "note: `[system_prompt] host` declares `{other}`"
+        )))
+        .stderr(predicate::str::contains(format!("runs on `{session}`")));
+    // It really launched: the shim recorded the slot flag.
+    assert!(
+        shims
+            .argv()
+            .contains(&"--append-system-prompt-file".to_owned()),
+        "{:?}",
+        shims.argv()
+    );
+}
+
 /// A `target:` selection is the product's platform, always resolved at build
 /// time: the selected row's bytes are in the lane and the others are gone
 /// entirely — never gated, and never an `installed:`-style residual.
@@ -487,8 +609,38 @@ fn prepare(world: &World, session_target: Option<&str>) -> serde_json::Value {
     if let Some(os) = session_target {
         command.arg("--session-target").arg(format!("os={os}"));
     }
+    document(&mut command)
+}
+
+/// The one JSON document a `--json` verb prints.
+fn document(command: &mut assert_cmd::Command) -> serde_json::Value {
     let stdout = command.assert().success().get_output().stdout.clone();
-    serde_json::from_slice(&stdout).expect("`prepare --json` emits one document")
+    serde_json::from_slice(&stdout).expect("a `--json` verb emits one document")
+}
+
+/// Whether a report's `warnings[]` carries a sentence containing `needle`.
+fn warned(report: &serde_json::Value, needle: &str) -> bool {
+    report["warnings"]
+        .as_array()
+        .expect("every report here carries `warnings[]`")
+        .iter()
+        .filter_map(serde_json::Value::as_str)
+        .any(|warning| warning.contains(needle))
+}
+
+/// The operating system this session really runs on, and one it certainly
+/// does not. Read once here so that a fixture is parameterised by the host
+/// while no expectation is: the suite asserts "a mismatch warns", never "on
+/// Linux it warns".
+fn session_and_other() -> (&'static str, &'static str) {
+    let session = vibe_core::manifest::TargetOs::current()
+        .expect("the suite runs on an operating system this build names")
+        .as_str();
+    let other = ["linux", "macos", "windows"]
+        .into_iter()
+        .find(|name| *name != session)
+        .expect("three names and one session: two remain");
+    (session, other)
 }
 
 /// Shims on `PATH` that record their argv — the only honest way to assert

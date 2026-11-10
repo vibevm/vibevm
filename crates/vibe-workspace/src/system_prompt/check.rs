@@ -33,7 +33,7 @@ specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-076#SYS-READ-ONLY-CH
 use std::path::{Path, PathBuf};
 
 use vibe_core::layout;
-use vibe_core::manifest::{HostChoice, Manifest};
+use vibe_core::manifest::{HostChoice, Manifest, TargetOs};
 use vibe_wire::generated::system_prompt_meta as wire;
 
 use crate::boot_artifacts;
@@ -180,6 +180,20 @@ pub struct CheckRequest<'a> {
     /// A stated model context window in bytes, against which the lane's size
     /// is reported. Absent reports the size and no verdict about it.
     pub model_window: Option<usize>,
+    /// The operating system **this session** runs on, as the caller observed
+    /// it. `None` is "not known", which warns about nothing.
+    ///
+    /// A seam rather than a direct `TargetOs::current()`, for the reason
+    /// [`TrackedPaths`] is one: the answer is *about* the caller's machine,
+    /// and a test must be able to state it instead of inheriting whatever
+    /// host happens to run the suite.
+    ///
+    /// **It decides no gate, ever.** It feeds exactly one sentence — the
+    /// host mismatch of [`host_mismatch_warning`](super::host_mismatch_warning)
+    /// — and an `os:` row is still selected only by an explicitly supplied
+    /// session target, because the generator's own operating system must
+    /// never become a session verdict (`#SYS-SESSION-TARGET`).
+    pub session_os: Option<TargetOs>,
     /// Which generated paths version control tracks.
     pub tracked: &'a dyn TrackedPaths,
 }
@@ -463,7 +477,7 @@ use inputs::{input_changes, recapture};
 
 #[path = "check/warnings.rs"]
 mod warnings;
-pub use warnings::prompt_warnings;
+pub use warnings::{host_mismatch_warning, prompt_warnings};
 
 #[cfg(test)]
 #[path = "check/tests.rs"]

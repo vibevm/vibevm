@@ -26,6 +26,9 @@ impl Fixture {
             gated: Vec::new(),
             unresolved: Vec::new(),
             cache_boundaries: vec![prefix.len()],
+            // The envelope is built from bands alone; an observation that
+            // changed no band cannot change what the adapter lays out.
+            warnings: Vec::new(),
         };
         for (name, body) in unconditional {
             std::fs::write(root.path().join(name), body).unwrap();

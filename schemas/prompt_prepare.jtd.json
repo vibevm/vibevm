@@ -1,10 +1,10 @@
 {
   "metadata": {
-    "description": "Version 1 request materials of vibe prompt prepare --json: bands P, U and G separately and in order, each member carrying the digest of the bytes observed for this request, plus the rows no supplied session target could decide and the recommended cache-breakpoint offsets. Materials and observations only: no credentials, no model choice and no provider envelope.",
+    "description": "Version 1 request materials of vibe prompt prepare --json: bands P, U and G separately and in order, each member carrying the digest of the bytes observed for this request, plus the rows no supplied session target could decide, the recommended cache-breakpoint offsets and the observations that change no band. Materials and observations only: no credentials, no model choice and no provider envelope.",
     "spec": { "implements": "spec://org.vibevm.core/vibevm/common/PROP-076#SYS-CONTINUATION-CACHEABLE" },
     "rustOptions": { "package": "vibe_wire::prompt_prepare" },
     "x-rust-type": "PromptPrepareReport",
-    "x-wire-order": ["protocol", "node", "session_target", "prefix", "unconditional", "gated", "unresolved", "cache_boundaries"]
+    "x-wire-order": ["protocol", "node", "session_target", "prefix", "unconditional", "gated", "unresolved", "cache_boundaries", "warnings"]
   },
   "properties": {
     "protocol": { "type": "string" },
@@ -13,7 +13,8 @@
     "unconditional": { "elements": { "ref": "band" }, "metadata": { "x-empty": "emit" } },
     "gated": { "elements": { "ref": "band" }, "metadata": { "x-empty": "emit" } },
     "unresolved": { "elements": { "ref": "unresolved" }, "metadata": { "x-empty": "emit" } },
-    "cache_boundaries": { "elements": { "type": "uint32" }, "metadata": { "x-empty": "emit" } }
+    "cache_boundaries": { "elements": { "type": "uint32" }, "metadata": { "x-empty": "emit" } },
+    "warnings": { "elements": { "type": "string" }, "metadata": { "x-empty": "emit", "description": "Observations that change no band — today the host mismatch of PROP-076 #SYS-HOST-AND-TARGET and nothing else. Never a refusal: the materials above are complete beside it." } }
   },
   "optionalProperties": {
     "session_target": { "type": "string", "metadata": { "x-default": null } }

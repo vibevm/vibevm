@@ -80,7 +80,7 @@ mod verify;
 pub use capture::{PrefixCapture, capture_node_prefix_inputs, capture_prefix_inputs};
 pub use check::{
     ArtifactFacts, CheckRequest, CheckVerdict, NotTracked, PromptCheck, TrackedPaths,
-    check_node_prompt, prompt_warnings,
+    check_node_prompt, host_mismatch_warning, prompt_warnings,
 };
 pub use compose::{
     ComposedPrefix, PrefixSettings, SEGMENT_FRAME, Segment, SegmentId, compose_prefix,

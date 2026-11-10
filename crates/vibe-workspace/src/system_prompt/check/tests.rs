@@ -10,7 +10,7 @@ use std::path::{Path, PathBuf};
 
 use tempfile::TempDir;
 use vibe_core::layout;
-use vibe_core::manifest::{LinkType, Manifest, SpecFormat};
+use vibe_core::manifest::{LinkType, Manifest, SpecFormat, TargetOs};
 
 use crate::WorkspaceError;
 use crate::boot::{BootBand, BootEntry, EffectiveBoot};
@@ -77,6 +77,14 @@ impl Node {
     /// Write the authored inputs and the committed `INDEX`/`STATIC`, then
     /// publish the three artifacts to disk exactly as the write path does.
     pub(crate) fn published(template: bool) -> Self {
+        Self::published_declaring(template, "")
+    }
+
+    /// The same node with extra `vibe.toml` text — a `[system_prompt]`
+    /// table, in practice — declared **before** publication, so the
+    /// artifacts are the composition of that declaration rather than stale
+    /// against it.
+    pub(crate) fn published_declaring(template: bool, extra: &str) -> Self {
         let dir = TempDir::new().unwrap();
         let boot = dir.path().join(layout::current_boot_dir());
         fs::create_dir_all(&boot).unwrap();
@@ -89,9 +97,9 @@ impl Node {
         }
         let node = Self {
             dir,
-            manifest: Manifest::parse_str(
-                "[project]\nname='demo'\ngroup='org.vibevm'\nversion='0.1.0'\n",
-            )
+            manifest: Manifest::parse_str(&format!(
+                "[project]\nname='demo'\ngroup='org.vibevm'\nversion='0.1.0'\n{extra}"
+            ))
             .unwrap(),
         };
         node.publish();
@@ -155,12 +163,20 @@ impl Node {
     }
 
     pub(crate) fn request(&self) -> CheckRequest<'_> {
+        self.request_from(None)
+    }
+
+    /// The same request with an explicit session operating system, so a
+    /// host-mismatch assertion states the session instead of inheriting
+    /// whichever machine runs the suite.
+    pub(crate) fn request_from(&self, session_os: Option<TargetOs>) -> CheckRequest<'_> {
         CheckRequest {
             node_rel: ".",
             node_dir: self.dir.path(),
             workspace_root: self.dir.path(),
             manifest: &self.manifest,
             model_window: None,
+            session_os,
             tracked: &NotTracked,
         }
     }
@@ -344,4 +360,67 @@ fn the_warnings_report_the_lane_and_never_a_verdict_about_it() {
     );
     // A warning is never a verdict: the prefix is still equal.
     assert_eq!(answer.verdict, CheckVerdict::Equal);
+}
+
+/// A session whose own OS differs from a **fixed** `host` is warned about
+/// and served: the sentence names both operating systems, says the prefix is
+/// served anyway, and the verdict stays `Equal` (`#SYS-HOST-AND-TARGET`).
+///
+/// The session OS is **stated**, not read off the machine running the suite,
+/// so all three legs below mean the same thing on every host.
+#[test]
+fn a_fixed_host_warns_about_a_different_session_os_and_never_refuses() {
+    let node = Node::published_declaring(true, "[system_prompt]\nhost = \"linux\"\n");
+    let request = node.request_from(Some(TargetOs::Windows));
+    let answer = check_node_prompt(&request).unwrap();
+    assert_eq!(answer.verdict, CheckVerdict::Equal);
+    let warnings = prompt_warnings(&request, &answer).unwrap();
+    let mismatch = warnings
+        .iter()
+        .find(|warning| warning.contains("`[system_prompt] host`"))
+        .unwrap_or_else(|| panic!("a host-mismatch warning: {warnings:?}"));
+    assert!(mismatch.contains("declares `linux`"), "{mismatch}");
+    assert!(mismatch.contains("runs on `windows`"), "{mismatch}");
+    assert!(mismatch.contains("rather than refused"), "{mismatch}");
+}
+
+/// The two silent cases, each for its own reason: an equal pair is the
+/// expected state, and `"portable"` carries no host decision at all — so a
+/// portable project never sees this sentence, whatever machine reads it.
+#[test]
+fn a_matching_session_and_a_portable_host_are_both_silent() {
+    let fixed = Node::published_declaring(true, "[system_prompt]\nhost = \"linux\"\n");
+    let portable = Node::published(true);
+    for (node, session, case) in [
+        (&fixed, TargetOs::Linux, "a fixed host the session matches"),
+        (&portable, TargetOs::Windows, "an absent host"),
+        (&portable, TargetOs::Linux, "an absent host, session equal"),
+    ] {
+        let request = node.request_from(Some(session));
+        let answer = check_node_prompt(&request).unwrap();
+        let warnings = prompt_warnings(&request, &answer).unwrap();
+        assert!(
+            !warnings
+                .iter()
+                .any(|warning| warning.contains("`[system_prompt] host`")),
+            "{case}: {warnings:?}"
+        );
+    }
+}
+
+/// A session OS this build does not recognise says nothing. Inventing a
+/// verdict about an unknown platform is the mistake `#SYS-SESSION-TARGET`
+/// forbids on the gate side, and it would be no better here.
+#[test]
+fn an_unknown_session_os_warns_about_nothing() {
+    let node = Node::published_declaring(true, "[system_prompt]\nhost = \"linux\"\n");
+    let request = node.request_from(None);
+    let answer = check_node_prompt(&request).unwrap();
+    let warnings = prompt_warnings(&request, &answer).unwrap();
+    assert!(
+        !warnings
+            .iter()
+            .any(|warning| warning.contains("`[system_prompt] host`")),
+        "{warnings:?}"
+    );
 }

@@ -79,6 +79,13 @@ impl Check for SystemPromptCheck {
             // The lane's size against a stated context window is a
             // `vibe prompt check` observation, not a project defect.
             model_window: None,
+            // So is a host mismatch, and more sharply: it is a fact about
+            // the machine running the command, which would be a finding
+            // this project's other contributors do not share. PROP-076
+            // `#SYS-HOST-AND-TARGET` names `vibe prompt check` and `vibe
+            // prompt prepare` as the two surfaces that say it, and this
+            // cell reports project defects (`SP-FMT-008`).
+            session_os: None,
             tracked: &tracked,
         };
         let answer = match check_node_prompt(&request) {

@@ -118,3 +118,39 @@ fn a_gated_row_with_no_supplied_target_is_unresolved_and_never_the_host() {
     let dropped = prepare_request(&request, &answer, Some(TargetOs::Linux)).unwrap();
     assert!(dropped.gated.is_empty() && dropped.unresolved.is_empty());
 }
+
+/// A host mismatch is one of `prepare`'s observations, never a refusal: the
+/// bands come back whole beside it (`#SYS-HOST-AND-TARGET`). The session OS
+/// is stated rather than detected, so the three legs mean the same on every
+/// machine.
+#[test]
+fn a_host_mismatch_is_an_observation_and_the_bands_come_back_whole() {
+    let fixed = Node::published_declaring(true, "[system_prompt]\nhost = \"macos\"\n");
+    let request = fixed.request_from(Some(TargetOs::Linux));
+    let answer = check_node_prompt(&request).unwrap();
+    let prepared = prepare_request(&request, &answer, None).unwrap();
+    assert_eq!(prepared.warnings.len(), 1, "{:?}", prepared.warnings);
+    assert!(
+        prepared.warnings[0].contains("declares `macos`")
+            && prepared.warnings[0].contains("runs on `linux`"),
+        "{:?}",
+        prepared.warnings
+    );
+    // The materials are complete: a warning changes no band.
+    let silent =
+        prepare_request(&fixed.request_from(Some(TargetOs::Macos)), &answer, None).unwrap();
+    assert!(silent.warnings.is_empty(), "{:?}", silent.warnings);
+    assert_eq!(prepared.prefix, silent.prefix);
+    assert_eq!(prepared.unconditional, silent.unconditional);
+
+    // And a portable node is silent whatever the session is.
+    let portable = Node::published(true);
+    let request = portable.request_from(Some(TargetOs::Windows));
+    let answer = check_node_prompt(&request).unwrap();
+    assert!(
+        prepare_request(&request, &answer, None)
+            .unwrap()
+            .warnings
+            .is_empty()
+    );
+}

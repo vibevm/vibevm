@@ -21,7 +21,13 @@ pub(crate) fn run(
 ) -> Result<()> {
     let target = session_target.map(parse_target).transpose()?;
     let tracked = selected.tracked();
-    let request = selected.request(&tracked, None);
+    let mut request = selected.request(&tracked, None);
+    // `--session-target os=<name>` is this verb's explicit statement of the
+    // session's own operating system (`#SYS-SESSION-TARGET`), so when it is
+    // supplied it **is** the session OS the host mismatch is measured
+    // against; without one, this process's host stands. It still decides
+    // the gated band on its own — `session_os` decides nothing.
+    request.session_os = target.or(request.session_os);
     let answer = check_node_prompt(&request)?;
     let prepared = prepare_request(&request, &answer, target)?;
     let report = wire::PromptPrepareReport {
@@ -45,6 +51,7 @@ pub(crate) fn run(
             .iter()
             .map(|offset| u32::try_from(*offset).unwrap_or(u32::MAX))
             .collect(),
+        warnings: prepared.warnings.clone(),
     };
     if ctx.is_json() {
         return ctx.emit_json(&report);
@@ -73,6 +80,12 @@ pub(crate) fn run(
     }
     for row in &prepared.unresolved {
         println!("  ? {} ({}) — {}", row.path, row.when, row.reason);
+    }
+    // `note:`, the same word `check` uses for the same genre of line: an
+    // observation that changed no material above. A host mismatch never
+    // makes this a failure, so the exit status is untouched.
+    for warning in &prepared.warnings {
+        println!("  note: {warning}");
     }
     println!(
         "  cache breakpoints at {}",
