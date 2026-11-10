@@ -941,6 +941,30 @@ rollback path needs a new arm per role; if it does, the phase is L.
 
 **Parallel.** Needs P3.
 
+**Partially delivered 2026-11-10 — the enforcement and the roles, not the
+transaction.** Two of this phase's items landed whole, because neither
+touches the publication transaction and both are testable on their own:
+the **layout roles** for the third artifact and for the ignore file
+(`layout::AGENT_LANE_MD`, `BOOT_GITIGNORE`, their accessors, and
+`current_boot_prompt_artifacts()` as the one list of the three — seven
+generated paths now, eight reserved), and the ***`vibe check` error* when
+git tracks a generated prefix**, which this phase's re-plan calls "the one
+place the decision is enforced rather than documented". Detail under
+`SP-FMT-102`.
+
+**Outstanding, and it is the bulk of the phase.** The three
+`StageRole`s / production targets and their journal members; the schema's
+additive entries and their codegen; `ArtifactWrite`'s new payloads; staging,
+roll-forward and the **five by-name journal enumerations** spike S2 found
+that the compiler never asks about (`transaction.rs::roll_forward_core` and
+`::rollback_all`, `transaction/durable_io.rs::discard_assets` and
+`::preflight_journal_paths`, and `boot_artifacts/inverse.rs`'s
+`[INDEX_FILE, STATIC_FILE, STATIC_XML_FILE]` undo image); the `.gitignore`
+writer inside that same commit; the composition hook in both publication
+seams; the removal case; and the interruption matrix over five — now eight —
+roles. S2's inventory is unchanged by the two items above and remains the
+starting map.
+
 ### P5 — operations: install-time generation and `vibe prompt` — **L**
 
 **Goal.** Generation happens inside the paths that already publish boot

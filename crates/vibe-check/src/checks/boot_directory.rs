@@ -18,6 +18,8 @@ use vibe_core::manifest::Manifest;
 
 use crate::{Check, CheckId, CheckOptions, CheckReport};
 
+mod tracked_prompt;
+
 /// The [`CheckId::BootDirectory`] cell.
 #[cell(seam = "Check", variant = "boot-directory")]
 pub struct BootDirectoryCheck;
@@ -41,6 +43,7 @@ impl Check for BootDirectoryCheck {
     }
 
     fn run(&self, project_root: &Path, _opts: &CheckOptions, report: &mut CheckReport) {
+        tracked_prompt::report_tracked_prompt_artifacts(project_root, report);
         let boot_rel = vibe_core::layout::current_boot_dir();
         // Message-facing label with `/` separators (a joined PathBuf
         // renders `\` on Windows; the finding text has always been

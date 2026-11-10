@@ -804,12 +804,54 @@ hand-edited. `vibe check` on this worktree reports the **2 pre-existing
 errors** that absent slot causes (`boot_graph_integrity`,
 `visibility_hygiene`) and 55 warnings, 15 of them this phase's.
 
-### P4 not started
+## 2026-11-10 — P4, partial: the enforcement and the roles, not the transaction
 
-P4 (publication of `SYSTEM.md`, the sidecar and `AGENT-LANE.md` through the
-boot transaction, the vibe-written `.gitignore`, and the `vibe check` error
-when git tracks a generated prefix) was not begun. The worker's standing
-constraint is to stop when the build filesystem falls under 12 GB free; it
-stood at 5.4 GB after the `vibe-cli` build, with concurrent workers on the
-same disk, and P4's own gates need a JTD regeneration and a second target
-triple. The design work P4 depends on is unchanged by this phase.
+Two of P4's items landed whole; the transaction half did not start. The split
+is not arbitrary: these two touch no journal, no staging and no rollback, so
+each is complete and tested on its own, while everything else in the phase is
+one atomic change to the publication transaction and is worth nothing
+half-done.
+
+**What landed.** `layout.rs` gained `AGENT_LANE_MD`, `BOOT_GITIGNORE`, their
+accessors, and `current_boot_prompt_artifacts()` — **one list of the three
+artifacts**, because every rule that applies to one applies to all three
+(one generation, one ignore file, removed together, reported together), and a
+caller that enumerates two of them is a caller that one day forgets the
+third. `generated_boot_paths()` is seven entries now and
+`reserved_boot_paths()` eight; as in P1, no existing caller of either public
+predicate needed an edit. And `vibe check` is an **error** when git tracks
+one of the three, in `checks/boot_directory/tracked_prompt.rs` — the one
+place `#SYS-ARTIFACTS-NOT-TRACKED` is enforced rather than documented.
+
+**Three decisions inside that check.** It **asks git**
+(`git ls-files --error-unmatch`) rather than parsing the index: a second
+reader of git's index would be a second answer to the question. It is
+**silent** when git is absent or the directory is no repository, because
+inventing an answer about a developer's working tree is worse than saying
+nothing — the test asserts both halves, and skips the tracked half rather
+than failing where git is unavailable. And the message says in the same
+breath why `STATIC.*` and `INDEX.md` keep the opposite rule, because a reader
+meeting this error is exactly the reader about to ask.
+
+**Two files were split to stay inside the 600-line budget** — the new check
+out of `boot_directory.rs`, and `layout.rs`'s own oracles into
+`layout/tests.rs`. `cargo xtask conform check` found them (`file-length`, 2
+new) before the commit, which is the budget working as intended rather than
+a surprise.
+
+**What remains, and it is the bulk of the phase.** The three `StageRole`s and
+production targets, the journal's additive members and their codegen,
+`ArtifactWrite`'s payloads, staging, roll-forward, the `.gitignore` writer
+inside that same commit, the composition hook in both publication seams, the
+removal case, and the interruption matrix over the enlarged role set —
+including the **five by-name journal enumerations spike S2 found that the
+compiler never asks about**, which is why S2 called this phase's risk
+silence rather than volume. S2's inventory is untouched by the two items
+above and remains the starting map.
+
+**Why it stopped there.** The worker's standing constraint is to stop when
+the build filesystem falls under 12 GB free; it reached 5.4 GB after the
+`vibe-cli` build, with concurrent workers on the same disk. It recovered to
+43 GB afterwards, which is what let these two items and the full gate set
+run, but the remaining work is a single large atomic change and was not
+worth starting against an unstable budget and a part-spent context.
