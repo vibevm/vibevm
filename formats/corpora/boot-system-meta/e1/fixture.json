@@ -1,0 +1,70 @@
+{
+  "protocol": "vibe-system-prompt/1",
+  "layer": "project",
+  "node": ".",
+  "node_id": "org.vibevm.core/demo",
+  "recipe": 1,
+  "entrypoint": "AGENTS.md",
+  "lane": "static-xml",
+  "lane_form": "verbatim",
+  "host": "portable",
+  "target": [
+    "windows",
+    "macos",
+    "linux"
+  ],
+  "inputs": [
+    {
+      "role": "template",
+      "path": "vibevm/vibespecs/boot/SYSTEM-TEMPLATE.md",
+      "sha256": "cebfc5d5cd7432b0efa9731c6d36ee3f1537a0c9d23fcd64d58f5696d3223067",
+      "len": 11
+    },
+    {
+      "role": "entrypoint",
+      "path": "AGENTS.md",
+      "sha256": "e10e1bb1f89a9458382992586dbb78b62104b9c03fabbd272a566bfa9bb14327",
+      "len": 57
+    },
+    {
+      "role": "lane",
+      "path": "vibevm/vibespecs/boot/STATIC.xml",
+      "sha256": "6056c0a5d53daea3941c930cd70656a4a8a9e8b7309f6c37737140e739673a52",
+      "len": 18
+    }
+  ],
+  "prefix_sha256": "4ad9f8cb9cda5f267aaed1ae089c12f65689d1dedbb66a563a04b66f0aab2349",
+  "prefix_len": 1211,
+  "segments": [
+    {
+      "id": "project.template",
+      "offset": 46,
+      "len": 11,
+      "cache_boundary": false
+    },
+    {
+      "id": "project.entrypoint",
+      "offset": 105,
+      "len": 1046,
+      "cache_boundary": true
+    },
+    {
+      "id": "project.lane",
+      "offset": 1193,
+      "len": 18,
+      "cache_boundary": true
+    }
+  ],
+  "index_sha256": "da93db77ebb07776dbd095f79fe28cbf4d42340c27bc33547ed7eeb2d3c93ea1",
+  "continuation": [
+    {
+      "path": "vibevm/vibespecs/boot/00-core.xml",
+      "band": "unconditional"
+    },
+    {
+      "path": "vibevm/vibespecs/boot/70-win.xml",
+      "band": "gated",
+      "when": "os:windows"
+    }
+  ]
+}

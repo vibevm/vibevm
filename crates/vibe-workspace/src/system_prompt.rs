@@ -40,17 +40,58 @@ specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-076#SYS-CAPTURE-REUS
 
 use vibe_core::manifest::SpecFormat;
 
+use crate::WorkspaceError;
+
 #[path = "system_prompt/capture.rs"]
 mod capture;
+#[path = "system_prompt/compose.rs"]
+mod compose;
+#[path = "system_prompt/contract.rs"]
+mod contract;
+#[cfg(test)]
+#[path = "system_prompt/host_repo.rs"]
+mod host_repo;
+#[path = "system_prompt/lane.rs"]
+mod lane;
+#[path = "system_prompt/markers.rs"]
+mod markers;
+#[path = "system_prompt/meta.rs"]
+mod meta;
 #[path = "system_prompt/plan.rs"]
 mod plan;
 #[path = "system_prompt/reader.rs"]
 mod reader;
+#[path = "system_prompt/verify.rs"]
+mod verify;
 
 pub use capture::{PrefixCapture, capture_node_prefix_inputs, capture_prefix_inputs};
+pub use compose::{
+    ComposedPrefix, PrefixSettings, SEGMENT_FRAME, Segment, SegmentId, compose_prefix,
+};
+pub use contract::{CURRENT_RECIPE, KNOWN_RECIPES, SuppliedSource, render_contract};
+pub use lane::{ComposedLane, LaneSegment, LaneSource, compose_agent_lane};
+pub use markers::{
+    HASH12_LEN, LANE_BEGIN, LANE_END, LaneMarker, MarkerKind, VerifiedSegment, hash12, marker_line,
+    parse_marker_line, sha256_hex, verify_lane_markers,
+};
+pub use meta::{SIDECAR_PROTOCOL, SidecarFacts, compose_sidecar, render_sidecar_bytes};
 pub use plan::{ContinuationBand, ContinuationPlan, ContinuationRow};
 pub use reader::PrefixReader;
 pub(crate) use reader::bound_reader;
+pub use verify::{
+    ImportInertness, ImportSite, refuse_managed_block_markers, refuse_marker_shaped_lines,
+    verify_no_recursion,
+};
+
+/// Every refusal composition can raise names what it was composing and why.
+/// Composition writes nothing, so a refusal leaves every published artifact
+/// exactly as it was.
+pub(crate) fn compose_error(what: &str, reason: String) -> WorkspaceError {
+    WorkspaceError::SystemPromptCompose {
+        what: what.to_owned(),
+        reason,
+    }
+}
 
 /// Which role an input plays in the prefix. The three are kept apart because
 /// only one of them is authored by the user, and because the sidecar and the

@@ -1,0 +1,271 @@
+{
+  "metadata": {
+    "description": "Version 1 of the generated sidecar beside the cache-stable system-prompt prefix: the selected node, the declared tuning, the ordered input witnesses with the SHA-256 of the bytes as observed, the prefix digest and its segment map, and the continuation plan a runner executes per request. It is a pure function of its inputs, so it carries no timestamp, no absolute path, no host observation and no content digest for any continuation row.",
+    "spec": {
+      "implements": "spec://org.vibevm.core/vibevm/common/PROP-076#SYS-SIDECAR"
+    },
+    "rustOptions": {
+      "package": "vibe_wire::system_prompt_meta"
+    },
+    "x-rust-type": "SystemPromptMeta",
+    "x-wire-order": [
+      "protocol",
+      "layer",
+      "node",
+      "node_id",
+      "recipe",
+      "entrypoint",
+      "lane",
+      "lane_form",
+      "host",
+      "target",
+      "inputs",
+      "prefix_sha256",
+      "prefix_len",
+      "segments",
+      "index_sha256",
+      "continuation"
+    ]
+  },
+  "properties": {
+    "protocol": {
+      "type": "string"
+    },
+    "layer": {
+      "ref": "layer"
+    },
+    "node": {
+      "type": "string",
+      "metadata": {
+        "description": "The selected node's workspace-relative path, `.` for the root. Relative on purpose: an absolute checkout path would make the sidecar differ by machine."
+      }
+    },
+    "node_id": {
+      "type": "string",
+      "metadata": {
+        "description": "The node's declared identity, as the lane segment markers spell it."
+      }
+    },
+    "recipe": {
+      "type": "uint32"
+    },
+    "lane": {
+      "ref": "lane_spelling"
+    },
+    "lane_form": {
+      "ref": "lane_form"
+    },
+    "host": {
+      "ref": "host"
+    },
+    "target": {
+      "elements": {
+        "ref": "os"
+      },
+      "metadata": {
+        "x-empty": "emit",
+        "description": "The operating systems the product is for, in the author's own order. Every one when the manifest declares none."
+      }
+    },
+    "inputs": {
+      "elements": {
+        "ref": "input"
+      },
+      "metadata": {
+        "x-empty": "emit",
+        "description": "The prefix's inputs in composition order, each with the digest of exactly the bytes observed."
+      }
+    },
+    "prefix_sha256": {
+      "type": "string"
+    },
+    "prefix_len": {
+      "type": "uint32"
+    },
+    "segments": {
+      "elements": {
+        "ref": "segment"
+      },
+      "metadata": {
+        "x-empty": "emit"
+      }
+    },
+    "continuation": {
+      "elements": {
+        "ref": "continuation_row"
+      },
+      "metadata": {
+        "x-empty": "emit",
+        "description": "The ordered rows of the unconditional and gated bands. Identity, order and conditions are fixed here; the bytes are read and witnessed per request."
+      }
+    }
+  },
+  "optionalProperties": {
+    "entrypoint": {
+      "type": "string",
+      "metadata": {
+        "x-default": null,
+        "description": "The selected entrypoint's node-relative path. Absent means the node declared `entrypoint = false`, so the prefix has no entrypoint segment."
+      }
+    },
+    "index_sha256": {
+      "type": "string",
+      "metadata": {
+        "x-default": null,
+        "description": "SHA-256 of the generated INDEX.md bytes that fix the continuation plan's identity and order. Absent when this generation published no INDEX."
+      }
+    }
+  },
+  "definitions": {
+    "layer": {
+      "enum": [
+        "project"
+      ],
+      "metadata": {
+        "x-vocabulary": "closed",
+        "description": "Which layer of PROP-074 #LAYERED-PREFIX these bytes are. Present from version 1 although no other layer exists yet."
+      }
+    },
+    "lane_spelling": {
+      "enum": [
+        "static-md",
+        "static-xml",
+        "none"
+      ],
+      "metadata": {
+        "x-vocabulary": "closed",
+        "description": "Which compiled lane the node publishes. `none` is a node with no static contributions, which is a normal case and not an error."
+      }
+    },
+    "lane_form": {
+      "enum": [
+        "verbatim"
+      ],
+      "metadata": {
+        "x-vocabulary": "closed"
+      }
+    },
+    "host": {
+      "enum": [
+        "portable",
+        "linux",
+        "macos",
+        "windows"
+      ],
+      "metadata": {
+        "x-vocabulary": "closed",
+        "description": "The declared host of PROP-076 #SYS-HOST-AND-TARGET, read from the node's own manifest. Never the generating machine's operating system."
+      }
+    },
+    "os": {
+      "enum": [
+        "linux",
+        "macos",
+        "windows"
+      ],
+      "metadata": {
+        "x-vocabulary": "closed"
+      }
+    },
+    "role": {
+      "enum": [
+        "template",
+        "entrypoint",
+        "lane"
+      ],
+      "metadata": {
+        "x-vocabulary": "closed"
+      }
+    },
+    "band": {
+      "enum": [
+        "unconditional",
+        "gated"
+      ],
+      "metadata": {
+        "x-vocabulary": "closed"
+      }
+    },
+    "input": {
+      "metadata": {
+        "x-wire-order": [
+          "role",
+          "path",
+          "sha256",
+          "len"
+        ]
+      },
+      "properties": {
+        "role": {
+          "ref": "role"
+        },
+        "path": {
+          "type": "string"
+        },
+        "sha256": {
+          "type": "string"
+        },
+        "len": {
+          "type": "uint32"
+        }
+      }
+    },
+    "segment": {
+      "metadata": {
+        "x-wire-order": [
+          "id",
+          "offset",
+          "len",
+          "cache_boundary"
+        ],
+        "description": "One segment's body inside the prefix bytes: the offset and length slice exactly that body, framing excluded."
+      },
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "offset": {
+          "type": "uint32"
+        },
+        "len": {
+          "type": "uint32"
+        },
+        "cache_boundary": {
+          "type": "boolean",
+          "metadata": {
+            "description": "Whether the end of this segment is a recommended cache breakpoint."
+          }
+        }
+      }
+    },
+    "continuation_row": {
+      "metadata": {
+        "x-wire-order": [
+          "path",
+          "band",
+          "when"
+        ]
+      },
+      "properties": {
+        "path": {
+          "type": "string",
+          "metadata": {
+            "description": "The path exactly as the generated INDEX.md row spells it, which is workspace-root-relative and is how a reading agent resolves it."
+          }
+        },
+        "band": {
+          "ref": "band"
+        }
+      },
+      "optionalProperties": {
+        "when": {
+          "type": "string",
+          "metadata": {
+            "x-default": null,
+            "description": "A gated row's condition verbatim. The runner, not the generator, decides it."
+          }
+        }
+      }
+    }
+  }
+}

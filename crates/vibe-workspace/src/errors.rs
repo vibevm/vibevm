@@ -382,6 +382,19 @@ pub enum WorkspaceError {
     )]
     SystemPromptCapture { path: PathBuf, reason: String },
 
+    /// Composition of a system-prompt artifact refused: a recipe this build
+    /// cannot render, a node identity or segment path a marker line cannot
+    /// carry, a managed block that survived the entrypoint substitution, a
+    /// marker-shaped line inside a segment's own bytes, or an `@` import
+    /// line in the composer's own generated text. Composition writes
+    /// nothing, so a refusal here leaves every published artifact as it was.
+    #[error(
+        "cannot compose the system prompt ({what}): {reason} \
+         (violates spec://org.vibevm.core/vibevm/common/PROP-076#SYS-NO-RECURSION; \
+         fix: repair the input the reason names, then re-run)"
+    )]
+    SystemPromptCompose { what: String, reason: String },
+
     /// A package's install hook (PROP-020) failed: no usable interpreter, a
     /// spawn error, an untrusted run, or a `pre-install` non-zero exit. The
     /// wrapped hook error already carries its own Class-F `(violates …;

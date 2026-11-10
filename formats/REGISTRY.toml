@@ -1207,6 +1207,58 @@ foreign_parsers = "none"
 corpus = "formats/corpora/boot-artifact-transaction/e1"
 sunset = "none"
 
+# ── The cache-stable system-prompt prefix, PROP-076 ────────────────────────
+# Four paths under the selected node's own `vibevm/vibespecs/boot/`, in three
+# roles. `SYSTEM-TEMPLATE.md` is authored by the user and never generated;
+# its presence is the whole opt-in. `SYSTEM.md` is the generated API prefix,
+# `AGENT-LANE.md` the generated lane a harness's own instruction slot takes,
+# and `SYSTEM.meta.json` the witnessed sidecar of both. The three generated
+# paths are produced and never committed (`#SYS-ARTIFACTS-NOT-TRACKED`).
+
+# The one input the user writes: literal permanent text, no language. No
+# schema, because there is no structure to validate — and `many` foreign
+# parsers, because a human writes it and any editor may read it.
+[format.boot-system-template]
+epoch = 1
+schema = "none"
+recoverable = true
+foreign_parsers = "many"
+corpus = "none"
+sunset = "none"
+
+# The prefix bytes: the template, the entrypoint export, the compiled static
+# lane, framed and deterministic. Not recoverable — it is a witnessed
+# generation over several inputs, not the projection of a single source.
+[format.boot-system-prompt]
+epoch = 1
+schema = "none"
+recoverable = false
+foreign_parsers = "many"
+corpus = "none"
+sunset = "none"
+
+# The lane alone, each file wrapped in the marker pair of `#SYS-LANE-MARKERS`,
+# recomposed at every `vibe agent` launch from the files then on disk.
+[format.boot-agent-lane]
+epoch = 1
+schema = "none"
+recoverable = false
+foreign_parsers = "many"
+corpus = "none"
+sunset = "none"
+
+# The sidecar, `vibe-system-prompt/1`. Read by vibe and by a calling program,
+# never sent to a model; `deny` because an unknown member in our own witness
+# is a disagreement, not an extension.
+[format.boot-system-meta]
+epoch = 1
+schema = "schemas/system_prompt_meta.jtd.json"
+recoverable = false
+foreign_parsers = "ours"
+unknown_fields = "deny"
+corpus = "formats/corpora/boot-system-meta/e1"
+sunset = "none"
+
 # ── MCP machine-JSON reports (1 JTD), PROP-054 §4.6 / R7.4 ──────────────────
 # The MCP `lifecycle_tasks` tool's durable handoff report: the same
 # validated state/outbox facts the CLI renders, restated as one generated

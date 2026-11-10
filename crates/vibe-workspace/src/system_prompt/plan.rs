@@ -17,7 +17,7 @@
 
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-076#SYS-BANDS");
 
-use vibe_core::manifest::WhenCondition;
+use vibe_core::manifest::{HostChoice, WhenCondition};
 
 use crate::boot::EffectiveBoot;
 
@@ -104,6 +104,52 @@ impl ContinuationPlan {
                         None => ContinuationBand::Unconditional,
                     },
                 })
+                .collect(),
+        }
+    }
+
+    /// Resolve `os:` rows against the node's declared `host`.
+    ///
+    /// `portable` — the default — changes nothing: the rows stay in band G
+    /// and are evaluated per session against an explicitly supplied session
+    /// target. A **fixed** host is a project declaration read from the
+    /// node's own manifest, so it is resolved here, at build time: a
+    /// matching row becomes an ordinary band-U row and a non-matching one is
+    /// dropped entirely, which is what leaves a fixed-host prefix with an
+    /// empty band G and lets `prepare` need no session target for it
+    /// (`#SYS-HOST-AND-TARGET`).
+    ///
+    /// Nothing is detected. The OS name comes from the manifest exactly like
+    /// `entrypoint` or `recipe`, so the artifact stays a pure function of
+    /// its declared inputs and `#SYS-NO-VOLATILE` holds unchanged.
+    ///
+    /// ```
+    /// use vibe_core::manifest::{HostChoice, TargetOs};
+    /// use vibe_workspace::system_prompt::ContinuationPlan;
+    ///
+    /// let plan = ContinuationPlan::default();
+    /// // An empty plan resolves to an empty plan under either host.
+    /// assert_eq!(plan.resolve_host(HostChoice::Portable), plan);
+    /// assert_eq!(plan.resolve_host(HostChoice::Fixed(TargetOs::Linux)), plan);
+    /// ```
+    pub fn resolve_host(&self, host: HostChoice) -> Self {
+        let Some(fixed) = host.fixed() else {
+            return self.clone();
+        };
+        Self {
+            rows: self
+                .rows
+                .iter()
+                .filter_map(
+                    |row| match row.band.when().and_then(WhenCondition::session_os) {
+                        None => Some(row.clone()),
+                        Some(os) if os == fixed => Some(ContinuationRow {
+                            path: row.path.clone(),
+                            band: ContinuationBand::Unconditional,
+                        }),
+                        Some(_) => None,
+                    },
+                )
                 .collect(),
         }
     }

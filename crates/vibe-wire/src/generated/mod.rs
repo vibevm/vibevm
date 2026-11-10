@@ -111,6 +111,7 @@ pub mod self_source_report;
 pub mod shared;
 pub mod slot_record;
 pub mod standalone_skill_receipt;
+pub mod system_prompt_meta;
 pub mod transfer_event;
 pub mod transfer_record;
 pub mod transfers_listing;
