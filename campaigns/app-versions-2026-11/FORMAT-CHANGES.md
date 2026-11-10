@@ -609,7 +609,7 @@ Status: **not delivered.** Design authority:
 
 ## AV-FMT-031 — `[[extension]]` at a `slot:` point gains `title`, `when`/`unless`, `needs`, `optional` (Phase 7e)
 
-Status: **not delivered.** Design authority:
+Status: **delivered** 2026-11-10, epoch unchanged (`1 → 1`). Design authority:
 `spec://org.vibevm.core/vibevm/common/PROP-065#ordinary-reach` and the four facts beside it;
 `spec://org.vibevm.core/vibevm/common/PROP-054#SLOT-CONTRIBUTION-JUDGMENT`.
 
@@ -619,9 +619,17 @@ Status: **not delivered.** Design authority:
 - Fields refused **by name** on a `slot:` contribution rather than ignored: `requires` (the application dependencies of PROP-065 `#app-dependencies`), `phase` (the point already is the moment), `result`, and any template variable of `$out`, `$sources`, `$app_root` or `$app_bin`.
 - Failure keeps PROP-020's law: a failing `slot:pre-install` aborts that package's install and rolls the slot back; a failing `slot:post-install` leaves it installed and flagged. There is no `--resume` and no `--from-step` on this plane; the retry is `vibe reinstall <group>/<name>`.
 
+**As built**, with the three places the delivery is narrower or wider than the record above:
+
+1. **One table is one conjunction.** `when` / `unless` take a single table whose every key is a condition — all must hold, none may hold — rather than PROP-065 `#conditions`' array of tables. The conjunction the array existed for is expressible in the one table the `when` anchor already carries (`when = { command_present = "cargo", offline = false }`), so no array spelling is admitted and none is needed. A key outside the vocabulary is a refusal naming the key.
+2. **The four fields travel as one optional carrier** (`judgment`) on `ExtensionDecl`, so a row that declares none of them keeps `None` and every manifest written before this grammar serialises byte-identically — the record's own promise, now structural. At a `slot:` point `when` is this vocabulary; at every other point it stays the opaque pre-selection guard it has always been, and the two are never both populated. The four are refused by name at any non-`slot:` point.
+3. **`feature`, `param` and `param_equals` answer `false` today**, and the plan prints the condition that decided. PROP-069 `#PACKAGE-ADMISSION` still refuses to install any package that declares `[configuration]` at all (`crates/vibe-install/src/configuration_admission.rs`), so the selected set is empty by construction; the evaluator takes it through a closure rather than a branch, so lifting that interim refusal reads the real snapshot with no change on this plane.
+
+**Plus one field the record did not foresee**, because the owner decided it after this record was written: the trust an untrusted dependency's contributions need before any of them runs, `spec://org.vibevm.core/vibevm/common/PROP-065#ordinary-trust`. No manifest field and no new flag: the trusted set is `agents.toml`'s `trusted_groups` unioned with PROP-020's default hook allow-list, the per-run escape is the existing `--assume-yes`, and plain `[hooks]` keeps the behaviour it measurably has (unasked — the lifecycle path consults no `HookPolicy`), so no published package changes behaviour.
+
 ## AV-FMT-032 — `vibe-install-steps/1`, the ordinary package's step evidence, and `vibe app describe`'s adapters (Phase 7e/7b)
 
-Status: **not delivered.** Design authority:
+Status: **not delivered.** The `vibe-install-steps/1` half is P7e's and was deliberately not taken in P7e's first pass: the judgment, the two refusals and the trust gate land first because everything else depends on their verdicts, and the evidence record is a new registered format with its own schema, registry row, generated reader and corpus. The per-contribution outcome rows it would serialise already exist in memory as `SlotLifecycleReport` (now carrying `skip` with its deciding condition), so what remains is the format, not the measurement. The `vibe app describe` half is P7b's throughout. Design authority:
 `spec://org.vibevm.core/vibevm/common/PROP-065#ordinary-plan`;
 `spec://org.vibevm.core/vibevm/common/PROP-075#ECOSYSTEM-ADAPTER`.
 

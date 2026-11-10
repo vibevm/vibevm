@@ -1106,3 +1106,137 @@ one message retained deliberately: a `keyed` row's file-name refusals name
 because such a row has no `names` array an author could have written. That
 keeps every pre-existing `tool-versions` refusal message exactly as it was, and
 the two existing refusal tests pass unchanged.
+
+## 2026-11-10 — phase P7e implemented (judgment, trust, B-188); the evidence record deferred
+
+`AV-FMT-031` delivered with three recorded narrowings and one field the
+record did not foresee; `AV-FMT-032` **not** delivered and the reason is
+written into it. Facts moved in PROP-065: `#ordinary-reach`,
+`#ordinary-grammar` and the new `#ordinary-trust` to `impl/done`,
+`#ordinary-plan` and `#ordinary-consumer` to `impl/work`, `#ordinary-failure`
+left at `spec/plan`. PROP-054 `#SLOT-CONTRIBUTION-JUDGMENT` to `impl/done`.
+The spec XML was validated by the PROP-045 projector, as P1's entry records
+it must be.
+
+**The owner's decision 3 was specified before the code, then corrected by the
+code.** `#ordinary-trust` was written first, claiming that leaving `[hooks]`
+alone costs nothing because PROP-020 `#trust-gate` and the new gate are
+behaviourally identical. Measuring before implementing showed that is false,
+and it is the whole compatibility argument, so the fact was rewritten and the
+correction committed on its own. What the code does: on the canonical install
+path `[hooks]` is lowered to a synthetic `slot:` script contribution and run
+through the lifecycle handler engine, which consults **no** `HookPolicy` and
+asks nothing — `crates/vibe-install/src/apply.rs` says so in as many words
+(«install itself is consent, so this path has no `HookPolicy` or prompt
+surface») and **nothing in `vibe-cli` ever constructs one**. PROP-020's
+allow-list, its question and its unattended refusal are reached only by the
+legacy `apply` / `apply_with_spec_format` entry points, which no command
+uses. So gating `[hooks]` would newly ask, and unattended newly refuse, for
+every published package that declares one; they are left exactly as they
+behave, and the gate binds only an authored `[[extension]]` row at a `slot:`
+point. **No package in this repository declares either**, so the tightening
+reaches nobody today. That PROP-020 `#trust-gate` is dead on the path every
+command takes is a defect of that gate, recorded in the fact and filed, not
+fixed inside this phase.
+
+Facts a later session would otherwise re-derive:
+
+- **The judgment extraction was clean, so the design's fallback was not
+  needed** — and it was clean for a reason worth recording: `Condition`,
+  `ParamEquals` and `Need` already lived in `vibe-core`, so nothing had to
+  move. What was entangled was never the vocabulary, it was `PlanInput`. The
+  shared library is `vibe_core::judgment` (the condition evaluator, the needs
+  check, the verdict), and every host-dependent answer is a caller-supplied
+  closure, so an application's payload root and an ordinary package's
+  materialised slot are the same parameter. `vibe-app` keeps exactly three
+  things, each genuinely app-only: the installer option a parameter's *type*
+  is declared in, the template expansion a `file_present` path goes through
+  (done up front, so the typed refusal still reaches the caller), and whether
+  an offline run can serve a step's inputs from the cache, which branches on
+  step kinds the ordinary plane has none of. The skip reasons are
+  byte-identical to the ones the planner printed before, which is what makes
+  the extraction invisible to every existing plan.
+- **PROP-069 `#PACKAGE-ADMISSION` makes `when = { feature }` unanswerable
+  today, and the design did not know it.** `crates/vibe-install/src/configuration_admission.rs:53`
+  refuses **any** package manifest that declares `[configuration]`
+  (`Error::ConfigurationUnsupported`, asserted by six tests), so a package
+  cannot declare a feature and be installed at all. The three configuration
+  conditions therefore answer `false` and the plan prints the deciding
+  condition. Lifting that refusal is a PROP-069 decision with `impl/done`
+  facts and tests behind it, not a P7e edit, which is why it was not taken.
+  The evaluator reads the snapshot through a closure, so the day it is lifted
+  this plane needs no change. PLAN.md's P7e test «`when = { feature }` reads
+  the package-scope configuration» is therefore satisfied as a unit test of
+  the library against a non-empty snapshot plus a plane test that the
+  condition is false and says so — not as an end-to-end install.
+- **One table is one conjunction, so no array spelling was added.** PROP-065
+  `#conditions` gives a step `when` as a table *or an array of them*. The
+  `[[extension]]` grammar's `when` anchor is a single `toml::Table`
+  (`ExtensionWhen`), and admitting an array would have meant a new
+  `EqTomlValue`, a changed public accessor and a lossier
+  `vibe extensions --json`. Reading **every key of the one table as one
+  condition** gives the conjunction the array existed for
+  (`when = { command_present = "cargo", offline = false }`) at zero type
+  churn. Recorded as a narrowing in `AV-FMT-031`.
+- **The four fields had to become one carrier, and that is better than the
+  record's four.** `ExtensionDecl` is constructed as a literal in fifteen
+  places and destructured exhaustively, without `..`, by the declaration
+  fingerprint — so each added field costs fifteen edits and an epoch ruling.
+  One optional `judgment` carrier costs one. It also answers the ambiguity
+  the record left: a slot row's `when` parses into the carrier and the opaque
+  guard stays `None`, so the two meanings of `when` are never both populated.
+  The fingerprint classifies the carrier as **excluded**, beside `auto` and
+  the selectors — it decides plan membership and presentation, never the work
+  delivered — so no epoch moved.
+- **The refused-by-name fields had to be *admitted* to be refused.** The wire
+  struct is `deny_unknown_fields`, so `requires` / `phase` / `result` were
+  already refused — with serde's generic «unknown field, expected one of …».
+  Naming them with their reason means adding them to the wire struct and
+  rejecting them in the conversion. And that refusal must stay at the TOML
+  boundary while **field legality stays semantic**: moving `validate()` into
+  `TryFrom` broke
+  `semantic_extension_errors_follow_legacy_role_precedence` immediately,
+  because a role error must precede a field error. The split is therefore:
+  what must be decided to *build* the value (the vocabulary, the refused
+  keys) at the boundary; what is a *law about* the value in `validate()`.
+- **The trust gate reaches `vibe install` through `ConfirmGate`, which cost
+  nothing.** Threading a context from `vibe-cli` through `vibe-orchestrator`
+  looked like a dozen signatures. The port that already answers «may this run
+  touch the operator's machine» is `ConfirmGate`, which every surface already
+  implements and every install path already holds; one defaulted trait method
+  (`slot_judgment`) wires the CLI and leaves every other implementor — hosted
+  MCP, four test fakes — untouched. The default consents and decides nothing,
+  which is correct for a surface with no operator to ask.
+- **A resume must not re-ask.** `ResumeRequest` carries the context its
+  original run was started with, because a continuation finishes a run that
+  was already consented to.
+- **`SlotLifecycleSeams` gained the context as a required field**, for the
+  same reason that type has no `Default`: a defaulted one consents on the
+  operator's behalf. The named `SlotJudgmentContext::consenting()` is what a
+  fixture writes, so the choice is visible in the diff — the same device
+  `SlotLifecycleSeams::refusing()` already uses for the agent backend.
+- **B-188 went into the two packages that own the acts, not into the
+  aggregator.** `#ordinary-consumer` says «two `slot:post-install`
+  contributions» of `rust-ai-native`; the aggregator is content-minimal by
+  PROP-028 and has no place to put a script. The build is declared by
+  `rust-ai-native-lang`, which declares the four binaries, and the
+  registration by `rust-ai-native-mcp`, which declares the server. One
+  install of the family still shows exactly two rows, so the acceptance reads
+  the same from outside.
+- **What P7e did not deliver, named rather than implied.** The
+  `vibe-install-steps/1` evidence directory, the per-contribution log files
+  and the attended step *panel* of `#display` on this plane. The outcome rows
+  they would serialise already exist in memory as `SlotLifecycleReport`, now
+  carrying `skip` with its deciding condition; what is missing is the
+  registered format (schema, registry row, generated reader, corpus) and the
+  log plumbing. `#ordinary-plan` and `#ordinary-consumer` therefore sit at
+  `impl/work`, not `impl/done`, and `AV-FMT-032` stays undelivered with that
+  reason written into it.
+- **One semantic hole, recorded rather than guessed.** `agent_configured` is
+  reported `false` on this plane: the lifecycle agent backend is injected per
+  run rather than read from a selection at the CLI boundary, so an
+  `agent_configured = true` condition on a `slot:` contribution always skips.
+  The seam is the field, not a branch.
+- **Disk, on this machine:** `/fast` had 125 GB free throughout; every cargo
+  command ran with the mandated `CARGO_TARGET_DIR=/fast/tmp/p45-target`,
+  `CARGO_BUILD_JOBS=6` and `--test-threads=6`.
