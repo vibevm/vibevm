@@ -6,8 +6,9 @@
 session; verified against the tree 2026-07-25 by the spec-actualization
 campaign). `[hooks]` parses in `vibe-core` (`manifest/package/hooks.rs`),
 `vibe-workspace/src/hooks.rs` runs the whole contract — the pre/post phases, the
-Git-Bash-first Windows interpreter selection, the trust gate over
-`DEFAULT_ALLOWED_GROUPS`, the ran / skipped / failed statuses and the
+Git-Bash-first Windows interpreter selection, the trust gate over the shared
+base trusted list (`##ALLOW-LIST-SUCCESSOR`; `DEFAULT_ALLOWED_GROUPS` is gone),
+the ran / skipped / failed statuses and the
   `VIBE_HOOK_*` environment — and `vibe-install`'s apply pipeline drives it.
   R1 successor `4503fdb6`/`9c545f0d` makes the exact nonempty materialisation
   report the sole hook-rerun trigger, including verify repair. One of
@@ -137,6 +138,7 @@ that permission model for every extension handler.</TRUST-CHEAP></p>
   or pass an explicit `--allow-hooks` opt-in. A script must never execute
   unseen third-party code by default.</NON-INTERACTIVE-SAFETY>
       </facts>
+      <p><ALLOW-LIST-SUCCESSOR fact="true" status="impl/done">**The allow-list is no longer this module's own constant — owner decision 2026-11-10.** Verbatim: «Доверять по умолчанию всему org.vibevm.*, и сделать этот механизм конфигурируемым (базовые trusted_groups для vibevm, которые у пользователя эффективно конкатенируются с содержимым его agents.toml)», and «я бы сделал еще механизм недоверенных групп в agents.toml, чтобы можно было запретить доверять встроенному». `vibe-workspace`'s `DEFAULT_ALLOWED_GROUPS` — the constant `["org.vibevm"]` this section's `##ALLOW-LIST` described and `#phases`' status line named — **no longer exists**. The one base list is `vibe_core::trust::BASE_TRUSTED_GROUPS`, which is `["org.vibevm.*"]`: a subtree covering `org.vibevm` itself and every group under it, configurable by a site profile's `[trust]` table and by `&lt;settings&gt;/agents.toml`, and refusable through either file's `untrusted_groups`. The grammar, the layers and the deny-wins rule are `spec://org.vibevm.core/vibevm/common/PROP-064#trust-entries`; what a dependency's authored `slot:` contribution needs is `spec://org.vibevm.core/vibevm/common/PROP-065#ordinary-trust`. `decide_trust` and `HookPolicy` now take that resolved policy instead of a `Vec&lt;String&gt;`, so the hook gate and the agent gate cannot diverge again — the divergence a second constant in a second crate is exactly how one gets. **This changes no published package's behaviour**, for the measured reason recorded at `#ordinary-trust`: on the path every command takes, a `[hooks]` entry is lowered to a synthetic `slot:` script contribution and run through the lifecycle handler engine, which consults no `HookPolicy` and asks nothing, so this gate is reached only by the legacy `apply` entry points no command uses. That residue is `BACKLOG.md#b-258` and is untouched here; what this decision closes is the *second half* of B-258's disposition — the unification of the two allow-lists — and nothing else.</ALLOW-LIST-SUCCESSOR></p>
       <p><INSTALLATION-CONSENT-SUCCESSOR fact="true" status="impl/done" action="continue" actionstage="doc" audience="user">**Current law.** Installing the package is the consent to run its declared
 hooks. There is no `[hooks].allowed_groups`, first-run prompt, or
 `--allow-hooks` permission layer. Safety is the PROP-054 observability model:

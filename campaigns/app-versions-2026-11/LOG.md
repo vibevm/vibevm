@@ -1606,3 +1606,76 @@ recommended install at exit 0, a cycle, transitivity, removal in both
 directions, autoremove and the manual mark, the plan's subtree and the
 suggestion line, and the plan and the walk stopping at the same place) and the two of `cli_install_no_recommends`, plus the `/8` arm
 in `cli_app_proxy_index_versions`.
+
+## 2026-11-10 — one trust mechanism: `org.vibevm.*` by default, and `untrusted_groups` to refuse it
+
+The owner's decision of the day, in two sentences taken verbatim into the
+specs: «Доверять по умолчанию всему org.vibevm.*, и сделать этот механизм
+конфигурируемым (базовые trusted_groups для vibevm, которые у пользователя
+эффективно конкатенируются с содержимым его agents.toml)» and «я бы сделал еще
+механизм недоверенных групп в agents.toml, чтобы можно было запретить доверять
+встроенному». `AV-FMT-104` records the formats; `PROP-064#trust-entries` is the
+new design authority, with `PROP-065#ordinary-trust`,
+`PROP-019#SITE-PROFILE-TRUST` and `PROP-020#ALLOW-LIST-SUCCESSOR` amended for
+it.
+
+What landed, and the two decisions inside it a later session would otherwise
+re-take:
+
+- **The mechanism is `vibe_core::trust`, and it is the only one.** P7e's
+  `#ordinary-trust` had to *union* two lists — `agents.toml`'s
+  `trusted_groups` and `vibe-workspace`'s `DEFAULT_ALLOWED_GROUPS` — and said
+  so as a reluctance, because the sugar must not be more privileged than the
+  grammar it lowers into. Making the base configurable made that union
+  untenable: two lists with two owners and three consumers would have become
+  two *configurable* lists. So the constant in `vibe-workspace` is **deleted**,
+  the base list is `BASE_TRUSTED_GROUPS = ["org.vibevm.*"]` in `vibe-core`, and
+  `AgentHooks`, `SlotJudgmentContext` and `HookPolicy` all carry a resolved
+  `TrustPolicy` instead of a `Vec<String>`. `trusts()` in all three planes is
+  now one function call. The pure half (patterns, layers, deny-wins, the
+  refusals) reads no file and is tested over values; the one place that reads
+  files is `vibe_app::effective_trust`.
+- **Deny-wins replaced the opt-out boolean, and that was the owner's second
+  sentence.** The planned shape was `inherit_base_trusted_groups = false`. The
+  owner asked for an untrusted list instead, which is strictly better and not
+  merely different: it is the same grammar as the trusted list, it works per
+  group as well as for the whole base (`org.vibevm.ai-native` versus
+  `org.vibevm.*`), it is available at the site layer for free, and — stated as
+  a law rather than left to the reader — because a deny beats every trusted
+  entry of every layer, the answer does not depend on the order the layers are
+  read in. The boolean was never committed.
+- **A subtree covers its own root.** `org.vibevm.*` matches `org.vibevm`,
+  because the decision is about everything vibevm publishes and the core
+  packages' own group is not a special case. The boundary is a group label and
+  not a string prefix, so `org.vibevmx` is a different organisation — asserted
+  in both directions. An **exact** deny entry denies exactly that group, so
+  denying a subtree is written `org.vibevm.ai-native.*`; the entry syntax is
+  deliberately identical in both lists, and the test says so where a reader
+  would otherwise guess.
+- **An unreadable entry refuses the run.** A `trusted_groups` /
+  `untrusted_groups` entry that is not a group or a subtree is a refusal naming
+  the entry, the reason and the fix — not a dropped row. Dropping it would
+  either grant trust nobody wrote or withhold trust somebody did, and both are
+  silent. This made `ConfirmGate::slot_judgment` fallible (`vibe-orchestrator`),
+  which is the one signature this work changed outside the trust files.
+- **What did NOT change.** `[hooks]` still runs unasked on the canonical path,
+  for the measured reason `#ordinary-trust` already records: that path consults
+  no `HookPolicy` at all. So widening the base list to a subtree is invisible to
+  every published package that declares a hook, and `B-258` stays open — this
+  work closes only the *second* half of its disposition, the unification of the
+  two allow-lists, and says so in the backlog entry.
+
+**Tests.** `vibe-core`: five laws in `trust/tests.rs` (the shipped base parses
+as an operator could have written it; the subtree and its non-matches;
+deny-wins from four directions; the verdict and what a deny overrides; every
+refused spelling) plus 28 doctests on the public surface, and one site-profile
+case for the `[trust]` table. `vibe-app`: two file-backed cases over
+`effective_trust` (the three layers, and a bad entry naming its file).
+`vibe-cli`: the two consequence cases the owner asked for —
+`a_dependency_under_the_shipped_base_runs_unasked_where_another_group_is_refused`
+installs `org.vibevm.ai-native/hooked` **unattended with no `--assume-yes`** and
+asserts the contribution ran, and
+`an_untrusted_groups_entry_restores_the_question_for_a_group_the_base_trusts`
+writes `untrusted_groups = ["org.vibevm.ai-native"]`, asserts the same install
+is refused naming the group, `untrusted_groups` and `--assume-yes`, and then
+installs `org.vibevm.node/hooked` to show the sibling group is untouched.

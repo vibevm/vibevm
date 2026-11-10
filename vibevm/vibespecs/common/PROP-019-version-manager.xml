@@ -26,7 +26,7 @@ clones from when run outside a source tree), [PROP-000 §7](PROP-000.xml#registr
 and [PROP-000 §20](PROP-000.xml#token-secrecy) (the publish token VVM never
 touches), [`VIBEVM-SPEC.md`](../../VIBEVM-SPEC.md) (CLI-first posture), and
 the repo's `rust-toolchain.toml` (the pin VVM honours when building).</related></p>
-  <p><changelog fact="true" status="spec/done">2026-11-09 — `#companion-tools` gains `##COMPANION-TOOLS-APPLY`: `vibe self apply` ensures px whenever the applied profile's effective route selects the vibe-managed px, after the self-import and whether or not it ran, in the tool store of the install root that profile chooses; a px still absent is a named warning with the asset and `vibe self px install --from &lt;directory-or-zip&gt;` in the summary and in the report's new `px` member, at exit 0, and `vibe self px status` refuses a px mode with no px anywhere (corporate-environment campaign, [`BACKLOG.md#b-251`](../../../BACKLOG.md#b-251)). 2026-11-09 — `#companion-tools` gains `##COMPANION-TOOLS-ANY-PX` and `##COMPANION-TOOLS-LAW` / `##COMPANION-TOOLS-DECISION` are amended for it (owner decision): vibe never refuses px over a SHA-256 on any install or download path, the pin only says which px to fetch by default, `vibe self px install --from &lt;archive|directory|executable&gt;` takes any px on any target, one store holds every version with `custom` for an unnamed one, the lookup is `px_path` &#8594; store &#8594; beside the binary &#8594; PATH, and every installed px carries a `PX.toml` provenance record that `vibe self px status` prints (source, measured SHA-256, `px --version`) with no verified/unverified verdict. 2026-11-09 — `#install-root` gains `##INSTALL-ROOT-HOME`: a declared `install_root` may start at the reader's own home (`~`, `~/&lt;rest&gt;`, and `~\&lt;rest&gt;` on Windows), expanded where the layer is read and never stored expanded, so one profile puts vibe in every developer's `~/opt`; the same rule governs `[artifacts] vibe`, `[artifacts] packages` (PROP-066 `#drops`, amended) and `[self] path`, so a drop written `~/opt/drop/packages` is this reader's own directory and not the relative path it used to be ignored as; `~user` and a relative value are refused by the key that carries them (owner request).</changelog></p>
+  <p><changelog fact="true" status="spec/done">2026-11-10 — `#site-profile` gains `##SITE-PROFILE-TRUST`: the profile may carry `[trust]` (`trusted_groups` / `untrusted_groups`), the site layer of the one trust mechanism of PROP-064 `#trust-entries`, read between the base list vibe ships and the user's `agents.toml`, with `untrusted_groups` overriding every layer (owner decision). 2026-11-09 — `#companion-tools` gains `##COMPANION-TOOLS-APPLY`: `vibe self apply` ensures px whenever the applied profile's effective route selects the vibe-managed px, after the self-import and whether or not it ran, in the tool store of the install root that profile chooses; a px still absent is a named warning with the asset and `vibe self px install --from &lt;directory-or-zip&gt;` in the summary and in the report's new `px` member, at exit 0, and `vibe self px status` refuses a px mode with no px anywhere (corporate-environment campaign, [`BACKLOG.md#b-251`](../../../BACKLOG.md#b-251)). 2026-11-09 — `#companion-tools` gains `##COMPANION-TOOLS-ANY-PX` and `##COMPANION-TOOLS-LAW` / `##COMPANION-TOOLS-DECISION` are amended for it (owner decision): vibe never refuses px over a SHA-256 on any install or download path, the pin only says which px to fetch by default, `vibe self px install --from &lt;archive|directory|executable&gt;` takes any px on any target, one store holds every version with `custom` for an unnamed one, the lookup is `px_path` &#8594; store &#8594; beside the binary &#8594; PATH, and every installed px carries a `PX.toml` provenance record that `vibe self px status` prints (source, measured SHA-256, `px --version`) with no verified/unverified verdict. 2026-11-09 — `#install-root` gains `##INSTALL-ROOT-HOME`: a declared `install_root` may start at the reader's own home (`~`, `~/&lt;rest&gt;`, and `~\&lt;rest&gt;` on Windows), expanded where the layer is read and never stored expanded, so one profile puts vibe in every developer's `~/opt`; the same rule governs `[artifacts] vibe`, `[artifacts] packages` (PROP-066 `#drops`, amended) and `[self] path`, so a drop written `~/opt/drop/packages` is this reader's own directory and not the relative path it used to be ignored as; `~user` and a relative value are refused by the key that carries them (owner request).</changelog></p>
   <motivation title="1. Motivation">
     <problem title="1.1 The problem — vibevm cannot install itself">
       <facts ordered="false">
@@ -901,8 +901,8 @@ PATH answers is a fact, not a failure.</COMPANION-TOOLS-APPLY></p>
 TOML **site profile** (`schema = 1`), and every developer runs `vibe self apply
 &lt;file|url&gt;`. The profile carries `name`, `[[registry]]` (with `type`),
 `[[mirror]]`, `[[override]]`, `[[remap]]`, `[source_policy]`, `[artifacts]`
-(`vibe`, `packages`), `[self]`, `[proxy]`, `[net] offline` and `[path] fix =
-"ask" | "always" | "never"`; any other key is refused. It is stored verbatim as
+(`vibe`, `packages`), `[self]`, `[proxy]`, `[net] offline`, `[path] fix =
+"ask" | "always" | "never"` and `[trust]`; any other key is refused. It is stored verbatim as
 its own layer, `&lt;settings-dir&gt;/site-profile.toml`, never merged into the
 user's files: every owner reads it **below** the user's own `registry.toml` /
 `config.toml` / `settings.toml` and **above** the built-in defaults.</SITE-PROFILE-LEAD></p>
@@ -920,6 +920,25 @@ user's files: every owner reads it **below** the user's own `registry.toml` /
   `[artifacts] packages` and each `[proxy]` key fall back to the site's;
   `[net] offline` is on when either says so. Provenance names the stored
   profile (`[self] in …/site-profile.toml`).</SITE-PROFILE-LAYER>
+        <SITE-PROFILE-TRUST fact="true" status="impl/done">**`[trust]` — which package groups this installation trusts (owner
+  decision 2026-11-10).** `trusted_groups` and `untrusted_groups`, each a list
+  of entries in the one grammar of
+  `spec://org.vibevm.core/vibevm/common/PROP-064#trust-entries`: an exact group
+  (`org.corp`) or a subtree (`org.corp.*`). This is the **site layer** of the
+  one trust mechanism, read between the base list vibe ships
+  (`["org.vibevm.*"]`) and the user's own `&lt;settings&gt;/agents.toml`, so an
+  administrator trusts a corporate group for a whole installation in the same
+  file that declares its registries. `untrusted_groups` takes trust away and
+  wins over every trusted entry of every layer — including the base's and the
+  user's own — which is how a site refuses a group vibe trusts out of the box
+  (`untrusted_groups = ["org.vibevm.ai-native"]`), or the built-in trust whole
+  (`["org.vibevm.*"]`). Entries are validated with the rest of the profile and
+  by the same parser the user's file goes through: a bad entry names its own key
+  (`trust.untrusted_groups[1]`) and nothing is stored. The table is NOT a
+  user-config layer like `[proxy]` or `[net]` — there is no `config.toml`
+  counterpart to fall back to — so it appears in no `vibe show config` layer
+  view; it is read where trust is resolved, and `vibe agent list` prints each
+  resolved entry with `site` as its source.</SITE-PROFILE-TRUST>
         <SITE-PROFILE-APPLY fact="true" status="impl/done">`vibe self apply &lt;file|url&gt;` reads a path, a `file://` URL or an
   `https://`/`http://` URL (through the controlled transport; refused offline),
   validates everything — TOML shape, `schema`, registry types against their
