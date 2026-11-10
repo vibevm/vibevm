@@ -11,6 +11,12 @@
 //! the adapter's own `list` verb; a verb that fails leaves the listing
 //! standing and names why, because a listing that refuses to answer what
 //! it does know would be the wrong trade.
+//!
+//! The listing answers the same arithmetic the apply runs, under the same
+//! two flags: `items` is the **final** list — the enabled recommendations
+//! minus the user's drops plus the user's `add`, de-duplicated first-wins
+//! — so `vibe app extras list SLOT --no-extras` is an honest preview of
+//! `vibe app extras apply SLOT --no-extras` and not a second opinion.
 
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-075#SLOT-EXTRAS");
 
@@ -20,8 +26,10 @@ use vibe_wire::generated::application_extras as wire;
 
 use crate::error::AppError;
 use crate::operations::OperationContext;
+use crate::resolve::ResolvedPackage;
 
-use super::{EcosystemRequest, ecosystem_run};
+use super::extras::{self, ExtrasPolicy, UserExtras};
+use super::{EcosystemRequest, Target, ecosystem_run};
 
 /// The in-document protocol tag of the extras listing.
 pub const EXTRAS_PROTOCOL: &str = "vibe-app-extras/1";
@@ -39,6 +47,7 @@ pub fn listing(
     version: Option<&str>,
     ecosystem: Option<&str>,
     observe: bool,
+    policy: ExtrasPolicy,
 ) -> Result<wire::ApplicationExtras, AppError> {
     let index = crate::index::Index::load(ctx.settings)?;
     let (key, resolved_version) = super::target(&index, slot, version)?;
@@ -56,26 +65,35 @@ pub fn listing(
         })?;
     let adapters = super::selected(
         &package,
-        &EcosystemRequest {
+        &Target {
             slot,
             version,
             ecosystem,
             // Every adapter declares `install`, so the selection refuses
             // only an `--ecosystem` the package does not declare.
             verb: EcosystemVerb::Install,
-            items: &[],
         },
     )?;
+    let mut user = extras::user_extras(ctx.user_config, &index, slot);
+    user.notices.extend(extras::stale_notices(&package, &user));
+    let recorded = index.installations[&key].extras.clone();
     let mut document = wire::ApplicationExtras {
         protocol: EXTRAS_PROTOCOL.to_owned(),
         slot: slot.to_owned(),
         key: key.clone(),
         version: resolved_version,
         ecosystems: Vec::new(),
-        notices: Vec::new(),
+        notices: user.notices.clone(),
     };
     for adapter in adapters {
-        let mut row = describe(adapter, &chosen);
+        let mut row = describe(&package, adapter, &chosen, &user, policy);
+        // What the last apply put there, from the installation's own
+        // record — the live observation below is a second, better answer
+        // when the adapter can be asked (`AV-FMT-029`).
+        if let Some(kept) = recorded.iter().find(|kept| kept.id == adapter.id) {
+            row.applied = kept.applied.clone();
+            row.applied_at = kept.applied_at.clone();
+        }
         if observe && adapter.verb(EcosystemVerb::List).is_some() {
             match ecosystem_run(
                 ctx,
@@ -106,10 +124,25 @@ pub fn listing(
 }
 
 /// One adapter's row: its verbs, the author's recommendations with their
-/// enabled state, and the list those make.
-pub(super) fn describe(adapter: &EcosystemDecl, chosen: &[String]) -> wire::Ecosystem {
-    let recommendations: Vec<wire::Recommendation> = adapter
-        .recommends
+/// enabled and dropped state, the user's own `add` and `drop`, and the
+/// final list the arithmetic of `#SLOT-EXTRAS` makes of all of it.
+///
+/// The recommendations are the rows **routed to** this adapter by their
+/// `ecosystem` field, which is what decides where an item goes
+/// (`#P7B-AS-BUILT` (3)) — reading `EcosystemDecl::recommends` would send
+/// a row authored in one table and addressed to another to the wrong
+/// `install` verb.
+pub(super) fn describe(
+    package: &ResolvedPackage,
+    adapter: &EcosystemDecl,
+    chosen: &[String],
+    user: &UserExtras,
+    policy: ExtrasPolicy,
+) -> wire::Ecosystem {
+    let routed = package.application.ecosystem_recommends_of(&adapter.id);
+    let own = user.by_ecosystem.get(&adapter.id);
+    let dropped = |id: &str| own.is_some_and(|extras| extras.drop.iter().any(|row| row == id));
+    let recommendations: Vec<wire::Recommendation> = routed
         .iter()
         .map(|recommend| wire::Recommendation {
             id: recommend.id.clone(),
@@ -117,19 +150,11 @@ pub(super) fn describe(adapter: &EcosystemDecl, chosen: &[String]) -> wire::Ecos
             item: recommend.item.clone(),
             default: recommend.default,
             enabled: chosen.iter().any(|id| id == &recommend.id),
+            dropped: dropped(&recommend.id),
             reason: recommend.reason.clone(),
         })
         .collect();
-    // The items of the recommendations in the chosen set, in declaration
-    // order, de-duplicated by exact string with the first winning. The
-    // user's own `add` and `drop` join this arithmetic in a later phase;
-    // nothing here reads the user's settings.
-    let mut items: Vec<String> = Vec::new();
-    for recommend in recommendations.iter().filter(|row| row.enabled) {
-        if !items.contains(&recommend.item) {
-            items.push(recommend.item.clone());
-        }
-    }
+    let computed = extras::computed(package, adapter, chosen, user, policy);
     wire::Ecosystem {
         id: adapter.id.clone(),
         name: adapter.name.clone(),
@@ -145,7 +170,11 @@ pub(super) fn describe(adapter: &EcosystemDecl, chosen: &[String]) -> wire::Ecos
             })
             .collect(),
         recommendations,
-        items,
+        add: computed.add,
+        drop: computed.drop,
+        items: computed.items,
+        applied: Vec::new(),
+        applied_at: None,
         observed: Vec::new(),
         observed_failed: None,
     }

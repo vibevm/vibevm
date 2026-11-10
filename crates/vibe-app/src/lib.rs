@@ -90,11 +90,12 @@ pub use catalog::{
 };
 pub use codes::{ErrorClass, ErrorCode, error_codes};
 pub use derive::{derive_launchers, hicolor as hicolor_icon_set, import_desktop};
-pub use describe::describe;
+pub use describe::{describe, describe_installed_extras};
 pub use desktop::{DesktopFile, exec_words};
 pub use ecosystem::{
-    ECOSYSTEM_PROTOCOL, EXTRAS_PROTOCOL, EcosystemRequest, ecosystem_run, extras_listing,
-    kept_ecosystem_work, slot_ecosystem_work,
+    ECOSYSTEM_PROTOCOL, EXTRAS_PROTOCOL, EcosystemRequest, ExtrasApply, ExtrasPolicy,
+    ecosystem_run, extras_apply, extras_final_list, extras_listing, kept_ecosystem_work,
+    slot_ecosystem_work,
 };
 pub use environment::blocks::{
     BlockMarkers, ENV_BLOCK, HOOK_BLOCK, ensure_block, has_block, managed_startup_files,

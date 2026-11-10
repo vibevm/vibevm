@@ -241,6 +241,22 @@ impl ApplicationDecl {
         self.ecosystem.iter().flat_map(|row| row.recommends.iter())
     }
 
+    /// The recommendations **routed to** the adapter `id`, in the package's
+    /// own declaration order.
+    ///
+    /// A row's `ecosystem` field is what routes its item, not the table it
+    /// was authored inside: the fact requires the field and requires an
+    /// unknown id to be refused by name, so a row naming a *different*
+    /// declared adapter belongs to that one (`#ECOSYSTEM-RECOMMENDS`, and
+    /// `#P7B-AS-BUILT` (3), which settled it). Reading
+    /// `EcosystemDecl::recommends` directly would therefore send such a
+    /// row's item to the wrong `install` verb.
+    pub fn ecosystem_recommends_of(&self, id: &str) -> Vec<&EcosystemRecommendDecl> {
+        self.ecosystem_recommends()
+            .filter(|row| row.ecosystem == id)
+            .collect()
+    }
+
     /// The feature rows the recommendations are shorthand for, in
     /// declaration order. They are synthesised into **every** installer
     /// option of the package, because a recommendation is a property of

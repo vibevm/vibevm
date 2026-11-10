@@ -18,7 +18,7 @@ use crate::error::{AppError, StepError};
 use crate::installer::io;
 use crate::settings::SettingsRoot;
 
-use super::{EcosystemRequest, wire_verb};
+use super::{Target, wire_verb};
 
 /// The in-document protocol tag of the adapter run record and report.
 pub const ECOSYSTEM_PROTOCOL: &str = "vibe-app-ecosystem/1";
@@ -181,18 +181,14 @@ fn stamp() -> String {
     chrono::Utc::now().format("%Y%m%dT%H%M%SZ").to_string()
 }
 
-/// An empty report over `request`, before any adapter has run.
-pub(super) fn empty(
-    request: &EcosystemRequest<'_>,
-    key: &str,
-    work: &Path,
-) -> wire::ApplicationEcosystem {
+/// An empty report over `target`, before any adapter has run.
+pub(super) fn empty(target: &Target<'_>, key: &str, work: &Path) -> wire::ApplicationEcosystem {
     wire::ApplicationEcosystem {
         protocol: ECOSYSTEM_PROTOCOL.to_owned(),
         ok: true,
-        slot: request.slot.to_owned(),
+        slot: target.slot.to_owned(),
         key: key.to_owned(),
-        verb: wire_verb(request.verb),
+        verb: wire_verb(target.verb),
         work: work.display().to_string(),
         adapters: Vec::new(),
         notices: Vec::new(),

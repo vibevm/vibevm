@@ -164,7 +164,12 @@ env_roots = [
     "crates/vibe-cli/src/commands/aiui/control.rs",
     # The GUI launchers moved to the vibevm-term products repo; their env-var
     # resolver (`spec://vibe-launcher/PROP-043#resolve`) is no longer in-tree.
-    "crates/vibe-core/src/user_config.rs",
+    # Where the user-config file is: `VIBEVM_USER_CONFIG`, and the home the
+    # one-line "no longer read" notice names. Split out of `user_config.rs`
+    # (whose subject is parsing and layering) so this file is literally the
+    # user-config layer's whole disk surface; the reads did not move, the
+    # file around them did.
+    "crates/vibe-core/src/user_config/location.rs",
     # The settings-dir chokepoint: the ONE place that reads $VIBE_SETTINGS /
     # HOME / USERPROFILE to resolve `~/.vibe`, so every settings path agrees.
     "crates/vibe-core/src/settings.rs",

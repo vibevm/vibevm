@@ -455,78 +455,7 @@ impl Index {
     }
 
     pub fn from_wire(document: wire::ApplicationIndex) -> Result<Self, String> {
-        if document.protocol != INDEX_PROTOCOL
-            && document.protocol != WEAK_PROTOCOL
-            && document.protocol != PATHS_PROTOCOL
-            && document.protocol != EVIDENCE_PROTOCOL
-            && document.protocol != FOUR_PROTOCOL
-            && document.protocol != LEGACY_PROTOCOL
-        {
-            return Err(format!(
-                "protocol `{}` is not `{INDEX_PROTOCOL}`",
-                document.protocol
-            ));
-        }
-        if document.protocol == LEGACY_PROTOCOL
-            && document.installations.values().any(|r| {
-                r.configuration.is_some() || r.pending.is_some() || !r.secret_origins.is_empty()
-            })
-        {
-            return Err(
-                "protocol3 cannot retain common configuration or pending operation state".into(),
-            );
-        }
-        if (document.protocol == LEGACY_PROTOCOL || document.protocol == FOUR_PROTOCOL)
-            && document
-                .installations
-                .values()
-                .any(|r| r.source_evidence.is_some())
-        {
-            return Err("source evidence requires application index5".into());
-        }
-        if document.protocol != INDEX_PROTOCOL
-            && document.protocol != WEAK_PROTOCOL
-            && document.protocol != PATHS_PROTOCOL
-            && (document
-                .installations
-                .values()
-                .any(|r| !r.path_dirs.is_empty())
-                || document
-                    .slots
-                    .values()
-                    .any(|slot| slot.off || !slot.path_env.is_empty()))
-        {
-            return Err(
-                "exposed payload directories and slot off state require application index6".into(),
-            );
-        }
-        if document.protocol != INDEX_PROTOCOL
-            && document.protocol != WEAK_PROTOCOL
-            && document
-                .installations
-                .values()
-                .any(|r| r.template.is_some() || !r.migrations.is_empty() || !r.migrated.is_empty())
-        {
-            return Err(
-                "template provenance and migration records require application index7".into(),
-            );
-        }
-        // The two facts `/8` carries, from two phases, in one guard: a weak
-        // requirer edge (`PROP-077#APP-RECOMMENDS-MECHANICS`) and an
-        // ecosystem adapter's record (`PROP-075#SLOT-EXTRAS`). Either in an
-        // older document is refused rather than dropped — a dropped weak
-        // edge would silently orphan a recommendation, and a dropped
-        // adapter record would claim a version carries nothing.
-        if document.protocol != INDEX_PROTOCOL
-            && document.installations.values().any(|r| {
-                r.requires.iter().any(|requirement| requirement.weak) || !r.extras.is_empty()
-            })
-        {
-            return Err(
-                "a weak requirer edge and an ecosystem adapter record require application index8"
-                    .into(),
-            );
-        }
+        protocol::carries(&document)?;
         let mut installations = BTreeMap::new();
         for (key, record) in document.installations {
             let installation = installation_from_wire(record)

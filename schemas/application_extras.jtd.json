@@ -63,6 +63,7 @@
           "item",
           "default",
           "enabled",
+          "dropped",
           "reason"
         ]
       },
@@ -96,6 +97,13 @@
         }
       },
       "optionalProperties": {
+        "dropped": {
+          "type": "boolean",
+          "metadata": {
+            "x-default": false,
+            "description": "The user's own settings drop this recommendation by id, so its item is not in the list even when the feature is in the chosen set. A drop is honoured in every case, --no-extras included."
+          }
+        },
         "reason": {
           "type": "string",
           "metadata": {
@@ -112,7 +120,11 @@
           "description",
           "verbs",
           "recommendations",
+          "add",
+          "drop",
           "items",
+          "applied",
+          "applied_at",
           "observed",
           "observed_failed"
         ]
@@ -151,7 +163,7 @@
           },
           "metadata": {
             "x-empty": "emit",
-            "description": "The list that would be installed, de-duplicated by exact string with the first occurrence winning."
+            "description": "The final list that would be installed: the enabled author recommendations in declaration order, minus every one the user dropped, plus the user's own add items in their order, de-duplicated by exact string with the first occurrence winning. It answers the invocation's own --no-recommends / --no-extras posture, so a listing is an honest preview of the apply."
           }
         }
       },
@@ -160,6 +172,40 @@
           "type": "string",
           "metadata": {
             "x-default": null
+          }
+        },
+        "add": {
+          "elements": {
+            "type": "string"
+          },
+          "metadata": {
+            "x-empty": "omit",
+            "description": "The user's own add list for this ecosystem, from [slot.<slot>.extras.<ecosystem>] of their config.toml, verbatim and in their order."
+          }
+        },
+        "drop": {
+          "elements": {
+            "type": "string"
+          },
+          "metadata": {
+            "x-empty": "omit",
+            "description": "The recommendation ids the user declines there — ids, not items, because naming the author's row rather than re-typing their string is what keeps the two sides from drifting."
+          }
+        },
+        "applied": {
+          "elements": {
+            "type": "string"
+          },
+          "metadata": {
+            "x-empty": "omit",
+            "description": "The list the adapter's install verb was last handed in this installation, from the inventory's own record. What was asked for, which a failed apply leaves standing and the live observation below may differ from."
+          }
+        },
+        "applied_at": {
+          "type": "string",
+          "metadata": {
+            "x-default": null,
+            "description": "When that apply ran, RFC 3339."
           }
         },
         "observed": {

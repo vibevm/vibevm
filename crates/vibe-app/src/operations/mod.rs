@@ -124,6 +124,20 @@ pub struct OperationContext<'a> {
     /// The caller's PATH, behind the requirements a step's child sees
     /// first (`PROP-065#app-dependencies`).
     pub search_path: Option<&'a OsStr>,
+    /// The user's own `config.toml` — the file
+    /// `[slot.<slot>.extras.<ecosystem>]` lives in
+    /// (`PROP-075#SLOT-EXTRAS`).
+    ///
+    /// **This is the `vibe-app` → user-config seam P7c introduces**, and it
+    /// is a *path* rather than a resolved config for the reason this crate's
+    /// settings root is threaded in the same way: this crate never reads the
+    /// environment itself, and the one chokepoint that resolves
+    /// `$VIBE_SETTINGS` / `VIBEVM_USER_CONFIG` into a file belongs to the
+    /// caller. Reading and interpreting the file is this crate's, so a test
+    /// that leaves this `None` behaves exactly as a home with no `[slot]`
+    /// table does — which is also exactly how every command that does not
+    /// consume extras behaves.
+    pub user_config: Option<&'a Path>,
 }
 
 /// What an operation that changes a slot's global exposure needs: the

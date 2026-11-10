@@ -136,7 +136,14 @@ fn list(
 ) -> Result<Option<i32>> {
     let operation = Operation::new(ctx, settings, target, embedded_root, offline)?;
     let document = operation.around(settings, offline, |cx| {
-        vibe_app::extras_listing(cx, slot, None, target.ecosystem.as_deref(), true)
+        vibe_app::extras_listing(
+            cx,
+            slot,
+            None,
+            target.ecosystem.as_deref(),
+            true,
+            vibe_app::ExtrasPolicy::default(),
+        )
     })?;
     report_listing(ctx, &document)?;
     Ok(None)

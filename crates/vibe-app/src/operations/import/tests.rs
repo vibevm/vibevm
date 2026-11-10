@@ -67,6 +67,7 @@ fn unavailable_lookup_before_import_leaves_no_unpublished_cohort_reservation() {
         source_reader: None,
         environment: None,
         search_path: None,
+        user_config: None,
     };
     fs::remove_dir(&lookup).unwrap();
     assert!(import_cohort(&ctx, &mut prepared).is_err());

@@ -57,6 +57,7 @@ fn runtime_refuses_programmatic_plan_collisions_without_values_or_work_publicati
         source_reader: None,
         environment: None,
         search_path: None,
+        user_config: None,
     };
     for parameters in [false, true] {
         let mut plan = base.clone();

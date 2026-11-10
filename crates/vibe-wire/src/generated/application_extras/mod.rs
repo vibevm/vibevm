@@ -44,9 +44,36 @@ pub struct Ecosystem {
     /// The author's recommended items in declaration order.
     pub recommendations: Vec<Recommendation>,
 
-    /// The list that would be installed, de-duplicated by exact string with the
-    /// first occurrence winning.
+    /// The user's own add list for this ecosystem, from
+    /// [slot.<slot>.extras.<ecosystem>] of their config.toml, verbatim and in
+    /// their order.
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub add: Vec<String>,
+
+    /// The recommendation ids the user declines there — ids, not items, because
+    /// naming the author's row rather than re-typing their string is what keeps
+    /// the two sides from drifting.
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub drop: Vec<String>,
+
+    /// The final list that would be installed: the enabled author
+    /// recommendations in declaration order, minus every one the user dropped,
+    /// plus the user's own add items in their order, de-duplicated by exact
+    /// string with the first occurrence winning. It answers the invocation's
+    /// own --no-recommends / --no-extras posture, so a listing is an honest
+    /// preview of the apply.
     pub items: Vec<String>,
+
+    /// The list the adapter's install verb was last handed in this
+    /// installation, from the inventory's own record. What was asked for, which
+    /// a failed apply leaves standing and the live observation below may differ
+    /// from.
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub applied: Vec<String>,
+
+    /// When that apply ran, RFC 3339.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub applied_at: Option<String>,
 
     /// What the adapter's list verb observed in this version. Absent when
     /// the adapter declares no list verb or the observation was not taken; an
@@ -78,6 +105,12 @@ pub struct Recommendation {
     /// The feature is in the chosen set this installation recorded, so the item
     /// is part of the list.
     pub enabled: bool,
+
+    /// The user's own settings drop this recommendation by id, so its item is
+    /// not in the list even when the feature is in the chosen set. A drop is
+    /// honoured in every case, --no-extras included.
+    #[serde(default, skip_serializing_if = "std::ops::Not::not")]
+    pub dropped: bool,
 
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub reason: Option<String>,

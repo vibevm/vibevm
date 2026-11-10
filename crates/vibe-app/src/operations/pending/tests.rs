@@ -65,6 +65,7 @@ fn completed_child_cannot_bless_a_changed_record_at_the_first_parent_ack() {
         source_reader: None,
         environment: None,
         search_path: None,
+        user_config: None,
     };
     let held = settings.lock().unwrap();
     let lock = &held;
@@ -182,6 +183,7 @@ fn saved_child_with_exact_backward_parent_binding_repairs_the_missing_forward_li
         source_reader: None,
         environment: None,
         search_path: None,
+        user_config: None,
     };
     let held = settings.lock().unwrap();
     let lock = &held;
@@ -291,6 +293,7 @@ fn retained_completed_child_is_visible_and_only_the_explicit_whole_cohort_can_be
         source_reader: None,
         environment: None,
         search_path: None,
+        user_config: None,
     };
     let held = settings.lock().unwrap();
     let lock = &held;

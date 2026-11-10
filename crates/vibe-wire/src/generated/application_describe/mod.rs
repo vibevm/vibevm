@@ -127,6 +127,28 @@ pub struct Ecosystem {
     /// of the same id (PROP-075 `#ECOSYSTEM-RECOMMENDS`).
     #[serde(default, skip_serializing_if = "Vec::is_empty")]
     pub recommends: Vec<EcosystemRecommendation>,
+
+    /// The item list this adapter's install verb was last handed in the
+    /// installed version, from the inventory's own record (PROP-075 `#SLOT-
+    /// EXTRAS`, AV-FMT-029). Present only when the package is installed and an
+    /// apply has run; every string is opaque and echoed.
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub applied: Vec<String>,
+
+    /// When that apply ran, RFC 3339.
+    #[serde(rename = "appliedAt")]
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub applied_at: Option<String>,
+
+    /// What this adapter's list verb last observed in the installed version,
+    /// from the same record. Nothing is run to answer `describe`.
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub observed: Vec<String>,
+
+    /// When that observation was taken, RFC 3339.
+    #[serde(rename = "observedAt")]
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub observed_at: Option<String>,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]

@@ -146,6 +146,7 @@ fn context<'a>(
         source_reader: None,
         environment: None,
         search_path: Some(std::ffi::OsStr::new("/usr/bin:/bin")),
+        user_config: None,
     }
 }
 

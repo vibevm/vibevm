@@ -6,7 +6,7 @@
 
 use std::path::Path;
 
-use vibe_core::manifest::{EcosystemDecl, Manifest};
+use vibe_core::manifest::Manifest;
 
 use super::*;
 use crate::index::{
@@ -16,7 +16,7 @@ use crate::settings::SettingsRoot;
 
 /// A package whose `[application]` declares `adapters`, resolved the way
 /// the library resolves one.
-fn package(adapters: &str) -> crate::resolve::ResolvedPackage {
+pub(super) fn package(adapters: &str) -> crate::resolve::ResolvedPackage {
     let text = format!(
         "[package]\ngroup = \"org.example\"\nname = \"runtime\"\nkind = \"app\"\n\
          version = \"2.0.0\"\n\n[application]\nid = \"runtime\"\n{adapters}"
@@ -36,7 +36,7 @@ fn package(adapters: &str) -> crate::resolve::ResolvedPackage {
 }
 
 /// `install` plus whatever `extra` adds.
-fn adapter(id: &str, extra: &str) -> String {
+pub(super) fn adapter(id: &str, extra: &str) -> String {
     format!(
         "\n[[application.ecosystem]]\nid = \"{id}\"\nname = \"{id} packages\"\n{extra}\n\
          [application.ecosystem.install]\nid = \"install\"\ntitle = \"Install\"\n\
@@ -84,7 +84,7 @@ fn record(version: &str, features: &[&str]) -> Installation {
 }
 
 /// Two installed versions of one slot, the newer one its default.
-fn home(features: &[&str]) -> Index {
+pub(super) fn home(features: &[&str]) -> Index {
     let mut index = Index::default();
     for version in ["1.0.0", "2.0.0"] {
         let row = record(version, features);
@@ -100,13 +100,12 @@ fn home(features: &[&str]) -> Index {
     index
 }
 
-fn request<'a>(ecosystem: Option<&'a str>, verb: EcosystemVerb) -> EcosystemRequest<'a> {
-    EcosystemRequest {
+fn aim<'a>(ecosystem: Option<&'a str>, verb: EcosystemVerb) -> Target<'a> {
+    Target {
         slot: "runtime",
         version: None,
         ecosystem,
         verb,
-        items: &[],
     }
 }
 
@@ -143,39 +142,39 @@ fn a_verb_runs_in_the_named_version_or_in_the_slots_default() {
 #[specmark::spec(verifies = "spec://org.vibevm.core/vibevm/common/PROP-075#ECOSYSTEM-ADAPTER")]
 fn a_request_selects_one_adapter_or_every_one_and_refuses_what_is_not_declared() {
     let several = package(&format!("{}{}", adapter("npm", ""), adapter("pip", "")));
-    let ids: Vec<&str> = selected(&several, &request(None, EcosystemVerb::Install))
+    let ids: Vec<&str> = selected(&several, &aim(None, EcosystemVerb::Install))
         .unwrap()
         .iter()
         .map(|row| row.id.as_str())
         .collect();
     assert_eq!(ids, ["npm", "pip"]);
     assert_eq!(
-        selected(&several, &request(Some("npm"), EcosystemVerb::Install))
+        selected(&several, &aim(Some("npm"), EcosystemVerb::Install))
             .unwrap()
             .len(),
         1
     );
-    let error = selected(&several, &request(Some("gems"), EcosystemVerb::Install)).unwrap_err();
+    let error = selected(&several, &aim(Some("gems"), EcosystemVerb::Install)).unwrap_err();
     assert_eq!(error.code(), "unknown_ecosystem");
     assert!(error.to_string().contains("npm, pip"), "{error}");
     // A package with no adapter at all: the mechanism is optional, and
     // asking for it says so by name.
     let none = package("");
     assert_eq!(
-        selected(&none, &request(None, EcosystemVerb::Install))
+        selected(&none, &aim(None, EcosystemVerb::Install))
             .unwrap_err()
             .code(),
         "no_ecosystem"
     );
     // Only `install` is required, so an explicitly named adapter that
     // declares no `self_upgrade` is a refusal naming what it does declare.
-    let error = selected(&several, &request(Some("npm"), EcosystemVerb::SelfUpgrade)).unwrap_err();
+    let error = selected(&several, &aim(Some("npm"), EcosystemVerb::SelfUpgrade)).unwrap_err();
     assert_eq!(error.code(), "ecosystem_verb_undeclared");
     assert!(error.to_string().contains("install"), "{error}");
     // With no `--ecosystem` the same shape is not an error: the runner
     // reports those adapters `skipped`.
     assert_eq!(
-        selected(&several, &request(None, EcosystemVerb::SelfUpgrade))
+        selected(&several, &aim(None, EcosystemVerb::SelfUpgrade))
             .unwrap()
             .len(),
         2
@@ -229,7 +228,7 @@ fn the_work_directory_is_kept_per_slot_version_and_run_and_carries_the_record() 
     // an error.
     assert!(ecosystem_summary(&first).is_none());
     let mut document = record::empty(
-        &request(None, EcosystemVerb::List),
+        &aim(None, EcosystemVerb::List),
         "org.example/runtime@2.0.0",
         &first,
     );
@@ -257,65 +256,24 @@ fn the_work_directory_is_kept_per_slot_version_and_run_and_carries_the_record() 
 #[specmark::spec(verifies = "spec://org.vibevm.core/vibevm/common/PROP-075#SLOT-EXTRAS")]
 fn a_failure_reports_the_exact_retry_command_and_never_rolls_anything_back() {
     let items = ["typescript".to_owned(), "pnpm@9".to_owned()];
-    let remove = EcosystemRequest {
-        slot: "runtime",
-        version: None,
-        ecosystem: None,
-        verb: EcosystemVerb::Remove,
-        items: &items,
-    };
     assert_eq!(
-        remove.retry("npm"),
+        aim(None, EcosystemVerb::Remove).retry("npm", &items),
         "vibe app extras remove runtime --ecosystem npm typescript pnpm@9"
     );
     assert_eq!(
-        request(None, EcosystemVerb::SelfUpgrade).retry("npm"),
+        aim(None, EcosystemVerb::SelfUpgrade).retry("npm", &[]),
         "vibe app extras self-upgrade runtime --ecosystem npm"
     );
     // The retry of a failed install is the apply command, because what
-    // failed is "put my extras in this version".
+    // failed is "put my extras in this version" — and it names no items,
+    // because the apply recomputes the list rather than replaying one.
     assert_eq!(
-        request(None, EcosystemVerb::Install).retry("npm"),
+        aim(None, EcosystemVerb::Install).retry("npm", &items),
         "vibe app extras apply runtime --ecosystem npm"
     );
 }
 
-#[test]
-#[specmark::spec(verifies = "spec://org.vibevm.core/vibevm/common/PROP-075#SLOT-EXTRAS")]
-fn the_listing_reads_the_enabled_state_off_the_recorded_feature_set() {
-    let declared: Vec<EcosystemDecl> = package(&adapter(
-        "npm",
-        "\n[[application.ecosystem.recommends]]\necosystem = \"npm\"\nid = \"corepack\"\n\
-         item = \"corepack@latest\"\ndefault = true\nreason = \"Shims\"\n\
-         \n[[application.ecosystem.recommends]]\necosystem = \"npm\"\nid = \"typescript\"\n\
-         item = \"typescript\"\nname = \"TypeScript\"\n",
-    ))
-    .application
-    .ecosystem
-    .clone();
-    // A recommendation is in the list exactly when its synthesised
-    // feature is in the set the installation recorded.
-    let row = super::listing::describe(&declared[0], &["corepack".to_owned()]);
-    assert_eq!(row.id, "npm");
-    assert_eq!(row.verbs, [extras_wire_verb()]);
-    assert_eq!(row.recommendations.len(), 2);
-    assert!(row.recommendations[0].enabled && row.recommendations[0].default);
-    assert_eq!(row.recommendations[1].name, "TypeScript");
-    assert!(!row.recommendations[1].enabled);
-    assert_eq!(row.items, ["corepack@latest"]);
-    // Nothing chosen: nothing would be installed, and the adapter is then
-    // not run at all.
-    let row = super::listing::describe(&declared[0], &[]);
-    assert!(row.items.is_empty());
-    // Both chosen: declaration order, de-duplicated by exact string.
-    let row = super::listing::describe(
-        &declared[0],
-        &["typescript".to_owned(), "corepack".to_owned()],
-    );
-    assert_eq!(row.items, ["corepack@latest", "typescript"]);
-}
-
 /// The `install` verb's wire spelling, which every adapter declares.
-fn extras_wire_verb() -> vibe_wire::generated::application_extras::Verb {
+pub(super) fn extras_wire_verb() -> vibe_wire::generated::application_extras::Verb {
     vibe_wire::generated::application_extras::Verb::Install
 }

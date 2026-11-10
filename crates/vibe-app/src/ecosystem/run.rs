@@ -22,13 +22,16 @@ use crate::operations::OperationContext;
 use crate::resolve::ResolvedPackage;
 use crate::steps::{EcosystemEnv, StepContext, StepPaths, StepVars, run_step};
 
-use super::EcosystemRequest;
+use super::Target;
 
 /// Everything one adapter run needs that does not change between its
 /// adapters.
 pub(super) struct Session<'a> {
     pub ctx: &'a OperationContext<'a>,
-    pub request: &'a EcosystemRequest<'a>,
+    /// Which installation, which adapters and which verb; the item list is
+    /// per adapter and is handed to [`Session::run_verb`] instead, because
+    /// an apply computes a different one for each (`PROP-075#SLOT-EXTRAS`).
+    pub target: &'a Target<'a>,
     /// The installation key the verb runs inside, and its version.
     pub key: &'a str,
     pub version: &'a str,
@@ -49,13 +52,17 @@ impl Session<'_> {
     /// Run the request's verb on one adapter. A failure is recorded, never
     /// propagated: one adapter's failure does not stop another's, and
     /// nothing of the runtime installation is ever rolled back.
-    pub(super) fn run_verb(&self, adapter: &EcosystemDecl) -> Result<wire::Adapter, AppError> {
-        let verb = self.request.verb;
+    pub(super) fn run_verb(
+        &self,
+        adapter: &EcosystemDecl,
+        items: &[String],
+    ) -> Result<wire::Adapter, AppError> {
+        let verb = self.target.verb;
         let mut row = wire::Adapter {
             id: adapter.id.clone(),
             name: adapter.name.clone(),
             outcome: wire::Outcome::Done,
-            items: self.request.items.to_vec(),
+            items: items.to_vec(),
             observed: Vec::new(),
             step: None,
             log: None,
@@ -74,7 +81,7 @@ impl Session<'_> {
                 ),
             ));
         };
-        if verb.takes_items() && self.request.items.is_empty() {
+        if verb.takes_items() && items.is_empty() {
             // "With an empty final list, the adapter is not run at all"
             // (`PROP-075#SLOT-EXTRAS`).
             return Ok(skipped(
@@ -91,7 +98,7 @@ impl Session<'_> {
         let log = dir.join(format!("{}.log", verb.as_str()));
         row.step = Some(step.id.clone());
         row.log = Some(log.display().to_string());
-        match self.run_step(adapter, verb, step, &list, &log) {
+        match self.run_step(adapter, verb, step, items, &list, &log) {
             Ok(()) => {
                 row.outcome = wire::Outcome::Done;
                 if verb == EcosystemVerb::List {
@@ -104,7 +111,7 @@ impl Session<'_> {
             Err(failure) => {
                 row.outcome = wire::Outcome::Failed;
                 row.reason = Some(failure.to_string());
-                row.retry = Some(self.request.retry(&adapter.id));
+                row.retry = Some(self.target.retry(&adapter.id, items));
             }
         }
         row.finished = Some(now());
@@ -144,6 +151,7 @@ impl Session<'_> {
         adapter: &EcosystemDecl,
         verb: EcosystemVerb,
         step: &StepDecl,
+        items: &[String],
         list: &Path,
         log: &Path,
     ) -> Result<(), AppError> {
@@ -152,7 +160,7 @@ impl Session<'_> {
             // Refused before the child starts, so a verb that cannot run
             // has changed nothing (`PROP-065#needs`).
             return Err(StepError::UnmetNeed {
-                key: format!("{}@{}", self.request.slot, self.version),
+                key: format!("{}@{}", self.target.slot, self.version),
                 step: step.id.clone(),
                 need,
             }
@@ -169,7 +177,7 @@ impl Session<'_> {
         ));
         let ecosystem = EcosystemEnv {
             id: &adapter.id,
-            items: self.request.items,
+            items,
             list,
         };
         let served = RefCell::new(Vec::new());
@@ -229,13 +237,13 @@ impl Session<'_> {
             Err(error) => {
                 task.fail(error.to_string());
                 Err(StepError::EcosystemFailed(Box::new(EcosystemFailure {
-                    slot: self.request.slot.to_owned(),
+                    slot: self.target.slot.to_owned(),
                     ecosystem: adapter.id.clone(),
                     verb: verb.as_str(),
                     step: step.id.clone(),
                     work: self.work.display().to_string(),
                     log: log.display().to_string(),
-                    retry: self.request.retry(&adapter.id),
+                    retry: self.target.retry(&adapter.id, items),
                     source: Box::new(error),
                 }))
                 .into())

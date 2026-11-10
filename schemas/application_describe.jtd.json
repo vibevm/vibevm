@@ -217,7 +217,11 @@
      "description",
      "migration",
      "verbs",
-     "recommends"
+     "recommends",
+     "applied",
+     "appliedAt",
+     "observed",
+     "observedAt"
     ]
    },
    "properties": {
@@ -260,6 +264,38 @@
      "metadata": {
       "x-empty": "omit",
       "description": "The author's recommended items, each shorthand for one installer feature of the same id (PROP-075 `#ECOSYSTEM-RECOMMENDS`)."
+     }
+    },
+    "applied": {
+     "elements": {
+      "type": "string"
+     },
+     "metadata": {
+      "x-empty": "omit",
+      "description": "The item list this adapter's install verb was last handed in the installed version, from the inventory's own record (PROP-075 `#SLOT-EXTRAS`, AV-FMT-029). Present only when the package is installed and an apply has run; every string is opaque and echoed."
+     }
+    },
+    "appliedAt": {
+     "type": "string",
+     "metadata": {
+      "x-default": null,
+      "description": "When that apply ran, RFC 3339."
+     }
+    },
+    "observed": {
+     "elements": {
+      "type": "string"
+     },
+     "metadata": {
+      "x-empty": "omit",
+      "description": "What this adapter's list verb last observed in the installed version, from the same record. Nothing is run to answer `describe`."
+     }
+    },
+    "observedAt": {
+     "type": "string",
+     "metadata": {
+      "x-default": null,
+      "description": "When that observation was taken, RFC 3339."
      }
     }
    }

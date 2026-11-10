@@ -178,6 +178,11 @@ pub(crate) struct Observation<'d> {
     pub(crate) environment: Option<Box<dyn UserEnvironment>>,
     /// The caller's PATH, behind the requirements a step sees first.
     pub(crate) search_path: Option<std::ffi::OsString>,
+    /// The user's own `config.toml`, resolved once here because this is
+    /// the layer that owns the process boundary: `vibe-app` reads and
+    /// interprets the file but never resolves `$VIBE_SETTINGS` or
+    /// `VIBEVM_USER_CONFIG` itself (PROP-075 `#SLOT-EXTRAS`).
+    pub(crate) user_config: Option<std::path::PathBuf>,
     /// One-line run notices on stderr, so `--json` stays one envelope
     /// (PROP-065 `#work`); absent when the caller asked for quiet.
     notice: Option<Notice>,
@@ -217,6 +222,7 @@ impl<'d> Observation<'d> {
                 super::facts::user_home().as_deref(),
             ),
             search_path: super::facts::search_path(),
+            user_config: vibe_core::user_config::UserConfig::default_path(),
             notice: (!ctx.is_quiet())
                 .then(|| Box::new(|text: &str| asking(|| notice(text))) as Notice),
             display,
@@ -288,6 +294,7 @@ pub(super) fn operation<'a>(
         source_reader: Some(&super::project::read_saved_source as vibe_app::SavedSourceReader<'_>),
         environment: observe.environment.as_deref(),
         search_path: observe.search_path.as_deref(),
+        user_config: observe.user_config.as_deref(),
     }
 }
 

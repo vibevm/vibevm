@@ -108,6 +108,7 @@ fn context<'a>(
         source_reader: None,
         environment: None,
         search_path: None,
+        user_config: None,
     }
 }
 

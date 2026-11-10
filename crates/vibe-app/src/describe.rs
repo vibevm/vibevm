@@ -507,5 +507,40 @@ fn describe_ecosystem(row: &EcosystemDecl) -> wire::Ecosystem {
                 reason: recommend.reason.clone(),
             })
             .collect(),
+        // The declaration alone; what the installed version actually
+        // carries comes from the inventory, through
+        // [`describe_installed_extras`].
+        applied: Vec::new(),
+        applied_at: None,
+        observed: Vec::new(),
+        observed_at: None,
+    }
+}
+
+/// Fill each described adapter with what it last applied and last observed
+/// **in this installation**, from the inventory's own record (PROP-075
+/// `#SLOT-EXTRAS`, `AV-FMT-029`; the `describe` half of `AV-FMT-032`).
+///
+/// Nothing is run and nothing is resolved: `describe` answers off
+/// declaration plus retained record, which is the whole point of retaining
+/// the record at all — a GUI or an agent can say what a version carries,
+/// and what it failed to carry, without starting a package manager.
+#[specmark::spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-075#SLOT-EXTRAS")]
+pub fn describe_installed_extras(
+    document: &mut wire::ApplicationDescribe,
+    installation: &crate::index::Installation,
+) {
+    for row in &mut document.application.ecosystems {
+        let Some(kept) = installation
+            .extras
+            .iter()
+            .find(|record| record.id == row.id)
+        else {
+            continue;
+        };
+        row.applied = kept.applied.clone();
+        row.applied_at = kept.applied_at.clone();
+        row.observed = kept.observed.clone();
+        row.observed_at = kept.observed_at.clone();
     }
 }

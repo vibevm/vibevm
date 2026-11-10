@@ -79,6 +79,7 @@ fn unresolved_configuration_report_keeps_the_same_hosting_without_execution() {
         source_reader: None,
         environment: None,
         search_path: None,
+        user_config: None,
     };
     let request = crate::InstallRequest {
         configuration: Some(crate::configuration::parse_submission(br#"{"protocol":"vibe-configuration-input/1","input":{"intent":{"policy":"require-selection","features":[],"defaultFeatures":false,"selections":{},"parameters":{}},"disabledFeatures":[]}}"#).unwrap()),
