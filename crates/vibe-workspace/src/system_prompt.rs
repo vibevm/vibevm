@@ -48,6 +48,8 @@ mod capture;
 mod check;
 #[path = "system_prompt/compose.rs"]
 mod compose;
+#[path = "system_prompt/constraints.rs"]
+mod constraints;
 #[path = "system_prompt/contract.rs"]
 mod contract;
 #[cfg(test)]
@@ -83,6 +85,7 @@ pub use check::{
 pub use compose::{
     ComposedPrefix, PrefixSettings, SEGMENT_FRAME, Segment, SegmentId, compose_prefix,
 };
+pub use constraints::{BlockShape, delivery_constraints, manifest_block_shape, one_block_shape};
 pub use contract::{CURRENT_RECIPE, KNOWN_RECIPES, SuppliedSource, render_contract};
 pub use harness::{
     CODEX_VERIFIED_VERSION, CarrierVerdict, CodexProfile, HarnessKind, LaunchFlags,

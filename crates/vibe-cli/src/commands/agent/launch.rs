@@ -75,8 +75,15 @@ pub(crate) fn run(ctx: &output::Context, argv: Vec<String>) -> Result<()> {
         return exec(&command);
     }
 
-    refuse_conflicting(launcher.kind, &rest)?;
     let composed = prompt::compose_flags(&selected, launcher.kind, Some(&launcher))?;
+    // **C2 — `vibe agent` injects only for a harness in `launch` delivery**,
+    // so the conflict question is asked only when vibe is about to pass the
+    // slot flag itself. In `read` delivery it passes none, and a user's own
+    // slot flag then conflicts with nothing — the same reasoning the
+    // opted-out branch above already applies (`HARNESS-DELIVERY.md` §4).
+    if !composed.flags.is_empty() {
+        refuse_conflicting(launcher.kind, &rest)?;
+    }
     for note in &composed.notes {
         if !ctx.is_quiet() {
             eprintln!("note: {note}");

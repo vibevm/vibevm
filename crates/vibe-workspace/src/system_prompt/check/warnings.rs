@@ -13,6 +13,7 @@ use vibe_core::layout;
 use crate::WorkspaceError;
 use crate::boot_artifacts;
 
+use super::super::constraints::delivery_constraints;
 use super::super::markers::verify_lane_markers;
 use super::super::verify::ImportInertness;
 use super::{CheckRequest, PromptCheck, read_owned};
@@ -59,6 +60,13 @@ pub fn prompt_warnings(
         }
     }
     warnings.extend(entrypoint_warnings(request)?);
+    // The one-delivery-mode constraints of `HARNESS-DELIVERY.md` §4, which
+    // that section places "at install and in `vibe prompt check`". They are
+    // observations rather than freshness for the same reason as the rest of
+    // this cell: a divergent instruction file does not make a published
+    // prefix wrong, and folding it into `stale` would send a caller to
+    // `vibe prompt build`, which is not the remedy.
+    warnings.extend(delivery_constraints(request.node_dir, request.manifest)?);
     Ok(warnings)
 }
 

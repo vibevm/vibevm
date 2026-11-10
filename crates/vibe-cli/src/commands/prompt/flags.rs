@@ -14,6 +14,7 @@ specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-076#SYS-HARNESS-EXEC
 
 use anyhow::{Result, bail};
 use vibe_app::{AgentsConfig, AppError};
+use vibe_core::manifest::HarnessDelivery;
 use vibe_wire::generated::prompt_flags as wire;
 use vibe_workspace::system_prompt::{HarnessKind, LaunchFlags, check_node_prompt, launch_flags};
 
@@ -105,6 +106,16 @@ pub(crate) fn compose(
             vibe_workspace::path_to_slash(&vibe_core::layout::current_boot_system_template())
         );
     }
+    // **C2 — no injection for a harness that is not in `launch`.** The
+    // project asked for the router to do the work, so there is no lane to
+    // point at, no carrier to gate against a harness version and nothing a
+    // user's own slot flag could conflict with. Asking those questions
+    // anyway is how a launch comes to be refused over a delivery it was
+    // never going to perform (`HARNESS-DELIVERY.md` §4).
+    let delivery = kind.delivery(&selected.manifest);
+    if delivery == HarnessDelivery::Read {
+        return Ok(launch_flags(kind, delivery, "", &answer.lane.path, "", 0));
+    }
     if !answer.lane.present {
         bail!(
             "`{}` has not been generated — run `{}`",
@@ -121,14 +132,7 @@ pub(crate) fn compose(
         Some(&selected.manifest),
         &vibe_spec::SelfCoordinate::new(None, String::new()),
     );
-    let mut composed = launch_flags(
-        kind,
-        kind.delivery(&selected.manifest),
-        &node_id,
-        &answer.lane.path,
-        &bytes,
-        limit,
-    );
+    let mut composed = launch_flags(kind, delivery, &node_id, &answer.lane.path, &bytes, limit);
     if let Some(note) = super::harness_version::gate(kind, launcher)? {
         composed.notes.push(note);
     }

@@ -121,6 +121,15 @@ impl Machine {
             .collect()
     }
 
+    /// Append a `[system_prompt.*]` declaration to the project manifest.
+    fn declare(&self, table: &str) {
+        let manifest = self.project.path().join("vibe.toml");
+        let mut text = fs::read_to_string(&manifest).unwrap();
+        text.push('\n');
+        text.push_str(table);
+        fs::write(&manifest, text).unwrap();
+    }
+
     fn lane(&self) -> PathBuf {
         self.project
             .path()
@@ -447,6 +456,81 @@ fn a_project_that_has_not_opted_in_starts_the_harness_unchanged() {
         .assert()
         .failure()
         .stderr(predicate::str::contains("has not opted in"));
+}
+
+/// C2 — `vibe agent` injects only for a harness in `launch` delivery.
+///
+/// The positive half of the constraint: a `read`-delivery harness is
+/// started unchanged, with no slot flag, and the user's own slot flag then
+/// conflicts with nothing — refusing it would refuse a launch over a
+/// delivery vibe was never going to perform (`HARNESS-DELIVERY.md` §4).
+#[test]
+fn c2_read_delivery_injects_nothing_and_conflicts_with_nothing() {
+    let machine = Machine::new(WRAPPER);
+    machine.declare("[system_prompt.harness.claude]\ndelivery = \"read\"\n");
+    machine
+        .agent(&["claude", "--append-system-prompt-file", "mine.md"])
+        .assert()
+        .success()
+        .stderr(predicate::str::contains("delivery = \"read\""))
+        .stderr(predicate::str::contains("no slot flag is passed"));
+    assert_eq!(
+        machine.argv(),
+        ["--no-telemetry", "--append-system-prompt-file", "mine.md"]
+    );
+}
+
+/// C2's refusal half, on the same project with the same user argument: in
+/// `launch` delivery vibe does pass the flag, so two of them is refused.
+#[test]
+fn c2_launch_delivery_still_refuses_the_users_own_slot_flag() {
+    let machine = Machine::new(WRAPPER);
+    machine.declare("[system_prompt.harness.claude]\ndelivery = \"launch\"\n");
+    machine
+        .agent(&["claude", "--append-system-prompt-file", "mine.md"])
+        .assert()
+        .failure()
+        .stderr(predicate::str::contains("is already in your own arguments"));
+}
+
+/// C2 for Codex: a `read`-delivery launch writes no profile file and is not
+/// gated on the harness version, because no carrier is delivered.
+#[test]
+fn c2_read_delivery_writes_no_codex_carrier_and_is_not_version_gated() {
+    let machine = Machine::new(WRAPPER);
+    machine.declare("[system_prompt.harness.codex]\ndelivery = \"read\"\n");
+    machine
+        .agent_reporting(&["work-codex"], "codex-cli 0.168.0")
+        .assert()
+        .success()
+        .stderr(predicate::str::contains("no slot flag is passed"));
+    // The shim records one empty line when it received no argument at all.
+    assert_eq!(machine.argv(), [""], "a read-delivery launch passed a flag");
+    assert!(
+        !machine.bin.path().join("codex-home").exists(),
+        "a read-delivery launch wrote a carrier"
+    );
+}
+
+/// C2 through the printing path, which `vibe agent` is a thin layer over:
+/// one code path decides what a kind takes, so `read` prints no flag there
+/// too — and does so without a generated lane on disk.
+#[test]
+fn c2_printing_flags_for_a_read_harness_prints_none_and_needs_no_lane() {
+    let machine = Machine::new(WRAPPER);
+    machine.declare("[system_prompt.harness.claude]\ndelivery = \"read\"\n");
+    let mut command = machine.user.vibe();
+    machine
+        .harnessed(&mut command, VERIFIED)
+        .args(["prompt", "flags", "--harness", "claude"])
+        .assert()
+        .success()
+        .stdout(predicate::str::is_empty().or(predicate::str::contains("\n")))
+        .stderr(predicate::str::contains("no slot flag is passed"));
+    assert!(
+        !machine.lane().exists(),
+        "printing read-delivery flags composed a lane"
+    );
 }
 
 #[test]

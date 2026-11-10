@@ -166,6 +166,35 @@ fn check_is_equal_after_a_build_and_json_carries_the_same_facts() {
     assert_eq!(report["artifacts"].as_array().unwrap().len(), 3);
 }
 
+/// C1 and C4 at the command surface, where `HARNESS-DELIVERY.md` §4 places
+/// them. Hand-editing one instruction file's managed block gives up the
+/// byte-identity the per-harness `delivery` spelling rests on, and a harness
+/// that reads more than one of them would read two different routers. The
+/// verdict stays `equal`, because a published prefix is not wrong — this is
+/// a configuration finding, not staleness.
+#[test]
+fn check_reports_c1_and_c4_for_a_divergent_instruction_file() {
+    let project = Project::opted_in();
+    project.prompt("build").assert().success();
+    project
+        .prompt("check")
+        .assert()
+        .success()
+        .stdout(predicate::str::contains("C1:").not());
+
+    let claude = project.dir.path().join("CLAUDE.md");
+    let text = fs::read_to_string(&claude).unwrap();
+    fs::write(&claude, text.replace("<vibevm>", "<vibevm>\nHand-edited.")).unwrap();
+    project
+        .prompt("check")
+        .assert()
+        .success()
+        .stdout(predicate::str::contains("system prompt: equal"))
+        .stdout(predicate::str::contains("C1:"))
+        .stdout(predicate::str::contains("C4:"))
+        .stdout(predicate::str::contains("CLAUDE.md"));
+}
+
 /// The assertion the band model rests on: a dynamic boot file's bytes are
 /// witnessed nowhere, so editing one leaves the prefix current.
 #[test]
