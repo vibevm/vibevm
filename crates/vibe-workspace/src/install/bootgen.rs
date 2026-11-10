@@ -67,7 +67,7 @@ pub(crate) mod replay_prepare;
 pub(crate) mod replay_publish;
 pub use desubstitute::desubstitute_covered_units;
 
-fn root_self_coordinate(root_manifest: &Manifest) -> vibe_spec::SelfCoordinate {
+pub(crate) fn root_self_coordinate(root_manifest: &Manifest) -> vibe_spec::SelfCoordinate {
     match root_manifest.consumer_node() {
         Some(node) => vibe_spec::SelfCoordinate::new(
             node.group.as_ref().map(|g| g.as_str().to_owned()),
@@ -258,6 +258,7 @@ pub fn regenerate_boot_from_traced_prepared(
             sources.as_ref(),
             trace,
             runtimes.node(rel)?.compile_plans().clone(),
+            Some(boot_artifacts::NodePrompt { manifest }),
         )?;
         nodes_regenerated.push(rel.to_string());
     }

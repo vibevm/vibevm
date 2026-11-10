@@ -72,7 +72,7 @@ pub use contract::{CURRENT_RECIPE, KNOWN_RECIPES, SuppliedSource, render_contrac
 pub use lane::{ComposedLane, LaneSegment, LaneSource, compose_agent_lane};
 pub use markers::{
     HASH12_LEN, LANE_BEGIN, LANE_END, LaneMarker, MarkerKind, VerifiedSegment, hash12, marker_line,
-    parse_marker_line, sha256_hex, verify_lane_markers,
+    parse_marker_line, segment_hash12, sha256_hex, verify_lane_markers,
 };
 pub use meta::{SIDECAR_PROTOCOL, SidecarFacts, compose_sidecar, render_sidecar_bytes};
 pub use plan::{ContinuationBand, ContinuationPlan, ContinuationRow};

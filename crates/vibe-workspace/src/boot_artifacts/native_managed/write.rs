@@ -27,6 +27,7 @@ pub(crate) fn write_boot_artifacts_owner_managed<P: OwnerNativeCompileProvider>(
         owner,
         provider,
         finalize_compiler_pending_artifact,
+        None,
     )
 }
 
@@ -42,6 +43,7 @@ pub(crate) fn write_boot_artifacts_owner_managed_with_sources<P: OwnerNativeComp
     trace: Option<&TraceRun>,
     owner: OwnerRuntimeView<'_>,
     provider: Option<&mut P>,
+    prompt: Option<NodePrompt<'_>>,
 ) -> Result<(WrittenArtifacts, Option<OwnerNativeCompileContinuation>), WorkspaceError> {
     write_boot_artifacts_owner_managed_using(
         node_dir,
@@ -55,6 +57,7 @@ pub(crate) fn write_boot_artifacts_owner_managed_with_sources<P: OwnerNativeComp
         owner,
         provider,
         finalize_compiler_pending_artifact,
+        prompt,
     )
 }
 
@@ -84,6 +87,7 @@ pub(crate) fn write_boot_artifacts_owner_managed_with_finalizer<P: OwnerNativeCo
         owner,
         provider,
         finalizer,
+        None,
     )
 }
 
@@ -100,6 +104,7 @@ fn write_boot_artifacts_owner_managed_using<P: OwnerNativeCompileProvider>(
     owner: OwnerRuntimeView<'_>,
     provider: Option<&mut P>,
     finalizer: PendingFinalizer,
+    prompt: Option<NodePrompt<'_>>,
 ) -> Result<(WrittenArtifacts, Option<OwnerNativeCompileContinuation>), WorkspaceError> {
     let control = provider
         .as_ref()
@@ -137,6 +142,13 @@ fn write_boot_artifacts_owner_managed_using<P: OwnerNativeCompileProvider>(
     if let Some(sources) = sources {
         sources.recheck_node(node_dir)?;
     }
+    // One generation, one set of router facts — the same rule as the builtin
+    // seam, which is why the facts are a value and not a second rendering.
+    let router = redirect::RouterFacts {
+        node_id: redirect::router_node_id(prompt.map(|prompt| prompt.manifest), self_coord),
+        static_hash12: static_bytes.map(crate::system_prompt::segment_hash12),
+        spec_format,
+    };
     let redirects = transaction::write_controlled_with_selectors(
         transaction::ArtifactWrite {
             index_path: &index,
@@ -147,7 +159,7 @@ fn write_boot_artifacts_owner_managed_using<P: OwnerNativeCompileProvider>(
         },
         control.as_ref(),
         |transaction| {
-            redirect::write_redirect_blocks_with_transaction(node_dir, spec_format, transaction)
+            redirect::write_redirect_blocks_with_transaction(node_dir, &router, transaction)
         },
     )?;
     let static_lane = compiled.as_ref().map(|_| static_path);

@@ -101,6 +101,14 @@ fn request<'a>(
         spec_format: SpecFormat::Xml,
         effective,
         lane,
+        router: crate::boot_artifacts::RouterFacts {
+            node_id: crate::boot_artifacts::router_node_id(
+                Some(manifest),
+                &vibe_spec::SelfCoordinate::new(None, String::new()),
+            ),
+            static_hash12: lane.map(super::segment_hash12),
+            spec_format: SpecFormat::Xml,
+        },
     }
 }
 
@@ -151,11 +159,19 @@ fn the_entrypoint_witness_is_the_post_write_content_of_this_generation() {
     );
 
     // Said against the write path itself, so the two cannot drift: the
-    // witness equals what the redirect write actually leaves behind.
+    // witness equals what the redirect write actually leaves behind, and
+    // it is the *same* `RouterFacts` value that decides both — which is why
+    // the facts travel in the capture request instead of being derived twice
+    // (`#SYS-PROSPECTIVE-ENTRYPOINT`).
     let path = dir.path().join("AGENTS.md");
     fs::write(&path, before).unwrap();
-    boot_artifacts::write_redirect_blocks_with_spec_format(dir.path(), SpecFormat::Xml).unwrap();
+    let request = request(dir.path(), &manifest, &boot, None);
+    boot_artifacts::write_redirect_blocks_for(dir.path(), &request.router).unwrap();
     assert_eq!(fs::read_to_string(&path).unwrap(), witnessed);
+    assert!(
+        witnessed.contains("project demo"),
+        "the witnessed block carries the node's declared identity:\n{witnessed}"
+    );
     assert_eq!(entrypoint.role, InputRole::Entrypoint);
     assert_eq!(
         entrypoint.sha256,

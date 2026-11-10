@@ -37,7 +37,7 @@ use crate::{WorkspaceError, layout_paths};
 use super::declared_sources::{BootSectionSource, DeclaredBootSources};
 
 use super::{
-    INDEX_FILE, WrittenArtifacts, inputs, redirect, render_index_with_spec_format,
+    INDEX_FILE, NodePrompt, WrittenArtifacts, inputs, redirect, render_index_with_spec_format,
     stale_static_file, static_file, static_path, transaction,
 };
 

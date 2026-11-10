@@ -71,7 +71,7 @@ impl SwitchFixture {
         fs::write(&index, old_index).unwrap();
         fs::write(&stale, b"OLD-STATIC").unwrap();
         let _ = fs::remove_file(&selected);
-        let old_block = render_block(direction.old());
+        let old_block = render_block(&RouterFacts::undeclared(direction.old()));
         for name in REDIRECT_FILES {
             fs::write(root.join(name), &old_block).unwrap();
         }
@@ -109,7 +109,11 @@ impl SwitchFixture {
 
     fn converge(&self, direction: Direction) {
         transaction::write_production_with_selectors(self.write(), |transaction| {
-            write_redirect_blocks_with_transaction(&self.root, direction.next(), transaction)
+            write_redirect_blocks_with_transaction(
+                &self.root,
+                &RouterFacts::undeclared(direction.next()),
+                transaction,
+            )
         })
         .unwrap();
     }
@@ -140,7 +144,7 @@ impl SwitchFixture {
     fn assert_final(&self, direction: Direction) {
         assert!(entry_present(&self.selected));
         assert!(!entry_present(&self.stale));
-        let expected = render_block(direction.next()).into_bytes();
+        let expected = render_block(&RouterFacts::undeclared(direction.next())).into_bytes();
         let triplet = REDIRECT_FILES
             .iter()
             .map(|name| fs::read(self.root.join(name)).unwrap())
@@ -195,7 +199,7 @@ fn each_redirect_error_keeps_selectors_live_and_retry_converges_both_directions(
                 transaction::write_production_with_selectors(fixture.write(), |transaction| {
                     write_redirect_blocks_with_faults(
                         &fixture.root,
-                        direction.next(),
+                        &RouterFacts::undeclared(direction.next()),
                         transaction,
                         &ErrorAfter(after),
                     )
@@ -249,7 +253,7 @@ fn redirect_child_helper() {
     let result = transaction::write_production_with_selectors(fixture.write(), |transaction| {
         write_redirect_blocks_with_faults(
             &fixture.root,
-            direction.next(),
+            &RouterFacts::undeclared(direction.next()),
             transaction,
             &ExitAfter(after),
         )

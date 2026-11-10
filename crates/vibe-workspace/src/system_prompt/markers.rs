@@ -131,6 +131,39 @@ pub fn hash12(bytes: &[u8]) -> String {
     digest
 }
 
+/// The 12 digits a delivered segment's markers carry, for a file whose own
+/// bytes are `bytes`.
+///
+/// This is [`hash12`] over the **delivered** body rather than over the file:
+/// the composer gives a body that does not end with a newline one, so the
+/// end marker is always a line of its own, and that byte lies *between* the
+/// two markers and is therefore part of what the hash covers.
+///
+/// It exists so the agent lane and the managed block's expected-`STATIC`
+/// value are computed by one function. The alternative — each side applying
+/// the same normalisation by hand — is how a project ends up telling a model
+/// to re-read a lane that is in fact current (`#SYS-LANE-MARKERS`).
+///
+/// ```
+/// use vibe_workspace::system_prompt::{hash12, segment_hash12};
+///
+/// // A body that already ends with a newline is hashed as it stands.
+/// assert_eq!(segment_hash12(b"a\n"), hash12(b"a\n"));
+/// // One that does not is hashed with the LF the composer will insert.
+/// assert_eq!(segment_hash12(b"a"), hash12(b"a\n"));
+/// // An empty body gets no inserted byte, because no marker needs one.
+/// assert_eq!(segment_hash12(b""), hash12(b""));
+/// ```
+pub fn segment_hash12(bytes: &[u8]) -> String {
+    if bytes.is_empty() || bytes.ends_with(b"\n") {
+        return hash12(bytes);
+    }
+    let mut delivered = Vec::with_capacity(bytes.len() + 1);
+    delivered.extend_from_slice(bytes);
+    delivered.push(b'\n');
+    hash12(&delivered)
+}
+
 /// Render one marker line, without its newline.
 ///
 /// ```

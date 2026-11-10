@@ -41,6 +41,14 @@ pub struct PrefixCapture<'a> {
     /// The lane bytes this generation publishes, or `None` for a node with
     /// no static contributions.
     pub lane: Option<&'a [u8]>,
+    /// The router facts this generation's managed-block write uses.
+    ///
+    /// They arrive from the caller rather than being derived here, because
+    /// the entrypoint witness must be the bytes the write will leave: a
+    /// second derivation of the node id or of the expected lane digest is
+    /// how a published block and its own witness come to disagree
+    /// (`#SYS-PROSPECTIVE-ENTRYPOINT`).
+    pub router: boot_artifacts::RouterFacts,
 }
 
 /// Capture one node's prefix inputs under a freshly held workspace.
@@ -74,6 +82,14 @@ pub fn capture_node_prefix_inputs(
         Some(spec_format),
     )?
     .ok_or_else(|| refusal(workspace.root.clone(), "prepared nodes missing".to_string()))?;
+    let router = boot_artifacts::RouterFacts {
+        node_id: boot_artifacts::router_node_id(
+            Some(manifest),
+            &crate::install::bootgen::root_self_coordinate(&workspace.root_manifest),
+        ),
+        static_hash12: lane.map(super::segment_hash12),
+        spec_format,
+    };
     capture_prefix_inputs(
         PrefixCapture {
             node_rel,
@@ -82,6 +98,7 @@ pub fn capture_node_prefix_inputs(
             spec_format,
             effective,
             lane,
+            router,
         },
         &super::bound_reader(&sources, node_rel),
     )
@@ -162,7 +179,7 @@ fn capture_entrypoint(
             format!("the selected system-prompt entrypoint is not UTF-8: {error}"),
         )
     })?;
-    let projected = boot_artifacts::project_managed_block(Some(&existing), request.spec_format)
+    let projected = boot_artifacts::project_managed_block(Some(&existing), &request.router)
         .map_err(|reason| WorkspaceError::MalformedRedirectBlock {
             path: request.node_dir.join(name),
             reason,

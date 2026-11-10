@@ -33,7 +33,7 @@ use crate::WorkspaceError;
 
 use super::compose_error;
 use super::markers::{
-    MarkerKind, hash12, marker_field, marker_line, sha256_hex, verify_lane_markers,
+    MarkerKind, marker_field, marker_line, segment_hash12, sha256_hex, verify_lane_markers,
 };
 use super::verify::{ImportInertness, refuse_managed_block_markers, refuse_marker_shaped_lines};
 
@@ -118,6 +118,10 @@ pub fn compose_agent_lane(
                 ),
             ));
         }
+        // The delivered digest is taken from the file's own bytes through the
+        // one shared function, so the managed block's expected value and the
+        // marker this loop writes can never be two different numbers.
+        let digest = segment_hash12(source.bytes);
         let mut body = String::from_utf8(source.bytes.to_vec()).map_err(|error| {
             compose_error(
                 "agent lane",
@@ -135,7 +139,7 @@ pub fn compose_agent_lane(
         if !body.is_empty() && !body.ends_with('\n') {
             body.push('\n');
         }
-        let digest = hash12(body.as_bytes());
+        debug_assert_eq!(digest, super::markers::hash12(body.as_bytes()));
         text.push_str(&marker_line(
             MarkerKind::Begin,
             node_id,

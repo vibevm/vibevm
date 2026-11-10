@@ -217,6 +217,7 @@ pub(crate) fn regenerate_boot_from_bound_native<P: OwnerNativeCompileProvider>(
                 trace,
                 node_runtime,
                 provider.as_deref_mut(),
+                Some(boot_artifacts::NodePrompt { manifest }),
             )?;
         if let Some(continuation) = continuation {
             native.insert(owner, continuation);

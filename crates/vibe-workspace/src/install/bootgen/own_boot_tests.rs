@@ -270,6 +270,7 @@ fn retained_zero_static_publication_refuses_changed_selection() {
             Some(&sources),
             None,
             vibe_spec::CompilePlans::transforms_only(vibe_spec::TransformPlan::empty()),
+            None,
         )
         .unwrap_err();
         assert!(
@@ -289,6 +290,7 @@ fn retained_zero_static_publication_refuses_changed_selection() {
                 Some(&sources),
                 None,
                 epoch.node(".").unwrap(),
+                None,
                 None,
             );
         assert!(

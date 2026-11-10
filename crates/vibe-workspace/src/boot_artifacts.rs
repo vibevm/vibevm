@@ -93,8 +93,10 @@ pub use format::{STATIC_FILE, STATIC_XML_FILE, resolve_static_path, static_file,
 mod redirect;
 pub(crate) use redirect::project_managed_block;
 pub use redirect::{
-    BLOCK_CLOSE, BLOCK_OPEN, BlockLocation, REDIRECT_FILES, locate_block, render_redirect,
-    render_redirect_with_spec_format, write_redirect_blocks,
+    BLOCK_CLOSE, BLOCK_OPEN, BlockLocation, CodexBudget, NEUTRALISED_BODY, PROJECT_DOC_MAX_BYTES,
+    PROJECT_DOC_WARN_MARGIN, REDIRECT_FILES, RouterFacts, UNDECLARED_NODE_ID, locate_block,
+    render_neutralised_block, render_redirect, render_redirect_with_spec_format, render_router,
+    router_node_id, write_redirect_blocks, write_redirect_blocks_for,
     write_redirect_blocks_with_spec_format,
 };
 
@@ -262,6 +264,21 @@ pub fn render_static_with_spec_format(
     )
 }
 
+/// What a node contributes to its own prompt artifacts, beside the boot
+/// artifacts a write already computes.
+///
+/// Optional, because `write_boot_artifacts` is reachable for a bare
+/// directory that is not a node of any workspace. Absent, the router block
+/// falls back to the workspace's own coordinate
+/// ([`redirect::router_node_id`]) and no prefix is published at all — a
+/// write path with no node identity has no node whose opt-in it could read.
+#[derive(Clone, Copy)]
+pub struct NodePrompt<'a> {
+    /// The node's own manifest — the authority for its identity and for
+    /// `[system_prompt]`.
+    pub manifest: &'a vibe_core::manifest::Manifest,
+}
+
 /// What [`write_boot_artifacts`] wrote — for the caller to report.
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct WrittenArtifacts {
@@ -327,6 +344,7 @@ pub fn write_boot_artifacts_with_spec_format(
         None,
         None,
         CompilePlans::transforms_only(TransformPlan::empty()),
+        None,
     )
 }
 
@@ -342,6 +360,7 @@ pub(crate) fn write_boot_artifacts_traced(
     sources: Option<&DeclaredBootSources>,
     trace: Option<&TraceRun>,
     plans: CompilePlans,
+    prompt: Option<NodePrompt<'_>>,
 ) -> Result<WrittenArtifacts, WorkspaceError> {
     // A node with no static contributions declares no scope at all, and the
     // base identity is only minted when a recorder is present, so off mode
@@ -358,6 +377,7 @@ pub(crate) fn write_boot_artifacts_traced(
         sources,
         acquisition.as_ref(),
         plans,
+        prompt,
     )
 }
 
@@ -372,6 +392,7 @@ fn write_boot_artifacts_inner(
     sources: Option<&DeclaredBootSources>,
     acquisition: Option<&ScopeAcquisition<'_>>,
     plans: CompilePlans,
+    prompt: Option<NodePrompt<'_>>,
 ) -> Result<WrittenArtifacts, WorkspaceError> {
     // Compile every fallible semantic artifact before touching existing files.
     // INDEX rendering precedes the compiler and may refuse — which is exactly
@@ -403,6 +424,17 @@ fn write_boot_artifacts_inner(
     if let Some(sources) = sources {
         sources.recheck_node(node_dir)?;
     }
+    // The router block's three facts, computed once for this generation and
+    // shared with the prefix's prospective entrypoint witness: the block the
+    // selector writes and the bytes the witness records must be the same
+    // bytes (PROP-076 `#SYS-PROSPECTIVE-ENTRYPOINT`).
+    let router = RouterFacts {
+        node_id: redirect::router_node_id(prompt.map(|prompt| prompt.manifest), self_coord),
+        static_hash12: static_artifact
+            .as_ref()
+            .map(|artifact| crate::system_prompt::segment_hash12(artifact.bytes())),
+        spec_format,
+    };
     let redirects = transaction::write_production_with_selectors(
         transaction::ArtifactWrite {
             index_path: &index,
@@ -412,7 +444,7 @@ fn write_boot_artifacts_inner(
             stale_path: &stale_path,
         },
         |transaction| {
-            redirect::write_redirect_blocks_with_transaction(node_dir, spec_format, transaction)
+            redirect::write_redirect_blocks_with_transaction(node_dir, &router, transaction)
         },
     )?;
     let static_lane = static_artifact.map(|_| static_path);
