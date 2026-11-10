@@ -47,6 +47,7 @@ mod record;
 mod selection;
 mod source;
 mod target;
+mod templates;
 
 use history::{history_bundles, mirror_record};
 use plan::{Decision, plan_versions};
@@ -219,6 +220,22 @@ pub(super) fn run_mirror(
     };
     let bundle_count = bundles.len();
     files.extend(bundles);
+    // The snapshot rides the same batch as the versions, so
+    // `#MIRROR-TEMPLATE-SNAPSHOT`'s "its digests are fixed there" is the
+    // git commit itself. An alarm inside it stops the run here, before
+    // the batch is assembled and so before anything is written.
+    let snapshots = match &reader {
+        SourceReader::Layout(opened) => {
+            super::observed_stage(ctx, "Snapshotting the templates' inputs", || {
+                templates::snapshots(ctx, &selection, opened.root(), tree.root(), scratch.path())
+            })?
+        }
+        // Refused before the listing by `refuse_templates_without_a_tree`,
+        // so a non-layout source has no `[[template]]` row to answer for.
+        SourceReader::PerPackage { .. } => Vec::new(),
+    };
+    let snapshot_count = snapshots.len();
+    files.extend(snapshots);
     drop(tree);
 
     let unavailable = planned
@@ -263,8 +280,12 @@ pub(super) fn run_mirror(
             .count();
         let recorded = copies + items.len() + new_facts;
         report.facts_recorded = u32::try_from(recorded).unwrap_or(u32::MAX);
-        report.index_refreshed =
-            recorded > 0 || target_state != vibe_core::layout_registry::IndexState::Current;
+        // A snapshot file the target does not hold is a write the batch
+        // would make, so a dry run that selected a new template version
+        // must not report the index as untouched.
+        report.index_refreshed = recorded > 0
+            || snapshot_count > 0
+            || target_state != vibe_core::layout_registry::IndexState::Current;
         return render(ctx, &report);
     }
     let batch = BatchConfig {

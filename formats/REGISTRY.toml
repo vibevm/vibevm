@@ -1179,6 +1179,37 @@ foreign_parsers = "many"
 corpus = "formats/corpora/index/e1"
 sunset = "none"
 
+# ── The template snapshot a mirror writes under `_index/`, PROP-075 ────────
+# `_index/templates/<group>/<name>/` — `snapshot.toml` (a record of what was
+# snapshotted and when), `versions.json` (the upstream version list restricted
+# to the selected versions, in the client cache's own envelope) and
+# `digests/<version>` (the upstream digest document verbatim). One format over
+# three files, which is why `schema = "none"`: no single JTD describes a TOML
+# record beside a JSON envelope beside an opaque upstream document, and the
+# record is hand-typed serde like `_index/mirrors/<source>.toml` beside it.
+#
+# NOT recoverable, and that is the whole point: the snapshot exists because a
+# client inside a closed network cannot reach the upstream the bytes came from,
+# so nothing inside the network can regenerate them. `many` foreign parsers —
+# an operator reads a snapshot with whatever tool is at hand, and a closed
+# network's own tooling may well read it too.
+#
+# Its corpus is its OWN authored golden home, deliberately not the projected
+# `formats/corpora/index/e1` beside it: that home is a registry tree
+# `rebuild --check` proves byte-identical to its journal's projection, and the
+# snapshot is written by the mirror through `BatchConfig.files` rather than by
+# the index writer (PROP-075 `#P4-AS-BUILT` amendment 5). An authored corpus
+# stands on its wire-parity oracle, which is
+# `templates::snapshot::tests::corpus` in `vibe-registry`: the writer emits
+# exactly these bytes and the reader round-trips them.
+[format.index-templates]
+epoch = 1
+schema = "none"
+recoverable = false
+foreign_parsers = "many"
+corpus = "formats/corpora/index-templates/e1"
+sunset = "none"
+
 # ── Authored formats (authored, not derived) ────────────────────────────────
 [format.manifest]
 epoch = 1

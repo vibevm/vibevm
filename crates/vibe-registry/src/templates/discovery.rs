@@ -92,10 +92,19 @@ impl TemplateLayer {
                 reason: error.to_string(),
             }
         })?;
+        let cache = self.cache(group, name);
         // Keep the declaration beside its inputs, so a channel can be
         // lowered later from the cache alone — the budget a prompt hook
         // has (PROP-075 `#ACTIVATION-HOOK`).
-        self.cache(group, name).write_declaration(&template_toml)?;
+        cache.write_declaration(&template_toml)?;
+        // A registry that carries a mirror's template snapshot primes
+        // this cache from it, and nothing below here learns that the
+        // bytes came from a registry rather than from upstream: the two
+        // document readers find an ordinary cache hit and never reach the
+        // transport. That is the whole mechanism by which a client inside
+        // a closed network renders a snapshotted version "with the same
+        // code as outside" (PROP-075 `#MIRROR-TEMPLATE-SNAPSHOT`).
+        self.prime_from_snapshot(registry_root, group, name, &cache);
         Ok(Some(ActiveTemplate {
             group: group.clone(),
             name: name.to_string(),
@@ -106,6 +115,55 @@ impl TemplateLayer {
             published: published.into_iter().collect(),
             revisions: revisions.keys().cloned().collect(),
         }))
+    }
+
+    /// Prime `cache` from the registry's own template snapshot, if it
+    /// carries one.
+    ///
+    /// **Never fails the discovery.** A snapshot is a cache of someone
+    /// else's bytes: one that cannot be read leaves the client with its
+    /// own cache and whatever network it has, which is a degraded answer,
+    /// while a refusal would make the registry unusable for the package.
+    /// What a broken snapshot must not do is go unmentioned, so the
+    /// reasons are warned about in [`super::snapshot`] where each is detected.
+    fn prime_from_snapshot(
+        &self,
+        registry_root: &Path,
+        group: &Group,
+        name: &str,
+        cache: &super::TemplateCache,
+    ) {
+        let Ok(Some(snapshot)) = super::Snapshot::read(registry_root, group, name) else {
+            return;
+        };
+        match snapshot.prime(cache) {
+            Ok(0) => {}
+            Ok(placed) => tracing::debug!(
+                target: "vibe_registry::templates",
+                "{group}/{name}: primed {placed} file(s) from the registry's template snapshot \
+                 of {}",
+                snapshot.synced()
+            ),
+            Err(error) => tracing::warn!(
+                target: "vibe_registry::templates",
+                "{group}/{name}: the registry's template snapshot could not be primed into the \
+                 cache ({error}); falling back to this machine's own cache"
+            ),
+        }
+    }
+
+    /// The snapshot `<group>/<name>`'s registry carries, if any — what
+    /// `vibe app versions` reports the `[sync] last` of, so a user in a
+    /// closed network can see how old the version list is.
+    pub fn registry_snapshot(
+        &self,
+        registry_root: &Path,
+        group: &Group,
+        name: &str,
+    ) -> Option<super::Snapshot> {
+        super::Snapshot::read(registry_root, group, name)
+            .ok()
+            .flatten()
     }
 
     /// The template of `<group>/<name>` **from the cache alone**: the

@@ -160,6 +160,7 @@ pub enum FormatId {
     IndexHttpPurlsResponse,
     IndexPrimary,
     IndexRepomd,
+    IndexTemplates,
     Journal,
     LifecycleContext,
     LifecycleReply,

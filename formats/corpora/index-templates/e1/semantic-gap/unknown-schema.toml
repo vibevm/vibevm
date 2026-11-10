@@ -1,0 +1,25 @@
+# Written by `vibe registry mirror` (PROP-075 #MIRROR-SNAPSHOT-LAYOUT): the
+# external inputs of template `org.vibevm.node/node` this registry carries, so a client inside
+# a closed network renders from them with no upstream request at all.
+schema = 2
+
+[source]
+package = "org.vibevm.node/node"
+revision = "1.0.0"
+version_list_url = "https://nodejs.org/dist/index.json"
+digest_url = "https://nodejs.org/dist/v{version}/SHASUMS256.txt"
+
+[sync]
+vibe = "vibe 1.0.11"
+first = "2026-11-10T09:00:00Z"
+last = "2026-11-10T09:00:00Z"
+
+[[version]]
+version = "22.23.4"
+digest_sha256 = "c90c3f14c90c3f14c90c3f14c90c3f14c90c3f14c90c3f14c90c3f14c90c3f14"
+rendered_sha256 = "1111222211112222111122221111222211112222111122221111222211112222"
+
+[[version]]
+version = "24.22.2"
+digest_sha256 = "aec92ae9aec92ae9aec92ae9aec92ae9aec92ae9aec92ae9aec92ae9aec92ae9"
+rendered_sha256 = "3333444433334444333344443333444433334444333344443333444433334444"

@@ -83,7 +83,9 @@ impl Domains for RegistryDomains {
         }
         for root in self.roots()? {
             match layer.for_directory(&root, &group, name) {
-                Ok(Some(found)) => return Ok(directory_domain(&layer, &found)),
+                Ok(Some(found)) => {
+                    return Ok(directory_domain(&layer, &found, Some(root.as_path())));
+                }
                 Ok(None) => continue,
                 Err(error) => return Err(error.to_string()),
             }
@@ -137,7 +139,11 @@ impl RegistryDomains {
 
 /// The domain of a template found on disk, with every version's origin
 /// and the channel table its rules produced.
-fn directory_domain(layer: &TemplateLayer, found: &DirectoryTemplate) -> Domain {
+fn directory_domain(
+    layer: &TemplateLayer,
+    found: &DirectoryTemplate,
+    registry_root: Option<&std::path::Path>,
+) -> Domain {
     let versions = found
         .domain
         .all()
@@ -150,7 +156,7 @@ fn directory_domain(layer: &TemplateLayer, found: &DirectoryTemplate) -> Domain 
     Domain {
         versions,
         channels: found.domain.channels().clone(),
-        template: Some(template_facts(layer, &found.template)),
+        template: Some(template_facts(layer, &found.template, registry_root)),
         notices: found.domain.skipped().to_vec(),
     }
 }
@@ -166,12 +172,20 @@ fn cached_domain(layer: &TemplateLayer, group: &Group, name: &str) -> Domain {
     Domain {
         versions: Vec::new(),
         channels,
-        template: Some(template_facts(layer, &template)),
+        // Read from the cache alone, so there is no registry to read a
+        // snapshot's sync time out of; the field stays absent rather
+        // than guessing from the primed bytes, which carry upstream's
+        // own `fetched_at` and not the mirror's.
+        template: Some(template_facts(layer, &template, None)),
         notices: Vec::new(),
     }
 }
 
-fn template_facts(layer: &TemplateLayer, template: &ActiveTemplate) -> TemplateFacts {
+fn template_facts(
+    layer: &TemplateLayer,
+    template: &ActiveTemplate,
+    registry_root: Option<&std::path::Path>,
+) -> TemplateFacts {
     TemplateFacts {
         coordinate: template.coordinate(),
         revision: template.revision.to_string(),
@@ -182,7 +196,15 @@ fn template_facts(layer: &TemplateLayer, template: &ActiveTemplate) -> TemplateF
             .ok()
             .flatten()
             .map(|envelope| envelope.fetched_at),
-        snapshot_synced: None,
+        // In a closed network the domain came from a mirror's snapshot,
+        // and how old that snapshot is is the fact a user needs to decide
+        // whether to ask the operator to re-run the mirror
+        // (PROP-075 `#MIRROR-SNAPSHOT-LAYOUT`).
+        snapshot_synced: registry_root.and_then(|root| {
+            layer
+                .registry_snapshot(root, &template.group, &template.name)
+                .map(|snapshot| snapshot.synced().to_string())
+        }),
     }
 }
 

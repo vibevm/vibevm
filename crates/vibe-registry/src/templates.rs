@@ -42,6 +42,7 @@ mod domain;
 mod error;
 mod fetch;
 mod materialise;
+pub mod snapshot;
 
 pub use active::{active, install};
 pub use cache::{CachedVersionList, TemplateCache, digest_of};
@@ -51,6 +52,7 @@ pub use domain::{Origin, TemplateChannels, VersionDomain};
 pub use error::TemplateError;
 pub use fetch::{Document, Fetched, HttpTransport, TemplateTransport, choose_url, local_file};
 pub use materialise::FullRender;
+pub use snapshot::Snapshot;
 
 /// The subdirectory of the settings root that holds every template's
 /// cached inputs and rendered outputs (PROP-075 `#TEMPLATE-CACHE`).

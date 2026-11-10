@@ -175,13 +175,33 @@ below with four amendments, recorded in
 
 ## AV-FMT-008 — template snapshot under `_index/templates/` (Phase 4)
 
-Status: **planned**. New format.
+Status: **delivered 2026-11-10** (phase P4, commit b). New format. As implemented it matches the
+entry below with three amendments to the registry record alone — the layout, the record's
+contents and the staleness rules are as written:
 
-- New record `[format.index-templates]`, epoch **1**, `schema = "schemas/index/e1/templates.jtd.json"`, `recoverable = true`, `foreign_parsers = "many"`, corpus `formats/corpora/index/e1`, `sunset = "none"`.
+1. **`schema = "none"`, not a JTD** (decided by the central session). One format spans three
+   files — a TOML record beside a JSON envelope beside an opaque upstream document — and no
+   single JTD describes that. The record is hand-typed serde, exactly like
+   `_index/mirrors/<source>.toml` beside it, and the precedent followed is
+   `[format.change-manifest]`.
+2. **`recoverable = false`.** The entry said `true`. The snapshot exists precisely because a
+   client inside a closed network cannot reach the upstream the bytes came from, so **nothing
+   inside the network can regenerate them** — which is the definition of unrecoverable. Calling
+   it recoverable would claim a repair recipe that cannot exist.
+3. **Its own authored golden corpus, `formats/corpora/index-templates/e1`**, not the projected
+   `formats/corpora/index/e1`. That home is a registry tree `rebuild --check` proves
+   byte-identical to its journal's projection; the snapshot is written by the mirror through
+   `BatchConfig.files` and not by the index writer, so putting its goldens there would mix an
+   authored document into a projected home. It is the same boundary P4 amendment 1 draws for
+   `WRITER_DIRS`. An authored corpus stands on its wire-parity oracle, which is
+   `vibe_registry::templates::snapshot::tests::corpus`: the writer emits exactly those bytes and
+   the reader round-trips them, with the two «reads as absent» cases kept as bytes too.
+
+- New record `[format.index-templates]`, epoch **1**, `schema = "none"`, `recoverable = false`, `foreign_parsers = "many"`, corpus `formats/corpora/index-templates/e1`, `sunset = "none"`.
 - Layout under the target registry root: `_index/templates/<group>/<name>/snapshot.toml` (`schema = 1`), `…/versions.json` (the upstream source document restricted to the selected versions, in the same envelope the client cache uses, with the record array filtered and nothing else altered), and `…/digests/<version>` (the upstream digest document verbatim).
 - `snapshot.toml` records `[source]` (the template coordinate and revision, the version-list url and the digest url template as declared, before remap), `[sync]` (the writing vibe and the first and last sync time), and one `[[version]]` per snapshotted version with `version`, `digest_sha256` and `rendered_sha256`.
 - Written inside the mirror's single commit through the existing `BatchConfig.files` channel, so the snapshot's digests are fixed by the git commit itself.
-- A client never revalidates a snapshot and never contacts upstream from one. `vibe app versions` reports the snapshot's `[sync] last` so a user can see how old the list is.
+- A client never revalidates a snapshot and never contacts upstream from one. `vibe app versions` reports the snapshot's `[sync] last` so a user can see how old the list is. As built that is **one mechanism, not two readers**: discovering a template in a directory registry primes this machine's template cache from the registry's snapshot, so the version-list and digest readers find an ordinary cache hit and never reach the transport — a client inside a closed network therefore renders «with the same code as outside» literally. Priming never overwrites a cache entry that is already there (a digest document is immutable, so the two cannot honestly differ, and overwriting would erase the evidence the changed-digest alarm exists to raise), and a snapshot that cannot be read — wrong `schema`, unparseable record, a `versions.json` whose `sha256` does not hash its own `document`, a `[[version]]` row whose digest file is missing or does not hash to it — reads as **absent** rather than fatal, because a refusal would make the whole registry unusable for every package including the ones with no template at all.
 - A re-run adds versions and leaves existing ones untouched; a `digest_sha256` that changed for an already-snapshotted version stops the run before anything is written, exactly as PROP-002 `#MIRROR-RULES` stops on a changed hash of a frozen version.
 - ~~`_index/templates/` is a new directory the index writer must own: `WRITER_DIRS` (`crates/vibe-index/src/index/mod.rs`) learns it, and the layout projection must know it so the index does not read `Stale`.~~ **Withdrawn against the code, 2026-11-10 (P4 amendments 1 and 2).** `WRITER_DIRS` is the whitelist of what `Index::write_to` itself *produces* — read by `rebuild.rs` `catalog_file_set` and `index/memory/projection_compare.rs` `projection_matches` — and the snapshot is written through `BatchConfig.files`, not by the index writer, so `_index/templates/` stays outside it exactly as `README.md`, `.gitignore` and `state/` do. Nor can it make the index read `Stale`: `listing.txt` is `render_listing(version_dirs, journal_digest)` and `version_dirs` skips `_index` altogether. The obligation this bullet created is replaced by one test: a registry that grows `_index/templates/` still reads `Fresh`.
 - `versions.json` carries the client cache's own envelope, `CachedVersionList { source_url, sha256, fetched_at, document }`. Because the snapshot restricts `document` to the selected versions, `sha256` is **recomputed over the filtered document** rather than carried over from the upstream fetch.

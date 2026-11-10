@@ -321,4 +321,41 @@ mod tests {
         };
         assert!(reason.contains("journal"), "{reason}");
     }
+    /// A mirror's template snapshot grows `_index/templates/`, and that
+    /// **cannot** make the index stale: the listing is rendered over
+    /// `version_dirs`, which skips `_index` altogether, and the journal
+    /// digest is over `state/journal/`. P4's plan carried the opposite as
+    /// a risk and this is its closure (PROP-075 `#P4-AS-BUILT`
+    /// amendment 6) — so a reader cannot reintroduce it by teaching the
+    /// listing to walk `_index/`.
+    #[test]
+    #[specmark::spec(verifies = "spec://org.vibevm.core/vibevm/common/PROP-075#P4-AS-BUILT")]
+    fn a_template_snapshot_under_the_index_leaves_the_index_current() {
+        let tmp = tempfile::tempdir().unwrap();
+        let root = tmp.path();
+        version(root, "org.corp/demo/v1.0.0");
+        fs::create_dir_all(index_dir(root)).unwrap();
+        fs::write(index_dir(root).join("repomd.json"), "{}").unwrap();
+        fs::write(
+            index_dir(root).join(LISTING_FILE),
+            current_listing(root).unwrap(),
+        )
+        .unwrap();
+        assert_eq!(index_state(root).unwrap(), IndexState::Current);
+        let before = current_listing(root).unwrap();
+
+        // The whole snapshot layout of `#MIRROR-SNAPSHOT-LAYOUT`, with a
+        // directory named like a group (`org.vibevm.node`) and one named
+        // like a version (`v24.22.2`) under it, which is the shape that
+        // would catch a listing that walked `_index/`.
+        let snapshot = index_dir(root).join("templates/org.vibevm.node/node");
+        fs::create_dir_all(snapshot.join("digests")).unwrap();
+        fs::create_dir_all(snapshot.join("v24.22.2")).unwrap();
+        fs::write(snapshot.join("snapshot.toml"), "schema = 1\n").unwrap();
+        fs::write(snapshot.join("versions.json"), "{}\n").unwrap();
+        fs::write(snapshot.join("digests/24.22.2"), "aa  f\n").unwrap();
+
+        assert_eq!(current_listing(root).unwrap(), before);
+        assert_eq!(index_state(root).unwrap(), IndexState::Current);
+    }
 }

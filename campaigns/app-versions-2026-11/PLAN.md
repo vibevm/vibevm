@@ -496,7 +496,7 @@ is P5b and does not exist yet. The four as-built amendments are
 
 **Parallel.** Needs P1 and P2. Independent of P4, P5, P6.
 
-### P4 — mirror config, template snapshot, payload projection, prune — **L** — *commit (a) delivered 2026-11-10; (b) and (c) open*
+### P4 — mirror config, template snapshot, payload projection, prune — **L** — *commits (a) and (b) delivered 2026-11-10; (c) open*
 
 **Goal.** `vibe registry mirror --config mirror.toml` selects declaratively,
 snapshots a template's inputs into the target's `_index/`, projects payloads
@@ -506,11 +506,13 @@ into the drop under a budget, and prunes only when told.
 `--config mirror.toml` reader with every refusal, the selection model
 replacing `Filters`, and the recorded selection in `_index/mirrors/<source>.toml`
 (`AV-FMT-007` delivered; `#MIRROR-CONFIG` and `#MIRROR-CONFIG-SCHEMA`
-`impl/done`). **(b) the `_index/templates/` snapshot writer** (its registered
-format, snapshot priming for a network-denied client, `vibe app versions`
-showing the snapshot's sync time) and **(c) payload projection, the budget,
-`--dry-run` counts and prune** are open, and the amendments below already
-bind them.
+`impl/done`). **(b) is landed** — the `_index/templates/` snapshot writer with
+its registered format `[format.index-templates]` and golden corpus, the
+priming by which a network-denied client renders from a snapshot, and
+`vibe app versions` reporting the snapshot's `[sync] last` (`AV-FMT-008`
+delivered; `#MIRROR-TEMPLATE-SNAPSHOT` and `#MIRROR-SNAPSHOT-LAYOUT`
+`impl/done`). **(c) payload projection with its budget, `--dry-run` counts and
+prune** is open, and amendment 4 below already binds it.
 
 **Amendments decided against the code (read before implementing (b) or (c)).**
 
@@ -555,16 +557,18 @@ bind them.
 and its `mirror/{history,plan,record,source,target}.rs` (the selection model
 replacing `Filters` ✔, the recorded selection ✔, the template rows, the prune
 plan); new `mirror/config.rs` (the `mirror.toml` reader ✔) and
-`mirror/selection.rs` (what it means for a run ✔); new `mirror/templates.rs`
+`mirror/selection.rs` (what it means for a run ✔); new `mirror/templates.rs` ✔
 (snapshot writing through the existing `BatchConfig.files` channel);
 `crates/vibe-publish/src/layout_publish.rs` (`BatchConfig`'s removal channel,
 amendment 4) with `layout_publish/{index_plan,localdir,monorepo,working_copy}.rs`;
-`crates/vibe-registry/src/templates/` (the snapshot layout, read and written
-from one place, and the cache priming a network-denied client renders from);
-`crates/vibe-cli/src/commands/app/versions.rs` (`snapshot_synced`, the one
+`crates/vibe-registry/src/templates/snapshot.rs` ✔ (the snapshot layout, read
+and written from one place) with the priming hook in `templates/discovery.rs`
+✔ (one mechanism, so the two document readers learn nothing);
+`crates/vibe-cli/src/commands/app/versions.rs` ✔ (`snapshot_synced`, the one
 field P5b declared in the wire and left unfilled);
 `schemas/registry_mirror_report.jtd.json` (`templates[]`, `pruned[]`);
-`formats/REGISTRY.toml` (`[format.index-templates]`). **Not**
+`formats/REGISTRY.toml` ✔ (`[format.index-templates]`) with
+`formats/corpora/index-templates/e1` ✔. **Not**
 `crates/vibe-index/src/index/mod.rs` and **not** the `repomd.json` `files`
 projection — amendments 1 and 3.
 
@@ -589,18 +593,23 @@ a version recorded as copied from another source is never pruned.
 
 **Acceptance.**
 ```sh
-# commit (a), green 2026-11-10:
+# commits (a) and (b), green 2026-11-10:
 cargo test -p vibe-cli --test cli_registry_mirror --offline --locked
 cargo test -p vibe-cli --test cli_registry_mirror_api --offline --locked
 cargo test -p vibe-cli --test cli_registry_mirror_config --offline --locked
-# commits (b) and (c):
 cargo test -p vibe-cli --test cli_registry_mirror_templates --offline --locked
-cargo test -p vibe-index --offline --locked
+cargo test -p vibe-registry -p vibe-core --offline --locked
 cargo xtask check-codegen && cargo xtask wire-diff
+# commit (c):
+cargo test -p vibe-publish --offline --locked
 ```
 
 **Risks.** The test that a client installs from the snapshot **with the
-network denied** is the only honest proof that the snapshot is complete.
+network denied** is the only honest proof that the snapshot is complete —
+`cli_registry_mirror_templates::a_client_with_only_the_target_and_no_network_renders_from_the_snapshot`,
+green 2026-11-10: a fresh home, only the target registry configured, no
+`[[remap]]` row and `--offline`, which leaves the snapshot as the only place
+its inputs can come from.
 *(The `listing.txt` / `Stale` risk this entry carried is withdrawn —
 amendment 2 above: `version_dirs` skips `_index`, so a snapshot directory
 cannot move the listing. The withdrawal is itself to be proven by a test.)*

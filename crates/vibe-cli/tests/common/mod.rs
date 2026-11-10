@@ -39,6 +39,10 @@ pub mod org_host;
 /// The owned loopback sshd serving one writable monorepo registry.
 #[cfg(unix)]
 pub mod ssh_monorepo;
+/// The template-snapshot fixture of `vibe registry mirror --config`
+/// (PROP-075 `#MIRROR-SNAPSHOT-LAYOUT`).
+#[cfg(unix)]
+pub mod template_mirror;
 /// The R3.4 failure reds' git-backed `org.demo/tools` fixture.
 pub mod trace_failure_slot;
 /// The generated-reader oracle for a registered `--json` report.

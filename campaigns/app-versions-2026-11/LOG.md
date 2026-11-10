@@ -691,3 +691,64 @@ What implementing it taught, beyond the as-built record:
   carried cannot happen. `AV-FMT-008`'s last bullet is withdrawn and
   `AV-FMT-010` is withdrawn whole. Two files the plan named are not touched,
   and one of them was the phase's stated risk.
+
+## 2026-11-10 — phase P4, commit (b): the template snapshot
+
+`vibe registry mirror --config` now writes a template's external inputs into the
+target's `_index/templates/<group>/<name>/`, and a client inside a closed network
+renders from them with no upstream request at all. `AV-FMT-008` is delivered;
+`#MIRROR-TEMPLATE-SNAPSHOT` and `#MIRROR-SNAPSHOT-LAYOUT` are `impl/done`; the six
+amendments it needed are `PROP-075#P4-AS-BUILT` 11–16. Commit **(c)** — payload
+projection, the budget, `--dry-run` counts and prune — is still open.
+
+What implementing it taught, beyond the as-built record:
+
+- **The client half turned out to be one act, not a reader.** The first shape in mind
+  was a snapshot-aware path inside `version_document` and `digest_document`: ask the
+  registry first, fall back to the cache. That is two readers for one question, which is
+  precisely the duplication `#TEMPLATE-RENDER-LOCATION` refuses for rendering. The shape
+  that fits is **priming**: discovery copies the snapshot's `versions.json` and
+  `digests/*` into this machine's own template cache, and every later read is the
+  ordinary cache path. Nothing below `discover_in_directory` learns that a registry was
+  involved, so `#MIRROR-TEMPLATE-SNAPSHOT`'s "with the same code as outside" is literal.
+  The diff is about forty lines in `discovery.rs` and no change at all to the two
+  readers.
+- **`versions.json` had to be the client cache's own envelope, and that forced a
+  recomputation.** The design already said "the same envelope `#TEMPLATE-CACHE` caches,
+  with the record array filtered"; what it did not say is that `CachedVersionList`
+  carries `sha256` **of the document**. Filter the records and the hash stops describing
+  the bytes beside it — so the snapshot writer recomputes it, and the reader now checks
+  it, because an envelope whose hash is a lie would put bytes in the cache under a
+  provenance that is not theirs. That check is a test of its own
+  (`an_envelope_whose_sha256_does_not_describe_its_document_is_ignored`), written against
+  exactly the mistake the amendment prevents.
+- **Every way a snapshot can be broken had to be decided before the writer, not after.**
+  A snapshot is a cache of someone else's bytes, and a registry serves every package, not
+  only the templated one. So a wrong `schema`, an unparseable record, a bad envelope hash
+  and a `[[version]]` row whose digest file is missing or does not hash to it all read as
+  **absent**, each with a warning where it is detected. The alternative — refusing — would
+  let one half-finished mirror run make a whole registry unusable for packages that have
+  no template at all.
+- **The alarm needed a faithful fixture, and the first one was not.** Tampering the
+  digest document by replacing it wholesale made the run fail earlier, as a *render*
+  error: the document no longer named the files the template references. The alarm only
+  fires once a version renders, so the fixture now keeps every filename and moves one
+  digest — which is what "upstream replaced a released version's checksums" actually looks
+  like. A test that fails for the wrong reason proves nothing, and this one was one line
+  away from passing for the wrong reason.
+- **A new `_index/` directory cannot make the index stale, and that is now tested twice.**
+  The plan carried the opposite as the phase's stated risk. `listing.txt` is
+  `render_listing(version_dirs, journal_digest)` and `version_dirs` skips `_index`, so the
+  focused test in `vibe_core::layout_registry` builds the whole snapshot layout — including
+  a directory named like a group and one named like a version, the shape that would catch a
+  listing that walked `_index/` — and asserts the listing is byte-identical and the state
+  `Current`. End-to-end, an identical second mirror run reports `facts_recorded = 0` and
+  `index_refreshed = false`, which is the same claim from the other side.
+- **Four records beat four hundred for a selection test.** P3's frozen index is the whole
+  410-record declared window, and this suite renders every version it selects — so a
+  `versions = [">=22"]` against that index would need a digest document for each of
+  dozens of versions, and the fixtures carry four. The suite therefore uses a four-record
+  subset built from the same frozen document, upstream's own bytes and its own `lts`
+  codenames, which is enough to make `channels = ["lts"]` and `newest` decide something
+  real. The render-fidelity questions stay with P3's suite, which is where the big index
+  belongs.
