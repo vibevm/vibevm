@@ -771,3 +771,39 @@ amended for it.
 - **`[format.cli-agent-list]`** (`schemas/agent_list.jtd.json`, `vibe-agent-list/1`), epoch **1 → 1**, additive: new optional `trust` object with `trusted[]` and `untrusted[]`, each row `{ pattern, source, overrides? }`. `source` is `base` (the list vibe ships), `site`, `user` or `run`; `overrides`, present only on an untrusted row, names the layers whose trust that row takes away. The existing `trusted_groups` array is **unchanged in meaning** — this user's `agents.toml` as written — and `trust` is the resolved answer every consumer reads; a reader that ignores the new member sees exactly what it saw before.
 - **The base list is data in one place**: `vibe_core::trust::BASE_TRUSTED_GROUPS = ["org.vibevm.*"]`. `vibe-workspace`'s `DEFAULT_ALLOWED_GROUPS` is **removed**, and `decide_trust` / `HookPolicy` take the resolved policy instead of a `Vec<String>` — the two allow-lists `AV-FMT-031`'s trust half had to union are now one mechanism. Rust API, not a wire format, recorded here because PROP-020's status line and `#ordinary-trust` both named the constant.
 - **The user-visible behaviour change**: a dependency in any group under `org.vibevm.*` — `org.vibevm.ai-native`, `org.vibevm.node` — now runs its authored `slot:` contributions and its agent-step prompts **unasked**, where before only the exact group `org.vibevm` did. A package in any other group is asked about, or refused unattended, exactly as before. The remedy is `untrusted_groups`, per group or per subtree, in `agents.toml` or in the site profile. Plain `[hooks]` is unaffected and still runs unasked on the canonical path (`BACKLOG.md#b-258`, untouched).
+
+## AV-FMT-105 — the project plane's `[recommends]`: the install report's `recommended[]` / `suggested[]`, and the lock's `weak-chain` provenance (owner decision, weak-dependency amendment)
+
+Status: **delivered 2026-11-10.** Owner decision of the same day, answering the one fork P7d
+left open (`PROP-077#P7D-AS-BUILT` (9)) in one word: **«Вариант 1 делай»** — variant 1 being «a
+package recommended by a project dependency is installed and VISIBLE TO ITS RECOMMENDER as if it
+were that package's ordinary dependency», best-effort, with `--no-recommends` as the decline.
+Design authority: `spec://org.vibevm.core/vibevm/common/PROP-050#WEAK-EDGES-ARE-ORDINARY-EDGES`,
+`spec://org.vibevm.core/vibevm/common/PROP-077#PROJECT-RECOMMENDS`,
+`#PROJECT-RECOMMENDS-REPORT`, with `#SUGGESTS-UNCHANGED` completed by it.
+
+- **No manifest change, again**: `[recommends]` and `[suggests]` already parse for every kind. The
+  change is in the effective set, where an accepted recommendation now contributes an edge
+  recommender → recommended carrying `weak`, traversed by PROP-050's ordinary three rules.
+- `[format.lockfile]` (`schema = "none"`, Rust-owned TOML), epoch **1 → 1**, **no new field**: the
+  existing `admitted_by` provenance member gains the value **`weak-chain`** beside `root-edge`,
+  `public-chain` and `friends-chain`. It is written for a member whose only admitting chain crosses
+  a recommendation. Every lock without a recommendation is byte-identical to before; every lock
+  reader already treats `admitted_by` as an opaque string and prints it (`vibe tree`, the closure
+  diff). `vibe why` says the same word about the same member. A locked weak member is **replayed**:
+  the lock is the record of what was installed, so `vibe install` with no arguments and
+  `vibe reinstall` materialise it again whichever way the flag is passed, and the freshness fast
+  path — declared roots versus `meta.root_dependencies`, plus slot presence — is untouched by an
+  extra non-root member.
+- `[format.cli-install-report]` (`schemas/install_report.jtd.json`), epoch **1 → 1**: two optional
+  members, `recommended[]` and `suggested[]`, omitted when empty. A `recommended[]` row is
+  `package` · `by` (the recommender) · `outcome` · optional `reason`; `outcome` is the new closed
+  vocabulary `install_recommendation_outcome` = `installed` | `satisfied` | `skipped`. A
+  `suggested[]` row is `package` · `by`. This is the channel from the plan to the report that
+  `AV-FMT-030`'s as-built note said a project-plane `suggested[]` would need; both levels now use
+  it. A replay carries neither member, because it resolved nothing and reached no weak table.
+- **Behaviour, not format**: a skipped recommendation is a named warning on stderr with its reason
+  and a report row, never a solve failure and never a change to the exit status; `--no-recommends`
+  runs no expansion at all and reports each reference as skipped **naming the flag**; a
+  recommendation is never a root, never written into the user's `[requires]`, and never grants
+  friendship. `vibe update` / `vibe reinstall` keep their own documents unchanged.

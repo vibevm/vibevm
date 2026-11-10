@@ -1975,3 +1975,102 @@ unit's packet:** PLAN §7's whole-campaign `campaigns/app-versions-2026-11/accep
 — the nine-leg end-to-end script across P1–P7 — is assigned to P7f by the plan
 and was not requested of this unit, which was the shim plus the proof. It
 remains unwritten, and the campaign's close-out owes it.
+
+## 2026-11-10 — `[recommends]` works on the project plane: the owner's «Вариант 1», built
+
+The one fork P7d left for the owner is answered and built. P7d measured that a
+project dependency's recommendation entered the solved graph and the PROP-050
+`#EFFECTIVE-SET` projection then pruned it again — not a root, no manifest edge
+to it, so `analyze` found it unreachable and `prune_graph` dropped it before
+anything was fetched, locked or materialised. The owner's word on the fork:
+**«Вариант 1 делай»** — a package recommended by a project dependency is
+installed and **visible to its recommender as if it were that package's
+ordinary dependency**, best-effort, with `--no-recommends` as the decline. The
+decision is PROP-050 `#WEAK-EDGES-ARE-ORDINARY-EDGES`, the plane's build is
+PROP-077 `#PROJECT-RECOMMENDS` / `#PROJECT-RECOMMENDS-REPORT`, and the formats
+are `AV-FMT-105`. `#SUGGESTS-UNCHANGED` is `impl/done` with them, and
+`#WEAK-TODAY`'s two gaps — the missing flag and the unread plane — are both
+shut.
+
+**One edge, not one exception.** The whole fix is that an accepted
+`[recommends]` reference now *is* an edge — recommender → recommended, carrying
+`weak` — and the effective-set walk reads it with the same three rules and the
+same defaults (`access = "public"`, no friendship) it reads a declared edge
+with. Nothing downstream of visibility had to learn the word: `exclude` through
+the declaring edge kills it, `override` reshapes it, the seal still gates
+friendship, `vibe why` explains it, the closure diff prints it. The alternative
+— an exception in `prune_graph` for «graph members nobody declares» — would have
+put a second notion of membership beside `E(R)` and left every consumer control
+unable to touch it.
+
+**What the implementation decided that the design did not say.**
+
+- **Acceptance is read off the world, not carried from the solver.** The
+  projection turns a `[recommends]` reference into an edge exactly when the
+  recommended coordinate is a member of the graph being analysed. That is one
+  rule for both solve paths (the source-aware metadata closure and the plain
+  `solve_visible_graph` of `vibe update <pkg>` / `--sources-only`), it needs no
+  new solver output, and it is automatically right for `--no-recommends`: the
+  expansion never ran, so there is no member and no edge. The same rule serves
+  the installed-world reader (`vibe why`), where the lock's members are the
+  world — so `vibe why` and the lock cannot disagree about a companion.
+- **Weakness needs a flag on the arrival, and the strong edge wins.** A
+  breadth-first walk can reach a coordinate weakly before it reaches it
+  strongly, so `Provenance.weak` is not «the last edge was weak» but «nothing
+  but a recommendation admits this», and a strong chain replaces a weak witness
+  whatever order the declarations are read in. The walk state carries the flag
+  (and keys on it, so both routes stay alive). A member reached only *through* a
+  weak hop is itself weak, which is the honest answer for what a recommendation
+  brought in.
+- **No lock field.** The lock already records the admitting rule; `admitted_by`
+  gains the value `weak-chain` beside `root-edge` / `public-chain` /
+  `friends-chain`, and that is the whole lock change — `LockedPackage` is
+  `deny_unknown_fields` with 38 literal constructions in the tree, so a new
+  field would have been a wide, forward-incompatible change to record one bit
+  the existing member already has a place for.
+- **Replay keeps it; only a solve reconsiders it.** The lock is the record of
+  what was installed, so a locked weak member is materialised again by a bare
+  `vibe install` and by `vibe reinstall` whichever way the flag is passed — and
+  the freshness fast path never sees it, because it compares declared roots with
+  `meta.root_dependencies` and then checks slot presence. An explicit
+  `vibe install <pkg> --no-recommends` recomputes the whole effective set and
+  the declined member leaves the lock with its slot pruned (measured). A bare
+  `vibe update` is a **scoped** update over every declared root: it moves what
+  it re-resolves and removes no member outside it, so it admits the flag without
+  reconsidering a locked companion. That asymmetry is recorded in
+  `#PROJECT-RECOMMENDS` rather than changed.
+- **The report channel P7d deferred is built, and both levels share it.**
+  `[format.cli-install-report]` gains `recommended[]` (`package` · `by` ·
+  `outcome` ∈ `installed | satisfied | skipped` · optional `reason`) and
+  `suggested[]` (`package` · `by`), filled from the finished metadata closure
+  and carried through `PlannedInstall` → `InstallRun` → the draft. A skip is
+  also a named warning on stderr with its reason, through a new
+  `PlanEvent::RecommendationSkipped`. A replay carries neither member, because
+  it resolved nothing and reached no weak table — a report assembled from the
+  lock would be inventing the account of a solve that did not run.
+
+**Open, deliberately.** A *project's own* `[recommends]` table is still not
+expanded: the solver's greedy expansion walks the selected packages' manifests,
+and the consumer root is not one of them. The projection would admit such an
+edge the moment the solver produced the member, so this is a resolver-side
+addition, not a visibility one. Filed as the one thing this pass found and did
+not do.
+
+**Tests.** `vibe-core`: `visibility::tests::a_weak_edge_admits_its_target_like_an_ordinary_one`,
+`…::a_weak_edge_grants_no_friendship`,
+`…::a_strong_chain_beats_a_weak_one_in_either_declaration_order`,
+`…::a_weak_target_is_excludable_through_the_declaring_edge`, plus the
+`append_recommended_edges` doctests. `vibe-wire`:
+`the_weak_members_are_rows_with_closed_outcomes_and_vanish_when_empty`.
+`vibe-cli` (`cli_install_no_recommends.rs`, rewritten from the suite that
+pinned the broken behaviour):
+`a_recommended_package_is_installed_visible_to_its_recommender_and_never_a_root`
+(lock row with `admitted_by = "weak-chain"`, materialised slot, the report
+lines, the untouched `[requires]`, the root set, and `vibe why` naming the
+chain), `an_unsatisfiable_or_conflicting_recommendation_warns_and_is_skipped`
+(both best-effort shapes: a requirement nothing satisfies, and a companion
+declaring `[conflicts]` on its own recommender),
+`the_flag_declines_the_whole_expansion_and_says_so`,
+`a_locked_weak_member_is_replayed_and_only_a_re_solve_reconsiders_it`,
+`the_json_report_carries_a_row_per_recommendation_and_suggestion`, and the
+retained flag-refusal case.
