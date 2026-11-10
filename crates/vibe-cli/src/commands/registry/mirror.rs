@@ -298,6 +298,10 @@ pub(super) fn run_mirror(
         items,
         facts,
         files,
+        // No run without `--prune` ever deletes anything, however narrow
+        // the selection became (PROP-075 `#MIRROR-NO-SILENT-PRUNE`), and
+        // `--prune` does not exist yet.
+        removed: Vec::new(),
         dry_run: false,
     };
     let outcome = super::observed_stage(ctx, "Writing into the target registry", || {

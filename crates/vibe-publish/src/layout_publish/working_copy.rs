@@ -58,6 +58,7 @@ pub(super) fn publish(
         return Ok(BatchOutcome {
             items: outcomes(staged, &actions),
             facts_recorded: if config.dry_run { plan.facts.len() } else { 0 },
+            removed: plan.removed.len(),
             index_refreshed: config.dry_run && plan.refresh,
             commit: None,
             retried: false,
@@ -66,6 +67,7 @@ pub(super) fn publish(
     }
     ensure_identity(&tree)?;
     let facts_recorded = plan.facts.len();
+    let removed = plan.removed.len();
     let batch = Batch {
         config,
         identity: &identity,
@@ -75,6 +77,7 @@ pub(super) fn publish(
     Ok(BatchOutcome {
         items: outcomes(staged, &actions),
         facts_recorded,
+        removed,
         index_refreshed: true,
         commit: Some(commit),
         retried: false,

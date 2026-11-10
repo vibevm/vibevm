@@ -10,6 +10,7 @@ use chrono::Utc;
 use vibe_core::cancellation::CancellationToken;
 use vibe_index::layout::LayoutIdentity;
 
+use super::index_plan::apply_removals;
 use super::{
     BatchConfig, BatchOutcome, IndexPlan, LayoutAction, Staged, checkpoint, commit_message,
     decide_all, io, outcomes, plan_index, write_index,
@@ -52,6 +53,7 @@ pub(super) fn publish(
             return Ok(BatchOutcome {
                 items: outcomes(staged, &actions),
                 facts_recorded: if config.dry_run { plan.facts.len() } else { 0 },
+                removed: plan.removed.len(),
                 index_refreshed: config.dry_run && plan.refresh,
                 commit: None,
                 retried,
@@ -59,6 +61,7 @@ pub(super) fn publish(
             });
         }
         let facts_recorded = plan.facts.len();
+        let removed = plan.removed.len();
         let batch = Batch {
             config,
             identity: &identity,
@@ -71,6 +74,7 @@ pub(super) fn publish(
                 return Ok(BatchOutcome {
                     items: outcomes(staged, &actions),
                     facts_recorded,
+                    removed,
                     index_refreshed: true,
                     commit: Some(commit),
                     retried,
@@ -111,6 +115,14 @@ pub(super) fn commit_batch(
     cancellation: &CancellationToken,
 ) -> Result<String, PublishError> {
     let mut changed = Vec::new();
+    // Deleted first, so the index re-projection below no longer sees the
+    // version directories; the paths are staged with the rest, which is
+    // what puts the deletion and the rewritten index in ONE commit
+    // (PROP-075 `#MIRROR-PRUNE`).
+    apply_removals(tree, &plan)?;
+    for removal in &plan.removed {
+        changed.push(removal.path.clone());
+    }
     for (index, (stage, action)) in batch.staged.iter().zip(actions).enumerate() {
         if *action == LayoutAction::Unchanged {
             continue;

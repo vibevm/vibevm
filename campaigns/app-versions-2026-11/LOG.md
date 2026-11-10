@@ -752,3 +752,49 @@ What implementing it taught, beyond the as-built record:
   codenames, which is enough to make `channels = ["lts"]` and `newest` decide something
   real. The render-fidelity questions stay with P3's suite, which is where the big index
   belongs.
+
+## 2026-11-10 — phase P4, commit (c) part 1: the removal channel
+
+`BatchConfig` has the removal channel `PLAN.md`'s P4 amendment 4 named, and it
+does what `#MIRROR-PRUNE` requires: a pruned version's bytes, its index rows and
+its journal fact leave in **one** commit. Nothing user-facing changed — no run
+deletes anything, because the mirror passes `removed: vec![]` and nothing else
+can reach the channel — so there is no `AV-FMT` id and no changelog line for a
+user to read. `#MIRROR-PRUNE` stays `spec/plan` until the command surface exists.
+
+Still open in (c): payload projection with digest verification and the pre-write
+`max_total` budget, `--dry-run` counts and bytes, the `--prune` /
+`--prune-payloads` / `--yes` surface with its plan, and `AV-FMT-009`'s two
+report arrays.
+
+What implementing it taught:
+
+- **The order is delete-then-reproject, and the journal fact alone is not
+  enough.** `vibe_index::layout::refresh` projects the catalog from
+  `layout::version_dirs(root)` — the tree, not the journal — so a version whose
+  directory is still on disk when the index is rewritten is projected straight
+  back in, `Event::Removed` or no `Event::Removed`. The fact is the *record* of
+  the removal; the deletion is what makes the catalog stop advertising it. Both
+  belong to the same `write_index` call, which is exactly why this had to be a
+  batch channel and not a step beside the batch.
+- **`monorepo` is the backend where a removal can silently not happen.**
+  `commit_batch` stages a computed list of changed paths, so a deletion that is
+  not in that list leaves the working tree without the file and the *commit*
+  with it — the push then succeeds and the registry still advertises the bytes.
+  The removed paths now join `changed`, and the test asserts against the pushed
+  bare repository's `ls-tree` and its committed `primary.jsonl`, not against the
+  temporary working tree, because only the pushed state can tell the two cases
+  apart.
+- **A removal path is validated against the coordinate it claims.** The channel
+  carries a path *and* the `(group, name, version)` whose journal fact it
+  implies, and those two can disagree — a caller could delete `v1.0.0` while
+  recording that `v9.9.9` went. Then the bytes and the index would describe
+  different worlds. So the path must spell the coordinate exactly, a path that
+  is neither a version directory nor inside `_index/` is refused outright
+  (a batch has no business deleting the rest of the tree, and the mistake is
+  unrecoverable), and every refusal happens before anything is deleted.
+- **A path the tree does not hold is dropped, not refused.** A prune plan is
+  computed against one reading of the target and applied against a possibly
+  newer one; a version someone else already removed is the outcome the caller
+  asked for, not an error. That is the one place the channel is deliberately
+  permissive, and it is tested.

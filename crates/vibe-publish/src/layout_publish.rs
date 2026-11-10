@@ -96,6 +96,37 @@ pub struct PublishItem {
     pub replace: bool,
 }
 
+/// One path the batch **deletes**, and what the registry must be told
+/// about it.
+///
+/// Removal rides the batch rather than happening beside it because a
+/// pruned version's index rows and journal facts have to be rewritten in
+/// the same commit as the deletion (PROP-075 `#MIRROR-PRUNE`): a target
+/// that advertised bytes it no longer had, even for one commit, would be
+/// a registry a client could not trust. The `files` channel cannot
+/// express it — a file it does not name is kept, not removed.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct Removal {
+    /// Registry-relative path, removed recursively. Either a package
+    /// version directory or a path inside `_index/`; anything else is
+    /// refused, because a batch has no business deleting the rest of the
+    /// tree.
+    pub path: String,
+    /// Set when `path` is a package version directory: the coordinate it
+    /// holds, so the journal records an `Event::Removed` for it and the
+    /// re-projection drops its rows. `None` for a file under `_index/`
+    /// (a snapshot's digest document), which no catalog row describes.
+    pub version: Option<RemovedVersion>,
+}
+
+/// The coordinate a removed version directory held.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct RemovedVersion {
+    pub group: vibe_core::Group,
+    pub name: String,
+    pub version: semver::Version,
+}
+
 /// Inputs to one batch.
 #[derive(Debug, Clone)]
 pub struct BatchConfig {
@@ -110,6 +141,10 @@ pub struct BatchConfig {
     /// path, source file) — a mirror's record and history bundles. Only
     /// those whose bytes differ are written.
     pub files: Vec<(String, PathBuf)>,
+    /// Paths the batch deletes, with the index rows and journal facts
+    /// they imply — see [`Removal`]. Empty for every publish that only
+    /// adds, which is every publish but a prune.
+    pub removed: Vec<Removal>,
     /// The commit message (monorepo, working copy); a default names the
     /// published versions.
     pub message: Option<String>,
@@ -173,6 +208,8 @@ pub struct BatchOutcome {
     /// Journal facts recorded beside the versions (after dropping those
     /// the registry already reflected).
     pub facts_recorded: usize,
+    /// Paths the batch deleted (or, on a dry run, would delete).
+    pub removed: usize,
     /// The registry index was rewritten (or, on a dry run, would be).
     pub index_refreshed: bool,
     /// The commit made (monorepo: pushed; working copy: local).
@@ -187,6 +224,7 @@ impl BatchOutcome {
     pub fn changed(&self) -> bool {
         self.index_refreshed
             || self.facts_recorded > 0
+            || self.removed > 0
             || self
                 .items
                 .iter()
@@ -257,6 +295,7 @@ pub fn publish(
             }],
             facts: Vec::new(),
             files: Vec::new(),
+            removed: Vec::new(),
             message: None,
             dry_run: config.dry_run,
         },

@@ -223,6 +223,7 @@ fn batch(target: LayoutTarget, items: Vec<PublishItem>, facts: Vec<Event>) -> Ba
         items,
         facts,
         files: Vec::new(),
+        removed: Vec::new(),
         message: Some("mirror: test".into()),
         dry_run: false,
     }
@@ -338,4 +339,228 @@ fn a_working_copy_is_committed_into_and_a_dirty_one_refused() {
         "{refused}"
     );
     assert_eq!(git(&wc, &["rev-parse", "HEAD"]), head);
+}
+
+/// A pruned version's bytes, its index rows and its journal fact leave in
+/// ONE commit (PROP-075 `#MIRROR-PRUNE`): the target is never left
+/// advertising bytes it no longer has, not even for one commit.
+#[test]
+#[specmark::spec(verifies = "spec://org.vibevm.core/vibevm/common/PROP-075#MIRROR-PRUNE")]
+fn a_removal_drops_the_bytes_the_rows_and_the_fact_together() {
+    let tmp = tempfile::tempdir().unwrap();
+    let root = tmp.path().join("registry");
+    fs::create_dir_all(&root).unwrap();
+    let one = package(tmp.path(), "1.0.0", "one");
+    let two = package(tmp.path(), "1.1.0", "eleven");
+    let target = LayoutTarget::Localdir { root: root.clone() };
+    publish_batch(
+        &batch(
+            target.clone(),
+            vec![item(one, "1.0.0"), item(two, "1.1.0")],
+            Vec::new(),
+        ),
+        &Default::default(),
+    )
+    .unwrap();
+    assert!(root.join("org.corp/demo/v1.0.0/payload").is_file());
+    let primary = fs::read_to_string(root.join("_index/primary.jsonl")).unwrap();
+    assert!(primary.contains("1.0.0"), "{primary}");
+
+    let mut prune = batch(target, Vec::new(), Vec::new());
+    prune.removed = vec![Removal {
+        path: "org.corp/demo/v1.0.0".into(),
+        version: Some(RemovedVersion {
+            group: vibe_core::Group::parse("org.corp").unwrap(),
+            name: "demo".into(),
+            version: "1.0.0".parse().unwrap(),
+        }),
+    }];
+    let outcome = publish_batch(&prune, &Default::default()).unwrap();
+    assert_eq!(outcome.removed, 1);
+    assert!(outcome.changed());
+
+    // The bytes are gone, the catalog no longer advertises them, and the
+    // journal says why.
+    assert!(!root.join("org.corp/demo/v1.0.0").exists());
+    let primary = fs::read_to_string(root.join("_index/primary.jsonl")).unwrap();
+    assert!(!primary.contains("\"1.0.0\""), "{primary}");
+    assert!(primary.contains("\"1.1.0\""), "{primary}");
+    let listing = fs::read_to_string(root.join("_index/listing.txt")).unwrap();
+    assert!(!listing.contains("v1.0.0"), "{listing}");
+    assert!(listing.contains("v1.1.0"), "{listing}");
+    let journal = fs::read_dir(root.join("_index/state/journal"))
+        .unwrap()
+        .flatten()
+        .map(|entry| fs::read_to_string(entry.path()).unwrap())
+        .collect::<String>();
+    assert!(journal.contains("removed"), "{journal}");
+}
+
+/// A dry run plans the removal and deletes nothing.
+#[test]
+fn a_dry_run_counts_the_removal_and_deletes_nothing() {
+    let tmp = tempfile::tempdir().unwrap();
+    let root = tmp.path().join("registry");
+    fs::create_dir_all(&root).unwrap();
+    let one = package(tmp.path(), "1.0.0", "one");
+    let target = LayoutTarget::Localdir { root: root.clone() };
+    publish_batch(
+        &batch(target.clone(), vec![item(one, "1.0.0")], Vec::new()),
+        &Default::default(),
+    )
+    .unwrap();
+
+    let mut prune = batch(target, Vec::new(), Vec::new());
+    prune.dry_run = true;
+    prune.removed = vec![Removal {
+        path: "org.corp/demo/v1.0.0".into(),
+        version: Some(RemovedVersion {
+            group: vibe_core::Group::parse("org.corp").unwrap(),
+            name: "demo".into(),
+            version: "1.0.0".parse().unwrap(),
+        }),
+    }];
+    let outcome = publish_batch(&prune, &Default::default()).unwrap();
+    assert_eq!(outcome.removed, 1);
+    assert!(root.join("org.corp/demo/v1.0.0/payload").is_file());
+}
+
+/// What a batch may and may not be asked to delete.
+#[test]
+fn a_removal_outside_a_version_directory_or_the_index_is_refused() {
+    let tmp = tempfile::tempdir().unwrap();
+    let root = tmp.path().join("registry");
+    fs::create_dir_all(root.join("org.corp/demo/v1.0.0")).unwrap();
+    let target = LayoutTarget::Localdir { root: root.clone() };
+    let attempt = |removal: Removal| {
+        let mut prune = batch(target.clone(), Vec::new(), Vec::new());
+        prune.removed = vec![removal];
+        publish_batch(&prune, &Default::default())
+    };
+    let bare = |path: &str| Removal {
+        path: path.into(),
+        version: None,
+    };
+    // Neither a version directory nor inside `_index/`.
+    assert!(attempt(bare("README.md")).is_err());
+    assert!(attempt(bare("org.corp/demo")).is_err());
+    // A climb out of the tree, however spelled.
+    assert!(attempt(bare("_index/../../etc")).is_err());
+    assert!(attempt(bare("/etc/passwd")).is_err());
+    assert!(attempt(bare("")).is_err());
+    // A path that claims a coordinate it does not spell.
+    assert!(
+        attempt(Removal {
+            path: "org.corp/demo/v1.0.0".into(),
+            version: Some(RemovedVersion {
+                group: vibe_core::Group::parse("org.corp").unwrap(),
+                name: "demo".into(),
+                version: "9.9.9".parse().unwrap(),
+            }),
+        })
+        .is_err()
+    );
+    // Nothing was deleted by any refusal.
+    assert!(root.join("org.corp/demo/v1.0.0").is_dir());
+
+    // A path the tree does not hold is dropped, not refused: someone else
+    // removing it first is the outcome asked for.
+    let outcome = attempt(Removal {
+        path: "org.corp/demo/v7.0.0".into(),
+        version: Some(RemovedVersion {
+            group: vibe_core::Group::parse("org.corp").unwrap(),
+            name: "demo".into(),
+            version: "7.0.0".parse().unwrap(),
+        }),
+    })
+    .unwrap();
+    assert_eq!(outcome.removed, 0);
+}
+
+/// Into a `monorepo` the deletion is **staged**, so it lands in the same
+/// pushed commit as the rewritten index. This is the backend where a
+/// removal could silently not happen: the file is gone from the working
+/// tree and the commit still carries it.
+#[test]
+#[specmark::spec(verifies = "spec://org.vibevm.core/vibevm/common/PROP-075#MIRROR-PRUNE")]
+fn a_monorepo_removal_lands_in_the_pushed_commit() {
+    if Command::new("git").arg("--version").output().is_err() {
+        return;
+    }
+    let tmp = tempfile::tempdir().unwrap();
+    let bare = tmp.path().join("registry.git");
+    git(
+        tmp.path(),
+        &["init", "-q", "--bare", bare.to_str().unwrap()],
+    );
+    let target = LayoutTarget::Monorepo {
+        url: format!("file://{}", bare.display()),
+        branch: "main".into(),
+    };
+    publish_batch(
+        &batch(
+            target.clone(),
+            vec![
+                item(package(tmp.path(), "1.0.0", "one\n"), "1.0.0"),
+                item(package(tmp.path(), "1.1.0", "eleven\n"), "1.1.0"),
+            ],
+            Vec::new(),
+        ),
+        &Default::default(),
+    )
+    .unwrap();
+    assert_eq!(
+        git(
+            tmp.path(),
+            &[
+                "--git-dir",
+                bare.to_str().unwrap(),
+                "show",
+                "main:org.corp/demo/v1.0.0/payload"
+            ]
+        ),
+        "one"
+    );
+
+    let mut prune = batch(target, Vec::new(), Vec::new());
+    prune.removed = vec![Removal {
+        path: "org.corp/demo/v1.0.0".into(),
+        version: Some(RemovedVersion {
+            group: vibe_core::Group::parse("org.corp").unwrap(),
+            name: "demo".into(),
+            version: "1.0.0".parse().unwrap(),
+        }),
+    }];
+    let outcome = publish_batch(&prune, &Default::default()).unwrap();
+    assert_eq!(outcome.removed, 1);
+    assert!(outcome.commit.is_some());
+
+    // The pushed tree no longer carries the version…
+    let listed = git(
+        tmp.path(),
+        &[
+            "--git-dir",
+            bare.to_str().unwrap(),
+            "ls-tree",
+            "-r",
+            "--name-only",
+            "main",
+            "--",
+            "org.corp/demo",
+        ],
+    );
+    assert!(!listed.contains("v1.0.0"), "{listed}");
+    assert!(listed.contains("v1.1.0"), "{listed}");
+    // …and the index committed beside it no longer advertises it.
+    let primary = git(
+        tmp.path(),
+        &[
+            "--git-dir",
+            bare.to_str().unwrap(),
+            "show",
+            "main:_index/primary.jsonl",
+        ],
+    );
+    assert!(!primary.contains("\"1.0.0\""), "{primary}");
+    assert!(primary.contains("\"1.1.0\""), "{primary}");
 }

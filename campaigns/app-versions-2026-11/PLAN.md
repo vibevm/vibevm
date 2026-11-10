@@ -496,7 +496,7 @@ is P5b and does not exist yet. The four as-built amendments are
 
 **Parallel.** Needs P1 and P2. Independent of P4, P5, P6.
 
-### P4 — mirror config, template snapshot, payload projection, prune — **L** — *commits (a) and (b) delivered 2026-11-10; (c) open*
+### P4 — mirror config, template snapshot, payload projection, prune — **L** — *commits (a) and (b) delivered 2026-11-10; (c) part-landed*
 
 **Goal.** `vibe registry mirror --config mirror.toml` selects declaratively,
 snapshots a template's inputs into the target's `_index/`, projects payloads
@@ -511,8 +511,30 @@ its registered format `[format.index-templates]` and golden corpus, the
 priming by which a network-denied client renders from a snapshot, and
 `vibe app versions` reporting the snapshot's `[sync] last` (`AV-FMT-008`
 delivered; `#MIRROR-TEMPLATE-SNAPSHOT` and `#MIRROR-SNAPSHOT-LAYOUT`
-`impl/done`). **(c) payload projection with its budget, `--dry-run` counts and
-prune** is open, and amendment 4 below already binds it.
+`impl/done`). **(c) is part-landed**: its structural prerequisite, the removal channel
+amendment 4 names, is in — `BatchConfig.removed` with the `Removal` /
+`RemovedVersion` types, planned and validated in `index_plan.rs` and applied
+by all three backends, so a pruned version's bytes, its index rows and its
+`Event::Removed` fact leave in ONE commit (proven on `localdir` and on a
+pushed `monorepo`). **Still open in (c):** payload projection with digest
+verification and the pre-write `max_total` budget, `--dry-run` counts and
+bytes, the `--prune` / `--prune-payloads` / `--yes` command surface with its
+plan, and the two report arrays `templates[]` / `pruned[]` (`AV-FMT-009`,
+which needs codegen and a wire-diff). No run deletes anything today:
+`#MIRROR-NO-SILENT-PRUNE` holds because the mirror passes `removed: vec![]`
+and nothing else can reach the channel.
+
+**What the removal channel decided** (for whoever finishes (c)): the order is
+**delete, then re-project**, because `vibe_index::layout::refresh` projects
+the catalog from `version_dirs(root)` — a version still on disk is projected
+straight back in, and the journal fact alone would not drop it. For a
+`monorepo` the deleted paths must also be **staged** (`git add -A -- <path>`)
+or the working tree loses the file and the commit keeps it; that is the one
+backend where a removal can silently not happen, and it has its own test. A
+removal path is refused unless it is a `<group>/<name>/v<version>` directory
+that **spells the coordinate it claims**, or a path inside `_index/`; a path
+the tree does not hold is dropped rather than refused, because a plan is read
+against one state and applied against a possibly newer one.
 
 **Amendments decided against the code (read before implementing (b) or (c)).**
 

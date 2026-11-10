@@ -12,6 +12,7 @@ use chrono::Utc;
 use vibe_core::cancellation::CancellationToken;
 use vibe_index::layout::LayoutIdentity;
 
+use super::index_plan::apply_removals;
 use super::{
     BatchConfig, BatchOutcome, LayoutAction, Staged, checkpoint, decide_all, io, outcomes,
     plan_index, write_index,
@@ -45,6 +46,7 @@ pub(super) fn publish(
         return Ok(BatchOutcome {
             items: outcomes(staged, &actions),
             facts_recorded: if config.dry_run { plan.facts.len() } else { 0 },
+            removed: plan.removed.len(),
             index_refreshed: config.dry_run && plan.refresh,
             commit: None,
             retried: false,
@@ -58,11 +60,18 @@ pub(super) fn publish(
         checkpoint(cancellation)?;
         place_version(root, stage, *action, cancellation)?;
     }
+    // Deleted before the index is rewritten, because the re-projection
+    // reads the version directories: a removal the tree still held would
+    // be projected straight back in.
+    checkpoint(cancellation)?;
+    apply_removals(root, &plan)?;
     let facts_recorded = plan.facts.len();
+    let removed = plan.removed.len();
     write_index(root, &identity, plan, at)?;
     Ok(BatchOutcome {
         items: outcomes(staged, &actions),
         facts_recorded,
+        removed,
         index_refreshed: true,
         commit: None,
         retried: false,
