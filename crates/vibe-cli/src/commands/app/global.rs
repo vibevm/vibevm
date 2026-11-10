@@ -15,7 +15,7 @@ use vibe_core::progress::Progress;
 use super::agents::{AgentSetup, report_parked};
 use super::display::{StepDisplay, asking};
 use super::interrupt::Signals;
-use super::report::{render, render_removal};
+use super::report::{render, render_removal, render_written};
 use super::wizard::{chooser, feature_chooser, license_prompt, parameter_prompt};
 use crate::cli::{AppChoiceArgs, AppStepArgs, InstallArgs, UninstallArgs, UpdateArgs};
 use crate::output;
@@ -453,7 +453,12 @@ pub fn install(
         report_parked(ctx, vibe_app::install(&operation, &resolved, &request))
     });
     let outcome = display.report(ctx, outcome)?;
-    render(ctx, &outcome)?;
+    // `--write-version-file` writes the version this install resolved to,
+    // and is reported in the same document (PROP-075
+    // `#VERSION-FILE-WRITE`).
+    let written =
+        super::version_file::write(&settings, &args.version_file, &outcome.slot, &outcome.key)?;
+    render_written(ctx, &outcome, written.as_ref())?;
     // The slot may have gained a version whose package declares state to
     // carry; the offer is one line and never migrates (PROP-075
     // `#MIGRATION-FAILURE`).

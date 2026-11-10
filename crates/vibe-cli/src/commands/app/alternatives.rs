@@ -7,7 +7,8 @@ use anyhow::Result;
 use vibe_app::SettingsRoot;
 use vibe_wire::generated::application_alternatives::{ApplicationAlternatives, Status};
 
-use super::global;
+use super::{global, version_file};
+use crate::cli::WriteVersionFileArgs;
 use crate::output;
 
 /// What `vibe app use` was asked to do: name a provider, switch the slot
@@ -44,7 +45,16 @@ pub(super) fn use_default(
     settings: &SettingsRoot,
     slot: &str,
     request: UseRequest,
+    write: &WriteVersionFileArgs,
 ) -> Result<()> {
+    // A slot switched off resolves to no version, so there would be nothing
+    // to write; the refusal lands before the slot moves at all.
+    if write.asked() && matches!(request, UseRequest::Off) {
+        anyhow::bail!(
+            "--write-version-file has no version to write: `vibe app use {slot} --none` switches \
+             the slot off; name a provider instead"
+        );
+    }
     let proxy_image = global::proxy_image()?;
     let home = super::facts::user_home();
     let environment = super::environment::for_host(settings.path(), home.as_deref());
@@ -57,9 +67,17 @@ pub(super) fn use_default(
         UseRequest::Off => vibe_app::set_slot_off(settings, slot, true, exposure)?,
         UseRequest::On => vibe_app::set_slot_off(settings, slot, false, exposure)?,
     };
+    // The version written is the one the slot now resolves to, so the write
+    // follows the change (PROP-075 `#VERSION-FILE-WRITE`).
+    let written = match change.off {
+        true => None,
+        false => version_file::write(settings, write, slot, &change.default)?,
+    };
     if ctx.is_json() {
         // The machine answer is the slot's listing after the change.
-        return ctx.emit_json(&vibe_app::alternatives_listing(settings, slot)?);
+        let mut listing = vibe_app::alternatives_listing(settings, slot)?;
+        listing.version_file = written.as_ref().map(version_file::wire_alternatives);
+        return ctx.emit_json(&listing);
     }
     if change.off {
         ctx.summary(&format!(
@@ -85,6 +103,9 @@ pub(super) fn use_default(
             change.slot, change.default
         ),
     });
+    if let Some(written) = &written {
+        version_file::report(ctx, "vibe app use", written);
+    }
     // Moving the default is the third thing that may leave state behind in
     // another version; it offers and never migrates (PROP-075
     // `#MIGRATION-FAILURE`).

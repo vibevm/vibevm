@@ -24,6 +24,7 @@ fn args(path: std::path::PathBuf) -> InstallArgs {
         installer: None,
         library: None,
         steps: Default::default(),
+        version_file: Default::default(),
         plan_only: false,
         hidden: false,
         path,

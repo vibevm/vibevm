@@ -259,6 +259,9 @@ pub fn listing(
     Ok(wire::ApplicationAlternatives {
         protocol: "vibe-app-alternatives/1".into(),
         slot: slot.to_owned(),
+        // Filled by the caller that wrote one (PROP-075
+        // `#VERSION-FILE-WRITE`); a listing writes nothing.
+        version_file: None,
         off: index.is_off(slot),
         default: default.map(str::to_owned),
         providers: rows,

@@ -13,7 +13,8 @@
    "default",
    "off",
    "providers",
-   "commands"
+   "commands",
+   "version_file"
   ]
  },
  "properties": {
@@ -128,6 +129,23 @@
     }
    }
   },
+  "version_file": {
+   "metadata": {
+    "description": "A written version file, reported by path with the version written.",
+    "x-wire-order": [
+     "path",
+     "version"
+    ]
+   },
+   "properties": {
+    "path": {
+     "type": "string"
+    },
+    "version": {
+     "type": "string"
+    }
+   }
+  },
   "command": {
    "metadata": {
     "x-wire-order": [
@@ -151,6 +169,13 @@
   }
  },
  "optionalProperties": {
+  "version_file": {
+   "ref": "version_file",
+   "metadata": {
+    "description": "The version file --write-version-file wrote and the resolved version it wrote there (PROP-075#VERSION-FILE-WRITE); absent unless `vibe app use` was asked to write one.",
+    "x-default": null
+   }
+  },
   "off": {
    "type": "boolean",
    "metadata": {

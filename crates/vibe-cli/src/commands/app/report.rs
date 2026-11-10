@@ -23,8 +23,14 @@ pub(crate) fn prose(message: &str) -> String {
 
 const REPORT_PROTOCOL: &str = "vibe-application-command-report/2";
 
-/// The report of an install, update, uninstall or modify.
-pub(crate) fn render(ctx: &output::Context, outcome: &Outcome) -> Result<()> {
+/// The report of an install, update, uninstall or modify, with the version
+/// file `--write-version-file` wrote when one was asked for
+/// (PROP-075 `#VERSION-FILE-WRITE`).
+pub(crate) fn render_written(
+    ctx: &output::Context,
+    outcome: &Outcome,
+    written: Option<&vibe_app::WrittenVersionFile>,
+) -> Result<()> {
     let command = match outcome.command {
         AppCommand::Install => ApplicationReportCommand::Install,
         AppCommand::Update => ApplicationReportCommand::Update,
@@ -45,6 +51,7 @@ pub(crate) fn render(ctx: &output::Context, outcome: &Outcome) -> Result<()> {
                 .as_deref()
                 .map(vibe_core::machine_json_path),
             work: outcome.work.as_deref().map(vibe_core::machine_json_path),
+            version_file: written.map(super::version_file::wire_report),
             selected_mode: Some(match outcome.method {
                 vibe_app::Method::Shell => ApplicationReportSelectedMode::Shell,
                 vibe_app::Method::Zip => ApplicationReportSelectedMode::Zip,
@@ -63,7 +70,15 @@ pub(crate) fn render(ctx: &output::Context, outcome: &Outcome) -> Result<()> {
             paint(Role::Accent, &work.display().to_string())
         ));
     }
+    if let Some(written) = written {
+        super::version_file::report(ctx, "vibe install -g", written);
+    }
     Ok(())
+}
+
+/// The same report for the commands that write no version file.
+pub(crate) fn render(ctx: &output::Context, outcome: &Outcome) -> Result<()> {
+    render_written(ctx, outcome, None)
 }
 
 /// The report of `expose`, `hide`, `mark`, `hold`, `unhold`, `rollback`.
@@ -78,6 +93,8 @@ pub(crate) fn render_change(ctx: &output::Context, change: &Change) -> Result<()
     };
     if ctx.is_json() {
         return ctx.emit_json(&ApplicationReport {
+            // A state change writes no version file.
+            version_file: None,
             protocol: REPORT_PROTOCOL.into(),
             ok: true,
             command,

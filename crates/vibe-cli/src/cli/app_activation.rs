@@ -1,8 +1,44 @@
 //! The argument surface of per-project version selection
 //! (PROP-075 `#ACTIVATION-ENV-OUTPUT`, `#VERSION-EXEC-SPELLING`,
-//! `#ACTIVATION-HOOK`): `vibe app env`, `vibe app exec` and `vibe hook`.
+//! `#ACTIVATION-HOOK`, `#VERSION-FILE-WRITE`): `vibe app env`,
+//! `vibe app exec`, `vibe hook`, and the one flag that *writes* a version
+//! file, shared by `vibe app use` and `vibe install -g`.
 
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-075#ACTIVATION-ENV-OUTPUT");
+
+/// `--write-version-file[=PATH]` (PROP-075 `#VERSION-FILE-WRITE`), which
+/// is nvm's `--save` / `-w`. One declaration, flattened into both commands
+/// that carry it, so the two spellings cannot drift.
+#[derive(Debug, Clone, Default, clap::Args)]
+pub struct WriteVersionFileArgs {
+    /// Write the resolved version into this slot's declared version file —
+    /// never the requirement or the channel you typed. Without a value the
+    /// nearest declared file of this directory is edited, or the package's
+    /// first declared name is created in the project root; with a value,
+    /// exactly that path, whose format is decided by its file name.
+    ///
+    /// A `keyed` file (`.sdkmanrc`, `.tool-versions`) is edited one line
+    /// at a time, so another tool's line in the same file survives
+    /// untouched.
+    #[arg(long, value_name = "PATH", num_args = 0..=1, require_equals = true)]
+    pub write_version_file: Option<Option<std::path::PathBuf>>,
+}
+
+impl WriteVersionFileArgs {
+    /// The path the flag named, `None` for a bare flag and no flag alike;
+    /// [`Self::asked`] is what distinguishes them.
+    pub fn path(&self) -> Option<&std::path::Path> {
+        self.write_version_file
+            .as_ref()
+            .and_then(Option::as_deref)
+            .filter(|path| !path.as_os_str().is_empty())
+    }
+
+    /// Whether the flag was given at all.
+    pub fn asked(&self) -> bool {
+        self.write_version_file.is_some()
+    }
+}
 
 /// Flags of `vibe app env` (PROP-075 `#ACTIVATION-ENV-OUTPUT`).
 #[derive(Debug, clap::Args)]

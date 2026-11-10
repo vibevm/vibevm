@@ -20,6 +20,8 @@ mod declared;
 mod formats;
 #[path = "versionfile/search.rs"]
 mod search;
+#[path = "versionfile/write.rs"]
+mod write;
 
 pub use cache::{CACHE_PROTOCOL, clear as clear_cache, path as cache_path, resolve};
 pub use declared::{Declared, VERSION_FILES_PROTOCOL, path as declared_path};
@@ -28,6 +30,7 @@ pub use formats::{
     plain_line,
 };
 pub use search::{Consulted, Found, Search, search};
+pub use write::{WriteRequest, Written, write};
 
 #[cfg(test)]
 #[path = "versionfile/tests.rs"]

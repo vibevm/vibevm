@@ -76,6 +76,7 @@ pub(super) fn resolver_args() -> InstallArgs {
         installer: None,
         library: None,
         steps: Default::default(),
+        version_file: Default::default(),
         plan_only: false,
         hidden: false,
         path: PathBuf::from("."),

@@ -98,6 +98,7 @@ pub use environment::blocks::{
 pub use environment::{ProfileEnvironment, UserEnvironment, recorded_environment};
 pub use error::{
     AppError, InstallerError, LaunchError, ResolveError, StateError, StepError, StorageError,
+    VersionFileError,
 };
 pub use error_catalog::CatalogError;
 pub use error_lifecycle::LifecycleError;
@@ -171,11 +172,12 @@ pub use storage::{
 pub use versionfile::{
     CACHE_PROTOCOL as VERSION_FILE_CACHE_PROTOCOL, Consulted as VersionFileConsulted,
     Declared as DeclaredVersionFiles, Found as VersionFileFound, KeyedLine, KeyedSelection,
-    RequestKind, Search as VersionFileSearch, VERSION_FILES_PROTOCOL, VersionRequest,
-    cache_path as version_files_cache_path, clear_cache as clear_version_file_cache,
-    declared_path as declared_version_files_path, is_channel_name, keyed as keyed_version_file,
-    keyed_lines as keyed_version_file_lines, plain_line, resolve as resolve_version_files,
-    search as search_version_files,
+    RequestKind, Search as VersionFileSearch, VERSION_FILES_PROTOCOL, VersionRequest, WriteRequest,
+    Written as WrittenVersionFile, cache_path as version_files_cache_path,
+    clear_cache as clear_version_file_cache, declared_path as declared_version_files_path,
+    is_channel_name, keyed as keyed_version_file, keyed_lines as keyed_version_file_lines,
+    plain_line, resolve as resolve_version_files, search as search_version_files,
+    write as write_version_file,
 };
 pub use versions::{
     DEFAULT_LIMIT as VERSIONS_DEFAULT_LIMIT, Domain, DomainVersion, Domains, Origin, TemplateFacts,

@@ -18,6 +18,20 @@ use super::app::home as application_home;
 use super::app::project as application_project;
 use super::{install, mcp, remap, uninstall, update};
 
+/// `--write-version-file` writes the version an **application** install
+/// resolved to (PROP-075 `#VERSION-FILE-WRITE`), so every other shape of
+/// `vibe install` refuses it by name instead of accepting a flag it would
+/// silently ignore.
+fn refuse_version_file_write(args: &InstallArgs, what: &str) -> Result<()> {
+    if args.version_file.asked() {
+        bail!(
+            "--write-version-file applies to an application install \
+             (`vibe install -g <group>/<name>`), not to {what}"
+        );
+    }
+    Ok(())
+}
+
 pub(crate) fn run_install(
     ctx: &output::Context,
     args: InstallArgs,
@@ -27,6 +41,7 @@ pub(crate) fn run_install(
 ) -> Result<()> {
     if !args.global {
         refuse_configuration_input(&args.steps.choice, "workspace package acquisition")?;
+        refuse_version_file_write(&args, "a project install")?;
         if args.plan_only {
             return install::run_preview(ctx, args, embedded_root, offline, seed_default_registry);
         }
@@ -64,11 +79,19 @@ pub(crate) fn run_install(
         // path keeps producing its own errors exactly as before.
         if let Some(refs) = remap::claims_install(&args, offline) {
             refuse_configuration_input(&args.steps.choice, "remap package acquisition")?;
+            refuse_version_file_write(&args, "a remap package")?;
             return remap::install_packages(ctx, &args, &refs, offline);
+        }
+        if args.plan_only {
+            refuse_version_file_write(
+                &args,
+                "a plan: --plan-only resolves a version and installs none",
+            )?;
         }
         return application::install(ctx, args, embedded_root, offline);
     }
     refuse_configuration_input(&args.steps.choice, "MCP package acquisition")?;
+    refuse_version_file_write(&args, "a global MCP package")?;
     let overall = ctx.progress().task("Installing global MCP package");
     let scoped = ctx.with_progress_scope(overall.progress());
     let result = install_mcp(&scoped, args, embedded_root, offline);

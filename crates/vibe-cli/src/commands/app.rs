@@ -34,6 +34,7 @@ mod report;
 mod resume;
 mod runtime;
 pub(crate) mod session;
+mod version_file;
 mod versions;
 mod views;
 mod wizard;
@@ -417,9 +418,10 @@ pub fn run(
             key,
             none,
             default,
+            version_file,
         } => {
             let request = alternatives::UseRequest::of(key, none, default)?;
-            alternatives::use_default(ctx, app_home.settings(), &slot, request)?;
+            alternatives::use_default(ctx, app_home.settings(), &slot, request, &version_file)?;
             Ok(None)
         }
         AppCommand::Alternatives { slot } => {

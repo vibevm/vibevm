@@ -503,6 +503,10 @@ pub enum AppCommand {
         /// Switch the slot back on at its remembered default.
         #[arg(long)]
         default: bool,
+        /// Also write the resolved version into the slot's version file
+        /// (PROP-075 `#VERSION-FILE-WRITE`).
+        #[command(flatten)]
+        version_file: WriteVersionFileArgs,
     },
 
     /// List the providers of a slot, its default and the commands each provides.
@@ -565,7 +569,7 @@ pub enum AppCommand {
 mod activation;
 #[path = "app_migration.rs"]
 mod migration;
-pub use activation::{AppEnvArgs, AppExecArgs, AppVersionsArgs, HookArgs};
+pub use activation::{AppEnvArgs, AppExecArgs, AppVersionsArgs, HookArgs, WriteVersionFileArgs};
 pub use migration::AppMigrateArgs;
 #[path = "app_collection.rs"]
 mod collection;

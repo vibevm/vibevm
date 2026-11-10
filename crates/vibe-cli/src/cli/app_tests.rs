@@ -189,7 +189,7 @@ fn app_list_use_alternatives_and_shell_parse() {
         panic!("expected app command");
     };
     assert!(
-        matches!(app.command, AppCommand::Use { slot, key, none, default }
+        matches!(app.command, AppCommand::Use { slot, key, none, default, .. }
             if slot == "editor"
                 && key.as_deref() == Some("org.example/vim@9.1.0")
                 && !none
@@ -202,7 +202,7 @@ fn app_list_use_alternatives_and_shell_parse() {
         panic!("expected app command");
     };
     assert!(
-        matches!(app.command, AppCommand::Use { slot, key, none, default }
+        matches!(app.command, AppCommand::Use { slot, key, none, default, .. }
         if slot == "node" && key.is_none() && none && !default)
     );
     let cli = Cli::try_parse_from(["vibe", "app", "use", "node", "--default"]).unwrap();
@@ -210,10 +210,54 @@ fn app_list_use_alternatives_and_shell_parse() {
         panic!("expected app command");
     };
     assert!(
-        matches!(app.command, AppCommand::Use { slot, key, none, default }
+        matches!(app.command, AppCommand::Use { slot, key, none, default, .. }
         if slot == "node" && key.is_none() && !none && default)
     );
     assert!(Cli::try_parse_from(["vibe", "app", "use", "node", "--none", "--default"]).is_err());
+    // `--write-version-file[=PATH]` (PROP-075 `#VERSION-FILE-WRITE`): the
+    // bare flag, the flag with a path, and absent.
+    let parse = |args: &[&str]| {
+        let Command::App(app) = Cli::try_parse_from(args).unwrap().command else {
+            panic!("expected app command");
+        };
+        match app.command {
+            AppCommand::Use { version_file, .. } => version_file,
+            other => panic!("expected app use, got {other:?}"),
+        }
+    };
+    let bare = parse(&["vibe", "app", "use", "node", "k", "--write-version-file"]);
+    assert!(bare.asked() && bare.path().is_none());
+    let named = parse(&[
+        "vibe",
+        "app",
+        "use",
+        "node",
+        "k",
+        "--write-version-file=.sdkmanrc",
+    ]);
+    assert_eq!(named.path(), Some(std::path::Path::new(".sdkmanrc")));
+    assert!(!parse(&["vibe", "app", "use", "node", "k"]).asked());
+    // The value needs `=`, so the flag can never swallow a positional: a
+    // space-separated word stays the installation key, which the slot then
+    // refuses by name rather than a file being written nobody asked for.
+    let Command::App(app) = Cli::try_parse_from([
+        "vibe",
+        "app",
+        "use",
+        "node",
+        "--write-version-file",
+        ".sdkmanrc",
+    ])
+    .unwrap()
+    .command
+    else {
+        panic!("expected app command");
+    };
+    assert!(matches!(
+        app.command,
+        AppCommand::Use { key, version_file, .. }
+            if key.as_deref() == Some(".sdkmanrc") && version_file.path().is_none()
+    ));
     let cli = Cli::try_parse_from(["vibe", "shell", "-g", "--use", "a=x", "--use", "b=y"]).unwrap();
     let Command::Shell(shell) = cli.command else {
         panic!("expected shell command");

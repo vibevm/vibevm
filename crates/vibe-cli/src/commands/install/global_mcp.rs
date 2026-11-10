@@ -110,6 +110,7 @@ pub(crate) fn update(
         installer: None,
         library: None,
         steps: Default::default(),
+        version_file: Default::default(),
         plan_only: false,
         hidden: false,
         path: project_root.clone(),

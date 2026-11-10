@@ -10,9 +10,11 @@ use thiserror::Error;
 mod migration;
 mod resolve;
 mod storage;
+mod version_file;
 pub use migration::MigrationFailure;
 pub use resolve::ResolveError;
 pub use storage::StorageError;
+pub use version_file::VersionFileError;
 
 /// Settings root, `storage.toml`, library markers and the index file.
 #[derive(Debug, Error)]
@@ -439,6 +441,8 @@ pub enum AppError {
     Paths(#[from] crate::error_paths::PathsError),
     #[error(transparent)]
     Versions(#[from] crate::error_versions::VersionsError),
+    #[error(transparent)]
+    VersionFile(Box<VersionFileError>),
     #[error(
         "not_installed: application `{package}` is not installed in {home} (violates spec://org.vibevm.core/vibevm/common/PROP-059#commands; \
          fix: {fix})"

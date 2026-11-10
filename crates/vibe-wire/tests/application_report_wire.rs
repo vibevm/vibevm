@@ -1,7 +1,7 @@
 //! Registered global application CLI report wire.
 
 use vibe_wire::generated::application_report::{
-    ApplicationReport, ApplicationReportCommand, ApplicationReportSelectedMode,
+    ApplicationReport, ApplicationReportCommand, ApplicationReportSelectedMode, VersionFile,
 };
 
 #[test]
@@ -17,6 +17,7 @@ fn application_report_round_trips_exact_camel_case_members() {
         app_root: Some("C:/settings/opt/apps/demo/org.example.demo@1.0.0".into()),
         work: None,
         selected_mode: Some(ApplicationReportSelectedMode::Zip),
+        version_file: None,
     };
     let value = serde_json::to_value(&report).unwrap();
     assert_eq!(value["applicationId"], "demo");
@@ -45,5 +46,21 @@ fn application_report_round_trips_exact_camel_case_members() {
     assert_eq!(
         serde_json::from_value::<ApplicationReport>(value).unwrap(),
         kept
+    );
+    // The written version file (PROP-075#VERSION-FILE-WRITE) travels the
+    // same way: only when `--write-version-file` wrote one.
+    let saved = ApplicationReport {
+        version_file: Some(VersionFile {
+            path: "C:/project/.sdkmanrc".into(),
+            version: "22.23.4".into(),
+        }),
+        ..kept
+    };
+    let value = serde_json::to_value(&saved).unwrap();
+    assert_eq!(value["versionFile"]["path"], "C:/project/.sdkmanrc");
+    assert_eq!(value["versionFile"]["version"], "22.23.4");
+    assert_eq!(
+        serde_json::from_value::<ApplicationReport>(value).unwrap(),
+        saved
     );
 }

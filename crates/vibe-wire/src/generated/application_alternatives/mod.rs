@@ -21,6 +21,12 @@ pub struct ApplicationAlternatives {
     pub providers: Vec<Provider>,
 
     pub commands: Vec<Command>,
+
+    /// The version file --write-version-file wrote and the resolved version it
+    /// wrote there (PROP-075#VERSION-FILE-WRITE); absent unless `vibe app use`
+    /// was asked to write one.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub version_file: Option<VersionFile>,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
@@ -69,4 +75,12 @@ pub enum Status {
 
     #[serde(rename = "unavailable")]
     Unavailable,
+}
+
+/// A written version file, reported by path with the version written.
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+pub struct VersionFile {
+    pub path: String,
+
+    pub version: String,
 }

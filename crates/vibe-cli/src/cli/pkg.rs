@@ -124,6 +124,11 @@ pub struct InstallArgs {
     #[command(flatten)]
     pub steps: Box<AppStepArgs>,
 
+    /// `install -g` of an application: also write the resolved version into
+    /// the slot's declared version file (PROP-075 `#VERSION-FILE-WRITE`).
+    #[command(flatten)]
+    pub version_file: super::WriteVersionFileArgs,
+
     /// Resolve and print the complete project closure without publication,
     /// or print the selected global application's installation plan.
     #[arg(long)]
@@ -353,6 +358,11 @@ pub struct UpdateArgs {
     /// Application feature, resume and step flags (PROP-065).
     #[command(flatten)]
     pub steps: Box<AppStepArgs>,
+
+    /// `install -g` of an application: also write the resolved version into
+    /// the slot's declared version file (PROP-075 `#VERSION-FILE-WRITE`).
+    #[command(flatten)]
+    pub version_file: super::WriteVersionFileArgs,
 
     /// Explicit local source registry for a global application update.
     #[arg(long)]

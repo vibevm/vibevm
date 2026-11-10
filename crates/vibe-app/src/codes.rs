@@ -12,6 +12,7 @@ use crate::agents::AgentError;
 use crate::configuration::ConfigurationError;
 use crate::error::{
     AppError, InstallerError, LaunchError, ResolveError, StateError, StepError, StorageError,
+    VersionFileError,
 };
 use crate::error_catalog::CatalogError;
 use crate::error_lifecycle::LifecycleError;
@@ -205,7 +206,15 @@ codes!(CONFIGURATION, ConfigurationError [] {
     Invalid => "configuration_input_invalid", Refusal, "common configuration input is invalid";
 });
 
-codes!(APP, AppError [Configuration, State, Catalog, Storage, Resolve, Installer, Launch, Step, Agent, Lifecycle, Paths, Versions] {
+codes!(VERSION_FILE, VersionFileError [] {
+    Symlink => "version_file_symlink", Refusal, "vibe never writes a version file through a link it did not make";
+    NoVersionFile => "no_version_file", Refusal, "the slot's package declares no version file to write";
+    UnknownName => "unknown_version_file", Refusal, "the named path is not one of the package's declared version files";
+    DuplicateKey => "duplicate_version_file_key", Refusal, "a keyed version file carries the key twice";
+    Io => "version_file_io", Failure, "reading or writing the version file failed";
+});
+
+codes!(APP, AppError [Configuration, State, Catalog, Storage, Resolve, Installer, Launch, Step, Agent, Lifecycle, Paths, Versions, VersionFile] {
     NotInstalled => "not_installed", Refusal, "the application is not installed";
     AmbiguousInstallation => "ambiguous_installation", Refusal, "several installed versions match";
     ForceUnsupported => "force_unsupported", Refusal, "--force has no authored variant to run";
@@ -252,6 +261,7 @@ pub fn error_codes() -> Vec<ErrorCode> {
         LAUNCH,
         CATALOG,
         VERSIONS,
+        VERSION_FILE,
         APP,
     ]
     .concat()
