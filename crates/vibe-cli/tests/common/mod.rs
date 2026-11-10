@@ -36,6 +36,10 @@ pub mod net_fixture;
 /// The loopback Git host serving a package organisation and its
 /// repository-listing API (`vibe registry mirror`'s `api` listing).
 pub mod org_host;
+/// The payload-projection fixture of `vibe registry mirror --config`
+/// (PROP-075 `#MIRROR-PAYLOAD-PROJECTION`).
+#[cfg(unix)]
+pub mod payload_mirror;
 /// The owned loopback sshd serving one writable monorepo registry.
 #[cfg(unix)]
 pub mod ssh_monorepo;

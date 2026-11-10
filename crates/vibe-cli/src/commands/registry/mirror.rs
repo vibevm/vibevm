@@ -42,6 +42,7 @@ mod config;
 mod git_source;
 mod history;
 mod org_api;
+mod payloads;
 mod plan;
 mod record;
 mod selection;
@@ -227,16 +228,23 @@ pub(super) fn run_mirror(
     let snapshots = match &reader {
         SourceReader::Layout(opened) => {
             super::observed_stage(ctx, "Snapshotting the templates' inputs", || {
-                templates::snapshots(ctx, &selection, opened.root(), tree.root(), scratch.path())
+                templates::snapshots(&selection, opened.root(), tree.root(), scratch.path())
             })?
         }
         // Refused before the listing by `refuse_templates_without_a_tree`,
         // so a non-layout source has no `[[template]]` row to answer for.
-        SourceReader::PerPackage { .. } => Vec::new(),
+        SourceReader::PerPackage { .. } => templates::Snapshots::default(),
     };
-    let snapshot_count = snapshots.len();
-    files.extend(snapshots);
+    let snapshot_count = snapshots.files.len();
+    files.extend(snapshots.files);
     drop(tree);
+
+    // The projection is read off the renders the snapshot stage performed,
+    // so a payload row costs no second render; it is weighed against
+    // `[payloads] max_total` before the first byte is written, and the
+    // bytes themselves are fetched only after the alarm check below.
+    let projection = payloads::project(&selection, &snapshots.rows)?;
+    payloads::report(ctx, &snapshots.rows, &projection);
 
     let unavailable = planned
         .iter()
@@ -271,6 +279,10 @@ pub(super) fn run_mirror(
         );
     }
 
+    if let Some(plan) = selection.payloads() {
+        payloads::weigh(&projection, plan)?;
+    }
+
     if args.dry_run {
         // Decided without writing: the facts the batch would record are the
         // publications plus the carried facts the target does not reflect.
@@ -288,6 +300,10 @@ pub(super) fn run_mirror(
             || target_state != vibe_core::layout_registry::IndexState::Current;
         return render(ctx, &report);
     }
+    // Payloads are projected before the batch: a target must not come to
+    // advertise a version whose bytes a closed network cannot get, and the
+    // drop is the one place a mirror writes outside the registry target.
+    payloads::fetch(ctx, &projection, &operation, root_offline)?;
     let batch = BatchConfig {
         target: target.layout.clone(),
         registry: LayoutRegistry {

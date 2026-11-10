@@ -10,6 +10,11 @@
 //! handed to `BatchConfig.files` — so the snapshot is fixed by the same
 //! git commit as the versions beside it.
 //!
+//! The row's **human form** is not here: it is drawn by `super::payloads`,
+//! which is where a row's counts and bytes are known. What this module
+//! answers with instead is [`Snapshots`] — the batch files and one
+//! [`SnapshotOutcome`] per row, carrying the renders a payload row needs.
+//!
 //! **Nothing is written outside the batch.** Every file is staged in the
 //! run's scratch directory and named by its registry-relative path; the
 //! batch writes only those whose bytes differ, so a re-run that
@@ -25,22 +30,22 @@ use vibe_core::manifest::VersionSource;
 use vibe_registry::templates::snapshot::{
     self, Snapshot, SnapshotRecord, SnapshotVersion, filtered_version_list,
 };
-use vibe_registry::templates::{ActiveTemplate, TemplateLayer};
+use vibe_registry::templates::{ActiveTemplate, FullRender, TemplateLayer};
 
 use super::selection::{Selection, TemplateSelection};
-use crate::output;
 
 /// Files written under `_index/` with the batch, as `BatchConfig.files`
 /// names them: the registry-relative path and the staged source.
 pub(super) type BatchFiles = Vec<(String, PathBuf)>;
 
-/// What one `[[template]]` row produced.
+/// Everything one `[[template]]` row decided, carried out of this module.
 ///
-/// It is **reported where it is produced** and not carried out of this
-/// module: the human form is all a snapshot run owes, because the machine
-/// answer (`AV-FMT-009`'s `templates[]`) is the payload projection's, and
-/// it is that projection which gives the array its byte counts. Carrying
-/// an unread outcome out of here would be a half-built wire surface.
+/// Commit (b) reported a row where it was produced and carried nothing,
+/// because the only reader then was the human form. Payload projection and
+/// `AV-FMT-009`'s `templates[]` are both readers of the same facts — and
+/// the projection needs the renders this stage already performed — so the
+/// outcome is the carrier it was always going to be, and the row's human
+/// form is drawn where its payload facts are known.
 #[derive(Debug, Clone)]
 pub(super) struct SnapshotOutcome {
     pub package: String,
@@ -58,24 +63,42 @@ pub(super) struct SnapshotOutcome {
     /// The installer options the row asks to keep, which select nothing
     /// in the snapshot itself — the snapshot carries a version's *inputs*
     /// (its version record and its digest document), which are per
-    /// version and not per option. They are reported because they are
-    /// what payload projection will act on.
+    /// version and not per option. They are what payload projection acts
+    /// on.
     pub installers: Vec<String>,
+    /// Versions this run added to the snapshot.
+    pub added: usize,
+    /// The full renders this run performed, kept **only** when the row
+    /// asks for payloads: the projection reads the inputs out of them, and
+    /// a row that wants no payload must not hold a manifest per version
+    /// for nothing.
+    pub renders: Vec<FullRender>,
+}
+
+/// What the snapshot stage produced.
+#[derive(Debug, Default)]
+pub(super) struct Snapshots {
+    /// Files for `BatchConfig.files`.
+    pub files: BatchFiles,
+    pub rows: Vec<SnapshotOutcome>,
 }
 
 /// Snapshot every `[[template]]` row of the selection.
 ///
-/// Returns the batch files. A row that selects nothing is reported, not
-/// an error (`#MIRROR-CONFIG-SCHEMA`).
+/// A row that selects nothing is reported, not an error
+/// (`#MIRROR-CONFIG-SCHEMA`); a snapshot only ever grows, because
+/// narrowing a selection never deletes (`#MIRROR-NO-SILENT-PRUNE`).
 pub(super) fn snapshots(
-    ctx: &output::Context,
     selection: &Selection,
     source_root: &Path,
     target_root: &Path,
     scratch: &Path,
-) -> Result<BatchFiles> {
+) -> Result<Snapshots> {
     if selection.templates().is_empty() {
-        return Ok(BatchFiles::new());
+        return Ok(Snapshots {
+            files: BatchFiles::new(),
+            rows: Vec::new(),
+        });
     }
     let layer = vibe_registry::templates::active().ok_or_else(|| {
         anyhow::anyhow!(
@@ -85,28 +108,24 @@ pub(super) fn snapshots(
              template's inputs have somewhere to be cached)"
         )
     })?;
-    let mut files = BatchFiles::new();
+    let mut done = Snapshots {
+        files: BatchFiles::new(),
+        rows: Vec::new(),
+    };
     for row in selection.templates() {
-        files.extend(snapshot_row(
-            ctx,
-            &layer,
-            row,
-            source_root,
-            target_root,
-            scratch,
-        )?);
+        snapshot_row(&layer, row, source_root, target_root, scratch, &mut done)?;
     }
-    Ok(files)
+    Ok(done)
 }
 
 fn snapshot_row(
-    ctx: &output::Context,
     layer: &TemplateLayer,
     row: &TemplateSelection,
     source_root: &Path,
     target_root: &Path,
     scratch: &Path,
-) -> Result<BatchFiles> {
+    done: &mut Snapshots,
+) -> Result<()> {
     let package = row.package();
     let group = Group::parse(&row.group)
         .with_context(|| format!("the `[[template]]` row for `{package}`"))?;
@@ -136,6 +155,7 @@ fn snapshot_row(
     let mut rows = Vec::new();
     let mut unchanged = 0usize;
     let mut dropped = Vec::new();
+    let mut renders = Vec::new();
     for version in &selected {
         let Some(record) = found.domain.record(version) else {
             // A version the domain lists without a record is a concrete
@@ -146,6 +166,11 @@ fn snapshot_row(
         let render = layer.full(template, version, record)?;
         for drop in &render.dropped {
             dropped.push((version.to_string(), drop.id.clone(), drop.missing.clone()));
+        }
+        if row.payloads {
+            // The projection reads this version's inputs out of the
+            // render; a row that asks for no payload keeps none.
+            renders.push(render.clone());
         }
         if let Some(previous) = existing.as_ref().and_then(|s| s.record.version(version)) {
             if previous.digest_sha256 != render.digest_source_sha256 {
@@ -172,7 +197,7 @@ fn snapshot_row(
         });
     }
 
-    let outcome = SnapshotOutcome {
+    done.rows.push(SnapshotOutcome {
         package: package.clone(),
         revision: template.revision.to_string(),
         versions: selected.clone(),
@@ -180,12 +205,14 @@ fn snapshot_row(
         unchanged,
         dropped,
         installers: row.installers.clone(),
-    };
-    report(ctx, &outcome, rows.len());
+        added: rows.len(),
+        renders,
+    });
+
     if selected.is_empty() {
         // Reported, not an error — and with nothing selected there is no
         // snapshot to write.
-        return Ok(BatchFiles::new());
+        return Ok(());
     }
 
     let mut record = match existing {
@@ -210,9 +237,10 @@ fn snapshot_row(
     // binds, not the revision").
     record.source.revision = template.revision.to_string();
     record.merge(rows);
-    stage(
+    done.files.extend(stage(
         layer, template, &group, &row.name, &record, &selected, scratch,
-    )
+    )?);
+    Ok(())
 }
 
 /// Write the three files into `scratch` and name them by their
@@ -377,45 +405,6 @@ fn resolved_channels(
             )
         })
         .collect()
-}
-
-/// The human form: one node per template row, its versions as children,
-/// in the display language `#MIRROR-DRY-RUN-OUTPUT` asks for.
-fn report(ctx: &output::Context, outcome: &SnapshotOutcome, added: usize) {
-    if ctx.is_json() {
-        return;
-    }
-    let span = match (outcome.versions.first(), outcome.versions.last()) {
-        (Some(first), Some(last)) if first != last => format!(" ({first} … {last})"),
-        (Some(only), _) => format!(" ({only})"),
-        _ => String::new(),
-    };
-    ctx.step(&format!(
-        "template {}@{}: {} version(s) selected{span} — {added} to snapshot, {} already there",
-        outcome.package,
-        outcome.revision,
-        outcome.versions.len(),
-        outcome.unchanged
-    ));
-    for (name, resolved) in &outcome.channels {
-        match resolved {
-            Some(version) => ctx.step(&format!("  channel {name} → {version}")),
-            None => ctx.step(&format!(
-                "  channel {name} → nothing (the template declares no such channel)"
-            )),
-        }
-    }
-    if !outcome.installers.is_empty() {
-        ctx.step(&format!(
-            "  installer option(s) kept: {}",
-            outcome.installers.join(", ")
-        ));
-    }
-    for (version, option, missing) in &outcome.dropped {
-        ctx.step(&format!(
-            "  {version}: installer option `{option}` dropped — upstream publishes no {missing}"
-        ));
-    }
 }
 
 #[cfg(test)]

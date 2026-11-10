@@ -8,6 +8,7 @@ specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-059#child-output");
 
 pub mod archive;
 mod child;
+mod declared_input;
 mod drop;
 mod fetch;
 pub mod native;
@@ -28,6 +29,7 @@ use crate::error::InstallerError;
 
 pub(crate) use child::{ChildIo, Relay, Released, run_attached, run_child};
 pub use child::{Interrupt, StepLogs, StepPanel};
+pub use declared_input::{DeclaredInput, fetch_declared_input};
 pub(crate) use drop::{copy_from_drop, copy_from_drop_named};
 use drop::{declared_origin_refused, first_rung};
 pub(crate) use fetch::{TransferFacts, fetch_verified};
