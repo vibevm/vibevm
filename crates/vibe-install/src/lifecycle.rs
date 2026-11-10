@@ -26,6 +26,7 @@ use crate::error::{Error, Result};
 
 mod construct;
 mod envelope;
+mod failure;
 mod judgment;
 mod plan;
 mod progress;
@@ -250,7 +251,7 @@ impl InstallSlotLifecycle {
                 })?;
                 continue;
             }
-            self.dispatch_execution(planned.execution.clone(), point)?;
+            self.dispatch_execution(planned.execution.clone(), point, planned.optional)?;
         }
         if !matched
             && !self
@@ -266,10 +267,17 @@ impl InstallSlotLifecycle {
         Ok(())
     }
 
+    /// Run one selected contribution and record what it did.
+    ///
+    /// `optional` is the declaration's own (PROP-065 `#ordinary-grammar`),
+    /// and it is a parameter rather than a lookup because the plan entry
+    /// that carries it is the thing being dispatched: a second search for
+    /// it here would be a second answer to «which row is this».
     fn dispatch_execution(
         &self,
         execution: HandlerExecution,
         point: SlotPoint,
+        optional: bool,
     ) -> std::result::Result<(), String> {
         let mut run = self
             .run
@@ -341,6 +349,19 @@ impl InstallSlotLifecycle {
             Err(error) => {
                 let soft_post_failure =
                     point == SlotPoint::PostInstall && is_semantic_handler_failure(&error);
+                // A failure under a requested stop is an INTERRUPT: the
+                // contribution did not fail on its own terms, the run was
+                // told to end. Read from this pass's own token rather than
+                // guessed from the message.
+                let outcome = failure::failure_outcome(
+                    self.cancellation.is_cancelled(),
+                    soft_post_failure,
+                    optional,
+                );
+                // `#ordinary-failure`: the message names the retry, and the
+                // same sentence reaches both channels — the report row a
+                // client reads and the error the run refuses with.
+                let detail = format!("{error}{}", failure::retry_line(execution.slot_target()));
                 let streams = failure_streams(&error);
                 self.push_report(SlotLifecycleReport {
                     key: execution.key(),
@@ -351,19 +372,15 @@ impl InstallSlotLifecycle {
                     handler: execution.row().declaration().handler.kind().to_string(),
                     tier: tier_name(execution.row().effective_tier()).into(),
                     version: provider_version(execution.row().provider()),
-                    status: "fail".into(),
-                    flagged: soft_post_failure,
-                    message: Some(error.to_string()),
+                    status: outcome.status.into(),
+                    flagged: outcome.flagged,
+                    message: Some(detail.clone()),
                     stdout: nonempty(streams.stdout),
                     stderr: nonempty(streams.stderr),
                     stdout_truncated: streams.stdout_truncated,
                     stderr_truncated: streams.stderr_truncated,
                 })?;
-                if soft_post_failure {
-                    Ok(())
-                } else {
-                    Err(error.to_string())
-                }
+                if outcome.stops { Err(detail) } else { Ok(()) }
             }
         }
     }
