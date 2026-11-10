@@ -1025,7 +1025,17 @@ an un-neutralised dependency copy.
    output; the same command passed on every repeat. Not touched by this
    phase's files as far as the failure could be localised, and recorded rather
    than silently ignored.
-3. **The staged-publication path publishes no prefix.** `publish/staging.rs`
+3. **This repository's own authored instruction text now carries a false
+   positional phrase**, and it is the exact breakage D12 predicted. Line 37 of
+   `AGENTS.md` (and its two byte-identical copies) reads "the boot lane in the
+   order the generated block **at the end of this file** prescribes"; the block
+   is now at the top. `#SYS-NO-REWRITE-OF-AUTHORED-TEXT` forbids the generator
+   from touching it, and `#SYS-BOOT-ORDER-IS-PRECEDENCE` puts the remedy in
+   `vibe prompt check`, which lists positional phrases in the entrypoint for a
+   human to review and never edits them — P5. Left for the owner rather than
+   corrected from inside this phase, because the three copies must stay
+   byte-identical and the sentence is theirs.
+4. **The staged-publication path publishes no prefix.** `publish/staging.rs`
    calls `write_boot_artifacts_with_spec_format` and therefore passes no node
    prompt, so an opted-in project's staged publication writes no prefix.
    `PROP-076#SYS-OPERATIONS-SURFACE` lists that path among the ones that
