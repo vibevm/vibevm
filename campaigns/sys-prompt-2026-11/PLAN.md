@@ -262,8 +262,15 @@ repeated here except where a phase depends on them.
   `vibe refactor convert-source --from xml --to md --dry-run <path>`, **which
   parses but always exits 0** (`crates/vibe-cli/src/commands/refactor/convert_source.rs:124-131`)
   — read its `dry-run …` line. Without `--dry-run` that command **rewrites and
-  renames files**. PROP-076 was validated this way and reports
-  `dry-run byte-stable`.
+  renames files**. PROP-076 is validated this way and reports
+  **`dry-run ir-stable-loss`** — *corrected 2026-11-10 (P7): this read
+  `byte-stable`, and the file has not given that verdict for some time. The
+  verdict is unchanged by P7's and P8's own edits, confirmed by running the
+  dry-run on the commit before them, so it is a property of the document's
+  prose rather than of any one phase's amendment. `ir-stable-loss` means the
+  projector parses it and round-trips its IR while the Markdown projection is
+  not byte-identical back; the gate is that the command parses the file at
+  all, and it does.*
 - **Format discipline.** `formats/EPOCHS.toml:35-36` is `public = false`,
   `break_window_open = true`: breaking is free and unmigrated, no note under
   `formats/breaks/` required. A format must exist in `formats/REGISTRY.toml`
@@ -1708,7 +1715,7 @@ git log --oneline -3
 cat campaigns/sys-prompt-2026-11/PLAN.md campaigns/sys-prompt-2026-11/LOG.md
 # the design:
 ./target/debug/vibe refactor convert-source --from xml --to md --dry-run \
-  vibevm/vibespecs/common/PROP-076-system-prompt-prefix.xml   # must say byte-stable
+  vibevm/vibespecs/common/PROP-076-system-prompt-prefix.xml   # must parse: `ir-stable-loss`
 # the material this feature is about, and its real sizes:
 wc -c AGENTS.md vibevm/vibespecs/boot/STATIC.xml vibevm/vibespecs/boot/INDEX.md
 cat vibevm/vibespecs/boot/INDEX.md
