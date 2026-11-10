@@ -5,7 +5,9 @@
 //! code path that decides which flags a kind takes, and this cell adds only
 //! what printing cannot do: it recomposes the lane first, writes Codex's
 //! launch-time profile file, refuses a user argument that would conflict
-//! with the slot flag, and then becomes the harness (decision D10).
+//! with the slot flag, and then becomes the harness (decision D10). In a
+//! project that has not opted in it passes no flag and starts the harness
+//! unchanged.
 //!
 //! **The lane is recomposed at every launch**, which is how band U keeps the
 //! "current bytes" meaning `#SYS-NO-FROZEN-INDEX` gives it: a mid-session
@@ -49,7 +51,6 @@ pub(crate) fn run(ctx: &output::Context, argv: Vec<String>) -> Result<()> {
     let settings = global::settings_root()?;
     let config = AgentsConfig::load(&settings).map_err(AppError::from)?;
     let launcher = launchers::resolve(&settings, &config, &name)?;
-    refuse_conflicting(launcher.kind, &rest)?;
 
     // Recompose first, so the slot carries the files as they are now.
     let built = build_node_prompt(&selected.workspace, &selected.node_rel);
@@ -58,11 +59,31 @@ pub(crate) fn run(ctx: &output::Context, argv: Vec<String>) -> Result<()> {
     }
     built?;
 
+    // A project that never opted in has no lane to put in the slot. That is
+    // not a reason to refuse the launch: the harness then boots exactly as
+    // it would without `vibe`, by reading the files its instruction file's
+    // block names, and a launcher stays usable in every project.
+    if !prompt::opted_in(&selected)? {
+        if !ctx.is_quiet() {
+            eprintln!(
+                "note: this project has not opted in to a system prompt — starting `{name}` \
+                 unchanged; the agent reads its boot lane from disk"
+            );
+        }
+        let mut command: Vec<String> = launcher.command.clone();
+        command.extend(rest);
+        return exec(&command);
+    }
+
+    refuse_conflicting(launcher.kind, &rest)?;
     let composed = prompt::compose_flags(&selected, launcher.kind, Some(&launcher))?;
     for note in &composed.notes {
         if !ctx.is_quiet() {
             eprintln!("note: {note}");
         }
+    }
+    if launcher.kind == HarnessKind::Claude && resumes(&rest) && !ctx.is_quiet() {
+        eprintln!("note: {RESUME_NOTE}");
     }
     if let Some(profile) = &composed.profile {
         write_profile(profile)?;
@@ -71,6 +92,21 @@ pub(crate) fn run(ctx: &output::Context, argv: Vec<String>) -> Result<()> {
     command.extend(composed.flags.iter().cloned());
     command.extend(rest);
     exec(&command)
+}
+
+/// Measured in the P9 live check (row C7, Claude Code 2.1.322): a resumed
+/// session resends the system prompt it was started with, so a lane edited
+/// since then does not arrive, and the router cannot notice a changed band-U
+/// file because its block carries only the static lane's id.
+const RESUME_NOTE: &str = "a resumed Claude Code session keeps the boot lane it started with; \
+     boot files edited since then reach the agent only in a new session";
+
+/// Whether the user's own arguments resume an earlier session.
+fn resumes(rest: &[String]) -> bool {
+    rest.iter().any(|argument| {
+        matches!(argument.as_str(), "-c" | "--continue" | "-r" | "--resume")
+            || argument.starts_with("--resume=")
+    })
 }
 
 /// Refuse a user argument that would land a second system prompt in the

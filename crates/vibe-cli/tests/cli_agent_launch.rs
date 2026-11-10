@@ -409,3 +409,59 @@ fn a_project_manifest_that_names_a_launcher_is_a_refusal() {
         "a refused launch started something"
     );
 }
+
+#[test]
+fn a_project_that_has_not_opted_in_starts_the_harness_unchanged() {
+    // The launcher must stay usable in every project. With no template there
+    // is no lane, so the harness gets no slot flag and boots the classic way,
+    // and a user's own slot flag is then no conflict at all.
+    let machine = Machine::new(WRAPPER);
+    fs::remove_file(
+        machine
+            .project
+            .path()
+            .join(vibe_core::layout::current_boot_dir())
+            .join("SYSTEM-TEMPLATE.md"),
+    )
+    .unwrap();
+    machine
+        .agent(&["claude", "--append-system-prompt-file", "mine.md"])
+        .assert()
+        .success()
+        .stderr(predicate::str::contains("has not opted in"))
+        .stderr(predicate::str::contains("unchanged"));
+    assert_eq!(
+        machine.argv(),
+        ["--no-telemetry", "--append-system-prompt-file", "mine.md"]
+    );
+    assert!(
+        !machine.lane().exists(),
+        "an opted-out launch composed a lane"
+    );
+    // Printing flags for such a project is still a refusal: there is nothing
+    // to print.
+    let mut flags = machine.user.vibe();
+    machine
+        .harnessed(&mut flags, VERIFIED)
+        .args(["prompt", "flags", "--harness", "claude"])
+        .assert()
+        .failure()
+        .stderr(predicate::str::contains("has not opted in"));
+}
+
+#[test]
+fn a_resumed_claude_session_is_told_it_keeps_its_old_lane() {
+    let machine = Machine::new(WRAPPER);
+    machine
+        .agent(&["claude", "--resume", "some-id"])
+        .assert()
+        .success()
+        .stderr(predicate::str::contains(
+            "keeps the boot lane it started with",
+        ));
+    machine
+        .agent(&["claude"])
+        .assert()
+        .success()
+        .stderr(predicate::str::contains("keeps the boot lane").not());
+}

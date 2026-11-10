@@ -67,6 +67,19 @@ fn resolve_kind(
     Ok((launcher.kind, Some(launcher)))
 }
 
+/// Whether this node has opted in to a system prompt at all.
+///
+/// `vibe agent` asks this before composing: a node with no authored template
+/// has no lane, and the launch then starts the harness unchanged, which is
+/// exactly the classic boot the block's router already handles. Printing
+/// flags for such a node stays a refusal in [`compose`] — there is nothing
+/// to print.
+pub(crate) fn opted_in(selected: &Selected) -> Result<bool> {
+    let tracked = selected.tracked();
+    let request = selected.request(&tracked, None);
+    Ok(check_node_prompt(&request)?.opted_in)
+}
+
 /// Compose the flags for one kind over this node's current artifacts.
 ///
 /// The lane is read from disk rather than recomposed, and a lane that is not
