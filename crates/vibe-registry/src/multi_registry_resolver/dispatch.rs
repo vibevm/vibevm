@@ -429,6 +429,8 @@ impl MultiRegistryResolver {
             is_embedded: false,
             is_local: false,
             via_redirect: None,
+            template: None,
+            via_channel: None,
         })
     }
 

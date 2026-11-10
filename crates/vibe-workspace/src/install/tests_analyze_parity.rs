@@ -68,6 +68,8 @@ pub(super) fn publish_resolution_lock(root: &Path, resolution: &[ResolvedDep]) {
                 .package
                 .as_ref()
                 .map_or(Materialization::Copy, |package| package.materialization),
+            template: None,
+            via_channel: None,
         })
         .collect();
     lock.write(root.join(Lockfile::FILENAME)).unwrap();

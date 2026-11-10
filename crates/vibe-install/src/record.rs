@@ -323,6 +323,14 @@ pub(crate) fn locked_package_from_fetched(
         // Record the package's declared materialization so destructive ops
         // and the guard (PROP-022 §2.6) recognise an in-place slot.
         materialization: c.package_meta().materialization,
+        // The lock record of a template-produced version, carried
+        // straight off the fetch (PROP-075 `#TEMPLATE-LOCK-RECORD`);
+        // `None` for every concretely published package.
+        template: c.template.clone(),
+        // The channel the requirement was lowered through, so `vibe.toml`
+        // keeps saying `lts` while `vibe.lock` says the concrete version
+        // (PROP-075 `#CHANNEL-SYNTAX`).
+        via_channel: c.via_channel.clone(),
     };
     if let Some(held) = &c.locked_selection {
         let selected = held.source_row();

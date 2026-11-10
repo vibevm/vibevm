@@ -31,7 +31,10 @@ impl Lockfile {
         }
         if !matches!(
             lockfile.meta.schema_version,
-            LEGACY_SCHEMA_VERSION | CONFIGURATION_SCHEMA_VERSION | CURRENT_SCHEMA_VERSION
+            LEGACY_SCHEMA_VERSION
+                | CONFIGURATION_SCHEMA_VERSION
+                | REMAP_SOURCE_SCHEMA_VERSION
+                | TEMPLATE_SCHEMA_VERSION
         ) {
             return Err(crate::error::Error::UnsupportedLockfile {
                 found: lockfile.meta.schema_version,
@@ -39,6 +42,7 @@ impl Lockfile {
             });
         }
         lockfile.validate_remap_sources()?;
+        lockfile.validate_template_records()?;
         // `find`/`find_mut`/`remove` below treat `(group, name)` as a
         // unique key — first match wins. A lockfile carrying duplicate
         // identities would make those lookups silently

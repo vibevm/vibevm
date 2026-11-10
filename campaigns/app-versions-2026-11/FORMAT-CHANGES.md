@@ -9,7 +9,8 @@ Design authority for all of it: `spec://org.vibevm.core/vibevm/common/PROP-075#F
 **Id ranges.** `AV-FMT-001`…`AV-FMT-020` are the ids `PLAN.md` assigned to the phases while
 planning; a phase fills its own. Ids from **`AV-FMT-101`** up are for a format a phase turned
 out to need and the plan did not foresee, so two phases running concurrently cannot pick the
-same number. P5a's own unforeseen records are `AV-FMT-101` and `AV-FMT-102`.
+same number. P5a's own unforeseen records are `AV-FMT-101` and `AV-FMT-102`; P2's are
+`AV-FMT-021`…`AV-FMT-024`, taken from the planning range below 100 because P2 owns it.
 
 ## AV-FMT-001 — `[package] template` and the `[template]` table (Phase 1)
 
@@ -40,7 +41,28 @@ AV-FMT-005, phase P2).
 
 ## AV-FMT-002 — lockfile: `[template]` per package, `via_channel`, schema 10 (Phase 2)
 
-Status: **planned**.
+Status: **delivered 2026-11-10** (phase P2). As implemented it matches the entry
+below, with two clarifications the 9 → 10 step forced. (1) The epoch floor a
+`[[remap]]` source binding needs is now its own named constant,
+`REMAP_SOURCE_SCHEMA_VERSION = 9`, instead of being read off
+`CURRENT_SCHEMA_VERSION`: without that split, raising `CURRENT` to 10 would have
+silently raised the floor a remap binding requires and refused every schema-9
+lock that carries one. (2) The writer still writes **the lowest epoch that
+carries what the lock actually holds** — the rule the 7 → 8 → 9 steps already
+followed — so a project with no template package and no channel requirement
+writes exactly the bytes it wrote before PROP-075, and a template record or a
+`via_channel` under an older epoch is **corruption, never legacy input**
+(`validate_template_records`).
+(3) The alarm has **two** call sites, not one. The comparison against the
+recorded `rendered_sha256` is `verify_recorded`, for the path that has a lock
+record. It also fires from materialisation, with no lock at all: a rendered
+directory already on disk is the same produced version rendered before, and its
+digest-bearing fields came from a digest document that is cached write-once and
+immutable — so a difference in those fields can only mean the document changed
+upstream, which is the alarm, while a difference *outside* them is a template
+fixed without touching a produced version, which TEMPLATE-FLAG exists to allow
+and which rewrites silently. Both behaviours are asserted through the real
+binary in `crates/vibe-cli/tests/cli_template_resolution.rs`.
 
 - `[format.lockfile]` (`schema = "none"`, authored TOML, `foreign_parsers = "ours"`), registry epoch **1 → 1**, following the precedent of the 7→8→9 steps, which did not move it. The lockfile's own `meta.schema_version` goes **9 → 10** and `admit` accepts **7..=10**; 11 and above still refuse.
 - `LockedPackage` gains an optional table `template` with `revision` (the template package's own version), `rendered_sha256` (SHA-256 of the full render's TOML bytes), `digest_source_sha256` (SHA-256 of the fetched digest document's bytes), and `source_url` / `digest_url` as resolved **after** remap.
@@ -50,7 +72,18 @@ Status: **planned**.
 
 ## AV-FMT-003 — index per-version record: `template`, `channels` (Phase 2)
 
-Status: **planned**.
+Status: **delivered 2026-11-10** (phase P2), with one deliberate omission: the
+two extra golden documents under `formats/corpora/index/e1` were **not** added.
+Spike S3 had already proved the point they would make — the corpus bytes do not
+move, `cargo xtask rebuild --check` reports the catalog byte-identical to its
+journal's projection (16 files), and `wire-diff` sees `schema 0, corpus 0` — and
+a corpus document is a journal fact, so adding one is a separate, owner-visible
+act rather than a side effect of a member. Filed as this phase's one open item.
+The mechanical cost S3 predicted held exactly: the regenerated
+`crates/vibe-wire/src/generated/shared/mod.rs` plus two struct-literal sites
+(`crates/vibe-wire/src/behaviour/records.rs`, where a behaviour record is a
+concrete published version, and `crates/vibe-index/src/scanner/tree_entry.rs`,
+where both members are read off the manifest).
 
 - `schemas/index/e1/entry.jtd.json` is a bare `ref` to the **shared vocabulary** `version_entry`, so the two new optional members reach `primary.jsonl`, `by-name/<name>.json` and the journal at once. Records touched: `[format.index-primary]`, `[format.index-by-name]`, `[format.index-entry]`, all epoch **1 → 1** (`recoverable = true`, `foreign_parsers = "many"`): the members are optional and absent means byte-identical documents.
 - New optional `template: boolean` — the published version is a template revision rather than a concrete version. This is how a client splits a package's published versions in one index read and finds the active template (the newest such revision), without reading a manifest per version.
@@ -61,7 +94,11 @@ Status: **planned**.
 
 ## AV-FMT-004 — two remap artifact kinds: `template-index`, `template-digest` (Phase 2)
 
-Status: **planned**.
+Status: **delivered 2026-11-10** (phase P2), exactly as the entry below describes:
+two members of `ArtifactKind` with their kebab-case labels, no new routing
+mechanism and no new config table. The template layer passes every declared URL
+through `vibe_core::remap::active()` before the fetch, and a Locator refusal is
+`remap_denied` naming the row — never a silent fall-through to the origin.
 
 - PROP-066 `#locations` artifact-kind vocabulary, epoch **1 → 1** (one open vocabulary gains two members).
 - A template's version-list document and its per-version digest document are fetched through the operation's controlled transport and the remap Locator like every other byte, so a closed network redirects them with the rows it already uses and `vibe remap explain <url>` answers for them. The payload inputs of a rendered version keep the existing `app-input` kind and the drop convention of PROP-066 `#drops` unchanged.
@@ -69,7 +106,17 @@ Status: **planned**.
 
 ## AV-FMT-005 — `~/.vibe/config.toml` `[template] version_list_ttl` (Phase 2)
 
-Status: **planned**.
+Status: **delivered 2026-11-10** (phase P2). As built, with two additions the
+entry below did not spell out. (1) `--refresh` is a **global** flag, beside
+`--offline`, and `--offline` wins on conflict: a posture that forbids the network
+outranks a request to use it. (2) The cache holds one more file,
+`<settings>/cache/templates/<group>/<name>/template.toml` — the template
+*document* verbatim, kept beside its inputs. It is a declaration, not an output,
+so `#TEMPLATE-RENDER-LOCATION`'s ban on caching a render is untouched; it exists
+so a **channel** can be lowered from the cache alone, with no registry root, no
+index read and no request, which is the budget `#ACTIVATION-HOOK` gives a prompt
+hook. Unlike a digest document it is not write-once: a template can be fixed
+without touching a produced version, and the cache must then hold the fix.
 
 - User config (`schema = "none"`, authored TOML), epoch **1 → 1**. One new table with one key.
 - `version_list_ttl` — how long a cached template version list is used before it is refetched. Default **15 minutes**. Digest documents are **never** revalidated (a released version's checksums are immutable, and a change upstream is precisely the AV-FMT-002 alarm), so the TTL applies to the version list alone.
@@ -195,7 +242,19 @@ Status: **planned**. New command, new format.
 
 ## AV-FMT-017 — application index protocol `vibe-user-applications/7` (Phase 2, visible from Phase 6)
 
-Status: **planned**.
+Status: **not delivered by P2; moved to the phase that first needs it.** The
+record below is unchanged and still correct. The reason for the move is the
+entry's own second half: `Installation` gains *both* the template table **and
+the recorded migration outcomes of AV-FMT-016*, and the second of those is P6's.
+A `/7` generation written now would have to be written again when P6 lands, and
+the writer's "lowest protocol that carries what the home retains" ladder means a
+home with no template installation and no migration record keeps writing `/6`
+either way — so nothing a user sees is waiting on it. P2 therefore leaves the
+inventory at `vibe-user-applications/6` and the proxy admission list untouched,
+and the template provenance of a globally installed application is carried where
+P2 does bind it: the project lock (AV-FMT-002). Spike S5 already measured the
+whole cost of the move (two `match` arms plus the new `e6` wire module), so the
+phase that takes it pays no discovery.
 
 - `[format.application-index]`, epoch **5 → 6**, new schema generation `schemas/application/e6/index.jtd.json` beside `e1`–`e5`, corpus `formats/corpora/application/e6`, `recoverable = false`, `foreign_parsers = "none"`, `unknown_fields = "deny"`. In-document protocol tag `vibe-user-applications/7`.
 - `Installation` gains the optional `template` table of AV-FMT-002 (template revision, produced version, rendered-manifest hash, digest-document hash) and the recorded migration outcomes of AV-FMT-016.
@@ -204,7 +263,11 @@ Status: **planned**.
 
 ## AV-FMT-018 — `vibe app describe`: the template provenance (Phase 2)
 
-Status: **planned**.
+Status: **not delivered by P2; follows AV-FMT-017.** The optional
+`template { revision, produced, rendered_sha256 }` member is read off the
+*installation record*, which is the `/7` generation AV-FMT-017 defers, so
+describing provenance the home does not retain would print nothing. Deferred
+with AV-FMT-017 and for the same reason; the record below is unchanged.
 
 - `[format.cli-application-describe]`, `schemas/application_describe.jtd.json`, epoch **1 → 1**. One optional member; existing documents byte-identical.
 - Optional `template { revision, produced, rendered_sha256 }` on the described package, so a graphical tool or an agent can see that the manifest it is reading was rendered and from what, plus the installer-option rows dropped by `template_optional` with the version and the missing file.
@@ -269,3 +332,42 @@ Status: **done** 2026-11-10. New format, not foreseen by `PLAN.md`.
   never an error. This is the document PROP-075 `#VERSION-FILE-FORMATS` names as "cached by the
   modification time and size of the files consulted"; it is registered because it is persisted.
 - Recorded in PROP-075 `#P5A-AS-BUILT` (2).
+
+## AV-FMT-021 — a channel where a version requirement is written (Phase 2)
+
+Status: **delivered 2026-11-10** (phase P2).
+
+- `[format.manifest]` and the pkgref grammar, epoch **1 → 1**. `VersionSpec` gains a third variant `Channel(ChannelName)`, so `group/name@lts`, `node@lts/jod`, `@latest` and `@stable` parse wherever a requirement is written — a `[requires.packages]` value, a CLI pkgref, a `--use SLOT=VER`, a version file's line.
+- **Semver first, always.** `VersionSpec::parse` tries `semver::VersionReq` and only a string that fails it **and** matches the channel grammar becomes a channel, so `1.x`, `^22`, `=1.2.3` and every other existing requirement keeps its meaning. A string that is neither is the refusal it already was.
+- The grammar is one function in one place, `vibe_core::manifest::channel_name_is_valid`: `[a-z][a-z0-9.-]*`, optionally one `/` and a second such segment. `VersionSpec::parse` reads it, the `[[template.channel]]` validator reads it, and the version-file reader reads it, so a name that is a channel in one is a channel in all three.
+- Two names are **reserved** and answered by vibe for every package, template or not: `latest` is the newest version in the domain and `stable` the newest non-prerelease. Neither is asked of a declaration.
+- **Fail closed.** A channel is lowered to an exact pin *before* the solve, by the one function `vibe_core::channel::lower_channel`. Everything that reads a `VersionSpec` as a constraint treats an unlowered channel as the **empty** set — `VersionSpec::matches` is `false`, `SemverVersionSet::from_spec` is the match-nothing set, `is_exact_pin` is `false`, and every other read site either lowers first or refuses rather than picks — so a path that forgot to lower reports «no candidate» instead of installing something plausible. The enum is matched **exhaustively** everywhere it is read, so the compiler enumerated those sites rather than a survey: adding the variant turned «a missed lowering site becomes a wrong install» into a build error.
+- New `[package] channels = ["lts"]` on a **concrete** manifest: publisher-assigned labels, carried into the per-version index record (AV-FMT-003). Two refusals, each naming its TOML path: a label that is not a channel name, and a label on a template — a template derives its channels from the version records with `[[template.channel]]` rules, and the two mechanisms must not both decide one package's channels.
+
+## AV-FMT-022 — `--refresh`, a global flag (Phase 2)
+
+Status: **delivered 2026-11-10** (phase P2). No wire format.
+
+- `--refresh` refetches a template package's version list regardless of its age, instead of reading the cached copy while it is inside `[template] version_list_ttl` (AV-FMT-005).
+- A **digest** document is immutable and is never revalidated, by this flag or anything else: a released version's checksums do not change, and a change upstream is precisely the `template_render_changed` alarm of AV-FMT-002 — which is what makes caching it forever meaningful rather than a race.
+- `--offline` wins on conflict. The posture is one value, `Posture::{Cached, Refresh, Offline}`, resolved once at the composition root and installed with the invocation's template layer.
+
+## AV-FMT-023 — `<settings>/cache/templates/`, the template input cache (Phase 2)
+
+Status: **delivered 2026-11-10** (phase P2). New machine-local cache; no registered wire format, because nothing outside vibe reads it and every byte in it is derived.
+
+- Layout: `versions.json` (the envelope: the source URL **after** remap, the fetched bytes' SHA-256, the RFC 3339 fetch time, and the fetched document verbatim), `digests/<version>` (the digest document verbatim, **write-once**), `rendered/v<version>/` (the materialised package directory an ordinary `Registry::fetch` then copies into the store), and `template.toml` (the declaration, AV-FMT-005).
+- A **rendered tree lives here and nowhere else**, because `#TEMPLATE-RENDER-LOCATION` forbids writing a render into a registry. `vibe install -g --registry DIR` checks that a resolved package tree is contained in the directory the operator named — against a symbolic-link or `..` escape — so it admits this one root by name (`vibe_registry::templates::is_rendered_tree`), never by widening the check.
+- **A template's two documents are declared as credential-free HTTPS and may be read from the filesystem.** `#TEMPLATE-DIGEST-SOURCE` refuses any other spelling in the declaration, and a `[[remap]]` row relocates the bytes — a `path` target yields a bare path, a `url` target may yield `file://`. The transport reads both off disk, joining the declared URL's last path segment when the target is a directory, which is the drop convention of PROP-066 `#drops`. A remap changes where bytes are found, never what a package declared.
+- Staleness is **asymmetric because the two documents are**: a version list ages out at the TTL, a digest document never does.
+- A corrupt `versions.json` is treated as **absent** rather than fatal: the cache is derived state, re-deriving it costs one request, and refusing would strand a user behind a file they never wrote by hand. A fetch that fails over a merely-aged cache logs once and uses the cached copy — the list is advisory, the digests are what bind.
+- `--offline` / `VIBE_OFFLINE` / `[net] offline` read the cache whatever its age and refuse a miss with `template_cache_missing`, naming the package, the exact path and the command that would fill it. A rendered directory is rebuilt rather than reused, because a half-written one from an interrupted run must not be installed from.
+
+## AV-FMT-024 — a channel in a version file resolves (Phase 2, completing Phase 5a)
+
+Status: **delivered 2026-11-10** (phase P2). No wire format.
+
+- P5a shipped `latest` and `stable` over the installed set and reported every other channel as `unresolved_channel` (`crates/vibe-app/src/activation.rs`). P2 completes it: `ActivationRequest` gains one seam, `ChannelMembership`, and a `.nvmrc` holding `lts/jod` now selects the newest installed member of that channel — which is what makes nvm's own `.nvmrc` idiom work unchanged.
+- **The hook's budget is kept exactly.** The membership answer is read from the template cache alone — `template.toml` plus `versions.json`, two small file reads — so `vibe app env --project` still makes no network call, no registry call and no index-server read.
+- A package that declares no such channel, or whose cache holds nothing, stays `unresolved_channel`; a declared channel with no installed member is `not_installed` with the exact `vibe install -g` command. Neither is an error, because a prompt hook must never fail a `cd`.
+- `PROP-075#VERSION-FILE-FORMATS` and `#VERSION-EXEC-SPELLING`, which P5a left `impl/work` "until channel lowering lands in P2", are `impl/done` with this record.

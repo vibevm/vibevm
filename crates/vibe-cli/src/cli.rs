@@ -190,6 +190,20 @@ pub struct Cli {
     #[arg(long, global = true)]
     pub offline: bool,
 
+    /// PROP-075 `#TEMPLATE-CACHE`: refetch a template package's version
+    /// list for this invocation regardless of its age, instead of
+    /// reading the copy cached under
+    /// `~/.vibe/cache/templates/<group>/<name>/versions.json` while it
+    /// is inside `[template] version_list_ttl` (fifteen minutes by
+    /// default). A **digest** document is immutable and is never
+    /// revalidated, by this flag or anything else: a released version's
+    /// checksums do not change, and a change upstream is precisely the
+    /// `template_render_changed` alarm. `--offline` wins on conflict,
+    /// because a posture that forbids the network outranks a request to
+    /// use it.
+    #[arg(long, global = true)]
+    pub refresh: bool,
+
     /// PROP-066 `#layers`: read `[[remap]]` rows from this file for this
     /// invocation. Repeatable; the last file wins among them, and every
     /// one of them outranks a row in `~/.vibe/settings.toml`,

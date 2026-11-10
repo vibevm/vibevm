@@ -130,6 +130,8 @@ fn fully_populated_entry(name: &str, version: &str) -> VersionEntry {
             .expect("timestamp parses")
             .with_timezone(&chrono::Utc),
         indexed_by: "round-trip fixture".to_string(),
+        template: false,
+        channels: Vec::new(),
     }
 }
 

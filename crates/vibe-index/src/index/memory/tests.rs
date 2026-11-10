@@ -95,6 +95,8 @@ fn entry(kind: PackageKind, group: Group, name: &str, version: &str) -> VersionE
         frozen: false,
         indexed_at: now(),
         indexed_by: "vibe-index 0.1.0-dev".into(),
+        template: false,
+        channels: Vec::new(),
     }
 }
 

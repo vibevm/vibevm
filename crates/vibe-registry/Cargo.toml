@@ -16,6 +16,10 @@ command-group = "=5.0.1"
 specmark.workspace = true
 vibe-core.workspace = true
 vibe-net.workspace = true
+# The pure renderer of PROP-075: TOML text in, TOML text out. Fetching,
+# caching, offline policy and store materialisation are this crate's
+# (`#TEMPLATE-RENDER-LOCATION`), the render is never ours.
+vibe-template.workspace = true
 vibe-wire.workspace = true
 anyhow.workspace = true
 thiserror.workspace = true

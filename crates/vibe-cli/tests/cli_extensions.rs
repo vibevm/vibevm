@@ -46,6 +46,8 @@ fn locked(group: &str, name: &str, kind: PackageKind, version: &str, hash: &str)
         describes: None,
         language: None,
         materialization: Materialization::Copy,
+        template: None,
+        via_channel: None,
     }
 }
 

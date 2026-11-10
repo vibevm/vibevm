@@ -63,6 +63,11 @@ impl<'a, P: DepProvider> BoundedProvider<'a, P> {
         let combined = match &pkgref.version {
             VersionSpec::Latest => format!("<{bound}"),
             VersionSpec::Req(req) => format!("{req}, <{bound}"),
+            // An unlowered channel reaching the solver resolves nothing
+            // (PROP-075 `#CHANNEL-SYNTAX`): bounding it is left to the
+            // empty version set rather than invented here, so the
+            // requirement travels on untouched and fails closed.
+            VersionSpec::Channel(_) => return Ok(pkgref.clone()),
         };
         let req = semver::VersionReq::parse(&combined).map_err(|e| {
             DepProviderError::Other(format!(

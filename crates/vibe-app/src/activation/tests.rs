@@ -88,6 +88,22 @@ fn request<'a>(
         project,
         requirements,
         consult_project,
+        channels: None,
+    }
+}
+
+/// A channel table a test states outright, standing in for the cached
+/// version list a real resolution reads.
+struct Channels(&'static [(&'static str, &'static str, &'static [&'static str])]);
+
+impl super::ChannelMembership for Channels {
+    fn members(&self, package: &str, channel: &str) -> Option<Vec<semver::Version>> {
+        self.0
+            .iter()
+            .find(|(declared_package, declared_channel, _)| {
+                *declared_package == package && *declared_channel == channel
+            })
+            .map(|(_, _, versions)| versions.iter().map(|v| v.parse().unwrap()).collect())
     }
 }
 
@@ -226,7 +242,7 @@ fn the_newest_matching_version_wins_and_a_missing_one_names_its_install_command(
 
 #[test]
 #[specmark::spec(verifies = "spec://org.vibevm.core/vibevm/common/PROP-075#CHANNEL-SYNTAX")]
-fn latest_and_stable_resolve_over_the_installed_set_and_other_channels_do_not_yet() {
+fn latest_and_stable_resolve_over_the_installed_set_without_a_channel_table() {
     let dir = tempfile::tempdir().unwrap();
     let index = home(&["1.0.0", "2.0.0", "3.0.0-rc.1"], None, false);
     let settings = settings_with(dir.path(), &index);
@@ -253,8 +269,63 @@ fn latest_and_stable_resolve_over_the_installed_set_and_other_channels_do_not_ye
     .unwrap();
     assert_eq!(
         activation.of_slot("runtime").unwrap().state,
-        State::UnresolvedChannel
+        State::UnresolvedChannel,
+        "without a channel table a declared channel stays unresolved, never an error"
     );
+}
+
+#[test]
+#[specmark::spec(verifies = "spec://org.vibevm.core/vibevm/common/PROP-075#CHANNEL-SYNTAX")]
+fn a_declared_channel_resolves_through_the_membership_seam() {
+    let dir = tempfile::tempdir().unwrap();
+    let index = home(&["1.0.0", "2.0.0", "3.0.0"], None, false);
+    let settings = settings_with(dir.path(), &index);
+    let table = Channels(&[
+        ("org.example/runtime", "lts", &["1.0.0", "2.0.0"]),
+        ("org.example/runtime", "lts/jod", &["2.0.0"]),
+        ("org.example/runtime", "nightly", &[]),
+    ]);
+    for (channel, expected, state) in [
+        ("lts", Some("org.example/runtime@2.0.0"), State::Selected),
+        (
+            "lts/jod",
+            Some("org.example/runtime@2.0.0"),
+            State::Selected,
+        ),
+        // Declared and empty, and declared-but-not-installed, are both
+        // `not_installed` with the exact install command — never an error,
+        // because a prompt hook must not fail a `cd`.
+        ("nightly", None, State::NotInstalled),
+        // Undeclared stays `unresolved_channel`, which is a different
+        // fact and a different message.
+        ("canary", None, State::UnresolvedChannel),
+    ] {
+        let uses = [format!("runtime={channel}")];
+        let mut outer = request(&uses, dir.path(), None, &[], false);
+        outer.channels = Some(&table);
+        let activation = resolve(&settings, &index, &outer).unwrap();
+        let chosen = activation.of_slot("runtime").unwrap();
+        assert_eq!(chosen.key.as_deref(), expected, "{channel}: {chosen:?}");
+        assert_eq!(chosen.state, state, "{channel}: {chosen:?}");
+    }
+}
+
+#[test]
+#[specmark::spec(verifies = "spec://org.vibevm.core/vibevm/common/PROP-075#VERSION-FILE-FORMATS")]
+fn a_version_file_naming_a_channel_resolves_through_the_same_seam() {
+    let dir = tempfile::tempdir().unwrap();
+    let project = dir.path().join("project");
+    fs::create_dir_all(&project).unwrap();
+    fs::write(project.join(".nvmrc"), "lts/jod\n").unwrap();
+    let index = home(&["1.0.0", "2.0.0"], Some("1.0.0"), false);
+    let settings = settings_with(dir.path(), &index);
+    let table = Channels(&[("org.example/runtime", "lts/jod", &["2.0.0"])]);
+    let mut outer = request(&[], &project, Some(&project), &[], true);
+    outer.channels = Some(&table);
+    let activation = resolve(&settings, &index, &outer).unwrap();
+    let chosen = activation.of_slot("runtime").unwrap();
+    assert_eq!(chosen.source, Source::VersionFile);
+    assert_eq!(chosen.key.as_deref(), Some("org.example/runtime@2.0.0"));
 }
 
 #[test]

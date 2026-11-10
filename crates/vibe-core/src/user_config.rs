@@ -52,7 +52,11 @@ use serde::{Deserialize, Serialize};
 use specmark::spec;
 
 pub(crate) mod artifacts;
+mod init;
 mod proxy;
+pub use init::InitConfig;
+mod template;
+pub use template::TemplateConfig;
 mod transfer;
 pub use artifacts::{ArtifactsConfig, ReleaseSourceKind, SelfConfig, UnknownReleaseSource};
 pub use artifacts::{InstallRootError, install_root_at};
@@ -72,6 +76,7 @@ pub use transfer::TransferConfig;
 /// assert!(cfg.net.is_default());
 /// assert!(cfg.llm.is_none());
 /// assert!(cfg.proxy.is_default());
+/// assert!(cfg.template.is_default());
 /// ```
 #[derive(Debug, Default, Clone, PartialEq, Eq, Deserialize, Serialize)]
 #[serde(deny_unknown_fields)]
@@ -128,6 +133,10 @@ pub struct UserConfig {
     #[serde(rename = "self")]
     #[serde(default, skip_serializing_if = "SelfConfig::is_default")]
     pub self_source: SelfConfig,
+    /// `[template]` — how long a cached template version list is used
+    /// before it is refetched (PROP-075 `#TEMPLATE-CACHE`).
+    #[serde(default, skip_serializing_if = "TemplateConfig::is_default")]
+    pub template: TemplateConfig,
 }
 
 /// `[install]` section — install-behaviour settings (PROP-011 §5.2).
@@ -162,31 +171,6 @@ impl InstallConfig {
     /// `[install]` entirely on a config that never set it.
     pub fn is_default(&self) -> bool {
         *self == InstallConfig::default()
-    }
-}
-
-/// `[init]` section — defaults persisted from `vibe init` prompts.
-///
-/// ```
-/// use vibe_core::user_config::InitConfig;
-///
-/// let c = InitConfig::default();
-/// assert!(c.last_author.is_none());
-/// assert!(c.is_default());
-/// ```
-#[derive(Debug, Default, Clone, PartialEq, Eq, Deserialize, Serialize)]
-#[serde(deny_unknown_fields)]
-pub struct InitConfig {
-    /// The author name entered in the last interactive `vibe init`.
-    /// Saved on first use, updated when the user enters a different
-    /// value. Reused as the default for subsequent inits.
-    #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub last_author: Option<String>,
-}
-
-impl InitConfig {
-    pub fn is_default(&self) -> bool {
-        *self == InitConfig::default()
     }
 }
 

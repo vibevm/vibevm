@@ -75,7 +75,9 @@ pub use field_path::{FieldError, FieldPath};
 pub use lockfile::{
     CONFIGURATION_SCHEMA_VERSION, CURRENT_SCHEMA_VERSION, LEGACY_SCHEMA_VERSION,
     LockedEmbeddedSource, LockedPackage, LockedRemap, LockedRemapSource, LockedRemapSourceError,
-    LockedRequirer, LockedSubskill, Lockfile, LockfileMeta, SourceKind, VirtualCapabilityRecord,
+    LockedRequirer, LockedSubskill, LockedTemplate, Lockfile, LockfileMeta,
+    REMAP_SOURCE_SCHEMA_VERSION, SourceKind, TEMPLATE_SCHEMA_VERSION, TemplateRenderChanged,
+    VirtualCapabilityRecord, differing_digest_fields,
 };
 pub use mechanism::{
     HOST_OWNER, MechanismDecl, MechanismFreshness, MechanismFreshnessParseError, MechanismKey,

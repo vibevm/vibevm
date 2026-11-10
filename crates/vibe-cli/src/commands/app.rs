@@ -9,6 +9,7 @@ specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-059#launcher-operati
 pub(crate) mod agents;
 mod alternatives;
 mod catalog;
+pub(crate) mod channels;
 mod configuration;
 mod describe;
 pub(crate) mod display;

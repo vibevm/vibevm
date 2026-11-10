@@ -427,6 +427,8 @@ mod tests {
             frozen: false,
             indexed_at: now(),
             indexed_by: "test".into(),
+            template: false,
+            channels: Vec::new(),
         }
     }
 

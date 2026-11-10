@@ -91,6 +91,8 @@ impl InstallSource for MirrorSource {
             is_embedded: false,
             is_local: false,
             via_redirect: None,
+            template: None,
+            via_channel: None,
         })
     }
     fn materialise_in_place(

@@ -137,6 +137,11 @@ const EXEMPT: &[(&str, Reader, &str)] = &[
         "the index server's per-package lookup replies; the catalog files are wrapped",
     ),
     (
+        "vibe-registry/src/templates/fetch.rs",
+        Reader::Http,
+        "a template's version-list JSON and digest document (PROP-075#TEMPLATE-CACHE): metadata routed through the remap Locator and cached, not a package payload; the rendered version's archives download through the installer's wrapped fetch",
+    ),
+    (
         "vibe-net/src/system_proxy/unix.rs",
         Reader::Http,
         "a bounded direct fetch of a WPAD/PAC script while resolving this host's proxy settings (PROP-068#proxy-system): configuration, not a download",

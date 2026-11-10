@@ -99,6 +99,7 @@ fn select(
         .unwrap_or_default();
     let mut known = false;
     let mut last: Option<SlotSelection> = None;
+    let channels = super::channels::CachedChannels::new();
     for settings in homes {
         let index = Index::load(settings)?;
         known = known || index.installations.values().any(|row| row.slot == slot);
@@ -107,6 +108,7 @@ fn select(
             directory: cwd,
             project,
             requirements: &[],
+            channels: Some(&channels),
             // With no explicit version the version files decide, which is
             // what `#VERSION-EXEC-SPELLING` means by "resolved exactly as
             // `#VERSION-FILE-FORMATS` prescribes".

@@ -37,6 +37,8 @@ fn locked(group: &str, name: &str, kind: PackageKind) -> LockedPackage {
         describes: None,
         language: None,
         materialization: Materialization::Copy,
+        template: None,
+        via_channel: None,
     }
 }
 

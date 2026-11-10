@@ -24,6 +24,7 @@ impl Manifest {
     pub(super) fn validate_template(&self) -> Result<()> {
         let at = FieldPath::root().table("template");
         let flag = FieldPath::root().table("package").field("template");
+        self.validate_package_channels()?;
         // `is_template` is `[package].template`, so the flagged arm always
         // has a `[package]`; the pattern says so instead of asserting it.
         match (&self.template, self.package.as_ref()) {
@@ -62,6 +63,44 @@ impl Manifest {
             .into()),
             (None, _) => Ok(()),
         }
+    }
+
+    /// `[package] channels` is a **concrete** version's publisher-assigned
+    /// labels (PROP-075 `#CHANNEL-SYNTAX`). Two refusals, each naming its
+    /// TOML path: a label that is not a channel name, and a label on a
+    /// template — a template derives its channels from the version records
+    /// with `[[template.channel]]` rules, and the two mechanisms must not
+    /// both decide one package's channels.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-075#CHANNEL-SYNTAX")]
+    fn validate_package_channels(&self) -> Result<()> {
+        let Some(package) = self.package.as_ref() else {
+            return Ok(());
+        };
+        if package.channels.is_empty() {
+            return Ok(());
+        }
+        let at = FieldPath::root().table("package").field("channels");
+        if package.template {
+            return Err(FieldError::new(
+                at,
+                "[package].channels labels a concrete version; a template derives its channels                  from the version records with [[template.channel]] rules (fix: declare the                  rules under [template] and drop [package].channels)"
+                    .to_string(),
+            )
+            .into());
+        }
+        for label in &package.channels {
+            if !crate::manifest::channel_name_is_valid(label) {
+                return Err(FieldError::new(
+                    at,
+                    format!(
+                        "[package].channels `{label}` is not a channel name — {}",
+                        crate::manifest::CHANNEL_NAME_RULE
+                    ),
+                )
+                .into());
+            }
+        }
+        Ok(())
     }
 }
 

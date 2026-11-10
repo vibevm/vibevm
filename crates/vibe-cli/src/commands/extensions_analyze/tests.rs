@@ -84,6 +84,8 @@ fn fixture() -> TempDir {
         describes: None,
         language: None,
         materialization: Materialization::Copy,
+        template: None,
+        via_channel: None,
     }];
     lock.write(root.join("vibe.lock"))
         .expect("fixture lockfile");

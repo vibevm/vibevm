@@ -150,6 +150,8 @@ pub(crate) fn locked(name: &str, hash: &str, dependencies: &[&str]) -> LockedPac
         describes: None,
         language: None,
         materialization: Materialization::Copy,
+        template: None,
+        via_channel: None,
     }
 }
 

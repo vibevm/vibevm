@@ -126,6 +126,8 @@ impl LockedRemap {
             describes: None,
             language: None,
             materialization: Materialization::default(),
+            template: None,
+            via_channel: None,
         })
     }
     /// Explicit caller input repairs missing source facts; acquisition must still
@@ -150,7 +152,7 @@ impl Lockfile {
             if row.source.is_none() {
                 continue;
             }
-            if self.meta.schema_version < CURRENT_SCHEMA_VERSION {
+            if self.meta.schema_version < REMAP_SOURCE_SCHEMA_VERSION {
                 return Err(crate::Error::InvalidLockfile {
                     reason: "remap source bindings require schema9 (reader/writer 1.0.12)".into(),
                 });

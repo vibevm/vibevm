@@ -136,6 +136,16 @@ pub struct PackageMeta {
     /// from serialisation when false, so every existing manifest is
     /// byte-identical. Admitted only on `kind = "app"` today.
     pub template: bool,
+    /// `[package].channels` — publisher-assigned channel labels on a
+    /// **concrete** version (PROP-075 `#CHANNEL-SYNTAX`): `channels =
+    /// ["lts"]` makes `group/name@lts` resolve to this version. They are
+    /// carried into the per-version index record, so resolving a concrete
+    /// channel is an index read and never a scan of every manifest. A
+    /// template derives its channels from the version records instead,
+    /// with `[[template.channel]]` rules; the two mechanisms do not mix on
+    /// one manifest. Empty by default and omitted from serialisation when
+    /// empty, so every existing manifest is byte-identical.
+    pub channels: Vec<String>,
 
     /// `[package].format` — the PROP-035 §3 package format. `simple` (the
     /// default) is carried whole, directive-free; `normal` opts into the

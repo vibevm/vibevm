@@ -231,7 +231,7 @@ fn empty_lockfile_has_v7_defaults() {
     let lf = Lockfile::empty("vibe 0.1.0-dev", "2026-05-21T00:00:00Z");
     assert_eq!(lf.meta.schema_version, LEGACY_SCHEMA_VERSION);
     assert_eq!(LEGACY_SCHEMA_VERSION, 7);
-    assert_eq!(CURRENT_SCHEMA_VERSION, 9);
+    assert_eq!(CURRENT_SCHEMA_VERSION, 10);
     assert!(lf.meta.solver.is_none());
     assert!(lf.packages.is_empty());
 
@@ -428,4 +428,99 @@ mystery = true
 "#
     );
     assert!(toml::from_str::<Lockfile>(&raw).is_err());
+}
+
+/// One `[[package]]` row's TOML, with `extra` appended inside it.
+fn lock_text(schema: u32, extra: &str) -> String {
+    format!(
+        "[meta]\ngenerated_by = \"vibe\"\ngenerated_at = \"2026-11-10T00:00:00Z\"\n\
+         schema_version = {schema}\n\n\
+         [[package]]\nkind = \"app\"\nname = \"node\"\ngroup = \"org.vibevm.node\"\n\
+         version = \"24.22.2\"\nsource_url = \"file:///r\"\n\
+         content_hash = \"sha256:abc\"\n{extra}"
+    )
+}
+
+const TEMPLATE_ROW: &str = "via_channel = \"lts\"\n\n\
+     [package.template]\nrevision = \"0.3.0\"\n\
+     rendered_sha256 = \"aa\"\ndigest_source_sha256 = \"bb\"\n\
+     source_url = \"https://nodejs.org/dist/index.json\"\n\
+     digest_url = \"https://nodejs.org/dist/v24.22.2/SHASUMS256.txt\"\n";
+
+#[test]
+#[verifies("spec://org.vibevm.core/vibevm/common/PROP-075#TEMPLATE-LOCK-RECORD")]
+fn schema_ten_round_trips_the_template_record_and_the_channel() {
+    let lock = Lockfile::parse_str(&lock_text(TEMPLATE_SCHEMA_VERSION, TEMPLATE_ROW)).unwrap();
+    let row = &lock.packages[0];
+    let template = row.template.as_ref().expect("the row carries a template");
+    assert_eq!(template.revision.to_string(), "0.3.0");
+    assert_eq!(template.rendered_sha256, "aa");
+    assert_eq!(template.digest_source_sha256, "bb");
+    assert_eq!(row.via_channel.as_deref(), Some("lts"));
+    // The writer keeps the epoch, because the row needs it.
+    let written = lock.for_write().unwrap();
+    assert_eq!(written.meta.schema_version, TEMPLATE_SCHEMA_VERSION);
+    let back = Lockfile::parse_str(&toml::to_string_pretty(&written).unwrap()).unwrap();
+    assert_eq!(back.packages[0].template, row.template);
+    assert_eq!(back.packages[0].via_channel, row.via_channel);
+}
+
+#[test]
+#[verifies("spec://org.vibevm.core/vibevm/common/PROP-075#TEMPLATE-LOCK-RECORD")]
+fn nine_still_reads_and_eleven_refuses() {
+    // A schema-9 lock with a remap source binding is read exactly as
+    // before: the 9 → 10 step did not raise that floor.
+    for schema in [LEGACY_SCHEMA_VERSION, CONFIGURATION_SCHEMA_VERSION, 9, 10] {
+        assert!(
+            Lockfile::parse_str(&lock_text(schema, "")).is_ok(),
+            "schema{schema} must read"
+        );
+    }
+    let error = Lockfile::parse_str(&lock_text(TEMPLATE_SCHEMA_VERSION + 1, "")).unwrap_err();
+    assert!(error.to_string().contains("11"), "{error}");
+}
+
+#[test]
+#[verifies("spec://org.vibevm.core/vibevm/common/PROP-075#TEMPLATE-LOCK-RECORD")]
+fn a_template_record_under_an_older_epoch_is_corruption_not_legacy_input() {
+    let error = Lockfile::parse_str(&lock_text(9, TEMPLATE_ROW)).unwrap_err();
+    assert!(error.to_string().contains("schema10"), "{error}");
+}
+
+#[test]
+#[verifies("spec://org.vibevm.core/vibevm/common/PROP-075#TEMPLATE-LOCK-RECORD")]
+fn a_lock_with_no_template_keeps_writing_the_epoch_it_always_did() {
+    // The writer writes the lowest epoch that carries what the lock
+    // holds, so nothing about a project without a template moves.
+    let lock = Lockfile::parse_str(&lock_text(TEMPLATE_SCHEMA_VERSION, "")).unwrap();
+    assert_eq!(
+        lock.for_write().unwrap().meta.schema_version,
+        LEGACY_SCHEMA_VERSION
+    );
+}
+
+#[test]
+#[verifies("spec://org.vibevm.core/vibevm/common/PROP-075#TEMPLATE-LOCK-RECORD")]
+fn the_alarm_names_the_digest_fields_that_differ() {
+    let before = "[[installer_options.steps]]\nid = \"unpack\"\nsha256 = \"aa\"\nsize = 10\n";
+    let after = "[[installer_options.steps]]\nid = \"unpack\"\nsha256 = \"bb\"\nsize = 10\n";
+    let fields = crate::manifest::differing_digest_fields(before, after);
+    assert_eq!(fields, vec!["sha256 = \"aa\" → \"bb\""]);
+    assert!(crate::manifest::differing_digest_fields(before, before).is_empty());
+
+    let alarm = crate::manifest::TemplateRenderChanged {
+        package: "org.vibevm.node/node".to_string(),
+        version: "24.22.2".parse().unwrap(),
+        recorded_revision: "0.3.0".parse().unwrap(),
+        computed_revision: "0.4.0".parse().unwrap(),
+        recorded_sha256: "a".repeat(64),
+        computed_sha256: "b".repeat(64),
+        fields,
+    };
+    let message = alarm.to_string();
+    assert!(message.contains("template_render_changed"), "{message}");
+    assert!(message.contains("org.vibevm.node/node"), "{message}");
+    assert!(message.contains("0.3.0"), "{message}");
+    assert!(message.contains("0.4.0"), "{message}");
+    assert!(message.contains("--trust-template"), "{message}");
 }

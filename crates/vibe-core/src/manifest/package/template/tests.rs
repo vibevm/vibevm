@@ -261,3 +261,53 @@ fn the_ttl_round_trips_through_the_table() {
             .contains("version_list_ttl = \"2h\""),
     );
 }
+
+#[test]
+#[specmark::spec(verifies = "spec://org.vibevm.core/vibevm/common/PROP-075#CHANNEL-SYNTAX")]
+fn package_channels_round_trip_and_refuse_by_name() {
+    let concrete = concat!(
+        "[package]\ngroup = \"org.vibevm.node\"\nname = \"node\"\nkind = \"app\"\n",
+        "version = \"22.23.4\"\nchannels = [\"lts\", \"lts/jod\"]\n\n",
+        "[application]\nid = \"node\"\n",
+    );
+    let manifest = crate::manifest::Manifest::parse_str(concrete).unwrap();
+    assert_eq!(
+        manifest.package.as_ref().unwrap().channels,
+        vec!["lts".to_string(), "lts/jod".to_string()]
+    );
+    // Absent means byte-identical: nothing is written for an empty list.
+    let rendered = manifest.render_with_comments(None).unwrap();
+    assert!(rendered.contains("channels = ["), "{rendered}");
+    assert!(rendered.contains("\"lts/jod\""), "{rendered}");
+    let plain = crate::manifest::Manifest::parse_str(
+        "[package]\ngroup = \"org.e\"\nname = \"p\"\nkind = \"flow\"\nversion = \"1.0.0\"\n",
+    )
+    .unwrap();
+    let rendered = plain.render_with_comments(None).unwrap();
+    assert!(!rendered.contains("channels"), "{rendered}");
+
+    // A label that is not a channel name refuses, naming its TOML path.
+    let bad = crate::manifest::Manifest::parse_str(&concrete.replace("\"lts/jod\"", "\"LTS\""))
+        .unwrap_err();
+    assert!(bad.to_string().contains("[package].channels"), "{bad}");
+    assert!(bad.to_string().contains("LTS"), "{bad}");
+}
+
+#[test]
+#[specmark::spec(verifies = "spec://org.vibevm.core/vibevm/common/PROP-075#CHANNEL-SYNTAX")]
+fn a_template_may_not_also_label_itself_with_channels() {
+    let text = concat!(
+        "[package]\ngroup = \"org.e\"\nname = \"tool\"\nkind = \"app\"\nversion = \"0.1.0\"\n",
+        "template = true\nchannels = [\"lts\"]\n\n[application]\nid = \"tool\"\n\n",
+        "[template.versions]\nkind = \"list\"\n\n",
+        "[[template.versions.item]]\nversion = \"1.0.0\"\n\n",
+        "[template.digests]\nkind = \"sha256sums\"\n",
+        "url = \"https://e.invalid/v{version}/SHASUMS256.txt\"\n",
+    );
+    let error = crate::manifest::Manifest::parse_str(text).unwrap_err();
+    assert!(error.to_string().contains("[package].channels"), "{error}");
+    assert!(
+        error.to_string().contains("[[template.channel]]"),
+        "{error}"
+    );
+}

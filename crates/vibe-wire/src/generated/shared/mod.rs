@@ -5466,6 +5466,12 @@ pub struct VersionEntry {
     #[serde(default, skip_serializing_if = "std::ops::Not::not")]
     pub bridge: bool,
 
+    /// Publisher-assigned channel labels on a concrete version (PROP-075
+    /// #CHANNEL-SYNTAX), so resolving a channel for a non-template package is
+    /// an index read and never a scan of every manifest.
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub channels: Vec<String>,
+
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub compatibility: Option<CompatibilityEntry>,
 
@@ -5533,6 +5539,14 @@ pub struct VersionEntry {
 
     #[serde(default, skip_serializing_if = "Vec::is_empty")]
     pub subskills: Vec<SubskillEntry>,
+
+    /// True when this published version is a template REVISION rather than a
+    /// produced version (PROP-075 #TEMPLATE-DISCOVERY): how a client splits
+    /// a package's published versions in one index read and finds the active
+    /// template — the newest such revision — without reading a manifest per
+    /// version.
+    #[serde(default, skip_serializing_if = "std::ops::Not::not")]
+    pub template: bool,
 
     /// Display name of the package (PROP-057 §7); absent when the package
     /// declares none. Required in the manifest of a `doc` package, optional for

@@ -286,6 +286,8 @@ mod tests {
             describes: None,
             language: None,
             materialization: Default::default(),
+            template: None,
+            via_channel: None,
         }
     }
 

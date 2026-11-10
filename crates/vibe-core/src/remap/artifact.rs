@@ -23,6 +23,8 @@ use super::row::{Provenance, RemapKey, RemapScope, RemapTarget, UnmatchedPolicy}
 ///
 /// assert_eq!(ArtifactKind::AppInput.label(), "app-input");
 /// assert_eq!(ArtifactKind::RegistryClone.label(), "registry-clone");
+/// assert_eq!(ArtifactKind::TemplateIndex.label(), "template-index");
+/// assert_eq!(ArtifactKind::TemplateDigest.label(), "template-digest");
 /// ```
 #[derive(Debug, Clone, Copy, Default, PartialEq, Eq, Serialize)]
 #[serde(rename_all = "kebab-case")]
@@ -49,6 +51,13 @@ pub enum ArtifactKind {
     Distribution,
     /// The documentation shell's release artifacts (PROP-057).
     DocShell,
+    /// A template package's version-list document — the JSON an upstream
+    /// publishes its releases as (PROP-075 `#TEMPLATE-CACHE`).
+    TemplateIndex,
+    /// A template package's per-version digest document — a
+    /// `SHASUMS256.txt` or a JSON checksum manifest
+    /// (PROP-075 `#TEMPLATE-CACHE`).
+    TemplateDigest,
 }
 
 impl ArtifactKind {
@@ -63,6 +72,8 @@ impl ArtifactKind {
             ArtifactKind::AppInput => "app-input",
             ArtifactKind::Distribution => "distribution",
             ArtifactKind::DocShell => "doc-shell",
+            ArtifactKind::TemplateIndex => "template-index",
+            ArtifactKind::TemplateDigest => "template-digest",
         }
     }
 }

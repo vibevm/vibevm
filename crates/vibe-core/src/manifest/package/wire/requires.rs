@@ -370,6 +370,10 @@ fn version_spec_to_constraint_str(spec: &VersionSpec) -> String {
     match spec {
         VersionSpec::Latest => "*".to_string(),
         VersionSpec::Req(req) => req.to_string(),
+        // The written form of a channel is its own name; it is lowered to
+        // an exact pin before the solve, never widened to a constraint
+        // (PROP-075 `#CHANNEL-SYNTAX`).
+        VersionSpec::Channel(name) => name.as_str().to_string(),
     }
 }
 

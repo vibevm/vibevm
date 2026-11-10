@@ -189,6 +189,8 @@ fn sanitize_lock(raw: &Lockfile) -> Lockfile {
                 describes: None,
                 language: None,
                 materialization: source.materialization,
+                template: None,
+                via_channel: None,
             }
         })
         .collect();

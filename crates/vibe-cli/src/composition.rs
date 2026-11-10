@@ -13,6 +13,7 @@ pub(crate) mod cancellation;
 pub(crate) mod native_helper;
 pub(crate) mod network;
 pub(crate) mod remap;
+pub(crate) mod templates;
 pub(crate) mod transfers;
 
 pub(crate) fn run_vars(

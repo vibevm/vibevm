@@ -249,6 +249,10 @@ impl fmt::Display for CapabilityRef {
         match &self.version {
             VersionSpec::Latest => Ok(()),
             VersionSpec::Req(req) => write!(f, "@{req}"),
+            // A capability requirement cannot name a channel — the
+            // grammar admits none — but `VersionSpec` is shared, so the
+            // arm round-trips the spelling rather than dropping it.
+            VersionSpec::Channel(name) => write!(f, "@{name}"),
         }
     }
 }

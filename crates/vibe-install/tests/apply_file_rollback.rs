@@ -123,6 +123,8 @@ impl InstallSource for Source {
             is_embedded: false,
             is_local: true,
             via_redirect: None,
+            template: None,
+            via_channel: None,
         })
     }
     fn solve(&self, _: &[PackageRef]) -> Result<ResolvedGraph, SolveError> {

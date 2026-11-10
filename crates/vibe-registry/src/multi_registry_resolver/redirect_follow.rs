@@ -355,6 +355,8 @@ impl MultiRegistryResolver {
             is_embedded: false,
             is_local: false,
             via_redirect: resolution.via_redirect.clone(),
+            template: None,
+            via_channel: None,
         })
     }
 }

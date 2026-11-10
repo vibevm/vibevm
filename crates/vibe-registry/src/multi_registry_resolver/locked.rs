@@ -283,6 +283,8 @@ impl MultiRegistryResolver {
             is_local: false,
             is_embedded: false,
             via_redirect: None,
+            template: None,
+            via_channel: None,
         };
         selection.apply_evidence(&mut cached);
         Ok(Some(cached))

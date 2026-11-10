@@ -230,6 +230,8 @@ impl GitPerPackageRegistry {
             is_local: false,
             is_embedded: false,
             via_redirect: None,
+            template: None,
+            via_channel: None,
         })))
     }
 }

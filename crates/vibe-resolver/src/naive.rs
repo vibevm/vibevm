@@ -304,7 +304,10 @@ pub(crate) fn capability_version_for_provider(
     package_version: &semver::Version,
 ) -> semver::Version {
     match &cap.version {
-        VersionSpec::Latest => package_version.clone(),
+        // A capability requirement's grammar admits no channel, and a
+        // `provides` line carries no domain to lower one against, so the
+        // providing package's own version is the only honest anchor.
+        VersionSpec::Latest | VersionSpec::Channel(_) => package_version.clone(),
         VersionSpec::Req(req) => req
             .comparators
             .first()

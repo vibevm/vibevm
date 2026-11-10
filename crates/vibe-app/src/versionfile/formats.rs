@@ -8,15 +8,10 @@ use vibe_core::VersionSpec;
 /// The channel grammar of PROP-075 `#CHANNEL-SYNTAX`: `[a-z][a-z0-9.-]*`,
 /// optionally one `/` and a second such segment.
 pub fn is_channel_name(text: &str) -> bool {
-    let segment = |part: &str| {
-        let mut chars = part.chars();
-        chars.next().is_some_and(|first| first.is_ascii_lowercase())
-            && chars.all(|c| c.is_ascii_lowercase() || c.is_ascii_digit() || c == '.' || c == '-')
-    };
-    match text.split_once('/') {
-        Some((first, second)) => segment(first) && segment(second),
-        None => segment(text),
-    }
+    // One grammar, in one place: the manifest layer's own, which
+    // `[[template.channel]]` validation and `VersionSpec::parse` both
+    // read (PROP-075 `#CHANNEL-SYNTAX`).
+    vibe_core::manifest::channel_name_is_valid(text)
 }
 
 /// What a version file's line, or a `SLOT@VER` argument, asks for.
@@ -55,10 +50,20 @@ impl VersionRequest {
             .strip_prefix('v')
             .filter(|rest| rest.starts_with(|c: char| c.is_ascii_digit()))
             .unwrap_or(&authored);
+        // `VersionSpec::parse` itself tries `semver::VersionReq` first and
+        // only then the channel grammar (PROP-075 `#CHANNEL-SYNTAX`), so
+        // one parser decides, and a channel it recognises is carried here
+        // as a channel rather than as a constraint that matches nothing.
         if let Ok(spec) = VersionSpec::parse(bare) {
-            return Ok(Self {
-                authored,
-                kind: RequestKind::Spec(spec),
+            return Ok(match spec {
+                VersionSpec::Channel(channel) => Self {
+                    kind: RequestKind::Channel(channel.as_str().to_owned()),
+                    authored,
+                },
+                spec => Self {
+                    authored,
+                    kind: RequestKind::Spec(spec),
+                },
             });
         }
         if is_channel_name(&authored) {

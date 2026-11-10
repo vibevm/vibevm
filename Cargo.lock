@@ -5086,6 +5086,7 @@ dependencies = [
  "tracing",
  "vibe-core",
  "vibe-net",
+ "vibe-template",
  "vibe-wire",
  "walkdir",
 ]

@@ -163,6 +163,9 @@ fn run() -> ExitCode {
         return as_exit_code(&error);
     }
 
+    // PROP-075 `#TEMPLATE-CACHE`, after the Locator it fetches through.
+    composition::templates::install_for(cli.offline, cli.refresh);
+
     // Seed `~/.vibe/registry.toml` with the default pair on registry-needing
     // commands; never overwrites, soft-warns, skipped by VIBE_NO_DEFAULT_REGISTRY.
     if composition::needs_global_registry(&cli.command)

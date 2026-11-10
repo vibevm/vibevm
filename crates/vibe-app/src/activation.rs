@@ -157,10 +157,52 @@ pub struct ProjectRequirement {
     pub authored: String,
 }
 
+/// Which installed versions a named channel holds — the seam by which
+/// `lts/jod` in a `.nvmrc` becomes a version, without the network, a
+/// registry call or an index read (PROP-075 `#CHANNEL-SYNTAX`,
+/// `#ACTIVATION-HOOK`).
+///
+/// `latest` and `stable` are **not** asked here: they are reserved and
+/// vibe answers them over the installed set itself, so every slot has
+/// them whether or not any package declares a channel. An implementor
+/// that knows nothing about a package answers `None`, and the slot is
+/// then reported `unresolved_channel` — never an error, because a prompt
+/// hook must not fail a `cd`.
+/// ```
+/// use vibe_app::ChannelMembership;
+///
+/// /// A table a test states outright, standing in for the cached version
+/// /// list a real resolution reads.
+/// struct Table;
+/// impl ChannelMembership for Table {
+///     fn members(&self, package: &str, channel: &str) -> Option<Vec<semver::Version>> {
+///         (package == "org.vibevm.node/node" && channel == "lts/jod")
+///             .then(|| vec!["22.23.4".parse().unwrap()])
+///     }
+/// }
+///
+/// let table: &dyn ChannelMembership = &Table;
+/// assert_eq!(
+///     table.members("org.vibevm.node/node", "lts/jod").unwrap()[0].to_string(),
+///     "22.23.4"
+/// );
+/// // An undeclared channel is `None`, which the activation reports as
+/// // `unresolved_channel` rather than as an error.
+/// assert!(table.members("org.vibevm.node/node", "canary").is_none());
+/// ```
+pub trait ChannelMembership {
+    /// The versions `channel` holds for `package` (`<group>/<name>`), or
+    /// `None` when that package declares no such channel.
+    fn members(&self, package: &str, channel: &str) -> Option<Vec<semver::Version>>;
+}
+
 /// What to resolve.
 #[spec(documents = "spec://org.vibevm.core/vibevm/common/PROP-075#VERSION-FILE-FORMATS")]
-#[derive(Debug, Clone)]
+#[derive(Clone)]
 pub struct ActivationRequest<'a> {
+    /// Which installed versions a channel holds. `None` leaves every
+    /// channel but `latest` and `stable` `unresolved_channel`.
+    pub channels: Option<&'a dyn ChannelMembership>,
     /// `SLOT=KEY`, `SLOT=VERSION`, `SLOT=CHANNEL` or `SLOT=none` entries, in
     /// command order; a later entry wins for its slot.
     pub uses: &'a [String],
@@ -207,9 +249,13 @@ pub fn resolve(
         explicit.push((slot.to_owned(), value.to_owned()));
     }
     for (slot, value) in &explicit {
-        activation
-            .selections
-            .push(from_flag(index, slot, value, &mut activation.notices)?);
+        activation.selections.push(from_flag(
+            index,
+            slot,
+            value,
+            &mut activation.notices,
+            request.channels,
+        )?);
     }
     if !request.consult_project {
         activation.selections.sort_by(|a, b| a.slot.cmp(&b.slot));
@@ -233,6 +279,7 @@ pub fn resolve(
                 kind: RequestKind::Spec(requirement.version.clone()),
             },
             Some(&spelling),
+            request.channels,
         );
         selection.requested = Some(requirement.authored.clone());
         activation.selections.push(selection);
@@ -252,6 +299,7 @@ pub fn resolve(
             Source::VersionFile,
             &found.request,
             None,
+            request.channels,
         );
         selection.file = Some(found.path.clone());
         selection.unused = found.unused.clone();
@@ -282,6 +330,7 @@ fn from_flag(
     slot: &str,
     value: &str,
     notices: &mut Vec<String>,
+    channels: Option<&dyn ChannelMembership>,
 ) -> Result<SlotSelection, crate::error::AppError> {
     let empty = SlotSelection {
         slot: slot.to_owned(),
@@ -334,7 +383,7 @@ fn from_flag(
         });
     }
     match VersionRequest::parse(value) {
-        Ok(request) => Ok(choose(index, slot, Source::Flag, &request, None)),
+        Ok(request) => Ok(choose(index, slot, Source::Flag, &request, None, channels)),
         Err(reason) => {
             notices.push(format!("`--use {slot}={value}`: {reason}"));
             Ok(SlotSelection {
@@ -359,12 +408,14 @@ fn slot_of_package(index: &Index, group: &str, name: &str) -> Option<String> {
 /// version wins, which is what a version manager means by `use 22`. Several
 /// distinct installations of the *same* newest version are what
 /// `selection_required` is about — nothing in the request narrows them.
+#[allow(clippy::too_many_arguments)]
 fn choose(
     index: &Index,
     slot: &str,
     source: Source,
     request: &VersionRequest,
     package: Option<&str>,
+    channels: Option<&dyn ChannelMembership>,
 ) -> SlotSelection {
     let mut selection = SlotSelection {
         slot: slot.to_owned(),
@@ -413,9 +464,32 @@ fn choose(
             .iter()
             .filter(|(_, version)| version.pre.is_empty())
             .collect(),
-        RequestKind::Channel(_) => {
-            selection.state = State::UnresolvedChannel;
-            return selection;
+        // Every other channel is the package's own, declared by its
+        // `[[template.channel]]` rules and answered from the cached
+        // version list — no network, no registry call, no index read
+        // (PROP-075 `#CHANNEL-SYNTAX`, `#ACTIVATION-HOOK`). A slot whose
+        // package declares no such channel, or whose cache holds nothing,
+        // stays `unresolved_channel`: a prompt hook must not fail a `cd`.
+        RequestKind::Channel(name) => {
+            let coordinate = package.map(str::to_owned).or_else(|| {
+                let record = index
+                    .installations
+                    .values()
+                    .find(|record| record.slot == slot)?;
+                Some(format!("{}/{}", record.package.group, record.package.name))
+            });
+            let members = coordinate
+                .as_deref()
+                .zip(channels)
+                .and_then(|(coordinate, resolver)| resolver.members(coordinate, name));
+            let Some(members) = members else {
+                selection.state = State::UnresolvedChannel;
+                return selection;
+            };
+            providers
+                .iter()
+                .filter(|(_, version)| members.contains(version))
+                .collect()
         }
     };
     let Some(newest) = matching.first() else {

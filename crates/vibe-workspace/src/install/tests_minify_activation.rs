@@ -97,6 +97,8 @@ fn publish_lock(root: &Path) {
         describes: None,
         language: None,
         materialization: Materialization::Copy,
+        template: None,
+        via_channel: None,
     }];
     lockfile
         .write(root.join(Lockfile::FILENAME))

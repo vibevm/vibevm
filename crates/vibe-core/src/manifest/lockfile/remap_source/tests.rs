@@ -34,7 +34,8 @@ fn new_fields_do_not_force_ordinary_legacy_or_configuration_epoch_changes() {
     let legacy = Lockfile::empty("fixture", "fixed");
     assert_eq!(legacy.for_write().unwrap().meta.schema_version, 7);
     assert_eq!(CONFIGURATION_SCHEMA_VERSION, 8);
-    assert_eq!(CURRENT_SCHEMA_VERSION, 9);
+    assert_eq!(crate::manifest::REMAP_SOURCE_SCHEMA_VERSION, 9);
+    assert_eq!(CURRENT_SCHEMA_VERSION, 10);
 }
 #[test]
 fn explicit_binding_rejects_credentials_without_printing_them() {

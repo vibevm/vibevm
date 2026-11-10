@@ -66,6 +66,8 @@ fn entry(kind: PackageKind, name: &str, version: &str) -> VersionEntry {
         frozen: false,
         indexed_at: now(),
         indexed_by: "vibe-index 0.1.0-dev".into(),
+        template: false,
+        channels: Vec::new(),
     }
 }
 

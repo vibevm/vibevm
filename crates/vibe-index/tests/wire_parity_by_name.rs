@@ -150,6 +150,8 @@ fn fully_populated_version() -> VersionEntry {
         frozen: true,
         indexed_at: fixed_instant(),
         indexed_by: "vibe-index".to_string(),
+        template: false,
+        channels: Vec::new(),
     }
 }
 

@@ -17,6 +17,7 @@ specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#c
 pub mod cancellation;
 pub mod capabilities;
 pub mod capability_ref;
+pub mod channel;
 pub mod configuration;
 pub mod content_hash;
 pub mod error;
@@ -53,6 +54,6 @@ pub use global_registry::{
 };
 pub use host_owner::{HOST_OWNER, HostOwner, HostSegmentError};
 pub use index_checkout::IndexCheckoutSection;
-pub use package_ref::{Group, PackageKind, PackageName, PackageRef, VersionSpec};
+pub use package_ref::{ChannelName, Group, PackageKind, PackageName, PackageRef, VersionSpec};
 pub use provenance::{RoutePublication, SourceUrl, TraceId};
 pub use rel_path::{RelPath, machine_json_path};

@@ -73,6 +73,8 @@ fn publish_resolution_lock(root: &Path, resolution: &[ResolvedDep]) {
             describes: None,
             language: None,
             materialization: dep.manifest.package.as_ref().unwrap().materialization,
+            template: None,
+            via_channel: None,
         })
         .collect();
     lock.write(root.join(Lockfile::FILENAME)).unwrap();

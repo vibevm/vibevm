@@ -57,8 +57,9 @@ mod storage;
 mod versionfile;
 
 pub use activation::{
-    Activation, ActivationRequest, ProjectRequirement, SlotSelection, Source as ActivationSource,
-    State as ActivationState, resolve as resolve_activation, slot_default,
+    Activation, ActivationRequest, ChannelMembership, ProjectRequirement, SlotSelection,
+    Source as ActivationSource, State as ActivationState, resolve as resolve_activation,
+    slot_default,
 };
 pub use agents::{
     AgentDefinition, AgentError, AgentHooks, AgentNotice, AgentPrompt, AgentSource, AgentsConfig,

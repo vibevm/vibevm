@@ -41,6 +41,11 @@ use crate::{CachedPackage, Registry, RegistryError, ResolvedPackage, compute_con
 pub struct LocalRegistry {
     root: PathBuf,
     pub(crate) candidate_owner: std::sync::Arc<()>,
+    /// The invocation's template layer, when one was installed
+    /// (PROP-075 `#TEMPLATE-DOMAIN-SEAM`'s fourth call site). `None`
+    /// leaves every method behaving exactly as it did before PROP-075,
+    /// which is what a library caller and a unit test get.
+    templates: Option<std::sync::Arc<crate::templates::TemplateLayer>>,
 }
 
 impl LocalRegistry {
@@ -52,7 +57,40 @@ impl LocalRegistry {
         Ok(LocalRegistry {
             root,
             candidate_owner: std::sync::Arc::new(()),
+            templates: crate::templates::active(),
         })
+    }
+
+    /// The same registry over an explicit template layer — the seam a
+    /// test drives instead of installing one process-wide.
+    ///
+    /// ```no_run
+    /// use std::path::Path;
+    /// use std::sync::Arc;
+    /// use std::time::Duration;
+    /// use vibe_registry::LocalRegistry;
+    /// use vibe_registry::templates::{Posture, TemplateLayer};
+    ///
+    /// let layer = Arc::new(TemplateLayer::http(
+    ///     Path::new("/home/u/.vibe"),
+    ///     Duration::from_secs(900),
+    ///     Posture::Cached,
+    /// ));
+    /// let registry = LocalRegistry::new("path/to/registry")?.with_templates(Some(layer));
+    /// assert!(registry.template_layer().is_some());
+    /// # Ok::<(), vibe_registry::RegistryError>(())
+    /// ```
+    pub fn with_templates(
+        mut self,
+        templates: Option<std::sync::Arc<crate::templates::TemplateLayer>>,
+    ) -> Self {
+        self.templates = templates;
+        self
+    }
+
+    /// This registry's template layer, if it has one.
+    pub fn template_layer(&self) -> Option<&std::sync::Arc<crate::templates::TemplateLayer>> {
+        self.templates.as_ref()
     }
 
     pub fn root(&self) -> &Path {
@@ -101,6 +139,14 @@ impl LocalRegistry {
             }
         }
         versions.sort();
+        // **Call site 1 / 4 of PROP-075 `#TEMPLATE-DOMAIN-SEAM`**: the
+        // published versions, minus the template revisions, unioned with
+        // the versions the template's source lists.
+        if let Some(layer) = &self.templates {
+            return layer
+                .union_versions(&self.root, group, name, versions)
+                .map_err(RegistryError::from);
+        }
         Ok(versions)
     }
 
@@ -191,6 +237,13 @@ impl LocalRegistry {
             .group
             .as_ref()
             .ok_or_else(|| RegistryError::UnqualifiedPkgref(pkgref.to_string()))?;
+        // **A channel lowers to an exact pin before anything selects.**
+        // PROP-075 `#CHANNEL-SYNTAX` names the entry paths; lowering at
+        // the one seam every one of them passes through is strictly
+        // stronger — no entry path can forget — and leaves the solver
+        // untouched, because an unlowered channel still matches nothing.
+        let lowered = self.lower(pkgref)?;
+        let pkgref = lowered.as_ref().unwrap_or(pkgref);
         let versions = self.list_versions(group, pkgref.name.as_str())?;
         let picked = match &pkgref.version {
             VersionSpec::Latest => {
@@ -203,17 +256,31 @@ impl LocalRegistry {
                 .find(|v| req.matches(v) && v.pre.is_empty())
                 .or_else(|| versions.iter().rev().find(|v| req.matches(v)))
                 .cloned(),
+            // An unlowered channel picks nothing (PROP-075
+            // `#CHANNEL-SYNTAX`): `lower_channel` runs at the entry path,
+            // and a registry that was reached without it refuses.
+            VersionSpec::Channel(_) => None,
         };
         let Some(version) = picked else {
             return Err(RegistryError::NoMatchingVersion {
                 group: group.clone(),
                 name: pkgref.name.to_string(),
-                req: match &pkgref.version {
-                    VersionSpec::Latest => "latest".to_string(),
-                    VersionSpec::Req(r) => r.to_string(),
-                },
+                req: pkgref.version.requirement_label(),
             });
         };
+        // **Call site 3 of PROP-075 `#TEMPLATE-DOMAIN-SEAM`**: a version
+        // the template produces and the registry does not publish is
+        // materialised as an ordinary package directory, and every caller
+        // above this gets the `ResolvedPackage` it already expects.
+        // `#TEMPLATE-CONCRETE-WINS`: a version in both sets never reaches
+        // the renderer at all.
+        if let Some(layer) = &self.templates
+            && let Some(resolved) = layer
+                .directory_materialise(&self.root, group, pkgref.name.as_str(), &version)
+                .map_err(RegistryError::from)?
+        {
+            return Ok(resolved);
+        }
         let source_dir = self
             .root
             .join(group.as_str())
@@ -265,8 +332,20 @@ impl LocalRegistry {
         // Build a source URI. On local-registry M0 we just encode the absolute
         // source path. We intentionally do NOT include the store path.
         let source_uri = source_uri_for_local(&resolved.source_dir);
+        let noted = self
+            .templates
+            .as_ref()
+            .map(|layer| layer.noted(&resolved.group, &resolved.name, &resolved.version))
+            .unwrap_or_default();
 
         Ok(CachedPackage {
+            // The lock record of a rendered version, when this
+            // invocation rendered one (PROP-075
+            // `#TEMPLATE-LOCK-RECORD`). `None` for every concretely
+            // published package, which is what keeps a lock with no
+            // template byte-identical.
+            template: noted.template,
+            via_channel: noted.via_channel,
             locked_selection: None,
             route_publication: vibe_core::RoutePublication::Local,
             recorded_source_kind: None,
@@ -294,6 +373,9 @@ impl LocalRegistry {
         })
     }
 }
+
+#[path = "local_registry/templates.rs"]
+mod templates;
 
 impl Registry for LocalRegistry {
     fn list_versions(

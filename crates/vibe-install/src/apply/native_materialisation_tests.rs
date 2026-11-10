@@ -175,6 +175,8 @@ fn exercise(filter: bool) {
         is_embedded: false,
         is_local: false,
         via_redirect: None,
+        template: None,
+        via_channel: None,
     };
     let resolution = vec![ResolvedDep {
         kind: cached.package_meta().kind,

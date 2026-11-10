@@ -252,6 +252,10 @@ impl PartialEq<PackageName> for &str {
     }
 }
 
+#[path = "package_ref/channel_name.rs"]
+mod channel_name;
+pub use channel_name::ChannelName;
+
 /// What the user wrote after `@` (if anything).
 ///
 /// Spec examples (`VIBEVM-SPEC.md` §7.1):
@@ -274,6 +278,10 @@ impl PartialEq<PackageName> for &str {
 /// assert!(!v.matches(&"0.4.0".parse().unwrap()));
 /// // Empty input resolves to the latest stable.
 /// assert_eq!(VersionSpec::parse("").unwrap(), VersionSpec::Latest);
+/// // A name that is no `semver::VersionReq` but is a channel name is a
+/// // channel, lowered to an exact pin before the solve
+/// // (PROP-075 `#CHANNEL-SYNTAX`).
+/// assert!(matches!(VersionSpec::parse("lts/jod").unwrap(), VersionSpec::Channel(_)));
 /// ```
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub enum VersionSpec {
@@ -284,6 +292,19 @@ pub enum VersionSpec {
     /// semver like `0.3.0` is treated as caret `^0.3.0`. To pin
     /// strictly equal, write `=0.3.0`.
     Req(semver::VersionReq),
+    /// A named channel (PROP-075 `#CHANNEL-SYNTAX`): `lts`, `lts/jod`,
+    /// `nightly`, plus the two reserved names `latest` and `stable` vibe
+    /// implements for every package.
+    ///
+    /// **A channel is not a version set the solver understands.** It names
+    /// one and lowers to the newest member of it as an exact pin, before
+    /// the solve, by [`crate::channel::lower_channel`]. Everything that
+    /// reads a `VersionSpec` as a constraint therefore treats a channel as
+    /// the **empty** set — [`VersionSpec::matches`] is `false` and
+    /// `SemverVersionSet::from_spec` is the match-nothing set — so a path
+    /// that forgot to lower fails closed with «no candidate» instead of
+    /// resolving something plausible.
+    Channel(ChannelName),
 }
 
 impl VersionSpec {
@@ -292,17 +313,33 @@ impl VersionSpec {
         if trimmed.is_empty() {
             return Ok(VersionSpec::Latest);
         }
-        let req = semver::VersionReq::parse(trimmed).map_err(|source| Error::BadVersionSpec {
-            input: input.to_owned(),
-            source,
-        })?;
-        Ok(VersionSpec::Req(req))
+        // Semver first, always: a string `semver::VersionReq` accepts keeps
+        // the meaning it has today, so `1.x` stays a requirement and no
+        // existing manifest changes meaning (PROP-075 `#CHANNEL-SYNTAX`).
+        match semver::VersionReq::parse(trimmed) {
+            Ok(req) => Ok(VersionSpec::Req(req)),
+            Err(source) => match ChannelName::parse(trimmed) {
+                Some(channel) => Ok(VersionSpec::Channel(channel)),
+                None => Err(Error::BadVersionSpec {
+                    input: input.to_owned(),
+                    source,
+                }),
+            },
+        }
     }
 
+    /// Whether `version` satisfies this spec.
+    ///
+    /// An **unlowered channel matches nothing**, by the fail-closed
+    /// invariant of PROP-075 `#CHANNEL-SYNTAX`: a channel names a version
+    /// set that only [`crate::channel::lower_channel`] can compute, so a
+    /// caller that reaches this with a channel has skipped the lowering
+    /// and must get a refusal rather than a plausible answer.
     pub fn matches(&self, version: &semver::Version) -> bool {
         match self {
             VersionSpec::Latest => true,
             VersionSpec::Req(req) => req.matches(version),
+            VersionSpec::Channel(_) => false,
         }
     }
 
@@ -321,6 +358,7 @@ impl VersionSpec {
     /// assert!(!VersionSpec::parse("=0.6").unwrap().is_exact_pin()); // partial
     /// assert!(!VersionSpec::parse(">=0.6.0, <0.7").unwrap().is_exact_pin());
     /// assert!(!VersionSpec::Latest.is_exact_pin());
+    /// assert!(!VersionSpec::parse("lts").unwrap().is_exact_pin());
     /// ```
     pub fn is_exact_pin(&self) -> bool {
         let VersionSpec::Req(req) = self else {
@@ -338,6 +376,7 @@ impl fmt::Display for VersionSpec {
         match self {
             VersionSpec::Latest => Ok(()),
             VersionSpec::Req(req) => write!(f, "{req}"),
+            VersionSpec::Channel(name) => f.write_str(name.as_str()),
         }
     }
 }
@@ -479,6 +518,7 @@ impl fmt::Display for PackageRef {
         match &self.version {
             VersionSpec::Latest => Ok(()),
             VersionSpec::Req(req) => write!(f, "@{req}"),
+            VersionSpec::Channel(name) => write!(f, "@{name}"),
         }
     }
 }

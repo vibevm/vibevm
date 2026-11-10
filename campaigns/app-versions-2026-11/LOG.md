@@ -274,3 +274,78 @@ Facts a later session would otherwise re-derive:
 - **The test target `cli_app_env` was already taken** by the PROP-065 env-step fixture
   (`crates/vibe-cli/tests/cli_app_env.rs`). P5a's CLI test is `cli_app_env_activation`, and
   `PLAN.md` §4's acceptance line for P5a is amended to name it.
+
+## 2026-11-10 — phase P2 implemented
+
+`AV-FMT-002`, `AV-FMT-003`, `AV-FMT-004` and `AV-FMT-005` delivered, plus the
+four records the phase turned out to need: `AV-FMT-021` (a channel where a
+version requirement is written), `AV-FMT-022` (`--refresh`), `AV-FMT-023`
+(`<settings>/cache/templates/`) and `AV-FMT-024` (a channel in a version file
+resolves, completing P5a's `unresolved_channel`). Facts moved to `impl/done` in
+PROP-075: `#TEMPLATE-RESOLUTION`, `#TEMPLATE-TRUST`, `#CHANNELS`,
+`#TEMPLATE-DISCOVERY`, `#TEMPLATE-DOMAIN-SEAM`, `#TEMPLATE-CONCRETE-WINS`,
+`#TEMPLATE-LOCK-RECORD`, `#TEMPLATE-CACHE`, `#CHANNEL-SYNTAX`, plus the new
+`#P2-AS-BUILT`. The spec XML was validated by the PROP-045 projector, as P1's
+entry records it must be.
+
+Facts a later session would otherwise re-derive:
+
+- **`VersionSpec` is read at eighteen sites, not the eight the survey named** —
+  and every one of them is an exhaustive `match`, so adding the `Channel`
+  variant turned «a missed lowering site becomes a wrong install» into a build
+  error. That is the whole reason the fail-closed design costs nothing: the
+  compiler enumerates the sites and each one is then a two-line decision.
+- **Lowering happens at the registry resolution seam, not at each entry path.**
+  `#CHANNEL-SYNTAX` lists the entry paths; as built the one named function
+  `lower_channel` is called inside `LocalRegistry::resolve`, which spike S2
+  already proved all three real paths reach. Strictly stronger (no entry path
+  can forget) and the solver is untouched either way.
+- **`ResolvedPackage` must not grow a field.** It is the type the four call
+  sites hand back, and widening it means touching every construction site in
+  the tree. The template layer instead *notes* `(package, version) → {template
+  lock record, via_channel}` for the invocation, and the fetch reads the note
+  onto `CachedPackage`. Both halves are `None` for an ordinary package, which
+  is what keeps a lock byte-identical.
+- **Raising `CURRENT_SCHEMA_VERSION` to 10 broke `validate_remap_sources`**,
+  which read its epoch floor off that constant. The floor is now
+  `REMAP_SOURCE_SCHEMA_VERSION = 9`. The next epoch step will meet the same
+  hazard; this is the only place the 7→8→9 precedent had not already been
+  followed.
+- **`reqwest` cannot fetch a `file://` URL, and a closed network needs exactly
+  that.** A template's documents are declared as credential-free HTTPS
+  (`#TEMPLATE-DIGEST-SOURCE` refuses anything else), and a `[[remap]]` row
+  relocates them onto the filesystem — a `path` target yields a bare path, a
+  `url` target may yield `file://`. The transport reads both off disk, joining
+  the declared URL's last path segment when the target is a directory. This is
+  also what makes the offline CLI suite possible without a loopback server, and
+  what `#MIRROR-TEMPLATE-SNAPSHOT` will need in P4.
+- **`vibe-app`'s containment check refuses a rendered tree** («the package tree
+  escapes the selected registry»): a render lives under the settings cache
+  because `#TEMPLATE-RENDER-LOCATION` forbids writing one into a registry. It
+  admits that one root by name (`vibe_registry::templates::is_rendered_tree`),
+  never by widening the check.
+- **The alarm has a call site that needs no lock.** `#TEMPLATE-LOCK-RECORD`'s
+  comparison against `rendered_sha256` is `verify_recorded`, which the project
+  lock path will use; the alarm *also* fires from materialisation, by comparing
+  the digest-bearing fields of a rendered directory already on disk with the
+  fresh render. Since a digest document is cached write-once and immutable, a
+  difference there can only mean the document changed upstream — which is the
+  alarm — while a difference outside those fields is a template fixed without
+  touching a produced version, which TEMPLATE-FLAG exists to allow and which
+  rewrites silently. Both behaviours are tested through the real binary.
+- **A channel can be lowered from the cache alone**, which is what lets a
+  `.nvmrc` holding `lts/jod` resolve inside `#ACTIVATION-HOOK`'s budget: the
+  cache keeps the template *document* beside the version list
+  (`template.toml`), so the `[[template.channel]]` rules are two file reads
+  away and no registry root is needed. A declaration is not an output, so
+  `#TEMPLATE-RENDER-LOCATION`'s ban on caching a render is untouched.
+
+Carried forward, not done, each with its reason in `FORMAT-CHANGES.md`:
+`AV-FMT-017` and `AV-FMT-018` (the `/7` inventory and the describe member that
+reads it — `/7` must also carry P6's migration outcomes, and the writer's
+protocol ladder means nothing a user sees waits on them); the two extra golden
+documents `AV-FMT-003` proposed under `formats/corpora/index/e1` (a corpus
+document is a journal fact and S3 already proved the bytes do not move); and
+template **rendering** from a per-package git registry, where the index member
+and the `template_index_required` refusal are delivered but the fetch-and-render
+path is not — every directory-shaped registry resolves templates today.

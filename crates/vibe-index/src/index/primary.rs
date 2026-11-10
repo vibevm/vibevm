@@ -193,6 +193,8 @@ mod tests {
                 .unwrap()
                 .with_timezone(&Utc),
             indexed_by: "vibe-index 0.1.0-dev".into(),
+            template: false,
+            channels: Vec::new(),
         }
     }
 

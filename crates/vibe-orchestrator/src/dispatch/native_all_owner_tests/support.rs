@@ -447,6 +447,8 @@ fn write_lock(root: &Path) {
         describes: None,
         language: None,
         materialization: Materialization::Copy,
+        template: None,
+        via_channel: None,
     });
     lock.packages.push(LockedPackage {
         kind: PackageKind::Tool,
@@ -478,6 +480,8 @@ fn write_lock(root: &Path) {
         describes: None,
         language: None,
         materialization: Materialization::Copy,
+        template: None,
+        via_channel: None,
     });
     must(lock.write(root.join("vibe.lock")), "fixture lockfile");
 }

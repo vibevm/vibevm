@@ -104,7 +104,16 @@ pub fn from_local_registry(
         .resolve(&requested)
         .map_err(|error| failed(error.to_string()))?;
     let package_root = canonical_dir(&selected.source_dir).map_err(&failed)?;
-    if !package_root.starts_with(&root) {
+    // The containment check guards against a symlink or `..` escape out of
+    // the directory the operator named. A **rendered** version is the one
+    // legitimate tree outside it: PROP-075 `#TEMPLATE-RENDER-LOCATION`
+    // forbids writing a render into a registry, so the template layer
+    // materialises it under the settings cache and `#TEMPLATE-DOMAIN-SEAM`
+    // hands back the ordinary `ResolvedPackage`. Admitted against that one
+    // root by name, never by widening the check.
+    if !package_root.starts_with(&root)
+        && !vibe_registry::templates::is_rendered_tree(&package_root)
+    {
         return Err(failed(
             "the package tree escapes the selected registry".into(),
         ));

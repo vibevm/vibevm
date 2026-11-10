@@ -29,6 +29,13 @@ impl SemverVersionSet {
         match spec {
             VersionSpec::Latest => SemverVersionSet::Any,
             VersionSpec::Req(req) => SemverVersionSet::Req(req.clone()),
+            // **A channel maps to the empty set — fail closed.** A channel
+            // names a version set only `vibe_core::channel::lower_channel`
+            // can compute, and it lowers to an exact pin *before* the
+            // solve (PROP-075 `#CHANNEL-SYNTAX`). A path that reached the
+            // solver without lowering has a bug, and the honest outcome of
+            // that bug is «no candidate» rather than a plausible pick.
+            VersionSpec::Channel(_) => SemverVersionSet::None,
         }
     }
 

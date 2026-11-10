@@ -73,6 +73,8 @@ impl PendingInPlace {
             is_embedded: false,
             is_local: false,
             via_redirect: evidence.via_redirect,
+            template: None,
+            via_channel: None,
         }
     }
 }

@@ -79,6 +79,8 @@ pub(super) fn locked(group_spelling: &str, name_spelling: &str, edges: &[&str]) 
         describes: None,
         language: None,
         materialization: Materialization::Copy,
+        template: None,
+        via_channel: None,
     }
 }
 

@@ -232,6 +232,8 @@ impl MultiRegistryResolver {
             is_embedded: false,
             is_local: false,
             via_redirect: None,
+            template: None,
+            via_channel: None,
         })
     }
 }
@@ -244,6 +246,8 @@ pub(super) fn version_matches(req: &VersionSpec, pinned: &semver::Version) -> bo
     match req {
         VersionSpec::Latest => true,
         VersionSpec::Req(r) => r.matches(pinned),
+        // Fail closed (PROP-075 `#CHANNEL-SYNTAX`).
+        VersionSpec::Channel(_) => false,
     }
 }
 
@@ -251,8 +255,5 @@ pub(super) fn version_matches(req: &VersionSpec, pinned: &semver::Version) -> bo
 /// renders `Latest` as the empty string, which would leave the
 /// offline-miss message with a dangling `@`.
 fn req_label(spec: &VersionSpec) -> String {
-    match spec {
-        VersionSpec::Latest => "latest".to_string(),
-        VersionSpec::Req(r) => r.to_string(),
-    }
+    spec.requirement_label()
 }

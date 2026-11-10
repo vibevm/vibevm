@@ -113,6 +113,14 @@ pub(super) fn locked_package(
         // A version bump does not change how the package is materialised —
         // carry the freshly-fetched manifest's declared mode (PROP-022 §2.1).
         materialization: cached.package_meta().materialization,
+        // The lock record of a template-produced version, carried
+        // straight off the fetch (PROP-075 `#TEMPLATE-LOCK-RECORD`);
+        // `None` for every concretely published package.
+        template: cached.template.clone(),
+        // The channel the requirement was lowered through, so `vibe.toml`
+        // keeps saying `lts` while `vibe.lock` says the concrete version
+        // (PROP-075 `#CHANNEL-SYNTAX`).
+        via_channel: cached.via_channel.clone(),
     };
     if let Some(held) = &cached.locked_selection {
         let selected = held.source_row();

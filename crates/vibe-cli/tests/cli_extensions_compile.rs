@@ -64,6 +64,8 @@ fn locked() -> LockedPackage {
         describes: None,
         language: None,
         materialization: Materialization::Copy,
+        template: None,
+        via_channel: None,
     }
 }
 

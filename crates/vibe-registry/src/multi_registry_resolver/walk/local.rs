@@ -17,6 +17,15 @@ pub(super) fn read_local_dep_manifest(
         .join(format!("v{version}"))
         .join(Manifest::FILENAME);
     if !path.exists() {
+        // **Call site 2 of PROP-075 `#TEMPLATE-DOMAIN-SEAM`**: a version
+        // the registry does not publish but its template produces gets a
+        // **skeleton** render — the stage that carries the identity,
+        // `[compatibility]`, `[requires]` and the installer options'
+        // platforms, and costs no digest request
+        // (`#TEMPLATE-TWO-STAGE`).
+        if let Some(skeleton) = registry.template_skeleton(group, name, version)? {
+            return Ok(skeleton);
+        }
         return Err(RegistryError::UnknownPackage {
             group: group.clone(),
             name: name.to_string(),

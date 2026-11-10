@@ -253,10 +253,7 @@ impl MultiRegistryResolver {
                 return Err(RegistryError::OfflinePackageUnavailable {
                     group: group.clone(),
                     name: pkgref.name.to_string(),
-                    req: match &pkgref.version {
-                        vibe_core::VersionSpec::Latest => "latest".into(),
-                        vibe_core::VersionSpec::Req(req) => req.to_string(),
-                    },
+                    req: pkgref.version.requirement_label(),
                 });
             }
             match src {

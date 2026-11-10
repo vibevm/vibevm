@@ -464,10 +464,7 @@ fn pick_version(
     candidates: &[IndexVersion],
     spec: &VersionSpec,
 ) -> Result<semver::Version, RegistryError> {
-    let req_display = match spec {
-        VersionSpec::Latest => "latest".to_string(),
-        VersionSpec::Req(r) => r.to_string(),
-    };
+    let req_display = spec.requirement_label();
     // One pick rule, applied to whichever list survives: newest
     // non-prerelease under `Latest`; under `Req` the newest
     // non-prerelease that matches, else the newest match of any
@@ -481,6 +478,10 @@ fn pick_version(
                 .find(|v| req.matches(v) && v.pre.is_empty())
                 .or_else(|| list.iter().rev().find(|v| req.matches(v)))
                 .cloned(),
+            // An unlowered channel picks nothing — the fail-closed
+            // invariant of PROP-075 `#CHANNEL-SYNTAX`: a path that forgot
+            // to lower must refuse, never resolve something plausible.
+            VersionSpec::Channel(_) => None,
         }
     };
     let mut usable: Vec<semver::Version> = Vec::new();

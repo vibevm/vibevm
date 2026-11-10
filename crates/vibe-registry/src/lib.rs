@@ -33,6 +33,7 @@ pub mod http_admission;
 pub mod index_client;
 pub mod source_candidates;
 pub mod source_policy_provider;
+pub mod templates;
 pub use http_admission::{ContactRefusal, HttpAdmission};
 mod local_registry;
 pub mod multi_registry_resolver;
@@ -187,6 +188,8 @@ pub struct ResolvedPackage {
 /// )
 /// .unwrap();
 /// let cached = CachedPackage {
+///     template: None,
+///     via_channel: None,
 ///     locked_selection: None,
 ///     route_publication: vibe_core::RoutePublication::Local,
 ///     recorded_source_kind: None,
@@ -218,6 +221,16 @@ pub struct ResolvedPackage {
 /// ```
 #[derive(Debug, Clone)]
 pub struct CachedPackage {
+    /// The lock record of a template-produced version (PROP-075
+    /// `#TEMPLATE-LOCK-RECORD`): the template revision, the hash of the
+    /// full render's bytes, the hash of the digest document, and the two
+    /// URLs as they were resolved after remap. `None` for every
+    /// concretely published package.
+    pub template: Option<vibe_core::manifest::LockedTemplate>,
+    /// The channel the requirement that selected this package was lowered
+    /// through (PROP-075 `#CHANNEL-SYNTAX`), so the lock row records it
+    /// and `vibe update` re-lowers. `None` for an ordinary requirement.
+    pub via_channel: Option<String>,
     /// Selection kind retained by the lock when acquisition reads the store.
     /// Explicit held source authority. Some preserves even an absent source kind;
     /// None retains the incumbent new-source/store evidence rules.

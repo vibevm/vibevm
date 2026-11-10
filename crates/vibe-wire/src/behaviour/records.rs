@@ -71,6 +71,11 @@ impl VersionEntry {
             must_understand: Vec::new(),
             yanked: false,
             frozen: false,
+            // A behaviour record is a concrete published version: neither
+            // a template revision nor labelled with a channel
+            // (PROP-075 `#TEMPLATE-DISCOVERY`, `#CHANNEL-SYNTAX`).
+            template: false,
+            channels: Vec::new(),
             indexed_at: at,
             indexed_by: "vibe-index".to_string(),
         }

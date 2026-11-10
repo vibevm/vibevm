@@ -2,7 +2,7 @@
 
 **Status:** planned 2026-11-10; written against `main` at `7d495d137`. Campaign
 node `APP-VERSIONS`: starts after `CORP-ENV` closes, before `SYS-PROMPT`.
-**Phase 0 spikes S1, S2, S3 and S5 ran 2026-11-10 and phase P1 is
+**Phase 0 spikes S1, S2, S3 and S5 ran 2026-11-10 and phases P1, P5a and P2 are
 implemented** — the answers and what they changed are in `LOG.md`, and the
 facts P1 delivers are `impl/done` in PROP-075. S4 and S6 are still open; S4
 belongs with P5a and S6 with P7.
@@ -323,7 +323,7 @@ dropping them from the grammar was not taken.
 
 **Parallel.** With P5a and P6.
 
-### P2 — resolution, channels, lock, trust, offline cache — **L**
+### P2 — resolution, channels, lock, trust, offline cache — **L** — *delivered 2026-11-10*
 
 **Goal.** A template's versions are resolvable, installable, lockable and
 alarmed; `@lts` works; nothing touches the network twice.
@@ -382,15 +382,44 @@ schema 10 reads, 9 still reads, 11 refuses.
 ```sh
 cargo test -p vibe-core -p vibe-registry -p vibe-resolver --offline --locked
 cargo test -p vibe-cli --test cli_template_resolution --offline --locked
-cargo test -p vibe-cli --test cli_template_trust --offline --locked
 ```
+*As delivered the trust cases live in `cli_template_resolution` rather than a
+second file: the alarm fires from the same `install -g` the resolution cases
+drive, over the same fixture, and splitting it would have duplicated the
+fixture to assert two of its seven cases
+(`a_digest_document_that_changed_upstream_is_the_alarm_before_any_effect`,
+`a_template_fixed_without_touching_a_digest_is_not_an_alarm`).*
 
-**Risks.** `VersionSpec` is read at eight sites (the survey names them); the
-fail-closed empty set is what keeps a missed lowering site from becoming a
-wrong install rather than a refusal, and each site gets its own test. The
-lockfile bump is the only format change that can strand a user's `vibe.lock`
-on an older binary — acceptable while `public = false`, recorded in
-`AV-FMT-002`.
+**Risks, as they turned out.** Both closed. `VersionSpec` is read across
+eighteen files, not the eight the survey named — and the compiler found every
+one of them, because the enum is matched exhaustively everywhere, which turned
+the risk into a build error instead of a silent wrong install; each site now either lowers first or fails
+closed, and the two solver-side ones are tested directly
+(`an_unlowered_channel_matches_nothing`,
+`SemverVersionSet::from_spec` → `None`). The lockfile bump strands nothing
+observable, because the writer still writes the lowest epoch that carries what
+the lock holds: a project with no template package and no channel requirement
+writes byte-identically to before.
+
+**As delivered.** Everything in the goal sentence works end-to-end through the
+real binary, offline: `crates/vibe-cli/tests/cli_template_resolution.rs` (7
+tests) installs a template-produced version through all four call sites, lowers
+`lts`, `lts/boron` and `stable`, proves a concretely published version is never
+rendered for, proves a cached digest document is never revalidated, and fires
+the `template_render_changed` alarm before any effect while leaving a template
+*fixed* without touching a digest free. Two deliverables of the phase are
+deliberately **not** in it, each with its reason in `FORMAT-CHANGES.md`:
+`AV-FMT-017` (the `vibe-user-applications/7` inventory) and `AV-FMT-018`
+(`vibe app describe`'s provenance, which reads the record `/7` carries), because
+the `Installation` record `/7` defines must also carry P6's migration outcomes
+and the writer's protocol ladder means nothing a user sees waits on them.
+Template **rendering** from a per-package git registry is the one part of
+`#TEMPLATE-DISCOVERY` left to the phase that first needs it; the index member
+that carries the fact (`AV-FMT-003`) and the refusal (`template_index_required`)
+are both delivered, and every directory-shaped registry — `--registry DIR`, a
+`localdir` source, a `monorepo` working copy, a mirrored layout registry —
+resolves templates today. The eight as-built amendments are
+`PROP-075#P2-AS-BUILT`.
 
 **Parallel.** Needs P1. P4, P5b and P3 all need P2.
 
@@ -720,7 +749,19 @@ concurrently once P2 lands.
   AV-FMT-006). Nothing else differs, for either version.**
 - **P2** The template layer is four call sites and one new module; no file
   under `crates/vibe-resolver/src/resolvo_engine/` changes except
-  `version_set.rs`.
+  `version_set.rs`. **Held on both halves, with the second half exact:
+  `version_set.rs` is the only file under `resolvo_engine/` that changed.** The
+  first half held in substance and grew in spelling: the four call sites are the
+  four `#TEMPLATE-DOMAIN-SEAM` names, and the "one new module" is one module
+  *directory* — `crates/vibe-registry/src/templates.rs` plus eight files under
+  `templates/`, because the 600-line budget does not admit discovery, the cache,
+  the transport, the domain, the two render stages and the errors in one file.
+  Three call sites outside the four were needed and are named here rather than
+  discovered later: `vibe-app`'s containment check had to admit the render root
+  (a render has no home in a registry), `vibe-app`'s activation needed the
+  channel-membership seam P5a left open, and the composition root installs the
+  layer. None of them learns that a manifest was rendered — they learn only
+  where a rendered tree lives and what a channel holds.
 - **P3** `vibe install -g org.vibevm.node/node@lts` makes exactly two HTTP
   requests on a cold cache (the version list and one digest document) and one
   payload download.

@@ -120,6 +120,9 @@ pub(crate) fn resolve(shell: Shell, args: &AppEnvArgs) -> Result<Resolved> {
         project: project.clone(),
         ..Activation::default()
     };
+    // The channel table, read from the template cache alone — no network,
+    // no registry call, no index read (PROP-075 `#ACTIVATION-HOOK`).
+    let channels = super::channels::CachedChannels::new();
     for settings in &homes {
         let index = Index::load(settings)?;
         let request = ActivationRequest {
@@ -128,6 +131,7 @@ pub(crate) fn resolve(shell: Shell, args: &AppEnvArgs) -> Result<Resolved> {
             project: project.as_deref(),
             requirements: &requirements,
             consult_project: args.project,
+            channels: Some(&channels),
         };
         let resolved = vibe_app::resolve_activation(settings, &index, &request)?;
         for notice in resolved.notices {

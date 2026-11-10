@@ -197,6 +197,11 @@ fn satisfies(spec: &VersionSpec, version: &semver::Version) -> bool {
     match spec {
         VersionSpec::Latest => true,
         VersionSpec::Req(req) => req.matches(version),
+        // A declared channel is re-lowered on every resolution, so a lock
+        // pinned through one is never «fresh» by constraint alone
+        // (PROP-075 `#CHANNEL-SYNTAX`); `via_channel` on the lock row is
+        // what records the channel it came from.
+        VersionSpec::Channel(_) => false,
     }
 }
 

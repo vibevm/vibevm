@@ -39,15 +39,31 @@ use super::{Materialization, read_toml, write_toml};
 /// Latest supported lock schema. Schema7 remains readable without inventing
 /// original requests; schema8 carries common package configuration. Ordinary
 /// legacy-only writes retain7. Rich locks cannot be regenerated as empty.
-pub const CURRENT_SCHEMA_VERSION: u32 = 9;
+pub const CURRENT_SCHEMA_VERSION: u32 = 10;
 /// First epoch carrying common package configuration (minimum reader 1.0.12
 /// for epoch9 remap source bindings; configuration-only epoch8 is unchanged).
 pub const CONFIGURATION_SCHEMA_VERSION: u32 = 8;
 /// Legacy effective-only lock, still read and written when lossless.
 pub const LEGACY_SCHEMA_VERSION: u32 = 7;
+/// First epoch carrying `[[remap]]` source bindings. Pinned by name rather
+/// than read off [`CURRENT_SCHEMA_VERSION`], so a later epoch (this is what
+/// the 9 → 10 step of PROP-075 `#TEMPLATE-LOCK-RECORD` found) does not
+/// silently raise the floor a remap binding needs.
+pub const REMAP_SOURCE_SCHEMA_VERSION: u32 = 9;
+/// First epoch carrying a template's `[package.template]` record and
+/// `via_channel` (PROP-075 `#TEMPLATE-LOCK-RECORD`, AV-FMT-002). The
+/// writer still writes the lowest epoch that carries what the lock
+/// actually holds, so a project with no template package keeps writing 7,
+/// 8 or 9 exactly as before.
+pub const TEMPLATE_SCHEMA_VERSION: u32 = 10;
 mod configuration;
 mod remap_source;
 pub use remap_source::{LockedRemapSource, LockedRemapSourceError};
+#[path = "lockfile/subskill.rs"]
+mod subskill;
+pub use subskill::LockedSubskill;
+mod template;
+pub use template::{LockedTemplate, TemplateRenderChanged, differing_digest_fields};
 mod io;
 
 fn is_false(b: &bool) -> bool {
@@ -452,54 +468,21 @@ pub struct LockedPackage {
     /// every lockfile written before this field parses unchanged.
     #[serde(default, skip_serializing_if = "Materialization::is_default")]
     pub materialization: Materialization,
-}
 
-/// One subskill entry under a package's `subskills_active` list.
-///
-/// ```
-/// use vibe_core::manifest::LockedSubskill;
-///
-/// let s: LockedSubskill = toml::from_str(r#"
-///     path = "stack/rust"
-///     delivery = "eager"
-///     files_written = ["spec/boot/15-flow-wal-rust.md"]
-/// "#).unwrap();
-/// assert_eq!(s.path, "stack/rust");
-/// assert_eq!(s.delivery, "eager");
-/// assert_eq!(s.files_written.len(), 1);
-/// ```
-#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
-#[serde(deny_unknown_fields)]
-pub struct LockedSubskill {
-    /// Subskill canonical path within the parent package, e.g.
-    /// `stack/rust`.
-    pub path: String,
-    /// Resolved delivery mode — `eager` / `lazy-push` / `lazy-pull`.
-    pub delivery: String,
-    /// PURL inherited or declared on the subskill, if any.
+    /// `[package.template]` — present only when this version was produced
+    /// by a template package rather than published concretely
+    /// (PROP-075 `#TEMPLATE-LOCK-RECORD`). Its `rendered_sha256` is what
+    /// the alarm compares against before any effect.
     #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub describes: Option<String>,
-    /// Project-relative files this subskill *specifically* contributed
-    /// — distinct from the package-level `files_written` aggregate.
-    /// Empty for `delivery=lazy-pull` since those files are never
-    /// materialised on disk; the per-subskill index lives in the
-    /// lockfile so `vibe-mcp::read_subskill` can resolve them by
-    /// loading from the package cache rather than the project tree.
-    /// Empty for legacy `subskills_active` entries written before
-    /// this field landed.
-    #[serde(default, skip_serializing_if = "Vec::is_empty")]
-    pub files_written: Vec<PathBuf>,
+    pub template: Option<LockedTemplate>,
 
-    /// For `delivery=lazy-pull`: the files the subskill carries
-    /// inside the package cache, relative to the subskill's own
-    /// root (`<cache>/subskills/<path>/<...>`). Used by
-    /// `vibe-mcp::read_subskill` to fetch on-demand without ever
-    /// touching the project tree.
-    /// Absent for `eager` / `lazy-push` deliveries (they
-    /// materialise into the project, recorded under
-    /// `files_written` above).
-    #[serde(default, skip_serializing_if = "Vec::is_empty")]
-    pub cache_files: Vec<PathBuf>,
+    /// The channel the requirement was lowered through, when it named one
+    /// (`lts`, `lts/jod`, `latest`, `stable`). `vibe.toml` keeps saying
+    /// `lts` while `vibe.lock` says the concrete version, and
+    /// `vibe update` re-lowers — the same split the file and the lock
+    /// already have for `^22` (PROP-075 `#CHANNEL-SYNTAX`).
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub via_channel: Option<String>,
 }
 
 impl Lockfile {

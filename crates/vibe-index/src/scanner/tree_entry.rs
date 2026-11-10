@@ -107,6 +107,12 @@ pub fn entry_from_tree(dir: &Path, source: EntrySource) -> Result<VersionEntry> 
         must_understand: Vec::new(),
         yanked: false,
         frozen: pkg.frozen,
+        // PROP-075 `#TEMPLATE-DISCOVERY`: the projection reads both off
+        // the manifest, so an indexed registry and a layout registry
+        // agree by construction — `vibe_index::layout::project` derives
+        // the index from exactly these manifests.
+        template: pkg.template,
+        channels: pkg.channels.clone(),
         indexed_at: source.indexed_at,
         indexed_by: source.indexed_by,
     })

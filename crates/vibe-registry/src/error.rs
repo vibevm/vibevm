@@ -38,6 +38,11 @@ use crate::git_backend::GitError;
     implements = "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#failure-discriminator"
 )]
 pub enum RegistryError {
+    /// The template layer refused (PROP-075 `#TEMPLATE-DOMAIN-SEAM`).
+    /// Boxed so one rare variant does not widen every `RegistryError` on
+    /// the stack.
+    #[error(transparent)]
+    Template(Box<crate::templates::TemplateError>),
     #[error(transparent)]
     SourcePolicy(#[from] vibe_core::manifest::SourcePolicyError),
     #[error(transparent)]

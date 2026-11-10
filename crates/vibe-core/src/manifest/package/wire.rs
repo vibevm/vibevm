@@ -77,6 +77,8 @@ struct PackageMetaWire {
     format: PackageFormat,
     #[serde(default, skip_serializing_if = "is_false")]
     template: bool,
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    channels: Vec<String>,
 }
 
 // An absent key is None; a present null is invalid, never an absent policy.
@@ -135,6 +137,7 @@ impl From<PackageMeta> for PackageMetaWire {
             bridge: value.bridge,
             format: value.format,
             template: value.template,
+            channels: value.channels,
         }
     }
 }
@@ -166,6 +169,7 @@ impl From<PackageMetaWire> for PackageMeta {
             bridge: value.bridge,
             format: value.format,
             template: value.template,
+            channels: value.channels,
         }
     }
 }
