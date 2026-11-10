@@ -1410,3 +1410,108 @@ Facts a later session would otherwise re-derive:
 - **Disk, on this machine:** `/fast` had over 100 GB free throughout; every
   cargo command ran with `CARGO_TARGET_DIR=/fast/tmp/p45-target`,
   `CARGO_BUILD_JOBS=6` and `--test-threads=6`.
+
+## 2026-11-10 — P7f's harness half: the differential conformance suite, sandbox A complete
+
+The half of P7f that does not need the shim package landed: `conformance/vibenvm/`
+plus `cargo xtask vibenvm-conform [--cases GLOB] [--update-inventory]`. Sandbox A
+— the pinned nvm-sh v0.41.0 against a local Node release mirror over loopback —
+runs for real, and the suite's own meta-tests pass, so the verdict is a measured
+one rather than a promise. `PROP-075#VIBENVM-SUITE` and `#VIBENVM-EXCLUSIONS`
+move to `impl/work` and carry their as-built notes; the campaign's acceptance
+command is `conformance/vibenvm/fetch-mirror.sh` once, then
+`cargo xtask vibenvm-conform`.
+
+**The arithmetic, since the gate is arithmetic.** The re-extraction of the pinned
+`nvm.sh` and its `nvm --help` yields **76 `(subcommand, flag)` pairs over 23
+subcommands**. 24 of them are excluded by the owner's twelve approved items
+(`exclusions.toml`, fourteen rows), and the remaining **52 are required and all
+52 are covered** by nine cases, every one of which passes sandbox A against
+itself. Sandbox B is wired — its own `HOME` and `VIBE_SETTINGS`, the `[[remap]]`
+row for `nodejs.org`, `vibe install -g org.vibevm.node/vibenvm` from a local
+registry — and reports a **harness error (exit 3) naming the missing package**,
+which is the shim half's work and nothing else's.
+
+**Facts a later session would otherwise re-derive.**
+
+- **"No network" needed two guards the design did not foresee, and both are
+  nvm's own defaults.** nvm's default category set includes `iojs`, so
+  `ls-remote` asks nodejs.org's io.js sibling unless `NVM_IOJS_ORG_MIRROR` is
+  set — which would have been a non-loopback `connect(2)` and therefore a
+  verdict of 3 on a case that is otherwise fine. And `--latest-npm` /
+  `install-latest-npm` reach the npm registry by construction. Both now point
+  at empty loopback directories of the mirror, so each gets a deterministic 404
+  instead of a forbidden connection. Measured, because the guess would have
+  been wrong: `--latest-npm` and `install-latest-npm` do make the request, npm
+  reports `E404` against loopback, and nvm then reports `npm upgraded to:` the
+  version it already had and **exits 0** — so the case compares what the
+  attempt did to the runtime, not whether the internet was reachable.
+- **The mirror's indexes are filtered to the pinned version set**, and that is
+  what makes `mirror.lock` possible at all: upstream's `index.json` changes with
+  every Node release, so its digest could never be pinned, while the filtered
+  one is a function of the pinned set alone. The set is `v23.1.0`, `v22.11.0`
+  (Jod), `v22.9.0`, `v20.18.0` (Iron) — two in one major, an older major, two
+  LTS lines — so `--lts`, `--lts=<name>` and the `node` channel all resolve to
+  something the mirror holds. `index.tab` is mirrored beside `index.json`
+  because nvm reads the former and vibe the latter; both `tar.xz` and `tar.gz`
+  are mirrored because nvm chooses by what the host's `tar` and `xz` support.
+- **A case runs in one shell, not one shell per step.** The state a version
+  manager exists to change is `PATH`, and a fresh shell per step would have
+  thrown away exactly the thing under test.
+- **The observer takes the tool's root from the harness, not from `$NVM_DIR`.**
+  `nvm unload` unsets its own variables, so an observer reading the shell would
+  go blind at precisely the step that matters, and sandbox B — whose settings
+  root survives its own unload — would then differ for a reason that is not a
+  divergence.
+- **The observation record gained one field family, `file:<path>`**, driven by a
+  case's `observe_files`. Without it `install --save` could only ever be
+  observed as "exited 0": the `.nvmrc` it wrote would not be compared. The case
+  now shows `v22.9.0` appearing and `absent` after an `rm`, in both sandboxes.
+- **Coverage is derived, never declared.** `coverage.py` reads the command lines
+  the cases actually ran, from passing cases only, and attributes flags to the
+  tokens directly after the subcommand — which is nvm's own rule for its
+  optional arguments and is what keeps a trailing `node -v` out of the
+  accounting.
+- **Two spelling rules the extraction had to settle.** A flag carries no `=` and
+  no value (`--lts` and `--lts=*` are one flag), and a branch's flags are
+  recorded against the branch's **first** subcommand spelling, because the alias
+  enters the same branch and the flags are parsed once; an alias (`i`, `list`,
+  `copy-packages`, `-v`, `help`) therefore gets a bare pair of its own, so the
+  gate still demands a case per alias.
+- **The owner's twelve approved exclusion items are fourteen rows**, by
+  `#VIBENVM-EXCLUSIONS-APPROVED`'s own row rule (1): `install -s` and
+  `install -b` are two rows sharing one reason, and the internal-state item is
+  recorded under both the `(environment)` and the `(internal)` spelling that
+  fact prescribes. Rows carry an added `item` key so the twelve stay countable,
+  and `coverage.py` holds the closed row set — a thirteenth gap, a missing
+  approval or a quietly reworded row is exit 2.
+- **`python3 -m http.server` must be run with `-u`**, or its "Serving HTTP on …
+  port N" line sits in a buffer and the harness cannot learn the port it just
+  bound.
+- **The default-packages case is real, not nominal.** `npm install -g` of a
+  dependency-free tarball succeeds with the registry answering 404, so the
+  fixture package shows up in `globals` for the version installed with the
+  default-packages list and is absent from the one installed with
+  `--skip-default-packages` — which is exactly the pair of surfaces the owner
+  refused to let the suite exclude.
+
+**Gates.** `cargo fmt --all --check` clean; `cargo clippy -p xtask --all-targets
+-- -D warnings` clean; `cargo test -p xtask` 339 passed with **one** failure,
+`codegen::optional_shapes::tests::stitch::the_real_vocabulary_home_walks_to_its_sites`
+(105 against 104), which is `B-260`, red on main before this work and
+deliberately not touched here; `cargo xtask conform check` 138 findings, **0
+new**; `conformance/vibenvm/run.sh --self-test` exit 0 with all nine cases and
+all six meta-tests; the PROP-075 XML reports `dry-run ir-stable-loss` before and
+after the edit — the same verdict, unchanged. `shellcheck` is not installed on
+this machine, so the four new shell scripts are unlinted and that is recorded
+rather than claimed. Every cargo command ran with
+`CARGO_TARGET_DIR=/fast/tmp/p45-target`, `CARGO_BUILD_JOBS=6` and
+`--test-threads=6`; `/fast` stayed above 70 GB free.
+
+**What remains for the shim half.** Build `org.vibevm.node/vibenvm`, publish it
+into a local registry, and pass `--vibenvm-registry`. Three things to confirm
+when it lands, and nothing else is expected to move: that the package publishes
+a `vibenvm.sh` under the settings root for the driver to source; that sandbox
+B's observation adapter reads the field names vibe's JSON actually uses; and
+that the `<TOOLROOT>@v<version>` layout collapse covers vibe's own layout, which
+it is written for but has only ever been exercised against nvm's.
