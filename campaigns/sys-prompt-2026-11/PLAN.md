@@ -958,11 +958,11 @@ locally and never estimated.
 
 **Commands.** `vibe prompt prepare --json` gains the envelope projection; no
 command in this campaign sends a request. **Added 2026-11-10:** `vibe agent
-<harness> [--] [args…]` — composes the agent lane, checks the delivery-mode
-constraints, starts the harness with its **file-based** slot (no lane bytes on a
+<launcher> [--] [args…]` — composes the agent lane, checks the delivery-mode
+constraints, starts the launcher's harness with its **file-based** slot (no lane bytes on a
 command line, on any operating system: one argument is capped at 128 KiB on
 Linux and the whole line at ~32,767 characters on Windows, against a 310 KB
-lane), and passes everything after the harness name through. Claude Code gets
+lane), and passes everything after the launcher name through. Claude Code gets
 `--append-system-prompt-file <lane>` plus
 `--exclude-dynamic-system-prompt-sections`, and a refusal when the user's own
 arguments already set a system prompt; Codex gets a launch-time profile file,
@@ -970,6 +970,43 @@ which `vibe agent` may write as `$CODEX_HOME/vibe-<node-id>.config.toml` and an
 install never writes. A harness in `read` or `import` mode is started unchanged
 and told so in one line. `vibe agent` is a thin layer over `vibe prompt flags`,
 so there is one code path.
+
+**Added 2026-11-10 — a launcher is a named thing with a kind**
+(`PROP-076#SYS-HARNESS-EXECUTABLE`, which amends `HARNESS-DELIVERY.md` §8.4
+where the programs are named directly). A **kind** — `claude`, `codex`, …, a
+closed set — is the flag dialect and the delivery rules. A **launcher** is a
+name bound to a kind and to the argv that starts it, and it lives in the
+**user** configuration only:
+
+```toml
+[agent.launchers.claude2]
+kind = "claude"            # flag dialect and delivery rules; the closed set
+command = ["claude2"]      # argv prefix to exec
+config_dir = "~/.claude2"  # optional: where its session logs live
+```
+
+`vibe agent <launcher-name> [args…]` resolves the launcher **by name**, takes
+its flags from its kind, and execs `command` + flags + the user's own
+arguments. The built-in launchers `claude` and `codex` always exist, each with
+`kind` equal to its name, and a user launcher of the same name overrides the
+built-in. Any number of launchers may share a kind — two Claude Code launchers
+with different `config_dir`s are ordinary, not an edge case. `vibe agent list`
+prints name, kind, command, config directory and **source** (built-in, or the
+exact user-config path), because a developer debugging which program ran needs
+to know which file decided it. An unknown name is a refusal **listing the
+available launchers**; an unknown kind is a refusal naming the field.
+`vibe prompt flags` accepts either a kind or a launcher name and keeps printing
+**flags only**, which is what lets its output be appended to a wrapper that
+already exists. **A project manifest that names a launcher is a refusal** — a
+repository must not choose which program runs on a contributor's machine.
+`config_dir` exists because a wrapper that sets `CLAUDE_CONFIG_DIR` internally
+makes the log directory unknowable from outside; absent it, vibe reads the
+environment, then the kind's default, and when it is still unknown the
+diagnostics say so rather than guessing a path and reading someone else's logs.
+Two notes for whoever implements it: the environment read belongs at the CLI
+composition root that `conform.toml`'s `env_roots` already sanctions, not in the
+adapter; and the exec test is a shim on `PATH` that records its own argv, which
+is the only way to prove an argv prefix was honoured rather than merely stored.
 
 **Formats.** `SP-FMT-011` (the capture envelope and the usage counters).
 
