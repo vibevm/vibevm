@@ -1,0 +1,597 @@
+{
+  "schema": 1,
+  "generated_by": "conformance/vibenvm/extract-inventory.sh",
+  "authority": "PROP-075 #VIBENVM-SUITE, #VIBENVM-PIN",
+  "nvm_tag": "v0.41.0",
+  "nvm_tag_object": "43d410caa64ba7928cef750e31fccbf5790c210c",
+  "nvm_commit": "4e8758a801eea9479b32a904f31093e410ddaba4",
+  "nvm_sh_sha256": "e7ffd3d192735da61e5eb04e68f1aca4a293af4cd0000864568d6de7aa8f6fc4",
+  "flag_spelling": "flag names carry no `=` and no value: nvm.sh's `--lts` and `--lts=*` are one flag, `--lts`, and so is the help's `--lts=<LTS name>`",
+  "pair_count": 76,
+  "subcommands": [
+    {
+      "name": "--version",
+      "aliases": [
+        "-v"
+      ],
+      "flags": [],
+      "sources": [
+        "dispatch",
+        "help"
+      ]
+    },
+    {
+      "name": "-h",
+      "aliases": [
+        "--help",
+        "help"
+      ],
+      "flags": [
+        "--no-colors"
+      ],
+      "sources": [
+        "dispatch",
+        "help"
+      ]
+    },
+    {
+      "name": "alias",
+      "aliases": [],
+      "flags": [
+        "--lts",
+        "--no-colors",
+        "--only"
+      ],
+      "sources": [
+        "dispatch",
+        "help"
+      ]
+    },
+    {
+      "name": "cache",
+      "aliases": [],
+      "flags": [],
+      "sources": [
+        "dispatch",
+        "help"
+      ]
+    },
+    {
+      "name": "clear-cache",
+      "aliases": [],
+      "flags": [],
+      "sources": [
+        "dispatch"
+      ]
+    },
+    {
+      "name": "current",
+      "aliases": [],
+      "flags": [],
+      "sources": [
+        "dispatch",
+        "help"
+      ]
+    },
+    {
+      "name": "deactivate",
+      "aliases": [],
+      "flags": [
+        "--silent"
+      ],
+      "sources": [
+        "dispatch",
+        "help"
+      ]
+    },
+    {
+      "name": "debug",
+      "aliases": [],
+      "flags": [],
+      "sources": [
+        "dispatch"
+      ]
+    },
+    {
+      "name": "exec",
+      "aliases": [],
+      "flags": [
+        "--lts",
+        "--only",
+        "--silent"
+      ],
+      "sources": [
+        "dispatch",
+        "help"
+      ]
+    },
+    {
+      "name": "install",
+      "aliases": [
+        "i"
+      ],
+      "flags": [
+        "--alias",
+        "--copy-packages-from",
+        "--default",
+        "--latest-npm",
+        "--lts",
+        "--no-progress",
+        "--offline",
+        "--only",
+        "--reinstall-packages-from",
+        "--save",
+        "--skip-default-packages",
+        "-b",
+        "-j",
+        "-s",
+        "-w"
+      ],
+      "sources": [
+        "dispatch",
+        "help"
+      ]
+    },
+    {
+      "name": "install-latest-npm",
+      "aliases": [],
+      "flags": [],
+      "sources": [
+        "dispatch",
+        "help"
+      ]
+    },
+    {
+      "name": "ls",
+      "aliases": [
+        "list"
+      ],
+      "flags": [
+        "--no-alias",
+        "--no-colors",
+        "--only"
+      ],
+      "sources": [
+        "dispatch",
+        "help"
+      ]
+    },
+    {
+      "name": "ls-remote",
+      "aliases": [
+        "list-remote"
+      ],
+      "flags": [
+        "--lts",
+        "--no-colors",
+        "--only"
+      ],
+      "sources": [
+        "dispatch",
+        "help"
+      ]
+    },
+    {
+      "name": "reinstall-packages",
+      "aliases": [
+        "copy-packages"
+      ],
+      "flags": [
+        "--only"
+      ],
+      "sources": [
+        "dispatch",
+        "help"
+      ]
+    },
+    {
+      "name": "run",
+      "aliases": [],
+      "flags": [
+        "--lts",
+        "--only",
+        "--silent"
+      ],
+      "sources": [
+        "dispatch",
+        "help"
+      ]
+    },
+    {
+      "name": "set-colors",
+      "aliases": [],
+      "flags": [],
+      "sources": [
+        "dispatch",
+        "help"
+      ]
+    },
+    {
+      "name": "unalias",
+      "aliases": [],
+      "flags": [],
+      "sources": [
+        "dispatch",
+        "help"
+      ]
+    },
+    {
+      "name": "uninstall",
+      "aliases": [],
+      "flags": [
+        "--lts",
+        "--only"
+      ],
+      "sources": [
+        "dispatch",
+        "help"
+      ]
+    },
+    {
+      "name": "unload",
+      "aliases": [],
+      "flags": [],
+      "sources": [
+        "dispatch",
+        "help"
+      ]
+    },
+    {
+      "name": "use",
+      "aliases": [],
+      "flags": [
+        "--delete-prefix",
+        "--lts",
+        "--only",
+        "--save",
+        "--silent",
+        "-w"
+      ],
+      "sources": [
+        "dispatch",
+        "help"
+      ]
+    },
+    {
+      "name": "version",
+      "aliases": [],
+      "flags": [
+        "--only"
+      ],
+      "sources": [
+        "dispatch",
+        "help"
+      ]
+    },
+    {
+      "name": "version-remote",
+      "aliases": [],
+      "flags": [
+        "--lts",
+        "--only"
+      ],
+      "sources": [
+        "dispatch",
+        "help"
+      ]
+    },
+    {
+      "name": "which",
+      "aliases": [],
+      "flags": [
+        "--only",
+        "--silent"
+      ],
+      "sources": [
+        "dispatch",
+        "help"
+      ]
+    }
+  ],
+  "pairs": [
+    {
+      "subcommand": "--help",
+      "flag": ""
+    },
+    {
+      "subcommand": "--version",
+      "flag": ""
+    },
+    {
+      "subcommand": "-h",
+      "flag": ""
+    },
+    {
+      "subcommand": "-h",
+      "flag": "--no-colors"
+    },
+    {
+      "subcommand": "-v",
+      "flag": ""
+    },
+    {
+      "subcommand": "alias",
+      "flag": ""
+    },
+    {
+      "subcommand": "alias",
+      "flag": "--lts"
+    },
+    {
+      "subcommand": "alias",
+      "flag": "--no-colors"
+    },
+    {
+      "subcommand": "alias",
+      "flag": "--only"
+    },
+    {
+      "subcommand": "cache",
+      "flag": ""
+    },
+    {
+      "subcommand": "clear-cache",
+      "flag": ""
+    },
+    {
+      "subcommand": "copy-packages",
+      "flag": ""
+    },
+    {
+      "subcommand": "current",
+      "flag": ""
+    },
+    {
+      "subcommand": "deactivate",
+      "flag": ""
+    },
+    {
+      "subcommand": "deactivate",
+      "flag": "--silent"
+    },
+    {
+      "subcommand": "debug",
+      "flag": ""
+    },
+    {
+      "subcommand": "exec",
+      "flag": ""
+    },
+    {
+      "subcommand": "exec",
+      "flag": "--lts"
+    },
+    {
+      "subcommand": "exec",
+      "flag": "--only"
+    },
+    {
+      "subcommand": "exec",
+      "flag": "--silent"
+    },
+    {
+      "subcommand": "help",
+      "flag": ""
+    },
+    {
+      "subcommand": "i",
+      "flag": ""
+    },
+    {
+      "subcommand": "install",
+      "flag": ""
+    },
+    {
+      "subcommand": "install",
+      "flag": "--alias"
+    },
+    {
+      "subcommand": "install",
+      "flag": "--copy-packages-from"
+    },
+    {
+      "subcommand": "install",
+      "flag": "--default"
+    },
+    {
+      "subcommand": "install",
+      "flag": "--latest-npm"
+    },
+    {
+      "subcommand": "install",
+      "flag": "--lts"
+    },
+    {
+      "subcommand": "install",
+      "flag": "--no-progress"
+    },
+    {
+      "subcommand": "install",
+      "flag": "--offline"
+    },
+    {
+      "subcommand": "install",
+      "flag": "--only"
+    },
+    {
+      "subcommand": "install",
+      "flag": "--reinstall-packages-from"
+    },
+    {
+      "subcommand": "install",
+      "flag": "--save"
+    },
+    {
+      "subcommand": "install",
+      "flag": "--skip-default-packages"
+    },
+    {
+      "subcommand": "install",
+      "flag": "-b"
+    },
+    {
+      "subcommand": "install",
+      "flag": "-j"
+    },
+    {
+      "subcommand": "install",
+      "flag": "-s"
+    },
+    {
+      "subcommand": "install",
+      "flag": "-w"
+    },
+    {
+      "subcommand": "install-latest-npm",
+      "flag": ""
+    },
+    {
+      "subcommand": "list",
+      "flag": ""
+    },
+    {
+      "subcommand": "list-remote",
+      "flag": ""
+    },
+    {
+      "subcommand": "ls",
+      "flag": ""
+    },
+    {
+      "subcommand": "ls",
+      "flag": "--no-alias"
+    },
+    {
+      "subcommand": "ls",
+      "flag": "--no-colors"
+    },
+    {
+      "subcommand": "ls",
+      "flag": "--only"
+    },
+    {
+      "subcommand": "ls-remote",
+      "flag": ""
+    },
+    {
+      "subcommand": "ls-remote",
+      "flag": "--lts"
+    },
+    {
+      "subcommand": "ls-remote",
+      "flag": "--no-colors"
+    },
+    {
+      "subcommand": "ls-remote",
+      "flag": "--only"
+    },
+    {
+      "subcommand": "reinstall-packages",
+      "flag": ""
+    },
+    {
+      "subcommand": "reinstall-packages",
+      "flag": "--only"
+    },
+    {
+      "subcommand": "run",
+      "flag": ""
+    },
+    {
+      "subcommand": "run",
+      "flag": "--lts"
+    },
+    {
+      "subcommand": "run",
+      "flag": "--only"
+    },
+    {
+      "subcommand": "run",
+      "flag": "--silent"
+    },
+    {
+      "subcommand": "set-colors",
+      "flag": ""
+    },
+    {
+      "subcommand": "unalias",
+      "flag": ""
+    },
+    {
+      "subcommand": "uninstall",
+      "flag": ""
+    },
+    {
+      "subcommand": "uninstall",
+      "flag": "--lts"
+    },
+    {
+      "subcommand": "uninstall",
+      "flag": "--only"
+    },
+    {
+      "subcommand": "unload",
+      "flag": ""
+    },
+    {
+      "subcommand": "use",
+      "flag": ""
+    },
+    {
+      "subcommand": "use",
+      "flag": "--delete-prefix"
+    },
+    {
+      "subcommand": "use",
+      "flag": "--lts"
+    },
+    {
+      "subcommand": "use",
+      "flag": "--only"
+    },
+    {
+      "subcommand": "use",
+      "flag": "--save"
+    },
+    {
+      "subcommand": "use",
+      "flag": "--silent"
+    },
+    {
+      "subcommand": "use",
+      "flag": "-w"
+    },
+    {
+      "subcommand": "version",
+      "flag": ""
+    },
+    {
+      "subcommand": "version",
+      "flag": "--only"
+    },
+    {
+      "subcommand": "version-remote",
+      "flag": ""
+    },
+    {
+      "subcommand": "version-remote",
+      "flag": "--lts"
+    },
+    {
+      "subcommand": "version-remote",
+      "flag": "--only"
+    },
+    {
+      "subcommand": "which",
+      "flag": ""
+    },
+    {
+      "subcommand": "which",
+      "flag": "--only"
+    },
+    {
+      "subcommand": "which",
+      "flag": "--silent"
+    }
+  ]
+}

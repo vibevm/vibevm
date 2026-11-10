@@ -1,0 +1,6 @@
+# The local Node release mirror and the pinned nvm-sh checkout that
+# `fetch-mirror.sh` downloads (PROP-075 `#VIBENVM-SUITE`: the only
+# networked step). Hundreds of megabytes of upstream binaries have no
+# business in this history — `mirror.lock` is committed instead, and it
+# pins every one of those files by SHA-256.
+/mirror/

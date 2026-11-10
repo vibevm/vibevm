@@ -1,0 +1,42 @@
+# conformance/vibenvm/mirror.lock — the suite's pin, and the digest of every
+# file `fetch-mirror.sh` downloads (PROP-075 `#VIBENVM-PIN`, `#VIBENVM-SUITE`).
+#
+# Tab-separated rows. The pin rows are authored by hand from the spec; the
+# `sha256` rows are written by `fetch-mirror.sh --lock` and verified on every
+# run — `run.sh` exits 3 on a mismatch, so a tampered mirror cannot pass as a
+# conformance result.
+#
+# The two index files are the pinned set's records filtered out of upstream's
+# `index.json` / `index.tab`; see fetch-mirror.sh for why they are filtered
+# (a mirror describes what the mirror has, and the digest then depends on the
+# pinned set alone rather than on Node's release cadence).
+#
+# The node set is small on purpose, and it is the spec's own shape: two
+# versions in one major (v22.9.0 non-LTS, v22.11.0 the Jod LTS line), one
+# older major (v20.18.0, the Iron LTS line) and one newer non-LTS
+# (v23.1.0, so `node` / `latest` resolves to something the mirror holds).
+schema	1
+nvm_tag	v0.41.0
+nvm_tag_object	43d410caa64ba7928cef750e31fccbf5790c210c
+nvm_commit	4e8758a801eea9479b32a904f31093e410ddaba4
+node_version	v23.1.0
+node_version	v22.11.0
+node_version	v22.9.0
+node_version	v20.18.0
+sha256	nvm/nvm.sh	e7ffd3d192735da61e5eb04e68f1aca4a293af4cd0000864568d6de7aa8f6fc4
+sha256	nvm/nvm-exec	eda3c10d8bcff0d328d2cdd15235c7806f9797031631cfca34a2c26c64d5ed86
+sha256	nvm/bash_completion	39c3c38294e9f579f23744e9b6b023e6e530352ca0143380ebc5c1f7b6786b68
+sha256	dist/index.json	10e94af093c1dafd0765c8366f027ca67c85cd58f8e1b5328e969886fb363bba
+sha256	dist/index.tab	d07815807fb07e8fadcdf311f90e00090dcb91ab377cc1cc09cba29724f08be8
+sha256	dist/v20.18.0/node-v20.18.0-linux-x64.tar.gz	24a5d58a1d4c2903478f4b7c3cfd2eeb5cea2cae3baee11a4dc6a1fed25fec6c
+sha256	dist/v20.18.0/node-v20.18.0-linux-x64.tar.xz	4543670b589593f8fa5f106111fd5139081da42bb165a9239f05195e405f240a
+sha256	dist/v20.18.0/SHASUMS256.txt	3a4d58219ce6ed145d8b9b69ff64a099b9e62f59d7b55cc4093fbae219518758
+sha256	dist/v22.11.0/node-v22.11.0-linux-x64.tar.gz	4f862bab52039835efbe613b532238b6e4dde98d139a34e6923193e073438b13
+sha256	dist/v22.11.0/node-v22.11.0-linux-x64.tar.xz	83bf07dd343002a26211cf1fcd46a9d9534219aad42ee02847816940bf610a72
+sha256	dist/v22.11.0/SHASUMS256.txt	dddf2b497e71a131348716f78662c9fd51b9a30f808d5c5b81e7f3c7824a83fb
+sha256	dist/v22.9.0/node-v22.9.0-linux-x64.tar.gz	1efa7ba49fbb80b2110ebed50224705ca23b1edbdd1e3210e293faa006540488
+sha256	dist/v22.9.0/node-v22.9.0-linux-x64.tar.xz	1bfae9ef21ab43c92d8274f1bd032bf61f42ea004192a18d4c64477508626142
+sha256	dist/v22.9.0/SHASUMS256.txt	9667e91309fb995b37be7650ca3a1819ee8a93ace0891334f6eec8fa1daa0452
+sha256	dist/v23.1.0/node-v23.1.0-linux-x64.tar.gz	1c436b2ac33a4fef7cf08c08b8a33362325c0c8ac8d05d4054a79628d5d0b5ae
+sha256	dist/v23.1.0/node-v23.1.0-linux-x64.tar.xz	ccacff4f32e3c3729f5094d20e4089a16a3b8f1381e9730b19f1c16f7cf64da9
+sha256	dist/v23.1.0/SHASUMS256.txt	2da713c4f40213d31b0de0568a88a3c9b9a16ae892fa45c41b0d2f67ce11c5cc
