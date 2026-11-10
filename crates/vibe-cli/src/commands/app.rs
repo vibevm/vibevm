@@ -17,6 +17,7 @@ pub(crate) mod env;
 pub(crate) mod environment;
 mod exec;
 mod export;
+mod extras;
 pub(crate) mod facts;
 pub(crate) mod global;
 pub(crate) mod home;
@@ -430,6 +431,9 @@ pub fn run(
         }
         AppCommand::Migrate(args) => {
             migrate::run(ctx, app_home.settings(), args, embedded_root, offline)
+        }
+        AppCommand::Extras(args) => {
+            extras::run(ctx, app_home.settings(), args, embedded_root, offline)
         }
         AppCommand::Env(args) => {
             env::run(ctx, args)?;

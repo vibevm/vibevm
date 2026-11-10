@@ -525,6 +525,16 @@ pub enum AppCommand {
     /// `--all` refuses rather than migrating unasked.
     Migrate(AppMigrateArgs),
 
+    /// Inspect and change what a slot's runtime carries in its **own**
+    /// package ecosystem (PROP-075 `#SLOT-EXTRAS`): the items the
+    /// package's author recommends, what the installed version actually
+    /// carries, and the adapter's `remove` and `self_upgrade` verbs.
+    ///
+    /// Item strings are opaque. vibe never parses, splits, quotes,
+    /// escapes, validates or reorders one: they reach the package's own
+    /// script as separate argv elements, exactly as you wrote them.
+    Extras(AppExtrasArgs),
+
     /// Print the lines that switch the current shell to a selection
     /// (PROP-075 `#ACTIVATION-ENV-OUTPUT`): `PATH` with the chosen
     /// installations' payload directories in front, and `VIBE_APP_USE`.
@@ -567,6 +577,9 @@ pub enum AppCommand {
 
 #[path = "app_activation.rs"]
 mod activation;
+#[path = "app_extras.rs"]
+mod extras;
+pub use extras::{AppExtrasArgs, ExtrasCommand, ExtrasTargetArgs};
 #[path = "app_migration.rs"]
 mod migration;
 pub use activation::{AppEnvArgs, AppExecArgs, AppVersionsArgs, HookArgs, WriteVersionFileArgs};

@@ -201,6 +201,9 @@ pub(crate) fn policy(command: &Command, terminal_attached: bool) -> CommandPolic
             // The two sides of each entry are ordinary steps with their own
             // logs (PROP-075 `#MIGRATION-DECLARATION`).
             crate::cli::AppCommand::Migrate(_) => FiniteFallback("Command app migrate"),
+            // An adapter verb is an ordinary step with its own log
+            // (PROP-075 `#ECOSYSTEM-ADAPTER`).
+            crate::cli::AppCommand::Extras(_) => FiniteFallback("Command app extras"),
             crate::cli::AppCommand::Modify { .. } => FiniteFallback("Command app modify"),
             crate::cli::AppCommand::Resume { .. } => FiniteFallback("Command app resume"),
             crate::cli::AppCommand::Expose { .. }
