@@ -16,6 +16,8 @@ drive the interactive terminal UI. Print mode passes the same
 `usage` record of each run, not from `read-usage.sh`. An interactive run was
 not measured here.
 
+Every answer verbatim, with its counters, is in `ANSWERS.md`.
+
 The usage columns are the provider's own counters: `cache_creation_input_tokens`
 and `cache_read_input_tokens`. Every run is a single request unless "turns"
 says otherwise.
@@ -35,7 +37,7 @@ says otherwise.
 | C5 subagent | `live-1` | The subagent saw no `CANARY-…` word and no `<!-- vibe:lane-begin` line. It saw only the block's format example. | 11,882 | 36,151 | **pass**: subagents do not inherit the slot |
 | N1 nested | `live-1` | Read only `nested/AGENTS.md`. `CANARY-NESTED-TUFF` present, `CANARY-NESTED-LANE-SCORIA` absent. It ignored the nested block as another project's. Claude Code also auto-loaded `nested/CLAUDE.md`, and the agent ignored that block too. | 12,707 | 36,108 | **pass** |
 | C6 repeated flag | `claude2` by hand, two `--append-system-prompt-file` | Only the **second** file's canary arrived. | — | — | recorded: **last flag wins**, the first file is dropped |
-| C7 resume | `live-1`: `00-core.md` edited and installed, then `--resume` of the step 2 session | The agent saw the **old** `00-core.md` id `cc8a3fa2cf16` (current: `2d1b478e28d7`) and not the new canary. It reported "no sign the lane is out of date": the block carries only `STATIC`'s expected id, and that id was unchanged. | 709 | 22,799 | recorded: **the old lane comes back, silently**. `6323e8a36` makes `vibe agent` say so on `-c/--continue/-r/--resume` |
+| C7 resume | `live-1`: `00-core.md` edited and installed, then `--resume` of the step 2 session | The agent saw the **old** `00-core.md` id `cc8a3fa2cf16` (current: `2d1b478e28d7`) and not the new canary. It reported "no sign the lane is out of date": the block carries only `STATIC`'s expected id, and that id was unchanged. | 709 | 22,799 | **neither runbook pass branch** (old lane, mismatch not noticed) — recorded: **the old lane comes back, silently**. `6323e8a36` makes `vibe agent` say so on `-c/--continue/-r/--resume` |
 | C8 Windows | — | — | — | — | **not run**: no Windows host in this session |
 
 ## Findings
