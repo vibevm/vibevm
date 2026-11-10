@@ -12,8 +12,9 @@
 //!
 //! The row's **human form** is not here: it is drawn by `super::payloads`,
 //! which is where a row's counts and bytes are known. What this module
-//! answers with instead is [`Snapshots`] — the batch files and one
-//! [`SnapshotOutcome`] per row, carrying the renders a payload row needs.
+//! answers with instead is [`Snapshots`] — the batch files, one
+//! [`SnapshotOutcome`] per row carrying the renders a payload row needs,
+//! and the snapshot versions a `--prune` would drop.
 //!
 //! **Nothing is written outside the batch.** Every file is staged in the
 //! run's scratch directory and named by its registry-relative path; the
@@ -75,30 +76,50 @@ pub(super) struct SnapshotOutcome {
     pub renders: Vec<FullRender>,
 }
 
+/// One package's snapshot versions the run's selection no longer names.
+///
+/// Computed by the stage that knows both sides — what the target records
+/// and what this selection selects — and acted on only by `--prune`
+/// (`#MIRROR-NO-SILENT-PRUNE`).
+#[derive(Debug, Clone)]
+pub(super) struct StaleSnapshot {
+    pub package: String,
+    pub group: Group,
+    pub name: String,
+    /// Version spellings, as the record writes them.
+    pub versions: BTreeSet<String>,
+}
+
 /// What the snapshot stage produced.
 #[derive(Debug, Default)]
 pub(super) struct Snapshots {
     /// Files for `BatchConfig.files`.
     pub files: BatchFiles,
     pub rows: Vec<SnapshotOutcome>,
+    /// The snapshot versions a `--prune` would drop, whether or not one
+    /// was asked for: the plan is what `--prune` prints before it removes
+    /// anything.
+    pub stale: Vec<StaleSnapshot>,
 }
 
 /// Snapshot every `[[template]]` row of the selection.
 ///
 /// A row that selects nothing is reported, not an error
-/// (`#MIRROR-CONFIG-SCHEMA`); a snapshot only ever grows, because
-/// narrowing a selection never deletes (`#MIRROR-NO-SILENT-PRUNE`).
+/// (`#MIRROR-CONFIG-SCHEMA`). Without `prune` a snapshot only ever grows,
+/// because narrowing a selection never deletes
+/// (`#MIRROR-NO-SILENT-PRUNE`); with it the record keeps **only** the
+/// versions this selection names, so the record, its `versions.json` and
+/// the digest files it drops are decided in the one place that writes
+/// them.
 pub(super) fn snapshots(
     selection: &Selection,
     source_root: &Path,
     target_root: &Path,
     scratch: &Path,
+    prune: bool,
 ) -> Result<Snapshots> {
     if selection.templates().is_empty() {
-        return Ok(Snapshots {
-            files: BatchFiles::new(),
-            rows: Vec::new(),
-        });
+        return Ok(Snapshots::default());
     }
     let layer = vibe_registry::templates::active().ok_or_else(|| {
         anyhow::anyhow!(
@@ -108,12 +129,17 @@ pub(super) fn snapshots(
              template's inputs have somewhere to be cached)"
         )
     })?;
-    let mut done = Snapshots {
-        files: BatchFiles::new(),
-        rows: Vec::new(),
-    };
+    let mut done = Snapshots::default();
     for row in selection.templates() {
-        snapshot_row(&layer, row, source_root, target_root, scratch, &mut done)?;
+        snapshot_row(
+            &layer,
+            row,
+            source_root,
+            target_root,
+            scratch,
+            prune,
+            &mut done,
+        )?;
     }
     Ok(done)
 }
@@ -124,6 +150,7 @@ fn snapshot_row(
     source_root: &Path,
     target_root: &Path,
     scratch: &Path,
+    prune: bool,
     done: &mut Snapshots,
 ) -> Result<()> {
     let package = row.package();
@@ -209,6 +236,27 @@ fn snapshot_row(
         renders,
     });
 
+    let keeping: BTreeSet<String> = selected.iter().map(ToString::to_string).collect();
+    let stale: BTreeSet<String> = existing
+        .as_ref()
+        .map(|snapshot| {
+            snapshot
+                .record
+                .versions
+                .iter()
+                .map(|row| row.version.clone())
+                .filter(|version| !keeping.contains(version))
+                .collect()
+        })
+        .unwrap_or_default();
+    if !stale.is_empty() {
+        done.stale.push(StaleSnapshot {
+            package: package.clone(),
+            group: group.clone(),
+            name: row.name.clone(),
+            versions: stale,
+        });
+    }
     if selected.is_empty() {
         // Reported, not an error — and with nothing selected there is no
         // snapshot to write.
@@ -220,6 +268,9 @@ fn snapshot_row(
             let mut record = found.record;
             record.sync.vibe = vibe;
             record.sync.last = now;
+            if prune {
+                record.versions.retain(|row| keeping.contains(&row.version));
+            }
             record
         }
         None => SnapshotRecord::new(

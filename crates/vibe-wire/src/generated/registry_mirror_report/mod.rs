@@ -58,6 +58,47 @@ pub struct RegistryMirrorReport {
     /// alarm stopped the run.
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub commit: Option<String>,
+
+    /// One row per removal `--prune` planned (PROP-075 `#MIRROR-PRUNE`): what
+    /// went, from where, and the reason that reached it. It is the **plan**,
+    /// which is printed before anything is removed and is never silent;
+    /// `removed` says how many of its rows this run actually took out, which
+    /// is none on a dry run and none when the plan's question was answered
+    /// no. Absent without `--prune`, because no run without it ever deletes
+    /// anything.
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub pruned: Vec<PrunedItem>,
+
+    /// How many of the `pruned[]` rows this run removed. Zero when the plan
+    /// was printed and not answered yes, and on a dry run; absent without
+    /// `--prune`.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub removed: Option<u32>,
+
+    /// One row per `[[template]]` row of the selection (PROP-075 `#MIRROR-
+    /// CONFIG`), in selection order: what it selected, what the snapshot now
+    /// carries, and — with `payloads = true` — the payload projection it would
+    /// write or wrote. Absent for a run with no template row, which is every
+    /// mirror run that predates the feature.
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub templates: Vec<MirroredTemplate>,
+}
+
+/// An exact non-negative byte count. JTD has no uint64 form, so generated Rust
+/// narrows the numeric form to u64.
+pub type ByteCount = u64;
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+pub struct DroppedOption {
+    /// The file upstream does not publish for this version, which is why a
+    /// `template_optional` row was dropped instead of failing the render (PROP-
+    /// 075 `#TEMPLATE-OPTION-GATING`).
+    pub missing: String,
+
+    /// The `[[installer_options]]` id the render dropped.
+    pub option: String,
+
+    pub version: String,
 }
 
 /// `index`: the source registry's package index (`primary.jsonl`); `layout`:
@@ -116,6 +157,59 @@ pub enum MirrorAction {
 }
 
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+pub struct MirroredTemplate {
+    /// Every channel the row named and what it resolved to.
+    pub channels: Vec<ResolvedChannel>,
+
+    /// The `template_optional` rows the render dropped, each naming the file
+    /// upstream does not publish.
+    pub dropped: Vec<DroppedOption>,
+
+    /// `<group>/<name>` of the template package.
+    pub package: String,
+
+    /// The template package's own version — a revision, never a produced
+    /// version.
+    pub revision: String,
+
+    /// Produced versions the row selected: what `versions` matched unioned with
+    /// the members of every `channels` entry, then `newest = N` per major.
+    pub selected: u32,
+
+    /// Of them, the ones this run added to the snapshot (on a dry run: would
+    /// add).
+    pub snapshotted: u32,
+
+    /// Of them, the ones the snapshot already carried and this run left
+    /// untouched.
+    pub unchanged: u32,
+
+    /// The selected versions, oldest first — the children of the row's node in
+    /// the human form.
+    pub versions: Vec<TemplateVersion>,
+
+    /// The oldest selected version; absent when the row selected nothing, which
+    /// is reported and is not an error.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub first: Option<String>,
+
+    /// The installer-option ids the row asks to keep, as authored. They select
+    /// nothing in the snapshot itself — a version's inputs are per version, not
+    /// per option — and are what payload projection acts on.
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub installers: Vec<String>,
+
+    /// The newest selected version.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub last: Option<String>,
+
+    /// The payload projection of this row; absent unless the row carries
+    /// `payloads = true`.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub payloads: Option<TemplatePayloads>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 pub struct MirroredVersion {
     pub action: MirrorAction,
 
@@ -162,6 +256,59 @@ pub struct MirroredVersion {
     pub tree_verified: Option<bool>,
 }
 
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+pub struct PrunedItem {
+    pub kind: PrunedKind,
+
+    /// `<group>/<name>` the removal belongs to.
+    pub package: String,
+
+    /// Registry-relative for a `version` or a `snapshot`, the absolute drop
+    /// path for a `payload`. It spells the coordinate of its fact: a `version`
+    /// path is exactly `<group>/<name>/v<version>`, which is what lets the
+    /// batch refuse a removal that claims a coordinate it is not (PROP-075
+    /// `#MIRROR-PRUNE`).
+    pub path: String,
+
+    /// Why this removal reached the plan — "no longer selected by `[select]`",
+    /// "no longer selected by `[[template]]` <package>".
+    pub reason: String,
+
+    /// The version removed; absent for a whole snapshot or a whole package's
+    /// payloads, which carry no single version.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub version: Option<String>,
+}
+
+/// `version`: a package version directory in the target; `snapshot`: a template
+/// snapshot under `_index/`, whole or by version; `payload`: a projected
+/// payload in the drop, the one removal outside the registry — it happens after
+/// the commit that stops advertising it. Closed: automation decides from it
+/// whether a removal changed the registry or only the drop.
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+pub enum PrunedKind {
+    #[serde(rename = "payload")]
+    Payload,
+
+    #[serde(rename = "snapshot")]
+    Snapshot,
+
+    #[serde(rename = "version")]
+    Version,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+pub struct ResolvedChannel {
+    /// The channel name the `[[template]]` row asked for.
+    pub channel: String,
+
+    /// The newest member of the channel's set — what the channel lowers to.
+    /// Absent when the template declares no such channel, which selects nothing
+    /// and is reported rather than refused.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub version: Option<String>,
+}
+
 /// `monorepo`: a repository url, cloned, committed and pushed; `working-copy`:
 /// a local Git working copy, committed into and not pushed; `localdir`: a
 /// directory registry, written in place.
@@ -175,4 +322,56 @@ pub enum TargetKind {
 
     #[serde(rename = "working-copy")]
     WorkingCopy,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+pub struct TemplatePayloads {
+    /// Declared bytes to fetch — what `[payloads] max_total` is checked
+    /// against, before the first byte is written.
+    pub fetch_bytes: ByteCount,
+
+    /// Payload inputs the selected versions and options declare.
+    pub inputs: u32,
+
+    /// The `[payloads] into` drop the projection writes at
+    /// `<into>/<group>/<name>/<version>/<file>`, the first rung of the drop
+    /// lookup (PROP-066 `#drops`). The one place a mirror run writes outside
+    /// the registry target.
+    pub into: String,
+
+    /// Of them, the ones already in the drop with the right digest.
+    pub present: u32,
+
+    /// Declared bytes already in the drop.
+    pub present_bytes: ByteCount,
+
+    /// `present_bytes` + `fetch_bytes`. A **lower bound** when `unknown` is
+    /// non-zero: a template that declares no `size` for an input cannot be
+    /// weighed, and the total says so rather than guessing.
+    pub total_bytes: ByteCount,
+
+    /// Inputs whose size the rendered manifest does not declare (`PROP-
+    /// 065#sizes`), which is what makes `total_bytes` a lower bound.
+    pub unknown: u32,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+pub struct TemplateVersion {
+    pub version: String,
+
+    /// Payload inputs those options declare.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub inputs: Option<u32>,
+
+    /// The installer options kept for this version, in manifest order — what
+    /// `platforms` / `archs` / `installers` resolved to against the rendered
+    /// manifest. Present only for a row with `payloads = true`, which is the
+    /// only row that reads the options at all.
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub installers: Vec<String>,
+
+    /// Of them, the ones already in the drop with the right digest, which are
+    /// counted and never fetched again.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub present: Option<u32>,
 }

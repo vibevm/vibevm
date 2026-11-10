@@ -33,7 +33,7 @@ use vibe_publish::git_publish::redact_credentials;
 use vibe_publish::layout_publish::{
     BatchConfig, GitTree, LayoutRegistry, PublishItem, publish_batch, read_target,
 };
-use vibe_wire::generated::registry_mirror_report::{MirrorAction, RegistryMirrorReport};
+use vibe_wire::generated::registry_mirror_report::RegistryMirrorReport;
 
 use crate::cli::RegistryMirrorArgs;
 use crate::output;
@@ -44,7 +44,9 @@ mod history;
 mod org_api;
 mod payloads;
 mod plan;
+mod prune;
 mod record;
+mod render;
 mod selection;
 mod source;
 mod target;
@@ -52,6 +54,7 @@ mod templates;
 
 use history::{history_bundles, mirror_record};
 use plan::{Decision, plan_versions};
+use render::render;
 use selection::Selection;
 use source::SourceReader;
 use target::resolve_target;
@@ -125,6 +128,12 @@ pub(super) fn run_mirror(
         &drops,
         local_root(&target.layout),
     )?;
+    let pruning = prune::Request {
+        prune: args.prune,
+        payloads: args.prune_payloads,
+        yes: args.yes,
+    };
+    prune::check(pruning, &selection, args.config.as_deref())?;
     announce(ctx, &selection);
 
     let reader = SourceReader::open(
@@ -228,7 +237,13 @@ pub(super) fn run_mirror(
     let snapshots = match &reader {
         SourceReader::Layout(opened) => {
             super::observed_stage(ctx, "Snapshotting the templates' inputs", || {
-                templates::snapshots(&selection, opened.root(), tree.root(), scratch.path())
+                templates::snapshots(
+                    &selection,
+                    opened.root(),
+                    tree.root(),
+                    scratch.path(),
+                    args.prune,
+                )
             })?
         }
         // Refused before the listing by `refuse_templates_without_a_tree`,
@@ -237,6 +252,14 @@ pub(super) fn run_mirror(
     };
     let snapshot_count = snapshots.files.len();
     files.extend(snapshots.files);
+    let pruned = prune::plan(
+        pruning,
+        &selection,
+        &source_reg.name,
+        tree.root(),
+        &target_index,
+        &snapshots.stale,
+    )?;
     drop(tree);
 
     // The projection is read off the renders the snapshot stage performed,
@@ -244,7 +267,7 @@ pub(super) fn run_mirror(
     // `[payloads] max_total` before the first byte is written, and the
     // bytes themselves are fetched only after the alarm check below.
     let projection = payloads::project(&selection, &snapshots.rows)?;
-    payloads::report(ctx, &snapshots.rows, &projection);
+    payloads::show(ctx, &snapshots.rows, &projection);
 
     let unavailable = planned
         .iter()
@@ -265,6 +288,12 @@ pub(super) fn run_mirror(
         dry_run: args.dry_run,
         commit: None,
         bundles: u32::try_from(bundle_count).unwrap_or(u32::MAX),
+        templates: payloads::rows(&selection, &snapshots.rows, &projection),
+        // The plan, always — a client that reads the document must see it
+        // before anything goes, exactly as a person does. `removed` below
+        // says how many of its rows this run actually took out.
+        pruned: prune::rows(&pruned),
+        removed: args.prune.then_some(0),
     };
     if alarms > 0 {
         render(ctx, &report)?;
@@ -278,6 +307,11 @@ pub(super) fn run_mirror(
             source_reg.name
         );
     }
+
+    // Never silent, and never without a word: the plan is printed before
+    // anything is removed, and an unattended run without `--yes` is
+    // refused rather than left to copy against a plan it did not answer.
+    let removing = prune::answer(ctx, &pruned, pruning, args.dry_run)?;
 
     if let Some(plan) = selection.payloads() {
         payloads::weigh(&projection, plan)?;
@@ -314,10 +348,13 @@ pub(super) fn run_mirror(
         items,
         facts,
         files,
-        // No run without `--prune` ever deletes anything, however narrow
-        // the selection became (PROP-075 `#MIRROR-NO-SILENT-PRUNE`), and
-        // `--prune` does not exist yet.
-        removed: Vec::new(),
+        // No run without `--prune` — and no `--prune` whose plan went
+        // unanswered — ever deletes anything, however narrow the
+        // selection became (PROP-075 `#MIRROR-NO-SILENT-PRUNE`).
+        removed: match removing {
+            true => pruned.removed.clone(),
+            false => Vec::new(),
+        },
         dry_run: false,
     };
     let outcome = super::observed_stage(ctx, "Writing into the target registry", || {
@@ -327,6 +364,13 @@ pub(super) fn run_mirror(
     report.index_refreshed = outcome.index_refreshed;
     report.retried = outcome.retried;
     report.commit = outcome.commit.clone();
+    if removing {
+        // The drop is the one thing outside the registry, so it is
+        // emptied only once the commit above has stopped advertising the
+        // versions whose payloads these are.
+        let drops = prune::remove_payloads(ctx, &pruned)?;
+        report.removed = Some(u32::try_from(outcome.removed + drops).unwrap_or(u32::MAX));
+    }
     for (row, item) in report.versions.iter_mut().filter_map(|row| {
         outcome
             .items
@@ -467,69 +511,6 @@ fn commit_message(source: &RegistrySection, items: &[PublishItem]) -> String {
         source.name,
         redact_credentials(&source.url)
     )
-}
-
-fn render(ctx: &output::Context, report: &RegistryMirrorReport) -> Result<()> {
-    if ctx.is_json() {
-        return ctx.emit_json(report);
-    }
-    let count = |action: MirrorAction| {
-        report
-            .versions
-            .iter()
-            .filter(|v| v.action == action)
-            .count()
-    };
-    for row in &report.versions {
-        if row.action == MirrorAction::Unchanged {
-            continue;
-        }
-        let verb = action_word(&row.action, report.dry_run);
-        let note = row
-            .note
-            .as_deref()
-            .map(|n| format!(" — {n}"))
-            .unwrap_or_default();
-        ctx.step(&format!("{}@{} {verb}{note}", row.package, row.version));
-    }
-    let commit = report
-        .commit
-        .as_deref()
-        .map(|c| format!(", commit {c}"))
-        .unwrap_or_default();
-    ctx.summary(&format!(
-        "\nvibe registry mirror: {} {}, {} {}, {} unchanged, {} snapshot(s) left as they are, \
-         {} alarm(s), {} unavailable; {} fact(s) recorded{commit}.",
-        count(MirrorAction::Copied),
-        if report.dry_run { "to copy" } else { "copied" },
-        count(MirrorAction::Updated),
-        if report.dry_run {
-            "to update"
-        } else {
-            "updated"
-        },
-        count(MirrorAction::Unchanged),
-        count(MirrorAction::SnapshotDiffers),
-        count(MirrorAction::Alarm),
-        count(MirrorAction::Unavailable),
-        report.facts_recorded,
-    ));
-    Ok(())
-}
-
-fn action_word(action: &MirrorAction, dry_run: bool) -> &'static str {
-    match (action, dry_run) {
-        (MirrorAction::Copied, true) => "would be copied",
-        (MirrorAction::Copied, false) => "copied",
-        (MirrorAction::Updated, true) => "would be updated (snapshot moved at the source)",
-        (MirrorAction::Updated, false) => "updated (snapshot moved at the source)",
-        (MirrorAction::Unchanged, _) => "unchanged",
-        (MirrorAction::SnapshotDiffers, _) => {
-            "differs at the source (snapshot; left as it is — pass --update-snapshots)"
-        }
-        (MirrorAction::Alarm, _) => "ALARM",
-        (MirrorAction::Unavailable, _) => "unavailable at the source",
-    }
 }
 
 /// The fetched copy of a version and where it came from.

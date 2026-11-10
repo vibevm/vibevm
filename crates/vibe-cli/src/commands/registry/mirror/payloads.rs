@@ -27,7 +27,6 @@ use vibe_registry::templates::FullRender;
 
 use super::selection::{PayloadPlan, Selection, TemplateSelection};
 use super::templates::SnapshotOutcome;
-use crate::output;
 
 const SPEC: &str = "spec://org.vibevm.core/vibevm/common/PROP-075#MIRROR-PAYLOAD-PROJECTION";
 const BUDGET: &str = "spec://org.vibevm.core/vibevm/common/PROP-075#MIRROR-PAYLOAD-BUDGET";
@@ -409,83 +408,14 @@ pub(super) fn fetch(
     Ok(written)
 }
 
-/// The human form of the template rows: one node per row, its versions as
-/// children, in the display language `#MIRROR-DRY-RUN-OUTPUT` asks for.
-///
-/// It is drawn here rather than where the snapshot is written because a
-/// row's payload facts — the input count, the bytes already in the drop,
-/// the bytes to fetch, the total and the inputs of unknown size — are
-/// only known once the projection exists, and a row must be drawn once,
-/// not twice.
-pub(super) fn report(ctx: &output::Context, rows: &[SnapshotOutcome], projection: &Projection) {
-    if ctx.is_json() {
-        return;
-    }
-    for outcome in rows {
-        let span = match (outcome.versions.first(), outcome.versions.last()) {
-            (Some(first), Some(last)) if first != last => format!(" ({first} … {last})"),
-            (Some(only), _) => format!(" ({only})"),
-            _ => String::new(),
-        };
-        ctx.step(&format!(
-            "template {}@{}: {} version(s) selected{span} — {} to snapshot, {} already there",
-            outcome.package,
-            outcome.revision,
-            outcome.versions.len(),
-            outcome.added,
-            outcome.unchanged
-        ));
-        for (name, resolved) in &outcome.channels {
-            match resolved {
-                Some(version) => ctx.step(&format!("  channel {name} → {version}")),
-                None => ctx.step(&format!(
-                    "  channel {name} → nothing (the template declares no such channel)"
-                )),
-            }
-        }
-        if !outcome.installers.is_empty() {
-            ctx.step(&format!(
-                "  installer option(s) kept: {}",
-                outcome.installers.join(", ")
-            ));
-        }
-        for (version, option, missing) in &outcome.dropped {
-            ctx.step(&format!(
-                "  {version}: installer option `{option}` dropped — upstream publishes no \
-                 {missing}"
-            ));
-        }
-        let Some(row) = projection.row(&outcome.package) else {
-            continue;
-        };
-        for version in &row.versions {
-            if version.inputs.is_empty() {
-                continue;
-            }
-            let options: Vec<&str> = version
-                .inputs
-                .iter()
-                .map(|input| input.option.as_str())
-                .collect();
-            ctx.step(&format!(
-                "  {}: {} payload input(s) — {}",
-                version.version,
-                version.inputs.len(),
-                options.join(", ")
-            ));
-        }
-        let facts = row.facts();
-        let lower = match facts.unknown {
-            0 => String::new(),
-            unknown => format!(" (a lower bound: {unknown} input(s) declare no size)"),
-        };
-        ctx.step(&format!(
-            "  payloads: {} input(s), {} already in the drop ({} byte(s)), {} byte(s) to fetch, \
-             {} byte(s) in all{lower}",
-            facts.inputs, facts.present, facts.present_bytes, facts.fetch_bytes, facts.total_bytes
-        ));
-    }
-}
+/// Both answers a projection owes — the document's `templates[]` and the
+/// row's human form — live beside it rather than in it: they are the one
+/// place every fact of a `[[template]]` row comes together, and neither
+/// decides anything.
+#[path = "payloads/report.rs"]
+mod report;
+
+pub(super) use report::{rows, show};
 
 #[cfg(test)]
 #[path = "payloads/tests.rs"]

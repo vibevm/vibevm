@@ -17,6 +17,13 @@ use std::fs;
 
 use common::UserScratch;
 use common::payload_mirror::{Fixture, PACKAGE, PAYLOAD_BYTES, mirror, ok, refusal, vibe, walk};
+use vibe_wire::generated::registry_mirror_report::RegistryMirrorReport;
+
+/// Every `--json` document here goes through its generated reader before
+/// anything is asserted about it (PROP-044 §8).
+fn report(stdout: &str) -> serde_json::Value {
+    common::wire::report::<RegistryMirrorReport>(stdout)
+}
 
 #[test]
 #[specmark::spec(
@@ -88,9 +95,35 @@ fn an_input_already_in_the_drop_is_present_and_a_wrong_one_stops_the_run() {
     // A second run finds it with the right digest, counts it present and
     // does not fetch it again.
     let again = UserScratch::new();
-    let report: serde_json::Value =
-        serde_json::from_str(&ok(&mirror(&again, &fixture, &config, &[]))).unwrap();
-    assert_eq!(report["ok"], true, "{report}");
+    let answer = report(&ok(&mirror(&again, &fixture, &config, &[])));
+    assert_eq!(answer["ok"], true, "{answer}");
+    // `templates[]` carries the row's facts: one version selected, none
+    // added this time, and its one input already in the drop.
+    let row = &answer["templates"][0];
+    assert_eq!(row["package"], PACKAGE, "{answer}");
+    assert_eq!(row["revision"], "1.0.0", "{answer}");
+    assert_eq!(row["selected"], 1, "{answer}");
+    assert_eq!(row["snapshotted"], 0, "{answer}");
+    assert_eq!(row["unchanged"], 1, "{answer}");
+    assert_eq!(row["first"], "3.1.0", "{answer}");
+    assert_eq!(row["last"], "3.1.0", "{answer}");
+    assert_eq!(row["installers"][0], "linux-x64", "{answer}");
+    assert_eq!(row["versions"][0]["version"], "3.1.0", "{answer}");
+    assert_eq!(row["versions"][0]["present"], 1, "{answer}");
+    assert_eq!(row["payloads"]["inputs"], 1, "{answer}");
+    assert_eq!(row["payloads"]["present"], 1, "{answer}");
+    assert_eq!(row["payloads"]["present_bytes"], PAYLOAD_BYTES, "{answer}");
+    assert_eq!(row["payloads"]["fetch_bytes"], 0, "{answer}");
+    assert_eq!(row["payloads"]["unknown"], 0, "{answer}");
+    assert_eq!(
+        row["payloads"]["into"],
+        fixture.drop().display().to_string(),
+        "{answer}"
+    );
+    // No prune was asked for, so the document carries neither array
+    // member — exactly as every mirror report that predates the feature.
+    assert!(answer.get("pruned").is_none(), "{answer}");
+    assert!(answer.get("removed").is_none(), "{answer}");
     assert_eq!(projected.metadata().unwrap().modified().unwrap(), written);
 
     // A file a human put there with the wrong bytes is never replaced.
@@ -235,5 +268,114 @@ fn a_client_inside_the_closed_network_installs_from_the_projected_drop() {
     assert_eq!(
         fs::read(&installed).unwrap(),
         fs::read(fixture.dist().join("v2.4.0/tool-2.4.0-src.bin")).unwrap()
+    );
+}
+
+#[test]
+#[specmark::spec(verifies = "spec://org.vibevm.core/vibevm/common/PROP-075#MIRROR-PRUNE")]
+fn pruning_a_narrowed_template_row_drops_its_snapshot_version_and_its_payloads() {
+    let user = UserScratch::new();
+    let fixture = Fixture::new();
+    let wide = fixture.config(&format!(
+        "schema = 1\n[[template]]\npackage = '{PACKAGE}'\nversions = ['>=2']\n\
+         installers = ['linux-x64']\npayloads = true\n[payloads]\ninto = '{}'\n",
+        fixture.drop().display()
+    ));
+    ok(&mirror(&user, &fixture, &wide, &[]));
+    let snapshot = fixture.target().join("_index/templates").join(PACKAGE);
+    assert!(snapshot.join("digests/2.4.0").is_file());
+    assert!(snapshot.join("digests/3.1.0").is_file());
+    assert!(fixture.projected("2.4.0", "linux-x64").is_file());
+
+    // Narrowing alone deletes nothing, snapshot or payload.
+    let narrow = fixture.one_version("3.1.0", None, "'linux-x64'");
+    ok(&mirror(&UserScratch::new(), &fixture, &narrow, &[]));
+    assert!(snapshot.join("digests/2.4.0").is_file());
+    assert!(fixture.projected("2.4.0", "linux-x64").is_file());
+
+    // The plan names both, and `--yes` removes both: the snapshot's
+    // digest inside the registry's commit, the drop directory after it.
+    let output = mirror(
+        &UserScratch::new(),
+        &fixture,
+        &narrow,
+        &["--prune", "--prune-payloads", "--yes"],
+    );
+    let answer = report(&ok(&output));
+    let kinds: Vec<&str> = answer["pruned"]
+        .as_array()
+        .unwrap_or_else(|| panic!("{answer}"))
+        .iter()
+        .map(|row| row["kind"].as_str().unwrap())
+        .collect();
+    assert_eq!(kinds, ["snapshot", "payload"], "{answer}");
+    assert_eq!(answer["pruned"][0]["version"], "2.4.0", "{answer}");
+    assert_eq!(
+        answer["pruned"][0]["path"],
+        format!("_index/templates/{PACKAGE}/digests/2.4.0"),
+        "{answer}"
+    );
+    assert_eq!(answer["removed"], 2, "{answer}");
+    assert!(!snapshot.join("digests/2.4.0").exists());
+    assert!(snapshot.join("digests/3.1.0").is_file());
+    assert!(!fixture.projected("2.4.0", "linux-x64").exists());
+    assert!(fixture.projected("3.1.0", "linux-x64").is_file());
+
+    // The record and its `versions.json` agree with what is left, so a
+    // client never reads a row whose digest file went.
+    let record: toml::Value =
+        toml::from_str(&fs::read_to_string(snapshot.join("snapshot.toml")).unwrap()).unwrap();
+    let kept: Vec<&str> = record["version"]
+        .as_array()
+        .unwrap()
+        .iter()
+        .map(|row| row["version"].as_str().unwrap())
+        .collect();
+    assert_eq!(kept, ["3.1.0"]);
+    let envelope: serde_json::Value =
+        serde_json::from_str(&fs::read_to_string(snapshot.join("versions.json")).unwrap()).unwrap();
+    let document = envelope["document"].as_str().unwrap();
+    assert!(document.contains("v3.1.0"), "{document}");
+    assert!(!document.contains("v2.4.0"), "{document}");
+    assert_eq!(
+        envelope["sha256"].as_str().unwrap(),
+        format!(
+            "{:x}",
+            <sha2::Sha256 as sha2::Digest>::digest(document.as_bytes())
+        )
+    );
+}
+
+#[test]
+#[specmark::spec(verifies = "spec://org.vibevm.core/vibevm/common/PROP-075#MIRROR-PRUNE")]
+fn a_snapshot_the_selection_no_longer_names_at_all_goes_whole() {
+    let user = UserScratch::new();
+    let fixture = Fixture::new();
+    ok(&mirror(
+        &user,
+        &fixture,
+        &fixture.one_version("3.1.0", None, "'linux-x64'"),
+        &[],
+    ));
+    let snapshot = fixture.target().join("_index/templates").join(PACKAGE);
+    assert!(snapshot.join("snapshot.toml").is_file());
+
+    // A selection that names the package only through `[select]` carries
+    // no `[[template]]` row for it, so its snapshot is an orphan.
+    let plain = fixture.config(&format!("schema = 1\n[select]\npackages = ['{PACKAGE}']\n"));
+    ok(&mirror(
+        &UserScratch::new(),
+        &fixture,
+        &plain,
+        &["--prune", "--yes"],
+    ));
+    assert!(!snapshot.exists(), "an orphan snapshot goes whole");
+    // The template package itself is still selected and still there.
+    assert!(
+        fixture
+            .target()
+            .join(PACKAGE)
+            .join("v1.0.0/vibe.toml")
+            .is_file()
     );
 }

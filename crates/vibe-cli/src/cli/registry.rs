@@ -323,6 +323,29 @@ pub struct RegistryMirrorArgs {
     #[arg(long = "config", value_name = "FILE")]
     pub config: Option<PathBuf>,
 
+    /// Remove from the target what the **recorded** selection no longer
+    /// matches: package versions, template snapshot versions, and — with
+    /// `--prune-payloads` — the projected files in the drop. Always a
+    /// two-step: the plan is printed first, one row per removal with its
+    /// reason, and nothing is removed without `--yes` in an unattended
+    /// run or a yes in an attended one. `--dry-run --prune` prints the
+    /// plan and stops. Needs a declared selection (`--config`, or the
+    /// `[select]` the target records): `--package` / `--group` are a
+    /// per-run override and never prune.
+    #[arg(long = "prune")]
+    pub prune: bool,
+
+    /// With `--prune`, also remove the payloads of the dropped versions
+    /// from the `[payloads] into` drop. The drop is outside the registry,
+    /// so it is emptied after the commit that stops advertising them.
+    #[arg(long = "prune-payloads")]
+    pub prune_payloads: bool,
+
+    /// Answer the `--prune` plan's question yes — what an unattended run
+    /// needs in order to remove anything.
+    #[arg(long = "yes")]
+    pub yes: bool,
+
     /// Replace a snapshot (not frozen) version whose content moved at the
     /// source. Without it such a version is reported and left as it is.
     #[arg(long = "update-snapshots")]
