@@ -73,13 +73,14 @@ fn sidecar(extra: &str) -> wire::SystemPromptMeta {
     let inputs = fixture();
     let settings = settings(extra);
     let prefix = compose_prefix(&inputs, &settings).expect("composes");
-    let plan = inputs.plan.resolve_host(settings.host);
+    // The **raw** plan goes in, gates and all: the sidecar applies the
+    // declared host itself, so no caller can forget to.
     compose_sidecar(
         &inputs,
         &settings,
         &prefix,
         SidecarFacts {
-            plan: &plan,
+            plan: &inputs.plan,
             index_bytes: Some(b"schema = 1\n"),
         },
     )
@@ -181,6 +182,23 @@ fn a_fixed_host_records_itself_and_leaves_the_gated_band_empty() {
             .all(|row| row.band == wire::Band::Unconditional)
     );
     assert!(meta.continuation.iter().all(|row| row.when.is_none()));
+    // Resolving twice is a no-op, so a caller that already resolved the plan
+    // for the lane may hand either one over.
+    let settings = settings("[system_prompt]\nhost = \"linux\"\n");
+    let inputs = fixture();
+    let prefix = compose_prefix(&inputs, &settings).expect("composes");
+    let resolved = inputs.plan.resolve_host(settings.host);
+    let twice = compose_sidecar(
+        &inputs,
+        &settings,
+        &prefix,
+        SidecarFacts {
+            plan: &resolved,
+            index_bytes: Some(b"schema = 1\n"),
+        },
+    )
+    .expect("builds");
+    assert_eq!(twice.continuation, meta.continuation);
 }
 
 #[test]

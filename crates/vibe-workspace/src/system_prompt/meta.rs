@@ -42,9 +42,12 @@ pub const SIDECAR_PROTOCOL: &str = "vibe-system-prompt/1";
 
 /// What a sidecar needs beyond the inputs and the composed bytes.
 pub struct SidecarFacts<'a> {
-    /// The continuation plan **after** the declared host resolved its `os:`
-    /// rows — so a fixed-host sidecar records an empty gated band, which is
-    /// the fact `prepare` acts on.
+    /// The continuation plan **as captured**, gates and all. The declared
+    /// host is applied here rather than by the caller: a fixed-host prefix
+    /// must record an empty gated band, and a caller that forgot to resolve
+    /// would publish a gated row under a fixed host — a contradiction no
+    /// reader of the artifact could detect. Resolving twice is a no-op, so a
+    /// caller that already resolved for the lane may pass either.
     pub plan: &'a ContinuationPlan,
     /// The generated `INDEX.md` bytes this generation publishes, whose
     /// digest fixes the plan's identity and order. `None` when this
@@ -62,6 +65,7 @@ pub fn compose_sidecar(
     prefix: &ComposedPrefix,
     facts: SidecarFacts<'_>,
 ) -> Result<wire::SystemPromptMeta, WorkspaceError> {
+    let plan = facts.plan.resolve_host(settings.host);
     Ok(wire::SystemPromptMeta {
         protocol: SIDECAR_PROTOCOL.to_owned(),
         layer: wire::Layer::Project,
@@ -107,8 +111,7 @@ pub fn compose_sidecar(
             })
             .collect::<Result<Vec<_>, WorkspaceError>>()?,
         index_sha256: facts.index_bytes.map(sha256_hex),
-        continuation: facts
-            .plan
+        continuation: plan
             .rows
             .iter()
             .map(|row| wire::ContinuationRow {
