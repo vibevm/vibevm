@@ -2766,3 +2766,12 @@ structure, and it goes when the file does.
 | @fact:B252-SEVERITY **severity** | P3 — an optimisation idea; nothing is broken without it. |
 | @fact:B252-DISPOSITION **disposition** | `candidate` — a separate campaign after SYS-PROMPT: it needs PROP-076's bands and breakpoints (P3–P5) and the real cache-hit metrics of its SYS-ADAPTERS phase to prove the band saves rather than costs. Not part of PROP-076. |
 | @fact:B252-FILED **filed by** | Owner idea in the SYS-PROMPT discussion, 2026-11-10. |
+
+## B-253 — Node.js built from source as an installer option {#b-253}
+
+| field | value |
+|---|---|
+| @fact:B253-WHAT **what** | `org.vibevm.node/node` publishes only upstream's prebuilt archives, so nvm's `install -s` (build from source) and `-j <N>` (build parallelism) have nothing to map to (PROP-075 `#VIBENVM-MAPPING`). A source-build installer option, selected with `--installer`, would build a version from the release's source tarball, verified against its `SHASUMS256.txt`, on hosts and architectures with no prebuilt archive; the parallelism would be a declared option parameter, not a shim flag. |
+| @fact:B253-SEVERITY **severity** | P3 — prebuilt archives cover every supported target; source builds serve rare hosts. |
+| @fact:B253-DISPOSITION **disposition** | `candidate` — owner decision 2026-11-10: recorded, not done now; until then `-s`/`-b`/`-j` stay owner-approved exclusions of the vibenvm differential suite. |
+| @fact:B253-FILED **filed by** | Owner, APP-VERSIONS P7 exclusion review, 2026-11-10. |
