@@ -323,7 +323,21 @@ means per-machine or per-day content.
   with a 250,421-character value built from the real `STATIC.xml`, using the
   offline renderer `codex debug prompt-input`:
   - Profile file `$CODEX_HOME/<name>.config.toml` selected with `-p <name>`:
-    arrived intact, head and tail canaries present **[V]**.
+    arrived intact, head and tail canaries present **[V — version-scoped, and
+    the spelling matters]**.
+    **Demoted from an unqualified [V] on 2026-11-10 (P6), and re-established
+    with the correct spelling.** The key must be at the profile file's **top
+    level**. `-p <name>` *layers* that file on top of the base user config —
+    codex-cli's own help text for the flag — so inside a
+    `[profiles.<name>]` table the key is an ordinary nested table the program
+    loads and never reads. P5 wrote the table form and measured nothing
+    arriving on codex-cli 0.167.0, which is what `LOG.md`'s falsification
+    recorded; top-level on the same version, a 314,270-byte value arrives
+    byte-equal and exactly once. Because the failure of this carrier is
+    silent — no warning, no error, exit 0 — the claim is scoped to the
+    version it was measured on, and `vibe agent codex` refuses an unverified
+    one (`PROP-076#SYS-CODEX-PROFILE-TOP-LEVEL`). Verified version:
+    **codex-cli 0.167.0**.
   - Project `.codex/config.toml` in a **trusted** project: arrived intact
     **[V]**. In an untrusted project it was silently not loaded, and
     `-c 'projects."<path>".trust_level="trusted"'` did not change that **[V]**.
@@ -358,7 +372,11 @@ means per-machine or per-day content.
   and the tail canary is dropped under the default limit; both arrive under
   `-c project_doc_max_bytes=262144`.
 - **Do not use `model_instructions_file`:** it replaced the base instructions
-  entirely in the rendered prompt **[V]**.
+  entirely in the rendered prompt **[V]**. P6 reconsidered it as a carrier —
+  the file would hold Codex's own base instructions followed by the lane, so
+  nothing is lost — and rejected it: correctness would then depend on a
+  cached copy of another program's prompt staying correct across its
+  upgrades, while the layered profile file loses nothing by construction.
 - **Cache:** automatic prefix caching **[R]**. Session logs carry
   `cached_input_tokens` and `cache_write_input_tokens` in `token_count` events
   **[V: grep of a local rollout file]**. The string `prompt_cache_key` is in the
@@ -531,7 +549,10 @@ changing the first.*
     `--exclude-dynamic-system-prompt-sections`. Refuses when the user's
     arguments already contain `--append-system-prompt-file`, `--system-prompt`
     or `--system-prompt-file`.
-  - Kind `codex`: writes the profile file, adds `-p <profile>`.
+  - Kind `codex`: writes the profile file with `developer_instructions` at
+    its **top level**, adds `-p <profile>` and
+    `-c project_doc_max_bytes=<declared>`, and refuses an installed codex-cli
+    version whose carrier this build has not verified.
   - A kind in `read` or `import` mode: starts it unchanged and says so in one
     line.
 - `vibe agent list` — prints each launcher's name, kind, command, config

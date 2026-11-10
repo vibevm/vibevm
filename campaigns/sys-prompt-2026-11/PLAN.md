@@ -1120,14 +1120,17 @@ transaction, and publish staging stops **copying** the development tree's
 generated artifacts into a staged package — which was the real defect there,
 not the missing generation.
 
-**One design claim was falsified.** `HARNESS-DELIVERY.md` §5 records as **[V]**
-that a Codex profile file carries `developer_instructions`; on codex-cli
-0.167.0 it does not, proved offline with `codex debug prompt-input`. The
-Codex launch tier is implemented as specified and does not deliver on that
-version; the Claude Code tier is proved against a shim. Owner decision, in
-`LOG.md`'s open issue 1.
+**One design claim was falsified — and P6 found it was the spelling, not the
+carrier.** `HARNESS-DELIVERY.md` §5 records as **[V]** that a Codex profile
+file carries `developer_instructions`; written inside a `[profiles.<name>]`
+table it does not on codex-cli 0.167.0, proved offline with `codex debug
+prompt-input`. At the file's **top level** on the same version it does, which
+is what `-p`'s "layer this file on top of the base user config" means. Fixed
+in P6 (`PROP-076#SYS-CODEX-PROFILE-TOP-LEVEL`), with the claim scoped to the
+verified version because the failure is silent. The Claude Code tier was
+unaffected and is proved against a shim.
 
-### P6 — adapters: the request envelope and cache diagnostics — **M**
+### P6 — adapters: the request envelope and cache diagnostics — **M** — **DONE 2026-11-10**
 
 **Goal.** One supported adapter path places the bands in the right roles, in
 the right order, exactly once — and reads the provider's own usage counters
@@ -1224,6 +1227,43 @@ therefore claims only what it proves — the bytes vibe produced — and
 `PROP-076#SYS-CACHE-FACTS` states the rest as provider-owned.
 
 **Parallel.** Needs P5. Independent of P7's fixtures but feeds its matrix.
+
+**As built, 2026-11-10.** The envelope is `vibe prompt capture`, a sixth verb,
+rather than a projection inside `vibe prompt prepare --json` — `prepare`
+promises "materials and observations, never a ready-to-send request" and the
+envelope is the request, and `SP-FMT-011` already named a separate format
+record. `prepare`'s document is untouched, epoch and all. One new format
+(`cli-prompt-capture`) and one amended (`SP-FMT-109`, a new optional
+`[launchers.<name>] harness_version`).
+
+Three things differ from the plan and each has its reason in `LOG.md`.
+**There is no `ToolRef` list to fill and no `tools` the adapter contributes**;
+what the plan wanted from that field is the tool block's *position*, which is
+declared (`before_instructions`) because a provider's cache hierarchy puts
+tools ahead of the instructions and a runner that placed them after the prefix
+would break its own cache entry on every tool edit. **`CacheDiagnostics` does
+not carry a `source: ProviderUsage` value** — it carries the provider spelling
+it was read with, and the type-level guarantee the plan asked for is delivered
+by private fields plus a single constructor that takes a `ProviderUsage` whose
+own single constructor parses a response. And **a counter the provider did not
+report is absent rather than present-and-zero**: zero is a measurement, so an
+OpenAI-compatible record reports no uncached figure (its prompt total contains
+the cached part, and the difference would be arithmetic) while an Anthropic one
+does.
+
+The envelope also admits each band's bytes **only against the digest the
+preparation witnessed**, which the plan did not ask for: a file edited between
+`prepare` and the envelope is a refusal, because the whole value of a
+witnessed band is that the bytes sent are the bytes measured.
+
+Delivered alongside, and the reason this phase also touched the launch tier:
+**P5's falsified Codex carrier was fixed rather than left open**
+(`PROP-076#SYS-CODEX-PROFILE-TOP-LEVEL`). And the open item P5 left — a test
+that plants a template on a **pending-native** node and proves the *replay*
+seam publishes the prefix — is
+`replay_prepare/prompt_tests.rs`, which asserts on digests rather than on
+existence (the pending pass has already published a prefix of its own) and
+fails when the prompt member or its selector is dropped.
 
 ### P7 — qualify: differential boot parity and the matrix — **L**
 

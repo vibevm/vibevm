@@ -170,9 +170,12 @@ Status: **delivered 2026-11-10** (phase P4), with the ownership-conflict refusal
 
 ## SP-FMT-011 — the adapter request capture and its cache diagnostics (Phase 6)
 
-Status: **planned**.
+Status: **delivered 2026-11-10** (phase P6), as `vibe prompt capture`.
 
-- New record `[format.cli-prompt-capture]`, epoch **1**, `schema = "schemas/prompt_request_capture.jtd.json"` (new), `recoverable = true`, `foreign_parsers = "ours"`, `corpus = "none"`, `sunset = "none"`.
+- New record `[format.cli-prompt-capture]`, epoch **1**, `schema = "schemas/prompt_request_capture.jtd.json"` (new), `recoverable = true`, `foreign_parsers = "many"`, `corpus = "none"`, `sunset = "none"`. **`many` rather than the planned `ours`**: the envelope exists to be read by a calling program that is not vibe, which is the definition the other five `cli-prompt-*` records already use.
+- **As delivered: a verb, not a field on `prepare`.** The plan put the projection inside `vibe prompt prepare --json`. `prepare`'s own contract is "materials and observations, never a ready-to-send request" and the envelope is precisely the request, so folding it in would have contradicted the sentence that command is built around and moved `vibe-prompt-prepare/1`'s epoch for every consumer that wanted none of it. This id already named a **separate** record, so the separate verb is the shape the format was written for. `vibe prompt capture [--json] [--with-text] [--task <text>] [--session-target os=<name>] [--usage <file>]`; `prepare`'s document is unchanged, epoch and all.
+- **The block bytes are optional and off by default** (`--with-text`). The structure — band, role, path, digest, length, offset — is the answer most callers want, and a runner can read each file itself from the path it names; emitting a 278 KB prefix into every report would make the common case pathological.
+- **`--usage <file>` reads a response the caller already has.** It is the only provider data in the command and it arrives as a file, not as a connection: nothing in this campaign sends a request.
 - The envelope a supported adapter builds from `SP-FMT-007`'s materials: the instruction blocks in order, the tool block's position, the message bands, and the declared cache-boundary offsets. It is what the qualification scenarios assert against a **local fake provider**, offline.
 - **A filename chooses no API role.** The adapter places the project's trusted instructions explicitly in a supported instruction role (`system`, `developer`, or the equivalent provider field), preserving mandatory external instructions and the user-set boundaries that already apply. The elevation is acknowledged, not assumed away: project instructions, package boot text, examples and operational grants do not acquire provider-level authority by sitting on disk or by being in a file called `SYSTEM.md`, and a text separator inside one message creates no real role boundary.
 - **No double injection.** A supported adapter never injects the prefix and then auto-loads the same entrypoint or lane again; supplied sources are accounted for explicitly, which is the only reason `SP-FMT-009`'s contract can say what it says. The test is that the entrypoint's text appears **exactly once** in the captured request. An agent that does not let its caller control its own prefix or auto-loading is simply not part of the guaranteed integration.
@@ -342,8 +345,25 @@ Status: **delivered 2026-11-10** (phase P4), including this repository's own reg
 
 ## SP-FMT-109 — `[launchers.<name>]` in the user configuration, and `vibe agent <launcher>` (Phase 5)
 
-Status: **delivered 2026-11-10** (phase P5). Design authority:
-`PROP-076#SYS-HARNESS-EXECUTABLE`.
+Status: **delivered 2026-11-10** (phase P5); **amended 2026-11-10** (phase P6)
+with one optional field. Design authority:
+`PROP-076#SYS-HARNESS-EXECUTABLE`, and for the amendment
+`PROP-076#SYS-CODEX-PROFILE-TOP-LEVEL`.
+
+- **Amendment (P6): `[launchers.<name>] harness_version`**, optional, a
+  version string. `<settings>/agents.toml` is a hand-written user file with
+  `deny_unknown_fields`, so a new key is a grammar change and is recorded
+  here; no document that parses today stops parsing, and the field is omitted
+  from serialisation when absent. It exists because the Codex launch carrier
+  is version-scoped and its failure is **silent**: `vibe agent` asks the
+  launcher's program its version and refuses one vibe has not verified, which
+  would leave a user whose Codex is newer than this build with no recourse.
+  The field **names the version the user checked** rather than carrying a
+  boolean, so the override is an attributable measurement and not a switch,
+  and a value that is not a version number is refused by name. It is
+  deliberately **not** in `vibe agent list`'s document: `cli-agent-list` keeps
+  its epoch, and a launcher running on a stated version says so in the note
+  `vibe agent` and `vibe prompt flags` print.
 
 - `[format.cli-agent-list]`, epoch **1 → 1**: one new optional `launchers`
   array, each row naming the launcher, its harness kind, its argv prefix, its

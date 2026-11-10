@@ -1273,3 +1273,180 @@ directory with exactly the four files it had before the opt-in.
    warning; `vibe check`'s own system-prompt check id (`SP-FMT-008`); and the
    entrypoint-copy and harness-version reports of §8.5. Each is a report
    around facts that now exist rather than a new mechanism.
+
+## 2026-11-10 — P6 adapters, and the Codex carrier was the spelling all along
+
+The phase delivered the request envelope and, before it, un-falsified P5's
+`[V]`: Codex's launch tier works, on the carrier the design always named, with
+the key one nesting level higher than P5 wrote it. That is the entry worth
+reading first, because a campaign that records a falsification owes the same
+rigour to its correction.
+
+### The probe, verbatim — `-p` layers a config file, so the key is top-level
+
+Every command below ran with `CODEX_HOME` pointed at a scratch directory under
+`/fast/tmp`, never at the real `~/.codex`, and used **only** `codex debug
+prompt-input`, which renders the model-visible prompt input as JSON and calls
+no model. No `codex exec`, no session, no provider.
+
+The first finding was in the help text, not in a render:
+
+```
+$ codex --help
+  -p, --profile <CONFIG_PROFILE_V2>
+          Layer $CODEX_HOME/<name>.config.toml on top of the base user config
+```
+
+`-p` does not select a `[profiles.<name>]` table — it **layers a whole config
+file**. The program says so again when asked the old way:
+
+```
+$ codex debug prompt-input -c profile=vibeprof "hi"
+Error: legacy `profile = "vibeprof"` config is no longer supported;
+use `--profile vibeprof` with `vibeprof.config.toml` instead
+```
+
+So P5's probe put the key in a nested table inside a file that is itself the
+config. Top-level, in the same file, on the same codex-cli 0.167.0:
+
+```
+$ printf 'developer_instructions = "CANARY_TOP_LEVEL_IN_PROFILE_FILE"\n' \
+    > "$CODEX_HOME/vibeprof.config.toml"
+$ codex -p vibeprof debug prompt-input "hi" | grep -c CANARY_TOP_LEVEL_IN_PROFILE_FILE
+1
+```
+
+Note `-p` **before** the subcommand: `codex debug prompt-input -p …` is
+`error: unexpected argument '-p' found`, which is one reason P5's probe could
+not have reached the layering path. `vibe agent` composes
+`command + flags + user arguments`, so its `-p` lands in exactly that position.
+
+**Position.** The canary is item 2, part 0 — the first part of the second
+developer item, directly behind the ~22 KB base instructions and ahead of
+skills, permissions and collaboration mode. Exactly where
+`HARNESS-DELIVERY.md` §5 said the lane would sit.
+
+**Nothing is lost.** A byte-exact diff of the render with and without the
+layer, over a base `config.toml` carrying `sandbox_mode =
+"danger-full-access"`, differs in **only** the lane's own part and two
+provenance keys (`generic.developer_instructions`, `type:
+developer_instructions`); the base config's own effect is still visible in the
+layered render. Layering, not replacing, is the whole reason this carrier
+beats the alternatives.
+
+**At the real size.** A 314,270-byte value built from this repository's
+`STATIC.xml`, emitted as a TOML basic string by the same escaping rules vibe
+uses, parsed back byte-equal by `tomllib`, rendered in 0.09 s:
+
+```
+lane bytes 314270 · profile file bytes 319380 · parses back byte-equal: True
+parts byte-equal to the whole 312 KB lane: [(2, 0)]
+head canary count: 1 · tail canary count: 1
+```
+
+**End to end, with vibe's own bytes.** `vibe agent codex` on a scratch project,
+with a shim `codex` on `PATH` so nothing real started, wrote
+`$CODEX_HOME/vibe-proj.config.toml` and passed `-p vibe-proj -c
+project_doc_max_bytes=32768`. The real codex-cli 0.167.0 then read **that
+file**: one part byte-equal to the `AGENT-LANE.md` vibe composed, at item 2
+part 0, occurring once in the whole render.
+
+### Why not the two candidates the task named
+
+- **A launch-scoped overlay `CODEX_HOME`** — rejected. The real home holds
+  SQLite databases, lock files and live session state. Symlinking a database
+  file splits it from its `-wal`/`-shm` siblings; copying `auth.json`
+  desynchronises token refresh; and an unprivileged symlink does not exist on
+  Windows, so the mechanism would differ per platform. It also answers a
+  question nobody needs to ask, now that the supported carrier loses nothing.
+- **`model_instructions_file` with Codex's base instructions prepended** —
+  rejected, though it would work. It **replaces** the base instructions, so
+  correctness would rest on a cached copy of another program's prompt staying
+  correct across its upgrades. The layered profile file loses nothing *by
+  construction*; this loses nothing only as long as the cache is right.
+
+### The version is part of the claim, and the refusal says so
+
+A configuration key the program does not read produces no warning, no error
+and no non-zero exit — the session starts, looks exactly right, and has no boot
+lane in it. P5's measurement is itself the evidence that this key's behaviour
+can change under us. So the carrier is claimed for **codex-cli 0.167.0** and
+`vibe agent <codex launcher>` / `vibe prompt flags --harness codex` refuse any
+other version, naming it, naming the verified one, naming
+`codex debug prompt-input` as the offline re-check, and naming
+`[launchers.<name>] harness_version`, which records a user's own measurement by
+number rather than switching the gate off. A version that cannot be read at all
+is a **note**: "cannot tell" is not "wrong", and refusing there would break
+machines where nothing is broken. Two probes also shaped this: an unknown
+profile exits 0 in silence (so a missing profile file would deliver nothing,
+quietly — vibe rewrites it at every launch), and `--strict-config` is simply
+unsupported for `codex debug`, so it is no help as a guard.
+
+### P6 — four things the plan did not settle, decided here
+
+1. **The envelope is a verb (`vibe prompt capture`), not a field on
+   `prepare`.** `prepare`'s module doc promises "materials and observations,
+   never a ready-to-send request"; the envelope is the request. `SP-FMT-011`
+   already named a separate format record, and `vibe-prompt-prepare/1` keeps
+   its epoch for consumers that want none of this.
+2. **There are no tools to contribute, so the *position* is the fact.**
+   `before_instructions`, because every provider whose cache hierarchy was
+   checked puts the tool list first; a runner that placed tools after the
+   prefix would invalidate its own cache entry on every tool edit. Declaring
+   it is the difference between a stated design and an omission.
+3. **An absent counter is absent, not zero.** Zero is a measurement. So the
+   diagnostics report an uncached figure for a provider that reports one
+   (Anthropic's `input_tokens` already excludes the cached part) and **none**
+   for an OpenAI-compatible record, whose prompt total contains the cached
+   part — the difference would be arithmetic published in a field whose whole
+   contract is that a provider said it.
+4. **A band's bytes are admitted only against the preparation's digest.** Not
+   asked for by the plan. A file edited between `prepare` and the envelope is
+   a refusal naming it, because the point of a witnessed band is that the
+   bytes sent are the bytes measured.
+
+The type-level guarantee the plan wanted is the compiler's: `CacheDiagnostics`
+has private fields and one constructor, which takes a `ProviderUsage` whose own
+only constructor parses a provider response. The shortest path from a guess to
+a diagnostic is a compile error.
+
+### The replay seam now has the test P5 left open
+
+`replay_prepare/prompt_tests.rs` plants an authored `SYSTEM-TEMPLATE.md` and an
+entrypoint on a node whose own compile is **pending**, seals the replay, then
+prepares and publishes it. Two facts a dropped prompt member cannot satisfy:
+the sidecar's `role = "lane"` witness equals the digest of the lane *this*
+replay published and differs from the pending one, and the managed block in
+`AGENTS.md` carries that lane's 12-digit segment id. Checked by mutation —
+making `prompt::for_lane` return `Ok(None)` for a node fails the first
+assertion.
+
+Two fixture facts worth not re-deriving: a node with **only its own authored
+boot** publishes no `STATIC.*` at all (every own row is forced dynamic, spike
+S3), so there is no lane for a replay to change and the test needs a graph with
+static contributions; and the native compile extension must sit on the **root**
+(`native_graph_full(COMPILE_NATIVE, "", "", "")`) — on a unit it is that unit's
+lane that changes, while the root's static closure comes out byte-identical and
+the test would assert nothing.
+
+### Open issues this phase leaves
+
+1. **The verified-version list has exactly one entry.** The next codex-cli
+   release refuses until someone runs the probe above and either extends
+   `CODEX_VERIFIED_VERSION` or states `harness_version` in their own launcher
+   table. That is the intended trade — a silent non-delivery is worse than a
+   refusal — but it is a maintenance obligation, not a free property.
+2. **`vibe prompt flags --harness codex` now spawns `codex --version`.** It is
+   the second effect a printing verb has beyond reading files (`check`'s `git
+   ls-files` was the first), it is the `--version`-only probe
+   `HARNESS-DELIVERY.md` §8.5 sanctions, and it is what makes the printed flags
+   honest. Recorded rather than hidden.
+3. **The envelope's provider mapping is the runner's.** vibe names the *kind*
+   of role (`instruction`) and the order; which field carries it — `system`,
+   `developer`, or a provider-specific one — is the calling program's mapping,
+   and the integration tests make it themselves. An envelope right against a
+   fake provider can still be lowered wrongly against a real one, which is the
+   risk the plan named and this phase does not remove.
+4. **No cache was measured.** Deliberately, and `#SYS-CACHE-FACTS` /
+   `#SYS-CACHE-ECONOMICS` keep it that way: a saving needs a separate,
+   separately authorised provider measurement.
