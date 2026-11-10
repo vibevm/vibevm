@@ -33,6 +33,7 @@ use specmark::verifies;
 use tempfile::tempdir;
 use vibe_core::Group;
 use vibe_core::manifest::HooksDecl;
+use vibe_core::trust::TrustPolicy;
 
 /// Probe that reports a fixed set of interpreters as present.
 struct FakeProbe {
@@ -88,13 +89,22 @@ fn pre_hook() -> HooksDecl {
     r = 1
 )]
 fn trust_matrix() {
-    let allowed = vec!["org.vibevm".to_string()];
+    // The allow-list is the shared base list vibe ships, not a constant of
+    // this module: a subtree, so every group under `org.vibevm.*` is
+    // trusted (owner decision 2026-11-10, PROP-065 `#ordinary-trust`).
+    let allowed = TrustPolicy::base();
     let vibe = org("org.vibevm");
+    let nested = org("org.vibevm.ai-native");
     let other = org("org.other");
-    // Allow-listed group runs with no prompt, even non-interactively.
+    // An allow-listed group runs with no prompt, even non-interactively.
     assert_eq!(
         decide_trust(&vibe, &allowed, false, false),
         HookTrust::Allowed
+    );
+    assert_eq!(
+        decide_trust(&nested, &allowed, false, false),
+        HookTrust::Allowed,
+        "the base list is a subtree, so a group under it is allow-listed too",
     );
     // Non-allow-listed needs consent when interactive.
     assert_eq!(
@@ -125,7 +135,7 @@ fn hook_policy_maps_allowed_to_run_and_the_rest_to_skip() {
     let other = org("org.other");
 
     let allowlisted = HookPolicy {
-        allowed_groups: vec!["org.vibevm".to_string()],
+        trust: TrustPolicy::trusting(["org.vibevm"]).unwrap(),
         allow_hooks: false,
     };
     assert_eq!(allowlisted.trust_for(&vibe), HookTrust::Allowed);
@@ -134,7 +144,7 @@ fn hook_policy_maps_allowed_to_run_and_the_rest_to_skip() {
 
     // `--allow-hooks` runs every group's hooks regardless of the list.
     let force = HookPolicy {
-        allowed_groups: Vec::new(),
+        trust: TrustPolicy::EMPTY,
         allow_hooks: true,
     };
     assert_eq!(force.trust_for(&other), HookTrust::Allowed);

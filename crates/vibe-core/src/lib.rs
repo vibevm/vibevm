@@ -40,6 +40,7 @@ pub mod settings;
 pub mod site_profile;
 pub mod timestamp;
 pub mod toml_preserve;
+pub mod trust;
 pub mod user_config;
 pub mod values;
 pub mod visibility;

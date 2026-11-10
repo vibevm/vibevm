@@ -74,7 +74,8 @@ pub enum Error {
         "`{package}` declares installation contributions and its group `{group}` is not trusted to run them: \
          {reason}; nothing was run ({contributions}) (violates REQ \
          spec://org.vibevm.core/vibevm/common/PROP-065#ordinary-trust; fix: add `{group}` to trusted_groups in \
-         agents.toml, or rerun with --assume-yes)"
+         <settings>/agents.toml — and check that no untrusted_groups entry of that file or of the site \
+         profile covers it — or rerun with --assume-yes)"
     )]
     SlotConsentRequired {
         package: String,

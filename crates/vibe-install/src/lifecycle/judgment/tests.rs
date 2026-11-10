@@ -1,9 +1,11 @@
 //! The ordinary plane's judgment and its trust policy, decided without a
 //! filesystem, a process or a prompt.
 
-use super::*;
 use specmark::verifies;
 use vibe_core::manifest::ParamEquals;
+use vibe_core::trust::TrustPolicy;
+
+use super::*;
 
 fn host(commands: &'static [&'static str]) -> SlotJudgmentContext {
     fn cargo_only(name: &str) -> bool {
@@ -100,18 +102,30 @@ fn an_unmet_need_is_named_and_a_met_one_is_not() {
 
 #[test]
 #[verifies("spec://org.vibevm.core/vibevm/common/PROP-065#ordinary-trust")]
-fn the_trusted_group_match_is_the_exact_one_agent_steps_use() {
+fn the_trusted_group_match_is_the_shared_one_agent_steps_use() {
     let context = SlotJudgmentContext {
-        trusted_groups: vec!["org.example".into(), "org.vibevm".into()],
+        trust: TrustPolicy::trusting(["org.example", "org.vibevm"]).unwrap(),
         ..SlotJudgmentContext::consenting()
     };
     assert!(context.trusts("org.example"));
     assert!(context.trusts("org.vibevm"));
-    // No prefix and no glob: a sub-group is a different group, exactly as
-    // PROP-064 `#consent` already decides it.
+    // An exact entry is exactly that group: a sub-group is a different
+    // group unless the entry is written as a subtree.
     assert!(!context.trusts("org.vibevm.ai-native"));
     assert!(!context.trusts("org.exampleX"));
     assert!(!context.trusts("ORG.EXAMPLE"));
+
+    // The base list vibe ships is a subtree, so a dependency of any group
+    // under `org.vibevm.*` runs its contributions unasked — the owner's
+    // decision of 2026-11-10 as this plane sees it.
+    let shipped = SlotJudgmentContext {
+        trust: TrustPolicy::base(),
+        ..SlotJudgmentContext::consenting()
+    };
+    assert!(shipped.trusts("org.vibevm"));
+    assert!(shipped.trusts("org.vibevm.ai-native"));
+    assert!(!shipped.trusts("org.vibevmx"));
+    assert!(!shipped.trusts("org.example"));
 }
 
 #[test]

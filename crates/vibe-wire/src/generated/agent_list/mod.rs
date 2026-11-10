@@ -3,10 +3,11 @@
 use serde::{Deserialize, Serialize};
 use std::collections::BTreeMap;
 
-/// Version 1 listing of the configured agent hooks from vibe agent list
-/// --json: the default definition, the trusted groups, every definition of
-/// <settings>/agents.toml merged with its preset, and the external registration
-/// of this process when one is set.
+/// Version 1 listing of the configured agent hooks from vibe agent list --json:
+/// the default definition, the trusted groups as this user's agents.toml writes
+/// them, the effective trust that decides whether a group's package-authored
+/// code runs unasked, every definition of <settings>/agents.toml merged with
+/// its preset, and the external registration of this process when one is set.
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 pub struct AgentList {
     pub protocol: String,
@@ -18,6 +19,9 @@ pub struct AgentList {
 
     #[serde(default, skip_serializing_if = "Vec::is_empty")]
     pub trusted_groups: Vec<String>,
+
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub trust: Option<Trust>,
 
     pub agents: Vec<Agent>,
 
@@ -80,4 +84,31 @@ pub struct Launcher {
     pub config_dir: Option<String>,
 
     pub source: String,
+}
+
+/// The effective trust of this machine (PROP-065 #ordinary-trust): every entry
+/// of the trusted list with the layer that wrote it, and every entry of the
+/// deny list, which overrides the trusted entries whatever layer wrote either
+/// one. trusted_groups above is the user's own file as written; this is the
+/// resolved answer every consumer reads.
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+pub struct Trust {
+    pub trusted: Vec<TrustEntry>,
+
+    pub untrusted: Vec<TrustEntry>,
+}
+
+/// One written entry: an exact group (org.example) or the subtree org.example.*
+/// that covers the group itself and everything below it. source is base (the
+/// list vibe ships), site (the applied site profile's [trust] table), user
+/// (<settings>/agents.toml) or run (granted for this run alone). overrides, on
+/// a deny entry, names the layers whose trusted entries it takes away.
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+pub struct TrustEntry {
+    pub pattern: String,
+
+    pub source: String,
+
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub overrides: Vec<String>,
 }

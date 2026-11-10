@@ -11,6 +11,7 @@ use anyhow::Result;
 use vibe_app::{
     AgentError, AgentHooks, AgentNotice, AgentPrompt, AgentsConfig, AppError, SelectedAgent,
 };
+use vibe_core::trust::TrustPolicy;
 use vibe_wire::generated::lifecycle::e1::context::RunAgentMode;
 
 use super::display::asking;
@@ -19,7 +20,9 @@ use crate::output;
 
 /// What the agent hooks of one command borrow.
 pub(crate) struct AgentSetup {
-    config: AgentsConfig,
+    /// The effective trust of this run, resolved once from the base list,
+    /// the site profile and `agents.toml` (PROP-065 `#ordinary-trust`).
+    trust: TrustPolicy,
     selected: Option<SelectedAgent>,
     hosted: bool,
     assume_yes: bool,
@@ -32,11 +35,13 @@ impl AgentSetup {
     /// registration > `default`), always from the user's `agents.toml`, so a
     /// project home inherits the user's agents.
     pub(crate) fn new(ctx: &output::Context, flag: Option<&str>, assume_yes: bool) -> Result<Self> {
-        let config = AgentsConfig::load(&global::settings_root()?).map_err(AppError::from)?;
+        let settings = global::settings_root()?;
+        let config = AgentsConfig::load(&settings).map_err(AppError::from)?;
+        let trust = vibe_app::effective_trust(&settings, Some(&config)).map_err(AppError::from)?;
         let external = super::facts::external_agent().map_err(AppError::from)?;
         let selected = vibe_app::select_agent(&config, flag, external).map_err(AppError::from)?;
         Ok(Self {
-            config,
+            trust,
             selected,
             hosted: ctx.agent_mode() == RunAgentMode::Agent,
             assume_yes: assume_yes || ctx.is_unattended(),
@@ -49,7 +54,7 @@ impl AgentSetup {
     pub(crate) fn for_resume(ctx: &output::Context, info: &vibe_app::ResumeInfo) -> Result<Self> {
         if info.cleanup_only {
             return Ok(Self {
-                config: AgentsConfig::default(),
+                trust: TrustPolicy::EMPTY,
                 selected: None,
                 hosted: false,
                 assume_yes: false,
@@ -66,7 +71,7 @@ impl AgentSetup {
     ) -> Result<Self> {
         if info.cleanup_only {
             return Ok(Self {
-                config: AgentsConfig::default(),
+                trust: TrustPolicy::EMPTY,
                 selected: None,
                 hosted: false,
                 assume_yes: false,
@@ -90,7 +95,7 @@ impl AgentSetup {
     ) -> Result<Self> {
         if hosted {
             return Ok(Self {
-                config: AgentsConfig::default(),
+                trust: TrustPolicy::EMPTY,
                 selected: None,
                 hosted: true,
                 assume_yes: ctx.is_unattended(),
@@ -107,7 +112,7 @@ impl AgentSetup {
             selected: self.selected.as_ref(),
             hosted: self.hosted,
             assume_yes: self.assume_yes,
-            trusted_groups: &self.config.trusted_groups,
+            trust: &self.trust,
             notify: self.show.then_some(&notify as &dyn Fn(&AgentNotice<'_>)),
             confirm: self
                 .attended

@@ -1,4 +1,5 @@
 use super::*;
+use vibe_core::trust::TrustPolicy;
 #[cfg(test)]
 mod cases {
     use super::*;
@@ -222,7 +223,7 @@ mod cases {
         let before = inventory(root.path());
         let spy = HookSpy::default();
         let policy = crate::hooks::HookPolicy {
-            allowed_groups: vec!["org.vibevm".into()],
+            trust: TrustPolicy::trusting(["org.vibevm"]).unwrap(),
             allow_hooks: false,
         };
         let outcome = crate::install::materialise_resolution(

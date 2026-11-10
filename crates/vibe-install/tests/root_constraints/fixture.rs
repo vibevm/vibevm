@@ -11,6 +11,7 @@ use std::path::{Path, PathBuf};
 use semver::Version;
 use tempfile::TempDir;
 use vibe_core::manifest::{Lockfile, Manifest};
+use vibe_core::trust::TrustPolicy;
 use vibe_core::user_config::SlotIntegrity;
 use vibe_core::{Group, PackageRef};
 use vibe_install::{FilteringDepProvider, InstallRequest, InstallSource, NullObserver, Plan};
@@ -286,7 +287,7 @@ impl Fixture {
             *plan,
             SlotIntegrity::Verify,
             &HookPolicy {
-                allowed_groups: vec![],
+                trust: TrustPolicy::EMPTY,
                 allow_hooks: false,
             },
         )

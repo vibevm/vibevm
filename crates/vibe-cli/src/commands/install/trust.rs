@@ -15,7 +15,8 @@ specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-064#selection");
 
 use std::sync::Arc;
 
-use vibe_app::{AgentsConfig, AppError, ExternalAgent};
+use vibe_app::{AgentError, AgentsConfig, AppError, ExternalAgent};
+use vibe_core::trust::TrustPolicy;
 use vibe_install::{SlotConsentRequest, SlotJudgmentContext};
 use vibe_wire::generated::lifecycle::e1::context::RunAgentMode;
 
@@ -29,21 +30,24 @@ fn agents_config() -> Option<AgentsConfig> {
     AgentsConfig::load(&settings).map_err(AppError::from).ok()
 }
 
-/// The trusted set: the `trusted_groups` of `agents.toml` — the very list
-/// `vibe agent list` prints and an agent step already obeys — unioned with
-/// PROP-020's default hook allow-list, so a group trusted to run a hook is
-/// trusted to run the same act written in the long form.
-fn trusted_groups(config: Option<&AgentsConfig>) -> Vec<String> {
-    let mut groups: Vec<String> = vibe_workspace::hooks::DEFAULT_ALLOWED_GROUPS
-        .iter()
-        .map(|group| (*group).to_string())
-        .collect();
-    for group in config.into_iter().flat_map(|config| &config.trusted_groups) {
-        if !groups.contains(group) {
-            groups.push(group.clone());
-        }
-    }
-    groups
+/// The trusted set of this run: the one effective policy of
+/// `vibe_core::trust`, resolved from the base list vibe ships, the applied
+/// site profile's `[trust]` table and the user's `agents.toml` — the very
+/// answer `vibe agent list` prints and an agent step already obeys. There
+/// is no second list to union here any more: PROP-020's hook allow-list
+/// *is* the base list.
+///
+/// A trust entry vibe cannot read refuses the run rather than being
+/// dropped: a dropped entry would either grant trust nobody wrote or
+/// withhold trust someone did.
+fn trust_policy(config: Option<&AgentsConfig>) -> Result<TrustPolicy, AppError> {
+    let settings = crate::commands::app::global::settings_root().map_err(|error| {
+        AppError::from(AgentError::Trust {
+            file: "<settings>/agents.toml".into(),
+            reason: error.to_string(),
+        })
+    })?;
+    Ok(vibe_app::effective_trust(&settings, config)?)
 }
 
 /// Whether an agent could deliver an `agent` contribution in this run.
@@ -102,11 +106,15 @@ fn question(request: &SlotConsentRequest) -> String {
 ///
 /// `assume_yes` is `--assume-yes`, which `--unattended` implies: the per-run
 /// escape agent steps already use, reused rather than reinvented.
-pub(crate) fn judgment(ctx: &output::Context, assume_yes: bool) -> SlotJudgmentContext {
+pub(crate) fn judgment(
+    ctx: &output::Context,
+    assume_yes: bool,
+) -> anyhow::Result<SlotJudgmentContext> {
     let attended = !ctx.is_json() && !ctx.is_unattended() && console::user_attended();
     let notice = ctx.clone();
     let config = agents_config();
-    SlotJudgmentContext {
+    let trust = trust_policy(config.as_ref())?;
+    Ok(SlotJudgmentContext {
         command_present: crate::commands::app::facts::command_on_path,
         env_present: crate::commands::app::facts::env_set,
         attended,
@@ -120,7 +128,7 @@ pub(crate) fn judgment(ctx: &output::Context, assume_yes: bool) -> SlotJudgmentC
             config.as_ref(),
             crate::commands::app::facts::external_agent().ok().flatten(),
         ),
-        trusted_groups: trusted_groups(config.as_ref()),
+        trust,
         assume_yes: assume_yes || ctx.is_unattended(),
         confirm: attended.then(|| {
             let asker: vibe_install::SlotConsentAsk = Arc::new(move |request| {
@@ -132,7 +140,7 @@ pub(crate) fn judgment(ctx: &output::Context, assume_yes: bool) -> SlotJudgmentC
             });
             asker
         }),
-    }
+    })
 }
 
 #[cfg(test)]
@@ -175,22 +183,33 @@ mod tests {
         assert!(!agent_available(false, Some(&broken), None));
     }
 
-    /// The hook allow-list is the floor of the trusted set, with or without
-    /// a readable `agents.toml`, and a group it already carries is not
-    /// listed twice.
+    /// The base list vibe ships is the floor of the trusted set, with or
+    /// without a readable `agents.toml`, and this plane reads the SAME
+    /// resolution the agent plane and the hook allow-list read — there is
+    /// no union of two lists here any more.
     #[test]
-    fn the_trusted_set_is_the_hook_allow_list_unioned_with_the_agent_list() {
-        let none = trusted_groups(None);
-        assert!(none.contains(&"org.vibevm".to_string()));
+    fn the_trusted_set_is_the_one_effective_policy_with_the_shipped_base_as_its_floor() {
+        let base = TrustPolicy::base();
+        assert!(base.trusts("org.vibevm"), "the group vibe always trusted");
+        assert!(
+            base.trusts("org.vibevm.ai-native"),
+            "and everything under it, from 2026-11-10",
+        );
+        assert!(!base.trusts("org.example"));
 
-        let config: AgentsConfig =
-            toml::from_str("trusted_groups = [\"org.example\", \"org.vibevm\"]").unwrap();
-        let both = trusted_groups(Some(&config));
-        assert!(both.contains(&"org.example".to_string()));
-        assert_eq!(
-            both.iter().filter(|group| *group == "org.vibevm").count(),
-            1,
-            "the union adds, it does not duplicate",
+        let config: AgentsConfig = toml::from_str(
+            "trusted_groups = [\"org.example\"]\nuntrusted_groups = [\"org.vibevm.ai-native\"]",
+        )
+        .unwrap();
+        let lists =
+            vibe_core::trust::TrustLists::new(&config.trusted_groups, &config.untrusted_groups);
+        let policy =
+            TrustPolicy::effective(&vibe_core::trust::TrustLists::default(), &lists).unwrap();
+        assert!(policy.trusts("org.example"), "the user's own entry");
+        assert!(policy.trusts("org.vibevm.node"), "the base, less one group");
+        assert!(
+            !policy.trusts("org.vibevm.ai-native"),
+            "a deny entry wins over the base list",
         );
     }
 }

@@ -172,6 +172,7 @@ codes!(AGENT, AgentError [] {
     Unknown => "agent_unknown", Refusal, "the named agent is neither defined nor a preset";
     Exists => "agent_exists", Refusal, "an agent definition of that name already exists";
     Config => "agents_config_invalid", Refusal, "agents.toml is invalid";
+    Trust => "trusted_groups_invalid", Refusal, "a trusted_groups / untrusted_groups entry is not a group or a subtree";
     Definition => "agent_definition_invalid", Refusal, "an agent definition lacks a command or a template";
     Registration => "agent_registration_invalid", Refusal, "VIBE_AGENT_COMMAND / VIBE_AGENT_ARGS are malformed";
     ConsentRequired => "consent_required", Refusal, "an agent prompt was not consented to";

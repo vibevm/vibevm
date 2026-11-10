@@ -570,3 +570,79 @@ fn agents_are_listed_configured_and_presets_shown() {
     assert_eq!(exit_of("consent_required"), Some(2));
     assert_eq!(exit_of("agent_failed"), Some(1));
 }
+
+/// `vibe agent list` prints the EFFECTIVE trust, not only this user's file:
+/// every entry with the layer that wrote it, and what each untrusted entry
+/// takes away (PROP-064 `#trust-entries`, owner decision 2026-11-10).
+#[test]
+fn agent_list_shows_the_effective_trust_with_each_entrys_source() {
+    let fixture = Fixture::new("");
+
+    // With no `agents.toml` at all, the shipped base is the whole answer.
+    let shipped: Value =
+        serde_json::from_str(&ok(&run(fixture.command(&["agent", "list", "--json"])))).unwrap();
+    assert_eq!(
+        shipped["trust"]["trusted"],
+        serde_json::json!([{ "pattern": "org.vibevm.*", "source": "base" }]),
+    );
+    assert_eq!(shipped["trust"]["untrusted"], serde_json::json!([]));
+    assert!(
+        shipped.get("trusted_groups").is_none(),
+        "the user's own array stays the user's own, and is absent when the file is",
+    );
+
+    // The user adds a group and refuses one subtree of the base.
+    fs::write(
+        fixture.user.settings.join("agents.toml"),
+        "trusted_groups = [\"org.example\"]\nuntrusted_groups = [\"org.vibevm.ai-native\"]\n",
+    )
+    .unwrap();
+    let listed: Value =
+        serde_json::from_str(&ok(&run(fixture.command(&["agent", "list", "--json"])))).unwrap();
+    assert_eq!(
+        listed["trust"]["trusted"],
+        serde_json::json!([
+            { "pattern": "org.vibevm.*", "source": "base" },
+            { "pattern": "org.example", "source": "user" },
+        ]),
+        "base first, then this user's own — concatenation, order kept",
+    );
+    assert_eq!(
+        listed["trust"]["untrusted"],
+        serde_json::json!([
+            { "pattern": "org.vibevm.ai-native", "source": "user", "overrides": ["base"] },
+        ]),
+        "and a deny entry says whose trust it takes away",
+    );
+    assert_eq!(
+        listed["trusted_groups"],
+        serde_json::json!(["org.example"]),
+        "unchanged in meaning: the file as written",
+    );
+
+    // The human report says the same, in words a reader can act on.
+    let human = ok(&run(fixture.command(&["agent", "list"])));
+    assert!(human.contains("effective trust"), "{human}");
+    assert!(human.contains("trusted:   org.vibevm.* [base]"), "{human}");
+    assert!(human.contains("trusted:   org.example [user]"), "{human}");
+    assert!(
+        human.contains("untrusted: org.vibevm.ai-native [user] — overrides base"),
+        "{human}",
+    );
+
+    // An entry that is not a group or a subtree is a refusal naming it.
+    fs::write(
+        fixture.user.settings.join("agents.toml"),
+        "trusted_groups = [\"org.*.tools\"]\n",
+    )
+    .unwrap();
+    let (code, envelope) = refused(&run(fixture.command(&["agent", "list", "--json"])));
+    assert_eq!(
+        (code, envelope["code"].as_str()),
+        (Some(2), Some("trusted_groups_invalid")),
+    );
+    assert!(
+        envelope["error"].as_str().unwrap().contains("org.*.tools"),
+        "{envelope:#?}",
+    );
+}

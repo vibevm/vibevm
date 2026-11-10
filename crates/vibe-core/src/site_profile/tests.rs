@@ -389,3 +389,44 @@ fn an_install_root_may_start_at_the_readers_own_home() {
             .is_err()
     );
 }
+
+/// The site layer of the one trust mechanism (PROP-065 `#ordinary-trust`):
+/// an administrator's `[trust]` table is stored verbatim, its entries are
+/// validated by the same parser the user's file goes through, and a bad
+/// entry names its own key.
+#[test]
+#[verifies("spec://org.vibevm.core/vibevm/common/PROP-019#site-profile")]
+fn the_trust_table_is_stored_verbatim_and_validated_entry_by_entry() {
+    let profile = SiteProfile::parse(
+        "schema = 1\nname = 'corp'\n[trust]\ntrusted_groups = ['org.corp.*']\n\
+         untrusted_groups = ['org.vibevm.ai-native']\n",
+        "corp.toml",
+    )
+    .unwrap();
+    assert_eq!(profile.trust.trusted_groups, ["org.corp.*"]);
+    assert_eq!(profile.trust.untrusted_groups, ["org.vibevm.ai-native"]);
+
+    // A profile that says nothing about trust carries the empty lists and
+    // serialises without the table at all.
+    let silent = SiteProfile::parse("schema = 1\n", "corp.toml").unwrap();
+    assert!(silent.trust.is_empty());
+    assert!(!toml::to_string(&silent).unwrap().contains("[trust]"));
+
+    for (text, key) in [
+        (
+            "trusted_groups = ['org.*.tools']",
+            "trust.trusted_groups[0]",
+        ),
+        ("untrusted_groups = ['', 'x']", "trust.untrusted_groups[0]"),
+        (
+            "untrusted_groups = ['org.ok', '**']",
+            "trust.untrusted_groups[1]",
+        ),
+    ] {
+        let error = SiteProfile::parse(&format!("schema = 1\n[trust]\n{text}\n"), "corp.toml")
+            .unwrap_err()
+            .to_string();
+        assert!(error.contains(key), "`{text}` must name `{key}`: {error}");
+        assert!(error.contains("corp.toml"), "{error}");
+    }
+}

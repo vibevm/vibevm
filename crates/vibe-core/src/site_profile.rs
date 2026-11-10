@@ -30,6 +30,7 @@ use crate::manifest::{
     EffectiveSourcePolicy, MirrorSection, OverrideSection, RegistrySection, SourcePolicyDecl,
 };
 use crate::remap::{Layer, LoadedSource, RowDecl};
+use crate::trust::TrustLists;
 use crate::user_config::{ArtifactsConfig, NetConfig, ProxyConfig, SelfConfig, UserConfig};
 
 /// The one schema version this reader accepts (`schema = 1`).
@@ -139,6 +140,14 @@ pub struct SiteProfile {
     /// `[path]` — the PATH policy of `vibe self apply`.
     #[serde(default, skip_serializing_if = "is_default_path")]
     pub path: PathSection,
+    /// `[trust]` — the installation's trusted and untrusted package groups
+    /// (`crate::trust`, PROP-065 `#ordinary-trust`). The site layer of the
+    /// one trust mechanism: `trusted_groups` adds to the base list vibe
+    /// ships, and `untrusted_groups` takes trust away — including the
+    /// base's, which is how an administrator refuses a group vibe trusts
+    /// out of the box for a whole installation.
+    #[serde(default, skip_serializing_if = "TrustLists::is_empty")]
+    pub trust: TrustLists,
 }
 
 fn is_default_path(section: &PathSection) -> bool {
@@ -178,7 +187,7 @@ pub enum SiteProfileError {
          (violates spec://org.vibevm.core/vibevm/common/PROP-019#site-profile; \
           fix: repair the TOML at the reported location — the tables are \
           schema, name, [[registry]], [[mirror]], [[override]], [[remap]], \
-          [source_policy], [artifacts], [self], [proxy], [net], [path])"
+          [source_policy], [artifacts], [self], [proxy], [net], [path], [trust])"
     )]
     Parse {
         origin: String,
@@ -345,6 +354,20 @@ impl SiteProfile {
         }
         if let Some((key, reason, fix)) = self.proxy.problem() {
             return Err(invalid(key.into(), &reason, fix));
+        }
+        for (key, written) in [
+            ("trust.trusted_groups", &self.trust.trusted_groups),
+            ("trust.untrusted_groups", &self.trust.untrusted_groups),
+        ] {
+            for (index, entry) in written.iter().enumerate() {
+                crate::trust::GroupPattern::parse(entry).map_err(|error| {
+                    invalid(
+                        format!("{key}[{index}]"),
+                        &error.to_string(),
+                        "name a group (`org.example`) or a subtree (`org.example.*`)",
+                    )
+                })?;
+            }
         }
         Ok(())
     }

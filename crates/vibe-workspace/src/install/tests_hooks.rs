@@ -7,6 +7,7 @@ use super::test_helpers::*;
 use super::*;
 use specmark::verifies;
 use tempfile::TempDir;
+use vibe_core::trust::TrustPolicy;
 use vibe_core::{Group, PackageKind};
 
 /// A `ResolvedDep` whose manifest declares a `pre-install` hook, with the
@@ -77,7 +78,7 @@ impl HookRunner for FakeRunner {
 #[cfg(test)]
 fn allow_vibevm() -> HookPolicy {
     HookPolicy {
-        allowed_groups: vec!["org.vibevm".to_string()],
+        trust: TrustPolicy::trusting(["org.vibevm"]).unwrap(),
         allow_hooks: false,
     }
 }

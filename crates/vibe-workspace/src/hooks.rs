@@ -19,11 +19,13 @@ use specmark::spec;
 use thiserror::Error;
 use vibe_core::Group;
 use vibe_core::manifest::HooksDecl;
+use vibe_core::trust::TrustPolicy;
 
-/// The default trusted groups whose hooks run with no prompt (PROP-020
-/// §2.3). `org.vibevm` — the project's own packages — is allow-listed out
-/// of the box; an operator extends this via config.
-pub const DEFAULT_ALLOWED_GROUPS: &[&str] = &["org.vibevm"];
+// The default trusted groups whose hooks run with no prompt (PROP-020
+// §2.3) are no longer this module's own constant: they are
+// `vibe_core::trust::BASE_TRUSTED_GROUPS`, the one base list every plane
+// reads (PROP-065 `#ordinary-trust`, owner decision 2026-11-10). A second
+// constant here is exactly how the two allow-lists diverged.
 
 /// Which lifecycle phase a hook runs in (PROP-020 §2.1).
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
@@ -123,7 +125,7 @@ pub enum HookError {
     #[error(
         "package `{group}/{name}` declares a {phase} hook but is not trusted to run it \
          (violates spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-020#trust-gate; \
-         fix: allow-list `{group}` in [hooks].allowed_groups or pass --allow-hooks)"
+         fix: add `{group}` to trusted_groups in <settings>/agents.toml, or pass --allow-hooks)"
     )]
     Untrusted {
         group: String,
@@ -333,11 +335,11 @@ fn run_system_hook(
 )]
 pub fn decide_trust(
     group: &Group,
-    allowed: &[String],
+    trust: &TrustPolicy,
     interactive: bool,
     allow_hooks: bool,
 ) -> HookTrust {
-    if allow_hooks || allowed.iter().any(|g| g == group.as_str()) {
+    if allow_hooks || trust.trusts(group.as_str()) {
         HookTrust::Allowed
     } else if interactive {
         HookTrust::NeedsConsent
@@ -358,10 +360,11 @@ pub fn decide_trust(
 /// forbids running) never reaches the pipeline, because the CLI aborts on it.
 #[derive(Debug, Clone, Default)]
 pub struct HookPolicy {
-    /// Groups whose hooks run with no prompt — the static allow-list
-    /// (`DEFAULT_ALLOWED_GROUPS` plus config) unioned with the groups the
-    /// operator consented to for this run.
-    pub allowed_groups: Vec<String>,
+    /// The effective trust whose groups' hooks run with no prompt — the
+    /// one policy of `vibe_core::trust` (the base list vibe ships, the site
+    /// profile and the user's `agents.toml`), plus any group the operator
+    /// consented to for this run (`TrustPolicy::allow_for_this_run`).
+    pub trust: TrustPolicy,
     /// `--allow-hooks` — run every package's hooks regardless of group.
     pub allow_hooks: bool,
 }
@@ -373,7 +376,7 @@ impl HookPolicy {
     /// [`run_package_hook`] reports as skipped — never silently run, never
     /// fatal. The genuine refusal was already caught in the CLI.
     pub fn trust_for(&self, group: &Group) -> HookTrust {
-        if self.allow_hooks || self.allowed_groups.iter().any(|g| g == group.as_str()) {
+        if self.allow_hooks || self.trust.trusts(group.as_str()) {
             HookTrust::Allowed
         } else {
             HookTrust::NeedsConsent

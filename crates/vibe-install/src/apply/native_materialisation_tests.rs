@@ -6,6 +6,7 @@ use std::os::unix::fs::MetadataExt;
 use std::path::PathBuf;
 use std::process::{Command, Stdio};
 use vibe_core::manifest::{Lockfile, NamingConvention};
+use vibe_core::trust::TrustPolicy;
 use vibe_registry::git_backend::shell::native_admission::{
     GitInstallation, NativeConfigSelection, NativeGitAdmission, TlsTrust,
 };
@@ -236,7 +237,7 @@ fn exercise(filter: bool) {
         planned,
         SlotIntegrity::Verify,
         &HookPolicy {
-            allowed_groups: vec![],
+            trust: TrustPolicy::EMPTY,
             allow_hooks: false,
         },
     );

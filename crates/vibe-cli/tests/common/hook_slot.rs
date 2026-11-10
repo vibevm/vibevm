@@ -183,6 +183,66 @@ category = "flow"
     root.join("registry")
 }
 
+/// Publish the `JudgmentTrust` package again under another group, so the
+/// trust gate can be asked about a group the base list covers
+/// (`org.vibevm.*`) rather than only about `org.example`
+/// (PROP-065 `#ordinary-trust`). Returns the pkgref to install.
+pub fn judged_package_in_group(registry: &Path, group: &str) -> String {
+    let package = registry.join(group).join("hooked").join("v0.1.0");
+    fs::create_dir_all(package.join("hooks")).unwrap();
+    fs::write(
+        package.join("vibe.toml"),
+        format!(
+            r#"[package]
+group = "{group}"
+name = "hooked"
+kind = "flow"
+version = "0.1.0"
+
+[[extension]]
+id = "judged"
+point = "slot:post-install"
+title = "Judged contribution"
+handler = {{ kind = "script", base = "hooks/post" }}
+"#,
+        ),
+    )
+    .unwrap();
+    for (file, body) in [
+        (
+            "hooks/post.sh",
+            "set -eu\nprintf 'post\\n' >> hook-order.txt\n",
+        ),
+        (
+            "hooks/post.ps1",
+            "Add-Content -LiteralPath hook-order.txt -Value post\n",
+        ),
+    ] {
+        fs::write(package.join(file), body).unwrap();
+    }
+    format!("{group}/hooked@=0.1.0")
+}
+
+/// `vibe install <pkgref>` with no `--assume-yes`: the posture the trust
+/// gate answers in, for any package of any group.
+pub fn install_pkg_unconsented(
+    user: &UserScratch,
+    project: &Path,
+    registry: &Path,
+    pkgref: &str,
+) -> std::process::Output {
+    no_agent_env(user.vibe())
+        .arg("--json")
+        .arg("install")
+        .arg(pkgref)
+        .arg("--registry")
+        .arg(registry)
+        .arg("--path")
+        .arg(project)
+        .output()
+        .unwrap()
+}
+
 pub fn plain_package(registry: &Path, name: &str) {
     let package = registry.join("org.multi").join(name).join("v0.1.0");
     fs::create_dir_all(&package).unwrap();

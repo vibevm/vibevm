@@ -212,8 +212,13 @@ pub trait ConfirmGate: Send + Sync {
     /// whether a terminal is there to be asked. The default consents and
     /// decides nothing, which is correct for a surface that has no operator
     /// to ask (a hosted run, a fixture); the CLI overrides it.
-    fn slot_judgment(&self) -> vibe_install::SlotJudgmentContext {
-        vibe_install::SlotJudgmentContext::consenting()
+    ///
+    /// Fallible because resolving the trust half reads the operator's
+    /// files: a `trusted_groups` or `untrusted_groups` entry vibe cannot
+    /// read stops the run, because dropping it would either grant trust
+    /// nobody wrote or withhold trust someone did.
+    fn slot_judgment(&self) -> Result<vibe_install::SlotJudgmentContext> {
+        Ok(vibe_install::SlotJudgmentContext::consenting())
     }
 }
 

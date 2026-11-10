@@ -5,6 +5,7 @@ specmark::scope!(
 
 use super::fixture::*;
 use vibe_core::manifest::{Lockfile, Manifest};
+use vibe_core::trust::TrustPolicy;
 use vibe_core::user_config::SlotIntegrity;
 use vibe_install::{Plan, PlannedInstall};
 use vibe_workspace::hooks::HookPolicy;
@@ -15,7 +16,7 @@ fn apply(source: &Source, plan: Box<PlannedInstall>) -> Result<(), vibe_install:
         *plan,
         SlotIntegrity::Verify,
         &HookPolicy {
-            allowed_groups: vec![],
+            trust: TrustPolicy::EMPTY,
             allow_hooks: false,
         },
     )
@@ -149,7 +150,7 @@ fn changed_sibling_common_input_refuses_apply_before_selected_publication() {
         *planned,
         vibe_core::user_config::SlotIntegrity::Verify,
         &vibe_workspace::hooks::HookPolicy {
-            allowed_groups: vec![],
+            trust: TrustPolicy::EMPTY,
             allow_hooks: false,
         },
     )
@@ -182,7 +183,7 @@ fn programmatic_resolution_common_definition_refuses_before_apply_effects() {
         *planned,
         vibe_core::user_config::SlotIntegrity::Verify,
         &vibe_workspace::hooks::HookPolicy {
-            allowed_groups: vec![],
+            trust: TrustPolicy::EMPTY,
             allow_hooks: false,
         },
     )

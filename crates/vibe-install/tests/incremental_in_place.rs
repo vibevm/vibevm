@@ -13,6 +13,7 @@ use std::sync::Arc;
 
 use tempfile::TempDir;
 use vibe_core::manifest::{Lockfile, Manifest, NamingConvention};
+use vibe_core::trust::TrustPolicy;
 use vibe_core::user_config::SlotIntegrity;
 use vibe_core::{Group, PackageRef};
 use vibe_install::{InstallRequest, InstallSource, NullObserver, Plan};
@@ -499,7 +500,7 @@ impl Fixture {
 }
 fn policy() -> HookPolicy {
     HookPolicy {
-        allowed_groups: vec!["org.vibevm".into()],
+        trust: TrustPolicy::trusting(["org.vibevm"]).unwrap(),
         allow_hooks: false,
     }
 }

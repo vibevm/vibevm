@@ -6,6 +6,7 @@ specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-064#consent");
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-064#parking");
 
 use specmark::spec;
+use vibe_core::trust::TrustPolicy;
 
 use super::SelectedAgent;
 
@@ -51,8 +52,12 @@ pub struct AgentHooks<'a> {
     pub hosted: bool,
     /// `--assume-yes` (implied by `--unattended`).
     pub assume_yes: bool,
-    /// Groups whose prompts need no question (`agents.toml`).
-    pub trusted_groups: &'a [String],
+    /// The effective trust of this run (`crate::effective_trust`): the
+    /// base list vibe ships, the site profile's `[trust]` table and the
+    /// user's `agents.toml`, with either file's `untrusted_groups`
+    /// overriding all of it. One mechanism, shared with a dependency's
+    /// `slot:` contributions and with `[hooks]`.
+    pub trust: &'a TrustPolicy,
     /// Prompts and answers are shown here.
     pub notify: Option<&'a dyn Fn(&AgentNotice<'_>)>,
     /// Present only in an attended terminal.
@@ -70,6 +75,6 @@ impl AgentHooks<'_> {
 
     /// Whether prompts of `group` run without the question.
     pub fn trusts(&self, group: &str) -> bool {
-        self.trusted_groups.iter().any(|trusted| trusted == group)
+        self.trust.trusts(group)
     }
 }

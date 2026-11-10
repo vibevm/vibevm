@@ -12,6 +12,7 @@ mod config;
 mod error;
 mod hooks;
 mod presets;
+mod trust;
 
 use std::collections::BTreeMap;
 use std::path::Path;
@@ -23,6 +24,7 @@ pub(crate) use error::io;
 pub use error::{AgentError, ParkedStep};
 pub use hooks::{AgentHooks, AgentNotice, AgentPrompt, ConsentPrompt};
 pub use presets::{PLACEHOLDERS, Preset, preset, presets};
+pub use trust::effective_trust;
 
 /// Where the chosen agent came from (`PROP-064#selection`).
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]

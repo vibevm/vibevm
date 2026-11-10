@@ -83,7 +83,7 @@ impl<'a> CliConfirmGate<'a> {
 }
 
 impl ConfirmGate for CliConfirmGate<'_> {
-    fn slot_judgment(&self) -> vibe_install::SlotJudgmentContext {
+    fn slot_judgment(&self) -> Result<vibe_install::SlotJudgmentContext> {
         super::trust::judgment(self.ctx, self.assume_yes)
     }
 

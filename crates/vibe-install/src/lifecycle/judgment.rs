@@ -15,6 +15,7 @@ use std::sync::Arc;
 use specmark::spec;
 use vibe_core::judgment::{self, Condition, Need};
 use vibe_core::manifest::SlotJudgment;
+use vibe_core::trust::TrustPolicy;
 
 /// One package whose contributions a question is about.
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -44,10 +45,12 @@ pub struct SlotJudgmentContext {
     pub attended: bool,
     /// Whether an agent is configured for this run.
     pub agent_configured: bool,
-    /// Groups whose dependency contributions run without a question — the
-    /// `trusted_groups` of `agents.toml` unioned with PROP-020's default
-    /// hook allow-list, resolved by the caller.
-    pub trusted_groups: Vec<String>,
+    /// The effective trust of this run, resolved by the caller from the
+    /// one mechanism of `vibe_core::trust`: the base list vibe ships
+    /// (`org.vibevm.*`), the site profile's `[trust]` table and the user's
+    /// `agents.toml`, with either file's `untrusted_groups` overriding all
+    /// of it.
+    pub trust: TrustPolicy,
     /// `--assume-yes`, which `--unattended` implies: the per-run escape
     /// agent steps already use. No new flag is invented.
     pub assume_yes: bool,
@@ -71,7 +74,7 @@ impl SlotJudgmentContext {
     ///
     /// let context = SlotJudgmentContext::consenting();
     /// assert!(context.assume_yes);
-    /// assert!(context.trusted_groups.is_empty());
+    /// assert!(!context.trusts("org.vibevm"));
     /// ```
     #[must_use]
     pub fn consenting() -> Self {
@@ -80,7 +83,7 @@ impl SlotJudgmentContext {
             env_present: never,
             attended: false,
             agent_configured: false,
-            trusted_groups: Vec::new(),
+            trust: TrustPolicy::EMPTY,
             assume_yes: true,
             confirm: None,
         }
@@ -88,22 +91,32 @@ impl SlotJudgmentContext {
 
     /// Whether this group's contributions run without a question.
     ///
-    /// The match is the exact-string group comparison PROP-064 `#consent`
-    /// already uses; no prefix, no glob, so `org.vibevm.ai-native` is not
-    /// covered by `org.vibevm`.
+    /// The answer is the shared mechanism's and no second rule: an entry is
+    /// an exact group or the subtree `prefix.*`, and a group the policy's
+    /// `untrusted_groups` covers is never trusted.
     ///
     /// ```
+    /// use vibe_core::trust::TrustPolicy;
     /// use vibe_install::SlotJudgmentContext;
     ///
     /// let context = SlotJudgmentContext {
-    ///     trusted_groups: vec!["org.example".into()],
+    ///     trust: TrustPolicy::trusting(["org.example"]).unwrap(),
     ///     ..SlotJudgmentContext::consenting()
     /// };
     /// assert!(context.trusts("org.example"));
     /// assert!(!context.trusts("org.example.sub"));
+    ///
+    /// // What vibe ships: everything under `org.vibevm.*`, the group
+    /// // itself included (owner decision 2026-11-10).
+    /// let shipped = SlotJudgmentContext {
+    ///     trust: TrustPolicy::base(),
+    ///     ..SlotJudgmentContext::consenting()
+    /// };
+    /// assert!(shipped.trusts("org.vibevm.ai-native"));
+    /// assert!(!shipped.trusts("org.example"));
     /// ```
     pub fn trusts(&self, group: &str) -> bool {
-        self.trusted_groups.iter().any(|trusted| trusted == group)
+        self.trust.trusts(group)
     }
 
     /// Decide one contribution: whether it runs, and why not.

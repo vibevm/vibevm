@@ -32,6 +32,13 @@ pub enum AgentError {
     )]
     Definition { name: String, reason: String },
     #[error(
+        "`{file}` carries a trust entry vibe cannot read: {reason} \
+         (violates spec://org.vibevm.core/vibevm/common/PROP-065#ordinary-trust; \
+         fix: correct the entry — each one is a group (`org.example`) or a subtree \
+         (`org.example.*`) in `trusted_groups` / `untrusted_groups`)"
+    )]
+    Trust { file: String, reason: String },
+    #[error(
         "the external agent registration is invalid: {reason} (violates spec://org.vibevm.core/vibevm/common/PROP-064#external-registration; \
          fix: set VIBE_AGENT_COMMAND to an executable and VIBE_AGENT_ARGS to a JSON array of strings)"
     )]

@@ -11,6 +11,7 @@ use std::fs;
 
 use serde::{Deserialize, Serialize};
 use specmark::spec;
+use vibe_core::trust::{TrustEntry, TrustLayer, TrustPolicy};
 use vibe_wire::generated::agent_list as list_wire;
 use vibe_wire::generated::agent_presets as presets_wire;
 
@@ -60,9 +61,17 @@ pub struct AgentsConfig {
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub default: Option<String>,
     /// Package groups whose prompts run without the consent question
-    /// (`PROP-064#consent`).
+    /// (`PROP-064#consent`). An entry is an exact group (`org.example`) or
+    /// the subtree `org.example.*`; the effective set adds the base list
+    /// vibe ships and the site profile's (`vibe_core::trust`).
     #[serde(default, skip_serializing_if = "Vec::is_empty")]
     pub trusted_groups: Vec<String>,
+    /// Package groups that are **never** trusted, whatever any layer says
+    /// — including this file's own `trusted_groups` and the base list vibe
+    /// ships. Writing `untrusted_groups = ["org.vibevm.*"]` is how a user
+    /// refuses the built-in trust (`PROP-065#ordinary-trust`).
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub untrusted_groups: Vec<String>,
     #[serde(default, skip_serializing_if = "BTreeMap::is_empty")]
     pub agent: BTreeMap<String, AgentDefinition>,
     /// `[launchers.NAME]` — the PROP-076 agent launchers: a name bound to a
@@ -288,11 +297,18 @@ impl AgentsConfig {
 
 /// The `vibe-agent-list/1` document: every definition merged with its
 /// preset (a definition that cannot be used carries its `problem`), the
-/// default, the trusted groups and the external registration.
+/// default, the trusted groups, the effective trust and the external
+/// registration.
+///
+/// `trust` is the resolved policy of [`crate::effective_trust`], passed in
+/// rather than resolved here: this function reads no file, and a trust
+/// answer assembled a second way is exactly the parallel list the one
+/// mechanism exists to prevent.
 pub fn agent_list(
     settings: &SettingsRoot,
     config: &AgentsConfig,
     external: Option<&ExternalAgent>,
+    trust: &TrustPolicy,
 ) -> list_wire::AgentList {
     list_wire::AgentList {
         protocol: "vibe-agent-list/1".into(),
@@ -302,7 +318,22 @@ pub fn agent_list(
         // kind set that is PROP-076's and not this crate's.
         launchers: Vec::new(),
         default: config.default.clone(),
+        // The user's own file as written, unchanged in meaning …
         trusted_groups: config.trusted_groups.clone(),
+        // … and the effective answer every consumer reads, with the layer
+        // that wrote each entry and what each deny entry overrides.
+        trust: Some(list_wire::Trust {
+            trusted: trust
+                .trusted()
+                .iter()
+                .map(|entry| trust_row(entry, &[]))
+                .collect(),
+            untrusted: trust
+                .untrusted()
+                .iter()
+                .map(|entry| trust_row(entry, &trust.overridden_by(entry)))
+                .collect(),
+        }),
         agents: config
             .agent
             .iter()
@@ -340,6 +371,17 @@ pub fn agent_list(
             command: external.command.clone(),
             args: external.args.clone(),
         }),
+    }
+}
+
+fn trust_row(entry: &TrustEntry, overrides: &[TrustLayer]) -> list_wire::TrustEntry {
+    list_wire::TrustEntry {
+        pattern: entry.written().to_owned(),
+        source: entry.layer().as_str().to_owned(),
+        overrides: overrides
+            .iter()
+            .map(|layer| layer.as_str().to_owned())
+            .collect(),
     }
 }
 
@@ -409,7 +451,7 @@ mod tests {
         let agent = loaded.resolve("wrapped").unwrap();
         assert_eq!(agent.command, "/opt/bin/claude-codex");
         assert_eq!(agent.unattended, ["-p", "{prompt}"]);
-        let listed = agent_list(&settings, &loaded, None);
+        let listed = agent_list(&settings, &loaded, None, &TrustPolicy::base());
         assert!(listed.agents[0].default);
         let mut loaded = loaded;
         loaded.remove("wrapped").unwrap();

@@ -4,6 +4,7 @@
 use super::*;
 use std::os::unix::fs::MetadataExt;
 use vibe_core::lock_provenance::{LockProvenance, provenance_path};
+use vibe_core::trust::TrustPolicy;
 
 #[test]
 #[specmark::spec(verifies = "spec://org.vibevm.core/vibevm/common/PROP-066#provenance")]
@@ -78,7 +79,7 @@ fn in_place_mirror_audit_survives_recording_noop_and_failed_apply() {
         store: root.path().join("store"),
     };
     let policy = vibe_workspace::hooks::HookPolicy {
-        allowed_groups: vec!["org.fixture".into()],
+        trust: TrustPolicy::trusting(["org.fixture"]).unwrap(),
         allow_hooks: false,
     };
     let plan = ready(&source, &project);

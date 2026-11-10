@@ -1,5 +1,7 @@
 #[cfg(test)]
 mod cases {
+    use vibe_core::trust::TrustPolicy;
+
     use crate::hooks::{HookInvocation, HookPolicy, HookRunner, InterpreterProbe};
     use crate::install::{
         MaterialiseLifecycle, MaterialiseOptions, materialise_resolution_with_spec_format,
@@ -115,7 +117,7 @@ mod cases {
             let before = snapshot(root.path());
             let spy = Spy::default();
             let policy = HookPolicy {
-                allowed_groups: vec!["org.vibevm".into()],
+                trust: TrustPolicy::trusting(["org.vibevm"]).unwrap(),
                 allow_hooks: false,
             };
             let result = materialise_resolution_with_spec_format(

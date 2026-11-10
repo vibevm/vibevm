@@ -516,7 +516,7 @@ fn execute_owned(
                 observer,
                 &agent,
                 resume::ResumeRequest {
-                    judgment: confirm_gate.slot_judgment(),
+                    judgment: confirm_gate.slot_judgment()?,
                     project_root: &project_root,
                     workspace: &workspace,
                     metadata: &run_metadata,

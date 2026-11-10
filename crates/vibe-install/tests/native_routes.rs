@@ -8,6 +8,7 @@ use std::{
     process::{Command, Stdio},
     sync::Arc,
 };
+use vibe_core::trust::TrustPolicy;
 use vibe_core::{
     PackageRef,
     manifest::{Lockfile, Manifest},
@@ -281,7 +282,7 @@ fn denied_primary_allowed_mirror_completes_public_plan_and_install() {
         *planned,
         SlotIntegrity::Verify,
         &vibe_workspace::hooks::HookPolicy {
-            allowed_groups: vec![],
+            trust: TrustPolicy::EMPTY,
             allow_hooks: false,
         },
     )

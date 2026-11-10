@@ -7,6 +7,7 @@ use std::path::{Path, PathBuf};
 
 use tempfile::TempDir;
 use vibe_core::manifest::{Lockfile, Manifest};
+use vibe_core::trust::TrustPolicy;
 use vibe_core::user_config::SlotIntegrity;
 use vibe_core::{Group, PackageRef};
 use vibe_install::{
@@ -364,7 +365,7 @@ impl Fixture {
         let planned = self.ready();
         let resolution = planned.resolution.clone();
         let policy = HookPolicy {
-            allowed_groups: vec![GROUP.to_string()],
+            trust: TrustPolicy::trusting([GROUP]).unwrap(),
             allow_hooks: false,
         };
         vibe_install::apply(

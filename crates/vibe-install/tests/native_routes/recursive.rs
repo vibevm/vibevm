@@ -2,6 +2,7 @@
 use super::*;
 use std::collections::BTreeMap;
 use std::os::unix::fs::PermissionsExt;
+use vibe_core::trust::TrustPolicy;
 
 fn git(info: &serde_json::Value, cwd: &Path, args: &[&str]) -> String {
     let output = Command::new("/usr/bin/git")
@@ -207,7 +208,7 @@ fn recovery(cut: &str) {
         store: root.path().join("store"),
     };
     let policy = vibe_workspace::hooks::HookPolicy {
-        allowed_groups: vec!["org.fixture".into()],
+        trust: TrustPolicy::trusting(["org.fixture"]).unwrap(),
         allow_hooks: false,
     };
     vibe_install::apply(

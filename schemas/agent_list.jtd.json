@@ -1,10 +1,10 @@
 {
   "metadata": {
-    "description": "Version 1 listing of the configured agent hooks from vibe agent list --json: the default definition, the trusted groups, every definition of <settings>/agents.toml merged with its preset, and the external registration of this process when one is set.",
+    "description": "Version 1 listing of the configured agent hooks from vibe agent list --json: the default definition, the trusted groups as this user's agents.toml writes them, the effective trust that decides whether a group's package-authored code runs unasked, every definition of <settings>/agents.toml merged with its preset, and the external registration of this process when one is set.",
     "spec": { "implements": "spec://org.vibevm.core/vibevm/common/PROP-064#presets" },
     "rustOptions": { "package": "vibe_wire::agent_list" },
     "x-rust-type": "AgentList",
-    "x-wire-order": ["protocol", "path", "default", "trusted_groups", "agents", "external", "launchers"]
+    "x-wire-order": ["protocol", "path", "default", "trusted_groups", "trust", "agents", "external", "launchers"]
   },
   "properties": {
     "protocol": { "type": "string" },
@@ -14,10 +14,34 @@
   "optionalProperties": {
     "default": { "type": "string", "metadata": { "x-default": null } },
     "trusted_groups": { "elements": { "type": "string" }, "metadata": { "x-empty": "omit" } },
+    "trust": { "ref": "trust", "metadata": { "x-default": null } },
     "external": { "ref": "external", "metadata": { "x-default": null } },
     "launchers": { "elements": { "ref": "launcher" }, "metadata": { "x-empty": "omit" } }
   },
   "definitions": {
+    "trust": {
+      "metadata": {
+        "description": "The effective trust of this machine (PROP-065 #ordinary-trust): every entry of the trusted list with the layer that wrote it, and every entry of the deny list, which overrides the trusted entries whatever layer wrote either one. trusted_groups above is the user's own file as written; this is the resolved answer every consumer reads.",
+        "x-wire-order": ["trusted", "untrusted"]
+      },
+      "properties": {
+        "trusted": { "elements": { "ref": "trust_entry" }, "metadata": { "x-empty": "emit" } },
+        "untrusted": { "elements": { "ref": "trust_entry" }, "metadata": { "x-empty": "emit" } }
+      }
+    },
+    "trust_entry": {
+      "metadata": {
+        "description": "One written entry: an exact group (org.example) or the subtree org.example.* that covers the group itself and everything below it. source is base (the list vibe ships), site (the applied site profile's [trust] table), user (<settings>/agents.toml) or run (granted for this run alone). overrides, on a deny entry, names the layers whose trusted entries it takes away.",
+        "x-wire-order": ["pattern", "source", "overrides"]
+      },
+      "properties": {
+        "pattern": { "type": "string" },
+        "source": { "type": "string" }
+      },
+      "optionalProperties": {
+        "overrides": { "elements": { "type": "string" }, "metadata": { "x-empty": "omit" } }
+      }
+    },
     "agent": {
       "metadata": { "x-wire-order": ["name", "preset", "command", "interactive", "unattended", "cwd", "env", "extra_args", "default", "problem"] },
       "properties": {

@@ -18,6 +18,7 @@ use super::super::{
 use super::run_post_install_with;
 use crate::hooks::{HookInvocation, HookPolicy, HookRunner, InterpreterProbe};
 use crate::vibedeps;
+use vibe_core::trust::TrustPolicy;
 
 struct BashProbe;
 
@@ -140,7 +141,7 @@ fn hash(digit: char) -> ContentHash {
 
 fn policy() -> HookPolicy {
     HookPolicy {
-        allowed_groups: vec!["org.vibevm".to_string()],
+        trust: TrustPolicy::trusting(["org.vibevm"]).unwrap(),
         allow_hooks: false,
     }
 }

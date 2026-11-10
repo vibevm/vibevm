@@ -7,6 +7,7 @@ use std::fs;
 use std::os::unix::fs::{MetadataExt, symlink};
 use std::path::{Path, PathBuf};
 use vibe_core::manifest::{CURRENT_SCHEMA_VERSION, Manifest};
+use vibe_core::trust::TrustPolicy;
 use vibe_core::user_config::SlotIntegrity;
 use vibe_core::{Group, PackageRef};
 use vibe_install::{InstallRequest, InstallSource, NullObserver, Plan};
@@ -242,7 +243,7 @@ fn shell_quote(value: &str) -> String {
 }
 fn hook_policy() -> HookPolicy {
     HookPolicy {
-        allowed_groups: vec!["org.vibevm".into()],
+        trust: TrustPolicy::trusting(["org.vibevm"]).unwrap(),
         allow_hooks: false,
     }
 }

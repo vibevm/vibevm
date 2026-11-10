@@ -23,6 +23,7 @@ use std::sync::{Arc, Mutex};
 use tempfile::TempDir;
 use vibe_core::manifest::{Manifest, SpecFormat};
 use vibe_core::progress::{Progress, ProgressEvent, ProgressEventKind, ProgressObserver};
+use vibe_core::trust::TrustPolicy;
 use vibe_core::user_config::SlotIntegrity;
 use vibe_core::{ContentHash, Group, PackageRef};
 use vibe_install::{InstallRequest, InstallSource, NullObserver, Plan, PlanEvent, PlanObserver};
@@ -286,7 +287,7 @@ fn request() -> InstallRequest {
 
 fn policy() -> HookPolicy {
     HookPolicy {
-        allowed_groups: vec!["org.vibevm".to_string()],
+        trust: TrustPolicy::trusting(["org.vibevm"]).unwrap(),
         allow_hooks: false,
     }
 }

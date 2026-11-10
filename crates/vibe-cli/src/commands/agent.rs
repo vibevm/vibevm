@@ -103,7 +103,11 @@ fn edit(
 
 fn list(ctx: &output::Context, settings: &SettingsRoot, config: &AgentsConfig) -> Result<()> {
     let external = crate::commands::app::agents::external_registration()?;
-    let mut listing = vibe_app::agent_list(settings, config, external.as_ref());
+    // The ONE effective trust, resolved from the base list vibe ships, the
+    // applied site profile and this file — the same value an agent step, a
+    // dependency's `slot:` contribution and a `[hooks]` entry read.
+    let trust = vibe_app::effective_trust(settings, Some(config)).map_err(AppError::from)?;
+    let mut listing = vibe_app::agent_list(settings, config, external.as_ref(), &trust);
     // The launcher rows are resolved here, not in the registry: merging the
     // user's `[launchers.*]` with the built-ins of a closed harness kind set
     // is PROP-076's question, and the registry is PROP-064's.
@@ -138,9 +142,7 @@ fn list(ctx: &output::Context, settings: &SettingsRoot, config: &AgentsConfig) -
             }
         }
     }
-    if !listing.trusted_groups.is_empty() {
-        println!("  trusted groups: {}", listing.trusted_groups.join(", "));
-    }
+    print_trust(&listing);
     if let Some(external) = &listing.external {
         println!(
             "  external registration (VIBE_AGENT_COMMAND): {} {}",
@@ -166,6 +168,44 @@ fn list(ctx: &output::Context, settings: &SettingsRoot, config: &AgentsConfig) -
         }
     }
     Ok(())
+}
+
+/// The effective trust, entry by entry with the layer that wrote it, and
+/// what each deny entry takes away. A reader must be able to see WHY a
+/// group's installation steps run unasked, and which file to edit to stop
+/// them (PROP-065 `#ordinary-trust`).
+fn print_trust(listing: &vibe_wire::generated::agent_list::AgentList) {
+    let Some(trust) = &listing.trust else {
+        return;
+    };
+    println!(
+        "  effective trust — a group's package-authored code runs unasked when a trusted entry \
+         covers it and no untrusted entry does:"
+    );
+    for entry in &trust.trusted {
+        println!("    trusted:   {} [{}]", entry.pattern, entry.source);
+    }
+    if trust.trusted.is_empty() {
+        println!("    trusted:   (nothing)");
+    }
+    for entry in &trust.untrusted {
+        let overrides = if entry.overrides.is_empty() {
+            String::new()
+        } else {
+            format!(" — overrides {}", entry.overrides.join(", "))
+        };
+        println!(
+            "    untrusted: {} [{}]{overrides}",
+            entry.pattern, entry.source,
+        );
+    }
+    if !listing.trusted_groups.is_empty() {
+        println!(
+            "    written in {}: trusted_groups = {}",
+            listing.path,
+            listing.trusted_groups.join(", "),
+        );
+    }
 }
 
 fn presets(ctx: &output::Context) -> Result<()> {

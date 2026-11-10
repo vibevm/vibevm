@@ -12,7 +12,8 @@ mod common;
 use std::fs;
 
 use common::hook_slot::{
-    Fixture, documents, install, install_unconsented, select_default_agent, setup, slot_outcomes,
+    Fixture, documents, install, install_pkg_unconsented, install_unconsented,
+    judged_package_in_group, select_default_agent, setup, slot_outcomes,
 };
 
 #[test]
@@ -280,5 +281,91 @@ fn an_install_writes_the_step_evidence_of_every_judged_contribution() {
     assert!(
         log.contains("NOISY-OUT") && log.contains("NOISY-ERR"),
         "every byte the contribution wrote reaches its log: {log:?}",
+    );
+}
+
+/// The consequence of the owner's decision of 2026-11-10: a dependency in a
+/// group the base list covers runs its contributions **unattended and
+/// unasked**, where the same package in `org.example` is refused (the test
+/// above). Nothing is configured for this — `org.vibevm.*` is what vibe
+/// ships (PROP-065 `#ordinary-trust`).
+#[test]
+fn a_dependency_under_the_shipped_base_runs_unasked_where_another_group_is_refused() {
+    let (outer, user, project, registry) = setup(Fixture::JudgmentTrust);
+    let pkgref = judged_package_in_group(&registry, "org.vibevm.ai-native");
+    assert!(outer.path().exists());
+
+    let output = install_pkg_unconsented(&user, project.path(), &registry, &pkgref);
+    assert!(
+        output.status.success(),
+        "`org.vibevm.ai-native` is trusted by the base list, so no question is asked: {}",
+        String::from_utf8_lossy(&output.stderr),
+    );
+    let outcomes = slot_outcomes(&documents(&output.stdout));
+    assert_eq!(outcomes.len(), 1);
+    assert_eq!(outcomes[0]["status"], "ok");
+    let slot = project
+        .path()
+        .join(common::slot_dir("org.vibevm.ai-native.hooked", "0.1.0"));
+    assert_eq!(
+        fs::read_to_string(slot.join("hook-order.txt"))
+            .unwrap()
+            .trim(),
+        "post",
+        "the trusted dependency's contribution really ran",
+    );
+}
+
+/// …and `untrusted_groups` takes that trust back. The owner's addition of
+/// 2026-11-10: a deny entry wins over the base list, so the very same
+/// install asks again — here, unattended, refuses with both remedies.
+#[test]
+fn an_untrusted_groups_entry_restores_the_question_for_a_group_the_base_trusts() {
+    let (_outer, user, project, registry) = setup(Fixture::JudgmentTrust);
+    let pkgref = judged_package_in_group(&registry, "org.vibevm.ai-native");
+    fs::write(
+        user.settings.join("agents.toml"),
+        "untrusted_groups = [\"org.vibevm.ai-native\"]\n",
+    )
+    .unwrap();
+
+    let output = install_pkg_unconsented(&user, project.path(), &registry, &pkgref);
+    assert!(
+        !output.status.success(),
+        "a group the user untrusted must not run its contributions unattended",
+    );
+    let combined = format!(
+        "{}{}",
+        String::from_utf8_lossy(&output.stdout),
+        String::from_utf8_lossy(&output.stderr),
+    );
+    for expected in [
+        "org.vibevm.ai-native",
+        "judged",
+        "untrusted_groups",
+        "--assume-yes",
+        "PROP-065#ordinary-trust",
+    ] {
+        assert!(
+            combined.contains(expected),
+            "the refusal must name `{expected}`: {combined}",
+        );
+    }
+    assert!(
+        !project
+            .path()
+            .join(common::slot_dir("org.vibevm.ai-native.hooked", "0.1.0"))
+            .exists(),
+        "nothing of the untrusted package was materialised",
+    );
+
+    // A sibling group under the same base entry is unaffected: the deny
+    // entry is exactly the group it names.
+    let sibling = judged_package_in_group(&registry, "org.vibevm.node");
+    let output = install_pkg_unconsented(&user, project.path(), &registry, &sibling);
+    assert!(
+        output.status.success(),
+        "`org.vibevm.node` is still trusted by the base: {}",
+        String::from_utf8_lossy(&output.stderr),
     );
 }
