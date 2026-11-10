@@ -899,10 +899,352 @@ evidence of the first.
 
 **Parallel.** With P1, P4, P5a.
 
-### P7 — vibenvm and the algorithmic differential proof — **L**
+### P7 — the owner's decisions of 2026-11-10, in six delegable units
+
+**What changed.** P7 was one phase: the vibenvm shim plus its differential
+suite, carrying the two general features the nvm mapping named. The owner's
+review of 2026-11-10 changed its shape twice. It **approved twelve of the
+fourteen proposed exclusions and rejected two** (PROP-075
+`#VIBENVM-EXCLUSIONS-APPROVED`), so `--skip-default-packages` and
+`$NVM_DIR/default-packages` are features the suite must cover rather than gaps
+it may declare; and it **required that nothing added for nvm know anything
+about npm or Node**, because the next pass replaces sdkman for Java and must
+land on the same machinery. Two further general features were decided the same
+day and are not demanded by nvm at all. So P7 is six ordered units, each a
+delegable task with its own files, acceptance and risks. The arithmetic and
+the correction of the campaign's "exactly three features" prediction are
+PROP-075 `#VIBENVM-GAPS`.
+
+**Sizes and parallelism at a glance.**
+
+| unit | what | size | needs | may run beside |
+|---|---|---|---|---|
+| P7a | keyed version files + `--write-version-file` | **M** | — | P7d, P7e |
+| P7b | ecosystem adapters (declaration + four verbs + `vibe app extras` verbs) | **L** | — | P7d, P7e |
+| P7c | the user's extras list, apply-after-install, `--no-extras` | **M** | P7b, P7d | P7a |
+| P7d | `[recommends]` for applications + the general `--no-recommends` | **M** | — | P7a, P7b, P7e |
+| P7e | steps for ordinary packages (+ B-188) | **L** | — | P7a, P7b, P7c, P7d |
+| P7f | vibenvm shim + the differential suite | **L** | P7a, P7b, P7c | — |
+
+**Where the file conflicts are, so a parallel run is a decision and not a
+hope.** P7a and P7b both touch
+`crates/vibe-core/src/manifest/package/application.rs` and the clap definitions
+under `crates/vibe-cli/src/cli/`, so running them together costs one
+rebase of two files; P7c and P7d both touch
+`crates/vibe-cli/src/commands/app/global.rs` (the flag surface) and
+`crates/vibe-app/src/index/wire.rs` (the inventory move), which is why P7c
+names P7d as a prerequisite rather than a neighbour. **P7e touches neither
+`crates/vibe-app/` nor `crates/vibe-core/src/manifest/package/application*`**
+— it lives in `crates/vibe-core/src/manifest/extension.rs`,
+`crates/vibe-install/` and `crates/vibe-lifecycle/` — so it is the one unit
+that is conflict-free against every other and is the best candidate to run
+first in parallel with anything.
+
+### P7a — keyed version files and `--write-version-file` — **M**
+
+**Goal.** A third version-file format of `key`/`version` pairs, with
+`tool-versions` reduced to its short spelling, and `--write-version-file` on
+`vibe app use` and `vibe install -g` for both formats.
+
+**Authority.** PROP-075 `#VERSION-FILE-KEYED`, `#VERSION-FILE-WRITE`;
+`AV-FMT-025` and `AV-FMT-019` (amended in place).
+
+**Files.** `crates/vibe-core/src/manifest/package/application/version_file.rs`
+(the `keyed` variant with `separator` / `comment` / `extra`, and the
+`tool-versions` → `keyed` expansion, which must happen **before** any reader
+sees a row so there is one reader and one writer);
+`…/version_file_validation.rs` (the four refusals, each naming its TOML path);
+`crates/vibe-app/src/versionfile/formats.rs` (read a keyed file, ignore foreign
+keys silently, take `extra` into account) and a new `…/versionfile/write.rs`
+(the in-place single-line edit, the symlink refusal, the duplicate-key
+refusal); `crates/vibe-app/src/versionfile/search.rs` (which file a write with
+no value lands in); `crates/vibe-cli/src/cli/app_activation.rs` and
+`crates/vibe-cli/src/cli/pkg.rs` (the flag on `app use` and on `install -g`);
+`crates/vibe-cli/src/commands/app/alternatives.rs` and
+`…/commands/app/global.rs` (the call and the report line).
+
+**Commands.** `vibe app use node 22.23.4 --write-version-file`,
+`vibe install -g org.vibevm.node/node@lts --write-version-file=.sdkmanrc`.
+
+**Tests.** `crates/vibe-core` unit: `tool-versions` and its expanded `keyed`
+row parse to the identical declared row (the no-drift proof); each refusal by
+TOML path. `crates/vibe-app` unit: a `.sdkmanrc` holding `java=21` and
+`maven=3.9.9` is read for `java` only, and writing `java` leaves the `maven`
+line and the comments **byte-identical** — asserted as bytes, not as a parse;
+a key absent from the file is appended; an absent file is created; a duplicate
+key refuses naming both line numbers; a `.tool-versions` with two versions on
+the key's line takes the first under `extra = "first"` and is unusable under
+`refuse`. CLI fixture: the two commands above against a fixture package
+declaring one `plain` and one `keyed` row.
+
+**Acceptance.**
+```sh
+cd /fast/git/vibevm
+cargo test -p vibe-core --offline --locked version_file
+cargo test -p vibe-app --offline --locked versionfile
+cargo test -p vibe-cli --offline --locked --test cli_app_version_files
+```
+
+**Risks.** (1) The byte-identity claim is the whole value of `keyed`, and a
+writer that round-trips through a parser will quietly normalise spacing — the
+test must compare bytes of the untouched lines. (2) `tool-versions` already
+ships (`AV-FMT-011`) and the real Node package declares it, so the expansion
+must keep that spelling working; a break here is invisible until a package is
+installed. (3) Deciding the write target when no file exists is the one
+genuinely ambiguous rule — it is decided in `#VERSION-FILE-WRITE` and must not
+be re-decided in code.
+
+### P7b — ecosystem adapters — **L**
+
+**Goal.** `[[application.ecosystem]]` with its four verbs, the argv-only item
+contract, the run record and work directory, the author-recommends shorthand
+as synthesised features, the synthesised migration entry, and the explicit
+`vibe app extras` verbs that do not need the user's list.
+
+**Authority.** PROP-075 `#ECOSYSTEM-ADAPTER`, `#ECOSYSTEM-RECOMMENDS`,
+`#ECOSYSTEM-MIGRATION`, `#PACKAGE-ACTIONS` (which records what is *not* built);
+`AV-FMT-026`, `AV-FMT-027`, and the `describe` half of `AV-FMT-032`.
+
+**Files.** `crates/vibe-core/src/manifest/package/application.rs` + a new
+`…/application/ecosystem.rs` and `…/application/ecosystem_validation.rs` (the
+rows, the `recipe`-only refusal for `install` / `remove`, the reserved
+`ecosystem:` migration namespace, the recommends→feature synthesis);
+`crates/vibe-app/src/steps/features.rs` (admit the synthesised rows in every
+option); a new `crates/vibe-app/src/ecosystem/` module beside
+`crates/vibe-app/src/migrate/` (the verb runner over `StepDecl`, the work
+directory, the `VIBE_ECOSYSTEM_*` environment, the `list` file reader, the
+`vibe-app-ecosystem/1` record); `crates/vibe-app/src/migrate.rs` (synthesise
+the `ecosystem:<id>` entry beside the declared ones);
+`crates/vibe-app/src/describe.rs`; `crates/vibe-cli/src/cli/app.rs` and a new
+`crates/vibe-cli/src/commands/app/extras.rs`;
+`schemas/application_ecosystem.jtd.json`, `schemas/application_extras.jtd.json`
+and their `formats/REGISTRY.toml` records with golden corpora.
+
+**Commands.** `vibe app extras list node --json`,
+`vibe app extras remove node typescript`,
+`vibe app extras self-upgrade node --ecosystem npm`,
+`vibe app migrate node 22.23.4 24.22.2 --only ecosystem:npm`.
+
+**Tests.** Manifest: a `shell` `install` verb refuses naming the field; two
+rows with one `id` refuse; a recommends row naming an undeclared ecosystem
+refuses; a recommends `id` colliding with an authored feature refuses; an
+authored migration id in the `ecosystem:` namespace refuses. **The injection
+test is the phase's own gate**: an item whose text is `; rm -rf $HOME` and one
+containing a newline, a quote and a `$(…)` reach the recipe as exactly those
+argv elements and nothing is evaluated — asserted by a fixture recipe that
+writes `"$@"` one per line and a comparison against the input list. Runner:
+the `list` file is read and trimmed; a missing `list` file is an empty list and
+not an error; the work directory is kept on success and on failure and is
+listed by `vibe app work`. Migration: the synthesised entry appears in
+`vibe app describe`, runs `list` on the old version and `install` on the new
+with the observed items, and `migration = false` suppresses it.
+
+**Acceptance.**
+```sh
+cd /fast/git/vibevm
+cargo test -p vibe-core --offline --locked ecosystem
+cargo test -p vibe-app --offline --locked ecosystem
+cargo test -p vibe-cli --offline --locked --test cli_app_extras
+cargo xtask formats check     # the two new registry records and their corpora
+```
+
+**Risks.** (1) The feature synthesis touches the feature resolution of
+PROP-065 `#feature-tree`, whose fixed-point rules are delicate: a synthesised
+row must be an ordinary row in every respect or the resolution order changes
+for packages that declare no adapter at all — the regression gate is the
+existing feature-tree suite, run unchanged. (2) `install` must be `recipe`, and
+the Node package's own adapter is the first real recipe to receive argv: a
+`"$@"` mistake in the package is invisible to vibe's tests, so the fixture
+recipe is the contract. (3) The synthesised migration entry is offered after
+`install -g`, and `migration_offer` answers nothing when a slot has no earlier
+version — correct for a migration, and the reason `#PACKAGE-ACTIONS` refuses to
+express a maintenance act as one; do not "fix" it here.
+
+### P7c — the user's extras list and apply-after-install — **M**
+
+**Goal.** `[slot.<slot>.extras.<ecosystem>]` in `~/.vibe/config.toml`, the
+final-list arithmetic, the apply after `install -g` / `update -g` of a new
+version, `--no-extras`, `--no-recommends`'s ecosystem half, `vibe app extras
+apply|add|drop|import`, and the failure that never touches the runtime.
+
+**Authority.** PROP-075 `#SLOT-EXTRAS`; `AV-FMT-028`, `AV-FMT-029`.
+
+**Files.** `crates/vibe-core/src/user_config.rs` (the new top-level `[slot]`
+table — the struct is `deny_unknown_fields`, so without this a user who writes
+the table gets a parse error); `crates/vibe-app/src/ecosystem/` (the final-list
+computation and the apply entry point); `crates/vibe-app/src/index/wire.rs`
+and `crates/vibe-app/src/index.rs` + `schemas/application/e7/index.jtd.json`
+(the per-adapter record; the generation step is shared with P7d's weak edge);
+`crates/vibe-cli/src/commands/app/global.rs` (the call after a successful
+install, beside the existing `migrate::offer` call, and the two flags);
+`crates/vibe-cli/src/commands/app/extras.rs`.
+
+**Commands.** `vibe install -g org.vibevm.node/node@lts`,
+`… --no-extras`, `… --no-recommends`, `vibe app extras apply node`,
+`vibe app extras import node ~/.nvm/default-packages`.
+
+**Tests.** The arithmetic, as a table-driven unit test: enabled author
+recommendations, minus drops, plus `add`, de-duplicated first-wins — including
+the case the owner's wording left ambiguous and the design decided, that a
+`drop` is honoured **under `--no-extras`**. An unknown slot, ecosystem or
+recommendation id in the settings is reported once and ignored. CLI fixture: a
+failing `install` verb leaves the version installed, the slot default where it
+was, exit status 0, one warning naming the retry command, and the outcome in
+the record; `import` reads a `#`-commented file into `add`. **This phase
+introduces the first read of `UserConfig` from `crates/vibe-app/`** — a test
+must prove a home with no `[slot]` table behaves exactly as today.
+
+**Acceptance.**
+```sh
+cd /fast/git/vibevm
+cargo test -p vibe-core --offline --locked user_config
+cargo test -p vibe-app --offline --locked extras
+cargo test -p vibe-cli --offline --locked --test cli_app_extras_apply
+```
+
+**Risks.** (1) `crates/vibe-app/` reads no user config today; adding that seam
+in a crate whose state is otherwise entirely its own settings root is the
+phase's real architectural cost, and the alternative (a slot-keyed file beside
+`applications/index.json`) must be rejected deliberately, not by accident —
+the owner said `~/.vibe` settings. (2) The inventory move to
+`vibe-user-applications/8` needs the `vibe-app-proxy` admission PROP-059
+`#proxy-index-upgrade` requires, which `AV-FMT-017` already paid once for `/7`;
+budget for it. (3) Applying extras after an install makes the first install of
+a runtime do ecosystem work, which lengthens it visibly — the step panel must
+show it as its own rows, or users will read the pause as a hang.
+
+### P7d — `[recommends]` for applications and the general `--no-recommends` — **M**
+
+**Goal.** An application's `[recommends]` installed best-effort by the
+application installer; `--no-recommends` as one global flag honoured by every
+plane that solves or installs; `[suggests]` reported and never installed.
+
+**Authority.** PROP-077 (`#APP-RECOMMENDS`, `#APP-RECOMMENDS-MECHANICS`,
+`#APP-RECOMMENDS-CONSENT`, `#NO-RECOMMENDS-FLAG`, `#SUGGESTS-UNCHANGED`);
+`AV-FMT-030`, and the weak edge of `AV-FMT-029`.
+
+**Files.** `crates/vibe-cli/src/cli.rs` (the global flag) and
+`crates/vibe-cli/src/commands/app/global.rs` (its refusal where nothing
+solves); `crates/vibe-resolver/src/resolvo_engine/mod.rs` and
+`crates/vibe-resolver/src/source_solve.rs` (skip the greedy weak expansion —
+the only resolver change, and it is a branch, not a rewrite);
+`crates/vibe-app/src/operations/install.rs` and `…/operations/mod.rs` (the
+breadth-first walk after `commit`, the visited set, the `auto` + weak edge);
+`crates/vibe-app/src/index/wire.rs` + `schemas/application/e7/index.jtd.json`
+(the weak attribute); `crates/vibe-app/src/steps/plan_view.rs` and
+`crates/vibe-cli/src/commands/app/plan_text.rs` (the recommended subtree in
+`--plan-only`); `schemas/install_report.jtd.json`.
+
+**Commands.** `vibe install -g org.example/jdk` (brings maven),
+`… --no-recommends`, `vibe install --no-recommends` (a project),
+`vibe install -g … --plan-only`.
+
+**Tests.** A fixture app recommending a second fixture app installs both, the
+second recorded `auto` with a weak edge; `--no-recommends` installs one.
+Each skip reason is its own case: not `kind = "app"`, no option for this
+platform, unsatisfiable, absent registry, a failing recommended install — each
+reported, each leaving exit 0. Transitivity with a cycle (`a` recommends `b`,
+`b` recommends `a`) terminates and installs both once. Removal: `uninstall -g`
+of the recommender succeeds and reports what it leaves; `uninstall -g` of the
+recommended succeeds although the recommender is installed; `autoremove` takes
+an orphaned recommendation and never one the user installed by name. Project
+plane: `--no-recommends` changes the solve and **not** a lock replay — asserted
+by installing with the flag, then installing again without it from the same
+lock and getting the same tree.
+
+**Acceptance.**
+```sh
+cd /fast/git/vibevm
+cargo test -p vibe-resolver --offline --locked recommends
+cargo test -p vibe-app --offline --locked recommends
+cargo test -p vibe-cli --offline --locked --test cli_app_recommends
+cargo test -p vibe-cli --offline --locked --test cli_install_no_recommends
+```
+
+**Risks.** (1) A recommendation is an install the user did not name; the plan
+and the report are the whole mitigation, and a run that installs something it
+did not print first is a defect of this phase, not a cosmetic one. (2) The
+weak edge rides the same inventory generation as P7c's adapter record — one
+generation step, two phases, so whichever lands first owns the `e7` schema and
+the proxy admission. (3) The project plane's arbitrary-code consent gate must
+cover a recommended package exactly as it covers a named one; a recommendation
+that walks past a consent the direct request would have needed is the one
+unacceptable outcome.
+
+### P7e — structured steps for ordinary packages — **L**
+
+**Goal.** An ordinary package may declare several named things to run when it
+is installed, with its prerequisites checked first, through PROP-054's `slot:`
+points and no second grammar; `B-188` is the consumer and the acceptance.
+
+**Authority.** PROP-065 `#ordinary-reach`, `#ordinary-grammar`,
+`#ordinary-plan`, `#ordinary-failure`, `#ordinary-consumer`; PROP-054
+`#SLOT-CONTRIBUTION-JUDGMENT`; `AV-FMT-031`, `AV-FMT-032`.
+
+**Files.** `crates/vibe-core/src/manifest/extension.rs` (the four new optional
+fields and the fields refused by name on a `slot:` point);
+`crates/vibe-core/src/lifecycle/point.rs` (unchanged — the point namespace
+stays closed, and a test should assert that);
+a new shared judgment module (the condition evaluator, the needs preflight and
+the plan projection) extracted from `crates/vibe-app/src/steps/plan.rs` so both
+planes call one implementation — **this extraction is the phase's main
+structural act and should be its own commit**;
+`crates/vibe-install/src/lifecycle.rs` and `…/lifecycle/plan.rs` (carry the
+four fields through the synthetic-contribution path `[hooks]` already uses);
+`crates/vibe-install/src/apply.rs` (the preflight refusal before step 8, the
+panel rows, the evidence directory);
+`crates/vibe-cli/src/commands/install/report.rs` and `…/install/draft.rs`;
+`schemas/install_steps.jtd.json` + its registry record and corpus.
+
+**Commands.** `vibe install --plan-only` (shows the `slot:` rows),
+`vibe install org.vibevm.ai-native/rust-ai-native`,
+`vibe reinstall org.vibevm.ai-native/rust-ai-native` (the retry).
+
+**Tests.** The refusals, each naming its field: `requires`, `phase`, `result`,
+and a `$out` / `$sources` / `$app_root` template on a `slot:` contribution.
+`needs` preflight: a contribution needing an absent command refuses the
+package's installation **before the slot is populated**, naming the
+contribution and the need; an `optional` one with an unmet need is skipped and
+reported. Conditions: `when = { feature }` reads the package-scope
+configuration of PROP-069 and a false condition reports `skip` with the
+deciding condition. Failure: a failing `pre-install` contribution rolls the
+slot back and registers nothing; a failing `post-install` leaves the package
+installed and flagged; an interrupt marks the contribution `interrupted`,
+marks nothing `done`, and runs nothing after it. **Regression gate**: the whole
+existing `[hooks]` suite runs unchanged, because `[hooks]` is the one-field
+spelling of the same thing. **B-188 fixture**: a package declaring two
+`slot:post-install` contributions with `needs` and `title`s produces the plan,
+the two logs and the `vibe-install-steps/1` record.
+
+**Acceptance.**
+```sh
+cd /fast/git/vibevm
+cargo test -p vibe-core --offline --locked extension
+cargo test -p vibe-install --offline --locked lifecycle
+cargo test -p vibe-cli --offline --locked --test cli_install_slot_steps
+cargo test -p vibe-workspace --offline --locked hooks   # the unchanged [hooks] gate
+```
+
+**Risks.** (1) The shared judgment module is an extraction out of a crate whose
+step planner is entangled with installation keys and payload roots; if the
+extraction cannot be made clean, the honest fallback is a second small
+evaluator with a shared test corpus, and that decision belongs in this phase's
+report rather than in silence. (2) `[hooks]` is in use today and its failure
+law differs from PROP-065's; carrying it unchanged is the acceptance, and the
+temptation to unify the two failure laws must be refused. (3) `needs`
+refusing an installation up front turns a late failure into an early refusal —
+better, but it will refuse installs that "worked" before by failing late, so
+the release note must say so.
+
+### P7f — vibenvm and the algorithmic differential proof — **L**
 
 **Goal.** `org.vibevm.node/vibenvm` plus a committed, rerunnable suite whose
-exit code is the verdict, with complete coverage of the pinned inventory.
+exit code is the verdict, with complete coverage of the pinned inventory and
+exactly the twelve owner-approved exclusions.
+
+**Authority.** PROP-075 `#VIBENVM`, `#VIBENVM-ALGORITHMIC-PROOF`,
+`#VIBENVM-PIN`, `#VIBENVM-MAPPING`, `#VIBENVM-SUITE`, `#VIBENVM-EXCLUSIONS`,
+`#VIBENVM-EXCLUSIONS-APPROVED`; `AV-FMT-020`.
 
 **Files.** New `conformance/vibenvm/` in this repository:
 `run.sh`, `fetch-mirror.sh`, `mirror.lock`, `extract-inventory.sh`,
@@ -911,24 +1253,34 @@ exit code is the verdict, with complete coverage of the pinned inventory.
 `mirror/`; `xtask/src/main.rs` + a new `xtask/src/vibenvm_conform.rs`
 (`cargo xtask vibenvm-conform`). The shim package itself is a new repository
 `/fast/git/vibe-pkg-vibenvm` (`nvm.sh`-shaped `vibenvm.sh`, a `[[application]]`
-of kind `app` with no `path_dirs`, installed by `vibe install -g`). The two
-general features the mapping named land here if they have not already:
-`--write-version-file` on `vibe app use` / `install -g` (P5a's files), and the
-`latest-npm` migration entry admitted by P6.
+of kind `app` with no `path_dirs`, installed by `vibe install -g`). The real
+`org.vibevm.node/node` package at `/fast/git/vibe-pkg-node` gains the npm
+adapter of P7b and **drops its hand-written `npm-globals` migration entry**.
+
+**The twelve approved exclusion rows**, written with `approved_by = "owner"`
+and `approved = "2026-11-10"` and no others: the five alias rows (`alias`,
+`unalias`, `install --alias=`, `ls --no-alias`, `$NVM_DIR/alias/*`), the two
+source-build rows (`install -s` / `-b`, `install -j`), the two category and
+internal-state rows (`install --only=` written as `subcommand = "*"`, and
+`$NVM_ONLY` with `.lts-status`, the install locks, `$NVM_AUTH_HEADER` and the
+third-party hook written as `(environment)` / `(internal)`), and the three
+hygiene rows (`use --delete-prefix`, `set-colors`, `debug`). The three row
+rules the file needs — one row per extracted pair, `subcommand = "*"`, and a
+recorded-but-not-required `(environment)` row — are
+`#VIBENVM-EXCLUSIONS-APPROVED` and belong in `coverage.py`.
 
 **Commands.** `cargo xtask vibenvm-conform [--cases GLOB] [--update-inventory]`.
-
-**Formats.** `AV-FMT-019` (`--write-version-file` on `vibe app use` and
-`vibe install -g`), `AV-FMT-020` (the suite's authored documents:
-`exclusions.toml`, `mirror.lock`, `nvm-tests.allow`, `normalise.rules`, and
-the exit-code verdict).
 
 **Tests.** The suite *is* the test. Its own meta-tests, which must exist or the
 verdict is not trustworthy: a deliberately wrong shim fails with exit 1 naming
 the field; a deliberately uncovered flag fails with exit 2 naming the pair; an
-exclusion row without `approved_by = "owner"` fails with exit 2; a tampered
-`mirror.lock` fails with exit 3; a non-loopback connection attempt fails with
-exit 3.
+exclusion row without `approved_by = "owner"` fails with exit 2; a thirteenth
+exclusion row fails with exit 2; a tampered `mirror.lock` fails with exit 3; a
+non-loopback connection attempt fails with exit 3. New differential cases the
+owner's rejections create: `install --skip-default-packages` against
+`--no-extras`, and a `$NVM_DIR/default-packages` file against
+`vibe app extras import` + the user's own list, compared through the `globals`
+observation in both sandboxes.
 
 **Acceptance.**
 ```sh
@@ -942,14 +1294,40 @@ conformance/vibenvm/run.sh --self-test ; echo "selftest=$?"
 **Risks.** The honest ones, named now. (1) nvm's own `fast` suite is *near*-
 offline, not offline, and has no mirror override — so reusing it is bounded to
 a recorded allow-list and the reuse is a bonus, never the gate. (2) The
-inventory of the pinned v0.41.0 includes `--only=<categories>` on nearly every
-verb; if the owner rejects that exclusion (Q2 below) the campaign gains a
-general "version class" feature and P7 grows by a phase. (3) A differential
-suite is only as strong as its observation list; the list is the owner's own,
-and adding to it later is cheap because the comparison is field-by-field.
-(4) Linux only, stated as such — this is not a cross-platform claim.
+default-packages cases are new and they are the only ones that exercise an
+ecosystem adapter end to end against a real `npm install -g`, so they are also
+the slowest; they need their own `wall_secs` budget and a small item list.
+(3) A differential suite is only as strong as its observation list; the list is
+the owner's own, and adding to it later is cheap because the comparison is
+field-by-field. (4) Linux only, stated as such — this is not a cross-platform
+claim. (5) The `--only=<categories>` risk the previous plan carried is
+**withdrawn**: the owner approved the exclusion, so no "version class" feature
+is built.
 
-**Parallel.** Needs P2, P3, P5a, P5b, P6. Last by construction.
+**Parallel.** Needs P2, P3, P5a, P5b, P6, P7a, P7b, P7c. Last by construction.
+
+### sdkman-readiness checklist — what the Java pass will need
+
+The owner's binding requirement was that nothing in P7 may block the sdkman
+replacement. This checklist is that claim, made checkable. None of these is
+P7 work; each names the P7 decision that leaves room for it.
+
+| what Java needs | status after P7 |
+|---|---|
+| **Vendor inside the version** (`21.0.4-tem`, `17-zulu`, `temurin-21`): a default vendor, and translation of sdkman's identifiers | **Not blocked, not built.** A produced version is semver after `strip_prefix` (`#TEMPLATE-SOURCE-KINDS`), and a vendor is expressible today as a prerelease/build segment or as separate packages per vendor; a first-class vendor axis is a later amendment of that fact and touches no P7 decision. |
+| **`JAVA_HOME` and other `*_HOME`**, not only PATH; macOS `java_home` | **Not blocked.** `[[installer_options.steps]]` already has `kind = "env"` with `set` / `path_prepend` over `$app_root` (PROP-065 `#env-step`), which is exactly a `*_HOME`; `vibe app env` prints per-shell lines for any variable, not only PATH (`#ACTIVATION-ENV-OUTPUT`). Nothing in P7 narrows either. |
+| **Registering an already-installed JDK** under a name (`sdk install java x /path`, `jenv add`), whose removal must not delete the files | **Not blocked.** `result = { external = "<app_root>" }` already registers a root vibe does not own, and PROP-065 `#uninstall-tree` already states that removal never touches files outside the payload. What is missing is only the command spelling, and no P7 decision occupies it. |
+| **Several candidates** (java, maven, gradle, kotlin, scala, sbt), each with its own `*_HOME`, several named in one `.sdkmanrc` | **Delivered by P7a.** `format = "keyed"` exists precisely for this, and `#VERSION-FILE-KEYED` states that one file resolves several slots from their own keys while `#VERSION-FILE-WRITE` edits one line in place so two slots can share the file. |
+| **`.sdkmanrc` read and written** | **Delivered by P7a**, as the `keyed` format's first real consumer. |
+| **No ecosystem adapter** (Java has no bundled package manager; default packages and self-upgrade are not wanted) | **Correct by construction.** `[[application.ecosystem]]` is optional and a package that declares none is the test that the mechanism is optional (`#ECOSYSTEM-ADAPTER`); `#SLOT-EXTRAS` applies per declared adapter and does nothing where there is none. |
+| **Companions installed together** (sdkman's java + maven + gradle) | **Delivered by P7d.** `[recommends]` on an application is exactly "maven comes with the JDK", with `--no-recommends` as the decline (PROP-077 `#APP-RECOMMENDS`). |
+| `sdk env install` / `clear`, offline mode, cache cleaning, "what is outdated" | **Not blocked.** Each maps onto an existing surface — the version-file resolution of `#VERSION-FILE-FORMATS`, the global `--offline`, `vibe cache`, `vibe app outdated` — and none is touched by a P7 decision. |
+
+**Conclusion, stated so the next pass can rely on it:** no P7a–P7f decision
+blocks the Java pass, and two of them (the `keyed` version-file format and
+application `[recommends]`) exist in their general form *because* Java needs
+them. The one thing the Java pass must decide for itself is the vendor axis,
+and it is deliberately left open rather than guessed at here.
 
 ### Dependency order, as a graph
 
@@ -958,15 +1336,21 @@ P0 spikes
   |
   +--> P1 ----+--> P2 --+--> P3 --+
   |           |         |         |
-  |           |         +--> P4   +--> P7
+  |           |         +--> P4   |
   |           |         |         |
   |           |         +--> P5b -+
-  +--> P5a ---------------------- +
-  +--> P6 ----------------------- +
+  +--> P5a ---------------------- +--> P7a --+
+  +--> P6 ----------------------- +--> P7b --+--> P7c --> P7f
+                                  +--> P7d --+
+                                  +--> P7e      (joins no one)
 ```
 
 P1, P5a and P6 may run concurrently from the start. P3, P4 and P5b may run
-concurrently once P2 lands.
+concurrently once P2 lands. **P1 through P6 are delivered.** Of the six units
+of P7, **P7a, P7b, P7d and P7e may all start at once**; P7c needs P7b and P7d
+(the inventory generation and the flag), and P7f needs P7a, P7b and P7c. P7e
+joins nothing: it is the only unit that touches neither `crates/vibe-app/` nor
+the application manifest tables, so it never conflicts and never blocks.
 
 ## 5. Predictions (falsifiable)
 
@@ -1012,7 +1396,18 @@ concurrently once P2 lands.
 - **P7** The mapping yields exactly the three new vibe features
   `PROP-075#VIBENVM-GAPS` names, and no fourth is discovered while writing the
   cases. *This is the campaign's central claim: nvm's surface is absorbed by
-  general machinery.*
+  general machinery.* **Half held, half falsified, 2026-11-10, before a case
+  was written — by the owner's review rather than by the code.** The absorption
+  held: nvm's surface still yields three gaps and nothing else, and every other
+  row of the mapping is `maps` or an owner-approved `exclude`. The *count of
+  features* did not: the owner rejected two proposed exclusions (so the third
+  gap is the default-packages pair) and required that nothing added for nvm
+  know anything about npm, which turns three gaps into four general features —
+  and then added two more features nvm does not ask for at all. Phase P7's
+  total is six, and `PROP-075#VIBENVM-GAPS` carries the corrected arithmetic
+  rather than a reinterpretation of this sentence. The prediction's successor,
+  for P7f to answer: **no seventh feature is discovered while writing the
+  cases.**
 
 ## 6. Quick start (cold)
 
@@ -1030,7 +1425,7 @@ python3 /fast/vibevm-test-tmp/claude-int/run_test.py <label> cargo test -p <crat
 
 ## 7. Acceptance script (whole campaign)
 
-To be written in P7 as `campaigns/app-versions-2026-11/accept.sh`. It runs, in
+To be written in P7f as `campaigns/app-versions-2026-11/accept.sh`. It runs, in
 one network-isolated sandbox with a fresh HOME: install Node from the template
 at a channel; `vibe app versions`; switch with `vibe app env` and with the
 prompt hook; `vibe app exec` at a second version; migrate the global npm
@@ -1038,17 +1433,30 @@ packages between them; mirror the template into a local registry with
 `mirror.toml` and install from the snapshot with the network denied; and
 finally `cargo xtask vibenvm-conform`. It exits non-zero on any step's
 failure, any non-loopback connection attempt, and any unverified artifact use.
+The owner's decisions of 2026-11-10 add four legs to it, one per new feature
+the user can see: writing a `keyed` version file and reading it back for two
+slots; applying a user extras list to a newly installed version and observing
+it through the adapter's own `list`; installing an application that recommends
+another and declining it with `--no-recommends`; and installing an ordinary
+package whose `slot:post-install` contributions appear in `--plan-only` and
+refuse up front on a missing `needs`.
 
 ## 8. Open points
 
 The design's open questions are
 `spec://org.vibevm.core/vibevm/common/PROP-075#OWNER-QUESTIONS`, each with the
 default it takes unless the owner objects: (Q1) the fourteen proposed nvm
-exclusions need row-by-row owner approval, because an unapproved row is a gate
-failure by construction; (Q2) `--only=<categories>` is the largest exclusion;
-(Q3) the 15-minute version-list TTL; (Q4) templates undiscoverable in an
-unindexed per-package git registry; (Q5) no `--trust-template` escape hatch
-for the changed-digest alarm. Only Q1 blocks a phase, and only P7.
+exclusions needed row-by-row owner approval, because an unapproved row is a
+gate failure by construction — **answered 2026-11-10: twelve approved, two
+rejected**, and the rejected pair became the ecosystem-adapter and slot-extras
+feature (`PROP-075#VIBENVM-EXCLUSIONS-APPROVED`); (Q2) `--only=<categories>`
+was the largest exclusion — **answered 2026-11-10: excluded as proposed**, so
+no general "version class" feature is built and P7's risk of growing by a
+phase is withdrawn; (Q3) the 15-minute version-list TTL; (Q4) templates
+undiscoverable in an unindexed per-package git registry; (Q5) no
+`--trust-template` escape hatch for the changed-digest alarm. Q3, Q4 and Q5
+stand on their defaults and block nothing; nothing blocks a phase any more.
+Four new questions, all P7d's and none blocking, are `PROP-077#WEAK-OPEN`.
 
 ## 9. Log
 
