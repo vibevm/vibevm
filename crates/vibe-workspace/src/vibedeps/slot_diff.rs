@@ -539,7 +539,23 @@ fn collect_source_files(
                 .strip_prefix(root)
                 .expect("a walked source path remains below its root")
                 .to_path_buf();
-            files.push(if let Some(observation) = policy.captured(&relative) {
+            let observed = policy.captured(&relative);
+            // A copy's managed boot block is neutralised on the way in, so
+            // the bytes a harness's downward discovery concatenates do not
+            // describe another project's boot (PROP-076 `#SYS-NO-RECURSION`).
+            // Only an instruction file is read for this, and only its block
+            // changes.
+            if super::instruction_block::is_instruction_file(&relative) {
+                let bytes = match &observed {
+                    Some(observation) => observation.bytes().to_vec(),
+                    None => fs::read(&source).map_err(|error| io_err(&source, error))?,
+                };
+                if let Some(neutralised) = super::instruction_block::neutralise(&bytes) {
+                    files.push(PreparedSlotFile::from_bytes(relative, neutralised));
+                    continue;
+                }
+            }
+            files.push(if let Some(observation) = observed {
                 PreparedSlotFile::from_observation(relative, source, mode, observation)
             } else {
                 PreparedSlotFile::from_source(relative, source, mode)?

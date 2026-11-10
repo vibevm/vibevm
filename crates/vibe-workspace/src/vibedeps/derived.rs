@@ -316,6 +316,16 @@ fn transform_file(
     package: &str,
     overlay: &PackageOverlay,
 ) -> Result<Option<(PathBuf, Vec<u8>)>, WorkspaceError> {
+    // An instruction file is not a spec document and never enters the
+    // pivot, but its managed boot block is still neutralised on the way
+    // into the slot — the same rule the mixed walk applies, applied at the
+    // one place this walk decides a file's output bytes
+    // (PROP-076 `#SYS-NO-RECURSION`).
+    if super::instruction_block::is_instruction_file(rel) {
+        let bytes = fs::read(source).map_err(|error| io_err(source, error))?;
+        return Ok(super::instruction_block::neutralise(&bytes)
+            .map(|neutralised| (rel.to_path_buf(), neutralised)));
+    }
     if !is_spec_document(rel) {
         return Ok(None);
     }

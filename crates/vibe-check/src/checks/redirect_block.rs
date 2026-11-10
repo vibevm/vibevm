@@ -28,7 +28,7 @@ impl Check for RedirectBlockCheck {
         r = 1
     )]
     fn run(&self, project_root: &Path, _opts: &CheckOptions, report: &mut CheckReport) {
-        for name in ["CLAUDE.md", "AGENTS.md", "GEMINI.md"] {
+        for name in INSTRUCTION_FILES {
             let path = project_root.join(name);
             let content = match fs::read_to_string(&path) {
                 Ok(c) => c,
@@ -41,9 +41,125 @@ impl Check for RedirectBlockCheck {
                     None,
                     format!("`{name}` has a malformed <vibevm> block: {reason}"),
                 );
+                continue;
             }
+            report_codex_budget(name, &content, report);
+        }
+        report_discoverable_blocks(project_root, report);
+    }
+}
+
+/// The agent instruction files vibevm owns a block inside (PROP-012).
+const INSTRUCTION_FILES: [&str; 3] = ["CLAUDE.md", "AGENTS.md", "GEMINI.md"];
+
+/// How close the block's end may come to a project instruction file's
+/// truncation limit before it is worth saying so. The limit itself and its
+/// margin are `vibe-workspace`'s, so there is one measurement rather than a
+/// second copy of a ceiling (owner decision D11,
+/// `PROP-076#SYS-HARNESS-DELIVERY`).
+fn report_codex_budget(name: &str, content: &str, report: &mut CheckReport) {
+    let Some(end) = block_end(content) else {
+        return;
+    };
+    let budget = vibe_workspace::boot_artifacts::CodexBudget::of(end);
+    // The past-the-limit case is a refusal in the writer, so a project can
+    // only reach it by hand-editing; reported here it is still a warning,
+    // because `vibe check` reports and never writes.
+    if let Some(message) = budget.message(name) {
+        report.warn(
+            CheckId::RedirectBlock,
+            Some(PathBuf::from(name)),
+            None,
+            message,
+        );
+    }
+}
+
+/// Managed blocks a harness's **downward** discovery would concatenate into
+/// a session rooted here (`PROP-076#SYS-NO-RECURSION`).
+///
+/// Two findings, because two different things are wrong. A nested
+/// instruction file below the project root carries a second project's boot
+/// rules: the router scopes itself by node id, so this is a cost in tokens
+/// rather than a contradiction, and it is a warning. A copy under the live
+/// dependency root whose block is **not** neutralised is a regeneration that
+/// has not happened, and names the command that fixes it.
+fn report_discoverable_blocks(project_root: &Path, report: &mut CheckReport) {
+    let vibedeps = vibe_core::layout::current_vibedeps_root();
+    for entry in walkdir::WalkDir::new(project_root)
+        .max_depth(12)
+        .into_iter()
+        .filter_entry(|entry| !skipped(entry.file_name().to_string_lossy().as_ref()))
+        .filter_map(Result::ok)
+    {
+        let Ok(relative) = entry.path().strip_prefix(project_root) else {
+            continue;
+        };
+        if relative.components().count() < 2
+            || !entry.file_type().is_file()
+            || !relative
+                .file_name()
+                .and_then(|name| name.to_str())
+                .is_some_and(|name| INSTRUCTION_FILES.contains(&name))
+        {
+            continue;
+        }
+        let Ok(content) = fs::read_to_string(entry.path()) else {
+            continue;
+        };
+        if block_end(&content).is_none() {
+            continue;
+        }
+        let shown = relative.display().to_string().replace('\\', "/");
+        if relative.starts_with(&vibedeps) {
+            if !content.contains(vibe_workspace::boot_artifacts::NEUTRALISED_BODY) {
+                report.warn(
+                    CheckId::RedirectBlock,
+                    Some(relative.to_path_buf()),
+                    None,
+                    format!(
+                        "`{shown}` is a materialised dependency copy whose <vibevm> block is not \
+                         neutralised, so a harness that discovers instruction files downward \
+                         would read another package's boot rules as this project's: run \
+                         `vibe install` to rewrite the copy"
+                    ),
+                );
+            }
+            continue;
+        }
+        report.warn(
+            CheckId::RedirectBlock,
+            Some(relative.to_path_buf()),
+            None,
+            format!(
+                "`{shown}` carries a <vibevm> block below the project root, and a harness that \
+                 discovers instruction files downward concatenates it: the block scopes itself \
+                 to its own project, so this costs context rather than contradicting this \
+                 project's boot"
+            ),
+        );
+    }
+}
+
+/// Directories no harness discovery and no check needs to walk.
+fn skipped(name: &str) -> bool {
+    matches!(name, ".git" | "target" | "node_modules" | ".vibe")
+}
+
+/// The byte offset just past a well-formed managed block's last byte, or
+/// `None` when the file carries no block.
+fn block_end(content: &str) -> Option<usize> {
+    let mut offset = 0usize;
+    let mut open = false;
+    for line in content.split_inclusive('\n') {
+        offset += line.len();
+        match line.strip_suffix('\n').unwrap_or(line).trim() {
+            "<vibevm>" => open = true,
+            "</vibevm>" if open => return Some(offset),
+            _ => {}
         }
     }
+    None
 }
 
 /// Classify the `<vibevm>` markers in `content` (PROP-012 §2.2): a line
@@ -126,6 +242,116 @@ mod tests {
             finding.message.contains("at line(s) 1, 4"),
             "the malformed report must name the marker lines; got: {}",
             finding.message
+        );
+    }
+
+    /// A nested instruction file is reported, because a harness's downward
+    /// discovery concatenates it — and the root's own block is not, because
+    /// that one is this project's boot.
+    #[test]
+    fn a_nested_managed_block_is_a_warning_and_the_root_block_is_not() {
+        let project = tempdir().unwrap();
+        write_minimal_project(project.path());
+        let block = "# Mine\n\n<vibevm>\nrouter\n</vibevm>\n";
+        fs::write(project.path().join("CLAUDE.md"), block).unwrap();
+        fs::create_dir_all(project.path().join("research/demo")).unwrap();
+        fs::write(project.path().join("research/demo/GEMINI.md"), block).unwrap();
+        // A nested file with no block at all is nothing to report.
+        fs::write(project.path().join("research/demo/AGENTS.md"), "# notes\n").unwrap();
+
+        let report = check_project(project.path(), &opts());
+        let nested = report
+            .findings
+            .iter()
+            .filter(|f| f.check == CheckId::RedirectBlock)
+            .collect::<Vec<_>>();
+        assert_eq!(nested.len(), 1, "got: {nested:?}");
+        assert_eq!(nested[0].severity, Severity::Warning);
+        assert!(
+            nested[0].message.contains("research/demo/GEMINI.md")
+                && nested[0]
+                    .message
+                    .contains("discovers instruction files downward"),
+            "{}",
+            nested[0].message
+        );
+    }
+
+    /// A dependency copy whose block is neutralised is clean; one that still
+    /// carries a live block names the command that rewrites it.
+    #[test]
+    fn an_un_neutralised_dependency_copy_names_the_regeneration() {
+        let project = tempdir().unwrap();
+        write_minimal_project(project.path());
+        let slot = project
+            .path()
+            .join(vibe_core::layout::current_vibedeps_root())
+            .join("org.x.pkg/1.0.0");
+        fs::create_dir_all(&slot).unwrap();
+        fs::write(
+            slot.join("AGENTS.md"),
+            "# package\n\n<vibevm>\nPACKAGE ROUTER\n</vibevm>\n",
+        )
+        .unwrap();
+        fs::write(
+            slot.join("CLAUDE.md"),
+            format!(
+                "# package\n\n<vibevm>\n{}\n</vibevm>\n",
+                vibe_workspace::boot_artifacts::NEUTRALISED_BODY
+            ),
+        )
+        .unwrap();
+
+        let report = check_project(project.path(), &opts());
+        let found = report
+            .findings
+            .iter()
+            .filter(|f| f.check == CheckId::RedirectBlock)
+            .collect::<Vec<_>>();
+        assert_eq!(found.len(), 1, "got: {found:?}");
+        assert_eq!(found[0].severity, Severity::Warning);
+        assert!(
+            found[0].message.contains("not \\\n")
+                || found[0].message.contains("is not neutralised")
+                || found[0].message.contains("not \n")
+                || found[0].message.contains("neutralised"),
+            "{}",
+            found[0].message
+        );
+        assert!(
+            found[0].message.contains("vibe install"),
+            "{}",
+            found[0].message
+        );
+    }
+
+    /// The instruction-file truncation budget, reported at the one offset
+    /// that matters: where the block ends.
+    #[test]
+    fn a_block_near_the_instruction_file_limit_is_a_warning() {
+        let project = tempdir().unwrap();
+        write_minimal_project(project.path());
+        let limit = vibe_workspace::boot_artifacts::PROJECT_DOC_MAX_BYTES;
+        let margin = vibe_workspace::boot_artifacts::PROJECT_DOC_WARN_MARGIN;
+        let block = "<vibevm>\nrouter\n</vibevm>\n";
+        let padding = "x".repeat(limit - margin - block.len());
+        fs::write(
+            project.path().join("AGENTS.md"),
+            format!("{padding}\n{block}"),
+        )
+        .unwrap();
+
+        let report = check_project(project.path(), &opts());
+        let found = report
+            .findings
+            .iter()
+            .find(|f| f.check == CheckId::RedirectBlock)
+            .unwrap_or_else(|| panic!("got: {:?}", report.findings));
+        assert_eq!(found.severity, Severity::Warning);
+        assert!(
+            found.message.contains("within 4 KB") && found.message.contains("32768"),
+            "{}",
+            found.message
         );
     }
 

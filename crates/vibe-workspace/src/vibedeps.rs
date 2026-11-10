@@ -33,6 +33,8 @@ use crate::{WorkspaceError, layout_paths};
 mod build_ignore;
 mod declared_read;
 mod derived;
+/// Neutralising the managed boot block in a materialised dependency copy.
+mod instruction_block;
 mod slot_cow;
 mod slot_diff;
 mod slot_record;

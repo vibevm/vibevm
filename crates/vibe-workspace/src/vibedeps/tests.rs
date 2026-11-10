@@ -96,6 +96,88 @@ fn materialise_copies_the_tree_verbatim() {
     );
 }
 
+/// A materialised copy's managed boot block is neutralised, and nothing
+/// else about the copy changes.
+///
+/// A harness that discovers context files downward concatenates this file
+/// into a session rooted above the dependency root, and the package's own
+/// router would then be a second project's boot rules in this project's
+/// context (PROP-076 `#SYS-NO-RECURSION`). The prose scope sentence is a
+/// sentence a model may skip; this is the mechanical half.
+#[test]
+fn materialise_neutralises_a_copied_managed_boot_block() {
+    let ws = TempDir::new().unwrap();
+    let src = TempDir::new().unwrap();
+    write(src.path(), "vibe.toml", LEGACY_MANIFEST);
+    let authored = "# The package's own rules\n\nkeep me\n";
+    let carried = format!("{authored}\n<vibevm>\nPACKAGE ROUTER\n</vibevm>\n");
+    for name in crate::boot_artifacts::REDIRECT_FILES {
+        write(src.path(), name, &carried);
+    }
+    write(src.path(), "docs/README.md", &carried);
+
+    materialise(
+        ws.path(),
+        &g("org.vibevm"),
+        "wal",
+        &version("0.3.0"),
+        src.path(),
+        &source_hash(),
+    )
+    .unwrap();
+    let slot = ws
+        .path()
+        .join(crate::layout_paths::vibedeps_path("org.vibevm.wal/0.3.0"));
+
+    for name in crate::boot_artifacts::REDIRECT_FILES {
+        let copied = fs::read_to_string(slot.join(name)).unwrap();
+        assert!(
+            copied.starts_with(authored),
+            "{name}: every byte outside the block is the package's own:\n{copied}"
+        );
+        assert!(
+            copied.contains(crate::boot_artifacts::NEUTRALISED_BODY),
+            "{name}: the block says it does not apply:\n{copied}"
+        );
+        assert!(!copied.contains("PACKAGE ROUTER"), "{name}");
+    }
+    // A file of another name is not an instruction file, whatever it holds.
+    assert_eq!(
+        fs::read_to_string(slot.join("docs/README.md")).unwrap(),
+        carried
+    );
+
+    // The slot record witnesses the bytes actually placed, so verification
+    // of the copy agrees with what is on disk.
+    let record = read_slot_record(&slot).unwrap();
+    for name in crate::boot_artifacts::REDIRECT_FILES {
+        let row = record
+            .files
+            .iter()
+            .find(|file| file.path == *name)
+            .unwrap_or_else(|| panic!("{name} is recorded"));
+        assert_eq!(row.sha256, sha256_file(&slot.join(name)).unwrap());
+    }
+
+    // Re-materialising the same source writes nothing: the neutralised
+    // bytes are a pure function of the copied ones.
+    let report = materialise_with_report(
+        ws.path(),
+        &g("org.vibevm"),
+        "wal",
+        &version("0.3.0"),
+        src.path(),
+        CopyMode::Copy,
+        &source_hash(),
+    )
+    .unwrap();
+    assert!(
+        report.written.is_empty(),
+        "an unchanged copy is not rewritten: {:?}",
+        report.written
+    );
+}
+
 #[test]
 fn materialise_skips_dot_git() {
     let ws = TempDir::new().unwrap();

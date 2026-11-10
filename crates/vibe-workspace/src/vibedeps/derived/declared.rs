@@ -120,7 +120,12 @@ pub(in crate::vibedeps) fn prepare(
                 None
             }
         } else {
-            None
+            // Not a native spec source, so nothing enters the pivot — but an
+            // instruction file's managed boot block is still neutralised on
+            // the way into the slot, by the same rule and the same function
+            // the other two walks use (PROP-076 `#SYS-NO-RECURSION`).
+            super::super::instruction_block::for_file(relative, observation.bytes())
+                .map(|neutralised| (relative.to_path_buf(), neutralised))
         };
         let (file, disposition) = if let Some((output, bytes)) = converted {
             (
