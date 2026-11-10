@@ -1026,3 +1026,15 @@ numbered `B-233` — the owner's environment/meta-distribution investigation and
 "an installed application records no source". The ids are supposed to be unique
 and one of them needs renumbering; it is not touched here because another
 worker holds that file.
+
+## 2026-11-10 — owner accepts the P7 design's recommendations
+
+The owner answered the five discussion points of the P7 design with "согласен с рекомендациями" — the recommended option of each:
+
+1. **Recommendations install by default**, shown in the plan and the report before and after; `--no-recommends` opts out (PROP-077 `#APP-RECOMMENDS-CONSENT`, `#WEAK-OPEN` W1/W2 as designed).
+2. **A recommended application is installed exposed** (PROP-077 `#WEAK-OPEN` W3 as designed).
+3. **P7e adds a trust policy for steps of ordinary packages**: an `[[extension]]` contribution of a project dependency runs without a question only when the package's group is trusted (the same trusted-groups mechanism agent steps already use); otherwise an attended install asks and an unattended one refuses naming the group and the remedy. To be specified in PROP-065/PROP-054 by P7e before the code.
+4. **Adapter `install` / `remove` are `recipe` only**, so ecosystem items always arrive as separate argv elements.
+5. **The user's extras list lives in `~/.vibe/config.toml`** (`[slot.<slot>.extras.<ecosystem>]`), accepting the new `vibe-app` → user-config seam.
+
+Implementation of P7a–P7f is authorised from this entry.
