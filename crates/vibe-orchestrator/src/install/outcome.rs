@@ -130,6 +130,10 @@ pub struct InstallRun {
     pub world_summary: WorldCallbackSummary,
     /// The one canonical project root this run acted on.
     pub project_root: PathBuf,
+    /// What became of the solved closure's `[recommends]` and `[suggests]`
+    /// tables (PROP-077 `#PROJECT-RECOMMENDS`). Empty on a replay, which
+    /// resolves nothing and therefore reaches no weak table.
+    pub weak: vibe_install::WeakDependencyReport,
 }
 
 impl InstallRun {
@@ -153,6 +157,7 @@ impl InstallRun {
             parked: None,
             world_summary: WorldCallbackSummary::default(),
             project_root,
+            weak: vibe_install::WeakDependencyReport::default(),
         }
     }
 }

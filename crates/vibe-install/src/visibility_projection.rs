@@ -85,7 +85,17 @@ pub struct Projection {
 /// ```
 pub fn project(input: &ProjectionInput<'_>) -> Result<Projection> {
     let mut graph = VisibilityGraph::default();
-    let mut root_decl = declaration_from_manifest(input.root_manifest)?;
+    // Which coordinates the solve actually selected. An accepted
+    // `[recommends]` reference is one of them and becomes a weak edge of its
+    // recommender; a declined one is absent and contributes nothing
+    // (PROP-050 `#WEAK-EDGES-ARE-ORDINARY-EDGES`).
+    let selected: BTreeSet<NodeId> = input
+        .graph
+        .iter()
+        .map(|node| node_id(&node.group, &node.name))
+        .collect();
+    let present = |id: &NodeId| selected.contains(id);
+    let mut root_decl = declaration_from_manifest(input.root_manifest, &present)?;
 
     // Solver roots include CLI roots and conditional-dependency extras. They
     // are direct consumer choices even when they are not written in the root
@@ -106,7 +116,7 @@ pub fn project(input: &ProjectionInput<'_>) -> Result<Projection> {
         let manifest = (input.manifest_of)(&pkgref)?;
         graph.nodes.insert(
             node_id(&node.group, &node.name),
-            declaration_from_manifest(&manifest)?,
+            declaration_from_manifest(&manifest, &present)?,
         );
     }
 
@@ -144,7 +154,10 @@ fn edge_contributes(
     analyze(&isolated, root).effective.contains_key(target)
 }
 
-fn declaration_from_manifest(manifest: &Manifest) -> Result<NodeDecl> {
+fn declaration_from_manifest(
+    manifest: &Manifest,
+    present: &dyn Fn(&NodeId) -> bool,
+) -> Result<NodeDecl> {
     let mut edges: Vec<EdgeDecl> = manifest
         .requires
         .iter_pkgrefs()
@@ -154,6 +167,7 @@ fn declaration_from_manifest(manifest: &Manifest) -> Result<NodeDecl> {
                 access: manifest.requires.declared_access(group, name),
                 friend: manifest.requires.declared_friend(group, name),
                 exclude: manifest.requires.excludes_for(group, name).to_vec(),
+                weak: false,
             })
         })
         .collect();
@@ -170,9 +184,15 @@ fn declaration_from_manifest(manifest: &Manifest) -> Result<NodeDecl> {
                 access: None,
                 friend: None,
                 exclude: Vec::new(),
+                weak: false,
             });
         }
     }
+    // An accepted recommendation is an edge recommender → recommended,
+    // carrying `weak` (PROP-077 `#PROJECT-RECOMMENDS`). It is appended after
+    // the declared edges so a coordinate that is both required and
+    // recommended keeps its strong edge.
+    vibe_core::visibility::append_recommended_edges(manifest, &mut edges, present);
     let visibility = manifest.visibility.clone().unwrap_or_default();
     let overrides = manifest
         .override_table

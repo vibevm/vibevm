@@ -29,6 +29,15 @@ pub enum PlanEvent {
     /// `--features` named features no root package declares — they
     /// were silently filtered per root and matched nothing overall.
     FeaturesUnmatched { features: Vec<String> },
+    /// A `[recommends]` reference of the solved closure is not installed:
+    /// nothing satisfies it, it conflicts with the hard solve, or the user
+    /// declined recommendations. A warning, never a failure of the install
+    /// the user asked for (PROP-077 `#PROJECT-RECOMMENDS`).
+    RecommendationSkipped {
+        package: String,
+        by: String,
+        reason: String,
+    },
 }
 
 /// The caller's view into a running plan. Implemented by the CLI to

@@ -64,9 +64,10 @@ pub use lifecycle::{
     SlotLifecyclePlanEntry, SlotLifecycleReport,
 };
 pub use plan::{
-    InstallPreview, InstallRequest, Plan, PlannedInstall, PreviewSourceStorage, freshness_prepared,
-    plan, plan_prepared_with_spec_format, plan_prepared_without_publication, plan_with_spec_format,
-    preview_has_requirements, preview_prepared,
+    InstallPreview, InstallRequest, Plan, PlannedInstall, PreviewSourceStorage,
+    RecommendationOutcome, RecommendationRow, SuggestionRow, WeakDependencyReport,
+    freshness_prepared, plan, plan_prepared_with_spec_format, plan_prepared_without_publication,
+    plan_with_spec_format, preview_has_requirements, preview_prepared,
 };
 pub use record::{
     exact_pinned_pkgref, finalize_pkgref_for_manifest, merge_manifest_requires,

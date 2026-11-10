@@ -89,6 +89,10 @@ pub struct PlannedInstall {
         (vibe_core::Group, String),
         Vec<vibe_registry::source_candidates::SourceCandidateObservation>,
     >,
+    /// What became of this closure's `[recommends]` and `[suggests]` tables
+    /// (PROP-077 `#PROJECT-RECOMMENDS`). Read by the caller that renders the
+    /// install report; the apply phase does nothing with it.
+    pub weak: weak::WeakDependencyReport,
 }
 
 /// Plan an install transaction over `source` for the project at
@@ -491,8 +495,10 @@ mod fetch;
 
 mod roots;
 mod selection;
+mod weak;
 use selection::migrate_selected_node;
 pub(crate) use selection::visibility_root_id;
+pub use weak::{RecommendationOutcome, RecommendationRow, SuggestionRow, WeakDependencyReport};
 
 mod configured;
 

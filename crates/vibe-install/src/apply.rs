@@ -398,6 +398,7 @@ fn apply_metadata_checked<S: InstallSource + ?Sized>(
         workspace: _pre_apply_workspace,
         progress,
         source_candidates: _,
+        weak: _, // the caller's to report; applying a plan does nothing with it
     } = planned;
 
     progress.checkpoint()?;

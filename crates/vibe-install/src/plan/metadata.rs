@@ -44,6 +44,9 @@ pub(super) struct MetadataClosure {
     pub selected: BTreeMap<(Group, String), CandidateMetadata>,
     pub feature_expansions: BTreeMap<(Group, String), FeatureExpansion>,
     pub visibility_analysis: Analysis,
+    /// What became of the closure's `[recommends]` and `[suggests]` tables
+    /// (PROP-077 `#PROJECT-RECOMMENDS`).
+    pub weak: super::weak::WeakDependencyReport,
 }
 
 pub(super) fn resolve_metadata_closure<S: InstallSource + ?Sized>(
@@ -185,11 +188,30 @@ pub(super) fn resolve_metadata_closure<S: InstallSource + ?Sized>(
                 };
                 feature_expansions.insert(key, expansion);
             }
+            // The weak account of the finished closure: every recommendation
+            // the solve reached, what became of it, and the suggestions it
+            // read. A skip is a warning and a report line, never a failure.
+            let weak = super::weak::weak_report(
+                &solved.selected,
+                &solved.graph,
+                &visibility_analysis,
+                input.recommends,
+            );
+            for row in &weak.recommended {
+                if let Some(reason) = &row.reason {
+                    input.observer.on(PlanEvent::RecommendationSkipped {
+                        package: row.package.clone(),
+                        by: row.by.clone(),
+                        reason: reason.clone(),
+                    });
+                }
+            }
             return Ok(MetadataClosure {
                 graph: solved.graph,
                 selected: solved.selected,
                 feature_expansions,
                 visibility_analysis,
+                weak,
             });
         }
         if conditional_pass == MAX_CONDITIONAL_PASSES {

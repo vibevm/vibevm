@@ -93,10 +93,15 @@ pub(super) fn acquire_prepared_metadata<S: InstallSource + ?Sized>(
                     .iter()
                     .filter_map(|p| p.group.clone().map(|g| (g, p.name.to_string())))
                     .collect(),
-                admitted_by: provenance.map(|witness| match witness.rule {
-                    ProvenanceRule::RootEdge => "root-edge".to_string(),
-                    ProvenanceRule::PublicChain => "public-chain".to_string(),
-                    ProvenanceRule::FriendsChain => "friends-chain".to_string(),
+                // A chain that crossed a recommendation says so, and that is
+                // how the lock records a weak member (PROP-077
+                // `#PROJECT-RECOMMENDS`): no new lock field, one new value of
+                // the provenance member the lock already carries.
+                admitted_by: provenance.map(|witness| match (witness.weak, witness.rule) {
+                    (true, _) => "weak-chain".to_string(),
+                    (false, ProvenanceRule::RootEdge) => "root-edge".to_string(),
+                    (false, ProvenanceRule::PublicChain) => "public-chain".to_string(),
+                    (false, ProvenanceRule::FriendsChain) => "friends-chain".to_string(),
                 }),
                 via_override: provenance.and_then(|witness| witness.via_override.clone()),
                 // Mutable iff an in-workspace `file://` self-hosting source (§2.6).
@@ -113,6 +118,7 @@ pub(super) fn acquire_prepared_metadata<S: InstallSource + ?Sized>(
         .map(|(key, metadata)| (key.clone(), metadata.observations.clone()))
         .collect();
     let planned = PlannedInstall {
+        weak: closure.weak,
         project_root,
         request,
         manifest,

@@ -226,6 +226,7 @@ fn exercise(filter: bool) {
         workspace: Workspace::load(&project).unwrap(),
         progress: Default::default(),
         source_candidates: Default::default(),
+        weak: Default::default(),
     };
     // Keep the old inode alive; atomic publish+undo cannot accidentally reuse it.
     let original = fs::File::open(&manifest_path).unwrap();

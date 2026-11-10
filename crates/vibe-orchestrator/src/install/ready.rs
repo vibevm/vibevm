@@ -72,6 +72,9 @@ pub(super) fn apply(
     // Counted here, from the solved graph itself, before the plan is
     // consumed by the apply.
     let packages_resolved = planned.resolution.len();
+    // The plan's weak account, read before the plan is consumed: a skipped
+    // recommendation is a report line of the install the user asked for.
+    let weak = planned.weak.clone();
 
     confirm_gate.confirm_install(planned.resolution.len())?;
 
@@ -141,6 +144,7 @@ pub(super) fn apply(
             let mut parked =
                 InstallRun::new(project_root.to_path_buf(), InstallDisposition::Parked);
             parked.packages_resolved = packages_resolved;
+            parked.weak = weak;
             parked.progress = *progress;
             parked.slot_reports = reports;
             parked.parked = Some(*delegation);
@@ -187,6 +191,7 @@ pub(super) fn apply(
     lifecycle_run.lifecycle_run = applied.lifecycle_run.clone();
     lifecycle_run.lifecycle_reports = applied.lifecycle_reports.clone();
     let tail = ReadyTail {
+        weak,
         observer,
         lockfile_path,
         lockfile_snapshot,
@@ -267,6 +272,7 @@ struct ReadyTail<'a> {
     lane_root: &'a Path,
     applied: &'a vibe_install::ApplyReport,
     packages_resolved: usize,
+    weak: vibe_install::WeakDependencyReport,
 }
 
 /// The common Ready tail.
@@ -297,6 +303,7 @@ fn finish_ready(tail: ReadyTail<'_>, mut run: InstallRun) -> InstallRun {
         Err(error) => run.notices.push(format!("installation was applied, but the written lock could not be read for closure comparison: {error}; restore/check the lock before another operation")),
     }
     run.packages_resolved = tail.packages_resolved;
+    run.weak = tail.weak;
     // The APPLY's progress and hooks, on both paths: what this invocation made
     // durable does not change because it also finished someone else's park.
     run.progress = tail.applied.progress.clone();
