@@ -198,3 +198,87 @@ fn an_agent_condition_runs_when_the_user_has_selected_one() {
         "the contribution really ran",
     );
 }
+
+/// The step evidence of `#ordinary-plan`, read back from a real install.
+///
+/// One record directory per package version per run, `steps.json` in the
+/// registered format `vibe-install-steps/1`, one row per judged
+/// contribution — the one that ran with its start, finish and log, and the
+/// one a condition skipped with its reason and no start — and every byte
+/// the running contribution wrote in `logs/<id>.log`.
+#[test]
+fn an_install_writes_the_step_evidence_of_every_judged_contribution() {
+    let (_outer, user, project, registry) = setup(Fixture::JudgmentEvidence);
+    let output = install(&user, project.path(), &registry);
+    assert!(
+        output.status.success(),
+        "the install itself must succeed: {}",
+        String::from_utf8_lossy(&output.stderr),
+    );
+
+    let versions = user
+        .settings
+        .join("cache")
+        .join("install-steps")
+        .join("org.example")
+        .join("hooked")
+        .join("0.1.0");
+    let runs: Vec<_> = fs::read_dir(&versions)
+        .unwrap_or_else(|error| panic!("the record root `{}` exists: {error}", versions.display()))
+        .map(|entry| entry.unwrap().path())
+        .collect();
+    assert_eq!(runs.len(), 1, "one directory per run: {runs:#?}");
+    let record = &runs[0];
+
+    let document: vibe_wire::generated::install_steps::InstallSteps =
+        serde_json::from_slice(&fs::read(record.join("steps.json")).unwrap())
+            .expect("the record is the registered format");
+    assert_eq!(document.protocol, "vibe-install-steps/1");
+    assert_eq!(document.package.name, "hooked");
+    assert_eq!(document.package.version, "0.1.0");
+    assert!(
+        document.finished.is_some(),
+        "a run that ended seals its record",
+    );
+
+    let row = |id: &str| {
+        document
+            .contributions
+            .iter()
+            .find(|row| row.id == id)
+            .unwrap_or_else(|| panic!("a row for `{id}` among {:#?}", document.contributions))
+    };
+    let noisy = row("noisy");
+    assert_eq!(
+        noisy.outcome,
+        vibe_wire::generated::install_steps::Outcome::Ok
+    );
+    assert_eq!(noisy.point, "slot:post-install");
+    assert_eq!(noisy.handler, "script");
+    assert!(
+        noisy.started.is_some() && noisy.finished.is_some(),
+        "a contribution that ran carries both instants: {noisy:#?}",
+    );
+    assert_eq!(noisy.log.as_deref(), Some("logs/noisy.log"));
+
+    let quiet = row("quiet");
+    assert_eq!(
+        quiet.outcome,
+        vibe_wire::generated::install_steps::Outcome::Skip
+    );
+    assert!(quiet.started.is_none(), "a skip is decided, never started");
+    assert!(
+        quiet
+            .reason
+            .as_deref()
+            .is_some_and(|reason| reason.contains("command_present")),
+        "and names the deciding condition: {quiet:#?}",
+    );
+
+    let log = fs::read_to_string(record.join("logs").join("noisy.log"))
+        .expect("the contribution's own log");
+    assert!(
+        log.contains("NOISY-OUT") && log.contains("NOISY-ERR"),
+        "every byte the contribution wrote reaches its log: {log:?}",
+    );
+}

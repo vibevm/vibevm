@@ -80,6 +80,7 @@ pub mod init_report;
 pub mod install;
 pub mod install_plan;
 pub mod install_report;
+pub mod install_steps;
 pub mod journal;
 pub mod lifecycle;
 pub mod lifecycle_plan;

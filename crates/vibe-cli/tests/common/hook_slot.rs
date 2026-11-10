@@ -34,6 +34,10 @@ pub enum Fixture {
     /// `agent_configured = true`, so the run's real agent posture decides
     /// it (PROP-065 `#ordinary-grammar`, PROP-064 `#selection`).
     JudgmentAgent,
+    /// Two `slot:post-install` contributions: one that runs and writes to
+    /// both streams, and one a condition skips — the shape the step
+    /// evidence of PROP-065 `#ordinary-plan` is read back from.
+    JudgmentEvidence,
 }
 
 pub fn registry(root: &Path, fixture: Fixture) -> PathBuf {
@@ -103,6 +107,22 @@ handler = { kind = "script", base = "hooks/post" }
 when = { agent_configured = true }
 "#
         }
+        Fixture::JudgmentEvidence => {
+            r#"
+[[extension]]
+id = "noisy"
+point = "slot:post-install"
+title = "A contribution with something to say"
+handler = { kind = "script", base = "hooks/noisy" }
+
+[[extension]]
+id = "quiet"
+point = "slot:post-install"
+title = "A contribution a condition decides against"
+handler = { kind = "script", base = "hooks/post" }
+when = { command_present = "no-such-command-anywhere" }
+"#
+        }
     };
     fs::write(
         package.join("vibe.toml"),
@@ -128,6 +148,16 @@ category = "flow"
     fs::write(
         package.join("hooks/post.sh"),
         "set -eu\ntest -f \"$VIBE_PROJECT_ROOT/vibe.lock\"\nprintf 'post\\n' >> hook-order.txt\n",
+    )
+    .unwrap();
+    fs::write(
+        package.join("hooks/noisy.sh"),
+        "set -eu\nprintf 'NOISY-OUT\\n'\nprintf 'NOISY-ERR\\n' >&2\nprintf 'post\\n' >> hook-order.txt\n",
+    )
+    .unwrap();
+    fs::write(
+        package.join("hooks/noisy.ps1"),
+        "Write-Output NOISY-OUT\n[Console]::Error.WriteLine('NOISY-ERR')\nAdd-Content -LiteralPath hook-order.txt -Value post\n",
     )
     .unwrap();
     fs::write(

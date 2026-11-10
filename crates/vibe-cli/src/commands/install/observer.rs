@@ -22,7 +22,7 @@ use vibe_orchestrator::ports::{
 use crate::output;
 
 use super::events::CtxObserver;
-use super::{emit_closure_diff, lane_sizes, report};
+use super::{emit_closure_diff, evidence, lane_sizes, report};
 
 /// The CLI's install narration, over the two contexts it really owns.
 pub(crate) struct CliInstallObserver<'a> {
@@ -104,21 +104,40 @@ impl InstallObserver for CliInstallObserver<'_> {
         &self,
         metadata: &RunMetadata,
     ) -> Arc<dyn vibe_install::SlotLifecycleObserver> {
-        Arc::new(LifecycleSlotObserver::new(
-            self.lifecycle_output.unwrap_or(self.ctx),
-            metadata.clone(),
-        ))
+        Arc::new(
+            LifecycleSlotObserver::new(self.lifecycle_output.unwrap_or(self.ctx), metadata.clone())
+                .with_panel(self.plan_events.progress_handle())
+                .writing_evidence(),
+        )
     }
 }
 
 /// The narration seam the slot lifecycle calls back into.
 ///
-/// It observes and renders human progress only: the machine document belongs
-/// to the outermost command, which folds every row this observer saw into its
-/// single report.
+/// It observes and renders human progress and writes the step evidence of
+/// PROP-065 `#ordinary-plan`; the machine document belongs to the outermost
+/// command, which folds every row this observer saw into its single report.
+///
+/// **The panel and the line records are the same rule PROP-065 `#display`
+/// states, and only one of them happens.** Where a terminal can draw, each
+/// running contribution is a panel row of the shared renderer — the label
+/// `<id> (<kind>) <title>`, a spinner and elapsed time while it runs, the
+/// renderer's own record once it finishes, its reason once when it is
+/// skipped. Where one cannot — redirected output, `--quiet`, `--json`, the
+/// machine stream, the progress opt-out — the progress handle is inert and
+/// the flat line record is emitted instead. Emitting both would print every
+/// contribution twice in exactly the case a person is watching.
 pub(crate) struct LifecycleSlotObserver {
     ctx: output::Context,
     metadata: RunMetadata,
+    /// The panel this run draws its rows on; inert wherever the flat
+    /// behaviour applies.
+    progress: vibe_core::progress::Progress,
+    /// The open panel row of each running contribution, by execution key.
+    rows: std::sync::Mutex<std::collections::BTreeMap<String, vibe_core::progress::ProgressTask>>,
+    /// The run's step evidence, absent when no settings home could be
+    /// resolved to write it under.
+    evidence: Option<evidence::StepEvidence>,
 }
 
 impl LifecycleSlotObserver {
@@ -126,7 +145,61 @@ impl LifecycleSlotObserver {
         Self {
             ctx: ctx.clone(),
             metadata,
+            progress: vibe_core::progress::Progress::default(),
+            rows: std::sync::Mutex::new(std::collections::BTreeMap::new()),
+            evidence: None,
         }
+    }
+
+    /// Draw this run's contributions on the given panel.
+    pub(crate) fn with_panel(mut self, progress: vibe_core::progress::Progress) -> Self {
+        self.progress = progress;
+        self
+    }
+
+    /// Write the step evidence under the user's settings home.
+    ///
+    /// A home that cannot be resolved costs the evidence and nothing else:
+    /// this is derived state, and an install must not fail over a cache.
+    pub(crate) fn writing_evidence(mut self) -> Self {
+        self.evidence = crate::commands::app::global::settings_root()
+            .ok()
+            .map(|settings| evidence::StepEvidence::new(settings.path()));
+        self
+    }
+
+    /// The panel row's label: `<id> (<kind>) <title>`, which is the row
+    /// `#display` prescribes for a step.
+    fn label(entry: &vibe_install::SlotLifecyclePlanEntry) -> String {
+        let id = entry.id.as_str();
+        match entry.title.as_deref() {
+            Some(title) => format!("{id} ({}) {title}", entry.handler),
+            None => format!("{id} ({})", entry.handler),
+        }
+    }
+
+    /// Close this contribution's panel row, and say whether there was one —
+    /// which is also the answer to "may the flat line record be skipped".
+    fn close_row(&self, report: &vibe_install::SlotLifecycleReport) -> bool {
+        let Ok(mut rows) = self.rows.lock() else {
+            return false;
+        };
+        let Some(row) = rows.remove(&report.key) else {
+            return false;
+        };
+        match report.status.as_str() {
+            "ok" | "fresh" => row.finish(),
+            "skip" => row.skip(report.message.clone().unwrap_or_else(|| "skipped".into())),
+            status => row.fail(format!(
+                "{status}{}",
+                report
+                    .message
+                    .as_deref()
+                    .map(|message| format!(" — {message}"))
+                    .unwrap_or_default()
+            )),
+        }
+        true
     }
 }
 
@@ -136,12 +209,61 @@ impl vibe_install::SlotLifecycleObserver for LifecycleSlotObserver {
             .map_err(|error| error.to_string())
     }
 
+    fn started(
+        &self,
+        entry: &vibe_install::SlotLifecyclePlanEntry,
+    ) -> std::result::Result<(), String> {
+        if let Some(evidence) = &self.evidence {
+            evidence.started(&entry.key);
+        }
+        let row = self.progress.task(Self::label(entry));
+        // An inert handle hands back a task with no id: there is no panel to
+        // put a row on, so the flat line records stay the whole narration.
+        if row.id().get() != 0
+            && let Ok(mut rows) = self.rows.lock()
+        {
+            rows.insert(entry.key.clone(), row);
+        }
+        Ok(())
+    }
+
     fn outcome(
         &self,
         report: &vibe_install::SlotLifecycleReport,
     ) -> std::result::Result<(), String> {
+        let log = self
+            .evidence
+            .as_ref()
+            .and_then(|evidence| evidence.record(report));
+        // `#ordinary-failure`: a failure's warning carries the contribution,
+        // its captured output and **its log path**. The first two are
+        // already in the row a client reads and in the error the run
+        // refuses with; the path is only knowable here, where the record
+        // was written.
+        if let Some(log) = log
+            && report.status != "ok"
+            && !self.ctx.is_json()
+            && !self.ctx.is_quiet()
+        {
+            self.ctx
+                .step(&format!("log of `{}`: {}", report.key, log.display()));
+        }
+        if self.close_row(report) {
+            return Ok(());
+        }
         crate::commands::lifecycle::emit_slot_transition_outcome(&self.ctx, &self.metadata, report)
             .map_err(|error| error.to_string())
+    }
+}
+
+/// The run ended — however it ended. Sealing the evidence here rather than
+/// at a success path is deliberate: a refused, failed or parked install is
+/// exactly the one whose rows a reader comes looking for.
+impl Drop for LifecycleSlotObserver {
+    fn drop(&mut self) {
+        if let Some(evidence) = &self.evidence {
+            evidence.close();
+        }
     }
 }
 

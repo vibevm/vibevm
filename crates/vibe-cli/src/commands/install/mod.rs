@@ -28,6 +28,9 @@ mod confirm;
 mod direct;
 mod draft;
 mod events;
+/// The step evidence of an ordinary package's installation contributions
+/// (PROP-065 `#ordinary-plan`): the record directory, its rows and its logs.
+mod evidence;
 mod global_mcp;
 mod observer;
 mod preview;

@@ -251,6 +251,10 @@ impl InstallSlotLifecycle {
                 })?;
                 continue;
             }
+            // The moment it begins is the observer's to take: a panel row
+            // opens here and the evidence record's start time is read here,
+            // because this engine is handed no clock (`#ordinary-plan`).
+            self.observer.started(planned)?;
             self.dispatch_execution(planned.execution.clone(), point, planned.optional)?;
         }
         if !matched

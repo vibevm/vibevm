@@ -1,0 +1,43 @@
+{
+  "protocol": "vibe-install-steps/1",
+  "package": {
+    "group": "org.example",
+    "name": "hooked",
+    "version": "0.1.0"
+  },
+  "started": "2026-11-10T09:00:00.000Z",
+  "finished": "2026-11-10T09:00:04.250Z",
+  "contributions": [
+    {
+      "id": "build",
+      "key": "org.example/hooked#build@slot(org.example/hooked@0.1.0)",
+      "point": "slot:post-install",
+      "handler": "script",
+      "outcome": "ok",
+      "started": "2026-11-10T09:00:01.000Z",
+      "finished": "2026-11-10T09:00:03.500Z",
+      "log": "logs/build.log"
+    },
+    {
+      "id": "register",
+      "key": "org.example/hooked#register@slot(org.example/hooked@0.1.0)",
+      "point": "slot:post-install",
+      "handler": "script",
+      "outcome": "skip",
+      "reason": "when `agent_configured = true` does not hold",
+      "finished": "2026-11-10T09:00:03.510Z"
+    },
+    {
+      "id": "publish",
+      "key": "org.example/hooked#publish@slot(org.example/hooked@0.1.0)",
+      "point": "slot:post-install",
+      "handler": "agent",
+      "outcome": "fail",
+      "reason": "lifecycle handler exited 17; the retry is a rerun and not a resume — `vibe reinstall org.example/hooked` (this plane has no `--resume` and no `--from-step`)",
+      "started": "2026-11-10T09:00:03.520Z",
+      "finished": "2026-11-10T09:00:04.200Z",
+      "log": "logs/publish.log",
+      "logTruncated": true
+    }
+  ]
+}

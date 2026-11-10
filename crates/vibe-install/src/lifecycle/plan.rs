@@ -209,6 +209,18 @@ impl SlotLifecyclePlan {
 pub trait SlotLifecycleObserver {
     fn observe(&self, plan: &SlotLifecyclePlan) -> std::result::Result<(), String>;
 
+    /// One contribution is about to run.
+    ///
+    /// The engine reports what a contribution DID; the moment it began is
+    /// a clock reading, and the engine is handed no clock. A surface that
+    /// draws a panel row or writes the step evidence of PROP-065
+    /// `#ordinary-plan` needs that moment, and this is where it is taken.
+    /// Called only for a contribution that will actually run: a skip is
+    /// decided, never started.
+    fn started(&self, _entry: &SlotLifecyclePlanEntry) -> std::result::Result<(), String> {
+        Ok(())
+    }
+
     fn outcome(&self, _report: &super::SlotLifecycleReport) -> std::result::Result<(), String> {
         Ok(())
     }

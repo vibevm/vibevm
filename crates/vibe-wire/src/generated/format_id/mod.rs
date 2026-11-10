@@ -169,6 +169,7 @@ pub enum FormatId {
     IndexPrimary,
     IndexRepomd,
     IndexTemplates,
+    InstallSteps,
     Journal,
     LifecycleContext,
     LifecycleReply,

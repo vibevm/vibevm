@@ -1337,3 +1337,76 @@ lands the record.
   here, because `vibe app extras list --json` needs an answer; P7c adds the
   user's `add` / `drop` and the record-sourced lists as optional members at the
   same epoch.
+
+## 2026-11-10 — P7e's open items: the evidence record, the failure law, the agent posture
+
+The three items P7e named as not delivered, taken in three commits. `AV-FMT-032`'s
+`vibe-install-steps/1` half is delivered (its `vibe app describe` half remains
+P7b's); `PROP-065#ordinary-failure` moves to `impl/done`; `#ordinary-plan` and
+`#ordinary-consumer` stay `impl/work` behind **one** named residue, which is
+smaller than the three they stood behind before. The spec XML was validated by
+the PROP-045 projector, which reports `dry-run ir-stable-loss` for `PROP-065`
+before and after — the same verdict, unchanged by these edits.
+
+Facts a later session would otherwise re-derive:
+
+- **`agent_configured` had no value to read, and the fix was a selection, not a
+  backend.** P7e recorded the field as the constant `false`. The install
+  boundary holds an injected `AgentBackend` on every run, so asking *it*
+  whether an agent is configured answers «an object exists» — true on a machine
+  with no agent at all. The honest answer is the same one
+  `AgentHooks::available` gives the application plane, from the same two facts:
+  vibe runs inside a hosting agent, or an agent is selected (the external
+  registration, else `agents.toml`'s `default`). `agents.toml` is now read
+  **once** for both halves of the judgment — the trusted groups and the
+  selection — so the two cannot disagree. An unresolvable `default` answers
+  false: the question is whether a contribution could be delivered, and the
+  refusal belongs to the command that selects an agent.
+- **The fixture had to stop inheriting the developer's agent.** An exported
+  `VIBE_AGENT_COMMAND` selects an external agent, so the slot-steps installs
+  now drop it and `VIBE_AGENT_ARGS` from the child. Without that, the same test
+  passes on CI and fails on a machine whose owner uses an agent host.
+- **`optional = true` meant nothing once a contribution actually ran.** The
+  dispatcher knew the declaration's `optional` at plan time and did not carry it
+  into execution, so an optional failure aborted the installation exactly as a
+  required one did. The three-way decision is now one pure classifier
+  (`lifecycle/failure.rs`) over the three facts the dispatcher holds, tested as
+  a table.
+- **An interrupt is readable without touching the engine.** `LifecycleRunError`
+  has no cancellation variant and the transition statuses have no `interrupted`,
+  so "the outcome is recorded `interrupted`" looked like an engine change. It is
+  not: the pass owns the cancellation token, so a failure *under a requested
+  stop* is an interrupt, and that is both cheap and precise. `optional` may not
+  excuse continuing after one — the law says nothing after it runs.
+- **The record's start times needed a seam, and only a seam.** The engine
+  reports what a contribution DID; when it began is a clock reading, and the
+  engine is handed no clock. `SlotLifecycleObserver::started` is defaulted, so
+  every existing implementor — the null observer, four fixtures — is untouched,
+  and it is called only for a row that will run, because a skip is decided and
+  never started.
+- **The evidence record is sealed on `Drop`, not on success.** A refused, failed
+  or parked install is exactly the one whose rows a reader comes looking for, and
+  no engine event marks "the run is over". Dropping the observer does.
+- **The log is the one place the facts and the engine still disagree.**
+  `#ordinary-plan` wants the running contribution's child output kept off the
+  terminal and every byte in its own log. `StreamMode::Inherit` — the attended
+  default — hands vibe no bytes at all, and `read_capped` bounds a capture at
+  one mebibyte. So a `--json` run's rows carry real logs (asserted end to end:
+  `NOISY-OUT` and `NOISY-ERR` both reach `logs/noisy.log`) and an attended run's
+  carry none. Changing `stream_mode` to `Capture` for attended runs would have
+  delivered the log and **regressed `[hooks]`**: a long contribution's output
+  would vanish from the terminal until it finished, because `#display`'s
+  `--log`/`--log-tail` fold does not exist on this plane. Both halves are
+  recorded as the residue instead of half-done quietly.
+- **The panel and the line records are mutually exclusive on purpose.** Where a
+  terminal can draw, each running contribution is a panel row; where it cannot,
+  the flat line record stays. Emitting both would print every contribution twice
+  in exactly the case a person is watching, so the observer emits the line only
+  when the progress handle was inert (a task with no id).
+- **The vocabulary census is untouched.** The new schema adds no fragment to
+  `formats/vocabularies.json`, so `xtask`'s `the_real_vocabulary_home_walks_to_its_sites`
+  census is unaffected — it was already red on main at 105 against 104 before
+  this work, which is filed as a backlog row rather than silenced here.
+- **Disk, on this machine:** `/fast` had over 100 GB free throughout; every
+  cargo command ran with `CARGO_TARGET_DIR=/fast/tmp/p45-target`,
+  `CARGO_BUILD_JOBS=6` and `--test-threads=6`.

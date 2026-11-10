@@ -809,6 +809,20 @@ foreign_parsers = "none"
 corpus = "formats/corpora/lifecycle/e1"
 sunset = "none"
 
+# The step evidence of one package's installation contributions (PROP-065
+# `#ordinary-plan`): `steps.json` beside `logs/<id>.log` under
+# `<home>/cache/install-steps/<group>/<name>/<version>/<timestamp>/`. Derived
+# evidence — it is listed and cleaned by the ordinary cache surface, nothing
+# resumes from it, and a graphical tool or an agent reads it to say what an
+# install ran without running anything.
+[format.install-steps]
+epoch = 1
+schema = "schemas/install_steps.jtd.json"
+recoverable = true
+foreign_parsers = "many"
+corpus = "formats/corpora/install-steps/e1"
+sunset = "none"
+
 # ── Native extension ABI wire contracts (3 JTD), PROP-054 §8/§14.4 ────────
 # Context is authored by the host and read by foreign SDKs; manifests are
 # foreign-authored declarations. Both therefore retain forward-compatible

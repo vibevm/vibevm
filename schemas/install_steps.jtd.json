@@ -1,0 +1,112 @@
+{
+  "metadata": {
+    "description": "The evidence of one package's installation contributions (PROP-065#ordinary-plan): `steps.json` in `<home>/cache/install-steps/<group>/<name>/<version>/<timestamp>/`, one row per `slot:` contribution the run judged, beside `logs/<id>.log`. Derived state — it is listed and cleaned by the ordinary cache surface, and nothing resumes from it. Rewritten as each contribution ends, so an interrupted run leaves the rows it had reached.",
+    "spec": {
+      "implements": "spec://org.vibevm.core/vibevm/common/PROP-065#ordinary-plan"
+    },
+    "rustOptions": {
+      "package": "vibe_wire::install_steps"
+    },
+    "x-rust-type": "InstallSteps",
+    "x-wire-order": ["protocol", "package", "started", "finished", "contributions"]
+  },
+  "properties": {
+    "protocol": { "type": "string" },
+    "package": { "ref": "package" },
+    "started": { "type": "string" },
+    "contributions": {
+      "elements": { "ref": "contribution" },
+      "metadata": {
+        "x-empty": "emit",
+        "description": "Every judged contribution of this package, in the order the run reached them: the ones that ran, the ones a condition skipped, and the one that failed or was interrupted."
+      }
+    }
+  },
+  "optionalProperties": {
+    "finished": {
+      "type": "string",
+      "metadata": {
+        "x-default": null,
+        "description": "Absent while the run is in flight, and on a run that was interrupted before it could close the record."
+      }
+    }
+  },
+  "definitions": {
+    "package": {
+      "metadata": {
+        "description": "The package whose contributions these are.",
+        "x-wire-order": ["group", "name", "version"]
+      },
+      "properties": {
+        "group": { "type": "string" },
+        "name": { "type": "string" },
+        "version": { "type": "string" }
+      }
+    },
+    "outcome": {
+      "enum": ["ok", "skip", "fresh", "fail", "delegated", "interrupted"],
+      "metadata": {
+        "description": "The engine's own transition statuses, carried verbatim rather than mapped: `ok` ran, `skip` was decided against by a condition or an unmet need of an optional row, `fresh` needed no rerun, `fail` failed, `delegated` was parked for a hosting agent, `interrupted` ended under a requested stop (PROP-065#ordinary-failure).",
+        "x-vocabulary": "closed"
+      }
+    },
+    "contribution": {
+      "metadata": {
+        "description": "One `slot:` contribution: its author-written `id`, the execution key the lifecycle state records it under, the point, the handler kind, the outcome, the reason a skip or a failure carries, and when it started and finished.",
+        "x-wire-order": [
+          "id",
+          "key",
+          "point",
+          "handler",
+          "outcome",
+          "reason",
+          "started",
+          "finished",
+          "log",
+          "logTruncated"
+        ]
+      },
+      "properties": {
+        "id": { "type": "string" },
+        "key": { "type": "string" },
+        "point": { "type": "string" },
+        "handler": { "type": "string" },
+        "outcome": { "ref": "outcome" }
+      },
+      "optionalProperties": {
+        "reason": {
+          "type": "string",
+          "metadata": {
+            "x-default": null,
+            "description": "The deciding condition of a skip, or the failure's own message including the retry it names."
+          }
+        },
+        "started": {
+          "type": "string",
+          "metadata": {
+            "x-default": null,
+            "description": "Absent on a row that never started — a skip is decided, not run."
+          }
+        },
+        "finished": {
+          "type": "string",
+          "metadata": { "x-default": null }
+        },
+        "log": {
+          "type": "string",
+          "metadata": {
+            "x-default": null,
+            "description": "This contribution's log, relative to the record directory (`logs/<id>.log`). Absent when the run produced no bytes for it, or when its child wrote straight to the terminal."
+          }
+        },
+        "logTruncated": {
+          "type": "boolean",
+          "metadata": {
+            "x-default": null,
+            "description": "True when the engine's stream capture bound was reached, so the log holds the first megabyte of that stream and not all of it."
+          }
+        }
+      }
+    }
+  }
+}
