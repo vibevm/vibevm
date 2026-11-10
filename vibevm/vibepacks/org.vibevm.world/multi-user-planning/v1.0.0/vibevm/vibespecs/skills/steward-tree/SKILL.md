@@ -64,7 +64,8 @@ invents a readiness for them. @status:impl/done
 @fact:TREE-SKILL-UI One page, no build step: search by id or title, expand and
 collapse, a jump to `current_node`, light/dark/auto theme, a Russian/English
 string table selectable in the page, keyboard navigation over an ARIA tree, and
-a layout that works at phone width. Plan text is data and never markup: titles,
+a layout that works at phone width. A node id in the URL fragment opens that
+node, so a review can point at one node instead of describing where to click. Plan text is data and never markup: titles,
 acceptance and evidence are injected as text, so a plan cannot script the page.
 @status:impl/done
 

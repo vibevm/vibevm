@@ -918,8 +918,12 @@ aside dd{margin:0;overflow-wrap:anywhere}
     node.path.forEach(function(ancestor){ open[ancestor] = true; });
   }
 
+  function remember(id){
+    try{ history.replaceState(null, "", "#" + encodeURIComponent(id)); }catch(e){}
+  }
   function select(id, scroll){
     if (!NODES[id]) return;
+    remember(id);
     if (selected && ROWS[selected]) ROWS[selected].setAttribute("aria-selected", "false");
     selected = id;
     reveal(id);
@@ -1169,10 +1173,18 @@ aside dd{margin:0;overflow-wrap:anywhere}
     }
   });
 
+  function fromHash(){
+    try{ return decodeURIComponent((location.hash || "").slice(1)); }catch(e){ return ""; }
+  }
   buildRows();
   chrome();
   if (DATA.plan.current_node) reveal(DATA.plan.current_node);
   paint();
+  // A node id in the fragment opens that node: the page is linkable.
+  if (NODES[fromHash()]) select(fromHash(), true);
+  window.addEventListener("hashchange", function(){
+    if (NODES[fromHash()]) select(fromHash(), true);
+  });
 })();
 </script>
 </body>
