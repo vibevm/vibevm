@@ -3,6 +3,10 @@
 //! for one target, verify its SHA-256, unpack it, and add px's MIT LICENSE
 //! and a NOTICE line. px is never committed; this runs at distribution
 //! build time.
+//!
+//! The licence is pinned and staged with LF line ends, because upstream
+//! ships the same text LF in the repository and CRLF in the Windows zip
+//! (see [`lf_line_ends`]).
 
 use std::io::Read;
 use std::path::{Component, Path, PathBuf};
@@ -92,6 +96,31 @@ fn sha256_hex(bytes: &[u8]) -> String {
         .iter()
         .map(|b| format!("{b:02x}"))
         .collect()
+}
+
+/// The licence text with every CRLF folded to a bare LF.
+///
+/// Upstream publishes one licence in two spellings: the repository's LF
+/// form, which `license_url` serves, and the CRLF form the Windows zip
+/// carries. `license_sha256` pins the LF form, so this is both the form the
+/// digest is measured on **and** the form written into `tools/px/`: the
+/// licence vibe ships is then byte for byte the pinned text whichever copy
+/// the build read, and its digest is exactly the pin. Only the two bytes of
+/// a line end are folded — a single changed, added or removed character of
+/// licence text still changes the digest and is still refused.
+fn lf_line_ends(bytes: &[u8]) -> Vec<u8> {
+    let mut out = Vec::with_capacity(bytes.len());
+    let mut rest = bytes;
+    while let Some(index) = rest.iter().position(|byte| *byte == b'\r') {
+        if rest.get(index + 1) == Some(&b'\n') {
+            out.extend_from_slice(&rest[..index]);
+        } else {
+            out.extend_from_slice(&rest[..=index]);
+        }
+        rest = &rest[index + 1..];
+    }
+    out.extend_from_slice(rest);
+    out
 }
 
 fn fetch(url: &str) -> Result<Vec<u8>> {
@@ -205,13 +234,18 @@ pub(crate) fn stage_with_archive(
         use std::os::unix::fs::PermissionsExt;
         std::fs::set_permissions(&executable, std::fs::Permissions::from_mode(0o755))?;
     }
-    let license = match inputs.license {
+    let license = lf_line_ends(&match inputs.license {
         Some(path) => std::fs::read(path)?,
         None if dest.join("LICENSE.txt").is_file() => std::fs::read(dest.join("LICENSE.txt"))?,
         None => fetch(&manifest.license_url)?,
-    };
-    if sha256_hex(&license) != manifest.license_sha256 {
-        bail!("px LICENSE does not match the pinned SHA-256 — refusing it");
+    });
+    let license_digest = sha256_hex(&license);
+    if license_digest != manifest.license_sha256 {
+        bail!(
+            "px LICENSE has SHA-256 {license_digest} with LF line ends, xtask/dist/px.toml pins \
+             {} — refusing it",
+            manifest.license_sha256
+        );
     }
     std::fs::write(dest.join("LICENSE.txt"), &license)?;
     std::fs::write(dest.join("NOTICE"), format!("{}\n", manifest.notice))?;
@@ -379,6 +413,61 @@ mod tests {
                 .to_string()
                 .contains("escapes")
         );
+    }
+
+    #[test]
+    fn the_crlf_spelling_of_the_pinned_licence_is_staged_as_the_pinned_lf_text() {
+        let lf: &[u8] = b"MIT License\n\nCopyright (c) 2017-2026 Someone\n";
+        let crlf: &[u8] = b"MIT License\r\n\r\nCopyright (c) 2017-2026 Someone\r\n";
+        let dir = tempfile::tempdir().unwrap();
+        let archive_path = dir.path().join("px.zip");
+
+        // The Windows zip's own CRLF copy of the pinned text is accepted,
+        // and `tools/px/LICENSE.txt` is the pinned LF form byte for byte.
+        let archive = zip_bytes(&[("px.exe", b"MZ fake"), ("LICENSE.txt", crlf)]);
+        std::fs::write(&archive_path, &archive).unwrap();
+        let inputs = Inputs {
+            target: "x86_64-pc-windows-msvc",
+            out_dir: dir.path(),
+            archive: Some(&archive_path),
+            license: None,
+        };
+        let pinned = manifest(&sha256_hex(&archive), &sha256_hex(lf));
+        let (staged, _) = stage_with_archive(&pinned, &inputs).unwrap();
+        assert_eq!(std::fs::read(staged.join("LICENSE.txt")).unwrap(), lf);
+        assert_eq!(
+            sha256_hex(&std::fs::read(staged.join("LICENSE.txt")).unwrap()),
+            pinned.license_sha256,
+            "the staged licence must hash to the pin"
+        );
+
+        // A single byte of licence *content* changed — `2026` to `2027`, the
+        // length untouched — is still refused, in the CRLF and the LF
+        // spelling alike.
+        for tampered in [
+            b"MIT License\r\n\r\nCopyright (c) 2017-2027 Someone\r\n".as_slice(),
+            b"MIT License\n\nCopyright (c) 2017-2027 Someone\n".as_slice(),
+        ] {
+            let archive = zip_bytes(&[("px.exe", b"MZ fake"), ("LICENSE.txt", tampered)]);
+            std::fs::write(&archive_path, &archive).unwrap();
+            let still_pinned = manifest(&sha256_hex(&archive), &sha256_hex(lf));
+            let error = stage_with_archive(&still_pinned, &inputs)
+                .unwrap_err()
+                .to_string();
+            assert!(error.contains("px LICENSE has SHA-256"), "{error}");
+            assert!(error.contains("refusing it"), "{error}");
+        }
+    }
+
+    #[test]
+    fn folding_line_ends_touches_nothing_but_a_crlf_pair() {
+        assert_eq!(lf_line_ends(b"a\r\nb\n"), b"a\nb\n");
+        assert_eq!(lf_line_ends(b"a\r\n\r\nb"), b"a\n\nb");
+        // A lone CR is content, not a line end, and survives.
+        assert_eq!(lf_line_ends(b"a\rb"), b"a\rb");
+        assert_eq!(lf_line_ends(b"a\r\r\nb"), b"a\r\nb");
+        assert_eq!(lf_line_ends(b"trailing\r"), b"trailing\r");
+        assert_eq!(lf_line_ends(b""), b"");
     }
 
     #[test]

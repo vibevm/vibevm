@@ -2704,7 +2704,7 @@ structure, and it goes when the file does.
 | @fact:B246-WHAT **what** | The px windows-amd64 zip ships `LICENSE.txt` with CRLF line ends (1101 bytes); `xtask/dist/px.toml` pins `license_sha256` of the GitHub-raw LF form (1080 bytes). `stage_with_archive` prefers the in-archive licence, so `cargo xtask dist px --target x86_64-pc-windows-msvc` always fails with `px LICENSE does not match the pinned SHA-256` unless `--license` names the LF copy. |
 | @fact:B246-EVIDENCE **evidence** | Corporate test build on base, 2026-11-09 (deterministic). |
 | @fact:B246-SEVERITY **severity** | P2 — blocks the documented release step for the Windows px companion. |
-| @fact:B246-DISPOSITION **disposition** | `candidate` — pin the in-archive digest per asset, or prefer `license_url` and compare normalised line ends. |
+| @fact:B246-DISPOSITION **disposition** | `fixed` 2026-11-10 — `stage_with_archive` (`xtask/src/dist/px_tool.rs`) folds CRLF to LF (`lf_line_ends`) before measuring the licence against `license_sha256` **and** writes that LF form into `tools/px/LICENSE.txt`, so the staged licence hashes to the pin whichever copy the build read; `xtask/dist/px.toml` says the pin is of the LF form. Nothing is skipped: a lone CR is content, and a one-byte content change is still refused by digest, now with both digests named. Tests: `the_crlf_spelling_of_the_pinned_licence_is_staged_as_the_pinned_lf_text`, `folding_line_ends_touches_nothing_but_a_crlf_pair` |
 | @fact:B246-FILED **filed by** | Corporate-env campaign, Windows test-build walk, 2026-11-09. |
 
 ## B-247 — a single-platform release drop cannot carry `DISTRIBUTIONS.json` {#b-247}

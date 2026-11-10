@@ -5,6 +5,12 @@
 # out with px's MIT LICENSE and a NOTICE line. Digests are the GitHub release
 # API `digest` values, re-measured on 2026-11-08.
 #
+# `license_sha256` is the digest of the licence with LF line ends. Upstream
+# ships that text twice: LF in the repository, which `license_url` serves,
+# and CRLF in the Windows zip. The build folds CRLF to LF before measuring
+# it and writes that same LF form into `tools/px/LICENSE.txt`, so the staged
+# licence hashes to this pin whichever copy the build read.
+#
 # Upstream: https://github.com/genotrance/px (MIT, Copyright (c) 2017-2026
 # Ganesh Viswanathan). v0.11.0 is the latest stable (non-pre-release) tag.
 # There is no macOS x86_64 asset: that target uses a system px
