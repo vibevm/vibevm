@@ -518,6 +518,10 @@ pub(super) fn recorded(plan: &Plan) -> Vec<Requirement> {
             key: dependency.key.clone(),
             scope: dependency.scope,
             step: dependency.step.clone(),
+            // A planned dependency is a declared requirement
+            // (`PROP-065#app-dependencies`); only the recommendation walk
+            // records a weak edge (`PROP-077#APP-RECOMMENDS-MECHANICS`).
+            weak: false,
         })
         .collect()
 }

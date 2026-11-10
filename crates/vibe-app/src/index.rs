@@ -1,8 +1,9 @@
 //! The one inventory, `<settings>/applications/index.json`
-//! (`vibe-user-applications/7`): domain model, wire conversion and the
+//! (`vibe-user-applications/8`): domain model, wire conversion and the
 //! atomic save. The writer writes the **lowest** protocol that carries what
-//! the home actually retains, so a home with no template provenance and no
-//! migration record keeps writing `/6` and every existing PATH proxy goes
+//! the home actually retains, so a home with no weak requirer edge keeps
+//! writing `/7`, a home with neither that nor a template provenance or a
+//! migration record keeps writing `/6`, and every existing PATH proxy goes
 //! on reading it (`PROP-059#proxy-index-upgrade`).
 
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-059#index");
@@ -17,13 +18,16 @@ use vibe_core::manifest::{
     IconDecl, InstallerMethod, InstallerOptionDecl, LauncherDecl, PublicCommandDecl,
     RequirementScope, ShellInterpreter, StepPhase, VersionFileDecl,
 };
-use vibe_wire::generated::application::e6::index as wire;
+use vibe_wire::generated::application::e7::index as wire;
 
 use crate::error::StateError;
 use crate::settings::{SettingsRoot, io, write_atomic};
 
 /// The protocol tag of the current index format.
-pub const INDEX_PROTOCOL: &str = "vibe-user-applications/7";
+pub const INDEX_PROTOCOL: &str = "vibe-user-applications/8";
+/// The protocol a home keeps writing while no requirer edge of it is weak
+/// (`PROP-059#proxy-index-upgrade`, `PROP-077#APP-RECOMMENDS-MECHANICS`).
+const WEAK_PROTOCOL: &str = "vibe-user-applications/7";
 /// The protocol a home keeps writing while it retains no template
 /// provenance, no declared migration entry and no migration outcome
 /// (`PROP-059#proxy-index-upgrade`).
@@ -290,6 +294,25 @@ pub struct Requirement {
     pub scope: RequirementScope,
     /// The step that asked for it; `None` for an option-level requirement.
     pub step: Option<String>,
+    /// A recommendation rather than a requirement
+    /// (`PROP-077#APP-RECOMMENDS-MECHANICS`): the edge keeps its target out
+    /// of the orphan set and blocks a removal in neither direction. One
+    /// attribute on the edge the inventory already carries, never a third
+    /// scope beside `build` and `runtime`.
+    pub weak: bool,
+}
+
+/// One recorded requirement seen from its target: who requires it, at which
+/// scope, and whether every edge from that owner is weak
+/// (`PROP-065#uninstall-tree`, `PROP-077#APP-RECOMMENDS-MECHANICS`).
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+#[spec(documents = "spec://org.vibevm.core/vibevm/common/PROP-077#APP-RECOMMENDS-MECHANICS")]
+pub struct ReverseEdge<'a> {
+    pub owner: &'a str,
+    pub scope: RequirementScope,
+    /// Every requirement this owner records for the target is weak, so the
+    /// owner neither blocks its removal nor is blocked by it.
+    pub weak: bool,
 }
 
 /// The lifecycle state of an installation beyond its payload: hidden
@@ -357,16 +380,27 @@ impl Index {
         Ok((index, protocol))
     }
 
-    /// The keys of the installations whose recorded requirements name
-    /// `key`, with the scope of each requirement (`PROP-065#uninstall-tree`).
-    pub fn required_by(&self, key: &str) -> Vec<(&str, RequirementScope)> {
-        let mut found: Vec<(&str, RequirementScope)> = Vec::new();
+    /// The installations whose recorded requirements name `key`, with the
+    /// strongest scope each one asks for and whether every edge it records
+    /// is weak (`PROP-065#uninstall-tree`,
+    /// `PROP-077#APP-RECOMMENDS-MECHANICS`). An owner that records both a
+    /// requirement and a recommendation of the same target is **not** weak:
+    /// the strong edge is the one that decides.
+    pub fn required_by(&self, key: &str) -> Vec<ReverseEdge<'_>> {
+        let mut found: Vec<ReverseEdge<'_>> = Vec::new();
         for (owner, record) in &self.installations {
             for requirement in &record.lifecycle.requires {
                 if requirement.key == key && owner != key {
-                    match found.iter_mut().find(|(seen, _)| *seen == owner.as_str()) {
-                        Some((_, scope)) => *scope = (*scope).max(requirement.scope),
-                        None => found.push((owner.as_str(), requirement.scope)),
+                    match found.iter_mut().find(|edge| edge.owner == owner.as_str()) {
+                        Some(edge) => {
+                            edge.scope = edge.scope.max(requirement.scope);
+                            edge.weak = edge.weak && requirement.weak;
+                        }
+                        None => found.push(ReverseEdge {
+                            owner: owner.as_str(),
+                            scope: requirement.scope,
+                            weak: requirement.weak,
+                        }),
                     }
                 }
             }
@@ -382,7 +416,8 @@ impl Index {
     pub fn to_wire(&self) -> wire::ApplicationIndex {
         wire::ApplicationIndex {
             protocol: match self.minimum_reader() {
-                7 => INDEX_PROTOCOL,
+                8 => INDEX_PROTOCOL,
+                7 => WEAK_PROTOCOL,
                 6 => PATHS_PROTOCOL,
                 5 => EVIDENCE_PROTOCOL,
                 4 => FOUR_PROTOCOL,
@@ -413,6 +448,7 @@ impl Index {
 
     pub fn from_wire(document: wire::ApplicationIndex) -> Result<Self, String> {
         if document.protocol != INDEX_PROTOCOL
+            && document.protocol != WEAK_PROTOCOL
             && document.protocol != PATHS_PROTOCOL
             && document.protocol != EVIDENCE_PROTOCOL
             && document.protocol != FOUR_PROTOCOL
@@ -441,6 +477,7 @@ impl Index {
             return Err("source evidence requires application index5".into());
         }
         if document.protocol != INDEX_PROTOCOL
+            && document.protocol != WEAK_PROTOCOL
             && document.protocol != PATHS_PROTOCOL
             && (document
                 .installations
@@ -456,6 +493,7 @@ impl Index {
             );
         }
         if document.protocol != INDEX_PROTOCOL
+            && document.protocol != WEAK_PROTOCOL
             && document
                 .installations
                 .values()
@@ -464,6 +502,14 @@ impl Index {
             return Err(
                 "template provenance and migration records require application index7".into(),
             );
+        }
+        if document.protocol != INDEX_PROTOCOL
+            && document
+                .installations
+                .values()
+                .any(|r| r.requires.iter().any(|requirement| requirement.weak))
+        {
+            return Err("a weak requirer edge requires application index8".into());
         }
         let mut installations = BTreeMap::new();
         for (key, record) in document.installations {
@@ -527,6 +573,7 @@ mod publication;
 mod upgrade;
 mod upgrade_five;
 mod upgrade_four;
+mod upgrade_seven;
 mod upgrade_six;
 #[path = "index/version_files.rs"]
 mod version_files;

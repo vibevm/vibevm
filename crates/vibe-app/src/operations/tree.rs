@@ -36,13 +36,15 @@ impl Reason {
     }
 }
 
-/// The installations that require `key` at runtime scope.
+/// The installations that require `key` at runtime scope through a **strong**
+/// edge. A weak edge blocks a removal in neither direction, so a recommender
+/// is not a dependent (`PROP-077#APP-RECOMMENDS-MECHANICS`).
 fn runtime_dependents<'a>(index: &'a Index, key: &str) -> Vec<&'a str> {
     index
         .required_by(key)
         .into_iter()
-        .filter(|(_, scope)| *scope == RequirementScope::Runtime)
-        .map(|(owner, _)| owner)
+        .filter(|edge| !edge.weak && edge.scope == RequirementScope::Runtime)
+        .map(|edge| edge.owner)
         .collect()
 }
 
@@ -88,7 +90,11 @@ fn visit(
 }
 
 /// Auto installations that nothing installed requires any more, never a
-/// manual one and never a kept previous installation.
+/// manual one and never a kept previous installation. A **weak** edge counts
+/// here although it blocks no removal: an installation a recommender still
+/// points at is not an orphan, and one the user installed by name is
+/// `manual` and is never offered however many weak edges name it
+/// (`PROP-077#APP-RECOMMENDS-MECHANICS`).
 pub(crate) fn orphans(index: &Index) -> Vec<String> {
     index
         .installations

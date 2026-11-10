@@ -19,7 +19,8 @@ fn roundtrip<T: DeserializeOwned + Serialize>(path: &str) {
 }
 #[test]
 fn new_source_records_roundtrip_and_frozen_readers_refuse() {
-    use vibe_wire::generated::application::{e1, e2, e3, e4, e5, e6};
+    use vibe_wire::generated::application::{e1, e2, e3, e4, e5, e6, e7};
+    roundtrip::<e7::index::ApplicationIndex>("application/e7/index.json");
     roundtrip::<e6::index::ApplicationIndex>("application/e6/index.json");
     roundtrip::<e5::index::ApplicationIndex>("application/e5/index.json");
     roundtrip::<e4::index::ApplicationIndex>("application/e4/index.json");
@@ -41,6 +42,14 @@ fn new_source_records_roundtrip_and_frozen_readers_refuse() {
     // `#TEMPLATE-LOCK-RECORD`, `#MIGRATION-DECLARATION`, `#MIGRATION-FAILURE`).
     assert!(
         serde_json::from_slice::<e5::index::ApplicationIndex>(&bytes("application/e6/index.json"))
+            .is_err()
+    );
+    // The weak requirer edge is index7's own world (PROP-077
+    // `#APP-RECOMMENDS-MECHANICS`): a frozen reader must refuse a document
+    // that carries one rather than drop the attribute and read the edge as
+    // a requirement.
+    assert!(
+        serde_json::from_slice::<e6::index::ApplicationIndex>(&bytes("application/e7/index.json"))
             .is_err()
     );
     assert!(

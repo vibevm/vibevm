@@ -58,6 +58,7 @@ fn needs(record: &mut Installation, child: &str) {
         key: format!("org.example/{child}@1.0.0"),
         scope: RequirementScope::Runtime,
         step: None,
+        weak: false,
     });
 }
 fn save(settings: &SettingsRoot, records: Vec<Installation>) {

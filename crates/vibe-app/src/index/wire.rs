@@ -1,12 +1,15 @@
 //! Conversion between the index domain model and the generated
-//! `vibe-user-applications/7` wire form. `requiredBy` is written from the
+//! `vibe-user-applications/8` wire form. `requiredBy` is written from the
 //! forward requirement edges at every save and never read back, so it
-//! cannot drift from them (`PROP-065#uninstall-tree`).
+//! cannot drift from them (`PROP-065#uninstall-tree`) — a weak edge is
+//! mirrored there like any other, because the member names who requires
+//! this installation and a recommender does (`PROP-077`
+//! `#APP-RECOMMENDS-MECHANICS`).
 
 use std::path::PathBuf;
 
 use vibe_core::manifest::{PublicCommandDecl, RequirementScope, ShellInterpreter, StepPhase};
-use vibe_wire::generated::application::e6::index as wire;
+use vibe_wire::generated::application::e7::index as wire;
 
 use super::launcher_wire::{icon_from_wire, icon_to_wire, launcher_from_wire, launcher_to_wire};
 use super::{
@@ -26,7 +29,7 @@ pub(super) fn installation_to_wire(
         index
             .required_by(key)
             .into_iter()
-            .map(|(owner, _)| owner.to_owned())
+            .map(|edge| edge.owner.to_owned())
             .collect(),
     )
 }
@@ -162,6 +165,7 @@ fn installation_with_reverse(value: &Installation, required_by: Vec<String>) -> 
                 key: requirement.key.clone(),
                 scope: scope_to_wire(requirement.scope),
                 step: requirement.step.clone(),
+                weak: requirement.weak,
             })
             .collect(),
         required_by,
@@ -422,6 +426,7 @@ pub(super) fn installation_from_wire(record: wire::Installation) -> Result<Insta
                         wire::Scope::Runtime => RequirementScope::Runtime,
                     },
                     step: requirement.step,
+                    weak: requirement.weak,
                 })
                 .collect(),
             env: record.env.into_iter().map(env_from_wire).collect(),

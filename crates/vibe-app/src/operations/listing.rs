@@ -161,7 +161,7 @@ fn row(
         required_by: index
             .required_by(key)
             .into_iter()
-            .map(|(owner, _)| owner.to_owned())
+            .map(|edge| edge.owner.to_owned())
             .collect(),
         env: lifecycle
             .env

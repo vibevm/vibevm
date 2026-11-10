@@ -138,7 +138,16 @@ fn actual_proxy_refuses_unknown_protocol_and_nested_fields_in_both_index_version
     for slot in six["slots"].as_object_mut().unwrap().values_mut() {
         slot["pathEnv"] = serde_json::json!([]);
     }
-    for original in [old, four, new.clone(), six] {
+    // Protocol8: a weak requirer edge (PROP-077 `#APP-RECOMMENDS-MECHANICS`).
+    let mut eight = new.clone();
+    eight["protocol"] = "vibe-user-applications/8".into();
+    eight["installations"]["org.example/rich@1.0.0"]["requires"] = serde_json::json!([{
+        "package": "org.example/legacy@^1",
+        "key": "org.example/legacy@1.0.0",
+        "scope": "runtime",
+        "weak": true,
+    }]);
+    for original in [old, four, new.clone(), six, eight] {
         fs::write(&path, serde_json::to_vec(&original).unwrap()).unwrap();
         assert!(
             launch(&r, "legacy-cmd").status.success(),
@@ -235,6 +244,7 @@ fn original_image_reports_exact_reader_capabilities_without_changing_probe() {
         "vibe-user-applications/5",
         "vibe-user-applications/6",
         "vibe-user-applications/7",
+        "vibe-user-applications/8",
     ] {
         let out = Command::new(image)
             .args(["--supports-index", protocol])

@@ -534,12 +534,12 @@ sunset = "none"
 
 # ── User-local application durable/exchange records, PROP-059 ───────────────
 [format.application-index]
-epoch = 6
-schema = "schemas/application/e6/index.jtd.json"
+epoch = 7
+schema = "schemas/application/e7/index.jtd.json"
 recoverable = false
 foreign_parsers = "none"
 unknown_fields = "deny"
-corpus = "formats/corpora/application/e6"
+corpus = "formats/corpora/application/e7"
 sunset = "none"
 
 # The version files the home's installed applications declare
@@ -2018,6 +2018,15 @@ recoverable = false
 foreign_parsers = "many"
 unknown_fields = "deny"
 corpus = "formats/corpora/migration-application-journal/e1"
+sunset = "none"
+
+[format.application-index-v7]
+epoch = 6
+schema = "schemas/application/e6/index.jtd.json"
+recoverable = false
+foreign_parsers = "none"
+unknown_fields = "deny"
+corpus = "formats/corpora/application/e6"
 sunset = "none"
 
 [format.application-index-v6]

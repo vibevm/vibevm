@@ -1,7 +1,7 @@
 //! Which protocol an index document *is*, and which one the writer writes
 //! (`PROP-059#index`, `#proxy-index-upgrade`).
 //!
-//! Reading admits the closed set `/3`…`/7`, promoting each older generation
+//! Reading admits the closed set `/3`…`/8`, promoting each older generation
 //! through the typed `upgrade*` modules; writing emits **the lowest protocol
 //! that carries what the home actually retains**, which is the whole reason
 //! a home that uses none of a generation's facts keeps its old format and
@@ -24,22 +24,25 @@ impl Index {
         }
         let header: Header = serde_json::from_slice(bytes).map_err(|e| e.to_string())?;
         let document = match header.protocol.as_str() {
-            LEGACY_PROTOCOL => upgrade_six::promote(upgrade_five::promote(upgrade_four::promote(
-                upgrade::promote(
+            LEGACY_PROTOCOL => upgrade_seven::promote(upgrade_six::promote(upgrade_five::promote(
+                upgrade_four::promote(upgrade::promote(
                     serde_json::from_slice::<
                         vibe_wire::generated::application::e2::index::ApplicationIndex,
                     >(bytes)
                     .map_err(|e| e.to_string())?,
-                ),
+                )),
             ))),
-            FOUR_PROTOCOL => upgrade_six::promote(upgrade_five::promote(upgrade_four::promote(
-                serde_json::from_slice(bytes).map_err(|e| e.to_string())?,
+            FOUR_PROTOCOL => upgrade_seven::promote(upgrade_six::promote(upgrade_five::promote(
+                upgrade_four::promote(serde_json::from_slice(bytes).map_err(|e| e.to_string())?),
             ))),
-            EVIDENCE_PROTOCOL => upgrade_six::promote(upgrade_five::promote(
+            EVIDENCE_PROTOCOL => upgrade_seven::promote(upgrade_six::promote(
+                upgrade_five::promote(serde_json::from_slice(bytes).map_err(|e| e.to_string())?),
+            )),
+            PATHS_PROTOCOL => upgrade_seven::promote(upgrade_six::promote(
                 serde_json::from_slice(bytes).map_err(|e| e.to_string())?,
             )),
-            PATHS_PROTOCOL => {
-                upgrade_six::promote(serde_json::from_slice(bytes).map_err(|e| e.to_string())?)
+            WEAK_PROTOCOL => {
+                upgrade_seven::promote(serde_json::from_slice(bytes).map_err(|e| e.to_string())?)
             }
             INDEX_PROTOCOL => serde_json::from_slice(bytes).map_err(|e| e.to_string())?,
             _ => return Err("unsupported application index protocol".into()),
@@ -48,7 +51,8 @@ impl Index {
             (
                 index,
                 match header.protocol.as_str() {
-                    INDEX_PROTOCOL => 7,
+                    INDEX_PROTOCOL => 8,
+                    WEAK_PROTOCOL => 7,
                     PATHS_PROTOCOL => 6,
                     EVIDENCE_PROTOCOL => 5,
                     FOUR_PROTOCOL => 4,
@@ -88,8 +92,20 @@ impl Index {
             .any(|r| r.template.is_some() || !r.migrations.is_empty() || !r.migrated.is_empty())
     }
 
+    /// Whether any retained data needs the current closed index8 reader: a
+    /// weak requirer edge (`PROP-077#APP-RECOMMENDS-MECHANICS`). The per
+    /// declared adapter extras record of `AV-FMT-029` rides this same
+    /// generation when phase P7c lands it, and joins this predicate then.
+    pub(crate) fn requires_reader_eight(&self) -> bool {
+        self.installations
+            .values()
+            .any(|r| r.lifecycle.requires.iter().any(|edge| edge.weak))
+    }
+
     pub(crate) fn minimum_reader(&self) -> u8 {
-        if self.requires_reader_seven() {
+        if self.requires_reader_eight() {
+            8
+        } else if self.requires_reader_seven() {
             7
         } else if self.requires_reader_six() {
             6

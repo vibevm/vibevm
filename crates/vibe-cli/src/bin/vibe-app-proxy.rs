@@ -63,7 +63,8 @@ fn original(caller: &[OsString]) -> Result<i32, String> {
                 | "vibe-user-applications/4"
                 | "vibe-user-applications/5"
                 | "vibe-user-applications/6"
-                | "vibe-user-applications/7",
+                | "vibe-user-applications/7"
+                | "vibe-user-applications/8",
             ) => {
                 println!("{}", protocol.to_string_lossy());
             }

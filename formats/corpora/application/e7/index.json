@@ -1,0 +1,440 @@
+{
+  "protocol": "vibe-user-applications/8",
+  "installations": {
+    "org.example/corpus@1.0.0": {
+      "slot": "corpus",
+      "package": {
+        "group": "org.example",
+        "name": "corpus",
+        "version": "1.0.0"
+      },
+      "option": "main",
+      "platform": "linux",
+      "arch": "x86_64",
+      "method": "steps",
+      "library": "default",
+      "directory": "apps/corpus/org.example.corpus@1.0.0",
+      "portable": true,
+      "launchers": [],
+      "publicCommands": [],
+      "pathDirs": [
+        "bin",
+        "$app_root/tools"
+      ],
+      "template": {
+        "revision": "3f2a1c",
+        "produced": "1.0.0",
+        "renderedSha256": "1111111111111111111111111111111111111111111111111111111111111111",
+        "digestSourceSha256": "2222222222222222222222222222222222222222222222222222222222222222",
+        "sourceUrl": "https://example.invalid/dist/index.json",
+        "digestUrl": "https://example.invalid/dist/v1.0.0/SHASUMS256.txt"
+      },
+      "migrations": [
+        {
+          "id": "global-packages",
+          "name": "Global packages",
+          "description": "Reinstall what the old version had",
+          "default": true
+        }
+      ],
+      "migrated": [
+        {
+          "id": "global-packages",
+          "from": "org.example/corpus@0.9.0",
+          "to": "org.example/corpus@1.0.0",
+          "result": "done",
+          "step": "install-globals",
+          "work": "/home/u/.vibe/cache/app-migrate/corpus/0.9.0-to-1.0.0/20261110T101500Z",
+          "log": "/home/u/.vibe/cache/app-migrate/corpus/0.9.0-to-1.0.0/20261110T101500Z/global-packages/import.log",
+          "at": "2026-11-10T10:15:04Z"
+        }
+      ],
+      "commands": {},
+      "features": [
+        "a",
+        "b"
+      ],
+      "parameters": {
+        "flag": "false",
+        "n": "-3"
+      },
+      "steps": [
+        {
+          "id": "build",
+          "kind": "recipe",
+          "outcome": "done"
+        },
+        {
+          "id": "finish",
+          "kind": "agent",
+          "phase": "finish",
+          "outcome": "delegated"
+        }
+      ],
+      "mark": "auto",
+      "requires": [
+        {
+          "package": "org.example/tool@^1",
+          "key": "org.example/tool@1.2.0",
+          "scope": "runtime",
+          "step": "build"
+        },
+        {
+          "package": "org.example/companion@^2",
+          "key": "org.example/companion@2.0.1",
+          "scope": "runtime",
+          "weak": true
+        }
+      ],
+      "requiredBy": [
+        "org.example/other@3.0.0"
+      ],
+      "configuration": {
+        "definition": {
+          "features": [
+            {
+              "id": "a",
+              "name": "A",
+              "visibility": "public",
+              "required": false,
+              "default": false,
+              "requires": [
+                "b"
+              ],
+              "guards": [],
+              "effects": [
+                {
+                  "kind": "config-value",
+                  "name": "mode"
+                }
+              ]
+            },
+            {
+              "id": "b",
+              "name": "B",
+              "visibility": "public",
+              "required": false,
+              "default": false,
+              "requires": [],
+              "guards": [],
+              "effects": []
+            }
+          ],
+          "groups": [
+            {
+              "mode": "choice",
+              "cardinality": "zero-or-one",
+              "defaults": [],
+              "guards": [],
+              "id": "mode",
+              "members": [
+                "a"
+              ],
+              "name": "Mode"
+            }
+          ],
+          "parameters": [
+            {
+              "id": "n",
+              "name": "Count",
+              "type": "integer",
+              "required": false,
+              "choices": [],
+              "mustExist": false,
+              "secret": false,
+              "default": {
+                "kind": "integer",
+                "value": "-7"
+              },
+              "min": "-10",
+              "max": "10"
+            },
+            {
+              "id": "flag",
+              "name": "Flag",
+              "type": "bool",
+              "required": false,
+              "choices": [],
+              "mustExist": false,
+              "secret": false,
+              "default": {
+                "kind": "bool",
+                "value": false
+              }
+            },
+            {
+              "id": "token",
+              "name": "Token",
+              "type": "string",
+              "required": false,
+              "choices": [],
+              "mustExist": false,
+              "secret": true,
+              "default": {
+                "kind": "text",
+                "value": "example-public-definition-literal"
+              }
+            }
+          ],
+          "profiles": [
+            {
+              "id": "preset",
+              "name": "Preset",
+              "default": false,
+              "features": [],
+              "selections": {
+                "mode": {
+                  "intent": "exact",
+                  "members": [
+                    "a"
+                  ]
+                }
+              },
+              "parameters": {
+                "n": {
+                  "kind": "integer",
+                  "value": "-3"
+                }
+              }
+            }
+          ],
+          "configValues": {
+            "mode": {
+              "kind": "text",
+              "value": "example-data"
+            }
+          }
+        },
+        "evaluation": {
+          "definition": "configuration-semantic/1:sha256:78e759d2d0783776c4475d92ca3581c8facfcf4d058797979acc592fff24eceb",
+          "input": {
+            "intent": {
+              "policy": "require-selection",
+              "features": [],
+              "defaultFeatures": false,
+              "selections": {},
+              "parameters": {},
+              "profile": "preset"
+            },
+            "disabledFeatures": []
+          },
+          "normalizedConsumers": [
+            {
+              "key": "installer",
+              "policy": "require-selection",
+              "answers": {
+                "mode": {
+                  "intent": "exact",
+                  "members": [
+                    "a"
+                  ]
+                }
+              }
+            }
+          ],
+          "controls": [
+            {
+              "id": "mode",
+              "active": true,
+              "cardinality": "zero-or-one",
+              "members": [
+                {
+                  "id": "a",
+                  "eligible": true,
+                  "requestedBy": [
+                    "installer"
+                  ],
+                  "blockedBy": []
+                }
+              ],
+              "projections": [
+                {
+                  "consumer": "installer",
+                  "intent": "exact",
+                  "origin": "explicit",
+                  "eligible": [
+                    "a"
+                  ],
+                  "dormant": []
+                }
+              ],
+              "blockedBy": [],
+              "selection": [
+                "a"
+              ]
+            }
+          ],
+          "defaults": [],
+          "questions": [],
+          "problems": [],
+          "parameters": [
+            {
+              "privacy": "public",
+              "id": "n",
+              "origin": {
+                "kind": "profile",
+                "profile": "preset"
+              },
+              "source": {
+                "kind": "integer",
+                "value": "-3"
+              },
+              "type": "integer",
+              "value": {
+                "kind": "integer",
+                "value": "-3"
+              }
+            },
+            {
+              "privacy": "public",
+              "id": "flag",
+              "origin": {
+                "kind": "default"
+              },
+              "source": {
+                "kind": "bool",
+                "value": false
+              },
+              "type": "bool",
+              "value": {
+                "kind": "bool",
+                "value": false
+              }
+            },
+            {
+              "privacy": "secret",
+              "id": "token",
+              "origin": {
+                "kind": "default"
+              },
+              "provided": false,
+              "resupply": false
+            }
+          ],
+          "reliance": [
+            "parameter:flag",
+            "parameter:n",
+            "parameter:token",
+            "profile"
+          ],
+          "resolved": {
+            "features": {
+              "selected": [
+                "a",
+                "b"
+              ],
+              "implied": [
+                {
+                  "feature": "b",
+                  "reason": {
+                    "kind": "requires",
+                    "feature": "a"
+                  }
+                }
+              ]
+            },
+            "parameters": [
+              {
+                "privacy": "public",
+                "id": "n",
+                "origin": {
+                  "kind": "profile",
+                  "profile": "preset"
+                },
+                "source": {
+                  "kind": "integer",
+                  "value": "-3"
+                },
+                "type": "integer",
+                "value": {
+                  "kind": "integer",
+                  "value": "-3"
+                }
+              },
+              {
+                "privacy": "public",
+                "id": "flag",
+                "origin": {
+                  "kind": "default"
+                },
+                "source": {
+                  "kind": "bool",
+                  "value": false
+                },
+                "type": "bool",
+                "value": {
+                  "kind": "bool",
+                  "value": false
+                }
+              },
+              {
+                "privacy": "secret",
+                "id": "token",
+                "origin": {
+                  "kind": "default"
+                },
+                "provided": false,
+                "resupply": false
+              }
+            ],
+            "data": [
+              {
+                "name": "mode",
+                "value": {
+                  "kind": "text",
+                  "value": "example-data"
+                },
+                "features": [
+                  "a"
+                ]
+              }
+            ]
+          },
+          "featureResult": {
+            "selected": [
+              "a",
+              "b"
+            ],
+            "implied": [
+              {
+                "feature": "b",
+                "reason": {
+                  "kind": "requires",
+                  "feature": "a"
+                }
+              }
+            ]
+          }
+        }
+      },
+      "pending": {
+        "home": "/tmp/nst-common-app-format-capture/home",
+        "key": "org.example/corpus@1.0.0",
+        "operation": "20261104T162511.396009348Z-773983-0"
+      },
+      "source_evidence": {
+        "registry": "fixture",
+        "source_url": "https://registry.invalid/org.example.editor",
+        "source_ref": "v1.2.0",
+        "source_kind": "registry",
+        "resolved_commit": "observed-fixture-commit",
+        "acquisition": "git_repository",
+        "store_reused": false
+      }
+    }
+  },
+  "slots": {
+    "corpus": {
+      "default": "org.example/corpus@1.0.0",
+      "off": true,
+      "pathEnv": [
+        {
+          "step": "paths",
+          "op": "path_prepend",
+          "name": "PATH",
+          "value": "/tmp/nst-common-app-format-capture/home/opt/paths/corpus/0"
+        }
+      ]
+    }
+  }
+}

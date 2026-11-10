@@ -173,8 +173,10 @@ pub fn remove_unrecorded(
         let held: Vec<String> = doomed
             .iter()
             .filter(|key| {
-                index.required_by(key).iter().any(|(owner, scope)| {
-                    *scope == RequirementScope::Runtime && !doomed.contains(*owner)
+                index.required_by(key).iter().any(|edge| {
+                    !edge.weak
+                        && edge.scope == RequirementScope::Runtime
+                        && !doomed.contains(edge.owner)
                 })
             })
             .cloned()

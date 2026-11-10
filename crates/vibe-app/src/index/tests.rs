@@ -164,12 +164,14 @@ fn sample() -> Index {
                     key: "org.example/editor@1.2.0".into(),
                     scope: RequirementScope::Runtime,
                     step: None,
+                    weak: false,
                 },
                 Requirement {
                     package: "org.example/gcc@13".into(),
                     key: "org.example/gcc@13.2.0".into(),
                     scope: RequirementScope::Build,
                     step: Some("register".into()),
+                    weak: false,
                 },
             ],
             env: vec![
@@ -344,4 +346,81 @@ fn the_writer_reaches_protocol_seven_only_for_a_fact_seven_carries() {
                 .contains("application index7")
         );
     }
+}
+
+/// The ladder's new rung: a **weak** requirer edge is the one fact `/8`
+/// carries, so a home that holds no recommendation goes on writing exactly
+/// the protocol it wrote before (`PROP-059#proxy-index-upgrade`,
+/// `PROP-077#APP-RECOMMENDS-MECHANICS`).
+#[test]
+#[specmark::spec(
+    verifies = "spec://org.vibevm.core/vibevm/common/PROP-077#APP-RECOMMENDS-MECHANICS"
+)]
+fn the_writer_reaches_protocol_eight_only_for_a_weak_requirer_edge() {
+    // Every edge of the sample is a real requirement, so the strong-edge
+    // home is not moved by this generation at all.
+    let base = sample();
+    assert!(
+        base.installations
+            .values()
+            .any(|record| !record.lifecycle.requires.is_empty())
+    );
+    assert_eq!(base.minimum_reader(), 3);
+
+    let mut index = sample();
+    let owner = index
+        .installations
+        .values_mut()
+        .find(|record| !record.lifecycle.requires.is_empty())
+        .unwrap();
+    owner.lifecycle.requires[0].weak = true;
+    assert_eq!(index.minimum_reader(), 8);
+    let document = index.to_wire();
+    assert_eq!(document.protocol, "vibe-user-applications/8");
+    // And it reads back as itself, through the `/8` arm.
+    assert_eq!(Index::from_wire(document.clone()).unwrap(), index);
+    // A `/8`-only fact in a `/7` document is refused rather than dropped,
+    // because a dropped weak edge would silently orphan a recommendation.
+    let mut forged = document;
+    forged.protocol = "vibe-user-applications/7".into();
+    assert!(
+        Index::from_wire(forged)
+            .unwrap_err()
+            .contains("application index8")
+    );
+}
+
+/// What each reader of the edge makes of its weakness: it keeps its target
+/// out of the orphan set, and it is a dependent of nothing
+/// (`PROP-077#APP-RECOMMENDS-MECHANICS`).
+#[test]
+#[specmark::spec(
+    verifies = "spec://org.vibevm.core/vibevm/common/PROP-077#APP-RECOMMENDS-MECHANICS"
+)]
+fn a_weak_edge_is_reported_weak_and_an_owner_of_both_edges_is_not() {
+    let mut index = sample();
+    let owner_key = index
+        .installations
+        .iter()
+        .find(|(_, record)| !record.lifecycle.requires.is_empty())
+        .map(|(key, _)| key.clone())
+        .unwrap();
+    let owner = index.installations.get_mut(&owner_key).unwrap();
+    let target = owner.lifecycle.requires[0].key.clone();
+    owner.lifecycle.requires[0].weak = true;
+    let edges = index.required_by(&target);
+    assert_eq!(edges.len(), 1);
+    assert_eq!(edges[0].owner, owner_key);
+    assert!(edges[0].weak);
+
+    // The same owner recording a real requirement of the same target is the
+    // case the weakness must not survive: the strong edge decides.
+    let owner = index.installations.get_mut(&owner_key).unwrap();
+    let mut strong = owner.lifecycle.requires[0].clone();
+    strong.weak = false;
+    strong.step = Some("install".into());
+    owner.lifecycle.requires.push(strong);
+    let edges = index.required_by(&target);
+    assert_eq!(edges.len(), 1);
+    assert!(!edges[0].weak);
 }
