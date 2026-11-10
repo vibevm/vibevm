@@ -15,6 +15,14 @@
 //! into an [`AggregateDistributionManifest`]. All three documents are strict
 //! JSON contracts with deterministic serializers.
 //!
+//! The complete matrix is the *publishing* rule, and only writers and
+//! release-host mirrors are held to it
+//! ([`AggregateDistributionManifest::validate`]). An installation reads one
+//! platform out of an aggregate, so a release drop may carry an aggregate
+//! describing only the targets that site runs
+//! ([`AggregateDistributionManifest::validate_for_target`], which documents
+//! why that costs no integrity).
+//!
 //! It lives in this crate rather than beside its callers because the orphan
 //! rule leaves no alternative: an inherent `impl` belongs in the crate that
 //! defines the type, and `vibe-publish` re-exports these types through
@@ -313,7 +321,17 @@ impl AggregateDistributionManifest {
         Ok(aggregate)
     }
 
-    pub fn validate(&self) -> Result<(), ReleaseManifestError> {
+    /// Everything that is true of any aggregate, whole or partial: the
+    /// schema, the release identity, at least one platform, every platform
+    /// valid in itself and for a target this vibe supports, no target
+    /// twice, no release-asset name used twice, every platform bound to the
+    /// aggregate's own identity, and one source archive across them all.
+    ///
+    /// These are the rules the *entries present* must satisfy. Which
+    /// entries must be present is the caller's question, and the two
+    /// callers answer it differently: [`Self::validate`] for a publisher,
+    /// [`Self::validate_for_target`] for a consumer.
+    fn validate_entries(&self) -> Result<(), ReleaseManifestError> {
         validate_schema(self.schema_version)?;
         validate_identity(
             &self.product,
@@ -322,26 +340,27 @@ impl AggregateDistributionManifest {
             &self.tag,
             &self.source_commit,
         )?;
-
-        let expected = SUPPORTED_DISTRIBUTION_TARGETS
-            .iter()
-            .map(|target| (*target).to_string())
-            .collect::<BTreeSet<_>>();
-        let actual = self
-            .platforms
-            .iter()
-            .map(|platform| platform.target.clone())
-            .collect::<BTreeSet<_>>();
-        if self.platforms.len() != SUPPORTED_DISTRIBUTION_TARGETS.len() || actual != expected {
+        let Some(first) = self.platforms.first() else {
             return Err(ReleaseManifestError::TargetMatrix {
-                expected: expected.into_iter().collect(),
-                actual: actual.into_iter().collect(),
+                expected: SUPPORTED_DISTRIBUTION_TARGETS
+                    .iter()
+                    .map(|target| (*target).to_string())
+                    .collect(),
+                actual: Vec::new(),
             });
-        }
+        };
 
         let mut release_asset_names = BTreeSet::new();
+        let mut seen_targets = BTreeSet::new();
         for platform in &self.platforms {
+            // Refuses a target outside `SUPPORTED_DISTRIBUTION_TARGETS`
+            // (`UnsupportedTarget`) before anything else is believed of it.
             platform.validate()?;
+            if !seen_targets.insert(platform.target.clone()) {
+                return Err(ReleaseManifestError::TargetDuplicate {
+                    target: platform.target.clone(),
+                });
+            }
             for asset in [&platform.asset, &platform.bootstrap] {
                 if !release_asset_names.insert(asset.name.clone()) {
                     return Err(ReleaseManifestError::AssetNameCollision {
@@ -367,22 +386,84 @@ impl AggregateDistributionManifest {
                     });
                 }
             }
-        }
-        let Some(first) = self.platforms.first() else {
-            return Err(ReleaseManifestError::TargetMatrix {
-                expected: SUPPORTED_DISTRIBUTION_TARGETS
-                    .iter()
-                    .map(|target| (*target).to_string())
-                    .collect(),
-                actual: Vec::new(),
-            });
-        };
-        for platform in &self.platforms {
             if platform.bundle.source_archive != first.bundle.source_archive {
                 return Err(ReleaseManifestError::SourceArchiveMismatch {
                     target: platform.target.clone(),
                 });
             }
+        }
+        Ok(())
+    }
+
+    /// The **publishing** contract: a published release describes every
+    /// supported target exactly once, built from one commit
+    /// (`PROP-019#release-production`). `from_platforms`, `to_json_bytes`
+    /// and `from_json_slice` hold writers and release-host mirrors to it,
+    /// so no incomplete release is ever written or republished.
+    pub fn validate(&self) -> Result<(), ReleaseManifestError> {
+        self.validate_entries()?;
+        let expected = SUPPORTED_DISTRIBUTION_TARGETS
+            .iter()
+            .map(|target| (*target).to_string())
+            .collect::<BTreeSet<_>>();
+        let actual = self
+            .platforms
+            .iter()
+            .map(|platform| platform.target.clone())
+            .collect::<BTreeSet<_>>();
+        if actual != expected {
+            return Err(ReleaseManifestError::TargetMatrix {
+                expected: expected.into_iter().collect(),
+                actual: actual.into_iter().collect(),
+            });
+        }
+        Ok(())
+    }
+
+    /// The **consuming** contract (`PROP-019#release-sources`): an
+    /// installation reads one platform out of an aggregate, so what it
+    /// needs is this host's target, described exactly once. An aggregate
+    /// that also describes the other four is the published shape and
+    /// satisfies this too.
+    ///
+    /// Why a partial aggregate may be consumed when it may not be
+    /// published: nothing authenticates the aggregate document as a whole.
+    /// There is no signature and no outer digest over it — it *is* the root
+    /// of trust, reached over a transport the operator chose (the canonical
+    /// HTTPS release directory, or a drop and a remap row on this machine),
+    /// and what it authenticates is each platform's bundle and bootstrap by
+    /// name, size and SHA-256, cross-checked afterwards against the bundle's
+    /// own embedded manifest. Those digests are per entry: an entry neither
+    /// gains nor loses strength from its neighbours' presence. A forger who
+    /// can rewrite one entry can write five consistent ones just as cheaply,
+    /// so requiring the full matrix buys a consumer nothing — while it
+    /// refuses an air-gapped site that copied only the platform it runs
+    /// (B-247). The cold-start installers already read an aggregate this
+    /// way: `install.ps1` takes the single entry matching its target and
+    /// never counts the rest, and `install.sh` refuses with "release
+    /// manifest has no bootstrap for `<target>`".
+    ///
+    /// Still refused: an entry for an unsupported target, the same target
+    /// twice, an aggregate with no entries, and an aggregate that does not
+    /// describe `target` — that last one by name, because the operator's
+    /// question is which file to copy next.
+    pub fn validate_for_target(&self, target: &str) -> Result<(), ReleaseManifestError> {
+        self.validate_entries()?;
+        if !self
+            .platforms
+            .iter()
+            .any(|platform| platform.target == target)
+        {
+            return Err(ReleaseManifestError::TargetAbsent {
+                target: target.to_owned(),
+                actual: self
+                    .platforms
+                    .iter()
+                    .map(|platform| platform.target.clone())
+                    .collect::<BTreeSet<_>>()
+                    .into_iter()
+                    .collect(),
+            });
         }
         Ok(())
     }
@@ -406,15 +487,33 @@ impl AggregateDistributionManifest {
         )
     }
 
+    /// Parse a **published** aggregate: the complete matrix, as a release
+    /// host serves it and a mirror republishes it.
     pub fn from_json_slice(bytes: &[u8]) -> Result<Self, ReleaseManifestError> {
+        let value = Self::parse(bytes)?;
+        value.validate()?;
+        Ok(value)
+    }
+
+    /// Parse an aggregate an installation will read one platform out of —
+    /// which may be a drop's partial aggregate
+    /// ([`Self::validate_for_target`]).
+    pub fn from_json_slice_for_target(
+        bytes: &[u8],
+        target: &str,
+    ) -> Result<Self, ReleaseManifestError> {
+        let value = Self::parse(bytes)?;
+        value.validate_for_target(target)?;
+        Ok(value)
+    }
+
+    fn parse(bytes: &[u8]) -> Result<Self, ReleaseManifestError> {
         validate_buffer_size(
             "aggregate manifest",
             bytes.len() as u64,
             DISTRIBUTION_AGGREGATE_MANIFEST_MAX_BYTES,
         )?;
-        let value: Self = serde_json::from_slice(bytes)?;
-        value.validate()?;
-        Ok(value)
+        Ok(serde_json::from_slice(bytes)?)
     }
 }
 

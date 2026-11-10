@@ -131,7 +131,7 @@ fn bootstrap_with_downloader(
     progress: &Progress,
 ) -> Result<()> {
     let store = env.store()?;
-    let aggregate = read_aggregate(&args.manifest)?;
+    let aggregate = read_aggregate(&args.manifest, current_target()?)?;
     let platform = select_platform(&aggregate, &args.version, current_target()?)?;
     if platform.bootstrap.size > DISTRIBUTION_BOOTSTRAP_MAX_BYTES {
         bail!("bootstrap declaration exceeds distribution policy");
@@ -466,7 +466,7 @@ fn fetch_aggregate(
         return Err(error);
     }
     let _cleanup = DownloadCleanup(manifest_path.clone());
-    let result = read_aggregate(&manifest_path);
+    let result = read_aggregate(&manifest_path, current_target()?);
     if result.is_ok() {
         task.finish();
     } else {

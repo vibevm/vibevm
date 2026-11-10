@@ -113,6 +113,19 @@ pub enum ReleaseManifestError {
         actual: Vec<String>,
     },
     #[error(
+        "aggregate describes distribution target `{target}` more than once \
+         (violates spec://org.vibevm.core/vibevm/common/PROP-019#instances; \
+         fix: keep exactly one platform fragment per target in the aggregate)"
+    )]
+    TargetDuplicate { target: String },
+    #[error(
+        "aggregate describes no distribution target `{target}`, only {actual:?} \
+         (violates spec://org.vibevm.core/vibevm/common/PROP-019#release-sources; \
+         fix: copy this target's platform fragment into the aggregate, or remove the \
+         aggregate and leave the platform zip to be verified against its own embedded manifest)"
+    )]
+    TargetAbsent { target: String, actual: Vec<String> },
+    #[error(
         "source archive has invalid bundle-relative path `{path}` \
          (violates spec://org.vibevm.core/vibevm/common/PROP-019#instances; \
          fix: use a non-executable archive path without root or parent traversal)"

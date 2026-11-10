@@ -21,6 +21,12 @@
 //! exactly one fragment for every target in [`SUPPORTED_DISTRIBUTION_TARGETS`]
 //! into an [`AggregateDistributionManifest`]. All three documents are strict
 //! JSON contracts with deterministic serializers.
+//!
+//! That complete matrix binds the publishing side. A reader that will take
+//! one platform out of an aggregate uses
+//! `AggregateDistributionManifest::from_json_slice_for_target` instead, so a
+//! release drop may carry an aggregate for only the targets its site runs
+//! (`PROP-019#release-sources`).
 
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-019#instances");
 

@@ -13,7 +13,20 @@ use vibe_publish::release_manifest::{
 use super::super::store::open_regular_no_follow;
 use super::download::copy_download;
 
-pub(super) fn read_aggregate(path: &Path) -> Result<AggregateDistributionManifest> {
+/// Read the aggregate manifest of one release, as the installation that
+/// will install `target` out of it.
+///
+/// The complete five-target matrix is the publishing rule, not a condition
+/// of reading: a release drop an administrator filled by hand may hold only
+/// the platforms that site runs, and nothing about the other four entries
+/// authenticates this one — the aggregate carries no signature and no outer
+/// digest, and every byte it covers is covered per entry, by name, size and
+/// SHA-256, then cross-checked against the bundle's own embedded manifest
+/// (`AggregateDistributionManifest::validate_for_target`, PROP-019
+/// `#release-sources`, B-247). What is still refused: an unsupported
+/// target, the same target twice, and an aggregate that does not describe
+/// `target` — that one naming the target the drop is missing.
+pub(super) fn read_aggregate(path: &Path, target: &str) -> Result<AggregateDistributionManifest> {
     let (mut file, metadata) = open_regular_no_follow(path)
         .with_context(|| format!("reading aggregate manifest `{}`", path.display()))?;
     if metadata.len() > DISTRIBUTION_AGGREGATE_MANIFEST_MAX_BYTES {
@@ -31,7 +44,7 @@ pub(super) fn read_aggregate(path: &Path) -> Result<AggregateDistributionManifes
     if copied != metadata.len() {
         bail!("aggregate manifest changed size while reading");
     }
-    AggregateDistributionManifest::from_json_slice(&bytes).map_err(Into::into)
+    AggregateDistributionManifest::from_json_slice_for_target(&bytes, target).map_err(Into::into)
 }
 
 pub(super) fn select_platform<'a>(
@@ -39,7 +52,7 @@ pub(super) fn select_platform<'a>(
     expected_version: &str,
     target: &str,
 ) -> Result<&'a PlatformDistributionFragment> {
-    aggregate.validate()?;
+    aggregate.validate_for_target(target)?;
     let expected = semver::Version::parse(expected_version)
         .with_context(|| format!("invalid bootstrap version `{expected_version}`"))?
         .to_string();

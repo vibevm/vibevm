@@ -117,7 +117,85 @@ fn aggregate_requires_the_exact_v1_target_matrix() {
     duplicate.platforms[3] = duplicate.platforms[0].clone();
     assert!(matches!(
         duplicate.validate(),
+        Err(ReleaseManifestError::TargetDuplicate { .. })
+    ));
+    // The publishing rule is also the republishing rule: a mirror parses a
+    // published aggregate and is held to the complete matrix.
+    let partial = serde_json::to_vec(&missing).unwrap();
+    assert!(matches!(
+        AggregateDistributionManifest::from_json_slice(&partial),
         Err(ReleaseManifestError::TargetMatrix { .. })
+    ));
+}
+
+/// An installation takes one platform out of an aggregate, so a release
+/// drop may carry only the targets that site runs (`#release-sources`,
+/// B-247) — while every rule that is actually load-bearing per entry stays.
+#[test]
+fn a_consumer_accepts_an_aggregate_holding_its_own_target_alone() {
+    let host = SUPPORTED_DISTRIBUTION_TARGETS[0];
+    let other = SUPPORTED_DISTRIBUTION_TARGETS[1];
+
+    let mut only_host = aggregate();
+    only_host.platforms.retain(|entry| entry.target == host);
+    assert_eq!(only_host.platforms.len(), 1);
+    only_host.validate_for_target(host).unwrap();
+    let bytes = serde_json::to_vec(&only_host).unwrap();
+    let parsed = AggregateDistributionManifest::from_json_slice_for_target(&bytes, host).unwrap();
+    assert_eq!(parsed.platforms.len(), 1);
+    // The complete matrix still parses as a consumer's aggregate.
+    aggregate().validate_for_target(host).unwrap();
+
+    // An aggregate that does not describe this host is refused, by name.
+    let error = only_host
+        .validate_for_target(other)
+        .unwrap_err()
+        .to_string();
+    assert!(error.contains(other), "{error}");
+    assert!(error.contains(host), "{error}");
+    assert!(matches!(
+        AggregateDistributionManifest::from_json_slice_for_target(&bytes, other),
+        Err(ReleaseManifestError::TargetAbsent { .. })
+    ));
+
+    // Still refused: the same target twice, an unsupported target, and an
+    // aggregate with no platforms at all.
+    let mut twice = only_host.clone();
+    twice.platforms.push(twice.platforms[0].clone());
+    assert!(matches!(
+        twice.validate_for_target(host),
+        Err(ReleaseManifestError::TargetDuplicate { .. })
+    ));
+    let mut unknown = only_host.clone();
+    unknown.platforms[0].target = "powerpc64-unknown-linux-gnu".to_string();
+    unknown.platforms[0].bundle.target = "powerpc64-unknown-linux-gnu".to_string();
+    assert!(matches!(
+        unknown.validate_for_target(host),
+        Err(ReleaseManifestError::UnsupportedTarget { .. })
+    ));
+    let mut empty = only_host.clone();
+    empty.platforms.clear();
+    assert!(matches!(
+        empty.validate_for_target(host),
+        Err(ReleaseManifestError::TargetMatrix { .. })
+    ));
+
+    // And every per-entry rule: a partial aggregate is validated exactly as
+    // a complete one, entry by entry.
+    let mut drifted = only_host.clone();
+    drifted.platforms[0].asset.name = drifted.platforms[0].bootstrap.name.clone();
+    assert!(matches!(
+        drifted.validate_for_target(host),
+        Err(ReleaseManifestError::AssetNameCollision { .. })
+    ));
+    let mut mismatched = only_host.clone();
+    mismatched.platforms[0].version = "1.2.4".to_string();
+    mismatched.platforms[0].tag = "v1.2.4".to_string();
+    mismatched.platforms[0].bundle.version = "1.2.4".to_string();
+    mismatched.platforms[0].bundle.tag = "v1.2.4".to_string();
+    assert!(matches!(
+        mismatched.validate_for_target(host),
+        Err(ReleaseManifestError::AggregateIdentityMismatch { .. })
     ));
 }
 

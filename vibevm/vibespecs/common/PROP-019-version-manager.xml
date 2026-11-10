@@ -753,8 +753,10 @@ the built-in GitHub release page.</RELEASE-SOURCES-LEAD></p>
         <RELEASE-SOURCE-TYPES fact="true" status="impl/done">`[self] source = "github" | "gitverse" | "nexus" | "localdir"`
   (case-insensitive, stored lower-case). `localdir` reads `[self] path` or the
   `[artifacts] vibe` drop, an absolute directory holding `v&lt;version&gt;/` with
-  exactly the files of the GitHub release (`DISTRIBUTIONS.json`,
-  `vibevm-&lt;version&gt;-&lt;target&gt;.zip`, …); `nexus` reads `[self] url`, an
+  the files of the GitHub release (`DISTRIBUTIONS.json`,
+  `vibevm-&lt;version&gt;-&lt;target&gt;.zip`, …) — the whole release, or only the
+  targets that site runs (`#RELEASE-SOURCE-PARTIAL-AGGREGATE`);
+  `nexus` reads `[self] url`, an
   `https://` or `http://` base of a raw/hosted repository (Nexus, Artifactory, a
   plain web server) with the same `v&lt;version&gt;/&lt;asset&gt;` layout;
   `gitverse` reads `[self] url` (the repository web URL, default
@@ -816,6 +818,25 @@ the built-in GitHub release page.</RELEASE-SOURCES-LEAD></p>
   against that embedded manifest and the run says it was verified against the
   embedded manifest only, because no publisher manifest is there to check the
   outer digest against.</RELEASE-SOURCE-VERIFY>
+        <RELEASE-SOURCE-PARTIAL-AGGREGATE fact="true" status="impl/done">**A drop may carry a partial aggregate — the targets that site runs.** The
+  five-target matrix is the *publishing* rule (`#release-production`): a
+  release, and a mirror republishing one, must describe every supported target
+  exactly once. An installation reads one platform out of a
+  `DISTRIBUTIONS.json`, so `self update`, `self install X.Y.Z`,
+  `self reinstall` and `self bootstrap` accept an aggregate that describes the
+  running host's target exactly once, whatever else it describes — a
+  Windows-only site copies its own `v&lt;version&gt;/` and nothing more. This
+  costs no integrity: nothing authenticates the aggregate document as a whole
+  (there is no signature and no outer digest over it — it is the root of
+  trust, reached over the transport the operator chose), and everything it
+  authenticates it authenticates **per entry**, by asset name, size and
+  SHA-256, cross-checked against the bundle's own embedded manifest. An entry
+  neither gains nor loses strength from its neighbours' presence, and anyone
+  who could forge one could forge five consistently. The cold-start installers
+  already read an aggregate this way. Still refused: an entry for an
+  unsupported target, the same target twice, an aggregate with no entries, and
+  an aggregate that does not describe the running host's target — that one
+  naming the missing target, so the operator knows which file to copy.</RELEASE-SOURCE-PARTIAL-AGGREGATE>
       </facts>
     </release-sources>
     <companion-tools title="2.19.1 Companion tools — px beside the bundle">
