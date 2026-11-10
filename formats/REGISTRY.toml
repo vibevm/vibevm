@@ -426,6 +426,17 @@ unknown_fields = "deny"
 corpus = "none"
 sunset = "none"
 
+# `vibe app versions --json` (PROP-075 `#VERSIONS-LIST-OUTPUT`): one row per
+# version of a package's whole domain with its origin, channels and local
+# state, the resolved channel table, and a template's provenance.
+[format.cli-application-versions]
+epoch = 1
+schema = "schemas/application_versions.jtd.json"
+recoverable = true
+foreign_parsers = "many"
+corpus = "none"
+sunset = "none"
+
 # ── User-local application durable/exchange records, PROP-059 ───────────────
 [format.application-index]
 epoch = 6

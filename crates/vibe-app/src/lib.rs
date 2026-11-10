@@ -36,6 +36,8 @@ mod error_catalog;
 mod error_lifecycle;
 mod error_paths;
 pub use error_paths::PathsError;
+mod error_versions;
+pub use error_versions::VersionsError;
 mod export;
 mod exposure;
 mod fs_util;
@@ -56,6 +58,7 @@ mod settings;
 mod steps;
 mod storage;
 mod versionfile;
+mod versions;
 
 pub use activation::{
     Activation, ActivationRequest, ChannelMembership, ProjectRequirement, SlotSelection,
@@ -141,8 +144,9 @@ pub use portable::{
 pub use portable::{FullImportPreview, export_portable, preview_full_import, selected_import_keys};
 pub use proxies::{proxy_file_name, sync as sync_proxies, sync_locked as sync_proxies_locked};
 pub use resolve::{
-    ResolvedPackage, from_global, from_global_with_operation, from_local_registry, from_manifest,
-    local_registry_carries, qualified_ref,
+    ResolvedPackage, directory_roots_from_global_with_operation, from_global,
+    from_global_with_operation, from_local_registry, from_manifest, global_resolver,
+    local_registry_carries, qualified_ref, versions_from_global_with_operation,
 };
 pub use select::{
     Choice, Chooser, InstallChoice, detected_arch, detected_platform, options_listing,
@@ -168,6 +172,10 @@ pub use versionfile::{
     cache_path as version_files_cache_path, clear_cache as clear_version_file_cache,
     declared_path as declared_version_files_path, is_channel_name, plain_line,
     resolve as resolve_version_files, search as search_version_files, tool_versions,
+};
+pub use versions::{
+    DEFAULT_LIMIT as VERSIONS_DEFAULT_LIMIT, Domain, DomainVersion, Domains, Origin, TemplateFacts,
+    VERSIONS_PROTOCOL, VersionsRequest, versions_listing,
 };
 
 pub use operations::import_full;

@@ -48,6 +48,36 @@ pub struct AppExecArgs {
     pub command: Vec<String>,
 }
 
+/// Flags of `vibe app versions` (PROP-075 `#VERSIONS-LIST-OUTPUT`).
+#[derive(Debug, clap::Args)]
+pub struct AppVersionsArgs {
+    /// The package as `<group>/<name>`, or an application slot id. A slot
+    /// with providers from several packages lists each under its own
+    /// heading.
+    pub target: String,
+
+    /// Keep only the versions this channel holds (`lts`, `lts/jod`).
+    #[arg(long, value_name = "NAME")]
+    pub channel: Option<String>,
+
+    /// Only the versions this home installed; consults no registry and
+    /// makes no request.
+    #[arg(long)]
+    pub installed: bool,
+
+    /// How many rows to show (default 20).
+    #[arg(long, value_name = "N", conflicts_with = "all")]
+    pub limit: Option<usize>,
+
+    /// Every row, however many the domain holds.
+    #[arg(long)]
+    pub all: bool,
+
+    /// List from this local registry instead of the configured registries.
+    #[arg(long)]
+    pub registry: Option<std::path::PathBuf>,
+}
+
 /// Flags of `vibe hook` (PROP-075 `#ACTIVATION-HOOK`).
 #[derive(Debug, clap::Args)]
 pub struct HookArgs {

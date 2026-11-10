@@ -187,13 +187,16 @@ pub fn from_global(
     )?;
     from_global_with_operation(settings_root, spelling, offline, &operation)
 }
-pub fn from_global_with_operation(
+/// The install resolver of the configured global registries — the one
+/// [`from_global_with_operation`] resolves through, built here so a
+/// read-only enumeration can use the identical source chain without
+/// resolving or fetching anything (PROP-075 `#VERSIONS-LIST`).
+pub fn global_resolver(
     settings_root: &Path,
     spelling: &str,
     offline: bool,
     operation: &vibe_package_source::SourceOperation,
-) -> Result<ResolvedPackage, ResolveError> {
-    let requested = qualified_ref(spelling)?;
+) -> Result<vibe_package_source::InstallResolver, ResolveError> {
     let failed = |reason: String| ResolveError::Registry {
         spelling: spelling.into(),
         reason,
@@ -206,7 +209,7 @@ pub fn from_global_with_operation(
         no_default_registry: true,
         ..Default::default()
     };
-    let resolver = vibe_package_source::build_install_resolver_with_operation(
+    vibe_package_source::build_install_resolver_with_operation(
         vibe_package_source::InstallResolverRequest {
             options: &options,
             manifest: &synthetic,
@@ -223,7 +226,149 @@ pub fn from_global_with_operation(
             Ok(error) => ResolveError::SourcePolicy(error),
             Err(error) => failed(format!("{error:#}")),
         },
+    )
+}
+
+/// Every version the configured global registries publish for
+/// `<group>/<name>`, ascending — the read-only enumeration one listing
+/// needs, with nothing resolved and nothing fetched
+/// (PROP-075 `#VERSIONS-LIST`).
+///
+/// Both halves of the chain already union a template package's produced
+/// versions in, because `#TEMPLATE-DOMAIN-SEAM`'s call sites 1 and 4 are
+/// inside the registries this walks.
+pub fn versions_from_global_with_operation(
+    settings_root: &Path,
+    group: &vibe_core::Group,
+    name: &str,
+    offline: bool,
+    operation: &vibe_package_source::SourceOperation,
+) -> Result<Vec<semver::Version>, ResolveError> {
+    let spelling = format!("{group}/{name}");
+    let resolver = global_resolver(settings_root, &spelling, offline, operation)?;
+    let failed = |reason: String| ResolveError::Registry {
+        spelling: spelling.clone(),
+        reason,
+    };
+    let from_multi =
+        |multi: &vibe_registry::MultiRegistryResolver| match multi.list_versions(group, name) {
+            Ok(found) => Ok(found),
+            Err(vibe_registry::RegistryError::UnknownPackage { .. }) => Ok(Vec::new()),
+            Err(error) => Err(failed(error.to_string())),
+        };
+    let mut versions = Vec::new();
+    match &resolver {
+        vibe_package_source::InstallResolver::Local(local, _) => {
+            versions.extend(local_versions(local, group, name)?);
+        }
+        vibe_package_source::InstallResolver::LockedLocal { local, held, .. } => {
+            versions.extend(local_versions(local, group, name)?);
+            versions.extend(from_multi(held)?);
+        }
+        vibe_package_source::InstallResolver::Multi(multi, _) => {
+            versions.extend(from_multi(multi)?);
+        }
+        vibe_package_source::InstallResolver::Embedded {
+            locals, declared, ..
+        } => {
+            for local in locals {
+                versions.extend(local_versions(local, group, name)?);
+            }
+            if let Some(multi) = declared {
+                versions.extend(from_multi(multi)?);
+            }
+        }
+    }
+    versions.sort();
+    versions.dedup();
+    Ok(versions)
+}
+
+/// The roots of the **directory-shaped** registries the configured chain
+/// reads, in precedence order — the places a template is discovered.
+///
+/// PROP-075 `#TEMPLATE-DISCOVERY` reads a template off the manifests of a
+/// package directory, which is what a local-directory registry, a
+/// `monorepo` working copy and a mirrored layout registry all are. A
+/// per-package **git** registry has no such root and contributes none.
+pub fn directory_roots_from_global_with_operation(
+    settings_root: &Path,
+    offline: bool,
+    operation: &vibe_package_source::SourceOperation,
+) -> Result<Vec<PathBuf>, ResolveError> {
+    let resolver = global_resolver(
+        settings_root,
+        "(the configured registries)",
+        offline,
+        operation,
     )?;
+    let mut roots: Vec<PathBuf> = Vec::new();
+    let declared_roots = |multi: &vibe_registry::MultiRegistryResolver,
+                          roots: &mut Vec<PathBuf>| {
+        if let Ok(sources) = multi.sources() {
+            for source in sources {
+                if let vibe_registry::multi_registry_resolver::RegistrySource::Local(local) = source
+                {
+                    roots.push(local.registry.root().to_path_buf());
+                }
+            }
+        }
+    };
+    match &resolver {
+        vibe_package_source::InstallResolver::Local(local, _) => {
+            roots.push(local.root().to_path_buf());
+        }
+        vibe_package_source::InstallResolver::LockedLocal { local, held, .. } => {
+            roots.push(local.root().to_path_buf());
+            declared_roots(held, &mut roots);
+        }
+        vibe_package_source::InstallResolver::Multi(multi, _) => {
+            declared_roots(multi, &mut roots);
+        }
+        vibe_package_source::InstallResolver::Embedded {
+            locals, declared, ..
+        } => {
+            for local in locals {
+                roots.push(local.root().to_path_buf());
+            }
+            if let Some(multi) = declared {
+                declared_roots(multi, &mut roots);
+            }
+        }
+    }
+    roots.dedup();
+    Ok(roots)
+}
+
+/// One local-directory registry's versions; a package it does not carry
+/// contributes nothing rather than failing the enumeration.
+fn local_versions(
+    registry: &LocalRegistry,
+    group: &vibe_core::Group,
+    name: &str,
+) -> Result<Vec<semver::Version>, ResolveError> {
+    match registry.list_versions(group, name) {
+        Ok(versions) => Ok(versions),
+        Err(vibe_registry::RegistryError::UnknownPackage { .. }) => Ok(Vec::new()),
+        Err(error) => Err(ResolveError::Registry {
+            spelling: format!("{group}/{name}"),
+            reason: error.to_string(),
+        }),
+    }
+}
+
+pub fn from_global_with_operation(
+    settings_root: &Path,
+    spelling: &str,
+    offline: bool,
+    operation: &vibe_package_source::SourceOperation,
+) -> Result<ResolvedPackage, ResolveError> {
+    let requested = qualified_ref(spelling)?;
+    let failed = |reason: String| ResolveError::Registry {
+        spelling: spelling.into(),
+        reason,
+    };
+    let resolver = global_resolver(settings_root, spelling, offline, operation)?;
     let store = vibe_registry::store::store_root().map_err(ResolveError::SourcePolicy)?;
     let cached = resolver
         .resolve_and_fetch(&requested, &store, None)

@@ -40,6 +40,7 @@ pub mod application_storage_list;
 pub mod application_storage_move;
 pub mod application_version_file_cache;
 pub mod application_version_files;
+pub mod application_versions;
 pub mod application_work;
 pub mod apps_manifest;
 pub mod artifact_record;

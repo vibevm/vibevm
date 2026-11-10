@@ -571,3 +571,69 @@ Facts a later session would otherwise re-derive:
   skipped when empty.
 - **Disk, on this machine:** `/fast` had 30 GB free throughout; every cargo
   command ran with the mandated `CARGO_BUILD_JOBS=8` and `--test-threads=8`.
+
+## 2026-11-10 — phase P5b implemented
+
+`vibe app versions PACKAGE|SLOT [--channel NAME] [--installed] [--limit N]
+[--all] [--refresh] [--registry DIR] [--json]` exists, answers
+`vibe-app-versions/1`, and renders nothing. `AV-FMT-014` is delivered;
+`#VERSIONS-LIST` and `#VERSIONS-LIST-OUTPUT` are `impl/done`; the five
+amendments are `PROP-075#P5B-AS-BUILT`.
+
+What implementing it taught, beyond the as-built record:
+
+- **The listing wanted an enumeration seam the tree did not have.** Every
+  existing path into the app resolver resolves exactly **one** version —
+  `from_global_with_operation` goes straight to `resolve_and_fetch`, and
+  `vibe app outdated` asks it for the newest and nothing else. A listing needs
+  the domain, so the resolver gained three read-only functions beside the
+  resolving one: `global_resolver` (the chain `from_global_with_operation`
+  already built, now named so a second caller can have it unchanged),
+  `versions_from_global_with_operation` and
+  `directory_roots_from_global_with_operation`. They live in `vibe-app`, not in
+  `vibe-package-source`, for a reason worth keeping: that crate's dependency
+  set is an **exact** R-001 fence (`fence_tests.rs`), and naming
+  `semver::Version` in its public API would have widened it. `vibe-app` already
+  depends on both `semver` and the resolver, so the match over
+  `InstallResolver`'s four variants sits there and the fence stays as it was.
+- **`--installed` is free of the network by construction, not by discipline.**
+  The join takes its domain through a `Domains` trait; `--installed` hands it an
+  implementor that reads the template cache alone. There is therefore no code
+  path from `--installed` to a registry to forget to guard, and the suite proves
+  it the only honest way — by deleting the registry directory outright and
+  asserting the listing still answers.
+- **Closed JTD vocabularies cannot spell the design's own words.** PROP-075
+  writes `published (overrides template)` and `installed (default)`. A closed
+  enum member may not carry a space or a parenthesis, so the wire tokens are
+  `overrides` and `installed_default`, and the parenthesised forms are the human
+  rendering. Worth stating in `AV-FMT-014` rather than leaving a reader of the
+  fact to discover it in a schema.
+- **The rows must be a union, not a filter.** The first shape filtered the
+  domain by the installed set; a version whose registry row is gone then
+  vanished from a listing of a home that has it installed. The rows are now the
+  union, and a version only the home carries is `published` with its local
+  state. There is a test for exactly that, because the failure mode is a
+  listing that lies about the machine it runs on.
+- **A listing must not render, and that is checkable.** `cli_app_versions.rs`
+  asserts `cache/templates/org.vibevm.node/node/rendered` does not exist after
+  listing the whole Node domain — the skeleton-path claim of
+  `#TEMPLATE-TWO-STAGE` as a check rather than a comment. (Contrast P3's note
+  that `install -g --plan-only` performs the *full* render: the two surfaces
+  differ, and only one of them is the skeleton path.)
+- **Four error arms were nineteen lines too many.** Adding the four refusals to
+  `crates/vibe-app/src/error.rs` in place carried it from 591 to 619 lines, past
+  the conform `max_file_lines = 600` — the only new conform finding the phase
+  produced beside a single `.expect()`. They became their own `VersionsError`
+  family in `error_versions.rs`, which is also the better shape: the sibling
+  `error_paths` and `error_lifecycle` families exist for exactly this reason,
+  `AppError` delegates transparently so no caller's `match` changes, and
+  `codes.rs` gains one more table rather than four more rows. Worth knowing
+  before the next phase adds an error arm to that file — P6 adds several.
+- **Disk, on this machine:** `/fast` fell from 53 GB to 6.7 GB free while three
+  workers built concurrently, and the test profile rebuilds the whole tree
+  rather than reusing the `cargo build` artifacts. 13.6 GB of that was this
+  worker's own `debug/incremental`, which is pure cache: deleting it and running
+  every later command with `CARGO_INCREMENTAL=0` beside the mandated
+  `CARGO_BUILD_JOBS=6` and `CARGO_PROFILE_DEV_DEBUG=0` returned the free space
+  to 22 GB and changes nothing a gate observes. Worth doing *before* the first
+  build on a shared disk, not after.

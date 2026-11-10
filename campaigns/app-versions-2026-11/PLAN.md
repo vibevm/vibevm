@@ -3,7 +3,7 @@
 **Status:** planned 2026-11-10; written against `main` at `7d495d137`. Campaign
 node `APP-VERSIONS`: starts after `CORP-ENV` closes, before `SYS-PROMPT`.
 **Phase 0 spikes S1, S2, S3 and S5 ran 2026-11-10 and phases P1, P5a, P2, P3
-and P6 are implemented** — the answers and what they changed are in `LOG.md`,
+P5b and P6 are implemented** — the answers and what they changed are in `LOG.md`,
 and the facts those phases deliver are `impl/done` in PROP-075. S4 and S6 are still
 open; S4 belongs with P5a and S6 with P7.
 Phase 0 (spikes) and Phases 5a / 6 may run while `CORP-ENV` finishes, because
@@ -621,7 +621,7 @@ on the existing lines goes in first, before the move.
 
 **Parallel.** With P1 and P6. Needs neither.
 
-### P5b — `vibe app versions` — **S**
+### P5b — `vibe app versions` — **S** — *delivered 2026-11-10*
 
 **Goal.** One listing over the whole domain.
 
@@ -645,6 +645,46 @@ snapshot's sync time.
 cargo test -p vibe-cli --test cli_app_versions --offline --locked
 vibe app versions node --installed --json   # on this machine, zero network
 ```
+
+**As delivered.** The command exists and does exactly the goal sentence.
+The library is `crates/vibe-app/src/versions.rs` with its unit suite
+(`versions/tests.rs`, 11 tests); it joins a domain with this home's index
+across one trait, `Domains`, which it never implements — so the join
+reaches no registry, no index server and no socket, and `--installed` is
+free of the network *by construction* rather than by care, because it is
+handed a cache-only implementor. The CLI adapter is
+`crates/vibe-cli/src/commands/app/versions.rs`, and the suite is
+`crates/vibe-cli/tests/cli_app_versions.rs` (7 tests): the first three
+drive the real `org.vibevm.node/node` template over upstream's own frozen
+documents behind one `[[remap]]` row — origins (`template` /
+`published (overrides template)`), the channel table, `--channel lts/jod`,
+the refusal of `lts/argon`, the newest-20 trailer, `--limit`, `--all` —
+and assert that **nothing was rendered**, which is the skeleton-path
+claim as a check rather than a comment; the last four install real
+`org.example` packages offline and assert the local states, the trailer,
+the off slot, `--installed` answering with the registry deleted outright,
+a slot with two packages under two headings, and the `unknown_target`
+refusal. Two things the plan's file list did not foresee, both named in
+`PROP-075#P5B-AS-BUILT`: the enumeration a listing needs is a **new**
+read-only seam on the app resolver
+(`versions_from_global_with_operation`,
+`directory_roots_from_global_with_operation`,
+`global_resolver`, all in `crates/vibe-app/src/resolve.rs`), because the
+existing one only ever resolved *one* version; and four new refusal codes
+join the `vibe app errors` table (`unknown_target`, `ambiguous_target`,
+`unknown_channel`, `version_domain_unreadable`). `--refresh` and `--json`
+are the root flags `AV-FMT-022` already delivered, not new ones on this
+command. Two of the planned test cases changed shape: the plan asserts
+`--installed` makes no network call "by a denying transport", and as
+delivered it is asserted more strongly — the registry directory is
+**deleted** before the listing runs, so there is nothing to read a domain
+from at all; and "a snapshot-backed registry shows the snapshot's sync
+time" cannot be written yet, because the `_index/templates/` tree it
+reads is P4's to write. `snapshot_synced` is declared in the wire and
+left unfilled until then, and that case belongs with P4's own suite. The
+hand acceptance line is not run here: this machine's `node` slot is
+whatever its own home holds, and the suite drives the same code through
+the real binary.
 
 **Parallel.** Needs P2. Independent of P4 and P6.
 

@@ -16,6 +16,7 @@ use crate::error::{
 use crate::error_catalog::CatalogError;
 use crate::error_lifecycle::LifecycleError;
 use crate::error_paths::PathsError;
+use crate::error_versions::VersionsError;
 
 /// Whether an error refused the request before any effect, or a started
 /// operation failed (`PROP-065#exit-codes`).
@@ -204,7 +205,7 @@ codes!(CONFIGURATION, ConfigurationError [] {
     Invalid => "configuration_input_invalid", Refusal, "common configuration input is invalid";
 });
 
-codes!(APP, AppError [Configuration, State, Catalog, Storage, Resolve, Installer, Launch, Step, Agent, Lifecycle, Paths] {
+codes!(APP, AppError [Configuration, State, Catalog, Storage, Resolve, Installer, Launch, Step, Agent, Lifecycle, Paths, Versions] {
     NotInstalled => "not_installed", Refusal, "the application is not installed";
     AmbiguousInstallation => "ambiguous_installation", Refusal, "several installed versions match";
     ForceUnsupported => "force_unsupported", Refusal, "--force has no authored variant to run";
@@ -222,6 +223,13 @@ codes!(APP, AppError [Configuration, State, Catalog, Storage, Resolve, Installer
     ForeignProxy => "foreign_proxy_file", Refusal, "another file holds a PATH proxy's name";
     SessionChoice => "session_choice_invalid", Refusal, "a session choice is malformed";
     Launchers => "launchers_invalid", Failure, "a launcher stays incomplete after desktop-entry derivation";
+});
+
+codes!(VERSIONS, VersionsError [] {
+    UnknownTarget => "unknown_target", Refusal, "the argument is neither a slot nor an installed package name";
+    AmbiguousTarget => "ambiguous_target", Refusal, "a bare name matches several installed packages";
+    UnknownChannel => "unknown_channel", Refusal, "the package declares no such channel";
+    Domain => "version_domain_unreadable", Refusal, "a package's version domain could not be read";
 });
 
 /// Every code of the application subsystem, grouped by enum.
@@ -243,6 +251,7 @@ pub fn error_codes() -> Vec<ErrorCode> {
         PATHS,
         LAUNCH,
         CATALOG,
+        VERSIONS,
         APP,
     ]
     .concat()

@@ -222,13 +222,19 @@ Status: **done** 2026-11-10. New command. No wire format.
 
 ## AV-FMT-014 — `vibe app versions` and `vibe-app-versions/1` (Phase 5b)
 
-Status: **planned**. New command, new format.
+Status: **done** 2026-11-10 (phase P5b). New command, new format. As
+implemented it matches the entry below, with the five clarifications
+recorded in
+`spec://org.vibevm.core/vibevm/common/PROP-075#P5B-AS-BUILT`.
 
-- New record `[format.cli-application-versions]`, epoch **1**, `schema = "schemas/application_versions.jtd.json"`, protocol tag `vibe-app-versions/1`.
-- `vibe app versions PACKAGE|SLOT [--channel NAME] [--installed] [--limit N] [--all] [--refresh] [--registry DIR] [--json]`. One row per version, newest first: the version, its origin (`template`, `published`, `published (overrides template)`), the channels it belongs to, and its local state (`installed`, `installed (default)`, `installed (hidden)`, `installed (held)`, or empty). Trailer: the slot, its default, whether the slot is off, and in a closed network the snapshot's sync time.
+- New record `[format.cli-application-versions]`, epoch **1**, `schema = "schemas/application_versions.jtd.json"`, `recoverable = true`, `foreign_parsers = "many"`, `corpus = "none"`, protocol tag `vibe-app-versions/1`.
+- `vibe app versions PACKAGE|SLOT [--channel NAME] [--installed] [--limit N] [--all] [--refresh] [--registry DIR] [--json]`. One row per version, newest first: the version, its origin (`template`, `published`, `published (overrides template)`), the channels it belongs to, and its local state (`installed`, `installed (default)`, `installed (hidden)`, `installed (held)`, or empty). Trailer: the slot, its default, whether the slot is off, and in a closed network the snapshot's sync time. `--refresh` and `--json` are the existing root flags (`AV-FMT-022`), not new ones on this command.
 - Without `--all`, the newest 20 with a count of the rest (Node's domain is 878 records).
 - `--json` adds the resolved channel table and, for a template, the template coordinate, revision and version-list fetch time.
 - The command renders nothing: it is the skeleton path and costs at most one HTTP request, and none within the TTL or under `--offline`.
+- **Wire shape, as built.** Top level: `protocol`, `target`, `off`, `packages[]`, optional `slot`, `default`, `snapshot_synced`, `notices[]`. Each `packages[]` row: `package`, `total`, `shown`, `more`, `versions[]`, optional `slot`, `channels` (name → members newest first), `template`, `notices[]`. Each `versions[]` row: `version`, `origin` (the closed vocabulary `template` / `published` / `overrides`), `state` (the closed vocabulary `available` / `installed` / `installed_default` / `installed_hidden` / `installed_held`), optional `channels[]` and `key`. `template`: `coordinate`, `revision`, optional `version_list_url`, `fetched_at`, `snapshot_synced`. The two human spellings PROP-075 writes (`published (overrides template)` and `installed (default)`) are the **rendering** of the two tokens, not the tokens themselves, so neither JSON member carries a space or a parenthesis.
+- **New refusal codes**, in a new `VersionsError` family that `AppError` delegates to transparently and `vibe app errors` lists beside every other: `unknown_target` (the argument is neither a slot of this home nor an installed package name — the message names the slots that do exist), `ambiguous_target` (a bare name several installed packages carry — the message names the `<group>/<name>` spellings), `unknown_channel` (the package declares no such channel — the message names the ones it does), `version_domain_unreadable` (a registry the listing had to read refused).
+- `snapshot_synced` is declared and left unfilled until phase P4 writes a snapshot; nothing reads a `_index/templates/` tree before then.
 
 ## AV-FMT-015 — `[[application.migration]]` (Phase 6)
 

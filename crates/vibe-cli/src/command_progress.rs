@@ -182,6 +182,10 @@ pub(crate) fn policy(command: &Command, terminal_attached: bool) -> CommandPolic
             | crate::cli::AppCommand::Errors
             | crate::cli::AppCommand::Outdated { .. }
             | crate::cli::AppCommand::Alternatives { .. }
+            // One version list of one package at most, and none at all
+            // under `--installed` or inside the TTL (PROP-075
+            // `#VERSIONS-LIST-OUTPUT`).
+            | crate::cli::AppCommand::Versions(_)
             // One home index and the version files of one directory are
             // read; the lines go to stdout and nothing may draw beside
             // them, because a shell evaluates them (PROP-075

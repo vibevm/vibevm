@@ -437,6 +437,8 @@ pub enum AppError {
     Lifecycle(#[from] crate::error_lifecycle::LifecycleError),
     #[error(transparent)]
     Paths(#[from] crate::error_paths::PathsError),
+    #[error(transparent)]
+    Versions(#[from] crate::error_versions::VersionsError),
     #[error(
         "not_installed: application `{package}` is not installed in {home} (violates spec://org.vibevm.core/vibevm/common/PROP-059#commands; \
          fix: {fix})"

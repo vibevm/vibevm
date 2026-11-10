@@ -1,0 +1,268 @@
+{
+  "metadata": {
+    "description": "Version 1 machine answer of vibe app versions --json: one row per version of the asked package's whole domain, newest first, with its origin, channel memberships and local state, plus the resolved channel table and, for a template package, its coordinate, revision and version-list fetch time.",
+    "spec": {
+      "implements": "spec://org.vibevm.core/vibevm/common/PROP-075#VERSIONS-LIST-OUTPUT"
+    },
+    "rustOptions": {
+      "package": "vibe_wire::application_versions"
+    },
+    "x-rust-type": "ApplicationVersions",
+    "x-wire-order": [
+      "protocol",
+      "target",
+      "slot",
+      "default",
+      "off",
+      "snapshot_synced",
+      "packages",
+      "notices"
+    ]
+  },
+  "properties": {
+    "protocol": {
+      "type": "string"
+    },
+    "target": {
+      "type": "string",
+      "metadata": {
+        "description": "The PACKAGE|SLOT argument as it was written."
+      }
+    },
+    "off": {
+      "type": "boolean",
+      "metadata": {
+        "description": "Whether the slot is switched off (PROP-059 #slot-off)."
+      }
+    },
+    "packages": {
+      "elements": {
+        "ref": "package"
+      },
+      "metadata": {
+        "x-empty": "emit",
+        "description": "One heading per package providing the asked slot, in coordinate order."
+      }
+    }
+  },
+  "definitions": {
+    "origin": {
+      "enum": [
+        "template",
+        "published",
+        "overrides"
+      ],
+      "metadata": {
+        "x-vocabulary": "closed",
+        "description": "Where the version comes from: produced by the template, published concretely, or published concretely over a version the template also produces (PROP-075 #TEMPLATE-CONCRETE-WINS)."
+      }
+    },
+    "state": {
+      "enum": [
+        "available",
+        "installed",
+        "installed_default",
+        "installed_hidden",
+        "installed_held"
+      ],
+      "metadata": {
+        "x-vocabulary": "closed",
+        "description": "The version's local state in this home; `available` is a version nothing installed."
+      }
+    },
+    "row": {
+      "metadata": {
+        "x-wire-order": [
+          "version",
+          "origin",
+          "state",
+          "channels",
+          "key"
+        ]
+      },
+      "properties": {
+        "version": {
+          "type": "string"
+        },
+        "origin": {
+          "ref": "origin"
+        },
+        "state": {
+          "ref": "state"
+        }
+      },
+      "optionalProperties": {
+        "channels": {
+          "elements": {
+            "type": "string"
+          },
+          "metadata": {
+            "x-empty": "omit",
+            "description": "The channels this version belongs to, in name order."
+          }
+        },
+        "key": {
+          "type": "string",
+          "metadata": {
+            "description": "The installation key, for a version this home installed.",
+            "x-default": null
+          }
+        }
+      }
+    },
+    "template": {
+      "metadata": {
+        "x-wire-order": [
+          "coordinate",
+          "revision",
+          "version_list_url",
+          "fetched_at",
+          "snapshot_synced"
+        ]
+      },
+      "properties": {
+        "coordinate": {
+          "type": "string"
+        },
+        "revision": {
+          "type": "string",
+          "metadata": {
+            "description": "The template package's own version — a revision, never a produced version."
+          }
+        }
+      },
+      "optionalProperties": {
+        "version_list_url": {
+          "type": "string",
+          "metadata": {
+            "description": "The version-list url the template declares, before remap.",
+            "x-default": null
+          }
+        },
+        "fetched_at": {
+          "type": "string",
+          "metadata": {
+            "description": "When the cached version list was fetched (RFC 3339).",
+            "x-default": null
+          }
+        },
+        "snapshot_synced": {
+          "type": "string",
+          "metadata": {
+            "description": "The mirror snapshot's [sync] last, when the domain came from a snapshot in a closed network (PROP-075 #MIRROR-SNAPSHOT-LAYOUT).",
+            "x-default": null
+          }
+        }
+      }
+    },
+    "package": {
+      "metadata": {
+        "x-wire-order": [
+          "package",
+          "slot",
+          "total",
+          "shown",
+          "more",
+          "versions",
+          "channels",
+          "template",
+          "notices"
+        ]
+      },
+      "properties": {
+        "package": {
+          "type": "string"
+        },
+        "total": {
+          "type": "uint32",
+          "metadata": {
+            "description": "Every version of the domain after --channel and --installed narrowed it."
+          }
+        },
+        "shown": {
+          "type": "uint32"
+        },
+        "more": {
+          "type": "uint32",
+          "metadata": {
+            "description": "The versions the limit left out; 0 when every one is shown."
+          }
+        },
+        "versions": {
+          "elements": {
+            "ref": "row"
+          },
+          "metadata": {
+            "x-empty": "emit"
+          }
+        }
+      },
+      "optionalProperties": {
+        "slot": {
+          "type": "string",
+          "metadata": {
+            "description": "The application slot this package provides, as the home records it.",
+            "x-default": null
+          }
+        },
+        "channels": {
+          "values": {
+            "elements": {
+              "type": "string"
+            }
+          },
+          "metadata": {
+            "x-empty": "omit",
+            "description": "The resolved channel table: channel name to its members, newest first."
+          }
+        },
+        "template": {
+          "ref": "template",
+          "metadata": {
+            "description": "The template provenance, for a package that carries one."
+          }
+        },
+        "notices": {
+          "elements": {
+            "type": "string"
+          },
+          "metadata": {
+            "x-empty": "omit",
+            "description": "What the listing reported and did not fail on: a source record it skipped, a domain it could not read."
+          }
+        }
+      }
+    }
+  },
+  "optionalProperties": {
+    "slot": {
+      "type": "string",
+      "metadata": {
+        "description": "The slot the listing is about, when the argument named one or the package provides one.",
+        "x-default": null
+      }
+    },
+    "default": {
+      "type": "string",
+      "metadata": {
+        "description": "The installation key the slot resolves to.",
+        "x-default": null
+      }
+    },
+    "snapshot_synced": {
+      "type": "string",
+      "metadata": {
+        "description": "The mirror snapshot's [sync] last, in a closed network.",
+        "x-default": null
+      }
+    },
+    "notices": {
+      "elements": {
+        "type": "string"
+      },
+      "metadata": {
+        "x-empty": "omit"
+      }
+    }
+  }
+}

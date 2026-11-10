@@ -34,6 +34,7 @@ mod report;
 mod resume;
 mod runtime;
 pub(crate) mod session;
+mod versions;
 mod views;
 mod wizard;
 
@@ -430,6 +431,17 @@ pub fn run(
         }
         AppCommand::Env(args) => {
             env::run(ctx, args)?;
+            Ok(None)
+        }
+        AppCommand::Versions(args) => {
+            versions::run(
+                ctx,
+                app_home.settings(),
+                args,
+                embedded_root,
+                offline,
+                &policy_operation()?,
+            )?;
             Ok(None)
         }
         AppCommand::Exec(args) => exec::run(ctx, args),

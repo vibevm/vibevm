@@ -570,6 +570,12 @@ pub enum AppCommand {
     /// `for /f "usebackq tokens=1,* delims==" %a in (`vibe app env --shell cmd`) do @set "%a=%b"`.
     Env(AppEnvArgs),
 
+    /// List every version of a package or slot — the template's and the
+    /// registries' — newest first, with each version's origin, channels
+    /// and local state (PROP-075 `#VERSIONS-LIST-OUTPUT`). Nothing is
+    /// rendered and nothing is installed.
+    Versions(AppVersionsArgs),
+
     /// Run one command with a slot's chosen version first on PATH, without
     /// changing any default, state or file (PROP-075
     /// `#VERSION-EXEC-SPELLING`). `--` is required before the command, so a
@@ -596,5 +602,5 @@ pub enum AppCommand {
 mod activation;
 #[path = "app_migration.rs"]
 mod migration;
-pub use activation::{AppEnvArgs, AppExecArgs, HookArgs};
+pub use activation::{AppEnvArgs, AppExecArgs, AppVersionsArgs, HookArgs};
 pub use migration::AppMigrateArgs;

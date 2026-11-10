@@ -76,6 +76,7 @@ pub enum FormatId {
     CliApplicationStorageGc,
     CliApplicationStorageList,
     CliApplicationStorageMove,
+    CliApplicationVersions,
     CliApplicationWork,
     CliArtifactsWhereReport,
     CliDlReport,
