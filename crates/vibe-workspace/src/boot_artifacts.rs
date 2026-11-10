@@ -85,6 +85,11 @@ pub(crate) mod publication;
 pub(crate) use publication::publish_unit_artifacts;
 use publication::stale_static_file;
 
+/// `vibe prompt build` — explicit regeneration of the system-prompt
+/// artifacts through this same transaction, out of line along that seam.
+mod prompt_build;
+pub use prompt_build::{PromptBuild, PromptPaths, build_node_prompt};
+
 mod format;
 pub use format::{STATIC_FILE, STATIC_XML_FILE, resolve_static_path, static_file, static_path};
 
@@ -92,6 +97,7 @@ pub use format::{STATIC_FILE, STATIC_XML_FILE, resolve_static_path, static_file,
 /// `AGENTS.md` / `GEMINI.md`, moved out of this cell along its seam.
 mod redirect;
 pub(crate) use redirect::project_managed_block;
+pub(crate) use redirect::write_redirect_blocks_with_transaction as write_redirect_blocks_in_transaction;
 pub use redirect::{
     BLOCK_CLOSE, BLOCK_OPEN, BlockLocation, CodexBudget, NEUTRALISED_BODY, PROJECT_DOC_MAX_BYTES,
     PROJECT_DOC_WARN_MARGIN, REDIRECT_FILES, RouterFacts, UNDECLARED_NODE_ID, locate_block,

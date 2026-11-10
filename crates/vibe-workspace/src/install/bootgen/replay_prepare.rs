@@ -1,14 +1,14 @@
 //! One-shot, all-memory preparation of the exact Collect replay closure.
 
-use std::collections::{BTreeMap, BTreeSet, HashMap, HashSet};
+use std::collections::{BTreeMap, BTreeSet};
 use std::path::{Path, PathBuf};
 use std::sync::Arc;
 
-use vibe_core::manifest::{ExtensionKey, LinkType, SpecFormat};
+use vibe_core::manifest::{ExtensionKey, SpecFormat};
 use vibe_spec::{CompilerNativePolicy, CompilerPendingSet, SelfCoordinate};
 
-use crate::boot::hybrid::{UnitId, UnitInput};
-use crate::boot::{BootProvenance, EffectiveBoot};
+use crate::boot::EffectiveBoot;
+use crate::boot::hybrid::UnitId;
 use crate::boot_artifacts::declared_sources::{BootSectionSource, DeclaredBootSources};
 use crate::extension_world::{
     CompilerNativeReplayFactory, OwnerRuntimeEpoch, OwnerRuntimeEpochToken, OwnerRuntimeId,
@@ -25,6 +25,13 @@ pub(crate) use prepared::{
 #[path = "replay_prepare/validate.rs"]
 mod validate;
 use validate::validate_ready;
+/// Which already-emitted units one replay candidate depends on statically.
+#[path = "replay_prepare/dependencies.rs"]
+mod dependencies;
+/// One node lane's prompt publication, out of line along that seam.
+#[path = "replay_prepare/prompt.rs"]
+mod prompt;
+pub(super) use dependencies::{node_generated_dependencies, static_dependencies};
 
 pub(super) struct UnitReplayCandidate {
     owner: OwnerRuntimeId,
@@ -42,6 +49,9 @@ pub(super) struct UnitReplayCandidate {
 pub(super) struct NodeReplayCandidate {
     owner: OwnerRuntimeId,
     rel: String,
+    // Retained for the node's prompt publication; see `prompt.rs`.
+    node_dir: PathBuf,
+    manifest: Box<vibe_core::manifest::Manifest>,
     effective: EffectiveBoot,
     spec_format: SpecFormat,
     index_path: PathBuf,
@@ -155,49 +165,6 @@ struct ReceiptIdentity {
     plan_digest: [u8; 32],
     order: u32,
     key: ExtensionKey,
-}
-
-pub(super) fn static_dependencies(
-    id: &UnitId,
-    table: &HashMap<UnitId, UnitInput>,
-    emitted: &HashSet<UnitId>,
-) -> Box<[UnitId]> {
-    let mut dependencies = table
-        .get(id)
-        .into_iter()
-        .flat_map(|unit| &unit.edges)
-        .filter(|edge| {
-            emitted.contains(&edge.target)
-                && matches!(
-                    edge.link,
-                    LinkType::Static | LinkType::StaticTransitive | LinkType::StaticHard
-                )
-        })
-        .map(|edge| edge.target.clone())
-        .collect::<Vec<_>>();
-    dependencies.sort();
-    dependencies.dedup();
-    dependencies.into_boxed_slice()
-}
-
-pub(super) fn node_generated_dependencies(
-    effective: &EffectiveBoot,
-    emitted: &HashSet<UnitId>,
-) -> Box<[UnitId]> {
-    effective
-        .static_entries()
-        .filter(|entry| entry.unit_substituted)
-        .filter_map(|entry| match &entry.provenance {
-            BootProvenance::Dependency { group, name } => {
-                let id = (group.clone(), name.clone());
-                emitted.contains(&id).then_some(id)
-            }
-            BootProvenance::Node => None,
-        })
-        .collect::<BTreeSet<_>>()
-        .into_iter()
-        .collect::<Vec<_>>()
-        .into_boxed_slice()
 }
 
 pub(super) fn seal_replay_set(
@@ -488,9 +455,18 @@ pub(crate) fn prepare_boot_replay<F: CompilerNativeReplayFactory>(
         for guard in &guards {
             guard.recheck()?;
         }
+        let sources = replay.sources.as_ref();
+        let prompt = prompt::for_lane(
+            &lane.candidate,
+            &replay.self_coord,
+            sources,
+            artifact.bytes(),
+            &index,
+        )?;
         publications.push(
             lane.into_publication(index, Some(artifact.into_bytes().into_boxed_slice()))
-                .with_node_guards(guards),
+                .with_node_guards(guards)
+                .with_node_prompt(prompt),
         );
     }
 

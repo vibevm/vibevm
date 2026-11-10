@@ -282,6 +282,30 @@ pub fn pull_request_template(pkgref: &str, upstream: &str) -> String {
 
 /// Recursively copy `src` into `dst`, excluding any `.git/` or `.vibe/`
 /// subtree at any depth. `dst` is created if absent.
+/// Whether a node-relative path is one of the four the system-prompt
+/// feature owns inside a boot directory.
+///
+/// The test is the layout owner's own, applied to the *last two*
+/// components, so a boot directory at any depth of a staged member is
+/// recognised and an authored file that merely shares a basename elsewhere
+/// in the tree is not.
+fn is_generated_prompt_artifact(rel: &Path) -> bool {
+    let boot = vibe_core::layout::current_boot_dir();
+    let Some(parent) = rel.parent() else {
+        return false;
+    };
+    if !parent.ends_with(&boot) {
+        return false;
+    }
+    matches!(
+        rel.file_name().and_then(|name| name.to_str()),
+        Some(vibe_core::layout::SYSTEM_MD)
+            | Some(vibe_core::layout::SYSTEM_META_JSON)
+            | Some(vibe_core::layout::AGENT_LANE_MD)
+            | Some(vibe_core::layout::BOOT_GITIGNORE)
+    )
+}
+
 fn copy_tree_excluding(src: &Path, dst: &Path) -> Result<()> {
     std::fs::create_dir_all(dst).map_err(|e| WorkspaceError::Io {
         path: dst.to_path_buf(),
@@ -313,6 +337,17 @@ fn copy_tree_excluding(src: &Path, dst: &Path) -> Result<()> {
                     Some(".git") | Some(".gitmodules") | Some(".vibe")
                 )
             }) {
+                continue;
+            }
+            // The generated system-prompt artifacts never travel. They are
+            // produced and never committed, and they are a function of the
+            // **development** shape: this copy's boot is about to be
+            // regenerated as a standalone node, so a copied prefix would
+            // describe a boot the published package does not have, and the
+            // ignore file beside it would cover files that are not there.
+            // A consumer that opts in generates its own on `vibe install`
+            // (PROP-076 `#SYS-ARTIFACTS-NOT-TRACKED`, `#SYS-OPT-IN`).
+            if is_generated_prompt_artifact(rel) {
                 continue;
             }
             let target = dst.join(rel);

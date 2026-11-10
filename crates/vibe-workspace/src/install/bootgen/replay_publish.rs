@@ -4,7 +4,7 @@ use std::fmt;
 
 use crate::WorkspaceError;
 use crate::boot_artifacts::transaction::{
-    self, ArtifactWrite, DetailedTransactionFailure, TransactionFailureDisposition,
+    self, ArtifactWrite, DetailedTransactionFailure, NodeSelectors, TransactionFailureDisposition,
 };
 use crate::extension_world::OwnerRuntimeId;
 
@@ -150,7 +150,10 @@ impl std::error::Error for BootReplayPublishFailure {
 pub(crate) fn publish_boot_replay(
     prepared: PreparedBootReplay,
 ) -> Result<PublishedBootReplay, BootReplayPublishFailure> {
-    publish_boot_replay_using(prepared, transaction::write_production_detailed)
+    publish_boot_replay_using(
+        prepared,
+        transaction::write_production_detailed_with_selectors,
+    )
 }
 
 #[cfg(test)]
@@ -158,14 +161,17 @@ pub(crate) fn publish_boot_replay_with_faults(
     prepared: PreparedBootReplay,
     faults: &impl transaction::FaultInjector,
 ) -> Result<PublishedBootReplay, BootReplayPublishFailure> {
-    publish_boot_replay_using(prepared, |write| {
-        transaction::write_with_faults_detailed(write, faults)
+    publish_boot_replay_using(prepared, |write, selectors| {
+        transaction::write_with_faults_and_selectors(write, faults, selectors)
     })
 }
 
 fn publish_boot_replay_using(
     prepared: PreparedBootReplay,
-    mut publish: impl FnMut(ArtifactWrite<'_>) -> Result<(), DetailedTransactionFailure>,
+    mut publish: impl FnMut(
+        ArtifactWrite<'_>,
+        NodeSelectors<'_>,
+    ) -> Result<(), DetailedTransactionFailure>,
 ) -> Result<PublishedBootReplay, BootReplayPublishFailure> {
     let mut publications = prepared.into_publications().into_vec().into_iter();
     let mut committed = Vec::new();
@@ -178,16 +184,28 @@ fn publish_boot_replay_using(
             .try_for_each(|guard| guard.recheck())
             .map_err(|source| (source, TransactionFailureDisposition::Uncommitted))
             .and_then(|()| {
-                publish(ArtifactWrite {
-                    index_path: &parts.index_path,
-                    index_bytes: &parts.index,
-                    static_path: &parts.static_path,
-                    static_bytes: parts.static_lane.as_deref(),
-                    stale_path: &parts.stale_path,
-                    // A replay republishes an already-prepared lane and
-                    // recomposes nothing, so it touches no prompt artifact.
-                    prompt: None,
-                })
+                // A replay republishes a **changed** lane, so it is one of
+                // the paths that must refresh the node's prefix and the
+                // managed block whose expected lane digest names it. P4 left
+                // this seam with no prompt member on the reading that a
+                // replay "recomposes nothing"; it recomposes the one thing
+                // that matters. Everything below is already prepared — the
+                // bytes and the node selector alike — so this cell stays
+                // consume-only (PROP-076 `#SYS-TRANSACTION-ROLES`).
+                let selectors = parts.node_prompt.as_ref().map(|prompt| &*prompt.selectors);
+                publish(
+                    ArtifactWrite {
+                        index_path: &parts.index_path,
+                        index_bytes: &parts.index,
+                        static_path: &parts.static_path,
+                        static_bytes: parts.static_lane.as_deref(),
+                        stale_path: &parts.stale_path,
+                        prompt: parts.node_prompt.as_ref().and_then(|prompt| {
+                            crate::boot_artifacts::prompt_payload(&prompt.publication)
+                        }),
+                    },
+                    selectors.map_or(&transaction::no_selectors, |selectors| selectors),
+                )
                 .map_err(|failure| {
                     let disposition = failure.disposition();
                     (failure.into_source(), disposition)

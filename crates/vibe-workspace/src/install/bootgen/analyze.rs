@@ -45,6 +45,12 @@ use super::{desubstitute_covered_units, node_dependency_boot, read_durable_resol
 mod result;
 pub use result::{AnalyzedBoundLane, AnalyzedLane};
 
+/// The provider-free node generation this cell and `vibe prompt build` share
+/// — out of line along that seam, so neither re-derives the other's inputs.
+#[path = "analyze/generation.rs"]
+mod generation;
+pub(crate) use generation::node_generation;
+
 /// Compose and compile ONE selected node's static lane under an analyzer
 /// observer, writing nothing.
 ///
@@ -87,130 +93,20 @@ fn analyze_node_lane_using(
     observer: Option<Arc<dyn CompileObserver>>,
     input_format: Option<SpecFormat>,
 ) -> Result<Option<AnalyzedLane>, WorkspaceError> {
-    let node_dir = workspace.node_abs_path(node_rel);
-    let node_manifest = workspace
-        .member_by_rel_path(node_rel)
-        .map(|member| member.manifest.clone())
-        .unwrap_or_else(|| workspace.root_manifest.clone());
-    let root = workspace.root.clone();
-    let self_coord = super::root_self_coordinate(&workspace.root_manifest);
-
-    // The per-unit table and the two sets the node lane's composition
-    // reads from it: which units carry a compiled STATIC (the
-    // substitution set) and which shared packages hoist to the root.
-    let resolution: Vec<ResolvedDep> = read_durable_resolution(&root)?;
-    let world = ExtensionWorldEpoch::from_resolution(&root, &resolution).map_err(world_error)?;
-    let runtimes = lower_owner_runtimes(
-        workspace,
-        &world,
-        OwnerRuntimeLowering::new(node_rel, BTreeMap::new()),
-    )?;
-    let mut sources = boot_artifacts::declared_sources::DeclaredBootSources::prepare_with_nodes(
-        workspace,
-        &resolution,
-        input_format,
-    )?;
-    let targets = super::conditions::project_targets(&workspace.root_manifest);
-    let table =
-        super::build_unit_table_bound(&root, &resolution, targets.clone(), sources.as_ref())?;
-    let with_static = with_static_set(&table);
-    let pulls = hoist::soft_static_pulls(&table);
-    let shared: HashSet<_> = pulls
-        .iter()
-        .filter(|(pkg, pullers)| {
-            pullers.len() >= 2 && table.get(pkg).is_some_and(|u| u.has_static_boot())
-        })
-        .map(|(pkg, _)| pkg.clone())
-        .collect();
-
-    // The lane's format follows the committed selected STATIC — what the
-    // tree's regeneration actually wrote — falling back to Mixed for a
-    // node that has not generated one yet.
-    let spec_format = match boot_artifacts::resolve_static_path(&node_dir)? {
-        Some(path) if path.extension().and_then(|e| e.to_str()) == Some("xml") => SpecFormat::Xml,
-        _ => SpecFormat::Mixed,
-    };
-
-    // The node's effective boot: own authored files, the root's
-    // foundation inherited by every member, the dependency closure with
-    // unit-STATIC substitution, the root's hoisted shared packages, and
-    // the B-006 once-each dedup — the regeneration order, all of it.
-    let own = sources
-        .as_ref()
-        .ok_or_else(|| WorkspaceError::Io {
-            path: node_dir.clone(),
-            reason: "prepared nodes missing".into(),
-        })?
-        .node(node_rel)?
-        .entries
-        .clone();
-    let inherited = if node_rel == "." {
-        Vec::new()
-    } else {
-        sources
-            .as_ref()
-            .ok_or_else(|| WorkspaceError::Io {
-                path: root.clone(),
-                reason: "prepared nodes missing".into(),
-            })?
-            .node(".")?
-            .entries
-            .clone()
-            .into_iter()
-            .filter(|b| b.category == Some(vibe_core::manifest::BootCategory::Foundation))
-            .collect()
-    };
-    let dependencies = node_dependency_boot(
-        &root,
-        &node_manifest,
-        &resolution,
-        &table,
-        &with_static,
-        spec_format,
-        targets.clone(),
-    );
-    let mut effective = boot::compute_effective_boot(boot::NodeBootInputs {
-        own_boot: &own,
-        inherited_foundation: &inherited,
-        dependencies: &dependencies,
-        default_link: node_manifest.boot.default_link,
-    })?;
-    if node_rel == "." {
-        append_hoisted(&mut effective, &shared, &table, &pulls);
-    }
-    desubstitute_covered_units(&mut effective, &table);
-    super::generated_inputs::admit(
-        &mut sources,
-        &effective,
-        &resolution,
-        &table,
-        &runtimes,
-        spec_format,
-        &self_coord,
-    )?;
-
-    let identities: Vec<(String, String)> = effective
-        .static_entries()
-        .map(|entry| (entry.origin.clone(), entry.path.clone()))
-        .collect();
-
-    // The node lane's own owner-scoped plan. Root and members take distinct
-    // host seats over this same exact parsed package epoch.
-    let transforms = runtimes.node(node_rel)?.transform_plan().clone();
-
+    let generation = node_generation(workspace, node_rel, input_format)?;
     let compiled = boot_artifacts::compile_static_analyzed(
-        &effective,
-        &root,
-        &self_coord,
-        spec_format,
-        sources.as_ref(),
-        transforms,
+        &generation.effective,
+        &generation.root,
+        &generation.self_coord,
+        generation.spec_format,
+        generation.sources.as_ref(),
+        generation.transforms,
         observer,
     )?;
     Ok(compiled.map(|compiled| AnalyzedLane {
         artifact: compiled.artifact,
         providers: compiled.providers,
-        identities,
+        identities: generation.identities,
     }))
 }
 

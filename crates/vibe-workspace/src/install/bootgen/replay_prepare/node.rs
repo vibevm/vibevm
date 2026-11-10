@@ -8,6 +8,7 @@ impl NodeReplayCandidate {
     #[allow(clippy::too_many_arguments)]
     pub(in crate::install::bootgen) fn new(
         node_dir: PathBuf,
+        manifest: &vibe_core::manifest::Manifest,
         rel: String,
         effective: EffectiveBoot,
         spec_format: SpecFormat,
@@ -19,6 +20,8 @@ impl NodeReplayCandidate {
         Self {
             owner: OwnerRuntimeId::Node { rel: rel.clone() },
             rel,
+            node_dir,
+            manifest: Box::new(manifest.clone()),
             effective,
             spec_format,
             index_path: boot_dir.join(boot_artifacts::INDEX_FILE),

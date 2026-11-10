@@ -157,10 +157,32 @@ pub(super) fn write_production_with_selectors<T>(
         .map_err(DetailedTransactionFailure::into_source)
 }
 
-pub(crate) fn write_production_detailed(
+/// The detailed entry a replay publication takes, with the node selectors of
+/// the ordinary write path.
+///
+/// A replay that republishes a changed `STATIC.*` must also rewrite the
+/// managed block whose expected lane digest names it, and must publish the
+/// prefix whose entrypoint witness is that very block — otherwise a replay
+/// leaves a project telling a session to re-read a lane that is current, and
+/// a prefix describing one that is not (PROP-076
+/// `#SYS-PROSPECTIVE-ENTRYPOINT`).
+pub(crate) fn write_production_detailed_with_selectors(
     write: ArtifactWrite<'_>,
+    selectors: NodeSelectors<'_>,
 ) -> Result<(), DetailedTransactionFailure> {
-    write_with_faults_and_selectors_detailed(write, &NoFault, |_| Ok(()))
+    write_with_faults_and_selectors_detailed(write, &NoFault, selectors)
+}
+
+/// The managed-block selector a publication runs inside its own
+/// transaction, as one name rather than as a type spelled at four call
+/// sites. The transaction id is the argument, because a selector writes
+/// through the same journal rather than beside it.
+pub(crate) type NodeSelectors<'a> = &'a dyn Fn(&str) -> Result<(), WorkspaceError>;
+
+/// The selector of a publication that has no managed block to rewrite — a
+/// package unit slot, and every test that does not exercise one.
+pub(crate) fn no_selectors(_transaction: &str) -> Result<(), WorkspaceError> {
+    Ok(())
 }
 
 pub(super) fn preflight_artifact_roles(write: ArtifactWrite<'_>) -> Result<(), WorkspaceError> {
@@ -200,7 +222,16 @@ pub(crate) fn write_with_faults_detailed(
     write: ArtifactWrite<'_>,
     faults: &impl FaultInjector,
 ) -> Result<(), DetailedTransactionFailure> {
-    write_with_faults_and_selectors_detailed(write, faults, |_| Ok(()))
+    write_with_faults_and_selectors_detailed(write, faults, no_selectors)
+}
+
+#[cfg(test)]
+pub(crate) fn write_with_faults_and_selectors(
+    write: ArtifactWrite<'_>,
+    faults: &impl FaultInjector,
+    selectors: NodeSelectors<'_>,
+) -> Result<(), DetailedTransactionFailure> {
+    write_with_faults_and_selectors_detailed(write, faults, selectors)
 }
 
 fn write_with_faults_and_selectors_detailed<T>(

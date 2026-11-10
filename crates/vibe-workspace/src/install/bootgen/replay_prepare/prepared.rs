@@ -3,6 +3,7 @@ use std::path::Path;
 use std::path::PathBuf;
 
 use crate::extension_world::OwnerRuntimeId;
+use crate::system_prompt::PromptPublication;
 
 use super::{ReplayCandidate, ReplayLane};
 
@@ -16,6 +17,21 @@ pub(crate) enum PreparedOwnerKind {
     Node,
 }
 
+/// One node lane's prompt publication, together with the facts its managed
+/// block selector needs. A unit lane has none: a package slot publishes no
+/// prefix (PROP-076 `#SYS-TRANSACTION-ROLES`).
+pub(crate) struct NodePromptPublication {
+    /// What this generation publishes for the node's prompt.
+    pub(crate) publication: PromptPublication,
+    /// The node selector this publication runs inside its own transaction,
+    /// **already built** at preparation time: the publisher is consume-only
+    /// and derives nothing, which is a property its own source test pins.
+    pub(crate) selectors: NodeSelectorFn,
+}
+
+/// One prepared node selector, owned.
+pub(crate) type NodeSelectorFn = Box<dyn Fn(&str) -> Result<(), crate::WorkspaceError>>;
+
 pub(crate) struct PreparedOwnerPublication {
     owner: OwnerRuntimeId,
     kind: PreparedOwnerKind,
@@ -25,6 +41,7 @@ pub(crate) struct PreparedOwnerPublication {
     index: Box<[u8]>,
     static_lane: Option<Box<[u8]>>,
     node_guards: Vec<std::sync::Arc<crate::install::bootgen::PreparedNodeBoot>>,
+    node_prompt: Option<NodePromptPublication>,
 }
 
 pub(crate) struct PreparedOwnerParts {
@@ -36,6 +53,7 @@ pub(crate) struct PreparedOwnerParts {
     pub(crate) index: Box<[u8]>,
     pub(crate) static_lane: Option<Box<[u8]>>,
     pub(crate) node_guards: Vec<std::sync::Arc<crate::install::bootgen::PreparedNodeBoot>>,
+    pub(crate) node_prompt: Option<NodePromptPublication>,
 }
 
 impl PreparedBootReplay {
@@ -64,6 +82,11 @@ impl PreparedOwnerPublication {
         self.node_guards = guards;
         self
     }
+
+    pub(super) fn with_node_prompt(mut self, prompt: Option<NodePromptPublication>) -> Self {
+        self.node_prompt = prompt;
+        self
+    }
     pub(crate) fn into_parts(self) -> PreparedOwnerParts {
         PreparedOwnerParts {
             owner: self.owner,
@@ -74,6 +97,7 @@ impl PreparedOwnerPublication {
             index: self.index,
             static_lane: self.static_lane,
             node_guards: self.node_guards,
+            node_prompt: self.node_prompt,
         }
     }
 
@@ -96,6 +120,7 @@ impl PreparedOwnerPublication {
             index: index.into(),
             static_lane,
             node_guards: Vec::new(),
+            node_prompt: None,
         }
     }
 
@@ -166,6 +191,7 @@ impl ReplayLane {
             index,
             static_lane,
             node_guards: Vec::new(),
+            node_prompt: None,
         }
     }
 }

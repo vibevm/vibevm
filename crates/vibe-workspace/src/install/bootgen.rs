@@ -43,6 +43,7 @@ use hybrid_emit::{
 mod analyze;
 #[cfg(test)]
 pub(crate) use analyze::analyze_effective_bound_native;
+pub(crate) use analyze::node_generation;
 pub use analyze::{
     AnalyzedBoundLane, AnalyzedLane, analyze_node_lane, analyze_node_lane_bound_native,
     analyze_node_lane_bound_native_with_source_format, analyze_node_lane_with_source_format,

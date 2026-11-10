@@ -44,6 +44,8 @@ use crate::WorkspaceError;
 
 #[path = "system_prompt/capture.rs"]
 mod capture;
+#[path = "system_prompt/check.rs"]
+mod check;
 #[path = "system_prompt/compose.rs"]
 mod compose;
 #[path = "system_prompt/contract.rs"]
@@ -59,6 +61,8 @@ mod markers;
 mod meta;
 #[path = "system_prompt/plan.rs"]
 mod plan;
+#[path = "system_prompt/prepare.rs"]
+mod prepare;
 #[path = "system_prompt/publish.rs"]
 mod publish;
 #[path = "system_prompt/reader.rs"]
@@ -67,6 +71,10 @@ mod reader;
 mod verify;
 
 pub use capture::{PrefixCapture, capture_node_prefix_inputs, capture_prefix_inputs};
+pub use check::{
+    ArtifactFacts, CheckRequest, CheckVerdict, NotTracked, PromptCheck, TrackedPaths,
+    check_node_prompt, prompt_warnings,
+};
 pub use compose::{
     ComposedPrefix, PrefixSettings, SEGMENT_FRAME, Segment, SegmentId, compose_prefix,
 };
@@ -78,6 +86,7 @@ pub use markers::{
 };
 pub use meta::{SIDECAR_PROTOCOL, SidecarFacts, compose_sidecar, render_sidecar_bytes};
 pub use plan::{ContinuationBand, ContinuationPlan, ContinuationRow};
+pub use prepare::{PreparedBand, PreparedRequest, UnresolvedRow, prepare_request};
 pub use publish::{BOOT_IGNORE_BODY, LaneBodyReader};
 pub(crate) use publish::{
     PromptPublication, PromptPublishRequest, bound_lane_reader, prepare_publication,

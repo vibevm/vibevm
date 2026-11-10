@@ -227,6 +227,7 @@ pub(crate) fn regenerate_boot_from_bound_native<P: OwnerNativeCompileProvider>(
         }
         replay_candidates.push_node(NodeReplayCandidate::new(
             node_dir,
+            manifest,
             rel.to_owned(),
             effective,
             spec_format,

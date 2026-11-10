@@ -358,7 +358,7 @@ pub fn write_redirect_blocks_bounded(
     })
 }
 
-pub(super) fn write_redirect_blocks_with_transaction(
+pub(crate) fn write_redirect_blocks_with_transaction(
     node_dir: &Path,
     facts: &RouterFacts,
     limit: usize,
