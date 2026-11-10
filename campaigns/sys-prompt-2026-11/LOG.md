@@ -1909,3 +1909,16 @@ claimed.**
    because `vibevm/vibedeps/org.vibevm.doc.web/` is absent here. That absence
    is also why `vibe check` on this worktree reports **2 pre-existing
    errors** rather than none.
+
+## 2026-11-10 — determinism measured on macOS and Windows
+
+`determinism-hashes.sh`, run by the coordinator with the 1.0.12 corporate test builds (source tree `f5127fded8ce` on every host):
+
+| host | inputs | SYSTEM.md | SYSTEM.meta.json | AGENT-LANE.md | two paths |
+|---|---|---|---|---|---|
+| Linux x86_64 | `7b747743…` | `9db549a7…` | `8b196318…` | `e28c93d2…` | same |
+| Windows 11 x86_64 (Git Bash, `vibe.exe` 1.0.12) | `7b747743…` | `9db549a7…` | `8b196318…` | `e28c93d2…` | same |
+| macOS x86_64 (`vibe` 1.0.12) | `7b747743…` | `9db549a7…` | `8b196318…` | `e28c93d2…` | same |
+
+The Windows inputs digest taken from a real git checkout with `core.autocrlf=true` also matched. First Windows attempt failed in the fixture, not the product: `make-sample.sh` produced `file://C:/…`; fixed with `Path.as_uri` in `0a37aa44b`. `#SYS-DETERMINISM` moves to `impl/done`.
+
