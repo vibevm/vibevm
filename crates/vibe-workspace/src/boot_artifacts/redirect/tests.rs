@@ -340,3 +340,78 @@ fn the_entrypoint_choice_set_is_exactly_the_redirect_file_set() {
     assert_eq!(declared, REDIRECT_FILES.to_vec());
     assert!(REDIRECT_FILES.contains(&vibe_core::manifest::EntrypointFile::DEFAULT.as_str()));
 }
+
+// --- PROP-076 `#SYS-PROSPECTIVE-ENTRYPOINT` — one projection, two callers --
+
+/// The risk the prospective projection introduces is a second renderer: a
+/// value computed one way and bytes written another, drifting apart at the
+/// first wording change. This is the fence — for every shape the write path
+/// distinguishes, the file the write leaves behind is byte-equal to what the
+/// projection returned for the same input.
+#[test]
+fn the_projection_equals_the_bytes_the_write_leaves_behind() {
+    let dir = TempDir::new().unwrap();
+    let cases = [
+        ("missing", None),
+        ("empty", Some(String::new())),
+        (
+            "co-tenant with no markers",
+            Some("# Mine\n\nAuthored prose.\n".to_string()),
+        ),
+        (
+            "co-tenant without a trailing newline",
+            Some("# Mine\n\nAuthored prose, unterminated.".to_string()),
+        ),
+        (
+            "an existing block with text on both sides",
+            Some("# Mine\n\nbefore\n\n<vibevm>\nstale body\n</vibevm>\n\nafter\n".to_string()),
+        ),
+        (
+            "the pre-PROP-012 whole-file redirect",
+            Some(format!("{OLD_GENERATED_HEADER}\n\nold body\n")),
+        ),
+    ];
+    for (label, existing) in cases {
+        let path = dir.path().join("AGENTS.md");
+        match &existing {
+            Some(content) => fs::write(&path, content).unwrap(),
+            None => {
+                let _ = fs::remove_file(&path);
+            }
+        }
+        let projected = project_managed_block(existing.as_deref(), SpecFormat::Mixed)
+            .unwrap_or_else(|reason| panic!("{label}: {reason}"));
+        write_managed_block(&path).unwrap();
+        assert_eq!(
+            fs::read_to_string(&path).unwrap(),
+            projected,
+            "{label}: the witness and the write must come from one function"
+        );
+    }
+}
+
+#[test]
+fn the_projection_reports_a_malformed_marker_pair_without_repairing_it() {
+    // A reading caller gets the same refusal reason a writing caller does,
+    // and neither invents a repair of a co-tenant document.
+    let reason = project_managed_block(
+        Some("<vibevm>\na\n</vibevm>\n<vibevm>\nb\n</vibevm>\n"),
+        SpecFormat::Mixed,
+    )
+    .expect_err("two marker pairs are malformed");
+    assert!(reason.contains("`<vibevm>`"), "{reason}");
+}
+
+#[test]
+fn the_projection_preserves_every_byte_outside_the_block() {
+    let before = "# Mine\n\nkeep me\n\n";
+    let after = "\n\nkeep me too\n";
+    let projected = project_managed_block(
+        Some(&format!("{before}<vibevm>\nstale\n</vibevm>{after}")),
+        SpecFormat::Mixed,
+    )
+    .unwrap();
+    assert!(projected.starts_with(before), "{projected}");
+    assert!(projected.ends_with(after), "{projected}");
+    assert!(!projected.contains("stale"), "{projected}");
+}

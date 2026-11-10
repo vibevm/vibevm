@@ -98,6 +98,58 @@ fn render_block(spec_format: SpecFormat) -> String {
     format!("{BLOCK_OPEN}\n{body}\n{BLOCK_CLOSE}\n")
 }
 
+/// What this generation's managed-block write would leave in an instruction
+/// file whose current content is `existing` (`None` for a missing file) —
+/// computed without touching the filesystem. `Err` carries the
+/// malformed-marker reason, which a writing caller turns into a refusal and
+/// a reading caller reports as-is.
+///
+/// This exists as a value, and not only as a side effect of writing,
+/// because the prefix's entrypoint witness must be the **prospective** bytes
+/// of the same generation: the redirect selector runs after the INDEX and
+/// STATIC roll-forwards commit, so witnessing the file as it is now would
+/// bind a newly published prefix to the previous generation
+/// (PROP-076 `#SYS-PROSPECTIVE-ENTRYPOINT`). One function answers both
+/// callers on purpose — a second renderer would drift from this one, and a
+/// test asserts the write leaves exactly what this returns.
+pub(crate) fn project_managed_block(
+    existing: Option<&str>,
+    spec_format: SpecFormat,
+) -> std::result::Result<String, String> {
+    let block = render_block(spec_format);
+    let Some(content) = existing else {
+        return Ok(block);
+    };
+    match locate_block(content) {
+        BlockLocation::Malformed(reason) => Err(reason),
+        BlockLocation::Present { start, end } => {
+            let mut out = String::with_capacity(content.len());
+            out.push_str(&content[..start]);
+            out.push_str(&block);
+            out.push_str(&content[end..]);
+            Ok(out)
+        }
+        BlockLocation::Absent => {
+            if content.trim().is_empty() || content.trim_start().starts_with(OLD_GENERATED_HEADER) {
+                // An empty file, or the pre-PROP-012 whole-file generated
+                // redirect — the file was vibevm's, so reclaim it as a
+                // block (PROP-012 §4).
+                Ok(block)
+            } else {
+                // Co-tenant content — append the block after it, preserving
+                // every existing byte (PROP-012 §2.3).
+                let mut out = content.to_owned();
+                if !out.ends_with('\n') {
+                    out.push('\n');
+                }
+                out.push('\n');
+                out.push_str(&block);
+                Ok(out)
+            }
+        }
+    }
+}
+
 /// Where vibevm's managed `<vibevm>` block sits in an instruction file
 /// (PROP-012 §2.2–§2.3).
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -225,45 +277,13 @@ fn write_managed_block_with_spec_format(
         ),
         None => None,
     };
-    let block = render_block(spec_format);
-    let new_content = match &existing {
-        None => block,
-        Some(content) => match locate_block(content) {
-            BlockLocation::Malformed(reason) => {
-                return Err(WorkspaceError::MalformedRedirectBlock {
-                    path: path.to_path_buf(),
-                    reason,
-                });
+    let new_content =
+        project_managed_block(existing.as_deref(), spec_format).map_err(|reason| {
+            WorkspaceError::MalformedRedirectBlock {
+                path: path.to_path_buf(),
+                reason,
             }
-            BlockLocation::Present { start, end } => {
-                let mut out = String::with_capacity(content.len());
-                out.push_str(&content[..start]);
-                out.push_str(&block);
-                out.push_str(&content[end..]);
-                out
-            }
-            BlockLocation::Absent => {
-                if content.trim().is_empty()
-                    || content.trim_start().starts_with(OLD_GENERATED_HEADER)
-                {
-                    // An empty file, or the pre-PROP-012 whole-file
-                    // generated redirect — the file was vibevm's, so
-                    // reclaim it as a block (PROP-012 §4).
-                    block
-                } else {
-                    // Co-tenant content — append the block after it,
-                    // preserving every existing byte (PROP-012 §2.3).
-                    let mut out = content.clone();
-                    if !out.ends_with('\n') {
-                        out.push('\n');
-                    }
-                    out.push('\n');
-                    out.push_str(&block);
-                    out
-                }
-            }
-        },
-    };
+        })?;
     if existing.as_deref() == Some(new_content.as_str()) {
         return Ok(None);
     }
