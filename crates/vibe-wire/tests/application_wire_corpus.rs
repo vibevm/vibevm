@@ -36,7 +36,8 @@ fn application_index_rejects_unknown_members() {
 
 #[test]
 fn registry_exposes_distinct_current_and_legacy_index_epochs() {
-    assert_eq!(FormatId::ApplicationIndex.epoch(), 5);
+    assert_eq!(FormatId::ApplicationIndex.epoch(), 6);
+    assert_eq!(FormatId::ApplicationIndexV6.epoch(), 5);
     assert_eq!(FormatId::ApplicationIndexV5.epoch(), 4);
     assert_eq!(FormatId::ApplicationIndexV4.epoch(), 3);
     assert_eq!(FormatId::ApplicationIndexV3.epoch(), 2);
@@ -57,6 +58,7 @@ fn registry_preserves_authoritative_input_and_continuation_state() {
     assert!(FormatId::ApplicationStepsV1.recoverable());
     assert!(!FormatId::ApplicationImportWork.recoverable());
     assert!(!FormatId::ApplicationIndex.recoverable());
+    assert!(!FormatId::ApplicationIndexV6.recoverable());
     assert!(!FormatId::ApplicationIndexV5.recoverable());
     assert!(!FormatId::ApplicationIndexV3.recoverable());
 }

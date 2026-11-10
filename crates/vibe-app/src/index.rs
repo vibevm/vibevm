@@ -1,6 +1,9 @@
 //! The one inventory, `<settings>/applications/index.json`
-//! (`vibe-user-applications/3`): domain model, wire conversion and the
-//! atomic save.
+//! (`vibe-user-applications/7`): domain model, wire conversion and the
+//! atomic save. The writer writes the **lowest** protocol that carries what
+//! the home actually retains, so a home with no template provenance and no
+//! migration record keeps writing `/6` and every existing PATH proxy goes
+//! on reading it (`PROP-059#proxy-index-upgrade`).
 
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-059#index");
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-059#ownership");
@@ -14,13 +17,17 @@ use vibe_core::manifest::{
     IconDecl, InstallerMethod, InstallerOptionDecl, LauncherDecl, PublicCommandDecl,
     RequirementScope, ShellInterpreter, StepPhase, VersionFileDecl,
 };
-use vibe_wire::generated::application::e5::index as wire;
+use vibe_wire::generated::application::e6::index as wire;
 
 use crate::error::StateError;
 use crate::settings::{SettingsRoot, io, write_atomic};
 
 /// The protocol tag of the current index format.
-pub const INDEX_PROTOCOL: &str = "vibe-user-applications/6";
+pub const INDEX_PROTOCOL: &str = "vibe-user-applications/7";
+/// The protocol a home keeps writing while it retains no template
+/// provenance, no declared migration entry and no migration outcome
+/// (`PROP-059#proxy-index-upgrade`).
+const PATHS_PROTOCOL: &str = "vibe-user-applications/6";
 const EVIDENCE_PROTOCOL: &str = "vibe-user-applications/5";
 const FOUR_PROTOCOL: &str = "vibe-user-applications/4";
 const LEGACY_PROTOCOL: &str = "vibe-user-applications/3";
@@ -201,6 +208,19 @@ pub struct Installation {
     /// from these records. [`Index::parse`], which has no home to read,
     /// leaves it empty.
     pub version_file: Vec<VersionFileDecl>,
+    /// The template this version's manifest was rendered from, when one
+    /// produced it (`PROP-075#TEMPLATE-LOCK-RECORD`). Absent for an
+    /// ordinary published package, which is what keeps a home without a
+    /// rendered installation at `vibe-user-applications/6`.
+    pub template: Option<InstalledTemplate>,
+    /// The `[[application.migration]]` entries this version's package
+    /// declares, retained so an offer after `install -g` / `update -g` /
+    /// `app use` and a later `--only ID` need no package tree
+    /// (`PROP-075#MIGRATION-DECLARATION`).
+    pub migrations: Vec<MigrationEntryRecord>,
+    /// The migrations already carried **into** this installation, oldest
+    /// first (`PROP-075#MIGRATION-FAILURE`).
+    pub migrated: Vec<MigrationOutcomeRecord>,
     /// The authored commands of a method-form option.
     pub commands: AuthoredCommands,
     /// The chosen features (`PROP-065#features`).
@@ -337,81 +357,6 @@ impl Index {
         Ok((index, protocol))
     }
 
-    /// Read the exact protocol's closed schema; loading never writes a migration.
-    pub fn parse(bytes: &[u8]) -> Result<Self, String> {
-        Self::parse_with_protocol(bytes).map(|(index, _)| index)
-    }
-
-    fn parse_with_protocol(bytes: &[u8]) -> Result<(Self, u8), String> {
-        #[derive(serde::Deserialize)]
-        struct Header {
-            protocol: String,
-        }
-        let header: Header = serde_json::from_slice(bytes).map_err(|e| e.to_string())?;
-        let document = match header.protocol.as_str() {
-            LEGACY_PROTOCOL => upgrade_five::promote(upgrade_four::promote(upgrade::promote(
-                serde_json::from_slice::<
-                    vibe_wire::generated::application::e2::index::ApplicationIndex,
-                >(bytes)
-                .map_err(|e| e.to_string())?,
-            ))),
-            FOUR_PROTOCOL => upgrade_five::promote(upgrade_four::promote(
-                serde_json::from_slice(bytes).map_err(|e| e.to_string())?,
-            )),
-            EVIDENCE_PROTOCOL => {
-                upgrade_five::promote(serde_json::from_slice(bytes).map_err(|e| e.to_string())?)
-            }
-            INDEX_PROTOCOL => serde_json::from_slice(bytes).map_err(|e| e.to_string())?,
-            _ => return Err("unsupported application index protocol".into()),
-        };
-        Self::from_wire(document).map(|index| {
-            (
-                index,
-                match header.protocol.as_str() {
-                    INDEX_PROTOCOL => 6,
-                    EVIDENCE_PROTOCOL => 5,
-                    FOUR_PROTOCOL => 4,
-                    _ => 3,
-                },
-            )
-        })
-    }
-
-    /// Whether any retained data needs the current closed index4 reader.
-    pub(crate) fn requires_reader_four(&self) -> bool {
-        self.installations.values().any(|r| {
-            r.configuration.is_some() || r.pending.is_some() || !r.secret_origins.is_empty()
-        })
-    }
-
-    /// Whether any retained data needs the current closed index6 reader:
-    /// an exposed payload directory, a slot switched off, or a slot's
-    /// applied link-directory PATH entries (`PROP-059#path-directories`,
-    /// `#slot-off`).
-    pub(crate) fn requires_reader_six(&self) -> bool {
-        self.installations.values().any(|r| !r.path_dirs.is_empty())
-            || self
-                .slots
-                .values()
-                .any(|state| state.off || !state.path_env.is_empty())
-    }
-
-    pub(crate) fn minimum_reader(&self) -> u8 {
-        if self.requires_reader_six() {
-            6
-        } else if self
-            .installations
-            .values()
-            .any(|r| r.source_evidence.is_some())
-        {
-            5
-        } else if self.requires_reader_four() {
-            4
-        } else {
-            3
-        }
-    }
-
     /// The keys of the installations whose recorded requirements name
     /// `key`, with the scope of each requirement (`PROP-065#uninstall-tree`).
     pub fn required_by(&self, key: &str) -> Vec<(&str, RequirementScope)> {
@@ -437,7 +382,8 @@ impl Index {
     pub fn to_wire(&self) -> wire::ApplicationIndex {
         wire::ApplicationIndex {
             protocol: match self.minimum_reader() {
-                6 => INDEX_PROTOCOL,
+                7 => INDEX_PROTOCOL,
+                6 => PATHS_PROTOCOL,
                 5 => EVIDENCE_PROTOCOL,
                 4 => FOUR_PROTOCOL,
                 _ => LEGACY_PROTOCOL,
@@ -467,6 +413,7 @@ impl Index {
 
     pub fn from_wire(document: wire::ApplicationIndex) -> Result<Self, String> {
         if document.protocol != INDEX_PROTOCOL
+            && document.protocol != PATHS_PROTOCOL
             && document.protocol != EVIDENCE_PROTOCOL
             && document.protocol != FOUR_PROTOCOL
             && document.protocol != LEGACY_PROTOCOL
@@ -494,6 +441,7 @@ impl Index {
             return Err("source evidence requires application index5".into());
         }
         if document.protocol != INDEX_PROTOCOL
+            && document.protocol != PATHS_PROTOCOL
             && (document
                 .installations
                 .values()
@@ -505,6 +453,16 @@ impl Index {
         {
             return Err(
                 "exposed payload directories and slot off state require application index6".into(),
+            );
+        }
+        if document.protocol != INDEX_PROTOCOL
+            && document
+                .installations
+                .values()
+                .any(|r| r.template.is_some() || !r.migrations.is_empty() || !r.migrated.is_empty())
+        {
+            return Err(
+                "template provenance and migration records require application index7".into(),
             );
         }
         let mut installations = BTreeMap::new();
@@ -560,17 +518,25 @@ impl Index {
 mod env_record;
 #[path = "index/launcher_wire.rs"]
 mod launcher_wire;
+#[path = "index/migration.rs"]
+mod migration;
+#[path = "index/protocol.rs"]
+mod protocol;
 mod publication;
 #[path = "index/upgrade.rs"]
 mod upgrade;
 mod upgrade_five;
 mod upgrade_four;
+mod upgrade_six;
 #[path = "index/version_files.rs"]
 mod version_files;
 #[path = "index/wire.rs"]
 mod wire_form;
 
 pub use env_record::{EnvEntry, EnvOp, ValueKind};
+pub use migration::{
+    InstalledTemplate, MigrationEntryRecord, MigrationOutcomeRecord, MigrationResult,
+};
 mod slots;
 pub use slots::SlotState;
 use wire_form::{env_from_wire, installation_from_wire, installation_to_wire};

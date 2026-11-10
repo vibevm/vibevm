@@ -282,6 +282,16 @@ impl SettingsRoot {
         self.root.join("cache").join("app-work")
     }
 
+    /// `<home>/cache/app-migrate`: one directory per migrated slot, then
+    /// one per version pair, then one per run — the shared work directory
+    /// `vibe app migrate` hands its export and import steps
+    /// (`PROP-075#MIGRATION-DECLARATION`). Always kept, success or
+    /// failure, because it is the evidence of what was and was not
+    /// carried; `vibe app work` lists and cleans it.
+    pub fn app_migrate_dir(&self) -> PathBuf {
+        self.root.join("cache").join("app-migrate")
+    }
+
     /// `<home>/cache/app-proxies/<dir>/bin`: the PATH proxies of one
     /// installation's public commands, put on the PATH of a session
     /// (`vibe shell --with`) or of a requiring step instead of `opt/bin`

@@ -1,0 +1,1090 @@
+{
+  "metadata": {
+    "description": "The one user-application inventory: installations by key, the directories each installation asks to be exposed whole on PATH, the template a rendered manifest was produced from, the migration entries an installation declares and the outcomes of the migrations already carried into it, and each slot's global default, off state and applied link-directory PATH entries.",
+    "spec": {
+      "implements": "spec://org.vibevm.core/vibevm/common/PROP-059#index"
+    },
+    "rustOptions": {
+      "package": "vibe_wire::application::e6::index"
+    },
+    "x-rust-type": "ApplicationIndex",
+    "x-wire-order": [
+      "protocol",
+      "installations",
+      "slots"
+    ],
+    "x-vocabularies": [
+      "configuration_record",
+      "application_pending_target",
+      "configuration_parameter_origin",
+      "source_evidence"
+    ]
+  },
+  "properties": {
+    "protocol": {
+      "type": "string"
+    },
+    "installations": {
+      "values": {
+        "ref": "installation"
+      },
+      "metadata": {
+        "x-empty": "emit"
+      }
+    },
+    "slots": {
+      "values": {
+        "ref": "slot"
+      },
+      "metadata": {
+        "x-empty": "emit"
+      }
+    }
+  },
+  "definitions": {
+    "method": {
+      "enum": [
+        "shell",
+        "zip",
+        "tar_gz",
+        "exe",
+        "msi",
+        "source_build",
+        "steps"
+      ],
+      "metadata": {
+        "x-vocabulary": "closed"
+      }
+    },
+    "interpreter": {
+      "enum": [
+        "posix_sh",
+        "windows_cmd",
+        "windows_powershell"
+      ],
+      "metadata": {
+        "x-vocabulary": "closed"
+      }
+    },
+    "outcome": {
+      "enum": [
+        "done",
+        "skipped",
+        "failed",
+        "delegated",
+        "interrupted"
+      ],
+      "metadata": {
+        "x-vocabulary": "closed"
+      }
+    },
+    "accepted_license": {
+      "metadata": {
+        "x-wire-order": [
+          "name",
+          "acceptedAt"
+        ]
+      },
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "acceptedAt": {
+          "type": "string"
+        }
+      }
+    },
+    "step_record": {
+      "metadata": {
+        "x-wire-order": [
+          "id",
+          "kind",
+          "phase",
+          "outcome",
+          "uninstall",
+          "forceUninstall",
+          "interpreter"
+        ]
+      },
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "kind": {
+          "type": "string"
+        },
+        "outcome": {
+          "ref": "outcome"
+        }
+      },
+      "optionalProperties": {
+        "phase": {
+          "ref": "phase",
+          "metadata": {
+            "x-default": null
+          }
+        },
+        "uninstall": {
+          "type": "string",
+          "metadata": {
+            "x-default": null
+          }
+        },
+        "forceUninstall": {
+          "type": "string",
+          "metadata": {
+            "x-default": null
+          }
+        },
+        "interpreter": {
+          "ref": "interpreter",
+          "metadata": {
+            "x-default": null
+          }
+        }
+      }
+    },
+    "phase": {
+      "enum": [
+        "prepare",
+        "finish"
+      ],
+      "metadata": {
+        "x-vocabulary": "closed"
+      }
+    },
+    "mark": {
+      "enum": [
+        "manual",
+        "auto"
+      ],
+      "metadata": {
+        "x-vocabulary": "closed"
+      }
+    },
+    "scope": {
+      "enum": [
+        "build",
+        "runtime"
+      ],
+      "metadata": {
+        "x-vocabulary": "closed"
+      }
+    },
+    "requirement": {
+      "metadata": {
+        "description": "One application package this installation requires (PROP-065#app-dependencies): the authored spelling, the installation key it resolved to, its scope and the step that asked for it (absent for an option-level requirement).",
+        "x-wire-order": [
+          "package",
+          "key",
+          "scope",
+          "step"
+        ]
+      },
+      "properties": {
+        "package": {
+          "type": "string"
+        },
+        "key": {
+          "type": "string"
+        },
+        "scope": {
+          "ref": "scope"
+        }
+      },
+      "optionalProperties": {
+        "step": {
+          "type": "string",
+          "metadata": {
+            "x-default": null
+          }
+        }
+      }
+    },
+    "env_op": {
+      "enum": [
+        "set",
+        "unset",
+        "path_prepend"
+      ],
+      "metadata": {
+        "x-vocabulary": "closed"
+      }
+    },
+    "value_kind": {
+      "enum": [
+        "string",
+        "expand_string"
+      ],
+      "metadata": {
+        "x-vocabulary": "closed"
+      }
+    },
+    "env_entry": {
+      "metadata": {
+        "description": "One applied durable environment change of an env step (PROP-065#env-step), removed exactly by uninstall and modify. `previous` / `previousKind` keep a Windows value the change replaced. A `path_prepend` replaces nothing, so it carries no `previous`; its `previousKind` is present exactly when the variable existed before vibe prepended, which is how removal tells a value vibe created (deleted with its last entry) from one that was already there (PROP-059#path-directories).",
+        "x-wire-order": [
+          "step",
+          "op",
+          "name",
+          "value",
+          "previous",
+          "previousKind"
+        ]
+      },
+      "properties": {
+        "step": {
+          "type": "string"
+        },
+        "op": {
+          "ref": "env_op"
+        },
+        "name": {
+          "type": "string"
+        }
+      },
+      "optionalProperties": {
+        "value": {
+          "type": "string",
+          "metadata": {
+            "x-default": null
+          }
+        },
+        "previous": {
+          "type": "string",
+          "metadata": {
+            "x-default": null
+          }
+        },
+        "previousKind": {
+          "ref": "value_kind",
+          "metadata": {
+            "x-default": null
+          }
+        }
+      }
+    },
+    "package": {
+      "metadata": {
+        "x-wire-order": [
+          "group",
+          "name",
+          "version"
+        ]
+      },
+      "properties": {
+        "group": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "version": {
+          "type": "string"
+        }
+      }
+    },
+    "slot": {
+      "metadata": {
+        "x-wire-order": [
+          "default",
+          "off",
+          "pathEnv"
+        ],
+        "description": "One slot's global state (PROP-059#alternatives, #path-directories): the default provider, whether the slot is switched off, and the durable PATH entries vibe applied for the slot's link directories."
+      },
+      "properties": {
+        "default": {
+          "type": "string",
+          "nullable": true
+        }
+      },
+      "optionalProperties": {
+        "off": {
+          "type": "boolean",
+          "metadata": {
+            "x-default": false,
+            "description": "Switched off (PROP-059#slot-off): the slot's link directories hold no link and its public commands have no proxy, so a lookup falls through to the system. Installations, index records and the remembered default are kept."
+          }
+        },
+        "pathEnv": {
+          "elements": {
+            "ref": "env_entry"
+          },
+          "metadata": {
+            "x-empty": "omit",
+            "description": "The durable PATH entries applied for this slot's link directories, recorded so removal takes out exactly them (PROP-059#path-directories)."
+          }
+        }
+      }
+    },
+    "launcher_kind": {
+      "enum": [
+        "gui",
+        "tui",
+        "command"
+      ],
+      "metadata": {
+        "x-vocabulary": "closed"
+      }
+    },
+    "launcher_source": {
+      "enum": [
+        "authored",
+        "desktop-entry"
+      ],
+      "metadata": {
+        "x-vocabulary": "closed"
+      }
+    },
+    "icon_set": {
+      "metadata": {
+        "x-wire-order": [
+          "svg",
+          "png",
+          "ico",
+          "icns",
+          "symbolic",
+          "maskable"
+        ],
+        "description": "An icon set of PROP-059#menu: path templates by slot, rasters keyed by decimal pixel size."
+      },
+      "optionalProperties": {
+        "svg": {
+          "type": "string",
+          "metadata": {
+            "x-default": null
+          }
+        },
+        "png": {
+          "values": {
+            "type": "string"
+          },
+          "metadata": {
+            "x-empty": "omit"
+          }
+        },
+        "ico": {
+          "type": "string",
+          "metadata": {
+            "x-default": null
+          }
+        },
+        "icns": {
+          "type": "string",
+          "metadata": {
+            "x-default": null
+          }
+        },
+        "symbolic": {
+          "type": "string",
+          "metadata": {
+            "x-default": null
+          }
+        },
+        "maskable": {
+          "type": "boolean",
+          "metadata": {
+            "x-default": false
+          }
+        }
+      }
+    },
+    "launcher_action": {
+      "metadata": {
+        "x-wire-order": [
+          "id",
+          "name",
+          "args",
+          "icon",
+          "iconSet"
+        ]
+      },
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        }
+      },
+      "optionalProperties": {
+        "args": {
+          "elements": {
+            "type": "string"
+          },
+          "metadata": {
+            "x-empty": "omit"
+          }
+        },
+        "icon": {
+          "type": "string",
+          "metadata": {
+            "x-default": null
+          }
+        },
+        "iconSet": {
+          "ref": "icon_set",
+          "metadata": {
+            "x-default": null
+          }
+        }
+      }
+    },
+    "launcher": {
+      "metadata": {
+        "x-wire-order": [
+          "id",
+          "name",
+          "description",
+          "executable",
+          "args",
+          "workingDirectory",
+          "icon",
+          "iconSet",
+          "terminal",
+          "default",
+          "kind",
+          "menu",
+          "categories",
+          "keywords",
+          "genericName",
+          "windowClass",
+          "mimeTypes",
+          "names",
+          "descriptions",
+          "actions",
+          "source"
+        ]
+      },
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "executable": {
+          "type": "string"
+        },
+        "args": {
+          "elements": {
+            "type": "string"
+          },
+          "metadata": {
+            "x-empty": "emit"
+          }
+        },
+        "terminal": {
+          "type": "boolean"
+        },
+        "default": {
+          "type": "boolean"
+        }
+      },
+      "optionalProperties": {
+        "description": {
+          "type": "string",
+          "metadata": {
+            "x-default": null
+          }
+        },
+        "workingDirectory": {
+          "type": "string",
+          "metadata": {
+            "x-default": null
+          }
+        },
+        "icon": {
+          "type": "string",
+          "metadata": {
+            "x-default": null,
+            "description": "The short-form icon path; absent when the launcher has an icon set."
+          }
+        },
+        "iconSet": {
+          "ref": "icon_set",
+          "metadata": {
+            "x-default": null
+          }
+        },
+        "kind": {
+          "ref": "launcher_kind",
+          "metadata": {
+            "x-default": null,
+            "description": "Absent in a record written before kinds existed: read as tui when terminal, otherwise gui."
+          }
+        },
+        "menu": {
+          "type": "boolean",
+          "metadata": {
+            "x-default": false
+          }
+        },
+        "categories": {
+          "elements": {
+            "type": "string"
+          },
+          "metadata": {
+            "x-empty": "omit"
+          }
+        },
+        "keywords": {
+          "elements": {
+            "type": "string"
+          },
+          "metadata": {
+            "x-empty": "omit"
+          }
+        },
+        "genericName": {
+          "type": "string",
+          "metadata": {
+            "x-default": null
+          }
+        },
+        "windowClass": {
+          "type": "string",
+          "metadata": {
+            "x-default": null
+          }
+        },
+        "mimeTypes": {
+          "elements": {
+            "type": "string"
+          },
+          "metadata": {
+            "x-empty": "omit"
+          }
+        },
+        "names": {
+          "values": {
+            "type": "string"
+          },
+          "metadata": {
+            "x-empty": "omit"
+          }
+        },
+        "descriptions": {
+          "values": {
+            "type": "string"
+          },
+          "metadata": {
+            "x-empty": "omit"
+          }
+        },
+        "actions": {
+          "elements": {
+            "ref": "launcher_action"
+          },
+          "metadata": {
+            "x-empty": "omit"
+          }
+        },
+        "source": {
+          "ref": "launcher_source",
+          "metadata": {
+            "x-default": null,
+            "description": "authored, or desktop-entry for a launcher derived through launchers_from (PROP-059#desktop-entries); absent means authored."
+          }
+        }
+      }
+    },
+    "public_command": {
+      "metadata": {
+        "x-wire-order": [
+          "name",
+          "launcher"
+        ]
+      },
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "launcher": {
+          "type": "string"
+        }
+      }
+    },
+    "authored_commands": {
+      "metadata": {
+        "x-wire-order": [
+          "uninstall",
+          "forceUninstall",
+          "update",
+          "interpreter"
+        ]
+      },
+      "optionalProperties": {
+        "uninstall": {
+          "type": "string",
+          "metadata": {
+            "x-default": null
+          }
+        },
+        "forceUninstall": {
+          "type": "string",
+          "metadata": {
+            "x-default": null
+          }
+        },
+        "update": {
+          "type": "string",
+          "metadata": {
+            "x-default": null
+          }
+        },
+        "interpreter": {
+          "ref": "interpreter",
+          "metadata": {
+            "x-default": null
+          }
+        }
+      }
+    },
+    "installation": {
+      "metadata": {
+        "x-wire-order": [
+          "slot",
+          "package",
+          "option",
+          "platform",
+          "arch",
+          "method",
+          "library",
+          "directory",
+          "appRoot",
+          "portable",
+          "launchers",
+          "publicCommands",
+          "pathDirs",
+          "template",
+          "migrations",
+          "migrated",
+          "commands",
+          "features",
+          "parameters",
+          "license",
+          "icon",
+          "iconSet",
+          "menuGroup",
+          "categories",
+          "keywords",
+          "steps",
+          "hidden",
+          "mark",
+          "requires",
+          "requiredBy",
+          "env",
+          "held",
+          "replaced",
+          "supersededBy",
+          "configuration",
+          "pending",
+          "secretOrigins",
+          "source_evidence"
+        ]
+      },
+      "properties": {
+        "slot": {
+          "type": "string"
+        },
+        "package": {
+          "ref": "package"
+        },
+        "option": {
+          "type": "string"
+        },
+        "platform": {
+          "type": "string"
+        },
+        "arch": {
+          "type": "string"
+        },
+        "method": {
+          "ref": "method"
+        },
+        "portable": {
+          "type": "boolean"
+        },
+        "launchers": {
+          "elements": {
+            "ref": "launcher"
+          },
+          "metadata": {
+            "x-empty": "emit"
+          }
+        },
+        "publicCommands": {
+          "elements": {
+            "ref": "public_command"
+          },
+          "metadata": {
+            "x-empty": "emit"
+          }
+        },
+        "commands": {
+          "ref": "authored_commands"
+        }
+      },
+      "optionalProperties": {
+        "library": {
+          "type": "string",
+          "metadata": {
+            "x-default": null
+          }
+        },
+        "directory": {
+          "type": "string",
+          "metadata": {
+            "x-default": null
+          }
+        },
+        "appRoot": {
+          "type": "string",
+          "metadata": {
+            "x-default": null
+          }
+        },
+        "features": {
+          "elements": {
+            "type": "string"
+          },
+          "metadata": {
+            "x-empty": "omit"
+          }
+        },
+        "parameters": {
+          "values": {
+            "type": "string"
+          },
+          "metadata": {
+            "x-empty": "omit"
+          }
+        },
+        "license": {
+          "ref": "accepted_license",
+          "metadata": {
+            "x-default": null
+          }
+        },
+        "icon": {
+          "type": "string",
+          "metadata": {
+            "x-default": null
+          }
+        },
+        "iconSet": {
+          "ref": "icon_set",
+          "metadata": {
+            "x-default": null
+          }
+        },
+        "menuGroup": {
+          "type": "string",
+          "metadata": {
+            "x-default": null
+          }
+        },
+        "categories": {
+          "elements": {
+            "type": "string"
+          },
+          "metadata": {
+            "x-empty": "omit"
+          }
+        },
+        "keywords": {
+          "elements": {
+            "type": "string"
+          },
+          "metadata": {
+            "x-empty": "omit"
+          }
+        },
+        "steps": {
+          "elements": {
+            "ref": "step_record"
+          },
+          "metadata": {
+            "x-empty": "omit"
+          }
+        },
+        "hidden": {
+          "type": "boolean",
+          "metadata": {
+            "x-default": false,
+            "description": "Installed without exposure (PROP-059#hidden-installations): no proxy, no alternative, never the default."
+          }
+        },
+        "mark": {
+          "ref": "mark",
+          "metadata": {
+            "x-default": null,
+            "description": "manual when the user asked for it by name, auto when a requirement pulled it in (PROP-065#uninstall-tree); absent means manual."
+          }
+        },
+        "requires": {
+          "elements": {
+            "ref": "requirement"
+          },
+          "metadata": {
+            "x-empty": "omit"
+          }
+        },
+        "requiredBy": {
+          "elements": {
+            "type": "string"
+          },
+          "metadata": {
+            "x-empty": "omit",
+            "description": "The installation keys whose recorded requirements name this one."
+          }
+        },
+        "env": {
+          "elements": {
+            "ref": "env_entry"
+          },
+          "metadata": {
+            "x-empty": "omit"
+          }
+        },
+        "held": {
+          "type": "boolean",
+          "metadata": {
+            "x-default": false,
+            "description": "Skipped by a bulk update and reported as held by outdated (PROP-065#update-and-rollback)."
+          }
+        },
+        "replaced": {
+          "type": "string",
+          "metadata": {
+            "x-default": null,
+            "description": "The installation key this update replaced."
+          }
+        },
+        "supersededBy": {
+          "type": "string",
+          "metadata": {
+            "x-default": null,
+            "description": "A previous installation kept hidden after an update until the next successful update of its slot; names the key that replaced it."
+          }
+        },
+        "configuration": {
+          "ref": "configuration_record",
+          "metadata": {
+            "x-default": null
+          }
+        },
+        "pending": {
+          "ref": "application_pending_target",
+          "metadata": {
+            "x-default": null
+          }
+        },
+        "secretOrigins": {
+          "values": {
+            "ref": "configuration_parameter_origin"
+          },
+          "metadata": {
+            "x-empty": "omit"
+          }
+        },
+        "source_evidence": {
+          "ref": "source_evidence",
+          "metadata": {
+            "x-default": null
+          }
+        },
+        "pathDirs": {
+          "elements": {
+            "type": "string"
+          },
+          "metadata": {
+            "x-empty": "omit",
+            "description": "The payload directories this installation asks to be exposed whole on PATH, in search order (PROP-059#path-directories); each is a directory template contained in the application root."
+          }
+        },
+        "template": {
+          "ref": "installation_template",
+          "metadata": {
+            "x-default": null,
+            "description": "The template the installed version's manifest was rendered from (PROP-075 #TEMPLATE-LOCK-RECORD); absent for an ordinary published package."
+          }
+        },
+        "migrations": {
+          "elements": {
+            "ref": "migration_entry"
+          },
+          "metadata": {
+            "x-empty": "omit",
+            "description": "The [[application.migration]] entries this installation's package declares, retained so an offer and `--only ID` need no package tree (PROP-075 #MIGRATION-DECLARATION)."
+          }
+        },
+        "migrated": {
+          "elements": {
+            "ref": "migration_outcome"
+          },
+          "metadata": {
+            "x-empty": "omit",
+            "description": "The migrations already carried into this installation, newest last (PROP-075 #MIGRATION-FAILURE)."
+          }
+        }
+      }
+    },
+    "installation_template": {
+      "metadata": {
+        "x-wire-order": [
+          "revision",
+          "produced",
+          "renderedSha256",
+          "digestSourceSha256",
+          "sourceUrl",
+          "digestUrl"
+        ]
+      },
+      "properties": {
+        "revision": {
+          "type": "string",
+          "metadata": {
+            "description": "The template document's own revision."
+          }
+        },
+        "produced": {
+          "type": "string",
+          "metadata": {
+            "description": "The version the render produced."
+          }
+        },
+        "renderedSha256": {
+          "type": "string"
+        }
+      },
+      "optionalProperties": {
+        "digestSourceSha256": {
+          "type": "string",
+          "metadata": {
+            "x-default": null
+          }
+        },
+        "sourceUrl": {
+          "type": "string",
+          "metadata": {
+            "x-default": null
+          }
+        },
+        "digestUrl": {
+          "type": "string",
+          "metadata": {
+            "x-default": null
+          }
+        }
+      }
+    },
+    "migration_entry": {
+      "metadata": {
+        "x-wire-order": [
+          "id",
+          "name",
+          "description",
+          "default"
+        ]
+      },
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        }
+      },
+      "optionalProperties": {
+        "description": {
+          "type": "string",
+          "metadata": {
+            "x-default": null
+          }
+        },
+        "default": {
+          "type": "boolean",
+          "metadata": {
+            "x-default": false,
+            "description": "An attended offer preselects this entry."
+          }
+        }
+      }
+    },
+    "migration_result": {
+      "enum": [
+        "done",
+        "export_failed",
+        "import_failed",
+        "pending"
+      ],
+      "metadata": {
+        "x-vocabulary": "closed",
+        "description": "done both sides ran; export_failed the entry stopped before its import and changed nothing; import_failed the new version stays installed and the slot default stays where the user put it; pending the export succeeded and the import has not run yet."
+      }
+    },
+    "migration_outcome": {
+      "metadata": {
+        "x-wire-order": [
+          "id",
+          "from",
+          "to",
+          "result",
+          "step",
+          "work",
+          "log",
+          "at"
+        ]
+      },
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "from": {
+          "type": "string",
+          "metadata": {
+            "description": "The installation key the state was carried from."
+          }
+        },
+        "to": {
+          "type": "string",
+          "metadata": {
+            "description": "The installation key the state was carried to."
+          }
+        },
+        "result": {
+          "ref": "migration_result"
+        }
+      },
+      "optionalProperties": {
+        "step": {
+          "type": "string",
+          "metadata": {
+            "x-default": null
+          }
+        },
+        "work": {
+          "type": "string",
+          "metadata": {
+            "x-default": null
+          }
+        },
+        "log": {
+          "type": "string",
+          "metadata": {
+            "x-default": null
+          }
+        },
+        "at": {
+          "type": "string",
+          "metadata": {
+            "x-default": null
+          }
+        }
+      }
+    }
+  }
+}

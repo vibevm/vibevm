@@ -43,6 +43,9 @@ fn sample() -> Index {
         }],
         path_dirs: Vec::new(),
         version_file: Vec::new(),
+        template: None,
+        migrations: Vec::new(),
+        migrated: Vec::new(),
         commands: AuthoredCommands::default(),
         features: Vec::new(),
         parameters: Default::default(),
@@ -69,6 +72,9 @@ fn sample() -> Index {
         public_commands: Vec::new(),
         path_dirs: Vec::new(),
         version_file: Vec::new(),
+        template: None,
+        migrations: Vec::new(),
+        migrated: Vec::new(),
         commands: AuthoredCommands {
             uninstall: Some("sudo apt-get remove editor".into()),
             force_uninstall: Some("sudo apt-get purge editor".into()),
@@ -272,4 +278,70 @@ fn a_record_without_kinds_reads_kind_from_terminal_and_no_menu() {
     let external = &index.installations["org.example/editor-apt@2.0.0"].launchers[0];
     assert_eq!(external.kind, Some(LauncherKind::Gui));
     assert_eq!(external.source, LauncherSource::Authored);
+}
+
+/// The writer's ladder, which is the whole reason a `/7` generation costs an
+/// existing PATH proxy nothing (`PROP-059#proxy-index-upgrade`, PROP-075
+/// `#MIGRATION-FAILURE`).
+#[test]
+#[specmark::spec(verifies = "spec://org.vibevm.core/vibevm/common/PROP-059#proxy-index-upgrade")]
+fn the_writer_reaches_protocol_seven_only_for_a_fact_seven_carries() {
+    /// Which `/7`-only fact the case marks the record with.
+    enum Fact {
+        Template,
+        Declared,
+        Carried,
+    }
+
+    // The sample retains nothing any generation above the first needs, so
+    // it writes the oldest protocol — which is the ladder's whole point.
+    let base = sample();
+    assert_eq!(base.minimum_reader(), 3);
+    assert_eq!(base.to_wire().protocol, "vibe-user-applications/3");
+
+    for fact in [Fact::Template, Fact::Declared, Fact::Carried] {
+        let mut index = sample();
+        let record = index.installations.values_mut().next().unwrap();
+        match fact {
+            Fact::Template => {
+                record.template = Some(crate::index::InstalledTemplate {
+                    revision: "1.0.0".into(),
+                    produced: "1.2.0".into(),
+                    rendered_sha256: "a".repeat(64),
+                    digest_source_sha256: None,
+                    source_url: None,
+                    digest_url: None,
+                })
+            }
+            Fact::Declared => record.migrations.push(crate::index::MigrationEntryRecord {
+                id: "state".into(),
+                name: "State".into(),
+                description: None,
+                default: true,
+            }),
+            Fact::Carried => record.migrated.push(crate::index::MigrationOutcomeRecord {
+                id: "state".into(),
+                from: "org.example/editor@1.1.0".into(),
+                to: "org.example/editor@1.2.0".into(),
+                result: crate::index::MigrationResult::Done,
+                step: None,
+                work: None,
+                log: None,
+                at: None,
+            }),
+        }
+        assert_eq!(index.minimum_reader(), 7);
+        let document = index.to_wire();
+        assert_eq!(document.protocol, "vibe-user-applications/7");
+        // And it reads back as itself, through the `/7` arm.
+        assert_eq!(Index::from_wire(document.clone()).unwrap(), index);
+        // A `/7`-only fact in a `/6` document is refused rather than dropped.
+        let mut forged = document;
+        forged.protocol = "vibe-user-applications/6".into();
+        assert!(
+            Index::from_wire(forged)
+                .unwrap_err()
+                .contains("application index7")
+        );
+    }
 }

@@ -24,6 +24,21 @@ use crate::installer::{self, ChildIo, FetchWatch, ServedBy, TransferFacts, io, r
 
 use super::template::{self, Vars};
 
+/// What a migration step sees beside the ordinary step inputs
+/// (PROP-075 `#MIGRATION-DECLARATION`): the entry it belongs to, the shared
+/// work directory the export writes into and the import reads from, and
+/// both installations' roots and versions. Its presence is also what makes
+/// a step a *migration* step: no `VIBE_OUT`, no `VIBE_SOURCES`, no
+/// `$out` — a migration produces no payload.
+pub(crate) struct MigrationEnv<'a> {
+    pub id: &'a str,
+    pub work: &'a Path,
+    pub from_app_root: &'a Path,
+    pub from_version: &'a str,
+    pub to_app_root: &'a Path,
+    pub to_version: &'a str,
+}
+
 /// What a step sees: its directories, variables and the operation flags.
 pub(crate) struct StepContext<'a> {
     pub http_client: Option<&'a vibe_package_source::OperationHttpClient>,
@@ -56,6 +71,9 @@ pub(crate) struct StepContext<'a> {
     pub served: &'a RefCell<Vec<ServedBy>>,
     /// What this step's downloads tell the journal (`PROP-068#transfer`).
     pub transfer: &'a TransferFacts,
+    /// Present only for a migration entry's `export` or `import`
+    /// (`PROP-075#MIGRATION-DECLARATION`).
+    pub migration: Option<&'a MigrationEnv<'a>>,
 }
 
 impl StepContext<'_> {
@@ -172,9 +190,13 @@ pub(crate) fn run(cx: &StepContext<'_>, step: &StepDecl) -> Result<AuthoredComma
             } else {
                 command
             };
-            let current_dir = match cx.phase {
-                StepPhase::Prepare => cx.package_root,
-                StepPhase::Finish => cx.app_root,
+            let current_dir = match (cx.migration, cx.phase) {
+                // A migration step runs in the shared work directory, the
+                // one place both sides of an entry agree on
+                // (`PROP-075#MIGRATION-DECLARATION`).
+                (Some(migration), _) => migration.work,
+                (None, StepPhase::Prepare) => cx.package_root,
+                (None, StepPhase::Finish) => cx.app_root,
             };
             let mut child = shell::command(*interpreter, script, current_dir, cx.app_root)?;
             environment(cx, &mut child);
@@ -237,15 +259,37 @@ pub(crate) fn run(cx: &StepContext<'_>, step: &StepDecl) -> Result<AuthoredComma
 /// `VIBE_WORK`, `VIBE_SOURCES`, `VIBE_OUT`, `VIBE_PACKAGE`, `VIBE_PLATFORM`,
 /// `VIBE_ARCH`, `VIBE_FEATURE_<ID>`, `VIBE_PARAM_<ID>`, and `VIBE_APP_ROOT`
 /// for a finish step.
+///
+/// A **migration** step instead sees `VIBE_MIGRATION_ID`,
+/// `VIBE_MIGRATION_WORK`, `VIBE_FROM_APP_ROOT`, `VIBE_FROM_VERSION`,
+/// `VIBE_TO_APP_ROOT` and `VIBE_TO_VERSION` beside `VIBE_WORK`,
+/// `VIBE_PACKAGE`, `VIBE_PLATFORM` and `VIBE_ARCH` — and no `VIBE_OUT` or
+/// `VIBE_SOURCES` at all, because a migration produces no payload
+/// (PROP-075 `#MIGRATION-DECLARATION`).
 fn environment(cx: &StepContext<'_>, command: &mut Command) {
     command
-        .env("VIBE_WORK", cx.work)
-        .env("VIBE_SOURCES", cx.work.join("sources"))
-        .env("VIBE_OUT", cx.work.join("out"))
         .env("VIBE_PACKAGE", cx.package_root)
         .env("VIBE_PLATFORM", cx.platform)
         .env("VIBE_ARCH", cx.arch)
         .envs(cx.env.iter().map(|(name, value)| (name, value)));
+    if let Some(migration) = cx.migration {
+        command
+            .env("VIBE_WORK", migration.work)
+            .env("VIBE_MIGRATION_ID", migration.id)
+            .env("VIBE_MIGRATION_WORK", migration.work)
+            .env("VIBE_FROM_APP_ROOT", migration.from_app_root)
+            .env("VIBE_FROM_VERSION", migration.from_version)
+            .env("VIBE_TO_APP_ROOT", migration.to_app_root)
+            .env("VIBE_TO_VERSION", migration.to_version)
+            .env_remove("VIBE_OUT")
+            .env_remove("VIBE_SOURCES")
+            .env_remove("VIBE_APP_ROOT");
+        return;
+    }
+    command
+        .env("VIBE_WORK", cx.work)
+        .env("VIBE_SOURCES", cx.work.join("sources"))
+        .env("VIBE_OUT", cx.work.join("out"));
     if cx.phase == StepPhase::Finish {
         command.env("VIBE_APP_ROOT", cx.app_root);
     }

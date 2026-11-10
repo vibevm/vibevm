@@ -240,6 +240,7 @@ impl ApplicationDecl {
             ));
         }
         self.validate_version_files(&at)?;
+        self.validate_migrations(&at)?;
         self.validate_menu(&at)
     }
 }

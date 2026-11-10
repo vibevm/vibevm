@@ -94,7 +94,14 @@ fn listing(
     inspect_retention: bool,
 ) -> Result<wire::ApplicationWork, AppError> {
     let home = settings.app_work_dir();
-    let entries = kept(settings, &home, package, inspect_retention)?;
+    let mut entries = kept(settings, &home, package, inspect_retention)?;
+    // A migration's work directory is kept like any other and is listed and
+    // cleaned here (`PROP-075#MIGRATION-FAILURE`). It is keyed by a slot and
+    // a version pair rather than by a package, so narrowing the listing to
+    // one package never selects one.
+    if package.is_none() {
+        entries.extend(migrations(settings));
+    }
     if entries.is_empty()
         && let Some(spelling) = package
     {
@@ -139,6 +146,39 @@ pub fn clean_work(
     let mut listing = listing(settings, package, false)?;
     cohorts::cleanup(lock, settings, &mut listing, package.is_none())?;
     Ok(listing)
+}
+
+/// The kept migration work directories of the home as listing rows
+/// (`PROP-075#MIGRATION-FAILURE`).
+fn migrations(settings: &SettingsRoot) -> Vec<wire::Entry> {
+    crate::migrate::kept_migration_work(settings)
+        .into_iter()
+        .map(|dir| {
+            let summary = crate::migrate::migration_summary(&dir);
+            let (state, step) = match &summary {
+                Some(kept) if kept.failed.is_some() => {
+                    (wire::EntryState::Failed, kept.failed.clone())
+                }
+                Some(kept) if kept.pending => (wire::EntryState::Interrupted, None),
+                Some(_) => (wire::EntryState::Done, None),
+                None => (wire::EntryState::Unknown, None),
+            };
+            let parts = parts(&dir);
+            wire::Entry {
+                operation: None,
+                retained_for: None,
+                key: summary
+                    .map(|kept| kept.key)
+                    .unwrap_or_else(|| format!("migrate:{}", file_name(&dir))),
+                path: dir.display().to_string(),
+                state,
+                step,
+                changed: changed(&dir),
+                bytes: parts.sources + parts.out + parts.inputs + parts.other,
+                parts,
+            }
+        })
+        .collect()
 }
 
 /// Read every work directory of `home` that `package` matches.

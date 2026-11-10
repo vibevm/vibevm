@@ -55,6 +55,7 @@ mod tests {
 }
 
 /// What `$work`, `$sources`, `$out`, `$package`, `$vibe_home`, `$app_root`,
+/// (the last three absent from a migration step's grammar)
 /// `$app_bin`,
 /// `$feature:ID` and `$param:ID` stand for.
 pub(crate) struct Vars<'a> {
@@ -65,6 +66,10 @@ pub(crate) struct Vars<'a> {
     pub app_root: Option<&'a Path>,
     pub features: &'a [String],
     pub params: &'a [ParamValue],
+    /// A migration step's templates: `$out` and `$sources` refuse, because
+    /// a migration produces no payload (PROP-075
+    /// `#MIGRATION-DECLARATION`).
+    pub migration: bool,
 }
 
 impl<'a> Vars<'a> {
@@ -82,6 +87,7 @@ impl<'a> Vars<'a> {
             app_root: None,
             features,
             params,
+            migration: false,
         }
     }
 }
@@ -127,6 +133,12 @@ fn expand_mode(
     let path = |path: PathBuf| Ok(path.to_string_lossy().into_owned());
     expand_step_template(template, &mut |var| match var {
         StepVar::Named("work") => path(vars.work.clone()),
+        StepVar::Named("sources") if vars.migration => {
+            Err("`$sources` is not available to a migration step".into())
+        }
+        StepVar::Named("out") if vars.migration => {
+            Err("`$out` is not available to a migration step, which produces no payload".into())
+        }
         StepVar::Named("sources") => path(vars.work.join("sources")),
         StepVar::Named("out") => path(vars.work.join("out")),
         StepVar::Named("package") => path(vars.package.to_path_buf()),

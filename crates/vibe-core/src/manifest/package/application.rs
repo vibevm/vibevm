@@ -7,6 +7,8 @@ mod environment;
 mod icon_files;
 mod launcher;
 mod launcher_validation;
+mod migration;
+mod migration_validation;
 mod requirement;
 mod site;
 mod step_validation;
@@ -27,6 +29,7 @@ pub use launcher::{
     LauncherKind, LauncherSource, MENU_CATEGORIES, is_launcher_command_name, launcher_command,
     png_dimensions,
 };
+pub use migration::{MigrationDecl, MigrationSide};
 pub use requirement::{
     RequirementDecl, RequirementScope, RequirementTable, application_requirements,
 };
@@ -388,6 +391,12 @@ pub struct ApplicationDecl {
     /// whole (`PROP-065#icon`).
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub icon: Option<IconDecl>,
+    /// `[[application.migration]]` — the entries that carry user state
+    /// between two installed versions of this application (PROP-075
+    /// `#MIGRATION-DECLARATION`). Absent means the slot has nothing to
+    /// carry and `vibe app migrate` has nothing to offer.
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub migration: Vec<MigrationDecl>,
     /// `[[application.version_file]]` — the per-project version files this
     /// package understands, from the closed format set of PROP-075
     /// `#VERSION-FILE-FORMATS`. Absent means the slot has no version file

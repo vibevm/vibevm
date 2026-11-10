@@ -583,6 +583,8 @@ mod tests_mechanism_grammar;
 #[cfg(test)]
 mod tests_menu;
 #[cfg(test)]
+mod tests_migration;
+#[cfg(test)]
 mod tests_requires;
 #[cfg(test)]
 mod tests_run_commands;

@@ -179,6 +179,7 @@ impl<'a> Run<'a> {
             app_root,
             features: &self.plan.features,
             params: &self.plan.parameters,
+            migration: false,
         }
     }
 
@@ -526,6 +527,7 @@ impl<'a> Run<'a> {
                 app_root: (step.phase == StepPhase::Finish).then_some(app_root),
                 features: &self.plan.features,
                 params: &self.plan.parameters,
+                migration: false,
             },
             platform: &self.plan.platform,
             arch: &self.plan.arch,
@@ -540,6 +542,7 @@ impl<'a> Run<'a> {
             package_key: &package_key,
             served: &served,
             transfer: &transfer,
+            migration: None,
         };
         let result = kinds::run(&cx, step);
         // The candidates that served this step's inputs are part of the

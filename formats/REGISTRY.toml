@@ -411,14 +411,29 @@ foreign_parsers = "many"
 corpus = "none"
 sunset = "none"
 
+# `vibe app migrate`'s machine answer, and the record kept inside the shared
+# work directory (PROP-075 `#MIGRATION-FAILURE`): one entry per selected
+# migration entry with its outcome and, for a failure, what was not carried.
+# One record serves both homes because the report *is* the record — the kept
+# work directory's `migration.json` is the report of the last run over it,
+# which is what `--resume` reads to re-run only the import.
+[format.cli-application-migration]
+epoch = 1
+schema = "schemas/application_migration.jtd.json"
+recoverable = true
+foreign_parsers = "none"
+unknown_fields = "deny"
+corpus = "none"
+sunset = "none"
+
 # ── User-local application durable/exchange records, PROP-059 ───────────────
 [format.application-index]
-epoch = 5
-schema = "schemas/application/e5/index.jtd.json"
+epoch = 6
+schema = "schemas/application/e6/index.jtd.json"
 recoverable = false
 foreign_parsers = "none"
 unknown_fields = "deny"
-corpus = "formats/corpora/application/e5"
+corpus = "formats/corpora/application/e6"
 sunset = "none"
 
 # The version files the home's installed applications declare
@@ -1852,6 +1867,15 @@ recoverable = false
 foreign_parsers = "many"
 unknown_fields = "deny"
 corpus = "formats/corpora/migration-application-journal/e1"
+sunset = "none"
+
+[format.application-index-v6]
+epoch = 5
+schema = "schemas/application/e5/index.jtd.json"
+recoverable = false
+foreign_parsers = "none"
+unknown_fields = "deny"
+corpus = "formats/corpora/application/e5"
 sunset = "none"
 
 [format.application-index-v5]

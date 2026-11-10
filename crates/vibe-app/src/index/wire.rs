@@ -1,18 +1,19 @@
 //! Conversion between the index domain model and the generated
-//! `vibe-user-applications/6` wire form. `requiredBy` is written from the
+//! `vibe-user-applications/7` wire form. `requiredBy` is written from the
 //! forward requirement edges at every save and never read back, so it
 //! cannot drift from them (`PROP-065#uninstall-tree`).
 
 use std::path::PathBuf;
 
 use vibe_core::manifest::{PublicCommandDecl, RequirementScope, ShellInterpreter, StepPhase};
-use vibe_wire::generated::application::e5::index as wire;
+use vibe_wire::generated::application::e6::index as wire;
 
 use super::launcher_wire::{icon_from_wire, icon_to_wire, launcher_from_wire, launcher_to_wire};
 use super::{
     AcceptedLicense, ApplicationMenu, AuthoredCommands, EnvEntry, EnvOp, Index, Installation,
-    Lifecycle, Location, Mark, Method, PackageCoordinate, Requirement, StepOutcome, StepRecord,
-    ValueKind,
+    InstalledTemplate, Lifecycle, Location, Mark, Method, MigrationEntryRecord,
+    MigrationOutcomeRecord, MigrationResult, PackageCoordinate, Requirement, StepOutcome,
+    StepRecord, ValueKind,
 };
 
 pub(super) fn installation_to_wire(
@@ -79,6 +80,41 @@ fn installation_with_reverse(value: &Installation, required_by: Vec<String>) -> 
             })
             .collect(),
         path_dirs: value.path_dirs.clone(),
+        template: value
+            .template
+            .as_ref()
+            .map(|template| wire::InstallationTemplate {
+                revision: template.revision.clone(),
+                produced: template.produced.clone(),
+                rendered_sha256: template.rendered_sha256.clone(),
+                digest_source_sha256: template.digest_source_sha256.clone(),
+                source_url: template.source_url.clone(),
+                digest_url: template.digest_url.clone(),
+            }),
+        migrations: value
+            .migrations
+            .iter()
+            .map(|entry| wire::MigrationEntry {
+                id: entry.id.clone(),
+                name: entry.name.clone(),
+                description: entry.description.clone(),
+                default: entry.default,
+            })
+            .collect(),
+        migrated: value
+            .migrated
+            .iter()
+            .map(|outcome| wire::MigrationOutcome {
+                id: outcome.id.clone(),
+                from: outcome.from.clone(),
+                to: outcome.to.clone(),
+                result: result_to_wire(outcome.result),
+                step: outcome.step.clone(),
+                work: outcome.work.clone(),
+                log: outcome.log.clone(),
+                at: outcome.at.clone(),
+            })
+            .collect(),
         commands: wire::AuthoredCommands {
             uninstall: value.commands.uninstall.clone(),
             force_uninstall: value.commands.force_uninstall.clone(),
@@ -133,6 +169,24 @@ fn installation_with_reverse(value: &Installation, required_by: Vec<String>) -> 
         held: value.lifecycle.held,
         replaced: value.lifecycle.replaced.clone(),
         superseded_by: value.lifecycle.superseded_by.clone(),
+    }
+}
+
+fn result_to_wire(result: MigrationResult) -> wire::MigrationResult {
+    match result {
+        MigrationResult::Done => wire::MigrationResult::Done,
+        MigrationResult::ExportFailed => wire::MigrationResult::ExportFailed,
+        MigrationResult::ImportFailed => wire::MigrationResult::ImportFailed,
+        MigrationResult::Pending => wire::MigrationResult::Pending,
+    }
+}
+
+fn result_from_wire(result: wire::MigrationResult) -> MigrationResult {
+    match result {
+        wire::MigrationResult::Done => MigrationResult::Done,
+        wire::MigrationResult::ExportFailed => MigrationResult::ExportFailed,
+        wire::MigrationResult::ImportFailed => MigrationResult::ImportFailed,
+        wire::MigrationResult::Pending => MigrationResult::Pending,
     }
 }
 
@@ -276,6 +330,38 @@ pub(super) fn installation_from_wire(record: wire::Installation) -> Result<Insta
         // declared version files, and `Index::load` fills them in
         // (`PROP-075#VERSION-FILE-FORMATS`).
         version_file: Vec::new(),
+        template: record.template.map(|template| InstalledTemplate {
+            revision: template.revision,
+            produced: template.produced,
+            rendered_sha256: template.rendered_sha256,
+            digest_source_sha256: template.digest_source_sha256,
+            source_url: template.source_url,
+            digest_url: template.digest_url,
+        }),
+        migrations: record
+            .migrations
+            .into_iter()
+            .map(|entry| MigrationEntryRecord {
+                id: entry.id,
+                name: entry.name,
+                description: entry.description,
+                default: entry.default,
+            })
+            .collect(),
+        migrated: record
+            .migrated
+            .into_iter()
+            .map(|outcome| MigrationOutcomeRecord {
+                id: outcome.id,
+                from: outcome.from,
+                to: outcome.to,
+                result: result_from_wire(outcome.result),
+                step: outcome.step,
+                work: outcome.work,
+                log: outcome.log,
+                at: outcome.at,
+            })
+            .collect(),
         commands: AuthoredCommands {
             uninstall: record.commands.uninstall,
             force_uninstall: record.commands.force_uninstall,

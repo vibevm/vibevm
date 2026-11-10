@@ -242,6 +242,9 @@ pub(crate) fn update_all(
             &source_operation,
         )?;
         render(ctx, &outcome)?;
+        // A bulk update gives slots new versions too, and offers the same
+        // way: one line, never a migration (PROP-075 `#MIGRATION-FAILURE`).
+        super::migrate::offer(ctx, &settings, &outcome.slot, &outcome.key);
         updated += 1;
     }
     if !ctx.is_json() {

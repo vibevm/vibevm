@@ -232,7 +232,17 @@ Status: **planned**. New command, new format.
 
 ## AV-FMT-015 — `[[application.migration]]` (Phase 6)
 
-Status: **planned**.
+Status: **delivered 2026-11-10** (phase P6). As implemented it matches the entry below, with five
+clarifications recorded in `spec://org.vibevm.core/vibevm/common/PROP-075#P6-AS-BUILT`: each side is
+**literally** a `StepDecl`, so it carries its own `id` and `title` (the runner uses them in the
+record, the progress row and the log name) rather than inheriting a synthesised pair; a migration
+step that declares `requires`, `when`, `unless` or `phase` is refused naming the field, because the
+runner has no requirement resolution, no feature or parameter selection and no prepare/finish split
+to honour them with; a migration step's current directory is the shared work directory on both
+sides, the one place the two agree on; `$sources` refuses beside `$out`, for the same reason
+`VIBE_SOURCES` is not set; and a step's `needs` rows are evaluated per side, so an export that
+declares a `command:` this host lacks refuses before its child starts and the entry has changed
+nothing.
 
 - `[format.manifest]`, epoch **1 → 1**. Optional rows; absent means byte-identical.
 - Rows carry `id`, `name`, optional `description`, `default`, and the two tables `export` and `import`. **Each is exactly one step declaration of the existing grammar, restricted to the kinds `recipe` and `shell`**, `kind` required; `env`, `archive`, `sources`, `native`, `copy` and `agent` refuse, naming the kind. No new `StepKind` variant is added.
@@ -241,7 +251,18 @@ Status: **planned**.
 
 ## AV-FMT-016 — `vibe app migrate` and `vibe-app-migration/1` (Phase 6)
 
-Status: **planned**. New command, new format.
+Status: **delivered 2026-11-10** (phase P6). New command, new format. Four as-built differences from
+the entry below, each recorded in `PROP-075#P6-AS-BUILT`: the command also takes **`--registry
+DIR`**, because a migration step is the package's own script and both versions' package trees must
+be reachable — every other package-reading `app` subcommand has the same flag; the **same** record
+`vibe-app-migration/1` is both the machine answer and the document kept inside the work directory
+(`migration.json`), which is what `--resume` reads, so there is one format and not two; the refusal
+code is **`migration_consent_required`**, not `consent_required`, which `AgentError::ConsentRequired`
+(PROP-064) already holds and which the inventory test
+`every_code_is_unique_snake_case_and_explained` keeps globally unique — the class (a refusal, exit
+2) and the printed command are exactly as specified; and the outcomes land in the
+`vibe-user-applications/7` inventory this phase delivers (AV-FMT-017) beside the **declared** entries
+the same record now retains, so an offer and `--only ID` need no package tree.
 
 - New record `[format.cli-application-migration]`, epoch **1**, `schema = "schemas/application_migration.jtd.json"`, protocol tag `vibe-app-migration/1`.
 - `vibe app migrate SLOT FROM TO [--only ID]… [--all] [--yes] [--resume] [--json]`. Entries run independently in declaration order. An attended terminal offers them with the `default` ones preselected; an unattended run without `--yes` refuses `consent_required` and prints the exact command. `install -g` / `update -g` that gives a slot a new version, and `vibe app use` that moves its default, make the same offer and never migrate on their own.
@@ -249,21 +270,30 @@ Status: **planned**. New command, new format.
 - The report names, per entry, the outcome and — for a failure — **what was not carried**: the entry's name, the failing step, its log path, the work directory, and the exact `--only ID --resume` that retries it. `--resume` reuses the kept work directory and re-runs only the import when the export already succeeded.
 - Exit 0 when every selected entry succeeded, 1 when any failed. Outcomes are recorded with the **new** installation.
 
-## AV-FMT-017 — application index protocol `vibe-user-applications/7` (Phase 2, visible from Phase 6)
+## AV-FMT-017 — application index protocol `vibe-user-applications/7` (Phase 2, delivered by Phase 6)
 
-Status: **not delivered by P2; moved to the phase that first needs it.** The
-record below is unchanged and still correct. The reason for the move is the
-entry's own second half: `Installation` gains *both* the template table **and
-the recorded migration outcomes of AV-FMT-016*, and the second of those is P6's.
-A `/7` generation written now would have to be written again when P6 lands, and
-the writer's "lowest protocol that carries what the home retains" ladder means a
-home with no template installation and no migration record keeps writing `/6`
-either way — so nothing a user sees is waiting on it. P2 therefore leaves the
-inventory at `vibe-user-applications/6` and the proxy admission list untouched,
-and the template provenance of a globally installed application is carried where
-P2 does bind it: the project lock (AV-FMT-002). Spike S5 already measured the
-whole cost of the move (two `match` arms plus the new `e6` wire module), so the
-phase that takes it pays no discovery.
+Status: **delivered 2026-11-10** (phase P6, as the deferral below said it would be). The record
+below is unchanged except for one widening: the `Installation` record gains a **third** optional
+member beside the template table and the recorded outcomes — the **declared** `[[application.migration]]`
+entries (`id`, `name`, `description`, `default`). Retaining the declarations is what lets the offer
+after `install -g` / `update -g` / `app use` and a later `--only ID` work without resolving a package
+tree, which the offer after `app use` cannot do at all; it rides in the same move rather than forcing
+a second one. The generation is `schemas/application/e6/index.jtd.json` with corpus
+`formats/corpora/application/e6`, the frozen `e5` reader is registered as
+`[format.application-index-v6]`, and `vibe-app-proxy` admits `/7` in its closed set and answers
+`--supports-index vibe-user-applications/7`. The writer's ladder is unchanged and now has four
+rungs: a home that retains no template provenance, no declared migration entry and no outcome keeps
+writing `/6`, so every existing PATH proxy goes on reading it.
+
+*Historical note (P2's deferral, kept for the record).* The reason for the move was the entry's own
+second half: `Installation` gains *both* the template table **and** the recorded migration outcomes
+of AV-FMT-016, and the second of those is P6's. A `/7` generation written in P2 would have to be
+written again when P6 landed, and the writer's ladder means a home with no template installation and
+no migration record keeps writing `/6` either way — so nothing a user saw was waiting on it. P2
+therefore left the inventory at `vibe-user-applications/6` and the proxy admission list untouched,
+and carried the template provenance of a globally installed application where P2 does bind it: the
+project lock (AV-FMT-002). Spike S5 measured the whole cost of the move (two `match` arms plus the
+new `e6` wire module), and the phase that took it paid no discovery.
 
 - `[format.application-index]`, epoch **5 → 6**, new schema generation `schemas/application/e6/index.jtd.json` beside `e1`–`e5`, corpus `formats/corpora/application/e6`, `recoverable = false`, `foreign_parsers = "none"`, `unknown_fields = "deny"`. In-document protocol tag `vibe-user-applications/7`.
 - `Installation` gains the optional `template` table of AV-FMT-002 (template revision, produced version, rendered-manifest hash, digest-document hash) and the recorded migration outcomes of AV-FMT-016.
@@ -272,11 +302,15 @@ phase that takes it pays no discovery.
 
 ## AV-FMT-018 — `vibe app describe`: the template provenance (Phase 2)
 
-Status: **not delivered by P2; follows AV-FMT-017.** The optional
-`template { revision, produced, rendered_sha256 }` member is read off the
-*installation record*, which is the `/7` generation AV-FMT-017 defers, so
-describing provenance the home does not retain would print nothing. Deferred
-with AV-FMT-017 and for the same reason; the record below is unchanged.
+Status: **still not delivered; no longer blocked.** The `/7` record AV-FMT-017 defines now exists and
+`install -g` writes it: the template provenance of a globally installed application is retained, read
+off this invocation's template layer at publication time (`vibe_registry::templates::active()`'s note
+for the exact resolved version, so `ResolvedPackage` still grows no field — P2's as-built amendment
+(3) stands). What is *not* delivered is the **reader**: `vibe app describe PACKAGE` describes a
+package resolved from a registry rather than an installation, so printing the member means teaching
+describe to consult the home's inventory for the described coordinate, which is a describe-shaped
+change and not a migration-shaped one. P6 delivers the record and leaves the projection to the phase
+that owns `describe`'s document; recorded in `PROP-075#P6-AS-BUILT`. The record below is unchanged.
 
 - `[format.cli-application-describe]`, `schemas/application_describe.jtd.json`, epoch **1 → 1**. One optional member; existing documents byte-identical.
 - Optional `template { revision, produced, rendered_sha256 }` on the described package, so a graphical tool or an agent can see that the manifest it is reading was rendered and from what, plus the installer-option rows dropped by `template_optional` with the version and the missing file.
@@ -320,6 +354,15 @@ Status: **done** 2026-11-10. New format, not foreseen by `PLAN.md`.
   version file, which is what keeps a prompt hook from failing. Losing it costs a reinstall of
   the application, which is why it is `recoverable` but not rebuildable from the home alone.
 - Recorded in PROP-075 `#P5A-AS-BUILT` (1).
+- **P6 decision (2026-11-10): the sidecar stays.** The question `AV-FMT-017`'s move reopens is
+  whether `/7` should now absorb this document, since the index is moving anyway. It should not, for
+  two reasons that outlive the move. First, the two have different recoverability: this record is
+  `recoverable = true` derived state that a reinstall rebuilds, while the index is
+  `recoverable = false`; folding it in would turn the loss of a version-file row into an index
+  corruption. Second, it would cost the writer a rung of its ladder — a home that declares a version
+  file but retains no template provenance and no migration record writes `/6` today and would be
+  forced to `/7`, which needs the `vibe-app-proxy` admission PROP-059 `#proxy-index-upgrade`
+  requires, for no fact the home does not already hold. Recorded in `PROP-075#P6-AS-BUILT`.
 
 ## AV-FMT-102 — `cache/version-files.json`, the resolution cache (Phase 5a)
 
@@ -380,3 +423,24 @@ Status: **delivered 2026-11-10** (phase P2). No wire format.
 - **The hook's budget is kept exactly.** The membership answer is read from the template cache alone — `template.toml` plus `versions.json`, two small file reads — so `vibe app env --project` still makes no network call, no registry call and no index-server read.
 - A package that declares no such channel, or whose cache holds nothing, stays `unresolved_channel`; a declared channel with no installed member is `not_installed` with the exact `vibe install -g` command. Neither is an error, because a prompt hook must never fail a `cd`.
 - `PROP-075#VERSION-FILE-FORMATS` and `#VERSION-EXEC-SPELLING`, which P5a left `impl/work` "until channel lowering lands in P2", are `impl/done` with this record.
+
+## AV-FMT-103 — `vibe app work` lists and cleans a migration's work directory (Phase 6)
+
+Status: **delivered 2026-11-10** (phase P6). No schema change; one new genre of row in an existing
+document.
+
+- `[format.cli-application-work]`, epoch **1 → 1**: `vibe app work` already answers rows of
+  `{key, path, state, step, changed, bytes, parts}`, and a migration's kept work directory is now
+  one of them, which is what AV-FMT-016's "listed and cleaned by `vibe app work` like any other"
+  means in the document.
+- The `key` of such a row is `migrate:<slot>:<from>-to-<to>` — a migration belongs to a **pair**,
+  not to one package, so `key` is deliberately not an installation key. `state` is read from the
+  kept `vibe-app-migration/1` record: `done` when every selected entry carried, `failed` naming the
+  failing step, `interrupted` when an export succeeded and its import has not run, `unknown` when
+  the directory holds no readable record.
+- Because the rows are keyed by a slot and not a package, `vibe app work PACKAGE` never selects one
+  and `vibe app work --clean PACKAGE` never removes one. `vibe app work --clean --all` does, which
+  is the home-wide clean a user asks for when they want the evidence gone.
+- `<home>/cache/app-migrate/` is the one new directory: a migration work directory is **never**
+  replaced by a later run, because it is the evidence of what was and was not carried, so each run
+  of a pair takes its own timestamp and `--resume` takes the newest.

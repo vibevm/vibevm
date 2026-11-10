@@ -453,7 +453,12 @@ pub fn install(
         report_parked(ctx, vibe_app::install(&operation, &resolved, &request))
     });
     let outcome = display.report(ctx, outcome)?;
-    render(ctx, &outcome)
+    render(ctx, &outcome)?;
+    // The slot may have gained a version whose package declares state to
+    // carry; the offer is one line and never migrates (PROP-075
+    // `#MIGRATION-FAILURE`).
+    super::migrate::offer(ctx, &settings, &outcome.slot, &outcome.key);
+    Ok(())
 }
 
 pub fn update(
@@ -489,7 +494,9 @@ pub fn update(
         &resolved,
         &source_operation,
     )?;
-    render(ctx, &outcome)
+    render(ctx, &outcome)?;
+    super::migrate::offer(ctx, &settings, &outcome.slot, &outcome.key);
+    Ok(())
 }
 
 /// One application update with the flags of `args` (PROP-065

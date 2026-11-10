@@ -46,6 +46,9 @@ fn home(versions: &[&str], default: Option<&str>, off: bool) -> Index {
                 version_file: vec![VersionFileDecl::Plain {
                     names: vec![".nvmrc".to_owned()],
                 }],
+                template: None,
+                migrations: Vec::new(),
+                migrated: Vec::new(),
                 commands: Default::default(),
                 features: Vec::new(),
                 parameters: BTreeMap::new(),

@@ -6,6 +6,7 @@ use serde::Deserialize;
 use std::collections::BTreeMap;
 use vibe_wire::generated::application::{
     e2::index as legacy, e3::index as current, e4::index as evidence, e5::index as paths,
+    e6::index as migrations,
 };
 
 pub(super) struct ApplicationIndex {
@@ -57,8 +58,11 @@ pub(super) fn read(bytes: &[u8]) -> Result<ApplicationIndex, String> {
         "vibe-user-applications/6" => serde_json::from_slice::<paths::ApplicationIndex>(bytes)
             .map(Into::into)
             .map_err(|error| error.to_string()),
+        "vibe-user-applications/7" => serde_json::from_slice::<migrations::ApplicationIndex>(bytes)
+            .map(Into::into)
+            .map_err(|error| error.to_string()),
         _ => Err(format!(
-            "application index protocol `{}` is unsupported; expected `vibe-user-applications/3` … `vibe-user-applications/6`",
+            "application index protocol `{}` is unsupported; expected `vibe-user-applications/3` … `vibe-user-applications/7`",
             header.protocol
         )),
     }
@@ -127,9 +131,11 @@ routing_view!(legacy);
 routing_view!(current);
 routing_view!(evidence);
 routing_view!(paths);
+routing_view!(migrations);
 
-/// Whether a wire slot is switched off; only the protocol6 shape carries
-/// the switch, and the frozen readers answer `false` by construction.
+/// Whether a wire slot is switched off; the protocol6 shape is the first
+/// that carries the switch, and the frozen readers below it answer `false`
+/// by construction.
 trait SlotOff {
     fn is_off(&self) -> bool {
         false
@@ -139,6 +145,11 @@ impl SlotOff for legacy::Slot {}
 impl SlotOff for current::Slot {}
 impl SlotOff for evidence::Slot {}
 impl SlotOff for paths::Slot {
+    fn is_off(&self) -> bool {
+        self.off
+    }
+}
+impl SlotOff for migrations::Slot {
     fn is_off(&self) -> bool {
         self.off
     }

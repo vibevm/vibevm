@@ -545,6 +545,19 @@ pub enum AppCommand {
     /// List the providers of a slot, its default and the commands each provides.
     Alternatives { slot: String },
 
+    /// Carry an application's user state from one installed version of a
+    /// slot to another (PROP-075 `#MIGRATION-FAILURE`): the old version
+    /// runs each declared entry's `export` step, the new one its `import`
+    /// step, over a shared work directory that is always kept.
+    ///
+    /// Nothing is ever rolled back. A failed export stops its own entry
+    /// before the import runs and changes nothing; a failed import leaves
+    /// the new version installed and the slot's default exactly where you
+    /// put it, and the report names what was not carried and the command
+    /// that retries it. An unattended run that names neither `--only` nor
+    /// `--all` refuses rather than migrating unasked.
+    Migrate(AppMigrateArgs),
+
     /// Print the lines that switch the current shell to a selection
     /// (PROP-075 `#ACTIVATION-ENV-OUTPUT`): `PATH` with the chosen
     /// installations' payload directories in front, and `VIBE_APP_USE`.
@@ -581,4 +594,7 @@ pub enum AppCommand {
 
 #[path = "app_activation.rs"]
 mod activation;
+#[path = "app_migration.rs"]
+mod migration;
 pub use activation::{AppEnvArgs, AppExecArgs, HookArgs};
+pub use migration::AppMigrateArgs;

@@ -153,6 +153,11 @@ codes!(STEP, StepError [] {
     ResumeMismatch => "resume_mismatch", Refusal, "the kept work directory belongs to another choice";
     UnknownStep => "unknown_step", Refusal, "--from-step names no step";
     WorkMissing => "work_missing", Refusal, "no kept work directory matches the named package";
+    MigrationUnresolvable => "migration_unresolvable", Refusal, "a migrated version's package tree cannot be resolved";
+    UnknownMigration => "unknown_migration", Refusal, "--only names no declared migration entry";
+    MigrationRecord => "migration_record_unwritable", Failure, "the migration record cannot be written";
+    MigrationFailed => "migration_failed", Failure, "a migration entry's export or import failed; the work directory is kept";
+    MigrationConsent => "migration_consent_required", Refusal, "an unattended migration was not consented to with --yes";
 });
 
 codes!(AGENT, AgentError [] {

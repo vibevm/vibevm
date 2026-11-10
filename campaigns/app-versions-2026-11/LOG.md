@@ -460,3 +460,114 @@ Facts a later session would otherwise re-derive:
   `CARGO_PROFILE_DEV_DEBUG=0` beside the mandated `CARGO_BUILD_JOBS=6`, which
   kept the whole target directory at 4.9 GB and changes nothing a gate
   observes.
+
+## 2026-11-10 — phase P6 implemented
+
+`AV-FMT-015` and `AV-FMT-016` delivered, plus **`AV-FMT-017`** — the
+`vibe-user-applications/7` inventory P2 deferred — and the one record the phase
+turned out to need, `AV-FMT-103` (`vibe app work` lists and cleans a migration's
+kept work directory). Facts moved to `impl/done` in PROP-075: `#MIGRATION`,
+`#MIGRATION-DECLARATION`, `#MIGRATION-FAILURE`, plus the new `#P6-AS-BUILT`.
+The spec XML was validated by the PROP-045 projector, as P1's entry records it
+must be. The question P2 left open is answered: **the declared version files
+stay in their sidecar** and `/7` does not absorb them.
+
+Facts a later session would otherwise re-derive:
+
+- **The inventory retains no package tree, so a migration must re-resolve
+  both versions.** A migration step is the package's own script
+  (`#MIGRATION-DECLARATION`: `VIBE_PACKAGE` is "the package tree of the version
+  that owns the step"), and nothing in `Installation` points at one — that is
+  deliberate, which is why `AuthoredCommands` exists for uninstall. So
+  `vibe app migrate` resolves `FROM` and `TO` through the ordinary registry
+  chain exactly as `vibe app modify` does, and therefore takes `--registry DIR`
+  like every other package-reading `app` subcommand. The spelling in `PLAN.md`
+  §4 is amended to include it.
+- **The offer after `vibe app use` is why the index retains the *declared*
+  entries.** `install -g` and `update -g` have the new version's
+  `ResolvedPackage` in hand and could read its declaration directly; `app use`
+  resolves nothing at all. Retaining `{id, name, description, default}` on the
+  installation makes all three offers one function over the inventory, and makes
+  `--only ID` checkable without a registry. It rides in the `/7` move rather
+  than forcing a second one.
+- **The template provenance needed no new field on `ResolvedPackage`.** P2's
+  amendment (3) refused to widen that type, and it stays refused: the
+  publication path reads `vibe_registry::templates::active()` and asks the
+  installed layer for its `noted(group, name, version)` — the same note the lock
+  path reads — so a global install records what rendered it without the resolver
+  carrying the fact. This is the one piece of AV-FMT-018 that P6 delivers; the
+  *reader* (`vibe app describe`) is left to the phase that owns that document,
+  because describe describes a **package resolved from a registry**, not an
+  installation.
+- **Two sub-claims of `#MIGRATION-DECLARATION` are honoured and one is
+  substituted.** "Both run through the ordinary engine — the step runner, the
+  interpreters, `needs`, the display panel of `#display`, the cancellation of
+  `#cancellation` and the run records of `#runs`" is literally true of the step
+  runner, the interpreters, `needs` (evaluated per side, so an export whose
+  `command:` is missing refuses *before* its child starts and the entry has
+  changed nothing) and cancellation (the caller's interrupt reaches the child
+  through `ChildIo`). It is **not** literally true of two: a migration uses the
+  flat display rather than the step panel, because two steps per entry do not
+  make a panel; and it writes no `app-runs` record, because a `RunRecord` is
+  keyed to an installation and one of four `Command` verbs. The evidence lives
+  in the always-kept work directory instead — per-side logs plus the
+  `vibe-app-migration/1` record — which is strictly stronger than `#runs`,
+  whose records are prunable by `vibe app runs --prune`.
+- **`AppError` has a size budget, enforced by clippy.** Adding a seven-field
+  `MigrationFailed` variant to `StepError` pushed `AppError` past
+  `clippy::result_large_err` and turned ~200 unrelated functions across the
+  crate into errors. The payload is now a boxed `MigrationFailure` struct with
+  `#[error(transparent)]`; the next variant with more than about four `String`s
+  will meet the same wall, and boxing is the answer, not an allow.
+- **`consent_required` was taken.** `#MIGRATION-FAILURE` names the refusal
+  `consent_required`; `AgentError::ConsentRequired` (PROP-064) already holds that
+  code, and `codes.rs`'s own
+  `every_code_is_unique_snake_case_and_explained` makes the codes of this
+  subsystem globally unique by construction. The migration refusal is
+  `migration_consent_required`, same `Refusal` class, same exit 2, same printed
+  command.
+- **The shared work directory's top level belongs to the scripts.** The first
+  version put an entry's logs at `<work>/<entry id>/`, and the CLI fixture
+  caught the collision on the first run: an entry called `second` could not write
+  a file called `second`. The logs are `<work>/logs/<entry id>/export.log` and
+  `import.log`, and the fixture now *asserts* that an entry may name a file after
+  itself.
+- **Each side's PATH is one `Exposure` through `StepPaths::child_env`**, exactly
+  as the plan predicted — and the fixture proves it from the outside rather than
+  by reading the code: each side calls the slot's own command and records which
+  marker answered (`who=st-1.0.0` in the export, `who=st-2.0.0` in the import).
+  The same fixture asserts `VIBE_OUT` and `VIBE_SOURCES` are **unset**, which is
+  `#MIGRATION-DECLARATION`'s "a migration produces no payload" from the child's
+  own point of view.
+- **What `--resume` can and cannot know, exactly.** The record is written
+  after each entry, so an entry whose *import* failed is recorded `import_failed`
+  and a later `--resume` re-runs only its import — the specified case. A run
+  **killed** between a successful export and its import leaves no record of that
+  export, so a resume re-runs it; that is safe, because an export is the
+  package's own script writing into the shared directory, and adding a second
+  mechanism (a sentinel file beside the logs) for an unspecified case was
+  deliberately not done. A resume also now *carries forward* the kept record of
+  an entry it was not asked to run, so `--only A --resume` followed by
+  `--only B --resume` does not lose A's state, and the run's verdict is computed
+  over the entries **this** run selected — otherwise a successful resume of one
+  entry would exit 1 because another failed an hour earlier.
+- **The report *is* the resumable record.** One document,
+  `vibe-app-migration/1`, is both the `--json` answer and `<work>/migration.json`,
+  rewritten after every side. That is what `--resume` reads, so there is one
+  registered format instead of two, and an interrupted run leaves a true record
+  behind. A corrupt one is no record and costs one re-run, never an error.
+- **A `/7` home is still routable, measured.** `vibe-app-proxy` admits `/7` in
+  its closed set and answers `--supports-index vibe-user-applications/7`;
+  `proxies::upgrade::probe` already loops `3..=reader`, so the admission and the
+  refresh of existing readers needed no new mechanism. The `e5` reader is
+  registered frozen as `[format.application-index-v6]` and
+  `source_evidence_corpora.rs` now asserts it **refuses** the `e6` corpus.
+- **Spike S5's estimate held.** The `/7` move cost the two `match` arms it
+  predicted plus the `e6` wire module — and three mechanical sweeps it did not:
+  `Installation`'s three new fields through every test fixture that builds one
+  by hand (ten files), and the two `e5`-typed helpers outside `index/wire.rs`
+  (`index/launcher_wire.rs`, `operations/pending/identity.rs`). The predecessor
+  digest is unchanged for a `/6`-shaped record, because the new members are
+  skipped when empty.
+- **Disk, on this machine:** `/fast` had 30 GB free throughout; every cargo
+  command ran with the mandated `CARGO_BUILD_JOBS=8` and `--test-threads=8`.

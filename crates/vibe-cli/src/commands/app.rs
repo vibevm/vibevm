@@ -24,6 +24,7 @@ pub(crate) mod interrupt;
 mod launch;
 mod lifecycle;
 mod menu;
+pub(crate) mod migrate;
 mod plan_text;
 mod portable;
 pub(crate) mod processes;
@@ -423,6 +424,9 @@ pub fn run(
         AppCommand::Alternatives { slot } => {
             alternatives::alternatives(ctx, app_home.settings(), &slot)?;
             Ok(None)
+        }
+        AppCommand::Migrate(args) => {
+            migrate::run(ctx, app_home.settings(), args, embedded_root, offline)
         }
         AppCommand::Env(args) => {
             env::run(ctx, args)?;

@@ -85,6 +85,10 @@ pub(super) fn use_default(
             change.slot, change.default
         ),
     });
+    // Moving the default is the third thing that may leave state behind in
+    // another version; it offers and never migrates (PROP-075
+    // `#MIGRATION-FAILURE`).
+    super::migrate::offer(ctx, settings, &change.slot, &change.default);
     Ok(())
 }
 

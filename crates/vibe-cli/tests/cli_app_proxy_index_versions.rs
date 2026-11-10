@@ -234,6 +234,7 @@ fn original_image_reports_exact_reader_capabilities_without_changing_probe() {
         "vibe-user-applications/4",
         "vibe-user-applications/5",
         "vibe-user-applications/6",
+        "vibe-user-applications/7",
     ] {
         let out = Command::new(image)
             .args(["--supports-index", protocol])

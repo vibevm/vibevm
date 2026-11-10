@@ -2,9 +2,9 @@
 
 **Status:** planned 2026-11-10; written against `main` at `7d495d137`. Campaign
 node `APP-VERSIONS`: starts after `CORP-ENV` closes, before `SYS-PROMPT`.
-**Phase 0 spikes S1, S2, S3 and S5 ran 2026-11-10 and phases P1, P5a, P2 and P3
-are implemented** — the answers and what they changed are in `LOG.md`, and the
-facts those phases deliver are `impl/done` in PROP-075. S4 and S6 are still
+**Phase 0 spikes S1, S2, S3 and S5 ran 2026-11-10 and phases P1, P5a, P2, P3
+and P6 are implemented** — the answers and what they changed are in `LOG.md`,
+and the facts those phases deliver are `impl/done` in PROP-075. S4 and S6 are still
 open; S4 belongs with P5a and S6 with P7.
 Phase 0 (spikes) and Phases 5a / 6 may run while `CORP-ENV` finishes, because
 their files are disjoint from it.
@@ -413,6 +413,9 @@ deliberately **not** in it, each with its reason in `FORMAT-CHANGES.md`:
 (`vibe app describe`'s provenance, which reads the record `/7` carries), because
 the `Installation` record `/7` defines must also carry P6's migration outcomes
 and the writer's protocol ladder means nothing a user sees waits on them.
+**P6 delivered both halves of that move on 2026-11-10** — the `/7` inventory
+with its `e6` generation and the `vibe-app-proxy` admission — so AV-FMT-017 is
+delivered and AV-FMT-018 is unblocked but still unwritten.
 Template **rendering** from a per-package git registry is the one part of
 `#TEMPLATE-DISCOVERY` left to the phase that first needs it; the index member
 that carries the fact (`AV-FMT-003`) and the refusal (`template_index_required`)
@@ -645,32 +648,67 @@ vibe app versions node --installed --json   # on this machine, zero network
 
 **Parallel.** Needs P2. Independent of P4 and P6.
 
-### P6 — migration — **M**
+### P6 — migration — **M** — *delivered 2026-11-10*
 
 **Goal.** `vibe app migrate` carries user state between two installed
 versions, is offered and never run without consent, and reports exactly what
 was not carried.
 
-**Files.** `crates/vibe-core/src/manifest/package/application.rs` +
-`…/application/validation.rs` (`[[application.migration]]`, kinds restricted to
-`recipe`/`shell`); new `crates/vibe-app/src/migrate.rs` (the runner over the
-existing step engine, the shared work directory, the per-entry record);
-`crates/vibe-app/src/steps/kinds.rs` (the migration environment variables; no
-new step kind); `crates/vibe-app/src/steps/env.rs` (`StepPaths::child_env`
-reused for the old/new PATH); `crates/vibe-app/src/index.rs` (the recorded
-outcomes); `crates/vibe-cli/src/commands/app/migrate.rs` (new) and the four
-touch points; `crates/vibe-cli/src/commands/app/global.rs` (the offer after
-`install -g` / `update -g`) and `…/app/alternatives.rs` (the offer after
-`app use`); `schemas/application_migration.jtd.json` (new),
-`formats/REGISTRY.toml`.
+**As built.** The ten amendments are PROP-075 `#P6-AS-BUILT`. The phase also
+delivered the `vibe-user-applications/7` inventory P2 deferred (AV-FMT-017,
+schema generation `e6`, the frozen `e5` reader registered as
+`[format.application-index-v6]`, and the `vibe-app-proxy` admission of `/7`
+PROP-059 `#proxy-index-upgrade` requires), because the record it defines is
+where the outcomes go. One format the plan did not foresee: `AV-FMT-103`
+(`vibe app work` lists and cleans a migration's kept work directory). The
+answered question P2 left for this phase: **the declared version files stay in
+their sidecar** (`AV-FMT-101`) and `/7` does not absorb them — the sidecar is
+`recoverable` derived state and folding it in would force every home that
+declares a version file onto `/7`.
+
+**Files, as delivered.**
+`crates/vibe-core/src/manifest/package/application.rs` +
+`…/application/validation.rs` + new `…/application/migration.rs` and
+`…/application/migration_validation.rs` (`[[application.migration]]`, kinds
+restricted to `recipe`/`shell`), `…/manifest/mod.rs`,
+`…/manifest/document.rs` + new `…/document/tests_migration.rs`;
+new `crates/vibe-app/src/migrate.rs` with `migrate/record.rs` (the work
+directory and the one document that is both the report and the resumable
+record), `migrate/run.rs` (the two sides over the existing step engine) and
+`migrate/tests.rs`;
+`crates/vibe-app/src/steps/kinds.rs` (`MigrationEnv` and the migration
+environment; no new step kind), `…/steps/template.rs` (`$out` and `$sources`
+refuse), `…/steps/mod.rs`, `…/steps/run.rs`, `…/steps/work.rs` (AV-FMT-103),
+`…/settings.rs` (`app_migrate_dir`), `…/error.rs` + `…/codes.rs` (five codes),
+`…/lib.rs`;
+the `/7` move: `crates/vibe-app/src/index.rs`, new `…/index/migration.rs`
+(the three retained records), new `…/index/upgrade_six.rs`, `…/index/wire.rs`,
+`…/index/launcher_wire.rs`, `…/operations/apply.rs` (the template provenance
+and the declared entries at publication), `…/operations/pending/identity.rs`,
+`schemas/application/e6/index.jtd.json` (new),
+`formats/corpora/application/e6/index.json` (new), `formats/REGISTRY.toml`,
+`crates/vibe-cli/src/bin/vibe-app-proxy.rs` + `…/vibe-app-proxy/index.rs`,
+`crates/vibe-wire/tests/source_evidence_corpora.rs`,
+`crates/vibe-cli/tests/cli_app_proxy_index_versions.rs`;
+the CLI: new `crates/vibe-cli/src/cli/app_migration.rs`, `…/cli/app.rs`,
+new `crates/vibe-cli/src/commands/app/migrate.rs`, `…/commands/app.rs`,
+`…/command_progress.rs` (the four touch points),
+`…/commands/app/global.rs` (the offer after `install -g` / `update -g`) and
+`…/commands/app/alternatives.rs` (the offer after `app use`);
+`schemas/application_migration.jtd.json` (new).
 
 **Commands.** `vibe app migrate SLOT FROM TO [--only ID]… [--all] [--yes]
-[--resume] [--json]`.
+[--resume] [--registry DIR] [--json]` — `--registry` as built, because a
+migration step is the package's own script and the inventory retains no
+package tree.
 
 **Formats.** `AV-FMT-015` (migration declaration),
-`AV-FMT-016` (`vibe-app-migration/1`); the recorded outcomes land in the
-`AV-FMT-017` inventory already delivered by P2, which is where a home first
-needs to retain them.
+`AV-FMT-016` (`vibe-app-migration/1`), `AV-FMT-017` (the
+`vibe-user-applications/7` inventory, deferred by P2 and delivered here
+because the record it defines is where the outcomes go), and the unforeseen
+`AV-FMT-103`. `AV-FMT-018` is no longer blocked and still not delivered: the
+record it reads exists and `install -g` writes it, but projecting it into
+`vibe app describe`'s document belongs to the phase that owns that document.
 
 **Tests.** Unit: the declaration validates; a forbidden kind refuses naming it;
 `FROM == TO` is admitted (the `latest-npm` shape). CLI with two installed
@@ -690,11 +728,14 @@ cargo test -p vibe-cli --test cli_app_migrate --offline --locked
 cargo test -p vibe-cli --test cli_app_migrate failed_import_keeps_the_new_version -- --exact
 ```
 
-**Risks.** The export's PATH must be the old version's and the import's the
-new one's; `StepPaths::child_env` already does exactly that for a step
-requirement, so the risk is wiring, not design. The one real hazard is a
-package-authored script that deletes user data — which is why the work
-directory is always kept and nothing is ever rolled back.
+**Risks, as they turned out.** Both closed. The PATH was wiring, exactly as
+predicted: `StepPaths::child_env` over one `Exposure` per installation, and
+the fixture proves it by having each side call the slot's own command and
+record which marker answered (`who=st-1.0.0` in the export, `who=st-2.0.0` in
+the import). The hazard of a script that destroys user state is unchanged and
+is why nothing is rolled back and the work directory is never replaced — a
+second run of the same pair takes a new timestamp rather than overwriting the
+evidence of the first.
 
 **Parallel.** With P1, P4, P5a.
 

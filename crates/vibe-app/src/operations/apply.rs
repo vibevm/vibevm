@@ -15,7 +15,8 @@ use vibe_core::manifest::{InstallerMethod, InstallerOptionDecl, LauncherDecl};
 
 use crate::error::AppError;
 use crate::index::{
-    AcceptedLicense, ApplicationMenu, AuthoredCommands, Installation, Lifecycle, Location, Method,
+    AcceptedLicense, ApplicationMenu, AuthoredCommands, Installation, InstalledTemplate, Lifecycle,
+    Location, Method, MigrationEntryRecord, PackageCoordinate,
 };
 use crate::installer;
 use crate::resolve::{ResolvedPackage, strip_verbatim};
@@ -211,6 +212,30 @@ pub(super) fn apply(
             public_commands: option.public_commands.clone(),
             path_dirs: option.path_dirs.clone(),
             version_file: selected.resolved.application.version_file.clone(),
+            // What this invocation's template layer noted about the exact
+            // version it resolved (`PROP-075#TEMPLATE-LOCK-RECORD`): the
+            // installed record is where a globally installed application's
+            // provenance lives, since a global install writes no lock.
+            template: installed_template(&selected.resolved.package),
+            migrations: selected
+                .resolved
+                .application
+                .migration
+                .iter()
+                .map(|entry| MigrationEntryRecord {
+                    id: entry.id.clone(),
+                    name: entry.name.clone(),
+                    description: entry.description.clone(),
+                    default: entry.default,
+                })
+                .collect(),
+            // The outcomes belong to the key, not to one run: a modify of
+            // the same version keeps what has already been carried into it
+            // (`PROP-075#MIGRATION-FAILURE`).
+            migrated: selected
+                .prior
+                .map(|prior| prior.migrated.clone())
+                .unwrap_or_default(),
             commands,
             features: plan.features.clone(),
             parameters: plan
@@ -246,6 +271,26 @@ pub(super) fn apply(
         retired,
         finish_failure,
         work: kept_work,
+    })
+}
+
+/// The template provenance of one resolved version, read off this
+/// invocation's installed template layer. `None` whenever the layer noted
+/// nothing — an ordinary published package, or no layer at all — which is
+/// what keeps a home without a rendered installation at
+/// `vibe-user-applications/6` (`PROP-059#proxy-index-upgrade`).
+fn installed_template(package: &PackageCoordinate) -> Option<InstalledTemplate> {
+    let layer = vibe_registry::templates::active()?;
+    let group = vibe_core::Group::parse(&package.group).ok()?;
+    let version = semver::Version::parse(&package.version).ok()?;
+    let noted = layer.noted(&group, &package.name, &version).template?;
+    Some(InstalledTemplate {
+        revision: noted.revision.to_string(),
+        produced: package.version.clone(),
+        rendered_sha256: noted.rendered_sha256,
+        digest_source_sha256: Some(noted.digest_source_sha256),
+        source_url: noted.source_url,
+        digest_url: noted.digest_url,
     })
 }
 

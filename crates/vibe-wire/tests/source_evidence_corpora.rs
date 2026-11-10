@@ -19,7 +19,8 @@ fn roundtrip<T: DeserializeOwned + Serialize>(path: &str) {
 }
 #[test]
 fn new_source_records_roundtrip_and_frozen_readers_refuse() {
-    use vibe_wire::generated::application::{e1, e2, e3, e4, e5};
+    use vibe_wire::generated::application::{e1, e2, e3, e4, e5, e6};
+    roundtrip::<e6::index::ApplicationIndex>("application/e6/index.json");
     roundtrip::<e5::index::ApplicationIndex>("application/e5/index.json");
     roundtrip::<e4::index::ApplicationIndex>("application/e4/index.json");
     roundtrip::<e3::steps::StepsFile>("application/e3/steps.json");
@@ -33,6 +34,13 @@ fn new_source_records_roundtrip_and_frozen_readers_refuse() {
     // own world (PROP-059 `#path-directories`, `#slot-off`).
     assert!(
         serde_json::from_slice::<e4::index::ApplicationIndex>(&bytes("application/e5/index.json"))
+            .is_err()
+    );
+    // The template provenance, the declared migration entries and their
+    // recorded outcomes are index6's own world (PROP-075
+    // `#TEMPLATE-LOCK-RECORD`, `#MIGRATION-DECLARATION`, `#MIGRATION-FAILURE`).
+    assert!(
+        serde_json::from_slice::<e5::index::ApplicationIndex>(&bytes("application/e6/index.json"))
             .is_err()
     );
     assert!(

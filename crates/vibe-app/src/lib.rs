@@ -43,6 +43,7 @@ mod icons;
 mod index;
 mod installer;
 mod launch;
+mod migrate;
 mod operations;
 pub use operations::pending::command as resume_command;
 mod paths;
@@ -113,6 +114,10 @@ pub use launch::{
     CommandSearch, LaunchRequest, ResolvedLauncher, TemplateVars, app_root, exit_code,
     expand_template, icon_choice, launch_arguments, listing as launcher_listing,
     listing_all as launcher_listing_all, resolve as resolve_launcher, run as run_launcher,
+};
+pub use migrate::{
+    MIGRATION_PROTOCOL, MigrationPlan, MigrationRequest, kept_migration_work, migrate,
+    migration_offer, migration_plan, slot_migration_work,
 };
 pub use operations::{
     Change, ChangeVerb, Command, InstallRequest, ModifyRequest, OperationContext, Outcome,

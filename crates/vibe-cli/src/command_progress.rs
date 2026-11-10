@@ -193,6 +193,9 @@ pub(crate) fn policy(command: &Command, terminal_attached: bool) -> CommandPolic
             | crate::cli::AppCommand::Unpin { .. }
             | crate::cli::AppCommand::Launcher { .. } => FastMetadata,
             crate::cli::AppCommand::Use { .. } => FiniteFallback("Command app use"),
+            // The two sides of each entry are ordinary steps with their own
+            // logs (PROP-075 `#MIGRATION-DECLARATION`).
+            crate::cli::AppCommand::Migrate(_) => FiniteFallback("Command app migrate"),
             crate::cli::AppCommand::Modify { .. } => FiniteFallback("Command app modify"),
             crate::cli::AppCommand::Resume { .. } => FiniteFallback("Command app resume"),
             crate::cli::AppCommand::Expose { .. }
