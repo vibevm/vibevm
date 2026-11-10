@@ -1506,7 +1506,7 @@ conversation's recorded snapshot, user-local instruction files outside vibe's
 accounting, and a 310 KB lane that compaction cannot drop the way it drops tool
 results.
 
-### P9 — the live check, Claude Code only — **S** — *authorised, scoped; prepared 2026-11-10, not run*
+### P9 — the live check, Claude Code only — **S** — **DONE 2026-11-10**
 
 *(New, 2026-11-10. `HARNESS-DELIVERY.md` §10, its decision D13, as the owner
 narrowed it the same day: **authorised for Claude Code only**, to run **before
@@ -1589,16 +1589,52 @@ subagent test means `launch` must not be Claude Code's default at all — the
 cost it would carry is a quiet worker holding the prefix in context, against
 `PROP-076#SYS-WORKER-EXCLUSION`.
 
+**Run 2026-11-10 by the central session. Rows C1–C7 and N1 passed or are
+recorded; C8 did not run.** The record is
+`campaigns/sys-prompt-2026-11/live/RESULTS.md`, the narrative is `LOG.md`, and
+`HARNESS-DELIVERY.md` §10 carries the verdicts row by row. In short: a
+312,345-byte lane reaches the slot whole with no lane file read by a tool; the
+cache read is measured within a stated scope; a subagent inherits nothing;
+classic mode reads `STATIC` first and then INDEX order, once each; a repeated
+slot flag keeps the last; a resumed session silently keeps the lane it started
+with. **No delivery default changed** — the three rows whose failure would have
+demoted `launch` all passed.
+
+**One deviation from the plan, and it is the whole of it.** Every session ran in
+**print mode** (`vibe agent claude2 -p "<prompt>" --output-format json`), not in
+the interactive terminal the runbook assumed: an agent cannot drive that UI.
+Print mode passes the same `--append-system-prompt-file` slot, so no delivery
+row is weakened by it, and the usage numbers are each run's own JSON `usage`
+record rather than `read-usage.sh`'s.
+
+**One defect found, and fixed in `6323e8a36`:** `vibe agent <launcher>` refused
+in a project that had not opted in. It now passes no slot flag, prints one note
+and starts the harness unchanged; `vibe prompt flags` keeps its refusal; and a
+resume prints that the session keeps the lane it started with.
+
+**What stays open after P9.**
+
+1. **C8, Windows: not run** — no Windows host in the session, so the Claude
+   Code delivery measurement is a Linux one.
+2. **The interactive terminal UI: not measured**, for the reason above.
+3. **TTL, cost, latency, hit rate and any saving: still unmeasured.** One cache
+   read was observed, on one account, one model and one CLI version inside one
+   hour; `#SYS-OWNER-QUESTIONS` Q5 is untouched.
+4. **Every other harness stays unauthorised**, so the Codex, Qwen Code, Gemini
+   CLI, OpenCode, pi and dsh rows remain research and their delivery default
+   stays `read`. Codex's placement is proved offline only, which is the weaker
+   claim.
+
 ### Dependency order, as a graph
 
 ```
 P0 spikes (S1..S6)
   |
   +--> P1 --> P2 --> P3 --> P4 --> P5 --> P6 --> P7 --> P8 --> P9
-       done   done   done   done   done   done   done   done   (authorised,
-                      |                                         Claude Code
-                      +--> P2b (done)                           only; prepared,
-                                                                not run)
+       done   done   done   done   done   done   done   done   done
+                      |                                        (Claude Code
+                      +--> P2b (done)                           only; C8 not
+                                                                 run)
 ```
 
 The chain is deliberately linear: every phase consumes the previous one's
@@ -1609,7 +1645,8 @@ except P2b, which is kept separate because it rewrites 19 tracked files and
 wants its own review. S1–S6 are independent of each other and of
 `APP-VERSIONS`. P9 is outside the chain: it spends money, and it is
 authorised narrowly — Claude Code only, before the release is published, run by
-the central session once `vibe agent claude` exists (HARNESS-DELIVERY D13).
+the central session once `vibe agent claude` exists (HARNESS-DELIVERY D13). It
+ran on 2026-11-10 under exactly that scope.
 
 ## 5. Predictions (falsifiable)
 
@@ -1811,4 +1848,46 @@ See `LOG.md`.
 
 ## 10. Report
 
-Empty until close.
+**Closed 2026-11-10.** Every phase P1–P8 plus P2b is done, and P9 — the live
+check, Claude Code only, as D13 authorised it — ran on the same day. The
+feature ships: two generated artifacts (`SYSTEM.md` with its sidecar, and
+`AGENT-LANE.md`), one managed router block shared by the `read` and `launch`
+tiers, seven `vibe prompt` verbs plus `vibe agent` with named launchers, and
+`docs/system-prompt/` as the guide. Design record: `PROP-076`; the delivery
+design is `HARNESS-DELIVERY.md`; the phase-by-phase narrative is `LOG.md`.
+
+**What the live run added that no offline test could.** A 312,345-byte lane
+reaches Claude Code's slot whole, with no lane file read by a tool; a repeat
+session is a cache read, and the same lane bytes at another path with a
+different git state are too, which is the evidence for
+`--exclude-dynamic-system-prompt-sections`; a subagent inherits none of it; a
+nested project is not pulled in; classic mode reads `STATIC` first and then
+INDEX order, once each; a repeated slot flag keeps the last; and a resumed
+session silently keeps the lane it started with. **No delivery default
+changed.** One defect was found and fixed — `vibe agent` refused in a project
+that had not opted in (`6323e8a36`).
+
+**What this campaign deliberately does not claim**, each stated where it
+belongs rather than only here:
+
+1. **No cache saving.** One cache read was observed, scoped to one account,
+   one model and one CLI version inside one hour. TTL, cost, latency and hit
+   rate are unmeasured; `#SYS-OWNER-QUESTIONS` Q5 is untouched.
+2. **Linux only, interactive untested.** Row C8 (Windows) did not run, and
+   every live session ran in print mode because an agent cannot drive the
+   interactive terminal UI.
+3. **One harness measured live.** Codex's placement is proved offline at the
+   real size; Qwen Code, Gemini CLI, OpenCode, pi and dsh are research. Their
+   delivery default stays `read`.
+4. **Cross-operating-system determinism is argued, not measured** — two
+   directories on Linux plus a composer proved unable to observe a path, a
+   clock, an environment or the host OS, with `.gitattributes` carrying the
+   rest.
+5. **`import` is refused in version 1**, with its four blockers named; the
+   `@spec://` tokens the lane carries are reported, never rewritten.
+6. **`SP-FMT-008` is deferred** — the `CheckId` that would carry the freshness
+   verdict into the ordinary `vibe check` report. Every fact it would report is
+   reported by `vibe prompt check` today.
+7. **A text separator is not a security boundary.** Moving repository text
+   into an instruction role is a real elevation of authority, acknowledged
+   rather than assumed away.

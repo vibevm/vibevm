@@ -11,7 +11,11 @@ test suites; the whole scenario is
 which runs in a network-isolated sandbox with every `vibe` call under
 `strace -e trace=connect`. Claims that were **not** measured are marked
 **“not measured here”** with the reason. No number below comes from a
-provider's bill.
+provider's bill. One exception, and it says so wherever it appears: the Claude
+Code delivery and cache rows were measured against a live model on 2026-11-10
+(Claude Code 2.1.322, Linux, print mode) — the record is
+[`campaigns/sys-prompt-2026-11/live/RESULTS.md`](../../campaigns/sys-prompt-2026-11/live/RESULTS.md),
+and the scope of each number travels with it.
 
 Design record: `spec://org.vibevm.core/vibevm/common/PROP-076#root`.
 
@@ -230,6 +234,22 @@ environment, then the kind's default; when it is still unknown the
 diagnostics say so rather than guessing a path and reading someone else's
 logs.
 
+**A project that has not opted in still launches.** With no
+`SYSTEM-TEMPLATE.md` there is no lane, so `vibe agent <launcher>` passes no
+slot flag at all: it prints one note saying the project has not opted in and
+that the harness starts unchanged, then starts it with your own arguments —
+and the agent boots the classic way, reading the files its instruction file's
+block names. A slot flag of your own is then no conflict, because there is
+nothing of ours beside it. `vibe prompt flags` in such a project is still a
+refusal: there is nothing to print.
+
+**A resumed Claude Code session keeps the lane it started with.** Claude Code
+resends the system prompt a conversation began with, so boot files edited since
+do not arrive, and the router cannot notice — the block states the expected id
+of `STATIC.*` alone, and a changed `INDEX.md` file leaves that id untouched.
+`vibe agent` says so when your arguments resume a session (`-c`, `--continue`,
+`-r`, `--resume`). **A new session is the remedy**, and the only one.
+
 ## 5. Delivering it to a coding agent
 
 Three tiers, one mode per harness, set by
@@ -264,6 +284,18 @@ slot therefore has no `launch` tier.
 The non-Claude, non-Codex rows are **research, not measured here**: those
 harnesses are not installed on the machine this was written on, so their
 delivery stays `read`.
+
+**The Claude Code row is measured.** On 2026-11-10, against Claude Code
+**2.1.322** on Linux in print mode: a 2,570-byte lane, a 202,349-byte one and
+this repository's own **312,345-byte** lane each reached the slot whole — the
+agent quoted the last `vibe:lane-end` line byte-equal, reported every canary
+including the one on the lane's last line, and **read no lane file with a
+tool**. No size limit was found up to 312,345 bytes. Classic mode was measured
+in the same run: with the template removed, the agent read `STATIC.*` first and
+then the `INDEX.md` files in order, **once each**. A subagent of such a session
+sees none of it. Two things that are **not** measured: Windows, and the
+interactive terminal UI — an agent cannot drive it, so every session was
+`-p … --output-format json`, which passes the same flag.
 
 ### Codex and `doc_max_bytes`
 
@@ -355,10 +387,18 @@ Each of these is a stated boundary, not a to-do.
 - **No cache is promised.** A text artifact is not a portable KV cache. Equal
   `SYSTEM.md` bytes do not prove identical actual API prefixes, because
   provider wrapper text, role arrangement, tools and request framing may
-  change independently of your file. No hit, no TTL, no latency and no saving
-  is claimed anywhere: **not measured here**, deliberately, because measuring
-  it spends real money on named models and is a separately authorised
-  exercise.
+  change independently of your file. One cache **read** was observed, and it
+  is an observation and not a promise: on 2026-11-10 a repeat Claude Code
+  session on a 202,349-byte lane reported zero cache creation and an
+  85,262-token read, the same bytes at another checkout path with a different
+  `git status` gave 75,803, and this repository's own lane gave 183,981 — which
+  is the evidence that `--exclude-dynamic-system-prompt-sections` keeps
+  per-machine text out of the cached prefix. **The scope is the claim:** one
+  account, one model, one Claude Code version, every run inside one hour, on
+  Linux, counters read from each run's own usage record. **No TTL, no latency,
+  no hit rate and no saving** is claimed anywhere: those are **not measured
+  here**, deliberately, because measuring them spends real money on named
+  models and is a separately authorised exercise.
 - **Cache diagnostics are read, never computed.** `vibe prompt capture
   --usage <file>` reads a provider response you already have; there is no
   constructor that accepts a local estimate. A counter the provider did not
@@ -368,9 +408,13 @@ Each of these is a stated boundary, not a to-do.
   connects late or changes its tools invalidates the lane's entry. A cache
   entry does not transfer between models, so a mid-session switch pays the
   lane again. A resumed Claude Code conversation keeps the system prompt it
-  recorded until compaction. Claude Code's file flag is hidden from
-  `--help` and Codex's profile option is labelled `CONFIG_PROFILE_V2`; either
-  may change — and the fallback is safe by construction, because when the
+  recorded until compaction — **measured**, on 2026-11-10: a resumed session
+  came back with the lane it started with after a boot file had changed, and
+  the router could not notice, because the block carries the expected id of
+  `STATIC.*` alone. `vibe agent` prints this when your arguments resume a
+  session, and a new session is the remedy. Claude Code's file flag is hidden
+  from `--help` and Codex's profile option is labelled `CONFIG_PROFILE_V2`;
+  either may change — and the fallback is safe by construction, because when the
   slot stops working the markers are absent and the router reads. A ~310 KB
   lane in the slot cannot be dropped by compaction the way tool results can.
   User-local additions (`~/.codex/AGENTS.md`, a harness's own global

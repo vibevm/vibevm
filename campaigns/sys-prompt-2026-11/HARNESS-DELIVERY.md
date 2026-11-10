@@ -3,8 +3,10 @@
 Status: **adopted**, 2026-11-10 — D1–D12 as decided and D13 authorised, narrowly
 (§11). Companion to `vibevm/vibespecs/common/PROP-076-system-prompt-prefix.xml`
 and `PLAN.md` in this directory; where the two disagree, PROP-076 governs and
-this document is corrected. Nothing here was verified against a live model:
-every check below either ran offline on this machine or is marked as research.
+this document is corrected. Every check below either ran offline on this
+machine, is marked as research, or — for the Claude Code rows C1–C7 and N1 of
+§10 only — was measured against a live model on 2026-11-10 by the run D13
+authorised, whose record is `live/RESULTS.md` and whose scope §10 states.
 
 **What is implemented, as of phase P3 (2026-11-10).** The marker grammar of §2
 and the agent lane of §1.1 are composed by
@@ -306,16 +308,22 @@ means per-machine or per-day content.
 - **One file only:** the binary combines the file's text with an inline
   `--append-system-prompt` rather than choosing one, and rejects that pair in a
   Remote Control session **[B]**. A repeated `--append-system-prompt-file`
-  presumably keeps the last **[R]**. `vibe agent` passes exactly one and
-  refuses if the user's arguments contain another, or `--system-prompt[-file]`.
-- **Size limit:** none known for the file flag **[I]**; verify with the real
-  310 KB.
+  keeps the **last**, dropping the first silently **[V: §10 row C6, 2026-11-10,
+  2.1.322]**. `vibe agent` passes exactly one and refuses if the user's
+  arguments contain another, or `--system-prompt[-file]`.
+- **Size limit:** none found up to **312,345 bytes**, this repository's own
+  lane, which arrived whole with its tail marker quoted byte-equal **[V: §10
+  row C1, 2026-11-10, 2.1.322, Linux]**. Windows is unmeasured (row C8).
 - **Import:** `@path` in `CLAUDE.md`, recursive, depth-limited **[R]**. Whether
   the 68 `@spec://…` tokens inside an imported `STATIC.xml` are attempted as
   imports is unknown.
-- **Verify live:** position of the appended text; cross-session cache hit with
-  the exclude flag; that subagents do not inherit it; behaviour of a repeated
-  flag; 310 KB acceptance; resume after a lane change.
+- **Verified live, 2026-11-10 (§10, Claude Code 2.1.322, Linux, print mode):**
+  312 KB accepted whole; a cross-session cache read with the exclude flag, at
+  one path and at another with a different git state; subagents do not inherit
+  the slot; a repeated flag keeps the last; a resumed session keeps the lane it
+  started with. **Still unverified:** the interactive terminal UI; Windows
+  (row C8); and the position of the appended text, which rests on the help text
+  above, since no answer from inside a session can establish it.
 
 ### Codex — launch and read available; no import
 
@@ -633,6 +641,19 @@ default stays `read`. The one Codex row that needs no authorisation is **X0**,
 which is offline and spends nothing. Nothing earlier in the campaign depends on
 any of this, because every phase's own acceptance is offline.
 
+**Run 2026-11-10 by the central session, Claude Code only.** Every verdict
+below is `campaigns/sys-prompt-2026-11/live/RESULTS.md`'s, which is the record
+and governs where this table is shorter. Environment: Claude Code **2.1.322**,
+model `claude-opus-5-5`, Linux, the launcher `claude2` declared in a scratch
+`agents.toml` with `config_dir = "~/.claude2"` so the owner's own settings were
+untouched. **One deviation from the runbook:** every session ran in **print
+mode** — `vibe agent claude2 -p "<prompt>" --output-format json` — because an
+agent cannot drive the interactive terminal UI. Print mode passes the same
+`--append-system-prompt-file` slot, and the usage numbers are each run's own
+JSON `usage` record rather than `read-usage.sh`'s; **an interactive run was not
+measured.** Rows C1–C7 and N1 are therefore **[V]**; C8 did not run; the Codex,
+other-harness and import rows were never authorised and stay as they were.
+
 **Sample project.** A small vibe project whose lane is padded to the real size,
 with unique canary words: one in the last line of `STATIC.xml`, one in each
 INDEX file, one in the entrypoint outside the block. The agent lane's last
@@ -653,25 +674,27 @@ block and its own canaries.
 
 | # | Step | Pass |
 |---|---|---|
-| C1 | `vibe agent claude`, one prompt: "quote the last vibe:lane-end line; list files you read" | Tail canary quoted; no read of any lane file in the transcript |
-| C2 | Same again, new session, within the cache lifetime | `cache_read_input_tokens` ≥ the lane's token count |
-| C3 | Same from a second checkout path with a different git status | Still a cache read of the lane — proves the exclude flag keeps per-machine text out of the prefix. Fail means the flag is not doing what the help says |
-| C4 | Plain `claude`, same prompt | Lane files read exactly once each; all canaries reported |
-| C5 | `vibe agent claude`, ask it to start one subagent that reports whether it sees a lane marker | Subagent sees none |
-| C6 | Pass the file flag twice with different files | Record which one arrives; fixes the "last wins" claim |
-| C7 | Change `STATIC.xml`, reinstall, resume the earlier session | Record whether the old lane is resent and whether the agent notices the hash mismatch |
-| C8 | Windows: C1 with the full-size file | Same as C1 |
+| C1 | `vibe agent claude`, one prompt: "quote the last vibe:lane-end line; list files you read" | Tail canary quoted; no read of any lane file in the transcript. **PASSED 2026-11-10 [V]**, three legs — a 2,570-byte lane, a 202,349-byte padded one and this repository's own 312,345-byte lane. In each the last `vibe:lane-end` line came back byte-equal, all four lane canaries were present including the tail, `CANARY-TEMPLATE-SLATE` was absent, and **no lane file was read with a tool**: no size limit up to 312,345 bytes, and router rule 1 held |
+| C2 | Same again, new session, within the cache lifetime | `cache_read_input_tokens` ≥ the lane's token count. **PASSED 2026-11-10 [V]** at size: the repeat session on the 202,349-byte lane reported `cache_creation_input_tokens` **0** and `cache_read_input_tokens` **85,262**, and on this repository's lane the repeat read was **183,981**. The 2,570-byte leg is a pass with a weak signal (that lane is ~0.7k tokens) |
+| C3 | Same from a second checkout path with a different git status | Still a cache read of the lane — proves the exclude flag keeps per-machine text out of the prefix. Fail means the flag is not doing what the help says. **PASSED 2026-11-10 [V]** at size: the same lane bytes at another path, in a git repository with a dirty tree, gave a **75,803**-token read. The small-lane leg was inconclusive at that size. So `--exclude-dynamic-system-prompt-sections` does what its help says |
+| C4 | Plain `claude`, same prompt | Lane files read exactly once each; all canaries reported. **PASSED 2026-11-10 [V]**: with the template and `[system_prompt]` removed, a plain `claude2` read `STATIC.md`, `INDEX.md`, `00-core.md`, `90-user.md` in that order, once each, and reported all four canaries. Through `vibe agent` in the same opted-out project it first **refused** — a defect, fixed in `6323e8a36`, which starts the harness unchanged with a one-line note — and the re-run read the same files in the same order |
+| C5 | `vibe agent claude`, ask it to start one subagent that reports whether it sees a lane marker | Subagent sees none. **PASSED 2026-11-10 [V]**: the subagent reported no `CANARY-…` word and no `<!-- vibe:lane-begin` line, only the managed block's own format example, which the instruction file carries in prose. Subagents do not inherit the slot |
+| C6 | Pass the file flag twice with different files | Record which one arrives; fixes the "last wins" claim. **RECORDED 2026-11-10 [V]: last flag wins.** With two `--append-system-prompt-file` flags naming different files, only the **second** file's canary arrived; the first was dropped silently. This closes §13's incomplete claim. Nothing depends on the answer — `vibe agent` refuses a user-supplied second flag |
+| C7 | Change `STATIC.xml`, reinstall, resume the earlier session | Record whether the old lane is resent and whether the agent notices the hash mismatch. **RECORDED 2026-11-10 [V]: the old lane comes back, silently.** After `00-core.md` was edited and installed, a `--resume` of the earlier session saw the **old** id `cc8a3fa2cf16` (current: `2d1b478e28d7`) and reported no sign of staleness — correctly, because the block carries only `STATIC`'s expected id and that id was unchanged. `6323e8a36` makes `vibe agent` say so on `-c` / `--continue` / `-r` / `--resume`; a new session is the remedy |
+| C8 | Windows: C1 with the full-size file | Same as C1. **NOT RUN 2026-11-10**: no Windows host in the session that ran C1–C7. It stays research, and the Claude Code delivery claim is a Linux claim |
 | X0 | Offline, no spend: `codex debug prompt-input` through the profile | Lane is part 0 of developer item 2, both canaries present |
 | X1 | `vibe agent codex` twice, `exec --json` | Second run's `cached_input_tokens` ≥ base + lane |
 | X2 | Plain `codex` | Lane read once through the router |
 | X3 | Entrypoint padded past the declared limit, block at the **top** | **DONE offline 2026-11-10** with `codex debug prompt-input`: router present, tail canary absent at the default limit; both present under `-c project_doc_max_bytes=262144`. The original form of this scenario (block at the end) is what motivated moving the block, and is retired |
-| N1 | From the root, make the agent open a file in the nested project | Nested lane not read; root lane not re-read |
+| N1 | From the root, make the agent open a file in the nested project | Nested lane not read; root lane not re-read. **PASSED 2026-11-10 [V]**: the agent read only `nested/AGENTS.md`, reported `CANARY-NESTED-TUFF` and not `CANARY-NESTED-LANE-SCORIA`, and ignored the nested block as another project's — as it also did for the `nested/CLAUDE.md` Claude Code auto-loaded beside it |
 | O1 | Qwen, Gemini CLI, OpenCode, pi, dsh in `read` mode | Lane read once; for dsh, record the doubled entrypoint |
 | I1 | Only if import is pursued: Claude Code and Gemini CLI with the import block | Lane present once; no attempt to resolve `@spec://`; position and role recorded |
 
 A failure of C1, C2 or X1 means `launch` for that harness defaults back to
 `read`. A failure of C5 means `launch` breaks worker exclusion on Claude Code
-and must not be the default.
+and must not be the default. **Neither fallback fired:** C1, C2 and C5 passed,
+so `launch` stays Claude Code's default, unchanged in code. The one change the
+run forced is a product fix, not a default — `6323e8a36`, row C4's refusal.
 
 ## 11. Owner decisions
 
@@ -716,11 +739,18 @@ chosen over what.
 2. **`--append-system-prompt-file` is hidden.** It exists in 2.1.322 but
    `claude --help` does not list it as an option. Treat it as less stable than
    a documented flag.
-3. **"Last flag wins" is incomplete.** The binary combines the file with an
-   inline `--append-system-prompt`. Which of two file flags wins is untested.
+3. ~~**"Last flag wins" is incomplete.**~~ **Closed 2026-11-10 (P9, row C6)
+   [V]:** with two `--append-system-prompt-file` flags naming different files,
+   only the second file's text arrives — last flag wins, and the first is
+   dropped with no notice. The other half was never in doubt: the binary
+   *combines* the file with an inline `--append-system-prompt` rather than
+   choosing between them.
 4. **Snapshot default has an exception** (`--bare` outside cloud and background
    sessions), and the snapshot survives a resume with different text. The
-   second point creates a staleness case the research did not mention.
+   second point creates a staleness case the research did not mention — and
+   **measured 2026-11-10 (P9, row C7) [V]**, it is real: a resumed session came
+   back with the lane it started with, and the router could not notice, because
+   the block carries only the static lane's id and that file had not changed.
 5. **Codex placement is better than described.** `developer_instructions` is
    not merely "before AGENTS.md": it is the first thing after the base
    instructions, ahead of skills, permissions, tools and plugins.

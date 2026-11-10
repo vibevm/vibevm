@@ -1657,3 +1657,86 @@ because a user's template is a term in that sum and a precise number would be
 precisely wrong for every reader. The lane's **312,345 bytes** stays exact: it
 was recomputed from this tree today, independently, by the Codex probe's own
 script, and it agrees with P3's composer to the byte.
+
+## 2026-11-10 — P9 ran: the live check on Claude Code, and one product fix
+
+The owner authorised the run and narrowed it to Claude Code, rows C1–C8, as
+D13 states. It ran in the owner's fixed order — the short sample, its cache
+repeat, then size, then classic mode, then the four rows the three steps do not
+cover. The record is `live/RESULTS.md`, which is the source of truth; this entry
+is what a later session would otherwise have to re-derive from it.
+
+**One deviation from the runbook, and it is the only one.** Every session ran in
+**print mode**: `vibe agent claude2 -p "<prompt>" --output-format json`. An
+agent cannot drive the interactive terminal UI, and the runbook was written for
+a human at a terminal. Print mode passes the same `--append-system-prompt-file`
+slot, so the delivery rows are unaffected; what it costs is that the
+**interactive UI is unmeasured**, and the usage numbers come from each run's own
+JSON `usage` record rather than from `read-usage.sh`. Claude Code 2.1.322, model
+`claude-opus-5-5`, Linux, launcher `claude2` declared in a scratch
+`agents.toml` so the owner's own settings were not touched.
+
+### What the run settled
+
+- **Delivery at the real size works.** 2,570 B, 202,349 B and this
+  repository's own 312,345 B lane each arrived with the last `vibe:lane-end`
+  line quoted byte-equal, every lane canary present including the one on the
+  lane's last line, `CANARY-TEMPLATE-SLATE` absent, and **no lane file read
+  with a tool**. No size limit was found up to 312,345 bytes, and the router's
+  rule 1 persuaded the model at that size — which was the open question, since
+  rule 1 is a request to a model and not a mechanism.
+- **The cache claim is measured, within a stated scope.** Zero creation and an
+  85,262-token read on the repeat session at 202 KB; 75,803 at another path
+  with a different git state; 183,981 on this repository. One account, one
+  model, one CLI version, inside one hour. TTL, cost, latency and saving stay
+  unmeasured, and the fact says so rather than generalising.
+- **Worker exclusion holds (C5)** — a subagent saw no canary and no
+  `vibe:lane-begin` line, only the block's own format example — and a nested
+  project is not pulled in (N1). The C5 asymmetry the runbook stated never had
+  to fire.
+- **Classic mode is intact (C4)**, which was the row that could have blocked
+  the release: `STATIC.md` first, then INDEX order, once each.
+- **Two behaviours recorded rather than passed.** A repeated
+  `--append-system-prompt-file` keeps the **last** and drops the first silently
+  (C6), which closes `HARNESS-DELIVERY.md` §13's third incomplete claim. And a
+  resumed session **silently keeps the lane it started with** (C7): the agent
+  reported the old band-U id and no sign of staleness — correctly, because the
+  block carries only `STATIC`'s expected id and that id had not changed.
+
+### The defect the run found, which is why it was worth running
+
+`vibe agent <launcher>` **refused** in a project that had not opted in, because
+it shared `vibe prompt flags`' refusal. No offline test caught it: every launch
+fixture opts in, because that is the interesting path. A launcher must work in
+every project, so `6323e8a36` makes a template-less project pass **no** slot
+flag, print one note and start the harness unchanged — and moves the slot-flag
+conflict check behind that branch, since without a lane a user's own flag
+conflicts with nothing. `vibe prompt flags` keeps its refusal: there is nothing
+to print. The same commit makes `vibe agent` say, on `-c` / `--continue` /
+`-r` / `--resume`, that the session keeps the lane it started with.
+
+**No delivery default changed.** C1, C2 and C5 — the three rows whose failure
+would have demoted `launch` to `read` — all passed, so `launch` stays Claude
+Code's default and no code decided differently.
+
+### What P9 does not cover, and is not pretending to
+
+- **C8, Windows: not run.** No Windows host in the session. The delivery
+  measurement is a Linux measurement.
+- **The interactive terminal UI: not measured**, for the reason above.
+- **Every other harness.** Codex, Qwen Code, Gemini CLI, OpenCode, pi and dsh
+  were never authorised for a live run; their rows stay research and their
+  delivery default stays `read`. Codex's placement remains proved **offline**
+  at the real size, which is a different and weaker claim than C1's.
+
+### The spec gate, unchanged
+
+`PROP-076`'s amendments were checked with the validator §2 of `PLAN.md` names —
+`./target/debug/vibe refactor convert-source --from xml --to md --dry-run
+vibevm/vibespecs/common/PROP-076-system-prompt-prefix.xml`, which always exits
+0, so the verdict is its `dry-run …` line. It reads **`dry-run
+ir-stable-loss`**, the same verdict the file gives at the commit this phase
+started from: it parses, and the Markdown projection is not byte-identical back,
+which is the state `PLAN.md` §2 records since its correction. *(The P7/P8 entry
+above still quotes `byte-stable`; that is the stale reading `daaec4637`
+corrected in `PLAN.md`, and this log is append-only.)*
