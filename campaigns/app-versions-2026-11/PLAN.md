@@ -1302,7 +1302,7 @@ conformance/vibenvm/run.sh --self-test ; echo "selftest=$?"
 **Delivered 2026-11-11** — both halves, `verdict=0` over nine cases and
 52 of 52 required pairs, with `--self-test` 0. The four shortfalls it found
 were closed in the campaign's close-out on the same day (`B-262`–`B-265`,
-`AV-FMT-105`), and the shim was simplified onto the three new surfaces at
+`AV-FMT-106`), and the shim was simplified onto the three new surfaces at
 revision **1.1.0** with the verdict measured 0 again. The two packages sandbox B
 installs live in their own repositories, which is why the registry is a step
 of the acceptance rather than a fixture of the suite:
@@ -1498,7 +1498,7 @@ See `LOG.md`.
 ## 10. Report
 
 **Closed 2026-11-11.** Every phase P1–P7f is delivered, the four shortfalls P7f
-found are closed as one design (`B-262`–`B-265`, `AV-FMT-105`,
+found are closed as one design (`B-262`–`B-265`, `AV-FMT-106`,
 `PROP-075#VERSION-FILE-VALUE` and `#P7-CLOSE-AS-BUILT`), and §7's whole-campaign
 acceptance script exists and passes all thirteen legs. The campaign's own proof
 that vibe replaces nvm is a measured verdict of 0 over nine differential cases

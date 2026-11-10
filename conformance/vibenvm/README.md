@@ -309,7 +309,7 @@ found decided.
    reads flags only from the tokens directly after the subcommand and `node`
    is not a flag. The case says so in its own summary.
 9. **The four shortfalls this suite found are closed, and the shim shrank in
-   three places** (`BACKLOG.md#b-262`…`#b-265`, `AV-FMT-105`,
+   three places** (`BACKLOG.md#b-262`…`#b-265`, `AV-FMT-106`,
    `PROP-075#P7-CLOSE-AS-BUILT`). `nvm install` with no version is one
    `vibe install -g` with no version — the shim no longer reads a `.nvmrc`'s
    value through `app env --project` and re-translates it. `nvm use --save` is

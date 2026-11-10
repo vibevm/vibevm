@@ -2085,7 +2085,7 @@ legs**. The shim is simpler for it, and the differential verdict is **0**
 again. `PROP-075#VERSION-FILE-VALUE` is new, `#VERSION-FILE-FORMATS`,
 `#VERSION-FILE-WRITE` and `#VERSIONS-LIST-OUTPUT` are amended,
 `#P7-CLOSE-AS-BUILT` records what the code decided, and the whole of it is
-`AV-FMT-105`.
+`AV-FMT-106`.
 
 **Four rows, one rule, and that is the finding.** They read as four gaps and
 are one question: *what does a spelling that names versions mean, and where*.
