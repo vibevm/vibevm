@@ -206,6 +206,34 @@ pub struct Cli {
     #[arg(long, global = true)]
     pub refresh: bool,
 
+    /// PROP-077 `#NO-RECOMMENDS-FLAG`: do not install what vibe was not
+    /// asked for. One flag for every package kind, because it answers one
+    /// question — may vibe install things I did not name? On a project
+    /// `vibe install` / `vibe update` the solver's best-effort
+    /// `[recommends]` expansion is not run at all, so the solve is the hard
+    /// solve and nothing else; on `vibe install -g` / `vibe update -g` and
+    /// an application install into a project home the recommendation walk
+    /// is not entered; `vibe reinstall` of either plane follows its own
+    /// plane; and an author's recommended **ecosystem** items (PROP-075
+    /// `#ECOSYSTEM-RECOMMENDS`) are treated as empty, because an author's
+    /// recommendation is one idea with two spellings. `[suggests]` is
+    /// unaffected: it installs nothing and is only ever reported.
+    ///
+    /// It changes a solve, never a replay. A project's lock already records
+    /// an accepted recommendation as a non-root graph member, so `vibe
+    /// install` with no arguments materialises exactly what the lock says
+    /// whichever way this flag is passed; a later deliberate re-solve
+    /// (`vibe update`) re-applies whichever way it is passed then. Nothing
+    /// is persisted, and there is deliberately no `--with-recommends`:
+    /// recommendations are on by default, and a flag that re-asserts a
+    /// default is surface with no question behind it.
+    ///
+    /// On a command that neither solves nor installs it is a usage refusal
+    /// naming this flag: a flag silently ignored is worse than a flag
+    /// refused.
+    #[arg(long = "no-recommends", global = true)]
+    pub no_recommends: bool,
+
     /// PROP-066 `#layers`: read `[[remap]]` rows from this file for this
     /// invocation. Repeatable; the last file wins among them, and every
     /// one of them outranks a row in `~/.vibe/settings.toml`,

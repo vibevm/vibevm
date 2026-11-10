@@ -180,6 +180,7 @@ fn unchanged_shared_readonly_manifest_remains_a_supported_input() {
             exact: false,
             generated_by: "probe".into(),
             offline: true,
+            no_recommends: false,
         },
         &NullObserver,
     )

@@ -115,6 +115,7 @@ fn solve(
         limits,
         configuration: None,
         blocked: &blocked,
+        recommends: true,
     })
 }
 struct Borrowed<'a, P>(&'a P);

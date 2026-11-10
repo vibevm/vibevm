@@ -264,6 +264,7 @@ impl TestSource {
                             limits: request.limits,
                             configuration: request.configuration,
                             blocked: &blocked,
+                            recommends: request.recommends,
                         },
                     )
                     .ok()?;
@@ -351,6 +352,7 @@ impl Fixture {
             exact: false,
             generated_by: "visibility golden".to_string(),
             offline: false,
+            no_recommends: false,
         };
         match vibe_install::plan(&self.source, &self.root, request, &NullObserver).unwrap() {
             Plan::Ready(planned) => planned,

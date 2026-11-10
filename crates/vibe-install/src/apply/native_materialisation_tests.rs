@@ -205,6 +205,7 @@ fn exercise(filter: bool) {
             exact: false,
             generated_by: "fixture".into(),
             offline: true,
+            no_recommends: false,
         },
         manifest,
         lockfile: Lockfile::empty("fixture", "2026-11-07T00:00:00Z"),

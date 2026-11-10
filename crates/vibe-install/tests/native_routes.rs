@@ -48,6 +48,7 @@ impl InstallSource for Source {
             limits: request.limits,
             configuration: request.configuration,
             blocked: request.blocked,
+            recommends: request.recommends,
         };
         vibe_resolver::ResolvoDepSolver::new(vibe_resolver::MultiRegistryDepProvider::new(
             &self.resolver,
@@ -257,6 +258,7 @@ fn denied_primary_allowed_mirror_completes_public_plan_and_install() {
         exact: false,
         generated_by: "route fixture".into(),
         offline: false,
+        no_recommends: false,
     };
     let Plan::Ready(planned) =
         vibe_install::plan(&source, &project, request, &NullObserver).unwrap()

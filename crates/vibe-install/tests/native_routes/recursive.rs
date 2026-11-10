@@ -62,6 +62,7 @@ fn ready(source: &Source, project: &Path) -> Box<vibe_install::PlannedInstall> {
         exact: false,
         generated_by: "recursive fixture".into(),
         offline: false,
+        no_recommends: false,
     };
     match vibe_install::plan(source, project, request, &NullObserver).unwrap() {
         Plan::Ready(plan) => plan,

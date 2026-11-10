@@ -349,6 +349,15 @@ pub trait VersionEnumerator: DepProvider {
 pub trait DepSolver {
     /// Resolve `roots` into a transitive [`ResolvedGraph`].
     fn solve(&self, roots: &[PackageRef]) -> Result<ResolvedGraph, SolveError>;
+
+    /// The same resolution with the greedy `[recommends]` expansion of
+    /// PROP-003 §2.3.3 **not run at all** — what `--no-recommends` asks of
+    /// the project plane (`PROP-077#NO-RECOMMENDS-FLAG`): the solve is the
+    /// hard solve and nothing else. Only the resolvo cell expands weak
+    /// dependencies, so every other cell answers with its ordinary solve.
+    fn solve_without_recommends(&self, roots: &[PackageRef]) -> Result<ResolvedGraph, SolveError> {
+        self.solve(roots)
+    }
 }
 
 // ---------------------------------------------------------------------------

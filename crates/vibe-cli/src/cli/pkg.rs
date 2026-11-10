@@ -61,6 +61,7 @@ impl InstallArgs {
     pub(crate) fn policy(
         &self,
         root_offline: bool,
+        root_no_recommends: bool,
         user_config: &vibe_core::user_config::UserConfig,
     ) -> vibe_orchestrator::InstallPolicy {
         vibe_orchestrator::InstallPolicy {
@@ -70,6 +71,7 @@ impl InstallArgs {
             ),
             slot_integrity: user_config.install.slot_integrity,
             spec_format_default: user_config.install.spec_format,
+            no_recommends: root_no_recommends,
         }
     }
 }

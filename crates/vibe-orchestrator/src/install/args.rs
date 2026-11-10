@@ -70,4 +70,9 @@ pub struct InstallPolicy {
     /// PROP-045 — the operator default the selected manifest's own pin wins
     /// over. Combined with the manifest at the position it always was.
     pub spec_format_default: Option<SpecFormat>,
+    /// `--no-recommends` (`PROP-077#NO-RECOMMENDS-FLAG`): the solve is the
+    /// hard solve and the greedy `[recommends]` expansion is not run at
+    /// all. One answer for the whole invocation, decided by the surface,
+    /// and nothing of it is persisted — it changes a solve, never a replay.
+    pub no_recommends: bool,
 }

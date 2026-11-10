@@ -177,6 +177,7 @@ fn configured_copy_graph_refuses_legacy_in_place_before_preparing_its_checkout()
             exact: false,
             generated_by: "fixture".into(),
             offline: true,
+            no_recommends: false,
         },
         &NullObserver,
     )

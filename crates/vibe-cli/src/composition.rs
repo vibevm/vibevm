@@ -174,6 +174,26 @@ pub(crate) fn project_preview(cmd: &crate::cli::Command) -> bool {
     matches!(cmd, crate::cli::Command::Install(args) if args.plan_only && !args.global)
 }
 
+/// `--no-recommends` answers one question — may vibe install things I did
+/// not name? — and only the commands that solve or install, on either
+/// plane, ever ask it. Everywhere else the flag is a usage refusal naming
+/// it, because a flag silently ignored is worse than a flag refused
+/// (`PROP-077#NO-RECOMMENDS-FLAG`).
+pub(crate) fn admit_no_recommends(passed: bool, cmd: &crate::cli::Command) -> anyhow::Result<()> {
+    use crate::cli::Command;
+    if !passed
+        || matches!(
+            cmd,
+            Command::Install(_) | Command::Update(_) | Command::Reinstall(_)
+        )
+    {
+        return Ok(());
+    }
+    Err(anyhow::anyhow!(
+        "`--no-recommends` is not available here: it decides whether vibe installs what you did not name, which only `vibe install`, `vibe update` and `vibe reinstall` — of a project or with `-g` — ever ask"
+    ))
+}
+
 pub(crate) fn needs_global_registry(cmd: &crate::cli::Command) -> bool {
     if project_preview(cmd) {
         return false;

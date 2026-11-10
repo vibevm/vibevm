@@ -237,19 +237,20 @@ fn run(
     solving.set_progress(0, Some(roots.len() as u64), "roots");
     // PROP-050 `#EFFECTIVE-SET`: the same effective set install computes —
     // a non-root package's private requirement is not resolved or fetched.
-    let graph = match vibe_install::solve_visible_graph(&resolver, &manifest, &roots)
-        .context("dependency resolution failed")
-    {
-        Ok(graph) => {
-            solving.set_progress(roots.len() as u64, Some(roots.len() as u64), "roots");
-            solving.finish();
-            graph
-        }
-        Err(error) => {
-            solving.fail("dependency resolution failed");
-            return Err(error);
-        }
-    };
+    let graph =
+        match vibe_install::solve_visible_graph(&resolver, &manifest, &roots, !ctx.no_recommends())
+            .context("dependency resolution failed")
+        {
+            Ok(graph) => {
+                solving.set_progress(roots.len() as u64, Some(roots.len() as u64), "roots");
+                solving.finish();
+                graph
+            }
+            Err(error) => {
+                solving.fail("dependency resolution failed");
+                return Err(error);
+            }
+        };
 
     // Fetched payload lands in the machine-global store (PROP-010
     // §2.7) — no project cache directory exists to create.

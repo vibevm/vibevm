@@ -301,6 +301,10 @@ fn run_serve(args: McpServeArgs, runtime: McpRuntime) -> Result<()> {
         offline: output::resolve_offline(runtime.root_offline, user.net.offline),
         slot_integrity: user.install.slot_integrity,
         spec_format_default: user.install.spec_format,
+        // A served lifecycle execution is not a surface with a flag
+        // grammar: it takes the default posture, recommendations included
+        // (`PROP-077#NO-RECOMMENDS-FLAG`).
+        no_recommends: false,
     };
     let server_ctx = ServerContext::new(project_root).with_lifecycle_execution(
         policy,

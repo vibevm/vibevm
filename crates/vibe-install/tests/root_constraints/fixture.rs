@@ -109,6 +109,7 @@ impl InstallSource for Source {
                 limits: request.limits,
                 configuration: request.configuration,
                 blocked: request.blocked,
+                recommends: request.recommends,
             },
         )
     }
@@ -306,6 +307,7 @@ pub fn request(refs: &[&str]) -> InstallRequest {
         exact: false,
         generated_by: "root constraint fixture".into(),
         offline: true,
+        no_recommends: false,
     }
 }
 

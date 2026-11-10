@@ -111,6 +111,7 @@ impl InstallSource for FixtureSource {
                 limits: request.limits,
                 configuration: request.configuration,
                 blocked: request.blocked,
+                recommends: request.recommends,
             },
         )
     }
@@ -279,6 +280,7 @@ fn request() -> InstallRequest {
         exact: false,
         generated_by: "vibe test".to_string(),
         offline: false,
+        no_recommends: false,
     }
 }
 

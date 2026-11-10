@@ -228,6 +228,14 @@ pub trait InstallSource {
     /// transitive graph the pipeline will fetch and materialise.
     fn solve(&self, roots: &[PackageRef]) -> Result<ResolvedGraph, SolveError>;
 
+    /// [`Self::solve`] with the greedy `[recommends]` expansion not run at
+    /// all — `--no-recommends` (`PROP-077#NO-RECOMMENDS-FLAG`). The default
+    /// is the ordinary solve, which is right for every source whose solver
+    /// cell expands no weak dependency.
+    fn solve_without_recommends(&self, roots: &[PackageRef]) -> Result<ResolvedGraph, SolveError> {
+        self.solve(roots)
+    }
+
     /// Resolve actual common consumer inputs through the selected supported cell.
     /// The operation-owned snapshot must be reused for held and masked retries.
     /// Legacy implementations explicitly refuse instead of dropping intent.
@@ -285,6 +293,18 @@ pub trait InstallSource {
         roots: &[PackageRef],
         blocked: &BTreeSet<(String, String)>,
     ) -> Result<ResolvedGraph, SolveError>;
+
+    /// [`Self::solve_masked`] with the greedy `[recommends]` expansion not
+    /// run at all, so a visibility re-solve under `--no-recommends` cannot
+    /// bring back what the first solve declined
+    /// (`PROP-077#NO-RECOMMENDS-FLAG`).
+    fn solve_masked_without_recommends(
+        &self,
+        roots: &[PackageRef],
+        blocked: &BTreeSet<(String, String)>,
+    ) -> Result<ResolvedGraph, SolveError> {
+        self.solve_masked(roots, blocked)
+    }
 
     /// Place an `in-place` package (PROP-022 §2.4) directly into its project
     /// `slot`: a fresh `git clone --recurse-submodules` when the slot is

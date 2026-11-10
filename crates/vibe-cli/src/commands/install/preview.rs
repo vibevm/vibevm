@@ -79,7 +79,7 @@ fn prepare(
     crate::commands::app::home::refuse_library(args.library.as_deref())?;
     let root = super::resolve_project_root(&args.path)?;
     let config = UserConfig::load().context("loading user configuration for preview")?;
-    let policy = args.policy(root_offline, &config);
+    let policy = args.policy(root_offline, ctx.no_recommends(), &config);
     let selected = super::SelectedManifest::read(&root).prepare().prove()?;
     let mut manifest = selected.manifest().clone();
     let mut workspace = selected.workspace().clone();
@@ -166,6 +166,7 @@ fn prepare(
             },
             language: args.language.clone(),
             exact: args.exact,
+            no_recommends: policy.no_recommends,
             generated_by: vibe_orchestrator::generated_by(),
             offline: policy.offline,
         };

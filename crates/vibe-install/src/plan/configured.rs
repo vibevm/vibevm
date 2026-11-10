@@ -52,6 +52,7 @@ impl<S: InstallSource + ?Sized> InstallSource for PlanningSource<'_, S> {
             limits: request.limits,
             blocked: request.blocked,
             configuration: self.configuration.as_ref().or(request.configuration),
+            recommends: request.recommends,
         };
         self.source.solve_metadata(&bound)
     }

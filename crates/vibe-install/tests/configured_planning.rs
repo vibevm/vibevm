@@ -75,6 +75,7 @@ impl InstallSource for DriftingSource {
             None,
             roots,
             blocked,
+            true,
         )
     }
     fn resolve_and_fetch(
@@ -125,6 +126,7 @@ fn actual_fetched_manifest_cannot_replace_captured_activation_meaning() {
         exact: false,
         generated_by: "fixture".into(),
         offline: true,
+        no_recommends: false,
     };
     let error = vibe_install::plan_prepared_without_publication(
         &source,

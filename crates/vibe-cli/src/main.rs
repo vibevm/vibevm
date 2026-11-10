@@ -114,7 +114,8 @@ fn run() -> ExitCode {
             cli.unattended,
             cli.agent_mode,
         )
-        .with_plain(cli.plain),
+        .with_plain(cli.plain)
+        .with_no_recommends(cli.no_recommends),
         &cli.command,
         cli.verbose,
         command_progress::Streams {
@@ -163,6 +164,10 @@ fn run() -> ExitCode {
         return as_exit_code(&error);
     }
 
+    if let Err(error) = composition::admit_no_recommends(cli.no_recommends, &cli.command) {
+        ctx.error_with_suffix(&error, None);
+        return ExitCode::FAILURE;
+    }
     // PROP-075 `#TEMPLATE-CACHE`, after the Locator it fetches through.
     composition::templates::install_for(cli.offline, cli.refresh);
 

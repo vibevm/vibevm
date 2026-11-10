@@ -139,6 +139,11 @@ impl PackageQualifier for RefusesQualification {
 pub struct RegistryPackageSource {
     resolver: InstallResolver,
     qualifier: Box<dyn PackageQualifier>,
+    /// Whether this invocation expands `[recommends]` at all. One posture
+    /// for every solve this source performs, so a visibility re-solve
+    /// cannot bring back what the first solve declined
+    /// (`PROP-077#NO-RECOMMENDS-FLAG`).
+    recommends: bool,
 }
 
 impl RegistryPackageSource {
@@ -147,7 +152,16 @@ impl RegistryPackageSource {
         Self {
             resolver,
             qualifier,
+            recommends: true,
         }
+    }
+
+    /// `--no-recommends`: every solve of this source is the hard solve
+    /// (`PROP-077#NO-RECOMMENDS-FLAG`).
+    #[must_use]
+    pub fn without_recommends(mut self) -> Self {
+        self.recommends = false;
+        self
     }
 
     /// The shared resolver, for surface code that talks to the
@@ -222,7 +236,18 @@ impl InstallSource for RegistryPackageSource {
         &self,
         roots: &[PackageRef],
     ) -> Result<vibe_resolver::ResolvedGraph, vibe_resolver::SolveError> {
-        self.resolver.solve(roots)
+        if self.recommends {
+            self.resolver.solve(roots)
+        } else {
+            self.resolver.solve_without_recommends(roots)
+        }
+    }
+
+    fn solve_without_recommends(
+        &self,
+        roots: &[PackageRef],
+    ) -> Result<vibe_resolver::ResolvedGraph, vibe_resolver::SolveError> {
+        self.resolver.solve_without_recommends(roots)
     }
 
     fn solve_configured(
@@ -246,7 +271,21 @@ impl InstallSource for RegistryPackageSource {
         roots: &[PackageRef],
         blocked: &BTreeSet<(String, String)>,
     ) -> Result<vibe_resolver::ResolvedGraph, vibe_resolver::SolveError> {
-        self.resolver.solve_masked(roots, blocked)
+        if self.recommends {
+            self.resolver.solve_masked(roots, blocked)
+        } else {
+            self.resolver
+                .solve_masked_without_recommends(roots, blocked)
+        }
+    }
+
+    fn solve_masked_without_recommends(
+        &self,
+        roots: &[PackageRef],
+        blocked: &BTreeSet<(String, String)>,
+    ) -> Result<vibe_resolver::ResolvedGraph, vibe_resolver::SolveError> {
+        self.resolver
+            .solve_masked_without_recommends(roots, blocked)
     }
 
     fn replays_locked_source(&self, pkgref: &PackageRef) -> bool {

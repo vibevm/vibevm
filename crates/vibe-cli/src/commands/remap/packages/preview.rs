@@ -117,6 +117,7 @@ pub(crate) fn preview_project_requirements(
         limits: source.source_solve_limits()?,
         configuration: None,
         blocked: &BTreeSet::new(),
+        recommends: true,
         authoritative_locked: &locked_sources,
     })?;
     for reference in &new {

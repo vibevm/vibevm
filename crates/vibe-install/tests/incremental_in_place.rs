@@ -121,6 +121,7 @@ fn mocked_selection<'a>(
         limits: request.limits,
         configuration: request.configuration,
         blocked: request.blocked,
+        recommends: request.recommends,
     }
 }
 
@@ -454,6 +455,7 @@ impl Fixture {
                 exact: false,
                 generated_by: "vibe test".into(),
                 offline: true,
+                no_recommends: false,
             },
             &NullObserver,
         )

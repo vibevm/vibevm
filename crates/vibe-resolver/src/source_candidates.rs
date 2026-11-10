@@ -127,6 +127,11 @@ pub struct SourceSolveRequest<'a> {
     pub limits: SourceSolveLimits,
     pub configuration: Option<&'a crate::configuration::ConfigurationSnapshot>,
     pub blocked: &'a std::collections::BTreeSet<(String, String)>,
+    /// Whether the greedy best-effort `[recommends]` expansion runs at all.
+    /// `false` is `--no-recommends`: the solve is the hard solve and nothing
+    /// else, on this plane exactly as on the plain one
+    /// (`PROP-077#NO-RECOMMENDS-FLAG`).
+    pub recommends: bool,
 }
 
 /// Registry/local providers retain discovery observations beside available tokens.

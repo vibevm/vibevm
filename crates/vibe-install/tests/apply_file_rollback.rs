@@ -289,6 +289,7 @@ fn prepared(case: Case) -> (tempfile::TempDir, Source, Box<vibe_install::Planned
         exact: false,
         generated_by: "rollback probe".into(),
         offline: true,
+        no_recommends: false,
     };
     let Plan::Ready(planned) = vibe_install::plan(&source, root, request, &NullObserver).unwrap()
     else {

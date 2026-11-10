@@ -288,7 +288,7 @@ fn execute_after_open(
             lease.root(),
             selection.parsed_ref(),
         ));
-    let policy = args.policy(root_offline, &user_config);
+    let policy = args.policy(root_offline, ctx.no_recommends(), &user_config);
     let run_observer = crate::commands::lifecycle::CliRunObserver::new(ctx);
     // The post-durability stage, NAMED: it holds the observation policy and the
     // backend, and nothing else. The closure it replaced captured this

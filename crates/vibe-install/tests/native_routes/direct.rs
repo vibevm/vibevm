@@ -198,6 +198,7 @@ fn direct_git_and_override_complete_copy_and_inplace_public_plan_apply() {
             exact: false,
             generated_by: "direct fixture".into(),
             offline: false,
+            no_recommends: false,
         };
         let Plan::Ready(plan) =
             vibe_install::plan(&source, &f.project, request, &NullObserver).unwrap()

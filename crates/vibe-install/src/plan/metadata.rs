@@ -33,6 +33,9 @@ pub(super) struct MetadataPlanningInput<'a> {
     pub project_root: &'a Path,
     pub root_id: &'a str,
     pub observer: &'a dyn PlanObserver,
+    /// Whether the greedy `[recommends]` expansion runs
+    /// (`PROP-077#NO-RECOMMENDS-FLAG`).
+    pub recommends: bool,
 }
 
 #[derive(Debug)]
@@ -237,6 +240,7 @@ fn solve_visible<S: InstallSource + ?Sized>(
             configuration: None,
             blocked: &blocked,
             authoritative_locked: &input.lockfile.packages,
+            recommends: input.recommends,
         };
         let mut solved = match source.solve_metadata(&request) {
             Ok(solved) => solved,
@@ -259,6 +263,7 @@ fn solve_visible<S: InstallSource + ?Sized>(
                         configuration: None,
                         blocked: &blocked,
                         authoritative_locked: &input.lockfile.packages,
+                        recommends: input.recommends,
                     })
                     .map_err(|error| explain_held_failure(source, input, error))?
             }

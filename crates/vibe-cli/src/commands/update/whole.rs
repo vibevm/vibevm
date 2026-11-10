@@ -151,7 +151,7 @@ fn run(
         reselect_sources: args.reselect_source,
         args: &install_args,
     };
-    let policy = install_args.policy(offline, &user_config);
+    let policy = install_args.policy(offline, ctx.no_recommends(), &user_config);
     let environment = install::CliRegistryEnvironment::new(move || embedded_root);
     // A whole update owns no lifecycle stage of its own, and admits no
     // manifest-mutating flag: both are the NAMED no-ops.

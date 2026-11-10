@@ -183,9 +183,11 @@ impl PackageSourceFactory for CliPackageSourceFactory<'_> {
         } else {
             resolver
         };
-        Ok(Box::new(RegistryPackageSource::new(
-            resolver,
-            Box::new(CliQualifier),
-        )))
+        let source = RegistryPackageSource::new(resolver, Box::new(CliQualifier));
+        Ok(Box::new(if input.recommends {
+            source
+        } else {
+            source.without_recommends()
+        }))
     }
 }

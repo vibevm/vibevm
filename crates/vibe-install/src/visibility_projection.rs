@@ -7,8 +7,8 @@ use vibe_core::visibility::{Analysis, EdgeDecl, NodeDecl, NodeId, VisibilityGrap
 use vibe_core::{Group, PackageRef};
 use vibe_resolver::mask_manifest_edges as prune_manifest;
 use vibe_resolver::{
-    DepProvider, DepProviderError, DepSolver, NaiveDepSolver, ResolvedGraph, ResolvoDepSolver,
-    SolveError, VersionEnumerator,
+    DepProvider, DepProviderError, NaiveDepSolver, ResolvedGraph, ResolvoDepSolver, SolveError,
+    VersionEnumerator,
 };
 
 use crate::error::{Error, Result};
@@ -230,18 +230,23 @@ fn node_id(group: &Group, name: &str) -> NodeId {
 /// #         -> Result<vibe_registry::InPlaceMaterialised, vibe_registry::RegistryError> { unreachable!() }
 /// # }
 /// let root = Manifest::parse_str("[project]\nname = \"demo\"\nversion = \"0.1.0\"\n").unwrap();
-/// let graph = vibe_install::solve_visible_graph(&Empty, &root, &[]).unwrap();
+/// let graph = vibe_install::solve_visible_graph(&Empty, &root, &[], true).unwrap();
 /// assert!(graph.packages.is_empty());
 /// ```
 pub fn solve_visible_graph<S: crate::InstallSource + ?Sized>(
     source: &S,
     root_manifest: &Manifest,
     roots: &[PackageRef],
+    recommends: bool,
 ) -> Result<ResolvedGraph> {
     const MAX_VISIBILITY_PASSES: usize = 4;
     let root_id = crate::plan::visibility_root_id(root_manifest);
     let mut blocked = BTreeSet::new();
-    let mut graph = source.solve(roots)?;
+    let mut graph = if recommends {
+        source.solve(roots)?
+    } else {
+        source.solve_without_recommends(roots)?
+    };
     for _ in 0..MAX_VISIBILITY_PASSES {
         let manifest_of = |reference: &PackageRef| source.manifest_of(reference);
         let projection = project(&ProjectionInput {
@@ -260,7 +265,11 @@ pub fn solve_visible_graph<S: crate::InstallSource + ?Sized>(
             return Ok(graph);
         }
         blocked.extend(newly_blocked);
-        graph = source.solve_masked(roots, &blocked)?;
+        graph = if recommends {
+            source.solve_masked(roots, &blocked)?
+        } else {
+            source.solve_masked_without_recommends(roots, &blocked)?
+        };
     }
     Err(visibility_error(format!(
         "visibility strictness did not converge within {MAX_VISIBILITY_PASSES} iterations"
@@ -432,7 +441,7 @@ pub fn metadata_manifest<P: DepProvider>(
 ///     fn list_versions(&self, _: &Group, _: &str)
 ///         -> Result<Vec<semver::Version>, DepProviderError> { unreachable!() }
 /// }
-/// let graph = solve_with_visibility_mask(Empty, None, &[], &BTreeSet::new()).unwrap();
+/// let graph = solve_with_visibility_mask(Empty, None, &[], &BTreeSet::new(), true).unwrap();
 /// assert!(graph.packages.is_empty());
 /// ```
 pub fn solve_with_visibility_mask<P: VersionEnumerator>(
@@ -440,12 +449,20 @@ pub fn solve_with_visibility_mask<P: VersionEnumerator>(
     solver: Option<&str>,
     roots: &[PackageRef],
     blocked: &BTreeSet<(String, String)>,
+    recommends: bool,
 ) -> std::result::Result<ResolvedGraph, SolveError> {
     let filtered = FilteringDepProvider::new(&provider, blocked);
+    let solve = |solver: &dyn vibe_resolver::DepSolver| {
+        if recommends {
+            solver.solve(roots)
+        } else {
+            solver.solve_without_recommends(roots)
+        }
+    };
     match solver.unwrap_or("resolvo") {
-        "resolvo" => ResolvoDepSolver::new(filtered).solve(roots),
-        "naive" => NaiveDepSolver::new(filtered).solve(roots),
-        "sat" => vibe_resolver::sat::SatDepSolver::new(filtered).solve(roots),
+        "resolvo" => solve(&ResolvoDepSolver::new(filtered)),
+        "naive" => solve(&NaiveDepSolver::new(filtered)),
+        "sat" => solve(&vibe_resolver::sat::SatDepSolver::new(filtered)),
         other => Err(DepProviderError::Other(format!(
             "unknown solver cell `{other}` while applying the visibility mask"
         ))

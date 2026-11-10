@@ -175,6 +175,20 @@ pub(crate) fn local_registry(root: PathBuf) -> Result<LocalRegistry, RegistryErr
 
 /// Construct the selected `DepSolver` cell over the selected
 /// `DepProvider` cell — the single seam-construction point.
+/// The solve of one invocation's posture: `--no-recommends` asks for the
+/// hard solve and nothing else (`PROP-077#NO-RECOMMENDS-FLAG`).
+pub(crate) fn solve_cell(
+    solver: &dyn DepSolver,
+    roots: &[vibe_core::PackageRef],
+    recommends: bool,
+) -> Result<vibe_resolver::ResolvedGraph, vibe_resolver::SolveError> {
+    if recommends {
+        solver.solve(roots)
+    } else {
+        solver.solve_without_recommends(roots)
+    }
+}
+
 pub(crate) fn dep_solver<'a>(
     flags: &SelectionFlags,
     resource: ProviderResource<'a>,
@@ -323,6 +337,7 @@ pub(crate) fn solve_masked_cell(
     resource: ProviderResource<'_>,
     roots: &[vibe_core::PackageRef],
     blocked: &std::collections::BTreeSet<(String, String)>,
+    recommends: bool,
 ) -> Result<vibe_resolver::ResolvedGraph, vibe_resolver::SolveError> {
     let solver = Some(flags.solver.value);
     match resource {
@@ -331,12 +346,14 @@ pub(crate) fn solve_masked_cell(
             solver,
             roots,
             blocked,
+            recommends,
         ),
         ProviderResource::Multi(m) => vibe_install::solve_with_visibility_mask(
             MultiRegistryDepProvider::new(m),
             solver,
             roots,
             blocked,
+            recommends,
         ),
         ProviderResource::Embedded {
             locals,
@@ -348,6 +365,7 @@ pub(crate) fn solve_masked_cell(
             solver,
             roots,
             blocked,
+            recommends,
         ),
     }
 }

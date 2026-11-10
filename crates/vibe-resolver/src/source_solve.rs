@@ -114,6 +114,11 @@ pub(crate) fn solve<P: SourceCandidateProvider>(
     let mut recommended = Vec::new();
     let mut tried = BTreeSet::new();
     let mut selected = hard(provider, &world, request, &recommended)?;
+    // `--no-recommends` is the hard solve and nothing else: the expansion
+    // below is not entered at all (`PROP-077#NO-RECOMMENDS-FLAG`).
+    if !request.recommends {
+        return Ok(selected);
+    }
     // Keep the incumbent greedy recommends policy: each trial owns fresh
     // assumptions/model; a declined trial cannot leak an active pin or parent.
     loop {

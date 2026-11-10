@@ -298,7 +298,24 @@ impl InstallSource for InstallResolver {
         // match only routes the resource the caller already owns.
         let (provider_cell, solver_override) = self.cell_selection();
         let flags = selection_flags(provider_cell, solver_override);
-        dep_solver(&flags, self.provider_resource()).solve(roots)
+        crate::cells::solve_cell(
+            dep_solver(&flags, self.provider_resource()).as_ref(),
+            roots,
+            true,
+        )
+    }
+
+    fn solve_without_recommends(
+        &self,
+        roots: &[PackageRef],
+    ) -> Result<vibe_resolver::ResolvedGraph, vibe_resolver::SolveError> {
+        let (provider_cell, solver_override) = self.cell_selection();
+        let flags = selection_flags(provider_cell, solver_override);
+        crate::cells::solve_cell(
+            dep_solver(&flags, self.provider_resource()).as_ref(),
+            roots,
+            false,
+        )
     }
 
     fn solve_configured(
@@ -334,7 +351,17 @@ impl InstallSource for InstallResolver {
     ) -> Result<vibe_resolver::ResolvedGraph, vibe_resolver::SolveError> {
         let (provider_cell, solver_override) = self.cell_selection();
         let flags = selection_flags(provider_cell, solver_override);
-        solve_masked_cell(&flags, self.provider_resource(), roots, blocked)
+        solve_masked_cell(&flags, self.provider_resource(), roots, blocked, true)
+    }
+
+    fn solve_masked_without_recommends(
+        &self,
+        roots: &[PackageRef],
+        blocked: &BTreeSet<(String, String)>,
+    ) -> Result<vibe_resolver::ResolvedGraph, vibe_resolver::SolveError> {
+        let (provider_cell, solver_override) = self.cell_selection();
+        let flags = selection_flags(provider_cell, solver_override);
+        solve_masked_cell(&flags, self.provider_resource(), roots, blocked, false)
     }
 
     fn prepare_in_place(

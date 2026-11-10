@@ -227,6 +227,7 @@ fn execute_owned(
         offline,
         slot_integrity,
         spec_format_default,
+        no_recommends,
     } = policy;
     // The resolved run metadata is the invocation's identity; the callback
     // context owns a clone so a later seam can still read it.
@@ -397,6 +398,7 @@ fn execute_owned(
         exact: args.exact,
         generated_by: generated_by(),
         offline,
+        no_recommends,
     };
 
     // Source-free Fresh admission precedes expensive/possibly unavailable
@@ -424,6 +426,7 @@ fn execute_owned(
             workspace_root: &workspace.root,
             global: &environment.global,
             offline,
+            recommends: !no_recommends,
             locked: &lockfile_snapshot.packages,
         })?;
 

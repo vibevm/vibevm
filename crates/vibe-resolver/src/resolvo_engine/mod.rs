@@ -90,6 +90,19 @@ impl<P: VersionEnumerator> DepSolver for ResolvoDepSolver<P> {
         // not roots. resolvo's `soft_requirements` is root-level only, so
         // per-package recommends ride this re-solve loop — batching them
         // as soft is a future optimisation.
+        self.solve_with_recommends(roots)
+    }
+
+    /// `--no-recommends`: the hard solve alone, with the greedy weak
+    /// expansion below never entered (`PROP-077#NO-RECOMMENDS-FLAG`).
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-077#NO-RECOMMENDS-FLAG")]
+    fn solve_without_recommends(&self, roots: &[PackageRef]) -> Result<ResolvedGraph, SolveError> {
+        self.solve_hard(roots, &[])
+    }
+}
+
+impl<P: VersionEnumerator> ResolvoDepSolver<P> {
+    fn solve_with_recommends(&self, roots: &[PackageRef]) -> Result<ResolvedGraph, SolveError> {
         let mut extra: Vec<PackageRef> = Vec::new();
         let mut tried: HashSet<(Group, String)> = HashSet::new();
         let mut graph = self.solve_hard(roots, &extra)?;

@@ -185,3 +185,50 @@ fn suggest_is_never_installed() {
         "a suggested package is not auto-installed"
     );
 }
+
+/// `--no-recommends`: the greedy expansion is not run at all, so the solve
+/// is the hard solve and nothing else — the recommended package is absent
+/// although it fits perfectly (`PROP-077#NO-RECOMMENDS-FLAG`).
+#[test]
+#[specmark::spec(verifies = "spec://org.vibevm.core/vibevm/common/PROP-077#NO-RECOMMENDS-FLAG")]
+fn no_recommends_runs_the_hard_solve_and_nothing_else() {
+    let seeds = [
+        manifest("a", "1.0.0", &[("c", "^1")], &["b"], &[]),
+        manifest("b", "1.0.0", &[], &[], &[]),
+        manifest("c", "1.0.0", &[], &[], &[]),
+    ];
+    let resolvo = ResolvoDepSolver::new(MapProvider::new(&seeds));
+    let declined = resolvo.solve_without_recommends(&root("a")).unwrap();
+    assert!(
+        declined.find(&org(), "b").is_none(),
+        "the flag declines a recommendation that would otherwise fit"
+    );
+    // And the hard graph is untouched: a real requirement is still resolved.
+    assert!(declined.find(&org(), "c").is_some());
+    assert!(declined.find(&org(), "a").unwrap().is_root);
+
+    // The same solver, asked the ordinary way, still brings it in — so the
+    // difference is the flag and not the fixture.
+    let kept = resolvo.solve(&root("a")).unwrap();
+    assert!(kept.find(&org(), "b").is_some());
+}
+
+/// A cell that expands no weak dependency answers the flag with its
+/// ordinary solve, which is the honest answer rather than a refusal.
+#[test]
+fn a_solver_without_weak_expansion_answers_with_its_ordinary_solve() {
+    let seeds = [
+        manifest("a", "1.0.0", &[], &["b"], &[]),
+        manifest("b", "1.0.0", &[], &[], &[]),
+    ];
+    let naive = vibe_resolver::NaiveDepSolver::new(MapProvider::new(&seeds));
+    let declined = naive.solve_without_recommends(&root("a")).unwrap();
+    let ordinary = naive.solve(&root("a")).unwrap();
+    let keys = |graph: &vibe_resolver::ResolvedGraph| -> Vec<String> {
+        graph
+            .iter()
+            .map(|node| format!("{}/{}@{}", node.group, node.name, node.version))
+            .collect()
+    };
+    assert_eq!(keys(&declined), keys(&ordinary));
+}

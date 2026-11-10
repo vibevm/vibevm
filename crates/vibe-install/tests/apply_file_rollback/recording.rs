@@ -136,6 +136,7 @@ pub(super) fn plan(source: &MirrorSource, selected: &Path) -> Box<vibe_install::
             exact: false,
             generated_by: "probe".into(),
             offline: true,
+            no_recommends: false,
         },
         &NullObserver,
     )

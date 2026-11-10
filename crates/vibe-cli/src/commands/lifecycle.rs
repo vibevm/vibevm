@@ -81,7 +81,7 @@ pub fn run(
     // load-between-the-stages seam); it rides into the prerequisite
     // install, which must never load its own.
     let user_config = UserConfig::load().context("loading user config for lifecycle envelope")?;
-    let policy = install_args.policy(root_offline, &user_config);
+    let policy = install_args.policy(root_offline, ctx.no_recommends(), &user_config);
     let assume_yes = install_args.assume_yes || ctx.is_unattended() || ctx.is_json();
     // Stage two: the ONE snapshot, identity and DERIVED chain — all inside
     // the cell, none of it suppliable here.
@@ -406,7 +406,7 @@ fn execute(
             chain,
             metadata,
             install_args: install_args.inputs(),
-            policy: install_args.policy(root_offline, &user_config),
+            policy: install_args.policy(root_offline, ctx.no_recommends(), &user_config),
             lease: prelude.lease,
             selection: prelude.selection,
             steps: reports,

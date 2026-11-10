@@ -33,6 +33,7 @@ pub(super) fn ready(f: &Fixture) -> Box<vibe_install::PlannedInstall> {
         exact: false,
         generated_by: "native failure fixture".into(),
         offline: true,
+        no_recommends: false,
     };
     match vibe_install::plan(&f.source, &f.project, request, &NullObserver).unwrap() {
         Plan::Ready(p) => p,

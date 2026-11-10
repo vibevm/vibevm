@@ -42,6 +42,13 @@ pub struct InstallRequest {
     /// Whole-invocation network posture. Embedded-source hydration obeys the
     /// same hard offline boundary as package resolution.
     pub offline: bool,
+    /// `--no-recommends`: the solve is the hard solve and the greedy
+    /// `[recommends]` expansion is not run at all
+    /// (`PROP-077#NO-RECOMMENDS-FLAG`). It changes a solve, never a replay:
+    /// a lock already records an accepted recommendation as a non-root graph
+    /// member, so `vibe install` with no arguments materialises exactly what
+    /// the lock says whichever way the flag is passed.
+    pub no_recommends: bool,
 }
 
 /// The planning verdict.
@@ -390,6 +397,7 @@ fn prepare_metadata_plan<S: InstallSource + ?Sized>(
                 project_root,
                 root_id: &root_id,
                 observer,
+                recommends: !request.no_recommends,
             },
         )
         .map_err(|error| {

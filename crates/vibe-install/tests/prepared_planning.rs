@@ -263,6 +263,7 @@ fn request() -> InstallRequest {
         exact: false,
         generated_by: "vibe test".to_string(),
         offline: false,
+        no_recommends: false,
     }
 }
 

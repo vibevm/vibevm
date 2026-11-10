@@ -226,6 +226,11 @@ pub struct Context {
     /// `--plain`: blocks written once, when they end, and no child stream
     /// between them (PROP-067 `#plain`).
     plain: bool,
+    /// `--no-recommends` (`PROP-077#NO-RECOMMENDS-FLAG`): one answer for
+    /// the whole invocation — may vibe install things the user did not
+    /// name? It reads the same on every plane, so it is resolved here once
+    /// and read by each command that solves or installs.
+    no_recommends: bool,
     /// The resolved handler-facing agent mode for this whole invocation,
     /// decided ONCE here. Every metadata constructor — ordinary lifecycle,
     /// clean, explicit install, update, reinstall — reads this rather than
@@ -278,6 +283,7 @@ impl Context {
             pending_trailer: std::sync::Arc::new(std::sync::Mutex::new(None)),
             started: std::time::Instant::now(),
             plain: false,
+            no_recommends: false,
             agent_mode,
             progress: Progress::default(),
             transfers: None,
@@ -288,6 +294,20 @@ impl Context {
             #[cfg(test)]
             verbose: false,
         }
+    }
+
+    /// The invocation's `--no-recommends` posture
+    /// (`PROP-077#NO-RECOMMENDS-FLAG`).
+    #[must_use]
+    pub fn with_no_recommends(mut self, no_recommends: bool) -> Self {
+        self.no_recommends = no_recommends;
+        self
+    }
+
+    /// Whether this invocation declined the author's recommendations
+    /// (`PROP-077#NO-RECOMMENDS-FLAG`).
+    pub fn no_recommends(&self) -> bool {
+        self.no_recommends
     }
 
     /// Selects the invocation's CLI progress renderer after all global flags

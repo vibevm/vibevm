@@ -1,7 +1,7 @@
 //! Lazy retention around the incumbent no-policy solver, with whole-attempt restart.
 specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#solver");
 use super::*;
-use crate::{DepProvider, DepSolver, ResolvoDepSolver, VersionEnumerator};
+use crate::{DepProvider, ResolvoDepSolver, VersionEnumerator};
 use std::cell::{Cell, RefCell};
 use vibe_registry::source_candidates::SourceChoiceMode;
 
@@ -187,18 +187,28 @@ pub(super) fn solve<'a, P: SourceCandidateProvider>(
         before: RefCell::new(None),
         restart: Cell::new(false),
     };
+    // `--no-recommends` reaches the incumbent cell as the hard solve alone,
+    // so the lazy retention path declines a recommendation exactly as the
+    // source-aware one does (`PROP-077#NO-RECOMMENDS-FLAG`).
+    let solve = |solver: &dyn crate::DepSolver| {
+        if request.recommends {
+            solver.solve(&roots)
+        } else {
+            solver.solve_without_recommends(&roots)
+        }
+    };
     let (outcome, retained) = match cell {
         LegacyCell::Resolvo => {
             let solver = ResolvoDepSolver::new(retained);
-            (solver.solve(&roots), solver.into_inner())
+            (solve(&solver), solver.into_inner())
         }
         LegacyCell::Naive => {
             let solver = crate::NaiveDepSolver::new(retained);
-            (solver.solve(&roots), solver.into_inner())
+            (solve(&solver), solver.into_inner())
         }
         LegacyCell::Sat => {
             let solver = crate::sat::SatDepSolver::new(retained);
-            (solver.solve(&roots), solver.into_inner())
+            (solve(&solver), solver.into_inner())
         }
     };
     if retained.restart.get()

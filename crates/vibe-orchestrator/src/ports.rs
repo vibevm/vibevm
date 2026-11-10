@@ -276,6 +276,10 @@ pub struct PackageSourceBuild<'a> {
     pub global: &'a GlobalRegistrySource,
     /// The resolved offline posture.
     pub offline: bool,
+    /// Whether this invocation expands `[recommends]` at all — `false` is
+    /// `--no-recommends` (`PROP-077#NO-RECOMMENDS-FLAG`). One decided
+    /// answer, like the offline posture beside it.
+    pub recommends: bool,
     /// The pre-apply lockfile's members, as the provenance channel.
     pub locked: &'a [LockedPackage],
 }
