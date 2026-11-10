@@ -9,7 +9,10 @@ Nothing is implemented. Phase 0 (spikes) may run while `APP-VERSIONS` finishes
 lockfile and channel work.
 
 Cold start: read this file, then `LOG.md` in this directory, then
-`spec://org.vibevm.core/vibevm/common/PROP-076#root`.
+`spec://org.vibevm.core/vibevm/common/PROP-076#root`, then
+`HARNESS-DELIVERY.md` in this directory — the owner-adopted design for how the
+lane reaches a coding agent, which is the input to the harness phases below and
+is **not** restated here.
 
 ## 1. Mandate
 
@@ -525,7 +528,7 @@ guard is the three-way classification unit test.
 
 **Parallel.** First. Nothing else may start.
 
-### P2 — capture: witnessed inputs and the prospective entrypoint — **M**
+### P2 — capture: witnessed inputs and the prospective entrypoint — **M** — **DONE 2026-11-10**
 
 **Goal.** For an opted-in node, produce an in-memory, fully witnessed input set
 for the prefix — template bytes, entrypoint bytes with the *prospective*
@@ -587,6 +590,91 @@ will drift, and a test asserts they are equal for the same inputs.
 
 **Parallel.** Needs P1.
 
+**As delivered.** Three commits, in this order: the `target:` gate spelling in
+`vibe-core`; its generation-time resolution in `install/bootgen/conditions.rs`,
+with `installed:` and `target:` travelling together as one condition world; the
+managed redirect block exposed as a value; and
+`crates/vibe-workspace/src/system_prompt/` — `capture.rs`, `plan.rs`,
+`reader.rs` and the module root — plus one `DeclaredBootSources::node_input`
+that observes a node-relative authored input under the held workspace with the
+prepared-node guard rechecked before and after. `AnalyzedLane` gained
+`lane_bytes()`, and `analyze.rs` was split along its result/behaviour seam
+(`analyze/result.rs`) to stay inside the file budget. Sixteen capture tests,
+six condition tests, three end-to-end `target:` tests and three projection
+tests.
+
+**Four decisions the plan did not settle, each recorded in `FORMAT-CHANGES.md`
+under `SP-FMT-101` and in `LOG.md`.** (1) A continuation row carries the path
+exactly as the `INDEX.md` row spells it — **workspace-root-relative**, not
+node-relative as `PLAN.md` wrote — because a dependency row names a path under
+`vibedeps/` that lies beneath no member node, so a node-relative spelling could
+not express it and re-basing would make the plan disagree with the artifact a
+session reads. (2) The `target:` selection is resolved **once per
+regeneration** from the project's own manifest rather than per node, because
+the unit table that carries each contribution's residual `when` is built once
+before the node loop and a package unit's lane is published once for the whole
+resolution. (3) The generated `INDEX.md` header prose was **left untouched**,
+so this repository's `INDEX.md` is byte-identical rather than merely
+row-identical: the header describes the grammar a reader may meet *in that
+file*, and a `target:` row is never in it. (4) Capture is reached through a
+`PrefixReader` seam rather than by calling the filesystem directly, because
+`#SYS-NO-HOME-EXPANSION` is a claim about which files are opened and a claim
+about reads is proved by counting reads.
+
+**One fact moved further than planned.** `PROP-076#SYS-SELF-INCLUSION` is now
+`impl/done`: its last clause — an output listed among its own inputs — had no
+generator to bind in P1 and now has one, so capture refuses a continuation row
+that resolves to any reserved path inside *this* node's own boot directory, in
+any ASCII case spelling. The test is a file identity, not a string: a
+dependency slot's own generated lane is untouched.
+
+### P2b — the managed block becomes a router — **L** — *re-planned 2026-11-10*
+
+*(New. `HARNESS-DELIVERY.md` §12 assigns three items to "P2 capture" — the
+router block as the prospective entrypoint's managed block, the expected
+`STATIC` hash in it, and managed-block neutralisation in `vibedeps/` copies.
+They arrived after P2's scope was fixed and they are **not** capture: each one
+rewrites the body of every `CLAUDE.md` / `AGENTS.md` / `GEMINI.md` in every
+project — 19 tracked files in this repository — and the expected hash must be
+the same digest the lane markers use, which the composer owns. So they are
+their own atom, placed after P3 where that grammar is settled, and nothing was
+silently dropped.)*
+
+**Goal.** The managed block stops being "read these files in order" and becomes
+the router of `PROP-076#SYS-NO-RECURSION`: scoped to its own project, keyed on
+marker presence anywhere in context rather than on position, carrying the
+expected lane hash, and byte-identical between `read` and `launch` delivery.
+
+**Files.** `crates/vibe-workspace/src/boot_artifacts/redirect.rs` (the new body,
+its node-id and its expected-hash parameter — one renderer, which P2 already
+made the single source of both the written bytes and the witness);
+`crates/vibe-workspace/src/boot_artifacts.rs` and
+`…/boot_artifacts/native_managed/write.rs` (thread the compiled lane's digest
+to the selector that writes the block); `crates/vibe-workspace/src/vibedeps/`
+(neutralise the block in materialised copies);
+`crates/vibe-check/src/checks/` (the nested-managed-block warning); and the
+regenerated instruction files of this repository.
+
+**Formats.** `SP-FMT-105` (the block shape half).
+
+**Tests.** The block's exact bytes, per harness mode. Codex's limit: the whole
+block well under 32 KiB, and a refusal when it would fall outside
+`project_doc_max_bytes`. Idempotence: two regenerations leave all three copies
+byte-identical, and the three stay byte-identical to each other. The expected
+hash follows `STATIC.*` and nothing else — editing `90-user.xml` changes no
+instruction file. A `vibedeps/` copy carries a neutralised block. `vibe check`
+warns about a nested managed block reachable by downward discovery.
+
+**Risks.** This is the phase that edits 19 tracked files and every downstream
+project's instruction files in one commit, and the diff is unreviewable by
+reading. The guard is that the body is generated from one function with a
+golden test over its bytes, so the review is of that function and that golden.
+Second risk: the router's wording depends on an unanswered question — what a
+harness does with a **missing** imported file — which is why the import tier is
+reserved (`#SYS-IMPORT-INERTNESS`) and the router alone ships first.
+
+**Parallel.** Needs P3's marker grammar. Independent of P4.
+
 ### P3 — compose: deterministic assembly, segments, sidecar — **L**
 
 **Goal.** A pure function from `CapturedPrefixInputs` to the prefix bytes, the
@@ -609,7 +697,23 @@ layer-qualified ids (`project.template`, `project.entrypoint`,
 
 **Formats.** `SP-FMT-003` (`SYSTEM.md`), `SP-FMT-004` (the sidecar,
 `vibe-system-prompt/1`), `SP-FMT-009` (the transport-contract recipe as a
-versioned surface). Also from the owner decision of 2026-11-10: under a fixed
+versioned surface), and — added 2026-11-10 by the owner decisions —
+`SP-FMT-103` (`AGENT-LANE.md`, the second composed artifact) and `SP-FMT-104`
+(the lane segment markers).
+
+**Added 2026-11-10 — this phase composes two artifacts, not one.** Beside the
+API prefix it composes the **agent lane** of `PROP-076#SYS-AGENT-LANE`:
+`STATIC.*` then every unconditional INDEX file in INDEX order, each wrapped in
+the begin/end marker pair of `#SYS-LANE-MARKERS` (`<node-id>`, project-relative
+path, 12 hex of the segment's own SHA-256), with no template, no entrypoint, no
+router and no import line. The marker grammar is settled here because P2b's
+expected hash must be the same digest, and the composer additionally
+**verifies** that the composed `SYSTEM.md` contains neither an `@` import line
+nor a router — so even a mistaken import of the prefix cannot recurse
+(`#SYS-NO-RECURSION`). The fixed-host baking of `os:` rows is shared between
+the two composers. Extra tests: every begin has its end, pairs are unique,
+order matches INDEX, each hash matches its own bytes, and no marker-shaped line
+occurs inside a segment's own bytes. Also from the owner decision of 2026-11-10: under a fixed
 `[system_prompt] host` the composer resolves `os:` rows at build time and
 bakes the matching ones into the prefix, leaving band G empty; the sidecar
 records the declared `host` and `target`, which are authored manifest values
@@ -654,11 +758,18 @@ every prefix digest in the world.
 
 **Parallel.** Needs P2.
 
-### P4 — publish: two transaction roles, stale, conflict, removal — **L**
+### P4 — publish: generated roles, the ignore file, removal — **M** — *re-planned 2026-11-10*
 
-*(Sized M while planning; spike S2 moved it to L — see the spike answers
-in §3. Twelve files refuse to compile and five more need edits the compiler
-never asks for.)*
+*(Sized M while planning; spike S2 moved it to L; the owner decision
+`PROP-076#SYS-ARTIFACTS-NOT-TRACKED` moves it back to **M**, for a reason worth
+stating. S2's finding stands in full — twelve files refuse to compile and five
+more need by-name edits the compiler never asks for — but the decision that the
+generated artifacts are **not git-tracked** removes the most expensive half of
+this phase's semantics. An untracked, always-derivable artifact needs no
+committed-artifact ownership-conflict machinery: there is no user's hand-edited
+`SYSTEM.md` to protect in a tracked file, and the honest answer to a file whose
+bytes do not match the sidecar is to rebuild it. What stays is exactly the
+transaction safety, which is not negotiable, plus the `.gitignore` writer.)*
 
 **Goal.** The two outputs are written inside the existing boot transaction as
 one coherent generation with INDEX, STATIC and the redirects; a failure leaves
@@ -681,8 +792,27 @@ conflict and removal).
 
 **Commands.** None new.
 
-**Formats.** `SP-FMT-005` (the two transaction roles),
-`SP-FMT-010` (removal and ownership-conflict semantics).
+**Formats.** `SP-FMT-005` (the transaction roles),
+`SP-FMT-010` (removal and ownership semantics, re-scoped below),
+`SP-FMT-102` (the untracked artifacts and the vibe-written `.gitignore`),
+`SP-FMT-103` (`AGENT-LANE.md` as a generated role).
+
+**Re-planned 2026-11-10 by `PROP-076#SYS-ARTIFACTS-NOT-TRACKED`.** Three
+changes to this phase. **(1) Three generated roles, not two:** `SYSTEM.md`,
+`SYSTEM.meta.json` and `AGENT-LANE.md`. **(2) A `.gitignore` writer**, owned by
+this phase: `vibe` writes the ignore file into the boot directory it already
+owns and never touches the repository root's, which is the developer's. It is
+written inside the same transaction as the artifacts it covers, because an
+artifact that exists before its ignore line is an artifact a `git add -A`
+commits. **(3) The ownership-conflict machinery shrinks to a rebuild.**
+`SP-FMT-010`'s named refusal existed to protect a *tracked* file that might be
+a user's own work; an untracked, derivable artifact whose bytes disagree with
+its sidecar is simply stale, and the answer is to rebuild it. What survives
+unchanged: the removal case (opting out removes exactly the three outputs the
+sidecar proves vibe owns), the stale-spelling removal, and every interruption
+and rollback test. A `vibe check` **error** when git tracks a generated prefix
+is new here, and is the one place the decision is enforced rather than
+documented.
 
 **Tests.** Unit: the role validation admits exactly the five production targets
 and refuses a sixth; `common_parent` still holds. CLI/integration with an
@@ -747,7 +877,29 @@ concatenated.
 
 **Formats.** `SP-FMT-006` (`vibe-prompt-check/1`),
 `SP-FMT-007` (`vibe-prompt-prepare/1`),
-`SP-FMT-008` (the `vibe check` check id).
+`SP-FMT-008` (the `vibe check` check id), and — added 2026-11-10 —
+`SP-FMT-106` (`vibe prompt path`, `vibe prompt flags`, the build summary line)
+and the parsing half of `SP-FMT-105` (`[system_prompt.harness.<name>]`).
+
+**Added 2026-11-10 by the owner decisions.** Two more verbs and one line.
+**`vibe prompt path [--part lane|system] [--json]`** prints the absolute path of
+a generated artifact — two parts because there are two artifacts — and reports a
+stale or missing one *as* stale or missing with the exact `vibe prompt build`
+that fixes it, **never as an empty path**, which a shell alias would turn
+silently into a broken launch. **`vibe prompt flags --harness <name>`** prints
+ready-to-paste launch flags. **Every build ends with one summary line** naming
+what happened and where — `system prompt: rebuilt → <path> (<size>), lane →
+<path> (<size>)` or `system prompt: unchanged → <path>` — from `vibe install`
+as well as `vibe prompt build`, with a failed or opted-out build saying so
+explicitly, and the same facts in the `--json` report. Also here: the
+`[system_prompt.harness.*]` table and constraints C1–C4 of
+`HARNESS-DELIVERY.md` §4 (including the refusal of `import` in v1), the
+host-mismatch warning, and the `vibe prompt check` additions of its §8.5 —
+marker integrity, the block's expected hash against the current lane, `@`
+tokens in lane bytes with their count and locations, entrypoint size against
+Codex's 32 KiB limit, nested and un-neutralised managed blocks, entrypoint
+copies that are not byte-identical, and lane size against a stated context
+size.
 
 **Tests.** Unit: the verdict for each of the six cases, each naming its reason;
 a changed template, entrypoint or lane input yields `Stale` naming which;
@@ -805,7 +957,19 @@ ProviderUsage }` — every field read from a provider response, never computed
 locally and never estimated.
 
 **Commands.** `vibe prompt prepare --json` gains the envelope projection; no
-command in this campaign sends a request.
+command in this campaign sends a request. **Added 2026-11-10:** `vibe agent
+<harness> [--] [args…]` — composes the agent lane, checks the delivery-mode
+constraints, starts the harness with its **file-based** slot (no lane bytes on a
+command line, on any operating system: one argument is capped at 128 KiB on
+Linux and the whole line at ~32,767 characters on Windows, against a 310 KB
+lane), and passes everything after the harness name through. Claude Code gets
+`--append-system-prompt-file <lane>` plus
+`--exclude-dynamic-system-prompt-sections`, and a refusal when the user's own
+arguments already set a system prompt; Codex gets a launch-time profile file,
+which `vibe agent` may write as `$CODEX_HOME/vibe-<node-id>.config.toml` and an
+install never writes. A harness in `read` or `import` mode is started unchanged
+and told so in one line. `vibe agent` is a thin layer over `vibe prompt flags`,
+so there is one code path.
 
 **Formats.** `SP-FMT-011` (the capture envelope and the usage counters).
 
@@ -853,6 +1017,15 @@ node with an extension world); new `crates/vibe-cli/tests/cli_prompt_matrix.rs`.
 **Commands.** None new.
 
 **Formats.** None.
+
+**Added 2026-11-10.** Offline marker and block tests; the nested-project
+fixture (a sub-project with its own managed block, proving the router's
+self-scoping and the `vibedeps/` neutralisation); a two-instruction-file
+configuration case (`AGENTS.md` plus `QWEN.md`), proving that concatenation
+order cannot change the router's verdict because its test is presence anywhere
+rather than position; and, where Codex is installed, the free placement test
+`codex debug prompt-input` through the profile file, which answers most Codex
+placement questions with no provider spend at all.
 
 **Tests.** The differential: for each fixture, build the reference stream the
 way the published boot contract says an agent reads it — the entrypoint, then
@@ -925,20 +1098,73 @@ and the page says so in its first paragraph.
 
 **Parallel.** Needs P7. Drafting may start after P3.
 
+**Added 2026-11-10.** The delivery modes of `HARNESS-DELIVERY.md` in
+user-facing form — the three tiers, the per-harness matrix and its recommended
+defaults, why `import` is refused in version 1, and the risks of its §9 that
+`vibe` cannot control: MCP tool-set changes ahead of the slot in the cache
+hierarchy, a mid-session model switch, undocumented harness flags, a resumed
+conversation's recorded snapshot, user-local instruction files outside vibe's
+accounting, and a 310 KB lane that compaction cannot drop the way it drops tool
+results.
+
+### P9 — the live check, Claude Code only — **S** — *authorised, scoped*
+
+*(New, 2026-11-10. `HARNESS-DELIVERY.md` §10, its decision D13, as the owner
+narrowed it the same day: **authorised for Claude Code only**, to run **before
+the release is published** and only once `vibe agent claude` — launch delivery —
+exists. Codex, Qwen Code, Gemini CLI and every other harness stay
+**unauthorised**, so their rows in §10 remain research and their recommended
+default stays `read`. It is the campaign's **final step**, after P7, and it is
+run by the **central session**: a worker neither starts an agent session nor
+spends the owner's subscription. Nothing earlier depends on it, because every
+phase's own acceptance is offline.)*
+
+**Goal.** Answer the questions no offline test can: whether a harness delivers
+a ~310 KB file whole or truncates it, what it does with a **missing** imported
+file (silent skip or a literal line — the router's wording depends on it),
+whether a cache read of the lane actually occurs on a second session, and
+whether Claude Code subagents receive `CLAUDE.md` imports — which, if they do,
+means a quiet worker would carry the prefix in context and must be recorded as
+a known cost or excluded.
+
+**Method.** A sample project in this campaign's fixtures — no personal data —
+whose lane is padded to the real size with unique canary words: one in the last
+line of `STATIC.xml`, one in each INDEX file, one in the entrypoint outside the
+block, and the last `vibe:lane-end` line as the tail canary. One nested
+sub-project with its own block and canaries, and `@spec`-style tokens in
+`STATIC`. Two or three short sessions, Claude Code only. Delivery is read from
+the answer; caching from the harness's own session logs under
+`$CLAUDE_CONFIG_DIR/projects/*.jsonl` (`cache_read_input_tokens` /
+`cache_creation_input_tokens`) — on this machine that directory is `~/.claude2`,
+not `~/.claude`.
+
+**Pass criteria and fallbacks** are the Claude Code rows (C1–C8) of
+`HARNESS-DELIVERY.md` §10; the Codex and other-harness rows are not run under
+this authorisation. The fallback is safe by construction: a failure of the
+launch evidence means `launch` defaults back to `read`, and a failure of the
+subagent test means `launch` must not be Claude Code's default at all — the
+cost it would carry is a quiet worker holding the prefix in context, against
+`PROP-076#SYS-WORKER-EXCLUSION`.
+
 ### Dependency order, as a graph
 
 ```
 P0 spikes (S1..S6)
   |
-  +--> P1 --> P2 --> P3 --> P4 --> P5 --> P6 --> P7 --> P8
-                      |                                 ^
-                      +---------- (P8 drafting) --------+
+  +--> P1 --> P2 --> P3 --> P4 --> P5 --> P6 --> P7 --> P8 --> (P9, if authorised)
+             done     |      ^                                 ^
+             done     +--> P2b                                 |
+                      +---------- (P8 drafting) ---------------+
 ```
 
 The chain is deliberately linear: every phase consumes the previous one's
-output, and the two places where that is not strictly true (P8's drafting, and
-P6's fixture work) are not worth the coordination cost of a parallel branch.
-S1–S6 are independent of each other and of `APP-VERSIONS`.
+output, and the three places where that is not strictly true (P8's drafting,
+P6's fixture work, and P2b, which needs only P3's marker grammar and is
+independent of P4) are not worth the coordination cost of a parallel branch —
+except P2b, which is kept separate because it rewrites 19 tracked files and
+wants its own review. S1–S6 are independent of each other and of
+`APP-VERSIONS`. P9 is outside the chain: it needs the owner's authorisation and
+it spends money.
 
 ## 5. Predictions (falsifiable)
 
@@ -985,7 +1211,14 @@ S1–S6 are independent of each other and of `APP-VERSIONS`.
 - **P2** Adding `when = "target:<os>"` changes **no** row of this
   repository's `INDEX.md`, because its `[system_prompt] target` is absent and
   an absent target selects every OS. *The compatibility half of the owner
-  decision, measurable as a byte-identical INDEX.*
+  decision, measurable as a byte-identical INDEX.* **Confirmed, and stronger
+  than predicted (P2, 2026-11-10): no byte of `INDEX.md` changes at all**,
+  because the generated header prose was deliberately left alone — it describes
+  the grammar a reader may meet in that file, and a `target:` row is never in
+  it. Asserted on fixtures rather than on the host repository, which has no
+  `target:` row to drop: a project declaring no `target` includes every such
+  row, a project declaring one platform drops the others entirely rather than
+  gating them, and no generated entry carries a `when` under any selection.
 - **P5** `vibe prompt prepare` on this repository opens exactly **11** files —
   the three prefix inputs and the eight INDEX rows — and performs zero writes
   and zero network connections. *Counted by an observer, not asserted in prose.*
@@ -995,6 +1228,20 @@ S1–S6 are independent of each other and of `APP-VERSIONS`.
   pair of commands.*
 - **P6** A fake-provider capture contains `AGENTS.md`'s text **exactly once**,
   and a worker-profile request contains none of it.
+- **P2b/P3** The composed `SYSTEM.md` contains no `@` import line and no
+  router, asserted by the composer itself and not only by a test, so the
+  recursion `#SYS-NO-RECURSION` forbids is impossible by construction rather
+  than by review. *If the assertion can be satisfied while an import line
+  survives somewhere in the prefix, the segment boundaries are wrong.*
+- **P2b** The expected lane hash in the managed block changes when and only
+  when `STATIC.*` changes: editing `90-user.xml` leaves all three instruction
+  files byte-identical. *The cost of D6 is bounded exactly here, and this is
+  the measurement of it.*
+- **P4** A second `vibe install` with nothing changed leaves three generated
+  artifacts, one `.gitignore` and three instruction files with unchanged
+  mtimes, and `git status` is clean — which under
+  `#SYS-ARTIFACTS-NOT-TRACKED` means the artifacts do not appear in it at all.
+  *The determinism claim and the no-tracking claim in one command.*
 - **P7** The differential parity test passes with exactly one declared
   normalisation and no other difference. ***This is the campaign's central
   claim: the prefix delivers what a file-reading boot delivers.*** *If a second
@@ -1052,15 +1299,25 @@ part of this script.
 
 ## 8. Open points
 
-**Q3 is answered (owner, 2026-11-10) and is no longer open** — see
+**Q3 and Q6 are answered (owner, 2026-11-10) and are no longer open.** Q6 was
+answered **against** its own default: the generated prefix, its sidecar and the
+agent lane are **not** git-tracked, under a `.gitignore` vibe writes into the
+boot directory it owns — see
+`spec://org.vibevm.core/vibevm/common/PROP-076#SYS-ARTIFACTS-NOT-TRACKED`,
+which re-planned P4. The whole delivery design was settled the same day and
+adopted as decided (D1–D12 of `HARNESS-DELIVERY.md` §11), adding
+`#SYS-AGENT-LANE`, `#SYS-LANE-MARKERS`, `#SYS-HARNESS-DELIVERY`,
+`#SYS-NO-RECURSION`, `#SYS-IMPORT-INERTNESS`, `#SYS-BOOT-ORDER-IS-PRECEDENCE`
+and `#SYS-OPERATIONS-PATH-AND-FLAGS`. Its D13 — the live run — is the one
+genuinely open item, and it is P9. For Q3, see
 `spec://org.vibevm.core/vibevm/common/PROP-076#SYS-HOST-AND-TARGET` and the
 decision entry in `LOG.md`. It was posed as one axis and turned out to be two:
 `[system_prompt] host` (default `"portable"`) decides whether the session's-OS
 `os:` gates stay in the gated band or are baked into the prefix, and a new
 `[system_prompt] target` plus a new `when = "target:<os>"` gate (default: every
 OS) carries the product's own platform and is always resolved at build time.
-The manifest keys landed in P1; the gate grammar lands in P2, the baking in P3,
-the host-mismatch warning in P5. The remaining questions are
+The manifest keys landed in P1; the gate grammar landed in P2, the baking lands
+in P3, the host-mismatch warning in P5. The remaining questions are
 `spec://org.vibevm.core/vibevm/common/PROP-076#SYS-OWNER-QUESTIONS`, each with
 the default it takes unless the owner objects: (Q1) the unconditional INDEX band
 as a cacheable continuation rather than baked into the prefix; (Q2) the override
@@ -1068,14 +1325,15 @@ authority of repository, package and user-preference instructions once they sit
 in an API instruction role; (Q3) a portable prefix with gated continuation
 rather than a target-bound one; (Q4) the entrypoint represented verbatim with
 one in-place substitution rather than filtered; (Q5) no measured provider saving
-required before the campaign closes; (Q6) both generated artifacts committed.
+required before the campaign closes. Q6 is answered above.
 
 **Which of them block a phase.** Q1 is the band model itself: a rejection after
 P3 lands is rework, not a tweak, so it wants an answer before P3 starts. Q3 was
 the other half of that and is now answered. Q4 shapes P2 and P3 the same way;
 S1 gave the owner the evidence for it and it stands. Q2 blocks P6's adapter
-contract and nothing earlier. Q6 shapes P4. Q5 blocks nothing and closes with
-P8.
+contract and nothing earlier. Q6 shaped P4 and is answered. Q5 blocks nothing
+and closes with P8. D13 blocks only P9, and P9 blocks nothing in the campaign:
+every phase's own acceptance is offline.
 
 ## 9. Log
 
