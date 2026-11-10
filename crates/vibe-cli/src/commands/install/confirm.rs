@@ -83,6 +83,10 @@ impl<'a> CliConfirmGate<'a> {
 }
 
 impl ConfirmGate for CliConfirmGate<'_> {
+    fn slot_judgment(&self) -> vibe_install::SlotJudgmentContext {
+        super::trust::judgment(self.ctx, self.assume_yes)
+    }
+
     fn confirm_install(&self, packages: usize) -> Result<()> {
         if let ConfirmationScope::UserProject { notice, action } = self.scope {
             notice.step(&self.user_notice(packages, action));

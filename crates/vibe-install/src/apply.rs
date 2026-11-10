@@ -176,6 +176,11 @@ pub fn apply_with_spec_format_and_hook_output<S: InstallSource + ?Sized>(
 pub struct SlotLifecycleSeams {
     pub observer: Arc<dyn SlotLifecycleObserver>,
     pub agent: Arc<dyn vibe_lifecycle::AgentBackend>,
+    /// The host facts every `slot:` condition and need is decided against,
+    /// and the trust policy of PROP-065 `#ordinary-trust`. Named for the
+    /// same reason `agent` is: a defaulted one consents on the operator's
+    /// behalf, which is the failure that looks like nothing happening.
+    pub judgment: crate::SlotJudgmentContext,
 }
 
 impl SlotLifecycleSeams {
@@ -186,6 +191,7 @@ impl SlotLifecycleSeams {
         Self {
             observer: Arc::new(NoSlotLifecycleObserver),
             agent: Arc::new(vibe_lifecycle::NoAgentBackend),
+            judgment: crate::SlotJudgmentContext::consenting(),
         }
     }
 }

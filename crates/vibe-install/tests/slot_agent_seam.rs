@@ -153,6 +153,7 @@ fn an_injected_backend_executes_a_slot_scoped_agent_row() {
         SlotLifecycleSeams {
             observer: Arc::new(vibe_install::NoSlotLifecycleObserver),
             agent: backend.clone(),
+            judgment: vibe_install::SlotJudgmentContext::consenting(),
         },
         std::sync::Arc::new(vibe_lifecycle::LifecycleLease::acquire(project.path()).unwrap()),
     )

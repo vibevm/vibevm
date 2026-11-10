@@ -154,7 +154,20 @@ impl InstallSlotLifecycle {
             })
             .collect::<Result<Vec<_>>>()?;
         let host = host_source(project_root, manifest)?;
-        let plan = build_slot_plan(&installed, &host, event_targets)?;
+        let plan = build_slot_plan(
+            &installed,
+            &host,
+            event_targets,
+            &seams.judgment,
+            run.offline,
+        )?;
+        // Both refusals happen HERE, before the materialiser has touched a
+        // slot: `#needs` refuses the installation up front naming the
+        // contribution and the need, and `#ordinary-trust` asks or refuses
+        // once per untrusted dependency. Nothing is materialised, registered
+        // or projected by a run that stops at either.
+        plan.preflight()?;
+        plan.admit_consent(&seams.judgment)?;
         let effective_world = ExtensionWorld {
             installed: installed.clone(),
             host: host.clone(),

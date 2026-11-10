@@ -12,6 +12,7 @@ use vibe_lifecycle::{
 use vibe_workspace::install::ResolvedDep;
 
 use crate::error::{Error, Result};
+use crate::lifecycle::judgment::{SlotConsentRequest, SlotJudgmentContext, condition_lines};
 
 #[derive(Debug, Clone)]
 #[spec(documents = "spec://org.vibevm.core/vibevm/common/PROP-054#SURFACE-THE-RITUAL")]
@@ -24,6 +25,25 @@ pub struct SlotLifecyclePlanEntry {
     pub tier: String,
     pub version: Option<String>,
     pub slot_target: SlotTarget,
+    /// The contribution's own `id`, as the author wrote it.
+    pub id: String,
+    /// The human line of PROP-065 `#ordinary-grammar`, when declared.
+    pub title: Option<String>,
+    /// The group of the package that DECLARED the row — `None` when the
+    /// host's own manifest did, which is what exempts it from the trust
+    /// question of PROP-065 `#ordinary-trust`.
+    pub declarant_group: Option<String>,
+    /// Whether this contribution will run in this pass.
+    pub run: bool,
+    /// The deciding condition, or the unmet need, when it will not.
+    pub reason: Option<String>,
+    /// The declared `needs` this host does not meet.
+    pub unmet_needs: Vec<String>,
+    /// An unmet need or a failure is recorded and does not stop the rest.
+    pub optional: bool,
+    /// The conditions the verdict was decided from, for the plan's
+    /// continuation lines.
+    pub conditions: Vec<String>,
     pub(super) execution: HandlerExecution,
 }
 
@@ -52,6 +72,124 @@ impl SlotLifecyclePlan {
                 .cloned()
                 .collect(),
         }
+    }
+}
+
+impl SlotLifecyclePlanEntry {
+    /// The `needs` continuation line of a plan row: what the contribution
+    /// requires and, when this host does not provide it, which of them.
+    ///
+    /// ```
+    /// use vibe_install::SlotLifecyclePlan;
+    ///
+    /// assert!(SlotLifecyclePlan::default().entries.is_empty());
+    /// ```
+    pub fn needs_line(&self) -> Option<String> {
+        (!self.unmet_needs.is_empty()).then(|| format!("missing: {}", self.unmet_needs.join(", ")))
+    }
+}
+
+impl SlotLifecyclePlan {
+    /// Every contribution that will run, in plan order.
+    pub fn running(&self) -> impl Iterator<Item = &SlotLifecyclePlanEntry> {
+        self.entries.iter().filter(|entry| entry.run)
+    }
+
+    /// Refuse the installation up front when a contribution that will run
+    /// needs something this host has not got (PROP-065 `#needs`,
+    /// `#ordinary-grammar`). Checked for every such contribution **before
+    /// anything starts**, so a late failure becomes an early refusal.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-065#needs")]
+    pub(super) fn preflight(&self) -> Result<()> {
+        for entry in self.running() {
+            if let Some(need) = entry.unmet_needs.first() {
+                return Err(Error::SlotNeedUnmet {
+                    package: format!(
+                        "{}/{}@{}",
+                        entry.slot_target.group, entry.slot_target.name, entry.slot_target.version
+                    ),
+                    contribution: entry.id.clone(),
+                    point: entry.point.clone(),
+                    need: need.clone(),
+                });
+            }
+        }
+        Ok(())
+    }
+
+    /// The question of PROP-065 `#ordinary-trust`, asked once per package
+    /// and only about a dependency whose group is not trusted and at least
+    /// one of whose contributions will actually run.
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-065#ordinary-trust")]
+    pub(super) fn admit_consent(&self, judgment: &SlotJudgmentContext) -> Result<()> {
+        if judgment.assume_yes {
+            return Ok(());
+        }
+        for request in self.consent_requests(judgment) {
+            let granted = match &judgment.confirm {
+                Some(ask) => ask(&request).map_err(|reason| Error::SlotConsentRequired {
+                    package: request.package.clone(),
+                    group: request.group.clone(),
+                    contributions: request.contributions.join("; "),
+                    reason: format!("the question failed: {reason}"),
+                })?,
+                None => {
+                    return Err(Error::SlotConsentRequired {
+                        package: request.package,
+                        group: request.group,
+                        contributions: request.contributions.join("; "),
+                        reason: "an unattended run proceeds only with --assume-yes (or \
+                                 --unattended)"
+                            .into(),
+                    });
+                }
+            };
+            if !granted {
+                return Err(Error::SlotConsentRequired {
+                    package: request.package,
+                    group: request.group,
+                    contributions: request.contributions.join("; "),
+                    reason: "the contributions were declined".into(),
+                });
+            }
+        }
+        Ok(())
+    }
+
+    /// One request per untrusted dependency with running contributions, in
+    /// plan order, each listing what it would run.
+    fn consent_requests(&self, judgment: &SlotJudgmentContext) -> Vec<SlotConsentRequest> {
+        let mut requests: Vec<SlotConsentRequest> = Vec::new();
+        for entry in self.running() {
+            let Some(group) = &entry.declarant_group else {
+                continue;
+            };
+            if judgment.trusts(group) {
+                continue;
+            }
+            let package = format!(
+                "{}/{}@{}",
+                entry.slot_target.group, entry.slot_target.name, entry.slot_target.version
+            );
+            let line = format!(
+                "{} ({}) {}",
+                entry.id,
+                entry.handler,
+                entry.title.as_deref().unwrap_or("-")
+            );
+            match requests
+                .iter_mut()
+                .find(|request| request.package == package)
+            {
+                Some(request) => request.contributions.push(line),
+                None => requests.push(SlotConsentRequest {
+                    package,
+                    group: group.clone(),
+                    contributions: vec![line],
+                }),
+            }
+        }
+        requests
     }
 }
 
@@ -88,11 +226,21 @@ pub(super) fn build_slot_plan(
     installed: &[DependencyExtensionSource],
     host: &HostExtensionSource,
     resolution: &[ResolvedDep],
+    judgment: &SlotJudgmentContext,
+    offline: bool,
 ) -> Result<SlotLifecyclePlan> {
     let mut entries = Vec::new();
     for point in [SlotPoint::PreInstall, SlotPoint::PostInstall] {
         for target_dep in resolution {
-            append_target_plan(&mut entries, installed, host, target_dep, point)?;
+            append_target_plan(
+                &mut entries,
+                installed,
+                host,
+                target_dep,
+                point,
+                judgment,
+                offline,
+            )?;
         }
     }
     Ok(SlotLifecyclePlan { entries })
@@ -104,6 +252,8 @@ fn append_target_plan(
     host: &HostExtensionSource,
     target_dep: &ResolvedDep,
     point: SlotPoint,
+    judgment: &SlotJudgmentContext,
+    offline: bool,
 ) -> Result<()> {
     let target_id = DependencyProviderId::new(
         target_dep.group.clone(),
@@ -148,6 +298,23 @@ fn append_target_plan(
         SelectorSubject::package(&target_id),
     ) {
         let execution = HandlerExecution::from_row(row).with_slot_target(target.clone());
+        let declared = row.declaration().judgment.as_ref();
+        let slot = std::path::Path::new(&target.root);
+        let (mut run, mut reason) = judgment.decide(declared, offline, slot);
+        let needs = declared.map(|j| j.needs.as_slice()).unwrap_or_default();
+        let optional = declared.is_some_and(|j| j.optional);
+        let unmet = if run {
+            judgment.unmet(needs, offline)
+        } else {
+            Vec::new()
+        };
+        // `#needs`: an optional contribution with an unmet need is skipped
+        // and reported; a required one refuses the whole installation, which
+        // the plan-wide preflight does once every verdict is known.
+        if run && optional && !unmet.is_empty() {
+            run = false;
+            reason = Some(format!("unmet need `{}`", unmet.join("`, `")));
+        }
         entries.push(SlotLifecyclePlanEntry {
             key: execution.key(),
             reference: execution.reference(),
@@ -157,6 +324,14 @@ fn append_target_plan(
             tier: tier_name(row.effective_tier()).into(),
             version: provider_version(row.provider()),
             slot_target: target.clone(),
+            id: row.declaration().id.clone(),
+            title: declared.and_then(|j| j.title.clone()),
+            declarant_group: declarant_group(row.provider()),
+            run,
+            reason,
+            unmet_needs: unmet,
+            optional,
+            conditions: condition_lines(declared),
             execution,
         });
     }
@@ -179,6 +354,16 @@ fn tier_name(tier: vibe_lifecycle::ContributionTier) -> &'static str {
         vibe_lifecycle::ContributionTier::Preset => "preset",
         vibe_lifecycle::ContributionTier::HostDeclaration => "host-declaration",
         vibe_lifecycle::ContributionTier::HostActivation => "host-activation",
+    }
+}
+
+/// The group of the package that declared the row, or `None` for the
+/// host's own manifest — a project's own `vibe.toml` is the user's own
+/// word, so it is never asked about (PROP-065 `#ordinary-trust`).
+fn declarant_group(provider: &ExtensionProvider) -> Option<String> {
+    match provider {
+        ExtensionProvider::Dependency(provider) => Some(provider.id.group().to_string()),
+        ExtensionProvider::Host(_) => None,
     }
 }
 

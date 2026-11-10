@@ -253,6 +253,7 @@ pub(super) fn run(ctx: &output::Context, inputs: Forced<'_>) -> Result<Reinstall
         vibe_install::SlotLifecycleSeams {
             observer: std::sync::Arc::new(LifecycleSlotObserver::new(ctx, metadata.clone())),
             agent: agent.clone(),
+            judgment: crate::commands::install::trust::judgment(ctx, true),
         },
         lease.clone(),
     )?;

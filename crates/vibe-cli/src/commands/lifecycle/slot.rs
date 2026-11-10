@@ -69,8 +69,25 @@ pub(crate) fn surface_plan(
         });
     }
     for entry in &plan.entries {
+        // PROP-065 `#ordinary-plan`: one row per contribution with its `id`,
+        // its handler kind, its `title`, its needs and its `run` / `skip
+        // (reason)` verdict. A skipped row names the condition that decided
+        // it, so a plan never says `skip` without saying why.
+        let verdict = if entry.run {
+            "will run".to_string()
+        } else {
+            format!(
+                "skip ({})",
+                entry.reason.as_deref().unwrap_or("no reason recorded")
+            )
+        };
+        let title = entry
+            .title
+            .as_deref()
+            .map(|title| format!(" — {title}"))
+            .unwrap_or_default();
         ctx.step(&format!(
-            "will run `{}` — point={}, handler={}, provider={} target={}/{}@{} tier={}",
+            "{verdict} `{}`{title} — point={}, handler={}, provider={} target={}/{}@{} tier={}",
             entry.key,
             entry.point,
             entry.handler,
@@ -80,6 +97,12 @@ pub(crate) fn surface_plan(
             entry.slot_target.version,
             entry.tier,
         ));
+        for line in &entry.conditions {
+            ctx.step(&format!("    {line}"));
+        }
+        if let Some(judgment) = entry.needs_line() {
+            ctx.step(&format!("    {judgment}"));
+        }
     }
     Ok(())
 }

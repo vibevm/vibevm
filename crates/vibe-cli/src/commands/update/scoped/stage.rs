@@ -263,6 +263,7 @@ pub(super) fn stage(
         metadata.clone(),
         lifecycle::stream_mode(ctx),
         vibe_install::SlotLifecycleSeams {
+            judgment: crate::commands::install::trust::judgment(ctx, true),
             observer: std::sync::Arc::new(LifecycleSlotObserver::new(ctx, metadata.clone())),
             // Built from the values this command already holds — no
             // discovery, no second manifest read.

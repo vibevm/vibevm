@@ -84,6 +84,7 @@ fn parked_apply(change: bool) {
                 change,
             }),
             agent: Arc::new(PromptOnly),
+            judgment: vibe_install::SlotJudgmentContext::consenting(),
         },
         lease.clone(),
         None,

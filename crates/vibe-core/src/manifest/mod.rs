@@ -70,6 +70,7 @@ pub use document::{BootSection, Manifest, OriginSection, WorkspaceSection};
 pub use extension::{
     ExtensionAppliesTo, ExtensionConfig, ExtensionDecl, ExtensionHandler, ExtensionIrLevel,
     ExtensionKey, ExtensionPass, ExtensionPassKind, ExtensionUse, ExtensionWhen, ExtensionsControl,
+    SlotJudgment, parse_slot_conditions,
 };
 pub use field_path::{FieldError, FieldPath};
 pub use lockfile::{

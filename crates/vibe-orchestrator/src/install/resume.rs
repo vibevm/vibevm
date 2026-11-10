@@ -58,6 +58,11 @@ pub struct ResumeRequest<'a> {
     pub disposition: InstallDisposition,
     /// What the caller's own pass made durable.
     pub progress: vibe_install::InstallProgress,
+    /// The host facts the resumed slot plan is judged against. A resume
+    /// never re-asks the trust question of PROP-065 `#ordinary-trust`: it
+    /// finishes a run that was already consented to, so the caller passes
+    /// the SAME context that run was started with.
+    pub judgment: vibe_install::SlotJudgmentContext,
 }
 
 /// A serviced continuation, plus what the SAME lifecycle run needs to carry on.
@@ -111,6 +116,7 @@ pub fn resume_slot_continuation(
         disposition,
         progress,
         packages_resolved,
+        judgment,
     } = request;
     // ---- the agreement gate, before ANY state or handler work ------------
     //
@@ -216,6 +222,7 @@ pub fn resume_slot_continuation(
             // run somebody else began and must serve its agent rows from the
             // same seam that run was started with.
             agent: agent.clone(),
+            judgment: judgment.clone(),
         },
         lease.clone(),
     )?;

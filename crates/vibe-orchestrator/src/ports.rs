@@ -201,6 +201,20 @@ pub trait InstallObserver: Send + Sync {
 pub trait ConfirmGate: Send + Sync {
     /// Approve materialising `packages` package(s), or refuse typed.
     fn confirm_install(&self, packages: usize) -> Result<()>;
+
+    /// The host facts a `slot:` contribution's conditions and needs are
+    /// decided against, and the trust policy of
+    /// `spec://org.vibevm.core/vibevm/common/PROP-065#ordinary-trust`.
+    ///
+    /// It belongs to this port because it is the same question the port
+    /// already answers — may this run touch the operator's machine — one
+    /// level finer: which dependency's authored contributions may run, and
+    /// whether a terminal is there to be asked. The default consents and
+    /// decides nothing, which is correct for a surface that has no operator
+    /// to ask (a hosted run, a fixture); the CLI overrides it.
+    fn slot_judgment(&self) -> vibe_install::SlotJudgmentContext {
+        vibe_install::SlotJudgmentContext::consenting()
+    }
 }
 
 /// The registry environment ONE install run resolves — seeded, then loaded.

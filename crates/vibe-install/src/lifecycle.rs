@@ -26,10 +26,12 @@ use crate::error::{Error, Result};
 
 mod construct;
 mod envelope;
+mod judgment;
 mod plan;
 mod progress;
 mod reconcile;
 use envelope::{nonempty, slot_target};
+pub use judgment::{SlotConsentAsk, SlotConsentRequest, SlotJudgmentContext};
 pub use plan::{
     NoSlotLifecycleObserver, SlotLifecycleObserver, SlotLifecyclePlan, SlotLifecyclePlanEntry,
 };
@@ -225,6 +227,29 @@ impl InstallSlotLifecycle {
                 && planned.slot_target.version == target.version
         }) {
             matched = true;
+            // `#conditions`: a contribution whose condition decided against
+            // it is reported `skip` with the deciding condition, never run
+            // and never silently absent.
+            if !planned.run {
+                self.push_report(SlotLifecycleReport {
+                    key: planned.key.clone(),
+                    reference: planned.reference.clone(),
+                    slot_target: Some(planned.slot_target.clone()),
+                    point: planned.point.clone(),
+                    provider: planned.provider.clone(),
+                    handler: planned.handler.clone(),
+                    tier: planned.tier.clone(),
+                    version: planned.version.clone(),
+                    status: "skip".into(),
+                    flagged: false,
+                    message: planned.reason.clone(),
+                    stdout: None,
+                    stderr: None,
+                    stdout_truncated: false,
+                    stderr_truncated: false,
+                })?;
+                continue;
+            }
             self.dispatch_execution(planned.execution.clone(), point)?;
         }
         if !matched

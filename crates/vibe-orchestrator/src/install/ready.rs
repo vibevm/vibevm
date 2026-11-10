@@ -115,6 +115,7 @@ pub(super) fn apply(
         vibe_install::SlotLifecycleSeams {
             observer: slot_observer,
             agent: agent.clone(),
+            judgment: confirm_gate.slot_judgment(),
         },
         // The command's ONE acquisition, shared by Arc — the apply builds
         // its slot run on the caller's lease and never reacquires.
@@ -208,6 +209,7 @@ pub(super) fn apply(
             observer,
             agent,
             resume::ResumeRequest {
+                judgment: confirm_gate.slot_judgment(),
                 project_root,
                 // The APPLY's own tree — step 7 rewrote `[requires]` with the
                 // finalised roots, so the pre-apply pair this function was

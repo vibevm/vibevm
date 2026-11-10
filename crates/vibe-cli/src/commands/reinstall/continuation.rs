@@ -155,6 +155,7 @@ pub(super) fn service(ctx: &output::Context, request: Request<'_>) -> Result<Opt
 /// The one `ResumeRequest` both wrappers build, from the values handed in.
 fn resume_request(request: Request<'_>) -> ResumeRequest<'_> {
     ResumeRequest {
+        judgment: vibe_install::SlotJudgmentContext::consenting(),
         // Selection and state have different roots in a workspace member
         // invocation. The lease/state stay at `workspace.root`; the resumed
         // handlers and the selected-node agreement gate must receive the

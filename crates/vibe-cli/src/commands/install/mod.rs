@@ -31,6 +31,7 @@ mod events;
 mod global_mcp;
 mod observer;
 mod preview;
+pub(crate) mod trust;
 pub(crate) use preview::run as run_preview;
 pub(crate) mod report;
 mod resolver;

@@ -437,6 +437,7 @@ fn service_continuation(
     let observer =
         crate::commands::install::CliInstallObserver::new(ctx, None).with_progress(ctx.progress());
     let request = ResumeRequest {
+        judgment: vibe_install::SlotJudgmentContext::consenting(),
         project_root: inputs.project_root,
         workspace: inputs.workspace,
         metadata: inputs.metadata,

@@ -60,6 +60,29 @@ pub enum Error {
     )]
     ConfigurationUnsupported { package: String },
     #[error(
+        "contribution `{contribution}` of `{package}` at `{point}` needs `{need}`, which this host does not \
+         provide, so nothing was installed (violates REQ spec://org.vibevm.core/vibevm/common/PROP-065#needs; \
+         fix: provide `{need}`, or declare the contribution `optional = true` so an unmet need skips it)"
+    )]
+    SlotNeedUnmet {
+        package: String,
+        contribution: String,
+        point: String,
+        need: String,
+    },
+    #[error(
+        "`{package}` declares installation contributions and its group `{group}` is not trusted to run them: \
+         {reason}; nothing was run ({contributions}) (violates REQ \
+         spec://org.vibevm.core/vibevm/common/PROP-065#ordinary-trust; fix: add `{group}` to trusted_groups in \
+         agents.toml, or rerun with --assume-yes)"
+    )]
+    SlotConsentRequired {
+        package: String,
+        group: String,
+        contributions: String,
+        reason: String,
+    },
+    #[error(
         "violates REQ spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-009#INSTALL-CONSUMER-CONSTRAINTS: \
          selected consumer `{selected}` is absent from workspace `{workspace}`; fix surface: supply the selected node's prepared workspace"
     )]
