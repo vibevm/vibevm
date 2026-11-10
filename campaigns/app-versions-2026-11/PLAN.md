@@ -1240,7 +1240,7 @@ refusing an installation up front turns a late failure into an early refusal —
 better, but it will refuse installs that "worked" before by failing late, so
 the release note must say so.
 
-### P7f — vibenvm and the algorithmic differential proof — **L**
+### P7f — vibenvm and the algorithmic differential proof — **L** — *delivered 2026-11-11*
 
 **Goal.** `org.vibevm.node/vibenvm` plus a committed, rerunnable suite whose
 exit code is the verdict, with complete coverage of the pinned inventory and
@@ -1290,10 +1290,24 @@ observation in both sandboxes.
 ```sh
 cd /fast/git/vibevm
 conformance/vibenvm/fetch-mirror.sh          # once, the only networked step
+cargo build -p vibe-cli                      # sandbox B's tool
+conformance/vibenvm/make-registry.sh         # the two packages sandbox B installs
+export VIBENVM_REGISTRY="$PWD/conformance/vibenvm/mirror/registry"
+export VIBE_BIN="$PWD/target/debug/vibe"
 cargo xtask vibenvm-conform ; echo "verdict=$?"   # must print verdict=0
 # and the meta-tests, which prove the verdict can fail:
 conformance/vibenvm/run.sh --self-test ; echo "selftest=$?"
 ```
+
+**Delivered 2026-11-11** — both halves, `verdict=0` over nine cases and
+52 of 52 required pairs, with `--self-test` 0. The two packages sandbox B
+installs live in their own repositories, which is why the registry is a step
+of the acceptance rather than a fixture of the suite:
+`org.vibevm.node/vibenvm` (new) and `org.vibevm.node/node` at template
+revision **1.1.0**, which gains the npm ecosystem adapter and the two `plain`
+version files. What the shim needed, the four shortfalls of existing features
+it found (`B-262`–`B-265`) and the three comparisons the suite had to take
+resolved rather than stored are `PROP-075#P7F-AS-BUILT`.
 
 **Risks.** The honest ones, named now. (1) nvm's own `fast` suite is *near*-
 offline, not offline, and has no mirror override — so reusing it is bounded to

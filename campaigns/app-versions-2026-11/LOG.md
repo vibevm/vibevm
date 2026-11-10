@@ -1813,3 +1813,165 @@ needs from the Node package itself is an `[[application.ecosystem]]`
 declaration with id `npm`: no package in the tree declares one yet, so the
 `globals` observation has nothing to compare until P7f (or a Node package
 change) adds it.
+
+## 2026-11-11 — P7f's shim half: `org.vibevm.node/vibenvm`, and the proof's measured verdict
+
+The campaign's last unit landed, and with it its final proof. `org.vibevm.node/vibenvm`
+exists — one sourced `vibenvm.sh` defining `nvm` — `org.vibevm.node/node` gained
+at template revision **1.1.0** the npm ecosystem adapter and the two `plain`
+version files the shim needs, and the differential suite now runs sandbox B for
+real. **The verdict is 0, measured, over nine cases and all 52 required
+`(subcommand, flag)` pairs.** Every fact of PROP-075 section 5 is `impl/done`;
+what the shim needed and what it found is `#VIBENVM-MAPPING`'s own table plus
+`#P7F-AS-BUILT`.
+
+**The verbatim run** (`cargo xtask vibenvm-conform`, with
+`VIBENVM_REGISTRY` and `VIBE_BIN` set as the suite's README says):
+
+```text
+mirror:     17 files match mirror.lock; nvm-sh v0.41.0 pinned at 43d410caa64ba7928cef750e31fccbf5790c210c
+mirror:     served over loopback at http://127.0.0.1:45335
+sandboxes:  a vs b
+cases:      9 matching *.toml
+pass: help-and-version (6 steps)
+pass: cache-and-unload (4 steps)
+pass: install-use-uninstall (16 steps)
+pass: dispatch-aliases (7 steps)
+pass: lts-and-remote (14 steps)
+pass: install-options (7 steps)
+pass: reinstall-packages-from (3 steps)
+pass: version-file (9 steps)
+pass: default-packages (3 steps)
+inventory:  76 pairs from nvm v0.41.0
+excluded:   24 pairs, 14 owner-approved rows
+            (3 recorded, not required)
+cases:      9 passed, 0 not passed
+covered:    52 of 52 required pairs
+coverage:   complete
+verdict:    0 (9 case(s) passed, coverage complete)
+```
+
+**The one thing a later session would most want to know.** nvm's `22.9.0` is
+*one release*; vibe's `@22.9.0` is a *requirement*. Measured against the
+suite's pinned version set, `vibe install -g org.vibevm.node/node@22.9.0`
+installed **22.11.0**, and `vibe app exec node@22.9.0 -- node -v` ran 22.11.0.
+So every version a target names — in the shim and in the suite's own observer
+— is spelled `=<version>`, and nvm's prefix match becomes a requirement by
+counting the fields the user typed: `22.9.0` → `=22.9.0`, `22.9` → `~22.9`,
+`22` → `22`, `node`/`stable` → `latest`, `lts` and `lts/*` → `lts`,
+`lts/jod` → `lts/jod`. That table is the only translation the shim carries;
+everything else a user types is handed to vibe as written, so `^22` and
+`>=20 <23` work too.
+
+**What the shim is, and what makes "it holds no version logic" checkable.**
+One file, one public function `nvm`, helpers in the reserved `__vibenvm_`
+namespace, nothing written and nothing cached. Every version is resolved by
+`vibe app env --use` (installed) or `vibe install -g … --plan-only --json`
+(available), every install is `vibe install -g`, every activation is
+`vibe app env`, every listing is `vibe app versions`, and what a `.nvmrc` says
+is read by `vibe app env --project --json` and never by the shim. `nvm unload`
+unsets the function, its helpers and its three variables. Three declared
+documents answered what it needed: `vibe-app-env/1`'s `version_file` selection
+carries `requested` whether or not that version is installed (a bare
+`nvm install`), `vibe-app-plan/1`'s `package.version` resolves a requirement
+against everything the registries and the template offer while downloading
+nothing (`nvm version-remote`), and `vibe-app-list/1` is the home's own
+inventory, needing no registry and no request.
+
+**Four shortfalls of existing features, reported and not patched** — the
+VIBENVM rule is that a missing capability is a vibe feature to report, never
+something to implement inside the shim. They are `B-262`…`B-265`:
+`vibe install -g` of an application with no version named does **not** consult
+the declared version file, though this document's own precedence puts it
+there, so the shim composes two commands; `vibe app versions` has no
+version-pattern filter, so `nvm ls <pattern>` answers with the one version a
+requirement resolves to rather than every match; `--write-version-file` lives
+only on commands that change state, so `nvm use --save` — which in nvm changes
+the shell and the file and *not* the global default — moves the slot default
+with it; and a version file's bare `22.9.0` is read as a caret requirement, so
+a `.nvmrc` that `--write-version-file` has just written stops pinning the
+version it recorded as soon as a newer minor is installed. The last two the
+suite cannot catch, and the backlog rows say why.
+
+**Two decisions in the Node package that a reader would otherwise reverse-engineer.**
+(1) The adapter's `list` leaves out `npm` and `corepack`: both live inside
+every Node distribution's own `lib/node_modules`, so they are the runtime's
+managers and not packages anybody added, and carrying them into another
+version would overwrite that version's own tested pair. This was found by a
+mismatch — with corepack in the list, `vibe app migrate … --only ecosystem:npm`
+carried a bundled manager, failed against the loopback npm registry and exited
+1, while nvm (whose own list excludes npm and predates corepack) swallowed the
+identical failure and exited 0. (2) `self_upgrade` asks for the newest npm
+*this* node line can run, from upstream's own ceilings rather than a bare
+`npm@latest` that cannot start on an older runtime, and its exit status answers
+**"does this installation have a usable package manager"** and not "was the
+network up": it succeeds with a notice when the attempt could not be made and
+npm still runs, and fails when npm does not. Measured: npm reports `E404`
+against the loopback registry and both tools exit 0 having changed nothing.
+
+**The harness half's three open confirmations: one held, two did not.** The
+installed package does publish a `vibenvm.sh` to source, and `run.sh` now
+takes it from under `<settings>/opt/` rather than by name anywhere under the
+settings root — the package cache holds a copy of the same bytes, and sourcing
+*that* would let a failed installation pass. The `<TOOLROOT>@v<version>`
+collapse did **not** cover vibe's layout: it required the version to be a path
+component (`versions/node/v22.9.0`) while vibe's is the version half of a
+coordinate (`apps/node/org.vibevm.node.node@22.9.0`), so the rule now accepts
+either separator. And sandbox B's readers named fields vibe does not emit —
+`vibe app env --json` carries no `default`, and `app versions --json` nests its
+versions under `packages[]` — so they were rewritten against the documents vibe
+actually emits.
+
+**Three comparisons are now of resolved answers rather than of each tool's
+storage, and one case names nvm's `node` flavour.** `default` follows nvm's
+alias chain exactly as `nvm_resolve_alias` does and reports `absent` when what
+it lands on is not installed, because nvm's `default` survives the uninstall of
+the version it names and a default naming a version that is gone provides
+nothing to a new shell. `aliases` reports what each name resolves to, with
+vibe's `lts` under nvm's spelling `lts/*`, and asks for the channels
+**offline** — so the observation makes no request of its own and reports only
+the names the tool has already fetched, which is exactly what nvm's alias store
+is; before any remote call both tools answer `none`. A second normalisation
+drops a leading `v` from a version that starts a field or a member of one,
+because nvm writes `v22.9.0` where vibe writes `22.9.0` and nvm's own
+`nvm_version` adds and strips it freely. And `cases/12`'s two whole-list
+`ls-remote` spellings now name nvm's own `node` flavour: a bare
+`nvm ls-remote` lists "node AND io.js" and returns the io.js half's status,
+which against the suite's empty loopback io.js mirror is **3** — so a required
+pair's exit status would have been decided entirely by nvm's io.js category,
+an owner-approved accepted gap that vibe has no concept of at all. The case
+says so in its own summary, and the pair is still covered because the coverage
+gate reads flags only from the tokens directly after the subcommand.
+
+**How sandbox B is wired, and why none of it is a test-only flag.** Its own
+`HOME` and `VIBE_SETTINGS`; the `[[remap]]` row the harness half already had;
+a `[[registry]]` row declaring the local registry as that home's **own**
+(`type = "localdir"`, a `file://` url), because the shim calls
+`vibe install -g org.vibevm.node/node@…` exactly as a user's shell would and
+must not carry a flag a user would not; and `vibe` on PATH in a directory of
+that sandbox, deliberately **outside** the tool root so it never appears in the
+`owned_path` observation. The two packages live in their own repositories, so
+publishing them into that registry is a step of the acceptance rather than a
+fixture of the suite: `conformance/vibenvm/make-registry.sh` does it, and the
+suite's README gives the five commands end to end.
+
+**Gates.** `cargo xtask vibenvm-conform` → `verdict=0` (above);
+`conformance/vibenvm/run.sh --self-test` → 0, all nine cases A-against-A and
+all six fail-fixtures. **No Rust changed in this unit** — the work is two
+package repositories, four shell/TOML files of the suite and the documents —
+so the Rust gate set does not apply and was not run beyond the build of
+`vibe-cli` the suite needs; `cargo xtask conform check` was run for the
+repository's own sake and reports 138 findings, 0 new. The PROP-075 XML reports
+`dry-run ir-stable-loss` before and after the edit, the same verdict unchanged.
+`shellcheck` is still not installed on this machine, so the shim and the four
+new shell files are syntax-checked with `sh -n` and `bash -n` and otherwise
+unlinted, which is recorded rather than claimed. Every cargo command ran with
+`CARGO_TARGET_DIR=/fast/tmp/sp-target`, `CARGO_BUILD_JOBS=6`,
+`CARGO_INCREMENTAL=0`; `/fast` stayed above 36 GB free, with the suite's kept
+work directories (3–4 GB each) deleted as they were read.
+
+**One obligation of the plan is deliberately not done here, and is not in this
+unit's packet:** PLAN §7's whole-campaign `campaigns/app-versions-2026-11/accept.sh`
+— the nine-leg end-to-end script across P1–P7 — is assigned to P7f by the plan
+and was not requested of this unit, which was the shim plus the proof. It
+remains unwritten, and the campaign's close-out owes it.

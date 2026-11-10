@@ -169,7 +169,8 @@ release cannot pass unnoticed. Re-extract with
 and the diff of `inventory.json` is the new surface.
 
 Today: **76 pairs** from nvm v0.41.0 — 52 required and covered by the cases,
-24 excluded by the owner's twelve approved items.
+24 excluded by the owner's twelve approved items. Measured 2026-11-11 against
+the real shim: nine cases passed, 52 of 52, **`verdict=0`**.
 
 **The exclusion list is closed.** `exclusions.toml` carries exactly the owner's
 decision of 2026-11-10 (PROP-075 `#VIBENVM-EXCLUSIONS-APPROVED`), one reason
