@@ -152,43 +152,6 @@ pub enum PinArg {
     Favorites,
 }
 
-/// The edits of one collection (PROP-059 `#launcher-catalog`).
-#[derive(Debug, clap::Subcommand)]
-pub enum CollectionCommand {
-    /// Create an empty collection.
-    Create {
-        name: String,
-        /// An icon file for the collection itself.
-        #[arg(long, value_name = "PATH")]
-        icon: Option<std::path::PathBuf>,
-    },
-    /// Rename one; it keeps its keys, and stops counting as seeded.
-    Rename { old: String, new: String },
-    /// Delete one; the launchers themselves stay installed.
-    Delete { name: String },
-    /// Append the launcher keys it does not hold yet.
-    Add {
-        name: String,
-        #[arg(required = true, value_name = "KEY")]
-        keys: Vec<String>,
-    },
-    /// Take launcher keys out and remember that you did, so an install of
-    /// the same `menu_group` does not put them back.
-    Remove {
-        name: String,
-        #[arg(required = true, value_name = "KEY")]
-        keys: Vec<String>,
-    },
-    /// The full order: the collection becomes exactly this sequence.
-    Order {
-        name: String,
-        #[arg(required = true, value_name = "KEY")]
-        keys: Vec<String>,
-    },
-    /// Show every collection, both pinned lists and every override.
-    List,
-}
-
 #[derive(Debug, clap::Subcommand)]
 pub enum AppCommand {
     /// List every installed application with its status and slot default.
@@ -604,3 +567,6 @@ mod activation;
 mod migration;
 pub use activation::{AppEnvArgs, AppExecArgs, AppVersionsArgs, HookArgs};
 pub use migration::AppMigrateArgs;
+#[path = "app_collection.rs"]
+mod collection;
+pub use collection::CollectionCommand;
