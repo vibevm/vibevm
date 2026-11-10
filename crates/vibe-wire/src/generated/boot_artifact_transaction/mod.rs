@@ -17,6 +17,10 @@ pub enum BootArtifactTransactionMode {
 /// recovery may retire it after selected STATIC and INDEX are durable while
 /// deliberately retaining the stale carrier until the next locked full write
 /// atomically refreshes every redirect and converges to exactly one carrier.
+/// The four optional members carry one node's generated system-prompt artifacts
+/// and the ignore file that covers them, inside this same commit rather than
+/// beside it: absent, the publication touches no prompt artifact at all, which
+/// is every project that has not opted in.
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
 pub struct BootArtifactTransaction {
@@ -31,6 +35,20 @@ pub struct BootArtifactTransaction {
     pub stale: Entry,
 
     pub transaction: String,
+
+    #[serde(rename = "agentLane")]
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub agent_lane: Option<Entry>,
+
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub gitignore: Option<Entry>,
+
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub system: Option<Entry>,
+
+    #[serde(rename = "systemMeta")]
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub system_meta: Option<Entry>,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]

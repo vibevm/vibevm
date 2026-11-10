@@ -71,6 +71,7 @@ mod tests {
                     static_path: &selected,
                     static_bytes: Some(b"NEW-STATIC"),
                     stale_path: &stale,
+                    prompt: None,
                 },
                 &CancelAfterStatic {
                     token: &token,

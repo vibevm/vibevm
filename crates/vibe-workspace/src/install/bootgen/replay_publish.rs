@@ -184,6 +184,9 @@ fn publish_boot_replay_using(
                     static_path: &parts.static_path,
                     static_bytes: parts.static_lane.as_deref(),
                     stale_path: &parts.stale_path,
+                    // A replay republishes an already-prepared lane and
+                    // recomposes nothing, so it touches no prompt artifact.
+                    prompt: None,
                 })
                 .map_err(|failure| {
                     let disposition = failure.disposition();

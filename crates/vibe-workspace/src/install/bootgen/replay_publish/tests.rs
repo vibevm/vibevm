@@ -349,6 +349,7 @@ fn rollback_entry_recovery_and_invalid_paths_use_the_real_engine_once() {
             static_path: &targets.selected,
             static_bytes: Some(b"SEEDED-S"),
             stale_path: &targets.stale,
+            prompt: None,
         },
         &seed,
     );

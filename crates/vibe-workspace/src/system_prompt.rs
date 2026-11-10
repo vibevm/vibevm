@@ -59,6 +59,8 @@ mod markers;
 mod meta;
 #[path = "system_prompt/plan.rs"]
 mod plan;
+#[path = "system_prompt/publish.rs"]
+mod publish;
 #[path = "system_prompt/reader.rs"]
 mod reader;
 #[path = "system_prompt/verify.rs"]
@@ -76,6 +78,10 @@ pub use markers::{
 };
 pub use meta::{SIDECAR_PROTOCOL, SidecarFacts, compose_sidecar, render_sidecar_bytes};
 pub use plan::{ContinuationBand, ContinuationPlan, ContinuationRow};
+pub use publish::{BOOT_IGNORE_BODY, LaneBodyReader};
+pub(crate) use publish::{
+    PromptPublication, PromptPublishRequest, bound_lane_reader, prepare_publication,
+};
 pub use reader::PrefixReader;
 pub(crate) use reader::bound_reader;
 pub use verify::{

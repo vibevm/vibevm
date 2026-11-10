@@ -105,6 +105,22 @@ impl DeclaredBootSources {
         Ok(bytes)
     }
 
+    /// Observe one **workspace-root-relative** file under the held
+    /// workspace — the spelling a generated `INDEX.md` row uses, and
+    /// therefore the only spelling in which the continuation plan can name a
+    /// dependency slot's boot file (`PROP-076#SYS-BANDS`, and the plan-path
+    /// deviation recorded in `#SYS-SIDECAR`).
+    ///
+    /// It is the root node's own [`node_input`](Self::node_input) and adds
+    /// no reader of its own: the same prepared guard, rechecked before and
+    /// after, and the same no-follow capability under the workspace root.
+    /// The agent lane's band-U bodies are read through it, which is why a
+    /// lane body can only ever be a file the boot plan itself named
+    /// (`#SYS-NO-HOME-EXPANSION`).
+    pub(crate) fn root_input(&self, relative: &str) -> Result<Option<Vec<u8>>, WorkspaceError> {
+        self.node_input(".", relative)
+    }
+
     pub(crate) fn recheck_node(&self, node_dir: &Path) -> Result<(), WorkspaceError> {
         let relative = node_dir
             .strip_prefix(&self.root)

@@ -24,39 +24,18 @@ pub(super) const STATIC_XML_TARGET: &str = "STATIC.xml";
 pub(super) const STAGE_PREFIX: &str = ".vibe-boot-txn-";
 pub(super) const STAGE_SUFFIX: &str = ".stage";
 
-#[derive(Debug, Clone, Copy, PartialEq, Eq)]
-pub(super) enum StageRole {
-    IndexBefore,
-    IndexAfter,
-    SelectedBefore,
-    SelectedAfter,
-    StaleBefore,
-    CommitIntent,
-    RollbackIntent,
-    RedirectClaude,
-    RedirectAgents,
-    RedirectGemini,
-}
-
-impl StageRole {
-    fn wire(self) -> &'static str {
-        match self {
-            StageRole::IndexBefore => "index-before",
-            StageRole::IndexAfter => "index-after",
-            StageRole::SelectedBefore => "selected-before",
-            StageRole::SelectedAfter => "selected-after",
-            StageRole::StaleBefore => "stale-before",
-            StageRole::CommitIntent => "commit-intent",
-            StageRole::RollbackIntent => "rollback-intent",
-            StageRole::RedirectClaude => "redirect-claude",
-            StageRole::RedirectAgents => "redirect-agents",
-            StageRole::RedirectGemini => "redirect-gemini",
-        }
-    }
-}
+pub(super) use super::roles::{PROMPT_MEMBERS, StageRole, entries, states};
 
 pub(super) fn stage_name(transaction: &str, role: StageRole) -> String {
     format!("{STAGE_PREFIX}{transaction}-{}{STAGE_SUFFIX}", role.wire())
+}
+
+/// The production target names a boot publication owns, which is also the
+/// set a journal stage may never alias.
+pub(super) fn production_targets() -> Vec<&'static str> {
+    let mut targets = vec![INDEX_TARGET, STATIC_MD_TARGET, STATIC_XML_TARGET];
+    targets.extend(PROMPT_MEMBERS.iter().map(|member| member.target));
+    targets
 }
 
 pub(super) fn validate_artifact_roles(
@@ -162,16 +141,34 @@ pub(super) fn validate_journal(
     {
         return Err(io_error(path, "journal stale-after state must be absent"));
     }
+    // Each optional prompt member targets exactly its own filename and
+    // nothing else: the member's place in the document *is* which artifact
+    // it governs, so a target that disagreed with it would be a journal
+    // describing a file no role owns (`#SYS-TRANSACTION-ROLES`).
+    for member in &PROMPT_MEMBERS {
+        let Some(entry) = (member.access)(journal) else {
+            continue;
+        };
+        if entry.target != member.target {
+            return Err(io_error(
+                path,
+                format!(
+                    "journal prompt role must target exactly `{}`, not `{}`",
+                    member.target, entry.target
+                ),
+            ));
+        }
+        validate_state(&entry.before, &journal.transaction, member.before, path)?;
+        validate_state(&entry.after, &journal.transaction, member.after, path)?;
+    }
 
     let stages = recorded_stage_names(journal);
     let unique = stages.iter().collect::<BTreeSet<_>>();
     if unique.len() != stages.len() {
         return Err(io_error(path, "journal stage names must be unique"));
     }
-    let reserved = [
-        INDEX_TARGET,
-        STATIC_MD_TARGET,
-        STATIC_XML_TARGET,
+    let mut reserved = production_targets();
+    reserved.extend([
         JOURNAL_NAME,
         ROLLBACK_JOURNAL_NAME,
         LOCK_NAME,
@@ -180,7 +177,7 @@ pub(super) fn validate_journal(
         "CLAUDE.md",
         "AGENTS.md",
         "GEMINI.md",
-    ];
+    ]);
     if stages
         .iter()
         .any(|stage| reserved.contains(&stage.as_str()))
@@ -246,20 +243,9 @@ pub(super) fn validate_owned_stage_name(
             format!("stage `{name}` is outside the owned namespace"),
         ));
     };
-    let valid_role = [
-        StageRole::IndexBefore,
-        StageRole::IndexAfter,
-        StageRole::SelectedBefore,
-        StageRole::SelectedAfter,
-        StageRole::StaleBefore,
-        StageRole::CommitIntent,
-        StageRole::RollbackIntent,
-        StageRole::RedirectClaude,
-        StageRole::RedirectAgents,
-        StageRole::RedirectGemini,
-    ]
-    .iter()
-    .any(|role| body.ends_with(&format!("-{}", role.wire())));
+    let valid_role = StageRole::ALL
+        .iter()
+        .any(|role| body.ends_with(&format!("-{}", role.wire())));
     if !valid_role {
         return Err(io_error(path, format!("stage `{name}` has no owned role")));
     }
@@ -281,20 +267,9 @@ pub(super) fn owned_stage_transaction(name: &str) -> Option<&str> {
     let body = name
         .strip_prefix(STAGE_PREFIX)?
         .strip_suffix(STAGE_SUFFIX)?;
-    let role = [
-        StageRole::IndexBefore,
-        StageRole::IndexAfter,
-        StageRole::SelectedBefore,
-        StageRole::SelectedAfter,
-        StageRole::StaleBefore,
-        StageRole::CommitIntent,
-        StageRole::RollbackIntent,
-        StageRole::RedirectClaude,
-        StageRole::RedirectAgents,
-        StageRole::RedirectGemini,
-    ]
-    .iter()
-    .find_map(|role| body.strip_suffix(&format!("-{}", role.wire())))?;
+    let role = StageRole::ALL
+        .iter()
+        .find_map(|role| body.strip_suffix(&format!("-{}", role.wire())))?;
     if role.is_empty() { None } else { Some(role) }
 }
 
@@ -388,15 +363,10 @@ fn validate_local_name(name: &str, path: &Path) -> Result<(), WorkspaceError> {
     }
 }
 
+/// Every stage name a journal records, derived from the one entry
+/// enumeration so a role added later joins it without an edit here.
 fn recorded_stage_names(journal: &Journal) -> Vec<String> {
-    [
-        &journal.index.before,
-        &journal.index.after,
-        &journal.selected.before,
-        &journal.selected.after,
-        &journal.stale.before,
-    ]
-    .iter()
-    .filter_map(|state| state.staged.clone())
-    .collect()
+    states(journal)
+        .filter_map(|state| state.staged.clone())
+        .collect()
 }

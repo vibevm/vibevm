@@ -71,6 +71,7 @@ impl Fixture {
             static_path: &self.selected,
             static_bytes: Some(b"NEW-STATIC"),
             stale_path: &self.stale,
+            prompt: None,
         }
     }
 

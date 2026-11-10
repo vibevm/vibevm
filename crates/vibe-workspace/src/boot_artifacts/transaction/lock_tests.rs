@@ -89,6 +89,7 @@ fn lock_process_helper() {
                     static_path: &root.join("STATIC.xml"),
                     static_bytes: Some(b"NEW-STATIC"),
                     stale_path: &root.join("STATIC.md"),
+                    prompt: None,
                 },
                 &NoFault,
             )

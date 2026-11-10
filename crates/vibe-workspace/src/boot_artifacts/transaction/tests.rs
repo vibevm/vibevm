@@ -15,6 +15,7 @@ const CHILD_ROOT: &str = "VIBEVM_R32_TXN_CHILD_ROOT";
 const CHILD_DIRECTION: &str = "VIBEVM_R32_TXN_CHILD_DIRECTION";
 const CHILD_POINT: &str = "VIBEVM_R32_TXN_CHILD_POINT";
 const CHILD_ROLLBACK: &str = "VIBEVM_R32_TXN_CHILD_ROLLBACK";
+const CHILD_PROMPT: &str = "VIBEVM_R32_TXN_CHILD_PROMPT";
 
 struct FailAt(WritePoint);
 
@@ -80,13 +81,21 @@ impl Direction {
     }
 }
 
+#[derive(Clone)]
 struct Fixture {
     index: PathBuf,
     selected: PathBuf,
     stale: PathBuf,
     old_index: Vec<u8>,
     new_index: Vec<u8>,
+    /// What this generation says about the system-prompt roles. `None` is
+    /// "nothing at all", which is every project that has not opted in.
+    prompt: Option<PromptWrite<'static>>,
 }
+
+const PROMPT_SYSTEM: &[u8] = b"<!-- vibe:prompt-segment project.template -->\nframe\n";
+const PROMPT_META: &[u8] = b"{\n  \"protocol\": \"vibe-system-prompt/1\"\n}\n";
+const PROMPT_LANE: &[u8] = b"<!-- vibe:lane-begin demo p 0123456789ab -->\nbody\n";
 
 impl Fixture {
     fn write(&self) -> ArtifactWrite<'_> {
@@ -96,6 +105,7 @@ impl Fixture {
             static_path: &self.selected,
             static_bytes: Some(b"NEW-STATIC"),
             stale_path: &self.stale,
+            prompt: self.prompt,
         }
     }
 
@@ -111,6 +121,59 @@ impl Fixture {
         assert_eq!(fs::read(&self.selected).unwrap(), b"NEW-STATIC");
         assert!(!entry_present(&self.stale));
         assert_exactly_one_static(self.index.parent().unwrap());
+    }
+
+    /// An opted-in generation's payload: the ignore file first, then the
+    /// three artifacts it covers.
+    fn published_payload() -> PromptWrite<'static> {
+        PromptWrite {
+            gitignore: Some(crate::system_prompt::BOOT_IGNORE_BODY.as_bytes()),
+            system: Some(PROMPT_SYSTEM),
+            meta: Some(PROMPT_META),
+            lane: Some(PROMPT_LANE),
+        }
+    }
+
+    fn opted_in(mut self) -> Self {
+        self.prompt = Some(Self::published_payload());
+        self
+    }
+
+    fn opted_out(mut self) -> Self {
+        self.prompt = Some(PromptWrite::REMOVE);
+        self
+    }
+
+    fn boot_dir(&self) -> &Path {
+        self.index.parent().unwrap()
+    }
+
+    fn prompt_path(&self, name: &str) -> PathBuf {
+        self.boot_dir().join(name)
+    }
+
+    fn prompt_pairs(&self) -> [(&'static str, &'static [u8]); 4] {
+        [
+            (
+                vibe_core::layout::BOOT_GITIGNORE,
+                crate::system_prompt::BOOT_IGNORE_BODY.as_bytes(),
+            ),
+            (vibe_core::layout::SYSTEM_MD, PROMPT_SYSTEM),
+            (vibe_core::layout::SYSTEM_META_JSON, PROMPT_META),
+            (vibe_core::layout::AGENT_LANE_MD, PROMPT_LANE),
+        ]
+    }
+
+    fn assert_prompt_published(&self) {
+        for (name, bytes) in self.prompt_pairs() {
+            assert_eq!(fs::read(self.prompt_path(name)).unwrap(), bytes, "{name}");
+        }
+    }
+
+    fn assert_prompt_absent(&self) {
+        for (name, _) in self.prompt_pairs() {
+            assert!(!entry_present(&self.prompt_path(name)), "{name}");
+        }
     }
 }
 
@@ -130,6 +193,7 @@ fn fixture(root: &Path, direction: Direction) -> Fixture {
         stale,
         old_index,
         new_index,
+        prompt: None,
     }
 }
 
@@ -271,6 +335,16 @@ fn generated_jtd_transaction_type_parses_the_committed_toml_corpus_strictly() {
 }
 
 fn spawn_child(root: &Path, direction: Direction, point: WritePoint, rollback: bool) -> ExitStatus {
+    spawn_child_with_prompt(root, direction, point, rollback, false)
+}
+
+fn spawn_child_with_prompt(
+    root: &Path,
+    direction: Direction,
+    point: WritePoint,
+    rollback: bool,
+    prompt: bool,
+) -> ExitStatus {
     Command::new(env::current_exe().unwrap())
         .arg("--exact")
         .arg("boot_artifacts::transaction::tests::transaction_child_helper")
@@ -279,6 +353,7 @@ fn spawn_child(root: &Path, direction: Direction, point: WritePoint, rollback: b
         .env(CHILD_DIRECTION, direction.code())
         .env(CHILD_POINT, format!("{point:?}"))
         .env(CHILD_ROLLBACK, if rollback { "1" } else { "0" })
+        .env(CHILD_PROMPT, if prompt { "1" } else { "0" })
         .status()
         .unwrap()
 }
@@ -325,6 +400,7 @@ fn transaction_child_helper() {
         stale: PathBuf::from(&root).join(direction.old_name()),
         old_index: index_bytes(direction.old_name()),
         new_index: index_bytes(direction.new_name()),
+        prompt: (env::var(CHILD_PROMPT).unwrap() == "1").then(Fixture::published_payload),
     };
     let result = write_with_faults(fixture.write(), &ChildExit { point, rollback });
     panic!("child reached the end instead of interruption: {result:?}");
@@ -332,6 +408,8 @@ fn transaction_child_helper() {
 
 fn parse_point(value: &str) -> WritePoint {
     match value {
+        "PromptWrite" => WritePoint::PromptWrite,
+        "PromptRemove" => WritePoint::PromptRemove,
         "PostStagePreReplace" => WritePoint::PostStagePreReplace,
         "PostStaticPreIndex" => WritePoint::PostStaticPreIndex,
         "PostIndexPreStaleCleanup" => WritePoint::PostIndexPreStaleCleanup,
@@ -404,6 +482,7 @@ fn opaque_custom_compile_and_real_writer_preserve_arbitrary_bytes_without_shippi
         static_path: &selected,
         static_bytes: Some(emitted.bytes()),
         stale_path: &stale,
+        prompt: None,
     })
     .unwrap();
     assert_eq!(fs::read(index).unwrap(), b"INDEX");
@@ -416,3 +495,7 @@ fn missing_and_invalid_replacement_backends_fail_before_the_writer() {
     let error = compile_artifact_replacement_test_vehicle(test_plan(), &NoSource).unwrap_err();
     assert!(error.to_string().contains("STATIC Markdown is not UTF-8"));
 }
+
+#[cfg(test)]
+#[path = "prompt_tests.rs"]
+mod prompt_tests;

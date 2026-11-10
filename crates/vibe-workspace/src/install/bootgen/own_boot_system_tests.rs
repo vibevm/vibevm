@@ -28,6 +28,10 @@ fn fixture() -> tempfile::TempDir {
         "vibe.toml",
         "[project]\nname='host'\nversion='1.0.0'\n",
     );
+    // The template's presence is the opt-in, and since P4 an opted-in node
+    // publishes a prefix — which needs the one entrypoint
+    // `#SYS-ENTRYPOINT-ONE` refuses to invent.
+    write(root.path(), "AGENTS.md", "# host\n\nRead the lane.\n");
     write(root.path(), boot_rel("00-core.md"), "# Core {#root}\n");
     write(root.path(), boot_rel("20-extra.md"), "# Extra {#root}\n");
     write(
@@ -118,26 +122,42 @@ fn neither_markers_text_reaches_a_generated_artifact() {
 }
 
 #[test]
-fn the_three_reserved_files_survive_a_regeneration_untouched() {
-    // The template is authored: it is reserved, never generated, and must
-    // never be removed as a stale output (PROP-076
-    // `#SYS-LAYOUT-RESERVATION`). The two generated names have no producer
-    // yet in this phase, so nothing may rewrite them either.
+fn the_authored_template_survives_and_the_generated_pair_is_idempotent() {
+    // Two different rules, which is why the three names were never one list.
+    // The **template** is authored: reserved, never generated, never removed
+    // as a stale output, and byte-identical after any number of
+    // regenerations (`#SYS-LAYOUT-RESERVATION`). The two **generated** names
+    // had no producer when this test was written and have one since P4, so
+    // the rule that holds for them is the other one: publication owns them,
+    // and a second regeneration with unchanged inputs rewrites neither
+    // (`#SYS-NO-EQUAL-REWRITE`). The stale hand-written bytes the fixture
+    // leaves there are therefore replaced exactly once.
     let root = fixture();
-    let watched: Vec<_> = [
-        vibe_core::layout::SYSTEM_TEMPLATE_MD,
+    let template = root
+        .path()
+        .join(boot_rel(vibe_core::layout::SYSTEM_TEMPLATE_MD));
+    let authored = fs::read(&template).unwrap();
+    regenerate(root.path());
+    let generated: Vec<_> = [
         vibe_core::layout::SYSTEM_MD,
         vibe_core::layout::SYSTEM_META_JSON,
+        vibe_core::layout::AGENT_LANE_MD,
+        vibe_core::layout::BOOT_GITIGNORE,
     ]
     .into_iter()
     .map(|name| {
         let path = root.path().join(boot_rel(name));
-        (path.clone(), fs::read(&path).unwrap())
+        let bytes = fs::read(&path).unwrap_or_else(|e| panic!("{}: {e}", path.display()));
+        (path, bytes)
     })
     .collect();
+    assert!(
+        !String::from_utf8_lossy(&generated[0].1).contains("MARKER-PREFIX-TEXT"),
+        "publication owns `SYSTEM.md` and replaced the stale hand-written copy"
+    );
     regenerate(root.path());
-    regenerate(root.path());
-    for (path, before) in watched {
+    assert_eq!(fs::read(&template).unwrap(), authored);
+    for (path, before) in generated {
         assert_eq!(
             fs::read(&path).unwrap(),
             before,

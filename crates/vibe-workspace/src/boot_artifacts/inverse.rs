@@ -65,6 +65,20 @@ impl BootImages {
         units: impl IntoIterator<Item = PathBuf>,
     ) -> Result<Self, WorkspaceError> {
         let lane = [INDEX_FILE, STATIC_FILE, STATIC_XML_FILE];
+        // A node also publishes the three system-prompt artifacts and the
+        // ignore file that covers them, so the undo image covers them for
+        // the same reason it covers the lane: this operation writes them,
+        // and a stop before the lock is published must be able to put them
+        // back. Spike S2 named this undo image as one of the five by-name
+        // enumerations the compiler never asks about
+        // (`PROP-076#SYS-TRANSACTION-ROLES`). A package **unit** boot
+        // directory publishes no prefix, so its own list stays the lane.
+        let prompt = [
+            layout::BOOT_GITIGNORE,
+            layout::SYSTEM_MD,
+            layout::SYSTEM_META_JSON,
+            layout::AGENT_LANE_MD,
+        ];
         let mut owners: Vec<Owner> = Vec::new();
         let mut add = |boot_dir: PathBuf, paths: Vec<PathBuf>| -> Result<(), WorkspaceError> {
             if owners.iter().any(|owner| owner.boot_dir == boot_dir) {
@@ -90,7 +104,11 @@ impl BootImages {
         };
         for node in nodes {
             let boot_dir = node.join(layout::current_boot_dir());
-            let mut paths: Vec<PathBuf> = lane.iter().map(|name| boot_dir.join(name)).collect();
+            let mut paths: Vec<PathBuf> = lane
+                .iter()
+                .chain(prompt.iter())
+                .map(|name| boot_dir.join(name))
+                .collect();
             paths.extend(REDIRECT_FILES.iter().map(|name| node.join(name)));
             add(boot_dir, paths)?;
         }
@@ -159,8 +177,13 @@ impl Owner {
             ));
         }
         // Present files first, removals last: an interrupted undo then never
-        // leaves an INDEX naming a STATIC lane that is already gone.
-        changed.sort_by_key(|file| file.before.is_none());
+        // leaves an INDEX naming a STATIC lane that is already gone. Inside
+        // each group the ignore file leads the restores and trails the
+        // removals, so an interrupted undo also never leaves a generated
+        // prompt artifact on disk with its ignore line already gone — which
+        // is the state a `git add -A` would commit
+        // (`PROP-076#SYS-ARTIFACTS-NOT-TRACKED`).
+        changed.sort_by_key(|file| restore_rank(file));
         super::transaction::with_boot_lock(&self.boot_dir, || {
             for file in &changed {
                 put_back(&file.path, file.before.as_ref()).map_err(|reason| {
@@ -180,6 +203,19 @@ impl Owner {
             let _ = fs::remove_dir(&self.boot_dir);
         }
         Ok(())
+    }
+}
+
+/// Where one changed file sits in the undo order. See the call site for why
+/// the ignore file is not simply one more generated name.
+fn restore_rank(file: &Generated) -> u8 {
+    let ignore =
+        file.path.file_name().and_then(|name| name.to_str()) == Some(layout::BOOT_GITIGNORE);
+    match (file.before.is_none(), ignore) {
+        (false, true) => 0,
+        (false, false) => 1,
+        (true, false) => 2,
+        (true, true) => 3,
     }
 }
 

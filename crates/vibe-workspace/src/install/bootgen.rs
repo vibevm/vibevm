@@ -258,7 +258,10 @@ pub fn regenerate_boot_from_traced_prepared(
             sources.as_ref(),
             trace,
             runtimes.node(rel)?.compile_plans().clone(),
-            Some(boot_artifacts::NodePrompt { manifest }),
+            Some(boot_artifacts::NodePrompt {
+                node_rel: rel,
+                manifest,
+            }),
         )?;
         nodes_regenerated.push(rel.to_string());
     }

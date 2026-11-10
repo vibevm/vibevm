@@ -38,13 +38,15 @@ fn fixture(declared: &str) -> (TempDir, Vec<ResolvedDep>, Vec<TempDir>) {
     write(ws_dir.path(), boot_rel("00-core.md"), "# core");
     if !declared.is_empty() {
         // `[system_prompt]` is legal only beside the authored template whose
-        // presence is the opt-in (PROP-076 `#SYS-OPT-IN`). Nothing in this
-        // phase reads it; it is written so the manifest is admissible.
+        // presence is the opt-in (PROP-076 `#SYS-OPT-IN`). Since P4 that
+        // presence also makes the regeneration publish a prefix, so the node
+        // needs the entrypoint `#SYS-ENTRYPOINT-ONE` refuses to invent.
         write(
             ws_dir.path(),
             boot_rel(vibe_core::layout::SYSTEM_TEMPLATE_MD),
             "You are working inside a project.\n",
         );
+        write(ws_dir.path(), "AGENTS.md", "# demo\n");
     }
 
     let (carrier, carrier_pkg) = dep_with_boot(

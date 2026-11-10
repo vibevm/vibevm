@@ -42,6 +42,12 @@ fn valid_commit(parent: &Path) -> Journal {
             before: present(parent, StageRole::StaleBefore, b"OLD-STATIC"),
             after: absent_state(),
         },
+        // A journal the safety matrix drives: the prompt roles are absent,
+        // which is the shape every project that has not opted in produces.
+        gitignore: None,
+        system: None,
+        system_meta: None,
+        agent_lane: None,
     }
 }
 
@@ -318,6 +324,7 @@ fn dangling_stale_link_is_not_treated_as_absent() {
             static_path: &selected,
             static_bytes: Some(b"NEW-STATIC"),
             stale_path: &stale,
+            prompt: None,
         },
         &NoFault,
     );

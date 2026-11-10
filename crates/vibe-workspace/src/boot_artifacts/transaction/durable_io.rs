@@ -14,7 +14,8 @@ use crate::WorkspaceError;
 use crate::safe_file;
 
 use super::journal::{
-    Journal, STAGE_PREFIX, STAGE_SUFFIX, owned_stage_transaction, validate_owned_stage_name,
+    Journal, STAGE_PREFIX, STAGE_SUFFIX, entries, owned_stage_transaction, states,
+    validate_owned_stage_name,
 };
 use super::{JOURNAL_NAME, ROLLBACK_JOURNAL_NAME};
 
@@ -76,15 +77,13 @@ pub(super) fn remove_owned_stage(
     remove_regular_if_exists(&path)
 }
 
+/// Every stage this journal owns, dropped. Derived from the one entry
+/// enumeration (`super::roles::states`) rather than from a by-name list,
+/// because a role missing here leaks its stage file on every failure and
+/// the compiler would never ask about it.
 pub(super) fn discard_assets(parent: &Path, journal: &Journal) -> Vec<WorkspaceError> {
     let mut errors = Vec::new();
-    for state in [
-        &journal.index.before,
-        &journal.index.after,
-        &journal.selected.before,
-        &journal.selected.after,
-        &journal.stale.before,
-    ] {
+    for state in states(journal) {
         if let Some(name) = &state.staged
             && let Err(error) = remove_owned_stage(parent, name, Some(&journal.transaction))
         {
@@ -94,24 +93,17 @@ pub(super) fn discard_assets(parent: &Path, journal: &Journal) -> Vec<WorkspaceE
     errors
 }
 
+/// Every target and every stage this journal names, proved absent-or-regular
+/// before the first replacement. Derived from the one entry enumeration for
+/// the same reason [`discard_assets`] is.
 pub(super) fn preflight_journal_paths(
     parent: &Path,
     journal: &Journal,
 ) -> Result<(), WorkspaceError> {
-    for target in [
-        &journal.index.target,
-        &journal.selected.target,
-        &journal.stale.target,
-    ] {
-        preflight_optional_file(&parent.join(target))?;
+    for entry in entries(journal) {
+        preflight_optional_file(&parent.join(&entry.target))?;
     }
-    for state in [
-        &journal.index.before,
-        &journal.index.after,
-        &journal.selected.before,
-        &journal.selected.after,
-        &journal.stale.before,
-    ] {
+    for state in states(journal) {
         if let Some(name) = &state.staged {
             preflight_optional_file(&parent.join(name))?;
         }

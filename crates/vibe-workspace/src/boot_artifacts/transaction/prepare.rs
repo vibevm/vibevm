@@ -9,12 +9,13 @@ use crate::WorkspaceError;
 use crate::safe_file;
 
 use super::journal::{
-    Journal, JournalEntry, JournalMode, RecordedState, STAGE_PREFIX, StageRole, file_name,
-    stage_name, validate_journal, validate_owned_stage_name,
+    Journal, JournalEntry, JournalMode, PROMPT_MEMBERS, RecordedState, STAGE_PREFIX, StageRole,
+    file_name, stage_name, validate_journal, validate_owned_stage_name,
 };
 use super::{
-    ArtifactWrite, FaultInjector, JOURNAL_SCHEMA, WritePoint, absent_state, aggregate_error,
-    bytes_digest, io_error, journal_path, read_regular_optional, remove_owned_stage,
+    ArtifactWrite, FaultInjector, JOURNAL_SCHEMA, PromptWrite, WritePoint, absent_state,
+    aggregate_error, bytes_digest, io_error, journal_path, read_regular_optional,
+    remove_owned_stage,
 };
 
 pub(super) fn prepare_journal(
@@ -25,6 +26,7 @@ pub(super) fn prepare_journal(
     let index_before_bytes = read_regular_optional(write.index_path)?;
     let selected_before_bytes = read_regular_optional(write.static_path)?;
     let stale_before_bytes = read_regular_optional(write.stale_path)?;
+    let prompt_before_bytes = read_prompt_before(parent, write.prompt)?;
     let mut assets = Vec::new();
 
     let result = (|| {
@@ -70,6 +72,14 @@ pub(super) fn prepare_journal(
             }
             None => absent_state(),
         };
+        let [gitignore, system, system_meta, agent_lane] = stage_prompt_members(
+            parent,
+            &transaction,
+            write.prompt,
+            prompt_before_bytes.as_ref(),
+            faults,
+            &mut assets,
+        )?;
         let journal = Journal {
             schema: JOURNAL_SCHEMA,
             transaction,
@@ -89,6 +99,10 @@ pub(super) fn prepare_journal(
                 before: stale_before,
                 after: absent_state(),
             },
+            gitignore,
+            system,
+            system_meta,
+            agent_lane,
         };
         validate_journal(&journal, &journal_path(parent), JournalMode::Commit)?;
         Ok(journal)
@@ -115,6 +129,64 @@ pub(super) fn prepare_journal(
             }
         }
     }
+}
+
+/// The before-images of the four prompt targets, read before anything is
+/// staged, exactly as the lane's own three are.
+///
+/// `None` — the payload is absent — reads nothing at all: a project that has
+/// not opted in must not even open these paths, which is what keeps its
+/// publication byte-identical to the one before this feature existed.
+fn read_prompt_before(
+    parent: &Path,
+    prompt: Option<PromptWrite<'_>>,
+) -> Result<Option<[Option<Vec<u8>>; 4]>, WorkspaceError> {
+    if prompt.is_none() {
+        return Ok(None);
+    }
+    let mut before: [Option<Vec<u8>>; 4] = Default::default();
+    for (slot, member) in before.iter_mut().zip(PROMPT_MEMBERS.iter()) {
+        *slot = read_regular_optional(&parent.join(member.target))?;
+    }
+    Ok(Some(before))
+}
+
+/// Stage one generation's prompt payload into four journal entries, in the
+/// ignore-first order [`PROMPT_MEMBERS`] fixes.
+///
+/// A member with no after-bytes is staged as a **removal**: before-image
+/// retained, after-image absent. That is the opt-out case and it is the same
+/// mechanism publication already uses to retire the stale `STATIC` spelling
+/// while never touching the selected one.
+fn stage_prompt_members(
+    parent: &Path,
+    transaction: &str,
+    prompt: Option<PromptWrite<'_>>,
+    before: Option<&[Option<Vec<u8>>; 4]>,
+    faults: &impl FaultInjector,
+    assets: &mut Vec<String>,
+) -> Result<[Option<JournalEntry>; 4], WorkspaceError> {
+    let (Some(prompt), Some(before)) = (prompt, before) else {
+        return Ok(Default::default());
+    };
+    let after = [prompt.gitignore, prompt.system, prompt.meta, prompt.lane];
+    let mut entries: [Option<JournalEntry>; 4] = Default::default();
+    for (index, member) in PROMPT_MEMBERS.iter().enumerate() {
+        let target = parent.join(member.target);
+        faults.check(WritePoint::PromptStage, &target)?;
+        entries[index] = Some(JournalEntry {
+            target: member.target.to_owned(),
+            before: stage_optional(
+                parent,
+                transaction,
+                member.before,
+                before[index].as_deref(),
+                assets,
+            )?,
+            after: stage_optional(parent, transaction, member.after, after[index], assets)?,
+        });
+    }
+    Ok(entries)
 }
 
 fn stage_initial_index(

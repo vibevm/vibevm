@@ -1,6 +1,6 @@
 {
   "metadata": {
-    "description": "Crash-recovery intent for publishing INDEX.md and its selected STATIC carrier. The record is written durably before the first replacement. A normal write retires it after redirects and stale cleanup; core-only recovery may retire it after selected STATIC and INDEX are durable while deliberately retaining the stale carrier until the next locked full write atomically refreshes every redirect and converges to exactly one carrier.",
+    "description": "Crash-recovery intent for publishing INDEX.md and its selected STATIC carrier. The record is written durably before the first replacement. A normal write retires it after redirects and stale cleanup; core-only recovery may retire it after selected STATIC and INDEX are durable while deliberately retaining the stale carrier until the next locked full write atomically refreshes every redirect and converges to exactly one carrier. The four optional members carry one node's generated system-prompt artifacts and the ignore file that covers them, inside this same commit rather than beside it: absent, the publication touches no prompt artifact at all, which is every project that has not opted in.",
     "spec": {
       "implements": "spec://org.vibevm.core/vibevm/common/PROP-045#STATIC-FOLLOWS-THE-TARGET"
     },
@@ -29,6 +29,32 @@
     },
     "stale": {
       "ref": "entry"
+    }
+  },
+  "optionalProperties": {
+    "gitignore": {
+      "ref": "entry",
+      "metadata": {
+        "x-default": null
+      }
+    },
+    "system": {
+      "ref": "entry",
+      "metadata": {
+        "x-default": null
+      }
+    },
+    "systemMeta": {
+      "ref": "entry",
+      "metadata": {
+        "x-default": null
+      }
+    },
+    "agentLane": {
+      "ref": "entry",
+      "metadata": {
+        "x-default": null
+      }
     }
   },
   "definitions": {

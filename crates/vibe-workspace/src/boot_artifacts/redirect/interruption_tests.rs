@@ -57,6 +57,24 @@ struct SwitchFixture {
     selected: PathBuf,
     stale: PathBuf,
     new_index: Vec<u8>,
+    /// What this generation says about the system-prompt roles. The
+    /// selector-switch matrix runs with the prefix published, so an
+    /// interruption in the redirect phase is proved not to disturb it
+    /// (`PROP-076#SYS-TRANSACTION-ROLES`).
+    prompt: Option<transaction::PromptWrite<'static>>,
+}
+
+const PROMPT_SYSTEM: &[u8] = b"PREFIX\n";
+const PROMPT_META: &[u8] = b"{}\n";
+const PROMPT_LANE: &[u8] = b"LANE\n";
+
+fn prompt_payload() -> transaction::PromptWrite<'static> {
+    transaction::PromptWrite {
+        gitignore: Some(crate::system_prompt::BOOT_IGNORE_BODY.as_bytes()),
+        system: Some(PROMPT_SYSTEM),
+        meta: Some(PROMPT_META),
+        lane: Some(PROMPT_LANE),
+    }
 }
 
 impl SwitchFixture {
@@ -82,6 +100,7 @@ impl SwitchFixture {
             selected,
             stale,
             new_index,
+            prompt: Some(prompt_payload()),
         }
     }
 
@@ -94,6 +113,7 @@ impl SwitchFixture {
             stale: boot.join(super::super::static_file(direction.old())),
             new_index: index_bytes(direction.next()),
             boot,
+            prompt: Some(prompt_payload()),
         }
     }
 
@@ -104,6 +124,7 @@ impl SwitchFixture {
             static_path: &self.selected,
             static_bytes: Some(b"NEW-STATIC"),
             stale_path: &self.stale,
+            prompt: self.prompt,
         }
     }
 

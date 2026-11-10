@@ -190,6 +190,10 @@ pub(crate) fn publish_unit_artifacts_controlled(
             static_path: &boot_dir.join(static_file(spec_format)),
             static_bytes,
             stale_path: &boot_dir.join(stale_static_file(spec_format)),
+            // A dependency package slot is not an agent entry point and
+            // publishes no prefix, so it says nothing about the prompt
+            // roles rather than removing them (PROP-076 `#SYS-FILES`).
+            prompt: None,
         },
         // No selector work: a package slot writes no redirect blocks.
         control,
@@ -208,6 +212,7 @@ pub(crate) fn preflight_artifact_targets(
         static_path,
         static_bytes: None,
         stale_path,
+        prompt: None,
     })
 }
 

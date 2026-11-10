@@ -4,12 +4,15 @@ use std::fs;
 use std::path::{Path, PathBuf};
 
 use crate::WorkspaceError;
-use tempfile::{NamedTempFile, TempPath};
 
+mod apply;
+use apply::{apply_forward, roll_forward_core, rollback_all};
 mod durable_io;
 use durable_io::*;
 mod control;
 mod detailed;
+/// The closed role algebra and the one enumeration of a journal's entries.
+mod roles;
 pub(super) use control::write_controlled_with_selectors;
 pub(crate) use detailed::{DetailedTransactionFailure, TransactionFailureDisposition};
 mod journal;
@@ -32,8 +35,15 @@ pub(crate) enum WritePoint {
     EntryRecovery,
     IndexWrite,
     StaticWrite,
+    PromptStage,
     PostIntentPreRollForward,
     PostStagePreReplace,
+    /// Just before one generated prompt artifact's bytes replace what is on
+    /// disk — the ignore file first, then the three artifacts it covers.
+    PromptWrite,
+    /// Just before one generated prompt artifact is removed — the artifacts
+    /// first, the ignore file last.
+    PromptRemove,
     StaticReplace,
     PostStaticPreIndex,
     IndexReplace,
@@ -64,6 +74,53 @@ pub(crate) struct ArtifactWrite<'a> {
     pub(crate) static_path: &'a Path,
     pub(crate) static_bytes: Option<&'a [u8]>,
     pub(crate) stale_path: &'a Path,
+    /// The generated system-prompt artifacts of this same generation, or
+    /// `None` when this publication has nothing to say about them.
+    ///
+    /// `None` is not "remove": it means the four prompt members are absent
+    /// from the journal and no prompt path is read, staged, replaced or
+    /// removed — which is every project that has not opted in and every
+    /// publication with no node identity to read an opt-in from. Removal is
+    /// [`PromptWrite::REMOVE`], which is a different statement and a
+    /// different journal (`PROP-076#SYS-OPT-IN`,
+    /// `#SYS-REMOVAL-AND-CONFLICT`).
+    pub(crate) prompt: Option<PromptWrite<'a>>,
+}
+
+/// One generation's system-prompt payload, inside the same commit as
+/// `INDEX.md` and the selected `STATIC` rather than beside it: a failure must
+/// never leave a new prefix paired with a sidecar of another generation, nor
+/// damage the previous usable set (`PROP-076#SYS-TRANSACTION-ROLES`).
+///
+/// Each member is `Some(bytes)` to publish those bytes and `None` for "this
+/// target must end absent". The paths are not carried: they are the four
+/// reserved names in the boot directory `index_path` already fixes, so the
+/// transaction's one-directory invariant holds trivially and no caller can
+/// point a prompt role at a file of its own choosing.
+#[derive(Clone, Copy, Default)]
+pub(crate) struct PromptWrite<'a> {
+    /// The ignore file vibe writes into the boot directory it owns. The
+    /// repository root's `.gitignore` is never touched — that file is the
+    /// developer's (`PROP-076#SYS-ARTIFACTS-NOT-TRACKED`).
+    pub(crate) gitignore: Option<&'a [u8]>,
+    /// `SYSTEM.md` — the cache-stable prefix.
+    pub(crate) system: Option<&'a [u8]>,
+    /// `SYSTEM.meta.json` — its witness.
+    pub(crate) meta: Option<&'a [u8]>,
+    /// `AGENT-LANE.md` — the agent-mode lane.
+    pub(crate) lane: Option<&'a [u8]>,
+}
+
+impl PromptWrite<'_> {
+    /// Opting out: every generated prompt artifact and the ignore file that
+    /// covered them end absent. Distinct from `prompt: None`, which touches
+    /// nothing at all.
+    pub(crate) const REMOVE: Self = Self {
+        gitignore: None,
+        system: None,
+        meta: None,
+        lane: None,
+    };
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -256,6 +313,15 @@ fn write_with_faults_locked<T>(
     Ok(output)
 }
 
+/// The one directory every target of this write shares.
+///
+/// The prompt roles need no clause of their own: their paths are not the
+/// caller's to choose but the four reserved names in *this* parent, so they
+/// share it by construction and are distinct from `INDEX.md` and from both
+/// `STATIC` spellings by construction too — which is the whole of what
+/// `PROP-076#SYS-TRANSACTION-ROLES` means by "the `common_parent` invariant
+/// holds trivially". The static fact behind "by construction" is pinned by
+/// `prompt_targets_are_distinct_from_the_lane_targets`.
 fn common_parent<'a>(write: &'a ArtifactWrite<'_>) -> Result<&'a Path, WorkspaceError> {
     let parent = write
         .index_path
@@ -279,171 +345,6 @@ fn common_parent<'a>(write: &'a ArtifactWrite<'_>) -> Result<&'a Path, Workspace
         ));
     }
     Ok(parent)
-}
-
-fn roll_forward_core(
-    parent: &Path,
-    journal: &Journal,
-    faults: &impl FaultInjector,
-) -> Result<(), WorkspaceError> {
-    faults.check(WritePoint::PostStagePreReplace, &journal_path(parent))?;
-    faults.check(
-        WritePoint::StaticReplace,
-        &target_path(parent, &journal.selected)?,
-    )?;
-    apply_forward(parent, &journal.selected)?;
-    faults.check(
-        WritePoint::PostStaticPreIndex,
-        &target_path(parent, &journal.selected)?,
-    )?;
-    faults.check(
-        WritePoint::IndexReplace,
-        &target_path(parent, &journal.index)?,
-    )?;
-    apply_forward(parent, &journal.index)
-}
-
-fn apply_forward(parent: &Path, entry: &JournalEntry) -> Result<(), WorkspaceError> {
-    let target = target_path(parent, entry)?;
-    let current = current_state(&target)?;
-    if current == recorded_current(&entry.after) {
-        return Ok(());
-    }
-    if current != recorded_current(&entry.before) {
-        return Err(third_state_error(
-            &target,
-            &entry.before,
-            &entry.after,
-            &current,
-        ));
-    }
-    apply_recorded(parent, &target, &entry.after).map(|_| ())
-}
-
-fn rollback_all(
-    parent: &Path,
-    journal: &Journal,
-    faults: &impl FaultInjector,
-) -> Vec<WorkspaceError> {
-    let mut errors = Vec::new();
-    let static_entries = [&journal.stale, &journal.selected];
-    let order = static_entries
-        .iter()
-        .copied()
-        .filter(|entry| entry.before.present)
-        .chain(std::iter::once(&journal.index))
-        .chain(
-            static_entries
-                .iter()
-                .copied()
-                .filter(|entry| !entry.before.present),
-        );
-    for entry in order {
-        let target = match target_path(parent, entry) {
-            Ok(path) => path,
-            Err(error) => {
-                errors.push(error);
-                continue;
-            }
-        };
-        if let Err(error) = faults.check(WritePoint::RollbackRestore, &target) {
-            errors.push(error);
-            continue;
-        }
-        match apply_rollback(parent, entry, &target) {
-            Ok(mutated) => {
-                if mutated
-                    && let Err(error) = faults.check(WritePoint::PostRollbackRestore, &target)
-                {
-                    errors.push(error);
-                }
-            }
-            Err(error) => errors.push(error),
-        }
-    }
-    errors
-}
-
-fn apply_rollback(
-    parent: &Path,
-    entry: &JournalEntry,
-    target: &Path,
-) -> Result<bool, WorkspaceError> {
-    let current = current_state(target)?;
-    if current == recorded_current(&entry.before) {
-        return Ok(false);
-    }
-    if current != recorded_current(&entry.after) {
-        return Err(third_state_error(
-            target,
-            &entry.before,
-            &entry.after,
-            &current,
-        ));
-    }
-    apply_recorded(parent, target, &entry.before)
-}
-
-fn apply_recorded(
-    parent: &Path,
-    target: &Path,
-    desired: &RecordedState,
-) -> Result<bool, WorkspaceError> {
-    if !desired.present {
-        let removed = remove_regular_if_exists(target)?;
-        sync_directory(parent)?;
-        return Ok(removed);
-    }
-    let stage_name = desired
-        .staged
-        .as_deref()
-        .ok_or_else(|| io_error(target, "recorded present state has no staged payload"))?;
-    let staged = parent.join(stage_name);
-    validate_owned_stage_name(stage_name, None, &staged)?;
-    let bytes = read_regular_optional(&staged)?
-        .ok_or_else(|| io_error(&staged, "recorded stage is missing"))?;
-    if desired.digest.as_deref() != Some(bytes_digest(&bytes).as_str()) {
-        return Err(io_error(&staged, "staged payload digest mismatch"));
-    }
-    let file = crate::safe_file::open_existing_read_write(&staged)
-        .map_err(|error| io_error(&staged, error))?;
-    let identity = crate::safe_file::identity(&file).map_err(|error| io_error(&staged, error))?;
-    crate::safe_file::assert_path_identity(&staged, identity)
-        .map_err(|error| io_error(&staged, error))?;
-    let temp_path = TempPath::try_from_path(staged).map_err(|error| io_error(target, error))?;
-    let temp = NamedTempFile::from_parts(file, temp_path);
-    persist_temp(temp, target)?;
-    let current = current_state(target)?;
-    if current != recorded_current(desired) {
-        return Err(io_error(
-            target,
-            "replacement target digest changed after persist",
-        ));
-    }
-    sync_directory(parent)?;
-    Ok(true)
-}
-
-fn persist_temp(temp: NamedTempFile, target: &Path) -> Result<(), WorkspaceError> {
-    match temp.persist(target) {
-        Ok(file) => file.sync_all().map_err(|error| io_error(target, error)),
-        Err(error) => {
-            let primary = error.error.to_string();
-            let staged = error.file.path().to_path_buf();
-            let keep = error.file.keep().err().map(|keep| keep.error.to_string());
-            let reason = match keep {
-                Some(keep) => format!(
-                    "atomic replace failed: {primary}; preserving `{}` also failed: {keep}",
-                    staged.display()
-                ),
-                None => format!(
-                    "atomic replace failed: {primary}; staged payload retained at `{}`",
-                    staged.display()
-                ),
-            };
-            Err(io_error(target, reason))
-        }
-    }
 }
 
 #[cfg(test)]

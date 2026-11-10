@@ -149,6 +149,20 @@ fn write_boot_artifacts_owner_managed_using<P: OwnerNativeCompileProvider>(
         static_hash12: static_bytes.map(crate::system_prompt::segment_hash12),
         spec_format,
     };
+    // The same composition hook as the builtin seam, through the same
+    // shared function: the seam is chosen once per regeneration, so a node
+    // reaches exactly one of the two and both must publish the prefix
+    // (PROP-076 `#SYS-LANE-VERBATIM`, `#SYS-TRANSACTION-ROLES`).
+    let publication = super::super::prompt_publication(
+        node_dir,
+        boot,
+        spec_format,
+        sources,
+        prompt,
+        static_bytes,
+        index_text.as_bytes(),
+        &router,
+    )?;
     let redirects = transaction::write_controlled_with_selectors(
         transaction::ArtifactWrite {
             index_path: &index,
@@ -156,6 +170,7 @@ fn write_boot_artifacts_owner_managed_using<P: OwnerNativeCompileProvider>(
             static_path: &static_path,
             static_bytes,
             stale_path: &stale_path,
+            prompt: super::super::prompt_payload(&publication),
         },
         control.as_ref(),
         |transaction| {

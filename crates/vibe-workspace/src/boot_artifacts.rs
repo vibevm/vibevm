@@ -274,6 +274,10 @@ pub fn render_static_with_spec_format(
 /// write path with no node identity has no node whose opt-in it could read.
 #[derive(Clone, Copy)]
 pub struct NodePrompt<'a> {
+    /// The node's canonical workspace-relative path (`.` for the root) —
+    /// the spelling the sidecar records and the one the continuation plan's
+    /// own paths are relative to.
+    pub node_rel: &'a str,
     /// The node's own manifest — the authority for its identity and for
     /// `[system_prompt]`.
     pub manifest: &'a vibe_core::manifest::Manifest,
@@ -435,6 +439,20 @@ fn write_boot_artifacts_inner(
             .map(|artifact| crate::system_prompt::segment_hash12(artifact.bytes())),
         spec_format,
     };
+    // The node's system-prompt artifacts of this same generation. Composed
+    // before publication — every fallible step is a composition failure, not
+    // a half-written set — and committed as four more roles of the one
+    // journal (PROP-076 `#SYS-TRANSACTION-ROLES`).
+    let publication = prompt_publication(
+        node_dir,
+        boot,
+        spec_format,
+        sources,
+        prompt,
+        static_artifact.as_ref().map(EmittedArtifact::bytes),
+        index_text.as_bytes(),
+        &router,
+    )?;
     let redirects = transaction::write_production_with_selectors(
         transaction::ArtifactWrite {
             index_path: &index,
@@ -442,6 +460,7 @@ fn write_boot_artifacts_inner(
             static_path: &static_path,
             static_bytes: static_artifact.as_ref().map(EmittedArtifact::bytes),
             stale_path: &stale_path,
+            prompt: prompt_payload(&publication),
         },
         |transaction| {
             redirect::write_redirect_blocks_with_transaction(node_dir, &router, transaction)
@@ -454,6 +473,71 @@ fn write_boot_artifacts_inner(
         static_lane,
         redirects,
     })
+}
+
+/// Decide and compose this generation's system-prompt publication, shared by
+/// both node publication seams so neither can hold a different opinion about
+/// what the generation contains (PROP-076 `#SYS-TRANSACTION-ROLES`).
+///
+/// `None` for `prompt` or for `sources` is answered with
+/// [`PromptPublication::Untouched`], and both answers are the same honest
+/// one: a write path with no node identity has no node whose opt-in it could
+/// read, and a write path with no prepared sources has no reader through
+/// which to observe an authored input. Neither is a project that opted out —
+/// nothing is removed — and the staged-publication and bare-directory
+/// entries are exactly those paths.
+#[allow(clippy::too_many_arguments)]
+pub(crate) fn prompt_publication(
+    node_dir: &Path,
+    boot: &EffectiveBoot,
+    spec_format: SpecFormat,
+    sources: Option<&DeclaredBootSources>,
+    prompt: Option<NodePrompt<'_>>,
+    lane: Option<&[u8]>,
+    index_bytes: &[u8],
+    router: &RouterFacts,
+) -> Result<crate::system_prompt::PromptPublication, WorkspaceError> {
+    let (Some(prompt), Some(sources)) = (prompt, sources) else {
+        return Ok(crate::system_prompt::PromptPublication::Untouched);
+    };
+    crate::system_prompt::prepare_publication(
+        &crate::system_prompt::PromptPublishRequest {
+            node_rel: prompt.node_rel,
+            node_dir,
+            manifest: prompt.manifest,
+            spec_format,
+            effective: boot,
+            lane,
+            index_bytes,
+            router: router.clone(),
+        },
+        &crate::system_prompt::bound_reader(sources, prompt.node_rel),
+        &crate::system_prompt::bound_lane_reader(sources),
+    )
+}
+
+/// The transaction payload of one decided publication.
+///
+/// The three answers are deliberately distinct. `Untouched` is `None`: no
+/// prompt path is read, staged or replaced, which is what keeps a project
+/// that never opted in byte-identical to before this feature existed.
+/// `Removed` is `PromptWrite::REMOVE`: the four owned paths end absent in
+/// this same commit. `Published` carries the bytes.
+pub(crate) fn prompt_payload<'a>(
+    publication: &'a crate::system_prompt::PromptPublication,
+) -> Option<transaction::PromptWrite<'a>> {
+    match publication {
+        crate::system_prompt::PromptPublication::Untouched => None,
+        crate::system_prompt::PromptPublication::Removed => Some(transaction::PromptWrite::REMOVE),
+        crate::system_prompt::PromptPublication::Published(published) => {
+            Some(transaction::PromptWrite {
+                gitignore: Some(crate::system_prompt::BOOT_IGNORE_BODY.as_bytes()),
+                system: Some(&published.system),
+                meta: Some(&published.meta),
+                lane: Some(&published.lane),
+            })
+        }
+    }
 }
 
 fn io_err(path: &Path, error: std::io::Error) -> WorkspaceError {
