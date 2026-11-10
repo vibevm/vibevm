@@ -1497,4 +1497,12 @@ See `LOG.md`.
 
 ## 10. Report
 
-Empty until close.
+**Closed 2026-11-11.** Every phase P1–P7f is delivered, the four shortfalls P7f
+found are closed as one design (`B-262`–`B-265`, `AV-FMT-105`,
+`PROP-075#VERSION-FILE-VALUE` and `#P7-CLOSE-AS-BUILT`), and §7's whole-campaign
+acceptance script exists and passes all thirteen legs. The campaign's own proof
+that vibe replaces nvm is a measured verdict of 0 over nine differential cases
+and all 52 required `(subcommand, flag)` pairs, rerunnable as
+`cargo xtask vibenvm-conform`. The per-phase records are `PROP-075`'s
+`#P1`…`#P7F-AS-BUILT` facts and `LOG.md`; what the campaign deliberately did not
+do is in its own entries rather than here.

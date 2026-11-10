@@ -2074,3 +2074,151 @@ declaring `[conflicts]` on its own recommender),
 `a_locked_weak_member_is_replayed_and_only_a_re_solve_reconsiders_it`,
 `the_json_report_carries_a_row_per_recommendation_and_suggestion`, and the
 retained flag-refusal case.
+
+## 2026-11-11 — the campaign's close-out: the four shortfalls as one rule, and §7's acceptance script
+
+The last two debts of the campaign are paid. `B-262`…`B-265` — the four
+shortfalls of existing features P7f's shim found and, by the VIBENVM rule, did
+not patch — are closed, and PLAN §7's whole-campaign
+`campaigns/app-versions-2026-11/accept.sh` exists and passes **all thirteen
+legs**. The shim is simpler for it, and the differential verdict is **0**
+again. `PROP-075#VERSION-FILE-VALUE` is new, `#VERSION-FILE-FORMATS`,
+`#VERSION-FILE-WRITE` and `#VERSIONS-LIST-OUTPUT` are amended,
+`#P7-CLOSE-AS-BUILT` records what the code decided, and the whole of it is
+`AV-FMT-105`.
+
+**Four rows, one rule, and that is the finding.** They read as four gaps and
+are one question: *what does a spelling that names versions mean, and where*.
+A **version file records a choice**; a **command line asks vibe to choose**.
+Once that is stated — a complete version in a version file selects exactly
+that version, a partial one selects the newest version beginning with it, a
+channel keeps its channel meaning, every other spelling keeps its requirement
+meaning — B-265 **is** the rule, B-262 is one more reader of it
+(`vibe install -g` with no version), B-263 is one more writer of the same
+spelling (`vibe app versions [PATTERN]`), and B-264 is the flag that closes
+the round trip (`vibe app env --write-version-file`, which writes the resolved
+version that now reads back as itself). Taken one row at a time each would
+have grown its own matcher; taken together the implementation is one function
+that counts components — three → `=X.Y.Z`, two → `~X.Y`, one → `^X` — called
+by the version-file search, by the resolution cache's re-read of the authored
+value, and by the listing's pattern. That shared call is why a cache hit and a
+cold read cannot disagree, and why a listing cannot narrow by a different rule
+than an activation selects by.
+
+**The CLI spelling is deliberately unchanged, and that is the boundary the
+owner's design drew.** `SLOT@VER`, `PKG@VER` and `--use SLOT=VER` stay
+requirements: `vibe install -g org.vibevm.node/node@22.9.0` still resolves
+22.9.0 as `^22.9.0`, `@=22.9.0` is still the pin, and nothing recorded in a
+manifest, a lock or an index changes meaning. The shim therefore keeps the
+`=<version>` translation of `#P7F-AS-BUILT` (1) for every *target* it builds,
+and a test asserts both halves side by side: a `.nvmrc` holding `1.0.0` selects
+1.0.0 with 1.1.0 installed, and `--use alpha=1.0.0` selects 1.1.0.
+
+**Three facts the implementation settled that the rows had left open.**
+
+- **B-262's chicken-and-egg was a false problem, and it is worth saying why.**
+  The row feared that a package's declared version files are unknown until the
+  package is resolved, and that resolving needs a version. They are not
+  unknown: the home's `vibe-app-version-files/1` sidecar records what every
+  **installed** application declares, which is the same document an activation
+  reads. So the install consults a file exactly when this home already has a
+  provider of that package's slot — which is exactly when "what does this
+  project want" has an answer — and a first install of a package the home
+  never held resolves as it always did. Nothing resolves twice, and no new
+  document was needed.
+- **B-264's open decision, taken: exactly one `--use`.** `vibe app env` can
+  resolve several slots in one call, so the flag names the slot by naming the
+  version. No `--use`, several, `--unset`, `SLOT=none`, and a `--use` that
+  resolved to nothing installed are five usage refusals naming the flag. The
+  written path goes to **stderr**, because `app env`'s stdout is the only
+  thing a shell evaluates, and `--json` carries it as the one new optional
+  member of `vibe-app-env/1`.
+- **B-263 became a positional, not a flag, and it absorbed the `@VER` the
+  target spelling already parsed.** `vibe app versions node 22` is nvm's
+  `ls 22`; `vibe app versions 'org.vibevm.node/node@22'` — accepted and then
+  silently ignored, which was half of the row's own complaint — now means the
+  same thing. A spelling that is neither a version pattern nor a channel is the
+  new refusal `bad_version_pattern`, before any version is listed.
+
+**The shim got smaller in three places, and that is the check that these are
+the right features.** `nvm install` with no version is now one
+`vibe install -g` with no version at all — the shim no longer reads the file's
+value through `app env --project` and re-translates it, which was version logic
+applied to a file vibe had already read. `nvm use --save` is one
+`vibe app env --use … --write-version-file`, so it no longer moves the slot
+default as a side effect nvm does not have. And `nvm ls <pattern>` /
+`ls-remote <pattern>` hand the spelling over as the user typed it and list
+**every** match, where each used to answer with the one version a requirement
+resolved to. `org.vibevm.node/vibenvm` is revision **1.1.0** for it. The one
+thing left in the shim that touches versions is the `=<version>` target
+translation, and nvm's "nothing matched is exit 3" status mapping.
+
+**§7's acceptance, and how its own count resolves.** PLAN §7's scenario is nine
+legs — install at a channel; the listing; `vibe app env`; the prompt hook;
+`vibe app exec`; `vibe app migrate`; the mirror from `mirror.toml`; the install
+from that snapshot with the network denied; the differential proof — and the
+owner's decisions of 2026-11-10 added four, one per feature a user can see: a
+`keyed` file written and read back for two slots, the user's extras list
+reaching a new version, a recommendation declined with `--no-recommends`, and
+an ordinary package's judged `slot:post-install` contribution with its unmet
+`needs`. Thirteen legs, all passing. It is isolated the way
+`campaigns/sys-prompt-2026-11/accept.sh` is — one re-exec into
+`bwrap --unshare-net`, every `vibe` call under `strace -e trace=connect`, any
+non-loopback `connect(2)` failing the run — and it reaches **no** upstream
+host: Node's release files come from the one documented mirror this repository
+pins, served over loopback and redirected by a `[[remap]]` row, which is the
+mechanism a closed network uses anyway. The two packages that live in their own
+repositories come from `conformance/vibenvm/make-registry.sh`, so both it and
+`fetch-mirror.sh` are prerequisites rather than parts of the script, named in
+the exit-2 message when one is missing.
+
+**Four things writing that script measured, each recorded rather than
+asserted.**
+
+- **"Install from the snapshot with the network denied" needs the bytes, not
+  only the manifest.** The first attempt mirrored with `payloads = false` and
+  the offline install failed naming the archive it could not fetch — correctly.
+  The leg now sets `payloads = true` with `[payloads] into`, and the closed
+  home reads them through an `[artifacts] packages` drop; the install's own
+  plan then says «1 input(s) from the [artifacts] packages drop», which is the
+  proof that `#MIRROR-PAYLOAD-PROJECTION` and PROP-066 `#drops` meet rather
+  than two facts that happen to agree on paper.
+- **§7 asks for the ordinary package's contributions in `--plan-only`, and
+  that surface does not exist.** Measured: the project plane's `--plan-only`
+  document carries `packages`, `preview_complete`, `remaps` and `hostings`, and
+  no contribution rows — because PROP-065 `#ordinary-plan` is `impl/work` and
+  `AV-FMT-032` was deliberately not delivered by P7e. The leg therefore reads
+  the row where this build reports it, the install's own `contributions` array
+  with its point, handler and outcome, and says so in its own comment. A leg
+  that asserted the plan preview would have been a false green.
+- **The migration leg needs an npm registry that can actually serve the
+  package it carries.** nvm's own `--reinstall-packages-from` case in the
+  differential suite passes with nothing carried, because a carry reinstalls
+  **by name** and the pinned mirror's `npm-registry/` is deliberately empty
+  and digest-locked. So the acceptance serves a second loopback registry of its
+  own holding one dependency-free package with its sha1 packument, and the
+  `globals` the adapter's own `list` verb observes after the carry is what the
+  leg compares. Nothing is written into the pinned mirror, which could not then
+  be verified again.
+- **A `vibe app` verb run inside a project resolves that project's home.** The
+  first draft never changed directory, so every leg ran in the vibevm checkout
+  and `app extras add node` answered `unknown_slot` for a slot the user home
+  plainly had — and the `--write-version-file=.sdkmanrc` of leg 10 wrote into
+  the repository root. Each leg now names its own working directory, and the
+  legs about the user's home run in a directory that is deliberately not a
+  project. Stdout and stderr are kept apart for the same class of reason: a
+  mutation prints its plan on stderr so `--json` keeps one envelope on stdout,
+  and the first draft merged them and could not read its own answers.
+
+**Gates.** `cargo fmt --all --check` clean; `cargo clippy --workspace
+--all-targets -D warnings` clean, and the same for `vibe-app` / `vibe-cli` on
+`x86_64-pc-windows-gnu`; the full `vibe-app` and `vibe-cli` suites pass, with
+the new tests named in the report; `cargo xtask conform check` 138 findings, 0
+new; `cargo xtask check-codegen` clean after the schema edit; the built binary's
+`vibe check` 0 new; the PROP-075 XML reports `dry-run ir-stable-loss` before and
+after the edit, the same verdict unchanged; `cargo xtask vibenvm-conform` →
+`verdict=0` and `conformance/vibenvm/run.sh --self-test` → 0 against the
+simplified shim; `campaigns/app-versions-2026-11/accept.sh` → 13 legs passed, 0
+failed. `shellcheck` is still not installed on this machine, so `accept.sh` and
+the shim are syntax-checked with `bash -n` / `sh -n` and otherwise unlinted,
+which is recorded rather than claimed.

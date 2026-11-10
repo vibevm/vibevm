@@ -175,7 +175,10 @@ and the diff of `inventory.json` is the new surface.
 
 Today: **76 pairs** from nvm v0.41.0 — 52 required and covered by the cases,
 24 excluded by the owner's twelve approved items. Measured 2026-11-11 against
-the real shim: nine cases passed, 52 of 52, **`verdict=0`**.
+the real shim: nine cases passed, 52 of 52, **`verdict=0`** — and measured 0
+again the same day against the **simplified** shim (`org.vibevm.node/vibenvm`
+revision 1.1.0), after the four shortfalls this suite found were closed in vibe
+itself rather than worked around in the shim.
 
 **The exclusion list is closed.** `exclusions.toml` carries exactly the owner's
 decision of 2026-11-10 (PROP-075 `#VIBENVM-EXCLUSIONS-APPROVED`), one reason
@@ -247,9 +250,10 @@ identical.
 
 ## As built — what the implementation decided
 
-Nine notes, each one a decision a reader would otherwise have to
-reverse-engineer. The first four are the harness half's; notes 5–9 are what
-plugging the real shim in decided.
+Ten notes, each one a decision a reader would otherwise have to
+reverse-engineer. The first four are the harness half's; notes 5–8 and 10 are
+what plugging the real shim in decided, and note 9 is what closing the gaps it
+found decided.
 
 1. **The owner's twelve approved exclusion items are fourteen rows**, because
    `#VIBENVM-EXCLUSIONS-APPROVED`'s own row rule (1) makes an item that names
@@ -304,7 +308,22 @@ plugging the real shim in decided.
    surface both tools have, and covers the same pair, because `coverage.py`
    reads flags only from the tokens directly after the subcommand and `node`
    is not a flag. The case says so in its own summary.
-9. **Each sandbox's `PATH` carries its own tool.** Sandbox A has nvm as a
+9. **The four shortfalls this suite found are closed, and the shim shrank in
+   three places** (`BACKLOG.md#b-262`…`#b-265`, `AV-FMT-105`,
+   `PROP-075#P7-CLOSE-AS-BUILT`). `nvm install` with no version is one
+   `vibe install -g` with no version — the shim no longer reads a `.nvmrc`'s
+   value through `app env --project` and re-translates it. `nvm use --save` is
+   one `vibe app env --use … --write-version-file`, so it no longer moves the
+   slot default as a side effect nvm does not have. And `nvm ls <pattern>` /
+   `ls-remote <pattern>` hand the spelling to `vibe app versions` as the user
+   typed it and list **every** match, where each used to answer with the one
+   version a requirement resolved to. None of it changed a case or a record
+   field, because the suite compares observations and exit statuses rather than
+   stdout: the pattern listings' statuses are the same, and note 6's
+   `=<version>` translation of a *target* is untouched. The shim's one
+   remaining text reading of vibe's own output is "did this listing select
+   anything", which maps nvm's exit 3 for nothing matched.
+10. **Each sandbox's `PATH` carries its own tool.** Sandbox A has nvm as a
    sourced function; sandbox B needs `vibe` as a program, so `run.sh` links it
    into a directory of that sandbox — deliberately **outside** the tool root,
    so it never appears in `owned_path`. The shim then finds vibe the way a
