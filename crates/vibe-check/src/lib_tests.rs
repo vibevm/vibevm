@@ -57,6 +57,7 @@ fn registration_matches_the_historical_dispatch_order() {
             CheckId::ApplicationIcons,
             CheckId::LockSlotHash,
             CheckId::TemplateRender,
+            CheckId::SystemPrompt,
         ]
     );
 }

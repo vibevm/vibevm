@@ -64,8 +64,8 @@ pub use checks::{
     DocMediaCheck, DocPackageContractCheck, DocTranslationCheck, FactsSyncCheck,
     FeaturesGraphCheck, I18nCoverageCheck, LocalSourceFreshnessCheck, LockSlotHashCheck,
     LockfileFilesCheck, ManifestEpochCheck, ManifestValidityCheck, RedirectBlockCheck,
-    ReviewAgingCheck, SnippetPresuppositionCheck, SubskillStructureCheck, TemplateRenderCheck,
-    VisibilityHygieneCheck, WalFreshnessCheck, WalWellformedCheck,
+    ReviewAgingCheck, SnippetPresuppositionCheck, SubskillStructureCheck, SystemPromptCheck,
+    TemplateRenderCheck, VisibilityHygieneCheck, WalFreshnessCheck, WalWellformedCheck,
 };
 
 /// Stable identifier for a single check. Used in [`Finding::check`]
@@ -165,6 +165,15 @@ pub enum CheckId {
     /// `{meta.…}` variable, which only the real version record answers,
     /// leaves the render *unchecked* with a warning rather than broken.
     TemplateRender,
+    /// PROP-076 `SP-FMT-008` — an opted-in project's generated system
+    /// prompt, its sidecar and its agent lane are the composition of their
+    /// own current inputs, and none of the three is tracked by git. A
+    /// project with no authored `SYSTEM-TEMPLATE.md` and no leftover
+    /// artifact is not reported at all. Warning for a stale, missing or
+    /// unverifiable artifact, which one named command resolves; **error**
+    /// for a tracked one, which `#SYS-ARTIFACTS-NOT-TRACKED` calls an
+    /// error in those words.
+    SystemPrompt,
 }
 
 impl CheckId {
@@ -194,6 +203,7 @@ impl CheckId {
             CheckId::BootGraphIntegrity => "boot_graph_integrity",
             CheckId::LockSlotHash => "lock_slot_hash",
             CheckId::TemplateRender => "template_render",
+            CheckId::SystemPrompt => "system_prompt",
         }
     }
 
@@ -226,6 +236,7 @@ impl CheckId {
             CheckId::ApplicationIcons,
             CheckId::LockSlotHash,
             CheckId::TemplateRender,
+            CheckId::SystemPrompt,
         ]
     }
 }
@@ -475,7 +486,7 @@ pub trait Check {
 /// use vibe_check::{CheckId, all_checks};
 ///
 /// let checks = all_checks();
-/// assert_eq!(checks.len(), 23);
+/// assert_eq!(checks.len(), 24);
 /// assert_eq!(checks[0].id(), CheckId::ManifestValidity);
 /// ```
 pub fn all_checks() -> Vec<Box<dyn Check>> {
@@ -503,6 +514,7 @@ pub fn all_checks() -> Vec<Box<dyn Check>> {
         Box::new(ApplicationIconsCheck),
         Box::new(LockSlotHashCheck),
         Box::new(TemplateRenderCheck),
+        Box::new(SystemPromptCheck),
     ]
 }
 

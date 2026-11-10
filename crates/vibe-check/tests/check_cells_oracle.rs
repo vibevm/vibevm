@@ -22,7 +22,7 @@ use vibe_check::{
     DocTranslationCheck, FactsSyncCheck, FeaturesGraphCheck, I18nCoverageCheck,
     LocalSourceFreshnessCheck, LockSlotHashCheck, LockfileFilesCheck, ManifestEpochCheck,
     ManifestValidityCheck, RedirectBlockCheck, ReviewAgingCheck, Severity,
-    SnippetPresuppositionCheck, SubskillStructureCheck, TemplateRenderCheck,
+    SnippetPresuppositionCheck, SubskillStructureCheck, SystemPromptCheck, TemplateRenderCheck,
     VisibilityHygieneCheck, WalFreshnessCheck, WalWellformedCheck, all_checks, check_project,
 };
 
@@ -114,6 +114,7 @@ fn each_cell_reports_its_own_check_id() {
         (Box::new(ApplicationIconsCheck), CheckId::ApplicationIcons),
         (Box::new(LockSlotHashCheck), CheckId::LockSlotHash),
         (Box::new(TemplateRenderCheck), CheckId::TemplateRender),
+        (Box::new(SystemPromptCheck), CheckId::SystemPrompt),
     ];
     assert_eq!(cells.len(), CheckId::all().len(), "one cell per CheckId");
     for (cell, expected) in &cells {
@@ -153,6 +154,7 @@ fn all_checks_registers_every_cell_in_dispatch_order() {
             CheckId::ApplicationIcons,
             CheckId::LockSlotHash,
             CheckId::TemplateRender,
+            CheckId::SystemPrompt,
         ]
     );
 }
