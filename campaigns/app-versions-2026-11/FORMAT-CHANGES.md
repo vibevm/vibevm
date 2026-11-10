@@ -552,8 +552,26 @@ bullet's "no wire change" was half right, and the sidecar **does** grow one mapp
 
 ## AV-FMT-026 — `[[application.ecosystem]]` and `[[application.ecosystem.recommends]]` (Phase 7b)
 
-Status: **not delivered.** Design authority:
-`spec://org.vibevm.core/vibevm/common/PROP-075#ECOSYSTEM-ADAPTER` and `#ECOSYSTEM-RECOMMENDS`.
+Status: **delivered 2026-11-10** (phase P7b). Design authority:
+`spec://org.vibevm.core/vibevm/common/PROP-075#ECOSYSTEM-ADAPTER` and `#ECOSYSTEM-RECOMMENDS`;
+the as-built record is `PROP-075#P7B-AS-BUILT`. As implemented it matches the entry below with
+four clarifications.
+
+- A **recommends row's `ecosystem` field is what routes the item**, not its position in the
+  document: the row is authored inside an `[[application.ecosystem]]` table, and the field must
+  name an adapter the package declares, which is the refusal the fact asks for. A row naming a
+  *different* declared adapter is admitted and belongs to that one.
+- The synthesised feature rows are put in by `TryFrom<ManifestWire> for Manifest` and taken out
+  again by `TryFrom<Manifest> for ManifestWire`, so a manifest **round trip is byte-identical**
+  and `vibe init`'s writer cannot duplicate them. `FeatureDecl` grew one never-authored,
+  never-serialised `origin` marker for that (`authored` or the recommends shorthand), the same
+  device `StepDecl.origin` and `LauncherDecl.source` already are.
+- The one refusal `[[installer_options]]` already had for `features` on a **method-form** option
+  now reads the author's own rows only, because a recommendation is a property of the package and
+  reaches a method-form option too. An author who writes `features` there is refused exactly as
+  before.
+- A **duplicate recommendation `id`** inside one package is also a refusal naming its path: each
+  row synthesises one feature of that id, so two rows of one id could not both be it.
 
 - `[format.manifest]` (`schema = "none"`, authored TOML), epoch **1 → 1**. Both tables optional and omitted when absent, so every existing manifest serialises byte-identically.
 - New `[[application.ecosystem]]` rows: `id` (an opaque token — vibe never interprets it), `name`, optional `description`, optional `migration` (boolean, default `true`), and the verbs `install` (required), `list`, `remove`, `self_upgrade`. Each verb is **exactly one `StepDecl`** restricted to `kind = "recipe" | "shell"`, `kind` required — the restriction `AV-FMT-015` already imposes on a migration side, for the same reason.
@@ -564,8 +582,16 @@ Status: **not delivered.** Design authority:
 
 ## AV-FMT-027 — `vibe-app-ecosystem/1`, the adapter run record (Phase 7b)
 
-Status: **not delivered.** Design authority:
-`spec://org.vibevm.core/vibevm/common/PROP-075#ECOSYSTEM-ADAPTER`.
+Status: **delivered 2026-11-10** (phase P7b). Design authority:
+`spec://org.vibevm.core/vibevm/common/PROP-075#ECOSYSTEM-ADAPTER`; the as-built record is
+`PROP-075#P7B-AS-BUILT`. As implemented it matches the entry below with two clarifications: the
+document carries **one row per adapter** the invocation touched (`adapters[]`, each with the
+adapter id, the items asked for, the observation, the outcome, the step, its log and the retry
+command) with the slot, the installation key, the verb and the work directory on the document
+itself, because the work directory of `#ECOSYSTEM-ADAPTER` is per *version*, not per adapter; and
+the row's `outcome` vocabulary is `done | failed | skipped`, where `skipped` is an adapter that
+declares no such verb, or one whose item list was empty — never an error. The `vibe app work` key
+of such a directory is `ecosystem:<slot>:<version>:<verb>`.
 
 - New format `[format.cli-application-ecosystem]`, `schemas/application_ecosystem.jtd.json`, epoch **new, 1**, protocol tag `vibe-app-ecosystem/1`.
 - Written as `<work>/ecosystem.json` in the run's own work directory `<home>/cache/app-ecosystem/<slot>/<version>/<timestamp>/`, which is kept on success and on failure as a migration's is, and is listed and cleaned by `vibe app work` exactly as `AV-FMT-103` does for a migration.
@@ -582,11 +608,21 @@ Status: **not delivered.** Design authority:
 - **This is the first user-authored per-slot configuration in vibe**, and `crates/vibe-app/` reads no user config at all today, so the phase introduces that read as a new seam.
 - An unknown slot, an unknown ecosystem id or an unknown recommendation id is **reported once and otherwise ignored**, never an error: a hand-written settings file outlives the packages it mentions.
 - Two new flags on `vibe install -g` / `vibe update -g`: `--no-extras` (skip the user's own `add` list) and `--no-recommends` (skip the author's recommendations of both kinds — `AV-FMT-030`). A `drop` is honoured in every case, including under `--no-extras`, because a flag that declines extras must never cause **more** to be installed than the user asked for.
-- New command family `vibe app extras list|apply|add|drop|remove|self-upgrade|import`, whose `--json` answer is `AV-FMT-029`'s `vibe-app-extras/1`.
+- New command family `vibe app extras list|apply|add|drop|remove|self-upgrade|import`, whose `--json` answer is `AV-FMT-029`'s `vibe-app-extras/1`. **`list`, `remove` and `self-upgrade` were delivered 2026-11-10 by phase P7b** — the three verbs that need no user list; `apply`, `add`, `drop` and `import` are this phase's.
 
 ## AV-FMT-029 — `vibe-app-extras/1` and the inventory's adapter record and weak edge (Phase 7c/7d)
 
-Status: **not delivered.** Design authority:
+Status: **partly delivered 2026-11-10** (phase P7b delivered the format record and the half of
+the document it can fill; the inventory generation, the weak edge and the user's own list remain
+P7c/P7d). What P7b delivered: `[format.cli-application-extras]`,
+`schemas/application_extras.jtd.json`, epoch **new, 1**, protocol `vibe-app-extras/1`, the answer
+of `vibe app extras list --json` — per declared adapter, which verbs the package declares, the
+author's recommendations with their **enabled** state (read off the installation's recorded chosen
+feature set), the computed list those make, and what the adapter's `list` verb observes in that
+version (`observed`, with `observed_failed` naming why an observation was not taken). The user's
+`add` and `drop`, the full final-list arithmetic and the inventory's per-adapter record are
+**not** in the document yet: P7c adds them as optional members, epoch **1 → 1**, and owns the
+`[format.application-index]` **6 → 7** move with its `vibe-app-proxy` admission. Design authority:
 `spec://org.vibevm.core/vibevm/common/PROP-075#SLOT-EXTRAS`, `#ECOSYSTEM-ADAPTER`, and
 `spec://org.vibevm.core/vibevm/common/PROP-077#APP-RECOMMENDS-MECHANICS`.
 
@@ -629,7 +665,14 @@ Status: **delivered** 2026-11-10, epoch unchanged (`1 → 1`). Design authority:
 
 ## AV-FMT-032 — `vibe-install-steps/1`, the ordinary package's step evidence, and `vibe app describe`'s adapters (Phase 7e/7b)
 
-Status: **not delivered.** The `vibe-install-steps/1` half is P7e's and was deliberately not taken in P7e's first pass: the judgment, the two refusals and the trust gate land first because everything else depends on their verdicts, and the evidence record is a new registered format with its own schema, registry row, generated reader and corpus. The per-contribution outcome rows it would serialise already exist in memory as `SlotLifecycleReport` (now carrying `skip` with its deciding condition), so what remains is the format, not the measurement. The `vibe app describe` half is P7b's throughout. Design authority:
+Status: **partly delivered 2026-11-10** — phase P7b delivered the `vibe app describe` half;
+`vibe-install-steps/1` remains P7e's: The `vibe-install-steps/1` half is P7e's and was deliberately not taken in P7e's first pass: the judgment, the two refusals and the trust gate land first because everything else depends on their verdicts, and the evidence record is a new registered format with its own schema, registry row, generated reader and corpus. The per-contribution outcome rows it would serialise already exist in memory as `SlotLifecycleReport` (now carrying `skip` with its deciding condition), so what remains is the format, not the measurement. The `vibe app describe` half is P7b's throughout.  What P7b delivered:
+`[format.cli-application-describe]` (`schemas/application_describe.jtd.json`), epoch **1 → 1**,
+optional `ecosystems[]` **on the `application` object** — the declaration's own place in the
+document — carrying each declared adapter's id, name, description, `migration` flag, the verbs it
+declares and the author's recommendations with their items. The *last applied* and *last
+observed* lists are **not** there: they come from `AV-FMT-029`'s inventory record, which P7c
+owns, and `vibe app describe` stays a pure read of the declaration until then. Design authority:
 `spec://org.vibevm.core/vibevm/common/PROP-065#ordinary-plan`;
 `spec://org.vibevm.core/vibevm/common/PROP-075#ECOSYSTEM-ADAPTER`.
 

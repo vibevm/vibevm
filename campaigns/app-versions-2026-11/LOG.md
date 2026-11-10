@@ -1240,3 +1240,100 @@ Facts a later session would otherwise re-derive:
 - **Disk, on this machine:** `/fast` had 125 GB free throughout; every cargo
   command ran with the mandated `CARGO_TARGET_DIR=/fast/tmp/p45-target`,
   `CARGO_BUILD_JOBS=6` and `--test-threads=6`.
+
+## 2026-11-10 — P7b implemented: ecosystem adapters, their verbs and `vibe app extras`
+
+The second of the six P7 units landed. `[[application.ecosystem]]` declares an
+adapter — an opaque `id`, a human `name`, an optional `description`, an
+optional `migration` flag, and up to four verbs (`install` required, `list`,
+`remove`, `self_upgrade`), each exactly one `StepDecl` restricted to `recipe`
+and `shell` — with `install` and `remove` restricted further to `recipe`,
+because the items are appended to the script's argv as separate elements and a
+`shell` step is a command *string* into which a list could only be spliced.
+`[[application.ecosystem.recommends]]` is shorthand for one ordinary installer
+feature per row, and an adapter that declares a `list` verb synthesises the
+`ecosystem:<id>` migration entry instead of asking the package to write the
+same two scripts twice. `vibe app extras list|remove|self-upgrade` are the
+explicit verbs that need no user list. `PROP-075#ECOSYSTEM-RECOMMENDS`,
+`#ECOSYSTEM-MIGRATION` and `#PACKAGE-ACTIONS` are `impl/done`; `AV-FMT-026`
+and `AV-FMT-027` are delivered, `AV-FMT-029` and `AV-FMT-032` partly; the
+as-built record is `PROP-075#P7B-AS-BUILT`.
+
+**Five things the implementation settled that the design left open.**
+
+- **The recommends shorthand had to be symmetric, for the same reason P7a's
+  `tool-versions` sugar did.** The fact says each row synthesises a feature row
+  in every installer option and says nothing about the way out. A one-way
+  synthesis would have written those rows into the document the next time a
+  manifest was serialised — `vibe init` serialises one — and the next parse
+  would then have refused them as colliding with themselves. So the rows go in
+  in `TryFrom<ManifestWire> for Manifest` and come out again in
+  `TryFrom<Manifest> for ManifestWire`, with one never-authored,
+  never-serialised `origin` marker on `FeatureDecl` to tell the two apart. Doing
+  it in the wire conversion rather than in a dozen readers is what makes the
+  synthesised row *ordinary in every respect*, which was the phase's own risk
+  (1): the existing feature-tree suite runs unchanged and passes, and so does
+  every other `vibe-app` test.
+- **Exactly one pre-existing refusal had to be narrowed.** An option in the
+  method form (`installation`, no `steps`) refuses `features`, and a
+  recommendation reaches every option — method-form ones included — because it
+  is a property of the package and not of one platform's archive. That refusal
+  now reads the author's own rows only. An author who writes `features` on a
+  method option is refused exactly as before.
+- **The reserved-namespace refusal has to be tested before the token shape.**
+  `ecosystem:npm` is not a portable lowercase token, so the pre-existing
+  refusal would have fired first and never mentioned the namespace the author
+  actually tripped over.
+- **A synthesised migration entry runs through the ordinary runner with one
+  new input, not a second runner.** Its two sides *are* adapter verbs, so the
+  step context carries an ecosystem environment beside the migration one: the
+  export runs `list` in the old version with `VIBE_ECOSYSTEM_LIST` inside the
+  shared work directory, and the import runs `install` in the new one with
+  exactly the lines of that file as its argv. The file lives at
+  `<work>/logs/ecosystem-<id>/items`, with the reserved `ecosystem:` prefix
+  spelled `ecosystem-` in the directory name because a colon is not a portable
+  path component.
+- **A named adapter refuses, an unnamed one skips.** `--ecosystem ID` naming an
+  adapter the package does not declare, or one that declares no such verb, is a
+  refusal naming what it does declare; with no `--ecosystem` the same shape is
+  reported `skipped`, because only `install` is required of an adapter.
+
+**The injection rule is a test, not a comment.** The phase's own gate is
+`cli_app_extras::items_reach_the_recipe_as_exactly_those_argv_elements_and_nothing_is_evaluated`:
+four items — `; rm -rf $HOME`, `a"b$(touch $HOME/pwned)c`, one carrying a real
+newline, and `@scope/pkg@^1.2` — are handed to `vibe app extras remove` and the
+fixture recipe writes its `"$@"` back out with a separator after each element.
+The comparison is against the input list, element for element; `$HOME` is
+intact, the substitution ran nowhere, and the record carries the four strings
+verbatim. The same fixture proves `VIBE_ECOSYSTEM_ITEMS`, the item count, the
+absence of `VIBE_OUT` / `VIBE_SOURCES`, that the PATH leads with the configured
+installation (`rt` is *that* version's), and that the working directory is the
+run's own.
+
+**The inventory generation is NOT moved by this phase, and that is a decision.**
+The P7 design note says the application inventory moves to
+`vibe-user-applications/8` once, for two phases' additions, and whichever of
+P7c and P7d lands first owns the `e7` schema and the `vibe-app-proxy`
+admission. P7b was checked against that and needs **no** new state: the
+synthesised migration entries go into the `migrations` list the `/7` generation
+already carries, and the per-adapter record (`AV-FMT-029`'s last applied and
+last observed list) is `#SLOT-EXTRAS` state that P7c owns together with the
+final-list arithmetic. So the home still writes the lowest protocol it can,
+the proxy admission is still unpaid, and **P7c or P7d owns the bump**. The one
+visible consequence is that `vibe app describe`'s new `ecosystems[]` carries
+the declaration only; the last applied and last observed lists appear when P7c
+lands the record.
+
+**Two notes on the plan's own text.**
+
+- Its acceptance block names `cargo xtask formats check`, which is not a
+  subcommand of this tree's xtask; the registry/corpus gate here is
+  `cargo xtask wire-diff` (with `check-codegen` for schema freshness), and that
+  is what was run. Both new records carry `corpus = "none"`, as the migration
+  record does.
+- Its file list names `schemas/application_extras.jtd.json` under P7b while
+  `AV-FMT-029` assigns `vibe-app-extras/1` to P7c. The format record and the
+  half of the document a listing can fill without the user's settings landed
+  here, because `vibe app extras list --json` needs an answer; P7c adds the
+  user's `add` / `drop` and the record-sourced lists as optional members at the
+  same epoch.
