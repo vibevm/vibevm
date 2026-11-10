@@ -2815,3 +2815,43 @@ structure, and it goes when the file does.
 | @fact:B261-SEVERITY **severity** | P3 — nothing is broken, and the cost is a tax on the next contributor rather than on a user. |
 | @fact:B261-DISPOSITION **disposition** | `candidate` — split along the remote seam (`bundle/remote.rs`) before the next feature edit, as its own commit, so the split and the change are not read as one diff. |
 | @fact:B261-FILED **filed by** | APP-VERSIONS P7e tail, 2026-11-10. |
+
+## B-262 — `vibe install -g` of an application ignores the declared version file {#b-262}
+
+| field | value |
+|---|---|
+| @fact:B262-WHAT **what** | `vibe install -g org.vibevm.node/node` in a directory whose `.nvmrc` says `20.18.0` installs the **newest** release instead, measured: it installed 23.1.0. PROP-075 `#VERSION-FILE-FORMATS`' precedence puts the nearest declared version file directly below an explicit requirement and above the slot default, and every other consumer of that precedence (`vibe app env --project`, the prompt hook, `vibe app exec`) honours it — only the install path never consults it. So the one command a user types when a project's file says what it wants is the one command that ignores it. |
+| @fact:B262-EVIDENCE **evidence** | Measured 2026-11-11 while building `org.vibevm.node/vibenvm` (APP-VERSIONS P7f): nvm's bare `nvm install` reads `.nvmrc`, and the shim can only reach that behaviour by composing two commands — `vibe app env --project --json` for the `requested` value, then `vibe install -g …@=<requested>`. Recorded in `PROP-075#P7F-AS-BUILT` (4). |
+| @fact:B262-SEVERITY **severity** | P2 — a documented precedence that one surface silently does not follow, on the surface where a wrong answer costs a download and a wrong runtime. |
+| @fact:B262-DISPOSITION **disposition** | `candidate` — the ordering is chicken-and-egg (the package's declared version files are known only once the package is resolved, and resolving it needs a version), so the fix is a design decision, not a patch: resolve the package at `latest` to read its declaration, then re-resolve with the file's requirement, or retain declared names per *package* rather than per installation. Needs a fact amending `#VERSION-FILE-FORMATS` to say what an install with no version does. |
+| @fact:B262-FILED **filed by** | APP-VERSIONS P7f, 2026-11-11. |
+
+## B-263 — `vibe app versions` has no version-pattern filter {#b-263}
+
+| field | value |
+|---|---|
+| @fact:B263-WHAT **what** | `vibe app versions <target>` filters by `--channel`, by `--installed` and by count (`--limit` / `--all`), but not by a version requirement: `vibe app versions 'org.vibevm.node/node@22'` is accepted and lists every version anyway, and `vibe app versions 'node@22' --installed` is refused as an unknown target. nvm's `ls <pattern>` and `ls-remote <pattern>` are exactly that filter, and it is the natural question of a list of 400 releases. |
+| @fact:B263-EVIDENCE **evidence** | Measured 2026-11-11 (APP-VERSIONS P7f): the vibenvm shim answers `nvm ls 22` with the single version the requirement resolves to, because resolving is the only thing vibe offers and filtering in the shim would be version logic the shim must not hold. `PROP-075#P7F-AS-BUILT` (4). |
+| @fact:B263-SEVERITY **severity** | P3 — the information is reachable (the full listing is there), the ergonomics are not. |
+| @fact:B263-DISPOSITION **disposition** | `candidate` — one flag (`--matching <REQUIREMENT>`, or honouring the `@<req>` the target spelling already parses) over the rows the listing already has; `#VERSIONS-LIST-OUTPUT` would gain a sentence. |
+| @fact:B263-FILED **filed by** | APP-VERSIONS P7f, 2026-11-11. |
+
+## B-264 — a version file can be written only by a command that also changes state {#b-264}
+
+| field | value |
+|---|---|
+| @fact:B264-WHAT **what** | `--write-version-file` exists on `vibe install -g` and `vibe app use` and nowhere else, so "record the version this shell resolved into the project's file" cannot be asked for on its own. `vibe app env`, the one command whose whole job is resolving for a shell, cannot write it. nvm's `use --save` changes the shell and the file and **not** the global default; the vibenvm shim has to go through `vibe app use` and therefore moves the slot default as a side effect nvm does not have. |
+| @fact:B264-EVIDENCE **evidence** | Measured 2026-11-11 (APP-VERSIONS P7f) and recorded in `PROP-075#P7F-AS-BUILT` (4). The suite does not catch it: in `cases/15-version-file.toml` the version being saved is already the default, so the extra effect is invisible there. |
+| @fact:B264-SEVERITY **severity** | P2 — a shell-local act silently becomes a machine-global one, and the suite's own coverage cannot see it. |
+| @fact:B264-DISPOSITION **disposition** | `candidate` — `vibe app env --write-version-file` needs one decision first: `app env` can resolve several slots in one call (`--use` is repeatable), so which slot's file is written has to be said rather than guessed. `#VERSION-FILE-WRITE` would gain the flag's third home and that rule. |
+| @fact:B264-FILED **filed by** | APP-VERSIONS P7f, 2026-11-11. |
+
+## B-265 — a version file written by `--write-version-file` does not pin the version it recorded {#b-265}
+
+| field | value |
+|---|---|
+| @fact:B265-WHAT **what** | `#VERSION-FILE-WRITE` writes the **resolved** version into the file, and `#VERSION-FILE-FORMATS` reads the file's line as a **requirement** — so a `.nvmrc` holding `22.9.0` selects 22.11.0 once that is installed. Measured: `vibe app env --project` in a directory whose `.nvmrc` says `22.9.0`, with 22.9.0 and 22.11.0 both installed, selects **22.11.0**. The whole reason `--write-version-file` records the resolved version rather than the channel is that "a version file that says `lts` tells the next reader nothing about what was chosen" — and reading it back as a caret range gives that away again. nvm's prefix match pins it. |
+| @fact:B265-EVIDENCE **evidence** | Measured 2026-11-11 (APP-VERSIONS P7f). `PROP-075#P7F-AS-BUILT` (4). The differential suite does not catch it: when `cases/15-version-file.toml` reads the file back, 22.9.0 is the only version installed. |
+| @fact:B265-SEVERITY **severity** | P2 — a pin file that does not pin, on the surface whose entire purpose is reproducibility between machines. |
+| @fact:B265-DISPOSITION **disposition** | `candidate` — needs an owner decision, because both readings are defensible and the fact asserts the loose one: either a *bare exact* version in a version file means `=` (the pin reading, which is what every tool whose file this is does), or `--write-version-file` writes `=22.9.0` and the requirement reading stands. The first changes how existing files resolve; the second changes bytes other tools read. Not closable silently either way. |
+| @fact:B265-FILED **filed by** | APP-VERSIONS P7f, 2026-11-11. |
