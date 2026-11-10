@@ -1,0 +1,22 @@
+schema = 1
+name = "version-file"
+summary = """
+The version file in both directions: written by `--save` / `-w` (the gap that
+became vibe's general `--write-version-file`), and read by a bare `install`
+and a bare `use`. The file's own content is compared through the record's
+`file:.nvmrc` field, so "it wrote a version file" is measured rather than
+assumed.
+"""
+wall_secs = 900
+observe_files = [".nvmrc"]
+commands = [
+  "nvm install --save 22.9.0",
+  "rm -f .nvmrc",
+  "nvm install -w 22.9.0",
+  "rm -f .nvmrc",
+  "nvm use --save 22.9.0",
+  "rm -f .nvmrc",
+  "nvm use -w 22.9.0",
+  "nvm install",
+  "nvm use",
+]

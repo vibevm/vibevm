@@ -1,0 +1,67 @@
+# conformance/vibenvm/nvm-tests.allow — the subset of the pinned nvm-sh's own
+# test suite that may be run against `vibenvm`, and nothing more.
+#
+# Authority: PROP-075 `#VIBENVM-SUITE`. "Reusing nvm's own tests" is a bonus,
+# never the gate: nvm's `test/fast/` suite is *near*-offline — it stubs
+# `nvm_download` and compares against recorded mocks in
+# `test/fast/Unit tests/mocks/` — but it has no suite-wide mirror override and
+# no local fixture server, and a few of its tests reach `nodejs.org`. So the
+# reuse is bounded to this recorded list, every line of which is a test that
+#   (a) exercises only the public `nvm` function, never an `nvm_*` internal,
+#   (b) needs no network at all, and
+#   (c) asserts behaviour `#VIBENVM-MAPPING` marks `maps`, not an
+#       owner-approved exclusion and not nvm's own internal layout.
+#
+# Running them needs `urchin` (nvm's test runner) and the pinned tree:
+#     cd conformance/vibenvm/mirror/nvm && urchin -f "test/fast/<name>"
+# with the sandbox env `run.sh` builds. `urchin` is not a prerequisite of the
+# suite and is absent on the machine this file was written on, so the reuse is
+# recorded here and is not part of any verdict.
+#
+# Lines are paths inside the pinned tree. One per line; `#` is a comment.
+
+test/fast/Running 'nvm exec' and 'nvm run' treat digit-named files as arguments, not versions
+test/fast/Running 'nvm exec' and 'nvm run' without a resolvable version warn and fall back
+test/fast/Running 'nvm install' with an invalid version fails nicely
+test/fast/Running 'nvm' should not change or export the caller's IFS
+test/fast/Running 'nvm use' and 'nvm deactivate' with hashing disabled
+test/fast/Running 'nvm use' does not leave a stale hashed node
+test/fast/Running 'nvm use x' should create and change the 'current' symlink
+test/fast/Running 'nvm use x' should not create the 'current' symlink if $NVM_SYMLINK_CURRENT is false
+
+# --- out of scope, and why -----------------------------------------------
+#
+# Whole directories, by construction (`#VIBENVM-SUITE` lists them): `slow/`,
+# `installation_node/`, `installation_iojs/`, `sourcing/`, `install_script/`
+# and `xenial/` all need the network or install nvm itself.
+#
+# `test/fast/Unit tests/**` — every one of them calls an `nvm_*` internal
+#   (`nvm_download`, `nvm_alias`, `nvm_ls_remote`, `nvm_get_checksum`, …).
+#   The shim has no internals to call: `#VIBENVM` makes it a mapping onto
+#   vibe commands that holds no version logic of its own.
+#
+# `test/fast/Aliases/**`, and the top-level `nvm alias` / `nvm unalias` /
+#   `set-colors` tests — named user aliases, colour setting: owner-approved
+#   exclusions (`#VIBENVM-EXCLUSIONS-APPROVED`), so there is nothing to
+#   compare.
+#
+# The `iojs` and `system` tests — io.js is a dead product and `system` is the
+#   slot off-switch rather than a version; both are mapping decisions, not
+#   behaviours to reproduce.
+#
+# `nvm --help documents …`, `nvm uninstall … shows the … message` — these
+#   assert nvm's own wording. The shim's help is its own text generated from
+#   the mapping table, and the suite compares observation records rather than
+#   output text, so asserting nvm's sentences would be asserting the wrong
+#   thing.
+#
+# `Running 'nvm-exec' …` — the `nvm-exec` helper script, not the `nvm`
+#   function.
+#
+# `Sourcing nvm.sh …`, `nvm should remove the last trailing slash in
+#   $NVM_DIR`, `nvm deactivate should unset the nvm environment variables`,
+#   `nvm unload should unset all function and variables` — the mechanics of
+#   nvm's own file and its own variable names. `$NVM_DIR` maps to vibe's
+#   install root and `unload` maps to `vibe app env --unset`, but the
+#   variables these tests name are nvm's internal state, which the owner
+#   approved as an exclusion.

@@ -1,0 +1,66 @@
+# conformance/vibenvm/normalise.rules — every normalisation the comparison
+# applies, declared in one file (PROP-075 `#VIBENVM-SUITE`).
+#
+# The comparison is of observation records, field by field. Two tools cannot
+# agree on absolute paths, on the colours a terminal gets or on how long a
+# download took, and they are not asked to: those differences are erased here,
+# mechanically and visibly, and nothing else is. An LLM is nowhere in this
+# file, which is the point of it.
+#
+# Rows are tab-separated:
+#   value  <sed expression>   applied, in order, to every field of every
+#                             observation record (`observe.sh` builds a
+#                             `sed -E` script out of these rows)
+#   drop   <ERE>              a stdout/stderr line matching it is dropped
+#                             before a case with `compare_stdout = true` is
+#                             compared; it never affects a record field
+#   sort   <field>            that field is a set, not a sequence: its
+#                             members are sorted before comparison
+#
+# Placeholders are substituted with the sandbox's own values at run time, so
+# one rule covers both sandboxes:
+#   @HOME@      the sandbox's HOME
+#   @TOOLROOT@  the root the tool under test owns ($NVM_DIR for sandbox A,
+#               the vibe settings/install root for sandbox B)
+#   @MIRROR@    the loopback mirror's base URL
+#   @TMPDIR@    the sandbox's TMPDIR
+
+# --- paths ---------------------------------------------------------------
+# The tool root first: it lives under HOME, so the more specific rule wins.
+value	s|@TOOLROOT@|<TOOLROOT>|g
+value	s|@TMPDIR@|<TMPDIR>|g
+value	s|@HOME@|<HOME>|g
+value	s|@MIRROR@|<MIRROR>|g
+
+# One version-manager lays its versions out as `versions/node/v22.9.0`, the
+# next as `apps/node/22.9.0`; that is a layout, not an observable. Any path
+# under the tool root collapses to `<TOOLROOT>@v<version>` plus whatever the
+# tool puts after it, so `which_node` and `owned_path` compare as what they
+# are — the directory of a specific version — without either layout winning.
+value	s|<TOOLROOT>[^,;=]*/v?([0-9]+\.[0-9]+\.[0-9]+([-+][0-9A-Za-z.-]+)?)|<TOOLROOT>@v\1|g
+
+# --- colour and timing ---------------------------------------------------
+value	s/\x1B\[[0-9;?]*[a-zA-Z]//g
+value	s/[0-9]+(\.[0-9]+)?(ms|s)([^a-zA-Z0-9]|$)/<T>\3/g
+
+# --- stdout lines a comparison may not depend on -------------------------
+# Download progress (curl's bar and nvm's own hashes), npm's notices and
+# funding chatter, and nvm's "Now using"/"Downloading" progress noise carry
+# no state: the observation record already says what happened.
+drop	^[[:space:]]*#+[[:space:]]*$
+drop	^[[:space:]]*[0-9.]+%.*$
+drop	^[[:space:]]*%[[:space:]]+Total.*$
+drop	^[[:space:]]*Dload[[:space:]]+Upload.*$
+drop	^npm (notice|warn|WARN|ERR!) .*$
+drop	^[[:space:]]*$
+drop	^[0-9]+ packages are looking for funding$
+drop	^[[:space:]]*run `npm fund` for details$
+drop	^Computing checksum with sha256sum$
+drop	^Checksums matched!$
+drop	^Downloading and installing node v.*\.\.\.$
+drop	^Downloading https?://.*$
+
+# --- fields that are sets, not sequences ---------------------------------
+sort	installed
+sort	aliases
+sort	globals

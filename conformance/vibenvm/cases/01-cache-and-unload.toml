@@ -1,0 +1,15 @@
+schema = 1
+name = "cache-and-unload"
+summary = """
+The three verbs that touch nothing but the tool's own cache, and the one that
+removes the tool from the shell. `unload` is last by construction: after it
+the `nvm` function is gone, so any later step would be measuring the absence
+of a shell function rather than a version manager.
+"""
+wall_secs = 180
+commands = [
+  "nvm cache dir",
+  "nvm cache clear",
+  "nvm clear-cache",
+  "nvm unload",
+]

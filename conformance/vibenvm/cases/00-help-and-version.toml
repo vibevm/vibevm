@@ -1,0 +1,20 @@
+schema = 1
+name = "help-and-version"
+summary = """
+The help and version spellings of the dispatch: `--help`, `help`, `-h`, the
+`--no-colors` variant of the help, and both version spellings. Output text is
+NOT compared here, deliberately: `#VIBENVM-MAPPING` makes the shim's help its
+own text generated from the mapping table, and `nvm --version` the shim's own
+compatibility constant. What is compared is that each spelling succeeds and
+changes nothing — a help screen that installed something would be a finding.
+"""
+wall_secs = 120
+compare_stdout = false
+commands = [
+  "nvm --help",
+  "nvm help",
+  "nvm -h",
+  "nvm --help --no-colors",
+  "nvm --version",
+  "nvm -v",
+]

@@ -1,0 +1,15 @@
+schema = 1
+name = "reinstall-packages-from"
+summary = """
+Carrying one version's global packages into a new one at install time, under
+both of nvm's spellings for it (`--reinstall-packages-from=` and its
+undocumented `--copy-packages-from=` alias). The `globals` field of every
+observation record is what makes this case mean something: it reports the
+global packages of each installed version, not only of the active one.
+"""
+wall_secs = 1800
+commands = [
+  "nvm install 20.18.0",
+  "nvm install --reinstall-packages-from=20.18.0 22.9.0",
+  "nvm install --copy-packages-from=20.18.0 22.11.0",
+]

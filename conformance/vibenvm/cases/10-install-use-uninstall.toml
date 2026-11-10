@@ -1,0 +1,27 @@
+schema = 1
+name = "install-use-uninstall"
+summary = """
+The whole life of one version: install it, see it listed, resolve it, run and
+exec on it, activate and deactivate it in this shell, and uninstall it. This
+is the case that exercises what a version manager is for — the PATH it owns
+and the node the shell resolves after each step.
+"""
+wall_secs = 900
+commands = [
+  "nvm install 22.9.0",
+  "nvm ls",
+  "nvm current",
+  "nvm which 22.9.0",
+  "nvm which --silent 22.9.0",
+  "nvm version 22",
+  "nvm use 22.9.0",
+  "nvm use --silent 22.9.0",
+  "nvm run 22.9.0 -e \"process.stdout.write('ran')\"",
+  "nvm run --silent 22.9.0 -e \"process.stdout.write('ran')\"",
+  "nvm exec 22.9.0 node -v",
+  "nvm exec --silent 22.9.0 node -v",
+  "nvm deactivate",
+  "nvm use 22.9.0",
+  "nvm deactivate --silent",
+  "nvm uninstall 22.9.0",
+]

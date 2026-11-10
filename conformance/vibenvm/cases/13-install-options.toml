@@ -1,0 +1,22 @@
+schema = 1
+name = "install-options"
+summary = """
+The install flags that change how an install runs rather than which version it
+picks: the progress switch, the default-setting flag, the offline install that
+must come out of the tool's own cache, and the npm self-upgrade — which has no
+registry to reach in this sandbox (npm's registry is a loopback directory that
+answers 404). The upgrade is attempted for real: npm reports `E404` against
+loopback, nvm says `npm upgraded to:` the version it already had, and the
+command still exits 0 — so what is compared is that the attempt left the
+runtime exactly where it was, not whether the internet was reachable.
+"""
+wall_secs = 900
+commands = [
+  "nvm install --no-progress 22.9.0",
+  "nvm install --default --no-progress 22.9.0",
+  "nvm deactivate",
+  "nvm uninstall 22.9.0",
+  "nvm install --offline 22.9.0",
+  "nvm install --latest-npm 22.9.0",
+  "nvm install-latest-npm",
+]

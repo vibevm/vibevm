@@ -1,0 +1,33 @@
+schema = 1
+name = "default-packages"
+summary = """
+The two surfaces the owner REFUSED to let the suite exclude (PROP-075
+`#VIBENVM-EXCLUSIONS-APPROVED`): nvm's `$NVM_DIR/default-packages` file and
+its `install --skip-default-packages`. On the vibe side they are the general
+slot-extras feature — the user's own `[slot.node.extras.npm] add` list applied
+after an install, and `--no-extras` as the decline (`#SLOT-EXTRAS`) — so the
+two sandboxes declare the same wish in their own way and the `globals`
+observation is what compares them.
+
+The package installed is a fixture the setup builds in the sandbox: a real npm
+tarball with no dependencies, so a global install of it needs no registry.
+This is the only case that runs a real `npm install -g`, which is why it has
+the largest budget of the suite.
+"""
+wall_secs = 1800
+setup = [
+  "mkdir -p \"$HOME/fixtures/package\"",
+  "printf '{\\n  \"name\": \"vibenvm-conformance-fixture\",\\n  \"version\": \"1.0.0\",\\n  \"license\": \"UPL-1.0\"\\n}\\n' >\"$HOME/fixtures/package/package.json\"",
+  "tar -czf \"$HOME/fixtures/fixture.tgz\" -C \"$HOME/fixtures\" package",
+]
+setup_a = [
+  "printf '%s\\n' \"$HOME/fixtures/fixture.tgz\" >\"$NVM_DIR/default-packages\"",
+]
+setup_b = [
+  "printf '[slot.node.extras.npm]\\nadd = [\"%s\"]\\n' \"$HOME/fixtures/fixture.tgz\" >>\"$VIBE_SETTINGS/config.toml\"",
+]
+commands = [
+  "nvm install 22.9.0",
+  "nvm install --skip-default-packages 20.18.0",
+  "nvm ls",
+]

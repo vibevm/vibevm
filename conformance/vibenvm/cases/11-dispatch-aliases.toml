@@ -1,0 +1,19 @@
+schema = 1
+name = "dispatch-aliases"
+summary = """
+The spellings nvm's dispatch accepts for the same branch — `i`, `list`,
+`list-remote`, `copy-packages` — each of which the inventory records as a pair
+of its own, because running it is the only thing that proves the alias exists.
+The two global-package verbs ride along, since they need two versions present
+anyway.
+"""
+wall_secs = 1200
+commands = [
+  "nvm i 22.9.0",
+  "nvm list",
+  "nvm list-remote 22",
+  "nvm install 20.18.0",
+  "nvm use 20.18.0",
+  "nvm reinstall-packages 22.9.0",
+  "nvm copy-packages 22.9.0",
+]

@@ -1,0 +1,26 @@
+schema = 1
+name = "lts-and-remote"
+summary = """
+The remote side of the tool, against the pinned mirror's own index: listing,
+resolving and installing through the LTS channel, and the colour switch that
+`#VIBENVM-MAPPING` maps onto the renderer's own decision. The mirror holds two
+LTS lines (Iron and Jod) and two non-LTS versions, so `--lts` and `--lts=<name>`
+resolve to different things and the difference is observable.
+"""
+wall_secs = 900
+commands = [
+  "nvm ls-remote",
+  "nvm ls-remote 22",
+  "nvm ls-remote --lts",
+  "nvm ls-remote --lts=jod",
+  "nvm ls-remote --no-colors",
+  "nvm version-remote 22",
+  "nvm version-remote --lts",
+  "nvm ls --no-colors",
+  "nvm install --lts",
+  "nvm use --lts",
+  "nvm run --lts -e \"process.stdout.write('lts')\"",
+  "nvm exec --lts node -v",
+  "nvm deactivate",
+  "nvm uninstall --lts",
+]
