@@ -21,7 +21,10 @@ pub fn install(
     if let Some(outcome) = pending::manual(lock, ctx, resolved, request)? {
         return Ok(outcome);
     }
-    install_locked(lock, ctx, resolved, request, &mut Vec::new(), None, None)
+    let outcome = install_locked(lock, ctx, resolved, request, &mut Vec::new(), None, None)?;
+    Ok(super::recommends::after(
+        lock, ctx, resolved, request, outcome,
+    ))
 }
 
 /// [`install`] under the held lock; `stack` names the installations in

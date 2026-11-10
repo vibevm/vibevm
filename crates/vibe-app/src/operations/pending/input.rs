@@ -180,5 +180,9 @@ pub(crate) fn restore(
             package: r.package.clone(),
             step: r.step.clone(),
         }),
+        // A resume continues one retained operation; the recommendation
+        // walk belongs to the command the user typed and is not replayed
+        // (`PROP-077#APP-RECOMMENDS-MECHANICS`).
+        recommends: false,
     })
 }

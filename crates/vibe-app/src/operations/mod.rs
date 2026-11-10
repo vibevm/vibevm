@@ -19,6 +19,9 @@ pub use planning::{configuration_plan, plan};
 use planning::{plan_option, plan_option_with_modes};
 mod deps;
 mod lifecycle;
+#[path = "recommends.rs"]
+mod recommends;
+pub use recommends::{Recommendation, RecommendationOutcome};
 mod listing;
 mod modify;
 mod outdated;
@@ -222,6 +225,14 @@ pub struct InstallRequest {
     /// and step that asked for this one, so its plan says whose it is
     /// (`PROP-065#app-dependencies`).
     pub required_by: Option<RequiredBy>,
+    /// Whether this installation's `[recommends]` are walked after its own
+    /// record is committed (`PROP-077#APP-RECOMMENDS-MECHANICS`). Set by
+    /// the command the user typed and `--no-recommends` clears it; a
+    /// requirement install, an import replay, a resume and each
+    /// recommendation of the walk itself leave it `false`, because the walk
+    /// enumerates the next level itself and must not recurse through the
+    /// installer.
+    pub recommends: bool,
 }
 
 /// The command an outcome reports.
@@ -248,6 +259,13 @@ pub struct Outcome {
     pub message: String,
     /// The work directory `--keep-work` kept (`PROP-065#work`).
     pub work: Option<PathBuf>,
+    /// What became of each `[recommends]` reference the walk reached, in
+    /// the order it reached them (`PROP-077#APP-RECOMMENDS`). Empty when
+    /// nothing recommended anything and when the walk was not entered.
+    pub recommended: Vec<Recommendation>,
+    /// The `[suggests]` of the packages this operation installed, reported
+    /// once and installed nowhere (`PROP-077#SUGGESTS-UNCHANGED`).
+    pub suggested: Vec<String>,
 }
 
 /// Remove the environment entries the previous record of the same key
@@ -383,6 +401,8 @@ fn commit(
         app_root,
         message: String::new(),
         work,
+        recommended: Vec::new(),
+        suggested: Vec::new(),
     })
 }
 

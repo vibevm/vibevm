@@ -36,7 +36,10 @@ pub fn update(
     }
     let mut stack = Vec::new();
     deps::enter(&mut stack, &resolved.package.key())?;
-    update_locked(lock, ctx, resolved, request, &mut stack, None)
+    let outcome = update_locked(lock, ctx, resolved, request, &mut stack, None)?;
+    Ok(super::recommends::after(
+        lock, ctx, resolved, request, outcome,
+    ))
 }
 
 pub(super) fn update_locked(

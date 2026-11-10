@@ -14,7 +14,17 @@ pub fn plan(
 ) -> Result<Plan, AppError> {
     let option = choose(ctx, resolved, &request.choice)?;
     let index = Index::load(ctx.settings)?;
-    plan_option(ctx, resolved, &option, request, None, &index, None)
+    let mut plan = plan_option(ctx, resolved, &option, request, None, &index, None)?;
+    plan.suggested = resolved
+        .suggests
+        .packages
+        .iter()
+        .map(ToString::to_string)
+        .collect();
+    if request.recommends {
+        plan.recommended = super::recommends::plan(ctx, &index, resolved);
+    }
+    Ok(plan)
 }
 
 /// Compute the plan of the selected option and show it.

@@ -62,9 +62,65 @@
         "description": "The version file --write-version-file wrote and the resolved version it wrote there (PROP-075#VERSION-FILE-WRITE); absent when the flag was not given.",
         "x-default": null
       }
+    },
+    "recommended": {
+      "elements": {
+        "ref": "recommendation"
+      },
+      "metadata": {
+        "description": "What became of each `[recommends]` reference this install walked, in walk order (PROP-077#APP-RECOMMENDS). A skipped one never changes the exit status of the install the user asked for.",
+        "x-empty": "omit"
+      }
+    },
+    "suggested": {
+      "elements": {
+        "type": "string"
+      },
+      "metadata": {
+        "description": "The `[suggests]` of the installed package: reported once, installed nowhere (PROP-077#SUGGESTS-UNCHANGED).",
+        "x-empty": "omit"
+      }
     }
   },
   "definitions": {
+    "recommendation_outcome": {
+      "enum": ["installed", "satisfied", "skipped", "planned"],
+      "metadata": {
+        "description": "What became of a recommendation: `installed` by this walk, `satisfied` by a version already installed, `skipped` with a reason and no failure of the install the user asked for, or `planned` — what `--plan-only` would install.",
+        "x-vocabulary": "closed"
+      }
+    },
+    "recommendation": {
+      "metadata": {
+        "description": "One `[recommends]` reference the walk reached (PROP-077#APP-RECOMMENDS): the authored spelling, the installation that recommended it, the installation key when one is installed or already satisfied, what became of it, and — for a skip — the one-line reason.",
+        "x-wire-order": ["package", "by", "key", "outcome", "reason"]
+      },
+      "properties": {
+        "package": {
+          "type": "string"
+        },
+        "by": {
+          "type": "string"
+        },
+        "outcome": {
+          "ref": "recommendation_outcome"
+        }
+      },
+      "optionalProperties": {
+        "key": {
+          "type": "string",
+          "metadata": {
+            "x-default": null
+          }
+        },
+        "reason": {
+          "type": "string",
+          "metadata": {
+            "x-default": null
+          }
+        }
+      }
+    },
     "version_file": {
       "metadata": {
         "description": "A written version file, reported by path with the version written.",

@@ -5,7 +5,7 @@
     "rustOptions": { "package": "vibe_wire::application_plan" },
     "x-rust-type": "ApplicationPlan",
     "x-vocabularies": ["source_evidence", "hosting_view", "operation_hosting"],
-    "x-wire-order": ["protocol", "package", "option", "platform", "arch", "result", "appRoot", "profile", "features", "parameters", "license", "downloadBytes", "unknownSizes", "dependencies", "steps", "warnings", "source_evidence", "source_hosting", "hostings"]
+    "x-wire-order": ["protocol", "package", "option", "platform", "arch", "result", "appRoot", "profile", "features", "parameters", "license", "downloadBytes", "unknownSizes", "dependencies", "recommended", "suggested", "steps", "warnings", "source_evidence", "source_hosting", "hostings"]
   },
   "properties": {
     "protocol": { "type": "string" },
@@ -26,6 +26,8 @@
         "hostings": { "elements": { "ref": "operation_hosting" }, "metadata": { "x-default": null, "x-empty": "preserve", "description": "Every hosting this plan would contact, derived from its captured source evidence (no extra contact); absent for older producers means unknown." } },
         "source_evidence": { "ref": "source_evidence", "metadata": { "x-default": null, "x-reader-projection": "permissive" } },
     "dependencies": { "elements": { "ref": "dependency" }, "metadata": { "x-empty": "omit", "description": "The required application packages (PROP-065#app-dependencies), each ahead of the step that needs it; an entry without `step` is required by the option and precedes every step." } },
+    "recommended": { "elements": { "ref": "recommendation" }, "metadata": { "x-empty": "omit", "description": "The whole `[recommends]` walk this install would perform, one node per recommended package with its reason — resolved and printed, downloading nothing (PROP-077#APP-RECOMMENDS-MECHANICS)." } },
+    "suggested": { "elements": { "type": "string" }, "metadata": { "x-empty": "omit", "description": "The `[suggests]` of the package being planned: reported, never installed (PROP-077#SUGGESTS-UNCHANGED)." } },
     "appRoot": { "type": "string", "metadata": { "x-default": null } },
     "profile": { "type": "string", "metadata": { "x-default": null } },
     "license": { "ref": "license", "metadata": { "x-default": null } }
@@ -122,6 +124,22 @@
       },
       "optionalProperties": {
         "step": { "type": "string", "metadata": { "x-default": null } }
+      }
+    },
+    "recommendation_outcome": {
+      "enum": ["installed", "satisfied", "skipped", "planned"],
+      "metadata": { "x-vocabulary": "closed", "description": "What became of a recommendation: `installed` by this walk, `satisfied` by a version already installed, `skipped` with a reason and no failure of the install the user asked for, or `planned` — what `--plan-only` would install." }
+    },
+    "recommendation": {
+      "metadata": { "x-wire-order": ["package", "by", "key", "outcome", "reason"], "description": "One `[recommends]` reference the walk reached (PROP-077#APP-RECOMMENDS): the authored spelling, the installation that recommended it, the installation key when one is installed or already satisfied, what became of it, and — for a skip — the one-line reason." },
+      "properties": {
+        "package": { "type": "string" },
+        "by": { "type": "string" },
+        "outcome": { "ref": "recommendation_outcome" }
+      },
+      "optionalProperties": {
+        "key": { "type": "string", "metadata": { "x-default": null } },
+        "reason": { "type": "string", "metadata": { "x-default": null } }
       }
     },
     "step": {

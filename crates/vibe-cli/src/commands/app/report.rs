@@ -6,10 +6,13 @@
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-059#commands");
 
 use anyhow::Result;
-use vibe_app::{Change, ChangeVerb, Command as AppCommand, Outcome, Removal};
+use vibe_app::{
+    Change, ChangeVerb, Command as AppCommand, Outcome, RecommendationOutcome, Removal,
+};
 use vibe_wire::generated::application_outdated::{ApplicationOutdated, Status};
 use vibe_wire::generated::application_report::{
-    ApplicationReport, ApplicationReportCommand, ApplicationReportSelectedMode,
+    ApplicationReport, ApplicationReportCommand, ApplicationReportSelectedMode, Recommendation,
+    RecommendationOutcome as WireOutcome,
 };
 
 use crate::output;
@@ -52,6 +55,8 @@ pub(crate) fn render_written(
                 .map(vibe_core::machine_json_path),
             work: outcome.work.as_deref().map(vibe_core::machine_json_path),
             version_file: written.map(super::version_file::wire_report),
+            recommended: outcome.recommended.iter().map(recommendation).collect(),
+            suggested: outcome.suggested.clone(),
             selected_mode: Some(match outcome.method {
                 vibe_app::Method::Shell => ApplicationReportSelectedMode::Shell,
                 vibe_app::Method::Zip => ApplicationReportSelectedMode::Zip,
@@ -72,6 +77,36 @@ pub(crate) fn render_written(
     }
     if let Some(written) = written {
         super::version_file::report(ctx, "vibe install -g", written);
+    }
+    // What the author recommended and what became of it — after it
+    // happened, as the plan said it before (`PROP-077#APP-RECOMMENDS`) —
+    // and the suggestions, which install nothing and are only ever seen
+    // (`#SUGGESTS-UNCHANGED`).
+    for line in &outcome.recommended {
+        let name = if line.package.is_empty() {
+            "recommendations".to_owned()
+        } else {
+            line.package.clone()
+        };
+        let state = match (&line.key, line.outcome) {
+            (Some(key), RecommendationOutcome::Installed) => format!("installed {key}"),
+            (Some(key), RecommendationOutcome::Satisfied) => format!("already installed {key}"),
+            _ => "skipped".to_owned(),
+        };
+        let because = match &line.reason {
+            Some(reason) => format!(" — {}", prose(reason)),
+            None => String::new(),
+        };
+        ctx.summary(&format!(
+            "  recommended {} · {state}{because}",
+            paint(Role::Accent, &name)
+        ));
+    }
+    if !outcome.suggested.is_empty() {
+        ctx.summary(&format!(
+            "  suggested (never installed) {}",
+            outcome.suggested.join(", ")
+        ));
     }
     Ok(())
 }
@@ -105,6 +140,9 @@ pub(crate) fn render_change(ctx: &output::Context, change: &Change) -> Result<()
             app_root: None,
             work: None,
             selected_mode: None,
+            // A state change installs nothing, so it recommends nothing.
+            recommended: Vec::new(),
+            suggested: Vec::new(),
         });
     }
     ctx.trailer(&format!("{} · {}", change.slot, prose(&change.message)));
@@ -191,4 +229,20 @@ pub(crate) fn render_outdated(ctx: &output::Context, report: &ApplicationOutdate
         }
     }
     Ok(())
+}
+
+/// One recommendation as the report carries it (`PROP-077#APP-RECOMMENDS`).
+fn recommendation(line: &vibe_app::Recommendation) -> Recommendation {
+    Recommendation {
+        package: line.package.clone(),
+        by: line.by.clone(),
+        key: line.key.clone(),
+        outcome: match line.outcome {
+            RecommendationOutcome::Installed => WireOutcome::Installed,
+            RecommendationOutcome::Satisfied => WireOutcome::Satisfied,
+            RecommendationOutcome::Skipped => WireOutcome::Skipped,
+            RecommendationOutcome::Planned => WireOutcome::Planned,
+        },
+        reason: line.reason.clone(),
+    }
 }

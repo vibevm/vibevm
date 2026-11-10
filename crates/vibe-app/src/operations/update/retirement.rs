@@ -360,6 +360,8 @@ pub(in crate::operations) fn resume(
             .request
             .keep_work
             .then(|| pending::work(ctx.settings, &state.package)),
+        recommended: Vec::new(),
+        suggested: Vec::new(),
     };
     pending::complete(lock, ctx.settings, target)?;
     Ok(outcome)

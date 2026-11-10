@@ -123,6 +123,30 @@ fn fields(plan: &Plan) -> String {
         let (text, meta) = requirement(dependency);
         field("requires", text, meta);
     }
+    // The recommendation subtree: one row per recommended package with its
+    // reason, so nothing is installed that the plan did not print first
+    // (`PROP-077#APP-RECOMMENDS-MECHANICS`).
+    for line in &plan.recommended {
+        let mut meta = vec![Meta::State(line.outcome.as_str().into())];
+        if line.by != plan.package.key() {
+            meta.push(Meta::Note(format!("recommended by {}", line.by)));
+        }
+        if let Some(reason) = &line.reason {
+            meta.push(Meta::Note(reason.replace('`', "")));
+        }
+        let text = match &line.key {
+            Some(key) => format!("{} ({key})", line.package),
+            None => line.package.clone(),
+        };
+        field("recommends", text, meta);
+    }
+    for suggestion in &plan.suggested {
+        field(
+            "suggests",
+            suggestion.clone(),
+            vec![Meta::Note("never installed".into())],
+        );
+    }
     List::new(rows).render()
 }
 

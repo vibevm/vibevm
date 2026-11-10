@@ -394,6 +394,8 @@ pub(super) fn remove_with_boundary(
         app_root: launch::app_root(&installation, &storage).ok(),
         message,
         work: None,
+        recommended: Vec::new(),
+        suggested: Vec::new(),
     })
 }
 

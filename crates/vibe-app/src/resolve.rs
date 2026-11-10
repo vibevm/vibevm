@@ -30,6 +30,13 @@ pub struct ResolvedPackage {
     pub kind: vibe_core::PackageKind,
     pub configuration: Option<vibe_core::manifest::ConfigurationDecl>,
     pub requires: vibe_core::manifest::Requires,
+    /// The `[recommends]` the package declares — the companions the
+    /// application installer installs beside it, best-effort
+    /// (`PROP-077#APP-RECOMMENDS`).
+    pub recommends: vibe_core::manifest::Recommends,
+    /// The `[suggests]` the package declares: reported once and installed
+    /// nowhere (`PROP-077#SUGGESTS-UNCHANGED`).
+    pub suggests: vibe_core::manifest::Suggests,
     pub package: PackageCoordinate,
     pub root: PathBuf,
     pub application: ApplicationDecl,
@@ -429,6 +436,8 @@ pub fn from_manifest(
         kind: package.kind,
         configuration: manifest.configuration,
         requires: manifest.requires,
+        recommends: manifest.recommends,
+        suggests: manifest.suggests,
         package: coordinate,
         root,
         application,

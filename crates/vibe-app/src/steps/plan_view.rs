@@ -9,6 +9,24 @@ use vibe_wire::generated::application_plan as wire;
 
 use super::features::ImpliedRule;
 use super::plan::Plan;
+use crate::operations::{Recommendation, RecommendationOutcome};
+
+/// One node of the recommendation subtree the plan prints
+/// (`PROP-077#APP-RECOMMENDS-MECHANICS`).
+fn recommendation_to_wire(line: &Recommendation) -> wire::Recommendation {
+    wire::Recommendation {
+        package: line.package.clone(),
+        by: line.by.clone(),
+        key: line.key.clone(),
+        outcome: match line.outcome {
+            RecommendationOutcome::Installed => wire::RecommendationOutcome::Installed,
+            RecommendationOutcome::Satisfied => wire::RecommendationOutcome::Satisfied,
+            RecommendationOutcome::Skipped => wire::RecommendationOutcome::Skipped,
+            RecommendationOutcome::Planned => wire::RecommendationOutcome::Planned,
+        },
+        reason: line.reason.clone(),
+    }
+}
 
 impl Plan {
     /// The `vibe-app-plan/1` document; secret parameter values are omitted.
@@ -104,6 +122,12 @@ impl Plan {
                     commands: dependency.commands.clone(),
                 })
                 .collect(),
+            recommended: self
+                .recommended
+                .iter()
+                .map(recommendation_to_wire)
+                .collect(),
+            suggested: self.suggested.clone(),
             steps: self
                 .steps
                 .iter()

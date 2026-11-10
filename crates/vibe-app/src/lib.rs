@@ -133,10 +133,11 @@ pub use migrate::{
 };
 pub use operations::{
     Change, ChangeVerb, Command, InstallRequest, ModifyRequest, OperationContext, Outcome,
-    PackageResolver, Removal, RemoveRequest, ResolverScope, ResumeInfo, ResumeRequest,
-    SavedSourceReader, SlotExposure, autoremove, configuration_plan, expose, hide, hold,
-    import_cohort, import_resume_info, install, installed, list, mark, modify, outdated, plan,
-    remove_unrecorded, resume, resume_import, resume_info, rollback, uninstall, update,
+    PackageResolver, Recommendation, RecommendationOutcome, Removal, RemoveRequest, ResolverScope,
+    ResumeInfo, ResumeRequest, SavedSourceReader, SlotExposure, autoremove, configuration_plan,
+    expose, hide, hold, import_cohort, import_resume_info, install, installed, list, mark, modify,
+    outdated, plan, remove_unrecorded, resume, resume_import, resume_info, rollback, uninstall,
+    update,
 };
 pub use paths::{
     PATH_LINK_STEP, PathSync, SlotPaths, env_tag as slot_path_env_tag,

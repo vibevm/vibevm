@@ -45,6 +45,17 @@ pub struct ApplicationPlan {
     #[serde(default, skip_serializing_if = "Vec::is_empty")]
     pub dependencies: Vec<Dependency>,
 
+    /// The whole `[recommends]` walk this install would perform, one node per
+    /// recommended package with its reason — resolved and printed, downloading
+    /// nothing (PROP-077#APP-RECOMMENDS-MECHANICS).
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub recommended: Vec<Recommendation>,
+
+    /// The `[suggests]` of the package being planned: reported, never installed
+    /// (PROP-077#SUGGESTS-UNCHANGED).
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub suggested: Vec<String>,
+
     pub steps: Vec<Step>,
 
     pub warnings: Vec<String>,
@@ -166,6 +177,43 @@ pub enum Phase {
 
     #[serde(rename = "prepare")]
     Prepare,
+}
+
+/// One `[recommends]` reference the walk reached (PROP-077#APP-RECOMMENDS): the
+/// authored spelling, the installation that recommended it, the installation
+/// key when one is installed or already satisfied, what became of it, and — for
+/// a skip — the one-line reason.
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+pub struct Recommendation {
+    pub package: String,
+
+    pub by: String,
+
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub key: Option<String>,
+
+    pub outcome: RecommendationOutcome,
+
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub reason: Option<String>,
+}
+
+/// What became of a recommendation: `installed` by this walk, `satisfied` by
+/// a version already installed, `skipped` with a reason and no failure of the
+/// install the user asked for, or `planned` — what `--plan-only` would install.
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+pub enum RecommendationOutcome {
+    #[serde(rename = "installed")]
+    Installed,
+
+    #[serde(rename = "planned")]
+    Planned,
+
+    #[serde(rename = "satisfied")]
+    Satisfied,
+
+    #[serde(rename = "skipped")]
+    Skipped,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]

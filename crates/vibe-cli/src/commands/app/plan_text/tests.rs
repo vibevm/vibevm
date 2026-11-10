@@ -43,6 +43,8 @@ fn plan(steps: Vec<PlannedStep>, dependencies: Vec<PlannedDependency>) -> Plan {
         unknown_sizes: 0,
         drop_inputs: 0,
         dependencies,
+        recommended: vec![],
+        suggested: vec![],
         steps,
         warnings: vec![],
         required_by: None,

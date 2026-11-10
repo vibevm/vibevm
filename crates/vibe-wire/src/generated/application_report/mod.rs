@@ -83,9 +83,20 @@ pub struct ApplicationReport {
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub app_root: Option<String>,
 
+    /// What became of each `[recommends]` reference this install walked, in
+    /// walk order (PROP-077#APP-RECOMMENDS). A skipped one never changes the
+    /// exit status of the install the user asked for.
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub recommended: Vec<Recommendation>,
+
     #[serde(rename = "selectedMode")]
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub selected_mode: Option<ApplicationReportSelectedMode>,
+
+    /// The `[suggests]` of the installed package: reported once, installed
+    /// nowhere (PROP-077#SUGGESTS-UNCHANGED).
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub suggested: Vec<String>,
 
     /// The version file --write-version-file wrote and the resolved version
     /// it wrote there (PROP-075#VERSION-FILE-WRITE); absent when the flag was
@@ -98,6 +109,43 @@ pub struct ApplicationReport {
     /// given (PROP-065#work); absent when it was deleted.
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub work: Option<String>,
+}
+
+/// One `[recommends]` reference the walk reached (PROP-077#APP-RECOMMENDS): the
+/// authored spelling, the installation that recommended it, the installation
+/// key when one is installed or already satisfied, what became of it, and — for
+/// a skip — the one-line reason.
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+pub struct Recommendation {
+    pub package: String,
+
+    pub by: String,
+
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub key: Option<String>,
+
+    pub outcome: RecommendationOutcome,
+
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub reason: Option<String>,
+}
+
+/// What became of a recommendation: `installed` by this walk, `satisfied` by
+/// a version already installed, `skipped` with a reason and no failure of the
+/// install the user asked for, or `planned` — what `--plan-only` would install.
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+pub enum RecommendationOutcome {
+    #[serde(rename = "installed")]
+    Installed,
+
+    #[serde(rename = "planned")]
+    Planned,
+
+    #[serde(rename = "satisfied")]
+    Satisfied,
+
+    #[serde(rename = "skipped")]
+    Skipped,
 }
 
 /// A written version file, reported by path with the version written.

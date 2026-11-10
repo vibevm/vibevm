@@ -344,6 +344,10 @@ pub(super) fn plan_request(
         parameters: answers.set.clone(),
         accept_license: answers.accept_license,
         start: Start::Fresh,
+        // A command the user typed walks the author's recommendations;
+        // `--no-recommends` clears it at the command that admits the flag
+        // (`PROP-077#APP-RECOMMENDS-MECHANICS`, `#NO-RECOMMENDS-FLAG`).
+        recommends: true,
         ..InstallRequest::default()
     })
 }
@@ -416,6 +420,7 @@ pub fn install(
     };
     let request = InstallRequest {
         hidden: args.hidden,
+        recommends: !ctx.no_recommends(),
         ..request(choice, args.library, args.force, &args.steps)?
     };
     let agents = AgentSetup::new(ctx, args.agent.as_deref(), args.assume_yes)?;
@@ -523,6 +528,7 @@ pub(crate) fn update_one(
     };
     let request = InstallRequest {
         purge_previous: args.purge_previous,
+        recommends: !ctx.no_recommends(),
         ..request(choice, args.library.clone(), args.force, &args.steps)?
     };
     let agents = AgentSetup::new(ctx, args.agent.as_deref(), args.assume_yes)?;

@@ -229,6 +229,13 @@ pub struct Plan {
     /// Required application packages in plan order: option-level first,
     /// then each running step's (`PROP-065#app-dependencies`).
     pub dependencies: Vec<PlannedDependency>,
+    /// The whole `[recommends]` walk this install would perform, one node
+    /// per recommended package with its reason — resolved and printed,
+    /// downloading nothing (`PROP-077#APP-RECOMMENDS-MECHANICS`).
+    pub recommended: Vec<crate::Recommendation>,
+    /// The `[suggests]` of the package being planned: reported, never
+    /// installed (`PROP-077#SUGGESTS-UNCHANGED`).
+    pub suggested: Vec<String>,
     pub steps: Vec<PlannedStep>,
     pub warnings: Vec<String>,
     /// Set when this plan belongs to a package another plan requires, so
@@ -462,6 +469,11 @@ pub(crate) fn plan(input: &PlanInput<'_>) -> Result<Plan, AppError> {
         unknown_sizes: fetched.unknown,
         drop_inputs: fetched.from_drop,
         dependencies,
+        // The recommendation walk and the suggestion line belong to the
+        // command's own plan entry, which fills them after this
+        // (`PROP-077#APP-RECOMMENDS-MECHANICS`, `#SUGGESTS-UNCHANGED`).
+        recommended: Vec::new(),
+        suggested: Vec::new(),
         steps,
         warnings,
         required_by: input.required_by.clone(),

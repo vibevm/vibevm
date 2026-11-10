@@ -64,7 +64,15 @@ pub(crate) fn install(
     let consent = args.assume_yes || ctx.is_unattended();
     let offline = root_offline || args.offline;
     let path = args.path.clone();
-    let request = global::request(choice, None, args.force, &args.steps)?;
+    // The project plane's arbitrary-code gate reads the LOCK's app rows, and
+    // a recommendation is not one, so the walk is entered only when the user
+    // has already consented to package-authored installers for this run —
+    // a recommendation can never be a way past a consent the direct request
+    // would have needed (`PROP-077#APP-RECOMMENDS-CONSENT`).
+    let request = InstallRequest {
+        recommends: consent && !ctx.no_recommends(),
+        ..global::request(choice, None, args.force, &args.steps)?
+    };
     let display = StepDisplay::open(ctx, &args.steps);
     let hidden = if args.hidden {
         args.packages
@@ -119,6 +127,7 @@ pub(crate) fn update(
         verb: "update",
         request: InstallRequest {
             purge_previous: args.purge_previous,
+            recommends: (args.assume_yes || ctx.is_unattended()) && !ctx.no_recommends(),
             ..global::request(choice, None, args.force, &args.steps)?
         },
         display: &display,
