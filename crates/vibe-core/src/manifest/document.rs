@@ -95,6 +95,12 @@ pub struct Manifest {
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub template: Option<super::TemplateSection>,
 
+    /// `[system_prompt]` — tuning for the generated cache-stable prefix
+    /// (PROP-076 `#SYS-MANIFEST-TABLE`). Legal on every role; refused
+    /// without the `SYSTEM-TEMPLATE.md` that is the opt-in.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub system_prompt: Option<super::SystemPromptSection>,
+
     /// `[application]` — optional package-owned user-local application metadata.
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub application: Option<ApplicationDecl>,
@@ -455,8 +461,10 @@ impl Manifest {
 
     /// Read and validate a `vibe.toml` from disk.
     pub fn read(path: impl AsRef<Path>) -> Result<Self> {
+        let path = path.as_ref();
         let m: Manifest = read_toml(path)?;
         m.validate()?;
+        m.validate_system_prompt_beside(path)?;
         Ok(m)
     }
 

@@ -21,6 +21,8 @@ mod mcp;
 mod navigation;
 #[path = "validation/remap.rs"]
 mod remap;
+#[path = "validation/system_prompt.rs"]
+mod system_prompt;
 #[path = "validation/template.rs"]
 mod template;
 

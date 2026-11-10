@@ -325,3 +325,18 @@ fn write_managed_block_errors_on_a_malformed_block() {
         "{err}"
     );
 }
+
+/// The manifest's `[system_prompt] entrypoint` enum and this module's
+/// [`REDIRECT_FILES`] are two spellings of one closed set, in two crates
+/// that cannot share a constant (vibe-core cannot depend on vibe-workspace).
+/// This is the fence that keeps them from drifting apart — PROP-076
+/// `#SYS-ENTRYPOINT-ONE` admits exactly the set vibe owns a block inside.
+#[test]
+fn the_entrypoint_choice_set_is_exactly_the_redirect_file_set() {
+    let declared: Vec<&str> = vibe_core::manifest::EntrypointFile::ALL
+        .iter()
+        .map(|file| file.as_str())
+        .collect();
+    assert_eq!(declared, REDIRECT_FILES.to_vec());
+    assert!(REDIRECT_FILES.contains(&vibe_core::manifest::EntrypointFile::DEFAULT.as_str()));
+}

@@ -305,6 +305,8 @@ pub(crate) struct ManifestWire {
     #[serde(default, skip_serializing_if = "Option::is_none")]
     template: Option<crate::manifest::TemplateSection>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
+    system_prompt: Option<crate::manifest::SystemPromptSection>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
     application: Option<crate::manifest::ApplicationDecl>,
     #[serde(default, skip_serializing_if = "Vec::is_empty")]
     installer_options: Vec<crate::manifest::InstallerOptionDecl>,

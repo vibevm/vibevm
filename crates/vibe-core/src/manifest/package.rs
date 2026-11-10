@@ -44,6 +44,7 @@ mod mcp_server;
 mod meta;
 mod skill;
 mod source_export;
+mod system_prompt;
 mod template;
 mod weak_deps;
 mod when;
@@ -67,6 +68,9 @@ pub use mcp_server::{MCP_ARG_VARS, McpServerDecl};
 pub use meta::PackageMeta;
 pub use skill::{SkillDecl, SkillResourceDecl};
 pub use source_export::SourceExport;
+pub use system_prompt::{
+    EntrypointChoice, EntrypointFile, HostChoice, LaneForm, SystemPromptSection, TargetSelection,
+};
 pub use template::{
     CHANNEL_NAME_RULE, ChannelRule, DigestSource, PrereleasePolicy, Scalar, TemplateSection, Ttl,
     VersionItem, VersionSource, channel_name_is_valid,
