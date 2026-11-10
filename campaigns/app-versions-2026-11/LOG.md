@@ -1038,3 +1038,71 @@ The owner answered the five discussion points of the P7 design with "согла�
 5. **The user's extras list lives in `~/.vibe/config.toml`** (`[slot.<slot>.extras.<ecosystem>]`), accepting the new `vibe-app` → user-config seam.
 
 Implementation of P7a–P7f is authorised from this entry.
+
+## 2026-11-10 — P7a implemented: `keyed` version files and `--write-version-file`
+
+The first of the six P7 units landed. `format = "keyed"` is the third version-file
+format — `names`, `key`, and the line syntax from three closed vocabularies
+(`separator` ∈ equals/whitespace/colon with no default, `comment` ∈
+hash/semicolon/none, `extra` ∈ refuse/first) — and `tool-versions` became its
+short spelling. `--write-version-file[=PATH]` writes the resolved version on
+`vibe app use` and `vibe install -g`, as one line for `plain` and as an
+in-place single-line edit for `keyed`. `PROP-075#VERSION-FILE-KEYED` and
+`#VERSION-FILE-WRITE` are `impl/done`; `AV-FMT-025` and `AV-FMT-019` are
+delivered; the as-built record is `PROP-075#P7A-AS-BUILT`.
+
+**Four things the implementation settled that the design left open.**
+
+- **The sugar had to be symmetric.** The fact says `tool-versions` expands into
+  one `keyed` row before anything reads a file, and says nothing about the way
+  out. A one-way expansion would have rewritten every manifest and every
+  derived sidecar into the long form on the next write, which is exactly the
+  "keeps working byte-for-byte" the risk list named. So the conversion back is
+  the same rule read the other way, as a pure function of the row: a `Keyed`
+  row that is exactly asdf's shape serialises as `format = "tool-versions"`.
+  Nothing remembers which spelling an author used, so the two cannot drift, and
+  the no-drift proof is an equality of two parsed manifests rather than a
+  comment.
+- **serde cannot name a TOML path, so the vocabularies are refused by hand.**
+  Measured rather than assumed: an unknown enum variant inside
+  `[[application.version_file]]` comes out of `toml` as «unknown variant
+  `tabs`, … in `application.version_file` at line 11» — the table and the line,
+  never the member. The fact requires the refusal to name its TOML path, so the
+  three words and the two fields a `keyed` row cannot omit arrive as text and
+  are lowered row by row, each refusal reading
+  `application.version_file[0].separator: …`. This is the one place where a
+  closed vocabulary in this tree is **not** a serde enum, and the reason is
+  worth keeping: the existing `format = "engines"` refusal names its field only
+  because the member happens to be called `format`.
+- **A keyed write preserves the trailing comment too.** The fact names the
+  separator and the spacing. A real `.sdkmanrc` line is
+  `maven = 3.9.9  # pinned`, so the writer splits a line into head / values /
+  tail and replaces only the values, which keeps the comment, the spacing on
+  both sides of it, and the line's own ending. The byte-identity tests compare
+  bytes and not a re-parse, because a round trip through a parser would
+  normalise the spacing of every line it never meant to touch and a re-parse
+  would not notice.
+- **The flag refuses wherever it would be ignored.** `--write-version-file` on
+  a project install, a remap package, a global MCP package, `--plan-only` or
+  `vibe app use --none` is a usage refusal naming the flag, not a flag that
+  does nothing. The write runs after the command has settled, so the version
+  written is the one the slot now resolves to.
+
+**One premise of the plan's own risk list did not hold, and it is recorded
+rather than quietly dropped.** Risk (2) says `tool-versions` already ships and
+"the real Node package declares it", so a break would be invisible until a
+package is installed. Measured at `240b8abaa`: neither `/fast/git/vibe-pkg-node`
+nor any manifest in this tree declares `[[application.version_file]]` at all —
+the format ships, no package uses it yet. The compatibility of the short
+spelling is therefore proved by tests (`vibe-core`'s no-drift equality, the
+sidecar round trip, and the `.tool-versions` cases in `vibe-app` and
+`cli_app_env_activation`) rather than observed on a shipped package. Whoever
+adds the row to the Node package inherits a proof, not a hope.
+
+**One deviation from the test list, named here.** The plan asks for "each
+refusal by TOML path" as a `vibe-core` unit test and that is what landed, with
+one message retained deliberately: a `keyed` row's file-name refusals name
+`format` rather than `names` when the row is the short spelling's expansion,
+because such a row has no `names` array an author could have written. That
+keeps every pre-existing `tool-versions` refusal message exactly as it was, and
+the two existing refusal tests pass unchanged.

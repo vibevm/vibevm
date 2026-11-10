@@ -377,11 +377,25 @@ that owns `describe`'s document; recorded in `PROP-075#P6-AS-BUILT`. The record 
 
 ## AV-FMT-019 — `--write-version-file` on `vibe app use` and `vibe install -g` (Phase 7a)
 
-Status: **planned; amended 2026-11-10** by the owner's generalisation decision, which carries it to
-both version-file formats rather than `plain` alone. Design authority:
-`spec://org.vibevm.core/vibevm/common/PROP-075#VERSION-FILE-WRITE`.
+Status: **delivered 2026-11-10** (phase P7a); amended that day by the owner's generalisation
+decision, which carries it to both version-file formats rather than `plain` alone. Design authority:
+`spec://org.vibevm.core/vibevm/common/PROP-075#VERSION-FILE-WRITE`; the as-built record is
+`PROP-075#P7A-AS-BUILT`. As implemented it matches the entry below, with three additions the
+flag's two surfaces forced.
 
-- No wire format. One new flag, `--write-version-file[=PATH]`, on two existing commands: it writes the **resolved** version — never the requirement or the channel the user typed — into the slot's declared version file, in either the `plain` or the `keyed` format (`AV-FMT-025`). This is the general feature behind nvm's `--save` / `-w`, and it exists because a version manager that reads a version file should be able to write it.
+- **`--json` carries the path and the version as one optional member of the document each command
+  already emits**, rather than as a document of its own: `versionFile { path, version }` on
+  `[format.cli-application-report]` (`schemas/application_report.jtd.json`, epoch **1 → 1**) and
+  `version_file { path, version }` on `[format.cli-application-alternatives]`
+  (`schemas/application_alternatives.jtd.json`, epoch **1 → 1**). Both are absent unless a file was
+  written, so every existing document serialises byte-identically.
+- **The flag is a usage refusal wherever it would be ignored**, naming itself: a project install, a
+  remap package, a global MCP package, `--plan-only` (which resolves a version and installs none)
+  and `vibe app use --none` (a slot that is off resolves to no version).
+- **The written line keeps the key line's trailing comment** as well as its spacing, because
+  `maven = 3.9.9  # pinned` carries one and the rewrite touches only the value region.
+
+- No **new** wire format (see the first addition above: two existing documents each gain one optional member). One new flag, `--write-version-file[=PATH]`, on two existing commands: it writes the **resolved** version — never the requirement or the channel the user typed — into the slot's declared version file, in either the `plain` or the `keyed` format (`AV-FMT-025`). This is the general feature behind nvm's `--save` / `-w`, and it exists because a version manager that reads a version file should be able to write it.
 - **Which file.** Without a value: the nearest file the `AV-FMT-011` search already found, in the directory it was found in; with no such file, the first `names` entry of the first declared row, created in the project root inside a project and in the working directory otherwise. With a value: exactly that path, whose format is decided by matching its file name against the declared `names` of every row — a path matching none is a refusal naming the path and the declared names.
 - **How each format is written.** `plain` writes the one line and nothing else. `keyed` is an **in-place edit of one line**: every other line — other keys, comments, blank lines, unknown content, the file's own line endings — is preserved byte-for-byte, the key's line is rewritten in the file's own declared separator with the spacing it had, an absent key is appended as the last line, and an absent file is created holding that one line. That is what lets two slots write one `.sdkmanrc` without either destroying the other's answer.
 - Refusals, all before any write: a path that is a symbolic link, naming it; a slot whose package declares no version file at all, naming the slot and the package; a `keyed` file carrying the key's line twice, naming both line numbers.
@@ -512,8 +526,22 @@ document.
 
 ## AV-FMT-025 — `[[application.version_file]] format = "keyed"` (Phase 7a)
 
-Status: **not delivered.** Design authority:
-`spec://org.vibevm.core/vibevm/common/PROP-075#VERSION-FILE-KEYED`.
+Status: **delivered 2026-11-10** (phase P7a). Design authority:
+`spec://org.vibevm.core/vibevm/common/PROP-075#VERSION-FILE-KEYED`; the as-built record is
+`PROP-075#P7A-AS-BUILT`. As implemented it matches the entry below with one correction: the last
+bullet's "no wire change" was half right, and the sidecar **does** grow one mapping.
+
+- `[format.application-version-files]` (`schemas/application_version_files.jtd.json`), epoch
+  **1 → 1**: the `row` discriminator gains a `keyed` mapping carrying `names`, `key` and the three
+  closed vocabularies, because a genuinely keyed row has five fields the document had no shape for.
+  Every existing document is byte-identical regardless, because the short spelling round-trips:
+  a declared row that is exactly asdf's shape is written back as `format = "tool-versions"`, which
+  is also what `vibe check` and a manifest round trip emit. `vibe-app-version-file-cache/1` is
+  unchanged.
+- A row whose vocabulary word this build does not know makes the sidecar unknown history, the
+  posture it already took for an unreadable document.
+- `extra = "refuse"` makes a line with a second value a **reported fault** and no selection, so the
+  upward search walks on exactly as it does past an unparseable `plain` line.
 
 - `[format.manifest]` (`schema = "none"`, authored TOML), epoch **1 → 1**. Optional and omitted when absent.
 - A third `format` value beside `plain` and `tool-versions`. A `keyed` row carries `names` (an ordered array of file names), `key` (this package's key in the file), and the line syntax from a closed vocabulary: `separator` ∈ {`equals`, `whitespace`, `colon`} (no default — the author states it), `comment` ∈ {`hash` (default), `semicolon`, `none`}, and `extra` ∈ {`refuse` (default), `first`} for a line carrying more than one value after the key.
