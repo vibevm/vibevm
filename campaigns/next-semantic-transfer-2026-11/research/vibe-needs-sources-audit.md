@@ -15,7 +15,7 @@ Read-only source audit, 2026-11-07. No runtime commands, Cargo, tests, network, 
 | 2: global plan/list/describe source | application_plan schema has no selected-source field; list/describe LauncherSource means launcher origin, not package registry origin. ApplicationPendingSource stores directory/kind/optional registry/project for continuation. | Missing; do not mislabel continuation or launcher source as installed provenance. |
 | 3: excluded hosting, no contact | Existing offline local-only filtering and remap Locator denial provide useful owners, but no exclude-hosting option/policy found. Resolver construction can probe index HTTP before resolve. | Missing; filtering solved output is too late. |
 
-B-232 (source plan, requirement pin, hosting order) remains open/high priority; source-related B-233 remains candidate. BACKLOG has another B-233 for environment targets; use title as well as number. B-222 application export/import is done and should round-trip or intentionally omit source policy with explicit semantics; do not call it the 222-task campaign itself.
+B-232 (source plan, requirement pin, hosting order) remains open/high priority; source-related B-254 (formerly a duplicate B-233) remains candidate. B-222 application export/import is done and should round-trip or intentionally omit source policy with explicit semantics; do not call it the 222-task campaign itself.
 
 ## Existing owners to extend
 

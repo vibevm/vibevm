@@ -2649,15 +2649,15 @@ structure, and it goes when the file does.
 | @fact:B233-FILED **filed by** | По предложению владельца,2026-11-04. |
 
 
-## B-233 — an installed application records no source {#b-233}
+## B-254 — an installed application records no source {#b-254}
 
 | field | value |
 |---|---|
-| @fact:B233-WHAT **what** | `vibe install -g` of an application from a registry writes no global `vibe.lock`, and `applications/index.json` records no source of the installation, so a client cannot say where an installed application came from ("Installed from <registry/url@ref>"). A project's `vibe.lock` does record `registry`, `source_url`, `source_ref`, `resolved_commit` for a project package. |
-| @fact:B233-EVIDENCE **evidence** | vibevm-app's R137b probe of vibe 1.0.11, 2026-11-04, in a temp home: `install -g` from a local registry; no global lock written, the index without a source. vibevm-app's `ApplicationFacts.installed.source` waits for it (I-1246). |
-| @fact:B233-SEVERITY **severity** | P2 — the Library's "Installed from" line on an application's page is hidden until vibe records it; related to B-232 (the install's source, high priority). |
-| @fact:B233-DISPOSITION **disposition** | `candidate — to be considered and decided later in vibe` (the owner's rule of 2026-11-04 for vibe's needs found while building the app). |
-| @fact:B233-FILED **filed by** | vibevm-app build side (session MVP), 2026-11-04. |
+| @fact:B254-WHAT **what** | `vibe install -g` of an application from a registry writes no global `vibe.lock`, and `applications/index.json` records no source of the installation, so a client cannot say where an installed application came from ("Installed from <registry/url@ref>"). A project's `vibe.lock` does record `registry`, `source_url`, `source_ref`, `resolved_commit` for a project package. |
+| @fact:B254-EVIDENCE **evidence** | vibevm-app's R137b probe of vibe 1.0.11, 2026-11-04, in a temp home: `install -g` from a local registry; no global lock written, the index without a source. vibevm-app's `ApplicationFacts.installed.source` waits for it (I-1246). |
+| @fact:B254-SEVERITY **severity** | P2 — the Library's "Installed from" line on an application's page is hidden until vibe records it; related to B-232 (the install's source, high priority). |
+| @fact:B254-DISPOSITION **disposition** | `candidate — to be considered and decided later in vibe` (the owner's rule of 2026-11-04 for vibe's needs found while building the app). |
+| @fact:B254-FILED **filed by** | vibevm-app build side (session MVP), 2026-11-04. |
 
 
 ## 2026-11-07 · the owner's ruling relayed from vibevm-app's audit (notes/66 there)
