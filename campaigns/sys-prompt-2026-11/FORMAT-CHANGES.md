@@ -658,3 +658,64 @@ and follows `SP-FMT-112` exactly in shape.
   so the loopback endpoint is the only reachable one by construction. It
   calls no model, and the recorder drops the `authorization` header before
   writing, so a capture can never carry a credential.
+
+## SP-FMT-114 — supplied harness bases: versioned data with provenance (Phase P10)
+
+Status: **specified 2026-11-11, not yet implemented** (phase P10). Design
+authority: `PROP-076#SYS-SUPPLIED-BASE`. Owner directives 2026-11-11: «так
+возьми системный промт Qwen и прибавь к нему наш, это нормально», «если мы
+хардкодим какие-то текстовые данные из исходников qwen и opencode то
+пожалуйста подумай как мы будем в будущем синхронизиорваться с дргуими
+версиями», and «нужно чтобы не только базовый промт совпал, но и чтобы их
+базовый промт с нашим префиксом собрались правильно». **Amends `SP-FMT-112`**,
+whose OpenCode row concluded `read`, and is the format record `SP-FMT-113`'s
+Qwen row points at for the same question.
+
+- **New data genre, carried by a harness's own vibe package, not by vibe:**
+  `prompt-bases/<harness-version>/` in the package tree, read from the
+  installed package's own source — `<settings>/cache/<group>/<name>/v<version>/
+  prompt-bases/<harness-version>/`, the directory an installer step already
+  knows as `$package`. It holds the upstream base files at their upstream
+  names plus `PROVENANCE.toml`. **Lookup order:** that directory for exactly
+  the running harness version, then an optional developer directory named by
+  the environment; no search, no nearest-version fallback, no copy inside
+  vibe.
+- **`PROVENANCE.toml` carries the description, so vibe's Rust carries no
+  harness strings.** Upstream repository, tag, commit; per base file its
+  upstream path, byte length and sha256; the model→file selection table as
+  rows of (substring, file, mode `override`/`append`, optional literal
+  substitution) each with the `file:line` it was read from; the render rule as
+  (token spelling, gate tool names, the ordered bullet strings, first- or
+  all-occurrence replacement) with its `file:line`; sha256 fingerprints of
+  every assembly file that could change the composition; the upstream licence
+  text and copyright line; `verified` with the proof's id and date; and the
+  two caveats of `#SYS-SUPPLIED-BASE` in prose. A version needing a rule the
+  interpreter cannot express is refused, never approximated.
+- **`verified = true` is a whole-request measurement**, not a digest match.
+  Reproduce the base, run the harness plainly against a loopback recorder,
+  require byte equality with the captured base part — then the six conditions
+  of `#SYS-SUPPLIED-BASE` on the combination: one contiguous insertion and
+  nothing else changed, the inserted bytes equal to the lane under a named
+  transformation only, the seam shown both ways, prefix stability across two
+  launches with every per-day byte after the lane, a subagent carrying the
+  lane zero times, and a live check that an instruction existing only in the
+  harness's own base is still obeyed.
+- **Measured for OpenCode 2.2.7 on 2026-11-11, offline, 202,349-byte lane.**
+  The reproduced base is **1,470 bytes**, sha256 `3728fd87457f4314…`,
+  byte-identical to the installed binary's own first system part. Against a
+  plain run of the same shape the carrier request differs by **one contiguous
+  insertion of 202,348 bytes at offset 1,472** — the plain run has **zero**
+  bytes in that window — and `model`, `stream`, `tools`,
+  `max_completion_tokens`, `stream_options` and every non-system message are
+  **identical**. The inserted bytes are the lane minus its single trailing
+  newline (the `{file:}` trim), both marker lines intact. The seam reads
+  `…overwriting them.\n\n` before the first marker and `\n# Your Model` after
+  the last, so nothing is glued. A `subagent` child's request carries the lane
+  **zero** times at 10,952 bytes.
+- **Still owed before `launch` may be the default:** the two-launch prefix
+  comparison, the subagent diff against its own plain counterpart, the live
+  base-not-displaced check on the local model, and the implementation itself.
+- **The Claude Code and Codex rows predate this check** and are recorded as
+  delivery-and-canary measurements only, not whole-request diffs; `SP-FMT-105`
+  and `SP-FMT-109` are not amended, and `HARNESS-DELIVERY.md` §10 states the
+  gap rather than implying a check that was never run.

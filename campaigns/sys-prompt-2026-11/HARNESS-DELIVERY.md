@@ -709,6 +709,64 @@ were research in the 2026-11-10 survey and **two of them were wrong**.
   have been. The day OpenCode can scope `instructions` to one agent, one
   constant and one gate arm open the tier.
 
+### OpenCode, second look — the carrier that works, and what it costs **[V, 2026-11-11]**
+
+The row above concluded `read` on two blockers. The first was never in doubt
+and is fixed by a flag; the second is now **measured on 2.2.7 instead of read
+at 1.19.5**, and it is real: driven offline by a fake provider that answers
+with a `subagent` tool call (`live/opencode-subagent-capture.sh` with
+`live/fake-provider-subagent.py`), the child session's request was
+**byte-identical to the primary's**, 213,456 bytes, lane ×1, every lane canary
+present. So the configuration `instructions` array is out for good — the
+upstream reason is that `context.select` loads the instruction sources with no
+agent or permission argument (`packages/core/src/session/context.ts:151`,
+`:170`) and the child runs the same `baseTranscript`
+(`packages/core/src/session/runner/llm.ts:257`) with nothing branching on
+`parentID`.
+
+**A per-launch primary agent passes, and it passes every condition.** Measured
+on 2.2.7 with `--standalone` and an `OPENCODE_CONFIG_CONTENT` that declares one
+`mode = "primary"` agent whose `system` is OpenCode's own base followed by
+`{file:<abs lane>}`, selected with `--agent`:
+
+- The **child carries the lane zero times**, at 10,952 bytes — the plain
+  control size — with the entrypoint canary, `<env>` and `# Your Model`
+  present. Its own agent (`general`) has no `system` of its own
+  (`packages/core/src/plugin/agent.ts:63-72`), so nothing of ours reaches it.
+- Against a plain run of the same shape the primary request differs by **one
+  contiguous insertion of 202,348 bytes at offset 1,472**, and the plain run
+  holds **zero** bytes in that window — `model`, `stream`, `tools`,
+  `max_completion_tokens`, `stream_options` and every non-system message are
+  **identical**, as are the model-identity part, the tools hint and the whole
+  instruction part with `AGENTS.md`, the date and `<env>`.
+- The inserted bytes are the lane **minus its single trailing newline**, which
+  is `{file:}`'s documented trim (`packages/core/src/config/variable.ts:76`,
+  measured on a fixture: leading and trailing whitespace stripped, inner
+  newlines kept): 202,348 of 202,349 bytes, both marker lines and their ids
+  intact.
+- The **seam** reads `…investigate before deleting or overwriting them.\n\n`
+  before the first marker and `\n# Your Model` after the last, so a base's
+  closing sentence is never glued to a marker line.
+
+**vibe must supply the base, and `render()` will not help.** An agent's
+`system` is used raw — `packages/core/src/session/model-request.ts:117-119`
+puts it straight into `SystemPart.make`, and `packages/core/src/plugin/
+optimize.ts:92` makes the provider-prompt hook bail out entirely for any agent
+that has one. Measured: a literal `${OPENCODE_TOOL_GUIDANCE}` inside an agent's
+`system` arrives **unsubstituted**. So the composition vibe reproduces is
+`render(<selected base>, <tool names>)`, plus `anthropic.txt` appended for
+Claude models — and the reproduction is **proven**: from the upstream 756-byte
+`session/runner/prompt/system.txt` (sha256 `ab9749036fe5a6b9…`) and the
+recorded rule it comes to **1,470 bytes**, sha256 `3728fd87457f4314…`,
+byte-identical to what the installed 2.2.7 binary itself emits. That equality
+is also the only evidence that the published bundle carries the tag's bytes.
+
+**So the tier is specified and not yet shipped.** The discipline it needs —
+versioned bases with provenance in the harness's own package, a generic
+interpreter in vibe, `verified` earned by the whole-request diff — is
+`PROP-076#SYS-SUPPLIED-BASE` and `SP-FMT-114`. Until it is implemented and
+verified, OpenCode's default stays `read`.
+
 ### pi — launch-like slot exists but is ambient **[R-nh]**
 
 - `.pi/APPEND_SYSTEM.md` appends; `.pi/SYSTEM.md` replaces. Both are project
@@ -988,6 +1046,15 @@ block and its own canaries.
 | N1 | From the root, make the agent open a file in the nested project | Nested lane not read; root lane not re-read. **PASSED 2026-11-10 [V]**: the agent read only `nested/AGENTS.md`, reported `CANARY-NESTED-TUFF` and not `CANARY-NESTED-LANE-SCORIA`, and ignored the nested block as another project's — as it also did for the `nested/CLAUDE.md` Claude Code auto-loaded beside it |
 | O1 | Qwen, Gemini CLI, OpenCode, pi, dsh in `read` mode | Lane read once; for dsh, record the doubled entrypoint. **OpenCode run 2026-11-11, two of three legs [V], one not run.** Delivery, offline against a loopback provider: the 204,429-byte lane arrived byte-equal and exactly once through `OPENCODE_CONFIG_CONTENT`, with a control run proving the carrier was what delivered it, and the `<env>` date block **after** the lane rather than before it. The launcher: `vibe agent opencode` resolved the built-in launcher, recomposed the lane, printed the `read` note and the carrier explanation and exec'd real OpenCode 2.2.7, which started and reached model selection. **Live, OpenCode 2.2.7, two models at the owner's instruction.** On `home/gpt-6.1-sol` (512,000-token context): the full **204,429-byte** lane through the carrier came back with the last `vibe:lane-end` byte-equal, all four lane canaries including the tail, the template's absent and **no file read with a tool**; and in `read` mode on the unpadded 2,570-byte sample the agent read `STATIC.md`, `INDEX.md`, `00-core.md`, `90-user.md` in order, **once each**, quoting the block's own format example for the marker line, which is correct in that tier. On `homelocal/qwen3.8-27b` (56,000 tokens, 42,397-byte lane): the same carrier answer; and `read` mode worked only once the prompt had work in it — the one prompt alone, which asks what is in the session's context, it answered literally with zero tool calls. So that leg is a model-strength finding, not a block failure. **Qwen Code run 2026-11-11, every leg [V].** Delivery, offline against a loopback provider inside `bwrap --unshare-net`: the plain run put the managed router block at system-prompt byte 14,046 inside Qwen Code's own `--- Context from: AGENTS.md ---` delimiter with **no lane byte and no lane canary**, which is the shipped tier exactly; the 2,570-byte lane through `--append-system-prompt` arrived byte-equal and exactly once at byte 16,985 with all four lane canaries and the template's absent; and the 202,349-byte lane through the same slot is `E2BIG` at `execve`, errno 7, before the program starts. The **file-based** slot was measured too, on the owner's instruction: `QWEN_WRITE_SYSTEM_MD` dumps Qwen Code's own base prompt, the lane goes after it and `QWEN_SYSTEM_MD` hands the pair back — the request then begins with Qwen Code's own prompt byte-exact, carries the lane exactly once at byte 13,858 and continues byte-identically to the plain run, it is subagent-safe, and live it carried the **whole 202,349-byte lane** with the last marker byte-equal and no file read. It stays closed because the prompt it replaces is session-shaped: 13,856 bytes headless against 18,451 interactive under identical probe flags, and a probe with no terminal is always the headless one. The context-file layer, additive and import-inert for this lane (`@spec://` verbatim, a real `@./path` expanded), reaches every subagent and is out on `#SYS-WORKER-EXCLUSION`. **No per-day text is in the system prompt at all** — the date sits at byte 7,079 of the user turn — so the cache property would have held. The launcher: `vibe agent qwen` resolved the built-in launcher, printed `system prompt: unchanged`, the `read` note and the slot note, passed **no** flag and exec'd real Qwen Code 0.27.2. **Live on `gpt-6.1-sol`:** in `read` mode the one prompt — which forbids reading — got the block's own format example and the entrypoint canary, and a task-shaped prompt got `STATIC.md`, `INDEX.md`, `00-core.md`, `90-user.md` in order, once each, with all four lane canaries; through the slot by hand the last `vibe:lane-end` came back byte-equal. Gemini CLI, pi and dsh were not run |
 | I1 | Only if import is pursued: Claude Code and Gemini CLI with the import block | Lane present once; no attempt to resolve `@spec://`; position and role recorded |
+
+**One gap is recorded rather than implied.** The Claude Code and Codex rows
+above are delivery-and-canary measurements: the lane arrived, the tail was
+quoted byte-equal, the canaries were right and no lane file was read. They are
+**not** whole-request diffs against a plain run of the same shape — nobody
+checked that every other system part, the tool definitions and the request
+parameters were byte-identical with exactly one insertion. That check was
+defined only on 2026-11-11 (`#SYS-SUPPLIED-BASE`), it has been run for
+OpenCode's agent carrier, and it is owed to those two rows.
 
 A failure of C1, C2 or X1 means `launch` for that harness defaults back to
 `read`. A failure of C5 means `launch` breaks worker exclusion on Claude Code
