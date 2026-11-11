@@ -231,7 +231,7 @@ fn empty_lockfile_has_v7_defaults() {
     let lf = Lockfile::empty("vibe 0.1.0-dev", "2026-05-21T00:00:00Z");
     assert_eq!(lf.meta.schema_version, LEGACY_SCHEMA_VERSION);
     assert_eq!(LEGACY_SCHEMA_VERSION, 7);
-    assert_eq!(CURRENT_SCHEMA_VERSION, 10);
+    assert_eq!(CURRENT_SCHEMA_VERSION, 11);
     assert!(lf.meta.solver.is_none());
     assert!(lf.packages.is_empty());
 
@@ -455,7 +455,7 @@ fn schema_ten_round_trips_the_template_record_and_the_channel() {
     let template = row.template.as_ref().expect("the row carries a template");
     assert_eq!(template.revision.to_string(), "0.3.0");
     assert_eq!(template.rendered_sha256, "aa");
-    assert_eq!(template.digest_source_sha256, "bb");
+    assert_eq!(template.digest_source_sha256.as_deref(), Some("bb"));
     assert_eq!(row.via_channel.as_deref(), Some("lts"));
     // The writer keeps the epoch, because the row needs it.
     let written = lock.for_write().unwrap();
@@ -467,17 +467,75 @@ fn schema_ten_round_trips_the_template_record_and_the_channel() {
 
 #[test]
 #[verifies("spec://org.vibevm.core/vibevm/common/PROP-075#TEMPLATE-LOCK-RECORD")]
-fn nine_still_reads_and_eleven_refuses() {
+fn nine_still_reads_and_the_epoch_above_the_newest_refuses() {
     // A schema-9 lock with a remap source binding is read exactly as
-    // before: the 9 → 10 step did not raise that floor.
-    for schema in [LEGACY_SCHEMA_VERSION, CONFIGURATION_SCHEMA_VERSION, 9, 10] {
+    // before: the 9 → 10 step did not raise that floor, and neither
+    // did the 10 → 11 step of PROP-075 `#TEMPLATE-NO-DIGEST`.
+    for schema in [
+        LEGACY_SCHEMA_VERSION,
+        CONFIGURATION_SCHEMA_VERSION,
+        9,
+        10,
+        11,
+    ] {
         assert!(
             Lockfile::parse_str(&lock_text(schema, "")).is_ok(),
             "schema{schema} must read"
         );
     }
-    let error = Lockfile::parse_str(&lock_text(TEMPLATE_SCHEMA_VERSION + 1, "")).unwrap_err();
-    assert!(error.to_string().contains("11"), "{error}");
+    let error =
+        Lockfile::parse_str(&lock_text(DIGESTLESS_TEMPLATE_SCHEMA_VERSION + 1, "")).unwrap_err();
+    assert!(error.to_string().contains("12"), "{error}");
+}
+
+/// The digest-less template record: round-tripped, writing epoch11, and
+/// corruption under any lower epoch (PROP-075 `#TEMPLATE-NO-DIGEST`,
+/// AV-FMT-033).
+#[test]
+#[verifies("spec://org.vibevm.core/vibevm/common/PROP-075#TEMPLATE-NO-DIGEST")]
+fn a_template_record_with_no_digest_document_round_trips_at_epoch_eleven() {
+    const NO_DIGEST_ROW: &str = "[package.template]\nrevision = \"1.0.0\"\n\
+         rendered_sha256 = \"aa\"\n";
+    let lock = Lockfile::parse_str(&lock_text(
+        DIGESTLESS_TEMPLATE_SCHEMA_VERSION,
+        NO_DIGEST_ROW,
+    ))
+    .unwrap();
+    let template = lock.packages[0]
+        .template
+        .as_ref()
+        .expect("the row carries a template");
+    // Absent, never an empty string: the record says "there is no such
+    // document", which is what makes the alarm meaningful.
+    assert!(template.digest_source_sha256.is_none());
+    assert!(template.digest_url.is_none());
+
+    let written = lock.for_write().unwrap();
+    assert_eq!(
+        written.meta.schema_version, DIGESTLESS_TEMPLATE_SCHEMA_VERSION,
+        "the row needs the epoch, so the writer claims it"
+    );
+    let back = Lockfile::parse_str(&toml::to_string_pretty(&written).unwrap()).unwrap();
+    assert_eq!(back.packages[0].template, lock.packages[0].template);
+
+    // Under schema10 the same row is corruption, not legacy input: a
+    // 10 reader requires `digest_source_sha256`.
+    let error =
+        Lockfile::parse_str(&lock_text(TEMPLATE_SCHEMA_VERSION, NO_DIGEST_ROW)).unwrap_err();
+    assert!(error.to_string().contains("schema11"), "{error}");
+}
+
+/// A template record that *does* name its digest document keeps writing
+/// epoch10 — the ladder gained a rung, not a floor.
+#[test]
+#[verifies("spec://org.vibevm.core/vibevm/common/PROP-075#TEMPLATE-NO-DIGEST")]
+fn a_template_record_with_a_digest_document_still_writes_epoch_ten() {
+    let lock =
+        Lockfile::parse_str(&lock_text(DIGESTLESS_TEMPLATE_SCHEMA_VERSION, TEMPLATE_ROW)).unwrap();
+    assert_eq!(
+        lock.for_write().unwrap().meta.schema_version,
+        TEMPLATE_SCHEMA_VERSION
+    );
 }
 
 #[test]

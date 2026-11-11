@@ -58,8 +58,8 @@ fn render() -> FullRender {
             .replace("\"11\"", &format!("\"{}\"", "a".repeat(64)))
             .replace("\"22\"", &format!("\"{}\"", "b".repeat(64))),
         sha256: "c".repeat(64),
-        digest_source_sha256: "d".repeat(64),
-        digest_url: "https://downloads.example/SHA256SUMS".into(),
+        digest_source_sha256: Some("d".repeat(64)),
+        digest_url: Some("https://downloads.example/SHA256SUMS".to_owned()),
         dropped: Vec::new(),
     }
 }

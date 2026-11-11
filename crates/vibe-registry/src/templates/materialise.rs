@@ -32,8 +32,8 @@ use super::{ActiveTemplate, TemplateLayer};
 ///     version: "24.22.2".parse().unwrap(),
 ///     toml: "[package]\n".to_string(),
 ///     sha256: "ab".repeat(32),
-///     digest_source_sha256: "cd".repeat(32),
-///     digest_url: "https://nodejs.org/dist/v24.22.2/SHASUMS256.txt".to_string(),
+///     digest_source_sha256: Some("cd".repeat(32)),
+///     digest_url: Some("https://nodejs.org/dist/v24.22.2/SHASUMS256.txt".to_string()),
 ///     dropped: Vec::new(),
 /// };
 /// assert_eq!(render.sha256.len(), 64);
@@ -47,10 +47,12 @@ pub struct FullRender {
     pub toml: String,
     /// SHA-256 of those bytes — the `rendered_sha256` of a lock record.
     pub sha256: String,
-    /// SHA-256 of the digest document's bytes.
-    pub digest_source_sha256: String,
-    /// The digest document's URL after remap.
-    pub digest_url: String,
+    /// SHA-256 of the digest document's bytes — `None` for a template
+    /// that declares no digest source, which has no document (PROP-075
+    /// `#TEMPLATE-NO-DIGEST`).
+    pub digest_source_sha256: Option<String>,
+    /// The digest document's URL after remap, `None` for the same reason.
+    pub digest_url: Option<String>,
     /// The `[[installer_options]]` rows dropped because a digest
     /// variable they reference has no value for this version and the row
     /// declared `template_optional`.
@@ -102,13 +104,17 @@ impl TemplateLayer {
         record: &VersionRecord,
     ) -> Result<FullRender, TemplateError> {
         let fetched = self.digest_document(template, version)?;
-        let digests = DigestTable::parse(&template.section, &fetched.body).map_err(|error| {
-            TemplateError::Render {
+        // With no digest source there is no document, and the table is
+        // empty rather than absent: a template that declares none may
+        // name no digest variable, so nothing can look one up
+        // (PROP-075 `#TEMPLATE-NO-DIGEST`).
+        let body = fetched.as_ref().map(|f| f.body.as_str()).unwrap_or("");
+        let digests =
+            DigestTable::parse(&template.section, body).map_err(|error| TemplateError::Render {
                 package: template.coordinate(),
                 version: version.to_string(),
                 reason: error.to_string(),
-            }
-        })?;
+            })?;
         let rendered =
             vibe_template::render(&template.template_toml, record, &digests).map_err(|error| {
                 TemplateError::Render {
@@ -121,8 +127,8 @@ impl TemplateLayer {
             version: version.clone(),
             sha256: rendered.sha256,
             toml: rendered.toml,
-            digest_source_sha256: digest_of(fetched.body.as_bytes()),
-            digest_url: fetched.chosen_url,
+            digest_source_sha256: fetched.as_ref().map(|f| digest_of(f.body.as_bytes())),
+            digest_url: fetched.map(|f| f.chosen_url),
             dropped: rendered.dropped,
         })
     }

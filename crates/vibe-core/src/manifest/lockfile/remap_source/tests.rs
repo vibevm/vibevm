@@ -35,7 +35,12 @@ fn new_fields_do_not_force_ordinary_legacy_or_configuration_epoch_changes() {
     assert_eq!(legacy.for_write().unwrap().meta.schema_version, 7);
     assert_eq!(CONFIGURATION_SCHEMA_VERSION, 8);
     assert_eq!(crate::manifest::REMAP_SOURCE_SCHEMA_VERSION, 9);
-    assert_eq!(CURRENT_SCHEMA_VERSION, 10);
+    assert_eq!(crate::manifest::TEMPLATE_SCHEMA_VERSION, 10);
+    // PROP-075 `#TEMPLATE-NO-DIGEST` (AV-FMT-033) added epoch11 for a
+    // template record with no digest document. The point of this test is
+    // that an ordinary lock is untouched by it, which the first
+    // assertion above still measures.
+    assert_eq!(CURRENT_SCHEMA_VERSION, 11);
 }
 #[test]
 fn explicit_binding_rejects_credentials_without_printing_them() {

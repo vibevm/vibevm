@@ -32,7 +32,7 @@ mod validation;
 ///      url = \"https://example.invalid/v{version}/SHASUMS256.txt\"\n",
 /// )?;
 /// assert!(matches!(section.versions, VersionSource::Json { .. }));
-/// assert!(matches!(section.digests, DigestSource::Sha256Sums { .. }));
+/// assert!(matches!(section.digests, Some(DigestSource::Sha256Sums { .. })));
 /// assert!(!section.has_sizes(), "sha256sum output carries no sizes");
 /// # Ok::<(), toml::de::Error>(())
 /// ```
@@ -43,8 +43,16 @@ pub struct TemplateSection {
     /// `[template.versions]` — where the produced versions come from.
     pub versions: VersionSource,
     /// `[template.digests]` — where the SHA-256 of every input comes from.
-    /// A template without one is refused (PROP-075 `#TEMPLATE-VERSIONS`).
-    pub digests: DigestSource,
+    ///
+    /// **Optional, and only because some templates download nothing**
+    /// (PROP-075 `#TEMPLATE-NO-DIGEST`): a template whose produced
+    /// versions install a file the package itself carries has no input
+    /// to verify and no document to name. A template that declares none
+    /// may not use a `{sha256:…}` or `{size:…}` variable, which is
+    /// refused by name at validation — so "every downloaded input is
+    /// digest-verified" still holds, by there being no downloaded input.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub digests: Option<DigestSource>,
     /// `[[template.channel]]` — named channels derived from the version
     /// records (PROP-075 `#CHANNELS`).
     #[serde(default, rename = "channel", skip_serializing_if = "Vec::is_empty")]
@@ -75,8 +83,8 @@ impl TemplateSection {
     /// ```
     pub fn has_sizes(&self) -> bool {
         match &self.digests {
-            DigestSource::Sha256Sums { .. } => false,
-            DigestSource::Json { size_field, .. } => size_field.is_some(),
+            None | Some(DigestSource::Sha256Sums { .. }) => false,
+            Some(DigestSource::Json { size_field, .. }) => size_field.is_some(),
         }
     }
 
@@ -90,10 +98,14 @@ impl TemplateSection {
     }
 
     /// The per-version digest-document URL **template**, over the version
-    /// variables only.
-    pub fn digest_url_template(&self) -> &str {
+    /// variables only — `None` for a template that declares no digest
+    /// source (PROP-075 `#TEMPLATE-NO-DIGEST`).
+    pub fn digest_url_template(&self) -> Option<&str> {
         match &self.digests {
-            DigestSource::Sha256Sums { url, .. } | DigestSource::Json { url, .. } => url,
+            Some(DigestSource::Sha256Sums { url, .. } | DigestSource::Json { url, .. }) => {
+                Some(url)
+            }
+            None => None,
         }
     }
 }

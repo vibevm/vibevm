@@ -120,6 +120,7 @@ impl Lockfile {
                 | CONFIGURATION_SCHEMA_VERSION
                 | REMAP_SOURCE_SCHEMA_VERSION
                 | TEMPLATE_SCHEMA_VERSION
+                | DIGESTLESS_TEMPLATE_SCHEMA_VERSION
         ) {
             return Err(crate::Error::UnsupportedLockfile {
                 found: self.meta.schema_version,
@@ -131,7 +132,9 @@ impl Lockfile {
         // rule the 7 → 8 → 9 steps already followed: a project with no
         // template package and no channel requirement writes exactly the
         // bytes it wrote before PROP-075 (AV-FMT-002).
-        value.meta.schema_version = if value.holds_template_records() {
+        value.meta.schema_version = if value.holds_digestless_template_records() {
+            DIGESTLESS_TEMPLATE_SCHEMA_VERSION
+        } else if value.holds_template_records() {
             TEMPLATE_SCHEMA_VERSION
         } else if value.remaps.iter().any(|row| row.source.is_some()) {
             REMAP_SOURCE_SCHEMA_VERSION
@@ -151,6 +154,18 @@ impl Lockfile {
         self.packages
             .iter()
             .any(|row| row.template.is_some() || row.via_channel.is_some())
+    }
+
+    /// Whether any row carries a template record with **no** digest
+    /// document — the one fact schema 10 cannot express, because its
+    /// `digest_source_sha256` is a required field (PROP-075
+    /// `#TEMPLATE-NO-DIGEST`, AV-FMT-033).
+    pub(crate) fn holds_digestless_template_records(&self) -> bool {
+        self.packages.iter().any(|row| {
+            row.template
+                .as_ref()
+                .is_some_and(|template| template.digest_source_sha256.is_none())
+        })
     }
 }
 

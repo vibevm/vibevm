@@ -381,14 +381,21 @@ impl TemplateLayer {
         &self,
         template: &ActiveTemplate,
         version: &semver::Version,
-    ) -> Result<Fetched, TemplateError> {
+    ) -> Result<Option<Fetched>, TemplateError> {
+        // No declared digest source, no document, and **no request**: a
+        // template whose produced versions download nothing has nothing
+        // to verify, so asking for a document it never named would be
+        // the one request that could not succeed (PROP-075
+        // `#TEMPLATE-NO-DIGEST`).
+        let Some(url) = digest_url(template, version) else {
+            return Ok(None);
+        };
         let cache = self.cache(&template.group, &template.name);
-        let url = digest_url(template, version);
         if let Some(document) = cache.read_digest_document(version)? {
-            return Ok(Fetched {
+            return Ok(Some(Fetched {
                 chosen_url: url,
                 body: document,
-            });
+            }));
         }
         if self.posture.is_offline() {
             return Err(cache.missing(
@@ -400,7 +407,7 @@ impl TemplateLayer {
             .transport
             .read(Document::Digests, &template.coordinate(), &url)?;
         cache.write_digest_document(version, &fetched.body)?;
-        Ok(fetched)
+        Ok(Some(fetched))
     }
 }
 
@@ -417,21 +424,28 @@ impl TemplateLayer {
 ///      url = \"https://nodejs.org/dist/v{version}/SHASUMS256.txt\"\n",
 /// )?;
 /// assert_eq!(
-///     digest_url_for(&section, &"24.22.2".parse()?),
-///     "https://nodejs.org/dist/v24.22.2/SHASUMS256.txt"
+///     digest_url_for(&section, &"24.22.2".parse()?).as_deref(),
+///     Some("https://nodejs.org/dist/v24.22.2/SHASUMS256.txt")
 /// );
+///
+/// // A template that declares no digest source names no document.
+/// let none: TemplateSection =
+///     toml::from_str("[versions]\nkind = \"list\"\n[[versions.item]]\nversion = \"1.0.0\"\n")?;
+/// assert!(digest_url_for(&none, &"1.0.0".parse()?).is_none());
 /// # Ok::<(), Box<dyn std::error::Error>>(())
 /// ```
-pub fn digest_url_for(section: &TemplateSection, version: &semver::Version) -> String {
-    let template = section.digest_url_template();
-    template
-        .replace("{version}", &version.to_string())
-        .replace("{major}", &version.major.to_string())
-        .replace("{minor}", &version.minor.to_string())
-        .replace("{patch}", &version.patch.to_string())
+pub fn digest_url_for(section: &TemplateSection, version: &semver::Version) -> Option<String> {
+    let template = section.digest_url_template()?;
+    Some(
+        template
+            .replace("{version}", &version.to_string())
+            .replace("{major}", &version.major.to_string())
+            .replace("{minor}", &version.minor.to_string())
+            .replace("{patch}", &version.patch.to_string()),
+    )
 }
 
-fn digest_url(template: &ActiveTemplate, version: &semver::Version) -> String {
+fn digest_url(template: &ActiveTemplate, version: &semver::Version) -> Option<String> {
     digest_url_for(&template.section, version)
 }
 
@@ -478,7 +492,7 @@ pub fn lock_record(
         rendered_sha256: render.sha256.clone(),
         digest_source_sha256: render.digest_source_sha256.clone(),
         source_url: version_list_url.map(str::to_string),
-        digest_url: Some(render.digest_url.clone()),
+        digest_url: render.digest_url.clone(),
     }
 }
 

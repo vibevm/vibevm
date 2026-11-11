@@ -225,6 +225,24 @@ fn resolve_digest(
             ),
         ));
     }
+    // A template that declares no digest source has no document to
+    // read a digest out of, so a digest variable in it can never be
+    // filled. Refused by name here rather than resolved to the
+    // placeholder, because the placeholder would make the skeleton
+    // render succeed and the full render fail at install time
+    // (PROP-075 `#TEMPLATE-NO-DIGEST`).
+    if context.section.digests.is_none() {
+        return Err(RenderError::grammar(
+            path,
+            format!(
+                "`{{{}:…}}` needs a digest document, and this template declares no \
+                 `[template.digests]` — a template may leave it out only when its produced \
+                 versions download nothing (fix: declare [template.digests], or remove the \
+                 digest variable)",
+                var.name()
+            ),
+        ));
+    }
     if wants_size && !context.section.has_sizes() {
         return Err(RenderError::grammar(
             path,

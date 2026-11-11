@@ -39,7 +39,7 @@ use super::{Materialization, read_toml, write_toml};
 /// Latest supported lock schema. Schema7 remains readable without inventing
 /// original requests; schema8 carries common package configuration. Ordinary
 /// legacy-only writes retain7. Rich locks cannot be regenerated as empty.
-pub const CURRENT_SCHEMA_VERSION: u32 = 10;
+pub const CURRENT_SCHEMA_VERSION: u32 = 11;
 /// First epoch carrying common package configuration (minimum reader 1.0.12
 /// for epoch9 remap source bindings; configuration-only epoch8 is unchanged).
 pub const CONFIGURATION_SCHEMA_VERSION: u32 = 8;
@@ -56,6 +56,16 @@ pub const REMAP_SOURCE_SCHEMA_VERSION: u32 = 9;
 /// actually holds, so a project with no template package keeps writing 7,
 /// 8 or 9 exactly as before.
 pub const TEMPLATE_SCHEMA_VERSION: u32 = 10;
+/// First epoch carrying a template record with **no** digest document —
+/// a template whose produced versions download nothing, so there is no
+/// digest source to name and `digest_source_sha256` is absent rather
+/// than an invented empty string (PROP-075 `#TEMPLATE-NO-DIGEST`,
+/// AV-FMT-033). A schema-10 reader requires that field, so a lock
+/// omitting it must claim this epoch; the writer still writes the
+/// lowest epoch that carries what the lock holds, so every lock that
+/// does name a digest document keeps writing 7, 8, 9 or 10 exactly as
+/// before.
+pub const DIGESTLESS_TEMPLATE_SCHEMA_VERSION: u32 = 11;
 mod configuration;
 mod remap_source;
 pub use remap_source::{LockedRemapSource, LockedRemapSourceError};

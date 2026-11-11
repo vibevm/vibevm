@@ -59,7 +59,10 @@ fn the_flag_and_the_table_round_trip() {
         section.versions,
         VersionSource::Json { ref select, .. } if select.is_empty()
     ));
-    assert!(matches!(section.digests, DigestSource::Sha256Sums { .. }));
+    assert!(matches!(
+        section.digests,
+        Some(DigestSource::Sha256Sums { .. })
+    ));
     assert_eq!(section.channels.len(), 2);
     assert!(!section.has_sizes());
     // The round trip keeps both, and an ordinary manifest keeps neither.

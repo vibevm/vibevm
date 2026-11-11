@@ -27,7 +27,7 @@ fn record(now: &str) -> SnapshotRecord {
         "org.vibevm.node/node".into(),
         "1.0.0".into(),
         Some("https://nodejs.org/dist/index.json".into()),
-        "https://nodejs.org/dist/v{version}/SHASUMS256.txt".into(),
+        Some("https://nodejs.org/dist/v{version}/SHASUMS256.txt".to_owned()),
         "vibe 1.0.11".into(),
         now.into(),
     )
@@ -56,7 +56,7 @@ fn written(versions: &[(&str, &str)]) -> tempfile::TempDir {
                 std::fs::write(dir.join("digests").join(version), digests).unwrap();
                 SnapshotVersion {
                     version: (*version).to_string(),
-                    digest_sha256: digest_of(digests.as_bytes()),
+                    digest_sha256: Some(digest_of(digests.as_bytes())),
                     rendered_sha256: format!("rendered-{version}"),
                 }
             })
@@ -153,8 +153,8 @@ fn a_snapshot_round_trips_and_reports_its_sync_time() {
     assert_eq!(snapshot.record.source.package, "org.vibevm.node/node");
     assert_eq!(snapshot.record.source.revision, "1.0.0");
     assert_eq!(
-        snapshot.record.source.digest_url,
-        "https://nodejs.org/dist/v{version}/SHASUMS256.txt"
+        snapshot.record.source.digest_url.as_deref(),
+        Some("https://nodejs.org/dist/v{version}/SHASUMS256.txt")
     );
     assert_eq!(snapshot.synced(), "2026-11-10T09:00:00Z");
     assert_eq!(
@@ -315,7 +315,7 @@ fn merge_adds_rows_keeps_the_others_and_sorts_by_version() {
     let mut snapshot = record("2026-11-10T09:00:00Z");
     let row = |version: &str| SnapshotVersion {
         version: version.to_string(),
-        digest_sha256: format!("d-{version}"),
+        digest_sha256: Some(format!("d-{version}")),
         rendered_sha256: format!("r-{version}"),
     };
     snapshot.merge(vec![row("22.23.4"), row("24.22.2")]);
@@ -331,11 +331,11 @@ fn merge_adds_rows_keeps_the_others_and_sorts_by_version() {
     // A replacement does not duplicate.
     snapshot.merge(vec![SnapshotVersion {
         version: "22.23.4".into(),
-        digest_sha256: "moved".into(),
+        digest_sha256: Some("moved".to_owned()),
         rendered_sha256: "moved".into(),
     }]);
     assert_eq!(snapshot.versions.len(), 3);
-    assert_eq!(snapshot.versions[1].digest_sha256, "moved");
+    assert_eq!(snapshot.versions[1].digest_sha256.as_deref(), Some("moved"));
 }
 
 /// The golden corpus of `[format.index-templates]`
@@ -360,19 +360,19 @@ mod corpus {
             "org.vibevm.node/node".into(),
             "1.0.0".into(),
             Some("https://nodejs.org/dist/index.json".into()),
-            "https://nodejs.org/dist/v{version}/SHASUMS256.txt".into(),
+            Some("https://nodejs.org/dist/v{version}/SHASUMS256.txt".to_owned()),
             "vibe 1.0.11".into(),
             "2026-11-10T09:00:00Z".into(),
         );
         record.merge(vec![
             SnapshotVersion {
                 version: "22.23.4".into(),
-                digest_sha256: "c90c3f14".repeat(8),
+                digest_sha256: Some("c90c3f14".repeat(8)),
                 rendered_sha256: "11112222".repeat(8),
             },
             SnapshotVersion {
                 version: "24.22.2".into(),
-                digest_sha256: "aec92ae9".repeat(8),
+                digest_sha256: Some("aec92ae9".repeat(8)),
                 rendered_sha256: "33334444".repeat(8),
             },
         ]);

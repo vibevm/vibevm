@@ -438,3 +438,116 @@ fn a_template_fixed_without_touching_a_digest_is_not_an_alarm() {
     .unwrap();
     assert!(manifest.contains("fixed"), "the fix landed: {manifest}");
 }
+
+// --- PROP-075 `#TEMPLATE-NO-DIGEST` -------------------------------------
+
+/// A template whose produced versions download **nothing**: the payload
+/// is a file the template's own tree carries, placed by a `kind = "copy"`
+/// step out of the rendered directory. Such a template declares no
+/// `[template.digests]` at all, and the point of the test is that the
+/// whole path works with **no digest document anywhere** — not a declared
+/// URL, not a fetch, not a lock member.
+///
+/// This is the two-file repro that found the gap, as a committed test.
+fn digestless_template(fixture: &AppRegistry) {
+    let dir = fixture.registry().join("org.vibevm.nvm/nvm/v1.0.0");
+    fs::create_dir_all(&dir).unwrap();
+    fs::write(
+        dir.join("vibe.toml"),
+        "[package]\nname = \"nvm\"\ngroup = \"org.vibevm.nvm\"\nkind = \"app\"\n\
+         version = \"1.0.0\"\ntemplate = true\n\
+         description = \"nvm {version}'s command surface, on vibe\"\n\n\
+         [application]\nid = \"nvm\"\n\n\
+         [template.versions]\nkind = \"list\"\n\
+         [[template.versions.item]]\nversion = \"0.41.0\"\n\n\
+         [[installer_options]]\nid = \"posix\"\nname = \"nvm {version}\"\n\
+         platform = \"linux\"\nplatform_name = \"Linux\"\narch = \"x86_64\"\n\
+         arch_name = \"Intel/AMD 64-bit\"\n\n\
+         [[installer_options.steps]]\nid = \"shim\"\n\
+         title = \"Place nvm.sh where a shell can source it\"\nkind = \"copy\"\n\
+         from = \"nvm.sh\"\nto = \"nvm.sh\"\n",
+    )
+    .unwrap();
+    // The payload: the file the package itself carries, which is exactly
+    // why there is nothing to digest.
+    fs::write(dir.join("nvm.sh"), "#!/bin/sh\nnvm() { :; }\n").unwrap();
+}
+
+/// The listing, the plan and a real install, all with no digest document.
+///
+/// Before `#TEMPLATE-NO-DIGEST` the listing worked — a skeleton render
+/// reads no digests — and the install failed fetching a document the
+/// template had been forced to declare and upstream does not publish.
+#[test]
+#[specmark::spec(verifies = "spec://org.vibevm.core/vibevm/common/PROP-075#TEMPLATE-NO-DIGEST")]
+fn a_template_that_downloads_nothing_needs_no_digest_document() {
+    let fixture = AppRegistry::new();
+    digestless_template(&fixture);
+
+    // The produced version is the domain, and the revision is not in it.
+    let listed = json(&fixture.app(&["app", "versions"], "org.vibevm.nvm/nvm", &["--json"]));
+    let rows: Vec<String> = listed["packages"][0]["versions"]
+        .as_array()
+        .expect("rows")
+        .iter()
+        .map(|row| row["version"].as_str().unwrap().to_owned())
+        .collect();
+    assert_eq!(rows, vec!["0.41.0".to_string()], "{listed}");
+
+    // The plan reaches the step without asking for a digest document.
+    let plan = json(&fixture.app(
+        &["install", "-g"],
+        "org.vibevm.nvm/nvm@=0.41.0",
+        &["--plan-only", "--json"],
+    ));
+    let planned = plan.to_string();
+    assert!(planned.contains("0.41.0"), "{planned}");
+    assert!(
+        !planned.contains("SHASUMS"),
+        "nothing named a digest document: {planned}"
+    );
+
+    // And the install really runs, from the rendered tree.
+    ok(&fixture.app(
+        &["install", "-g"],
+        "org.vibevm.nvm/nvm@=0.41.0",
+        &["--assume-yes"],
+    ));
+    let installed = fixture.listed("org.vibevm.nvm/nvm@0.41.0");
+    assert_eq!(installed["package"]["version"], "0.41.0", "{installed}");
+    assert_eq!(installed["status"], "ready", "{installed}");
+}
+
+/// The one thing such a template may not do: name a digest variable. The
+/// refusal is at the variable, with the fix in it, and it lands at
+/// **resolution** — the skeleton render, before any effect — rather than
+/// waiting for an install to fail on a lookup in an empty table. The
+/// version *listing* is unaffected, because a domain is the version list
+/// and renders nothing at all.
+#[test]
+#[specmark::spec(verifies = "spec://org.vibevm.core/vibevm/common/PROP-075#TEMPLATE-NO-DIGEST")]
+fn a_digest_variable_without_a_digest_source_is_refused_by_name() {
+    let fixture = AppRegistry::new();
+    digestless_template(&fixture);
+    let manifest = fixture
+        .registry()
+        .join("org.vibevm.nvm/nvm/v1.0.0/vibe.toml");
+    let text = fs::read_to_string(&manifest).unwrap();
+    // The same template, with one digest-bearing field it cannot fill.
+    fs::write(
+        &manifest,
+        text.replace(
+            "from = \"nvm.sh\"\nto = \"nvm.sh\"\n",
+            "from = \"nvm.sh\"\nto = \"nvm.sh\"\nsha256 = \"{sha256:nvm.sh}\"\n",
+        ),
+    )
+    .unwrap();
+    let output = failed(&fixture.app(
+        &["install", "-g"],
+        "org.vibevm.nvm/nvm@=0.41.0",
+        &["--plan-only"],
+    ));
+    assert!(output.contains("[template.digests]"), "{output}");
+    assert!(output.contains("download nothing"), "{output}");
+    assert!(output.contains("sha256"), "{output}");
+}

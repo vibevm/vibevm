@@ -126,7 +126,15 @@ impl TemplateSection {
     }
 
     fn validate_digests(&self, at: &FieldPath) -> Result<(), FieldError> {
-        let (url, declared) = match &self.digests {
+        // A template that declares no digest source is legal and has
+        // nothing to validate here; whether it is *allowed* to declare
+        // none is decided where the variables are read, because that is
+        // where "no downloaded input" can actually be checked
+        // (PROP-075 `#TEMPLATE-NO-DIGEST`).
+        let Some(digests) = &self.digests else {
+            return Ok(());
+        };
+        let (url, declared) = match digests {
             DigestSource::Sha256Sums { url, sizes } => (url, *sizes),
             DigestSource::Json {
                 url,

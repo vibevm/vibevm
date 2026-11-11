@@ -209,8 +209,8 @@ fn snapshot_row(
                      fix: a released version's checksums are immutable — investigate upstream, \
                      because either the release was replaced or the snapshot is not of what it \
                      says it is)",
-                    previous.digest_sha256,
-                    render.digest_source_sha256
+                    previous.digest_sha256.as_deref().unwrap_or("(none)"),
+                    render.digest_source_sha256.as_deref().unwrap_or("(none)")
                 );
             }
             // A re-run adds versions and leaves existing ones untouched.
@@ -277,7 +277,7 @@ fn snapshot_row(
             package.clone(),
             template.revision.to_string(),
             template.section.version_list_url().map(str::to_owned),
-            template.section.digest_url_template().to_string(),
+            template.section.digest_url_template().map(str::to_owned),
             vibe,
             now,
         ),
@@ -368,7 +368,13 @@ fn stage(
         if !added.contains(&version.to_string()) {
             continue;
         }
-        let document = layer.digest_document(template, version)?;
+        // A template with no digest source has no document to stage:
+        // the snapshot carries its version list and its renders, which
+        // is everything a closed-network client needs for it
+        // (PROP-075 `#TEMPLATE-NO-DIGEST`).
+        let Some(document) = layer.digest_document(template, version)? else {
+            continue;
+        };
         files.push((
             snapshot::relative_digest(group, name, version),
             write(

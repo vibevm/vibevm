@@ -300,7 +300,7 @@ fn installed_template(package: &PackageCoordinate) -> Option<InstalledTemplate> 
         revision: noted.revision.to_string(),
         produced: package.version.clone(),
         rendered_sha256: noted.rendered_sha256,
-        digest_source_sha256: Some(noted.digest_source_sha256),
+        digest_source_sha256: noted.digest_source_sha256,
         source_url: noted.source_url,
         digest_url: noted.digest_url,
     })

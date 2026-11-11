@@ -56,8 +56,9 @@ impl Manifest {
             (None, Some(package)) if package.template => Err(FieldError::new(
                 flag,
                 "`[package] template = true` without a [template] table — a template must say \
-                 where its versions and digests come from (fix: add [template.versions] and \
-                 [template.digests], or drop the flag)"
+                 where its versions come from (fix: add [template.versions], plus \
+                 [template.digests] unless its produced versions download nothing, or drop the \
+                 flag)"
                     .to_string(),
             )
             .into()),

@@ -356,14 +356,19 @@ impl DigestTable {
     /// A JSON checksum manifest, read through the declared source.
     pub fn parse(section: &TemplateSection, text: &str) -> Result<Self, RenderError> {
         match &section.digests {
-            DigestSource::Sha256Sums { .. } => Self::parse_sha256sums(text),
-            DigestSource::Json {
+            // A template that declares no digest source has no digest
+            // document to read and no digest variable to fill — the
+            // empty table is the whole truth about its inputs
+            // (PROP-075 `#TEMPLATE-NO-DIGEST`).
+            None => Ok(Self::default()),
+            Some(DigestSource::Sha256Sums { .. }) => Self::parse_sha256sums(text),
+            Some(DigestSource::Json {
                 select,
                 file_field,
                 digest_field,
                 size_field,
                 ..
-            } => Self::parse_json(
+            }) => Self::parse_json(
                 text,
                 select,
                 file_field,

@@ -14,7 +14,7 @@ specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-075#TEMPLATE-LOCK-RE
 
 use serde::{Deserialize, Serialize};
 
-use super::{Lockfile, TEMPLATE_SCHEMA_VERSION};
+use super::{DIGESTLESS_TEMPLATE_SCHEMA_VERSION, Lockfile, TEMPLATE_SCHEMA_VERSION};
 use crate::error::Result;
 
 impl Lockfile {
@@ -23,6 +23,28 @@ impl Lockfile {
     /// outright, so a lock claiming an older epoch while carrying one is
     /// corruption, never legacy input (AV-FMT-002).
     pub(crate) fn validate_template_records(&self) -> Result<()> {
+        if self.meta.schema_version < DIGESTLESS_TEMPLATE_SCHEMA_VERSION {
+            // A template with no digest source has no
+            // `digest_source_sha256` to record, and schema10 requires
+            // that field: a lock claiming10 while omitting it would be
+            // unreadable by the very reader10 names (PROP-075
+            // `#TEMPLATE-NO-DIGEST`, AV-FMT-033).
+            for row in &self.packages {
+                if row
+                    .template
+                    .as_ref()
+                    .is_some_and(|template| template.digest_source_sha256.is_none())
+                {
+                    return Err(crate::Error::InvalidLockfile {
+                        reason: format!(
+                            "`{}/{}` carries a template record with no digest document, which \
+                             requires schema{DIGESTLESS_TEMPLATE_SCHEMA_VERSION}",
+                            row.group, row.name
+                        ),
+                    });
+                }
+            }
+        }
         if self.meta.schema_version >= TEMPLATE_SCHEMA_VERSION {
             return Ok(());
         }
@@ -56,6 +78,14 @@ impl Lockfile {
 /// )?;
 /// assert_eq!(t.revision.to_string(), "0.2.0");
 /// assert_eq!(t.digest_url.as_deref(), Some("https://nodejs.org/dist/v24.22.2/SHASUMS256.txt"));
+///
+/// // A template whose produced versions download nothing records no
+/// // digest document at all — absent, never an empty string.
+/// let none: LockedTemplate = toml::from_str(
+///     "revision = \"1.0.0\"\nrendered_sha256 = \"ab12\"\n",
+/// )?;
+/// assert!(none.digest_source_sha256.is_none());
+/// assert!(none.digest_url.is_none());
 /// # Ok::<(), toml::de::Error>(())
 /// ```
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
@@ -70,7 +100,14 @@ pub struct LockedTemplate {
     pub rendered_sha256: String,
     /// SHA-256 of the fetched digest document's bytes, so a changed
     /// upstream digest document is visible even before a re-render.
-    pub digest_source_sha256: String,
+    ///
+    /// **Absent** when the template declares no `[template.digests]` at
+    /// all — a template whose produced versions download nothing has no
+    /// digest document, and a record of one would be an invention
+    /// (PROP-075 `#TEMPLATE-NO-DIGEST`). A lock carrying such a record
+    /// claims [`DIGESTLESS_TEMPLATE_SCHEMA_VERSION`].
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub digest_source_sha256: Option<String>,
     /// The version-list URL as it was resolved **after** remap. Absent
     /// for a `kind = "list"` source, which has no URL.
     #[serde(default, skip_serializing_if = "Option::is_none")]

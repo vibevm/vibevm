@@ -99,8 +99,11 @@ pub struct SnapshotSource {
     pub revision: String,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub version_list_url: Option<String>,
-    /// The digest url **template** over the version variables.
-    pub digest_url: String,
+    /// The digest url **template** over the version variables — absent
+    /// for a template that declares no digest source, which snapshots
+    /// no digest documents at all (PROP-075 `#TEMPLATE-NO-DIGEST`).
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub digest_url: Option<String>,
 }
 
 /// `[sync]` — the writing vibe and the first and last sync time, exactly
@@ -118,8 +121,11 @@ pub struct SnapshotVersion {
     pub version: String,
     /// SHA-256 of the digest document's bytes. A changed one for an
     /// already-snapshotted version is the alarm of
-    /// `#TEMPLATE-LOCK-RECORD` raised at mirror time.
-    pub digest_sha256: String,
+    /// `#TEMPLATE-LOCK-RECORD` raised at mirror time. Absent when the
+    /// template declares no digest source (PROP-075
+    /// `#TEMPLATE-NO-DIGEST`).
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub digest_sha256: Option<String>,
     /// The full render the mirror computed while it was there, so a
     /// client inside the network can compare without rendering first and
     /// an operator sees a diff in the commit.
@@ -132,7 +138,7 @@ impl SnapshotRecord {
         package: String,
         revision: String,
         version_list_url: Option<String>,
-        digest_url: String,
+        digest_url: Option<String>,
         vibe: String,
         now: String,
     ) -> Self {
@@ -273,6 +279,13 @@ impl Snapshot {
             let Ok(version) = semver::Version::parse(&row.version) else {
                 continue;
             };
+            // A row with no recorded digest is a template that
+            // declares no digest source: there is no document to prime
+            // and nothing will ever ask for one (PROP-075
+            // `#TEMPLATE-NO-DIGEST`).
+            let Some(recorded) = row.digest_sha256.as_deref() else {
+                continue;
+            };
             if cache.read_digest_document(&version)?.is_some() {
                 continue;
             }
@@ -285,7 +298,7 @@ impl Snapshot {
                 // refusal for the package.
                 Err(_) => continue,
             };
-            if digest_of(document.as_bytes()) != row.digest_sha256 {
+            if digest_of(document.as_bytes()) != recorded {
                 tracing::warn!(
                     target: "vibe_registry::templates",
                     "{}: the snapshot's digest document for {version} does not hash to the \
