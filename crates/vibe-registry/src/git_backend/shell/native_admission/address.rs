@@ -174,6 +174,30 @@ fn share(path: &str) -> Option<Result<(String, String), GitError>> {
     }
     Some(Ok((host.to_owned(), tail.to_owned())))
 }
+/// Whether a selected address makes a **transport** contact, and so needs
+/// the invocation's ambient proxy, credential, header and TLS context
+/// validated before it is admitted.
+///
+/// A repository on this machine does not. Git reads it through the
+/// filesystem: there is no host, no proxy, no credential helper, no
+/// header and no TLS, so no setting of the invocation's configuration can
+/// apply to it and none can be smuggled in through it. Validating it
+/// anyway refused a local registry for configuration about somewhere else
+/// entirely — a corporate machine carries `credential.<url>.*` entries for
+/// its own forge, and every one of them refused a mirrored monorepo on
+/// disk that those entries could not reach.
+///
+/// It is also the only reading that does not depend on how the path was
+/// spelled. `C:\srv\mono.git` and `C:/srv/mono.git` carry a colon and no
+/// scheme, which is otherwise read as an SSH `host:path`; `file:///C:/…`
+/// carries a scheme; `/srv/mono.git` carries neither. All four are one
+/// repository on disk, and the refusal must not turn on which spelling a
+/// `[[registry]]` happens to use (PROP-002 `#offline-local`, PROP-073
+/// `#NATIVE-PREPARATION`).
+fn validates_transport_context(address: &str, windows: bool) -> bool {
+    local_repository_for(address, windows).is_none()
+}
+
 impl NativeGitAdmission {
     // Metadata/address capture never grants use of an SSH credential.
     pub(in crate::git_backend::shell) fn preflight_selected_address(
@@ -307,10 +331,12 @@ impl NativeGitAdmission {
         // retain their existing, separately declared override authority.
         if self.ssh_provider.is_some() && self.selection.is_some() {
             self.preflight_selected_address(address)?;
-            let selected_ssh = address.starts_with("ssh://")
-                || (!address.contains("://") && address.contains(':'));
-            self.capture_context(None)?
-                .validate_warm_transport(selected_ssh, false)?;
+            if validates_transport_context(address, cfg!(windows)) {
+                let selected_ssh = address.starts_with("ssh://")
+                    || (!address.contains("://") && address.contains(':'));
+                self.capture_context(None)?
+                    .validate_warm_transport(selected_ssh, false)?;
+            }
         }
         let remote = self.capture_address(address, reject_https_credentials)?;
         if matches!(remote, AdmittedRemote::Ssh(_))
@@ -326,7 +352,50 @@ impl NativeGitAdmission {
 
 #[cfg(test)]
 mod tests {
-    use super::{LocalRepository, local_repository_for};
+    use super::{LocalRepository, local_repository_for, validates_transport_context};
+
+    #[test]
+    #[specmark::spec(verifies = "spec://org.vibevm.core/vibevm/common/PROP-073#NATIVE-PREPARATION")]
+    fn a_repository_on_disk_needs_no_transport_context_in_any_spelling() {
+        // Every spelling of one mirrored monorepo on a Windows disk. The
+        // bare paths carry a colon and no scheme — read as an SSH
+        // `host:path` anywhere else — and the url carries a scheme; the
+        // refusal must not turn on which one a `[[registry]]` used.
+        for local in [
+            "C:/srv/mono.git",
+            r"C:\srv\mono.git",
+            "file:///C:/srv/mono.git",
+            r"\\fileserver\vibe\mono.git",
+            "//fileserver/vibe/mono.git",
+            "file:///srv/mono.git",
+        ] {
+            assert!(
+                !validates_transport_context(local, true),
+                "windows: {local}"
+            );
+        }
+        // Elsewhere a drive path is not a path at all — and a POSIX
+        // absolute path is not one on Windows, which is why the bare
+        // spelling appears in one list and not the other.
+        for local in ["/srv/mono.git", "file:///srv/mono.git"] {
+            assert!(!validates_transport_context(local, false), "posix: {local}");
+        }
+        // An address that does contact a host keeps its validation, on
+        // either platform: that refusal is the whole point of the check.
+        for remote in [
+            "https://forge.invalid/vibe/mono.git",
+            "http://forge.invalid/vibe/mono.git",
+            "ssh://git@forge.invalid/vibe/mono.git",
+            "git@forge.invalid:vibe/mono.git",
+        ] {
+            for windows in [false, true] {
+                assert!(
+                    validates_transport_context(remote, windows),
+                    "{remote} ({windows})"
+                );
+            }
+        }
+    }
 
     fn disk(address: &str, windows: bool) -> String {
         match local_repository_for(address, windows).unwrap().unwrap() {
