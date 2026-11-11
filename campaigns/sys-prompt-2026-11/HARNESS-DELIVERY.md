@@ -396,7 +396,7 @@ means per-machine or per-day content.
   gating are checkable offline — vibe can run `codex debug prompt-input` in its
   qualification suite when Codex is installed.
 
-### Qwen Code — read; four carriers measured, each closed on a different axis **[V, 2026-11-11]**
+### Qwen Code — **launch** through the identity sentence; four other carriers measured and closed **[V, 2026-11-11]**
 
 **Measured on Qwen Code 0.27.2**, offline against a loopback
 OpenAI-compatible provider that recorded the request body
@@ -586,6 +586,7 @@ it closed.
   | `QWEN_SYSTEM_MD` + `QWEN_WRITE_SYSTEM_MD` | yes, by composition | yes | **no — the replaced base prompt is session-shaped** | **yes** | the wrong copy would swap the harness's instructions (above) |
   | the context-file layer (`context.fileName`, `--include-directories` + `loadFromIncludeDirectories`, a settings file through `QWEN_CODE_SYSTEM_SETTINGS_PATH`) | yes | yes | yes | **no** | `renderSubagentSystemPrompt` passes `contextFiles: runtimeContext.getUserMemory()` to **every** subagent, so a quiet worker would receive the lane — `#SYS-WORKER-EXCLUSION`, and row C5's disqualifying rule |
   | a generated `QWEN.md` | yes | yes | yes | **no** | the same layer as the row above, with a fourth instruction file on top |
+  | **`QWEN_SYSTEM_IDENTITY_MD`** | **yes, by composition** | **yes** | **yes — it replaces one PARAGRAPH, and that paragraph is a function of the interaction mode and the output style alone** | **yes** | **SHIPS — the identity sentence is sampled from the installed program at launch, so nothing is stored and nothing goes stale (above)** |
 
   The context-file layer is the one the owner's second idea names, and it is
   genuinely the best-shaped of the four: additive, file-based, byte-stable,
@@ -597,20 +598,97 @@ it closed.
   axis that is not negotiable: the subagent. A per-launch route to it also
   needs either an ambient settings key or a hijack of the machine-wide
   settings path, both of which decision D3 already refuses.
-- **Therefore `read`, and `launch` is undeliverable — with the two
-  conditions that would open it written down.** `vibe agent qwen` starts Qwen
-  Code unchanged and the router has the agent read the boot files; a project
-  that declares `delivery = "launch"` gets the soft launch of
-  `#SYS-SOFT-LAUNCH` with both slots named, and `vibe prompt flags --harness
-  qwen` refuses while printing what each would have been. **Either** of two
-  changes opens the tier, and both are one constant and one gate arm away:
-  `--append-system-prompt` gaining a file form, which removes the command
-  line from the question entirely; **or** Qwen Code gaining an additive
-  file-based slot, or any way for a launcher to obtain the base prompt
-  variant a launch will actually use without starting a second session. Until
-  then the carrier is measured and reproducible — `live/qwen-capture.sh`'s
-  `carrier` leg — and not wired, because a carrier that may deliver the wrong
-  base prompt has no legitimate caller.
+- **The fifth carrier, found by the parallel investigation the same day, and
+  the one that ships: `QWEN_SYSTEM_IDENTITY_MD` **[V, 2026-11-11]**.** It
+  names a file whose contents replace the base prompt's **first paragraph** —
+  its single identity sentence — and nothing else; upstream pins both halves
+  in its own tests (`prompts.test.ts:614-628` asserts
+  `withOverride.slice(custom.length) === baseline.slice(default.length)`, and
+  `:849-860` that the style section still lands under an override), the
+  resolver is `resolveCoreIdentityOverride` at `prompts.ts:119-153` consumed
+  at `:545` inside `getCoreSystemPrompt`, and a subagent never enters that
+  path (`agents/runtime/agent-core.ts:370-405`). **Why this is clean where
+  `QWEN_SYSTEM_MD` is not** is the whole finding: the base prompt is a
+  function of the session and cannot be had without starting one, but the
+  identity *sentence* is a function of two things — the interaction mode and
+  whether an output style is active — and vibe never stores it. It is
+  **sampled at launch from the installed package's own
+  `getCoreSystemPrompt`**, the way upstream's own test samples it, and every
+  other byte is still built live by Qwen Code for the session it is starting.
+  So no `prompt-bases` set exists for this harness and nothing goes stale.
+  The sampling helper is vibe's own program, carries no word of anyone's
+  prompt, ships in the binary, and runs under the Node Qwen Code itself runs
+  on (`<prefix>/bin/node` beside `<prefix>/lib/node_modules/@qwen-code/
+  qwen-code`, the Windows `<prefix>/node.exe` second, `node` on `PATH` last);
+  the package is checked against its own `package.json` at the version the
+  program reported. It samples, composes
+  `<settings>/agent/qwen/qwen-identity-<mode>[-styled]-<digest>.md`
+  (content-addressed, because a live session re-reads that file on every
+  prompt rebuild and throws when it is gone) and **proves** on that very
+  package that the variable yields the plain prompt with exactly one
+  insertion, gated and ungated tool surface alike — one in-process call, no
+  session, no model, no network. A package that fails it starts softly, and
+  so does an unverified version: one version, not a floor.
+- **Measured offline from the committed tree, through `vibe agent qwen`
+  itself [V, 2026-11-11]** (`live/qwen-identity-prove.sh`: three real
+  sessions, each in its own network namespace under `bwrap --unshare-net`
+  against a loopback provider recording request bodies, each driving one
+  subagent spawn; the 204,845-byte sample lane). **Interactive:** every
+  main-session request is its plain counterpart plus ONE contiguous insertion
+  of 208,787 raw bytes at raw offset **303** (system-message offset 260); the
+  inserted bytes are `AGENT-LANE.md` byte for byte plus one LF; the lane
+  occurs **once**; the first and last marker lines are intact; the tools
+  array and every non-system message and parameter are identical; the seam
+  reads `…utilizing your available tools.\n\n` | `<!-- vibe:lane-begin …`
+  and `…6494d071a30d -->\n\n` | `# Core Mandates`; two consecutive launches
+  are byte-identical for the **whole** request (system message sha
+  `671683cfeed40a34` both times); and all three non-main requests — the
+  general-purpose **subagent**, the security classifier, the memory
+  extractor — are byte-identical to their plain counterparts with **zero**
+  lane canaries and zero marker lines. **Headless:** the same, one insertion
+  at raw offset **306**. Both runs: `VERDICT: PASS`.
+- **Live on the local `qwen3.8-27b` with the tiny sample [V, 2026-11-11]**
+  (`live/qwen-identity-live-check.sh`, through `vibe agent qwen`): the
+  delivered tail marker came back **byte-equal**, **no file was read with a
+  tool**, all four lane canaries plus the entrypoint's were reported, the
+  base-only rule that exists nowhere in the lane — what text inside a
+  `<qwen:user-prompt-submit-context>` tag is, which is the first sentence
+  **after** the seam — came back stated, and asked for its own first sentence
+  the session answered «You are Qwen Code, a non-interactive CLI agent
+  developed by Alibaba Group, specializing in software engineering tasks.»
+- **The soft-launch list, and why each entry is soft rather than a
+  refusal.** `--system-prompt` (replaces the prompt the slot lives in),
+  `--safe-mode` (asks for every customization off, and the lane is one),
+  `--bare` (asks for only what is explicitly on the command line), an active
+  `QWEN_SYSTEM_MD` (the identity slot is then never read, which upstream
+  pins), a foreign `QWEN_SYSTEM_IDENTITY_MD` (something else owns the
+  sentence), and an **unclassifiable** session — a bare word with a terminal
+  is either the prompt (headless) or a subcommand (interactive), and nothing
+  but Qwen Code's own command table decides which. Each is a user asking for
+  something the carrier would contradict, so `conflicting_flags` stays empty
+  for this kind and the launch honours the request while saying what was not
+  delivered. A vibe-owned carrier **inherited** from an outer launch is
+  removed from the child's environment on any launch that delivers nothing;
+  a user's own value is theirs and is passed through.
+- **Residual risks, stated rather than discovered later.** A style configured
+  in `general.outputStyle` is not knowable to a launcher — `--output-style`
+  on the command line is read, `default` means none — so such a session gets
+  the **unstyled** sentence, one clause of one sentence, while the style's
+  own section still lands. The variable is inherited by processes Qwen Code
+  itself starts, exactly as any environment variable is. A container sandbox
+  may drop it, in which case the lane is absent and the router tier below
+  applies. Windows and macOS are **unrun**: both lookups name their layouts
+  and are unit-tested over fixture trees, but no session has been measured.
+  An upstream release is a silent risk by construction, which is what the
+  version gate and the per-launch proof exist for.
+- **`read` remains the floor, and the two conditions that would open the
+  other slots stay written down.** A project that declares `delivery =
+  "read"` gets exactly the shipped 2026-11-11 behaviour above: Qwen Code
+  starts unchanged, the note names the carrier and the closed slots, and the
+  router has the agent read the boot files. `--append-system-prompt` gaining
+  a file form would still remove the command line from the question
+  entirely; a documented way to ask the program for the whole base prompt of
+  the session it is about to start would still open `QWEN_SYSTEM_MD`.
 
 ### Gemini CLI — read; import possible only after the lane is import-inert **[R-nh]**
 
@@ -877,7 +955,7 @@ than vibe's.
 |---|---|---|---|---|
 | Claude Code | yes, file flag (hidden) | yes, caveats | yes | `launch` |
 | Codex | yes, profile file | no | yes | `launch` |
-| Qwen Code | two slots: additive is text-only, file-based **replaces** the base prompt | blocked by C3/C4 | yes | `read` |
+| Qwen Code | yes — one environment path to a file holding Qwen Code's **own** identity sentence, sampled at launch, and then the lane | blocked by C3/C4 | yes | `launch` |
 | Gemini CLI | no | blocked by C3/C4 | yes | `read` |
 | OpenCode | yes — a per-launch primary agent carrying OpenCode's **own** supplied base in front of the lane | no | yes | `launch` |
 | pi | ambient only | no | yes | `read` |
@@ -1132,6 +1210,7 @@ block and its own canaries.
 | X2 | Plain `codex` | Lane read once through the router |
 | X3 | Entrypoint padded past the declared limit, block at the **top** | **DONE offline 2026-11-10** with `codex debug prompt-input`: router present, tail canary absent at the default limit; both present under `-c project_doc_max_bytes=262144`. The original form of this scenario (block at the end) is what motivated moving the block, and is retired |
 | N1 | From the root, make the agent open a file in the nested project | Nested lane not read; root lane not re-read. **PASSED 2026-11-10 [V]**: the agent read only `nested/AGENTS.md`, reported `CANARY-NESTED-TUFF` and not `CANARY-NESTED-LANE-SCORIA`, and ignored the nested block as another project's — as it also did for the `nested/CLAUDE.md` Claude Code auto-loaded beside it |
+| Q2 | Qwen Code in **`launch`** mode through `QWEN_SYSTEM_IDENTITY_MD` | One contiguous insertion; inserted bytes == the lane; seam printed; two launches identical; subagents zero and byte-identical to plain; live tail marker, canaries, no file read, base intact. **Run 2026-11-11, every leg [V].** Offline from the committed tree and through `vibe agent qwen` itself (`live/qwen-identity-prove.sh`, three sessions per shape under `bwrap --unshare-net`, 204,845-byte lane): interactive — ONE insertion of 208,787 raw bytes at raw offset 303 (system offset 260), inserted bytes `AGENT-LANE.md` byte for byte plus one LF, lane exactly once, first and last marker lines intact, tools and every non-system message and parameter identical, two consecutive launches byte-identical for the whole request (system sha `671683cfeed40a34`), and the general-purpose **subagent**, the security classifier and the memory extractor each byte-identical to their plain counterparts with zero lane canaries; headless — the same at raw offset 306; both `VERDICT: PASS`. Live on the local `qwen3.8-27b` with the tiny sample (`live/qwen-identity-live-check.sh`): tail marker byte-equal, no file read with a tool, all four lane canaries plus the entrypoint's, the base-only `<qwen:user-prompt-submit-context>` rule stated, and its own first sentence quoted back as «You are Qwen Code, a non-interactive CLI agent developed by Alibaba Group, specializing in software engineering tasks.» |
 | O1 | Qwen, Gemini CLI, OpenCode, pi, dsh in `read` mode | Lane read once; for dsh, record the doubled entrypoint. **OpenCode run 2026-11-11, two of three legs [V], one not run.** Delivery, offline against a loopback provider: the 204,429-byte lane arrived byte-equal and exactly once through `OPENCODE_CONFIG_CONTENT`, with a control run proving the carrier was what delivered it, and the `<env>` date block **after** the lane rather than before it. The launcher: `vibe agent opencode` resolved the built-in launcher, recomposed the lane, printed the `read` note and the carrier explanation and exec'd real OpenCode 2.2.7, which started and reached model selection. **Live, OpenCode 2.2.7, two models at the owner's instruction.** On `home/gpt-6.1-sol` (512,000-token context): the full **204,429-byte** lane through the carrier came back with the last `vibe:lane-end` byte-equal, all four lane canaries including the tail, the template's absent and **no file read with a tool**; and in `read` mode on the unpadded 2,570-byte sample the agent read `STATIC.md`, `INDEX.md`, `00-core.md`, `90-user.md` in order, **once each**, quoting the block's own format example for the marker line, which is correct in that tier. On `homelocal/qwen3.8-27b` (56,000 tokens, 42,397-byte lane): the same carrier answer; and `read` mode worked only once the prompt had work in it — the one prompt alone, which asks what is in the session's context, it answered literally with zero tool calls. So that leg is a model-strength finding, not a block failure. **Qwen Code run 2026-11-11, every leg [V].** Delivery, offline against a loopback provider inside `bwrap --unshare-net`: the plain run put the managed router block at system-prompt byte 14,046 inside Qwen Code's own `--- Context from: AGENTS.md ---` delimiter with **no lane byte and no lane canary**, which is the shipped tier exactly; the 2,570-byte lane through `--append-system-prompt` arrived byte-equal and exactly once at byte 16,985 with all four lane canaries and the template's absent; and the 202,349-byte lane through the same slot is `E2BIG` at `execve`, errno 7, before the program starts. The **file-based** slot was measured too, on the owner's instruction: `QWEN_WRITE_SYSTEM_MD` dumps Qwen Code's own base prompt, the lane goes after it and `QWEN_SYSTEM_MD` hands the pair back — the request then begins with Qwen Code's own prompt byte-exact, carries the lane exactly once at byte 13,858 and continues byte-identically to the plain run, it is subagent-safe, and live it carried the **whole 202,349-byte lane** with the last marker byte-equal and no file read. It stays closed because the prompt it replaces is session-shaped: 13,856 bytes headless against 18,451 interactive under identical probe flags, and a probe with no terminal is always the headless one. The context-file layer, additive and import-inert for this lane (`@spec://` verbatim, a real `@./path` expanded), reaches every subagent and is out on `#SYS-WORKER-EXCLUSION`. **No per-day text is in the system prompt at all** — the date sits at byte 7,079 of the user turn — so the cache property would have held. The launcher: `vibe agent qwen` resolved the built-in launcher, printed `system prompt: unchanged`, the `read` note and the slot note, passed **no** flag and exec'd real Qwen Code 0.27.2. **Live on `gpt-6.1-sol`:** in `read` mode the one prompt — which forbids reading — got the block's own format example and the entrypoint canary, and a task-shaped prompt got `STATIC.md`, `INDEX.md`, `00-core.md`, `90-user.md` in order, once each, with all four lane canaries; through the slot by hand the last `vibe:lane-end` came back byte-equal. Gemini CLI, pi and dsh were not run |
 | I1 | Only if import is pursued: Claude Code and Gemini CLI with the import block | Lane present once; no attempt to resolve `@spec://`; position and role recorded |
 

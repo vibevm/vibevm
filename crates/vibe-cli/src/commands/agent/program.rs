@@ -175,6 +175,56 @@ pub(crate) fn resolve(program: &str) -> Result<PathBuf> {
     .map_err(|reason| anyhow!(reason))
 }
 
+/// The **file** this machine would start for `program`, on both platforms.
+///
+/// [`resolve`] answers what to *spawn*, and off Windows that is the bare
+/// name: the kernel performs the `PATH` search itself and resolving it there
+/// would hide a `PATH` the child was meant to be looked up in. A caller that
+/// has to look **at** the program rather than start it needs the file — Qwen
+/// Code's launch samples its identity sentence from the npm package the
+/// program lives in (`#SYS-QWEN`) — so this performs the search `exec` would
+/// have performed, and nothing else differs: the same bare-name rule, the
+/// same `PATH` order, the same refusal sentence.
+///
+/// It is **not** a fourth resolver: `resolve` is still the one answer to
+/// "what do we spawn", this is the one answer to "which file is that", and
+/// on Windows the second is the first.
+#[specmark::spec(
+    deviates = "spec://core-ai-native/mechanisms/ENGINE-CONFORM-v0.1#rules",
+    reason = "ambient-env: `PATH` is the fact being asked — which file \
+              WOULD this machine's loader start for this program, at the \
+              moment this launch is about to start it. The resolution \
+              itself is PURE (`locate_in`) over an injected value; this is \
+              the read, exactly as `resolve`'s in the same cell"
+)]
+pub(crate) fn locate(program: &str) -> Result<PathBuf> {
+    if cfg!(windows) {
+        return resolve(program);
+    }
+    locate_in(program, std::env::var_os("PATH").as_deref()).map_err(|reason| anyhow!(reason))
+}
+
+/// Locate `program` against the given `PATH` — PURE, so the law is tested
+/// over injected directories rather than over this machine's own
+/// installation.
+fn locate_in(program: &str, path: Option<&OsStr>) -> std::result::Result<PathBuf, String> {
+    if !is_bare(program) {
+        return Ok(PathBuf::from(program));
+    }
+    for directory in std::env::split_paths(path.unwrap_or(OsStr::new(""))) {
+        if directory.as_os_str().is_empty() {
+            continue;
+        }
+        let candidate = directory.join(program);
+        if candidate.is_file() {
+            return Ok(candidate);
+        }
+    }
+    Err(format!(
+        "program not found: no directory on PATH holds `{program}`"
+    ))
+}
+
 #[cfg(test)]
 mod tests {
     use std::ffi::OsString;
@@ -292,6 +342,29 @@ mod tests {
         assert!(refusal.contains("PATHEXT"), "{refusal}");
         assert!(refusal.contains(".CMD"), "{refusal}");
         assert!(refusal.contains("`claude.cmd`"), "{refusal}");
+    }
+
+    /// Locating a program answers the FILE, which is what a caller that
+    /// must look at the program needs — and it applies the same two rules:
+    /// a path is used as written, and an empty `PATH` entry is not the
+    /// working directory.
+    #[test]
+    fn locating_a_program_answers_the_file_the_loader_would_start() {
+        let home = tempfile::tempdir().unwrap();
+        let (first, second) = (home.path().join("a"), home.path().join("b"));
+        std::fs::create_dir_all(&first).unwrap();
+        std::fs::create_dir_all(&second).unwrap();
+        let shim = file(&first, "qwen");
+        file(&second, "qwen");
+        let path = search(&[&first, &second]);
+
+        assert_eq!(locate_in("qwen", Some(&path)).unwrap(), shim);
+        assert_eq!(
+            locate_in("/opt/qwen/bin/qwen", Some(&path)).unwrap(),
+            PathBuf::from("/opt/qwen/bin/qwen")
+        );
+        let refusal = locate_in("qwen", Some(OsStr::new(""))).expect_err("nothing is installed");
+        assert!(refusal.starts_with("program not found:"), "{refusal}");
     }
 
     /// Off Windows nothing is resolved: `Command::new` searches `PATH`

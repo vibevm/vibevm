@@ -35,13 +35,13 @@ use std::process::Command;
 use anyhow::Result;
 use vibe_app::SettingsRoot;
 use vibe_workspace::system_prompt::{
-    CODEX_VERIFIED_VERSION, CarrierVerdict, HarnessKind, codex_carrier_verdict,
-    qwen_launch_blocker, reported_version,
+    CODEX_VERIFIED_VERSION, CarrierVerdict, HarnessKind, codex_carrier_verdict, reported_version,
 };
 
 use crate::commands::agent::launchers::Launcher;
 
 use super::flags::Undeliverable;
+use super::qwen_identity;
 use super::supplied_base;
 
 /// What the gate decided about one kind's carrier.
@@ -57,7 +57,20 @@ pub(crate) enum Gate {
         /// Sentences the caller prints beside the flags.
         notes: Vec<String>,
         /// The carrier document, for a kind that has one.
-        supplied: Option<supplied_base::Composed>,
+        ///
+        /// Boxed for the reason the field below is: a composition is large,
+        /// this arm may carry one, and the arm that carries none is what
+        /// every refusal path pays for.
+        supplied: Option<Box<supplied_base::Composed>>,
+        /// Qwen Code's composed identity carrier, for the one kind that has
+        /// one. A field of its own rather than a second spelling of
+        /// `supplied`: that is a configuration document, this is a file on
+        /// disk the harness re-reads (`#SYS-QWEN`).
+        ///
+        /// Boxed for the same reason: two compositions inline would make
+        /// this arm several times the size of `Undeliverable`, which every
+        /// caller pays for on the path that delivers nothing.
+        qwen: Option<Box<qwen_identity::Composed>>,
     },
     /// The carrier's precondition failed, so it must not be delivered.
     Undeliverable(Undeliverable),
@@ -100,16 +113,13 @@ pub(crate) fn gate(
         // asks that version's own `PROVENANCE.toml` whether its set has
         // been proved (`#SYS-SUPPLIED-BASE`).
         HarnessKind::OpenCode => return opencode(launcher, request),
-        HarnessKind::Qwen => {
-            return Ok(Gate::Undeliverable(Undeliverable::hard(
-                qwen_launch_blocker(),
-                "declare `[system_prompt.harness.qwen] delivery = \"read\"`, which is already \
-                 this harness's default, and let the managed block's router have the agent read \
-                 the boot files — Qwen Code reads `AGENTS.md` itself, so the block arrives \
-                 without a flag"
-                    .to_owned(),
-            )));
-        }
+        // **Gated on the installed version and then on the installed
+        // program's own answer.** Which identity sentence a launch must
+        // carry is a fact about the session Qwen Code is about to start, so
+        // the gate asks the program what version it is and then has vibe's
+        // helper sample and prove the sentence against that very package
+        // (`#SYS-QWEN`).
+        HarnessKind::Qwen => return qwen(launcher, request),
         HarnessKind::Codex => {}
     }
     let name = launcher.map_or(kind.as_str(), |launcher| launcher.name.as_str());
@@ -159,6 +169,7 @@ impl Gate {
         Gate::Deliver {
             notes: Vec::new(),
             supplied: None,
+            qwen: None,
         }
     }
 
@@ -167,8 +178,78 @@ impl Gate {
         Gate::Deliver {
             notes: vec![note],
             supplied: None,
+            qwen: None,
         }
     }
+}
+
+/// Gate Qwen Code's identity carrier: ask the installed program which
+/// version it is, then have vibe's helper sample that package's own identity
+/// sentence and prove the insertion on it.
+///
+/// **An unknown version is a refusal here, as it is for OpenCode and unlike
+/// Codex.** The carrier replaces a paragraph of the harness's own prompt; a
+/// version that replaced more than that paragraph, or stopped reading the
+/// variable, costs the harness's instructions or the lane **silently**, and
+/// there is no version-shaped guess that is safe to make (`#SYS-QWEN`).
+fn qwen(launcher: Option<&Launcher>, request: &GateRequest<'_>) -> Result<Gate> {
+    let name = launcher.map_or(HarnessKind::Qwen.as_str(), |launcher| {
+        launcher.name.as_str()
+    });
+    let unknown = |reason: String| {
+        Gate::Undeliverable(Undeliverable::hard(
+            format!(
+                "vibe could not learn which Qwen Code this launch would start ({reason}), and \
+                 the identity sentence it must carry is sampled from the installed program \
+                 itself, so nothing can be composed — and a sentence from the wrong version \
+                 would misdescribe the session to the model with no error anywhere"
+            ),
+            format!(
+                "say which version it is with `[launchers.{name}] harness_version = \"<the \
+                 number `qwen --version` prints>\"`, or declare \
+                 `[system_prompt.harness.qwen] delivery = \"read\"` and let the managed block's \
+                 router have the agent read the boot files"
+            ),
+        ))
+    };
+    let reported = match declared_or_probed_for(HarnessKind::Qwen, launcher) {
+        Declared::Stated(version) | Declared::Probed(version) => version,
+        Declared::Unreachable(reason) => return Ok(unknown(reason)),
+    };
+    let Some(version) = reported_version(&reported) else {
+        return Ok(unknown(format!(
+            "`{}` carries no version number",
+            reported.trim()
+        )));
+    };
+    let command = program_argv(HarnessKind::Qwen, launcher);
+    let Some((program, _standing)) = command.split_first() else {
+        return Ok(unknown("its `command` is an empty argv prefix".to_owned()));
+    };
+    // **Located rather than resolved**: this carrier needs the program's own
+    // file, because the identity sentence is sampled from the npm package it
+    // lives in (`#SYS-HARNESS-EXECUTABLE`, `#SYS-QWEN`).
+    let resolved = match crate::commands::agent::program::locate(program) {
+        Ok(resolved) => resolved,
+        Err(error) => return Ok(unknown(format!("`{program}`: {error}"))),
+    };
+    Ok(
+        match qwen_identity::carrier(&qwen_identity::Request {
+            settings: request.settings,
+            harness_version: &version,
+            program: &resolved,
+            project_root: request.project_root,
+            launch_args: request.launch_args,
+            lane: request.lane,
+        }) {
+            Ok(composed) => Gate::Deliver {
+                notes: vec![qwen_identity::note(&composed)],
+                supplied: None,
+                qwen: Some(Box::new(composed)),
+            },
+            Err(undeliverable) => Gate::Undeliverable(undeliverable),
+        },
+    )
 }
 
 /// Gate OpenCode's carrier: ask the installed program which version it is,
@@ -233,7 +314,8 @@ fn opencode(launcher: Option<&Launcher>, request: &GateRequest<'_>) -> Result<Ga
         }) {
             Ok(composed) => Gate::Deliver {
                 notes: vec![supplied_base::note(&composed)],
-                supplied: Some(composed),
+                supplied: Some(Box::new(composed)),
+                qwen: None,
             },
             Err(undeliverable) => Gate::Undeliverable(undeliverable),
         },

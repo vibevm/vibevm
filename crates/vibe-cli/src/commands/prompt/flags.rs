@@ -57,6 +57,25 @@ pub(crate) fn run(ctx: &output::Context, selected: &Selected, harness: &str) -> 
         }
         None => composed.flags,
     };
+    // **The one answer whose correctness depends on the session the reader
+    // goes on to start.** Qwen Code's carrier holds the identity sentence
+    // for one session shape, and this command classified the shape of
+    // *itself* — its own arguments and its own terminal — because there is
+    // no launch here to classify. `vibe agent qwen` classifies the session
+    // it is about to start, so the one thing a reader must know is that
+    // these two can differ (`#SYS-QWEN`).
+    let mut composed = composed;
+    if kind == HarnessKind::Qwen && !composed.env.is_empty() {
+        composed.notes.push(
+            "this assignment names the file composed for the session shape THIS command has \
+             — its own arguments and its own terminal — because printing starts no session \
+             to classify. `vibe agent qwen` classifies the session it is about to start and \
+             composes the matching file; pairing this one with a differently shaped session \
+             hands Qwen Code an identity sentence that misdescribes it, which is why the \
+             launcher exists"
+                .to_owned(),
+        );
+    }
     let report = wire::PromptFlagsReport {
         protocol: PROTOCOL.to_owned(),
         node: selected.node_rel.clone(),
@@ -246,6 +265,7 @@ pub(crate) fn compose(
                     lane_bytes: "",
                     codex_limit: 0,
                     supplied: None,
+                    qwen: None,
                 },
             ),
             undeliverable: None,
@@ -286,8 +306,12 @@ pub(crate) fn compose(
             launch_args,
         },
     )?;
-    let (notes, supplied) = match gate {
-        super::harness_version::Gate::Deliver { notes, supplied } => (notes, supplied),
+    let (notes, supplied, qwen) = match gate {
+        super::harness_version::Gate::Deliver {
+            notes,
+            supplied,
+            qwen,
+        } => (notes, supplied, qwen),
         super::harness_version::Gate::Undeliverable(undeliverable) => {
             return Ok(Composed {
                 flags: LaunchFlags::default(),
@@ -304,6 +328,7 @@ pub(crate) fn compose(
             lane_bytes: &bytes,
             codex_limit: limit,
             supplied: supplied.as_ref().map(|composed| &composed.document),
+            qwen: qwen.as_ref().map(|composed| &composed.carrier),
         },
     );
     flags.notes.extend(notes);

@@ -25,6 +25,7 @@ use std::path::Path;
 
 use vibe_core::manifest::{HarnessDelivery, HarnessTable, Manifest};
 
+use super::qwen::QwenCarrier;
 use super::supplied_base::CarrierDocument;
 
 #[path = "harness/notes.rs"]
@@ -32,17 +33,19 @@ mod notes;
 use notes::no_slot_note;
 pub use notes::{
     OPENCODE_MEASURED_VERSION, QWEN_MEASURED_VERSION, opencode_carrier_description,
-    qwen_launch_blocker,
+    qwen_carrier_description, qwen_closed_slots,
 };
 
 /// The closed set of harness kinds this version has a flag dialect for.
 ///
-/// **Membership is not a launch tier.** A kind is here when vibe knows its
-/// dialect well enough to answer "what does a launch of this pass", and for
-/// `opencode` and `qwen` that answer is "nothing, and here is why" — which
-/// is an answer worth having, because without the kind `vibe agent
-/// opencode` would not exist and `[system_prompt.harness.opencode]` could
-/// not be declared (`#SYS-OPENCODE`, `#SYS-QWEN`).
+/// **Membership is not a launch tier**, and each of these four happens to
+/// have one. A kind is here when vibe knows its dialect well enough to
+/// answer "what does a launch of this pass" — and for the two harnesses
+/// whose only subagent-safe slot *replaces* rather than adds, that answer
+/// required vibe to supply the replaced text itself: OpenCode's whole base
+/// prompt from versioned data, and Qwen Code's one identity sentence sampled
+/// from the installed program at launch (`#SYS-OPENCODE`, `#SYS-QWEN`,
+/// `#SYS-SUPPLIED-BASE`).
 ///
 /// ```
 /// use vibe_workspace::system_prompt::HarnessKind;
@@ -65,9 +68,10 @@ pub enum HarnessKind {
     /// primary agent, whose `system` is OpenCode's **own** base followed by
     /// the lane (`#SYS-OPENCODE`, `#SYS-SUPPLIED-BASE`).
     OpenCode,
-    /// Qwen Code — a launcher and a dialect, but **no deliverable slot**:
-    /// its one additive carrier takes the instructions as text on the
-    /// command line, where a lane does not fit (`#SYS-QWEN`).
+    /// Qwen Code — `QWEN_SYSTEM_IDENTITY_MD`, a file that replaces the
+    /// base prompt's **first paragraph** and nothing else, carrying Qwen
+    /// Code's own identity sentence for this launch and then the lane
+    /// (`#SYS-QWEN`).
     Qwen,
 }
 
@@ -117,10 +121,16 @@ impl HarnessKind {
             // boot lane and nothing says so, which is the same silence
             // every other entry here guards (`#SYS-OPENCODE`).
             HarnessKind::OpenCode => &["--agent"],
-            // Nothing: vibe passes this kind no flag under any delivery, so
-            // nothing of the user's could be a second one beside ours. Qwen
-            // Code's `--append-system-prompt` and `--system-prompt` are a
-            // user's own business here for exactly that reason.
+            // **Nothing, although this kind now delivers.** vibe passes
+            // Qwen Code no flag at all — its carrier is one environment
+            // path — so a flag of the user's own is never a *second* one
+            // beside ours. The arguments that would defeat the carrier
+            // (`--system-prompt`, `--safe-mode`, `--bare`) are handled the
+            // other way round, as **soft-launch** preconditions rather than
+            // refusals: each is a user asking Qwen Code for something the
+            // carrier would contradict, and honouring the request while
+            // saying what was not delivered beats refusing to start their
+            // session (`#SYS-QWEN`, `#SYS-SOFT-LAUNCH`).
             HarnessKind::Qwen => &[],
         }
     }
@@ -136,9 +146,11 @@ impl HarnessKind {
     pub fn base_package(self) -> Option<(&'static str, &'static str)> {
         match self {
             HarnessKind::OpenCode => Some(("org.vibevm.opencode", "opencode")),
-            // Claude Code and Codex have additive slots and need no base;
+            // Claude Code and Codex have additive slots and need no base.
             // Qwen Code's base is a function of the session rather than of
-            // the version, so no set of its own can be recorded yet
+            // the version and so could never be recorded as data — which is
+            // exactly why its carrier replaces one *sentence* and samples
+            // that sentence from the installed program instead
             // (`#SYS-QWEN`).
             HarnessKind::Claude | HarnessKind::Codex | HarnessKind::Qwen => None,
         }
@@ -234,6 +246,14 @@ pub struct LaunchInputs<'a> {
     /// refused, and the caller's gate has already turned that into a soft
     /// launch (`#SYS-SUPPLIED-BASE`, `#SYS-SOFT-LAUNCH`).
     pub supplied: Option<&'a CarrierDocument>,
+    /// Qwen Code's composed identity carrier, when one could be composed
+    /// for this launch. A separate field from `supplied` and not a second
+    /// spelling of it: that one is a configuration *document* with a base
+    /// prompt inside it, and this one is a **file on disk** the harness
+    /// re-reads on every prompt rebuild, so the two carry different facts
+    /// and a launch that confused them would pass a document where a path
+    /// belongs (`#SYS-QWEN`).
+    pub qwen: Option<&'a QwenCarrier>,
 }
 
 /// Compose one kind's launch flags.
@@ -334,16 +354,30 @@ pub fn launch_flags(
                 profile: None,
             },
         },
-        // **No flags, and the note says what the slot would have been.** A
-        // caller that reaches here declared `launch` for a kind whose slot
-        // vibe will not use; the composition still answers, and the carrier
-        // gate above it turns the answer into a soft launch or a refusal
-        // (`#SYS-QWEN`, `#SYS-SOFT-LAUNCH`).
-        HarnessKind::Qwen => LaunchFlags {
-            flags: Vec::new(),
-            env: Vec::new(),
-            notes: no_slot_note(kind, inputs.lane).into_iter().collect(),
-            profile: None,
+        // **The carrier is an environment path and there are no flags at
+        // all.** Qwen Code reads the variable on its own prompt path, so
+        // nothing has to be passed to make it reachable — which is why this
+        // kind's `conflicting_flags` is empty even under `launch`.
+        HarnessKind::Qwen => match inputs.qwen {
+            Some(carrier) => LaunchFlags {
+                flags: Vec::new(),
+                env: vec![EnvAssignment {
+                    name: carrier.env.clone(),
+                    value: carrier.path.display().to_string(),
+                }],
+                notes: vec![super::qwen::qwen_carrier_note(carrier, inputs.lane)],
+                profile: None,
+            },
+            // A caller that reaches here declared `launch` and the
+            // composition refused; the gate above it has already turned
+            // that into a soft launch or a refusal naming which it was
+            // (`#SYS-QWEN`, `#SYS-SOFT-LAUNCH`).
+            None => LaunchFlags {
+                flags: Vec::new(),
+                env: Vec::new(),
+                notes: no_slot_note(kind, inputs.lane).into_iter().collect(),
+                profile: None,
+            },
         },
     }
 }

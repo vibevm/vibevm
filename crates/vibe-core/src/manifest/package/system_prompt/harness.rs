@@ -58,19 +58,24 @@ impl HarnessTable {
 
     /// The declared delivery of one harness by name, or its default.
     ///
-    /// The default is `launch` for the three harnesses whose lane vibe can
-    /// deliver — the two with a file-based instruction slot, and OpenCode,
-    /// whose per-launch agent carries the harness's own supplied base in
-    /// front of the lane — and `read` for every other. It is safe before any
-    /// live run either way: a project in `launch` mode started *plain* has
-    /// no lane markers in context and the router block has the agent read
+    /// The default is `launch` for every harness whose lane vibe can
+    /// deliver — the two with an additive file-based instruction slot,
+    /// OpenCode, whose per-launch agent carries the harness's own supplied
+    /// base in front of the lane, and Qwen Code, whose per-launch file
+    /// carries the harness's own identity sentence in front of it — and
+    /// `read` for every other name, which is every harness this version has
+    /// no dialect for. It is safe before any live run either way: a project
+    /// in `launch` mode started *plain* has no lane markers in context and
+    /// the router block has the agent read
     /// the files, so one byte-identical block serves both tiers and a
     /// project can never contradict itself (PROP-076
     /// `#SYS-HARNESS-DELIVERY`, decision D1). A `launch` default is also
-    /// safe on a machine with no verified prompt-base set for the installed
-    /// OpenCode: the carrier gate refuses and the launch is soft, which is
-    /// the classic boot behind one loud warning (`#SYS-SOFT-LAUNCH`,
-    /// `#SYS-SUPPLIED-BASE`).
+    /// safe on a machine whose installed harness is a version the carrier
+    /// was not measured on — no verified prompt-base set for the installed
+    /// OpenCode, or a Qwen Code other than the one version its identity
+    /// carrier was proved against: the carrier gate refuses and the launch
+    /// is soft, which is the classic boot behind one loud warning
+    /// (`#SYS-SOFT-LAUNCH`, `#SYS-SUPPLIED-BASE`, `#SYS-QWEN`).
     ///
     /// ```
     /// use vibe_core::manifest::{HarnessDelivery, SystemPromptSection};
@@ -79,7 +84,7 @@ impl HarnessTable {
     /// assert_eq!(absent.harness.delivery("claude"), HarnessDelivery::Launch);
     /// assert_eq!(absent.harness.delivery("codex"), HarnessDelivery::Launch);
     /// assert_eq!(absent.harness.delivery("opencode"), HarnessDelivery::Launch);
-    /// assert_eq!(absent.harness.delivery("qwen"), HarnessDelivery::Read);
+    /// assert_eq!(absent.harness.delivery("qwen"), HarnessDelivery::Launch);
     /// assert_eq!(absent.harness.delivery("gemini"), HarnessDelivery::Read);
     ///
     /// let read: SystemPromptSection =
@@ -99,7 +104,7 @@ impl HarnessTable {
             _ => None,
         };
         declared.unwrap_or(match harness {
-            "claude" | "codex" | "opencode" => HarnessDelivery::Launch,
+            "claude" | "codex" | "opencode" | "qwen" => HarnessDelivery::Launch,
             _ => HarnessDelivery::Read,
         })
     }
@@ -164,34 +169,39 @@ pub struct OpenCodeHarness {
 
 /// `[system_prompt.harness.qwen]`.
 ///
-/// Qwen Code's one additive per-launch slot is `--append-system-prompt`,
-/// and it takes **text on the command line**. There is no file variant and
-/// no additive settings or environment key beside it, so a real lane — ten
-/// to a hundred times the 128 KiB a single argument may be — cannot go
-/// through it: the launch fails before the program starts. So `read` is
-/// this harness's default and a declared `launch` delivers nothing — `vibe
-/// agent` starts Qwen Code softly with the reason, and `vibe prompt flags`
-/// refuses (`PROP-076#SYS-QWEN`).
+/// **The carrier replaces one paragraph.** `QWEN_SYSTEM_IDENTITY_MD` names
+/// a file whose contents replace the base prompt's **first paragraph** — its
+/// single identity sentence — and nothing else, which upstream's own tests
+/// pin. So a launch writes Qwen Code's own identity sentence for the session
+/// it is about to start, a blank line and the lane into one file and names
+/// it in that variable; Qwen Code builds every other byte of the prompt
+/// itself, live, and a subagent never enters that path. `launch` is this
+/// harness's default (`PROP-076#SYS-QWEN`).
 ///
-/// **Worker exclusion is not what closes this tier**, which is the one way
-/// it differs from `opencode`: an ordinary Qwen Code subagent is rendered
-/// from its own definition and never receives the append text, so the slot
-/// would be worker-safe if it could carry the bytes. The key exists so a
-/// project can *declare* the tier it wants the day Qwen Code takes those
-/// bytes from a file, and so the declaration is refused by name rather than
-/// ignored.
+/// The sentence is **sampled, never stored**: a launch calls the installed
+/// package's own prompt builder for it, so nothing of another program's
+/// wording lives in vibe and nothing goes stale at an upgrade. Its other two
+/// slots stay closed — `--append-system-prompt` takes the instructions as
+/// text on a command line, where no lane byte of this project may go, and
+/// `QWEN_SYSTEM_MD` replaces the whole base prompt, which is a function of
+/// the session rather than of the version.
+///
+/// `read` is the setting for a project that wants the router to do the work
+/// anyway. It is also what a machine whose Qwen Code is a version the
+/// carrier was not measured on gets in effect: the gate refuses and the
+/// launch is soft behind one loud warning naming the reason.
 ///
 /// ```
 /// use vibe_core::manifest::{HarnessDelivery, QwenHarness};
 ///
-/// let declared: QwenHarness = toml::from_str("delivery = \"launch\"\n")?;
-/// assert_eq!(declared.delivery, Some(HarnessDelivery::Launch));
+/// let declared: QwenHarness = toml::from_str("delivery = \"read\"\n")?;
+/// assert_eq!(declared.delivery, Some(HarnessDelivery::Read));
 /// # Ok::<(), toml::de::Error>(())
 /// ```
 #[derive(Debug, Clone, Default, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
 pub struct QwenHarness {
-    /// How the lane reaches this harness. Absent means `read`.
+    /// How the lane reaches this harness. Absent means `launch`.
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub delivery: Option<HarnessDelivery>,
 }

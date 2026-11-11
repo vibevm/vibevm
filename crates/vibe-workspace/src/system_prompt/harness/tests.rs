@@ -4,10 +4,11 @@ specmark::scope!(
     r = 1
 );
 
-use std::path::Path;
+use std::path::{Path, PathBuf};
 
 use vibe_core::manifest::HarnessDelivery;
 
+use super::super::qwen::{QwenCarrier, QwenMode};
 use super::*;
 
 const LANE: &str = "<!-- lane -->\n\"quoted\"\tand \\ a backslash\n";
@@ -21,6 +22,21 @@ fn inputs<'a>(supplied: Option<&'a CarrierDocument>) -> LaunchInputs<'a> {
         lane_bytes: LANE,
         codex_limit: 32 * 1024,
         supplied,
+        qwen: None,
+    }
+}
+
+/// A composed identity carrier shaped like the one a Qwen Code launch hands
+/// over: a file in vibe's settings tree, named by its own bytes.
+fn identity_carrier() -> QwenCarrier {
+    QwenCarrier {
+        env: "QWEN_SYSTEM_IDENTITY_MD".to_owned(),
+        path: PathBuf::from("/h/.vibe/agent/qwen/qwen-identity-interactive-0123456789abcdef.md"),
+        mode: QwenMode::Interactive,
+        styled: false,
+        identity_bytes: 211,
+        carrier_bytes: 202_562,
+        version: QWEN_MEASURED_VERSION.to_owned(),
     }
 }
 
@@ -77,6 +93,7 @@ fn codex_takes_the_profile_and_the_declared_doc_limit() {
             lane_bytes: LANE,
             codex_limit: 262_144,
             supplied: None,
+            qwen: None,
         },
     );
     assert_eq!(
@@ -225,54 +242,99 @@ fn only_a_harness_whose_slot_replaces_its_prompt_names_a_base_package() {
 }
 
 #[test]
-fn qwen_passes_no_flag_under_either_delivery_and_names_its_slot() {
-    // **The slot exists, and the note names it rather than denying it.**
-    // What closes the tier is that `--append-system-prompt` takes the
-    // instructions as text on a command line, where a lane does not fit
-    // (`#SYS-QWEN`).
+fn qwen_delivers_one_environment_path_and_never_a_flag() {
+    // **The carrier is an environment path and there are no flags at all.**
+    // Qwen Code reads the variable on its own prompt path, so nothing has to
+    // be passed to make it reachable — which is also why this kind's
+    // `conflicting_flags` is empty even under `launch` (`#SYS-QWEN`).
+    let carrier = identity_carrier();
+    let answer = launch_flags(
+        HarnessKind::Qwen,
+        HarnessDelivery::Launch,
+        &LaunchInputs {
+            qwen: Some(&carrier),
+            ..inputs(None)
+        },
+    );
+    assert!(answer.flags.is_empty());
+    assert!(answer.profile.is_none());
+    assert_eq!(
+        answer.env,
+        [EnvAssignment {
+            name: "QWEN_SYSTEM_IDENTITY_MD".to_owned(),
+            value: "/h/.vibe/agent/qwen/qwen-identity-interactive-0123456789abcdef.md".to_owned(),
+        }]
+    );
+    let said = answer.notes.join(" ");
+    // The value is a PATH, and the note says which file and what is in it.
+    assert!(said.contains("QWEN_SYSTEM_IDENTITY_MD"), "{said}");
+    assert!(said.contains("FIRST PARAGRAPH"), "{said}");
+    assert!(said.contains("sampled at this launch"), "{said}");
+    assert!(said.contains(LANE_PATH), "{said}");
+    // And never the lane's own bytes.
+    assert!(!said.contains("<!-- lane -->"), "{said}");
+}
+
+#[test]
+fn qwen_names_its_carrier_and_its_closed_slots_under_either_delivery() {
+    // **Printed under both deliveries**, because the question it answers —
+    // where would this harness's lane have gone — does not depend on the
+    // tier the project declared. With no composed carrier (a `read`
+    // project, or a `launch` the gate refused) there is no assignment and
+    // the note is the whole answer.
     for delivery in [HarnessDelivery::Read, HarnessDelivery::Launch] {
         let answer = flags(HarnessKind::Qwen, delivery);
         assert!(answer.flags.is_empty(), "{delivery:?}");
+        assert!(answer.env.is_empty(), "{delivery:?}");
         assert!(answer.profile.is_none(), "{delivery:?}");
         let said = answer.notes.join(" ");
+        assert!(said.contains("QWEN_SYSTEM_IDENTITY_MD"), "{said}");
         assert!(said.contains("--append-system-prompt"), "{said}");
         assert!(said.contains("QWEN_SYSTEM_MD"), "{said}");
         assert!(said.contains("128 KiB"), "{said}");
         assert!(said.contains(QWEN_MEASURED_VERSION), "{said}");
-        // The argument is shown with the lane's PATH inside a `cat`, which
-        // is what makes "the lane's own bytes on the command line" legible
-        // — and the lane's bytes themselves are never in the note.
-        assert!(
-            said.contains("/w/vibevm/vibespecs/boot/AGENT-LANE.md"),
-            "{said}"
-        );
+        assert!(said.contains(LANE_PATH), "{said}");
         assert!(!said.contains("<!-- lane -->"), "{said}");
     }
 }
 
 #[test]
-fn the_qwen_blocker_names_both_slots_and_what_closes_each() {
+fn the_qwen_carrier_description_names_the_slot_and_why_it_is_clean() {
+    let said = qwen_carrier_description();
+    assert!(said.contains("QWEN_SYSTEM_IDENTITY_MD"), "{said}");
+    // The two properties that make it admissible where `QWEN_SYSTEM_MD` was
+    // not: it replaces one paragraph, and the sentence is sampled rather
+    // than stored.
+    assert!(said.contains("FIRST PARAGRAPH"), "{said}");
+    assert!(said.contains("never stored"), "{said}");
+    assert!(said.contains("getCoreSystemPrompt"), "{said}");
+    assert!(said.contains("INSTALLED"), "{said}");
+    // No lane byte on a command line or in an environment value, which is
+    // the standing rule rather than this kind's own.
+    assert!(said.contains("command line"), "{said}");
+    assert!(said.contains("subagent"), "{said}");
+    assert!(said.contains(QWEN_MEASURED_VERSION), "{said}");
+}
+
+#[test]
+fn the_qwen_closed_slots_name_both_and_what_closes_each() {
     // **Two slots, two different reasons, and the sentence carries both.**
     // Stopping at the additive one would leave a reader believing Qwen Code
     // has no file-based slot, which is false and is the more interesting
     // half: it exists, it is subagent-safe, and what closes it is that it
     // REPLACES a prompt whose bytes depend on the session (`#SYS-QWEN`).
-    let blocker = qwen_launch_blocker();
+    let closed = qwen_closed_slots();
     // Worker exclusion is satisfied here, unlike `opencode` — said out loud
     // so a reader does not carry that kind's conclusion over.
-    assert!(
-        blocker.contains("worker exclusion is satisfied"),
-        "{blocker}"
-    );
-    assert!(blocker.contains("E2BIG"), "{blocker}");
-    assert!(blocker.contains("202,349"), "{blocker}");
-    assert!(blocker.contains("QWEN_SYSTEM_MD"), "{blocker}");
-    assert!(blocker.contains("QWEN_WRITE_SYSTEM_MD"), "{blocker}");
-    // The measurement that closes the file-based slot: one prompt, two
+    assert!(closed.contains("worker exclusion is satisfied"), "{closed}");
+    assert!(closed.contains("E2BIG"), "{closed}");
+    assert!(closed.contains("202,349"), "{closed}");
+    assert!(closed.contains("QWEN_SYSTEM_MD"), "{closed}");
+    // The measurement that closes the whole-prompt slot: one prompt, two
     // sizes, decided by something a launcher cannot observe.
-    assert!(blocker.contains("13,856"), "{blocker}");
-    assert!(blocker.contains("18,451"), "{blocker}");
-    assert!(blocker.contains(QWEN_MEASURED_VERSION), "{blocker}");
+    assert!(closed.contains("13,856"), "{closed}");
+    assert!(closed.contains("18,451"), "{closed}");
+    assert!(closed.contains(QWEN_MEASURED_VERSION), "{closed}");
 }
 
 #[test]
@@ -362,22 +424,19 @@ fn a_node_with_no_system_prompt_table_takes_each_kinds_own_default() {
     // the two file-slot harnesses, and wrong the moment it did not: `qwen`
     // would have read `launch` from a project that declared nothing at all.
     // `opencode` joined the `launch` side on 2026-11-11, once its supplied
-    // base earned `verified` by the whole-request proof — and a machine with
-    // no verified set for its installed OpenCode soft-launches, so the
-    // default costs nothing where the data is absent (`#SYS-SUPPLIED-BASE`,
-    // `#SYS-SOFT-LAUNCH`).
+    // base earned `verified` by the whole-request proof, and `qwen` the same
+    // day once its identity carrier was measured — and a machine whose
+    // installed harness is another version soft-launches, so the default
+    // costs nothing where the carrier cannot be proved
+    // (`#SYS-SUPPLIED-BASE`, `#SYS-QWEN`, `#SYS-SOFT-LAUNCH`). The per-kind
+    // function stays, because the next kind may well not have a tier.
     let manifest = vibe_core::manifest::Manifest::default();
     assert!(manifest.system_prompt.is_none());
-    for kind in [
-        HarnessKind::Claude,
-        HarnessKind::Codex,
-        HarnessKind::OpenCode,
-    ] {
+    for kind in HarnessKind::ALL {
         assert_eq!(
             kind.delivery(&manifest),
             HarnessDelivery::Launch,
             "{kind:?}"
         );
     }
-    assert_eq!(HarnessKind::Qwen.delivery(&manifest), HarnessDelivery::Read);
 }

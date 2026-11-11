@@ -72,6 +72,8 @@ mod plan;
 mod prepare;
 #[path = "system_prompt/publish.rs"]
 mod publish;
+#[path = "system_prompt/qwen.rs"]
+mod qwen;
 #[path = "system_prompt/reader.rs"]
 mod reader;
 #[path = "system_prompt/verify.rs"]
@@ -97,7 +99,8 @@ pub use supplied_base::{
 pub use harness::{
     CODEX_VERIFIED_VERSION, CarrierVerdict, CodexProfile, EnvAssignment, HarnessKind, LaunchFlags,
     LaunchInputs, OPENCODE_MEASURED_VERSION, QWEN_MEASURED_VERSION, codex_carrier_verdict,
-    launch_flags, opencode_carrier_description, qwen_launch_blocker, reported_version,
+    launch_flags, opencode_carrier_description, qwen_carrier_description, qwen_closed_slots,
+    reported_version,
 };
 pub use lane::{ComposedLane, LaneSegment, LaneSource, compose_agent_lane};
 pub use markers::{
@@ -110,6 +113,11 @@ pub use prepare::{PreparedBand, PreparedRequest, UnresolvedRow, prepare_request}
 pub use publish::{BOOT_IGNORE_BODY, LaneBodyReader};
 pub(crate) use publish::{
     PromptPublication, PromptPublishRequest, bound_lane_reader, prepare_publication,
+};
+pub use qwen::{
+    QWEN_CARRIER_DIR, QWEN_IDENTITY_ENV, QWEN_SYSTEM_MD_ENV, QWEN_VERIFIED_VERSION, QwenAmbient,
+    QwenCarrier, QwenMode, QwenSession, qwen_carrier_is_ours, qwen_carrier_note,
+    qwen_carrier_prefix, qwen_mode, qwen_precondition, qwen_styled,
 };
 pub use reader::PrefixReader;
 pub(crate) use reader::bound_reader;

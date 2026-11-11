@@ -391,7 +391,7 @@ that a harness's downward discovery would also read is `vibe check`'s
 | Claude Code | yes — `--append-system-prompt-file`, plus `--exclude-dynamic-system-prompt-sections` | yes | `launch` |
 | Codex | yes — `developer_instructions` at the **top level** of a launch-time profile file | yes | `launch` |
 | OpenCode | yes — one per-launch configuration layer declaring vibe's own primary agent, with OpenCode's **own** base prompt in front of the lane (see below) | yes | `launch` |
-| Qwen Code | the slot works and takes **text**, so a lane does not fit — see below | yes | `read` |
+| Qwen Code | yes — one environment path to a file holding Qwen Code's **own** identity sentence, sampled from the installed program at launch, and then the lane (see below) | yes | `launch` |
 | Gemini CLI, pi, dsh | no file-based slot known | yes | `read` |
 
 The Gemini CLI, pi and dsh rows are **research, not measured here**: those
@@ -527,10 +527,31 @@ interactive terminal UI — an agent cannot drive it, so every session was
 
 ### Qwen Code
 
-`vibe agent qwen` works, and it passes nothing. The kind exists so the
-launcher exists, so `[system_prompt.harness.qwen]` can be declared rather
-than refused as an unknown field, and so `vibe prompt flags --harness qwen`
-can tell you what it would have passed and why it does not.
+`vibe agent qwen` delivers the lane, and it passes **no flag at all**. The
+whole carrier is one environment variable:
+
+```
+QWEN_SYSTEM_IDENTITY_MD=<your settings>/agent/qwen/qwen-identity-<shape>-<digest>.md
+```
+
+That variable replaces the base prompt's **first paragraph** — its single
+identity sentence — and nothing else. So the file vibe writes is Qwen Code's
+**own** identity sentence, a blank line, and your lane; Qwen Code then builds
+every other byte of the prompt itself, live, for the session it is actually
+starting. Measured on **Qwen Code 0.27.2**: the request is a plain request
+with exactly one insertion in it, the inserted bytes are `AGENT-LANE.md` byte
+for byte, and a subagent receives **none** of it.
+
+**vibe stores no part of Qwen Code's prompt.** The identity sentence is
+*sampled at launch* from the installed program's own prompt builder, the way
+Qwen Code's own test suite samples it. That is the difference between this
+carrier and the one below, and it is why there is no `prompt-bases` package
+for this harness and nothing to re-record at an upgrade. A small helper of
+vibe's — shipped inside the binary, carrying no word of anyone's prompt — is
+written into your settings tree and run under the Node that Qwen Code itself
+runs on; it samples the sentence, composes the file, and then **proves on
+that same installed package** that the variable yields the plain prompt with
+one insertion and nothing else. It calls no model and starts no session.
 
 **You need no new file.** Qwen Code reads `QWEN.md` and `AGENTS.md` — both,
 together — and `AGENTS.md` is already one of the three files vibe writes the
@@ -539,76 +560,91 @@ installed vibe before this harness was a kind, with nothing to change. vibe
 does **not** write a `QWEN.md`: the same block under both names would arrive
 twice and you would pay for it twice.
 
-**The slot was found and measured.** `--append-system-prompt` is per-launch,
-additive, and lands in a good place: measured on **Qwen Code 0.27.2** against
-a loopback provider that recorded the request, a 2,570-byte lane arrived
-byte-equal and exactly once inside the single system message, behind the base
-prompt and your own context files. And Qwen Code puts **no per-day text in
-that message at all** — the date, OS, shell and directory listing go into the
-first user turn instead, and the harness sets its own cache breakpoint just
-after the append layer — so nothing that changes daily would sit in front of
-the lane.
+**When a launch delivers nothing, and says so.** Each of these is you asking
+Qwen Code for something the carrier would contradict, so vibe starts your
+session anyway — unchanged, behind one loud warning that `--quiet` does not
+suppress — and the router has the agent read the boot files instead:
 
-**One thing stops vibe from using it: the flag takes text.** There is no
-file variant of it, and nothing else adds to the prompt — `QWEN_SYSTEM_MD`
-and `--system-prompt` *replace* the base prompt. So the lane would have to
-travel as one command-line argument, and **vibe puts no lane byte on a
-command line in any delivery** — a rule, not a size limit it checks, because
-one argument is capped at 128 KiB on Linux while a whole Windows command line
-is about 32,767 characters, so delivering by size would work for you and fail
-for the next person on the team. The measurement behind the rule: the
-202,349-byte sample lane is «Argument list too long» at `execve`, before Qwen
-Code starts. An environment variable is capped the same way, so there is no
-way round it for the bytes — only for a path, and this flag does not take
-one.
+- your Qwen Code is **not 0.27.2**. The carrier is measured per version, and
+  a release that replaced more than the first paragraph would swap the
+  harness's own instructions with no error anywhere;
+- `--system-prompt`, which replaces the whole prompt the slot lives in;
+- `--safe-mode`, which asks for every customization off — and your lane is
+  one;
+- `--bare`, which asks Qwen Code to honour only what is explicitly on its
+  command line;
+- `QWEN_SYSTEM_MD` is set, and while it is, Qwen Code never reads the
+  identity slot at all;
+- `QWEN_SYSTEM_IDENTITY_MD` already names a file that is not vibe's, so
+  something else owns your session's identity sentence;
+- vibe cannot tell what shape your session is. A bare word on the command
+  line with a terminal attached is either your prompt (a non-interactive
+  turn) or a subcommand (an interactive session), and the identity sentence
+  differs between the two — so say which with `-p <prompt>` or
+  `-i <prompt>`.
 
-**Worker exclusion is not the problem here**, which is the one way this
-differs from OpenCode: an ordinary Qwen Code subagent is built from its own
-agent definition and never receives the append text.
+None of these is a refusal, and `--append-system-prompt` or
+`--system-prompt` of your own is never refused either: vibe passes this
+harness no flag, so nothing of yours can be a second one beside ours.
 
-**There is a second, file-based slot, and it very nearly works.**
-`QWEN_SYSTEM_MD` names a file, is not read by a subagent, and *replaces*
-Qwen Code's base prompt — so vibe can supply Qwen Code's own prompt with the
-lane after it, taking the prompt from the installed program itself
-(`QWEN_WRITE_SYSTEM_MD`) rather than from a stored copy. Measured: the request
-then begins with Qwen Code's own prompt byte for byte, carries the lane
-exactly once, and continues identically to a plain run — and it carried a
-whole 202 KB lane in a live session, because a file has no command-line
-limit. What stops it is the prompt it replaces: Qwen Code builds that prompt
-from the session's own shape — interactive or not, the tool set, the model,
-whether you are in a git repository — and the interactive variant is 4.5 KB
-longer than the non-interactive one. A launcher cannot tell which one your
-launch will use without starting a second Qwen Code session in a pseudo
-terminal, and handing over the wrong one would silently replace your
-harness's own instructions, which is worse than delivering no lane.
-`QWEN_SYSTEM_MD` also switches off your `general.outputStyle` for that
-session, which Qwen Code tells you itself.
+**One thing to know about a sentence vibe cannot see.** If you have set
+`general.outputStyle` in Qwen Code's own settings, its identity sentence
+points at that style — and a launcher cannot read another program's settings
+precedence without reimplementing it, so what arrives is Qwen Code's
+**unstyled** sentence. That is one clause of one sentence; the style's own
+section still lands. Passing `--output-style <name>` on the command line is
+read and composes the styled sentence.
 
-**And delivering the lane as a context file is the one shape that fails for
-the OpenCode reason.** It would be additive and byte-stable — and your lane's
-`@spec://…` tokens arrive verbatim, which is worth knowing — but Qwen Code
-gives the context layer to every subagent, so a bounded worker would receive
-your whole project prefix. A generated `QWEN.md` is that same layer with an
-extra file on top.
+**The three other carriers were measured and are closed**, and the reasons
+are worth knowing because they are what makes the shipped one admissible.
 
-So the day `--append-system-prompt` takes a **file**, or a launcher can ask
-Qwen Code for the base prompt a given session will use, this tier opens and
-nothing else is in the way.
+`--append-system-prompt` is additive, subagent-safe and lands in a good
+place — and it takes the instructions as **text**. There is no file variant,
+and **vibe puts no lane byte on a command line in any delivery** — a rule,
+not a size limit it checks, because one argument is capped at 128 KiB on
+Linux while a whole Windows command line is about 32,767 characters, so
+delivering by size would work for you and fail for the next person on the
+team. The measurement behind the rule: a 202,349-byte lane is «Argument list
+too long» at `execve`, before Qwen Code starts. An environment *value* is
+capped the same way — which is why the carrier above travels a **path**.
 
-So `read` is the default and a declared `launch` is **not delivered**:
-`vibe agent qwen` soft-launches with the size named, and `vibe prompt flags
---harness qwen` refuses.
+`QWEN_SYSTEM_MD` names a file, is not read by a subagent, and replaces the
+**whole** base prompt; supplying Qwen Code's own prompt in front of the lane
+through it was measured end to end and works, including a 202 KB lane live.
+What stops it is the prompt it replaces: Qwen Code builds that from the
+session's own shape — interactive or not, the tool set, the model, whether
+you are in a git repository — and the interactive variant is 4.5 KB longer
+than the non-interactive one. A launcher cannot tell which one your launch
+will use without starting a second session in a pseudo terminal, and handing
+over the wrong one would silently replace your harness's own instructions.
+It also switches off your `general.outputStyle`, which Qwen Code tells you
+itself. The shipped carrier is that same idea reduced to the one paragraph
+that *is* knowable.
 
-**Both were measured live** on Qwen Code 0.27.2 with a 512,000-token model.
-In the shipped `read` mode the agent read `STATIC.md`, `INDEX.md`,
-`00-core.md` and `90-user.md` in that order, once each, reported every canary
-and correctly left the harness-injected `AGENTS.md` off its read list.
-Through the slot by hand, on a 2,570-byte lane, it quoted the last
-`vibe:lane-end` line byte-equal with no file read — and the same command on
-the 202 KB lane never reached the program. One honest caveat: the live
+Delivering the lane as a **context file** fails for the OpenCode reason: it
+would be additive and byte-stable — and your lane's `@spec://…` tokens
+arrive verbatim, which is worth knowing — but Qwen Code gives the context
+layer to every subagent, so a bounded worker would receive your whole
+project prefix. A generated `QWEN.md` is that same layer with an extra file
+on top.
+
+**Measured live** on the local `qwen3.8-27b` with a small lane: the session
+quoted the delivered tail marker byte-equal, read **no file with a tool**,
+reported every canary, stated a rule that exists only in Qwen Code's own
+base prompt, and — asked for its own first sentence — answered «You are Qwen
+Code, a non-interactive CLI agent developed by Alibaba Group, specializing in
+software engineering tasks.» The `read` tier was measured live too, on a
+512,000-token model: the agent read `STATIC.md`, `INDEX.md`, `00-core.md`
+and `90-user.md` in that order, once each, and correctly left the
+harness-injected `AGENTS.md` off its read list. One honest caveat: the live
 check's own prompt ends «do not read any file to answer this», so it cannot
 test the router's read rule at all; that rule was measured on a prompt with
 work in it.
+
+**Windows and macOS are unrun.** The package and Node lookups name both
+layouts and are tested over fixture trees, but no Qwen Code session has been
+measured on either, and a sandbox that drops environment variables will put
+you in the `read` tier with the warning to say so.
 
 ### Codex and `doc_max_bytes`
 

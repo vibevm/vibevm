@@ -83,6 +83,7 @@ impl Machine {
              done\n\
              printf '%s\\n' \"$@\" > \"$SHIM_ARGV\"\n\
              printf '%s' \"${OPENCODE_CONFIG_CONTENT-}\" > \"$SHIM_ENV\"\n\
+             printf '%s' \"${QWEN_SYSTEM_IDENTITY_MD-}\" > \"$SHIM_ENV.qwen\"\n\
              exit 0\n",
         )
         .unwrap();
@@ -1065,14 +1066,13 @@ fn printing_flags_for_an_unverified_opencode_refuses_where_a_launch_would_soften
         .stderr(predicate::str::contains("is not verified"));
 }
 
-/// Qwen Code — a launcher and a dialect whose one additive slot takes the
-/// instructions as **text**.
+/// Qwen Code — a launcher whose carrier is one environment **path**.
 ///
-/// The kind exists so `vibe agent qwen` exists and
-/// `[system_prompt.harness.qwen]` is declarable; the slot is named in the
-/// note and never passed, because `--append-system-prompt` would put the
-/// lane's own bytes on a command line, where one argument is capped at
-/// 128 KiB (`#SYS-QWEN`).
+/// `QWEN_SYSTEM_IDENTITY_MD` names a file holding Qwen Code's own identity
+/// sentence for this launch's session shape and then the lane; it replaces
+/// the base prompt's first paragraph and nothing else, and the sentence is
+/// sampled from the installed package at launch rather than stored
+/// (`#SYS-QWEN`).
 #[test]
 fn qwen_is_a_builtin_launcher() {
     let machine = Machine::new(WRAPPER);
@@ -1085,45 +1085,252 @@ fn qwen_is_a_builtin_launcher() {
         ));
 }
 
+/// What the `qwen` shim answers `--version` with: the one version whose
+/// identity carrier is verified.
+const SHIM_QWEN_REPORTS: &str = "0.27.2";
+
+/// A fake npm package shaped like the installed Qwen Code: a `package.json`
+/// that identifies it, and a `chunks/` module exporting a
+/// `getCoreSystemPrompt` with the contract the carrier depends on — a first
+/// paragraph that varies by interaction mode and output style, and an
+/// identity override read from the environment that replaces **only** that
+/// paragraph.
+///
+/// **The fixture's text is nobody else's**, which is the same rule the
+/// OpenCode prompt-base fixture follows: a test that asserted over vendored
+/// third-party prose would fail the day upstream edits a sentence. What is
+/// pinned here is the mechanism — the session classification, the file's
+/// name, the sampling, the proof and the one environment assignment that
+/// reaches the harness.
+fn qwen_package(root: &Path) -> PathBuf {
+    // Beside the shim, which is the layout a `qwen.cmd` in an npm bin
+    // directory and a local `node_modules/.bin` install both have.
+    let package = root.join("node_modules/@qwen-code/qwen-code");
+    fs::create_dir_all(package.join("chunks")).unwrap();
+    fs::write(
+        package.join("package.json"),
+        format!("{{ \"name\": \"@qwen-code/qwen-code\", \"version\": \"{SHIM_QWEN_REPORTS}\" }}"),
+    )
+    .unwrap();
+    fs::write(
+        package.join("chunks/chunk-FIXTURE.js"),
+        r#"import fs from 'node:fs';
+function getCoreSystemPrompt(a, b, c, mode, style) {
+  const identity = `FIXTURE identity for ${mode}${style ? ' styled' : ''}.`;
+  const override = process.env['QWEN_SYSTEM_IDENTITY_MD'];
+  const head = override ? fs.readFileSync(override, 'utf8').trimEnd() : identity;
+  return `${head}\n\n# FIXTURE Mandates\n\n- a rule\n`;
+}
+export{getCoreSystemPrompt};
+"#,
+    )
+    .unwrap();
+    package
+}
+
+/// A launch whose `qwen` is a shim beside a fake package, and whose helper
+/// therefore runs against that package.
+///
+/// It needs `node`, which the helper runs under and which is not a
+/// dependency of this suite, so the caller skips when there is none.
+fn qwened(machine: &Machine, args: &[&str]) -> assert_cmd::Command {
+    let mut command = machine.user.vibe();
+    machine.harnessed(&mut command, SHIM_QWEN_REPORTS);
+    command.arg("agent");
+    for argument in args {
+        command.arg(argument);
+    }
+    command
+}
+
+/// Whether this machine has the `node` the sampling helper runs under.
+fn has_node() -> bool {
+    std::process::Command::new("node")
+        .arg("--version")
+        .output()
+        .is_ok_and(|output| output.status.success())
+}
+
 #[test]
-fn qwen_defaults_to_read_and_starts_unchanged_naming_its_slot() {
+fn qwen_defaults_to_launch_and_delivers_one_environment_path() {
+    if !has_node() {
+        eprintln!("skipped: the sampling helper runs under `node`, and there is none here");
+        return;
+    }
     let machine = Machine::new(WRAPPER);
+    // The shim and the fake package beside it, which is one of the three
+    // layouts the lookup knows.
+    qwen_package(machine.bin.path());
+    qwened(&machine, &["qwen", "-p", "hello"])
+        .assert()
+        .success()
+        .stderr(predicate::str::contains("QWEN_SYSTEM_IDENTITY_MD"))
+        .stderr(predicate::str::contains("FIRST PARAGRAPH"))
+        // The session shape this launch classified: `-p` is one
+        // non-interactive turn, whatever the terminal says.
+        .stderr(predicate::str::contains("headless session shape"))
+        .stderr(predicate::str::contains("warning: vibe cannot deliver").not());
+    // No flag at all: the carrier is the variable, and the user's own
+    // arguments reach the harness unchanged.
+    assert_eq!(machine.argv(), ["-p", "hello"]);
+    let carrier =
+        PathBuf::from(fs::read_to_string(machine.env_path().with_extension("txt.qwen")).unwrap());
+    // Content-addressed, inside vibe's own settings tree, and naming the
+    // session shape it was composed for.
+    assert!(carrier.starts_with(&machine.user.settings), "{carrier:?}");
+    let name = carrier.file_name().unwrap().to_string_lossy().into_owned();
+    assert!(name.starts_with("qwen-identity-headless-"), "{name}");
+    assert!(name.ends_with(".md"), "{name}");
+    // The file is the fixture's own identity sentence, a blank line and the
+    // lane byte for byte — and the lane's bytes are in the FILE, never in
+    // the environment value, which is a path.
+    let bytes = fs::read_to_string(&carrier).unwrap();
+    let lane = fs::read_to_string(machine.lane()).unwrap();
+    assert_eq!(
+        bytes,
+        format!("FIXTURE identity for headless.\n\n{lane}"),
+        "the carrier is the harness's own sentence and then the lane"
+    );
+}
+
+#[test]
+fn an_output_style_argument_asks_for_the_styled_sentence() {
+    if !has_node() {
+        eprintln!("skipped: the sampling helper runs under `node`, and there is none here");
+        return;
+    }
+    let machine = Machine::new(WRAPPER);
+    qwen_package(machine.bin.path());
+    qwened(
+        &machine,
+        &["qwen", "-p", "hello", "--output-style", "Concise"],
+    )
+    .assert()
+    .success();
+    let carrier =
+        PathBuf::from(fs::read_to_string(machine.env_path().with_extension("txt.qwen")).unwrap());
+    let name = carrier.file_name().unwrap().to_string_lossy().into_owned();
+    assert!(name.starts_with("qwen-identity-headless-styled-"), "{name}");
+    assert!(
+        fs::read_to_string(&carrier)
+            .unwrap()
+            .starts_with("FIXTURE identity for headless styled."),
+        "the styled sentence is the one Qwen Code would have used"
+    );
+}
+
+#[test]
+fn an_unverified_qwen_launches_softly_naming_both_versions() {
+    let machine = Machine::new(WRAPPER);
+    qwen_package(machine.bin.path());
+    machine
+        .agent_reporting(&["qwen", "-p", "hello"], "0.28.0")
+        .assert()
+        .success()
+        .stderr(predicate::str::contains("warning: vibe cannot deliver"))
+        .stderr(predicate::str::contains("0.28.0"))
+        .stderr(predicate::str::contains(SHIM_QWEN_REPORTS))
+        .stderr(predicate::str::contains("qwen-identity-prove.sh"));
+    assert_eq!(machine.argv(), ["-p", "hello"]);
+    assert!(
+        fs::read_to_string(machine.env_path().with_extension("txt.qwen"))
+            .unwrap()
+            .is_empty(),
+        "a soft launch sets no carrier"
+    );
+}
+
+#[test]
+fn an_argument_that_would_defeat_the_carrier_launches_softly_rather_than_refusing() {
+    // **Soft, not a refusal**, which is this kind's one difference from
+    // `opencode`'s `--agent`: each of these is the user asking Qwen Code
+    // for something the carrier would contradict, and honouring the request
+    // while saying what was not delivered beats refusing to start the
+    // session (`#SYS-QWEN`, `#SYS-SOFT-LAUNCH`).
+    let machine = Machine::new(WRAPPER);
+    qwen_package(machine.bin.path());
+    for (argument, said) in [
+        ("--safe-mode", "every customization"),
+        ("--bare", "explicitly on its command line"),
+    ] {
+        qwened(&machine, &["qwen", argument, "-p", "hello"])
+            .assert()
+            .success()
+            .stderr(predicate::str::contains("warning: vibe cannot deliver"))
+            .stderr(predicate::str::contains(said));
+        assert_eq!(machine.argv(), [argument, "-p", "hello"]);
+    }
+    // `--system-prompt` replaces the whole prompt the slot lives in.
+    qwened(&machine, &["qwen", "--system-prompt", "mine.md"])
+        .assert()
+        .success()
+        .stderr(predicate::str::contains("replaces the whole prompt"));
+    // And `QWEN_SYSTEM_MD` means Qwen Code never reads the slot at all.
+    qwened(&machine, &["qwen", "-p", "hello"])
+        .env("QWEN_SYSTEM_MD", "1")
+        .assert()
+        .success()
+        .stderr(predicate::str::contains("QWEN_SYSTEM_MD"))
+        .stderr(predicate::str::contains("warning: vibe cannot deliver"));
+}
+
+#[test]
+fn an_inherited_carrier_of_ours_is_scrubbed_from_a_launch_that_delivers_nothing() {
+    // An outer vibe-launched session's carrier is still a valid path in
+    // this child, so a session the warning just said has no boot lane would
+    // quietly have the outer one's (`#SYS-QWEN`).
+    let machine = Machine::new(WRAPPER);
+    let inherited = machine
+        .user
+        .settings
+        .join("agent/qwen/qwen-identity-headless-dead.md");
+    fs::create_dir_all(inherited.parent().unwrap()).unwrap();
+    fs::write(&inherited, "INHERITED\n").unwrap();
+    machine.declare("[system_prompt.harness.qwen]\ndelivery = \"read\"\n");
+    qwened(&machine, &["qwen", "-p", "hello"])
+        .env("QWEN_SYSTEM_IDENTITY_MD", &inherited)
+        .assert()
+        .success();
+    assert!(
+        fs::read_to_string(machine.env_path().with_extension("txt.qwen"))
+            .unwrap()
+            .is_empty(),
+        "the inherited carrier rode into a session vibe delivered nothing to"
+    );
+    // A `QWEN_SYSTEM_IDENTITY_MD` of the USER's own is theirs, and is
+    // passed through untouched.
+    let theirs = machine.bin.path().join("brand.md");
+    fs::write(&theirs, "THEIRS\n").unwrap();
+    qwened(&machine, &["qwen", "-p", "hello"])
+        .env("QWEN_SYSTEM_IDENTITY_MD", &theirs)
+        .assert()
+        .success();
+    assert_eq!(
+        fs::read_to_string(machine.env_path().with_extension("txt.qwen")).unwrap(),
+        theirs.display().to_string()
+    );
+}
+
+#[test]
+fn qwen_in_read_delivery_starts_unchanged_naming_the_carrier_and_the_closed_slots() {
+    let machine = Machine::new(WRAPPER);
+    machine.declare("[system_prompt.harness.qwen]\ndelivery = \"read\"\n");
     machine
         .agent(&["qwen", "-p", "hello"])
         .assert()
         .success()
         .stderr(predicate::str::contains("no slot flag is passed"))
+        .stderr(predicate::str::contains("QWEN_SYSTEM_IDENTITY_MD"))
         .stderr(predicate::str::contains("--append-system-prompt"))
-        .stderr(predicate::str::contains("QWEN_SYSTEM_MD"))
         .stderr(predicate::str::contains("128 KiB"))
-        // `read` is the default, not a warning: the router is doing the
+        // `read` is a declaration, not a failure: the router is doing the
         // work by design, so this is a note and not a soft launch.
         .stderr(predicate::str::contains("warning: vibe cannot deliver").not());
     assert_eq!(machine.argv(), ["-p", "hello"]);
 }
 
 #[test]
-fn a_project_declaring_launch_for_qwen_launches_softly_with_the_reason() {
-    let machine = Machine::new(WRAPPER);
-    machine.declare("[system_prompt.harness.qwen]\ndelivery = \"launch\"\n");
-    machine
-        .agent(&["qwen"])
-        .assert()
-        .success()
-        .stderr(predicate::str::contains("warning: vibe cannot deliver"))
-        .stderr(predicate::str::contains("E2BIG"))
-        .stderr(predicate::str::contains("0.27.2"))
-        .stderr(predicate::str::contains("delivery = \"read\""))
-        // Worker exclusion is satisfied here, unlike OpenCode's, and the
-        // sentence says so rather than letting a reader carry that kind's
-        // conclusion over.
-        .stderr(predicate::str::contains("worker exclusion is satisfied"));
-    // The shim records one empty line when it received no argument at all.
-    assert_eq!(machine.argv(), [""], "a soft launch passed a flag");
-}
-
-#[test]
-fn printing_flags_for_qwen_says_why_the_slot_is_not_used() {
+fn printing_flags_for_qwen_prints_the_assignment_or_the_reason() {
     let machine = Machine::new(WRAPPER);
     machine
         .user
@@ -1132,29 +1339,42 @@ fn printing_flags_for_qwen_says_why_the_slot_is_not_used() {
         .arg(machine.project.path())
         .assert()
         .success();
-    // The default, `read`: no flags, and the note names the argument the
-    // slot would have taken.
+    // `read`: no assignment, and the note names the carrier a launch would
+    // have set.
+    machine.declare("[system_prompt.harness.qwen]\ndelivery = \"read\"\n");
     let mut command = machine.user.vibe();
     machine
-        .harnessed(&mut command, VERIFIED)
+        .harnessed(&mut command, SHIM_QWEN_REPORTS)
         .args(["prompt", "flags", "--harness", "qwen", "--path"])
         .arg(machine.project.path())
         .assert()
         .success()
-        .stderr(predicate::str::contains("--append-system-prompt"))
-        .stderr(predicate::str::contains("on the command line"));
-    // A declared `launch` is a refusal here, where `vibe agent` launches
-    // softly: this command prints and starts nothing, so there is no
-    // session to save.
-    machine.declare("[system_prompt.harness.qwen]\ndelivery = \"launch\"\n");
+        .stdout(predicate::str::contains("QWEN_SYSTEM_IDENTITY_MD").not())
+        .stderr(predicate::str::contains("QWEN_SYSTEM_IDENTITY_MD"));
+    if !has_node() {
+        eprintln!("skipped the launch half: the sampling helper runs under `node`");
+        return;
+    }
+    // `launch`: the assignment on stdout, first, one `NAME=value` per line
+    // — and one note saying the shape it was composed for is this
+    // command's own.
+    qwen_package(machine.bin.path());
+    let project = machine.project.path().join("vibe.toml");
+    let text = fs::read_to_string(&project)
+        .unwrap()
+        .replace("[system_prompt.harness.qwen]\ndelivery = \"read\"\n", "");
+    fs::write(&project, text).unwrap();
     let mut command = machine.user.vibe();
     machine
-        .harnessed(&mut command, VERIFIED)
+        .harnessed(&mut command, SHIM_QWEN_REPORTS)
         .args(["prompt", "flags", "--harness", "qwen", "--path"])
         .arg(machine.project.path())
         .assert()
-        .failure()
-        .stderr(predicate::str::contains("128 KiB"));
+        .success()
+        .stdout(predicate::str::starts_with("QWEN_SYSTEM_IDENTITY_MD="))
+        .stderr(predicate::str::contains(
+            "composed for the session shape THIS command has",
+        ));
 }
 
 /// The real offline proof, as an **opt-in** test.
@@ -1208,6 +1428,53 @@ fn opencode_prove_runs_the_real_offline_capture() {
     assert!(
         status.success(),
         "the whole-request proof FAILED — every condition it failed is named \
+         in its report:\n{report}"
+    );
+    assert!(report.contains("VERDICT: PASS"), "{report}");
+}
+
+/// The real offline Qwen proof, as an **opt-in** test.
+///
+/// Gated for the reason the OpenCode one is: it needs an installed Qwen
+/// Code, `bwrap`, `python3`, a pseudo-terminal, a free loopback port and
+/// several minutes. The mechanism is pinned by the shim tests above — over a
+/// fixture package whose text nobody else owns — and this exists so the real
+/// thing can be run on demand, by the one command that already knows how:
+///
+/// ```text
+/// VIBE_QWEN_PROVE=1 VIBE_QWEN_SAMPLE=/tmp/sample \
+///   cargo test -p vibe-cli --test cli_agent_launch -- --ignored qwen_identity_prove
+/// ```
+///
+/// The sample is built once by `campaigns/sys-prompt-2026-11/live/
+/// make-sample.sh <dir> 202349`. The proof calls no model and reaches
+/// nothing but `127.0.0.1`.
+#[test]
+#[ignore = "needs an installed Qwen Code, bubblewrap and several minutes"]
+fn qwen_identity_prove_runs_the_real_offline_capture() {
+    if std::env::var_os("VIBE_QWEN_PROVE").is_none() {
+        eprintln!("skipped: set VIBE_QWEN_PROVE=1 (and VIBE_QWEN_SAMPLE) to run it");
+        return;
+    }
+    let sample = std::env::var("VIBE_QWEN_SAMPLE")
+        .expect("VIBE_QWEN_SAMPLE must name a project built by make-sample.sh");
+    let out = tempfile::tempdir().unwrap();
+    let captures = out.path().join("captures");
+    let script = Path::new(env!("CARGO_MANIFEST_DIR"))
+        .join("../../campaigns/sys-prompt-2026-11/live/qwen-identity-prove.sh");
+    // The carrier under test is the one `vibe agent qwen` sets, so the
+    // binary under test is what the script launches with.
+    let status = std::process::Command::new("bash")
+        .arg(&script)
+        .arg(&sample)
+        .arg(&captures)
+        .env("VIBE", assert_cmd::cargo::cargo_bin("vibe"))
+        .status()
+        .expect("the proof script runs");
+    let report = fs::read_to_string(captures.join("report.txt")).unwrap_or_default();
+    assert!(
+        status.success(),
+        "the combined-request proof FAILED — every condition it failed is named \
          in its report:\n{report}"
     );
     assert!(report.contains("VERDICT: PASS"), "{report}");

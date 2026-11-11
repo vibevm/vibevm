@@ -30,11 +30,13 @@ mod flags;
 mod harness_version;
 mod path;
 mod prepare;
+mod qwen_identity;
 mod resolve;
 mod supplied_base;
 
 pub(crate) use build::summary_line;
 pub(crate) use flags::{Undeliverable, compose as compose_flags, opted_in};
+pub(crate) use qwen_identity::inherited_carrier_to_scrub;
 pub(crate) use resolve::{Selected, select};
 
 /// Run one regeneration and end it with the system-prompt summary line.

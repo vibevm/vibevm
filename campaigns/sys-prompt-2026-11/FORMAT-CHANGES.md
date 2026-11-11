@@ -778,3 +778,67 @@ whose own status was "specified, not yet implemented", and **amends
   counterpart. Live on the local `qwen3.8-27b`, the one condition a byte diff
   cannot make: the tail marker quoted, no boot file read, and an instruction
   existing only in OpenCode's own base still obeyed.
+
+## SP-FMT-116 — Qwen Code's `launch` tier: one environment path to a sampled identity sentence (Phase P10)
+
+Status: **delivered 2026-11-11** (phase P10). Design authority:
+`PROP-076#SYS-QWEN`, `#SYS-SOFT-LAUNCH`. **Amends `SP-FMT-113`**, whose
+verdict for this harness was `read` because its one additive slot takes the
+instructions as text, and **amends `SP-FMT-105`**, whose per-harness
+`delivery` defaults put `qwen` in `read`.
+
+- **`[system_prompt.harness.qwen] delivery` default `read` → `launch`.**
+  Authored-manifest grammar unchanged; the key, its values and its
+  serialisation are all as before, and a manifest that declares nothing
+  serialises byte-identically. What changed is what an undeclared value
+  *means*. Safe where the carrier cannot be proved: a machine whose Qwen
+  Code is not the one verified version, or whose launch arguments would
+  defeat the carrier, soft-launches — the classic boot behind one loud
+  warning. With this, every kind in the closed set of four defaults to
+  `launch`, and `HarnessTable::delivery`'s per-kind match stays because the
+  next kind may well have no tier.
+- **`[format.cli-prompt-flags]` epoch 1 → 1, no member added.** Qwen Code's
+  carrier rides the `env` list `SP-FMT-115` added for OpenCode: `vibe prompt
+  flags --harness qwen` now prints `QWEN_SYSTEM_IDENTITY_MD=<path>` on
+  stdout before the (empty) flag line, and `--json` carries it in `env`. The
+  schema, the generated types and the wire contract are untouched.
+- **One new note shape, for this kind only.** `vibe prompt flags --harness
+  qwen` adds a sentence saying the assignment was composed for the session
+  shape **that command** has — its own arguments and its own terminal —
+  because printing starts no session to classify, while `vibe agent qwen`
+  classifies the session it is about to start. Pairing the printed
+  assignment with a differently shaped session hands Qwen Code an identity
+  sentence that misdescribes it.
+- **A new file genre in the user's settings tree:
+  `<settings>/agent/qwen/`.** It holds `qwen-identity-<mode>[-styled]-<16
+  hex>.md`, one per distinct carrier, and `carrier-<16 hex>.mjs`, vibe's own
+  sampling helper written out of the binary. Both are **content-addressed**
+  and neither is ever rewritten in place: a running Qwen Code session
+  re-reads its carrier on every prompt rebuild and throws when it is
+  missing, so a later launch carrying a different lane writes a different
+  file. Nothing in the project changes, and no `QWEN.md` is written (it
+  would deliver the managed block twice).
+- **`vibe prompt flags` writes a file for this kind, which it does for no
+  other.** The established rule — a command whose job is to print is a
+  command that prints — bends here because the carrier's *value* **is** a
+  path, and an answer naming a file that is not there is not an answer.
+  Codex's profile is the contrasting case: its value is a profile *name*,
+  so `vibe agent` can write the file at launch and printing stays pure.
+- **No new registered format.** The carrier is one environment variable of
+  another program and one file in the user's own settings tree;
+  `formats/REGISTRY.toml` gains nothing.
+- **Measured, 2026-11-11, Qwen Code 0.27.2, 204,845-byte lane, offline, from
+  the committed tree and through `vibe agent qwen` itself.** Interactive: one
+  contiguous insertion of **208,787** raw bytes at raw offset **303**
+  (system-message offset 260), the inserted bytes `AGENT-LANE.md` byte for
+  byte plus one LF, the lane exactly once, tools and every non-system
+  message and parameter identical, two consecutive launches byte-identical
+  for the whole request (system sha `671683cfeed40a34`), and the
+  general-purpose subagent, the security classifier and the memory extractor
+  each byte-identical to their plain counterparts with **zero** lane
+  canaries. Headless: the same at raw offset **306**. Both `VERDICT: PASS`.
+  Live on the local `qwen3.8-27b` with the tiny sample, the one condition a
+  byte diff cannot make: the tail marker quoted byte-equal, no boot file
+  read with a tool, all four lane canaries plus the entrypoint's, the
+  base-only `<qwen:user-prompt-submit-context>` rule stated, and the
+  session's own first sentence quoted back as Qwen Code's.

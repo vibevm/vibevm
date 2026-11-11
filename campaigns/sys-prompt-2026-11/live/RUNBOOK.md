@@ -65,10 +65,19 @@ measures from here on:
 - **The real-size proofs are offline**, against the fake provider, where a
   202 KB lane costs nothing: `opencode-prove.sh` (the whole-request proof of
   `#SYS-SUPPLIED-BASE`, five legs in one run, judged by `opencode-prove.py`),
-  and the narrower `opencode-capture.sh`, `qwen-capture.sh` and
-  `opencode-subagent-capture.sh` it supersedes for OpenCode. A delivery
-  question is about *bytes in a request*, and a recorder answers it better
-  than a model does.
+  `qwen-identity-prove.sh` (the combined-request proof of `#SYS-QWEN`, three
+  real sessions per session shape, judged by `qwen-identity-prove.py`), and
+  the narrower `opencode-capture.sh`, `qwen-capture.sh` and
+  `opencode-subagent-capture.sh` they supersede. A delivery question is about
+  *bytes in a request*, and a recorder answers it better than a model does.
+- **Both proofs launch the harness through `vibe agent`**, not by hand: the
+  claim under test is what the shipped launcher delivers, so the launcher has
+  to be the thing that delivers it. `qwen-identity-prove.sh` takes `VIBE=`
+  and runs each of its two carrier legs as `<vibe> agent qwen`.
+- **Qwen Code is proved in BOTH session shapes**, interactive under a
+  pseudo-terminal and headless, because its identity sentence differs between
+  them and a launch classifies the shape itself: `qwen-identity-prove.sh
+  <sample> <out>` and `… --headless`.
 - A live run on a large lane or a metered model needs the owner to ask for
   it. The rows that were taken that way before this rule are kept as
   evidence and are **not** to be repeated.
@@ -81,8 +90,9 @@ compare:
 > list every file you have read with a tool in this session, exactly, and name
 > none you did not open. Do not read any file to answer this.
 
-**Two amendments the OpenCode `launch` tier forced on that prompt**, both
-findings rather than conveniences, and both in `opencode-live-check.sh`:
+**Amendments the two `launch` tiers forced on that prompt**, each a finding
+rather than a convenience — the first two in `opencode-live-check.sh`, the
+last in `qwen-identity-live-check.sh`:
 
 - **"The last `vibe:lane-end` line" is ambiguous in `launch` delivery**, and a
   model that answers it with the managed block's own indented *format example*
@@ -95,8 +105,17 @@ findings rather than conveniences, and both in `opencode-live-check.sh`:
   byte comparisons and none of them can tell a base that arrived from a base
   that is still obeyed. So the session is also asked to state a rule that
   exists **only** in the harness's own base text — for OpenCode, the edit
-  tool's `oldString`-occurs-once rule — and the script refuses to run if the
-  lane mentions it, so the premise is checked rather than assumed.
+  tool's `oldString`-occurs-once rule; for Qwen Code, what text inside a
+  `<qwen:user-prompt-submit-context>` tag is, which is also the first sentence
+  **after** the seam — and the script refuses to run if the lane mentions it,
+  so the premise is checked rather than assumed.
+- **A supplied identity sentence needs a fifth question**, for the same
+  reason one level in: `qwen-identity-live-check.sh` asks the session to
+  quote its own first sentence, and the answer must be Qwen Code's own
+  («You are Qwen Code, …») rather than anything of vibe's. vibe's stderr is
+  kept in a separate file there, because the launcher's own notes name the
+  carrier and the harness and a combined stream would let the check pass on
+  vibe's words instead of the model's.
 
 **Recording.** For each step write, into this directory's `RESULTS.md`
 (created by the first step): the step id, the exact command, the harness

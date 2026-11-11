@@ -132,7 +132,7 @@ pub(crate) fn run(ctx: &output::Context, argv: Vec<String>) -> Result<()> {
         }
         let mut command: Vec<String> = launcher.command.clone();
         command.extend(rest);
-        return exec(&command, &[]);
+        return exec(&command, &[], &scrub(launcher.kind));
     }
 
     // **The host mismatch, as a note and nothing more.** `vibe agent`
@@ -205,7 +205,35 @@ pub(crate) fn run(ctx: &output::Context, argv: Vec<String>) -> Result<()> {
     let mut command: Vec<String> = launcher.command.clone();
     command.extend(composed.flags.iter().cloned());
     command.extend(rest);
-    exec(&command, &composed.env)
+    let scrub = if composed.env.is_empty() {
+        scrub(launcher.kind)
+    } else {
+        Vec::new()
+    };
+    exec(&command, &composed.env, &scrub)
+}
+
+/// Variables of **vibe's own** that must not ride into a child this launch
+/// delivers nothing to.
+///
+/// **One carrier needs this and the others cannot.** Codex's profile is
+/// selected by a flag and OpenCode's document travels in a variable whose
+/// value *is* the document, so a launch that passes neither delivers
+/// nothing by construction. Qwen Code's carrier is a **path**, and a path
+/// an outer vibe-launched session exported is still valid in this child —
+/// so a session the warning just told the developer has no boot lane would
+/// quietly have the outer session's one. Only a file inside vibe's own
+/// carrier directory is removed; a `QWEN_SYSTEM_IDENTITY_MD` of the user's
+/// own is theirs (`#SYS-QWEN`, `#SYS-SOFT-LAUNCH`).
+fn scrub(kind: HarnessKind) -> Vec<&'static str> {
+    if kind != HarnessKind::Qwen {
+        return Vec::new();
+    }
+    global::settings_root()
+        .ok()
+        .and_then(|settings| prompt::inherited_carrier_to_scrub(&settings))
+        .into_iter()
+        .collect()
 }
 
 /// Start the harness with no slot flag and no carrier, behind one loud
@@ -239,7 +267,7 @@ fn soft(
     );
     let mut command: Vec<String> = launcher.command.clone();
     command.extend(rest.iter().cloned());
-    exec(&command, &[])
+    exec(&command, &[], &scrub(launcher.kind))
 }
 
 /// Measured in the P9 live check (row C7, Claude Code 2.1.322): a resumed
@@ -318,7 +346,7 @@ fn write_profile(profile: &CodexProfile) -> Result<()> {
 /// `PATHEXT` first, or an npm-installed `claude.cmd` is «program not found»
 /// (`super::program`).
 #[cfg(unix)]
-fn exec(command: &[String], env: &[EnvAssignment]) -> Result<()> {
+fn exec(command: &[String], env: &[EnvAssignment], scrub: &[&str]) -> Result<()> {
     use std::os::unix::process::CommandExt;
 
     let (program, arguments) = command
@@ -326,6 +354,9 @@ fn exec(command: &[String], env: &[EnvAssignment]) -> Result<()> {
         .context("a launcher's `command` is an empty argv prefix")?;
     let mut spawn = Command::new(program);
     spawn.args(arguments);
+    for name in scrub {
+        spawn.env_remove(name);
+    }
     for assignment in env {
         spawn.env(&assignment.name, &assignment.value);
     }
@@ -334,7 +365,7 @@ fn exec(command: &[String], env: &[EnvAssignment]) -> Result<()> {
 }
 
 #[cfg(not(unix))]
-fn exec(command: &[String], env: &[EnvAssignment]) -> Result<()> {
+fn exec(command: &[String], env: &[EnvAssignment], scrub: &[&str]) -> Result<()> {
     let (program, arguments) = command
         .split_first()
         .context("a launcher's `command` is an empty argv prefix")?;
@@ -345,6 +376,9 @@ fn exec(command: &[String], env: &[EnvAssignment]) -> Result<()> {
         super::program::resolve(program).with_context(|| format!("starting `{program}`"))?;
     let mut spawn = Command::new(&resolved);
     spawn.args(arguments);
+    for name in scrub {
+        spawn.env_remove(name);
+    }
     for assignment in env {
         spawn.env(&assignment.name, &assignment.value);
     }
