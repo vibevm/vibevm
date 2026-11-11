@@ -132,13 +132,22 @@ a_installed() {
 # and an alias store's internal chaining is nvm's storage, not an
 # observable. What a reader can see is what each name *resolves to*, which
 # is also the only thing the other tool can be asked for.
-a_resolve_alias() { # a_resolve_alias <name>
-    local dir="${OBS_TOOLROOT:-}/alias" value="$1" hops=0
+# One alias resolver for both sandboxes, over whichever directory the
+# tool keeps its store in. The walk is deliberately naive — follow the
+# file, bounded — because it must be the **same** naive walk on both
+# sides: a difference in what the two stores hold has to show up as a
+# difference in this field, never as a difference in how it was read.
+resolve_alias_in() { # resolve_alias_in <alias dir> <name>
+    local dir="$1" value="$2" hops=0
     while [ -n "$value" ] && [ -f "$dir/$value" ] && [ "$hops" -lt 10 ]; do
         value="$(tr -d '\n' <"$dir/$value")"
         hops=$((hops + 1))
     done
     printf '%s' "$value"
+}
+
+a_resolve_alias() { # a_resolve_alias <name>
+    resolve_alias_in "${OBS_TOOLROOT:-}/alias" "$1"
 }
 
 # Whether this sandbox holds that version installed. nvm's `default` alias
@@ -198,12 +207,13 @@ a_globals() {
 # vibe's own query surface, read as the documents vibe actually emits:
 # `vibe app list -g --json` (`vibe-app-list/1`) is the home's inventory —
 # which versions of the slot are installed and which one is its default,
-# answered without a registry, a template or a request; `vibe app versions
-# <package> --json` (`vibe-app-versions/1`) carries the channels; and
-# `vibe app exec node@=<v> -- npm …` reaches one version's own npm, the same
-# command sandbox A runs. The slot has no named user aliases (they are an
-# owner-approved exclusion), so the `aliases` field reports the channels the
-# slot resolves, under nvm's own spelling for them.
+# answered without a registry, a template or a request; and `vibe app exec
+# node@=<v> -- npm …` reaches one version's own npm, the same command
+# sandbox A runs. Named user aliases are no longer an accepted gap
+# (PROP-075 `#VIBENVM-NO-EXCLUSIONS`): the shim owns a real alias store in
+# nvm's own layout, so the `aliases` field is read the same way on both
+# sides — the files, walked and resolved by one function — and only its
+# directory differs, because each tool keeps its own under its own root.
 #
 # Every version a target names is spelled `=<version>` — vibe's exact-version
 # requirement. A bare `node@22.9.0` is a *requirement*, and would select the
@@ -235,21 +245,6 @@ else:
     print("absent")
 '
 # nvm keeps one alias file per LTS line plus `lts/*` for the newest line;
-# vibe keeps no alias store at all and computes the same names from the
-# version list, newest first. `lts` is vibe's name for "the newest LTS of
-# any line", which is nvm's `lts/*`, and the two are the one name under two
-# spellings.
-B_CHANNELS_PY='
-import json, sys
-data = json.load(sys.stdin)
-rows = []
-for package in data.get("packages", []):
-    for name, targets in (package.get("channels") or {}).items():
-        if not targets:
-            continue
-        rows.append(("lts/*" if name == "lts" else name, targets[0]))
-print(",".join(f"{name}={target}" for name, target in sorted(rows)) or "")
-'
 
 vibe_bin() { printf '%s' "${VIBE_BIN:?observe.sh: VIBE_BIN is required for sandbox B}"; }
 
@@ -268,13 +263,29 @@ b_default() { b_list_read "$B_DEFAULT_PY" ""; }
 # request of its own: it reports the names the tool knows from the version
 # list it has already fetched, which is exactly what nvm's alias store is.
 # Before any remote call both tools therefore answer `none`.
+# The shim's alias store, in nvm's own layout, under the root the shim
+# resolves for itself: `$NVM_DIR` when the user set one, else vibe's
+# settings root — which in this sandbox is `OBS_TOOLROOT`. So the store is
+# `<toolroot>/apps/nvm/alias`, and `resolve_alias_in` walks it exactly as
+# it walks nvm's.
+b_alias_dir() { printf '%s' "${OBS_TOOLROOT:-}/apps/nvm/alias"; }
+
 b_aliases() {
-    local channels default out=""
-    channels="$("$(vibe_bin)" app versions org.vibevm.node/node --json --offline 2>/dev/null |
-        python3 -I -c "$B_CHANNELS_PY" 2>/dev/null)"
+    local dir rel name out="" value default
+    dir="$(b_alias_dir)"
+    # `default` is never a file here: it is the slot's default, which is
+    # vibe's own answer and the one source of truth for it. nvm keeps it
+    # as a file, and both report the same `default=<version>` row.
     default="$(b_default)"
     [ "$default" = "$ABSENT" ] || out="default=$default"
-    [ -z "$channels" ] || out="${out:+$out,}$channels"
+    if [ -d "$dir" ]; then
+        while IFS= read -r rel; do
+            name="${rel#"$dir"/}"
+            [ "$name" = default ] && continue
+            value="$(resolve_alias_in "$dir" "$name")"
+            out="${out:+$out,}$name=$value"
+        done < <(find "$dir" -type f 2>/dev/null | sort)
+    fi
     printf '%s' "${out:-none}"
 }
 
