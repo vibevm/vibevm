@@ -7,6 +7,7 @@ use std::path::{Path, PathBuf};
 use anyhow::{Context, Result};
 use vibe_core::manifest::RegistrySection;
 
+use super::super::alias::MirrorMerge;
 use super::plan::{self, Decision};
 use super::record;
 use super::source::{self, SourceReader};
@@ -18,6 +19,7 @@ pub(super) fn mirror_record(
     source: &RegistrySection,
     planned: &[plan::Planned],
     select: Option<record::SelectRecord>,
+    aliases: &MirrorMerge,
     target_root: &Path,
     scratch: &Path,
 ) -> Result<Vec<(String, PathBuf)>> {
@@ -39,7 +41,7 @@ pub(super) fn mirror_record(
         })
         .collect();
     let existing = record::MirrorRecord::read(target_root, &source.name)?;
-    if rows.is_empty() && existing.is_none() && select.is_none() {
+    if rows.is_empty() && existing.is_none() && select.is_none() && !aliases.changed() {
         return Ok(Vec::new());
     }
     let mut record = existing.unwrap_or_else(|| record::MirrorRecord {
@@ -59,6 +61,7 @@ pub(super) fn mirror_record(
         },
         select: None,
         versions: Vec::new(),
+        aliases: Vec::new(),
     });
     // A run that had a selection of its own records it, replacing what was
     // there: the record names the selection the target is kept to, and a
@@ -69,7 +72,8 @@ pub(super) fn mirror_record(
     if let Some(select) = select {
         record.select = Some(select);
     }
-    let changed = !rows.is_empty() || reselected;
+    let changed = !rows.is_empty() || reselected || aliases.changed();
+    record.record_aliases(aliases.recorded());
     record.source = record::SourceRecord {
         name: source.name.clone(),
         url: source.url.clone(),
@@ -92,7 +96,25 @@ pub(super) fn mirror_record(
     let path = scratch.join("record.toml");
     std::fs::write(&path, record.render()?)
         .with_context(|| format!("writing `{}`", path.display()))?;
-    Ok(vec![(record::record_path(&source.name), path)])
+    let mut files = vec![(record::record_path(&source.name), path)];
+    if aliases.changed() {
+        // The merged table rides the SAME batch as the versions and the
+        // record: a mirror that advertised a spelling before it carried
+        // the package, or recorded carrying a row it had not written,
+        // would be a registry whose own account of itself is wrong.
+        let table = scratch.join("aliases.toml");
+        std::fs::write(&table, aliases.table.render())
+            .with_context(|| format!("writing `{}`", table.display()))?;
+        files.push((
+            format!(
+                "{}/{}",
+                vibe_core::layout_registry::INDEX_DIR,
+                vibe_core::layout_registry::ALIAS_TABLE_FILE
+            ),
+            table,
+        ));
+    }
+    Ok(files)
 }
 
 /// The largest history bundle `--keep-history` stores (per repository).

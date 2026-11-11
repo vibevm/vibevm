@@ -49,6 +49,10 @@ pub(super) struct SourceListing {
     pub versions: Vec<SourceVersion>,
     /// Retired names: `(name, reason, superseded_by)`.
     pub tombstones: Vec<(String, String, Option<String>)>,
+    /// The short spellings the source's OWNER offers (PROP-008 §2.6),
+    /// as authored. What the mirror does with them is the merge rule's
+    /// business, not the listing's: this is only what the source says.
+    pub aliases: vibe_index::aliases::AliasTable,
 }
 
 pub(super) enum SourceReader {
@@ -152,10 +156,15 @@ impl SourceReader {
                     .filter(|(name, _)| tombstone_admitted(selection, name))
                     .map(|(name, t)| (name.clone(), t.reason.clone(), t.superseded_by.clone()))
                     .collect();
+                let mut aliases = vibe_index::aliases::AliasTable::default();
+                for (alias, target) in &index.aliases {
+                    aliases.insert(alias.clone(), target.clone());
+                }
                 Ok(SourceListing {
                     kind: ListingKind::Layout,
                     versions,
                     tombstones,
+                    aliases,
                 })
             }
             SourceReader::PerPackage {
@@ -206,10 +215,25 @@ impl SourceReader {
                         }
                     }
                 }
+                // The table is an input to the source's projection and
+                // sits at its index root, so it is fetched as itself —
+                // `repomd.json` vouches for what the writer WRITES, and
+                // this is what the writer was told.
+                let mut aliases = vibe_index::aliases::AliasTable::default();
+                for (alias, target) in client.alias_table().map_err(refusal_first)? {
+                    aliases.insert(
+                        alias,
+                        vibe_index::types::AliasTarget {
+                            group: target.group,
+                            name: target.name,
+                        },
+                    );
+                }
                 Ok(SourceListing {
                     kind: ListingKind::Index,
                     versions,
                     tombstones,
+                    aliases,
                 })
             }
             SourceReader::PerPackage {
@@ -230,10 +254,13 @@ impl SourceReader {
                         .map_err(layout_root::refusal_first)?;
                     versions.extend(tagged_versions(&repository, &group, name, listed));
                 }
+                // A source with no index has no alias table to carry:
+                // a tag list cannot say what a short spelling means.
                 Ok(SourceListing {
                     kind: ListingKind::Tags,
                     versions,
                     tombstones: Vec::new(),
+                    aliases: vibe_index::aliases::AliasTable::default(),
                 })
             }
         }

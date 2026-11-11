@@ -16,6 +16,7 @@
 
 specmark::scope!("spec://org.vibevm.core/vibevm/VIBEVM-SPEC#registry");
 
+mod alias;
 mod config;
 mod index_step;
 pub(crate) mod layout_root;
@@ -45,6 +46,7 @@ pub fn run(ctx: &output::Context, args: RegistryArgs, root_offline: bool) -> Res
         RegistrySubcommand::SetMirror(sub) => config::run_set_mirror(ctx, sub),
         RegistrySubcommand::Remove(sub) => config::run_remove(ctx, sub),
         RegistrySubcommand::Mirror(sub) => mirror::run_mirror(ctx, sub, root_offline),
+        RegistrySubcommand::Alias(sub) => alias::run_alias(ctx, sub, root_offline),
         RegistrySubcommand::Vendor(sub) => vendor::run_vendor(ctx, sub),
         RegistrySubcommand::Test(sub) => config::run_test(ctx, sub),
         RegistrySubcommand::Redirect(sub) => redirect::run_redirect(ctx, sub),

@@ -44,6 +44,23 @@ pub(super) struct MirrorRecord {
     pub select: Option<SelectRecord>,
     #[serde(default, rename = "version")]
     pub versions: Vec<VersionRecord>,
+    /// The alias rows this mirror last CARRIED from the source
+    /// (PROP-008 §2.6). Not the target's table — that is
+    /// `_index/aliases.toml`, which the mirror owner may edit — but the
+    /// values the source had when they were copied, which is the only
+    /// way a later run can tell a local hand from an untouched copy.
+    /// Additive: a reader that ignores these rows behaves exactly as
+    /// before, so the record's `schema` stays 1.
+    #[serde(default, rename = "alias", skip_serializing_if = "Vec::is_empty")]
+    pub aliases: Vec<AliasRecord>,
+}
+
+/// One alias row as it stood in the source when this mirror copied it.
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+pub(super) struct AliasRecord {
+    pub alias: String,
+    /// The `<group>/<name>` the SOURCE gave, verbatim.
+    pub target: String,
 }
 
 /// `[select]` and the `[[template]]` rows beside it, as recorded.
@@ -166,6 +183,27 @@ impl MirrorRecord {
             let version = |v: &VersionRecord| semver::Version::parse(&v.version).ok();
             (a.package.as_str(), version(a)).cmp(&(b.package.as_str(), version(b)))
         });
+    }
+
+    /// Replace the recorded alias rows with what this run carried.
+    /// Wholesale rather than row-by-row: the rows ARE the statement
+    /// "this is what the source said last time we looked", and a stale
+    /// row left behind would make the next run read an untouched copy
+    /// as a local edit.
+    pub(super) fn record_aliases(&mut self, carried: Vec<(String, String)>) {
+        self.aliases = carried
+            .into_iter()
+            .map(|(alias, target)| AliasRecord { alias, target })
+            .collect();
+        self.aliases.sort_by(|a, b| a.alias.cmp(&b.alias));
+    }
+
+    /// The alias rows the previous run recorded carrying.
+    pub(super) fn carried_aliases(&self) -> Vec<(String, String)> {
+        self.aliases
+            .iter()
+            .map(|row| (row.alias.clone(), row.target.clone()))
+            .collect()
     }
 
     pub(super) fn render(&self) -> Result<String> {

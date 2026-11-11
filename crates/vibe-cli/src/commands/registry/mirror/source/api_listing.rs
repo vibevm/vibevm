@@ -86,6 +86,7 @@ impl SourceReader {
             versions.extend(tagged_versions(&repository, &group, &name, tags));
         }
         Ok(SourceListing {
+            aliases: vibe_index::aliases::AliasTable::default(),
             kind: ListingKind::Api,
             versions,
             tombstones: Vec::new(),

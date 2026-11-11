@@ -9,6 +9,12 @@ use std::path::PathBuf;
 
 use clap::Subcommand;
 
+/// `vibe registry alias` — the registry owner's short spellings
+/// (PROP-008 `#short-name`). Its own file: the hub re-exports it, so
+/// `crate::cli::RegistryAliasArgs` is unchanged.
+mod alias;
+pub use alias::{RegistryAliasAction, RegistryAliasArgs};
+
 #[derive(Debug, clap::Args)]
 pub struct RegistryArgs {
     #[command(subcommand)]
@@ -91,6 +97,11 @@ pub enum RegistrySubcommand {
     /// snapshot version that moved is updated only with
     /// `--update-snapshots`. PROP-002 `#registry-mirror`.
     Mirror(RegistryMirrorArgs),
+
+    /// Manage the short spellings a directory-layout registry offers for
+    /// its own packages — the registry owner's alias table
+    /// (PROP-008 §2.6). Maintainers only: it writes into the registry.
+    Alias(RegistryAliasArgs),
 
     /// Generate a local mirror directory containing every package
     /// referenced by `vibe.lock`, suitable for use as a

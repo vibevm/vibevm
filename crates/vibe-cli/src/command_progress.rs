@@ -384,6 +384,7 @@ pub(crate) fn policy(command: &Command, terminal_attached: bool) -> CommandPolic
             | RegistrySubcommand::RedirectSync(_)
             | RegistrySubcommand::RedirectUpdate(_)
             | RegistrySubcommand::Mirror(_)
+            | RegistrySubcommand::Alias(_)
             | RegistrySubcommand::Vendor(_) => FiniteFallback("Command registry"),
             RegistrySubcommand::Remove(remove) => match &remove.target {
                 RegistryRemoveTarget::Registry(_) | RegistryRemoveTarget::Mirror(_) => {

@@ -38,6 +38,7 @@ use vibe_wire::generated::registry_mirror_report::RegistryMirrorReport;
 use crate::cli::RegistryMirrorArgs;
 use crate::output;
 
+mod aliases;
 mod config;
 mod git_source;
 mod history;
@@ -208,11 +209,38 @@ pub(super) fn run_mirror(
         });
     }
     let facts = source::carried_facts(&listing, &planned, &source_reg.name);
+    // The source's alias table, merged into the target's by the rule in
+    // `registry::alias`: a row the mirror OWNER edited is never
+    // overwritten, a row whose package this mirror does not carry is
+    // left behind, and the run says which.
+    let alias_merge =
+        aliases::alias_merge(&listing, &planned, &target_index, tree.root(), &recorded)?;
+    // Said out loud rather than carried in the report envelope: the
+    // mirror report is a wire schema of its own, and these three counts
+    // do not earn a format change of their own yet (B-293).
+    for (alias, target) in &alias_merge.dropped {
+        ctx.diagnostic(&format!(
+            "the alias `{alias}` was not carried — this mirror does not hold `{target}`"
+        ));
+    }
+    for (alias, held, offered) in &alias_merge.conflicts {
+        ctx.diagnostic(&format!(
+            "the alias `{alias}` was edited here and the source disagrees — keeping `{held}`, \
+             the source offers `{offered}`"
+        ));
+    }
+    for alias in &alias_merge.withdrawn {
+        ctx.diagnostic(&format!(
+            "the alias `{alias}` was withdrawn upstream and had not been edited here, so it \
+             goes with it"
+        ));
+    }
     let scratch = tempfile::tempdir().context("creating a scratch directory")?;
     let mut files = mirror_record(
         &source_reg,
         &planned,
         selection.to_record(),
+        &alias_merge,
         tree.root(),
         scratch.path(),
     )?;
