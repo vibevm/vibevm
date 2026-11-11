@@ -853,3 +853,46 @@ answer be «general for any SDK switcher, nvm parity proven». Design authority:
   `bad_version_pattern` in the `VERSIONS` family, and a channel the package does not declare is
   the existing `unknown_channel` whether `--channel` or the pattern named it; `schemas/application_versions.jtd.json` is
   **unchanged**, because the filter narrows rows the document already had.
+
+## AV-FMT-107 — `vibe app versions`: the `in drop` mark, `--in-drop`, and the `drop` row member (owner decision, closed-network installability)
+
+Status: **delivered 2026-11-12**. Owner request of 2026-11-12, «давай сделаем это»: a listing must
+say which versions this machine can install *here and now*, which in a closed network means which
+of them an `[artifacts] packages` drop (PROP-066 `#drops`) already holds the payload of. Design
+authority: `spec://org.vibevm.core/vibevm/common/PROP-075#VERSIONS-LIST-OUTPUT` (amended), with one
+pointer clause in PROP-066 `#drops`.
+
+- **`[format.cli-application-versions]`** (`schemas/application_versions.jtd.json`,
+  `vibe-app-versions/1`), epoch **1 → 1**, additive and optional: `row` gains
+  `drop`, an array of the paths that already hold every input this version's installer option for
+  the running platform downloads, one per input, in the option's declaration order. Omitted when
+  the drop holds none of them, when no drop is configured, and when the file names cannot be known
+  from the skeleton render alone, so a reader that ignores the member sees exactly what it saw
+  before and no existing member changes meaning. The document's own description gained the mark.
+  `corpus = "none"` for this format, so there is no golden corpus to reproject.
+- **Human output.** The mark joins the local state in the **one** trailing `— …` segment a row
+  already had, comma-separated: `— in drop`, `— installed (held), in drop`. It is shown on an
+  installed row too, because it states a fact about the drop rather than about installability, and
+  that is what makes `--in-drop` mean the same thing on every row.
+- **New flag `--in-drop`** on `vibe app versions`: keep only the marked rows. It narrows **before**
+  the limit, exactly as `PATTERN` does, so `total` / `shown` / `more` describe the narrowed set.
+  It **conflicts with `--installed`** at the parser: `--installed` answers from this home and the
+  template cache alone, with no registry and therefore no manifest to take a file name from, so
+  there is nothing for the filter to narrow.
+- **New refusal code `no_package_drop`** in the `VERSIONS` family: `--in-drop` with no
+  `[artifacts] packages` drop configured, named rather than answered as an empty listing. No drop
+  **without** `--in-drop` stays what it was — no mark, no warning, no error.
+- **The cost, which is the reason the shape is what it is.** The file names come out of the
+  **skeleton** render of `#TEMPLATE-TWO-STAGE` and a published version's own manifest on disk,
+  reusing the template and the version records the domain read already captured: marking every row
+  of Node's domain costs no HTTP request, no digest document, no render into a store and no second
+  registry walk. The drop is searched **by name alone** — install's convention minus the
+  `<drop>/<sha256>/<file>` rung a listing has no digest for — and existence only: **no byte of a
+  payload is read and nothing is hashed**. Integrity stays the install's job, where the digest is
+  known. A payload filed only under the digest rung is served by every fetch as before and simply
+  goes unmarked; a file name a skeleton cannot settle is unknown and the row is unmarked, never
+  guessed.
+- **New public surface, additive**: `vibe_core::remap::drop::package_lookup_by_name` (the
+  convention's by-name rungs; `package_lookup` now delegates to the same private builder and is
+  byte-for-byte unchanged) and a defaulted `Domains::in_drop` seam method in `vibe-app`, so every
+  existing implementor keeps compiling and answers "no mark".

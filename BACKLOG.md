@@ -3160,3 +3160,47 @@ fixed rather than the assertion loosened. Severity **P2** (a flaky gate
 hides real regressions).
 
 Independently reproduced by the byte-exact registry checkout work (2026-11-11): on pristine `main` at `b89e8f673`, 10 repeats of `cli_registry_mirror_templates` under `--test-threads=4` failed once and passed alone, so the flake predates both that change and the alias table.
+
+---
+
+## B-300 — `vibe app versions --installed` cannot carry the `in drop` mark {#b-300}
+
+The `in drop` mark of PROP-075 `#VERSIONS-LIST-OUTPUT` (landed 2026-11-12,
+`AV-FMT-107`) needs a manifest to learn which files this platform's installer
+option downloads. `--installed` deliberately answers from this home and the
+template cache alone — no registry root, no version records — so it has no
+manifest for any row and marks nothing. `--in-drop` with `--installed` is
+therefore refused at the parser, which is honest but is a hole in a grid a user
+can see.
+
+**The fix that is available and was not taken.** An installed version's own
+rendered manifest is already on this machine, in its library directory, and the
+index record names the option that was chosen (`Installation::option`,
+`platform`, `arch`) — so the names could be read with no registry and no
+network at all, which would also make the mark *more* exact than the
+registry path's (the selected option is recorded rather than re-derived). What
+stopped it in this change was scope: the probe is one seam (`Domains::in_drop`)
+fed by the registry adapter, and a second source would have meant a second
+feeding path through the same seam for the one flag combination that is least
+useful — an installed version is already installed, so "is its payload in the
+drop" answers nothing a user acts on. Severity **P3** (a refused flag
+combination with a clear message, not a wrong answer).
+
+## B-301 — a `template_optional` installer option can be marked `in drop` although a full render would drop it {#b-301}
+
+PROP-075 `#TEMPLATE-TWO-STAGE`'s skeleton render substitutes every digest
+variable with the placeholder, and `template_optional` drops an option only on
+a `MissingDigest` error — which a skeleton therefore never raises
+(`crates/vibe-template/src/render.rs`, `render_options`). So where upstream
+publishes no file for this platform at some version, the listing still sees the
+option, computes its file name and may mark the row, while the install that
+follows would find that option dropped.
+
+**Why it was left.** It cannot produce a wrong mark in practice: the reason the
+full render drops the row is that upstream's digest document names no such
+file, which is also the reason nobody could have put a file of that name in the
+drop. Closing it properly would mean reading the digest document — exactly the
+cost the mark exists to avoid — so the honest alternatives are to leave it, or
+to teach `template_optional` a second, digest-free criterion. Recorded so that
+a future reader of a surprising mark finds the mechanism rather than hunting
+it. Severity **P3**.
