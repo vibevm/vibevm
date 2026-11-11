@@ -21,7 +21,6 @@ specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-008#s
 
 use std::path::PathBuf;
 
-use chrono::Utc;
 use clap::{Parser, Subcommand};
 
 use crate::aliases::{self, AliasTable};
@@ -62,8 +61,6 @@ pub enum Action {
 }
 
 pub fn run(args: Args) -> Result<()> {
-    // F2-1 — the clock enters here, once per command.
-    let at = Utc::now();
     let data_dir = args.data_dir.clone();
     let mut table = AliasTable::read(&data_dir)?;
     match args.action {
@@ -125,6 +122,16 @@ pub fn run(args: Args) -> Result<()> {
     // every client actually reads.
     table.write(&data_dir)?;
     aliases::attach(&mut index, table);
+    // **No clock enters here**, and that is the whole reason this verb
+    // appends no journal record either. The catalog's `generated_at`
+    // means "this reflects the journal up to that moment", and the
+    // journal did not move — so stamping `now()` would make
+    // `rebuild --check` fail for ever on any registry that offers a
+    // spelling: the rebuild projects the journal's last moment, and a
+    // catalog stamped later carries a fact its inputs cannot explain.
+    // The stamp therefore stays the fold's own, which is derivable
+    // from the inputs exactly as the proof requires (PROP-044 §4.4).
+    let at = index.generated_at;
     index.write_to(&data_dir, &WriteCtx { at })
 }
 

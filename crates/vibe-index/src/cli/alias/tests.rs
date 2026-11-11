@@ -1,5 +1,6 @@
 use super::*;
 
+use chrono::Utc;
 use std::path::Path;
 
 use crate::index::memory::default_generator;
@@ -49,8 +50,11 @@ fn registry(tmp: &Path) -> PathBuf {
     initialised(&data);
     publish(&data, "org.vibevm.qwen", "qwen-code", "0.27.2");
     let index = project(replay(&default_dir(&data)).expect("replay")).expect("fold");
+    // Stamped from the fold, not from a fresh clock — the same rule the
+    // real write paths keep, and what makes the catalog provable.
+    let at = index.generated_at;
     index
-        .write_to(&data, &WriteCtx { at: Utc::now() })
+        .write_to(&data, &WriteCtx { at })
         .expect("catalog writes");
     data
 }
@@ -212,5 +216,50 @@ fn a_row_the_registry_outgrew_is_named_on_the_next_edit() {
     assert!(
         error.to_string().contains("`qwen` is already the name"),
         "the refusal must name the row that went bad, not the one being added: {error}"
+    );
+}
+
+/// The proof that ships must keep passing on a registry that offers a
+/// spelling — and it is the reason this verb runs no clock.
+///
+/// `rebuild --check` projects the catalog from the registry's inputs and
+/// byte-compares it with what is on disk. The alias table is one of
+/// those inputs and the journal is the other, so a catalog stamped with
+/// `now()` by an alias edit — while the journal's last moment stayed
+/// where it was — would carry a `generated_at` its inputs cannot
+/// explain, and the check would fail for ever after the first alias.
+#[test]
+fn the_rebuild_proof_still_holds_after_an_alias_edit() {
+    let tmp = tempfile::tempdir().expect("tempdir");
+    let data = registry(tmp.path());
+    crate::rebuild::check_catalog(&data)
+        .expect("the fixture catalog projects")
+        .drift
+        .is_clean()
+        .then_some(())
+        .expect("the fixture starts clean");
+
+    add(&data, "qwen", "org.vibevm.qwen/qwen-code", false).expect("the alias stands");
+
+    let outcome = crate::rebuild::check_catalog(&data).expect("the check runs");
+    assert!(
+        outcome.drift.is_clean(),
+        "an alias edit must leave the catalog provable from its inputs: {:?}",
+        outcome.drift.lines()
+    );
+
+    // And withdrawing it returns to a provable catalog too.
+    run(Args {
+        data_dir: data.clone(),
+        action: Action::Remove {
+            alias: "qwen".into(),
+        },
+    })
+    .expect("withdrawal");
+    let outcome = crate::rebuild::check_catalog(&data).expect("the check runs");
+    assert!(
+        outcome.drift.is_clean(),
+        "withdrawing must leave it provable as well: {:?}",
+        outcome.drift.lines()
     );
 }
