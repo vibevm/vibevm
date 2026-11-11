@@ -246,6 +246,25 @@ else:
 '
 # nvm keeps one alias file per LTS line plus `lts/*` for the newest line;
 
+# nvm writes its LTS lines into the alias store as real files the moment
+# it reads a remote index (`nvm.sh` 2816-2822), so sandbox A's store holds
+# `lts/*`, `lts/iron`, `lts/jod` beside whatever the user named. vibe keeps
+# the same facts as **channels** and the shim deliberately does not copy
+# them into a second store, so sandbox B reads them from vibe and spells
+# them nvm's way: `lts` is vibe's name for "the newest LTS of any line",
+# which is nvm's `lts/*`, and the two are one name under two spellings.
+B_CHANNELS_PY='
+import json, sys
+data = json.load(sys.stdin)
+rows = []
+for package in data.get("packages", []):
+    for name, targets in (package.get("channels") or {}).items():
+        if not targets:
+            continue
+        rows.append(("lts/*" if name == "lts" else name, targets[0]))
+print(",".join(f"{name}={target}" for name, target in sorted(rows)) or "")
+'
+
 vibe_bin() { printf '%s' "${VIBE_BIN:?observe.sh: VIBE_BIN is required for sandbox B}"; }
 
 # The home's inventory, read once per field that needs it.
@@ -271,13 +290,14 @@ b_default() { b_list_read "$B_DEFAULT_PY" ""; }
 b_alias_dir() { printf '%s' "${OBS_TOOLROOT:-}/apps/nvm/alias"; }
 
 b_aliases() {
-    local dir rel name out="" value default
+    local dir rel name out="" value default channels
     dir="$(b_alias_dir)"
     # `default` is never a file here: it is the slot's default, which is
     # vibe's own answer and the one source of truth for it. nvm keeps it
-    # as a file, and both report the same `default=<version>` row.
+    # as a file, and both sandboxes report the same `default=<version>`.
     default="$(b_default)"
     [ "$default" = "$ABSENT" ] || out="default=$default"
+    # The named user aliases, from the store the shim owns.
     if [ -d "$dir" ]; then
         while IFS= read -r rel; do
             name="${rel#"$dir"/}"
@@ -286,6 +306,13 @@ b_aliases() {
             out="${out:+$out,}$name=$value"
         done < <(find "$dir" -type f 2>/dev/null | sort)
     fi
+    # The LTS lines, which nvm keeps as files in the same store and vibe
+    # keeps as channels. Asked for **offline**, so the observation never
+    # makes a request of its own: it reports the names the tool already
+    # knows, which is exactly what nvm's own `lts/` files are.
+    channels="$("$(vibe_bin)" app versions org.vibevm.node/node --json --offline 2>/dev/null |
+        python3 -I -c "$B_CHANNELS_PY" 2>/dev/null)"
+    [ -z "$channels" ] || out="${out:+$out,}$channels"
     printf '%s' "${out:-none}"
 }
 
