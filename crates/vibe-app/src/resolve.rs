@@ -291,61 +291,13 @@ pub fn versions_from_global_with_operation(
     Ok(versions)
 }
 
-/// The roots of the **directory-shaped** registries the configured chain
-/// reads, in precedence order — the places a template is discovered.
-///
-/// PROP-075 `#TEMPLATE-DISCOVERY` reads a template off the manifests of a
-/// package directory, which is what a local-directory registry, a
-/// `monorepo` working copy and a mirrored layout registry all are. A
-/// per-package **git** registry has no such root and contributes none.
-pub fn directory_roots_from_global_with_operation(
-    settings_root: &Path,
-    offline: bool,
-    operation: &vibe_package_source::SourceOperation,
-) -> Result<Vec<PathBuf>, ResolveError> {
-    let resolver = global_resolver(
-        settings_root,
-        "(the configured registries)",
-        offline,
-        operation,
-    )?;
-    let mut roots: Vec<PathBuf> = Vec::new();
-    let declared_roots = |multi: &vibe_registry::MultiRegistryResolver,
-                          roots: &mut Vec<PathBuf>| {
-        if let Ok(sources) = multi.sources() {
-            for source in sources {
-                if let vibe_registry::multi_registry_resolver::RegistrySource::Local(local) = source
-                {
-                    roots.push(local.registry.root().to_path_buf());
-                }
-            }
-        }
-    };
-    match &resolver {
-        vibe_package_source::InstallResolver::Local(local, _) => {
-            roots.push(local.root().to_path_buf());
-        }
-        vibe_package_source::InstallResolver::LockedLocal { local, held, .. } => {
-            roots.push(local.root().to_path_buf());
-            declared_roots(held, &mut roots);
-        }
-        vibe_package_source::InstallResolver::Multi(multi, _) => {
-            declared_roots(multi, &mut roots);
-        }
-        vibe_package_source::InstallResolver::Embedded {
-            locals, declared, ..
-        } => {
-            for local in locals {
-                roots.push(local.root().to_path_buf());
-            }
-            if let Some(multi) = declared {
-                declared_roots(multi, &mut roots);
-            }
-        }
-    }
-    roots.dedup();
-    Ok(roots)
-}
+/// Which directory-shaped registries the configured chain reads, and
+/// where: its own responsibility, because a `monorepo` root is a
+/// capture whose lease must travel with it.
+#[path = "resolve/roots.rs"]
+mod roots;
+
+pub use roots::{DirectoryRoots, directory_roots_from_global_with_operation};
 
 /// One local-directory registry's versions; a package it does not carry
 /// contributes nothing rather than failing the enumeration.

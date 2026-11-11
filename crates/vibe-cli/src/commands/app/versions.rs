@@ -82,8 +82,13 @@ impl Domains for RegistryDomains {
         if self.cache_only {
             return Ok(cached_domain(&layer, &group, name));
         }
-        for root in self.roots()? {
-            match layer.for_directory(&root, &group, name) {
+        // The whole value is held for the loop: a `monorepo` root is a
+        // capture its source owns, and dropping the lease would delete the
+        // tree out from under the read (PROP-075
+        // `#VERSIONS-CHANNEL-DISCOVERY`).
+        let found_roots = self.roots()?;
+        for root in found_roots.roots() {
+            match layer.for_directory(root, &group, name) {
                 Ok(Some(found)) => {
                     return Ok(directory_domain(&layer, &found, Some(root.as_path())));
                 }
@@ -91,27 +96,26 @@ impl Domains for RegistryDomains {
                 Err(error) => return Err(error.to_string()),
             }
         }
+        drop(found_roots);
         self.published(&group, name)
     }
 }
 
 impl RegistryDomains {
     /// The directory-shaped registries this listing may read a template
-    /// from, in precedence order (PROP-075 `#TEMPLATE-DISCOVERY`).
-    fn roots(&self) -> Result<Vec<PathBuf>, String> {
+    /// from, in precedence order (PROP-075 `#TEMPLATE-DISCOVERY`), with
+    /// the lease that keeps a captured working copy on disk.
+    fn roots(&self) -> Result<vibe_app::DirectoryRoots, String> {
         if let Some(root) = &self.registry {
-            return Ok(vec![root.clone()]);
+            return Ok(vibe_app::DirectoryRoots::given(vec![root.clone()]));
         }
-        let mut roots: Vec<PathBuf> = self.embedded.clone().into_iter().collect();
-        roots.extend(
-            vibe_app::directory_roots_from_global_with_operation(
-                self.settings.path(),
-                self.offline,
-                &self.operation,
-            )
-            .map_err(|error| error.to_string())?,
-        );
-        Ok(roots)
+        vibe_app::directory_roots_from_global_with_operation(
+            self.settings.path(),
+            self.offline,
+            &self.operation,
+        )
+        .map(|found| found.ahead_of(self.embedded.clone()))
+        .map_err(|error| error.to_string())
     }
 
     /// The concretely published versions of a package with no template.

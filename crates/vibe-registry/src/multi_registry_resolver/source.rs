@@ -195,6 +195,41 @@ impl RegistrySource {
             RegistrySource::Monorepo(mono) => &mono.url,
         }
     }
+
+    /// The **directory root** this source serves packages from, laid out
+    /// `<root>/<group>/<name>/v<version>/` — the place a template is read
+    /// off the manifests on disk (PROP-075 `#TEMPLATE-DISCOVERY`).
+    ///
+    /// A `localdir` registry is that directory. A `monorepo` registry's is
+    /// its **working copy**, opened on first use and reused afterwards, so
+    /// one repository answers as a directory registry like any other. A
+    /// per-package **git** registry has no such root and answers `None`,
+    /// and so does a working copy that cannot be opened — a root is an
+    /// enumeration's optional contribution, never its failure.
+    ///
+    /// `offline` reads only a local repository and only its local
+    /// candidates, exactly as a resolution under `--offline` does
+    /// (PROP-002 `#offline-local`).
+    ///
+    /// Deciding this per variant beside the variants is the point: a
+    /// caller that matched the variants itself forgot the monorepo, and
+    /// every listing over the corporate shape — one mirrored monorepo and
+    /// nothing else — then had no root at all (PROP-075
+    /// `#VERSIONS-CHANNEL-DISCOVERY`).
+    pub fn directory_root(&self, offline: bool) -> Option<PathBuf> {
+        match self {
+            RegistrySource::Git(_) => None,
+            RegistrySource::Local(ls) => Some(ls.registry.root().to_path_buf()),
+            RegistrySource::Monorepo(mono) => {
+                let opened = if offline {
+                    mono.offline_local().ok().flatten()
+                } else {
+                    mono.local().ok()
+                };
+                opened.map(|local| local.root().to_path_buf())
+            }
+        }
+    }
 }
 
 /// Whether a url names a **local directory** by an explicit `file:` scheme

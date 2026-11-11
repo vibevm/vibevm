@@ -155,7 +155,7 @@ pub use portable::{
 pub use portable::{FullImportPreview, export_portable, preview_full_import, selected_import_keys};
 pub use proxies::{proxy_file_name, sync as sync_proxies, sync_locked as sync_proxies_locked};
 pub use resolve::{
-    ResolvedPackage, directory_roots_from_global_with_operation, from_global,
+    DirectoryRoots, ResolvedPackage, directory_roots_from_global_with_operation, from_global,
     from_global_with_operation, from_local_registry, from_manifest, global_resolver,
     local_registry_carries, qualified_ref, versions_from_global_with_operation,
 };

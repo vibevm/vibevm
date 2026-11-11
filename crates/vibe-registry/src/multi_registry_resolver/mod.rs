@@ -504,6 +504,10 @@ pub(crate) mod test_support;
 mod offline_tests;
 
 #[cfg(test)]
+#[path = "source_tests.rs"]
+mod source_tests;
+
+#[cfg(test)]
 #[path = "tests.rs"]
 mod tests;
 
