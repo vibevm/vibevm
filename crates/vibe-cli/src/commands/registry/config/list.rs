@@ -251,13 +251,19 @@ pub(in crate::commands::registry) fn run_list(
     }
 
     ctx.heading(&format!(
-        "Registries ({}; primary listed first)",
+        "Registries ({}; declared order)",
         registries.len()
     ));
     for (i, reg) in registries.iter().enumerate() {
-        // Declared order still decides what "first" means; the effective
-        // primary below says which of them resolution actually asks first.
-        let primary_marker = if i == 0 { " (primary)" } else { "" };
+        // The tag goes on the registry resolution actually asks first, not
+        // on whichever row happens to be declared first: tagging a row the
+        // source policy disables `(primary)` contradicts the effective
+        // primary printed below it, and the disabled row is the one a
+        // reader is already unsure about.
+        let primary_marker = match effective_primary.as_deref() {
+            Some(name) if name == reg.name => " (primary)",
+            _ => "",
+        };
         let adapter_label = reg
             .adapter
             .as_deref()
