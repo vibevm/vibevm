@@ -33,4 +33,7 @@ commands = [
   "nvm alias mine",
   "nvm reinstall-packages --only=lts 22.9.0",
   "nvm uninstall --only=lts 22.9.0",
+  "nvm install --no-progress --only=lts,non-lts 22.9.0",
+  "nvm install --no-progress --only=alpha 22.9.0",
+  "nvm install --no-progress --only=bogus 22.9.0",
 ]
