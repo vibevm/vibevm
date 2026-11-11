@@ -47,6 +47,52 @@ fn owned_config(windows: bool) -> Vec<&'static str> {
     entries
 }
 
+/// What a failed controlled operation may say about itself.
+///
+/// A remote's stderr is untrusted and may reflect authorization, so a
+/// credential-aware contact — HTTPS with or without a captured header,
+/// SSH with an admitted identity — keeps the fixed refusal and publishes
+/// nothing of it, even after token scrubbing. An operation that carries no
+/// such context cannot leak one: a local repository is read through the
+/// filesystem with no credential, header, proxy or TLS input of any kind,
+/// and an absent remote is an operation on objects this process already
+/// owns. For those two, Git's own words **are** the diagnosis, because an
+/// exit 128 with no text at all is undiagnosable — which is exactly how
+/// `Filename too long` read as nothing but a refused registry source
+/// (PROP-001 `#windows-ux`).
+fn failure_text(remote: Option<&AdmittedRemote>, stderr: &[u8]) -> String {
+    const REFUSED: &str =
+        "direct Git operation failed; redirects and ambient credential routes are disabled";
+    match remote {
+        Some(AdmittedRemote::Https { .. } | AdmittedRemote::Ssh(_)) => REFUSED.to_owned(),
+        None | Some(AdmittedRemote::Local { .. }) => {
+            let text = stderr_tail(stderr, 4096);
+            if text.is_empty() {
+                REFUSED.to_owned()
+            } else {
+                text
+            }
+        }
+    }
+}
+
+/// The trailing `limit` bytes of `stderr` as text, cut on a character
+/// boundary and marked when anything was dropped: Git writes the `fatal:`
+/// line that ends an operation last, after however many `error:` lines it
+/// collected on the way.
+fn stderr_tail(stderr: &[u8], limit: usize) -> String {
+    let text = String::from_utf8_lossy(stderr);
+    let text = text.trim();
+    if text.len() <= limit {
+        return text.to_owned();
+    }
+    let mut start = text.len() - limit;
+    while !text.is_char_boundary(start) {
+        start += 1;
+    }
+    format!("…{}", &text[start..])
+}
+
 pub(super) struct Context<'a> {
     profile: &'a NativeGitAdmission,
     root: tempfile::TempDir,
@@ -184,6 +230,9 @@ impl<'a> Context<'a> {
     ) -> Result<Output, GitError> {
         let mut command = self.command(repo, remote)?;
         command.args(args);
+        // Named the way a transfer names itself: without the argv, "re-run
+        // the command by hand" is not an instruction anybody can follow.
+        tracing::debug!(target: "vibe_registry::git", argv = ?args, repo = ?repo, "running git (admitted)");
         let control = crate::git_backend::transfers::current()
             .progress
             .unwrap_or_default()
@@ -204,14 +253,10 @@ impl<'a> Context<'a> {
         {
             return Err(error);
         }
-        // Remote stderr is untrusted and may reflect authorization. Do not
-        // publish it from this credential-aware path, even after token scrubbing.
         Err(GitError::CommandFailed {
             cmd: "admitted native Git operation".into(),
             status: output.status.code().unwrap_or(-1),
-            stderr:
-                "direct Git operation failed; redirects and ambient credential routes are disabled"
-                    .into(),
+            stderr: failure_text(remote, &output.stderr),
         })
     }
     pub(super) fn transfer(
@@ -274,7 +319,7 @@ impl<'a> Context<'a> {
 
 #[cfg(test)]
 mod tests {
-    use super::owned_config;
+    use super::{AdmittedRemote, failure_text, owned_config, stderr_tail};
 
     #[test]
     #[specmark::spec(verifies = "spec://org.vibevm.core/vibevm/common/PROP-073#NATIVE-WINDOWS-LAW")]
@@ -290,5 +335,47 @@ mod tests {
         // mirrored monorepo dies with `Filename too long` and exit 128.
         assert!(!posix.contains(&"core.longpaths=true"));
         assert_eq!(windows.last(), Some(&"core.longpaths=true"));
+    }
+
+    #[test]
+    #[specmark::spec(
+        verifies = "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-001#windows-ux"
+    )]
+    fn a_failure_with_no_credential_context_publishes_what_git_said() {
+        let fatal = b"error: unable to create file a/b: Filename too long\n\
+                      fatal: cannot create directory at 'a/b': Filename too long\n";
+        // An operation on objects this process owns, and a repository on
+        // disk: no credential, header, proxy or TLS input exists to leak,
+        // and an exit 128 with no text is undiagnosable.
+        let local = AdmittedRemote::Local {
+            address: "C:/srv/mono.git".into(),
+        };
+        for remote in [None, Some(&local)] {
+            let published = failure_text(remote, fatal);
+            assert!(published.contains("Filename too long"), "{published}");
+            assert!(published.ends_with("Filename too long"), "{published}");
+        }
+        // A silent failure still says something actionable.
+        assert!(failure_text(None, b"  \n").contains("direct Git operation failed"));
+        // A contact that could carry an authorization publishes none of
+        // its stderr, which is the same arm an admitted SSH remote takes.
+        let https = AdmittedRemote::Https {
+            url: reqwest::Url::parse("https://forge.invalid/mono.git").unwrap(),
+            authorization: None,
+        };
+        let refused = failure_text(Some(&https), b"fatal: Authentication failed for 'x'\n");
+        assert!(!refused.contains("Authentication"), "{refused}");
+        assert!(refused.contains("ambient credential routes are disabled"));
+    }
+
+    #[test]
+    fn a_long_stderr_keeps_the_tail_that_carries_gits_verdict() {
+        let mut noisy = "error: unable to create file ы: Filename too long\n".repeat(400);
+        noisy.push_str("fatal: giving up\n");
+        let kept = stderr_tail(noisy.as_bytes(), 4096);
+        assert!(kept.starts_with('…'));
+        assert!(kept.ends_with("fatal: giving up"));
+        assert!(kept.len() <= 4096 + '…'.len_utf8());
+        assert_eq!(stderr_tail(b"  one line  ", 4096), "one line");
     }
 }
