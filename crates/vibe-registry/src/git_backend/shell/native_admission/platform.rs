@@ -115,6 +115,57 @@ pub(super) fn path_text(path: &Path, windows: bool) -> Option<String> {
     })
 }
 
+/// The literal the Windows OpenSSH client prints where `%ProgramData%`
+/// belongs. `ssh -G` reports its compiled-in system defaults as
+/// `__PROGRAMDATA__\ssh/ssh_known_hosts`; the token is expanded by the
+/// client itself when it opens the file, not by the environment, so no
+/// ordinary `${NAME}` expansion resolves it.
+pub const PROGRAM_DATA_TOKEN: &str = "__PROGRAMDATA__";
+
+/// `path` with a leading [`PROGRAM_DATA_TOKEN`] component replaced by
+/// `program_data`, written with the Windows separator throughout. `None`
+/// when `path` does not begin with that token followed by a separator —
+/// the token is a whole leading component, never a prefix of a name.
+pub fn expand_program_data(path: &str, program_data: &str) -> Option<String> {
+    let tail = path
+        .strip_prefix(PROGRAM_DATA_TOKEN)?
+        .strip_prefix(['\\', '/'])?;
+    Some(format!(
+        r"{}\{}",
+        program_data
+            .replace('/', "\\")
+            .trim_end_matches('\\')
+            .to_owned(),
+        tail.replace('/', "\\")
+    ))
+}
+
+/// Whether `path` is absolute for a client running on `windows`. There a
+/// path is absolute only with a drive (`C:\x`, `C:/x`) or a `\\` root (a
+/// UNC share, or a device namespace such as the OpenSSH agent's named
+/// pipe). A rootless POSIX path — `/etc/ssh/ssh_known_hosts`, which the
+/// MSYS client bundled with Git for Windows prints for its compiled-in
+/// defaults — is *not* absolute on Windows: it names a different file on
+/// every drive the process might be on. `windows` is a parameter, not a
+/// `cfg`, so the Windows decision is tested on every platform; with
+/// `windows` false this is exactly [`Path::is_absolute`].
+pub fn absolute_path(path: &Path, windows: bool) -> bool {
+    if !windows {
+        return path.is_absolute();
+    }
+    let simplified = simplified_path(path.to_path_buf());
+    let Some(text) = simplified.to_str() else {
+        return false;
+    };
+    let bytes = text.as_bytes();
+    (bytes.len() >= 3
+        && bytes[0].is_ascii_alphabetic()
+        && bytes[1] == b':'
+        && matches!(bytes[2], b'\\' | b'/'))
+        || text.starts_with(r"\\")
+        || text.starts_with("//")
+}
+
 /// A Windows named-pipe path (`\\.\pipe\name`), by either separator
 /// spelling: the endpoint of the Windows OpenSSH agent.
 pub fn named_pipe(path: &Path) -> bool {
@@ -317,6 +368,55 @@ mod tests {
         assert!(named_pipe(win32.default_agent.as_deref().unwrap()));
         // Without ProgramData the system configuration is unknown: refused.
         assert!(windows_ssh_client(system, None, None, |_| false).is_err());
+    }
+
+    #[test]
+    #[specmark::spec(verifies = "spec://org.vibevm.core/vibevm/common/PROP-073#NATIVE-WINDOWS-LAW")]
+    fn program_data_tokens_expand_and_only_drive_or_unc_paths_are_absolute_on_windows() {
+        // The exact shape Win32-OpenSSH prints, mixed separators and all.
+        assert_eq!(
+            expand_program_data(r"__PROGRAMDATA__\ssh/ssh_known_hosts", r"C:\ProgramData"),
+            Some(r"C:\ProgramData\ssh\ssh_known_hosts".to_owned())
+        );
+        assert_eq!(
+            expand_program_data("__PROGRAMDATA__/ssh/ssh_config", "C:/ProgramData/"),
+            Some(r"C:\ProgramData\ssh\ssh_config".to_owned())
+        );
+        // A whole leading component only: a prefix of a name is not the token.
+        assert_eq!(
+            expand_program_data(r"__PROGRAMDATA__X\ssh", r"C:\ProgramData"),
+            None
+        );
+        assert_eq!(
+            expand_program_data("__PROGRAMDATA__", r"C:\ProgramData"),
+            None
+        );
+        assert_eq!(
+            expand_program_data(r"C:\ProgramData\ssh", r"C:\ProgramData"),
+            None
+        );
+
+        for absolute in [
+            r"C:\ProgramData\ssh\ssh_known_hosts",
+            "C:/Users/dev/.ssh/known_hosts",
+            r"\\server\share\known_hosts",
+            r"\\.\pipe\openssh-ssh-agent",
+            r"\\?\C:\Users\dev\.ssh\known_hosts",
+        ] {
+            assert!(absolute_path(Path::new(absolute), true), "{absolute}");
+        }
+        for relative in [
+            "known_hosts",
+            // A rootless POSIX path names a different file on every drive.
+            "/etc/ssh/ssh_known_hosts",
+            r"__PROGRAMDATA__\ssh\ssh_known_hosts",
+            r"C:known_hosts",
+        ] {
+            assert!(!absolute_path(Path::new(relative), true), "{relative}");
+        }
+        // Off Windows this is exactly `Path::is_absolute`.
+        assert!(absolute_path(Path::new("/etc/ssh/ssh_known_hosts"), false));
+        assert!(!absolute_path(Path::new(r"C:\Users\dev"), false));
     }
 
     #[test]

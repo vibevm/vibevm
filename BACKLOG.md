@@ -2856,7 +2856,7 @@ structure, and it goes when the file does.
 | @fact:B265-DISPOSITION **disposition** | `done` — landed 2026-11-11 as `feat(app): a version file's value selects the way a switcher's does` (`AV-FMT-106`), on the owner's requirement that the answer be general for any SDK switcher with nvm parity proven. The **pin** reading, taken as the general rule and stated as a decision fact, `PROP-075#VERSION-FILE-VALUE`: a complete version in a version file selects exactly that version, a partial one is a prefix, a channel keeps its channel meaning, every other spelling keeps its requirement meaning — both formats, every reader. `--write-version-file` keeps writing the plain resolved version, which now round-trips to exactly itself, so the second option's cost (bytes other tools read) is not paid. The first option's cost **is** paid and is recorded rather than hidden: a `.nvmrc` holding `22.9.0` used to select the newest 22.x and a `22.9` reached into 22.10. The CLI spelling is deliberately unchanged — `@22.9.0` is still a requirement and `@=22.9.0` the pin — so nothing recorded in a manifest, a lock or an index changes meaning. |
 | @fact:B265-FILED **filed by** | APP-VERSIONS P7f, 2026-11-11. |
 
-## B-266 — the vibenvm shim dropped every flag written after the version {#b-266}
+## B-278 — the vibenvm shim dropped every flag written after the version {#b-278}
 
 | field | value |
 |---|---|
@@ -2866,15 +2866,15 @@ structure, and it goes when the file does.
 | @fact:B277-DISPOSITION **disposition** | `done` — fixed 2026-11-11 in `org.vibevm.node/vibenvm@1.1.2`. The discipline is now stated rather than guessed: `PROP-075#VIBENVM-ARGUMENT-ORDER` records nvm's rule branch by branch from the pinned `nvm.sh` v0.41.0 — `install`'s two passes with exit 6 for a selecting flag written after the version, the whole-list scans of `use` / `which` (last version wins) and of `ls` / `ls-remote` / `version` / `version-remote` (first pattern wins), the stop-at-the-version of `run` / `exec`, and the one-version counts of `uninstall` / `reinstall-packages`. **Why nine cases missed it**: not one asked for a flag after the version. `conformance/vibenvm/cases/17-flags-after-the-version.toml` now asks each wish in both positions with the version file in the observation record. |
 | @fact:B277-FILED **filed by** | the corporate-network proof, 2026-11-11. |
 
-## B-267 — `nvm use default` was refused although `default` is the slot default {#b-267}
+## B-279 — `nvm use default` was refused although `default` is the slot default {#b-279}
 
 | field | value |
 |---|---|
-| @fact:B267-WHAT **what** | `nvm use default` answered "`default` is not installed; run `nvm install default`" and exited 3 with the slot default set, and so did `which` / `run` / `exec` / `version` for the same spelling. `PROP-075#VIBENVM-MAPPING` already decided that `default` **is** the slot default while named user aliases stay deferred; the shim handed the word to vibe as a requirement, where it reads as a channel nothing declares. |
-| @fact:B267-EVIDENCE **evidence** | Measured 2026-11-11 in the corporate-network proof (`nodecorp/followup.log` §3), immediately after `vibe app use node org.vibevm.node/node@22.23.4` reported the default was set. |
-| @fact:B267-SEVERITY **severity** | P2 — the one built-in alias nvm users type most, refused on every subcommand that takes a version. |
-| @fact:B267-DISPOSITION **disposition** | `done` — fixed 2026-11-11 in `org.vibevm.node/vibenvm@1.1.2` and recorded as `PROP-075#VIBENVM-BUILT-IN-ALIASES`. `default` is one more spelling of the shim's single translation table, resolved to `=<the slot's default version>` out of vibe's own `vibe app versions <slot> --installed --json` answer — free of a registry and of the network — so it works wherever a version does and nothing downstream knows it was a word; with no default set it is a refusal that names how to set one. An `lts/` **pattern** became an LTS selection in the same place, as it is for nvm. `conformance/vibenvm/cases/18-default-and-channels.toml` asks each subcommand for it by name. |
-| @fact:B267-FILED **filed by** | the corporate-network proof, 2026-11-11. |
+| @fact:B279-WHAT **what** | `nvm use default` answered "`default` is not installed; run `nvm install default`" and exited 3 with the slot default set, and so did `which` / `run` / `exec` / `version` for the same spelling. `PROP-075#VIBENVM-MAPPING` already decided that `default` **is** the slot default while named user aliases stay deferred; the shim handed the word to vibe as a requirement, where it reads as a channel nothing declares. |
+| @fact:B279-EVIDENCE **evidence** | Measured 2026-11-11 in the corporate-network proof (`nodecorp/followup.log` §3), immediately after `vibe app use node org.vibevm.node/node@22.23.4` reported the default was set. |
+| @fact:B279-SEVERITY **severity** | P2 — the one built-in alias nvm users type most, refused on every subcommand that takes a version. |
+| @fact:B279-DISPOSITION **disposition** | `done` — fixed 2026-11-11 in `org.vibevm.node/vibenvm@1.1.2` and recorded as `PROP-075#VIBENVM-BUILT-IN-ALIASES`. `default` is one more spelling of the shim's single translation table, resolved to `=<the slot's default version>` out of vibe's own `vibe app versions <slot> --installed --json` answer — free of a registry and of the network — so it works wherever a version does and nothing downstream knows it was a word; with no default set it is a refusal that names how to set one. An `lts/` **pattern** became an LTS selection in the same place, as it is for nvm. `conformance/vibenvm/cases/18-default-and-channels.toml` asks each subcommand for it by name. |
+| @fact:B279-FILED **filed by** | the corporate-network proof, 2026-11-11. |
 
 ## B-268 — a `monorepo` registry contributed no directory root, so no template was ever discovered {#b-268}
 
@@ -2974,3 +2974,22 @@ structure, and it goes when the file does.
 | @fact:B277-SEVERITY **severity** | P2 — the worst case (an intercepted external host) is covered; the remaining half is a smaller, still-confusing message on the paths an operator hits next. |
 | @fact:B277-DISPOSITION **disposition** | `open` — the shape that closes it without touching resolution is an **optional context attachment on `RegistryError::Git`** (`Git { source, context: Option<Box<…>> }`), so every `matches!(…, RegistryError::Git(GitError::X { .. }))` becomes `RegistryError::Git { source: GitError::X { .. }, .. }` and the routed identity survives verbatim. That is ~50 call sites across `vibe-registry`, `vibe-cli` and `vibe-install`, including files owned by a parallel worker; it wants its own commit, taken when no one else is in `native_admission/**`. |
 | @fact:B277-FILED **filed by** | corporate-env registry-diagnostics slice, 2026-11-11. |
+## B-278 — a Git for Windows global known-hosts file is no longer read at all {#b-278}
+
+| field | value |
+|---|---|
+| @fact:B278-WHAT **what** | The MSYS OpenSSH client Git for Windows bundles reports its compiled-in `GlobalKnownHostsFile /etc/ssh/ssh_known_hosts`. That path has no drive, so it is not absolute on Windows, and the capture now lets it select **no trust** rather than refuse the context. A site that deploys its host keys into `<GitPrefix>/etc/ssh/ssh_known_hosts` — the one place that client itself would find them — therefore gets none of them, and must repeat the file under `UserKnownHostsFile` for `vibe` to see it. Resolving it properly means reading that client's MSYS mount table (`<GitPrefix>/etc/fstab` plus its built-in map), which the capture neither reads nor witnesses. |
+| @fact:B278-EVIDENCE **evidence** | The decision and its reasoning are in `trust_files` in `crates/vibe-registry/src/git_backend/shell/native_admission/ssh_config/values.rs`; `msys_rootless_global_trust_defaults_select_nothing_rather_than_refusing` pins the behaviour. `PROP-073#NATIVE-WINDOWS-LAW` states it. |
+| @fact:B278-SEVERITY **severity** | P3 — Git for Windows ships no such file, so the common case loses nothing, and the failure mode is an explicit host-key refusal at connect time, never a silent acceptance. |
+| @fact:B278-DISPOSITION **disposition** | open — deliberately not mapped. Doing it right means witnessing the mount table as an input of the capture, which is a larger piece of work than the `__PROGRAMDATA__` fix this was found beside. |
+| @fact:B278-FILED **filed by** | the Win32-OpenSSH `__PROGRAMDATA__` fix, 2026-11-11. |
+
+## B-279 — `${NAME}` in an SSH path is matched case-sensitively, which Windows is not {#b-279}
+
+| field | value |
+|---|---|
+| @fact:B279-WHAT **what** | `expand_path` resolves `${NAME}` with `input.environment.get(&name)`, an exact match. Windows compares environment variable names without case, and the captured snapshot keeps whatever spelling the invocation used, so a configuration writing `${ProgramData}` against a captured `PROGRAMDATA` (or the reverse) refuses with "SSH path expansion variable is unavailable". The crate already has the case-insensitive lookup this wants, twice: `variable_in` in `vibe-package-source`, and the new `program_data` beside this code. |
+| @fact:B279-EVIDENCE **evidence** | `crates/vibe-registry/src/git_backend/shell/native_admission/ssh_config/values.rs`, the `$` branch of `expand_path`. Found while adding the `__PROGRAMDATA__` token expansion, which does compare without case. |
+| @fact:B279-SEVERITY **severity** | P3 — it refuses rather than mis-resolves, and `${…}` in an ssh_config path is rare; but the refusal names a variable the caller can see is set. |
+| @fact:B279-DISPOSITION **disposition** | open — out of the scope of the `__PROGRAMDATA__` fix, which only had to stop the refusal that broke `vibe install -g` over SSH on Windows. The fix is to fold the lookup to the same case rule the rest of the Windows path already uses. |
+| @fact:B279-FILED **filed by** | the Win32-OpenSSH `__PROGRAMDATA__` fix, 2026-11-11. |

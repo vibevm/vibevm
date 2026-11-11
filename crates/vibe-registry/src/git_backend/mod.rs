@@ -76,6 +76,24 @@ pub enum GitError {
         "native context unsupported: {reason} (violates spec://org.vibevm.core/vibevm/common/PROP-073#NATIVE-PREPARATION; fix: supply a supported explicit transport context)"
     )]
     NativeContext { reason: &'static str },
+    /// A path-valued OpenSSH setting the selected client reported that this
+    /// capture cannot lower to one file it may read. The message names the
+    /// client that produced the value, the keyword it reported it under and
+    /// the value itself, because the setting may come from any file in the
+    /// user's Include closure or from the client's compiled-in defaults.
+    #[error(
+        "the SSH client `{executable}` reported `{key} {value}`, which this capture cannot use: \
+         {reason} \
+         (violates spec://org.vibevm.core/vibevm/common/PROP-073#NATIVE-PREPARATION; \
+          fix: {fix})"
+    )]
+    SshConfigPath {
+        executable: String,
+        key: String,
+        value: String,
+        reason: &'static str,
+        fix: &'static str,
+    },
     #[error(transparent)]
     ContactRefused(#[from] crate::ContactRefusal),
     #[error(

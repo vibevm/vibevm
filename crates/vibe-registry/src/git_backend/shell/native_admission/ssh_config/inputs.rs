@@ -199,7 +199,7 @@ fn freeze_file(
                 return Err(unsupported("SSH Include has no path"));
             }
             for pattern in &args[1..] {
-                let pattern = values::path(pattern, input, None)?;
+                let pattern = values::path(pattern, input, None, cfg!(windows), &args[0])?;
                 let pattern = if pattern.is_absolute() {
                     pattern
                 } else {
@@ -238,7 +238,7 @@ fn freeze_file(
                 {
                     value.clone()
                 } else {
-                    values::deferred_path(value, input)?
+                    values::deferred_path(value, input, cfg!(windows), &args[0])?
                 };
                 if value.chars().any(char::is_control) {
                     return Err(unsupported("SSH path contains control syntax"));
