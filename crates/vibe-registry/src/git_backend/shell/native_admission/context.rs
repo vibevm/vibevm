@@ -8,6 +8,45 @@ impl AdmittedCommand {
         (self.0, self.1)
     }
 }
+/// Every configuration entry a controlled child is given outright. All
+/// entries originate here, never from inherited `-c`, environment or
+/// configuration input, and all but one are a refusal.
+///
+/// The exception is `core.longpaths`, and it is a platform fact rather
+/// than a policy: Git for Windows refuses to create a working-tree path
+/// longer than `MAX_PATH` (260 characters), reporting `Filename too long`
+/// and exiting 128. A controlled child never reads the system or global
+/// configuration (`GIT_CONFIG_NOSYSTEM`), so the installation's own
+/// `core.longpaths` cannot reach it, and its staging checkout lives under
+/// the operation's acquisition root — some ninety characters of settings
+/// home before the repository's own deepest path. A mirrored monorepo
+/// carrying nested dependency trees therefore could not be captured on
+/// Windows **at all** until this entry was given to the child, and the
+/// failure read as a refused source rather than as a path length
+/// (PROP-073 `#NATIVE-WINDOWS`, PROP-001 `#windows-ux`). It is given only
+/// on Windows: elsewhere `MAX_PATH` does not exist and the entry means
+/// nothing.
+fn owned_config(windows: bool) -> Vec<&'static str> {
+    let mut entries = vec![
+        "credential.helper=",
+        "core.askPass=",
+        "http.followRedirects=false",
+        "http.sslVerify=true",
+        "http.extraHeader=",
+        "http.cookieFile=",
+        "http.saveCookies=false",
+        "fetch.recurseSubmodules=false",
+        "submodule.recurse=false",
+        "maintenance.auto=false",
+        "gc.auto=0",
+        "core.fsmonitor=false",
+    ];
+    if windows {
+        entries.push("core.longpaths=true");
+    }
+    entries
+}
+
 pub(super) struct Context<'a> {
     profile: &'a NativeGitAdmission,
     root: tempfile::TempDir,
@@ -55,21 +94,7 @@ impl<'a> Context<'a> {
             .env("GIT_TEMPLATE_DIR", root.join("empty"))
             .stdin(Stdio::null());
         self.profile.installation.prepare(&mut cmd);
-        // All entries originate here, never from inherited -c/env/config input.
-        for value in [
-            "credential.helper=",
-            "core.askPass=",
-            "http.followRedirects=false",
-            "http.sslVerify=true",
-            "http.extraHeader=",
-            "http.cookieFile=",
-            "http.saveCookies=false",
-            "fetch.recurseSubmodules=false",
-            "submodule.recurse=false",
-            "maintenance.auto=false",
-            "gc.auto=0",
-            "core.fsmonitor=false",
-        ] {
+        for value in owned_config(cfg!(windows)) {
             cmd.args(["-c", value]);
         }
         // PROP-068 `#proxy`: the configured route is the only proxy this
@@ -244,5 +269,26 @@ impl<'a> Context<'a> {
             values.push((key.to_owned(), value.to_owned()));
         }
         Ok(values)
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::owned_config;
+
+    #[test]
+    #[specmark::spec(verifies = "spec://org.vibevm.core/vibevm/common/PROP-073#NATIVE-WINDOWS-LAW")]
+    fn a_windows_child_may_write_a_path_past_max_path_and_nothing_else_changes() {
+        let posix = owned_config(false);
+        let windows = owned_config(true);
+        // The refusals are the same recipe on both platforms.
+        assert_eq!(windows[..posix.len()], posix[..]);
+        assert!(posix.contains(&"credential.helper="));
+        assert!(posix.contains(&"http.followRedirects=false"));
+        // Only Windows is told about `MAX_PATH`, and in the one spelling
+        // Git for Windows reads. Without it the staging checkout of a
+        // mirrored monorepo dies with `Filename too long` and exit 128.
+        assert!(!posix.contains(&"core.longpaths=true"));
+        assert_eq!(windows.last(), Some(&"core.longpaths=true"));
     }
 }
