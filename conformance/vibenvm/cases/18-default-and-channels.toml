@@ -1,0 +1,36 @@
+schema = 1
+name = "default-and-channels"
+summary = """
+The built-in version spellings that are not versions: `default`, and the LTS
+channel asked for as a pattern rather than as a flag.
+
+`default` is the one built-in alias `#VIBENVM-MAPPING` keeps while named user
+aliases stay deferred — "`default` is the slot default" — and every subcommand
+that takes a version must accept it. It did not: `nvm use default` answered
+"`default` is not installed" and exited 3 on the vibe side, because `default`
+was handed to vibe as a requirement, where it reads as a channel nothing
+declares. nvm resolves it through its `default` alias, which `install
+--default` sets; the step order below sets it the same way in both sandboxes
+and then asks each subcommand for it.
+
+The channel half is the other spelling of the same thing: nvm turns an `lts/`
+*pattern* into an LTS selection (its `NVM_LTS`), so `nvm ls-remote lts/jod`
+and `nvm ls-remote --lts=jod` are one question. On vibe that is one
+`--channel`, and the two spellings must agree.
+"""
+wall_secs = 1200
+commands = [
+  "nvm install 22.9.0",
+  "nvm install 20.18.0 --default",
+  "nvm current",
+  "nvm use default",
+  "nvm which default",
+  "nvm version default",
+  "nvm run default -e \"process.stdout.write('ran')\"",
+  "nvm exec default node -v",
+  "nvm use 22.9.0",
+  "nvm use default",
+  "nvm ls-remote lts/jod",
+  "nvm ls-remote --lts=jod",
+  "nvm version-remote lts/jod",
+]

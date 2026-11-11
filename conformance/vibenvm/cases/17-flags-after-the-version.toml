@@ -1,0 +1,56 @@
+schema = 1
+name = "flags-after-the-version"
+summary = """
+Where a flag may stand. nvm reads a different argument list per subcommand
+(`#VIBENVM-MAPPING`, and the pinned `nvm.sh` v0.41.0 branch by branch): most
+flags may follow the version, `install`'s version-selecting ones may not, and
+`run` / `exec` stop at the version because the rest is the command's own
+argument list. Nothing in the suite asked for a flag after the version before
+this case, which is exactly why `nvm use 22.9.0 --save` could exit 0 and write
+nothing: the shim's option loop stopped at the first non-option and dropped
+every flag behind it.
+
+Each pair below is the same wish spelled twice, once with the flag before the
+version and once after, so a difference between the two positions is a
+mismatch rather than something a reader has to notice. The version file is in
+the record (`observe_files`), which is what makes "wrote nothing" visible at
+all; `--default` is in the `default` field; `--no-progress` and `--silent`
+change no state and are compared as the absence of a change.
+
+`install --offline 22.9.0` is the legal spelling and the step before it leaves
+the version in the cache; `install 22.9.0 --offline` is the illegal one, and
+nvm's answer to it is **exit 6** with the flag named, not a silent install.
+"""
+wall_secs = 1200
+observe_files = [".nvmrc"]
+commands = [
+  # use: the flag before and after the version, and the version file both times
+  "nvm install 22.9.0",
+  "nvm use --save 22.9.0",
+  "rm -f .nvmrc",
+  "nvm use 22.9.0 --save",
+  "rm -f .nvmrc",
+  "nvm use 22.9.0 -w",
+  "rm -f .nvmrc",
+  "nvm use 22.9.0 --silent",
+  # install: the acting flags after the version
+  "nvm install 22.9.0 --save",
+  "rm -f .nvmrc",
+  "nvm install 20.18.0 --default",
+  "nvm install 20.18.0 --no-progress",
+  "nvm install 22.11.0 --reinstall-packages-from=20.18.0",
+  "nvm install 22.11.0 --skip-default-packages",
+  # install: the selecting flags demand the place before the version
+  "nvm install --offline 22.9.0",
+  "nvm install 22.9.0 --offline",
+  "nvm install 22.9.0 --lts",
+  # the listings and the resolvers: a flag after the pattern
+  "nvm ls 22 --no-colors",
+  "nvm ls-remote 22 --no-colors",
+  "nvm ls-remote 22 --lts",
+  "nvm version-remote 22 --lts",
+  "nvm which 22.9.0 --silent",
+  # run and exec stop at the version, so `-v` below is node's own flag
+  "nvm run 22.9.0 -e \"process.stdout.write('ran')\"",
+  "nvm exec 22.9.0 node -v",
+]
