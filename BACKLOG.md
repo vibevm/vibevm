@@ -3083,12 +3083,40 @@ structure, and it goes when the file does.
 | @fact:B290-DISPOSITION **disposition** | open — the probe exists and is reusable; what it needs is a home on the incumbent path that does not turn every clone into an extra `check-attr` walk. |
 | @fact:B290-FILED **filed by** | the byte-exact registry checkout, 2026-11-11. |
 
-## B-291 — `cli_registry_mirror_templates` flakes about one in ten runs, on main {#b-291}
+## B-291 — the project install boundary applies no trust filter, to aliases or to names {#b-291}
 
-| field | value |
-|---|---|
-| @fact:B291-WHAT **what** | `a_selected_template_writes_exactly_the_expected_snapshot_tree` fails intermittently under `--test-threads=4`: the snapshot tree it walks is missing a file the mirror should have written, and the surrounding six tests pass. The assertion is about the *file set* `vibe registry mirror` wrote, so the mirror either raced its own write or the walk read a tree that was still being filled. |
-| @fact:B291-EVIDENCE **evidence** | Measured on `main` at `b89e8f673` with no change applied: 10 repeats of the binary under `--test-threads=4`, one failure (`6 passed; 1 failed`); the same 10 repeats on the `crlf-fix` branch gave one failure too, and the test passes every time when run alone. So it is neither new nor caused by the byte-exact checkout. |
-| @fact:B291-SEVERITY **severity** | P2 — a gate that fails one run in ten teaches contributors to re-run gates, which is how a real regression gets waved through. |
-| @fact:B291-DISPOSITION **disposition** | open — needs the mirror's write order (or the fixture's read of it) established before the assertion, not a retry around it. Deliberately not taken here: it predates this work and is in `vibe registry mirror`, not in the checkout path this change touches. |
-| @fact:B291-FILED **filed by** | the byte-exact registry checkout's gate run, 2026-11-11. |
+`vibe install -g qwen` asks the trust policy about an alias target's group
+before picking it (`#SHORT-NAME-TRUST`): installing an application runs that
+author's code, so a group nobody trusted is listed and never chosen. The
+**project** boundary — `vibe-cli::commands::short_name`, which qualifies
+`vibe install wal` — applies no trust filter at all, and this landing did not
+add one for aliases either, because filtering the offered spellings while
+leaving the real names unfiltered at the same boundary would be incoherent.
+Whether a project dependency should be trust-narrowed is a decision about the
+exact candidates too, not about aliases, and it is the owner's to take.
+Severity **P3**.
+
+## B-292 — a per-package registry's alias table is fetched unvouched {#b-292}
+
+`IndexClient::alias_table` GETs `<index>/aliases.toml` so `vibe registry
+mirror` can carry a per-package registry's spellings across.
+`repomd.json` does not vouch for it — correctly, because the manifest
+describes what the WRITER writes and the table is what the writer was told —
+so the by-name freshness check that catches a stale cache (`by_name_is_current`)
+has no counterpart here. A cache serving an old table makes a mirror carry an
+old row, which the merge rule then records as current. The fix is either a
+digest of the table inside `repomd.json`'s own body (not its `files` map) or a
+conditional request; both are a format question. Only the mirror path is
+affected: a RESOLVING client never fetches this file, it reads the alias off
+the `by-name` file it already gets. Severity **P3**.
+
+## B-293 — the mirror report says nothing about aliases in `--json` {#b-293}
+
+A `vibe registry mirror` run reports its alias decisions — rows dropped
+because this mirror does not hold their package, rows kept because the mirror
+owner edited them, rows withdrawn upstream — on **stderr** only. The
+`registry-mirror-report` envelope (`schemas/registry_mirror_report.jtd.json`)
+carries none of them, so a machine reader sees a silent merge. Three fields
+(`aliases_copied`, `aliases_dropped`, `aliases_kept_local`) would be additive
+and epoch-neutral; they were left out of CORP-FMT-043 to keep that landing to
+one wire schema. Severity **P3**.
