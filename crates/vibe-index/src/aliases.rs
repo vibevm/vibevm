@@ -62,7 +62,8 @@ const HEADER: &str = "\
 # Authored by the REGISTRY OWNER. A package cannot declare its own
 # alias: a short spelling is a registry-wide namespace, and package-
 # declared aliases would be an uncontrolled race for the good ones.
-# Edit with `vibe registry alias add|remove|list`.
+# Edit with `vibe-index alias <data-dir> add|remove|list`, or, for a
+# monorepo/localdir registry, `vibe registry alias <registry> …`.
 ";
 
 /// The alias table of the index data directory `data_dir`.
