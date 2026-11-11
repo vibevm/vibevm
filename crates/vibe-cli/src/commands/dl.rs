@@ -52,6 +52,28 @@ pub struct DlError {
     pub fix: String,
 }
 
+/// A nested error's message without its `(violates …; fix: …)` tail —
+/// what a refusal shows as the cause.
+fn first_sentence(message: &str) -> String {
+    match message.find(" (violates ") {
+        Some(at) => message[..at].to_owned(),
+        None => message.to_owned(),
+    }
+}
+
+/// The `fix:` a nested error carries, when it carries one: a
+/// configuration error knows its own fix better than any failure class
+/// does.
+fn nested_fix(message: &str) -> String {
+    match message.find("fix: ") {
+        Some(at) => message[at + "fix: ".len()..]
+            .trim_end_matches(')')
+            .trim()
+            .to_owned(),
+        None => "check the configured certificate files".to_owned(),
+    }
+}
+
 impl DlError {
     fn class(class: FailureClass, detail: impl Into<String>) -> Self {
         let detail: String = detail.into();
@@ -150,6 +172,19 @@ pub fn run(ctx: &Context, args: DlArgs, offline: bool, verbose: bool) -> Result<
             .map_err(|error| error.to_string()),
         None => Ok(()),
     };
+    // A certificate file that cannot be read is a mistake in the
+    // configuration, not a failure of this server's TLS: reported here,
+    // before a connection is made, so the fix names the key and the file
+    // rather than the server's clock (PROP-068 `#proxy-trust`).
+    if let Err(error) = session.trust() {
+        return Err(DlError::local(
+            "dl_usage",
+            2,
+            first_sentence(&error.to_string()),
+            &nested_fix(&error.to_string()),
+        )
+        .into());
+    }
     let started = Instant::now();
     let probe = vibe_net::probe::probe(&session, &url, &ProbeOptions::default(), &admit);
     render::phases(ctx, &probe, verbose);

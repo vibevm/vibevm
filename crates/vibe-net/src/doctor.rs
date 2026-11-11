@@ -110,8 +110,18 @@ pub fn diagnose(session: &Arc<NetworkSession>, target: &url::Url, timeout: Durat
                     .iter()
                     .map(|path| path.display().to_string())
                     .collect();
+                let authorities = if anchors == 1 {
+                    "authority"
+                } else {
+                    "authorities"
+                };
+                let pinned = if pins == 1 {
+                    "certificate"
+                } else {
+                    "certificates"
+                };
                 detail.push_str(&format!(
-                    " + {anchors} extra certificate authorities and {pins} pinned certificates                      from `{}`",
+                    " + {anchors} extra certificate {authorities} and {pins} pinned {pinned} from `{}`",
                     sources.join("`, `")
                 ));
             }
