@@ -119,6 +119,26 @@ pub trait Domains {
     /// Every version of `<group>/<name>`, with each version's origin and
     /// the channel table the package's rules produced.
     fn domain(&self, group: &str, name: &str) -> Result<Domain, String>;
+
+    /// Where an `[artifacts] packages` drop already holds **every** input
+    /// the installer option this platform would select for one version
+    /// downloads (PROP-066 `#drops`) — the `in drop` mark, which tells a
+    /// user in a closed network what is installable here and now.
+    ///
+    /// `None` means "no mark", and says nothing more than that: no drop is
+    /// configured, or the drop is missing one of the inputs, or the file
+    /// names cannot be known from the skeleton render the listing has
+    /// (`#TEMPLATE-TWO-STAGE`) — a guess is never offered in their place.
+    /// The default implementation answers `None`, so an implementor that
+    /// knows nothing of drops is unchanged.
+    fn in_drop(
+        &self,
+        _group: &str,
+        _name: &str,
+        _version: &semver::Version,
+    ) -> Option<Vec<String>> {
+        None
+    }
 }
 
 /// What `vibe app versions` was asked for.
@@ -137,6 +157,11 @@ pub struct VersionsRequest<'a> {
     pub channel: Option<&'a str>,
     /// `--installed`: only the versions this home holds, and no registry.
     pub installed: bool,
+    /// `--in-drop`: keep only the rows an `[artifacts] packages` drop
+    /// already holds every input of (PROP-066 `#drops`). Like `pattern`
+    /// it narrows **before** the limit, so `total`, `shown` and `more`
+    /// describe the narrowed set.
+    pub in_drop: bool,
     /// `--limit N`; `None` is [`DEFAULT_LIMIT`].
     pub limit: Option<usize>,
     /// `--all`: every row, however many.
@@ -399,6 +424,27 @@ fn one_package(
         )
         .collect();
 
+    // The drop probe is the one per-row filesystem question a listing
+    // asks, so it is asked for as few rows as the answer allows. With
+    // `--in-drop` it decides which rows there are, and must therefore run
+    // over every selected version **before** the limit, exactly as the
+    // pattern does; without it the mark is decoration on the rows that
+    // are shown, and the versions the limit cut are never probed.
+    let (selected, marks) = match request.in_drop {
+        true => {
+            let mut kept = Vec::with_capacity(selected.len());
+            let mut marks = Vec::with_capacity(selected.len());
+            for (version, origin) in selected {
+                if let Some(found) = domains.in_drop(&heading.group, &heading.name, &version) {
+                    kept.push((version, origin));
+                    marks.push(found);
+                }
+            }
+            (kept, marks)
+        }
+        false => (selected, Vec::new()),
+    };
+
     let total = selected.len();
     let shown = if request.all {
         total
@@ -408,7 +454,16 @@ fn one_package(
     let versions = selected
         .iter()
         .take(shown)
-        .map(|(version, origin)| row(heading, version, *origin, &domain, &installed, index))
+        .enumerate()
+        .map(|(at, (version, origin))| {
+            let drop = match request.in_drop {
+                true => marks[at].clone(),
+                false => domains
+                    .in_drop(&heading.group, &heading.name, version)
+                    .unwrap_or_default(),
+            };
+            row(heading, version, *origin, &domain, &installed, index, drop)
+        })
         .collect();
     Ok(wire::Package {
         package: coordinate,
@@ -462,6 +517,7 @@ fn row(
     domain: &Domain,
     installed: &BTreeMap<semver::Version, (&String, &Installation)>,
     index: &Index,
+    drop: Vec<String>,
 ) -> wire::Row {
     let found = installed.get(version);
     wire::Row {
@@ -482,6 +538,7 @@ fn row(
             .map(|(name, _)| name.clone())
             .collect(),
         key: found.map(|(key, _)| (*key).clone()),
+        drop,
     }
 }
 

@@ -7,13 +7,23 @@
 //! version list and nothing else — no digest document, no render, no
 //! installation. Inside the version-list TTL, under `--offline`, and
 //! under `--installed` it costs no request at all.
+//!
+//! The `in drop` mark of PROP-066 `#drops` is the second thing this
+//! adapter supplies, in `versions/drop.rs`, and it is held to the same
+//! budget: the file names come out of the skeleton render the domain read
+//! already produced, and the drop is asked by name alone.
 
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-075#VERSIONS-LIST-OUTPUT");
 
+use std::cell::RefCell;
+use std::collections::BTreeMap;
 use std::path::{Path, PathBuf};
 
 use anyhow::Result;
-use vibe_app::{Domain, DomainVersion, Domains, Origin, SettingsRoot, TemplateFacts};
+use vibe_app::{
+    DirectoryRoots, Domain, DomainVersion, Domains, Origin, SettingsRoot, TemplateFacts,
+    VersionsError,
+};
 use vibe_core::Group;
 use vibe_registry::templates::{ActiveTemplate, DirectoryTemplate, TemplateLayer};
 use vibe_wire::generated::application_versions as wire;
@@ -21,6 +31,9 @@ use vibe_wire::generated::application_versions as wire;
 use super::global;
 use crate::cli::AppVersionsArgs;
 use crate::output;
+
+#[path = "versions/drop.rs"]
+mod in_drop;
 
 pub(super) fn run(
     ctx: &output::Context,
@@ -47,6 +60,19 @@ pub(super) fn run(
         args.installed,
     )?;
     let index = vibe_app::Index::load(home)?;
+    // Every configured `[artifacts] packages` drop, highest layer first;
+    // a version found in any of them is marked (PROP-066 `#drops`). With
+    // none configured nothing is marked and nothing is an error — but
+    // `--in-drop` asked for a narrowing the home cannot perform, and that
+    // refuses by name rather than answering an empty listing.
+    let drops: Vec<PathBuf> = vibe_core::remap::active()
+        .package_drops()
+        .iter()
+        .map(|path| path.to_path_buf())
+        .collect();
+    if args.in_drop && drops.is_empty() {
+        return Err(vibe_app::AppError::Versions(VersionsError::NoDrop).into());
+    }
     let domains = RegistryDomains {
         settings: global::settings_root()?,
         registry: args.registry.clone(),
@@ -57,12 +83,15 @@ pub(super) fn run(
         // alone, which is what makes it free of a registry and of the
         // network (PROP-075 `#VERSIONS-LIST-OUTPUT`).
         cache_only: args.installed,
+        drops,
+        found: RefCell::default(),
     };
     let request = vibe_app::VersionsRequest {
         target: &args.target,
         pattern: args.pattern.as_deref(),
         channel: args.channel.as_deref(),
         installed: args.installed,
+        in_drop: args.in_drop,
         limit: args.limit,
         all: args.all,
     };
@@ -84,40 +113,100 @@ struct RegistryDomains {
     offline: bool,
     operation: vibe_package_source::SourceOperation,
     cache_only: bool,
+    /// Every configured `[artifacts] packages` drop, highest layer first;
+    /// empty when the home declares none, and then nothing is marked.
+    drops: Vec<PathBuf>,
+    /// What the `in drop` probe needs, per listed package, captured by
+    /// the domain read that already had it in hand (`versions/drop.rs`).
+    found: RefCell<BTreeMap<String, Found>>,
+}
+
+/// One listed package's half of the drop probe's inputs, kept from the
+/// domain read.
+///
+/// It holds the lease on purpose: a `monorepo` root is a capture its
+/// source owns and lives exactly as long as that source (PROP-075
+/// `#VERSIONS-CHANNEL-DISCOVERY`), and the probe reads under those roots
+/// row by row, after `domain` has returned.
+struct Found {
+    /// The package's template with its domain, when a directory root
+    /// carries one — the skeleton render of a produced version comes from
+    /// here, with no request and no second registry walk.
+    template: Option<DirectoryTemplate>,
+    /// The directory roots the domain was read over, with their lease —
+    /// where a concretely published version's own manifest is read from.
+    roots: DirectoryRoots,
 }
 
 impl Domains for RegistryDomains {
     fn domain(&self, group: &str, name: &str) -> Result<Domain, String> {
-        let group = Group::parse(group).map_err(|error| error.to_string())?;
+        let parsed = Group::parse(group).map_err(|error| error.to_string())?;
         let Some(layer) = vibe_registry::templates::active() else {
             // No layer means no template cache and no template
             // discovery: the pre-PROP-075 answer, which is the published
             // versions alone.
-            return self.published(&group, name);
+            return self.published(&parsed, name);
         };
         if self.cache_only {
-            return Ok(cached_domain(&layer, &group, name));
+            return Ok(cached_domain(&layer, &parsed, name));
         }
         // The whole value is held for the loop: a `monorepo` root is a
         // capture its source owns, and dropping the lease would delete the
         // tree out from under the read (PROP-075
         // `#VERSIONS-CHANNEL-DISCOVERY`).
         let found_roots = self.roots()?;
-        for root in found_roots.roots() {
-            match layer.for_directory(root, &group, name) {
+        let mut hit = None;
+        for (at, root) in found_roots.roots().iter().enumerate() {
+            match layer.for_directory(root, &parsed, name) {
                 Ok(Some(found)) => {
-                    return Ok(directory_domain(&layer, &found, Some(root.as_path())));
+                    hit = Some((at, found));
+                    break;
                 }
                 Ok(None) => continue,
                 Err(error) => return Err(error.to_string()),
             }
         }
-        drop(found_roots);
-        self.published(&group, name)
+        if let Some((at, found)) = hit {
+            let root = found_roots.roots()[at].clone();
+            let domain = directory_domain(&layer, &found, Some(root.as_path()));
+            self.keep(
+                group,
+                name,
+                Found {
+                    template: Some(found),
+                    roots: found_roots,
+                },
+            );
+            return Ok(domain);
+        }
+        // No template under any root; the roots are still kept, because a
+        // version the registry publishes concretely has its own manifest
+        // under one of them and the probe reads it there.
+        let published = self.published(&parsed, name);
+        self.keep(
+            group,
+            name,
+            Found {
+                template: None,
+                roots: found_roots,
+            },
+        );
+        published
+    }
+
+    fn in_drop(&self, group: &str, name: &str, version: &semver::Version) -> Option<Vec<String>> {
+        self.drop_paths(group, name, version)
     }
 }
 
 impl RegistryDomains {
+    /// Record what the drop probe will ask of this package.
+    fn keep(&self, group: &str, name: &str, found: Found) {
+        self.found
+            .borrow_mut()
+            .insert(format!("{group}/{name}"), found);
+    }
+
     /// The directory-shaped registries this listing may read a template
     /// from, in precedence order (PROP-075 `#TEMPLATE-DISCOVERY`), with
     /// the lease that keeps a captured working copy on disk.
@@ -249,15 +338,25 @@ fn print(listing: &wire::ApplicationVersions, quiet: bool) {
     println!("{}", trailer(listing));
 }
 
-/// One row: the version, its origin, the channels it belongs to and what
-/// this home holds of it.
+/// One row: the version, its origin, the channels it belongs to, what
+/// this home holds of it and whether a drop already holds its payload.
+///
+/// The two notes share **one** trailing `— …` segment, comma-separated,
+/// so every row has the same shape whichever notes it carries. The drop
+/// mark is shown on an installed row too: it is a fact about the drop,
+/// not about installability, and `--in-drop` means the same thing on
+/// every row because of it.
 fn row_line(row: &wire::Row) -> String {
     let mut line = format!("{} ({})", row.version, origin_label(&row.origin));
     if !row.channels.is_empty() {
         line.push_str(&format!(" [{}]", row.channels.join(", ")));
     }
-    if let Some(state) = state_label(&row.state) {
-        line.push_str(&format!(" — {state}"));
+    let notes: Vec<&str> = state_label(&row.state)
+        .into_iter()
+        .chain((!row.drop.is_empty()).then_some("in drop"))
+        .collect();
+    if !notes.is_empty() {
+        line.push_str(&format!(" — {}", notes.join(", ")));
     }
     line
 }

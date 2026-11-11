@@ -115,6 +115,12 @@ pub struct AppVersionsArgs {
     #[arg(long)]
     pub installed: bool,
 
+    /// Only the versions an `[artifacts] packages` drop already holds the
+    /// payload of for this platform — what is installable in a closed
+    /// network here and now. Narrows before --limit.
+    #[arg(long = "in-drop", conflicts_with = "installed")]
+    pub in_drop: bool,
+
     /// How many rows to show (default 20).
     #[arg(long, value_name = "N", conflicts_with = "all")]
     pub limit: Option<usize>,

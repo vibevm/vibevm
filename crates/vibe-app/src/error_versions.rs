@@ -58,6 +58,14 @@ pub enum VersionsError {
     )]
     BadPattern { pattern: String },
     #[error(
+        "--in-drop needs an artifact drop, and this home has none configured \
+         (violates spec://org.vibevm.core/vibevm/common/PROP-066#drops; \
+         fix: declare the directory in `~/.vibe/config.toml` as `[artifacts]` `packages = \
+         \"<dir>\"`, or drop --in-drop; `vibe artifacts where <package>` prints the file names \
+         and paths such a drop is filled with)"
+    )]
+    NoDrop,
+    #[error(
         "the version domain of `{package}` could not be read: {reason} \
          (violates spec://org.vibevm.core/vibevm/common/PROP-075#VERSIONS-LIST; \
          fix: correct the registry configuration, or run `vibe app versions --installed` for what \

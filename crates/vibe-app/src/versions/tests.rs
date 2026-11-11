@@ -484,3 +484,6 @@ fn a_pattern_narrows_the_listing_by_prefix_and_a_bad_one_is_refused_by_name() {
     let listing = versions_listing(&index, &both, &node_domain()).unwrap();
     assert_eq!(listing.packages[0].versions[0].version, "24.22.2");
 }
+
+#[path = "tests_drop.rs"]
+mod drop;

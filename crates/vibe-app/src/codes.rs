@@ -246,6 +246,7 @@ codes!(VERSIONS, VersionsError [] {
     AmbiguousTarget => "ambiguous_target", Refusal, "a bare name matches several installed packages";
     UnknownChannel => "unknown_channel", Refusal, "the package declares no such channel";
     BadPattern => "bad_version_pattern", Refusal, "the positional pattern is neither a version pattern nor a channel";
+    NoDrop => "no_package_drop", Refusal, "--in-drop was asked for and no `[artifacts] packages` drop is configured";
     Domain => "version_domain_unreadable", Refusal, "a package's version domain could not be read";
 });
 

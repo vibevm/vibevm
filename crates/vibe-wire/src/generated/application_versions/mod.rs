@@ -5,8 +5,9 @@ use std::collections::BTreeMap;
 
 /// Version 1 machine answer of vibe app versions --json: one row per version
 /// of the asked package's whole domain, newest first, with its origin, channel
-/// memberships and local state, plus the resolved channel table and, for a
-/// template package, its coordinate, revision and version-list fetch time.
+/// memberships, local state and the artifact-drop paths that already hold its
+/// payload, plus the resolved channel table and, for a template package, its
+/// coordinate, revision and version-list fetch time.
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 pub struct ApplicationVersions {
     pub protocol: String,
@@ -99,6 +100,16 @@ pub struct Row {
     /// The installation key, for a version this home installed.
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub key: Option<String>,
+
+    /// The paths in an [artifacts] packages drop that already hold every input
+    /// this version's installer option for the running platform downloads, one
+    /// per input, in the option's declaration order (PROP-066 #drops). Absent
+    /// when a drop holds none of them, when no drop is configured, and when the
+    /// file names cannot be known from the skeleton render alone; the digest-
+    /// keyed <drop>/<sha256>/<file> rung is not searched, because a listing has
+    /// no digest document.
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub drop: Vec<String>,
 }
 
 /// The version's local state in this home; `available` is a version nothing
