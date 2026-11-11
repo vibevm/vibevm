@@ -564,6 +564,13 @@ mod reported;
 
 mod diagnostics;
 use diagnostics::*;
+/// The credential-scrubbing funnel, for the explanation layer that
+/// renders borrowed git text beside vibe's own (`crate::git_failure`).
+pub(crate) use diagnostics::{scrub_stderr, without_userinfo};
+
+#[cfg(test)]
+#[path = "shell/tests_transport.rs"]
+mod tests_transport;
 
 #[cfg(test)]
 #[path = "shell/tests.rs"]

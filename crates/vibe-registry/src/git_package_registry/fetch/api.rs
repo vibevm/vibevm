@@ -16,6 +16,7 @@ impl GitPerPackageRegistry {
         let refresh = destination.join(".git").exists()
             && self.backend.recorded_origin_url(destination)? == strip_git_plus_prefix(address);
         self.bring_clone_to_ref(
+            &crate::git_failure::GitOperation::capture_mirror(self.name()),
             address,
             reference,
             destination,

@@ -39,7 +39,7 @@ pub(super) fn classify_failure(args: &[&str], output: &Output) -> GitError {
     classify_stderr_message(&combined, url, refname).unwrap_or_else(|| GitError::CommandFailed {
         cmd: render_argv_for_display(args),
         status: output.status.code().unwrap_or(-1),
-        stderr: combined.trim_end().to_string(),
+        stderr: scrub_stderr(combined.trim_end()),
     })
 }
 
@@ -60,7 +60,37 @@ pub(super) fn classify_stderr_message(
 ) -> Option<GitError> {
     let lc = combined.to_lowercase();
 
-    if lc.contains("repository not found") || lc.contains("does not appear to be a git repository")
+    // A redirect comes first: it is the most specific reading of the
+    // stderr, and on an intercepting corporate network it is also the
+    // most misleading one left unclassified — git reports the broken
+    // smart-protocol stream (`expected flush after ref listing`) and
+    // never says that a gateway answered the request instead of the
+    // host. vibe does not follow redirects on the git transports, so a
+    // 3xx is a terminal answer, not a hop (PROP-002
+    // `#failure-discriminator`).
+    if let Some(status) = observed_redirect_status(&lc) {
+        return Some(GitError::HttpRedirected {
+            url,
+            status,
+            stderr: scrub_stderr(combined.trim_end()),
+        });
+    }
+    // Then the trust set: a TLS failure is about which certificates
+    // this machine trusts, never about the repository or the
+    // credentials, and it frames (`unable to access`) the same
+    // connect-failure wording the network branch below keys on.
+    if let Some(detail) = tls_trust_detail(combined, &lc) {
+        return Some(GitError::TlsTrust {
+            url,
+            detail,
+            stderr: scrub_stderr(combined.trim_end()),
+        });
+    }
+    if lc.contains("repository not found")
+        || lc.contains("does not appear to be a git repository")
+        || lc.contains("returned error: 404")
+        || lc.contains("http 404")
+        || lc.contains("404 not found")
     {
         return Some(GitError::RepoNotFound { url });
     }
@@ -126,6 +156,105 @@ pub(super) fn classify_stderr_message(
     None
 }
 
+/// The redirect status git's stderr reports, if any.
+///
+/// Git speaks the smart protocol over HTTP(S) and does **not** follow a
+/// redirect for it, so a `301` / `302` / `307` / `308` is the whole
+/// answer the host gave. The shapes seen in the wild come from libcurl
+/// (`error: RPC failed; HTTP 302 curl 22 The requested URL returned
+/// error: 302`) and from git's own transport layer (`unable to access
+/// '…': The requested URL returned error: 301`); the reason-phrase forms
+/// (`302 Found`) appear when a proxy writes its own line. `lc` is the
+/// lower-cased stderr.
+fn observed_redirect_status(lc: &str) -> Option<u16> {
+    const REDIRECTS: [(u16, &str); 4] = [
+        (301, "moved permanently"),
+        (302, "found"),
+        (307, "temporary redirect"),
+        (308, "permanent redirect"),
+    ];
+    REDIRECTS.into_iter().find_map(|(code, phrase)| {
+        (lc.contains(&format!("returned error: {code}"))
+            || lc.contains(&format!("http {code}"))
+            || lc.contains(&format!("http/1.1 {code}"))
+            || lc.contains(&format!("http/2 {code}"))
+            || lc.contains(&format!("{code} {phrase}")))
+        .then_some(code)
+    })
+}
+
+/// The line of git's stderr that reports a TLS trust failure, if any —
+/// scrubbed, so it is safe to carry in a `Display` type.
+///
+/// Everything here is about the *trust set* this machine presents to the
+/// verifier: an unknown issuer (a corporate TLS-terminating gateway signs
+/// with its own CA), an expired or mismatched certificate, or a handshake
+/// the platform backend refused. OpenSSL, schannel (Windows) and GnuTLS
+/// each word it differently; the substrings below are the stable parts of
+/// each wording. `combined` is the original stderr (so the returned line
+/// reads as git wrote it); `lc` is its lower-cased twin.
+fn tls_trust_detail(combined: &str, lc: &str) -> Option<String> {
+    const TLS_MARKERS: [&str; 11] = [
+        "unable to get local issuer certificate",
+        "unable to get issuer certificate",
+        "certificate verify failed",
+        "ssl certificate problem",
+        "self signed certificate",
+        "self-signed certificate",
+        "certificate has expired",
+        "ssl peer certificate or ssh remote key was not ok",
+        "gnutls_handshake() failed",
+        "ssl connect error",
+        "schannel: ",
+    ];
+    if !TLS_MARKERS.iter().any(|marker| lc.contains(marker)) {
+        return None;
+    }
+    // Prefer the line that actually carries the diagnosis; fall back to
+    // the first non-empty line so the variant is never built empty.
+    let line = combined
+        .lines()
+        .find(|line| {
+            let line = line.to_lowercase();
+            TLS_MARKERS.iter().any(|marker| line.contains(marker))
+        })
+        .or_else(|| combined.lines().find(|line| !line.trim().is_empty()))?;
+    Some(scrub_stderr(line.trim()))
+}
+
+/// Every `scheme://userinfo@host/…` token in `text` reduced to its
+/// credential-free form — the same reduction [`without_userinfo`] makes,
+/// applied to text vibe did not compose itself.
+///
+/// Git ≥ 2.31 redacts passwords from its own stderr, but that is the
+/// *second* line of defence and it covers only the shapes git recognises:
+/// a proxy's own error page, an `ssh` banner or a credential helper's
+/// chatter reaches us verbatim. Anything this module may put in front of
+/// an operator goes through here first, so the one-funnel property
+/// [`without_userinfo`] documents holds for borrowed text too.
+pub(crate) fn scrub_stderr(text: &str) -> String {
+    if !text.contains("://") {
+        return text.to_string();
+    }
+    let mut out = String::with_capacity(text.len());
+    let mut token = String::new();
+    for ch in text.chars() {
+        // Split on everything that cannot occur inside an authority, so a
+        // url in quotes, parentheses or a sentence is still one token.
+        if ch.is_whitespace() || matches!(ch, '\'' | '"' | '`' | '<' | '>' | '(' | ')' | ',') {
+            if !token.is_empty() {
+                out.push_str(&without_userinfo(&token));
+                token.clear();
+            }
+            out.push(ch);
+        } else {
+            token.push(ch);
+        }
+    }
+    out.push_str(&without_userinfo(&token));
+    out
+}
+
 /// The HTTP refusal status git's stderr reports, if any: curl's
 /// `The requested URL returned error: 403`, or `HTTP 401` /
 /// `401 Unauthorized` shapes. `lc` is the lower-cased stderr.
@@ -186,7 +315,7 @@ pub(super) fn archive_unsupported(combined_lc: &str) -> bool {
             && combined_lc.contains("flush packet")
 }
 
-pub(super) fn without_userinfo(url: &str) -> String {
+pub(crate) fn without_userinfo(url: &str) -> String {
     let Some((scheme, rest)) = url.split_once("://") else {
         return url.to_string();
     };

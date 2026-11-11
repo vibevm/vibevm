@@ -64,10 +64,12 @@ impl GitPerPackageRegistry {
         dest: &Path,
     ) -> Result<String, RegistryError> {
         let (primary, mirrors) = self.package_urls(group, name)?;
+        let operation = crate::git_failure::GitOperation::fetch_package(group, name, refname);
         // Primary outside the mirror loop — its error is a plain value.
         // The primary attempt refreshes the existing copy in place; a
         // failure surfaces without touching the copy.
         let primary_err = match self.bring_clone_to_ref(
+            &operation,
             &primary,
             refname,
             dest,
@@ -83,7 +85,8 @@ impl GitPerPackageRegistry {
         for (i, url) in mirrors.iter().enumerate() {
             // A mirror serves a DIFFERENT source than the copy on disk
             // — the switch clones beside and swaps in only on success.
-            match self.bring_clone_to_ref(url, refname, dest, BringIntent::SwitchSource) {
+            match self.bring_clone_to_ref(&operation, url, refname, dest, BringIntent::SwitchSource)
+            {
                 Ok(()) => {
                     tracing::info!(
                         target: "vibe_registry",
@@ -265,7 +268,17 @@ impl GitPerPackageRegistry {
                 None
             };
             if native.is_none()
-                && let Err(e) = self.bring_clone_to_ref(url, &tag, &clone_dir, intent)
+                && let Err(e) = self.bring_clone_to_ref(
+                    &crate::git_failure::GitOperation::fetch_package(
+                        &resolved.group,
+                        &resolved.name,
+                        &tag,
+                    ),
+                    url,
+                    &tag,
+                    &clone_dir,
+                    intent,
+                )
             {
                 if i == 0 {
                     primary_err = Some(e);

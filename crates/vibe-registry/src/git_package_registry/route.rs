@@ -318,6 +318,7 @@ impl GitPerPackageRegistry {
             index_client: std::sync::OnceLock::new(),
             index_discovery: None,
             index_transfers: std::sync::OnceLock::new(),
+            roster: Arc::clone(&self.roster),
             freshness_secs: self.freshness_secs,
         };
         Ok(target)

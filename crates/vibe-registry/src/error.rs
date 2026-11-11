@@ -168,6 +168,27 @@ pub enum RegistryError {
     )]
     Git(GitError),
 
+    /// A registry git operation failed, stated as the errand it was on
+    /// rather than as the argv it ran (`PROP-002
+    /// #failure-discriminator`). The detail names the operation in
+    /// words, the registry and its real url, the package, the
+    /// translated cause with its fix, and the registries this profile
+    /// allows; git's own stderr tail follows BELOW that explanation,
+    /// which is why the trailer sits between the two here instead of at
+    /// the end. Boxed ([`crate::GitFailureDetail`]) so one wide, rare
+    /// variant does not widen every `Result<_, RegistryError>` — the
+    /// shape [`RegistryError::AllVersionsUnusable`] already pays.
+    #[error(
+        "{} \
+         (violates spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#failure-discriminator; \
+          fix: act on the cause and fix named above){}",
+        detail.explanation(),
+        detail.git_said()
+    )]
+    GitOperation {
+        detail: Box<crate::GitFailureDetail>,
+    },
+
     #[error(
         "could not determine the user home directory; set HOME (or USERPROFILE on Windows), or \
          pass an explicit cache root \

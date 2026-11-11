@@ -300,6 +300,10 @@ fn construct_source(
     freshness_secs: u64,
     admission: &Option<Arc<crate::HttpAdmission>>,
 ) -> Result<RegistrySource, RegistryError> {
+    // The declared set is known exactly here and nowhere below, so this
+    // is where a source that later fails is handed the answer to "which
+    // registries may I read?" (`crate::git_failure`).
+    let roster = Arc::new(crate::git_failure::RegistryRoster::from_rows(registries));
     // PROP-002 `#registry-type`: the declared (or inferred) type picks the
     // backend. `localdir` is served straight off the filesystem by
     // `LocalRegistry` — never git-cloned. Without a `type`, exactly the
@@ -339,7 +343,8 @@ fn construct_source(
                 cache_root,
                 backend.clone(),
                 freshness_secs,
-            ),
+            )
+            .with_registry_roster(Arc::clone(&roster)),
         )));
     }
     // PROP-066 `#locator`: the clone chain is the Locator's
@@ -372,7 +377,8 @@ fn construct_source(
         auth.kind,
         auth.token_env_name.as_deref(),
     )?
-    .with_mirror_publication(mirror_routes);
+    .with_mirror_publication(mirror_routes)
+    .with_registry_roster(Arc::clone(&roster));
     // PROP-005 §2.2 INDEX-URL-CONFIG — the index-location
     // ladder: env `VIBEVM_INDEX_URL_<REGISTRY>` (operator,
     // per-run) > the `[[registry]].index_url` key (project

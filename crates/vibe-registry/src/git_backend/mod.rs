@@ -18,8 +18,15 @@ use specmark::spec;
 use thiserror::Error;
 
 pub mod deferred;
+/// The prose each [`GitError`] variant interpolates — the heads and the
+/// standing fixes, kept together so one failure reads the same wherever
+/// it surfaces.
+mod messages;
 pub mod shell;
 pub mod transfers;
+
+pub(crate) use messages::{REDIRECTED_FIX, TLS_TRUST_FIX};
+use messages::{auth_failed_fix, auth_failed_head, redirected_head, tls_trust_head};
 
 pub use shell::ShellGit;
 
@@ -122,6 +129,41 @@ pub enum GitError {
         status: Option<u16>,
     },
 
+    /// The host answered the git request with an HTTP redirect rather
+    /// than the smart-protocol stream. Git does not follow a redirect
+    /// for this transport, so the 3xx is the whole answer — and on a
+    /// corporate network it is almost always a gateway answering in the
+    /// host's place, which is why the fix names the mirror and the proxy
+    /// before it names the url.
+    #[error(
+        "{} (violates spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#failure-discriminator; fix: {})",
+        redirected_head(url, *status),
+        REDIRECTED_FIX
+    )]
+    HttpRedirected {
+        url: String,
+        status: u16,
+        /// Git's own stderr, kept so the explanation layer can print it
+        /// below the diagnosis instead of in place of it.
+        stderr: String,
+    },
+
+    /// The TLS handshake was refused over the certificate: an unknown
+    /// issuer, an expired or mismatched certificate, a handshake the
+    /// platform backend would not complete. About the trust set this
+    /// machine presents, never about the repository or the credentials.
+    #[error(
+        "{} (violates spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#failure-discriminator; fix: {})",
+        tls_trust_head(url, detail),
+        TLS_TRUST_FIX
+    )]
+    TlsTrust {
+        url: String,
+        detail: String,
+        /// Git's own stderr — see [`GitError::HttpRedirected`].
+        stderr: String,
+    },
+
     #[error(
         "unable to reach `{url}` (network or DNS error) \
          (violates spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#failure-discriminator; \
@@ -176,57 +218,6 @@ pub enum GitError {
         #[source]
         source: std::io::Error,
     },
-}
-
-/// The transport a Git address uses, as an operator would name it.
-fn transport_of(url: &str) -> &'static str {
-    let raw = url.strip_prefix("git+").unwrap_or(url);
-    let lower = raw.get(..8).unwrap_or(raw).to_ascii_lowercase();
-    if lower.starts_with("https://") {
-        "HTTPS"
-    } else if lower.starts_with("http://") {
-        "HTTP"
-    } else if lower.starts_with("ssh://")
-        || (!raw.contains("://") && raw.contains(':') && !Path::new(raw).is_absolute())
-    {
-        "SSH"
-    } else {
-        "local"
-    }
-}
-
-/// The [`GitError::AuthFailed`] head: the actual transport and status.
-///
-/// ```
-/// use vibe_registry::GitError;
-/// let https = GitError::AuthFailed { url: "https://h/o/r.git".into(), status: Some(401) };
-/// assert!(https.to_string().starts_with("HTTPS authentication failed (HTTP 401)"));
-/// assert!(!https.to_string().contains("ssh-agent"));
-/// let ssh = GitError::AuthFailed { url: "git@h:o/r.git".into(), status: None };
-/// assert!(ssh.to_string().contains("ssh-agent"));
-/// ```
-fn auth_failed_head(url: &str, status: Option<u16>) -> String {
-    let status = status
-        .map(|code| format!(" (HTTP {code})"))
-        .unwrap_or_default();
-    format!(
-        "{} authentication failed{status} for `{url}`",
-        transport_of(url)
-    )
-}
-
-/// The fix that applies to the transport `url` uses.
-fn auth_failed_fix(url: &str) -> &'static str {
-    match transport_of(url) {
-        "HTTPS" | "HTTP" => {
-            "the host requires credentials for this repository: if it is private, \
-             give the registry a read token (`auth = \"token-env\"` with `token_env`), \
-             a credential helper (`auth = \"credential-helper\"`) or an SSH url; \
-             if it should be public, check the url and that the repository exists"
-        }
-        "local" => "check the repository path and its file permissions",
-        _ => "load your key into ssh-agent / check ~/.ssh, or fix the [[registry]] auth setting",
-    }
 }
 
 /// Narrow abstraction over the git operations the registry needs.

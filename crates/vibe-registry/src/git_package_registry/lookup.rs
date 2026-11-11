@@ -7,6 +7,7 @@
 specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#registry-model");
 
 use super::*;
+use crate::git_failure::GitOperation;
 use crate::index_client::IndexVersion;
 
 impl GitPerPackageRegistry {
@@ -58,7 +59,13 @@ impl GitPerPackageRegistry {
                     source,
                 })?
             }
-            Err(other) => return Err(RegistryError::from(other)),
+            Err(other) => {
+                return Err(self.git_failure(
+                    GitOperation::read_file(group, name, refname, Manifest::FILENAME),
+                    &plain_url,
+                    other,
+                ));
+            }
         };
         let text = String::from_utf8(bytes).map_err(|e| RegistryError::MalformedMeta {
             path: PathBuf::from(format!("{plain_url}@{refname}:{}", Manifest::FILENAME)),
@@ -134,13 +141,16 @@ impl GitPerPackageRegistry {
     ) -> Result<Vec<u8>, RegistryError> {
         self.ensure_token_loaded()?;
         let read = |url: &str| {
+            let plain = strip_git_plus_prefix(url);
             self.backend
-                .fetch_file_at_ref(
-                    &self.selected_credentialed_url(strip_git_plus_prefix(url))?,
-                    reference,
-                    path,
-                )
-                .map_err(RegistryError::from)
+                .fetch_file_at_ref(&self.selected_credentialed_url(plain)?, reference, path)
+                .map_err(|error| {
+                    self.git_failure(
+                        GitOperation::read_file(&resolved.group, &resolved.name, reference, path),
+                        plain,
+                        error,
+                    )
+                })
         };
         match route {
             Some(route) => read(route.validate(self, resolved)?),
@@ -156,13 +166,16 @@ impl GitPerPackageRegistry {
     ) -> Result<Vec<u8>, RegistryError> {
         self.ensure_token_loaded()?;
         self.try_lookup(group, name, |url| {
+            let plain = strip_git_plus_prefix(url);
             self.backend
-                .fetch_file_at_ref(
-                    &self.selected_credentialed_url(strip_git_plus_prefix(url))?,
-                    reference,
-                    path,
-                )
-                .map_err(RegistryError::from)
+                .fetch_file_at_ref(&self.selected_credentialed_url(plain)?, reference, path)
+                .map_err(|error| {
+                    self.git_failure(
+                        GitOperation::read_file(group, name, reference, path),
+                        plain,
+                        error,
+                    )
+                })
         })
     }
 
@@ -274,7 +287,11 @@ impl GitPerPackageRegistry {
                     group: owned_group.clone(),
                     name: owned_name.clone(),
                 },
-                other => RegistryError::from(other),
+                other => self.git_failure(
+                    GitOperation::list_versions(&owned_group, &owned_name),
+                    plain,
+                    other,
+                ),
             })?;
             let mut versions: Vec<semver::Version> = tags
                 .iter()

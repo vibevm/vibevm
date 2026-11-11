@@ -8,6 +8,7 @@
 specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#registry-model");
 
 use super::*;
+use crate::git_failure::GitOperation;
 
 /// How one bring-the-clone-to-ref attempt relates to the copy already
 /// on disk — PROP-010 §2.6: **a refresh and a source switch are
@@ -141,6 +142,7 @@ impl GitPerPackageRegistry {
     ///   copy is not an operation on a copy at all.
     pub(super) fn bring_clone_to_ref(
         &self,
+        operation: &GitOperation,
         url: &str,
         refname: &str,
         clone_dir: &Path,
@@ -164,7 +166,11 @@ impl GitPerPackageRegistry {
                         "update on existing clone failed; the copy stays — \
                          failover, if any, is a source switch"
                     );
-                    return Err(e.into());
+                    // The refresh pulls from the clone's own recorded
+                    // origin, so git names it `origin` and nothing else:
+                    // the endpoint an operator can act on is the one
+                    // this chain chose, which only the funnel knows.
+                    return Err(self.git_failure(operation.clone(), url, e));
                 }
                 Ok(())
             }
@@ -172,8 +178,10 @@ impl GitPerPackageRegistry {
             // bootstrap straight into it. (Debris without `.git` from
             // a prior failed bootstrap is not a copy and is cleaned by
             // `bootstrap_fresh_at` itself.)
-            (_, false) => self.bootstrap_fresh_at(url, refname, clone_dir),
-            (BringIntent::SwitchSource, true) => self.switch_source_at(url, refname, clone_dir),
+            (_, false) => self.bootstrap_fresh_at(operation, url, refname, clone_dir),
+            (BringIntent::SwitchSource, true) => {
+                self.switch_source_at(operation, url, refname, clone_dir)
+            }
         }
     }
 
@@ -193,6 +201,7 @@ impl GitPerPackageRegistry {
     /// `git clone` process.
     fn bootstrap_fresh_at(
         &self,
+        operation: &GitOperation,
         url: &str,
         refname: &str,
         dest: &Path,
@@ -211,7 +220,9 @@ impl GitPerPackageRegistry {
         }
         let plain_url = strip_git_plus_prefix(url);
         let fetch_url = self.selected_credentialed_url(plain_url)?;
-        self.backend.bootstrap(&fetch_url, refname, dest)?;
+        self.backend
+            .bootstrap(&fetch_url, refname, dest)
+            .map_err(|error| self.git_failure(operation.clone(), plain_url, error))?;
         if self.effective_token_value().is_some() {
             self.backend.set_remote_url(dest, "origin", plain_url)?;
         }
@@ -233,7 +244,13 @@ impl GitPerPackageRegistry {
     /// remove-then-rename (a rename over an existing directory is
     /// refused outright), so the instant between the two is the only
     /// moment the destination is absent.
-    fn switch_source_at(&self, url: &str, refname: &str, dest: &Path) -> Result<(), RegistryError> {
+    fn switch_source_at(
+        &self,
+        operation: &GitOperation,
+        url: &str,
+        refname: &str,
+        dest: &Path,
+    ) -> Result<(), RegistryError> {
         let no_parent = || RegistryError::Io {
             path: dest.to_path_buf(),
             source: std::io::Error::new(
@@ -248,20 +265,22 @@ impl GitPerPackageRegistry {
             source,
         })?;
         let tmp = parent.join(format!("{file}.switch-tmp-{}", std::process::id()));
-        let switched = self.bootstrap_fresh_at(url, refname, &tmp).and_then(|()| {
-            // The new clone fully succeeded — NOW, and only now, the
-            // previous copy goes.
-            if dest.exists() {
-                fs::remove_dir_all(dest).map_err(|source| RegistryError::Io {
+        let switched = self
+            .bootstrap_fresh_at(operation, url, refname, &tmp)
+            .and_then(|()| {
+                // The new clone fully succeeded — NOW, and only now, the
+                // previous copy goes.
+                if dest.exists() {
+                    fs::remove_dir_all(dest).map_err(|source| RegistryError::Io {
+                        path: dest.to_path_buf(),
+                        source,
+                    })?;
+                }
+                fs::rename(&tmp, dest).map_err(|source| RegistryError::Io {
                     path: dest.to_path_buf(),
                     source,
-                })?;
-            }
-            fs::rename(&tmp, dest).map_err(|source| RegistryError::Io {
-                path: dest.to_path_buf(),
-                source,
-            })
-        });
+                })
+            });
         if switched.is_err() {
             // The switch failed: the temp is debris; the previous copy
             // never left.

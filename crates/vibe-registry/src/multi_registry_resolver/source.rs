@@ -55,6 +55,11 @@ pub struct MonorepoRegistrySource {
     freshness_secs: u64,
     opened: std::sync::OnceLock<GitMonorepoRegistry>,
     gate: std::sync::Mutex<()>,
+    /// The registries the effective profile allows — see
+    /// [`GitPerPackageRegistry::with_registry_roster`]. Carried into the
+    /// clone failure, which is the one git operation a monorepo
+    /// registry performs on its own behalf.
+    roster: Arc<crate::git_failure::RegistryRoster>,
 }
 
 impl MonorepoRegistrySource {
@@ -77,7 +82,19 @@ impl MonorepoRegistrySource {
             freshness_secs,
             opened: std::sync::OnceLock::new(),
             gate: std::sync::Mutex::new(()),
+            roster: Arc::new(crate::git_failure::RegistryRoster::default()),
         }
+    }
+
+    /// Record the registries this profile allows, for the clone failure
+    /// this source reports. Called by the catalog, which is the one
+    /// place that knows the declared set.
+    pub(crate) fn with_registry_roster(
+        mut self,
+        roster: Arc<crate::git_failure::RegistryRoster>,
+    ) -> Self {
+        self.roster = roster;
+        self
     }
 
     /// Whether the repository is read through the filesystem (a `file:`
@@ -120,6 +137,20 @@ impl MonorepoRegistrySource {
                 .cloned()
                 .collect();
             // A controlled transport admits only native preparation.
+            // The whole clone chain is one errand — "capturing the
+            // mirror of registry `corp`" — so its failure is explained
+            // here, where the registry's name, its declared url and the
+            // allowed set are all in hand, rather than inside a clone
+            // helper that knows only a candidate address.
+            let explain = |error| {
+                crate::git_failure::upgrade(
+                    crate::git_failure::GitOperation::capture_mirror(&self.name),
+                    &self.name,
+                    &self.url,
+                    &self.roster,
+                    error,
+                )
+            };
             let opened = if self.backend.native_materialisation_for(&self.url)? {
                 GitMonorepoRegistry::open_native(
                     &self.url,
@@ -127,7 +158,8 @@ impl MonorepoRegistrySource {
                     &self.refname,
                     &cache,
                     Arc::clone(&self.backend),
-                )?
+                )
+                .map_err(explain)?
             } else {
                 GitMonorepoRegistry::open_routes(
                     &self.url,
@@ -136,7 +168,8 @@ impl MonorepoRegistrySource {
                     &cache,
                     Arc::clone(&self.backend),
                     self.freshness_secs,
-                )?
+                )
+                .map_err(explain)?
             }
             .with_name(&self.name);
             let _ = self.opened.set(opened);

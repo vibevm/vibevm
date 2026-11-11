@@ -27,6 +27,7 @@ use vibe_core::{Group, PackageRef};
 
 pub mod embedded_source;
 pub mod git_backend;
+pub mod git_failure;
 pub mod git_package_registry;
 pub mod git_registry;
 pub mod http_admission;
@@ -48,6 +49,7 @@ pub use embedded_source::{
     lock_embedded_sources_with,
 };
 pub use git_backend::{GitBackend, GitError, ShellGit};
+pub use git_failure::{GitFailureDetail, GitOperation, RegistryRoster, RegistryRosterRow};
 mod registry_auth;
 pub use git_package_registry::{
     GitPerPackageRegistry, PackageAcquisition, PreparedInPlace, RegistryRoute,

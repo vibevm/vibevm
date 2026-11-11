@@ -129,6 +129,13 @@ pub struct GitPerPackageRegistry {
     index_client: std::sync::OnceLock<Option<crate::index_client::IndexClient>>,
     index_discovery: Option<index_discovery::IndexDiscovery>,
     index_transfers: std::sync::OnceLock<vibe_core::progress::transfer::Transfers>,
+    /// The registries the effective profile allows, captured when the
+    /// catalog opened this source. Carried into every git failure this
+    /// registry reports (`crate::git_failure`) so a missing
+    /// `[source_policy] exclude_hosting` is visible in the failure
+    /// itself. Empty for the direct constructors, which have no catalog
+    /// around them and therefore nothing to say about one.
+    roster: Arc<crate::git_failure::RegistryRoster>,
     /// Implicit-update freshness TTL — reserved for the next commit, where
     /// per-package `meta.toml` files track `last_synced_at`. Stored now so
     /// callers parameterising it do not need to thread it through later.
@@ -267,6 +274,7 @@ impl GitPerPackageRegistry {
             index_client: std::sync::OnceLock::new(),
             index_discovery: None,
             index_transfers: std::sync::OnceLock::new(),
+            roster: Arc::new(crate::git_failure::RegistryRoster::default()),
             freshness_secs,
         })
     }
@@ -354,6 +362,7 @@ impl GitPerPackageRegistry {
             index_client: std::sync::OnceLock::new(),
             index_discovery: None,
             index_transfers: std::sync::OnceLock::new(),
+            roster: Arc::new(crate::git_failure::RegistryRoster::default()),
             freshness_secs,
         })
     }
@@ -415,6 +424,26 @@ impl GitPerPackageRegistry {
 
     pub fn index_client(&self) -> Option<&crate::index_client::IndexClient> {
         self.index_client.get().and_then(Option::as_ref)
+    }
+
+    /// Record the registries this profile allows, for the failures this
+    /// registry reports. Called by the catalog, which is the one place
+    /// that knows the declared set.
+    pub fn with_registry_roster(mut self, roster: Arc<crate::git_failure::RegistryRoster>) -> Self {
+        self.roster = roster;
+        self
+    }
+
+    /// **The funnel.** Every git failure this registry reports becomes an
+    /// operator-facing error here and nowhere else, so a new call site
+    /// either names the errand it was on or does not compile.
+    pub(crate) fn git_failure(
+        &self,
+        operation: crate::git_failure::GitOperation,
+        url: &str,
+        error: GitError,
+    ) -> RegistryError {
+        crate::git_failure::explain(operation, &self.name, url, &self.roster, error)
     }
 
     pub fn name(&self) -> &str {
