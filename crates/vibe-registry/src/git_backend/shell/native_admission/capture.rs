@@ -132,12 +132,33 @@ impl NativeGitAdmission {
                     "captured Git metadata reader".into(),
                 )
             })?;
+        Ok(output)
+    }
+    /// A metadata read whose answer the capture requires. Exit 1 is an
+    /// ordinary "no" from `git config`, not a failure.
+    ///
+    /// Anything else carries **what was run and what Git said** into the
+    /// failure ([`GitError::NativeMetadata`]). These children run with a
+    /// cleared environment and a selected installation, so "the reader
+    /// failed" on its own told an operator nothing: a Git too old for an
+    /// option, a repository it refuses to open and a broken installation all
+    /// read identically, and the one thing that distinguishes them — Git's
+    /// own message — was the thing being dropped.
+    fn required_metadata(
+        &self,
+        cwd: &Path,
+        args: &[&str],
+        git_dir: Option<&Path>,
+    ) -> Result<std::process::Output, GitError> {
+        let output = self.metadata(cwd, args, git_dir)?;
         if output.status.success() || output.status.code() == Some(1) {
             return Ok(output);
         }
-        Err(unsupported(
-            "selected Git metadata reader failed; context was not captured",
-        ))
+        Err(GitError::NativeMetadata {
+            argv: args.join(" "),
+            status: output.status.code(),
+            stderr: super::stderr_tail(&output.stderr, 4096),
+        })
     }
     pub(super) fn capture_context(&self, warm: Option<&Path>) -> Result<CapturedContext, GitError> {
         self.capture_child_context(warm, None)
@@ -162,7 +183,15 @@ impl NativeGitAdmission {
             .then(|| self.temporary("vibe-config-read-"))
             .transpose()?;
         let git_dir = fresh.as_ref().map(|root| root.path().join("absent.git"));
-        let read = |args: &[&str]| self.metadata(cwd, args, git_dir.as_deref());
+        let read = |args: &[&str]| self.required_metadata(cwd, args, git_dir.as_deref());
+        // `git var GIT_ATTR_SYSTEM` / `GIT_ATTR_GLOBAL` ask the selected Git
+        // where it would read attributes from. Git learned those two names in
+        // 2.46; an older one — Apple Git 2.39.5, which is the only `git` a
+        // stock macOS has — answers its own usage message and exits 129.
+        // That is a Git that cannot be *asked*, not a context that failed to
+        // capture, and the answer is already handled below: an unanswered
+        // scope contributes no attributes.
+        let ask = |args: &[&str]| self.metadata(cwd, args, git_dir.as_deref());
         let config = read(&[
             "config",
             "--null",
@@ -237,17 +266,32 @@ impl NativeGitAdmission {
             captured.validate_warm_transport(explicit_ssh, !self.ssh.is_empty())?;
         }
         for (name, system) in [("GIT_ATTR_SYSTEM", true), ("GIT_ATTR_GLOBAL", false)] {
-            let result = read(&["var", name])?;
-            let bytes = if result.status.success() {
-                let path = text(result.stdout)?;
-                if path.contains(['\n', '\r']) {
-                    return Err(unsupported("ambiguous attributes path"));
-                }
-                captured
-                    .read_file(&absolute_from(cwd, &path))?
-                    .unwrap_or_default()
+            let result = ask(&["var", name])?;
+            let path = if result.status.success() {
+                Some(text(result.stdout)?)
+            } else if system {
+                // The machine-wide `$(prefix)/etc/gitattributes` cannot be
+                // located without asking, and the controlled child excludes
+                // that scope by construction anyway (`GIT_ATTR_NOSYSTEM=1` in
+                // `Context`), so nothing here is *assumed* empty — it is made
+                // empty, the same way the machine-wide configuration scope is.
+                None
             } else {
-                Vec::new()
+                // The global file, on the other hand, is Git's documented
+                // default over inputs this capture already holds, so an
+                // unaskable Git costs no fidelity.
+                global_attributes_default(selected, &captured.entries)
+            };
+            let bytes = match path {
+                Some(path) => {
+                    if path.contains(['\n', '\r']) {
+                        return Err(unsupported("ambiguous attributes path"));
+                    }
+                    captured
+                        .read_file(&absolute_from(cwd, &path))?
+                        .unwrap_or_default()
+                }
+                None => Vec::new(),
             };
             if system {
                 captured.system_attributes = bytes;
@@ -288,6 +332,48 @@ impl NativeGitAdmission {
 /// `local` scopes everywhere, the refusal stands.
 pub(super) fn machine_transport_exempt(scope: &[u8], windows: bool) -> bool {
     windows && scope == b"system"
+}
+/// Where Git itself reads the global attributes file from, for a selected Git
+/// too old to be asked: `core.attributesFile`, else
+/// `$XDG_CONFIG_HOME/git/attributes`, else `$HOME/.config/git/attributes`
+/// (gitattributes(5)). Every input is one this capture already selected or
+/// observed, so the path is derived, never guessed; a file that is not there
+/// reads as absent exactly as it does on a newer Git.
+fn global_attributes_default(
+    selected: &NativeConfigSelection,
+    entries: &[(String, String)],
+) -> Option<String> {
+    let home = selected
+        .environment
+        .get(std::ffi::OsStr::new("HOME"))?
+        .clone();
+    let home = Path::new(&home);
+    if let Some((_, value)) = entries
+        .iter()
+        .rev()
+        .find(|(key, _)| key == "core.attributesfile")
+    {
+        if value.is_empty() {
+            return None;
+        }
+        // Git expands a leading `~/` against the home it was given.
+        return Some(match value.strip_prefix("~/") {
+            Some(rest) => home.join(rest).to_str()?.to_owned(),
+            None => value.clone(),
+        });
+    }
+    let base = match selected
+        .environment
+        .get(std::ffi::OsStr::new("XDG_CONFIG_HOME"))
+        .filter(|value| !value.is_empty())
+    {
+        Some(xdg) => PathBuf::from(xdg),
+        None => home.join(".config"),
+    };
+    base.join("git")
+        .join("attributes")
+        .to_str()
+        .map(str::to_owned)
 }
 fn absolute_from(cwd: &Path, path: &str) -> PathBuf {
     let path = Path::new(path);
@@ -482,61 +568,5 @@ pub(super) fn validate_child_ancestors(path: &Path) -> Result<(), GitError> {
 }
 
 #[cfg(test)]
-mod machine_scope_tests {
-    use super::*;
-
-    fn context(entries: &[(&str, &str, bool)]) -> CapturedContext {
-        CapturedContext {
-            cwd: PathBuf::from("/"),
-            warm: None,
-            layout: None,
-            config: Vec::new(),
-            entries: entries
-                .iter()
-                .map(|(k, v, _)| ((*k).into(), (*v).into()))
-                .collect(),
-            machine: entries.iter().map(|(_, _, machine)| *machine).collect(),
-            files: BTreeMap::new(),
-            system_attributes: Vec::new(),
-            global_attributes: Vec::new(),
-            info_attributes: Vec::new(),
-            effective_origin: None,
-            recorded_origin: None,
-        }
-    }
-
-    #[test]
-    #[specmark::spec(verifies = "spec://org.vibevm.core/vibevm/common/PROP-073#NATIVE-WINDOWS-LAW")]
-    fn windows_installation_defaults_do_not_refuse_but_user_transport_settings_do() {
-        assert!(machine_transport_exempt(b"system", true));
-        assert!(!machine_transport_exempt(b"system", false));
-        assert!(!machine_transport_exempt(b"global", true));
-        // Git for Windows' own system configuration.
-        let installation = [
-            ("credential.helper", "manager", true),
-            ("http.sslbackend", "schannel", true),
-            (
-                "http.sslcainfo",
-                "C:/Program Files/Git/mingw64/etc/ssl/certs/ca-bundle.crt",
-                true,
-            ),
-            ("core.autocrlf", "true", true),
-        ];
-        context(&installation)
-            .validate_warm_transport(false, false)
-            .unwrap();
-        // The same settings chosen by the user still refuse.
-        for user in [
-            ("credential.helper", "store", false),
-            ("http.proxy", "http://ambient:3128", false),
-            ("core.sshcommand", "ssh -i key", false),
-        ] {
-            assert!(
-                context(&[installation[0], user])
-                    .validate_warm_transport(false, false)
-                    .is_err(),
-                "{user:?}"
-            );
-        }
-    }
-}
+#[path = "capture_tests.rs"]
+mod tests;

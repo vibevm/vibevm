@@ -199,14 +199,43 @@ impl NativeState {
         external.extend_from_slice(&captured.global_attributes);
         fs::write(&attrs, external).map_err(io)?;
         fs::write(git.join("info/attributes"), &captured.info_attributes).map_err(io)?;
+        // `--attr-source` (Git 2.40) is how the probes below read the
+        // payload's own `.gitattributes` out of the commit rather than out of
+        // a working tree that does not hold it yet. Apple Git 2.39.5 — the
+        // `git` a stock macOS carries, and the only one on a machine with no
+        // Homebrew — knows neither it nor `check-attr --source`, and answers
+        // its usage message. Refusing that machine the controlled transport
+        // outright is not the honest answer when the same question can be
+        // asked a second way: the probes then run *after* the checkout, where
+        // the staged tree carries the real `.gitattributes` and a plain
+        // `check-attr` reads exactly those bytes. Nothing has left the private
+        // stage at that point, and no external filter can have run — an
+        // attribute naming a driver this owned configuration does not define
+        // converts nothing — so the refusal still lands before the stage is
+        // read, copied or published.
+        let attr_source_option = format!("--attr-source={}", owned.revision.commit);
+        let attr_source = context
+            .run(
+                &[
+                    attr_source_option.as_str(),
+                    "rev-parse",
+                    "--verify",
+                    &owned.revision.commit,
+                ],
+                Some(&git),
+                None,
+            )
+            .is_ok();
         let mut prefix = vec![
             "--work-tree".to_owned(),
             utf8(&stage)?.to_owned(),
             "-c".into(),
             format!("core.attributesFile={}", attrs.display()),
         ];
+        if attr_source {
+            prefix.push(attr_source_option.clone());
+        }
         prefix.extend([
-            format!("--attr-source={}", owned.revision.commit),
             "-c".into(),
             "filter.unset.required=true".into(),
             "-c".into(),
@@ -269,7 +298,9 @@ impl NativeState {
                     written.extend(["-c".into(), format!("{key}={value}")]);
                 }
             }
-            written.push(format!("--attr-source={}", owned.revision.commit));
+            if attr_source {
+                written.push(attr_source_option.clone());
+            }
             written.extend(verbatim::CONFIG.iter().map(|flag| (*flag).to_owned()));
             written
         } else {
@@ -286,7 +317,7 @@ impl NativeState {
         let source_option = format!("--source={}", owned.revision.commit);
         // Every tracked path of the commit, checked for a transformation this
         // staging does not support.
-        {
+        let probe = || -> Result<(), GitError> {
             let entries = run(&["ls-tree", "-r", "-z", &owned.revision.commit])?;
             let mut paths = Vec::new();
             for entry in entries.stdout.split(|b| *b == 0).filter(|s| !s.is_empty()) {
@@ -305,7 +336,9 @@ impl NativeState {
             }
             for paths in paths.chunks(64) {
                 let mut args: Vec<&str> = vec!["check-attr"];
-                args.push(&source_option);
+                if attr_source {
+                    args.push(&source_option);
+                }
                 args.extend(["--all", "-z", "--"]);
                 args.extend(paths.iter().copied());
                 let result = run(&args)?;
@@ -347,6 +380,10 @@ impl NativeState {
                     }
                 }
             }
+            Ok(())
+        };
+        if attr_source {
+            probe()?;
         }
         // Only now: the probe above had to read the payload's own attributes,
         // and this override would have answered in their place.
@@ -361,6 +398,16 @@ impl NativeState {
         } else {
             write(&["reset", "--hard", &owned.revision.commit])?;
             write(&["clean", "-dfx"])?;
+        }
+        if !attr_source {
+            // The probe reads the payload's own attributes, not the
+            // byte-exact override a data tree keeps.
+            fs::write(git.join("info/attributes"), &captured.info_attributes).map_err(io)?;
+            let answer = probe();
+            if bytes == PayloadBytes::Verbatim {
+                fs::write(git.join("info/attributes"), verbatim::ATTRIBUTES).map_err(io)?;
+            }
+            answer?;
         }
         if owned.revision.reference.starts_with("refs/") {
             run(&[

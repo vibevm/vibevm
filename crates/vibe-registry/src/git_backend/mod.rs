@@ -78,6 +78,19 @@ pub enum GitError {
         "native context unsupported: {reason} (violates spec://org.vibevm.core/vibevm/common/PROP-073#NATIVE-PREPARATION; fix: supply a supported explicit transport context)"
     )]
     NativeContext { reason: &'static str },
+    /// A bounded metadata reader of the controlled transport failed, carrying
+    /// **what was run and what Git said**: with a cleared environment and a
+    /// selected installation, "the reader failed" told an operator nothing.
+    #[error(
+        "the selected Git could not answer `git {argv}`{} (violates spec://org.vibevm.core/vibevm/common/PROP-073#NATIVE-PREPARATION; fix: check that the selected Git installation supports this operation, and read its own message above): {stderr}",
+        match status { Some(code) => format!(" (exit {code})"), None => String::new() }
+    )]
+    NativeMetadata {
+        /// The child's arguments, and Git's own stderr below them.
+        argv: String,
+        status: Option<i32>,
+        stderr: String,
+    },
     /// A path-valued OpenSSH setting the selected client reported that this
     /// capture cannot lower to one file it may read. The message names the
     /// client that produced the value, the keyword it reported it under and

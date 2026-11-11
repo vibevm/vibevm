@@ -481,6 +481,8 @@ mod ssh_tests;
 #[cfg(all(test, unix))]
 mod local_registry_tests;
 #[cfg(all(test, unix))]
+mod old_git_tests;
+#[cfg(all(test, unix))]
 mod registry_auth_tests;
 #[cfg(all(test, unix))]
 mod relocation_tests;
