@@ -72,6 +72,14 @@ drop	^Checksums matched!$
 drop	^Downloading and installing node v.*\.\.\.$
 drop	^Downloading https?://.*$
 
+# `nvm debug` is a dump of the tool's own facts, and the shim has one fact
+# nvm has not got: which revision of the template produced the file being
+# sourced. It is dropped here rather than hidden in the shim, because a
+# user running `nvm debug` to report a bug needs it and the comparison
+# must not — the one line is an addition to nvm's dump, never a change to
+# any line nvm prints (PROP-075 `#VIBENVM-NO-EXCLUSIONS`).
+drop	^vibenvm: org\.vibevm\.nvm/nvm template revision .*$
+
 # --- fields that are sets, not sequences ---------------------------------
 sort	installed
 sort	aliases
