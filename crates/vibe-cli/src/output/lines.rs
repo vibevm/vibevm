@@ -97,6 +97,21 @@ impl Context {
         self.suspend_progress(|| eprintln!("{gap}{text}"));
     }
 
+    /// One line saying what vibe decided on the operator's behalf, plain
+    /// and unglyphed: `node → org.vibevm.node/node`.
+    ///
+    /// It is stderr in EVERY mode, for `diagnostic`'s reason and one more:
+    /// a decision is not a warning, so it carries no warning mark, and it
+    /// survives `--quiet` because quiet's one line is the command's answer
+    /// and this says what the command was asked about.
+    pub fn decision(&self, text: &str) {
+        if self.suppress_output {
+            return;
+        }
+        let gap = language::before(Stream::Err, Kind::Block);
+        self.suspend_progress(|| eprintln!("{gap}{text}"));
+    }
+
     /// A bounded diagnostic that belongs to no document: `! <sentence>`.
     ///
     /// It is stderr in EVERY mode on purpose: JSON's stdout is a document

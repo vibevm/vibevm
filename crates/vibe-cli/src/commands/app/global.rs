@@ -15,6 +15,14 @@ use vibe_app::{
 mod observation;
 pub(crate) use observation::Observation;
 
+/// Where one command's package comes from: the effective source policy,
+/// the registry chain, and the resolver requirements are solved through.
+#[path = "global/sources.rs"]
+mod sources;
+pub(crate) use sources::{
+    Packages, resolve_package_with_operation, source_operation, source_operation_for_project,
+};
+
 use super::agents::{AgentSetup, report_parked};
 use super::display::{StepDisplay, asking};
 use super::report::{render, render_removal, render_written};
@@ -44,113 +52,6 @@ pub(crate) fn settings_root() -> Result<SettingsRoot> {
 pub(crate) fn proxy_image() -> Result<PathBuf> {
     let exe = std::env::current_exe().context("locating the running vibe executable")?;
     Ok(exe.with_file_name(crate::commands::vvm::APP_PROXY_BINARY_NAME))
-}
-
-pub(crate) fn source_operation(
-    invocation: vibe_core::manifest::SourcePolicyDecl,
-) -> Result<vibe_package_source::SourceOperation> {
-    source_operation_for_project(None, invocation)
-}
-
-/// The caller supplies the already selected project, never inferred from app-home paths.
-pub(crate) fn source_operation_for_project(
-    project_root: Option<&Path>,
-    invocation: vibe_core::manifest::SourcePolicyDecl,
-) -> Result<vibe_package_source::SourceOperation> {
-    let manifest = match project_root {
-        Some(root) => vibe_core::manifest::Manifest::read(root.join("vibe.toml"))?,
-        None => vibe_core::manifest::Manifest::default(),
-    };
-    let cwd = std::env::current_dir()?;
-    vibe_package_source::source_operation(
-        &vibe_package_source::PackageSourceOptions {
-            source_policy: invocation,
-            ..Default::default()
-        },
-        &manifest,
-        project_root.unwrap_or(&cwd),
-        vibe_package_source::deferred_user_registry(crate::output::seeds_default_registry()),
-    )
-}
-
-pub(crate) fn resolve_package_with_operation(
-    settings: &SettingsRoot,
-    registry: Option<&Path>,
-    embedded_root: Option<&Path>,
-    spelling: &str,
-    offline: bool,
-    operation: &vibe_package_source::SourceOperation,
-) -> Result<ResolvedPackage> {
-    if let Some(root) = registry {
-        let local = open_local(root)?;
-        return Ok(vibe_app::from_local_registry(&local, root, spelling)
-            .map_err(vibe_app::AppError::from)?);
-    }
-    if let Some(root) = embedded_root {
-        let local = open_local(root)?;
-        if vibe_app::local_registry_carries(&local, spelling)? {
-            let mut resolved = vibe_app::from_local_registry(&local, root, spelling)
-                .map_err(vibe_app::AppError::from)?;
-            if let Some(evidence) = &mut resolved.source_evidence {
-                evidence.source_kind =
-                    Some(vibe_wire::generated::shared::SourceSelectionKind::Embedded);
-            }
-            return Ok(resolved);
-        }
-    }
-    Ok(
-        vibe_app::from_global_with_operation(settings.path(), spelling, offline, operation)
-            .map_err(vibe_app::AppError::from)?,
-    )
-}
-
-fn open_local(root: &Path) -> Result<vibe_registry::LocalRegistry> {
-    crate::registry::application_local_registry(root.to_path_buf())
-        .with_context(|| format!("opening the application registry `{}`", root.display()))
-}
-
-#[cfg(test)]
-#[path = "global/source_tests.rs"]
-mod source_tests;
-
-/// The package resolver of one command: the same explicit (or embedded)
-/// registry as the requested package, otherwise the configured registries
-/// (PROP-065 `#app-dependencies`: requirements resolve like any package).
-pub(crate) struct Packages {
-    pub(crate) operation: vibe_package_source::SourceOperation,
-    pub(crate) settings: SettingsRoot,
-    pub(crate) registry: Option<PathBuf>,
-    pub(crate) embedded: Option<PathBuf>,
-    pub(crate) offline: bool,
-}
-
-impl Packages {
-    pub(crate) fn scope(&self) -> vibe_app::ResolverScope<'_> {
-        match self.registry.as_deref() {
-            Some(root) => vibe_app::ResolverScope::Registry(root),
-            None => vibe_app::ResolverScope::Chain {
-                embedded: self.embedded.as_deref(),
-            },
-        }
-    }
-    pub(crate) fn resolve(&self, spelling: &str) -> Result<ResolvedPackage, vibe_app::AppError> {
-        resolve_package_with_operation(
-            &self.settings,
-            self.registry.as_deref(),
-            self.embedded.as_deref(),
-            spelling,
-            self.offline,
-            &self.operation,
-        )
-        .map_err(|error| match error.downcast::<vibe_app::AppError>() {
-            Ok(error) => error,
-            Err(error) => vibe_app::ResolveError::Registry {
-                spelling: spelling.into(),
-                reason: format!("{error:#}"),
-            }
-            .into(),
-        })
-    }
 }
 
 pub(super) fn attended(ctx: &output::Context) -> bool {
@@ -333,10 +234,29 @@ pub fn install(
     let settings = settings_root()?;
     let proxy_image = proxy_image()?;
     let source_operation = source_operation(args.source_policy.declaration())?;
+    // PROP-008 §2.6 first: a bare `node` becomes `org.vibevm.node/node`
+    // before anything downstream — the version file below reads a
+    // qualified coordinate, and nothing is ever recorded bare
+    // (PROP-029 `#ADDR-SHORT-NAMES`).
+    let qualified = super::short_name::from_registries(
+        ctx,
+        "vibe install -g",
+        &super::short_name::Sources {
+            home: &settings,
+            settings: &settings,
+            inputs: super::short_name::inputs(
+                args.registry.as_deref(),
+                embedded_root.as_deref(),
+                offline,
+                &source_operation,
+            ),
+        },
+        &args.packages[0],
+    )?;
     // With no version named, the nearest declared version file decides, as
     // `#VERSION-FILE-FORMATS`' precedence puts it directly below an explicit
     // requirement, and the install says which file did.
-    let spelling = super::version_file::install_spelling(ctx, &settings, &args.packages[0]);
+    let spelling = super::version_file::install_spelling(ctx, &settings, &qualified);
     let resolved = resolve_package_with_operation(
         &settings,
         args.registry.as_deref(),
@@ -477,11 +397,15 @@ pub fn update(
     }
     let settings = settings_root()?;
     let source_operation = source_operation(args.source_policy.declaration())?;
+    // An update acts on what is installed, so the home's own inventory
+    // answers the short name (PROP-008 `#INSTALLED-STATE-RESOLVES-LOCALLY`).
+    let spelling =
+        super::short_name::installed(ctx, "vibe update -g", &settings, &args.packages[0])?;
     let resolved = resolve_package_with_operation(
         &settings,
         args.registry.as_deref(),
         embedded_root.as_deref(),
-        &args.packages[0],
+        &spelling,
         root_offline,
         &source_operation,
     )?;
@@ -575,11 +499,15 @@ pub(crate) fn remove_request(args: &UninstallArgs) -> RemoveRequest {
 }
 
 pub fn uninstall(ctx: &output::Context, args: UninstallArgs, root_offline: bool) -> Result<()> {
-    vibe_app::qualified_ref(&args.package)?;
     if args.path != Path::new(".") {
         bail!("global uninstall received project-only --path");
     }
     let settings = settings_root()?;
+    // An uninstall acts only on installed state, so the home's inventory is
+    // the whole source of the short name and the answer never leaves this
+    // machine (PROP-008 `#INSTALLED-STATE-RESOLVES-LOCALLY`).
+    let package = super::short_name::installed(ctx, "vibe uninstall -g", &settings, &args.package)?;
+    vibe_app::qualified_ref(&package)?;
     let proxy_image = proxy_image()?;
     let flat = StepDisplay::flat();
     let observe = Observation::new(ctx, true, &flat)?;
@@ -589,7 +517,7 @@ pub fn uninstall(ctx: &output::Context, args: UninstallArgs, root_offline: bool)
             feature_chooser: None,
             ..operation(ctx, &settings, root_offline, &proxy_image, None, &observe)
         };
-        vibe_app::uninstall(&operation, &args.package, &remove_request(&args))
+        vibe_app::uninstall(&operation, &package, &remove_request(&args))
     })?;
     render_removal(ctx, &removal)
 }

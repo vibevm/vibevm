@@ -25,11 +25,27 @@ use crate::output;
 pub(super) fn run(
     ctx: &output::Context,
     home: &SettingsRoot,
-    args: AppVersionsArgs,
+    mut args: AppVersionsArgs,
     embedded_root: Option<&Path>,
     offline: bool,
     operation: &vibe_package_source::SourceOperation,
 ) -> Result<()> {
+    // `PACKAGE|SLOT` in three tiers (PROP-059 `#SHORT-NAME-SLOT-PRECEDENCE`):
+    // the first two are below, in the library; a word that is neither a
+    // slot of this home nor an installed package is resolved here, once,
+    // through the same registries the domain is read from.
+    args.target = super::short_name::versions_target(
+        ctx,
+        home,
+        &args.target,
+        super::short_name::Inputs {
+            registry: args.registry.as_deref(),
+            embedded: embedded_root,
+            offline,
+            operation,
+        },
+        args.installed,
+    )?;
     let index = vibe_app::Index::load(home)?;
     let domains = RegistryDomains {
         settings: global::settings_root()?,

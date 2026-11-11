@@ -44,7 +44,12 @@ pub(crate) struct Resolved {
     pub homes: Vec<SettingsRoot>,
 }
 
-pub(super) fn run(ctx: &output::Context, args: AppEnvArgs) -> Result<()> {
+pub(super) fn run(ctx: &output::Context, mut args: AppEnvArgs) -> Result<()> {
+    // `--use node=22` where `node` is an installed package rather than a
+    // slot id: the bare name stands for the slot that package provides
+    // (PROP-059 `#SHORT-NAME-SLOT-PRECEDENCE`). A slot id keeps its
+    // meaning, so nothing that works today changes.
+    slot_aliases(ctx, &mut args.uses)?;
     let shell = match &args.shell {
         Some(name) => Shell::parse(name)?,
         None => Shell::detect(parent_shell().as_deref()),
@@ -306,6 +311,32 @@ pub(crate) fn enclosing_project(from: &Path) -> Option<PathBuf> {
         current = dir.parent();
     }
     None
+}
+
+/// Rewrite the `SLOT` half of every `--use SLOT=VER` that names an
+/// installed package rather than a slot, nearer home first. A `SLOT` that
+/// names a slot of either home, and a `SLOT` no home can place, are both
+/// left exactly as written.
+fn slot_aliases(ctx: &output::Context, uses: &mut [String]) -> Result<()> {
+    if uses.is_empty() {
+        return Ok(());
+    }
+    let cwd = std::env::current_dir()?;
+    let project = enclosing_project(&cwd);
+    let user = global::settings_root()?;
+    for entry in uses.iter_mut() {
+        let Some((slot, value)) = entry.split_once('=') else {
+            continue;
+        };
+        for home in session_homes(project.as_deref(), &user) {
+            let resolved = super::short_name::slot_target(ctx, "vibe app env --use", &home, slot)?;
+            if resolved != slot.trim() {
+                *entry = format!("{resolved}={value}");
+                break;
+            }
+        }
+    }
+    Ok(())
 }
 
 /// The homes of one session in priority order: the project home when it

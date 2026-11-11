@@ -263,6 +263,27 @@ impl EffectiveSourcePolicy {
             excluded,
         })
     }
+    /// The exclusions **as the operator wrote them** — `github`,
+    /// `gitverse`, `host:mirror.example` — in declared-set order.
+    ///
+    /// A message a human reads names these; [`Self::denied_host_keys`]
+    /// expands one family into the ten destinations transport admission
+    /// needs, which is the right answer for a gate and a wall of names
+    /// nobody typed for a sentence.
+    ///
+    /// ```
+    /// use vibe_core::manifest::{EffectiveSourcePolicy, SourcePolicyDecl};
+    /// let user: SourcePolicyDecl = toml::from_str("exclude_hosting = ['github']").unwrap();
+    /// let empty = SourcePolicyDecl::default();
+    /// let policy = EffectiveSourcePolicy::merge(&user, &empty, &empty).unwrap();
+    /// assert_eq!(
+    ///     policy.excluded_selectors().map(ToString::to_string).collect::<Vec<_>>(),
+    ///     ["github"],
+    /// );
+    /// ```
+    pub fn excluded_selectors(&self) -> impl Iterator<Item = &HostingSelector> {
+        self.excluded.iter()
+    }
     pub fn denied_host_keys(&self) -> BTreeSet<String> {
         self.excluded
             .iter()
@@ -302,11 +323,6 @@ impl EffectiveSourcePolicy {
     /// [`Self::excluded_by`] with the selector dropped.
     pub fn excludes_endpoint(&self, endpoint: &str) -> bool {
         self.excluded_by(endpoint).is_some()
-    }
-
-    /// Every exclusion this policy carries, in normalized order.
-    pub fn excluded_hostings(&self) -> impl Iterator<Item = &HostingSelector> {
-        self.excluded.iter()
     }
 
     pub fn preference_rank(&self, actual_source: &str) -> usize {

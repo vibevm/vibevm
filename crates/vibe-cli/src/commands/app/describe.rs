@@ -17,6 +17,8 @@ use crate::output;
 /// Where `show` resolves its package from: an explicit local registry or the
 /// operation's sources, with the embedded root and the offline posture.
 pub(super) struct DescribeSource<'a> {
+    /// The home whose installed applications a short name prefers.
+    pub home: &'a vibe_app::SettingsRoot,
     pub registry: Option<&'a Path>,
     pub embedded_root: Option<&'a Path>,
     pub offline: bool,
@@ -33,6 +35,27 @@ pub(super) fn show(
     configuration: bool,
 ) -> Result<()> {
     let settings = global::settings_root()?;
+    // A bare `<name>[@<version>]` is qualified here, once, against the very
+    // sources this resolution is about to walk (PROP-008 `#short-name`).
+    let package = &super::short_name::from_registries(
+        ctx,
+        if steps_only {
+            "vibe app steps"
+        } else {
+            "vibe app describe"
+        },
+        &super::short_name::Sources {
+            home: source.home,
+            settings: &settings,
+            inputs: super::short_name::Inputs {
+                registry: source.registry,
+                embedded: source.embedded_root,
+                offline: source.offline,
+                operation: source.operation,
+            },
+        },
+        package,
+    )?;
     let resolved = global::resolve_package_with_operation(
         &settings,
         source.registry,

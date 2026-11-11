@@ -212,7 +212,7 @@ fn an_exact_host_exclusion_and_an_empty_policy_decide_narrowly() {
     assert!(!policy.excludes_endpoint("ssh://git@other.example.invalid/corp.git"));
     assert_eq!(
         policy
-            .excluded_hostings()
+            .excluded_selectors()
             .map(ToString::to_string)
             .collect::<Vec<_>>(),
         vec!["host:mono.example.invalid".to_owned()]
@@ -220,5 +220,5 @@ fn an_exact_host_exclusion_and_an_empty_policy_decide_narrowly() {
 
     let neutral = EffectiveSourcePolicy::merge(&empty, &empty, &empty).unwrap();
     assert!(!neutral.excludes_endpoint("https://github.com/vibespecs"));
-    assert_eq!(neutral.excluded_hostings().count(), 0);
+    assert_eq!(neutral.excluded_selectors().count(), 0);
 }

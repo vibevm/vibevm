@@ -3023,3 +3023,42 @@ structure, and it goes when the file does.
 | @fact:B282-SEVERITY **severity** | P3 — the diagnosability gap the owner reported (`-v` printed nothing at all about resolution) is closed; this is the next notch of detail. |
 | @fact:B282-DISPOSITION **disposition** | open — it wants the observation seam threaded into `GitPerPackageRegistry` and the index client, which is a wider plumbing change than the walk-level narration this commit added. |
 | @fact:B282-FILED **filed by** | the `exclude_hosting` enumeration fix, 2026-11-11. |
+## B-285 — `--json` carries no `resolved_from`, so a machine reader never sees the short name it typed {#b-285}
+
+| field | value |
+|---|---|
+| @fact:B285-WHAT **what** | When an application command resolves a bare `node` to `org.vibevm.node/node`, the decision is one line on stderr. A `--json` caller gets the qualified coordinate inside the envelope and no record that it asked with a short name, nor which candidate set the answer came out of. The natural shape is a `resolved_from` member on the envelopes that already name a package — the install report, the plan, `describe`, `versions`. |
+| @fact:B285-EVIDENCE **evidence** | `crates/vibe-cli/src/commands/app/short_name.rs` prints the provenance with `Context::decision`, deliberately on stderr so `--json`'s stdout stays one envelope. |
+| @fact:B285-SEVERITY **severity** | P3 — the stderr line is present in every mode, so no information is lost to a reader that reads both streams; only a reader of stdout alone is short. |
+| @fact:B285-DISPOSITION **disposition** | open — deliberately out of scope. Adding the member means editing several JTD schemas, running `cargo xtask codegen` and filing one `CORP-FMT-0NN` record per envelope; that is a format change of its own and should be decided as one rather than ridden in on a convenience. |
+| @fact:B285-FILED **filed by** | the application short-name boundary, 2026-11-11. |
+
+## B-286 — `vibe shell --use` and `vibe app exec` still take a slot id only {#b-286}
+
+| field | value |
+|---|---|
+| @fact:B286-WHAT **what** | `vibe app use`, `vibe app alternatives` and `vibe app env --use` now read a bare installed package name as the slot that package provides (`PROP-059#SHORT-NAME-SLOT-PRECEDENCE`). `vibe shell --use SLOT=VER` and `vibe app exec SLOT[@VER]` take the same kind of argument and did not get the alias, so the four spellings of one idea disagree. |
+| @fact:B286-EVIDENCE **evidence** | `crates/vibe-cli/src/commands/app/exec.rs` and the `--use` handling of `vibe shell`; neither passes its slot word through `app::short_name::slot_target`. |
+| @fact:B286-SEVERITY **severity** | P3 — nothing regressed, and the slot id every caller writes today still works; it is an inconsistency in how far the convenience reaches. |
+| @fact:B286-DISPOSITION **disposition** | open — `exec` resolves its target inside `vibe-app` and `vibe shell` composes its own homes, so each needs its own small boundary rather than the shared one the other three share. |
+| @fact:B286-FILED **filed by** | the application short-name boundary, 2026-11-11. |
+
+## B-287 — `vibe app stop`, `pin`, `unpin` and `launcher` take a launcher key with no short form {#b-287}
+
+| field | value |
+|---|---|
+| @fact:B287-WHAT **what** | These four take a **launcher key** (`<group>/<name>@<version>#<launcher id>`) or, for `stop`, a process id — not a package coordinate — so the short-name boundary deliberately leaves them alone. A key is long and its package half would resolve like any other short name; a user who can write `vibe app start node` cannot write `vibe app pin node#main`. |
+| @fact:B287-EVIDENCE **evidence** | `crates/vibe-cli/src/commands/app/catalog.rs` and `runtime.rs`; `vibe_app::split_launcher_key` is where the package half is already separated. |
+| @fact:B287-SEVERITY **severity** | P3 — a convenience, and the version in the key makes it a different decision from a package short name (which version's launcher?). |
+| @fact:B287-DISPOSITION **disposition** | open — it needs a rule for the version half before the name half is worth resolving, which is a design question rather than a boundary call. |
+| @fact:B287-FILED **filed by** | the application short-name boundary, 2026-11-11. |
+
+## B-288 — a short name naming a remap package still falls through to the application path {#b-288}
+
+| field | value |
+|---|---|
+| @fact:B288-WHAT **what** | `vibe install -g <group>/<name>` reads the kind off the manifest the registry would serve, so a `kind = "remap"` package installs as an offer without the operator knowing (`PROP-066#package`). That probe parses the pkgref itself and needs a group, so a bare `vibe install -g intranet` answers `None`, falls through to the application path, and fails there with "the package declares no `[application]`" instead of installing the offer. |
+| @fact:B288-EVIDENCE **evidence** | `crates/vibe-cli/src/commands/remap/packages.rs::claims` calls `PackageRef::parse(raw).ok()?` and then `resolver.manifest_of`, both before `crates/vibe-cli/src/commands/app/global.rs` qualifies the spelling. |
+| @fact:B288-SEVERITY **severity** | P3 — a bare name has never worked on this path at all, so nothing regressed; it is a corner the application boundary did not reach. |
+| @fact:B288-DISPOSITION **disposition** | open — the fix is to qualify once, above the kind probe, which means moving the boundary out of `app::global::install` into the dispatcher so both kinds share it. Deliberately not taken here: that dispatcher also routes `mcp:` and project installs, and moving the boundary is a change to all three rather than to the one this work was asked for. |
+| @fact:B288-FILED **filed by** | the application short-name boundary, 2026-11-11. |

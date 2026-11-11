@@ -8,6 +8,7 @@ specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-059#launcher-operati
 
 pub(crate) mod agents;
 mod alternatives;
+mod boundary;
 mod catalog;
 pub(crate) mod channels;
 mod configuration;
@@ -35,6 +36,7 @@ mod report;
 mod resume;
 mod runtime;
 pub(crate) mod session;
+pub(crate) mod short_name;
 mod version_file;
 mod versions;
 mod views;
@@ -49,6 +51,8 @@ use anyhow::Result;
 
 use crate::cli::{AppArgs, AppCommand};
 use crate::output;
+
+use boundary::{from_home, resolved, state_verb};
 
 pub fn run(
     ctx: &output::Context,
@@ -68,15 +72,18 @@ pub fn run(
         || global::source_operation_for_project(source_project, Default::default());
     match args.command {
         AppCommand::Installers { package, registry } => {
-            let settings = global::settings_root()?;
             let source_operation = policy_operation()?;
-            let resolved = global::resolve_package_with_operation(
-                &settings,
-                registry.as_deref(),
-                embedded_root,
+            let (package, resolved) = resolved(
+                ctx,
+                "vibe app installers",
+                &app_home,
                 &package,
-                offline,
-                &source_operation,
+                short_name::inputs(
+                    registry.as_deref(),
+                    embedded_root,
+                    offline,
+                    &source_operation,
+                ),
             )?;
             let listing = vibe_app::options_listing(&package, &resolved.options);
             if ctx.is_json() {
@@ -98,13 +105,17 @@ pub fn run(
         } => {
             let settings = global::settings_root()?;
             let source_operation = policy_operation()?;
-            let resolved = global::resolve_package_with_operation(
-                &settings,
-                registry.as_deref(),
-                embedded_root,
+            let (_, resolved) = resolved(
+                ctx,
+                "vibe app plan",
+                &app_home,
                 &package,
-                offline,
-                &source_operation,
+                short_name::inputs(
+                    registry.as_deref(),
+                    embedded_root,
+                    offline,
+                    &source_operation,
+                ),
             )?;
             let proxy_image = global::proxy_image()?;
             let flat = display::StepDisplay::flat();
@@ -159,16 +170,20 @@ pub fn run(
             package,
             operation,
             parameters,
-        } => resume::run(
-            ctx,
-            app_home.settings(),
-            &package,
-            &operation,
-            parameters,
-            offline,
-            &policy_operation()?,
-        ),
+        } => {
+            let package = from_home(ctx, "vibe app resume", &app_home, &package)?;
+            resume::run(
+                ctx,
+                app_home.settings(),
+                &package,
+                &operation,
+                parameters,
+                offline,
+                &policy_operation()?,
+            )
+        }
         AppCommand::Runs { package, prune } => {
+            let package = from_home(ctx, "vibe app runs", &app_home, &package)?;
             records::runs(ctx, app_home.settings(), &package, prune)?;
             Ok(None)
         }
@@ -178,6 +193,9 @@ pub fn run(
             clean,
             all: _,
         } => {
+            let package = package
+                .map(|package| from_home(ctx, "vibe app work", &app_home, &package))
+                .transpose()?;
             records::work(
                 ctx,
                 app_home.settings(),
@@ -199,6 +217,9 @@ pub fn run(
             agent,
             keep_work,
         } => {
+            // `modify` changes an installation in place, so the home's
+            // inventory is the authority on which package is meant.
+            let package = from_home(ctx, "vibe app modify", &app_home, &package)?;
             lifecycle::modify(
                 ctx,
                 app_home.settings(),
@@ -227,64 +248,54 @@ pub fn run(
             )?;
             Ok(None)
         }
-        AppCommand::Expose { package } => {
-            lifecycle::change(
-                ctx,
-                app_home.settings(),
-                &package,
-                lifecycle::StateVerb::Expose,
-            )?;
-            Ok(None)
-        }
-        AppCommand::Hide { package } => {
-            lifecycle::change(
-                ctx,
-                app_home.settings(),
-                &package,
-                lifecycle::StateVerb::Hide,
-            )?;
-            Ok(None)
-        }
+        AppCommand::Expose { package } => state_verb(
+            ctx,
+            &app_home,
+            "vibe app expose",
+            &package,
+            lifecycle::StateVerb::Expose,
+        ),
+        AppCommand::Hide { package } => state_verb(
+            ctx,
+            &app_home,
+            "vibe app hide",
+            &package,
+            lifecycle::StateVerb::Hide,
+        ),
         AppCommand::Mark { mark, package } => {
             let mark = match mark {
                 crate::cli::MarkArg::Manual => vibe_app::Mark::Manual,
                 crate::cli::MarkArg::Auto => vibe_app::Mark::Auto,
             };
-            lifecycle::change(
+            state_verb(
                 ctx,
-                app_home.settings(),
+                &app_home,
+                "vibe app mark",
                 &package,
                 lifecycle::StateVerb::Mark(mark),
-            )?;
-            Ok(None)
+            )
         }
-        AppCommand::Hold { package } => {
-            lifecycle::change(
-                ctx,
-                app_home.settings(),
-                &package,
-                lifecycle::StateVerb::Hold(true),
-            )?;
-            Ok(None)
-        }
-        AppCommand::Unhold { package } => {
-            lifecycle::change(
-                ctx,
-                app_home.settings(),
-                &package,
-                lifecycle::StateVerb::Hold(false),
-            )?;
-            Ok(None)
-        }
-        AppCommand::Rollback { package } => {
-            lifecycle::change(
-                ctx,
-                app_home.settings(),
-                &package,
-                lifecycle::StateVerb::Rollback,
-            )?;
-            Ok(None)
-        }
+        AppCommand::Hold { package } => state_verb(
+            ctx,
+            &app_home,
+            "vibe app hold",
+            &package,
+            lifecycle::StateVerb::Hold(true),
+        ),
+        AppCommand::Unhold { package } => state_verb(
+            ctx,
+            &app_home,
+            "vibe app unhold",
+            &package,
+            lifecycle::StateVerb::Hold(false),
+        ),
+        AppCommand::Rollback { package } => state_verb(
+            ctx,
+            &app_home,
+            "vibe app rollback",
+            &package,
+            lifecycle::StateVerb::Rollback,
+        ),
         AppCommand::Autoremove { plan_only } => {
             lifecycle::autoremove(
                 ctx,
@@ -299,6 +310,7 @@ pub fn run(
             describe::show(
                 ctx,
                 describe::DescribeSource {
+                    home: app_home.settings(),
                     registry: registry.as_deref(),
                     embedded_root,
                     offline,
@@ -318,6 +330,7 @@ pub fn run(
             describe::show(
                 ctx,
                 describe::DescribeSource {
+                    home: app_home.settings(),
                     registry: registry.as_deref(),
                     embedded_root,
                     offline,
@@ -360,7 +373,10 @@ pub fn run(
                 menu::all(ctx, &app_home, project_root.as_deref(), menu)?;
                 return Ok(None);
             }
-            let package = package.unwrap_or_default();
+            let package = match package {
+                Some(package) => from_home(ctx, "vibe app launchers", &app_home, &package)?,
+                None => String::new(),
+            };
             let listing = launcher_listing(&app_home, &package, project_root.as_deref())?;
             if ctx.is_json() {
                 ctx.emit_json(&listing)?;
@@ -375,6 +391,7 @@ pub fn run(
             size,
             prefer,
         } => {
+            let package = from_home(ctx, "vibe app icon", &app_home, &package)?;
             menu::icon(
                 ctx,
                 &app_home,
@@ -422,10 +439,13 @@ pub fn run(
             version_file,
         } => {
             let request = alternatives::UseRequest::of(key, none, default)?;
+            let slot = short_name::slot_target(ctx, "vibe app use", app_home.settings(), &slot)?;
             alternatives::use_default(ctx, app_home.settings(), &slot, request, &version_file)?;
             Ok(None)
         }
         AppCommand::Alternatives { slot } => {
+            let slot =
+                short_name::slot_target(ctx, "vibe app alternatives", app_home.settings(), &slot)?;
             alternatives::alternatives(ctx, app_home.settings(), &slot)?;
             Ok(None)
         }
@@ -456,6 +476,7 @@ pub fn run(
             launcher_id,
             args,
         } => {
+            let package = from_home(ctx, "vibe app run", &app_home, &package)?;
             let code = ctx.suspend_progress(|| {
                 run_launcher(
                     &app_home,
@@ -509,6 +530,9 @@ pub fn run(
             args,
         } => {
             let (package, launcher) = catalog::start_target(&package, launcher)?;
+            // After the `#<launcher id>` split, what is left is the package
+            // the short name may stand for.
+            let package = from_home(ctx, "vibe app start", &app_home, &package)?;
             let Some(id) = catalog::start_launcher_id(
                 ctx,
                 &app_home,
