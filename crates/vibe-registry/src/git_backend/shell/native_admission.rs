@@ -26,6 +26,7 @@ mod preparation;
 mod relocation;
 pub(super) use context::AdmittedCommand;
 use context::Context;
+pub(super) use context::stderr_tail;
 pub use relocation::HttpDiscoveryTrust;
 
 /// Caller-trusted Git installation. Absolute paths are checked for consistency,

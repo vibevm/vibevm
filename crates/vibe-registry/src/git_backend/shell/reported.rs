@@ -29,6 +29,33 @@ pub(super) enum Remote<'a> {
     Admitted(&'a str, native_admission::NativeProtocol),
 }
 
+/// What a failed admitted transfer may say about itself — the same
+/// decision the controlled child's other operations reach, over the only
+/// fact a transfer has about its endpoint: its protocol.
+///
+/// Git's `file` transport reaches a repository on this machine through
+/// the filesystem, with no credential, header, proxy or TLS input that
+/// could be reflected back in its stderr, so that stderr is the diagnosis
+/// and is published, bounded to its tail. A transfer over `http`, `https`
+/// or `ssh` publishes none of its own, even after token scrubbing
+/// (PROP-073 `#NATIVE-PREPARATION`, PROP-001 `#windows-ux`).
+fn transfer_failure_text(remote: &Remote<'_>, stderr: &[u8]) -> String {
+    const REFUSED: &str =
+        "direct transfer failed; redirects and ambient credential routes are disabled";
+    if !matches!(
+        remote,
+        Remote::Admitted(_, native_admission::NativeProtocol::File)
+    ) {
+        return REFUSED.to_owned();
+    }
+    let text = native_admission::stderr_tail(stderr, 4096);
+    if text.is_empty() {
+        REFUSED.to_owned()
+    } else {
+        text
+    }
+}
+
 impl ShellGit {
     /// Run the clone or fetch `args` (the subcommand first) with
     /// `--progress`, in `cwd`, into the repository at `repository`,
@@ -214,9 +241,7 @@ impl ShellGit {
             GitError::CommandFailed {
                 cmd: "admitted native Git transfer".into(),
                 status: output.status.code().unwrap_or(-1),
-                stderr:
-                    "direct transfer failed; redirects and ambient credential routes are disabled"
-                        .into(),
+                stderr: transfer_failure_text(&remote, &output.stderr),
             }
         } else {
             classify_failure(argv, &output)
@@ -435,5 +460,30 @@ mod tests {
             seen.push(s.to_owned())
         });
         assert_eq!(seen, ["a: 1%", "a: 50%", "a: 100%, done.", "fatal: no"]);
+    }
+
+    #[test]
+    #[specmark::spec(
+        verifies = "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-001#windows-ux"
+    )]
+    fn only_a_local_transfer_publishes_what_git_said() {
+        let fatal = b"fatal: repository 'C:/srv/mono.git' does not exist\n";
+        let local = Remote::Admitted("C:/srv/mono.git", native_admission::NativeProtocol::File);
+        assert_eq!(
+            transfer_failure_text(&local, fatal),
+            "fatal: repository 'C:/srv/mono.git' does not exist"
+        );
+        // A silent local failure still says something.
+        assert!(transfer_failure_text(&local, b"\n").contains("direct transfer failed"));
+        for protocol in [
+            native_admission::NativeProtocol::Http,
+            native_admission::NativeProtocol::Https,
+            native_admission::NativeProtocol::Ssh,
+        ] {
+            let remote = Remote::Admitted("https://forge.invalid/mono.git", protocol);
+            let published = transfer_failure_text(&remote, b"fatal: Authentication failed\n");
+            assert!(!published.contains("Authentication"), "{published}");
+            assert!(published.contains("ambient credential routes are disabled"));
+        }
     }
 }

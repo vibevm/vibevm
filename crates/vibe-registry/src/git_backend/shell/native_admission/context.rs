@@ -80,7 +80,10 @@ fn failure_text(remote: Option<&AdmittedRemote>, stderr: &[u8]) -> String {
 /// boundary and marked when anything was dropped: Git writes the `fatal:`
 /// line that ends an operation last, after however many `error:` lines it
 /// collected on the way.
-fn stderr_tail(stderr: &[u8], limit: usize) -> String {
+///
+/// Shared with the transfer reporter, which reaches the same decision for
+/// the same reason over its own protocol (`NativeProtocol::File`).
+pub(in crate::git_backend::shell) fn stderr_tail(stderr: &[u8], limit: usize) -> String {
     let text = String::from_utf8_lossy(stderr);
     let text = text.trim();
     if text.len() <= limit {
