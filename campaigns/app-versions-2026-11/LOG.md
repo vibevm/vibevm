@@ -2222,3 +2222,104 @@ simplified shim; `campaigns/app-versions-2026-11/accept.sh` → 13 legs passed, 
 failed. `shellcheck` is still not installed on this machine, so `accept.sh` and
 the shim are syntax-checked with `bash -n` / `sh -n` and otherwise unlinted,
 which is recorded rather than claimed.
+
+## 2026-11-11 — the corporate proof's three defects: one vibe bug, two shim bugs, and what the suite cannot see
+
+The corporate-network proof exercised the shipped surface against
+`~/corp/admin/vibevm-repo` with the network denied and found **three** defects
+that nine passing differential cases, a 13-leg acceptance script and a green
+`vibe check` had all missed. Two are the shim's and one is vibe's. They are
+fixed before the 1.0.12 build: the shim is `org.vibevm.node/vibenvm@1.1.2`,
+`PROP-075` gains `#VIBENVM-ARGUMENT-ORDER`, `#VIBENVM-BUILT-IN-ALIASES` and
+`#VERSIONS-CHANNEL-DISCOVERY` with `#CORP-PROOF-FIX-AS-BUILT` recording what
+closing them decided, and `BACKLOG.md#b-266`…`#b-269` carry the rows.
+
+**1. `nvm use 22 --save` exited 0 and wrote nothing** (`B-266`). One
+`*) break` per option loop: the version stopped the scan and every flag behind
+it was discarded — silently, with a success status, on the one command whose
+whole observable effect is the file it writes. The fix is not a bigger loop,
+it is the discipline stated: nvm reads a **different argument list per
+branch**, and the shim now takes each branch's rule from the pinned `nvm.sh`
+v0.41.0 rather than imposing a uniform one. `install` reads two passes and
+answers **exit 6** for a version-selecting flag written after the version,
+which is nvm's own answer and not a dropped flag; `use` and `which` scan the
+whole list with the last version winning; `ls`, `ls-remote`, `version` and
+`version-remote` scan it with the first pattern winning; `run` and `exec`
+stop at the version because the rest is the command's own argv. The audit that
+rule demanded found three more divergences in the same loops, all closed with
+it: `--reinstall-packages-from <v>` was accepted where nvm refuses the space
+spelling, a repeated `--save` was last-one-wins where nvm exits 6, and an
+unknown long option was ignored where `ls`, `ls-remote`, `version-remote` and
+`exec` refuse it.
+
+**2. `nvm use default` exited 3** (`B-267`), with the slot default set, and so
+did `which` / `run` / `exec` / `version` for the same word. `#VIBENVM-MAPPING`
+had already decided that `default` **is** the slot default while named user
+aliases stay deferred; the shim honoured three of the four built-ins and
+handed `default` to vibe as a requirement, where it reads as a channel nothing
+declares. It is now one more spelling of the shim's single translation table —
+`=<the slot's default version>`, read out of vibe's own
+`vibe app versions <slot> --installed --json`, which costs no registry and no
+request — so it works wherever a version does and nothing downstream knows it
+was ever a word. An `lts/` **pattern** became an LTS selection in the same
+place, as it is for nvm, so `nvm ls-remote lts/jod` and `--lts=jod` are one
+question again.
+
+**3. `nvm ls-remote --lts` answered `N/A`, and that one was not the shim**
+(`B-268`). `vibe app versions <coordinate> --channel lts` refused with
+`unknown_channel … channels: (none)` while `vibe app versions node --installed
+--all` showed `[lts, lts/krypton]` in the same home. The asymmetry was never
+about the argument: `--installed` answers from the template **cache**, which
+an install had primed, while every other path enumerates the directory roots
+of the configured chain — and that enumeration knew only `localdir`, though
+its own doc comment named the `monorepo` working copy. In the corporate shape
+the monorepo is the *only* registry, so a closed network had **no directory
+root at all**: no template was discovered, the listing fell back to the
+published version union, and the answer was a package that declares no
+channels. The versions were right, which is exactly what made it survive
+every gate. Which sources have a directory root is now the registry layer's
+own decision, taken per variant beside the variants
+(`RegistrySource::directory_root`), so a kind of registry cannot be left out
+of it again.
+
+**The second defect was hidden inside the third, and it is the one worth
+remembering.** Adding the monorepo root did not fix anything: the symptom was
+byte-identical afterwards, because a monorepo root is a `tempfile::TempDir`
+capture the registry **owns**, and the enumeration was handing back a path
+that the drop of its own resolver deleted before the caller read it. A
+read-only enumeration that returns paths into something it opened must return
+the lease with them — the retention `LayoutRoot` already has for the same
+reason (PROP-073 `#NATIVE-PREPARATION`) — so the roots now travel as one value
+with the resolver that captured them. The general lesson is that one, not a
+detail of monorepos; and the reason it took a second measurement to see is
+that the right version list hides both halves of this defect equally well.
+
+**What the suite cannot see, said out loud.** Two of the three were missable
+and one was unreachable, and the distinction matters for what was added. The
+flag-after-the-version bug was **missable**: not one of nine cases asked for a
+flag on that side of the version, and
+`conformance/vibenvm/cases/17-flags-after-the-version.toml` now asks every
+wish in both positions with the version file in the observation record. The
+`default` bug was **missable** the same way: the cases reached the slot default
+only through `install --default`, never by naming it, and
+`cases/18-default-and-channels.toml` now asks each subcommand for it by name.
+The monorepo bug is **structurally outside the suite's reach**: sandbox B
+publishes into a `localdir` registry, so the registry type the corporate shape
+uses cannot appear there at all. Closing that gap by changing the suite would
+have meant teaching the harness a second registry type for one case; it is
+closed where it can be measured instead —
+`crates/vibe-cli/tests/cli_app_versions_monorepo.rs` drives the real binary
+over a real local `monorepo` with **no** `--registry` on the command line, two
+unit tests cover the root decision for all three source variants, and the
+corporate proof re-runs the three commands itself.
+
+**Evidence, before and after, against the proof's own home.** Before:
+`vibe app versions org.vibevm.node/node --channel lts` → `✗ unknown_channel
+… channels: (none)`, and the unfiltered listing's 406 rows all read
+`(published)` with no provenance line. After: `177 version(s)`, newest
+`26.13.0 (template) [lts, lts/lithium]`, `24.22.2 (published (overrides
+template)) [lts, lts/krypton] — installed`, and a trailer that finally names
+the slot's default **and** the mirror snapshot it read the domain from
+(`mirror snapshot synced 2026-11-11T01:32:28Z`) — byte-for-byte the answer the
+same home gives when the directory root is passed as `--registry`, which is
+the invariant the fix is about.
