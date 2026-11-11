@@ -50,6 +50,13 @@ pub(super) struct VersionEntryView {
     /// exactly as before.
     #[serde(default)]
     pub must_understand: Vec<String>,
+    /// Whether the record's manifest declared `[package] template =
+    /// true` — a **template revision** rather than a produced version
+    /// (PROP-075 `#TEMPLATE-FLAG`, `#TEMPLATE-REVISION-NOT-A-VERSION`).
+    /// `default` — a record without the field, and every index that
+    /// predates it, reads as an ordinary version.
+    #[serde(default)]
+    pub template: bool,
 }
 
 /// One `by-name` version entry as the client reads it: the version
@@ -65,6 +72,13 @@ pub struct IndexVersion {
     /// Empty on records that declare no capabilities — and on every
     /// entry served by an index that predates the field.
     pub must_understand: Vec<String>,
+    /// `true` for a **template revision**: the version of the template
+    /// itself, never a version of the thing it produces (PROP-075
+    /// `#TEMPLATE-REVISION-NOT-A-VERSION`). A revision is not a
+    /// candidate — it is neither listed nor selectable — which is the
+    /// same answer the directory-shaped path reaches by splitting the
+    /// manifests on disk.
+    pub template: bool,
 }
 
 impl From<VersionEntryView> for IndexVersion {
@@ -72,6 +86,7 @@ impl From<VersionEntryView> for IndexVersion {
         IndexVersion {
             version: v.version,
             must_understand: v.must_understand,
+            template: v.template,
         }
     }
 }
@@ -263,6 +278,35 @@ mod tests {
             serde_json::from_value(serde_json::json!({ "version": "1.0.0" })).unwrap();
         assert_eq!(plain.version.to_string(), "1.0.0");
         assert!(plain.must_understand.is_empty());
+    }
+
+    #[test]
+    fn version_entry_view_reads_the_template_flag_and_tolerates_its_absence() {
+        // PROP-075 `#TEMPLATE-REVISION-NOT-A-VERSION`: the by-name
+        // record says whether a published version is the template's own
+        // revision, and the view reads it. A record without the field —
+        // every index that predates it, and every ordinary package —
+        // reads as an ordinary version, so nothing an older index
+        // serves changes meaning.
+        let revision: VersionEntryView = serde_json::from_value(serde_json::json!({
+            "version": "1.1.0",
+            "template": true
+        }))
+        .unwrap();
+        assert!(revision.template);
+        let carried: IndexVersion = revision.into();
+        assert!(carried.template, "the flag survives the decode");
+
+        let produced: VersionEntryView = serde_json::from_value(serde_json::json!({
+            "version": "22.23.4",
+            "template": false
+        }))
+        .unwrap();
+        assert!(!produced.template);
+
+        let older: VersionEntryView =
+            serde_json::from_value(serde_json::json!({ "version": "1.0.0" })).unwrap();
+        assert!(!older.template, "a record without the field is a version");
     }
 
     #[test]

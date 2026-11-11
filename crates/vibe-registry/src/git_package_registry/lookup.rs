@@ -235,12 +235,27 @@ impl GitPerPackageRegistry {
         if let Some(client) = self.discover_index()? {
             match client.list_version_entries(group, name) {
                 Ok(Some(entries)) => {
+                    // **A template revision is not a candidate**
+                    // (PROP-075 `#TEMPLATE-REVISION-NOT-A-VERSION`).
+                    // The record carries the flag its manifest
+                    // declared, so an indexed registry splits the two
+                    // sets exactly as `discover_in_directory` splits
+                    // them from the manifests on disk — and the
+                    // revision is dropped here, above both the
+                    // listing and the selector, so neither can
+                    // disagree with the other.
+                    let total = entries.len();
+                    let entries: Vec<_> = entries
+                        .into_iter()
+                        .filter(|entry| !entry.template)
+                        .collect();
                     tracing::debug!(
                         target: "vibe_registry::index",
                         registry = %self.name,
                         group = %group,
                         name = %name,
                         count = entries.len(),
+                        revisions = total - entries.len(),
                         "list_versions served from index"
                     );
                     return Ok((entries, None));
@@ -306,6 +321,13 @@ impl GitPerPackageRegistry {
                 .map(|version| IndexVersion {
                     version,
                     must_understand: Vec::new(),
+                    // A tag list carries no manifest, so this path
+                    // cannot tell a template revision from a produced
+                    // version and does not pretend to: it declares
+                    // nothing, exactly as it declares no
+                    // `must_understand` (PROP-075
+                    // `#TEMPLATE-REVISION-NOT-A-VERSION`).
+                    template: false,
                 })
                 .collect())
         })

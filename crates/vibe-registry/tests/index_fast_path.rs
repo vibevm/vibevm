@@ -551,3 +551,171 @@ fn resolve_req_on_quarantined_version_refuses_honestly_b080() {
         other => panic!("unexpected error variant: {other:?}"),
     }
 }
+
+// --- PROP-075 `#TEMPLATE-REVISION-NOT-A-VERSION` ------------------------
+//
+// A template package publishes two kinds of tag: the revisions of the
+// template itself, which carry `[package] template = true`, and the
+// versions it produces. A directory-shaped registry splits them by
+// reading the manifests on disk (`discover_in_directory`); an indexed
+// registry has no tree to read, and reads the flag the record carries
+// instead. Either way a revision is **not** a candidate: it is neither
+// listed nor selectable, so no resolver can pick the template's own
+// version as a version of the thing it produces.
+
+/// `name_entry_json` with the `template` flag per version — the shape
+/// a template package's `by-name` record actually has in the public
+/// index (`org.vibevm.node/node` carries `1.0.0` and `1.1.0` as
+/// revisions beside its concrete `22.23.4` / `24.22.2` / `26.13.0`).
+fn name_entry_json_with_template_flags(
+    group: &str,
+    kind: PackageKind,
+    name: &str,
+    versions: &[(&str, bool)],
+) -> serde_json::Value {
+    let entries: Vec<serde_json::Value> = versions
+        .iter()
+        .map(|(v, template)| {
+            serde_json::json!({
+                "schema_version": 1,
+                "kind": kind,
+                "group": group,
+                "name": name,
+                "version": v,
+                "content_hash": "sha256:0000",
+                "source_url": "https://example.invalid/x.git",
+                "source_ref": format!("v{v}"),
+                "registry": "vibespecs",
+                "files_count": 1,
+                "indexed_at": "2026-05-06T12:00:00Z",
+                "indexed_by": "mock",
+                "template": template,
+            })
+        })
+        .collect();
+    serde_json::json!({
+        "name": name,
+        "indexed_at": "2026-05-06T12:00:00Z",
+        "packages": [
+            {
+                "group": group,
+                "name": name,
+                "indexed_at": "2026-05-06T12:00:00Z",
+                "versions": entries,
+            }
+        ],
+    })
+}
+
+/// A template package served by an index: the listing is the produced
+/// versions alone, and the two revisions are gone — the same answer
+/// `LocalRegistry::list_versions` gives for the same package laid out
+/// as a directory.
+#[test]
+#[verifies(
+    "spec://org.vibevm.core/vibevm/common/PROP-075#TEMPLATE-REVISION-NOT-A-VERSION",
+    r = 1
+)]
+fn a_template_revision_is_not_listed_as_a_version() {
+    let org = Group::parse("org.vibevm").unwrap();
+    let mut canned = CannedFiles {
+        repomd_status: 200,
+        by_name: HashMap::new(),
+    };
+    canned.by_name.insert(
+        "tool".into(),
+        Some(name_entry_json_with_template_flags(
+            "org.vibevm",
+            PackageKind::App,
+            "tool",
+            &[
+                ("1.0.0", true),
+                ("1.1.0", true),
+                ("0.41.0", false),
+                ("0.42.0", false),
+            ],
+        )),
+    );
+    let mock = spawn_mock(canned);
+    let cache = tempdir().unwrap();
+    let backend = Arc::new(AlwaysMissing);
+    let registry = GitPerPackageRegistry::open_with_mirrors(
+        "vibespecs",
+        "https://example.invalid/vibespecs",
+        "main",
+        NamingConvention::Fqdn,
+        Vec::new(),
+        cache.path(),
+        backend,
+        3600,
+    )
+    .unwrap()
+    .with_index_client(IndexClient::at(&mock.base_url));
+
+    let versions = registry.list_versions(&org, "tool").unwrap();
+    assert_eq!(
+        versions.iter().map(|v| v.to_string()).collect::<Vec<_>>(),
+        vec!["0.41.0".to_string(), "0.42.0".to_string()],
+        "a template revision is the version of the template, never a version of \
+         the thing it produces"
+    );
+}
+
+/// The selector cannot land on a revision either — not by `@latest`
+/// (which is what `install -g PACKAGE` with no version asks for), and
+/// not by naming the revision exactly. This is the case the owner
+/// named: a revision numbered above every produced version would
+/// otherwise outrank them all.
+#[test]
+#[verifies(
+    "spec://org.vibevm.core/vibevm/common/PROP-075#TEMPLATE-REVISION-NOT-A-VERSION",
+    r = 1
+)]
+fn a_template_revision_is_not_selectable() {
+    let mut canned = CannedFiles {
+        repomd_status: 200,
+        by_name: HashMap::new(),
+    };
+    canned.by_name.insert(
+        "tool".into(),
+        Some(name_entry_json_with_template_flags(
+            "org.vibevm",
+            PackageKind::App,
+            "tool",
+            // The revision outranks every produced version, which is
+            // exactly the nvm shape: revisions `1.x`, versions `0.41.x`.
+            &[("1.0.0", true), ("0.41.0", false)],
+        )),
+    );
+    let mock = spawn_mock(canned);
+    let cache = tempdir().unwrap();
+    let backend = Arc::new(AlwaysMissing);
+    let registry = GitPerPackageRegistry::open_with_mirrors(
+        "vibespecs",
+        "https://example.invalid/vibespecs",
+        "main",
+        NamingConvention::Fqdn,
+        Vec::new(),
+        cache.path(),
+        backend,
+        3600,
+    )
+    .unwrap()
+    .with_index_client(IndexClient::at(&mock.base_url));
+
+    // `@latest` picks the newest **produced** version, not the newest tag.
+    let latest = PackageRef::parse("org.vibevm/tool").unwrap();
+    let picked = registry.resolve(&latest).unwrap();
+    assert_eq!(picked.version.to_string(), "0.41.0");
+
+    // Naming the revision exactly refuses, exactly as a
+    // directory-shaped registry refuses it: there is no such version.
+    let pinned = PackageRef::parse("org.vibevm/tool@1.0.0").unwrap();
+    let err = registry.resolve(&pinned).unwrap_err();
+    match &err {
+        vibe_registry::RegistryError::NoMatchingVersion { name, .. } => {
+            assert_eq!(name, "tool");
+        }
+        other => panic!("unexpected error variant: {other:?}"),
+    }
+}

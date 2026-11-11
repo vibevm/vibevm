@@ -279,6 +279,7 @@ fn candidate(version: &str, caps: &[&str]) -> IndexVersion {
     IndexVersion {
         version: version.parse().unwrap(),
         must_understand: caps.iter().map(|s| s.to_string()).collect(),
+        template: false,
     }
 }
 
