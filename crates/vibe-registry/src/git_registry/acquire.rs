@@ -31,7 +31,8 @@ pub(super) fn clone_first_reachable(
             })?;
         }
         tracing::info!(target: "vibe_registry", url = %candidate, dest = %clone_dir.display(), "cloning registry");
-        match backend.bootstrap(strip_git_plus_prefix(candidate), refname, clone_dir) {
+        // The registry working copy is data vibe reads and hashes.
+        match backend.bootstrap_data(strip_git_plus_prefix(candidate), refname, clone_dir) {
             Ok(()) => return Ok(candidate.to_string()),
             Err(error) => {
                 tracing::warn!(target: "vibe_registry", url = %candidate, %error, "registry clone candidate failed");
@@ -69,8 +70,16 @@ pub(super) fn native_snapshot(
     // The bound destination stays absent: the verified tree is copied to
     // a sibling, exactly as a cache candidate is.
     let revision = token.bind(&work.join("bound"))?;
+    // A registry working copy is read as data — its manifests, its template
+    // snapshot and the digest documents hashed against it — so it holds the
+    // recorded blob bytes, not this user's text conversion
+    // (`crate::git_backend::verbatim`).
     let staged = backend
-        .stage_native_materialisation(&objects, &revision)?
+        .stage_native_materialisation(
+            &objects,
+            &revision,
+            crate::git_backend::PayloadBytes::Verbatim,
+        )?
         .ok_or_else(unavailable)?;
     let tree = work.join("tree");
     staged.copy_for_cache(&tree)?;

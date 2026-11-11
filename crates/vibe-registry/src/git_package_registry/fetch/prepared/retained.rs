@@ -172,7 +172,7 @@ impl GitPerPackageRegistry {
             return Ok(PackageAcquisition::InPlace(prepared));
         }
         let stage = prepared
-            .stage_native()?
+            .stage_native(crate::git_backend::PayloadBytes::Verbatim)?
             .ok_or_else(|| refusal(destination, "controlled direct stage unavailable"))?;
         let hash = if inplace {
             prepared.content_hash().to_owned()

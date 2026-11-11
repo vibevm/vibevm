@@ -200,11 +200,20 @@ impl GitBackend for ShellGit {
         &self,
         objects: &Path,
         revision: &GitPreparedRevision,
+        bytes: super::PayloadBytes,
     ) -> Result<Option<native_admission::NativeMaterialisation>, GitError> {
         self.native
             .as_ref()
-            .map(|native| native.stage(objects, revision))
+            .map(|native| native.stage(objects, revision, bytes))
             .transpose()
+    }
+    fn normalise_owned_worktree(&self, dest: &Path) -> Result<(), GitError> {
+        // A controlled transport owns no ambient working copy: its trees come
+        // from native materialisation, which renders a data tree itself.
+        if self.admit_native().is_err() {
+            return Ok(());
+        }
+        checkout::normalise_owned_worktree(self, dest)
     }
     fn prepare_native_source(
         &self,
@@ -303,7 +312,12 @@ impl GitBackend for ShellGit {
     }
     fn bootstrap(&self, url: &str, refname: &str, dest: &Path) -> Result<(), GitError> {
         self.preflight()?;
-        checkout::bootstrap(self, url, refname, dest)
+        checkout::bootstrap(self, url, refname, dest, false)
+    }
+
+    fn bootstrap_data(&self, url: &str, refname: &str, dest: &Path) -> Result<(), GitError> {
+        self.preflight()?;
+        checkout::bootstrap(self, url, refname, dest, true)
     }
 
     fn bootstrap_embedded(&self, url: &str, refname: &str, dest: &Path) -> Result<(), GitError> {
@@ -313,7 +327,12 @@ impl GitBackend for ShellGit {
 
     fn update(&self, dest: &Path, refname: &str) -> Result<(), GitError> {
         self.preflight()?;
-        checkout::update(self, dest, refname)
+        checkout::update(self, dest, refname, false)
+    }
+
+    fn update_data(&self, dest: &Path, refname: &str) -> Result<(), GitError> {
+        self.preflight()?;
+        checkout::update(self, dest, refname, true)
     }
 
     fn head_commit(&self, dest: &Path) -> Result<Option<String>, GitError> {

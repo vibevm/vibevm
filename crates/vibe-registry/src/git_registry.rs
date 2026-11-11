@@ -141,11 +141,18 @@ impl GitMonorepoRegistry {
             write_meta(&meta_path, &normalized, refname, &full_hash)?;
         } else if should_pull(existing_meta.as_ref(), freshness_secs) {
             tracing::info!(target: "vibe_registry", url = %normalized, "updating registry (cache stale)");
-            backend.update(&clone_dir, refname)?;
+            backend.update_data(&clone_dir, refname)?;
             write_meta(&meta_path, &normalized, refname, &full_hash)?;
         } else {
             tracing::debug!(target: "vibe_registry", url = %normalized, "registry cache fresh");
         }
+        // A working copy this vibe did not just check out may be one an older
+        // vibe wrote under the user's text conversion — and a fresh cache
+        // reaches no other git command at all, so without this the registry
+        // would answer from converted bytes until its freshness window
+        // expired. Checking is a single file read
+        // (`crate::git_backend::verbatim`).
+        backend.normalise_owned_worktree(&clone_dir)?;
 
         let local = LocalRegistry::new(clone_dir.clone())?;
         Ok(GitMonorepoRegistry {
@@ -252,7 +259,7 @@ impl GitMonorepoRegistry {
     /// `vibe registry sync`.
     pub fn sync(&self) -> Result<(), RegistryError> {
         tracing::info!(target: "vibe_registry", url = %self.url, "forcing registry sync");
-        self.backend.update(&self.clone_dir, &self.refname)?;
+        self.backend.update_data(&self.clone_dir, &self.refname)?;
         let normalized = normalize_url(&self.url);
         let full_hash = full_sha256_hex(&normalized);
         write_meta(

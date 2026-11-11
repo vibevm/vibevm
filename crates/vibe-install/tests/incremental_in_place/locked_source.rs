@@ -81,7 +81,10 @@ fn locked_native_update_retains_refs_config_and_never_fetches_live_old_origin() 
         .resolve(&PackageRef::parse("org.vibevm/giant@1.1.0").unwrap())
         .unwrap();
     let prepared = resolver.prepare_in_place(&selected, &f.slot).unwrap();
-    let staged = prepared.stage_native().unwrap().unwrap();
+    let staged = prepared
+        .stage_native(vibe_registry::git_backend::PayloadBytes::AsConfigured)
+        .unwrap()
+        .unwrap();
     let path = staged.staged_path();
     assert_eq!(
         fs::read_to_string(path.join(".git/refs/tags/local-sentinel"))

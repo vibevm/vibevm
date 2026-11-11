@@ -2,135 +2,13 @@
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-073#NATIVE-MATERIALISATION");
 use super::capture::{CapturedContext, selected_git_dir, validate_selected_directory};
 use super::*;
-use sha2::{Digest, Sha256};
+use crate::git_backend::{PayloadBytes, verbatim};
 use std::collections::BTreeMap;
 use std::fs;
 
-#[derive(Debug, Clone, PartialEq, Eq)]
-struct Entry {
-    bytes: Vec<u8>,
-    mode: u32,
-    identity: (u64, u64),
-}
-#[derive(Debug, Clone, PartialEq, Eq)]
-pub(super) struct Tree(BTreeMap<PathBuf, Entry>);
-pub(super) fn tree(path: &Path) -> Result<Option<Tree>, GitError> {
-    if !path.try_exists().map_err(io)? {
-        return Ok(None);
-    }
-    let mut entries = BTreeMap::new();
-    for entry in walkdir::WalkDir::new(path).follow_links(false) {
-        let entry = entry.map_err(|_| unsupported("cannot witness materialisation tree"))?;
-        let metadata = fs::symlink_metadata(entry.path()).map_err(io)?;
-        #[cfg(unix)]
-        let mode = {
-            use std::os::unix::fs::MetadataExt;
-            metadata.mode()
-        };
-        #[cfg(not(unix))]
-        let mode = u32::from(metadata.permissions().readonly());
-        #[cfg(unix)]
-        let identity = {
-            use std::os::unix::fs::MetadataExt;
-            (metadata.dev(), metadata.ino())
-        };
-        // Windows: creation and last-write times stand in for the inode
-        // (PROP-073 `#NATIVE-WINDOWS`); a replaced file has new ones.
-        #[cfg(windows)]
-        let identity = {
-            use std::os::windows::fs::MetadataExt;
-            (metadata.creation_time(), metadata.last_write_time())
-        };
-        #[cfg(not(any(unix, windows)))]
-        let identity = (0, 0);
-        let bytes = if metadata.is_file() {
-            let mut file = fs::File::open(entry.path()).map_err(io)?;
-            let mut digest = Sha256::new();
-            std::io::copy(&mut file, &mut digest).map_err(io)?;
-            digest.finalize().to_vec()
-        } else if metadata.file_type().is_symlink() {
-            fs::read_link(entry.path())
-                .map_err(io)?
-                .as_os_str()
-                .as_encoded_bytes()
-                .to_vec()
-        } else if metadata.is_dir() {
-            Vec::new()
-        } else {
-            return Err(unsupported("special files cannot be staged"));
-        };
-        entries.insert(
-            entry
-                .path()
-                .strip_prefix(path)
-                .map_err(|_| unsupported("invalid tree witness path"))?
-                .into(),
-            Entry {
-                bytes,
-                mode,
-                identity,
-            },
-        );
-    }
-    Ok(Some(Tree(entries)))
-}
-fn copy(from: &Path, to: &Path, objects: bool) -> Result<(), GitError> {
-    let mut modes = Vec::new();
-    for entry in walkdir::WalkDir::new(from).follow_links(false) {
-        let entry = entry.map_err(|_| unsupported("cannot copy retained source"))?;
-        let relative = entry
-            .path()
-            .strip_prefix(from)
-            .map_err(|_| unsupported("invalid copy path"))?;
-        let target = to.join(relative);
-        if entry.file_type().is_dir() {
-            let existed = target.exists();
-            fs::create_dir_all(&target).map_err(io)?;
-            if !objects || !existed {
-                modes.push((
-                    target,
-                    fs::metadata(entry.path()).map_err(io)?.permissions(),
-                ));
-            }
-        } else if entry.file_type().is_file() {
-            if target.exists() {
-                if fs::read(entry.path()).map_err(io)? != fs::read(&target).map_err(io)? {
-                    let parts: Vec<_> = relative.components().collect();
-                    let loose = parts.len() == 2
-                        && parts[0].as_os_str().as_encoded_bytes().len() == 2
-                        && matches!(parts[1].as_os_str().as_encoded_bytes().len(), 38 | 62)
-                        && parts.iter().all(|p| {
-                            p.as_os_str()
-                                .as_encoded_bytes()
-                                .iter()
-                                .all(u8::is_ascii_hexdigit)
-                        });
-                    if !objects || !loose {
-                        return Err(unsupported(
-                            "retained object metadata collision during staging",
-                        ));
-                    }
-                    // Compression is not object identity. Both repositories are
-                    // fsck-validated below before this retained object is trusted.
-                }
-            } else {
-                fs::copy(entry.path(), &target).map_err(io)?;
-            }
-        } else if entry.file_type().is_symlink() {
-            #[cfg(unix)]
-            std::os::unix::fs::symlink(fs::read_link(entry.path()).map_err(io)?, &target)
-                .map_err(io)?;
-            #[cfg(not(unix))]
-            return Err(unsupported("symlink staging is qualified only on Unix"));
-        } else {
-            return Err(unsupported("special files cannot be staged"));
-        }
-    }
-    for (path, mode) in modes.into_iter().rev() {
-        fs::set_permissions(path, mode).map_err(io)?;
-    }
-    Ok(())
-}
+#[path = "materialisation/witness.rs"]
+mod witness;
+pub(super) use witness::{Tree, copy, tree};
 
 /// An operation-owned verified tree, with its original context still retained.
 /// This value has no publication method: the workspace must capture undo before
@@ -202,6 +80,7 @@ impl NativeState {
         &self,
         objects: &Path,
         revision: &GitPreparedRevision,
+        bytes: PayloadBytes,
     ) -> Result<NativeMaterialisation, GitError> {
         let owned = self.with_owned(objects, |owned| {
             if !owned.destination_bound {
@@ -216,12 +95,13 @@ impl NativeState {
             }
             Ok(owned.clone())
         })?;
-        self.stage_owned(objects, &owned)
+        self.stage_owned(objects, &owned, bytes)
     }
     fn stage_owned(
         &self,
         objects: &Path,
         owned: &OwnedRepository,
+        bytes: PayloadBytes,
     ) -> Result<NativeMaterialisation, GitError> {
         let destination = &owned.revision.destination;
         let source = owned.source.as_deref();
@@ -354,74 +234,133 @@ impl NativeState {
                 .collect();
             context.run(&argv, Some(&git), None)
         };
-        let entries = run(&["ls-tree", "-r", "-z", &owned.revision.commit])?;
-        let mut paths = Vec::new();
-        for entry in entries.stdout.split(|b| *b == 0).filter(|s| !s.is_empty()) {
-            if entry.starts_with(b"160000 ") {
-                continue;
-            }
-            let tab = entry
-                .iter()
-                .position(|b| *b == b'\t')
-                .ok_or_else(|| unsupported("invalid selected tree entry"))?;
-            let path = &entry[tab + 1..];
-            paths.push(
-                std::str::from_utf8(path).map_err(|_| unsupported("non-UTF-8 checkout path"))?,
-            );
-        }
-        let attr_source = format!("--source={}", owned.revision.commit);
-        for paths in paths.chunks(64) {
-            let args: Vec<_> = ["check-attr", &attr_source, "--all", "-z", "--"]
-                .into_iter()
-                .chain(paths.iter().copied())
-                .collect();
-            let result = run(&args)?;
-            let fields: Vec<_> = result
-                .stdout
-                .split(|b| *b == 0)
-                .filter(|s| !s.is_empty())
-                .collect();
-            if fields.len() % 3 != 0
-                || fields.as_chunks::<3>().0.iter().any(|row| match row[1] {
-                    b"filter" => row[2] != b"unset",
-                    b"working-tree-encoding" | b"ident" => row[2] != b"unset",
-                    _ => false,
-                })
-            {
-                return Err(unsupported(
-                    "payload has an unsupported filter, ident or working-tree-encoding transformation",
-                ));
-            }
-            for row in fields
-                .as_chunks::<3>()
-                .0
-                .iter()
-                .filter(|row| row[1] == b"filter" && row[2] == b"unset")
-            {
-                let path = std::str::from_utf8(row[0])
-                    .map_err(|_| unsupported("invalid filter probe path"))?;
-                let path_option = format!("--path={path}");
-                let object = format!("{}:{path}", owned.revision.commit);
-                let argv: Vec<_> = prefix
-                    .iter()
-                    .map(String::as_str)
-                    .chain(["cat-file", "--filters", &path_option, &object])
-                    .collect();
-                if !context.filter_probe(&argv, &git)? {
-                    return Err(unsupported(
-                        "payload selects a reserved external filter driver",
-                    ));
+        // Which rendering the stage holds is a separate question from which
+        // transformations the payload is *allowed* to ask for: the probes below
+        // keep answering with the payload's own attribute meaning, so an active
+        // filter, `ident` or `working-tree-encoding` still refuses. What a tree
+        // vibe reads as data then receives is the recorded blob bytes — the
+        // template snapshot it carries is hashed against its own record, and a
+        // user's `core.autocrlf` is no part of that identity
+        // (`crate::git_backend::verbatim`).
+        let written = if bytes == PayloadBytes::Verbatim {
+            let empty = temporary.path().join("no-attributes");
+            fs::write(&empty, b"").map_err(io)?;
+            let mut written = vec![
+                "--work-tree".to_owned(),
+                utf8(&stage)?.to_owned(),
+                "-c".into(),
+                format!("core.attributesFile={}", empty.display()),
+                "-c".into(),
+                "filter.unset.required=true".into(),
+                "-c".into(),
+                "filter.unspecified.required=true".into(),
+            ];
+            // The path and mode meanings of the invocation's own Git stay as
+            // captured: a checkout is byte-exact in its *contents*, not in how
+            // this platform spells a name or records an executable bit.
+            for (key, value) in &captured.entries {
+                if matches!(
+                    key.as_str(),
+                    "core.filemode"
+                        | "core.symlinks"
+                        | "core.ignorecase"
+                        | "core.precomposeunicode"
+                ) {
+                    written.extend(["-c".into(), format!("{key}={value}")]);
                 }
             }
+            written.push(format!("--attr-source={}", owned.revision.commit));
+            written.extend(verbatim::CONFIG.iter().map(|flag| (*flag).to_owned()));
+            written
+        } else {
+            prefix.clone()
+        };
+        let write = |args: &[&str]| {
+            let argv: Vec<_> = written
+                .iter()
+                .map(String::as_str)
+                .chain(args.iter().copied())
+                .collect();
+            context.run(&argv, Some(&git), None)
+        };
+        let source_option = format!("--source={}", owned.revision.commit);
+        // Every tracked path of the commit, checked for a transformation this
+        // staging does not support.
+        {
+            let entries = run(&["ls-tree", "-r", "-z", &owned.revision.commit])?;
+            let mut paths = Vec::new();
+            for entry in entries.stdout.split(|b| *b == 0).filter(|s| !s.is_empty()) {
+                if entry.starts_with(b"160000 ") {
+                    continue;
+                }
+                let tab = entry
+                    .iter()
+                    .position(|b| *b == b'\t')
+                    .ok_or_else(|| unsupported("invalid selected tree entry"))?;
+                let path = &entry[tab + 1..];
+                paths.push(
+                    std::str::from_utf8(path)
+                        .map_err(|_| unsupported("non-UTF-8 checkout path"))?,
+                );
+            }
+            for paths in paths.chunks(64) {
+                let mut args: Vec<&str> = vec!["check-attr"];
+                args.push(&source_option);
+                args.extend(["--all", "-z", "--"]);
+                args.extend(paths.iter().copied());
+                let result = run(&args)?;
+                let fields: Vec<_> = result
+                    .stdout
+                    .split(|b| *b == 0)
+                    .filter(|s| !s.is_empty())
+                    .collect();
+                if fields.len() % 3 != 0
+                    || fields.as_chunks::<3>().0.iter().any(|row| match row[1] {
+                        b"filter" => row[2] != b"unset",
+                        b"working-tree-encoding" | b"ident" => row[2] != b"unset",
+                        _ => false,
+                    })
+                {
+                    return Err(unsupported(
+                        "payload has an unsupported filter, ident or working-tree-encoding transformation",
+                    ));
+                }
+                for row in fields
+                    .as_chunks::<3>()
+                    .0
+                    .iter()
+                    .filter(|row| row[1] == b"filter" && row[2] == b"unset")
+                {
+                    let path = std::str::from_utf8(row[0])
+                        .map_err(|_| unsupported("invalid filter probe path"))?;
+                    let path_option = format!("--path={path}");
+                    let object = format!("{}:{path}", owned.revision.commit);
+                    let argv: Vec<_> = prefix
+                        .iter()
+                        .map(String::as_str)
+                        .chain(["cat-file", "--filters", &path_option, &object])
+                        .collect();
+                    if !context.filter_probe(&argv, &git)? {
+                        return Err(unsupported(
+                            "payload selects a reserved external filter driver",
+                        ));
+                    }
+                }
+            }
+        }
+        // Only now: the probe above had to read the payload's own attributes,
+        // and this override would have answered in their place.
+        if bytes == PayloadBytes::Verbatim {
+            fs::write(git.join("info/attributes"), verbatim::ATTRIBUTES).map_err(io)?;
         }
         if owned.gitlink && source.is_some() {
             let current = text(run(&["rev-parse", "--verify", "HEAD"])?.stdout)?;
             if current != owned.revision.commit {
-                run(&["checkout", "--detach", &owned.revision.commit])?;
+                write(&["checkout", "--detach", &owned.revision.commit])?;
             }
         } else {
-            run(&["reset", "--hard", &owned.revision.commit])?;
-            run(&["clean", "-dfx"])?;
+            write(&["reset", "--hard", &owned.revision.commit])?;
+            write(&["clean", "-dfx"])?;
         }
         if owned.revision.reference.starts_with("refs/") {
             run(&[
@@ -448,7 +387,7 @@ impl NativeState {
             ])?;
         }
         for child in &owned.children {
-            let child_stage = self.stage(&child.objects, &child.revision)?;
+            let child_stage = self.stage(&child.objects, &child.revision, bytes)?;
             let mount = stage.join(&child.path);
             if mount.exists() {
                 fs::remove_dir_all(&mount).map_err(io)?;

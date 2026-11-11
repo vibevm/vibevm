@@ -401,7 +401,11 @@ fn retained_mirror_is_not_replaced_by_a_warm_excluded_origin() {
         .prepare_ref(ssh.get("url"), "v1.0.0", None, &old_objects, &old_ssh)
         .unwrap();
     let old_stage = direct
-        .stage_native_materialisation(&old_objects, &old_revision)
+        .stage_native_materialisation(
+            &old_objects,
+            &old_revision,
+            crate::git_backend::PayloadBytes::AsConfigured,
+        )
         .unwrap()
         .unwrap();
     std::fs::rename(old_stage.staged_path(), &old_ssh).unwrap();
@@ -498,7 +502,7 @@ fn retained_mirror_is_not_replaced_by_a_warm_excluded_origin() {
         Some(format!("{mirror}/org.fixture.demo.git").as_str())
     );
     prepared
-        .stage_native()
+        .stage_native(crate::git_backend::PayloadBytes::AsConfigured)
         .unwrap()
         .unwrap()
         .validate_before_publication()
@@ -516,7 +520,10 @@ fn retained_mirror_is_not_replaced_by_a_warm_excluded_origin() {
     );
     assert_eq!(f.contacts("a"), contacts);
     let prepared = resolver.prepare_in_place(&resolved, &old_ssh).unwrap();
-    let switched = prepared.stage_native().unwrap().unwrap();
+    let switched = prepared
+        .stage_native(crate::git_backend::PayloadBytes::AsConfigured)
+        .unwrap()
+        .unwrap();
     assert_eq!(
         std::fs::read(switched.staged_path().join("payload.txt")).unwrap(),
         b"retained fixture\n"

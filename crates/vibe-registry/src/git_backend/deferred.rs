@@ -225,6 +225,11 @@ impl GitBackend for DeferredShellGit {
         self.preflight_materialisation()?;
         self.backend()?.bootstrap(url, reference, dest)
     }
+    fn bootstrap_data(&self, url: &str, reference: &str, dest: &Path) -> Result<(), GitError> {
+        self.state.factory.preflight(url)?;
+        self.preflight_materialisation()?;
+        self.backend()?.bootstrap_data(url, reference, dest)
+    }
     fn bootstrap_embedded(&self, url: &str, reference: &str, dest: &Path) -> Result<(), GitError> {
         self.state.factory.preflight(url)?;
         self.preflight_materialisation()?;
@@ -233,6 +238,10 @@ impl GitBackend for DeferredShellGit {
     fn update(&self, dest: &Path, reference: &str) -> Result<(), GitError> {
         self.preflight_materialisation()?;
         self.backend()?.update(dest, reference)
+    }
+    fn update_data(&self, dest: &Path, reference: &str) -> Result<(), GitError> {
+        self.preflight_materialisation()?;
+        self.backend()?.update_data(dest, reference)
     }
     fn prepare_ref(
         &self,
@@ -269,9 +278,13 @@ impl GitBackend for DeferredShellGit {
         &self,
         objects: &Path,
         revision: &GitPreparedRevision,
+        bytes: super::PayloadBytes,
     ) -> Result<Option<shell::native_admission::NativeMaterialisation>, GitError> {
         self.backend()?
-            .stage_native_materialisation(objects, revision)
+            .stage_native_materialisation(objects, revision, bytes)
+    }
+    fn normalise_owned_worktree(&self, dest: &Path) -> Result<(), GitError> {
+        self.backend()?.normalise_owned_worktree(dest)
     }
     fn file_at_commit(
         &self,

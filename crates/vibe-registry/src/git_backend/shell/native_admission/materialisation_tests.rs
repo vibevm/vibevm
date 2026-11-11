@@ -1,59 +1,13 @@
 //! Executable local checkout/capture controls; no public service or user profile.
 #![cfg(all(test, unix))]
 use super::*;
+use crate::git_backend::PayloadBytes;
 use std::os::unix::fs::PermissionsExt;
 
-#[specmark::spec(
-    deviates = "spec://core-ai-native/mechanisms/ENGINE-CONFORM-v0.1#rules",
-    reason = "no-unwrap-in-domain: this cfg(test, unix) helper constructs isolated test-only Git fixtures; invalid fixture paths or configuration must abort the test, never become a product fallback"
-)]
-fn selected(f: &Fixture, cwd: &Path, extra: &[(&str, String)], deny_b: bool) -> ShellGit {
-    let mut selection =
-        NativeConfigSelection::new(cwd.into(), Path::new(f.get("root")).join("home"))
-            .unwrap()
-            .with_variable("GIT_CONFIG_NOSYSTEM", "1".into())
-            .unwrap()
-            .with_variable("GIT_ATTR_NOSYSTEM", "1".into())
-            .unwrap();
-    for (key, value) in extra {
-        selection = selection.with_variable(key, value.into()).unwrap();
-    }
-    let profile = NativeGitAdmission::direct_https(
-        Arc::new(
-            crate::HttpAdmission::new(if deny_b { vec!["127.0.0.2"] } else { vec![] }).unwrap(),
-        ),
-        GitInstallation::trusted("/usr/bin/git".into(), "/usr/lib/git-core".into()).unwrap(),
-        TlsTrust::Pem(std::fs::read(f.get("ca")).unwrap()),
-    )
-    .with_config_selection(selection);
-    ShellGit::new().with_native_admission(Arc::new(profile))
-}
-fn warm_origin(f: &Fixture) -> PathBuf {
-    let warm = PathBuf::from(f.get("work"));
-    assert!(
-        fixture_git(
-            &f.info,
-            &[
-                "remote",
-                "add",
-                "origin",
-                &format!("{}/repo.git", f.get("a"))
-            ],
-            &warm
-        )
-        .status
-        .success()
-    );
-    warm
-}
-#[specmark::spec(
-    deviates = "spec://core-ai-native/mechanisms/ENGINE-CONFORM-v0.1#rules",
-    reason = "no-unwrap-in-domain: this cfg(test, unix) helper writes only isolated test marker scripts; invalid fixture paths or setup I/O must abort the test before asserting non-execution"
-)]
-fn script(path: &Path, marker: &Path) {
-    std::fs::write(path,format!("#!/usr/bin/python3\nimport pathlib,sys\npathlib.Path({:?}).write_text('ran')\nsys.stdout.buffer.write(sys.stdin.buffer.read().replace(b'retained',b'FILTERED'))\n",marker.to_str().unwrap())).unwrap();
-    std::fs::set_permissions(path, std::fs::Permissions::from_mode(0o755)).unwrap();
-}
+#[path = "materialisation_tests/fixtures.rs"]
+mod fixtures;
+use fixtures::{script, selected, warm_origin};
+
 #[test]
 #[specmark::spec(
     verifies = "spec://org.vibevm.core/vibevm/common/PROP-073#NATIVE-MATERIALISATION-LAW"
@@ -95,12 +49,36 @@ fn default_global_attributes_includes_info_override_and_external_markers() {
         .prepare_ref(&url, "v1.0.0", None, &objects, &slot)
         .unwrap();
     let stage = git
-        .stage_native_materialisation(&objects, &revision)
+        .stage_native_materialisation(&objects, &revision, PayloadBytes::AsConfigured)
         .unwrap()
         .unwrap();
     assert_eq!(
         std::fs::read(stage.staged_path().join("payload.txt")).unwrap(),
         b"retained fixture\r\n"
+    );
+    assert!(
+        !marker.exists()
+            && !monitor_marker.exists()
+            && !hook_marker.exists()
+            && !trace_marker.exists()
+    );
+    // The same objects, staged for a tree vibe reads as data rather than for
+    // a user's slot: the recorded blob bytes, whatever the configuration and
+    // the attributes would have converted (`crate::git_backend::verbatim`).
+    // A registry working copy's template snapshot is hashed against its own
+    // record, so this is the difference between priming and warning once per
+    // version.
+    let objects = temp.path().join("verbatim.git");
+    let revision = git
+        .prepare_ref(&url, "v1.0.0", None, &objects, &slot)
+        .unwrap();
+    let data = git
+        .stage_native_materialisation(&objects, &revision, PayloadBytes::Verbatim)
+        .unwrap()
+        .unwrap();
+    assert_eq!(
+        std::fs::read(data.staged_path().join("payload.txt")).unwrap(),
+        b"retained fixture\n"
     );
     assert!(
         !marker.exists()
@@ -122,7 +100,7 @@ fn default_global_attributes_includes_info_override_and_external_markers() {
         .prepare_ref(&url, "v1.0.0", Some(&warm), &objects, &warm)
         .unwrap();
     let stage = git
-        .stage_native_materialisation(&objects, &revision)
+        .stage_native_materialisation(&objects, &revision, PayloadBytes::AsConfigured)
         .unwrap()
         .unwrap();
     assert_eq!(
@@ -142,7 +120,7 @@ fn default_global_attributes_includes_info_override_and_external_markers() {
         .prepare_ref(&url, "v1.0.0", Some(&warm), &objects, &warm)
         .unwrap();
     assert!(matches!(
-        git.stage_native_materialisation(&objects, &revision),
+        git.stage_native_materialisation(&objects, &revision, PayloadBytes::AsConfigured),
         Err(GitError::NativeContext { .. })
     ));
     assert!(
@@ -199,7 +177,8 @@ fn reserved_filter_driver_names_are_not_mistaken_for_disabled_attributes() {
         let revision = git
             .prepare_ref(&url, "v1.0.0", None, &objects, &slot)
             .unwrap();
-        let result = git.stage_native_materialisation(&objects, &revision);
+        let result =
+            git.stage_native_materialisation(&objects, &revision, PayloadBytes::AsConfigured);
         assert_eq!(result.is_ok(), i < 2, "{value}: {result:?}");
         assert!(!marker.exists());
         assert!(!slot.exists());
@@ -352,7 +331,7 @@ fn warm_object_compression_and_directory_modes_are_preserved_and_corruption_refu
         .prepare_ref(&url, "v1.0.0", Some(&warm), &objects, &warm)
         .unwrap();
     let stage = git
-        .stage_native_materialisation(&objects, &revision)
+        .stage_native_materialisation(&objects, &revision, PayloadBytes::AsConfigured)
         .unwrap()
         .unwrap();
     assert_eq!(
@@ -389,7 +368,7 @@ fn warm_object_compression_and_directory_modes_are_preserved_and_corruption_refu
         .prepare_ref(&url, "v1.0.0", Some(&warm), &objects, &warm)
         .unwrap();
     assert!(
-        git.stage_native_materialisation(&objects, &revision)
+        git.stage_native_materialisation(&objects, &revision, PayloadBytes::AsConfigured)
             .is_err()
     );
     assert_eq!(
@@ -446,7 +425,10 @@ fn warm_registry_retains_explicit_token_auth_without_ambient_credentials() {
         )
         .unwrap();
     assert_eq!(prepared.resolved_commit(), f.get("head"));
-    let stage = prepared.stage_native().unwrap().unwrap();
+    let stage = prepared
+        .stage_native(PayloadBytes::AsConfigured)
+        .unwrap()
+        .unwrap();
     assert_eq!(
         std::fs::read(stage.staged_path().join("payload.txt")).unwrap(),
         b"retained fixture\n"
@@ -529,7 +511,7 @@ fn native_stage_retains_exact_payload_and_warm_repository_metadata() {
         .prepare_ref(&url, "v1.0.0", None, &objects, &destination)
         .unwrap();
     let staged = git
-        .stage_native_materialisation(&objects, &revision)
+        .stage_native_materialisation(&objects, &revision, PayloadBytes::AsConfigured)
         .unwrap()
         .unwrap();
     assert_eq!(
@@ -553,7 +535,7 @@ fn native_stage_retains_exact_payload_and_warm_repository_metadata() {
         .prepare_ref(&url, "v1.0.0", Some(warm), &objects, warm)
         .unwrap();
     let staged = git
-        .stage_native_materialisation(&objects, &revision)
+        .stage_native_materialisation(&objects, &revision, PayloadBytes::AsConfigured)
         .unwrap()
         .unwrap();
     assert_eq!(

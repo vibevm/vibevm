@@ -196,6 +196,7 @@ impl PreparedInPlace {
     )]
     pub fn stage_native(
         &self,
+        bytes: crate::git_backend::PayloadBytes,
     ) -> Result<
         Option<crate::git_backend::shell::native_admission::NativeMaterialisation>,
         RegistryError,
@@ -217,10 +218,11 @@ impl PreparedInPlace {
                 "destination HEAD or origin changed before staging",
             ));
         }
-        let staged = self
-            .0
-            .backend
-            .stage_native_materialisation(&self.0.objects, &self.0.revision)?;
+        let staged = self.0.backend.stage_native_materialisation(
+            &self.0.objects,
+            &self.0.revision,
+            bytes,
+        )?;
         if let Some(staged) = &staged {
             if Manifest::read(staged.staged_path().join(Manifest::FILENAME))? != self.0.manifest {
                 return Err(refusal(

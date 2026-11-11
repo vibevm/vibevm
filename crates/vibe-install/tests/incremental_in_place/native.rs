@@ -132,9 +132,14 @@ fn public_native_copy_keeps_store_identity_and_uses_normal_versioned_slot() {
     assert_eq!(result.outcome.materialised.len(), 1);
     assert!(!f.slot.join(".git").exists());
     let slot = f.slot.join("1.0.0");
+    // An ordinary copy package is content-hashed and inserted into the
+    // machine-global store, so its bytes are the package's own, identical on
+    // every machine: the invocation's `eol=crlf` decides what an *in-place*
+    // working copy holds (above), never what a store entry holds
+    // (`vibe_registry::git_backend::verbatim`).
     assert_eq!(
         fs::read(slot.join("payload.txt")).unwrap(),
-        b"retained fixture\r\n"
+        b"retained fixture\n"
     );
     assert!(!slot.join(".git").exists());
     let lock = Lockfile::read(f.project.join("vibe.lock")).unwrap();

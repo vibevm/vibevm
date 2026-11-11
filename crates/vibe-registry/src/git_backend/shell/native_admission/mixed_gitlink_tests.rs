@@ -211,7 +211,11 @@ fn mixed_exact_gitlinks_use_distinct_profiles_and_retain_origins_in_fresh_and_wa
             .unwrap();
         assert_eq!(revision.commit, parent_oid);
         let stage = backend
-            .stage_native_materialisation(&objects, &revision)
+            .stage_native_materialisation(
+                &objects,
+                &revision,
+                crate::git_backend::PayloadBytes::AsConfigured,
+            )
             .unwrap()
             .unwrap();
         stage.validate_before_publication().unwrap();
@@ -261,7 +265,11 @@ fn mixed_exact_gitlinks_use_distinct_profiles_and_retain_origins_in_fresh_and_wa
             )
             .unwrap();
         let warm_stage = backend
-            .stage_native_materialisation(&warm_objects, &revision)
+            .stage_native_materialisation(
+                &warm_objects,
+                &revision,
+                crate::git_backend::PayloadBytes::AsConfigured,
+            )
             .unwrap()
             .unwrap();
         warm_stage.validate_before_publication().unwrap();

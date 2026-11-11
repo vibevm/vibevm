@@ -345,7 +345,11 @@ fn exact_children(nested: bool, authenticated: bool) {
         }
         let revision = result.unwrap();
         let stage = git
-            .stage_native_materialisation(&objects, &revision)
+            .stage_native_materialisation(
+                &objects,
+                &revision,
+                crate::git_backend::PayloadBytes::AsConfigured,
+            )
             .unwrap()
             .unwrap();
         assert!(!slot.exists());
@@ -432,7 +436,11 @@ fn exact_children(nested: bool, authenticated: bool) {
                         continue;
                     }
                     let revision = revision.unwrap();
-                    let staged = git.stage_native_materialisation(&acquired, &revision);
+                    let staged = git.stage_native_materialisation(
+                        &acquired,
+                        &revision,
+                        crate::git_backend::PayloadBytes::AsConfigured,
+                    );
                     assert_eq!(materialisation::tree(&warm).unwrap(), witness);
                     if scenario == "other-conflict" {
                         assert!(staged.is_err());

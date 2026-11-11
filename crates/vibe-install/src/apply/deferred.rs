@@ -42,7 +42,13 @@ pub(super) fn stage_deferred_native(
         let Some(held) = &fetched.in_place else {
             continue;
         };
-        let Some(candidate) = held.stage_native()? else {
+        // An in-place package is a working copy the user keeps and opens in
+        // their own tools, and its identity is its commit, not its bytes — so
+        // this is the one staging that replays the user's own Git text
+        // conversion (PROP-073 `#NATIVE-MATERIALISATION`).
+        let Some(candidate) =
+            held.stage_native(vibe_registry::git_backend::PayloadBytes::AsConfigured)?
+        else {
             continue;
         };
         let source = &fetched.cached.resolved;

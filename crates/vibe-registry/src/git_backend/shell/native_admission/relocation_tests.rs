@@ -82,7 +82,11 @@ fn default_initial_redirect_reuses_final_base_and_preserves_logical_origin() {
     assert_eq!(git.recorded_origin_url(&objects).unwrap(), original);
     let before = (f.connections("a"), f.connections("b"));
     let stage = git
-        .stage_native_materialisation(&objects, &revision)
+        .stage_native_materialisation(
+            &objects,
+            &revision,
+            crate::git_backend::PayloadBytes::AsConfigured,
+        )
         .unwrap()
         .unwrap();
     assert_eq!(

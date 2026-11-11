@@ -130,7 +130,11 @@ fn direct_key_and_explicit_agent_acquire_exact_objects_and_use_n2_staging() {
             .unwrap();
         assert_eq!(revision.commit, f.get("head"));
         let stage = git
-            .stage_native_materialisation(&objects, &revision)
+            .stage_native_materialisation(
+                &objects,
+                &revision,
+                crate::git_backend::PayloadBytes::AsConfigured,
+            )
             .unwrap()
             .unwrap();
         stage.validate_before_publication().unwrap();
@@ -220,7 +224,11 @@ fn explicitly_selected_direct_warm_route_overrides_legacy_ssh_config_without_cla
             .unwrap();
         assert_eq!(revision.commit, commit);
         let stage = git
-            .stage_native_materialisation(&objects, &revision)
+            .stage_native_materialisation(
+                &objects,
+                &revision,
+                crate::git_backend::PayloadBytes::AsConfigured,
+            )
             .unwrap()
             .unwrap();
         stage.validate_before_publication().unwrap();
@@ -373,7 +381,11 @@ fn explicit_direct_warm_ssh_supersedes_captured_core_ssh_command_without_executi
         .prepare_ref(f.get("url"), "v1.0.0", Some(&warm), &objects, &warm)
         .unwrap();
     let stage = git
-        .stage_native_materialisation(&objects, &revision)
+        .stage_native_materialisation(
+            &objects,
+            &revision,
+            crate::git_backend::PayloadBytes::AsConfigured,
+        )
         .unwrap()
         .unwrap();
     stage.validate_before_publication().unwrap();
@@ -439,7 +451,11 @@ fn explicit_warm_ssh_keeps_inactive_http_selectors_without_helper_or_proxy_conta
         .prepare_ref(f.get("url"), "v1.0.0", Some(&warm), &objects, &warm)
         .unwrap();
     let stage = git
-        .stage_native_materialisation(&objects, &revision)
+        .stage_native_materialisation(
+            &objects,
+            &revision,
+            crate::git_backend::PayloadBytes::AsConfigured,
+        )
         .unwrap()
         .unwrap();
     stage.validate_before_publication().unwrap();

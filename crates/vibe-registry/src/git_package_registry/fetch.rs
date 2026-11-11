@@ -46,7 +46,7 @@ impl GitPerPackageRegistry {
         refname: &str,
     ) -> Result<String, RegistryError> {
         let clone_dir = self.package_clone_dir(group, name);
-        self.bootstrap_chain_into(group, name, refname, &clone_dir)
+        self.bootstrap_chain_into(group, name, refname, &clone_dir, true)
     }
 
     /// Bring `dest` to `refname` against the package's source chain —
@@ -62,6 +62,7 @@ impl GitPerPackageRegistry {
         name: &str,
         refname: &str,
         dest: &Path,
+        data: bool,
     ) -> Result<String, RegistryError> {
         let (primary, mirrors) = self.package_urls(group, name)?;
         let operation = crate::git_failure::GitOperation::fetch_package(group, name, refname);
@@ -78,6 +79,7 @@ impl GitPerPackageRegistry {
             } else {
                 BringIntent::RefreshExisting
             },
+            data,
         ) {
             Ok(()) => return Ok(primary),
             Err(e) => e,
@@ -85,8 +87,14 @@ impl GitPerPackageRegistry {
         for (i, url) in mirrors.iter().enumerate() {
             // A mirror serves a DIFFERENT source than the copy on disk
             // — the switch clones beside and swaps in only on success.
-            match self.bring_clone_to_ref(&operation, url, refname, dest, BringIntent::SwitchSource)
-            {
+            match self.bring_clone_to_ref(
+                &operation,
+                url,
+                refname,
+                dest,
+                BringIntent::SwitchSource,
+                data,
+            ) {
                 Ok(()) => {
                     tracing::info!(
                         target: "vibe_registry",
@@ -140,7 +148,9 @@ impl GitPerPackageRegistry {
             None
         };
         let dirty = existed && self.backend.working_tree_dirty(slot)?;
-        self.bootstrap_chain_into(&resolved.group, &resolved.name, &tag, slot)?;
+        // The slot is the user's own working copy: its identity is its commit
+        // (PROP-022 §2.5), and its files are rendered by the user's Git.
+        self.bootstrap_chain_into(&resolved.group, &resolved.name, &tag, slot, false)?;
         self.backend.clean_worktree(slot)?;
         let manifest_path = slot.join(Manifest::FILENAME);
         let manifest = Manifest::read(&manifest_path)?;
@@ -278,6 +288,7 @@ impl GitPerPackageRegistry {
                     &tag,
                     &clone_dir,
                     intent,
+                    true,
                 )
             {
                 if i == 0 {
@@ -309,9 +320,14 @@ impl GitPerPackageRegistry {
                     }
                 })?));
             }
+            // Everything staged from here is hashed and copied into the
+            // store and the package cache — trees vibe reads as data, so the
+            // recorded blob bytes (`crate::git_backend::verbatim`). The one
+            // checkout that keeps the user's own conversion is the in-place
+            // workspace slot, which returned above.
             let native_stage = native
                 .as_ref()
-                .map(PreparedInPlace::stage_native)
+                .map(|prepared| prepared.stage_native(crate::git_backend::PayloadBytes::Verbatim))
                 .transpose()?
                 .flatten();
             let content = native_stage

@@ -3062,3 +3062,33 @@ structure, and it goes when the file does.
 | @fact:B288-SEVERITY **severity** | P3 — a bare name has never worked on this path at all, so nothing regressed; it is a corner the application boundary did not reach. |
 | @fact:B288-DISPOSITION **disposition** | open — the fix is to qualify once, above the kind probe, which means moving the boundary out of `app::global::install` into the dispatcher so both kinds share it. Deliberately not taken here: that dispatcher also routes `mcp:` and project installs, and moving the boundary is a change to all three rather than to the one this work was asked for. |
 | @fact:B288-FILED **filed by** | the application short-name boundary, 2026-11-11. |
+
+## B-289 — a `.gitattributes` inside a submodule of a vibe-owned clone still converts {#b-289}
+
+| field | value |
+|---|---|
+| @fact:B289-WHAT **what** | A working copy vibe reads as data is checked out byte-exact by two levers: `-c core.autocrlf=false -c core.eol=lf`, which Git exports to its own children through `GIT_CONFIG_PARAMETERS` and so reaches a submodule checkout, and a vibe-owned `$GIT_DIR/info/attributes`, which is per-repository and does **not**. A `.gitattributes` saying `* text=auto eol=crlf` *inside a submodule* of a registry monorepo or a package clone therefore still converts that submodule's files, and anything hashed out of them mis-hashes exactly as the top level used to. |
+| @fact:B289-EVIDENCE **evidence** | `crates/vibe-registry/src/git_backend/verbatim.rs` (the two levers and why `GIT_ATTR_SOURCE` was not used: it is Git 2.40 and its value depends on the repository's object format); `crates/vibe-registry/src/git_backend/shell/checkout.rs::sync_submodules`. Measured on Linux: the `-c` flags do reach the submodule checkout, an in-submodule `.gitattributes` does not. |
+| @fact:B289-SEVERITY **severity** | P2 — it needs a registry monorepo or a package whose submodule carries an EOL attribute, which is rare; where it happens the symptom is the same silent hash mismatch, which is why it is not P3. |
+| @fact:B289-DISPOSITION **disposition** | open — the fix is to walk `git submodule status --recursive`, install the attributes in each module's git dir and renormalise it, or to use `GIT_ATTR_SOURCE` with the repository's own empty-tree id once the Git floor allows. Deliberately not taken with the release fix: both add a traversal to every clone, and the reported defect is at the top level. |
+| @fact:B289-FILED **filed by** | the byte-exact registry checkout, 2026-11-11. |
+
+## B-290 — the legacy clone path has no attribute admission for a registry working copy {#b-290}
+
+| field | value |
+|---|---|
+| @fact:B290-WHAT **what** | Under the controlled transport a payload that selects `ident`, `working-tree-encoding` or an external `filter` is refused before its stage is used (PROP-073 `#NATIVE-MATERIALISATION`). The incumbent `ShellGit` clone path — the one a profile without `[source_policy]` exclusions takes — has no such probe for a **registry** working copy: an `ident`-marked file in a mirrored monorepo is expanded on checkout and then fails the hash it was supposed to answer, with no explanation naming the attribute. The byte-exact checkout deliberately does not paper over it: `info/attributes` unsets `text`/`eol` only, precisely so these three stay visible to whoever probes them. |
+| @fact:B290-EVIDENCE **evidence** | `crates/vibe-registry/src/git_backend/shell/checkout.rs` (no probe); `crates/vibe-registry/src/git_backend/shell/native_admission/materialisation.rs` (the probe the controlled path runs); `crates/vibe-registry/src/git_backend/verbatim.rs` for why the attributes are left alone. |
+| @fact:B290-SEVERITY **severity** | P3 — it predates this work and needs a registry that marks its own files `ident` or routes them through a filter, which a mirror has no reason to do. |
+| @fact:B290-DISPOSITION **disposition** | open — the probe exists and is reusable; what it needs is a home on the incumbent path that does not turn every clone into an extra `check-attr` walk. |
+| @fact:B290-FILED **filed by** | the byte-exact registry checkout, 2026-11-11. |
+
+## B-291 — `cli_registry_mirror_templates` flakes about one in ten runs, on main {#b-291}
+
+| field | value |
+|---|---|
+| @fact:B291-WHAT **what** | `a_selected_template_writes_exactly_the_expected_snapshot_tree` fails intermittently under `--test-threads=4`: the snapshot tree it walks is missing a file the mirror should have written, and the surrounding six tests pass. The assertion is about the *file set* `vibe registry mirror` wrote, so the mirror either raced its own write or the walk read a tree that was still being filled. |
+| @fact:B291-EVIDENCE **evidence** | Measured on `main` at `b89e8f673` with no change applied: 10 repeats of the binary under `--test-threads=4`, one failure (`6 passed; 1 failed`); the same 10 repeats on the `crlf-fix` branch gave one failure too, and the test passes every time when run alone. So it is neither new nor caused by the byte-exact checkout. |
+| @fact:B291-SEVERITY **severity** | P2 — a gate that fails one run in ten teaches contributors to re-run gates, which is how a real regression gets waved through. |
+| @fact:B291-DISPOSITION **disposition** | open — needs the mirror's write order (or the fixture's read of it) established before the assertion, not a retry around it. Deliberately not taken here: it predates this work and is in `vibe registry mirror`, not in the checkout path this change touches. |
+| @fact:B291-FILED **filed by** | the byte-exact registry checkout's gate run, 2026-11-11. |

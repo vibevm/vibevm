@@ -24,6 +24,8 @@ pub mod deferred;
 mod messages;
 pub mod shell;
 pub mod transfers;
+pub mod verbatim;
+pub use verbatim::PayloadBytes;
 
 pub(crate) use messages::{REDIRECTED_FIX, TLS_TRUST_FIX};
 use messages::{auth_failed_fix, auth_failed_head, redirected_head, tls_trust_head};
@@ -336,12 +338,21 @@ pub trait GitBackend: Send + Sync {
     }
     /// Stage a retained source under an explicitly supported native profile.
     /// None means this backend remains on its incumbent materialisation path.
+    ///
+    /// `bytes` is whose rendering the stage holds ([`PayloadBytes`]).
     fn stage_native_materialisation(
         &self,
         _objects: &Path,
         _revision: &GitPreparedRevision,
+        _bytes: PayloadBytes,
     ) -> Result<Option<shell::native_admission::NativeMaterialisation>, GitError> {
         Ok(None)
+    }
+    /// Bring a data working copy to the exact bytes its blobs record, where a
+    /// clone is *used* without being cloned or updated first: a registry
+    /// inside its freshness window reaches no other git command ([`verbatim`]).
+    fn normalise_owned_worktree(&self, _dest: &Path) -> Result<(), GitError> {
+        Ok(())
     }
     /// Check the selected authored endpoint before credential lookup. No contact or
     /// ambient configuration evaluation is permitted here. Final backend admission
@@ -429,6 +440,14 @@ pub trait GitBackend: Send + Sync {
     /// — the caller cleans up.
     fn bootstrap(&self, url: &str, refname: &str, dest: &Path) -> Result<(), GitError>;
 
+    /// [`Self::bootstrap`] into a working copy vibe owns and reads as data,
+    /// checked out byte-exact ([`verbatim`]). The same chain also places an
+    /// `in-place` package into the user's own slot (PROP-022 §2.4), so which
+    /// a destination is, the caller says; it is never inferred.
+    fn bootstrap_data(&self, url: &str, refname: &str, dest: &Path) -> Result<(), GitError> {
+        self.bootstrap(url, refname, dest)
+    }
+
     /// Clone and check out one exact ref without initialising submodules.
     ///
     /// Dependency-declared embedded sources are opaque upstream trees, not
@@ -444,6 +463,11 @@ pub trait GitBackend: Send + Sync {
     /// branches track their `origin` branch, and exact commits stay detached.
     /// Assumes `dest` is a git repository previously populated by `bootstrap`.
     fn update(&self, dest: &Path, refname: &str) -> Result<(), GitError>;
+
+    /// [`Self::update`] of a data working copy ([`Self::bootstrap_data`]).
+    fn update_data(&self, dest: &Path, refname: &str) -> Result<(), GitError> {
+        self.update(dest, refname)
+    }
 
     /// The commit SHA the working tree at `dest` is checked out at —
     /// `git -C <dest> rev-parse HEAD`. Recorded as the lockfile's

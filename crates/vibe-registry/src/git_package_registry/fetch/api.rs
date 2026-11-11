@@ -25,6 +25,7 @@ impl GitPerPackageRegistry {
             } else {
                 BringIntent::SwitchSource
             },
+            true,
         )
     }
 

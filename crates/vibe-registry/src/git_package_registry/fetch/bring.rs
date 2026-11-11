@@ -147,6 +147,7 @@ impl GitPerPackageRegistry {
         refname: &str,
         clone_dir: &Path,
         intent: BringIntent,
+        data: bool,
     ) -> Result<(), RegistryError> {
         self.backend.preflight_materialisation()?;
         let working_copy = clone_dir.join(".git").exists();
@@ -157,7 +158,12 @@ impl GitPerPackageRegistry {
                 // grounds for destroying anything — not here, and not
                 // as a side effect of a later attempt against another
                 // source.
-                if let Err(e) = self.backend.update(clone_dir, refname) {
+                let refreshed = if data {
+                    self.backend.update_data(clone_dir, refname)
+                } else {
+                    self.backend.update(clone_dir, refname)
+                };
+                if let Err(e) = refreshed {
                     tracing::debug!(
                         target: "vibe_registry",
                         registry = %self.name,
@@ -178,9 +184,9 @@ impl GitPerPackageRegistry {
             // bootstrap straight into it. (Debris without `.git` from
             // a prior failed bootstrap is not a copy and is cleaned by
             // `bootstrap_fresh_at` itself.)
-            (_, false) => self.bootstrap_fresh_at(operation, url, refname, clone_dir),
+            (_, false) => self.bootstrap_fresh_at(operation, url, refname, clone_dir, data),
             (BringIntent::SwitchSource, true) => {
-                self.switch_source_at(operation, url, refname, clone_dir)
+                self.switch_source_at(operation, url, refname, clone_dir, data)
             }
         }
     }
@@ -205,6 +211,7 @@ impl GitPerPackageRegistry {
         url: &str,
         refname: &str,
         dest: &Path,
+        data: bool,
     ) -> Result<(), RegistryError> {
         if dest.exists() {
             fs::remove_dir_all(dest).map_err(|source| RegistryError::Io {
@@ -220,9 +227,15 @@ impl GitPerPackageRegistry {
         }
         let plain_url = strip_git_plus_prefix(url);
         let fetch_url = self.selected_credentialed_url(plain_url)?;
-        self.backend
-            .bootstrap(&fetch_url, refname, dest)
-            .map_err(|error| self.git_failure(operation.clone(), plain_url, error))?;
+        // A cache clone is data vibe reads and hashes; an `in-place`
+        // package's slot is the user's own checkout
+        // (`crate::git_backend::verbatim`).
+        if data {
+            self.backend.bootstrap_data(&fetch_url, refname, dest)
+        } else {
+            self.backend.bootstrap(&fetch_url, refname, dest)
+        }
+        .map_err(|error| self.git_failure(operation.clone(), plain_url, error))?;
         if self.effective_token_value().is_some() {
             self.backend.set_remote_url(dest, "origin", plain_url)?;
         }
@@ -250,6 +263,7 @@ impl GitPerPackageRegistry {
         url: &str,
         refname: &str,
         dest: &Path,
+        data: bool,
     ) -> Result<(), RegistryError> {
         let no_parent = || RegistryError::Io {
             path: dest.to_path_buf(),
@@ -266,7 +280,7 @@ impl GitPerPackageRegistry {
         })?;
         let tmp = parent.join(format!("{file}.switch-tmp-{}", std::process::id()));
         let switched = self
-            .bootstrap_fresh_at(operation, url, refname, &tmp)
+            .bootstrap_fresh_at(operation, url, refname, &tmp, data)
             .and_then(|()| {
                 // The new clone fully succeeded — NOW, and only now, the
                 // previous copy goes.

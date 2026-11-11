@@ -486,7 +486,7 @@ fn ensure_clone_at(
     clone_dir: &Path,
 ) -> Result<(), RegistryError> {
     if clone_dir.join(".git").exists() {
-        backend.update(clone_dir, refname)?;
+        backend.update_data(clone_dir, refname)?;
         return Ok(());
     }
     if clone_dir.exists() {
@@ -501,7 +501,7 @@ fn ensure_clone_at(
             source,
         })?;
     }
-    backend.bootstrap(strip_git_plus_prefix(url), refname, clone_dir)?;
+    backend.bootstrap_data(strip_git_plus_prefix(url), refname, clone_dir)?;
     Ok(())
 }
 
