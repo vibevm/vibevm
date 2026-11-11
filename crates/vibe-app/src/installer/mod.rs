@@ -48,6 +48,12 @@ pub(crate) struct FetchWatch<'a> {
     pub facts: Option<&'a TransferFacts>,
     pub purpose: Option<vibe_core::progress::transfer::Purpose>,
     pub remapped_from: Option<&'a str>,
+    /// This invocation's extra request headers (`PROP-075#DOWNLOAD-HEADERS`).
+    /// They ride on the fetch rather than on the HTTP client because the
+    /// installer's declared inputs are the only downloads they are for:
+    /// a registry read, an index read and a template document share the
+    /// operation's client and never see a `FetchWatch`.
+    pub download_headers: Option<&'a vibe_core::download_headers::DownloadHeaders>,
 }
 
 /// Which candidate served one input's bytes, and the row that chose it

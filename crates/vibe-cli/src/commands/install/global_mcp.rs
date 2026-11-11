@@ -111,6 +111,7 @@ pub(crate) fn update(
         library: None,
         steps: Default::default(),
         no_extras: false,
+        download_header_file: None,
         version_file: Default::default(),
         plan_only: false,
         hidden: false,

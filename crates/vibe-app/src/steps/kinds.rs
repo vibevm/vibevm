@@ -58,6 +58,8 @@ pub(crate) struct EcosystemEnv<'a> {
 /// What a step sees: its directories, variables and the operation flags.
 pub(crate) struct StepContext<'a> {
     pub http_client: Option<&'a vibe_package_source::OperationHttpClient>,
+    /// This invocation's extra request headers (`PROP-075#DOWNLOAD-HEADERS`).
+    pub download_headers: Option<&'a vibe_core::download_headers::DownloadHeaders>,
     pub work: &'a Path,
     pub package_root: &'a Path,
     pub cache_root: &'a Path,
@@ -108,6 +110,7 @@ impl StepContext<'_> {
     fn watch(&self, size: Option<u64>, purpose: Purpose) -> FetchWatch<'_> {
         FetchWatch {
             http_client: self.http_client,
+            download_headers: self.download_headers,
             size,
             task: self.io.task,
             interrupt: self.io.interrupt,

@@ -15,6 +15,12 @@ use vibe_core::progress::transfer::{self, Destination, Purpose, TransferRecord};
 use super::{FetchWatch, hex, io, package_file};
 use crate::error::InstallerError;
 
+mod headers;
+
+#[cfg(test)]
+#[path = "fetch/header_tests.rs"]
+mod header_tests;
+
 /// What a step's downloads tell the journal about themselves
 /// (`PROP-068#transfer`): the package and step, the run they belong to
 /// (`batch`) and the line that resumes it if it is interrupted (`#pause`).
@@ -75,31 +81,39 @@ pub(crate) fn fetch_verified(
                 .task
                 .map(|task| task.progress().cancellation().clone())
                 .unwrap_or_default();
-            let response =
-                client
-                    .get_anonymous(source, &cancellation)
-                    .map_err(|error| match error {
-                        vibe_package_source::SourceHttpError::Policy(error) => {
-                            InstallerError::SourcePolicy(error)
-                        }
-                        vibe_package_source::SourceHttpError::Transport(error) => {
-                            managed_error(source, error)
-                        }
-                    })?;
+            // The admission is the same call either way: a header says
+            // what is sent once an endpoint may be contacted, never
+            // whether it may (`PROP-073#HTTP-ADMISSION-LAW`).
+            let response = match watch.download_headers {
+                Some(headers) => client.get_with_headers(source, &cancellation, headers),
+                None => client.get_anonymous(source, &cancellation),
+            }
+            .map_err(|error| match error {
+                vibe_package_source::SourceHttpError::Policy(error) => {
+                    InstallerError::SourcePolicy(error)
+                }
+                vibe_package_source::SourceHttpError::Transport(error) => {
+                    managed_error(source, error)
+                }
+            })?;
             if !response.status().is_success() {
                 return Err(fetch_error(format!("HTTP status {}", response.status())));
             }
             let announced = response.content_length();
             (Box::new(response), announced)
         } else {
-            let builder = vibe_net::http::route(
+            let mut builder = vibe_net::http::route(
                 reqwest::blocking::Client::builder().timeout(Duration::from_secs(600)),
                 vibe_net::http::Ambient::Inherit,
             )
             .map_err(|error| fetch_error(error.to_string()))?;
+            if watch.download_headers.is_some() {
+                builder = builder.redirect(headers::origin_bound_redirects(source));
+            }
             let response = builder
                 .build()
-                .and_then(|client| client.get(source).send())
+                .map(|client| headers::attach(client.get(source), watch.download_headers))
+                .and_then(reqwest::blocking::RequestBuilder::send)
                 .and_then(reqwest::blocking::Response::error_for_status)
                 .map_err(|error| fetch_error(with_causes(&error)))?;
             let announced = response.content_length();

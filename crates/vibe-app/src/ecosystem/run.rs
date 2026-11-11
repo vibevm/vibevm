@@ -190,6 +190,7 @@ impl Session<'_> {
         let env = self.paths.child_env(&[], &step.id, ctx.search_path);
         let cx = StepContext {
             http_client: ctx.http_client,
+            download_headers: ctx.download_headers,
             work: self.work,
             package_root: &self.package.root,
             cache_root: &ctx.settings.app_sources_cache(),

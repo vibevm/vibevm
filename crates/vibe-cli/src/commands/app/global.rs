@@ -93,6 +93,7 @@ pub(super) fn operation<'a>(
     let attended = attended(ctx);
     OperationContext {
         http_client: Some(&observe.http_client),
+        download_headers: observe.download_headers.as_ref(),
         import_scope: None,
         settings,
         json: ctx.is_json(),
@@ -286,8 +287,9 @@ pub fn install(
     let resolver = |spelling: &str| packages.resolve(spelling);
     if args.plan_only {
         let flat = StepDisplay::flat();
-        let observe =
-            Observation::new(ctx, false, &flat)?.with_source_operation(&packages.operation);
+        let observe = Observation::new(ctx, false, &flat)?
+            .with_download_headers(args.download_header_file.as_deref())?
+            .with_source_operation(&packages.operation);
         let operation = OperationContext {
             agent: agents.hooks(),
             resolver: Some(&resolver),
@@ -299,7 +301,11 @@ pub fn install(
     }
     let show = plan_printer(ctx);
     let display = StepDisplay::open(ctx, &args.steps);
-    let observe = Observation::new(ctx, true, &display)?.with_source_operation(&packages.operation);
+    // The header file is read and validated before the first request of
+    // the run (PROP-075 `#DOWNLOAD-HEADERS`).
+    let observe = Observation::new(ctx, true, &display)?
+        .with_download_headers(args.download_header_file.as_deref())?
+        .with_source_operation(&packages.operation);
     let before = installed_keys(&settings);
     let outcome = display.around(ctx, || {
         let operation = OperationContext {

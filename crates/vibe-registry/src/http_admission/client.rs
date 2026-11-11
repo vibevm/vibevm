@@ -15,6 +15,10 @@ pub struct ManagedHttpClient {
     blocking: Client,
     asynchronous: reqwest::Client,
     binding: Option<Arc<HttpAdmission>>,
+    /// Whether the pools follow a redirect by themselves. A bound pool
+    /// never does, and neither does a [`Self::direct`] one; the walk that
+    /// decides what a hop may carry needs the chain in its own hands.
+    follows_redirects: bool,
 }
 impl ManagedHttpClient {
     /// Capture the existing unbound HTTP policy, for a separately authorized domain owner.
@@ -66,6 +70,27 @@ impl ManagedHttpClient {
             trust,
         )
     }
+    /// The client of a request that carries caller-supplied headers
+    /// (`PROP-075#DOWNLOAD-HEADERS`): exactly the pool [`Self::bound`] or
+    /// [`Self::legacy`] would build for this `binding` — same admission,
+    /// same proxy and trust — except that it never follows a redirect on
+    /// its own. The chain belongs to [`Self::get_with_headers`], because
+    /// only a walk that sees each hop can keep those headers on the origin
+    /// the address named.
+    pub fn direct(
+        timeout: Duration,
+        binding: Option<Arc<HttpAdmission>>,
+    ) -> Result<Self, ClientBuildError> {
+        Self::build(
+            &vibe_net::current(),
+            timeout,
+            None,
+            reqwest::header::HeaderMap::new(),
+            binding,
+            None,
+            true,
+        )
+    }
     /// [`Self::captured`] under an explicit network session — the seam a
     /// proxy test drives without installing a process-wide route.
     pub fn captured_in(
@@ -75,6 +100,18 @@ impl ManagedHttpClient {
         headers: reqwest::header::HeaderMap,
         binding: Option<Arc<HttpAdmission>>,
         trust: Option<Vec<u8>>,
+    ) -> Result<Self, ClientBuildError> {
+        Self::build(network, timeout, user_agent, headers, binding, trust, false)
+    }
+    #[allow(clippy::too_many_arguments)]
+    fn build(
+        network: &Arc<vibe_net::NetworkSession>,
+        timeout: Duration,
+        user_agent: Option<&str>,
+        headers: reqwest::header::HeaderMap,
+        binding: Option<Arc<HttpAdmission>>,
+        trust: Option<Vec<u8>>,
+        direct: bool,
     ) -> Result<Self, ClientBuildError> {
         let mut blocking = Client::builder()
             .timeout(timeout)
@@ -94,6 +131,11 @@ impl ManagedHttpClient {
                 .no_proxy()
                 .referer(false)
                 .retry(reqwest::retry::never());
+        } else if direct {
+            // Nothing else of the incumbent unbound policy moves — only
+            // the redirects, which this client's caller walks itself.
+            blocking = blocking.redirect(reqwest::redirect::Policy::none());
+            asynchronous = asynchronous.redirect(reqwest::redirect::Policy::none());
         }
         // PROP-068 `#proxy`: a bound client tunnels through the configured
         // proxy — admission has already judged the requested host name,
@@ -119,10 +161,12 @@ impl ManagedHttpClient {
         }
         // Both builders capture ambient default policy in this single factory,
         // before any operation. Controlled requests never create an unbound client.
+        let follows_redirects = binding.is_none() && !direct;
         Ok(Self {
             blocking: blocking.build()?,
             asynchronous: asynchronous.build()?,
             binding,
+            follows_redirects,
         })
     }
     pub(crate) fn get(&self, url: impl reqwest::IntoUrl) -> RequestBuilder {
@@ -140,6 +184,47 @@ impl ManagedHttpClient {
             self.binding.as_deref(),
             cancellation,
         )
+    }
+    /// [`Self::get_anonymous`] with the caller's own request headers
+    /// attached (`PROP-075#DOWNLOAD-HEADERS`). The admission runs first
+    /// and unchanged — a header decides nothing about *whether* an
+    /// endpoint may be contacted — and the headers are origin-bound: they
+    /// go to the origin `address` names and to no other, whether or not a
+    /// binding is in force. Only a [`Self::direct`] client may do this,
+    /// because any other pool would follow a redirect before this side
+    /// could decide.
+    pub fn get_with_headers(
+        &self,
+        address: &str,
+        cancellation: &vibe_core::cancellation::CancellationToken,
+        headers: &vibe_core::download_headers::DownloadHeaders,
+    ) -> Result<ManagedResponse, HttpGetError> {
+        if self.follows_redirects {
+            return Err(ContactRefusal::UnsupportedControlledRequest.into());
+        }
+        let mut map = reqwest::header::HeaderMap::new();
+        let mut bound = Vec::with_capacity(headers.len());
+        for header in headers {
+            // The file reader has already refused everything `http` would
+            // refuse here, so this cannot fail on a validated file; a
+            // refusal rather than a panic keeps that a statement about the
+            // reader and not an assumption about this crate.
+            let name = HeaderName::from_bytes(header.name().as_bytes())
+                .map_err(|_| ContactRefusal::UnsupportedControlledRequest)?;
+            let value = reqwest::header::HeaderValue::from_str(header.value())
+                .map_err(|_| ContactRefusal::UnsupportedControlledRequest)?;
+            bound.push(name.clone());
+            map.append(name, value);
+        }
+        Ok(walk(
+            self,
+            self.get(address).headers(map),
+            address,
+            self.binding.as_deref(),
+            &bound,
+            cancellation,
+        )?
+        .response)
     }
 }
 impl std::fmt::Debug for ManagedHttpClient {

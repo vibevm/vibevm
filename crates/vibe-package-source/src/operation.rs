@@ -171,6 +171,7 @@ impl SourceOperation {
             operation: self.clone(),
             timeout,
             client: OnceLock::new(),
+            direct: OnceLock::new(),
             gate: Mutex::new(()),
         }
     }
@@ -202,6 +203,11 @@ pub struct OperationHttpClient {
     operation: SourceOperation,
     timeout: Duration,
     client: OnceLock<vibe_registry::http_admission::ManagedHttpClient>,
+    /// The pool of a request carrying caller-supplied headers
+    /// (`PROP-075#DOWNLOAD-HEADERS`): the same admission decision as
+    /// `client`, built apart only because it must not follow a redirect
+    /// by itself. Built on first such request and never otherwise.
+    direct: OnceLock<vibe_registry::http_admission::ManagedHttpClient>,
     gate: Mutex<()>,
 }
 impl std::fmt::Debug for OperationHttpClient {
@@ -256,35 +262,65 @@ impl OperationHttpClient {
         address: &str,
         cancellation: &vibe_core::cancellation::CancellationToken,
     ) -> Result<vibe_registry::http_admission::ManagedResponse, SourceHttpError> {
+        self.pool(false)?
+            .get_anonymous(address, cancellation)
+            .map_err(SourceHttpError::Transport)
+    }
+    /// [`Self::get_anonymous`] with this invocation's own request headers
+    /// attached (`PROP-075#DOWNLOAD-HEADERS`). The admission decision is
+    /// the same one, taken the same way and in the same order; only the
+    /// redirects move, because these headers belong to one origin.
+    pub fn get_with_headers(
+        &self,
+        address: &str,
+        cancellation: &vibe_core::cancellation::CancellationToken,
+        headers: &vibe_core::download_headers::DownloadHeaders,
+    ) -> Result<vibe_registry::http_admission::ManagedResponse, SourceHttpError> {
+        self.pool(true)?
+            .get_with_headers(address, cancellation, headers)
+            .map_err(SourceHttpError::Transport)
+    }
+    /// The retained pool of this operation, built on first use. `direct`
+    /// asks for the one whose redirects the caller walks; both are built
+    /// from the same binding and the same `controlled()` verdict.
+    fn pool(
+        &self,
+        direct: bool,
+    ) -> Result<&vibe_registry::http_admission::ManagedHttpClient, SourceHttpError> {
         let binding = self
             .operation
             .admission()
             .map_err(SourceHttpError::Policy)?;
+        let cell = if direct { &self.direct } else { &self.client };
         // Factory does not hide policy/config failure behind a network miss.
-        if self.client.get().is_none() {
+        if cell.get().is_none() {
             let _guard = self.gate.lock().map_err(|_| {
                 SourceHttpError::Policy(invalid("HTTP policy initialization lock poisoned"))
             })?;
-            if self.client.get().is_none() {
-                let client = if self
+            if cell.get().is_none() {
+                let controlled = self
                     .operation
                     .controlled()
-                    .map_err(SourceHttpError::Policy)?
-                {
-                    vibe_registry::http_admission::ManagedHttpClient::bound(self.timeout, binding)
-                } else {
-                    vibe_registry::http_admission::ManagedHttpClient::legacy(self.timeout)
+                    .map_err(SourceHttpError::Policy)?;
+                let client = match (direct, controlled) {
+                    (true, _) => vibe_registry::http_admission::ManagedHttpClient::direct(
+                        self.timeout,
+                        controlled.then_some(binding),
+                    ),
+                    (false, true) => vibe_registry::http_admission::ManagedHttpClient::bound(
+                        self.timeout,
+                        binding,
+                    ),
+                    (false, false) => {
+                        vibe_registry::http_admission::ManagedHttpClient::legacy(self.timeout)
+                    }
                 }
                 .map_err(|e| SourceHttpError::Transport(e.into()))?;
-                let _ = self.client.set(client);
+                let _ = cell.set(client);
             }
         }
-        self.client
-            .get()
-            .ok_or_else(|| {
-                SourceHttpError::Policy(invalid("HTTP client initialization produced no client"))
-            })?
-            .get_anonymous(address, cancellation)
-            .map_err(SourceHttpError::Transport)
+        cell.get().ok_or_else(|| {
+            SourceHttpError::Policy(invalid("HTTP client initialization produced no client"))
+        })
     }
 }

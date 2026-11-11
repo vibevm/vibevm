@@ -70,6 +70,9 @@ use apply::Applied;
 pub struct OperationContext<'a> {
     /// Shared lazy managed-contact owner of this operation, never reloaded from payload metadata.
     pub http_client: Option<&'a vibe_package_source::OperationHttpClient>,
+    /// Extra HTTP request headers for the declared inputs this operation
+    /// downloads, and for nothing else (`PROP-075#DOWNLOAD-HEADERS`).
+    pub download_headers: Option<&'a vibe_core::download_headers::DownloadHeaders>,
     /// Immutable public bindings of one verified finite import, with ephemeral scoped answers.
     pub import_scope: Option<&'a crate::ImportScope<'a>>,
     pub settings: &'a SettingsRoot,

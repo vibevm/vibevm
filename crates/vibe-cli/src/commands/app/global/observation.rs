@@ -24,6 +24,12 @@ type Notice = Box<dyn Fn(&str)>;
 /// caught signals of a mutating command.
 pub(crate) struct Observation<'d> {
     pub(crate) http_client: vibe_package_source::OperationHttpClient,
+    /// This invocation's `--download-header-file`, read and validated once
+    /// here — before anything is resolved or contacted — because this is
+    /// the layer that owns the process boundary (PROP-075
+    /// `#DOWNLOAD-HEADERS`). `vibe-app` is handed the parsed headers and
+    /// never a path.
+    pub(crate) download_headers: Option<vibe_core::download_headers::DownloadHeaders>,
     pub(crate) progress: Progress,
     pub(crate) signals: Option<Signals>,
     /// The durable user environment env steps change (PROP-065 `#env-step`).
@@ -53,6 +59,7 @@ impl<'d> Observation<'d> {
         Ok(Self {
             http_client: source_operation(Default::default())?
                 .http_client(std::time::Duration::from_secs(600)),
+            download_headers: None,
             // Every human renderer draws the steps as blocks (PROP-067
             // `#collapse`, `#plain`); a run with none observes nothing but
             // the machine stream.
@@ -79,6 +86,15 @@ impl<'d> Observation<'d> {
                 .then(|| Box::new(|text: &str| asking(|| notice(text))) as Notice),
             display,
         })
+    }
+
+    /// Read `path`, if the command was given one. A malformed file stops
+    /// the command here, with the line that is wrong, before any request.
+    pub(crate) fn with_download_headers(mut self, path: Option<&std::path::Path>) -> Result<Self> {
+        self.download_headers = path
+            .map(vibe_core::download_headers::DownloadHeaders::read)
+            .transpose()?;
+        Ok(self)
     }
 
     pub(crate) fn with_source_operation(

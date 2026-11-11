@@ -123,6 +123,7 @@ fn context<'a>(
 ) -> OperationContext<'a> {
     OperationContext {
         http_client: None,
+        download_headers: None,
         import_scope: None,
         settings: &home.settings,
         json: false,

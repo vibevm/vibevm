@@ -517,6 +517,7 @@ impl<'a> Run<'a> {
         let transfer = transfer_facts(self.record.as_ref(), self.command, &package_key, &step.id);
         let cx = StepContext {
             http_client: ctx.http_client,
+            download_headers: ctx.download_headers,
             work: &self.work,
             package_root: &self.resolved.root,
             cache_root: &cache_root,

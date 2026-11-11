@@ -299,6 +299,7 @@ impl Session<'_> {
         };
         let cx = StepContext {
             http_client: ctx.http_client,
+            download_headers: ctx.download_headers,
             work: self.work,
             package_root: half.package_root,
             cache_root: &ctx.settings.app_sources_cache(),

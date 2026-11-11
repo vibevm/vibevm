@@ -44,6 +44,7 @@ fn unavailable_lookup_before_import_leaves_no_unpublished_cohort_reservation() {
     let progress = vibe_core::progress::Progress::default();
     let ctx = OperationContext {
         http_client: None,
+        download_headers: None,
         import_scope: None,
         settings: &settings,
         json: false,

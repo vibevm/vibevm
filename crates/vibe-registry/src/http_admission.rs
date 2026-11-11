@@ -6,7 +6,7 @@ specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-073#HTTP-ADMISSION")
 use reqwest::{
     Url,
     blocking::{Client, ClientBuilder, RequestBuilder},
-    header::{AUTHORIZATION, COOKIE, LOCATION, PROXY_AUTHORIZATION, REFERER},
+    header::{AUTHORIZATION, COOKIE, HeaderName, LOCATION, PROXY_AUTHORIZATION, REFERER},
 };
 use std::collections::BTreeSet;
 mod client;
@@ -221,8 +221,8 @@ fn get_controlled(
     admission: Option<&HttpAdmission>,
     token: &vibe_core::cancellation::CancellationToken,
 ) -> Result<ManagedResponse, HttpGetError> {
-    if let Some(admission) = admission {
-        return Ok(get_observed_controlled(client, request, address, admission, token)?.response);
+    if admission.is_some() {
+        return Ok(walk(client, request, address, admission, &[], token)?.response);
     }
     send(client, request, token)
 }
@@ -256,16 +256,29 @@ pub(crate) fn get_observed(
         .unwrap_or_default()
         .cancellation()
         .clone();
-    get_observed_controlled(client, request, address, admission, &token)
+    walk(client, request, address, Some(admission), &[], &token)
 }
-fn get_observed_controlled(
+/// The explicit redirect walk: this side owns every hop, so each one is
+/// admitted before contact (`PROP-073#HTTP-ADMISSION-LAW`) and each one
+/// decides afresh which headers may travel. `bound` names the headers the
+/// caller supplied for **this** origin — the ones an ordinary HTTP client
+/// would happily resend to the next one; like the standing credential
+/// headers they are dropped the moment the chain leaves the origin the
+/// address named, and `crossed_origin` is sticky, so a chain that comes
+/// back never re-attaches them. Without an `admission` nothing is admitted
+/// and the incumbent contact behaviour stands; the walk is then only the
+/// place that keeps those headers at home.
+fn walk(
     client: &impl HttpClient,
     request: RequestBuilder,
     address: &str,
-    admission: &HttpAdmission,
+    admission: Option<&HttpAdmission>,
+    bound: &[HeaderName],
     token: &vibe_core::cancellation::CancellationToken,
 ) -> Result<BoundGet, HttpGetError> {
-    admission.admit_address(address)?;
+    if let Some(admission) = admission {
+        admission.admit_address(address)?;
+    }
     let request = request.build()?;
     let mut url = request.url().clone();
     let mut headers = request.headers().clone();
@@ -275,7 +288,9 @@ fn get_observed_controlled(
         token
             .checkpoint()
             .map_err(|_| ContactRefusal::OperationCancelled)?;
-        admission.admit(&url)?;
+        if let Some(admission) = admission {
+            admission.admit(&url)?;
+        }
         let response = send(
             client,
             client.blocking().get(url.clone()).headers(headers.clone()),
@@ -300,7 +315,7 @@ fn get_observed_controlled(
             .url()
             .join(location)
             .map_err(|_| ContactRefusal::InvalidRedirect)?;
-        crossed_origin |= redirect_headers(&url, &next, &mut headers)?;
+        crossed_origin |= redirect_headers(&url, &next, &mut headers, bound)?;
         // Drop joins the prior response worker before another request starts.
         drop(response);
         url = next;
@@ -327,6 +342,7 @@ fn redirect_headers(
     from: &Url,
     to: &Url,
     headers: &mut reqwest::header::HeaderMap,
+    bound: &[HeaderName],
 ) -> Result<bool, ContactRefusal> {
     if from.scheme() == "https" && to.scheme() == "http" {
         return Err(ContactRefusal::HttpsDowngrade);
@@ -336,6 +352,9 @@ fn redirect_headers(
         headers.remove(AUTHORIZATION);
         headers.remove(COOKIE);
         headers.remove(PROXY_AUTHORIZATION);
+        for name in bound {
+            headers.remove(name);
+        }
     }
     Ok(crossed_origin)
 }
@@ -387,17 +406,18 @@ mod tests {
         for key in [AUTHORIZATION, COOKIE, PROXY_AUTHORIZATION] {
             headers.insert(key, "secret".parse().unwrap());
         }
-        redirect_headers(&origin, &same, &mut headers).unwrap();
+        redirect_headers(&origin, &same, &mut headers, &[]).unwrap();
         assert_eq!(headers.len(), 3);
-        redirect_headers(&same, &other, &mut headers).unwrap();
+        redirect_headers(&same, &other, &mut headers, &[]).unwrap();
         assert!(headers.is_empty());
-        redirect_headers(&other, &origin, &mut headers).unwrap();
+        redirect_headers(&other, &origin, &mut headers, &[]).unwrap();
         assert!(headers.is_empty());
         assert_eq!(
             redirect_headers(
                 &origin,
                 &Url::parse("http://example.com").unwrap(),
-                &mut headers
+                &mut headers,
+                &[]
             ),
             Err(ContactRefusal::HttpsDowngrade)
         );
@@ -464,6 +484,7 @@ mod tests {
             &Url::parse("https://example.invalid/").unwrap(),
             &Url::parse("https://example.invalid./").unwrap(),
             &mut headers,
+            &[],
         )
         .unwrap();
         assert!(headers.is_empty());
@@ -473,3 +494,7 @@ mod tests {
 #[cfg(test)]
 #[path = "http_admission/cancellation_tests.rs"]
 mod cancellation_tests;
+
+#[cfg(test)]
+#[path = "http_admission/header_tests.rs"]
+mod header_tests;

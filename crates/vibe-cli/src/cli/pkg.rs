@@ -137,6 +137,20 @@ pub struct InstallArgs {
     #[arg(long, requires = "global")]
     pub no_extras: bool,
 
+    /// `install -g` of an application: a file of extra HTTP request
+    /// headers to send with this install's own input downloads — one
+    /// `Name: value` per line, `#` comments and blank lines skipped
+    /// (PROP-075 `#DOWNLOAD-HEADERS`).
+    ///
+    /// A header value is a credential, so it is a **file** and never an
+    /// argument: every local user can read `/proc/<pid>/cmdline`. The
+    /// values are never logged, journaled or put in an error, they reach
+    /// only `http://` and `https://` inputs of this install — not registry,
+    /// index or template reads — and they are not sent to any origin other
+    /// than the one the input's URL names.
+    #[arg(long, value_name = "PATH", requires = "global")]
+    pub download_header_file: Option<PathBuf>,
+
     /// `install -g` of an application: also write the resolved version into
     /// the slot's declared version file (PROP-075 `#VERSION-FILE-WRITE`).
     #[command(flatten)]

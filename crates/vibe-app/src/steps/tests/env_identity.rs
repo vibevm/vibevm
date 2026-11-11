@@ -34,6 +34,7 @@ fn runtime_refuses_programmatic_plan_collisions_without_values_or_work_publicati
     let progress = vibe_core::progress::Progress::default();
     let ctx = OperationContext {
         http_client: None,
+        download_headers: None,
         import_scope: None,
         settings: &settings,
         json: false,
