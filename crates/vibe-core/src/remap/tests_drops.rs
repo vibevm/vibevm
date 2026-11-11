@@ -190,3 +190,49 @@ fn a_shown_drop_rung_carries_one_separator_style() {
         "one separator style throughout: {shown}"
     );
 }
+
+/// The by-name lookup is the package convention minus the one rung the
+/// digest keys, and nothing else moves: the reader that has no digest
+/// document (`vibe app versions`' `in drop` mark) searches the same
+/// places in the same order, and simply never looks under
+/// `<drop>/<sha256>/<file>` (`PROP-066#drops`).
+#[test]
+fn the_by_name_lookup_is_the_convention_without_the_digest_rung() {
+    use super::drop::package_lookup_by_name;
+
+    let drop = Path::new("/d");
+    let digest = "ab".repeat(32);
+    let full = package_lookup(drop, Some("org.example/tool@1.2.0"), &digest, Some("t.tgz"));
+    let by_name = package_lookup_by_name(drop, Some("org.example/tool@1.2.0"), Some("t.tgz"));
+    assert_eq!(
+        by_name,
+        vec![
+            PathBuf::from("/d/org.example/tool/1.2.0/t.tgz"),
+            PathBuf::from("/d/org.example/tool/t.tgz"),
+            PathBuf::from("/d/t.tgz"),
+        ]
+    );
+    let kept: Vec<PathBuf> = full
+        .into_iter()
+        .filter(|rung| rung != &drop.join(&digest).join("t.tgz"))
+        .collect();
+    assert_eq!(kept, by_name, "the one dropped rung is the digest's");
+
+    // The rungs a part is unknown for are skipped the same way: no
+    // package coordinate leaves the flat drop alone, no version leaves the
+    // version-less package directory, and no file name is no answer.
+    assert_eq!(
+        package_lookup_by_name(drop, None, Some("t.tgz")),
+        vec![PathBuf::from("/d/t.tgz")]
+    );
+    assert_eq!(
+        package_lookup_by_name(drop, Some("org.example/tool"), Some("t.tgz")),
+        vec![
+            PathBuf::from("/d/org.example/tool/t.tgz"),
+            PathBuf::from("/d/t.tgz"),
+        ]
+    );
+    assert!(package_lookup_by_name(drop, Some("org.example/tool@1.2.0"), None).is_empty());
+    // A name that could climb out of the drop is no answer either.
+    assert!(package_lookup_by_name(drop, None, Some("../t.tgz")).is_empty());
+}

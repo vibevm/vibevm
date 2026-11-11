@@ -183,6 +183,54 @@ pub fn package_lookup(
     sha256: &str,
     file_name: Option<&str>,
 ) -> Vec<PathBuf> {
+    rungs(drop, package, Some(sha256), file_name)
+}
+
+/// The rungs of [`package_lookup`] a **file name alone** decides — the
+/// same convention with the digest-keyed `<drop>/<D>/<F>` rung left out:
+///
+/// 1. `<drop>/<G>/<N>/<V>/<F>`
+/// 2. `<drop>/<G>/<N>/<F>`
+/// 3. `<drop>/<F>`
+///
+/// A reader that only wants to know **whether** the drop holds an input,
+/// and must not pay for the input's digest to ask, searches exactly these
+/// — `vibe app versions`' `in drop` mark, which is the skeleton path of
+/// PROP-075 `#TEMPLATE-TWO-STAGE` and therefore has no digest document in
+/// hand. The one rung it gives up is the one keyed by the digest it does
+/// not have; a person who files a payload under `<drop>/<D>/<F>` is
+/// served by every fetch as before and simply goes unmarked by the
+/// listing. Nothing here reads or hashes a file: integrity stays the
+/// fetch's job, where the digest is known.
+///
+/// ```
+/// use std::path::{Path, PathBuf};
+/// use vibe_core::remap::drop::package_lookup_by_name;
+///
+/// let rungs = package_lookup_by_name(Path::new("/d"), Some("org.example/tool@1.2.0"), Some("t.tgz"));
+/// assert_eq!(rungs, vec![
+///     PathBuf::from("/d/org.example/tool/1.2.0/t.tgz"),
+///     PathBuf::from("/d/org.example/tool/t.tgz"),
+///     PathBuf::from("/d/t.tgz"),
+/// ]);
+/// ```
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-066#drops")]
+pub fn package_lookup_by_name(
+    drop: &Path,
+    package: Option<&str>,
+    file_name: Option<&str>,
+) -> Vec<PathBuf> {
+    rungs(drop, package, None, file_name)
+}
+
+/// The one place the package convention's rungs are built; the digest
+/// rung is present exactly when a digest is known.
+fn rungs(
+    drop: &Path,
+    package: Option<&str>,
+    sha256: Option<&str>,
+    file_name: Option<&str>,
+) -> Vec<PathBuf> {
     let Some(file) = file_name.filter(|name| portable_name(name)) else {
         return Vec::new();
     };
@@ -193,7 +241,9 @@ pub fn package_lookup(
         }
         rungs.push(drop.join(group).join(name).join(file));
     }
-    rungs.push(drop.join(sha256.to_ascii_lowercase()).join(file));
+    if let Some(sha256) = sha256 {
+        rungs.push(drop.join(sha256.to_ascii_lowercase()).join(file));
+    }
     rungs.push(drop.join(file));
     rungs
 }
