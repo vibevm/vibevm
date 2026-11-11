@@ -14,7 +14,7 @@
 # (`conformance/vibenvm/fetch-mirror.sh` is the only networked step in the
 # tree, and it is a prerequisite here rather than a part of this script).
 # The two application packages that live in their own repositories — the real
-# `org.vibevm.node/node` template and the `org.vibevm.node/vibenvm` shim —
+# `org.vibevm.node/node` template and the `org.vibevm.nvm/nvm` shim —
 # are published into a local `localdir` registry by
 # `conformance/vibenvm/make-registry.sh`, which is likewise a prerequisite:
 # a registry a script could have built out of this repository alone would not
@@ -64,8 +64,8 @@ if [ -z "${ACCEPT_IN_SANDBOX:-}" ]; then
         || missing="$missing $MIRROR/dist/index.json (fetch it once: conformance/vibenvm/fetch-mirror.sh)"
     [ -d "$REGISTRY_SRC/org.vibevm.node/node" ] \
         || missing="$missing $REGISTRY_SRC/org.vibevm.node/node (publish it: conformance/vibenvm/make-registry.sh)"
-    [ -d "$REGISTRY_SRC/org.vibevm.node/vibenvm" ] \
-        || missing="$missing $REGISTRY_SRC/org.vibevm.node/vibenvm (publish it: conformance/vibenvm/make-registry.sh)"
+    [ -d "$REGISTRY_SRC/org.vibevm.nvm/nvm" ] \
+        || missing="$missing $REGISTRY_SRC/org.vibevm.nvm/nvm (publish it: conformance/vibenvm/make-registry.sh)"
     if [ -n "$missing" ]; then
         echo "FAIL prerequisites: missing$missing"
         exit 2

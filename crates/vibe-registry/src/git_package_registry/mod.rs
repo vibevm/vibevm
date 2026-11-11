@@ -58,6 +58,7 @@ use crate::{
 mod auth;
 mod fetch;
 mod lookup;
+mod pick;
 mod route;
 mod template;
 pub use route::RegistryRoute;

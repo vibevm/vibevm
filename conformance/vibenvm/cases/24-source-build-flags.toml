@@ -1,0 +1,28 @@
+schema = 1
+name = "source-build-flags"
+summary = """
+`-s`, `-b` and `-j <N>`: the argument surface, which is what a differential
+run can measure. A real source build is deliberately **not** here — it
+needs a toolchain and upstream's source tarball, and this suite is
+network-isolated by construction; the Node template's `source` installer
+option is proven by a real build in its own repository instead. What is
+compared is every observable decision nvm takes about these flags before
+it builds anything: the mutual exclusion, the job-count validation, the
+rule that a selecting flag must precede the version, that `-j4` is not a
+spelling nvm has (so it reads as a version), and that `-b` on a version
+whose binary exists is an ordinary install.
+"""
+wall_secs = 900
+commands = [
+  "nvm install --no-progress -s -b 22.9.0",
+  "nvm install --no-progress -b -s 22.9.0",
+  "nvm install --no-progress -j abc 22.9.0",
+  "nvm install --no-progress -j 0 22.9.0",
+  "nvm install --no-progress -j4 22.9.0",
+  "nvm install --no-progress 22.9.0 -s",
+  "nvm install --no-progress 22.9.0 -j 2",
+  "nvm install --no-progress ---typo 22.9.0",
+  "nvm install --no-progress -b -j 2 22.9.0",
+  "nvm ls",
+  "nvm uninstall 22.9.0",
+]

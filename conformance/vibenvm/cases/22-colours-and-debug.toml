@@ -1,0 +1,24 @@
+schema = 1
+name = "colours-and-debug"
+summary = """
+`nvm set-colors` and `nvm debug`, the two surfaces the accepted-gap set
+called "vibe decides these once". Both sandboxes run without a tty, so
+`nvm_has_colors` is false on each side and `set-colors` takes its
+two-line non-colour branch — which is the honest comparison here, because
+a tty would make the record a terminal's rather than nvm's. The invalid
+code is the interesting one: it prints the whole help to **stderr**, a
+blank line to stdout, the painted advice to stderr, and still exits 0.
+`nvm debug` writes only to stderr and always exits 42; its lines are
+normalised for the paths and versions that are each sandbox's own.
+"""
+wall_secs = 900
+commands = [
+  "nvm set-colors bygre",
+  "nvm set-colors RGBCM",
+  "nvm ls",
+  "nvm set-colors toolong",
+  "nvm set-colors xxxxx",
+  "nvm set-colors",
+  "nvm ls --no-colors",
+  "nvm debug",
+]

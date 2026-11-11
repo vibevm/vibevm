@@ -1,0 +1,18 @@
+schema = 1
+name = "install-alias"
+summary = """
+`nvm install --alias=<name>`, and the rule that it and `--default` are the
+same slot: naming both, or either twice, is nvm's exit 6. The alias written
+is the **user-provided** version string, not the version it resolved to,
+which is why the listing afterwards is part of the record.
+"""
+wall_secs = 900
+commands = [
+  "nvm install --no-progress --alias=mine 22.9.0",
+  "nvm alias mine",
+  "nvm alias",
+  "nvm install --no-progress --alias=one --alias=two 22.9.0",
+  "nvm install --no-progress --default --alias=mine 22.9.0",
+  "nvm install --no-progress --alias=bymajor 22",
+  "nvm alias bymajor",
+]

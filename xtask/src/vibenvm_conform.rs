@@ -100,7 +100,9 @@ mod tests {
             "observe.sh",
             "coverage.py",
             "normalise.rules",
-            "exclusions.toml",
+            // `exclusions.toml` is deliberately absent: the accepted-gap
+            // set is empty (PROP-075 `#VIBENVM-NO-EXCLUSIONS`), and
+            // `coverage.py` treats a missing file as the ordinary state.
             "inventory.json",
             "mirror.lock",
             "nvm-tests.allow",

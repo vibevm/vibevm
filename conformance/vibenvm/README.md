@@ -52,7 +52,7 @@ suite refuses to run on a mismatch.
 |---|---|
 | 0 | every case passed and coverage is complete |
 | 1 | a differential mismatch — the case, the step, the field and both values are printed |
-| 2 | coverage is incomplete, or the exclusion list is not what the owner approved |
+| 2 | coverage is incomplete, or an exclusion row appeared where the owner's set is empty |
 | 3 | a harness error: a mirror digest mismatch, a missing pinned tag, a missing prerequisite, a **non-loopback connection attempt**, or a sandbox that could not be built |
 
 Useful flags: `--cases GLOB` (one case or a family), `--list`, `--keep` (keep
@@ -76,7 +76,7 @@ Sandbox B is a vibe home of its own: its own `HOME` and `VIBE_SETTINGS`, a
 (PROP-066 `#locator` — the mechanism a closed network uses anyway, so the
 suite exercises the real path rather than a test-only flag), a `[[registry]]`
 row declaring the local `localdir` registry as that home's own, and
-`vibe install -g org.vibevm.node/vibenvm` from it. The shim is then sourced
+`vibe install -g org.vibevm.nvm/nvm` from it. The shim is then sourced
 from the **installed** copy under `<settings>/opt/`.
 
 The registry is configured in the home rather than passed as `--registry` on
@@ -176,18 +176,20 @@ and the diff of `inventory.json` is the new surface.
 Today: **76 pairs** from nvm v0.41.0 — 52 required and covered by the cases,
 24 excluded by the owner's twelve approved items. Measured 2026-11-11 against
 the real shim: nine cases passed, 52 of 52, **`verdict=0`** — and measured 0
-again the same day against the **simplified** shim (`org.vibevm.node/vibenvm`
+again the same day against the **simplified** shim (`org.vibevm.nvm/nvm`
 revision 1.1.0), after the four shortfalls this suite found were closed in vibe
 itself rather than worked around in the shim.
 
-**The exclusion list is closed.** `exclusions.toml` carries exactly the owner's
-decision of 2026-11-10 (PROP-075 `#VIBENVM-EXCLUSIONS-APPROVED`), one reason
-per row, `approved_by = "owner"` and the date. A row without that approval
-fails the gate, and so does a row outside the closed set — `coverage.py` holds
-that set, so a worker can neither widen the list nor quietly reword it. The
-two exclusions the owner **rejected**, `install --skip-default-packages` and
-`$NVM_DIR/default-packages`, are covered by a real case
-(`cases/16-default-packages.toml`) instead.
+**The exclusion list is empty, and closed at empty.** `exclusions.toml` is
+**deleted**: the owner reopened the twelve approved gaps of 2026-11-10 and
+closed them the other way on 2026-11-11, by having every one of them
+implemented inside `org.vibevm.nvm/nvm` and inside the Node template
+(PROP-075 `#VIBENVM-NO-EXCLUSIONS`). The machinery stays and is now
+stronger than it was: `coverage.py`'s `OWNER_APPROVED` is `frozenset()`, so
+a row dropped into a re-created `exclusions.toml` is not in the closed set
+and fails the gate. Reintroducing an accepted gap is therefore a change to
+the gate's own source, under the owner's eye, and never a row in a data
+file beside it. A missing file is the ordinary state and reads as no rows.
 
 ## The meta-tests
 
@@ -217,8 +219,7 @@ sandbox and is set by nothing but the meta-tests.
 | `fetch-mirror.sh` | the one networked step: the mirror and the pinned nvm-sh |
 | `mirror.lock` | the pin (nvm tag object, node version set) and every mirrored file's SHA-256 |
 | `extract-inventory.sh` → `inventory.json` | nvm's own command and flag inventory, extracted from the pinned tree |
-| `exclusions.toml` | the owner-approved accepted-gap set, with a reason per row |
-| `coverage.py` | the coverage gate, and the lock on the exclusion list |
+| `coverage.py` | the coverage gate, and the lock that keeps the accepted-gap set empty |
 | `observe.sh` | one observation record per step per sandbox |
 | `normalise.rules` | every normalisation the comparison applies |
 | `cases/*.toml` | the differential cases |
@@ -275,7 +276,7 @@ found decided.
    alias spelling (`i`, `list`, `copy-packages`) gets a bare pair of its own,
    so the gate still asks for a case per alias.
 5. **The three things the harness half said to confirm: one held, two did
-   not.** The installed package does publish a `vibenvm.sh` to source, and
+   not.** The installed package does publish a `nvm.sh` to source, and
    `run.sh` now takes it from under `<settings>/opt/` rather than by name
    anywhere under the settings root — the package cache holds a copy of the
    same bytes, and sourcing *that* would let a failed installation pass. The

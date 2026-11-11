@@ -1,0 +1,40 @@
+schema = 1
+name = "named-aliases"
+summary = """
+nvm's named user aliases, the surface the accepted-gap set used to hold
+(PROP-075 `#VIBENVM-NO-EXCLUSIONS`). Every shape the pinned `nvm.sh` has: a
+listing with no aliases at all, a created alias and its `->` line, an alias
+whose target is another alias, a dangling target (created anyway, with the
+warning), a cycle (the `∞` sentinel), an `lts/` alias, the two refusals that
+are not options at all (`--delete`, a name with `#`, a name with a `/`), the
+built-in rows that only appear when no file shadows them, `unalias` of a
+built-in and of a name that does not exist, and `ls --no-alias` with and
+without a pattern — the second being nvm's own exit 55.
+"""
+wall_secs = 900
+commands = [
+  "nvm alias",
+  "nvm alias mine 22.9.0",
+  "nvm alias",
+  "nvm alias mine",
+  "nvm alias second mine",
+  "nvm alias second",
+  "nvm alias dangling 99.9.9",
+  "nvm alias loop-a loop-b",
+  "nvm alias loop-b loop-a",
+  "nvm alias loop-a",
+  "nvm alias --lts lts-one node",
+  "nvm alias --no-colors",
+  "nvm alias mine --delete",
+  "nvm alias bad#name 22.9.0",
+  "nvm alias sub/dir 22.9.0",
+  "nvm ls",
+  "nvm ls --no-alias",
+  "nvm ls --no-alias 22",
+  "nvm unalias second",
+  "nvm unalias nosuch",
+  "nvm unalias stable",
+  "nvm unalias",
+  "nvm unalias a b",
+  "nvm alias",
+]

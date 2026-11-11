@@ -31,38 +31,19 @@ from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
 
-# The closure of the owner's decision of 2026-11-10 (PROP-075
-# `#VIBENVM-EXCLUSIONS-APPROVED`): twelve approved items, fourteen
-# `(subcommand, flag)` rows, because that fact's row rule (1) makes an item
-# naming two flags two rows — `install -s` and `install -b` are two — and the
-# internal-state item is recorded under both the `(environment)` and the
-# `(internal)` spelling the same fact prescribes.
-#
-# This constant is the lock on the list, not a second copy of the decision:
-# `exclusions.toml` carries each row's reason and approval, and the gate
-# fails unless the file's rows are exactly these. "This list is closed until
-# the owner reopens it" is then a mechanical property, so a thirteenth row —
-# or a quietly reworded twelfth — cannot pass as reviewed.
-OWNER_APPROVED: frozenset[tuple[str, str]] = frozenset(
-    {
-        ("alias", ""),
-        ("unalias", ""),
-        ("install", "--alias"),
-        ("ls", "--no-alias"),
-        ("(internal)", "$NVM_DIR/alias/*"),
-        ("install", "-s"),
-        ("install", "-b"),
-        ("install", "-j"),
-        ("*", "--only"),
-        ("(environment)", "$NVM_ONLY, $NVM_AUTH_HEADER"),
-        ("(internal)", ".lts-status, per-version install locks, third-party installer hook"),
-        ("use", "--delete-prefix"),
-        ("set-colors", ""),
-        ("debug", ""),
-    }
-)
+# **The closed set is empty, and that is the whole statement.** The
+# owner's twelve approved items of 2026-11-10 are all implemented in
+# `org.vibevm.nvm/nvm` (PROP-075 `#VIBENVM-NO-EXCLUSIONS`), so there is
+# no accepted gap left and `exclusions.toml` is gone. The machinery
+# stays, because the property it enforces is now stronger than it was:
+# this constant is the lock on the list, so a row added to a re-created
+# `exclusions.toml` is **not** in the closed set and the gate fails on
+# it — an exclusion cannot be reintroduced without the owner reopening
+# this set, which is a change to this file and not to a data file beside
+# it.
+OWNER_APPROVED: frozenset[tuple[str, str]] = frozenset()
 
-APPROVED_ITEM_COUNT = 12
+APPROVED_ITEM_COUNT = 0
 
 # Subcommand spellings the extraction never yields, by design: an exclusion
 # row carrying one is reported as recorded, not required.
@@ -93,6 +74,12 @@ def load_inventory(path: Path) -> dict:
 
 
 def load_exclusions(path: Path) -> list[dict]:
+    # No file at all is the expected state: every surface the owner once
+    # approved as a gap is implemented, so there is nothing to exclude
+    # (PROP-075 `#VIBENVM-NO-EXCLUSIONS`). It is not a harness error and
+    # it is not silence either — `report` says so.
+    if not path.exists():
+        return []
     try:
         with path.open("rb") as handle:
             data = tomllib.load(handle)
@@ -154,7 +141,7 @@ def check_rows(rows: list[dict], path: Path) -> None:
     if items and len(items) != APPROVED_ITEM_COUNT:
         failures.append(
             f"{path.name}: {len(items)} approved items, not {APPROVED_ITEM_COUNT} "
-            "— the owner approved twelve"
+            "— the owner's approved set is closed and currently empty"
         )
     if failures:
         raise GateFailure("\n".join(failures))

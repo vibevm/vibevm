@@ -1,0 +1,36 @@
+schema = 1
+name = "version-categories"
+summary = """
+`--only=<categories>` and `$NVM_ONLY`: the four tokens, the canonical
+re-ordering, the refusals, the precedence of the flag over the environment,
+and the filter applied by each verb that takes it. `--only=iojs` with no
+io.js version available is nvm's right-aligned `N/A` and exit 3, which is
+the one shape the accepted-gap note used to guess at.
+"""
+wall_secs = 900
+commands = [
+  "nvm install --no-progress 22.9.0",
+  "nvm ls --only=lts,non-lts",
+  "nvm ls --only=non-lts,lts",
+  "nvm ls --only=alpha",
+  "nvm ls --only=iojs",
+  "nvm ls-remote --only=iojs",
+  "nvm ls --only=bogus",
+  "nvm ls --only=",
+  "nvm ls --only=lts,",
+  "nvm ls --only=lts --only=non-lts",
+  "NVM_ONLY=alpha nvm ls",
+  "NVM_ONLY=bogus nvm ls",
+  "NVM_ONLY=alpha nvm ls --only=lts,non-lts",
+  "nvm ls-remote --only=lts",
+  "nvm version --only=lts 22",
+  "nvm version-remote --only=lts 22",
+  "nvm which --only=lts 22.9.0",
+  "nvm use --only=lts 22.9.0",
+  "nvm run --only=lts 22.9.0 --version",
+  "nvm exec --only=lts 22.9.0 node --version",
+  "nvm alias --only=lts mine 22.9.0",
+  "nvm alias mine",
+  "nvm reinstall-packages --only=lts 22.9.0",
+  "nvm uninstall --only=lts 22.9.0",
+]

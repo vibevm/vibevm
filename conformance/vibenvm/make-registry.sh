@@ -7,19 +7,19 @@
 #
 #   org.vibevm.node/node      the Node.js runtime template, with its npm
 #                             ecosystem adapter and its version files
-#   org.vibevm.node/vibenvm   the nvm-shaped shim `vibenvm.sh`
+#   org.vibevm.nvm/nvm        the nvm-shaped shim `nvm.sh`, a template package
 #
 # This writes them into one `localdir` registry — the plain directory layout
 # `<group>/<name>/v<version>/` (PROP-002 `#registry-type`) — which is what
-# `run.sh --vibenvm-registry` / `$VIBENVM_REGISTRY` points at. It copies
+# `run.sh --nvm-registry` / `$VIBENVM_REGISTRY` points at. It copies
 # working trees, so a package being edited is published as it stands; the
 # version comes from each manifest's own `[package] version`.
 #
-# usage: make-registry.sh [REGISTRY_DIR] [NODE_PKG_DIR] [VIBENVM_PKG_DIR]
+# usage: make-registry.sh [REGISTRY_DIR] [NODE_PKG_DIR] [NVM_PKG_DIR]
 #   REGISTRY_DIR      default: $VIBENVM_REGISTRY, else ./mirror/registry
 #                     (git-ignored, beside the mirror)
 #   NODE_PKG_DIR      default: $VIBENVM_NODE_PKG, else /fast/git/vibe-pkg-node
-#   VIBENVM_PKG_DIR   default: $VIBENVM_SHIM_PKG, else /fast/git/vibe-pkg-vibenvm
+#   NVM_PKG_DIR       default: $VIBENVM_SHIM_PKG, else /fast/git/vibe-pkg-nvm
 #
 # It reaches no network and reads nothing but those two directories.
 # exit: 0 published; 2 a package directory or its version is missing.
@@ -30,7 +30,7 @@ HERE="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
 REGISTRY="${1:-${VIBENVM_REGISTRY:-$HERE/mirror/registry}}"
 NODE_PKG="${2:-${VIBENVM_NODE_PKG:-/fast/git/vibe-pkg-node}}"
-SHIM_PKG="${3:-${VIBENVM_SHIM_PKG:-/fast/git/vibe-pkg-vibenvm}}"
+SHIM_PKG="${3:-${VIBENVM_SHIM_PKG:-/fast/git/vibe-pkg-nvm}}"
 
 publish() { # publish <package-dir> <group> <name>
     local src="$1" group="$2" name="$3" version dest
@@ -53,5 +53,5 @@ publish() { # publish <package-dir> <group> <name>
 
 mkdir -p "$REGISTRY"
 publish "$NODE_PKG" org.vibevm.node node
-publish "$SHIM_PKG" org.vibevm.node vibenvm
+publish "$SHIM_PKG" org.vibevm.nvm nvm
 echo "registry:   $REGISTRY"

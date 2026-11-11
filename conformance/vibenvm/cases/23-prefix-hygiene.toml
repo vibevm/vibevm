@@ -1,0 +1,25 @@
+schema = 1
+name = "prefix-hygiene"
+summary = """
+`nvm use --delete-prefix`, and the refusals it is the answer to. A `prefix`
+line in the user's own npmrc makes `nvm use` refuse with exit 11 and name
+the file; `--delete-prefix` removes `prefix` and `globalconfig` from that
+file and the use succeeds. `$PREFIX` is the one `--delete-prefix` does not
+apply to — nvm deactivates and refuses either way — and a project npmrc is
+never modified, so with the flag it warns and carries on.
+"""
+wall_secs = 900
+commands = [
+  "nvm install --no-progress 22.9.0",
+  "printf 'prefix=/tmp/elsewhere\\n' >> \"$HOME/.npmrc\"",
+  "nvm use 22.9.0",
+  "nvm use --delete-prefix 22.9.0",
+  "cat \"$HOME/.npmrc\"",
+  "nvm use 22.9.0",
+  "PREFIX=/tmp/elsewhere nvm use 22.9.0",
+  "PREFIX=/tmp/elsewhere nvm use --delete-prefix 22.9.0",
+  "mkdir -p proj && printf 'globalconfig=/tmp/gc\\n' > proj/.npmrc",
+  "cd proj && nvm use 22.9.0",
+  "cd proj && nvm use --delete-prefix 22.9.0",
+  "cat proj/.npmrc",
+]

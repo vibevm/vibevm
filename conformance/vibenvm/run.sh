@@ -20,8 +20,8 @@
 #                         records; only the meta-tests use this
 #   --vibe PATH           the vibe binary for sandbox B
 #                         (default: $VIBE_BIN, else <repo>/target/debug/vibe)
-#   --vibenvm-registry P   a local registry path publishing
-#                         org.vibevm.node/vibenvm (default: $VIBENVM_REGISTRY)
+#   --nvm-registry P      a local registry path publishing
+#                         org.vibevm.nvm/nvm (default: $VIBENVM_REGISTRY)
 #   --lock PATH           read the mirror pin from PATH instead of mirror.lock
 #   --work DIR            where the per-case sandboxes are built
 #                         (default: $VIBENVM_TMP, else $TMPDIR, else /tmp)
@@ -33,8 +33,8 @@
 #        2  coverage is incomplete, or the exclusion list is not the owner's
 #        3  a harness error: a mirror digest mismatch, a missing pinned tag, a
 #           missing prerequisite, a non-loopback connection attempt, or a
-#           sandbox that could not be built (sandbox B needs the `vibenvm`
-#           package, which campaign phase P7f's shim half has yet to land)
+#           sandbox that could not be built (sandbox B needs the
+#           `org.vibevm.nvm/nvm` package in a local registry)
 #
 # Linux only, and it says so: it needs `bwrap --unshare-net` for the network
 # isolation and `strace` for the proof that nothing reached past loopback.
@@ -94,7 +94,7 @@ while [ $# -gt 0 ]; do
             VIBE_BIN_ARG="$2"
             shift 2
             ;;
-        --vibenvm-registry)
+        --nvm-registry)
             VIBENVM_REGISTRY_ARG="$2"
             shift 2
             ;;
@@ -218,7 +218,7 @@ if [ -z "${VIBENVM_IN_SANDBOX:-}" ]; then
     [ -n "$PERTURB" ] && args+=(--perturb "$PERTURB")
     [ "$KEEP" = 1 ] && args+=(--keep)
     [ -n "$VIBE_BIN_ARG" ] && args+=(--vibe "$VIBE_BIN_ARG")
-    [ -n "$VIBENVM_REGISTRY_ARG" ] && args+=(--vibenvm-registry "$VIBENVM_REGISTRY_ARG")
+    [ -n "$VIBENVM_REGISTRY_ARG" ] && args+=(--nvm-registry "$VIBENVM_REGISTRY_ARG")
     bwrap --dev-bind / / --proc /proc --unshare-net --unshare-pid --die-with-parent \
         env VIBENVM_IN_SANDBOX=1 bash "${BASH_SOURCE[0]}" "${args[@]}"
     exit $?
@@ -321,7 +321,7 @@ prepare_a() { # prepare_a <dir>
 
 # Sandbox B: its own HOME and `VIBE_SETTINGS`, a remap row that sends
 # nodejs.org to the same loopback mirror (PROP-066 `#locator`), the local
-# registry declared as this home's own, and the `vibenvm` package installed
+# registry declared as this home's own, and the `org.vibevm.nvm/nvm` package installed
 # from it.
 prepare_b() { # prepare_b <dir>
     local dir="$1" vibe="$VIBE_BIN_ARG" registry="$VIBENVM_REGISTRY_ARG"
@@ -342,11 +342,11 @@ EOF
     # when the real blocker is a package that does not exist yet has been
     # sent to the wrong place.
     if [ -z "$registry" ]; then
-        harness_b "sandbox B needs the package org.vibevm.node/vibenvm, and no registry was given: pass --vibenvm-registry PATH (or set VIBENVM_REGISTRY) pointing at a local registry that publishes it"
+        harness_b "sandbox B needs the package org.vibevm.nvm/nvm, and no registry was given: pass --nvm-registry PATH (or set VIBENVM_REGISTRY) pointing at a local registry that publishes it"
         return 1
     fi
-    if [ ! -d "$registry/org.vibevm.node/vibenvm" ]; then
-        harness_b "missing package org.vibevm.node/vibenvm in the registry at $registry — campaign phase P7f's shim half (the nvm-shaped vibenvm.sh) has not landed yet, so there is nothing to compare against"
+    if [ ! -d "$registry/org.vibevm.nvm/nvm" ]; then
+        harness_b "missing package org.vibevm.nvm/nvm in the registry at $registry — run conformance/vibenvm/make-registry.sh, which publishes it from its own repository"
         return 1
     fi
     [ -z "$vibe" ] && vibe="$REPO/target/debug/vibe"
@@ -379,18 +379,18 @@ EOF
 
     env -i HOME="$dir" PATH="$dir/tool:$SANDBOX_PATH" TMPDIR="$dir/tmp" \
         VIBE_SETTINGS="$dir/.vibe" \
-        "$vibe" install -g org.vibevm.node/vibenvm \
+        "$vibe" install -g org.vibevm.nvm/nvm \
         --registry "$registry" >"$dir/install.log" 2>&1 \
         || {
-            harness_b "\`vibe install -g org.vibevm.node/vibenvm\` failed: $(tail -3 "$dir/install.log" | tr '\n' ' ')"
+            harness_b "\`vibe install -g org.vibevm.nvm/nvm\` failed: $(tail -3 "$dir/install.log" | tr '\n' ' ')"
             return 1
         }
     # The *installed* copy, never the package cache's: both carry the same
     # bytes, and sourcing the cache would let a failed installation pass.
     local shim
-    shim="$(find "$dir/.vibe/opt" -name 'vibenvm.sh' -type f 2>/dev/null | sort | head -1)"
+    shim="$(find "$dir/.vibe/opt" -name 'nvm.sh' -type f 2>/dev/null | sort | head -1)"
     if [ -z "$shim" ]; then
-        harness_b "the installed org.vibevm.node/vibenvm publishes no vibenvm.sh to source under $dir/.vibe/opt"
+        harness_b "the installed org.vibevm.nvm/nvm publishes no nvm.sh to source under $dir/.vibe/opt"
         return 1
     fi
     printf '%s\n' "$shim" >"$dir/tool-init"

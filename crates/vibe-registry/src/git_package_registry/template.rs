@@ -30,7 +30,7 @@ use std::collections::BTreeSet;
 use vibe_core::manifest::Manifest;
 use vibe_core::{Group, PackageRef, VersionSpec};
 
-use super::lookup::pick_version;
+use super::pick::pick_version;
 use super::*;
 use crate::index_client::IndexVersion;
 use crate::store;
