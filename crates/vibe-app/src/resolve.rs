@@ -244,6 +244,47 @@ pub fn global_resolver(
 /// Both halves of the chain already union a template package's produced
 /// versions in, because `#TEMPLATE-DOMAIN-SEAM`'s call sites 1 and 4 are
 /// inside the registries this walks.
+/// The active template of `<group>/<name>` in the configured global
+/// registries, for the one registry shape that has no directory root:
+/// an **indexed per-package** registry (PROP-075 `#TEMPLATE-IN-A-REPO`).
+///
+/// The directory-shaped registries are reached through
+/// [`directory_roots_from_global_with_operation`] and
+/// `TemplateLayer::for_directory`, because they have a tree to read. This
+/// is the shape that has not, and it is read through the index record
+/// plus one file at the active revision's tag.
+///
+/// `Ok(None)` means no configured per-package registry names a template
+/// revision for the package, which is the ordinary case.
+pub fn template_from_global_with_operation(
+    settings_root: &Path,
+    group: &vibe_core::Group,
+    name: &str,
+    offline: bool,
+    operation: &vibe_package_source::SourceOperation,
+) -> Result<Option<vibe_registry::templates::RepoTemplate>, ResolveError> {
+    let spelling = format!("{group}/{name}");
+    let resolver = global_resolver(settings_root, &spelling, offline, operation)?;
+    let failed = |reason: String| ResolveError::Registry {
+        spelling: spelling.clone(),
+        reason,
+    };
+    let from_multi = |multi: &vibe_registry::MultiRegistryResolver| {
+        multi
+            .active_template(group, name)
+            .map_err(|error| failed(error.to_string()))
+    };
+    match &resolver {
+        vibe_package_source::InstallResolver::Local(_, _) => Ok(None),
+        vibe_package_source::InstallResolver::LockedLocal { held, .. } => from_multi(held),
+        vibe_package_source::InstallResolver::Multi(multi, _) => from_multi(multi),
+        vibe_package_source::InstallResolver::Embedded { declared, .. } => match declared {
+            Some(multi) => from_multi(multi),
+            None => Ok(None),
+        },
+    }
+}
+
 pub fn versions_from_global_with_operation(
     settings_root: &Path,
     group: &vibe_core::Group,

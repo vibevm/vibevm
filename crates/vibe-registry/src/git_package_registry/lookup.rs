@@ -192,11 +192,41 @@ impl GitPerPackageRegistry {
         group: &Group,
         name: &str,
     ) -> Result<Vec<semver::Version>, RegistryError> {
-        Ok(self
-            .list_candidates(group, name)?
+        let produced = self
+            .produced_candidates(group, name)?
+            .0
             .into_iter()
             .map(|c| c.version)
-            .collect())
+            .collect();
+        // **Call site 1 of PROP-075 `#TEMPLATE-DOMAIN-SEAM` on this
+        // registry shape** (`#TEMPLATE-IN-A-REPO`): the concrete
+        // publications, unioned with the versions the template's source
+        // lists. With no template this is `produced` unchanged, which is
+        // every package in a registry.
+        self.union_with_template(group, name, produced)
+    }
+
+    /// The candidates a listing or a selection may see: every row the
+    /// index or the tag list named, **minus the template revisions**
+    /// (PROP-075 `#TEMPLATE-REVISION-NOT-A-VERSION`).
+    ///
+    /// The split is here, in one place above both the listing and the
+    /// selector, so the two cannot disagree — and it is the same split
+    /// `discover_in_directory` makes from the manifests on disk. The
+    /// rows it drops are not lost: [`Self::active_template`] reads the
+    /// unsplit set, because a revision is exactly what discovery is
+    /// looking for.
+    fn produced_candidates(
+        &self,
+        group: &Group,
+        name: &str,
+    ) -> Result<(Vec<IndexVersion>, Option<PublicationRoute>), RegistryError> {
+        let (entries, route) = self.list_candidates_with_route(group, name)?;
+        let produced = entries
+            .into_iter()
+            .filter(|entry| !entry.template)
+            .collect();
+        Ok((produced, route))
     }
 
     /// The candidate set [`Self::resolve`] picks over: every version
@@ -212,16 +242,7 @@ impl GitPerPackageRegistry {
     /// a tag list wins. If every URL says `RepoNotFound`, the result
     /// is `UnknownPackage` (treated identically to the primary-only
     /// path).
-    fn list_candidates(
-        &self,
-        group: &Group,
-        name: &str,
-    ) -> Result<Vec<IndexVersion>, RegistryError> {
-        self.list_candidates_with_route(group, name)
-            .map(|(entries, _)| entries)
-    }
-
-    fn list_candidates_with_route(
+    pub(super) fn list_candidates_with_route(
         &self,
         group: &Group,
         name: &str,
@@ -235,27 +256,13 @@ impl GitPerPackageRegistry {
         if let Some(client) = self.discover_index()? {
             match client.list_version_entries(group, name) {
                 Ok(Some(entries)) => {
-                    // **A template revision is not a candidate**
-                    // (PROP-075 `#TEMPLATE-REVISION-NOT-A-VERSION`).
-                    // The record carries the flag its manifest
-                    // declared, so an indexed registry splits the two
-                    // sets exactly as `discover_in_directory` splits
-                    // them from the manifests on disk — and the
-                    // revision is dropped here, above both the
-                    // listing and the selector, so neither can
-                    // disagree with the other.
-                    let total = entries.len();
-                    let entries: Vec<_> = entries
-                        .into_iter()
-                        .filter(|entry| !entry.template)
-                        .collect();
                     tracing::debug!(
                         target: "vibe_registry::index",
                         registry = %self.name,
                         group = %group,
                         name = %name,
                         count = entries.len(),
-                        revisions = total - entries.len(),
+                        revisions = entries.iter().filter(|e| e.template).count(),
                         "list_versions served from index"
                     );
                     return Ok((entries, None));
@@ -362,13 +369,31 @@ impl GitPerPackageRegistry {
             .group
             .as_ref()
             .ok_or_else(|| RegistryError::UnqualifiedPkgref(pkgref.to_string()))?;
-        let (candidates, route) = self.list_candidates_with_route(group, pkgref.name.as_str())?;
-        let version = pick_version(group, pkgref.name.as_str(), &candidates, &pkgref.version)?;
+        let name = pkgref.name.as_str();
+        let (candidates, route) = self.produced_candidates(group, name)?;
+        // **A channel lowers to an exact pin before anything selects**,
+        // the same order `LocalRegistry::resolve` takes it in: lowering
+        // at the one seam every entry path passes through is strictly
+        // stronger than lowering per entry path, and an unlowered
+        // channel still matches nothing (PROP-075 `#CHANNEL-SYNTAX`).
+        let lowered = self.lower_through_template(pkgref)?;
+        let pkgref = lowered.as_ref().unwrap_or(pkgref);
+        // The pick is over the produced candidates unioned with what the
+        // template produces, so a version only the template names is
+        // selectable and a revision is not.
+        let version = self.pick_with_template(group, name, &candidates, &pkgref.version)?;
+        // **Call site 3**: a version the template produces and the
+        // registry does not publish is rendered and materialised as an
+        // ordinary package directory, and every caller above this gets
+        // the `ResolvedPackage` it already expects.
+        if let Some(resolved) = self.materialise_from_template(group, name, &version)? {
+            return Ok((resolved, None));
+        }
         let resolved = ResolvedPackage {
             group: group.clone(),
             name: pkgref.name.to_string(),
             version,
-            source_dir: self.package_clone_dir(group, pkgref.name.as_str()),
+            source_dir: self.package_clone_dir(group, name),
         };
         let route = route
             .map(|url| RegistryRoute::selected(self, &resolved, url))
@@ -425,6 +450,14 @@ impl GitPerPackageRegistry {
         let group = &resolved.group;
         let name = resolved.name.as_str();
         let version = &resolved.version;
+        // **Call site 2 of PROP-075 `#TEMPLATE-DOMAIN-SEAM` on this
+        // registry shape** (`#TEMPLATE-IN-A-REPO`): a version the
+        // template produces and the registry does not publish has no tag
+        // to read a manifest at, and the skeleton render is what the
+        // resolve walk needs — no digest document, no request.
+        if let Some(manifest) = self.template_skeleton(group, name, version)? {
+            return Ok(manifest);
+        }
         self.ensure_token_loaded()?;
         let tag = format!("v{version}");
         let archive_result = self.read_selected_file(resolved, &tag, Manifest::FILENAME, route);
@@ -497,7 +530,7 @@ fn skip_warning(
 ///
 /// `candidates` arrive sorted ascending (both sources sort); the pick
 /// walks them in reverse, so "first match" is "newest match".
-fn pick_version(
+pub(super) fn pick_version(
     group: &Group,
     name: &str,
     candidates: &[IndexVersion],

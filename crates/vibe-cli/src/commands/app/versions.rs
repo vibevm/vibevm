@@ -179,6 +179,27 @@ impl Domains for RegistryDomains {
             );
             return Ok(domain);
         }
+        // The one registry shape with no directory root: an indexed
+        // per-package registry, which reads its template through the
+        // index record and one file at the active revision's tag
+        // (PROP-075 `#TEMPLATE-IN-A-REPO`). Before it existed this
+        // listing fell straight through to the published versions, so a
+        // template package on a public registry answered no channels, no
+        // origins and no provenance (`BACKLOG.md#b-269`). The drop probe
+        // has no directory template to render here, so such rows carry no
+        // `in drop` mark.
+        if let Some(found) = self.repo_template(&parsed, name)? {
+            let domain = repo_domain(&layer, &found);
+            self.keep(
+                group,
+                name,
+                Found {
+                    template: None,
+                    roots: found_roots,
+                },
+            );
+            return Ok(domain);
+        }
         // No template under any root; the roots are still kept, because a
         // version the registry publishes concretely has its own manifest
         // under one of them and the probe reads it there.
@@ -220,6 +241,28 @@ impl RegistryDomains {
             &self.operation,
         )
         .map(|found| found.ahead_of(self.embedded.clone()))
+        .map_err(|error| error.to_string())
+    }
+
+    /// The template an indexed per-package registry carries, if any.
+    ///
+    /// `--registry DIR` names a directory registry, which the roots loop
+    /// above already read, so this asks nothing in that case.
+    fn repo_template(
+        &self,
+        group: &Group,
+        name: &str,
+    ) -> Result<Option<vibe_registry::templates::RepoTemplate>, String> {
+        if self.registry.is_some() {
+            return Ok(None);
+        }
+        vibe_app::template_from_global_with_operation(
+            self.settings.path(),
+            group,
+            name,
+            self.offline,
+            &self.operation,
+        )
         .map_err(|error| error.to_string())
     }
 
@@ -267,6 +310,30 @@ fn directory_domain(
         versions,
         channels: found.domain.channels().clone(),
         template: Some(template_facts(layer, &found.template, registry_root)),
+        notices: found.domain.skipped().to_vec(),
+    }
+}
+
+/// The domain of a template an indexed per-package registry carries.
+///
+/// The same drawing as [`directory_domain`], and deliberately so: the two
+/// registry shapes differ in how the template is **found**, never in what
+/// a listing says about it. There is no registry root, so no mirror
+/// snapshot is read — a per-package registry carries none.
+fn repo_domain(layer: &TemplateLayer, found: &vibe_registry::templates::RepoTemplate) -> Domain {
+    let versions = found
+        .domain
+        .all()
+        .into_iter()
+        .map(|version| DomainVersion {
+            origin: found.domain.origin(&version).unwrap_or(Origin::Published),
+            version,
+        })
+        .collect();
+    Domain {
+        versions,
+        channels: found.domain.channels().clone(),
+        template: Some(template_facts(layer, &found.template, None)),
         notices: found.domain.skipped().to_vec(),
     }
 }

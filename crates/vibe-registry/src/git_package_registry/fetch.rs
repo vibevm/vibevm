@@ -200,6 +200,19 @@ impl GitPerPackageRegistry {
         workspace_slot: Option<&Path>,
         route: Option<&RegistryRoute>,
     ) -> Result<PackageAcquisition, RegistryError> {
+        // A version this invocation **rendered** out of the registry's
+        // template is already an ordinary package directory on this
+        // machine, and there is no tag to clone it from: the version
+        // exists upstream only as a row in the template's source
+        // (PROP-075 `#TEMPLATE-IN-A-REPO`, `#TEMPLATE-DOMAIN-SEAM`). It
+        // is inserted into the store exactly as a directory registry
+        // inserts it, and nothing below here learns a manifest was
+        // rendered.
+        if crate::templates::is_rendered_tree(&resolved.source_dir) {
+            return self
+                .fetch_materialised(resolved, store_root)
+                .map(|cached| PackageAcquisition::Cached(Box::new(cached)));
+        }
         // PROP-002 §2.2.1 — bail before any clone work when this
         // registry is `auth = "token-env"` but the env-var resolved
         // empty.

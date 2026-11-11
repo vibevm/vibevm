@@ -42,6 +42,7 @@ mod domain;
 mod error;
 mod fetch;
 mod materialise;
+mod package_repo;
 pub mod snapshot;
 
 pub use active::{active, install};
@@ -52,6 +53,7 @@ pub use domain::{Origin, TemplateChannels, VersionDomain};
 pub use error::TemplateError;
 pub use fetch::{Document, Fetched, HttpTransport, TemplateTransport, choose_url, local_file};
 pub use materialise::FullRender;
+pub use package_repo::{RepoReader, RepoTemplate};
 pub use snapshot::Snapshot;
 
 /// The subdirectory of the settings root that holds every template's

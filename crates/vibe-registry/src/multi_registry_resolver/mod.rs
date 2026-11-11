@@ -347,6 +347,47 @@ impl MultiRegistryResolver {
         self.catalog.sources(self)
     }
 
+    /// The active template of `<group>/<name>` as the first **indexed
+    /// per-package** registry that carries one reports it, in declared
+    /// order (PROP-075 `#TEMPLATE-IN-A-REPO`).
+    ///
+    /// Only the per-package-git shape answers here: a `localdir` or
+    /// `monorepo` registry has a directory root, and that shape is read
+    /// through `TemplateLayer::for_directory` by the caller that has the
+    /// root. This is the shape with no root, which is why it needs its
+    /// own walk rather than one more root in the enumeration.
+    ///
+    /// `Ok(None)` means no configured per-package registry names a
+    /// template revision for the package — the ordinary case.
+    pub fn active_template(
+        &self,
+        group: &vibe_core::Group,
+        name: &str,
+    ) -> Result<Option<crate::templates::RepoTemplate>, RegistryError> {
+        for source in self.sources()? {
+            let RegistrySource::Git(registry) = source else {
+                continue;
+            };
+            match registry.active_template(group, name) {
+                Ok(Some(found)) => return Ok(Some(found)),
+                Ok(None) => continue,
+                // A registry that cannot answer is not a reason to fail
+                // the listing: the next one may carry the package, and a
+                // package no registry carries is `None` as before.
+                Err(RegistryError::UnknownPackage { .. }) => continue,
+                Err(error) => {
+                    tracing::debug!(
+                        target: "vibe_registry::templates",
+                        "{group}/{name}: template discovery in a per-package registry failed \
+                         ({error}); trying the next registry"
+                    );
+                    continue;
+                }
+            }
+        }
+        Ok(None)
+    }
+
     /// Index-backed short-name candidate enumeration (PROP-008 §2.6).
     /// For each configured registry that exposes an index, fetch the
     /// `by-name/<name>.json` candidate set and union every `group`

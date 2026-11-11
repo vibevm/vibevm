@@ -59,6 +59,7 @@ mod auth;
 mod fetch;
 mod lookup;
 mod route;
+mod template;
 pub use route::RegistryRoute;
 pub(crate) use route::{PublicationRoute, excluded_route};
 mod urls;
