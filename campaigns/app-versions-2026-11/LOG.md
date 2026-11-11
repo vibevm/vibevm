@@ -2323,3 +2323,62 @@ the slot's default **and** the mirror snapshot it read the domain from
 (`mirror snapshot synced 2026-11-11T01:32:28Z`) — byte-for-byte the answer the
 same home gives when the directory root is passed as `--registry`, which is
 the invariant the fix is about.
+
+## 2026-11-11 — `org.vibevm.node/node`'s concrete tags re-cut from revision 1.1.0, and 26.13.0 published
+
+Owner decision 2026-11-11, verbatim: «re-cutting the tags v24.22.2 and
+v22.23.4 from revision 1.1. add 26.13.0». This is what it fixed and how.
+
+**The gap, stated plainly.** `#TEMPLATE-CONCRETE-WINS` says a concretely
+published version wins over the template's render of the same version —
+by design, and that is the right rule. But `v24.22.2` and `v22.23.4` were
+published on 2026-11-09, *before* template revision 1.1.0 declared the npm
+`[[application.ecosystem]]` adapter and the `.nvmrc` / `.node-version`
+version-file rows. So the two versions a corporate kit actually ships were
+the two on which `.nvmrc`, the prompt hook, `vibe app env --project`,
+`--write-version-file`, `vibe app extras …` and
+`vibe app migrate … --only ecosystem:npm` all did nothing — while 26.13.0,
+which the template rendered, had every one of them. The channels worked in
+both cases, because `lts` and `lts/<name>` come from the version list and
+not from the winning manifest, which is exactly why the gap was easy to
+miss.
+
+**The fix is the second of the two options the mirror's own notes had
+already written down**, and it is the general one: publish the concrete
+version *from* the template, with vibe's own renderer, as Qwen Code and
+OpenCode already were. Each of `release/24.22.2`, `release/22.23.4` and
+`release/26.13.0` is template revision 1.1.0's tree with one file replaced
+— the `vibe.toml` that revision renders for that version, taken from
+`<home>/cache/templates/org.vibevm.node/node/rendered/v<version>/`, which
+is the renderer's own output and not a hand edit. Nothing else in the tree
+differs from the revision, measured. `v24.22.2` and `v22.23.4` are moved
+tags, which is why each carries its reason in its own annotation; `v26.13.0`
+is new, and it is the current active LTS line (Lithium). The two template
+revisions are untouched: an old revision is never moved.
+
+**Why a re-cut and not a new version.** A fourth concrete version would have
+left the two the kit ships still broken, and the kit is handed over by hand:
+the owner's alternative was the one that fixes what people already have.
+Nothing an installation downloads changed — the same upstream archive and the
+same upstream SHASUMS256 digest — so the cost of moving the tags is paid in
+content hashes alone, and the mirror's own alarm is what notices that: step 2
+of the two-stage run needs `--update-snapshots`, because a frozen version
+whose content differs is an alarm by construction and not a thing to
+overwrite quietly.
+
+**Measured from a clean home against the public registry**, with nothing but
+the published tags: `vibe install -g org.vibevm.node/node@=26.13.0` and
+`@=22.23.4` install; `vibe app extras list node --ecosystem npm` answers
+«npm packages (npm)» on the installed 22.23.4, where it used to answer
+`no_ecosystem`; and `vibe app env --use node==22.23.4 --write-version-file`
+wrote `22.23.4` to `.nvmrc`. The same three, and a bare `nvm use` reading a
+`.nvmrc` that names 22.23.4 or 24.22.2, are in the corporate offline proof
+with the network denied.
+
+**`#P3-AS-BUILT` (4) is still true and now less interesting.** Its reason for
+leaving the package unpublished — that rendering a template found in a
+per-package git registry is the part of `#TEMPLATE-DISCOVERY` P2 left for the
+phase that first needs it — is untouched: these tags carry *rendered* trees
+precisely so that no client has to render a per-package git registry's
+template. What changed is that the rendering now happens once, here, at
+publication time, rather than being owed to a future phase for every reader.
