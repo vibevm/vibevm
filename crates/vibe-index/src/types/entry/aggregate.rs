@@ -4,10 +4,14 @@
 //! `(group, name)` identity (PROP-008 §2.2); [`NameEntry`] gathers
 //! every `PackageEntry` that shares one bare `name` — the
 //! `by-name/<name>.json` candidate set that makes short-name
-//! resolution one round-trip per registry. The root type's name is
+//! resolution one round-trip per registry; [`AliasTarget`] is the
+//! package a short spelling that registry offers stands for
+//! (PROP-008 §2.6, [`crate::aliases`]). The root type's name is
 //! declared in the schema (`x-rust-type`), not derived from the file
 //! name.
 
 specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#entry");
 
-pub use vibe_wire::generated::index::e1::by_name::{NameEntry, PackageEntry, Tombstone};
+pub use vibe_wire::generated::index::e1::by_name::{
+    AliasTarget, NameEntry, PackageEntry, Tombstone,
+};

@@ -306,7 +306,7 @@ pub(crate) fn run_plan(plan: Plan) -> Result<()> {
         append(&journal_dir, record)?;
     }
     records.extend(appended);
-    let next = project(records)?;
+    let next = crate::aliases::projected(records, &plan.data_dir)?;
     next.write_to(&plan.data_dir, &WriteCtx { at })?;
 
     // Persist the new checkpoint regardless of mode — incremental

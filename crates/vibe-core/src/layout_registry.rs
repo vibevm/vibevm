@@ -32,6 +32,12 @@ pub const INDEX_DIR: &str = "_index";
 /// The listing file inside [`INDEX_DIR`]: what the index was computed from.
 pub const LISTING_FILE: &str = "listing.txt";
 
+/// The registry's alias table inside [`INDEX_DIR`] — the owner-authored
+/// short spellings this registry offers (PROP-008 §2.6). Named here
+/// because the listing hashes it; the reader and writer of its contents
+/// are `vibe_index::aliases`.
+pub const ALIAS_TABLE_FILE: &str = "aliases.toml";
+
 /// The first line of [`LISTING_FILE`]; a different first line is a listing
 /// this build does not read (treated as stale, never as current).
 pub const LISTING_HEADER: &str = "# vibe layout-registry listing 1";
@@ -131,10 +137,56 @@ pub fn journal_digest(root: &Path) -> io::Result<String> {
     Ok(format!("sha256:{:x}", hasher.finalize()))
 }
 
-/// The listing text for `versions` and `journal`: the header, the journal
-/// digest, then one version path per line.
-pub fn render_listing(versions: &[LayoutVersion], journal: &str) -> String {
+/// `sha256:<hex>` over the registry's alias table, or `None` when it has
+/// none — which is every registry that has never offered a short spelling,
+/// and is why the listing of such a registry is byte-identical to the one
+/// a vibe without aliases writes.
+///
+/// The table is an INPUT to the projection (PROP-008 §2.6), so a hand-edit
+/// of it must make the persisted index stale exactly as a hand-added version
+/// directory does. The line is conditional rather than always-present for
+/// one measured reason: an older vibe computes a listing without it and
+/// would read every registry as stale, so only a registry that actually uses
+/// the feature asks that of its old clients — and what they then do is
+/// recompute the projection in memory, which is correct, aliases and all
+/// (they simply do not see them).
+pub fn alias_digest(root: &Path) -> io::Result<Option<String>> {
+    #[derive(serde::Deserialize)]
+    struct Rows {
+        #[serde(default)]
+        aliases: std::collections::BTreeMap<String, String>,
+    }
+    let path = index_dir(root).join(ALIAS_TABLE_FILE);
+    let bytes = match fs::read(&path) {
+        Ok(bytes) => bytes,
+        Err(error) if error.kind() == io::ErrorKind::NotFound => return Ok(None),
+        Err(error) => return Err(error),
+    };
+    // The ROWS decide, not the file: a table emptied in place and a table
+    // that never existed project the same catalog, so they must leave the
+    // same listing. Otherwise a registry that dropped its last alias would
+    // keep every older client recomputing for ever over a feature nobody
+    // uses any more. A table this build cannot parse counts as present:
+    // its rows are unknown, so the persisted index cannot be vouched for.
+    let rows: Option<Rows> = std::str::from_utf8(&bytes)
+        .ok()
+        .and_then(|text| toml::from_str(text).ok());
+    if rows.is_some_and(|rows| rows.aliases.is_empty()) {
+        return Ok(None);
+    }
+    let mut hasher = Sha256::new();
+    hasher.update(&bytes);
+    Ok(Some(format!("sha256:{:x}", hasher.finalize())))
+}
+
+/// The listing text for `versions`, `journal` and the alias table: the
+/// header, the journal digest, the alias digest when there is a table,
+/// then one version path per line.
+pub fn render_listing(versions: &[LayoutVersion], journal: &str, aliases: Option<&str>) -> String {
     let mut text = format!("{LISTING_HEADER}\n# journal {journal}\n");
+    if let Some(aliases) = aliases {
+        text.push_str(&format!("# aliases {aliases}\n"));
+    }
     for version in versions {
         text.push_str(&version.path());
         text.push('\n');
@@ -144,7 +196,11 @@ pub fn render_listing(versions: &[LayoutVersion], journal: &str) -> String {
 
 /// The listing of the registry as it is on disk now.
 pub fn current_listing(root: &Path) -> io::Result<String> {
-    Ok(render_listing(&version_dirs(root)?, &journal_digest(root)?))
+    Ok(render_listing(
+        &version_dirs(root)?,
+        &journal_digest(root)?,
+        alias_digest(root)?.as_deref(),
+    ))
 }
 
 /// Whether the persisted index of a layout registry describes its tree.
@@ -225,6 +281,8 @@ pub fn index_state(root: &Path) -> io::Result<IndexState> {
     };
     let reason = if differs("# journal ") {
         "the journal changed since the index was written".to_string()
+    } else if differs("# aliases ") {
+        "the alias table changed since the index was written".to_string()
     } else {
         "the version directories differ from the ones the index was computed from".to_string()
     };

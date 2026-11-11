@@ -117,6 +117,7 @@ impl NameEntry {
             name: name.into(),
             indexed_at,
             packages: Vec::new(),
+            alias: None,
             tombstone: None,
         }
     }

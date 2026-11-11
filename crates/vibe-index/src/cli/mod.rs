@@ -11,6 +11,7 @@ use crate::error::{Error, Result};
 use crate::lock::ServerLock;
 
 pub mod add;
+pub mod alias;
 pub mod bury;
 pub mod capabilities;
 pub mod config;
@@ -202,6 +203,10 @@ pub enum Command {
     /// names why it is gone and, when there is one, where to move.
     Bury(bury::Args),
 
+    /// Manage the short spellings this registry offers for its own
+    /// packages — the registry owner's alias table (PROP-008 §2.6).
+    Alias(alias::Args),
+
     /// Recompute file hashes and check `repomd.json` integrity.
     Verify(verify::Args),
 
@@ -241,6 +246,7 @@ impl Command {
             Command::Remove(a) => Some(&a.data_dir),
             Command::Yank(a) => Some(&a.data_dir),
             Command::Bury(a) => Some(&a.data_dir),
+            Command::Alias(a) => Some(&a.data_dir),
             Command::Verify(a) => Some(&a.data_dir),
             Command::Dump(a) => Some(&a.data_dir),
             Command::Serve(a) => Some(&a.data_dir),
@@ -272,6 +278,7 @@ pub fn dispatch(command: Command, log_level: Option<LogLevel>) -> Result<()> {
         Command::Remove(args) => remove::run(args),
         Command::Yank(args) => yank::run(args),
         Command::Bury(args) => bury::run(args),
+        Command::Alias(args) => alias::run(args),
         Command::Verify(args) => verify::run(args),
         Command::Dump(args) => dump::run(args),
         Command::Serve(args) => serve::run(args),

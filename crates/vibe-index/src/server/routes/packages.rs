@@ -23,7 +23,7 @@ use crate::index::quarantine::{
     Unavailable, unavailable_for, usable_latest_stable, usable_versions,
 };
 use crate::index::search;
-use crate::journal::{Event, JournalRecord, append, default_dir, project, replay};
+use crate::journal::{Event, JournalRecord, append, default_dir, replay};
 use crate::server::error::ApiError;
 use crate::server::state::AppState;
 use crate::types::{PackageKind, VersionEntry};
@@ -454,7 +454,7 @@ where
     let journal_dir = default_dir(&state.data_dir);
     let mut records =
         replay(&journal_dir).map_err(|e| journal_refused("could not read the journal", e))?;
-    let mut probe = project(records.iter().cloned())
+    let mut probe = crate::aliases::projected(records.iter().cloned(), &state.data_dir)
         .map_err(|e| journal_refused("could not fold the journal into a catalog", e))?;
     let (stood, event) = decide(&mut probe);
     let Some(event) = event else {
@@ -472,7 +472,7 @@ where
     append(&journal_dir, &record)
         .map_err(|e| journal_refused("could not append the fact to the journal", e))?;
     records.push(record);
-    let fresh = project(records)
+    let fresh = crate::aliases::projected(records, &state.data_dir)
         .map_err(|e| journal_refused("could not fold the journal into a catalog", e))?;
     // Truth first: the record is already durable, so a failed
     // `write_to` leaves a journal whose next fold rebuilds the catalog

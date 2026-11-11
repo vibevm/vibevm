@@ -105,6 +105,8 @@ GET /v1/index/repomd.json                      manifest of the files the WRITER 
 GET /v1/index/primary.jsonl                    one VersionEntry per line, sorted
 GET /v1/index/primary.jsonl.gz                 deterministic gzip sibling
 GET /v1/index/by-name/{name}.json              candidate set for one bare name
+                                               (+ `alias`, when the registry
+                                                offers that spelling)
 GET /v1/index/by-cap/{slug}                    inverted index by capability
 GET /v1/index/by-purl/{slug}                   inverted index by `describes` PURL
 

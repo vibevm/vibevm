@@ -4,13 +4,17 @@
 //! A layout registry holds its packages at `<group>/<name>/v<version>/` and
 //! its own index at `_index/` ([`vibe_core::layout_registry::INDEX_DIR`]):
 //! an ordinary vibe-index data directory whose journal is committed with
-//! it. The index is ONE projection, computed by [`project`], of two inputs:
+//! it. The index is ONE projection, computed by [`project`], of three inputs:
 //!
 //! - **the tree** — which versions exist and what bytes they hold (a
 //!   directory filled by hand is as real as a published one);
 //! - **the journal** — the facts a tree cannot carry: the registry's
 //!   identity, where a mirrored version came from (its `Published` entry),
-//!   yanks and tombstones.
+//!   yanks and tombstones;
+//! - **the alias table** (`_index/aliases.toml`, [`crate::aliases`]) — the
+//!   short spellings this registry's OWNER offers for packages it carries
+//!   (PROP-008 §2.6). Authored, never derived, and never a package
+//!   author's to write.
 //!
 //! A `Published` fact whose bytes no longer match the tree yields to the
 //! tree; a version present only in the tree is projected from the tree
@@ -157,10 +161,18 @@ fn project_records(
             _ => stream.push(record.clone()),
         }
     }
-    Ok(LayoutProjection {
-        index: fold(stream)?,
-        skipped,
-    })
+    let mut index = fold(stream)?;
+    // The registry's third input. The tree says which versions exist
+    // and the journal what a tree cannot carry; the alias table says
+    // which short spellings this registry offers for them. It is a
+    // FILE and not a journal fact on purpose: the journal here is
+    // committed and replayed by every client that finds the persisted
+    // index stale, and a replay refuses a record whose `kind` it does
+    // not know — so an alias arm would have made an older vibe fail
+    // outright on a registry that uses one, where an unread file
+    // costs it nothing.
+    crate::aliases::attach_from(&mut index, &layout::index_dir(root))?;
+    Ok(LayoutProjection { index, skipped })
 }
 
 /// Append `facts` to the registry's journal (an `Initialised` first when

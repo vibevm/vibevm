@@ -9,7 +9,7 @@ use clap::Parser;
 
 use crate::error::{Error, Result};
 use crate::index::Index;
-use crate::journal::{default_dir, project, replay};
+use crate::journal::{default_dir, replay};
 use crate::lock::ServerLock;
 use crate::server::rate_limit::DEFAULT_MAX_BUCKETS;
 use crate::server::{AppState, FileTokenStore, RateLimitConfig, build_app};
@@ -170,7 +170,7 @@ pub fn boot_index(data_dir: &Path) -> Result<Index> {
         )),
         other => other,
     })?;
-    project(records).map_err(|e| match e {
+    crate::aliases::projected(records, data_dir).map_err(|e| match e {
         Error::Unprojectable(reason) => Error::InvalidInput(format!(
             "data-dir `{}` cannot be served from its journal: {reason}. \
              A catalog on disk, if one is present, is a projection and is not an input \

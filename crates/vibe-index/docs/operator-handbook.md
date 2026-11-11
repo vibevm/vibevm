@@ -228,6 +228,32 @@ The HTTP server never echoes token bytes in logs / responses /
 error messages; the same discipline `vibe-publish` follows for its
 host-API tokens applies here.
 
+## Short spellings this registry offers
+
+`vibe-index alias <data-dir> add qwen org.vibevm.qwen/qwen-code` lets an
+operator of `vibe install -g qwen` reach `org.vibevm.qwen/qwen-code`.
+The spelling is yours as the registry's owner — a package cannot declare
+its own — and it lands in `aliases.toml`, an authored input beside the
+journal, plus the `alias` member of `by-name/qwen.json`, which is what
+clients read. `remove` withdraws one and `list` prints the table.
+
+The command validates the whole table and refuses it entire rather than
+dropping a row: the rules, and why each one is there, are in
+[`format.md`](format.md#aliases). Two are worth knowing before you write
+one — an alias may never be a name this registry publishes (a real name
+outranks every alias, so the row could never be chosen), and it may not
+point at a package another registry carries (an alias points into the
+registry that offers it). Both are re-checked on every edit, so if the
+registry grows a package under a spelling you already offered, the next
+edit tells you.
+
+An older vibe reading an aliased registry is safe and loses only the
+feature: `by-name/qwen.json` carries an empty candidate list, which it
+reads as "nobody publishes this name". A layout registry that offers a
+spelling does make an older client recompute its index in memory each
+time, because the listing gains a line it does not know; a registry with
+no rows is byte-identical to one written before the feature existed.
+
 ## Layout reference
 
 ```
@@ -239,6 +265,7 @@ host-API tokens applies here.
 │   └── <name>.json       # no <kind>/ level: identity is (group, name)
 ├── by-cap/<slug>.jsonl
 ├── by-purl/<slug>.jsonl
+├── aliases.toml          # the owner's short spellings — an INPUT, not output
 ├── state/                # gitignored — never published
 │   ├── journal/          # <YYYY>-<MM>.ndjson — the truth; back THIS up
 │   ├── server.lock       # PID file when serve is running

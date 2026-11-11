@@ -29,7 +29,7 @@ mod content;
 mod documentation;
 mod relations;
 
-pub use aggregate::{NameEntry, PackageEntry, Tombstone};
+pub use aggregate::{AliasTarget, NameEntry, PackageEntry, Tombstone};
 pub use content::{
     BootSnippetEntry, DeliveryMode, EmbeddedSourceEntry, FeaturesEntry, I18nEntry, SubskillEntry,
     WorkspaceOriginEntry,

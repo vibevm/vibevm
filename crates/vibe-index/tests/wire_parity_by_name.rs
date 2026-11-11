@@ -31,20 +31,20 @@ use chrono::{DateTime, Utc};
 use semver::Version;
 
 use vibe_index::types::{
-    BootSnippetEntry, CompatibilityEntry, ConflictsEntry, DeliveryMode, FeaturesEntry, Group,
-    I18nEntry, NameEntry, ObsoletesEntry, PackageEntry, PackageKind, ProvidesEntry,
+    AliasTarget, BootSnippetEntry, CompatibilityEntry, ConflictsEntry, DeliveryMode, FeaturesEntry,
+    Group, I18nEntry, NameEntry, ObsoletesEntry, PackageEntry, PackageKind, ProvidesEntry,
     RequiresAnyEntry, RequiresEntry, SubskillEntry, Tombstone, VersionEntry, WorkspaceOriginEntry,
 };
 use vibe_wire::generated::index::e1::by_name::NameEntry as GeneratedNameEntry;
 
 /// Key counts a fully populated fixture puts on the wire at each nesting
-/// level: 4 on the `NameEntry` itself, 5 on each `PackageEntry`, 33 on
+/// level: 5 on the `NameEntry` itself, 5 on each `PackageEntry`, 33 on
 /// each `VersionEntry` (12 required + 21 optional, every optional
 /// present — the same closure the entry oracle guards). Declared as
 /// constants so the fixture's exhaustiveness is asserted at every depth,
 /// not assumed: an optional branch that quietly stayed `None` would
 /// prove nothing about the field the schema forgot.
-const NAME_ENTRY_KEY_COUNT: usize = 4;
+const NAME_ENTRY_KEY_COUNT: usize = 5;
 const PACKAGE_ENTRY_KEY_COUNT: usize = 5;
 const VERSION_ENTRY_KEY_COUNT: usize = 33;
 
@@ -155,9 +155,13 @@ fn fully_populated_version() -> VersionEntry {
     }
 }
 
-/// A `NameEntry` with both optional branches taken: a candidate package
+/// A `NameEntry` with every optional branch taken: a candidate package
 /// whose own optionals (`latest_stable`, the whole version record) are
-/// filled, and a tombstone carrying its own optional successor.
+/// filled, a tombstone carrying its own optional successor, and the
+/// registry-offered alias pointer (PROP-008 §2.6). The three co-occur
+/// only in a fixture — a real name is alive, buried or a spelling — and
+/// that is exactly why the oracle fills all three: an optional branch
+/// left `None` proves nothing about the field the schema forgot.
 fn fully_populated_name_entry() -> NameEntry {
     NameEntry {
         name: "wal".to_string(),
@@ -169,6 +173,10 @@ fn fully_populated_name_entry() -> NameEntry {
             latest_stable: Some(Version::parse("1.2.3").expect("version parses")),
             versions: vec![fully_populated_version()],
         }],
+        alias: Some(AliasTarget {
+            group: Group::parse("org.vibevm").expect("group parses"),
+            name: "wal-core".to_string(),
+        }),
         tombstone: Some(Tombstone {
             reason: "absorbed into the monorepo".to_string(),
             superseded_by: Some("org.vibevm/wal".to_string()),

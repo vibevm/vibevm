@@ -19,8 +19,36 @@ pub struct NameEntry {
     /// set is emitted as `[]`, never omitted.
     pub packages: Vec<PackageEntry>,
 
+    /// Present when this bare name is a short spelling the REGISTRY OWNER
+    /// offers for another package (PROP-008 §2.6): `by-name/qwen.json` carrying
+    /// `alias = { group: "org.vibevm.qwen", name: "qwen-code" }` says the
+    /// spelling `qwen` means that package. Authored only in the registry's
+    /// own `aliases.toml` — a package cannot declare its own alias. It rides
+    /// BESIDE `packages[]` rather than inside it, and that placement is the
+    /// whole compatibility story: a reader that has never heard of aliases sees
+    /// the candidate set it always saw (empty, for a pure alias) and says the
+    /// name is not there, which is the truthful answer for a reader that cannot
+    /// follow the pointer — where an alias smuggled in as a candidate would
+    /// have been read as a real package of that name. `packages[]` outranks
+    /// it for every reader: a name somebody publishes is never displaced by a
+    /// spelling somebody offers.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub alias: Option<AliasTarget>,
+
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub tombstone: Option<Tombstone>,
+}
+
+/// The package a short spelling stands for — the fully qualified `(group,
+/// name)` identity of PROP-008 §2.2, and never a version: an alias is a
+/// spelling of a PACKAGE, so version selection stays the operator's. Local to
+/// this schema: the alias table that authors these rows is TOML, not wire, and
+/// nothing else consumes the pointer.
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+pub struct AliasTarget {
+    pub group: Group,
+
+    pub name: String,
 }
 
 pub use crate::generated::shared::BootSnippetEntry;

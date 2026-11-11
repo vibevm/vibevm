@@ -18,6 +18,7 @@
 #![forbid(unsafe_code)]
 specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#root");
 
+pub mod aliases;
 pub mod cli;
 pub mod config;
 pub mod content_hash;

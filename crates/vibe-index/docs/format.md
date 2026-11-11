@@ -7,6 +7,7 @@ Spec: [`PROP-005 §2.4 / §2.6`](../../../spec/modules/vibe-index/PROP-005-packa
 ```
 <data-dir>/
 ├── hello.json                           the eternal handshake — read FIRST
+├── aliases.toml                         the OWNER's short spellings — an INPUT
 ├── repomd.json                          manifest of what the WRITER writes
 ├── primary.jsonl                        one VersionEntry per line, sorted
 ├── primary.jsonl.gz                     deterministic gzip sibling
@@ -173,6 +174,28 @@ answers — with the current thing, a re-address pointer, or a tombstone
 with a reason — never with silence. `tombstone` is omitted when the
 name is alive.
 
+A name that is a short spelling the registry OFFERS for another package
+answers with an `alias` pointer instead (PROP-008 §2.6):
+
+```json
+{
+  "name": "qwen",
+  "indexed_at": "2026-11-11T12:00:00Z",
+  "alias": { "group": "org.vibevm.qwen", "name": "qwen-code" },
+  "packages": []
+}
+```
+
+`alias` rides **beside** `packages[]` and never inside it, and that
+placement is the whole compatibility story: a reader that has never
+heard of aliases sees the candidate set it always saw — empty, for a
+pure alias — and says the name is not carried, which is the truthful
+answer for a reader that cannot follow the pointer. An alias smuggled in
+as a candidate would have been read as a real package of that name. A
+reader that knows the member still prefers `packages[]`: a name somebody
+publishes is never displaced by a spelling somebody offers. `alias` is
+omitted when the name is not a spelling, which is almost always.
+
 ## VersionEntry {#versionentry}
 
 Canonical record per `(group, name, version)`. Schema pinned in
@@ -270,6 +293,52 @@ package carries none of the four.
   author's one-way act — the bytes are immutable, and a hash mismatch
   is an alarm.
 
+## `aliases.toml` — the registry owner's short spellings {#aliases}
+
+The short spellings this registry offers for packages it carries
+(PROP-008 §2.6). Authored by the registry OWNER — whoever builds and
+publishes this index — and by nobody else: a package cannot declare its
+own alias, because a short spelling is a registry-wide namespace while a
+package author owns one `(group, name)` corner of it.
+
+```toml
+# vibe registry alias table 1 — short spellings this registry offers.
+schema = 1
+
+[aliases]
+qwen = "org.vibevm.qwen/qwen-code"
+```
+
+**It is an INPUT, not a projection.** It sits beside the journal among
+the things the catalog is computed FROM, so it is not in
+`repomd.json`'s `files` map and not in the writer's whitelist — exactly
+as `README.md`, `listing.txt` and `state/` are not. It is a file rather
+than a journal fact on purpose: a layout registry's journal is committed
+and replayed by every client that finds the persisted index stale, and
+the replay refuses a record whose `kind` it does not know, so an alias
+fact would have made every older vibe fail outright on a registry that
+uses one.
+
+Edit it with `vibe-index alias <data-dir> add|remove|list` (a standalone
+index) or `vibe registry alias <registry> add|remove|list` (a `monorepo`
+or `localdir` registry, where the table and the rebuilt `_index/` land in
+one commit). Both validate the **whole** table against this registry's
+own index and refuse it entire:
+
+| rule | why |
+|---|---|
+| the alias obeys the package-name grammar | it is typed where a package name is typed |
+| the target is fully qualified and unversioned | supplying the group is the point; version selection stays the operator's |
+| the target is a package THIS registry carries | an alias points into the registry that offers it, never across |
+| the alias is not a name this registry publishes | a real name outranks every alias, so such a row could never be chosen |
+| the alias is not an alias of an alias | one spelling, one step, one readable answer, no loops |
+| the alias is not a buried name | a retirement is not reversible by another hand; `superseded_by` is the sanctioned redirect |
+
+One target per alias needs no rule of ours: a TOML table cannot hold a
+key twice. A READER that finds a faulty row drops it with a warning and
+answers anyway — the file belongs to somebody else, and one stranger's
+typo must not take a whole registry down for everyone reading it.
+
 ## `state/checkpoint.json` — incremental bookkeeping
 
 ```json
@@ -328,13 +397,21 @@ three differences ([PROP-005 §2.4.1](../../../vibevm/vibespecs/modules/vibe-ind
 
 - **The journal is committed** (in a monorepo, in the same commit as the
   versions), so yanks, tombstones and provenance are shared.
-- **The projection has two inputs** (`vibe_index::layout::project`): the
+- **The projection has three inputs** (`vibe_index::layout::project`): the
   tree decides which versions exist and what bytes they hold (a directory
   filled by hand counts); the journal adds identity, provenance (a
   `Published` entry, used only while its `content_hash` matches the tree),
-  yanks and tombstones.
+  yanks and tombstones; [`aliases.toml`](#aliases) adds the short
+  spellings this registry's owner offers.
 - **`listing.txt`** — `# vibe layout-registry listing 1`, `# journal
-  sha256:<hex>` (the digest of the journal shards), then every version path.
+  sha256:<hex>` (the digest of the journal shards), `# aliases
+  sha256:<hex>` when the alias table has rows, then every version path.
+  The alias line is conditional so that a registry offering no spelling
+  writes the listing it always wrote: an older vibe computes a listing
+  without it and would otherwise read every registry as stale. A
+  registry that does offer one makes an older vibe fall back to
+  computing the projection in memory, which is correct — it simply does
+  not see the aliases.
   A reader uses the persisted files only while this matches the tree and
   journal; otherwise it computes the same projection in memory
   (`load_or_project`). `vibe registry test` reports `current`, `stale` or

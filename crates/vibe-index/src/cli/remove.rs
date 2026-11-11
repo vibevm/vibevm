@@ -96,7 +96,8 @@ pub fn run(args: Args) -> Result<()> {
     // catalog whose truth never existed.
     append(&journal_dir, &record)?;
     records.push(record);
-    project(records)?.write_to(&args.data_dir, &WriteCtx { at })?;
+    crate::aliases::projected(records, &args.data_dir)?
+        .write_to(&args.data_dir, &WriteCtx { at })?;
     println!(
         "removed {}/{}{}",
         args.group,

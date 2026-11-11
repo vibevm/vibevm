@@ -20,7 +20,8 @@ use crate::index::persistence::atomic_write;
 use crate::index::quarantine::{Quarantined, missing_capabilities};
 use crate::index::{by_name, inverted, primary, repomd};
 use crate::types::{
-    NameEntry, NamingConvention, PackageEntry, Repomd, RepomdFileEntry, Tombstone, VersionEntry,
+    AliasTarget, NameEntry, NamingConvention, PackageEntry, Repomd, RepomdFileEntry, Tombstone,
+    VersionEntry,
 };
 use vibe_wire::generated::format_id::FormatId;
 use vibe_wire::generated::hello::e1::hello::{Handshake, World};
@@ -93,6 +94,13 @@ pub struct Index {
     /// Per-name tombstones (PROP-044 §2) — in memory only; `write_to`
     /// projects them back onto the by-name `NameEntry` it builds.
     pub tombstones: BTreeMap<String, Tombstone>,
+    /// The registry's alias table (PROP-008 §2.6) — short spellings the
+    /// registry OWNER offers for packages it carries, keyed by the
+    /// spelling. Unlike every other carrier here it is not folded from
+    /// the journal: it is read from the data directory's own
+    /// `aliases.toml` by [`crate::aliases::attach_from`] and projected
+    /// back onto the by-name entries, exactly as `tombstones` is.
+    pub aliases: BTreeMap<String, AliasTarget>,
 }
 
 impl Index {
@@ -116,6 +124,7 @@ impl Index {
             by_pkgref: BTreeMap::new(),
             quarantined: Vec::new(),
             tombstones: BTreeMap::new(),
+            aliases: BTreeMap::new(),
         }
     }
 
@@ -314,6 +323,19 @@ impl Index {
                 .or_insert_with(|| NameEntry::new(name.clone(), ctx.at));
             slot.tombstone = Some(ts.clone());
         }
+        // An alias gets its own candidate-set file, carrying the
+        // pointer and the candidate list the name has on its own — for
+        // a pure alias, none. The pointer rides BESIDE `packages[]`
+        // and never inside it, so the file an older reader fetches
+        // says what it always said: nobody publishes this name. The
+        // alias is one extra GET's worth of nothing for that reader,
+        // and the whole answer for one that knows the member.
+        for (alias, target) in &self.aliases {
+            let slot = by_name_files
+                .entry(alias.clone())
+                .or_insert_with(|| NameEntry::new(alias.clone(), ctx.at));
+            slot.alias = Some(target.clone());
+        }
         for name_entry in by_name_files.values_mut() {
             name_entry.finalise();
             let written = by_name::write(data_dir, name_entry)?;
@@ -394,16 +416,22 @@ impl Index {
     /// path (`write_to`) deliberately does not ask, because the catalog
     /// is the projection of the journal and a reader's capabilities
     /// never shrink what is written. Tombstones ride the by-name files
-    /// and are collected into the in-memory carrier.
+    /// and are collected into the in-memory carrier, and so do aliases
+    /// — which is what lets a reader of a CURRENT persisted catalog
+    /// answer a short spelling without opening `aliases.toml` at all.
     pub fn load_from(data_dir: &Path) -> Result<Self> {
         let manifest = repomd::read(data_dir)?;
         let name_entries = by_name::read_all(data_dir)?;
         let mut by_pkgref: BTreeMap<PkgKey, PackageEntry> = BTreeMap::new();
         let mut quarantined: Vec<Quarantined> = Vec::new();
         let mut tombstones: BTreeMap<String, Tombstone> = BTreeMap::new();
+        let mut aliases: BTreeMap<String, AliasTarget> = BTreeMap::new();
         for name_entry in name_entries {
             if let Some(ts) = name_entry.tombstone {
                 tombstones.insert(name_entry.name.clone(), ts);
+            }
+            if let Some(alias) = name_entry.alias {
+                aliases.insert(name_entry.name.clone(), alias);
             }
             for mut pkg in name_entry.packages {
                 // Record versions this reader cannot honour (PROP-044
@@ -446,6 +474,7 @@ impl Index {
             by_pkgref,
             quarantined,
             tombstones,
+            aliases,
         })
     }
 }

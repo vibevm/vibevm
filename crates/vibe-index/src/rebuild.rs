@@ -126,7 +126,7 @@ pub fn run_check(data_dir: &Path) -> Result<()> {
 
 fn rebuild_drift(data_dir: &Path, scratch: &Path) -> Result<CheckOutcome> {
     let records = journal::replay(&journal::default_dir(data_dir))?;
-    let index = journal::project(records)?;
+    let index = crate::aliases::projected(records, data_dir)?;
     let at = index.generated_at;
     index.write_to(scratch, &WriteCtx { at })?;
     diff_against_catalog(scratch, data_dir)
