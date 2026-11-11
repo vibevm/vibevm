@@ -52,6 +52,7 @@ impl Machine {
         machine.shim("my-claude");
         machine.shim("codex");
         machine.shim("opencode");
+        machine.shim("qwen");
         machine
     }
 
@@ -448,13 +449,18 @@ fn an_unknown_launcher_name_is_a_refusal_listing_the_launchers() {
 
 #[test]
 fn an_unknown_kind_is_a_refusal_naming_the_field() {
-    let machine = Machine::new("[launchers.mine]\nkind = \"qwen\"\ncommand = [\"x\"]\n");
+    // `gemini` rather than `qwen`: the latter is a kind of its own since
+    // `#SYS-QWEN`, and a test whose fixture becomes valid stops testing.
+    let machine = Machine::new("[launchers.mine]\nkind = \"gemini\"\ncommand = [\"x\"]\n");
     machine
         .agent(&["mine"])
         .assert()
         .failure()
-        .stderr(predicate::str::contains("[launchers.mine] kind = \"qwen\""))
-        .stderr(predicate::str::contains("`claude`"));
+        .stderr(predicate::str::contains(
+            "[launchers.mine] kind = \"gemini\"",
+        ))
+        .stderr(predicate::str::contains("`claude`"))
+        .stderr(predicate::str::contains("`qwen`"));
 }
 
 #[test]
@@ -710,4 +716,96 @@ fn printing_flags_for_opencode_says_why_the_carrier_is_not_a_flag() {
         .assert()
         .failure()
         .stderr(predicate::str::contains("SYS-WORKER-EXCLUSION"));
+}
+
+/// Qwen Code — a launcher and a dialect whose one additive slot takes the
+/// instructions as **text**.
+///
+/// The kind exists so `vibe agent qwen` exists and
+/// `[system_prompt.harness.qwen]` is declarable; the slot is named in the
+/// note and never passed, because `--append-system-prompt` would put the
+/// lane's own bytes on a command line, where one argument is capped at
+/// 128 KiB (`#SYS-QWEN`).
+#[test]
+fn qwen_is_a_builtin_launcher() {
+    let machine = Machine::new(WRAPPER);
+    machine
+        .agent(&["list"])
+        .assert()
+        .success()
+        .stdout(predicate::str::contains(
+            "qwen (kind qwen) — qwen [built-in]",
+        ));
+}
+
+#[test]
+fn qwen_defaults_to_read_and_starts_unchanged_naming_its_slot() {
+    let machine = Machine::new(WRAPPER);
+    machine
+        .agent(&["qwen", "-p", "hello"])
+        .assert()
+        .success()
+        .stderr(predicate::str::contains("no slot flag is passed"))
+        .stderr(predicate::str::contains("--append-system-prompt"))
+        .stderr(predicate::str::contains("QWEN_SYSTEM_MD"))
+        .stderr(predicate::str::contains("128 KiB"))
+        // `read` is the default, not a warning: the router is doing the
+        // work by design, so this is a note and not a soft launch.
+        .stderr(predicate::str::contains("warning: vibe cannot deliver").not());
+    assert_eq!(machine.argv(), ["-p", "hello"]);
+}
+
+#[test]
+fn a_project_declaring_launch_for_qwen_launches_softly_with_the_reason() {
+    let machine = Machine::new(WRAPPER);
+    machine.declare("[system_prompt.harness.qwen]\ndelivery = \"launch\"\n");
+    machine
+        .agent(&["qwen"])
+        .assert()
+        .success()
+        .stderr(predicate::str::contains("warning: vibe cannot deliver"))
+        .stderr(predicate::str::contains("E2BIG"))
+        .stderr(predicate::str::contains("0.27.2"))
+        .stderr(predicate::str::contains("delivery = \"read\""))
+        // Worker exclusion is satisfied here, unlike OpenCode's, and the
+        // sentence says so rather than letting a reader carry that kind's
+        // conclusion over.
+        .stderr(predicate::str::contains("worker exclusion is satisfied"));
+    // The shim records one empty line when it received no argument at all.
+    assert_eq!(machine.argv(), [""], "a soft launch passed a flag");
+}
+
+#[test]
+fn printing_flags_for_qwen_says_why_the_slot_is_not_used() {
+    let machine = Machine::new(WRAPPER);
+    machine
+        .user
+        .vibe()
+        .args(["prompt", "build", "--path"])
+        .arg(machine.project.path())
+        .assert()
+        .success();
+    // The default, `read`: no flags, and the note names the argument the
+    // slot would have taken.
+    let mut command = machine.user.vibe();
+    machine
+        .harnessed(&mut command, VERIFIED)
+        .args(["prompt", "flags", "--harness", "qwen", "--path"])
+        .arg(machine.project.path())
+        .assert()
+        .success()
+        .stderr(predicate::str::contains("--append-system-prompt"))
+        .stderr(predicate::str::contains("on the command line"));
+    // A declared `launch` is a refusal here, where `vibe agent` launches
+    // softly: this command prints and starts nothing, so there is no
+    // session to save.
+    machine.declare("[system_prompt.harness.qwen]\ndelivery = \"launch\"\n");
+    let mut command = machine.user.vibe();
+    machine
+        .harnessed(&mut command, VERIFIED)
+        .args(["prompt", "flags", "--harness", "qwen", "--path"])
+        .arg(machine.project.path())
+        .assert()
+        .failure()
+        .stderr(predicate::str::contains("128 KiB"));
 }

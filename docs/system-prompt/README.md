@@ -373,8 +373,10 @@ check` reports two configuration findings: your `CLAUDE.md`, `AGENTS.md` and
 `GEMINI.md` carrying **different** managed blocks, because a *per-harness*
 `delivery` only describes what a harness receives while those files are
 byte-identical; and the same divergence seen from the harness side, since
-Gemini CLI and Qwen Code read several of those names and concatenate them, so
-one session would get two contradicting routers. Identical copies are fine
+Gemini CLI reads several of those names and concatenates them, so one session
+would get two contradicting routers. (Qwen Code was measured on 0.27.2 and
+reads `QWEN.md` and `AGENTS.md`, so of the three it reads exactly one and
+cannot see a divergence.) Identical copies are fine
 and cost only their own bytes. A managed block **below** your project root
 that a harness's downward discovery would also read is `vibe check`'s
 `redirect_block` warning.
@@ -384,11 +386,12 @@ that a harness's downward discovery would also read is `vibe check`'s
 | Claude Code | yes — `--append-system-prompt-file`, plus `--exclude-dynamic-system-prompt-sections` | yes | `launch` |
 | Codex | yes — `developer_instructions` at the **top level** of a launch-time profile file | yes | `launch` |
 | OpenCode | the carrier works and is **not deliverable** — see below | yes | `read` |
-| Qwen Code, Gemini CLI, pi, dsh | no file-based slot known | yes | `read` |
+| Qwen Code | the slot works and takes **text**, so a lane does not fit — see below | yes | `read` |
+| Gemini CLI, pi, dsh | no file-based slot known | yes | `read` |
 
-The Qwen Code, Gemini CLI, pi and dsh rows are **research, not measured
-here**: those harnesses are not installed on the machine this was written on,
-so their delivery stays `read`.
+The Gemini CLI, pi and dsh rows are **research, not measured here**: those
+harnesses are not installed on the machine this was written on, so their
+delivery stays `read`.
 
 ### OpenCode
 
@@ -458,6 +461,91 @@ then the `INDEX.md` files in order, **once each**. A subagent of such a session
 sees none of it. Two things that are **not** measured: Windows, and the
 interactive terminal UI — an agent cannot drive it, so every session was
 `-p … --output-format json`, which passes the same flag.
+
+### Qwen Code
+
+`vibe agent qwen` works, and it passes nothing. The kind exists so the
+launcher exists, so `[system_prompt.harness.qwen]` can be declared rather
+than refused as an unknown field, and so `vibe prompt flags --harness qwen`
+can tell you what it would have passed and why it does not.
+
+**You need no new file.** Qwen Code reads `QWEN.md` and `AGENTS.md` — both,
+together — and `AGENTS.md` is already one of the three files vibe writes the
+managed block into. So the router reaches Qwen Code in a project that
+installed vibe before this harness was a kind, with nothing to change. vibe
+does **not** write a `QWEN.md`: the same block under both names would arrive
+twice and you would pay for it twice.
+
+**The slot was found and measured.** `--append-system-prompt` is per-launch,
+additive, and lands in a good place: measured on **Qwen Code 0.27.2** against
+a loopback provider that recorded the request, a 2,570-byte lane arrived
+byte-equal and exactly once inside the single system message, behind the base
+prompt and your own context files. And Qwen Code puts **no per-day text in
+that message at all** — the date, OS, shell and directory listing go into the
+first user turn instead, and the harness sets its own cache breakpoint just
+after the append layer — so nothing that changes daily would sit in front of
+the lane.
+
+**One thing stops vibe from using it: the flag takes text.** There is no
+file variant of it, and nothing else adds to the prompt — `QWEN_SYSTEM_MD`
+and `--system-prompt` *replace* the base prompt. So the lane would have to
+travel as one command-line argument, and **vibe puts no lane byte on a
+command line in any delivery** — a rule, not a size limit it checks, because
+one argument is capped at 128 KiB on Linux while a whole Windows command line
+is about 32,767 characters, so delivering by size would work for you and fail
+for the next person on the team. The measurement behind the rule: the
+202,349-byte sample lane is «Argument list too long» at `execve`, before Qwen
+Code starts. An environment variable is capped the same way, so there is no
+way round it for the bytes — only for a path, and this flag does not take
+one.
+
+**Worker exclusion is not the problem here**, which is the one way this
+differs from OpenCode: an ordinary Qwen Code subagent is built from its own
+agent definition and never receives the append text.
+
+**There is a second, file-based slot, and it very nearly works.**
+`QWEN_SYSTEM_MD` names a file, is not read by a subagent, and *replaces*
+Qwen Code's base prompt — so vibe can supply Qwen Code's own prompt with the
+lane after it, taking the prompt from the installed program itself
+(`QWEN_WRITE_SYSTEM_MD`) rather than from a stored copy. Measured: the request
+then begins with Qwen Code's own prompt byte for byte, carries the lane
+exactly once, and continues identically to a plain run — and it carried a
+whole 202 KB lane in a live session, because a file has no command-line
+limit. What stops it is the prompt it replaces: Qwen Code builds that prompt
+from the session's own shape — interactive or not, the tool set, the model,
+whether you are in a git repository — and the interactive variant is 4.5 KB
+longer than the non-interactive one. A launcher cannot tell which one your
+launch will use without starting a second Qwen Code session in a pseudo
+terminal, and handing over the wrong one would silently replace your
+harness's own instructions, which is worse than delivering no lane.
+`QWEN_SYSTEM_MD` also switches off your `general.outputStyle` for that
+session, which Qwen Code tells you itself.
+
+**And delivering the lane as a context file is the one shape that fails for
+the OpenCode reason.** It would be additive and byte-stable — and your lane's
+`@spec://…` tokens arrive verbatim, which is worth knowing — but Qwen Code
+gives the context layer to every subagent, so a bounded worker would receive
+your whole project prefix. A generated `QWEN.md` is that same layer with an
+extra file on top.
+
+So the day `--append-system-prompt` takes a **file**, or a launcher can ask
+Qwen Code for the base prompt a given session will use, this tier opens and
+nothing else is in the way.
+
+So `read` is the default and a declared `launch` is **not delivered**:
+`vibe agent qwen` soft-launches with the size named, and `vibe prompt flags
+--harness qwen` refuses.
+
+**Both were measured live** on Qwen Code 0.27.2 with a 512,000-token model.
+In the shipped `read` mode the agent read `STATIC.md`, `INDEX.md`,
+`00-core.md` and `90-user.md` in that order, once each, reported every canary
+and correctly left the harness-injected `AGENTS.md` off its read list.
+Through the slot by hand, on a 2,570-byte lane, it quoted the last
+`vibe:lane-end` line byte-equal with no file read — and the same command on
+the 202 KB lane never reached the program. One honest caveat: the live
+check's own prompt ends «do not read any file to answer this», so it cannot
+test the router's read rule at all; that rule was measured on a prompt with
+work in it.
 
 ### Codex and `doc_max_bytes`
 

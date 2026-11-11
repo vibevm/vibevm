@@ -19,7 +19,7 @@ pub const CODEX_DOC_MAX_BYTES_DEFAULT: usize = 32 * 1024;
 
 /// `[system_prompt.harness]` — per-harness delivery settings.
 ///
-/// A closed table of three in this version. An unknown harness name refuses
+/// A closed table of four in this version. An unknown harness name refuses
 /// by name rather than being ignored, because a setting silently ignored is
 /// the one failure a configuration table must not have.
 ///
@@ -29,6 +29,7 @@ pub const CODEX_DOC_MAX_BYTES_DEFAULT: usize = 32 * 1024;
 /// let empty: HarnessTable = toml::from_str("")?;
 /// assert!(empty.is_empty());
 /// assert!(toml::from_str::<HarnessTable>("[opencode]\n").is_ok());
+/// assert!(toml::from_str::<HarnessTable>("[qwen]\n").is_ok());
 /// assert!(toml::from_str::<HarnessTable>("[gemini]\n").is_err());
 /// # Ok::<(), toml::de::Error>(())
 /// ```
@@ -44,6 +45,9 @@ pub struct HarnessTable {
     /// `[system_prompt.harness.opencode]`.
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub opencode: Option<OpenCodeHarness>,
+    /// `[system_prompt.harness.qwen]`.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub qwen: Option<QwenHarness>,
 }
 
 impl HarnessTable {
@@ -68,6 +72,7 @@ impl HarnessTable {
     /// assert_eq!(absent.harness.delivery("claude"), HarnessDelivery::Launch);
     /// assert_eq!(absent.harness.delivery("codex"), HarnessDelivery::Launch);
     /// assert_eq!(absent.harness.delivery("opencode"), HarnessDelivery::Read);
+    /// assert_eq!(absent.harness.delivery("qwen"), HarnessDelivery::Read);
     /// assert_eq!(absent.harness.delivery("gemini"), HarnessDelivery::Read);
     ///
     /// let read: SystemPromptSection =
@@ -83,6 +88,7 @@ impl HarnessTable {
                 .opencode
                 .as_ref()
                 .and_then(|opencode| opencode.delivery),
+            "qwen" => self.qwen.as_ref().and_then(|qwen| qwen.delivery),
             _ => None,
         };
         declared.unwrap_or(match harness {
@@ -137,6 +143,40 @@ pub struct ClaudeHarness {
 #[derive(Debug, Clone, Default, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
 pub struct OpenCodeHarness {
+    /// How the lane reaches this harness. Absent means `read`.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub delivery: Option<HarnessDelivery>,
+}
+
+/// `[system_prompt.harness.qwen]`.
+///
+/// Qwen Code's one additive per-launch slot is `--append-system-prompt`,
+/// and it takes **text on the command line**. There is no file variant and
+/// no additive settings or environment key beside it, so a real lane — ten
+/// to a hundred times the 128 KiB a single argument may be — cannot go
+/// through it: the launch fails before the program starts. So `read` is
+/// this harness's default and a declared `launch` delivers nothing — `vibe
+/// agent` starts Qwen Code softly with the reason, and `vibe prompt flags`
+/// refuses (`PROP-076#SYS-QWEN`).
+///
+/// **Worker exclusion is not what closes this tier**, which is the one way
+/// it differs from `opencode`: an ordinary Qwen Code subagent is rendered
+/// from its own definition and never receives the append text, so the slot
+/// would be worker-safe if it could carry the bytes. The key exists so a
+/// project can *declare* the tier it wants the day Qwen Code takes those
+/// bytes from a file, and so the declaration is refused by name rather than
+/// ignored.
+///
+/// ```
+/// use vibe_core::manifest::{HarnessDelivery, QwenHarness};
+///
+/// let declared: QwenHarness = toml::from_str("delivery = \"launch\"\n")?;
+/// assert_eq!(declared.delivery, Some(HarnessDelivery::Launch));
+/// # Ok::<(), toml::de::Error>(())
+/// ```
+#[derive(Debug, Clone, Default, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct QwenHarness {
     /// How the lane reaches this harness. Absent means `read`.
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub delivery: Option<HarnessDelivery>,

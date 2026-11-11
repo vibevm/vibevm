@@ -383,12 +383,16 @@ fn an_unknown_harness_is_a_refusal_listing_the_launchers() {
     project.prompt("build").assert().success();
     project
         .prompt("flags")
-        .args(["--harness", "qwen"])
+        // `gemini` rather than `qwen`: the latter is a kind of its own
+        // since `#SYS-QWEN`, and a test whose fixture becomes valid stops
+        // testing.
+        .args(["--harness", "gemini"])
         .assert()
         .failure()
         .stderr(predicate::str::contains("is not an agent launcher"))
         .stderr(predicate::str::contains("`claude`"))
-        .stderr(predicate::str::contains("`codex`"));
+        .stderr(predicate::str::contains("`codex`"))
+        .stderr(predicate::str::contains("`qwen`"));
 }
 
 #[test]

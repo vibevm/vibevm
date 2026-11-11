@@ -29,6 +29,12 @@
 //!   them would read two **different** routers. The nested-discovery half of
 //!   C4 is `vibe check`'s `redirect_block` cell and is named rather than
 //!   re-implemented, because two scans of one question are two answers.
+//!   **The example the finding names shrank by one on 2026-11-11**: Qwen
+//!   Code reads `QWEN.md` and `AGENTS.md`, measured on 0.27.2, so of the
+//!   three files this project writes it reads exactly one and cannot see a
+//!   divergence at all (`#SYS-QWEN`). Gemini CLI stays as the named case,
+//!   and the finding itself is written over "more than one", not over a
+//!   list of harnesses, so it needed no other change.
 //! - **C3** — the lane's import-inertness — is already reported, as the
 //!   `@`-token census in `check/warnings.rs`.
 
@@ -200,11 +206,11 @@ pub fn delivery_constraints(
              harness receives — regenerate them with `vibe install`"
         ));
         findings.push(format!(
-            "C4: a harness that reads more than one of `{carriers}` — Gemini CLI and Qwen \
-             Code read several names and concatenate them — would read two different \
-             routers. Identical copies are admitted and cost only their own bytes; \
-             differing ones are a contradiction the agent cannot resolve. The \
-             nested-discovery half of C4 is `vibe check`'s `redirect_block` finding"
+            "C4: a harness that reads more than one of `{carriers}` — Gemini CLI reads \
+             several names and concatenates them — would read two different routers. \
+             Identical copies are admitted and cost only their own bytes; differing ones \
+             are a contradiction the agent cannot resolve. The nested-discovery half of C4 \
+             is `vibe check`'s `redirect_block` finding"
         ));
     }
     Ok(findings)

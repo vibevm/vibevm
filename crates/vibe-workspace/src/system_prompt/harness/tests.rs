@@ -146,6 +146,57 @@ fn opencode_passes_no_flag_under_either_delivery_and_names_its_carrier() {
 }
 
 #[test]
+fn qwen_passes_no_flag_under_either_delivery_and_names_its_slot() {
+    // **The slot exists, and the note names it rather than denying it.**
+    // What closes the tier is that `--append-system-prompt` takes the
+    // instructions as text on a command line, where a lane does not fit
+    // (`#SYS-QWEN`).
+    for delivery in [HarnessDelivery::Read, HarnessDelivery::Launch] {
+        let answer = flags(HarnessKind::Qwen, delivery);
+        assert!(answer.flags.is_empty(), "{delivery:?}");
+        assert!(answer.profile.is_none(), "{delivery:?}");
+        let said = answer.notes.join(" ");
+        assert!(said.contains("--append-system-prompt"), "{said}");
+        assert!(said.contains("QWEN_SYSTEM_MD"), "{said}");
+        assert!(said.contains("128 KiB"), "{said}");
+        assert!(said.contains(QWEN_MEASURED_VERSION), "{said}");
+        // The argument is shown with the lane's PATH inside a `cat`, which
+        // is what makes "the lane's own bytes on the command line" legible
+        // — and the lane's bytes themselves are never in the note.
+        assert!(
+            said.contains("/w/vibevm/vibespecs/boot/AGENT-LANE.md"),
+            "{said}"
+        );
+        assert!(!said.contains("<!-- lane -->"), "{said}");
+    }
+}
+
+#[test]
+fn the_qwen_blocker_names_both_slots_and_what_closes_each() {
+    // **Two slots, two different reasons, and the sentence carries both.**
+    // Stopping at the additive one would leave a reader believing Qwen Code
+    // has no file-based slot, which is false and is the more interesting
+    // half: it exists, it is subagent-safe, and what closes it is that it
+    // REPLACES a prompt whose bytes depend on the session (`#SYS-QWEN`).
+    let blocker = qwen_launch_blocker();
+    // Worker exclusion is satisfied here, unlike `opencode` — said out loud
+    // so a reader does not carry that kind's conclusion over.
+    assert!(
+        blocker.contains("worker exclusion is satisfied"),
+        "{blocker}"
+    );
+    assert!(blocker.contains("E2BIG"), "{blocker}");
+    assert!(blocker.contains("202,349"), "{blocker}");
+    assert!(blocker.contains("QWEN_SYSTEM_MD"), "{blocker}");
+    assert!(blocker.contains("QWEN_WRITE_SYSTEM_MD"), "{blocker}");
+    // The measurement that closes the file-based slot: one prompt, two
+    // sizes, decided by something a launcher cannot observe.
+    assert!(blocker.contains("13,856"), "{blocker}");
+    assert!(blocker.contains("18,451"), "{blocker}");
+    assert!(blocker.contains(QWEN_MEASURED_VERSION), "{blocker}");
+}
+
+#[test]
 fn the_opencode_blocker_is_version_scoped_and_names_worker_exclusion() {
     let blocker = opencode_launch_blocker();
     assert!(blocker.contains("SYS-WORKER-EXCLUSION"), "{blocker}");
@@ -196,9 +247,10 @@ fn a_version_that_cannot_be_read_claims_nothing_either_way() {
 
 #[test]
 fn an_unknown_kind_is_none_rather_than_a_default() {
-    assert_eq!(HarnessKind::parse("qwen"), None);
+    assert_eq!(HarnessKind::parse("gemini"), None);
     assert_eq!(HarnessKind::parse("Claude"), None, "the set is exact");
     assert_eq!(HarnessKind::parse("OpenCode"), None, "the set is exact");
+    assert_eq!(HarnessKind::parse("Qwen"), None, "the set is exact");
 }
 
 #[test]
@@ -220,4 +272,5 @@ fn a_node_with_no_system_prompt_table_takes_each_kinds_own_default() {
         HarnessKind::OpenCode.delivery(&manifest),
         HarnessDelivery::Read
     );
+    assert_eq!(HarnessKind::Qwen.delivery(&manifest), HarnessDelivery::Read);
 }

@@ -34,7 +34,7 @@ use std::process::Command;
 use anyhow::Result;
 use vibe_workspace::system_prompt::{
     CODEX_VERIFIED_VERSION, CarrierVerdict, HarnessKind, codex_carrier_verdict,
-    opencode_launch_blocker,
+    opencode_launch_blocker, qwen_launch_blocker,
 };
 
 use crate::commands::agent::launchers::Launcher;
@@ -59,17 +59,28 @@ pub(crate) enum Gate {
 pub(crate) fn gate(kind: HarnessKind, launcher: Option<&Launcher>) -> Result<Gate> {
     match kind {
         HarnessKind::Claude => return Ok(Gate::Deliver(None)),
-        // **The one precondition that no version satisfies yet.** It is not
-        // asked of the installed program at all, because the blocker is in
-        // how OpenCode assembles a prompt rather than in which build does
-        // it: probing a version to refuse either way would be a subprocess
-        // spent on a decision already made (`#SYS-OPENCODE`).
+        // **The preconditions no version satisfies yet.** Neither is
+        // asked of the installed program, because each blocker is in how
+        // that harness assembles a prompt — or in how a kernel passes an
+        // argument — rather than in which build does it: probing a version
+        // to refuse either way would be a subprocess spent on a decision
+        // already made (`#SYS-OPENCODE`, `#SYS-QWEN`).
         HarnessKind::OpenCode => {
             return Ok(Gate::Undeliverable(Undeliverable::hard(
                 opencode_launch_blocker(),
                 "declare `[system_prompt.harness.opencode] delivery = \"read\"`, which is \
                  already this harness's default, and let the managed block's router have the \
                  agent read the boot files"
+                    .to_owned(),
+            )));
+        }
+        HarnessKind::Qwen => {
+            return Ok(Gate::Undeliverable(Undeliverable::hard(
+                qwen_launch_blocker(),
+                "declare `[system_prompt.harness.qwen] delivery = \"read\"`, which is already \
+                 this harness's default, and let the managed block's router have the agent read \
+                 the boot files — Qwen Code reads `AGENTS.md` itself, so the block arrives \
+                 without a flag"
                     .to_owned(),
             )));
         }

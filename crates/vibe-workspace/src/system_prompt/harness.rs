@@ -28,20 +28,21 @@ use vibe_core::manifest::{HarnessDelivery, HarnessTable, Manifest};
 /// The closed set of harness kinds this version has a flag dialect for.
 ///
 /// **Membership is not a launch tier.** A kind is here when vibe knows its
-/// dialect well enough to answer "what does a launch of this pass", and
-/// `opencode`'s answer is "nothing, and here is why" — which is an answer
-/// worth having, because without the kind `vibe agent opencode` would not
-/// exist and `[system_prompt.harness.opencode]` could not be declared
-/// (`#SYS-OPENCODE`).
+/// dialect well enough to answer "what does a launch of this pass", and for
+/// `opencode` and `qwen` that answer is "nothing, and here is why" — which
+/// is an answer worth having, because without the kind `vibe agent
+/// opencode` would not exist and `[system_prompt.harness.opencode]` could
+/// not be declared (`#SYS-OPENCODE`, `#SYS-QWEN`).
 ///
 /// ```
 /// use vibe_workspace::system_prompt::HarnessKind;
 ///
 /// assert_eq!(HarnessKind::parse("claude"), Some(HarnessKind::Claude));
 /// assert_eq!(HarnessKind::parse("opencode"), Some(HarnessKind::OpenCode));
+/// assert_eq!(HarnessKind::parse("qwen"), Some(HarnessKind::Qwen));
 /// assert_eq!(HarnessKind::parse("gemini"), None);
 /// assert_eq!(HarnessKind::Codex.as_str(), "codex");
-/// assert_eq!(HarnessKind::ALL.len(), 3, "the set is closed at three");
+/// assert_eq!(HarnessKind::ALL.len(), 4, "the set is closed at four");
 /// ```
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum HarnessKind {
@@ -54,14 +55,19 @@ pub enum HarnessKind {
     /// only additive carrier is process-wide and reaches `task` subagents
     /// (`#SYS-OPENCODE`).
     OpenCode,
+    /// Qwen Code — a launcher and a dialect, but **no deliverable slot**:
+    /// its one additive carrier takes the instructions as text on the
+    /// command line, where a lane does not fit (`#SYS-QWEN`).
+    Qwen,
 }
 
 impl HarnessKind {
     /// Every kind, in the order a refusal lists them.
-    pub const ALL: [HarnessKind; 3] = [
+    pub const ALL: [HarnessKind; 4] = [
         HarnessKind::Claude,
         HarnessKind::Codex,
         HarnessKind::OpenCode,
+        HarnessKind::Qwen,
     ];
 
     /// The kind's own name, which is also the manifest's harness key.
@@ -70,6 +76,7 @@ impl HarnessKind {
             HarnessKind::Claude => "claude",
             HarnessKind::Codex => "codex",
             HarnessKind::OpenCode => "opencode",
+            HarnessKind::Qwen => "qwen",
         }
     }
 
@@ -93,9 +100,11 @@ impl HarnessKind {
                 "--system-prompt-file",
             ],
             HarnessKind::Codex => &["-p", "--profile"],
-            // Nothing: vibe passes this kind no flag under any delivery, so
-            // nothing of the user's could be a second one beside ours.
-            HarnessKind::OpenCode => &[],
+            // Nothing: vibe passes these kinds no flag under any delivery,
+            // so nothing of the user's could be a second one beside ours.
+            // Qwen Code's `--append-system-prompt` and `--system-prompt`
+            // are a user's own business here for exactly that reason.
+            HarnessKind::OpenCode | HarnessKind::Qwen => &[],
         }
     }
 
@@ -210,8 +219,8 @@ pub fn launch_flags(
         // A caller that reaches here declared `launch` for a kind whose
         // carrier vibe will not deliver; the composition still answers, and
         // the carrier gate above it turns the answer into a soft launch or
-        // a refusal (`#SYS-OPENCODE`, `#SYS-SOFT-LAUNCH`).
-        HarnessKind::OpenCode => LaunchFlags {
+        // a refusal (`#SYS-OPENCODE`, `#SYS-QWEN`, `#SYS-SOFT-LAUNCH`).
+        HarnessKind::OpenCode | HarnessKind::Qwen => LaunchFlags {
             flags: Vec::new(),
             notes: no_slot_note(kind, lane).into_iter().collect(),
             profile: None,
@@ -271,6 +280,90 @@ pub fn opencode_launch_blocker() -> String {
     )
 }
 
+/// The Qwen Code version this build measured its carrier question against.
+///
+/// Version-scoped for the same reason Codex's and OpenCode's are: the claim
+/// is a measurement of how one program assembles a prompt. It gates nothing
+/// — there is no delivery to gate — it scopes the *findings* that keep the
+/// delivery closed.
+pub const QWEN_MEASURED_VERSION: &str = "0.27.2";
+
+/// Why Qwen Code has no deliverable launch tier, as one sentence naming both
+/// of its slots, what closes each, and the version they were measured on.
+///
+/// **Qwen Code has two per-launch instruction slots, and the campaign
+/// measured both.** Neither can carry this project's lane, and they fail for
+/// opposite reasons — which is why the sentence names both rather than
+/// stopping at the first.
+///
+/// **The additive slot is the right shape and the wrong medium.**
+/// `--append-system-prompt` is per-launch, additive, lands inside the
+/// prompt's cache-stable prefix and is **not** inherited by an ordinary
+/// subagent, so `#SYS-WORKER-EXCLUSION` is satisfied — four properties out
+/// of four. It takes the instructions as **text**, there is no file variant
+/// of it, and nothing else adds to the prompt beside it. So the lane would
+/// have to travel as one argument, and `#SYS-HARNESS-DELIVERY` puts no lane
+/// byte on a command line under any delivery — **a rule, not a threshold**,
+/// because one argument is capped at 128 KiB on Linux and a whole command
+/// line at about 32,767 characters on Windows, so a project delivered by
+/// measured size would arrive for one contributor and fail for the next.
+/// The measurement behind the rule: the 202,349-byte sample lane is `E2BIG`
+/// — «Argument list too long», errno 7 — at `execve`, before Qwen Code
+/// starts, and an environment string is capped the same way.
+///
+/// **The file-based slot works, and the owner's composition with it works.**
+/// `QWEN_SYSTEM_MD` names a file, is read only on the main session's own
+/// prompt path — `isSystemMdActive` is consumed inside `getCoreSystemPrompt`,
+/// which a subagent never enters — and it *replaces* the base prompt rather
+/// than adding to it. The owner's answer to that was to supply Qwen Code's
+/// own prompt followed by the lane, and it holds: `QWEN_WRITE_SYSTEM_MD`
+/// makes the installed program write its base prompt to a file, the lane is
+/// appended to that copy, and the captured request then begins with Qwen
+/// Code's own prompt **byte-exact**, carries the lane **exactly once** at
+/// byte 13,858, and continues byte-identically to a plain run after its
+/// base. The probe costs nothing and calls nothing: with no prompt and stdin
+/// closed, Qwen Code writes the dump and then refuses for want of input.
+///
+/// **What closes that slot is that the prompt it replaces is a function of
+/// the session, not of the version.** The base prompt is built from the
+/// interaction mode, the tool configuration, the model, whether the working
+/// directory is a git repository and whether a sandbox is set — and the
+/// interaction mode alone is decisive: measured on 0.27.2 under identical
+/// probe flags, the headless variant is **13,856** bytes and the interactive
+/// one **18,451**, differing by whole sections rather than a sentence, and a
+/// probe with no terminal is **always** the headless one, because
+/// `--prompt-interactive` refuses piped input and a run without a tty is
+/// headless whatever is asked of it. So a launcher cannot know which copy a
+/// given launch needs without allocating a pty and starting a second
+/// session, and handing over the wrong copy would silently swap the
+/// harness's own instructions — strictly worse than delivering no lane,
+/// which is `#SYS-SOFT-LAUNCH`'s standing judgement. A stored copy per
+/// verified version does not help either: it would be stale along every axis
+/// above on the first launch, not merely at the next upgrade. One more cost
+/// is recorded rather than discovered later: `QWEN_SYSTEM_MD` also disables
+/// the user's `general.outputStyle`, which Qwen Code says itself
+/// (`#SYS-QWEN`).
+pub fn qwen_launch_blocker() -> String {
+    format!(
+        "Qwen Code has two per-launch instruction slots and neither can carry this project's \
+         lane. `--append-system-prompt` is additive and is **not** inherited by an ordinary \
+         subagent, so worker exclusion is satisfied — but it takes the instructions as TEXT, and \
+         no lane byte goes on a command line in any delivery of this project, on any platform: \
+         that is one rule rather than a size threshold, since a single argument is capped at 128 \
+         KiB on Linux and a whole command line at about 32,767 characters on Windows. The \
+         measurement behind the rule: the 202,349-byte sample lane is `E2BIG` at `execve`, before \
+         the program starts, and an environment string is capped the same way. `QWEN_SYSTEM_MD` \
+         IS file-based and subagent-safe, and composing Qwen Code's own base prompt — dumped by \
+         `QWEN_WRITE_SYSTEM_MD` — with the lane after it was measured to arrive byte-exact and \
+         exactly once; but that slot REPLACES the base prompt, and the prompt it replaces is a \
+         function of the session rather than of the version: 13,856 bytes headless against 18,451 \
+         interactive under identical probe flags, and a probe without a terminal is always the \
+         headless one. Handing over the wrong copy would silently swap the harness's own \
+         instructions, which is worse than delivering no lane, and it would also disable the \
+         user's `general.outputStyle`. Measured against Qwen Code {QWEN_MEASURED_VERSION}"
+    )
+}
+
 /// The note a kind with no deliverable slot prints: what the carrier is,
 /// why it is not a flag, and why vibe does not use it.
 ///
@@ -288,6 +381,15 @@ fn no_slot_note(kind: HarnessKind, lane: &Path) -> Option<String> {
              itself instead",
             opencode_launch_blocker(),
             lane.display()
+        )),
+        HarnessKind::Qwen => Some(format!(
+            "{}. Both slots exist, which is why this note names them rather than denying them: \
+             the argument would have been `--append-system-prompt \"$(cat {lane})\"`, the \
+             lane's own bytes on the command line, and the file-based assignment would have \
+             been `QWEN_SYSTEM_MD=<a vibe-owned copy of Qwen Code's base prompt with {lane} \
+             after it>`. The agent reads the boot files itself instead",
+            qwen_launch_blocker(),
+            lane = lane.display()
         )),
     }
 }

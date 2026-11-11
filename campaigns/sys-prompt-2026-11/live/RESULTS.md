@@ -1,4 +1,4 @@
-# P9 — live check results, Claude Code (plus the P10 OpenCode rows)
+# P9 — live check results, Claude Code (plus the P10 OpenCode and Qwen Code rows)
 
 Run 2026-11-10 by the central session, as `RUNBOOK.md` orders. The owner
 authorised it; it covers Claude Code only.
@@ -40,6 +40,20 @@ canary still the last line. On the 512,000-token model the full
 These rows report no cache counters: OpenCode's `run` prints none, and a
 number nobody measured is not reported as zero.
 
+**Qwen Code rows (P10, 2026-11-11).** Qwen Code **0.27.2**, Linux, through
+the built-in `qwen` launcher. One model, `gpt-6.1-sol` through an
+OpenAI-compatible endpoint with a 512,000-token context, which is ample: this
+harness's legs are a 2,570-byte lane and a 202,349-byte one, and the second
+never reaches a model at all. The offline capture ran inside
+`bwrap --unshare-net`, so `127.0.0.1` was the only reachable endpoint by
+construction rather than by configuration. **Qwen Code's measured fixed
+overhead:** a 21,708-byte system message whose base prompt runs
+to byte 13,863, where the project's own context files begin, plus 9,129 bytes
+of tool definitions over six tools, with a further 12,212-byte first user turn carrying the skills roster,
+the deferred-tool list and the date/cwd reminder. These rows report no cache
+counters: `qwen -p` prints none, and a number nobody measured is not reported
+as zero.
+
 The usage columns are the provider's own counters: `cache_creation_input_tokens`
 and `cache_read_input_tokens`. Every run is a single request unless "turns"
 says otherwise.
@@ -69,6 +83,15 @@ says otherwise.
 | O1 OpenCode live, `read` mode, the one prompt, 56k model | `live-o1s`, **2,570 B** lane, `vibe agent opencode run -m homelocal/qwen3.8-27b` | The agent **did not boot**: it answered the meta-question literally — "no *delivered* lane marker … the only literal occurrence is an example inside the AGENTS.md prose", `CANARY-ENTRYPOINT-QUARTZ` only, "zero tool calls … I have not opened any file". So router rule 4 did not fire for this model **on this prompt**. | — | — | **recorded, not a mechanism failure** — see the next row, which distinguishes them |
 | O1 OpenCode live, `read` mode, a task-shaped prompt, 56k model | `live-o1s`, same project, "what are this project's standing boot instructions? answer from the project's own boot files, and list every file you read with a tool" | **Router rule 4 obeyed.** The agent read `vibevm/vibespecs/boot/STATIC.md`, `INDEX.md`, `00-core.md`, `90-user.md` — in that order, **once each** — summarised all three layers correctly, reported `CANARY-LANE-HEAD-OBSIDIAN`, `CANARY-LANE-TAIL-PUMICE` and `CANARY-ENTRYPOINT-QUARTZ`, quoted STATIC's expected id `df1cb2d5aadc` from rule 3, and correctly excluded `AGENTS.md` from the read list because the harness had injected it. | — | — | **pass (2026-11-11)**: the `read` tier works on OpenCode even on the 27B model, once the session has work in it. The row above it is the **prompt**, not the block — and `home/gpt-6.1-sol` obeyed rule 4 on that very prompt, which settles it |
 | O1 OpenCode live, carrier at medium size, 56k model | `live-o1m`, **42,397 B** lane, `OPENCODE_CONFIG_CONTENT={"instructions":["…/AGENT-LANE.md"]}` with `opencode --standalone run -m homelocal/qwen3.8-27b` by hand, because vibe does not deliver this carrier | Last `vibe:lane-end` quoted **byte-equal** (`<!-- vibe:lane-end org.live/sample vibevm/vibespecs/boot/90-user.md 6494d071a30d -->`, identical to `tail -1`). All four lane canaries present **including the tail**, plus `CANARY-ENTRYPOINT-QUARTZ`; `CANARY-TEMPLATE-SLATE` absent. **No file read with a tool** — router rule 1 held at size. | — | — | **pass (2026-11-11)**: the tail arrives through the carrier at a non-trivial size on a 56,000-token model too |
+| Q1 Qwen delivery, offline | `live-q1` / `live-q3`, **Qwen Code 0.27.2**, offline against a loopback OpenAI-compatible provider that recorded the request body (`qwen-capture.sh`, `PORT=8752`/`8753`, inside `bwrap --unshare-net`) | **Plain, the shipped tier:** one system message of 21,708 bytes carrying the managed router block at byte **14,046**, inside Qwen Code's own `--- Context from: AGENTS.md ---` delimiter — `CANARY-ENTRYPOINT-QUARTZ` once, **every lane canary 0**, `CANARY-TEMPLATE-SLATE` absent, lane x0. So the router arrives and nothing else of the lane does. **Through the slot:** `--append-system-prompt "$(cat AGENT-LANE.md)"` on the 2,570-byte lane put it at byte **16,985**, **byte-equal and exactly once**, all four lane canaries present including the tail, the template's absent. **At real size:** the 202,349-byte lane through the same slot is `E2BIG` — «Argument list too long», errno **7** — at `execve`, before Qwen Code starts; an environment string is capped by the same 128 KiB rule. **Offsets:** context files 13,863, router 14,046, lane 16,985, auto-memory 16,985 → 19,561 when the lane is appended, `Today's date` **absent from the system message** and at byte 7,079 of the 12,212-byte user turn — Qwen Code puts the per-day text in the **user turn**, so nothing per-day precedes the lane | — | — | **pass, offline (2026-11-11)**: the router reaches the model in the shipped tier; the slot delivers; the slot cannot carry a real lane |
+| Q1 Qwen launcher | `live-q1`, `vibe agent qwen -p …` with vibe built from this worktree | `vibe agent` resolved the built-in `qwen` launcher, printed `system prompt: unchanged`, the `read` note and the slot note naming `--append-system-prompt`, the 128 KiB cap and `E2BIG`, passed **no** flag and exec'd real Qwen Code 0.27.2, which answered | — | — | **pass (2026-11-11)** for the launcher half |
+| Q1 Qwen live, `read` mode, the one prompt | `live-q1`, **2,570 B** lane, `vibe agent qwen -p "<the one prompt>"`, `gpt-6.1-sol` | Quoted, verbatim: «` vibe:lane-end org.live/sample <path> <id>`» — the managed block's own indented **format example**, which is the correct answer in `read` mode: there is no delivered marker and the example is the only literal occurrence. Canaries: `CANARY-ENTRYPOINT-QUARTZ` alone. «Files read with a tool in this session: none.» | — | — | **pass (2026-11-11)**, and **the prompt cannot test router rule 4** — it ends «do not read any file to answer this», so not reading is obedience. See the next row |
+| Q1 Qwen live, `read` mode, a task-shaped prompt | `live-q1`, same project, "what are this project's standing boot instructions? answer from the project's own boot files, and list every file you read with a tool" | **Router rule 4 obeyed.** Read `vibevm/vibespecs/boot/STATIC.md`, `INDEX.md`, `00-core.md`, `90-user.md` — in that order, **once each** — summarised all three layers correctly, quoted `STATIC`'s expected id `df1cb2d5aadc` from rule 3, reported `CANARY-LANE-HEAD-OBSIDIAN`, `CANARY-INDEX-CORE-BASALT`, `CANARY-INDEX-USER-GNEISS`, `CANARY-LANE-TAIL-PUMICE` and, separately, `CANARY-ENTRYPOINT-QUARTZ` as «the context-provided entrypoint», and **excluded `AGENTS.md` from the read list** because the harness had injected it | — | — | **pass (2026-11-11)**: the shipped tier works on Qwen Code |
+| Q1 Qwen carrier, offline | `live-q1`, the **file-based** slot: `QWEN_WRITE_SYSTEM_MD` probe → base prompt → lane appended → `QWEN_SYSTEM_MD` (`qwen-capture.sh`'s `carrier` leg) | The request begins with Qwen Code's own base prompt **byte-exact**, carries the lane **exactly once** at byte **13,858**, and from the end of the lane onward is **byte-identical** to the plain run after its base. All four lane canaries plus the entrypoint's, `CANARY-TEMPLATE-SLATE` absent. The probe reaches no provider: with no prompt and stdin closed Qwen Code writes the dump and refuses for want of input, and under `--safe-mode` the dump is byte-identical to a plain run's base layer | — | — | **pass, offline (2026-11-11)**: the owner's composition works. Not shipped — see the row below |
+| Q1 Qwen carrier, the blocker | `live-q1`, the same probe in both interaction modes under identical flags | The base prompt is **13,856** bytes headless and **18,451** interactive, differing by whole sections — the role sentence, the dedicated-tool and absolute-path rules, the background-process guidance, a block of worked examples. `--prompt-interactive` refuses piped input and a run with no tty is headless whatever is asked of it, so a probe without a terminal is **always** the headless variant | — | — | **recorded (2026-11-11)**, and it is what closes the tier: a launcher cannot know which copy a launch needs without allocating a pty and starting a second session |
+| Q1 Qwen carrier, live at real size | `live-q3`, **202,349 B** lane, `QWEN_SYSTEM_MD=<base+lane>` with `qwen -p "<the one prompt>"` by hand, `gpt-6.1-sol`, combined file 216,207 bytes | Last `vibe:lane-end` quoted **byte-equal** (`<!-- vibe:lane-end org.live/sample vibevm/vibespecs/boot/90-user.md 6494d071a30d -->`). All four lane canaries **including the tail** plus `CANARY-ENTRYPOINT-QUARTZ`; template's absent. «Files read with a tool in this session: none.» | — | — | **pass (2026-11-11)**: a **file** has no command-line limit, so the real-size lane goes through. The 128 KiB cap is the additive slot's problem alone |
+| Q1 Qwen context layer, import-inertness | `live-q1` copy with a hand-written `QWEN.md` carrying `@spec://org.vibevm.core/vibevm/common/PROP-076#SYS-QWEN` and `@./sibling.md` | The `@spec://` token arrived **verbatim**; the `@./sibling.md` beside it was **expanded in place**, inlined between `<!-- Imported from: ./sibling.md -->` and `<!-- End of import from: … -->`, carrying `CANARY-SIBLING-IMPORTED-ONYX` | — | — | **recorded (2026-11-11)**: C3's `@spec://` worry does **not** apply to Qwen Code, so the lane's 53 such tokens would survive the context layer. That layer still breaks `#SYS-WORKER-EXCLUSION`, which is why it is not the carrier |
+| Q1 Qwen live, the slot by hand | `live-q1`, **2,570 B** lane, `qwen --append-system-prompt "$(cat …/AGENT-LANE.md)" -p "<the one prompt>"`, because vibe does not deliver this slot | Last `vibe:lane-end` quoted **byte-equal** (`<!-- vibe:lane-end org.live/sample vibevm/vibespecs/boot/90-user.md 6494d071a30d -->`, `diff` against `tail -1` empty). All four lane canaries present **including the tail**, plus `CANARY-ENTRYPOINT-QUARTZ`; `CANARY-TEMPLATE-SLATE` absent. **Files read with a tool: none** — router rule 1 held. The same command on the **202,349-byte** lane printed «Argument list too long» and never started Qwen Code | — | — | **pass (2026-11-11)** for the slot at a size it can take, **and the measurement that closes the tier** at the size that matters |
 
 ## Findings
 
@@ -95,3 +118,19 @@ says otherwise.
 6. **Fixture note.** `CANARY-ENTRYPOINT-QUARTZ` lives only in the sample's
    `AGENTS.md`. Claude Code loads `CLAUDE.md`, so this canary never appears
    in a Claude session. That is expected and does not show a delivery gap.
+7. **Qwen Code reads `AGENTS.md`, so the router needed no new file.** The
+   intersection of what vibe writes (`CLAUDE.md`, `AGENTS.md`, `GEMINI.md`)
+   and what Qwen Code reads (`QWEN.md`, `AGENTS.md`, both together) is
+   `AGENTS.md`, and the block arrived through it in every Qwen leg. No
+   `QWEN.md` is written: the same block in both names would be delivered
+   twice.
+8. **Qwen Code has four candidate carriers and each fails on a different
+   axis.** `--append-system-prompt` is additive, cache-safe and worker-safe
+   and takes **text**, so the lane may not travel in it. `QWEN_SYSTEM_MD`
+   with `QWEN_WRITE_SYSTEM_MD` is file-based, worker-safe and carries 202 KB
+   live, and it **replaces** a base prompt whose bytes depend on the
+   session's shape, which a launcher cannot observe. The context-file layer —
+   and the generated `QWEN.md` behind it — is additive, byte-stable and
+   import-inert for this lane, and reaches every subagent. So `read` ships,
+   and the two changes that would open `launch` are written down rather than
+   waited for.

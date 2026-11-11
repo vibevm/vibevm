@@ -117,8 +117,8 @@ pub use package::{
     LaneForm, LinkType, MCP_ARG_VARS, Materialization, McpServerDecl, MediaDecl,
     NavigationChapterDecl, NavigationDecl, NavigationSectionDecl, Obsoletes, OpenCodeHarness,
     OverrideEntry, OverrideTable, OverrideTarget, PackageFormat, PackageMeta, PathPackageDep,
-    PrereleasePolicy, Provides, PublishPosture, Recommends, Requires, RequiresAny, Scalar,
-    SkillDecl, SkillResourceDecl, SourceExport, Suggests, SystemPromptSection, TargetOs,
+    PrereleasePolicy, Provides, PublishPosture, QwenHarness, Recommends, Requires, RequiresAny,
+    Scalar, SkillDecl, SkillResourceDecl, SourceExport, Suggests, SystemPromptSection, TargetOs,
     TargetSelection, TemplateSection, TranslatesDecl, Ttl, VarRegistryDep, VersionItem,
     VersionSource, VisibilityMeta, WhenCondition, channel_name_is_valid,
 };

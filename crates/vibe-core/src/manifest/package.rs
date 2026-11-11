@@ -71,7 +71,7 @@ pub use source_export::SourceExport;
 pub use system_prompt::{
     CODEX_DOC_MAX_BYTES_DEFAULT, ClaudeHarness, CodexHarness, DocMaxBytes, EntrypointChoice,
     EntrypointFile, HarnessDelivery, HarnessTable, HostChoice, LaneForm, OpenCodeHarness,
-    SystemPromptSection, TargetSelection,
+    QwenHarness, SystemPromptSection, TargetSelection,
 };
 pub use template::{
     CHANNEL_NAME_RULE, ChannelRule, DigestSource, PrereleasePolicy, Scalar, TemplateSection, Ttl,

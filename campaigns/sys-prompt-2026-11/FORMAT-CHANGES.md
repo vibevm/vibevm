@@ -579,3 +579,82 @@ opencode». **Amends `SP-FMT-105`** (whose harness table held two keys) and
   `opencode-fake-provider.py` reproduce the measurement. They call no model and
   reach nothing but `127.0.0.1`, and the recorder drops the `authorization`
   header before writing, so a capture can never carry a credential.
+
+## SP-FMT-113 — Qwen Code is a harness kind, and `[system_prompt.harness.qwen]` (Phase P10)
+
+Status: **delivered 2026-11-11** (phase P10). Design authority:
+`PROP-076#SYS-QWEN`. Owner directive 2026-11-11, «поддержи пожалуйста агента
+qwen-code до сборки релиза». **Amends `SP-FMT-105`** (whose harness table
+held three keys) and **`SP-FMT-109`** (whose built-in launchers were three),
+and follows `SP-FMT-112` exactly in shape.
+
+- **Manifest grammar: `[system_prompt.harness.qwen] delivery`**, optional,
+  `"launch" | "read"`, absent meaning **`read`**. `HarnessTable` has
+  `deny_unknown_fields`, so a fourth key is a grammar change and is recorded
+  here; it is omitted from serialisation when absent, so every manifest
+  written before this reads and writes byte for byte as it did. The key
+  exists so the declaration is **refused by name rather than ignored**, and
+  so a project can state the tier it wants the day the slot takes a file.
+- **`HarnessKind` is closed at four.** `qwen` is therefore a built-in
+  launcher — `vibe agent qwen` and a row in `vibe agent list` — and
+  `vibe prompt flags --harness qwen` answers. No wire change: the
+  `cli-agent-list` and `vibe-prompt-flags/1` documents gain no member,
+  because a kind is a value in fields they already carry.
+- **No new instruction file.** Qwen Code reads `QWEN.md` and `AGENTS.md`
+  together, and `AGENTS.md` is already one of the three files the managed
+  block is written into (`SP-FMT-105`), so the router reaches this harness in
+  every project that installed vibe before the kind existed. `QWEN.md` is
+  deliberately **not** written: the same block under both names would arrive
+  twice and be paid for twice.
+- **`launch` for this kind is undeliverable, and that is the shipped
+  behaviour.** `vibe agent` soft-launches it under `SP-FMT-111` with the size
+  and the fix named; `vibe prompt flags` refuses. The reason, with how it was
+  established, is `HARNESS-DELIVERY.md` §5's Qwen Code row — measured on
+  **Qwen Code 0.27.2**: the only additive per-launch slot,
+  `--append-system-prompt`, takes the instructions as **text**, and the
+  202,349-byte sample lane is `E2BIG` at `execve` **[V]**. Worker exclusion
+  is **not** the blocker — an ordinary subagent never receives the append
+  text **[R: source, 0.27.2]** — and the printed sentence says so, so a
+  reader does not carry `SP-FMT-112`'s conclusion over.
+- **Both slots measured, neither wired.** The additive one delivers a
+  2,570-byte lane byte-equal and exactly once, at system-prompt byte 16,985,
+  with a plain control run proving the slot is what delivered it. The
+  **file-based** one, on the owner's directive of the same day — «так возьми
+  системный промт Qwen и прибавь к нему наш, это нормально» — was measured end
+  to end: `QWEN_WRITE_SYSTEM_MD` has the installed program write its own base
+  prompt, the lane is appended to that copy, and `QWEN_SYSTEM_MD` hands it
+  back, so the request begins with Qwen Code's own prompt byte-exact, carries
+  the lane exactly once at byte 13,858, and continues byte-identically to a
+  plain run after its base; it is subagent-safe, and it carried the whole
+  **202,349-byte** lane live. What closes it is the prompt it replaces: that
+  prompt is session-shaped, **13,856** bytes headless against **18,451**
+  interactive under identical probe flags, and a probe without a terminal is
+  always the headless one — so a launcher cannot know which copy a launch
+  needs, and the wrong copy would silently swap the harness's instructions.
+  The owner's fallback, the lane as a **context file** (or a generated
+  `QWEN.md`), is additive, byte-stable and import-inert for this lane —
+  `@spec://` tokens arrive verbatim where a real `@./path` is expanded — but
+  `renderSubagentSystemPrompt` passes the context layer to every subagent, so
+  it breaks `#SYS-WORKER-EXCLUSION`. No environment plumbing and no wire
+  member were added for any of them: none has a legitimate caller yet, and
+  the measurement is reproducible instead.
+- **The cache finding, which the research never asked for.** Qwen Code puts
+  **no per-day text in the system prompt**: the date, OS, shell, cwd and
+  directory listing are `<system-reminder>` parts of the first user turn, and
+  the harness sets its own cache breakpoint immediately after the append
+  layer. So nothing per-day would precede a delivered lane. This changes no
+  format; it is recorded because it is the question `SP-FMT-112` had to
+  correct for OpenCode.
+- **Measured live 2026-11-11** on Qwen Code 0.27.2 with `gpt-6.1-sol`: the
+  `read` tier read the four boot files in `INDEX.md` order, once each, on a
+  task-shaped prompt, and quoted the block's own format example on the live
+  check's one prompt — which forbids reading, so it cannot test router rule 4
+  and both legs are kept. The slot, by hand, returned the last
+  `vibe:lane-end` byte-equal at 2,570 bytes and «Argument list too long» at
+  202,349. Record: `live/RESULTS.md` rows Q1.
+- **New campaign material, not a format:**
+  `campaigns/sys-prompt-2026-11/live/qwen-capture.sh`, which reuses
+  `opencode-fake-provider.py` and re-execs itself under `bwrap --unshare-net`
+  so the loopback endpoint is the only reachable one by construction. It
+  calls no model, and the recorder drops the `authorization` header before
+  writing, so a capture can never carry a credential.
