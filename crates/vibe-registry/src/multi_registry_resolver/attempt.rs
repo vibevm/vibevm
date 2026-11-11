@@ -33,6 +33,11 @@ pub enum WalkAttemptStatus {
     /// The line below tells the operator the host would need credentials if
     /// they want to access this registry as authenticated.
     Public401,
+    /// The effective source policy excludes this registry's hosting
+    /// (`exclude_hosting`), so the walk skipped it as if it were not
+    /// declared — it was never opened and never contacted (PROP-073
+    /// `#SOURCE-POLICY`). The declaration stays exactly where it is.
+    ExcludedByPolicy,
 }
 
 impl WalkAttemptStatus {
@@ -40,7 +45,13 @@ impl WalkAttemptStatus {
         match self {
             WalkAttemptStatus::NotFound => "not found",
             WalkAttemptStatus::Public401 => "access denied (401, walked past — auth=none)",
+            WalkAttemptStatus::ExcludedByPolicy => super::DISABLED_BY_POLICY_MARK,
         }
+    }
+    /// Whether this registry was actually asked. A registry the source policy
+    /// disables was not, so its auth regime says nothing about what happened.
+    pub fn was_contacted(&self) -> bool {
+        !matches!(self, WalkAttemptStatus::ExcludedByPolicy)
     }
 }
 
@@ -55,16 +66,57 @@ pub(super) fn format_walk_attempts(attempts: &[RegistryWalkAttempt]) -> String {
     let mut out = String::new();
     for a in attempts {
         // Indent each line with two spaces so the report nests visually
-        // under the parent error's "Tried:" label.
-        let _ = writeln!(
+        // under the parent error's "Tried:" label. A registry the source
+        // policy disabled was never asked, so its auth regime is not part
+        // of what happened and is left off its line.
+        let _ = if a.status.was_contacted() {
+            writeln!(
+                out,
+                "  - {:<name_width$}  ({:<url_width$})  → {} (auth={})",
+                a.name,
+                a.url,
+                a.status.as_label(),
+                a.auth.as_str(),
+                name_width = name_width,
+                url_width = url_width,
+            )
+        } else {
+            writeln!(
+                out,
+                "  - {:<name_width$}  ({:<url_width$})  → {}",
+                a.name,
+                a.url,
+                a.status.as_label(),
+                name_width = name_width,
+                url_width = url_width,
+            )
+        };
+    }
+    // The split the operator needs to read the table: which registries the
+    // walk actually asked, and which the effective source policy switched
+    // off. The disabled ones stay declared — nothing here asks for them to
+    // be removed (PROP-073 `#SOURCE-POLICY`).
+    let allowed: Vec<&str> = attempts
+        .iter()
+        .filter(|a| a.status.was_contacted())
+        .map(|a| a.name.as_str())
+        .collect();
+    let skipped: Vec<&str> = attempts
+        .iter()
+        .filter(|a| !a.status.was_contacted())
+        .map(|a| a.name.as_str())
+        .collect();
+    if !skipped.is_empty() {
+        let _ = write!(
             out,
-            "  - {:<name_width$}  ({:<url_width$})  → {} (auth={})",
-            a.name,
-            a.url,
-            a.status.as_label(),
-            a.auth.as_str(),
-            name_width = name_width,
-            url_width = url_width,
+            "\nAllowed registries: {}\nDisabled by the effective source policy \
+             (`exclude_hosting`), left configured and never contacted: {}\n",
+            if allowed.is_empty() {
+                "(none — the source policy disables every configured registry)".to_owned()
+            } else {
+                allowed.join(", ")
+            },
+            skipped.join(", "),
         );
     }
     // Hint at the bottom — the most common operator next step when nothing

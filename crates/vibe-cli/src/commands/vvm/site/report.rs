@@ -322,6 +322,36 @@ fn effective_text(effective: &Effective, out: &mut String) {
             scope_label(&row.scope),
             row.url
         ));
+        // The exclusion is said beside the registry it switches off, so the
+        // `never contacted:` line below is never read against an unmarked
+        // row. The row stays declared — this is not a removal hint.
+        if let Some(selector) = &row.disabled_by {
+            out.push_str(&format!(
+                "  {:<16} {} [{selector}]\n",
+                "",
+                vibe_registry::multi_registry_resolver::DISABLED_BY_POLICY_MARK,
+            ));
+        }
+    }
+    // Which registry resolution actually asks first: declared precedence is
+    // unchanged, but a registry the policy disables is never in play
+    // (PROP-002 `#registry-layers`, PROP-019 `#site-profile`).
+    if effective
+        .registries
+        .iter()
+        .any(|row| row.disabled_by.is_some())
+    {
+        out.push_str(&format!(
+            "effective primary: {}\n",
+            effective
+                .registries
+                .iter()
+                .find(|row| row.disabled_by.is_none())
+                .map_or(
+                    "(none — the source policy disables every configured registry)",
+                    |row| row.name.as_str()
+                )
+        ));
     }
     match (&effective.release, &effective.release_error) {
         (Some(release), _) => out.push_str(&format!(

@@ -68,6 +68,10 @@ mod locked;
 mod offline;
 pub use locked::{LockedSelection, LockedUpdateAvailability};
 mod override_resolve;
+mod policy_admission;
+pub use policy_admission::{
+    DISABLED_BY_POLICY_MARK, DisabledRegistry, disabled_registry, effective_primary,
+};
 mod redirect_follow;
 mod refresh;
 mod resolution;
@@ -434,6 +438,14 @@ impl MultiRegistryResolver {
     /// Declared rows, including disabled entries; no source is opened.
     pub fn declared_registry_rows(&self) -> Result<Vec<RegistrySection>, RegistryError> {
         self.catalog.declared_registry_rows(self)
+    }
+    /// The declared registries the effective source policy disables
+    /// (PROP-073 `#SOURCE-POLICY`). They are absent from [`Self::sources`]
+    /// and [`Self::registries`] and are never opened or contacted; this is
+    /// how a caller names them in a report or an error. The declarations
+    /// themselves stay exactly as the operator wrote them.
+    pub fn disabled_registries(&self) -> Result<&[DisabledRegistry], RegistryError> {
+        self.catalog.disabled_registries(self)
     }
     pub fn source_policy_for_new_selection(
         &self,

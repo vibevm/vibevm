@@ -113,6 +113,11 @@ struct ListReport {
     ok: bool,
     command: &'static str,
     registries: Vec<ListReportRegistry>,
+    /// The first registry the effective `[source_policy]` admits — the one
+    /// resolution actually asks first (PROP-002 `#registry-layers`, PROP-073
+    /// `#SOURCE-POLICY`). `null` when the policy admits none.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    effective_primary: Option<String>,
     mirrors: Vec<ListReportMirror>,
     overrides: Vec<ListReportOverride>,
 }
@@ -146,6 +151,19 @@ pub(in crate::commands::registry) fn run_list(
         }
     };
 
+    // The same policy resolution applies, so the marks below name exactly the
+    // registries resolution skips. The rows themselves are untouched: an
+    // excluded registry stays declared and is simply not used.
+    // A listing must not fail over a project manifest it was not asked to
+    // read — `--scope user` never looks at one — so a project layer that
+    // cannot be parsed simply does not contribute here.
+    let project = resolve_project_root(&args.path)
+        .ok()
+        .map(|root| root.join(Manifest::FILENAME))
+        .filter(|path| path.exists())
+        .and_then(|path| Manifest::read(&path).ok());
+    let policy = super::super::effective_source_policy(project.as_ref())?;
+
     let mut registries: Vec<ListReportRegistry> = Vec::with_capacity(view.rows.len());
     for (scope, reg) in &view.rows {
         let kind = reg.effective_type();
@@ -178,8 +196,18 @@ pub(in crate::commands::registry) fn run_list(
             org,
             adapter,
             mirrors,
+            disabled_by_source_policy: policy.excludes_endpoint(&reg.url),
+            disabled_by: policy.excluded_by(&reg.url).map(ToString::to_string),
         });
     }
+    // 4b: declared precedence is unchanged, but a registry the policy
+    // disables can never be primary in practice, so the effective primary is
+    // the first allowed one.
+    let effective_primary = vibe_registry::multi_registry_resolver::effective_primary(
+        &policy,
+        view.rows.iter().map(|(_, reg)| reg),
+    )
+    .map(|reg| reg.name.clone());
 
     let all_mirrors: Vec<ListReportMirror> = view
         .mirrors
@@ -206,6 +234,7 @@ pub(in crate::commands::registry) fn run_list(
             ok: true,
             command: "registry:list",
             registries,
+            effective_primary,
             mirrors: all_mirrors,
             overrides,
         })?;
@@ -226,6 +255,8 @@ pub(in crate::commands::registry) fn run_list(
         registries.len()
     ));
     for (i, reg) in registries.iter().enumerate() {
+        // Declared order still decides what "first" means; the effective
+        // primary below says which of them resolution actually asks first.
         let primary_marker = if i == 0 { " (primary)" } else { "" };
         let adapter_label = reg
             .adapter
@@ -246,6 +277,18 @@ pub(in crate::commands::registry) fn run_list(
             reg.naming,
             reg.refname,
         );
+        // The declaration stays; the policy switches it off. Nothing here
+        // suggests removing the row — leaving it in place is the point.
+        if reg.disabled_by_source_policy {
+            println!(
+                "     status:  {}{}",
+                vibe_registry::multi_registry_resolver::DISABLED_BY_POLICY_MARK,
+                reg.disabled_by
+                    .as_deref()
+                    .map(|selector| format!(" [{selector}]"))
+                    .unwrap_or_default(),
+            );
+        }
         if reg.mirrors.is_empty() {
             println!("     mirrors: (none)");
         } else {
@@ -257,6 +300,19 @@ pub(in crate::commands::registry) fn run_list(
                 );
             }
         }
+    }
+
+    let disabled = registries
+        .iter()
+        .filter(|reg| reg.disabled_by_source_policy)
+        .count();
+    if disabled > 0 {
+        println!(
+            "\neffective primary: {}",
+            effective_primary
+                .as_deref()
+                .unwrap_or("(none — the source policy disables every configured registry)")
+        );
     }
 
     if !overrides.is_empty() {
@@ -282,8 +338,15 @@ pub(in crate::commands::registry) fn run_list(
 
     let mirror_total = registries.iter().map(|r| r.mirrors.len()).sum::<usize>();
     ctx.summary(&format!(
-        "\nvibe registry list: {} registries, {} mirror{}, {} override{}.",
+        "\nvibe registry list: {} registries{}, {} mirror{}, {} override{}.",
         registries.len(),
+        // Said only when the policy disabled something, so the ordinary
+        // listing reads exactly as it did before.
+        if disabled > 0 {
+            format!(" ({disabled} disabled by the source policy)")
+        } else {
+            String::new()
+        },
         mirror_total,
         if mirror_total == 1 { "" } else { "s" },
         overrides.len(),

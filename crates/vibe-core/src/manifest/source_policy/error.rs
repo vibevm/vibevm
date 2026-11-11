@@ -71,13 +71,22 @@ pub enum SourcePolicyError {
         requested: String,
         held: Option<String>,
     },
+    /// The admitted registries are named beside the excluded endpoints: a
+    /// refusal has to say what WAS asked, not only what was not, or the
+    /// operator cannot tell an empty allowed set from a genuine absence
+    /// (PROP-073 `#EXCLUDED-REGISTRY-ENUMERATION`). The excluded registries
+    /// stay declared; nothing here proposes removing them.
     #[error(
-        "source_host_excluded: no admitted registry offers {package}; its remaining candidate sources are on excluded hosting ({}) and were not contacted (violates spec://org.vibevm.core/vibevm/common/PROP-073#SOURCE-POLICY-LAW; fix: admit that hosting for this operation, or declare a registry outside the excluded hosting that serves {package})",
+        "source_host_excluded: no admitted registry offers {package}; allowed registries: {}; its remaining candidate sources are on excluded hosting ({}) and were not contacted (violates spec://org.vibevm.core/vibevm/common/PROP-073#SOURCE-POLICY-LAW; fix: admit that hosting for this operation, or declare a registry outside the excluded hosting that serves {package})",
+        if .admitted.is_empty() { "(none — the source policy disables every configured registry)".to_owned() } else { .admitted.join(", ") },
         .endpoints.join(", ")
     )]
     ExcludedOnly {
         package: String,
         endpoints: Vec<String>,
+        /// The registries that were in play, by name; empty when the policy
+        /// disables every configured registry.
+        admitted: Vec<String>,
     },
 }
 

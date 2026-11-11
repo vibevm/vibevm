@@ -96,6 +96,31 @@ pub(crate) fn effective_registries(
     .merge())
 }
 
+/// The effective `[source_policy]` (PROP-073 `#SOURCE-POLICY`, PROP-019
+/// `#site-profile`): the applied site profile beneath the user's own
+/// `~/.vibe/registry.toml`, with the project's `vibe.toml` above both. This
+/// is the policy resolution itself applies, so a listing built on it marks
+/// exactly the registries resolution skips — and nothing else.
+pub(crate) fn effective_source_policy(
+    manifest: Option<&vibe_core::manifest::Manifest>,
+) -> Result<vibe_core::manifest::EffectiveSourcePolicy> {
+    use anyhow::Context as _;
+    let site = vibe_core::site_profile::installed()
+        .context("reading the applied site profile")?
+        .map(|site| site.profile.source_policy.clone())
+        .unwrap_or_default();
+    let user = vibe_core::GlobalRegistryConfig::load()
+        .context("loading `~/.vibe/registry.toml`")?
+        .source_policy
+        .over(&site);
+    let project = manifest
+        .map(|manifest| manifest.source_policy.clone())
+        .unwrap_or_default();
+    let empty = vibe_core::manifest::SourcePolicyDecl::default();
+    vibe_core::manifest::EffectiveSourcePolicy::merge(&user, &project, &empty)
+        .context("merging the effective source policy")
+}
+
 fn resolve_project_root(path: &Path) -> Result<PathBuf> {
     let canonical = path
         .canonicalize()

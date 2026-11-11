@@ -116,6 +116,7 @@ pub(in crate::commands::registry) fn run_add(
     file.save()?;
 
     let adapter = adapter_for(kind, &host).map(String::from);
+    let policy = super::super::effective_source_policy(None)?;
     let registry_view = ListReportRegistry {
         name: new.name.clone(),
         registry_type: kind.as_str().to_string(),
@@ -135,6 +136,12 @@ pub(in crate::commands::registry) fn run_add(
                 priority: m.priority,
             })
             .collect(),
+        // Whether the effective `[source_policy]` would disable the row just
+        // added (PROP-073 `#SOURCE-POLICY`) — worth saying at the moment of
+        // adding it, so the operator is not left waiting for a registry that
+        // will never be asked.
+        disabled_by_source_policy: policy.excludes_endpoint(&new.url),
+        disabled_by: policy.excluded_by(&new.url).map(ToString::to_string),
     };
     let total = file.registries().len();
 

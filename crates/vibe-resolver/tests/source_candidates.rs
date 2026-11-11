@@ -368,10 +368,17 @@ fn requirement_served_only_by_excluded_hosting_is_a_typed_refusal() {
     let error = solve(&provider, &["a"], SourceSolveLimits::standard_operation()).unwrap_err();
     match error {
         SolveError::Provider(DepProviderError::SourcePolicy(
-            vibe_core::manifest::SourcePolicyError::ExcludedOnly { package, endpoints },
+            vibe_core::manifest::SourcePolicyError::ExcludedOnly {
+                package,
+                endpoints,
+                admitted,
+            },
         )) => {
             assert_eq!(package, "org.test/a");
             assert_eq!(endpoints, ["http://127.0.0.1:9"]);
+            // Every observed source here was excluded, so the refusal says
+            // that in as many words rather than leaving it to be inferred.
+            assert!(admitted.is_empty(), "{admitted:?}");
         }
         other => panic!("expected ExcludedOnly, got {other:?}"),
     }

@@ -668,6 +668,13 @@ pub struct RegistryRow {
     pub url: String,
 
     pub scope: RegistryScope,
+
+    /// The `[source_policy] exclude_hosting` selector that disables this
+    /// registry (PROP-073 `#SOURCE-POLICY`). Present only when one does: the
+    /// declaration stays exactly where it is and resolution skips the registry
+    /// as if absent, never contacting it. Absent means the registry is in play.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub disabled_by: Option<String>,
 }
 
 /// Which layer declared the row: the user's `~/.vibe/registry.toml`, the

@@ -90,7 +90,14 @@ impl MultiRegistryResolver {
                 }
             });
         }
-        task.detail(format!("checking remote registry {}", reg.name()));
+        // The URL belongs on this line as much as the name: `-v` has to be
+        // enough to tell which endpoint a walk step actually reached, without
+        // the reader cross-referencing `vibe registry list`.
+        task.detail(format!(
+            "checking remote registry {} ({}) for {group}/{name}",
+            reg.name(),
+            reg.org_url()
+        ));
         let result = lookup();
         if let Err(err) = &result
             && let Some(miss) = self.walked_past(reg, err)

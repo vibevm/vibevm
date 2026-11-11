@@ -55,6 +55,18 @@ pub(super) struct Catalog {
     opened: OnceLock<Opened>,
     initialization: Mutex<()>,
     selected: Mutex<HashMap<String, Arc<RegistrySource>>>,
+    /// The effective source policy's verdict on the declared rows, taken
+    /// once per resolver and before any row is opened
+    /// (`super::policy_admission`).
+    admitted: OnceLock<PolicySplit>,
+    admission_gate: Mutex<()>,
+}
+
+/// The declared, enabled rows split by the effective source policy: the ones
+/// resolution may walk, and the ones it skips as if they were not declared.
+struct PolicySplit {
+    allowed: Vec<RegistrySection>,
+    disabled: Vec<super::policy_admission::DisabledRegistry>,
 }
 struct Opened {
     sources: Vec<RegistrySource>,
@@ -87,6 +99,8 @@ impl Catalog {
             opened: OnceLock::from(Opened::new(sources)),
             initialization: Mutex::new(()),
             selected: Mutex::new(HashMap::new()),
+            admitted: OnceLock::new(),
+            admission_gate: Mutex::new(()),
         }
     }
     pub(super) fn declared(
@@ -104,6 +118,8 @@ impl Catalog {
             opened: OnceLock::new(),
             initialization: Mutex::new(()),
             selected: Mutex::new(HashMap::new()),
+            admitted: OnceLock::new(),
+            admission_gate: Mutex::new(()),
         }
     }
     pub(super) fn deferred(provider: Arc<dyn RegistryCatalogProvider>, freshness: u64) -> Self {
@@ -154,6 +170,69 @@ impl Catalog {
         resolver: &MultiRegistryResolver,
     ) -> Result<Vec<RegistrySection>, RegistryError> {
         Ok(self.definitions(resolver)?.registries.clone())
+    }
+    /// The effective source policy's verdict on the declared rows, taken once
+    /// per resolver, before any row is opened and therefore before anything
+    /// could be contacted (PROP-073 `#SOURCE-POLICY`). The exclusions are
+    /// announced here and nowhere else, so a run says them once however many
+    /// packages the walk goes on to ask for.
+    ///
+    /// A resolver built from already-opened sources
+    /// ([`MultiRegistryResolver::new`]) has no declarations to judge: its
+    /// caller handed in the exact source owners it wanted.
+    fn split(&self, resolver: &MultiRegistryResolver) -> Result<&PolicySplit, RegistryError> {
+        if self.admitted.get().is_none() {
+            let _guard = self
+                .admission_gate
+                .lock()
+                .map_err(|_| RegistryError::MalformedMeta {
+                    path: "registry.toml".into(),
+                    reason: "catalog policy admission lock poisoned".into(),
+                })?;
+            if self.admitted.get().is_none() {
+                let rows = &self.definitions(resolver)?.registries;
+                let policy = resolver.source_policy_for_new_selection()?;
+                let mut allowed = Vec::new();
+                let mut disabled = Vec::new();
+                for row in rows.iter().filter(|row| row.enabled) {
+                    match super::policy_admission::disabled_registry(&policy, row) {
+                        Some(value) => disabled.push(value),
+                        None => allowed.push(row.clone()),
+                    }
+                }
+                if !disabled.is_empty() {
+                    let task = resolver
+                        .progress
+                        .task("Applying the effective source policy");
+                    for value in &disabled {
+                        tracing::info!(
+                            target: "vibe_registry::source_policy",
+                            registry = %value.name,
+                            url = %value.url,
+                            selector = %value.selector,
+                            "{}", value.skip_note()
+                        );
+                        task.detail(value.skip_note());
+                    }
+                    task.finish();
+                }
+                let _ = self.admitted.set(PolicySplit { allowed, disabled });
+            }
+        }
+        self.admitted
+            .get()
+            .ok_or_else(|| RegistryError::MalformedMeta {
+                path: "registry.toml".into(),
+                reason: "catalog policy admission produced no verdict".into(),
+            })
+    }
+    /// The declared registries the effective source policy disables. They stay
+    /// in `registry.toml`; resolution treats them as absent.
+    pub(super) fn disabled_registries<'a>(
+        &'a self,
+        resolver: &MultiRegistryResolver,
+    ) -> Result<&'a [super::policy_admission::DisabledRegistry], RegistryError> {
+        Ok(&self.split(resolver)?.disabled)
     }
     pub(super) fn mirrors<'a>(
         &'a self,
@@ -208,6 +287,23 @@ impl Catalog {
         if !row.enabled {
             return Err(invalid("selected registry is disabled"));
         }
+        // The last gate before a row is opened: a registry the effective
+        // source policy disables is never constructed, so nothing downstream
+        // can reach its index probe, its clone chain or its host. Resolution
+        // filters these out before it asks for them (`Self::split`); only an
+        // explicit by-name selection — `--registry <name>`, a lockfile pin —
+        // arrives here and is told why the name it asked for is not in play.
+        if let Some(disabled) = self
+            .split(resolver)?
+            .disabled
+            .iter()
+            .find(|value| value.name == name)
+        {
+            return Err(RegistryError::RegistryDisabledByPolicy {
+                registry: disabled.name.clone(),
+                selector: disabled.selector.clone(),
+            });
+        }
         let source = Arc::new(construct_source(
             row,
             &definitions.registries,
@@ -243,7 +339,14 @@ impl Catalog {
             .map_or(&[], |opened| opened.registries.as_slice())
     }
     fn demand(&self, resolver: &MultiRegistryResolver) -> Result<&Opened, RegistryError> {
-        let definitions = self.definitions(resolver)?;
+        let _definitions = self.definitions(resolver)?;
+        // The walk list is the declared order minus the registries the
+        // effective source policy disables — they are absent here, so no
+        // later step can open, probe or contact one (PROP-073
+        // `#SOURCE-POLICY`). Declared precedence (PROP-002
+        // `#registry-layers`, PROP-019 `#site-profile`) is untouched; the
+        // first row that survives this filter is the effective primary.
+        let admitted = self.split(resolver)?;
         if self.opened.get().is_none() {
             let _guard = self
                 .initialization
@@ -253,10 +356,9 @@ impl Catalog {
                     reason: "catalog initialization lock poisoned".into(),
                 })?;
             if self.opened.get().is_none() {
-                let sources = definitions
-                    .registries
+                let sources = admitted
+                    .allowed
                     .iter()
-                    .filter(|row| row.enabled)
                     .map(|row| {
                         self.selected(resolver, &row.name)
                             .map(|source| source.as_ref().clone())

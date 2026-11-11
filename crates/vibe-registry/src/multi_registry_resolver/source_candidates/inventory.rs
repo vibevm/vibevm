@@ -51,6 +51,25 @@ impl MultiRegistryResolver {
                 decision: SourceCandidateDecision::Disabled,
             });
         }
+        // A registry the effective source policy disables is observed exactly
+        // like a row switched off by hand: recorded, never probed (PROP-073
+        // `#SOURCE-POLICY`). Deciding it here, from the declared URL, is what
+        // keeps the inventory from opening it to be refused later.
+        for row in rows
+            .iter()
+            .filter(|row| row.enabled && policy.excludes_endpoint(&row.url))
+        {
+            observations.push(SourceCandidateObservation {
+                binding: Binding::Registry {
+                    registry: RegistryPin::new(row.name.clone())?,
+                    source_url: row.url.clone().into(),
+                },
+                observation: SourceCandidateObservationKind::NotProbed,
+                decision: SourceCandidateDecision::ExcludedHost {
+                    endpoint: row.url.clone(),
+                },
+            });
+        }
         vibe_core::manifest::validate_registry_aliases(&rows, "effective")?;
         let mut candidates = Vec::new();
         let mut domain = BTreeSet::new();
@@ -59,7 +78,11 @@ impl MultiRegistryResolver {
         let task = self
             .progress
             .task(format!("Discovering source candidates for {coordinate}"));
-        for (order, row) in rows.iter().filter(|row| row.enabled).enumerate() {
+        for (order, row) in rows
+            .iter()
+            .filter(|row| row.enabled && !policy.excludes_endpoint(&row.url))
+            .enumerate()
+        {
             let binding = Binding::Registry {
                 registry: RegistryPin::new(row.name.clone())?,
                 source_url: row.url.clone().into(),
@@ -194,10 +217,22 @@ fn walks_past(source: &RegistrySource, strict: bool, error: &RegistryError) -> b
             | RegistryError::Git(GitError::ContactRefused(
                 crate::ContactRefusal::ExcludedHost { .. }
             ))
+            | RegistryError::RegistryDisabledByPolicy { .. }
     ) || matches!((source, error), (RegistrySource::Git(registry), RegistryError::Git(GitError::AuthFailed { .. })) if registry.auth_kind() == vibe_core::manifest::AuthKind::None && !strict)
 }
 fn failed_observation(binding: Binding, error: &RegistryError) -> SourceCandidateObservation {
     let (observation, decision) = match error {
+        // The row was named and the policy disables it: recorded as not
+        // probed, because it was not (PROP-073 `#SOURCE-POLICY`).
+        RegistryError::RegistryDisabledByPolicy { .. } => (
+            SourceCandidateObservationKind::NotProbed,
+            SourceCandidateDecision::ExcludedHost {
+                endpoint: match &binding {
+                    Binding::Registry { source_url, .. } => source_url.to_string(),
+                    _ => String::new(),
+                },
+            },
+        ),
         RegistryError::ContactRefused(crate::ContactRefusal::ExcludedHost { endpoint })
         | RegistryError::Git(GitError::ContactRefused(crate::ContactRefusal::ExcludedHost {
             endpoint,

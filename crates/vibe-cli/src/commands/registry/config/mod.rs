@@ -46,6 +46,14 @@ struct ListReportRegistry {
     adapter: Option<String>,
     /// Mirrors that fall through to this registry, in priority order.
     mirrors: Vec<ListReportMirror>,
+    /// `true` when the effective `[source_policy]` excludes this registry's
+    /// hosting (PROP-073 `#SOURCE-POLICY`): the row stays declared and
+    /// resolution skips it as if it were absent, never contacting it.
+    #[serde(skip_serializing_if = "std::ops::Not::not")]
+    disabled_by_source_policy: bool,
+    /// The `exclude_hosting` selector that disabled the row, when one did.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    disabled_by: Option<String>,
 }
 
 #[derive(Debug, Serialize)]

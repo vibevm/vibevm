@@ -72,6 +72,15 @@ pub(super) fn run_sync_home(ctx: &output::Context, root_offline: bool) -> Result
         )
     })?;
     let global = GlobalRegistryConfig::load().context("loading `~/.vibe/registry.toml`")?;
+    // A registry the effective `[source_policy]` disables is not refreshed:
+    // refreshing it is contacting it (PROP-073 `#SOURCE-POLICY`). It stays
+    // declared and is reported as skipped, exactly like `enabled = false`.
+    let policy = super::effective_source_policy(None)?;
+    let (admitted, excluded): (Vec<_>, Vec<_>) = global
+        .registries
+        .iter()
+        .cloned()
+        .partition(|row| !policy.excludes_endpoint(&row.url));
 
     ctx.heading(&format!(
         "Refreshing the registry cache of {}",
@@ -80,24 +89,21 @@ pub(super) fn run_sync_home(ctx: &output::Context, root_offline: bool) -> Result
     let task = ctx
         .progress()
         .task("Refreshing the user home's registry clones");
-    let refreshed = MultiRegistryResolver::open_refreshing(
-        &global.registries,
-        &global.mirrors,
-        &global.overrides,
-    )
-    .context("opening the user home's registries")
-    .and_then(|mrr| {
-        // A refresh that moves bytes is a transfer of this task
-        // (`PROP-068#git`).
-        let walked = vibe_registry::git_backend::transfers::observed(
-            Some(&task.progress()),
-            None,
-            None,
-            || mrr.refresh_cached_clones(),
-        )
-        .context("refreshing the cached package clones")?;
-        Ok((walked, local_sources(&mrr)?))
-    });
+    let refreshed =
+        MultiRegistryResolver::open_refreshing(&admitted, &global.mirrors, &global.overrides)
+            .context("opening the user home's registries")
+            .and_then(|mrr| {
+                // A refresh that moves bytes is a transfer of this task
+                // (`PROP-068#git`).
+                let walked = vibe_registry::git_backend::transfers::observed(
+                    Some(&task.progress()),
+                    None,
+                    None,
+                    || mrr.refresh_cached_clones(),
+                )
+                .context("refreshing the cached package clones")?;
+                Ok((walked, local_sources(&mrr)?))
+            });
     let (walked, locals) = match refreshed {
         Ok(found) => {
             task.finish();
@@ -115,6 +121,12 @@ pub(super) fn run_sync_home(ctx: &output::Context, root_offline: bool) -> Result
         .filter(|r| !r.enabled)
         .map(|r| registry_skip(&r.name, "disabled (`enabled = false`)"))
         .collect();
+    skipped.extend(excluded.iter().map(|r| {
+        registry_skip(
+            &r.name,
+            vibe_registry::multi_registry_resolver::DISABLED_BY_POLICY_MARK,
+        )
+    }));
     skipped.extend(locals.iter().map(|name| {
         registry_skip(
             name,

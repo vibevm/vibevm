@@ -105,10 +105,41 @@ pub fn run(ctx: &output::Context, args: SearchArgs, env: SearchEnv) -> Result<()
         );
     }
 
+    // A registry the effective `[source_policy]` disables is skipped here as
+    // it is in resolution: left declared, never contacted (PROP-073
+    // `#SOURCE-POLICY`). The note is said once, before the search runs, not
+    // once per registry asked.
+    let policy = crate::commands::registry::effective_source_policy(Some(&manifest))?;
+    for row in effective
+        .registries
+        .iter()
+        .filter(|r| policy.excludes_endpoint(&r.url))
+    {
+        if let Some(disabled) =
+            vibe_registry::multi_registry_resolver::disabled_registry(&policy, row)
+        {
+            ctx.summary(&disabled.skip_note());
+        }
+    }
+
     let target_registries: Vec<&vibe_core::manifest::RegistrySection> =
         match args.registry.as_deref() {
-            None => effective.registries.iter().collect(),
+            None => effective
+                .registries
+                .iter()
+                .filter(|r| !policy.excludes_endpoint(&r.url))
+                .collect(),
             Some(name) => match effective.registries.iter().find(|r| r.name == name) {
+                Some(r) if policy.excludes_endpoint(&r.url) => bail!(
+                    "registry `{name}` is {}: the effective `[source_policy]` excludes \
+                     `{}` hosting, so it is not searched. Search a registry the policy \
+                     admits, or drop that exclusion.",
+                    vibe_registry::multi_registry_resolver::DISABLED_BY_POLICY_MARK,
+                    policy
+                        .excluded_by(&r.url)
+                        .map(ToString::to_string)
+                        .unwrap_or_default(),
+                ),
                 Some(r) => vec![r],
                 None => bail!(
                     "no `[[registry]]` named `{name}` in `vibe.toml`, \
@@ -122,6 +153,14 @@ pub fn run(ctx: &output::Context, args: SearchArgs, env: SearchEnv) -> Result<()
                 ),
             },
         };
+    if target_registries.is_empty() {
+        bail!(
+            "every configured registry is {}. Leave them declared and admit one \
+             hosting in `[source_policy] exclude_hosting`, or add a registry the \
+             policy allows.",
+            vibe_registry::multi_registry_resolver::DISABLED_BY_POLICY_MARK
+        );
+    }
 
     if let Some(purl) = args.purl.as_deref() {
         let purl_norm = purl.trim();

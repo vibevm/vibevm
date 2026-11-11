@@ -150,13 +150,22 @@ fn remotes_that_lack_a_local_package_are_asked_once_per_run() {
     }
     assert_eq!(backend.tag_calls(ONE), 1);
     assert_eq!(backend.tag_calls(TWO), 1);
-    assert_eq!(recording.details("checking remote registry one"), 1);
-    assert_eq!(recording.details("checking remote registry two"), 1);
+    assert_eq!(
+        recording.details("checking remote registry one (git@host:one) for org.vibevm/wal"),
+        1
+    );
+    assert_eq!(
+        recording.details("checking remote registry two (git@host:two) for org.vibevm/wal"),
+        1
+    );
     assert_eq!(
         recording.details("remote registry one: not here (answered earlier in this run)"),
         7
     );
-    assert_eq!(recording.details("checking local registry local"), 8);
+    assert_eq!(
+        recording.details(&format!("checking local registry local ({local_url})")),
+        8
+    );
 }
 
 #[test]
@@ -183,7 +192,10 @@ fn an_earlier_remote_that_holds_the_package_still_shadows_the_local_one() {
     // The miss is remembered; the hit is asked every time, as before.
     assert_eq!(backend.tag_calls(ONE), 1);
     assert_eq!(backend.tag_calls(TWO), 4);
-    assert_eq!(recording.details("checking local registry local"), 0);
+    assert_eq!(
+        recording.details(&format!("checking local registry local ({local_url})")),
+        0
+    );
 }
 
 #[test]

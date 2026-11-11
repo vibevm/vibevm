@@ -356,7 +356,8 @@
           "name",
           "type",
           "url",
-          "scope"
+          "scope",
+          "disabled_by"
         ],
         "description": "One effective `[[registry]]` and the layer it came from."
       },
@@ -372,6 +373,15 @@
         },
         "scope": {
           "ref": "registry_scope"
+        }
+      },
+      "optionalProperties": {
+        "disabled_by": {
+          "type": "string",
+          "metadata": {
+            "x-default": null,
+            "description": "The `[source_policy] exclude_hosting` selector that disables this registry (PROP-073 `#SOURCE-POLICY`). Present only when one does: the declaration stays exactly where it is and resolution skips the registry as if absent, never contacting it. Absent means the registry is in play."
+          }
         }
       }
     },

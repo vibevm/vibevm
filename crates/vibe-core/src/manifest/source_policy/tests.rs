@@ -118,6 +118,7 @@ fn excluded_only_requirement_names_the_package_and_refused_endpoints() {
     let error = SourcePolicyError::ExcludedOnly {
         package: "org.policy/demo".into(),
         endpoints: vec!["http://127.0.0.1:9".into(), "https://github.com".into()],
+        admitted: vec!["corp".into()],
     };
     assert_eq!(error.code(), "source_host_excluded");
     let rendered = error.to_string();
@@ -131,4 +132,93 @@ fn excluded_only_requirement_names_the_package_and_refused_endpoints() {
         rendered.contains("PROP-073#SOURCE-POLICY-LAW"),
         "{rendered}"
     );
+    // The refusal names what WAS asked beside what was not.
+    assert!(rendered.contains("allowed registries: corp"), "{rendered}");
+    let nothing_allowed = SourcePolicyError::ExcludedOnly {
+        package: "org.policy/demo".into(),
+        endpoints: vec!["https://github.com".into()],
+        admitted: Vec::new(),
+    };
+    assert!(
+        nothing_allowed.to_string().contains(
+            "allowed registries: (none — the source policy disables every configured registry)"
+        ),
+        "{nothing_allowed}"
+    );
+}
+
+/// The registry-enumeration decision (`PROP-073#SOURCE-POLICY`): a registry
+/// URL in, "is this hosting excluded by the effective policy" out. Nothing is
+/// opened, resolved or contacted to decide it.
+#[test]
+fn an_excluded_hosting_disables_exactly_the_registry_urls_it_names() {
+    let site: SourcePolicyDecl = toml::from_str("exclude_hosting=['github','gitverse']").unwrap();
+    let empty = SourcePolicyDecl::default();
+    let policy = EffectiveSourcePolicy::merge(&site, &empty, &empty).unwrap();
+
+    for excluded in [
+        "https://github.com/vibespecs",
+        "https://GitHub.com/vibespecs",
+        "git+https://github.com/vibespecs",
+        "git@github.com:vibespecs/node.git",
+        "ssh://git@ssh.github.com:443/vibespecs/node.git",
+        "https://raw.githubusercontent.com/vibespecs/node",
+        "https://gitverse.ru/vibespecs",
+        "https://api.gitverse.ru/vibespecs",
+    ] {
+        assert!(
+            policy.excludes_endpoint(excluded),
+            "`{excluded}` must be disabled by the policy"
+        );
+    }
+    assert_eq!(
+        policy
+            .excluded_by("https://gitverse.ru/vibespecs")
+            .map(ToString::to_string),
+        Some("gitverse".to_owned())
+    );
+
+    // The site registry, and every spelling that names no excluded hosting,
+    // stays allowed. A suffix of an excluded host is a different host.
+    for allowed in [
+        "ssh://git@mono.example.invalid/corp/mono.git",
+        "git@mono.example.invalid:corp/mono.git",
+        "file:///srv/corp/mono.git",
+        "/srv/corp/mono.git",
+        "C:\\srv\\corp\\mono.git",
+        "https://github.com.attacker.invalid/vibespecs",
+        "https://notgithub.com/vibespecs",
+        "",
+    ] {
+        assert!(
+            !policy.excludes_endpoint(allowed),
+            "`{allowed}` must stay allowed"
+        );
+        assert!(policy.excluded_by(allowed).is_none(), "{allowed}");
+    }
+}
+
+/// An exact host selector disables that one host and nothing around it, and
+/// an empty policy disables nothing at all.
+#[test]
+fn an_exact_host_exclusion_and_an_empty_policy_decide_narrowly() {
+    let site: SourcePolicyDecl =
+        toml::from_str("exclude_hosting=['host:MONO.example.invalid.']").unwrap();
+    let empty = SourcePolicyDecl::default();
+    let policy = EffectiveSourcePolicy::merge(&site, &empty, &empty).unwrap();
+    assert!(policy.excludes_endpoint("ssh://git@mono.example.invalid/corp.git"));
+    assert!(policy.excludes_endpoint("git@mono.example.invalid:corp.git"));
+    assert!(!policy.excludes_endpoint("https://github.com/vibespecs"));
+    assert!(!policy.excludes_endpoint("ssh://git@other.example.invalid/corp.git"));
+    assert_eq!(
+        policy
+            .excluded_hostings()
+            .map(ToString::to_string)
+            .collect::<Vec<_>>(),
+        vec!["host:mono.example.invalid".to_owned()]
+    );
+
+    let neutral = EffectiveSourcePolicy::merge(&empty, &empty, &empty).unwrap();
+    assert!(!neutral.excludes_endpoint("https://github.com/vibespecs"));
+    assert_eq!(neutral.excluded_hostings().count(), 0);
 }

@@ -40,6 +40,19 @@ pub(super) fn effective(
         .site
         .as_ref()
         .map(|site| site.profile.registry_layer());
+    // The same `[source_policy]` resolution applies (PROP-073
+    // `#SOURCE-POLICY`), so each row can say whether it is actually in play.
+    // The declaration is not touched: an excluded registry stays in
+    // `registry.toml` and the policy simply switches it off.
+    let declared_policy = match &site {
+        Some(site) => user.source_policy.over(&site.source_policy),
+        None => user.source_policy.clone(),
+    };
+    let empty = vibe_core::manifest::SourcePolicyDecl::default();
+    let effective_policy =
+        vibe_core::manifest::EffectiveSourcePolicy::merge(&declared_policy, &empty, &empty)
+            .unwrap_or_default();
+    let disabled_by = |url: &str| effective_policy.excluded_by(url).map(ToString::to_string);
     let mut registries: Vec<RegistryRow> = RegistryLayers {
         local: None,
         project: None,
@@ -51,6 +64,7 @@ pub(super) fn effective(
     .map(|(scope, row)| RegistryRow {
         type_: registry_type(row.effective_type()),
         name: row.name,
+        disabled_by: disabled_by(&row.url),
         url: row.url,
         scope: match scope {
             RegistryScope::Site => WireScope::Site,
@@ -65,6 +79,7 @@ pub(super) fn effective(
                 .map(|row| RegistryRow {
                     type_: registry_type(row.effective_type()),
                     name: row.name,
+                    disabled_by: disabled_by(&row.url),
                     url: row.url,
                     scope: WireScope::Default,
                 }),
@@ -85,10 +100,7 @@ pub(super) fn effective(
         ),
         Err(error) => (None, Some(error.to_string())),
     };
-    let policy = match &site {
-        Some(site) => user.source_policy.over(&site.source_policy),
-        None => user.source_policy.clone(),
-    };
+    let policy = declared_policy;
     let merged = match &layers.site {
         Some(site) => layers.own.clone().over_site(&site.profile),
         None => layers.own.clone(),

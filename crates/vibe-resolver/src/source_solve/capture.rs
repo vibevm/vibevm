@@ -73,7 +73,7 @@ impl Universe {
                 world.incomplete.insert(format!("{group}/{name}"));
             }
             let excluded = excluded_endpoints(&inventory.observations);
-            if !excluded.is_empty() {
+            if !excluded.endpoints.is_empty() {
                 world
                     .excluded
                     .push(((group.clone(), name.clone()), excluded));
@@ -166,25 +166,53 @@ impl Universe {
     }
 }
 
+/// The two halves of the split a refusal has to report: the endpoints
+/// hosting exclusion refused, and the registries that were actually in play.
+#[derive(Default)]
+pub(super) struct ExcludedSplit {
+    pub(super) endpoints: BTreeSet<String>,
+    pub(super) admitted: BTreeSet<String>,
+}
+
 /// Endpoints refused by hosting exclusion, but only when no admitted source
 /// observed any version: availability on an excluded endpoint is never
-/// inferred, only that nothing admitted remains.
+/// inferred, only that nothing admitted remains. The admitted registries are
+/// carried beside them so the refusal can say what WAS asked, not only what
+/// was not (PROP-073 `#EXCLUDED-REGISTRY-ENUMERATION`).
 fn excluded_endpoints(
     observations: &[vibe_registry::source_candidates::SourceCandidateObservation],
-) -> BTreeSet<String> {
+) -> ExcludedSplit {
     use vibe_registry::source_candidates::SourceCandidateDecision;
     let admitted = observations.iter().any(|row| {
         matches!(&row.observation, SourceCandidateObservationKind::Available { versions } if !versions.is_empty())
             && !matches!(row.decision, SourceCandidateDecision::ExcludedHost { .. })
     });
     if admitted {
-        return BTreeSet::new();
+        return ExcludedSplit::default();
     }
-    observations
-        .iter()
-        .filter_map(|row| match &row.decision {
-            SourceCandidateDecision::ExcludedHost { endpoint } => Some(endpoint.clone()),
-            _ => None,
-        })
-        .collect()
+    ExcludedSplit {
+        endpoints: observations
+            .iter()
+            .filter_map(|row| match &row.decision {
+                SourceCandidateDecision::ExcludedHost { endpoint } => Some(endpoint.clone()),
+                _ => None,
+            })
+            .collect(),
+        admitted: observations
+            .iter()
+            .filter(|row| {
+                !matches!(
+                    row.decision,
+                    SourceCandidateDecision::ExcludedHost { .. }
+                        | SourceCandidateDecision::Disabled
+                )
+            })
+            .filter_map(|row| match &row.binding {
+                vibe_core::manifest::CanonicalSourceBinding::Registry { registry, .. } => {
+                    Some(registry.as_str().to_owned())
+                }
+                _ => None,
+            })
+            .collect(),
+    }
 }

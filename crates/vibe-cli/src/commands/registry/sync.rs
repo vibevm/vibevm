@@ -114,12 +114,30 @@ pub(super) fn run_sync(
         return Ok(());
     }
 
-    let mrr = MultiRegistryResolver::open(
-        &effective.registries,
-        &effective.mirrors,
-        &effective.overrides,
-    )
-    .context("opening multi-registry resolver")?;
+    // Refreshing a registry is contacting it, so a registry the effective
+    // `[source_policy]` disables is left out of the walk entirely; it stays
+    // declared (PROP-073 `#SOURCE-POLICY`).
+    let policy = super::effective_source_policy(Some(&manifest))?;
+    let admitted: Vec<_> = effective
+        .registries
+        .iter()
+        .filter(|row| !policy.excludes_endpoint(&row.url))
+        .cloned()
+        .collect();
+    for row in effective
+        .registries
+        .iter()
+        .filter(|row| policy.excludes_endpoint(&row.url))
+    {
+        if let Some(disabled) =
+            vibe_registry::multi_registry_resolver::disabled_registry(&policy, row)
+        {
+            ctx.summary(&disabled.skip_note());
+        }
+    }
+
+    let mrr = MultiRegistryResolver::open(&admitted, &effective.mirrors, &effective.overrides)
+        .context("opening multi-registry resolver")?;
 
     ctx.heading(&format!(
         "Syncing {} package clone{} referenced by lockfile",

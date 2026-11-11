@@ -96,7 +96,7 @@ impl MultiRegistryResolver {
                         }
                     }
                     super::RegistrySource::Local(ls) => {
-                        task.detail(format!("checking local registry {}", ls.name));
+                        task.detail(format!("checking local registry {} ({})", ls.name, ls.url));
                         match ls.registry.list_versions(group, name) {
                             Ok(versions) if !versions.is_empty() => return Ok(versions),
                             Ok(_) => continue,
@@ -105,7 +105,10 @@ impl MultiRegistryResolver {
                         }
                     }
                     super::RegistrySource::Monorepo(mono) => {
-                        task.detail(format!("checking monorepo registry {}", mono.name));
+                        task.detail(format!(
+                            "checking monorepo registry {} ({})",
+                            mono.name, mono.url
+                        ));
                         match mono
                             .local()
                             .and_then(|local| local.list_versions(group, name))
@@ -243,6 +246,21 @@ impl MultiRegistryResolver {
             Some(source) => vec![source.as_ref()],
             None => self.sources()?.iter().collect(),
         };
+        // A registry the effective source policy disables is absent from the
+        // walk list above: it is never opened and never contacted (PROP-073
+        // `#SOURCE-POLICY`). It is still named in the report, so the operator
+        // reading "not found in any configured registry" can see which
+        // registries answered and which were switched off.
+        if registry_filter.is_none() {
+            for disabled in self.disabled_registries()? {
+                attempts.push(RegistryWalkAttempt {
+                    name: disabled.name.clone(),
+                    url: disabled.url.clone(),
+                    auth: disabled.auth,
+                    status: WalkAttemptStatus::ExcludedByPolicy,
+                });
+            }
+        }
         for src in sources {
             let network = match src {
                 RegistrySource::Git(_) => true,
@@ -345,7 +363,7 @@ impl MultiRegistryResolver {
                 // the lockfile `source_url` (a `file://` / path string) with
                 // no `source_ref` (there is no git ref).
                 RegistrySource::Local(ls) => {
-                    task.detail(format!("checking local registry {}", ls.name));
+                    task.detail(format!("checking local registry {} ({})", ls.name, ls.url));
                     match ls.registry.resolve(pkgref) {
                         Ok(resolved) => {
                             let source_url =
@@ -394,7 +412,10 @@ impl MultiRegistryResolver {
                     }
                 }
                 RegistrySource::Monorepo(mono) => {
-                    task.detail(format!("checking monorepo registry {}", mono.name));
+                    task.detail(format!(
+                        "checking monorepo registry {} ({})",
+                        mono.name, mono.url
+                    ));
                     match mono.local().and_then(|local| local.resolve(pkgref)) {
                         Ok(resolved) => {
                             let source_url = crate::git_registry::monorepo_source_url(
@@ -484,6 +505,23 @@ impl MultiRegistryResolver {
                 group: group.clone(),
                 name: pkgref.name.to_string(),
             });
+        }
+        // Nothing admitted was even asked: the exclusion is the whole reason,
+        // not an absence anyone observed, so this keeps the dedicated
+        // `source_host_excluded` refusal rather than reporting a package
+        // nobody looked for as missing (PROP-073 `#SOURCE-POLICY`). Its
+        // message names both halves — the admitted registries, which here are
+        // none, and the endpoints that were skipped.
+        if attempts
+            .iter()
+            .all(|attempt| matches!(attempt.status, WalkAttemptStatus::ExcludedByPolicy))
+        {
+            return Err(vibe_core::manifest::SourcePolicyError::ExcludedOnly {
+                package: format!("{group}/{}", pkgref.name),
+                endpoints: attempts.iter().map(|a| a.url.clone()).collect(),
+                admitted: Vec::new(),
+            }
+            .into());
         }
         let summary = format_walk_attempts(&attempts);
         Err(RegistryError::PackageNotFoundEverywhere {

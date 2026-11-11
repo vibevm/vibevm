@@ -28,15 +28,16 @@ struct Universe {
     entries: Vec<Entry>,
     incomplete: BTreeSet<String>,
     /// Coordinates whose only observed sources were refused by hosting
-    /// exclusion, in capture order (roots first), with those endpoints.
-    excluded: Vec<(Coordinate, BTreeSet<String>)>,
+    /// exclusion, in capture order (roots first), with those endpoints and
+    /// the registries that were in play beside them.
+    excluded: Vec<(Coordinate, capture::ExcludedSplit)>,
 }
 impl Universe {
     /// A demanded coordinate with no admitted entry at all, known only from
     /// excluded hosting; a coordinate with any admitted entry is never
     /// reported here, so real version conflicts keep their proof.
     fn excluded_only(&self) -> Option<vibe_core::manifest::SourcePolicyError> {
-        self.excluded.iter().find_map(|(key, endpoints)| {
+        self.excluded.iter().find_map(|(key, split)| {
             let package = format!("{}/{}", key.0, key.1);
             let admitted = self
                 .entries
@@ -45,7 +46,8 @@ impl Universe {
             (!admitted && !self.incomplete.contains(&package)).then(|| {
                 vibe_core::manifest::SourcePolicyError::ExcludedOnly {
                     package,
-                    endpoints: endpoints.iter().cloned().collect(),
+                    endpoints: split.endpoints.iter().cloned().collect(),
+                    admitted: split.admitted.iter().cloned().collect(),
                 }
             })
         })

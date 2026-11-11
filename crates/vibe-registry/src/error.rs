@@ -249,6 +249,20 @@ pub enum RegistryError {
         attempts: Vec<crate::multi_registry_resolver::RegistryWalkAttempt>,
     },
 
+    /// A registry was named explicitly — `--registry <name>`, a lockfile pin
+    /// — but the effective source policy excludes its hosting, so it is not
+    /// in play (PROP-073 `#SOURCE-POLICY`). The declaration itself is
+    /// untouched; `exclude_hosting` switches the registry off rather than
+    /// removing it, and the resolution walk skips it without ever opening
+    /// it. Only a by-name selection reaches this error.
+    #[error(
+        "registry `{registry}` is disabled by the effective source policy, which excludes \
+         `{selector}` hosting \
+         (violates spec://org.vibevm.core/vibevm/common/PROP-073#SOURCE-POLICY-LAW; \
+          fix: name a registry the policy admits, or drop `{selector}` from `exclude_hosting`)"
+    )]
+    RegistryDisabledByPolicy { registry: String, selector: String },
+
     #[error(
         "I/O error on `{path}` \
          (violates spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#failure-discriminator; \

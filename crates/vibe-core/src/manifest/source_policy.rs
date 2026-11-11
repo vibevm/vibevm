@@ -270,6 +270,45 @@ impl EffectiveSourcePolicy {
             .map(str::to_owned)
             .collect()
     }
+    /// The exclusion that disables a source at this spelled endpoint, if any.
+    ///
+    /// This is the enumeration decision, taken before anything is opened or
+    /// contacted: a registry whose hosting is excluded is absent from the
+    /// walk rather than contacted and refused. The decision is pure
+    /// observation of the spelling — a local directory, a UNC path or an
+    /// unsupported syntax matches nothing, because an exclusion names
+    /// hosting, not storage.
+    ///
+    /// ```
+    /// use vibe_core::manifest::{EffectiveSourcePolicy, HostingSelector, SourcePolicyDecl};
+    /// let site = SourcePolicyDecl {
+    ///     prefer_hosting: None,
+    ///     exclude_hosting: vec![HostingSelector::Github],
+    /// };
+    /// let empty = SourcePolicyDecl::default();
+    /// let policy = EffectiveSourcePolicy::merge(&site, &empty, &empty).unwrap();
+    /// assert_eq!(
+    ///     policy.excluded_by("https://github.com/vibespecs").map(ToString::to_string),
+    ///     Some("github".to_owned())
+    /// );
+    /// assert!(policy.excluded_by("ssh://git@mono.example.invalid/corp.git").is_none());
+    /// ```
+    pub fn excluded_by(&self, endpoint: &str) -> Option<&HostingSelector> {
+        self.excluded
+            .iter()
+            .find(|selector| selector.matches_endpoint(endpoint))
+    }
+
+    /// [`Self::excluded_by`] with the selector dropped.
+    pub fn excludes_endpoint(&self, endpoint: &str) -> bool {
+        self.excluded_by(endpoint).is_some()
+    }
+
+    /// Every exclusion this policy carries, in normalized order.
+    pub fn excluded_hostings(&self) -> impl Iterator<Item = &HostingSelector> {
+        self.excluded.iter()
+    }
+
     pub fn preference_rank(&self, actual_source: &str) -> usize {
         self.preference
             .iter()
