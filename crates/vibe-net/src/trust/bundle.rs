@@ -161,13 +161,18 @@ pub(crate) fn cached_in(dir: &std::path::Path, bytes: &[u8]) -> Result<PathBuf, 
 /// hands it to vibe, on this operating system. Generic: it names the
 /// stores and commands, never a particular network.
 pub(crate) const UNTRUSTED_HELP: &str = if cfg!(windows) {
+    // The command is printed through the display language, which strips
+    // backtick markup — so it must not need a PowerShell backtick escape
+    // of its own. Emitting the three PEM lines as three values rather
+    // than joining them with `n keeps it correct as printed.
     "export the issuer and every certificate above it, then name the file with \
      `[tls] extra_ca`. In PowerShell, the whole of both stores: \
-     `Get-ChildItem Cert:\\CurrentUser\\Root, Cert:\\CurrentUser\\CA, \
+     Get-ChildItem Cert:\\CurrentUser\\Root, Cert:\\CurrentUser\\CA, \
      Cert:\\LocalMachine\\Root, Cert:\\LocalMachine\\CA | ForEach-Object { \
-     [Convert]::ToBase64String($_.RawData, 'InsertLineBreaks') | \
-     ForEach-Object { \"-----BEGIN CERTIFICATE-----`n$_`n-----END CERTIFICATE-----\" } } | \
-     Set-Content -Encoding ascii $HOME\\.vibe\\corp-ca.pem`"
+     '-----BEGIN CERTIFICATE-----'; \
+     [Convert]::ToBase64String($_.RawData, 'InsertLineBreaks'); \
+     '-----END CERTIFICATE-----' } | \
+     Set-Content -Encoding ascii $HOME\\.vibe\\corp-ca.pem"
 } else if cfg!(target_vendor = "apple") {
     "export the issuer and every certificate above it, then name the file with \
      `[tls] extra_ca`. From the system keychain: \
