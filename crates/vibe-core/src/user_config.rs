@@ -64,6 +64,8 @@ mod slot;
 pub use slot::{SlotConfig, SlotExtras, read_item_lines};
 mod template;
 pub use template::TemplateConfig;
+mod tls;
+pub use tls::{ExtraCa, TlsConfig, effective_extra_ca};
 mod transfer;
 pub use artifacts::{ArtifactsConfig, ReleaseSourceKind, SelfConfig, UnknownReleaseSource};
 pub use artifacts::{InstallRootError, install_root_at};
@@ -83,6 +85,7 @@ pub use transfer::TransferConfig;
 /// assert!(cfg.net.is_default());
 /// assert!(cfg.llm.is_none());
 /// assert!(cfg.proxy.is_default());
+/// assert!(cfg.tls.is_default());
 /// assert!(cfg.template.is_default());
 /// assert!(cfg.slot.is_empty());
 /// ```
@@ -130,6 +133,12 @@ pub struct UserConfig {
     /// `[proxy]` — the one proxy table every HTTP client and child `git` reads (`PROP-066#locator`).
     #[serde(default, skip_serializing_if = "ProxyConfig::is_default")]
     pub proxy: ProxyConfig,
+
+    /// `[tls]` — the certificates trusted besides the operating system's
+    /// own (`PROP-068#proxy`). `[proxy] ca_file` is the older spelling of
+    /// the same thing and both are read.
+    #[serde(default, skip_serializing_if = "TlsConfig::is_default")]
+    pub tls: TlsConfig,
 
     /// `[transfer]` — the download rate limit (`PROP-068#limit`).
     #[serde(default, skip_serializing_if = "TransferConfig::is_default")]
@@ -403,6 +412,7 @@ impl UserConfig {
             self.artifacts.packages = site.artifacts.packages.clone();
         }
         self.proxy = std::mem::take(&mut self.proxy).over(&site.proxy);
+        self.tls = std::mem::take(&mut self.tls).over(&site.tls);
         self.net.offline |= site.net.offline;
         self
     }

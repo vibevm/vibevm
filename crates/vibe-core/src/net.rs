@@ -141,6 +141,7 @@ pub struct ProxyRoute {
     bypass: Bypass,
     no_proxy: Option<String>,
     ca_file: Option<PathBuf>,
+    extra_ca: Vec<PathBuf>,
     revocation: RevocationCheck,
     revocation_origin: ModeOrigin,
 }
@@ -161,6 +162,7 @@ impl ProxyRoute {
             bypass: Bypass::default(),
             no_proxy: None,
             ca_file: None,
+            extra_ca: Vec::new(),
             revocation: RevocationCheck::Check,
             revocation_origin: ModeOrigin::Default,
         }
@@ -223,6 +225,7 @@ impl ProxyRoute {
             bypass: Bypass::parse(cfg.no_proxy.as_deref().unwrap_or_default()),
             no_proxy: cfg.no_proxy.clone(),
             ca_file: cfg.ca_file.clone(),
+            extra_ca: cfg.ca_file.clone().into_iter().collect(),
             revocation: cfg.revocation.unwrap_or_default(),
             revocation_origin: if cfg.revocation.is_some() {
                 ModeOrigin::User
@@ -295,9 +298,45 @@ impl ProxyRoute {
         }
     }
 
-    /// The extra certificate authorities (`[proxy] ca_file`).
+    /// The extra certificate authorities (`[proxy] ca_file`) as that one
+    /// key names them — what `vibe self apply --show` reports for it.
+    /// [`Self::extra_ca`] is the whole effective list.
     pub fn ca_file(&self) -> Option<&Path> {
         self.ca_file.as_deref()
+    }
+
+    /// Every certificate file or directory this installation trusts
+    /// besides the operating system's own verifier: `[proxy] ca_file`
+    /// followed by `[tls] extra_ca`, without repeats
+    /// (`vibe_core::user_config::effective_extra_ca`).
+    ///
+    /// ```
+    /// use std::path::PathBuf;
+    /// use vibe_core::net::ProxyRoute;
+    /// use vibe_core::user_config::ProxyConfig;
+    /// let cfg: ProxyConfig = toml::from_str("ca_file='/etc/corp-ca.pem'").unwrap();
+    /// let route = ProxyRoute::from_config(&cfg).unwrap();
+    /// // `ca_file` alone is already an extra-certificate list of one.
+    /// assert_eq!(route.extra_ca(), [PathBuf::from("/etc/corp-ca.pem")]);
+    /// // And `[tls] extra_ca` adds to it rather than replacing it.
+    /// let route = route.with_extra_ca(vec![
+    ///     PathBuf::from("/etc/corp-ca.pem"),
+    ///     PathBuf::from("/etc/corp-certs"),
+    /// ]);
+    /// assert_eq!(route.extra_ca().len(), 2);
+    /// ```
+    pub fn extra_ca(&self) -> &[PathBuf] {
+        &self.extra_ca
+    }
+
+    /// This route with the effective extra-certificate list recorded. The
+    /// composition root builds the list from both keys and installs it
+    /// here; the list replaces whatever `from_config` seeded from
+    /// `ca_file`, which is the first entry the composition root produces.
+    #[must_use]
+    pub fn with_extra_ca(mut self, paths: Vec<PathBuf>) -> Self {
+        self.extra_ca = paths;
+        self
     }
 
     /// Whether a child `git` on Windows checks certificate revocation

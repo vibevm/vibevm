@@ -7,7 +7,7 @@
 /// use vibe_net::probe::FailureClass;
 /// assert_eq!(FailureClass::ProxyAuth.code(), "dl_proxy_auth");
 /// assert_eq!(FailureClass::ProxyAuth.exit_code(), 9);
-/// assert!(FailureClass::UntrustedCertificate.fix().contains("ca_file"));
+/// assert!(FailureClass::UntrustedCertificate.fix().contains("extra_ca"));
 /// ```
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum FailureClass {
@@ -125,9 +125,11 @@ impl FailureClass {
             Self::ConnectRejected => {
                 "the proxy refuses this destination: ask for it to be allowed, or add the host to `[proxy] no_proxy` if it is internal"
             }
-            Self::UntrustedCertificate => {
-                "install the issuing CA in the system store, or set `[proxy] ca_file` to its PEM file"
-            }
+            // The operating system's own verifier already read every
+            // store this machine has, so the fix is never "install it
+            // again": it is to export the issuer and name it, and the
+            // text says how on this operating system (PROP-068 `#proxy`).
+            Self::UntrustedCertificate => crate::TrustSet::untrusted_help(),
             Self::NameMismatch => {
                 "the certificate is for another name: use the host name the certificate names, or ask the server's owner to fix it"
             }

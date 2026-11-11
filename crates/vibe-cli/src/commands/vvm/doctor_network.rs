@@ -14,11 +14,11 @@ use vibe_net::doctor::{Check, Status};
 pub(super) const DEFAULT_TARGET: &str = crate::cli::DEFAULT_TEST_TARGET;
 
 /// The diagnosed steps, or `None` when there is nothing to diagnose (no
-/// route, no CA file, no `--network`).
+/// route, no extra certificates, no `--network`).
 pub(super) fn diagnose(requested: Option<&str>) -> anyhow::Result<Option<Vec<Check>>> {
     let session = vibe_net::current();
     let route = session.route();
-    if requested.is_none() && !route.is_proxied() && route.ca_file().is_none() {
+    if requested.is_none() && !route.is_proxied() && route.extra_ca().is_empty() {
         return Ok(None);
     }
     let raw = requested

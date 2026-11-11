@@ -4,41 +4,19 @@
 
 use super::der::summarize;
 use super::*;
-use rustls::client::WebPkiServerVerifier;
+use crate::TrustSet;
 use rustls::client::danger::{HandshakeSignatureValid, ServerCertVerified, ServerCertVerifier};
-use rustls::pki_types::pem::PemObject;
 use rustls::pki_types::{CertificateDer, ServerName, UnixTime};
-use rustls::{CertificateError, DigitallySignedStruct, RootCertStore, SignatureScheme};
+use rustls::{CertificateError, DigitallySignedStruct, SignatureScheme};
 use std::net::TcpStream;
 use std::sync::{Mutex, PoisonError};
 
-/// The roots every vibe client trusts besides `ca_file`: the bundled web
-/// roots and the operating system's store.
-fn system_roots() -> RootCertStore {
-    let mut roots = RootCertStore::empty();
-    roots.extend(webpki_roots::TLS_SERVER_ROOTS.iter().cloned());
-    let native = rustls_native_certs::load_native_certs();
-    roots.add_parsable_certificates(native.certs);
-    roots
-}
-
-fn ca_file_roots(session: &NetworkSession) -> Result<Option<RootCertStore>, Failure> {
-    let Some(path) = session.route().ca_file() else {
-        return Ok(None);
-    };
-    let bytes = crate::trust::read_ca_file(path)
-        .map_err(|error| fail(FailureClass::Tls, error.to_string()))?;
-    let mut roots = RootCertStore::empty();
-    let certs: Vec<CertificateDer<'static>> = CertificateDer::pem_slice_iter(&bytes)
-        .filter_map(Result::ok)
-        .collect();
-    roots.add_parsable_certificates(certs);
-    Ok(Some(roots))
-}
-
+/// The one trust set, wrapped so the probe keeps the chain the server
+/// sent even when verification refuses it — a refusal an operator can act
+/// on names the certificate it ended at.
 #[derive(Debug)]
 struct Recording {
-    inner: Arc<WebPkiServerVerifier>,
+    inner: Arc<dyn ServerCertVerifier>,
     chain: Arc<Mutex<Vec<CertificateDer<'static>>>>,
 }
 
@@ -81,15 +59,6 @@ impl ServerCertVerifier for Recording {
     }
 }
 
-fn verifier(
-    roots: RootCertStore,
-    provider: &Arc<rustls::crypto::CryptoProvider>,
-) -> Result<Arc<WebPkiServerVerifier>, Failure> {
-    WebPkiServerVerifier::builder_with_provider(Arc::new(roots), provider.clone())
-        .build()
-        .map_err(|error| fail(FailureClass::Tls, format!("trust set unusable: {error}")))
-}
-
 pub(super) fn handshake(
     session: &NetworkSession,
     host: &str,
@@ -101,19 +70,19 @@ pub(super) fn handshake(
     ),
     Failure,
 > {
-    let provider = Arc::new(rustls::crypto::ring::default_provider());
-    let system = system_roots();
-    let extra = ca_file_roots(session)?;
-    let mut all = system.clone();
-    if let Some(extra) = &extra {
-        all.roots.extend(extra.roots.iter().cloned());
-    }
+    let trust = TrustSet::of_route(session.route())
+        .map_err(|error| fail(FailureClass::Tls, error.to_string()))?;
     let chain = Arc::new(Mutex::new(Vec::new()));
     let recording = Arc::new(Recording {
-        inner: verifier(all, &provider)?,
+        inner: trust
+            .verifier()
+            .map_err(|error| fail(FailureClass::Tls, error.to_string()))?,
         chain: chain.clone(),
     });
-    let config = rustls::ClientConfig::builder_with_provider(provider.clone())
+    // The same configuration every client of this operation gets, with
+    // the recording verifier in place of the plain one and no ALPN: the
+    // probe speaks HTTP/1.1 by hand.
+    let config = rustls::ClientConfig::builder_with_provider(crate::trust::provider())
         .with_safe_default_protocol_versions()
         .map_err(|error| fail(FailureClass::Tls, error.to_string()))?
         .dangerous()
@@ -159,7 +128,7 @@ pub(super) fn handshake(
                 FailureClass::UntrustedCertificate,
                 format!(
                     "unable to get local issuer certificate: the chain ends at `{issuer}`, {}",
-                    untrusted_by(extra.is_some())
+                    trust.untrusted_by()
                 ),
             ),
             Some(rustls::Error::InvalidCertificate(
@@ -183,7 +152,7 @@ pub(super) fn handshake(
             ..failure
         });
     }
-    let trusted_by = attribute(&recorded, &name, system, extra, &provider);
+    let trusted_by = trust.attribute(&recorded, &name, UnixTime::now());
     let version = stream
         .conn
         .protocol_version()
@@ -211,39 +180,6 @@ fn chain_text(chain: &[CertSummary]) -> String {
         .map(|cert| format!("`{}` issued by `{}`", cert.subject, cert.issuer))
         .collect::<Vec<_>>()
         .join(" ← ")
-}
-
-fn attribute(
-    chain: &[CertificateDer<'static>],
-    name: &ServerName<'static>,
-    system: RootCertStore,
-    extra: Option<RootCertStore>,
-    provider: &Arc<rustls::crypto::CryptoProvider>,
-) -> Option<TrustSource> {
-    let (leaf, rest) = chain.split_first()?;
-    let accepts = |roots: RootCertStore| {
-        verifier(roots, provider).is_ok_and(|v| {
-            v.verify_server_cert(leaf, rest, name, &[], UnixTime::now())
-                .is_ok()
-        })
-    };
-    if accepts(system) {
-        return Some(TrustSource::System);
-    }
-    if extra.is_some_and(accepts) {
-        return Some(TrustSource::CaFile);
-    }
-    None
-}
-
-/// Who refused the issuer an untrusted chain ends at: the system store, and
-/// `[proxy] ca_file` when one is configured.
-fn untrusted_by(ca_file: bool) -> &'static str {
-    if ca_file {
-        "which neither the system store nor `[proxy] ca_file` trusts"
-    } else {
-        "which the system store does not trust"
-    }
 }
 
 /// The failure of a handshake the transport ended, after the TCP connection
@@ -296,12 +232,10 @@ mod tests {
     }
 
     #[test]
-    fn the_untrusted_issuer_sentence_reads_with_and_without_a_ca_file() {
-        assert_eq!(untrusted_by(false), "which the system store does not trust");
-        assert_eq!(
-            untrusted_by(true),
-            "which neither the system store nor `[proxy] ca_file` trusts"
-        );
+    fn the_untrusted_issuer_sentence_says_who_refused_the_chain() {
+        let bare = TrustSet::from_paths(&[]).unwrap();
+        assert_eq!(bare.untrusted_by(), "which the system store does not trust");
+        assert!(TrustSet::untrusted_help().contains("extra_ca"));
     }
 
     #[test]

@@ -114,6 +114,16 @@ pub fn search_cache_dir() -> Option<PathBuf> {
     Some(settings_dir()?.join("search-cache"))
 }
 
+/// The content-addressed TLS bundle cache: `<settings-dir>/tls`.
+///
+/// A child `git` is handed a CA bundle as a file path, so the bundle has
+/// to outlive the process that wrote it for as long as the child reads it,
+/// and two runs with the same trust set must not write two files. Both
+/// follow from naming the file after its own content (`PROP-068#proxy`).
+pub fn tls_cache_dir() -> Option<PathBuf> {
+    Some(settings_dir()?.join("tls"))
+}
+
 /// vibeterm/aiui discovery dir: `<settings-dir>/aiui`.
 pub fn aiui_dir() -> Option<PathBuf> {
     Some(settings_dir()?.join("aiui"))
@@ -196,6 +206,7 @@ mod tests {
             settings_toml_path(),
             registries_cache_dir(),
             search_cache_dir(),
+            tls_cache_dir(),
             aiui_dir(),
             site_profile_path(),
             site_receipt_path(),

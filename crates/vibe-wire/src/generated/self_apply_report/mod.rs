@@ -573,10 +573,15 @@ pub struct ProxyRow {
     #[serde(deserialize_with = "crate::behaviour::required_nullable::deserialize")]
     pub px_path: Option<String>,
 
-    /// The PEM bundle of extra certificate authorities trusted with the system
-    /// store.
+    /// The `[proxy] ca_file` key as written — the older spelling of `[tls]
+    /// extra_ca`, and the first entry of the effective list.
     #[serde(deserialize_with = "crate::behaviour::required_nullable::deserialize")]
     pub ca_file: Option<String>,
+
+    /// Every certificate file or directory trusted in addition to the operating
+    /// system's own verifier: `[proxy] ca_file` followed by `[tls] extra_ca`,
+    /// without repeats.
+    pub extra_ca: Vec<String>,
 
     /// Whether a child `git` using Windows schannel checks certificate
     /// revocation: `check` (the default), `best-effort` or `off`.

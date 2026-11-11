@@ -901,7 +901,7 @@ PATH answers is a fact, not a failure.</COMPANION-TOOLS-APPLY></p>
 TOML **site profile** (`schema = 1`), and every developer runs `vibe self apply
 &lt;file|url&gt;`. The profile carries `name`, `[[registry]]` (with `type`),
 `[[mirror]]`, `[[override]]`, `[[remap]]`, `[source_policy]`, `[artifacts]`
-(`vibe`, `packages`), `[self]`, `[proxy]`, `[net] offline`, `[path] fix =
+(`vibe`, `packages`), `[self]`, `[proxy]`, `[tls]`, `[net] offline`, `[path] fix =
 "ask" | "always" | "never"` and `[trust]`; any other key is refused. It is stored verbatim as
 its own layer, `&lt;settings-dir&gt;/site-profile.toml`, never merged into the
 user's files: every owner reads it **below** the user's own `registry.toml` /
@@ -917,7 +917,11 @@ user's files: every owner reads it **below** the user's own `registry.toml` /
   are local-layer rows placed before the user's `settings.toml` rows, so a
   user's row wins among equals. The release decision (`[self]` with
   `[artifacts] vibe`) comes whole from the higher layer declaring either;
-  `[artifacts] packages` and each `[proxy]` key fall back to the site's;
+  `[artifacts] packages` and each `[proxy]` and `[tls]` key fall back to the
+  site's — `[tls] extra_ca` layers on its own key like every other, and the
+  **effective trust set** is that key together with `[proxy] ca_file` (the
+  older spelling of the same thing), merged without repeats, so neither
+  spelling can take the other's certificates away (PROP-068 `#proxy-trust`);
   `[net] offline` is on when either says so. Provenance names the stored
   profile (`[self] in …/site-profile.toml`).</SITE-PROFILE-LAYER>
         <SITE-PROFILE-TRUST fact="true" status="impl/done">**`[trust]` — which package groups this installation trusts (owner

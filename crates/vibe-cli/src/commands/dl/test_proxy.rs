@@ -117,11 +117,17 @@ pub(super) fn run(ctx: &Context, args: &DlArgs, offline: bool) -> Result<()> {
             session.route().mode_name(),
             session.route().mode_origin().as_str(),
             table_origin(),
-            session
-                .route()
-                .ca_file()
-                .map(|path| format!(" · ca_file {}", path.display()))
-                .unwrap_or_default(),
+            match session.route().extra_ca() {
+                [] => String::new(),
+                paths => format!(
+                    " · extra_ca {}",
+                    paths
+                        .iter()
+                        .map(|path| path.display().to_string())
+                        .collect::<Vec<_>>()
+                        .join(", ")
+                ),
+            },
             // Said only when a layer asked for it: the default row stays
             // exactly as it read before the key existed.
             match session.route().revocation() {

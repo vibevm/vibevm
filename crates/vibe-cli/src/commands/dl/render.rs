@@ -97,9 +97,12 @@ pub(super) fn hop_rows(probe: &Probe, index: usize, hop: &Hop, verbose: bool) ->
         let mut tls_row = row(
             "TLS",
             format!(
-                "{} · trusted by {}",
+                "{} · {}",
                 tls.version,
-                tls.trusted_by.map_or("?", |source| source.as_str())
+                tls.trusted_by.as_ref().map_or_else(
+                    || "trust source unknown".to_owned(),
+                    |source| source.describe()
+                )
             ),
             vec![
                 tls.chain

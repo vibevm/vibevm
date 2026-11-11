@@ -168,8 +168,15 @@ pub struct Tls {
     /// The server's chain, leaf first.
     pub chain: Vec<Certificate>,
 
-    /// `system` (bundled web roots or the operating system's store) or
-    /// `ca_file`.
+    /// Which part of the trust set accepted the chain: `system` (the operating
+    /// system's own verifier, or the web roots vibe ships), `extra_ca` (a
+    /// certificate authority from `[tls] extra_ca` / `[proxy] ca_file`) or
+    /// `pinned` (the server's own certificate, named in that same list).
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub trusted_by: Option<String>,
+
+    /// The configured file or directory that accepted the chain; absent when
+    /// `trusted_by` is `system`.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub trusted_by_source: Option<String>,
 }

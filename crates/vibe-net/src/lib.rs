@@ -33,11 +33,11 @@ pub mod px_store;
 mod px_tests;
 mod session;
 pub mod system_proxy;
-mod trust;
+pub mod trust;
 
 pub use px::{PX_EXE, PX_READY_TIMEOUT, PxError, bundled_px_candidates, locate as locate_px};
 pub use session::{NetworkGuard, NetworkSession, current, enter};
-pub use trust::TrustError;
+pub use trust::{TrustError, TrustSet, TrustSource};
 
 /// Why the network route could not be applied. Each message names the
 /// cause and the fix, and never carries a credential.

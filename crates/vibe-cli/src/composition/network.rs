@@ -6,7 +6,9 @@
 
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-068#proxy");
 
-use vibe_core::user_config::{ProxyConfig, ProxyMode, RevocationCheck, UserConfig};
+use vibe_core::user_config::{
+    ProxyConfig, ProxyMode, RevocationCheck, TlsConfig, UserConfig, effective_extra_ca,
+};
 
 /// Install the route `effective` (the merged `[proxy]` table) describes,
 /// with the environment switches `VIBEVM_PROXY_MODE` / `VIBEVM_PROXY_PAC` /
@@ -16,6 +18,7 @@ use vibe_core::user_config::{ProxyConfig, ProxyMode, RevocationCheck, UserConfig
 /// its fix, and the run continues direct, as before `[proxy]` existed.
 pub(crate) fn install_route(
     effective: &ProxyConfig,
+    tls: &TlsConfig,
     env: fn(&str) -> Option<String>,
 ) -> Vec<(&'static str, String)> {
     use vibe_core::net::{MODE_ENV, PAC_ENV, REVOCATION_ENV};
@@ -57,13 +60,17 @@ pub(crate) fn install_route(
     let (revocation, revocation_origin) =
         vibe_core::net::effective_revocation(site.as_ref(), &own, env_revocation);
     table.revocation = Some(revocation);
+    // PROP-068 `#proxy`: the trust set is additive across both spellings,
+    // so the route carries the whole list rather than the one key.
+    let extra_ca = effective_extra_ca(tls, &table);
     match vibe_core::net::ProxyRoute::from_config(&table) {
         Ok(route) => {
             vibe_core::net::install_route(
                 route
                     .with_origin(origin)
                     .with_pac_origin(pac_origin)
-                    .with_revocation(revocation, revocation_origin),
+                    .with_revocation(revocation, revocation_origin)
+                    .with_extra_ca(extra_ca),
             );
         }
         Err(error) => warn(&error.to_string()),

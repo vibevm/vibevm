@@ -12,7 +12,7 @@
 
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-019#install-root");
 
-use std::path::Path;
+use std::path::{Path, PathBuf};
 
 use super::SiteProfile;
 use super::windows_paths::{is_absolute_anywhere, starts_at_home};
@@ -53,8 +53,10 @@ impl SiteProfile {
 }
 
 /// Every path of the profile that must name a directory, with its key.
-fn declared(profile: &SiteProfile) -> [(&'static str, Option<&Path>); 6] {
-    [
+/// `tls.extra_ca` contributes one entry per path it names, since it takes
+/// a list.
+fn declared(profile: &SiteProfile) -> Vec<(&'static str, PathBuf)> {
+    let fixed = [
         ("artifacts.vibe", profile.artifacts.vibe.as_deref()),
         ("artifacts.packages", profile.artifacts.packages.as_deref()),
         ("self.path", profile.self_source.path.as_deref()),
@@ -64,7 +66,12 @@ fn declared(profile: &SiteProfile) -> [(&'static str, Option<&Path>); 6] {
         ),
         ("proxy.ca_file", profile.proxy.ca_file.as_deref()),
         ("proxy.px_path", profile.proxy.px_path.as_deref()),
-    ]
+    ];
+    fixed
+        .into_iter()
+        .filter_map(|(key, path)| path.map(|path| (key, path.to_path_buf())))
+        .chain(profile.tls.declared_paths())
+        .collect()
 }
 
 /// Which of the four per-user keys may start at the home directory. The
@@ -80,7 +87,7 @@ fn per_user(key: &str) -> bool {
 /// reason and the fix the profile's refusal carries.
 pub(super) fn check(profile: &SiteProfile) -> Result<(), (&'static str, String, &'static str)> {
     for (key, path) in declared(profile) {
-        let Some(path) = path else { continue };
+        let path = path.as_path();
         // `~user` is another account's home, which vibe does not resolve —
         // wherever it appears.
         if per_user(key) && expand_home(path, Some(Path::new("/anywhere"))).is_err() {

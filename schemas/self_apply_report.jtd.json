@@ -442,6 +442,7 @@
           "px_port",
           "px_path",
           "ca_file",
+          "extra_ca",
           "revocation",
           "revocation_origin"
         ],
@@ -525,7 +526,16 @@
           "type": "string",
           "nullable": true,
           "metadata": {
-            "description": "The PEM bundle of extra certificate authorities trusted with the system store."
+            "description": "The `[proxy] ca_file` key as written — the older spelling of `[tls] extra_ca`, and the first entry of the effective list."
+          }
+        },
+        "extra_ca": {
+          "elements": {
+            "type": "string"
+          },
+          "metadata": {
+            "x-empty": "emit",
+            "description": "Every certificate file or directory trusted in addition to the operating system's own verifier: `[proxy] ca_file` followed by `[tls] extra_ca`, without repeats."
           }
         },
         "revocation": {

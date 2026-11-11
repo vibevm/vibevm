@@ -241,7 +241,15 @@ pub(crate) use outcome::finish;
 pub(crate) fn init_tracing() {
     use tracing_subscriber::{EnvFilter, fmt};
 
-    let filter = EnvFilter::try_from_env("VIBE_LOG").unwrap_or_else(|_| EnvFilter::new("warn"));
+    // `rustls-platform-verifier` logs every refused chain at ERROR through
+    // the `log` bridge, including the trial verifications `vibe dl` makes
+    // to work out *which* part of the trust set accepted a server
+    // (PROP-068 `#dl`). vibe reports that outcome itself, with the chain
+    // and the fix, so the crate's own line is noise on a successful
+    // download. It is silenced by default and not at all when `$VIBE_LOG`
+    // is set, which stays the one switch that decides what is logged.
+    let filter = EnvFilter::try_from_env("VIBE_LOG")
+        .unwrap_or_else(|_| EnvFilter::new("warn,rustls_platform_verifier=off"));
     let _ = fmt()
         .with_env_filter(filter)
         .with_target(false)

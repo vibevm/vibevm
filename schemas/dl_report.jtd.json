@@ -189,7 +189,8 @@
           "version",
           "cipher",
           "chain",
-          "trusted_by"
+          "trusted_by",
+          "trusted_by_source"
         ]
       },
       "properties": {
@@ -214,7 +215,14 @@
           "type": "string",
           "metadata": {
             "x-default": null,
-            "description": "`system` (bundled web roots or the operating system's store) or `ca_file`."
+            "description": "Which part of the trust set accepted the chain: `system` (the operating system's own verifier, or the web roots vibe ships), `extra_ca` (a certificate authority from `[tls] extra_ca` / `[proxy] ca_file`) or `pinned` (the server's own certificate, named in that same list)."
+          }
+        },
+        "trusted_by_source": {
+          "type": "string",
+          "metadata": {
+            "x-default": null,
+            "description": "The configured file or directory that accepted the chain; absent when `trusted_by` is `system`."
           }
         }
       }

@@ -560,7 +560,7 @@ fn promote_user_config_env() -> vibe_core::user_config::TransferConfig {
         );
     }
     // PROP-068 `#proxy`: `[proxy]` is the route; its names promote as below.
-    let proxy = composition::network::install_route(&cfg.proxy, read_env_opt);
+    let proxy = composition::network::install_route(&cfg.proxy, &cfg.tls, read_env_opt);
     let mut promoted: BTreeSet<String> = BTreeSet::new();
     for (name, value) in admitted
         .into_iter()

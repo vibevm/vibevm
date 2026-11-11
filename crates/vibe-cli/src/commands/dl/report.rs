@@ -42,7 +42,15 @@ fn hops(probe: &Probe) -> Vec<wire::Hop> {
                         issuer: cert.issuer.clone(),
                     })
                     .collect(),
-                trusted_by: tls.trusted_by.map(|source| source.as_str().to_owned()),
+                trusted_by: tls
+                    .trusted_by
+                    .as_ref()
+                    .map(|source| source.kind().to_owned()),
+                trusted_by_source: tls
+                    .trusted_by
+                    .as_ref()
+                    .and_then(|source| source.source())
+                    .map(|path| path.display().to_string()),
             }),
             status_line: hop.status_line.clone(),
             headers: hop

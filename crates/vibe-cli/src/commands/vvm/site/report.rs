@@ -382,6 +382,14 @@ fn effective_text(effective: &Effective, out: &mut String) {
             out.push_str(&format!("proxy {key}: {value}\n"));
         }
     }
+    // PROP-068 `#proxy`: the whole trust set, not only the older key —
+    // what a reader has to see to know which certificates are in force.
+    if !proxy.extra_ca.is_empty() {
+        out.push_str(&format!(
+            "extra certificates (added to the operating system's own): {}\n",
+            proxy.extra_ca.join(", ")
+        ));
+    }
     if effective.offline {
         out.push_str("offline by default ([net] offline)\n");
     }

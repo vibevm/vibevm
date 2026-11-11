@@ -118,7 +118,7 @@ pub(super) fn effective(
             .iter()
             .map(ToString::to_string)
             .collect(),
-        proxy: proxy_row(layers, &merged.proxy),
+        proxy: proxy_row(layers, &merged.proxy, &merged.tls),
         offline: merged.net.offline,
         site_remap_rows: layers.site.as_ref().map_or(0, |site| {
             u32::try_from(site.profile.remap.len()).unwrap_or(u32::MAX)
@@ -130,7 +130,11 @@ pub(super) fn effective(
 /// (`PROP-068#proxy`). The environment switches (`VIBEVM_PROXY_MODE`,
 /// `VIBEVM_PROXY_PAC`) are this process's: they show when the installed
 /// route says it took them from there.
-fn proxy_row(layers: &ConfigLayers, merged: &vibe_core::user_config::ProxyConfig) -> ProxyRow {
+fn proxy_row(
+    layers: &ConfigLayers,
+    merged: &vibe_core::user_config::ProxyConfig,
+    tls: &vibe_core::user_config::TlsConfig,
+) -> ProxyRow {
     use vibe_core::net::{ModeOrigin, effective_mode, effective_pac};
     let site = layers.site.as_ref().map(|site| &site.profile.proxy);
     let (mode, mut mode_origin) = effective_mode(site, &layers.own.proxy, None);
@@ -193,6 +197,10 @@ fn proxy_row(layers: &ConfigLayers, merged: &vibe_core::user_config::ProxyConfig
         px_port: merged.px_port.map(u32::from),
         px_path: merged.px_path.as_ref().map(|p| p.display().to_string()),
         ca_file: merged.ca_file.as_ref().map(|p| p.display().to_string()),
+        extra_ca: vibe_core::user_config::effective_extra_ca(tls, merged)
+            .iter()
+            .map(|path| path.display().to_string())
+            .collect(),
         revocation: revocation.as_str().to_owned(),
         revocation_origin: revocation_origin
             .label(vibe_core::net::REVOCATION_ENV)

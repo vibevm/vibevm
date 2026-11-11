@@ -92,15 +92,28 @@ const FIX_REVOCATION: &str = "the certificate's revocation state could not be ch
 pub fn diagnose(session: &Arc<NetworkSession>, target: &url::Url, timeout: Duration) -> Vec<Check> {
     let mut checks = Vec::new();
     let route = session.route();
-    match session.extra_roots() {
-        Ok(extra) => {
-            let (native, errors) = crate::trust::native_root_count();
-            let mut detail = format!("{native} operating-system roots");
-            if errors > 0 {
-                detail.push_str(&format!(" ({errors} unreadable entries ignored)"));
+    match session.trust() {
+        Ok(trust) => {
+            let (system, errors) = crate::trust::system_certificates();
+            let mut detail = format!(
+                "the operating system's own verifier ({} certificates in its stores",
+                system.len()
+            );
+            if !errors.is_empty() {
+                detail.push_str(&format!(", {} store(s) unreadable", errors.len()));
             }
-            if let Some(path) = route.ca_file() {
-                detail.push_str(&format!(" + {} from `{}`", extra.len(), path.display()));
+            detail.push(')');
+            let (anchors, pins) = trust.counts();
+            if !trust.is_empty() {
+                let sources: Vec<String> = trust
+                    .sources()
+                    .iter()
+                    .map(|path| path.display().to_string())
+                    .collect();
+                detail.push_str(&format!(
+                    " + {anchors} extra certificate authorities and {pins} pinned certificates                      from `{}`",
+                    sources.join("`, `")
+                ));
             }
             checks.push(Check::ok("trust", detail));
         }
@@ -443,16 +456,15 @@ pub fn pac_check(session: &Arc<NetworkSession>, timeout: Duration) -> Option<Che
         PacSource::Url(location) => {
             let shown = vibe_core::progress::transfer::safe_url(location);
             let fetched = session
-                .extra_roots()
+                .tls_config()
                 .map_err(|error| error.to_string())
-                .and_then(|roots| {
-                    let mut builder = reqwest::blocking::Client::builder()
+                .and_then(|tls| {
+                    reqwest::blocking::Client::builder()
                         .no_proxy()
-                        .timeout(timeout);
-                    for root in roots {
-                        builder = builder.add_root_certificate(root);
-                    }
-                    builder.build().map_err(|error| error.to_string())
+                        .timeout(timeout)
+                        .use_preconfigured_tls(tls)
+                        .build()
+                        .map_err(|error| error.to_string())
                 })
                 .and_then(|client| {
                     client

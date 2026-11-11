@@ -53,16 +53,12 @@ impl NativeGitAdmission {
                 None => return Ok(AdmittedRemote::Https { url, authorization }),
             },
         };
-        let roots = pem
-            .map(reqwest::Certificate::from_pem_bundle)
-            .transpose()
-            .map_err(|_| unsupported("invalid captured HTTP discovery trust"))?;
         let client = crate::http_admission::ManagedHttpClient::captured(
             std::time::Duration::from_secs(30),
             None,
             reqwest::header::HeaderMap::new(),
             Some(std::sync::Arc::new(self.binding.as_ref().clone())),
-            roots,
+            pem.map(<[u8]>::to_vec),
         )
         .map_err(|_| unsupported("HTTP discovery client could not be constructed"))?;
         let mut advertisement = url.clone();

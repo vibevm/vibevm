@@ -197,3 +197,183 @@ pub fn requests(log: &Path) -> Vec<String> {
         .map(str::to_owned)
         .collect()
 }
+
+/// A two-level authority: a root that signs an intermediate, and a leaf
+/// signed by the intermediate. `leaf_only` is the leaf by itself — a
+/// server configured with it sends an incomplete chain, which is the
+/// corporate shape a trust set has to be able to complete on its own.
+pub struct Chain {
+    pub root_pem: PathBuf,
+    pub intermediate_pem: PathBuf,
+    pub leaf_only: PathBuf,
+    pub leaf_with_intermediate: PathBuf,
+    pub key: PathBuf,
+}
+
+/// A root, an intermediate it signs, and a leaf for the fixture host.
+pub fn test_chain(dir: &Path, name: &str) -> Chain {
+    let p = |file: &str| dir.join(format!("{name}-{file}"));
+    let s = |path: &PathBuf| path.to_str().unwrap().to_owned();
+    let (root_pem, root_key) = (p("root.pem"), p("root-key.pem"));
+    let (int_pem, int_key, int_csr, int_ext) =
+        (p("int.pem"), p("int-key.pem"), p("int.csr"), p("int.ext"));
+    let (leaf, leaf_key, leaf_csr, leaf_ext) = (
+        p("leaf.pem"),
+        p("leaf-key.pem"),
+        p("leaf.csr"),
+        p("leaf.ext"),
+    );
+    openssl(&[
+        "req",
+        "-x509",
+        "-newkey",
+        "rsa:2048",
+        "-nodes",
+        "-keyout",
+        &s(&root_key),
+        "-out",
+        &s(&root_pem),
+        "-days",
+        "2",
+        "-subj",
+        &format!("/CN=vibe test {name} root"),
+        "-addext",
+        "basicConstraints=critical,CA:TRUE",
+        "-addext",
+        "keyUsage=critical,keyCertSign,cRLSign",
+    ]);
+    std::fs::write(
+        &int_ext,
+        "basicConstraints=critical,CA:TRUE,pathlen:0\nkeyUsage=critical,keyCertSign,cRLSign\n",
+    )
+    .unwrap();
+    openssl(&[
+        "req",
+        "-newkey",
+        "rsa:2048",
+        "-nodes",
+        "-keyout",
+        &s(&int_key),
+        "-out",
+        &s(&int_csr),
+        "-subj",
+        &format!("/CN=vibe test {name} subordinate"),
+    ]);
+    openssl(&[
+        "x509",
+        "-req",
+        "-in",
+        &s(&int_csr),
+        "-CA",
+        &s(&root_pem),
+        "-CAkey",
+        &s(&root_key),
+        "-CAcreateserial",
+        "-out",
+        &s(&int_pem),
+        "-days",
+        "2",
+        "-extfile",
+        &s(&int_ext),
+    ]);
+    std::fs::write(
+        &leaf_ext,
+        format!(
+            "basicConstraints=critical,CA:FALSE\nkeyUsage=critical,digitalSignature,keyEncipherment\n\
+             extendedKeyUsage=serverAuth\nsubjectAltName=DNS:{FIXTURE_HOST},DNS:localhost,IP:127.0.0.1\n"
+        ),
+    )
+    .unwrap();
+    openssl(&[
+        "req",
+        "-newkey",
+        "rsa:2048",
+        "-nodes",
+        "-keyout",
+        &s(&leaf_key),
+        "-out",
+        &s(&leaf_csr),
+        "-subj",
+        &format!("/CN={FIXTURE_HOST}"),
+    ]);
+    openssl(&[
+        "x509",
+        "-req",
+        "-in",
+        &s(&leaf_csr),
+        "-CA",
+        &s(&int_pem),
+        "-CAkey",
+        &s(&int_key),
+        "-CAcreateserial",
+        "-out",
+        &s(&leaf),
+        "-days",
+        "2",
+        "-extfile",
+        &s(&leaf_ext),
+    ]);
+    let full = p("leaf-full.pem");
+    let mut bytes = std::fs::read(&leaf).unwrap();
+    bytes.extend(std::fs::read(&int_pem).unwrap());
+    std::fs::write(&full, bytes).unwrap();
+    Chain {
+        root_pem,
+        intermediate_pem: int_pem,
+        leaf_only: leaf,
+        leaf_with_intermediate: full,
+        key: leaf_key,
+    }
+}
+
+/// A self-signed end-entity certificate for `host` — no authority above
+/// it, so nothing can ever build a path to it and only naming its bytes
+/// makes it trusted.
+pub fn self_signed(dir: &Path, name: &str, host: &str) -> Ca {
+    let p = |file: &str| dir.join(format!("{name}-{file}"));
+    let s = |path: &PathBuf| path.to_str().unwrap().to_owned();
+    let (cert, key) = (p("self.pem"), p("self-key.pem"));
+    openssl(&[
+        "req",
+        "-x509",
+        "-newkey",
+        "rsa:2048",
+        "-nodes",
+        "-keyout",
+        &s(&key),
+        "-out",
+        &s(&cert),
+        "-days",
+        "2",
+        "-subj",
+        &format!("/CN={host}"),
+        "-addext",
+        "basicConstraints=critical,CA:FALSE",
+        "-addext",
+        "keyUsage=critical,digitalSignature,keyEncipherment",
+        "-addext",
+        "extendedKeyUsage=serverAuth",
+        "-addext",
+        &format!("subjectAltName=DNS:{host},IP:127.0.0.1"),
+    ]);
+    Ca {
+        ca_pem: cert.clone(),
+        cert,
+        key,
+    }
+}
+
+/// A PEM certificate written out again as DER, as the Windows and macOS
+/// export dialogs write it.
+pub fn as_der(pem: &Path, out: &Path) -> PathBuf {
+    openssl(&[
+        "x509",
+        "-in",
+        pem.to_str().unwrap(),
+        "-outform",
+        "DER",
+        "-out",
+        out.to_str().unwrap(),
+    ]);
+    out.to_path_buf()
+}

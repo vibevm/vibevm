@@ -19,9 +19,19 @@ url.workspace = true
 tempfile.workspace = true
 base64.workspace = true
 reqwest.workspace = true
-# The operating system's root store, as PEM for a child `git` given an extra
-# CA file (reqwest reads the same store through its native-roots feature).
+# The operating system's own certificate verifier (PROP-068 `#proxy`,
+# Part 1): Windows -> the CryptoAPI chain engine (every store including the
+# intermediate `CA` ones, enterprise policy, AIA), macOS -> the Security
+# framework, elsewhere -> webpki over the platform's root bundle. 0.7.1
+# (2026-09-24) is the current release and the one that fits this lock file:
+# it asks for rustls ^0.23.27 (we hold 0.23.39), rustls-webpki ^0.103
+# (0.103.13) and windows-sys >=0.52,<0.62, which the workspace's 0.61.2
+# satisfies, so it adds no second copy of any of the three.
+rustls-platform-verifier = "0.7.1"
+# The platform bundle off Windows, and the bundle a child `git` reads.
 rustls-native-certs = "0.8"
+# Content addressing for that bundle (`<settings-dir>/tls/<sha256>.pem`).
+sha2.workspace = true
 # Process group (Unix) / job object (Windows) for the managed px, the same
 # pinned crate the native helper session uses.
 command-group = "=5.0.1"
@@ -37,6 +47,12 @@ toml.workspace = true
 # logged-in user's proxy configuration through WinHTTP, and the two
 # Internet Settings registry reads that stand in when it answers nothing.
 [target.'cfg(windows)'.dependencies]
+# The whole Windows trust material for a child `git`'s CA bundle: `ROOT`
+# and `CA` of both `CurrentUser` and `LocalMachine`. `rustls-native-certs`
+# reads only `CurrentUser\ROOT`, which is why a corporate chain ending at a
+# subordinate authority could not be completed from the generated bundle.
+# Already in the lock file as that crate's own dependency.
+schannel = "0.1.29"
 windows-sys = { workspace = true, features = [
     "Win32_Foundation",
     "Win32_Networking_WinHttp",
@@ -44,3 +60,5 @@ windows-sys = { workspace = true, features = [
 ] }
 
 [dev-dependencies]
+tempfile.workspace = true
+url.workspace = true

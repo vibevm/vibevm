@@ -55,7 +55,7 @@ impl ManagedHttpClient {
         user_agent: Option<&str>,
         headers: reqwest::header::HeaderMap,
         binding: Option<Arc<HttpAdmission>>,
-        roots: Option<Vec<reqwest::Certificate>>,
+        trust: Option<Vec<u8>>,
     ) -> Result<Self, ClientBuildError> {
         Self::captured_in(
             &vibe_net::current(),
@@ -63,7 +63,7 @@ impl ManagedHttpClient {
             user_agent,
             headers,
             binding,
-            roots,
+            trust,
         )
     }
     /// [`Self::captured`] under an explicit network session — the seam a
@@ -74,7 +74,7 @@ impl ManagedHttpClient {
         user_agent: Option<&str>,
         headers: reqwest::header::HeaderMap,
         binding: Option<Arc<HttpAdmission>>,
-        roots: Option<Vec<reqwest::Certificate>>,
+        trust: Option<Vec<u8>>,
     ) -> Result<Self, ClientBuildError> {
         let mut blocking = Client::builder()
             .timeout(timeout)
@@ -107,13 +107,15 @@ impl ManagedHttpClient {
         };
         blocking = vibe_net::http::route_in(network, blocking, ambient)?;
         asynchronous = vibe_net::http::route_in(network, asynchronous, ambient)?;
-        if let Some(roots) = roots {
-            blocking = blocking.tls_built_in_root_certs(false);
-            asynchronous = asynchronous.tls_built_in_root_certs(false);
-            for root in roots {
-                blocking = blocking.add_root_certificate(root.clone());
-                asynchronous = asynchronous.add_root_certificate(root);
-            }
+        // A captured registry trust REPLACES the installation's trust set
+        // rather than adding to it — that is what capturing one means —
+        // so it is applied after the route, over the configuration the
+        // route installed, and the two can never be in force at once.
+        if let Some(pem) = trust {
+            let config =
+                vibe_net::TrustSet::pinned_roots_config(&pem).map_err(vibe_net::NetError::from)?;
+            blocking = blocking.use_preconfigured_tls(config.clone());
+            asynchronous = asynchronous.use_preconfigured_tls(config);
         }
         // Both builders capture ambient default policy in this single factory,
         // before any operation. Controlled requests never create an unbound client.

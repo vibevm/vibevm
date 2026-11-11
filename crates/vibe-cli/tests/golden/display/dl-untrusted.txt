@@ -3,7 +3,7 @@
 ✓ connect  connected · <ms>
 ✗ TLS      untrusted certificate
 
-✗ dl_untrusted_certificate  unable to get local issuer certificate: the chain ends at `CN=Vibe Fixture untrusted CA, O=vibe-fixture`, which neither the system store nor `[proxy] ca_file` trusts;
+✗ dl_untrusted_certificate  unable to get local issuer certificate: the chain ends at `CN=Vibe Fixture untrusted CA, O=vibe-fixture`, which neither the system store nor the extra certificates trust;
   chain: `CN=vibe-fixture.test` issued by `CN=Vibe Fixture untrusted CA, O=vibe-fixture`
-  fix   install the issuing CA in the system store, or set [proxy] ca_file to its PEM file
+  fix   export the issuer and every certificate above it, then name the file with [tls] extra_ca; or install it where this distribution keeps certificate authorities (/usr/local/share/ca-certificates then update-ca-certificates, or /etc/pki/ca-trust/source/anchors then update-ca-trust)
   see   spec://org.vibevm.core/vibevm/common/PROP-068#dl

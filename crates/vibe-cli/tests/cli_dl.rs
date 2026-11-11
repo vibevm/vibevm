@@ -150,7 +150,7 @@ fn a_direct_https_download_names_its_route_tls_and_trust_and_writes_atomically()
         "route",
         "direct",
         "TLS 1.3",
-        "trusted by ca_file",
+        "trusted by extra CA:",
         "200 OK",
         "6 B",
     ] {
@@ -204,7 +204,9 @@ fn an_untrusted_server_is_named_with_its_issuer_and_never_receives_a_request() {
     assert!(err.contains("dl_untrusted_certificate"), "{err}");
     assert!(err.contains("unable to get local issuer"), "{err}");
     assert!(err.contains("Vibe Fixture untrusted CA"), "{err}");
-    assert!(err.contains("ca_file"), "{err}");
+    // The fix names the key to set and, on this host, how to export the
+    // issuer into it.
+    assert!(err.contains("extra_ca"), "{err}");
     assert!(rogue.requests().is_empty(), "{:?}", rogue.requests());
 }
 
@@ -306,7 +308,12 @@ fn the_json_report_carries_the_route_tls_and_download() {
     assert_eq!(report["protocol"], "vibe-dl/1");
     assert_eq!(report["ok"], true);
     assert_eq!(report["mode"], "direct");
-    assert_eq!(report["hops"][0]["tls"]["trusted_by"], "ca_file");
+    assert_eq!(report["hops"][0]["tls"]["trusted_by"], "extra_ca");
+    assert_eq!(
+        report["hops"][0]["tls"]["trusted_by_source"],
+        serde_json::json!(w.ca.ca_pem.display().to_string()),
+        "the report names the file that accepted the chain"
+    );
     assert_eq!(report["download"]["bytes"], 6);
     let failed = w.dl(&[
         "--json",

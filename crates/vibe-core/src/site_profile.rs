@@ -31,7 +31,9 @@ use crate::manifest::{
 };
 use crate::remap::{Layer, LoadedSource, RowDecl};
 use crate::trust::TrustLists;
-use crate::user_config::{ArtifactsConfig, NetConfig, ProxyConfig, SelfConfig, UserConfig};
+use crate::user_config::{
+    ArtifactsConfig, NetConfig, ProxyConfig, SelfConfig, TlsConfig, UserConfig,
+};
 
 /// The one schema version this reader accepts (`schema = 1`).
 pub const SITE_PROFILE_SCHEMA: u32 = 1;
@@ -134,6 +136,10 @@ pub struct SiteProfile {
     /// `[proxy]` — the proxy every client reads.
     #[serde(default, skip_serializing_if = "ProxyConfig::is_default")]
     pub proxy: ProxyConfig,
+    /// `[tls]` — the certificates trusted besides the operating system's
+    /// own verifier (`PROP-068#proxy`), below the user's own `[tls]`.
+    #[serde(default, skip_serializing_if = "TlsConfig::is_default")]
+    pub tls: TlsConfig,
     /// `[net]` — `offline = true` makes the installation offline by default.
     #[serde(default, skip_serializing_if = "NetConfig::is_default")]
     pub net: NetConfig,
@@ -355,6 +361,9 @@ impl SiteProfile {
         if let Some((key, reason, fix)) = self.proxy.problem() {
             return Err(invalid(key.into(), &reason, fix));
         }
+        if let Some((key, reason, fix)) = self.tls.problem() {
+            return Err(invalid(key.into(), &reason, fix));
+        }
         for (key, written) in [
             ("trust.trusted_groups", &self.trust.trusted_groups),
             ("trust.untrusted_groups", &self.trust.untrusted_groups),
@@ -406,6 +415,7 @@ impl SiteProfile {
             artifacts: self.artifacts.clone(),
             self_source: self.self_source.clone(),
             proxy: self.proxy.clone(),
+            tls: self.tls.clone(),
             net: self.net.clone(),
             ..UserConfig::default()
         }

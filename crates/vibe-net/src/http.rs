@@ -34,7 +34,10 @@ pub(crate) const UNROUTABLE: &str = "http://vibe-px-unavailable.invalid:9";
 pub trait RouteBuilder: Sized {
     fn with_proxy(self, proxy: reqwest::Proxy) -> Self;
     fn without_proxy(self) -> Self;
-    fn with_root(self, root: reqwest::Certificate) -> Self;
+    /// Use this TLS configuration as given. It carries the whole trust
+    /// decision ([`crate::TrustSet`]), so `reqwest`'s own root handling
+    /// never runs and cannot disagree with it.
+    fn with_tls(self, config: rustls::ClientConfig) -> Self;
 }
 
 impl RouteBuilder for reqwest::blocking::ClientBuilder {
@@ -44,8 +47,8 @@ impl RouteBuilder for reqwest::blocking::ClientBuilder {
     fn without_proxy(self) -> Self {
         self.no_proxy()
     }
-    fn with_root(self, root: reqwest::Certificate) -> Self {
-        self.add_root_certificate(root)
+    fn with_tls(self, config: rustls::ClientConfig) -> Self {
+        self.use_preconfigured_tls(config)
     }
 }
 
@@ -56,8 +59,8 @@ impl RouteBuilder for reqwest::ClientBuilder {
     fn without_proxy(self) -> Self {
         self.no_proxy()
     }
-    fn with_root(self, root: reqwest::Certificate) -> Self {
-        self.add_root_certificate(root)
+    fn with_tls(self, config: rustls::ClientConfig) -> Self {
+        self.use_preconfigured_tls(config)
     }
 }
 
@@ -77,18 +80,16 @@ pub fn route<B: RouteBuilder>(builder: B, ambient: Ambient) -> Result<B, NetErro
 
 /// Apply `session`'s route to `builder`: with `[proxy]`, every request
 /// whose host is not bypassed goes through the proxy (HTTP `CONNECT` for
-/// `https://`), the ambient proxy environment is ignored, and `ca_file` is
-/// trusted together with the operating system's roots. Without `[proxy]`,
-/// `ambient` decides.
+/// `https://`), and the ambient proxy environment is ignored. Without
+/// `[proxy]`, `ambient` decides. Either way the client is given the one
+/// trust set — the operating system's verifier plus the configured extra
+/// certificates ([`crate::TrustSet`]). Verification is never disabled.
 pub fn route_in<B: RouteBuilder>(
     session: &Arc<NetworkSession>,
     builder: B,
     ambient: Ambient,
 ) -> Result<B, NetError> {
-    let mut builder = builder;
-    for root in session.extra_roots()? {
-        builder = builder.with_root(root);
-    }
+    let builder = builder.with_tls(session.tls_config()?);
     if !session.route().is_proxied() {
         return Ok(match ambient {
             Ambient::Inherit => builder,

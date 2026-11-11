@@ -155,6 +155,43 @@ pub fn version_takes_best_effort(line: &str) -> bool {
     (major, minor) >= (2, 26)
 }
 
+/// The `-c` values that hand a child `git` the combined CA bundle.
+///
+/// On Windows this replaces the Windows certificate store rather than
+/// adding to it — Git's own documentation of `http.schannelUseSSLCAInfo`
+/// says the bundle "would override the Windows Certificate Store" — so the
+/// bundle vibe writes carries that store's own certificates first
+/// ([`crate::trust::system_certificates`] reads `ROOT` **and** `CA`, of
+/// both the machine and the user), and the extra ones after it. Schannel
+/// stays the backend: it is the stack every other Windows application
+/// uses, and `http.sslBackend=openssl` is documented as "ignored if cURL
+/// lacks support for choosing the SSL backend at runtime", which would
+/// fail silently on a build without it.
+///
+/// ```
+/// use std::path::Path;
+/// use vibe_net::git::bundle_config;
+/// let windows = bundle_config(Path::new("/c/bundle.pem"), true);
+/// assert!(windows.iter().any(|v| v == "http.sslBackend=schannel"));
+/// assert!(windows.iter().any(|v| v == "http.schannelUseSSLCAInfo=true"));
+/// assert!(windows.iter().any(|v| v.starts_with("http.sslCAInfo=")));
+/// // Elsewhere the bundle is simply the trust set, and nothing else is said.
+/// assert_eq!(
+///     bundle_config(Path::new("/etc/bundle.pem"), false),
+///     vec!["http.sslCAInfo=/etc/bundle.pem".to_owned()]
+/// );
+/// ```
+pub fn bundle_config(bundle: &Path, windows: bool) -> Vec<String> {
+    let mut config = vec![format!("http.sslCAInfo={}", bundle.display())];
+    if windows {
+        // Named explicitly rather than left to the build's default, so the
+        // next two keys are the ones git actually applies.
+        config.push("http.sslBackend=schannel".to_owned());
+        config.push("http.schannelUseSSLCAInfo=true".to_owned());
+    }
+    config
+}
+
 /// The bypass list a child receives: the configured one plus loopback.
 fn no_proxy_env(session: &NetworkSession) -> String {
     let mut list = String::from("localhost,127.0.0.1,::1");
@@ -212,13 +249,7 @@ pub fn for_remote_with(
     if url.scheme() == "https"
         && let Some(bundle) = session.ca_bundle()?
     {
-        net.config
-            .push(format!("http.sslCAInfo={}", bundle.display()));
-        if cfg!(windows) {
-            // Schannel ignores sslCAInfo unless told; the bundle carries
-            // the system roots too, so nothing is taken away.
-            net.config.push("http.schannelUseSSLCAInfo=true".to_owned());
-        }
+        net.config.extend(bundle_config(&bundle, cfg!(windows)));
     }
     Ok(net)
 }
@@ -239,7 +270,7 @@ pub fn for_args(
     cwd: Option<&std::path::Path>,
 ) -> Result<GitNetwork, NetError> {
     if !session.route().is_proxied()
-        && session.route().ca_file().is_none()
+        && session.route().extra_ca().is_empty()
         && session.route().revocation() == RevocationCheck::Check
     {
         return Ok(GitNetwork::default());

@@ -1,7 +1,7 @@
 //! One operation's network: the route, the lazily started px and the
 //! operation's trust bundle — released when the operation ends.
 
-use crate::{NetError, PxError, px::PxProcess, trust};
+use crate::{NetError, PxError, TrustSet, px::PxProcess};
 use std::{
     net::SocketAddr,
     path::PathBuf,
@@ -40,7 +40,10 @@ pub struct NetworkSession {
     control: Option<WeakCancellationToken>,
     px: Mutex<PxSlot>,
     scratch: Mutex<Option<tempfile::TempDir>>,
-    bundle: Mutex<Option<PathBuf>>,
+    /// The operation's trust set, read once: the configured certificate
+    /// files are opened on the first TLS client the operation builds, not
+    /// once per client.
+    trust: OnceLock<Arc<TrustSet>>,
     starts: std::sync::atomic::AtomicUsize,
 }
 
@@ -61,7 +64,7 @@ impl NetworkSession {
             control: None,
             px: Mutex::new(PxSlot::Idle),
             scratch: Mutex::new(None),
-            bundle: Mutex::new(None),
+            trust: OnceLock::new(),
             starts: std::sync::atomic::AtomicUsize::new(0),
         }
     }
@@ -176,30 +179,28 @@ impl NetworkSession {
         }
     }
 
-    /// `[proxy] ca_file` as reqwest roots (empty without one).
-    pub fn extra_roots(&self) -> Result<Vec<reqwest::Certificate>, NetError> {
-        match self.route.ca_file() {
-            Some(path) => Ok(trust::extra_roots(path)?),
-            None => Ok(Vec::new()),
+    /// The operation's trust set: the operating system's verifier plus
+    /// `[tls] extra_ca` / `[proxy] ca_file`, read once.
+    pub fn trust(&self) -> Result<&Arc<TrustSet>, NetError> {
+        if let Some(set) = self.trust.get() {
+            return Ok(set);
         }
+        let set = Arc::new(TrustSet::of_route(&self.route)?);
+        Ok(self.trust.get_or_init(|| set))
     }
 
-    /// The operation's PEM bundle — the operating system's roots plus
-    /// `ca_file` — written once into the operation's scratch, for a child
-    /// `git`'s `http.sslCAInfo`. `None` without a `ca_file`.
+    /// The TLS configuration every client of this operation is built from.
+    pub fn tls_config(&self) -> Result<rustls::ClientConfig, NetError> {
+        Ok(self.trust()?.client_config()?)
+    }
+
+    /// The combined PEM bundle a child `git` reads as `http.sslCAInfo` —
+    /// this machine's own certificates followed by the configured extra
+    /// ones, in the content-addressed cache. `None` when nothing is
+    /// configured: the child then uses the platform's own trust, which on
+    /// Windows is the whole certificate store rather than a file.
     pub fn ca_bundle(&self) -> Result<Option<PathBuf>, NetError> {
-        let Some(ca_file) = self.route.ca_file() else {
-            return Ok(None);
-        };
-        let mut cached = self.bundle.lock().unwrap_or_else(PoisonError::into_inner);
-        if let Some(path) = cached.as_ref() {
-            return Ok(Some(path.clone()));
-        }
-        let bytes = trust::combined_bundle(ca_file)?;
-        let path = self.scratch()?.join("ca-bundle.pem");
-        std::fs::write(&path, bytes).map_err(NetError::Scratch)?;
-        *cached = Some(path.clone());
-        Ok(Some(path))
+        Ok(self.trust()?.git_bundle()?)
     }
 
     /// Kill and reap px, and drop the scratch. Later requests that need px
@@ -216,10 +217,6 @@ impl NetworkSession {
                 Err(error) => tracing::warn!(pid, "could not stop the vibe-managed px: {error}"),
             }
         }
-        self.bundle
-            .lock()
-            .unwrap_or_else(PoisonError::into_inner)
-            .take();
         self.scratch
             .lock()
             .unwrap_or_else(PoisonError::into_inner)

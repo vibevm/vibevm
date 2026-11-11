@@ -5,9 +5,8 @@
 //! trust source that accepted it), the response head and every redirect.
 //!
 //! The probe verifies the server with the very trust set every vibe client
-//! uses — the bundled web roots, the operating system's store and
-//! `[proxy] ca_file` — and a server that fails verification never receives
-//! a request. It sends no credential of any kind. It only describes: the
+//! uses — the operating system's own verifier plus `[tls] extra_ca` — and
+//! a server that fails verification never receives a request. It sends no credential of any kind. It only describes: the
 //! bytes themselves are fetched by the controlled transport afterwards.
 
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-068#dl");
@@ -21,6 +20,7 @@ mod class;
 mod der;
 mod hop;
 mod tls;
+pub use crate::TrustSource;
 pub use class::FailureClass;
 pub use der::summarize;
 use hop::one_hop;
@@ -30,24 +30,6 @@ use hop::one_hop;
 pub struct Failure {
     pub class: FailureClass,
     pub detail: String,
-}
-
-/// Which part of the trust set accepted a server's chain.
-#[derive(Debug, Clone, Copy, PartialEq, Eq)]
-pub enum TrustSource {
-    /// The bundled web roots or the operating system's root store.
-    System,
-    /// `[proxy] ca_file`.
-    CaFile,
-}
-
-impl TrustSource {
-    pub fn as_str(self) -> &'static str {
-        match self {
-            Self::System => "system",
-            Self::CaFile => "ca_file",
-        }
-    }
 }
 
 /// A certificate as an operator reads it.

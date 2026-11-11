@@ -39,14 +39,20 @@ impl SiteProfile {
             return Vec::new();
         }
         let mut notes = Vec::new();
-        for (key, path) in [
+        let fixed = [
             ("artifacts.vibe", self.artifacts.vibe.as_ref()),
             ("artifacts.packages", self.artifacts.packages.as_ref()),
             ("self.path", self.self_source.path.as_ref()),
             ("self.install_root", self.self_source.install_root.as_ref()),
             ("proxy.ca_file", self.proxy.ca_file.as_ref()),
             ("proxy.px_path", self.proxy.px_path.as_ref()),
-        ] {
+        ];
+        let extra = self.tls.declared_paths();
+        for (key, path) in fixed
+            .into_iter()
+            .map(|(key, path)| (key, path.cloned()))
+            .chain(extra.into_iter().map(|(key, path)| (key, Some(path))))
+        {
             if let Some(path) = path.filter(|path| is_windows_absolute(path)) {
                 notes.push(format!(
                     "`{key} = \"{}\"` is a Windows path: it is accepted, but only a Windows \

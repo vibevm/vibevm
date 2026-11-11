@@ -529,18 +529,90 @@ vibe tool px serve
 `org.vibevm.pxworld/pxpip` — `pxpip`; каждая запускает соответствующий
 инструмент с `PATH` через `vibe tool px exec`.
 
-### 5.3. Корпоративный корневой сертификат
+### 5.3. Сертификаты: сначала решает ОС, свои добавляются сверху
 
-vibe доверяет системному хранилищу сертификатов ОС. Если корпоративный CA
-туда не установлен:
+**Проверку сертификатов выполняет собственный верификатор операционной
+системы.** На Windows это CryptoAPI: те же хранилища, что видят Edge и любое
+другое приложение Windows, — и машинные, и пользовательские, **включая
+промежуточные (`CA`)**, с корпоративной политикой и дозагрузкой издателей по
+AIA. На macOS — Security framework. На прочих системах — webpki поверх
+штатного набора корней дистрибутива; только там vibe дополнительно доверяет
+встроенным публичным корням, чтобы минимальный контейнер без пакета
+сертификатов продолжал работать (на Windows и macOS этого нет: там действует
+корневая программа самой ОС, включая её список недоверенных корней).
+
+Практический смысл: корпоративная цепочка вида
+`сайт ← перехватывающий CA ← промежуточный CA ← корневой CA`, где корень лежит в `Root`, а
+два промежуточных — только в `CA`, теперь проверяется **без какой-либо
+настройки**. Раньше vibe читал лишь корневые хранилища и падал с
+`dl_untrusted_certificate`.
+
+**Свои сертификаты добавляются к решению ОС, а не вместо него.**
 
 ```toml
-[proxy]
-ca_file = "/mnt/vibe/certs/corp-root-ca.pem"
+[tls]
+# одна строка …
+extra_ca = "/mnt/vibe/certs/corp-root-ca.pem"
+# … или список файлов и каталогов
+extra_ca = ["/mnt/vibe/certs/corp-root-ca.pem", "/mnt/vibe/certs/corp"]
 ```
 
-Проверено: без `ca_file` загрузка через перехватывающий TLS прокси даёт
-`dl_untrusted_certificate` (код 11), с `ca_file` — `TLS 1.3 · trusted by ca_file`.
+- Элемент списка — **файл** (PEM с одним или несколькими сертификатами либо
+  один DER) или **каталог**: читаются все файлы `*.pem`, `*.crt`, `*.cer`
+  внутри, в алфавитном порядке.
+- `[proxy] ca_file` — прежнее написание того же самого. Оно продолжает
+  работать без изменений и просто становится первым элементом списка; оба
+  ключа объединяются без повторов, ни один не отменяет другой.
+- Ключ читается и из `~/.vibe/config.toml`, и из профиля площадки; слои
+  складываются как все остальные ключи (пользовательский поверх площадки).
+- Сертификат удостоверяющего центра из этого списка становится
+  дополнительным якорем доверия — так достраивается цепочка, в которой
+  сервер не присылает промежуточный сертификат.
+
+**Самоподписанный сертификат сервера.** webpki не принимает конечный
+сертификат как якорь доверия, поэтому такой сертификат можно доверить только
+назвав его сам. Положите его файл в тот же `extra_ca`: vibe примет
+подключение, если предъявленный сертификат **побайтно** совпал с названным,
+не истёк и выписан на то имя, к которому идёт обращение (`subjectAltName`,
+а при его отсутствии — CN; одна wildcard-метка слева). Просроченный
+сертификат и сертификат на другое имя не принимаются никогда.
+
+**Что печатает отчёт.** Строка `TLS` в `vibe dl` называет источник доверия:
+`trusted by system`, `trusted by extra CA: <файл>` или
+`pinned self-signed: <файл>`. Непроверенная цепочка называет издателя, на
+котором она оборвалась, и подсказывает выгрузку **для этой ОС**:
+
+```powershell
+# Windows: оба хранилища целиком, и Root, и CA, машинное и пользовательское
+Get-ChildItem Cert:\CurrentUser\Root, Cert:\CurrentUser\CA, `
+              Cert:\LocalMachine\Root, Cert:\LocalMachine\CA |
+  ForEach-Object {
+    [Convert]::ToBase64String($_.RawData, 'InsertLineBreaks') |
+      ForEach-Object { "-----BEGIN CERTIFICATE-----`n$_`n-----END CERTIFICATE-----" }
+  } | Set-Content -Encoding ascii $HOME\.vibe\corp-ca.pem
+```
+
+```sh
+# macOS
+security find-certificate -a -p /Library/Keychains/System.keychain > ~/.vibe/corp-ca.pem
+
+# Linux: либо тот же extra_ca, либо штатный путь дистрибутива
+sudo cp corp-root-ca.crt /usr/local/share/ca-certificates/ && sudo update-ca-certificates
+```
+
+**Дочерний `git`.** Ему нельзя передать верификатор — только файл, а на
+Windows такой файл **заменяет** хранилище сертификатов, а не дополняет его
+(так сказано в документации `http.schannelUseSSLCAInfo`). Поэтому, когда
+свои сертификаты заданы, vibe собирает связку, где сначала идут сертификаты
+самой машины — на Windows всё из `ROOT` **и** `CA` обоих хранилищ
+(`CurrentUser` и `LocalMachine`), на прочих системах штатный набор, — и лишь
+затем заданные. Связка лежит в `~/.vibe/tls/<sha256>.pem` (имя — её
+собственное содержимое). Если свои сертификаты не заданы, никакой файл не
+передаётся и `git` пользуется хранилищем ОС целиком.
+
+Проверено: без `extra_ca` загрузка с сервером, чей CA неизвестен машине,
+даёт `dl_untrusted_certificate` (код 11); с ним — `TLS 1.3 · trusted by
+extra CA: …`; самоподписанный сертификат сервера — `pinned self-signed: …`.
 
 ### 5.4. Временное отключение
 
@@ -569,7 +641,7 @@ vibe self doctor --network https://repo.example.corp/
 | Вывод | Код `dl` | Значение и что делать |
 |---|---|---|
 | `proxy auth … 407 Proxy Authentication Required` (`dl_proxy_auth`) | 9 (21 для `--test-proxy`) | Прокси требует входа. Включите `mode = "px"` с `pac` или `upstream` |
-| `TLS trust … unable to get local issuer certificate … chain ends at CN=…` (`dl_untrusted_certificate`) | 11 (22) | TLS перехватывается корпоративным CA. Установите CA в ОС или задайте `ca_file` |
+| `TLS trust … unable to get local issuer certificate … chain ends at CN=…` (`dl_untrusted_certificate`) | 11 (22) | Издатель, названный в сообщении, не найден ни в хранилищах ОС, ни в `[tls] extra_ca`. Выгрузите его (см. 5.3) и задайте `extra_ca` |
 | `proxy reachable … Connection refused` | 8 (21) | Неверный адрес/порт прокси или прокси не запущен |
 | `dns … does not resolve` (`dl_dns`) | 6 | Имя не разрешается; если наружу резолвит только прокси — настройте `[proxy]`, проверьте `no_proxy` |
 | таймаут соединения | 7 | Прокси или узел недоступен по сети (не выполнялось здесь: в песочнице без сети соединение отвергается сразу) |
@@ -644,10 +716,14 @@ mode = "px"
 pac = "https://pac.example.corp/proxy.pac"
 # pac = "system"            # настройки прокси этой ОС, читает сам vibe — §5.2
 no_proxy = "localhost,127.0.0.1,.example.corp"
-ca_file = "/mnt/vibe/certs/corp-root-ca.pem"
 # Проверка отзыва сертификатов для дочернего git на schannel (Windows), §5.2:
 # "check" (по умолчанию) | "best-effort" | "off".
 # revocation = "best-effort"
+
+# Свои сертификаты поверх хранилища ОС (§5.3). Строка или список;
+# элемент — файл (PEM или DER) либо каталог с *.pem / *.crt / *.cer.
+[tls]
+extra_ca = "/mnt/vibe/certs/corp-root-ca.pem"
 
 # true — запретить сеть вовсе (как --offline).
 [net]
@@ -771,7 +847,7 @@ vibe update --sources-only
 | Симптом | Причина | Решение |
 |---|---|---|
 | `407 Proxy Authentication Required` (`dl_proxy_auth`) | Прокси требует корпоративного входа | `[proxy] mode = "px"` + `pac`/`upstream`; проверить `vibe dl --test-proxy` |
-| `unable to get local issuer certificate … chain ends at CN=…` (`dl_untrusted_certificate`) | Корпоративный CA перехватывает TLS и не установлен в ОС | Установить CA в системное хранилище или `[proxy] ca_file = "<pem>"` |
+| `unable to get local issuer certificate … chain ends at CN=…` (`dl_untrusted_certificate`) | Названного издателя нет ни в хранилищах ОС (включая промежуточные `CA`), ни в заданных сертификатах | Выгрузить издателя и всё, что над ним, и задать `[tls] extra_ca = "<pem>"` (см. 5.3) |
 | `px is not installed: looked for …` | Нет px для `mode = "px"` | Положить `px-0.11.0-<T>.*` в дроп релизов, `vibe self px install` (или `--from <файл>`), проверить `vibe self px status`; временно `VIBEVM_PROXY_MODE=none` |
 | `dependency resolution is unsatisfiable: No candidates were found …` | Пакета (или версии) нет ни в одном реестре | Опубликовать или зеркалировать пакет (§2.3–2.4); проверить `vibe registry list`, `vibe search <слово>` |
 | `the [artifacts] packages drop holds no <F> (sha256 …); searched …` | В дропе нет payload-файла | `vibe artifacts where <пакет>` — положить файл по пути из `put it at …` |
