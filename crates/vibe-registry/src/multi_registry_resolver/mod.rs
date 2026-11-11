@@ -49,6 +49,7 @@ use vibe_core::{Group, PackageRef, VersionSpec};
 use crate::git_backend::{GitBackend, GitError, ShellGit};
 use crate::git_package_registry::GitPerPackageRegistry;
 use crate::registry_cache::{DEFAULT_FRESHNESS_SECS, default_cache_root, strip_git_plus_prefix};
+use crate::short_name::{NameLookup, ShortNameCandidates};
 use crate::{
     CachedPackage, GitMonorepoRegistry, InPlaceMaterialised, LocalRegistry, RegistryError,
     ResolvedPackage, compute_content_hash, store,
@@ -360,19 +361,27 @@ impl MultiRegistryResolver {
     /// sorted; `len() > 1` is a short-name collision (PROP-008 §2.7),
     /// `len() == 0` means no index carried the name.
     pub fn resolve_name_candidates(&self, name: &str) -> Result<Vec<Group>, RegistryError> {
-        let mut groups: Vec<Group> = Vec::new();
+        Ok(self.resolve_short_name(name)?.exact)
+    }
+
+    /// [`Self::resolve_name_candidates`] with the registry-offered
+    /// short spellings beside the real names (PROP-008 §2.6).
+    ///
+    /// The same walk, the same one GET per registry, the same skip
+    /// rules — a registry the effective source policy excluded is
+    /// already absent from `sources()`/`registries()` and is therefore
+    /// never asked about an alias either. An exact name found in ANY
+    /// registry clears the alias side wholesale
+    /// ([`ShortNameCandidates::gather`]), so no alias can ever take a
+    /// spelling somebody publishes.
+    pub fn resolve_short_name(&self, name: &str) -> Result<ShortNameCandidates, RegistryError> {
+        let mut answers: Vec<(String, NameLookup)> = Vec::new();
         for reg in self.registries()? {
             let Some(client) = reg.discover_index()? else {
                 continue;
             };
-            match client.name_candidates(name) {
-                Ok(found) => {
-                    for g in found {
-                        if !groups.contains(&g) {
-                            groups.push(g);
-                        }
-                    }
-                }
+            match client.name_lookup(name) {
+                Ok(found) => answers.push((reg.name().to_string(), found)),
                 Err(crate::IndexError::ContactRefused(refusal)) => return Err(refusal.into()),
                 Err(e) => {
                     tracing::debug!(
@@ -404,14 +413,9 @@ impl MultiRegistryResolver {
                 },
                 RegistrySource::Git(_) => continue,
             };
-            for g in local.indexed_candidate_groups(name)? {
-                if !groups.contains(&g) {
-                    groups.push(g);
-                }
-            }
+            answers.push((source.name().to_string(), local.indexed_name_lookup(name)?));
         }
-        groups.sort();
-        Ok(groups)
+        Ok(ShortNameCandidates::gather(answers))
     }
 
     pub fn with_source_policy_provider(

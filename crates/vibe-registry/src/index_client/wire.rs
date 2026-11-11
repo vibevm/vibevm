@@ -18,6 +18,20 @@ use vibe_core::{Group, PackageKind};
 pub(super) struct NameEntryView {
     #[serde(default)]
     pub packages: Vec<PackageEntryView>,
+    /// The short spelling this registry offers for another package
+    /// (PROP-008 §2.6). `default` — every index written before aliases
+    /// existed reads as offering none, which is what it does.
+    #[serde(default)]
+    pub alias: Option<AliasView>,
+}
+
+/// The `alias` member of a `by-name` file: the package a spelling
+/// stands for. It sits BESIDE `packages`, so a reader that ignores it
+/// sees the candidate set it always saw.
+#[derive(Debug, Deserialize)]
+pub(super) struct AliasView {
+    pub group: Group,
+    pub name: String,
 }
 
 #[derive(Debug, Deserialize)]

@@ -26,6 +26,17 @@
 //! already installed (`#LOCKFILE-AUTHORITATIVE`) and falls through to the
 //! registries' index layer.
 //!
+//! **A registry may offer a short spelling of its own.** `qwen` reaches
+//! `org.vibevm.qwen/qwen-code` when the registry carrying that package
+//! says the spelling means it (PROP-008 §2.6, `vibe_index::aliases`).
+//! The alias is the registry OWNER's, never the package author's, and it
+//! is always outranked: a package actually named `qwen`, in any consulted
+//! registry, wins outright and the alias is not even weighed. Two
+//! registries offering the same target are one candidate; two targets are
+//! the §2.7 collision. The one resolved line names the registry that
+//! decided, because a spelling that reaches a differently-named package
+//! must never arrive unattributed.
+//!
 //! **Trust narrows the registry candidates.** `org.vibevm.*` is trusted by
 //! default and `untrusted_groups` takes that back (PROP-065
 //! `#ordinary-trust`, `vibe_core::trust`). An untrusted group's package is
@@ -45,6 +56,8 @@ use vibe_app::{Index, SettingsRoot};
 use vibe_core::Group;
 use vibe_core::trust::TrustPolicy;
 
+use vibe_registry::short_name::{AliasCandidate, ShortNameCandidates};
+
 use crate::exit_code::InstallError;
 use crate::output;
 
@@ -57,13 +70,21 @@ mod slots;
 
 pub(crate) use slots::{slot_target, versions_target};
 
-use render::{bare_name, provenance, render_collision, render_not_found, splice};
+use render::{bare_name, provenance, render_collision, render_not_found, splice, splice_alias};
 
 /// One candidate group of a bare name, with the trust verdict that decides
 /// whether it may be picked for an operator who did not name it.
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub(crate) struct Candidate {
     group: Group,
+    /// Set when this candidate was reached through a registry's ALIAS
+    /// for the spelling rather than through a package that bears it
+    /// (PROP-008 §2.6): the package the registry owner points the
+    /// spelling at, and which registries point it there. An alias
+    /// candidate only ever exists when no registry carries the name for
+    /// real — a name somebody publishes is never displaced by a
+    /// spelling somebody offers.
+    alias: Option<AliasCandidate>,
     /// Whether the effective trust policy covers the group. An installed
     /// candidate is always eligible — see the module note.
     eligible: bool,
@@ -75,6 +96,7 @@ impl Candidate {
     fn installed(group: Group) -> Self {
         Candidate {
             group,
+            alias: None,
             eligible: true,
         }
     }
@@ -82,14 +104,45 @@ impl Candidate {
     /// A registry candidate, eligible only from a trusted group.
     fn offered(group: Group, trust: &TrustPolicy) -> Self {
         let eligible = trust.trusts(group.as_str());
-        Candidate { group, eligible }
+        Candidate {
+            group,
+            alias: None,
+            eligible,
+        }
     }
 
-    /// `org.vibevm.node/node`, or the same with the untrusted mark.
+    /// A candidate reached through a registry's alias. Trust is asked
+    /// about the TARGET's group — the group whose code an install would
+    /// run — and never about the registry that offered the spelling: an
+    /// alias moves no code and vouches for nothing.
+    fn aliased(candidate: AliasCandidate, trust: &TrustPolicy) -> Self {
+        let eligible = trust.trusts(candidate.target.group.as_str());
+        Candidate {
+            group: candidate.target.group.clone(),
+            alias: Some(candidate),
+            eligible,
+        }
+    }
+
+    /// The package this candidate resolves to — the bare name itself for
+    /// an ordinary candidate, the alias target's name for an alias.
+    fn package_name<'a>(&'a self, name: &'a str) -> &'a str {
+        match &self.alias {
+            Some(candidate) => &candidate.target.name,
+            None => name,
+        }
+    }
+
+    /// `org.vibevm.node/node`, or the alias's own provenance spelling,
+    /// each with the untrusted mark when it carries one.
     fn spelling(&self, name: &str) -> String {
+        let base = match &self.alias {
+            Some(candidate) => candidate.provenance(),
+            None => format!("{}/{name}", self.group),
+        };
         match self.eligible {
-            true => format!("{}/{name}", self.group),
-            false => format!("{}/{name} (untrusted group)", self.group),
+            true => base,
+            false => format!("{base} (untrusted group)"),
         }
     }
 }
@@ -116,8 +169,13 @@ pub(crate) struct Lookup {
 
 impl Lookup {
     fn sorted(mut candidates: Vec<Candidate>) -> Vec<Candidate> {
-        candidates.sort_by(|a, b| a.group.as_str().cmp(b.group.as_str()));
-        candidates.dedup_by(|a, b| a.group == b.group);
+        // Keyed on the PACKAGE each candidate resolves to, not on its
+        // group alone: two registries offering the same alias target
+        // are one candidate, and two aliases into one group that name
+        // different packages are two.
+        let key = |c: &Candidate| (c.group.as_str().to_owned(), c.package_name("").to_owned());
+        candidates.sort_by_key(key);
+        candidates.dedup_by_key(|c| key(c));
         candidates
     }
 
@@ -138,7 +196,7 @@ impl Lookup {
 #[derive(Debug, Clone, PartialEq, Eq)]
 enum Outcome {
     /// Exactly one eligible candidate.
-    Resolved(Group),
+    Resolved(Box<Candidate>),
     /// Two or more eligible candidates — PROP-008 §2.7, exit 7.
     Ambiguous,
     /// None eligible; there may still be untrusted candidates to name.
@@ -151,7 +209,7 @@ enum Outcome {
 /// `vibe install` has always made.
 fn decide(lookup: &Lookup) -> Outcome {
     match lookup.eligible().as_slice() {
-        [only] => Outcome::Resolved(only.group.clone()),
+        [only] => Outcome::Resolved(Box::new((*only).clone())),
         [] => Outcome::NotFound,
         _ => Outcome::Ambiguous,
     }
@@ -178,12 +236,18 @@ fn settle(
     lookup: &Lookup,
 ) -> Result<String> {
     match decide(lookup) {
-        Outcome::Resolved(group) => {
+        Outcome::Resolved(candidate) => {
             // One line, on stderr in every mode: it is what vibe decided,
             // not what the command answered, so `--json`'s stdout stays one
             // envelope and `--quiet`'s one line is still the command's own.
-            ctx.decision(&provenance(name, &group));
-            Ok(splice(spelling, &group))
+            // An alias says so, and says which registry offered it: a
+            // spelling that reaches a differently-named package must
+            // never arrive without naming who decided that.
+            ctx.decision(&provenance(name, &candidate));
+            Ok(match &candidate.alias {
+                Some(alias) => splice_alias(spelling, &alias.target),
+                None => splice(spelling, &candidate.group),
+            })
         }
         // PROP-008 §2.7 — the typed refusal that carries exit 7, returned
         // unchanged so the exit mapper's downcast still finds it.
@@ -373,18 +437,35 @@ fn lookup(sources: &Sources<'_>, name: &str) -> Result<Lookup> {
         }
     }
     let trust = trust_policy(sources.settings)?;
-    let offered = |groups: Vec<Group>| -> Vec<Candidate> {
+    // One gatherer for every source: the real names become ordinary
+    // candidates, the registry-offered spellings become alias ones. The
+    // gather step has already dropped every alias when any registry
+    // carries the name for real, so nothing here has to rank them.
+    let offered = |found: ShortNameCandidates| -> Vec<Candidate> {
         Lookup::sorted(
-            groups
+            found
+                .exact
                 .into_iter()
                 .map(|group| Candidate::offered(group, &trust))
+                .chain(
+                    found
+                        .aliases
+                        .into_iter()
+                        .map(|candidate| Candidate::aliased(candidate, &trust)),
+                )
                 .collect(),
         )
     };
-    if let Some(root) = sources.inputs.registry {
+    let from_local = |root: &Path| -> Result<ShortNameCandidates> {
         let registry = open_local(root)?;
+        Ok(ShortNameCandidates::gather([(
+            root.display().to_string(),
+            registry.indexed_name_lookup(name)?,
+        )]))
+    };
+    if let Some(root) = sources.inputs.registry {
         return Ok(Lookup {
-            candidates: offered(registry.indexed_candidate_groups(name)?),
+            candidates: offered(from_local(root)?),
             consulted: vec![root.display().to_string()],
             skipped: sources.skipped(),
             offline: sources.inputs.offline,
@@ -394,11 +475,10 @@ fn lookup(sources: &Sources<'_>, name: &str) -> Result<Lookup> {
     // The embedded registry is first in the chain, not the whole chain
     // (PROP-030 `#precedence`): a name it does not carry falls through.
     if let Some(root) = sources.inputs.embedded {
-        let registry = open_local(root)?;
-        let groups = registry.indexed_candidate_groups(name)?;
-        if !groups.is_empty() {
+        let found = from_local(root)?;
+        if !found.is_empty() {
             return Ok(Lookup {
-                candidates: offered(groups),
+                candidates: offered(found),
                 consulted: vec![root.display().to_string()],
                 skipped: sources.skipped(),
                 offline: sources.inputs.offline,
@@ -414,7 +494,7 @@ fn lookup(sources: &Sources<'_>, name: &str) -> Result<Lookup> {
     )
     .map_err(vibe_app::AppError::from)?;
     Ok(Lookup {
-        candidates: offered(resolver.candidate_groups(name)?),
+        candidates: offered(resolver.short_name_candidates(name)?),
         consulted: consulted(&resolver),
         skipped: sources.skipped(),
         offline: sources.inputs.offline,

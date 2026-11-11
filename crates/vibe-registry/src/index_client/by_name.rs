@@ -21,6 +21,7 @@ use vibe_wire::generated::index::e1::repomd::RepomdFileEntry;
 
 use super::wire::NameEntryView;
 use super::{IndexClient, IndexError, IndexVersion};
+use crate::short_name::{AliasTarget, NameLookup};
 
 impl IndexClient {
     /// Fetch the `by-name/<name>.json` candidate set and return the
@@ -111,6 +112,17 @@ impl IndexClient {
     /// registry. Groups are returned in on-disk order; de-duplication
     /// and sorting are the caller's job (it unions across registries).
     pub fn name_candidates(&self, name: &str) -> Result<Vec<Group>, IndexError> {
+        Ok(self.name_lookup(name)?.groups)
+    }
+
+    /// [`IndexClient::name_candidates`] with the registry's own alias
+    /// for the spelling, from the SAME single GET (PROP-008 §2.6).
+    ///
+    /// The alias rides beside the candidate list in the one file
+    /// short-name resolution already fetches, so offering short
+    /// spellings costs a resolving client no extra round trip — which
+    /// is the constraint the whole `by-name` layout exists to satisfy.
+    pub fn name_lookup(&self, name: &str) -> Result<NameLookup, IndexError> {
         let url = format!("{}/by-name/{}.json", self.file_base, name);
         let client = self.file_client().map_err(|e| IndexError::Http {
             url: url.clone(),
@@ -119,7 +131,7 @@ impl IndexClient {
         let resp = self.get(client, client.get(&url), &url)?;
         let status = resp.status();
         if status.as_u16() == 404 {
-            return Ok(Vec::new());
+            return Ok(NameLookup::default());
         }
         if !status.is_success() {
             return Err(self.classify_failure(url, status.as_u16()));
@@ -132,7 +144,13 @@ impl IndexClient {
                 url: url.clone(),
                 message: e.to_string(),
             })?;
-        Ok(parsed.packages.into_iter().map(|p| p.group).collect())
+        Ok(NameLookup {
+            groups: parsed.packages.into_iter().map(|p| p.group).collect(),
+            alias: parsed.alias.map(|a| AliasTarget {
+                group: a.group,
+                name: a.name,
+            }),
+        })
     }
 
     /// Whether `body`, served for `by-name/<name>.json`, is the file
@@ -187,4 +205,78 @@ impl IndexClient {
         );
         Ok(false)
     }
+}
+
+impl IndexClient {
+    /// The registry's whole alias table — the authored
+    /// `aliases.toml` at the index root (PROP-008 §2.6).
+    ///
+    /// It is an INPUT to the projection rather than one of its outputs,
+    /// so `repomd.json` does not vouch for it and the freshness check
+    /// above does not apply. That is the honest shape: the manifest is
+    /// the manifest of what the writer writes, and this is what the
+    /// writer was told. The one consumer is `vibe registry mirror`,
+    /// which carries the table across and whose own merge rule decides
+    /// what to do with each row; a RESOLVING client never fetches this
+    /// — it reads the alias off the `by-name` file it already gets.
+    pub fn alias_table(&self) -> Result<Vec<(String, AliasTarget)>, IndexError> {
+        let url = format!("{}/aliases.toml", self.file_base);
+        let client = self.file_client().map_err(|e| IndexError::Http {
+            url: url.clone(),
+            message: e.to_string(),
+        })?;
+        let resp = self.get(client, client.get(&url), &url)?;
+        let status = resp.status();
+        if status.as_u16() == 404 {
+            return Ok(Vec::new());
+        }
+        if !status.is_success() {
+            return Err(self.classify_failure(url, status.as_u16()));
+        }
+        let body = resp
+            .bytes()
+            .map_err(|error| Self::body_error(&url, error))?;
+        // A table this reader cannot parse is answered as "no spellings"
+        // rather than as a failure: the file belongs to another registry,
+        // the only caller is a mirror run copying what it can, and a
+        // stranger's malformed table must not be able to stop it. The
+        // same reader tolerance `vibe_index::aliases::attach` applies to
+        // a single bad row, one level up.
+        let text = String::from_utf8_lossy(&body);
+        Ok(parse_alias_table(&text).unwrap_or_else(|message| {
+            tracing::warn!(
+                target: "vibe_registry::index_client",
+                %url,
+                %message,
+                "the registry's alias table could not be read; carrying no spellings from it"
+            );
+            Vec::new()
+        }))
+    }
+}
+
+/// The narrow reader for the alias table — the same shape this crate
+/// uses for `by-name`: it reads a registry's files, it does not build
+/// them, so the rows it cannot use it simply does not return.
+pub(crate) fn parse_alias_table(text: &str) -> Result<Vec<(String, AliasTarget)>, String> {
+    #[derive(serde::Deserialize)]
+    struct Table {
+        #[serde(default)]
+        aliases: std::collections::BTreeMap<String, String>,
+    }
+    let table: Table = toml::from_str(text).map_err(|e| e.to_string())?;
+    Ok(table
+        .aliases
+        .into_iter()
+        .filter_map(|(alias, spelling)| {
+            let (group, name) = spelling.split_once('/')?;
+            Some((
+                alias,
+                AliasTarget {
+                    group: Group::parse(group).ok()?,
+                    name: name.to_owned(),
+                },
+            ))
+        })
+        .collect())
 }

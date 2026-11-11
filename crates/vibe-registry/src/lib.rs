@@ -40,6 +40,7 @@ mod local_registry;
 pub mod multi_registry_resolver;
 mod registry_cache;
 pub mod search;
+pub mod short_name;
 pub mod store;
 pub mod vendor;
 
@@ -68,6 +69,7 @@ pub use multi_registry_resolver::{
     localdir_path,
 };
 pub use registry_auth::{RegistryAuthInput, ResolvedRegistryAuth, resolve_registry_auth};
+pub use short_name::{AliasCandidate, AliasTarget, NameLookup, ShortNameCandidates};
 
 /// Uniform surface over all registry backends — [`LocalRegistry`] and
 /// [`GitMonorepoRegistry`] both implement this trait. `vibe-install` and

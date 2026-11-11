@@ -7,13 +7,18 @@
 //! `Lookup` built by hand rather than against whatever this machine holds.
 
 use vibe_core::Group;
+use vibe_registry::short_name::AliasTarget;
 
-use super::Lookup;
+use super::{Candidate, Lookup};
 
 /// `node → org.vibevm.node/node` — the one line that says what vibe
-/// decided on the operator's behalf.
-pub(super) fn provenance(name: &str, group: &Group) -> String {
-    format!("{name} → {group}/{name}")
+/// decided on the operator's behalf. An alias adds who decided it:
+/// `qwen → org.vibevm.qwen/qwen-code (alias in registry vibespecs)`,
+/// because a spelling that lands on a differently-named package is a
+/// bigger step than supplying a group, and the operator is owed the
+/// name of the registry that took it.
+pub(super) fn provenance(name: &str, candidate: &Candidate) -> String {
+    format!("{name} → {}", candidate.spelling(name))
 }
 
 /// The PROP-008 §2.7 collision refusal in the application commands'
@@ -35,8 +40,9 @@ pub(super) fn render_collision(command: &str, name: &str, lookup: &Lookup) -> St
     if let Some(first) = eligible.first() {
         let _ = write!(
             message,
-            "Re-run with the qualified form, e.g. `{command} {}/{name}`.",
+            "Re-run with the qualified form, e.g. `{command} {}/{}`.",
             first.group,
+            first.package_name(name),
         );
     }
     message
@@ -78,7 +84,7 @@ pub(super) fn render_not_found(command: &str, name: &str, lookup: &Lookup) -> St
         .candidates
         .iter()
         .filter(|candidate| !candidate.eligible)
-        .map(|candidate| format!("{}/{name}", candidate.group))
+        .map(|candidate| format!("{}/{}", candidate.group, candidate.package_name(name)))
         .collect();
     if !untrusted.is_empty() {
         let _ = writeln!(
@@ -114,6 +120,30 @@ pub(super) fn splice(spelling: &str, group: &Group) -> String {
         }
         _ => format!("{group}/{spelling}"),
     }
+}
+
+/// Splice an alias TARGET into the spelling the operator typed: both
+/// the group and the name change, while a `kind:` prefix and a version
+/// requirement survive byte for byte — `qwen@0.27` must come back as
+/// `org.vibevm.qwen/qwen-code@0.27` and not as `@^0.27`.
+pub(super) fn splice_alias(spelling: &str, target: &AliasTarget) -> String {
+    let spelling = spelling.trim();
+    let (kind, rest) = match spelling.split_once(':') {
+        Some((kind, rest)) if !kind.contains('/') && !kind.contains('@') => (Some(kind), rest),
+        _ => (None, spelling),
+    };
+    let version = rest.split_once('@').map(|(_, version)| version);
+    let mut out = String::new();
+    if let Some(kind) = kind {
+        out.push_str(kind);
+        out.push(':');
+    }
+    out.push_str(&format!("{}/{}", target.group, target.name));
+    if let Some(version) = version {
+        out.push('@');
+        out.push_str(version);
+    }
+    out
 }
 
 /// The bare name a spelling carries, or `None` when it is already

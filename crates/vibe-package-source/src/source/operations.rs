@@ -1,6 +1,7 @@
 //! Existing source dispatch helpers; retained selection remains in one owner.
 specmark::scope!("spec://org.vibevm.core/vibevm/VIBEVM-SPEC#install-workflow-in-detail");
 use super::*;
+use vibe_registry::short_name::{NameLookup, ShortNameCandidates};
 
 impl InstallResolver {
     pub(super) fn held_for(&self, pkg: &PackageRef) -> Option<&MultiRegistryResolver> {
@@ -197,28 +198,60 @@ impl InstallResolver {
     /// part of [`InstallSource`]: qualification is the surface's input
     /// boundary, reached through [`crate::PackageQualifier`].
     pub fn candidate_groups(&self, name: &str) -> Result<Vec<Group>> {
+        Ok(self.short_name_candidates(name)?.exact)
+    }
+
+    /// [`Self::candidate_groups`] with the short spellings the walked
+    /// registries OFFER for the name beside the ones that really carry
+    /// it (PROP-008 §2.6).
+    ///
+    /// Same walk, same sources, same exclusions: this is the resolver
+    /// the command would have resolved the package through, so a
+    /// registry its source policy disabled contributes no alias either.
+    /// An explicit local-directory registry answers from its own
+    /// `_index/`, which is where a hand-built registry's alias table
+    /// lives too.
+    pub fn short_name_candidates(&self, name: &str) -> Result<ShortNameCandidates> {
+        let mut answers: Vec<(String, NameLookup)> = Vec::new();
+        let mut gathered = |registry: String, lookup: NameLookup| answers.push((registry, lookup));
         match self {
             InstallResolver::Local(r, _) | InstallResolver::LockedLocal { local: r, .. } => {
-                Ok(r.candidate_groups(name)?)
+                gathered(local_name(r), r.indexed_name_lookup(name)?);
             }
-            InstallResolver::Multi(m, _) => Ok(m.resolve_name_candidates(name)?),
+            InstallResolver::Multi(m, _) => return Ok(m.resolve_short_name(name)?),
             InstallResolver::Embedded {
                 locals, declared, ..
             } => {
-                // The local family is a Vec: union candidate_groups across
-                // every local (project-local + vibe-embedded), then layer in
-                // the declared walk, then sort + dedup.
-                let mut groups = Vec::new();
+                // The local family is a Vec: union across every local
+                // (project-local + vibe-embedded), then layer in the
+                // declared walk.
                 for local in locals {
-                    groups.extend(local.candidate_groups(name)?);
+                    gathered(local_name(local), local.indexed_name_lookup(name)?);
                 }
                 if let Some(m) = declared {
-                    groups.extend(m.resolve_name_candidates(name)?);
+                    let declared = m.resolve_short_name(name)?;
+                    gathered(String::new(), NameLookup::of_groups(declared.exact));
+                    for candidate in declared.aliases {
+                        answers.extend(candidate.registries.into_iter().map(|registry| {
+                            (
+                                registry,
+                                NameLookup {
+                                    groups: Vec::new(),
+                                    alias: Some(candidate.target.clone()),
+                                },
+                            )
+                        }));
+                    }
                 }
-                groups.sort_by(|a, b| a.as_str().cmp(b.as_str()));
-                groups.dedup();
-                Ok(groups)
             }
         }
+        Ok(ShortNameCandidates::gather(answers))
     }
+}
+
+/// How a local-directory registry names itself in a provenance line: it
+/// has no `[[registry]].name` here, so its root is the honest answer —
+/// the same spelling the not-found refusal already uses for it.
+fn local_name(registry: &vibe_registry::LocalRegistry) -> String {
+    registry.root().display().to_string()
 }

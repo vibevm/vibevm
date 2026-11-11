@@ -13,6 +13,16 @@ fn base() -> TrustPolicy {
     TrustPolicy::base()
 }
 
+/// The group a lookup resolves to, as a string — the verdict's own
+/// shape carries the whole candidate now, and these cases only ever
+/// cared which group won.
+fn resolved(lookup: &Lookup) -> String {
+    match decide(lookup) {
+        Outcome::Resolved(candidate) => candidate.group.as_str().to_owned(),
+        other => panic!("expected a resolution, got {other:?}"),
+    }
+}
+
 fn offered(groups: &[&str], trust: &TrustPolicy) -> Lookup {
     Lookup {
         candidates: Lookup::sorted(
@@ -31,13 +41,13 @@ fn offered(groups: &[&str], trust: &TrustPolicy) -> Lookup {
 #[test]
 fn one_eligible_candidate_resolves() {
     let lookup = offered(&["org.vibevm.node"], &base());
-    assert_eq!(decide(&lookup), Outcome::Resolved(g("org.vibevm.node")));
+    assert_eq!(resolved(&lookup), "org.vibevm.node");
 }
 
 #[test]
 fn the_provenance_line_is_the_typed_name_and_the_qualified_one() {
     assert_eq!(
-        provenance("node", &g("org.vibevm.node")),
+        provenance("node", &Candidate::offered(g("org.vibevm.node"), &base())),
         "node → org.vibevm.node/node"
     );
 }
@@ -87,7 +97,7 @@ fn an_untrusted_group_cannot_turn_a_single_trusted_match_into_a_collision() {
     // the answer is that one — and the untrusted sibling never silently
     // disappears from the record, it simply is not picked.
     let lookup = offered(&["org.vibevm.node", "com.acme"], &base());
-    assert_eq!(decide(&lookup), Outcome::Resolved(g("org.vibevm.node")));
+    assert_eq!(resolved(&lookup), "org.vibevm.node");
     assert_eq!(lookup.candidates.len(), 2);
 }
 
@@ -104,7 +114,7 @@ fn an_installed_candidate_is_eligible_whatever_the_trust_lists_say() {
     // The operator installed it; a verb acting on installed state must be
     // able to name it.
     let lookup = Lookup::of_installed(vec![g("com.acme")]);
-    assert_eq!(decide(&lookup), Outcome::Resolved(g("com.acme")));
+    assert_eq!(resolved(&lookup), "com.acme");
 }
 
 /// A verb acting on installed state refuses locally and never reaches for

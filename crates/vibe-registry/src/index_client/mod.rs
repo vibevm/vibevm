@@ -23,7 +23,7 @@
 specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#http");
 
 mod auth;
-mod by_name;
+pub(crate) mod by_name;
 mod catalog;
 mod handshake;
 mod locate;

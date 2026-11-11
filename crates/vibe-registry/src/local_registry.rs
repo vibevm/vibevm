@@ -195,40 +195,7 @@ impl LocalRegistry {
     /// directory listing of [`Self::candidate_groups`], which is what the
     /// projection of a tree without journal facts holds.
     pub fn indexed_candidate_groups(&self, name: &str) -> Result<Vec<Group>, RegistryError> {
-        use vibe_core::layout_registry::{IndexState, index_dir, index_state};
-        #[derive(serde::Deserialize)]
-        struct NameFile {
-            #[serde(default)]
-            packages: Vec<NamePackage>,
-        }
-        #[derive(serde::Deserialize)]
-        struct NamePackage {
-            group: Group,
-        }
-        let state = index_state(&self.root).map_err(|source| RegistryError::Io {
-            path: self.root.clone(),
-            source,
-        })?;
-        if state != IndexState::Current {
-            return self.candidate_groups(name);
-        }
-        let path = index_dir(&self.root)
-            .join("by-name")
-            .join(format!("{name}.json"));
-        let bytes = match fs::read(&path) {
-            Ok(bytes) => bytes,
-            Err(error) if error.kind() == std::io::ErrorKind::NotFound => return Ok(Vec::new()),
-            Err(source) => return Err(RegistryError::Io { path, source }),
-        };
-        let parsed: NameFile =
-            serde_json::from_slice(&bytes).map_err(|e| RegistryError::MalformedMeta {
-                path: path.clone(),
-                reason: e.to_string(),
-            })?;
-        let mut groups: Vec<Group> = parsed.packages.into_iter().map(|p| p.group).collect();
-        groups.sort();
-        groups.dedup();
-        Ok(groups)
+        Ok(self.indexed_name_lookup(name)?.groups)
     }
 
     /// Pick the highest version that satisfies `req`.
@@ -406,6 +373,10 @@ pub(crate) fn source_uri_for_local(path: &Path) -> String {
     }
     format!("file://{s}")
 }
+
+/// The short-name half of a local-directory registry: what a bare
+/// spelling finds in it, candidates and registry-offered aliases alike.
+mod short_name;
 
 #[cfg(test)]
 mod tests {

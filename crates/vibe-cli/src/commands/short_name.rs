@@ -15,26 +15,45 @@
 //! local-directory registry is scanned, a multi-registry resolver
 //! walks each registry's index. Two groups under one bare name is a
 //! collision the resolver refuses to guess past (PROP-008 §2.7).
+//!
+//! A registry may also OFFER a short spelling for a package of another
+//! name — `qwen` for `org.vibevm.qwen/qwen-code` — written by that
+//! registry's owner into its own alias table and never by a package
+//! author (PROP-008 §2.6, `vibe_index::aliases`). An alias is reached
+//! only when no source carries the bare name for real: the lockfile
+//! first, then every allowed registry's candidate set, and only then
+//! the spellings they offer. Trust does not narrow the alias side here,
+//! because it does not narrow the exact side here either — the
+//! application boundary, where an install runs the author's code, is
+//! where that filter lives (`commands::app::short_name`).
 
 specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-008#short-name");
 
 use anyhow::{Result, bail};
 use vibe_core::manifest::Lockfile;
 use vibe_core::{Group, PackageRef};
+use vibe_registry::short_name::AliasCandidate;
 
 use super::install::InstallResolver;
 use crate::exit_code::InstallError;
 
-/// The outcome of resolving one bare package name to its `group`.
+/// The outcome of resolving one bare package name.
 enum ShortNameOutcome {
     /// Exactly one `(group, name)` package matched.
     Resolved(Group),
+    /// No package matched the name, but exactly one registry-offered
+    /// ALIAS did (PROP-008 §2.6): the spelling stands for a package
+    /// under another name, and this is the package. Only ever reached
+    /// when nothing — lockfile or registry — carries the bare name for
+    /// real, because a name somebody publishes outranks a spelling
+    /// somebody offers.
+    ResolvedAlias(Box<AliasCandidate>),
     /// No package of that name was found in any source.
     NotFound,
-    /// More than one group publishes the name — a collision
-    /// (PROP-008 §2.7). Groups are sorted and de-duplicated; the
-    /// variant carries at least two.
-    Ambiguous(Vec<Group>),
+    /// More than one candidate matches the name — a collision
+    /// (PROP-008 §2.7). The variant carries at least two qualified
+    /// spellings, sorted and de-duplicated, and the form to re-run with.
+    Ambiguous(Vec<String>, String),
 }
 
 /// De-duplicate a stream of groups and sort the result, so a caller
@@ -78,40 +97,56 @@ fn resolve(
         return Ok(ShortNameOutcome::Resolved(only.clone()));
     }
     if locked.len() > 1 {
-        return Ok(ShortNameOutcome::Ambiguous(locked));
+        return Ok(ShortNameOutcome::Ambiguous(
+            qualified(&locked, name),
+            format!("{}/{name}", locked[0]),
+        ));
     }
-    let candidates = resolver.candidate_groups(name)?;
-    if let [only] = candidates.as_slice() {
+    let found = resolver.short_name_candidates(name)?;
+    if let [only] = found.exact.as_slice() {
         return Ok(ShortNameOutcome::Resolved(only.clone()));
     }
-    Ok(if candidates.is_empty() {
-        ShortNameOutcome::NotFound
-    } else {
-        ShortNameOutcome::Ambiguous(candidates)
-    })
+    if !found.exact.is_empty() {
+        return Ok(ShortNameOutcome::Ambiguous(
+            qualified(&found.exact, name),
+            format!("{}/{name}", found.exact[0]),
+        ));
+    }
+    // Only now the aliases: `gather` has already cleared them if any
+    // registry carried the bare name for real, so reaching here means
+    // nobody publishes it and the registries' own spellings are the
+    // whole answer.
+    match found.aliases.as_slice() {
+        [] => Ok(ShortNameOutcome::NotFound),
+        [only] => Ok(ShortNameOutcome::ResolvedAlias(Box::new(only.clone()))),
+        many => Ok(ShortNameOutcome::Ambiguous(
+            many.iter().map(AliasCandidate::provenance).collect(),
+            many[0].target.to_string(),
+        )),
+    }
+}
+
+/// `<group>/<name>` for each group — the spellings a collision lists.
+fn qualified(groups: &[Group], name: &str) -> Vec<String> {
+    groups.iter().map(|g| format!("{g}/{name}")).collect()
 }
 
 /// Render the PROP-008 §2.7 collision message: the ambiguous bare
 /// name, a numbered list of the qualified candidates, and a re-run
 /// hint. Pure — unit-tested without a registry.
-fn render_collision(name: &str, candidates: &[Group]) -> String {
+fn render_collision(name: &str, candidates: &[String], hint: &str) -> String {
     use std::fmt::Write as _;
     let mut msg = format!(
         "the short name `{name}` is ambiguous — {} packages match it:\n",
         candidates.len(),
     );
-    for (i, group) in candidates.iter().enumerate() {
-        let _ = writeln!(msg, "  {}. {group}/{name}", i + 1);
+    for (i, spelling) in candidates.iter().enumerate() {
+        let _ = writeln!(msg, "  {}. {spelling}", i + 1);
     }
-    // A collision carries at least two candidates, so `first()` is
-    // always `Some` here; render the re-run hint when present and skip
-    // it (rather than panic) on the unreachable empty case.
-    if let Some(first) = candidates.first() {
-        let _ = write!(
-            msg,
-            "Re-run with the qualified form, e.g. `vibe install {first}/{name}`.",
-        );
-    }
+    let _ = write!(
+        msg,
+        "Re-run with the qualified form, e.g. `vibe install {hint}`.",
+    );
     msg
 }
 
@@ -137,6 +172,20 @@ pub fn qualify(
             name: pkgref.name.clone(),
             version: pkgref.version.clone(),
         }),
+        // A registry's own spelling for the package (PROP-008 §2.6).
+        // Both halves of the identity change, and the operator is told
+        // which registry decided that — the resolved pkgref that leaves
+        // here is fully qualified, so nothing downstream ever sees the
+        // alias (PROP-029 `#ADDR-SHORT-NAMES`).
+        ShortNameOutcome::ResolvedAlias(candidate) => {
+            eprintln!("{} → {}", pkgref.name, candidate.provenance());
+            Ok(PackageRef {
+                kind: pkgref.kind,
+                group: Some(candidate.target.group.clone()),
+                name: candidate.target.name.parse()?,
+                version: pkgref.version.clone(),
+            })
+        }
         ShortNameOutcome::NotFound => bail!(
             "could not resolve the short name `{name}` — no package of that name \
              is in `vibe.lock` or any configured registry's index. If a registry \
@@ -150,9 +199,10 @@ pub fn qualify(
         // distinct from a `3` dependency conflict, and the rendered
         // message lists the qualified alternatives so the operator can
         // pick one.
-        ShortNameOutcome::Ambiguous(groups) => {
-            Err(InstallError::AmbiguousPackage(render_collision(&pkgref.name, &groups)).into())
-        }
+        ShortNameOutcome::Ambiguous(spellings, hint) => Err(InstallError::AmbiguousPackage(
+            render_collision(&pkgref.name, &spellings, &hint),
+        )
+        .into()),
     }
 }
 
@@ -190,7 +240,12 @@ pub fn qualify_locked(pkgref: &PackageRef, lockfile: &Lockfile) -> Result<Packag
         ),
         // PROP-008 §2.7 — a short name matching two locked groups is a
         // collision the lockfile cannot break (same verdict as `qualify`).
-        many => Err(InstallError::AmbiguousPackage(render_collision(&pkgref.name, many)).into()),
+        many => Err(InstallError::AmbiguousPackage(render_collision(
+            &pkgref.name,
+            &qualified(many, &pkgref.name),
+            &format!("{}/{}", many[0], pkgref.name),
+        ))
+        .into()),
     }
 }
 
@@ -224,7 +279,11 @@ mod tests {
 
     #[test]
     fn render_collision_numbers_every_candidate() {
-        let msg = render_collision("wal", &[g("com.acme"), g("org.vibevm")]);
+        let msg = render_collision(
+            "wal",
+            &qualified(&[g("com.acme"), g("org.vibevm")], "wal"),
+            "com.acme/wal",
+        );
         assert!(
             msg.contains("`wal` is ambiguous — 2 packages match"),
             "missing the header line:\n{msg}"
