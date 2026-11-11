@@ -3120,3 +3120,41 @@ carries none of them, so a machine reader sees a silent merge. Three fields
 (`aliases_copied`, `aliases_dropped`, `aliases_kept_local`) would be additive
 and epoch-neutral; they were left out of CORP-FMT-043 to keep that landing to
 one wire schema. Severity **P3**.
+
+## B-294 — the template-snapshot mirror test is time-dependent and flakes {#b-294}
+
+`cli_registry_mirror_templates::a_selected_template_writes_exactly_the_expected_snapshot_tree`
+asserts that an identical second `vibe registry mirror` run reports
+`index_refreshed: false`. It does not, reliably: under `--test-threads=4`
+on a loaded machine it failed 2 runs in 8 while passing 3/3 at
+`--test-threads=1`.
+
+**Cause, measured.** The refresh verdict is
+`!facts.is_empty() || !files.is_empty() || !removed.is_empty() || state != Current`
+(`crates/vibe-publish/src/layout_publish/index_plan.rs`), and `files`
+holds only the batch files whose bytes DIFFER from the target's. An
+instrumented run of the failing case logs
+
+```
+PROBE facts=0 files=["_index/mirrors/src.toml",
+  "_index/templates/org.vibevm.node/node/snapshot.toml",
+  "_index/templates/org.vibevm.node/node/versions.json",
+  "_index/templates/org.vibevm.node/node/digests/22.23.4",
+  "_index/templates/org.vibevm.node/node/digests/24.22.2"] removed=0 state=Current
+```
+
+against `files=[]` on a passing one. `crates/vibe-cli/src/commands/registry/mirror/templates.rs`
+stamps `record.sync.vibe` and `record.sync.last = now` on the snapshot
+record **unconditionally**, where `now` is `Utc::now()` at second
+granularity — so two runs that straddle a second boundary write
+different `snapshot.toml` bytes, and the assertion fails. The sibling
+`mirror_record` already guards its own `sync.last` behind a `changed`
+flag; the snapshot path does not.
+
+**Fix direction:** stamp the snapshot's `[sync] last` only when the
+snapshot actually changed, the way `history::mirror_record` does, or
+freeze the clock in the test. Note the test's own comment claims the
+identical re-run is the end-to-end closure of `#P4-AS-BUILT` amendment
+6 — so the assertion is deliberate and should be kept, with the writer
+fixed rather than the assertion loosened. Severity **P2** (a flaky gate
+hides real regressions).
