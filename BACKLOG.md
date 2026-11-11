@@ -3158,3 +3158,5 @@ identical re-run is the end-to-end closure of `#P4-AS-BUILT` amendment
 6 — so the assertion is deliberate and should be kept, with the writer
 fixed rather than the assertion loosened. Severity **P2** (a flaky gate
 hides real regressions).
+
+Independently reproduced by the byte-exact registry checkout work (2026-11-11): on pristine `main` at `b89e8f673`, 10 repeats of `cli_registry_mirror_templates` under `--test-threads=4` failed once and passed alone, so the flake predates both that change and the alias table.
