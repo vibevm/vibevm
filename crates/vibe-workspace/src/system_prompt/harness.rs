@@ -25,6 +25,16 @@ use std::path::Path;
 
 use vibe_core::manifest::{HarnessDelivery, HarnessTable, Manifest};
 
+use super::supplied_base::CarrierDocument;
+
+#[path = "harness/notes.rs"]
+mod notes;
+use notes::no_slot_note;
+pub use notes::{
+    OPENCODE_MEASURED_VERSION, QWEN_MEASURED_VERSION, opencode_carrier_description,
+    qwen_launch_blocker,
+};
+
 /// The closed set of harness kinds this version has a flag dialect for.
 ///
 /// **Membership is not a launch tier.** A kind is here when vibe knows its
@@ -51,9 +61,9 @@ pub enum HarnessKind {
     Claude,
     /// Codex — `developer_instructions` through a launch-time profile file.
     Codex,
-    /// OpenCode — a launcher and a dialect, but **no deliverable slot**: its
-    /// only additive carrier is process-wide and reaches `task` subagents
-    /// (`#SYS-OPENCODE`).
+    /// OpenCode — one per-launch configuration layer declaring vibe's own
+    /// primary agent, whose `system` is OpenCode's **own** base followed by
+    /// the lane (`#SYS-OPENCODE`, `#SYS-SUPPLIED-BASE`).
     OpenCode,
     /// Qwen Code — a launcher and a dialect, but **no deliverable slot**:
     /// its one additive carrier takes the instructions as text on the
@@ -100,11 +110,37 @@ impl HarnessKind {
                 "--system-prompt-file",
             ],
             HarnessKind::Codex => &["-p", "--profile"],
-            // Nothing: vibe passes these kinds no flag under any delivery,
-            // so nothing of the user's could be a second one beside ours.
-            // Qwen Code's `--append-system-prompt` and `--system-prompt`
-            // are a user's own business here for exactly that reason.
-            HarnessKind::OpenCode | HarnessKind::Qwen => &[],
+            // **Not a second prompt but a bypass of the first.** vibe's
+            // carrier selects its own primary agent by name, and a user's
+            // own `--agent` selects a different one — whose `system` is not
+            // the one carrying the lane. The session then starts with no
+            // boot lane and nothing says so, which is the same silence
+            // every other entry here guards (`#SYS-OPENCODE`).
+            HarnessKind::OpenCode => &["--agent"],
+            // Nothing: vibe passes this kind no flag under any delivery, so
+            // nothing of the user's could be a second one beside ours. Qwen
+            // Code's `--append-system-prompt` and `--system-prompt` are a
+            // user's own business here for exactly that reason.
+            HarnessKind::Qwen => &[],
+        }
+    }
+
+    /// The vibe package that carries this harness's own prompt bases, when
+    /// one exists.
+    ///
+    /// **A coordinate is packaging, not prompt text.** `#SYS-SUPPLIED-BASE`
+    /// names it itself — "for OpenCode that is `org.vibevm.opencode/
+    /// opencode`" — because the whole point of the rule is that the *data*
+    /// ships with the harness's package; knowing which package that is, is
+    /// how the lookup starts. Nothing about a prompt is decided here.
+    pub fn base_package(self) -> Option<(&'static str, &'static str)> {
+        match self {
+            HarnessKind::OpenCode => Some(("org.vibevm.opencode", "opencode")),
+            // Claude Code and Codex have additive slots and need no base;
+            // Qwen Code's base is a function of the session rather than of
+            // the version, so no set of its own can be recorded yet
+            // (`#SYS-QWEN`).
+            HarnessKind::Claude | HarnessKind::Codex | HarnessKind::Qwen => None,
         }
     }
 
@@ -129,10 +165,32 @@ impl HarnessKind {
 pub struct LaunchFlags {
     /// The argument vector, in order.
     pub flags: Vec<String>,
+    /// The environment assignments the launch makes for the harness it
+    /// starts, in order. Empty for every kind whose carrier is a flag or a
+    /// file.
+    pub env: Vec<EnvAssignment>,
     /// Sentences a caller prints beside the flags — never part of them.
     pub notes: Vec<String>,
     /// The profile file a Codex launch must write before exec, or `None`.
     pub profile: Option<CodexProfile>,
+}
+
+/// One environment assignment a launch makes for the harness it starts.
+///
+/// **Scoped to the child and to nothing else.** It is set on the process
+/// vibe execs, and is never exported, written to a profile or persisted, so
+/// it cannot reach another session or another project — which is the
+/// per-launch half of `#SYS-WORKER-EXCLUSION`, and the reason an
+/// environment carrier is admissible here at all when an ambient
+/// configuration file would not be.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct EnvAssignment {
+    /// The variable's name.
+    pub name: String,
+    /// Its value. For OpenCode this is one configuration document carrying
+    /// the harness's own base prompt and the lane's **path** — never the
+    /// lane's bytes (`#SYS-HARNESS-DELIVERY`).
+    pub value: String,
 }
 
 /// The Codex launch carrier: a profile file beside `$CODEX_HOME/config.toml`.
@@ -153,20 +211,40 @@ pub struct CodexProfile {
     pub body: String,
 }
 
+/// What one launch knows that the flags are composed from.
+///
+/// A struct rather than a parameter list because the kinds need disjoint
+/// parts of it: Claude Code wants only the path, Codex the bytes and the
+/// limit, OpenCode a carrier document another cell had to read a package to
+/// compose. Threading five positional arguments through one call that uses
+/// two of them is how the wrong one gets passed.
+#[derive(Debug, Clone, Copy)]
+pub struct LaunchInputs<'a> {
+    /// The node's router id, which names Codex's profile file.
+    pub node_id: &'a str,
+    /// The absolute path of the composed `AGENT-LANE.md`.
+    pub lane: &'a Path,
+    /// The lane's content. Needed only by Codex, whose carrier is a TOML
+    /// value rather than a path.
+    pub lane_bytes: &'a str,
+    /// The `project_doc_max_bytes` this node declares for Codex.
+    pub codex_limit: usize,
+    /// The carrier document a supplied-base harness launches with, when one
+    /// could be composed for this launch. `None` means the composition
+    /// refused, and the caller's gate has already turned that into a soft
+    /// launch (`#SYS-SUPPLIED-BASE`, `#SYS-SOFT-LAUNCH`).
+    pub supplied: Option<&'a CarrierDocument>,
+}
+
 /// Compose one kind's launch flags.
 ///
-/// `lane` is the absolute path of the composed `AGENT-LANE.md`; `lane_bytes`
-/// is its content, needed only by Codex, whose carrier is a TOML value
-/// rather than a path. A kind in `read` delivery takes **no** flags and says
-/// so in one line: the project asked for the router to do the work, and
-/// adding the slot anyway would deliver the lane twice.
+/// A kind in `read` delivery takes **no** flags and says so in one line:
+/// the project asked for the router to do the work, and adding the slot
+/// anyway would deliver the lane twice.
 pub fn launch_flags(
     kind: HarnessKind,
     delivery: HarnessDelivery,
-    node_id: &str,
-    lane: &Path,
-    lane_bytes: &str,
-    codex_limit: usize,
+    inputs: &LaunchInputs<'_>,
 ) -> LaunchFlags {
     if delivery == HarnessDelivery::Read {
         let mut notes = vec![format!(
@@ -175,9 +253,10 @@ pub fn launch_flags(
              itself — no slot flag is passed",
             kind.as_str()
         )];
-        notes.extend(no_slot_note(kind, lane));
+        notes.extend(no_slot_note(kind, inputs.lane));
         return LaunchFlags {
             flags: Vec::new(),
+            env: Vec::new(),
             notes,
             profile: None,
         };
@@ -186,9 +265,10 @@ pub fn launch_flags(
         HarnessKind::Claude => LaunchFlags {
             flags: vec![
                 "--append-system-prompt-file".to_owned(),
-                lane.display().to_string(),
+                inputs.lane.display().to_string(),
                 "--exclude-dynamic-system-prompt-sections".to_owned(),
             ],
+            env: Vec::new(),
             notes: vec![
                 "`--exclude-dynamic-system-prompt-sections` moves cwd, env info, memory paths \
                  and git status into the first user message, which keeps the slot's bytes \
@@ -198,14 +278,16 @@ pub fn launch_flags(
             profile: None,
         },
         HarnessKind::Codex => {
-            let profile = codex_profile(node_id, lane_bytes);
+            let profile = codex_profile(inputs.node_id, inputs.lane_bytes);
+            let limit = inputs.codex_limit;
             LaunchFlags {
                 flags: vec![
                     "-p".to_owned(),
                     profile.name.clone(),
                     "-c".to_owned(),
-                    format!("project_doc_max_bytes={codex_limit}"),
+                    format!("project_doc_max_bytes={limit}"),
                 ],
+                env: Vec::new(),
                 notes: vec![format!(
                     "`vibe agent codex` writes `$CODEX_HOME/{}` at launch and selects it with \
                      `-p {}`; the lane cannot go on a command line, and Codex's ambient \
@@ -215,182 +297,54 @@ pub fn launch_flags(
                 profile: Some(profile),
             }
         }
-        // **No flags, and the note says what the carrier would have been.**
-        // A caller that reaches here declared `launch` for a kind whose
-        // carrier vibe will not deliver; the composition still answers, and
-        // the carrier gate above it turns the answer into a soft launch or
-        // a refusal (`#SYS-OPENCODE`, `#SYS-QWEN`, `#SYS-SOFT-LAUNCH`).
-        HarnessKind::OpenCode | HarnessKind::Qwen => LaunchFlags {
+        // **The carrier is an environment assignment, and the flags only
+        // make it reachable.** `--standalone` is not an option: OpenCode's
+        // default mode serves sessions from one long-lived background
+        // service that never sees this launch's environment, so without it
+        // the document does not arrive at all (`#SYS-OPENCODE`).
+        HarnessKind::OpenCode => match inputs.supplied {
+            Some(carrier) => LaunchFlags {
+                flags: carrier.flags.clone(),
+                env: vec![EnvAssignment {
+                    name: carrier.env.clone(),
+                    value: carrier.value.clone(),
+                }],
+                notes: vec![format!(
+                    "`{}` carries one configuration layer declaring the primary agent `{}`, \
+                     whose prompt is OpenCode's OWN base for this version and model followed \
+                     by `{}` — the lane's path, never its bytes. The agent is selected for \
+                     this launch alone, a `subagent` child has a `system` of its own and \
+                     receives none of it, and `--standalone` is required because OpenCode's \
+                     default mode serves sessions from a background service that never sees \
+                     this environment",
+                    carrier.env,
+                    carrier.agent_name,
+                    inputs.lane.display()
+                )],
+                profile: None,
+            },
+            // A caller that reaches here declared `launch` and the
+            // composition refused; the gate above it has already turned
+            // that into a soft launch or a refusal naming which refusal it
+            // was (`#SYS-SUPPLIED-BASE`, `#SYS-SOFT-LAUNCH`).
+            None => LaunchFlags {
+                flags: Vec::new(),
+                env: Vec::new(),
+                notes: no_slot_note(kind, inputs.lane).into_iter().collect(),
+                profile: None,
+            },
+        },
+        // **No flags, and the note says what the slot would have been.** A
+        // caller that reaches here declared `launch` for a kind whose slot
+        // vibe will not use; the composition still answers, and the carrier
+        // gate above it turns the answer into a soft launch or a refusal
+        // (`#SYS-QWEN`, `#SYS-SOFT-LAUNCH`).
+        HarnessKind::Qwen => LaunchFlags {
             flags: Vec::new(),
-            notes: no_slot_note(kind, lane).into_iter().collect(),
+            env: Vec::new(),
+            notes: no_slot_note(kind, inputs.lane).into_iter().collect(),
             profile: None,
         },
-    }
-}
-
-/// The OpenCode version this build measured its carrier question against.
-///
-/// Version-scoped for the same reason Codex's is: the claim is a measurement
-/// of how one program assembles a prompt, and nothing here is a floor.
-/// Unlike Codex's it does **not** gate a delivery — there is none to gate —
-/// it scopes the *findings* that keep the delivery closed.
-pub const OPENCODE_MEASURED_VERSION: &str = "2.2.7";
-
-/// Why OpenCode has no deliverable launch tier, as one sentence naming the
-/// carrier, the two blockers and the version they were measured on.
-///
-/// **The carrier itself is excellent, and that is the frustrating part.**
-/// `OPENCODE_CONFIG_CONTENT` is read as one configuration layer, its
-/// `instructions` array is *set-unioned* with the project's own rather than
-/// replacing it, and it writes nothing to disk — per-launch, additive,
-/// side-effect-free. Both blockers are about *who* ends up reading it.
-///
-/// **Blocker one: the launch's environment does not reach the session.**
-/// OpenCode's default mode hands the work to one long-lived background
-/// service on a fixed port, and that process has the environment of whoever
-/// started it. Observed on 2.2.7: with `OPENCODE_CONFIG_CONTENT` set in the
-/// client's environment, `opencode debug config` against the running
-/// service lists the global config and no such layer, while the same
-/// command with `--standalone` lists it last. So the carrier either does
-/// not arrive at all, or — when that launch is the one that starts the
-/// service — arrives for **every session the service goes on to serve**,
-/// across projects. Neither is a per-launch delivery.
-///
-/// **Blocker two: a subagent inherits it.** OpenCode assembles one system
-/// array per session from process-wide state, and the `task` tool's child
-/// session goes through the same assembly with no gate on its parent, so a
-/// `task` subagent receives what the primary agent received. A quiet worker
-/// would get the whole central prefix, which `#SYS-WORKER-EXCLUSION`
-/// forbids outright and which `#SYS-HARNESS-DELIVERY`'s row C5 already
-/// calls disqualifying: a harness whose subagents inherit the slot must not
-/// have `launch` as its default at all. There is no per-agent
-/// `instructions` key and no primary-only switch to narrow it with
-/// (`#SYS-OPENCODE`).
-pub fn opencode_launch_blocker() -> String {
-    format!(
-        "OpenCode has no instruction slot a launch can scope to one session. Its only additive \
-         carrier is the configuration key `instructions`, which vibe would hand over per launch \
-         as `OPENCODE_CONFIG_CONTENT`, and two things stop it: OpenCode's default mode serves \
-         sessions from one long-lived background service that never sees the launch's own \
-         environment, so the carrier either does not arrive or arrives for every session that \
-         service serves; and the `instructions` array is injected into **every** session a \
-         process serves, `task` subagents included, so a quiet worker would receive the whole \
-         central prefix — which `PROP-076#SYS-WORKER-EXCLUSION` forbids. Measured against \
-         OpenCode {OPENCODE_MEASURED_VERSION}"
-    )
-}
-
-/// The Qwen Code version this build measured its carrier question against.
-///
-/// Version-scoped for the same reason Codex's and OpenCode's are: the claim
-/// is a measurement of how one program assembles a prompt. It gates nothing
-/// — there is no delivery to gate — it scopes the *findings* that keep the
-/// delivery closed.
-pub const QWEN_MEASURED_VERSION: &str = "0.27.2";
-
-/// Why Qwen Code has no deliverable launch tier, as one sentence naming both
-/// of its slots, what closes each, and the version they were measured on.
-///
-/// **Qwen Code has two per-launch instruction slots, and the campaign
-/// measured both.** Neither can carry this project's lane, and they fail for
-/// opposite reasons — which is why the sentence names both rather than
-/// stopping at the first.
-///
-/// **The additive slot is the right shape and the wrong medium.**
-/// `--append-system-prompt` is per-launch, additive, lands inside the
-/// prompt's cache-stable prefix and is **not** inherited by an ordinary
-/// subagent, so `#SYS-WORKER-EXCLUSION` is satisfied — four properties out
-/// of four. It takes the instructions as **text**, there is no file variant
-/// of it, and nothing else adds to the prompt beside it. So the lane would
-/// have to travel as one argument, and `#SYS-HARNESS-DELIVERY` puts no lane
-/// byte on a command line under any delivery — **a rule, not a threshold**,
-/// because one argument is capped at 128 KiB on Linux and a whole command
-/// line at about 32,767 characters on Windows, so a project delivered by
-/// measured size would arrive for one contributor and fail for the next.
-/// The measurement behind the rule: the 202,349-byte sample lane is `E2BIG`
-/// — «Argument list too long», errno 7 — at `execve`, before Qwen Code
-/// starts, and an environment string is capped the same way.
-///
-/// **The file-based slot works, and the owner's composition with it works.**
-/// `QWEN_SYSTEM_MD` names a file, is read only on the main session's own
-/// prompt path — `isSystemMdActive` is consumed inside `getCoreSystemPrompt`,
-/// which a subagent never enters — and it *replaces* the base prompt rather
-/// than adding to it. The owner's answer to that was to supply Qwen Code's
-/// own prompt followed by the lane, and it holds: `QWEN_WRITE_SYSTEM_MD`
-/// makes the installed program write its base prompt to a file, the lane is
-/// appended to that copy, and the captured request then begins with Qwen
-/// Code's own prompt **byte-exact**, carries the lane **exactly once** at
-/// byte 13,858, and continues byte-identically to a plain run after its
-/// base. The probe costs nothing and calls nothing: with no prompt and stdin
-/// closed, Qwen Code writes the dump and then refuses for want of input.
-///
-/// **What closes that slot is that the prompt it replaces is a function of
-/// the session, not of the version.** The base prompt is built from the
-/// interaction mode, the tool configuration, the model, whether the working
-/// directory is a git repository and whether a sandbox is set — and the
-/// interaction mode alone is decisive: measured on 0.27.2 under identical
-/// probe flags, the headless variant is **13,856** bytes and the interactive
-/// one **18,451**, differing by whole sections rather than a sentence, and a
-/// probe with no terminal is **always** the headless one, because
-/// `--prompt-interactive` refuses piped input and a run without a tty is
-/// headless whatever is asked of it. So a launcher cannot know which copy a
-/// given launch needs without allocating a pty and starting a second
-/// session, and handing over the wrong copy would silently swap the
-/// harness's own instructions — strictly worse than delivering no lane,
-/// which is `#SYS-SOFT-LAUNCH`'s standing judgement. A stored copy per
-/// verified version does not help either: it would be stale along every axis
-/// above on the first launch, not merely at the next upgrade. One more cost
-/// is recorded rather than discovered later: `QWEN_SYSTEM_MD` also disables
-/// the user's `general.outputStyle`, which Qwen Code says itself
-/// (`#SYS-QWEN`).
-pub fn qwen_launch_blocker() -> String {
-    format!(
-        "Qwen Code has two per-launch instruction slots and neither can carry this project's \
-         lane. `--append-system-prompt` is additive and is **not** inherited by an ordinary \
-         subagent, so worker exclusion is satisfied — but it takes the instructions as TEXT, and \
-         no lane byte goes on a command line in any delivery of this project, on any platform: \
-         that is one rule rather than a size threshold, since a single argument is capped at 128 \
-         KiB on Linux and a whole command line at about 32,767 characters on Windows. The \
-         measurement behind the rule: the 202,349-byte sample lane is `E2BIG` at `execve`, before \
-         the program starts, and an environment string is capped the same way. `QWEN_SYSTEM_MD` \
-         IS file-based and subagent-safe, and composing Qwen Code's own base prompt — dumped by \
-         `QWEN_WRITE_SYSTEM_MD` — with the lane after it was measured to arrive byte-exact and \
-         exactly once; but that slot REPLACES the base prompt, and the prompt it replaces is a \
-         function of the session rather than of the version: 13,856 bytes headless against 18,451 \
-         interactive under identical probe flags, and a probe without a terminal is always the \
-         headless one. Handing over the wrong copy would silently swap the harness's own \
-         instructions, which is worse than delivering no lane, and it would also disable the \
-         user's `general.outputStyle`. Measured against Qwen Code {QWEN_MEASURED_VERSION}"
-    )
-}
-
-/// The note a kind with no deliverable slot prints: what the carrier is,
-/// why it is not a flag, and why vibe does not use it.
-///
-/// It is printed under **both** deliveries, because the question it answers
-/// — "where would this harness's lane have gone" — does not depend on which
-/// tier the project declared.
-fn no_slot_note(kind: HarnessKind, lane: &Path) -> Option<String> {
-    match kind {
-        HarnessKind::Claude | HarnessKind::Codex => None,
-        HarnessKind::OpenCode => Some(format!(
-            "{}. The carrier could never have been a flag in any case: OpenCode takes no \
-             append-instructions argument, so the assignment would have been \
-             `OPENCODE_CONFIG_CONTENT={{\"instructions\":[\"{}\"]}}` in the launch's own \
-             environment — a path, never the lane's bytes. The agent reads the boot files \
-             itself instead",
-            opencode_launch_blocker(),
-            lane.display()
-        )),
-        HarnessKind::Qwen => Some(format!(
-            "{}. Both slots exist, which is why this note names them rather than denying them: \
-             the argument would have been `--append-system-prompt \"$(cat {lane})\"`, the \
-             lane's own bytes on the command line, and the file-based assignment would have \
-             been `QWEN_SYSTEM_MD=<a vibe-owned copy of Qwen Code's base prompt with {lane} \
-             after it>`. The agent reads the boot files itself instead",
-            qwen_launch_blocker(),
-            lane = lane.display()
-        )),
     }
 }
 
@@ -488,6 +442,25 @@ pub fn codex_carrier_verdict(reported: &str) -> CarrierVerdict {
     } else {
         CarrierVerdict::Unverified { installed: version }
     }
+}
+
+/// The version number out of a `--version` line, or `None` when the line
+/// carries none.
+///
+/// Public because a kind whose carrier is gated on *data* rather than on a
+/// constant still has to turn the program's own answer into the version
+/// string that names a directory — and reading it out of a
+/// [`CarrierVerdict`] would be reading a Codex judgement for an OpenCode
+/// question.
+///
+/// ```
+/// use vibe_workspace::system_prompt::reported_version;
+///
+/// assert_eq!(reported_version("opencode v2.2.7").as_deref(), Some("2.2.7"));
+/// assert_eq!(reported_version(""), None);
+/// ```
+pub fn reported_version(reported: &str) -> Option<String> {
+    parse_version(reported)
 }
 
 /// The version number out of a `--version` line: the last whitespace-

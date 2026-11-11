@@ -31,6 +31,7 @@ mod harness_version;
 mod path;
 mod prepare;
 mod resolve;
+mod supplied_base;
 
 pub(crate) use build::summary_line;
 pub(crate) use flags::{Undeliverable, compose as compose_flags, opted_in};

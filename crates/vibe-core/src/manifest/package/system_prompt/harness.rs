@@ -58,12 +58,19 @@ impl HarnessTable {
 
     /// The declared delivery of one harness by name, or its default.
     ///
-    /// The default is `launch` for the two harnesses with a file-based
-    /// instruction slot and `read` for every other, which is safe before any
-    /// live run: a project in `launch` mode started *plain* has no lane
-    /// markers in context and the router block has the agent read the files,
-    /// so one byte-identical block serves both tiers and a project can never
-    /// contradict itself (PROP-076 `#SYS-HARNESS-DELIVERY`, decision D1).
+    /// The default is `launch` for the three harnesses whose lane vibe can
+    /// deliver — the two with a file-based instruction slot, and OpenCode,
+    /// whose per-launch agent carries the harness's own supplied base in
+    /// front of the lane — and `read` for every other. It is safe before any
+    /// live run either way: a project in `launch` mode started *plain* has
+    /// no lane markers in context and the router block has the agent read
+    /// the files, so one byte-identical block serves both tiers and a
+    /// project can never contradict itself (PROP-076
+    /// `#SYS-HARNESS-DELIVERY`, decision D1). A `launch` default is also
+    /// safe on a machine with no verified prompt-base set for the installed
+    /// OpenCode: the carrier gate refuses and the launch is soft, which is
+    /// the classic boot behind one loud warning (`#SYS-SOFT-LAUNCH`,
+    /// `#SYS-SUPPLIED-BASE`).
     ///
     /// ```
     /// use vibe_core::manifest::{HarnessDelivery, SystemPromptSection};
@@ -71,7 +78,7 @@ impl HarnessTable {
     /// let absent: SystemPromptSection = toml::from_str("")?;
     /// assert_eq!(absent.harness.delivery("claude"), HarnessDelivery::Launch);
     /// assert_eq!(absent.harness.delivery("codex"), HarnessDelivery::Launch);
-    /// assert_eq!(absent.harness.delivery("opencode"), HarnessDelivery::Read);
+    /// assert_eq!(absent.harness.delivery("opencode"), HarnessDelivery::Launch);
     /// assert_eq!(absent.harness.delivery("qwen"), HarnessDelivery::Read);
     /// assert_eq!(absent.harness.delivery("gemini"), HarnessDelivery::Read);
     ///
@@ -92,7 +99,7 @@ impl HarnessTable {
             _ => None,
         };
         declared.unwrap_or(match harness {
-            "claude" | "codex" => HarnessDelivery::Launch,
+            "claude" | "codex" | "opencode" => HarnessDelivery::Launch,
             _ => HarnessDelivery::Read,
         })
     }
@@ -122,28 +129,35 @@ pub struct ClaudeHarness {
 
 /// `[system_prompt.harness.opencode]`.
 ///
-/// OpenCode has **no instruction slot a launch can scope to one session**.
-/// Its only additive carrier is a configuration `instructions` array, and
-/// the configuration is read per *process*: the same array is injected into
-/// every session that process serves, `task` subagents included, which is
-/// precisely what `PROP-076#SYS-WORKER-EXCLUSION` forbids. So `read` is this
-/// harness's default and a declared `launch` delivers nothing — `vibe agent`
-/// starts OpenCode softly with the reason, and `vibe prompt flags` refuses
-/// (`#SYS-OPENCODE`). The key exists so a project can *declare* the tier it
-/// wants the day OpenCode can scope instructions to one agent, and so the
-/// declaration is refused by name rather than ignored.
+/// **The one additive carrier is closed and the one worker-safe carrier
+/// replaces.** OpenCode's configuration `instructions` array is additive
+/// and file-based — and a `subagent` child receives it: measured on 2.2.7,
+/// the child's request came back byte-identical to the primary's with the
+/// lane in it, which `PROP-076#SYS-WORKER-EXCLUSION` forbids outright. An
+/// agent's `system` is the opposite on both counts: the child's own agent
+/// has a `system` of its own and receives none of ours, and the value
+/// *replaces* OpenCode's base prompt instead of adding to it. So a launch
+/// supplies that base — for exactly the installed version and the launch's
+/// model, from versioned data with provenance in OpenCode's own vibe
+/// package — with the lane after it, and `launch` is this harness's default
+/// (`#SYS-OPENCODE`, `#SYS-SUPPLIED-BASE`).
+///
+/// `read` is the setting for a project that wants the router to do the work
+/// anyway. It is also what a machine with no verified set for its installed
+/// OpenCode gets in effect: the carrier gate refuses, and the launch is
+/// soft behind one loud warning naming which of the reasons it was.
 ///
 /// ```
 /// use vibe_core::manifest::{HarnessDelivery, OpenCodeHarness};
 ///
-/// let declared: OpenCodeHarness = toml::from_str("delivery = \"launch\"\n")?;
-/// assert_eq!(declared.delivery, Some(HarnessDelivery::Launch));
+/// let declared: OpenCodeHarness = toml::from_str("delivery = \"read\"\n")?;
+/// assert_eq!(declared.delivery, Some(HarnessDelivery::Read));
 /// # Ok::<(), toml::de::Error>(())
 /// ```
 #[derive(Debug, Clone, Default, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
 pub struct OpenCodeHarness {
-    /// How the lane reaches this harness. Absent means `read`.
+    /// How the lane reaches this harness. Absent means `launch`.
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub delivery: Option<HarnessDelivery>,
 }

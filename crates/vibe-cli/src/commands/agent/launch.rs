@@ -41,7 +41,7 @@ use vibe_app::{AgentsConfig, AppError};
 use vibe_core::manifest::TargetOs;
 use vibe_workspace::boot_artifacts::build_node_prompt;
 use vibe_workspace::system_prompt::{
-    CodexProfile, HarnessKind, build_remedy, host_mismatch_warning,
+    CodexProfile, EnvAssignment, HarnessKind, build_remedy, host_mismatch_warning,
 };
 
 use crate::commands::app::global;
@@ -132,7 +132,7 @@ pub(crate) fn run(ctx: &output::Context, argv: Vec<String>) -> Result<()> {
         }
         let mut command: Vec<String> = launcher.command.clone();
         command.extend(rest);
-        return exec(&command);
+        return exec(&command, &[]);
     }
 
     // **The host mismatch, as a note and nothing more.** `vibe agent`
@@ -166,7 +166,7 @@ pub(crate) fn run(ctx: &output::Context, argv: Vec<String>) -> Result<()> {
     // prints — `vibe agent` has already asked the opt-in question — so an
     // error here is a reason nobody foresaw, and a reason nobody foresaw is
     // still not a reason to leave a developer without a session.
-    let composed = match prompt::compose_flags(&selected, launcher.kind, Some(&launcher)) {
+    let composed = match prompt::compose_flags(&selected, launcher.kind, Some(&launcher), &rest) {
         Ok(composed) => composed,
         Err(error) => {
             return soft(
@@ -188,7 +188,7 @@ pub(crate) fn run(ctx: &output::Context, argv: Vec<String>) -> Result<()> {
     // slot flag itself. In `read` delivery it passes none, and a user's own
     // slot flag then conflicts with nothing — the same reasoning the
     // opted-out branch above already applies (`HARNESS-DELIVERY.md` §4).
-    if !composed.flags.is_empty() {
+    if !composed.flags.is_empty() || !composed.env.is_empty() {
         refuse_conflicting(launcher.kind, &rest)?;
     }
     for note in &composed.notes {
@@ -205,7 +205,7 @@ pub(crate) fn run(ctx: &output::Context, argv: Vec<String>) -> Result<()> {
     let mut command: Vec<String> = launcher.command.clone();
     command.extend(composed.flags.iter().cloned());
     command.extend(rest);
-    exec(&command)
+    exec(&command, &composed.env)
 }
 
 /// Start the harness with no slot flag and no carrier, behind one loud
@@ -239,7 +239,7 @@ fn soft(
     );
     let mut command: Vec<String> = launcher.command.clone();
     command.extend(rest.iter().cloned());
-    exec(&command)
+    exec(&command, &[])
 }
 
 /// Measured in the P9 live check (row C7, Claude Code 2.1.322): a resumed
@@ -318,18 +318,23 @@ fn write_profile(profile: &CodexProfile) -> Result<()> {
 /// `PATHEXT` first, or an npm-installed `claude.cmd` is «program not found»
 /// (`super::program`).
 #[cfg(unix)]
-fn exec(command: &[String]) -> Result<()> {
+fn exec(command: &[String], env: &[EnvAssignment]) -> Result<()> {
     use std::os::unix::process::CommandExt;
 
     let (program, arguments) = command
         .split_first()
         .context("a launcher's `command` is an empty argv prefix")?;
-    let error = Command::new(program).args(arguments).exec();
+    let mut spawn = Command::new(program);
+    spawn.args(arguments);
+    for assignment in env {
+        spawn.env(&assignment.name, &assignment.value);
+    }
+    let error = spawn.exec();
     Err(anyhow::Error::new(error).context(format!("starting `{program}`")))
 }
 
 #[cfg(not(unix))]
-fn exec(command: &[String]) -> Result<()> {
+fn exec(command: &[String], env: &[EnvAssignment]) -> Result<()> {
     let (program, arguments) = command
         .split_first()
         .context("a launcher's `command` is an empty argv prefix")?;
@@ -338,8 +343,12 @@ fn exec(command: &[String]) -> Result<()> {
     // library whole so its own CVE-2024-24576 argument escaping applies.
     let resolved =
         super::program::resolve(program).with_context(|| format!("starting `{program}`"))?;
-    let status = Command::new(&resolved)
-        .args(arguments)
+    let mut spawn = Command::new(&resolved);
+    spawn.args(arguments);
+    for assignment in env {
+        spawn.env(&assignment.name, &assignment.value);
+    }
+    let status = spawn
         .status()
         .with_context(|| format!("starting `{program}`"))?;
     std::process::exit(status.code().unwrap_or(1));

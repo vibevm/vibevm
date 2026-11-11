@@ -719,3 +719,62 @@ Qwen row points at for the same question.
   delivery-and-canary measurements only, not whole-request diffs; `SP-FMT-105`
   and `SP-FMT-109` are not amended, and `HARNESS-DELIVERY.md` §10 states the
   gap rather than implying a check that was never run.
+
+## SP-FMT-115 — OpenCode's `launch` tier: an environment carrier on the wire, and two new provenance fields (Phase P10)
+
+Status: **delivered 2026-11-11** (phase P10). Design authority:
+`PROP-076#SYS-SUPPLIED-BASE`, `#SYS-OPENCODE`. **Implements `SP-FMT-114`**,
+whose own status was "specified, not yet implemented", and **amends
+`SP-FMT-105`**, whose per-harness `delivery` defaults put `opencode` in
+`read`.
+
+- **`[format.cli-prompt-flags]` epoch 1 → 1, one added member.**
+  `schemas/prompt_flags.jtd.json` gains `env`, a list of
+  `{ name, value }` with `x-empty: "emit"` — the environment assignments a
+  launch makes for the harness it starts. Every existing kind emits `[]`, so
+  a `claude` or `codex` answer is byte-identical to one produced before the
+  field existed, and no reader of those answers changes. The element type is
+  a named definition (`assignment`) rather than an anonymous object, because
+  the generator names a struct only for the root or a named definition.
+- **The human output of `vibe prompt flags` gains a line shape, for one kind
+  only.** A harness whose carrier is an environment variable prints its
+  assignments first, one `NAME=value` per line, and the flags last. It
+  cannot be one line: `NAME=value` works only as a shell *prefix*, with the
+  program between it and the flags, so no single line can be both. The
+  established one-line contract — `claude $(vibe prompt flags --harness
+  claude)` — is untouched, because the kinds whose carrier is a flag or a
+  file emit no assignment at all.
+- **`[system_prompt.harness.opencode] delivery` default `read` → `launch`.**
+  Authored-manifest grammar unchanged; the key, its values and its
+  serialisation are all as before, and a manifest that declares nothing
+  serialises byte-identically. What changed is what an undeclared value
+  *means*. Safe where the data is absent: a machine with no verified
+  prompt-base set for its installed OpenCode soft-launches, which is the
+  classic boot behind one loud warning.
+- **`PROVENANCE.toml` schema 1, additive: `[render] trim` and the
+  `[carrier]` key names.** `trim` takes `none` (the default, so a document
+  that says nothing changes nothing) or `end`, and records that the program
+  emits its own base with trailing whitespace removed — one byte on
+  OpenCode 2.2.7, and the byte that decides where the seam falls. The
+  carrier gains `agents_key`, `system_key`, `mode_key`,
+  `default_agent_key`, `agent_name` and `gate_tools`, so vibe's Rust spells
+  no configuration key of another program and the render rule's gate list is
+  data beside the bullets it admits. `flags` loses `--agent`: measured on
+  2.2.7, the top-level command takes no such argument, and the document's
+  own `default_agent` selects the agent for the TUI and every subcommand
+  alike.
+- **No new registered format.** The prompt-base genre is a package's own
+  data, read through one interpreter; `formats/REGISTRY.toml` gains nothing.
+- **Measured, 2026-11-11, OpenCode 2.2.7, 204,845-byte lane, offline.** The
+  composed base is **1,470 bytes** (sha256 `3728fd87457f4314…`) and the plain
+  run's first 1,470 bytes are byte-identical to it. The carrier request
+  satisfies `carried[:1472] + carried[1472 + 204845:] == plain` exactly: one
+  insertion at byte **1,472**, length **204,845**, zero plain bytes in the
+  window, every other request member equal. The inserted window is
+  `AGENT-LANE.md` **exactly** — `{file:}` trims the lane's one trailing
+  newline and the harness's own part join restores one. Two launches are
+  byte-identical throughout. A real `subagent` child carries the lane
+  **zero** times at 10,958 bytes and is byte-identical to its own plain
+  counterpart. Live on the local `qwen3.8-27b`, the one condition a byte diff
+  cannot make: the tail marker quoted, no boot file read, and an instruction
+  existing only in OpenCode's own base still obeyed.

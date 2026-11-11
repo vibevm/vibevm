@@ -21,5 +21,18 @@ pub struct PromptFlagsReport {
 
     pub flags: Vec<String>,
 
+    pub env: Vec<Assignment>,
+
     pub notes: Vec<String>,
+}
+
+/// One environment assignment the launch makes for the harness it starts. Empty
+/// for every kind whose carrier is a flag or a file; a harness whose carrier
+/// is a configuration document has one, and that document carries the harness's
+/// own base prompt and the lane's PATH rather than the lane's bytes.
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+pub struct Assignment {
+    pub name: String,
+
+    pub value: String,
 }

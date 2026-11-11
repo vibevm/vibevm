@@ -63,9 +63,12 @@ measures from here on:
   56,000-token context — and the **tiny** sample, the unpadded ~2.5 KB lane,
   or at most a medium one that fits 56k with headroom.
 - **The real-size proofs are offline**, against the fake provider, where a
-  202 KB lane costs nothing: `opencode-capture.sh`, `qwen-capture.sh`,
-  `opencode-subagent-capture.sh`. A delivery question is about *bytes in a
-  request*, and a recorder answers it better than a model does.
+  202 KB lane costs nothing: `opencode-prove.sh` (the whole-request proof of
+  `#SYS-SUPPLIED-BASE`, five legs in one run, judged by `opencode-prove.py`),
+  and the narrower `opencode-capture.sh`, `qwen-capture.sh` and
+  `opencode-subagent-capture.sh` it supersedes for OpenCode. A delivery
+  question is about *bytes in a request*, and a recorder answers it better
+  than a model does.
 - A live run on a large lane or a metered model needs the owner to ask for
   it. The rows that were taken that way before this rule are kept as
   evidence and are **not** to be repeated.
@@ -77,6 +80,23 @@ compare:
 > canary word of the form `CANARY-…` that is anywhere in your context. Then
 > list every file you have read with a tool in this session, exactly, and name
 > none you did not open. Do not read any file to answer this.
+
+**Two amendments the OpenCode `launch` tier forced on that prompt**, both
+findings rather than conveniences, and both in `opencode-live-check.sh`:
+
+- **"The last `vibe:lane-end` line" is ambiguous in `launch` delivery**, and a
+  model that answers it with the managed block's own indented *format example*
+  is **right**: the harness injects `AGENTS.md` after the agent's `system`, so
+  that example genuinely is the last such line. Measured on the local 27B
+  model, which did exactly that. The question must name the marker's own file
+  — "the line containing both `vibe:lane-end` and `90-user`" — which only the
+  delivered marker carries.
+- **A supplied base needs a fourth question**, because conditions (0)–(v) are
+  byte comparisons and none of them can tell a base that arrived from a base
+  that is still obeyed. So the session is also asked to state a rule that
+  exists **only** in the harness's own base text — for OpenCode, the edit
+  tool's `oldString`-occurs-once rule — and the script refuses to run if the
+  lane mentions it, so the premise is checked rather than assumed.
 
 **Recording.** For each step write, into this directory's `RESULTS.md`
 (created by the first step): the step id, the exact command, the harness

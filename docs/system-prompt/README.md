@@ -194,7 +194,7 @@ collaborators share.
 | `vibe prompt prepare --json [--session-target os=<name>]` | one request's materials: bands P, U and G **separately**, with observed digests and the recommended cache breakpoints |
 | `vibe prompt capture [--json] [--with-text] [--task <text>] [--usage <file>]` | the request envelope an API runner sends: which band in which role, in what order |
 | `vibe prompt path [--part lane\|system] [--json]` | the absolute path of a generated artifact |
-| `vibe prompt flags --harness <kind-or-launcher>` | ready-to-paste launch flags — flags only, never a program |
+| `vibe prompt flags --harness <kind-or-launcher>` | ready-to-paste launch flags — flags only, never a program; a harness whose carrier is an environment variable gets its assignments first, one line each, and the flags last |
 | `vibe agent <launcher> [--] [args…]` | compose the lane, check the mode constraints, and start the harness with it |
 
 Generation also happens inside `vibe install`, `vibe reinstall` and the
@@ -240,8 +240,8 @@ does not write. `vibe prompt check` exits non-zero on any verdict but
 
 ### `vibe agent` and named launchers
 
-A harness **kind** (`claude`, `codex`) is the flag dialect and the delivery
-rules. A **launcher** is a name bound to a kind and to the argv that starts
+A harness **kind** (`claude`, `codex`, `opencode`, `qwen`) is the flag dialect
+and the delivery rules. A **launcher** is a name bound to a kind and to the argv that starts
 it, and it lives in your **user** configuration only —
 `<settings>/agents.toml`:
 
@@ -255,8 +255,8 @@ harness_version = "0.168.0"      # optional: a version you verified yourself
 
 `vibe agent claude2 [args…]` resolves the launcher by name, takes its flags
 from its kind, and execs `command` + flags + your own arguments. The
-built-ins `claude` and `codex` always exist, and a user launcher of the same
-name **overrides** the built-in — which is how a personal wrapper takes over
+built-ins `claude`, `codex`, `opencode` and `qwen` always exist, and a user
+launcher of the same name **overrides** the built-in — which is how a personal wrapper takes over
 the plain name. Any number of launchers may share a kind: two Claude Code
 launchers with different `config_dir`s are ordinary configuration.
 `vibe agent list` prints each one's name, kind, command, config directory and
@@ -307,12 +307,16 @@ warning: `--quiet` does not suppress this: it is about what the agent receives, 
 | This directory is not a vibe project | soft launch |
 | Your Codex is a version vibe has not verified | soft launch |
 | `harness_version` is not a version number | soft launch |
+| No prompt-base set for your installed OpenCode | soft launch — there is no fallback to another version's base |
+| That set is **not verified**, or is not what its provenance claims | soft launch — a guessed base replaces the harness's own instructions, silently |
+| vibe cannot learn which OpenCode this launch would start, or which model it would use | soft launch |
 | Any kind's carrier precondition fails | soft launch |
 | The project has not opted in | starts unchanged, with a **note** — nothing to deliver is not a failure |
 | `delivery = "read"` for this kind | starts unchanged, with a **note** — the router is doing the work by design |
 | A project manifest names a launcher | **refusal** — a repository must not choose which program runs on your machine |
 | An unknown launcher name | **refusal** — vibe does not know which program to start |
 | Your own slot flag, while vibe is delivering | **refusal** — two system prompts in one slot is a session nobody chose |
+| Your own `--agent`, while vibe is delivering to OpenCode | **refusal** — it selects an agent whose `system` is not the one carrying the lane, and nothing reports that |
 
 **`--quiet` does not suppress the warning.** `--quiet` asks for less
 narration about what vibe did; this sentence is about what the **agent
@@ -349,7 +353,8 @@ Three tiers, one mode per harness, set by
 | **read** | the router block in your instruction file tells the agent to read the files with its tools | after the entrypoint, as tool results |
 | **import** | an `@path` line inside the managed block — **refused in this version** (§6) |  |
 
-Default: `launch` for `claude` and `codex`, `read` for every other harness.
+Default: `launch` for `claude`, `codex` and `opencode`, `read` for every
+other harness.
 
 **`read` and `launch` share one byte-identical block.** The router's test is
 “are the lane markers anywhere in your context”, never “above”. Launched
@@ -385,7 +390,7 @@ that a harness's downward discovery would also read is `vibe check`'s
 |---|---|---|---|
 | Claude Code | yes — `--append-system-prompt-file`, plus `--exclude-dynamic-system-prompt-sections` | yes | `launch` |
 | Codex | yes — `developer_instructions` at the **top level** of a launch-time profile file | yes | `launch` |
-| OpenCode | the carrier works and is **not deliverable** — see below | yes | `read` |
+| OpenCode | yes — one per-launch configuration layer declaring vibe's own primary agent, with OpenCode's **own** base prompt in front of the lane (see below) | yes | `launch` |
 | Qwen Code | the slot works and takes **text**, so a lane does not fit — see below | yes | `read` |
 | Gemini CLI, pi, dsh | no file-based slot known | yes | `read` |
 
@@ -395,60 +400,118 @@ delivery stays `read`.
 
 ### OpenCode
 
-`vibe agent opencode` works, and it passes nothing. The kind exists so the
-launcher exists, so `[system_prompt.harness.opencode]` can be declared
-rather than refused as an unknown field, and so `vibe prompt flags --harness
-opencode` can tell you what it would have passed and why it does not.
+`vibe agent opencode` delivers the lane, and the shape of how it does is worth
+reading before you rely on it, because OpenCode is the one harness where vibe
+hands over **the harness's own prompt** as well as yours.
 
-**The carrier was found and measured.** OpenCode takes additional
-instructions through a configuration key, `instructions`, and the per-launch
-way to hand it over is the environment variable
-`OPENCODE_CONFIG_CONTENT` — a JSONC document whose `instructions` array is
-*added to* the project's own rather than replacing it, which writes nothing
-to disk, and which names **file paths**, so the lane never leaves the file it
-is in. Measured offline on **OpenCode 2.2.7** against a loopback provider
-that recorded the request: a 204,429-byte lane arrived **byte-equal and
-exactly once**, every lane canary present, the template's canary absent, and
-a control run with the variable unset carried no lane at all. The `<env>`
-block with today's date lands **after** the lane, in the last ~700 bytes of
-a 215 KB prompt — so OpenCode's per-day text does **not** invalidate the
-lane's cache entry.
+**The additive carrier is closed and the worker-safe carrier replaces.**
+OpenCode's configuration `instructions` array is additive and file-based,
+which looks ideal — and a `subagent` child receives it. Measured offline on
+**2.2.7** with a provider that answered the first request with a `subagent`
+tool call: the child's request came back **byte-identical to the primary's
+with the lane in it**, which `#SYS-WORKER-EXCLUSION` forbids outright. So
+that door is shut for good. The one slot a child does *not* inherit is an
+**agent's `system`** — the child's own agent has a `system` of its own — and
+that value **replaces** OpenCode's base prompt instead of adding to it.
 
-**Two things stop vibe from using it.**
+So a launch supplies that base. `vibe agent opencode` sets one environment
+variable, `OPENCODE_CONFIG_CONTENT`, holding one configuration layer that
+declares a `mode = "primary"` agent named `vibe`, selects it with the
+document's own `default_agent`, and gives it a `system` of
 
-1. **The launch's environment never reaches the session.** OpenCode's
-   default mode serves every session from one long-lived background service,
-   and that process has the environment of whoever started it. So the
-   variable either does not arrive, or — when your launch is the one that
-   starts the service — arrives for *every session that service later
-   serves, across projects*. Neither is a per-launch delivery.
-2. **A `task` subagent inherits it.** OpenCode builds one instruction array
-   per session from process-wide state, and a subagent session goes through
-   the same assembly. A bounded worker would receive the whole central
-   prefix, which `#SYS-WORKER-EXCLUSION` forbids — the same rule that made
-   "do Claude Code subagents inherit the slot?" a release-blocking question.
-   (This one is read from OpenCode's source at 1.19.5, not re-measured at
-   2.2.7; the first blocker alone decides it.)
+```text
+<OpenCode's own base prompt for this version and this model>
 
-So `read` is the default and a declared `launch` is **not delivered**:
-`vibe agent opencode` soft-launches with both reasons named, and `vibe prompt
-flags --harness opencode` refuses. The day OpenCode can scope `instructions`
-to one agent, the tier opens.
+{file:<abs path to AGENT-LANE.md>}
+```
 
-**Both tiers were measured live** on OpenCode 2.2.7. Through the carrier,
-handed over by hand on a 512,000-token model, the whole **204,429-byte** lane
-came back with its last `vibe:lane-end` line quoted byte-equal, all four lane
-canaries including the tail, the template's absent, and **no file read with a
-tool**. In the shipped `read` mode on a 2,570-byte lane the agent read
-`STATIC.md`, `INDEX.md`, `00-core.md` and `90-user.md` in that order, once
-each — and quoted the block's own format example when asked for the last
-marker line, which is the right answer when no marker was delivered. A
-56,000-token model gave the same answers on smaller samples, sized against
-OpenCode's measured overhead of 10,928 bytes of base prompt plus 14,043 bytes
-of tool definitions over 12 tools. One thing is **not** claimed: on that
-weaker model, a question asking only what is already in the session's context
-did not make it boot at all — it obeyed the router as soon as the prompt had
-work in it, so that is about model strength rather than about the block.
+and passes `--standalone`. Three details are each a measurement rather than a
+preference:
+
+- **`--standalone` is required.** OpenCode's default mode serves sessions
+  from one long-lived background service that never sees your launch's
+  environment, so without it the document either does not arrive or arrives
+  for every session that service goes on to serve.
+- **`--agent` is not passed, and `default_agent` is.** `--agent` is a flag of
+  the `run` and `mini` subcommands only: `opencode --standalone --agent
+  <name>` prints the usage and starts nothing, so a launcher that must also
+  start the interactive interface cannot use it. The document's own
+  `default_agent` selects the agent for the TUI and for every subcommand
+  alike.
+- **`--agent` of your own is refused**, which is the one new conflict. It is
+  not a second prompt but a bypass of the first: it selects an agent whose
+  `system` is not the one carrying the lane, and nothing reports that.
+
+**No lane byte is in the variable.** The document carries the base — 1,470
+bytes on 2.2.7 — and the lane's **path** in a `{file:}` token; OpenCode reads
+the file itself.
+
+#### Where the base comes from, and why that is data
+
+A base from the wrong version, or for the wrong model family, gives you a
+session whose OpenCode instructions are not the ones OpenCode wrote, **with
+no error anywhere**. That is worse than delivering no lane. So nothing about
+the base is in vibe's source code:
+
+- The text, the rule that renders it and the table that selects it per model
+  are **data**, carried per OpenCode version in OpenCode's own vibe package:
+  `prompt-bases/<opencode-version>/` with a `PROVENANCE.toml` beside it. vibe
+  carries a generic interpreter and no OpenCode strings at all.
+- **The lookup is exact and short.** The installed
+  `org.vibevm.opencode/opencode` application's own package source first, then
+  the directory `VIBE_PROMPT_BASES_DIR` names if you set one — and nothing
+  else. No search, and **no nearest-version fallback**: a base for 2.2.6 is
+  not a base for 2.2.7.
+- **The model is learned, never assumed.** `--model` / `-m` in your own
+  arguments if you wrote one (the last wins), otherwise the effective
+  configuration as `opencode debug config` reports it — OpenCode's own
+  resolution rather than a reimplementation of its precedence. The model id
+  is matched without the provider and without a `#variant` suffix.
+- **Three gates stand between the bytes and your session**, and each answers
+  a different failure: every recorded digest is checked before its bytes are
+  used; a set whose `verified` flag is not set refuses outright; and a launch
+  whose model cannot be learned refuses rather than taking the generic base.
+- `verified` is earned by a **whole-request measurement** against the
+  installed binary — not by a checksum, which cannot see that a published
+  bundle disagrees with its own tag. The tool that runs it is
+  `cargo run -p xtask -- opencode-bases`, and it is the only thing that may
+  write the flag.
+
+**Each of those refusals is a soft launch, not an error.** OpenCode starts
+without the carrier, the agent reads the boot files the way the router block
+already tells it to, and one loud warning names which refusal it was and the
+exact command that fixes it. A machine with no prompt-base set for its
+installed OpenCode therefore behaves exactly as it did before this tier
+existed.
+
+#### What was measured
+
+Offline on 2.2.7, against a loopback recorder, with a 204,845-byte lane
+(`campaigns/sys-prompt-2026-11/live/opencode-prove.sh`):
+
+- the base vibe composes is **1,470 bytes** and is **byte-identical** to what
+  the installed binary puts at the head of its own prompt — which is also the
+  only evidence that the published bundle carries the tag's bytes;
+- against a plain run of the same shape the carrier request differs by **one
+  contiguous insertion at byte 1,472**, and removing that window gives the
+  plain request back byte for byte: the model, the tools, the request
+  parameters and every non-system message are identical;
+- the inserted window is `AGENT-LANE.md` **exactly**, all 204,845 bytes —
+  `{file:}` trims the lane's single trailing newline and OpenCode's own join
+  between the agent's `system` and its next part puts one back;
+- the seam reads `…overwriting them.\n\n` before the first marker and
+  `\n# Your Model` after the last, so a base sentence is never glued to a
+  marker line;
+- two consecutive launches are byte-identical throughout, so every per-day
+  byte sits after the lane;
+- a real `subagent` child carries the lane **zero** times and its request is
+  **byte-identical to its own plain counterpart**.
+
+Live on the local 27B model with the tiny sample, the one thing a byte diff
+cannot establish: the agent quoted the delivered tail marker, read **no** boot
+file, and still obeyed an instruction that exists only in OpenCode's own base
+text — the edit tool's rule that `oldString` must occur exactly once unless
+`replaceAll` is set. So the base was supplied and not displaced.
 
 **The Claude Code row is measured.** On 2026-11-10, against Claude Code
 **2.1.322** on Linux in print mode: a 2,570-byte lane, a 202,349-byte one and

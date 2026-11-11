@@ -6093,6 +6093,7 @@ dependencies = [
  "vibe-net",
  "vibe-publish",
  "vibe-registry",
+ "vibe-workspace",
  "walkdir",
  "zip",
 ]

@@ -8,15 +8,18 @@
 //! ships in the harness's own vibe package, per harness version, beside a
 //! `PROVENANCE.toml` that records where every byte came from.
 //!
-//! **This file is an INTERPRETER, and that is the whole design rule.** No
-//! prompt text, no token spelling, no bullet string and no model-matching
-//! substring may appear here: every one of them is read from the provenance
-//! document. A harness version whose composition needs a rule this
-//! interpreter cannot express is **refused** — [`Provenance::compose`]
-//! answers an error, the caller soft-launches, and a human extends either the
-//! document or this interpreter deliberately. A special case in Rust for one
-//! harness version would be a literal wearing a different hat, and it would
-//! put us back where `#SYS-SUPPLIED-BASE` started.
+//! **This cell is the GENRE and `compose` is the interpretation of it.**
+//! Here is what a `PROVENANCE.toml` may say and what every refusal of it is
+//! called; the sibling `supplied_base/compose.rs` applies it. The design
+//! rule spans both: no prompt text, no token spelling, no bullet string and
+//! no model-matching substring may appear in either, because every one of
+//! them is read from the document. A harness version whose composition needs
+//! a rule the interpreter cannot express is **refused** —
+//! [`Provenance::compose`] answers an error, the caller soft-launches, and a
+//! human extends either the document or the interpreter deliberately. A
+//! special case in Rust for one harness version would be a literal wearing a
+//! different hat, and it would put us back where `#SYS-SUPPLIED-BASE`
+//! started.
 //!
 //! **A wrong base is worse than no lane.** A base from a stale version, or
 //! for the wrong model family, produces a session whose harness instructions
@@ -24,15 +27,18 @@
 //! answer here is either exact or an error: digests are verified before the
 //! bytes are used, `verified = false` refuses, and there is deliberately no
 //! nearest-version fallback — a base for 2.2.6 is not a base for 2.2.7.
+//!
+//! **Where a set lives on disk is not decided here.** That is a host
+//! question — an installed application, a settings tree, an environment —
+//! and it is answered in the command layer, which can reach the
+//! installed-applications index and the package store.
 
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-076#SYS-SUPPLIED-BASE");
 
-use std::collections::BTreeMap;
 use std::fmt;
-use std::path::{Path, PathBuf};
+use std::path::PathBuf;
 
 use serde::Deserialize;
-use sha2::{Digest, Sha256};
 
 /// The schema version this interpreter understands. A document declaring
 /// another one is refused rather than read optimistically: the whole point of
@@ -44,6 +50,25 @@ pub const PROVENANCE_FILE: &str = "PROVENANCE.toml";
 
 /// The directory in a harness package that holds the per-version sets.
 pub const PROMPT_BASES_DIR: &str = "prompt-bases";
+
+/// The placeholder a document's `lane_token` puts the lane's path at.
+pub const LANE_PLACEHOLDER: &str = "%LANE%";
+
+/// One launch's carrier: the environment assignment that hands the harness
+/// a configuration layer, the flags that make it arrive, and the name of the
+/// agent it declares.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct CarrierDocument {
+    /// The environment variable the document travels in.
+    pub env: String,
+    /// The document itself. It holds the base and the lane's path — never
+    /// the lane's bytes.
+    pub value: String,
+    /// The flags a launch must pass for the carrier to be read at all.
+    pub flags: Vec<String>,
+    /// The agent the document declares and selects.
+    pub agent_name: String,
+}
 
 /// Why a base could not be supplied. Every variant is a sentence a soft
 /// launch prints, because each names a different thing the operator can fix.
@@ -244,6 +269,19 @@ pub struct Render {
     /// Where the rule was read from.
     #[serde(default)]
     pub source: String,
+    /// What the harness does to the composed base's own ends: `none`, or
+    /// `end` for a program that emits its base with trailing whitespace
+    /// removed.
+    ///
+    /// **Recorded rather than assumed, because it is one byte and it moves
+    /// the seam.** OpenCode 2.2.7's `system.txt` ends with a newline and the
+    /// installed binary's own first system part is 1,470 bytes rather than
+    /// 1,471; a composition that kept that newline would put three of them
+    /// between the base's last sentence and the lane's first marker, where a
+    /// plain run has two — and condition (ii) of `#SYS-SUPPLIED-BASE` would
+    /// then see the difference inside the insertion rather than beside it.
+    #[serde(default = "no_trim")]
+    pub trim: String,
     /// The bullets, in the order the harness emits them — which is the
     /// order written here, not the order of the tool list.
     #[serde(default)]
@@ -252,6 +290,10 @@ pub struct Render {
 
 fn first_occurrence() -> String {
     "first".to_owned()
+}
+
+fn no_trim() -> String {
+    "none".to_owned()
 }
 
 fn newline() -> String {
@@ -269,6 +311,39 @@ pub struct Carrier {
     /// Flags the launch must pass for the carrier to apply.
     #[serde(default)]
     pub flags: Vec<String>,
+    /// The carrier document's own key names, so vibe's Rust spells no
+    /// configuration key of another program: the table of agents, the key
+    /// inside one agent that takes the composed prompt, the key that
+    /// declares its mode, and the key that selects the launch's primary
+    /// agent.
+    #[serde(default)]
+    pub agents_key: String,
+    /// The key inside the agent table that takes the composed prompt.
+    #[serde(default)]
+    pub system_key: String,
+    /// The key that declares an agent's mode.
+    #[serde(default)]
+    pub mode_key: String,
+    /// The key that selects the launch's primary agent by name.
+    #[serde(default)]
+    pub default_agent_key: String,
+    /// The agent name vibe declares for its own launch.
+    #[serde(default)]
+    pub agent_name: String,
+    /// The mode that agent is declared in.
+    #[serde(default)]
+    pub agent_mode: String,
+    /// The gate tool names a launch through this carrier offers.
+    ///
+    /// **Data, because the render rule is gated on it and the launch cannot
+    /// ask.** The carrier declares a `primary` agent with no tool
+    /// restrictions of its own, so the launch receives the harness's default
+    /// tool set; which of the recorded gates that set contains is a fact
+    /// about the harness version, recorded here beside the bullets those
+    /// gates admit and proved by the whole-request diff rather than assumed
+    /// by vibe.
+    #[serde(default)]
+    pub gate_tools: Vec<String>,
     /// The token in the composed text that stands for the lane's path.
     #[serde(default)]
     pub lane_token: String,
@@ -295,6 +370,72 @@ pub struct Verification {
     pub proof_date: String,
 }
 
+/// Where a set's bytes came from upstream.
+///
+/// Read by the sync tool rather than by a launch: a launch needs the base
+/// and the digests, and provenance is for the human and the tool that
+/// produce the next version.
+#[derive(Debug, Clone, Deserialize)]
+pub struct Upstream {
+    /// The upstream repository.
+    #[serde(default)]
+    pub repository: String,
+    /// The tag these bytes were read at.
+    #[serde(default)]
+    pub tag: String,
+    /// The commit that tag pointed at, because a tag can move.
+    #[serde(default)]
+    pub commit: String,
+    /// The licence that governs the vendored text.
+    #[serde(default)]
+    pub license: Option<License>,
+}
+
+/// The upstream licence carried beside the text it governs.
+#[derive(Debug, Clone, Deserialize)]
+pub struct License {
+    /// Its SPDX identifier, as the record states it.
+    #[serde(default)]
+    pub spdx: String,
+    /// The copyright line the licence asks be included.
+    #[serde(default)]
+    pub copyright: String,
+    /// Its upstream path.
+    #[serde(default)]
+    pub upstream_path: String,
+    /// Its name inside the set's directory.
+    #[serde(default)]
+    pub file: String,
+    /// Its length.
+    #[serde(default)]
+    pub bytes: usize,
+    /// Its digest.
+    #[serde(default)]
+    pub sha256: String,
+}
+
+/// One drift tripwire: a file upstream whose change could alter the
+/// composition this set describes.
+///
+/// **A tripwire and not a proof.** A matching digest says the upstream
+/// source has not been edited; it cannot say the published artifact carries
+/// the tag's bytes, because the shipped program inlines these files through
+/// a bundler. Only the whole-request measurement can say that.
+#[derive(Debug, Clone, Deserialize)]
+pub struct Fingerprint {
+    /// The upstream path.
+    pub path: String,
+    /// Its digest, when one was recorded. A row with none is a file whose
+    /// *existence* in the list matters — a reader's map of what decides
+    /// what — rather than one the tool compares.
+    #[serde(default)]
+    pub sha256: Option<String>,
+    /// What this file decides, in one clause, for whoever reads a diff of
+    /// it.
+    #[serde(default)]
+    pub decides: String,
+}
+
 /// One harness version's prompt-base set.
 #[derive(Debug, Clone, Deserialize)]
 pub struct Provenance {
@@ -317,253 +458,17 @@ pub struct Provenance {
     /// What has been proved.
     #[serde(default)]
     pub verification: Option<Verification>,
+    /// Where the bytes came from. Read by the sync tool.
+    #[serde(default)]
+    pub upstream: Option<Upstream>,
+    /// The drift tripwires. Read by the sync tool.
+    #[serde(default)]
+    pub fingerprint: Vec<Fingerprint>,
 }
 
-/// The facts of one launch that the recorded rules are applied to.
-#[derive(Debug, Clone)]
-pub struct Launch<'a> {
-    /// The model id, as the harness would see it. Matching is a substring
-    /// test on its lower-cased form.
-    pub model_id: &'a str,
-    /// The model's display name, for a `model_name` substitution.
-    pub model_name: &'a str,
-    /// The tool names this launch will offer, which gate the render bullets.
-    pub tools: &'a [String],
-}
-
-impl Provenance {
-    /// Read one set's document. The bytes are not trusted yet — [`compose`]
-    /// verifies every digest before using a base.
-    ///
-    /// [`compose`]: Provenance::compose
-    pub fn read(dir: &Path) -> Result<Self, BaseError> {
-        let path = dir.join(PROVENANCE_FILE);
-        let text = std::fs::read_to_string(&path).map_err(|error| BaseError::Unreadable {
-            path: path.clone(),
-            reason: error.to_string(),
-        })?;
-        let parsed: Provenance = toml::from_str(&text).map_err(|error| BaseError::Unreadable {
-            path,
-            reason: error.to_string(),
-        })?;
-        if parsed.schema != PROVENANCE_SCHEMA {
-            return Err(BaseError::Schema {
-                found: parsed.schema,
-                understood: PROVENANCE_SCHEMA,
-            });
-        }
-        Ok(parsed)
-    }
-
-    /// The directory a harness package's installed source keeps one
-    /// version's set in.
-    pub fn set_dir(package_source: &Path, harness_version: &str) -> PathBuf {
-        package_source.join(PROMPT_BASES_DIR).join(harness_version)
-    }
-
-    /// Which base this launch's model takes, and how it combines with the
-    /// default one.
-    ///
-    /// **Order is the rule.** Rows are tried as written and the first whose
-    /// every substring is present wins, so a document can reproduce an
-    /// upstream conditional — "astra if the id also says astra, else gpt" —
-    /// by writing the narrower row first. No row matching is not an error:
-    /// it is the default base, which is what the harness itself does.
-    pub fn select_for(&self, model_id: &str) -> Result<Chosen<'_>, BaseError> {
-        if model_id.trim().is_empty() {
-            return Err(BaseError::UnknownModel);
-        }
-        let id = model_id.to_ascii_lowercase();
-        let default =
-            self.base
-                .iter()
-                .find(|base| base.default)
-                .ok_or_else(|| BaseError::Unsupported {
-                    what: "no base is marked `default`, and a model that matches no row needs one"
-                        .to_owned(),
-                })?;
-        for row in &self.select {
-            if row.substrings.is_empty() {
-                return Err(BaseError::Unsupported {
-                    what: "a selection row with no `substrings` would match every model".to_owned(),
-                });
-            }
-            if !row.substrings.iter().all(|needle| id.contains(needle)) {
-                continue;
-            }
-            let mode = match row.mode.as_str() {
-                "override" => Mode::Override,
-                "append" => Mode::Append,
-                other => {
-                    return Err(BaseError::Unsupported {
-                        what: format!("selection mode `{other}`"),
-                    });
-                }
-            };
-            let selected = self
-                .base
-                .iter()
-                .find(|base| base.id == row.base)
-                .ok_or_else(|| BaseError::Unsupported {
-                    what: format!(
-                        "selection row names base `{}`, which is not recorded",
-                        row.base
-                    ),
-                })?;
-            return Ok(Chosen {
-                default,
-                selected: Some(selected),
-                mode,
-                substitute: &row.substitute,
-            });
-        }
-        Ok(Chosen {
-            default,
-            selected: None,
-            mode: Mode::Override,
-            substitute: &[],
-        })
-    }
-
-    /// Expand the recorded token in `template` from the launch's tool list.
-    ///
-    /// A template without the token is returned unchanged, which is not an
-    /// optimisation: the document records `has_tool_guidance_token` per base
-    /// precisely because some families receive no guidance at all, and that
-    /// is a behavioural fact worth being able to read.
-    pub fn render_guidance(&self, template: &str, tools: &[String]) -> Result<String, BaseError> {
-        let Some(render) = &self.render else {
-            return Ok(template.to_owned());
-        };
-        let kept: Vec<&str> = render
-            .bullet
-            .iter()
-            .filter(|bullet| tools.iter().any(|tool| tool == &bullet.gate))
-            .map(|bullet| bullet.text.as_str())
-            .collect();
-        let expansion = kept.join(&render.join);
-        Ok(match render.replace.as_str() {
-            "first" => template.replacen(&render.token, &expansion, 1),
-            "all" => template.replace(&render.token, &expansion),
-            other => {
-                return Err(BaseError::Unsupported {
-                    what: format!("render replacement `{other}`"),
-                });
-            }
-        })
-    }
-
-    /// The harness's own base prompt for this launch, composed from the set
-    /// in `dir`.
-    ///
-    /// Every digest is verified before its bytes are used, and an unverified
-    /// set refuses outright: those two checks are what separate "the base we
-    /// recorded" from "a base we hope is right".
-    pub fn compose(&self, dir: &Path, launch: &Launch<'_>) -> Result<String, BaseError> {
-        if !self
-            .verification
-            .as_ref()
-            .is_some_and(|verification| verification.verified)
-        {
-            return Err(BaseError::NotVerified {
-                harness: self.harness.clone(),
-                version: self.harness_version.clone(),
-            });
-        }
-        let chosen = self.select_for(launch.model_id)?;
-        let mut text = match (chosen.selected, chosen.mode) {
-            // The default base alone.
-            (None, _) => {
-                self.render_guidance(&self.read_base(dir, chosen.default)?, launch.tools)?
-            }
-            // This family's own base instead of the default one.
-            (Some(base), Mode::Override) => {
-                self.render_guidance(&self.read_base(dir, base)?, launch.tools)?
-            }
-            // The default base, then this family's addendum behind a blank
-            // line — the one combining form a harness has been seen to use.
-            (Some(base), Mode::Append) => {
-                let head =
-                    self.render_guidance(&self.read_base(dir, chosen.default)?, launch.tools)?;
-                let tail = self.render_guidance(&self.read_base(dir, base)?, launch.tools)?;
-                format!("{}\n\n{}", head.trim_end_matches('\n'), tail)
-            }
-        };
-        for substitution in chosen.substitute {
-            let value = match substitution.value.as_str() {
-                "model_name" => launch.model_name,
-                "model_id" => launch.model_id,
-                other => {
-                    return Err(BaseError::Unsupported {
-                        what: format!("substitution value `{other}`"),
-                    });
-                }
-            };
-            text = match substitution.occurrences.as_str() {
-                "all" => text.replace(&substitution.token, value),
-                "first" => text.replacen(&substitution.token, value, 1),
-                other => {
-                    return Err(BaseError::Unsupported {
-                        what: format!("substitution occurrences `{other}`"),
-                    });
-                }
-            };
-        }
-        Ok(text)
-    }
-
-    /// Read one base's bytes and hold them to their record.
-    fn read_base(&self, dir: &Path, base: &Base) -> Result<String, BaseError> {
-        let path = dir.join(&base.file);
-        let bytes = std::fs::read(&path).map_err(|_| BaseError::MissingFile {
-            file: base.file.clone(),
-        })?;
-        if bytes.len() != base.bytes {
-            return Err(BaseError::DigestMismatch {
-                file: base.file.clone(),
-                expected: format!("{} bytes", base.bytes),
-                found: format!("{} bytes", bytes.len()),
-            });
-        }
-        let digest = format!("{:x}", Sha256::digest(&bytes));
-        if !digest.eq_ignore_ascii_case(&base.sha256) {
-            return Err(BaseError::DigestMismatch {
-                file: base.file.clone(),
-                expected: base.sha256.clone(),
-                found: digest,
-            });
-        }
-        String::from_utf8(bytes).map_err(|_| BaseError::Unreadable {
-            path,
-            reason: "not UTF-8".to_owned(),
-        })
-    }
-
-    /// Verify every recorded file in the set, including the ones this launch
-    /// does not use. The sync tool and `vibe prompt check` want the whole
-    /// set's integrity, not only the part one model reaches.
-    pub fn verify_all(&self, dir: &Path) -> Result<BTreeMap<String, usize>, BaseError> {
-        let mut sizes = BTreeMap::new();
-        for base in &self.base {
-            let text = self.read_base(dir, base)?;
-            sizes.insert(base.file.clone(), text.len());
-        }
-        Ok(sizes)
-    }
-}
-
-/// Which base a model takes, and how it combines with the default one.
-#[derive(Debug, Clone)]
-pub struct Chosen<'a> {
-    /// The base used when no row matches, and the head of an `append`.
-    pub default: &'a Base,
-    /// The row's own base, when a row matched.
-    pub selected: Option<&'a Base>,
-    /// How the two combine.
-    pub mode: Mode,
-    /// Literal substitutions the row asks for.
-    pub substitute: &'a [Substitute],
-}
+#[path = "supplied_base/compose.rs"]
+mod compose;
+pub use compose::{Chosen, Launch};
 
 #[cfg(test)]
 #[path = "supplied_base/tests.rs"]

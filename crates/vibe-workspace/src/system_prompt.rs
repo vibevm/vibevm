@@ -89,14 +89,15 @@ pub use constraints::{BlockShape, delivery_constraints, manifest_block_shape, on
 pub use contract::{CURRENT_RECIPE, KNOWN_RECIPES, SuppliedSource, render_contract};
 mod supplied_base;
 pub use supplied_base::{
-    Base, BaseError, Carrier, Chosen, Launch, Mode, PROMPT_BASES_DIR, PROVENANCE_FILE,
-    PROVENANCE_SCHEMA, Provenance, Render, Select, Verification,
+    Base, BaseError, Carrier, CarrierDocument, Chosen, Fingerprint, LANE_PLACEHOLDER, Launch,
+    License, Mode, PROMPT_BASES_DIR, PROVENANCE_FILE, PROVENANCE_SCHEMA, Provenance, Render,
+    Select, Upstream, Verification,
 };
 
 pub use harness::{
-    CODEX_VERIFIED_VERSION, CarrierVerdict, CodexProfile, HarnessKind, LaunchFlags,
-    OPENCODE_MEASURED_VERSION, QWEN_MEASURED_VERSION, codex_carrier_verdict, launch_flags,
-    opencode_launch_blocker, qwen_launch_blocker,
+    CODEX_VERIFIED_VERSION, CarrierVerdict, CodexProfile, EnvAssignment, HarnessKind, LaunchFlags,
+    LaunchInputs, OPENCODE_MEASURED_VERSION, QWEN_MEASURED_VERSION, codex_carrier_verdict,
+    launch_flags, opencode_carrier_description, qwen_launch_blocker, reported_version,
 };
 pub use lane::{ComposedLane, LaneSegment, LaneSource, compose_agent_lane};
 pub use markers::{

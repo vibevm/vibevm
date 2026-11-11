@@ -144,6 +144,10 @@ windows-sys = { workspace = true, features = [
 
 [dev-dependencies]
 walkdir.workspace = true
+# The launch tests write a prompt-base set and must digest it with the same
+# algorithm the interpreter re-measures it with (PROP-076
+# `#SYS-SUPPLIED-BASE`) — one algorithm, so the comparison means something.
+sha2.workspace = true
 indicatif = { workspace = true, features = ["in_memory"] }
 vibe-native-loader-compiler-fixture = { path = "../vibe-native-loader/tests/fixtures/native-compiler-plugin" }
 # The blocking slot hook a stop must interrupt through the native helper.

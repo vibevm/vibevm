@@ -767,6 +767,94 @@ interpreter in vibe, `verified` earned by the whole-request diff — is
 `PROP-076#SYS-SUPPLIED-BASE` and `SP-FMT-114`. Until it is implemented and
 verified, OpenCode's default stays `read`.
 
+### OpenCode, shipped — `launch` is the default, and what it cost **[V, 2026-11-11]**
+
+The two rows above are the research and the design. This is the delivery, and
+three of its details are corrections to what the design assumed.
+
+**`--agent` is not a flag a launcher can use, and `default_agent` is.**
+`--agent` belongs to the `run` and `mini` subcommands only: measured on 2.2.7,
+`opencode --standalone --agent <name>` prints the usage and starts nothing, so
+a launcher that must also be able to start the interactive interface cannot
+select the agent with it. The carrier document's own `default_agent` key —
+«Default primary agent to use when no session agent is selected» — does select
+it, for the TUI and for every subcommand alike; verified at the request level,
+where the declared agent's `system` arrived as the head of the prompt with no
+`--agent` anywhere. So the delivered argv is `opencode --standalone <your own
+arguments>` and the selection is in the document. A user's own `--agent` is
+therefore a **conflict**: not a second prompt but a bypass of the first, since
+it picks an agent whose `system` is not the one carrying the lane and nothing
+reports it.
+
+**`{file:}` substitution is applied to the parsed value, not to the document
+text.** The 2026-11-11 record read it as a textual substitution before the
+JSONC parse, which would have made an arbitrary lane able to break the
+document. Measured against a fixture carrying `"`, `\`, `{}` and `${}`: every
+one of them arrives in the parsed value verbatim. A lane cannot corrupt the
+carrier.
+
+**The base the program emits is its rendered text with the trailing newline
+removed**, and that one byte is why the reproduction is 1,470 rather than
+1,471: `system.txt` ends with a newline, and the installed binary's own first
+system part does not. Recorded in the provenance as `[render] trim = "end"`
+rather than carried in vibe's Rust, because it is a fact about a harness
+version like every other one there.
+
+**The whole-request proof, run offline on a 204,845-byte lane** against the
+installed 2.2.7 binary (`live/opencode-prove.sh`, five legs, one loopback
+recorder, no model called). Conditions (0) and (i)–(v) of
+`#SYS-SUPPLIED-BASE`:
+
+- **(0)** The base vibe composes from the recorded data is **1,470 bytes**,
+  sha256 `3728fd87457f4314…`, and the plain run's first 1,470 bytes are
+  **byte-identical** to it.
+- **(i)** Stated as an identity rather than as a diff, so the boundary is not
+  a matter of taste: `carried[:1472] + carried[1472 + 204845:] == plain`,
+  exactly. The insertion is at byte **1,472** — the base's 1,470 plus the
+  recorded two-byte separator — and is **204,845** bytes long; the plain run
+  holds **zero** bytes in that window. `model`, `stream`, `tools`,
+  `max_completion_tokens`, `stream_options` and every non-system message
+  compare **equal**, and both requests carry the same six members.
+- **(ii)** The inserted window is `AGENT-LANE.md` **exactly**, all 204,845
+  bytes — stronger than the design expected, and for a reason worth naming:
+  `{file:}` trims the lane's single trailing newline and OpenCode's own join
+  between the agent's `system` part and the next part puts one back, so the
+  two transformations cancel. Both marker lines and their ids arrive intact
+  and the lane appears once.
+- **(iii)** The seam reads `…before deleting or overwriting them.\n\n`
+  before the first marker and `\n# Your Model` after the last.
+- **(iv)** Two consecutive launches are **byte-identical throughout**, not
+  merely up to the end of the lane, so no per-day or per-session byte sits
+  anywhere in the prefix.
+- **(v)** A real `subagent` child — driven by a provider that answers with the
+  spawning tool call — carries the lane **zero** times at **10,958** bytes,
+  and its request is **byte-identical to its own plain counterpart**, every
+  compared member included. That is worker exclusion measured on both sides
+  rather than argued from one.
+
+**(vi) is live and it is the one a byte diff cannot make.** On the local
+`qwen3.8-27b` with the tiny sample: the agent quoted the delivered tail marker
+byte-equal, read **no** boot file with a tool, and still obeyed an instruction
+that exists **only** in OpenCode's own base text — the edit tool's rule that
+`oldString` must occur exactly once unless `replaceAll` is set. Supplied, not
+displaced.
+
+**What the launch refuses, and what each refusal costs.** Every one is a soft
+launch naming which it was: no set for the installed version (and no fallback
+to another version's base), a set that is not verified, a set whose digests do
+not match its provenance, a version vibe cannot learn, a model vibe cannot
+learn, and a recorded rule the interpreter cannot express. A machine with no
+set behaves exactly as it did before this tier existed.
+
+**The sync tool is `cargo run -p xtask -- opencode-bases`** and it is the only
+thing that may write `verified = true`. Fingerprints unchanged → fetch, write,
+prove, set the flag from the verdict; fingerprints changed → refuse and print
+the assembly-file diff, because "can the recorded data express this change" is
+a question for a human. It composes through the **same** interpreter a launch
+reads, by a door (`compose_unverified`) that skips only the `verified` check:
+a sync tool with a composition of its own would prove its own bytes rather
+than vibe's.
+
 ### pi — launch-like slot exists but is ambient **[R-nh]**
 
 - `.pi/APPEND_SYSTEM.md` appends; `.pi/SYSTEM.md` replaces. Both are project
@@ -791,7 +879,7 @@ verified, OpenCode's default stays `read`.
 | Codex | yes, profile file | no | yes | `launch` |
 | Qwen Code | two slots: additive is text-only, file-based **replaces** the base prompt | blocked by C3/C4 | yes | `read` |
 | Gemini CLI | no | blocked by C3/C4 | yes | `read` |
-| OpenCode | carrier works, **not per-launch and not worker-safe** | no | yes | `read` |
+| OpenCode | yes — a per-launch primary agent carrying OpenCode's **own** supplied base in front of the lane | no | yes | `launch` |
 | pi | ambient only | no | yes | `read` |
 | dsh | no | no | yes | `read` |
 
@@ -1053,8 +1141,23 @@ quoted byte-equal, the canaries were right and no lane file was read. They are
 **not** whole-request diffs against a plain run of the same shape — nobody
 checked that every other system part, the tool definitions and the request
 parameters were byte-identical with exactly one insertion. That check was
-defined only on 2026-11-11 (`#SYS-SUPPLIED-BASE`), it has been run for
-OpenCode's agent carrier, and it is owed to those two rows.
+defined only on 2026-11-11 (`#SYS-SUPPLIED-BASE`), and it has now been **run
+in full for OpenCode's agent carrier** — conditions (0) and (i)–(v) offline on
+a 204,845-byte lane, (vi) live on the local model, by
+`live/opencode-prove.sh`, which is the only thing that writes that set's
+`verified` flag. It is still owed to the Claude Code and Codex rows, and the
+script generalises: what it needs from a harness is a plain run and a carrier
+run of the same shape against the same recorder.
+
+**One thing the OpenCode proof is scoped to, said rather than left to be
+assumed.** It runs under the loopback provider's own model, `fake-1`, which
+matches no row of the selection table — so what it proves about the base is
+the **default** base, the one every other row is an exception to. A family
+with a template of its own (`gpt`, `gpt-astra`, `kimi`, `meta`, `trinity`, and
+`anthropic` as an append) is covered by the digest gate and by the recorded
+table's own `file:line` provenance, not by a capture. Proving those would need
+a provider per family, and the honest record is this sentence rather than a
+claim nobody measured.
 
 A failure of C1, C2 or X1 means `launch` for that harness defaults back to
 `read`. A failure of C5 means `launch` breaks worker exclusion on Claude Code
@@ -1071,7 +1174,7 @@ chosen over what.
 
 | # | Decision | Recommended default — **decided as recommended unless the row says otherwise** |
 |---|---|---|
-| D1 | Setting shape and defaults | `[system_prompt.harness.<name>] delivery`; `launch` for `claude` and `codex`, `read` for the rest. Safe before live verification because a plain launch in `launch` mode is read mode |
+| D1 | Setting shape and defaults | `[system_prompt.harness.<name>] delivery`; `launch` for `claude` and `codex`, `read` for the rest. Safe before live verification because a plain launch in `launch` mode is read mode. **Amended 2026-11-11:** `opencode` joins the `launch` defaults, once its supplied base earned `verified` by the whole-request proof (`#SYS-SUPPLIED-BASE`); a machine with no verified set soft-launches, so the default costs nothing where the data is absent |
 | D2 | Offer `import` in version 1? | No. Reserve the value; refuse it with a message naming C1, C3, C4 and worker exclusion. Revisit after I1 |
 | D3 | Use ambient config carriers (Codex project config, OpenCode `instructions`, pi `APPEND_SYSTEM.md`)? | No. They reach quiet workers. For Codex use the profile file |
 | D4 | May `vibe agent codex` write `$CODEX_HOME/vibe-<node-id>.config.toml` — a file outside the project? | Yes, written only by `vibe agent` / `vibe prompt flags`, never by install. The alternative is no launch tier for Codex |

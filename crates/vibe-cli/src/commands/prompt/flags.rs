@@ -16,7 +16,9 @@ use anyhow::{Result, bail};
 use vibe_app::{AgentsConfig, AppError};
 use vibe_core::manifest::HarnessDelivery;
 use vibe_wire::generated::prompt_flags as wire;
-use vibe_workspace::system_prompt::{HarnessKind, LaunchFlags, check_node_prompt, launch_flags};
+use vibe_workspace::system_prompt::{
+    HarnessKind, LaunchFlags, LaunchInputs, check_node_prompt, launch_flags,
+};
 
 use crate::commands::agent::launchers;
 use crate::commands::app::global;
@@ -29,7 +31,12 @@ pub(crate) const PROTOCOL: &str = "vibe-prompt-flags/1";
 
 pub(crate) fn run(ctx: &output::Context, selected: &Selected, harness: &str) -> Result<()> {
     let (kind, launcher) = resolve_kind(selected, harness)?;
-    let composed = compose(selected, kind, launcher.as_ref())?;
+    // **No launch arguments, because there is no launch.** A kind whose
+    // base depends on the model then learns it from the harness's own
+    // configuration, which is what a launch with no `-m` of its own would
+    // do too; the note below says so, because a reader who goes on to pass
+    // `-m` is being shown an assignment for a different model.
+    let composed = compose(selected, kind, launcher.as_ref(), &[])?;
     // **A command whose job is to print refuses what it may not print.**
     // `vibe agent` starts the harness anyway on exactly these reasons, with
     // no slot flag and one loud warning; here there is no session to save,
@@ -57,13 +64,33 @@ pub(crate) fn run(ctx: &output::Context, selected: &Selected, harness: &str) -> 
         kind: kind.as_str().to_owned(),
         delivery: kind.delivery(&selected.manifest).as_str().to_owned(),
         flags: composed.flags.clone(),
+        env: composed
+            .env
+            .iter()
+            .map(|assignment| wire::Assignment {
+                name: assignment.name.clone(),
+                value: assignment.value.clone(),
+            })
+            .collect(),
         notes: composed.notes.clone(),
     };
     if ctx.is_json() {
         return ctx.emit_json(&report);
     }
-    // One line of flags on stdout, so `claude $(vibe prompt flags --harness
-    // claude)` is the whole integration; everything else is stderr.
+    // **One line of flags on stdout**, so `claude $(vibe prompt flags
+    // --harness claude)` is the whole integration; everything else is
+    // stderr.
+    //
+    // **A harness whose carrier is an environment variable gets its
+    // assignments first, one per line, and the flags last.** It cannot be
+    // one line: `NAME=value` only works as a shell *prefix* and the program
+    // has to sit between it and the flags, so no single line can be both.
+    // The kinds whose carrier is a flag or a file emit no assignment at
+    // all, which is why this costs the established one-line contract
+    // nothing.
+    for assignment in &composed.env {
+        println!("{}={}", assignment.name, assignment.value);
+    }
     println!("{}", shell_line(&composed.flags));
     for note in &composed.notes {
         eprintln!("note: {note}");
@@ -188,6 +215,7 @@ pub(crate) fn compose(
     selected: &Selected,
     kind: HarnessKind,
     launcher: Option<&launchers::Launcher>,
+    launch_args: &[String],
 ) -> Result<Composed> {
     let tracked = selected.tracked();
     let request = selected.request(&tracked, None);
@@ -209,7 +237,17 @@ pub(crate) fn compose(
     let delivery = kind.delivery(&selected.manifest);
     if delivery == HarnessDelivery::Read {
         return Ok(Composed {
-            flags: launch_flags(kind, delivery, "", &answer.lane.path, "", 0),
+            flags: launch_flags(
+                kind,
+                delivery,
+                &LaunchInputs {
+                    node_id: "",
+                    lane: &answer.lane.path,
+                    lane_bytes: "",
+                    codex_limit: 0,
+                    supplied: None,
+                },
+            ),
             undeliverable: None,
         });
     }
@@ -231,28 +269,54 @@ pub(crate) fn compose(
         Some(&selected.manifest),
         &vibe_spec::SelfCoordinate::new(None, String::new()),
     );
-    let mut flags = launch_flags(kind, delivery, &node_id, &answer.lane.path, &bytes, limit);
     // **The carrier gate first, because it is the harder answer.** A
     // carrier this harness may not read makes the lane's own freshness
     // beside the point, and reporting the weaker reason over the stronger
-    // one is how a reader comes to run the wrong command.
-    let undeliverable = match super::harness_version::gate(kind, launcher)? {
-        super::harness_version::Gate::Deliver(note) => {
-            flags.notes.extend(note);
-            (!answer.verdict.is_equal()).then(|| {
-                Undeliverable::printable(
-                    format!(
-                        "the lane is {} ({}), so the bytes on disk are not this node's current \
-                         lane",
-                        answer.verdict.as_str(),
-                        answer.verdict.reasons().join("; ")
-                    ),
-                    format!("run `{}`", answer.remedy()),
-                )
-            })
+    // one is how a reader comes to run the wrong command. It also composes
+    // a supplied base when the kind needs one, which is why it runs before
+    // the flags rather than beside them.
+    let settings = global::settings_root()?;
+    let gate = super::harness_version::gate(
+        kind,
+        launcher,
+        &super::harness_version::GateRequest {
+            settings: &settings,
+            project_root: &selected.workspace.root,
+            lane: &answer.lane.path,
+            launch_args,
+        },
+    )?;
+    let (notes, supplied) = match gate {
+        super::harness_version::Gate::Deliver { notes, supplied } => (notes, supplied),
+        super::harness_version::Gate::Undeliverable(undeliverable) => {
+            return Ok(Composed {
+                flags: LaunchFlags::default(),
+                undeliverable: Some(undeliverable),
+            });
         }
-        super::harness_version::Gate::Undeliverable(undeliverable) => Some(undeliverable),
     };
+    let mut flags = launch_flags(
+        kind,
+        delivery,
+        &LaunchInputs {
+            node_id: &node_id,
+            lane: &answer.lane.path,
+            lane_bytes: &bytes,
+            codex_limit: limit,
+            supplied: supplied.as_ref().map(|composed| &composed.document),
+        },
+    );
+    flags.notes.extend(notes);
+    let undeliverable = (!answer.verdict.is_equal()).then(|| {
+        Undeliverable::printable(
+            format!(
+                "the lane is {} ({}), so the bytes on disk are not this node's current lane",
+                answer.verdict.as_str(),
+                answer.verdict.reasons().join("; ")
+            ),
+            format!("run `{}`", answer.remedy()),
+        )
+    });
     Ok(Composed {
         flags,
         undeliverable,

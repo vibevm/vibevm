@@ -56,20 +56,34 @@ impl Machine {
         machine
     }
 
-    /// A shim that records its argv and exits — never a real harness.
+    /// A shim that records its argv and its carrier environment, and exits
+    /// — never a real harness.
     ///
-    /// It answers `--version` from `$SHIM_VERSION` **without** recording,
-    /// because the Codex carrier is gated on the installed version and the
-    /// probe must be answerable by a shim: a test that let the gate fall
-    /// through to the real `codex` on `PATH` would be measuring this
-    /// machine rather than the code.
+    /// It answers two questions **without** recording, because both are
+    /// probes the carrier gates make and both must be answerable by a shim:
+    /// a test that let a gate fall through to the real `codex` or
+    /// `opencode` on `PATH` would be measuring this machine rather than the
+    /// code.
+    ///
+    /// - `--version`, from `$SHIM_VERSION`. The Codex carrier is gated on
+    ///   the installed version, and OpenCode's prompt-base set is recorded
+    ///   per harness version.
+    /// - any argv containing `debug`, from `$SHIM_DEBUG_CONFIG`. That is
+    ///   OpenCode's own answer about its own configuration, which is where
+    ///   a launch with no `-m` of its own learns the model.
     fn shim(&self, name: &str) {
         let path = self.bin.path().join(name);
         fs::write(
             &path,
             "#!/bin/sh\n\
              if [ \"$1\" = \"--version\" ]; then printf '%s\\n' \"$SHIM_VERSION\"; exit 0; fi\n\
-             printf '%s\\n' \"$@\" > \"$SHIM_ARGV\"\nexit 0\n",
+             for argument in \"$@\"; do\n\
+             \x20 if [ \"$argument\" = \"debug\" ]; then \
+             printf '%s\\n' \"$SHIM_DEBUG_CONFIG\"; exit 0; fi\n\
+             done\n\
+             printf '%s\\n' \"$@\" > \"$SHIM_ARGV\"\n\
+             printf '%s' \"${OPENCODE_CONFIG_CONTENT-}\" > \"$SHIM_ENV\"\n\
+             exit 0\n",
         )
         .unwrap();
         let mut permissions = fs::metadata(&path).unwrap().permissions();
@@ -79,6 +93,15 @@ impl Machine {
 
     fn argv_path(&self) -> PathBuf {
         self.bin.path().join("argv.txt")
+    }
+
+    fn env_path(&self) -> PathBuf {
+        self.bin.path().join("carrier.txt")
+    }
+
+    /// What the launched harness found in `$OPENCODE_CONFIG_CONTENT`.
+    fn carrier(&self) -> String {
+        fs::read_to_string(self.env_path()).unwrap_or_default()
     }
 
     fn agent(&self, args: &[&str]) -> assert_cmd::Command {
@@ -106,7 +129,9 @@ impl Machine {
             .current_dir(self.project.path())
             .env("PATH", self.path_env())
             .env("SHIM_ARGV", self.argv_path())
+            .env("SHIM_ENV", self.env_path())
             .env("SHIM_VERSION", version)
+            .env("SHIM_DEBUG_CONFIG", CONFIGURED)
             .env("CODEX_HOME", self.bin.path().join("codex-home"))
     }
 
@@ -138,7 +163,144 @@ impl Machine {
             .join(vibe_core::layout::current_boot_dir())
             .join("AGENT-LANE.md")
     }
+
+    /// Write a prompt-base set shaped like a real one, into a directory the
+    /// launch is pointed at with `VIBE_PROMPT_BASES_DIR`.
+    ///
+    /// **The fixture's text is nobody else's.** A test that asserted over
+    /// vendored third-party prose would fail the day upstream edits a
+    /// sentence, which is that package's business; what is pinned here is
+    /// the mechanism — the lookup, the digest gate, the `verified` gate, and
+    /// the shape of the document that reaches the harness.
+    fn bases(&self, set: &Set) -> PathBuf {
+        let root = self.bin.path().join("bases");
+        let dir = root.join("prompt-bases").join(SHIM_OPENCODE_VERSION);
+        fs::create_dir_all(&dir).unwrap();
+        let base = "FIXTURE base head\n${TOKEN}\nFIXTURE base tail\n";
+        fs::write(dir.join("system.txt"), base).unwrap();
+        let digest = if set.digest_matches {
+            format!(
+                "{:x}",
+                <sha2::Sha256 as sha2::Digest>::digest(base.as_bytes())
+            )
+        } else {
+            "0".repeat(64)
+        };
+        fs::write(
+            dir.join("PROVENANCE.toml"),
+            format!(
+                r#"schema = 1
+harness = "opencode"
+harness_version = "{SHIM_OPENCODE_VERSION}"
+
+[[base]]
+id = "generic"
+file = "system.txt"
+upstream_path = "packages/core/src/session/runner/prompt/system.txt"
+bytes = {}
+sha256 = "{digest}"
+has_tool_guidance_token = true
+default = true
+
+[render]
+token = "${{TOKEN}}"
+replace = "first"
+join = "\n"
+trim = "end"
+
+[[render.bullet]]
+gate = "edit"
+text = "- FIXTURE edit rule"
+
+[carrier]
+kind = "config-agent-system"
+env = "OPENCODE_CONFIG_CONTENT"
+flags = ["--standalone"]
+agents_key = "agents"
+system_key = "system"
+mode_key = "mode"
+default_agent_key = "default_agent"
+agent_name = "vibe"
+agent_mode = "primary"
+gate_tools = ["edit"]
+lane_token = "{{file:%LANE%}}"
+lane_transform = "trim"
+separator_between_base_and_lane = "\n\n"
+
+[verification]
+verified = {}
+proof_id = "fixture"
+proof_date = "2026-11-11"
+"#,
+                base.len(),
+                set.verified
+            ),
+        )
+        .unwrap();
+        root
+    }
+
+    /// A launch whose prompt-base lookup is pointed at a fixture set, and
+    /// whose harness answers as the named OpenCode.
+    fn opencoded(&self, args: &[&str], set: &Set) -> assert_cmd::Command {
+        let root = self.bases(set);
+        let mut command = self.user.vibe();
+        self.harnessed(&mut command, SHIM_OPENCODE_REPORTS);
+        if set.present {
+            command.env("VIBE_PROMPT_BASES_DIR", &root);
+        } else {
+            command.env_remove("VIBE_PROMPT_BASES_DIR");
+        }
+        if !set.model_known {
+            command.env("SHIM_DEBUG_CONFIG", NO_MODEL);
+        }
+        command.arg("agent");
+        for argument in args {
+            command.arg(argument);
+        }
+        command
+    }
 }
+
+/// Which way a fixture set is broken, if it is.
+struct Set {
+    present: bool,
+    verified: bool,
+    digest_matches: bool,
+    model_known: bool,
+}
+
+impl Set {
+    /// The set a launch may deliver.
+    fn good() -> Self {
+        Self {
+            present: true,
+            verified: true,
+            digest_matches: true,
+            model_known: true,
+        }
+    }
+}
+
+/// What the shims answer `opencode --version` with, and therefore which
+/// version directory the lookup asks for.
+const SHIM_OPENCODE_VERSION: &str = "9.9.9";
+const SHIM_OPENCODE_REPORTS: &str = "opencode v9.9.9";
+
+/// What the shim answers `opencode debug config` with: OpenCode's own
+/// configuration documents, in its own resolution order. The last one that
+/// states a model is the effective one, which is how a launch with no `-m`
+/// of its own learns which base to supply.
+const CONFIGURED: &str = r#"[
+  { "type": "document", "path": "/h/.config/opencode/opencode.json",
+    "info": { "model": "homelocal/qwen3.8-27b" } }
+]"#;
+
+/// The same answer from a machine that has configured no model at all.
+const NO_MODEL: &str = r#"[
+  { "type": "document", "path": "/h/.config/opencode/opencode.json",
+    "info": { "theme": "dark" } }
+]"#;
 
 /// What the shims answer `codex --version` with by default: the one
 /// version whose profile carrier is verified.
@@ -630,13 +792,15 @@ fn a_resumed_claude_session_is_told_it_keeps_its_old_lane() {
         .stderr(predicate::str::contains("keeps the boot lane").not());
 }
 
-/// OpenCode — a launcher and a dialect with **no deliverable slot**.
+/// OpenCode — a launcher whose carrier is a per-launch configuration layer
+/// declaring vibe's own primary agent (`#SYS-OPENCODE`,
+/// `#SYS-SUPPLIED-BASE`).
 ///
-/// The kind exists so `vibe agent opencode` exists and
-/// `[system_prompt.harness.opencode]` is declarable; the carrier is named
-/// in the note and never passed, because OpenCode injects a configuration
-/// `instructions` array into every session its process serves, `task`
-/// subagents included (`#SYS-OPENCODE`, `#SYS-WORKER-EXCLUSION`).
+/// The slot's cost is that it **replaces** OpenCode's own prompt, so the
+/// launch supplies that prompt from versioned data with provenance in
+/// OpenCode's own package. Everything these tests pin follows from that: the
+/// lookup, the gates that refuse a set that has not been proved, and the one
+/// argument of the user's that would silently bypass the whole thing.
 #[test]
 fn opencode_is_a_builtin_launcher() {
     let machine = Machine::new(WRAPPER);
@@ -650,40 +814,202 @@ fn opencode_is_a_builtin_launcher() {
 }
 
 #[test]
-fn opencode_defaults_to_read_and_starts_unchanged_naming_its_carrier() {
+fn opencode_launches_with_the_carrier_in_the_environment_and_one_flag() {
+    // **The whole delivery, end to end through the shim.** `--standalone`
+    // is the document's own flag, the document is one environment
+    // assignment, and what it carries is the harness's own base plus the
+    // lane's PATH — never the lane's bytes, in the environment as on a
+    // command line.
     let machine = Machine::new(WRAPPER);
     machine
-        .agent(&["opencode", "run", "hello"])
+        .opencoded(&["opencode", "run", "hello"], &Set::good())
+        .assert()
+        .success()
+        .stderr(predicate::str::contains("OPENCODE_CONFIG_CONTENT"))
+        .stderr(predicate::str::contains("qwen3.8-27b"))
+        .stderr(predicate::str::contains("warning: vibe cannot deliver").not());
+    assert_eq!(machine.argv(), ["--standalone", "run", "hello"]);
+
+    let carrier = machine.carrier();
+    let document: serde_json::Value = serde_json::from_str(&carrier).expect("valid JSON");
+    // The agent is declared AND selected, because the top-level command
+    // takes no `--agent` argument: measured on 2.2.7, `opencode
+    // --standalone --agent <name>` prints the usage and starts nothing.
+    assert_eq!(document["default_agent"], "vibe");
+    let system = document["agents"]["vibe"]["system"]
+        .as_str()
+        .expect("the agent carries the composed prompt");
+    assert_eq!(document["agents"]["vibe"]["mode"], "primary");
+    // The supplied base comes first, with the render rule applied and its
+    // own trailing newline trimmed as the program's own is.
+    assert!(system.starts_with("FIXTURE base head\n"), "{system}");
+    assert!(system.contains("- FIXTURE edit rule"), "{system}");
+    assert!(!system.contains("${TOKEN}"), "{system}");
+    // Then one blank line, then the lane's path in the file token.
+    assert!(
+        system.ends_with(&format!(
+            "FIXTURE base tail\n\n{{file:{}}}",
+            machine.lane().display()
+        )),
+        "{system}"
+    );
+    // No lane byte anywhere in the assignment.
+    assert!(!carrier.contains("My frame"), "{carrier}");
+    assert!(machine.lane().exists());
+}
+
+#[test]
+fn a_launch_whose_own_argument_names_the_model_does_not_ask_the_harness() {
+    // The most specific thing anyone knows about a launch is what its user
+    // wrote, so nothing else is consulted — and the note says which model
+    // the base was chosen for, because that is the fact a reader checks.
+    let machine = Machine::new(WRAPPER);
+    machine
+        .opencoded(
+            &["opencode", "run", "-m", "home/gpt-6.1-sol", "hello"],
+            &Set::good(),
+        )
+        .assert()
+        .success()
+        .stderr(predicate::str::contains("gpt-6.1-sol"))
+        .stderr(predicate::str::contains("qwen3.8-27b").not());
+}
+
+#[test]
+fn a_machine_with_no_set_for_its_opencode_launches_softly_and_names_both_places() {
+    // There is deliberately no fallback to another version's base, so the
+    // refusal names the two places the lookup knows and says there is no
+    // search.
+    let machine = Machine::new(WRAPPER);
+    machine
+        .opencoded(
+            &["opencode"],
+            &Set {
+                present: false,
+                ..Set::good()
+            },
+        )
+        .assert()
+        .success()
+        .stderr(predicate::str::contains("warning: vibe cannot deliver"))
+        .stderr(predicate::str::contains(SHIM_OPENCODE_VERSION))
+        .stderr(predicate::str::contains("no fallback to another version"))
+        .stderr(predicate::str::contains("org.vibevm.opencode/opencode"))
+        .stderr(predicate::str::contains("VIBE_PROMPT_BASES_DIR"));
+    assert_eq!(machine.argv(), [""], "a soft launch passed a flag");
+    assert!(
+        machine.carrier().is_empty(),
+        "a soft launch set the carrier"
+    );
+}
+
+#[test]
+fn an_unverified_set_launches_softly_and_points_at_the_sync_tool() {
+    // **The gate that matters most.** Digests prove the data is what it
+    // claims; only the whole-request proof proves the claim matches the
+    // installed program — and the only thing that may write the flag is the
+    // tool that runs that proof.
+    let machine = Machine::new(WRAPPER);
+    machine
+        .opencoded(
+            &["opencode"],
+            &Set {
+                verified: false,
+                ..Set::good()
+            },
+        )
+        .assert()
+        .success()
+        .stderr(predicate::str::contains("warning: vibe cannot deliver"))
+        .stderr(predicate::str::contains("is not verified"))
+        .stderr(predicate::str::contains("opencode-bases"))
+        .stderr(predicate::str::contains("never hand-edit"));
+    assert_eq!(machine.argv(), [""]);
+    assert!(machine.carrier().is_empty());
+}
+
+#[test]
+fn a_set_that_is_not_what_its_provenance_claims_launches_softly() {
+    let machine = Machine::new(WRAPPER);
+    machine
+        .opencoded(
+            &["opencode"],
+            &Set {
+                digest_matches: false,
+                ..Set::good()
+            },
+        )
+        .assert()
+        .success()
+        .stderr(predicate::str::contains("warning: vibe cannot deliver"))
+        .stderr(predicate::str::contains("recorded digest"))
+        .stderr(predicate::str::contains("not what its provenance claims"));
+    assert_eq!(machine.argv(), [""]);
+    assert!(machine.carrier().is_empty());
+}
+
+#[test]
+fn a_launch_whose_model_nobody_states_launches_softly_rather_than_guessing() {
+    // Taking the generic base here would hand a model family with a
+    // template of its own the wrong instructions, silently — which is the
+    // failure the whole mechanism exists to prevent.
+    let machine = Machine::new(WRAPPER);
+    machine
+        .opencoded(
+            &["opencode"],
+            &Set {
+                model_known: false,
+                ..Set::good()
+            },
+        )
+        .assert()
+        .success()
+        .stderr(predicate::str::contains("warning: vibe cannot deliver"))
+        .stderr(predicate::str::contains("model could not be determined"))
+        .stderr(predicate::str::contains("silently"));
+    assert_eq!(machine.argv(), [""]);
+    assert!(machine.carrier().is_empty());
+}
+
+#[test]
+fn a_users_own_agent_argument_is_refused_rather_than_silently_bypassing_the_lane() {
+    // Not a second prompt but a bypass of the first: `--agent other`
+    // selects an agent whose `system` is not the one carrying the lane, and
+    // nothing reports it.
+    let machine = Machine::new(WRAPPER);
+    machine
+        .opencoded(&["opencode", "run", "--agent", "plan"], &Set::good())
+        .assert()
+        .failure()
+        .stderr(predicate::str::contains("is already in your own arguments"));
+}
+
+#[test]
+fn a_read_delivery_opencode_starts_unchanged_and_names_the_carrier_anyway() {
+    // `read` is the project's own choice to have the router do the work;
+    // the note still says where the lane WOULD have gone, which is what a
+    // reader choosing a tier needs.
+    let machine = Machine::new(WRAPPER);
+    machine.declare("[system_prompt.harness.opencode]\ndelivery = \"read\"\n");
+    machine
+        .opencoded(&["opencode", "run", "hello"], &Set::good())
         .assert()
         .success()
         .stderr(predicate::str::contains("no slot flag is passed"))
         .stderr(predicate::str::contains("OPENCODE_CONFIG_CONTENT"))
-        .stderr(predicate::str::contains("subagents included"))
-        // `read` is the default, not a warning: the router is doing the
-        // work by design, so this is a note and not a soft launch.
         .stderr(predicate::str::contains("warning: vibe cannot deliver").not());
     assert_eq!(machine.argv(), ["run", "hello"]);
+    assert!(machine.carrier().is_empty());
 }
 
 #[test]
-fn a_project_declaring_launch_for_opencode_launches_softly_with_the_reason() {
+fn printing_flags_for_opencode_prints_the_assignment_first_and_the_flags_last() {
+    // **The one-line contract holds where it can and is stated where it
+    // cannot.** `NAME=value` only works as a shell *prefix*, with the
+    // program between it and the flags, so no single line can be both; the
+    // assignments come first, one per line, and the flags last.
     let machine = Machine::new(WRAPPER);
-    machine.declare("[system_prompt.harness.opencode]\ndelivery = \"launch\"\n");
-    machine
-        .agent(&["opencode"])
-        .assert()
-        .success()
-        .stderr(predicate::str::contains("warning: vibe cannot deliver"))
-        .stderr(predicate::str::contains("SYS-WORKER-EXCLUSION"))
-        .stderr(predicate::str::contains("2.2.7"))
-        .stderr(predicate::str::contains("delivery = \"read\""));
-    // The shim records one empty line when it received no argument at all.
-    assert_eq!(machine.argv(), [""], "a soft launch passed a flag");
-}
-
-#[test]
-fn printing_flags_for_opencode_says_why_the_carrier_is_not_a_flag() {
-    let machine = Machine::new(WRAPPER);
+    let root = machine.bases(&Set::good());
     machine
         .user
         .vibe()
@@ -691,31 +1017,52 @@ fn printing_flags_for_opencode_says_why_the_carrier_is_not_a_flag() {
         .arg(machine.project.path())
         .assert()
         .success();
-    // The default, `read`: no flags, and the note names the environment
-    // assignment the carrier would have been.
     let mut command = machine.user.vibe();
-    machine
-        .harnessed(&mut command, VERIFIED)
+    machine.harnessed(&mut command, SHIM_OPENCODE_REPORTS);
+    let printed = command
+        .env("VIBE_PROMPT_BASES_DIR", &root)
         .args(["prompt", "flags", "--harness", "opencode", "--path"])
         .arg(machine.project.path())
         .assert()
-        .success()
-        .stderr(predicate::str::contains("OPENCODE_CONFIG_CONTENT"))
-        .stderr(predicate::str::contains(
-            "takes no append-instructions argument",
-        ));
-    // A declared `launch` is a refusal here, where `vibe agent` launches
-    // softly: this command prints and starts nothing, so there is no
-    // session to save.
-    machine.declare("[system_prompt.harness.opencode]\ndelivery = \"launch\"\n");
-    let mut command = machine.user.vibe();
+        .success();
+    let stdout = String::from_utf8(printed.get_output().stdout.clone()).unwrap();
+    let lines: Vec<&str> = stdout.lines().collect();
+    assert_eq!(*lines.last().unwrap(), "--standalone", "{stdout}");
+    assert_eq!(lines.len(), 2, "one assignment, then the flags: {stdout}");
+    assert!(lines[0].starts_with("OPENCODE_CONFIG_CONTENT="), "{stdout}");
+    assert!(lines[0].contains("default_agent"), "{stdout}");
+    // Printing writes nothing: the carrier is an environment value, so
+    // there is no file for this command to have left behind.
+    assert!(!machine.env_path().exists());
+}
+
+#[test]
+fn printing_flags_for_an_unverified_opencode_refuses_where_a_launch_would_soften() {
+    // The two surfaces answer the same facts differently on purpose: this
+    // one prints and starts nothing, so there is no session to save, and
+    // flags for a carrier that may not arrive are the one answer a shell
+    // alias turns silently into a session with no lane in it.
+    let machine = Machine::new(WRAPPER);
+    let root = machine.bases(&Set {
+        verified: false,
+        ..Set::good()
+    });
     machine
-        .harnessed(&mut command, VERIFIED)
+        .user
+        .vibe()
+        .args(["prompt", "build", "--path"])
+        .arg(machine.project.path())
+        .assert()
+        .success();
+    let mut command = machine.user.vibe();
+    machine.harnessed(&mut command, SHIM_OPENCODE_REPORTS);
+    command
+        .env("VIBE_PROMPT_BASES_DIR", &root)
         .args(["prompt", "flags", "--harness", "opencode", "--path"])
         .arg(machine.project.path())
         .assert()
         .failure()
-        .stderr(predicate::str::contains("SYS-WORKER-EXCLUSION"));
+        .stderr(predicate::str::contains("is not verified"));
 }
 
 /// Qwen Code — a launcher and a dialect whose one additive slot takes the
@@ -808,4 +1155,60 @@ fn printing_flags_for_qwen_says_why_the_slot_is_not_used() {
         .assert()
         .failure()
         .stderr(predicate::str::contains("128 KiB"));
+}
+
+/// The real offline proof, as an **opt-in** test.
+///
+/// **Why it is gated and not simply a test.** It needs an installed OpenCode
+/// binary, a published prompt-base set outside this repository, `python3`,
+/// `bash`, a free loopback port and about five minutes; a suite that needed
+/// any of those would stop being a suite. So the mechanism is pinned by the
+/// shim tests above — over a fixture whose text nobody else owns — and *this*
+/// one exists so the real thing can be run on demand, by the one command that
+/// already knows how:
+///
+/// ```text
+/// VIBE_OPENCODE_PROVE=1 \
+/// VIBE_OPENCODE_SAMPLE=/tmp/sample \
+/// VIBE_OPENCODE_BASES=/path/to/vibe-pkg-opencode \
+///   cargo test -p vibe-cli --test cli_agent_launch -- --ignored opencode_prove
+/// ```
+///
+/// The sample is built once by `campaigns/sys-prompt-2026-11/live/
+/// make-sample.sh <dir> 202349`. The proof calls no model and reaches nothing
+/// but `127.0.0.1`.
+#[test]
+#[ignore = "needs an installed OpenCode, a published prompt-base set and ~5 minutes"]
+fn opencode_prove_runs_the_real_offline_capture() {
+    if std::env::var_os("VIBE_OPENCODE_PROVE").is_none() {
+        eprintln!("skipped: set VIBE_OPENCODE_PROVE=1 (and VIBE_OPENCODE_SAMPLE) to run it");
+        return;
+    }
+    let sample = std::env::var("VIBE_OPENCODE_SAMPLE")
+        .expect("VIBE_OPENCODE_SAMPLE must name a project built by make-sample.sh");
+    let out = tempfile::tempdir().unwrap();
+    let captures = out.path().join("captures");
+    let script = Path::new(env!("CARGO_MANIFEST_DIR"))
+        .join("../../campaigns/sys-prompt-2026-11/live/opencode-prove.sh");
+    // `--from-vibe` is the point of running it from here: the carrier under
+    // test is the one `vibe prompt flags` emits, so a pass says the bytes the
+    // proof measured are the bytes the launcher sets.
+    let mut command = std::process::Command::new("bash");
+    command
+        .arg(&script)
+        .arg(&sample)
+        .arg(&captures)
+        .arg("--from-vibe")
+        .env("VIBE", assert_cmd::cargo::cargo_bin("vibe"));
+    if let Some(bases) = std::env::var_os("VIBE_OPENCODE_BASES") {
+        command.env("VIBE_PROMPT_BASES_DIR", bases);
+    }
+    let status = command.status().expect("the proof script runs");
+    let report = fs::read_to_string(captures.join("report.txt")).unwrap_or_default();
+    assert!(
+        status.success(),
+        "the whole-request proof FAILED — every condition it failed is named \
+         in its report:\n{report}"
+    );
+    assert!(report.contains("VERDICT: PASS"), "{report}");
 }

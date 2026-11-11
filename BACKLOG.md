@@ -170,6 +170,16 @@ An **id**, the **`spec://…#ANCHOR`** it came from where one exists, a one-line
 
 ## P2 — the next wave drains from here {#p2}
 
+### B-266 — `xtask`'s vocabulary-home census is red on `main`: 105 sites against an expected 104 {#b-266}
+
+| | |
+|---|---|
+| @fact:B266-ANCHOR **anchor** | `xtask/src/codegen/optional_shapes/tests/stitch.rs:253` (`the_real_vocabulary_home_walks_to_its_sites`), over `formats/vocabularies.json` |
+| @fact:B266-LOCATOR **locator** | found 2026-11-11 while running the touched-crate gate for OpenCode's `launch` tier, and **confirmed pre-existing**: the same test fails identically on an unmodified checkout of `d0b9fa1c5` with `formats/` and `xtask/` clean, so it is not that work's. The assertion is a tripwire on the *pre-portable* baseline — `assert_eq!(shapes(baseline)?.sites, 104, "the original pre-portable census is unchanged")` — and the census now walks to **105**. Some earlier change added a definition that lands in the baseline bucket rather than in the `later` / `portable_` / `full_work` exclusion lists the test maintains |
+| @fact:B266-SEVERITY **severity** | P2 — one red test in `xtask`, in a tripwire rather than in product behaviour. It costs every later worker the same false alarm on the same gate, and it masks the next real census drift, which is the actual damage |
+| @fact:B266-DISPOSITION **disposition** | `open` — find the definition that was added, and decide which of the two the test means: add its name to the `later` list (the established pattern for "added after the baseline was taken") and leave 104 standing, or move the expected count to 105 if the baseline bucket legitimately grew. A guess either way turns a tripwire into a rubber stamp, which is why this is filed rather than patched |
+| @fact:B266-FILED **filed by** | worker, OpenCode `launch` delivery, 2026-11-11 |
+
 ### B-242 — `vibe validate` на голом дереве пакета пишет `.vibe/lifecycle.*` в само дерево пакета {#b-242}
 
 | | |

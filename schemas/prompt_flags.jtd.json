@@ -4,7 +4,7 @@
     "spec": { "implements": "spec://org.vibevm.core/vibevm/common/PROP-076#SYS-HARNESS-EXECUTABLE" },
     "rustOptions": { "package": "vibe_wire::prompt_flags" },
     "x-rust-type": "PromptFlagsReport",
-    "x-wire-order": ["protocol", "node", "launcher", "kind", "delivery", "flags", "notes"]
+    "x-wire-order": ["protocol", "node", "launcher", "kind", "delivery", "flags", "env", "notes"]
   },
   "properties": {
     "protocol": { "type": "string" },
@@ -12,9 +12,22 @@
     "kind": { "type": "string" },
     "delivery": { "type": "string" },
     "flags": { "elements": { "type": "string" }, "metadata": { "x-empty": "emit" } },
+    "env": { "elements": { "ref": "assignment" }, "metadata": { "x-empty": "emit" } },
     "notes": { "elements": { "type": "string" }, "metadata": { "x-empty": "emit" } }
   },
   "optionalProperties": {
     "launcher": { "type": "string", "metadata": { "x-default": null } }
+  },
+  "definitions": {
+    "assignment": {
+      "metadata": {
+        "description": "One environment assignment the launch makes for the harness it starts. Empty for every kind whose carrier is a flag or a file; a harness whose carrier is a configuration document has one, and that document carries the harness's own base prompt and the lane's PATH rather than the lane's bytes.",
+        "x-wire-order": ["name", "value"]
+      },
+      "properties": {
+        "name": { "type": "string" },
+        "value": { "type": "string" }
+      }
+    }
   }
 }

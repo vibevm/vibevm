@@ -47,6 +47,7 @@ mod dist;
 mod doc_shell;
 mod epochs;
 mod mirror;
+mod opencode_bases;
 mod rebuild;
 mod specmap;
 mod sync_engines;
@@ -87,6 +88,10 @@ enum Cmd {
     /// Regenerate Rust types under each owning crate's `src/generated/`
     /// from JTD schemas under `schemas/`.
     Codegen,
+
+    /// The prompt-base sync tool of PROP-076 `#SYS-SUPPLIED-BASE`, and the
+    /// only thing that may write a set's `verified` flag.
+    OpencodeBases(opencode_bases::OpencodeBasesArgs),
 
     /// Run `codegen`, then assert via `git diff --exit-code` that the
     /// generated tree matches what's checked in. CI runs this to catch
@@ -444,6 +449,7 @@ fn main() -> Result<()> {
     match cli.command {
         Cmd::Bridge { command } => run_bridge(command),
         Cmd::Codegen => run_codegen(),
+        Cmd::OpencodeBases(args) => opencode_bases::run(args),
         Cmd::CheckCodegen => run_check_codegen(),
         Cmd::Specmap { check } => run_specmap(check),
         Cmd::SyncEngines { check } => run_sync_engines(check),

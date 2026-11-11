@@ -36,6 +36,10 @@ sha2.workspace = true
 vibe-core.workspace = true
 vibe-net.workspace = true
 vibe-registry.workspace = true
+# `opencode-bases` reads a prompt-base set through the ONE interpreter a
+# launch reads it through (PROP-076 `#SYS-SUPPLIED-BASE`): a sync tool with
+# a composition of its own would prove its own bytes rather than vibe's.
+vibe-workspace.workspace = true
 # `embed-doc-shell` writes the shell's index and its pin, and the digest
 # in both is measured by the crate that will re-measure it later — one
 # algorithm, so the comparison means something (PROP-057 ##SHELL-PIN).

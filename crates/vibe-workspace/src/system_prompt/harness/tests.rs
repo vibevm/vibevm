@@ -12,15 +12,34 @@ use super::*;
 
 const LANE: &str = "<!-- lane -->\n\"quoted\"\tand \\ a backslash\n";
 
+const LANE_PATH: &str = "/w/vibevm/vibespecs/boot/AGENT-LANE.md";
+
+fn inputs<'a>(supplied: Option<&'a CarrierDocument>) -> LaunchInputs<'a> {
+    LaunchInputs {
+        node_id: "org.vibevm/demo",
+        lane: Path::new(LANE_PATH),
+        lane_bytes: LANE,
+        codex_limit: 32 * 1024,
+        supplied,
+    }
+}
+
 fn flags(kind: HarnessKind, delivery: HarnessDelivery) -> LaunchFlags {
-    launch_flags(
-        kind,
-        delivery,
-        "org.vibevm/demo",
-        Path::new("/w/vibevm/vibespecs/boot/AGENT-LANE.md"),
-        LANE,
-        32 * 1024,
-    )
+    launch_flags(kind, delivery, &inputs(None))
+}
+
+/// A carrier document shaped like the one a composed OpenCode launch hands
+/// over: the base, the separator and the lane's path in a file token.
+fn carrier_document() -> CarrierDocument {
+    CarrierDocument {
+        env: "OPENCODE_CONFIG_CONTENT".to_owned(),
+        value: format!(
+            "{{\"default_agent\":\"vibe\",\"agents\":{{\"vibe\":{{\"mode\":\"primary\",\
+             \"system\":\"BASE\\n\\n{{file:{LANE_PATH}}}\"}}}}}}"
+        ),
+        flags: vec!["--standalone".to_owned()],
+        agent_name: "vibe".to_owned(),
+    }
 }
 
 #[test]
@@ -52,10 +71,13 @@ fn codex_takes_the_profile_and_the_declared_doc_limit() {
     let answer = launch_flags(
         HarnessKind::Codex,
         HarnessDelivery::Launch,
-        "org.vibevm/demo",
-        Path::new("/w/boot/AGENT-LANE.md"),
-        LANE,
-        262_144,
+        &LaunchInputs {
+            node_id: "org.vibevm/demo",
+            lane: Path::new("/w/boot/AGENT-LANE.md"),
+            lane_bytes: LANE,
+            codex_limit: 262_144,
+            supplied: None,
+        },
     );
     assert_eq!(
         answer.flags,
@@ -121,27 +143,84 @@ fn read_delivery_passes_no_flag_and_says_why() {
 }
 
 #[test]
-fn opencode_passes_no_flag_under_either_delivery_and_names_its_carrier() {
-    // **A kind with no deliverable slot is still a kind.** `vibe agent
-    // opencode` has to exist and `[system_prompt.harness.opencode]` has to
-    // be declarable; what the dialect answers is "nothing, and here is
-    // why" (`#SYS-OPENCODE`).
-    for delivery in [HarnessDelivery::Read, HarnessDelivery::Launch] {
-        let answer = flags(HarnessKind::OpenCode, delivery);
-        assert!(answer.flags.is_empty(), "{delivery:?}");
-        assert!(answer.profile.is_none(), "{delivery:?}");
-        let said = answer.notes.join(" ");
-        // The carrier is named, and so is the reason it is not delivered.
-        assert!(said.contains("OPENCODE_CONFIG_CONTENT"), "{said}");
-        assert!(said.contains("subagents included"), "{said}");
-        assert!(said.contains(OPENCODE_MEASURED_VERSION), "{said}");
-        // A path, never the lane's own bytes — the carrier would travel in
-        // the environment, and an environment is not a safer command line.
-        assert!(
-            said.contains("/w/vibevm/vibespecs/boot/AGENT-LANE.md"),
-            "{said}"
-        );
-        assert!(!said.contains("<!-- lane -->"), "{said}");
+fn opencode_in_read_delivery_passes_nothing_and_names_the_carrier_a_launch_would_use() {
+    // **The question a note answers does not depend on the tier.** A
+    // `read`-delivery OpenCode receives no flag and no assignment, and the
+    // note still says where the lane *would* have gone, because that is
+    // what a reader who is choosing a tier needs (`#SYS-OPENCODE`).
+    let answer = flags(HarnessKind::OpenCode, HarnessDelivery::Read);
+    assert!(answer.flags.is_empty());
+    assert!(answer.env.is_empty());
+    assert!(answer.profile.is_none());
+    let said = answer.notes.join(" ");
+    assert!(said.contains("OPENCODE_CONFIG_CONTENT"), "{said}");
+    assert!(said.contains("default_agent"), "{said}");
+    assert!(said.contains("--standalone"), "{said}");
+    assert!(said.contains(OPENCODE_MEASURED_VERSION), "{said}");
+    // A path, never the lane's own bytes: the document names the file.
+    assert!(said.contains(LANE_PATH), "{said}");
+    assert!(!said.contains("<!-- lane -->"), "{said}");
+}
+
+#[test]
+fn opencode_in_launch_delivery_carries_the_document_in_the_environment() {
+    let document = carrier_document();
+    let answer = launch_flags(
+        HarnessKind::OpenCode,
+        HarnessDelivery::Launch,
+        &inputs(Some(&document)),
+    );
+    // `--standalone` is the document's own, because whether the carrier is
+    // readable at all is a fact about the harness version.
+    assert_eq!(answer.flags, ["--standalone"]);
+    assert!(answer.profile.is_none());
+    assert_eq!(answer.env.len(), 1);
+    assert_eq!(answer.env[0].name, "OPENCODE_CONFIG_CONTENT");
+    assert_eq!(answer.env[0].value, document.value);
+    // **The lane's path, never its bytes — in the environment as on a
+    // command line.** An environment string is capped the same way an
+    // argument is, and `#SYS-HARNESS-DELIVERY` is a rule rather than a
+    // threshold.
+    assert!(answer.env[0].value.contains(LANE_PATH), "{:?}", answer.env);
+    assert!(!answer.env[0].value.contains("<!-- lane -->"));
+    let said = answer.notes.join(" ");
+    assert!(said.contains("vibe"), "{said}");
+    assert!(said.contains("--standalone"), "{said}");
+    assert!(said.contains("subagent"), "{said}");
+}
+
+#[test]
+fn opencode_with_no_composed_carrier_passes_nothing_at_all() {
+    // The gate above this cell has already turned the refusal into a soft
+    // launch; what must not happen is a flag with no document behind it.
+    let answer = launch_flags(
+        HarnessKind::OpenCode,
+        HarnessDelivery::Launch,
+        &inputs(None),
+    );
+    assert!(answer.flags.is_empty());
+    assert!(answer.env.is_empty());
+}
+
+#[test]
+fn a_users_own_agent_argument_is_a_conflict_because_it_bypasses_ours() {
+    // Not a second prompt but a bypass of the first: `--agent other`
+    // selects an agent whose `system` is not the one carrying the lane, and
+    // nothing reports it.
+    assert_eq!(HarnessKind::OpenCode.conflicting_flags(), ["--agent"]);
+    assert!(HarnessKind::Qwen.conflicting_flags().is_empty());
+}
+
+#[test]
+fn only_a_harness_whose_slot_replaces_its_prompt_names_a_base_package() {
+    // The coordinate is packaging, not prompt text, and it exists only for
+    // the kind whose slot replaces the harness's own prompt.
+    assert_eq!(
+        HarnessKind::OpenCode.base_package(),
+        Some(("org.vibevm.opencode", "opencode"))
+    );
+    for kind in [HarnessKind::Claude, HarnessKind::Codex, HarnessKind::Qwen] {
+        assert_eq!(kind.base_package(), None, "{kind:?}");
     }
 }
 
@@ -197,12 +276,35 @@ fn the_qwen_blocker_names_both_slots_and_what_closes_each() {
 }
 
 #[test]
-fn the_opencode_blocker_is_version_scoped_and_names_worker_exclusion() {
-    let blocker = opencode_launch_blocker();
-    assert!(blocker.contains("SYS-WORKER-EXCLUSION"), "{blocker}");
-    assert!(blocker.contains(OPENCODE_MEASURED_VERSION), "{blocker}");
-    assert!(blocker.contains("instructions"), "{blocker}");
-    assert!(blocker.contains("background service"), "{blocker}");
+fn the_opencode_carrier_description_names_the_slot_the_base_and_what_is_closed() {
+    let said = opencode_carrier_description();
+    // The slot that works, and the cost that makes a supplied base
+    // necessary at all.
+    assert!(said.contains("OPENCODE_CONFIG_CONTENT"), "{said}");
+    assert!(said.contains("default_agent"), "{said}");
+    assert!(said.contains("REPLACES"), "{said}");
+    assert!(said.contains("--standalone"), "{said}");
+    assert!(said.contains("background service"), "{said}");
+    // The carrier that is closed for good, and the rule that closes it.
+    assert!(said.contains("SYS-WORKER-EXCLUSION"), "{said}");
+    assert!(said.contains("instructions"), "{said}");
+    assert!(said.contains(OPENCODE_MEASURED_VERSION), "{said}");
+    // The base is data in the harness's own package, never vibe's source.
+    assert!(said.contains("versioned data with provenance"), "{said}");
+}
+
+#[test]
+fn a_version_line_yields_its_number_or_nothing() {
+    assert_eq!(
+        reported_version("opencode v2.2.7").as_deref(),
+        Some("2.2.7")
+    );
+    assert_eq!(
+        reported_version("codex-cli 0.167.0").as_deref(),
+        Some("0.167.0")
+    );
+    assert_eq!(reported_version("no number here"), None);
+    assert_eq!(reported_version(""), None);
 }
 
 #[test]
@@ -255,22 +357,27 @@ fn an_unknown_kind_is_none_rather_than_a_default() {
 
 #[test]
 fn a_node_with_no_system_prompt_table_takes_each_kinds_own_default() {
-    // One default for every kind was harmless while the set held only the
-    // two file-slot harnesses. It is not once it does not: `opencode` would
-    // have read `launch` from a project that declared nothing at all.
+    // **The table's own per-kind default, not one default for every kind.**
+    // Reading `launch` for everything was harmless while the set held only
+    // the two file-slot harnesses, and wrong the moment it did not: `qwen`
+    // would have read `launch` from a project that declared nothing at all.
+    // `opencode` joined the `launch` side on 2026-11-11, once its supplied
+    // base earned `verified` by the whole-request proof — and a machine with
+    // no verified set for its installed OpenCode soft-launches, so the
+    // default costs nothing where the data is absent (`#SYS-SUPPLIED-BASE`,
+    // `#SYS-SOFT-LAUNCH`).
     let manifest = vibe_core::manifest::Manifest::default();
     assert!(manifest.system_prompt.is_none());
-    assert_eq!(
-        HarnessKind::Claude.delivery(&manifest),
-        HarnessDelivery::Launch
-    );
-    assert_eq!(
-        HarnessKind::Codex.delivery(&manifest),
-        HarnessDelivery::Launch
-    );
-    assert_eq!(
-        HarnessKind::OpenCode.delivery(&manifest),
-        HarnessDelivery::Read
-    );
+    for kind in [
+        HarnessKind::Claude,
+        HarnessKind::Codex,
+        HarnessKind::OpenCode,
+    ] {
+        assert_eq!(
+            kind.delivery(&manifest),
+            HarnessDelivery::Launch,
+            "{kind:?}"
+        );
+    }
     assert_eq!(HarnessKind::Qwen.delivery(&manifest), HarnessDelivery::Read);
 }
