@@ -313,6 +313,16 @@ b_aliases() {
     channels="$("$(vibe_bin)" app versions org.vibevm.node/node --json --offline 2>/dev/null |
         python3 -I -c "$B_CHANNELS_PY" 2>/dev/null)"
     [ -z "$channels" ] || out="${out:+$out,}$channels"
+    # The two halves overlap on purpose. The shim writes nvm's `lts/` alias
+    # files the moment it learns which lines are LTS, exactly as nvm writes
+    # them on reading a release index — so once it has, a line is in the
+    # store **and** in vibe's channel answer. Whichever source knew it
+    # first, it is one fact and the field carries it once; the store wins,
+    # because the store is what nvm would read. A name the two disagree
+    # about is the one case worth seeing twice, and it would be a real
+    # divergence rather than this bookkeeping.
+    [ -z "$out" ] || out="$(printf '%s' "$out" | command tr ',' '\n' |
+        command awk -F= '!seen[$1]++' | command paste -sd, -)"
     printf '%s' "${out:-none}"
 }
 
