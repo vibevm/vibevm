@@ -938,6 +938,21 @@ JSON `usage` record rather than `read-usage.sh`'s; **an interactive run was not
 measured.** Rows C1–C7 and N1 are therefore **[V]**; C8 did not run; the Codex,
 other-harness and import rows were never authorised and stay as they were.
 
+**Cost rule, owner 2026-11-11 — and it narrows every row below.** «для
+экономии токенов пожалуйста запускай qwen на супер маленьких проектах и на
+локальном инференсе … Все равно для задач вычисления префикса нам неинтересно
+гонять большие проекты.» From here on a **live** session uses the local
+`qwen3.8-27b` (56,000 tokens) and the **tiny** sample — the unpadded ~2.5 KB
+lane, or at most a medium one that fits 56k with headroom — and every
+**real-size** claim is proved **offline** against the fake provider, where a
+202 KB lane costs nothing. This loses no evidence: "does the lane arrive
+whole and exactly once" is a question about bytes in a request, which a
+recorder answers better than a model does, and what a live session adds is
+whether the *router* is obeyed, which the tiny sample shows just as well. The
+`gpt-6.1-sol` and 202 KB live rows already recorded stay as evidence and are
+not to be repeated; a new live run on a large lane or a metered model needs
+the owner to ask for it.
+
 **Sample project.** A small vibe project whose lane is padded to the real size,
 with unique canary words: one in the last line of `STATIC.xml`, one in each
 INDEX file, one in the entrypoint outside the block. The agent lane's last

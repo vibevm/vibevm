@@ -53,6 +53,23 @@ The canaries, and what each one answers:
 | `CANARY-NESTED-TUFF` | `nested/AGENTS.md` | did downward discovery pull a sub-project's instruction file in? |
 | `CANARY-NESTED-LANE-SCORIA` | the nested project's lane | did the agent read a nested project's lane? It must not. |
 
+**Cost rule, owner 2026-11-11 — small projects and local inference.**
+«для экономии токенов пожалуйста запускай qwen на супер маленьких проектах и
+на локальном инференсе … Все равно для задач вычисления префикса нам
+неинтересно гонять большие проекты.» So, for every harness this campaign
+measures from here on:
+
+- **Live sessions use the local model** — `homelocal/qwen3.8-27b`, a
+  56,000-token context — and the **tiny** sample, the unpadded ~2.5 KB lane,
+  or at most a medium one that fits 56k with headroom.
+- **The real-size proofs are offline**, against the fake provider, where a
+  202 KB lane costs nothing: `opencode-capture.sh`, `qwen-capture.sh`,
+  `opencode-subagent-capture.sh`. A delivery question is about *bytes in a
+  request*, and a recorder answers it better than a model does.
+- A live run on a large lane or a metered model needs the owner to ask for
+  it. The rows that were taken that way before this rule are kept as
+  evidence and are **not** to be repeated.
+
 **The one prompt.** Every delivery step uses the same prompt, so the answers
 compare:
 
