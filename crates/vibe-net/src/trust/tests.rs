@@ -53,3 +53,21 @@ fn an_installation_that_names_certificates_says_so_in_its_refusal() {
     std::fs::write(&path, "-----BEGIN CERTIFICATE-----\nnot base64\n").unwrap();
     assert!(TrustSet::from_paths(&[path]).is_err());
 }
+
+#[test]
+fn the_offered_protocols_are_only_what_this_build_of_reqwest_can_speak() {
+    // A pre-configured TLS configuration replaces reqwest's own, ALPN
+    // included. The workspace builds reqwest without its `http2` feature,
+    // so offering `h2` would let a server that prefers HTTP/2 — which
+    // every large host does — select a protocol `hyper-util` then panics
+    // on ("http2 feature is not enabled"), turning every download against
+    // a real host into a crash. Found on Windows against a live host, not
+    // by a local fixture: no local fixture here negotiates HTTP/2.
+    assert_eq!(ALPN, [b"http/1.1".as_slice()]);
+    let config = TrustSet::from_paths(&[]).unwrap().client_config().unwrap();
+    assert_eq!(config.alpn_protocols, vec![b"http/1.1".to_vec()]);
+    assert!(
+        !config.alpn_protocols.iter().any(|name| name == b"h2"),
+        "offering h2 needs reqwest's `http2` feature in the same change"
+    );
+}

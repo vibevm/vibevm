@@ -31,6 +31,13 @@ mod x509;
 pub use bundle::{SYSTEM_STORE_NAMES, system_certificates};
 pub(crate) use verifier::provider;
 
+/// The application protocols every vibe TLS client offers.
+///
+/// HTTP/1.1 only: see [`TrustSet::client_config`]. Adding `h2` here is
+/// safe only together with `reqwest`'s `http2` feature in the workspace
+/// manifest, and the two must move in one change.
+pub const ALPN: [&[u8]; 1] = [b"http/1.1"];
+
 /// Why the configured extra certificates cannot be trusted.
 ///
 /// ```
@@ -230,8 +237,14 @@ impl TrustSet {
     /// installation is built from — the one construction point, so a new
     /// client cannot be given a different trust set by accident.
     ///
-    /// The ALPN list is vibe's own rather than `reqwest`'s, because a
-    /// pre-configured TLS configuration is used exactly as given.
+    /// A pre-configured TLS configuration is used by `reqwest` exactly as
+    /// given, so this one also owns the ALPN list — and it must offer
+    /// only what this build of `reqwest` can actually speak. The
+    /// workspace builds `reqwest` without its `http2` feature, so
+    /// offering `h2` would let a server that prefers HTTP/2 (every large
+    /// host does) select a protocol `hyper-util` then panics on. Offering
+    /// `http/1.1` alone is exactly what `reqwest` offers for itself under
+    /// these features; [`ALPN`] is asserted against that.
     pub fn client_config(&self) -> Result<rustls::ClientConfig, TrustError> {
         let provider = verifier::provider();
         let mut config = rustls::ClientConfig::builder_with_provider(provider)
@@ -242,7 +255,7 @@ impl TrustSet {
             .dangerous()
             .with_custom_certificate_verifier(self.verifier()?)
             .with_no_client_auth();
-        config.alpn_protocols = vec![b"h2".to_vec(), b"http/1.1".to_vec()];
+        config.alpn_protocols = ALPN.iter().map(|name| name.to_vec()).collect();
         Ok(config)
     }
 
@@ -278,7 +291,7 @@ impl TrustSet {
             .dangerous()
             .with_custom_certificate_verifier(verifier)
             .with_no_client_auth();
-        config.alpn_protocols = vec![b"h2".to_vec(), b"http/1.1".to_vec()];
+        config.alpn_protocols = ALPN.iter().map(|name| name.to_vec()).collect();
         Ok(config)
     }
 
