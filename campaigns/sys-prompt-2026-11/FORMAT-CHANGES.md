@@ -833,7 +833,7 @@ instructions as text, and **amends `SP-FMT-105`**, whose per-harness
   (system-message offset 260), the inserted bytes `AGENT-LANE.md` byte for
   byte plus one LF, the lane exactly once, tools and every non-system
   message and parameter identical, two consecutive launches byte-identical
-  for the whole request (system sha `671683cfeed40a34`), and the
+  for the whole request (system sha `35bd245f386c120d`), and the
   general-purpose subagent, the security classifier and the memory extractor
   each byte-identical to their plain counterparts with **zero** lane
   canaries. Headless: the same at raw offset **306**. Both `VERDICT: PASS`.
