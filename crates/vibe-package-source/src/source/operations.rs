@@ -191,19 +191,22 @@ impl InstallResolver {
     }
 
     /// Enumerate every `group` that publishes a package of the bare
-    /// `name` — the candidate set short-name resolution (PROP-008
-    /// §2.6) walks. The local-directory path scans the registry tree;
-    /// the multi-registry path walks each registry's index. The result
-    /// is de-duplicated and sorted; `len() > 1` is a collision. Not
-    /// part of [`InstallSource`]: qualification is the surface's input
-    /// boundary, reached through [`crate::PackageQualifier`].
-    pub fn candidate_groups(&self, name: &str) -> Result<Vec<Group>> {
-        Ok(self.short_name_candidates(name)?.exact)
+    /// `name`. The local-directory path scans the registry tree; the
+    /// multi-registry path walks each registry's index. The result is
+    /// de-duplicated and sorted.
+    ///
+    /// **Not the short-name resolution candidate set.** Since the
+    /// owner's 2026-11-12 ruling a bare spelling resolves only through
+    /// a name a registry ISSUED (PROP-008 §2.6 `##ISSUED-NAMES-ONLY`);
+    /// bearing the name grants a package nothing, and this list is what
+    /// a refusal prints so the operator can copy a qualified name.
+    /// Resolution is [`Self::short_name_candidates`].
+    pub fn groups_publishing_name(&self, name: &str) -> Result<Vec<Group>> {
+        Ok(self.short_name_candidates(name)?.named)
     }
 
-    /// [`Self::candidate_groups`] with the short spellings the walked
-    /// registries OFFER for the name beside the ones that really carry
-    /// it (PROP-008 §2.6).
+    /// The spellings the walked registries have ISSUED for `name`, with
+    /// the groups that merely publish it beside them (PROP-008 §2.6).
     ///
     /// Same walk, same sources, same exclusions: this is the resolver
     /// the command would have resolved the package through, so a
@@ -230,7 +233,7 @@ impl InstallResolver {
                 }
                 if let Some(m) = declared {
                     let declared = m.resolve_short_name(name)?;
-                    gathered(String::new(), NameLookup::of_groups(declared.exact));
+                    gathered(String::new(), NameLookup::of_groups(declared.named));
                     for candidate in declared.aliases {
                         answers.extend(candidate.registries.into_iter().map(|registry| {
                             (
@@ -246,6 +249,76 @@ impl InstallResolver {
             }
         }
         Ok(ShortNameCandidates::gather(answers))
+    }
+
+    /// The names of the registries this resolver actually walks, in
+    /// declared order — what a short-name refusal names as consulted.
+    ///
+    /// Read off the resolver itself and never re-enumerated from
+    /// configuration, so a registry the effective source policy
+    /// excluded is already absent here rather than being filtered out
+    /// again by a second rule that could drift from the first.
+    pub fn consulted_registries(&self) -> Vec<String> {
+        let declared = |multi: &vibe_registry::MultiRegistryResolver| -> Vec<String> {
+            multi
+                .sources()
+                .map(|sources| {
+                    sources
+                        .iter()
+                        .map(|source| source.name().to_owned())
+                        .collect()
+                })
+                .unwrap_or_default()
+        };
+        match self {
+            InstallResolver::Local(registry, _) => vec![local_name(registry)],
+            InstallResolver::LockedLocal {
+                local: registry,
+                held,
+                ..
+            } => {
+                let mut names = vec![local_name(registry)];
+                names.extend(declared(held));
+                names
+            }
+            InstallResolver::Multi(multi, _) => declared(multi),
+            InstallResolver::Embedded {
+                locals,
+                declared: d,
+                ..
+            } => {
+                let mut names: Vec<String> = locals.iter().map(local_name).collect();
+                if let Some(multi) = d {
+                    names.extend(declared(multi));
+                }
+                names
+            }
+        }
+    }
+
+    /// The registries the effective source policy leaves declared but
+    /// never contacts, named as the operator declared them — what a
+    /// refusal names as deliberately not asked (PROP-073
+    /// `#SOURCE-POLICY`).
+    ///
+    /// A policy this resolver cannot read says nothing rather than
+    /// failing the lookup: the resolution that follows reports that
+    /// fault properly, and a refusal is no place to learn of it first.
+    pub fn policy_skipped_registries(&self) -> Vec<String> {
+        let disabled = |multi: &vibe_registry::MultiRegistryResolver| -> Vec<String> {
+            multi
+                .disabled_registries()
+                .map(|rows| rows.iter().map(|row| row.name.clone()).collect())
+                .unwrap_or_default()
+        };
+        match self {
+            InstallResolver::Local(..) => Vec::new(),
+            InstallResolver::LockedLocal { held, .. } => disabled(held),
+            InstallResolver::Multi(multi, _) => disabled(multi),
+            InstallResolver::Embedded { declared, .. } => {
+                declared.as_deref().map(disabled).unwrap_or_default()
+            }
+        }
     }
 }
 

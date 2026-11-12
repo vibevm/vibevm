@@ -12,11 +12,13 @@ use vibe_registry::short_name::AliasTarget;
 use super::{Candidate, Lookup};
 
 /// `node → org.vibevm.node/node` — the one line that says what vibe
-/// decided on the operator's behalf. An alias adds who decided it:
-/// `qwen → org.vibevm.qwen/qwen-code (alias in registry vibespecs)`,
-/// because a spelling that lands on a differently-named package is a
-/// bigger step than supplying a group, and the operator is owed the
-/// name of the registry that took it.
+/// decided on the operator's behalf. A registry-issued spelling adds
+/// who decided it: `qwen → org.vibevm.qwen/qwen-code (alias in registry
+/// vibespecs)`, because the operator typed neither half of that
+/// identity and is owed the name of the registry that supplied it.
+/// Since every registry candidate is now an issued spelling, that is
+/// the ordinary shape of this line; a bare `node → org.vibevm.node/node`
+/// without the attribution means the home's own inventory answered.
 pub(super) fn provenance(name: &str, candidate: &Candidate) -> String {
     format!("{name} → {}", candidate.spelling(name))
 }
@@ -66,8 +68,10 @@ pub(super) fn render_not_found(command: &str, name: &str, lookup: &Lookup) -> St
         );
     }
     let mut message = format!(
-        "could not resolve the short name `{name}` — no package of that name is installed in \
-         this home or carried by a consulted registry's index.\n",
+        "the short name `{name}` is not issued by any consulted registry; give the full name.\n\
+         A short name exists only when a registry's own alias table issues it — being named \
+         `{name}` grants a package nothing, and this home has nothing of that name installed \
+         either.\n",
     );
     let _ = match lookup.consulted.as_slice() {
         [] => writeln!(message, "consulted: (no registry answered)"),
@@ -101,10 +105,32 @@ pub(super) fn render_not_found(command: &str, name: &str, lookup: &Lookup) -> St
              contributes no candidate.",
         );
     }
-    let _ = write!(
-        message,
-        "Give the qualified form instead, e.g. `{command} <group>/{name}`.",
-    );
+    // The hint: the packages that BEAR the spelling. They are listed so
+    // the operator can copy one, and the sentence says plainly that
+    // none of them was chosen — a name no registry issued must not
+    // become resolvable by accident just because the refusal mentions a
+    // package (PROP-008 §2.6 `##ISSUED-NAMES-ONLY`).
+    let named: Vec<String> = lookup
+        .named
+        .iter()
+        .map(|group| format!("{group}/{name}"))
+        .collect();
+    match named.as_slice() {
+        [] => {
+            let _ = write!(
+                message,
+                "Give the qualified form instead, e.g. `{command} <group>/{name}`.",
+            );
+        }
+        named => {
+            let _ = writeln!(
+                message,
+                "packages named `{name}`, none of them chosen for you — copy one in full: {}",
+                named.join(", "),
+            );
+            let _ = write!(message, "e.g. `{command} {}`.", named[0]);
+        }
+    }
     message
 }
 

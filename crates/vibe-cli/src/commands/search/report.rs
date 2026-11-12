@@ -56,6 +56,19 @@ pub(super) struct HitRow {
     pub(super) score: u32,
     pub(super) matched_tokens: Vec<String>,
     pub(super) description: Option<String>,
+    /// The short names a consulted registry has ISSUED for this package
+    /// (PROP-008 §2.6 `##ISSUED-NAMES-ONLY`) — the spellings an operator
+    /// may actually type bare, sorted and de-duplicated across the
+    /// registries searched. Empty is the normal state and means the
+    /// package is reachable only by its qualified `<group>/<name>`:
+    /// since the owner's 2026-11-12 ruling, being *called* `qwen-code`
+    /// is not a short name. A search is not a resolution, so this is
+    /// reported and never acted on.
+    ///
+    /// A fresh search-cache hit carries no marks — the table is read
+    /// from the registry, not from the cached hit list — so
+    /// `--no-cache` is what shows them for an HTTP-served index.
+    pub(super) short_names: Vec<String>,
     pub(super) registry: String,
     /// `"index"` (served from the registry's `vibe-index` server) or
     /// `"full-scan"` (built by walking the org's repos directly).

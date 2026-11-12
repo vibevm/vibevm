@@ -7,7 +7,7 @@ Spec: [`PROP-005 §2.4 / §2.6`](../../../spec/modules/vibe-index/PROP-005-packa
 ```
 <data-dir>/
 ├── hello.json                           the eternal handshake — read FIRST
-├── aliases.toml                         the OWNER's short spellings — an INPUT
+├── aliases.toml                         the short names the OWNER ISSUES — an INPUT
 ├── repomd.json                          manifest of what the WRITER writes
 ├── primary.jsonl                        one VersionEntry per line, sorted
 ├── primary.jsonl.gz                     deterministic gzip sibling
@@ -174,8 +174,8 @@ answers — with the current thing, a re-address pointer, or a tombstone
 with a reason — never with silence. `tombstone` is omitted when the
 name is alive.
 
-A name that is a short spelling the registry OFFERS for another package
-answers with an `alias` pointer instead (PROP-008 §2.6):
+A name this registry has ISSUED as a short spelling carries an `alias`
+pointer beside its candidate set (PROP-008 §2.6):
 
 ```json
 {
@@ -186,15 +186,39 @@ answers with an `alias` pointer instead (PROP-008 §2.6):
 }
 ```
 
+An issued name MAY be the name a package in this registry actually
+bears, and since the owner's ruling of 2026-11-12 that is the ordinary
+row — it is the only thing that makes a bare `vibe install node` reach
+`org.vibevm.node/node` at all. Such a file carries both members:
+
+```json
+{
+  "name": "node",
+  "indexed_at": "2026-11-12T12:00:00Z",
+  "alias": { "group": "org.vibevm.node", "name": "node" },
+  "packages": [ { "group": "org.vibevm.node", "name": "node", "versions": [ … ] } ]
+}
+```
+
 `alias` rides **beside** `packages[]` and never inside it, and that
 placement is the whole compatibility story: a reader that has never
 heard of aliases sees the candidate set it always saw — empty, for a
-pure alias — and says the name is not carried, which is the truthful
-answer for a reader that cannot follow the pointer. An alias smuggled in
-as a candidate would have been read as a real package of that name. A
-reader that knows the member still prefers `packages[]`: a name somebody
-publishes is never displaced by a spelling somebody offers. `alias` is
-omitted when the name is not a spelling, which is almost always.
+spelling of a differently-named package; the real package, for an
+issued name the registry also publishes — and in neither case is it
+misled about what exists. An alias smuggled in as a candidate would
+have been read as a real package of that name.
+
+What the two members MEAN to a current reader changed on 2026-11-12:
+`alias` is the resolution candidate, and `packages[]` is enumeration.
+Before that date `packages[]` outranked `alias`; now a bare spelling
+resolves through `alias` alone, and `packages[]` serves the refusal's
+hint for a name nobody issued. A vibe of 1.0.12 or older still prefers
+`packages[]`, which is why issuing a name equal to the package's own
+name is **safely redundant** there rather than a behaviour change: both
+readers reach the same `(group, name)`.
+
+`alias` is omitted when the registry has issued no spelling under that
+name.
 
 ## VersionEntry {#versionentry}
 
@@ -293,21 +317,32 @@ package carries none of the four.
   author's one-way act — the bytes are immutable, and a hash mismatch
   is an alarm.
 
-## `aliases.toml` — the registry owner's short spellings {#aliases}
+## `aliases.toml` — the short names this registry ISSUES {#aliases}
 
-The short spellings this registry offers for packages it carries
-(PROP-008 §2.6). Authored by the registry OWNER — whoever builds and
-publishes this index — and by nobody else: a package cannot declare its
-own alias, because a short spelling is a registry-wide namespace while a
+The short names this registry issues for packages it carries (PROP-008
+§2.6). Authored by the registry OWNER — whoever builds and publishes
+this index — and by nobody else: a package cannot declare its own
+alias, because a short spelling is a registry-wide namespace while a
 package author owns one `(group, name)` corner of it.
 
+**This table is the whole short-name namespace.** Owner ruling,
+2026-11-12: «мы не можем дать людям самим выбирать любое имя» — a
+package's own `name` is not a short name either, so a bare `vibe
+install <x>` resolves through a row here and through nothing else. A
+package this registry carries and has issued no name for is reachable
+only as `<group>/<name>`.
+
 ```toml
-# vibe registry alias table 1 — short spellings this registry offers.
+# vibe registry alias table 1 — the short names this registry issues.
 schema = 1
 
 [aliases]
+node = "org.vibevm.node/node"
 qwen = "org.vibevm.qwen/qwen-code"
 ```
+
+The `node` row is the shape most rows have: the name a package already
+bears, issued so that it can be typed bare.
 
 **It is an INPUT, not a projection.** It sits beside the journal among
 the things the catalog is computed FROM, so it is not in
@@ -330,9 +365,13 @@ own index and refuse it entire:
 | the alias obeys the package-name grammar | it is typed where a package name is typed |
 | the target is fully qualified and unversioned | supplying the group is the point; version selection stays the operator's |
 | the target is a package THIS registry carries | an alias points into the registry that offers it, never across |
-| the alias is not a name this registry publishes | a real name outranks every alias, so such a row could never be chosen |
-| the alias is not an alias of an alias | one spelling, one step, one readable answer, no loops |
+| the alias is not an alias of an alias | one spelling, one step, one readable answer, no loops — the test is whether the target's name is another row meaning a DIFFERENT package, so `node = "…/node"` and two rows for one package both stand |
 | the alias is not a buried name | a retirement is not reversible by another hand; `superseded_by` is the sanctioned redirect |
+
+The rule this table had until 2026-11-12 and no longer has: *the alias
+is not a name this registry publishes*. It protected a precedence
+(«a real name outranks every alias») that the owner's ruling removed,
+and it forbade exactly the rows the ruling now requires.
 
 One target per alias needs no rule of ours: a TOML table cannot hold a
 key twice. A READER that finds a faulty row drops it with a warning and

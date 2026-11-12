@@ -1,13 +1,22 @@
 //! `vibe registry alias <registry> add|remove|list` — the maintainer's
-//! edits to the short spellings a directory-layout registry offers
+//! edits to the short names a directory-layout registry ISSUES
 //! (PROP-008 §2.6).
+//!
+//! Since the owner's ruling of 2026-11-12 these rows are the WHOLE
+//! short-name namespace a client resolves through: a package this
+//! registry carries is reachable as `<group>/<name>` always, and as a
+//! bare `<name>` only once a row here issues that spelling. So
+//! `node = "org.vibevm.node/node"` — a row the earlier design refused
+//! outright — is the ordinary edit.
 //!
 //! The table lives at `<registry>/_index/aliases.toml` and is the
 //! registry OWNER's: whoever can publish into the registry can say what
 //! its short spellings mean, and a package author cannot. That is the
 //! whole point of the owner's ruling — a short name is a registry-wide
 //! namespace, and letting packages claim them would be «an
-//! uncontrolled war for short names».
+//! uncontrolled war for short names» — nor is a package reachable by
+//! its own name merely because it bears it: «мы не можем дать людям
+//! самим выбирать любое имя».
 //!
 //! **The table and the built index move in one commit.** The edit rides
 //! the ordinary publish batch, as a mirror's record and its history
@@ -119,7 +128,7 @@ pub(super) fn run_alias(
         RegistryAliasAction::Remove { alias } => {
             if table.remove(&alias).is_none() {
                 bail!(
-                    "registry `{}` offers no alias `{alias}` — `vibe registry alias {} list` \
+                    "registry `{}` issues no short name `{alias}` — `vibe registry alias {} list` \
                      shows the ones it does",
                     section.name,
                     section.name,

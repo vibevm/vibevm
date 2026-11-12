@@ -17,6 +17,10 @@ pub(super) struct LayoutSearch {
     pub hits: Vec<SearchHit>,
     /// Why the persisted index was not used, when it was not.
     pub stale: Option<String>,
+    /// The registry's issued short names, `(spelling, target)` — read
+    /// off the index this search already projected, so marking them
+    /// costs a directory-layout registry nothing (PROP-008 §2.6).
+    pub issued: Vec<(String, vibe_registry::short_name::AliasTarget)>,
 }
 
 pub(super) fn search(
@@ -52,5 +56,22 @@ pub(super) fn search(
             Some(format!("index is stale ({reason}); computed in memory"))
         }
     };
-    Ok(LayoutSearch { hits, stale })
+    let issued = index
+        .aliases
+        .iter()
+        .map(|(alias, target)| {
+            (
+                alias.clone(),
+                vibe_registry::short_name::AliasTarget {
+                    group: target.group.clone(),
+                    name: target.name.clone(),
+                },
+            )
+        })
+        .collect();
+    Ok(LayoutSearch {
+        hits,
+        stale,
+        issued,
+    })
 }

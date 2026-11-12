@@ -20,7 +20,7 @@
 
 specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#root");
 
-use std::collections::HashMap;
+use std::collections::{BTreeMap, BTreeSet, HashMap};
 use std::path::Path;
 
 use anyhow::{Context, Result, bail};
@@ -37,6 +37,7 @@ use vibe_registry::{
 use crate::cli::SearchArgs;
 use crate::output;
 
+mod human;
 mod layout;
 mod purl;
 mod report;
@@ -222,6 +223,12 @@ pub fn run(ctx: &output::Context, args: SearchArgs, env: SearchEnv) -> Result<()
     let mut full_scanned: Vec<String> = Vec::new();
     let mut full_scan_unsupported: Vec<UnreachableRegistry> = Vec::new();
     let mut by_pkg: HashMap<(PackageKind, String), HitRow> = HashMap::new();
+    // Package name → the short names a consulted registry has ISSUED
+    // for it (PROP-008 §2.6). Accumulated across the whole walk and
+    // stamped onto the rows at the end, so the de-duplication that
+    // keeps one row per `(kind, name)` cannot lose a mark another
+    // registry contributed.
+    let mut issued: BTreeMap<String, BTreeSet<String>> = BTreeMap::new();
 
     let registry_search = progress.task("Searching configured registries");
     registry_search.set_progress(0, Some(target_registries.len() as u64), "registries");
@@ -254,6 +261,7 @@ pub fn run(ctx: &output::Context, args: SearchArgs, env: SearchEnv) -> Result<()
                     for hit in &found.hits {
                         insert_hit_keep_highest(&mut by_pkg, make_hit_row(hit, &reg.name));
                     }
+                    collect_issued(&mut issued, found.issued);
                     if let Some(note) = found.stale {
                         component.detail(note);
                     }
@@ -378,6 +386,23 @@ pub fn run(ctx: &output::Context, args: SearchArgs, env: SearchEnv) -> Result<()
                 match client.search(&query, kind_filter, Some(args.limit)) {
                     Ok(results) => {
                         searched.push(reg.name.clone());
+                        // One extra GET of the registry's own
+                        // `aliases.toml`, and only when it has
+                        // something to say about — a table this run
+                        // cannot read simply marks nothing (PROP-008
+                        // §2.6).
+                        if !results.hits.is_empty() {
+                            match client.alias_table() {
+                                Ok(rows) => collect_issued(&mut issued, rows),
+                                Err(error) => tracing::debug!(
+                                    target: "vibe_registry::index_client",
+                                    registry = %reg.name,
+                                    %error,
+                                    "the registry's alias table could not be read; \
+                                     marking no issued short names for it"
+                                ),
+                            }
+                        }
                         if let Some(root) = cache_root.as_ref()
                             && let Err(e) = search_cache::save(root, &cache_key, &results)
                         {
@@ -473,6 +498,7 @@ pub fn run(ctx: &output::Context, args: SearchArgs, env: SearchEnv) -> Result<()
     }
 
     let mut hits: Vec<HitRow> = by_pkg.into_values().collect();
+    stamp_issued(&mut hits, &issued);
     hits.sort_by(|a, b| {
         b.score
             .cmp(&a.score)
@@ -511,86 +537,7 @@ pub fn run(ctx: &output::Context, args: SearchArgs, env: SearchEnv) -> Result<()
         return Ok(());
     }
 
-    println!("query     : {query}");
-    println!(
-        "registries: {} searched, {} unreachable, {} without index URL{}",
-        searched.len(),
-        unreachable.len(),
-        unconfigured.len(),
-        if full_scan {
-            format!(
-                ", {} full-scanned, {} full-scan unsupported",
-                full_scanned.len(),
-                full_scan_unsupported.len()
-            )
-        } else {
-            String::new()
-        },
-    );
-    if !searched.is_empty() {
-        println!("  searched: {}", searched.join(", "));
-    }
-    if !full_scanned.is_empty() {
-        println!("  full-scanned: {}", full_scanned.join(", "));
-    }
-    for u in &unreachable {
-        println!("  unreachable: {} — {}", u.name, u.reason);
-    }
-    for skipped in &policy_skipped {
-        println!(
-            "  policy skipped {} (availability unknown): {}",
-            skipped.name, skipped.reason
-        );
-    }
-    for u in &full_scan_unsupported {
-        println!("  full-scan unsupported: {} — {}", u.name, u.reason);
-    }
-    if !unconfigured.is_empty() {
-        println!("  no VIBEVM_INDEX_URL_<R> set: {}", unconfigured.join(", "),);
-    }
-    println!();
-
-    if hits.is_empty() {
-        if searched.is_empty() {
-            ctx.summary(
-                "(no registry has VIBEVM_INDEX_URL_<R> configured; search returns empty.\n\
-                 To install a known package, run `vibe install <group>/<name>` directly —\n\
-                 install resolves through `[[registry]]` over git and does not need an\n\
-                 index. The index is a discovery optimisation, not a runtime dependency.\n\
-                 See docs/commands/search.md for setting up an index server.)",
-            );
-        } else {
-            ctx.summary("(no matches)");
-        }
-        return Ok(());
-    }
-
-    println!(
-        "KIND    NAME                          LATEST       SCORE  SOURCE      REGISTRY              DESCRIPTION"
-    );
-    for h in &hits {
-        let latest = h.latest_stable.as_deref().unwrap_or("-");
-        let desc = h.description.as_deref().unwrap_or("");
-        println!(
-            "{:<6}  {:<28}  {:<11}  {:<5}  {:<10}  {:<20}  {}",
-            h.kind,
-            truncate(&h.name, 28),
-            latest,
-            h.score,
-            h.source,
-            truncate(&h.registry, 20),
-            truncate(desc, 60),
-        );
-    }
-    println!();
-    ctx.summary(&format!(
-        "{} hit{} across {} registr{}",
-        hits.len(),
-        if hits.len() == 1 { "" } else { "s" },
-        searched.len(),
-        if searched.len() == 1 { "y" } else { "ies" },
-    ));
-    Ok(())
+    human::render(ctx, &report, full_scan)
 }
 
 mod support;

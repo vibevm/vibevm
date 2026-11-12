@@ -1,6 +1,7 @@
 use super::*;
 
 use chrono::{DateTime, Utc};
+use vibe_core::Group;
 
 use crate::types::{NamingConvention, PackageKind, Tombstone, VersionEntry};
 
@@ -158,11 +159,14 @@ fn an_alias_naming_a_package_this_registry_lacks_is_refused() {
     );
 }
 
+/// The inverted rule. Until the owner's 2026-11-12 ruling a row whose
+/// spelling some package published was refused, because a published
+/// name outranked every alias and the row could never be chosen. The
+/// ruling removed that candidacy — «мы не можем дать людям самим
+/// выбирать любое имя» — so the row is now the only way the spelling
+/// resolves at all, and it stands.
 #[test]
-fn an_alias_that_shadows_a_real_package_name_is_refused() {
-    // The rule that keeps `nvm` honest: once somebody publishes a
-    // package actually called `nvm`, no registry may offer `nvm` as a
-    // spelling for something else.
+fn an_issued_name_a_package_also_publishes_is_allowed() {
     let mut index = registry();
     index.upsert(VersionEntry::minimal(
         PackageKind::Flow,
@@ -171,13 +175,22 @@ fn an_alias_that_shadows_a_real_package_name_is_refused() {
         "0.41.0".parse().expect("fixture version parses"),
         now(),
     ));
-    let t = table(&[("nvm", "org.vibevm.qwen", "qwen-code")]);
-    let fault = only_fault(&index, &t);
+    // Pointing `nvm` at something else is legal: the registry owner is
+    // the one who decides what the spelling means.
+    let elsewhere = table(&[("nvm", "org.vibevm.qwen", "qwen-code")]);
     assert!(
-        matches!(fault, AliasFault::ShadowsPackage { .. }),
-        "{fault:?}"
+        check(&index, &elsewhere).is_empty(),
+        "a published name no longer outranks the row: {:?}",
+        check(&index, &elsewhere)
     );
-    assert!(fault.to_string().contains("already the name"), "{fault}");
+    // And the primary case — the spelling issued for the package that
+    // bears it — is sound.
+    let itself = table(&[("nvm", "org.vibevm.nvm", "nvm")]);
+    assert!(
+        check(&index, &itself).is_empty(),
+        "`nvm → org.vibevm.nvm/nvm` is the ordinary row now: {:?}",
+        check(&index, &itself)
+    );
 }
 
 #[test]
@@ -190,6 +203,31 @@ fn an_alias_of_an_alias_is_refused() {
         "{fault:?}"
     );
     assert!(fault.to_string().contains("one step"), "{fault}");
+}
+
+/// The alias-of-an-alias test is about a second STEP, not about a
+/// spelling that happens to appear twice. A row that names itself takes
+/// one step, and so does a pair of rows meaning the same package — both
+/// must pass, or the issued-name law could not express its own primary
+/// case.
+#[test]
+fn a_row_that_names_its_own_target_is_one_step() {
+    let mut index = registry();
+    index.upsert(VersionEntry::minimal(
+        PackageKind::Flow,
+        group("org.vibevm.qwen"),
+        "qwen",
+        "1.0.0".parse().expect("fixture version parses"),
+        now(),
+    ));
+    let mut t = table(&[("qwen-code", "org.vibevm.qwen", "qwen-code")]);
+    // `qwen` and `qwen-code` both mean `org.vibevm.qwen/qwen-code`.
+    t.insert("qwen", target("org.vibevm.qwen", "qwen-code"));
+    assert!(
+        check(&index, &t).is_empty(),
+        "neither row adds a step: {:?}",
+        check(&index, &t)
+    );
 }
 
 #[test]

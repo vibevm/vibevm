@@ -9,7 +9,7 @@ use std::path::PathBuf;
 
 use clap::Subcommand;
 
-/// `vibe registry alias` — the registry owner's short spellings
+/// `vibe registry alias` — the short names the registry owner issues
 /// (PROP-008 `#short-name`). Its own file: the hub re-exports it, so
 /// `crate::cli::RegistryAliasArgs` is unchanged.
 mod alias;
@@ -98,9 +98,10 @@ pub enum RegistrySubcommand {
     /// `--update-snapshots`. PROP-002 `#registry-mirror`.
     Mirror(RegistryMirrorArgs),
 
-    /// Manage the short spellings a directory-layout registry offers for
-    /// its own packages — the registry owner's alias table
-    /// (PROP-008 §2.6). Maintainers only: it writes into the registry.
+    /// Manage the short names a directory-layout registry ISSUES for its
+    /// own packages — the registry owner's alias table (PROP-008 §2.6).
+    /// A bare `vibe install <name>` resolves through these rows alone.
+    /// Maintainers only: it writes into the registry.
     Alias(RegistryAliasArgs),
 
     /// Generate a local mirror directory containing every package

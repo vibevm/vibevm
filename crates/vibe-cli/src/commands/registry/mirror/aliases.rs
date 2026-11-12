@@ -24,10 +24,16 @@ use super::source;
 /// A row is carried only when the target will actually hold the package
 /// it names: the versions this run copies plus the ones it already had.
 /// A row that survives that and still would not stand against the
-/// target's own index — a spelling the target publishes itself — is
-/// dropped here rather than failing the run: a mirror must not become
-/// un-mirrorable because its source offers a spelling this registry
-/// already uses for something real.
+/// target's own index is dropped here rather than failing the run: a
+/// mirror must not become un-mirrorable over one row it cannot honour.
+///
+/// That set shrank on 2026-11-12. A spelling the target publishes
+/// itself used to be exactly such a row and is now the ordinary one
+/// (PROP-008 §2.6 `##ISSUED-MAY-EQUAL-THE-PACKAGE-NAME`), so it is
+/// carried — which is what lets a mirror of an index issuing
+/// `node = "org.vibevm.node/node"` answer a bare `vibe install node`
+/// at all. What still drops a row is a target this mirror does not
+/// hold, an alias of an alias, a buried name or a bad grammar.
 pub(super) fn alias_merge(
     listing: &source::SourceListing,
     planned: &[plan::Planned],

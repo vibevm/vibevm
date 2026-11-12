@@ -26,16 +26,30 @@
 //! already installed (`#LOCKFILE-AUTHORITATIVE`) and falls through to the
 //! registries' index layer.
 //!
-//! **A registry may offer a short spelling of its own.** `qwen` reaches
-//! `org.vibevm.qwen/qwen-code` when the registry carrying that package
-//! says the spelling means it (PROP-008 §2.6, `vibe_index::aliases`).
-//! The alias is the registry OWNER's, never the package author's, and it
-//! is always outranked: a package actually named `qwen`, in any consulted
-//! registry, wins outright and the alias is not even weighed. Two
-//! registries offering the same target are one candidate; two targets are
-//! the §2.7 collision. The one resolved line names the registry that
-//! decided, because a spelling that reaches a differently-named package
-//! must never arrive unattributed.
+//! **A short name is one a registry ISSUED, and nothing else.** `qwen`
+//! reaches `org.vibevm.qwen/qwen-code` because the registry carrying
+//! that package has issued the spelling in its own alias table
+//! (PROP-008 §2.6, `vibe_index::aliases`), and `node` reaches
+//! `org.vibevm.node/node` for exactly the same reason — not because a
+//! package happens to be called `node`. The owner's ruling of
+//! 2026-11-12: «если мы разрешим назначать короткие имена держателям
+//! пакетов, то всё сломается, потому что все будут бороться за эти
+//! короткие имена. Это то же самое что с доменами в интернете - мы не
+//! можем дать людям самим выбирать любое имя.» So the registry tier's
+//! candidate set is the issued spellings, full stop. The groups that
+//! publish a package bearing the name are still enumerated, because a
+//! refusal that names them lets the operator copy a qualified name —
+//! but nothing picks one, at any rank. Two registries issuing the same
+//! target are one candidate; two targets are the §2.7 collision. The
+//! one resolved line names the registry that decided, because a
+//! spelling the operator did not type must never arrive unattributed.
+//!
+//! **The installed tier is untouched by that ruling.** A verb acting on
+//! installed state resolves a bare name from this home's inventory,
+//! under names the operator already qualified once when installing, and
+//! asks no registry anything. The ruling is about a registry-wide
+//! namespace; `vibe app hold node` reading the home's own index is not
+//! in it.
 //!
 //! **Trust narrows the registry candidates.** `org.vibevm.*` is trusted by
 //! default and `untrusted_groups` takes that back (PROP-065
@@ -77,13 +91,12 @@ use render::{bare_name, provenance, render_collision, render_not_found, splice, 
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub(crate) struct Candidate {
     group: Group,
-    /// Set when this candidate was reached through a registry's ALIAS
-    /// for the spelling rather than through a package that bears it
-    /// (PROP-008 §2.6): the package the registry owner points the
-    /// spelling at, and which registries point it there. An alias
-    /// candidate only ever exists when no registry carries the name for
-    /// real — a name somebody publishes is never displaced by a
-    /// spelling somebody offers.
+    /// Set when this candidate came from a registry that ISSUED the
+    /// spelling (PROP-008 §2.6): the package the registry owner points
+    /// the spelling at, and which registries point it there. Every
+    /// registry candidate carries one, because an issued spelling is
+    /// the only thing the registry tier resolves; `None` means this
+    /// candidate came from the home's own inventory.
     alias: Option<AliasCandidate>,
     /// Whether the effective trust policy covers the group. An installed
     /// candidate is always eligible — see the module note.
@@ -101,17 +114,7 @@ impl Candidate {
         }
     }
 
-    /// A registry candidate, eligible only from a trusted group.
-    fn offered(group: Group, trust: &TrustPolicy) -> Self {
-        let eligible = trust.trusts(group.as_str());
-        Candidate {
-            group,
-            alias: None,
-            eligible,
-        }
-    }
-
-    /// A candidate reached through a registry's alias. Trust is asked
+    /// A candidate reached through a registry's issued spelling. Trust is asked
     /// about the TARGET's group — the group whose code an install would
     /// run — and never about the registry that offered the spelling: an
     /// alias moves no code and vouches for nothing.
@@ -152,6 +155,11 @@ impl Candidate {
 pub(crate) struct Lookup {
     /// Every candidate, trusted or not, sorted and de-duplicated by group.
     candidates: Vec<Candidate>,
+    /// The qualified packages that merely BEAR the bare name, across
+    /// every consulted registry — never a candidate at any rank
+    /// (PROP-008 §2.6 `##ISSUED-NAMES-ONLY`), printed by the refusal so
+    /// the operator can copy one.
+    named: Vec<Group>,
     /// The sources that actually answered, named as the operator declared
     /// them, for the not-found sentence.
     consulted: Vec<String>,
@@ -338,50 +346,6 @@ impl Sources<'_> {
     }
 }
 
-/// The names of the registries a resolver actually walks, in declared
-/// order. Read off the resolver the command uses, never re-enumerated
-/// from configuration: a registry the effective source policy excluded is
-/// already absent here.
-fn consulted(resolver: &vibe_package_source::InstallResolver) -> Vec<String> {
-    use vibe_package_source::InstallResolver;
-    let local = |registry: &vibe_registry::LocalRegistry| registry.root().display().to_string();
-    let declared = |multi: &vibe_registry::MultiRegistryResolver| -> Vec<String> {
-        multi
-            .sources()
-            .map(|sources| {
-                sources
-                    .iter()
-                    .map(|source| source.name().to_owned())
-                    .collect()
-            })
-            .unwrap_or_default()
-    };
-    match resolver {
-        InstallResolver::Local(registry, _) => vec![local(registry)],
-        InstallResolver::LockedLocal {
-            local: registry,
-            held,
-            ..
-        } => {
-            let mut names = vec![local(registry)];
-            names.extend(declared(held));
-            names
-        }
-        InstallResolver::Multi(multi, _) => declared(multi),
-        InstallResolver::Embedded {
-            locals,
-            declared: d,
-            ..
-        } => {
-            let mut names: Vec<String> = locals.iter().map(local).collect();
-            if let Some(multi) = d {
-                names.extend(declared(multi));
-            }
-            names
-        }
-    }
-}
-
 /// Qualify a package spelling for a command that resolves the package out
 /// of a registry: `vibe install -g`, `vibe app installers|plan|steps|
 /// describe|versions`.
@@ -437,22 +401,15 @@ fn lookup(sources: &Sources<'_>, name: &str) -> Result<Lookup> {
         }
     }
     let trust = trust_policy(sources.settings)?;
-    // One gatherer for every source: the real names become ordinary
-    // candidates, the registry-offered spellings become alias ones. The
-    // gather step has already dropped every alias when any registry
-    // carries the name for real, so nothing here has to rank them.
-    let offered = |found: ShortNameCandidates| -> Vec<Candidate> {
+    // One gatherer for every source: an ISSUED spelling becomes a
+    // candidate, a package that merely bears the name becomes a hint.
+    // The two no longer compete, so nothing here ranks them.
+    let issued = |found: &ShortNameCandidates| -> Vec<Candidate> {
         Lookup::sorted(
             found
-                .exact
-                .into_iter()
-                .map(|group| Candidate::offered(group, &trust))
-                .chain(
-                    found
-                        .aliases
-                        .into_iter()
-                        .map(|candidate| Candidate::aliased(candidate, &trust)),
-                )
+                .aliases
+                .iter()
+                .map(|candidate| Candidate::aliased(candidate.clone(), &trust))
                 .collect(),
         )
     };
@@ -464,8 +421,10 @@ fn lookup(sources: &Sources<'_>, name: &str) -> Result<Lookup> {
         )]))
     };
     if let Some(root) = sources.inputs.registry {
+        let found = from_local(root)?;
         return Ok(Lookup {
-            candidates: offered(from_local(root)?),
+            candidates: issued(&found),
+            named: found.named,
             consulted: vec![root.display().to_string()],
             skipped: sources.skipped(),
             offline: sources.inputs.offline,
@@ -473,18 +432,26 @@ fn lookup(sources: &Sources<'_>, name: &str) -> Result<Lookup> {
         });
     }
     // The embedded registry is first in the chain, not the whole chain
-    // (PROP-030 `#precedence`): a name it does not carry falls through.
+    // (PROP-030 `#precedence`): a spelling it has not issued falls
+    // through. It falls through even when the embedded registry
+    // publishes a package of that name, because publishing the name
+    // resolves nothing — the declared chain may still have issued the
+    // spelling, and stopping here would hide that. What the embedded
+    // registry publishes is carried along as a hint either way.
+    let mut named: Vec<Group> = Vec::new();
     if let Some(root) = sources.inputs.embedded {
         let found = from_local(root)?;
-        if !found.is_empty() {
+        if found.has_candidates() {
             return Ok(Lookup {
-                candidates: offered(found),
+                candidates: issued(&found),
+                named: found.named,
                 consulted: vec![root.display().to_string()],
                 skipped: sources.skipped(),
                 offline: sources.inputs.offline,
                 local: false,
             });
         }
+        named = found.named;
     }
     let resolver = vibe_app::global_resolver(
         sources.settings.path(),
@@ -493,9 +460,18 @@ fn lookup(sources: &Sources<'_>, name: &str) -> Result<Lookup> {
         sources.inputs.operation,
     )
     .map_err(vibe_app::AppError::from)?;
+    let found = resolver.short_name_candidates(name)?;
+    let candidates = issued(&found);
+    for group in found.named {
+        if !named.contains(&group) {
+            named.push(group);
+        }
+    }
+    named.sort();
     Ok(Lookup {
-        candidates: offered(resolver.short_name_candidates(name)?),
-        consulted: consulted(&resolver),
+        candidates,
+        named,
+        consulted: resolver.consulted_registries(),
         skipped: sources.skipped(),
         offline: sources.inputs.offline,
         local: false,

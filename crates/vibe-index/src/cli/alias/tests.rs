@@ -180,13 +180,36 @@ fn an_alias_of_a_package_this_registry_lacks_is_refused_and_writes_nothing() {
     );
 }
 
+/// The inverted rule, end to end through the verb: issuing a short name
+/// equal to a package's own name is the ordinary edit now, and it is
+/// what makes `vibe install nvm` work at all (owner, 2026-11-12).
 #[test]
-fn an_alias_that_shadows_a_published_name_is_refused() {
+fn a_short_name_equal_to_the_package_name_is_issued() {
     let tmp = tempfile::tempdir().expect("tempdir");
     let data = registry(tmp.path());
     publish(&data, "org.vibevm.nvm", "nvm", "0.41.0");
-    let error = add(&data, "nvm", "org.vibevm.qwen/qwen-code", false).expect_err("must refuse");
-    assert!(error.to_string().contains("already the name"), "{error}");
+    add(&data, "nvm", "org.vibevm.nvm/nvm", false).expect("the row stands");
+    let table = AliasTable::read(&data).expect("the table reads back");
+    assert_eq!(
+        table.get("nvm").map(aliases::spell),
+        Some("org.vibevm.nvm/nvm".to_string())
+    );
+    // The projection carries it onto the name's own candidate file,
+    // beside the package that bears the name rather than instead of it.
+    let name_entry = std::fs::read_to_string(data.join("by-name/nvm.json"))
+        .expect("the candidate file is written");
+    assert!(name_entry.contains("\"alias\""), "{name_entry}");
+    assert!(name_entry.contains("org.vibevm.nvm"), "{name_entry}");
+}
+
+/// And pointing a published spelling somewhere else is the registry
+/// owner's call, not a refusal: the spelling is the registry's to issue.
+#[test]
+fn an_issued_name_may_point_away_from_the_package_that_bears_it() {
+    let tmp = tempfile::tempdir().expect("tempdir");
+    let data = registry(tmp.path());
+    publish(&data, "org.vibevm.nvm", "nvm", "0.41.0");
+    add(&data, "nvm", "org.vibevm.qwen/qwen-code", false).expect("the row stands");
 }
 
 #[test]
@@ -201,20 +224,23 @@ fn an_unqualified_or_versioned_target_is_refused_before_anything_is_read() {
 }
 
 #[test]
-fn a_row_the_registry_outgrew_is_named_on_the_next_edit() {
-    // The whole table is re-validated on every edit, so publishing a
-    // package under a name an older row already spells is caught the
-    // next time the owner touches the table — by the person who can do
-    // something about it.
+fn a_row_the_table_outgrew_is_named_on_the_next_edit() {
+    // The whole table is re-validated on every edit, so a row that an
+    // unrelated later edit turned into a second step is caught by the
+    // person who can do something about it — and the refusal names
+    // THAT row, not the one being added.
     let tmp = tempfile::tempdir().expect("tempdir");
     let data = registry(tmp.path());
-    add(&data, "qwen", "org.vibevm.qwen/qwen-code", false).expect("the alias stands");
-    publish(&data, "com.acme", "qwen", "1.0.0");
     publish(&data, "com.acme", "other", "1.0.0");
+    add(&data, "qwen", "org.vibevm.qwen/qwen-code", false).expect("the alias stands");
 
-    let error = add(&data, "oth", "com.acme/other", false).expect_err("must refuse");
+    // `qwen-code` now spells a DIFFERENT package, so `qwen` would have
+    // to resolve in two steps.
+    let error = add(&data, "qwen-code", "com.acme/other", false).expect_err("must refuse");
     assert!(
-        error.to_string().contains("`qwen` is already the name"),
+        error
+            .to_string()
+            .contains("`qwen` names `org.vibevm.qwen/qwen-code`"),
         "the refusal must name the row that went bad, not the one being added: {error}"
     );
 }

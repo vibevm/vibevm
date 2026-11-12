@@ -188,13 +188,19 @@ impl LocalRegistry {
         Ok(groups)
     }
 
-    /// The short-name candidates as the registry's own index answers them
-    /// (PROP-002 `#registry-index`): the persisted
-    /// `_index/by-name/<name>.json` while its listing matches the tree — a
-    /// retired name then answers with no candidate — otherwise the
-    /// directory listing of [`Self::candidate_groups`], which is what the
-    /// projection of a tree without journal facts holds.
-    pub fn indexed_candidate_groups(&self, name: &str) -> Result<Vec<Group>, RegistryError> {
+    /// The groups publishing a package of this bare name, as the
+    /// registry's own index answers them (PROP-002 `#registry-index`):
+    /// the persisted `_index/by-name/<name>.json` while its listing
+    /// matches the tree — a retired name then answers with nothing —
+    /// otherwise the directory listing of [`Self::candidate_groups`],
+    /// which is what the projection of a tree without journal facts
+    /// holds.
+    ///
+    /// These are not short-name resolution candidates: since the
+    /// owner's 2026-11-12 ruling only a spelling the registry ISSUED
+    /// resolves (PROP-008 §2.6 `##ISSUED-NAMES-ONLY`), and this list
+    /// serves the refusal's hint.
+    pub fn indexed_groups_publishing(&self, name: &str) -> Result<Vec<Group>, RegistryError> {
         Ok(self.indexed_name_lookup(name)?.groups)
     }
 

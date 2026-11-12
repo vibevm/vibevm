@@ -1,5 +1,5 @@
 //! `vibe-index alias <data-dir> add|remove|list` — the registry
-//! owner's edits to the short spellings this registry offers
+//! owner's edits to the short names this registry ISSUES
 //! (PROP-008 §2.6).
 //!
 //! The table is an authored INPUT (`<data-dir>/aliases.toml`,
@@ -30,7 +30,15 @@ use crate::journal::{default_dir, project, replay};
 use crate::types::AliasTarget;
 
 #[derive(Debug, Parser)]
-#[command(about = "Manage the short spellings this registry offers for its packages.")]
+#[command(
+    about = "Manage the short names this registry issues for its packages.",
+    long_about = "Manage the short names this registry issues for its packages.\n\n\
+A bare `vibe install <name>` resolves through these rows and through nothing\n\
+else: a package carried here is reachable as `<group>/<name>` always, and as a\n\
+bare `<name>` only once a row issues that spelling. Issuing a package\u{27}s own\n\
+name — `node = \"org.vibevm.node/node\"` — is the ordinary row and is what makes\n\
+`vibe install node` work."
+)]
 pub struct Args {
     pub data_dir: PathBuf,
 
@@ -40,9 +48,12 @@ pub struct Args {
 
 #[derive(Debug, Subcommand)]
 pub enum Action {
-    /// Offer `<alias>` as a short spelling of `<group>/<name>`.
+    /// Issue `<alias>` as a short name for `<group>/<name>`.
+    ///
+    /// `<alias>` may be the package's own name; that row is what makes
+    /// the package reachable by a bare spelling at all.
     Add {
-        /// The short spelling. Obeys the package-name grammar, because
+        /// The short name. Obeys the package-name grammar, because
         /// it is typed exactly where a package name is typed.
         alias: String,
         /// The package it stands for — fully qualified, never
@@ -54,7 +65,8 @@ pub enum Action {
         #[arg(long)]
         replace: bool,
     },
-    /// Withdraw the spelling `<alias>`.
+    /// Withdraw the short name `<alias>`. A bare `<alias>` then
+    /// resolves to nothing, including when a package bears that name.
     Remove { alias: String },
     /// Print the table, one `alias -> group/name` per line.
     List,
@@ -68,7 +80,7 @@ pub fn run(args: Args) -> Result<()> {
         Action::Remove { alias } => {
             if table.remove(&alias).is_none() {
                 return Err(Error::InvalidInput(format!(
-                    "this registry offers no alias `{alias}` — `vibe-index alias {} list` \
+                    "this registry issues no short name `{alias}` — `vibe-index alias {} list` \
                      shows the ones it does",
                     data_dir.display()
                 )));

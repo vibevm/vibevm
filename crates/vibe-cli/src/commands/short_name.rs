@@ -9,23 +9,30 @@
 //! into the dependency graph — every transitive `[requires.packages]`
 //! key is already group-qualified by construction.
 //!
-//! The lookup consults the lockfile first — a locked package of that
-//! name wins outright ("the short name prefers what is already
-//! locked", PROP-008 §2.6) — then enumerates registry candidates: a
-//! local-directory registry is scanned, a multi-registry resolver
-//! walks each registry's index. Two groups under one bare name is a
-//! collision the resolver refuses to guess past (PROP-008 §2.7).
+//! **A short name is one a registry ISSUED.** The owner's ruling of
+//! 2026-11-12: «если мы разрешим назначать короткие имена держателям
+//! пакетов, то всё сломается, потому что все будут бороться за эти
+//! короткие имена. Это то же самое что с доменами в интернете - мы не
+//! можем дать людям самим выбирать любое имя.» So the registries'
+//! alias tables are the whole of the registry tier
+//! (`vibe_index::aliases`, written by the registry OWNER and never by a
+//! package author), and a package merely *called* `opencode` is not a
+//! candidate for the spelling `opencode`. The groups that publish the
+//! name are still enumerated — the refusal prints them, so an operator
+//! can copy a qualified name out of the message — but nothing picks
+//! one.
 //!
-//! A registry may also OFFER a short spelling for a package of another
-//! name — `qwen` for `org.vibevm.qwen/qwen-code` — written by that
-//! registry's owner into its own alias table and never by a package
-//! author (PROP-008 §2.6, `vibe_index::aliases`). An alias is reached
-//! only when no source carries the bare name for real: the lockfile
-//! first, then every allowed registry's candidate set, and only then
-//! the spellings they offer. Trust does not narrow the alias side here,
-//! because it does not narrow the exact side here either — the
-//! application boundary, where an install runs the author's code, is
-//! where that filter lives (`commands::app::short_name`).
+//! **What still resolves locally.** The lockfile is consulted first: a
+//! locked package of that name wins outright ("the short name prefers
+//! what is already locked", `##LOCKFILE-AUTHORITATIVE`). That tier is
+//! untouched by the ruling, which is about a registry-wide namespace:
+//! `vibe.lock` is this project's own record of what it installed, under
+//! names it already qualified once, and resolving against it asks no
+//! registry anything.
+//!
+//! Two issued targets under one spelling is a collision the resolver
+//! refuses to guess past (PROP-008 §2.7, exit `7`); two registries
+//! issuing the same target are one candidate.
 
 specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-008#short-name");
 
@@ -39,21 +46,35 @@ use crate::exit_code::InstallError;
 
 /// The outcome of resolving one bare package name.
 enum ShortNameOutcome {
-    /// Exactly one `(group, name)` package matched.
+    /// Exactly one `(group, name)` package matched — from `vibe.lock`,
+    /// the one tier that still answers a bare name without an issued
+    /// spelling behind it.
     Resolved(Group),
-    /// No package matched the name, but exactly one registry-offered
-    /// ALIAS did (PROP-008 §2.6): the spelling stands for a package
-    /// under another name, and this is the package. Only ever reached
-    /// when nothing — lockfile or registry — carries the bare name for
-    /// real, because a name somebody publishes outranks a spelling
-    /// somebody offers.
+    /// Exactly one registry had ISSUED this spelling (PROP-008 §2.6):
+    /// the name stands for that package, and this is it. The whole of
+    /// the registry tier since the owner's 2026-11-12 ruling.
     ResolvedAlias(Box<AliasCandidate>),
-    /// No package of that name was found in any source.
-    NotFound,
+    /// No registry issued the spelling. The variant carries what the
+    /// refusal needs: the qualified packages that merely BEAR the name
+    /// (a hint to copy, never a choice), and the registries consulted
+    /// and deliberately skipped.
+    NotIssued(NotIssued),
     /// More than one candidate matches the name — a collision
     /// (PROP-008 §2.7). The variant carries at least two qualified
     /// spellings, sorted and de-duplicated, and the form to re-run with.
     Ambiguous(Vec<String>, String),
+}
+
+/// What a refusal says when no consulted registry issued the spelling.
+struct NotIssued {
+    /// `<group>/<name>` for every package that bears the bare name —
+    /// the hint, printed so the operator can copy one, never picked.
+    hint: Vec<String>,
+    /// The registries that were walked, in declared order.
+    consulted: Vec<String>,
+    /// The registries the effective source policy leaves declared and
+    /// never contacts.
+    skipped: Vec<String>,
 }
 
 /// De-duplicate a stream of groups and sort the result, so a caller
@@ -86,7 +107,8 @@ fn locked_groups(lockfile: &Lockfile, name: &str) -> Vec<Group> {
 /// The lockfile is consulted first: a single locked entry of that
 /// name wins; two locked entries under different groups are already a
 /// collision the lockfile cannot break. With nothing locked, the
-/// registries reachable through `resolver` are enumerated.
+/// registries reachable through `resolver` are asked which spellings
+/// they have ISSUED — and only that.
 fn resolve(
     resolver: &InstallResolver,
     name: &str,
@@ -103,21 +125,12 @@ fn resolve(
         ));
     }
     let found = resolver.short_name_candidates(name)?;
-    if let [only] = found.exact.as_slice() {
-        return Ok(ShortNameOutcome::Resolved(only.clone()));
-    }
-    if !found.exact.is_empty() {
-        return Ok(ShortNameOutcome::Ambiguous(
-            qualified(&found.exact, name),
-            format!("{}/{name}", found.exact[0]),
-        ));
-    }
-    // Only now the aliases: `gather` has already cleared them if any
-    // registry carried the bare name for real, so reaching here means
-    // nobody publishes it and the registries' own spellings are the
-    // whole answer.
     match found.aliases.as_slice() {
-        [] => Ok(ShortNameOutcome::NotFound),
+        [] => Ok(ShortNameOutcome::NotIssued(NotIssued {
+            hint: qualified(&found.named, name),
+            consulted: resolver.consulted_registries(),
+            skipped: resolver.policy_skipped_registries(),
+        })),
         [only] => Ok(ShortNameOutcome::ResolvedAlias(Box::new(only.clone()))),
         many => Ok(ShortNameOutcome::Ambiguous(
             many.iter().map(AliasCandidate::provenance).collect(),
@@ -150,6 +163,52 @@ fn render_collision(name: &str, candidates: &[String], hint: &str) -> String {
     msg
 }
 
+/// The refusal for a spelling no registry issued (PROP-008 §2.6
+/// `##ISSUED-NAMES-ONLY`).
+///
+/// It says the one thing that is true — nobody issued this name — then
+/// names who was asked, who was deliberately not asked, and the
+/// qualified packages that merely bear the spelling. The hint is a list
+/// to copy from, and the sentence says so: a name that is not issued
+/// must not be resolvable by accident just because the message happens
+/// to mention one package.
+fn render_not_issued(name: &str, refusal: &NotIssued) -> String {
+    use std::fmt::Write as _;
+    let mut msg = format!(
+        "the short name `{name}` is not issued by any consulted registry; give the full name.\n\
+         A short name exists only when a registry's own alias table issues it — being named \
+         `{name}` grants a package nothing.\n",
+    );
+    let _ = match refusal.consulted.as_slice() {
+        [] => writeln!(msg, "consulted: (no registry answered)"),
+        consulted => writeln!(msg, "consulted: {}", consulted.join(", ")),
+    };
+    if !refusal.skipped.is_empty() {
+        let _ = writeln!(
+            msg,
+            "not consulted, excluded by the effective source policy: {}",
+            refusal.skipped.join(", "),
+        );
+    }
+    match refusal.hint.as_slice() {
+        [] => {
+            let _ = write!(
+                msg,
+                "Give the qualified form instead, e.g. `vibe install <group>/{name}`.",
+            );
+        }
+        hint => {
+            let _ = writeln!(
+                msg,
+                "packages named `{name}`, none of them chosen for you — copy one in full: {}",
+                hint.join(", "),
+            );
+            let _ = write!(msg, "e.g. `vibe install {}`.", hint[0]);
+        }
+    }
+    msg
+}
+
 /// Qualify one CLI-supplied pkgref. A pkgref that already carries a
 /// `group` passes through untouched. A bare pkgref is resolved
 /// through [`resolve`]; the discovered `group` is spliced in, with
@@ -172,11 +231,12 @@ pub fn qualify(
             name: pkgref.name.clone(),
             version: pkgref.version.clone(),
         }),
-        // A registry's own spelling for the package (PROP-008 §2.6).
-        // Both halves of the identity change, and the operator is told
-        // which registry decided that — the resolved pkgref that leaves
-        // here is fully qualified, so nothing downstream ever sees the
-        // alias (PROP-029 `#ADDR-SHORT-NAMES`).
+        // A spelling the registry ISSUED for the package (PROP-008
+        // §2.6). Both halves of the identity may change, and the
+        // operator is told which registry decided that — the resolved
+        // pkgref that leaves here is fully qualified, so nothing
+        // downstream ever sees the short name (PROP-029
+        // `#ADDR-SHORT-NAMES`).
         ShortNameOutcome::ResolvedAlias(candidate) => {
             eprintln!("{} → {}", pkgref.name, candidate.provenance());
             Ok(PackageRef {
@@ -186,14 +246,10 @@ pub fn qualify(
                 version: pkgref.version.clone(),
             })
         }
-        ShortNameOutcome::NotFound => bail!(
-            "could not resolve the short name `{name}` — no package of that name \
-             is in `vibe.lock` or any configured registry's index. If a registry \
-             has no package index, short names cannot be enumerated against it; \
-             give the qualified form instead, e.g. `vibe install <group>/{name}`.",
-            name = pkgref.name,
-        ),
-        // PROP-008 §2.7 — a short name matching two groups is a
+        ShortNameOutcome::NotIssued(refusal) => {
+            bail!(render_not_issued(&pkgref.name, &refusal))
+        }
+        // PROP-008 §2.7 — a short name matching two issued targets is a
         // collision the resolver refuses to guess past. It carries a
         // dedicated exit code (`7`, via `InstallError::AmbiguousPackage`)
         // distinct from a `3` dependency conflict, and the rendered
@@ -297,6 +353,56 @@ mod tests {
             msg.contains("`vibe install com.acme/wal`"),
             "missing the re-run hint:\n{msg}"
         );
+    }
+
+    /// The refusal of the new law: a package bearing the name is named
+    /// as a hint to copy, and the sentence makes clear nothing was
+    /// chosen from it.
+    #[test]
+    fn a_name_nobody_issued_is_refused_with_the_qualified_names_as_a_hint() {
+        let msg = render_not_issued(
+            "opencode",
+            &NotIssued {
+                hint: qualified(&[g("org.vibevm.opencode")], "opencode"),
+                consulted: vec!["vibespecs".into()],
+                skipped: vec!["corp".into()],
+            },
+        );
+        assert!(
+            msg.contains("the short name `opencode` is not issued by any consulted registry"),
+            "{msg}"
+        );
+        assert!(msg.contains("give the full name"), "{msg}");
+        assert!(msg.contains("consulted: vibespecs"), "{msg}");
+        assert!(
+            msg.contains("excluded by the effective source policy: corp"),
+            "{msg}"
+        );
+        assert!(
+            msg.contains("none of them chosen for you"),
+            "the hint must not read as a choice: {msg}"
+        );
+        assert!(
+            msg.contains("org.vibevm.opencode/opencode"),
+            "the qualified name must be copyable: {msg}"
+        );
+    }
+
+    /// With nothing publishing the name either, the refusal falls back
+    /// to the shape of the qualified form rather than inventing a hint.
+    #[test]
+    fn a_name_nothing_carries_asks_for_the_qualified_form() {
+        let msg = render_not_issued(
+            "nope",
+            &NotIssued {
+                hint: Vec::new(),
+                consulted: Vec::new(),
+                skipped: Vec::new(),
+            },
+        );
+        assert!(msg.contains("consulted: (no registry answered)"), "{msg}");
+        assert!(msg.contains("`vibe install <group>/nope`"), "{msg}");
+        assert!(!msg.contains("copy one in full"), "{msg}");
     }
 
     /// A minimal locked entry — `locked_groups` reads only `name` and

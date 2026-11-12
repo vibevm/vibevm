@@ -32,9 +32,10 @@ use specmark::verifies;
 ///
 /// The short name `vibe install wal` is deliberately NOT covered here: a
 /// hermetic per-package git registry carries no PROP-005 package index, so
-/// `MultiRegistryResolver::resolve_name_candidates` skips it and short-name
-/// qualification fails with "no package index" — measured, not a gap. See
-/// the worker report for the file:line evidence.
+/// `MultiRegistryResolver::resolve_short_name` finds no alias table to read
+/// and short-name qualification refuses with "not issued by any consulted
+/// registry" — measured, not a gap. See the worker report for the
+/// file:line evidence.
 #[test]
 #[verifies("spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#global-config")]
 fn default_path_installs_via_global_registry() {

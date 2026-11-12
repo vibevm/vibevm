@@ -59,10 +59,17 @@ use crate::source::InstallResolver;
 ///         if pkgref.is_qualified() {
 ///             return Ok(pkgref.clone());
 ///         }
-///         let candidates = resolver.candidate_groups(&pkgref.name)?;
-///         match candidates.as_slice() {
-///             [only] => Ok(PackageRef { group: Some(only.clone()), ..pkgref.clone() }),
-///             _ => anyhow::bail!("the surface refuses an ambiguous short name"),
+///         // Only a name a registry ISSUED resolves (PROP-008 §2.6
+///         // `##ISSUED-NAMES-ONLY`); a package merely bearing the
+///         // spelling is not a candidate.
+///         let found = resolver.short_name_candidates(&pkgref.name)?;
+///         match found.aliases.as_slice() {
+///             [only] => Ok(PackageRef {
+///                 group: Some(only.target.group.clone()),
+///                 name: only.target.name.parse()?,
+///                 ..pkgref.clone()
+///             }),
+///             _ => anyhow::bail!("the surface refuses a short name no registry issued"),
 ///         }
 ///     }
 /// }
@@ -430,7 +437,7 @@ mod tests {
             InstallResolver::Local(resolver, None),
             Box::new(RefusesQualification),
         );
-        let groups = source.resolver().candidate_groups("wal").unwrap();
+        let groups = source.resolver().groups_publishing_name("wal").unwrap();
         assert_eq!(groups.len(), 1);
     }
 }

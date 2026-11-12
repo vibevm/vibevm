@@ -352,7 +352,7 @@ fn resolver_binds_before_probe_and_keeps_index_denial_through_git_fallback() {
         ))
     ));
     assert!(matches!(
-        resolver.resolve_name_candidates("p"),
+        resolver.groups_publishing_name("p"),
         Err(crate::RegistryError::ContactRefused(
             ContactRefusal::ExcludedHost { .. }
         ))

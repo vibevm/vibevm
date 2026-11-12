@@ -388,33 +388,38 @@ impl MultiRegistryResolver {
         Ok(None)
     }
 
-    /// Index-backed short-name candidate enumeration (PROP-008 §2.6).
-    /// For each configured registry that exposes an index, fetch the
-    /// `by-name/<name>.json` candidate set and union every `group`
-    /// that publishes a package of this bare `name`. Registries
-    /// without an index contribute nothing — a remote git host cannot
-    /// be enumerated cheaply (PROP-005 §1), which is precisely why
-    /// short-name resolution needs the index layer.
+    /// Index-backed enumeration of the groups publishing a package of
+    /// this bare `name` (PROP-008 §2.6). For each configured registry
+    /// that exposes an index, fetch the `by-name/<name>.json` candidate
+    /// set and union every `group`. Registries without an index
+    /// contribute nothing — a remote git host cannot be enumerated
+    /// cheaply (PROP-005 §1), which is precisely why short-name
+    /// resolution needs the index layer.
+    ///
+    /// **This is not the short-name resolution candidate set.** Since
+    /// the owner's 2026-11-12 ruling a bare spelling resolves only when
+    /// a registry ISSUED it (`##ISSUED-NAMES-ONLY`); the list this
+    /// returns is what a refusal prints so the operator can copy a
+    /// qualified name. [`Self::resolve_short_name`] is resolution.
     ///
     /// Ordinary per-registry index errors are logged and skipped; typed
     /// contact refusals propagate. One unreachable index must not block resolution
     /// against the others. The returned groups are de-duplicated and
-    /// sorted; `len() > 1` is a short-name collision (PROP-008 §2.7),
-    /// `len() == 0` means no index carried the name.
-    pub fn resolve_name_candidates(&self, name: &str) -> Result<Vec<Group>, RegistryError> {
-        Ok(self.resolve_short_name(name)?.exact)
+    /// sorted.
+    pub fn groups_publishing_name(&self, name: &str) -> Result<Vec<Group>, RegistryError> {
+        Ok(self.resolve_short_name(name)?.named)
     }
 
-    /// [`Self::resolve_name_candidates`] with the registry-offered
-    /// short spellings beside the real names (PROP-008 §2.6).
+    /// The spellings the walked registries have ISSUED for `name`, with
+    /// the groups that merely publish it beside them (PROP-008 §2.6).
     ///
     /// The same walk, the same one GET per registry, the same skip
     /// rules — a registry the effective source policy excluded is
     /// already absent from `sources()`/`registries()` and is therefore
-    /// never asked about an alias either. An exact name found in ANY
-    /// registry clears the alias side wholesale
-    /// ([`ShortNameCandidates::gather`]), so no alias can ever take a
-    /// spelling somebody publishes.
+    /// never asked about an alias either. The two halves no longer
+    /// compete ([`ShortNameCandidates::gather`]): a package bearing the
+    /// spelling is not a candidate, so it displaces nothing, and an
+    /// issued spelling may equal the package's own name.
     pub fn resolve_short_name(&self, name: &str) -> Result<ShortNameCandidates, RegistryError> {
         let mut answers: Vec<(String, NameLookup)> = Vec::new();
         for reg in self.registries()? {

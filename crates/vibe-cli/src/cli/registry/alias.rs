@@ -1,6 +1,11 @@
-//! Arguments for `vibe registry alias …` — the short spellings a
-//! directory-layout registry offers for its own packages
+//! Arguments for `vibe registry alias …` — the short names a
+//! directory-layout registry ISSUES for its own packages
 //! (PROP-008 `#short-name`).
+//!
+//! A bare `vibe install <name>` resolves through these rows and
+//! through nothing else (`##ISSUED-NAMES-ONLY`), so issuing a
+//! package's own name is the ordinary edit rather than a forbidden
+//! one.
 
 specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-008#short-name");
 
@@ -26,11 +31,12 @@ pub struct RegistryAliasArgs {
 
 #[derive(Debug, clap::Subcommand)]
 pub enum RegistryAliasAction {
-    /// Offer `<alias>` as a short spelling of `<group>/<name>`.
+    /// Issue `<alias>` as a short name for `<group>/<name>`.
     Add {
-        /// The short spelling. It obeys the package-name grammar,
-        /// because it is typed exactly where a package name is typed,
-        /// and it may not be a name this registry publishes.
+        /// The short name. It obeys the package-name grammar, because
+        /// it is typed exactly where a package name is typed. It MAY be
+        /// the target's own name — `node` for `org.vibevm.node/node` —
+        /// and that row is what lets the package be typed bare.
         alias: String,
         /// The package it stands for — fully qualified, never versioned,
         /// and carried by this very registry.
@@ -39,7 +45,8 @@ pub enum RegistryAliasAction {
         #[arg(long)]
         replace: bool,
     },
-    /// Withdraw the spelling `<alias>`.
+    /// Withdraw the short name `<alias>`. A bare `<alias>` then
+    /// resolves to nothing here, including when a package bears it.
     Remove { alias: String },
     /// Print the table, one `alias -> group/name` per line.
     List,

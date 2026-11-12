@@ -1,5 +1,5 @@
-//! The registry's alias table — short spellings the REGISTRY OWNER
-//! offers for packages it carries (PROP-008 §2.6 `#short-name`).
+//! The registry's alias table — the short names the REGISTRY OWNER has
+//! ISSUED for packages it carries (PROP-008 §2.6 `#short-name`).
 //!
 //! `vibe install -g qwen` reaches `org.vibevm.qwen/qwen-code` because
 //! the registry that carries that package says `qwen` means it. The
@@ -10,6 +10,20 @@
 //! uncontrolled war for short names», because a short spelling is a
 //! registry-wide namespace and a package author owns only its own
 //! `(group, name)` corner of it.
+//!
+//! **This table is now the whole of the short-name namespace.** On
+//! 2026-11-12 the owner closed the other half of it: «если мы разрешим
+//! назначать короткие имена держателям пакетов, то всё сломается,
+//! потому что все будут бороться за эти короткие имена. Это то же самое
+//! что с доменами в интернете - мы не можем дать людям самим выбирать
+//! любое имя.» A package's own `name` is no longer a short name by
+//! itself, so `node` resolves only because this table issues `node =
+//! "org.vibevm.node/node"`. Two consequences land here. A row whose
+//! spelling equals its target's own name is **legal, and the ordinary
+//! case** — the rule that refused it existed only to protect a
+//! candidacy that no longer exists. And the table's rows are the only
+//! thing a resolving client can act on, which is why the writer's gate
+//! below is the gate that matters.
 //!
 //! **The table is an INPUT, not a projection.** It sits beside the
 //! journal among the things a catalog is computed FROM — the two
@@ -39,7 +53,7 @@ use std::fs;
 use std::path::{Path, PathBuf};
 
 use serde::Deserialize;
-use vibe_core::{Group, PackageRef};
+use vibe_core::PackageRef;
 
 use crate::error::{Error, Result};
 use crate::index::Index;
@@ -57,11 +71,14 @@ pub const SCHEMA: u32 = 1;
 
 /// The header every rendered table carries.
 const HEADER: &str = "\
-# vibe registry alias table 1 — short spellings this registry offers.
+# vibe registry alias table 1 — the short names this registry issues.
 #
 # Authored by the REGISTRY OWNER. A package cannot declare its own
 # alias: a short spelling is a registry-wide namespace, and package-
 # declared aliases would be an uncontrolled race for the good ones.
+# A bare `vibe install <name>` resolves through these rows and through
+# nothing else — a package is not reachable by its own name unless a
+# row here issues it, which `name = \"group/name\"` does.
 # Edit with `vibe-index alias <data-dir> add|remove|list`, or, for a
 # monorepo/localdir registry, `vibe registry alias <registry> …`.
 ";
@@ -220,10 +237,8 @@ pub enum AliasFault {
     Grammar { alias: String, reason: String },
     /// This registry's index carries no such package.
     TargetAbsent { alias: String, target: String },
-    /// A real package of this registry already answers to that bare
-    /// name. An alias may never shadow a name somebody publishes.
-    ShadowsPackage { alias: String, group: Group },
-    /// The target's own name is itself an alias here.
+    /// The target's own name is itself an alias here, pointing at a
+    /// DIFFERENT package.
     AliasOfAlias { alias: String, target: String },
     /// The alias is a name this registry has buried. A retired name
     /// answers with its tombstone, and re-pointing it would make the
@@ -236,7 +251,6 @@ impl AliasFault {
         match self {
             AliasFault::Grammar { alias, .. }
             | AliasFault::TargetAbsent { alias, .. }
-            | AliasFault::ShadowsPackage { alias, .. }
             | AliasFault::AliasOfAlias { alias, .. }
             | AliasFault::Buried { alias } => alias,
         }
@@ -258,17 +272,12 @@ impl fmt::Display for AliasFault {
                  alias points INTO the registry that offers it, never across to another one, \
                  so publish the package here first or alias something this registry has"
             ),
-            AliasFault::ShadowsPackage { alias, group } => write!(
-                f,
-                "`{alias}` is already the name of the package `{group}/{alias}` in this \
-                 registry — a real name outranks every alias, so this row could never be \
-                 chosen; pick a spelling nobody publishes"
-            ),
             AliasFault::AliasOfAlias { alias, target } => write!(
                 f,
-                "`{alias}` names `{target}`, whose own name is itself an alias here — an alias \
-                 resolves in exactly one step, so that every spelling has one readable answer \
-                 and no table can ever loop; point it at the package directly"
+                "`{alias}` names `{target}`, whose own name is an alias here for a different \
+                 package — an alias resolves in exactly one step, so that every spelling has \
+                 one readable answer and no table can ever loop; point it at the package \
+                 directly"
             ),
             AliasFault::Buried { alias } => write!(
                 f,
@@ -312,13 +321,17 @@ fn fault(
             alias: alias.to_owned(),
         });
     }
-    if let Some(pkg) = index.candidates_for(alias).first() {
-        return Some(AliasFault::ShadowsPackage {
-            alias: alias.to_owned(),
-            group: pkg.group.clone(),
-        });
-    }
-    if table.get(&target.name).is_some() {
+    // An alias of an alias is still refused, but the test is now about
+    // the TARGET, not about the spelling: a row whose target's name is
+    // another row's key is only a second step when the two rows mean
+    // different packages. `node = "org.vibevm.node/node"` matches
+    // itself here, and `qwen = "org.vibevm.qwen/qwen-code"` beside
+    // `qwen-code = "org.vibevm.qwen/qwen-code"` matches a row that
+    // means the very same package — neither adds a step, and refusing
+    // them would make the issued-name law (§2.6
+    // `##ISSUED-NAMES-ONLY`) unusable for exactly the rows it exists
+    // to allow.
+    if table.get(&target.name).is_some_and(|other| other != target) {
         return Some(AliasFault::AliasOfAlias {
             alias: alias.to_owned(),
             target: spell(target),

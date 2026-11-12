@@ -1,6 +1,7 @@
 //! What a bare spelling finds in a local-directory registry
-//! (PROP-008 `#short-name`): the candidate set its index answers with,
-//! and the alias its owner offers for that spelling.
+//! (PROP-008 `#short-name`): the spelling its owner has ISSUED for
+//! that name — the whole of resolution — and, beside it, the packages
+//! that merely bear the name, which the refusal prints as a hint.
 //!
 //! Split from the registry's own file so the reader of either half has
 //! one subject in front of them.
@@ -16,18 +17,20 @@ use crate::RegistryError;
 use crate::short_name::{AliasTarget, NameLookup};
 
 impl LocalRegistry {
-    /// [`Self::indexed_candidate_groups`] with the short spelling this
-    /// registry OFFERS for the name, if any (PROP-008 §2.6).
+    /// [`Self::indexed_groups_publishing`] with the short spelling this
+    /// registry has ISSUED for the name, if any (PROP-008 §2.6).
     ///
     /// Current index: the alias rides on the persisted candidate-set
     /// file, so it is one read of the file that was already being read.
     /// Stale or absent index: the authored table
     /// `_index/aliases.toml` answers instead, exactly as the directory
-    /// listing answers for the candidates — the tree and the table are
-    /// the two things a hand-built registry really has. The table's row
-    /// is still held to the two rules that could make it wrong here: a
-    /// target the tree does not carry, and a name the tree publishes
-    /// itself, are both dropped rather than offered.
+    /// listing answers for the names — the tree and the table are the
+    /// two things a hand-built registry really has. The table's row is
+    /// still held to the one rule that can make it wrong against this
+    /// tree: a target the tree does not carry is dropped rather than
+    /// offered. A row whose spelling the tree also publishes is kept —
+    /// since the owner's 2026-11-12 ruling that is the ordinary case,
+    /// `node → org.vibevm.node/node`.
     pub fn indexed_name_lookup(&self, name: &str) -> Result<NameLookup, RegistryError> {
         use vibe_core::layout_registry::{IndexState, index_dir, index_state};
         #[derive(serde::Deserialize)]
@@ -110,13 +113,13 @@ impl LocalRegistry {
         };
         let (group, target_name) = (target.group, target.name);
         let target_name = target_name.as_str();
-        // The two rules that could make an authored row wrong against
-        // this tree, applied here because no projection did it for us:
-        // a name the tree itself publishes outranks the row, and a
-        // target the tree does not carry cannot be offered at all.
-        if !self.candidate_groups(name)?.is_empty() {
-            return Ok(None);
-        }
+        // The one rule that can make an authored row wrong against this
+        // tree, applied here because no projection did it for us: a
+        // target the tree does not carry cannot be offered at all. The
+        // sibling rule — a name the tree itself publishes outranks the
+        // row — is gone with the candidacy that justified it: a package
+        // bearing the spelling resolves nothing, so it displaces
+        // nothing (PROP-008 §2.6 `##ISSUED-NAMES-ONLY`).
         if !self.root.join(group.as_str()).join(target_name).is_dir() {
             return Ok(None);
         }

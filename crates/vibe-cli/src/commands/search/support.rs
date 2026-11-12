@@ -10,6 +10,10 @@ pub(super) fn make_hit_row(hit: &SearchHit, registry: &str) -> HitRow {
         score: hit.score,
         matched_tokens: hit.matched_tokens.clone(),
         description: hit.description.clone(),
+        // Stamped in one pass once every registry has answered, so a
+        // row kept from one registry still names a spelling another
+        // issued for the same package.
+        short_names: Vec::new(),
         registry: registry.to_string(),
         source: "index",
     }
@@ -27,8 +31,36 @@ pub(super) fn make_full_scan_hit_row(hit: &FullScanHit, registry: &str) -> HitRo
         score: hit.score,
         matched_tokens: hit.matched_tokens.clone(),
         description: hit.description.clone(),
+        short_names: Vec::new(),
         registry: registry.to_string(),
         source: "full-scan",
+    }
+}
+
+/// Fold one registry's alias rows into the name → issued-spellings map
+/// the report stamps its rows from.
+///
+/// The key is the TARGET's package name, because a search hit carries
+/// `(kind, name)` and no group (`vibe_registry::SearchHit`): the mark
+/// says "this name has an issued short spelling in some consulted
+/// registry", which is the question an operator reading a hit list is
+/// asking, and the resolution that follows is still the one authority
+/// on what the spelling reaches.
+pub(super) fn collect_issued(
+    issued: &mut BTreeMap<String, BTreeSet<String>>,
+    rows: impl IntoIterator<Item = (String, vibe_registry::short_name::AliasTarget)>,
+) {
+    for (alias, target) in rows {
+        issued.entry(target.name).or_default().insert(alias);
+    }
+}
+
+/// Stamp each row with the short names issued for the package it names.
+pub(super) fn stamp_issued(rows: &mut [HitRow], issued: &BTreeMap<String, BTreeSet<String>>) {
+    for row in rows {
+        if let Some(names) = issued.get(&row.name) {
+            row.short_names = names.iter().cloned().collect();
+        }
     }
 }
 
