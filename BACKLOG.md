@@ -3274,3 +3274,13 @@ it. Severity **P3**.
 | @fact:B304-SEVERITY **severity** | P1 — every verb that takes a version refused every alias to anything but a fully-spelled release, which is how aliases are mostly written. |
 | @fact:B304-DISPOSITION **disposition** | `done` — fixed in template revision **1.0.1**: a named alias is a spelling in the translation table, resolved through the chain and then translated again, and the `ls` pattern path consults it too. The recursion terminates structurally, because the chain only reads the store and so returns a version spelling, never another alias name. Covered by `conformance/vibenvm/cases/25-alias-resolution.toml` — 21 steps over three chains (alias → partial, alias → `lts/*`, alias → alias → partial) through `use`, `which`, `run`, `exec`, `version`, `ls` and the listing. **Why eighteen cases missed it**: every case that used an alias used one naming a complete version, so the chain was never asked to resolve anything afterwards — the defect was in the step after the chain. |
 | @fact:B304-FILED **filed by** | release testing of `org.vibevm.nvm/nvm@0.41.0`, 2026-11-12. |
+
+## B-305 — an application with no installer option for this platform is refused as "platform selection required" {#b-305}
+
+| field | value |
+|---|---|
+| @fact:B305-WHAT **what** | `vibe install -g org.vibevm.nvm/nvm` on Windows answers `✗ selection_required  platform selection required; use --platform with one of: linux, linux-musl, macos` and suggests `--platform`. The package declares installer options for Linux and macOS only, so there is nothing to select on this machine: the honest answer is "this package has no installer option for windows/x86_64", naming the platforms it does support, without inviting the user to force another platform's option onto this one. |
+| @fact:B305-EVIDENCE **evidence** | Release proof of vibe 1.0.12 on Windows (`base`), 2026-11-12: `vibe --unattended install -g nvm` exited 2 with the text above. |
+| @fact:B305-SEVERITY **severity** | P3 — the refusal is correct and nothing is installed; only its wording misleads. |
+| @fact:B305-DISPOSITION **disposition** | open — distinguish "no option matches this platform" from "several options match and one must be chosen" before the selection prompt. |
+| @fact:B305-FILED **filed by** | the 1.0.12 release proof, 2026-11-12. |
