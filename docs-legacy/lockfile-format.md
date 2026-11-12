@@ -131,8 +131,8 @@ files_written   = []
 Reading from this:
 
 - Both packages came from the same registry (`vibespecs`), so `vibe registry sync` will refresh both via one `MultiRegistryResolver` instance.
-- `flow:wal` declared a transitive `flow:atomic-commits@^0.1`; the solver pinned it to exact `=0.1.0` (the only version available). Re-resolving against this lockfile picks the same version even if `vibespecs` later tags `v0.1.1`.
-- `flow:atomic-commits` is **not** in `root_dependencies` — `vibe uninstall flow:atomic-commits` would refuse (it's a transitive, not a root). To remove it, `vibe uninstall flow:wal` first; future `vibe update --prune` will then orphan-collect `flow:atomic-commits` if no other root reaches it.
+- `flow:org.vibevm.world/wal` declared a transitive `flow:atomic-commits@^0.1`; the solver pinned it to exact `=0.1.0` (the only version available). Re-resolving against this lockfile picks the same version even if `vibespecs` later tags `v0.1.1`.
+- `flow:atomic-commits` is **not** in `root_dependencies` — `vibe uninstall flow:atomic-commits` would refuse (it's a transitive, not a root). To remove it, `vibe uninstall flow:org.vibevm.world/wal` first; future `vibe update --prune` will then orphan-collect `flow:atomic-commits` if no other root reaches it.
 - `files_written` is empty and `boot_snippet` is absent on both entries: under the [loading model](loading-model.md) each package is materialised verbatim into a `vibedeps/` slot and boot ordering is computed — there is no per-file write list and no pinned boot filename. The slots here are `vibedeps/flow-wal/0.1.0/` and `vibedeps/flow-atomic-commits/0.1.0/`.
 - `content_hash` values are the identity. A re-fetch that produces a different hash for the same `(org.vibevm, wal, 0.1.0)` would trigger `InstallError::ContentDrift` on the next install of an already-locked entry.
 

@@ -28,7 +28,7 @@ The common `--json`, `--quiet`, `--invoked-by`, and `--unattended` options are a
 ## Examples
 
 ```bash
-vibe update flow:wal
+vibe update flow:org.vibevm.world/wal
 vibe update --all --assume-yes
 vibe update --all --offline --path ./my-project
 vibe update -g mcp:ai.lev/fpf-mcp

@@ -9,7 +9,7 @@ Examples (planned for M1.5):
 
 A stack is **feat-agnostic at authoring time** — the same `stack:rust-cli` should compile any feat that declares it needs the capabilities `stack:rust-cli` provides. Stacks supply infrastructure; feats supply business logic. Together they produce code.
 
-> **Status note.** Today (M1.1-revision) `vibe install stack:<name>` works and lays the spec content into the consumer project. The actual code-generation step (`vibe build feat:<name> --stack rust-cli`) is M1.5 ([`VIBEVM-SPEC.md` §11.3](../VIBEVM-SPEC.md)). This guide covers stack authoring; the build pipeline is documented when M1.5 ships.
+> **Status note.** Today (M1.1-revision) `vibe install stack:<group>/<name>` works and lays the spec content into the consumer project. The actual code-generation step (`vibe build feat:<group>/<name> --stack rust-cli`) is M1.5 ([`VIBEVM-SPEC.md` §11.3](../VIBEVM-SPEC.md)). This guide covers stack authoring; the build pipeline is documented when M1.5 ships.
 
 ## Anatomy of a stack package
 
@@ -32,7 +32,7 @@ stack-<name>/
             └── deployment.md          # how to ship a build of this stack
 ```
 
-After `vibe install stack:<name>`, the package's whole published tree is materialised verbatim into a slot under the workspace-root `vibedeps/` tree:
+After `vibe install stack:<group>/<name>`, the package's whole published tree is materialised verbatim into a slot under the workspace-root `vibedeps/` tree:
 
 ```
 <workspace-root>/
@@ -103,7 +103,7 @@ capabilities = []
 
 # [requires.packages] is a table: pkgref → constraint string.
 [requires.packages]
-"flow:atomic-commits" = "^0.1"
+"flow:org.vibevm.world/git-atomic-commits" = "^0.1"
 ```
 
 The `[provides].capabilities` list is the stack's most important manifest entry. Every capability listed here is a contract the stack promises to satisfy at build time, so any feat that requires the same capability can be paired with this stack.

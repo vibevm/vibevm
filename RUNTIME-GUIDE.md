@@ -56,7 +56,7 @@ The pre-consolidation `~/.vibevm/` is **no longer read at all** (its last read l
 
 ```
 vibe init --path /path/to/project
-vibe install flow:wal
+vibe install flow:org.vibevm.world/wal
 ```
 
 This scaffolds a project and installs a canonical flow package from the default public registry. See [`manual-tests/`](manual-tests/) for end-to-end walkthroughs against the real registry.

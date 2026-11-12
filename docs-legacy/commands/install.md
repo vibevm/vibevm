@@ -8,7 +8,11 @@ Resolve and install one or more packages into a project. With package arguments,
 vibe install [OPTIONS] [PACKAGES]...
 ```
 
-A package reference accepts the qualified `<group>/<name>[@<version>]` form or CLI short form `<kind>:<name>[@<version>]`. Package kinds are `flow`, `feat`, `stack`, `tool`, `mcp`, and `lang`.
+A package reference accepts the qualified `<group>/<name>[@<version>]` form, optionally with a kind prefix as `<kind>:<group>/<name>[@<version>]`, or a bare `<name>[@<version>]` where a registry has issued that short name (see below). Package kinds are `flow`, `feat`, `stack`, `tool`, `mcp`, and `lang`.
+
+## Short names
+
+A bare `vibe install <name>` works only when a registry has issued `<name>` as a short name in its own alias table, which the registry's owner authors with `vibe registry alias <registry> add <name> <group>/<name>` (or `vibe-index alias <data-dir> add …` for a standalone index). Being called `<name>` grants a package nothing: a short name is a registry-wide namespace, and letting every package claim one would make it a race for the good words. The public `vibespecs` index issues `node`, `nvm`, `opencode`, `qwen` and `qwen-code`; every other package there is reached as `<group>/<name>`. A spelling nobody issued is refused, and the refusal prints the qualified names that bear it for you to copy. `vibe uninstall` and `vibe update` still take a bare name for a package this project already locked (PROP-008 §2.6).
 
 ## Important options
 
@@ -48,7 +52,7 @@ vibe install
 vibe install --offline --path ./my-project
 
 # Install one direct git source.
-vibe install tool:example --git https://example.com/example.git --tag v1.0.0
+vibe install tool:com.acme/example --git https://example.com/example.git --tag v1.0.0
 
 # Install and register a remote MCP package for this user.
 vibe install -g mcp:ai.lev/fpf-mcp --agent qwen-code

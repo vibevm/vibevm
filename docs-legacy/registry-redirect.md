@@ -71,7 +71,7 @@ The fact that stub-tags exist independently of target-tags is the key affordance
 
 `content_hash` is computed over the **target** package content, not over the stub. The stub repo carries only `vibe-redirect.toml` and (optionally) human-readable companion files; nothing in the stub ships into the consumer project. A force-pushed target tag is detected exactly as it would be for a non-redirected package: hash mismatch on the next install raises `IntegrityError`.
 
-The pkgref `<kind>:<name>` declared on the consumer side and the stub URL slot must match what the target's `vibe.toml` `[package]` table declares. Mismatch — e.g. `<org>/flow-internal` redirects to a target whose manifest declares `feat:something-else` — is rejected as `PackageIdentityMismatch` ("refusing to install"). This means a malicious target cannot impersonate `flow:wal` if its manifest declares it as `feat:auth`.
+The pkgref `<kind>:<name>` declared on the consumer side and the stub URL slot must match what the target's `vibe.toml` `[package]` table declares. Mismatch — e.g. `<org>/flow-internal` redirects to a target whose manifest declares `feat:something-else` — is rejected as `PackageIdentityMismatch` ("refusing to install"). This means a malicious target cannot impersonate `flow:org.vibevm.world/wal` if its manifest declares it as `feat:auth`.
 
 ## Lockfile
 
@@ -119,7 +119,7 @@ The CLI helper creates the stub repo automatically — analogous to `vibe regist
 
 ```bash
 # Bare minimum — pass-through-tag policy, no auth.
-vibe registry redirect flow:internal-helper \
+vibe registry redirect flow:com.acme/internal-helper \
   --to git@gitlab.acme.example:flows/internal-helper \
   --description "Delegated to acme-corp; contact maintainers@acme.example"
 
@@ -141,7 +141,7 @@ vibe registry redirect flow:internal-secret \
 # Equivalent to running `vibe registry redirect-sync <pkgref>` once
 # the stub exists — useful when you already have v0.1.0 / v0.2.0 / ...
 # sitting on the target side.
-vibe registry redirect flow:internal-helper \
+vibe registry redirect flow:com.acme/internal-helper \
   --to git@gitlab.acme.example:flows/internal-helper \
   --sync
 ```
@@ -154,12 +154,12 @@ The marker file is not immutable. Operators retarget a stub (external author mig
 
 ```bash
 # Description-only update. Operator-side metadata; no trust flag needed.
-vibe registry redirect-update flow:internal-helper \
+vibe registry redirect-update flow:com.acme/internal-helper \
   --description "Delegated to forgejo-corp; contact ops@forgejo.example"
 
 # External author moved hosting from GitLab to Forgejo. The target URL
 # change requires --trust-redirect — see PROP-002 §2.4.2 trust model.
-vibe registry redirect-update flow:internal-helper \
+vibe registry redirect-update flow:com.acme/internal-helper \
   --to https://forgejo.example/internal-helper \
   --trust-redirect \
   --resync
@@ -172,7 +172,7 @@ Every flag is optional — fields not specified retain their current value. The 
 In `pass-through-tag` policy, the stub's tags determine which target versions the org's namespace exposes. Mirror them across in one command:
 
 ```bash
-vibe registry redirect-sync flow:internal-helper
+vibe registry redirect-sync flow:com.acme/internal-helper
 ```
 
 What it does:
@@ -183,7 +183,7 @@ What it does:
 
 Already-present tags are skipped quietly. `pinned`-policy stubs reject the sync command with a clear message — pinned-policy semantically ignores stub-side tags.
 
-The command fits naturally into a periodic CI job: every Monday, `vibe registry redirect-sync flow:internal-helper` against every redirect stub the org owns; new target versions appear in the consumer-facing namespace within a week.
+The command fits naturally into a periodic CI job: every Monday, `vibe registry redirect-sync flow:com.acme/internal-helper` against every redirect stub the org owns; new target versions appear in the consumer-facing namespace within a week.
 
 ### Manual procedure (fallback)
 
@@ -205,7 +205,7 @@ EOF
 
 # Step 4: commit.
 git add vibe-redirect.toml README.md
-git commit -m "stub: delegate flow:internal-helper to acme-corp"
+git commit -m "stub: delegate flow:com.acme/internal-helper to acme-corp"
 
 # Step 5: tag and push to the org's stub slot.
 git remote add origin git@github.com:vibespecs/flow-internal-helper.git
@@ -214,7 +214,7 @@ git push -u origin main
 git push --tags
 ```
 
-After `git push --tags`, consumers running `vibe install flow:internal-helper@^0.1` resolve through the stub and fetch content from the acme-corp target.
+After `git push --tags`, consumers running `vibe install flow:com.acme/internal-helper@^0.1` resolve through the stub and fetch content from the acme-corp target.
 
 To certify a new target version (e.g. acme-corp released `v0.2.0`):
 
@@ -223,7 +223,7 @@ git tag v0.2.0
 git push origin v0.2.0
 ```
 
-Pass-through ref policy means the new stub tag immediately routes resolves of `flow:internal-helper@^0.2` to the target's `v0.2.0`.
+Pass-through ref policy means the new stub tag immediately routes resolves of `flow:com.acme/internal-helper@^0.2` to the target's `v0.2.0`.
 
 ## Comparison with related mechanisms
 

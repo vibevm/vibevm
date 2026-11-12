@@ -40,7 +40,7 @@ If the same private host serves three or more packages, declare them through a `
 "org.example/sibling" = { path = "../flow-sibling", version = "^0.1" }
 ```
 
-`[requires.packages]` is a TOML table, full stop. The legacy array-of-strings form `packages = ["flow:wal@^0.3", ...]` is no longer accepted — a manifest using it is a hard parse error. (vibevm is pre-release; there is no migration path and none is needed.)
+`[requires.packages]` is a TOML table, full stop. The legacy array-of-strings form `packages = ["flow:org.vibevm.world/wal@^0.3", ...]` is no longer accepted — a manifest using it is a hard parse error. (vibevm is pre-release; there is no migration path and none is needed.)
 
 ### Inline-table fields
 
@@ -59,26 +59,26 @@ If the same private host serves three or more packages, declare them through a `
 
 ## Adding a git-source via CLI
 
-Symmetric to the registry-resolved `vibe install flow:wal@^0.3` shape — adds the declaration to `vibe.toml` then resolves and installs.
+Symmetric to the registry-resolved `vibe install flow:org.vibevm.world/wal@^0.3` shape — adds the declaration to `vibe.toml` then resolves and installs.
 
 ```bash
 # Pin to an immutable tag:
-vibe install flow:internal-helper \
+vibe install flow:com.acme/internal-helper \
   --git https://github.com/me/flow-internal-helper \
   --tag v0.1.0
 
 # Track a branch HEAD (mutable; vibe update re-walks):
-vibe install flow:experimental \
+vibe install flow:com.acme/experimental \
   --git https://github.com/me/flow-experimental \
   --branch main
 
 # Pin to an exact commit SHA:
-vibe install flow:fork \
+vibe install flow:com.acme/fork \
   --git https://github.com/me/flow-wal-fork \
   --rev abc12345
 
 # Private target with explicit token:
-vibe install flow:secret \
+vibe install flow:com.acme/secret \
   --git https://gitlab.acme.example/specs/secret \
   --tag v1.0 \
   --git-auth token-env \
@@ -170,7 +170,7 @@ Both declare a git URL + ref for a pkgref. The difference is semantic:
 | `vibe list --overrides` | Not surfaced (it is a normal dependency) | Surfaced |
 | Removal | `vibe uninstall <pkgref>` drops the entry | Drop the `[[override]]` block; the underlying dependency comes back |
 
-A project may use both: declare `flow:internal` through `[requires.packages]` git-source (the architecture), and override `flow:wal` through `[[override]]` while waiting for an upstream fix (the patch). The override always wins.
+A project may use both: declare `flow:com.acme/internal` through `[requires.packages]` git-source (the architecture), and override `flow:org.vibevm.world/wal` through `[[override]]` while waiting for an upstream fix (the patch). The override always wins.
 
 ## Out of scope
 

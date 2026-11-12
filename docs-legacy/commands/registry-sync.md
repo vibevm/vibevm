@@ -39,7 +39,7 @@ Run before installing a new version of an already-installed package:
 
 ```bash
 vibe registry sync                      # pull new tags
-vibe install flow:wal@^0.2 --assume-yes # now sees v0.2.x if upstream tagged it
+vibe install flow:org.vibevm.world/wal@^0.2 --assume-yes # now sees v0.2.x if upstream tagged it
 ```
 
 ## Edge cases

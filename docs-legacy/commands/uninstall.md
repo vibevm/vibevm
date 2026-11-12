@@ -24,7 +24,7 @@ The common `--json`, `--quiet`, `--invoked-by`, and `--unattended` options are a
 ## Example
 
 ```bash
-vibe uninstall flow:wal --path ./my-project
+vibe uninstall flow:org.vibevm.world/wal --path ./my-project
 vibe uninstall -g mcp:ai.lev/fpf-mcp
 ```
 

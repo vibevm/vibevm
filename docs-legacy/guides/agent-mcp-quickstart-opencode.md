@@ -17,7 +17,7 @@ Tested on: Windows 11 Pro for Workstations, PowerShell 5.1, opencode 1.14.x, GLM
 
 - Working `opencode` in PATH (`where.exe opencode` returns a path).
 - A model with tool-use support configured in opencode (Claude / GPT-4o / Llama-3.1 / GLM-4 / etc.).
-- Internet access to `github.com` (for `vibe install flow:wal` later, when the agent does it).
+- Internet access to `github.com` (for `vibe install flow:org.vibevm.world/wal` later, when the agent does it).
 - Rust toolchain installed (only if you want the persistent-PATH variant).
 
 ---
@@ -146,7 +146,7 @@ might want to run next (e.g. install a real package).
 This prompt deliberately does NOT assume any project convention
 (WAL discipline, PROP/FEAT spec corpus, etc.). The vibevm skill
 covers only the package manager surface; project-specific
-disciplines (such as the WAL protocol shipped by `flow:wal`) are
+disciplines (such as the WAL protocol shipped by `flow:org.vibevm.world/wal`) are
 opt-in via `vibe install <pkgref>` and additional skills.
 
 If you want the agent to also adopt a specific convention, install
@@ -154,7 +154,7 @@ the relevant package + its skill explicitly. For example, after
 Prompt B:
 
 ```
-Install flow:wal via vibevm. Then read the WAL protocol via the
+Install flow:org.vibevm.world/wal via vibevm. Then read the WAL protocol via the
 vibevm MCP server (read_subskill) and apply it: update spec/WAL.md
 to record what we did in this session per the protocol.
 ```
@@ -254,7 +254,7 @@ This guide is a contract: when slice-5 surface changes, update accordingly.
 - **MCP wire-shape changes** (new tool, renamed tool, new field) → update Prompt A and the hand-test.
 - **New supported agent** → file a sibling `docs/guides/agent-mcp-quickstart-<agent>.md`. Keep per-agent guides focused.
 - **Skill template changes** (`crates/vibe-cli/src/commands/skill_template.md`) → update the acceptance checklist's "SKILL.md must contain" line if a tested string changes; update the agent skill-section structure references if Section A/B structure shifts.
-- **`flow:wal` content_hash drift** — the prompts don't pin a specific hash, only that one is present. No update needed unless `flow:wal@0.1.0` gets unpublished.
+- **`flow:org.vibevm.world/wal` content_hash drift** — the prompts don't pin a specific hash, only that one is present. No update needed unless `flow:org.vibevm.world/wal@0.1.0` gets unpublished.
 
 When a vibevm release ships, run this guide top-to-bottom against a clean sandbox before tagging. A failed acceptance checkbox is a release blocker.
 

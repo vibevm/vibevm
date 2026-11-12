@@ -8,7 +8,7 @@ A **feat** is a *functional feature* — a self-contained capability of an appli
 
 A feat is **stack-agnostic at authoring time**. The same `feat:welcome-page` is meant to compile against `stack:rust-cli`, `stack:rust-axum`, `stack:typescript-next`, etc. The feat carries the *what*; the stack carries the *how*. This separation is the heart of vibevm's "spec-driven, multi-stack" pitch.
 
-> **Status note.** Today (M1.1-revision) `vibe install feat:<name>` works and lays the spec content into the consumer project. `vibe build feat:<name> --stack <stack-name>` — which actually generates code — is M1.5 ([`VIBEVM-SPEC.md` §11.3](../VIBEVM-SPEC.md)). This guide covers the authoring side; the build flow is documented separately when M1.5 ships.
+> **Status note.** Today (M1.1-revision) `vibe install feat:<group>/<name>` works and lays the spec content into the consumer project. `vibe build feat:<group>/<name> --stack <stack-name>` — which actually generates code — is M1.5 ([`VIBEVM-SPEC.md` §11.3](../VIBEVM-SPEC.md)). This guide covers the authoring side; the build flow is documented separately when M1.5 ships.
 
 ## Anatomy of a feat package
 
@@ -29,7 +29,7 @@ feat-<name>/
             └── failure-modes.md    # what should happen when things go wrong
 ```
 
-After `vibe install feat:<name>`, the package's whole published tree is materialised verbatim into a slot under the workspace-root `vibedeps/` tree:
+After `vibe install feat:<group>/<name>`, the package's whole published tree is materialised verbatim into a slot under the workspace-root `vibedeps/` tree:
 
 ```
 <workspace-root>/

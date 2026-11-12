@@ -205,7 +205,7 @@ before the handshake existed.
 
 ```sh
 export VIBEVM_INDEX_URL_VIBESPECS=https://index.example.com/v1/index
-vibe install flow:wal
+vibe install flow:org.vibevm.world/wal
 ```
 
 A 404 or transient failure on the index transparently falls back to

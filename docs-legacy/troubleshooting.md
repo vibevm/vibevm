@@ -83,9 +83,9 @@ Never edit `vibe.lock` by hand to silence this — that defeats the integrity ch
 
 ### `no version of `kind:name` matches `…``
 
-**What.** The package exists in the registry but no published version satisfies your constraint. E.g. you asked for `flow:wal@^0.5` and the registry only has `v0.1.0` / `v0.2.0`.
+**What.** The package exists in the registry but no published version satisfies your constraint. E.g. you asked for `flow:org.vibevm.world/wal@^0.5` and the registry only has `v0.1.0` / `v0.2.0`.
 
-**Action.** `git ls-remote --tags git@<host>:<org>/<kind>-<name>.git` to see what's actually published. Loosen the constraint (`vibe install flow:wal` for latest stable) or pin a real version.
+**Action.** `git ls-remote --tags git@<host>:<org>/<kind>-<name>.git` to see what's actually published. Loosen the constraint (`vibe install flow:org.vibevm.world/wal` for latest stable) or pin a real version.
 
 ### `no registry configured. Pass `--registry <path>` or add a `[[registry]]` entry to `vibe.toml`.`
 

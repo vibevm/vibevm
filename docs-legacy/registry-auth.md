@@ -49,14 +49,14 @@ token_env = "VIBEVM_REGISTRY_TOKEN_INTERNAL"
 
 ```bash
 export VIBEVM_REGISTRY_TOKEN_GITLAB_COMPANY_COM=ghp_yourTokenHere
-vibe install flow:internal-helper --assume-yes
+vibe install flow:com.acme/internal-helper --assume-yes
 ```
 
 #### PowerShell
 
 ```powershell
 $env:VIBEVM_REGISTRY_TOKEN_GITLAB_COMPANY_COM = 'ghp_yourTokenHere'
-vibe install flow:internal-helper --assume-yes
+vibe install flow:com.acme/internal-helper --assume-yes
 ```
 
 #### CI (GitHub Actions example)
@@ -176,13 +176,13 @@ behaviour.
 
 ```bash
 # CI run: refuse to fall back to a public registry on auth-failure.
-vibe install --unattended --auth-required flow:internal-helper
+vibe install --unattended --auth-required flow:com.acme/internal-helper
 ```
 
 Or via env-var equivalence (M1.14.1 lookup convention):
 
 ```bash
-VIBE_UNATTENDED=1 vibe install --auth-required flow:internal-helper
+VIBE_UNATTENDED=1 vibe install --auth-required flow:com.acme/internal-helper
 ```
 
 ## How vibevm walks the registry list under different `auth`
@@ -235,7 +235,7 @@ When `vibe install --json` cannot find a package in any registry, the JSON envel
 ```json
 {
   "ok": false,
-  "error": "package_not_found: flow:internal-helper not found in any of 2 registries...",
+  "error": "package_not_found: flow:com.acme/internal-helper not found in any of 2 registries...",
   "error_kind": "package_not_found_everywhere",
   "package": { "kind": "flow", "name": "internal-helper" },
   "attempts": [
@@ -302,7 +302,7 @@ Use `[[override]]` (PROP-002 §2.4) to point the package at a different source U
 
 ```toml
 [[override]]
-pkgref     = "flow:wal"
+pkgref     = "flow:org.vibevm.world/wal"
 source_url = "git@gitlab.company.com:my-fork/wal"
 ref        = "my-fix"
 reason     = "while I wait for upstream PR #42"

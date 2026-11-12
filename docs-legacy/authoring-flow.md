@@ -3,9 +3,9 @@
 A **flow** is a discipline / process module — a set of conventions, protocols, and reminders an AI agent reads at session start so it follows the team's working agreements. Flows are the "how we work" half of vibevm; feats and stacks are the "what we build" half.
 
 Examples shipped today:
-- `flow:wal` — the Write-Ahead Log discipline.
+- `flow:org.vibevm.world/wal` — the Write-Ahead Log discipline.
 - `flow:sync-from-code` — the protocol for reconciling spec drift from code.
-- `flow:atomic-commits` — one-commit-per-idea + Conventional Commits format.
+- `flow:org.vibevm.world/git-atomic-commits` — one-commit-per-idea + Conventional Commits format.
 
 A flow is *content*. There is no executable component, no LLM call, no build artefact — at install time a flow's published tree is materialised verbatim into a `vibedeps/` slot, and its boot snippet is folded into each consuming node's computed boot sequence so the AI session reads it.
 
@@ -25,7 +25,7 @@ flow-<name>/                 # the per-package repo on the registry
             └── <subprotocol-2>.md
 ```
 
-After `vibe install flow:<name>`, the package's whole published tree is materialised verbatim into a slot under the workspace-root `vibedeps/` tree:
+After `vibe install flow:<group>/<name>`, the package's whole published tree is materialised verbatim into a slot under the workspace-root `vibedeps/` tree:
 
 ```
 <workspace-root>/
@@ -129,8 +129,8 @@ See [`vibe registry publish`](commands/registry-publish.md) for the full token /
 
 ## Tips
 
-- **Read existing flows first.** [`flow:wal`](https://gitverse.ru/anarchic/vibespecs) is short and well-formed; use it as a structural template.
-- **Test with the local-fixture path before publishing.** `vibe install flow:<name> --registry ./path/to/your/dir` against a directory laid out in the M0 monorepo shape lets you iterate without going through `git push` round-trips.
+- **Read existing flows first.** [`flow:org.vibevm.world/wal`](https://gitverse.ru/anarchic/vibespecs) is short and well-formed; use it as a structural template.
+- **Test with the local-fixture path before publishing.** `vibe install flow:<group>/<name> --registry ./path/to/your/dir` against a directory laid out in the M0 monorepo shape lets you iterate without going through `git push` round-trips.
 - **Boot snippets are user-facing prose.** Write them like you're briefing a teammate. The AI agent is the immediate reader, but humans review the boot files; make both happy.
 - **Don't put runtime logic in a flow.** A flow is content. If your idea needs a build step or a tool invocation, it's a `feat` or a `tool`, not a `flow`.
 

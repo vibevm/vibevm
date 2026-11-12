@@ -4,8 +4,8 @@ Everywhere a vibevm command takes a package reference (`vibe install <pkgref>`, 
 
 ## TL;DR
 
-- Bare semver (`flow:wal@0.3.0`) is shorthand for **caret** (`^0.3.0`). To get strict-equal behaviour, write `=0.3.0`.
-- `vibe install flow:wal` (no version) resolves to a concrete version and writes the **caret** form to `vibe.toml`. Same default as `cargo add` and `npm install`.
+- Bare semver (`flow:org.vibevm.world/wal@0.3.0`) is shorthand for **caret** (`^0.3.0`). To get strict-equal behaviour, write `=0.3.0`.
+- `vibe install flow:org.vibevm.world/wal` (no version) resolves to a concrete version and writes the **caret** form to `vibe.toml`. Same default as `cargo add` and `npm install`.
 - The lockfile (`vibe.lock`) always pins to one exact version per package — that's the *materialisation*. The manifest carries the *declaration*.
 - Use `--exact` when you want the manifest itself to pin strictly.
 
@@ -15,7 +15,7 @@ vibevm has two files that together describe the project's package set:
 
 | File | Role | Format example |
 | --- | --- | --- |
-| `vibe.toml` | **Declaration.** What the human asked for. Constraints, written in semver-syntax form (`^0.3.0`, `~1.2`, `=0.4.0`, etc.). Edited by humans, reviewed in PRs, mostly stable across versions. | `flow:wal@^0.1.0` |
+| `vibe.toml` | **Declaration.** What the human asked for. Constraints, written in semver-syntax form (`^0.3.0`, `~1.2`, `=0.4.0`, etc.). Edited by humans, reviewed in PRs, mostly stable across versions. | `flow:org.vibevm.world/wal@^0.1.0` |
 | `vibe.lock` | **Materialisation.** The exact version the resolver picked, plus content hashes, source URLs, transitive graph. Regenerated on every install / update; mostly noise to humans, mostly signal to tooling. | `version = "0.1.3"` |
 
 Same shape as Cargo (`Cargo.toml` ↔ `Cargo.lock`), npm (`package.json` ↔ `package-lock.json`), Poetry, Bundler. If you understand one, you understand the other.
@@ -28,14 +28,14 @@ A package reference is `[<kind>:][<group>/]<name>[@<version>]`. Manifests store 
 
 | Form | Meaning | Matches | Doesn't match |
 | --- | --- | --- | --- |
-| `flow:wal` | No constraint — latest stable. | `0.1.0`, `0.1.5`, `0.2.0`, `1.0.0` | — |
-| `flow:wal@0.3.0` | **Caret shorthand** — same as `^0.3.0`. | `0.3.0`, `0.3.5` (pre-1.0 patch range) | `0.4.0`, `0.2.9` |
-| `flow:wal@^0.3.0` | Caret, written explicitly. Same meaning. | `0.3.0`, `0.3.5` | `0.4.0`, `0.2.9` |
-| `flow:wal@^0.3` | Caret with omitted patch. | `0.3.0`, `0.3.5` | `0.4.0`, `0.2.9` |
-| `flow:wal@~0.3.1` | **Tilde** — patch-only within the same minor. | `0.3.1`, `0.3.5` | `0.4.0`, `0.3.0` (below) |
-| `flow:wal@=0.3.0` | **Strict equal** — only that version. | `0.3.0` | everything else |
-| `flow:wal@>=0.3, <1.0` | Compound range. | `0.3.0`, `0.5.7`, `0.9.99` | `0.2.9`, `1.0.0` |
-| `flow:wal@*` | Any version (wildcard). Same as bare `flow:wal`. | everything | — |
+| `flow:org.vibevm.world/wal` | No constraint — latest stable. | `0.1.0`, `0.1.5`, `0.2.0`, `1.0.0` | — |
+| `flow:org.vibevm.world/wal@0.3.0` | **Caret shorthand** — same as `^0.3.0`. | `0.3.0`, `0.3.5` (pre-1.0 patch range) | `0.4.0`, `0.2.9` |
+| `flow:org.vibevm.world/wal@^0.3.0` | Caret, written explicitly. Same meaning. | `0.3.0`, `0.3.5` | `0.4.0`, `0.2.9` |
+| `flow:org.vibevm.world/wal@^0.3` | Caret with omitted patch. | `0.3.0`, `0.3.5` | `0.4.0`, `0.2.9` |
+| `flow:org.vibevm.world/wal@~0.3.1` | **Tilde** — patch-only within the same minor. | `0.3.1`, `0.3.5` | `0.4.0`, `0.3.0` (below) |
+| `flow:org.vibevm.world/wal@=0.3.0` | **Strict equal** — only that version. | `0.3.0` | everything else |
+| `flow:org.vibevm.world/wal@>=0.3, <1.0` | Compound range. | `0.3.0`, `0.5.7`, `0.9.99` | `0.2.9`, `1.0.0` |
+| `flow:org.vibevm.world/wal@*` | Any version (wildcard). Same as bare `flow:org.vibevm.world/wal`. | everything | — |
 
 `<kind>` is one of `flow`, `feat`, `stack`, `tool`. `<name>` is kebab-case.
 
@@ -87,7 +87,7 @@ Reach for tilde when you've discovered an API quirk in a particular minor and wa
 
 `=0.3.0` matches exactly `0.3.0` and nothing else. This is what you want when you need byte-for-byte reproducibility regardless of what's published later, and you don't trust caret's compatibility promise.
 
-The `=` operator is required because **bare semver is caret**, not exact. `flow:wal@0.3.0` is `^0.3.0` — to pin strictly, write `flow:wal@=0.3.0`.
+The `=` operator is required because **bare semver is caret**, not exact. `flow:org.vibevm.world/wal@0.3.0` is `^0.3.0` — to pin strictly, write `flow:org.vibevm.world/wal@=0.3.0`.
 
 This is the one place vibevm differs from older or simpler tools. If you're coming from a `requirements.txt`-style world where `foo==1.2.3` is exact, the equivalent here is `foo@=1.2.3`.
 
@@ -98,7 +98,7 @@ The manifest's `[requires].packages` records the **constraint** the user declare
 ### Rule 1 — No version on CLI → caret of resolved version
 
 ```bash
-vibe install flow:wal --assume-yes
+vibe install flow:org.vibevm.world/wal --assume-yes
 ```
 
 Resolver picks `0.1.0` (latest stable). Manifest gets:
@@ -113,7 +113,7 @@ This is the **default**, and matches `cargo add` / `npm install` / `poetry add`.
 ### Rule 2 — Explicit constraint on CLI → preserved verbatim
 
 ```bash
-vibe install flow:wal@^0.1 --assume-yes
+vibe install flow:org.vibevm.world/wal@^0.1 --assume-yes
 ```
 
 Manifest stores exactly what was typed:
@@ -127,21 +127,21 @@ We don't tighten `^0.1` to `^0.1.0`, even though the resolver produces a concret
 
 | You typed | Manifest stores |
 | --- | --- |
-| `flow:wal@^0.1` | `"org.vibevm.world/wal" = "^0.1"` |
-| `flow:wal@~0.1.0` | `"org.vibevm.world/wal" = "~0.1.0"` |
-| `flow:wal@=0.1.0` | `"org.vibevm.world/wal" = "=0.1.0"` |
-| `flow:wal@>=0.1, <0.3` | `"org.vibevm.world/wal" = ">=0.1, <0.3"` |
+| `flow:org.vibevm.world/wal@^0.1` | `"org.vibevm.world/wal" = "^0.1"` |
+| `flow:org.vibevm.world/wal@~0.1.0` | `"org.vibevm.world/wal" = "~0.1.0"` |
+| `flow:org.vibevm.world/wal@=0.1.0` | `"org.vibevm.world/wal" = "=0.1.0"` |
+| `flow:org.vibevm.world/wal@>=0.1, <0.3` | `"org.vibevm.world/wal" = ">=0.1, <0.3"` |
 
 ### Rule 3 — `--exact` overrides everything
 
 ```bash
-vibe install flow:wal --exact --assume-yes
+vibe install flow:org.vibevm.world/wal --exact --assume-yes
 ```
 
 or
 
 ```bash
-vibe install flow:wal@^0.1 --exact --assume-yes
+vibe install flow:org.vibevm.world/wal@^0.1 --exact --assume-yes
 ```
 
 Manifest pins to `=<resolved>`, regardless of CLI form:
@@ -159,12 +159,12 @@ Manifest pins to `=<resolved>`, regardless of CLI form:
 
 Since the manifest carries constraints (not pins), `vibe update` respects them:
 
-- `flow:wal@^0.1.0` → may bump from `0.1.0` to `0.1.5` (caret allows patch).
-- `flow:wal@~0.1.0` → same, only patch.
-- `flow:wal@=0.1.0` → no-op, the constraint pins exactly.
-- `flow:wal` (no version, legacy) → may bump anywhere up to latest.
+- `flow:org.vibevm.world/wal@^0.1.0` → may bump from `0.1.0` to `0.1.5` (caret allows patch).
+- `flow:org.vibevm.world/wal@~0.1.0` → same, only patch.
+- `flow:org.vibevm.world/wal@=0.1.0` → no-op, the constraint pins exactly.
+- `flow:org.vibevm.world/wal` (no version, legacy) → may bump anywhere up to latest.
 
-`vibe update` never edits `vibe.toml` itself. To bump the manifest's constraint (`^0.1` → `^0.2`), re-run `vibe install flow:wal@^0.2`.
+`vibe update` never edits `vibe.toml` itself. To bump the manifest's constraint (`^0.1` → `^0.2`), re-run `vibe install flow:org.vibevm.world/wal@^0.2`.
 
 ## What's in `vibe.lock`
 
@@ -212,17 +212,17 @@ Three reasons, none new:
 2. **Industry default.** Operators arriving from any of Cargo / npm / Poetry / Yarn already expect this shape. Diverging would be surprising for no benefit.
 3. **You can still pin.** `--exact`, or write `@=0.1.0` explicitly. The default doesn't take options away; it picks the most useful one.
 
-### Why does `flow:wal@0.3.0` not match `0.3.0` only?
+### Why does `flow:org.vibevm.world/wal@0.3.0` not match `0.3.0` only?
 
-Because bare semver in vibevm is caret shorthand, exactly like in Cargo. `flow:wal@0.3.0` means `^0.3.0`, which (pre-1.0) means `>=0.3.0, <0.4.0`. To pin only `0.3.0`, write `flow:wal@=0.3.0`.
+Because bare semver in vibevm is caret shorthand, exactly like in Cargo. `flow:org.vibevm.world/wal@0.3.0` means `^0.3.0`, which (pre-1.0) means `>=0.3.0, <0.4.0`. To pin only `0.3.0`, write `flow:org.vibevm.world/wal@=0.3.0`.
 
 ### How does this interact with the registry's available versions?
 
 vibevm asks the registry for the list of published versions, then walks them top-down looking for the highest one that matches the constraint. So `^0.1.0` against a registry that has `0.1.0`, `0.1.3`, `0.2.0` resolves to `0.1.3`. The resolver always prefers the highest matching stable version (pre-release versions are skipped unless the constraint explicitly requests one).
 
-### What if I already have a `"flow:wal"` (no version) in my `vibe.toml`?
+### What if I already have a `"flow:org.vibevm.world/wal"` (no version) in my `vibe.toml`?
 
-It keeps working — `vibe install` and `vibe update` both treat it as "any version". vibevm doesn't auto-rewrite legacy entries; new installs write caret, but existing entries are left to the operator. To upgrade a legacy entry to caret, re-run `vibe install flow:wal --assume-yes` and let it write the modern shape.
+It keeps working — `vibe install` and `vibe update` both treat it as "any version". vibevm doesn't auto-rewrite legacy entries; new installs write caret, but existing entries are left to the operator. To upgrade a legacy entry to caret, re-run `vibe install flow:org.vibevm.world/wal --assume-yes` and let it write the modern shape.
 
 ### Can I use this syntax in `[provides].capabilities`?
 
@@ -235,9 +235,9 @@ For `provides`, an exact-form like `=0.3.0` and a caret-form like `0.3.0` carry 
 Yes:
 
 ```
-flow:wal@1     → ^1.0.0    (matches 1.x.x)
-flow:wal@1.2   → ^1.2.0    (matches 1.2.x — caret with omitted patch)
-flow:wal@~1.2  → ~1.2.0    (same window for tilde)
+flow:org.vibevm.world/wal@1     → ^1.0.0    (matches 1.x.x)
+flow:org.vibevm.world/wal@1.2   → ^1.2.0    (matches 1.2.x — caret with omitted patch)
+flow:org.vibevm.world/wal@~1.2  → ~1.2.0    (same window for tilde)
 ```
 
 ### Where is the canonical specification of the syntax?
