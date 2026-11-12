@@ -13,10 +13,13 @@
 //! exactly as a channel is lowered to an exact pin before anything
 //! selects (`#CHANNEL-SYNTAX`). One chokepoint
 //! ([`super::global::resolve_package_with_operation`]) therefore covers
-//! `install -g`, `update -g`, `app plan`, `app use`, `env --use`, a
-//! version file's partial value and every `requires` entry of
-//! PROP-065 `#app-dependencies` — and nvm, which calls those commands —
-//! without a single registry knowing the policy exists.
+//! `install -g`, `update -g`, `app plan`, a version file's partial value,
+//! `describe`, `migrate`, the portable surfaces and every `requires`
+//! entry of PROP-065 `#app-dependencies` — and nvm, which calls those
+//! commands — without a single registry knowing the policy exists.
+//! `app use` and `app env --use` need nothing: they choose among the
+//! versions this home has **installed**, where every candidate is
+//! available by the definition below, so no policy can move their answer.
 //!
 //! **What `newest` costs: nothing.** The default returns before a domain
 //! is read, a drop is listed or the home's index is opened. The two other
@@ -37,10 +40,11 @@ use vibe_core::{Group, PackageRef};
 
 use super::versions::RegistryDomains;
 
-/// The environment variable that overrides every file (`PROP-075`
-/// `#VERSIONS-SELECT`). It is a `VIBE_*` name, so `[env]` in
-/// `config.toml` supplies it as a fallback like any other.
-pub(crate) const ENV_VAR: &str = "VIBE_VERSIONS_SELECT";
+// The environment variable that overrides every file (`PROP-075`
+// `#VERSIONS-SELECT`) is read at the composition root, with the
+// invocation's other `VIBE_*` posture variables
+// (`crate::output::env_versions_select`); this module only parses what it
+// hands over, so nothing below dispatch touches the ambient environment.
 
 /// Which layer decided the policy — what `vibe show config` and
 /// `vibe self apply --show` print beside the value.
@@ -98,14 +102,14 @@ pub(crate) fn effective_from(
     own: &UserConfig,
     site: Option<&vibe_core::site_profile::SiteProfile>,
 ) -> Result<(VersionSelect, Origin)> {
-    if let Some(raw) = std::env::var_os(ENV_VAR) {
-        let raw = raw.to_string_lossy();
-        if !raw.trim().is_empty() {
-            let policy = raw.parse::<VersionSelect>().map_err(|error| {
-                anyhow::anyhow!("`{ENV_VAR}={raw}` is not a version-selection policy: {error}")
-            })?;
-            return Ok((policy, Origin::Environment));
-        }
+    if let Some(raw) = crate::output::env_versions_select() {
+        let policy = raw.parse::<VersionSelect>().map_err(|error| {
+            anyhow::anyhow!(
+                "`{}={raw}` is not a version-selection policy: {error}",
+                crate::output::VERSIONS_SELECT_VAR
+            )
+        })?;
+        return Ok((policy, Origin::Environment));
     }
     if let Some(policy) = own.versions.select {
         return Ok((policy, Origin::UserConfig));

@@ -311,12 +311,22 @@ fn snapshot_row(
         template,
         &group,
         &row.name,
-        &record,
-        &selected,
-        row.version_list,
+        Staging {
+            record: &record,
+            selected: &selected,
+            version_list: row.version_list,
+        },
         scratch,
     )?);
     Ok(())
+}
+
+/// What one row stages: the record to write, the versions this run
+/// selected, and how much of the version list to publish.
+struct Staging<'a> {
+    record: &'a SnapshotRecord,
+    selected: &'a [semver::Version],
+    version_list: VersionList,
 }
 
 /// Write the three files into `scratch` and name them by their
@@ -326,11 +336,14 @@ fn stage(
     template: &ActiveTemplate,
     group: &Group,
     name: &str,
-    record: &SnapshotRecord,
-    selected: &[semver::Version],
-    version_list: VersionList,
+    staging: Staging<'_>,
     scratch: &Path,
 ) -> Result<BatchFiles> {
+    let Staging {
+        record,
+        selected,
+        version_list,
+    } = staging;
     let dir = scratch.join("templates").join(group.as_str()).join(name);
     std::fs::create_dir_all(dir.join("digests"))
         .with_context(|| format!("creating `{}`", dir.display()))?;

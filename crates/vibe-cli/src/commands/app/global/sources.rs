@@ -163,15 +163,50 @@ impl Packages {
         }
     }
     pub(crate) fn resolve(&self, spelling: &str) -> Result<ResolvedPackage, vibe_app::AppError> {
-        resolve_package_with_operation(
-            &self.settings,
-            self.registry.as_deref(),
-            self.embedded.as_deref(),
+        self.lift(
             spelling,
-            self.offline,
-            &self.operation,
+            resolve_package_with_operation(
+                &self.settings,
+                self.registry.as_deref(),
+                self.embedded.as_deref(),
+                spelling,
+                self.offline,
+                &self.operation,
+            ),
         )
-        .map_err(|error| match error.downcast::<vibe_app::AppError>() {
+    }
+
+    /// Resolve with **no** `[versions] select` policy applied — what a
+    /// reader whose question is "what is newest upstream" asks
+    /// (`vibe app outdated`, PROP-075 `#VERSIONS-SELECT`). What is newer
+    /// upstream is a fact about upstream, not about this machine's drop,
+    /// and under `drop-only` the policy path would refuse to answer at
+    /// all for a package the drop does not carry.
+    pub(crate) fn resolve_newest(
+        &self,
+        spelling: &str,
+    ) -> Result<ResolvedPackage, vibe_app::AppError> {
+        self.lift(
+            spelling,
+            resolve_package_newest(
+                &self.settings,
+                self.registry.as_deref(),
+                self.embedded.as_deref(),
+                spelling,
+                self.offline,
+                &self.operation,
+            ),
+        )
+    }
+
+    /// One resolution's answer as the application error family spells it,
+    /// so a caller's `match` is the same whichever of the two it asked.
+    fn lift(
+        &self,
+        spelling: &str,
+        resolved: Result<ResolvedPackage>,
+    ) -> Result<ResolvedPackage, vibe_app::AppError> {
+        resolved.map_err(|error| match error.downcast::<vibe_app::AppError>() {
             Ok(error) => error,
             Err(error) => vibe_app::ResolveError::Registry {
                 spelling: spelling.into(),

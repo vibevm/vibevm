@@ -965,7 +965,8 @@ Status: **delivered 2026-11-12**. Owner request of 2026-11-12, «положит�
   channel before anything selects — so `install -g`, `update -g`, `app plan`, `app use`, `env --use`,
   a partial version-file value, `describe`, `migrate`, `portable` and every `requires` entry of
   PROP-065 `#app-dependencies` are covered, and nvm with them, while no registry and no caller learns
-  the policy exists. **`newest` returns before a domain is read, a drop is listed or the home's index
+  the policy exists. `app use` and `app env --use` are untouched and need to be: they choose among
+  **installed** versions, where every candidate is available by definition. **`newest` returns before a domain is read, a drop is listed or the home's index
   is opened**, so the default costs nothing at all. The other two pay one domain read and one `in
   drop` probe per resolution, which is the skeleton-stage budget of `#TEMPLATE-TWO-STAGE`: no digest
   document, no render, no byte of a payload read.

@@ -81,6 +81,22 @@ pub fn env_app_log_tail() -> Option<String> {
     env_nonempty("VIBE_APP_LOG_TAIL")
 }
 
+/// The name of the `[versions] select` override, the highest rung of its
+/// ladder (PROP-075 `#VERSIONS-SELECT`). A `VIBE_*` name, so `[env]` in
+/// `config.toml` supplies it as a fallback like every other promoted
+/// variable, with no extra machinery.
+pub const VERSIONS_SELECT_VAR: &str = "VIBE_VERSIONS_SELECT";
+
+/// Read `VIBE_VERSIONS_SELECT`: the version-selection policy this
+/// invocation was given, over every file. Resolved here with the
+/// invocation's other `VIBE_*` posture variables, so the selection layer
+/// takes its override as data and reads no environment of its own; the
+/// spelling is not parsed here, because a refusal belongs where the three
+/// policies are defined.
+pub fn env_versions_select() -> Option<String> {
+    env_nonempty(VERSIONS_SELECT_VAR)
+}
+
 /// Hand the display language this invocation's terminal (PROP-067
 /// `#palette`): attributes only where both streams reach a terminal that
 /// draws them, nobody asked for plain text and `NO_COLOR` (any nonempty

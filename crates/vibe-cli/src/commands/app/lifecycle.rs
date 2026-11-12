@@ -100,9 +100,14 @@ pub(crate) fn outdated(
         embedded: embedded_root.map(Path::to_path_buf),
         offline,
     };
+    // **Deliberately the policy-free resolution** (PROP-075
+    // `#VERSIONS-SELECT`): `outdated` answers "what is newer upstream",
+    // which is a fact about upstream and not about this machine's drop —
+    // and under `[versions] select = "drop-only"` the policy path would
+    // refuse to answer at all for a package the drop does not carry.
     let latest = |package: &vibe_app::PackageCoordinate| {
         packages
-            .resolve(&format!("{}/{}", package.group, package.name))
+            .resolve_newest(&format!("{}/{}", package.group, package.name))
             .map(|resolved| resolved.package.version)
             .map_err(|error| error.to_string())
     };

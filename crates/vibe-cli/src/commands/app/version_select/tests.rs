@@ -6,7 +6,7 @@
 
 use std::path::PathBuf;
 
-use super::{ENV_VAR, Origin, no_drop};
+use super::{Origin, no_drop};
 
 /// Every layer prints the word the rest of the configuration surface
 /// already uses for it, so one `vibe show config` reads consistently.
@@ -19,11 +19,12 @@ fn each_layer_is_named_the_way_every_other_layered_value_names_it() {
 }
 
 /// The override is a `VIBE_*` name, which is what lets `[env]` in
-/// `config.toml` supply it as a fallback like every other such variable.
+/// `config.toml` supply it as a fallback like every other such variable,
+/// and it is read at the composition root with its siblings.
 #[test]
 fn the_environment_override_is_a_promotable_vibe_name() {
-    assert!(ENV_VAR.starts_with("VIBE_"));
-    assert_eq!(ENV_VAR, "VIBE_VERSIONS_SELECT");
+    assert!(crate::output::VERSIONS_SELECT_VAR.starts_with("VIBE_"));
+    assert_eq!(crate::output::VERSIONS_SELECT_VAR, "VIBE_VERSIONS_SELECT");
 }
 
 /// `drop-only` with no drop declared at all refuses by naming the key to
