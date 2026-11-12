@@ -30,6 +30,7 @@
 
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-075#VERSIONS-SELECT");
 
+use std::collections::BTreeSet;
 use std::path::{Path, PathBuf};
 
 use anyhow::Result;
@@ -233,14 +234,22 @@ fn narrow_under(
         })
     });
     let installed = installed_versions(settings, &group, name);
-    let candidates: Vec<Candidate> = admitted(&requested.version, &all, members.as_deref())
-        .into_iter()
-        .map(|version| Candidate {
-            available: installed.contains(&version)
-                || domains.in_drop(group.as_str(), name, &version).is_some(),
+    // The two grounds are kept apart only so the note can say which one
+    // applied: a version that is here because it is **installed** must not
+    // be announced as "in drop", which would be a sentence about a file
+    // that is not there. The policy itself sees one bit.
+    let mut candidates: Vec<Candidate> = Vec::new();
+    let mut in_drop: BTreeSet<semver::Version> = BTreeSet::new();
+    for version in admitted(&requested.version, &all, members.as_deref()) {
+        let marked = domains.in_drop(group.as_str(), name, &version).is_some();
+        if marked {
+            in_drop.insert(version.clone());
+        }
+        candidates.push(Candidate {
+            available: marked || installed.contains(&version),
             version,
-        })
-        .collect();
+        });
+    }
 
     match decide(policy, &candidates) {
         Selection::Unchanged => Ok(Narrowed::AsWritten),
@@ -249,9 +258,7 @@ fn narrow_under(
             instead_of,
         } => Ok(Narrowed::Pinned {
             spelling: format!("{coordinate}@={version}"),
-            note: format!(
-                "{spelling} → {version} (in drop; {instead_of} is newer but not in the drop)"
-            ),
+            note: redirect_note(spelling, &version, &instead_of, in_drop.contains(&version)),
         }),
         Selection::Refuse { newest } => Err(nothing_in_drop(
             &coordinate,
@@ -263,6 +270,23 @@ fn narrow_under(
             name,
         )),
     }
+}
+
+/// The one line a redirected resolution prints: both versions, and which
+/// ground made the picked one available.
+///
+/// A version that is here because this home **installed** it is announced
+/// as `installed`, never as `in drop` — that would be a sentence about a
+/// file which is not there, and the whole point of the note is that the
+/// operator can act on it.
+fn redirect_note(
+    spelling: &str,
+    version: &semver::Version,
+    instead_of: &semver::Version,
+    in_drop: bool,
+) -> String {
+    let ground = if in_drop { "in drop" } else { "installed" };
+    format!("{spelling} → {version} ({ground}; {instead_of} is newer but not in the drop)")
 }
 
 /// The members of the two channel names every package has whether it

@@ -956,6 +956,12 @@ Status: **delivered 2026-11-12**. Owner request of 2026-11-12, «положит�
   `drop-only` with no `[artifacts] packages` drop declared at all, and `drop-only` whose drop holds
   nothing the requirement admits — the latter naming the version `newest` would have landed on and
   the **first rung its payload belongs at**, which is the convention's `<drop>/<group>/<name>/<version>/<file>`.
+- **Human output, the one new line.** A resolution the policy moves prints one warning-shaped line
+  on stderr, once, naming both versions and which ground made the picked one available:
+  `! node@22 → 22.23.4 (in drop; 22.23.5 is newer but not in the drop)`, or `(installed; …)` when the
+  version is here because this home already installed it rather than because a file is in the drop.
+  Stdout is untouched, so a `--json` reader sees the pinned version in its own answer and the reason
+  here. A resolution the policy does not move says nothing at all.
 - **New public surface, additive**: `vibe_core::version_select` — `VersionSelect`, `Candidate`,
   `Selection`, `pick`, `admitted`, `select` — the whole policy as one pure function over a list, and
   `vibe_core::user_config::VersionsConfig`. Nothing in it reads a drop, an index or a registry.

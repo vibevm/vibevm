@@ -6,7 +6,7 @@
 
 use std::path::PathBuf;
 
-use super::{Origin, no_drop};
+use super::{Origin, no_drop, redirect_note};
 
 /// Every layer prints the word the rest of the configuration surface
 /// already uses for it, so one `vibe show config` reads consistently.
@@ -99,4 +99,22 @@ fn an_unknown_file_name_falls_back_to_naming_the_drop_itself() {
         None,
     );
     assert!(message.contains("/srv/drop"), "{message}");
+}
+
+/// The note of a redirected resolution names both versions and the ground
+/// that made the picked one available — `in drop` for a payload on disk,
+/// `installed` for a version this home already holds. Announcing the
+/// second as the first would be a sentence about a file that is not there.
+#[test]
+fn the_note_names_both_versions_and_the_ground_that_applied() {
+    let picked = "22.23.4".parse().unwrap();
+    let newer = "22.23.5".parse().unwrap();
+    assert_eq!(
+        redirect_note("node@22", &picked, &newer, true),
+        "node@22 → 22.23.4 (in drop; 22.23.5 is newer but not in the drop)"
+    );
+    assert_eq!(
+        redirect_note("node@22", &picked, &newer, false),
+        "node@22 → 22.23.4 (installed; 22.23.5 is newer but not in the drop)"
+    );
 }
