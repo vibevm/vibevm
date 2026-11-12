@@ -345,6 +345,17 @@ EOF
         harness_b "sandbox B needs the package org.vibevm.nvm/nvm, and no registry was given: pass --nvm-registry PATH (or set VIBENVM_REGISTRY) pointing at a local registry that publishes it"
         return 1
     fi
+    # **The shim is sourced on macOS too, and this harness is Linux
+    # only** — so the one class of defect it structurally cannot see is a
+    # GNU-only construct in the shim, which works here and fails there.
+    # The package carries its own gate for that class; the suite refuses
+    # to pretend it proved anything about a shim that fails it.
+    local gate="$registry/org.vibevm.nvm/nvm"
+    gate="$(find "$gate" -name portability.sh -type f 2>/dev/null | sort | head -1)"
+    if [ -n "$gate" ] && ! bash "$gate" >/dev/null 2>&1; then
+        bash "$gate" >&2 || true
+        harness_b "the shim fails its own portability gate ($gate): a GNU-only construct works on this Linux harness and fails on macOS, so a verdict from here would prove nothing about it"
+    fi
     if [ ! -d "$registry/org.vibevm.nvm/nvm" ]; then
         harness_b "missing package org.vibevm.nvm/nvm in the registry at $registry — run conformance/vibenvm/make-registry.sh, which publishes it from its own repository"
         return 1

@@ -1,0 +1,43 @@
+schema = 1
+name = "alias-resolution"
+summary = """
+What a named alias resolves to, which is not the same question as what it
+stores. nvm follows the chain and then resolves the **result**: unless that
+result is an exactly installed version it goes through `nvm_version`
+(nvm.sh 2143-2167), so an alias naming a partial version names whatever
+that partial names. With v22.9.0 installed, `nvm alias work 22` makes
+`work` mean v22.9.0 — for `use`, `which`, `run`, `exec`, `version` and the
+`ls` listing alike.
+
+This is the shape release testing on real machines found broken: the chain
+was followed and its result then taken as an exact version, so every verb
+refused a perfectly good alias with `N/A: version "work -> v22" is not yet
+installed.` and exit 3. Three chains are asked for here — an alias to a
+partial version, an alias to `lts/*`, and an alias to another alias to a
+partial — because the defect was in the step after the chain, and only a
+chain with something left to resolve can see it.
+"""
+wall_secs = 900
+commands = [
+  "nvm install --no-progress 22.9.0",
+  "nvm alias work 22",
+  "nvm alias work",
+  "nvm version work",
+  "nvm which work",
+  "nvm use work",
+  "nvm current",
+  "nvm run work --version",
+  "nvm exec work node --version",
+  "nvm ls work",
+  "nvm alias viaLts --lts node",
+  "nvm alias viaLts",
+  "nvm alias chain work",
+  "nvm alias chain",
+  "nvm version chain",
+  "nvm use chain",
+  "nvm which chain",
+  "nvm alias",
+  "nvm unalias chain",
+  "nvm unalias work",
+  "nvm use work",
+]
