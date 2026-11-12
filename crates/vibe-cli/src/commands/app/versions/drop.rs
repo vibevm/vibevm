@@ -219,7 +219,7 @@ mod tests {
             "path_dirs = [\"bin\"]\n\n[[installer_options.steps]]\nid = \"unpack\"\n\
              title = \"Unpack\"\nkind = \"archive\"\nformat = \"tar_gz\"\n\
              source = \"https://h.example/d/v1.0.0/tool-1.0.0-linux-x64.tar.gz\"\n\
-             sha256 = \"ab\"\n",
+             sha256 = \"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\"\n",
         );
         assert_eq!(
             downloaded_file_names(&option).as_deref(),
@@ -235,11 +235,11 @@ mod tests {
         let option = option(
             "[installer_options.installation]\ntype = \"source_build\"\n\
              [[installer_options.installation.sources]]\nname = \"a\"\n\
-             url = \"https://h.example/a-1.tgz\"\nsha256 = \"ab\"\n\
+             url = \"https://h.example/a-1.tgz\"\nsha256 = \"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\"\n\
              [[installer_options.installation.sources]]\nname = \"b\"\n\
-             drop = \"packages\"\nfile = \"b-1.tgz\"\nsha256 = \"cd\"\n\
+             drop = \"packages\"\nfile = \"b-1.tgz\"\nsha256 = \"cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc\"\n\
              [[installer_options.installation.sources]]\nname = \"c\"\n\
-             path = \"vendor/c.tgz\"\nsha256 = \"ef\"\n\
+             path = \"vendor/c.tgz\"\nsha256 = \"eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee\"\n\
              [installer_options.installation.recipe]\nscript = \"build.sh\"\n\n\
              [[installer_options.launchers]]\nid = \"m\"\nname = \"M\"\n\
              executable = \"$app_bin/tool\"\nkind = \"command\"\ndefault = true\n",
@@ -265,7 +265,7 @@ mod tests {
         let nameless = option(
             "path_dirs = [\"bin\"]\n\n[[installer_options.steps]]\nid = \"unpack\"\n\
              title = \"Unpack\"\nkind = \"archive\"\nformat = \"tar_gz\"\n\
-             source = \"https://h.example/\"\nsha256 = \"ab\"\n",
+             source = \"https://h.example/\"\nsha256 = \"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\"\n",
         );
         assert_eq!(downloaded_file_names(&nameless), None);
     }
