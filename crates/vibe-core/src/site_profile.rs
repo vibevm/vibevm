@@ -32,7 +32,7 @@ use crate::manifest::{
 use crate::remap::{Layer, LoadedSource, RowDecl};
 use crate::trust::TrustLists;
 use crate::user_config::{
-    ArtifactsConfig, NetConfig, ProxyConfig, SelfConfig, TlsConfig, UserConfig,
+    ArtifactsConfig, NetConfig, ProxyConfig, SelfConfig, TlsConfig, UserConfig, VersionsConfig,
 };
 
 /// The one schema version this reader accepts (`schema = 1`).
@@ -143,6 +143,13 @@ pub struct SiteProfile {
     /// `[net]` — `offline = true` makes the installation offline by default.
     #[serde(default, skip_serializing_if = "NetConfig::is_default")]
     pub net: NetConfig,
+    /// `[versions]` — the installation's version-selection policy
+    /// (PROP-075 `#VERSIONS-SELECT`). The table a closed network sets to
+    /// `prefer-drop` or `drop-only` once, for every developer who applies
+    /// the profile; a developer's own `[versions]` in `config.toml` still
+    /// overrides it.
+    #[serde(default, skip_serializing_if = "VersionsConfig::is_default")]
+    pub versions: VersionsConfig,
     /// `[path]` — the PATH policy of `vibe self apply`.
     #[serde(default, skip_serializing_if = "is_default_path")]
     pub path: PathSection,
@@ -417,6 +424,7 @@ impl SiteProfile {
             proxy: self.proxy.clone(),
             tls: self.tls.clone(),
             net: self.net.clone(),
+            versions: self.versions.clone(),
             ..UserConfig::default()
         }
     }

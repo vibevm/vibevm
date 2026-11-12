@@ -177,6 +177,7 @@ fn a_bare_run_repeats_the_recorded_selection_and_does_not_rewrite_it() {
             archs: vec![],
             installers: vec![],
             payloads: true,
+            version_list: Default::default(),
         }],
     };
     let selection = resolve(None, &[], &[], Some(&recorded), &[], None).unwrap();
@@ -267,6 +268,7 @@ fn a_recorded_requirement_this_vibe_cannot_parse_is_dropped_not_fatal() {
             archs: vec![],
             installers: vec![],
             payloads: false,
+            version_list: Default::default(),
         }],
         ..record::SelectRecord::default()
     };

@@ -105,6 +105,14 @@ pub(super) struct TemplateRecord {
     pub installers: Vec<String>,
     #[serde(default, skip_serializing_if = "std::ops::Not::not")]
     pub payloads: bool,
+    /// `version_list = "all" | "selected"`; the default is skipped, so
+    /// every record written before the knob existed stays byte-identical.
+    #[serde(default, skip_serializing_if = "is_default_version_list")]
+    pub version_list: super::config::VersionList,
+}
+
+fn is_default_version_list(value: &super::config::VersionList) -> bool {
+    *value == super::config::VersionList::default()
 }
 
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]

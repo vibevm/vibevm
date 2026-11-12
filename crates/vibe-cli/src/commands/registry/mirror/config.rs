@@ -15,7 +15,7 @@ specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-075#MIRROR-CONFIG-SC
 use std::path::{Path, PathBuf};
 
 use anyhow::{Context, Result, bail};
-use serde::Deserialize;
+use serde::{Deserialize, Serialize};
 
 /// The only schema this vibe reads; any other value is refused outright,
 /// exactly as `_index/mirrors/<source>.toml` is (`super::record::SCHEMA`).
@@ -52,6 +52,41 @@ pub(super) struct SelectDocument {
     pub exclude: Vec<String>,
 }
 
+/// `[[template]] version_list` — how much of the template's version
+/// document the snapshot's `versions.json` carries, and therefore how
+/// much of the version domain a client behind this mirror can see and
+/// resolve at all (PROP-075 `#MIRROR-CONFIG-SCHEMA`).
+///
+/// The snapshot always carries a **render** only for the versions the row
+/// selects; this knob is about the *list*, which is what a client's
+/// domain and channel table are computed from.
+#[derive(Debug, Clone, Copy, Default, PartialEq, Eq, Deserialize, Serialize)]
+#[serde(rename_all = "kebab-case")]
+pub(super) enum VersionList {
+    /// Every version the snapshot's record names, accumulated over every
+    /// run — the behaviour before the knob existed, and the **default**:
+    /// a re-run never takes away a version the record still describes.
+    #[default]
+    All,
+    /// Only the versions **this** row selects. Narrowing `versions`,
+    /// `channels` or `newest` then narrows what every client behind the
+    /// mirror sees and resolves on the next run, with no `--prune`: the
+    /// list is rewritten in place, never deleted. This is «обрезать
+    /// список» — the knob a closed network sets so `install -g node@22`
+    /// cannot land on a version the mirror deliberately did not carry.
+    Selected,
+}
+
+impl VersionList {
+    /// The stored, kebab-case spelling.
+    pub(super) fn as_str(self) -> &'static str {
+        match self {
+            VersionList::All => "all",
+            VersionList::Selected => "selected",
+        }
+    }
+}
+
 /// One `[[template]]` row — a template package and which of the versions
 /// it produces this mirror wants.
 #[derive(Debug, Clone, Deserialize)]
@@ -77,6 +112,9 @@ pub(super) struct TemplateDocument {
     pub installers: Vec<String>,
     #[serde(default)]
     pub payloads: bool,
+    /// `version_list = "all" | "selected"`; absent is `all`.
+    #[serde(default)]
+    pub version_list: VersionList,
 }
 
 /// `[payloads]` — the budget and the drop payload projection writes into.
@@ -145,6 +183,7 @@ pub(super) struct ValidatedTemplate {
     pub archs: Vec<String>,
     pub installers: Vec<String>,
     pub payloads: bool,
+    pub version_list: VersionList,
 }
 
 impl ValidatedTemplate {
@@ -261,6 +300,7 @@ fn validate_template(row: &TemplateDocument, shown: &str) -> Result<ValidatedTem
         archs: row.archs.clone(),
         installers: row.installers.clone(),
         payloads: row.payloads,
+        version_list: row.version_list,
     })
 }
 

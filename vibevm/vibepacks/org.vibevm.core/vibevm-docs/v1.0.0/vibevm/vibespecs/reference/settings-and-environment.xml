@@ -18,7 +18,7 @@ VIBE_LOG=warn</expect>
       <tr><td>`~/.vibe/registries/`</td><td>git clones of registries, used to fetch packages</td></tr>
       <tr><td>`~/.vibe/opt/`</td><td>installed versions of vibe, their launchers in `opt/bin/`, and the downloaded reader shell</td></tr>
       <tr><td>`~/.vibe/registry.toml`</td><td>machine-wide registries, mirrors and overrides, merged after each project's</td></tr>
-      <tr><td>`~/.vibe/config.toml`</td><td>user configuration: `[env]`, `[install]`, `[net]`</td></tr>
+      <tr><td>`~/.vibe/config.toml`</td><td>user configuration: `[env]`, `[install]`, `[net]`, `[artifacts]` (the directories a closed network is fed from by hand), `[versions]` (`select = "newest" | "prefer-drop" | "drop-only"` &#8212; which version a requirement over an application package lands on when only part of the version list can be installed here; `VIBE_VERSIONS_SELECT` overrides it, a site profile supplies it below)</td></tr>
       <tr><td>`~/.vibe/settings.toml`</td><td>your application preferences, the first of three layers</td></tr>
       <tr><td>`~/.vibe/&lt;host&gt;.publish.token`, `~/.vibe/git.publish.token`</td><td>publish tokens, readable by you alone; never printed, never copied</td></tr>
       <tr><td>`~/.vibe/search-cache/`</td><td>cached search results with a time to live</td></tr>

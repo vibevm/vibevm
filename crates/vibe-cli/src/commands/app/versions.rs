@@ -100,13 +100,28 @@ pub(super) fn run(
     if ctx.is_json() {
         return ctx.emit_json(&listing);
     }
-    print(&listing, ctx.is_quiet());
+    // The policy belongs in the trailer, beside the slot and the default,
+    // because it is what decides which of the rows above an install would
+    // actually land on (PROP-075 `#VERSIONS-SELECT`).
+    print(
+        &listing,
+        ctx.is_quiet(),
+        super::version_select::effective()?.0,
+    );
     Ok(())
 }
 
 /// The version domain of one package, read through the same source chain
 /// an install resolves through.
-struct RegistryDomains {
+///
+/// Shared with the version-selection policy of PROP-075
+/// `#VERSIONS-SELECT`, which needs exactly these two answers over exactly
+/// this source chain — the domain a requirement chooses within, and the
+/// `in drop` probe that says which of its versions this machine can
+/// install. Reusing the value rather than restating it is what keeps the
+/// listing's `in drop` mark and the policy's verdict from ever disagreeing
+/// (`app/version_select.rs`).
+pub(crate) struct RegistryDomains {
     settings: SettingsRoot,
     registry: Option<PathBuf>,
     embedded: Option<PathBuf>,
@@ -119,6 +134,32 @@ struct RegistryDomains {
     /// What the `in drop` probe needs, per listed package, captured by
     /// the domain read that already had it in hand (`versions/drop.rs`).
     found: RefCell<BTreeMap<String, Found>>,
+}
+
+impl RegistryDomains {
+    /// The domain reader of one command, over the source chain that
+    /// command resolves through. `drops` is every configured
+    /// `[artifacts] packages` drop, highest layer first; with none,
+    /// nothing is ever marked `in drop`.
+    pub(crate) fn new(
+        settings: SettingsRoot,
+        registry: Option<PathBuf>,
+        embedded: Option<PathBuf>,
+        offline: bool,
+        operation: vibe_package_source::SourceOperation,
+        drops: Vec<PathBuf>,
+    ) -> Self {
+        RegistryDomains {
+            settings,
+            registry,
+            embedded,
+            offline,
+            operation,
+            cache_only: false,
+            drops,
+            found: RefCell::default(),
+        }
+    }
 }
 
 /// One listed package's half of the drop probe's inputs, kept from the
@@ -387,7 +428,11 @@ fn template_facts(
 
 /// The human listing: one block per package, the rows newest first, and
 /// the slot's trailer.
-fn print(listing: &wire::ApplicationVersions, quiet: bool) {
+fn print(
+    listing: &wire::ApplicationVersions,
+    quiet: bool,
+    policy: vibe_core::version_select::VersionSelect,
+) {
     for package in &listing.packages {
         println!("{}: {} version(s)", package.package, package.total);
         if !quiet {
@@ -402,7 +447,7 @@ fn print(listing: &wire::ApplicationVersions, quiet: bool) {
             }
         }
     }
-    println!("{}", trailer(listing));
+    println!("{}", trailer(listing, policy));
 }
 
 /// One row: the version, its origin, the channels it belongs to, what
@@ -446,7 +491,20 @@ fn state_label(state: &wire::State) -> Option<&'static str> {
     }
 }
 
-fn trailer(listing: &wire::ApplicationVersions) -> String {
+/// The trailer: the slot, the default, the mirror's sync time — and the
+/// version-selection policy, which is the fact that turns this listing
+/// from "what exists" into "what an install here would pick".
+///
+/// Under `drop-only` the rows are **not** filtered. A listing's job is to
+/// show the domain, and `--in-drop` is the flag that narrows it; hiding
+/// the unselectable rows would also hide the version an operator has to
+/// carry into the drop, which is the one thing the policy's own refusal
+/// goes out of its way to name. The trailer says which rows are
+/// selectable instead.
+fn trailer(
+    listing: &wire::ApplicationVersions,
+    policy: vibe_core::version_select::VersionSelect,
+) -> String {
     let mut parts = Vec::new();
     match &listing.slot {
         Some(slot) => parts.push(format!("slot `{slot}`")),
@@ -466,5 +524,16 @@ fn trailer(listing: &wire::ApplicationVersions) -> String {
     if let Some(synced) = &listing.snapshot_synced {
         parts.push(format!("mirror snapshot synced {synced}"));
     }
+    parts.push(match policy {
+        vibe_core::version_select::VersionSelect::Newest => "versions select newest".to_owned(),
+        vibe_core::version_select::VersionSelect::PreferDrop => {
+            "versions select prefer-drop: a requirement picks the newest `in drop` row it \
+             matches, else the newest"
+                .to_owned()
+        }
+        vibe_core::version_select::VersionSelect::DropOnly => {
+            "versions select drop-only: only an `in drop` or installed row is selectable".to_owned()
+        }
+    });
     parts.join(" · ")
 }

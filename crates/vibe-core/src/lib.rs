@@ -44,6 +44,7 @@ pub mod toml_preserve;
 pub mod trust;
 pub mod user_config;
 pub mod values;
+pub mod version_select;
 pub mod visibility;
 pub mod wire_decimal;
 

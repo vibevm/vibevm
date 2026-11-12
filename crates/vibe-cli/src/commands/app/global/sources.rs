@@ -38,7 +38,71 @@ pub(crate) fn source_operation_for_project(
     )
 }
 
+/// Resolve `spelling` through this run's source chain, with
+/// `[versions] select` applied first (PROP-075 `#VERSIONS-SELECT`).
+///
+/// **The one chokepoint the policy hangs off.** Every application
+/// resolution passes here — `install -g`, `update -g`, `app plan`,
+/// `app use`, `env --use`, a version file's partial value, `describe`,
+/// `migrate`, `portable`, and every `requires` entry of PROP-065
+/// `#app-dependencies` — so narrowing the requirement here is what makes
+/// the setting apply "wherever a requirement is resolved to a version"
+/// without a single caller or registry knowing it exists. Under the
+/// default `newest` the call costs nothing at all.
+///
+/// The one caller that must NOT see the policy asks with
+/// [`resolve_package_newest`]: `vibe artifacts where` exists to say where
+/// a payload belongs, and under `drop-only` that is precisely the payload
+/// the drop does not have yet.
 pub(crate) fn resolve_package_with_operation(
+    settings: &SettingsRoot,
+    registry: Option<&Path>,
+    embedded_root: Option<&Path>,
+    spelling: &str,
+    offline: bool,
+    operation: &vibe_package_source::SourceOperation,
+) -> Result<ResolvedPackage> {
+    match crate::commands::app::version_select::narrow(
+        settings,
+        registry,
+        embedded_root,
+        spelling,
+        offline,
+        operation,
+    )? {
+        crate::commands::app::version_select::Narrowed::AsWritten => resolve_package_newest(
+            settings,
+            registry,
+            embedded_root,
+            spelling,
+            offline,
+            operation,
+        ),
+        crate::commands::app::version_select::Narrowed::Pinned { spelling, note } => {
+            // Stderr, unconditionally and once: the operator is being
+            // moved off the version they asked for, and that is never a
+            // thing to learn from a log level. The machine-readable
+            // answer on stdout is untouched, so a `--json` reader sees
+            // the pinned version in its own output and the reason here.
+            // One line in the warning shape of PROP-067 `#block`, because
+            // the command carries on.
+            eprintln!("{}", crate::output::language::warning(&note));
+            resolve_package_newest(
+                settings,
+                registry,
+                embedded_root,
+                &spelling,
+                offline,
+                operation,
+            )
+        }
+    }
+}
+
+/// Resolve `spelling` with **no** version-selection policy applied —
+/// the pre-PROP-075 `#VERSIONS-SELECT` behaviour, for the one caller
+/// whose question is about the newest version by definition.
+pub(crate) fn resolve_package_newest(
     settings: &SettingsRoot,
     registry: Option<&Path>,
     embedded_root: Option<&Path>,

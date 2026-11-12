@@ -429,6 +429,14 @@ fn effective_text(effective: &Effective, out: &mut String) {
             effective.site_remap_rows
         ));
     }
+    // Always said, like `[[registry]]` and the release source, because a
+    // closed network's whole install behaviour turns on it and «the key is
+    // absent» is itself the answer an operator needs confirmed
+    // (PROP-075 `#VERSIONS-SELECT`).
+    out.push_str(&format!(
+        "version selection: {} (from {})\n",
+        effective.versions_select.select, effective.versions_select.from
+    ));
 }
 
 /// The wire value of one registry type, spelled for a human — the same

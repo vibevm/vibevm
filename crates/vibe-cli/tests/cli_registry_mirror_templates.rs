@@ -402,3 +402,222 @@ fn a_template_row_naming_a_package_with_no_template_revision_refuses_by_name() {
         "{message}"
     );
 }
+
+/// The `[[template]]` configs the `version_list` cases use: a wide first
+/// run, then a narrowed second one with each spelling of the knob.
+const SELECT_24_UP: &str = r#"schema = 1
+[[template]]
+package = "org.vibevm.node/node"
+versions = [">=24"]
+"#;
+
+const SELECT_26_LIST_ALL: &str = r#"schema = 1
+[[template]]
+package = "org.vibevm.node/node"
+versions = [">=26"]
+version_list = "all"
+"#;
+
+const SELECT_26_LIST_SELECTED: &str = r#"schema = 1
+[[template]]
+package = "org.vibevm.node/node"
+versions = [">=26"]
+version_list = "selected"
+"#;
+
+/// The versions the snapshot's `versions.json` carries, newest first as
+/// upstream writes them — the document a client's whole domain is
+/// computed from.
+fn listed_versions(fixture: &Fixture) -> Vec<String> {
+    let envelope: serde_json::Value = serde_json::from_str(
+        &fs::read_to_string(fixture.snapshot().join("versions.json")).unwrap(),
+    )
+    .unwrap();
+    let document: serde_json::Value =
+        serde_json::from_str(envelope["document"].as_str().unwrap()).unwrap();
+    document
+        .as_array()
+        .unwrap()
+        .iter()
+        .map(|row| {
+            row["version"]
+                .as_str()
+                .unwrap()
+                .trim_start_matches('v')
+                .to_owned()
+        })
+        .collect()
+}
+
+/// `version_list = "all"` is the behaviour before the key existed: a
+/// re-run that selects less leaves the published list alone, because the
+/// record still names those versions and a client parses one document.
+#[test]
+#[specmark::spec(verifies = "spec://org.vibevm.core/vibevm/common/PROP-075#MIRROR-CONFIG-SCHEMA")]
+fn version_list_all_keeps_every_version_the_record_still_names() {
+    let user = UserScratch::new();
+    let fixture = Fixture::new();
+    ok(&mirror(&user, &fixture, &fixture.config(SELECT_24_UP), &[]));
+    assert_eq!(listed_versions(&fixture), ["26.13.0", "24.22.2"]);
+
+    ok(&mirror(
+        &user,
+        &fixture,
+        &fixture.config(SELECT_26_LIST_ALL),
+        &[],
+    ));
+    assert_eq!(
+        snapshot_versions(&fixture),
+        ["24.22.2", "26.13.0"],
+        "the record keeps what it had: no --prune was asked for"
+    );
+    assert_eq!(
+        listed_versions(&fixture),
+        ["26.13.0", "24.22.2"],
+        "and so does the list a client resolves within"
+    );
+}
+
+/// `version_list = "selected"` trims the published list to what the row
+/// now selects, with no `--prune`: the document is rewritten in place, so
+/// a client behind the mirror sees — and resolves within, and computes
+/// channels over — exactly the set the operator chose to carry.
+#[test]
+#[specmark::spec(verifies = "spec://org.vibevm.core/vibevm/common/PROP-075#MIRROR-CONFIG-SCHEMA")]
+fn version_list_selected_trims_the_list_a_client_resolves_within() {
+    let user = UserScratch::new();
+    let fixture = Fixture::new();
+    ok(&mirror(&user, &fixture, &fixture.config(SELECT_24_UP), &[]));
+    assert_eq!(listed_versions(&fixture), ["26.13.0", "24.22.2"]);
+
+    ok(&mirror(
+        &user,
+        &fixture,
+        &fixture.config(SELECT_26_LIST_SELECTED),
+        &[],
+    ));
+    assert_eq!(
+        snapshot_versions(&fixture),
+        ["24.22.2", "26.13.0"],
+        "the record is untouched: the knob is about the list, not the renders"
+    );
+    assert_eq!(
+        listed_versions(&fixture),
+        ["26.13.0"],
+        "the list is trimmed to this run's selection"
+    );
+    // The digest documents follow the record, not the trim, so flipping
+    // the knob back needs no repair run.
+    for (version, _) in DIGESTS {
+        let digest = fixture.snapshot().join("digests").join(version);
+        assert_eq!(
+            digest.is_file(),
+            ["26.13.0", "24.22.2"].contains(&version),
+            "digest of {version}: {}",
+            digest.display()
+        );
+    }
+
+    // The envelope still describes its own document, as the client's
+    // reader checks (`#MIRROR-SNAPSHOT-LAYOUT`).
+    let envelope: serde_json::Value = serde_json::from_str(
+        &fs::read_to_string(fixture.snapshot().join("versions.json")).unwrap(),
+    )
+    .unwrap();
+    let digest = sha256_hex(envelope["document"].as_str().unwrap().as_bytes());
+    assert_eq!(envelope["sha256"].as_str().unwrap(), digest);
+
+    // And the client: a fresh home, the target alone, `--offline`, so the
+    // snapshot is the only place a domain can come from.
+    let inside = UserScratch::new();
+    let closed = fixture.closed_project();
+    let listing = ok(&vibe(
+        &inside,
+        &closed,
+        &[
+            "--offline",
+            "--json",
+            "app",
+            "versions",
+            PACKAGE,
+            "--registry",
+            fixture.target().to_str().unwrap(),
+            "--all",
+        ],
+    ));
+    let listing: serde_json::Value = serde_json::from_str(&listing).unwrap();
+    let package = &listing["packages"][0];
+    let versions: Vec<&str> = package["versions"]
+        .as_array()
+        .unwrap()
+        .iter()
+        .map(|row| row["version"].as_str().unwrap())
+        .collect();
+    assert_eq!(
+        versions,
+        ["26.13.0"],
+        "the client sees only what the mirror published"
+    );
+    // Channels are recomputed from that same document, so `lts` holds the
+    // one member the mirror carried and nothing it did not.
+    let lts: Vec<&str> = package["versions"][0]["channels"]
+        .as_array()
+        .unwrap()
+        .iter()
+        .map(|name| name.as_str().unwrap())
+        .collect();
+    assert!(lts.contains(&"lts"), "the trimmed channel table: {lts:?}");
+}
+
+/// The hex SHA-256 of `bytes`, the one the snapshot's envelope carries.
+fn sha256_hex(bytes: &[u8]) -> String {
+    use sha2::Digest;
+    sha2::Sha256::digest(bytes)
+        .iter()
+        .map(|byte| format!("{byte:02x}"))
+        .collect()
+}
+
+/// The knob is recorded like every other selection key, so a bare re-run
+/// with no `--config` reproduces the operator's choice instead of
+/// silently widening the list again.
+#[test]
+#[specmark::spec(verifies = "spec://org.vibevm.core/vibevm/common/PROP-075#MIRROR-CONFIG-SCHEMA")]
+fn the_recorded_selection_carries_the_version_list_knob() {
+    let user = UserScratch::new();
+    let fixture = Fixture::new();
+    ok(&mirror(&user, &fixture, &fixture.config(SELECT_24_UP), &[]));
+    let record =
+        fs::read_to_string(fixture.target().join("_index/mirrors").join("src.toml")).unwrap();
+    assert!(
+        !record.contains("version_list"),
+        "the default is skipped, so every record written before the key existed is unchanged:\n{record}"
+    );
+
+    ok(&mirror(
+        &user,
+        &fixture,
+        &fixture.config(SELECT_26_LIST_SELECTED),
+        &[],
+    ));
+    let record =
+        fs::read_to_string(fixture.target().join("_index/mirrors").join("src.toml")).unwrap();
+    assert!(
+        record.contains("version_list = \"selected\""),
+        "the declared value is recorded:\n{record}"
+    );
+}
+
+/// A value no spelling of the knob answers to is refused by naming the
+/// two, rather than taken as the default.
+#[test]
+fn an_unknown_version_list_spelling_is_refused() {
+    let user = UserScratch::new();
+    let fixture = Fixture::new();
+    let config = fixture.config(
+        "schema = 1\n[[template]]\npackage = \"org.vibevm.node/node\"\nversion_list = \"trimmed\"\n",
+    );
+    let message = refusal(&mirror(&user, &fixture, &config, &[]));
+    assert!(message.contains("version_list"), "{message}");
+    assert!(message.contains("selected"), "{message}");
+}

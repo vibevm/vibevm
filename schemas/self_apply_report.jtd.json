@@ -232,7 +232,8 @@
           "exclude_hosting",
           "proxy",
           "offline",
-          "site_remap_rows"
+          "site_remap_rows",
+          "versions_select"
         ],
         "description": "The installation as the layers read it: registries highest first, the release source, the package drop, source policy, proxy and the site's remap contribution."
       },
@@ -303,6 +304,32 @@
           "type": "uint32",
           "metadata": {
             "description": "How many `[[remap]]` rows the site profile contributes (`vibe remap list` shows them)."
+          }
+        },
+        "versions_select": {
+          "ref": "versions_select_row"
+        }
+      }
+    },
+    "versions_select_row": {
+      "metadata": {
+        "x-wire-order": ["select", "from"],
+        "description": "The effective `[versions] select` policy and the layer that decided it (PROP-075 `#VERSIONS-SELECT`): which version of an application package a requirement resolves to when only part of the version domain can be installed in this network.",
+        "spec": {
+          "implements": "spec://org.vibevm.core/vibevm/common/PROP-075#VERSIONS-SELECT"
+        }
+      },
+      "properties": {
+        "select": {
+          "type": "string",
+          "metadata": {
+            "description": "`\"newest\"` \u2014 the newest version satisfying the requirement, which is nvm's own rule and the built-in default; `\"prefer-drop\"` \u2014 the newest one an `[artifacts] packages` drop already holds every input of for this platform, else the newest; `\"drop-only\"` \u2014 only those, else refuse naming where the payload belongs."
+          }
+        },
+        "from": {
+          "type": "string",
+          "metadata": {
+            "description": "Which layer declared it: `\"env\"` (`VIBE_VERSIONS_SELECT`), `\"config.toml\"`, `\"site profile\"`, or `\"default\"` when nothing did."
           }
         }
       }

@@ -36,12 +36,27 @@ struct ConfigReport {
     /// The applied site profile (`PROP-019#site-profile`): the layer below
     /// the user's own files.
     site_profile: ConfigSiteProfileSummary,
+    /// `[versions] select` — the effective version-selection policy and
+    /// the layer that decided it (PROP-075 `#VERSIONS-SELECT`).
+    versions: ConfigVersions,
     /// Detailed resolution block for the agent-context layer. The top-
     /// level `invoked_by: "<agent>"` field stamped on every JSON
     /// envelope by `output::Context` is just the resolved value;
     /// `invoked_by_resolution` adds the provenance ("cli-flag" / "env"
     /// / "default") so an operator can see which layer supplied it.
     invoked_by_resolution: ConfigInvokedBy,
+}
+
+/// The effective `[versions] select` with its provenance — the one value
+/// of the `[versions]` table (PROP-075 `#VERSIONS-SELECT`).
+#[derive(Debug, Serialize)]
+struct ConfigVersions {
+    /// `"newest"`, `"prefer-drop"` or `"drop-only"`.
+    select: &'static str,
+    /// `"env"` (`VIBE_VERSIONS_SELECT`), `"config.toml"`, `"site profile"`
+    /// or `"default"`.
+    provenance: &'static str,
+    description: &'static str,
 }
 
 #[derive(Debug, Serialize)]
@@ -272,6 +287,22 @@ pub(super) fn run_config(ctx: &output::Context, args: ShowConfigArgs) -> Result<
     // loader looked.
     let _ = user_config;
 
+    // The version-selection policy, with the layer that decided it. A
+    // misspelled `VIBE_VERSIONS_SELECT` refuses here as it does on an
+    // install, because a value that silently reverts to `newest` is the
+    // one failure a closed network cannot afford to debug.
+    let (policy, policy_origin) = crate::commands::app::version_select::effective()?;
+    let versions = ConfigVersions {
+        select: policy.as_str(),
+        provenance: policy_origin.label(),
+        description: "Which version of an application package a requirement resolves to when \
+                      only part of the version domain is installable here: `newest` (nvm's own \
+                      rule, the default), `prefer-drop` (the newest version an `[artifacts] \
+                      packages` drop already holds), `drop-only` (only those, else refuse). \
+                      Resolved from `VIBE_VERSIONS_SELECT` (highest), `[versions] select` in \
+                      `config.toml`, the applied site profile, then the built-in `newest`.",
+    };
+
     let invoked_by_block = ConfigInvokedBy {
         value: ctx.invoked_by().map(|s| s.to_string()),
         provenance: ctx.invoked_by_provenance().as_str(),
@@ -296,6 +327,7 @@ pub(super) fn run_config(ctx: &output::Context, args: ShowConfigArgs) -> Result<
             env,
             user_config: user_config_summary,
             site_profile,
+            versions,
             invoked_by_resolution: invoked_by_block,
         };
         ctx.emit_json(&payload)?;
@@ -426,6 +458,10 @@ pub(super) fn run_config(ctx: &output::Context, args: ShowConfigArgs) -> Result<
             println!("Site profile: (no settings directory resolved)")
         }
     }
+    println!(
+        "Version selection: `[versions] select = \"{}\"`  [source: {}]",
+        versions.select, versions.provenance
+    );
     println!();
     println!("Environment:");
     for e in &env {

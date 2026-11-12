@@ -71,6 +71,33 @@ impl RegistryDomains {
         Some(found)
     }
 
+    /// Where the payload of one version **belongs** in the highest
+    /// configured drop — the first rung of the convention, named whether
+    /// a file is there or not (`PROP-066#drops`).
+    ///
+    /// The mark above answers "is it here"; this answers "where do I put
+    /// it", which is what a `drop-only` refusal owes the operator
+    /// (PROP-075 `#VERSIONS-SELECT`). It names the directory of the
+    /// version's first downloaded input rather than the whole list,
+    /// because every input of one option lands in the same place and the
+    /// per-file detail is `vibe artifacts where`'s answer, which the
+    /// refusal points at.
+    pub(crate) fn drop_target(
+        &self,
+        group: &str,
+        name: &str,
+        version: &semver::Version,
+    ) -> Option<String> {
+        let drop = self.drops.first()?;
+        let files = self.downloaded_file_names(group, name, version)?;
+        let file = files.first()?;
+        let package = format!("{group}/{name}@{version}");
+        package_lookup_by_name(drop, Some(&package), Some(file))
+            .into_iter()
+            .next()
+            .map(|rung| shown_path(&rung))
+    }
+
     /// The first rung of the first drop that holds a regular file of this
     /// name — existence only, in the layer order `package_drops` gives,
     /// so any configured drop may serve the mark.

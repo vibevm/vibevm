@@ -103,7 +103,14 @@ fn package_inputs(
 ) -> Result<Vec<InputWhere>> {
     let settings = crate::commands::app::global::settings_root()?;
     let operation = crate::commands::app::global::source_operation(Default::default())?;
-    let resolved = crate::commands::app::global::resolve_package_with_operation(
+    // **Deliberately not the policy path.** `vibe artifacts where`
+    // answers "where does this payload belong", and under
+    // `[versions] select = "drop-only"` the version the operator needs the
+    // answer for is exactly the one the drop does not hold yet — a policy
+    // applied here would refuse the question instead of answering it, and
+    // would name a version whose files are already in place (PROP-075
+    // `#VERSIONS-SELECT`, PROP-066 `#drops`).
+    let resolved = crate::commands::app::global::resolve_package_newest(
         &settings, registry, None, spelling, offline, &operation,
     )?;
     let package = resolved.package.key();

@@ -908,3 +908,107 @@ Status: **delivered** 2026-11-11. Design authority:
 - **The ladder is unchanged in shape and in output.** `for_write` still writes the lowest epoch that carries what the lock actually holds, now with one more rung: `11` only when a row carries a template record with no digest document, else `10` for any template record or `via_channel`, else `9`, `8`, `7` exactly as before. **No existing lock changes a byte**, because no template that could produce a digest-less record exists before this change.
 - `[format.index-templates]` (the mirror's template snapshot, AV-FMT-008), `schema = "none"`, epoch unchanged. `[source].digest_url` and each `[[version]].digest_sha256` become optional for the same reason. A snapshot of such a template stages its version list and its renders and **no digest files**, which is everything a closed-network client needs for it; the priming reader skips a row with no recorded digest instead of warning about a file that was never meant to be there.
 - `vibe-user-applications/6` and `/7` (the installed application record) need **no change at all**: their `digest_source_sha256` and `digest_url` have been optional since AV-FMT-017, so the installed-record half of this was already expressible and one `Some(...)` wrapper in `vibe-app` was all that stood in the way.
+
+## AV-FMT-108 — `[versions] select`: the version-selection policy, its site-profile layer, and the two surfaces that print it (owner decision, closed-network installability)
+
+Status: **delivered 2026-11-12**. Owner request of 2026-11-12, «положить сделать опцией: новейшая,
+предпочитать дроп, обрезать список. Сейчас пусть будет новейшая.», and on the site layer «пусть
+по-умолчанию в корпоративной поставке будет prefer-drop». Design authority:
+`spec://org.vibevm.core/vibevm/common/PROP-075#VERSIONS-SELECT`, with a pointer clause in PROP-066
+`#drops` and `[versions]` added to the tables PROP-019 `#site-profile` enumerates.
+
+- **`user config`** (`schema = "none"`, authored TOML), epoch **1 → 1**, additive and optional:
+  `[versions] select = "newest" | "prefer-drop" | "drop-only"`. Kebab-case, read in any letter case,
+  `skip_serializing_if = "Option::is_none"` behind a `VersionsConfig::is_default` table guard — so
+  every `config.toml` vibe writes back is byte-identical, and a file that never mentions the table
+  parses and serialises exactly as before. The built-in default is `newest`, which is today's
+  behaviour and nvm's own rule: **no open network changes behaviour.**
+- **`site profile`** (`site-profile.toml`, `schema = "none"`, authored TOML), epoch **1 → 1**, the
+  same table. `SiteProfile` is `deny_unknown_fields`, so the key had to be declared there before an
+  administrator could write it at all; `schema` stays `1` because the member is optional and skipped
+  at its default, which keeps every stored profile and its `sha256` receipt byte-identical. It is an
+  **ordinary user-config layer**, unlike `[trust]`: `UserConfig::over_site` falls back per key by
+  absence, so it shows up in `vibe show config` and in `self apply --show`.
+- **New environment variable `VIBE_VERSIONS_SELECT`**, the highest rung. It is a `VIBE_*` name, so
+  `[env]` in `config.toml` supplies it as a fallback like any other promoted variable with no extra
+  machinery. A spelling no policy answers to **refuses** — on an install and on `vibe show config`
+  alike — rather than falling through to `newest`: a value that silently restored the default is the
+  one failure mode a closed network cannot afford to debug.
+- **`[format.cli-self-apply]`** (`schemas/self_apply_report.jtd.json`, `vibe-self-apply/1`), epoch
+  **1 → 1**: `effective` gains the required member `versions_select` — a `{ select, from }` object,
+  the new definition `versions_select_row`. Required rather than optional because `effective` is
+  itself nullable and every report that carries one has an effective policy; `corpus = "none"` for
+  this format, so there is no golden corpus to reproject. The human form gains one unconditional
+  line, `version selection: <policy> (from <layer>)`, beside the release source and `[net] offline`.
+  It is read off the **layers in hand**, not the installed state, so a `--dry-run` reports the policy
+  the profile being applied *would* give.
+- **`vibe show config`**: a new `versions` block in the `--json` answer (`select`, `provenance`,
+  `description`) and one new human line. That document is not a registered format and carries no
+  protocol tag, so there is no epoch to move; the addition is additive and no existing member changes
+  meaning.
+- **`vibe app versions` human trailer** gains a `versions select …` segment, which under
+  `prefer-drop` / `drop-only` also says which rows are selectable. **No wire change**: the trailer is
+  drawn from the already-emitted document, `vibe-app-versions/1` is untouched, and **the rows are
+  deliberately not filtered** — hiding the unselectable ones would also hide the version an operator
+  has to carry into the drop, which is the one thing the policy's own refusal goes out of its way to
+  name. `--in-drop` remains the flag that narrows.
+- **Two new refusals**, both naming the key to write and the policy that would install anyway:
+  `drop-only` with no `[artifacts] packages` drop declared at all, and `drop-only` whose drop holds
+  nothing the requirement admits — the latter naming the version `newest` would have landed on and
+  the **first rung its payload belongs at**, which is the convention's `<drop>/<group>/<name>/<version>/<file>`.
+- **New public surface, additive**: `vibe_core::version_select` — `VersionSelect`, `Candidate`,
+  `Selection`, `pick`, `admitted`, `select` — the whole policy as one pure function over a list, and
+  `vibe_core::user_config::VersionsConfig`. Nothing in it reads a drop, an index or a registry.
+- **Where it applies, and the cost of the default.** The policy is applied by **narrowing the
+  requirement to an exact pin** at the one application-resolution chokepoint
+  (`commands::app::global::resolve_package_with_operation`), exactly as `#CHANNEL-SYNTAX` lowers a
+  channel before anything selects — so `install -g`, `update -g`, `app plan`, `app use`, `env --use`,
+  a partial version-file value, `describe`, `migrate`, `portable` and every `requires` entry of
+  PROP-065 `#app-dependencies` are covered, and nvm with them, while no registry and no caller learns
+  the policy exists. **`newest` returns before a domain is read, a drop is listed or the home's index
+  is opened**, so the default costs nothing at all. The other two pay one domain read and one `in
+  drop` probe per resolution, which is the skeleton-stage budget of `#TEMPLATE-TWO-STAGE`: no digest
+  document, no render, no byte of a payload read.
+- **Two exemptions, by construction.** An **exact** pin (`=X.Y.Z`) is never redirected by any policy.
+  And `vibe artifacts where` resolves through a new `resolve_package_newest` that skips the policy
+  entirely: its whole job is to say where a payload belongs, and under `drop-only` that is precisely
+  the payload the drop does not have yet — a policy applied there would refuse the question instead
+  of answering it. `vibe outdated` likewise keeps reporting the newest version under every policy,
+  because what is newer upstream is a fact about upstream and not about this drop.
+
+## AV-FMT-109 — `mirror.toml` `[[template]] version_list`: how much of the version list a snapshot carries (owner decision, «обрезать список»)
+
+Status: **delivered 2026-11-12**. The second half of the owner's sentence of 2026-11-12. Design
+authority: `spec://org.vibevm.core/vibevm/common/PROP-075#MIRROR-CONFIG-SCHEMA` (amended), with
+`#MIRROR-CONFIG` naming the knob.
+
+- **`mirror.toml`** (`schema = "none"`, authored TOML, AV-FMT-007), epoch **1 → 1**: a `[[template]]`
+  row gains `version_list = "all" | "selected"`, default `all`. The document is
+  `deny_unknown_fields`, so the key had to be declared before an operator could write it; an
+  unknown value is refused by serde naming the two spellings.
+- **`mirror provenance record`** (`_index/mirrors/<source>.toml`, `schema = "none"`, authored TOML),
+  epoch **1 → 1**: `[[select.template]]` gains the same key, `skip_serializing_if` its default, so
+  **every record written before the key existed stays byte-identical** and a bare re-run reproduces
+  the operator's choice.
+- **What it changes.** The snapshot's `versions.json` is the document a client's whole version domain
+  **and channel table** are computed from (`#MIRROR-SNAPSHOT-LAYOUT`: a snapshot stores no channels —
+  a client recomputes them from that document by the same `[[template.channel]]` rules). `all`
+  restricts it to every version the snapshot's **record** names, accumulated over every run, which is
+  the behaviour before the key existed: a client parses one document, so a re-run that narrowed it
+  would take away versions the record still names. `selected` restricts it to the versions **this
+  row** selects, so narrowing `versions` / `channels` / `newest` immediately narrows what every
+  client behind the mirror can see and resolve.
+- **The knob needs no `--prune`, in either direction.** `versions.json` is re-staged from the record
+  on every run and the batch writes only what differs, so flipping the key narrows or widens the
+  document in place; it is never a removal. The **digest** documents deliberately keep following the
+  record rather than the trimmed list, so flipping back to `all` needs no repair run to make those
+  versions usable again. Prune is unchanged: the stale-digest and `record.versions.retain` paths are
+  still keyed on the row's selection, which is exactly `selected`'s own semantics.
+- **Channel consistency is part of the knob, not a consequence of it.** Under `selected` the run's
+  own projection resolves each named channel over the **trimmed** set, so the row an operator reads
+  (`channel lts → 22.23.4`) and the table a client recomputes cannot disagree. Under `all` it
+  resolves over the source domain exactly as before.
+- **Human output.** The projection gains one line per row, said only when the row asked for it:
+  `version list: selected — a client behind this mirror sees only these versions`. **No wire change**:
+  `[format.cli-registry-mirror-report]` (`schemas/registry_mirror_report.jtd.json`) is untouched, and
+  `MirroredTemplate.selected` / `.snapshotted` already carry the counts.

@@ -38,6 +38,7 @@ platforms = ["linux"]
 archs = ["x86_64"]
 installers = ["linux-x64"]
 payloads = true
+version_list = "selected"
 
 [payloads]
 max_total = "40 GiB"
@@ -50,6 +51,7 @@ into = "/srv/payloads"
     assert_eq!(config.select.exclude, ["org.corp.legacy", "org.corp/old"]);
     let row = &config.templates[0];
     assert_eq!(row.package(), "org.vibevm.node/node");
+    assert_eq!(row.version_list, VersionList::Selected);
     assert_eq!(row.versions.len(), 2);
     assert!(row.versions[0].matches(&semver::Version::new(24, 1, 0)));
     assert_eq!(
@@ -187,4 +189,27 @@ fn an_empty_installer_id_is_refused_rather_than_ignored() {
     let message =
         refusal("schema = 1\n[[template]]\npackage = 'org.a/b'\ninstallers = ['linux-x64', ' ']\n");
     assert!(message.contains("carries an empty id"), "{message}");
+}
+
+/// An absent `version_list` is `all` — today's behaviour, which is what
+/// keeps every `mirror.toml` written before the key existed unchanged in
+/// meaning (PROP-075 `#MIRROR-CONFIG-SCHEMA`).
+#[test]
+fn an_absent_version_list_is_all() {
+    let config =
+        read_body("schema = 1\n[[template]]\npackage = \"org.vibevm.node/node\"\n").unwrap();
+    assert_eq!(config.templates[0].version_list, VersionList::All);
+    assert_eq!(VersionList::default(), VersionList::All);
+}
+
+/// A spelling neither value answers to is refused by naming both, rather
+/// than taken as the default.
+#[test]
+fn an_unknown_version_list_value_is_refused_by_naming_both_spellings() {
+    let message = refusal(
+        "schema = 1\n[[template]]\npackage = \"org.vibevm.node/node\"\nversion_list = \"trimmed\"\n",
+    );
+    assert!(message.contains("version_list"), "{message}");
+    assert!(message.contains("all"), "{message}");
+    assert!(message.contains("selected"), "{message}");
 }

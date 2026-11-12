@@ -33,6 +33,7 @@ use vibe_registry::templates::snapshot::{
 };
 use vibe_registry::templates::{ActiveTemplate, FullRender, TemplateLayer};
 
+use super::config::VersionList;
 use super::selection::{Selection, TemplateSelection};
 
 /// Files written under `_index/` with the batch, as `BatchConfig.files`
@@ -74,6 +75,11 @@ pub(super) struct SnapshotOutcome {
     /// a row that wants no payload must not hold a manifest per version
     /// for nothing.
     pub renders: Vec<FullRender>,
+    /// How much of the version document the snapshot's `versions.json`
+    /// carries, so the projection can say when a client behind the mirror
+    /// sees fewer versions than the record names
+    /// (PROP-075 `#MIRROR-CONFIG-SCHEMA`).
+    pub version_list: VersionList,
 }
 
 /// One package's snapshot versions the run's selection no longer names.
@@ -168,8 +174,19 @@ fn snapshot_row(
             )
         })?;
     let template = &found.template;
-    let channels = resolved_channels(row, found.domain.channels());
     let selected = select_versions(row, &found.domain.all(), found.domain.channels());
+    // The channels are reported over the versions a client behind this
+    // mirror will actually see, so the row's `[lts → 22.23.5]` and the
+    // client's own recomputed `lts` cannot disagree. Channels are not
+    // stored in a snapshot: a client recomputes them from the version
+    // document by the same `[[template.channel]]` rules, so trimming that
+    // document trims the channel table with it — and the report has to
+    // say the trimmed answer, not the source's
+    // (PROP-075 `#MIRROR-CONFIG-SCHEMA`, `#CHANNELS`).
+    let channels = resolved_channels(
+        row,
+        &listed_channels(row.version_list, found.domain.channels(), &selected),
+    );
     let existing = Snapshot::read(target_root, &group, &row.name)?;
     let now = chrono::Utc::now().to_rfc3339_opts(chrono::SecondsFormat::Secs, true);
     let vibe = format!("vibe {}", env!("CARGO_PKG_VERSION"));
@@ -234,6 +251,7 @@ fn snapshot_row(
         installers: row.installers.clone(),
         added: rows.len(),
         renders,
+        version_list: row.version_list,
     });
 
     let keeping: BTreeSet<String> = selected.iter().map(ToString::to_string).collect();
@@ -289,7 +307,14 @@ fn snapshot_row(
     record.source.revision = template.revision.to_string();
     record.merge(rows);
     done.files.extend(stage(
-        layer, template, &group, &row.name, &record, &selected, scratch,
+        layer,
+        template,
+        &group,
+        &row.name,
+        &record,
+        &selected,
+        row.version_list,
+        scratch,
     )?);
     Ok(())
 }
@@ -303,6 +328,7 @@ fn stage(
     name: &str,
     record: &SnapshotRecord,
     selected: &[semver::Version],
+    version_list: VersionList,
     scratch: &Path,
 ) -> Result<BatchFiles> {
     let dir = scratch.join("templates").join(group.as_str()).join(name);
@@ -317,15 +343,28 @@ fn stage(
         write(dir.join("snapshot.toml"), &record.render()?)?,
     )];
 
-    // `versions.json`: the upstream document restricted to **every**
-    // version the snapshot now carries, not only the ones this run added
-    // — a client parses one document, so a re-run that narrowed it would
-    // take away versions the record still names.
-    let keep: Vec<semver::Version> = record
+    // `versions.json` — the document a client's whole version domain and
+    // channel table are computed from, so **this** is what decides which
+    // versions a closed network can see and resolve at all
+    // (PROP-075 `#MIRROR-CONFIG-SCHEMA`).
+    //
+    // `version_list = "all"` (the default) restricts it to **every**
+    // version the snapshot now carries, not only the ones this run added:
+    // a client parses one document, so a re-run that narrowed it would
+    // take away versions the record still names. `"selected"` restricts it
+    // to the versions **this row** selects, which is how an operator trims
+    // the list a client resolves within without waiting for a `--prune` —
+    // the document is rewritten in place on every run, never deleted, so
+    // the knob takes effect in both directions by itself.
+    let recorded: Vec<semver::Version> = record
         .versions
         .iter()
         .filter_map(|row| semver::Version::parse(&row.version).ok())
         .collect();
+    let listed: Vec<semver::Version> = match version_list {
+        VersionList::All => recorded.clone(),
+        VersionList::Selected => selected.to_vec(),
+    };
     if let (
         Some(upstream),
         VersionSource::Json {
@@ -343,7 +382,7 @@ fn stage(
             select,
             version_field,
             strip_prefix.as_deref(),
-            &keep,
+            &listed,
         )?;
         files.push((
             snapshot::relative_version_list(group, name),
@@ -363,8 +402,12 @@ fn stage(
     // run instead of staying half-written. A version the snapshot carries
     // and this run did not select is skipped: its file is in the target
     // and nothing here has read it.
+    // The digest documents follow the **record**, never the trimmed list:
+    // a version the record names keeps its digest file whichever list a
+    // client is shown, so flipping the knob back to `all` needs no repair
+    // run to make those versions usable again.
     let added: BTreeSet<String> = selected.iter().map(ToString::to_string).collect();
-    for version in &keep {
+    for version in &recorded {
         if !added.contains(&version.to_string()) {
             continue;
         }
@@ -440,6 +483,44 @@ fn newest_per_major(selected: &BTreeSet<semver::Version>, n: u32) -> BTreeSet<se
                 .collect::<Vec<_>>()
         })
         .collect()
+}
+
+/// The channel table a client behind this mirror will compute, which is
+/// what the row has to report (PROP-075 `#MIRROR-CONFIG-SCHEMA`).
+///
+/// Channels are not stored in a snapshot: a client recomputes them from
+/// the version document by the same `[[template.channel]]` rules, so
+/// trimming that document trims the channel table with it. Under
+/// `version_list = "selected"` the report must therefore name the
+/// **trimmed** resolution and not the source's, or the `channel lts → …`
+/// an operator reads and the `lts` a client resolves would disagree.
+///
+/// A named channel's own members are unioned into `selected` before this
+/// runs, so the intersection usually changes nothing; the case it exists
+/// for is `newest = N`, which is applied **after** that union and can
+/// therefore drop a channel member back out
+/// ([`BACKLOG.md#b-308`](../../../../../../BACKLOG.md#b-308) is the
+/// notice this does not yet give).
+fn listed_channels(
+    version_list: VersionList,
+    channels: &BTreeMap<String, BTreeSet<semver::Version>>,
+    selected: &[semver::Version],
+) -> BTreeMap<String, BTreeSet<semver::Version>> {
+    match version_list {
+        VersionList::All => channels.clone(),
+        VersionList::Selected => {
+            let listed: BTreeSet<semver::Version> = selected.iter().cloned().collect();
+            channels
+                .iter()
+                .map(|(name, members)| {
+                    (
+                        name.clone(),
+                        members.intersection(&listed).cloned().collect(),
+                    )
+                })
+                .collect()
+        }
+    }
 }
 
 /// Each channel the row named and the version it lowers to — the newest

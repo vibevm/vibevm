@@ -40,6 +40,7 @@ fn row(versions: &[&str], channel_names: &[&str], newest: Option<u32>) -> Templa
         archs: Vec::new(),
         installers: Vec::new(),
         payloads: false,
+        version_list: VersionList::default(),
     }
 }
 
@@ -147,5 +148,70 @@ fn newest_per_major_takes_the_tail_of_each_major() {
             .map(ToString::to_string)
             .collect::<Vec<_>>(),
         ["1.0.0", "1.1.0"]
+    );
+}
+
+/// `version_list = "all"` reports the source's own channel table, which
+/// is what a client computing over the untrimmed document will find.
+#[test]
+fn version_list_all_reports_the_sources_channel_table() {
+    let channels = channels();
+    let selected = vec![version("24.22.2")];
+    assert_eq!(
+        listed_channels(VersionList::All, &channels, &selected),
+        channels
+    );
+}
+
+/// `version_list = "selected"` reports the channel table over the trimmed
+/// list — the one a client behind the mirror will actually recompute — so
+/// the row an operator reads cannot promise a member the mirror did not
+/// carry. A channel left with nothing is kept as an empty set, which
+/// `resolved_channels` then reports as "nothing".
+#[test]
+fn version_list_selected_reports_the_channel_table_over_the_trimmed_list() {
+    let channels = channels();
+    let selected = vec![version("22.23.4")];
+    let trimmed = listed_channels(VersionList::Selected, &channels, &selected);
+    assert_eq!(
+        trimmed["lts"]
+            .iter()
+            .map(ToString::to_string)
+            .collect::<Vec<_>>(),
+        ["22.23.4"]
+    );
+    assert!(
+        trimmed.contains_key("lts/jod"),
+        "a channel the trim emptied is still named: {trimmed:?}"
+    );
+    let row = row(&["=22.23.4"], &["lts"], None);
+    assert_eq!(
+        resolved_channels(&row, &trimmed),
+        vec![("lts".to_owned(), Some(version("22.23.4")))]
+    );
+}
+
+/// The case the intersection exists for: `newest` is applied **after** a
+/// channel's members are unioned in, so it can drop the channel's newest
+/// member back out — and then the reported head is the one the mirror
+/// kept, not upstream's.
+#[test]
+fn newest_can_drop_a_channel_member_and_the_report_follows_the_trim() {
+    let mut channels = channels();
+    channels.insert(
+        "lts".to_owned(),
+        ["22.23.4", "22.23.9"]
+            .iter()
+            .map(|spelling| version(spelling))
+            .collect(),
+    );
+    let domain = vec![version("22.23.4"), version("22.23.9")];
+    let row = row(&[], &["lts"], Some(1));
+    let selected = select_versions(&row, &domain, &channels);
+    assert_eq!(selected, vec![version("22.23.9")]);
+    let trimmed = listed_channels(VersionList::Selected, &channels, &selected);
+    assert_eq!(
+        resolved_channels(&row, &trimmed),
+        vec![("lts".to_owned(), Some(version("22.23.9")))]
     );
 }

@@ -14,6 +14,7 @@ specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-075#MIRROR-DRY-RUN-O
 
 use vibe_wire::generated::registry_mirror_report as wire;
 
+use super::super::config::VersionList;
 use super::{Projection, RowProjection, Selection, SnapshotOutcome};
 use crate::output;
 
@@ -137,6 +138,14 @@ pub(crate) fn show(ctx: &output::Context, rows: &[SnapshotOutcome], projection: 
             outcome.added,
             outcome.unchanged
         ));
+        // Said only when the row asked for it, so a projection without the
+        // knob reads exactly as it did before the key existed.
+        if outcome.version_list != VersionList::default() {
+            ctx.step(&format!(
+                "  version list: {} — a client behind this mirror sees only these versions",
+                outcome.version_list.as_str()
+            ));
+        }
         for (name, resolved) in &outcome.channels {
             match resolved {
                 Some(version) => ctx.step(&format!("  channel {name} → {version}")),

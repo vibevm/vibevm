@@ -15,7 +15,7 @@ use super::super::store::VersionStore;
 use super::ConfigLayers;
 use vibe_wire::generated::self_apply_report::{
     Effective, InstallRootRow, PackagesWhere, ProxyRow, RegistryRow, RegistryScope as WireScope,
-    RegistryType, ReleaseRow, VersionedWhere, WhereToPut,
+    RegistryType, ReleaseRow, VersionedWhere, VersionsSelectRow, WhereToPut,
 };
 
 /// The installation as it reads with `layers`: registries by layer,
@@ -135,6 +135,23 @@ pub(super) fn effective(
         site_remap_rows: layers.site.as_ref().map_or(0, |site| {
             u32::try_from(site.profile.remap.len()).unwrap_or(u32::MAX)
         }),
+        // Read off `layers` rather than the installed state, so a
+        // `--dry-run` reports the policy the profile in hand WOULD give
+        // (PROP-075 `#VERSIONS-SELECT`).
+        versions_select: versions_select_row(layers)?,
+    })
+}
+
+/// The effective `[versions] select` and the layer that decided it, over
+/// the layers this view was built from (PROP-075 `#VERSIONS-SELECT`).
+fn versions_select_row(layers: &ConfigLayers) -> Result<VersionsSelectRow> {
+    let (policy, origin) = crate::commands::app::version_select::effective_from(
+        &layers.own,
+        layers.site.as_ref().map(|site| &site.profile),
+    )?;
+    Ok(VersionsSelectRow {
+        select: policy.as_str().to_owned(),
+        from: origin.label().to_owned(),
     })
 }
 

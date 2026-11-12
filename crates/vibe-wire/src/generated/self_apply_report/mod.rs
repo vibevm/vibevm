@@ -150,6 +150,8 @@ pub struct Effective {
     /// How many `[[remap]]` rows the site profile contributes (`vibe remap
     /// list` shows them).
     pub site_remap_rows: u32,
+
+    pub versions_select: VersionsSelectRow,
 }
 
 /// The state of vibe's managed block in the target. Closed: a repair decides
@@ -770,6 +772,24 @@ pub struct VersionedWhere {
     /// an absent key would make the document invalid by this same schema (rule
     /// R21).
     pub files: Vec<String>,
+}
+
+/// The effective `[versions] select` policy and the layer that decided it
+/// (PROP-075 `#VERSIONS-SELECT`): which version of an application package
+/// a requirement resolves to when only part of the version domain can be
+/// installed in this network.
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+pub struct VersionsSelectRow {
+    /// `"newest"` — the newest version satisfying the requirement, which is
+    /// nvm's own rule and the built-in default; `"prefer-drop"` — the newest
+    /// one an `[artifacts] packages` drop already holds every input of for
+    /// this platform, else the newest; `"drop-only"` — only those, else refuse
+    /// naming where the payload belongs.
+    pub select: String,
+
+    /// Which layer declared it: `"env"` (`VIBE_VERSIONS_SELECT`),
+    /// `"config.toml"`, `"site profile"`, or `"default"` when nothing did.
+    pub from: String,
 }
 
 /// What a closed network cannot download and where it goes instead.

@@ -38,7 +38,8 @@ mod runtime;
 pub(crate) mod session;
 pub(crate) mod short_name;
 mod version_file;
-mod versions;
+pub(crate) mod version_select;
+pub(crate) mod versions;
 mod views;
 mod wizard;
 

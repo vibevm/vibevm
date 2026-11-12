@@ -64,6 +64,8 @@ mod slot;
 pub use slot::{SlotConfig, SlotExtras, read_item_lines};
 mod template;
 pub use template::TemplateConfig;
+mod versions;
+pub use versions::{VersionSelect, VersionsConfig};
 mod tls;
 pub use tls::{ExtraCa, TlsConfig, effective_extra_ca};
 mod transfer;
@@ -87,6 +89,7 @@ pub use transfer::TransferConfig;
 /// assert!(cfg.proxy.is_default());
 /// assert!(cfg.tls.is_default());
 /// assert!(cfg.template.is_default());
+/// assert!(cfg.versions.is_default());
 /// assert!(cfg.slot.is_empty());
 /// ```
 #[derive(Debug, Default, Clone, PartialEq, Eq, Deserialize, Serialize)]
@@ -154,6 +157,11 @@ pub struct UserConfig {
     /// before it is refetched (PROP-075 `#TEMPLATE-CACHE`).
     #[serde(default, skip_serializing_if = "TemplateConfig::is_default")]
     pub template: TemplateConfig,
+    /// `[versions]` — which version of an application package a
+    /// requirement lands on when only part of the domain is installable
+    /// here (PROP-075 `#VERSIONS-SELECT`).
+    #[serde(default, skip_serializing_if = "VersionsConfig::is_default")]
+    pub versions: VersionsConfig,
     /// `[slot.<slot>]` — the user's own per-slot settings, today just
     /// their per-ecosystem extras list (PROP-075 `#SLOT-EXTRAS`). Keyed by
     /// the application slot id; a slot nothing installs is kept, because a
@@ -414,6 +422,16 @@ impl UserConfig {
         self.proxy = std::mem::take(&mut self.proxy).over(&site.proxy);
         self.tls = std::mem::take(&mut self.tls).over(&site.tls);
         self.net.offline |= site.net.offline;
+        // `[versions] select` is one value and falls back by absence, so
+        // a site can set a closed network's posture and a developer can
+        // still override it per machine (PROP-075 `#VERSIONS-SELECT`).
+        // Not an `|=` like `offline`: the three policies are not ordered
+        // by strictness in a way a merge could pick from, and a site that
+        // wants `drop-only` enforced says so by being the only declaring
+        // layer.
+        if self.versions.select.is_none() {
+            self.versions.select = site.versions.select;
+        }
         self
     }
 

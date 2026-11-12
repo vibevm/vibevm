@@ -430,3 +430,67 @@ fn the_trust_table_is_stored_verbatim_and_validated_entry_by_entry() {
         assert!(error.contains("corp.toml"), "{error}");
     }
 }
+
+/// `[versions] select` is an ordinary user-config layer, unlike
+/// `[trust]`: a site profile may declare the installation's
+/// version-selection policy and a user's own `config.toml` still
+/// overrides it, by absence per key (PROP-019 `#site-profile`
+/// `##SITE-PROFILE-LAYER`, PROP-075 `#VERSIONS-SELECT`).
+#[test]
+#[verifies("spec://org.vibevm.core/vibevm/common/PROP-019#site-profile")]
+fn the_site_decides_the_version_selection_policy_until_the_user_does() {
+    let site = SiteProfile::parse(
+        "schema = 1\nname = 'corp'\n\n[versions]\nselect = 'prefer-drop'\n",
+        "corp.toml",
+    )
+    .unwrap();
+    assert_eq!(
+        site.versions.select,
+        Some(crate::user_config::VersionSelect::PreferDrop)
+    );
+
+    // Nothing of the user's own: the site's policy is in force, and it is
+    // visible in the user-config layer the profile supplies.
+    let effective = UserConfig::default().over_site(&site);
+    assert_eq!(
+        effective.versions.effective(),
+        crate::user_config::VersionSelect::PreferDrop
+    );
+    assert_eq!(
+        site.user_config_layer().versions.select,
+        Some(crate::user_config::VersionSelect::PreferDrop)
+    );
+
+    // The user's own value wins, including the one that restores the
+    // built-in rule.
+    let mine: UserConfig = toml::from_str("[versions]\nselect = 'newest'\n").unwrap();
+    assert_eq!(
+        mine.over_site(&site).versions.effective(),
+        crate::user_config::VersionSelect::Newest
+    );
+
+    // A profile that says nothing leaves the built-in default.
+    let silent = SiteProfile::parse("schema = 1\n", "corp.toml").unwrap();
+    assert!(silent.versions.is_default());
+    assert_eq!(
+        UserConfig::default()
+            .over_site(&silent)
+            .versions
+            .effective(),
+        crate::user_config::VersionSelect::Newest
+    );
+}
+
+/// A policy spelling the profile cannot read is refused when the profile
+/// is parsed, so `vibe self apply` never installs a file whose key would
+/// silently do nothing.
+#[test]
+#[verifies("spec://org.vibevm.core/vibevm/common/PROP-019#site-profile")]
+fn an_unknown_version_selection_policy_is_refused_at_parse() {
+    let message = refused("schema = 1\n[versions]\nselect = 'oldest'\n");
+    assert!(message.contains("corp.toml"), "{message}");
+    assert!(
+        message.contains("newest") || message.contains("oldest"),
+        "{message}"
+    );
+}

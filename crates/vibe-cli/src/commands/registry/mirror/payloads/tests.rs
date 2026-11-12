@@ -3,6 +3,7 @@
 //! budget does with a total it cannot know exactly.
 use std::path::PathBuf;
 
+use super::super::config::VersionList;
 use super::*;
 
 /// A two-option manifest: one declares its archive's size, the other does
@@ -75,6 +76,7 @@ fn row(installers: &[&str], platforms: &[&str]) -> TemplateSelection {
         archs: Vec::new(),
         installers: installers.iter().map(|i| (*i).to_owned()).collect(),
         payloads: true,
+        version_list: VersionList::default(),
     }
 }
 

@@ -3284,3 +3284,33 @@ it. Severity **P3**.
 | @fact:B305-SEVERITY **severity** | P3 — the refusal is correct and nothing is installed; only its wording misleads. |
 | @fact:B305-DISPOSITION **disposition** | open — distinguish "no option matches this platform" from "several options match and one must be chosen" before the selection prompt. |
 | @fact:B305-FILED **filed by** | the 1.0.12 release proof, 2026-11-12. |
+
+## B-306 — `[versions] select` pays for a whole domain read per resolution, and nothing caches it {#b-306}
+
+| field | value |
+|---|---|
+| @fact:B306-WHAT **what** | Under `[versions] select = "prefer-drop"` or `"drop-only"`, each application resolution reads the package's version domain and probes the drop once per admitted version, through its own `RegistryDomains` value built for that one call. A command that resolves several packages — `install -g a b c`, or one package with `requires` entries — repeats the whole read per package, and an `install -g` that resolves the same package twice (the plan, then the install) repeats it twice. The budget is the skeleton stage of PROP-075 `#TEMPLATE-TWO-STAGE`, so it costs no request and no digest document, but on Node's 878-record domain it is not free either: the drop probe renders a skeleton manifest and selects an installer option per admitted version. The default `newest` is unaffected — it returns before any of this. |
+| @fact:B306-EVIDENCE **evidence** | By construction: `commands::app::version_select::narrow` builds a fresh `RegistryDomains` on every call and holds no cache across calls; `commands::app::global::resolve_package_with_operation` is reached once per resolved package. Measured cost not taken. |
+| @fact:B306-SEVERITY **severity** | P3 — correctness is unaffected and the closed-network case this serves is offline anyway, where the read is local file I/O. |
+| @fact:B306-DISPOSITION **disposition** | open — if it bites, memoise the `(group, name)` → candidate-availability answer for the process, or hand one `RegistryDomains` down from the command instead of building one per resolution. |
+| @fact:B306-FILED **filed by** | PROP-075 `#VERSIONS-SELECT`, 2026-11-12. |
+
+## B-307 — `vibe app versions --json` does not carry the version-selection policy {#b-307}
+
+| field | value |
+|---|---|
+| @fact:B307-WHAT **what** | `vibe app versions` says the effective `[versions] select` in its **human** trailer, so a person sees which of the listed rows an install would actually land on. The `--json` answer (`vibe-app-versions/1`) does not carry it: an automated reader gets the domain and the `in drop` marks but has to ask `vibe show config` separately to know how a requirement would choose among them. The human and machine answers therefore say different amounts about the same question. |
+| @fact:B307-EVIDENCE **evidence** | By construction: the trailer is drawn in `commands::app::versions::trailer` from a policy read at the call site, and no member of `schemas/application_versions.jtd.json` carries it (AV-FMT-108 states the wire is untouched on purpose). |
+| @fact:B307-SEVERITY **severity** | P3 — the fact is obtainable, just not in this document. |
+| @fact:B307-DISPOSITION **disposition** | open — add an optional top-level `versions_select` member to `vibe-app-versions/1` (epoch 1 → 1, additive) when a consumer asks for it, rather than moving the wire for a fact nothing reads yet. |
+| @fact:B307-FILED **filed by** | PROP-075 `#VERSIONS-SELECT`, 2026-11-12. |
+
+## B-308 — a `[[template]] version_list = "selected"` mirror can publish a channel table with no newest member {#b-308}
+
+| field | value |
+|---|---|
+| @fact:B308-WHAT **what** | With `version_list = "selected"`, a snapshot's version list carries only the versions the row selects, and a client recomputes channels from that list. A row whose `versions` requirement happens to exclude the newest member of a channel the template declares therefore publishes a channel whose newest member is an older release than upstream's — `node@lts` behind that mirror resolves to what the mirror carries, which is correct and intended, but there is nothing that tells the operator the channel's head moved. The run's projection reports the trimmed resolution (so the row an operator reads is honest), but it does not compare it against the source's and say "this channel's newest member is not the one upstream names". |
+| @fact:B308-EVIDENCE **evidence** | By construction: `registry::mirror::templates::snapshot_row` intersects the source's channel table with the selected set and reports the result; it never diffs the two. |
+| @fact:B308-SEVERITY **severity** | P3 — the behaviour is the one the knob is for; only the absence of a notice is the gap. |
+| @fact:B308-DISPOSITION **disposition** | open — emit one line per channel whose newest member the trim moved, in the same place the projection already names the resolution. |
+| @fact:B308-FILED **filed by** | PROP-075 `#MIRROR-CONFIG-SCHEMA`, 2026-11-12. |

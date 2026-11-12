@@ -20,7 +20,8 @@ pub(crate) use observation::Observation;
 #[path = "global/sources.rs"]
 mod sources;
 pub(crate) use sources::{
-    Packages, resolve_package_with_operation, source_operation, source_operation_for_project,
+    Packages, resolve_package_newest, resolve_package_with_operation, source_operation,
+    source_operation_for_project,
 };
 
 use super::agents::{AgentSetup, report_parked};

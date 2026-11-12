@@ -24,7 +24,7 @@ use std::path::PathBuf;
 
 use anyhow::{Result, bail};
 
-use super::config::{self, Validated, ValidatedTemplate};
+use super::config::{self, Validated, ValidatedTemplate, VersionList};
 use super::record;
 
 const SPEC: &str = "spec://org.vibevm.core/vibevm/common/PROP-075#MIRROR-CONFIG-SCHEMA";
@@ -53,6 +53,9 @@ pub(super) struct TemplateSelection {
     pub archs: Vec<String>,
     pub installers: Vec<String>,
     pub payloads: bool,
+    /// How much of the version document the snapshot's `versions.json`
+    /// carries (PROP-075 `#MIRROR-CONFIG-SCHEMA`).
+    pub version_list: VersionList,
 }
 
 impl TemplateSelection {
@@ -295,6 +298,7 @@ impl Selection {
                     archs: row.archs.clone(),
                     installers: row.installers.clone(),
                     payloads: row.payloads,
+                    version_list: row.version_list,
                 })
                 .collect(),
         })
@@ -378,6 +382,7 @@ fn template(row: &ValidatedTemplate) -> TemplateSelection {
         archs: row.archs.clone(),
         installers: row.installers.clone(),
         payloads: row.payloads,
+        version_list: row.version_list,
     }
 }
 
@@ -406,6 +411,7 @@ fn recorded_template(row: &record::TemplateRecord) -> TemplateSelection {
         archs: row.archs.clone(),
         installers: row.installers.clone(),
         payloads: row.payloads,
+        version_list: row.version_list,
     }
 }
 
