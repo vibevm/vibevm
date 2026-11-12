@@ -81,6 +81,10 @@ pub struct InstallArgs {
     #[command(flatten)]
     pub source_policy: super::SourcePolicyArgs,
     /// Zero or more package references, each `<group>/<name>[@<version>]`.
+    /// A bare `<name>` works only where a registry has ISSUED that short
+    /// name in its own alias table (PROP-008 §2.6) — a package is not
+    /// reachable by its own name; `vibe search` marks the names that are
+    /// issued.
     /// When empty, `vibe install` reads the project's `vibe.toml`
     /// `[requires].packages` and installs every entry — same shape as
     /// `cargo build` / `npm install` against an existing manifest.
@@ -357,7 +361,10 @@ pub struct UpdateArgs {
     #[command(flatten)]
     pub source_policy: super::SourcePolicyArgs,
     /// Package references `<group>/<name>` to update. Each must be
-    /// currently installed. Mutually exclusive with `--all`.
+    /// currently installed, which is also why a bare `<name>` still
+    /// works here: it is resolved against `vibe.lock` alone, never
+    /// against a registry's issued short names (PROP-008 §2.6).
+    /// Mutually exclusive with `--all`.
     pub packages: Vec<String>,
 
     /// Update exactly one installed user application under the Vibe settings root.
@@ -513,7 +520,11 @@ pub struct ReinstallArgs {
 #[derive(Debug, clap::Args)]
 pub struct UninstallArgs {
     /// Direct package reference; removes dependencies no longer needed by the workspace.
-    /// The version selector is ignored on uninstall.
+    /// The version selector is ignored on uninstall. A bare `<name>` is
+    /// resolved against this project's `vibe.lock` — or, with `-g`, this
+    /// home's application index — and never against a registry's issued
+    /// short names, because the verb acts on what is already installed
+    /// (PROP-008 §2.6).
     pub package: String,
 
     /// Uninstall one user application without mutating a project.

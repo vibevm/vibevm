@@ -1,12 +1,19 @@
 //! A bare `<name>` at the application command boundary (PROP-008
-//! `#APP-COMMANDS-SHORT-NAMES`, `#SHORT-NAME-TRUST`, PROP-059
-//! `#commands`).
+//! `#APP-COMMANDS-SHORT-NAMES`, `#SHORT-NAME-TRUST`,
+//! `#ISSUED-NAMES-ONLY`, PROP-059 `#commands`).
 //!
 //! The site here is the shape a closed corporate network has and the shape
 //! short-name resolution most needs to work in: one `type = "monorepo"`
 //! registry — a mirrored single repository, read over Git's `file`
 //! transport — under a `[source_policy]` that excludes the public
 //! hostings by name. **No run here opens a socket.**
+//!
+//! Since the owner's ruling of 2026-11-12 the registry also has to ISSUE
+//! the spellings it wants typed: this monorepo's `_index/aliases.toml`
+//! issues `widget` and `gadget` for the packages that bear them, which is
+//! what makes those two resolvable at all. `node`, which two groups here
+//! publish and nobody issued, is the counter-case — it resolves nothing
+//! and the refusal names both bearers as something to copy.
 #![cfg(all(test, unix))]
 
 use std::fs;
@@ -17,12 +24,12 @@ use std::process::{Command, Output};
 /// that excludes the public hostings. The monorepo carries four
 /// application packages:
 ///
-/// | package | group | why |
-/// |---|---|---|
-/// | `org.vibevm.node/widget` | trusted | the single candidate |
-/// | `org.vibevm.node/node` | trusted | one half of the collision |
-/// | `org.vibevm.alt/node` | trusted | the other half |
-/// | `com.acme/gadget` | untrusted by default | never picked for you |
+/// | package | issued as | group | why |
+/// |---|---|---|---|
+/// | `org.vibevm.node/widget` | `widget` | trusted | the single candidate |
+/// | `org.vibevm.node/node` | — | trusted | one of two bearers of a name nobody issued |
+/// | `org.vibevm.alt/node` | — | trusted | the other bearer |
+/// | `com.acme/gadget` | `gadget` | untrusted by default | issued, and still never picked for you |
 struct Site {
     root: tempfile::TempDir,
 }
@@ -48,9 +55,32 @@ impl Site {
             fs::create_dir_all(&package).unwrap();
             fs::write(package.join("vibe.toml"), manifest(group, name)).unwrap();
         }
+        // The registry's own issued names (PROP-008 §2.6). A monorepo's
+        // table lives in its `_index/`; with no built projection beside
+        // it the authored file answers directly, exactly as the
+        // directory listing answers for what the tree carries. Note
+        // `widget` and `gadget` name the very packages that bear them —
+        // the row the earlier design refused and the one the law now
+        // requires.
+        fs::create_dir_all(work.join("_index")).unwrap();
+        fs::write(
+            work.join("_index/aliases.toml"),
+            "schema = 1\n\n[aliases]\n\
+             gadget = \"com.acme/gadget\"\n\
+             widget = \"org.vibevm.node/widget\"\n",
+        )
+        .unwrap();
         site.git(None, &["init", "-q", "-b", "main", work.to_str().unwrap()]);
         site.git(Some(&work), &["add", "-A"]);
-        site.git(Some(&work), &["commit", "-q", "-m", "four app packages"]);
+        site.git(
+            Some(&work),
+            &[
+                "commit",
+                "-q",
+                "-m",
+                "four app packages and two issued names",
+            ],
+        );
         site.git(
             None,
             &[
@@ -187,11 +217,12 @@ fn one_candidate_resolves_and_the_provenance_line_says_which() {
     ok(&listed, "vibe app installers widget");
     let said = stderr(&listed);
     assert!(
-        said.contains("widget → org.vibevm.node/widget"),
+        said.contains("widget → org.vibevm.node/widget (alias in registry corp)"),
         "the provenance line is missing: {said}"
     );
     assert_eq!(
-        said.matches("widget → org.vibevm.node/widget").count(),
+        said.matches("widget → org.vibevm.node/widget (alias in registry corp)")
+            .count(),
         1,
         "the provenance line is printed once: {said}"
     );
@@ -211,7 +242,7 @@ fn the_provenance_line_survives_quiet_and_json() {
         let listed = site.vibe(&args);
         ok(&listed, "vibe app installers widget");
         assert!(
-            stderr(&listed).contains("widget → org.vibevm.node/widget"),
+            stderr(&listed).contains("widget → org.vibevm.node/widget (alias in registry corp)"),
             "{extra:?} dropped the provenance line: {}",
             stderr(&listed)
         );
@@ -240,18 +271,37 @@ fn a_qualified_spelling_announces_nothing() {
     );
 }
 
-/// Two trusted groups publishing one bare name is the PROP-008 §2.7
-/// collision: the qualified spellings, and exit 7.
+/// Two trusted groups publishing one bare name used to be the PROP-008
+/// §2.7 collision with exit `7`. Since `#ISSUED-NAMES-ONLY` neither
+/// bearer is a candidate, so there is nothing to be ambiguous between:
+/// the verdict is the refusal, and both bearers are named as qualified
+/// spellings to copy. The collision itself now needs two registries
+/// issuing one spelling for different packages, which
+/// `cli_registry_alias.rs` proves.
 #[test]
 #[specmark::spec(
     verifies = "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-008#short-name"
 )]
-fn two_groups_under_one_name_refuse_with_exit_seven() {
+fn two_groups_under_one_name_are_a_hint_and_not_a_collision() {
     let site = Site::new();
     let refused = site.vibe(&["app", "installers", "node"]);
-    assert_eq!(code(&refused), 7, "stderr: {}", stderr(&refused));
+    assert!(!refused.status.success(), "{}", stderr(&refused));
+    assert_ne!(
+        code(&refused),
+        7,
+        "nothing was ambiguous — nothing was issued: {}",
+        stderr(&refused)
+    );
     let said = stderr(&refused);
-    assert!(said.contains("`node` is ambiguous"), "{said}");
+    assert!(
+        said.contains("the short name `node` is not issued by any consulted registry"),
+        "{said}"
+    );
+    assert!(!said.contains("is ambiguous"), "{said}");
+    assert!(
+        said.contains("none of them chosen for you"),
+        "both bearers are a hint, not a choice: {said}"
+    );
     assert!(said.contains("org.vibevm.alt/node"), "{said}");
     assert!(said.contains("org.vibevm.node/node"), "{said}");
     assert!(
@@ -282,7 +332,7 @@ fn an_untrusted_group_is_listed_and_never_picked() {
     let listed = site.vibe(&["app", "installers", "gadget"]);
     ok(&listed, "vibe app installers gadget, com.acme trusted");
     assert!(
-        stderr(&listed).contains("gadget → com.acme/gadget"),
+        stderr(&listed).contains("gadget → com.acme/gadget (alias in registry corp)"),
         "{}",
         stderr(&listed)
     );
@@ -327,7 +377,7 @@ fn offline_resolves_from_the_cached_index() {
     let listed = site.vibe(&["app", "installers", "widget", "--offline"]);
     ok(&listed, "vibe app installers widget --offline");
     assert!(
-        stderr(&listed).contains("widget → org.vibevm.node/widget"),
+        stderr(&listed).contains("widget → org.vibevm.node/widget (alias in registry corp)"),
         "{}",
         stderr(&listed)
     );
@@ -384,7 +434,7 @@ fn versions_reaches_the_index_only_for_a_word_that_is_neither() {
     let listed = site.vibe(&["app", "versions", "widget", "--json"]);
     ok(&listed, "vibe app versions widget --json");
     assert!(
-        stderr(&listed).contains("widget → org.vibevm.node/widget"),
+        stderr(&listed).contains("widget → org.vibevm.node/widget (alias in registry corp)"),
         "{}",
         stderr(&listed)
     );
@@ -398,7 +448,8 @@ fn versions_reaches_the_index_only_for_a_word_that_is_neither() {
 /// …and when the third tier finds nothing at all, `vibe app versions`
 /// keeps its own refusal, the one that names the slots this home records.
 /// A collision is still the boundary's, because the command's refusal
-/// cannot know there were two.
+/// cannot know there were two — but two bearers of an unissued name are
+/// no longer a collision.
 #[test]
 #[specmark::spec(
     verifies = "spec://org.vibevm.core/vibevm/common/PROP-059#SHORT-NAME-SLOT-PRECEDENCE"
@@ -414,11 +465,17 @@ fn versions_keeps_its_own_refusal_for_a_word_no_registry_carries() {
         "the boundary stands aside for a word nothing carries: {said}"
     );
 
-    let collision = site.vibe(&["app", "versions", "node", "--json"]);
-    assert_eq!(code(&collision), 7, "stderr: {}", stderr(&collision));
+    // And a word two packages bear but nobody issued is, to this
+    // boundary, a word no candidate matches: `versions` keeps its own
+    // refusal there too. The §2.7 collision it does still forward is
+    // the one two registries make by issuing one spelling differently
+    // (`cli_registry_alias.rs`).
+    let unissued = site.vibe(&["app", "versions", "node", "--json"]);
+    assert!(!unissued.status.success(), "{}", stderr(&unissued));
+    assert_ne!(code(&unissued), 7, "stderr: {}", stderr(&unissued));
     assert!(
-        stderr(&collision).contains("`node` is ambiguous"),
+        stderr(&unissued).contains("unknown_target"),
         "{}",
-        stderr(&collision)
+        stderr(&unissued)
     );
 }

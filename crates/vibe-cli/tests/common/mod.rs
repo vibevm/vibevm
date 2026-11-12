@@ -215,6 +215,28 @@ pub fn make_wal_dir_registry(root: &Path) -> PathBuf {
     registry
 }
 
+/// Issue `alias` as a short name for `target` in the local-directory
+/// registry at `registry` (PROP-008 §2.6 `#ISSUED-NAMES-ONLY`).
+///
+/// Written straight into the registry's own `_index/aliases.toml`,
+/// which is where a hand-built registry's table lives and what the
+/// reader falls back to when no projection is current — the same way
+/// these fixtures write a package's `vibe.toml` by hand rather than
+/// publishing it. Since 2026-11-12 a bare spelling resolves through
+/// these rows and through nothing else, so a fixture that wants one
+/// typed has to say so.
+pub fn issue_short_name(registry: &Path, alias: &str, target: &str) {
+    let index = registry.join("_index");
+    std::fs::create_dir_all(&index).expect("the registry index directory");
+    let table = index.join("aliases.toml");
+    let existing = std::fs::read_to_string(&table).unwrap_or_default();
+    let text = match existing.is_empty() {
+        true => format!("schema = 1\n\n[aliases]\n{alias} = \"{target}\"\n"),
+        false => format!("{existing}{alias} = \"{target}\"\n"),
+    };
+    std::fs::write(&table, text).expect("writing the alias table");
+}
+
 pub fn init_project(dir: &Path) {
     vibe().arg("init").arg("--path").arg(dir).assert().success();
 }

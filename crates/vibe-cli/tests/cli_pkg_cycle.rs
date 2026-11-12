@@ -11,7 +11,7 @@ mod common;
 use std::fs;
 
 use common::{
-    UserScratch, fixture_registry, git_available, make_per_package_registry,
+    UserScratch, fixture_registry, git_available, issue_short_name, make_per_package_registry,
     make_single_package_bare_repo, make_wal_dir_registry, write_project_with_per_package_registry,
 };
 use predicates::prelude::*;
@@ -514,11 +514,18 @@ fn install_writes_caret_pkgref_to_vibe_toml_requires() {
 /// `org.vibevm.world/wal` against the registry, and it is the **qualified**
 /// form that lands in `vibe.toml` `[requires].packages` — a manifest
 /// never stores a short name.
+///
+/// Since `#ISSUED-NAMES-ONLY` the bare spelling only reaches the package
+/// because this registry ISSUES it: the row below is what the law
+/// requires, and `wal` would otherwise resolve nothing even though the
+/// registry carries a package of that very name.
 #[test]
 fn install_resolves_bare_short_name_to_qualified() {
     let user = UserScratch::new();
     let project = tempfile::tempdir().unwrap();
     user.init_project(project.path());
+    let registry = make_wal_dir_registry(project.path());
+    issue_short_name(&registry, "wal", "org.vibevm.world/wal");
 
     user.vibe()
         .arg("install")
@@ -526,7 +533,7 @@ fn install_resolves_bare_short_name_to_qualified() {
         .arg("--path")
         .arg(project.path())
         .arg("--registry")
-        .arg(make_wal_dir_registry(project.path()))
+        .arg(&registry)
         .arg("--assume-yes")
         .assert()
         .success();
@@ -554,9 +561,8 @@ fn install_resolves_bare_short_name_to_qualified() {
     );
 }
 
-/// A bare short name that resolves to no package fails the install
-/// with a pointer at the qualified form — the resolver never guesses
-/// (PROP-008 §2.6).
+/// A bare spelling no registry issued fails the install with a pointer
+/// at the qualified form — the resolver never guesses (PROP-008 §2.6).
 #[test]
 fn install_unresolvable_short_name_fails_with_hint() {
     let user = UserScratch::new();
@@ -573,17 +579,50 @@ fn install_unresolvable_short_name_fails_with_hint() {
         .arg("--assume-yes")
         .assert()
         .failure()
-        .stderr(predicate::str::contains("could not resolve the short name"));
+        .stderr(predicate::str::contains(
+            "is not issued by any consulted registry",
+        ))
+        .stderr(predicate::str::contains("give the full name"));
 }
 
-/// PROP-008 §2.7 — a short name matching two groups is a collision.
-/// `vibe install` refuses to guess: it fails with the dedicated exit
-/// code `7` ("ambiguous package", distinct from `3`) and prints the
-/// numbered qualified alternatives so the operator can pick one.
+/// And the case the law changed: a registry that CARRIES a package of
+/// that very name but has issued nothing refuses too, printing the
+/// qualified name for the operator to copy. This is the test that
+/// replaces "a package name is a short name".
 #[test]
-fn install_ambiguous_short_name_fails_with_exit_code_seven() {
+fn install_refuses_a_package_name_no_registry_issued() {
+    let user = UserScratch::new();
+    let project = tempfile::tempdir().unwrap();
+    user.init_project(project.path());
+
+    user.vibe()
+        .arg("install")
+        .arg("wal")
+        .arg("--path")
+        .arg(project.path())
+        .arg("--registry")
+        .arg(make_wal_dir_registry(project.path()))
+        .arg("--assume-yes")
+        .assert()
+        .failure()
+        .stderr(predicate::str::contains(
+            "the short name `wal` is not issued by any consulted registry",
+        ))
+        .stderr(predicate::str::contains("none of them chosen for you"))
+        .stderr(predicate::str::contains("org.vibevm.world/wal"));
+}
+
+/// PROP-008 §2.7 — the collision, after `#ISSUED-NAMES-ONLY` moved what
+/// can collide. Two groups publishing one bare name no longer compete
+/// for the spelling, because neither is a candidate: the verdict is the
+/// refusal, and both are named as qualified spellings to copy. The
+/// §2.7 exit `7` now belongs to two registries that ISSUE one spelling
+/// for different packages, which `cli_registry_alias.rs` proves end to
+/// end; here the point is that this case is no longer that one.
+#[test]
+fn install_two_groups_under_one_name_are_a_hint_and_not_a_collision() {
     // A two-group registry: `org.vibevm/wal` and `com.example/wal`
-    // both exist, so the bare `wal` cannot be resolved to one group.
+    // both exist, and this registry has issued neither spelling.
     let registry = tempfile::tempdir().unwrap();
     for group in ["org.vibevm", "com.example"] {
         fs::create_dir_all(registry.path().join(group).join("wal").join("v0.1.0")).unwrap();
@@ -599,6 +638,51 @@ fn install_ambiguous_short_name_fails_with_exit_code_seven() {
         .arg(project.path())
         .arg("--registry")
         .arg(registry.path())
+        .arg("--assume-yes")
+        .assert()
+        .failure()
+        .stderr(predicate::str::contains(
+            "is not issued by any consulted registry",
+        ))
+        .stderr(predicate::str::contains("none of them chosen for you"))
+        .stderr(predicate::str::contains("com.example/wal"))
+        .stderr(predicate::str::contains("org.vibevm/wal"));
+}
+
+/// And the collision that remains: one registry cannot hold two targets
+/// for one spelling (a TOML table has one key), so the ambiguity the
+/// install path still refuses with exit `7` is the one its lockfile can
+/// make — two locked groups under one name, which no registry can break.
+#[test]
+fn install_two_locked_groups_under_one_name_is_exit_seven() {
+    let user = UserScratch::new();
+    let project = tempfile::tempdir().unwrap();
+    user.init_project(project.path());
+
+    // Two locked entries of one name: the lockfile tier answers a bare
+    // name (`#LOCKFILE-AUTHORITATIVE`) and cannot choose between these.
+    let lock = project.path().join("vibe.lock");
+    let text = fs::read_to_string(&lock).unwrap();
+    let entry = |group: &str| {
+        format!(
+            "\n[[package]]\nkind = \"flow\"\nname = \"wal\"\ngroup = \"{group}\"\n\
+             version = \"0.1.0\"\nsource_url = \"git@example.invalid/x.git\"\n\
+             content_hash = \"sha256:abc\"\n"
+        )
+    };
+    fs::write(
+        &lock,
+        format!("{text}{}{}", entry("com.example"), entry("org.vibevm")),
+    )
+    .unwrap();
+
+    user.vibe()
+        .arg("install")
+        .arg("wal")
+        .arg("--path")
+        .arg(project.path())
+        .arg("--registry")
+        .arg(fixture_registry())
         .arg("--assume-yes")
         .assert()
         .code(7)
