@@ -3314,3 +3314,23 @@ it. Severity **P3**.
 | @fact:B308-SEVERITY **severity** | P3 — the behaviour is the one the knob is for; only the absence of a notice is the gap. |
 | @fact:B308-DISPOSITION **disposition** | open — emit one line per channel whose newest member the trim moved, in the same place the projection already names the resolution. |
 | @fact:B308-FILED **filed by** | PROP-075 `#MIRROR-CONFIG-SCHEMA`, 2026-11-12. |
+
+## B-309 — a fresh `vibe search` cache hit carries no issued short names {#b-309}
+
+| field | value |
+|---|---|
+| @fact:B309-WHAT **what** | `vibe search` marks each hit with the short names a consulted registry has issued for it (PROP-008 §2.6 `#ISSUED-NAMES-ONLY`). For a directory-layout registry the marks come free, off the index the search already projected. For an HTTP-served index they come from one extra GET of `aliases.toml`, made only when that registry returned hits — and the search cache stores the hit list, not the table, so a run served from a fresh cache entry reports `short_names: []` for every hit. The marks reappear with `--no-cache` or once the entry expires. An operator reading a cached hit list therefore cannot tell "no issued name" from "not asked". |
+| @fact:B309-EVIDENCE **evidence** | By construction: `commands::search` collects issued rows inside the live `client.search(...)` arm and inside `layout::search`'s result; the `search_cache::load_if_fresh` arm has no `IndexClient` to ask, and contacting one there would defeat the cache. |
+| @fact:B309-SEVERITY **severity** | P3 — a reported fact is absent rather than wrong, and the resolution that follows is still the one authority on what a spelling reaches. |
+| @fact:B309-DISPOSITION **disposition** | open — carry the issued rows in the cached entry beside the hits (the cache key already names the registry), or mark the hit list as "issued names not asked" when it came from the cache. The first is better: the table is small and changes with the index. |
+| @fact:B309-FILED **filed by** | PROP-008 `#ISSUED-NAMES-ONLY`, 2026-11-12. |
+
+## B-310 — `vibe app versions` hands a never-issued bare name back unchanged instead of saying so {#b-310}
+
+| field | value |
+|---|---|
+| @fact:B310-WHAT **what** | `vibe app versions <arg>` takes either a package or an installed slot id, so its short-name boundary hands a bare name that matched no candidate back **unchanged** rather than refusing — the command's own refusal then names the slots this home records, which is the fact its reader needs. Since `#ISSUED-NAMES-ONLY` the "no candidate" case now also covers a spelling that several registries publish as a real package name and none has issued, so an operator who typed a genuine package name there is told about slots and never learns that the name exists but is not issued. The install and `app describe` boundaries say it properly; this one verb does not. |
+| @fact:B310-EVIDENCE **evidence** | By construction: `commands::app::short_name::from_registries_or_unchanged` returns `Ok(None)` on `lookup.candidates.is_empty()`, and `candidates` now holds only issued spellings; the hint list it gathered (`Lookup::named`) is discarded on that path. |
+| @fact:B310-SEVERITY **severity** | P3 — one verb's refusal is less informative than its siblings'; nothing resolves wrongly. |
+| @fact:B310-DISPOSITION **disposition** | open — when the slot lookup also fails, let the command fold the boundary's hint list into its own refusal, so one message names both the slots it knows and the qualified packages that bear the spelling. |
+| @fact:B310-FILED **filed by** | PROP-008 `#NOT-ISSUED-REFUSES-WITH-A-HINT`, 2026-11-12. |
