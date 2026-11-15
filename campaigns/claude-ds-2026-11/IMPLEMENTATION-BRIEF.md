@@ -32,7 +32,7 @@ No old launcher/config dump or private runtime tree is an input.
 Create source only under
 `vibevm/vibepacks/org.vibevm.world/claude-ds/v1.0.12/`:
 
-- Manifest: coordinate `org.vibevm.world/claude-ds`, version `1.0.12`, kind `tool`,
+- Manifest: coordinate `org.vibevm.world/claude-ds`, version `1.0.12`, kind `app`,
   valid `[application] id = "claude-ds"`, verified Linux installer options, ordinary
   recipe step, owned launcher and `public_commands` exposure named `claude-ds`.
 - Clean launcher, small focused stdlib source modules for config, enforcement/runner,
@@ -95,8 +95,9 @@ mechanisms as contracts, not this pair's private machine settings or owner grant
 Use synthetic fixtures exclusively. Record exact commands, selected counts, passed,
 failed and unrun gates; worker selftests do not establish independent acceptance.
 
-1. Ordinary manifest validation/application resolution accepts kind tool plus
-   application capability. Offline local-registry `vibe install -g` in isolated
+1. Ordinary manifest validation/application resolution accepts kind app plus
+   application identity and complete installer options. Keep the validator unchanged;
+   a tool-kind manifest with installer options must still refuse. Offline local-registry `vibe install -g` in isolated
    settings produces the normal owned `claude-ds` command/proxy. No extra host code
    route or personal-spec selector is needed.
 2. Install with fake runtime/network/auth sentinels proves none are invoked/read or
@@ -145,3 +146,14 @@ provider calls, retries, source commits, external push, package publication, rel
 remote creation, actual host deployment or deletion. Follow currently applicable
 local execution authority separately. Resume USER-PROJECT only under the agreed
 owner priority after the observability/package milestone boundary is accounted for.
+
+## Manifest admission correction — 2026-11-15
+
+The initial kind-tool recommendation was incorrect for an executable globally
+installable package. Independently inspected
+`crates/vibe-core/src/manifest/document/validation.rs:225-244` requires both
+application identity and package kind app for installer options. The failed
+isolated install reported by builder exposed this earlier missing validation check.
+Use kind app; do not weaken the validator or change host routing to accommodate
+the previous draft. Group/name/version and external credential boundaries remain
+unchanged. A successful config unit suite does not prove installability.

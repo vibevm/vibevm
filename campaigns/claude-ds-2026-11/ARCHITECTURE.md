@@ -11,7 +11,7 @@ a live endpoint, or moving live runs. Access credentials must never enter source
 
 Recommended canonical source slot:
 `vibevm/vibepacks/org.vibevm.world/claude-ds/v1.0.12/`.
-Proposed coordinate `org.vibevm.world/claude-ds`, kind `tool`, version `1.0.12`,
+Proposed coordinate `org.vibevm.world/claude-ds`, kind `app`, version `1.0.12`,
 UPL-1.0, subject to existing manifest validation and dependency/license review.
 Builder relayed the owner's explicit version decision: this package's initial
 version matches the next VibeVM version, 1.0.12. This does not authorize a host
@@ -58,10 +58,12 @@ Python establishes native macOS or Windows verification. Missing enforcement
 prerequisites cause refusal, never an unsandboxed fallback.
 
 The requested delivery includes a clean launcher and valid application capability,
-not an observer-only inert tool. Keep `[package] kind = "tool"` and add a valid
+not an observer-only inert tool. Use `[package] kind = "app"` and a valid
 `[application] id = "claude-ds"` with ordinary Linux installer options, recipe steps,
-launchers and `public_commands`. Capability, not kind alone, makes `install -g`
-choose application lifecycle. Use the existing application payload/ownership/proxy
+launchers and `public_commands`. Ordinary manifest validation requires kind app
+when installer options are present; a resolver accepting application metadata alone
+does not waive that admission. Kind alone is also insufficient without an
+installable option and valid application metadata. Use existing payload/ownership/proxy
 machinery; do not invent a parallel installer or edit the user's shell files.
 The exact manifest must pass ordinary validation and application resolution before
 claiming global installability; an application id alone is insufficient.
@@ -241,3 +243,14 @@ synthetic checks, unchanged credential/isolation floor, reproducible inventories
 explicit unsupported/unrun cases and integrated milestone review. Source-home
 acceptance does not imply launcher trust, provider availability, package release,
 remote-repository creation or permission to move/delete runtime resources.
+
+## Manifest admission correction — 2026-11-15
+
+The initial kind-tool recommendation was incorrect for an executable globally
+installable package. Independently inspected
+`crates/vibe-core/src/manifest/document/validation.rs:225-244` requires both
+application identity and package kind app for installer options. The failed
+isolated install reported by builder exposed this earlier missing validation check.
+Use kind app; do not weaken the validator or change host routing to accommodate
+the previous draft. Group/name/version and external credential boundaries remain
+unchanged. A successful config unit suite does not prove installability.
