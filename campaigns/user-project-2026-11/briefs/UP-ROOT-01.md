@@ -68,8 +68,14 @@ found, return a precise perimeter adjustment to architect before dispatch.
 3. Report CLI grammar collision, output/JSON conventions and exact test target names.
 4. Establish no-follow path admission, exclusive manifest creation and interruption
    ownership using existing utilities. Do not silently choose clobber/recovery.
-5. Satisfy credential-isolation and autoload-suppression gate for the actual external
-   execution lane. Synthetic namespace capability alone is insufficient.
+5. Satisfy credential-isolation and mode-specific instruction-delivery gates for
+   the actual external execution lane under the sessions' local context policy.
+   This atom's filesystem/concurrency/report coupling is medium-complexity work.
+   This shared brief requires no particular launcher, provider or hardware. Do not attach
+   the quiet-clause marker to full-boot packets. Verify required boot reads and
+   exclusion of unrelated host instructions/personal state. Small independent
+   mechanical tasks may use bounded mode with verified automatic-boot suppression.
+   Synthetic namespace capability alone is insufficient in either mode.
 
 ## Builder review dispositions
 

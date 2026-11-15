@@ -65,8 +65,12 @@ Before dispatching dependent atoms, close these explicit refinement nodes:
 Read-only code probes are complete for initial routing/export/boot owners; no
 Phase-0 commits or real harness calls. Builder reports synthetic bwrap filesystem,
 process and network capability checks passed, but actual external launcher auth
-mediation and instruction-load suppression remain NOT VERIFIED. That is a hard
-external-worker gate, not evidence that the lane is safe. Use synthetic evidence,
+mediation and mode-specific instruction delivery remain NOT VERIFIED. The owner's
+2026-11-15 amendment supports mode selection through local execution policy;
+launcher identities, hardware access and cost assumptions are not shared prerequisites. Full mode verifies approved
+boot reads and excludes unrelated host instructions; bounded mode suppresses boot.
+This supersedes the earlier universal quiet rule without weakening data isolation.
+That is a hard external-worker gate, not evidence that the lane is safe. Use synthetic evidence,
 never real secret reads or security weakening. Builder retains gate ownership.
 
 ## 5. Phases and dependencies
