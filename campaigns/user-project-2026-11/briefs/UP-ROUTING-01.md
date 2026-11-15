@@ -18,6 +18,32 @@ extension; this brief does not authorize a source commit or dirty cross-clone
 transfer. Existing authorized builder task tree may retain its own root changes.
 Actual coding follows current local execution policy. No external publication.
 
+Stage-specific input admission, 2026-11-15: the builder relayed a direct owner
+request to try the next stage on the designated execution lane while the reviewed
+root prerequisite remains uncommitted. For this routing stage only, a worker may
+receive a committed contract/source base plus the exact reviewed v4 prerequisite
+above, assembled by the builder from its own retained candidate. This supersedes
+UP-ROOT-01's blanket committed-snapshot requirement only for this named prerequisite
+in the next stage; it does not relax cross-clone committed product delivery.
+
+Use committed routing delivery `5ae159e5ecbfcb1111a74c46a5e574d26be9723b` plus
+this committed brief amendment (report its exact commit hash) and exactly the 28
+root files from the v4 manifest. Verify the manifest SHA-256 and every file hash,
+reject extra overlay files and path escapes, and record the resulting complete
+worker-input inventory/hash before launch. Never copy the moving dirty task tree,
+its Git metadata, local execution state, private inputs or unrelated reports.
+Any additional admitted public boot/dependency closure must be separately inventoried
+and distinguished from the product overlay. Verify actual instruction delivery
+and isolation under the applicable local policy; this input exception grants no
+launcher, credential, network or retry permission.
+
+Preserve the original root candidate and report root review separately from routing
+output. The worker cannot commit, publish or claim owner acceptance. Its output
+remains a candidate for builder verification and integrated architectural review.
+A mismatched or unavailable manifest/file is a stop condition, not permission to
+substitute a newer dirty file. No arbitrary uncommitted prerequisite, old worker
+replay or future-stage exception is implied.
+
 Governing anchors: PROP-074 USER-PROJECT-DESTINATION, INSTALL-ROUTING,
 INSTALLED-ROUTING, EMPTY-AND-ALL, ROUTING-PREFLIGHT, LIFECYCLE-ADMISSION,
 LIFECYCLE-TRANSPORT and ROUTING-DECISION (all with USER-PROJECT prefix), plus
