@@ -147,6 +147,13 @@ impl ShellGit {
             .checkpoint()
             .map_err(|_| GitError::ContactRefused(crate::ContactRefusal::OperationCancelled))?;
         let began = std::time::Instant::now();
+        let progress = transfers::current().progress.unwrap_or_default();
+        let operation = args
+            .iter()
+            .copied()
+            .find(|arg| matches!(*arg, "clone" | "fetch"))
+            .unwrap_or("transfer");
+        let task = progress.task(format!("Git {operation}"));
         let mut child =
             super::controlled::spawn_transfer(&mut cmd, &cancellation).map_err(spawn_error)?;
         // stdout is drained beside stderr so neither pipe can fill and
@@ -177,6 +184,9 @@ impl ShellGit {
             }
             match receiver.recv_timeout(std::time::Duration::from_millis(50)) {
                 Ok(segment) => {
+                    if is_progress(&segment) {
+                        task.detail(segment.trim().to_owned());
+                    }
                     if let Some(receipt) = Receipt::parse(&segment) {
                         let figure = relay.cumulative(receipt.bytes);
                         let total = receipt.whole.then_some(figure);
@@ -216,6 +226,7 @@ impl ShellGit {
             stderr,
         };
         if output.status.success() {
+            task.finish();
             if let Some(mut transfer) = relay.transfer {
                 let store = if self.native.is_some() {
                     repository.join("objects")
@@ -246,6 +257,7 @@ impl ShellGit {
         } else {
             classify_failure(argv, &output)
         };
+        task.fail(format!("git {operation} failed"));
         if let Some(transfer) = relay.transfer {
             transfer.fail(format!("git {} failed", args.first().unwrap_or(&"")));
         }

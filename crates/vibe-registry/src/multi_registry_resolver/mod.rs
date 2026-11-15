@@ -171,9 +171,6 @@ pub struct MultiRegistryResolver {
     /// this resolver's run so a package is asked of each remote once
     /// (PROP-002 `#registry-model`, B-199).
     misses: walk::RemoteMisses,
-    /// Monorepo snapshots this run captured, kept for the run so every
-    /// stage reads one capture per repository and commit.
-    monorepo_snapshots: crate::git_registry::shared_snapshot::Retained,
 }
 
 impl MultiRegistryResolver {
@@ -215,7 +212,6 @@ impl MultiRegistryResolver {
             mutable_locked: Default::default(),
             progress: vibe_core::progress::Progress::default(),
             misses: walk::RemoteMisses::default(),
-            monorepo_snapshots: Default::default(),
         }
     }
 

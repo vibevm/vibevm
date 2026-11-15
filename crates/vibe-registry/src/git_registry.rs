@@ -65,9 +65,6 @@ pub struct GitMonorepoRegistry {
     /// The commit of an operation-owned snapshot (controlled transport),
     /// which has no `.git` to ask.
     snapshot_commit: Option<String>,
-    /// Keeps an operation-owned snapshot alive for the registry's lifetime;
-    /// shared with every other live reader of the same capture.
-    _snapshot: Option<Arc<shared_snapshot::Snapshot>>,
 }
 
 impl GitMonorepoRegistry {
@@ -165,7 +162,6 @@ impl GitMonorepoRegistry {
             clone_dir,
             local,
             snapshot_commit: None,
-            _snapshot: None,
         })
     }
 
@@ -181,6 +177,7 @@ impl GitMonorepoRegistry {
         refname: &str,
         cache_root: &Path,
         backend: Arc<dyn GitBackend>,
+        freshness_secs: u64,
     ) -> Result<Self, RegistryError> {
         fs::create_dir_all(cache_root).map_err(|source| RegistryError::Io {
             path: cache_root.to_path_buf(),
@@ -190,68 +187,31 @@ impl GitMonorepoRegistry {
             path: cache_root.to_path_buf(),
             source,
         })?;
-        // One capture per repository and commit while any reader holds it
-        // (`shared_snapshot`): discovery, metadata and fetch share it. The
-        // operation's own policy must still admit the url that served it.
-        if let Some(shared) = shared_snapshot::find(url, refname)
-            && backend
-                .preflight_selected_address(&shared.served_url)
-                .is_ok()
-        {
-            tracing::debug!(target: "vibe_registry::monorepo", %url, reference = %refname, commit = %shared.commit, "reusing monorepo snapshot");
-            return Self::from_snapshot(url, refname, backend, shared);
-        }
-        let snapshot = tempfile::Builder::new()
-            .prefix("monorepo-native-")
-            .tempdir_in(&cache)
-            .map_err(|source| RegistryError::Io {
-                path: cache.clone(),
-                source,
-            })?;
-        let mut first_error = None;
-        for (attempt, candidate) in std::iter::once(url)
-            .chain(candidates.iter().map(String::as_str))
-            .enumerate()
-        {
-            let work = snapshot.path().join(attempt.to_string());
-            tracing::debug!(target: "vibe_registry::monorepo", url = %candidate, reference = %refname, "capturing monorepo snapshot");
-            match native_snapshot(backend.as_ref(), candidate, refname, &work) {
-                Ok((tree, commit)) => {
-                    let shared = Arc::new(shared_snapshot::Snapshot::new(
-                        snapshot,
-                        tree,
-                        commit,
-                        candidate.to_string(),
-                    ));
-                    shared_snapshot::register(url, refname, &shared);
-                    return Self::from_snapshot(url, refname, backend, shared);
-                }
-                Err(error) => {
-                    tracing::warn!(target: "vibe_registry", url = %candidate, %error, "registry snapshot candidate failed");
-                    first_error.get_or_insert(error);
-                }
-            }
-        }
-        Err(first_error.unwrap_or_else(|| RegistryError::MissingRoot(snapshot.path().into())))
+        native::open(url, candidates, refname, &cache, backend, freshness_secs)
     }
 
-    fn from_snapshot(
+    fn from_retained(
         url: &str,
         refname: &str,
         backend: Arc<dyn GitBackend>,
-        shared: Arc<shared_snapshot::Snapshot>,
+        retained: native::Retained,
     ) -> Result<Self, RegistryError> {
+        let native::Retained {
+            root,
+            tree,
+            commit,
+            served_url,
+        } = retained;
         Ok(GitMonorepoRegistry {
             backend,
             url: url.to_string(),
-            served_url: shared.served_url.clone(),
+            served_url,
             name: None,
             refname: refname.to_string(),
-            cache_dir: shared.root.clone(),
-            clone_dir: shared.tree.clone(),
-            local: LocalRegistry::new(shared.tree.clone())?,
-            snapshot_commit: Some(shared.commit.clone()),
-            _snapshot: Some(shared),
+            cache_dir: root,
+            clone_dir: tree.clone(),
+            local: LocalRegistry::new(tree)?,
+            snapshot_commit: Some(commit),
         })
     }
 
@@ -305,12 +265,6 @@ impl GitMonorepoRegistry {
 
     pub fn cache_dir(&self) -> &Path {
         &self.cache_dir
-    }
-
-    /// The shared snapshot this registry reads, for an owner that keeps
-    /// it alive across stages (`shared_snapshot::Retained`).
-    pub(crate) fn snapshot(&self) -> Option<&Arc<shared_snapshot::Snapshot>> {
-        self._snapshot.as_ref()
     }
 
     pub fn clone_dir(&self) -> &Path {
@@ -573,10 +527,16 @@ fn to_uri_body(url: &str) -> String {
 
 #[path = "git_registry/acquire.rs"]
 mod acquire;
-#[path = "git_registry/shared_snapshot.rs"]
-pub(crate) mod shared_snapshot;
-use acquire::{clone_first_reachable, native_snapshot};
+#[path = "git_registry/native.rs"]
+mod native;
+#[path = "git_registry/native_cache.rs"]
+mod native_cache;
+use acquire::clone_first_reachable;
 
 #[cfg(test)]
 #[path = "git_registry/tests.rs"]
 mod tests;
+
+#[cfg(test)]
+#[path = "git_registry/native_tests.rs"]
+mod native_tests;

@@ -40,6 +40,16 @@ fn owned_config(windows: bool) -> Vec<&'static str> {
         "maintenance.auto=false",
         "gc.auto=0",
         "core.fsmonitor=false",
+        // Every object this transport receives is checked at receipt, which
+        // is the guarantee a warm object store rests on: a cache created by
+        // a fully `fsck --full`-verified clone and refreshed only by fetches
+        // under these two keys has had every one of its objects verified,
+        // so re-walking all of them on each later command buys nothing
+        // (PROP-073 `#NATIVE-PREPARATION`). The checks are the object checks
+        // `git fsck` performs, so this is the same gate applied earlier and
+        // to the new objects alone.
+        "transfer.fsckObjects=true",
+        "fetch.fsckObjects=true",
     ];
     if windows {
         entries.push("core.longpaths=true");
@@ -236,11 +246,19 @@ impl<'a> Context<'a> {
         // Named the way a transfer names itself: without the argv, "re-run
         // the command by hand" is not an instruction anybody can follow.
         tracing::debug!(target: "vibe_registry::git", argv = ?args, repo = ?repo, "running git (admitted)");
-        let control = crate::git_backend::transfers::current()
+        let progress = crate::git_backend::transfers::current()
             .progress
-            .unwrap_or_default()
-            .cancellation()
-            .clone();
+            .unwrap_or_default();
+        let label = match args.first().copied() {
+            Some("fsck") => "Verifying Git objects",
+            Some("ls-remote") => "Checking registry remote revision",
+            Some("ls-tree") => "Reading registry tree",
+            Some("read-tree" | "reset" | "checkout-index") => "Preparing registry checkout",
+            _ => "Reading Git metadata",
+        };
+        let task = progress.task(label);
+        task.detail(format!("git {}", args.first().unwrap_or(&"metadata")));
+        let control = progress.cancellation().clone();
         let output = crate::git_backend::shell::controlled::output(&mut command, &control)
             .map_err(|error| {
                 crate::git_backend::shell::controlled::git_error(
@@ -249,8 +267,10 @@ impl<'a> Context<'a> {
                 )
             })?;
         if output.status.success() {
+            task.finish();
             return Ok(output);
         }
+        task.fail(format!("git exited {}", output.status));
         if matches!(remote, Some(AdmittedRemote::Ssh(_)))
             && let Some(error) = ssh::failure(&output.stderr)
         {
@@ -282,6 +302,54 @@ impl<'a> Context<'a> {
             remote.address(),
             objects,
         )
+    }
+    /// One attribute probe over however many paths a tree holds, with the
+    /// paths handed to `check-attr --stdin` instead of spelled on the argv.
+    ///
+    /// A tree of five thousand files cost eighty-six `check-attr` children
+    /// in chunks of sixty-four, because an argv has a length limit and a
+    /// NUL-separated stdin does not. The answer is the same answer: `-z`
+    /// reads the paths exactly as it writes them.
+    pub(super) fn probe_paths(
+        &self,
+        args: &[&str],
+        repo: &Path,
+        paths: &[&str],
+    ) -> Result<Output, GitError> {
+        use std::io::Write;
+        use std::io::{Seek, SeekFrom};
+        // A regular stdin file cannot deadlock against a full stdout pipe
+        // when a large tree produces attributes while still reading paths.
+        let mut input = tempfile::tempfile().map_err(io)?;
+        for path in paths {
+            input.write_all(path.as_bytes()).map_err(io)?;
+            input.write_all(&[0]).map_err(io)?;
+        }
+        input.seek(SeekFrom::Start(0)).map_err(io)?;
+        let mut command = self.command(Some(repo), None)?;
+        command.args(args).stdin(Stdio::from(input));
+        tracing::debug!(target: "vibe_registry::git", argv = ?args, repo = ?repo, paths = paths.len(), "running git (admitted, paths on stdin)");
+        let control = crate::git_backend::transfers::current()
+            .progress
+            .unwrap_or_default()
+            .cancellation()
+            .clone();
+        let output =
+            crate::git_backend::shell::controlled::output_with_stdin(&mut command, &control)
+                .map_err(|error| {
+                    crate::git_backend::shell::controlled::git_error(
+                        error,
+                        "admitted native attribute probe".into(),
+                    )
+                })?;
+        if output.status.success() {
+            return Ok(output);
+        }
+        Err(GitError::CommandFailed {
+            cmd: "admitted native Git operation".into(),
+            status: output.status.code().unwrap_or(-1),
+            stderr: failure_text(None, &output.stderr),
+        })
     }
     /// A controlled conversion probe. No filter command is present in this
     /// owned config; required-only drivers discriminate reserved value strings.

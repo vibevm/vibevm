@@ -3344,3 +3344,23 @@ it. Severity **P3**.
 | @fact:B311-SEVERITY **severity** | P2 — a flaky test is worse than a red one for the next person, because a green run proves nothing; and if the behaviour it catches is real, the cost is real too: a no-op mirror run that rebuilds the index makes every re-mirror write, which a scheduled mirror does on every tick. |
 | @fact:B311-DISPOSITION **disposition** | open — reproduce it deliberately under load before touching the mirror, then find what the second run sees as changed (the template snapshot tree and the alias table are both inputs the projection reads but the listing does not cover). The fix is then either to stop refreshing when the projection is byte-identical, or — if the refresh is legitimate — to make the test assert what the run is entitled to do, so a loaded machine stops producing a false red. |
 | @fact:B311-FILED **filed by** | PROP-075 `#MIRROR-TEMPLATE-SNAPSHOT`, 2026-11-12, while gating PROP-008 `#ISSUED-NAMES-ONLY`. |
+
+## B-312 — the prefer-drop note is printed a second time for the version it already chose {#b-312}
+
+| field | value |
+|---|---|
+| @fact:B312-WHAT **what** | Under `[versions] select = "prefer-drop"`, `vibe install -g node@24` prints `! org.vibevm.node/node@24 → 24.22.2 (in drop; 24.22.3 is newer but not in the drop)` and then, later in the same run, `! org.vibevm.node/node@24.22.2 → 24.22.2 (…)` — the narrowed requirement goes through the chokepoint again and the note repeats for a pin that moved nothing. |
+| @fact:B312-EVIDENCE **evidence** | Release proof of vibe 1.0.12 on macOS (`flash`), 2026-11-12, corporate profile with `prefer-drop`. |
+| @fact:B312-SEVERITY **severity** | P3 — cosmetic: the chosen version is right and nothing is installed twice. |
+| @fact:B312-DISPOSITION **disposition** | open — print the note only when the chosen version differs from what `newest` would choose **and** the requirement was not already an exact pin. |
+| @fact:B312-FILED **filed by** | the 1.0.12 release proof, 2026-11-12. |
+
+## B-313 — `--offline` falls through to a capture when the controlled registry cache cannot answer {#b-313}
+
+| field | value |
+|---|---|
+| @fact:B313-WHAT **what** | The durable controlled-transport registry cache (PROP-073 `#NATIVE-REGISTRY-CACHE`) reads the posture the template layer resolved, and under `Posture::Offline` it does the right half of the job: it reuses the kept snapshot whatever its age and never asks the endpoint. What it does **not** do is refuse when there is no usable snapshot — it falls through to the ordinary capture, which contacts the registry. That is exactly the pre-cache behaviour, so nothing regressed; but it is not what `--offline` means, and it is not what the template cache does for the same posture (`template_cache_missing`). |
+| @fact:B313-EVIDENCE **evidence** | By construction: `git_registry::native::ask` returns `Endpoint::NotAsked` for `Posture::Offline`, and `native::open` then calls `capture` when no reuse holds. Deliberate: making the miss refuse is a behaviour change on a path whose existing `--offline` handling lives elsewhere (`MonorepoRegistrySource::offline_local`, which covers only a local url), and changing both at once would have conflated a cache with a posture. |
+| @fact:B313-SEVERITY **severity** | P2 — an `--offline` run may still make a network contact. It is the posture's own guarantee that is weak, not an integrity check: everything the capture does is admitted and verified exactly as online. |
+| @fact:B313-DISPOSITION **disposition** | fixed in candidate 2026-11-15 for the controlled cache: `open_with_posture` refuses absent/damaged snapshots offline before clone/fetch/ls-remote. Actual counting-Git regression covers miss, warm reuse, damage and refresh. Ordinary transport behavior is unchanged. |
+| @fact:B313-FILED **filed by** | PROP-073 `#NATIVE-REGISTRY-CACHE-DECISION`, 2026-11-13. |
