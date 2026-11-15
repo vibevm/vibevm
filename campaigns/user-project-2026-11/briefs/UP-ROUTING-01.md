@@ -1,0 +1,153 @@
+# UP-ROUTING-01 — explicit personal lifecycle destination
+
+Genre: implementation brief. Date: 2026-11-15. Architect contract delivery;
+builder owns implementation, tests and integration. Not a coding-worker packet.
+
+## Inputs and exact binding
+
+Contract predecessor: `75ea074313c0942cbd2e196276a49d294169e98b` on architect
+`spec/user-project-root`, checkout `/fast/git/vibevm-architect`. This brief and
+PROP-074 routing anchors are delivered together by a subsequent commit whose full
+hash is sent explicitly; verify that commit, not a moving branch tip.
+
+Implementation prerequisite: architecturally cleared UP-ROOT-01 v4, manifest
+SHA-256 `29834dabaa803e71145bafdc16a498ca240a6b259ba40253cebb6eaaf425a9df`.
+That candidate is uncommitted, not owner-final or an integrated commit. Builder
+records the exact task-tree/branch and verified prerequisite content before any
+extension; this brief does not authorize a source commit or dirty cross-clone
+transfer. Existing authorized builder task tree may retain its own root changes.
+Actual coding follows current local execution policy. No external publication.
+
+Governing anchors: PROP-074 USER-PROJECT-DESTINATION, INSTALL-ROUTING,
+INSTALLED-ROUTING, EMPTY-AND-ALL, ROUTING-PREFLIGHT, LIFECYCLE-ADMISSION,
+LIFECYCLE-TRANSPORT and ROUTING-DECISION (all with USER-PROJECT prefix), plus
+existing root admission, ordinary package lifecycle and application/MCP/remap laws.
+
+## Destination matrix
+
+| Operation | Default global destination | Explicit personal selection |
+| --- | --- | --- |
+| install named literal `mcp:` | Existing MCP service/registration | Conflicting selector: refuse |
+| install valid remap | Existing offer/consent owner | Refuse; use remap owner |
+| install application-capable, including dual-form | Existing application owner | Ordinary dependency install if admitted |
+| install ordinary spec-only dependency | Personal project | Personal project |
+| install doc | Existing refusal/cache-reader surface | Same refusal |
+| install empty | Existing global refusal | Install personal requirements |
+| update named | Existing applicable installed legacy owner; otherwise personal requirement | Personal requirements only |
+| update empty | Existing global refusal | Ordinary personal update |
+| update `--all` | Applications only, unchanged | Personal requirements only |
+| uninstall named | Existing MCP/remap/application ownership priority; otherwise personal requirement | Personal requirement only |
+| list/check `-g` | Personal project only | No extra selector needed |
+
+`--user-project` is added only to install/update/uninstall and requires `-g`.
+Non-global routes remain unchanged. A valid application declaration, not kind=app,
+is application capability. Specification eligibility means ordinary consumer-project
+dependency admission, not a new requirement for a boot snippet or guessed directory
+contents; valid aggregators and dependency-only packages remain possible. Dedicated
+doc/remap exclusions remain. A valid MCP-kind dependency without literal service
+routing may use personal dependency semantics only if the ordinary project owner
+already admits it; it must never register a server. Verify this existing admission
+before implementation; report a contradiction rather than invent a new capability.
+
+Installed-state routing is local and read-only. For update, application ownership is
+the existing application index; do not invent remap update. For uninstall retain
+remap priority before application. A matching personal requirement is considered
+only when no applicable legacy owner claims the unqualified reference. Corruption
+is not absence. Multi-store identity never authorizes mutating both; explicit
+personal selection is the escape hatch. Do not contact a registry just to determine
+which installed store owns update/uninstall.
+
+Absent personal project refuses with an init remedy; no implicit creation. `--path`
+explicitly supplied with personal selection conflicts, including explicit `.`;
+implicit parser default must be distinguishable. No cwd project discovery fallback.
+Empty and named update behavior otherwise inherits ordinary project cardinality.
+
+## Execution design and allowed owners
+
+Before coding, builder reports a compact inventory of inherited flags, their
+personal applicability and exact source/materializer seam. Reject app installer,
+configuration-step, deployment, version-file and MCP agent/server controls before
+personal writes. Preserve applicable package source, feature, offline, preview and
+ordinary dependency options; do not silently drop a flag. Keep this inventory in
+the implementation report, not a competing normative schema.
+
+Allowed changes by purpose:
+
+- CLI grammar: `crates/vibe-cli/src/cli/pkg.rs`, `cli/inspect.rs`, focused grammar
+  tests and existing construction sites affected by new fields.
+- Routing: `commands/global_mcp_dispatch.rs` and a focused personal-destination
+  adapter beside it; `commands/list.rs`, `commands/check.rs`, `main.rs` wiring.
+- Ordinary lifecycle adapters under `commands/install/`, update/uninstall owners,
+  existing application global and remap dispatch helpers only as necessary to
+  inspect installed ownership or reuse a selected package without changing effects.
+- Source handoff: `commands/install/resolver/port.rs`, relevant resolver module,
+  `crates/vibe-package-source/src/qualified.rs`, `builder.rs` and focused adjacent
+  source modules; `crates/vibe-orchestrator/src/ports.rs` and existing install
+  composition to carry already selected immutable top-level artifacts. A focused
+  typed port/internal source view is allowed; no new registry or second solver.
+- Ordinary workspace/install owners and exports only for explicit root/source
+  injection and reuse of existing transaction/cancellation machinery. Do not
+  invoke application-project convenience behavior for a personal spec install.
+- Cancellation support/composition and command-progress inventory only as required
+  by destination-aware classification; preserve legacy supported/refused cases.
+- Focused tests, fixtures and implementation/help documentation. If a wire change
+  is necessary, return the precise format/schema delta for review before editing
+  registry/generated consumers. Existing command reports are the default.
+
+No safefs public API expansion, new Cargo dependency, generic core-error redesign,
+installed vibedeps edits, root instruction/rule edits, remap consent changes, MCP
+migration, application installer redesign, boot layering, memory, overrides, private
+inputs, CI/toolchains or publication. A necessary owner outside this perimeter is a
+precise adjustment request, not permission to grow the task silently.
+
+The preflight selection must retain exact source/content identity, not just a
+version string. A source-pinned wrapper or explicit already-resolved package port
+may provide the normal resolver/materializer with those selected top-level inputs.
+Transitives still use ordinary resolution. Test a registry changing bytes/version
+between classification and execution: execute the retained verified artifact or
+refuse, never silently re-resolve into another destination or payload. Existing
+legacy remap probing must not be used as a new fallible classification oracle that
+turns errors into personal fallback. Refactor its handoff narrowly if needed for
+one-selection semantics; preserve offer/consent behavior.
+
+## Acceptance and meaningful review boundary
+
+1. Nonproject cwd: explicit init, personal install/list/check/update/uninstall against
+   isolated settings; invoking repository and MCP/application/remap stores unchanged.
+2. Legacy app-only, dual-form application, MCP literal and remap flows retain their
+   destinations/consent/cardinality. Dual-form explicit personal installs no app.
+3. Ordinary spec-only and aggregator packages install personally; doc/remap refusal;
+   kind prefix validates kind but does not select destination. MCP dependency
+   admission verified separately from service registration.
+4. Mixed batches refuse before any target mutation. Resolve failure/invalid manifest
+   cannot fall through to another destination. Cache effects are reported separately;
+   preview remains within its ordinary no-write law.
+5. Same coordinate in personal and legacy stores: default legacy and explicit personal
+   touch only the selected store. Installed-owner corruption refuses, not fallback.
+6. Empty install/update, `--all`, named updates and uninstall cardinality exercise the
+   matrix, including unchanged app-only unqualified `update -g --all`.
+7. Missing/relative/unsafe/uninitialized personal root, explicit competing path and
+   incompatible flags refuse without initialization, registration or cwd writes.
+8. Mutable registry/source selection test proves retained artifact identity. Existing
+   locked-source/integrity/offline behavior and relevant transitive cases remain valid.
+9. Personal command cancellation supports the inherited stop source and accurately
+   records transaction publication; existing legacy support decisions remain intact.
+   Success/error/preview stdout/stderr/context use the existing command contracts.
+10. List/check remain read-only and use ordinary project semantics, not root status.
+    No schema-unowned fields or extra terminal root reports.
+
+Builder selects focused exact test targets plus adjacent routing/application/MCP/
+remap consumers after inspection, with nonzero selected counts. Record commands,
+results, failures, skipped/unrun gates and changed fixture assumptions. No real
+harness invocation or remote publication is needed. Existing final campaign gates
+remain later obligations, not waived or claimed here.
+
+This is a substantial lifecycle milestone: return a frozen integrated candidate
+identity, exact diff, original mandate coverage, test evidence and R1-R6 root
+non-regression disposition for cross-cutting architectural review. Internal atoms
+may split preflight/grammar from ordinary lifecycle reuse, but must not ship a
+placeholder selector or silently fall back while incomplete. Stop safely with a
+bounded candidate/report if a required ordinary-source seam is unavailable.
+
+Next obligations remain ordered personal boot/classic discovery, composition/export
+privacy, override binding/authority, memory, checker isolation and tree surfaces.
