@@ -55,6 +55,14 @@ fn verified_bundle_installs_all_tools_source_shims_and_force_refresh() {
         &store,
         &first.record
     ));
+    // Recursive removal must refuse even an otherwise intact bundle when
+    // another tenant has added a file inside its instance.
+    let extra = first.home.join("bin/user-notes.txt");
+    std::fs::write(&extra, b"keep me").unwrap();
+    assert!(crate::commands::vvm::remove::payload::guard(&store, &first.record).is_err());
+    assert_eq!(std::fs::read(&extra).unwrap(), b"keep me");
+    std::fs::remove_file(&extra).unwrap();
+    crate::commands::vvm::remove::payload::guard(&store, &first.record).unwrap();
     let mut swapped_identity = first.record.clone();
     swapped_identity.commit = "f".repeat(40);
     assert!(!super::super::archive::installed_bundle_intact(
