@@ -494,3 +494,33 @@ fn an_unknown_version_selection_policy_is_refused_at_parse() {
         "{message}"
     );
 }
+
+#[test]
+fn settings_home_validates_expands_and_layers_independently() {
+    let profile = SiteProfile::parse(
+        "schema = 1\n[self]\nsettings_dir = '~/vibe-home'\n",
+        "site.toml",
+    )
+    .unwrap();
+    assert!(!profile.declares_release_source());
+    let home = std::path::Path::new("/home/test");
+    assert_eq!(
+        profile
+            .with_home(Some(home))
+            .self_source
+            .settings_dir
+            .unwrap(),
+        home.join("vibe-home")
+    );
+    assert!(
+        refused("schema = 1\n[self]\nsettings_dir = 'relative'\n").contains("self.settings_dir")
+    );
+    let own: crate::user_config::UserConfig =
+        toml::from_str("[self]\nsettings_dir = '/own'\n").unwrap();
+    assert_eq!(
+        own.over_site(&profile).self_source.settings_dir.unwrap(),
+        std::path::Path::new("/own")
+    );
+    let plain = SiteProfile::parse("schema = 1\n", "site.toml").unwrap();
+    assert!(!toml::to_string(&plain).unwrap().contains("settings_dir"));
+}

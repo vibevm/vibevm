@@ -110,6 +110,38 @@ impl<R: UserRegistry> EnvPersister for RegistryEnvPersister<R> {
         self.set_var("VIBEVM_INSTALL_ROOT", root)
     }
 
+    fn settings_home(&self) -> Result<Option<String>> {
+        Ok(self
+            .registry
+            .get_raw("VIBE_SETTINGS")?
+            .map(|value| value.value))
+    }
+
+    fn set_settings_home(&self, dir: &Path) -> Result<Persisted> {
+        let target = dir.display().to_string();
+        if self
+            .settings_home()?
+            .as_deref()
+            .is_some_and(|current| super::settings_paths_equal(current, &target, true))
+        {
+            return Ok(Persisted::Unchanged);
+        }
+        self.set_var("VIBE_SETTINGS", dir)
+    }
+
+    fn remove_settings_home(&self, dir: &Path) -> Result<Persisted> {
+        let target = dir.display().to_string();
+        if self
+            .settings_home()?
+            .as_deref()
+            .is_some_and(|current| super::settings_paths_equal(current, &target, true))
+        {
+            self.registry.delete_raw("VIBE_SETTINGS")?;
+            return Ok(Persisted::Changed);
+        }
+        Ok(Persisted::Unchanged)
+    }
+
     fn ensure_on_path(&self, dir: &Path) -> Result<Persisted> {
         let current = self.registry.get_raw("Path")?;
         let raw = current
@@ -160,6 +192,15 @@ impl EnvPersister for WindowsEnvPersister {
     }
     fn ensure_on_path(&self, dir: &Path) -> Result<Persisted> {
         Self::real().ensure_on_path(dir)
+    }
+    fn settings_home(&self) -> Result<Option<String>> {
+        Self::real().settings_home()
+    }
+    fn set_settings_home(&self, dir: &Path) -> Result<Persisted> {
+        Self::real().set_settings_home(dir)
+    }
+    fn remove_settings_home(&self, dir: &Path) -> Result<Persisted> {
+        Self::real().remove_settings_home(dir)
     }
     fn activation_hint(&self) -> String {
         Self::real().activation_hint()

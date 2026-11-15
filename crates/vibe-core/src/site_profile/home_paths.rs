@@ -61,6 +61,10 @@ fn declared(profile: &SiteProfile) -> Vec<(&'static str, PathBuf)> {
         ("artifacts.packages", profile.artifacts.packages.as_deref()),
         ("self.path", profile.self_source.path.as_deref()),
         (
+            "self.settings_dir",
+            profile.self_source.settings_dir.as_deref(),
+        ),
+        (
             "self.install_root",
             profile.self_source.install_root.as_deref(),
         ),
@@ -79,7 +83,11 @@ fn declared(profile: &SiteProfile) -> Vec<(&'static str, PathBuf)> {
 fn per_user(key: &str) -> bool {
     matches!(
         key,
-        "artifacts.vibe" | "artifacts.packages" | "self.path" | "self.install_root"
+        "artifacts.vibe"
+            | "artifacts.packages"
+            | "self.path"
+            | "self.install_root"
+            | "self.settings_dir"
     )
 }
 
@@ -88,6 +96,13 @@ fn per_user(key: &str) -> bool {
 pub(super) fn check(profile: &SiteProfile) -> Result<(), (&'static str, String, &'static str)> {
     for (key, path) in declared(profile) {
         let path = path.as_path();
+        if key == "self.settings_dir" && path.to_string_lossy().chars().any(char::is_control) {
+            return Err((
+                key,
+                "settings directory contains a control character".into(),
+                "give a single-line directory without control characters",
+            ));
+        }
         // `~user` is another account's home, which vibe does not resolve —
         // wherever it appears.
         if per_user(key) && expand_home(path, Some(Path::new("/anywhere"))).is_err() {

@@ -79,6 +79,21 @@ pub(crate) enum Persisted {
     Unchanged,
 }
 
+/// Lexical comparison only: never resolve links or expand another shell's
+/// variables while deciding whether a persisted directory is ours.
+pub(crate) fn settings_paths_equal(a: &str, b: &str, windows: bool) -> bool {
+    if windows {
+        a.replace('\\', "/")
+            .trim_end_matches('/')
+            .eq_ignore_ascii_case(b.replace('\\', "/").trim_end_matches('/'))
+    } else {
+        a == b || a.trim_end_matches('/') == b.trim_end_matches('/')
+    }
+}
+
+#[path = "env_settings.rs"]
+mod settings;
+
 /// Persists durable user-environment settings (PROP-019 §2.6). A
 /// crate-internal seam (vibe-cli is a bin crate): tests exercise the POSIX
 /// rc-file impl in a temp dir, never mutating the real machine.
@@ -92,6 +107,15 @@ pub(crate) trait EnvPersister {
     /// the terminal that ran `vibe self apply`.
     fn set_install_root(&self, root: &Path) -> Result<Persisted>;
     fn ensure_on_path(&self, dir: &Path) -> Result<Persisted>;
+    fn settings_home(&self) -> Result<Option<String>> {
+        bail!("this environment persister cannot inspect VIBE_SETTINGS")
+    }
+    fn set_settings_home(&self, _dir: &Path) -> Result<Persisted> {
+        bail!("this environment persister cannot persist VIBE_SETTINGS")
+    }
+    fn remove_settings_home(&self, _dir: &Path) -> Result<Persisted> {
+        bail!("this environment persister cannot withdraw VIBE_SETTINGS")
+    }
     /// How to apply the change to the *current* shell now.
     fn activation_hint(&self) -> String;
     /// Observe the same durable target without changing it or executing a shell.
@@ -193,6 +217,15 @@ impl RcFilePersister {
 }
 
 impl EnvPersister for RcFilePersister {
+    fn settings_home(&self) -> Result<Option<String>> {
+        self.inspect_settings()
+    }
+    fn set_settings_home(&self, dir: &Path) -> Result<Persisted> {
+        self.persist_settings(dir)
+    }
+    fn remove_settings_home(&self, dir: &Path) -> Result<Persisted> {
+        self.withdraw_settings(dir)
+    }
     fn inspect_path(&self, dir: &Path) -> EnvironmentObservation {
         profile::inspect_rc(&self.rc_path, self.shell, dir)
     }
