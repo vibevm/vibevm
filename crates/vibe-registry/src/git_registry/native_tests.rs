@@ -246,7 +246,9 @@ fn a_second_command_asks_the_endpoint_once_and_clones_fscks_and_probes_nothing()
     git_in(&work, &["push", "-q", bare.to_str().unwrap(), "main"]);
 
     fs::write(&log, "").unwrap();
-    let moved = open_fresh(&url, &cache, &home, &executable, 0);
+    held_reader.sync().unwrap();
+    // Explicit sync publishes rather than mutating the held generation.
+    let moved = open_fresh(&url, &cache, &home, &executable, 3600);
     assert_eq!(
         moved.list_versions(&group, "tool").unwrap(),
         vec![semver::Version::new(1, 0, 0), semver::Version::new(1, 1, 0)],

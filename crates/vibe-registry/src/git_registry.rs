@@ -65,6 +65,7 @@ pub struct GitMonorepoRegistry {
     /// The commit of an operation-owned snapshot (controlled transport),
     /// which has no `.git` to ask.
     snapshot_commit: Option<String>,
+    native_refresh: Option<(PathBuf, Vec<String>)>,
 }
 
 impl GitMonorepoRegistry {
@@ -162,6 +163,7 @@ impl GitMonorepoRegistry {
             clone_dir,
             local,
             snapshot_commit: None,
+            native_refresh: None,
         })
     }
 
@@ -195,6 +197,8 @@ impl GitMonorepoRegistry {
         refname: &str,
         backend: Arc<dyn GitBackend>,
         retained: native::Retained,
+        cache_root: &Path,
+        candidates: &[String],
     ) -> Result<Self, RegistryError> {
         let native::Retained {
             root,
@@ -212,6 +216,7 @@ impl GitMonorepoRegistry {
             clone_dir: tree.clone(),
             local: LocalRegistry::new(tree)?,
             snapshot_commit: Some(commit),
+            native_refresh: Some((cache_root.to_path_buf(), candidates.to_vec())),
         })
     }
 
@@ -219,6 +224,20 @@ impl GitMonorepoRegistry {
     /// `vibe registry sync`.
     pub fn sync(&self) -> Result<(), RegistryError> {
         tracing::info!(target: "vibe_registry", url = %self.url, "forcing registry sync");
+        if let Some((cache_root, candidates)) = &self.native_refresh {
+            // Publish a fresh generation for future opens. This reader keeps
+            // its selected immutable tree and commit throughout its lifetime.
+            native::open_with_posture(
+                &self.url,
+                candidates,
+                &self.refname,
+                cache_root,
+                self.backend.clone(),
+                0,
+                native::Posture::Refresh,
+            )?;
+            return Ok(());
+        }
         self.backend.update_data(&self.clone_dir, &self.refname)?;
         let normalized = normalize_url(&self.url);
         let full_hash = full_sha256_hex(&normalized);

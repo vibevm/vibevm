@@ -128,7 +128,9 @@ pub(super) fn open_with_posture(
     )? {
         task.detail("cache hit: verified snapshot unchanged; no clone or fetch");
         task.finish();
-        return super::GitMonorepoRegistry::from_retained(url, refname, backend, retained);
+        return super::GitMonorepoRegistry::from_retained(
+            url, refname, backend, retained, cache_root, candidates,
+        );
     }
     if posture == Posture::Offline {
         return Err(RegistryError::MalformedMeta {
@@ -152,6 +154,7 @@ pub(super) fn open_with_posture(
                 refname,
                 backend,
                 namespace.as_deref(),
+                cache_root,
             )
         });
     match &result {
@@ -279,6 +282,7 @@ fn ask(
 }
 
 /// Capture the repository into the durable cache and record what it holds.
+#[allow(clippy::too_many_arguments)]
 fn capture(
     cache: &NativeCache,
     url: &str,
@@ -286,6 +290,7 @@ fn capture(
     refname: &str,
     backend: Arc<dyn GitBackend>,
     namespace: Option<&str>,
+    cache_root: &Path,
 ) -> Result<super::GitMonorepoRegistry, RegistryError> {
     let mut first_error = None;
     for candidate in std::iter::once(url).chain(candidates.iter().map(String::as_str)) {
@@ -335,7 +340,9 @@ fn capture(
                     commit: captured.commit,
                     served_url: candidate.to_owned(),
                 };
-                return super::GitMonorepoRegistry::from_retained(url, refname, backend, retained);
+                return super::GitMonorepoRegistry::from_retained(
+                    url, refname, backend, retained, cache_root, candidates,
+                );
             }
             Err(error) => {
                 tracing::warn!(target: "vibe_registry", url = %candidate, %error, "registry snapshot candidate failed");
