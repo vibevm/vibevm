@@ -107,6 +107,13 @@ these to the wire type without making the library depend on CLI output machinery
 Allow narrowly scoped cancellation-publication plumbing and tests in
 `composition/outcome.rs` only if required to preserve the existing terminal contract;
 no new cancellation schema or duplicate terminal report is authorized.
+Also allow `crates/vibe-cli/src/composition/cancellation.rs` and focused tests to
+register only `user init/status` with the existing stop-source support gate and
+update the gate's diagnostic to describe the supported commands accurately.
+Preserve every existing command's support decision and signal/stop-file semantics;
+this is required wiring for the inherited cancellation contract, not a redesign.
+Test stop-file admission for both new verbs, cancellation before any init mutation,
+status with no writes, and unchanged admission/refusal for existing commands.
 
 Effects use a three-state enum, not the proposed ambiguous changed boolean.
 Distinguish pre-existing residue from this invocation's effects, and preserve
