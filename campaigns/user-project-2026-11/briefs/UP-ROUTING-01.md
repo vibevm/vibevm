@@ -111,6 +111,22 @@ Allowed changes by purpose:
   source modules; `crates/vibe-orchestrator/src/ports.rs` and existing install
   composition to carry already selected immutable top-level artifacts. A focused
   typed port/internal source view is allowed; no new registry or second solver.
+- Retained top-level provider overlay: `crates/vibe-resolver/src/source_candidates.rs`
+  may register a focused `source_candidates/retained_overlay.rs` adapter and focused
+  sibling tests; only necessary exports in `crates/vibe-resolver/src/lib.rs` are
+  admitted. This owner already defines SourceCandidateProvider/VersionEnumerator
+  signatures and depends on semver; do not add a package-source dependency or a
+  guessed type alias to implement the same trait elsewhere. Compose the adapter
+  at existing package-source provider/cell construction seams. It restricts only
+  retained top-level candidate metadata/identity while delegating ordinary
+  transitive, constraint, lock/source-policy, visibility, weak-dependency and
+  configured/masked/retry semantics. Do not report a retained selection as an
+  authored lock or bypass conflicting pins/constraints. Metadata and acquisition
+  handoffs must stay bound; an overlay alone proves neither payload immutability
+  nor checked materialization. Tests cover changed upstream metadata, conflicting
+  original requirement/source pin, normal transitive delegation and provider
+  retry/masking retention. No solver algorithm, registry schema, Cargo dependency
+  or global source-policy redesign is allowed.
 - Ordinary workspace/install owners and exports only for explicit root/source
   injection and reuse of existing transaction/cancellation machinery. Do not
   invoke application-project convenience behavior for a personal spec install.
