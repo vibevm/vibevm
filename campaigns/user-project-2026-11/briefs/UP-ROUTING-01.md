@@ -114,6 +114,21 @@ Allowed changes by purpose:
 - Ordinary workspace/install owners and exports only for explicit root/source
   injection and reuse of existing transaction/cancellation machinery. Do not
   invoke application-project convenience behavior for a personal spec install.
+- Narrow retained-root lease handoff: `crates/vibe-lifecycle/src/lease.rs` and
+  focused tests under `lease/` may add `LifecycleLease::acquire_retained` accepting
+  the already admitted `Arc<vibe_safefs::Project>`. Preserve the existing path-based
+  acquire API as an opening wrapper and retain the exact supplied capability for
+  lock and subsequent lease-owned I/O. Do not change lock name/location, nonblocking
+  contention, error/guard/drop semantics or legacy root discovery. Sharing the root
+  capability is not sharing or cloning the acquired lease/OS guard; preview/read
+  admission does not take a mutating lease. Admission must compare the pinned root
+  identity and revalidate the retained component chain and manifest snapshot around
+  lease acquisition, refusing observed drift before personal execution. This seam
+  fixes lock redirection only; it does not prove that later ambient ordinary I/O is
+  safe. Keep that broader consumer obligation explicit. Tests cover retained-root
+  path substitution without locking a replacement, same-root contention/release,
+  unchanged path acquire, absent/unsafe root and read-only no-lock behavior. No
+  public safefs API expansion or general lease redesign is admitted.
 - Cancellation support/composition and command-progress inventory only as required
   by destination-aware classification; preserve legacy supported/refused cases.
 - Focused tests, fixtures and implementation/help documentation. If a wire change
