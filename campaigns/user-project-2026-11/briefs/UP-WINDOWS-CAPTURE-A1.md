@@ -36,9 +36,13 @@ Required sequence and invariant:
    must prove which link is removed, access/share rights and filesystem support.
 4. Unsupported cleanup capability is detected before target publication where
    possible. If discovered after an owned stage exists, retain its exact recovery
-   evidence. Never claim BeforePublication with residue; report a typed truthful
-   residue outcome under the existing PublishStage laws or request its precise
-   schema adjustment. No deletion/chmod of an ambient name to manufacture success.
+   evidence. BeforePublication describes the unchanged DESTINATION and may coexist
+   with explicitly reported staging residue, as publish.rs already specifies.
+   Track residue/ownership separately; never claim no effects or promote an
+   untouched target to PossiblyPublished merely because a stage remains. Use an
+   additive typed private residue carrier if PublishError alone is insufficient;
+   preserve existing PublishStage meaning. No deletion/chmod of an ambient name
+   to manufacture success.
 5. After publication/cleanup verify visible identity, bytes, expected permissions
    and single-link count. A foreign replacement is not ownership even with equal
    bytes. Do not clear readonly on a shared inode to delete stage: that changes
