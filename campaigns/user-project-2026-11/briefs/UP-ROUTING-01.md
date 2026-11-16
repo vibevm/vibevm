@@ -44,6 +44,48 @@ A mismatched or unavailable manifest/file is a stop condition, not permission to
 substitute a newer dirty file. No arbitrary uncommitted prerequisite, old worker
 replay or future-stage exception is implied.
 
+### One-atom retained-source prerequisite admission — 2026-11-16
+
+For one RegistryPackageSource source-owner admission atom only, admit the frozen
+nine-file retained-source/overlay candidate whose MANIFEST.json SHA-256 is
+`d1be7314b90a6ba7116d3a7125a1bafebc49f71c1193665c6a7e67e9b5cd33cb`.
+Builder-owned locator: `/fast/tmp/up-source-owner-input-8xsetk6k`, product files
+under `files/`. Committed product base is
+`6a83be1dd35d7bec2de4911ee375c2be3cb8686a`, plus the exact committed version of
+this amendment as contract input. This exception is independent of the root-v4
+exception: do not combine their overlays for this atom.
+
+The prerequisite is an unaccepted S1/S2 successor admitted for rework, not an
+architecturally cleared overlay or a committed product delivery. Its exact paths
+are package-source `src/{cells.rs,lib.rs,qualified.rs,source/operations.rs,
+retained_top_level.rs,retained_top_level_tests.rs}` and resolver
+`src/{source_candidates.rs,source_candidates/retained_overlay.rs,
+source_candidates/retained_overlay_tests.rs}`. The manifest binds every file hash,
+five modifications/four additions, regular-file mode 0664, no deletions or
+executable-bit changes. Independently verified hashes do not certify semantics.
+
+Before launch verify that exact manifest, every file hash/type/mode, relative path
+and base classification; reject extras, links, escapes, missing or changed files.
+Assemble from committed base plus these nine files, never copy the moving task
+tree. Independently compile this minimal overlay without unrelated dirty
+prerequisites; a missing dependency is a stop and precise new input review, not
+permission to import root/metadata/epoch/CLI state. Record the complete assembled
+source inventory/hash. Separately inventory the admitted public full-boot closure
+and any derived dependency inputs, with their provenance and exclusion boundaries.
+No private runtime, HOME/config/auth, transcripts, diagnostics, stewardship or
+local binding content enters source under this exception.
+
+The atom binds acquisition and overlay admission to the same invocation/source
+owner and refuses foreign resolver or incompatible policy reuse. Writes remain
+within the already allowed source/provider owner perimeter and focused tests;
+additional owner/API changes require separate perimeter review. Preserve original
+candidate and report exact output hashes and independent gate results. This grants
+no source commit, dirty cross-clone integration, acceptance, old-job replay,
+publication, cleanup, arbitrary future candidate admission or execution-lane
+permission. Isolation/context and current explicit launcher authority remain
+separate gates. Actual checked materializer, native fixtures, app/remap handoff and
+public CLI remain outside this atom's acceptance.
+
 Governing anchors: PROP-074 USER-PROJECT-DESTINATION, INSTALL-ROUTING,
 INSTALLED-ROUTING, EMPTY-AND-ALL, ROUTING-PREFLIGHT, LIFECYCLE-ADMISSION,
 LIFECYCLE-TRANSPORT and ROUTING-DECISION (all with USER-PROJECT prefix), plus
