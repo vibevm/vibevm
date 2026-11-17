@@ -93,6 +93,19 @@ reintroduce them. Broader unrelated workspace/campaign findings remain outside s
   UP-FINAL active for the running canonical release panel, and platform validation
   blocked by actual unavailable runtimes. Final snapshot reconciliation follows.
 
+## Canonical host panel findings under repair
+
+The still-running canonical workspace test step exposed three CLI `specmap` unit
+failures: package-map coordinate remapping, coordinate-equals-namespace and repeated
+byte determinism. Their fixture creates a Vibe manifest/config/source without the
+now-required admitted authority context. These are task-related compatibility
+failures, not an unrelated baseline exemption. Builder owns bounded fixture/flow
+repair after this keep-going panel terminates; production missing-context refusal
+must remain fail-closed. Existing positive assertions must remain meaningful,
+including an annotation namespace matching the fixture's configured namespace.
+No final host gate success or complete validation is claimed while these fail.
+Evidence: `/fast/tmp/up-final-self-check.log` (nonterminal at observation).
+
 ## Remaining closure accounting, not missing functional implementation
 
 1. Record the running final host self-check/cross-target outcomes exactly, including
