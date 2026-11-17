@@ -95,6 +95,48 @@ is not model compliance. Do not create or access credentials or install/change h
 software to fabricate a green panel. A genuinely unavailable external test is reported
 as a concrete validation blocker, not a disabled feature or successful check.
 
+## Concrete authoring example for acceptance
+
+Lower project manifest (the ordinary source unit has an explicit `width` anchor):
+
+```toml
+[layers]
+schema = 1
+
+[[layers.targets]]
+id = "width"
+source = "spec://org.example/project/common/STYLE#width"
+policy = "overridable"
+category = "preference"
+```
+
+Personal manifest, resolved independently with its own lock:
+
+```toml
+[layers]
+schema = 1
+
+[[layers.relations]]
+id = "personal-width"
+kind = "replace"
+target_layer = "project"
+target = "width"
+source = "spec://org.personal/preferences/common/STYLE#width"
+```
+
+When the target is declared by an installed lower-layer package, specify its
+coordinate in `target_owner`; declaration ids do not flatten across package owners.
+A package-authored relation defaults to the same declaring coordinate in the lower
+layer; root-authored relations default to the lower root. Ordinary selected worlds
+bind versions; no newest lookup or cross-layer lock merge is implied.
+
+The user sees the effective source and exact target in `tree --layers` and its
+schema2 JSON. Capture/launch/compose carry the same validated notice and source
+unit. Changing the lower grant to protected must deny the upper replacement;
+disabling the upper layer restores the lower effective contribution without edits
+to shared sources. Tests must use these actual ordinary manifests and addressable
+spec units, not a mock relation result alone.
+
 ## Final connected acceptance journey
 
 Extend the existing hermetic onboarding rather than replacing it with helper counts:
