@@ -63,9 +63,47 @@ Current completion frontier, not accepted as finished merely by this document:
   root. The separate 16 positive/negative authority outcomes also pass on that
   binary. Classic wording expectations are refreshed for schema1/2 without
   weakening no-command/no-mutation checks.
-- Scoped commits, architectural integration, final host release-panel accounting,
-  feasible cross-target checks and original-tree status reconciliation remain
-  before final technical completion. Owner acceptance/release are separate.
+- Scoped implementation and compatibility repairs are committed and reviewed.
+  The full canonical host panel completed with the exact outcomes below; it is
+  not represented as an all-green workspace run. Owner acceptance and external
+  release remain separate from technical implementation completion.
+
+### Canonical panel and compatibility repairs
+
+| Canonical step | Actual outcome |
+| --- | --- |
+| Workspace format | PASS |
+| Workspace tests | FAIL, exit101: 27 targets on the pre-repair subject |
+| Workspace Clippy, all targets, warnings denied | PASS |
+| `vibe check --path . --quiet` | PASS |
+| 1 MiB startup through script's `target/debug/vibe` | FAIL, exit127: script hardcodes the path while this run uses an external `CARGO_TARGET_DIR`; the actual built binary separately passes the same stack limit |
+| Full conform | PASS,141 existing/0new, baseline unchanged |
+| Committed codegen check | PASS |
+| Wire diff | PASS |
+
+The resulting task-related failures were repaired in `38b573822`: local application
+execution retains its selected source tree and original acquisition evidence;
+classification relinquishes only its own signal registrations; offline authority
+refresh can read the verified store; Fresh/remap projection remains source-free
+and precedes publication; kind refusals retain their typed error. Positive
+specmap/trace/MCP fixtures use the existing canonical publisher. Read-only assertions
+compare authority bytes/mtime and directory contents; force-count, evidence equality,
+SIGINT exit, monorepo single-capture and trace-state assertions remain meaningful.
+Every task-related failed target has a subsequent focused PASS; strict checks across
+six affected crates, conform and canonical synchronization also pass. This is
+focused recovery evidence, not a claim that the entire workspace test panel was
+rerun green after the repairs.
+
+Residual failures have source-identical pre-change evidence against `082c05de1`:
+`vibe-index`'s absent-alias assertion expects wording different from its unchanged
+implementation; xtask's exclusions test reads absent
+`conformance/vibenvm/exclusions.toml` (also absent at that base); its vocabulary
+census expects104 while the unchanged vocabulary/algorithm produces105. Neither
+baseline nor assertions were changed to conceal these failures. This is source
+comparison evidence, not a claim to have executed an old binary.
+
+Core cross-checks pass for Windows GNU, macOS ARM64 and Linux musl. These are
+compilation checks only, not foreign runtime smoke tests.
 
 ## Explicit limits, not silently disabled modes
 
