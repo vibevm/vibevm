@@ -176,15 +176,36 @@ existing authority bytes,mtime and directory entry count; all7MCP tests pass in
 regression remains failed on its subject and must not be hidden by the MCP success.
 Fresh projection now precedes boot effects; a remap-only empty package world grants
 zero package roots. Builder owns remaining Fresh/typed/category tests and exact
-baseline classification. No full repaired-panel acceptance yet.
+baseline classification. Full root-constraints27 subsequently pass in
+`/fast/tmp/up-repair-fresh-remap-root-kinds.log`, preserving typed KindMismatch
+assertions. The following app-configuration group has3pass/1fail (registry failure
+category); its fail-fast chain did not run later remap tests. Review of the new
+kind projection requires respecting the actually chosen alternative: unused
+alternatives must not reject an otherwise admitted candidate. No full repaired-panel
+acceptance yet.
+
+The registry category repair subsequently passes all4app-configuration cases in
+`/fast/tmp/up-repair-category-remap-monorepo-retry.log`. The structured-error reader
+now recognizes typed anyhow context while retaining its underlying provider cause.
+The singleton guard addresses the unused-alternative projection concern.
+
+Possible unrelated baseline evidence was independently source-checked against
+`082c05de1`:index alias implementation/test,xtask exclusion test,census algorithm,
+vocabulary and census assertion are byte-identical. The observed alias wording
+mismatch and105-versus104 census are therefore supported by unchanged causal inputs;
+the exclusion fixture is absent at both revisions. Receipt:
+`/fast/tmp/up-canonical-baseline-source-evidence.json`. This is source-identity
+classification evidence, not a claim of running the old binary. No baseline or
+assertion was edited to turn these green.
 
 ## Remaining closure accounting, not missing functional implementation
 
-1. Record the running final host self-check/cross-target outcomes exactly, including
-   existing baseline or environment failures and unrun external runtime checks.
-2. Original plan revision368 reportedly marks implemented A/AI/routing/lifecycle and
-   named mode validation accepted; graphical/foreign runtime validation is blocked
-   by actual unavailable runtimes. Architect must refresh and inspect the snapshot.
-3. Record the final synchronized review/documentation pin, keeping technical
-   implementation completion separate from owner acceptance and external release.
+1. Finish the bounded canonical-gate repairs and verify all task-related failed
+   targets on the repaired subject. Record exact remaining baseline/environment
+   failures; do not relabel the original failed panel as successful.
+2. Reconcile the source plan and actual dashboard after repair integration.
+   USER-PROJECT and UP-FINAL remain active; unavailable graphical/foreign runtimes
+   remain blocked. Three cross-target compilation checks passed, not runtime tests.
+3. Review and synchronize the coherent repair commit plus final documentation pin,
+   keeping technical completion separate from owner acceptance and external release.
    No new optional polishing or redesign campaign follows automatically.
