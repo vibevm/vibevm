@@ -93,6 +93,8 @@ impl LifecycleArgs {
             source_policy: Default::default(),
             packages: Vec::new(),
             global: false,
+            user_project: false,
+            explicit_path: false,
             agent: None,
             server: None,
             platform: None,

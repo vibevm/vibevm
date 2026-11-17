@@ -16,6 +16,7 @@ mod artifacts;
 mod build;
 mod diagnostics;
 mod host;
+mod layers;
 mod model;
 mod picker;
 mod plain;
@@ -59,6 +60,18 @@ pub fn run(ctx: &output::Context, args: TreeArgs) -> Result<()> {
         vibe_core::manifest::Manifest::read(root.join(vibe_core::manifest::Manifest::FILENAME))?;
     let format = super::reinstall::effective_rederive_format(&manifest)?;
     let tree = build::build_tree_bound(&root, format)?;
+
+    if args.layers {
+        if args.terminal && !args.plain && !ctx.is_json() && !host::in_vibeterm() {
+            return open_in_vibeterm_mode(&root, true);
+        }
+        let interactive =
+            !ctx.is_json() && !ctx.is_quiet() && !args.plain && console::user_attended();
+        if interactive {
+            return host::run_upgraded(|| layers::run(ctx, &root, &tree, true));
+        }
+        return layers::run(ctx, &root, &tree, false);
+    }
 
     if ctx.is_json() {
         // The schema-valid model is flattened under the CLI envelope
@@ -228,31 +241,35 @@ fn resolve_launch_mode(
 /// subprocess — the extracted-product fallback (a box without the terminal
 /// product installed still gets a working tree, just no desktop window).
 fn open_in_vibeterm(root: &std::path::Path) -> Result<()> {
+    open_in_vibeterm_mode(root, false)
+}
+fn open_in_vibeterm_mode(root: &std::path::Path, layers: bool) -> Result<()> {
     let exe = std::env::current_exe()?;
     let exec = format!(
-        "{} tree --path {} -c",
+        "{} tree --path {} -c{}",
         super::term::quote_exe(&exe.to_string_lossy()),
-        root.display(),
+        super::term::quote_exe(&root.to_string_lossy()),
+        if layers { " --layers" } else { "" },
     );
     // The tree carries the `vibetree` window icon so it matches VibeTree.exe
     // (PROP-043 #icon / VIBE-LAUNCHERS D8).
     let exe_for_in_place = exe.clone();
     let root_for_in_place = root.to_path_buf();
     super::term::launch_vibeterm_or_in_place(&exec, Some("vibetree"), "vibeframe", || {
-        run_tree_in_place(&exe_for_in_place, &root_for_in_place)
+        run_tree_in_place(&exe_for_in_place, &root_for_in_place, layers)
     })
 }
 
 /// Run `vibe tree --path <root> -c` synchronously in THIS terminal, inheriting
 /// stdio so the TUI renders right here. The in-place fallback for when no
 /// desktop terminal product (vibeframe / vibeterm) is resolvable.
-fn run_tree_in_place(exe: &std::path::Path, root: &std::path::Path) -> Result<()> {
-    let status = std::process::Command::new(exe)
-        .arg("tree")
-        .arg("--path")
-        .arg(root)
-        .arg("-c")
-        .status()?;
+fn run_tree_in_place(exe: &std::path::Path, root: &std::path::Path, layers: bool) -> Result<()> {
+    let mut command = std::process::Command::new(exe);
+    command.arg("tree").arg("--path").arg(root).arg("-c");
+    if layers {
+        command.arg("--layers");
+    }
+    let status = command.status()?;
     if status.success() {
         Ok(())
     } else {

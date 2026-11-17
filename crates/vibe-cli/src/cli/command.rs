@@ -345,6 +345,11 @@ pub enum Command {
     /// (mirror, weave, rescan, resume).
     Progress(ProgressArgs),
 
+    /// Explicitly initialize, or read-only report, the personal user project
+    /// the settings root holds (PROP-074). Usable outside any repository; the
+    /// existing settings authority selects the root.
+    User(UserArgs),
+
     /// Print version information.
     Version,
 }

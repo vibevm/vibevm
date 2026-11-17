@@ -1,0 +1,15 @@
+{
+  "metadata": {
+    "description": "Observation of an explicit user override binding operation, separate from personal root init/status.",
+    "rustOptions": {"package": "vibe_wire::user_override_report"},
+    "x-rust-type": "UserOverrideReport"
+  },
+  "properties": {
+    "command": {"type": "string"},
+    "ok": {"type": "boolean"},
+    "state": {"type": "string"},
+    "alias": {"type": "string", "nullable": true},
+    "root": {"type": "string", "nullable": true},
+    "enabled": {"type": "boolean"}
+  }
+}

@@ -35,15 +35,15 @@ mod global_mcp;
 mod observer;
 mod preview;
 pub(crate) mod trust;
-pub(crate) use preview::run as run_preview;
+pub(crate) use preview::{run as run_preview, run_selected as run_preview_selected};
 pub(crate) mod report;
 mod resolver;
 
 pub(crate) use closure_diff::{emit_closure_diff, lane_sizes};
 pub(crate) use confirm::CliConfirmGate;
 use confirm::UserProjectAction;
-pub(crate) use direct::run as run_direct;
 use direct::run_user_project;
+pub(crate) use direct::{SelectedRouting, run as run_direct, run_selected};
 pub(crate) use draft::InstallDraft;
 pub(crate) use global_mcp::{
     preflight_uninstall as preflight_global_mcp_uninstall, run as run_global_mcp,
@@ -53,8 +53,8 @@ pub(crate) use observer::{CliInstallObserver, CliRegistryEnvironment, LifecycleS
 pub(crate) use report::candidate_rows as source_candidate_rows;
 pub(crate) use report::{HookReportPresentation, LifecycleHookView};
 pub(crate) use resolver::{
-    CliGitSourceMutation, CliPackageSourceFactory, InstallResolver, any_package_source,
-    build_install_resolver, build_install_resolver_deferred,
+    CliGitSourceMutation, CliPackageSourceFactory, CliQualifier, InstallResolver,
+    any_package_source, build_install_resolver, build_install_resolver_deferred,
 };
 pub(crate) use vibe_install::exact_pinned_pkgref;
 

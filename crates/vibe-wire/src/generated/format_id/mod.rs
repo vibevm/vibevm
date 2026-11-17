@@ -88,6 +88,7 @@ pub enum FormatId {
     CliInstallPlan,
     CliInstallPlanV1,
     CliInstallReport,
+    CliLayeredTree,
     CliLifecyclePlan,
     CliLifecycleReport,
     CliListReport,
@@ -97,6 +98,7 @@ pub enum FormatId {
     CliPromptBuild,
     CliPromptCapture,
     CliPromptCheck,
+    CliPromptCompose,
     CliPromptFlags,
     CliPromptPath,
     CliPromptPrepare,
@@ -117,6 +119,8 @@ pub enum FormatId {
     CliTransfersListing,
     CliUninstallReport,
     CliUpdateReport,
+    CliUserOverrideReport,
+    CliUserProjectReport,
     CompilerIr,
     CompilerIrV1,
     CompilerTraceIndex,
@@ -221,6 +225,7 @@ pub enum FormatId {
     ScrapeVerificationHealthEvidence,
     SlotRecord,
     StandaloneSkillReceipt,
+    UserOverrideBindings,
 }
 
 /// How many independent parsers read a format — the second policy axis

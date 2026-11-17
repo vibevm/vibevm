@@ -20,7 +20,12 @@ use crate::output::language::{Block, Glyph, LabelValue, Line, Meta, Role, join_m
 
 pub fn run(ctx: &output::Context, args: CheckArgs) -> Result<()> {
     let locate = ctx.progress().task("Locating project checks");
-    let project_root = match resolve_project_root(&args.path) {
+    let selected = if args.global {
+        super::user::initialized_root()
+    } else {
+        resolve_project_root(&args.path)
+    };
+    let project_root = match selected {
         Ok(root) => {
             locate.finish();
             root

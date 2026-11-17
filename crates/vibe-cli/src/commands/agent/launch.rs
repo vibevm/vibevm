@@ -166,19 +166,20 @@ pub(crate) fn run(ctx: &output::Context, argv: Vec<String>) -> Result<()> {
     // prints — `vibe agent` has already asked the opt-in question — so an
     // error here is a reason nobody foresaw, and a reason nobody foresaw is
     // still not a reason to leave a developer without a session.
-    let composed = match prompt::compose_flags(&selected, launcher.kind, Some(&launcher), &rest) {
-        Ok(composed) => composed,
-        Err(error) => {
-            return soft(
-                &launcher,
-                &rest,
-                &prompt::Undeliverable::hard(
-                    format!("the launch flags could not be composed ({error:#})"),
-                    format!("run `{}`", build_remedy(&selected.node_rel)),
-                ),
-            );
-        }
-    };
+    let composed =
+        match prompt::compose_launch_flags(ctx, &selected, launcher.kind, Some(&launcher), &rest) {
+            Ok(composed) => composed,
+            Err(error) => {
+                return soft(
+                    &launcher,
+                    &rest,
+                    &prompt::Undeliverable::hard(
+                        format!("the launch flags could not be composed ({error:#})"),
+                        format!("run `{}`", build_remedy(&selected.node_rel)),
+                    ),
+                );
+            }
+        };
     if let Some(undeliverable) = &composed.undeliverable {
         return soft(&launcher, &rest, undeliverable);
     }

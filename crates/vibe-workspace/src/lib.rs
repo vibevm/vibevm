@@ -46,6 +46,8 @@ pub mod publish;
 /// The cache-stable system-prompt prefix (PROP-076).
 pub mod system_prompt;
 pub mod tools;
+/// The personal user project's observation and initialization (PROP-074).
+pub mod user_project;
 pub mod vibedeps;
 
 mod authored;

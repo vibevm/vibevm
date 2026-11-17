@@ -81,6 +81,35 @@ fn copy_dir_skips_dot_git_subtrees() {
 }
 
 #[test]
+fn filesystem_copy_excludes_personal_boot_before_descent() {
+    let src = tempdir().unwrap();
+    let dst = tempdir().unwrap();
+    let boot = vibe_core::layout::current_boot_dir();
+    for node in [
+        std::path::PathBuf::new(),
+        std::path::PathBuf::from("members/demo"),
+    ] {
+        let lane = src.path().join(&node).join(&boot);
+        fs::create_dir_all(lane.join("local/nested")).unwrap();
+        fs::write(lane.join("local/nested/private.md"), "PRIVATE_CANARY").unwrap();
+        fs::write(lane.join("project.md"), "PUBLIC_CANARY").unwrap();
+        #[cfg(unix)]
+        std::os::unix::fs::symlink(".", lane.join("local/loop")).unwrap();
+    }
+    copy_dir(src.path(), dst.path()).unwrap();
+    for node in [
+        std::path::PathBuf::new(),
+        std::path::PathBuf::from("members/demo"),
+    ] {
+        assert!(!dst.path().join(&node).join(&boot).join("local").exists());
+        assert_eq!(
+            fs::read_to_string(dst.path().join(node).join(&boot).join("project.md")).unwrap(),
+            "PUBLIC_CANARY"
+        );
+    }
+}
+
+#[test]
 fn push_release_against_local_bare_origin() {
     if !git_available() {
         eprintln!("skipping: git not on PATH");

@@ -16,7 +16,11 @@ use crate::cli::ListArgs;
 use crate::output;
 
 pub fn run(ctx: &output::Context, args: ListArgs) -> Result<()> {
-    let project_root = resolve_project_root(&args.path)?;
+    let project_root = if args.global {
+        super::user::initialized_root()?
+    } else {
+        resolve_project_root(&args.path)?
+    };
     let lockfile = load_lockfile(&project_root)?;
 
     let kind_filter = match &args.kind {

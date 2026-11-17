@@ -98,6 +98,10 @@ pub struct ShowSourcePathArgs {
 
 #[derive(Debug, clap::Args)]
 pub struct TreeArgs {
+    /// Show project, personal and override trees as separate attributed layers.
+    #[arg(long)]
+    pub layers: bool,
+
     /// Project root. Defaults to the current directory.
     #[arg(long, default_value = ".")]
     pub path: PathBuf,
@@ -123,6 +127,10 @@ pub struct TreeArgs {
 
 #[derive(Debug, clap::Args)]
 pub struct CheckArgs {
+    /// Check the personal specification project without initializing it.
+    #[arg(short = 'g', long = "global", conflicts_with = "path")]
+    pub global: bool,
+
     /// Project root with `vibe.toml`. Defaults to current directory.
     #[arg(long, default_value = ".")]
     pub path: PathBuf,
