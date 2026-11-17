@@ -61,8 +61,10 @@ classified, not silently marked complete.
    ownership; no blanket staging or unrelated collaboration/config/dependency files.
 2. Synchronize exact accepted local commits in each own checkout, without .git copies,
    history rewrite, peer writes or external publication.
-3. Builder completes finite residual assessment/focused supported-flow fixes in
-   UP-FINISH-01. Reuse unchanged proof; do not repeat every helper matrix.
+3. Builder implements the remaining full-tree behaviors and focused validations in
+   UP-COMPLETE-01. Earlier UP-FINISH-01 accounting is accepted base evidence, not a
+   substitute for the renewed requested functionality. Reuse unchanged proof; do
+   not repeat every helper matrix.
 4. Deliver final original-requirement outcome table, exact commits/inventory and
    passed/failed/unrun panel. Continue across routine milestones without repeatedly
    asking the owner to restart execution. Full product acceptance is not manufactured.
