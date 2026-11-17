@@ -43,26 +43,33 @@ classified, not silently marked complete.
 
 ## Current full-tree implementation frontier
 
-Automatic existing-context personal routing and cooperative-stop continuation are
-committed and locally synchronized in `082c05de1`; the tested public path includes
-repeat install, declared/locked sources, preview, pre-stop and stop at first HTTP
-metadata contact. Remote/materialization validation remains part of the final panel.
+All requested functional areas are implemented, independently reviewed and locally
+integrated through `47425c24b9cb23b46421fffd4666f09d2e91a290`. Automatic routing
+and cooperative stop retain the earlier reviewed `082c05de1` milestone. The final
+114-path committed inventory was compared against both Git blobs and architect
+working-file bytes; unrelated collaboration/configuration/dependency work is excluded.
 
-Explicit layer declarations, package-owned grants, request-effective notices,
-independent user controls and layered tree epoch2 are implemented in builder's
-working tree with coherent public consumer tests. Final acceptance still requires
-the shared exact dependency projection and final committed scenario.
+Explicit package-owned grants, request-effective replacement/supplement notices,
+independent user controls and layered tree epoch2 have public scenario coverage.
+Canonical authority uses exact admitted per-node roots, source-free Fresh projection
+and lifecycle refresh. Workspace path acquisition and reference authority remain
+separate; member invocation, deterministic publication and legacy reinstall regressions
+are covered. No known functional architectural blocker remains.
 
-Canonical reference authority has real Rust/TypeScript CLI and MCP evidence:
-16 expected outcomes across declared custom-root aliases, actual direct annotation
-resolution, private/undeclared direct references and undeclared configured roots.
-Per-node producer evidence isolates two workspace members. Latest lifecycle refresh,
-publication determinism and final shipping-source binding are still under review;
-these results are not full-tree acceptance.
+Latest connected onboarding passes37steps/36checks; sixteen actual Rust/TypeScript
+CLI/MCP outcomes cover admitted custom-root aliases, non-vacuous direct annotations
+and expected private/undeclared refusals. Full orchestrator171, named source/lifecycle
+fixtures67 and strict checks across six affected crates pass. Three core cross-target
+checks pass; compilation is not foreign runtime evidence. Exact subjects and receipts
+are recorded in REVIEW-COMPLETE.md.
 
-No original remaining node is marked accepted merely because this frontier report
-exists. Builder executes the connected acceptance journey in UP-COMPLETE-01, then
-commits/reviews/synchronizes outcomes and refreshes the actual dashboard source.
+The canonical host self-check is still running. UP-FINAL remains active until its
+terminal panel is recorded; actual unavailable graphical/foreign runtimes remain
+explicitly blocked. Dashboard revision369 reflects accepted functional nodes rather
+than this report alone. Final panel accounting, synchronized review documents and
+source-plan/dashboard reconciliation are the remaining closure work, not missing
+implementation or a new polishing campaign. Owner acceptance and external publication
+remain separate.
 
 ## Accepted base evidence
 
