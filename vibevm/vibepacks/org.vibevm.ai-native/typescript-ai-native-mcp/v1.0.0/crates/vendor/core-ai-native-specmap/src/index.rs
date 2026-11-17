@@ -79,6 +79,14 @@ pub fn build_with_scanner(
     let external_units = mdspec::scan_external_units(root, cfg);
 
     let mut warnings = Vec::new();
+    if let Err(error) = crate::local_layers::LocalLayers::current(root).validate(root, cfg) {
+        warnings.push(Warning {
+            code: "local-layer-reference".into(),
+            message: error.to_string(),
+            file: Config::REL_PATH.into(),
+            line: 0,
+        });
+    }
     warnings.append(&mut md_warnings);
     warnings.append(&mut rs_warnings);
 
@@ -348,6 +356,7 @@ pub fn write_with_scanner(
     cfg: &Config,
     scanner: &dyn crate::scanner::CodeScanner,
 ) -> Result<(PathBuf, Summary)> {
+    crate::local_layers::LocalLayers::current(root).validate(root, cfg)?;
     let map = build_with_scanner(root, cfg, scanner);
     let summary = Summary::of(&map);
     if let Some(old) = load_committed(root) {
@@ -375,6 +384,7 @@ pub fn check_with_scanner(
     cfg: &Config,
     scanner: &dyn crate::scanner::CodeScanner,
 ) -> Result<std::result::Result<Summary, String>> {
+    crate::local_layers::LocalLayers::current(root).validate(root, cfg)?;
     let map = build_with_scanner(root, cfg, scanner);
     let summary = Summary::of(&map);
     let fresh = to_canonical_bytes(&map)?;

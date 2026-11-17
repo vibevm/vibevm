@@ -268,7 +268,9 @@ fn the_projection_preserves_every_authored_byte_and_its_order() {
     let before = "# Mine\n\nkeep me\n\n";
     let after = "\n\nkeep me too\n";
     let projected = project_managed_block(
-        Some(&format!("{before}<vibevm>\nstale\n</vibevm>{after}")),
+        Some(&format!(
+            "{before}<vibevm>\nOBSOLETE_ROUTER_BODY_CANARY\n</vibevm>{after}"
+        )),
         &RouterFacts::undeclared(SpecFormat::Mixed),
     )
     .unwrap();
@@ -278,7 +280,10 @@ fn the_projection_preserves_every_authored_byte_and_its_order() {
         projected.ends_with("\n# Mine\n\nkeep me\n\nkeep me too\n"),
         "{projected}"
     );
-    assert!(!projected.contains("stale"), "{projected}");
+    assert!(
+        !projected.contains("OBSOLETE_ROUTER_BODY_CANARY"),
+        "{projected}"
+    );
     // Idempotent: projecting the projection changes nothing.
     assert_eq!(
         project_managed_block(

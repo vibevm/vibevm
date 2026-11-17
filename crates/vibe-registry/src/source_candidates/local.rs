@@ -25,17 +25,9 @@ impl LocalRegistry {
                 root: self.root().into(),
             },
         };
-        let source_dir = self
-            .root()
-            .join(group.as_str())
-            .join(name)
-            .join(format!("v{version}"));
-        if !source_dir.is_dir() {
-            return Err(RegistryError::UnknownPackage {
-                group: group.clone(),
-                name: name.into(),
-            });
-        }
+        let reference = vibe_core::PackageRef::parse(&format!("{group}/{name}@={version}"))?;
+        let selected = self.resolve(&reference)?;
+        let source_dir = selected.source_dir;
         let manifest = Manifest::read(source_dir.join(Manifest::FILENAME))?;
         let source_url = crate::local_registry::source_uri_for_local(&source_dir);
         let mut evidence = crate::binding_source_evidence(&binding);

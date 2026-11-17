@@ -94,6 +94,20 @@ pub(crate) fn solve<P: SourceCandidateProvider>(
     provider: &P,
     request: &SourceSolveRequest<'_>,
 ) -> Result<SourceResolvedGraph, SolveError> {
+    for candidate in request.selected_roots {
+        if !request.roots.iter().any(|root| {
+            matches!(
+                root.requirement.site,
+                crate::source_edges::RequirementSite::ExplicitRequest(_)
+            ) && root.requirement.alternatives.iter().any(|choice| {
+                choice.reference.group.as_ref() == Some(candidate.group())
+                    && choice.reference.name.as_str() == candidate.name()
+                    && choice.reference.version.matches(candidate.version())
+            })
+        }) {
+            return Err(invalid("selected source is not an explicit requested root"));
+        }
+    }
     let explicit_pin = request
         .roots
         .iter()
@@ -106,6 +120,7 @@ pub(crate) fn solve<P: SourceCandidateProvider>(
         )
         .any(|choice| choice.registry_pin.is_some());
     if !explicit_pin
+        && request.selected_roots.is_empty()
         && provider.source_choice_mode() != SourceChoiceMode::CandidateRequired
         && let Some(graph) = legacy::solve(provider, request, legacy::LegacyCell::Resolvo)?
     {
@@ -272,7 +287,10 @@ pub(crate) fn solve_legacy_cell<P: SourceCandidateProvider>(
         .flat_map(|root| &root.requirement.alternatives)
         .chain(request.activated.iter().flat_map(|a| &a.edge.alternatives))
         .any(|choice| choice.registry_pin.is_some());
-    if pinned || provider.source_choice_mode() == SourceChoiceMode::CandidateRequired {
+    if pinned
+        || !request.selected_roots.is_empty()
+        || provider.source_choice_mode() == SourceChoiceMode::CandidateRequired
+    {
         return Err(SolveError::SourceSolverUnsupported { solver });
     }
     legacy::solve(

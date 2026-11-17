@@ -705,3 +705,63 @@ impl Shims {
         command
     }
 }
+
+#[cfg(unix)]
+#[test]
+fn personal_launch_in_selected_member_keeps_workspace_relative_markers() {
+    let world = World::build(&Recipe {
+        member: true,
+        ..Recipe::default()
+    });
+    world
+        .user
+        .vibe()
+        .args(["user", "init", "--json"])
+        .assert()
+        .success();
+    let personal = world.user.settings.join("user-project");
+    world
+        .user
+        .vibe()
+        .args(["install", "-g", "--user-project", "--offline", "--json"])
+        .assert()
+        .success();
+    fs::write(
+        personal.join(common::boot_rel("preferences.md")),
+        "member-personal-marker\n",
+    )
+    .unwrap();
+    world
+        .user
+        .vibe()
+        .args(["install", "-g", "--user-project", "--offline", "--json"])
+        .assert()
+        .success();
+    let shims = Shims::beside(&world);
+    let member = world.root.join(world::MEMBER_REL);
+    shims
+        .agent(&world, "claude")
+        .current_dir(&member)
+        .assert()
+        .success();
+    let argv = shims.argv();
+    let slot = argv
+        .windows(2)
+        .find(|pair| pair[0] == "--append-system-prompt-file")
+        .map(|pair| PathBuf::from(&pair[1]))
+        .expect("actual selected member slot");
+    assert_eq!(
+        slot.parent().unwrap(),
+        member.join(common::boot_dir()).join("local")
+    );
+    let text = fs::read_to_string(slot).unwrap();
+    assert!(text.contains("MEMBER-OWN-BYTES"));
+    assert!(text.contains("member-personal-marker"));
+    assert!(text.contains(&format!(
+        "{}/{}",
+        world::MEMBER_REL,
+        common::boot_rel("00-member.md")
+    )));
+    assert!(!text.contains("pkg/member/pkg/member/"));
+    assert!(!text.contains("MEMBER-TEMPLATE-CANARY"));
+}

@@ -207,7 +207,34 @@ any position. A delivered file sits between two lines:
 
 {precedence}
 
-Boot is pure file-reading — there is nothing to execute."
+# Optional personal boot — read last
+
+After all project INDEX entries/live continuation, use exposed settings: nonempty VIBE_SETTINGS, else HOME/.vibe (Windows:
+USERPROFILE/.vibe only without HOME). Unknown/relative/../symlink/alias root or ancestor: skip diagnostically. No guessing, commands or environment dumps.
+
+Personal: settings/user-project, not mcp/user-project; validate vibe.toml;
+read its vibevm/vibespecs/boot/STATIC.xml or STATIC.md, then INDEX.md in order
+with session conditions. Two STATIC spellings, unsafe/out-of-root members,
+Absent/empty/broken/stale: skip whole layer; project boot continues.
+No recursive CLAUDE.md/AGENTS.md/GEMINI.md, prose-private-file expansion or
+initialize/install/compile/repair during boot.
+
+Then read settings/override-bindings.toml (schema=1). Match only known canonical
+Git common-dir + workspace-relative selected node, or exact non-Git root.
+No remote/name/content inference. Unknown identity or invalid/ambiguous
+mapping: skip, never bind/repair. For an enabled match, its 32-alphanumeric id
+selects settings/project-overrides/id; apply the same safe STATIC+INDEX rules,
+after personal. Disabled means do not read that project.
+
+Complete same-project vibe:lane-begin/end pairs for personal: or override:
+paths supply those members; partial pairs/project markers do not.
+Override beats personal only for project-marked overridable rules. Project
+safety, attribution, commit discipline and unmarked rules always bind: report
+conflicts. No personal bytes/bindings in shared artifacts.
+
+{memory}
+Boot is pure file-reading — there is nothing to execute.",
+        memory = vibe_core::user_project::memory::INSTRUCTIONS.trim_end()
     )
 }
 

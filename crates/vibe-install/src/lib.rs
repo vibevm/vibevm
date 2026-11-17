@@ -66,8 +66,9 @@ pub use lifecycle::{
 pub use plan::{
     InstallPreview, InstallRequest, Plan, PlannedInstall, PreviewSourceStorage,
     RecommendationOutcome, RecommendationRow, SuggestionRow, WeakDependencyReport,
-    freshness_prepared, plan, plan_prepared_with_spec_format, plan_prepared_without_publication,
-    plan_with_spec_format, preview_has_requirements, preview_prepared,
+    freshness_prepared, plan, plan_prepared_with_selected_roots, plan_prepared_with_spec_format,
+    plan_prepared_without_publication, plan_with_spec_format, preview_has_requirements,
+    preview_prepared, preview_prepared_with_selected_roots,
 };
 pub use record::{
     exact_pinned_pkgref, finalize_pkgref_for_manifest, merge_manifest_requires,

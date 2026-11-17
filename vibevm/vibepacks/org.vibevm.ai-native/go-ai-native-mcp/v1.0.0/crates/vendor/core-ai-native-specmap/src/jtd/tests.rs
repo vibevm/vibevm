@@ -480,5 +480,21 @@ fn live_thin_root_projects_exact_shared_inventory() {
     assert_eq!(edges.len(), 1);
     assert_eq!(edges[0].fromSymbol, "ir");
     assert_eq!(edges[0].file, "formats/vocabularies.json");
-    assert_eq!(edges[0].line, 57);
+    // The live vocabulary can gain preceding definitions without moving this
+    // edge away from its semantic owner. Verify the measured IR definition,
+    // not a historical physical line number.
+    let vocabulary = std::fs::read_to_string(root.join("formats/vocabularies.json")).unwrap();
+    let ir_line = vocabulary
+        .lines()
+        .position(|line| line.starts_with("  \"ir\":"))
+        .expect("live vocabulary contains the IR definition")
+        + 1;
+    assert_eq!(edges[0].line as usize, ir_line);
+    assert!(
+        vocabulary
+            .lines()
+            .nth(ir_line - 1)
+            .unwrap()
+            .contains("PROP-054#WHOLE-IR-WIRE")
+    );
 }

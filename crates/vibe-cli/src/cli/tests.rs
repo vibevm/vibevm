@@ -3,7 +3,7 @@
 use clap::Parser;
 use specmark::verifies;
 
-use super::{CleanChain, Cli, Command};
+use super::{CleanChain, Cli, Command, UserCommand};
 
 #[test]
 fn verbose_is_global_and_composes_with_silent_output_modes() {
@@ -230,4 +230,53 @@ fn run_keeps_arguments_after_the_separator() {
     };
     assert_eq!(args.command, "vibevm-doc");
     assert_eq!(args.args, ["--no-build", "--port", "4323"]);
+}
+
+#[test]
+#[verifies("spec://org.vibevm.core/vibevm/common/PROP-074#USER-PROJECT-ROOT-GRAMMAR")]
+fn the_user_verbs_inherit_global_output_and_cancellation_options() {
+    for argv in [
+        vec!["vibe", "user", "init", "--json"],
+        vec!["vibe", "user", "--plain", "status"],
+        vec!["vibe", "user", "status", "--stop-file", "/tmp/stop"],
+        vec!["vibe", "--quiet", "user", "init"],
+    ] {
+        let cli =
+            Cli::try_parse_from(&argv).unwrap_or_else(|error| panic!("parse {argv:?}: {error}"));
+        let Command::User(args) = &cli.command else {
+            panic!("{argv:?} did not reach the user namespace");
+        };
+        assert!(matches!(
+            args.command,
+            UserCommand::Init | UserCommand::Status
+        ));
+    }
+}
+
+#[test]
+#[verifies("spec://org.vibevm.core/vibevm/common/PROP-074#USER-PROJECT-ROOT-GRAMMAR")]
+fn neither_user_verb_takes_a_root_or_force_flag() {
+    // The settings authority is the sole root selector.
+    for argv in [
+        vec!["vibe", "user", "init", "--path", "."],
+        vec!["vibe", "user", "status", "--path", "."],
+        vec!["vibe", "user", "init", "--force"],
+        vec!["vibe", "user", "status", "-g"],
+        vec!["vibe", "user", "init", "somewhere"],
+    ] {
+        assert!(
+            Cli::try_parse_from(&argv).is_err(),
+            "{argv:?} must not parse"
+        );
+    }
+}
+
+#[test]
+#[verifies("spec://org.vibevm.core/vibevm/common/PROP-074#USER-PROJECT-ROOT-GRAMMAR")]
+fn the_user_namespace_has_exactly_two_verbs() {
+    let cli = Cli::try_parse_from(["vibe", "user", "status"]).unwrap();
+    match cli.command {
+        Command::User(args) => assert!(matches!(args.command, UserCommand::Status)),
+        other => panic!("expected the user namespace, got {other:?}"),
+    }
 }

@@ -85,6 +85,8 @@ fn inert_args() -> InstallArgs {
         source_policy: Default::default(),
         packages: Vec::new(),
         global: true,
+        user_project: false,
+        explicit_path: false,
         agent: None,
         server: None,
         platform: None,

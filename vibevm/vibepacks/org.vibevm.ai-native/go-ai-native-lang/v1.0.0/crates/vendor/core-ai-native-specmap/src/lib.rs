@@ -39,6 +39,7 @@ pub mod fingerprint;
 pub mod index;
 pub mod jtd;
 pub mod ledger;
+mod local_layers;
 pub mod mdspec;
 pub mod ratchet;
 pub mod rscan;

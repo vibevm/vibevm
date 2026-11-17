@@ -12,7 +12,6 @@ use std::path::PathBuf;
 use std::process::ExitCode;
 use std::sync::OnceLock;
 
-use clap::Parser;
 use vibe_core::user_config::UserConfig;
 
 mod cli;
@@ -72,7 +71,10 @@ fn main() -> ExitCode {
 
 fn run() -> ExitCode {
     // Clap owns argument diagnostics and their exit classification.
-    let cli = Cli::parse();
+    let (mut cli, explicit_path) = Cli::parse_invocation();
+    if let Err(exit) = composition::select_installed_destination(&mut cli, explicit_path) {
+        return exit;
+    }
 
     if let Command::Refactor(args) = &cli.command
         && let Some(exit) = commands::refactor::machine_entry(args)
@@ -132,8 +134,7 @@ fn run() -> ExitCode {
             read_env_opt("VIBE_PROGRESS_FORMAT").as_deref(),
         ),
     );
-    let preview_only =
-        matches!(&cli.command, Command::Install(args) if !args.global && args.plan_only);
+    let preview_only = composition::project_preview(&cli.command);
     let ctx = composition::transfers::attach_for_command(ctx, &transfer_config, &cli.command);
     let (ctx, cancellation, stop_input) =
         match composition::cancellation::for_command(&ctx, &cli.command, cli.stop_file.clone()) {
@@ -436,6 +437,7 @@ fn run() -> ExitCode {
                 }
                 Err(err) => Err(err),
             },
+            Command::User(args) => commands::user::run(&ctx, args.command, &cancellation),
             Command::Version => {
                 println!("vibe {}", env!("CARGO_PKG_VERSION"));
                 return ExitCode::SUCCESS;

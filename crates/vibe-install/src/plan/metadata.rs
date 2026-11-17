@@ -22,6 +22,7 @@ use vibe_resolver::{
 use vibe_workspace::Workspace;
 
 pub(super) struct MetadataPlanningInput<'a> {
+    pub selected_roots: &'a [vibe_registry::source_candidates::RetainedSourceCandidate],
     pub workspace: &'a Workspace,
     pub root_manifest: &'a Manifest,
     pub roots: &'a [PackageRef],
@@ -255,6 +256,7 @@ fn solve_visible<S: InstallSource + ?Sized>(
     for iteration in 1..=MAX_VISIBILITY_PASSES {
         input.observer.progress().checkpoint()?;
         let request = SourceSolveRequest {
+            selected_roots: input.selected_roots,
             roots: input.root_edges,
             held_roots: held,
             activated,
@@ -278,6 +280,7 @@ fn solve_visible<S: InstallSource + ?Sized>(
                 *held = input.roots.to_vec();
                 source
                     .solve_metadata(&SourceSolveRequest {
+                        selected_roots: input.selected_roots,
                         roots: input.root_edges,
                         held_roots: held,
                         activated,

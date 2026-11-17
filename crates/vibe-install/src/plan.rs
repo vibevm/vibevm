@@ -201,6 +201,30 @@ pub fn plan_prepared_without_publication<S: InstallSource + ?Sized>(
     spec_format: SpecFormat,
     observer: &dyn PlanObserver,
 ) -> Result<Plan> {
+    plan_prepared_with_selected_roots(
+        source,
+        project_root,
+        manifest,
+        workspace,
+        request,
+        spec_format,
+        observer,
+        &[],
+    )
+}
+
+/// Continue ordinary planning with exact top-level candidates selected by this source owner.
+#[allow(clippy::too_many_arguments)]
+pub fn plan_prepared_with_selected_roots<S: InstallSource + ?Sized>(
+    source: &S,
+    project_root: &Path,
+    manifest: &mut Manifest,
+    workspace: &mut Workspace,
+    request: InstallRequest,
+    spec_format: SpecFormat,
+    observer: &dyn PlanObserver,
+    selected_roots: &[vibe_registry::source_candidates::RetainedSourceCandidate],
+) -> Result<Plan> {
     let before = manifest.clone();
     let previous_workspace = workspace.clone();
     let result = match prepare_metadata_plan(
@@ -212,6 +236,7 @@ pub fn plan_prepared_without_publication<S: InstallSource + ?Sized>(
         spec_format,
         observer,
         PlanningPurpose::Apply,
+        selected_roots,
     )? {
         None => Ok(Plan::Fresh),
         Some(prepared) => {
@@ -255,6 +280,7 @@ fn prepare_metadata_plan<S: InstallSource + ?Sized>(
     spec_format: SpecFormat,
     observer: &dyn PlanObserver,
     purpose: PlanningPurpose<'_>,
+    selected_roots: &[vibe_registry::source_candidates::RetainedSourceCandidate],
 ) -> Result<Option<PreparedMetadata>> {
     let selected = roots::selected_node(workspace, project_root)?;
     crate::configuration_admission::workspace_inputs_for_install(
@@ -390,6 +416,7 @@ fn prepare_metadata_plan<S: InstallSource + ?Sized>(
         let closure = metadata::resolve_metadata_closure(
             source,
             metadata::MetadataPlanningInput {
+                selected_roots,
                 workspace,
                 root_manifest: manifest,
                 roots: &roots,
@@ -486,6 +513,7 @@ mod metadata;
 mod preview;
 pub use preview::{
     InstallPreview, PreviewSourceStorage, preview_has_requirements, preview_prepared,
+    preview_prepared_with_selected_roots,
 };
 
 /// The acquisition half of planning — fetch/defer helpers and the

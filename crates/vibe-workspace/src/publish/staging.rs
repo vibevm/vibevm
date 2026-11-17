@@ -327,6 +327,10 @@ fn copy_tree_excluding(src: &Path, dst: &Path) -> Result<()> {
                 path: path.clone(),
                 reason: format!("walked path escaped its copy root `{}`", src.display()),
             })?;
+            // Exclude private composed boot before metadata, copying or descent.
+            if rel.ends_with(vibe_core::layout::current_boot_dir().join("local")) {
+                continue;
+            }
             // Skip `.git`, `.gitmodules`, and `.vibe` at any depth. Submodule
             // working-tree bytes are deliberately copied as plain files, but
             // neither their repository metadata nor a now-dangling module

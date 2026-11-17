@@ -120,6 +120,9 @@ pub enum SourceModelResource {
 
 /// Source-aware solves keep ordinary roots distinct from historical extras.
 pub struct SourceSolveRequest<'a> {
+    /// Exact top-level selections from this operation's original source owner.
+    /// Their domains are constrained before solving, never replaced afterwards.
+    pub selected_roots: &'a [RetainedSourceCandidate],
     pub roots: &'a [RootRequirement],
     pub held_roots: &'a [vibe_core::PackageRef],
     pub authoritative_locked: &'a [vibe_core::manifest::LockedPackage],

@@ -111,6 +111,7 @@ pub(crate) fn preview_project_requirements(
         .collect::<Vec<_>>();
     progress.checkpoint()?;
     let solved = source.solve_metadata(&SourceSolveRequest {
+        selected_roots: &[],
         roots: &roots,
         held_roots: &new,
         activated: &[],

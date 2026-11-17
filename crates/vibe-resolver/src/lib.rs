@@ -66,6 +66,7 @@ pub mod local_registry_provider;
 pub mod multi_registry_provider;
 pub mod source_candidates;
 pub mod source_edges;
+pub use vibe_registry::source_candidates::RetainedSourceCandidate;
 mod source_solve;
 pub use source_candidates::{
     CandidateKey, CandidateMetadata, HistoricalActivation, RootRequirement,

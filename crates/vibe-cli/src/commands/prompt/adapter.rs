@@ -49,6 +49,10 @@ pub(crate) enum Band {
     Unconditional,
     /// Band G — the gated rows this session's target selects.
     Gated,
+    /// Personal boot, loaded after the complete project instruction sequence.
+    Personal,
+    /// Project-specific override, after global personal preferences.
+    Override,
     /// Band T — the caller's own task content, which vibe never witnesses.
     Task,
 }
@@ -60,6 +64,8 @@ impl Band {
             Band::Prefix => "P",
             Band::Unconditional => "U",
             Band::Gated => "G",
+            Band::Personal => "personal",
+            Band::Override => "override",
             Band::Task => "T",
         }
     }

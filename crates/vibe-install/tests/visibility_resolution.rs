@@ -258,6 +258,7 @@ impl TestSource {
                     let solved = retained::solve(
                         &self.registry,
                         &vibe_resolver::SourceSolveRequest {
+                            selected_roots: request.selected_roots,
                             roots: request.roots,
                             held_roots: request.held_roots,
                             authoritative_locked: request.authoritative_locked,

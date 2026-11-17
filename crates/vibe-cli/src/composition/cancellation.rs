@@ -16,14 +16,18 @@ mod watch;
 
 pub(crate) fn supported(command: &Command) -> bool {
     match command {
-        Command::Install(args) => !args.global,
-        Command::Update(args) => !args.global,
+        Command::Install(args) => !args.global || args.user_project,
+        Command::Update(args) => !args.global || args.user_project,
         Command::Registry(args) => matches!(&args.command, RegistrySubcommand::Publish(_)),
         // PROP-068 `#dl`: a download is an operation a stop removes.
         Command::Dl(_) => true,
         // PROP-068 `#proxy-tool`: `serve` runs until it is stopped, and
         // `exec` lives as long as the child it lent px to.
         Command::Tool(_) => true,
+        // PROP-074 `#USER-PROJECT-ROOT-GRAMMAR`: init is a finite operation a
+        // stop may interrupt; status is read-only and accepts the same input
+        // so the grammar does not fork.
+        Command::User(_) => true,
         _ => false,
     }
 }
@@ -98,9 +102,19 @@ pub(crate) fn for_command(
         return Ok(attach(ctx, stop));
     }
     if stop.is_some() {
+        if matches!(command, Command::Install(args) if args.global && !args.user_project) {
+            anyhow::bail!(
+                "--stop-file cannot classify an inferred global install before source preflight; for personal installation use `vibe install -g --user-project ... --stop-file <path>`; application/MCP/remap cancellation support is unchanged"
+            );
+        }
         anyhow::bail!(
-            "--stop-file is supported only for project install/update, registry publish and dl"
+            "--stop-file is supported only for project install/update, registry publish, dl, \
+             tool and user init/status"
         );
     }
     Ok((ctx.clone(), CancellationToken::new(), StopInput::none()))
 }
+
+#[cfg(test)]
+#[path = "cancellation/tests.rs"]
+mod tests;

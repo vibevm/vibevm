@@ -286,6 +286,7 @@ impl Config {
                 path.display()
             );
         }
+        crate::local_layers::LocalLayers::current(root).validate(root, &cfg)?;
         // An absent `[[external_specs]]` root is the legitimate "not yet
         // installed" state, not a refusal — but it must be said out loud,
         // once and for every broken namespace, so version drift cannot pass

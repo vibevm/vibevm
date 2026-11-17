@@ -58,6 +58,32 @@ any position. A delivered file sits between two lines:
 The boot order — this file, `vibevm/vibespecs/boot/STATIC.xml`, the INDEX files — is an order of
 precedence, not of position. A lane delivered before this file has been read.
 
+# Optional personal boot — read last
+
+After all project INDEX entries/live continuation, use exposed settings: nonempty VIBE_SETTINGS, else HOME/.vibe (Windows:
+USERPROFILE/.vibe only without HOME). Unknown/relative/../symlink/alias root or ancestor: skip diagnostically. No guessing, commands or environment dumps.
+
+Personal: settings/user-project, not mcp/user-project; validate vibe.toml;
+read its vibevm/vibespecs/boot/STATIC.xml or STATIC.md, then INDEX.md in order
+with session conditions. Two STATIC spellings, unsafe/out-of-root members,
+Absent/empty/broken/stale: skip whole layer; project boot continues.
+No recursive CLAUDE.md/AGENTS.md/GEMINI.md, prose-private-file expansion or
+initialize/install/compile/repair during boot.
+
+Then read settings/override-bindings.toml (schema=1). Match only known canonical
+Git common-dir + workspace-relative selected node, or exact non-Git root.
+No remote/name/content inference. Unknown identity or invalid/ambiguous
+mapping: skip, never bind/repair. For an enabled match, its 32-alphanumeric id
+selects settings/project-overrides/id; apply the same safe STATIC+INDEX rules,
+after personal. Disabled means do not read that project.
+
+Complete same-project vibe:lane-begin/end pairs for personal: or override:
+paths supply those members; partial pairs/project markers do not.
+Override beats personal only for project-marked overridable rules. Project
+safety, attribution, commit discipline and unmarked rules always bind: report
+conflicts. No personal bytes/bindings in shared artifacts.
+
+Personal memory: when authorized to remember a user preference, working style, machine fact or cross-project convention, write an ordinary authored record under the personal project's vibevm/vibespecs, not harness auto-memory. A fact collaborators need belongs in the project's repository. Never store credentials. An explicit durable opt-out in the loaded user snippet selects the user's other memory mechanism; respect it. A record must be boot-indexed or explicitly linked from the authored user boot snippet to reach a later session; arbitrary records are not auto-loaded. Boot never writes records or edits INDEX. An absent/unavailable personal root requires explicit user init/action before a memory write, not silent harness fallback.
 Boot is pure file-reading — there is nothing to execute."
     );
 }
@@ -97,7 +123,11 @@ fn a_node_with_no_lane_keeps_the_rule_shape_and_states_there_is_no_id() {
         assert!(body.contains(rule), "rule {rule:?} is missing: {body}");
     }
     assert!(body.contains("publishes no static lane"));
-    assert!(!body.contains("STATIC.xml"), "there is no lane to name");
+    let project = body.split("# Optional personal boot").next().unwrap();
+    assert!(
+        !project.contains("STATIC.xml"),
+        "there is no project lane to name"
+    );
     assert!(!body.contains("expected id of"));
 }
 
@@ -107,14 +137,24 @@ fn a_node_with_no_lane_keeps_the_rule_shape_and_states_there_is_no_id() {
 fn the_named_lane_follows_the_target_format() {
     let xml = render_router(&facts("org.x/y", Some("aaaaaaaaaaaa"), SpecFormat::Xml));
     assert!(xml.contains("vibevm/vibespecs/boot/STATIC.xml"));
-    assert!(!xml.contains("STATIC.md"));
+    assert!(
+        !xml.split("# Optional personal boot")
+            .next()
+            .unwrap()
+            .contains("STATIC.md")
+    );
     let md = render_router(&facts(
         "org.x/y",
         Some("aaaaaaaaaaaa"),
         SpecFormat::Markdown,
     ));
     assert!(md.contains("vibevm/vibespecs/boot/STATIC.md"));
-    assert!(!md.contains("STATIC.xml"));
+    assert!(
+        !md.split("# Optional personal boot")
+            .next()
+            .unwrap()
+            .contains("STATIC.xml")
+    );
 }
 
 /// The expected id follows the lane and nothing else, which is what keeps

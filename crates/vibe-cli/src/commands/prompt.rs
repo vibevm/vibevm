@@ -26,16 +26,20 @@ mod adapter;
 mod build;
 mod capture;
 mod check;
+mod compose;
 mod flags;
 mod harness_version;
+mod local_artifact;
 mod path;
+mod personal;
+mod personal_launch;
 mod prepare;
 mod qwen_identity;
 mod resolve;
 mod supplied_base;
 
 pub(crate) use build::summary_line;
-pub(crate) use flags::{Undeliverable, compose as compose_flags, opted_in};
+pub(crate) use flags::{Undeliverable, compose_for_launch as compose_launch_flags, opted_in};
 pub(crate) use qwen_identity::inherited_carrier_to_scrub;
 pub(crate) use resolve::{Selected, select};
 
@@ -62,6 +66,15 @@ pub(crate) fn reporting_the_prompt<T>(
 pub fn run(ctx: &output::Context, args: PromptArgs) -> Result<()> {
     match args.command {
         PromptCommand::Build { node, path } => build::run(ctx, &select(&path, node.as_deref())?),
+        PromptCommand::Compose {
+            node,
+            path,
+            session_target,
+        } => compose::run(
+            ctx,
+            &select(&path, node.as_deref())?,
+            session_target.as_deref(),
+        ),
         PromptCommand::Check {
             node,
             path,

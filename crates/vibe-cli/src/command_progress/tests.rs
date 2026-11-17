@@ -127,6 +127,9 @@ fn fast_metadata_is_silent_while_passthrough_commands_allow_plain_stages() {
         &["vibe", "extensions"][..],
         &["vibe", "self", "env"][..],
         &["vibe", "prefs", "list"][..],
+        // PROP-074 `#USER-PROJECT-ROOT-GRAMMAR`: one directory chain and
+        // one file at most — no phase worth a progress root.
+        &["vibe", "user", "status"][..],
     ] {
         let policy = parsed_policy(argv, true);
         assert_eq!(policy.progress_mode(true, false), ProgressMode::Disabled);
@@ -254,4 +257,16 @@ fn the_machine_format_comes_from_the_flag_then_the_environment() {
         true,
     );
     assert!(ctx.is_machine_progress() && ctx.is_json());
+}
+
+#[test]
+fn user_init_is_finite_but_status_is_metadata() {
+    assert_eq!(
+        parsed_policy(&["vibe", "user", "init"], false),
+        CommandPolicy::FiniteFallback("Command user init")
+    );
+    assert_eq!(
+        parsed_policy(&["vibe", "user", "status"], false),
+        CommandPolicy::FastMetadata
+    );
 }

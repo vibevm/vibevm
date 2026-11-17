@@ -66,9 +66,27 @@ fn stage_node_excludes_git_and_vibe_dirs() {
     write(tmp.path(), package_path("a/.git/objects/x"), "obj");
     write(tmp.path(), package_path("a/.vibe/cache.bin"), "cache");
     write(tmp.path(), package_path("a/keep.md"), "keep me");
+    let private = package_path("a")
+        .join(vibe_core::layout::current_boot_dir())
+        .join("local");
+    write(
+        tmp.path(),
+        private.join("personal.md"),
+        "PRIVATE_BOOT_CANARY",
+    );
+    #[cfg(unix)]
+    std::os::unix::fs::symlink(".", tmp.path().join(&private).join("loop")).unwrap();
     let staged = stage_package(tmp.path(), "a", &origin_info());
     assert!(!staged.staging.path().join(".git").exists());
     assert!(!staged.staging.path().join(".vibe").exists());
+    assert!(
+        !staged
+            .staging
+            .path()
+            .join(vibe_core::layout::current_boot_dir())
+            .join("local")
+            .exists()
+    );
     assert!(staged.staging.path().join("keep.md").is_file());
 }
 
