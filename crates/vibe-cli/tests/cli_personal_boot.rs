@@ -287,7 +287,9 @@ fn classic_init_without_system_template_has_late_personal_discovery_contract() {
         assert!(text.contains("nonempty VIBE_SETTINGS else HOME/.vibe"));
         assert!(text.contains("not mcp/user-project"));
         assert!(text.contains("no guessing, commands or env dumps"));
-        assert!(text.contains("No nested instruction entrypoints, prose-private expansion or boot mutations"));
+        assert!(text.contains(
+            "No nested instruction entrypoints, prose-private expansion or boot mutations"
+        ));
         assert!(text.contains("settings/override-bindings.toml schema1/2 before personal"));
         assert!(text.contains("schema2 user_controls"));
         assert!(text.contains("user_enabled=false skips personal only; absent=true"));
