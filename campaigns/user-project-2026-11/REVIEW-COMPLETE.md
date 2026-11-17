@@ -123,7 +123,35 @@ no new fetch/solver framework is authorized. Foreign-explain fixtures share the
 missing-context preparation issue; boot-text expectations must distinguish the
 mandatory project router from optional personal lane alternatives.
 No final host gate success or complete validation is claimed while these fail.
-Evidence: `/fast/tmp/up-final-self-check.log` (nonterminal at observation).
+Workspace step is now terminal: exit101 after2134seconds,27failed test targets.
+The full keep-going panel continues with strict Clippy (step3/8). Shared fixture
+failures also affect trace/MCP relation consumers. Fresh remap admission, repeated
+monorepo capture and typed root-kind error behavior require separate finite checks;
+existing index/xtask findings require demonstrated baseline classification, not a
+blanket exemption. Successful native-fixture panic probes are not failed targets.
+Evidence: `/fast/tmp/up-final-self-check.log`; complete27-target triage is in
+`/fast/tmp/up-canonical-failure-inventory.json`, with individual diagnostics in
+`/fast/tmp/up-canonical-failure-details.json`. Architect reviewed the complete
+inventory: every failed target is assigned a bounded cause cluster or explicit
+pending classification. This accepts the triage only, not an untested repair.
+Overall panel is now terminal, exit127. Exact eight-step result:
+
+| Step | Result |
+| --- | --- |
+| Format | PASS |
+| Workspace tests | FAIL,exit101,27targets,2134seconds |
+| Strict workspace/all-target Clippy | PASS,163seconds |
+| Host vibe check | PASS,36seconds |
+| 1MiB stack script step | FAIL,exit127:hardcoded target/debug binary unavailable with external CARGO_TARGET_DIR |
+| Conform | PASS,76seconds |
+| Codegen | PASS,7seconds |
+| Wire diff | PASS,19seconds |
+
+The prior direct actual-built-binary stack test remains valid separate evidence;
+it does not replace this failed script step. The observer process exit0 means it
+found the terminal marker, not that the gate passed. Builder now executes the
+bounded compatibility repairs and exact baseline classification; no extra owner
+approval is required for that already-authorized work. Final validation remains open.
 
 ## Remaining closure accounting, not missing functional implementation
 

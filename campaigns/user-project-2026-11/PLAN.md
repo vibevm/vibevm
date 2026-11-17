@@ -63,12 +63,16 @@ fixtures67 and strict checks across six affected crates pass. Three core cross-t
 checks pass; compilation is not foreign runtime evidence. Exact subjects and receipts
 are recorded in REVIEW-COMPLETE.md.
 
-The canonical host self-check is still running. Its workspace step has exposed
-three task-related CLI specmap fixture failures (missing admitted authority context),
-so final host validation is not green. Builder will repair them after this keep-going
-panel terminates, retaining production fail-closed behavior and positive assertions.
-UP-FINAL remains active until the repaired terminal panel is recorded; actual
-unavailable graphical/foreign runtimes remain explicitly blocked. Dashboard revision369 reflects accepted functional nodes rather
+The canonical host self-check has terminated with6passing steps and2failed steps:
+workspace tests (27targets,exit101) and the script's hardcoded stack-test binary
+path (exit127 under external CARGO_TARGET_DIR). Strict workspace Clippy, format,
+vibe check, conform, codegen and wire diff pass. Final host validation is not green.
+Builder is repairing the bounded task-related authority fixture/storage, app
+source/signal handoff, Fresh and typed-error compatibility failures; possible
+baseline findings require exact proof. Production fail-closed behavior and meaningful
+positive assertions remain binding. UP-FINAL remains active until repaired validation
+and exact residual dispositions are recorded; unavailable graphical/foreign runtimes
+remain explicitly blocked. Dashboard revision369 reflects accepted functional nodes rather
 than this report alone. Final panel accounting, synchronized review documents and
 source-plan/dashboard reconciliation are the remaining closure work, not missing
 implementation or a new polishing campaign. Owner acceptance and external publication
