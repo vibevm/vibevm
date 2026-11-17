@@ -1,6 +1,30 @@
 # USER-PROJECT — architecture settled; finite completion route
 
-Canonical contract: PROP-074. Current execution: briefs/UP-FINISH-01.md.
+Canonical contract: PROP-074. Current execution: briefs/UP-COMPLETE-01.md.
+
+## Renewed full-tree mandate — 2026-11-17
+
+The owner explicitly requested the three remaining tasks and the USER-PROJECT tree.
+The earlier explicit-workflow boundary no longer permits leaving automatic routing,
+reference authority or explicit replacement behavior unimplemented. Preserve the
+accepted workflow and privacy simplification; implement the remaining scenarios.
+
+Builder executes automatic existing-context install and cancellation, canonical
+AI-native authority/consumer checks, supported remote/materialization validation,
+and shared relation-driven transport/tree integration. Architect settles explicit
+manifest layer metadata and reviews cross-cutting outcomes. Relation syntax and
+precedence are now defined by PROP-074 LAYER-EXPLICIT-RELATIONS,
+LAYER-EFFECTIVE-RELATIONS and LAYER-RELATION-TRANSPORT. No NLP inference, merged
+cross-layer locks or retired retained/native/history framework.
+
+Current base is acb259e15dd4abb57711567f22f34d580a17e35c. Ordinary scoped edits,
+checks, local commits and local sync continue without per-helper approvals. Real
+external/host/credential blockers are reported specifically; unrun validation cannot
+be called implemented or successful. Update actual original plan nodes and refresh
+the dashboard when evidence changes, not only a synthetic completion child.
+
+The remaining sections record the earlier accepted base; UP-COMPLETE-01 governs
+where its narrower scope or stop conditions conflict.
 Owner accepted the bounded workflow on 2026-11-17, then directed scoped fixation
 and continued completion. Architect owns contract/task closure; builder owns code,
 tests, documentation and integration. No external push/release is authorized.
