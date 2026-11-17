@@ -135,32 +135,49 @@ mod tests {
         assert!(message.contains("fetch-mirror.sh"), "{message}");
     }
 
-    /// Every exclusion row the gate accepts is one of the owner's, and the
-    /// committed file is exactly that set — the property `coverage.py`
-    /// enforces, asserted here too so `cargo test` says it as well.
+    /// The accepted gap set is now closed at empty. Exercise the actual
+    /// coverage owner: absence admits no exclusions, and recreating an
+    /// apparently approved row must not restore a historical waiver.
     #[test]
     fn the_exclusion_list_is_the_owners_closed_set() {
         let root = crate::repo_root().expect("repo root");
-        let text = std::fs::read_to_string(root.join(SUITE_DIR).join("exclusions.toml"))
-            .expect("read exclusions.toml");
-        // Counted over whole lines, so the file's own prose about the rules
-        // is prose and not a row.
-        let lines = |wanted: &str| text.lines().filter(|line| *line == wanted).count();
-        let rows = lines("[[exclusion]]");
-        assert_eq!(
-            rows, 14,
-            "the owner approved twelve items, which PROP-075 \
-             #VIBENVM-EXCLUSIONS-APPROVED's row rule spells as fourteen rows"
+        let suite = root.join(SUITE_DIR);
+        assert!(
+            !suite.join("exclusions.toml").exists(),
+            "the no-exclusions contract removes the file"
         );
-        assert_eq!(
-            lines("approved_by = \"owner\""),
-            rows,
-            "every row is approved by the owner"
-        );
-        assert_eq!(
-            lines("approved = \"2026-11-10\""),
-            rows,
-            "every row carries the owner's decision date"
+        let python = if cfg!(windows) { "python" } else { "python3" };
+        let status = Command::new(python)
+            .args([
+                "-I",
+                "-c",
+                r#"
+import pathlib, runpy, sys
+owner = runpy.run_path(sys.argv[1])
+path = pathlib.Path(sys.argv[2])
+assert owner['OWNER_APPROVED'] == frozenset()
+assert owner['APPROVED_ITEM_COUNT'] == 0
+rows = owner['load_exclusions'](path)
+assert rows == []
+owner['check_rows'](rows, path)
+try:
+    owner['check_rows']([{'subcommand': 'install', 'flag': '--lts',
+        'approved_by': 'owner', 'approved': '2026-11-10',
+        'item': 'historical', 'reason': 'must not reopen a closed gap'}], path)
+except owner['GateFailure']:
+    pass
+else:
+    raise AssertionError('a historical exclusion was silently readmitted')
+assert not path.exists()
+"#,
+            ])
+            .arg(suite.join("coverage.py"))
+            .arg(suite.join("exclusions.toml"))
+            .status()
+            .expect("run the coverage owner's no-exclusions check");
+        assert!(
+            status.success(),
+            "coverage must preserve the empty closed set"
         );
     }
 }
