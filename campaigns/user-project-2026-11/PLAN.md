@@ -41,7 +41,30 @@ are specified. No invented API sender, NLP replacement detector or autonomous me
 writer is a prerequisite. Original broader unimplemented behavior stays honestly
 classified, not silently marked complete.
 
-## Completed evidence
+## Current full-tree implementation frontier
+
+Automatic existing-context personal routing and cooperative-stop continuation are
+committed and locally synchronized in `082c05de1`; the tested public path includes
+repeat install, declared/locked sources, preview, pre-stop and stop at first HTTP
+metadata contact. Remote/materialization validation remains part of the final panel.
+
+Explicit layer declarations, package-owned grants, request-effective notices,
+independent user controls and layered tree epoch2 are implemented in builder's
+working tree with coherent public consumer tests. Final acceptance still requires
+the shared exact dependency projection and final committed scenario.
+
+Canonical reference authority has real Rust/TypeScript CLI and MCP evidence:
+16 expected outcomes across declared custom-root aliases, actual direct annotation
+resolution, private/undeclared direct references and undeclared configured roots.
+Per-node producer evidence isolates two workspace members. Latest lifecycle refresh,
+publication determinism and final shipping-source binding are still under review;
+these results are not full-tree acceptance.
+
+No original remaining node is marked accepted merely because this frontier report
+exists. Builder executes the connected acceptance journey in UP-COMPLETE-01, then
+commits/reviews/synchronizes outcomes and refreshes the actual dashboard source.
+
+## Accepted base evidence
 
 - Reviewed bounded root/lifecycle/boot/override/tree/compose and AI-native guard.
 - Applicable153 tests; post-move routing3/personal6/root29/orchestrator171 passed;
