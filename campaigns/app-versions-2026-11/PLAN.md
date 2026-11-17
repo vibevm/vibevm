@@ -3,9 +3,11 @@
 **Current follow-up — 2026-11-17:** implementation phases P1–P7f and the historical
 13-leg acceptance are recorded as delivered below. The original task remains active
 for current requirement/evidence reconciliation, not wholesale reimplementation.
-Current focused owner tests pass54cases; the latest whole-campaign attempt exits2
-because the pinned mirror and local package registry are absent. Windows migration
-runtime evidence remains unverified. See `REVIEW-2026-11-17.md` for exact boundaries.
+Current focused evidence includes54cases plus the public16-case selection retry.
+The authorized latest Linux whole-campaign retry passes13/13legs and differential
+18/18cases,76/76required pairs,zero exclusions. Prerequisites were fetched and
+verified without lock changes; earlier failed attempts remain recorded. Windows
+migration runtime evidence remains unverified. See `REVIEW-2026-11-17.md` for exact boundaries.
 The earlier planned/S4/S6 header was stale relative to this file's own closure report.
 Cold start: read this file, then `LOG.md` in this directory, then
 `spec://org.vibevm.core/vibevm/common/PROP-075#root`.
