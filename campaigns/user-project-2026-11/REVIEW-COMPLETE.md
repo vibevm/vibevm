@@ -198,6 +198,16 @@ the exclusion fixture is absent at both revisions. Receipt:
 classification evidence, not a claim of running the old binary. No baseline or
 assertion was edited to turn these green.
 
+Remaining-target retry evidence in
+`/fast/tmp/up-repair-remaining-canonical-targets.log` shows nine groups passing
+(4+3+5+3+1+71+1+2+2), followed by2pass/2fail in trace displacement.
+The two reinstall failures count the new truthful authority warning together with
+the distinct trace notice. Their repair must assert each expected warning exactly,
+retaining trace-state/byte invariants and no-provider-contact assertions. Later
+fail-fast commands are unrun until the corrected retry completes.
+Conform141existing/0new and canonical sync51pairs/9sets/6targets are independently
+verified on the repair subject; these do not replace the pending strict retry.
+
 ## Remaining closure accounting, not missing functional implementation
 
 1. Finish the bounded canonical-gate repairs and verify all task-related failed
