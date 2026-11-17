@@ -103,6 +103,13 @@ failures, not an unrelated baseline exemption. Builder owns bounded fixture/flow
 repair after this keep-going panel terminates; production missing-context refusal
 must remain fail-closed. Existing positive assertions must remain meaningful,
 including an annotation namespace matching the fixture's configured namespace.
+The same keep-going panel also exposed app compatibility failures in forced global
+repair (two roundtrip cases), registry failure category, local source reuse evidence,
+interrupt and wizard interruption. These are not presumed unrelated or waived.
+Builder will classify exact operation/source semantics after the panel terminates;
+count/exit/evidence assertions must not simply be relaxed. Architecture review has
+identified retained preflight conditional-default signal registration as a concrete
+handoff hypothesis for signal death, still requiring regression verification.
 No final host gate success or complete validation is claimed while these fail.
 Evidence: `/fast/tmp/up-final-self-check.log` (nonterminal at observation).
 
