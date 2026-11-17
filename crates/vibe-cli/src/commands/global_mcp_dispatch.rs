@@ -80,7 +80,7 @@ pub(crate) fn run_install(
         // writes `vibe install -g org.corp/intranet` without knowing it;
         // a probe that cannot answer falls through, so the application
         // path keeps producing its own errors exactly as before.
-        if let Some(refs) = remap::claims_install(&args, offline) {
+        if let Some(selection) = remap::claims_install(&args, offline) {
             if args.plan_only {
                 bail!(
                     "--plan-only is not supported for global remap offers; no offer was installed"
@@ -88,7 +88,7 @@ pub(crate) fn run_install(
             }
             refuse_configuration_input(&args.steps.choice, "remap package acquisition")?;
             refuse_version_file_write(&args, "a remap package")?;
-            return remap::install_packages(ctx, &args, &refs, offline);
+            return remap::install_packages(ctx, selection);
         }
         if args.plan_only {
             refuse_version_file_write(
