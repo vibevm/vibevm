@@ -237,3 +237,26 @@ verified on the repair subject; strict retry subsequently passed as recorded abo
 - Architecture, dispatch, cross-cutting review and local implementation integration
   are technically complete. Final plan/dashboard reconciliation records this boundary;
   owner whole-feature acceptance and external release are not implied.
+
+## Owner-directed residual gate completion — 2026-11-17
+
+This later result supersedes the earlier residual disposition, not the history of
+failed subjects. Fix `40f69fe5eec3a9f2ac91490ec0fb033cf8280e32` and status record
+`b66d985266915be425026dc2ee6c218d8f519169` are reviewed and locally fast-forward
+integrated. All four committed repair SHA256 values and the full log SHA match
+`/fast/tmp/up-residual-full-green-receipt.json`.
+
+The actual full canonical panel `/fast/tmp/up-residual-full-self-check.log` exits0:
+all8steps PASS, including full workspace tests(1832s), strict whole-workspace
+all-target Clippy(148s), actual1MiB startup, format, host check, conform, codegen
+and wire diff. No target skips or baseline waivers were used. Residual tests now
+exercise the typed alias refusal/no-write invariant, the actual coverage owner's
+empty exclusion set and rejection of historical waivers, and the precise added
+`version_entry.template` site while retaining the historical104-site assertion.
+
+After that frozen Linux run, only the helper's platform interpreter selection
+changed. The actual external-target binary and synthetic Linux/msys branches,
+quoted space-containing paths and1024KiB limit pass separately. These do not claim
+Windows runtime smoke. External graphical/foreign runtime/provider boundaries stay
+unchanged. The previous whole-panel FAIL remains historical evidence; the latest
+whole-panel outcome is now PASS.

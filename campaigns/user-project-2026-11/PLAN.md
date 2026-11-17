@@ -117,3 +117,13 @@ privacy or dishonest terminal-state bugs still block their supported scenario.
 No separate retained/native framework, general private allocator, secret/history
 policing, broad cleanup, credential access or toolchain changes. Deleted designs
 must not reappear as archives or future-work instructions.
+
+## Residual full-gate follow-up completed — 2026-11-17
+
+The owner-directed remaining gate fixes are reviewed and integrated through
+`b66d985266915be425026dc2ee6c218d8f519169` (fix `40f69fe5e`). Latest full canonical
+self-check exits0 with8/8PASS and no skips or baseline waivers. Exact log/file
+hashes were independently verified; REVIEW-COMPLETE.md records the frozen Linux
+subject and separately tested interpreter portability tail. Earlier failures are
+historical, not the latest residual state. External runtime limitations and owner
+acceptance/publication authority remain distinct.
