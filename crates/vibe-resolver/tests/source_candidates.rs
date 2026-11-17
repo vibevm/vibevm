@@ -108,6 +108,7 @@ fn solve(
     let roots = roots(names);
     let blocked = BTreeSet::new();
     ResolvoDepSolver::new(Borrowed(provider)).solve_source_aware(&SourceSolveRequest {
+        selected_roots: &[],
         roots: &roots,
         held_roots: &[],
         authoritative_locked: &[],
@@ -401,4 +402,112 @@ fn admitted_entry_beside_an_exclusion_keeps_its_unsatisfiability_proof() {
         solve(&provider, &["a"], SourceSolveLimits::standard_operation()),
         Err(SolveError::Unsatisfiable { .. })
     ));
+}
+
+#[test]
+fn selected_top_level_token_constrains_domain_before_dependency_solve() {
+    let dir = tempfile::tempdir().unwrap();
+    seed(dir.path(), "a", "");
+    let registry = LocalRegistry::new(dir.path()).unwrap();
+    let group = Group::parse("org.test").unwrap();
+    let selected = registry
+        .retain_default_candidate(
+            &group,
+            "a",
+            &"1.0.0".parse().unwrap(),
+            LocalCandidateKind::ExplicitRegistry,
+        )
+        .unwrap()
+        .candidate;
+    let newer = dir.path().join("org.test/a/v2.0.0");
+    std::fs::create_dir_all(&newer).unwrap();
+    std::fs::write(
+        newer.join("vibe.toml"),
+        "[package]\ngroup='org.test'\nname='a'\nkind='flow'\nversion='2.0.0'\n",
+    )
+    .unwrap();
+    let provider = LocalRegistryDepProvider::new(&registry);
+    let requested = roots(&["a"]);
+    let blocked = BTreeSet::new();
+    let selected_roots = [selected];
+    let request = SourceSolveRequest {
+        selected_roots: &selected_roots,
+        roots: &requested,
+        held_roots: &[],
+        authoritative_locked: &[],
+        activated: &[],
+        limits: SourceSolveLimits::standard_operation(),
+        configuration: None,
+        blocked: &blocked,
+        recommends: false,
+    };
+    let solved = ResolvoDepSolver::new(Borrowed(&provider))
+        .solve_source_aware(&request)
+        .unwrap();
+    assert_eq!(solved.graph.packages[0].version.to_string(), "1.0.0");
+    assert_eq!(
+        solved.selected[&(group.clone(), "a".into())]
+            .candidate
+            .metadata_digest(),
+        selected_roots[0].metadata_digest()
+    );
+    let mut conflicting = roots(&["a"]);
+    conflicting[0].requirement.alternatives[0].reference =
+        PackageRef::parse("org.test/a@2").unwrap();
+    let request = SourceSolveRequest {
+        roots: &conflicting,
+        ..request
+    };
+    assert!(
+        ResolvoDepSolver::new(Borrowed(&provider))
+            .solve_source_aware(&request)
+            .is_err()
+    );
+}
+
+#[test]
+fn selected_root_does_not_promote_policy_ineligible_or_foreign_owner() {
+    let dir = tempfile::tempdir().unwrap();
+    seed(dir.path(), "a", "");
+    let registry = LocalRegistry::new(dir.path()).unwrap();
+    let group = Group::parse("org.test").unwrap();
+    let selected = registry
+        .retain_default_candidate(
+            &group,
+            "a",
+            &"1.0.0".parse().unwrap(),
+            LocalCandidateKind::ExplicitRegistry,
+        )
+        .unwrap()
+        .candidate;
+    let requested = roots(&["a"]);
+    let blocked = BTreeSet::new();
+    let chosen = [selected];
+    let request = SourceSolveRequest {
+        selected_roots: &chosen,
+        roots: &requested,
+        held_roots: &[],
+        authoritative_locked: &[],
+        activated: &[],
+        limits: SourceSolveLimits::standard_operation(),
+        configuration: None,
+        blocked: &blocked,
+        recommends: false,
+    };
+    let denied = Forced {
+        inner: LocalRegistryDepProvider::new(&registry),
+        deny: "a".into(),
+    };
+    assert!(
+        ResolvoDepSolver::new(Borrowed(&denied))
+            .solve_source_aware(&request)
+            .is_err()
+    );
+    let foreign = LocalRegistry::new(dir.path()).unwrap();
+    let provider = LocalRegistryDepProvider::new(&foreign);
+    assert!(
+        ResolvoDepSolver::new(Borrowed(&provider))
+            .solve_source_aware(&request)
+            .is_err()
+    );
 }

@@ -115,6 +115,7 @@ fn mocked_selection<'a>(
     request: &vibe_resolver::SourceSolveRequest<'a>,
 ) -> vibe_resolver::SourceSolveRequest<'a> {
     vibe_resolver::SourceSolveRequest {
+        selected_roots: request.selected_roots,
         roots: request.roots,
         held_roots: request.held_roots,
         authoritative_locked: &[],

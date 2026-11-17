@@ -4,6 +4,14 @@ use super::*;
 use vibe_registry::short_name::{NameLookup, ShortNameCandidates};
 
 impl InstallResolver {
+    /// Preflight returns this resolver's existing source token, not a path recipe.
+    pub fn select_top_level(
+        &self,
+        reference: &PackageRef,
+    ) -> Result<vibe_registry::source_candidates::RetainedSourceCandidate, vibe_resolver::SolveError>
+    {
+        crate::cells::select_top_level_cell(self.provider_resource(), reference)
+    }
     pub(super) fn held_for(&self, pkg: &PackageRef) -> Option<&MultiRegistryResolver> {
         let group = pkg.group.as_ref()?;
         let held = match self {

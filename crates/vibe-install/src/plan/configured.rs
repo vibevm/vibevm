@@ -45,6 +45,7 @@ impl<S: InstallSource + ?Sized> InstallSource for PlanningSource<'_, S> {
         request: &vibe_resolver::SourceSolveRequest<'_>,
     ) -> Result<vibe_resolver::SourceResolvedGraph, SolveError> {
         let bound = vibe_resolver::SourceSolveRequest {
+            selected_roots: request.selected_roots,
             roots: request.roots,
             held_roots: request.held_roots,
             authoritative_locked: request.authoritative_locked,

@@ -58,6 +58,10 @@ impl RetainedSourceCandidate {
     pub fn source_evidence(&self) -> &SourceEvidence {
         &self.0.evidence
     }
+    /// Whether both observations were minted by the same original source owner.
+    pub fn same_owner(&self, other: &Self) -> bool {
+        Arc::ptr_eq(&self.0.owner, &other.0.owner)
+    }
 
     pub(crate) fn captured(
         owner: &Arc<()>,

@@ -42,6 +42,7 @@ impl InstallSource for Source {
         // Like the incumbent per-root solve, this resolver holds no lock rows,
         // so it does not re-adjudicate the project lock's recorded selection.
         let unlocked = vibe_resolver::SourceSolveRequest {
+            selected_roots: request.selected_roots,
             roots: request.roots,
             held_roots: request.held_roots,
             authoritative_locked: &[],
