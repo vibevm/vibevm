@@ -886,3 +886,275 @@ same as earning one.
    The entrypoint is a build input, so every such edit is a cache write. The
    remedy is repository hygiene, and `vibe` will not take it on your behalf:
    it never summarises, shortens, reorders or filters authored instructions.
+
+## Personal specification boot
+
+### Quickstart: one personal setup, then ordinary project launches
+
+Use the explicit `--user-project` selector as the normal supported interface.
+Examples below assume a POSIX shell, an absolute existing project path, and a
+specification package available in a registry you trust. Replace the example
+package coordinates and paths; they are not public packages to download.
+
+```sh
+PROJECT=/absolute/path/to/your/project
+REGISTRY=/absolute/path/to/your/spec-package-registry
+
+vibe user init
+vibe user status --json                 # reports <settings>/user-project
+vibe install -g --user-project org.example/preferences --registry "$REGISTRY"
+vibe list -g
+vibe check -g
+```
+
+`<settings>` is the existing settings location (`VIBE_SETTINGS` when explicitly
+set, otherwise the normal user settings). Use the root reported by status, not a
+path inferred from your current directory. The personal root is separate from
+both the selected project and MCP service settings. Initialization alone does
+not compile boot; ordinary installation does.
+
+To author your own preference or an authorized user-memory record, create a
+Markdown file such as `<reported-root>/vibevm/vibespecs/boot/preferences.md`,
+then run `vibe install -g --user-project --registry "$REGISTRY"` to regenerate
+its boot INDEX. Repeat the registry option while it is not declared persistently
+in the personal manifest; the first install does not save that option. For
+example: “Prefer concise examples; ask before remembering sensitive personal
+facts.” An edit to an already indexed file is read on the **next launch**; a
+new file needs ordinary INDEX regeneration. User-specific preferences belong
+here; build decisions and facts collaborators need belong in the project.
+Never put credentials in either boot or memory. A durable authored opt-out can
+name a different memory mechanism; this is guidance, not an automatic memory
+writer or a harness-memory import.
+
+Prepare the selected project through its ordinary installation. For launch
+transport, it must also have a SYSTEM template as described in section 9, and an
+existing launcher configured for your harness:
+
+```sh
+vibe install --path "$PROJECT"          # ordinary shared project requirements
+vibe prompt build --path "$PROJECT"     # after opting into SYSTEM-TEMPLATE.md
+cd "$PROJECT"
+vibe agent YOUR_CONFIGURED_LAUNCHER
+```
+
+The next launch receives project boot, then personal boot. Shared project
+SYSTEM/AGENT artifacts stay unchanged by personal edits. A classic/no-template
+entrypoint instead supplies late file-reading instructions; it does not inject
+a launch carrier or establish that a model followed those instructions.
+
+For an additional preference used only with this project:
+
+```sh
+vibe user override init --alias work --path "$PROJECT"
+vibe user override status --path "$PROJECT" --json  # reports override root
+# Substitute that reported root below:
+vibe install org.example/work-preferences --path /reported/override/root --registry "$REGISTRY"
+vibe user override disable --path "$PROJECT"       # absent from next launch
+vibe user override enable --path "$PROJECT"        # present again next launch
+# Only when explicitly attaching the same alias to a new checkout:
+vibe user override bind --alias work --path /absolute/path/to/new-checkout
+
+vibe tree --layers --plain --path "$PROJECT"
+vibe prompt compose --path "$PROJECT" --session-target os=linux
+```
+
+Override packages and authored files use their own ordinary project root; they
+are not installed with `-g --user-project`. For new authored override boot
+files, regenerate with `vibe install --path /reported/override/root --registry
+"$REGISTRY"`, or declare the registry persistently in that override's own
+manifest. The initial override install does not persist `--registry`. Enabled
+override boot comes after personal boot, without permission to replace safety,
+attribution, commit discipline or unmarked project rules. Controls affect the
+next launch, not instructions already loaded in a running session. Use your
+actual target OS for compose (`linux`, `macos`, or `windows`). The returned
+composed file is private text, not a provider request. **Do not commit or publish
+`vibevm/vibespecs/boot/local/`**; ignore rules cannot sanitize tracked Git history.
+
+Personal package maintenance uses the same explicit destination:
+
+```sh
+vibe update -g --user-project
+vibe uninstall -g --user-project org.example/preferences
+```
+
+Keep durable source/registry policy in the personal manifest if later updates
+need it; a one-command `--registry` is not a promise to rewrite that policy.
+For the local-registry example, add this ordinary declaration to
+`<reported-personal-root>/vibe.toml` before updating (use your real registry URI):
+
+```toml
+[[registry]]
+name = "my-specifications"
+url = "file:///absolute/path/to/your/spec-package-registry"
+```
+
+The offline walkthrough uses this declaration, publishes a synthetic newer
+version, then verifies update and uninstall through the next actual launch.
+Uninstall removes the dependency, not your authored preference/memory files.
+Absent/unavailable optional boot layers diagnose and skip; explicit lifecycle
+operations require a valid initialized root. Automatic `install -g` into an
+existing declared/locked personal context is not supported: use the explicit
+selector above. Inferred global `--stop-file` has the same explicit-route
+remedy. Global remap `--plan-only` is unsupported and refuses without adopting
+an offer. No full automatic source-policy parity is claimed.
+
+**Runnable offline walkthrough:** build the current CLI, then run the following
+on Linux with Python 3.11+. It creates a fresh scratch directory, synthetic local
+registry, isolated settings/home and an argv-recording launcher. It runs this
+whole lifecycle including live memory edits, override toggles/binding, tree,
+compose, update and uninstall; it calls no provider and leaves a `RESULTS.json`.
+Use a scratch parent with enough disk space, not a RAM-backed temporary mount.
+
+```sh
+cargo build -p vibe-cli --offline
+python3 -I docs/system-prompt/user-project-onboarding.py /absolute/path/to/target/debug/vibe /scratch/parent
+```
+
+The walkthrough records its own hash, binary hash, each CLI result and behavioral
+checks. It proves local delivery transport, not model compliance, autonomous
+memory writing, graphical Electron operation or API/provider consumption.
+
+For the global PROP-074 coverage, remaining limits and practical release scope,
+see [USER-PROJECT status](USER-PROJECT-STATUS.md).
+
+### Delivery behavior and boundaries
+
+`vibe user init` initializes the separate personal specification project under
+`<settings>/user-project`; it does not initialize or migrate the MCP service
+project. Install its requirements with `vibe install -g --user-project <pkgref>`.
+Use `vibe list -g`, `vibe check -g`, and explicit personal `update`/`uninstall`
+for ordinary lifecycle operations. Automatic global installation currently
+supports only a personal project without an existing declared/locked source
+context; otherwise it refuses with the explicit `--user-project` remedy rather
+than changing the selected source or ignoring personal policy. Application and
+literal `mcp:` routing retain their separate destinations.
+
+For an opted-in project using **launch delivery**, `vibe agent <launcher>` adds
+the current personal boot after the complete project lane. Its local composed
+carrier lives under the selected node's `vibevm/vibespecs/boot/local/`, with an
+in-directory `.gitignore` containing `*`. A personal edit is read at the next
+launch; the shared `SYSTEM.md` and `AGENT-LANE.md` never receive personal bytes.
+Absent personal boot creates no local carrier. An unavailable personal layer
+is skipped with a diagnostic; the project lane remains usable. `vibe prompt
+flags` still prints the project-only flags and does not create personal output.
+`vibe prompt capture` includes the optional personal layer in the captured
+request. Classic/no-template reading instructions are described below; actual
+provider/API consumption is not established by this launch increment.
+
+Ordinary filesystem-copy publication excludes the reserved boot `local/`
+subtree before descending into it. **Do not commit or publish personal/composed
+boot files.** Ignore rules do not protect files already tracked by Git and do
+not prevent `git add -f`. Explicit faithful Git history publication is not a
+secret scanner or a sanitizing export. Credentials are not boot or memory
+content. Launch transport tests use an argv-recording shim, not a real model;
+they demonstrate the file passed to the harness, not model compliance.
+
+### Classic discovery and memory guidance
+
+Fresh ordinary entrypoints also carry a late personal-discovery instruction;
+it does not require `SYSTEM-TEMPLATE.md`. After the complete project boot it
+uses only a settings/home location already exposed to the session, respecting
+`VIBE_SETTINGS`, and skips unknown or unsafe locations rather than running a
+command or guessing a path. It never imports the personal project's instruction
+entrypoints as another project router. This is a generated reading contract,
+not a measurement of a model following it.
+
+Classic and request-local personal boot share memory guidance: remember
+user-specific facts as ordinary authored personal specification records when
+authorized, keep collaborator-relevant project facts in the repository, and
+never record credentials. An explicit durable opt-out in the loaded user snippet
+selects the user's chosen alternative memory mechanism. No preference parser,
+automatic migration from harness memory, new configuration key or boot-time
+memory write is introduced. A personal record is seen next session only when
+boot-indexed or explicitly linked from the user's authored boot snippet;
+placing a file arbitrarily under `vibespecs` does not auto-enroll it. The explicit
+authored-record → ordinary INDEX regeneration → next-process read scenario is
+tested, including live edits and opt-out preservation. This is not autonomous
+model fact-writing or permission to initialize an absent root during memory use.
+
+### Explicit project overrides
+
+Create an independent override project with:
+
+```sh
+vibe user override init --alias work --path /path/to/project
+vibe user override status --path /path/to/project
+```
+
+Status reports its root. Install its packages using ordinary `vibe install
+--path <reported-root>`; its manifest, lock and boot remain separate. Capture
+and launch composition append an enabled compiled override after global personal
+boot. `vibe user override disable --path <project>` preserves its files and
+removes it from the next request; `enable` requires a valid existing project.
+Already loaded instructions are not removed from a running session.
+
+Linked Git worktrees of the same common directory and selected project node
+share a binding; branches do not select different overrides. A fresh clone or
+moved non-Git checkout is not guessed from its name or remote. Attach it explicitly
+with `vibe user override bind --alias work --path <new-checkout>`. Bind preserves
+the enabled state. Alias conflicts refuse; no implicit reassignment occurs.
+Bindings live only under settings, and ordinary status/boot lookup never creates
+them. Broken optional override boot is skipped without disabling the project or
+personal layer. Classic entrypoints describe read-only lookup of an existing
+enabled binding after personal boot; unknown identity is skipped, never guessed.
+Console tree controls use the same binding owner, as described below.
+
+### Layered tree read model
+
+`vibe tree --layers --json` is an explicit separate `tree:layers` envelope;
+the frozen `vibe tree --json` project document is unchanged. `--layers --plain`
+shows the same ordered project/user/override attribution. The project payload
+is the ordinary tree; each available local layer has its own independent tree.
+A package coordinate is scoped by its layer, so equal coordinates in different
+stores are not merged or claimed as replacements. Disabled and unavailable
+layers remain visible as descriptors; enabled plus available describes additive
+participation, not proof that arbitrary preference text overrides a project rule.
+The console layer browser uses the same descriptors: Up/Down selects a layer,
+Space hides/shows it only in the view, and Enter explicitly enables/disables a
+bound project override for the next session. Project/global-user loading controls
+are reported as unsupported, not faked. A failed control leaves the displayed
+state unchanged until a fresh observation. `--terminal --layers` forwards this
+console view through the existing terminal launcher. Hosted-PTY tests verify
+icon upgrade/revert and the same hide/enable controls; graphical Electron
+smoke remains unrun.
+
+### AI-native local-layer boundary
+
+The shared specmap engine rejects configured spec roots that resolve into the
+current personal project, project-overrides store, or reserved project boot/local
+subtree when analyzing another project. Existing aliases are resolved before the
+component containment check; ordinary external dependency roots remain supported.
+A personal/override project can analyze its own specifications independently,
+without gaining access to sibling layers. Composed boot/local content is never a
+specification authority or part of project coverage. Rust/TypeScript CLI and MCP
+consumers receive the canonical guard through the existing engine sync owner.
+This is a bounded current-root exclusion, not a new complete dependency-authority
+model, automatic secret scan, or proof of native vibeterm layer parity.
+
+### Explicit full-prefix composition
+
+`vibe prompt compose --path <project> --session-target os=linux` explicitly
+publishes a private `boot/local/SYSTEM-<hash>.md` and prints its path; `--json`
+returns the registered `prompt:compose` artifact report. It sends nothing to a
+provider. The ordinary shared `SYSTEM.md` is an exact byte-identical leading
+part, followed by current project continuation and then user/override layers.
+Personal edits produce a different local content-addressed artifact; disabled
+or broken optional layers are not silently reused from an older composition.
+Without optional layers the answer is the existing project `SYSTEM.md`, with
+no local directory created. This full prefix is separate from the launch-only
+AGENT carrier, which deliberately omits the harness's already loaded entrypoint.
+Capture/flags/status retain their read-only behavior. An API caller may consume
+the reported text artifact; actual provider consumption is not established by
+composition or capture alone.
+
+Global remap offers retain their dedicated owner. `install -g <remap>
+--plan-only` currently refuses explicitly rather than recording an offer while
+pretending to preview. Ordinary project previews still report required remaps
+without adopting them. This explicit limitation is not full global-remap preview
+support or proof that all global routing source-continuation cases are complete.
+
+Inferred global personal install with `--stop-file` currently refuses before
+source preflight with an explicit `-g --user-project` remedy. The explicit
+personal route supports cooperative cancellation and pre-existing stop input.
+This limitation does not enable cancellation for legacy application/MCP/remap
+routes or establish full inferred routing/cancellation parity.
