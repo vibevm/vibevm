@@ -107,9 +107,21 @@ The same keep-going panel also exposed app compatibility failures in forced glob
 repair (two roundtrip cases), registry failure category, local source reuse evidence,
 interrupt and wizard interruption. These are not presumed unrelated or waived.
 Builder will classify exact operation/source semantics after the panel terminates;
-count/exit/evidence assertions must not simply be relaxed. Architecture review has
-identified retained preflight conditional-default signal registration as a concrete
-handoff hypothesis for signal death, still requiring regression verification.
+count/exit/evidence assertions must not simply be relaxed. Code review confirmed
+that original explicit-local app ownership executes from the local registry tree,
+whereas routed selection currently supplies a cached tree. The narrow repair must
+retain exact held selection while preserving the original local execution/source
+semantics; neither a new latest-selection pass nor weaker execution-count assertions
+is acceptable. Architecture review also identified retained preflight
+conditional-default signal registration as a concrete handoff hypothesis for signal
+death, still requiring regression verification.
+Later lifecycle cases exposed another bounded defect: the authority refresh helper's
+scratch storage override disables the existing verified read-only store, so offline
+locked metadata refresh can fail after durable changes. The repair must retain private
+acquisition and offline operation while consulting the ordinary verified store;
+no new fetch/solver framework is authorized. Foreign-explain fixtures share the
+missing-context preparation issue; boot-text expectations must distinguish the
+mandatory project router from optional personal lane alternatives.
 No final host gate success or complete validation is claimed while these fail.
 Evidence: `/fast/tmp/up-final-self-check.log` (nonterminal at observation).
 
