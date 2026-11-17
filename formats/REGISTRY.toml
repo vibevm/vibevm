@@ -2160,7 +2160,7 @@ sunset = "none"
 
 # Private local binding metadata; no remotes or credentials.
 [format.user-override-bindings]
-epoch = 1
+epoch = 2
 schema = "none"
 recoverable = false
 foreign_parsers = "ours"
@@ -2169,8 +2169,8 @@ corpus = "none"
 sunset = "none"
 
 [format.cli-layered-tree]
-epoch = 1
-schema = "crates/vibe-cli/resources/layered-tree.schema.v1.json"
+epoch = 2
+schema = "crates/vibe-cli/resources/layered-tree.schema.v2.json"
 recoverable = true
 foreign_parsers = "many"
 corpus = "none"
@@ -2181,5 +2181,15 @@ epoch = 1
 schema = "schemas/prompt_compose.jtd.json"
 recoverable = true
 foreign_parsers = "many"
+corpus = "none"
+sunset = "none"
+
+# Private derived authority from ordinary install; canonical neutral DTO.
+[format.specmap-authority]
+epoch = 1
+schema = "vibevm/vibepacks/org.vibevm.ai-native/core-ai-native/v1.0.0/schemas/specmap_authority.jtd.json"
+recoverable = true
+foreign_parsers = "ours"
+unknown_fields = "deny"
 corpus = "none"
 sunset = "none"

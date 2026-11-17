@@ -95,7 +95,19 @@ pub(super) fn execute_after_open(
     trace: Option<&TraceRun>,
 ) -> CommandExit<RegisteredReportDraft> {
     let identity = UpdateIdentity::from_args(execution.selection.root(), &execution.args);
-    match run(ctx, execution, roots, trace) {
+    let result = run(ctx, execution, roots, trace).and_then(|mut draft| {
+        if draft.delegation.is_none()
+            && let Err(error) =
+                super::super::authority_refresh::refresh(ctx, &identity.project_root)
+        {
+            draft.ok = false;
+            return Err(compile_trace::carry_measured(error, || {
+                RegisteredReportDraft::Update(Box::new(draft))
+            }));
+        }
+        Ok(draft)
+    });
+    match result {
         Ok(draft) => {
             let parked = draft.delegation.is_some();
             let draft = RegisteredReportDraft::Update(Box::new(draft));

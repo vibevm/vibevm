@@ -82,25 +82,24 @@ pub struct Manifest {
     /// exclusive with `package`.
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub project: Option<ProjectSection>,
-
     /// `[package]` — identity of a publishable artifact. Mutually exclusive
     /// with `project`.
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub package: Option<PackageMeta>,
-
     /// `[template]` — where a template package's produced versions and
     /// digests come from (PROP-075 `#TEMPLATE-SPELLING`). Legal only
     /// beside `[package] template = true`, and refused without it, so the
     /// table and the flag cannot disagree.
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub template: Option<super::TemplateSection>,
-
     /// `[system_prompt]` — tuning for the generated cache-stable prefix
     /// (PROP-076 `#SYS-MANIFEST-TABLE`). Legal on every role; refused
     /// without the `SYSTEM-TEMPLATE.md` that is the opt-in.
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub system_prompt: Option<super::SystemPromptSection>,
 
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub layers: Option<super::LayersSection>,
     /// `[application]` — optional package-owned user-local application metadata.
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub application: Option<ApplicationDecl>,

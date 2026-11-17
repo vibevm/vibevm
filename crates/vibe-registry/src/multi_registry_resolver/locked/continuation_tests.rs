@@ -54,13 +54,8 @@ fn continued_payload_cannot_replay_same_manifest_and_hash_from_a_different_commi
         row,
         revision: LockedRevision::Replay,
     };
-    assert!(
-        held.verify("sha256:aabbccdd", Some(&first))
-            .is_ok()
-    );
-    let error = held
-        .verify("sha256:aabbccdd", Some(&second))
-        .unwrap_err();
+    assert!(held.verify("sha256:aabbccdd", Some(&first)).is_ok());
+    let error = held.verify("sha256:aabbccdd", Some(&second)).unwrap_err();
     assert!(error.to_string().contains("commit differs"));
     assert!(held.verify("sha256:11223344", Some(&first)).is_err());
 }

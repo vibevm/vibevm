@@ -5386,6 +5386,7 @@ name = "vibe-workspace"
 version = "1.0.11"
 dependencies = [
  "command-group",
+ "core-ai-native-specmap",
  "core-ai-native-specmark",
  "glob",
  "libc",

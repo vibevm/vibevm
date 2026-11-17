@@ -40,7 +40,7 @@ impl Browser {
         }
     }
     fn lines(&self) -> Vec<String> {
-        let mut lines = vec!["Layers: Up/Down select · Space hide/show · Enter enable/disable override · PgUp/PgDn scroll · Esc quit".into()];
+        let mut lines = vec!["Layers: Up/Down select · Space hide/show · Enter enable/disable personal/override · PgUp/PgDn scroll · Esc quit".into()];
         for (index, layer) in self.layers.iter().enumerate() {
             lines.push(format!(
                 "{} {} [{}] {} — {}",
@@ -70,6 +70,7 @@ impl Browser {
             if let Some(text) = text {
                 lines.extend(text.lines().map(str::to_owned));
             }
+            lines.extend(selected.relations.iter().map(|r| r.display_line()));
             lines.extend(selected.diagnostics.iter().cloned());
         }
         lines
@@ -95,8 +96,9 @@ impl Browser {
             KeyCode::PageUp => self.offset = self.offset.saturating_sub(10),
             KeyCode::Char(' ') => self.hidden[self.selected] = !self.hidden[self.selected],
             KeyCode::Enter => {
-                if self.layers[self.selected].id != "override" {
-                    self.message="Enable/disable is supported only for a bound project override; hide/show changes this view only".into();
+                if self.layers[self.selected].id == "project" {
+                    self.message =
+                        "The project layer is mandatory; hide/show changes this view only".into();
                 } else if !controls {
                     self.message =
                         "Persisted controls are unavailable in read-only rendering".into();
@@ -118,19 +120,22 @@ impl Browser {
                         true,
                         crate::cli::AgentModeArg::Auto,
                     );
-                    match crate::commands::user_override::run(
-                        &quiet,
-                        command,
-                        &vibe_core::cancellation::CancellationToken::new(),
-                    ) {
+                    let token = vibe_core::cancellation::CancellationToken::new();
+                    let result = if self.layers[self.selected].id == "user" {
+                        crate::commands::user_override::set_user_enabled(
+                            &quiet, &self.root, !enabled, &token,
+                        )
+                    } else {
+                        crate::commands::user_override::run(&quiet, command, &token)
+                    };
+                    match result {
                         Ok(()) => {
                             self.layers = collect(&self.root);
-                            self.message="Override loading changed for the next session; current session instructions are unchanged".into();
+                            self.message="Layer loading changed for the next session; current session instructions are unchanged".into();
                         }
                         Err(_) => {
                             self.message =
-                                "Override control refused; inspect `vibe user override status`"
-                                    .into()
+                                "Layer control refused; inspect `vibe tree --layers --plain`".into()
                         }
                     }
                 }
@@ -198,7 +203,7 @@ mod tests {
         Event::Key(KeyEvent::new(code, KeyModifiers::NONE))
     }
     #[test]
-    fn hide_is_view_only_and_global_loading_control_is_explicitly_unsupported() {
+    fn hide_is_view_only_and_read_only_rendering_cannot_persist_controls() {
         let root = tempfile::tempdir().unwrap();
         std::fs::write(
             root.path().join("vibe.toml"),
@@ -214,6 +219,7 @@ mod tests {
                 root: None,
                 tree: None,
                 diagnostics: vec![],
+                relations: vec![],
             },
             Layer {
                 id: "user",
@@ -222,6 +228,7 @@ mod tests {
                 root: None,
                 tree: None,
                 diagnostics: vec![],
+                relations: vec![],
             },
             Layer {
                 id: "override",
@@ -230,6 +237,7 @@ mod tests {
                 root: None,
                 tree: None,
                 diagnostics: vec![],
+                relations: vec![],
             },
         ];
         let mut app = Browser::new(root.path(), &tree, layers);
@@ -238,7 +246,7 @@ mod tests {
         assert!(app.hidden[1]);
         assert!(app.layers[1].enabled);
         let _ = app.handle(&key(KeyCode::Enter), false).unwrap();
-        assert!(app.message.contains("supported only"));
+        assert!(app.message.contains("read-only"));
         assert!(app.layers[1].enabled);
         let mut buf = Buffer::empty(Rect::new(0, 0, 120, 25));
         render(buf.area, &mut buf, &mut app, &mut Global::default()).unwrap();

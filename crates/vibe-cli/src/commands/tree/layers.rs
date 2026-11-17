@@ -14,6 +14,7 @@ pub(super) struct Layer {
     pub(super) root: Option<String>,
     pub(super) tree: Option<PackageTree>,
     pub(super) diagnostics: Vec<String>,
+    pub(super) relations: Vec<vibe_workspace::layer_relations::Relation>,
 }
 #[derive(Serialize)]
 struct LayeredTree<'a> {
@@ -31,6 +32,7 @@ fn observe(id: &'static str, root: Option<PathBuf>, enabled: bool) -> Layer {
         root: root.as_deref().map(vibe_core::machine_json_path),
         tree: None,
         diagnostics: Vec::new(),
+        relations: Vec::new(),
     };
     let Some(root) = root else {
         return layer;
@@ -66,8 +68,13 @@ fn observe(id: &'static str, root: Option<PathBuf>, enabled: bool) -> Layer {
     layer
 }
 pub(super) fn collect(root: &Path) -> Vec<Layer> {
+    let control = super::super::user_override::user_enabled(root);
     let personal = match vibe_core::user_project::admit_root(vibe_core::settings::settings_dir()) {
-        Ok(root) => observe("user", Some(root), true),
+        Ok(root) => observe(
+            "user",
+            Some(root),
+            control.as_ref().copied().unwrap_or(false),
+        ),
         Err(_) => Layer {
             id: "user",
             enabled: true,
@@ -75,6 +82,7 @@ pub(super) fn collect(root: &Path) -> Vec<Layer> {
             root: None,
             tree: None,
             diagnostics: vec!["settings root unavailable".into()],
+            relations: Vec::new(),
         },
     };
     let override_layer = match super::super::user_override::observed_root(root) {
@@ -87,9 +95,10 @@ pub(super) fn collect(root: &Path) -> Vec<Layer> {
             root: None,
             tree: None,
             diagnostics: vec!["override binding unavailable".into()],
+            relations: Vec::new(),
         },
     };
-    vec![
+    let mut layers = vec![
         Layer {
             id: "project",
             enabled: true,
@@ -97,10 +106,42 @@ pub(super) fn collect(root: &Path) -> Vec<Layer> {
             root: Some(vibe_core::machine_json_path(root)),
             tree: None,
             diagnostics: Vec::new(),
+            relations: Vec::new(),
         },
         personal,
         override_layer,
-    ]
+    ];
+    if let Err(error) = control {
+        layers[1].state = "unavailable";
+        layers[1]
+            .diagnostics
+            .push(format!("invalid personal layer control: {error}"));
+    }
+    let resolved = super::super::layer_selection::relations(root);
+    for layer in &mut layers {
+        let name = match layer.id {
+            "project" => vibe_core::manifest::LayerName::Project,
+            "user" => vibe_core::manifest::LayerName::User,
+            _ => vibe_core::manifest::LayerName::Override,
+        };
+        if resolved.denied_layers.contains(&name) {
+            layer.state = "denied";
+        }
+        layer.relations = resolved
+            .relations
+            .iter()
+            .filter(|r| r.layer == name)
+            .cloned()
+            .collect();
+        layer.diagnostics.extend(
+            resolved
+                .diagnostics
+                .iter()
+                .filter(|(l, _)| *l == name)
+                .map(|(_, d)| d.clone()),
+        );
+    }
+    layers
 }
 
 pub(super) fn run(
@@ -116,7 +157,7 @@ pub(super) fn run(
     let report = LayeredTree {
         ok: true,
         command: "tree:layers",
-        schema_version: 1,
+        schema_version: 2,
         project: tree,
         layers,
     };
@@ -138,6 +179,9 @@ pub(super) fn run(
         }
         if let Some(tree) = &layer.tree {
             print!("{}", plain::render(tree));
+        }
+        for relation in &layer.relations {
+            println!("  {}", relation.display_line());
         }
         for diagnostic in &layer.diagnostics {
             println!("  {diagnostic}");

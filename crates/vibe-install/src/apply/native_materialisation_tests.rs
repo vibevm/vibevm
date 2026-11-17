@@ -198,6 +198,7 @@ fn exercise(filter: bool) {
         configuration: None,
     }];
     let planned = PlannedInstall {
+        node_roots: Default::default(),
         project_root: project.clone(),
         request: crate::InstallRequest {
             roots: vec![PackageRef::parse("org.vibevm/giant").unwrap()],

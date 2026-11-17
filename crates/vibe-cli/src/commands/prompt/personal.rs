@@ -45,27 +45,74 @@ pub(super) fn layered_blocks(
     target: Option<TargetOs>,
     project: &std::path::Path,
 ) -> Vec<Block> {
-    let mut blocks = blocks(ctx, target);
-    let loaded = crate::commands::user_override::selected_root(project)
-        .and_then(|root| root.map(|root| load(&root, target)).transpose());
-    match loaded {
-        Ok(Some(mut layer)) => {
-            layer.retain(|block| block.path != "personal:memory-policy");
-            for block in &mut layer {
-                block.band = Band::Override;
-                block.path = block.path.replacen("personal:", "override:", 1);
-                if block.path == "override:precedence" {
-                    block.text = "Project override preferences supplement the project and take precedence over general personal preferences only for rules the project marks overridable. Safety, attribution, commit discipline and all unmarked project rules remain binding; report conflicts.\n".into();
-                    block.sha256 = sha256_hex(block.text.as_bytes());
-                }
-            }
-            blocks.extend(layer);
+    let user_enabled = match crate::commands::user_override::user_enabled(project) {
+        Ok(value) => value,
+        Err(error) => {
+            ctx.diagnostic(&format!("personal control unavailable: {error}"));
+            false
         }
-        Ok(None) => {}
-        Err(_) => ctx
-            .diagnostic("project override boot skipped: binding or compiled layer is unavailable"),
+    };
+    let mut personal = if user_enabled {
+        blocks(ctx, target)
+    } else {
+        Vec::new()
+    };
+    let mut override_blocks = match crate::commands::user_override::selected_root(project)
+        .and_then(|root| root.map(|root| load(&root, target)).transpose())
+    {
+        Ok(Some(blocks)) => blocks,
+        Ok(None) => Vec::new(),
+        Err(error) => {
+            ctx.diagnostic(&format!("override boot skipped: {error}"));
+            Vec::new()
+        }
+    };
+    // Effective relations belong to this request's actually admitted block set.
+    // A failed/gated higher layer cannot supersede a surviving lower layer.
+    let relations = crate::commands::layer_selection::relations_for_delivery(
+        project,
+        Some((!personal.is_empty(), !override_blocks.is_empty())),
+    );
+    for (_, diagnostic) in &relations.diagnostics {
+        ctx.diagnostic(diagnostic);
     }
-    blocks
+    if relations
+        .denied_layers
+        .contains(&vibe_core::manifest::LayerName::User)
+    {
+        personal.clear();
+    }
+    if relations
+        .denied_layers
+        .contains(&vibe_core::manifest::LayerName::Override)
+    {
+        override_blocks.clear();
+    }
+    prepend_notice(
+        &mut personal,
+        &relations,
+        vibe_core::manifest::LayerName::User,
+        Band::Personal,
+        "personal:relations",
+    );
+    override_blocks.retain(|block| block.path != "personal:memory-policy");
+    for block in &mut override_blocks {
+        block.band = Band::Override;
+        block.path = block.path.replacen("personal:", "override:", 1);
+        if block.path == "override:precedence" {
+            block.text="Project override preferences supplement the project and take precedence over general personal preferences only for rules the project marks overridable. Safety, attribution, commit discipline and all unmarked project rules remain binding; report conflicts.\n".into();
+            block.sha256 = sha256_hex(block.text.as_bytes());
+        }
+    }
+    prepend_notice(
+        &mut override_blocks,
+        &relations,
+        vibe_core::manifest::LayerName::Override,
+        Band::Override,
+        "override:relations",
+    );
+    personal.extend(override_blocks);
+    personal
 }
 
 fn blocks(ctx: &output::Context, target: Option<TargetOs>) -> Vec<Block> {
@@ -173,4 +220,27 @@ fn load(root: &std::path::Path, target: Option<TargetOs>) -> Result<Vec<Block>> 
         });
     }
     Ok(blocks)
+}
+
+fn prepend_notice(
+    blocks: &mut Vec<Block>,
+    relations: &vibe_workspace::layer_relations::Resolution,
+    layer: vibe_core::manifest::LayerName,
+    band: Band,
+    path: &str,
+) {
+    let text = relations.notice(layer);
+    if !blocks.is_empty() && !text.is_empty() {
+        blocks.insert(
+            0,
+            Block {
+                band,
+                role: Role::Instruction,
+                path: path.into(),
+                sha256: sha256_hex(text.as_bytes()),
+                offset: 0,
+                text,
+            },
+        );
+    }
 }

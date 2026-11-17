@@ -187,6 +187,7 @@ pub(super) fn apply(
         .context("native-aware Ready apply returned no runtime sidecar")?;
     lifecycle_run.native = Some(super::outcome::NativeInstallContext::new(native, sidecar));
     let post_workspace = applied.workspace;
+    vibe_workspace::specmap_authority::publish(&post_workspace, project_root, &applied.node_roots)?;
     let applied = applied.report;
     lifecycle_run.lifecycle_run = applied.lifecycle_run.clone();
     lifecycle_run.lifecycle_reports = applied.lifecycle_reports.clone();

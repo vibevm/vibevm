@@ -22,7 +22,12 @@ mod document;
 mod extension;
 mod field_path;
 pub mod i18n;
+mod layers;
 mod lockfile;
+pub use layers::{
+    LayerCategory, LayerName, LayerPolicy, LayerRelation, LayerRelationKind, LayerTarget,
+    LayersSection,
+};
 mod mechanism;
 mod migration;
 mod source_descriptor;

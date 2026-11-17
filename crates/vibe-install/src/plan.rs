@@ -66,8 +66,10 @@ pub enum Plan {
 /// A confirmed-pending resolution — everything [`apply`](crate::apply)
 /// needs, carried by value so the apply phase cannot observe state
 /// the plan did not produce.
+pub type NodeRootProjection = std::collections::BTreeMap<String, Vec<PackageRef>>;
 #[derive(Debug)]
 pub struct PlannedInstall {
+    pub(crate) node_roots: std::collections::BTreeMap<String, Vec<PackageRef>>,
     pub(crate) project_root: PathBuf,
     pub(crate) request: InstallRequest,
     pub(crate) manifest: Manifest,
@@ -351,6 +353,7 @@ fn prepare_metadata_plan<S: InstallSource + ?Sized>(
         let roots = requirements.authored();
         let root_count = requirements.package_count();
         let root_edges = requirements.source_edges();
+        let root_owners = requirements.node_owners();
 
         // ##EMPTY-REQUIRES-IS-A-NO-OP (PROP-011, the 2026-08-24 ruling): zero
         // dependencies is a fresh project, not an error — regenerate the boot
@@ -421,6 +424,7 @@ fn prepare_metadata_plan<S: InstallSource + ?Sized>(
                 root_manifest: manifest,
                 roots: &roots,
                 root_edges: &root_edges,
+                root_owners: &root_owners,
                 held_roots: &solve_roots,
                 lockfile: &lockfile,
                 root_features: &request.features,
@@ -531,6 +535,6 @@ pub use weak::{RecommendationOutcome, RecommendationRow, SuggestionRow, WeakDepe
 mod configured;
 
 mod fresh;
-pub use fresh::freshness_prepared;
+pub use fresh::{freshness_prepared, project_fresh_node_roots};
 
 mod report;

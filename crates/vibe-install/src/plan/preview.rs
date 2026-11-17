@@ -16,9 +16,14 @@ pub struct PreviewSourceStorage<'a> {
 /// Candidate observations remain held by the source owner for this invocation.
 #[derive(Debug)]
 pub struct InstallPreview {
+    node_roots: std::collections::BTreeMap<String, Vec<PackageRef>>,
     selected: Vec<vibe_resolver::CandidateMetadata>,
 }
 impl InstallPreview {
+    /// Exact requiring-node roots from this metadata-only solve.
+    pub fn node_roots(&self) -> &std::collections::BTreeMap<String, Vec<PackageRef>> {
+        &self.node_roots
+    }
     /// Reasons retained by the selected metadata, not a new registry probe.
     ///
     /// ```no_run
@@ -160,7 +165,10 @@ pub fn preview_prepared_with_selected_roots<S: InstallSource + ?Sized>(
                 })
         })
         .collect::<Result<Vec<_>>>()?;
-    Ok(InstallPreview { selected: packages })
+    Ok(InstallPreview {
+        selected: packages,
+        node_roots: prepared.closure.node_roots,
+    })
 }
 
 /// Whether the package closure needs a provider; remap offers have a separate owner.

@@ -100,3 +100,5 @@ mod tests {
         assert_ne!(content_hash("a"), content_hash("b"));
     }
 }
+
+pub mod authority;

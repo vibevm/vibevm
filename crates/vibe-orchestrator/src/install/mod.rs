@@ -20,6 +20,8 @@ specmark::scope!("spec://org.vibevm.core/vibevm/VIBEVM-SPEC#install-workflow-in-
 use specmark::spec;
 
 mod args;
+mod authority;
+pub use authority::refresh_from_source as refresh_specmap_authority;
 mod inputs;
 mod lease;
 mod native_world;
@@ -148,7 +150,23 @@ pub fn execute_prepared_with_selected_roots(
     selected_roots: &[vibe_resolver::RetainedSourceCandidate],
 ) -> Result<InstallRun> {
     let scratch = RunScratch::fresh(&execution.lease, &execution.metadata, false);
-    let result = execute_owned(execution, after_durable_world, selected_roots);
+    let emit_machine_failure = execution.observer.emit_machine_failure();
+    let result = execute_owned(execution, after_durable_world, selected_roots).and_then(|run| {
+        if run.parked.is_none()
+            && let Err(error) = vibe_workspace::specmap_authority::verify_current(&run.project_root)
+        {
+            return Err(crate::failure::carry(crate::failure::MeasuredFailure {
+                original: error.into(),
+                evidence: crate::failure::Measurement::InstallBarrier {
+                    progress: Box::new(run.progress),
+                    reports: run.slot_reports,
+                    packages_resolved: run.packages_resolved,
+                },
+                emit_machine_failure,
+            }));
+        }
+        Ok(run)
+    });
     scratch.settle(result.as_ref().is_err_and(|error| {
         !matches!(
             error.downcast_ref::<vibe_install::Error>(),
@@ -301,7 +319,9 @@ fn execute_owned(
     // boot artifacts of the empty world and report the fresh shape.
     if args.packages.is_empty()
         && workspace.iter_nodes().all(|(_, node)| {
-            node.requires.packages.is_empty() && node.requires.git_packages.is_empty()
+            node.requires.is_empty()
+                && node.requires_any.is_empty()
+                && node.conditional_deps.is_empty()
         })
         && lockfile_snapshot.meta.root_dependencies.is_empty()
         && (lockfile_snapshot.meta.schema_version < vibe_core::manifest::CURRENT_SCHEMA_VERSION
@@ -334,6 +354,11 @@ fn execute_owned(
         progress.checkpoint()?;
         boot_task.set_progress(nodes.len() as u64, Some(nodes.len() as u64), "nodes");
         boot_task.finish();
+        let empty_roots = workspace
+            .iter_nodes()
+            .map(|(node, _)| (node.to_owned(), Vec::new()))
+            .collect();
+        vibe_workspace::specmap_authority::publish(&workspace, &project_root, &empty_roots)?;
         lifecycle_run.native = Some(native);
         let after = after_durable_world
             .take()
@@ -413,7 +438,7 @@ fn execute_owned(
             &mut workspace,
             InstallRequest {
                 roots: cli_roots,
-                ..request
+                ..request.clone()
             },
             spec_format,
             observer.plan_events(),
@@ -462,6 +487,15 @@ fn execute_owned(
             progress.checkpoint()?;
             boot_task.set_progress(nodes.len() as u64, Some(nodes.len() as u64), "nodes");
             boot_task.finish();
+            let roots = vibe_install::project_fresh_node_roots(
+                &project_root,
+                &manifest,
+                &workspace,
+                &request,
+                &lockfile_snapshot,
+                spec_format,
+            )?;
+            vibe_workspace::specmap_authority::publish(&workspace, &project_root, &roots)?;
             lifecycle_run.native = Some(native);
             let after = after_durable_world
                 .take()

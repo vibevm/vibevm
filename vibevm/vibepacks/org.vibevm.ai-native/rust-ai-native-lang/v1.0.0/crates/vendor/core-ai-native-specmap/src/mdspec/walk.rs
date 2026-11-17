@@ -92,6 +92,9 @@ fn pair_collision_warning(md: &str, xml: &str) -> Warning {
 /// `SpecExcludes`]).
 pub fn scan_spec_tree(root: &Path, cfg: &Config) -> (Vec<SpecUnit>, Vec<Warning>) {
     let mut units = Vec::new();
+    if crate::authority::validate(root, cfg).is_err() {
+        return (units, Vec::new());
+    }
     let mut warnings = Vec::new();
     let (mut excludes, bad_globs) = excludes::SpecExcludes::compile(&cfg.spec_exclude);
     // Bad globs are discovered before any walk, so they lead the warnings.
@@ -224,6 +227,9 @@ pub fn scan_spec_tree(root: &Path, cfg: &Config) -> (Vec<SpecUnit>, Vec<Warning>
 /// skipped — the same loud law, the walk's own idiom.
 pub fn scan_external_units(root: &Path, cfg: &Config) -> Vec<SpecUnit> {
     let mut units = Vec::new();
+    if crate::authority::validate(root, cfg).is_err() {
+        return units;
+    }
     let private = crate::local_layers::LocalLayers::current(root);
     for ext in &cfg.external_specs {
         let base = root.join(&ext.root);

@@ -464,7 +464,9 @@ pub(crate) fn policy(command: &Command, terminal_attached: bool) -> CommandPolic
         Command::User(args) => match args.command {
             UserCommand::Init => FiniteFallback("Command user init"),
             UserCommand::Status => FastMetadata,
-            UserCommand::Override(_) => FastMetadata,
+            UserCommand::Override(_) | UserCommand::Enable { .. } | UserCommand::Disable { .. } => {
+                FastMetadata
+            }
         },
         Command::Version => SilentMetadata,
     }

@@ -60,28 +60,29 @@ precedence, not of position. A lane delivered before this file has been read.
 
 # Optional personal boot — read last
 
-After all project INDEX entries/live continuation, use exposed settings: nonempty VIBE_SETTINGS, else HOME/.vibe (Windows:
-USERPROFILE/.vibe only without HOME). Unknown/relative/../symlink/alias root or ancestor: skip diagnostically. No guessing, commands or environment dumps.
+After complete project INDEX/live, use exposed nonempty VIBE_SETTINGS else HOME/.vibe
+(Windows USERPROFILE/.vibe only without HOME). Unknown/relative/../symlink/alias
+root/ancestor: diagnose+skip; no guessing, commands or env dumps.
 
-Personal: settings/user-project, not mcp/user-project; validate vibe.toml;
-read its vibevm/vibespecs/boot/STATIC.xml or STATIC.md, then INDEX.md in order
-with session conditions. Two STATIC spellings, unsafe/out-of-root members,
-Absent/empty/broken/stale: skip whole layer; project boot continues.
-No recursive CLAUDE.md/AGENTS.md/GEMINI.md, prose-private-file expansion or
-initialize/install/compile/repair during boot.
+Personal: settings/user-project, not mcp/user-project. Validate vibe.toml;
+read vibevm/vibespecs/boot/STATIC.xml or STATIC.md then INDEX.md with conditions.
+Two STATICs, unsafe/absent/broken/stale inputs: skip whole layer, keep project.
+No nested instruction entrypoints, prose-private expansion or boot mutations.
 
-Then read settings/override-bindings.toml (schema=1). Match only known canonical
-Git common-dir + workspace-relative selected node, or exact non-Git root.
-No remote/name/content inference. Unknown identity or invalid/ambiguous
-mapping: skip, never bind/repair. For an enabled match, its 32-alphanumeric id
-selects settings/project-overrides/id; apply the same safe STATIC+INDEX rules,
-after personal. Disabled means do not read that project.
+Read settings/override-bindings.toml schema1/2 before personal. Match known
+Git common-dir+node or non-Git root, never names/remotes. schema2 user_controls
+user_enabled=false skips personal only; absent=true. Invalid mapping: skip optional.
+Enabled binding's 32-alphanumeric id selects project-overrides/id after personal;
+same STATIC/INDEX rules. Disabled skips override; no bind/repair.
 
-Complete same-project vibe:lane-begin/end pairs for personal: or override:
-paths supply those members; partial pairs/project markers do not.
-Override beats personal only for project-marked overridable rules. Project
-safety, attribution, commit discipline and unmarked rules always bind: report
-conflicts. No personal bytes/bindings in shared artifacts.
+Same-project complete vibe:lane-begin/end personal:/override: pairs count as read;
+partial/project pairs do not.
+[layers] schema1: validate targets/relations by declaring owner/version and
+own/locked spec anchors. replace requires lower owner's own overridable preference;
+supplement is additive. Unsafe/missing/protected/competing: skip optional layer.
+Highest permitted layer wins: name target/source and read its exact unit;
+keep prefix bytes. Disabled grants nothing. Safety/attribution/commit discipline
+and unmarked rules bind; no prose inference.
 
 Personal memory: when authorized to remember a user preference, working style, machine fact or cross-project convention, write an ordinary authored record under the personal project's vibevm/vibespecs, not harness auto-memory. A fact collaborators need belongs in the project's repository. Never store credentials. An explicit durable opt-out in the loaded user snippet selects the user's other memory mechanism; respect it. A record must be boot-indexed or explicitly linked from the authored user boot snippet to reach a later session; arbitrary records are not auto-loaded. Boot never writes records or edits INDEX. An absent/unavailable personal root requires explicit user init/action before a memory write, not silent harness fallback.
 Boot is pure file-reading — there is nothing to execute."

@@ -50,6 +50,7 @@ impl Fixture {
                 removed: vec![row],
                 removed_count: 1,
                 roots: vec![],
+                node_roots: Default::default(),
                 manifest_changed: true,
             },
             pruned: Lockfile::empty("test", "2026-01-01T00:00:00Z"),

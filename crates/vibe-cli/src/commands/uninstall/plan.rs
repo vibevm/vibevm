@@ -13,6 +13,7 @@ pub(super) struct Plan {
     pub removed: Vec<LockedPackage>,
     pub removed_count: u32,
     pub roots: Vec<PackageRef>,
+    pub node_roots: BTreeMap<String, Vec<PackageRef>>,
     pub manifest_changed: bool,
 }
 pub(super) fn key(group: &Group, name: &str) -> Key {
@@ -113,6 +114,7 @@ pub(super) fn build(
     }
     let manifest_changed = drop_requires(manifest, group, name);
     let mut roots = BTreeSet::new();
+    let mut node_roots = BTreeMap::new();
     for (node, data) in workspace.iter_nodes() {
         let absolute = if node == "." {
             workspace.root.clone()
@@ -124,6 +126,7 @@ pub(super) fn build(
         } else {
             data
         };
+        let projected = node_roots.entry(node.to_owned()).or_insert_with(Vec::new);
         for (g, n) in data.requires.iter_pkgrefs() {
             let id = key(g.context("workspace requires must be qualified")?, n);
             if !rows.contains_key(&id) {
@@ -133,11 +136,22 @@ pub(super) fn build(
                     id.1
                 );
             }
+            let reference = rows[&id].as_package_ref()?;
+            if !projected.contains(&reference) {
+                projected.push(reference);
+            }
             roots.insert(id);
         }
     }
     if legacy {
         roots.extend(recorded.keys().filter(|id| **id != selected).cloned());
+        node_roots.insert(
+            ".".into(),
+            roots
+                .iter()
+                .map(|id| rows[id].as_package_ref())
+                .collect::<std::result::Result<Vec<_>, _>>()?,
+        );
     }
     let candidate = closure([selected], &edges);
     // Keep unrelated historical rows and everything they still need. This is
@@ -167,6 +181,7 @@ pub(super) fn build(
         removed,
         removed_count,
         roots,
+        node_roots,
         manifest_changed,
     })
 }

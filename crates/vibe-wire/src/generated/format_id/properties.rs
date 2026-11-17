@@ -210,6 +210,7 @@ impl FormatId {
         FormatId::ScrapeTransactionOwner,
         FormatId::ScrapeVerificationHealthEvidence,
         FormatId::SlotRecord,
+        FormatId::SpecmapAuthority,
         FormatId::StandaloneSkillReceipt,
         FormatId::UserOverrideBindings,
     ];
@@ -422,6 +423,7 @@ impl FormatId {
             FormatId::ScrapeTransactionOwner => "scrape-transaction-owner",
             FormatId::ScrapeVerificationHealthEvidence => "scrape-verification-health-evidence",
             FormatId::SlotRecord => "slot-record",
+            FormatId::SpecmapAuthority => "specmap-authority",
             FormatId::StandaloneSkillReceipt => "standalone-skill-receipt",
             FormatId::UserOverrideBindings => "user-override-bindings",
         }
@@ -499,7 +501,7 @@ impl FormatId {
             FormatId::CliInstallPlan => 2,
             FormatId::CliInstallPlanV1 => 1,
             FormatId::CliInstallReport => 1,
-            FormatId::CliLayeredTree => 1,
+            FormatId::CliLayeredTree => 2,
             FormatId::CliLifecyclePlan => 1,
             FormatId::CliLifecycleReport => 1,
             FormatId::CliListReport => 1,
@@ -635,8 +637,9 @@ impl FormatId {
             FormatId::ScrapeTransactionOwner => 3,
             FormatId::ScrapeVerificationHealthEvidence => 2,
             FormatId::SlotRecord => 1,
+            FormatId::SpecmapAuthority => 1,
             FormatId::StandaloneSkillReceipt => 1,
-            FormatId::UserOverrideBindings => 1,
+            FormatId::UserOverrideBindings => 2,
         }
     }
 
@@ -848,6 +851,7 @@ impl FormatId {
             FormatId::ScrapeTransactionOwner => false,
             FormatId::ScrapeVerificationHealthEvidence => false,
             FormatId::SlotRecord => true,
+            FormatId::SpecmapAuthority => true,
             FormatId::StandaloneSkillReceipt => false,
             FormatId::UserOverrideBindings => false,
         }
@@ -1061,6 +1065,7 @@ impl FormatId {
             FormatId::ScrapeTransactionOwner => ForeignParsers::None,
             FormatId::ScrapeVerificationHealthEvidence => ForeignParsers::None,
             FormatId::SlotRecord => ForeignParsers::None,
+            FormatId::SpecmapAuthority => ForeignParsers::Ours,
             FormatId::StandaloneSkillReceipt => ForeignParsers::None,
             FormatId::UserOverrideBindings => ForeignParsers::Ours,
         }
@@ -1274,6 +1279,7 @@ impl FormatId {
             FormatId::ScrapeTransactionOwner => UnknownFields::Deny,
             FormatId::ScrapeVerificationHealthEvidence => UnknownFields::Deny,
             FormatId::SlotRecord => UnknownFields::Deny,
+            FormatId::SpecmapAuthority => UnknownFields::Deny,
             FormatId::StandaloneSkillReceipt => UnknownFields::Deny,
             FormatId::UserOverrideBindings => UnknownFields::Deny,
         }

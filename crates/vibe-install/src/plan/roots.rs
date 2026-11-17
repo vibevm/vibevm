@@ -13,6 +13,7 @@ use vibe_workspace::Workspace;
 use crate::error::{Error, Result};
 
 pub(super) struct ConsumerRequirement {
+    node: String,
     consumer: String,
     requirement: PackageRef,
     configuration: Option<vibe_core::manifest::ConfigurationIntentDecl>,
@@ -77,6 +78,7 @@ impl RootRequirements {
             .iter()
             .enumerate()
             .map(|(index, requirement)| ConsumerRequirement {
+                node: selected.into(),
                 site: vibe_resolver::source_edges::RequirementSite::ExplicitRequest(index),
                 registry_pin: workspace
                     .iter_nodes()
@@ -101,6 +103,7 @@ impl RootRequirements {
                     continue;
                 }
                 declarations.push(ConsumerRequirement {
+                    node: rel.into(),
                     consumer: format!("{rel}/vibe.toml"),
                     site: vibe_resolver::source_edges::RequirementSite::Requires(index),
                     registry_pin: registry_pin(&node.requires, requirement),
@@ -112,10 +115,32 @@ impl RootRequirements {
                         .cloned(),
                 });
             }
+            for path in &node.requires.path_packages {
+                declarations.push(ConsumerRequirement {
+                    node: rel.into(),
+                    consumer: format!("{rel}/vibe.toml (path source)"),
+                    site: vibe_resolver::source_edges::RequirementSite::Requires(
+                        declarations.len(),
+                    ),
+                    registry_pin: None,
+                    configuration: node
+                        .requires
+                        .configurations
+                        .get(&format!("{}/{}", path.group, path.name))
+                        .cloned(),
+                    requirement: PackageRef::new(
+                        path.kind,
+                        Some(path.group.clone()),
+                        path.name.clone(),
+                        path.version.clone().unwrap_or(VersionSpec::Latest),
+                    )?,
+                });
+            }
             // Source routing remains the provider's owner. A plain version
             // request never removes or changes an existing source declaration.
             for git in &node.requires.git_packages {
                 declarations.push(ConsumerRequirement {
+                    node: rel.into(),
                     consumer: format!("{rel}/vibe.toml (git source)"),
                     site: vibe_resolver::source_edges::RequirementSite::Requires(
                         declarations.len(),
@@ -167,6 +192,15 @@ impl RootRequirements {
                     },
                 }
             })
+            .collect()
+    }
+    /// Typed node ownership travels beside the exact root edge id; diagnostic
+    /// spelling is never parsed to reconstruct a consumer.
+    pub(super) fn node_owners(&self) -> Vec<(vibe_resolver::source_candidates::EdgeId, String)> {
+        self.source_edges()
+            .into_iter()
+            .zip(&self.declarations)
+            .map(|(edge, declaration)| (edge.id, declaration.node.clone()))
             .collect()
     }
     pub(super) fn check_metadata_kinds(
@@ -268,6 +302,35 @@ impl RootRequirements {
         Ok(())
     }
 
+    pub(super) fn locked_node_roots(&self, lock: &Lockfile) -> Result<super::NodeRootProjection> {
+        let mut roots = super::NodeRootProjection::new();
+        for declaration in &self.declarations {
+            let reference = &declaration.requirement;
+            let row = reference
+                .group
+                .as_ref()
+                .and_then(|group| lock.find(group, &reference.name))
+                .ok_or_else(|| {
+                    self.solve_error(SolveError::from(vibe_resolver::DepProviderError::Other(
+                        "Fresh root has no admitted locked witness".into(),
+                    )))
+                })?;
+            if !reference.version.matches(&row.version) {
+                return Err(self.solve_error(SolveError::from(
+                    vibe_resolver::DepProviderError::Other(
+                        "Fresh root constraint differs from locked witness".into(),
+                    ),
+                )));
+            }
+            self.check_kind(reference, row.kind)?;
+            let selected = row.as_package_ref()?;
+            let node = roots.entry(declaration.node.clone()).or_default();
+            if !node.contains(&selected) {
+                node.push(selected);
+            }
+        }
+        Ok(roots)
+    }
     pub(super) fn check_locked_kinds(&self, lock: &Lockfile) -> Result<()> {
         for d in &self.declarations {
             if let Some(group) = &d.requirement.group

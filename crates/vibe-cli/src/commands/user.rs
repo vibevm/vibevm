@@ -46,6 +46,12 @@ pub(crate) fn run(
 ) -> Result<()> {
     match command {
         UserCommand::Init => init(ctx, cancellation),
+        UserCommand::Enable { path } => {
+            super::user_override::set_user_enabled(ctx, &path, true, cancellation)
+        }
+        UserCommand::Disable { path } => {
+            super::user_override::set_user_enabled(ctx, &path, false, cancellation)
+        }
         // Status has no checkpoint to stop at: the token arrives unused.
         UserCommand::Status => status(ctx),
         UserCommand::Override(args) => super::user_override::run(ctx, args.command, cancellation),

@@ -52,5 +52,6 @@ pub(super) fn regenerate_native_world(
         run,
         &mut make_provider,
     )?;
+
     Ok((nodes, outcome::NativeInstallContext::new(carriage, sidecar)))
 }

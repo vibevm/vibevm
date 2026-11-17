@@ -29,14 +29,23 @@ struct Binding {
 struct Mapping {
     schema: u32,
     bindings: Vec<Binding>,
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    user_controls: Vec<UserControl>,
 }
 impl Default for Mapping {
     fn default() -> Self {
         Self {
             schema: 1,
             bindings: Vec::new(),
+            user_controls: Vec::new(),
         }
     }
+}
+#[derive(Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+struct UserControl {
+    identity: Identity,
+    user_enabled: bool,
 }
 struct Selected {
     identity: Identity,
@@ -91,7 +100,9 @@ fn read(store: &ExternalStore) -> Result<Mapping> {
     };
     let mapping: Mapping = toml::from_str(std::str::from_utf8(&bytes.bytes)?)
         .context("invalid override binding mapping; restore it explicitly")?;
-    if mapping.schema != 1 {
+    if !matches!(mapping.schema, 1 | 2)
+        || (mapping.schema == 1 && !mapping.user_controls.is_empty())
+    {
         bail!("unsupported override binding mapping schema");
     }
     let mut aliases = std::collections::BTreeSet::new();
@@ -108,18 +119,26 @@ fn read(store: &ExternalStore) -> Result<Mapping> {
             bail!("invalid or duplicate override binding identity");
         }
         for identity in &row.identities {
-            if !matches!(identity.kind.as_str(), "git" | "directory")
-                || !Path::new(&identity.root).is_absolute()
-                || identity.node.is_empty()
-                || identity.node.split('/').any(|part| part == "..")
-                || identities.contains(identity)
-            {
+            if !valid_identity(identity) || identities.contains(identity) {
                 bail!("invalid or duplicate override project locator");
             }
             identities.push(identity.clone());
         }
     }
+    let mut controls = Vec::new();
+    for row in &mapping.user_controls {
+        if !valid_identity(&row.identity) || controls.contains(&row.identity) {
+            bail!("invalid or duplicate personal layer project control");
+        }
+        controls.push(row.identity.clone());
+    }
     Ok(mapping)
+}
+fn valid_identity(identity: &Identity) -> bool {
+    matches!(identity.kind.as_str(), "git" | "directory")
+        && Path::new(&identity.root).is_absolute()
+        && !identity.node.is_empty()
+        && !identity.node.split('/').any(|part| part == "..")
 }
 fn validate_alias(alias: &str) -> Result<()> {
     if alias.is_empty()
@@ -335,6 +354,10 @@ pub(crate) fn run(
         }
         _ => owner,
     };
+    if mutation && mapping.schema != 2 {
+        mapping.schema = 2;
+        changed = true;
+    }
     if changed {
         cancellation.checkpoint().context("override operation stopped before mapping publication; inspect project-overrides for an unbound initialized root")?;
         let bytes = toml::to_string(&mapping)?;
@@ -379,4 +402,64 @@ pub(crate) fn run(
         bail!("bound override project is unavailable");
     }
     Ok(())
+}
+
+/// Per-project personal loading is independent from override bindings.
+pub(crate) fn user_enabled(path: &Path) -> Result<bool> {
+    let selected = select(path)?;
+    let settings = settings()?;
+    let Some(store) = ExternalStore::open_existing_disjoint(&settings, &selected.project)? else {
+        return Ok(true);
+    };
+    let mapping = read(&store)?;
+    Ok(mapping
+        .user_controls
+        .iter()
+        .find(|row| row.identity == selected.identity)
+        .is_none_or(|row| row.user_enabled))
+}
+pub(crate) fn set_user_enabled(
+    ctx: &output::Context,
+    path: &Path,
+    enabled: bool,
+    cancellation: &CancellationToken,
+) -> Result<()> {
+    let selected = select(path)?;
+    let settings = settings()?;
+    cancellation.checkpoint()?;
+    cancellation.publishing();
+    let store = ExternalStore::open_or_create_disjoint(&settings, &selected.project)?;
+    let _lock = store.open_and_lock_project("user-override-bindings")?;
+    let mut mapping = read(&store)?;
+    let mut changed = mapping.schema != 2;
+    mapping.schema = 2;
+    if let Some(row) = mapping
+        .user_controls
+        .iter_mut()
+        .find(|row| row.identity == selected.identity)
+    {
+        changed |= row.user_enabled != enabled;
+        row.user_enabled = enabled;
+    } else {
+        mapping.user_controls.push(UserControl {
+            identity: selected.identity,
+            user_enabled: enabled,
+        });
+        changed = true;
+    }
+    if changed {
+        cancellation.checkpoint()?;
+        store.write_durable(FILE, toml::to_string(&mapping)?.as_bytes())?;
+    }
+    cancellation.committed();
+    if ctx.is_json() {
+        ctx.emit_json(&serde_json::json!({"ok":true,"command":if enabled {"user:enable"} else {"user:disable"},"enabled":enabled}))
+    } else {
+        ctx.summary(if enabled {
+            "personal layer enabled for this project"
+        } else {
+            "personal layer disabled for this project"
+        });
+        Ok(())
+    }
 }

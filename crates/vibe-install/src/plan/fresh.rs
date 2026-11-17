@@ -2,6 +2,43 @@
 use super::*;
 use vibe_workspace::freshness::Freshness;
 
+/// Project the exact roots admitted by the existing source-free Fresh owner.
+/// No inventory, solver or acquisition is constructed.
+#[allow(clippy::too_many_arguments)]
+pub fn project_fresh_node_roots(
+    project_root: &Path,
+    manifest: &Manifest,
+    workspace: &Workspace,
+    request: &InstallRequest,
+    lock: &Lockfile,
+    spec_format: SpecFormat,
+) -> Result<NodeRootProjection> {
+    if !freshness_prepared(
+        project_root,
+        manifest,
+        workspace,
+        request,
+        lock,
+        spec_format,
+    )?
+    .is_fresh()
+    {
+        return Err(Error::Solve(
+            vibe_resolver::DepProviderError::Other(
+                "root projection requires ordinary Fresh admission".into(),
+            )
+            .into(),
+        ));
+    }
+    let selected = roots::selected_node(workspace, project_root)?;
+    let requirements = roots::RootRequirements::collect(workspace, &selected, &[])?;
+    let mut roots = requirements.locked_node_roots(lock)?;
+    for (node, _) in workspace.iter_nodes() {
+        roots.entry(node.into()).or_default();
+    }
+    Ok(roots)
+}
+
 /// Determine whether the prepared authored world can use its materialized lock
 /// without constructing a registry. The caller still admits and uses its held
 /// durable world before publication; this is not an alternative apply path.

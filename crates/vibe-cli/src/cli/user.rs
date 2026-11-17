@@ -30,6 +30,16 @@ pub enum UserCommand {
 
     /// Manage an explicitly bound per-project personal override.
     Override(UserOverrideArgs),
+    /// Enable the personal layer for the selected project, without changing override state.
+    Enable {
+        #[arg(long, default_value = ".")]
+        path: std::path::PathBuf,
+    },
+    /// Disable personal loading for this project, preserving authored records.
+    Disable {
+        #[arg(long, default_value = ".")]
+        path: std::path::PathBuf,
+    },
 }
 
 #[derive(Debug, clap::Args)]

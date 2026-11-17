@@ -269,6 +269,15 @@ impl Config {
     /// and the fix); the config is then returned all the same, never refused.
     /// The built-in degradation — the resolution layer skips a missing root —
     /// stays in force; this only ends the silence around it.
+    /// Parse authored configuration for the ordinary host producer before an
+    /// authority artifact exists. Consumer entrypoints must use `load`.
+    pub fn parse_authoring(text: &str) -> Result<Config> {
+        let cfg: Config = toml::from_str(text).context("parsing authored specmap configuration")?;
+        if cfg.namespace.is_empty() {
+            anyhow::bail!("specmap namespace is required");
+        }
+        Ok(cfg)
+    }
     pub fn load(root: &Path) -> Result<Option<Config>> {
         let path = root.join(Self::REL_PATH);
         if !path.exists() {
@@ -286,7 +295,7 @@ impl Config {
                 path.display()
             );
         }
-        crate::local_layers::LocalLayers::current(root).validate(root, &cfg)?;
+        crate::authority::validate(root, &cfg)?;
         // An absent `[[external_specs]]` root is the legitimate "not yet
         // installed" state, not a refusal — but it must be said out loud,
         // once and for every broken namespace, so version drift cannot pass

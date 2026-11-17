@@ -1,0 +1,171 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "vibe layered tree v2",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "ok",
+    "command",
+    "schema_version",
+    "project",
+    "layers"
+  ],
+  "properties": {
+    "ok": {
+      "const": true
+    },
+    "command": {
+      "const": "tree:layers"
+    },
+    "schema_version": {
+      "const": 2
+    },
+    "project": {
+      "$ref": "package-tree.schema.v1.json"
+    },
+    "layers": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "enabled",
+          "state",
+          "root",
+          "tree",
+          "diagnostics",
+          "relations"
+        ],
+        "properties": {
+          "id": {
+            "enum": [
+              "project",
+              "user",
+              "override"
+            ]
+          },
+          "enabled": {
+            "type": "boolean"
+          },
+          "state": {
+            "enum": [
+              "available",
+              "absent",
+              "unavailable",
+              "denied"
+            ]
+          },
+          "root": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "tree": {
+            "anyOf": [
+              {
+                "$ref": "package-tree.schema.v1.json"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "diagnostics": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "relations": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "id",
+                "layer",
+                "source",
+                "kind",
+                "target_layer",
+                "target",
+                "target_source",
+                "state",
+                "reason",
+                "source_owner",
+                "source_version",
+                "target_owner",
+                "target_version"
+              ],
+              "properties": {
+                "id": {
+                  "type": "string"
+                },
+                "layer": {
+                  "enum": [
+                    "project",
+                    "user",
+                    "override"
+                  ]
+                },
+                "source": {
+                  "type": "string"
+                },
+                "kind": {
+                  "enum": [
+                    "supplement",
+                    "replace"
+                  ]
+                },
+                "target_layer": {
+                  "enum": [
+                    "project",
+                    "user",
+                    "override"
+                  ]
+                },
+                "target": {
+                  "type": "string"
+                },
+                "target_source": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "state": {
+                  "enum": [
+                    "active",
+                    "superseded",
+                    "disabled",
+                    "unavailable",
+                    "denied"
+                  ]
+                },
+                "reason": {
+                  "type": "string"
+                },
+                "source_owner": {
+                  "type": "string"
+                },
+                "source_version": {
+                  "type": "string"
+                },
+                "target_owner": {
+                  "type": "string"
+                },
+                "target_version": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

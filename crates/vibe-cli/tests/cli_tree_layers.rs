@@ -49,9 +49,9 @@ fn validate_layered(report: &serde_json::Value) {
         .prepare()
         .unwrap();
     let schema: serde_json::Value =
-        serde_json::from_str(include_str!("../resources/layered-tree.schema.v1.json")).unwrap();
+        serde_json::from_str(include_str!("../resources/layered-tree.schema.v2.json")).unwrap();
     let validator = jsonschema::options()
-        .with_base_uri("https://vibespecs.org/schemas/layered-tree.schema.v1.json")
+        .with_base_uri("https://vibespecs.org/schemas/layered-tree.schema.v2.json")
         .with_registry(&registry)
         .build(&schema)
         .unwrap();
