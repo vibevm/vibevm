@@ -992,11 +992,13 @@ The offline walkthrough uses this declaration, publishes a synthetic newer
 version, then verifies update and uninstall through the next actual launch.
 Uninstall removes the dependency, not your authored preference/memory files.
 Absent/unavailable optional boot layers diagnose and skip; explicit lifecycle
-operations require a valid initialized root. Automatic `install -g` into an
-existing declared/locked personal context is not supported: use the explicit
-selector above. Inferred global `--stop-file` has the same explicit-route
-remedy. Global remap `--plan-only` is unsupported and refuses without adopting
-an offer. No full automatic source-policy parity is claimed.
+operations require a valid initialized root. Automatic `install -g <spec-package>`
+also supports an existing declared/locked personal context: kind preflight retains
+its selected source, then ordinary personal source policy admits the continued
+root and resolves dependencies. Inferred personal `--stop-file` supports cooperative
+cancellation, including pre-existing stops. Legacy application/MCP/remap routes
+still reject an explicit stop input after classification and before acquisition.
+Global remap `--plan-only` remains unsupported and refuses without adopting an offer.
 
 **Runnable offline walkthrough:** build the current CLI, then run the following
 on Linux with Python 3.11+. It creates a fresh scratch directory, synthetic local
@@ -1008,6 +1010,9 @@ Use a scratch parent with enough disk space, not a RAM-backed temporary mount.
 ```sh
 cargo build -p vibe-cli --offline
 python3 -I docs/system-prompt/user-project-onboarding.py /absolute/path/to/target/debug/vibe /scratch/parent
+# Include the same personal root's four shipping AI-native consumers:
+python3 -I docs/system-prompt/user-project-onboarding.py /absolute/path/to/target/debug/vibe \
+  /scratch/parent /absolute/path/to/consumer/bin /absolute/path/to/node_modules/typescript
 ```
 
 The walkthrough records its own hash, binary hash, each CLI result and behavioral
@@ -1017,17 +1022,95 @@ memory writing, graphical Electron operation or API/provider consumption.
 For the global PROP-074 coverage, remaining limits and practical release scope,
 see [USER-PROJECT status](USER-PROJECT-STATUS.md).
 
+### Explicit preference relations and independent controls
+
+Personal and override loading have independent project-scoped switches:
+
+```sh
+vibe user disable --path "$PROJECT"
+vibe user enable --path "$PROJECT"
+# These neither create nor toggle an override binding.
+```
+
+A grouped project can explicitly grant replacement of its own anchored preference:
+
+```toml
+[layers]
+schema = 1
+[[layers.targets]]
+id = "width"
+source = "spec://org.example/project/common/STYLE#width"
+policy = "overridable"
+category = "preference"
+```
+
+Its personal project can declare the later source unit (both documents and exact
+anchors must exist, followed by ordinary installation of each project):
+
+```toml
+[layers]
+schema = 1
+[[layers.relations]]
+id = "my-width"
+kind = "replace" # or "supplement", which needs no replacement grant
+source = "spec://org.example/personal/common/STYLE#width"
+target_layer = "project"
+target = "width"
+```
+
+Root declarations default to the lower root; package declarations default to the
+same package coordinate in the lower layer. Use `target_owner = "org.example/rules"`
+for a different owner. Installed versions remain independent: views show both exact
+owner/version provenances. Only the unit's own owner can grant replacement.
+Safety, attribution and commit-discipline targets are always protected; missing
+grants, ambiguous anchors and competing replacements deny the whole optional layer.
+Use an ordinary explicit project group for addressable root rules, not an invented
+self namespace. Revision-qualified `~rN` relation sources currently refuse explicitly;
+ordinary exact anchors and supported `@version` addresses apply.
+
+Plain/JSON/TUI views share the relation model. They describe declared precedence
+for available layers, not a promise that an unknown future session can load every
+optional layer. Capture, compose and launch resolve precedence from the layers
+actually delivered to that request; a failed higher layer cannot suppress the
+surviving lower relation. Earlier shared prefix bytes are not removed. No NLP
+contradiction inference or cross-layer merged lock is performed.
+
+### AI-native dependency authority
+
+Ordinary install produces private `.vibe/specmap-authority.json` from the exact
+planner-selected per-node roots and durable dependency edges. A selected workspace
+member does not inherit sibling dependencies. Configured dependency spec roots and
+namespace aliases are admitted only for that selected dependency world. Rust and
+TypeScript CLI/MCP consumers reject undeclared configured roots and direct code
+references to unknown/private namespaces before publishing an index. Missing or
+stale context names `vibe install --path <project>`; checks never repair it.
+Generic non-Vibe projects retain explicit `external_specs` configuration.
+
+Update and uninstall refresh authority after durable changes. A valid installed
+context is refreshed by source-free reinstall; legacy boot repair without a valid
+context still works and diagnoses the ordinary install remedy instead of silently
+granting authority. Repeated unchanged publication preserves bytes and mtime.
+
+Run the shipping boundary proof using already built consumer binaries and an
+existing TypeScript compiler installation (nothing is installed by this script):
+
+```sh
+python3 -I docs/system-prompt/user-project-authority-proof.py \
+  /absolute/path/to/vibe /absolute/path/to/consumer/bin /scratch/parent \
+  /absolute/path/to/node_modules/typescript
+```
+
 ### Delivery behavior and boundaries
 
 `vibe user init` initializes the separate personal specification project under
 `<settings>/user-project`; it does not initialize or migrate the MCP service
 project. Install its requirements with `vibe install -g --user-project <pkgref>`.
 Use `vibe list -g`, `vibe check -g`, and explicit personal `update`/`uninstall`
-for ordinary lifecycle operations. Automatic global installation currently
-supports only a personal project without an existing declared/locked source
-context; otherwise it refuses with the explicit `--user-project` remedy rather
-than changing the selected source or ignoring personal policy. Application and
-literal `mcp:` routing retain their separate destinations.
+for ordinary lifecycle operations. Automatic global specification installation
+continues the selected root through ordinary personal policy, including existing
+manifest/lock contexts; conflicting source identity refuses rather than silently
+changing the selection. Application and literal `mcp:` routing retain their
+separate destinations.
 
 For an opted-in project using **launch delivery**, `vibe agent <launcher>` adds
 the current personal boot after the complete project lane. Its local composed
@@ -1153,8 +1236,7 @@ pretending to preview. Ordinary project previews still report required remaps
 without adopting them. This explicit limitation is not full global-remap preview
 support or proof that all global routing source-continuation cases are complete.
 
-Inferred global personal install with `--stop-file` currently refuses before
-source preflight with an explicit `-g --user-project` remedy. The explicit
-personal route supports cooperative cancellation and pre-existing stop input.
-This limitation does not enable cancellation for legacy application/MCP/remap
-routes or establish full inferred routing/cancellation parity.
+Inferred and explicit global personal installation support `--stop-file`,
+including a pre-existing stop and cancellation during source preflight. Destination
+classification does not enable cancellation for legacy application/MCP/remap routes:
+those routes reject an explicit stop input before acquisition or target writes.

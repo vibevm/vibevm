@@ -3,6 +3,7 @@
 
 Run with Python 3.11+, on Linux, against a freshly built vibe binary:
   python3 -I docs/system-prompt/user-project-onboarding.py /absolute/path/to/vibe /scratch/parent
+Optional final arguments: consumer-bin-directory existing-typescript-directory.
 Every run creates a new directory; it never uses the caller's settings or agents.
 """
 import hashlib
@@ -19,7 +20,7 @@ def sha(path):
 
 
 def main():
-    if len(sys.argv) != 3:
+    if len(sys.argv) not in (3, 5):
         raise SystemExit(__doc__)
     exe = Path(sys.argv[1]).resolve(strict=True)
     base = Path(tempfile.mkdtemp(prefix="user-project-onboarding-", dir=sys.argv[2])).resolve()
@@ -57,7 +58,7 @@ def main():
             "limits": ["synthetic local fixture registry; offline",
                        "argv-recording harness, no provider request or model compliance proof",
                        "Linux only; no graphical Electron smoke",
-                       "not full automatic routing/source-policy parity"],
+                       "finite supported source-policy fixtures, not all providers or model compliance"],
         }, indent=2) + "\n")
 
     def run(*args, cwd=project):
@@ -83,7 +84,19 @@ def main():
             f"[package]\ngroup='org.onboarding'\nname='{name}'\n"
             f"version='{version}'\nkind='flow'\nformat='simple'\n"
             "[boot_snippet]\nsource='boot/instructions.md'\n")
-        (root / "boot/instructions.md").write_text(f"# {name}\n\n{marker}\n")
+        (root / "boot/instructions.md").write_text(f"# {name} {{#width}}\n\n{marker}\n")
+        specs = root / "vibevm/vibespecs/common"
+        specs.mkdir(parents=True)
+        (specs / "STYLE.md").write_text(f"# Width {{#width}}\n\n{marker}_RULE\n")
+        # Installed package relation provenance, not a root-only helper example.
+        if name == "project":
+            extra = "\n[layers]\nschema=1\n[[layers.targets]]\nid='width'\nsource='spec://org.onboarding/project/common/STYLE#width'\npolicy='overridable'\n"
+        elif name == "personal":
+            extra = "\n[layers]\nschema=1\n[[layers.relations]]\nid='personal-width'\nkind='replace'\ntarget_layer='project'\ntarget_owner='org.onboarding/project'\ntarget='width'\nsource='spec://org.onboarding/personal/common/STYLE#width'\n"
+        else:
+            extra = ""
+        manifest = root / "vibe.toml"
+        manifest.write_text(manifest.read_text() + extra)
 
     def add_registry(root):
         manifest = root / "vibe.toml"
@@ -103,6 +116,9 @@ def main():
         checked("personal root initialized separately", personal.joinpath("vibe.toml").is_file())
         add_registry(personal)
         run("install", "-g", "--user-project", "org.onboarding/personal", "--offline", "--json")
+        # Repeat inferred routing into an already declared/locked context.
+        run("install", "-g", "org.onboarding/personal", "--registry", registry,
+            "--offline", "--json")
         run("list", "-g", "--json")
         run("check", "-g", "--json")
         memory = personal / "vibevm/vibespecs/boot/preferences.md"
@@ -129,12 +145,13 @@ def main():
             f"[launchers.onboarding]\nkind='claude'\ncommand=['{recorder}']\n")
         env["ONBOARDING_ARGV"] = str(argv_file)
 
-        def launch(root=project):
+        def launch(root=project, layered=True):
             run("agent", "onboarding", cwd=root)
             argv = argv_file.read_text().splitlines()
             carrier = Path(argv[argv.index("--append-system-prompt-file") + 1])
-            checked("actual launcher receives private AGENT carrier",
-                    carrier.parent == root / "vibevm/vibespecs/boot/local")
+            checked("actual launcher receives current AGENT carrier",
+                    carrier.parent == root / "vibevm/vibespecs/boot/local" if layered
+                    else carrier == root / "vibevm/vibespecs/boot/AGENT-LANE.md")
             return carrier.read_text()
 
         first = launch()
@@ -143,6 +160,12 @@ def main():
                 min(first.index("PERSONAL_PACKAGE_V1"), first.index("PERSONAL_AUTHORED_ONE"))
                 and first.count("PERSONAL_AUTHORED_ONE") == 1)
         checked("launch carrier omits already loaded template", "PROJECT_TEMPLATE" not in first)
+        checked("installed package replacement notice reaches actual launch",
+                "Declared layer relation personal-width" in first)
+        for state in ("disable", "enable"):
+            run("user", state, "--path", project, "--json")
+            text = launch(layered=(state == "enable"))
+            checked(f"personal {state} independent of override", ("PERSONAL_AUTHORED_ONE" in text) == (state == "enable"))
         memory.write_text(memory.read_text().replace("PERSONAL_AUTHORED_ONE", "PERSONAL_AUTHORED_TWO"))
         next_launch = launch()
         checked("authored edit visible next launch without rebuild",
@@ -177,6 +200,12 @@ def main():
         run("tree", "--layers", "--plain", "--path", project)
         tree = json.loads(run("tree", "--layers", "--path", project, "--json"))
         checked("layer tree exposes three separate descriptors", len(tree["layers"]) == 3)
+        checked("layer tree preserves exact package relation provenance",
+                tree["layers"][1]["relations"][0]["source_owner"] == "org.onboarding/personal"
+                and tree["layers"][1]["relations"][0]["target_owner"] == "org.onboarding/project")
+        authority = json.loads((personal / ".vibe/specmap-authority.json").read_text())
+        checked("personal install publishes own dependency authority",
+                authority["dependencies"][0]["coordinate"] == "org.onboarding/personal")
         composed = json.loads(run("prompt", "compose", "--path", project,
                                   "--session-target", "os=linux", "--json"))
         data = Path(composed["path"]).read_bytes()
@@ -190,6 +219,8 @@ def main():
         checked("ordinary update changes next launch package",
                 "PERSONAL_PACKAGE_V2" in updated and "PERSONAL_PACKAGE_V1" not in updated)
         run("uninstall", "-g", "--user-project", "org.onboarding/personal", "--json")
+        checked("personal uninstall refreshes authority", not json.loads(
+            (personal / ".vibe/specmap-authority.json").read_text())["dependencies"])
         removed = launch()
         checked("uninstall removes package, not authored memory or override",
                 "PERSONAL_PACKAGE_V2" not in removed and "PERSONAL_AUTHORED_TWO" in removed
@@ -198,6 +229,32 @@ def main():
                 (boot / "SYSTEM.md").read_bytes() == prefix and
                 (boot / "AGENT-LANE.md").read_bytes() == lane)
         checked("local artifacts carry in-directory ignore", (boot / "local/.gitignore").read_text() == "*\n")
+        # Optional full acceptance run uses these same installed roots/settings,
+        # not a second project with an unrelated authority fixture.
+        if len(sys.argv) == 5:
+            bins = Path(sys.argv[3]).resolve(strict=True)
+            compiler = Path(sys.argv[4]).resolve(strict=True)
+            (personal / "node_modules").mkdir(exist_ok=True)
+            (personal / "node_modules/typescript").symlink_to(compiler, target_is_directory=True)
+            (personal / "specmap.toml").write_text("namespace='personal-alias'\nscan_roots=[]\nspec_roots=[]\n")
+            run("install", "-g", "--user-project", "--offline", "--json")
+            for name in ("rust-ai-native-specmap", "typescript-ai-native-specmap",
+                         "rust-ai-native-mcp", "typescript-ai-native-mcp"):
+                binary = bins / name
+                request = json.dumps({"jsonrpc":"2.0", "id":1, "method":"tools/call",
+                           "params":{"name":"specmap_write", "arguments":{}}}) + "\n"
+                result = subprocess.run([str(binary), "--path", str(personal)],
+                    input=request if name.endswith("-mcp") else None,
+                    cwd=personal, env=env, text=True, capture_output=True, timeout=60)
+                rows.append({"consumer":name, "binary_sha256":sha(binary),
+                             "exit":result.returncode, "stdout":result.stdout, "stderr":result.stderr})
+                if name.endswith("-mcp"):
+                    response = next(json.loads(line) for line in result.stdout.splitlines()
+                                    if json.loads(line).get("id") == 1)
+                    checked(f"{name} accepts own installed personal authority",
+                            "error" not in response and not response["result"].get("isError", False))
+                else:
+                    checked(f"{name} accepts own installed personal authority", result.returncode == 0)
         checked("binary unchanged through scenario", sha(exe) == binary_hash)
         report("pass")
     except Exception:
