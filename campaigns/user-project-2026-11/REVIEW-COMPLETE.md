@@ -1,8 +1,10 @@
 # USER-PROJECT full-tree architectural review
 
 Review date: 2026-11-17. Status: functional review complete and coherent implementation
-locally integrated at `47425c24b9cb23b46421fffd4666f09d2e91a290`; final host/cross-target
-release-panel and dashboard accounting remain separate below.
+locally integrated through repair `38b5738227250f5e2b9fa61ee55d6a7e377dd0a1`.
+All task-related canonical failures have passing focused retries; strict affected
+checks pass. Original whole-panel failures and external validation boundaries are
+retained explicitly below. Final source-plan/dashboard reconciliation is separate.
 This record does not manufacture owner acceptance or external publication authority.
 
 ## Original requested behavior
@@ -181,8 +183,8 @@ baseline classification. Full root-constraints27 subsequently pass in
 assertions. The following app-configuration group has3pass/1fail (registry failure
 category); its fail-fast chain did not run later remap tests. Review of the new
 kind projection requires respecting the actually chosen alternative: unused
-alternatives must not reject an otherwise admitted candidate. No full repaired-panel
-acceptance yet.
+alternatives must not reject an otherwise admitted candidate. The later singleton
+guard and passing retries below resolve this review item.
 
 The registry category repair subsequently passes all4app-configuration cases in
 `/fast/tmp/up-repair-category-remap-monorepo-retry.log`. The structured-error reader
@@ -203,19 +205,35 @@ Remaining-target retry evidence in
 (4+3+5+3+1+71+1+2+2), followed by2pass/2fail in trace displacement.
 The two reinstall failures count the new truthful authority warning together with
 the distinct trace notice. Their repair must assert each expected warning exactly,
-retaining trace-state/byte invariants and no-provider-contact assertions. Later
-fail-fast commands are unrun until the corrected retry completes.
+retaining trace-state/byte invariants and no-provider-contact assertions. The corrected displacement retry passes4tests and the following machine-registry
+group passes3tests in `/fast/tmp/up-repair-displacement-tail-strict.log`. Each
+intentionally stale reinstall now asserts exactly one authority remedy and exactly
+one specific structural trace notice; byte/state/no-contact assertions remain.
+The strict affected-crate check is terminal PASS:all targets across vibe-cli,
+vibe-install,vibe-registry,vibe-package-source,vibe-trace and vibe-mcp with
+`-D warnings`,finished in2m12s. Architect reconciled latest successful outcomes
+for every task-related failed target in `/fast/tmp/up-architect-repair-target-latest.json`.
+The bounded repair batch is accepted for scoped fixation/integration; this does not
+relabel baseline/environment failures in the original canonical panel as green.
 Conform141existing/0new and canonical sync51pairs/9sets/6targets are independently
-verified on the repair subject; these do not replace the pending strict retry.
+verified on the repair subject; strict retry subsequently passed as recorded above.
 
-## Remaining closure accounting, not missing functional implementation
+## Integrated technical closure
 
-1. Finish the bounded canonical-gate repairs and verify all task-related failed
-   targets on the repaired subject. Record exact remaining baseline/environment
-   failures; do not relabel the original failed panel as successful.
-2. Reconcile the source plan and actual dashboard after repair integration.
-   USER-PROJECT and UP-FINAL remain active; unavailable graphical/foreign runtimes
-   remain blocked. Three cross-target compilation checks passed, not runtime tests.
-3. Review and synchronize the coherent repair commit plus final documentation pin,
-   keeping technical completion separate from owner acceptance and external release.
-   No new optional polishing or redesign campaign follows automatically.
+- Repair commit `38b5738227250f5e2b9fa61ee55d6a7e377dd0a1` is independently
+  reviewed and fast-forward integrated into architect. All21file SHA256 entries in
+  `/fast/tmp/up-repair-final-scope.json` match the committed blobs. No unrelated
+  instructions, collaboration configuration or installed dependency was staged.
+- Every task-related target from the original27-target failure inventory has a
+  successful focused retry. This is not a second complete workspace run, nor a
+  claim that every CLI unit was rerun when only the affected unit group was selected.
+- Strict affected6crate/all-target checks pass; conform adds0findings and canonical
+  sync is clean. Original full workspace Clippy/codegen/wire checks passed on their
+  recorded pre-repair subject; no fabricated post-repair full-panel result is claimed.
+- Remaining index alias wording, absent xtask exclusion fixture and census expectation
+  are source-identical baseline findings, not waived task regressions. The script's
+  external-target binary path failure remains environmental; actual binary stack proof
+  is separate. External graphical/foreign runtime and provider compliance remain unrun.
+- Architecture, dispatch, cross-cutting review and local implementation integration
+  are technically complete. Final plan/dashboard reconciliation records this boundary;
+  owner whole-feature acceptance and external release are not implied.
