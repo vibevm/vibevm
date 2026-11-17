@@ -1,13 +1,12 @@
 # Campaign: template packages and version management for every application
 
-**Status:** planned 2026-11-10; written against `main` at `7d495d137`. Campaign
-node `APP-VERSIONS`: starts after `CORP-ENV` closes, before `SYS-PROMPT`.
-**Phase 0 spikes S1, S2, S3 and S5 ran 2026-11-10 and phases P1, P5a, P2, P3
-P5b and P6 are implemented** — the answers and what they changed are in `LOG.md`,
-and the facts those phases deliver are `impl/done` in PROP-075. S4 and S6 are still
-open; S4 belongs with P5a and S6 with P7.
-Phase 0 (spikes) and Phases 5a / 6 may run while `CORP-ENV` finishes, because
-their files are disjoint from it.
+**Current follow-up — 2026-11-17:** implementation phases P1–P7f and the historical
+13-leg acceptance are recorded as delivered below. The original task remains active
+for current requirement/evidence reconciliation, not wholesale reimplementation.
+Current focused owner tests pass54cases; the latest whole-campaign attempt exits2
+because the pinned mirror and local package registry are absent. Windows migration
+runtime evidence remains unverified. See `REVIEW-2026-11-17.md` for exact boundaries.
+The earlier planned/S4/S6 header was stale relative to this file's own closure report.
 Cold start: read this file, then `LOG.md` in this directory, then
 `spec://org.vibevm.core/vibevm/common/PROP-075#root`.
 
