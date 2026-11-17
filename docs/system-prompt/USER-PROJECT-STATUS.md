@@ -78,9 +78,10 @@ corresponding targeted smoke on that consumer, rather than another universal
 prerequisite ladder. Retain the existing baseline lint finding honestly under
 ordinary release policy.
 
-If unrestricted automatic routing, general AI-native authority, or autonomous
-memory writes become release promises, select the relevant user scenario as a
-separate deliberate task. They are not implied by this delivery. The removed
+Broader original guarantees, including unrestricted automatic routing and general
+AI-native authority, need separately completed scenarios before they can be
+claimed. The current approved release boundary is narrower. Autonomous memory
+writing is not required by that boundary and is not demonstrated here. The removed
 retained/native/history-policing framework is not a follow-up or release
 prerequisite and must not be revived.
 
