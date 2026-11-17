@@ -109,6 +109,9 @@ pub struct InstallArgs {
     #[arg(skip)]
     pub(crate) explicit_path: bool,
 
+    #[arg(skip)]
+    pub(crate) stop_requested: bool,
+
     /// Target coding agent for a global MCP package. Without this flag an
     /// interactive terminal offers all detected agents by default. For a
     /// global application, the agent that runs the installer's agent steps:

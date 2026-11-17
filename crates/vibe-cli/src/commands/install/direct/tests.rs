@@ -19,6 +19,7 @@ fn args(path: std::path::PathBuf) -> InstallArgs {
         global: false,
         user_project: false,
         explicit_path: false,
+        stop_requested: false,
         agent: None,
         server: None,
         platform: None,

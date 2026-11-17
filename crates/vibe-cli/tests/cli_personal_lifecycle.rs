@@ -401,7 +401,7 @@ fn automatic_personal_held_source_refuses_without_writes_and_explicit_uses_held_
             String::from_utf8_lossy(&output.stdout),
             String::from_utf8_lossy(&output.stderr)
         );
-        assert!(error.contains("--user-project"), "{error}");
+        assert!(error.contains("ordinary source policy"), "{error}");
         assert_eq!(fs::read(root.join("vibe.toml")).unwrap(), before_manifest);
         assert_eq!(fs::read(root.join("vibe.lock")).unwrap(), before_lock);
         assert_eq!(

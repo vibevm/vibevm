@@ -37,7 +37,7 @@ mod preview;
 pub(crate) mod trust;
 pub(crate) use preview::{run as run_preview, run_selected as run_preview_selected};
 pub(crate) mod report;
-mod resolver;
+pub(crate) mod resolver;
 
 pub(crate) use closure_diff::{emit_closure_diff, lane_sizes};
 pub(crate) use confirm::CliConfirmGate;

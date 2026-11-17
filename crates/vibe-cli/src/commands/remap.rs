@@ -34,7 +34,8 @@ pub(crate) use consent::{
 };
 pub(crate) use home::RemapHome;
 pub(crate) use packages::{
-    adopt_project_requirements, claims as claims_install, install as install_packages,
+    adopt_project_requirements, claims_with_progress as claims_install_with_progress,
+    install as install_packages,
 };
 pub(crate) use probe::RemapUnreachable;
 pub(crate) use uninstall::{claims as claims_uninstall, run as run_uninstall};

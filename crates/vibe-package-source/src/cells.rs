@@ -329,53 +329,9 @@ pub(crate) fn metadata_manifest_cell(
     }
 }
 
-/// Select one top-level metadata token through the existing provider composition.
-pub(crate) fn select_top_level_cell(
-    resource: ProviderResource<'_>,
-    reference: &vibe_core::PackageRef,
-) -> Result<vibe_registry::source_candidates::RetainedSourceCandidate, vibe_resolver::SolveError> {
-    fn select(
-        provider: &impl vibe_resolver::SourceCandidateProvider,
-        reference: &vibe_core::PackageRef,
-    ) -> Result<vibe_registry::source_candidates::RetainedSourceCandidate, vibe_resolver::SolveError>
-    {
-        let group = reference.group.as_ref().ok_or_else(|| {
-            vibe_resolver::DepProviderError::Other("top-level reference must be qualified".into())
-        })?;
-        let version = provider.resolve_version(reference)?;
-        let candidate = provider
-            .retain_default_candidate(group, reference.name.as_str(), &version)?
-            .candidate;
-        let actual = candidate
-            .manifest()
-            .require_package()
-            .map_err(|error| vibe_resolver::DepProviderError::Other(error.to_string()))?
-            .kind;
-        if let Some(requested) = reference.kind
-            && requested != actual
-        {
-            return Err(vibe_resolver::SolveError::KindMismatch {
-                package: format!("{group}/{}", reference.name),
-                requested,
-                actual,
-            });
-        }
-        Ok(candidate)
-    }
-    match resource {
-        ProviderResource::Local(local) => select(&LocalRegistryDepProvider::new(local), reference),
-        ProviderResource::Multi(owner) => select(&MultiRegistryDepProvider::new(owner), reference),
-        ProviderResource::Embedded {
-            locals,
-            declared,
-            precedence,
-            short_circuit,
-        } => select(
-            &embedded_dep_provider(locals, declared, precedence, short_circuit),
-            reference,
-        ),
-    }
-}
+#[path = "cells_selection.rs"]
+mod top_level;
+pub(crate) use top_level::{readmit_top_level_cell, select_top_level_cell};
 
 /// The masked re-solve through the selected provider and solver cells —
 /// the `InstallSource::solve_masked` construction site (R-001). The same
@@ -527,6 +483,28 @@ pub(crate) fn solve_metadata_cell(
             )
         }
     }
+}
+
+// Typed construction helpers keep the canonical R-001 constructor boundary in
+// this file when top-level source-admission logic is factored out of line.
+fn local_provider(owner: &LocalRegistry) -> LocalRegistryDepProvider<'_> {
+    LocalRegistryDepProvider::new(owner)
+}
+fn multi_provider(owner: &MultiRegistryResolver) -> MultiRegistryDepProvider<'_> {
+    MultiRegistryDepProvider::new(owner)
+}
+fn local_composite_provider(
+    providers: Vec<LocalRegistryDepProvider<'_>>,
+) -> LocalCompositeDepProvider<'_> {
+    LocalCompositeDepProvider::new(providers)
+}
+fn embedded_provider<'a>(
+    locals: LocalCompositeDepProvider<'a>,
+    declared: Option<MultiRegistryDepProvider<'a>>,
+    precedence: EmbeddedPrecedence,
+    short_circuit: bool,
+) -> EmbeddedDepProvider<'a> {
+    EmbeddedDepProvider::new(locals, declared, precedence, short_circuit)
 }
 
 #[cfg(test)]

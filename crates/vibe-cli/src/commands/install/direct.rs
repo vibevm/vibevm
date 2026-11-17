@@ -166,19 +166,26 @@ pub(crate) struct SelectedRouting {
     pub source: vibe_package_source::RegistryPackageSource,
     pub roots: Vec<vibe_registry::source_candidates::RetainedSourceCandidate>,
 }
-struct SelectedSource(std::sync::Mutex<Option<vibe_package_source::RegistryPackageSource>>);
-impl vibe_orchestrator::ports::PackageSourceFactory for SelectedSource {
+struct SelectedSource<'a> {
+    original: std::sync::Mutex<Option<vibe_package_source::RegistryPackageSource>>,
+    roots: Vec<vibe_registry::source_candidates::RetainedSourceCandidate>,
+    ordinary: &'a super::CliPackageSourceFactory<'a>,
+}
+impl vibe_orchestrator::ports::PackageSourceFactory for SelectedSource<'_> {
     fn build(
         &self,
-        _: vibe_orchestrator::ports::PackageSourceBuild<'_>,
+        input: vibe_orchestrator::ports::PackageSourceBuild<'_>,
     ) -> Result<Box<dyn vibe_orchestrator::ports::PackageSource>> {
         let source = self
-            .0
+            .original
             .lock()
             .map_err(|_| anyhow::anyhow!("routing source unavailable"))?
             .take()
             .ok_or_else(|| anyhow::anyhow!("routing source was already consumed"))?;
-        Ok(Box::new(source))
+        let ordinary = self.ordinary.build_source(input)?;
+        Ok(Box::new(
+            ordinary.with_selected_continuation(source, self.roots.clone()),
+        ))
     }
 }
 pub(crate) fn run_selected(
@@ -355,7 +362,11 @@ fn execute_after_open(
         crate::commands::lifecycle::DirectInstallWorld::new(&run_observer, &agent);
     let (selected_source, selected_roots) = match selected {
         Some(selected) => (
-            Some(SelectedSource(std::sync::Mutex::new(Some(selected.source)))),
+            Some(SelectedSource {
+                original: std::sync::Mutex::new(Some(selected.source)),
+                roots: selected.roots.clone(),
+                ordinary: &sources,
+            }),
             selected.roots,
         ),
         None => (None, Vec::new()),

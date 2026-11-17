@@ -71,6 +71,7 @@ pub(super) fn resolver_args() -> InstallArgs {
         global: false,
         user_project: false,
         explicit_path: false,
+        stop_requested: false,
         agent: None,
         server: None,
         platform: None,

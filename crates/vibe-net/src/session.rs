@@ -243,6 +243,28 @@ impl NetworkGuard {
     pub fn session(&self) -> &Arc<NetworkSession> {
         &self.session
     }
+
+    /// Finish a synchronous metadata phase and bind the same guard to the
+    /// execution token. Old px/scratch are closed before a new session exists.
+    /// Call only after every preflight request and child has returned.
+    pub fn bind_execution(&mut self, token: &CancellationToken) -> Result<(), NetError> {
+        if token
+            .existing_operation_resource::<NetworkSession>()
+            .is_some()
+        {
+            return Err(NetError::Scratch(std::io::Error::new(
+                std::io::ErrorKind::InvalidInput,
+                "network phase handoff requires a fresh execution token",
+            )));
+        }
+        let route = self.session.route().clone();
+        self.session.close();
+        let session =
+            token.operation_resource(|| NetworkSession::observing(route, token.downgrade()));
+        *CURRENT.lock().unwrap_or_else(PoisonError::into_inner) = Arc::downgrade(&session);
+        self.session = session;
+        Ok(())
+    }
 }
 
 impl Drop for NetworkGuard {
@@ -289,4 +311,25 @@ pub fn current() -> Arc<NetworkSession> {
     FALLBACK
         .get_or_init(|| Arc::new(NetworkSession::new(vibe_core::net::route().clone())))
         .clone()
+}
+
+#[cfg(test)]
+mod phase_tests {
+    use super::*;
+    #[test]
+    fn execution_rebinding_closes_old_session_and_drops_preflight_cancellation() {
+        let before = CancellationToken::new();
+        let mut guard = enter(&before, ProxyRoute::direct());
+        let old = guard.session().clone();
+        let after = CancellationToken::new();
+        assert!(guard.bind_execution(&before).is_err());
+        assert!(!matches!(*old.px.lock().unwrap(), PxSlot::Closed));
+        guard.bind_execution(&after).unwrap();
+        assert!(!Arc::ptr_eq(&old, guard.session()));
+        assert!(matches!(*old.px.lock().unwrap(), PxSlot::Closed));
+        before.cancel();
+        let url = url::Url::parse("http://127.0.0.1/").unwrap();
+        assert_eq!(guard.session().proxy_for(&url).unwrap(), None);
+        assert!(Arc::ptr_eq(guard.session(), &current()));
+    }
 }

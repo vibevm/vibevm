@@ -288,6 +288,7 @@ impl Cli {
         let mut cli = Self::from_arg_matches(&matches).unwrap_or_else(|error| error.exit());
         if let Command::Install(args) = &mut cli.command {
             args.explicit_path = explicit_path;
+            args.stop_requested = cli.stop_file.is_some();
         }
         (cli, explicit_path)
     }

@@ -38,6 +38,8 @@ pub(crate) fn run_install(
     embedded_root: Option<PathBuf>,
     offline: bool,
     seed_default_registry: bool,
+    stop_input: &mut crate::composition::cancellation::StopInput,
+    network: &mut vibe_net::NetworkGuard,
 ) -> Result<()> {
     if args.user_project {
         return super::personal::install(ctx, args, embedded_root, offline, seed_default_registry);
@@ -80,7 +82,15 @@ pub(crate) fn run_install(
         // writes `vibe install -g org.corp/intranet` without knowing it;
         // a probe that cannot answer falls through, so the application
         // path keeps producing its own errors exactly as before.
-        if let Some(selection) = remap::claims_install(&args, offline) {
+        ctx.progress().checkpoint()?;
+        if let Some(selection) =
+            remap::claims_install_with_progress(&args, offline, &ctx.progress())
+        {
+            if args.stop_requested {
+                bail!(
+                    "--stop-file is not supported for global remap installation; no offer was installed"
+                );
+            }
             if args.plan_only {
                 bail!(
                     "--plan-only is not supported for global remap offers; no offer was installed"
@@ -88,7 +98,8 @@ pub(crate) fn run_install(
             }
             refuse_configuration_input(&args.steps.choice, "remap package acquisition")?;
             refuse_version_file_write(&args, "a remap package")?;
-            return remap::install_packages(ctx, selection);
+            let legacy = stop_input.bind_legacy(ctx, network)?;
+            return remap::install_packages(&legacy, selection);
         }
         if args.plan_only {
             refuse_version_file_write(
@@ -96,7 +107,14 @@ pub(crate) fn run_install(
                 "a plan: --plan-only resolves a version and installs none",
             )?;
         }
-        return super::personal::automatic_install(ctx, args, embedded_root, offline);
+        return super::personal::automatic_install(
+            ctx,
+            args,
+            embedded_root,
+            offline,
+            stop_input,
+            network,
+        );
     }
     if args
         .packages

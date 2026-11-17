@@ -421,7 +421,7 @@ fn accepted_offers(
     };
     let accepted = if crate::composition::project_preview(inputs.command) {
         crate::commands::remap::preview_consent(ctx, &home, &inputs.consent, inputs.offline)?
-    } else if asks_about_offers(&home, inputs) {
+    } else if asks_about_offers(&home, inputs, &ctx.progress()) {
         crate::commands::remap::resolve_consent(ctx, &mut home, &inputs.consent, inputs.offline)?
     } else {
         // A verb that applies no offer asks nothing and refuses nothing:
@@ -506,10 +506,14 @@ fn project_required(project_root: Option<&Path>) -> Result<Vec<vibe_core::manife
 /// has answered; and the verb must not be one that only records or
 /// retires an offer. The order is what keeps the probe off every ordinary
 /// run — a home with nothing pending never reaches it.
-fn asks_about_offers(home: &crate::commands::remap::RemapHome, inputs: &Inputs<'_>) -> bool {
+fn asks_about_offers(
+    home: &crate::commands::remap::RemapHome,
+    inputs: &Inputs<'_>,
+    progress: &vibe_core::progress::Progress,
+) -> bool {
     resolves_artifacts(inputs.command)
         && !home.pending().is_empty()
-        && !only_records_remap_offers(inputs.command, inputs.offline)
+        && !only_records_remap_offers(inputs.command, inputs.offline, progress)
 }
 
 /// Whether this verb resolves artifacts, and therefore whether an
@@ -577,10 +581,14 @@ fn resolves_artifacts(cmd: &crate::cli::Command) -> bool {
 /// anything, so resolving the probe without it is not a loss. A probe that
 /// cannot answer says `false`, which only means the run asks its question
 /// as any other install does.
-fn only_records_remap_offers(cmd: &crate::cli::Command, offline: bool) -> bool {
+fn only_records_remap_offers(
+    cmd: &crate::cli::Command,
+    offline: bool,
+    progress: &vibe_core::progress::Progress,
+) -> bool {
     match cmd {
         crate::cli::Command::Install(args) if args.global => {
-            crate::commands::remap::claims_install(args, offline).is_some()
+            crate::commands::remap::claims_install_with_progress(args, offline, progress).is_some()
         }
         crate::cli::Command::Uninstall(args) => {
             crate::commands::remap::claims_uninstall(&args.package)

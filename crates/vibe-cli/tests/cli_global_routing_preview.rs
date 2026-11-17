@@ -98,7 +98,7 @@ fn mixed_global_update_refuses_destination_cohort_before_service_refresh() {
 }
 
 #[test]
-fn inferred_personal_stop_names_explicit_route_and_explicit_prestop_writes_nothing() {
+fn inferred_and_explicit_personal_prestop_write_nothing() {
     let user = UserScratch::new();
     let cwd = tempfile::tempdir().unwrap();
     let stop = cwd.path().join("stop");
@@ -112,9 +112,10 @@ fn inferred_personal_stop_names_explicit_route_and_explicit_prestop_writes_nothi
         .args(["--offline", "--json"])
         .output()
         .unwrap();
-    assert!(!inferred.status.success());
-    assert!(inferred.stdout.is_empty());
-    assert!(String::from_utf8_lossy(&inferred.stderr).contains("--user-project"));
+    assert_eq!(inferred.status.code(), Some(130));
+    let report: serde_json::Value = serde_json::from_slice(&inferred.stdout).unwrap();
+    assert_eq!(report["protocol"], "vibe-project-cancellation/1");
+    assert_eq!(report["outcome"], "cancelled");
     assert_eq!(snapshot(&user.settings), before);
     let explicit = user
         .vibe()

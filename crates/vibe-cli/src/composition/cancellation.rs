@@ -38,7 +38,7 @@ pub(crate) struct StopInput {
 }
 
 impl StopInput {
-    fn none() -> Self {
+    pub(crate) fn none() -> Self {
         Self { watch: None }
     }
 
@@ -46,6 +46,27 @@ impl StopInput {
     /// is answered first, and later signals take their default action. A
     /// stop the person confirmed after the last checkpoint is said so,
     /// rather than left looking honoured.
+    /// End metadata-only classification before a legacy destination executes.
+    pub(crate) fn bind_legacy(
+        &mut self,
+        ctx: &crate::output::Context,
+        network: &mut vibe_net::NetworkGuard,
+    ) -> anyhow::Result<crate::output::Context> {
+        let token = ctx.progress().cancellation().clone();
+        token.checkpoint()?;
+        std::mem::replace(self, Self::none()).settle(ctx, &token);
+        token.checkpoint()?;
+        let progress = ctx.progress().with_cancellation(CancellationToken::new());
+        vibe_registry::git_backend::transfers::observe_by_default(progress.clone());
+        let mut legacy = ctx.with_progress_scope(progress.clone());
+        if let Some(transfers) = ctx.transfers() {
+            legacy =
+                legacy.with_transfers(transfers.with_cancellation(progress.cancellation().clone()));
+        }
+        network.bind_execution(progress.cancellation())?;
+        Ok(legacy)
+    }
+
     pub(crate) fn settle(self, ctx: &crate::output::Context, token: &CancellationToken) {
         let Some(watch) = self.watch else {
             return;
@@ -98,15 +119,13 @@ pub(crate) fn for_command(
     command: &Command,
     stop: Option<PathBuf>,
 ) -> anyhow::Result<(crate::output::Context, CancellationToken, StopInput)> {
-    if supported(command) {
+    // Inferred global installs get a cancellable metadata-only classification.
+    // Their destination owner must refuse legacy stop modes before acquisition.
+    let inferred = matches!(command, Command::Install(args) if args.global && !args.user_project && !args.packages.iter().any(|p| p.starts_with("mcp:")));
+    if supported(command) || inferred {
         return Ok(attach(ctx, stop));
     }
     if stop.is_some() {
-        if matches!(command, Command::Install(args) if args.global && !args.user_project) {
-            anyhow::bail!(
-                "--stop-file cannot classify an inferred global install before source preflight; for personal installation use `vibe install -g --user-project ... --stop-file <path>`; application/MCP/remap cancellation support is unchanged"
-            );
-        }
         anyhow::bail!(
             "--stop-file is supported only for project install/update, registry publish, dl, \
              tool and user init/status"
@@ -118,3 +137,14 @@ pub(crate) fn for_command(
 #[cfg(test)]
 #[path = "cancellation/tests.rs"]
 mod tests;
+
+pub(crate) fn preflight(
+    ctx: &crate::output::Context,
+    token: &CancellationToken,
+    stop: &mut StopInput,
+    preview: bool,
+) -> Option<std::process::ExitCode> {
+    let error = token.checkpoint().err()?;
+    std::mem::replace(stop, StopInput::none()).settle(ctx, token);
+    Some(super::finish(ctx, token, Err(error.into()), preview))
+}

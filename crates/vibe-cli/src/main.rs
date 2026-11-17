@@ -11,9 +11,7 @@ use std::io::IsTerminal;
 use std::path::PathBuf;
 use std::process::ExitCode;
 use std::sync::OnceLock;
-
 use vibe_core::user_config::UserConfig;
-
 mod cli;
 mod command_progress;
 mod commands;
@@ -24,9 +22,8 @@ mod output;
 mod registry;
 mod shell_syntax;
 
-use env_allowlist::partition_env_promotions;
-
 use cli::{Cli, Command};
+use env_allowlist::partition_env_promotions;
 use exit_code::as_exit_code;
 
 /// Names of environment variables that were promoted from the
@@ -70,7 +67,6 @@ fn main() -> ExitCode {
 }
 
 fn run() -> ExitCode {
-    // Clap owns argument diagnostics and their exit classification.
     let (mut cli, explicit_path) = Cli::parse_invocation();
     if let Err(exit) = composition::select_installed_destination(&mut cli, explicit_path) {
         return exit;
@@ -136,7 +132,7 @@ fn run() -> ExitCode {
     );
     let preview_only = composition::project_preview(&cli.command);
     let ctx = composition::transfers::attach_for_command(ctx, &transfer_config, &cli.command);
-    let (ctx, cancellation, stop_input) =
+    let (ctx, cancellation, mut stop_input) =
         match composition::cancellation::for_command(&ctx, &cli.command, cli.stop_file.clone()) {
             Ok(value) => value,
             Err(error) => {
@@ -144,7 +140,12 @@ fn run() -> ExitCode {
                 return ExitCode::FAILURE;
             }
         };
-    let network = vibe_net::enter(&cancellation, composition::network::route_for(&cli.command));
+    if let Some(exit) =
+        composition::cancellation::preflight(&ctx, &cancellation, &mut stop_input, preview_only)
+    {
+        return exit;
+    }
+    let mut network = vibe_net::enter(&cancellation, composition::network::route_for(&cli.command));
 
     // PROP-066 `#locator`: this invocation's one Locator, built and
     // installed before any command — it is write-once — and after the
@@ -239,6 +240,8 @@ fn run() -> ExitCode {
                 discover_embedded_root(),
                 cli.offline,
                 read_env_opt("VIBE_NO_DEFAULT_REGISTRY").is_none(),
+                &mut stop_input,
+                &mut network,
             ),
             Command::Generate(args) => run_lifecycle(vibe_lifecycle::Phase::Generate, args),
             Command::Build(args) => run_lifecycle(vibe_lifecycle::Phase::Build, args),

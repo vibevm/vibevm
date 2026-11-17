@@ -63,6 +63,64 @@ impl RetainedSourceCandidate {
         Arc::ptr_eq(&self.0.owner, &other.0.owner)
     }
 
+    /// Compare an already policy-admitted observation with the original route.
+    /// A held binding includes its content pin whereas discovery has none; this
+    /// comparison does not grant eligibility or waive the pin during acquisition.
+    pub fn same_selected_source(&self, other: &Self) -> bool {
+        if self.group() != other.group()
+            || self.name() != other.name()
+            || self.version() != other.version()
+            || self.metadata_recipe() != other.metadata_recipe()
+            || self.metadata_digest() != other.metadata_digest()
+        {
+            return false;
+        }
+        if self.binding() == other.binding() {
+            return true;
+        }
+        if !matches!(self.binding(), CanonicalSourceBinding::Locked { .. })
+            && !matches!(other.binding(), CanonicalSourceBinding::Locked { .. })
+        {
+            return false;
+        }
+        let a = &self.0.resolution;
+        let b = &other.0.resolution;
+        a.source_url == b.source_url
+            && a.source_ref == b.source_ref
+            && a.is_git_source == b.is_git_source
+            && a.is_path_source == b.is_path_source
+            && a.overridden == b.overridden
+            && a.via_redirect == b.via_redirect
+            && a.redirect_target_auth == b.redirect_target_auth
+            && a.redirect_target_token_env == b.redirect_target_token_env
+    }
+
+    /// Retain the personal owner's locked-source verification law after
+    /// acquisition through an independently retained original route.
+    pub fn verify_continued_acquisition(
+        &self,
+        acquired: crate::PackageAcquisition,
+    ) -> Result<crate::PackageAcquisition, RegistryError> {
+        match acquired {
+            crate::PackageAcquisition::Cached(mut cached) => {
+                self.validate_manifest(&cached.manifest)?;
+                if let Some(held) = &self.0.resolution.locked {
+                    held.verify_continued(&mut cached)?;
+                }
+                Ok(crate::PackageAcquisition::Cached(cached))
+            }
+            crate::PackageAcquisition::InPlace(prepared) => {
+                self.validate_manifest(prepared.manifest())?;
+                let prepared = if let Some(held) = &self.0.resolution.locked {
+                    held.verify_continued_in_place(prepared)?
+                } else {
+                    prepared
+                };
+                Ok(crate::PackageAcquisition::InPlace(prepared))
+            }
+        }
+    }
+
     pub(crate) fn captured(
         owner: &Arc<()>,
         binding: CanonicalSourceBinding,

@@ -153,6 +153,8 @@ pub(crate) fn automatic_install(
     mut args: InstallArgs,
     embedded: Option<PathBuf>,
     offline: bool,
+    stop_input: &mut crate::composition::cancellation::StopInput,
+    network: &mut vibe_net::NetworkGuard,
 ) -> Result<()> {
     use vibe_install::InstallSource;
     use vibe_orchestrator::ports::PackageSource;
@@ -162,13 +164,34 @@ pub(crate) fn automatic_install(
     let source_root = vibe_core::settings::settings_dir()
         .ok_or_else(|| anyhow::anyhow!("settings root unavailable"))?;
     let manifest = vibe_core::manifest::Manifest::default();
-    let resolver = super::install::build_install_resolver_deferred(
-        &args,
-        &manifest,
-        embedded.as_deref(),
-        &source_root,
-        offline || args.offline,
-        &[],
+    ctx.progress().checkpoint()?;
+    let mut options = super::install::resolver::package_source_options(&args);
+    let preview_scratch = if args.plan_only {
+        Some(
+            tempfile::Builder::new()
+                .prefix("vibe-routing-preview-")
+                .tempdir()?,
+        )
+    } else {
+        None
+    };
+    if let Some(scratch) = &preview_scratch {
+        options.storage = Some(vibe_package_source::SourceStorage {
+            acquisition_root: scratch.path().into(),
+            read_only_store: None,
+        });
+    }
+    let resolver = vibe_package_source::build_install_resolver_with_sources(
+        vibe_package_source::InstallResolverRequest {
+            options: &options,
+            manifest: &manifest,
+            embedded_root: embedded.as_deref(),
+            project_root: &source_root,
+            offline: offline || args.offline,
+            locked: &[],
+            progress: &ctx.progress(),
+        },
+        vibe_package_source::deferred_user_registry(false),
     )?;
     let source = vibe_package_source::RegistryPackageSource::new(
         resolver,
@@ -179,8 +202,10 @@ pub(crate) fn automatic_install(
     let mut qualified_requests = Vec::new();
     let mut personal = None;
     for spelling in &args.packages {
+        ctx.progress().checkpoint()?;
         let reference = source.qualify(&vibe_core::PackageRef::parse(spelling)?, &lock)?;
         let mut candidate = source.resolver().select_top_level(&reference)?;
+        ctx.progress().checkpoint()?;
         if candidate.manifest().application.is_some() {
             let authored = if vibe_core::PackageRef::parse(spelling)?.group.is_some() {
                 spelling.clone()
@@ -222,6 +247,13 @@ pub(crate) fn automatic_install(
         selected.push(candidate);
     }
     if personal == Some(false) {
+        if args.stop_requested {
+            bail!(
+                "--stop-file is not supported for global application installation; no application was installed"
+            );
+        }
+        let legacy = stop_input.bind_legacy(ctx, network)?;
+        let ctx = &legacy;
         if selected.len() != 1 {
             bail!("global application install requires exactly one package");
         }
@@ -283,7 +315,6 @@ pub(crate) fn automatic_install(
         bail!("application/MCP controls do not apply to personal installation");
     }
     args.path = root()?;
-    admit_automatic_personal_context(&args.path)?;
     args.global = false;
     args.user_project = false;
     args.packages = qualified_requests;
@@ -310,38 +341,6 @@ pub(crate) fn automatic_install(
             roots: selected,
         },
     )
-}
-
-/// The global source owner cannot replay a personal lock or replace its source context.
-/// Until exact-selection transfer is supported, refuse rather than silently solve
-/// personal dependencies with the global catalog. Explicit selection uses the ordinary owner.
-fn admit_automatic_personal_context(root: &std::path::Path) -> Result<()> {
-    use vibe_core::manifest::{Lockfile, Manifest};
-    let manifest = Manifest::read(root.join(Manifest::FILENAME))?;
-    let lock = root.join(Lockfile::FILENAME);
-    let held = if lock.try_exists()? {
-        !Lockfile::read(&lock)?.packages.is_empty()
-    } else {
-        false
-    };
-    if held
-        || !manifest.requires.is_empty()
-        || !manifest.requires_any.is_empty()
-        || !manifest.registries.is_empty()
-        || !manifest.source_policy.is_empty()
-        || !manifest.mirrors.is_empty()
-        || !manifest.overrides.is_empty()
-        || manifest.override_table.is_some()
-        || vibe_core::project_local_registry_path(root).try_exists()?
-        || root
-            .join(vibe_core::layout::current_packages_root())
-            .try_exists()?
-    {
-        bail!(
-            "automatic personal installation cannot transfer this project's declared or locked source context; use `vibe install -g --user-project` to resolve under its ordinary policy"
-        );
-    }
-    Ok(())
 }
 
 fn root() -> Result<PathBuf> {

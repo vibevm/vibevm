@@ -20,7 +20,8 @@ fn remap_preflight_keeps_original_owner_and_version_when_catalog_grows() {
         packages: vec!["org.continuity/offer".into()],
         ..inert_args()
     };
-    let selected = claims(&args, true).unwrap();
+    let selected =
+        claims_with_progress(&args, true, &vibe_core::progress::Progress::default()).unwrap();
     package(registry.path(), "1.1.0");
     let candidate = &selected.candidates[0];
     let acquired = selected
@@ -52,7 +53,8 @@ fn remap_preflight_refuses_changed_selected_manifest() {
         packages: vec!["org.continuity/offer".into()],
         ..inert_args()
     };
-    let selected = claims(&args, true).unwrap();
+    let selected =
+        claims_with_progress(&args, true, &vibe_core::progress::Progress::default()).unwrap();
     let path = root.join("vibe.toml");
     let original = std::fs::read_to_string(&path).unwrap();
     std::fs::write(

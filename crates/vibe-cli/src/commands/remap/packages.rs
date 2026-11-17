@@ -42,9 +42,6 @@ pub(crate) struct Installed {
 /// `vibe cache add` uses, because a remap package is fetched like any
 /// other package and an operator with no project still has to be able to
 /// install one.
-fn resolver(args: &InstallArgs, offline: bool) -> Result<InstallResolver> {
-    resolver_with_locked(args, offline, &[])
-}
 fn resolver_with_locked(
     args: &InstallArgs,
     offline: bool,
@@ -87,6 +84,7 @@ fn inert_args() -> InstallArgs {
         global: true,
         user_project: false,
         explicit_path: false,
+        stop_requested: false,
         agent: None,
         server: None,
         platform: None,
@@ -135,37 +133,8 @@ fn inert_args() -> InstallArgs {
 /// cannot answer — no registry, an unresolvable coordinate, a malformed
 /// manifest — answers `None`, so the existing application path produces
 /// its own error exactly as before rather than this one guessing.
-#[specmark::spec(documents = "spec://org.vibevm.core/vibevm/common/PROP-066#package")]
-pub(crate) struct Selection {
-    resolver: InstallResolver,
-    candidates: Vec<vibe_registry::source_candidates::RetainedSourceCandidate>,
-}
-
-pub(crate) fn claims(args: &InstallArgs, offline: bool) -> Option<Selection> {
-    if args.packages.is_empty() {
-        return None;
-    }
-    let resolver = resolver(args, offline).ok()?;
-    let mut candidates = Vec::with_capacity(args.packages.len());
-    for raw in &args.packages {
-        let parsed = PackageRef::parse(raw).ok()?;
-        let pkgref = crate::commands::short_name::qualify(
-            &resolver,
-            &parsed,
-            &Lockfile::empty("remap-preflight", "0"),
-        )
-        .ok()?;
-        let candidate = resolver.select_top_level(&pkgref).ok()?;
-        if candidate.manifest().package.as_ref().map(|meta| meta.kind) != Some(PackageKind::Remap) {
-            return None;
-        }
-        candidates.push(candidate);
-    }
-    Some(Selection {
-        resolver,
-        candidates,
-    })
-}
+mod selection;
+pub(crate) use selection::{Selection, claims_with_progress};
 
 /// Install one or more remap packages into the user home as offers.
 #[specmark::spec(documents = "spec://org.vibevm.core/vibevm/common/PROP-066#package")]
