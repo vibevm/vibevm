@@ -317,7 +317,19 @@ fn a_trace_disabled_reinstall_displaces_a_parked_traced_install_cleanly() {
     );
     assert_clean_root(&output, "reinstall");
 
-    let warnings = warning_lines(&output.stderr);
+    let all_warnings = warning_lines(&output.stderr);
+    let authority = "! specification authority is missing/stale; boot repair remains source-free; run vibe install to refresh AI-native authority";
+    assert_eq!(
+        all_warnings
+            .iter()
+            .filter(|line| line.as_str() == authority)
+            .count(),
+        1
+    );
+    let warnings: Vec<_> = all_warnings
+        .into_iter()
+        .filter(|line| line != authority)
+        .collect();
     assert_eq!(warnings.len(), 1, "one structural notice: {warnings:?}");
     assert_eq!(
         warnings[0],
@@ -412,7 +424,19 @@ fn an_invalid_displaced_start_on_reinstall_refuses_once_and_touches_nothing() {
     );
     assert_clean_root(&output, "reinstall");
 
-    let warnings = warning_lines(&output.stderr);
+    let all_warnings = warning_lines(&output.stderr);
+    let authority = "! specification authority is missing/stale; boot repair remains source-free; run vibe install to refresh AI-native authority";
+    assert_eq!(
+        all_warnings
+            .iter()
+            .filter(|line| line.as_str() == authority)
+            .count(),
+        1
+    );
+    let warnings: Vec<_> = all_warnings
+        .into_iter()
+        .filter(|line| line != authority)
+        .collect();
     assert_eq!(warnings.len(), 1, "{warnings:?}");
     let body = warnings[0]
         .strip_prefix("! ")

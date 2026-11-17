@@ -13,6 +13,14 @@ pub fn project_fresh_node_roots(
     lock: &Lockfile,
     spec_format: SpecFormat,
 ) -> Result<NodeRootProjection> {
+    // Remap-only worlds have no package root declarations. Their dedicated
+    // owner admits remaps separately; they grant no package reference authority.
+    if request.roots.is_empty() && !roots::has_declarations(workspace) && lock.packages.is_empty() {
+        return Ok(workspace
+            .iter_nodes()
+            .map(|(node, _)| (node.into(), Vec::new()))
+            .collect());
+    }
     if !freshness_prepared(
         project_root,
         manifest,

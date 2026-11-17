@@ -9,8 +9,12 @@ use serde_json::Value;
 
 /// The first application error of the chain, if any.
 pub(crate) fn app_error(err: &anyhow::Error) -> Option<&vibe_app::AppError> {
-    err.chain()
-        .find_map(|cause| cause.downcast_ref::<vibe_app::AppError>())
+    // anyhow context can itself carry the typed application envelope while
+    // retaining the original registry/provider error underneath it.
+    err.downcast_ref::<vibe_app::AppError>().or_else(|| {
+        err.chain()
+            .find_map(|cause| cause.downcast_ref::<vibe_app::AppError>())
+    })
 }
 
 /// `code`, and `step` / `work` when the application error names them.

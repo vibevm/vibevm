@@ -85,6 +85,31 @@ pub enum InstallResolver {
     },
 }
 
+impl InstallResolver {
+    /// The selected local owner retains its source-tree execution semantics.
+    /// None means this route uses ordinary immutable acquisition instead.
+    pub fn retained_local_tree(
+        &self,
+        candidate: &vibe_registry::source_candidates::RetainedSourceCandidate,
+    ) -> Result<Option<vibe_registry::ResolvedPackage>, RegistryError> {
+        use vibe_core::manifest::CanonicalSourceBinding;
+        let root = match candidate.binding() {
+            CanonicalSourceBinding::DirectoryRegistry { root }
+            | CanonicalSourceBinding::Local { root }
+            | CanonicalSourceBinding::Embedded { root } => root,
+            _ => return Ok(None),
+        };
+        let local = match self {
+            Self::Local(local, _) | Self::LockedLocal { local, .. } => Some(local),
+            Self::Embedded { locals, .. } => locals.iter().find(|local| local.root() == root),
+            Self::Multi(..) => None,
+        };
+        local
+            .map(|local| local.retained_source_tree(candidate))
+            .transpose()
+    }
+}
+
 impl InstallSource for InstallResolver {
     fn source_solve_limits(
         &self,

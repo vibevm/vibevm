@@ -43,6 +43,13 @@ pub(crate) fn project_with_map() -> tempfile::TempDir {
         "crates/demo/src/lib.rs",
         "//! A scannable unit, so the map build walks real bytes.\npub fn demo() {}\n",
     );
+    let workspace = vibe_workspace::Workspace::load(root.path()).unwrap();
+    vibe_workspace::specmap_authority::publish(
+        &workspace,
+        root.path(),
+        &std::collections::BTreeMap::from([(".".into(), Vec::new())]),
+    )
+    .unwrap();
     root
 }
 

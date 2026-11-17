@@ -453,6 +453,14 @@ fn execute_owned(
             // regeneration (cheap, self-healing — §2.4).
             progress.checkpoint()?;
             observer.narrate(InstallNarration::FreshLock);
+            let roots = vibe_install::project_fresh_node_roots(
+                &project_root,
+                &manifest,
+                &workspace,
+                &request,
+                &lockfile_snapshot,
+                spec_format,
+            )?;
             progress.cancellation().publishing();
             let boot_task = progress.task("Regenerating boot artifacts from the fresh lock");
             // The one workspace snapshot this command owns. Nothing between
@@ -487,14 +495,6 @@ fn execute_owned(
             progress.checkpoint()?;
             boot_task.set_progress(nodes.len() as u64, Some(nodes.len() as u64), "nodes");
             boot_task.finish();
-            let roots = vibe_install::project_fresh_node_roots(
-                &project_root,
-                &manifest,
-                &workspace,
-                &request,
-                &lockfile_snapshot,
-                spec_format,
-            )?;
             vibe_workspace::specmap_authority::publish(&workspace, &project_root, &roots)?;
             lifecycle_run.native = Some(native);
             let after = after_durable_world

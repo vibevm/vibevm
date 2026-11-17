@@ -25,7 +25,7 @@ fn refresh_inner(ctx: &crate::output::Context, root: &Path) -> Result<()> {
     let options = vibe_package_source::PackageSourceOptions {
         storage: Some(vibe_package_source::SourceStorage {
             acquisition_root: scratch.path().into(),
-            read_only_store: None,
+            read_only_store: Some(vibe_registry::store::store_root()?),
         }),
         ..Default::default()
     };

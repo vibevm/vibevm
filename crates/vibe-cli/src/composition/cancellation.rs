@@ -54,7 +54,11 @@ impl StopInput {
     ) -> anyhow::Result<crate::output::Context> {
         let token = ctx.progress().cancellation().clone();
         token.checkpoint()?;
-        std::mem::replace(self, Self::none()).settle(ctx, &token);
+        if let Some(watch) = std::mem::replace(self, Self::none()).watch
+            && watch.handoff(&token)
+        {
+            ctx.diagnostic("classification ended before the requested stop took effect");
+        }
         token.checkpoint()?;
         let progress = ctx.progress().with_cancellation(CancellationToken::new());
         vibe_registry::git_backend::transfers::observe_by_default(progress.clone());

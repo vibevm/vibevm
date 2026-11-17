@@ -209,8 +209,9 @@ fn preserves_host(spec_format: Option<&str>, static_name: &str) {
     assert_eq!(index["static"].as_str(), Some(lane.as_str()));
     for launcher in ["CLAUDE.md", "AGENTS.md", "GEMINI.md"] {
         let text = fs::read_to_string(root.join(launcher)).unwrap();
-        assert!(text.contains(&lane));
-        assert!(!text.contains(&common::boot_rel(other_lane)));
+        let project_router = text.split("# Optional personal boot").next().unwrap();
+        assert!(project_router.contains(&lane));
+        assert!(!project_router.contains(&common::boot_rel(other_lane)));
     }
 }
 

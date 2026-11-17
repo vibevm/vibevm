@@ -137,6 +137,43 @@ impl LocalRegistry {
         })
     }
 
+    /// Preserve the existing local application's source-tree execution posture
+    /// without reselecting a version or warming the immutable package store.
+    pub fn retained_source_tree(
+        &self,
+        candidate: &RetainedSourceCandidate,
+    ) -> Result<ResolvedPackage, RegistryError> {
+        let resolution = candidate.resolution_for(&self.candidate_owner)?;
+        let selected = resolution.resolved.clone();
+        let root = selected
+            .source_dir
+            .canonicalize()
+            .map_err(|source| RegistryError::Io {
+                path: selected.source_dir.clone(),
+                source,
+            })?;
+        if !root.starts_with(
+            self.root()
+                .canonicalize()
+                .map_err(|source| RegistryError::Io {
+                    path: self.root().into(),
+                    source,
+                })?,
+        ) && !crate::templates::is_rendered_tree(&root)
+        {
+            return Err(RegistryError::MalformedMeta {
+                path: root,
+                reason: "selected local tree escaped its registry".into(),
+            });
+        }
+        let current = Manifest::read(root.join(Manifest::FILENAME))?;
+        candidate.validate_manifest(&current)?;
+        Ok(ResolvedPackage {
+            source_dir: root,
+            ..selected
+        })
+    }
+
     /// Acquire the exact retained directory selection, never resolve another version/root.
     pub fn fetch_candidate_for_install(
         &self,

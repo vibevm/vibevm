@@ -449,6 +449,32 @@ fn project_node_roots(
     roots: &[RootRequirement],
     owners: &[(vibe_resolver::source_candidates::EdgeId, String)],
 ) -> Result<BTreeMap<String, Vec<PackageRef>>> {
+    // Preserve the ordinary typed kind refusal before provenance projection can
+    // turn an incompatible original occurrence into a generic missing witness.
+    for root in roots {
+        // A singleton declaration asserts one kind. Unchosen disjunctive
+        // alternatives must not veto the accepted occurrence's witness.
+        if root.requirement.alternatives.len() != 1 {
+            continue;
+        }
+        for alternative in &root.requirement.alternatives {
+            let reference = &alternative.reference;
+            if let (Some(requested), Some(group)) = (reference.kind, reference.group.as_ref())
+                && let Some(metadata) = solved
+                    .selected
+                    .get(&(group.clone(), reference.name.to_string()))
+            {
+                let actual = metadata.candidate.manifest().require_package()?.kind;
+                if actual != requested {
+                    return Err(Error::Solve(vibe_resolver::SolveError::KindMismatch {
+                        package: reference.qualified_name(),
+                        requested,
+                        actual,
+                    }));
+                }
+            }
+        }
+    }
     let mut out = BTreeMap::<String, Vec<PackageRef>>::new();
     for (id, node) in owners {
         let rows = out.entry(node.clone()).or_default();

@@ -309,10 +309,31 @@ mod tests {
         // The code cites the nickname so the edge resolves at build time.
         std::fs::write(
             src.join("lib.rs"),
-            "#[spec(implements = \"spec://demo/D#req-r\", r = 1)]\npub fn f() {}\n",
+            format!(
+                "#[spec(implements = \"spec://{}/D#req-r\", r = 1)]\npub fn f() {{}}\n",
+                specmap_namespace.unwrap_or("demo")
+            ),
         )
         .unwrap();
+        if specmap_namespace.is_some() {
+            let workspace = vibe_workspace::Workspace::load(root).unwrap();
+            vibe_workspace::specmap_authority::publish(
+                &workspace,
+                root,
+                &std::collections::BTreeMap::from([(".".into(), Vec::new())]),
+            )
+            .unwrap();
+        }
         tmp
+    }
+
+    #[test]
+    fn refuses_missing_installed_authority_without_publishing_map() {
+        let tmp = package_dir(Some("demo"));
+        std::fs::remove_file(tmp.path().join(".vibe/specmap-authority.json")).unwrap();
+        let error = generate(tmp.path()).unwrap_err();
+        assert!(format!("{error:#}").contains("vibe install"));
+        assert!(!tmp.path().join(MAP_FILENAME).exists());
     }
 
     #[test]
@@ -415,6 +436,22 @@ mod tests {
         };
         assert_eq!(coordinate, "org.demo/demo");
         assert!(!remapped, "nickname == coordinate ⇒ no remap, no notice");
+        let map: serde_json::Value =
+            serde_json::from_slice(&std::fs::read(tmp.path().join(MAP_FILENAME)).unwrap()).unwrap();
+        assert!(
+            map["edges"]
+                .as_array()
+                .unwrap()
+                .iter()
+                .any(|edge| edge["uri"] == "spec://org.demo/demo/D#req-r")
+        );
+        assert!(
+            map["spec_units"]
+                .as_array()
+                .unwrap()
+                .iter()
+                .any(|unit| unit["uri"] == "spec://org.demo/demo/D#req-r")
+        );
     }
 
     #[test]

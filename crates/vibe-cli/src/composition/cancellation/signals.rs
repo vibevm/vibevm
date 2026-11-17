@@ -48,6 +48,8 @@ pub(super) struct Source {
     flags: Flags,
     #[cfg(unix)]
     done: Arc<AtomicBool>,
+    #[cfg(unix)]
+    registrations: Vec<signal_hook::SigId>,
     #[cfg(windows)]
     _console: crate::commands::app::interrupt::windows::Console,
 }
@@ -59,11 +61,19 @@ impl Source {
         {
             use signal_hook::consts::{SIGINT, SIGTERM};
             let done = Arc::new(AtomicBool::new(false));
+            let mut registrations = Vec::new();
             for (signal, flag) in [(SIGINT, &flags.interrupt), (SIGTERM, &flags.terminate)] {
-                signal_hook::flag::register_conditional_default(signal, Arc::clone(&done))?;
-                signal_hook::flag::register(signal, Arc::clone(flag))?;
+                registrations.push(signal_hook::flag::register_conditional_default(
+                    signal,
+                    Arc::clone(&done),
+                )?);
+                registrations.push(signal_hook::flag::register(signal, Arc::clone(flag))?);
             }
-            Ok(Self { flags, done })
+            Ok(Self {
+                flags,
+                done,
+                registrations,
+            })
         }
         #[cfg(windows)]
         {
@@ -78,6 +88,15 @@ impl Source {
                 std::io::ErrorKind::Unsupported,
                 "no stop signals on this platform",
             ))
+        }
+    }
+
+    /// Relinquish only this classification owner's handlers before the legacy
+    /// destination installs its own. Normal terminal drop keeps default behavior.
+    pub(super) fn handoff(&mut self) {
+        #[cfg(unix)]
+        for id in self.registrations.drain(..) {
+            signal_hook::low_level::unregister(id);
         }
     }
 

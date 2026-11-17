@@ -204,7 +204,31 @@ pub(crate) fn automatic_install(
     for spelling in &args.packages {
         ctx.progress().checkpoint()?;
         let reference = source.qualify(&vibe_core::PackageRef::parse(spelling)?, &lock)?;
-        let mut candidate = source.resolver().select_top_level(&reference)?;
+        let mut candidate = source
+            .resolver()
+            .select_top_level(&reference)
+            .map_err(|error| {
+                // Classification has not selected a personal destination yet. Keep
+                // the established global registry-failure envelope for source misses,
+                // while preserving typed policy/kind failures unchanged.
+                if matches!(
+                    &error,
+                    vibe_resolver::SolveError::Provider(
+                        vibe_resolver::DepProviderError::OfflineUnavailable { .. }
+                            | vibe_resolver::DepProviderError::UnknownPackage { .. }
+                            | vibe_resolver::DepProviderError::NoMatchingVersion { .. }
+                            | vibe_resolver::DepProviderError::AggregateNotFound { .. }
+                    )
+                ) {
+                    let envelope = vibe_app::AppError::from(vibe_app::ResolveError::Registry {
+                        spelling: spelling.clone(),
+                        reason: error.to_string(),
+                    });
+                    anyhow::Error::new(error).context(envelope)
+                } else {
+                    anyhow::Error::new(error)
+                }
+            })?;
         ctx.progress().checkpoint()?;
         if candidate.manifest().application.is_some() {
             let authored = if vibe_core::PackageRef::parse(spelling)?.group.is_some() {
@@ -266,6 +290,42 @@ pub(crate) fn automatic_install(
         {
             bail!(
                 "global application acquisition requires a cached package, not an in-place project checkout"
+            );
+        }
+        if let Some(local) = source.resolver().retained_local_tree(candidate)? {
+            let mut resolved = vibe_app::from_manifest(
+                candidate.manifest().clone(),
+                local.source_dir.clone(),
+                vibe_app::PackageCoordinate {
+                    group: candidate.group().to_string(),
+                    name: candidate.name().into(),
+                    version: candidate.version().to_string(),
+                },
+            )?;
+            let registry_root = match candidate.binding() {
+                vibe_core::manifest::CanonicalSourceBinding::DirectoryRegistry { root }
+                | vibe_core::manifest::CanonicalSourceBinding::Local { root }
+                | vibe_core::manifest::CanonicalSourceBinding::Embedded { root } => root,
+                _ => unreachable!("retained_local_tree admits only local registry bindings"),
+            };
+            resolved.source.kind =
+                vibe_wire::generated::shared::ApplicationPendingSourceKind::LocalRegistry;
+            resolved.source.registry = Some(
+                registry_root
+                    .to_str()
+                    .ok_or_else(|| anyhow::anyhow!("registry path is not UTF-8"))?
+                    .into(),
+            );
+            let mut evidence = candidate.source_evidence().clone();
+            evidence.acquisition = Some(vibe_wire::generated::shared::SourceAcquisition::Directory);
+            evidence.store_reused = Some(false);
+            resolved.source_evidence = Some(evidence);
+            return super::app::global::install_with_selected(
+                ctx,
+                args,
+                embedded,
+                offline,
+                Some(resolved),
             );
         }
         let store = vibe_registry::store::store_root()?;
