@@ -153,6 +153,21 @@ found the terminal marker, not that the gate passed. Builder now executes the
 bounded compatibility repairs and exact baseline classification; no extra owner
 approval is required for that already-authorized work. Final validation remains open.
 
+## Bounded repair verification in progress
+
+First repaired cluster independently verified in
+`/fast/tmp/up-repair-specmap-signal-store.log`:specmap7,interrupt1,wizard1,
+hosted-reconcile5,lifecycle-update-world1 all pass. The specmap positives retain
+actual resolved edge/unit assertions and the added missing-context negative refuses
+without publishing. Signal registrations are relinquished only at legacy handoff;
+normal terminal behavior remains distinct. This accepts15 focused tests on that
+subject, not the complete updated implementation.
+
+The subsequent local-app/fixture batch initially failed compilation (E0277 at the
+new canonicalize error conversions), so its runtime tests were unrun, not passing.
+Builder owns that ordinary compile repair and the remaining Fresh, single-capture,
+typed-error and fixture targets. No full repaired-panel acceptance yet.
+
 ## Remaining closure accounting, not missing functional implementation
 
 1. Record the running final host self-check/cross-target outcomes exactly, including
