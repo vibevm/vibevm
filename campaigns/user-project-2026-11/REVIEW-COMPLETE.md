@@ -165,8 +165,18 @@ subject, not the complete updated implementation.
 
 The subsequent local-app/fixture batch initially failed compilation (E0277 at the
 new canonicalize error conversions), so its runtime tests were unrun, not passing.
-Builder owns that ordinary compile repair and the remaining Fresh, single-capture,
-typed-error and fixture targets. No full repaired-panel acceptance yet.
+That compile issue was repaired. Independent retry evidence:
+`/fast/tmp/up-repair-local-app-fixtures-retry.log` has44passing tests
+(2roundtrip,7source-evidence,4foreign-explain,25init,6monorepo-local), retaining
+original force execution count, full source evidence equality and single capture.
+`/fast/tmp/up-repair-trace-mcp-fixtures.log` has60trace tests passing, followed
+by2MCP fixture read-only assertion failures. The corrected MCP assertions compare
+existing authority bytes,mtime and directory entry count; all7MCP tests pass in
+`/fast/tmp/up-repair-mcp-readonly-root-kind.log`. That log's later typed-kind
+regression remains failed on its subject and must not be hidden by the MCP success.
+Fresh projection now precedes boot effects; a remap-only empty package world grants
+zero package roots. Builder owns remaining Fresh/typed/category tests and exact
+baseline classification. No full repaired-panel acceptance yet.
 
 ## Remaining closure accounting, not missing functional implementation
 
