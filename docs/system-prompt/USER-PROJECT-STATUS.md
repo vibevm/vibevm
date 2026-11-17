@@ -1,8 +1,9 @@
 # USER-PROJECT: practical delivery status
 
-Verified on 2026-11-17. This reports runnable behavior against PROP-074, not a
-rewrite of its requirements or whole-feature/release acceptance. The previously
-accepted bounded slice remains the base. See the [quickstart](README.md#personal-specification-boot)
+Verified on 2026-11-17. This reports runnable behavior against PROP-074 and its
+owner-approved CURRENT-SCOPE, MEMORY-DELIVERY, TRANSPORT-DELIVERY and
+CLOSURE-ACCOUNTING refinements. It is not whole-feature/release acceptance.
+The previously accepted bounded slice remains the base. See the [quickstart](README.md#personal-specification-boot)
 and [offline walkthrough](user-project-onboarding.py).
 
 ## Finished user journeys
@@ -36,10 +37,13 @@ code change was needed to complete the journey.
   lifecycle. Inferred global `--stop-file` requires that same explicit selector.
   These remain contract gaps, not silently waived requirements, but are not a
   reason to redesign routing merely to shorten the documented command.
-- **Legacy/remoter modes:** remap offer probing and installation still resolve
-  independently; global remap preview explicitly refuses without adoption.
-  Broader solver/mode, remote preflight cache/publication and in-place acquisition
-  parity have not been established by this local journey.
+- **Legacy/remoter modes:** global remap installation now carries its original
+  resolver and selected source candidates from kind preflight into acquisition,
+  then uses the ordinary offer-adoption owner. Focused regressions cover a newer
+  version appearing after selection and refusal when selected metadata changes.
+  Global remap preview explicitly refuses without adoption. Broader solver/mode,
+  remote preflight cache/publication and in-place acquisition parity have not
+  been established by this local journey.
 - **Memory automation:** authorized explicit records and next-boot loading are
   demonstrated. Autonomous model fact-writing and absent-root first-write behavior
   are not. No harness-memory migration or automatic synchronization is provided.
@@ -63,10 +67,12 @@ The recommended release scope is the documented **explicit personal workflow**,
 not unrestricted automatic routing or autonomous memory management. That workflow
 has a runnable local end-to-end path; no additional runtime blocker was found.
 
-Before release, the owner must decide that scope against the still broader
-PROP-074 wording, have the corresponding specification/status reconciled by its
-owner, and authorize fixation/integration and release separately. Review the
-scoped changes without staging unrelated dirty bytes. A release to additional
+The owner-approved scope is now reconciled in PROP-074 and the finite
+UP-FINISH-01 brief; scoped product/onboarding commits and local integration are
+authorized and performed. External release/push remain separate owner actions.
+The final requirement dispositions below preserve the broader original promises
+rather than presenting every one as implemented. Review scoped changes without
+staging unrelated dirty bytes. A release to additional
 operating systems or a claim of graphical/provider integration requires the
 corresponding targeted smoke on that consumer, rather than another universal
 prerequisite ladder. Retain the existing baseline lint finding honestly under
@@ -80,3 +86,30 @@ prerequisite and must not be revived.
 
 This status does not authorize commits, push, publication, provider calls or
 changes to credentials, harness configuration, toolchains or peer checkouts.
+
+## Final original-requirement disposition
+
+| Requirement family | Disposition | Evidence / exact residual |
+| --- | --- | --- |
+| ROOT, INIT, STATUS, root grammar/admission/publication/report | Demonstrated | Root29, core15, workspace51 tests; walkthrough init/status. No implicit boot/read init. |
+| Explicit INSTALL, installed lifecycle, EMPTY-AND-ALL, list/check | Demonstrated | Personal lifecycle6/read4; walkthrough install/list/check/no-arg regeneration/update/uninstall. Own manifest/lock/source policy. |
+| Automatic INSTALL-ROUTING and inferred stop | Explicit unsupported convenience at its documented boundary | Existing personal source context refuses with explicit-selector remedy; inferred stop does likewise. No supported explicit-flow blocker found. |
+| Application/MCP compatibility, one destination before mutation | Demonstrated within named test subjects | Existing legacy routing gates and global mixed-destination/preview regressions. Not every remote/solver/materialization mode was measured. |
+| Remap source selection through global installation | Demonstrated bounded repair | Same live resolver/candidate from preflight through acquire; catalog-growth and selected-manifest-drift regressions, plus ordinary remap/preview compatibility tests. No new source authority. |
+| Late lane, outside shared prefix, optional failure, protected precedence | Demonstrated delivery contract and transport | Boot3 and actual recorder journey; shared bytes unchanged, next-launch edits/toggles. Model obedience is not measured. |
+| Memory default/classification/opt-out | Demonstrated guidance and authored-record delivery | Shared instruction constant; boot3 opt-out/index/live-edit test and connected authored-memory journey. Read4 proves absent-root initialization remedy and invalid-root refusal without mutation. No memory-write command is invented. |
+| Absent/unavailable first memory-write destination | Delivered instruction/refusal boundary; autonomous behavior excluded | Guidance requires explicit user init/action and forbids silent harness fallback; ordinary reads/lifecycle refuse safely. There is no autonomous writer to exercise; no claim of observed model behavior. |
+| Override purpose/shape/location/controls/additive/separate resolution | Demonstrated | Override5, independent package roots and locks, worktree identity test, actual next-launch toggles and explicit new-checkout bind. |
+| LAYERED-PREFIX and LOCATION | Demonstrated | Compose1 plus walkthrough exact leading bytes, protected local publication/ignore and separate launch carrier; no-layer identity tested. |
+| LAYERS-IN-TREE additive attribution and controls | Demonstrated | Layers3, frozen legacy projection, console/hosted-PTY hide versus enable controls. |
+| Original explicit supplement/replacement visualization and general cross-layer resolution | Unimplemented original promise, not a supported explicit-flow blocker | Current view carries additive layer-qualified identity, not explicit replacement relations or merged cross-layer locks. Independent compilation is deliberate; no prose/NLP conflict graph is claimed. |
+| OVERRIDE-NO-AI-NATIVE-ANCHORS | Demonstrated bounded guard; broader original authority promise remains unimplemented | Canonical isolation tests and12 shipping CLI/MCP probes reject configured current private roots and omit local units from index/coverage. General direct-unresolved or every undeclared external reference is not proven; no universal dependency-authority claim. |
+| Privacy responsibility and filesystem-copy export | Demonstrated product boundary | Existing payload/staging exclusion tests, launch shared-byte isolation, local ignore checks. Deliberate Git publication/history policing is owner-excluded scope, not a missing scanner. |
+| Classic, launch, capture, compose | Demonstrated respective reading/transport/artifact boundaries | Generated classic router tests, actual recorder, capture tests, compose artifact. Product session API sender does not exist; creating one or modifying installer authority is excluded. |
+| Platforms and actual consumers | Validation unrun where named | Linux hermetic CLI/PTY measured. Other-OS runtime, graphical Electron and provider/model-compliance smoke unrun; not silently disabled product modes. |
+| Retained/native transaction framework, migration and sync automation | Owner-excluded scope | Rejected framework removed; no revival. Autonomous memory extraction/migration/sync and NLP preference parsing are not prerequisites of current delivery. |
+
+No concrete supported explicit-workflow data-loss, privacy or source-integrity
+blocker remains identified by this finite assessment. The documented workflow is
+ready within its stated boundaries. Original promises explicitly marked
+unimplemented above are not thereby accepted, erased or reclassified as tests.
