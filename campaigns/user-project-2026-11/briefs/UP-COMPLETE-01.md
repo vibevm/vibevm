@@ -95,6 +95,34 @@ is not model compliance. Do not create or access credentials or install/change h
 software to fabricate a green panel. A genuinely unavailable external test is reported
 as a concrete validation blocker, not a disabled feature or successful check.
 
+## Final connected acceptance journey
+
+Extend the existing hermetic onboarding rather than replacing it with helper counts:
+
+1. Install a shared preference package exposing an overridable anchor. Install another
+   version in personal and a declared override relation; tree epoch2 shows exact owners,
+   selected versions and effective precedence. Actual launcher receives the authorized
+   source unit and notice; protected replacement fails safely without dropping project.
+2. Disable/enable user and override independently; next capture/launch/compose restores
+   the correct lower replacement if the higher layer is disabled, denied or unavailable.
+   Shared prefix bytes and authored records remain unchanged.
+3. Perform repeated automatic global personal installs from nonproject cwd with declared
+   registry, locked root and transitive dependency; preview leaves persistent state
+   unchanged, pre-stop and metadata-contact stop produce accurate130/no apply. Adjacent
+   application/MCP/remap routes preserve prior support and selected source identity.
+4. Ordinary install creates exact selected-node authority context. Real Rust/TypeScript
+   CLI and MCP accept own/self-alias and installed custom-layout dependency alias, reject
+   private/undeclared/direct forbidden references without private content/index inflation.
+   Another workspace member's dependency is denied; ordinary update/uninstall refreshes
+   remaining authority, read checks never write, config/input drift is stale until regenerate.
+5. Run existing supported remote/solver/in-place fixtures and feasible target checks;
+   distinguish builds, runtime tests and unavailable real graphical/provider consumers.
+
+Produce one source-bound result with commands, binary/source hashes and behavioral
+assertions. Reuse already exact-subject lower-level gates. No optional polishing
+campaign follows automatically. Any failure names the concrete broken user step and
+its existing owner; implementation completion is not replaced by a status classification.
+
 ## Execution order and completion law
 
 1. Verify base, reactivate deferred auto node and correct stale acceptance semantics.
