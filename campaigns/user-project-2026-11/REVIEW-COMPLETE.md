@@ -79,6 +79,20 @@ reintroduce them. Broader unrelated workspace/campaign findings remain outside s
   `/fast/tmp/up-authority-shipping-g4bjjkzq/RESULTS.json`,16 expected outcomes
   independently verified. These supersede the earlier binary-subject receipt above.
 
+## Post-commit validation already verified
+
+- Final committed receipt `/fast/tmp/up-final-committed-receipt.json`:114 SHA entries
+  independently matched both integrated Git blobs and architect working-file bytes.
+- Actual `cargo xtask check-codegen`: clean against the committed subject.
+- Canonical sync check:51 pairs/9 sets/6 target directories clean.
+- Direct newly built `vibe check --path . --quiet`:0errors,56warnings.
+- Actual built CLI with a1MiB stack:exit0,version1.0.11.
+- Core cross-target cargo checks:Windows GNU,macOS ARM and Linux musl all exit0.
+  These are compilation checks only, not runtime or graphical validation.
+- Dashboard snapshot revision369 has implementation parents/children accepted,
+  UP-FINAL active for the running canonical release panel, and platform validation
+  blocked by actual unavailable runtimes. Final snapshot reconciliation follows.
+
 ## Remaining closure accounting, not missing functional implementation
 
 1. Record the running final host self-check/cross-target outcomes exactly, including
