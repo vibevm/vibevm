@@ -64,8 +64,9 @@ Current completion frontier, not accepted as finished merely by this document:
   binary. Classic wording expectations are refreshed for schema1/2 without
   weakening no-command/no-mutation checks.
 - Scoped implementation and compatibility repairs are committed and reviewed.
-  The full canonical host panel completed with the exact outcomes below; it is
-  not represented as an all-green workspace run. Owner acceptance and external
+  The latest full canonical host panel passes all eight stages after the
+  owner-requested residual gate repairs. Earlier failed subjects remain recorded
+  below rather than being relabeled successful. Owner acceptance and external
   release remain separate from technical implementation completion.
 
 ### Canonical panel and compatibility repairs
@@ -73,10 +74,10 @@ Current completion frontier, not accepted as finished merely by this document:
 | Canonical step | Actual outcome |
 | --- | --- |
 | Workspace format | PASS |
-| Workspace tests | FAIL, exit101: 27 targets on the pre-repair subject |
+| Workspace tests | PASS, full workspace rerun,1832s |
 | Workspace Clippy, all targets, warnings denied | PASS |
 | `vibe check --path . --quiet` | PASS |
-| 1 MiB startup through script's `target/debug/vibe` | FAIL, exit127: script hardcodes the path while this run uses an external `CARGO_TARGET_DIR`; the actual built binary separately passes the same stack limit |
+| 1 MiB startup through Cargo's actual target directory | PASS, including external `CARGO_TARGET_DIR`; platform-specific interpreter selection and quoted paths separately checked |
 | Full conform | PASS,141 existing/0new, baseline unchanged |
 | Committed codegen check | PASS |
 | Wire diff | PASS |
@@ -89,18 +90,23 @@ and precedes publication; kind refusals retain their typed error. Positive
 specmap/trace/MCP fixtures use the existing canonical publisher. Read-only assertions
 compare authority bytes/mtime and directory contents; force-count, evidence equality,
 SIGINT exit, monorepo single-capture and trace-state assertions remain meaningful.
-Every task-related failed target has a subsequent focused PASS; strict checks across
-six affected crates, conform and canonical synchronization also pass. This is
-focused recovery evidence, not a claim that the entire workspace test panel was
-rerun green after the repairs.
+Every task-related failed target first received a focused PASS. The subsequent
+owner-requested full rerun now passes all eight canonical stages, exit0. The
+original panel's27 failed targets and hardcoded-path exit127 remain historical
+failure evidence, not the outcome of this latest subject.
 
-Residual failures have source-identical pre-change evidence against `082c05de1`:
-`vibe-index`'s absent-alias assertion expects wording different from its unchanged
-implementation; xtask's exclusions test reads absent
-`conformance/vibenvm/exclusions.toml` (also absent at that base); its vocabulary
-census expects104 while the unchanged vocabulary/algorithm produces105. Neither
-baseline nor assertions were changed to conceal these failures. This is source
-comparison evidence, not a claim to have executed an old binary.
+Residual gate repairs in `40f69fe5e` reconcile actual contracts: the alias test
+checks the existing typed short-name refusal and no writes; the exclusions test
+executes the coverage owner's empty closed-set rule and rejects a historical
+waiver; the schema census separately pins `version_entry.template` (added by
+`4e2860880`) while retaining the historical104-site assertion. The current totals
+account for that exact additional scalar. No excluded targets, restored waiver
+list or baseline rewrite was used to obtain the green run.
+
+The stack helper now uses Cargo metadata's target directory. After the full Linux
+panel, its Windows/Unix interpreter choice was checked separately with synthetic
+branches, a target path containing spaces and a1024KiB stack assertion, plus the
+actual external-target binary. This is not a Windows runtime smoke claim.
 
 Core cross-checks pass for Windows GNU, macOS ARM64 and Linux musl. These are
 compilation checks only, not foreign runtime smoke tests.
