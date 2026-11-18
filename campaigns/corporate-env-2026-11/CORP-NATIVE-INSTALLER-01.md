@@ -107,7 +107,20 @@ replacement of existing toolchains. Keep build/test data in established isolated
 - Packaging includes native assets and correct hashes; no real private configuration
   enters a release/test fixture. Review source/binary binding, not version string only.
 
-## Update the owner's existing ~/corp
+## Rebuild the current distribution and update the owner's existing ~/corp
+
+Owner clarification2026-11-18: completion requires a freshly rebuilt corporate
+ distribution containing all latest reviewed improvements in vibe, not merely new
+installer executables beside stale vibe bundles. Freeze the coherent final accepted
+source revision, build matching native release payloads and installer binaries for
+Windows/Linux/macOS using base/local/flash, and regenerate the applicable canonical
+manifests/checksums with exact source/target/hash binding. Include the accepted
+APP-VERSIONS fixes. Inspect and retain existing source/distribution version and
+immutability rules; do not silently republish changed bytes as an already published
+release. Local staging/build/update is authorized, external release/tag/push is not.
+Validate the newly built payloads through the native installer on their actual
+platforms before updating the local corporate instance. Do not substitute an older
+bundled vibe just because its version string or profile parser is convenient.
 
 Explicitly authorized by the owner as part of this task, after implementation review.
 Inspect current layout and compute a bounded update manifest first. Preserve private
