@@ -1,0 +1,31 @@
+# SYS-TAILS — актуализация оставшегося scope
+
+Жанр: campaign reconciliation / архитектурная подготовка.
+Дата: 2026-11-19. Owner request: «кстати, мы забыли SYS-TAILS, ее тоже надо делать (и посмотреть, насколько она вообще актуальна)».
+Статус: initial source/code reconciliation; не полный acceptance и не разрешение запускать live provider.
+
+## Исходный узел
+
+Existing `SYS-TAILS` находится внутри `SYS-PROMPT`, зависит от `SYS-QUALIFY` и уже помечен active. Не создавать заменяющую кампанию или терять старый ID. Его historical evidence перечисляет interactive session, Windows live row C8 и host-mismatch warning; последняя часть устарела относительно actual code и более позднего campaign log.
+
+## Уже выполнено — не делать повторно без конкретной invalidation
+
+- C1/C2/C4 shape/divergent-copy/read-carrier behavior, обычный `vibe check` finding, extension-world fixture: campaign LOG содержит поставки campaign tail. Проверить применимость evidence к затронутым owners при окончательной сверке, а не заново реализовывать эти механизмы.
+- Межплатформенная determinism Linux/Windows/macOS закрыта поздней записью `2026-11-10 — determinism measured on macOS and Windows`, с одинаковыми artifact hashes на admitted source; старое утверждение «две платформы не измерены» — история, не current outstanding work.
+- Host-mismatch warning реализован. Наличие независимо проверено в `crates/vibe-workspace/src/system_prompt/check/warnings.rs::host_mismatch_warning`, `prepare.rs`, `prepare/tests.rs` и `crates/vibe-cli/tests/cli_prompt_matrix.rs::a_launch_notes_the_host_mismatch_on_stderr_and_still_starts_the_harness`. LOG заканчивается записью о завершении этой части SP-FMT-101. Не планировать реализацию по старому обозначению SP-FMT-105 или объявлять эти тесты заново запущенными: сейчас проверены sources, не новый runtime receipt.
+
+## Оставшееся — проверить актуальность и довести finite outcomes
+
+1. **Current instruction/router delivery.** Historical log сообщает18 tracked instruction files со старым redirect из-за отсутствовавшего doc.web. Проверить реальные текущие generated/owned paths и source status; исчезнувший blocker не считать вечным, но не запускать mutating install в dirty roots без bound scope. Совместить с current USER-PROJECT behavior, не создавать второй boot owner.
+2. **Interactive harness delivery.** Разделить уже доказанный slot/prefix delivery, фактический terminal UX и ещё не разрешённые live runs. Current version/source/context и точные утверждения должны быть определены до запуска. Print-mode не доказывает visual interactive behavior.
+3. **Windows C8.** Проверить точный scope исторической строки против уже имеющихся native evidence и owner exception, разрешающего не выполнять физические Windows manual/Terminal проверки. Не переносить exception автоматически на любые authenticated live-provider calls и не просить снова ручной Ctrl+C, который уже сделан nonblocking. При неопределённости дать конечную requirement/disposition запись, не новый prerequisite ladder.
+4. **Other harness claims.** Старое «шесть harnesses — research» нельзя целиком принять как implementation debt или как current capability. Hermes/Pi — отдельная новая owner task; её current primary-source research и actual native integration идут в собственном scope. Не дублировать под SYS-TAILS их adapter implementation или USER-PROJECT tests.
+5. **Final evidence and docs.** Сопоставить existing PLAN/LOG/RESULTS, current owning contracts и actual source plan. Обновить current status, сохранив append-only historical failures и границы evidence. Living physical acceptance guide дополняется только actual manual claims.
+
+## Порядок работы и acceptance
+
+Начать с короткой актуализации existing SYS-TAILS и ready shared seams; Hermes/Pi research можно готовить параллельно без пересекающихся product writes. Не вводить вымышленную обязательную зависимость «все SYS-TAILS закрыть до Hermes/Pi», если actual contract этого не требует. Реальные общие prerequisites и integration owner фиксируются перед implementation dispatch.
+
+Завершение: every original tail имеет disposition delivered/evidence-valid, bounded actual repair, explicitly unsupported/out-of-scope или owner acceptance exception. Outstanding live/manual facts не превращаются в PASS. Authoritative multi-user-planning обновляется до renderer; дерево отражает действительные remaining tasks, а не stale log prose.
+
+Никакие provider calls, installs, credentials/config changes, external publication или worktree creation этим документом не выполнены. Все новые task/worktrees размещаются под `/data` по owner directive.
