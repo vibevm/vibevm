@@ -32,6 +32,23 @@ replacement of existing toolchains. Keep build/test data in established isolated
 - Private `~/corp` contains actual internal addresses. Never copy profiles, private
   configuration, credentials or real endpoints into committed tests/docs/prompts.
 
+## Implementation latitude and unprivileged execution
+
+Owner clarification2026-11-18: vibe itself and any necessary implementation surfaces
+may be changed to deliver a genuinely good installer. Reuse is a design preference,
+not a prohibition on fixing core APIs or exposing a narrow native install operation.
+Do not preserve a broken workflow merely to avoid touching vibe. Existing correctness,
+privacy,publication and data-preservation rules remain binding.
+
+The complete supported installation MUST work as an ordinary unprivileged user:
+no UAC elevation,sudo/admin requirement,machine-wide PATH/registry changes or writes
+to protected system directories. Use user-writable or explicitly selected writable
+locations; fail preflight with an actionable message if a destination is not writable.
+User-level PATH changes require the existing consent; no-PATH installation must work.
+If the current bundled CLI lacks a complete verified local-bundle bootstrap API,
+add/fix the appropriate core owner rather than staging an incomplete single-binary
+import or shell workaround. Test actual non-elevated execution on each target host.
+
 ## Design constraints
 
 1. The corporate kit MUST contain already compiled, ready-to-run Rust installer
