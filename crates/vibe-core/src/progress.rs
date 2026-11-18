@@ -285,6 +285,14 @@ impl Progress {
         self.transfers.as_ref()
     }
 
+    /// Whether this handle carries an actual observer.
+    /// ```
+    /// assert!(!vibe_core::progress::Progress::default().has_observer());
+    /// ```
+    pub fn has_observer(&self) -> bool {
+        self.inner.is_some()
+    }
+
     /// Starts a task beneath this handle's parent, emitting `Started` before
     /// the handle is returned.
     pub fn task(&self, label: impl Into<String>) -> ProgressTask {

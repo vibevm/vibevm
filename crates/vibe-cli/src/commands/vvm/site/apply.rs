@@ -75,7 +75,7 @@ pub(in crate::commands::vvm) fn run_apply_cmd(
         return super::manage::show(ctx, env);
     }
     if args.remove {
-        return super::manage::remove(ctx, dry_run, args.diff);
+        return super::manage::remove(ctx, env, dry_run, args.diff);
     }
     let source = args.profile.as_deref().ok_or_else(|| {
         anyhow!(
@@ -139,6 +139,13 @@ pub(in crate::commands::vvm) fn run_apply_cmd(
     if !dry_run {
         record_path(&prepared, report.path.as_ref(), report.changed)?;
     }
+    report.changed |= super::settings::step(
+        &prepared.profile,
+        env,
+        super::settings::Action::Apply,
+        dry_run,
+        &mut report.next_steps,
+    )?;
     report::emit(&report, ctx)
 }
 

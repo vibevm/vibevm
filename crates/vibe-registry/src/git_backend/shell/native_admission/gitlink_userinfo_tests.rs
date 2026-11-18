@@ -152,6 +152,8 @@ fn assert_raw_rewrite_refused(scheme: &str, malformed: bool) {
             objects: &supplied_objects,
             destination: &slot,
             anonymous: false,
+            cache: false,
+            namespace: None,
         },
         &mut Vec::new(),
         Some(remote),

@@ -19,6 +19,8 @@ mod layers;
 mod manage;
 #[path = "site/report.rs"]
 mod report;
+#[path = "site/settings.rs"]
+pub(super) mod settings;
 #[path = "site/steps.rs"]
 mod steps;
 #[path = "site/view.rs"]

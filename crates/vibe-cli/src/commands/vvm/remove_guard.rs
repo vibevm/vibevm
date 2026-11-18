@@ -112,6 +112,9 @@ pub(super) fn guard_remove_targets(
     {
         let id = record.version_id();
         let home = store.instance_dir(&id, record.instance);
+        if record.origin == model::Origin::Binary && scope == RemoveScope::Both {
+            super::payload::guard(store, record)?;
+        }
         match scope {
             RemoveScope::Both => store.guard_mutation_tree(&home)?,
             RemoveScope::Bin => {

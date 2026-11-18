@@ -264,6 +264,26 @@ impl GitBackend for DeferredShellGit {
         self.contact(url)?
             .prepare_native_source(url, reference, reuse, objects)
     }
+    fn prepare_cached_native_source(
+        &self,
+        url: &str,
+        reference: &str,
+        namespace: Option<&str>,
+        objects: &Path,
+    ) -> Result<Option<shell::native_admission::NativeSource>, GitError> {
+        self.contact(url)?
+            .prepare_cached_native_source(url, reference, namespace, objects)
+    }
+    fn native_advertised_tip(
+        &self,
+        url: &str,
+        reference: &str,
+    ) -> Result<Option<(String, String)>, GitError> {
+        self.contact(url)?.native_advertised_tip(url, reference)
+    }
+    fn native_admission_inputs(&self) -> Result<Option<[u8; 32]>, GitError> {
+        self.backend()?.native_admission_inputs()
+    }
     fn prepare_pinned_native_source(
         &self,
         url: &str,

@@ -119,6 +119,7 @@ fn set(ctx: &output::Context, env: &VvmEnv, args: VvmSourceSetArgs) -> Result<()
             api: args.api,
             path,
             install_root: None,
+            settings_dir: None,
         },
     };
     store(ctx, table)
@@ -136,6 +137,7 @@ fn store(ctx: &output::Context, mut table: SelfConfig) -> Result<()> {
     // installs itself (`PROP-019#install-root`) — and the release-source
     // editor is not allowed to forget it.
     table.install_root = config.self_source.install_root.clone();
+    table.settings_dir = config.self_source.settings_dir.clone();
     config.self_source = table;
     release_source::resolve(None, &config, Some(&path))?;
     config

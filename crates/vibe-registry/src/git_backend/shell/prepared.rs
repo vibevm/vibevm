@@ -73,6 +73,8 @@ pub(super) fn prepare(
             objects,
             destination,
             anonymous: git.force_anonymous,
+            cache: false,
+            namespace: None,
         });
     }
     let dest = objects.to_string_lossy();
