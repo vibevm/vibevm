@@ -1507,3 +1507,15 @@ and all 52 required `(subcommand, flag)` pairs, rerunnable as
 `cargo xtask vibenvm-conform`. The per-phase records are `PROP-075`'s
 `#P1`…`#P7F-AS-BUILT` facts and `LOG.md`; what the campaign deliberately did not
 do is in its own entries rather than here.
+
+## Current technical acceptance — 2026-11-18
+
+The renewed owner-requested APP-VERSIONS completion is technically accepted after
+actual native Windows migration and the updated Linux13/13scenario,including
+18/18differential cases,76/76required pairs,zero exclusions and verdict0.
+Core `ab349255c` and Node candidate `f030ee3` fix the measured declared-PATH and
+interpreter defects. Exact source binding,tests,earlier failures and restored host
+PATH incident are recorded in REVIEW-2026-11-17.md and WINDOWS-MIGRATION-2026-11-18.md.
+The preceding Windows-blocked paragraphs are historical frontiers,not current blockers.
+Next execution is CORP-NATIVE-INSTALLER-01,including fresh three-platform binaries
+and the explicitly authorized local corporate kit/delta update. No external release.
