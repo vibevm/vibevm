@@ -70,6 +70,26 @@ replacement of existing toolchains. Keep build/test data in established isolated
    change. They may delegate to native binaries; native startup must not delegate
    essential installation back to them.
 
+## User experience and diagnostics — owner clarification2026-11-18
+
+- Provide `--verbose`: describe each action in useful detail, including what is
+  checked, selected, unpacked, installed and applied, and whether it changed anything.
+- Provide `--debug`: detailed diagnostic logging for corporate-environment failures,
+  including stages, timings, safe resolved paths, platform/source/target identity,
+  validation decisions, child outcome/exit status and causal error chains. It includes
+  verbose progress but must never dump credentials, complete environment/configuration,
+  authorization headers or private profile contents. State the log location clearly;
+  diagnostic logging is not authority to collect secrets.
+- Default UI should be pleasant and compact, borrowing vibe styling where useful:
+  a few clear stage/status lines, restrained pseudographics and a spinner for long
+  operations. Disable animations/control sequences when output is redirected or the
+  terminal is unsuitable. Keep actionable errors and useful plain-text logs.
+- Prioritize complete basic user scenarios. Do not add a GUI framework, generic
+  observability platform or an exhaustive installer-feature/perfection campaign.
+  Basic installation, safe refusal, clear diagnostics and repeat invocation suffice
+  when their supported behavior is reliable. Existing correctness/privacy boundaries
+  remain binding; optional polish does not become a prerequisite ladder.
+
 ## Acceptance
 
 - Generic fresh fixture kit, path with spaces, unrelated cwd: native installer
