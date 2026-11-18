@@ -74,6 +74,16 @@ pub(super) fn show(ctx: &output::Context, env: &VvmEnv) -> Result<()> {
         None => env.store()?,
     };
     let path = path_step(ctx, env, &store, None, policy, true, None)?;
+    let mut next_steps = Vec::new();
+    if let Some(site) = &site {
+        super::settings::step(
+            &site.profile,
+            env,
+            super::settings::Action::Inspect,
+            true,
+            &mut next_steps,
+        )?;
+    }
     report::emit(
         &SelfApplyReport {
             protocol: PROTOCOL.to_owned(),
@@ -88,7 +98,7 @@ pub(super) fn show(ctx: &output::Context, env: &VvmEnv) -> Result<()> {
             path: Some(path),
             imported: None,
             px: None,
-            next_steps: Vec::new(),
+            next_steps,
             warnings,
         },
         ctx,
@@ -98,8 +108,16 @@ pub(super) fn show(ctx: &output::Context, env: &VvmEnv) -> Result<()> {
 /// `vibe self apply --remove`: delete exactly the files the receipt says
 /// apply owns — never a file a user wrote. The durable PATH is left as it
 /// is: the shim directory on it is vibe's own and still needed.
-pub(super) fn remove(ctx: &output::Context, dry_run: bool, with_diff: bool) -> Result<()> {
+pub(super) fn remove(
+    ctx: &output::Context,
+    env: &VvmEnv,
+    dry_run: bool,
+    with_diff: bool,
+) -> Result<()> {
     let files = Files::resolve()?;
+    let site_settings =
+        vibe_core::site_profile::installed_at(&files.profile)?.map(|site| site.profile);
+    let mut settings_notes = Vec::new();
     let mut warnings = Vec::new();
     let receipt = match SiteReceipt::load_from(&files.receipt) {
         Ok(receipt) => receipt,
@@ -159,8 +177,19 @@ pub(super) fn remove(ctx: &output::Context, dry_run: bool, with_diff: bool) -> R
             std::fs::remove_file(path).with_context(|| format!("removing `{}`", path.display()))?;
         }
     }
-    let changed = !changes.is_empty();
-    let mut next_steps = Vec::new();
+    let settings_changed = if let Some(profile) = &site_settings {
+        super::settings::step(
+            profile,
+            env,
+            super::settings::Action::Remove,
+            dry_run,
+            &mut settings_notes,
+        )?
+    } else {
+        false
+    };
+    let changed = !changes.is_empty() || settings_changed;
+    let mut next_steps = settings_notes;
     if changed {
         next_steps.push(
             "the durable PATH was left as it is; the shim directory on it is vibe's own".to_owned(),

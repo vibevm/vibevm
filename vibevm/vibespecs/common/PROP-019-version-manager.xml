@@ -976,6 +976,7 @@ user's files: every owner reads it **below** the user's own `registry.toml` /
   release — from a local release drop when `--release-base` is one — and stores
   it once the release is installed.</SITE-PROFILE-BOOTSTRAP>
       </facts>
+      <p><SITE-SETTINGS-HOME fact="true" status="impl/done">Optional `[self] settings_dir` names an absolute settings/cache directory, independently of install root and release source. Own-home `~` expands; relative and control-character paths refuse. Apply persists `VIBE_SETTINGS` through the existing user-environment persister without moving or deleting existing settings or changing the running process environment. Installers export the requested directory before their first vibe invocation; manual apply from a differing home reports that mismatch and the need to rerun there. Windows equivalent case/separator/trailing-separator values are already set without a write. Show and doctor report current, requested and persistent homes; doctor repair uses existing consent. Remove withdraws only a value matching the profile, retaining a later user change. Absent field serialization remains unchanged; older strict readers refuse the new key, so update the binary first.</SITE-SETTINGS-HOME></p>
     </site-profile>
     <install-root title="2.21 Install root — one directory holds the whole installation">
       <p><INSTALL-ROOT-LEAD fact="true" status="impl/done">Some networks allow executables only under one directory, so WHERE

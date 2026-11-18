@@ -159,6 +159,20 @@ pub(super) fn run_doctor_cmd(
     let network = network::run(&checks.progress(), args.network.as_deref())?;
     let problems = problems + network.as_deref().map_or(0, network::failures);
     let mut remaining_problems = problems;
+    let settings_profile = vibe_core::settings::site_profile_path()
+        .map(|path| vibe_core::site_profile::installed_at(&path))
+        .transpose()?
+        .flatten();
+    let mut settings_notes = Vec::new();
+    if let Some(site) = &settings_profile {
+        super::site::settings::step(
+            &site.profile,
+            env,
+            super::site::settings::Action::Inspect,
+            true,
+            &mut settings_notes,
+        )?;
+    }
     let mut fixed = false;
     checks.detail(format!("problems found: {problems}"));
     checks.finish();
@@ -182,6 +196,15 @@ pub(super) fn run_doctor_cmd(
                     &env::PathFixConsent::granted(),
                     &mut |_, _| false,
                 )?;
+                if let Some(site) = &settings_profile {
+                    super::site::settings::step(
+                        &site.profile,
+                        env,
+                        super::site::settings::Action::Apply,
+                        false,
+                        &mut settings_notes,
+                    )?;
+                }
                 Ok(())
             })();
             match result {
@@ -226,6 +249,7 @@ pub(super) fn run_doctor_cmd(
             "application_path_dirs": paths::json(&link_dirs),
             "process_path_refresh_needed": !on_path,
             "durable_environment": durable_environment,
+            "settings_home": settings_notes,
             "shims": final_shim_statuses.iter().map(|(name, ok)| serde_json::json!({
                 "name": name, "ok": ok,
             })).collect::<Vec<_>>(),
@@ -261,6 +285,9 @@ pub(super) fn run_doctor_cmd(
     }
 
     ctx.heading("vibe self doctor");
+    for note in &settings_notes {
+        ctx.step(note);
+    }
     ctx.step(&format!("durable environment target: {} ({:?}); observation {:?}, managed block {:?}, PATH entry {:?}; login effectiveness unknown (not probed)",
         durable_environment.target.as_deref().unwrap_or("unavailable"), durable_environment.shell,
         durable_environment.observation, durable_environment.managed_block, durable_environment.path_entry));

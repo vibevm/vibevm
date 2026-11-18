@@ -20,6 +20,8 @@ use crate::output;
 
 #[path = "remove_guard.rs"]
 mod guard;
+#[path = "remove_payload.rs"]
+pub(super) mod payload;
 use guard::{
     RemovalEffects, RemovalNote, guard_remove_targets, remove_mirror_after, removes_last_managed,
     scoped_removal_notes,

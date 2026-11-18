@@ -925,3 +925,34 @@ vibe update --sources-only
 | `MISS shim dir … (NOT on PATH)` в `vibe self doctor` | PATH не обновлён или открыт старый терминал | Открыть новый терминал; `vibe self apply <профиль> --fix-path` или `vibe self doctor --fix`; на Windows — §7 |
 | `vibe self update`: `… releases/latest/download/DISTRIBUTIONS.json: excluded HTTP endpoint https://github.com` | Источник релизов остался GitHub, а он запрещён `exclude_hosting` | `[self] source = "localdir"` + `[artifacts] vibe`; проверить `vibe self source show` |
 | `vibe self releases` печатает `none` | Дроп пуст или неверная раскладка | `<drop>/v<версия>/` с `DISTRIBUTIONS.json` и `vibevm-<версия>-<T>.zip` (§3.2); `vibe artifacts where` |
+
+
+## 9. Settings home и повторное чтение registry (новая сборка)
+
+Профиль может задать независимо от install root:
+
+```toml
+[self]
+install_root = "C:/Work"
+settings_dir = "C:/Work/vibe-home"
+```
+
+Сначала обновите бинарник: старые strict readers не знают `settings_dir`.
+Installer экспортирует `VIBE_SETTINGS` до первого запуска vibe; `self apply`
+сохраняет переменную пользователя для новых терминалов. При ручном запуске
+сначала задайте её в текущем shell, затем примените профиль. Уже перенесённая
+папка не мигрируется повторно. Старое содержимое `~/.vibe` не удаляется.
+`self apply --show` и `self doctor` показывают текущую и persisted настройку;
+`self apply --remove` убирает только совпадающую с профилем переменную.
+
+Controlled monorepo registry сохраняет verified snapshot в settings cache.
+Неизменный повтор не клонирует репозиторий и не запускает полный fsck или
+проверку attributes для каждого пути. `--refresh` проверяет remote вне TTL;
+`--offline` не заполняет отсутствующий cache через сеть, а отказывает.
+`--verbose` показывает cache/stage/transfer details до install plan. Первый
+cold clone всё ещё нужен, а удаление cache потребует заполнения заново.
+
+Новая корпоративная поставка обновляется по её `README-UPDATE.md`; для
+обычного обновления успешной установки не требуется сначала удалять приложения.
+Shared `opt/bin` может содержать ваши инструменты: uninstall оставляет их и
+нужную им запись PATH. Изменённый binary instance удаление сохраняет с отказом.

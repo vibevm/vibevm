@@ -342,6 +342,8 @@ impl NativeState {
                     objects: &child_objects,
                     destination: &child_destination,
                     anonymous,
+                    cache: false,
+                    namespace: None,
                 },
                 active,
                 Some(remote),

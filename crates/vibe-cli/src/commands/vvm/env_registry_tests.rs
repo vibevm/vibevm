@@ -242,3 +242,33 @@ fn application_commands_land_in_the_directory_the_path_step_made_durable() {
         PathEntryStatus::Correct
     );
 }
+
+#[test]
+fn settings_home_normalizes_windows_spelling_and_preserves_other_values() {
+    let p = persister(&[(
+        "VIBE_SETTINGS",
+        "c:/WORK/vibe-home/",
+        RegistryValueKind::String,
+    )]);
+    assert_eq!(
+        p.set_settings_home(Path::new(r"C:\Work\vibe-home"))
+            .unwrap(),
+        Persisted::Unchanged
+    );
+    assert_eq!(p.registry().writes(), 0);
+    assert_eq!(
+        p.remove_settings_home(Path::new("D:/other")).unwrap(),
+        Persisted::Unchanged
+    );
+    assert_eq!(
+        p.remove_settings_home(Path::new("C:/Work/vibe-home"))
+            .unwrap(),
+        Persisted::Changed
+    );
+    assert_eq!(p.settings_home().unwrap(), None);
+    assert_eq!(
+        p.set_settings_home(Path::new("C:/Work/vibe-home")).unwrap(),
+        Persisted::Changed
+    );
+    assert_eq!(p.registry().writes(), 2);
+}

@@ -16,14 +16,20 @@ use vibe_core::cancellation::{CancellationToken, Cancelled};
 /// # Ok::<(), std::io::Error>(())
 /// ```
 pub fn output(command: &mut Command, token: &CancellationToken) -> io::Result<Output> {
+    command.stdin(Stdio::null());
+    output_with_stdin(command, token)
+}
+
+/// As `output`, preserving an explicitly supplied noninteractive stdin file.
+pub(super) fn output_with_stdin(
+    command: &mut Command,
+    token: &CancellationToken,
+) -> io::Result<Output> {
     if !token.has_control() {
         return command.output();
     }
     token.checkpoint().map_err(io::Error::other)?;
-    command
-        .stdout(Stdio::piped())
-        .stderr(Stdio::piped())
-        .stdin(Stdio::null());
+    command.stdout(Stdio::piped()).stderr(Stdio::piped());
     let mut child = command.group_spawn()?;
     let stdout = child.inner().stdout.take().map(|mut pipe| {
         std::thread::spawn(move || {
@@ -81,6 +87,20 @@ pub fn output(command: &mut Command, token: &CancellationToken) -> io::Result<Ou
 #[cfg(all(test, unix))]
 mod tests {
     use super::*;
+    #[test]
+    fn controlled_output_preserves_supplied_stdin_without_pipe_deadlock() {
+        use std::io::{Seek, SeekFrom, Write};
+        let mut input = tempfile::tempfile().unwrap();
+        let bytes = vec![b'x'; 256 * 1024];
+        input.write_all(&bytes).unwrap();
+        input.seek(SeekFrom::Start(0)).unwrap();
+        let token = CancellationToken::new();
+        let result =
+            output_with_stdin(Command::new("/bin/cat").stdin(Stdio::from(input)), &token).unwrap();
+        assert!(result.status.success());
+        assert_eq!(result.stdout, bytes);
+    }
+
     #[test]
     fn cancellation_reaps_a_shell_and_its_pipe_holding_descendant() {
         let token = CancellationToken::new();

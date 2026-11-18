@@ -187,6 +187,10 @@ pub struct SelfConfig {
     /// pair layers on).
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub install_root: Option<PathBuf>,
+    /// Per-user settings/cache home persisted as `VIBE_SETTINGS` by apply.
+    /// This is independent of both the install root and release source.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub settings_dir: Option<PathBuf>,
 }
 
 /// Why a configured per-user path — `[self] install_root`, `[self] path`,
@@ -343,6 +347,10 @@ impl SelfConfig {
     pub fn with_home(&self, home: Option<&Path>) -> Self {
         SelfConfig {
             path: self.path.as_deref().map(|path| home_expanded(path, home)),
+            settings_dir: self
+                .settings_dir
+                .as_deref()
+                .map(|path| home_expanded(path, home)),
             install_root: self
                 .install_root
                 .as_deref()
@@ -416,6 +424,7 @@ impl SelfConfig {
             api,
             path,
             install_root: _,
+            settings_dir: _,
         } = self;
         source.is_none() && url.is_none() && api.is_none() && path.is_none()
     }

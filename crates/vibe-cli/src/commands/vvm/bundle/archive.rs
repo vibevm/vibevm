@@ -16,6 +16,8 @@ use vibe_publish::release_manifest::{
 };
 use zip::ZipArchive;
 
+#[path = "document_receipt.rs"]
+mod document_receipt;
 #[path = "source_verify.rs"]
 mod source_verify;
 use source_verify::source_matches_archive;
@@ -456,6 +458,7 @@ fn extract_verified_bundle(
     )?;
     copy_bounded_entry(archive, LICENSE_FILENAME, MAX_DOCUMENT_BYTES, staging)?;
     copy_bounded_entry(archive, README_FILENAME, MAX_DOCUMENT_BYTES, staging)?;
+    document_receipt::write(staging)?;
     Ok(())
 }
 
