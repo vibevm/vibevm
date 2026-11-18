@@ -21,9 +21,10 @@ pub(crate) struct ProgressPanel {
 impl ProgressPanel {
     #[cfg(test)]
     pub(crate) fn for_test(ctx: &Context) -> Self {
-        Self {
-            renderer: ctx.progress_renderer.clone().expect("test renderer"),
-        }
+        let Some(renderer) = ctx.progress_renderer.clone() else {
+            panic!("test renderer is required");
+        };
+        Self { renderer }
     }
     /// Replace the fold with the live stream, or fold it back.
     pub(crate) fn toggle(&self) {
