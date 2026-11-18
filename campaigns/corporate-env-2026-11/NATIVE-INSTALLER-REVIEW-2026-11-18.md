@@ -87,3 +87,18 @@ cold offline admission,recursive remote-contact refusal,its public regression,
 canonical version-bound repomd projection,and lint-only installer let-chain.
 Final coherent full-panel and actual final native assets remain required before
 corporate delivery. Earlier mixed-subject6PASS/2FAIL panel is not relabeled green.
+
+## Final coherent whole-host gate — PASS
+
+The recovered frozen-source panel on576e6a862 exits0,all8steps PASS. Architect
+independently read `/fast/tmp/corp-native-final-coherent-self-check-oom-recovery-20261118.log`:
+format14s,full workspace tests/doctests3432s,strict workspace/all-target Clippy364s,
+host check50s,1MiB startup0s,conform9s,codegen6s,wire diff28s. Wire corpus matches
+its journal and no tracked wire paths differ from the committed subject.
+Process-local build_jobs1/test_threads1 were used after OOM;incremental remained
+unchanged. The interrupted earlier panel still has no terminal verdict.
+
+The final source is accepted for delivery build. Final Windows and macOS source576
+assets/workflows are separately reviewed in NATIVE-PLATFORMS-2026-11-18.md; Linux
+release/native workflow and baseline-preserving corporate update/delta remain pending.
+Windows elevated functional proof is not a standard-user runtime receipt.
