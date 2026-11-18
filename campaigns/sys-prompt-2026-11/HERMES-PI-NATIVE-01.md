@@ -1,7 +1,7 @@
 # SYS-HERMES-PI — native Hermes and Pi agent support
 
 Genre: campaign task / owner mandate and acceptance outline.
-Status: planned / execution held. Later owner instruction2026-11-18 requires finishing PRIOR-APP-STEPS and then stopping for server maintenance. Do not start this task automatically after closure; wait for a subsequent owner resume instruction. Do not run it concurrently with the unfinished PRIOR verification tail.
+Status: active / native carrier proof in progress. PRIOR-APP-STEPS was accepted with explicit limits, the post-PRIOR stop was honored, and the owner resumed development2026-11-19. Current route is complete SYS-PROMPT, then semantically reconcile remaining NST tasks and complete NST. Full cache-stable prefix parity for Hermes/Pi is mandatory; reduced read-only support is not completion. Current execution contract and provisioning grants are in HERMES-PI-IMPLEMENTATION-01.md.
 Owner instruction: 2026-11-18.
 Campaign: SYS-PROMPT. This addition reopens only the named scope; historical accepted phases and their evidence are preserved.
 
