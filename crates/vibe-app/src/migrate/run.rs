@@ -402,6 +402,7 @@ pub(crate) fn installation_paths(
         StepPaths {
             option: vec![exposure],
             steps: Default::default(),
+            selected_dirs: crate::paths::session_dirs(ctx.settings, index, &storage, key)?,
         },
         root,
     ))
