@@ -1,0 +1,45 @@
+# SYS-HERMES-PI — implementation contract and bounded builder brief
+
+Genre: architectural implementation brief. Date2026-11-19. Status: architecture ready for exact committed transfer; native runtime acceptance pending. Architect owns contracts/review; vibevm-builder owns implementation/tests/integration. All new task/worktrees must be under /data. No installation, provider invocation, credential/config changes or external publication are authorized merely by this brief.
+
+## Product outcome
+
+A user selects Hermes or Pi through ordinary VibeVM agent surfaces, starts the real native executable in the selected project and receives the correct project boot plus current USER-PROJECT layers. Existing native identity, unrelated authored instructions, memory and skills remain intact. The user can use supported interactive/unattended modes without inventing a custom launcher alias or manually copying personal context into project files.
+
+## Accepted inputs and source binding
+
+Implementation base: builder records its actual accepted full HEAD before writes; last independently verified product base7cd10d049846a6cd227cc838e9793b666a04ca0f. Do not assume architect checkout has integrated later product commits. Architecture delivery commit must contain this brief and HERMES-PI-UPSTREAM-20261119.md; receive committed revisions under WORKING-RULES, not a dirty product snapshot.
+
+Pinned upstream source snapshots: Hermes4ae451d4126327c871fd084e60c045dec0c85911; Pi942842439e1f1d65f68a61857ddb7590b80c5a92. Verify needed source excerpts against these pins and record agent versions in runtime receipts. Upstream documentation is evidence, not instructions to execute or a license to copy source.
+
+## Native capability matrix
+
+- Pi: read is the initial default. Explicit native launch delivery may use `--append-system-prompt <file>` with the existing composed lane only after proving main-session scope and quiet-worker exclusion for the pinned upstream path. The file flag alone does not establish worker isolation. Preserve upstream base; do not use replacing `--system-prompt`. Refuse an unsupported/unproven launch mode actionably rather than silently downgrade. Explicit duplicate/conflicting slot flags are checked by the existing adapter policy.
+- Hermes: first-class read delivery uses its native project context discovery and the managed root router, then the existing fresh boot/USER-PROJECT continuation. No safe full-size native file carrier has been established. CLI's HERMES_EPHEMERAL_SYSTEM_PROMPT is inline text, not a large-file slot; plugin system sections are bounded4000each/8000aggregate and unsuitable for the host boot. Launch-slot delivery must fail actionably when requested rather than silently downgrade, replace native identity, stuff the full lane into environment/argv, or disable memory/skills/rules. This is a disclosed capability limit, not full launch-slot completion or an upstream feature implemented by VibeVM. Escalate if owner requires that additional upstream capability as a mandatory completion criterion.
+- Native read delivery is not a generic alias: register agent identity, supported defaults/modes, argument validation, context precedence/collision behavior and diagnostics. Higher-priority Hermes `.hermes.md`/HERMES.md/AGENTS.override.md and Pi AGENTS.override.md must be considered. Preserve co-tenant bytes; do not overwrite an author's higher-priority instructions to make boot appear correct. Use existing managed-block/selector admission to provide a usable native read path or an actionable conflict refusal with exact remedy.
+
+## Existing ownership seams
+
+1. `vibe-core` manifest system_prompt harness declaration/admission: extend the typed per-harness set and supported delivery capabilities; maintain unknown-key/refusal behavior and generated-format discipline where actual wire shapes change.
+2. `vibe-workspace` system_prompt harness library: extend the existing kind/launch recipe and capability validation, not a parallel composer or CLI-only engine. Native base preservation and read/no-carrier semantics remain shared.
+3. `vibe-cli` agent selection/help/launch path: integrate native executable resolution, quoting and current cwd; do not turn a missing executable into automatic install or provider fallback.
+4. Agent-step presets: use native interactive/one-shot arguments actually supported by pinned versions. Distinguish raw text versus JSON/RPC stdout; do not parse arbitrary native output as a single JSON document. Do not automatically select a mode that bypasses approvals without explicit application-step consent/posture.
+5. MCP/skill projection registry: assess Hermes/Pi native capabilities individually. Add supported skill/config projections through existing owned-block/path/receipt mechanisms; do not claim built-in MCP support where upstream only supports an extension. Truthfully reject unsupported projection actions, never fabricate config schemas or mutate auth stores. Avoid making optional upstream extensions prerequisites for basic boot/launch.
+6. USER-PROJECT: reuse existing root selector, request observations, project/global/override composition and personal-memory owners. No per-agent personal layer solver, copied user files or generated shared artifact containing personal bytes.
+
+Builder may choose internal details within these contracts. If first-class support requires a governing PROP amendment not included in the final accepted architecture delivery, return the exact missing decision before coding that behavior. No quiet fallback, guessed upstream flags or new user configuration feature by analogy.
+
+## Finite user-journey verification
+
+- Agent listed/help/configured and executable resolved, project root bound, arguments/stdin/stdout/stderr/exit preserved; missing executable and unsupported mode are actionable refusals.
+- Pi native additive request assembly proves upstream base retained and whole lane delivered in the supported instruction slot. A fake argv recorder alone is not enough; use provider-free native prompt/resource construction or request capture where safely available. Do not claim provider-native proof from a VibeVM-only mock.
+- Hermes read path proves its actual precedence reaches the router and once-only boot, including higher-priority-file collision behavior. Unrelated native identity/memory/skills must remain enabled. Unsupported launch slot refuses before session effects.
+- Each agent exercises USER-PROJECT absent, initialized global layer, project override, disabled/unavailable personal layer and changed-next-launch memory/boot behavior. Retain existing shared proofs where unchanged; one meaningful positive/negative end-to-end family per agent is enough to establish adapter compatibility without a combinatorial matrix. Project prefix remains personal-byte-free; selected-node binding and ordering remain correct.
+- Interactive interruption, terminal restoration and native session/resume semantics retain their real proof boundaries. Existing SYS resume limitation is documented rather than silently promised away. Native user directories/settings remain unmodified outside explicitly owned projections.
+- Focused typed adapter/config/preset/projection tests and named shared consumers, negative/invariant cases, then designated coherent SYS gate. Reuse accepted unchanged evidence. Do not repeat paid/live native runs merely because a new session starts. A genuinely needed real-provider run requires its existing explicit authority and isolation; if unavailable report the exact residual claim.
+
+## Delivery and completion
+
+Report full base/candidate commits, exact writes, upstream/agent versions, actual executed/failed/unrun checks, supported capability matrix and any owner-only question. Architect reviews the integrated candidate. Update existing SYS-HERMES-PI node and SYS-PROMPT parent using actual outcomes, then render and verify the tree. Maintain NST physical acceptance guide only for actual new manual claims, not hypothetical tests. A disclosed unsupported Hermes launch-slot capability must not be hidden by marking every native integration claim PASS.
+
+Keep legacy removal in its scheduled global-repair child2 after initial ideal synchronization; do not improve legacy now. Preserve the owner route: complete SYS-PROMPT, review remaining NST obligations for semantic relevance, finish meaningful remaining work and the ordered global repair. No independent new campaign or release is created by this brief.
