@@ -28,6 +28,14 @@ Existing `SYS-TAILS` находится внутри `SYS-PROMPT`, зависи�
 
 TS-demo outcome принят в этой области: обновлены три routers и lock через штатного owner; INDEX не изменился, dependency inputs существуют благодаря actual materialization, не raw copy. Schema6→7 соответствует текущему writer, не будущему latest-only proposal. Machine-local `/data` source epoch объявлен честно; native TypeScript tool build этим не доказан. Остальные три canonical root и host-derived refresh остаются открытыми; это не acceptance всего SYS-TAILS.
 
+## Принятый промежуточный результат — canonical Rust-demo
+
+2026-11-19 architect независимо сверил все пять hashes из `CANONICAL-RUST-RESULT.json` с actual destination `/data/git/vibevm/research/rust-demo`, проверил каждый INDEX input и точное равенство package rows reviewed isolated candidate. Actual ordinary install: четыре mandatory build contributions успешны; четыре optional MCP registrations отказали без явного scope и не считаются выполненными. Source-free candidate reinstall без mounted source registry сохранил bytes/mtime пяти outputs.
+
+Scoped canonical Rust outcome принят вместе с reviewed package fixes: literal `cargo-clippy` prerequisite, project-root binding и explicit build consent внутри уже согласованной contribution. POSIX и native PowerShell script cases имеют отдельные receipts; это не утверждение о native Windows Rust build. Допустимая поставка — четыре изменённых Rust root files, три canonical package files и report, без bulk dependencies, неизменённого INDEX и чужих dirty changes.
+
+Итого приняты два demo roots из четырёх. Два nested package/project roots и host-derived delegation-rules refresh остаются открытыми. Это не закрывает Hermes/Pi или весь SYS-PROMPT.
+
 ## Порядок работы и acceptance
 
 Начать с короткой актуализации existing SYS-TAILS и ready shared seams; Hermes/Pi research можно готовить параллельно без пересекающихся product writes. Не вводить вымышленную обязательную зависимость «все SYS-TAILS закрыть до Hermes/Pi», если actual contract этого не требует. Реальные общие prerequisites и integration owner фиксируются перед implementation dispatch.
