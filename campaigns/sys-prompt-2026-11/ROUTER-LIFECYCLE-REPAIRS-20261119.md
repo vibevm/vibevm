@@ -1,0 +1,41 @@
+# Router reconstruction — lifecycle defects and bounded repairs
+
+Date2026-11-19. Repair base `b377349d7`; scoped canonical Rust demo outputs and three Rust lang package fixes have now received architectural review and acceptance. TypeScript demo was accepted separately in `57c7755f2`. This report does not claim completion of the two remaining canonical package roots, host-derived refresh, SYS-PROMPT or native carrier parity.
+
+## Actual first reconstruction
+
+Source-bound Vibe SHA256 `8010eabf3c6f606c5c050648fd320d643dce5e89168eec73fa0cbe35871a8296`, built offline/locked through Cargo task b6vclv124. First fresh Rust demo resolved four packages at1.0.0, then refused literal `command:clippy`. Lock and dependency slots remained absent. Evidence: `/data/git/vibevm-router-reconstruction-20261119/FIRST-PREFLIGHT-RESULT.json` and retained install log.
+
+### Prerequisite correction
+
+Canonical `rust-ai-native-lang/v1.0.0/vibe.toml`: replace only `command:clippy` with the actual `command:cargo-clippy` executable. Retain all four discipline-tool prerequisites and mandatory contribution. No shim, optional downgrade or toolchain change.
+
+The approved coding worker timed out300s; this is NOT worker PASS. Its candidate was complete and independently verified as an exact single-token change, parsed through TOML, with all unrelated bytes preserved. Root integrated only those reviewed bytes. Actual CLI positive/negative contribution proof subsequently passed: missing cargo-clippy refuses before handler/lock/slots; actual installed executable present admits the handler and install succeeds. This proves literal need behavior, not a full discipline build. Evidence: `need-behavior/RESULTS.json` under the reconstruction evidence root.
+
+## Actual lifecycle root defect
+
+The corrected fresh demo materialized four packages and wrote schema7 lock/INDEX, command exit0, but all eight selected lifecycle contributions failed. Never interpret that exit code as successful lifecycle proof.
+
+`handlers/helpers.rs` supplies existing `VIBE_PROJECT_ROOT`; handlers run at the target slot. Bare `vibe bin build` from that slot discovers a standalone project without a lock and returns an empty binary inventory. The actual installed lang manifest contains four binary declarations.
+
+Approved package-owned fix: both `tooling/post-install/build-tools.sh` and `.ps1` bind a nonempty `VIBE_PROJECT_ROOT` before their existing build invocation. Absent variable retains prior cwd; invalid root fails before child execution. No global cwd or lifecycle runner change.
+
+Worker blkraf9eq succeeded, and root reviewed its exact two-file diff. Independent POSIX tests passed four cases: project path with spaces; absent root variable; child exit17 propagation; nonexistent root/no child. PowerShell changes have source review only, NOT native runtime PASS. Evidence: `script-root-proof-zrmdsxzz/RESULTS.json` and `control/BUILD-ROOT-FIX-REVIEW.json` in the native-carrier evidence root.
+
+## Remaining nested build-consent refusal
+
+The next actual root-bound install now discovers binaries, confirming the root fix, but Cargo still does not run: the nested bare `vibe bin build` uses the direct operator consent gate, which admits exact group org.vibevm or explicit assume-yes, not org.vibevm.ai-native. Outer install consent is not propagated to that child command. Result remains8selected/0ok, not acceptance. Evidence: `RUST-DEMO-ROOTBOUND-RESULT.json`.
+
+Existing PROP-054 INSTALL-IS-CONSENT and H-BINARY distinguish consented installed extensions from direct operator builds; existing BuildAuthorization already models that distinction. Architect selected the finite package remedy: explicit `bin build --assume-yes` inside the already consented contribution, with a contract comment, rather than global trust expansion or a new consent framework. Worker b0413jph8 succeeded; root reviewed its exact two-script diff and independently passed the four POSIX root/exit/argv cases with the explicit flag (`script-root-proof-r7addvbq/RESULTS.json`). Reviewed worker bytes are integrated locally; direct operator/runtime trust gates remain unchanged. Fresh ordinary Rust install bkjbarnvk reached Cargo but its nested clean environment did not retain the outer CARGO_HOME/offline variables; the netless sandbox refused attempted crates.io access. The fixture was corrected using ordinary private HOME Cargo config/cache, not a runtime allowlist change. Two linker-layout failures were then retained; restoring the existing cc symlink semantics fixed them without host toolchain/config changes. Actual offline `vibe bin build --assume-yes` completed successfully for all four discipline binaries in3m37s (task b4x7rqkft, exact binary hashes in `RUST-BINARY-BUILD-RESULT.json`). An unchanged locked rematerialization ran no contributions and is not used as lifecycle proof. Fresh ordinary install bbf4l2zs6 completed0 in3m39s: all four mandatory build-tools contributions have actual `outcome=ok`; four optional register-mcp contributions failed without explicit scope and remain unperformed. Five declared release binaries, including rust-ai-native-mcp, were actually built and hashed. Source-free reinstall preserved bytes and mtimes of all five root outputs. Canonical Rust demo was then materialized through the ordinary offline owner (b4i7c750d), again4 mandatory successes/4 optional failures; actual destination package rows/source/hash match the candidate, INDEX inputs exist and authored bytes are preserved (`CANONICAL-RUST-RESULT.json`). Native Windows PowerShell5.1 script-protocol proof also passed all four cases with the exact current script SHA (`WINDOWS-SCRIPT-VERIFIED-RESULT.json`); its recorder child is not a Windows Rust build. Earlier driver errors remain retained and were not product defects.
+
+## Optional MCP disposition
+
+Registration script currently calls bare `vibe mcp install`, which refuses without explicit scope in a non-TTY. Architect accepts this as an explicit optional, unperformed registration outcome for router housekeeping, provided mandatory build succeeds. No automatic agent/config mutation is required to complete this router scope.
+
+Do not append blanket `--auto`: current CLI selects all detected agents and defaults to both MCP and skills, broadening effects. Existing explicit named-agent/project-scope/MCP-only registration remains a separate actual journey when required. No MCP script change or claimed registration is part of these repairs.
+
+## Scope and next execution
+
+Accepted commit scope is four Rust demo root outputs (AGENTS/CLAUDE/GEMINI/vibe.lock), three canonical package paths (prerequisite manifest plus two build scripts) and this report. Root INDEX is unchanged. Root instructions/collaboration/config/materialized dependency trees remain excluded. Architect independently verified all five actual Rust root output hashes, every INDEX input and exact package arrays against the frozen candidate. Preserve all failed runs, source/hash deltas and partial-output candidates. Continue the two remaining canonical package roots and separate host-derived refresh through ordinary offline owners; do not manually patch generated routers or old lock schemas, copy dependency trees or run whole-host force reinstall.
+
+Canonical Rust output SHA256: three routers `43691ca1de3b457566ddfda7ab973683b2331628872e548ea12d58be148105e9`; lock `36f405c3133e2c7327da5dca958dd4276280cbc373b33125c1dfb8160c93ec93`; unchanged INDEX `bbc1f3a7ffc3e92fc1a90c2206afe33cf27a2b4c3af816ac57d401c864ccce57`. Full graph/hash/step evidence remains in the bounded receipt files cited above. No external push or publication is implied.

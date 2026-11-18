@@ -6,4 +6,12 @@
 # contribution, so it appears in `vibe install --plan-only` with its title and
 # its prerequisites before anything runs (PROP-065 `#ordinary-consumer`).
 set -euo pipefail
-exec "${VIBE_EXECUTABLE:-vibe}" bin build
+# The lifecycle runs in the target slot, but `bin build` takes the owning
+# project's lock, so run from the project root when the environment names one.
+if [ -n "${VIBE_PROJECT_ROOT:-}" ]; then
+  cd -- "$VIBE_PROJECT_ROOT"
+fi
+# Pass --assume-yes: the install that materialised this slot already authorised
+# dependency installation, so the narrated build contribution needs no second
+# prompt (PROP-054 `#INSTALL-IS-CONSENT`).
+exec "${VIBE_EXECUTABLE:-vibe}" bin build --assume-yes
