@@ -171,7 +171,10 @@ pub fn publish(
     {
         return Ok(());
     }
-    safe.write_atomic_with_mode(FILE, &bytes, Some(0o600))
+    // This derived metadata uses ordinary inherited permissions on non-Unix.
+    // Exact Unix mode requests remain strict in safefs.
+    let mode = if cfg!(unix) { Some(0o600) } else { None };
+    safe.write_atomic_with_mode(FILE, &bytes, mode)
         .map_err(|e| fail(node, e))?;
     Ok(())
 }

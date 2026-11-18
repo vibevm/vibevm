@@ -19,6 +19,12 @@ pub(crate) struct ProgressPanel {
 }
 
 impl ProgressPanel {
+    #[cfg(test)]
+    pub(crate) fn for_test(ctx: &Context) -> Self {
+        Self {
+            renderer: ctx.progress_renderer.clone().expect("test renderer"),
+        }
+    }
     /// Replace the fold with the live stream, or fold it back.
     pub(crate) fn toggle(&self) {
         self.renderer.toggle_panel();
@@ -130,5 +136,92 @@ impl Context {
         ProgressHold {
             renderer: self.progress_renderer.as_ref(),
         }
+    }
+}
+
+/// Invocation-scoped input ownership, shared by context clones and prompt threads.
+pub(crate) trait TerminalPanel: Send + Sync {
+    fn release(&self);
+    fn reclaim(&self);
+}
+struct TerminalRestore(Arc<dyn TerminalPanel>);
+impl Drop for TerminalRestore {
+    fn drop(&mut self) {
+        self.0.reclaim();
+    }
+}
+impl Context {
+    #[specmark::spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-065#display")]
+    pub(crate) fn register_terminal_panel(&self, panel: Arc<dyn TerminalPanel>) {
+        if let Ok(mut slot) = self.terminal_panel.lock() {
+            *slot = Some(Arc::downgrade(&panel));
+        }
+    }
+    #[specmark::spec(
+        implements = "spec://org.vibevm.core/vibevm/common/PROP-073#PROJECT-COOPERATIVE-STOP"
+    )]
+    pub(crate) fn with_terminal_released<R>(&self, ask: impl FnOnce() -> R) -> R {
+        let panel = self
+            .terminal_panel
+            .lock()
+            .ok()
+            .and_then(|slot| slot.as_ref().and_then(std::sync::Weak::upgrade));
+        if let Some(panel) = panel {
+            panel.release();
+            let _restore = TerminalRestore(panel);
+            // No renderer lock is held over a blocking question.
+            ask()
+        } else {
+            let _hold = self.hold_progress();
+            ask()
+        }
+    }
+}
+
+#[cfg(test)]
+mod terminal_tests {
+    use super::*;
+    use std::sync::atomic::{AtomicUsize, Ordering};
+    #[derive(Default)]
+    struct Panel {
+        released: AtomicUsize,
+        reclaimed: AtomicUsize,
+    }
+    impl TerminalPanel for Panel {
+        fn release(&self) {
+            self.released.fetch_add(1, Ordering::SeqCst);
+        }
+        fn reclaim(&self) {
+            self.reclaimed.fetch_add(1, Ordering::SeqCst);
+        }
+    }
+    fn context() -> Context {
+        Context::from_flags(false, false, None, false, crate::cli::AgentModeArg::Auto)
+    }
+    #[test]
+    fn context_clones_share_terminal_release_across_threads_and_restore_after_unwind() {
+        let ctx = context();
+        let panel = Arc::new(Panel::default());
+        ctx.register_terminal_panel(panel.clone());
+        let other = ctx.clone();
+        let held = panel.clone();
+        std::thread::spawn(move || {
+            let result = std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
+                other.with_terminal_released(|| {
+                    assert_eq!(held.released.load(Ordering::SeqCst), 1);
+                    // Reentrant invocation access must not encounter the slot mutex.
+                    other.with_terminal_released(|| {});
+                    panic!("test prompt failed");
+                });
+            }));
+            assert!(result.is_err());
+        })
+        .join()
+        .unwrap();
+        assert_eq!(panel.released.load(Ordering::SeqCst), 2);
+        assert_eq!(panel.reclaimed.load(Ordering::SeqCst), 2);
+        let separate = context();
+        separate.with_terminal_released(|| {});
+        assert_eq!(panel.released.load(Ordering::SeqCst), 2);
     }
 }

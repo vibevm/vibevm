@@ -218,7 +218,7 @@ impl Owner {
         let asked = std::thread::Builder::new()
             .name("vibe-stop-question".to_owned())
             .spawn(move || {
-                let result = ctx.suspend_progress(|| {
+                let result = ctx.with_terminal_released(|| {
                     crate::output::prompts::confirm(question::QUESTION, false)
                 });
                 let _ = answers.send(question::answer(&result));

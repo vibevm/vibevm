@@ -267,6 +267,8 @@ pub struct Context {
     /// Whether standard input is a terminal this invocation may read keys
     /// from (PROP-065 `#display`); resolved once at the composition root.
     terminal_input: bool,
+    terminal_panel:
+        std::sync::Arc<std::sync::Mutex<Option<std::sync::Weak<dyn panel::TerminalPanel>>>>,
     pub(crate) agent_user_dirs: vibe_agent_projection::agents::AgentUserDirectories,
     /// Detailed rendering policy belongs only to the CLI composition root.
     #[cfg(test)]
@@ -306,6 +308,7 @@ impl Context {
             progress_renderer: None,
             machine_progress: false,
             terminal_input: false,
+            terminal_panel: Default::default(),
             agent_user_dirs: vibe_agent_projection::agents::AgentUserDirectories::ambient(),
             #[cfg(test)]
             verbose: false,
@@ -566,3 +569,5 @@ impl Context {
 #[cfg(test)]
 #[path = "output/tests.rs"]
 mod tests;
+
+pub(crate) use panel::TerminalPanel;

@@ -237,3 +237,37 @@ fn empty_ready_and_noop_install_publish_current_selected_node_authority() {
             .is_empty()
     );
 }
+
+#[test]
+fn ordinary_empty_install_publishes_portable_authority_with_stable_bytes_and_mtime() {
+    let user = UserScratch::new();
+    let root = tempfile::tempdir().unwrap();
+    user.init_project(root.path());
+    fs::write(user.settings.join("registry.toml"), "").unwrap();
+    let install = || {
+        user.vibe()
+            .args(["install", "--path"])
+            .arg(root.path())
+            .args(["--offline", "--json"])
+            .assert()
+            .success();
+    };
+    install();
+    let path = root.path().join(".vibe/specmap-authority.json");
+    let bytes = fs::read(&path).unwrap();
+    let value = authority(root.path());
+    assert_eq!(value["schema"], 1);
+    assert!(value["dependencies"].as_array().unwrap().is_empty());
+    #[cfg(unix)]
+    {
+        use std::os::unix::fs::PermissionsExt;
+        assert_eq!(
+            fs::metadata(&path).unwrap().permissions().mode() & 0o777,
+            0o600
+        );
+    }
+    let modified = fs::metadata(&path).unwrap().modified().unwrap();
+    install();
+    assert_eq!(fs::read(&path).unwrap(), bytes);
+    assert_eq!(fs::metadata(path).unwrap().modified().unwrap(), modified);
+}
