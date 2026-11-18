@@ -31,6 +31,10 @@ Builder reports background task bxbt6q1nw launched through the approved claude-d
 
 Independently read `/data/git/vibevm-native-carrier-20261119/ISOLATION-GATE.json`: exit0, SENTINEL_ENV_PID_GATE_OK, stated fs/env/pid sentinel scope and unchanged approved relay. Reading this receipt is not an independent audit of every network/credential boundary. Await actual worker terminal output and independent offline carrier proof.
 
+## First carrier candidate rejected
+
+Builder reported the first carrier run timed out after1800seconds with signal9; a runner exit0 only meant the control receipt was emitted, not worker success. Initial candidate review found a module-global replacement of build_system_prompt_parts despite the instance-scoped contract, with a recursive path back into the patched function. A manually reproduced prompt tail was not actual native CLI integration, Pi prototype/proof remained absent. Architect agrees these are blocking contract violations; the candidate was not executed or accepted as parity proof. The failed run and partial artifacts are retained. One bounded rework through the same approved lane was started; behavioral failure is not a reason to switch provider/model until a passing result appears. Await exact corrected candidate and independent native proof; do not add speculative acceptance criteria.
+
 ## Remaining finite proof
 
 Inspect the actual instance-bound carrier and native Pi extension/file path against the existing packet. Require exact source/runtime binding, complete prefix byte/ordering/once-only evidence, preserved base/resources, changed personal-tail behavior, worker/child exclusion and truthful resume behavior. Distinguish constructed payload from attempted SDK/network delivery. No new generic middleware, permission rounds or speculative proof campaign is requested.

@@ -36,6 +36,12 @@ Scoped canonical Rust outcome принят вместе с reviewed package fixe
 
 Итого приняты два demo roots из четырёх. Два nested package/project roots и host-derived delegation-rules refresh остаются открытыми. Это не закрывает Hermes/Pi или весь SYS-PROMPT.
 
+## Preservation gap — canonical delegation refresh
+
+2026-11-19 independently read `DELEGATION-PRESERVATION-GAP.json`: nested pinned refetch task btwl7ehiy had already materialized31 slots before a full before-state slot snapshot/record-untracked inventory was captured. Only root inputs were preserved. Current31 ownership records do not establish prior state. The actual unrecorded-slot migration may replace a whole directory, so absence of lost unknown user files cannot be proved from available evidence. This is a process defect, not a successful preservation assertion.
+
+Canonical delegation acceptance is held pending finite effect/recoverability review. No further force/slot deletion/cleanup or canonical fractality writes until the relevant old state is preserved and effects reviewed. Existing active Cargo is not stopped merely to manufacture a checkpoint; retain logs, old tracked blobs, root backups and candidate evidence. Recovery claims must distinguish actual observed changes, recoverable tracked/source bytes and unknown unrecorded data. Independent isolated carrier work can continue. Do not retroactively declare before-state preservation or silently broaden cleanup.
+
 ## Порядок работы и acceptance
 
 Начать с короткой актуализации existing SYS-TAILS и ready shared seams; Hermes/Pi research можно готовить параллельно без пересекающихся product writes. Не вводить вымышленную обязательную зависимость «все SYS-TAILS закрыть до Hermes/Pi», если actual contract этого не требует. Реальные общие prerequisites и integration owner фиксируются перед implementation dispatch.
