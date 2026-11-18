@@ -44,7 +44,11 @@ The complete supported installation MUST work as an ordinary unprivileged user:
 no UAC elevation,sudo/admin requirement,machine-wide PATH/registry changes or writes
 to protected system directories. Use user-writable or explicitly selected writable
 locations; fail preflight with an actionable message if a destination is not writable.
-User-level PATH changes require the existing consent; no-PATH installation must work.
+Owner decision2026-11-18 supersedes the earlier consent requirement for this installer:
+installation updates the current user's persistent PATH automatically by default,
+without a separate confirmation prompt. Use the existing native user-level PATH owner
+with explicit installer authorization; do not change machine PATH or elevate.
+An explicit `--no-path` opt-out remains supported and prevents that PATH update.
 If the current bundled CLI lacks a complete verified local-bundle bootstrap API,
 add/fix the appropriate core owner rather than staging an incomplete single-binary
 import or shell workaround. Test actual non-elevated execution on each target host.
@@ -76,9 +80,12 @@ import or shell workaround. Test actual non-elevated execution on each target ho
 5. Preflight validates the chosen profile, platform, required bundled artifacts and
    digest declarations before publication. Errors clearly distinguish no effects from
    already committed partial effects; do not promise unsupported atomic rollback.
-6. No automatic privilege elevation, execution-policy bypass or consent bypass.
-   Preserve default PATH consent and explicit no-PATH behavior. Explain that native
-   launch avoids script dependence but cannot evade corporate executable restrictions.
+6. No automatic privilege elevation or execution-policy bypass. As explicitly
+   authorized by the owner,the native installer updates only user-level PATH by
+   default without a prompt; pass the existing explicit fix-path option to its
+   native child. `--no-path` wins and disables that update. Preserve unrelated PATH
+   entries and idempotence. Explain that native launch avoids script dependence but
+   cannot evade corporate executable restrictions.
 7. Default is the kit's intended closed-network workflow. No implicit public network
    fallback when local artifacts are missing. Missing inputs name the required file.
    Existing configured corporate routes retain their ordinary policy; do not invent
