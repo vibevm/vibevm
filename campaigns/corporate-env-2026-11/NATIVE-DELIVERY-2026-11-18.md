@@ -61,14 +61,22 @@ not something recipients need to copy or something published in this repository.
   installation into isolated scratch under UID1000. All components/source and
   automatic isolated user PATH were checked;normal host installation was not changed.
 
-## Explicit remaining criterion
+## Owner acceptance with a disclosed verification limit
 
-**Windows non-elevated runtime verification is still pending.** The SSH functional
-run is elevated and is not presented as proof of ordinary-user operation. A prepared
-single normal-terminal verification command uses the final ready assets; no build
-is required from the owner. No UAC,security-policy,account,credential or desktop ACL
-changes were made to manufacture this evidence. Do not claim that all three OS
-ordinary-user proofs or whole-task owner acceptance have been obtained.
+On2026-11-18 the owner answered the builder's explicit acceptance question by
+selecting **«Принять без этой проверки»**. The option expressly accepted the ready
+corporate delivery without the remaining Windows standard-user run, while stating
+that an unperformed test must not be recorded as PASS. This is a direct human
+question-dialog answer,not an automated stop-hook event or inferred peer approval.
+The delivery is therefore **owner-accepted with this disclosed limitation**; the
+prepared manual command is no longer a completion prerequisite for this scope.
+
+**Windows non-elevated runtime verification remains UNVERIFIED,not PASS.** The SSH
+functional run is elevated and is not proof of ordinary-user operation. No synthetic
+standard-user receipt was created. No UAC,security-policy,account,credential or
+desktop ACL changes were made to manufacture evidence. The owner disposition
+changes the acceptance boundary,not the measured test results: ordinary-user Linux
+and macOS proofs stand,but an all-three-OS ordinary-user proof must not be claimed.
 
 The earlier OOM-interrupted final gate has no verdict. The initial mixed-subject
 canonical failures and repaired integration regressions remain documented. The
