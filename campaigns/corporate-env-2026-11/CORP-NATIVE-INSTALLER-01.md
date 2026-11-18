@@ -131,5 +131,21 @@ Use staged/create-new outputs and ordinary recoverable replacement; never wipe t
 whole directory or regenerate confidential profiles from generic examples.
 
 Verify the resulting kit with native entry points in isolated scratch, then report
-exact updated paths and hashes without exposing endpoint/profile contents. External
-source push, releases, corporate rollout and signing remain separately authorized.
+exact updated paths and hashes without exposing endpoint/profile contents.
+
+Owner follow-up relayed by builder2026-11-18: inspect whether each existing component
+needs replacement; do not redownload or recopy the entire distribution indiscriminately.
+Baseline the actual local kit/admin files before changes, reuse unchanged verified
+payloads, and retain the exact changed-file inventory. After rebuilding/updating the
+main local distribution, create `~/corp-upd-2` containing ONLY the required network
+transfer delta, with a relative-path/action/hash manifest and source/build identity.
+Verify the destination before writing; preserve any existing unrelated contents.
+Do not include unchanged drops, complete mirrors or private administration data by
+default. Keep any necessary site-private values confined to the authorized private
+local artifacts, never committed generic manifests. Describe required replacements
+or removals explicitly; do not infer permission to delete remote corporate files.
+A fresh build of changed vibe/installer components remains required; unchanged
+third-party payloads need not be downloaded or rebuilt to satisfy freshness.
+
+External source push, releases, corporate rollout and signing remain separately
+authorized; preparing the local delta does not authorize applying it remotely.
