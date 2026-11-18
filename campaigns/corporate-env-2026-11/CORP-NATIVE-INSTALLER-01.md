@@ -11,6 +11,12 @@ clarifications and integrated acceptance. Base at dispatch preparation is
 `d1267eb04` (resolve the exact synchronized head again when this task starts).
 No worktree, external publication, host security-policy change or shared service
 operation is implied. Existing APP work retains priority and source ownership.
+Owner grant2026-11-18: if base or flash lacks build prerequisites such as the Rust
+compiler, installing the prerequisites necessary for these native builds is authorized.
+Inspect existing tools first, install only actual missing dependencies through normal
+trusted mechanisms, and record versions/changes. This does not authorize unrelated
+upgrades, disabling corporate/security policies, credential changes or destructive
+replacement of existing toolchains. Keep build/test data in established isolated roots.
 
 ## Existing seams already identified
 
@@ -28,9 +34,15 @@ operation is implied. Existing APP work retains priority and source ownership.
 
 ## Design constraints
 
-1. Direct executable launch on Windows is the first-class entry, with corresponding
-   native Linux/macOS assets for supported distribution targets. A small CLI/TUI is
-   sufficient; a GUI framework is not required. No Rust toolchain at user install time.
+1. The corporate kit MUST contain already compiled, ready-to-run Rust installer
+   executables for Windows, Linux and macOS. Source code, build instructions or a
+   promise to download/build on first launch do not satisfy this requirement. Build
+   Windows on the established base SSH host, macOS on flash, and Linux locally,
+   using their established isolated test/build directories and existing toolchains.
+   Bind each asset to its source revision, target and SHA256; test the actual native
+   executable on the corresponding host. Direct Windows launch is first-class.
+   A small CLI/TUI is sufficient; a GUI framework is not required. No Rust toolchain
+   or script interpreter may be required on the recipient's machine for bootstrap.
 2. No essential dependency on bash/cmd/PowerShell scripts, external tar/unzip or an
    already-installed vibe for the supported bootstrap path. Calling a verified native
    vibe executable with structured argv is allowed; do not shell-interpolate input.

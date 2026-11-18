@@ -18,8 +18,11 @@ bash/cmd scripts as its essential bootstrap path.
 
 ## Required outcome
 
-- A directly launchable small Rust application is shipped inside the corporate
-  distribution for the relevant supported targets, especially Windows.
+- Already compiled, directly launchable Rust installer executables for Windows,
+  Linux and macOS are physically shipped inside the corporate distribution, not
+  source-only/build-on-first-run substitutes. Owner clarification2026-11-18 permits
+  the established base and flash hosts for native Windows/macOS builds; Linux builds
+  locally. Preserve source/target/hash binding and execute each actual native asset.
 - It performs the current intended bootstrap/install/configuration workflow through
   existing Rust owners, with clear diagnostics and the existing consent/offline,
   digest, source and PATH rules preserved.
