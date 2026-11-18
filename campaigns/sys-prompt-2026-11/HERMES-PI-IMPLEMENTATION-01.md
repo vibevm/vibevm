@@ -6,6 +6,12 @@ Genre: architectural implementation brief. Date2026-11-19. Status: architecture 
 
 A user selects Hermes or Pi through ordinary VibeVM agent surfaces, starts the real native executable in the selected project and receives the correct project boot plus current USER-PROJECT layers. Existing native identity, unrelated authored instructions, memory and skills remain intact. The user can use supported interactive/unattended modes without inventing a custom launcher alias or manually copying personal context into project files.
 
+## Owner runtime-provisioning grant — 2026-11-19
+
+Direct owner instruction: «разреши установить hermes, pi, bwrap и любые другие необходимые утилиты». Necessary native runtimes, dependencies and utilities may be installed and executed for this integration and its native proof. Prefer isolated user-owned runtime/proof directories under `/data`, pinned official sources and the existing enforced credential/process/network boundary. This resolves the earlier missing runtime/dependency-install authority; do not ask again for the same permission. Record actual versions, sources, installation results and isolation checks. The grant does not authorize unrelated software, copying ordinary auth stores, credential/endpoint changes, privileged security relaxation, external publication or real model calls merely to install a runtime. Genuine privilege or security-policy decisions remain explicit boundaries.
+
+The architect supplies detailed executable briefs and resolves architectural questions. Reuse the already approved bounded execution plan for this task; runtime provisioning now falls within it. Do not introduce a redundant plan-mode approval cycle for the same decided scope. Actual harness approval and permission boundaries still govern; neither role may change permission settings or route around a denied action.
+
 ## Accepted inputs and source binding
 
 Implementation base: builder records its actual accepted full HEAD before writes; last independently verified product base7cd10d049846a6cd227cc838e9793b666a04ca0f. Do not assume architect checkout has integrated later product commits. Architecture delivery commit must contain this brief and HERMES-PI-UPSTREAM-20261119.md; receive committed revisions under WORKING-RULES, not a dirty product snapshot.
