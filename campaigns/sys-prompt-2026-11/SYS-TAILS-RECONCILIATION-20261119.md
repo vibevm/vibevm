@@ -22,6 +22,12 @@ Existing `SYS-TAILS` находится внутри `SYS-PROMPT`, зависи�
 4. **Other harness claims.** Старое «шесть harnesses — research» нельзя целиком принять как implementation debt или как current capability. Hermes/Pi — отдельная новая owner task; её current primary-source research и actual native integration идут в собственном scope. Не дублировать под SYS-TAILS их adapter implementation или USER-PROJECT tests.
 5. **Final evidence and docs.** Сопоставить existing PLAN/LOG/RESULTS, current owning contracts и actual source plan. Обновить current status, сохранив append-only historical failures и границы evidence. Living physical acceptance guide дополняется только actual manual claims.
 
+## Принятый промежуточный результат — canonical TS-demo
+
+2026-11-19 architect независимо прочитал `CANONICAL-TS-RESULT.json`, сверил SHA256 всех пяти canonical outputs в `/data/git/vibevm/research/ts-demo`, разобрал INDEX и проверил наличие каждого input. Actual ordinary install exit0; четыре package rows совпадают с проверенным candidate по versions/sources/hashes, authored entrypoint bytes сохранены. Scoped marker routers и optional personal boot присутствуют. Предыдущий source-free reinstall candidate сохранил bytes/mtime routers, lock и INDEX.
+
+TS-demo outcome принят в этой области: обновлены три routers и lock через штатного owner; INDEX не изменился, dependency inputs существуют благодаря actual materialization, не raw copy. Schema6→7 соответствует текущему writer, не будущему latest-only proposal. Machine-local `/data` source epoch объявлен честно; native TypeScript tool build этим не доказан. Остальные три canonical root и host-derived refresh остаются открытыми; это не acceptance всего SYS-TAILS.
+
 ## Порядок работы и acceptance
 
 Начать с короткой актуализации existing SYS-TAILS и ready shared seams; Hermes/Pi research можно готовить параллельно без пересекающихся product writes. Не вводить вымышленную обязательную зависимость «все SYS-TAILS закрыть до Hermes/Pi», если actual contract этого не требует. Реальные общие prerequisites и integration owner фиксируются перед implementation dispatch.
