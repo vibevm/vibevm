@@ -224,15 +224,24 @@ fn run_with_scope_selected(
 ) -> Result<()> {
     let overall = ctx.progress().task("Installing packages");
     let scoped = ctx.with_progress_scope(overall.progress());
-    let result = run_observed(
-        &scoped,
-        args,
-        embedded_root,
-        root_offline,
-        &overall,
-        scope,
-        selected,
-    );
+    let display = crate::commands::app::display::StepDisplay::open(&scoped, &args.steps);
+    let mut args = args;
+    args.steps.log = Some(match display.log_mode() {
+        crate::commands::app::display::LogMode::Live => crate::cli::AppLogArg::Live,
+        crate::commands::app::display::LogMode::Tail => crate::cli::AppLogArg::Tail,
+        crate::commands::app::display::LogMode::Quiet => crate::cli::AppLogArg::Quiet,
+    });
+    let result = display.around(&scoped, || {
+        run_observed(
+            &scoped,
+            args,
+            embedded_root,
+            root_offline,
+            &overall,
+            scope,
+            selected,
+        )
+    });
     if result.is_err() {
         overall.fail("package installation failed");
     }
@@ -327,7 +336,13 @@ fn execute_after_open(
     // answers to "which node did this command act on".
     let failed_root = selection.root().to_path_buf();
     let confirm_gate = super::CliConfirmGate::with_scope(ctx, args.assume_yes, &failed_root, scope);
-    let install_observer = super::CliInstallObserver::new(ctx, None).with_progress(ctx.progress());
+    let install_observer = super::CliInstallObserver::new(ctx, None)
+        .with_progress(ctx.progress())
+        .with_log_mode(crate::commands::app::display::log_mode(
+            args.steps.log,
+            output::env_app_log().as_deref(),
+            ctx.has_interactive_progress(),
+        ));
     // `vibe update -g mcp:<pkg>` is an explicit version update of the held
     // user-project root: it selects a newer version at the locked endpoint
     // (PROP-073 `#LOCKED-SOURCE`), never a source reset. Every other route

@@ -126,6 +126,10 @@ impl StepDisplay {
         self.panelled.then_some(self as &dyn vibe_app::StepPanel)
     }
 
+    pub(crate) fn log_mode(&self) -> LogMode {
+        self.mode
+    }
+
     /// `--log quiet` keeps child output out of both streams; the run log
     /// still gets every byte.
     pub(crate) fn quiet_children(&self) -> bool {

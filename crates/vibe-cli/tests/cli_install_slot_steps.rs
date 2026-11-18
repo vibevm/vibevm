@@ -369,3 +369,175 @@ fn an_untrusted_groups_entry_restores_the_question_for_a_group_the_base_trusts()
         String::from_utf8_lossy(&output.stderr),
     );
 }
+
+#[cfg(unix)]
+#[test]
+fn full_logs_keep_both_streams_beyond_the_bounded_machine_preview() {
+    let (outer, user, project, registry) = setup(Fixture::JudgmentEvidence);
+    let script = registry.join("org.example/hooked/v0.1.0/hooks/noisy.sh");
+    assert!(script.exists(), "fixture script at {}", script.display());
+    fs::write(&script, "set -eu\nprintf OUT-BEGIN\nhead -c 1200000 /dev/zero | tr '\\0' O\nprintf OUT-END\nprintf ERR-BEGIN >&2\nhead -c 1200000 /dev/zero | tr '\\0' E >&2\nprintf ERR-END >&2\n").unwrap();
+    let output = install(&user, project.path(), &registry);
+    assert!(
+        output.status.success(),
+        "{}",
+        String::from_utf8_lossy(&output.stderr)
+    );
+    let docs = documents(&output.stdout);
+    let outcomes = slot_outcomes(&docs);
+    let noisy = outcomes
+        .iter()
+        .find(|row| row["key"].as_str().is_some_and(|s| s.contains("#noisy")))
+        .unwrap();
+    assert!(noisy["stdout"].as_str().unwrap().len() <= 1024 * 1024);
+    assert!(!String::from_utf8_lossy(&output.stderr).contains("OUT-BEGIN"));
+    assert!(noisy["stderr"].as_str().unwrap().len() <= 1024 * 1024);
+    assert!(!String::from_utf8_lossy(&output.stderr).contains("ERR-BEGIN"));
+    let root = user
+        .settings
+        .join("cache/install-steps/org.example/hooked/0.1.0");
+    let run = fs::read_dir(root).unwrap().next().unwrap().unwrap().path();
+    let log = fs::read(run.join("logs/noisy.log")).unwrap();
+    for marker in [
+        b"OUT-BEGIN".as_slice(),
+        b"OUT-END",
+        b"ERR-BEGIN",
+        b"ERR-END",
+    ] {
+        assert!(log.windows(marker.len()).any(|w| w == marker));
+    }
+    assert!(log.len() > 2400000);
+    let record: serde_json::Value =
+        serde_json::from_slice(&fs::read(run.join("steps.json")).unwrap()).unwrap();
+    let row = record["contributions"]
+        .as_array()
+        .unwrap()
+        .iter()
+        .find(|r| r["id"] == "noisy")
+        .unwrap();
+    assert!(
+        row.get("logTruncated").is_none(),
+        "full log is not a capped preview"
+    );
+    drop(outer);
+}
+
+#[test]
+fn quiet_install_keeps_logs_without_child_output_and_bad_evidence_does_not_fail_work() {
+    for blocked in [false, true] {
+        let (_outer, user, project, registry) = setup(Fixture::JudgmentEvidence);
+        if blocked {
+            fs::create_dir_all(user.settings.join("cache")).unwrap();
+            fs::write(
+                user.settings.join("cache/install-steps"),
+                b"not a directory",
+            )
+            .unwrap();
+        }
+        let output = user
+            .vibe()
+            .arg("--quiet")
+            .arg("install")
+            .arg("org.example/hooked@=0.1.0")
+            .arg("--registry")
+            .arg(&registry)
+            .arg("--path")
+            .arg(project.path())
+            .arg("--assume-yes")
+            .output()
+            .unwrap();
+        assert!(
+            output.status.success(),
+            "{}",
+            String::from_utf8_lossy(&output.stderr)
+        );
+        for bytes in [&output.stdout, &output.stderr] {
+            let text = String::from_utf8_lossy(bytes);
+            assert!(!text.contains("NOISY-OUT"));
+            assert!(!text.contains("NOISY-ERR"));
+        }
+        if blocked {
+            assert!(
+                String::from_utf8_lossy(&output.stderr)
+                    .contains("output log incomplete or unavailable")
+            );
+        }
+        if !blocked {
+            let root = user
+                .settings
+                .join("cache/install-steps/org.example/hooked/0.1.0");
+            let run = fs::read_dir(root).unwrap().next().unwrap().unwrap().path();
+            let log = fs::read_to_string(run.join("logs/noisy.log")).unwrap();
+            assert!(log.contains("NOISY-OUT") && log.contains("NOISY-ERR"));
+        }
+    }
+}
+
+#[cfg(target_os = "linux")]
+#[test]
+fn attended_contribution_uses_the_existing_fold_session_and_retains_full_log() {
+    use std::process::Command;
+    let (outer, user, project, registry) = setup(Fixture::JudgmentEvidence);
+    let root = outer.path();
+    let source = root.join("pty.c");
+    let runner = root.join("pty");
+    let code=include_str!("common/pty-runner.c").replace("#include <errno.h>","#include <errno.h>\n#include <poll.h>\n#include <signal.h>\n#include <time.h>")
+        .replace("    char buffer[4096];","    time_t started=time(NULL);\n    char buffer[4096];")
+        .replace("        ssize_t length = read(master, buffer, sizeof(buffer));","        if(time(NULL)-started>15){kill(-child,SIGKILL);waitpid(child,NULL,0);return 131;}\n        struct pollfd ready={.fd=master,.events=POLLIN}; if(poll(&ready,1,100)==0)continue;\n        ssize_t length = read(master, buffer, sizeof(buffer));");
+    fs::write(&source, code).unwrap();
+    assert!(
+        Command::new("cc")
+            .arg("-o")
+            .arg(&runner)
+            .arg(source)
+            .arg("-lutil")
+            .status()
+            .unwrap()
+            .success()
+    );
+    let script = registry.join("org.example/hooked/v0.1.0/hooks/noisy.sh");
+    fs::write(
+        script,
+        "printf 'PANEL-FIRST\\n'\nsleep .2\nprintf 'PANEL-LAST\\n'\n",
+    )
+    .unwrap();
+    let output = Command::new(&runner)
+        .arg(env!("CARGO_BIN_EXE_vibe"))
+        .args([
+            "install",
+            "org.example/hooked@=0.1.0",
+            "--assume-yes",
+            "--log",
+            "tail",
+            "--log-tail",
+            "2",
+        ])
+        .arg("--registry")
+        .arg(&registry)
+        .arg("--path")
+        .arg(project.path())
+        .env("VIBE_SETTINGS", &user.settings)
+        .env("VIBE_REGISTRY_CACHE", &user.cache)
+        .env("VIBEVM_SEARCH_CACHE_DIR", &user.search_cache)
+        .env("VIBE_NO_DEFAULT_REGISTRY", "1")
+        .env("TERM", "xterm")
+        .env_remove("CI")
+        .env_remove("VIBE_INVOKED_BY")
+        .env_remove("VIBE_UNATTENDED")
+        .env_remove("VIBE_AGENT_COMMAND")
+        .env_remove("VIBE_AGENT_ARGS")
+        .output()
+        .unwrap();
+    assert!(
+        output.status.success(),
+        "{}",
+        String::from_utf8_lossy(&output.stdout)
+    );
+    let runs = user
+        .settings
+        .join("cache/install-steps/org.example/hooked/0.1.0");
+    let run = fs::read_dir(runs).unwrap().next().unwrap().unwrap().path();
+    let log = fs::read_to_string(run.join("logs/noisy.log")).unwrap();
+    assert!(log.contains("PANEL-FIRST") && log.contains("PANEL-LAST"));
+    assert!(String::from_utf8_lossy(&output.stdout).contains("noisy"));
+}

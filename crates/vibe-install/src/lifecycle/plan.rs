@@ -221,6 +221,14 @@ pub trait SlotLifecycleObserver {
         Ok(())
     }
 
+    /// Optional best-effort process output observation for this contribution.
+    fn output_observer(
+        &self,
+        _entry: &SlotLifecyclePlanEntry,
+    ) -> Option<std::sync::Arc<dyn vibe_lifecycle::process::ProcessOutputObserver>> {
+        None
+    }
+
     fn outcome(&self, _report: &super::SlotLifecycleReport) -> std::result::Result<(), String> {
         Ok(())
     }

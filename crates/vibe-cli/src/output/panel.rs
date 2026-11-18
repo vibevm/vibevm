@@ -113,6 +113,12 @@ impl Context {
         }
     }
 
+    pub(crate) fn note_task_log(&self, id: vibe_core::progress::TaskId, log: &std::path::Path) {
+        if let Some(renderer) = &self.progress_renderer {
+            renderer.note_task_log(id, log);
+        }
+    }
+
     /// Hold this invocation's progress back until the guard drops, so the
     /// held work prints and prompts on its own streams. Unlike
     /// [`Context::suspend_progress`] it keeps no renderer lock, so output

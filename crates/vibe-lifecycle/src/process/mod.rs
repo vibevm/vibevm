@@ -12,6 +12,10 @@ use specmark::spec;
 use thiserror::Error;
 
 mod controlled;
+mod observe;
+use observe::Observation;
+pub use observe::{OutputStream, ProcessOutputObserver};
+use std::sync::Arc;
 mod scratch;
 pub(crate) mod session;
 pub use controlled::ControlledProcessRunner;
@@ -102,6 +106,24 @@ pub trait ProcessRunner: Send + Sync {
 #[spec(documents = "spec://org.vibevm.core/vibevm/common/PROP-054#H-SCRIPT")]
 pub struct SystemProcessRunner;
 
+impl SystemProcessRunner {
+    /// Run with an invocation-owned byte observer, leaving ordinary callers unchanged.
+    /// ```
+    /// use vibe_lifecycle::process::{ProcessRunner, SystemProcessRunner};
+    /// let runner = SystemProcessRunner;
+    /// let _: &dyn ProcessRunner = &runner;
+    /// // Passing no observer preserves the existing bounded process contract.
+    /// ```
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-065#ordinary-plan")]
+    pub fn run_observed(
+        &self,
+        spec: &ProcessSpec,
+        observer: Option<Arc<dyn ProcessOutputObserver>>,
+    ) -> Result<ProcessOutput, ProcessError> {
+        run_system(spec, observer)
+    }
+}
+
 struct CaptureFile {
     path: PathBuf,
     file: File,
@@ -109,59 +131,107 @@ struct CaptureFile {
 
 impl ProcessRunner for SystemProcessRunner {
     fn run(&self, spec: &ProcessSpec) -> Result<ProcessOutput, ProcessError> {
-        let mut command = Command::new(&spec.program);
-        command.args(&spec.args).current_dir(&spec.cwd).env_clear();
-        command.envs(&spec.env);
-        command.stdin(if spec.stdin.is_some() {
-            Stdio::piped()
-        } else {
-            Stdio::null()
-        });
-        let (stdout, mut stdout_capture) = stream_stdio(spec.stdout, &spec.scratch, "stdout")
-            .map_err(|reason| ProcessError::Spawn {
+        run_system(spec, None)
+    }
+}
+
+fn run_system(
+    spec: &ProcessSpec,
+    observer: Option<Arc<dyn ProcessOutputObserver>>,
+) -> Result<ProcessOutput, ProcessError> {
+    let mut command = Command::new(&spec.program);
+    command.args(&spec.args).current_dir(&spec.cwd).env_clear();
+    command.envs(&spec.env);
+    command.stdin(if spec.stdin.is_some() {
+        Stdio::piped()
+    } else {
+        Stdio::null()
+    });
+    let (stdout, mut stdout_capture) =
+        stream_stdio(spec.stdout, &spec.scratch, "stdout").map_err(|reason| {
+            ProcessError::Spawn {
                 program: spec.program.display().to_string(),
                 reason,
-            })?;
-        let (stderr, mut stderr_capture) = stream_stdio(spec.stderr, &spec.scratch, "stderr")
-            .map_err(|reason| ProcessError::Spawn {
+            }
+        })?;
+    let (stderr, mut stderr_capture) =
+        stream_stdio(spec.stderr, &spec.scratch, "stderr").map_err(|reason| {
+            ProcessError::Spawn {
                 program: spec.program.display().to_string(),
                 reason,
-            })?;
-        command.stdout(stdout);
-        command.stderr(stderr);
-        let mut child = spawn_retrying_busy(BUSY_ATTEMPTS, BUSY_PAUSE, || command.spawn())
-            .map_err(|error| ProcessError::Spawn {
+            }
+        })?;
+    command.stdout(stdout);
+    command.stderr(stderr);
+    let mut observation = Observation::new(
+        observer,
+        spec,
+        stdout_capture.as_ref(),
+        stderr_capture.as_ref(),
+    );
+    let mut child =
+        spawn_retrying_busy(BUSY_ATTEMPTS, BUSY_PAUSE, || command.spawn()).map_err(|error| {
+            ProcessError::Spawn {
                 program: spec.program.display().to_string(),
                 reason: error.to_string(),
-            })?;
-        if let Some(bytes) = &spec.stdin {
-            use std::io::Write;
-            let Some(mut stdin) = child.stdin.take() else {
-                return Err(reap_stdin_failure(
-                    &mut child,
-                    "spawned process did not expose the requested pipe".into(),
-                ));
-            };
-            if let Err(error) = stdin.write_all(bytes) {
-                drop(stdin);
-                return Err(reap_stdin_failure(&mut child, error.to_string()));
             }
-            drop(stdin);
+        })?;
+    let mut writer = match (spec.stdin.as_ref(), child.stdin.take()) {
+        (Some(bytes), Some(mut pipe)) => {
+            let bytes = bytes.clone();
+            Some(std::thread::spawn(move || {
+                use std::io::Write;
+                pipe.write_all(&bytes)
+            }))
         }
-        let status = child
-            .wait()
-            .map_err(|error| ProcessError::Wait(error.to_string()))?;
-        let retain = !status.success();
-        let (stdout, stdout_truncated) = read_capped(spec.stdout, stdout_capture.as_mut(), retain)?;
-        let (stderr, stderr_truncated) = read_capped(spec.stderr, stderr_capture.as_mut(), retain)?;
-        Ok(ProcessOutput {
-            code: status.code(),
-            stdout,
-            stderr,
-            stdout_truncated,
-            stderr_truncated,
-        })
+        _ => None,
+    };
+    let status = loop {
+        if let Some(observation) = &mut observation {
+            observation.poll();
+        }
+        if writer.as_ref().is_some_and(|writer| writer.is_finished())
+            && let Some(writer) = writer.take()
+        {
+            match writer.join() {
+                Ok(Ok(())) => {}
+                result => {
+                    let _ = child.kill();
+                    let _ = child.wait();
+                    return Err(ProcessError::Stdin(format!(
+                        "stdin writer failed: {result:?}"
+                    )));
+                }
+            }
+        }
+        if let Some(status) = child
+            .try_wait()
+            .map_err(|error| ProcessError::Wait(error.to_string()))?
+        {
+            break status;
+        }
+        std::thread::sleep(Duration::from_millis(25));
+    };
+    if let Some(writer) = writer {
+        writer
+            .join()
+            .map_err(|_| ProcessError::Stdin("stdin writer panicked".into()))?
+            .map_err(|error| ProcessError::Stdin(error.to_string()))?;
     }
+    if let Some(observation) = &mut observation {
+        observation.reaped();
+    }
+    drop(observation);
+    let retain = !status.success();
+    let (stdout, stdout_truncated) = read_capped(spec.stdout, stdout_capture.as_mut(), retain)?;
+    let (stderr, stderr_truncated) = read_capped(spec.stderr, stderr_capture.as_mut(), retain)?;
+    Ok(ProcessOutput {
+        code: status.code(),
+        stdout,
+        stderr,
+        stdout_truncated,
+        stderr_truncated,
+    })
 }
 
 /// How often a spawn that hits a busy executable is tried in all.
@@ -250,22 +320,6 @@ fn read_capped(
     Ok((bytes, truncated))
 }
 
-fn reap_stdin_failure(child: &mut std::process::Child, primary: String) -> ProcessError {
-    let kill = child.kill().err().and_then(|error| {
-        (error.kind() != std::io::ErrorKind::InvalidInput).then(|| error.to_string())
-    });
-    let wait = child.wait().err().map(|error| error.to_string());
-    let cleanup = [kill, wait].into_iter().flatten().collect::<Vec<_>>();
-    if cleanup.is_empty() {
-        ProcessError::Stdin(primary)
-    } else {
-        ProcessError::Stdin(format!(
-            "{primary}; handler cleanup/reap also failed: {}",
-            cleanup.join("; ")
-        ))
-    }
-}
-
 #[spec(
     deviates = "spec://core-ai-native/mechanisms/ENGINE-CONFORM-v0.1#rules",
     reason = "the system-process adapter is the explicit composition boundary that snapshots a fixed OS allowlist before env_clear"
@@ -328,3 +382,6 @@ pub(crate) fn client_environment(
 
 #[cfg(test)]
 mod tests;
+
+#[cfg(test)]
+mod observe_tests;

@@ -23,7 +23,9 @@ specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-065#ordinary-plan");
 
 use std::collections::BTreeMap;
 use std::path::{Path, PathBuf};
-use std::sync::Mutex;
+use std::sync::{Arc, Mutex};
+mod stream;
+use stream::StreamLog;
 
 use vibe_install::SlotLifecycleReport;
 use vibe_wire::generated::install_steps as wire;
@@ -60,6 +62,7 @@ struct Record {
 pub(crate) struct StepEvidence {
     /// `<home>/cache/install-steps`.
     root: PathBuf,
+    streams: Mutex<BTreeMap<String, Arc<StreamLog>>>,
     /// One timestamp for the whole run, so every package of one install
     /// lands under directories a reader can line up.
     stamp: String,
@@ -75,6 +78,7 @@ impl StepEvidence {
     pub(crate) fn new(settings_root: &Path) -> Self {
         Self {
             root: settings_root.join("cache").join("install-steps"),
+            streams: Mutex::new(BTreeMap::new()),
             stamp: stamp(),
             open: Mutex::new(BTreeMap::new()),
             started: Mutex::new(BTreeMap::new()),
@@ -87,6 +91,76 @@ impl StepEvidence {
         if let Ok(mut started) = self.started.lock() {
             started.insert(key.to_owned(), now());
         }
+    }
+
+    pub(crate) fn stream(
+        &self,
+        entry: &vibe_install::SlotLifecyclePlanEntry,
+        task: Arc<vibe_core::progress::ProgressTask>,
+        ctx: crate::output::Context,
+        mode: crate::commands::app::display::LogMode,
+    ) -> Option<Arc<dyn vibe_lifecycle::process::ProcessOutputObserver>> {
+        let target = &entry.slot_target;
+        let path = self
+            .root
+            .join(&target.group)
+            .join(&target.name)
+            .join(&target.version)
+            .join(&self.stamp)
+            .join("logs")
+            .join(format!("{}.log", contribution_id(&entry.key)));
+        let log = StreamLog::open(path, entry.handler == "binary", task, ctx, mode);
+        self.streams
+            .lock()
+            .ok()?
+            .insert(entry.key.clone(), log.clone());
+        if let Ok(mut open) = self.open.lock() {
+            let coordinate = Coordinate::of(target);
+            let record = open.entry(coordinate).or_insert_with(|| Record {
+                dir: self
+                    .root
+                    .join(&target.group)
+                    .join(&target.name)
+                    .join(&target.version)
+                    .join(&self.stamp),
+                document: wire::InstallSteps {
+                    protocol: PROTOCOL.into(),
+                    package: wire::Package {
+                        group: target.group.clone(),
+                        name: target.name.clone(),
+                        version: target.version.clone(),
+                    },
+                    started: now(),
+                    finished: None,
+                    contributions: Vec::new(),
+                },
+            });
+            record.document.contributions.push(wire::Contribution {
+                id: contribution_id(&entry.key),
+                key: entry.key.clone(),
+                point: entry.point.clone(),
+                handler: entry.handler.clone(),
+                outcome: wire::Outcome::Interrupted,
+                reason: Some("contribution started; no terminal outcome recorded yet".into()),
+                started: Some(now()),
+                finished: None,
+                log: log
+                    .status()
+                    .0
+                    .then(|| format!("logs/{}.log", contribution_id(&entry.key))),
+                log_truncated: Some(true),
+            });
+            write_document(record);
+        }
+        Some(log)
+    }
+
+    pub(crate) fn stream_path(&self, key: &str) -> Option<PathBuf> {
+        self.streams
+            .lock()
+            .ok()?
+            .get(key)
+            .map(|log| log.path().to_path_buf())
     }
 
     /// One contribution ended: append its row, write its log, and rewrite
@@ -129,18 +203,44 @@ impl StepEvidence {
             },
         });
         let id = contribution_id(&report.key);
-        let log = write_log(&record.dir, &id, report);
+        let streamed = self
+            .streams
+            .lock()
+            .ok()
+            .and_then(|mut streams| streams.remove(&report.key));
+        let (log, incomplete) = streamed
+            .as_ref()
+            .map(|log| log.status())
+            .unwrap_or_else(|| {
+                (
+                    write_log(&record.dir, &id, report),
+                    report.stdout_truncated || report.stderr_truncated,
+                )
+            });
+        let reason = if incomplete {
+            Some(format!(
+                "{}{}output log incomplete or unavailable",
+                report.message.as_deref().unwrap_or(""),
+                if report.message.is_some() { "; " } else { "" }
+            ))
+        } else {
+            report.message.clone()
+        };
+        record
+            .document
+            .contributions
+            .retain(|row| row.key != report.key);
         record.document.contributions.push(wire::Contribution {
             id: id.clone(),
             key: report.key.clone(),
             point: report.point.clone(),
             handler: report.handler.clone(),
             outcome: outcome(&report.status),
-            reason: report.message.clone(),
+            reason,
             started,
             finished: Some(now()),
             log: log.then(|| format!("logs/{id}.log")),
-            log_truncated: (report.stdout_truncated || report.stderr_truncated).then_some(true),
+            log_truncated: incomplete.then_some(true),
         });
         write_document(record);
         log.then(|| record.dir.join("logs").join(format!("{id}.log")))
@@ -195,9 +295,9 @@ fn outcome(status: &str) -> wire::Outcome {
 /// Write this contribution's captured output to `logs/<id>.log`; `true`
 /// when there was anything to write.
 ///
-/// `stdout` then `stderr`, each as the engine captured it. A run whose
-/// child wrote straight to the terminal (the attended default) captures
-/// nothing, and such a row carries no log rather than an empty one.
+/// Compatibility fallback for rows without a streaming process observer:
+/// `stdout` then `stderr`, bounded as the engine returned them. Observed
+/// contributions reserve their append-only log before execution instead.
 fn write_log(dir: &Path, id: &str, report: &SlotLifecycleReport) -> bool {
     let mut bytes = report.stdout.clone().unwrap_or_default();
     bytes.push_str(report.stderr.as_deref().unwrap_or_default());

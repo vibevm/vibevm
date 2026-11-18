@@ -255,7 +255,12 @@ impl InstallSlotLifecycle {
             // opens here and the evidence record's start time is read here,
             // because this engine is handed no clock (`#ordinary-plan`).
             self.observer.started(planned)?;
-            self.dispatch_execution(planned.execution.clone(), point, planned.optional)?;
+            self.dispatch_execution(
+                planned.execution.clone(),
+                point,
+                planned.optional,
+                self.observer.output_observer(planned),
+            )?;
         }
         if !matched
             && !self
@@ -282,6 +287,7 @@ impl InstallSlotLifecycle {
         execution: HandlerExecution,
         point: SlotPoint,
         optional: bool,
+        output_observer: Option<Arc<dyn vibe_lifecycle::process::ProcessOutputObserver>>,
     ) -> std::result::Result<(), String> {
         let mut run = self
             .run
@@ -301,8 +307,10 @@ impl InstallSlotLifecycle {
             created_at: &self.created_at,
         })
         .with_cancellation(self.cancellation.clone());
+        let observed = output_observer.is_some();
         let process =
-            vibe_lifecycle::process::ControlledProcessRunner::new(self.cancellation.clone());
+            vibe_lifecycle::process::ControlledProcessRunner::new(self.cancellation.clone())
+                .with_output_observer(output_observer);
         let runtime = HandlerRuntime {
             process: &process,
             binary: &binary,
@@ -310,7 +318,11 @@ impl InstallSlotLifecycle {
             package_binding: &vibe_lifecycle::NoPackageBindingBackend,
             agent: self.agent.as_ref(),
             probe: &SystemProbe,
-            streams: self.streams,
+            streams: if observed {
+                StreamMode::Capture
+            } else {
+                self.streams
+            },
         };
         let result = run.execute_one(&execution, "install", ExecutionReuse::Always, &runtime);
         drop(run);
