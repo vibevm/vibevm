@@ -73,3 +73,17 @@ Verify hashes,relative actions,backup/replay and unchanged unrelated bytes. No p
 profile contents enter committed records. No external publication or remote corporate
 application is implied. Ordinary-user Windows criterion remains explicit until a
 real non-elevated test runs; do not hide it behind user-directory installation.
+
+## Finite integration repair review — focused PASS
+
+Architect independently verified actual targeted logs:
+short-name11PASS and local-monorepo7PASS (including HTTPS recursive gitlink exact
+refusal/zero TCP/no lock),direct hard-offline1PASS,golden journal projection1PASS,
+bootstrap8tests+3doctests PASS. Affected strict check finishes successfully in54.02s
+(`/fast/tmp/corp-final-integration-strict-20261118.log`). No baseline waivers.
+
+The five-path repair scope is accepted for committed source freeze:filesystem-only
+cold offline admission,recursive remote-contact refusal,its public regression,
+canonical version-bound repomd projection,and lint-only installer let-chain.
+Final coherent full-panel and actual final native assets remain required before
+corporate delivery. Earlier mixed-subject6PASS/2FAIL panel is not relabeled green.
