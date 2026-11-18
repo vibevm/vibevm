@@ -85,6 +85,14 @@ impl NativeState {
                 reporter.native_registry_auth,
             )?
         };
+        if crate::templates::active()
+            .is_some_and(|layer| layer.posture() == crate::templates::Posture::Offline)
+            && !matches!(remote, AdmittedRemote::Local { .. })
+        {
+            return Err(unsupported(
+                "offline native preparation cannot contact a network repository, including a local repository's child",
+            ));
+        }
         let logical_origin = if supplied {
             address.to_owned()
         } else {

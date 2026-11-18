@@ -74,14 +74,36 @@ pub(super) fn open(
     backend: Arc<dyn GitBackend>,
     freshness_secs: u64,
 ) -> Result<super::GitMonorepoRegistry, RegistryError> {
+    let posture = posture();
+    // Offline forbids network contact, not reading a repository on disk.
+    // Keep every candidate filesystem-only before admitting a cold capture.
+    let local_offline = posture == Posture::Offline
+        && crate::git_backend::shell::native_admission::local_repository(url)
+            .is_some_and(|found| found.is_ok());
+    let local_candidates: Vec<String> = candidates
+        .iter()
+        .filter(|candidate| {
+            crate::git_backend::shell::native_admission::local_repository(candidate)
+                .is_some_and(|found| found.is_ok())
+        })
+        .cloned()
+        .collect();
     open_with_posture(
         url,
-        candidates,
+        if local_offline {
+            &local_candidates
+        } else {
+            candidates
+        },
         refname,
         cache_root,
         backend,
         freshness_secs,
-        posture(),
+        if local_offline {
+            Posture::Cached
+        } else {
+            posture
+        },
     )
 }
 

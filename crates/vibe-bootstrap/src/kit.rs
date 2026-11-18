@@ -228,12 +228,11 @@ pub fn run(args: Args) -> Result<()> {
         if let (Some(explicit), Some(declared)) = (
             explicit.as_ref(),
             self_table.and_then(|t| t.get(key)).and_then(|v| v.as_str()),
-        ) {
-            if expand(&explicit.to_string_lossy())? != expand(declared)? {
-                bail!(
-                    "explicit destination/settings conflicts with [self] {key}; choose a matching profile so current and persistent configuration agree"
-                );
-            }
+        ) && expand(&explicit.to_string_lossy())? != expand(declared)?
+        {
+            bail!(
+                "explicit destination/settings conflicts with [self] {key}; choose a matching profile so current and persistent configuration agree"
+            );
         }
     }
     let destination = args.destination.clone().or_else(|| {
