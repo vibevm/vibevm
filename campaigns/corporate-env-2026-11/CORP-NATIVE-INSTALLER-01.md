@@ -66,9 +66,17 @@ replacement of existing toolchains. Keep build/test data in established isolated
    fallback when local artifacts are missing. Missing inputs name the required file.
    Existing configured corporate routes retain their ordinary policy; do not invent
    a broad mandatory offline mode that breaks supported configured proxies.
-8. Retain existing script entry compatibility unless a concrete contract requires
-   change. They may delegate to native binaries; native startup must not delegate
-   essential installation back to them.
+8. Owner clarification2026-11-18: KEEP the existing installation scripts as a
+   working independent fallback in the corporate distribution and transfer delta
+   where relevant. Do not delete them or convert them into wrappers whose essential
+   path requires the new installer: they must remain usable if the native installer
+   has a bug. Preserve their current supported behavior and instructions, clearly
+   document native versus script alternatives, and avoid gratuitous script rewrites.
+   Owner clarification2026-11-18 explicitly authorizes fixing discovered bugs in
+   these scripts without another permission request. Review/test the affected path,
+   retain their independent fallback behavior, and include actually changed scripts
+   in the corporate update/delta with refreshed hashes. Retention does not freeze bugs.
+   Conversely,native startup must not delegate essential installation back to scripts.
 
 ## User experience and diagnostics — owner clarification2026-11-18
 
