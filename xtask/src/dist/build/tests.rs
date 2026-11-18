@@ -37,15 +37,22 @@ fn artifact_names_are_version_and_target_exact() {
 }
 
 #[test]
-fn cargo_messages_select_exactly_the_three_products() {
+fn cargo_messages_select_the_three_products_and_native_installer() {
     let temp = tempfile::tempdir().unwrap();
     let vibe = temp.path().join("vibe");
     let index = temp.path().join("vibe-index");
     let proxy = temp.path().join("vibe-app-proxy");
+    let installer = temp.path().join("vibe-installer");
     std::fs::write(&vibe, b"vibe").unwrap();
     std::fs::write(&index, b"index").unwrap();
     std::fs::write(&proxy, b"proxy").unwrap();
+    std::fs::write(&installer, b"installer").unwrap();
     let lines = [
+        serde_json::json!({
+            "reason": "compiler-artifact",
+            "target": {"name": "vibe-installer", "kind": ["bin"]},
+            "executable": installer
+        }),
         serde_json::json!({
             "reason": "build-script-executed",
             "target": {"name": "ignored", "kind": ["bin"]},
@@ -73,7 +80,8 @@ fn cargo_messages_select_exactly_the_three_products() {
         .collect::<Vec<_>>()
         .join("\n");
     let selected = select_binaries(input.as_bytes()).unwrap();
-    assert_eq!(selected.len(), 3);
+    assert_eq!(selected.len(), 4);
+    assert!(selected["vibe-installer"].is_file());
     assert!(selected[COMPONENT_VIBE].is_file());
     assert!(selected[COMPONENT_INDEX].is_file());
     assert!(selected[COMPONENT_PROXY].is_file());
@@ -84,4 +92,11 @@ fn supported_target_inventory_is_closed() {
     assert_eq!(SUPPORTED_DISTRIBUTION_TARGETS.len(), 5);
     assert!(SUPPORTED_DISTRIBUTION_TARGETS.contains(&"x86_64-unknown-linux-musl"));
     assert!(SUPPORTED_DISTRIBUTION_TARGETS.contains(&"x86_64-unknown-linux-gnu"));
+}
+
+#[test]
+fn cargo_build_respects_explicit_incremental_override() {
+    let source = include_str!("../build.rs");
+    assert!(source.contains("std::env::var_os(\"CARGO_INCREMENTAL\")"));
+    assert!(source.contains("unwrap_or_else(|| \"0\".into())"));
 }

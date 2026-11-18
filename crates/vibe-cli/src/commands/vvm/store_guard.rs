@@ -42,31 +42,7 @@ pub(super) fn atomic_replace_at(path: &Path, temp: &Path, bytes: &[u8]) -> io::R
 }
 
 pub(crate) fn open_regular_no_follow(path: &Path) -> io::Result<(fs::File, fs::Metadata)> {
-    let mut options = fs::OpenOptions::new();
-    options.read(true);
-    #[cfg(any(target_os = "linux", target_os = "macos"))]
-    {
-        use std::os::unix::fs::OpenOptionsExt;
-        #[cfg(target_os = "linux")]
-        options.custom_flags(0x2_0000);
-        #[cfg(target_os = "macos")]
-        options.custom_flags(0x100);
-    }
-    #[cfg(windows)]
-    {
-        use std::os::windows::fs::OpenOptionsExt;
-        options.custom_flags(0x0020_0000); // FILE_FLAG_OPEN_REPARSE_POINT
-    }
-    let file = options.open(path)?;
-    let metadata = file.metadata()?;
-    reject_link_or_special(path, &metadata)?;
-    if !metadata.file_type().is_file() {
-        return Err(io::Error::new(
-            io::ErrorKind::InvalidData,
-            format!("`{}` is not a regular file", path.display()),
-        ));
-    }
-    Ok((file, metadata))
+    vibe_bootstrap::regular::open_regular_no_follow(path)
 }
 
 pub(super) fn read_bounded_utf8(path: &Path, maximum: u64) -> io::Result<Option<String>> {

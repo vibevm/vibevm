@@ -4652,6 +4652,21 @@ dependencies = [
 ]
 
 [[package]]
+name = "vibe-bootstrap"
+version = "1.0.12"
+dependencies = [
+ "anyhow",
+ "clap",
+ "serde",
+ "serde_json",
+ "sha2",
+ "tempfile",
+ "toml 0.9.12+spec-1.1.0",
+ "vibe-wire",
+ "zip",
+]
+
+[[package]]
 name = "vibe-check"
 version = "1.0.12"
 dependencies = [
@@ -4719,6 +4734,7 @@ dependencies = [
  "vibe-actions",
  "vibe-agent-projection",
  "vibe-app",
+ "vibe-bootstrap",
  "vibe-check",
  "vibe-core",
  "vibe-doc",
