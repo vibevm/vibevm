@@ -72,6 +72,10 @@ replacement of existing toolchains. Keep build/test data in established isolated
    path requires the new installer: they must remain usable if the native installer
    has a bug. Preserve their current supported behavior and instructions, clearly
    document native versus script alternatives, and avoid gratuitous script rewrites.
+   Owner clarification2026-11-18 explicitly authorizes fixing discovered bugs in
+   these scripts without another permission request. Review/test the affected path,
+   retain their independent fallback behavior, and include actually changed scripts
+   in the corporate update/delta with refreshed hashes. Retention does not freeze bugs.
    Conversely,native startup must not delegate essential installation back to scripts.
 
 ## User experience and diagnostics — owner clarification2026-11-18
