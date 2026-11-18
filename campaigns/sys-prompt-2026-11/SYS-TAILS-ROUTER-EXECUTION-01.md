@@ -1,0 +1,35 @@
+# SYS-TAILS — bounded router reconstruction execution brief
+
+Genre: architectural execution brief. Date2026-11-19. Existing parent SYS-TAILS; not another campaign. Architect approves intent; builder owns packets, isolation, coding/execution and integration. No whole-host force reinstall or schema6 compatibility implementation.
+
+## Accepted input binding
+
+Use committed architect reconciliation720e1cfe98adf163673654d881e358c41b6e6c80 and builder read-only reports SYS-TAILS-ROUTER-PREPARATION-20261119.md and SYS-TAILS-RECONSTRUCTION-PROPOSAL-20261119.md (reported SHA256 f420da1f93173b12df62182ee5c60ac1d2e2c86c448ebef1f8936b0c63fcd387 /4056590c76f08c84beb8aa1fa228bbe1e7c70692c9147b1e4728583ec335bbbe). Verify these actual bytes and current product HEAD before execution; record the actual binary source/hash. Current architecture tip and implementation tip may differ; never imply a stale PATH binary is source-bound.
+
+## Goal and four owned roots
+
+Reconstruct current admitted development worlds and regenerate scoped managed routers for research/rust-demo, research/ts-demo, vibevm/vibepacks/org.vibevm.fractality/delegation-rules/v1.0.0 and vibevm/vibepacks/org.vibevm.fractality/fractality/v1.0.0. These are separate projects; regeneration of the host alone cannot own them. The fractality specspace boundary is explicit: before affected writes load its applicable standing contract and issue the corresponding selected context-mode packet. Do not import its execution mandate into unrelated roots.
+
+## Allowed execution and exclusions
+
+- Work in new owned physical directories under /data, bound to the exact accepted source snapshot, not copied Git administration. Keep downloaded upstream inputs separate from trusted supervisor scripts, with the normal interpreter isolation.
+- Preserve original manifest/lock/boot/entrypoint bytes outside the execution subjects. Reuse reviewed authored manifests, including root requirements and private visibility. Old schema6 bytes are historical evidence, not admitted current locks.
+- Resolve through the existing current offline install owner with an explicitly exclusive local canonical registry `/data/git/vibevm/vibevm/vibepacks` and isolated HOME/settings/caches. Disable ambient default registries through existing supported controls. Do not read ordinary credentials or perform network acquisition.
+- This is an intentional new source epoch replacing obsolete Windows file URLs with admitted current /data local sources, not a claim of portable lockfiles or replay of old hashes. No intended version movement; any selected version or closure difference is a reviewable candidate, not automatically accepted.
+- Permit ordinary package materialization, boot compilation and declared lifecycle effects required by that selected operation in the isolated subjects; narrate actual effects. No model/provider call, arbitrary host install, persistent toolchain/security change or privilege escalation follows from router housekeeping. If current packages require an effect outside the packet, name it before acting.
+- No manual lock schema bump, ad-hoc content hashing, raw dependency-tree copy, generated-block edit, unsupported old reader, blanket reset or whole-host install/reinstall --force.
+
+## Finite route
+
+1. Bind inputs, check actual project discovery and absence of parked continuations in each fresh subject; record selected root.
+2. Reconstruct one demo and one canonical package world through ordinary offline install, then the remaining two once the route is validated. Capture actual resolver/admission output. Exact CLI spelling and positional requirements are verified by builder against the bound binary; the preparation report gives the existing command family, not permission to guess new flags.
+3. Compare old/new package identities, selected roots, visibility, version, source and registry-owned content hashes. All70 historical rows/34coordinates were inspected for availability, not pre-admitted. Explain actual missing/extra rows; do not bless a graph from counts alone. Current writer behavior is the current implementation unless a separately accepted latest-only format consolidation has landed.
+4. Inspect generated routers and boot/index outputs: selected identity/scope, STATIC-before-INDEX semantics, unchanged authored prefix/suffix, no nested central boot pollution. Use existing idempotent regeneration to verify unchanged bytes/mtime where relevant, without a repeated full suite.
+5. Present the finite output manifest and source/graph deltas for architect review before integrating. Only root-owned maintained source/generated outputs and properly admitted lock state may transfer. Exclude private paths/receipts where not intended product data; declare machine-local source addresses honestly.
+6. After canonical package bytes are final, prepare a distinct targeted host dependency materialization subject for delegation-rules. Its new admitted package source/hash and actual dependent effects are explicit. Use the existing source-reselection/materialization owner and instruction-block neutralizer, not copying three files. Whole-host force is outside this packet; if the current public operation cannot perform a bounded safe update, report that precise limit rather than inventing an API or widening writes.
+
+## Verification and delivery
+
+Report exact base/candidate commits or frozen candidate file hashes, binary provenance, four per-root command outcomes, complete generated-output/lock/source/version deltas, preserved authored text, actual admission/neutralization evidence and any failed/unrun effects. Reuse accepted historical C8/C9/determinism/host-warning evidence; no new paid live matrix is needed. Tests focus on affected generation/materialization consumers and negative preservation invariants, not a full workspace suite after each root.
+
+Architect reviews the coherent output. Update the existing SYS-TAILS node with delivered and deliberately residual claims, then refresh and verify its task-tree projection. No aggregate all-harness PASS follows from router regeneration. Current development route remains SYS-PROMPT first, then semantic NST completion and the ordered final global repair. This brief does not initiate that later repair or legacy cleanup early.
