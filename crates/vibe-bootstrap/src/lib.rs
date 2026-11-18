@@ -19,12 +19,22 @@ use vibe_wire::behaviour::release_manifest::{
 use zip::ZipArchive;
 
 /// Staging remains alive until all verified native child operations finish.
+///
+/// ```
+/// use vibe_bootstrap::VerifiedBundle;
+/// fn version(bundle: &VerifiedBundle) -> &str { &bundle.manifest.version }
+/// ```
 pub struct VerifiedBundle {
     pub manifest: BundleDistributionManifest,
     pub directory: PathBuf,
     _stage: tempfile::TempDir,
 }
 
+/// Select the running native platform without probing another machine.
+///
+/// ```
+/// assert!(!vibe_bootstrap::target().unwrap().is_empty());
+/// ```
 pub fn target() -> Result<&'static str> {
     match (std::env::consts::OS, std::env::consts::ARCH) {
         ("windows", "x86_64") => Ok("x86_64-pc-windows-msvc"),
@@ -38,6 +48,11 @@ pub fn target() -> Result<&'static str> {
 
 /// Authenticate the complete local ZIP, validate its closed manifest and every
 /// component/source member before any bundled executable can be run.
+///
+/// ```
+/// let missing = std::path::Path::new("/missing-vibe-bootstrap-fixture.zip");
+/// assert!(vibe_bootstrap::verify_bundle(missing, &"0".repeat(64), "x86_64-unknown-linux-gnu").is_err());
+/// ```
 pub fn verify_bundle(path: &Path, sha256: &str, expected_target: &str) -> Result<VerifiedBundle> {
     let (_, metadata) = regular::open_regular_no_follow(path)?;
     let (file, measured) =

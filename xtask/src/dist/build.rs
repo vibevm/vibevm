@@ -94,23 +94,7 @@ pub(crate) fn run(repo_root: &Path, options: &BuildOptions) -> Result<()> {
     println!("dist build: {}", asset_path.display());
     println!("dist build: {}", bootstrap_path.display());
     println!("dist build: {}", fragment_path.display());
-    let installer = binaries
-        .get("vibe-installer")
-        .context("Cargo emitted no native installer")?;
-    let suffix = if target.contains("windows") {
-        ".exe"
-    } else {
-        ""
-    };
-    let installer_path = out_dir.join(format!("vibe-installer-{target}{suffix}"));
-    let installer_bytes = fs::read(installer)?;
-    write_output(&installer_path, &installer_bytes)?;
-    #[cfg(unix)]
-    {
-        use std::os::unix::fs::PermissionsExt;
-        fs::set_permissions(&installer_path, fs::Permissions::from_mode(0o755))?;
-    }
-    println!("dist build: {}", installer_path.display());
+    output::write_native_installer(&out_dir, &target, &binaries)?;
     Ok(())
 }
 

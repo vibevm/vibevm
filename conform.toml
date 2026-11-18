@@ -55,6 +55,7 @@ audit_crates = ["vibe-ext", "vibe-native-loader", "vibe-test-support"]
 # edges).
 gated = [
     "progress-core",
+    "vibe-bootstrap",
     "vibe-core",
     "vibe-doc",
     "vibe-doc-server",
@@ -113,6 +114,8 @@ gated_pub_doctest = [
 # whose job is to read or display env. A gated crate reading env in any OTHER
 # file fails the gate; extending this list is a deliberate, reviewed decision.
 env_roots = [
+    # Native installer composition root resolves current executable and user homes.
+    "crates/vibe-bootstrap/src/kit.rs",
     "crates/vibe-cli/src/main.rs",
     # `main.rs`'s own cell, by its name and its doc line: the helpers that
     # assemble ambient input so dispatch never touches it. `VvmEnv` — the
