@@ -38,6 +38,19 @@ removed. Equally,an implementation claim or task status is not executable eviden
 
 ### 3. Apply meaningful AI-Native Rust traceability and tests
 
+Owner clarification2026-11-18 — verbatim:
+
+> я хочу достаточно подробную расстановку specmark маркеров на всех важных функциях, которые связаны со спецификациями
+
+Provide sufficiently detailed function-level `specmark` annotations on ALL important
+in-scope functions whose behavior relates to specifications,including private/internal
+functions that implement meaningful rules. File/module-level scope markers alone do
+not satisfy this requirement. Link each important function to the precise applicable
+facts and use the appropriate relation; where it implements several distinct obligations,
+record those relations rather than one generic umbrella anchor. Review omissions
+explicitly: visibility or a low annotation count is not an excuse to skip important
+specified behavior. This does not require meaningless markers on trivial plumbing.
+
 Use the installed project's AI-Native Rust conventions and canonical annotation/
 reference tooling. Give reviewed functions the correct relation to exact owning
 specification anchors,including meaningful implements/verifies/documents/deviates
@@ -70,7 +83,9 @@ and no waiver/baseline update that hides newly introduced defects.
 - Complete file inventory tied to exact baseline/candidate commits and reconciled
   against historical task/requirement sources.
 - Every reviewed in-scope implementation function has a justified traceability
-  disposition; exact annotations resolve and describe actual behavior.
+  disposition; exact annotations resolve and describe actual behavior. All important
+  spec-related functions carry sufficiently detailed function-level `specmark`
+  relations; module scopes or generic umbrella links do not substitute for them.
 - Bidirectional matrix explains coverage of all222original contracts and additional
   owner mandates without fabricating completeness from one directional scan.
 - All discovered missing requirements,orphan behavior,contradictions,untested
