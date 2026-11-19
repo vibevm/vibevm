@@ -67,6 +67,12 @@ Proof review found an insufficient native unrelated-session assertion: optional 
 
 Actual installed ExtensionRunner catches handler exceptions and emits errors while continuing. Consequently a handler throw establishes neither native turn abortion nor zero provider submissions. Ordering/native diagnostic proof and production fail-closed adapter proof remain separate. A replacing system prompt, global native patch or custom agent loop is not an acceptable shortcut.
 
+## Native runner and UI integration feasibility
+
+Hermes owned-runner candidate SHA256 `f3b06d75f4c5da058365f9d273a70be5c3f15ad1052fe3ed2339186f72dd5c9a` and strict driver SHA256 `75fc36f0b6caa146fc5c74a9cdfcb065b8e8f53f2d34156343cf28d4d32aba2b` were independently read/hash-verified. Receipt HERMES-OWNED-RUNNER-RESULT.json distinguishes actual CLI-admitted identity followed by direct native turn construction/cache calls from a CLI-submitted model turn. Native constructor/prefix placement, cached same-instance reuse and unrelated-session exclusion are feasibility evidence. Production findings remain: cache lookup must use the native lock, every turn must validate source/route/platform against authority, and foreign runner instance shadows/double attachment must refuse. Strict session-info proof does not replace runtime admission checks. No full resource/worker/cache-hit acceptance follows.
+
+Pi actual native UI script SHA256 `8be339e6aea977b90ed08d96518191089526680034686f5c45daeeb76940002b` and log SHA256 `3971bf69805e1383edb9f624323a578667efa8d1846ed861e067536941dd054c` were independently read/hash-verified. Task bakr6hddt exercises exported runtime/services, real InteractiveMode.init, actual reload, stop and dispose, with prefix-before-tail, fresh reload tail and two owned listener attachments. Accept native UI/API lifecycle feasibility only: read-only tool selection is not full resource proof, stop is an API call not a user quit command, and full argv/print/RPC/fork/resume/product wiring remain open.
+
 ## Remaining finite proof
 
 Inspect the actual instance-bound carrier and native Pi extension/file path against the existing packet. Require exact source/runtime binding, complete prefix byte/ordering/once-only evidence, preserved base/resources, changed personal-tail behavior, worker/child exclusion and truthful resume behavior. Distinguish constructed payload from attempted SDK/network delivery. No new generic middleware, permission rounds or speculative proof campaign is requested.
