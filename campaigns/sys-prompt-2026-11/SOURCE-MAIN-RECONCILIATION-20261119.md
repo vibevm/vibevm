@@ -40,6 +40,12 @@ Exact builder milestone `2d78ca2c22b348e9f6b1ceb17d5150d796787201` was independe
 
 Standard mirror task bnjqrfyy5 published main on both hosts; independent remote queries verified GitHub main and GitVerse main exactly `4e7d068882b5f1c5eaa1f1f281a75cf255f9136e`. Overall exit1 again reflects only the four known existing GitVerse tag refusals; no force or tag rewrite occurred. This publishes the accepted MCP milestone, not full SYS-PROMPT, CORP-ENV or NST completion.
 
+## Hermes builtin profile-skills milestone rollout
+
+Exact builder milestone `cda62ffbbaeea51f1402622d9d2c332a79b87005` contains exactly the 11 accepted manifest paths; every committed blob was independently matched against manifest SHA256 `e312ba2821ece3864c8fa1395b87ca4569e4c5643e887a444e3b9d8d62fa5491`. Publication main `3daa6ee170af7679ed41f289ec357ad173841be3` retains previous main `4e7d068882b5f1c5eaa1f1f281a75cf255f9136e` and the builder milestone as parents, with exactly the accepted tree `0173988eba938ec1a52ea9b56ad51e2edd7042b5`. Unrelated dirty files and future native session-selector work are excluded.
+
+Standard mirror task `bu6i0c2u2` published main on both hosts. Independent remote queries verified GitHub and GitVerse main exactly `3daa6ee170af7679ed41f289ec357ad173841be3`; file diff against the accepted builder source is zero. Overall exit1 reflects only the same four existing GitVerse tag refusals (`v1.0.8` through `v1.0.11`). No force or tag rewrite occurred. Bounded builtin skills acceptance and source publication are not general package-skill/activation completion, full native session parity or SYS-PROMPT/CORP-ENV/NST closure.
+
 ## Non-negotiable limits
 
 No force push, rewrite-ref lease, hard reset, deletion of old main, blind ours merge, mass conflict resolution, mirroring of unrelated tags or ad hoc target bypass. No mirror manifest changes merely to make a task branch publish. Use PROP-016 and the existing mirror owner; source publication is not a release or package publication. Never publish dirty working files or local secrets.
