@@ -14,7 +14,7 @@ export async function runNativePi({packageDir, carrierPath, prefixPath, cwd, arg
   if(parsed.help||parsed.version||parsed.listModels||parsed.export){const {main}=await native('main.js');return main(args);}
   // Do not silently reinterpret native flags while their complete bootstrap mapping
   // is still being integrated. Values (notably apiKey) never enter diagnostics.
-  const pending=['resume','fork','models','systemPrompt'];
+  const pending=['resume','fork','systemPrompt'];
   const refused=pending.filter(key=>Array.isArray(parsed[key])?parsed[key].length>0:parsed[key]!==undefined&&parsed[key]!==false);
   if(refused.length) throw new Error('Vibe Pi adapter has not admitted these native option families: '+refused.join(', '));
   const appMode=parsed.mode==='rpc'?'rpc':parsed.mode==='json'?'json':parsed.print||!process.stdin.isTTY||!process.stdout.isTTY?'print':'interactive';
@@ -42,7 +42,7 @@ export async function runNativePi({packageDir, carrierPath, prefixPath, cwd, arg
   const settings=SettingsManager.create(cwd,agentDir);
   const manager=await createSessionManager(parsed,cwd,parsed.sessionDir,settings);
   const {createAgentSessionRuntime,createAgentSessionServices,createAgentSessionFromServices}=await native('core/agent-session-runtime.js');
-  const {resolveCliModel}=await native('core/model-resolver.js');
+  const {resolveCliModel,resolveModelScope}=await native('core/model-resolver.js');
   const carriers=new Set();
   const createRuntime=async({cwd:nextCwd,agentDir:nextAgentDir,sessionManager,sessionStartEvent,projectTrustContext})=>{
     // Runtime replacement is native; revalidate scope before resource loading.
@@ -65,11 +65,19 @@ export async function runNativePi({packageDir, carrierPath, prefixPath, cwd, arg
     services=await createAgentSessionServices({cwd:nextCwd,agentDir:nextAgentDir,settingsManager:runtimeSettings,resourceLoaderReloadOptions:reloadOptions,extensionFlagValues:parsed.unknownFlags,resourceLoaderOptions:{extensionFactories:[...builtInExtensions,carrier.extension],additionalExtensionPaths:parsed.extensions,additionalSkillPaths:parsed.skills,additionalPromptTemplatePaths:parsed.promptTemplates,additionalThemePaths:parsed.themes,noExtensions:parsed.noExtensions,disabledBuiltinExtensions:parsed.noMcp?['mcp']:undefined,noSkills:parsed.noSkills,noPromptTemplates:parsed.noPromptTemplates,noThemes:parsed.noThemes,noContextFiles:parsed.noContextFiles,appendSystemPrompt:parsed.appendSystemPrompt}});
     if(services.diagnostics.some(d=>d.type==='error')||services.resourceLoader.getExtensions().errors.length) throw new Error('Native Pi resource or extension argument admission failed');
     if(parsed.provider&&!parsed.model) throw new Error('Native Pi --provider requires --model');
+    const patterns=parsed.models??services.settingsManager.getEnabledModels();
+    const scopedModels=patterns?.length?await resolveModelScope(patterns,services.modelRuntime,{signal:AbortSignal.timeout(15000)}):[];
     const selected=resolveCliModel({cliProvider:parsed.provider,cliModel:parsed.model,cliThinking:parsed.thinking,inlineApiKey:parsed.apiKey!==undefined,modelRuntime:services.modelRuntime});
+    if(!selected.model&&scopedModels.length&&!sessionManager.buildSessionContext().messages.length){
+      const savedProvider=services.settingsManager.getDefaultProvider();
+      const savedModel=services.settingsManager.getDefaultModel();
+      const first=scopedModels.find(item=>item.model.provider===savedProvider&&item.model.id===savedModel)??scopedModels[0];
+      selected.model=first.model;selected.thinkingLevel=first.thinkingLevel;
+    }
     if(selected.error) throw new Error('Native Pi model selection failed; check the provider/model arguments');
     if(selected.warning) console.error('Native Pi model selection reported a warning; verify the selected model');
     if(parsed.apiKey){if(!selected.model)throw new Error('Native --api-key requires an admitted model');await services.modelRuntime.setRuntimeApiKey(selected.model.provider,parsed.apiKey);}
-    created=await createAgentSessionFromServices({services,sessionManager,sessionStartEvent,model:selected.model,thinkingLevel:parsed.thinking??selected.thinkingLevel,tools:parsed.tools,excludeTools:parsed.excludeTools,noTools:parsed.noTools?'all':parsed.noBuiltinTools?'builtin':undefined});
+    created=await createAgentSessionFromServices({services,sessionManager,sessionStartEvent,model:selected.model,thinkingLevel:parsed.thinking??selected.thinkingLevel,scopedModels,tools:parsed.tools,excludeTools:parsed.excludeTools,noTools:parsed.noTools?'all':parsed.noBuiltinTools?'builtin':undefined});
     holder.session=created.session;carrier.attach();carriers.add(carrier);
     return {...created,services,diagnostics:[...trustDiagnostics,...services.diagnostics]};
     } catch(error) {
