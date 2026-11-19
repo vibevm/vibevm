@@ -109,6 +109,14 @@ Architect read `control/hermes-vibe-dispatch-locate.log`: actual Vibe dispatch r
 
 Exact candidate hashes, cancellation evidence and final focused gates await the coherent builder packet. Separately reported product-carrier native assembly/cache tests do not prove a CLI-submitted model turn. Full submitted-turn delivery, worker isolation, platform layouts and session selectors remain explicit obligations. Do not rerun the accepted normal-exit scenario merely to fill another receipt, and do not write the owner-facing Hermes completion report before the actual delivered scope is reviewed.
 
+## Shared Pi projection and grouped skill ownership accepted
+
+The staged 81-file manifest SHA256 `500f3611b7767be8fc040c57ec46df2e86ed8c4c7401be9a85fc389fd036e0fe` was independently verified against every staged blob, then against every corresponding committed blob in builder commit `89d3e188b`. This binds Pi native paths/config, shared physical skill target ownership, epoch3/schema4 receipt migration and generated outputs to the reviewed candidate, excluding subsequent Hermes MCP work and unrelated dirty files. Follow-up report commit c25b060f8 records the final staged wire result.
+
+Architect inspected the alias planner/state/activation/transaction and tests: one physical file inventory with separate logical identities, group intent conflict refusal including disabled groups, singleton migration, group removal and shared-unbound status. Actual terminal evidence inspected includes 89 unit tests/18 doctests, conform141 existing/0 new, and staged wire-diff1 schema/1 corpus/1 registry shift under the allowed prepublication regime. Other affected MCP/wire/CLI and clean staged codegen results retain their producer-reported scope. Earlier shell-masked conform failure and fixture/codegen failures remain disclosed, not relabeled green.
+
+Accept this coherent shared-projection milestone, not full SYS/native platform acceptance. Hermes YAML native stage/Rust publisher integration remains a separate active atom. Do not reopen unchanged carrier/prefix proofs or begin the deferred domain consolidation now.
+
 ## Remaining finite proof
 
 Inspect the actual instance-bound carrier and native Pi extension/file path against the existing packet. Require exact source/runtime binding, complete prefix byte/ordering/once-only evidence, preserved base/resources, changed personal-tail behavior, worker/child exclusion and truthful resume behavior. Distinguish constructed payload from attempted SDK/network delivery. No new generic middleware, permission rounds or speculative proof campaign is requested.
