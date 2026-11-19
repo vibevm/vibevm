@@ -201,3 +201,5 @@ Three historical migration changes bind decisions to the exact authored path and
 The same revision’s `ROOT-FINAL-INTEGRATION.json` explicitly lists the two differing paths, `crates/vibe-install/src/slot_verify/derivation.rs` and `crates/vibe-specdoc/src/canonical_node.rs`, as root metadata-only changes. That is the historical integrator’s classification, not an independent reconstruction of the two earlier source blobs. Neither mismatch is explained by simple LF-to-CRLF conversion.
 
 The BIND.2 manifest at `68728811bd` reproduces all 20 declared sizes and SHA-256 values at the recording commit, not at the stated base (`ddc502417`), where none match. A base reference is not the candidate snapshot.
+
+At `39c7d99040` all four raw digests cited by the typed adapter review match the logs in the originating tree; each retained log contains its one-case pass. These are the original selected receipts, not additional tests on top of the later normalized copies or closure of the two deferred gates.
