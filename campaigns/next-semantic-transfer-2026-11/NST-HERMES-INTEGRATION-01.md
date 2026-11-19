@@ -8,7 +8,23 @@ The canonical product vision is `spec://org.vibevm.core/vibevm/common/PROP-076#H
 
 ## Where initial Hermes support stops
 
-Finish the bounded initial SYS milestone: bind the accepted owned Linux launch/large-prefix, history and query selectors, projection and worker evidence, plus the explicit READY two-client history transport. Verify the coherent host gate on the accepted code, reconcile the six-harness evidence and give the owner a plain-language account of what works, how to use it and what is not promised. Repair regressions in these accepted journeys; do not require speculative product additions to exit. READY transport does not add project instructions. The two prompt debts in PROP-076 stay open. Cold unattended startup, seamless native classic/TUI and interactive worktree dispatch, and unqualified platform layouts must be transferred by name rather than reported as passed. This limits Hermes scope, not unrelated remaining SYS requirements.
+Finish the bounded initial SYS milestone: bind the accepted owned Linux launch/large-prefix, history and query selectors, projection and worker evidence, plus the explicit READY two-client history transport. Verify the coherent host gate on the accepted code, retain the historical six-harness evidence separately from the current five-agent audit and give the owner a plain-language account of what works, how to use it and what is not promised. Repair regressions in these accepted journeys; do not require speculative product additions to exit. READY transport does not add project instructions. The two prompt debts in PROP-076 stay open. Cold unattended startup, seamless native classic/TUI and interactive worktree dispatch, and unqualified platform layouts must be transferred by name rather than reported as passed. This limits Hermes scope, not unrelated remaining SYS requirements.
+
+## Hermes integration backlog
+
+This is the working list for the Hermes child of `VIBEVM-IDE-MVP`. Add Hermes-only gaps here when discovered, including during the five-agent SYS audit. The architect maintains scope and disposition; the builder supplies implementation and evidence. Keep each item open until its named user outcome has a version-bound receipt or an explicit deferral with reason. An initial transport success, an upstream merge, or a host gate does not close a row by itself.
+
+| Item | What remains | Evidence needed to close |
+|---|---|---|
+| Cold start and owner lifetime | Start an admitted local session from cold, including unattended use where supported; reconnect without launching a second owner or unrelated services. | Separate cold/ready journeys; refuse on absent or changed authority where reuse is required. |
+| Native CLI/TUI and worktrees | Preserve native frontend choice, configured interactive worktree, session/cwd selection, terminal behavior and CLI argument/exit semantics. | Real PTY conversation and clean exit in each claimed frontend; verify actual selected cwd and project instructions, not just help output. |
+| Shared conversation and recovery | Ordinary resume with two viewers, close either first, reconnect to the same history; handle actual owner replacement and uncertain prior submission (`/discard`). | Same IDs/history and surviving viewer; no silent replay or replacement. Explicit READY transport is an accepted baseline, not this complete journey. |
+| Required instruction delivery | `PROP-076#HERMES-REQUIRED-PROMPT`: distinguish invocation-only and explicitly conversation-wide rules; validate actual delivery or fail honestly. | Follow the existing upstream capability/release and positive/negative closeout criteria. A second client must not silently inherit an invocation-only rule. |
+| Stable placement on READY | `PROP-076#HERMES-READY-PLACEMENT`: insert once at a witnessed stable boundary, before mutable native context. | Inspect real request bytes across changed tails and a fresh personal layer; do not infer a cache hit. Keep transport-only mode explicit. |
+| Platforms and launcher layouts | Qualify remaining macOS/Windows and wrapper/profile layouts without equating upstream support with Vibe support. | Isolated native install/launch/resume evidence per claimed layout, or a named unqualified case. |
+| IDE adapter and operation outcome | Plug Hermes into the shared shell; follow a failed check to its operation and specification, then return to the same draft and pending approval. Keep the native CLI independent. | Real terminal journey, retained conversation identity, no implicit execution or consent. Record individual dispositions for the optional skills, explanations and notifications described below. |
+
+Use the [local interactive journey](../sys-prompt-2026-11/HERMES-LOCAL-INTERACTIVE-JOURNEY-01.md) as the detailed test brief and `PROP-076` as the authority for prompt debts; do not maintain competing copies of those contracts.
 
 ## Entry and delivery of the later node
 

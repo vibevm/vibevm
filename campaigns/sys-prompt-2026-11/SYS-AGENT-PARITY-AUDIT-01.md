@@ -7,6 +7,10 @@ Status: planned, after SYS-HERMES-PI implementation. Existing parent SYS-PROMPT;
 
 > я заметил, что сейчас при реализации Hermes и Pi что-то происходит в пакетах delegation-rules и еще где-то. Возможно, нужно проверить чтобы проверка других агентов тоже была полноценной. Мы поддерживаем: Qwen, Codex, Open Code, Qwen Code, Hermes, Pi. Возможно при реализации Hermes и Pi вскрылись какие-то моменты, которые нужно поддержать и в другиех агентах. Если да, то доработай это. Можно поставить эту проверку в план того же SYS-PROMPT после реалзации Hermes и Pi.
 
+## Current acceptance scope — five agents
+
+Audit Claude Code, Codex, OpenCode, Qwen Code (`qwen`) and Pi. Hermes is excluded from the matrix, tests, repairs, denominator and exit decision of this task. The bounded initial Hermes milestone remains accepted separately; its results can inform checks of shared behavior in the five agents. The earlier six-harness report is historical evidence, not the current acceptance checklist. Record new Hermes-only findings in the [integration backlog](../next-semantic-transfer-2026-11/NST-HERMES-INTEGRATION-01.md#hermes-integration-backlog), not as blockers here. This changes neither the product's supported-agent inventory nor the six-agent CORP package scope.
+
 ## Scope and identities
 
 Owner clarification2026-11-19: Qwen and Qwen Code name the same agent. Use **Qwen Code** as the canonical human-facing name, matching the official upstream product. Preserve the existing `qwen` CLI/manifest identity; this naming clarification does not rename stored keys or create a second adapter/test row. Verify actual supported registry identities and user-facing spellings before selecting cases. Normalize Open Code/OpenCode naming at the existing identity owner. Existing Claude support is not retired by omission from the list and remains an affected shared-consumer regression target. Hermes/Pi retain their own exact implementation evidence.
@@ -15,11 +19,11 @@ Work on delegation-rules/fractality routers is SYS-TAILS nested boot housekeepin
 
 ## Outcome
 
-For each actual supported agent, an evidence-bound account establishes whether the existing integration supports the complete promised native user journey. Apply concrete lessons from Hermes/Pi to other adapters where applicable, fix actual gaps at their shared or agent-specific owners and retain truthful capability limits. A registry entry, executable alias, argv recorder or aggregate impl/done tag does not establish native completeness.
+For each of the five in-scope agents, an evidence-bound account establishes whether the existing integration supports the complete promised native user journey. Apply concrete lessons from Hermes/Pi to other adapters where applicable, fix actual gaps at their shared or agent-specific owners and retain truthful capability limits. A registry entry, executable alias, argv recorder or aggregate impl/done tag does not establish native completeness.
 
 ## Finite matrix to inspect
 
-For each distinct harness, record governing contract, implementation/source pin, native version and existing proof validity for:
+For each in-scope harness, record governing contract, implementation/source pin, native version and existing proof validity for:
 
 1. Native selection and executable resolution; supported interactive/unattended presets; actual stdout protocol, exit/cancellation and terminal restoration boundaries.
 2. Full-sized file-based stable prefix: actual native instruction-role placement, whole bytes/once-only delivery, upstream identity/tool/resource preservation, and stable prefix before changing cwd/environment/personal tail. Do not infer a cache hit or cost saving merely from deterministic composition.
@@ -36,13 +40,13 @@ During native product registration review, `crates/vibe-workspace/src/system_pro
 
 ## Execution and repair
 
-Architect reviews the completed Hermes/Pi delivery and selects transferable issues and meaningful end-to-end cases. Builder maps actual current adapter/shared owners and executes targeted provider-free/native tests first. Repairs must address a named obligation/user impact, not copy Hermes-specific gateway logic into every harness or create a general middleware framework.
+Architect reviews the bounded initial Hermes/Pi evidence and selects transferable issues and meaningful end-to-end cases. Builder maps actual current adapter/shared owners and executes targeted provider-free/native tests first. Repairs must address a named obligation/user impact, not copy Hermes-specific gateway logic into every harness or create a general middleware framework.
 
 A concrete parity gap gets a bounded repair atom under this existing child, with exact accepted input, allowed writes, essential checks and integration owner. Apply the owner-required architectural-quality gate in WORKING-RULES.project.md to delegated repairs: builder inspects actual design before integration and returns poor ownership, duplicated mechanisms, workaround shims or needless abstraction for bounded rework even if tests pass. Architect reviews the integrated design, material deviations and residual risks at feature transfer. Do not expand this into a speculative redesign of every accepted adapter. Preserve native identity/resources, security and data. Do not improve marked legacy slated for deletion. All new work/task trees are under /data; flash/base provisioning is allowed under the owner's existing scope, but live provider/credential/security decisions retain their actual boundaries. Record blocked native/human claims honestly and consolidate owner-only decisions rather than multiplying approval requests.
 
 ## Acceptance and publication of status
 
-- All distinct supported identities accounted for, aliases clarified and existing support retained.
+- All five in-scope identities accounted for, aliases clarified and existing support retained.
 - Each relevant matrix row has actual implementation/evidence or an explicit precise limitation/disposition; no aggregate unsupported claim is hidden by mock PASS.
 - Concrete shared/agent-specific gaps uncovered by Hermes/Pi are repaired and independently reviewed; unchanged accepted proofs are reused rather than rerun by ritual.
 - Focused shared-consumer regression and the designated coherent final SYS gate apply to the integrated candidate. Unknown/unrun behavior is not declared tested.
