@@ -153,3 +153,5 @@ Five inspected revisions distinguish mode-only source changes, wire vocabulary, 
 Another 14 commits were confined to release documentation, evidence and fixtures (212 changed-file occurrences). Structured records were parsed where applicable; fixture helpers and recorded commands were not executed. This does not establish a publication or target behavior.
 
 Fourteen xtask-only revisions were inspected for capture, local staging, compatible-host smoke, persisted evidence, pure publication planning, reader policy and finite reference checks. Fake release ordering is not host publication; staging a bundle is not executing it.
+
+Seven publication changes distinguish preparation and identity, smoke readiness, pure remote planning, local capture and scoped approval. None is accepted as an observed release on a real host by this review.
