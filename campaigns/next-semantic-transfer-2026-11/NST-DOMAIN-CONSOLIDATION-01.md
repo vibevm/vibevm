@@ -4,6 +4,8 @@ Date2026-11-19. Owner directive: «Поставь всё это (включая 
 
 ## Placement and authority
 
+**Current schedule (owner amendment, 2026-11-19):** `NST-DOMAIN-CONSOLIDATION → NST-HERMES-INTEGRATION → NST-AI-NATIVE-GLOBAL-REPAIR`. This supersedes the earlier adjacency wording below, not the scope of consolidation. Deliver its accepted owner/caller map to the Hermes integration node before global repair. See `NST-HERMES-INTEGRATION-01.md`.
+
 Latest owner placement clarification2026-11-19: «лучше даже не после SYS-PROMPT а перед NST-AI-NATIVE-GLOBAL-REPAIR». Create ONE actual node `NST-DOMAIN-CONSOLIDATION` under NST, initially planned, immediately BEFORE `NST-AI-NATIVE-GLOBAL-REPAIR`, after the preceding functional NST work. It depends on the applicable existing functional prerequisites; the global-repair parent additionally depends on this consolidation. Do not create a dependency back from consolidation into global repair. This preserves the original222-task historical denominator, accepted work and the SYS→CORP-ENV→remaining NST route. It neither blocks current SYS/CORP delivery nor begins refactoring now. The existing seven global-repair children remain unchanged, including initial ideal synchronization inside that later task.
 
 Move the existing planned `AGENT-ADAPTER-CONSOLIDATION` beneath this node. Its earlier proposed location only inside global-repair REPAIR is superseded; retain one implementation task and references, not two refactors. Global repair reuses this node's inventory, accepted dispositions and regression evidence and still performs its final reconciliation/gates.

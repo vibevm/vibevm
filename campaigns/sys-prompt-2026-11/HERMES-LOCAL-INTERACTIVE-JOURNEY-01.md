@@ -2,6 +2,8 @@
 
 SYS-PROMPT / SYS-HERMES-PI, 2026-11-19. Implementation brief, not a completion receipt. The existing explicit READY transport is a useful diagnostic and opt-in, not the default project experience. Build this journey against ordinary installed Hermes; do not require the unpublished upstream patch.
 
+**Scheduling amendment (2026-11-19):** The complete journey below is now the acceptance brief for the planned NST child `NST-HERMES-INTEGRATION`, after domain consolidation. Its implementation sequence and CORP pause below are historical, not current instructions. Initial SYS support stops at the bounded, evidenced milestone defined in `campaigns/next-semantic-transfer-2026-11/NST-HERMES-INTEGRATION-01.md`; no additional deep integration is required in this slice.
+
 ## User journey and ownership
 
 1. From an opted-in project, `vibe agent hermes` starts a native interactive conversation. Resolve the configured launcher and profile. A healthy, already-serving local profile owner is reused; a cold launch uses an admitted existing lifecycle. Never start an additional daemon because a ready owner is busy, inaccessible, changed, or speaking an unsupported protocol. Never start unrelated configured services silently. If the cold and warm paths have different ownership, explicitly verify the transition while the first window remains open; do not assume an invocation-private runner is attachable by a second terminal.
