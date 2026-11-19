@@ -29,3 +29,7 @@ The wording should make ownership immediately actionable without requiring every
 - Update the existing SYS boot/common consumer task scope with this owner clarification and actual evidence before refreshing the tree. No automatic reopening of every accepted package or unrelated new campaign.
 
 Existing already-regenerated SYS-TAILS roots may need another ordinary idempotent publication only after the shared generator change is accepted. Reuse valid graph/materialization evidence; do not redo source reconstruction or build tools solely to add this boot instruction.
+
+## Recipe compatibility decision
+
+The executable addendum [CONSUMER-BOOT-RECIPE-02.md](CONSUMER-BOOT-RECIPE-02.md) resolves transport-versioning: default recipe 2, frozen recipe 1 contract bytes, and separately delivered ownership policy for explicit recipe 1. Its owner/file sequence, focused tests and exclusions govern implementation; this is a decided architecture, not another request for builder planning. Neither brief grants a coding-lane fallback.
