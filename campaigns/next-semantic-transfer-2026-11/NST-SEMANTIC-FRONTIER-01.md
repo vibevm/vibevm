@@ -93,3 +93,5 @@ Accept the source classification of the 222 historical task records, not their i
 ### Historical preview amendments
 
 Four previously inventory-only changes were read against their first parents: `2387e346fea` (dependency direction), `c279d6410c8` (opaque identity), `8f2810868d8` (documentation capture versus retrieval), and `d4d8af1e69d` (local read boundary). Each changed contract now has a scoped finding and diff digest in `commit-index.json`. They specify behavior; none is a product execution receipt.
+
+Five historical Zap backlog amendments (`31314cdbb`, `c7e550ba6`, `96336d860`, `ff83fe2bd`, `865d4d8d9`) record import costs, inactive acceptance, incomplete obligation routing, uncertain recovery and limits on work dispatch. None of the five diffs implements a product change or grants authority. See the per-commit evidence in the index.
