@@ -1,5 +1,13 @@
 # Campaign: VibeVM in a restricted corporate network
 
+**New owner scope, 2026-11-19 — five agent stages after SYS-AGENT-PARITY-AUDIT.** Preserve all accepted baseline deliveries and the closed CORP-RELEASE decision below. Extend CORP-ENV with `CORP-AGENT-PACKAGES` → `CORP-AGENT-PROXY` → `CORP-AI-CONNECTIONS` → `CORP-AI-SETUP` → `CORP-AGENT-DISTRIBUTION`; the first depends on SYS-AGENT-PARITY-AUDIT, each next on its predecessor, and CORP-ENV completion awaits all five. Detailed scope, decisions, finite acceptance and safety boundaries: [CORP-AGENTS-01.md](CORP-AGENTS-01.md). This is planning, not evidence that agent packages, inventory or setup already ship.
+
+The owner explicitly selected the **effective user settings root** for local AI secrets: `<settings>/secrets/ai/`, normally `~/.vibe/secrets/ai/`, never install `opt`, a project or a corporate drop. Inventory/default/per-agent overrides precede reusable optional final onboarding. Generic profiles may supply nonsecret endpoint/acquisition hints, not keys. Private corporate values remain in authorized deployment configuration; no public Vibe release is reopened. The five stages do not interrupt current SYS native implementation.
+
+**CORP-RELEASE closed by owner decision — 2026-11-19.** Direct instruction: «убери из CORP-RELEASE публичный гитхаб релиз и закрой ее тогда. Релиз будем делать когда-нибудь потом, когда я явно скажу». Public GitHub release is removed from this task's scope, not retained as a hidden prerequisite or deferred child. Delivered corporate distribution and live owner acceptance satisfy the remaining task. Any future public release requires a new explicit owner instruction; no publication is performed or implied here. Earlier release plans below are historical where superseded by this ruling.
+
+**Live owner acceptance passed — 2026-11-19.** Direct owner confirmation: «корпоративный дистрибутив кажется работает, проставь в плане что живая приемка пройдена». Record the corporate distribution's live acceptance as passed on this human evidence, distinct from automated receipts; do not infer additional commands, platform coverage, cleared historical test limitations or publication authority. The earlier baseline/status sections below remain historical. Authoritative multi-user-planning and its derived task tree must carry this acceptance disposition.
+
 **Status:** planned 2026-11-08; written against `main` at `0ec3c96de` plus the
 uncommitted VIBE-NEEDS completion pass. Starts after VIBE-NEEDS closes.
 Phase 0 (spikes) may run in parallel with VIBE-NEEDS where files are disjoint.
