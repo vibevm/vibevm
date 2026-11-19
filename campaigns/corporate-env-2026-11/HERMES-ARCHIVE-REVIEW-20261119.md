@@ -1,0 +1,7 @@
+# Hermes core CLI: private Linux archive review
+
+The assembled candidate is `hermes-v0.23.2-linux-x86_64-cp314-vibevm.tar.gz`, 140175971 bytes, SHA-256 `844e678e0b1cb1773d0e06b6f30d2c06acc54939e2e9402d71a26bb74c012ddf`. An independent sequential inventory found 30619 regular files and 1687 directories under `hermes/`, no duplicate paths and no links. The executable `bin/hermes` resolves its installation root before invoking `/usr/bin/python3 -I -S`. The staged private library has the same 65 distribution names and versions as the selected wheel inputs. These checks do not establish redistribution rights.
+
+A relocated staged copy (not an installation by Vibe) reported Hermes v0.23.2, upstream ae2a81cc, Python 3.14.4. Native plugin inspection returned a bundled `chronos` entry whose name, version and full description matched the archive’s `plugins/cron_providers/chronos/plugin.yaml` (SHA-256 `f234e93ec87477ab45b8e868aeed05e3c3ce87e307aac79a7d2a123493f9ba59`). No plugin execution or service startup is needed to establish this result.
+
+The available user-namespace fixture displays UID 65534 for `/usr`, `/usr/bin` and `/usr/bin/python3.14`. This observation certifies neither their original owner nor their provenance for the normal installer's system-interpreter trust check. Keep the normal CLI positive row unrun until witnessed under an admitted environment; do not substitute the staged copy or an injected library fact. Package acceptance still requires the offline install/resource-read/uninstall journey defined in `HERMES-ARCHIVE-LINUX-01.md`.
