@@ -79,6 +79,12 @@ Independently read actual request witnesses `pi-vibe-launch-subject/request-pers
 
 Accept this as actual Vibe entrypoint/native request-ordering and personal-freshness evidence for the small fixture, not large-prefix parity, worker isolation, full argument support or provider cache savings. The transport intentionally fails after capture; exit1 alone is not a passing test. The already required integrated large-prefix and zero-submission negative cases remain open; do not repeat the small fixture as a substitute.
 
+## Full-size actual Pi request delivery
+
+PI-ACTUAL-LARGE-REQUEST-RESULT.json records actual Vibe entrypoint task bqih7ps1a with intentional post-capture transport exit1. Architect independently verified the 374499-byte request SHA256 `9b514b4766708a106709b1b19178af96f42f7178fd6a6a6291e3ace37fb7b360` and compared the actual 352029-byte project boot source against native system.sections.addendum: its full text appears exactly once before PERSONAL-TWO, which also appears once. Native tools section remains present. Accept full-size delivery within this actual native request boundary, not provider cache hits, measured savings, complete native resource preservation or worker/argument parity. Earlier timeout45 attempt remains failed; a later bounded capture does not retroactively validate it.
+
+The actual-entrypoint carrier-refusal test is a separate outstanding result. Its transport capture must start absent rather than reuse a prior successful request, and the named carrier refusal must be observed; absence of output alone is not zero-submission proof.
+
 ## Remaining finite proof
 
 Inspect the actual instance-bound carrier and native Pi extension/file path against the existing packet. Require exact source/runtime binding, complete prefix byte/ordering/once-only evidence, preserved base/resources, changed personal-tail behavior, worker/child exclusion and truthful resume behavior. Distinguish constructed payload from attempted SDK/network delivery. No new generic middleware, permission rounds or speculative proof campaign is requested.
