@@ -10,6 +10,14 @@ The canonical product vision is `spec://org.vibevm.core/vibevm/common/PROP-076#H
 
 Finish the bounded initial SYS milestone: bind the accepted owned Linux launch/large-prefix, history and query selectors, projection and worker evidence, plus the explicit READY two-client history transport. Verify the coherent host gate on the accepted code, retain the historical six-harness evidence separately from the current five-agent audit and give the owner a plain-language account of what works, how to use it and what is not promised. Repair regressions in these accepted journeys; do not require speculative product additions to exit. READY transport does not add project instructions. The two prompt debts in PROP-076 stay open. Cold unattended startup, seamless native classic/TUI and interactive worktree dispatch, and unqualified platform layouts must be transferred by name rather than reported as passed. This limits Hermes scope, not unrelated remaining SYS requirements.
 
+## Closing the IDE must not stop active Hermes work
+
+Owner requirement relayed by builder: «наша интеграция с агентом hermes в рамках задачи про IDE должна работать так, чтобы IDE можно было закрывать и открывать, а Hermes продолжал бы работать. Это должно работать от любого непривилегированного пользователя на Mac/Linux/Windows».
+
+Closing the last IDE window detaches the viewer, not the running user's Hermes work. Reopening must reattach to the same conversation and operation and show progress or its actual recorded outcome without resubmission. Stored chat history alone is insufficient. Define explicit ordinary-user start, stop and ownership behavior; neither closing a window nor opening another silently terminates, replaces or duplicates the owner. Do not require elevation, a system service or a different account. Logout, reboot and crash recovery are separate claims.
+
+For each of macOS, Linux and Windows, drive a bounded operation as an ordinary user, hold it at a witnessed progress point, close all IDE windows, then let it advance with no viewer. Reopen and check the same identity, progress/outcome and exactly one execution. Also verify that an explicitly stopped owner is not mistaken for running work. Report unrun platforms separately. This future requirement does not expand the accepted initial Linux READY transport slice.
+
 ## Hermes integration backlog
 
 This is the working list for the Hermes child of `VIBEVM-IDE-MVP`. Add Hermes-only gaps here when discovered, including during the five-agent SYS audit. The architect maintains scope and disposition; the builder supplies implementation and evidence. Keep each item open until its named user outcome has a version-bound receipt or an explicit deferral with reason. An initial transport success, an upstream merge, or a host gate does not close a row by itself.
