@@ -121,3 +121,5 @@ Six historical reviews separate accepted design from available lifecycle/source 
 Four single-file code amendments distinguish captured inventory from physical completeness, plan reservation size from payload size, test-only publication owners from release routes, and root comparison from dispatch. See `87023f56ac0e`, `c570f59e2f4d`, `696542ece2b4`, `ef8816a77129` in the evidence index.
 
 Nine single-file test-labeled changes were inspected by actual content. One only retargets a specification annotation, one switches a fixture, and one adds only a historical race report; the others add assertions around decoding, replay, domain isolation or multi-client operation behavior. No current-product run is inferred.
+
+The three migration JTD declarations in `aa48a5f98d13` and two preview catalogue fixtures in `db29ee46f531` establish format inputs, not execution of the reader or a production migration.
