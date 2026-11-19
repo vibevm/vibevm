@@ -46,9 +46,22 @@ Exact builder milestone `cda62ffbbaeea51f1402622d9d2c332a79b87005` contains exac
 
 Standard mirror task `bu6i0c2u2` published main on both hosts. Independent remote queries verified GitHub and GitVerse main exactly `3daa6ee170af7679ed41f289ec357ad173841be3`; file diff against the accepted builder source is zero. Overall exit1 reflects only the same four existing GitVerse tag refusals (`v1.0.8` through `v1.0.11`). No force or tag rewrite occurred. Bounded builtin skills acceptance and source publication are not general package-skill/activation completion, full native session parity or SYS-PROMPT/CORP-ENV/NST closure.
 
+## Explicit owner-authorized GitVerse tag alignment
+
+On 2026-11-19 the owner explicitly requested replacing the conflicting GitVerse tags with the GitHub versions. This is a narrow exception to the prior no-tag-rewrite boundary, not standing permission for future tag or branch rewrites. Both remotes and local tag objects were checked immediately before mutation. One atomic push updated exactly four GitVerse tag refs with per-ref expected-old-OID leases; no delete/recreate gap, other tags or branches were involved:
+
+| Tag | Previous GitVerse OID | Selected GitHub / resulting GitVerse OID |
+|---|---|---|
+| v1.0.8 | `753145f2546071e3418323cafeff0eb4c46b5660` | `6cf994349d9eccf87551e40061f11bc15f7e8f1a` |
+| v1.0.9 | `67c59ba58e9127494a27239b494247332eee0dd2` | `3dbc249839c290a9c6e0308277801dbb6688bdf6` |
+| v1.0.10 | `49a2d745ec2ad8bb123ba867a53400b0a3ff0c3d` | `e00e1533bf561b20551929f2416869688528bbf7` |
+| v1.0.11 | `5e470926ad0f34d61e37d387ce4b7c153356a804` | `e9d6e6fabc8b75c4febc05509189ff9880ad722a` |
+
+Independent post-update queries verified all tags and configured branches match across both hosts (17 refs each), with main unchanged at `3daa6ee170af7679ed41f289ec357ad173841be3`. `cargo xtask mirror --check` returned success for all configured branches. The historical mirror tasks above remain exit1; this later authorized repair resolves their outstanding tag drift rather than retroactively making them green.
+
 ## Non-negotiable limits
 
-No force push, rewrite-ref lease, hard reset, deletion of old main, blind ours merge, mass conflict resolution, mirroring of unrelated tags or ad hoc target bypass. No mirror manifest changes merely to make a task branch publish. Use PROP-016 and the existing mirror owner; source publication is not a release or package publication. Never publish dirty working files or local secrets.
+Outside the exact four-tag owner-authorized repair above: no force push, rewrite-ref lease, hard reset, deletion of old main, blind ours merge, mass conflict resolution, mirroring of unrelated tags or ad hoc target bypass. No mirror manifest changes merely to make a task branch publish. Use PROP-016 and the existing mirror owner; source publication is not a release or package publication. Never publish dirty working files or local secrets.
 
 ## Finite reconciliation route
 
