@@ -16,6 +16,8 @@ Owner requirement relayed by builder: «наша интеграция с аге�
 
 Closing the last IDE window detaches the viewer, not the running user's Hermes work. Reopening must reattach to the same conversation and operation and show progress or its actual recorded outcome without resubmission. Stored chat history alone is insufficient. Define explicit ordinary-user start, stop and ownership behavior; neither closing a window nor opening another silently terminates, replaces or duplicates the owner. Do not require elevation, a system service or a different account. Logout, reboot and crash recovery are separate claims.
 
+Expose explicit **Start**, **Stop** and **Status** operations for the current user’s selected Hermes owner. Repeated Start must not create a duplicate. Status distinguishes running, stopped, unavailable and unknown; an unreachable owner is not proof that it stopped. Report known active work separately from owner health. Before deliberate Stop, make its effect on active work clear and verify the outcome; detaching an IDE window never invokes Stop. Exercise these operations as a non-administrator on each supported OS. Command spelling and widget layout are design decisions, not prescribed here.
+
 For each of macOS, Linux and Windows, drive a bounded operation as an ordinary user, hold it at a witnessed progress point, close all IDE windows, then let it advance with no viewer. Reopen and check the same identity, progress/outcome and exactly one execution. Also verify that an explicitly stopped owner is not mistaken for running work. Report unrun platforms separately. This future requirement does not expand the accepted initial Linux READY transport slice.
 
 ## Hermes integration backlog
