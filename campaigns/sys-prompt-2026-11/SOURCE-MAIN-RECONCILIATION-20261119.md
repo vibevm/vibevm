@@ -71,6 +71,12 @@ Exact accepted builder boundary `d83a1e5ada444ba497b4d058d6004eaf735e17cd` conta
 
 Standard mirror task `bgof53xjg` exited0: all configured branches and tags succeeded on both hosts. Independent remote queries verified both main refs exactly `6131738c5ebc5c7cbb72bb4e7fe303297e126808`, and diff against the accepted builder boundary is zero. This publishes only the bounded finite-query configured-worktree repair, not classic/TUI or unattended oneshot support, worker/platform qualification, full SYS-PROMPT/CORP-ENV/NST completion or a release.
 
+## Native worker identity milestone rollout
+
+Exact accepted builder boundary `a5bb3eea81a30dd0f96737c35330594a5865279f` contains the two accepted paths; both committed blobs independently matched manifest SHA256 `a9d7f44cb49666806d7cce2cfdb01c5c5521756e6f1a26b8410e3899e69e320e`. Publication main `1f327d9811dc823588ad5cae1ab5ed1c0b1df1a5` retains previous main `6131738c5ebc5c7cbb72bb4e7fe303297e126808` and that boundary as parents, with exactly accepted tree `248669533f2fb25491eaaf48649e18ad20408efc`. Subsequent parity evidence consolidation is excluded.
+
+Standard mirror task `bp2hg79rw` exited0: all configured branches and tags succeeded on both hosts. Independent queries verified both remote main refs exactly `1f327d9811dc823588ad5cae1ab5ed1c0b1df1a5`; diff against the accepted builder boundary is zero. Publication covers the Pi executable-identity repair and bounded native worker evidence only. It does not establish separate child filesystem isolation, all worker modes/platforms, Hermes prerequisite completion, final parity acceptance, SYS-PROMPT/CORP-ENV/NST closure or a release.
+
 ## Non-negotiable limits
 
 Outside the exact four-tag owner-authorized repair above: no force push, rewrite-ref lease, hard reset, deletion of old main, blind ours merge, mass conflict resolution, mirroring of unrelated tags or ad hoc target bypass. No mirror manifest changes merely to make a task branch publish. Use PROP-016 and the existing mirror owner; source publication is not a release or package publication. Never publish dirty working files or local secrets.
