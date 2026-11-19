@@ -17,3 +17,7 @@ Validate the basis against the retained definition, original consumer requests, 
 ### First public candidate run — partial, not acceptance
 
 `automatic-cli-tests-r1.log` ran two actual public tests. Fresh installs with an omitted exactly-one group passed for both enabled and disabled defaults, producing schema 12 and the expected optional slot; a second CLI process retained identical lock bytes and the authored manifest remained unchanged. The changed-default update test failed: the public update route returned `ConfigurationInputUnsupported` before comparing retained reliance. This is not evidence of the intended drift check. Assertions after the failed diagnostic check did not run. Keep an explicit-input update control on the same newer local version and preserve refusal on unrelated unsupported routes.
+
+### Fresh install and cold replay accepted
+
+Accepted manifest `2f2662f1d49e7a53c2d1118fbd087dfc76436ec53491dc1979bb096defeaf949`: all fourteen source files and the exact tested CLI `41df60bc80cda660edb9fee6f468fa3b0ddcc4647057928e4cb4fbdd2967ce96` matched. The ordinary package CLI suite had fourteen passes and one deliberately excluded known failing update case. The lock suite had four passes, the shared reliance policy four, and the resolver eight. Strict scoped lint completed. This accepts first install and byte-identical cold replay with a single omitted exactly-one default, not updating a previously selected version or acknowledging changed meaning.
