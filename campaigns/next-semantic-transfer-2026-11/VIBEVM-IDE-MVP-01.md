@@ -1,6 +1,6 @@
 # VIBEVM-IDE-MVP — one terminal workspace for VibeVM
 
-Planned direct NST child, after completion of `NST-AI-NATIVE-GLOBAL-REPAIR`, including its final synchronization. Hermes is the first integrated agent. The project, tree, search and operations remain usable without a conversation. Initial SYS and CORP delivery are not rescheduled. Preserve the seven global-repair stages and the historical NST denominator.
+Independent planned roadmap item immediately after acceptance of the whole NST campaign. It is not an NST child or an NST exit criterion. Completing global repair alone does not start the IDE. The existing ID and seven children remain intact; this brief stays at its established path for stable references. Hermes is the first integrated agent. The project, tree, search and operations remain usable without a conversation. Initial SYS and CORP delivery are not rescheduled. Preserve the seven global-repair stages and the historical NST denominator.
 
 ## Ordered children and evidence of completion
 
