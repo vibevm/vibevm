@@ -9,6 +9,7 @@ use std::path::{Path, PathBuf};
 use vibe_safefs::{Pinned, Project};
 mod id;
 mod mutations;
+mod roster;
 pub use id::SecretId;
 pub use mutations::{Expected, MetadataSnapshot, ReferenceGuard, ReferenceInventory};
 
@@ -65,6 +66,10 @@ struct Index {
     store_revision: u64,
     #[serde(default)]
     items: BTreeMap<SecretId, ItemMetadata>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    reference_protocol: Option<u32>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    participants: Option<Vec<String>>,
 }
 impl Default for Index {
     fn default() -> Self {
@@ -72,6 +77,8 @@ impl Default for Index {
             schema: 1,
             store_revision: 0,
             items: BTreeMap::new(),
+            reference_protocol: None,
+            participants: None,
         }
     }
 }
@@ -93,6 +100,12 @@ impl Store {
     }
 
     fn open(&self, create: bool) -> Result<Option<(Project, Pinned)>, Error> {
+        Ok(self
+            .open_recording(create)?
+            .map(|(project, root, _)| (project, root)))
+    }
+
+    fn open_recording(&self, create: bool) -> Result<Option<(Project, Pinned, bool)>, Error> {
         let parent = self.root.parent().ok_or(Error::Invalid)?;
         let settings = Project::open(parent).map_err(|_| Error::Unavailable)?;
         settings
@@ -100,10 +113,10 @@ impl Store {
             .map_err(|_| Error::Unavailable)?
             .verify_user_owned_parent()
             .map_err(|_| Error::Unavailable)?;
-        let Some(root) = settings
+        let Some((root, created)) = settings
             .root_dir()
             .map_err(|_| Error::Unavailable)?
-            .private_child("secrets", create)
+            .private_child_recording("secrets", create)
             .map_err(|_| Error::Unavailable)?
         else {
             return Ok(None);
@@ -114,7 +127,7 @@ impl Store {
         {
             return Err(Error::Unavailable);
         }
-        Ok(Some((project, root)))
+        Ok(Some((project, root, created)))
     }
 
     fn load(_project: &Project, root: &Pinned) -> Result<Index, Error> {
@@ -131,9 +144,7 @@ impl Store {
             .ok_or(Error::Unavailable)?;
         let index: Index = toml::from_str(std::str::from_utf8(&bytes).map_err(|_| Error::Invalid)?)
             .map_err(|_| Error::Invalid)?;
-        if index.schema != 1 {
-            return Err(Error::Invalid);
-        }
+        roster::validate_format(&index)?;
         for (id, item) in &index.items {
             validate_metadata(&item.kind, &item.label)?;
             let leaf = open_revision(root, id, &item.current_revision, false)?;
@@ -165,11 +176,27 @@ impl Store {
         value: ProtectedValue,
     ) -> Result<SecretId, Error> {
         validate_metadata(kind, label)?;
-        let (project, root) = self.open(true)?.ok_or(Error::Unavailable)?;
+        let (project, root, created) = self.open_recording(true)?.ok_or(Error::Unavailable)?;
+        let _inventory = root
+            .private_lock("inventory.lock")
+            .map_err(|_| Error::Unavailable)?;
         let _lock = root
             .private_lock("store.lock")
             .map_err(|_| Error::Unavailable)?;
         let mut index = Self::load(&project, &root)?;
+        if created
+            && root
+                .private_entries_are_only(&["inventory.lock", "store.lock"])
+                .map_err(|_| Error::Unavailable)?
+        {
+            index.schema = 2;
+            index.reference_protocol = Some(1);
+            index.participants = Some(Vec::new());
+            let bytes = Self::prepare_index(&index)?;
+            project
+                .write_atomic_in_with_mode(&root, "index.toml", bytes.as_bytes(), Some(0o600))
+                .map_err(|_| Error::Publication)?;
+        }
         let id = SecretId::generate()?;
         if index.items.contains_key(&id) {
             return Err(Error::Conflict);
@@ -259,7 +286,8 @@ impl Store {
             return Err(Error::Invalid);
         }
         let checked: Index = toml::from_str(&bytes).map_err(|_| Error::Invalid)?;
-        if checked.schema != 1 || checked.store_revision != proposed.store_revision {
+        roster::validate_format(&checked)?;
+        if checked.store_revision != proposed.store_revision {
             return Err(Error::Invalid);
         }
         Ok(bytes)
@@ -330,3 +358,6 @@ thread_local! { static INDEX_WRITE_LIMIT: std::cell::Cell<usize> = const { std::
 
 #[cfg(test)]
 mod tests_index_limit;
+
+#[cfg(all(test, unix))]
+mod roster_tests;

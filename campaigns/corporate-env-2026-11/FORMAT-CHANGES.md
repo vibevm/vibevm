@@ -548,3 +548,12 @@ Status: implementation candidate, 2026-11-20; no full CLI/UI or AI connection co
 - UUIDv4 IDs are random, stable across value rotation, independent of labels/values and never authorization. Expected-revision conflict refuses mutation. New IDs/revisions claim paths exclusively.
 - Bound proposed index serialization before value publication; immutable revision then atomic index switch under direct private-root lock. Unselected old revisions remain protected, no eager cleanup or secure-erasure claim.
 - Unix current-user 0700/0600 no-follow held-capability enforcement; unsupported Windows DACL refuses before writes. Plaintext at rest is intentional and does not isolate an unrestricted same-user process. See KEYRING-STORAGE-01.md.
+
+## CORP-FMT-051 — fresh keyring reference coordination v2
+
+Status: approved design, implementation candidate 2026-11-20; not compatibility acceptance.
+
+- Newly proven private store genesis may publish index schema=2 with reference_protocol=1 and an explicit monotonic participants list. Only trusted composition registers consumer owners before their first binding; no public roster flags or inferred filesystem inventory.
+- Initialization requires this invocation's private-root creation witness, inventory/store coordination and a held-root residue recheck. Existing schema1/indexless/residual roots never automatically gain an empty-roster attestation. Valid schema1 read/create/rotate remains supported; coordinated removal refuses unknown.
+- Older strict readers/writers refuse schema2 before value publication. This intentional incompatibility prevents an older writer from dropping participant metadata. Unknown protocol/participant or incomplete owner inventory refuses removal, never falls back to empty.
+- Inventory lock precedes store lock for participating reference registration/publication/removal. Reserved paths and old value revisions remain after logical removal; no physical erase/migration is introduced.

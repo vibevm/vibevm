@@ -73,6 +73,19 @@ impl Pinned {
     /// Open/create one private child. Mode is private at creation; existing
     /// insecure occupants are refused, never silently chmod-repaired.
     pub fn private_child(&self, name: &str, create: bool) -> Result<Option<Self>> {
+        Ok(self
+            .private_child_recording(name, create)?
+            .map(|(child, _)| child))
+    }
+
+    /// Reports only this invocation's successful private mkdir, after held-child
+    /// admission. Existing children and a lost creation race report false.
+    /// The caller still owns parent admission and durable genesis validation.
+    pub fn private_child_recording(
+        &self,
+        name: &str,
+        create: bool,
+    ) -> Result<Option<(Self, bool)>> {
         crate::ensure_safe_component(name)?;
         #[cfg(not(unix))]
         {
@@ -83,7 +96,7 @@ impl Pinned {
         {
             if let Some(child) = self.open_child_checked(name)? {
                 child.verify_user_private()?;
-                return Ok(Some(child));
+                return Ok(Some((child, false)));
             }
             if !create {
                 return Ok(None);
@@ -91,15 +104,31 @@ impl Pinned {
             use cap_std::fs::DirBuilderExt;
             let mut builder = cap_std::fs::DirBuilder::new();
             builder.mode(0o700);
-            match self.dir.create_dir_with(name, &builder) {
-                Ok(()) => {}
-                Err(error) if error.kind() == std::io::ErrorKind::AlreadyExists => {}
+            let created = match self.dir.create_dir_with(name, &builder) {
+                Ok(()) => true,
+                Err(error) if error.kind() == std::io::ErrorKind::AlreadyExists => false,
                 Err(error) => return Err(error.into()),
-            }
+            };
             let child = self.open_child(name)?;
             child.verify_user_private()?;
-            Ok(Some(child))
+            Ok(Some((child, created)))
         }
+    }
+
+    /// Direct-name predicate on a held private root, without traversing entries.
+    /// Coordination names are fixed by trusted composition, not user input.
+    pub fn private_entries_are_only(&self, allowed: &[&str]) -> Result<bool> {
+        self.verify_user_private()?;
+        for entry in self.dir.entries()? {
+            let entry = entry?;
+            if !allowed
+                .iter()
+                .any(|name| entry.file_name() == std::ffi::OsStr::new(name))
+            {
+                return Ok(false);
+            }
+        }
+        Ok(true)
     }
 
     /// Metadata-only admission of one regular private leaf, rejecting hardlinks.
@@ -172,5 +201,77 @@ impl Pinned {
             }
             Ok(guard)
         }
+    }
+}
+
+#[cfg(all(test, unix))]
+mod tests {
+    use crate::Project;
+    use std::os::unix::fs::PermissionsExt;
+    #[test]
+    fn private_creation_records_one_winner_without_repairing_existing_modes() {
+        let temp = tempfile::Builder::new()
+            .permissions(std::fs::Permissions::from_mode(0o755))
+            .tempdir()
+            .unwrap();
+        let root = Project::open(temp.path()).unwrap().root_dir().unwrap();
+        root.verify_user_owned_parent().unwrap();
+        let barrier = std::sync::Arc::new(std::sync::Barrier::new(3));
+        let mut threads = vec![];
+        for _ in 0..2 {
+            let path = temp.path().to_owned();
+            let barrier = barrier.clone();
+            threads.push(std::thread::spawn(move || {
+                let root = Project::open(&path).unwrap().root_dir().unwrap();
+                barrier.wait();
+                let (child, created) = root
+                    .private_child_recording("private", true)
+                    .unwrap()
+                    .unwrap();
+                assert_eq!(child.unix_mode().unwrap().unwrap() & 0o777, 0o700);
+                created
+            }));
+        }
+        barrier.wait();
+        assert_eq!(
+            threads
+                .into_iter()
+                .filter_map(|t| t.join().unwrap().then_some(()))
+                .count(),
+            1
+        );
+        assert!(
+            !root
+                .private_child_recording("private", true)
+                .unwrap()
+                .unwrap()
+                .1
+        );
+        let private = root.private_child("private", false).unwrap().unwrap();
+        assert!(private.private_entries_are_only(&[]).unwrap());
+        std::fs::write(private.join("foreign-note"), b"KEEP").unwrap();
+        assert!(!private.private_entries_are_only(&[]).unwrap());
+        assert!(private.private_entries_are_only(&["foreign-note"]).unwrap());
+        std::fs::create_dir(private.join("foreign-dir")).unwrap();
+        assert!(!private.private_entries_are_only(&["foreign-note"]).unwrap());
+        assert_eq!(
+            std::fs::read(private.join("foreign-note")).unwrap(),
+            b"KEEP"
+        );
+        std::fs::create_dir(temp.path().join("insecure")).unwrap();
+        std::fs::set_permissions(
+            temp.path().join("insecure"),
+            std::fs::Permissions::from_mode(0o755),
+        )
+        .unwrap();
+        assert!(root.private_child_recording("insecure", true).is_err());
+        assert_eq!(
+            std::fs::metadata(temp.path().join("insecure"))
+                .unwrap()
+                .permissions()
+                .mode()
+                & 0o777,
+            0o755
+        );
     }
 }

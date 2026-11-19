@@ -155,9 +155,8 @@ fn execute(
                 );
             }
             cancel.checkpoint()?;
-            // No protected version-compatible roster witness exists yet. Neither
-            // this binary's compiled consumer count nor --yes can attest empty.
-            render(ctx, store.remove(&id, &expected, None)?, None)
+            // Only durable fresh-genesis protocol admission can attest inventory.
+            render(ctx, store.remove_coordinated(&id, &expected)?, None)
         }
     }
 }
@@ -240,7 +239,7 @@ fn interactive(ctx: &output::Context, store: &Store, cancel: &CancellationToken)
                     false,
                 )? {
                     cancel.checkpoint()?;
-                    store.remove(selected, &expected, None)?;
+                    store.remove_coordinated(selected, &expected)?;
                 }
             }
             _ => unreachable!(),

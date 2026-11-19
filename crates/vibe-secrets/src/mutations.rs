@@ -70,7 +70,7 @@ impl Store {
     }
 
     /// Logical deletion only; immutable private paths stay reserved, not erased.
-    pub fn remove(
+    pub(crate) fn remove(
         &self,
         id: &SecretId,
         expected: &Expected,

@@ -49,7 +49,7 @@ impl Fixture {
 }
 #[cfg(unix)]
 #[test]
-fn public_metadata_lifecycle_preserves_ids_tokens_and_refuses_unknown_removal() {
+fn public_metadata_lifecycle_preserves_ids_tokens_and_removes_fresh_unreferenced_item() {
     let f = Fixture::new();
     assert_eq!(
         f.json(&["list", "--json"], None)["items"],
@@ -134,22 +134,59 @@ fn public_metadata_lifecycle_preserves_ids_tokens_and_refuses_unknown_removal() 
     let version = rotated["store_revision"].as_u64().unwrap().to_string();
     let path = f.0.path().join("secrets/index.toml");
     let before = fs::read(&path).unwrap();
-    for yes in [false, true] {
-        let mut args = vec![
+    let args = [
+        "remove",
+        id,
+        "--expect-store",
+        &version,
+        "--expect-current",
+        current,
+        "--json",
+    ];
+    assert!(!f.run(&args, None).status.success());
+    assert_eq!(fs::read(&path).unwrap(), before);
+    let removed = f.json(
+        &[
             "remove",
             id,
             "--expect-store",
             &version,
             "--expect-current",
             current,
+            "--yes",
             "--json",
-        ];
-        if yes {
-            args.push("--yes");
-        }
-        assert!(!f.run(&args, None).status.success());
-        assert_eq!(fs::read(&path).unwrap(), before);
-    }
+        ],
+        None,
+    );
+    assert_eq!(removed["items"], serde_json::json!([]));
+    assert!(!f.run(&["details", id, "--json"], None).status.success());
+    let after = fs::read(&path).unwrap();
+    assert!(
+        !f.run(
+            &[
+                "remove",
+                id,
+                "--expect-store",
+                &version,
+                "--expect-current",
+                current,
+                "--yes",
+                "--json"
+            ],
+            None
+        )
+        .status
+        .success()
+    );
+    assert_eq!(fs::read(&path).unwrap(), after);
+    assert!(
+        f.0.path()
+            .join("secrets/items")
+            .join(id)
+            .join(current)
+            .join("value")
+            .exists()
+    );
     assert_eq!(fs::read(f.0.path().join("foreign")).unwrap(), b"KEEP");
 }
 #[test]
