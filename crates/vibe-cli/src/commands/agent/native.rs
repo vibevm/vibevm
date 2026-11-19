@@ -16,6 +16,8 @@ use vibe_safefs::Project;
 mod hermes_mcp;
 #[path = "native/hermes_runtime.rs"]
 mod hermes_runtime;
+#[path = "native/hermes_selected.rs"]
+pub(super) mod hermes_selected;
 #[path = "native/pi_runtime.rs"]
 mod pi_runtime;
 pub(crate) use hermes_mcp::{profile_home as hermes_profile_home, project_yaml};

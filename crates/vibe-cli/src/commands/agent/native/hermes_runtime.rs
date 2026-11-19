@@ -36,6 +36,22 @@ const MODULES: &[(&str, &str)] = &[
         "hermes_cli/main.py",
         "8d986cd8de3ea7802e04a9d58543b19e7b03436299be5d5e0b6b65e409e22705",
     ),
+    (
+        "hermes_cli/gateway_chat.py",
+        "f689d2471c2020e2b884375f45dc850332af934f958d2a633ec1275cf6ebdb02",
+    ),
+    (
+        "hermes_cli/session_worktree.py",
+        "575665b1fe68f2f06912fc39a4c72b461ca5e01ccc59058e9a46728489970428",
+    ),
+    (
+        "hermes_cli/main_resume_args.py",
+        "907c68545fe1b668e5bc606380c201f7ce45ec7bd938ee3c78e59caa19a9334c",
+    ),
+    (
+        "gateway/session_finite.py",
+        "a01c12ede67fad8d63a3e8054b7e76696e18250294b1676594d1031442639bad",
+    ),
 ];
 
 pub(super) fn discover(program: &Path) -> Result<HermesRuntime> {
