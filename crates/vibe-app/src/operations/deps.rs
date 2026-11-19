@@ -362,6 +362,7 @@ pub(super) fn install_required(
         );
         let progress = task.progress();
         let nested = OperationContext {
+            missing_command: None,
             progress: &progress,
             ..*ctx
         };

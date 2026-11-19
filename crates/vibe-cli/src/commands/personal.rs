@@ -367,6 +367,7 @@ pub(crate) fn automatic_install(
         || args.arch.is_some()
         || args.installer.is_some()
         || args.library.is_some()
+        || args.on_missing_command.is_some()
         || args.no_extras
         || args.download_header_file.is_some()
         || args.version_file.asked()
@@ -428,6 +429,7 @@ pub(crate) fn install(
         || args.arch.is_some()
         || args.installer.is_some()
         || args.library.is_some()
+        || args.on_missing_command.is_some()
         || args.no_extras
         || args.download_header_file.is_some()
         || args.version_file.asked()

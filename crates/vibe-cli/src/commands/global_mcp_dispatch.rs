@@ -41,6 +41,13 @@ pub(crate) fn run_install(
     stop_input: &mut crate::composition::cancellation::StopInput,
     network: &mut vibe_net::NetworkGuard,
 ) -> Result<()> {
+    if args.on_missing_command.is_some()
+        && (!args.global
+            || args.user_project
+            || args.packages.iter().any(|p| p.starts_with("mcp:")))
+    {
+        bail!("--on-missing-command applies only to global application installation");
+    }
     if args.user_project {
         return super::personal::install(ctx, args, embedded_root, offline, seed_default_registry);
     }
@@ -86,6 +93,9 @@ pub(crate) fn run_install(
         if let Some(selection) =
             remap::claims_install_with_progress(&args, offline, &ctx.progress())
         {
+            if args.on_missing_command.is_some() {
+                bail!("--on-missing-command does not apply to remap installation");
+            }
             if args.stop_requested {
                 bail!(
                     "--stop-file is not supported for global remap installation; no offer was installed"

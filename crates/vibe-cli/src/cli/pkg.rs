@@ -136,6 +136,10 @@ pub struct InstallArgs {
     #[arg(long, value_name = "ID")]
     pub installer: Option<String>,
 
+    /// Defer a selected application's missing required command before installation.
+    #[arg(long, value_parser = ["defer"], requires = "global")]
+    pub on_missing_command: Option<String>,
+
     /// Place an owned (archive or source-built) application payload in this
     /// storage library of the user home instead of the default
     /// `<settings>/opt`; refused for a project home.

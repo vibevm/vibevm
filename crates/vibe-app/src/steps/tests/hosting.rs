@@ -55,6 +55,7 @@ fn unresolved_configuration_report_keeps_the_same_hosting_without_execution() {
     let settings = SettingsRoot::new(&dir.path().join("settings"));
     let progress = vibe_core::progress::Progress::default();
     let ctx = crate::OperationContext {
+        missing_command: None,
         http_client: None,
         download_headers: None,
         import_scope: None,

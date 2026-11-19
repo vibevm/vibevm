@@ -41,6 +41,7 @@ fn base_args() -> InstallArgs {
         platform: None,
         arch: None,
         installer: None,
+        on_missing_command: None,
         library: None,
         steps: Default::default(),
         no_extras: false,

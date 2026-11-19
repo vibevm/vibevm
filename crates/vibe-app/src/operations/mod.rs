@@ -64,6 +64,9 @@ use crate::storage::{Availability, Storage};
 
 use apply::Applied;
 
+/// A caller-only decision about one selected top-level missing command.
+pub type MissingCommandDecision<'a> = &'a dyn Fn(&str, &str, &str) -> bool;
+
 /// What every mutating operation needs from its caller.
 #[derive(Clone, Copy)]
 #[spec(documents = "spec://org.vibevm.core/vibevm/common/PROP-059#commands")]
@@ -75,6 +78,8 @@ pub struct OperationContext<'a> {
     pub download_headers: Option<&'a vibe_core::download_headers::DownloadHeaders>,
     /// Immutable public bindings of one verified finite import, with ephemeral scoped answers.
     pub import_scope: Option<&'a crate::ImportScope<'a>>,
+    /// Ephemeral top-level command-need decision; never runs remediation.
+    pub missing_command: Option<MissingCommandDecision<'a>>,
     pub settings: &'a SettingsRoot,
     /// Relay child stdout to stderr so a JSON envelope stays clean.
     pub json: bool,

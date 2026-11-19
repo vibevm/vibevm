@@ -150,6 +150,14 @@ pub enum StepError {
         reason: String,
     },
     #[error(
+        "installation of `{key}` deferred because step `{step}` needs command `{command}`; nothing was downloaded or installed (spec://org.vibevm.core/vibevm/common/PROP-065#needs; fix: install the missing runtime yourself and rerun the original command)"
+    )]
+    PrerequisiteDeferred {
+        key: String,
+        step: String,
+        command: String,
+    },
+    #[error(
         "step `{step}` of `{key}` needs `{need}`, which this host does not provide; nothing was downloaded or run \
          (violates spec://org.vibevm.core/vibevm/common/PROP-065#needs; fix: provide `{need}` and retry, or select another installer option)"
     )]

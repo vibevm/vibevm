@@ -527,6 +527,216 @@ fn an_unmet_command_need_is_refused_before_any_download() {
     assert!(!user.settings.join("applications/index.json").exists());
 }
 
+/// An operator's explicit pre-effect choice is not ordinary missing-command refusal.
+#[test]
+fn a_missing_command_can_be_deferred_without_installation_and_retried_fresh() {
+    let archive = tar_gz("readme", "synthetic npm package input");
+    let digest = sha(&archive);
+    let (url, hits) = serve(archive);
+    let fixture = Fixture::new();
+    let package = fixture.package(
+        "deferred",
+        &format!(
+            "[[installer_options.steps]]\nid='fetch'\ntitle='Fetch'\nkind='sources'\n\
+             [[installer_options.steps.sources]]\nname='up'\nurl='{url}'\nsha256='{}'\n\
+             [[installer_options.steps]]\nid='copy'\ntitle='Copy'\nkind='copy'\nfrom='payload'\n\
+             needs=['command:vibe-fixture-npm']\n\
+             [[installer_options.launchers]]\nid='main'\nname='Deferred'\nexecutable='$app_bin/deferred'\nkind='command'\ndefault=true\n\
+             [[installer_options.public_commands]]\nname='deferred-fixture'\nlauncher='main'\n",
+            digest
+        ),
+    );
+    let user = UserScratch::new();
+    let output = fixture.app(
+        &user,
+        &["install", "-g"],
+        "org.example/deferred",
+        &[
+            "--on-missing-command=defer",
+            "--json",
+            "--unattended",
+            "--write-version-file=.deferred-version",
+        ],
+    );
+    assert_eq!(output.status.code(), Some(2), "{}", failed(&output));
+    let (_, envelope) = common::fake_agent::refused(&output);
+    assert_eq!(envelope["code"], "prerequisite_deferred", "{envelope}");
+    assert_eq!(envelope["step"], "copy");
+    assert_eq!(hits.load(Ordering::SeqCst), 0);
+    assert!(!user.settings.join("cache/app-work").exists());
+    assert!(!user.settings.join("applications/index.json").exists());
+    assert!(!user.settings.join("opt/bin/deferred-fixture").exists());
+    assert!(!fixture.root.path().join(".deferred-version").exists());
+    // A later invocation supplies the command. No saved decision or resume job exists.
+    // The exact same selected manifest can now proceed without a saved answer.
+    let payload = package.join("payload/bin");
+    fs::create_dir_all(&payload).unwrap();
+    fs::write(payload.join("deferred"), "payload").unwrap();
+    let bin = fixture.root.path().join("tools");
+    fs::create_dir_all(&bin).unwrap();
+    fs::write(bin.join("vibe-fixture-npm"), "#!/bin/sh\nexit 0\n").unwrap();
+    use std::os::unix::fs::PermissionsExt;
+    fs::set_permissions(
+        bin.join("vibe-fixture-npm"),
+        fs::Permissions::from_mode(0o755),
+    )
+    .unwrap();
+    let mut command = user.vibe();
+    let path = std::env::join_paths(std::iter::once(bin).chain(std::env::split_paths(
+        &std::env::var_os("PATH").unwrap_or_default(),
+    )))
+    .unwrap();
+    command
+        .current_dir(fixture.root.path())
+        .env("PATH", path)
+        .args([
+            "install",
+            "-g",
+            "org.example/deferred",
+            "--registry",
+            fixture.registry.to_str().unwrap(),
+            "--on-missing-command=defer",
+            "--json",
+            "--unattended",
+        ]);
+    ok(&command.output().unwrap());
+    assert_eq!(hits.load(Ordering::SeqCst), 1);
+    assert_eq!(
+        index(&user)["installations"]["org.example/deferred@1.0.0"]["option"],
+        "main"
+    );
+}
+
+#[test]
+fn defer_does_not_relabel_noncommand_or_selection_refusals() {
+    let fixture = Fixture::new();
+    fixture.package("terminal", "[[installer_options.steps]]\nid='copy'\ntitle='Copy'\nkind='copy'\nfrom='vibe.toml'\nneeds=['terminal']\n");
+    let user = UserScratch::new();
+    for (extra, code) in [
+        (
+            vec!["--on-missing-command=defer", "--json", "--unattended"],
+            "need_unmet",
+        ),
+        (
+            vec![
+                "--on-missing-command=defer",
+                "--json",
+                "--unattended",
+                "--installer=unknown",
+            ],
+            "no_option",
+        ),
+    ] {
+        let output = fixture.app(&user, &["install", "-g"], "org.example/terminal", &extra);
+        assert_eq!(output.status.code(), Some(2), "{}", failed(&output));
+        let (_, envelope) = common::fake_agent::refused(&output);
+        assert_eq!(envelope["code"], code, "{envelope}");
+        assert!(!user.settings.join("applications/index.json").exists());
+    }
+}
+
+#[test]
+fn deferred_reinstall_preserves_existing_receipt_payload_and_foreign_command() {
+    let fixture = Fixture::new();
+    let package = fixture.package(
+        "protected",
+        "[[installer_options.steps]]\nid='copy'\ntitle='Copy'\nkind='copy'\nfrom='payload'\n",
+    );
+    fs::create_dir_all(package.join("payload")).unwrap();
+    fs::write(package.join("payload/keep"), "accepted payload").unwrap();
+    let user = UserScratch::new();
+    ok(&fixture.app(
+        &user,
+        &["install", "-g"],
+        "org.example/protected",
+        &["--json", "--unattended"],
+    ));
+    let index_path = user.settings.join("applications/index.json");
+    let before = fs::read(&index_path).unwrap();
+    let foreign = user.settings.join("opt/bin/foreign");
+    fs::create_dir_all(foreign.parent().unwrap()).unwrap();
+    fs::write(&foreign, "foreign command").unwrap();
+    let manifest = package.join("vibe.toml");
+    let original = fs::read_to_string(&manifest).unwrap();
+    fs::write(
+        &manifest,
+        format!("{original}needs=['command:vibe-fixture-missing']\n"),
+    )
+    .unwrap();
+    let output = fixture.app(
+        &user,
+        &["install", "-g"],
+        "org.example/protected",
+        &[
+            "--on-missing-command=defer",
+            "--json",
+            "--unattended",
+            "--force",
+        ],
+    );
+    assert_eq!(output.status.code(), Some(2), "{}", failed(&output));
+    let (_, envelope) = common::fake_agent::refused(&output);
+    assert_eq!(envelope["code"], "prerequisite_deferred");
+    assert_eq!(fs::read(index_path).unwrap(), before);
+    assert_eq!(fs::read_to_string(&foreign).unwrap(), "foreign command");
+    let directory = index(&user)["installations"]["org.example/protected@1.0.0"]["directory"]
+        .as_str()
+        .unwrap()
+        .to_owned();
+    assert_eq!(
+        fs::read_to_string(user.settings.join("opt").join(directory).join("keep")).unwrap(),
+        "accepted payload"
+    );
+}
+
+#[test]
+fn defer_stays_out_of_dependency_and_plan_only_failures_and_standalone_options() {
+    let fixture = Fixture::new();
+    let child = fixture.package("child-need", "[[installer_options.steps]]\nid='copy'\ntitle='Copy'\nkind='copy'\nfrom='vibe.toml'\nneeds=['command:vibe-child-absent']\n");
+    assert!(child.is_dir());
+    fixture.package("parent-need", "requires=['org.example/child-need@1']\n[[installer_options.steps]]\nid='copy'\ntitle='Copy'\nkind='copy'\nfrom='vibe.toml'\n");
+    let user = UserScratch::new();
+    let output = fixture.app(
+        &user,
+        &["install", "-g"],
+        "org.example/parent-need",
+        &["--on-missing-command=defer", "--json", "--unattended"],
+    );
+    assert_eq!(output.status.code(), Some(2), "{}", failed(&output));
+    let (_, envelope) = common::fake_agent::refused(&output);
+    assert_eq!(envelope["code"], "need_unmet", "{envelope}");
+    assert!(!user.settings.join("applications/index.json").exists());
+    let output = fixture.app(
+        &user,
+        &["install", "-g"],
+        "org.example/child-need",
+        &[
+            "--on-missing-command=defer",
+            "--plan-only",
+            "--json",
+            "--unattended",
+        ],
+    );
+    assert_eq!(output.status.code(), Some(2), "{}", failed(&output));
+    let (_, envelope) = common::fake_agent::refused(&output);
+    assert_eq!(envelope["code"], "need_unmet");
+    fixture.package(
+        "standalone",
+        "[[installer_options.steps]]\nid='copy'\ntitle='Copy'\nkind='copy'\nfrom='vibe.toml'\nto='manifest-copy'\n",
+    );
+    ok(&fixture.app(
+        &user,
+        &["install", "-g"],
+        "org.example/standalone",
+        &["--on-missing-command=defer", "--json", "--unattended"],
+    ));
+    assert!(
+        index(&user)["installations"]
+            .get("org.example/standalone@1.0.0")
+            .is_some()
+    );
+}
+
 #[test]
 fn external_steps_record_uninstalls_that_run_in_reverse() {
     let fixture = Fixture::new();

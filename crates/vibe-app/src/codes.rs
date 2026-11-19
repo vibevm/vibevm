@@ -142,6 +142,7 @@ codes!(STEP, StepError [] {
     ParameterInvalid => "parameter_invalid", Refusal, "a parameter value is missing or invalid";
     LicenseRequired => "license_required", Refusal, "the license was not accepted";
     LicenseUnreadable => "license_unreadable", Refusal, "the declared license file cannot be read";
+    PrerequisiteDeferred => "prerequisite_deferred", Refusal, "the operator deferred a missing command before installation";
     UnmetNeed => "need_unmet", Refusal, "a running step needs what this host lacks";
     AgentRequired => "agent_missing", Refusal, "a required agent step has no agent";
     NoResultStep => "plan_refused", Refusal, "no running step produces the declared result";
@@ -293,6 +294,7 @@ impl AppError {
                 StepError::Failed { step, .. }
                 | StepError::FinishFailed { step, .. }
                 | StepError::UnmetNeed { step, .. }
+                | StepError::PrerequisiteDeferred { step, .. }
                 | StepError::AgentRequired { step, .. }
                 | StepError::Template { step, .. }
                 | StepError::Copy { step, .. },

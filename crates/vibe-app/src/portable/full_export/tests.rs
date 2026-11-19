@@ -384,6 +384,7 @@ fn context<'a>(
     progress: &'a vibe_core::progress::Progress,
 ) -> crate::OperationContext<'a> {
     crate::OperationContext {
+        missing_command: None,
         http_client: None,
         download_headers: None,
         import_scope: None,

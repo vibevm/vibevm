@@ -93,6 +93,7 @@ pub(super) fn operation<'a>(
 ) -> OperationContext<'a> {
     let attended = attended(ctx);
     OperationContext {
+        missing_command: None,
         http_client: Some(&observe.http_client),
         download_headers: observe.download_headers.as_ref(),
         import_scope: None,
@@ -341,8 +342,28 @@ pub(crate) fn install_with_selected(
         .with_download_headers(args.download_header_file.as_deref())?
         .with_source_operation(&packages.operation);
     let before = installed_keys(&settings);
+    let missing_command = |_key: &str, _step: &str, command: &str| {
+        if args.on_missing_command.as_deref() == Some("defer") {
+            return true;
+        }
+        if !attended(ctx) {
+            return false;
+        }
+        asking(|| {
+            output::prompts::choose_opt(
+                &format!("Command `{command}` is missing"),
+                &output::prompts::named(&[
+                    "Cancel installation",
+                    "Install the runtime yourself and rerun later?",
+                ]),
+                0,
+            )
+            .is_ok_and(|answer| answer == Some(1))
+        })
+    };
     let outcome = display.around(ctx, || {
         let operation = OperationContext {
+            missing_command: Some(&missing_command),
             agent: agents.hooks(),
             resolver: Some(&resolver),
             resolver_scope: packages.scope(),

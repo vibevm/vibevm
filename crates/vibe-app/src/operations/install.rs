@@ -9,6 +9,9 @@ use crate::storage::Storage;
 use crate::{AppError, Index, InstallRequest, Lifecycle, Mark, Outcome, ResolvedPackage};
 use vibe_wire::generated::shared as w;
 
+#[cfg(test)]
+mod deferral_tests;
+
 /// Install one app package into the current user's settings root: its
 /// requirements first (`PROP-065#app-dependencies`), then the package.
 pub fn install(
@@ -132,7 +135,40 @@ fn install_entered(
         previous,
         &index,
         (saved.and_then(|s| s.operation.as_ref()), import_row),
-    )?;
+    )
+    .map_err(|error| {
+        if saved.is_none()
+            && parent.is_none()
+            && request.required_by.is_none()
+            && ctx.import_scope.is_none()
+            && request.start == crate::Start::Fresh
+            && let crate::AppError::Step(crate::StepError::UnmetNeed {
+                key: failed_key,
+                step,
+                need,
+            }) = &error
+            && failed_key == &key
+            && let Ok(vibe_core::manifest::Need::Command(command)) =
+                vibe_core::manifest::Need::try_from(need.clone())
+            && vibe_core::manifest::steps_of(&option).iter().any(|row| {
+                row.id == *step
+                    && row
+                        .needs
+                        .contains(&vibe_core::manifest::Need::Command(command.clone()))
+            })
+            && ctx
+                .missing_command
+                .is_some_and(|decide| decide(&key, step, &command))
+        {
+            return crate::StepError::PrerequisiteDeferred {
+                key: key.clone(),
+                step: step.clone(),
+                command,
+            }
+            .into();
+        }
+        error
+    })?;
     apply::admit_agents(ctx, resolved, &plan, request, saved)?;
     let target = if let Some(state) = saved {
         pending::validate_plan(ctx, resolved, &option, request, &plan, state)?;
