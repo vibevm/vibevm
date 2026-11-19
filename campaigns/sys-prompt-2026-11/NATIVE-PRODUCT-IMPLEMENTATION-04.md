@@ -34,6 +34,12 @@ Initial classic worktree inspection found process-bound setup/exit state and dup
 
 Finite proof: existing-history resume and continue, actual worktree cwd matching composed boot, native oneshot completion/exit, and invalid selection before provider submission. Reuse full-size, cache, MCP and skills evidence rather than repeat it. External/shared gateway attachment is a separate unresolved capability: no mutation of a foreign runner and no permanent read-delivery waiver presented as full parity. Source/gates and independent architectural review remain required.
 
+## Pi selected-session cwd and native pre-parser dispatch
+
+H4 source inspection identified two concrete adapter defects requiring bounded repair. After native session-manager/picker selection, compare its actual cwd with the admitted project cwd using the existing canonical path identity before runtime services, project resources, carrier attachment or provider submission. Passing the original cwd into createRuntime does not validate the selected session. A foreign cwd must refuse with the existing relaunch/re-admission remedy; do not rewrite saved session cwd or claim full cross-project selection support. Cover same-project selection and foreign-project refusal at the real boundary without repeating unchanged carrier proofs.
+
+Native subcommands dispatched before ordinary parse must retain that grammar through the existing native main owner, rather than becoming model prompts. Reuse native dispatch for the exact identified verbs before adapter session/carrier construction. Proof must not mutate real auth/config/package state. If a native dispatch cannot safely be reused, refuse the recognized command before prompt submission and retain that as an implementation gap, not completed parity. Preserve native handling of literal prompt arguments and option delimiters. No new command framework, copied native orchestration or second project solver is authorized.
+
 ## Initial product asset review findings
 
 The first Rust asset publisher passed `Some(0o600)` unconditionally to strict safefs publication. Correct this through the established platform contract: Unix exact mode0600, non-Unix no Unix mode request; do not weaken safefs or claim Windows ACL equivalence. Keep immutable full-digest names, foreign-byte refusal and no-follow publication.

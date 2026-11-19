@@ -1,6 +1,6 @@
 // Thin executable Pi adapter: native modules own runtime, resources and modes.
 // Unsupported parser families refuse explicitly before creating a session.
-import { readFileSync } from 'node:fs';
+import { readFileSync, realpathSync } from 'node:fs';
 import { resolve, join } from 'node:path';
 import { pathToFileURL } from 'node:url';
 
@@ -11,6 +11,8 @@ export async function runNativePi({packageDir, carrierPath, prefixPath, cwd, arg
   // bootstrap arguments must never become the native process identity.
   process.argv=[process.execPath,join(packageDir,'dist','cli.js'),...args];
   const native=relative=>import(pathToFileURL(join(packageDir,'dist',relative)).href);
+  // Native main owns these pre-parser command families; they are not chat text.
+  if(['auth','config','mcp','install','remove','uninstall','update','list'].includes(args[0])){const {main}=await native('main.js');return main(args);}
   const {parseArgs}=await native('cli/args.js');
   const parsed=parseArgs(args);
   if(parsed.diagnostics.some(d=>d.type==='error')) throw new Error('Native Pi argument validation failed; run plain pi --help for its argument contract');
@@ -42,6 +44,8 @@ export async function runNativePi({packageDir, carrierPath, prefixPath, cwd, arg
   const {createSessionManager}=await native('main.js');
   const settings=SettingsManager.create(cwd,agentDir);
   const manager=await createSessionManager(parsed,cwd,parsed.sessionDir,settings);
+  const {pathsEqual}=await native('utils/paths.js');
+  if(!pathsEqual(realpathSync(manager.getCwd()),realpathSync(cwd))) throw new Error('Pi selected another project cwd; relaunch Vibe there to re-admit its boot before loading native resources');
   const {createAgentSessionRuntime,createAgentSessionServices,createAgentSessionFromServices}=await native('core/agent-session-runtime.js');
   const {resolveCliModel,resolveModelScope}=await native('core/model-resolver.js');
   const carriers=new Set();
