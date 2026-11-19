@@ -1,0 +1,81 @@
+# CORP-ENV: agent distribution, proxy and AI connection setup
+
+Date: 2026-11-19. Genre: owner-approved scope and architectural planning brief, not implemented functionality. Owner requested four stages, then clarified that five stages including the AI-key inventory are appropriate. Architect owns contracts and implementation briefs; builder owns execution/integration. Register these five children in the existing CORP-ENV source plan after SYS-AGENT-PARITY-AUDIT; do not interrupt current SYS native integration. Preserve accepted historical CORP deliveries and closed CORP-RELEASE. This is not a public GitHub Vibe release.
+
+## Route and ownership
+
+1. `CORP-AGENT-PACKAGES` depends on SYS-AGENT-PARITY-AUDIT.
+2. `CORP-AGENT-PROXY` depends on CORP-AGENT-PACKAGES.
+3. `CORP-AI-CONNECTIONS` depends on CORP-AGENT-PROXY.
+4. `CORP-AI-SETUP` depends on CORP-AI-CONNECTIONS.
+5. `CORP-AGENT-DISTRIBUTION` depends on CORP-AI-SETUP.
+
+All are children of CORP-ENV, not new campaigns. Parent completion must await all five; do not make children depend on their own parent. Keep original NST task identities/denominator and the ordered final global repair. These additions extend the current mandate rather than retroactively invalidating accepted CORP baseline evidence. Update authoritative plan first, then refresh/verify its existing task-tree projection.
+
+Distinct supported identities: Claude Code (`claude` harness; preserve existing `claude-code` preset/aliases), Codex, OpenCode, Qwen Code (`qwen`, not two agents), Hermes, Pi. Resolve the user's launcher override table before deciding an agent is missing. One connection binding follows harness identity; aliases remain executable choices, not accidental duplicate credential inventories.
+
+## 1 — CORP-AGENT-PACKAGES
+
+Deliver ordinary installable packages for all six agents with Win/macOS/Linux support using existing application, template/version-channel, acquisition, checksum/provenance, lifecycle and public-command owners. Prefer templated packages where a common manifest plus version data actually fits. Prefer official direct binary/archive URLs when available and permitted; verify platform/architecture, licensing/redistribution rights and artifact integrity. Do not fabricate a direct artifact or native architecture that upstream does not ship. Review actual current official releases at execution time; record exact versions/artifact hashes, not an unpinned claim of latest.
+
+Where direct installation is not possible, use the official npm method through the existing installer-step/prerequisite mechanisms. npm is NOT a hard package dependency. Before any package installation effects, check the actual npm executable/runtime and supported version. If absent, offer installation from `org.vibevm.world/node` (verify exact existing kind/coordinate; create the canonical package if needed rather than guessing) or 'I will install it myself and restart'. The latter produces an explicit deferred/not-installed result: no installed package receipt, launcher, half-success or dependent package installation. Do not silently install Node or modify system configuration. Recheck availability after an approved dependency installation; cancellation/failure must not produce false package success.
+
+Build the acquisition/drop inventory for exact Win/Mac/Linux artifacts and necessary npm closure. Download through existing routes into the corporate installation drop, with local integrity/source receipts. An npm fallback must actually work in the intended corporate/offline posture: a lone CLI tarball is not an offline dependency closure. Surface unsatisfied upstream distribution/license constraints rather than declaring unsupported platforms done.
+
+Publication of these six scoped agent packages and inclusion in corporate drops are explicitly requested by the owner. Execute through the existing registry/package publication authority and process, with finite reviewed artifacts/targets, not independent ad hoc pushes. This does not authorize an unrelated public Vibe release, publishing secrets/private profiles, or modifying signing/credentials. Confirm unresolved publication destinations or sensitive legal/security decisions before their effects.
+
+Acceptance: six-identity × three-OS outcome table with exact supported architectures, real acquisition/install/launch/uninstall paths and meaningful native evidence; npm-missing/self-install/defer/cancel tests; no ambient npm hard dependency; real corporate drop closure and published package receipts. Unsupported claims need a precise blocker, not a cosmetic matrix PASS.
+
+## 2 — CORP-AGENT-PROXY
+
+All six agents launched by Vibe use the effective corporate proxy route, including px when selected. Reuse `vibe_net::NetworkSession`, corporate/site profile proxy resolution and the existing `vibe tool px exec` lending/lifetime semantics (`crates/vibe-cli/src/commands/tool/px.rs`), not six unrelated proxy managers. Bind routing after resolving actual launcher aliases; preserve custom standing arguments. Plain native invocation outside Vibe is not modified by this feature.
+
+Pass the appropriate native proxy environment/config only to the owned agent invocation. Preserve NO_PROXY/loopback exclusions so private Hermes gateway/RPC traffic stays local. Distinguish px authentication/transport from LLM API authorization; never send a model API key as proxy credentials. Retain TLS validation; no blanket insecure flags, global environment writes, OS proxy changes, silent direct fallback or log of proxy credentials. Keep the px process alive for agent descendants that need it; release only owned resources after the actual process tree ends. Existing proxy already selected by the user remains authoritative.
+
+Acceptance: actual final native transport uses the selected proxy for each agent, not merely presence of HTTP_PROXY in an argv recorder; synthetic local endpoint/proxy sentinels prove route/no-direct/bypass behavior without real keys. Proxy-unavailable/auth errors, child/cancel/cleanup, aliases and direct non-Vibe invocation isolation are covered with existing platform gates. No persistent agent-native config rewrite merely to route a Vibe launch.
+
+## 3 — CORP-AI-CONNECTIONS: lightweight local inventory
+
+### Storage decision
+
+Owner confirmed the settings-root choice explicitly on 2026-11-19: «пользовательском settings root Vibe — давай сделаем так, да». Canonical user-owned root: `<effective user settings root>/secrets/ai/`, default `~/.vibe/secrets/ai/`, honoring existing explicit VIBE_SETTINGS resolution. Do NOT use project `vibevm/vibeopt`, replaceable/shared application `opt`, package payloads, corporate drops, profiles or portable application history. The settings root is already the per-user authority; moving/updating an install root must not relocate or expose keys. No fallback into a project on a missing/unwritable root. Explain the actual resolved path in nonsecret status.
+
+Preferred structure: `index.toml` for schema, default reference and per-agent binding modes; `connections/<opaque-id>/config.toml` for typed endpoint/model metadata and a `credential` file for the key. `default` is a reference to a named connection, not a duplicated secret directory. Exact layout and generated schemas are finalized with the owning storage/format contract before coding. Keep endpoint and key as one versioned logical connection so updates cannot pair an old key with a new endpoint after interruption. Avoid credentials in URLs. Plain local protected files are not encryption; state this truthfully.
+
+Enforce per-user storage before accepting a secret: no-follow path admission, race-safe/atomic publication, user-only Unix permissions and explicit Windows ACL/reparse-point checks or an equivalent existing secure backend. Passing None for Unix mode on Windows is not proof of confidentiality. Shared/insecure roots fail actionably. No secret value in Debug/Display/errors/JSON/list/show/history/receipts/telemetry/crash samples, arguments or default shell input. Read secret input with hidden terminal prompt; automation uses protected input/file/descriptor conventions, never --api-key VALUE. Use synthetic sentinels in tests. OS credential storage may be reused where already available; do not design a general vault/server or encryption-key management system for this task.
+
+### Connection model and CLI
+
+A connection is `{schema, id, api_kind, endpoint, optional model selection, credential reference}`. Initial admitted kind: `openai-chat-completions`; unknown kinds refuse, with room for additional explicit variants later. Store no supplied raw credentials in corporate profile or public configuration. Agent binding modes are explicit: inherit-default, use-connection(id), or native/unmanaged; deleting an override can restore inherit-default only when the user selected that disposition. Never guess an incompatible provider protocol from URL shape.
+
+Working CLI family: `vibe ai connections list|add|update|remove`, `vibe ai default [connection]`, `vibe ai agent <harness> show|use <connection>|use-default|use-native`. Final command grammar must be reconciled with existing CLI owners before becoming normative. Commands show redacted presence, binding/source and actual supported API, never key bytes. Default changes affect inherit-default bindings on the next launch; explicit per-agent connections remain unchanged. Removing a referenced connection requires an explicit rebind/delete disposition, not silent fallback. Default clearing, cancel and interrupted updates preserve existing working values.
+
+Do not automatically import/overwrite native credentials. Vibe-managed launch resolves an explicit binding, overlays native runtime only where the adapter supports that API and keeps operator settings intact. Per-agent override creation must be easy without redoing the installer. Inventory and six bindings do not imply six agents can speak the same protocol: verify real native OpenAI Chat Completions support, particularly Claude Code. px is not a protocol translator. If an agent needs a protocol adapter, return its precise contract/security/maintenance scope for architectural decision; do not silently change providers, claim unsupported APIs work or introduce an unreviewed general gateway. Inventory supports initial OpenAI protocol even while an agent-specific compatibility gap is reported.
+
+Acceptance: secure user-local storage on three OSes, default/override/native resolution and easy override/restore, atomic endpoint/key pairing, deletion/cancel/reuse, redacted CLI/JSON and no key leakage into packages/history. Real adapter-level API compatibility table and bounded synthetic request tests; no paid/provider calls inferred from installing/configuring software.
+
+## 4 — CORP-AI-SETUP: reusable optional final onboarding
+
+Implement the setup operation in Vibe itself, with corporate installer only as a caller. Proposed `vibe ai setup`, installer rerun flag `--configure-ai` (reconcile existing parser/contract). Three entry paths share ONE planner/executor: optional last stage of initial installation, explicit installer flag after installation, and opt-in recovery when the resolved user launcher is unavailable. Do not bypass the launcher override table or install the plain executable when a custom wrapper was intended. Noninteractive operation does not hang or invent consent; return a structured skipped/deferred/input-required result.
+
+Run only AFTER Vibe and all mandatory installation functionality work. Ask 'Would you like to configure an AI agent?' with safe default skip; skipping/failure must not roll back the working Vibe installation or mark mandatory installation failed. Then choose one of the six supported agents and install its package only if needed/consented. npm self-install-defer stops agent installation, not the completed Vibe installation.
+
+The site/corporate profile may carry optional API-key acquisition hint label/URL and default endpoint; NEVER a key. A hint may be plain text if no real URL is provided. Show it when present, without launching a browser automatically. User input overrides profile defaults. If a usable local default connection exists, ask whether to reuse its endpoint/key (show nonsecret identity/endpoint, never the key). Ask replacement endpoint/key only if missing or reuse is declined; explain clearly that replacing a default is an overwrite and confirm before writing. No prompt that prints the existing password.
+
+Default update choice: 'Change only the default connection'. Separate opt-in 'Replace all Vibe-managed agent overrides with this connection' explains exact affected agents and confirms destructive reassignment. It must NOT erase arbitrary native OAuth/config/auth-store credentials. Existing unmanaged native credentials can be adopted/replaced only through an explicit scoped import/write operation with before-state and native adapter semantics. Cancel preserves all prior keys and bindings. Changing the default naturally updates inherited agents, not explicit overrides. Display a redacted summary and useful next steps, no secrets.
+
+Configure necessary selected agents from the inventory using native supported API bindings and managed ownership; do not copy keys into every native config when invocation-scoped injection suffices. Offer supported optional per-agent setup later. A missing API compatibility path is a named refusal, not a successful wizard with a broken agent.
+
+Acceptance: all three entry paths share operation results; optional final stage and rerun idempotence; alias-aware missing launcher; reuse/new/decline/overwrite/default-only/all-managed/override/cancel/defer flows; unattended behavior; secrets security and native config preservation; Vibe remains usable after every optional failure. UI wording localizes through existing prompt owners; no second installer-only setup engine.
+
+## 5 — CORP-AGENT-DISTRIBUTION
+
+After preceding stages pass, refresh the actual corporate distribution, its local artifact drops, package repositories and installer integration. Include exact fresh admitted releases for six agents and needed installation closure on target platforms, profile defaults/hints and the final optional setup invocation. Verify closed-network install, npm-defer path, px routing, setup reuse/override and subsequent native launch with a synthetic key/endpoint; real corporate credentials stay outside workers and reports.
+
+Owner-specific private deployment setting: show the key-acquisition hint label **SberTech AI Hub** in the corporate profile. The owner supplied no URL: do not invent one. Optional acquisition URL/default endpoint are filled only from explicit authorized corporate configuration, not public-source research or worker access to private profiles. Generic public specifications and templates remain company-neutral; actual private bundle/config values stay in their authorized local deployment surface.
+
+Provide exact package publication/drop/version/hash receipts and safe installed-state outcomes. No public Vibe GitHub release is reopened. Maintain physical acceptance guide for genuinely new Windows/macOS/Linux manual steps and preserve previously accepted limits without inventing new PASS.
+
+## Ready planning versus later executable atoms
+
+This brief settles product route, storage authority, default/override semantics and safety boundaries. Before each stage implementation, architect and builder inspect its actual owning PROP/FEAT, format/CLI registries and current code, then bind finite file/write/test packets. Existing seams inspected here: SettingsRoot/site_profile, vvm site apply/steps and vibe-bootstrap kit, agent launcher aliases/native adapters, tool px lending, current app prerequisites/installers/templates/drop/publishing, and secret-redaction laws. Do not claim these existing owners already implement the new inventory/setup. No secrets/private corporate inputs go to delegated workers. No automatic migration of native credentials or generic secret-vault expansion is authorized by planning this route.
