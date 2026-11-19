@@ -27,6 +27,14 @@ Use the real native call site and original assembly with synthetic isolated reso
 
 Once this seam works, extend the same candidate through the existing finite full-size/stability/fresh personal/resume/quiet-child native proof packet. Real cache savings require actual provider measurements and are not claimed by deterministic prompt construction. Full capability parity requires actual native CLI/SDK launch integration, not only a helper that concatenates strings.
 
+## Native gateway cache ownership
+
+Pinned `gateway/run_turn.py::_run_agent_build_turn_context` receives the native AIAgent factory and stores it in TurnContext. `gateway/session_execution.py::GatewaySessionAgentMixin._build_fresh_agent` consumes that factory, but `_resolve_turn_agent` first consults the runner's existing per-session agent cache. A factory-only test therefore cannot establish continued-turn behavior.
+
+The invocation-owned runner seam must preserve the carrier on the exact selected cached instance across subsequent turns. Do not detach immediately after factory return or turn-context construction; restore owned shadows only at the actual admitted lifecycle boundary. Use the existing native cache/signature and session authority, not a parallel carrier cache or global eviction. Preserve native fallback refresh and resource policy. A fresh session/fork/unrelated session must not inherit the selected instance or binding merely because native settings match.
+
+Finite no-model verification covers actual fresh construction, same-session native cached reuse with unchanged prefix/binding, unrelated/new-session exclusion and owned cleanup. Exercise the native cache owner where safely possible; manually returning the same object from a test stub is not native cache proof. Report any inability to reach that path without provider execution as a precise residual claim, not a cache PASS.
+
 ## Pi separation
 
 Pi uses its actual per-launch native extension/file path and pinned installed runtime. Give it a separate ready scope and proof target; it does not depend on Hermes internals. Both results must eventually integrate through VibeVM's existing harness owners. Do not create a shared generic carrier framework just to combine two upstream-specific seams.
