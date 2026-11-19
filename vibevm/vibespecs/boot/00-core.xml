@@ -29,7 +29,7 @@
     </facts>
   </section>
   <section title="Dependency copies are algorithm-owned, never hand-edited">
-    <p><VIBEDEPS-MANAGED-ONLY fact="true" status="spec/done">Never manually edit vibedeps payload, generated boot or ownership metadata to fix a dependency. Edit canonical source/declarations and let Vibe materialize the result, even when dependency copies are tracked. Broken ordinary generated copies may be removed and regenerated through Vibe under the owner's standing recovery grant; retain valid lock/source/transform inputs and verify package identities/graph. vibe.toml alone does not guarantee exact replay. Do not delete in-place clones, external aliases, active consumers or nonreproducible user state by assumption. Canonical ownership and recovery boundaries: spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-022-materialization-modes#managed-dependencies.</VIBEDEPS-MANAGED-ONLY></p>
+    <p><VIBEDEPS-MANAGED-ONLY fact="true" status="spec/done">Edit sources, not materializations. Never hand-edit `vibedeps`; change its canonical inputs and let Vibe regenerate it.</VIBEDEPS-MANAGED-ONLY></p>
   </section>
   <section title="Units marked `void` — do not implement">
     <facts ordered="false">
