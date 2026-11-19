@@ -546,6 +546,13 @@ fn a_missing_command_can_be_deferred_without_installation_and_retried_fresh() {
             digest
         ),
     );
+    // A valid runtime binding must not cause even metadata acquisition on defer.
+    let manifest = package.join("vibe.toml");
+    let original = fs::read_to_string(&manifest).unwrap();
+    fs::write(&manifest, original.replace(
+        "[[installer_options.steps]]\nid='fetch'",
+        "[installer_options.npm_runtime]\nstep='fetch'\ninput='up'\npackage='@qwen-code/qwen-code'\nversion='0.28.0'\nnode_range='>=22.0.0'\n[[installer_options.steps]]\nid='fetch'",
+    )).unwrap();
     let user = UserScratch::new();
     let output = fixture.app(
         &user,

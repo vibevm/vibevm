@@ -518,3 +518,16 @@ Status: implementation under native qualification, 2026-11-15.
 - Corporate scripts delete named files and empty directories only, preserve shared opt/bin/apps/paths/drop and PATH when foreign tools remain, and never terminate processes merely because they run under opt.
 - Drop/archive legacy matching is byte-exact, never path+size. Missing comparison capability retains uncertain files. A failed native self removal stops script before deleting store metadata or shims.
 - Tests include same-size modified archive member, foreign shared files, relocated settings and no-profile uninstall on Linux and Windows sandbox. Full old-install upgrade proof remains a delivery gate.
+
+
+## CORP-FMT-048 — optional npm runtime input binding
+
+Status: implementation candidate, 2026-11-19; no completed Node-remediation claim.
+
+- Strict application installer options gain optional `npm_runtime = { step, input?, package, version, node_range }`; absent serialization is unchanged. Older strict readers refuse a manifest using the new field; use a compatible Vibe before selecting it.
+- The binding references existing `steps`/method-sugar input and its concrete SHA-256. Sources require a name in that exact step; archive forbids a second input name. No new acquisition URL, dependency resolver or executable command field exists.
+- Exact npm package/stable version and `engines.node` must match metadata from the same verified tarball before provider installation. Initial range subset is `>=major.minor.patch`, stable Node candidates only; unsupported syntax refuses.
+- Existing explicit `--on-missing-command=defer` returns before acquiring the bound archive. Standalone options have no npm requirement. Node installation, provider/version recheck, consent and target continuation remain separate unaccepted work.
+- No existing report epoch is changed by the declaration alone; common manifest serde and ordinary validation own it. Any future report projection must preserve the binding rather than silently imply remediation is available.
+
+- Superseding owner large-package rule: stream compressed SHA-256 and decoded tar with checked u64 counters and bounded resident metadata memory; no fixed package-size ceiling. Fully drain gzip and authenticate before metadata confers authority. Operation interruption and explicit resource budgets refuse without provider effects, distinct from a successful verification.

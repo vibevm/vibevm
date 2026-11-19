@@ -11,6 +11,7 @@ mod launcher;
 mod launcher_validation;
 mod migration;
 mod migration_validation;
+mod npm_runtime;
 mod requirement;
 mod site;
 mod step_validation;
@@ -35,6 +36,7 @@ pub use launcher::{
     png_dimensions,
 };
 pub use migration::{MigrationDecl, MigrationSide};
+pub use npm_runtime::NpmRuntimeDecl;
 pub use requirement::{
     RequirementDecl, RequirementScope, RequirementTable, application_requirements,
 };
@@ -305,6 +307,9 @@ pub struct PublicCommandDecl {
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
 pub struct InstallerOptionDecl {
+    /// Reviewed npm metadata bound to an existing acquisition input.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub npm_runtime: Option<NpmRuntimeDecl>,
     pub id: String,
     pub name: String,
     pub platform: String,

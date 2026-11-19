@@ -141,6 +141,11 @@ impl InstallerOptionDecl {
             }
         }
         self.validate_steps(at, template)?;
+        if let Some(runtime) = &self.npm_runtime {
+            runtime
+                .validate(self)
+                .map_err(|reason| FieldError::new(at.field("npm_runtime"), reason))?;
+        }
         self.validate_launchers_from(at)?;
         let mut public_names = BTreeSet::new();
         for (index, command) in self.public_commands.iter().enumerate() {
