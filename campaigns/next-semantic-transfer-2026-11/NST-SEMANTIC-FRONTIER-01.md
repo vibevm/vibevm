@@ -22,3 +22,28 @@ Manifest-set comparison at the same origin: Git contains 523 files named `Cargo.
 At `4a3f80a34`, independently parsing the TOML and looking up each recorded field path reproduced the type and value of all 155 `measured_version_fields` rows (95 inheritance flags, 48 package versions, nine workspace versions and three project versions). An inheritance flag is not itself a resolved version; this check does not validate the separate policy dispositions.
 
 For the 95 Cargo inheritance rows at the origin, the declared workspace membership and exclusions identify one owning workspace per package. All nine owning workspace manifests declare `workspace.package.version = "1.0.0"`. No row required an explicit package workspace override or had an ambiguous owner in this comparison. This is a source inspection, not a Cargo build.
+
+### Necessity review outside the historical accepted set
+
+Joining the 113 unique `old_task_id` values in `research/old113-transfer-crosswalk.json` to the 222 source task IDs leaves 33 implemented/partial source records outside that crosswalk (two implemented and 31 partial). The other 76 outside rows are 72 planned-only and four unknown. The 33 are lookup candidates for necessity decisions, not 33 assumed missing features or repairs. Search the later scoped reviews and current product obligations before assigning work.
+
+- Brownfield observe/propose/promote and controlled existing-file production: M-11-A.1, M-11-A.2, M-11-D.1, M-11-D.2, M-11-D.3.
+- Close initial-domain API gaps without hiding supported operations behind contextual unsupported results.: M-17-A.2.
+- Compose change analysis over one captured fact universe.: M-04-B.1.
+- Derive a complete DP1-to-candidate migration document from actual delivered changes rather than completed task counts.: NEXT-PREVIEW-RELEASE.1.
+- Exact foreign bridge resources and reusable native feat journeys: M-09-B.2, M-09-C.2.
+- Exercise documented examples through headless surfaces and retain a reproducible capability matrix.: M-12-B.2.
+- Exercise failure and connection boundaries through independent external clients without duplicate effects.: M-17-C.2.
+- Explicit source semantics and inspectable actual/hypothetical boot: M-06-G.4.
+- Expose stage evidence without acquiring writer ownership, rerunning providers or silently truncating completeness.: M-17-A.3.
+- Give users one explicit create-to-verify entry without adding a workflow engine.: M-03-A.2.
+- Leave implementable client-neutral documentation and compatibility examples independent of temporary campaign files.: M-17-D.2.
+- Make ETO/interface completeness a mechanically checked property of the delivered product.: M-17-D.1.
+- Make contributed models/actions inspectable after provider removal and prove every supported initial coverage row.: M-17-A.4.
+- Make scoped reuse depend on meaningful production inputs and exact target context.: M-03-B.1.
+- Package-defined client adapters and safe complete deployment lifecycle: M-08-E.1, M-08-E.2.
+- Preserve the separately authored documentation as an exact input before planning its product-driven update.: NEXT-PREVIEW-DOCS.1.
+- Prove independent external clients can navigate, edit unsaved state and perform the saved-state rename protocol.: M-17-C.1.
+- Replace CLI-local summary assumptions with exact externally queryable tree/provenance/reference views.: M-17-A.1.
+- Subject-bound distribution publication, smoke, approval and recovery: M-07-B.1, M-07-B.2, M-07-C.1, M-07-C.2, M-07-D.1, M-07-D.2, M-07-E.1, M-07-E.2.
+- Update the user/developer journeys from implemented CLI/API behavior and accepted prototype policy.: M-12-B.1.
