@@ -135,3 +135,5 @@ Thirty further commits touched only retained evidence (179 changed-file occurren
 Of the remaining historical amendments, 51 touched Markdown only (54 changed-file occurrences), including issue ledgers and guides. The index records the actual paths, added/removed line counts, cited task or issue identifiers where present and per-path diff hashes. This is a record-level classification, not acceptance of the changes described in those documents.
 
 Eleven remaining XML-only changes were compared by named fact text and first-parent diff. Eight concerned common specifications and three amended boot instructions. Their changed contracts and instructions are not evidence of product delivery.
+
+Three remaining Rust test-only changes exercise cold partial installation, deferred TCP session stop, and simulated draft replacement. Their assertions were inspected; no live publishing or current-product execution was inferred.
