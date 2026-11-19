@@ -109,3 +109,5 @@ Historical repository creation and release finalization (`05d60fbe0`, `d3eee83b3
 Task packet review: 25 task-JSON-only commits amended 15 distinct original tasks. A full before/after field comparison found one amended task per commit; only named read/write perimeters, notes and checks changed. Existing task identities and acceptance fields were preserved. No new product implementation or executed tests are inferred from those edits. The index retains the exact task IDs, changed field names and first-parent diff digests.
 
 Eight specmap-only commits were compared as complete parent/child JSON: three changed only the spec-unit collection; five changed spec units, code items and edges. The exact counts are recorded per commit. No source or specification was edited in those commits and a projected edge is not evidence that its behavior ran.
+
+Five release-impact-only commits changed 18 records. All 43 distinct commit subjects named by those records exist locally. The index records their change identities and diff hashes separately from the product and publication evidence they describe.
