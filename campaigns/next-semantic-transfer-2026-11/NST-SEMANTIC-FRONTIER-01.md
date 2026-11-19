@@ -141,3 +141,5 @@ Three remaining Rust test-only changes exercise cold partial installation, defer
 `65d631fd88` introduced the machine-operation census contract and its projected map, not executable operations. Inspecting a registration must not invoke its handler.
 
 Another 90 revisions touched only original campaign seed/registry/task inputs (271 changed-file occurrences). Parsed first-parent comparisons identify the changed keys and task-file IDs in the index. They describe historical planning, not the present roadmap or executed product changes.
+
+12 further commits changed only the historical campaign evidence tree (1246 changed-file occurrences). Embedded patches, inputs, scripts and logs were classified as retained artifacts; their presence does not establish acceptance or execution in the target. Per-file diffs are fingerprinted for later claim-specific inspection.
