@@ -1,6 +1,6 @@
 # VIBEVM-IDE-MVP — one terminal workspace for VibeVM
 
-Planned direct NST child, after `NST-DOMAIN-CONSOLIDATION` and before `NST-AI-NATIVE-GLOBAL-REPAIR`. Hermes is the first integrated agent. The project, tree, search and operations remain usable without a conversation. Initial SYS and CORP delivery are not rescheduled. Preserve the seven global-repair stages and the historical NST denominator.
+Planned direct NST child, after completion of `NST-AI-NATIVE-GLOBAL-REPAIR`, including its final synchronization. Hermes is the first integrated agent. The project, tree, search and operations remain usable without a conversation. Initial SYS and CORP delivery are not rescheduled. Preserve the seven global-repair stages and the historical NST denominator.
 
 ## Ordered children and evidence of completion
 
@@ -8,12 +8,13 @@ Each step consumes the preceding result. The architect owns briefs and acceptanc
 
 | Order | Stable plan ID | Deliverable and acceptance |
 |---:|---|---|
+| 5 | `IDE-VIBEINK` | First deliverable: consume a verified revision of the independent `vibevm/vibeink` product, developed with the unreleased VibeVM toolchain. Framework specifications, reference studies and design decisions belong only in that product repository; this plan tracks its delivery, not its internals. |
 | 10 | `IDE-REFERENCE-MAP` | Trace real extension and action lifecycles in pinned VS Code and IntelliJ sources; inspect current native Hermes TUI, strong terminal references and existing Vibe tree. Deliver source map and retain/adapt/reject decisions against the consolidated owner map. |
 | 20 | `IDE-UX-MATRIX` | Compare the same user journeys, including large-plan orientation and vertical conversation. Prototype different layouts; select the target matrix with acceptance tests before choosing the renderer. |
 | 30 | `IDE-WORKBENCH` | Deliver a single agent-independent shell and contribution lifecycle. Prove registration/removal of a view and substitution of a test agent without editing the shell or tree. Unavailable capabilities confer no authority. |
 | 40 | `IDE-TREE-SEARCH` | Move interactive tree into `vibe ui --tree`. Verify old CLI output, shared Search Everywhere, real scenario/stage descriptions, spec and operation navigation, offline standalone use and focus restoration. |
 | 50 | `NST-HERMES-INTEGRATION` | Deliver the [existing Hermes journey](NST-HERMES-INTEGRATION-01.md) through the first real adapter, with native CLI kept separate. Verify same-conversation resume and two viewers, declared instruction scope, draft and approval preservation; distinguish absent evidence and unavailable guarantees. |
-| 60 | `IDE-MVP-ACCEPTANCE` | Demonstrate the full failed-check → scenario → spec → operation result → unsent draft journey in real terminals. Verify entry points and pipes independently, reconcile every target matrix row, document supported platforms and limits, and hand the evidence to global repair. |
+| 60 | `IDE-MVP-ACCEPTANCE` | Demonstrate the full failed-check → scenario → spec → operation result → unsent draft journey in real terminals. Verify entry points and pipes independently, reconcile every target matrix row, document supported platforms and limits, and record the post-repair IDE acceptance independently. |
 
 ## User-facing command split
 
