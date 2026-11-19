@@ -65,6 +65,12 @@ Exact accepted builder boundary `4391c12c8f596e43eb01fafe57f5390d3b8341af` conta
 
 Standard mirror task `bqdosq89y` exited0: main, next, release1.0.0 and tags succeeded on both hosts after the authorized tag repair. Independent remote queries verified GitHub and GitVerse main exactly `1c13c94cd047f26ac7c46fb088b98f2be19fb2bb`, with zero file diff against the accepted builder boundary. This fanout is fully successful; historical exit1 receipts remain unchanged. Publication accepts no additional behavior: unattended oneshot remains BLOCKED, parser/config-default/shared-gateway/worker/platform gaps and final SYS parity remain open. No SYS-PROMPT/CORP-ENV/NST closure or release is implied.
 
+## Hermes configured-worktree query milestone rollout
+
+Exact accepted builder boundary `d83a1e5ada444ba497b4d058d6004eaf735e17cd` contains exactly seven accepted paths; every committed blob independently matched manifest SHA256 `95d6e04e1aa167fdfcdea0e5926e8e322ea5a881c204181dda6ff3fe59934467`. Publication main `6131738c5ebc5c7cbb72bb4e7fe303297e126808` retains previous main `1c13c94cd047f26ac7c46fb088b98f2be19fb2bb` and that builder boundary as parents, with exactly accepted tree `a6b716317d1249c27e151c31c829ee09b05c6671`. Subsequent worker qualification is excluded.
+
+Standard mirror task `bgof53xjg` exited0: all configured branches and tags succeeded on both hosts. Independent remote queries verified both main refs exactly `6131738c5ebc5c7cbb72bb4e7fe303297e126808`, and diff against the accepted builder boundary is zero. This publishes only the bounded finite-query configured-worktree repair, not classic/TUI or unattended oneshot support, worker/platform qualification, full SYS-PROMPT/CORP-ENV/NST completion or a release.
+
 ## Non-negotiable limits
 
 Outside the exact four-tag owner-authorized repair above: no force push, rewrite-ref lease, hard reset, deletion of old main, blind ours merge, mass conflict resolution, mirroring of unrelated tags or ad hoc target bypass. No mirror manifest changes merely to make a task branch publish. Use PROP-016 and the existing mirror owner; source publication is not a release or package publication. Never publish dirty working files or local secrets.
