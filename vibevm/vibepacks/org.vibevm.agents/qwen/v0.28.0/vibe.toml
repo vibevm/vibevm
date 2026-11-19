@@ -1,0 +1,27 @@
+[package]
+name = "qwen"
+group = "org.vibevm.agents"
+kind = "app"
+version = "0.28.0"
+[application]
+id = "qwen"
+[[installer_options]]
+id = "linux-x64-standalone"
+name = "Official Qwen Code standalone Linux x64"
+platform = "linux"
+platform_name = "Linux"
+arch = "x86_64"
+[installer_options.installation]
+type = "tar_gz"
+source = "https://github.com/QwenLM/qwen-code/releases/download/v0.28.0/qwen-code-linux-x64.tar.gz"
+sha256 = "51b56eb1fffc104651016cf440e5afffc93c021e1a48fe2641060fbd9202abfb"
+payload_root = "qwen-code"
+[[installer_options.launchers]]
+id = "main"
+name = "Qwen Code"
+executable = "$app_bin/qwen"
+kind = "command"
+default = true
+[[installer_options.public_commands]]
+name = "qwen"
+launcher = "main"
