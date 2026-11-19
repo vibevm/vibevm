@@ -24,9 +24,71 @@ specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-054#OPEN-DEPLOY-TARG
 
 use std::path::{Path, PathBuf};
 
-use super::Agent;
+use super::{Agent, AgentUserDirectories, Scope};
+use anyhow::{Context, Result, bail};
 
 impl Agent {
+    /// Resolve skill roots from an explicit operation directory context.
+    /// Hermes profile homes are native-selected inputs, never inferred from user HOME.
+    /// ```
+    /// use vibe_agent_projection::agents::{Agent, AgentUserDirectories, Scope};
+    /// let mut dirs = AgentUserDirectories::default();
+    /// let profile = std::env::temp_dir().join("hermes-example-profile");
+    /// dirs.native.insert(Agent::Hermes, profile.clone());
+    /// assert_eq!(Agent::Hermes.skills_root_with_dirs(Scope::User, None, &dirs)?, Some(profile.join("skills")));
+    /// # Ok::<(), anyhow::Error>(())
+    /// ```
+    pub fn skills_root_with_dirs(
+        self,
+        scope: Scope,
+        project: Option<&Path>,
+        dirs: &AgentUserDirectories,
+    ) -> Result<Option<PathBuf>> {
+        if scope == Scope::Both {
+            bail!("expand skill scopes before resolving paths");
+        }
+        if !self.supports_skill() {
+            return Ok(None);
+        }
+        if scope == Scope::Project {
+            return self.skills_root(scope, project);
+        }
+        if self == Agent::Hermes {
+            let config = self
+                .config_path_with_dirs(scope, project, dirs)?
+                .context("Hermes profile home unavailable")?;
+            return Ok(Some(
+                config
+                    .parent()
+                    .context("Hermes config has no profile home")?
+                    .join("skills"),
+            ));
+        }
+        let home = dirs
+            .home
+            .as_ref()
+            .context("user home unavailable for skill projection")?;
+        Ok(self.user_skills_root_from_home(home))
+    }
+
+    /// Resolve the builtin skill entry from the same injected directory owner.
+    /// ```
+    /// use vibe_agent_projection::agents::{Agent, AgentUserDirectories, Scope};
+    /// let dirs = AgentUserDirectories::default();
+    /// assert!(Agent::Cursor.skill_path_with_dirs(Scope::User, None, &dirs)?.is_none());
+    /// # Ok::<(), anyhow::Error>(())
+    /// ```
+    pub fn skill_path_with_dirs(
+        self,
+        scope: Scope,
+        project: Option<&Path>,
+        dirs: &AgentUserDirectories,
+    ) -> Result<Option<PathBuf>> {
+        Ok(self
+            .skills_root_with_dirs(scope, project, dirs)?
+            .map(|root| root.join(super::SKILL_NAME).join("SKILL.md")))
+    }
+
     /// The user-scope skills ROOT for an injected home: `.claude/skills`,
     /// `.agents/skills`, `.config/opencode/skills`, `.qwen/skills`.
     ///

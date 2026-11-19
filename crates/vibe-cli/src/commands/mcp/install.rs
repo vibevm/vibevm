@@ -524,12 +524,13 @@ fn walk_install(
             }
             // ---- SKILL.md ----
             if what.includes_skill() {
-                let outcome = vibe_mcp::install::install_skill_adopting(
+                let outcome = vibe_mcp::install::install_skill_adopting_with_dirs(
                     *agent,
                     concrete_scope,
                     project_root,
                     install_adoption(force),
                     dry_run,
+                    &ctx.agent_user_dirs,
                 )?;
                 skill_results.push(outcome);
             }

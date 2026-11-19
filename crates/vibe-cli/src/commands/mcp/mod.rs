@@ -379,6 +379,7 @@ pub(super) fn install_adoption(force: bool) -> vibe_agent_projection::activation
 /// The per-row report for a builtin SKILL.md that has no ownership receipt
 /// and cannot be claimed by the running command.
 pub(super) fn unreceipted_skill_row(
+    ctx: &output::Context,
     agent: Agent,
     scope: Scope,
     project_root: Option<&Path>,
@@ -388,7 +389,7 @@ pub(super) fn unreceipted_skill_row(
         agent: agent.as_str().to_string(),
         scope: scope.as_str(),
         path: agent
-            .skill_path(scope, project_root)?
+            .skill_path_with_dirs(scope, project_root, &ctx.agent_user_dirs)?
             .map(|path| machine_json_path(&path)),
         status,
         note: Some(package_registration::UNRECEIPTED_HINT.into()),

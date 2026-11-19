@@ -60,7 +60,13 @@ pub(super) fn run_upgrade(ctx: &output::Context, args: McpUpgradeArgs) -> Result
     let agents: Vec<Agent> = if let Some(filter) = &args.agent {
         Agent::parse_filter(filter)?
     } else {
-        Agent::ALL.to_vec()
+        Agent::ALL
+            .iter()
+            .copied()
+            .filter(|agent| {
+                *agent != Agent::Hermes || ctx.agent_user_dirs.native.contains_key(agent)
+            })
+            .collect()
     };
 
     // Two-pass walk + apply-confirm. Same shape as run_install
@@ -196,7 +202,7 @@ fn walk_upgrade(
                 }
             }
             if what.includes_skill() {
-                let outcome = upgrade_skill(*agent, concrete_scope, project_root, dry_run)?;
+                let outcome = upgrade_skill(ctx, *agent, concrete_scope, project_root, dry_run)?;
                 if let Some(o) = outcome {
                     skill_results.push(o);
                 }
@@ -297,26 +303,35 @@ fn upgrade_mcp_entry(
 
 /// One-place upgrade probe + apply for a SKILL.md file.
 fn upgrade_skill(
+    ctx: &output::Context,
     agent: Agent,
     scope: Scope,
     project_root: Option<&Path>,
     dry_run: bool,
 ) -> Result<Option<SkillInstallReport>> {
-    let Some(path) = agent.skill_path(scope, project_root)? else {
+    let Some(path) = agent.skill_path_with_dirs(scope, project_root, &ctx.agent_user_dirs)? else {
         // Agent does not load skills, or scope has no surface — skip
         // the row entirely (don't pollute the upgrade plan with rows
         // for agents that have no skill loader).
         return Ok(None);
     };
-    let activation = vibe_agent_projection::pkgskill::managed_skill_status(
+    let activation = vibe_agent_projection::pkgskill::managed_skill_status_with_dirs(
         agent,
         scope,
         project_root,
         "org.vibevm.core/vibevm",
         "vibevm",
+        &ctx.agent_user_dirs,
     )?;
     if !activation.desired_enabled {
-        return vibe_mcp::install::refresh_skill(agent, scope, project_root, dry_run).map(Some);
+        return vibe_mcp::install::refresh_skill_with_dirs(
+            agent,
+            scope,
+            project_root,
+            dry_run,
+            &ctx.agent_user_dirs,
+        )
+        .map(Some);
     }
     if !path.exists() {
         return Ok(Some(SkillInstallReport {
@@ -330,16 +345,17 @@ fn upgrade_skill(
     // Explicit refresh: receipt-owned bytes are reconciled to the current
     // template, byte-canonical legacy bytes are adopted, and a stale
     // unreceipted SKILL.md is reported `unmanaged` with the `--force` hint.
-    match vibe_mcp::install::install_skill_adopting(
+    match vibe_mcp::install::install_skill_adopting_with_dirs(
         agent,
         scope,
         project_root,
         BuiltinAdoption::explicit("vibe mcp upgrade"),
         dry_run,
+        &ctx.agent_user_dirs,
     ) {
         Ok(outcome) => Ok(Some(outcome)),
         Err(error) if is_unreceipted_builtin_refusal(&error) => {
-            unreceipted_skill_row(agent, scope, project_root, "unmanaged").map(Some)
+            unreceipted_skill_row(ctx, agent, scope, project_root, "unmanaged").map(Some)
         }
         Err(error) => Err(error),
     }

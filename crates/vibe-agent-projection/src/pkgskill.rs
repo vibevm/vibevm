@@ -36,8 +36,10 @@ mod activation;
 mod snapshot;
 pub use activation::{
     SkillActivationStatus, SkillActivationTarget, admit_managed_skill_activation,
-    adopt_builtin_skill_snapshot, change_managed_skill_activation, install_managed_skill_snapshot,
-    managed_skill_status, register_builtin_skill_snapshot, retain_managed_skill_activation,
+    adopt_builtin_skill_snapshot, adopt_builtin_skill_snapshot_with_dirs,
+    change_managed_skill_activation, install_managed_skill_snapshot,
+    install_managed_skill_snapshot_with_dirs, managed_skill_status, managed_skill_status_with_dirs,
+    register_builtin_skill_snapshot, retain_managed_skill_activation,
 };
 
 #[path = "pkgskill/standalone.rs"]
@@ -287,6 +289,26 @@ pub fn uninstall_package_skill(
     skill_name: &str,
     dry_run: bool,
 ) -> Result<PackageSkillReport, PackageSkillError> {
+    uninstall_package_skill_with_dirs(
+        agent,
+        scope,
+        project_root,
+        skill_name,
+        dry_run,
+        &crate::agents::AgentUserDirectories::ambient(),
+    )
+}
+
+/// Remove only receipt-owned skill bytes in caller-injected directories.
+#[spec(documents = "spec://org.vibevm.core/vibevm/common/PROP-018#vibe-skill")]
+pub fn uninstall_package_skill_with_dirs(
+    agent: Agent,
+    scope: Scope,
+    project_root: Option<&Path>,
+    skill_name: &str,
+    dry_run: bool,
+    dirs: &crate::agents::AgentUserDirectories,
+) -> Result<PackageSkillReport, PackageSkillError> {
     if !vibe_core::manifest::SkillDecl::valid_name(skill_name) {
         return Err(PackageSkillError::UnsafePath {
             path: PathBuf::from(skill_name),
@@ -294,12 +316,11 @@ pub fn uninstall_package_skill(
         });
     }
     let scope_str = scope.as_str();
-    let Some(root) =
-        agent
-            .skills_root(scope, project_root)
-            .map_err(|e| PackageSkillError::SkillsRoot {
-                detail: format!("{e:#}"),
-            })?
+    let Some(root) = agent
+        .skills_root_with_dirs(scope, project_root, dirs)
+        .map_err(|e| PackageSkillError::SkillsRoot {
+            detail: format!("{e:#}"),
+        })?
     else {
         return Ok(skipped(skill_name, agent, scope_str));
     };
