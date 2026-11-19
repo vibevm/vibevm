@@ -193,3 +193,5 @@ The entity-view account at `cc21c4d50b` has 79 listed paths; both endpoint prese
 For six derivative and boot revisions, checked the saved-file digests in the retained manifests against the originating Git trees. Matched/listed entries: `8b096070cd` 19/19, `0c9bf19b47` 21/21, `76b60b2a36` 18/18, `dbbd0b5a5c` 33/33, `d8e437a20b` 30/30, `fe9caaa2cf` 60/60. External raw files and the product code changes in those revisions were not qualified by this archive check.
 
 For the four-client commissioning contract, all 39 saved artifact hashes matched. For the prepared-plan bridge characterization, all 72 archived mappings reproduce both stored and raw sizes/hashes, including the decompressed trace, and all four source records match Git. Neither check constitutes a new native client qualification.
+
+Four historical changes separate a lock-selected package source, bounded retained bytes, cited host facts and boot-file classification. A file that disappears after observation does not establish a complete capture; a directory declaration does not establish its membership. Scope is limited to the named code owners, not present runtime acceptance.
