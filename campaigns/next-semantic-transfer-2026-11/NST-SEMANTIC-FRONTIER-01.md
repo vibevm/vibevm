@@ -149,3 +149,5 @@ Eleven remaining campaign-only revisions (39 changed-file occurrences) update ru
 Five inspected revisions distinguish mode-only source changes, wire vocabulary, codegen slot selection, report-duration limits and documentation about late errors. These are not five newly executed product journeys.
 
 `036497cb67` added generated migration request, journal and report types and registrations in six files. Its authored schemas were not changed in this commit; a generated reader is not evidence that a migration ran.
+
+Another 14 commits were confined to release documentation, evidence and fixtures (212 changed-file occurrences). Structured records were parsed where applicable; fixture helpers and recorded commands were not executed. This does not establish a publication or target behavior.
