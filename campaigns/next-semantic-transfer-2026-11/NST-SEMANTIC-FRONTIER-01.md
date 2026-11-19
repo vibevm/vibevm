@@ -101,3 +101,5 @@ Historical local-smoke and host-guard records (`095187156`, `115b946de`, `2659c4
 Five preview amendments distinguish documentation byte coverage, tool readiness, temporary routing, inherited exclusions and affected-source review from semantic acceptance (`2cfdabd30ee6`, `a81a91fe9606`, `e32abf8e68a6`, `6488f4fd5af7`, `b9e913919be4`).
 
 Migration and environment amendments (`640ed8e33409`, `7012d485eca6`, `c7517ffd0c2c`, `92d30ff72aae`, `b80b3ce83dd2`, `8f072d3325d4`) distinguish disclosure from parser output, null from omission, and lexical target constraints from concrete target identity and authority. None of these six changes establishes runtime execution.
+
+At the 813-row frontier, 394 commits touched possible production Rust under `crates/` or `xtask/`, 48 touched only other Rust there, and 371 touched no Rust there. This path heuristic prioritizes inspection, not acceptance. In `b347fa04e611` the actual atomic push driver was private and transport-injected despite the subject mentioning production; no live push was performed or inferred.
