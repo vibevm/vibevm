@@ -115,3 +115,5 @@ Five release-impact-only commits changed 18 records. All 43 distinct commit subj
 Ten preview-transition commits changed only 36 release JSON files. All 24 explicit top-level commit/tree pairs matched Git. No product execution or publication was inferred from these records.
 
 Five combined manifest/task changes amended the permissible paths or notes of M-16-C.3 or M-16-C.4 and the registry digest field only. Task identity, its acceptance fields and product code were unchanged.
+
+Six historical reviews separate accepted design from available lifecycle/source behavior. In the M14 release-impact recount (32 → at least 34 → at least 33 product changes), all seven paths of `e68c64679` are environment-C1 evidence. Its retention should not inflate product-change coverage.
