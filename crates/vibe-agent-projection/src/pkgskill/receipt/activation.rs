@@ -29,6 +29,17 @@ pub(crate) fn effective_binding(
     {
         binding.activation = owned.activation.clone();
     }
+    let mut group_states = std::collections::BTreeMap::new();
+    for target in &binding.targets {
+        let enabled = desired_enabled(binding.activation.get(target.agent.as_str()));
+        if let Some(previous) = group_states.insert(target.path.clone(), enabled) {
+            if previous != enabled {
+                bail!(
+                    "shared skill target has conflicting alias activation intents; select the complete shared group"
+                );
+            }
+        }
+    }
     binding
         .targets
         .retain(|target| desired_enabled(binding.activation.get(target.agent.as_str())));
@@ -56,16 +67,33 @@ pub(crate) fn project_status(
         .and_then(|row| row.activation.get(agent.as_str()))
         .cloned();
     let enabled = desired_enabled(intent.as_ref());
-    let owned = row.and_then(|row| row.target.iter().find(|t| t.agent == agent.as_str()));
+    let owned = row.and_then(|row| {
+        row.target
+            .iter()
+            .find(|t| t.agents.iter().any(|alias| alias == agent.as_str()))
+    });
     let target = agent
         .skills_root(Scope::Project, Some(root))?
         .map(|p| p.join(&binding.skill.decl.name));
     let exists = target.as_ref().is_some_and(|p| p.join("SKILL.md").exists());
+    let shared = row.and_then(|row| {
+        row.target.iter().find(|group| {
+            target
+                .as_ref()
+                .is_some_and(|path| vibe_core::machine_json_path(path) == group.path)
+        })
+    });
     let observed = if receipt.applying.is_some() {
         "pending"
     } else if let Some(target) = owned {
         if owned_target_matches(&project, root, target)? {
             if enabled { "enabled" } else { "pending" }
+        } else {
+            "changed"
+        }
+    } else if let Some(group) = shared {
+        if owned_target_matches(&project, root, group)? {
+            "shared-unbound"
         } else {
             "changed"
         }
@@ -88,7 +116,7 @@ pub(crate) fn project_status(
 }
 
 #[specmark::spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-073#MANAGED-ACTIVATION")]
-
+#[cfg(test)]
 pub(crate) fn project_activation(
     root: &Path,
     binding: &ProjectSkillBinding,
@@ -113,6 +141,28 @@ pub(crate) fn project_activation(
         }
     })?;
     project_status(root, binding, agent)
+}
+
+pub(crate) fn project_group_activation(
+    root: &Path,
+    binding: &ProjectSkillBinding,
+    agents: &[Agent],
+    intent: &ActivationIntent,
+    dry_run: bool,
+) -> Result<Vec<SkillActivationStatus>> {
+    project_group_intent(
+        root,
+        &binding.skill.provider.identity(),
+        &binding.skill.decl.name,
+        agents,
+        intent,
+        !dry_run,
+    )?;
+    mutate_subset(root, binding, agents, Change::Set(intent), dry_run)?;
+    agents
+        .iter()
+        .map(|agent| project_status(root, binding, *agent))
+        .collect()
 }
 
 /// Selected agents change; unselected agents retain exact receipt-owned bytes.
@@ -224,13 +274,13 @@ fn mutate_subset(
                 let mut owned = expected
                     .target
                     .into_iter()
-                    .find(|t| t.agent == target.agent.as_str())
+                    .find(|t| t.agents.iter().any(|alias| alias == target.agent.as_str()))
                     .ok_or_else(|| anyhow::anyhow!("missing selected target"))?;
                 owned.file = old
                     .file
                     .into_iter()
                     .map(
-                        |f| vibe_wire::generated::package_skill::e2::receipt::PackageSkillFile {
+                        |f| vibe_wire::generated::package_skill::e3::receipt::PackageSkillFile {
                             path: f.path,
                             sha256: format!("sha256:{}", f.sha256),
                         },
@@ -249,7 +299,10 @@ fn mutate_subset(
     if request.is_some()
         && !agents.iter().all(|a| {
             after_row.activation.contains_key(a.as_str())
-                || after_row.target.iter().any(|t| t.agent == a.as_str())
+                || after_row
+                    .target
+                    .iter()
+                    .any(|t| t.agents.iter().any(|alias| alias == a.as_str()))
         })
     {
         bail!("selected skill agent is not managed");
@@ -262,15 +315,37 @@ fn mutate_subset(
         }
     }
     let wanted = receipt_binding(&raw, files);
-    after_row.target.retain(|t| !selected(&t.agent));
+    for target in &mut after_row.target {
+        target.agents.retain(|alias| !selected(alias));
+    }
+    after_row.target.retain(|target| !target.agents.is_empty());
     if matches!(change, Change::Remove) {
         after_row.activation.retain(|agent, _| !selected(agent));
     } else {
-        after_row.target.extend(
-            wanted.target.into_iter().filter(|t| {
-                selected(&t.agent) && desired_enabled(after_row.activation.get(&t.agent))
-            }),
-        );
+        for mut target in wanted.target {
+            target.agents.retain(|alias| {
+                selected(alias) && desired_enabled(after_row.activation.get(alias))
+            });
+            if target.agents.is_empty() {
+                continue;
+            }
+            if let Some(existing) = after_row
+                .target
+                .iter_mut()
+                .find(|old| old.path == target.path)
+            {
+                if existing.file != target.file {
+                    bail!(
+                        "shared skill payload update affects unselected aliases; select the whole shared group"
+                    );
+                }
+                existing.agents.extend(target.agents);
+                existing.agents.sort();
+                existing.agents.dedup();
+            } else {
+                after_row.target.push(target);
+            }
+        }
     }
     after_row.source_snapshot = binding.source_snapshot.clone();
     let mut after = before.binding.clone();
@@ -288,7 +363,7 @@ fn mutate_subset(
             let directory = project.dir(&chain, false)?;
             for file in &target.file {
                 if let Some(bytes) = project.read_file_in(&directory, &file.path)? {
-                    staged.insert(format!("{}/{}", target.agent, file.path), bytes);
+                    staged.insert(format!("{}/{}", target.agents.join(","), file.path), bytes);
                 }
             }
         }
@@ -300,11 +375,11 @@ fn mutate_subset(
             .find(|t| t.agent == agent)
             .ok_or_else(|| anyhow::anyhow!("missing selected target"))?;
         let current = crate::pkgskill::snapshot_dir(&target.path)?;
-        let owned = before
-            .binding
-            .iter()
-            .find(|r| r.key == key)
-            .and_then(|r| r.target.iter().find(|t| t.agent == agent.as_str()));
+        let owned = before.binding.iter().find(|r| r.key == key).and_then(|r| {
+            r.target
+                .iter()
+                .find(|t| t.agents.iter().any(|alias| alias == agent.as_str()))
+        });
         if current.as_ref().is_some_and(|files| !files.is_empty()) && owned.is_none() {
             bail!("refusing unowned project skill target");
         }
@@ -322,8 +397,16 @@ fn mutate_subset(
         return Ok(agents
             .iter()
             .map(|agent| {
-                let prior = old.and_then(|r| r.target.iter().find(|t| t.agent == agent.as_str()));
-                let wanted = new.and_then(|r| r.target.iter().find(|t| t.agent == agent.as_str()));
+                let prior = old.and_then(|r| {
+                    r.target
+                        .iter()
+                        .find(|t| t.agents.iter().any(|alias| alias == agent.as_str()))
+                });
+                let wanted = new.and_then(|r| {
+                    r.target
+                        .iter()
+                        .find(|t| t.agents.iter().any(|alias| alias == agent.as_str()))
+                });
                 let disabled = new
                     .and_then(|r| r.activation.get(agent.as_str()))
                     .is_some_and(|i| !i.enabled);
@@ -398,7 +481,9 @@ pub(crate) fn project_intent_for_target(
     let row = rows.iter().find(|r| {
         r.skill == name
             && (r.activation.contains_key(agent.as_str())
-                || r.target.iter().any(|t| t.agent == agent.as_str()))
+                || r.target
+                    .iter()
+                    .any(|t| t.agents.iter().any(|alias| alias == agent.as_str())))
     });
     if let Some(row) = row {
         if provider.is_some_and(|p| p != row.provider) {
@@ -411,11 +496,22 @@ pub(crate) fn project_intent_for_target(
 }
 
 #[specmark::spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-073#MANAGED-ACTIVATION")]
+#[cfg(test)]
 pub(crate) fn project_intent(
     root: &Path,
     provider: &str,
     skill: &str,
     agent: Agent,
+    intent: &ActivationIntent,
+    retain: bool,
+) -> Result<()> {
+    project_group_intent(root, provider, skill, &[agent], intent, retain)
+}
+pub(crate) fn project_group_intent(
+    root: &Path,
+    provider: &str,
+    skill: &str,
+    agents: &[Agent],
     intent: &ActivationIntent,
     retain: bool,
 ) -> Result<()> {
@@ -429,41 +525,38 @@ pub(crate) fn project_intent(
         "{}{provider}/{skill}",
         crate::pkgskill::PROJECT_SKILL_PREFIX
     );
-    validate_intent_owner(&initial, &key, agent)?;
+    for &agent in agents {
+        validate_intent_owner(&initial, &key, agent)?;
+    }
+    let owner = validate_intent_owner(
+        &initial,
+        &key,
+        *agents
+            .first()
+            .ok_or_else(|| anyhow::anyhow!("empty skill alias selection"))?,
+    )?;
+    check_shared_intent(root, &initial.binding[owner], agents, intent)?;
     if !retain {
         return Ok(());
     }
     let _lock = project.lock(super::nofollow::LOCK_FILE)?;
     let mut receipt =
         read_receipt(&project)?.ok_or_else(|| anyhow::anyhow!("project skill receipt vanished"))?;
-    let index = validate_intent_owner(&receipt, &key, agent)?;
-    receipt.binding[index]
-        .activation
-        .insert(agent.as_str().into(), intent.clone());
+    for &agent in agents {
+        validate_intent_owner(&receipt, &key, agent)?;
+    }
+    let index = validate_intent_owner(&receipt, &key, agents[0])?;
+    check_shared_intent(root, &receipt.binding[index], agents, intent)?;
+    for agent in agents {
+        receipt.binding[index]
+            .activation
+            .insert(agent.as_str().into(), intent.clone());
+    }
     write_receipt(&project, &receipt).map_err(|e| {
         anyhow::anyhow!("activation intent not confirmed retained; projection untouched: {e}")
     })
 }
-fn validate_intent_owner(
-    receipt: &vibe_wire::generated::package_skill::e2::receipt::PackageSkillReceipt,
-    key: &str,
-    agent: Agent,
-) -> Result<usize> {
-    if receipt.applying.is_some() {
-        bail!("recover active project skill transaction before activation");
-    }
-    let (index, row) = receipt
-        .binding
-        .iter()
-        .enumerate()
-        .find(|(_, r)| r.key == key)
-        .ok_or_else(|| {
-            anyhow::anyhow!("project skill owner is unknown; explicitly install it first")
-        })?;
-    if !row.activation.contains_key(agent.as_str())
-        && !row.target.iter().any(|t| t.agent == agent.as_str())
-    {
-        bail!("selected project skill agent is not managed");
-    }
-    Ok(index)
-}
+
+#[path = "activation_admission.rs"]
+mod admission;
+use admission::{check_shared_intent, validate_intent_owner};

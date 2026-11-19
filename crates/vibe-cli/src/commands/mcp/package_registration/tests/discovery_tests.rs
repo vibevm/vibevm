@@ -6,6 +6,7 @@ fn dirs(root: &Path) -> AgentUserDirectories {
     AgentUserDirectories {
         home: Some(root.join("home")),
         config: Some(root.join("config")),
+        native: Default::default(),
     }
 }
 

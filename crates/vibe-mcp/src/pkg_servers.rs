@@ -80,12 +80,14 @@ pub fn substituted_args(decl_args: &[String], project_root: &Path) -> Vec<String
 /// ```
 pub fn entry_payload(agent: Agent, command: &str, args: &[String]) -> ConfigPayload {
     match agent {
-        Agent::ClaudeCode | Agent::ClaudeCodeDesktop | Agent::Cursor | Agent::QwenCode => {
-            ConfigPayload::Json(serde_json::json!({
-                "command": command,
-                "args": args,
-            }))
-        }
+        Agent::ClaudeCode
+        | Agent::ClaudeCodeDesktop
+        | Agent::Cursor
+        | Agent::QwenCode
+        | Agent::Pi => ConfigPayload::Json(serde_json::json!({
+            "command": command,
+            "args": args,
+        })),
         Agent::OpenCode => {
             let mut argv = vec![command.to_string()];
             argv.extend(args.iter().cloned());
@@ -123,7 +125,7 @@ pub fn remote_entry_payload(agent: Agent, url: &str) -> anyhow::Result<ConfigPay
         Agent::ClaudeCodeDesktop => anyhow::bail!(
             "Claude Desktop cannot connect directly to a remote HTTP MCP URL through claude_desktop_config.json; select another agent or configure its remote connector in Claude Desktop"
         ),
-        Agent::Cursor => ConfigPayload::Json(serde_json::json!({ "url": url })),
+        Agent::Cursor | Agent::Pi => ConfigPayload::Json(serde_json::json!({ "url": url })),
         Agent::QwenCode => ConfigPayload::Json(serde_json::json!({ "httpUrl": url })),
         Agent::OpenCode => ConfigPayload::Json(serde_json::json!({
             "type": "remote",
@@ -325,6 +327,25 @@ mod tests {
         };
         assert_eq!(v["command"], "/slot/target/release/x");
         assert_eq!(v["args"], serde_json::json!(["--path", "/proj"]));
+    }
+
+    #[test]
+    fn pi_native_stdio_and_http_payloads_use_existing_json_owner() {
+        let ConfigPayload::Json(stdio) =
+            entry_payload(Agent::Pi, "/synthetic/server", &["--test".into()])
+        else {
+            panic!("Pi uses JSON")
+        };
+        assert_eq!(
+            stdio,
+            serde_json::json!({"command":"/synthetic/server", "args":["--test"]})
+        );
+        let ConfigPayload::Json(remote) =
+            remote_entry_payload(Agent::Pi, "http://127.0.0.1:9/mcp").unwrap()
+        else {
+            panic!("Pi uses JSON")
+        };
+        assert_eq!(remote, serde_json::json!({"url":"http://127.0.0.1:9/mcp"}));
     }
 
     #[test]

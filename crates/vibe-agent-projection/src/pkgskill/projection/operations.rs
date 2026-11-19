@@ -5,6 +5,7 @@ use super::*;
 impl DeclaredSkillProjection {
     pub fn install(&self, dry_run: bool) -> Result<Vec<PackageSkillReport>> {
         let mut reports = Vec::new();
+        let mut processed = std::collections::BTreeSet::new();
         for task in &self.tasks {
             if task
                 .agent
@@ -19,6 +20,19 @@ impl DeclaredSkillProjection {
                 continue;
             }
             if task.scope == Scope::Project {
+                if !processed.insert((task.provider.clone(), task.name.clone())) {
+                    continue;
+                }
+                let aliases = self
+                    .tasks
+                    .iter()
+                    .filter(|candidate| {
+                        candidate.scope == Scope::Project
+                            && candidate.provider == task.provider
+                            && candidate.name == task.name
+                    })
+                    .map(|candidate| candidate.agent)
+                    .collect::<Vec<_>>();
                 let binding = collect_project_skill_bindings(&self.project_root)?
                     .into_iter()
                     .find(|b| {
@@ -29,7 +43,7 @@ impl DeclaredSkillProjection {
                 reports.extend(crate::pkgskill::receipt::project_subset(
                     &self.project_root,
                     &binding,
-                    &[task.agent],
+                    &aliases,
                     dry_run,
                 )?);
                 continue;
@@ -54,13 +68,27 @@ impl DeclaredSkillProjection {
         intent: &crate::activation::ActivationIntent,
         retain: bool,
     ) -> Result<()> {
+        let mut checked = std::collections::BTreeSet::new();
         for task in &self.tasks {
             if task.scope == Scope::Project {
-                crate::pkgskill::receipt::project_intent(
+                if !checked.insert((task.provider.clone(), task.name.clone())) {
+                    continue;
+                }
+                let aliases = self
+                    .tasks
+                    .iter()
+                    .filter(|candidate| {
+                        candidate.scope == Scope::Project
+                            && candidate.provider == task.provider
+                            && candidate.name == task.name
+                    })
+                    .map(|candidate| candidate.agent)
+                    .collect::<Vec<_>>();
+                crate::pkgskill::receipt::project_group_intent(
                     &self.project_root,
                     &task.provider,
                     &task.name,
-                    task.agent,
+                    &aliases,
                     intent,
                     false,
                 )?;
@@ -77,13 +105,27 @@ impl DeclaredSkillProjection {
         }
         if retain {
             let mut retained = Vec::new();
+            let mut processed = std::collections::BTreeSet::new();
             for task in &self.tasks {
                 let result = if task.scope == Scope::Project {
-                    crate::pkgskill::receipt::project_intent(
+                    if !processed.insert((task.provider.clone(), task.name.clone())) {
+                        continue;
+                    }
+                    let aliases = self
+                        .tasks
+                        .iter()
+                        .filter(|candidate| {
+                            candidate.scope == Scope::Project
+                                && candidate.provider == task.provider
+                                && candidate.name == task.name
+                        })
+                        .map(|candidate| candidate.agent)
+                        .collect::<Vec<_>>();
+                    crate::pkgskill::receipt::project_group_intent(
                         &self.project_root,
                         &task.provider,
                         &task.name,
-                        task.agent,
+                        &aliases,
                         intent,
                         true,
                     )
@@ -117,6 +159,7 @@ impl DeclaredSkillProjection {
         dry_run: bool,
     ) -> Result<Vec<crate::pkgskill::SkillActivationStatus>> {
         let mut rows = Vec::new();
+        let mut processed = std::collections::BTreeSet::new();
         for task in &self.tasks {
             if task.scope == Scope::Project {
                 let binding = collect_project_skill_bindings(&self.project_root)?
@@ -126,21 +169,34 @@ impl DeclaredSkillProjection {
                             && b.skill.decl.name == task.name
                     })
                     .ok_or_else(|| anyhow::anyhow!("selected project skill vanished"))?;
-                rows.push(if let Some(request) = request {
-                    crate::pkgskill::receipt::project_activation(
+                if let Some(request) = request {
+                    if !processed.insert((task.provider.clone(), task.name.clone())) {
+                        continue;
+                    }
+                    let aliases = self
+                        .tasks
+                        .iter()
+                        .filter(|candidate| {
+                            candidate.scope == Scope::Project
+                                && candidate.provider == task.provider
+                                && candidate.name == task.name
+                        })
+                        .map(|candidate| candidate.agent)
+                        .collect::<Vec<_>>();
+                    rows.extend(crate::pkgskill::receipt::project_group_activation(
                         &self.project_root,
                         &binding,
-                        task.agent,
+                        &aliases,
                         request,
                         dry_run,
-                    )?
+                    )?);
                 } else {
-                    crate::pkgskill::receipt::project_status(
+                    rows.push(crate::pkgskill::receipt::project_status(
                         &self.project_root,
                         &binding,
                         task.agent,
-                    )?
-                });
+                    )?);
+                }
                 continue;
             }
             let row = if let Some(request) = request {
@@ -173,6 +229,7 @@ impl DeclaredSkillProjection {
 
     pub fn uninstall(&self, dry_run: bool) -> Result<Vec<PackageSkillReport>> {
         let mut reports = Vec::with_capacity(self.tasks.len());
+        let mut processed = std::collections::BTreeSet::new();
         for task in &self.tasks {
             if task
                 .agent
@@ -187,6 +244,19 @@ impl DeclaredSkillProjection {
                 continue;
             }
             if task.scope == Scope::Project {
+                if !processed.insert((task.provider.clone(), task.name.clone())) {
+                    continue;
+                }
+                let aliases = self
+                    .tasks
+                    .iter()
+                    .filter(|candidate| {
+                        candidate.scope == Scope::Project
+                            && candidate.provider == task.provider
+                            && candidate.name == task.name
+                    })
+                    .map(|candidate| candidate.agent)
+                    .collect::<Vec<_>>();
                 let binding = collect_project_skill_bindings(&self.project_root)?
                     .into_iter()
                     .find(|b| {
@@ -197,7 +267,7 @@ impl DeclaredSkillProjection {
                 reports.extend(crate::pkgskill::receipt::project_remove(
                     &self.project_root,
                     &binding,
-                    &[task.agent],
+                    &aliases,
                     dry_run,
                 )?);
                 continue;

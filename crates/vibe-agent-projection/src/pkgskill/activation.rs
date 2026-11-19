@@ -14,6 +14,8 @@ pub struct SkillActivationStatus {
     pub desired_enabled: bool,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub activation: Option<ActivationIntent>,
+    /// `shared-unbound` means this logical association is absent while the
+    /// same binding still owns the physical tree for another native alias.
     pub observed: &'static str,
 }
 

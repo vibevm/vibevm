@@ -211,6 +211,7 @@ pub enum FormatId {
     NativeReply,
     PackageSkillReceipt,
     PackageSkillReceiptV1,
+    PackageSkillReceiptV2,
     RemapBundle,
     RemapConsent,
     RemapProviders,

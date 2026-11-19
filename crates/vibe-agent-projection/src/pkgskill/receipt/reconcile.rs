@@ -40,7 +40,7 @@ fn reconcile_with_receipt(
     project: &Project,
     project_root: &Path,
     binding: &ProjectSkillBinding,
-    before: vibe_wire::generated::package_skill::e2::receipt::PackageSkillReceipt,
+    before: vibe_wire::generated::package_skill::e3::receipt::PackageSkillReceipt,
 ) -> Result<Vec<PackageSkillReport>> {
     // Plan-time safety re-check: the authored source stays inside its
     // declaring provider's root, and every target stays inside the selected

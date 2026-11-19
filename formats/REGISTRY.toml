@@ -1055,11 +1055,11 @@ corpus = "formats/corpora/compiler_trace_index/e1"
 sunset = "none"
 
 [format.package-skill-receipt]
-epoch = 2
-schema = "schemas/package_skill/e2/receipt.jtd.json"
+epoch = 3
+schema = "schemas/package_skill/e3/receipt.jtd.json"
 recoverable = false
 foreign_parsers = "none"
-corpus = "formats/corpora/package-skills/e2"
+corpus = "formats/corpora/package-skills/e3"
 sunset = "none"
 
 # ── OpenAI-compatible provider wire (2 JTD), PROP-000 §16 / PROP-054 §6.4 ─
@@ -2192,4 +2192,13 @@ recoverable = true
 foreign_parsers = "ours"
 unknown_fields = "deny"
 corpus = "none"
+sunset = "none"
+
+# Frozen singleton receipt predecessor; admitted as singleton groups by schema-4 owner.
+[format.package-skill-receipt-v2]
+epoch = 2
+schema = "schemas/package_skill/e2/receipt.jtd.json"
+recoverable = false
+foreign_parsers = "none"
+corpus = "formats/corpora/package-skills/e2"
 sunset = "none"
