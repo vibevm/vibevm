@@ -14,6 +14,14 @@ Raw main history difference is547 GitHub-only /127 GitVerse-only commits. `git c
 
 Builder task descends from GitHub main but not from GitVerse main or configured next. Initial main-to-builder publication range was176 commits/622 files, much broader than the last native-agent milestone. A reviewed final atom does not automatically accept every preceding unpublished commit. Keep the existing original task/campaign acceptance history for classification.
 
+## Exact duplicate-tree witness and approved local join
+
+Further comparison found GitVerse main's complete tree is exactly equal to GitHub ancestor `218996b360b4ea1a669f16f933f1437b524ae6b0` (both tree `fa452f66315490734b4115326cdf34d6575645b3`). Range comparison pairs all127 historical commits; metadata differs in author address and some referenced commit IDs, while endpoint file trees are identical. Thus no old remote file content needs conflict resolution to preserve that already incorporated tree.
+
+The owner explicitly approved joining both histories with unchanged current GitHub main tree. Local main now points to merge `8678f883d263ea02d7eb8809de7f35931fc82abf`, parents exactly the two observed remote main OIDs, tree exactly `2e89ce0fde287697410fa13d21b12cfedaeab03a` (unchanged current GitHub main). Compare-and-swap ref update preserved the task working tree and both parent histories. This joins history only; unpublished builder implementation has NOT been integrated or published by this commit.
+
+Before fanout, tag preflight found GitVerse `v1.0.8`, `v1.0.9`, `v1.0.10`, `v1.0.11` differ from local/GitHub; all other tags and configured next/release refs matched. No tag rewrite is authorized. The ordinary mirror tool remains non-force: any tag drift must be reported as failure, not resolved by rewriting tags or claiming a fully green rollout. Actual standard mirror task ba3ok4e7l exited1 solely for those four existing GitVerse tag conflicts; both main pushes succeeded. Independent `git ls-remote` verifies GitHub main and GitVerse main exactly `8678f883d263ea02d7eb8809de7f35931fc82abf`. Configured next/release pushes and GitHub tags succeeded; no force or tag rewrites occurred. Report main reconciliation published on both hosts, overall fanout NOT green, and builder implementation still unpublished pending its separate integrated-range review.
+
 ## Non-negotiable limits
 
 No force push, rewrite-ref lease, hard reset, deletion of old main, blind ours merge, mass conflict resolution, mirroring of unrelated tags or ad hoc target bypass. No mirror manifest changes merely to make a task branch publish. Use PROP-016 and the existing mirror owner; source publication is not a release or package publication. Never publish dirty working files or local secrets.
