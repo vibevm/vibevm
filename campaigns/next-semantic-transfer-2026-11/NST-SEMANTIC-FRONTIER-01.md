@@ -47,3 +47,8 @@ Joining the 113 unique `old_task_id` values in `research/old113-transfer-crosswa
 - Replace CLI-local summary assumptions with exact externally queryable tree/provenance/reference views.: M-17-A.1.
 - Subject-bound distribution publication, smoke, approval and recovery: M-07-B.1, M-07-B.2, M-07-C.1, M-07-C.2, M-07-D.1, M-07-D.2, M-07-E.1, M-07-E.2.
 - Update the user/developer journeys from implemented CLI/API behavior and accepted prototype policy.: M-12-B.1.
+
+#### Necessity dispositions for the two implemented source records
+
+- **M-03-A.2 — keep the user outcome, not an independent workflow engine.** A user needs to distinguish a prepared create/verify plan from execution and inspect the actual outcome without replay. The historical atom supplied only a read-only composition and identity recipe. `research/reconciliation-report.md` records the Zap safe-stop, not acceptance of an executable journey. Review the current operation owners at DESIGN/LAND; do not issue an implementation task for a parallel identity system merely because this source atom existed.
+- **M-07-B.2 — keep smoke status and publication eligibility separate.** A skipped check must remain inspectable and must not count as executed. The implemented historical default did not permit publication on a skip; a wider historical proposal did. Preserve the stricter admission unless an independently authorized target policy explicitly permits an exception. This necessity decision neither authorizes publication nor establishes that the target implements either policy.
