@@ -285,3 +285,57 @@ fn explicit_unchanged_input_cannot_leave_unreachable_old_dependency_on_update() 
         .exists()
     );
 }
+
+#[test]
+fn changed_default_response_is_only_a_refusal_not_a_completable_review() {
+    let fixture = Fixture::new(false);
+    configure(&fixture, false);
+    fixture.install_ok();
+    let before = fs::read(fixture.project.join("vibe.lock")).unwrap();
+    let boot = fixture.static_boot();
+    let hooks = fixture.hooks();
+    let old = fixture.registry.join(GROUP).join(DRIVER).join("v1.0.0");
+    let new = fixture.registry.join(GROUP).join(DRIVER).join("v1.1.0");
+    write(
+        &new.join("vibe.toml"),
+        fs::read_to_string(old.join("vibe.toml"))
+            .unwrap()
+            .replace("version='1.0.0'", "version='1.1.0'")
+            .replace("defaults = [\"disabled\"]", "defaults = [\"enabled\"]"),
+    );
+    write(
+        &new.join("boot/rules.md"),
+        fs::read(old.join("boot/rules.md")).unwrap(),
+    );
+    let result = update(&fixture); // Includes --assume-yes: never acknowledgment.
+    assert!(!result.status.success());
+    assert!(
+        result.stdout.is_empty(),
+        "ordinary failure does not emit a proposal document"
+    );
+    let error: serde_json::Value = serde_json::from_slice(&result.stderr).unwrap();
+    assert_eq!(error["ok"], false);
+    assert!(
+        error["error"]
+            .as_str()
+            .unwrap()
+            .contains("retained configuration")
+    );
+    assert!(error.get("proposal").is_none());
+    assert!(error.get("expected_definition").is_none());
+    assert_eq!(fs::read(fixture.project.join("vibe.lock")).unwrap(), before);
+    assert_eq!(fixture.static_boot(), boot);
+    assert_eq!(fixture.hooks(), hooks);
+    assert!(!fixture.slot(EXTRA).exists());
+    if let Some(dir) = std::env::var_os("NST_PACKAGE_ACK_EVIDENCE") {
+        let dir = PathBuf::from(dir);
+        fs::create_dir_all(&dir).unwrap();
+        fs::write(dir.join("stdout"), &result.stdout).unwrap();
+        fs::write(dir.join("stderr.json"), &result.stderr).unwrap();
+        fs::write(
+            dir.join("exit"),
+            result.status.code().unwrap_or(-1).to_string(),
+        )
+        .unwrap();
+    }
+}
