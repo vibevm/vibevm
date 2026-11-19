@@ -158,6 +158,10 @@ pub enum StepError {
         command: String,
     },
     #[error(
+        "runtime remediation for `{key}` was refused: {reason}; target installation did not start (spec://org.vibevm.core/vibevm/common/PROP-065#needs; fix: review the selected provider and grant explicit consent, or install the runtime yourself)"
+    )]
+    RuntimeRemediationRefused { key: String, reason: String },
+    #[error(
         "step `{step}` of `{key}` needs `{need}`, which this host does not provide; nothing was downloaded or run \
          (violates spec://org.vibevm.core/vibevm/common/PROP-065#needs; fix: provide `{need}` and retry, or select another installer option)"
     )]

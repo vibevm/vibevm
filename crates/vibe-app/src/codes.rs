@@ -142,6 +142,7 @@ codes!(STEP, StepError [] {
     ParameterInvalid => "parameter_invalid", Refusal, "a parameter value is missing or invalid";
     LicenseRequired => "license_required", Refusal, "the license was not accepted";
     LicenseUnreadable => "license_unreadable", Refusal, "the declared license file cannot be read";
+    RuntimeRemediationRefused => "runtime_remediation_refused", Refusal, "runtime provider consent or verification was refused before target effects";
     PrerequisiteDeferred => "prerequisite_deferred", Refusal, "the operator deferred a missing command before installation";
     UnmetNeed => "need_unmet", Refusal, "a running step needs what this host lacks";
     AgentRequired => "agent_missing", Refusal, "a required agent step has no agent";

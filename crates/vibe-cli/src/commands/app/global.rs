@@ -11,6 +11,7 @@ use vibe_app::{
     RemoveRequest, ResolvedPackage, SettingsRoot, Start,
 };
 
+mod node_remediation;
 #[path = "global/observation.rs"]
 mod observation;
 pub(crate) use observation::Observation;
@@ -369,7 +370,26 @@ pub(crate) fn install_with_selected(
             resolver_scope: packages.scope(),
             ..operation(ctx, &settings, offline, &proxy_image, Some(&show), &observe)
         };
-        report_parked(ctx, vibe_app::install(&operation, &resolved, &request))
+        if args.on_missing_command.as_deref() == Some("install-node") {
+            node_remediation::run(
+                ctx,
+                &packages,
+                &operation,
+                &resolved,
+                &request,
+                args.assume_yes,
+            )
+            .map_err(|error| match error.downcast::<vibe_app::AppError>() {
+                Ok(error) => error,
+                Err(error) => vibe_app::StepError::RuntimeRemediationRefused {
+                    key: resolved.package.key(),
+                    reason: error.to_string(),
+                }
+                .into(),
+            })
+        } else {
+            report_parked(ctx, vibe_app::install(&operation, &resolved, &request))
+        }
     });
     let outcome = display.report(ctx, outcome)?;
     // `--write-version-file` writes the version this install resolved to,

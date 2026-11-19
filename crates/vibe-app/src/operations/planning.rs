@@ -62,7 +62,51 @@ pub(super) fn plan_option_with_modes(
         >,
     ),
 ) -> Result<Plan, AppError> {
-    let (pending, modes) = continuation;
+    match prepare_option(
+        ctx,
+        resolved,
+        option,
+        request,
+        previous,
+        index,
+        PreparedContinuation {
+            pending: continuation.0,
+            modes: continuation.1,
+            request_node: false,
+            prepared: None,
+        },
+    )? {
+        steps::PreparedInstall::Ready(plan) => Ok(*plan),
+        steps::PreparedInstall::NeedsNode(_) => {
+            unreachable!("ordinary planning cannot request Node")
+        }
+    }
+}
+
+pub(super) struct PreparedContinuation<'a> {
+    pub pending: Option<&'a vibe_wire::generated::shared::ApplicationPendingOperation>,
+    pub modes: Option<
+        &'a std::collections::BTreeMap<String, vibe_wire::generated::shared::ApplicationAgentMode>,
+    >,
+    pub request_node: bool,
+    pub prepared: Option<steps::PreparedSelection>,
+}
+
+pub(super) fn prepare_option(
+    ctx: &OperationContext<'_>,
+    resolved: &ResolvedPackage,
+    option: &InstallerOptionDecl,
+    request: &InstallRequest,
+    previous: Option<Previous<'_>>,
+    index: &Index,
+    continuation: PreparedContinuation<'_>,
+) -> Result<steps::PreparedInstall, AppError> {
+    let PreparedContinuation {
+        pending,
+        modes,
+        request_node,
+        prepared,
+    } = continuation;
     let owner = resolved.package.key();
     let requirements = |spelling: &str, scope, step: Option<&str>| {
         if let Some(operation) = pending {
@@ -147,7 +191,7 @@ pub(super) fn plan_option_with_modes(
         configuration: configuration.as_ref(),
         ..p
     });
-    let plan = steps::plan(&PlanInput {
+    let input = PlanInput {
         import_scope: ctx.import_scope.map(|s| s.fingerprint()),
         transfer: request.transfer.as_ref(),
         agent_modes: agent_modes.as_ref(),
@@ -171,9 +215,15 @@ pub(super) fn plan_option_with_modes(
         agent: ctx.agent,
         requirements: Some(&requirements as RequirementResolver<'_>),
         required_by: request.required_by.clone(),
-    })?;
-    if let Some(show) = ctx.on_plan {
-        show(&plan);
+    };
+    let plan = match prepared {
+        Some(prepared) => steps::PreparedInstall::Ready(Box::new(prepared.continue_plan(&input)?)),
+        None => steps::prepare_install(&input, request_node)?,
+    };
+    if let steps::PreparedInstall::Ready(ready) = &plan
+        && let Some(show) = ctx.on_plan
+    {
+        show(ready);
     }
     Ok(plan)
 }

@@ -13,8 +13,10 @@ pub use import::{
     ImportResumeInfo, ImportScope, import_cohort, import_full, import_resume_info,
     inspect_import_resume, resume_full_import, resume_import,
 };
-pub use install::install;
 use install::install_locked;
+pub use install::{
+    InstallPreparation, NodeRemediation, continue_after_node, install, install_preparing_node,
+};
 pub use planning::{configuration_plan, plan};
 use planning::{plan_option, plan_option_with_modes};
 mod deps;

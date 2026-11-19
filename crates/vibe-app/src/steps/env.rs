@@ -48,6 +48,9 @@ impl StepPaths {
             .collect();
         let mut env = base.to_vec();
         if exposures.is_empty() && self.selected_dirs.is_empty() {
+            if let Some(path) = inherited {
+                env.push(("PATH".into(), path.to_string_lossy().into_owned()));
+            }
             return env;
         }
         let mut front: Vec<PathBuf> = Vec::new();
@@ -134,5 +137,30 @@ impl Run<'_> {
             }
             .into()
         })
+    }
+}
+
+#[cfg(test)]
+mod scoped_path_tests {
+    use super::*;
+    #[test]
+    fn explicit_path_reaches_child_without_exposures_and_none_keeps_base() {
+        let paths = StepPaths::default();
+        let base = vec![
+            ("PATH".into(), "/original".into()),
+            ("OTHER".into(), "keep".into()),
+        ];
+        assert_eq!(paths.child_env(&base, "install", None), base);
+        let actual = paths.child_env(&base, "install", Some(OsStr::new("/scoped:/original")));
+        assert_eq!(
+            actual
+                .iter()
+                .rev()
+                .find(|(name, _)| name == "PATH")
+                .unwrap()
+                .1,
+            "/scoped:/original"
+        );
+        assert!(actual.contains(&("OTHER".into(), "keep".into())));
     }
 }

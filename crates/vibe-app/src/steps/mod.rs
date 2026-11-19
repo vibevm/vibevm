@@ -30,7 +30,10 @@ pub(crate) use kinds::{EcosystemEnv, MigrationEnv, StepContext, run as run_step}
 pub(crate) use params::admit_license;
 pub use params::{LicensePrompt, ParamValue, ParameterPrompt, PlanLicense, step_env_name};
 pub use plan::{FeatureChooser, HostFacts, Plan, PlannedDependency, PlannedStep, RequiredBy};
-pub(crate) use plan::{PlanInput, Previous, Prompts, RequirementResolver, plan};
+pub(crate) use plan::{
+    PlanInput, PreparedInstall, PreparedSelection, Previous, Prompts, RequirementResolver,
+    prepare_install,
+};
 pub(crate) use run::{Run, RunFlags};
 pub(crate) use runs::{RunOutcome, RunRecord};
 pub use runs::{prune_runs, runs};

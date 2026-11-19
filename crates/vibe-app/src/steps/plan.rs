@@ -29,8 +29,11 @@ use super::params::{
 };
 use super::sizes::{DropLookup, downloads};
 mod decision;
+mod prepared;
 use super::template::{self, Vars};
 use decision::{NO_AGENT, decide, effective_agent_mode, require};
+use prepared::PreparedAnswers;
+pub(crate) use prepared::{PreparedInstall, PreparedSelection};
 
 #[path = "plan/remap_note.rs"]
 mod remap_note;
@@ -133,6 +136,7 @@ pub(crate) struct Previous<'a> {
 }
 
 /// Everything one plan is computed from.
+#[derive(Clone)]
 pub(crate) struct PlanInput<'a> {
     pub import_scope: Option<&'a str>,
     pub transfer: Option<&'a crate::configuration::PortableTransfer>,
@@ -271,6 +275,18 @@ pub(crate) fn work_dir(settings: &SettingsRoot, package: &PackageCoordinate) -> 
 /// interactive agent step without a terminal, or a plan in which nothing
 /// produces the declared result.
 pub(crate) fn plan(input: &PlanInput<'_>) -> Result<Plan, AppError> {
+    match prepare_install(input, false)? {
+        PreparedInstall::Ready(plan) => Ok(*plan),
+        PreparedInstall::NeedsNode(_) => {
+            unreachable!("ordinary planning cannot request remediation")
+        }
+    }
+}
+
+pub(crate) fn prepare_install(
+    input: &PlanInput<'_>,
+    request_node: bool,
+) -> Result<PreparedInstall, AppError> {
     let package = &input.resolved.package;
     let key = package.key();
     let option = input.option;
@@ -282,6 +298,23 @@ pub(crate) fn plan(input: &PlanInput<'_>) -> Result<Plan, AppError> {
             package: key.clone(),
             reason: format!("{}: {error}", error.field),
         })?;
+    let witnessed_source = request_node
+        .then(|| prepared::source_hash(input.resolved))
+        .transpose()?;
+    let witnessed_license = if request_node {
+        input
+            .option
+            .license
+            .as_ref()
+            .map(|decl| std::fs::read(input.resolved.root.join(&decl.file)))
+            .transpose()
+            .map_err(|_| crate::ResolveError::Manifest {
+                package: key.clone(),
+                reason: "cannot witness license before presentation".into(),
+            })?
+    } else {
+        None
+    };
     let license = admit_license(
         option,
         &key,
@@ -290,6 +323,16 @@ pub(crate) fn plan(input: &PlanInput<'_>) -> Result<Plan, AppError> {
         input.previous.and_then(|previous| previous.license),
         input.prompts.license.filter(|_| input.attended),
     )?;
+    if let Some(before) = &witnessed_license {
+        let current = license.as_ref().and_then(|l| std::fs::read(&l.file).ok());
+        if current.as_ref() != Some(before) {
+            return Err(crate::ResolveError::Manifest {
+                package: key.clone(),
+                reason: "license changed while collecting consent".into(),
+            }
+            .into());
+        }
+    }
     let (profile, resolution, parameters, configuration, secret_provided, secret_origins) =
         if option.configuration.is_some() {
             let common = crate::configuration::plan::prepare(input)?;
@@ -371,7 +414,46 @@ pub(crate) fn plan(input: &PlanInput<'_>) -> Result<Plan, AppError> {
         .flat_map(|dependency| dependency.commands.iter().cloned())
         .collect();
     for step in steps_of(option) {
-        let (run, reason, needed) = decide(input, &step, &vars, &work, &key, &provided)?;
+        let (run, reason, needed) = match decide(input, &step, &vars, &work, &key, &provided) {
+            Ok(decision) => decision,
+            Err(error) => {
+                if request_node
+                    && input.required_by.is_none()
+                    && input.import_scope.is_none()
+                    && input.option.npm_runtime.is_some()
+                    && let AppError::Step(StepError::UnmetNeed {
+                        key: failed,
+                        step: failed_step,
+                        need,
+                    }) = &error
+                    && failed == &key
+                    && failed_step == &step.id
+                    && let Ok(vibe_core::manifest::Need::Command(command)) =
+                        vibe_core::manifest::Need::try_from(need.clone())
+                    && (command == "npm" || command == "node")
+                {
+                    return Ok(PreparedInstall::NeedsNode(Box::new(
+                        PreparedSelection::capture(
+                            input,
+                            PreparedAnswers {
+                                profile,
+                                features: resolution.selected,
+                                parameters,
+                                configuration,
+                                secret_origins,
+                                secret_provided,
+                                license,
+                            },
+                            command,
+                            witnessed_source
+                                .clone()
+                                .expect("explicit remediation witness"),
+                        )?,
+                    )));
+                }
+                return Err(error);
+            }
+        };
         if run {
             dependencies.extend(needed);
         }
@@ -448,7 +530,7 @@ pub(crate) fn plan(input: &PlanInput<'_>) -> Result<Plan, AppError> {
             package: &package_key,
         },
     );
-    Ok(Plan {
+    Ok(PreparedInstall::Ready(Box::new(Plan {
         source_evidence: input.resolved.source_evidence.clone(),
         import_scope: input.import_scope.map(str::to_owned),
         secret_provided,
@@ -477,5 +559,5 @@ pub(crate) fn plan(input: &PlanInput<'_>) -> Result<Plan, AppError> {
         steps,
         warnings,
         required_by: input.required_by.clone(),
-    })
+    })))
 }

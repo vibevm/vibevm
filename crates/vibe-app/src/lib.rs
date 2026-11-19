@@ -135,12 +135,13 @@ pub use migrate::{
     migration_offer, migration_plan, slot_migration_work,
 };
 pub use operations::{
-    Change, ChangeVerb, Command, InstallRequest, ModifyRequest, OperationContext, Outcome,
-    PackageResolver, Recommendation, RecommendationOutcome, Removal, RemoveRequest, ResolverScope,
-    ResumeInfo, ResumeRequest, SavedSourceReader, SlotExposure, autoremove, configuration_plan,
-    expose, hide, hold, import_cohort, import_resume_info, install, installed, list, mark, modify,
-    outdated, plan, remove_unrecorded, resume, resume_import, resume_info, rollback, uninstall,
-    update,
+    Change, ChangeVerb, Command, InstallPreparation, InstallRequest, ModifyRequest,
+    NodeRemediation, OperationContext, Outcome, PackageResolver, Recommendation,
+    RecommendationOutcome, Removal, RemoveRequest, ResolverScope, ResumeInfo, ResumeRequest,
+    SavedSourceReader, SlotExposure, autoremove, configuration_plan, continue_after_node, expose,
+    hide, hold, import_cohort, import_resume_info, install, install_preparing_node, installed,
+    list, mark, modify, outdated, plan, remove_unrecorded, resume, resume_import, resume_info,
+    rollback, uninstall, update,
 };
 pub use paths::{
     PATH_LINK_STEP, PathSync, SlotPaths, env_tag as slot_path_env_tag,

@@ -11,6 +11,10 @@ use vibe_wire::generated::shared as w;
 
 #[cfg(test)]
 mod deferral_tests;
+mod remediation;
+pub use remediation::{
+    InstallPreparation, NodeRemediation, continue_after_node, install_preparing_node,
+};
 
 /// Install one app package into the current user's settings root: its
 /// requirements first (`PROP-065#app-dependencies`), then the package.
@@ -169,6 +173,54 @@ fn install_entered(
         }
         error
     })?;
+    let inherited_held = owner_state
+        .as_ref()
+        .zip(import_parent.as_ref())
+        .and_then(|(owner, (_, row))| owner.held(*row as usize));
+    apply_plan(
+        lock,
+        ctx,
+        resolved,
+        request,
+        stack,
+        ApplicationPlan {
+            option,
+            plan,
+            prior,
+            saved,
+            parent,
+            inherited_held,
+        },
+    )
+}
+
+struct ApplicationPlan<'a> {
+    option: vibe_core::manifest::InstallerOptionDecl,
+    plan: crate::Plan,
+    prior: Option<crate::Installation>,
+    saved: Option<&'a StepsFile>,
+    parent: Option<pending::Parent<'a>>,
+    inherited_held: Option<bool>,
+}
+
+fn apply_plan(
+    lock: &crate::MutationLock,
+    ctx: &OperationContext<'_>,
+    resolved: &ResolvedPackage,
+    request: &InstallRequest,
+    stack: &mut Vec<String>,
+    prepared: ApplicationPlan<'_>,
+) -> Result<Outcome, AppError> {
+    let ApplicationPlan {
+        option,
+        plan,
+        prior,
+        saved,
+        parent,
+        inherited_held,
+    } = prepared;
+    let key = resolved.package.key();
+    let storage = Storage::load(ctx.settings)?;
     apply::admit_agents(ctx, resolved, &plan, request, saved)?;
     let target = if let Some(state) = saved {
         pending::validate_plan(ctx, resolved, &option, request, &plan, state)?;
@@ -260,11 +312,7 @@ fn install_entered(
         retire_env(ctx, &key, prior, &applied.installation)?;
     }
     let replaced = prior.is_some();
-    if let Some(held) = owner_state
-        .as_ref()
-        .zip(import_parent.as_ref())
-        .and_then(|(owner, (_, row))| owner.held(*row as usize))
-    {
+    if let Some(held) = inherited_held {
         applied.installation.lifecycle.held = held;
     }
     if let Some(binding) = ctx.import_scope.and_then(|scope| scope.binding(&key)) {
