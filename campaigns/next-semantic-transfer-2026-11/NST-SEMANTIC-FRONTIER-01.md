@@ -205,3 +205,5 @@ The BIND.2 manifest at `68728811bd` reproduces all 20 declared sizes and SHA-256
 At `39c7d99040` all four raw digests cited by the typed adapter review match the logs in the originating tree; each retained log contains its one-case pass. These are the original selected receipts, not additional tests on top of the later normalized copies or closure of the two deferred gates.
 
 The historical Redbook declared `mup` as the exactly-one continuity default, but the host separately supplied exact `mup`. Identical resulting graphs are insufficient to classify the latter as automatic reliance. Feature-effect lowering and resolver characterization do not establish the current schema-12 replay behavior.
+
+The B.1 machine-operation source account binds all 200 present endpoint blobs for its 122 listed paths. Separately, M-03-A.2 records thirteen candidate hashes found at `0f3d637098`, not at the manifest head. These are source identity checks rather than new operation runs.
