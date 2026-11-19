@@ -14,6 +14,8 @@ use vibe_safefs::Project;
 
 #[path = "native/hermes_mcp.rs"]
 mod hermes_mcp;
+#[path = "native/hermes_ready_session.rs"]
+pub(super) mod hermes_ready_session;
 #[path = "native/hermes_runtime.rs"]
 mod hermes_runtime;
 #[path = "native/hermes_selected.rs"]

@@ -78,8 +78,14 @@ pub enum AgentCommand {
     /// (PROP-076 `#SYS-HARNESS-EXECUTABLE`). `vibe agent list` names the
     /// launchers this machine has.
     ///
-    /// Everything after the launcher name is passed to it unchanged, so
-    /// `vibe agent claude --model opus -- -p` works.
+    /// Native arguments are passed unchanged, so
+    /// `vibe agent claude --model opus -- -p` works. Hermes additionally admits
+    /// the explicit Vibe option `--vibe-ready-session=transport --resume ID`
+    /// before `--`: attach to an already-READY local owner and exact history
+    /// without adding Vibe instructions. This never starts/replaces an owner
+    /// or silently substitutes for delivery. Session-changing commands are
+    /// outside this bounded route; READY conversation delivery and strict
+    /// delivery remain unavailable.
     #[command(external_subcommand)]
     Launch(Vec<String>),
 }

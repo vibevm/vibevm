@@ -68,6 +68,19 @@ pub(crate) fn run(ctx: &output::Context, argv: Vec<String>) -> Result<()> {
 
     let mut native_arguments = launcher.command.iter().skip(1).cloned().collect::<Vec<_>>();
     native_arguments.extend(rest.iter().cloned());
+    if launcher.kind == HarnessKind::Hermes
+        && let Some(request) = super::native::hermes_ready_session::parse(&native_arguments)?
+    {
+        let program =
+            super::program::locate(launcher.command.first().context("empty Hermes launcher")?)?;
+        // Explicit transport is not prompt delivery: never compose, bind a
+        // plugin, or silently enter this route after a delivery failure.
+        std::process::exit(super::native::hermes_ready_session::run(
+            settings.path(),
+            &program,
+            request,
+        )?);
+    }
     let native_selection = if launcher.kind == HarnessKind::Hermes
         && super::native::hermes_selected::requested(&native_arguments)
     {

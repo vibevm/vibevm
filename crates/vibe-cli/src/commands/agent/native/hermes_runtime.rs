@@ -98,3 +98,46 @@ pub(super) fn discover(program: &Path) -> Result<HermesRuntime> {
         "selected Hermes installation does not match the admitted native module identities; use read delivery without a carrier"
     )
 }
+
+/// Additional measured owners used only by explicit non-delivery attachment.
+pub(super) fn admit_ready(root: &Path) -> Result<()> {
+    const READY_MODULES: &[(&str, &str)] = &[
+        (
+            "hermes_cli/_startup_fast.py",
+            "aee97caeac769012a0271e9b53f8625eb1da8e04e348d5637ef3b636543524a1",
+        ),
+        (
+            "hermes_cli/gateway_runtime.py",
+            "7c4fc52a48843e1f6a2b66b9c0a01275b762225047c1580e52a057a9dd91acf7",
+        ),
+        (
+            "hermes_cli/gateway_runtime_discovery.py",
+            "c8e3d10f25f3f2ffcf7ba1fc249f2decc3bc69340c29cbcec5036dff9cf18256",
+        ),
+        (
+            "hermes_cli/gateway_client.py",
+            "65c2d4e221a8eb5c1bc39f50d30d02ff859b651b3c4a7662afc153c82ae6262b",
+        ),
+        (
+            "hermes_cli/gateway_chat_view.py",
+            "6819082e1a3ef2aff40c86b24465f8da1ab83af6a5c91d464dbab845e72d77b8",
+        ),
+        (
+            "hermes_cli/profiles.py",
+            "b3301e1b6889a8a0c1ce40da6964b31383c77b7c485273ec3be4f95fc324a0cc",
+        ),
+        (
+            "gateway/session_contract.py",
+            "624f45de8dcf2537266614ac14eaf98150ad6ed82ac3167f30f6f463733e7a41",
+        ),
+    ];
+    for (relative, expected) in READY_MODULES {
+        let bytes = std::fs::read(root.join(relative))?;
+        if format!("{:x}", Sha256::digest(bytes)) != *expected {
+            bail!(
+                "selected Hermes READY transport modules do not match the admitted native identities"
+            );
+        }
+    }
+    Ok(())
+}
