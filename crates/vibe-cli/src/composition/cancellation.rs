@@ -28,6 +28,7 @@ pub(crate) fn supported(command: &Command) -> bool {
         // stop may interrupt; status is read-only and accepts the same input
         // so the grammar does not fork.
         Command::User(_) => true,
+        Command::Mcp(args) => !matches!(args.command, crate::cli::McpSubcommand::Serve(_)),
         _ => false,
     }
 }

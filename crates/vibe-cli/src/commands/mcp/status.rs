@@ -42,7 +42,11 @@ struct PkgServerStatus {
 }
 
 /// Collect the PROP-027 lifecycle rows for `vibe mcp status`.
-fn pkg_server_status(root: &Path, scope: Scope) -> Result<Vec<PkgServerStatus>> {
+fn pkg_server_status(
+    ctx: &output::Context,
+    root: &Path,
+    scope: Scope,
+) -> Result<Vec<PkgServerStatus>> {
     let servers = vibe_workspace::bins::collect_mcp_servers(root)
         .map_err(|e| anyhow::anyhow!("collecting MCP servers from `{}`: {e}", root.display()))?;
     servers
@@ -50,9 +54,14 @@ fn pkg_server_status(root: &Path, scope: Scope) -> Result<Vec<PkgServerStatus>> 
         .map(|s| -> Result<PkgServerStatus> {
             let mut registrations = Vec::new();
             for agent in Agent::ALL.iter().copied() {
-                if let Some(config) =
-                    agent.config_path(scope, (scope == Scope::Project).then_some(root))?
-                {
+                if agent == Agent::Hermes && !ctx.agent_user_dirs.native.contains_key(&agent) {
+                    continue;
+                }
+                if let Some(config) = agent.config_path_with_dirs(
+                    scope,
+                    (scope == Scope::Project).then_some(root),
+                    &ctx.agent_user_dirs,
+                )? {
                     registrations.push(package_registration::registration_status(
                         agent, scope, &config, &s,
                     )?);
@@ -113,12 +122,17 @@ pub(super) fn run_status(ctx: &output::Context, args: McpStatusArgs) -> Result<(
     let mut managed_builtin = Vec::new();
     let mut skill_results: Vec<SkillInstallReport> = Vec::new();
     for agent in Agent::ALL.iter().copied() {
+        if agent == Agent::Hermes && !ctx.agent_user_dirs.native.contains_key(&agent) {
+            continue;
+        }
         for scope in [Scope::Project, Scope::User] {
             if scope == Scope::Project && project_root.is_none() {
                 continue;
             }
             // MCP-config preview.
-            if let Some(path) = agent.config_path(scope, project_root.as_deref())? {
+            if let Some(path) =
+                agent.config_path_with_dirs(scope, project_root.as_deref(), &ctx.agent_user_dirs)?
+            {
                 managed_builtin.push(package_registration::registration_status(
                     agent,
                     scope,
@@ -167,14 +181,14 @@ pub(super) fn run_status(ctx: &output::Context, args: McpStatusArgs) -> Result<(
         }
     }
     let mut pkg_servers = if let Some(root) = project_root.as_deref() {
-        pkg_server_status(root, Scope::Project)?
+        pkg_server_status(ctx, root, Scope::Project)?
     } else {
         Vec::new()
     };
     if let Ok(user_root) = crate::commands::install::user_project_root()
         && user_root.join(Manifest::FILENAME).exists()
     {
-        pkg_servers.extend(pkg_server_status(&user_root, Scope::User)?);
+        pkg_servers.extend(pkg_server_status(ctx, &user_root, Scope::User)?);
     }
     let report = StatusReport {
         ok: true,

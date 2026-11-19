@@ -472,7 +472,7 @@ version = "0.1.0"
     assert_eq!(
         unknown_agent.to_string(),
         "unknown --agent value `nope` (expected one of `all`, `claude`, \
-         `claude-desktop`, `cursor`, `opencode`, `codex`, `qwen-code`, `pi`)"
+         `claude-desktop`, `cursor`, `opencode`, `codex`, `qwen-code`, `pi`, `hermes`)"
     );
 
     let no_match = prepare_declared_skill_projection(

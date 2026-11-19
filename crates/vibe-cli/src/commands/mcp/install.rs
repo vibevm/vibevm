@@ -3,6 +3,9 @@
 //! the mcp god-file (CONVERT-PLAN v0.1 §7.3d).
 
 use super::*;
+#[path = "install_render.rs"]
+mod render;
+use render::print_install_results;
 
 // ---------------------------------------------------------------------------
 // Reporting
@@ -137,7 +140,16 @@ pub(super) fn run_install(ctx: &output::Context, args: McpInstallArgs) -> Result
     };
 
     // 4. Resolve agents.
-    let detected = detect_agents(project_root.as_deref());
+    let mut detected = detect_agents(project_root.as_deref());
+    if ctx
+        .agent_user_dirs
+        .native
+        .get(&Agent::Hermes)
+        .is_some_and(|home| home.join("config.yaml").is_file())
+        && !detected.contains(&Agent::Hermes)
+    {
+        detected.push(Agent::Hermes);
+    }
     let targeted: Vec<Agent> = if args.auto {
         detected.clone()
     } else if let Some(filter) = &args.agent {
@@ -171,6 +183,7 @@ pub(super) fn run_install(ctx: &output::Context, args: McpInstallArgs) -> Result
     // Second pass writes only when (a) the operator approved AND
     // (b) the original invocation wasn't `--dry-run`.
     let (preview_results, preview_skill) = walk_install(
+        ctx,
         &targeted,
         scope,
         project_root.as_deref(),
@@ -231,6 +244,7 @@ pub(super) fn run_install(ctx: &output::Context, args: McpInstallArgs) -> Result
         (preview_results, preview_skill)
     } else {
         walk_install(
+            ctx,
             &targeted,
             scope,
             project_root.as_deref(),
@@ -432,44 +446,6 @@ fn run_selected_install(ctx: &output::Context, args: McpInstallArgs) -> Result<(
     Ok(())
 }
 
-fn print_install_results(
-    ctx: &output::Context,
-    dry_run: bool,
-    results: &[AgentInstallReport],
-    skill_results: &[SkillInstallReport],
-) {
-    for r in results {
-        let prefix = if dry_run { "would" } else { r.status };
-        let note = r
-            .note
-            .as_deref()
-            .map(|n| format!(" ({n})"))
-            .unwrap_or_default();
-        let target = if r.config_path.is_empty() {
-            "(no surface)".to_string()
-        } else {
-            r.config_path.clone()
-        };
-        ctx.step(&format!(
-            "{} mcp     {} ({}) → {}{note}",
-            prefix, r.agent, r.scope, target
-        ));
-    }
-    for r in skill_results {
-        let prefix = if dry_run { "would" } else { r.status };
-        let note = r
-            .note
-            .as_deref()
-            .map(|n| format!(" ({n})"))
-            .unwrap_or_default();
-        let path_str = r.path.as_deref().unwrap_or("(no skill loader)");
-        ctx.step(&format!(
-            "{} skill   {} ({}) → {}{note}",
-            prefix, r.agent, r.scope, path_str
-        ));
-    }
-}
-
 /// Per-(agent × scope) install walker. Extracted from `run_install`
 /// so the two-pass `confirm-then-apply` flow can call it twice —
 /// once with `dry_run = true` to gather the would-do plan, then
@@ -478,6 +454,7 @@ fn print_install_results(
 /// from the prior single-pass implementation; only the surrounding
 /// state lives in `run_install` now.
 fn walk_install(
+    ctx: &output::Context,
     targeted: &[Agent],
     scope: Scope,
     project_root: Option<&Path>,
@@ -497,7 +474,11 @@ fn walk_install(
             }
             // ---- MCP entry ----
             if what.includes_mcp() {
-                let path = agent.config_path(concrete_scope, project_root)?;
+                let path = agent.config_path_with_dirs(
+                    concrete_scope,
+                    project_root,
+                    &ctx.agent_user_dirs,
+                )?;
                 if let Some(path) = path {
                     let payload = agent.build_mcp_entry();
                     let outcome = install_builtin_mcp(

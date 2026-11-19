@@ -382,6 +382,7 @@ fn stale_unreceipted_builtin_is_replaced_only_by_forced_adoption() {
         let config = root.path().join("config");
         let payload = agent.build_mcp_entry();
         let stale = match agent.config_format() {
+            ConfigFormat::Yaml => panic!("this fixture selects JSON/TOML agents only"),
             ConfigFormat::Json => {
                 r#"{"keep":1,"mcpServers":{"vibevm":{"command":"old-binary","args":[]},"other":{"command":"o"}}}"#
             }

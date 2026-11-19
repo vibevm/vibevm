@@ -57,6 +57,7 @@ pub(super) fn render_projection(
     desired: Option<&serde_json::Value>,
 ) -> Result<String> {
     match agent.config_format() {
+        ConfigFormat::Yaml => native_yaml(config, name, Some(desired)).map(|result| result.1),
         ConfigFormat::Json => {
             let mut doc = if let Some(value) = desired {
                 merge_json(config, agent.mcp_section_key(), name, value)?

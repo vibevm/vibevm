@@ -317,6 +317,11 @@ impl Context {
                         .native
                         .insert(vibe_agent_projection::agents::Agent::Pi, path.into());
                 }
+                if let Some(path) = std::env::var_os("HERMES_HOME") {
+                    directories
+                        .native
+                        .insert(vibe_agent_projection::agents::Agent::Hermes, path.into());
+                }
                 directories
             },
             #[cfg(test)]

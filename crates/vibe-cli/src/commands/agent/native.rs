@@ -12,10 +12,13 @@ use anyhow::{Context, Result, bail};
 use sha2::{Digest, Sha256};
 use vibe_safefs::Project;
 
+#[path = "native/hermes_mcp.rs"]
+mod hermes_mcp;
 #[path = "native/hermes_runtime.rs"]
 mod hermes_runtime;
 #[path = "native/pi_runtime.rs"]
 mod pi_runtime;
+pub(crate) use hermes_mcp::{profile_home as hermes_profile_home, project_yaml};
 
 /// Pi's agent-native carrier; runtime/mode orchestration remains native.
 const PI_HELPER: &[u8] = include_bytes!("native/pi_bootstrap.mjs");

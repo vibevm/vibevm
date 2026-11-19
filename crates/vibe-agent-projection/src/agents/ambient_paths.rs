@@ -59,6 +59,9 @@ impl Agent {
                 if self == Agent::Pi {
                     return Ok(Some(directory.join("mcp.json")));
                 }
+                if self == Agent::Hermes {
+                    return Ok(Some(directory.join("config.yaml")));
+                }
             }
         }
         match (self, scope) {
@@ -84,7 +87,7 @@ impl Agent {
                 Ok(project_root.map(|p| p.join(".codex").join("config.toml")))
             }
             (Agent::Pi, Scope::Project) => Ok(project_root.map(|p| p.join(".pi").join("mcp.json"))),
-            (Agent::ClaudeCodeDesktop, Scope::Project) => Ok(None),
+            (Agent::ClaudeCodeDesktop | Agent::Hermes, Scope::Project) => Ok(None),
             // ---- User scope ----
             (Agent::ClaudeCode, Scope::User) => {
                 // User-scope MCP servers live in the top-level `mcpServers`
@@ -132,6 +135,9 @@ impl Agent {
                 })?;
                 Ok(Some(cfg.join("Claude").join("claude_desktop_config.json")))
             }
+            (Agent::Hermes, Scope::User) => bail!(
+                "Hermes requires an explicitly resolved native profile home; refusing default-home fallback"
+            ),
             (Agent::Pi, Scope::User) => {
                 let home = directories
                     .home
@@ -165,6 +171,25 @@ impl Agent {
         if !self.supports_skill() {
             return Ok(None);
         }
+        if self == Agent::Hermes {
+            if scope == Scope::Project {
+                return Ok(None);
+            }
+            if scope == Scope::Both {
+                bail!("expand Both before resolving Hermes skills");
+            }
+            let config = self
+                .config_path(Scope::User, None)?
+                .ok_or_else(|| anyhow!("Hermes profile home unavailable"))?;
+            return Ok(Some(
+                config
+                    .parent()
+                    .ok_or_else(|| anyhow!("Hermes profile home unavailable"))?
+                    .join("skills")
+                    .join(SKILL_NAME)
+                    .join("SKILL.md"),
+            ));
+        }
         match (self, scope) {
             (_, Scope::Both) => {
                 bail!("internal: Agent::skill_path requires concrete scope; expand Both first")
@@ -194,7 +219,7 @@ impl Agent {
                     .join(SKILL_NAME)
                     .join("SKILL.md")
             })),
-            (Agent::Cursor | Agent::ClaudeCodeDesktop, _) => Ok(None),
+            (Agent::Cursor | Agent::ClaudeCodeDesktop | Agent::Hermes, _) => Ok(None),
             // ---- User scope ----
             (Agent::ClaudeCode, Scope::User) => {
                 let home = dirs::home_dir()
@@ -262,6 +287,23 @@ impl Agent {
         if !self.supports_skill() {
             return Ok(None);
         }
+        if self == Agent::Hermes {
+            if scope == Scope::Project {
+                return Ok(None);
+            }
+            if scope == Scope::Both {
+                bail!("expand Both before resolving Hermes skills");
+            }
+            let config = self
+                .config_path(Scope::User, None)?
+                .ok_or_else(|| anyhow!("Hermes profile home unavailable"))?;
+            return Ok(Some(
+                config
+                    .parent()
+                    .ok_or_else(|| anyhow!("Hermes profile home unavailable"))?
+                    .join("skills"),
+            ));
+        }
         match (self, scope) {
             (_, Scope::Both) => {
                 bail!("internal: Agent::skills_root requires concrete scope; expand Both first")
@@ -278,7 +320,7 @@ impl Agent {
             (Agent::Codex | Agent::Pi, Scope::Project) => {
                 Ok(project_root.map(|p| p.join(".agents").join("skills")))
             }
-            (Agent::Cursor | Agent::ClaudeCodeDesktop, _) => Ok(None),
+            (Agent::Cursor | Agent::ClaudeCodeDesktop | Agent::Hermes, _) => Ok(None),
             (Agent::ClaudeCode, Scope::User) => {
                 let home = dirs::home_dir()
                     .ok_or_else(|| anyhow!("could not resolve home dir for Claude Code skills"))?;
@@ -490,7 +532,7 @@ mod injected_path_tests {
             native: Default::default(),
         };
         for agent in Agent::ALL {
-            if *agent != Agent::ClaudeCodeDesktop {
+            if !matches!(*agent, Agent::ClaudeCodeDesktop | Agent::Hermes) {
                 assert!(
                     agent
                         .config_path_with_dirs(Scope::User, None, &home_only)
