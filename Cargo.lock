@@ -4759,6 +4759,7 @@ dependencies = [
  "vibe-resolver",
  "vibe-safefs",
  "vibe-scrape",
+ "vibe-secrets",
  "vibe-settings",
  "vibe-spec",
  "vibe-specdoc",

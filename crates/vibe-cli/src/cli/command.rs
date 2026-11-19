@@ -4,6 +4,8 @@ use super::*;
 
 #[derive(Debug, Subcommand)]
 pub enum Command {
+    /// Manage protected local keyring metadata and values without disclosure.
+    Secrets(SecretsArgs),
     /// Scaffold a new vibevm project in the target directory.
     Init(InitArgs),
 

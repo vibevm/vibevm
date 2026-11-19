@@ -135,3 +135,79 @@ pub(crate) fn choose_many(
     }
     Ok(picked)
 }
+
+/// Hidden explicit replacement input, with no collapsed value report.
+pub(crate) fn secret(prompt: &str) -> dialoguer::Result<String> {
+    use dialoguer::theme::Theme;
+    use ratatui_crossterm::crossterm::{
+        event::{self, Event, KeyCode, KeyModifiers},
+        terminal,
+    };
+    struct RawGuard;
+    impl Drop for RawGuard {
+        fn drop(&mut self) {
+            let _ = terminal::disable_raw_mode();
+        }
+    }
+    space_before_question();
+    let mut rendered = String::new();
+    super::prompt_theme()
+        .format_prompt(&mut rendered, prompt)
+        .map_err(|_| std::io::Error::other("protected prompt unavailable"))?;
+    let term = console::Term::stderr();
+    if terminal::is_raw_mode_enabled()? {
+        return Err(std::io::Error::other("protected input requires an unowned terminal").into());
+    }
+    terminal::enable_raw_mode()?;
+    let guard = RawGuard;
+    term.write_str(&rendered)?;
+    term.flush()?;
+    let result = (|| -> std::io::Result<String> {
+        let mut value = String::new();
+        loop {
+            if let Event::Key(key) = event::read()? {
+                match key.code {
+                    KeyCode::Esc | KeyCode::Char('c')
+                        if key.code == KeyCode::Esc
+                            || key.modifiers.contains(KeyModifiers::CONTROL) =>
+                    {
+                        return Err(std::io::Error::new(
+                            std::io::ErrorKind::Interrupted,
+                            "protected input cancelled",
+                        ));
+                    }
+                    KeyCode::Char('d') if key.modifiers.contains(KeyModifiers::CONTROL) => {
+                        return Err(std::io::Error::new(
+                            std::io::ErrorKind::UnexpectedEof,
+                            "protected input ended",
+                        ));
+                    }
+                    KeyCode::Enter => {
+                        if value.is_empty() {
+                            return Err(std::io::Error::other("protected input must not be empty"));
+                        }
+                        return Ok(value);
+                    }
+                    KeyCode::Backspace => {
+                        value.pop();
+                    }
+                    KeyCode::Char(c)
+                        if !c.is_control()
+                            && !key
+                                .modifiers
+                                .intersects(KeyModifiers::CONTROL | KeyModifiers::ALT) =>
+                    {
+                        if value.len() + c.len_utf8() > 1024 * 1024 {
+                            return Err(std::io::Error::other("protected input exceeds bound"));
+                        }
+                        value.push(c);
+                    }
+                    _ => {}
+                }
+            }
+        }
+    })();
+    drop(guard);
+    term.write_line("")?;
+    result.map_err(Into::into)
+}

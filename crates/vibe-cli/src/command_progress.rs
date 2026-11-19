@@ -468,6 +468,7 @@ pub(crate) fn policy(command: &Command, terminal_attached: bool) -> CommandPolic
                 FastMetadata
             }
         },
+        Command::Secrets(_) => FastMetadata,
         Command::Version => SilentMetadata,
     }
 }

@@ -73,6 +73,7 @@ pub mod requirements;
 pub mod run;
 pub mod scrape;
 pub mod search;
+pub mod secrets;
 pub mod select;
 pub mod shell;
 pub mod short_name;

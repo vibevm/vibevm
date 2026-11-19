@@ -37,7 +37,9 @@ mod remap;
 mod requirements;
 mod run;
 mod scrape;
+mod secrets;
 mod select;
+pub use secrets::*;
 mod shell;
 mod skill;
 mod source_policy;
@@ -280,7 +282,21 @@ pub struct Cli {
 impl Cli {
     /// Preserve clap's explicit-path provenance before routing changes a destination.
     pub(crate) fn parse_invocation() -> (Self, bool) {
-        let matches = Self::command().get_matches();
+        let args: Vec<_> = std::env::args_os().collect();
+        // Clap normally quotes rejected tokens. The secrets surface must never
+        // reproduce a mistakenly supplied value, including malformed invocations.
+        let protected = Self::command()
+            .ignore_errors(true)
+            .try_get_matches_from(&args)
+            .ok()
+            .is_some_and(|matches| matches.subcommand_name() == Some("secrets"));
+        let matches = Self::command().try_get_matches_from(args).unwrap_or_else(|error| {
+            if protected && !matches!(error.kind(), clap::error::ErrorKind::DisplayHelp | clap::error::ErrorKind::DisplayVersion) {
+                eprintln!("invalid secrets invocation; use `vibe secrets --help` (values must not be arguments)");
+                std::process::exit(2);
+            }
+            error.exit()
+        });
         let explicit_path = matches.subcommand().is_some_and(|(_, sub)| {
             sub.try_contains_id("path").unwrap_or(false)
                 && sub.value_source("path") == Some(clap::parser::ValueSource::CommandLine)
