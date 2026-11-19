@@ -107,3 +107,5 @@ At the 813-row frontier, 394 commits touched possible production Rust under `cra
 Historical repository creation and release finalization (`05d60fbe0`, `d3eee83b3`) used private transport interfaces. Existing remote state or a lost response is not a successful receipt and confers no automatic retry; neither owner establishes a reachable public-host path at its reviewed revision.
 
 Task packet review: 25 task-JSON-only commits amended 15 distinct original tasks. A full before/after field comparison found one amended task per commit; only named read/write perimeters, notes and checks changed. Existing task identities and acceptance fields were preserved. No new product implementation or executed tests are inferred from those edits. The index retains the exact task IDs, changed field names and first-parent diff digests.
+
+Eight specmap-only commits were compared as complete parent/child JSON: three changed only the spec-unit collection; five changed spec units, code items and edges. The exact counts are recorded per commit. No source or specification was edited in those commits and a projected edge is not evidence that its behavior ran.
