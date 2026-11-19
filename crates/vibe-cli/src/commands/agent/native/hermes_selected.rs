@@ -19,6 +19,7 @@ pub(crate) struct Selection {
     temporary: tempfile::TempDir,
     signals: crate::commands::app::interrupt::Signals,
     ready: Ready,
+    route: Option<crate::commands::tool::px::AgentRoute>,
 }
 
 /// Only native cwd/session selectors require the two-stage launch.
@@ -85,6 +86,7 @@ impl Selection {
         }
         let signals = crate::commands::app::interrupt::Signals::install()?;
         let code = "import runpy,sys;root,entry,*args=sys.argv[1:];sys.path.insert(0,root);sys.argv=[entry,*args];runpy.run_path(entry,run_name='__main__')";
+        let route_required = vibe_net::current().route().mode_name() != "direct";
         let child = Command::new(&runtime.python)
             .args(["-I", "-c", code])
             .arg(&runtime.root)
@@ -95,12 +97,17 @@ impl Selection {
             .arg(cwd)
             .arg(temporary.path())
             .args(args)
+            .env(
+                "VIBE_HERMES_MANAGED_ROUTE_REQUIRED",
+                if route_required { "1" } else { "0" },
+            )
             .current_dir(cwd)
             .spawn()?;
         let mut selected = Self {
             child,
             temporary,
             signals,
+            route: None,
             ready: Ready {
                 session: String::new(),
                 cwd: PathBuf::new(),
@@ -142,10 +149,19 @@ impl Selection {
     pub(crate) fn launch(mut self, prefix: Option<&Path>) -> Result<i32> {
         let interrupted = self.signals.poll(Some(self.child.id()));
         let capability = Project::open(self.temporary.path())?;
-        acknowledge(&capability, &self.ready, prefix, interrupted)?;
+        self.route = crate::commands::tool::px::AgentRoute::selected()?;
+        let ack = self
+            .route
+            .as_ref()
+            .map(|route| route.owned_ack())
+            .transpose()?;
+        acknowledge(&capability, &self.ready, prefix, interrupted, ack.as_ref())?;
         loop {
             self.signals.poll(Some(self.child.id()));
             if let Some(status) = self.child.try_wait()? {
+                if let Some(route) = &self.route {
+                    route.close();
+                }
                 // The child is reaped before exit; its supervisor already released native owners.
                 #[cfg(unix)]
                 {
@@ -166,6 +182,9 @@ impl Drop for Selection {
     fn drop(&mut self) {
         // Close rendezvous first: a waiting supervisor refuses and runs native cleanup.
         if self.child.try_wait().ok().flatten().is_some() {
+            if let Some(route) = &self.route {
+                route.close();
+            }
             return;
         }
         if let Ok(capability) = Project::open(self.temporary.path())
@@ -176,6 +195,9 @@ impl Drop for Selection {
         let deadline = std::time::Instant::now() + std::time::Duration::from_secs(240);
         while std::time::Instant::now() < deadline {
             if self.child.try_wait().ok().flatten().is_some() {
+                if let Some(route) = &self.route {
+                    route.close();
+                }
                 return;
             }
             std::thread::sleep(std::time::Duration::from_millis(20));
@@ -185,6 +207,9 @@ impl Drop for Selection {
         );
         let _ = self.child.kill();
         let _ = self.child.wait();
+        if let Some(route) = &self.route {
+            route.close();
+        }
     }
 }
 
@@ -193,14 +218,18 @@ fn acknowledge(
     ready: &Ready,
     prefix: Option<&Path>,
     interrupted: bool,
+    route: Option<&serde_json::Value>,
 ) -> Result<()> {
     if interrupted {
         bail!("native Hermes selection interrupted before prefix admission");
     }
     let directory = capability.dir(&[], false)?;
-    let bytes = serde_json::to_vec(&serde_json::json!({
-        "session": ready.session, "cwd": ready.cwd, "prefix": prefix,
-    }))?;
+    let mut value =
+        serde_json::json!({ "session": ready.session, "cwd": ready.cwd, "prefix": prefix });
+    if let Some(route) = route {
+        value["route"] = route.clone();
+    }
+    let bytes = serde_json::to_vec(&value)?;
     capability.write_atomic_in(&directory, "ack.json", &bytes)?;
     Ok(())
 }
@@ -255,12 +284,12 @@ mod tests {
             cwd: temporary.path().into(),
             mode: "selected".into(),
         };
-        assert!(acknowledge(&capability, &ready, None, true).is_err());
+        assert!(acknowledge(&capability, &ready, None, true, None).is_err());
         assert_eq!(
             capability.read_file_bounded("ack.json", 65536).unwrap(),
             Some(Vec::new())
         );
-        acknowledge(&capability, &ready, None, false).unwrap();
+        acknowledge(&capability, &ready, None, false, None).unwrap();
         let bytes = capability
             .read_file_bounded("ack.json", 65536)
             .unwrap()

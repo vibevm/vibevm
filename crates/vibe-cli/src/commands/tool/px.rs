@@ -79,6 +79,22 @@ impl AgentRoute {
     pub(crate) fn apply(&self, command: &mut Command) {
         self.lent.apply(command);
     }
+    /// Only this non-secret closed route may cross an owned Hermes ACK.
+    pub(crate) fn owned_ack(&self) -> Result<serde_json::Value> {
+        if !self.managed() {
+            bail!("owned Hermes route requires managed px; external proxy is not qualified");
+        }
+        let endpoint = self.session.px_address()?;
+        if !endpoint.ip().is_loopback() || endpoint.port() == 0 {
+            bail!("managed px endpoint is not loopback");
+        }
+        if self.lent.no_proxy.len() > 4096 || self.lent.no_proxy.chars().any(char::is_control) {
+            bail!("managed bypass list is invalid");
+        }
+        Ok(
+            serde_json::json!({"kind":"managed-px","endpoint":endpoint.to_string(),"no_proxy":self.lent.no_proxy}),
+        )
+    }
     pub(crate) fn close(&self) {
         if self.managed() {
             self.session.close();

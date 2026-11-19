@@ -83,7 +83,7 @@ fn pi_managed_route_preserves_arguments_status_and_reaps_px_on_spawn_failure() {
         .unwrap();
     assert!(!other.status.success());
     assert!(!String::from_utf8_lossy(&other.stdout).contains("SHOULD_NOT_START"));
-    assert!(String::from_utf8_lossy(&other.stderr).contains("not yet qualified"));
+    assert!(String::from_utf8_lossy(&other.stderr).contains("owned Hermes finite"));
     // An existing OpenCode server has a different inference owner and cannot
     // receive the invocation route through a local attachment.
     std::fs::write(

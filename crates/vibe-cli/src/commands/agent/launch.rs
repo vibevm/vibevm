@@ -636,6 +636,10 @@ fn fresh_claude_print(arguments: &[String]) -> bool {
     print && prompt
 }
 
+fn fresh_hermes_query(arguments: &[String]) -> bool {
+    matches!(arguments, [chat, query, _] if chat == "chat" && (query == "-q" || query == "--query"))
+}
+
 fn admit_route_kind(kind: HarnessKind, arguments: &[String]) -> Result<()> {
     let configured = vibe_net::current().route().mode_name() != "direct";
     if kind == HarnessKind::OpenCode && configured {
@@ -666,6 +670,14 @@ fn admit_route_kind(kind: HarnessKind, arguments: &[String]) -> Result<()> {
         if !fresh_claude_print(arguments) {
             bail!(
                 "configured corporate proxy requires a recognized fresh Claude print invocation; resume, background and ambiguous forms are not qualified"
+            );
+        }
+        return Ok(());
+    }
+    if kind == HarnessKind::Hermes && configured {
+        if vibe_net::current().route().px().is_none() || !fresh_hermes_query(arguments) {
+            bail!(
+                "configured corporate proxy requires an owned Hermes finite chat query with managed px; shared, resumed and external routes are not qualified"
             );
         }
         return Ok(());
@@ -724,6 +736,17 @@ fn route_child(kind: HarnessKind, command: &mut Command) -> Result<Option<i32>> 
 #[cfg(test)]
 mod proxy_argument_tests {
     use super::standalone_opencode_run;
+    #[test]
+    fn hermes_proxy_admits_only_owned_finite_query() {
+        let check = |args: &[&str]| {
+            super::fresh_hermes_query(&args.iter().map(|s| (*s).to_owned()).collect::<Vec<_>>())
+        };
+        assert!(check(&["chat", "-q", "--resume"]));
+        assert!(!check(&["chat", "--resume", "id", "-q", "hello"]));
+        assert!(!check(&["gateway", "run"]));
+        assert!(!check(&["chat"]));
+    }
+
     #[test]
     fn claude_proxy_admits_native_print_not_persistent_modes() {
         let check = |args: &[&str]| {

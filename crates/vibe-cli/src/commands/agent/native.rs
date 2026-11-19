@@ -148,6 +148,23 @@ fn native_asset_mode() -> Option<u32> {
 mod tests {
     use super::*;
 
+    #[cfg(target_os = "linux")]
+    #[test]
+    fn hermes_proxy_ack_python_contract() {
+        let script = Path::new(env!("CARGO_MANIFEST_DIR"))
+            .join("src/commands/agent/native/test_hermes_proxy_ack.py");
+        let result = std::process::Command::new("python3")
+            .args(["-I", "-B"])
+            .arg(script)
+            .output()
+            .expect("Python 3 is required for the Hermes ACK contract test");
+        assert!(
+            result.status.success(),
+            "{}",
+            String::from_utf8_lossy(&result.stderr)
+        );
+    }
+
     #[test]
     fn assets_are_immutable_and_idempotent() {
         let temp = tempfile::tempdir().unwrap();

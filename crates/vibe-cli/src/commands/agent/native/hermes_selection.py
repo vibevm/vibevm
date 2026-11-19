@@ -134,6 +134,38 @@ async def select(client, parsed):
         raise
 
 
+def admit_route_ack(result, required):
+    """Closed non-secret route, never arbitrary environment or credentials."""
+    from ipaddress import ip_address
+    from urllib.parse import urlsplit
+    route = result.get('route')
+    if route is None:
+        if required:
+            raise ValueError('required managed route acknowledgement missing')
+        return
+    if not required or not isinstance(route, dict) or set(route) != {'kind', 'endpoint', 'no_proxy'}:
+        raise ValueError('unexpected managed route acknowledgement')
+    if route['kind'] != 'managed-px' or not isinstance(route['endpoint'], str) or not isinstance(route['no_proxy'], str):
+        raise ValueError('invalid managed route vocabulary')
+    endpoint = route['endpoint']
+    if not endpoint or len(endpoint) > 128 or any(c.isspace() or ord(c) < 32 or ord(c) == 127 for c in endpoint):
+        raise ValueError('invalid managed route endpoint')
+    url = urlsplit('http://' + endpoint)
+    if (url.username is not None or url.password is not None or url.path or url.query or url.fragment
+            or not url.hostname or not ip_address(url.hostname).is_loopback
+            or url.port is None or not 0 < url.port < 65536):
+        raise ValueError('managed route endpoint must be numeric loopback host and port')
+    bypass = route['no_proxy']
+    if len(bypass) > 4096 or any(ord(c) < 32 or ord(c) == 127 for c in bypass):
+        raise ValueError('invalid managed route bypass')
+    if not {'localhost', '127.0.0.1', '::1'}.issubset(set(bypass.split(','))):
+        raise ValueError('managed route must preserve local gateway bypass')
+    for key in ('HTTP_PROXY', 'http_proxy', 'HTTPS_PROXY', 'https_proxy'):
+        os.environ[key] = 'http://' + route['endpoint']
+    for key in ('NO_PROXY', 'no_proxy'):
+        os.environ[key] = bypass
+
+
 async def prefix_ack(directory, session_id, cwd):
     directory = Path(directory)
     publish_private(directory / 'ready.json', {'session': session_id, 'cwd': cwd, 'mode': 'selected'})
@@ -149,8 +181,11 @@ async def prefix_ack(directory, session_id, cwd):
         except json.JSONDecodeError:
             await asyncio.sleep(0.02)
             continue
-        if set(result) != {'session', 'cwd', 'prefix'} or result['session'] != session_id or result['cwd'] != cwd:
+        required = os.environ.get('VIBE_HERMES_MANAGED_ROUTE_REQUIRED') == '1'
+        expected = {'session', 'cwd', 'prefix', 'route'} if required else {'session', 'cwd', 'prefix'}
+        if set(result) != expected or result['session'] != session_id or result['cwd'] != cwd:
             raise ValueError('selection acknowledgement binding changed')
+        admit_route_ack(result, required)
         if result['prefix'] is None:
             return None
         path = Path(result['prefix'])
