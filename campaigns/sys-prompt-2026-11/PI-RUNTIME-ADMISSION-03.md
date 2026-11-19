@@ -19,6 +19,12 @@ The actual SDK three-arm result demonstrates the error-gate mechanism, not a pro
 7. Before product launch wiring, map the actual native parser's recognized argument families to their native implementation owners: selection/cwd, new/resume/fork, model/provider/thinking, prompt/files/stdin, tools/resources/extensions, trust/settings, interactive/print/RPC and informational/subcommands. Preserve behavior through native owners. Unsupported options must refuse before session effects, never silently disappear. A proof-only small argv set cannot close first-class parity. If preserving the full surface requires duplicating native main, report that exact bootstrap gap for a decision rather than copying it.
 8. Integrate only through existing Vibe typed harness/composer/launcher/preset/projection owners after the native seam passes. Bind any new bootstrap file owner explicitly in the candidate report; do not create a generic cross-agent framework. Keep Hermes changes out of this atom.
 
+## Observed native lifecycle constraint
+
+Source inspection of the pinned installed runtime shows `AgentSession.bindExtensions(onError)` stores one retained listener, while native `InteractiveMode.bindCurrentSessionExtensions` supplies its own UI reporting callback. `_applyExtensionBindings` unsubscribes the retained old callback and installs the current one on the runner. An additional direct `runner.onError` listener can coexist with UI initially, but `_buildRuntime` creates a new runner during reload. A creation-factory listener alone therefore does not establish reload-safe admission. The caller-owned `reload({beforeSessionStart})` hook is not automatically the hook used by native UI reload commands.
+
+One bounded actual reload proof is required to confirm this gap. Do not accept the factory as production-complete, overwrite the UI callback, wrap private instance methods or invent a public lifecycle hook. Return the precise missing integration capability for an architectural decision if no admitted lifecycle owner can preserve both UI reporting and carrier admission.
+
 ## Finite proof and review
 
 - Positive actual runtime-factory/native event delivers full stable prefix before exact fresh personal tail; test stream sentinel remains reachable.
