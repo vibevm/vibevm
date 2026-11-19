@@ -188,9 +188,11 @@ pub(super) fn run_install(ctx: &output::Context, args: McpInstallArgs) -> Result
         scope,
         project_root.as_deref(),
         what,
-        args.yes || ctx.is_unattended(),
-        args.force,
-        true,
+        InstallPolicy {
+            assume_yes: args.yes || ctx.is_unattended(),
+            force: args.force,
+            dry_run: true,
+        },
     )?;
 
     let needs_change = preview_results
@@ -249,9 +251,11 @@ pub(super) fn run_install(ctx: &output::Context, args: McpInstallArgs) -> Result
             scope,
             project_root.as_deref(),
             what,
-            args.yes || ctx.is_unattended(),
-            args.force,
-            false,
+            InstallPolicy {
+                assume_yes: args.yes || ctx.is_unattended(),
+                force: args.force,
+                dry_run: false,
+            },
         )?
     };
 
@@ -446,6 +450,13 @@ fn run_selected_install(ctx: &output::Context, args: McpInstallArgs) -> Result<(
     Ok(())
 }
 
+#[derive(Clone, Copy)]
+struct InstallPolicy {
+    assume_yes: bool,
+    force: bool,
+    dry_run: bool,
+}
+
 /// Per-(agent × scope) install walker. Extracted from `run_install`
 /// so the two-pass `confirm-then-apply` flow can call it twice —
 /// once with `dry_run = true` to gather the would-do plan, then
@@ -459,10 +470,13 @@ fn walk_install(
     scope: Scope,
     project_root: Option<&Path>,
     what: What,
-    assume_yes: bool,
-    force: bool,
-    dry_run: bool,
+    policy: InstallPolicy,
 ) -> Result<(Vec<AgentInstallReport>, Vec<SkillInstallReport>)> {
+    let InstallPolicy {
+        assume_yes,
+        force,
+        dry_run,
+    } = policy;
     let mut results: Vec<AgentInstallReport> = Vec::new();
     let mut skill_results: Vec<SkillInstallReport> = Vec::new();
     for agent in targeted {

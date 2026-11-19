@@ -176,6 +176,10 @@ impl Drop for OwnedChild {
     }
 }
 
+fn private_mode() -> Option<u32> {
+    if cfg!(unix) { Some(0o600) } else { None }
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -194,8 +198,4 @@ mod tests {
         drop(owned);
         assert!(!Path::new(&format!("/proc/{pid}")).exists());
     }
-}
-
-fn private_mode() -> Option<u32> {
-    if cfg!(unix) { Some(0o600) } else { None }
 }

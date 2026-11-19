@@ -102,12 +102,10 @@ pub fn run(ctx: &output::Context, args: McpArgs, runtime: McpRuntime) -> Result<
             crate::commands::agent::launchers::resolve(&settings, &configuration, "hermes")?;
         if launcher.kind == vibe_workspace::system_prompt::HarnessKind::Hermes
             && launcher.command.len() == 1
+            && let Ok(program) = crate::commands::agent::program::locate(&launcher.command[0])
+            && let Ok(home) = crate::commands::agent::native::hermes_profile_home(&program)
         {
-            if let Ok(program) = crate::commands::agent::program::locate(&launcher.command[0]) {
-                if let Ok(home) = crate::commands::agent::native::hermes_profile_home(&program) {
-                    resolved.agent_user_dirs.native.insert(Agent::Hermes, home);
-                }
-            }
+            resolved.agent_user_dirs.native.insert(Agent::Hermes, home);
         }
     }
     let ctx = &resolved;
