@@ -1,0 +1,26 @@
+[package]
+name = "codex"
+group = "org.vibevm.agents"
+kind = "app"
+version = "0.170.0"
+[application]
+id = "codex"
+[[installer_options]]
+id = "linux-x64-musl"
+name = "Official Codex Linux x64 musl CLI"
+platform = "linux"
+platform_name = "Linux"
+arch = "x86_64"
+[installer_options.installation]
+type = "tar_gz"
+source = "https://github.com/openai/codex/releases/download/rust-v0.170.0/codex-x86_64-unknown-linux-musl.tar.gz"
+sha256 = "d054916ccd28a53820376b8d2f7c875184ca8f40fcd44bbabeb8ee240ce247f5"
+[[installer_options.launchers]]
+id = "main"
+name = "Codex"
+executable = "$app_root/codex-x86_64-unknown-linux-musl"
+kind = "command"
+default = true
+[[installer_options.public_commands]]
+name = "codex"
+launcher = "main"
