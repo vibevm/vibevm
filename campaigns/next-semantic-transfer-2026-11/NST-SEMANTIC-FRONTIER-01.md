@@ -215,3 +215,5 @@ Five historical lifecycle changes distinguish a journal-ready reservation from a
 Four historical derivative changes distinguish a five-family design, passive source comparison/handoff, navigation of retained bytes, and explicit reconciliation of owned materialization. A foreign neighbor is not a derivative-owned effect and survives the inspected removal test. No native test was rerun by this review.
 
 Source maps in eight boot, source-observation and editorial evidence manifests were checked at their recording commits: `20e952e331` 15/15, `f60dd007b8` 7/7, `6b487cbdff` 8/8, `4e1386dec0` 11/11, `f7cd66691e` 49/49, `97e43e63a2` 62/62, `8187ba0dfc` 7/7, `a36c6b5562` 28/28. These are source bindings, not new test executions.
+
+At 19 introduction commits, 42 wire schemas were parsed: 144 ref occurrences resolve locally, 1 via an explicitly named entry in that revision's vocabulary registry, and 0 were not directly resolved by this check. Scope ends at those named bindings, not generated readers, transitive vocabulary expansion or actual operations.
