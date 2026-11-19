@@ -91,10 +91,17 @@ pub(super) fn prepare_records(
             pending.dependencies.clone(),
             None,
             pending.embedded_sources.clone(),
+            None,
         )
     }));
     let mut planned = base.clone();
-    for (cached, deps, _, embedded) in &prospective {
+    for (cached, deps, _, embedded, configuration) in &prospective {
+        let key = format!("{}/{}", cached.resolved.group, cached.resolved.name);
+        if let Some(record) = configuration {
+            planned.configurations.insert(key, record.clone());
+        } else {
+            planned.configurations.remove(&key);
+        }
         let old = planned.find(&cached.resolved.group, &cached.resolved.name);
         let entry = super::super::inputs::locked_package(cached, deps, old, embedded);
         match planned
@@ -216,6 +223,7 @@ pub(super) fn stage(
             p.dependencies,
             Some(placed.changed),
             p.embedded_sources,
+            None,
         ));
         package.finish();
         in_place.set_progress((index + 1) as u64, Some(in_place_total as u64), "packages");
@@ -234,7 +242,7 @@ pub(super) fn stage(
     let source_hashes = SourceHashes(
         updated
             .iter()
-            .map(|(cached, _, _, _)| {
+            .map(|(cached, _, _, _, _)| {
                 (
                     (cached.resolved.group.clone(), cached.resolved.name.clone()),
                     cached.content_hash.clone(),
@@ -334,7 +342,7 @@ pub(super) fn project_rows(workspace: &Workspace, updated: &[Resolved]) -> Vec<R
     updated
         .iter()
         .map(
-            |(cached, deps, in_place_changed, embedded_sources)| ResolvedDep {
+            |(cached, deps, in_place_changed, embedded_sources, configuration)| ResolvedDep {
                 kind: cached.package_meta().kind,
                 group: cached.resolved.group.clone(),
                 name: cached.resolved.name.clone(),
@@ -357,7 +365,7 @@ pub(super) fn project_rows(workspace: &Workspace, updated: &[Resolved]) -> Vec<R
                     &workspace.root,
                 ),
                 in_place_changed: *in_place_changed,
-                configuration: None,
+                configuration: configuration.clone(),
             },
         )
         .collect()

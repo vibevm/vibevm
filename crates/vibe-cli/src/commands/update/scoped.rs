@@ -71,6 +71,7 @@ type Resolved = (
     Vec<PackageRef>,
     Option<bool>,
     Vec<vibe_core::manifest::LockedEmbeddedSource>,
+    Option<vibe_core::manifest::PackageConfiguration>,
 );
 
 pub(super) struct SourceHashes(HashMap<(Group, String), String>);
@@ -162,7 +163,32 @@ fn run(
         proven.workspace(),
     );
 
-    vibe_install::configuration_admission::workspace_inputs(workspace, &project_root, &manifest)?;
+    let configured_all = matches!(&roots, Roots::All(_))
+        && workspace
+            .iter_nodes()
+            .any(|(_, node)| !node.requires.configurations.is_empty());
+    if configured_all {
+        vibe_install::configuration_admission::workspace_inputs_for_install(
+            workspace,
+            &project_root,
+            &manifest,
+        )?;
+        if workspace.iter_nodes().any(|(_, node)| {
+            !node.requires.git_packages.is_empty()
+                || !node.requires.path_packages.is_empty()
+                || !node.requires.var_packages.is_empty()
+        }) {
+            bail!(
+                "configured whole-workspace update requires ordinary local-registry declarations"
+            );
+        }
+    } else {
+        vibe_install::configuration_admission::workspace_inputs(
+            workspace,
+            &project_root,
+            &manifest,
+        )?;
+    }
     let mut lockfile = load_lockfile(&workspace.root)?;
     // PROP-050 ##VERIFY-LOCK-DIFF — the scoped update's own pre-apply
     // snapshot: the lock as loaded (before the entry replacements below
@@ -207,6 +233,21 @@ fn run(
         Roots::Named if args.sources_only => source_only_roots(&args.packages, &lockfile)?,
         Roots::Named => qualify_roots(&args.packages, &manifest, &lockfile)?,
     };
+    if configured_all
+        && lockfile.packages.iter().any(|row| {
+            row.materialization.is_in_place() || !row.source_url.as_str().starts_with("file://")
+        })
+    {
+        bail!("configured whole-workspace update refuses mixed or in-place sources");
+    }
+    let original_inputs = if configured_all {
+        Some(vibe_install::configured_workspace_inputs(
+            workspace,
+            &project_root,
+        )?)
+    } else {
+        None
+    };
     let record_capture =
         vibe_install::ProjectRecordPublication::capture_before(&workspace.root, &old_lock)?;
 
@@ -240,6 +281,16 @@ fn run(
         resolver
     };
 
+    let resolver = vibe_install::PlanningSource {
+        source: &resolver,
+        configuration: original_inputs.clone().map(|inputs| {
+            vibe_resolver::configuration::ConfigurationSnapshot::with_history(
+                inputs,
+                lockfile.configurations.clone(),
+            )
+        }),
+    };
+
     ctx.heading(&format!(
         "Re-resolving {} package{}…",
         roots.len(),
@@ -263,6 +314,23 @@ fn run(
                 return Err(error);
             }
         };
+
+    if configured_all {
+        let previous: std::collections::BTreeSet<_> = old_lock
+            .packages
+            .iter()
+            .map(|row| (row.group.clone(), row.name.to_string()))
+            .collect();
+        let selected: std::collections::BTreeSet<_> = graph
+            .iter()
+            .map(|row| (row.group.clone(), row.name.clone()))
+            .collect();
+        if previous != selected {
+            bail!(
+                "configured whole-workspace update requires explicit graph membership reconciliation before effects"
+            );
+        }
+    }
 
     // Fetched payload lands in the machine-global store (PROP-010
     // §2.7) — no project cache directory exists to create.
@@ -319,10 +387,21 @@ fn run(
                 return Err(error.into());
             }
         };
-        vibe_install::configuration_admission::package_manifest(&pkgref, &cached.manifest)?;
+        let configuration = resolver.configuration_for_node(node)?;
+        if let Some(record) = &configuration {
+            record.validate(&cached.manifest)?;
+        } else {
+            vibe_install::configuration_admission::package_manifest(&pkgref, &cached.manifest)?;
+        }
         let embedded_sources =
             vibe_registry::lock_embedded_sources_with(&cached.manifest.embedded_sources, offline)?;
-        updated.push((cached, node.dependencies.clone(), None, embedded_sources));
+        updated.push((
+            cached,
+            node.dependencies.clone(),
+            None,
+            embedded_sources,
+            configuration,
+        ));
         package.finish();
         fetching.set_progress((index + 1) as u64, Some(graph_len as u64), "packages");
     }
@@ -426,6 +505,7 @@ fn run(
             records,
             lanes_before: &lanes_before,
             agent: &agent,
+            original_inputs: original_inputs.as_ref(),
         },
     );
     outcome.map_err(|error| {
@@ -491,7 +571,7 @@ fn prune_superseded(
     measured: &mut Measured,
     rollback: &mut InstallRollback,
 ) -> Result<()> {
-    for (cached, _, _, _) in updated {
+    for (cached, _, _, _, _) in updated {
         let name = &cached.resolved.name;
         let Some(old_v) = lockfile
             .find(&cached.resolved.group, name)

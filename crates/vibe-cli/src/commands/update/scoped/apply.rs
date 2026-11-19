@@ -49,6 +49,8 @@ use super::{Resolved, SCOPED_INTEGRITY, SourceHashes, prune_superseded};
 
 /// Everything the measured half borrows from the scoped body.
 pub(super) struct ScopedApply<'a> {
+    pub(super) original_inputs:
+        Option<&'a vibe_resolver::configuration::PackageConfigurationInputs>,
     pub(super) lifecycle: &'a InstallSlotLifecycle,
     pub(super) measured: &'a mut Measured,
     pub(super) identity: &'a UpdateIdentity,
@@ -81,6 +83,7 @@ pub(super) struct ScopedApply<'a> {
 #[specmark::spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-069#PACKAGE-ADMISSION")]
 pub(super) fn apply(ctx: &output::Context, inputs: ScopedApply<'_>) -> Result<UpdateDraft> {
     let ScopedApply {
+        original_inputs,
         lifecycle,
         measured,
         identity,
@@ -104,7 +107,20 @@ pub(super) fn apply(ctx: &output::Context, inputs: ScopedApply<'_>) -> Result<Up
         agent,
     } = inputs;
 
-    vibe_install::configuration_admission::workspace_inputs(workspace, project_root, manifest)?;
+    if let Some(expected) = original_inputs {
+        vibe_install::configuration_admission::workspace_inputs_for_install(
+            workspace,
+            project_root,
+            manifest,
+        )?;
+        let current = Workspace::discover_selected(project_root)?;
+        if vibe_install::configured_workspace_inputs(&current.workspace, project_root)? != *expected
+        {
+            anyhow::bail!("configured update consumer inputs changed before publication");
+        }
+    } else {
+        vibe_install::configuration_admission::workspace_inputs(workspace, project_root, manifest)?;
+    }
     vibe_install::configuration_admission::resolved_packages(full_world)?;
 
     records.validate_before_publication()?;

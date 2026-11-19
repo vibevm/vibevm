@@ -542,3 +542,13 @@ mod fresh;
 pub use fresh::{freshness_prepared, project_fresh_node_roots};
 
 mod report;
+
+/// Reuse the ordinary fixed-consumer collector for a governed whole-workspace update.
+pub fn configured_workspace_inputs(
+    workspace: &Workspace,
+    selected_root: &Path,
+) -> Result<vibe_resolver::configuration::PackageConfigurationInputs> {
+    let selected = roots::selected_node(workspace, selected_root)?;
+    Ok(roots::RootRequirements::collect(workspace, &selected, &[])?.configuration_inputs())
+}
+pub use configured::PlanningSource;

@@ -66,9 +66,10 @@ pub use lifecycle::{
     SlotLifecyclePlanEntry, SlotLifecycleReport,
 };
 pub use plan::{
-    InstallPreview, InstallRequest, NodeRootProjection, Plan, PlannedInstall, PreviewSourceStorage,
-    RecommendationOutcome, RecommendationRow, SuggestionRow, WeakDependencyReport,
-    freshness_prepared, plan, plan_prepared_with_selected_roots, plan_prepared_with_spec_format,
+    InstallPreview, InstallRequest, NodeRootProjection, Plan, PlannedInstall, PlanningSource,
+    PreviewSourceStorage, RecommendationOutcome, RecommendationRow, SuggestionRow,
+    WeakDependencyReport, configured_workspace_inputs, freshness_prepared, plan,
+    plan_prepared_with_selected_roots, plan_prepared_with_spec_format,
     plan_prepared_without_publication, plan_with_spec_format, preview_has_requirements,
     preview_prepared, preview_prepared_with_selected_roots, project_fresh_node_roots,
 };

@@ -73,7 +73,6 @@ fn omitted_exactly_one_defaults_on_and_off_install_and_cold_replay_without_rewri
     }
 }
 #[test]
-#[ignore = "known public update configuration preflight gap; retained RED requires separate governed update follow-on"]
 fn changed_relied_on_default_refuses_update_before_effects() {
     let fixture = Fixture::new(false);
     configure(&fixture, false);
@@ -136,4 +135,153 @@ fn changed_relied_on_default_refuses_update_before_effects() {
         String::from_utf8_lossy(&result.stderr)
     );
     assert!(!control.slot(EXTRA).exists());
+    assert_eq!(
+        control
+            .lock()
+            .find(&GROUP.parse().unwrap(), DRIVER)
+            .unwrap()
+            .version
+            .to_string(),
+        "1.1.0"
+    );
+    let unchanged = Fixture::new(false);
+    configure(&unchanged, false);
+    unchanged.install_ok();
+    let old = unchanged.registry.join(GROUP).join(DRIVER).join("v1.0.0");
+    let new = unchanged.registry.join(GROUP).join(DRIVER).join("v1.1.0");
+    write(
+        &new.join("vibe.toml"),
+        fs::read_to_string(old.join("vibe.toml"))
+            .unwrap()
+            .replace("version='1.0.0'", "version='1.1.0'"),
+    );
+    write(
+        &new.join("boot/rules.md"),
+        fs::read(old.join("boot/rules.md")).unwrap(),
+    );
+    let result = update(&unchanged);
+    assert!(
+        result.status.success(),
+        "unchanged basis update failed: {}{}",
+        String::from_utf8_lossy(&result.stdout),
+        String::from_utf8_lossy(&result.stderr)
+    );
+    assert_eq!(
+        unchanged
+            .lock()
+            .find(&GROUP.parse().unwrap(), DRIVER)
+            .unwrap()
+            .version
+            .to_string(),
+        "1.1.0"
+    );
+    assert!(!unchanged.slot(EXTRA).exists());
+}
+
+#[test]
+fn governed_update_rejects_corrupt_basis_and_named_route_before_effects() {
+    let fixture = Fixture::new(false);
+    configure(&fixture, false);
+    fixture.install_ok();
+    let lock_path = fixture.project.join("vibe.lock");
+    let before = fs::read(&lock_path).unwrap();
+    let boot = fixture.static_boot();
+    let hooks = fixture.hooks();
+    let named = fixture
+        .user
+        .vibe()
+        .current_dir(&fixture.project)
+        .env("HOME", fixture.root.join("home"))
+        .args([
+            "update",
+            &coordinate(DRIVER),
+            "--offline",
+            "--assume-yes",
+            "--json",
+            "--path",
+            fixture.project.to_str().unwrap(),
+        ])
+        .output()
+        .unwrap();
+    assert!(!named.status.success());
+    assert_eq!(fs::read(&lock_path).unwrap(), before);
+    let text = String::from_utf8(before.clone()).unwrap();
+    let record = fixture.lock();
+    let fingerprint = &record.configurations[&coordinate(DRIVER)]
+        .automatic_basis
+        .as_ref()
+        .unwrap()
+        .definition_fingerprint;
+    assert!(text.contains(fingerprint));
+    write(
+        &lock_path,
+        text.replace(fingerprint, "configuration-semantic/1:sha256:invalid"),
+    );
+    let corrupted = fs::read(&lock_path).unwrap();
+    let result = update(&fixture);
+    assert!(!result.status.success());
+    assert_eq!(fs::read(&lock_path).unwrap(), corrupted);
+    assert_eq!(fixture.static_boot(), boot);
+    assert_eq!(fixture.hooks(), hooks);
+    assert!(!fixture.slot(EXTRA).exists());
+}
+
+#[test]
+fn explicit_unchanged_input_cannot_leave_unreachable_old_dependency_on_update() {
+    let fixture = Fixture::new(false);
+    fixture.install_ok();
+    let lock = fs::read(fixture.project.join("vibe.lock")).unwrap();
+    let boot = fixture.static_boot();
+    let hooks = fixture.hooks();
+    let old = fixture.registry.join(GROUP).join(DRIVER).join("v1.0.0");
+    let new = fixture.registry.join(GROUP).join(DRIVER).join("v1.1.0");
+    let text = fs::read_to_string(old.join("vibe.toml"))
+        .unwrap()
+        .replace("version='1.0.0'", "version='1.1.0'")
+        .replace("\"org.vibevm/oracle-base\" = \"^1\"", "");
+    // Remove the dormant effect mentioning the removed mandatory declaration
+    // as well, so the replacement is valid rather than malformed metadata.
+    let text = text.replace(
+        "effects = [{ kind = \"dependency\", target = \"org.vibevm/oracle-base\" }]",
+        "",
+    );
+    Manifest::parse_str(&text).unwrap();
+    write(&new.join("vibe.toml"), text);
+    write(
+        &new.join("boot/rules.md"),
+        fs::read(old.join("boot/rules.md")).unwrap(),
+    );
+    let result = update(&fixture);
+    let diagnostic = format!(
+        "{}{}",
+        String::from_utf8_lossy(&result.stdout),
+        String::from_utf8_lossy(&result.stderr)
+    );
+    assert!(!result.status.success(), "{diagnostic}");
+    assert!(
+        diagnostic.contains("graph membership reconciliation"),
+        "{diagnostic}"
+    );
+    assert_eq!(fs::read(fixture.project.join("vibe.lock")).unwrap(), lock);
+    assert_eq!(
+        fixture
+            .lock()
+            .find(&GROUP.parse().unwrap(), DRIVER)
+            .unwrap()
+            .version
+            .to_string(),
+        "1.0.0"
+    );
+    assert_eq!(fixture.static_boot(), boot);
+    assert_eq!(fixture.hooks(), hooks);
+    assert!(fixture.slot(BASE).exists());
+    assert!(
+        !vibe_workspace::vibedeps::slot_abs_path(
+            &fixture.project,
+            &GROUP.parse().unwrap(),
+            DRIVER,
+            &"1.1.0".parse().unwrap()
+        )
+        .exists()
+    );
 }

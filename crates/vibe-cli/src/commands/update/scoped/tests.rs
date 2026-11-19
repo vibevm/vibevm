@@ -121,12 +121,14 @@ fn a_prune_that_fails_half_way_keeps_the_slots_it_really_removed() {
             Vec::new(),
             None,
             Vec::new(),
+            None,
         ),
         (
             cached("org.demo", "second", "0.2.0"),
             Vec::new(),
             None,
             Vec::new(),
+            None,
         ),
     ];
     let mut measured = Measured::default();
@@ -204,6 +206,7 @@ fn a_restored_prune_puts_the_superseded_slot_back() {
         Vec::new(),
         None,
         Vec::new(),
+        None,
     )];
 
     let mut measured = Measured::default();
@@ -250,6 +253,7 @@ fn an_absent_superseded_slot_is_not_reported_as_pruned() {
         Vec::new(),
         None,
         Vec::new(),
+        None,
     )];
 
     let mut measured = Measured::default();

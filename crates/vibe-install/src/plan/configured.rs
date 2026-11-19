@@ -11,7 +11,7 @@ use vibe_resolver::{
     ResolvedGraph, ResolvedNode, SolveError, configuration::ConfigurationSnapshot,
 };
 
-pub(super) struct PlanningSource<'a, S: ?Sized> {
+pub struct PlanningSource<'a, S: ?Sized> {
     pub source: &'a S,
     pub configuration: Option<ConfigurationSnapshot>,
 }
