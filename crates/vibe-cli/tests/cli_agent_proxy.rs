@@ -84,6 +84,38 @@ fn pi_managed_route_preserves_arguments_status_and_reaps_px_on_spawn_failure() {
     assert!(!other.status.success());
     assert!(!String::from_utf8_lossy(&other.stdout).contains("SHOULD_NOT_START"));
     assert!(String::from_utf8_lossy(&other.stderr).contains("not yet qualified"));
+    // An existing OpenCode server has a different inference owner and cannot
+    // receive the invocation route through a local attachment.
+    std::fs::write(
+        user.settings.join("agents.toml"),
+        "[launchers.remote]\nkind='opencode'\ncommand=['/bin/sh','-c','echo SHOULD_NOT_START']\n",
+    )
+    .unwrap();
+    let attached = user
+        .vibe()
+        .current_dir(root.path())
+        .env("FAKE_PX_LOG", &log)
+        .args([
+            "agent",
+            "remote",
+            "--standalone",
+            "attach",
+            "http://127.0.0.1:9",
+        ])
+        .output()
+        .unwrap();
+    assert!(!attached.status.success());
+    assert!(!String::from_utf8_lossy(&attached.stdout).contains("SHOULD_NOT_START"));
+    assert!(String::from_utf8_lossy(&attached.stderr).contains("existing server owner"));
+    let served = user
+        .vibe()
+        .current_dir(root.path())
+        .env("FAKE_PX_LOG", &log)
+        .args(["agent", "remote", "--standalone", "serve"])
+        .output()
+        .unwrap();
+    assert!(!served.status.success());
+    assert!(!String::from_utf8_lossy(&served.stdout).contains("SHOULD_NOT_START"));
     let text = std::fs::read_to_string(&log).unwrap();
     let pids: Vec<u32> = text
         .lines()

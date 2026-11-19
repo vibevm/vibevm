@@ -83,7 +83,7 @@ pub(crate) fn run(ctx: &output::Context, argv: Vec<String>) -> Result<()> {
     }
     // READY above is local-only attachment. Every other unqualified harness
     // must refuse an explicitly selected corporate route before native effects.
-    admit_route_kind(launcher.kind)?;
+    admit_route_kind(launcher.kind, &native_arguments)?;
     let native_selection = if launcher.kind == HarnessKind::Hermes
         && super::native::hermes_selected::requested(&native_arguments)
     {
@@ -506,8 +506,48 @@ fn exec(
     std::process::exit(status.code().unwrap_or(1));
 }
 
-fn admit_route_kind(kind: HarnessKind) -> Result<()> {
-    if kind != HarnessKind::Pi && vibe_net::current().route().mode_name() != "direct" {
+/// Initial supported native shape: global --standalone followed by run.
+/// After `run`, positional prompt text (including web/serve/attach) is opaque.
+/// Only known value-consuming run options are walked; unknown options refuse.
+fn standalone_opencode_run(arguments: &[String]) -> bool {
+    if arguments.first().map(String::as_str) != Some("--standalone")
+        || arguments.get(1).map(String::as_str) != Some("run")
+    {
+        return false;
+    }
+    let mut index = 2;
+    while let Some(argument) = arguments.get(index) {
+        match argument.as_str() {
+            "--" => return true,
+            "--attach" => return false,
+            "-m" | "--model" | "--agent" | "--session" | "--title" | "--format" | "--file"
+            | "-f" => {
+                index += 1;
+                if arguments.get(index).is_none() {
+                    return false;
+                }
+            }
+            "--continue" | "-c" | "--fork" => {}
+            value if value.starts_with("--attach=") => return false,
+            value if value.starts_with('-') => return false,
+            _ => {}
+        }
+        index += 1;
+    }
+    true
+}
+
+fn admit_route_kind(kind: HarnessKind, arguments: &[String]) -> Result<()> {
+    let configured = vibe_net::current().route().mode_name() != "direct";
+    if kind == HarnessKind::OpenCode && configured {
+        if !standalone_opencode_run(arguments) {
+            bail!(
+                "configured corporate proxy requires an explicitly recognized standalone OpenCode run; an existing server owner or ambiguous invocation cannot inherit this invocation route"
+            );
+        }
+        return Ok(());
+    }
+    if kind != HarnessKind::Pi && configured {
         bail!(
             "configured corporate proxy routing is not yet qualified for harness `{}`; no agent was started (use a qualified Pi launcher or retain native/unmanaged invocation explicitly)",
             kind.as_str()
@@ -516,9 +556,9 @@ fn admit_route_kind(kind: HarnessKind) -> Result<()> {
     Ok(())
 }
 
-/// First admitted native route: Pi only. Other adapters remain separate work.
+/// Admitted native routes share one lifetime owner; other adapters remain separate work.
 fn route_child(kind: HarnessKind, command: &mut Command) -> Result<Option<i32>> {
-    if kind != HarnessKind::Pi {
+    if !matches!(kind, HarnessKind::Pi | HarnessKind::OpenCode) {
         return Ok(None);
     }
     let Some(route) = crate::commands::tool::px::AgentRoute::selected()? else {
@@ -532,10 +572,10 @@ fn route_child(kind: HarnessKind, command: &mut Command) -> Result<Option<i32>> 
         let mut supervisor = crate::process_supervision::Supervisor::install()?;
         let child = command
             .spawn()
-            .context("starting Pi with the selected managed proxy")?;
+            .context("starting agent with the selected managed proxy")?;
         supervisor
             .wait(child)
-            .context("waiting for Pi with the selected managed proxy")
+            .context("waiting for agent with the selected managed proxy")
     })();
     route.close();
     let status = result?;
@@ -549,4 +589,33 @@ fn route_child(kind: HarnessKind, command: &mut Command) -> Result<Option<i32>> 
     }
     #[cfg(not(unix))]
     Ok(Some(1))
+}
+
+#[cfg(test)]
+mod proxy_argument_tests {
+    use super::standalone_opencode_run;
+    #[test]
+    fn opencode_proxy_classifies_boundaries_not_prompt_prose() {
+        let check = |args: &[&str]| {
+            standalone_opencode_run(&args.iter().map(|s| (*s).to_owned()).collect::<Vec<_>>())
+        };
+        assert!(check(&["--standalone", "run", "web"]));
+        assert!(check(&["--standalone", "run", "--", "--attach", "serve"]));
+        assert!(check(&[
+            "--standalone",
+            "run",
+            "-m",
+            "fake/fake-1",
+            "attach"
+        ]));
+        assert!(!check(&["--standalone", "attach", "http://localhost"]));
+        assert!(!check(&["--standalone", "serve"]));
+        assert!(!check(&[
+            "--standalone",
+            "run",
+            "--attach",
+            "http://localhost"
+        ]));
+        assert!(!check(&["--standalone", "run", "--unknown", "web"]));
+    }
 }
