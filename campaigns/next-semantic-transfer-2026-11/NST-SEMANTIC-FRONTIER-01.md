@@ -163,3 +163,5 @@ Ten small revisions were checked for annotation binding, mirror configuration, w
 Eight environment revisions distinguish exact captured configuration and target identity from legacy observations and bounded layout reports. Native execution or final publication is not inferred from those records.
 
 At `0e945cb009`, each of the four parent log blobs matches the manifest raw digest, and each child matches its repository digest and the parent bytes with only trailing blank lines normalized. This checks retained M-16-C.4 evidence, not its external directory or a new execution.
+
+Five first-parent revisions clarify historical scaffold defaults, source declarations, delegation ownership, Zap source selection and prototype version policy. In particular, an exact bridge coordinate did not freeze the mutable application branch; a package/context owner did not thereby own task admission or process lifecycle. No target execution or publication was established.
