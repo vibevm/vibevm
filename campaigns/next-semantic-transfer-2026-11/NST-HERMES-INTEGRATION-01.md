@@ -1,6 +1,6 @@
 # NST-HERMES-INTEGRATION — Hermes on the consolidated domain architecture
 
-Owner scheduling decision, 2026-11-19. Planned child of `VIBEVM-IDE-MVP`, after its shared tree/search slice. Its stable ID and Hermes acceptance journey are unchanged. The IDE parent follows domain consolidation and precedes global repair; no deep integration starts in initial SYS.
+Owner scheduling decision, 2026-11-19. Planned child of `VIBEVM-IDE-MVP`, after its shared tree/search slice. Its stable ID and Hermes acceptance journey are unchanged. The IDE parent is outside NST and follows acceptance of the whole campaign. The historical NST prefix in this child ID preserves references; neither deep Hermes integration nor IDE implementation is required to close NST.
 
 ## Why this node exists
 
@@ -32,7 +32,7 @@ Start only after review of the domain consolidation: identify the actual owners 
 
 The core acceptance journey is the native local conversation from project launch through continuation, two viewers and reconnect, declared instruction scope and actual delivery, then the same supported outcome in the new integrated TUI, compared with native Hermes. Use the existing local-interactive journey brief for the checks. Classify cold startup, selected worktree, supported platforms and remaining native limits against the actual runtime. At entry re-evaluate the released Hermes API and both prompt debts; absence of an upstream merge does not prevent starting this node or authorize silently claiming strict delivery.
 
-Integration candidates, **not four automatic mandates**: reconnect a conversation to an actual Vibe operation and report its verified outcome without re-execution; promote a learned procedure to a reviewed versioned skill; explain a discrepancy using the governing specification and observed project state; notify a conversation of an operation outcome without model polling or implicit consent to retry. Prioritize the first concrete journey that benefits from the consolidated owners. Retain only selected, tested additions; document a disposition for the others. Before global repair, hand over the accepted behavior, remaining debt and reproducible provider-free evidence.
+Integration candidates, **not four automatic mandates**: reconnect a conversation to an actual Vibe operation and report its verified outcome without re-execution; promote a learned procedure to a reviewed versioned skill; explain a discrepancy using the governing specification and observed project state; notify a conversation of an operation outcome without model polling or implicit consent to retry. Prioritize the first concrete journey that benefits from the consolidated owners. Retain only selected, tested additions; document a disposition for the others. At IDE acceptance, hand over the accepted behavior, remaining debt and reproducible provider-free evidence.
 
 ## Shared workbench dependency
 
