@@ -195,3 +195,5 @@ For six derivative and boot revisions, checked the saved-file digests in the ret
 For the four-client commissioning contract, all 39 saved artifact hashes matched. For the prepared-plan bridge characterization, all 72 archived mappings reproduce both stored and raw sizes/hashes, including the decompressed trace, and all four source records match Git. Neither check constitutes a new native client qualification.
 
 Four historical changes separate a lock-selected package source, bounded retained bytes, cited host facts and boot-file classification. A file that disappears after observation does not establish a complete capture; a directory declaration does not establish its membership. Scope is limited to the named code owners, not present runtime acceptance.
+
+Three historical migration changes bind decisions to the exact authored path and replay against original bytes rather than choosing media by suffix. Separately the `8c8d623602` source receipt yielded 77/79 matching recorded source hashes against the commit tree (0 missing, 2 differing). The source comparison is not a conversion runtime test.
