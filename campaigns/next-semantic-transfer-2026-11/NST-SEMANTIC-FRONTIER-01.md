@@ -113,3 +113,5 @@ Eight specmap-only commits were compared as complete parent/child JSON: three ch
 Five release-impact-only commits changed 18 records. All 43 distinct commit subjects named by those records exist locally. The index records their change identities and diff hashes separately from the product and publication evidence they describe.
 
 Ten preview-transition commits changed only 36 release JSON files. All 24 explicit top-level commit/tree pairs matched Git. No product execution or publication was inferred from these records.
+
+Five combined manifest/task changes amended the permissible paths or notes of M-16-C.3 or M-16-C.4 and the registry digest field only. Task identity, its acceptance fields and product code were unchanged.
