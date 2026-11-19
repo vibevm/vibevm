@@ -31,3 +31,15 @@ name = "rust-ai-native"
 binary = "rust-ai-native-mcp"
 description = "AI-Native Rust discipline gates + type oracle over MCP (PROP-027)"
 args = ["--path", "{project_root}"]
+
+# The second half of `B-188` (PROP-065 `#ordinary-consumer`): the MCP server
+# above is of no use until an agent knows about it, and the install named
+# `vibe mcp install` nowhere. It is `optional = true` because it writes into
+# the user's own agent configuration rather than into this package's slot — a
+# failure is recorded and the installation carries on.
+[[extension]]
+id = "register-mcp"
+point = "slot:post-install"
+title = "Register the MCP server with your agents (vibe mcp install)"
+handler = { kind = "script", base = "tooling/post-install/register-mcp" }
+optional = true

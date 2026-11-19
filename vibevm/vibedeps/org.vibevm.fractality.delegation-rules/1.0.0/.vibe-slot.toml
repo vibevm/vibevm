@@ -1,25 +1,25 @@
 schema = 1
-source_hash = "sha256:61fee3dce2ceead0fbc7dbf4f7af820633ad498203aab3283bd7926b529c4f5f"
+source_hash = "sha256:d63946fc7b7b27e5693ddf06a2b8f3c678f6f681d214da22ae8988d8eb68cda6"
 spec_format = "xml"
 converter_recipe = "specdoc/4"
-derived_hash = "sha256:cb1a3b4594e66d10d4e6bb7c4c7f8443548ff55c28caeaf805aa47454c18d33e"
+derived_hash = "sha256:78a0d30f23c0d3a4d4b02eebf560137a6f831f7e03a477816d171e05b1dfa9a8"
 
 [[file]]
 path = "AGENTS.md"
-sha256 = "b6586c59ad7e755a7474c7917e2eeee1f5c09a9f5d1874775fd53675e5b18c1f"
-disposition = "copied"
+sha256 = "18a399ae924f22affbd60fc7a2b30a1ce1e8b606d87d4535460c91fa9f5828cd"
+disposition = "converted"
 source = "AGENTS.md"
 
 [[file]]
 path = "CLAUDE.md"
-sha256 = "b6586c59ad7e755a7474c7917e2eeee1f5c09a9f5d1874775fd53675e5b18c1f"
-disposition = "copied"
+sha256 = "18a399ae924f22affbd60fc7a2b30a1ce1e8b606d87d4535460c91fa9f5828cd"
+disposition = "converted"
 source = "CLAUDE.md"
 
 [[file]]
 path = "GEMINI.md"
-sha256 = "b6586c59ad7e755a7474c7917e2eeee1f5c09a9f5d1874775fd53675e5b18c1f"
-disposition = "copied"
+sha256 = "18a399ae924f22affbd60fc7a2b30a1ce1e8b606d87d4535460c91fa9f5828cd"
+disposition = "converted"
 source = "GEMINI.md"
 
 [[file]]
@@ -36,7 +36,7 @@ source = "README.md"
 
 [[file]]
 path = "vibe.lock"
-sha256 = "4974f8a3724f52665f865045fda69ce9dd9fa373eeccd2f113c80c20fe8a8230"
+sha256 = "0ae05e32281bc4f44a52eecabf2e08976db68f1f1dbf8352a1997aac4d760c06"
 disposition = "copied"
 source = "vibe.lock"
 
@@ -47,8 +47,14 @@ disposition = "copied"
 source = "vibe.toml"
 
 [[file]]
+path = "vibevm/vibedeps/.gitignore"
+sha256 = "cd78b20de1d901358a3c38c93966ef8842fb7e5816e532fff0671bc5f685a994"
+disposition = "copied"
+source = "vibevm/vibedeps/.gitignore"
+
+[[file]]
 path = "vibevm/vibedeps/org.vibevm.ai-native.core-ai-native/1.0.0/.vibe-slot.toml"
-sha256 = "f7ae040b8a4fcb15509e7641b65f90a719fdeda2700f092466c226a2a108492a"
+sha256 = "5e72a4b1a392e6a0daaec9a6b7119cf501fe209ea9035bbae4cca83830e248c1"
 disposition = "copied"
 source = "vibevm/vibedeps/org.vibevm.ai-native.core-ai-native/1.0.0/.vibe-slot.toml"
 
@@ -299,8 +305,14 @@ disposition = "copied"
 source = "vibevm/vibedeps/org.vibevm.ai-native.core-ai-native/1.0.0/crates/core-ai-native-specmap/Cargo.toml"
 
 [[file]]
+path = "vibevm/vibedeps/org.vibevm.ai-native.core-ai-native/1.0.0/crates/core-ai-native-specmap/src/authority.rs"
+sha256 = "644cd5938156d560858f19c8a11a49605068a6870bb68b25936d1fcbd9e2e13c"
+disposition = "copied"
+source = "vibevm/vibedeps/org.vibevm.ai-native.core-ai-native/1.0.0/crates/core-ai-native-specmap/src/authority.rs"
+
+[[file]]
 path = "vibevm/vibedeps/org.vibevm.ai-native.core-ai-native/1.0.0/crates/core-ai-native-specmap/src/config.rs"
-sha256 = "0f43c87919b1805babb09b85a3048c6627b2b0bb06fa91bc2ccbe1769afadcfc"
+sha256 = "9cebd366a5dfb8cd46c4abccdbadcabfb6b94b5301f7d92879557e397198c717"
 disposition = "copied"
 source = "vibevm/vibedeps/org.vibevm.ai-native.core-ai-native/1.0.0/crates/core-ai-native-specmap/src/config.rs"
 
@@ -324,7 +336,7 @@ source = "vibevm/vibedeps/org.vibevm.ai-native.core-ai-native/1.0.0/crates/core-
 
 [[file]]
 path = "vibevm/vibedeps/org.vibevm.ai-native.core-ai-native/1.0.0/crates/core-ai-native-specmap/src/generated/mod.rs"
-sha256 = "1aecc6379f57bbe787c119bef8a6c2f7b72e3655ea3f995239d5d9b74687bf91"
+sha256 = "54448c1c403e984bc6fed95a70a04cad4976f6b116d4048a6dabf7d9bbaa0707"
 disposition = "copied"
 source = "vibevm/vibedeps/org.vibevm.ai-native.core-ai-native/1.0.0/crates/core-ai-native-specmap/src/generated/mod.rs"
 
@@ -335,8 +347,14 @@ disposition = "copied"
 source = "vibevm/vibedeps/org.vibevm.ai-native.core-ai-native/1.0.0/crates/core-ai-native-specmap/src/generated/specmap/mod.rs"
 
 [[file]]
+path = "vibevm/vibedeps/org.vibevm.ai-native.core-ai-native/1.0.0/crates/core-ai-native-specmap/src/generated/specmap_authority/mod.rs"
+sha256 = "e2092995ea3f2159f2f7386ccaa0d7d2d9dc8ed5c9dcfd6a64432127d827beca"
+disposition = "copied"
+source = "vibevm/vibedeps/org.vibevm.ai-native.core-ai-native/1.0.0/crates/core-ai-native-specmap/src/generated/specmap_authority/mod.rs"
+
+[[file]]
 path = "vibevm/vibedeps/org.vibevm.ai-native.core-ai-native/1.0.0/crates/core-ai-native-specmap/src/index.rs"
-sha256 = "7329984b45b10242f714f8a079dd74787f55e71ddd91b81e90b9336f08534ab1"
+sha256 = "766b6758404fc224bd0febeab170abaa9d801336779eff6e80d3e956fe9a1ae7"
 disposition = "copied"
 source = "vibevm/vibedeps/org.vibevm.ai-native.core-ai-native/1.0.0/crates/core-ai-native-specmap/src/index.rs"
 
@@ -372,7 +390,7 @@ source = "vibevm/vibedeps/org.vibevm.ai-native.core-ai-native/1.0.0/crates/core-
 
 [[file]]
 path = "vibevm/vibedeps/org.vibevm.ai-native.core-ai-native/1.0.0/crates/core-ai-native-specmap/src/jtd/tests.rs"
-sha256 = "583a743cd269def6d98b67340ed26b6b6d6be8bc2d6a4222a7a53c38df16977b"
+sha256 = "03cf06abafbc33ba1b20cc2546f669efa1162689818a471c895c135b85859347"
 disposition = "copied"
 source = "vibevm/vibedeps/org.vibevm.ai-native.core-ai-native/1.0.0/crates/core-ai-native-specmap/src/jtd/tests.rs"
 
@@ -384,9 +402,15 @@ source = "vibevm/vibedeps/org.vibevm.ai-native.core-ai-native/1.0.0/crates/core-
 
 [[file]]
 path = "vibevm/vibedeps/org.vibevm.ai-native.core-ai-native/1.0.0/crates/core-ai-native-specmap/src/lib.rs"
-sha256 = "73846811f1a54bf8e8aa3073aa44551cde1ee5108a896160143a993faca5e9b2"
+sha256 = "7a5e752518e0bbff22fc885a9bd9b7c1b86618869799f94693c0558b7dcc9efc"
 disposition = "copied"
 source = "vibevm/vibedeps/org.vibevm.ai-native.core-ai-native/1.0.0/crates/core-ai-native-specmap/src/lib.rs"
+
+[[file]]
+path = "vibevm/vibedeps/org.vibevm.ai-native.core-ai-native/1.0.0/crates/core-ai-native-specmap/src/local_layers.rs"
+sha256 = "4fa5fc80914146dd3d63616feb372c3fe9aab0b040e23f2ab2e8713574e4fef1"
+disposition = "copied"
+source = "vibevm/vibedeps/org.vibevm.ai-native.core-ai-native/1.0.0/crates/core-ai-native-specmap/src/local_layers.rs"
 
 [[file]]
 path = "vibevm/vibedeps/org.vibevm.ai-native.core-ai-native/1.0.0/crates/core-ai-native-specmap/src/mdspec.rs"
@@ -414,7 +438,7 @@ source = "vibevm/vibedeps/org.vibevm.ai-native.core-ai-native/1.0.0/crates/core-
 
 [[file]]
 path = "vibevm/vibedeps/org.vibevm.ai-native.core-ai-native/1.0.0/crates/core-ai-native-specmap/src/mdspec/walk.rs"
-sha256 = "b783c1d639c610586525201bf66d1b60dce9dea5b028a0d206dcc0b006a3b17f"
+sha256 = "ed05a41df845d574fe7847f30bb0fa6e9c3c6c464cd9d4776d05a9c9ae30795e"
 disposition = "copied"
 source = "vibevm/vibedeps/org.vibevm.ai-native.core-ai-native/1.0.0/crates/core-ai-native-specmap/src/mdspec/walk.rs"
 
@@ -555,6 +579,12 @@ path = "vibevm/vibedeps/org.vibevm.ai-native.core-ai-native/1.0.0/schemas/specma
 sha256 = "3a47f08375ed86c095e1dc2116c24f331e59055449cf85c23791445e08eebbcc"
 disposition = "copied"
 source = "vibevm/vibedeps/org.vibevm.ai-native.core-ai-native/1.0.0/schemas/specmap.jtd.json"
+
+[[file]]
+path = "vibevm/vibedeps/org.vibevm.ai-native.core-ai-native/1.0.0/schemas/specmap_authority.jtd.json"
+sha256 = "97d2ce454a6ca1062e8c6ccc91df3895ca1b01a2b71156d29e46eab07ce170d1"
+disposition = "copied"
+source = "vibevm/vibedeps/org.vibevm.ai-native.core-ai-native/1.0.0/schemas/specmap_authority.jtd.json"
 
 [[file]]
 path = "vibevm/vibedeps/org.vibevm.ai-native.core-ai-native/1.0.0/specmap.toml"
@@ -726,7 +756,7 @@ source = "vibevm/vibedeps/org.vibevm.ai-native.core-ai-native/1.0.0/vibevm/vibes
 
 [[file]]
 path = "vibevm/vibedeps/org.vibevm.ai-native.rust-ai-native-lang/1.0.0/.vibe-slot.toml"
-sha256 = "058b4006bcc43a77415039e8c1bd90f40104409747fd83c011c48953dbf7dc56"
+sha256 = "2715f7691434bc52b8697f545de1be7cd6351fa22a039852b6691ed3cf1e3eee"
 disposition = "copied"
 source = "vibevm/vibedeps/org.vibevm.ai-native.rust-ai-native-lang/1.0.0/.vibe-slot.toml"
 
@@ -1211,8 +1241,14 @@ disposition = "copied"
 source = "vibevm/vibedeps/org.vibevm.ai-native.rust-ai-native-lang/1.0.0/crates/vendor/core-ai-native-specmap/Cargo.toml"
 
 [[file]]
+path = "vibevm/vibedeps/org.vibevm.ai-native.rust-ai-native-lang/1.0.0/crates/vendor/core-ai-native-specmap/src/authority.rs"
+sha256 = "644cd5938156d560858f19c8a11a49605068a6870bb68b25936d1fcbd9e2e13c"
+disposition = "copied"
+source = "vibevm/vibedeps/org.vibevm.ai-native.rust-ai-native-lang/1.0.0/crates/vendor/core-ai-native-specmap/src/authority.rs"
+
+[[file]]
 path = "vibevm/vibedeps/org.vibevm.ai-native.rust-ai-native-lang/1.0.0/crates/vendor/core-ai-native-specmap/src/config.rs"
-sha256 = "0f43c87919b1805babb09b85a3048c6627b2b0bb06fa91bc2ccbe1769afadcfc"
+sha256 = "9cebd366a5dfb8cd46c4abccdbadcabfb6b94b5301f7d92879557e397198c717"
 disposition = "copied"
 source = "vibevm/vibedeps/org.vibevm.ai-native.rust-ai-native-lang/1.0.0/crates/vendor/core-ai-native-specmap/src/config.rs"
 
@@ -1236,7 +1272,7 @@ source = "vibevm/vibedeps/org.vibevm.ai-native.rust-ai-native-lang/1.0.0/crates/
 
 [[file]]
 path = "vibevm/vibedeps/org.vibevm.ai-native.rust-ai-native-lang/1.0.0/crates/vendor/core-ai-native-specmap/src/generated/mod.rs"
-sha256 = "1aecc6379f57bbe787c119bef8a6c2f7b72e3655ea3f995239d5d9b74687bf91"
+sha256 = "54448c1c403e984bc6fed95a70a04cad4976f6b116d4048a6dabf7d9bbaa0707"
 disposition = "copied"
 source = "vibevm/vibedeps/org.vibevm.ai-native.rust-ai-native-lang/1.0.0/crates/vendor/core-ai-native-specmap/src/generated/mod.rs"
 
@@ -1247,8 +1283,14 @@ disposition = "copied"
 source = "vibevm/vibedeps/org.vibevm.ai-native.rust-ai-native-lang/1.0.0/crates/vendor/core-ai-native-specmap/src/generated/specmap/mod.rs"
 
 [[file]]
+path = "vibevm/vibedeps/org.vibevm.ai-native.rust-ai-native-lang/1.0.0/crates/vendor/core-ai-native-specmap/src/generated/specmap_authority/mod.rs"
+sha256 = "e2092995ea3f2159f2f7386ccaa0d7d2d9dc8ed5c9dcfd6a64432127d827beca"
+disposition = "copied"
+source = "vibevm/vibedeps/org.vibevm.ai-native.rust-ai-native-lang/1.0.0/crates/vendor/core-ai-native-specmap/src/generated/specmap_authority/mod.rs"
+
+[[file]]
 path = "vibevm/vibedeps/org.vibevm.ai-native.rust-ai-native-lang/1.0.0/crates/vendor/core-ai-native-specmap/src/index.rs"
-sha256 = "7329984b45b10242f714f8a079dd74787f55e71ddd91b81e90b9336f08534ab1"
+sha256 = "766b6758404fc224bd0febeab170abaa9d801336779eff6e80d3e956fe9a1ae7"
 disposition = "copied"
 source = "vibevm/vibedeps/org.vibevm.ai-native.rust-ai-native-lang/1.0.0/crates/vendor/core-ai-native-specmap/src/index.rs"
 
@@ -1284,7 +1326,7 @@ source = "vibevm/vibedeps/org.vibevm.ai-native.rust-ai-native-lang/1.0.0/crates/
 
 [[file]]
 path = "vibevm/vibedeps/org.vibevm.ai-native.rust-ai-native-lang/1.0.0/crates/vendor/core-ai-native-specmap/src/jtd/tests.rs"
-sha256 = "583a743cd269def6d98b67340ed26b6b6d6be8bc2d6a4222a7a53c38df16977b"
+sha256 = "03cf06abafbc33ba1b20cc2546f669efa1162689818a471c895c135b85859347"
 disposition = "copied"
 source = "vibevm/vibedeps/org.vibevm.ai-native.rust-ai-native-lang/1.0.0/crates/vendor/core-ai-native-specmap/src/jtd/tests.rs"
 
@@ -1296,9 +1338,15 @@ source = "vibevm/vibedeps/org.vibevm.ai-native.rust-ai-native-lang/1.0.0/crates/
 
 [[file]]
 path = "vibevm/vibedeps/org.vibevm.ai-native.rust-ai-native-lang/1.0.0/crates/vendor/core-ai-native-specmap/src/lib.rs"
-sha256 = "73846811f1a54bf8e8aa3073aa44551cde1ee5108a896160143a993faca5e9b2"
+sha256 = "7a5e752518e0bbff22fc885a9bd9b7c1b86618869799f94693c0558b7dcc9efc"
 disposition = "copied"
 source = "vibevm/vibedeps/org.vibevm.ai-native.rust-ai-native-lang/1.0.0/crates/vendor/core-ai-native-specmap/src/lib.rs"
+
+[[file]]
+path = "vibevm/vibedeps/org.vibevm.ai-native.rust-ai-native-lang/1.0.0/crates/vendor/core-ai-native-specmap/src/local_layers.rs"
+sha256 = "4fa5fc80914146dd3d63616feb372c3fe9aab0b040e23f2ab2e8713574e4fef1"
+disposition = "copied"
+source = "vibevm/vibedeps/org.vibevm.ai-native.rust-ai-native-lang/1.0.0/crates/vendor/core-ai-native-specmap/src/local_layers.rs"
 
 [[file]]
 path = "vibevm/vibedeps/org.vibevm.ai-native.rust-ai-native-lang/1.0.0/crates/vendor/core-ai-native-specmap/src/mdspec.rs"
@@ -1326,7 +1374,7 @@ source = "vibevm/vibedeps/org.vibevm.ai-native.rust-ai-native-lang/1.0.0/crates/
 
 [[file]]
 path = "vibevm/vibedeps/org.vibevm.ai-native.rust-ai-native-lang/1.0.0/crates/vendor/core-ai-native-specmap/src/mdspec/walk.rs"
-sha256 = "b783c1d639c610586525201bf66d1b60dce9dea5b028a0d206dcc0b006a3b17f"
+sha256 = "ed05a41df845d574fe7847f30bb0fa6e9c3c6c464cd9d4776d05a9c9ae30795e"
 disposition = "copied"
 source = "vibevm/vibedeps/org.vibevm.ai-native.rust-ai-native-lang/1.0.0/crates/vendor/core-ai-native-specmap/src/mdspec/walk.rs"
 
@@ -1463,8 +1511,20 @@ disposition = "copied"
 source = "vibevm/vibedeps/org.vibevm.ai-native.rust-ai-native-lang/1.0.0/specmap.toml"
 
 [[file]]
+path = "vibevm/vibedeps/org.vibevm.ai-native.rust-ai-native-lang/1.0.0/tooling/post-install/build-tools.ps1"
+sha256 = "28b07e3baf71b0c70dfbf1b1f85f364c9244033593e563427e99c2ef09d2a418"
+disposition = "copied"
+source = "vibevm/vibedeps/org.vibevm.ai-native.rust-ai-native-lang/1.0.0/tooling/post-install/build-tools.ps1"
+
+[[file]]
+path = "vibevm/vibedeps/org.vibevm.ai-native.rust-ai-native-lang/1.0.0/tooling/post-install/build-tools.sh"
+sha256 = "b04bc6d5237e0b41d5b7c9c52d1cb9ce4919084c17aa4fac33614f691987fbbf"
+disposition = "copied"
+source = "vibevm/vibedeps/org.vibevm.ai-native.rust-ai-native-lang/1.0.0/tooling/post-install/build-tools.sh"
+
+[[file]]
 path = "vibevm/vibedeps/org.vibevm.ai-native.rust-ai-native-lang/1.0.0/vibe.toml"
-sha256 = "f5658add3678829076f69f6800931c98d14635ecf2d6b0bd832ef6e4c91b7817"
+sha256 = "e6d7c25bbdac966a0c2d057519082a93d8c74395b32951309e441c26483deff0"
 disposition = "copied"
 source = "vibevm/vibedeps/org.vibevm.ai-native.rust-ai-native-lang/1.0.0/vibe.toml"
 
@@ -1602,7 +1662,7 @@ source = "vibevm/vibedeps/org.vibevm.ai-native.rust-ai-native-lang/1.0.0/vibevm/
 
 [[file]]
 path = "vibevm/vibedeps/org.vibevm.ai-native.rust-ai-native-mcp/1.0.0/.vibe-slot.toml"
-sha256 = "30f430c65826e299cd168bdaa9048229970cfcf4163661d1894bdc8a28ff6ddf"
+sha256 = "61d7a5f5c4219040da4f998052953ffea595a79381b1983a37dc1a37ca69894e"
 disposition = "copied"
 source = "vibevm/vibedeps/org.vibevm.ai-native.rust-ai-native-mcp/1.0.0/.vibe-slot.toml"
 
@@ -2159,8 +2219,14 @@ disposition = "copied"
 source = "vibevm/vibedeps/org.vibevm.ai-native.rust-ai-native-mcp/1.0.0/crates/vendor/core-ai-native-specmap/Cargo.toml"
 
 [[file]]
+path = "vibevm/vibedeps/org.vibevm.ai-native.rust-ai-native-mcp/1.0.0/crates/vendor/core-ai-native-specmap/src/authority.rs"
+sha256 = "644cd5938156d560858f19c8a11a49605068a6870bb68b25936d1fcbd9e2e13c"
+disposition = "copied"
+source = "vibevm/vibedeps/org.vibevm.ai-native.rust-ai-native-mcp/1.0.0/crates/vendor/core-ai-native-specmap/src/authority.rs"
+
+[[file]]
 path = "vibevm/vibedeps/org.vibevm.ai-native.rust-ai-native-mcp/1.0.0/crates/vendor/core-ai-native-specmap/src/config.rs"
-sha256 = "0f43c87919b1805babb09b85a3048c6627b2b0bb06fa91bc2ccbe1769afadcfc"
+sha256 = "9cebd366a5dfb8cd46c4abccdbadcabfb6b94b5301f7d92879557e397198c717"
 disposition = "copied"
 source = "vibevm/vibedeps/org.vibevm.ai-native.rust-ai-native-mcp/1.0.0/crates/vendor/core-ai-native-specmap/src/config.rs"
 
@@ -2184,7 +2250,7 @@ source = "vibevm/vibedeps/org.vibevm.ai-native.rust-ai-native-mcp/1.0.0/crates/v
 
 [[file]]
 path = "vibevm/vibedeps/org.vibevm.ai-native.rust-ai-native-mcp/1.0.0/crates/vendor/core-ai-native-specmap/src/generated/mod.rs"
-sha256 = "1aecc6379f57bbe787c119bef8a6c2f7b72e3655ea3f995239d5d9b74687bf91"
+sha256 = "54448c1c403e984bc6fed95a70a04cad4976f6b116d4048a6dabf7d9bbaa0707"
 disposition = "copied"
 source = "vibevm/vibedeps/org.vibevm.ai-native.rust-ai-native-mcp/1.0.0/crates/vendor/core-ai-native-specmap/src/generated/mod.rs"
 
@@ -2195,8 +2261,14 @@ disposition = "copied"
 source = "vibevm/vibedeps/org.vibevm.ai-native.rust-ai-native-mcp/1.0.0/crates/vendor/core-ai-native-specmap/src/generated/specmap/mod.rs"
 
 [[file]]
+path = "vibevm/vibedeps/org.vibevm.ai-native.rust-ai-native-mcp/1.0.0/crates/vendor/core-ai-native-specmap/src/generated/specmap_authority/mod.rs"
+sha256 = "e2092995ea3f2159f2f7386ccaa0d7d2d9dc8ed5c9dcfd6a64432127d827beca"
+disposition = "copied"
+source = "vibevm/vibedeps/org.vibevm.ai-native.rust-ai-native-mcp/1.0.0/crates/vendor/core-ai-native-specmap/src/generated/specmap_authority/mod.rs"
+
+[[file]]
 path = "vibevm/vibedeps/org.vibevm.ai-native.rust-ai-native-mcp/1.0.0/crates/vendor/core-ai-native-specmap/src/index.rs"
-sha256 = "7329984b45b10242f714f8a079dd74787f55e71ddd91b81e90b9336f08534ab1"
+sha256 = "766b6758404fc224bd0febeab170abaa9d801336779eff6e80d3e956fe9a1ae7"
 disposition = "copied"
 source = "vibevm/vibedeps/org.vibevm.ai-native.rust-ai-native-mcp/1.0.0/crates/vendor/core-ai-native-specmap/src/index.rs"
 
@@ -2232,7 +2304,7 @@ source = "vibevm/vibedeps/org.vibevm.ai-native.rust-ai-native-mcp/1.0.0/crates/v
 
 [[file]]
 path = "vibevm/vibedeps/org.vibevm.ai-native.rust-ai-native-mcp/1.0.0/crates/vendor/core-ai-native-specmap/src/jtd/tests.rs"
-sha256 = "583a743cd269def6d98b67340ed26b6b6d6be8bc2d6a4222a7a53c38df16977b"
+sha256 = "03cf06abafbc33ba1b20cc2546f669efa1162689818a471c895c135b85859347"
 disposition = "copied"
 source = "vibevm/vibedeps/org.vibevm.ai-native.rust-ai-native-mcp/1.0.0/crates/vendor/core-ai-native-specmap/src/jtd/tests.rs"
 
@@ -2244,9 +2316,15 @@ source = "vibevm/vibedeps/org.vibevm.ai-native.rust-ai-native-mcp/1.0.0/crates/v
 
 [[file]]
 path = "vibevm/vibedeps/org.vibevm.ai-native.rust-ai-native-mcp/1.0.0/crates/vendor/core-ai-native-specmap/src/lib.rs"
-sha256 = "73846811f1a54bf8e8aa3073aa44551cde1ee5108a896160143a993faca5e9b2"
+sha256 = "7a5e752518e0bbff22fc885a9bd9b7c1b86618869799f94693c0558b7dcc9efc"
 disposition = "copied"
 source = "vibevm/vibedeps/org.vibevm.ai-native.rust-ai-native-mcp/1.0.0/crates/vendor/core-ai-native-specmap/src/lib.rs"
+
+[[file]]
+path = "vibevm/vibedeps/org.vibevm.ai-native.rust-ai-native-mcp/1.0.0/crates/vendor/core-ai-native-specmap/src/local_layers.rs"
+sha256 = "4fa5fc80914146dd3d63616feb372c3fe9aab0b040e23f2ab2e8713574e4fef1"
+disposition = "copied"
+source = "vibevm/vibedeps/org.vibevm.ai-native.rust-ai-native-mcp/1.0.0/crates/vendor/core-ai-native-specmap/src/local_layers.rs"
 
 [[file]]
 path = "vibevm/vibedeps/org.vibevm.ai-native.rust-ai-native-mcp/1.0.0/crates/vendor/core-ai-native-specmap/src/mdspec.rs"
@@ -2274,7 +2352,7 @@ source = "vibevm/vibedeps/org.vibevm.ai-native.rust-ai-native-mcp/1.0.0/crates/v
 
 [[file]]
 path = "vibevm/vibedeps/org.vibevm.ai-native.rust-ai-native-mcp/1.0.0/crates/vendor/core-ai-native-specmap/src/mdspec/walk.rs"
-sha256 = "b783c1d639c610586525201bf66d1b60dce9dea5b028a0d206dcc0b006a3b17f"
+sha256 = "ed05a41df845d574fe7847f30bb0fa6e9c3c6c464cd9d4776d05a9c9ae30795e"
 disposition = "copied"
 source = "vibevm/vibedeps/org.vibevm.ai-native.rust-ai-native-mcp/1.0.0/crates/vendor/core-ai-native-specmap/src/mdspec/walk.rs"
 
@@ -2411,8 +2489,20 @@ disposition = "copied"
 source = "vibevm/vibedeps/org.vibevm.ai-native.rust-ai-native-mcp/1.0.0/specmap.toml"
 
 [[file]]
+path = "vibevm/vibedeps/org.vibevm.ai-native.rust-ai-native-mcp/1.0.0/tooling/post-install/register-mcp.ps1"
+sha256 = "e41f3056197be41d8d7f709bda9323dc2c985c9bd71a34a14de5b13e5d53a8f4"
+disposition = "copied"
+source = "vibevm/vibedeps/org.vibevm.ai-native.rust-ai-native-mcp/1.0.0/tooling/post-install/register-mcp.ps1"
+
+[[file]]
+path = "vibevm/vibedeps/org.vibevm.ai-native.rust-ai-native-mcp/1.0.0/tooling/post-install/register-mcp.sh"
+sha256 = "8cda4f27f81364a9c7492e7e3605a0c3957a1155d4c58353b843cbea6f996fbb"
+disposition = "copied"
+source = "vibevm/vibedeps/org.vibevm.ai-native.rust-ai-native-mcp/1.0.0/tooling/post-install/register-mcp.sh"
+
+[[file]]
 path = "vibevm/vibedeps/org.vibevm.ai-native.rust-ai-native-mcp/1.0.0/vibe.toml"
-sha256 = "79c94195dd89c832aa9fffcc251a2e89d4d01fda0f817d9fd19d4f912da9efac"
+sha256 = "612818fc01409268d34010acdafd735d591a4efbca46d42f6087ff7ee6149a6a"
 disposition = "copied"
 source = "vibevm/vibedeps/org.vibevm.ai-native.rust-ai-native-mcp/1.0.0/vibe.toml"
 
@@ -2964,7 +3054,7 @@ source = "vibevm/vibedeps/org.vibevm.world.git-practices/1.0.0/vibevm/vibespecs/
 
 [[file]]
 path = "vibevm/vibedeps/org.vibevm.world.git-practices/1.0.0/vibevm/vibespecs/boot/INDEX.md"
-sha256 = "5d1726057b5c8e4ac92c4b9c3675736cf8ecb7999f9455f79701af3e9c9c330e"
+sha256 = "fbfb79eac45e51190aad32acd794a6fc275ed4e4c739156253ec7264aa2145e3"
 disposition = "copied"
 source = "vibevm/vibedeps/org.vibevm.world.git-practices/1.0.0/vibevm/vibespecs/boot/INDEX.md"
 
@@ -3737,28 +3827,10 @@ disposition = "copied"
 source = "vibevm/vibedeps/org.vibevm.world.wal/1.0.0/vibevm/vibespecs/skills/wal-status/SKILL.md"
 
 [[file]]
-path = "vibevm/vibespecs/boot/.vibe-boot-artifacts.lock"
-sha256 = "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
-disposition = "copied"
-source = "vibevm/vibespecs/boot/.vibe-boot-artifacts.lock"
-
-[[file]]
 path = "vibevm/vibespecs/boot/77-flow-delegation-rules.xml"
 sha256 = "d8ad3c3794ce02a84ae1a0509b06ccb597c269b09b03aaafd9a9badd0a2b4b9b"
 disposition = "copied"
 source = "vibevm/vibespecs/boot/77-flow-delegation-rules.xml"
-
-[[file]]
-path = "vibevm/vibespecs/boot/INDEX.xml"
-sha256 = "fdc1e56fde61d5a9de7ac3e374cbe677d7b056fd328b3f2f328b2c63d54f58a0"
-disposition = "converted"
-source = "vibevm/vibespecs/boot/INDEX.md"
-
-[[file]]
-path = "vibevm/vibespecs/boot/STATIC.xml"
-sha256 = "a3c234191c64f384afd51a9491ddae523d9da1edbdbbb6628d386a69268307cc"
-disposition = "converted"
-source = "vibevm/vibespecs/boot/STATIC.md"
 
 [[file]]
 path = "vibevm/vibespecs/flows/delegation-rules/DECISION-MATRIX.xml"

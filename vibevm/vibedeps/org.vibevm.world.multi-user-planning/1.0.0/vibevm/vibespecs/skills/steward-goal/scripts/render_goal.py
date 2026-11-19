@@ -165,6 +165,16 @@ def require_str_list(row: dict[str, Any], key: str, owner: str) -> list[str]:
     return value
 
 
+def completion_gates(row: dict[str, Any]) -> list[str]:
+    """`completes_after` is optional: an absent field is no completion gate.
+
+    It gates only this node's own acceptance and is never inherited, so every
+    plan written before the field exists keeps its exact meaning.
+    """
+    value = row.get("completes_after")
+    return list(value) if isinstance(value, list) else []
+
+
 def detect_cycle(edges: dict[str, list[str]], label: str) -> None:
     visiting: set[str] = set()
     visited: set[str] = set()
@@ -219,6 +229,7 @@ def validate_plan(plan: dict[str, Any]) -> tuple[list[dict[str, Any]], list[dict
 
     parent_edges: dict[str, list[str]] = {}
     dep_edges: dict[str, list[str]] = {}
+    gate_edges: dict[str, list[str]] = {}
     for node_id, row in by_id.items():
         parent = require_str(row, "parent", node_id)
         if parent and parent not in by_id:
@@ -229,6 +240,16 @@ def validate_plan(plan: dict[str, Any]) -> tuple[list[dict[str, Any]], list[dict
         if missing_deps:
             raise GoalError("GOAL_PLAN_INVALID", f"{node_id} has missing dependencies {missing_deps}")
         dep_edges[node_id] = deps
+        if "completes_after" in row:
+            require_str_list(row, "completes_after", node_id)
+        gates = completion_gates(row)
+        missing_gates = [gate for gate in gates if gate not in by_id]
+        if missing_gates:
+            raise GoalError("GOAL_PLAN_INVALID",
+                            f"{node_id} has missing completion gates {missing_gates}")
+        if node_id in gates:
+            raise GoalError("GOAL_PLAN_INVALID", f"{node_id} completes after itself")
+        gate_edges[node_id] = gates
         refs = require_str_list(row, "mandates", node_id)
         missing_mandates = [mid for mid in refs if mid not in mandate_ids]
         if missing_mandates:
@@ -247,7 +268,10 @@ def validate_plan(plan: dict[str, Any]) -> tuple[list[dict[str, Any]], list[dict
             raise GoalError("GOAL_PLAN_INVALID", f"{node_id}.order must be an integer")
 
     detect_cycle(parent_edges, "parent")
-    detect_cycle(dep_edges, "dependency")
+    # A start gate and a completion gate can deadlock each other, so both edge
+    # kinds share one acyclicity check.
+    detect_cycle({key: dep_edges[key] + gate_edges[key] for key in by_id},
+                 "dependency/completion-gate")
     root_node = require_str(plan, "root_node", "plan")
     current_node = require_str(plan, "current_node", "plan")
     if root_node not in by_id or current_node not in by_id:
@@ -531,8 +555,11 @@ def render(snapshot: dict[str, Any]) -> tuple[bytes, bytes | None, dict[str, Any
     lines.extend(["", "## Remaining route"])
     for node in remaining:
         deps = ", ".join(node["depends_on"]) if node["depends_on"] else "none"
+        gates = completion_gates(node)
+        suffix = f"; completes after: {', '.join(gates)}" if gates else ""
         lines.append(
-            f"- [{node['id']}] {node['state']} — {md_text(node['title'])}; depends on: {deps}"
+            f"- [{node['id']}] {node['state']} — {md_text(node['title'])}; "
+            f"depends on: {deps}{suffix}"
         )
     if not remaining:
         lines.append("- None.")

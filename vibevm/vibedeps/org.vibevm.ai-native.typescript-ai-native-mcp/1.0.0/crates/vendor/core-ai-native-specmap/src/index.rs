@@ -69,6 +69,21 @@ pub fn build_with_scanner(
     cfg: &Config,
     scanner: &dyn crate::scanner::CodeScanner,
 ) -> Specmap {
+    if let Err(error) = crate::authority::validate(root, cfg) {
+        return Specmap {
+            schema: SCHEMA,
+            specUnits: Vec::new(),
+            codeItems: Vec::new(),
+            edges: Vec::new(),
+            suspects: Vec::new(),
+            warnings: vec![Warning {
+                code: "reference-authority".into(),
+                message: error.to_string(),
+                file: Config::REL_PATH.into(),
+                line: 0,
+            }],
+        };
+    }
     let (mut spec_units, mut md_warnings) = mdspec::scan_spec_tree(root, cfg);
     let (mut code_items, mut edges, mut rs_warnings) = scanner.scan(root, cfg);
     // Installed packages' spec trees participate in RESOLUTION only
@@ -76,9 +91,30 @@ pub fn build_with_scanner(
     // edge into `spec://<pkg>/…` resolves instead of dangling, and its
     // pin can go suspect — but are never serialised into this project's
     // index (`spec_units` stays the project's own content, byte-stable).
-    let external_units = mdspec::scan_external_units(root, cfg);
+    let edge_authority = crate::authority::validate_edges(root, cfg, &edges);
+    let external_units = if edge_authority.is_ok() {
+        mdspec::scan_external_units(root, cfg)
+    } else {
+        Vec::new()
+    };
 
     let mut warnings = Vec::new();
+    if let Err(error) = edge_authority {
+        warnings.push(Warning {
+            code: "reference-authority".into(),
+            message: error.to_string(),
+            file: Config::REL_PATH.into(),
+            line: 0,
+        });
+    }
+    if let Err(error) = crate::local_layers::LocalLayers::current(root).validate(root, cfg) {
+        warnings.push(Warning {
+            code: "local-layer-reference".into(),
+            message: error.to_string(),
+            file: Config::REL_PATH.into(),
+            line: 0,
+        });
+    }
     warnings.append(&mut md_warnings);
     warnings.append(&mut rs_warnings);
 
@@ -348,7 +384,9 @@ pub fn write_with_scanner(
     cfg: &Config,
     scanner: &dyn crate::scanner::CodeScanner,
 ) -> Result<(PathBuf, Summary)> {
+    crate::authority::validate(root, cfg)?;
     let map = build_with_scanner(root, cfg, scanner);
+    crate::authority::validate_edges(root, cfg, &map.edges)?;
     let summary = Summary::of(&map);
     if let Some(old) = load_committed(root) {
         for line in classify_drift(&old, &map) {
@@ -375,7 +413,9 @@ pub fn check_with_scanner(
     cfg: &Config,
     scanner: &dyn crate::scanner::CodeScanner,
 ) -> Result<std::result::Result<Summary, String>> {
+    crate::authority::validate(root, cfg)?;
     let map = build_with_scanner(root, cfg, scanner);
+    crate::authority::validate_edges(root, cfg, &map.edges)?;
     let summary = Summary::of(&map);
     let fresh = to_canonical_bytes(&map)?;
     let path = index_path(root);

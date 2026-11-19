@@ -39,6 +39,7 @@ pub mod fingerprint;
 pub mod index;
 pub mod jtd;
 pub mod ledger;
+mod local_layers;
 pub mod mdspec;
 pub mod ratchet;
 pub mod rscan;
@@ -99,3 +100,5 @@ mod tests {
         assert_ne!(content_hash("a"), content_hash("b"));
     }
 }
+
+pub mod authority;

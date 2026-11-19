@@ -44,6 +44,14 @@ evidence mechanics that any capable agent or human coordinator can use.</NOT-A-C
   interaction mode in `user-local-state.xml`.</CONTENT-LOCAL-STORE>
       <CONTENT-PLAN fact="true" status="impl/done">The lossless hierarchical plan and receding-horizon
   planning discipline in `plan-hierarchy.xml`.</CONTENT-PLAN>
+      <CONTENT-TWO-GATE-KINDS fact="true" status="impl/done">Two dependency kinds in `plan-hierarchy.xml`:
+  the inherited start gate `depends_on`, unchanged, and the optional per-node
+  completion gate `completes_after`, which withholds that one node's acceptance
+  without gating its start, its dispatch or its descendants. It names a parent's
+  own final step — a design that generalises what its children already
+  delivered — without stalling every child. Both kinds share one acyclicity
+  check; an absent field is no gate, so every older plan keeps its exact
+  meaning.</CONTENT-TWO-GATE-KINDS>
       <CONTENT-GOAL fact="true" status="impl/done">The deterministic, user-local goal projection in
   `goal-projection.xml`: one selected campaign node, its governing mandates,
   accepted boundary, candidates, complete remaining route and closure proof;
@@ -73,10 +81,25 @@ evidence mechanics that any capable agent or human coordinator can use.</NOT-A-C
       <CONTENT-MIGRATION fact="true" status="impl/done">The composition and migration rules for projects
   leaving `wal`/`wal-specspaces`, including the redbook exclusion recipe, in
   `migration-and-composition.xml`.</CONTENT-MIGRATION>
-      <CONTENT-SKILLS fact="true" status="impl/done">Four optional agent skills: status-only orientation,
-  explicit same-machine formal handoff, deterministic goal refresh, and
+      <CONTENT-PLAN-DISPLAY fact="true" status="spec/done">The display vocabulary every viewer of a plan
+  shares, in `plan-hierarchy.xml`: the fixed state-to-bucket map that keeps
+  `candidate` («Сделано · ждёт приёмки») distinct from `accepted`, the
+  leaf-descendant counting rule, and the law that a rendered tree is derived
+  navigation carrying the validator's verdict.</CONTENT-PLAN-DISPLAY>
+      <CONTENT-SKILLS fact="true" status="impl/done">Five optional agent skills: status-only orientation,
+  explicit same-machine formal handoff, deterministic goal refresh,
   `steward-parallel` for a read-only JSON frontier with readiness, conflicts,
-  candidate batches and review backlog. They are not `vibe.exe` commands.</CONTENT-SKILLS>
+  candidate batches and review backlog, and `steward-tree` for a static offline
+  HTML tree of any conformant plan. They are not `vibe.exe` commands.</CONTENT-SKILLS>
+      <CONTENT-TREE fact="true" status="impl/done">A generic plan viewer in
+  `vibevm/vibespecs/skills/steward-tree`: `render_tree.py --plan &lt;plan.toml&gt;
+  --out &lt;dir&gt; [--watch]` writes a self-contained `index.html` plus
+  `plan-tree.json` atomically, with no network, no build step and no
+  project-specific layer. It shows the node tree, the full state vocabulary in
+  display buckets, per-parent leaf counts, typed dependency edges and their
+  reverse direction, acceptance, evidence, mandates, unknown extra fields, and
+  the plan validator's verdict with per-node warnings. Plan text is rendered as
+  data, never as markup.</CONTENT-TREE>
     </facts>
   </contents>
   <authority title="Authority boundary">

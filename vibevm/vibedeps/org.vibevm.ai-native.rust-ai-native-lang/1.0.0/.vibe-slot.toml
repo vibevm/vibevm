@@ -1,8 +1,8 @@
 schema = 1
-source_hash = "sha256:ddfe01d8b1b7c2694ef6409276873c10b6f51fe98c14faf774dbaadde0aa8ab4"
+source_hash = "sha256:f94933e6812c294d36920a7700723ad79d38d6ca37f07148a28d3aaf162c4b28"
 spec_format = "xml"
 converter_recipe = "specdoc/4"
-derived_hash = "sha256:71a89d181c30cac9f164c910866f31dc845935b30cf0c50118c52389a7ec6433"
+derived_hash = "sha256:5763c7235dbea3bbf9a2483a9bd72f5fb049b04cea373f43067d6d22e64fa8ac"
 
 [[file]]
 path = "Cargo.lock"
@@ -485,8 +485,14 @@ disposition = "copied"
 source = "crates/vendor/core-ai-native-specmap/Cargo.toml"
 
 [[file]]
+path = "crates/vendor/core-ai-native-specmap/src/authority.rs"
+sha256 = "644cd5938156d560858f19c8a11a49605068a6870bb68b25936d1fcbd9e2e13c"
+disposition = "copied"
+source = "crates/vendor/core-ai-native-specmap/src/authority.rs"
+
+[[file]]
 path = "crates/vendor/core-ai-native-specmap/src/config.rs"
-sha256 = "0f43c87919b1805babb09b85a3048c6627b2b0bb06fa91bc2ccbe1769afadcfc"
+sha256 = "9cebd366a5dfb8cd46c4abccdbadcabfb6b94b5301f7d92879557e397198c717"
 disposition = "copied"
 source = "crates/vendor/core-ai-native-specmap/src/config.rs"
 
@@ -510,7 +516,7 @@ source = "crates/vendor/core-ai-native-specmap/src/fingerprint.rs"
 
 [[file]]
 path = "crates/vendor/core-ai-native-specmap/src/generated/mod.rs"
-sha256 = "1aecc6379f57bbe787c119bef8a6c2f7b72e3655ea3f995239d5d9b74687bf91"
+sha256 = "54448c1c403e984bc6fed95a70a04cad4976f6b116d4048a6dabf7d9bbaa0707"
 disposition = "copied"
 source = "crates/vendor/core-ai-native-specmap/src/generated/mod.rs"
 
@@ -521,8 +527,14 @@ disposition = "copied"
 source = "crates/vendor/core-ai-native-specmap/src/generated/specmap/mod.rs"
 
 [[file]]
+path = "crates/vendor/core-ai-native-specmap/src/generated/specmap_authority/mod.rs"
+sha256 = "e2092995ea3f2159f2f7386ccaa0d7d2d9dc8ed5c9dcfd6a64432127d827beca"
+disposition = "copied"
+source = "crates/vendor/core-ai-native-specmap/src/generated/specmap_authority/mod.rs"
+
+[[file]]
 path = "crates/vendor/core-ai-native-specmap/src/index.rs"
-sha256 = "7329984b45b10242f714f8a079dd74787f55e71ddd91b81e90b9336f08534ab1"
+sha256 = "766b6758404fc224bd0febeab170abaa9d801336779eff6e80d3e956fe9a1ae7"
 disposition = "copied"
 source = "crates/vendor/core-ai-native-specmap/src/index.rs"
 
@@ -558,7 +570,7 @@ source = "crates/vendor/core-ai-native-specmap/src/jtd/positions.rs"
 
 [[file]]
 path = "crates/vendor/core-ai-native-specmap/src/jtd/tests.rs"
-sha256 = "583a743cd269def6d98b67340ed26b6b6d6be8bc2d6a4222a7a53c38df16977b"
+sha256 = "03cf06abafbc33ba1b20cc2546f669efa1162689818a471c895c135b85859347"
 disposition = "copied"
 source = "crates/vendor/core-ai-native-specmap/src/jtd/tests.rs"
 
@@ -570,9 +582,15 @@ source = "crates/vendor/core-ai-native-specmap/src/ledger.rs"
 
 [[file]]
 path = "crates/vendor/core-ai-native-specmap/src/lib.rs"
-sha256 = "73846811f1a54bf8e8aa3073aa44551cde1ee5108a896160143a993faca5e9b2"
+sha256 = "7a5e752518e0bbff22fc885a9bd9b7c1b86618869799f94693c0558b7dcc9efc"
 disposition = "copied"
 source = "crates/vendor/core-ai-native-specmap/src/lib.rs"
+
+[[file]]
+path = "crates/vendor/core-ai-native-specmap/src/local_layers.rs"
+sha256 = "4fa5fc80914146dd3d63616feb372c3fe9aab0b040e23f2ab2e8713574e4fef1"
+disposition = "copied"
+source = "crates/vendor/core-ai-native-specmap/src/local_layers.rs"
 
 [[file]]
 path = "crates/vendor/core-ai-native-specmap/src/mdspec.rs"
@@ -600,7 +618,7 @@ source = "crates/vendor/core-ai-native-specmap/src/mdspec/tests.rs"
 
 [[file]]
 path = "crates/vendor/core-ai-native-specmap/src/mdspec/walk.rs"
-sha256 = "b783c1d639c610586525201bf66d1b60dce9dea5b028a0d206dcc0b006a3b17f"
+sha256 = "ed05a41df845d574fe7847f30bb0fa6e9c3c6c464cd9d4776d05a9c9ae30795e"
 disposition = "copied"
 source = "crates/vendor/core-ai-native-specmap/src/mdspec/walk.rs"
 
@@ -737,8 +755,20 @@ disposition = "copied"
 source = "specmap.toml"
 
 [[file]]
+path = "tooling/post-install/build-tools.ps1"
+sha256 = "28b07e3baf71b0c70dfbf1b1f85f364c9244033593e563427e99c2ef09d2a418"
+disposition = "copied"
+source = "tooling/post-install/build-tools.ps1"
+
+[[file]]
+path = "tooling/post-install/build-tools.sh"
+sha256 = "b04bc6d5237e0b41d5b7c9c52d1cb9ce4919084c17aa4fac33614f691987fbbf"
+disposition = "copied"
+source = "tooling/post-install/build-tools.sh"
+
+[[file]]
 path = "vibe.toml"
-sha256 = "f5658add3678829076f69f6800931c98d14635ecf2d6b0bd832ef6e4c91b7817"
+sha256 = "e6d7c25bbdac966a0c2d057519082a93d8c74395b32951309e441c26483deff0"
 disposition = "copied"
 source = "vibe.toml"
 

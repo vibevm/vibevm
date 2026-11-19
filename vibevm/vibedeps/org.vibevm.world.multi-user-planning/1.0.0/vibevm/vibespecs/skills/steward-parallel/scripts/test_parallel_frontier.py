@@ -243,6 +243,55 @@ class ParallelFrontierTests(unittest.TestCase):
         self.assertEqual(self.analyze()["proposed_batches"], [["A", "B"]])
         self.assertEqual(self.plan["node"][4]["state"], "planned")
 
+    def test_completion_gate_closes_only_its_own_node(self):
+        """A parent's final step is not a prerequisite of each child."""
+        self.plan = plan(node("P", kind="phase", order=3),
+                         node("X", state="active", order=4))
+        self.plan["node"][1]["parent"] = "P"       # A, a leaf of P
+        self.plan["node"][2]["parent"] = "P"       # B, a leaf of P
+        self.plan["node"][3]["completes_after"] = ["X"]
+        self.tasks = {"A": metadata(writes=["src/a.py"]), "B": metadata(writes=["src/b.py"]),
+                      "X": metadata(writes=["src/x.py"])}
+
+        # The gate is not inherited: both children stay ready and dispatchable.
+        result = self.analyze()
+        self.assertEqual([row["id"] for row in result["ready"]], ["A", "B"])
+        self.assertEqual(result["proposed_batches"], [["A", "B"]])
+        self.assertEqual(result["completion_gated"],
+                         [{"id": "P", "state": "planned", "completion_gates": ["X"],
+                           "unsatisfied_completion_gates": ["X"]}])
+
+        # A child may be accepted while its parent's completion gate is open.
+        for row in self.plan["node"][1:3]:
+            row["state"] = "accepted"
+            row["evidence"] = ["commit:child"]
+        self.analyze()
+
+        # The gated parent itself may not be accepted until the gate is terminal.
+        self.plan["node"][3]["state"] = "accepted"
+        self.plan["node"][3]["evidence"] = ["commit:parent"]
+        with self.assertRaises(frontier.FrontierError) as caught:
+            self.analyze()
+        self.assertEqual(caught.exception.code, "PLAN_INVALID")
+        self.assertIn("accepted before its completion gates: P", str(caught.exception))
+        self.plan["node"][4]["state"] = "accepted"
+        self.plan["node"][4]["evidence"] = ["commit:gate"]
+        self.assertEqual(self.analyze()["completion_gated"][0]["unsatisfied_completion_gates"], [])
+
+    def test_the_same_shape_as_a_start_gate_still_blocks_every_child(self):
+        self.plan = plan(node("P", kind="phase", order=3),
+                         node("X", state="active", order=4))
+        self.plan["node"][1]["parent"] = "P"
+        self.plan["node"][2]["parent"] = "P"
+        self.plan["node"][3]["depends_on"] = ["X"]
+        self.assertEqual(self.analyze()["ready"], [])
+        for row in self.plan["node"][1:3]:
+            row["state"] = "accepted"
+            row["evidence"] = ["commit:child"]
+        with self.assertRaises(frontier.FrontierError) as caught:
+            self.analyze()
+        self.assertIn("accepted with open prerequisites/children", str(caught.exception))
+
     def test_open_predecessor_keeps_existing_sequential_dependency(self):
         self.plan["node"][2]["depends_on"] = ["A"]
         result = self.analyze()
