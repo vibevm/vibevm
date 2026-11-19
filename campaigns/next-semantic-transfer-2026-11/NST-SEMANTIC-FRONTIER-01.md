@@ -203,3 +203,5 @@ The same revision’s `ROOT-FINAL-INTEGRATION.json` explicitly lists the two dif
 The BIND.2 manifest at `68728811bd` reproduces all 20 declared sizes and SHA-256 values at the recording commit, not at the stated base (`ddc502417`), where none match. A base reference is not the candidate snapshot.
 
 At `39c7d99040` all four raw digests cited by the typed adapter review match the logs in the originating tree; each retained log contains its one-case pass. These are the original selected receipts, not additional tests on top of the later normalized copies or closure of the two deferred gates.
+
+The historical Redbook declared `mup` as the exactly-one continuity default, but the host separately supplied exact `mup`. Identical resulting graphs are insufficient to classify the latter as automatic reliance. Feature-effect lowering and resolver characterization do not establish the current schema-12 replay behavior.
