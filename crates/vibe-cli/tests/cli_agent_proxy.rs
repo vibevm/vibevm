@@ -71,7 +71,7 @@ fn pi_managed_route_preserves_arguments_status_and_reaps_px_on_spawn_failure() {
     // execution for an adapter outside this first qualified identity.
     std::fs::write(
         user.settings.join("agents.toml"),
-        "[launchers.other]\nkind='claude'\ncommand=['/bin/sh','-c','echo SHOULD_NOT_START']\n",
+        "[launchers.other]\nkind='hermes'\ncommand=['/bin/sh','-c','echo SHOULD_NOT_START']\n",
     )
     .unwrap();
     let other = user
@@ -146,6 +146,19 @@ fn pi_managed_route_preserves_arguments_status_and_reaps_px_on_spawn_failure() {
     assert!(!qwen.status.success());
     assert!(!String::from_utf8_lossy(&qwen.stdout).contains("SHOULD_NOT_START"));
     assert!(String::from_utf8_lossy(&qwen.stderr).contains("fresh headless Qwen"));
+    std::fs::write(user.settings.join("agents.toml"),
+        "[launchers.clauderetained]\nkind='claude'\ncommand=['/bin/sh','-c','echo SHOULD_NOT_START']\n"
+    ).unwrap();
+    let claude = user
+        .vibe()
+        .current_dir(root.path())
+        .env("FAKE_PX_LOG", &log)
+        .args(["agent", "clauderetained", "--resume", "id", "-p", "hello"])
+        .output()
+        .unwrap();
+    assert!(!claude.status.success());
+    assert!(!String::from_utf8_lossy(&claude.stdout).contains("SHOULD_NOT_START"));
+    assert!(String::from_utf8_lossy(&claude.stderr).contains("fresh Claude print"));
     let text = std::fs::read_to_string(&log).unwrap();
     let pids: Vec<u32> = text
         .lines()

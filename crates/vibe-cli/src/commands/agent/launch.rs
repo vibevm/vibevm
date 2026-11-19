@@ -594,6 +594,48 @@ fn fresh_qwen_prompt(arguments: &[String]) -> bool {
     prompt
 }
 
+/// Fresh native Claude print only; no resume/background/remote lifetime.
+fn fresh_claude_print(arguments: &[String]) -> bool {
+    let mut index = 0;
+    let mut print = false;
+    let mut prompt = false;
+    while let Some(argument) = arguments.get(index) {
+        match argument.as_str() {
+            "-p" | "--print" => {
+                if print {
+                    return false;
+                }
+                print = true;
+            }
+            "--model" => {
+                index += 1;
+                if arguments
+                    .get(index)
+                    .is_none_or(|value| value.starts_with('-'))
+                {
+                    return false;
+                }
+            }
+            "--tools" => {
+                index += 1;
+                if arguments.get(index).map(String::as_str) != Some("") {
+                    return false;
+                }
+            }
+            "--no-session-persistence" => {}
+            value if !value.starts_with('-') => {
+                if prompt {
+                    return false;
+                }
+                prompt = true;
+            }
+            _ => return false,
+        }
+        index += 1;
+    }
+    print && prompt
+}
+
 fn admit_route_kind(kind: HarnessKind, arguments: &[String]) -> Result<()> {
     let configured = vibe_net::current().route().mode_name() != "direct";
     if kind == HarnessKind::OpenCode && configured {
@@ -620,6 +662,14 @@ fn admit_route_kind(kind: HarnessKind, arguments: &[String]) -> Result<()> {
         }
         return Ok(());
     }
+    if kind == HarnessKind::Claude && configured {
+        if !fresh_claude_print(arguments) {
+            bail!(
+                "configured corporate proxy requires a recognized fresh Claude print invocation; resume, background and ambiguous forms are not qualified"
+            );
+        }
+        return Ok(());
+    }
     if kind != HarnessKind::Pi && configured {
         bail!(
             "configured corporate proxy routing is not yet qualified for harness `{}`; no agent was started (use a qualified Pi launcher or retain native/unmanaged invocation explicitly)",
@@ -633,7 +683,11 @@ fn admit_route_kind(kind: HarnessKind, arguments: &[String]) -> Result<()> {
 fn route_child(kind: HarnessKind, command: &mut Command) -> Result<Option<i32>> {
     if !matches!(
         kind,
-        HarnessKind::Pi | HarnessKind::OpenCode | HarnessKind::Codex | HarnessKind::Qwen
+        HarnessKind::Pi
+            | HarnessKind::OpenCode
+            | HarnessKind::Codex
+            | HarnessKind::Qwen
+            | HarnessKind::Claude
     ) {
         return Ok(None);
     }
@@ -670,6 +724,27 @@ fn route_child(kind: HarnessKind, command: &mut Command) -> Result<Option<i32>> 
 #[cfg(test)]
 mod proxy_argument_tests {
     use super::standalone_opencode_run;
+    #[test]
+    fn claude_proxy_admits_native_print_not_persistent_modes() {
+        let check = |args: &[&str]| {
+            super::fresh_claude_print(&args.iter().map(|s| (*s).to_owned()).collect::<Vec<_>>())
+        };
+        assert!(check(&[
+            "-p",
+            "hello",
+            "--tools",
+            "",
+            "--no-session-persistence"
+        ]));
+        assert!(check(&["--model", "claude-opus-5-5", "--print", "hello"]));
+        assert!(!check(&["--resume", "id", "-p", "hello"]));
+        assert!(!check(&["--background", "-p", "hello"]));
+        assert!(!check(&["-p", "--continue"]));
+        assert!(!check(&["-p", "--resume"]));
+        assert!(!check(&["-p"]));
+        assert!(!check(&["-p", "hello", "--unknown"]));
+    }
+
     #[test]
     fn qwen_proxy_admits_opaque_prompt_not_other_lifetimes() {
         let check = |args: &[&str]| {
