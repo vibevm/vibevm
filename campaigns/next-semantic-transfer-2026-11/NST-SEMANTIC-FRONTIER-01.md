@@ -157,3 +157,5 @@ Fourteen xtask-only revisions were inspected for capture, local staging, compati
 Seven publication changes distinguish preparation and identity, smoke readiness, pure remote planning, local capture and scoped approval. None is accepted as an observed release on a real host by this review.
 
 Eight lifecycle revisions were checked for narrowly scoped admission, target OS, physical effect uncertainty, missing recovery input, stopped-phase reports and replay identity. A completed report is not proof that uncertain physical effects completed.
+
+Ten small revisions were checked for annotation binding, mirror configuration, worker disclosure, schema provenance, CLI guidance and target policy. A mirror ref configuration or changed spec revision is not evidence of a push or executed migration.
