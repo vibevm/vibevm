@@ -135,7 +135,7 @@ pub(crate) fn run(ctx: &output::Context, argv: Vec<String>) -> Result<()> {
         return exec(&command, &[], &scrub(launcher.kind));
     }
 
-    if launcher.kind == HarnessKind::Pi
+    if matches!(launcher.kind, HarnessKind::Pi | HarnessKind::Hermes)
         && launcher.kind.delivery(&selected.manifest)
             == vibe_core::manifest::HarnessDelivery::Launch
     {
@@ -144,16 +144,26 @@ pub(crate) fn run(ctx: &output::Context, argv: Vec<String>) -> Result<()> {
             .command
             .split_first()
             .context("empty native Pi launcher")?;
-        let program = super::program::resolve(program)?;
+        let program = super::program::locate(program)?;
         let mut arguments = standing.to_vec();
         arguments.extend(rest);
-        let prepared = super::native::prepare_pi(
-            settings.path(),
-            &program,
-            &prefix,
-            &selected.node_dir,
-            &arguments,
-        )?;
+        let prepared = if launcher.kind == HarnessKind::Hermes {
+            super::native::prepare_hermes(
+                settings.path(),
+                &program,
+                &prefix,
+                &selected.node_dir,
+                &arguments,
+            )?
+        } else {
+            super::native::prepare_pi(
+                settings.path(),
+                &program,
+                &prefix,
+                &selected.node_dir,
+                &arguments,
+            )?
+        };
         return exec(&prepared.command, &[], &[]);
     }
 

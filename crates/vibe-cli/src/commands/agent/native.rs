@@ -12,6 +12,8 @@ use anyhow::{Context, Result, bail};
 use sha2::{Digest, Sha256};
 use vibe_safefs::Project;
 
+#[path = "native/hermes_runtime.rs"]
+mod hermes_runtime;
 #[path = "native/pi_runtime.rs"]
 mod pi_runtime;
 
@@ -24,8 +26,8 @@ pub(super) fn publish_pi(settings: &Path) -> Result<PathBuf> {
     publish_asset(settings, "pi", "mjs", PI_HELPER)
 }
 
-/// The admitted runtime and immutable helpers for a native Pi invocation.
-pub(super) struct PiLaunch {
+/// The admitted runtime and immutable helpers for a native invocation.
+pub(super) struct NativeLaunch {
     pub(super) command: Vec<String>,
 }
 
@@ -35,7 +37,7 @@ pub(super) fn prepare_pi(
     prefix: &Path,
     cwd: &Path,
     args: &[String],
-) -> Result<PiLaunch> {
+) -> Result<NativeLaunch> {
     let runtime = pi_runtime::discover(program)?;
     let carrier = publish_pi(settings)?;
     let entry = publish_asset(settings, "pi", "mjs", PI_ENTRY)?;
@@ -48,7 +50,46 @@ pub(super) fn prepare_pi(
         cwd.display().to_string(),
     ];
     command.extend_from_slice(args);
-    Ok(PiLaunch { command })
+    Ok(NativeLaunch { command })
+}
+
+/// Prepare the exact installed Hermes interpreter and embedded native supervisor.
+pub(super) fn prepare_hermes(
+    settings: &Path,
+    program: &Path,
+    prefix: &Path,
+    cwd: &Path,
+    args: &[String],
+) -> Result<NativeLaunch> {
+    let runtime = hermes_runtime::discover(program)?;
+    let carrier = publish_asset(
+        settings,
+        "hermes",
+        "py",
+        include_bytes!("native/hermes_bootstrap.py"),
+    )?;
+    let entry = publish_asset(
+        settings,
+        "hermes",
+        "py",
+        include_bytes!("native/hermes_entry.py"),
+    )?;
+    // -I excludes project/current-directory Python imports. Only this admitted
+    // native installation is inserted before executing the immutable helper.
+    let code = "import runpy,sys;root,entry,*args=sys.argv[1:];sys.path.insert(0,root);sys.argv=[entry,*args];runpy.run_path(entry,run_name='__main__')";
+    let mut command = vec![
+        runtime.python.display().to_string(),
+        "-I".into(),
+        "-c".into(),
+        code.into(),
+        runtime.root.display().to_string(),
+        entry.display().to_string(),
+        carrier.display().to_string(),
+        prefix.display().to_string(),
+        cwd.display().to_string(),
+    ];
+    command.extend_from_slice(args);
+    Ok(NativeLaunch { command })
 }
 
 /// Publish one embedded helper under an already admitted settings root.
