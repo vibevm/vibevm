@@ -2,6 +2,10 @@
 
 Owner scheduling decision, 2026-11-19. Planned direct child of NST, not an implementation atom for the current SYS-PROMPT slice. Required order: `NST-DOMAIN-CONSOLIDATION → NST-HERMES-INTEGRATION → NST-AI-NATIVE-GLOBAL-REPAIR`. The seven global-repair stages and historical NST denominator do not change.
 
+## Why this node exists
+
+The canonical product vision is `spec://org.vibevm.core/vibevm/common/PROP-076#HERMES-INTEGRATION-VISION` in [PROP-076](../../vibevm/vibespecs/common/PROP-076-system-prompt-prefix.xml). Read the adjacent `HERMES-RESUME-WORK`, `HERMES-REVIEWED-SKILLS`, `HERMES-EXPLAIN-WITH-EVIDENCE`, `HERMES-OPERATION-NOTIFICATIONS` and `HERMES-VISION-SCOPE` facts when selecting implementation slices. Start with the user's question on reconnect: “What happened to the check we started?” A usable answer identifies the same operation, its recorded outcome, and whether its inputs are still current. It does not start the check again.
+
 ## Where initial Hermes support stops
 
 Finish the bounded initial SYS milestone: bind the accepted owned Linux launch/large-prefix, history and query selectors, projection and worker evidence, plus the explicit READY two-client history transport. Verify the coherent host gate on the accepted code, reconcile the six-harness evidence and give the owner a plain-language account of what works, how to use it and what is not promised. Repair regressions in these accepted journeys; do not require speculative product additions to exit. READY transport does not add project instructions. The two prompt debts in PROP-076 stay open. Cold unattended startup, seamless native classic/TUI and interactive worktree dispatch, and unqualified platform layouts must be transferred by name rather than reported as passed. This limits Hermes scope, not unrelated remaining SYS requirements.
