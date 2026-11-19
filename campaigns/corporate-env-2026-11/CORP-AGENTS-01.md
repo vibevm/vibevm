@@ -26,6 +26,14 @@ Publication of these six scoped agent packages and inclusion in corporate drops 
 
 Acceptance: six-identity × three-OS outcome table with exact supported architectures, real acquisition/install/launch/uninstall paths and meaningful native evidence; npm-missing/self-install/defer/cancel tests; no ambient npm hard dependency; real corporate drop closure and published package receipts. Unsupported claims need a precise blocker, not a cosmetic matrix PASS.
 
+### Hermes: prebuilt archive for corporate installation
+
+Assemble Hermes for each admitted OS/architecture on a separate build host. Pin the supplier revision, supported interpreter, dependency versions and hashes; include the Hermes runtime libraries, resources, launcher and required notices, but not a Python interpreter for the supported feature set. Document optional features omitted. Label a Vibe-built archive as such. Review redistribution rights for the actual component inventory before shipping the archive.
+
+The destination consumes the verified archive from the corporate drop through the existing Vibe installer. It must not resolve Python dependencies or invoke `pip`, `python -m pip`, `uv` or a host package manager during installation or first launch. A wheelhouse followed by offline pip installation does not qualify. Use the system Python without modifying its installation or site-packages. Probe interpreter version and ABI before installing; refuse a missing or incompatible interpreter without creating a receipt or launcher. No PyPI access, privilege elevation, service registration or fallback to an online bootstrap script. Build-time tools are not target prerequisites.
+
+Qualify Linux first with networking disabled, a compatible system Python but no pip or uv, a clean ordinary-user home and a non-default install path with spaces. Verify archive integrity, actual `hermes --version`, a provider-free native command that loads packaged resources, and clean uninstall. A corrupt archive must not publish a launcher or receipt. Qualify macOS and Windows separately; no Linux result grants their acceptance.
+
 ## 2 — CORP-AGENT-PROXY
 
 All six agents launched by Vibe use the effective corporate proxy route, including px when selected. Reuse `vibe_net::NetworkSession`, corporate/site profile proxy resolution and the existing `vibe tool px exec` lending/lifetime semantics (`crates/vibe-cli/src/commands/tool/px.rs`), not six unrelated proxy managers. Bind routing after resolving actual launcher aliases; preserve custom standing arguments. Plain native invocation outside Vibe is not modified by this feature.
