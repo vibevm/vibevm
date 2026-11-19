@@ -1,6 +1,6 @@
 # NST-HERMES-INTEGRATION — Hermes on the consolidated domain architecture
 
-Owner scheduling decision, 2026-11-19. Planned child of `VIBEVM-IDE-MVP`, after its shared tree/search slice. Its stable ID and Hermes acceptance journey are unchanged. The IDE parent follows the completed global repair; no deep integration starts in initial SYS.
+Owner scheduling decision, 2026-11-19. Planned child of `VIBEVM-IDE-MVP`, after its shared tree/search slice. Its stable ID and Hermes acceptance journey are unchanged. The IDE parent is outside NST and follows acceptance of the whole campaign. The historical NST prefix in this child ID preserves references; neither deep Hermes integration nor IDE implementation is required to close NST.
 
 ## Why this node exists
 
