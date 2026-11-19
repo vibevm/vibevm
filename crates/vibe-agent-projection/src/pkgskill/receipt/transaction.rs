@@ -5,7 +5,7 @@ use std::collections::{BTreeMap, BTreeSet};
 use std::path::Path;
 
 use anyhow::{Context, Result, bail};
-use vibe_wire::generated::package_skill::e2::receipt::{
+use vibe_wire::generated::package_skill::e3::receipt::{
     PackageSkillApplying, PackageSkillBinding as ReceiptBinding,
     PackageSkillTarget as ReceiptTarget,
 };
@@ -134,15 +134,17 @@ fn execute_binding(
                 let prior = before
                     .target
                     .iter()
-                    .find(|candidate| candidate.agent == target.agent);
+                    .find(|candidate| candidate.path == target.path);
                 let status = publish_target_cas(project, project_root, stage, target, prior)?;
-                reports.push(report(key, &target.agent, &target.path, status));
+                for agent in &target.agents {
+                    reports.push(report(key, agent, &target.path, status));
+                }
             }
             for target in &before.target {
                 if !after
                     .target
                     .iter()
-                    .any(|candidate| candidate.agent == target.agent)
+                    .any(|candidate| candidate.path == target.path)
                 {
                     remove_target_owned(project, project_root, key, target, &mut reports)?;
                 }
@@ -151,7 +153,9 @@ fn execute_binding(
         (None, Some(after)) => {
             for target in &after.target {
                 let status = publish_target_cas(project, project_root, stage, target, None)?;
-                reports.push(report(key, &target.agent, &target.path, status));
+                for agent in &target.agents {
+                    reports.push(report(key, agent, &target.path, status));
+                }
             }
         }
         (Some(before), None) => {
@@ -267,7 +271,7 @@ fn publish(
     project: &Project,
     stage: Option<&Stage>,
     directory: &Pinned,
-    file: &vibe_wire::generated::package_skill::e2::receipt::PackageSkillFile,
+    file: &vibe_wire::generated::package_skill::e3::receipt::PackageSkillFile,
 ) -> Result<()> {
     let Some(stage) = stage else {
         bail!(
@@ -321,16 +325,18 @@ fn remove_target_owned(
     components.pop();
     let target_dir = project.dir(&components, false)?;
     project.remove_dir_if_empty(&target_dir, last_component(&prior.path))?;
-    reports.push(report(
-        key,
-        &prior.agent,
-        &prior.path,
-        if prior.file.is_empty() {
-            "unchanged"
-        } else {
-            "removed"
-        },
-    ));
+    for agent in &prior.agents {
+        reports.push(report(
+            key,
+            agent,
+            &prior.path,
+            if prior.file.is_empty() {
+                "unchanged"
+            } else {
+                "removed"
+            },
+        ));
+    }
     Ok(())
 }
 
@@ -420,11 +426,11 @@ fn report(key: &str, agent: &str, path: &str, status: &'static str) -> PackageSk
 
 fn empty_with(
     bindings: &[ReceiptBinding],
-) -> vibe_wire::generated::package_skill::e2::receipt::PackageSkillReceipt {
-    vibe_wire::generated::package_skill::e2::receipt::PackageSkillReceipt {
+) -> vibe_wire::generated::package_skill::e3::receipt::PackageSkillReceipt {
+    vibe_wire::generated::package_skill::e3::receipt::PackageSkillReceipt {
         applying: None,
         binding: bindings.to_vec(),
-        schema: 3,
+        schema: super::state::SCHEMA,
     }
 }
 
@@ -503,7 +509,7 @@ pub(super) fn verify_visible(project: &Project, project_root: &Path, plan: &Plan
                     let prior = prior_targets
                         .target
                         .iter()
-                        .find(|candidate| candidate.agent == target.agent);
+                        .find(|candidate| candidate.path == target.path);
                     if let Some(prior) = prior {
                         let kept = target
                             .file
@@ -536,7 +542,7 @@ pub(super) fn verify_visible(project: &Project, project_root: &Path, plan: &Plan
                     binding
                         .target
                         .iter()
-                        .any(|target| target.agent == prior_target.agent)
+                        .any(|target| target.path == prior_target.path)
                 });
                 if retained {
                     continue;

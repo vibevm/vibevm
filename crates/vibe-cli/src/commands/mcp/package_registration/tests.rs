@@ -78,6 +78,49 @@ fn selected_json_registration_refuses_edits_and_preserves_foreign_entries() {
 }
 
 #[test]
+fn pi_json_registration_reuses_receipt_and_preserves_foreign_entries() {
+    let dir = tempfile::tempdir().unwrap();
+    let path = dir.path().join("mcp.json");
+    fs::write(
+        &path,
+        r#"{"operator":"keep","mcpServers":{"foreign":{"command":"foreign"}}}"#,
+    )
+    .unwrap();
+    let server = remote();
+    let payload = server_payload(Agent::Pi, dir.path(), &server, false).unwrap();
+    assert_eq!(
+        register_one(Agent::Pi, Scope::Project, &path, &server, &payload, false)
+            .unwrap()
+            .status,
+        "created"
+    );
+    assert_eq!(
+        register_one(Agent::Pi, Scope::Project, &path, &server, &payload, false)
+            .unwrap()
+            .status,
+        "unchanged"
+    );
+    let document = read_json(&path).unwrap();
+    assert_eq!(
+        document["mcpServers"]["fpf"]["url"],
+        "https://mcp.fpf.tools/mcp"
+    );
+    assert_eq!(document["operator"], "keep");
+    remove_selected(
+        Agent::Pi,
+        Scope::Project,
+        &path,
+        "ai.lev/fpf-mcp",
+        None,
+        false,
+    )
+    .unwrap();
+    let cleaned = read_json(&path).unwrap();
+    assert_eq!(cleaned["mcpServers"]["foreign"]["command"], "foreign");
+    assert!(cleaned["mcpServers"].get("fpf").is_none());
+}
+
+#[test]
 fn codex_toml_uses_same_receipt_and_preserves_other_servers() {
     let dir = tempfile::tempdir().unwrap();
     let path = dir.path().join("config.toml");

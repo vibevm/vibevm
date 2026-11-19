@@ -9,7 +9,7 @@ use sha2::{Digest, Sha256};
 use vibe_core::manifest::SkillDecl;
 use vibe_core::{Group, PackageName, machine_json_path};
 use vibe_wire::generated::lifecycle_state::StateArtifact;
-use vibe_wire::generated::package_skill::e2::receipt::{
+use vibe_wire::generated::package_skill::e3::receipt::{
     PackageSkillApplying, PackageSkillBinding as ReceiptBinding, PackageSkillFile as ReceiptFile,
     PackageSkillReceipt, PackageSkillTarget as ReceiptTarget,
 };
@@ -19,7 +19,7 @@ use super::nofollow::Project;
 use crate::agents::{Agent, Scope};
 use crate::pkgskill::{PROJECT_SKILL_PREFIX, PROJECT_SKILL_RECONCILE_KEY, ProjectSkillBinding};
 
-const SCHEMA: u32 = 3;
+pub(super) const SCHEMA: u32 = 4;
 const RECEIPT_FILE: &str = "package-skills.toml";
 
 pub(crate) fn receipt_exists_project_root(project_root: &Path) -> Result<bool> {
@@ -112,15 +112,21 @@ pub(super) fn read_receipt(project: &Project) -> Result<Option<PackageSkillRecei
     };
     let text = String::from_utf8(bytes)
         .with_context(|| format!("decoding `{}`", vibe.join(RECEIPT_FILE).display()))?;
-    let mut receipt: PackageSkillReceipt = toml::from_str(&text).with_context(|| {
-        format!(
-            "malformed package-skill receipt `{}`",
-            vibe.join(RECEIPT_FILE).display()
-        )
-    })?;
-    if !matches!(receipt.schema, 2 | 3) {
+    let header: toml::Value = toml::from_str(&text).context("malformed package-skill receipt")?;
+    let schema = header
+        .get("schema")
+        .and_then(toml::Value::as_integer)
+        .context("package-skill receipt schema is missing")?;
+    let mut receipt: PackageSkillReceipt = if matches!(schema, 2 | 3) {
+        let legacy: vibe_wire::generated::package_skill::e2::receipt::PackageSkillReceipt =
+            toml::from_str(&text).context("malformed singleton package-skill receipt")?;
+        migrate_singleton(legacy)?
+    } else {
+        toml::from_str(&text).context("malformed grouped package-skill receipt")?
+    };
+    if !matches!(receipt.schema, 2 | 3 | 4) {
         bail!(
-            "unsupported package-skill receipt schema {} in `{}`; this build supports schemas 2 and 3; preserve this ownership/activation receipt and use a compatible VibeVM version",
+            "unsupported package-skill receipt schema {} in `{}`; this build supports singleton schemas 2/3 and grouped schema 4; preserve this ownership/activation receipt and use a compatible VibeVM version",
             receipt.schema,
             vibe.join(RECEIPT_FILE).display()
         );
@@ -138,6 +144,35 @@ pub(super) fn read_receipt(project: &Project) -> Result<Option<PackageSkillRecei
     validate_receipt(project.root_path(), &receipt)?;
     canonicalize_receipt(&mut receipt);
     Ok(Some(receipt))
+}
+
+fn migrate_singleton(
+    old: vibe_wire::generated::package_skill::e2::receipt::PackageSkillReceipt,
+) -> Result<PackageSkillReceipt> {
+    let mut value = serde_json::to_value(old)?;
+    fn rows(value: &mut serde_json::Value) -> Result<()> {
+        for binding in value
+            .as_array_mut()
+            .context("singleton binding is not an array")?
+        {
+            for target in binding["target"]
+                .as_array_mut()
+                .context("singleton target is not an array")?
+            {
+                let object = target
+                    .as_object_mut()
+                    .context("singleton target is not an object")?;
+                let agent = object.remove("agent").context("singleton agent missing")?;
+                object.insert("agents".into(), serde_json::Value::Array(vec![agent]));
+            }
+        }
+        Ok(())
+    }
+    rows(&mut value["binding"])?;
+    if let Some(applying) = value.get_mut("applying") {
+        rows(&mut applying["binding"])?;
+    }
+    serde_json::from_value(value).context("migrating singleton package-skill receipt")
 }
 
 /// Persist a receipt this build's own strict reader will accept.
@@ -214,11 +249,12 @@ fn canonicalize_bindings(bindings: &mut [ReceiptBinding]) {
                 .file
                 .sort_by(|left, right| left.path.cmp(&right.path));
         }
-        binding.target.sort_by(|left, right| {
-            left.agent
-                .cmp(&right.agent)
-                .then_with(|| left.path.cmp(&right.path))
-        });
+        for target in &mut binding.target {
+            target.agents.sort();
+        }
+        binding
+            .target
+            .sort_by(|left, right| left.path.cmp(&right.path));
     }
     bindings.sort_by(|left, right| left.key.cmp(&right.key));
 }
@@ -240,15 +276,22 @@ pub(super) fn receipt_binding(
         provider: binding.skill.provider.identity(),
         skill: binding.skill.decl.name.clone(),
         source_snapshot: binding.source_snapshot.clone(),
-        target: binding
-            .targets
-            .iter()
-            .map(|target| ReceiptTarget {
-                agent: target.agent.as_str().to_string(),
-                path: machine_json_path(&target.path),
-                file: owned.clone(),
-            })
-            .collect(),
+        target: {
+            let mut groups: BTreeMap<String, ReceiptTarget> = BTreeMap::new();
+            for target in &binding.targets {
+                let path = machine_json_path(&target.path);
+                let group = groups.entry(path.clone()).or_insert_with(|| ReceiptTarget {
+                    agents: Vec::new(),
+                    path,
+                    file: owned.clone(),
+                });
+                group.agents.push(target.agent.as_str().to_string());
+            }
+            for group in groups.values_mut() {
+                group.agents.sort();
+            }
+            groups.into_values().collect()
+        },
     }
 }
 
@@ -379,37 +422,42 @@ fn validate_bindings(project_root: &Path, bindings: &[ReceiptBinding]) -> Result
         }
         let mut agents = BTreeSet::new();
         for target in &binding.target {
-            if !agents.insert(target.agent.as_str()) {
-                bail!(
-                    "duplicate target agent `{}` in receipt binding `{}`",
-                    target.agent,
-                    binding.key
-                );
+            if target.agents.is_empty() {
+                bail!("physical skill group has no agent aliases");
             }
-            let parsed = Agent::parse_filter(&target.agent)?;
-            if parsed.len() != 1 || parsed[0].as_str() != target.agent {
-                bail!(
-                    "receipt target agent `{}` is not one exact skill agent",
-                    target.agent
-                );
-            }
-            let root = parsed[0]
-                .skills_root(Scope::Project, Some(project_root))?
-                .with_context(|| {
-                    format!("receipt agent `{}` has no project skill root", target.agent)
-                })?;
-            // The engine writes the canonical spelling itself, so ownership
-            // requires the exact canonical string on every host — a
-            // case-fold-equivalent alias must not authorize the canonical
-            // target. Fold-aware collision detection below stays for planned
-            // physical-target safety.
-            let expected = machine_json_path(&root.join(&binding.skill));
-            if target.path != expected {
-                bail!(
-                    "receipt target `{}` is not the canonical `{}` project skill target",
-                    target.path,
-                    target.agent
-                );
+            for alias in &target.agents {
+                if !agents.insert(alias.as_str()) {
+                    bail!(
+                        "duplicate target agent `{}` in receipt binding `{}`",
+                        alias,
+                        binding.key
+                    );
+                }
+                let parsed = Agent::parse_filter(&alias)?;
+                if parsed.len() != 1 || parsed[0].as_str() != alias {
+                    bail!(
+                        "receipt target agent `{}` is not one exact skill agent",
+                        alias
+                    );
+                }
+                let root = parsed[0]
+                    .skills_root(Scope::Project, Some(project_root))?
+                    .with_context(|| {
+                        format!("receipt agent `{}` has no project skill root", alias)
+                    })?;
+                // The engine writes the canonical spelling itself, so ownership
+                // requires the exact canonical string on every host — a
+                // case-fold-equivalent alias must not authorize the canonical
+                // target. Fold-aware collision detection below stays for planned
+                // physical-target safety.
+                let expected = machine_json_path(&root.join(&binding.skill));
+                if target.path != expected {
+                    bail!(
+                        "receipt target `{}` is not the canonical `{}` project skill target",
+                        target.path,
+                        alias
+                    );
+                }
             }
             ensure_lexically_contained(project_root, Path::new(&target.path))?;
             if !physical_targets.insert(fold_key(&target.path)) {

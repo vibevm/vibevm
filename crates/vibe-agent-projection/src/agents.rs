@@ -132,7 +132,7 @@ pub const SKILL_NAME: &str = "vibevm";
 /// ```
 /// use vibe_agent_projection::agents::Agent;
 /// assert_eq!(Agent::ClaudeCode.as_str(), "claude");
-/// assert_eq!(Agent::parse_filter("all").unwrap().len(), 6);
+/// assert_eq!(Agent::parse_filter("all").unwrap().len(), 7);
 /// // Codex configures via TOML; the others via JSON.
 /// assert!(Agent::Codex.supports_project_scope());
 /// ```
@@ -144,6 +144,7 @@ pub enum Agent {
     OpenCode,
     Codex,
     QwenCode,
+    Pi,
 }
 
 /// User directories supplied by the caller when resolving agent config paths.
@@ -161,6 +162,9 @@ pub struct AgentUserDirectories {
     pub home: Option<PathBuf>,
     /// Platform user-config directory, used by Claude Desktop.
     pub config: Option<PathBuf>,
+    /// Explicit caller-resolved native agent directories, keyed by agent identity.
+    /// Pure path resolution never reads environment variables to fill these.
+    pub native: std::collections::BTreeMap<Agent, PathBuf>,
 }
 
 impl AgentUserDirectories {
@@ -175,6 +179,7 @@ impl AgentUserDirectories {
         Self {
             home: dirs::home_dir(),
             config: dirs::config_dir(),
+            native: Default::default(),
         }
     }
 }
@@ -212,6 +217,7 @@ impl Agent {
         Agent::OpenCode,
         Agent::Codex,
         Agent::QwenCode,
+        Agent::Pi,
     ];
 
     pub fn as_str(self) -> &'static str {
@@ -222,6 +228,7 @@ impl Agent {
             Agent::OpenCode => "opencode",
             Agent::Codex => "codex",
             Agent::QwenCode => "qwen-code",
+            Agent::Pi => "pi",
         }
     }
 
@@ -234,9 +241,10 @@ impl Agent {
             "opencode" => Ok(vec![Agent::OpenCode]),
             "codex" => Ok(vec![Agent::Codex]),
             "qwen" | "qwen-code" => Ok(vec![Agent::QwenCode]),
+            "pi" => Ok(vec![Agent::Pi]),
             other => bail!(
                 "unknown --agent value `{other}` (expected one of `all`, \
-                 `claude`, `claude-desktop`, `cursor`, `opencode`, `codex`, `qwen-code`)"
+                 `claude`, `claude-desktop`, `cursor`, `opencode`, `codex`, `qwen-code`, `pi`)"
             ),
         }
     }
@@ -264,7 +272,8 @@ impl Agent {
             | Agent::Cursor
             | Agent::OpenCode
             | Agent::QwenCode
-            | Agent::Codex => true,
+            | Agent::Codex
+            | Agent::Pi => true,
             Agent::ClaudeCodeDesktop => false,
         }
     }
@@ -273,7 +282,9 @@ impl Agent {
     /// and Claude Desktop are JSON-config-only.
     pub fn supports_skill(self) -> bool {
         match self {
-            Agent::ClaudeCode | Agent::OpenCode | Agent::Codex | Agent::QwenCode => true,
+            Agent::ClaudeCode | Agent::OpenCode | Agent::Codex | Agent::QwenCode | Agent::Pi => {
+                true
+            }
             Agent::ClaudeCodeDesktop | Agent::Cursor => false,
         }
     }
@@ -325,12 +336,14 @@ impl Agent {
         let command = argv[0].clone();
         let args: Vec<String> = argv[1..].to_vec();
         match self {
-            Agent::ClaudeCode | Agent::ClaudeCodeDesktop | Agent::Cursor | Agent::QwenCode => {
-                ConfigPayload::Json(serde_json::json!({
-                    "command": command,
-                    "args": args,
-                }))
-            }
+            Agent::ClaudeCode
+            | Agent::ClaudeCodeDesktop
+            | Agent::Cursor
+            | Agent::QwenCode
+            | Agent::Pi => ConfigPayload::Json(serde_json::json!({
+                "command": command,
+                "args": args,
+            })),
             Agent::OpenCode => ConfigPayload::Json(serde_json::json!({
                 "type": "local",
                 "command": argv,
@@ -356,6 +369,7 @@ impl Agent {
             Agent::Cursor => &[".cursor", ".cursorrules"],
             Agent::OpenCode => &[".opencode", "opencode.json", "opencode.jsonc", "AGENTS.md"],
             Agent::QwenCode => &[".qwen", "QWEN.md"],
+            Agent::Pi => &[".pi"],
             Agent::ClaudeCodeDesktop | Agent::Codex => &[],
         }
     }

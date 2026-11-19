@@ -4,8 +4,10 @@
 
 #[path = "receipt/activation.rs"]
 mod activation;
+#[cfg(test)]
+pub(crate) use activation::project_activation;
 pub(crate) use activation::{
-    effective_binding, project_activation, project_intent, project_intent_for_target,
+    effective_binding, project_group_activation, project_group_intent, project_intent_for_target,
     project_remove, project_status, project_subset,
 };
 

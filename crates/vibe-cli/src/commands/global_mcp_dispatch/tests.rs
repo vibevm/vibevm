@@ -43,6 +43,7 @@ impl Harness {
         let directories = AgentUserDirectories {
             home: Some(root.path().join("home")),
             config: Some(root.path().join("config")),
+            native: Default::default(),
         };
         Self {
             _env: env,

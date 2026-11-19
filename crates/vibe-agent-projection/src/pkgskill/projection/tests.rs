@@ -88,7 +88,7 @@ fn package_binding_defaults_to_every_project_skill_loader_and_hashes_selected_so
             .iter()
             .map(|target| target.agent.as_str())
             .collect::<Vec<_>>(),
-        ["claude", "opencode", "codex", "qwen-code"]
+        ["claude", "opencode", "codex", "qwen-code", "pi"]
     );
     assert_eq!(
         binding
@@ -101,6 +101,7 @@ fn package_binding_defaults_to_every_project_skill_loader_and_hashes_selected_so
             project.path().join(".opencode/skills/demo"),
             project.path().join(".agents/skills/demo"),
             project.path().join(".qwen/skills/demo"),
+            project.path().join(".agents/skills/demo"),
         ]
     );
     let initial = binding.source_snapshot.clone();
@@ -119,6 +120,38 @@ fn package_binding_defaults_to_every_project_skill_loader_and_hashes_selected_so
         collect_project_skill_bindings(project.path()).unwrap()[0].source_snapshot,
         initial
     );
+}
+
+#[test]
+fn command_group_activation_and_uninstall_keep_shared_physical_owner() {
+    let project = project_with_skill(&["codex", "pi"], &[]);
+    let plan = prepare_declared_skill_projection(
+        project.path(),
+        &DeclaredSkillFilter::all(),
+        Scope::Project,
+    )
+    .unwrap();
+    plan.install(false).unwrap();
+    let off = crate::activation::ActivationIntent {
+        enabled: false,
+        actor: Some("operator".into()),
+        provenance: "test:group-command".into(),
+    };
+    plan.activation_intent(&off, true).unwrap();
+    let rows = plan.activation(Some(&off), false).unwrap();
+    assert_eq!(rows.len(), 2);
+    assert!(rows.iter().all(|row| !row.desired_enabled));
+    assert!(!project.path().join(".agents/skills/demo/SKILL.md").exists());
+    let on = crate::activation::ActivationIntent {
+        enabled: true,
+        actor: None,
+        provenance: "test:group-command-on".into(),
+    };
+    plan.activation_intent(&on, true).unwrap();
+    plan.activation(Some(&on), false).unwrap();
+    assert!(project.path().join(".agents/skills/demo/SKILL.md").exists());
+    plan.uninstall(false).unwrap();
+    assert!(!project.path().join(".agents/skills/demo/SKILL.md").exists());
 }
 
 #[test]
@@ -188,6 +221,28 @@ fn project_orchestrator_is_idempotent_preserves_neighbor_and_cleans_owned_stale_
     let target = project.path().join(".claude/skills/demo");
     assert_eq!(fs::read_to_string(target.join("SKILL.md")).unwrap(), "v2");
     assert!(!target.join("drop.md").exists());
+    assert_eq!(fs::read_to_string(neighbor).unwrap(), "foreign");
+}
+
+#[test]
+fn pi_explicit_projection_reuses_receipts_and_preserves_foreign_skills() {
+    let project = project_with_skill(&["pi"], &[]);
+    let neighbor = project.path().join(".agents/skills/foreign/KEEP.md");
+    fs::create_dir_all(neighbor.parent().unwrap()).unwrap();
+    fs::write(&neighbor, "foreign").unwrap();
+    let first =
+        project_declared_skills_project_scope(project.path(), &DeclaredSkillFilter::all(), false)
+            .unwrap();
+    assert_eq!(first.len(), 1);
+    assert_eq!(first[0].agent, "pi");
+    let second =
+        project_declared_skills_project_scope(project.path(), &DeclaredSkillFilter::all(), false)
+            .unwrap();
+    assert_eq!(second[0].status, "unchanged");
+    assert_eq!(
+        fs::read_to_string(project.path().join(".agents/skills/demo/SKILL.md")).unwrap(),
+        "v1"
+    );
     assert_eq!(fs::read_to_string(neighbor).unwrap(), "foreign");
 }
 
@@ -417,7 +472,7 @@ version = "0.1.0"
     assert_eq!(
         unknown_agent.to_string(),
         "unknown --agent value `nope` (expected one of `all`, `claude`, \
-         `claude-desktop`, `cursor`, `opencode`, `codex`, `qwen-code`)"
+         `claude-desktop`, `cursor`, `opencode`, `codex`, `qwen-code`, `pi`)"
     );
 
     let no_match = prepare_declared_skill_projection(

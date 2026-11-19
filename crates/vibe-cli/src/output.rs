@@ -309,7 +309,16 @@ impl Context {
             machine_progress: false,
             terminal_input: false,
             terminal_panel: Default::default(),
-            agent_user_dirs: vibe_agent_projection::agents::AgentUserDirectories::ambient(),
+            agent_user_dirs: {
+                let mut directories =
+                    vibe_agent_projection::agents::AgentUserDirectories::ambient();
+                if let Some(path) = std::env::var_os("PI_CODING_AGENT_DIR") {
+                    directories
+                        .native
+                        .insert(vibe_agent_projection::agents::Agent::Pi, path.into());
+                }
+                directories
+            },
             #[cfg(test)]
             verbose: false,
         }

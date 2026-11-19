@@ -61,7 +61,7 @@ impl Agent {
         }
         match self {
             Agent::ClaudeCode => Some(home.join(".claude").join("skills")),
-            Agent::Codex => Some(home.join(".agents").join("skills")),
+            Agent::Codex | Agent::Pi => Some(home.join(".agents").join("skills")),
             Agent::QwenCode => Some(home.join(".qwen").join("skills")),
             // Same XDG-on-every-OS contract as the ambient sibling — see
             // `Agent::config_path`'s comment for the empirical record.

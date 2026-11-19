@@ -31,6 +31,7 @@ impl Agent {
     /// let directories = AgentUserDirectories {
     ///     home: Some(home.clone()),
     ///     config: None,
+    ///     native: Default::default(),
     /// };
     /// assert_eq!(
     ///     Agent::Codex.config_path_with_dirs(Scope::User, None, &directories)?,
@@ -44,6 +45,22 @@ impl Agent {
         project_root: Option<&Path>,
         directories: &AgentUserDirectories,
     ) -> Result<Option<PathBuf>> {
+        if scope == Scope::User {
+            if let Some(directory) = directories.native.get(&self) {
+                if !directory.is_absolute()
+                    || directory
+                        .components()
+                        .any(|part| matches!(part, std::path::Component::ParentDir))
+                {
+                    bail!(
+                        "native agent directory must be an absolute normalized path; refusing fallback write"
+                    );
+                }
+                if self == Agent::Pi {
+                    return Ok(Some(directory.join("mcp.json")));
+                }
+            }
+        }
         match (self, scope) {
             (_, Scope::Both) => {
                 bail!("internal: Agent::config_path requires concrete scope; expand Both first")
@@ -66,6 +83,7 @@ impl Agent {
             (Agent::Codex, Scope::Project) => {
                 Ok(project_root.map(|p| p.join(".codex").join("config.toml")))
             }
+            (Agent::Pi, Scope::Project) => Ok(project_root.map(|p| p.join(".pi").join("mcp.json"))),
             (Agent::ClaudeCodeDesktop, Scope::Project) => Ok(None),
             // ---- User scope ----
             (Agent::ClaudeCode, Scope::User) => {
@@ -113,6 +131,13 @@ impl Agent {
                     anyhow!("could not resolve user-config dir for Claude Desktop")
                 })?;
                 Ok(Some(cfg.join("Claude").join("claude_desktop_config.json")))
+            }
+            (Agent::Pi, Scope::User) => {
+                let home = directories
+                    .home
+                    .as_ref()
+                    .ok_or_else(|| anyhow!("could not resolve home dir for Pi"))?;
+                Ok(Some(home.join(".pi").join("agent").join("mcp.json")))
             }
             (Agent::Codex, Scope::User) => {
                 let home = directories
@@ -163,7 +188,7 @@ impl Agent {
                     .join(SKILL_NAME)
                     .join("SKILL.md")
             })),
-            (Agent::Codex, Scope::Project) => Ok(project_root.map(|p| {
+            (Agent::Codex | Agent::Pi, Scope::Project) => Ok(project_root.map(|p| {
                 p.join(".agents")
                     .join("skills")
                     .join(SKILL_NAME)
@@ -196,7 +221,7 @@ impl Agent {
                         .join("SKILL.md"),
                 ))
             }
-            (Agent::Codex, Scope::User) => {
+            (Agent::Codex | Agent::Pi, Scope::User) => {
                 let home = dirs::home_dir()
                     .ok_or_else(|| anyhow!("could not resolve home dir for Codex skill"))?;
                 Ok(Some(
@@ -250,7 +275,7 @@ impl Agent {
             (Agent::QwenCode, Scope::Project) => {
                 Ok(project_root.map(|p| p.join(".qwen").join("skills")))
             }
-            (Agent::Codex, Scope::Project) => {
+            (Agent::Codex | Agent::Pi, Scope::Project) => {
                 Ok(project_root.map(|p| p.join(".agents").join("skills")))
             }
             (Agent::Cursor | Agent::ClaudeCodeDesktop, _) => Ok(None),
@@ -265,7 +290,7 @@ impl Agent {
                     .ok_or_else(|| anyhow!("could not resolve home dir for OpenCode skills"))?;
                 Ok(Some(home.join(".config").join("opencode").join("skills")))
             }
-            (Agent::Codex, Scope::User) => {
+            (Agent::Codex | Agent::Pi, Scope::User) => {
                 let home = dirs::home_dir()
                     .ok_or_else(|| anyhow!("could not resolve home dir for Codex skills"))?;
                 Ok(Some(home.join(".agents").join("skills")))
@@ -291,6 +316,7 @@ mod injected_path_tests {
         let directories = AgentUserDirectories {
             home: Some(home.clone()),
             config: Some(config.clone()),
+            native: Default::default(),
         };
         for (agent, expected) in [
             (Agent::ClaudeCode, home.join(".claude.json")),
@@ -380,12 +406,73 @@ mod injected_path_tests {
     }
 
     #[test]
+    fn pi_native_config_and_skill_paths_use_existing_injected_owners() {
+        let home = PathBuf::from("/synthetic-home");
+        let project = Path::new("/synthetic-project");
+        let directories = AgentUserDirectories {
+            home: Some(home.clone()),
+            config: None,
+            native: Default::default(),
+        };
+        assert_eq!(Agent::parse_filter("pi").unwrap(), vec![Agent::Pi]);
+        assert_eq!(
+            Agent::Pi
+                .config_path_with_dirs(Scope::User, None, &directories)
+                .unwrap(),
+            Some(home.join(".pi/agent/mcp.json"))
+        );
+        assert_eq!(
+            Agent::Pi
+                .config_path_with_dirs(Scope::Project, Some(project), &directories)
+                .unwrap(),
+            Some(project.join(".pi/mcp.json"))
+        );
+        assert_eq!(
+            Agent::Pi
+                .skills_root(Scope::Project, Some(project))
+                .unwrap(),
+            Some(project.join(".agents/skills"))
+        );
+        assert_eq!(
+            Agent::Pi.user_skill_entry_from_home(&home, "demo"),
+            Some(home.join(".agents/skills/demo/SKILL.md"))
+        );
+        assert_eq!(Agent::Pi.mcp_section_key(), "mcpServers");
+        let mut overridden = directories.clone();
+        let custom = std::env::temp_dir().join("synthetic-pi-agent");
+        overridden.native.insert(Agent::Pi, custom.clone());
+        assert_eq!(
+            Agent::Pi
+                .config_path_with_dirs(Scope::User, None, &overridden)
+                .unwrap(),
+            Some(custom.join("mcp.json"))
+        );
+        overridden
+            .native
+            .insert(Agent::Pi, PathBuf::from("relative/unsafe"));
+        assert!(
+            Agent::Pi
+                .config_path_with_dirs(Scope::User, None, &overridden)
+                .unwrap_err()
+                .to_string()
+                .contains("refusing fallback")
+        );
+        assert_eq!(
+            Agent::Pi
+                .config_path_with_dirs(Scope::Project, Some(project), &overridden)
+                .unwrap(),
+            Some(project.join(".pi/mcp.json"))
+        );
+    }
+
+    #[test]
     fn injected_user_paths_require_only_the_selected_directory() {
         let sandbox = tempfile::tempdir().unwrap();
         let root = sandbox.path().to_path_buf();
         let config_only = AgentUserDirectories {
             home: None,
             config: Some(root.clone()),
+            native: Default::default(),
         };
         assert!(
             Agent::ClaudeCodeDesktop
@@ -400,6 +487,7 @@ mod injected_path_tests {
         let home_only = AgentUserDirectories {
             home: Some(root),
             config: None,
+            native: Default::default(),
         };
         for agent in Agent::ALL {
             if *agent != Agent::ClaudeCodeDesktop {

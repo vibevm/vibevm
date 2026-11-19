@@ -4,7 +4,7 @@
 use std::collections::BTreeMap;
 
 use anyhow::{Result, bail};
-use vibe_wire::generated::package_skill::e2::receipt::PackageSkillBinding as ReceiptBinding;
+use vibe_wire::generated::package_skill::e3::receipt::PackageSkillBinding as ReceiptBinding;
 
 use super::containment::{FoldKey, fold_key};
 
@@ -36,7 +36,7 @@ pub(super) fn ensure_no_portable_rename(
             let Some(prior_target) = prior
                 .target
                 .iter()
-                .find(|candidate| candidate.agent == target.agent)
+                .find(|candidate| candidate.path == target.path)
             else {
                 continue;
             };
