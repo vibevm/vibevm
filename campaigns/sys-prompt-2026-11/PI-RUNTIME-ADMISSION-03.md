@@ -25,6 +25,12 @@ Source inspection of the pinned installed runtime shows `AgentSession.bindExtens
 
 One bounded actual reload proof is required to confirm this gap. Do not accept the factory as production-complete, overwrite the UI callback, wrap private instance methods or invent a public lifecycle hook. Return the precise missing integration capability for an architectural decision if no admitted lifecycle owner can preserve both UI reporting and carrier admission.
 
+## Bounded public-abort alternative after the observed gap
+
+One source-bound alternative avoids the single UI error binding entirely: an invocation-owned extension closure can be bound to the actual created AgentSession, then request `void session.abort()` only on its own carrier error and let native reporting preserve that error. This means the public session method, not `ctx.abort()` (which native UI can redirect). In the inspected runtime, public abort sets the active-run cancellation flag synchronously before awaiting idle; the native agent-start handler observes that flag before the first request. Do not await abort inside the before-start handler, because idle waits for that handler/run to finish.
+
+This is a hypothesis, not an accepted gate. A finite actual three-arm stream-sentinel proof must show successful1 / unguarded-error1 / guarded-error0 submissions, plus visible error/cancellation. If it passes, verify the same owned binding across actual reload with native UI-style error reporting preserved. Bind each replacement session through the runtime factory; never inspect or set private cancellation fields. No global callback replacement, method patch or provider wrapper is permitted. If the public abort does not prevent submission, retain the failure and return the precise gap rather than adding timing guesses or retries.
+
 ## Finite proof and review
 
 - Positive actual runtime-factory/native event delivers full stable prefix before exact fresh personal tail; test stream sentinel remains reachable.
