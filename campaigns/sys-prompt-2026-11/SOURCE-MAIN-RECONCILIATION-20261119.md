@@ -59,6 +59,12 @@ On 2026-11-19 the owner explicitly requested replacing the conflicting GitVerse 
 
 Independent post-update queries verified all tags and configured branches match across both hosts (17 refs each), with main unchanged at `3daa6ee170af7679ed41f289ec357ad173841be3`. `cargo xtask mirror --check` returned success for all configured branches. The historical mirror tasks above remain exit1; this later authorized repair resolves their outstanding tag drift rather than retroactively making them green.
 
+## Hermes bounded query-selector milestone rollout
+
+Exact accepted builder boundary `4391c12c8f596e43eb01fafe57f5390d3b8341af` contains exactly the 10 accepted paths; every committed blob independently matched refreshed manifest SHA256 `11c278d0309e3fc741139d94f3772303e059b96ed2e8d98496f7a77bf333390e`. Publication main `1c13c94cd047f26ac7c46fb088b98f2be19fb2bb` retains previous main `3daa6ee170af7679ed41f289ec357ad173841be3` and that builder boundary as parents, with exactly accepted tree `badf45a22e71a8f95fb9a030a3c6fce70f5268a9`. Subsequent parser/frontend work is excluded.
+
+Standard mirror task `bqdosq89y` exited0: main, next, release1.0.0 and tags succeeded on both hosts after the authorized tag repair. Independent remote queries verified GitHub and GitVerse main exactly `1c13c94cd047f26ac7c46fb088b98f2be19fb2bb`, with zero file diff against the accepted builder boundary. This fanout is fully successful; historical exit1 receipts remain unchanged. Publication accepts no additional behavior: unattended oneshot remains BLOCKED, parser/config-default/shared-gateway/worker/platform gaps and final SYS parity remain open. No SYS-PROMPT/CORP-ENV/NST closure or release is implied.
+
 ## Non-negotiable limits
 
 Outside the exact four-tag owner-authorized repair above: no force push, rewrite-ref lease, hard reset, deletion of old main, blind ours merge, mass conflict resolution, mirroring of unrelated tags or ad hoc target bypass. No mirror manifest changes merely to make a task branch publish. Use PROP-016 and the existing mirror owner; source publication is not a release or package publication. Never publish dirty working files or local secrets.
