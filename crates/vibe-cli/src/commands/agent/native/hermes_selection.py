@@ -9,6 +9,7 @@ import json
 import os
 from pathlib import Path
 import stat
+import sys
 import time
 import uuid
 
@@ -54,6 +55,23 @@ async def select(client, parsed):
     from hermes_cli import gateway_chat as native
     from hermes_cli.gateway_client import GatewayClientError
     from hermes_cli.main_resume_args import apply_in_dir
+    from hermes_cli.main_tui_launch import _resolve_use_tui, _bypass_chat_launch
+    from hermes_cli.config import load_config_readonly
+    # Freeze only the native classic finite-query worktree preference here.
+    # The chosen gateway frontend never re-enters classic config-driven setup.
+    finite_query = bool(getattr(parsed, 'query', None) or getattr(parsed, 'query_file', None))
+    finite = bool(getattr(parsed, 'quiet', False) or getattr(parsed, 'oneshot_exit', False)
+        or not (sys.stdin.isatty() and sys.stdout.isatty()))
+    classic = not (_resolve_use_tui(parsed) or _bypass_chat_launch(parsed)
+        or getattr(parsed, 'output_format', 'text') == 'stream-json')
+    if finite_query and not (finite and classic):
+        raise ValueError('selected native frontend requires its own admitted bootstrap; query routing refused')
+    validation = argparse.Namespace(**vars(parsed))
+    validation.worktree = False  # The existing external worktree owner consumes this effect below.
+    validation.no_restore_cwd = False if getattr(parsed, 'in_dir', None) else getattr(parsed, 'no_restore_cwd', False)
+    native.validate_options(validation)  # Refuse unsupported classic flags BEFORE any worktree effect.
+    if finite_query and finite and classic:
+        parsed.worktree = bool(getattr(parsed, 'worktree', False) or load_config_readonly().get('worktree', False))
     explicit_no_restore = getattr(parsed, 'no_restore_cwd', False)
     apply_in_dir(parsed)
     tree = None

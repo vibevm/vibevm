@@ -10,8 +10,10 @@ import uuid
 
 async def run_native_hermes(carrier_path, prefix_path, cwd, args, selection_path=None, rendezvous=None):
     os.chdir(cwd)  # Isolated helper process, not the host CLI's global cwd.
-    # Native parser owns syntax; selectors not yet mapped must refuse before effects.
+    # Native profile pre-parser must see only caller argv before native imports.
+    sys.argv = ['hermes', *args]
     from hermes_cli.main import _light_chat_parser, _set_chat_arg_defaults
+    args = sys.argv[1:]  # Native profile owner consumed its own selector.
     parsed = _light_chat_parser().parse_args(args)
     _set_chat_arg_defaults(parsed)
     if getattr(parsed, 'command', None) not in (None, 'chat'):

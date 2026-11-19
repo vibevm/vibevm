@@ -35,9 +35,21 @@ pub(crate) fn requested(args: &[String]) -> bool {
                 | "-z"
                 | "--oneshot"
                 | "--in"
-        ) || ["--resume=", "--continue=", "--oneshot=", "--in="]
-            .iter()
-            .any(|prefix| arg.starts_with(prefix))
+                | "-q"
+                | "--query"
+                | "--query-file"
+                | "-Q"
+                | "--quiet"
+        ) || [
+            "--resume=",
+            "--continue=",
+            "--oneshot=",
+            "--in=",
+            "--query=",
+            "--query-file=",
+        ]
+        .iter()
+        .any(|prefix| arg.starts_with(prefix))
     })
 }
 
@@ -223,11 +235,12 @@ mod tests {
                 &args.into_iter().map(str::to_owned).collect::<Vec<_>>()
             ));
         }
-        assert!(!requested(&[
+        assert!(requested(&[
             "chat".into(),
             "--query".into(),
             "hello".into()
         ]));
+        assert!(!requested(&["chat".into()]));
     }
     #[test]
     fn cancelled_read_fallback_never_acknowledges_frontend_start() {
