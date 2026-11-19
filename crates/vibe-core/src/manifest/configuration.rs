@@ -11,7 +11,7 @@ pub mod basis;
 mod intent;
 mod lower;
 mod package;
-pub use package::{PackageConfiguration, PackageConfigurationError};
+pub use package::{AutomaticBasis, PackageConfiguration, PackageConfigurationError};
 mod semantic;
 mod validate;
 mod vocabulary;

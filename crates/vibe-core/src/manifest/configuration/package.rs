@@ -2,9 +2,7 @@
 //! The initial operation adapter accepts explicit, non-automatic inputs. Domain
 //! effects beyond dependency activation remain explicit unsupported outcomes.
 use super::{ConfigurationDecl, ConfigurationEffect, ConfigurationIntentDecl};
-use crate::configuration::{
-    ChoiceOutcome, ChoicePolicy, FeatureBase, FeatureInput, ImplicationReason,
-};
+use crate::configuration::{ChoiceOutcome, FeatureBase, FeatureInput, ImplicationReason};
 use crate::manifest::{FieldPath, Manifest, Requires};
 use serde::{Deserialize, Serialize};
 use std::collections::{BTreeMap, BTreeSet};
@@ -15,6 +13,8 @@ use std::collections::{BTreeMap, BTreeSet};
 #[serde(deny_unknown_fields)]
 #[specmark::spec(documents = "spec://org.vibevm.core/vibevm/common/PROP-069#PERSISTENCE")]
 pub struct PackageConfiguration {
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub automatic_basis: Option<AutomaticBasis>,
     pub consumers: BTreeMap<String, ConfigurationIntentDecl>,
     pub definition: ConfigurationDecl,
     pub declarations: Requires,
@@ -23,6 +23,14 @@ pub struct PackageConfiguration {
     /// Empty causes mean an ordinary mandatory declaration; selected features
     /// are recorded even when they also name that mandatory declaration.
     pub dependency_causes: BTreeMap<String, Vec<String>>,
+}
+
+/// Historical automatic selection, not a consent receipt or authored answer.
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct AutomaticBasis {
+    pub definition_fingerprint: String,
+    pub consumer_choices: BTreeMap<String, BTreeMap<String, String>>,
 }
 
 /// Configuration admission has not produced an executable package selection.
@@ -127,6 +135,7 @@ impl PackageConfiguration {
         if consumers.is_empty() {
             return Err(unsupported("no actual incoming configuration declaration"));
         }
+        let mut automatic_choices = BTreeMap::new();
         let mut ordinary = BTreeSet::new();
         let mut choices = Vec::new();
         for (consumer, input) in consumers {
@@ -140,13 +149,43 @@ impl PackageConfiguration {
                     reason: format!("{}: {}", e.field, e.message),
                 }
             })?;
-            if input.default_features
-                || input.profile.is_some()
-                || input.policy != ChoicePolicy::RequireSelection
-            {
+            if input.default_features || input.profile.is_some() {
                 return Err(unsupported(
                     "automatic/default/profile basis is not connected on this package operation; supply explicit no-default input",
                 ));
+            }
+            let reasons = super::basis::consumer_reliance(
+                definition,
+                super::basis::ConsumerInput {
+                    original: input,
+                    normalized: &normalized,
+                },
+                &BTreeSet::new(),
+                super::basis::Authority::Reuse,
+            );
+            let mut selected_defaults = BTreeMap::new();
+            for reason in reasons {
+                let super::basis::ConsumerReliance::Choice(group_id) = reason else {
+                    return Err(unsupported(
+                        "only omitted exactly-one choice defaults are connected",
+                    ));
+                };
+                let Some(super::ConfigurationGroupDecl::Choice { cardinality, defaults: Some(defaults), members, guards, .. }) = definition.groups.iter().find(|group| matches!(group, super::ConfigurationGroupDecl::Choice { id, .. } if id == &group_id)) else {
+                    return Err(unsupported("automatic choice needs a declared exactly-one default"));
+                };
+                if *cardinality != crate::configuration::Cardinality::ExactlyOne
+                    || defaults.len() != 1
+                    || !guards.is_empty()
+                    || !members.contains(&defaults[0])
+                {
+                    return Err(unsupported(
+                        "only unguarded exactly-one single-member defaults are connected",
+                    ));
+                }
+                selected_defaults.insert(group_id, defaults[0].clone());
+            }
+            if !selected_defaults.is_empty() {
+                automatic_choices.insert(consumer.clone(), selected_defaults);
             }
             if !definition.parameters.is_empty() {
                 return Err(unsupported(
@@ -260,7 +299,18 @@ impl PackageConfiguration {
                 "active transitive configuration requires candidate-conditioned incoming consumers",
             ));
         }
+        let automatic_basis = if automatic_choices.is_empty() {
+            None
+        } else {
+            Some(AutomaticBasis {
+                definition_fingerprint: definition
+                    .semantic_fingerprint()
+                    .map_err(|e| invalid(e.to_string()))?,
+                consumer_choices: automatic_choices,
+            })
+        };
         Ok(Self {
+            automatic_basis,
             consumers: consumers.clone(),
             definition: definition.clone(),
             declarations: requires.clone(),

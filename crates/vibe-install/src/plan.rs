@@ -346,8 +346,12 @@ fn prepare_metadata_plan<S: InstallSource + ?Sized>(
         }
         let planning_source = configured::PlanningSource {
             source,
-            configuration: configured
-                .then(|| vibe_resolver::configuration::ConfigurationSnapshot::new(inputs)),
+            configuration: configured.then(|| {
+                vibe_resolver::configuration::ConfigurationSnapshot::with_history(
+                    inputs,
+                    lockfile.configurations.clone(),
+                )
+            }),
         };
         let source = &planning_source;
         let roots = requirements.authored();

@@ -58,7 +58,7 @@ pub use artifact::{
 pub use compile::CompileSection;
 pub use configuration::basis as configuration_basis;
 pub use configuration::{
-    ConfigurationDecl, ConfigurationEffect, ConfigurationFeatureDecl,
+    AutomaticBasis, ConfigurationDecl, ConfigurationEffect, ConfigurationFeatureDecl,
     ConfigurationFeatureVisibility, ConfigurationGroupDecl, ConfigurationGuard,
     ConfigurationIntentDecl, ConfigurationProfileDecl, ConfigurationSelection, ForwardStrength,
     NormalizedConfigurationInput, PackageConfiguration, PackageConfigurationError,

@@ -39,7 +39,9 @@ use super::{Materialization, read_toml, write_toml};
 /// Latest supported lock schema. Schema7 remains readable without inventing
 /// original requests; schema8 carries common package configuration. Ordinary
 /// legacy-only writes retain7. Rich locks cannot be regenerated as empty.
-pub const CURRENT_SCHEMA_VERSION: u32 = 11;
+pub const CURRENT_SCHEMA_VERSION: u32 = 12;
+/// Typed historical ordinary package default reliance.
+pub const AUTOMATIC_BASIS_SCHEMA_VERSION: u32 = 12;
 /// First epoch carrying common package configuration (minimum reader 1.0.12
 /// for epoch9 remap source bindings; configuration-only epoch8 is unchanged).
 pub const CONFIGURATION_SCHEMA_VERSION: u32 = 8;

@@ -16,6 +16,11 @@ impl Lockfile {
             ));
         }
         for (key, record) in &self.configurations {
+            if record.automatic_basis.is_some()
+                && self.meta.schema_version < AUTOMATIC_BASIS_SCHEMA_VERSION
+            {
+                return Err(invalid("automatic package basis requires schema12".into()));
+            }
             let rows: Vec<_> = self
                 .packages
                 .iter()
@@ -121,6 +126,7 @@ impl Lockfile {
                 | REMAP_SOURCE_SCHEMA_VERSION
                 | TEMPLATE_SCHEMA_VERSION
                 | DIGESTLESS_TEMPLATE_SCHEMA_VERSION
+                | AUTOMATIC_BASIS_SCHEMA_VERSION
         ) {
             return Err(crate::Error::UnsupportedLockfile {
                 found: self.meta.schema_version,
@@ -132,7 +138,13 @@ impl Lockfile {
         // rule the 7 → 8 → 9 steps already followed: a project with no
         // template package and no channel requirement writes exactly the
         // bytes it wrote before PROP-075 (AV-FMT-002).
-        value.meta.schema_version = if value.holds_digestless_template_records() {
+        value.meta.schema_version = if value
+            .configurations
+            .values()
+            .any(|record| record.automatic_basis.is_some())
+        {
+            AUTOMATIC_BASIS_SCHEMA_VERSION
+        } else if value.holds_digestless_template_records() {
             DIGESTLESS_TEMPLATE_SCHEMA_VERSION
         } else if value.holds_template_records() {
             TEMPLATE_SCHEMA_VERSION

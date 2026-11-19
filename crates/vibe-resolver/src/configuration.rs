@@ -33,6 +33,7 @@ struct Candidate {
 #[specmark::spec(documents = "spec://org.vibevm.core/vibevm/common/PROP-069#CANDIDATE-BOUNDARY")]
 pub struct ConfigurationSnapshot {
     inputs: PackageConfigurationInputs,
+    previous: BTreeMap<String, PackageConfiguration>,
     versions: RefCell<BTreeMap<(Group, String), VersionObservation>>,
     candidates: RefCell<BTreeMap<Coordinate, Candidate>>,
     source_errors: RefCell<BTreeMap<Coordinate, DepProviderError>>,
@@ -90,7 +91,28 @@ impl ConfigurationSnapshot {
                             input.clone().map(|i| (consumer.clone(), i))
                         })
                         .collect();
-                    PackageConfiguration::evaluate(&original, &inputs).map(Some)
+                    PackageConfiguration::evaluate(&original, &inputs).and_then(|record| {
+                        if let Some(previous) = self.previous.get(&package) {
+                            if previous.automatic_basis.is_some() {
+                                // Prior is admitted historical data, not reconstructed
+                                // from this replacement candidate. Explicit takeover is
+                                // deliberately outside this first slice.
+                                if previous.consumers != record.consumers
+                                    || previous.automatic_basis != record.automatic_basis
+                                    || previous.declarations != record.declarations
+                                {
+                                    return Err(PackageConfigurationError::ReplayMismatch {
+                                        package: package.clone(),
+                                    });
+                                }
+                            } else if record.automatic_basis.is_some() {
+                                return Err(PackageConfigurationError::ReplayMismatch {
+                                    package: package.clone(),
+                                });
+                            }
+                        }
+                        Ok(Some(record))
+                    })
                 }
             }
         } else if supplied.is_some_and(|inputs| inputs.values().any(Option::is_some)) {
@@ -109,7 +131,10 @@ impl ConfigurationSnapshot {
         let view = match &evaluated {
             Ok(Some(record)) => record.project(&original),
             Ok(None) => Ok(original.clone()),
-            Err(PackageConfigurationError::NeedsSelection { .. }) => {
+            Err(
+                PackageConfigurationError::NeedsSelection { .. }
+                | PackageConfigurationError::ReplayMismatch { .. },
+            ) => {
                 // Candidate viability uses only unconditional requirements.
                 // No partial selection is ever returned to an effect owner.
                 let mut mandatory = original.clone();
@@ -190,8 +215,17 @@ impl ConfigurationSnapshot {
     }
 
     pub fn new(inputs: PackageConfigurationInputs) -> Self {
+        Self::with_history(inputs, BTreeMap::new())
+    }
+
+    /// Admitted lock history remains separate from replacement candidate meaning.
+    pub fn with_history(
+        inputs: PackageConfigurationInputs,
+        previous: BTreeMap<String, PackageConfiguration>,
+    ) -> Self {
         Self {
             inputs,
+            previous,
             versions: RefCell::new(BTreeMap::new()),
             candidates: RefCell::new(BTreeMap::new()),
             source_errors: RefCell::new(BTreeMap::new()),

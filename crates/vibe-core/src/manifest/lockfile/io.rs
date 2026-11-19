@@ -36,6 +36,7 @@ impl Lockfile {
                 | REMAP_SOURCE_SCHEMA_VERSION
                 | TEMPLATE_SCHEMA_VERSION
                 | DIGESTLESS_TEMPLATE_SCHEMA_VERSION
+                | AUTOMATIC_BASIS_SCHEMA_VERSION
         ) {
             return Err(crate::error::Error::UnsupportedLockfile {
                 found: lockfile.meta.schema_version,

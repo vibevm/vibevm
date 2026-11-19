@@ -170,3 +170,56 @@ fn rich_under_old_schema_and_dangling_or_mismatched_association_refuse() {
             .contains("features/dependency graph")
     );
 }
+
+#[test]
+fn automatic_basis_requires_twelve_and_validates_historical_omission() {
+    let mut lock = rich();
+    let manifest=Manifest::parse_str("[package]\ngroup='org.test'\nname='owner'\nkind='flow'\nversion='1.0.0'\n[requires.packages]\n'org.test/dep'={version='^1',optional=true}\n[[configuration.features]]\nid='enable'\nname='Enable'\neffects=[{kind='dependency',target='org.test/dep'}]\n[[configuration.groups]]\nmode='choice'\nid='mode'\nname='Mode'\ncardinality='exactly-one'\nmembers=['enable']\ndefaults=['enable']").unwrap();
+    let input: ConfigurationIntentDecl =
+        toml::from_str("policy='use-declared-defaults'\ndefault_features=false").unwrap();
+    let record =
+        PackageConfiguration::evaluate(&manifest, &BTreeMap::from([("./vibe.toml".into(), input)]))
+            .unwrap();
+    assert!(
+        record
+            .consumers
+            .values()
+            .all(|input| input.selections.is_empty())
+    );
+    lock.configurations.insert("org.test/owner".into(), record);
+    assert!(read(&lock).unwrap_err().to_string().contains("schema12"));
+    let written = lock.for_write().unwrap();
+    assert_eq!(written.meta.schema_version, 12);
+    assert!(read(&written).is_ok());
+    let mut missing = written.clone();
+    missing
+        .configurations
+        .get_mut("org.test/owner")
+        .unwrap()
+        .automatic_basis = None;
+    assert!(read(&missing).is_err());
+    let mut forged = written.clone();
+    forged
+        .configurations
+        .get_mut("org.test/owner")
+        .unwrap()
+        .automatic_basis
+        .as_mut()
+        .unwrap()
+        .consumer_choices
+        .clear();
+    assert!(read(&forged).is_err());
+    let mut fingerprint = written.clone();
+    fingerprint
+        .configurations
+        .get_mut("org.test/owner")
+        .unwrap()
+        .automatic_basis
+        .as_mut()
+        .unwrap()
+        .definition_fingerprint = "invalid".into();
+    assert!(read(&fingerprint).is_err());
+    let mut future = written;
+    future.meta.schema_version = 13;
+    assert!(read(&future).is_err());
+}
