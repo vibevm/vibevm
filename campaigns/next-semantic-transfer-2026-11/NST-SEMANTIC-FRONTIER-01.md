@@ -161,3 +161,5 @@ Eight lifecycle revisions were checked for narrowly scoped admission, target OS,
 Ten small revisions were checked for annotation binding, mirror configuration, worker disclosure, schema provenance, CLI guidance and target policy. A mirror ref configuration or changed spec revision is not evidence of a push or executed migration.
 
 Eight environment revisions distinguish exact captured configuration and target identity from legacy observations and bounded layout reports. Native execution or final publication is not inferred from those records.
+
+At `0e945cb009`, each of the four parent log blobs matches the manifest raw digest, and each child matches its repository digest and the parent bytes with only trailing blank lines normalized. This checks retained M-16-C.4 evidence, not its external directory or a new execution.
