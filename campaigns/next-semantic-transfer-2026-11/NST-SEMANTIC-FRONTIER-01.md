@@ -219,3 +219,5 @@ Source maps in eight boot, source-observation and editorial evidence manifests w
 At 19 introduction commits, 42 wire schemas were parsed: 144 ref occurrences resolve locally, 1 via an explicitly named entry in that revision's vocabulary registry, and 0 were not directly resolved by this check. Scope ends at those named bindings, not generated readers, transitive vocabulary expansion or actual operations.
 
 Six historical validator/schema changes distinguish optional capture and path declarations from proof. Source validators constrain pending versus captured states, stage membership, unique identities and canonical values; the review did not run a release or authenticate live source bytes.
+
+Seven historical preview-tool changes distinguish verified capture bytes, scoped contribution records, draft assembly rollback and later independent release proof. Reading the original tests and guides did not execute them or publish a release.
