@@ -28,6 +28,12 @@ Owner's standing milestone source-push grant applies to both hosts after main re
 
 Local reviewed main integration is `aac918599f796bfd048360a1d525b544e44efffb`, parents reconciled main8678 and exact builder boundary `6f33c5c9c1877ee23def28e32f4ee2bec0b0e55e`. Its tree is exactly the reviewed builder tree `4bb123ace765b984fa6f73c61796b61d7f2e09a4`; no task working-tree changes entered through this operation. Standard mirror task btsiruamp exited1 only because the four known existing GitVerse tags refused non-force updates. Both main pushes succeeded; independent remote queries verified GitHub and GitVerse main exactly `aac918599f796bfd048360a1d525b544e44efffb`, with a zero file diff against the accepted builder tree. No force/tag rewrite occurred. Source milestone publication succeeded on both hosts; overall fanout remains partial due to tag drift. This is an intermediate source milestone, not full SYS-PROMPT, new CORP-ENV or NST completion.
 
+## Shared-projection milestone rollout
+
+The next large reviewed boundary consists exactly of builder `89d3e188b` (81 accepted projection/schema/generated/report files) and report-only `c25b060f830f7676aa9a4f3de9455db8dd62a2e3`, after previously published6f33. All81 committed blobs were independently compared with the accepted frozen manifest. Publication main `d5b1ac46a696a8e1b956ded320b2be4e7c85e8b8` retains parents aac918 and c25b and exactly the c25b tree; subsequent dirty Hermes MCP work is excluded.
+
+Standard mirror task bg1ez3key published main on both hosts; independent remote queries verified GitHub main and GitVerse main exactly d5b1ac46a696a8e1b956ded320b2be4e7c85e8b8. Overall exit1 again reports only the same four preexisting GitVerse tag refusals, with no force or tag overwrite. SYS-PROMPT/CORP/NST completion is not implied by source milestone publication.
+
 ## Non-negotiable limits
 
 No force push, rewrite-ref lease, hard reset, deletion of old main, blind ours merge, mass conflict resolution, mirroring of unrelated tags or ad hoc target bypass. No mirror manifest changes merely to make a task branch publish. Use PROP-016 and the existing mirror owner; source publication is not a release or package publication. Never publish dirty working files or local secrets.
