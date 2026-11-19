@@ -18,6 +18,10 @@ Keep CLI and supporting crates Rust. Approve minimal agent-native resources at `
 8. Extend application presets at `vibe-app/src/agents/presets.rs` with actual native interactive/unattended arguments and output protocols; preserve application consent. Assess native skills/MCP projection at `vibe-agent-projection/src/agents.rs` and its existing path/receipt owners from actual runtime capabilities, not guessed schemas. No auth-store rewrite or second user-layer solver.
 9. Independently inspect the integrated design, run focused gates, commit scoped product changes and hand over exact base/candidate, runtime hashes, supported modes, deviations/rework, actual tests and residual claims. Update authoritative source plan before dashboard refresh. Only after Hermes implementation/review does architect write the separate plain-language ~/temp/HERMES.md user-feature/savings report.
 
+## Exact Hermes identity candidate
+
+A bounded supported-path candidate is native `session.create` preallocation followed by CLI `--resume <exact returned ID>`, with carrier admission before CLI use. Verify native empty-session resume behavior, source/cwd/launch policy and normal exit; do not assume it works from flag names. Preserve user-requested resume/continue identity rather than injecting a conflicting selector. Use native policy builders/admission checks, not copied parsing or fabricated history. If native rejects the preallocated session or incompatible flags, report that precise gap without polling the first admitted session or bypassing native checks. This candidate is not accepted product behavior until its finite native proof passes.
+
 ## Safety and acceptance
 
 Unsupported runtime may retain existing documented soft classic-read launch behavior where that contract permits it; this is not completion of full prefix parity. An admitted carrier error must not silently submit a model turn without required boot. No provider/auth/endpoint change is authorized by this brief; proof uses isolated synthetic runtime and transport sentinels. Test compaction admission separately from fresh-turn zero-submission proof.
