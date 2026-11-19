@@ -390,7 +390,7 @@ fn still_named(vibe: &Pinned, name: &str, locked: &std::fs::File, display: &Path
 #[spec(documents = "spec://org.vibevm.core/vibevm/common/PROP-054#REPLY-SHAPE")]
 pub struct LockGuard {
     /// Held until the guard explicitly unlocks it, then closes the handle.
-    _file: std::fs::File,
+    pub(crate) _file: std::fs::File,
 }
 
 impl Drop for LockGuard {

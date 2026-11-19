@@ -30,6 +30,7 @@ specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-054#REPLY-SHAPE");
 mod component;
 mod file;
 mod identity_hook;
+mod private;
 mod project;
 mod proof;
 mod publish;

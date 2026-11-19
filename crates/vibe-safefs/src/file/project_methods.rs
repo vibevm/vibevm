@@ -188,7 +188,7 @@ macro_rules! project_file_methods {
             }
             None => {
                 let (name, file) =
-                    create_unique_stage(&destination).map_err(|error| before(&created, error))?;
+                    create_unique_stage_mode(&destination, unix_mode).map_err(|error| before(&created, error))?;
                 (name, Some(file.into_std()), true)
             }
         };

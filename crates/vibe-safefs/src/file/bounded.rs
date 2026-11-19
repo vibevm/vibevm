@@ -283,7 +283,7 @@ fn snapshot_limit(cap: usize) -> Result<usize> {
 /// One held observation law for ordinary snapshots and already-authorized
 /// deterministic stages. Public reads still validate authored relative paths
 /// before reaching this internal single-component seam.
-pub(super) fn read_held_snapshot_bounded(
+pub(crate) fn read_held_snapshot_bounded(
     file: &mut std::fs::File,
     holder: &Pinned,
     name: &str,

@@ -26,7 +26,7 @@ use crate::component::{STAGE_PREFIX, split_relative};
 use crate::project::{Pinned, Project, descend};
 use crate::publish::{PublishError, Published};
 
-mod bounded;
+pub(crate) mod bounded;
 mod owned;
 pub use owned::{OwnedFileReceipt, OwnedPublication, OwnedPublishError};
 mod create_new;
@@ -92,10 +92,26 @@ fn refuse_unpublishable_destination(destination: &Pinned, name: &str) -> Result<
 /// entry, so a leftover or a neighbour's stage is stepped over, never reused
 /// and never removed.
 fn create_unique_stage(destination: &Pinned) -> Result<(String, cap_std::fs::File)> {
+    create_unique_stage_mode(destination, None)
+}
+
+fn create_unique_stage_mode(
+    destination: &Pinned,
+    mode: Option<u32>,
+) -> Result<(String, cap_std::fs::File)> {
     let pid = std::process::id();
     for attempt in 0..STAGE_ATTEMPTS {
         let name = format!("{STAGE_PREFIX}{pid}-{attempt}");
         let mut options = cap_options();
+        #[cfg(unix)]
+        if let Some(mode) = mode {
+            use cap_std::fs::OpenOptionsExt;
+            options.mode(mode);
+        }
+        #[cfg(not(unix))]
+        if mode.is_some() {
+            bail!("private creation mode requires witnessed filesystem protection");
+        }
         match destination
             .dir
             .open_with(&name, options.read(true).write(true).create_new(true))

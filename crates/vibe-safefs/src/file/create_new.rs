@@ -41,7 +41,7 @@ use crate::component::ensure_safe_component;
 use crate::project::{Pinned, Project};
 use crate::publish::PublishError;
 
-use super::{cap_options, create_unique_stage};
+use super::{cap_options, create_unique_stage_mode};
 
 impl Project {
     /// Publish `bytes` at `name` directly inside `directory`, refusing to
@@ -85,7 +85,8 @@ impl Project {
         // cannot be raced.
         refuse_any_occupant(directory, name).map_err(&before)?;
 
-        let (staged_name, staged_file) = create_unique_stage(directory).map_err(&before)?;
+        let (staged_name, staged_file) =
+            create_unique_stage_mode(directory, unix_mode).map_err(&before)?;
         let mut std_file = staged_file.into_std();
         let written = std_file
             .write_all(bytes)

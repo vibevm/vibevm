@@ -539,3 +539,12 @@ Status: implementation candidate, 2026-11-19; native installation qualification 
 - Selected application installer options may declare `system_python = { implementation, major, minor, soabi }`. No executable/script field. Initial target: CPython 3.14 Linux x64 with exact SOABI. Existing platform/arch fields remain authoritative.
 - Host observation uses fixed isolated arguments and complete typed output before target acquisition/effects. Missing/incompatible interpreters refuse; no automatic Python install or system package writes. Options without the field do not probe.
 - Strict older readers reject the new field; use a compatible Vibe before selecting this option. No installed-state wire epoch changes from the declaration alone.
+
+## CORP-FMT-050 — private generic keyring storage v1
+
+Status: implementation candidate, 2026-11-20; no full CLI/UI or AI connection completion.
+
+- Generic `<effective-settings>/secrets/index.toml`: schema=1, monotonic store_revision, UUID item keys selecting immutable UUID current_revision plus kind/label metadata. Value bytes live only in private `items/<id>/<revision>/value`, never index or event output.
+- UUIDv4 IDs are random, stable across value rotation, independent of labels/values and never authorization. Expected-revision conflict refuses mutation. New IDs/revisions claim paths exclusively.
+- Bound proposed index serialization before value publication; immutable revision then atomic index switch under direct private-root lock. Unselected old revisions remain protected, no eager cleanup or secure-erasure claim.
+- Unix current-user 0700/0600 no-follow held-capability enforcement; unsupported Windows DACL refuses before writes. Plaintext at rest is intentional and does not isolate an unrestricted same-user process. See KEYRING-STORAGE-01.md.
