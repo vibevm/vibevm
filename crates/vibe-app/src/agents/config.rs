@@ -389,7 +389,10 @@ fn trust_row(entry: &TrustEntry, overrides: &[TrustLayer]) -> list_wire::TrustEn
 ///
 /// ```
 /// let table = vibe_app::agent_preset_table();
-/// assert_eq!(table.presets.len(), 6);
+/// assert_eq!(
+///     table.presets.iter().map(|preset| preset.name.as_str()).collect::<Vec<_>>(),
+///     ["claude-code", "codex", "opencode", "qwen-code", "gemini", "cursor", "hermes", "pi"]
+/// );
 /// assert!(table.placeholders.contains(&"{prompt_file}".to_owned()));
 /// ```
 pub fn preset_table() -> presets_wire::AgentPresets {
