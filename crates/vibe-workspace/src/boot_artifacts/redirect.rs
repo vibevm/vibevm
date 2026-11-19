@@ -34,6 +34,9 @@ pub const BLOCK_OPEN: &str = "<vibevm>";
 /// The closing marker of vibevm's managed block — see [`BLOCK_OPEN`].
 pub const BLOCK_CLOSE: &str = "</vibevm>";
 
+/// Shared ownership policy for project routers and launch-delivered contracts.
+pub(crate) const DEPENDENCY_OWNERSHIP: &str = "Edit sources, not materializations. Never hand-edit `vibedeps`; change its canonical inputs and let Vibe regenerate it.";
+
 /// The header line of the pre-PROP-012 whole-file generated redirect. A
 /// file carrying no `<vibevm>` markers but beginning with this line was
 /// wholly vibevm's, and is migrated to a managed block wholesale

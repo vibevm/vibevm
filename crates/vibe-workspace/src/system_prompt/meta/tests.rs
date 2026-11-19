@@ -109,7 +109,7 @@ fn it_holds_the_two_identities_and_the_plan_but_never_the_continuations_bytes() 
     assert_eq!(meta.node_id, "org.vibevm.core/demo");
     assert_eq!(meta.entrypoint.as_deref(), Some("AGENTS.md"));
     assert_eq!(meta.lane, wire::LaneSpelling::StaticXml);
-    assert_eq!(meta.recipe, 1);
+    assert_eq!(meta.recipe, crate::system_prompt::CURRENT_RECIPE);
     assert_eq!(meta.inputs.len(), 3, "template, entrypoint, lane");
     assert_eq!(meta.inputs[0].role, wire::Role::Template);
     assert_eq!(meta.inputs[0].len, "# My frame\n".len() as u32);

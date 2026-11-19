@@ -204,7 +204,12 @@ pub fn compose_prefix(
             relative: input.relative.as_str(),
         })
         .collect();
-    let contract = render_contract(settings.recipe, &supplied)?;
+    let mut contract = render_contract(settings.recipe, &supplied)?;
+    if settings.recipe == 1 {
+        // The pinned transport prose stays frozen; universal policy is adjoining
+        // generated text covered by the same owned replacement range.
+        super::contract::append_dependency_ownership(&mut contract);
+    }
 
     let mut parts = vec![Part {
         id: SegmentId::Template,

@@ -61,6 +61,46 @@ fn text(prefix: &ComposedPrefix) -> String {
     String::from_utf8(prefix.bytes.clone()).expect("UTF-8")
 }
 
+#[test]
+fn universal_policy_survives_all_contract_and_entrypoint_shapes() {
+    let policy = crate::boot_artifacts::DEPENDENCY_OWNERSHIP;
+    for recipe in [1, 2] {
+        for entrypoint in [
+            Some(format!("AUTHORED\r\n{BLOCK}SUFFIX\r\n")),
+            Some("AUTHORED\r\nSUFFIX\r\n".to_owned()),
+            None,
+        ] {
+            let mut captured = inputs("frame", "", None);
+            captured.entrypoint = entrypoint
+                .as_ref()
+                .map(|body| input(InputRole::Entrypoint, "AGENTS.md", body));
+            let mut configured = settings();
+            configured.recipe = recipe;
+            let prefix = compose_prefix(&captured, &configured).unwrap();
+            let rendered = text(&prefix);
+            assert_eq!(rendered.matches(policy).count(), 1);
+            if let Some(authored) = entrypoint {
+                if authored.contains(BLOCK) {
+                    assert!(rendered.contains("AUTHORED\r\n"));
+                    assert!(rendered.contains("SUFFIX\r\n"));
+                } else {
+                    assert!(rendered.contains(&authored));
+                }
+            }
+            if recipe == 1 {
+                let supplied = captured
+                    .inputs()
+                    .map(|i| SuppliedSource {
+                        role: i.role,
+                        relative: i.relative.as_str(),
+                    })
+                    .collect::<Vec<_>>();
+                assert!(rendered.contains(&render_contract(1, &supplied).unwrap()));
+            }
+        }
+    }
+}
+
 // --- purity ---------------------------------------------------------------
 
 /// The composer's own sources, named explicitly rather than discovered, so

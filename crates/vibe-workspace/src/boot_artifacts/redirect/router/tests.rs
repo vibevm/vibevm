@@ -58,6 +58,8 @@ any position. A delivered file sits between two lines:
 The boot order — this file, `vibevm/vibespecs/boot/STATIC.xml`, the INDEX files — is an order of
 precedence, not of position. A lane delivered before this file has been read.
 
+Edit sources, not materializations. Never hand-edit `vibedeps`; change its canonical inputs and let Vibe regenerate it.
+
 # Optional personal boot — read last
 
 After complete project INDEX/live, use exposed nonempty VIBE_SETTINGS else HOME/.vibe
@@ -262,7 +264,8 @@ fn the_rendered_block_is_small_against_the_instruction_file_budget() {
     ));
     println!("router block: {} bytes", block.len());
     assert!(
-        block.len() < 4 * 1024,
+        // Retain the original router budget plus exactly the new universal policy.
+        block.len() < 4 * 1024 + super::super::DEPENDENCY_OWNERSHIP.len() + 2,
         "the block itself must leave an entrypoint most of its 32 KiB: {} bytes",
         block.len()
     );

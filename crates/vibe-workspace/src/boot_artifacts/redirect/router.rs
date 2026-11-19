@@ -207,6 +207,8 @@ any position. A delivered file sits between two lines:
 
 {precedence}
 
+{dependency_ownership}
+
 # Optional personal boot — read last
 
 After complete project INDEX/live, use exposed nonempty VIBE_SETTINGS else HOME/.vibe
@@ -235,6 +237,7 @@ and unmarked rules bind; no prose inference.
 
 {memory}
 Boot is pure file-reading — there is nothing to execute.",
+        dependency_ownership = super::DEPENDENCY_OWNERSHIP,
         memory = vibe_core::user_project::memory::INSTRUCTIONS.trim_end()
     )
 }
