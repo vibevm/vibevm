@@ -184,6 +184,22 @@ pub fn change_managed_skill_activation(
     managed_skill_status(agent, scope, project, provider, name)
 }
 
+/// Borrowed destination context for the existing skill projection writer.
+/// ```
+/// use vibe_agent_projection::{agents::{Agent, AgentUserDirectories, Scope}, pkgskill::SkillProjectionTarget};
+/// let dirs = AgentUserDirectories::default();
+/// let target = SkillProjectionTarget { agent: Agent::Pi, scope: Scope::User, project: None, dirs: &dirs };
+/// assert_eq!(target.agent, Agent::Pi);
+/// ```
+#[derive(Debug, Clone, Copy)]
+#[spec(documents = "spec://org.vibevm.core/vibevm/common/PROP-073#MANAGED-ACTIVATION")]
+pub struct SkillProjectionTarget<'a> {
+    pub agent: Agent,
+    pub scope: Scope,
+    pub project: Option<&'a Path>,
+    pub dirs: &'a crate::agents::AgentUserDirectories,
+}
+
 /// Canonical owned snapshot reconciliation used by declared and builtin skill writers.
 #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-073#MANAGED-ACTIVATION")]
 pub fn install_managed_skill_snapshot(
@@ -196,29 +212,34 @@ pub fn install_managed_skill_snapshot(
     dry_run: bool,
 ) -> Result<PackageSkillReport, PackageSkillError> {
     install_managed_skill_snapshot_with_dirs(
-        agent,
-        scope,
-        project,
+        SkillProjectionTarget {
+            agent,
+            scope,
+            project,
+            dirs: &crate::agents::AgentUserDirectories::ambient(),
+        },
         provider,
         name,
         desired,
         dry_run,
-        &crate::agents::AgentUserDirectories::ambient(),
     )
 }
 
 /// Reconcile a skill using only caller-injected user/native directories.
 #[spec(documents = "spec://org.vibevm.core/vibevm/common/PROP-073#MANAGED-ACTIVATION")]
 pub fn install_managed_skill_snapshot_with_dirs(
-    agent: Agent,
-    scope: Scope,
-    project: Option<&Path>,
+    target: SkillProjectionTarget<'_>,
     provider: Option<&str>,
     name: &str,
     desired: &BTreeMap<String, Vec<u8>>,
     dry_run: bool,
-    dirs: &crate::agents::AgentUserDirectories,
 ) -> Result<PackageSkillReport, PackageSkillError> {
+    let SkillProjectionTarget {
+        agent,
+        scope,
+        project,
+        dirs,
+    } = target;
     if let Some(project_root) = project.filter(|_| scope == Scope::Project) {
         let intent = receipt::project_intent_for_target(project_root, name, agent, provider)
             .map_err(|e| PackageSkillError::UnsafePath {
@@ -442,14 +463,16 @@ pub fn adopt_builtin_skill_snapshot_with_dirs(
         });
     }
     Ok(install_managed_skill_snapshot_with_dirs(
-        agent,
-        scope,
-        project,
+        SkillProjectionTarget {
+            agent,
+            scope,
+            project,
+            dirs,
+        },
         Some("org.vibevm.core/vibevm"),
         "vibevm",
         desired,
         dry_run,
-        dirs,
     )?)
 }
 

@@ -118,18 +118,18 @@ impl Selection {
             if std::time::Instant::now() >= deadline {
                 bail!("native Hermes selection timed out");
             }
-            if let Some(bytes) = capability.read_file_bounded("ready.json", 65536)? {
-                if let Ok(ready) = serde_json::from_slice::<Ready>(&bytes) {
-                    if ready.session.is_empty()
-                        || ready.mode != "selected"
-                        || !ready.cwd.is_absolute()
-                        || ready.cwd.canonicalize()? != ready.cwd
-                    {
-                        bail!("invalid native selection binding");
-                    }
-                    selected.ready = ready;
-                    return Ok(selected);
+            if let Some(bytes) = capability.read_file_bounded("ready.json", 65536)?
+                && let Ok(ready) = serde_json::from_slice::<Ready>(&bytes)
+            {
+                if ready.session.is_empty()
+                    || ready.mode != "selected"
+                    || !ready.cwd.is_absolute()
+                    || ready.cwd.canonicalize()? != ready.cwd
+                {
+                    bail!("invalid native selection binding");
                 }
+                selected.ready = ready;
+                return Ok(selected);
             }
             std::thread::sleep(std::time::Duration::from_millis(20));
         }
@@ -168,10 +168,10 @@ impl Drop for Selection {
         if self.child.try_wait().ok().flatten().is_some() {
             return;
         }
-        if let Ok(capability) = Project::open(self.temporary.path()) {
-            if let Ok(directory) = capability.dir(&[], false) {
-                let _ = capability.write_atomic_in(&directory, "ack.json", b"{\"cancelled\":true}");
-            }
+        if let Ok(capability) = Project::open(self.temporary.path())
+            && let Ok(directory) = capability.dir(&[], false)
+        {
+            let _ = capability.write_atomic_in(&directory, "ack.json", b"{\"cancelled\":true}");
         }
         let deadline = std::time::Instant::now() + std::time::Duration::from_secs(240);
         while std::time::Instant::now() < deadline {

@@ -45,23 +45,23 @@ impl Agent {
         project_root: Option<&Path>,
         directories: &AgentUserDirectories,
     ) -> Result<Option<PathBuf>> {
-        if scope == Scope::User {
-            if let Some(directory) = directories.native.get(&self) {
-                if !directory.is_absolute()
-                    || directory
-                        .components()
-                        .any(|part| matches!(part, std::path::Component::ParentDir))
-                {
-                    bail!(
-                        "native agent directory must be an absolute normalized path; refusing fallback write"
-                    );
-                }
-                if self == Agent::Pi {
-                    return Ok(Some(directory.join("mcp.json")));
-                }
-                if self == Agent::Hermes {
-                    return Ok(Some(directory.join("config.yaml")));
-                }
+        if scope == Scope::User
+            && let Some(directory) = directories.native.get(&self)
+        {
+            if !directory.is_absolute()
+                || directory
+                    .components()
+                    .any(|part| matches!(part, std::path::Component::ParentDir))
+            {
+                bail!(
+                    "native agent directory must be an absolute normalized path; refusing fallback write"
+                );
+            }
+            if self == Agent::Pi {
+                return Ok(Some(directory.join("mcp.json")));
+            }
+            if self == Agent::Hermes {
+                return Ok(Some(directory.join("config.yaml")));
             }
         }
         match (self, scope) {

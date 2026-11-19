@@ -498,7 +498,9 @@ fn agents_are_listed_configured_and_presets_shown() {
             "opencode",
             "qwen-code",
             "gemini",
-            "cursor"
+            "cursor",
+            "hermes",
+            "pi"
         ]
     );
     assert_eq!(

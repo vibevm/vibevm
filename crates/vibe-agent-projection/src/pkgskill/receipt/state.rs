@@ -124,7 +124,7 @@ pub(super) fn read_receipt(project: &Project) -> Result<Option<PackageSkillRecei
     } else {
         toml::from_str(&text).context("malformed grouped package-skill receipt")?
     };
-    if !matches!(receipt.schema, 2 | 3 | 4) {
+    if !matches!(receipt.schema, 2..=4) {
         bail!(
             "unsupported package-skill receipt schema {} in `{}`; this build supports singleton schemas 2/3 and grouped schema 4; preserve this ownership/activation receipt and use a compatible VibeVM version",
             receipt.schema,
@@ -433,7 +433,7 @@ fn validate_bindings(project_root: &Path, bindings: &[ReceiptBinding]) -> Result
                         binding.key
                     );
                 }
-                let parsed = Agent::parse_filter(&alias)?;
+                let parsed = Agent::parse_filter(alias)?;
                 if parsed.len() != 1 || parsed[0].as_str() != alias {
                     bail!(
                         "receipt target agent `{}` is not one exact skill agent",

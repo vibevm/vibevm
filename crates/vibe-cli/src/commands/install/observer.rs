@@ -1,8 +1,9 @@
 //! The CHILD install observation policy, and the lazy embedded-registry root.
 //!
 //! This is the install half of the two-observer split, and it is deliberately
-//! NOT the phase observer. Its stream formula nulls on a SUPPRESSED context
-//! (the phase one nulls on `--quiet`), and its machine-failure emission bit is
+//! NOT the phase observer. Its requested stream formula nulls on a SUPPRESSED
+//! context; ordinary contribution observation captures full logs and suppresses
+//! raw terminal output under `--quiet`/`--json`. Its machine-failure emission bit is
 //! the child context's answer — which is why a composed phase verb's slot
 //! failure stays silent while a direct `vibe install --json` narrates the same
 //! failure. Merging the two flips that bit.

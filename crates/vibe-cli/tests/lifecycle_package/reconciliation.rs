@@ -233,7 +233,7 @@ agents = ["claude"]
         "foreign\n"
     );
     assert_eq!(fs::read(&receipt_path).unwrap(), committed);
-    let receipt: vibe_wire::generated::package_skill_receipt::PackageSkillReceipt =
+    let receipt: vibe_wire::generated::package_skill::e3::receipt::PackageSkillReceipt =
         toml::from_str(&String::from_utf8(committed).unwrap()).unwrap();
     assert!(receipt.applying.is_none());
     assert!(!project.path().join(".vibe/package-skills/staged").exists());

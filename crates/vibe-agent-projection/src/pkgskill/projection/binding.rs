@@ -113,13 +113,13 @@ fn lower_skills(
         }
         for target in &binding.targets {
             let key = receipt::fold_key(vibe_core::machine_json_path(&target.path));
-            if let Some(first) = physical_targets.insert(key, identity.clone()) {
-                if first != identity {
-                    bail!(
-                        "package skill bindings `{first}` and `{identity}` collide at physical target `{}`",
-                        target.path.display()
-                    );
-                }
+            if let Some(first) = physical_targets.insert(key, identity.clone())
+                && first != identity
+            {
+                bail!(
+                    "package skill bindings `{first}` and `{identity}` collide at physical target `{}`",
+                    target.path.display()
+                );
             }
         }
         bindings.push(binding);

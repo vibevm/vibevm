@@ -35,11 +35,12 @@ mod activation;
 #[path = "pkgskill/snapshot.rs"]
 mod snapshot;
 pub use activation::{
-    SkillActivationStatus, SkillActivationTarget, admit_managed_skill_activation,
-    adopt_builtin_skill_snapshot, adopt_builtin_skill_snapshot_with_dirs,
-    change_managed_skill_activation, install_managed_skill_snapshot,
-    install_managed_skill_snapshot_with_dirs, managed_skill_status, managed_skill_status_with_dirs,
-    register_builtin_skill_snapshot, retain_managed_skill_activation,
+    SkillActivationStatus, SkillActivationTarget, SkillProjectionTarget,
+    admit_managed_skill_activation, adopt_builtin_skill_snapshot,
+    adopt_builtin_skill_snapshot_with_dirs, change_managed_skill_activation,
+    install_managed_skill_snapshot, install_managed_skill_snapshot_with_dirs, managed_skill_status,
+    managed_skill_status_with_dirs, register_builtin_skill_snapshot,
+    retain_managed_skill_activation,
 };
 
 #[path = "pkgskill/standalone.rs"]
