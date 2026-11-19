@@ -22,6 +22,12 @@ Keep CLI and supporting crates Rust. Approve minimal agent-native resources at `
 
 A bounded supported-path candidate is native `session.create` preallocation followed by CLI `--resume <exact returned ID>`, with carrier admission before CLI use. Verify native empty-session resume behavior, source/cwd/launch policy and normal exit; do not assume it works from flag names. Preserve user-requested resume/continue identity rather than injecting a conflicting selector. Use native policy builders/admission checks, not copied parsing or fabricated history. If native rejects the preallocated session or incompatible flags, report that precise gap without polling the first admitted session or bypassing native checks. This candidate is not accepted product behavior until its finite native proof passes.
 
+## Initial product asset review findings
+
+The first Rust asset publisher passed `Some(0o600)` unconditionally to strict safefs publication. Correct this through the established platform contract: Unix exact mode0600, non-Unix no Unix mode request; do not weaken safefs or claim Windows ACL equivalence. Keep immutable full-digest names, foreign-byte refusal and no-follow publication.
+
+The first Pi carrier library used a fixed named inline extension path for owned-error filtering and ordinary UTF-8 string reads. Before production admission, reject collision with another loaded extension identity and validate prefix encoding/binding strictly rather than silently replacing invalid UTF-8 bytes. These are bounded concrete review findings, not an invitation to introduce a generic extension/security framework. Report their actual tests and disposition. Library exports alone are not an executable native CLI bootstrap or completion of launch support.
+
 ## Safety and acceptance
 
 Unsupported runtime may retain existing documented soft classic-read launch behavior where that contract permits it; this is not completion of full prefix parity. An admitted carrier error must not silently submit a model turn without required boot. No provider/auth/endpoint change is authorized by this brief; proof uses isolated synthetic runtime and transport sentinels. Test compaction admission separately from fresh-turn zero-submission proof.
