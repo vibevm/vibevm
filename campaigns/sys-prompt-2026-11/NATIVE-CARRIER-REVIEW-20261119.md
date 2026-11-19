@@ -73,6 +73,12 @@ Hermes owned-runner candidate SHA256 `f3b06d75f4c5da058365f9d273a70be5c3f15ad105
 
 Pi actual native UI script SHA256 `8be339e6aea977b90ed08d96518191089526680034686f5c45daeeb76940002b` and log SHA256 `3971bf69805e1383edb9f624323a578667efa8d1846ed861e067536941dd054c` were independently read/hash-verified. Task bakr6hddt exercises exported runtime/services, real InteractiveMode.init, actual reload, stop and dispose, with prefix-before-tail, fresh reload tail and two owned listener attachments. Accept native UI/API lifecycle feasibility only: read-only tool selection is not full resource proof, stop is an API call not a user quit command, and full argv/print/RPC/fork/resume/product wiring remain open.
 
+## Actual Vibe-to-Pi request and personal freshness
+
+Independently read actual request witnesses `pi-vibe-launch-subject/request-personal-one.json` and `request-proof.json`; SHA256 values match PI-ACTUAL-REQUEST-PERSONAL-RESULT.json: `aebfa0553c595de2f6dbccd6bfb940e40bd8d0de789a58d278e1de0625b1b64f` and `6f68469996842f9eb1fb9a1a52d5580700a33bc26c615a48f40c05864fd970c5`. The installed runtime supplies TranscriptContext with system.sections, not a legacy systemPrompt string. Its addendum carries the project lane before personal instructions; native preamble and tools are exactly equal between both requests. The second request carries PERSONAL-TWO after changing only personal boot, without project regeneration.
+
+Accept this as actual Vibe entrypoint/native request-ordering and personal-freshness evidence for the small fixture, not large-prefix parity, worker isolation, full argument support or provider cache savings. The transport intentionally fails after capture; exit1 alone is not a passing test. The already required integrated large-prefix and zero-submission negative cases remain open; do not repeat the small fixture as a substitute.
+
 ## Remaining finite proof
 
 Inspect the actual instance-bound carrier and native Pi extension/file path against the existing packet. Require exact source/runtime binding, complete prefix byte/ordering/once-only evidence, preserved base/resources, changed personal-tail behavior, worker/child exclusion and truthful resume behavior. Distinguish constructed payload from attempted SDK/network delivery. No new generic middleware, permission rounds or speculative proof campaign is requested.
