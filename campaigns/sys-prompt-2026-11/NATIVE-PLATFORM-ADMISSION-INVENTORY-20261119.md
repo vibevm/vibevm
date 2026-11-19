@@ -1,0 +1,25 @@
+# Native platform/runtime admission inventory
+
+2026-11-19; accepted product14b5ef40010073d8ecb2d67ce333b98319422641. Inventory of observed evidence, not provisioned platform matrix or approval to install another runtime.
+
+| Native/runtime subject | Admitted input / actual evidence | Product admission limit | Unrun boundary |
+|---|---|---|---|
+| Pi Linux npm-style installation | Published @earendil-works/pi-coding-agent1.5.2, existing Node24.18.0, retained native-input hashes and actual Vibe dispatch/picker/worker fixtures | Selected package name/version + installed Node/root discovery; carrier process exposes admitted native dist/cli.js identity | Other Node versions/distributions and independent transitive dependency sets not automatically qualified |
+| Pi Windows/macOS native installation | Pinned published README documents installers for those systems, npm alternative, Node>=22.19 | Common PATH/PATHEXT resolver has injected-path unit tests; Pi discovery has Windows node.exe spelling, not runtime qualification | No actual Windows/macOS native Pi fixture in this session; npm.cmd/Bun/managed layouts not proven by Linux source branches |
+| Hermes Linux direct Python entry | Source4ae451d4126327c871fd084e60c045dec0c85911 + exact measured native modules, private dependency sites and actual CLI/query/worker/projection evidence | Absolute direct Python shebang and matching installed-root module identities; wrappers refuse | Different dependency/layout/interpreter revisions need separate admission |
+| Hermes Windows/macOS/WSL | Pinned README explicitly documents native Windows support and Linux/macOS/WSL2 installation | Vibe's current native carrier does not admit Windows shell/PowerShell wrappers; common launcher resolution alone does not solve interpreter/root selection | Native Windows upstream support exists, so missing Vibe admission is not called unsupported upstream. WSL is a separate Linux runtime, not Windows-native qualification |
+| Common program resolver | Existing program.rs PATH/PATHEXT tests plus historical Claude C8 Windows receipt | Explicit paths preserved, cmd/bat uses standard process escaping, inferred PowerShell host refused | Claude Windows historical proof does not qualify Pi/Hermes native layouts |
+
+All actual runtime executions here were under credential-free allowlisted bwrap with synthetic HOME/state, not operator-installed runtime mutation. Upstream documentation is source evidence only, not actual platform execution. Do not follow third-party antivirus bypass instructions or alter host protections to establish compatibility.
+
+## Flash/base provisioning status
+
+Superseding verified binding, 2026-11-19: `HERMES-PI-IMPLEMENTATION-01.md` records the owner's existing SSH aliases `flash` = macOS and `base` = Windows. These are physical test-host aliases, not model or VM names. Read-only SSH probes using those aliases with unchanged host-key policy confirmed `flash`: Darwin x86_64, macOS 15.7.7; `base`: Windows NT 10.0.26200.0, X64. No SSH config, keys or auth stores were read or printed. The earlier missing-host-binding statement is superseded, not a remaining blocker.
+
+Tool availability is separate from native qualification: macOS reports `sandbox-exec`, Python and Cargo available, Node absent from the SSH PATH; Windows reports Python, Node and Cargo available. The first Windows tool probe failed because of command quoting; the corrected encoded metadata-only PowerShell command succeeded. Absence of `WindowsSandbox.exe` is only an observation, not proof that no other isolation exists. No downloaded runtime has been installed or executed remotely in this slice. A tested filesystem/process/network boundary has not yet been established on either host; native agent scenarios remain **UNRUN for that concrete isolation prerequisite**, not for unknown host identity. Synthetic HOME alone is not credential isolation. Do not relax host protections, reuse ordinary auth, or infer runtime/platform PASS from successful SSH access.
+
+## Integration baseline
+
+Historical baseline: the original self-check ended during OOM at workspace test step2, after format step1 PASS. Accepted focused Pi repair subsequently passed with process-local two Cargo jobs. These earlier outcomes remain historical evidence, not the current gate status.
+
+Current committed-product baseline: `tools/self-check.sh`, task `b8r5wyddg`, completed on `dfc544f918015315e6469ba4f28e5ab437387e2b` with all eight steps PASS and terminal exit 0, using the same process-local two-job cap and preserving unrelated dirty repository/materialized inputs. The architect independently accepted this host gate and bounded initial Hermes functionality; see `READY-TRANSPORT-HOST-GATE-20261119.md`. This is not full SYS acceptance or native platform qualification. Remaining Windows/macOS/layout and deeper Hermes lifecycle/CLI/TUI journeys are deferred to `NST-HERMES-INTEGRATION` after domain consolidation, not PASS; `HERMES-REQUIRED-PROMPT` and `HERMES-READY-PLACEMENT` remain separately open.
