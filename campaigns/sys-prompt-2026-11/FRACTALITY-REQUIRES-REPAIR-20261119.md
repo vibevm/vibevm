@@ -23,7 +23,7 @@ Independent verification:
 - All32 slot source hashes and1238 recorded payload hashes verified.
 - Boot77 appears in INDEX; every actual INDEX/static target exists.
 - Authored bytes outside the three managed root routers preserved.
-- Ordinary non-forced regeneration `b6a0529tp` exit0; all six root output hashes unchanged. Pre-repeat mtimes were not witnessed; no mtime claim is made.
+- Correction: `b6a0529tp` was NOT an actual regeneration proof. Its transcript-recovered script selected a read-only diagnostic command; exit0 and unchanged hashes did not establish Vibe execution. That claim is retracted, with the failed driver retained. Actual ordinary non-forced publication `bv3p404w1` and explicit repeat `bjy4igedb` subsequently verified all witnessed outputs byte-and-mtime unchanged across four roots, including this32-package root. See `CONSUMER-BOOT-PUBLICATION-RESULT.json`; no reconstruction/build proof was repeated.
 
 Evidence root `/data/git/vibevm-router-reconstruction-20261119/`: `FRACTALITY-REQUIRES-RESULT.json`, `fractality-requires-before/`, `fractality-requires-install.log` and `fractality-requires-repeat.log`.
 

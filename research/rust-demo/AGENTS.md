@@ -28,6 +28,8 @@ any position. A delivered file sits between two lines:
 The boot order — this file, then the INDEX files — is an order of precedence,
 not of position. A lane delivered before this file has been read.
 
+Edit sources, not materializations. Never hand-edit `vibedeps`; change its canonical inputs and let Vibe regenerate it.
+
 # Optional personal boot — read last
 
 After complete project INDEX/live, use exposed nonempty VIBE_SETTINGS else HOME/.vibe
