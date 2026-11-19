@@ -31,6 +31,10 @@ One source-bound alternative avoids the single UI error binding entirely: an inv
 
 This is a hypothesis, not an accepted gate. A finite actual three-arm stream-sentinel proof must show successful1 / unguarded-error1 / guarded-error0 submissions, plus visible error/cancellation. If it passes, verify the same owned binding across actual reload with native UI-style error reporting preserved. Bind each replacement session through the runtime factory; never inspect or set private cancellation fields. No global callback replacement, method patch or provider wrapper is permitted. If the public abort does not prevent submission, retain the failure and return the precise gap rather than adding timing guesses or retries.
 
+## Public-abort hypothesis rejected by actual proof
+
+`PI-PUBLIC-ABORT-RESULT.json` records actual task `buzfhwf08`, exit1: the owned before-start handler called public `session.abort()` without awaiting it, then threw, but the test stream boundary was still invoked once. The zero-invocation criterion failed in the first guarded arm; reload was NOT RUN after that assertion. Do not adopt this alternative as production admission or retry unchanged. This witnesses stream invocation, not an actual network request on an aborted signal. Retain the narrower working SDK throwing-listener result and its unresolved native UI/reload conflict; full Pi adapter acceptance remains open.
+
 ## Finite proof and review
 
 - Positive actual runtime-factory/native event delivers full stable prefix before exact fresh personal tail; test stream sentinel remains reachable.
