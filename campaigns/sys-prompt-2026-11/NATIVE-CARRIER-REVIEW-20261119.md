@@ -53,6 +53,14 @@ Accept this as native client/session/CLI-adapter feasibility only. It is NOT who
 
 Next finite verification: actual supported CLI entrypoint through that same invocation-owned endpoint, without prompt/model submission or admission changes. Session-specific gateway factory/carrier implementation still needs the approved coding lane. Builder explicitly confirmed that the coding-lane timeout blocker is unresolved; no successful coding receipt or new substitute-lane authorization exists. Independent runtime verification does not authorize product patches.
 
+## Pi ordering candidate and proof review
+
+Read revised carrier `/data/git/vibevm-native-carrier-20261119/pi-order-exact-retry/carrier.mjs`, verified SHA256 `f8697d8b7521dbc33233b1f3e8102dd52c1a1ccdf11ba4d1d5c581a405fe84b9`, corresponding proof SHA256 `f2bee973f5c8dbe5698c5a9f7aa1e115e8bfc07de55438fc4fbb0588697763a4`, and all three logs in PI-ORDERING-RESULT.json. Actual source uses selected-session admission before file IO, validates options, freezes prefix on first admitted event, preserves caller tail after the prefix and uses a private WeakMap rather than text heuristics. No blocking design defect found in this ordering candidate; this is not full adapter acceptance.
+
+Proof review found an insufficient native unrelated-session assertion: optional chaining plus an expected-value fallback could pass if the result/options were absent. Builder was asked to assert actual native output presence and exact unchanged append, and preserve native extension-error observations. Pure-handler missing-file exclusion and native full-tool-session binding are distinct evidence; do not merge them into an uninstrumented native file-read claim.
+
+Actual installed ExtensionRunner catches handler exceptions and emits errors while continuing. Consequently a handler throw establishes neither native turn abortion nor zero provider submissions. Ordering/native diagnostic proof and production fail-closed adapter proof remain separate. A replacing system prompt, global native patch or custom agent loop is not an acceptable shortcut.
+
 ## Remaining finite proof
 
 Inspect the actual instance-bound carrier and native Pi extension/file path against the existing packet. Require exact source/runtime binding, complete prefix byte/ordering/once-only evidence, preserved base/resources, changed personal-tail behavior, worker/child exclusion and truthful resume behavior. Distinguish constructed payload from attempted SDK/network delivery. No new generic middleware, permission rounds or speculative proof campaign is requested.
