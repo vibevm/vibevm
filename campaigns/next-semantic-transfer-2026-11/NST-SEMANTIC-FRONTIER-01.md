@@ -151,3 +151,5 @@ Five inspected revisions distinguish mode-only source changes, wire vocabulary, 
 `036497cb67` added generated migration request, journal and report types and registrations in six files. Its authored schemas were not changed in this commit; a generated reader is not evidence that a migration ran.
 
 Another 14 commits were confined to release documentation, evidence and fixtures (212 changed-file occurrences). Structured records were parsed where applicable; fixture helpers and recorded commands were not executed. This does not establish a publication or target behavior.
+
+Fourteen xtask-only revisions were inspected for capture, local staging, compatible-host smoke, persisted evidence, pure publication planning, reader policy and finite reference checks. Fake release ordering is not host publication; staging a bundle is not executing it.
