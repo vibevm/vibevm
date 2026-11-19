@@ -117,6 +117,14 @@ Architect inspected the alias planner/state/activation/transaction and tests: on
 
 Accept this coherent shared-projection milestone, not full SYS/native platform acceptance. Hermes YAML native stage/Rust publisher integration remains a separate active atom. Do not reopen unchanged carrier/prefix proofs or begin the deferred domain consolidation now.
 
+## Hermes MCP product milestone accepted
+
+Accepted exact 25-file Hermes MCP candidate manifest SHA256 `bf3a411a939e51dc7018e78629c5c067b0f302a70faca83837fc2846cdc17448`, base c25b060f8, after independent source-file hash comparison and review of the native stage, launcher override, profile context, observation and PublicationBatch integration. All 25 committed blobs in builder `2d78ca2c22b348e9f6b1ceb17d5150d796787201` independently match that manifest.
+
+Actual rebuilt Vibe explicit/default-profile install/repeat/upgrade/remove covers owned receipt package/payload, repeated bytes, receipt removal and preserved foreign comments/anchors. Helper cancellation/reap test and conform0 new/141 existing were read; other affected MCP/projection/CLI counts retain their report scope. The old scratch cleanup glob is not exhaustive proof of new TempDir cleanup. Native helper never becomes final live-config writer or a second YAML serializer.
+
+This closes the bounded MCP integration, not complete Hermes/Pi parity. Next profile-aware Hermes skills and remaining ordinary native session/worker/platform obligations follow the existing finite disposition table; no repeated carrier/full-prefix matrix or deferred central-adapter refactor is required now.
+
 ## Remaining finite proof
 
 Inspect the actual instance-bound carrier and native Pi extension/file path against the existing packet. Require exact source/runtime binding, complete prefix byte/ordering/once-only evidence, preserved base/resources, changed personal-tail behavior, worker/child exclusion and truthful resume behavior. Distinguish constructed payload from attempted SDK/network delivery. No new generic middleware, permission rounds or speculative proof campaign is requested.
