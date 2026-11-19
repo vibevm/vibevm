@@ -91,6 +91,12 @@ Read builder `NATIVE-PI-PRODUCT-CANDIDATE-20261119.md` as a coherent intermediat
 
 Full Pi/Hermes acceptance remains open: native option families currently refused, saved model/session selection, trust prompting, actual user command loop, workers/resources, replacement/resume/fork and pre-compaction admission require finite implementation/disposition under the existing mandate. Hermes product bootstrap is not delivered by its CLI/factory feasibility proofs. These are existing completion obligations, not new prerequisites created by review. Builder proceeds through existing native owners without another architecture approval cycle; exact unsupported API gaps return for decision. Preserve current milestone evidence and do not rerun unchanged large-prefix positives by ritual.
 
+## Pi trust/files follow-up accepted
+
+Read NATIVE-PI-TRUST-FILES-20261119.md and inspected the actual entrypoint diff against base7050eb66b. Independently verified entry asset SHA256 `3b95d60c1b5227f6d63aafb28ba2639b5144787db3fbaa8056ec7e3d82c3e199` and final log SHA256 `3ca23c4f6bd0fefb57276baf7d35de76087ea5e0d10eb67281606b24e7145c61`. The native runtime excludes project extensions for untrusted/deny and loads them for explicit approve/remembered trust. Native file-processing plus user input reaches the captured request with the prefix. Restored built-in extension inputs are a source change, not retrospective full resource proof.
+
+Accept this bounded source-import follow-up. It is not a rebuilt Vibe binary result, interactive trust-dialogue proof or full lifecycle/worker coverage. Keep the earlier `.mjs` discovery fixture failure distinct from corrected `.js` results. Session/scoped-model mapping and the already named full-parity obligations remain the next implementation scope, without another trust-test matrix.
+
 ## Remaining finite proof
 
 Inspect the actual instance-bound carrier and native Pi extension/file path against the existing packet. Require exact source/runtime binding, complete prefix byte/ordering/once-only evidence, preserved base/resources, changed personal-tail behavior, worker/child exclusion and truthful resume behavior. Distinguish constructed payload from attempted SDK/network delivery. No new generic middleware, permission rounds or speculative proof campaign is requested.
