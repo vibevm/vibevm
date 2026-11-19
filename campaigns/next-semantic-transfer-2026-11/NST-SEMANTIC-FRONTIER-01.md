@@ -155,3 +155,5 @@ Another 14 commits were confined to release documentation, evidence and fixtures
 Fourteen xtask-only revisions were inspected for capture, local staging, compatible-host smoke, persisted evidence, pure publication planning, reader policy and finite reference checks. Fake release ordering is not host publication; staging a bundle is not executing it.
 
 Seven publication changes distinguish preparation and identity, smoke readiness, pure remote planning, local capture and scoped approval. None is accepted as an observed release on a real host by this review.
+
+Eight lifecycle revisions were checked for narrowly scoped admission, target OS, physical effect uncertainty, missing recovery input, stopped-phase reports and replay identity. A completed report is not proof that uncertain physical effects completed.
