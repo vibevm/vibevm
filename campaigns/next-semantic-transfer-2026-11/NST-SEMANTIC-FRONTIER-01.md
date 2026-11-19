@@ -137,3 +137,5 @@ Of the remaining historical amendments, 51 touched Markdown only (54 changed-fil
 Eleven remaining XML-only changes were compared by named fact text and first-parent diff. Eight concerned common specifications and three amended boot instructions. Their changed contracts and instructions are not evidence of product delivery.
 
 Three remaining Rust test-only changes exercise cold partial installation, deferred TCP session stop, and simulated draft replacement. Their assertions were inspected; no live publishing or current-product execution was inferred.
+
+`65d631fd88` introduced the machine-operation census contract and its projected map, not executable operations. Inspecting a registration must not invoke its handler.
