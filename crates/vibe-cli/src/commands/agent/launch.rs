@@ -537,12 +537,52 @@ fn standalone_opencode_run(arguments: &[String]) -> bool {
     true
 }
 
+/// First Codex route: fresh noninteractive exec only. The native parser owns
+/// the rest; this gate recognizes a finite option subset, never prompt prose.
+fn fresh_codex_exec(arguments: &[String]) -> bool {
+    if arguments.first().map(String::as_str) != Some("exec") {
+        return false;
+    }
+    let mut index = 1;
+    while let Some(argument) = arguments.get(index) {
+        match argument.as_str() {
+            "--" => return true,
+            "--skip-git-repo-check" | "--ephemeral" | "--json" => {}
+            "--sandbox" | "-s" => {
+                index += 1;
+                if arguments.get(index).map(String::as_str) != Some("read-only") {
+                    return false;
+                }
+            }
+            "--model" | "-m" => {
+                index += 1;
+                if arguments.get(index).is_none() {
+                    return false;
+                }
+            }
+            value if value.starts_with('-') => return false,
+            "resume" | "fork" | "review" | "help" => return false,
+            _ => return index + 1 == arguments.len(),
+        }
+        index += 1;
+    }
+    true
+}
+
 fn admit_route_kind(kind: HarnessKind, arguments: &[String]) -> Result<()> {
     let configured = vibe_net::current().route().mode_name() != "direct";
     if kind == HarnessKind::OpenCode && configured {
         if !standalone_opencode_run(arguments) {
             bail!(
                 "configured corporate proxy requires an explicitly recognized standalone OpenCode run; an existing server owner or ambiguous invocation cannot inherit this invocation route"
+            );
+        }
+        return Ok(());
+    }
+    if kind == HarnessKind::Codex && configured {
+        if !fresh_codex_exec(arguments) {
+            bail!(
+                "configured corporate proxy requires a recognized fresh noninteractive Codex exec; resume, remote and ambiguous invocations are not qualified"
             );
         }
         return Ok(());
@@ -558,7 +598,10 @@ fn admit_route_kind(kind: HarnessKind, arguments: &[String]) -> Result<()> {
 
 /// Admitted native routes share one lifetime owner; other adapters remain separate work.
 fn route_child(kind: HarnessKind, command: &mut Command) -> Result<Option<i32>> {
-    if !matches!(kind, HarnessKind::Pi | HarnessKind::OpenCode) {
+    if !matches!(
+        kind,
+        HarnessKind::Pi | HarnessKind::OpenCode | HarnessKind::Codex
+    ) {
         return Ok(None);
     }
     let Some(route) = crate::commands::tool::px::AgentRoute::selected()? else {
@@ -594,6 +637,26 @@ fn route_child(kind: HarnessKind, command: &mut Command) -> Result<Option<i32>> 
 #[cfg(test)]
 mod proxy_argument_tests {
     use super::standalone_opencode_run;
+    #[test]
+    fn codex_proxy_admits_fresh_exec_not_resumed_or_remote_owners() {
+        let check = |args: &[&str]| {
+            super::fresh_codex_exec(&args.iter().map(|s| (*s).to_owned()).collect::<Vec<_>>())
+        };
+        assert!(check(&["exec", "--sandbox", "read-only", "hello"]));
+        assert!(check(&["exec", "--", "resume"]));
+        assert!(check(&["exec", "--model", "sentinel", "web"]));
+        assert!(!check(&["exec", "resume", "--last"]));
+        assert!(!check(&["exec", "fork", "hello"]));
+        assert!(!check(&["cloud", "exec", "hello"]));
+        assert!(!check(&["exec", "--config", "unknown=1", "hello"]));
+        assert!(!check(&[
+            "exec",
+            "--sandbox",
+            "danger-full-access",
+            "hello"
+        ]));
+    }
+
     #[test]
     fn opencode_proxy_classifies_boundaries_not_prompt_prose() {
         let check = |args: &[&str]| {

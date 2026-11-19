@@ -71,7 +71,7 @@ fn pi_managed_route_preserves_arguments_status_and_reaps_px_on_spawn_failure() {
     // execution for an adapter outside this first qualified identity.
     std::fs::write(
         user.settings.join("agents.toml"),
-        "[launchers.other]\nkind='codex'\ncommand=['/bin/sh','-c','echo SHOULD_NOT_START']\n",
+        "[launchers.other]\nkind='qwen'\ncommand=['/bin/sh','-c','echo SHOULD_NOT_START']\n",
     )
     .unwrap();
     let other = user
@@ -116,6 +116,21 @@ fn pi_managed_route_preserves_arguments_status_and_reaps_px_on_spawn_failure() {
         .unwrap();
     assert!(!served.status.success());
     assert!(!String::from_utf8_lossy(&served.stdout).contains("SHOULD_NOT_START"));
+    std::fs::write(
+        user.settings.join("agents.toml"),
+        "[launchers.retained]\nkind='codex'\ncommand=['/bin/sh','-c','echo SHOULD_NOT_START']\n",
+    )
+    .unwrap();
+    let resumed = user
+        .vibe()
+        .current_dir(root.path())
+        .env("FAKE_PX_LOG", &log)
+        .args(["agent", "retained", "exec", "resume", "--last"])
+        .output()
+        .unwrap();
+    assert!(!resumed.status.success());
+    assert!(!String::from_utf8_lossy(&resumed.stdout).contains("SHOULD_NOT_START"));
+    assert!(String::from_utf8_lossy(&resumed.stderr).contains("fresh noninteractive Codex exec"));
     let text = std::fs::read_to_string(&log).unwrap();
     let pids: Vec<u32> = text
         .lines()
