@@ -19,6 +19,7 @@ mod composition;
 mod env_allowlist;
 mod exit_code;
 mod output;
+mod process_supervision;
 mod registry;
 mod shell_syntax;
 

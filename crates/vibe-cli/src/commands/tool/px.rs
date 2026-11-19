@@ -38,6 +38,54 @@ struct Lent {
     no_proxy: String,
 }
 
+impl Lent {
+    /// One shared proxy environment projection; callers retain their argv/cwd.
+    pub(crate) fn apply(&self, command: &mut Command) {
+        for name in PROXY_VARS {
+            match &self.url {
+                Some(url) => {
+                    command.env(name, url);
+                }
+                None => {
+                    command.env_remove(name);
+                }
+            }
+        }
+        for name in NO_PROXY_VARS {
+            command.env(name, &self.no_proxy);
+        }
+    }
+}
+
+/// Invocation-scoped agent route. Absence preserves the native exec contract.
+/// The session is deliberately retained until the supervised child finishes.
+pub(crate) struct AgentRoute {
+    session: std::sync::Arc<vibe_net::NetworkSession>,
+    lent: Lent,
+}
+
+impl AgentRoute {
+    pub(crate) fn selected() -> Result<Option<Self>> {
+        let session = vibe_net::current();
+        if session.route().mode_name() == "direct" {
+            return Ok(None);
+        }
+        let lent = lend(&session, false)?;
+        Ok(Some(Self { session, lent }))
+    }
+    pub(crate) fn managed(&self) -> bool {
+        self.session.route().px().is_some()
+    }
+    pub(crate) fn apply(&self, command: &mut Command) {
+        self.lent.apply(command);
+    }
+    pub(crate) fn close(&self) {
+        if self.managed() {
+            self.session.close();
+        }
+    }
+}
+
 /// The fixed loopback port a `vibe tool px` invocation asked for, read
 /// at the composition root: one session serves the whole invocation, and
 /// it is built before any command runs, so `--port` has to be applied to
@@ -209,16 +257,7 @@ pub fn run_exec(
 
     let mut command = Command::new(&program);
     command.args(rest);
-    for name in PROXY_VARS {
-        match &lent.url {
-            Some(url) => command.env(name, url),
-            // A direct run must not inherit a proxy the parent carries.
-            None => command.env_remove(name),
-        };
-    }
-    for name in NO_PROXY_VARS {
-        command.env(name, &lent.no_proxy);
-    }
+    lent.apply(&mut command);
     // A tool that reads its own variable for the proxy cannot be told the
     // address in advance, so it is named instead of hard-coded here.
     if let Some(url) = &lent.url {

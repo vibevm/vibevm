@@ -18,7 +18,7 @@ use std::os::unix::process::ExitStatusExt;
 
 #[path = "vibe-app-proxy/resolve.rs"]
 mod resolve;
-#[path = "vibe-app-proxy/supervision.rs"]
+#[path = "../process_supervision.rs"]
 mod supervision;
 
 const PROXY_PROTOCOL: &str = "vibe-app-proxy/2";

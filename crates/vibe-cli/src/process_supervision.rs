@@ -1,3 +1,5 @@
+//! Shared foreground child supervision for PATH proxies and managed agent routes.
+
 use std::io;
 use std::process::{Child, ExitStatus};
 
@@ -5,15 +7,18 @@ use std::process::{Child, ExitStatus};
 use std::time::Duration;
 
 #[cfg(unix)]
+#[allow(unsafe_code)]
 unsafe extern "C" {
     fn kill(pid: i32, signal: i32) -> i32;
 }
 
 #[cfg(windows)]
+#[allow(unsafe_code)]
 type HandlerRoutine = Option<unsafe extern "system" fn(u32) -> i32>;
 
 #[cfg(windows)]
 #[link(name = "kernel32")]
+#[allow(unsafe_code)]
 unsafe extern "system" {
     fn SetConsoleCtrlHandler(handler_routine: HandlerRoutine, add: i32) -> i32;
 }
@@ -33,6 +38,7 @@ fn handles_console_control(control: u32) -> bool {
     deviates = "spec://core-ai-native/mechanisms/ENGINE-CONFORM-v0.1#rules",
     reason = "Windows requires an unsafe system-ABI callback for SetConsoleCtrlHandler; this stateless callback only classifies the control value and returns BOOL."
 )]
+#[allow(unsafe_code)]
 unsafe extern "system" fn console_control_handler(control: u32) -> i32 {
     if handles_console_control(control) {
         1
@@ -50,6 +56,7 @@ impl ConsoleControlHandler {
         deviates = "spec://core-ai-native/mechanisms/ENGINE-CONFORM-v0.1#rules",
         reason = "SetConsoleCtrlHandler has no standard-library wrapper; the registered callback is static, has the required ABI, and carries no borrowed state."
     )]
+    #[allow(unsafe_code)]
     fn install() -> io::Result<Self> {
         // SAFETY: `console_control_handler` has the required static lifetime and
         // ABI, and remains valid until process exit. The guard unregisters the
@@ -67,6 +74,7 @@ impl Drop for ConsoleControlHandler {
         deviates = "spec://core-ai-native/mechanisms/ENGINE-CONFORM-v0.1#rules",
         reason = "SetConsoleCtrlHandler has no standard-library wrapper; drop removes the same static callback registered by the guard and ignores only cleanup failure during process exit."
     )]
+    #[allow(unsafe_code)]
     fn drop(&mut self) {
         // SAFETY: this removes the handler registered by `install`; there is no
         // callback state to outlive the registration.
@@ -130,6 +138,7 @@ impl Supervisor {
     deviates = "spec://core-ai-native/mechanisms/ENGINE-CONFORM-v0.1#rules",
     reason = "Rust has no standard-library API for sending SIGTERM to a child; the process id comes from Child::id and the signal is a signal-hook platform constant."
 )]
+#[allow(unsafe_code)]
 fn forward_unix_signal(child_id: u32, signal: i32) -> io::Result<()> {
     // SAFETY: `child_id` is the live OS process identifier returned by
     // `Child::id`, and `signal` comes from signal-hook's platform constants.

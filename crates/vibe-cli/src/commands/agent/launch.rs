@@ -81,6 +81,9 @@ pub(crate) fn run(ctx: &output::Context, argv: Vec<String>) -> Result<()> {
             request,
         )?);
     }
+    // READY above is local-only attachment. Every other unqualified harness
+    // must refuse an explicitly selected corporate route before native effects.
+    admit_route_kind(launcher.kind)?;
     let native_selection = if launcher.kind == HarnessKind::Hermes
         && super::native::hermes_selected::requested(&native_arguments)
     {
@@ -187,7 +190,7 @@ pub(crate) fn run(ctx: &output::Context, argv: Vec<String>) -> Result<()> {
         }
         let mut command: Vec<String> = launcher.command.clone();
         command.extend(rest);
-        return exec(&command, &[], &scrub(launcher.kind));
+        return exec(launcher.kind, &command, &[], &scrub(launcher.kind));
     }
 
     if let Some(selection) = native_selection {
@@ -230,7 +233,7 @@ pub(crate) fn run(ctx: &output::Context, argv: Vec<String>) -> Result<()> {
                 &arguments,
             )?
         };
-        return exec(&prepared.command, &[], &[]);
+        return exec(launcher.kind, &prepared.command, &[], &[]);
     }
 
     // **The host mismatch, as a note and nothing more.** `vibe agent`
@@ -309,7 +312,7 @@ pub(crate) fn run(ctx: &output::Context, argv: Vec<String>) -> Result<()> {
     } else {
         Vec::new()
     };
-    exec(&command, &composed.env, &scrub)
+    exec(launcher.kind, &command, &composed.env, &scrub)
 }
 
 /// Variables of **vibe's own** that must not ride into a child this launch
@@ -366,7 +369,7 @@ fn soft(
     );
     let mut command: Vec<String> = launcher.command.clone();
     command.extend(rest.iter().cloned());
-    exec(&command, &[], &scrub(launcher.kind))
+    exec(launcher.kind, &command, &[], &scrub(launcher.kind))
 }
 
 /// Measured in the P9 live check (row C7, Claude Code 2.1.322): a resumed
@@ -445,7 +448,12 @@ fn write_profile(profile: &CodexProfile) -> Result<()> {
 /// `PATHEXT` first, or an npm-installed `claude.cmd` is «program not found»
 /// (`super::program`).
 #[cfg(unix)]
-fn exec(command: &[String], env: &[EnvAssignment], scrub: &[&str]) -> Result<()> {
+fn exec(
+    kind: HarnessKind,
+    command: &[String],
+    env: &[EnvAssignment],
+    scrub: &[&str],
+) -> Result<()> {
     use std::os::unix::process::CommandExt;
 
     let (program, arguments) = command
@@ -459,12 +467,20 @@ fn exec(command: &[String], env: &[EnvAssignment], scrub: &[&str]) -> Result<()>
     for assignment in env {
         spawn.env(&assignment.name, &assignment.value);
     }
+    if let Some(code) = route_child(kind, &mut spawn)? {
+        std::process::exit(code);
+    }
     let error = spawn.exec();
     Err(anyhow::Error::new(error).context(format!("starting `{program}`")))
 }
 
 #[cfg(not(unix))]
-fn exec(command: &[String], env: &[EnvAssignment], scrub: &[&str]) -> Result<()> {
+fn exec(
+    kind: HarnessKind,
+    command: &[String],
+    env: &[EnvAssignment],
+    scrub: &[&str],
+) -> Result<()> {
     let (program, arguments) = command
         .split_first()
         .context("a launcher's `command` is an empty argv prefix")?;
@@ -481,8 +497,56 @@ fn exec(command: &[String], env: &[EnvAssignment], scrub: &[&str]) -> Result<()>
     for assignment in env {
         spawn.env(&assignment.name, &assignment.value);
     }
+    if let Some(code) = route_child(kind, &mut spawn)? {
+        std::process::exit(code);
+    }
     let status = spawn
         .status()
         .with_context(|| format!("starting `{program}`"))?;
     std::process::exit(status.code().unwrap_or(1));
+}
+
+fn admit_route_kind(kind: HarnessKind) -> Result<()> {
+    if kind != HarnessKind::Pi && vibe_net::current().route().mode_name() != "direct" {
+        bail!(
+            "configured corporate proxy routing is not yet qualified for harness `{}`; no agent was started (use a qualified Pi launcher or retain native/unmanaged invocation explicitly)",
+            kind.as_str()
+        );
+    }
+    Ok(())
+}
+
+/// First admitted native route: Pi only. Other adapters remain separate work.
+fn route_child(kind: HarnessKind, command: &mut Command) -> Result<Option<i32>> {
+    if kind != HarnessKind::Pi {
+        return Ok(None);
+    }
+    let Some(route) = crate::commands::tool::px::AgentRoute::selected()? else {
+        return Ok(None);
+    };
+    route.apply(command);
+    if !route.managed() {
+        return Ok(None);
+    }
+    let result = (|| {
+        let mut supervisor = crate::process_supervision::Supervisor::install()?;
+        let child = command
+            .spawn()
+            .context("starting Pi with the selected managed proxy")?;
+        supervisor
+            .wait(child)
+            .context("waiting for Pi with the selected managed proxy")
+    })();
+    route.close();
+    let status = result?;
+    if let Some(code) = status.code() {
+        return Ok(Some(code));
+    }
+    #[cfg(unix)]
+    {
+        use std::os::unix::process::ExitStatusExt;
+        Ok(Some(128 + status.signal().unwrap_or(1)))
+    }
+    #[cfg(not(unix))]
+    Ok(Some(1))
 }
