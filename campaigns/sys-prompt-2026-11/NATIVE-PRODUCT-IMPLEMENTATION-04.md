@@ -36,6 +36,14 @@ Native finite/oneshot admission is a separate identity boundary. The initial act
 
 Finite proof: existing-history resume and continue, actual worktree cwd matching composed boot, native oneshot completion/exit, invalid selection before provider submission, and refusal of inappropriate native-owner/creator identity at the finite boundary. Reuse full-size, cache, MCP and skills evidence rather than repeat it. External/shared gateway attachment is a separate unresolved capability: no mutation of a foreign runner and no permanent read-delivery waiver presented as full parity. Source/gates and independent architectural review remain required.
 
+## Remaining classic frontend dispatch boundary
+
+Native dispatch inspection at the pinned Hermes source distinguishes classic `cli.main` from gateway chat. Classic setup applies both explicit and configuration-selected worktree effects and has no admitted already-consumed worktree/session/cwd bootstrap handle. Gateway chat does not support every classic option (including the reported verbose/run-budget/image/compact/no-restore cases). Therefore substituting gateway chat for all launches is not full native parity.
+
+Retain this as a separate unresolved native-owner prerequisite alongside unattended bootstrap. Do not bypass classic orchestration via lower-level runtime constructors, copy its main loop, mutate CLI_CONFIG or claim native gateway refusals complete ordinary classic support. A future supported native bootstrap handle/callback must preserve native selection, worktree, runtime construction and cleanup ownership. Its proposal is not permission to modify installed upstream.
+
+A bounded configuration-default worktree repair may cover the admitted query subset: inspect policy through the existing native config owner before project select/build, preserve actual explicit-option/default precedence, and consume the effect once through native worktree lifecycle. No full config crosses Rust/ready/log boundaries. Require a source-bound subset/dispatch/precedence proposal before that repair; do not expand a proof matrix or represent the subset as classic parity. Actual worker qualification and the finite six-harness audit remain subsequent obligations; upstream blockers stay open without a unilateral waiver.
+
 ## Initial product asset review findings
 
 The first Rust asset publisher passed `Some(0o600)` unconditionally to strict safefs publication. Correct this through the established platform contract: Unix exact mode0600, non-Unix no Unix mode request; do not weaken safefs or claim Windows ACL equivalence. Keep immutable full-digest names, foreign-byte refusal and no-follow publication.
