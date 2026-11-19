@@ -103,3 +103,5 @@ Five preview amendments distinguish documentation byte coverage, tool readiness,
 Migration and environment amendments (`640ed8e33409`, `7012d485eca6`, `c7517ffd0c2c`, `92d30ff72aae`, `b80b3ce83dd2`, `8f072d3325d4`) distinguish disclosure from parser output, null from omission, and lexical target constraints from concrete target identity and authority. None of these six changes establishes runtime execution.
 
 At the 813-row frontier, 394 commits touched possible production Rust under `crates/` or `xtask/`, 48 touched only other Rust there, and 371 touched no Rust there. This path heuristic prioritizes inspection, not acceptance. In `b347fa04e611` the actual atomic push driver was private and transport-injected despite the subject mentioning production; no live push was performed or inferred.
+
+Historical repository creation and release finalization (`05d60fbe0`, `d3eee83b3`) used private transport interfaces. Existing remote state or a lost response is not a successful receipt and confers no automatic retry; neither owner establishes a reachable public-host path at its reviewed revision.
