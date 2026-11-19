@@ -7,6 +7,9 @@ import { pathToFileURL } from 'node:url';
 export async function runNativePi({packageDir, carrierPath, prefixPath, cwd, args}) {
   const meta=JSON.parse(readFileSync(join(packageDir,'package.json'),'utf8'));
   if(meta.name!=='@earendil-works/pi-coding-agent'||meta.version!=='1.5.2') throw new Error('Pi runtime is not an admitted 1.5.2 installation');
+  // Native extensions use argv[1] to launch plain Pi children. Private Vibe
+  // bootstrap arguments must never become the native process identity.
+  process.argv=[process.execPath,join(packageDir,'dist','cli.js'),...args];
   const native=relative=>import(pathToFileURL(join(packageDir,'dist',relative)).href);
   const {parseArgs}=await native('cli/args.js');
   const parsed=parseArgs(args);
