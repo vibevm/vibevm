@@ -35,6 +35,19 @@ Use synthetic facts only. Record exact natural user prompts and expected destina
 
 These are completed user journeys, not a statistical benchmark. At least one real baseline for each distinct destination and a fresh recall/control is required; do not multiply equivalent prompts or platforms without a concrete defect. Use existing hermetic mechanical proofs for unchanged safety cases rather than rediscovering every negative path through a model.
 
+## Blind baseline script (supervisor only)
+
+Keep this script, the answer key, execution logs and other trials outside every subject mount. Give the subject only its authentic example-project boot and the single request for its current turn. Before starting, choose two independent synthetic values in the supervisor and substitute them only in the corresponding write requests. Do not encode them in project names, launch arguments for recall, shared files, or the recall questions. No hints after an incorrect answer.
+
+| Session | Project | Request to the subject |
+|---|---|---|
+| P-write | A | “For my own reviews of this project I use the label `<project label>`. Please remember that for next time. It isn't a team convention.” |
+| M-write, new history | A | “On this machine I keep my scratch exports in `<machine path>`, whichever project I am working on. Please remember that for next time.” |
+| A-read, new history | A | “What label do I use for my own reviews of this project, and where do I keep scratch exports on this machine? Say if either is unknown.” |
+| B-read, new history | B | Same question as A-read. The machine path may follow the user; the project-A label must not be applied to B. |
+
+Use the same isolated user across these sessions. Start P-write without a personal project and retain a before/after check that simply opening the example did not create it. Judge each answer alongside the actual stored record, its scope and evidence of loading: a correct guess or ordinary harness auto-memory is not adoption. Classify an isolation/access failure before a subject can act as **unrun**, not as rejection of the product by an agent.
+
 ## Observe behavior, not only successful commands
 
 Capture source/boot variant, exact generated entrypoint/lane hashes, launcher/version as observed, isolated context, prompts, tool actions, created files, record/index contents, session separation and final outcome. Classify destination selection, initialization, persistence and recall independently. A mechanically valid command after the operator tells the agent the answer is useful diagnosis but not autonomous adoption PASS. An agent claiming it saved a fact without bytes/evidence is not PASS. Provider access failure is distinct from agent choice failure.
