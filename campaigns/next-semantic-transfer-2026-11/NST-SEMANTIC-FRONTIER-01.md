@@ -125,3 +125,5 @@ Nine single-file test-labeled changes were inspected by actual content. One only
 The three migration JTD declarations in `aa48a5f98d13` and two preview catalogue fixtures in `db29ee46f531` establish format inputs, not execution of the reader or a production migration.
 
 Four M-13-D records in `529ee8eb7853` document the numerical edit perimeter, slot moves, and inheritance guards. A retained report does not grant subtree writes or establish a migration run.
+
+Four publication amendments distinguish subject preparation, pure approval, repeated observation and required pre-effect baseline from a live remote write (`8ef1fd0ba0db`, `a65993704180`, `bd40c8d7b85a`, `9c5810bb04bc`).
