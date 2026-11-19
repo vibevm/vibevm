@@ -92,3 +92,7 @@ Outside the exact four-tag owner-authorized repair above: no force push, rewrite
 7. Execute the existing fanout once, verify resulting remote main OIDs on GitHub and GitVerse, report each host separately and retain partial-failure evidence. Do not report both published if only one succeeded.
 
 Product development continues independently. This reconciliation is required before the requested source rollout, not permission to stop SYS-PROMPT/CORP implementation or manufacture extra product gates.
+
+## Reviewed host integration baseline (including Pi H4)
+
+Verified the nine-commit linear range after `a5bb3eea8` against nine frozen manifests, including the report-only `2ebbde8a69ec09d7e80c1bca4ebdda217fa29f80`. The eight host checks passed on `ef69b21c`; the report adds no product behavior. Standard mirror succeeded for every configured ref. Independent remote queries confirmed both GitHub and GitVerse main `1e719c002ae32ac87d0c107c3fd2a58333b9537c`, exact reviewed tree `21a540f3b1532d1c89063a4f825577bd1f12275e`. No new READY-gateway implementation, Hermes upstream draft, release or campaign closure was published.
