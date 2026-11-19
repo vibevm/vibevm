@@ -21,3 +21,7 @@ The architect independently ran the selected public test against CLI SHA-256 `75
 ### Dependency membership counterexample — candidate r2 not accepted
 
 On CLI `752e87d3…`, the three-way default check passed, but a separate explicit-choice fixture exposed stale state. Its only root `driver` version 1.0 required `oldleaf`; version 1.1 removed that mandatory requirement without changing the explicit group/member. Public update exited zero and recorded `driver` 1.1 while leaving the now-unreachable `oldleaf` 1.0 in the lock and on disk. Passing the 15-case package fixture and five rollback controls did not detect this case. For this bounded route, refuse unsupported changes to reachable package membership before effects; do not invent general orphan cleanup. Test the actual failure, unchanged lock/slots/boot/hook effects and an independently retained root before accepting final bytes.
+
+### Membership repair, independently exercised
+
+On CLI SHA-256 `08c4938c1e051428a4e2e8496dea4f8db41efeafdba3df6194c17d0a855c1350` the same last-consumer fixture now refuses before changing the lock; `driver` remains 1.0.0. In a second fresh fixture, `oldleaf` is also an independently declared project root: the public update succeeds, locks `driver` at 1.1.0 and retains `oldleaf` at 1.0.0. Thus an edge may disappear while the reachable package remains. The 17-case public regression suite passed without ignores. No general orphan-cleanup behavior is asserted.
