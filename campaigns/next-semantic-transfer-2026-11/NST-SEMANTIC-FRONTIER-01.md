@@ -199,3 +199,5 @@ Four historical changes separate a lock-selected package source, bounded retaine
 Three historical migration changes bind decisions to the exact authored path and replay against original bytes rather than choosing media by suffix. Separately the `8c8d623602` source receipt yielded 77/79 matching recorded source hashes against the commit tree (0 missing, 2 differing). The source comparison is not a conversion runtime test.
 
 The same revision’s `ROOT-FINAL-INTEGRATION.json` explicitly lists the two differing paths, `crates/vibe-install/src/slot_verify/derivation.rs` and `crates/vibe-specdoc/src/canonical_node.rs`, as root metadata-only changes. That is the historical integrator’s classification, not an independent reconstruction of the two earlier source blobs. Neither mismatch is explained by simple LF-to-CRLF conversion.
+
+The BIND.2 manifest at `68728811bd` reproduces all 20 declared sizes and SHA-256 values at the recording commit, not at the stated base (`ddc502417`), where none match. A base reference is not the candidate snapshot.
