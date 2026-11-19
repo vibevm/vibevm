@@ -191,3 +191,5 @@ For M-08-C.1/C.2, the retained before/after source maps agree and all 104/13 fil
 The entity-view account at `cc21c4d50b` has 79 listed paths; both endpoint presences were independently checked and all 91 present blobs matched their Git IDs and SHA-256. This binds the historical pure-model/projection scope, not live resource access or durable cursors.
 
 For six derivative and boot revisions, checked the saved-file digests in the retained manifests against the originating Git trees. Matched/listed entries: `8b096070cd` 19/19, `0c9bf19b47` 21/21, `76b60b2a36` 18/18, `dbbd0b5a5c` 33/33, `d8e437a20b` 30/30, `fe9caaa2cf` 60/60. External raw files and the product code changes in those revisions were not qualified by this archive check.
+
+For the four-client commissioning contract, all 39 saved artifact hashes matched. For the prepared-plan bridge characterization, all 72 archived mappings reproduce both stored and raw sizes/hashes, including the decompressed trace, and all four source records match Git. Neither check constitutes a new native client qualification.
