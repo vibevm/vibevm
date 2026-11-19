@@ -145,3 +145,5 @@ Another 90 revisions touched only original campaign seed/registry/task inputs (2
 12 further commits changed only the historical campaign evidence tree (1246 changed-file occurrences). Embedded patches, inputs, scripts and logs were classified as retained artifacts; their presence does not establish acceptance or execution in the target. Per-file diffs are fingerprinted for later claim-specific inspection.
 
 Eleven remaining campaign-only revisions (39 changed-file occurrences) update rulings, evidence, task bindings or historical campaign tooling. Python tooling changes are distinguished from record-only changes; no current-product effect or historical test execution is inferred.
+
+Five inspected revisions distinguish mode-only source changes, wire vocabulary, codegen slot selection, report-duration limits and documentation about late errors. These are not five newly executed product journeys.
