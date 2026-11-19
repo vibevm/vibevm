@@ -16,6 +16,14 @@ Each step consumes the preceding result. The architect owns briefs and acceptanc
 | 50 | `NST-HERMES-INTEGRATION` | Deliver the [existing Hermes journey](NST-HERMES-INTEGRATION-01.md) through the first real adapter, with native CLI kept separate. Verify same-conversation resume and two viewers, declared instruction scope, draft and approval preservation; distinguish absent evidence and unavailable guarantees. |
 | 60 | `IDE-MVP-ACCEPTANCE` | Demonstrate the full failed-check → scenario → spec → operation result → unsent draft journey in real terminals. Verify entry points and pipes independently, reconcile every target matrix row, document supported platforms and limits, and record the post-repair IDE acceptance independently. |
 
+## Settings: redesign the interaction, not just the rendering
+
+Do not port the existing `vibe tree` settings screens, category hierarchy or editing flow to vibeink. Use them to inventory supported settings and capture a baseline, not as the target design. Preserve settings semantics and compatible stored values at their existing owner; a different UI must not silently change scope, precedence or defaults.
+
+In IDE-UX-MATRIX compare alternative ways to find a setting by intent, see its effective value and source, understand who or what a change affects, and keep or discard that change. Distinguish restoring an inherited value from explicitly setting the same value. In IDE-TREE-SEARCH exercise a supported preference end to end: find it without knowing a configuration key, identify the applicable scope, edit and cancel without writes, apply deliberately, reopen and verify persistence, then restore the previous effective behavior. Return to the same tree selection. Use only scopes the setting actually supports.
+
+Judge the visual design separately: can the reader distinguish navigation, current value, unsaved edit and keyboard focus on both a narrow and a wide terminal? Use original designs, real terminal captures and structural interaction tests. A repaint of the old dialog or a passing storage test alone does not meet IDE-MVP-ACCEPTANCE.
+
 ## ZenMode: conversation or plan
 
 ZenMode is a required MVP experience, not a theme or a shortcut for hiding sidebars. It has exactly two primary screens, one visible at a time:
