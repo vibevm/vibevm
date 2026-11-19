@@ -35,6 +35,12 @@ This is a hypothesis, not an accepted gate. A finite actual three-arm stream-sen
 
 `PI-PUBLIC-ABORT-RESULT.json` records actual task `buzfhwf08`, exit1: the owned before-start handler called public `session.abort()` without awaiting it, then threw, but the test stream boundary was still invoked once. The zero-invocation criterion failed in the first guarded arm; reload was NOT RUN after that assertion. Do not adopt this alternative as production admission or retry unchanged. This witnesses stream invocation, not an actual network request on an aborted signal. Retain the narrower working SDK throwing-listener result and its unresolved native UI/reload conflict; full Pi adapter acceptance remains open.
 
+## Selected additive lifecycle proof after abort rejection
+
+Test a public event-based reattachment instead of replacing the UI's retained callback. An invocation-owned extension factory closes over a holder bound to the actual AgentSession after creation and before first prompt. Its `session_start` handler reads the public `session.extensionRunner` and attaches the owned filtered additive `onError` gate; its `session_shutdown` handler unsubscribes only that gate. Initial bootstrap attaches before any prompt. Each runtime replacement gets its own admitted holder/session.
+
+The inspected native reload rebuilds resources and the runner, performs the UI's before-session-start binding, then emits `session_start` with reason reload when native bindings exist. Thus the additive listener can be reattached after native UI binding without overriding its single callback. Actual proof must confirm this ordering, missing-carrier zero submissions after reload, native handling of unrelated errors, and no duplicate/stale owned listeners. No private field access or native method patch is permitted. If events or binding are absent, refuse before prompt and report the gap; do not claim the factory has solved native main's lack of session access. This candidate replaces the rejected public-abort hypothesis, not its failure evidence.
+
 ## Finite proof and review
 
 - Positive actual runtime-factory/native event delivers full stable prefix before exact fresh personal tail; test stream sentinel remains reachable.
