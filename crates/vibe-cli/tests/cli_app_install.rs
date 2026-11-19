@@ -285,6 +285,105 @@ fn zip_and_tar_gz_payloads_land_in_the_default_library_and_are_removed() {
     }
 }
 
+/// OpenCode's candidate archive has one executable at its root, not in `bin`.
+/// This synthetic payload checks that layout and argv, not upstream execution
+/// or permission to redistribute the real archive.
+#[test]
+fn a_root_member_launcher_preserves_argv_and_its_selected_receipt() {
+    let fixture = Fixture::new("root-agent");
+    let user = UserScratch::new();
+    let archive = fixture.package.join("agent.tar.gz");
+    let tool = "#!/bin/sh\nprintf '<%s>\\n' \"$@\"\n";
+    let encoder = flate2::write::GzEncoder::new(
+        fs::File::create(&archive).unwrap(),
+        flate2::Compression::fast(),
+    );
+    let mut tar = tar::Builder::new(encoder);
+    let mut header = tar::Header::new_gnu();
+    header.set_size(tool.len() as u64);
+    header.set_mode(0o755);
+    header.set_cksum();
+    tar.append_data(&mut header, "opencode", tool.as_bytes())
+        .unwrap();
+    tar.into_inner().unwrap().finish().unwrap();
+    let sha = digest(&archive);
+    let manifest = format!(
+        "{}[installer_options.installation]\ntype = \"tar_gz\"\nsource = \"agent.tar.gz\"\nsha256 = \"{sha}\"\n\n\
+         [[installer_options.launchers]]\nid = \"main\"\nname = \"Synthetic OpenCode layout\"\n\
+         executable = \"$app_root/opencode\"\nkind = \"command\"\nargs = [\"fixed argument\"]\ndefault = true\n\n\
+         [[installer_options.public_commands]]\nname = \"synthetic-opencode\"\nlauncher = \"main\"\n",
+        option_header("root-archive")
+    );
+    fixture.manifest("root-agent", &manifest);
+    let key = "org.example/root-agent@1.0.0";
+    let report = json(&fixture.install(
+        &user,
+        "org.example/root-agent",
+        &["--installer", "root-archive", "--json"],
+    ));
+    assert_eq!(report["installation"], key);
+    let payload = PathBuf::from(report["appRoot"].as_str().unwrap());
+    assert!(payload.join("opencode").is_file());
+    assert!(!payload.join("bin/opencode").exists());
+    let receipt = index(&user);
+    let record = &receipt["installations"][key];
+    assert_eq!(record["option"], "root-archive");
+    assert_eq!(record["method"], "tar_gz");
+    assert_eq!(record["library"], "default");
+    assert_eq!(
+        record["directory"],
+        "apps/tool/org.example.root-agent@1.0.0"
+    );
+    assert_eq!(
+        payload,
+        user.settings
+            .join("opt")
+            .join(record["directory"].as_str().unwrap())
+    );
+    assert_eq!(record["publicCommands"][0]["name"], "synthetic-opencode");
+    let expected = "<fixed argument>\n<--version>\n<two words>\n";
+    let ran = ok(&fixture.vibe(
+        &user,
+        &[
+            "app",
+            "run",
+            "org.example/root-agent",
+            "main",
+            "--",
+            "--version",
+            "two words",
+        ],
+    ));
+    assert_eq!(ran, expected);
+    let proxy = user.settings.join("opt/bin/synthetic-opencode");
+    let proxied = std::process::Command::new(&proxy)
+        .env("VIBE_SETTINGS", &user.settings)
+        .env("VIBE_NO_DEFAULT_REGISTRY", "1")
+        .args(["--version", "two words"])
+        .output()
+        .unwrap();
+    assert_eq!(ok(&proxied), expected);
+    ok(&fixture.install(
+        &user,
+        "org.example/root-agent",
+        &["--installer", "root-archive"],
+    ));
+    ok(&fixture.vibe(&user, &["uninstall", "-g", "org.example/root-agent"]));
+    assert!(!payload.exists());
+    assert!(!proxy.exists());
+    assert_eq!(index(&user)["installations"], serde_json::json!({}));
+    // The same candidate with a bad digest must not publish a fresh receipt.
+    fixture.manifest("root-agent", &manifest.replace(&sha, &"0".repeat(64)));
+    failed(&fixture.install(
+        &user,
+        "org.example/root-agent",
+        &["--installer", "root-archive"],
+    ));
+    assert_eq!(index(&user)["installations"], serde_json::json!({}));
+    assert!(!payload.exists());
+    assert!(!proxy.exists());
+}
+
 #[test]
 fn hooks_run_in_order_and_a_failing_post_hook_keeps_the_previous_record() {
     let fixture = Fixture::new("hooked-app");
