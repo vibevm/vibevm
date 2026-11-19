@@ -71,7 +71,7 @@ fn pi_managed_route_preserves_arguments_status_and_reaps_px_on_spawn_failure() {
     // execution for an adapter outside this first qualified identity.
     std::fs::write(
         user.settings.join("agents.toml"),
-        "[launchers.other]\nkind='qwen'\ncommand=['/bin/sh','-c','echo SHOULD_NOT_START']\n",
+        "[launchers.other]\nkind='claude'\ncommand=['/bin/sh','-c','echo SHOULD_NOT_START']\n",
     )
     .unwrap();
     let other = user
@@ -131,6 +131,21 @@ fn pi_managed_route_preserves_arguments_status_and_reaps_px_on_spawn_failure() {
     assert!(!resumed.status.success());
     assert!(!String::from_utf8_lossy(&resumed.stdout).contains("SHOULD_NOT_START"));
     assert!(String::from_utf8_lossy(&resumed.stderr).contains("fresh noninteractive Codex exec"));
+    std::fs::write(
+        user.settings.join("agents.toml"),
+        "[launchers.qwenretained]\nkind='qwen'\ncommand=['/bin/sh','-c','echo SHOULD_NOT_START']\n",
+    )
+    .unwrap();
+    let qwen = user
+        .vibe()
+        .current_dir(root.path())
+        .env("FAKE_PX_LOG", &log)
+        .args(["agent", "qwenretained", "--resume", "last", "-p", "hello"])
+        .output()
+        .unwrap();
+    assert!(!qwen.status.success());
+    assert!(!String::from_utf8_lossy(&qwen.stdout).contains("SHOULD_NOT_START"));
+    assert!(String::from_utf8_lossy(&qwen.stderr).contains("fresh headless Qwen"));
     let text = std::fs::read_to_string(&log).unwrap();
     let pids: Vec<u32> = text
         .lines()
