@@ -131,3 +131,5 @@ Four publication amendments distinguish subject preparation, pure approval, repe
 Across 31 evidence-only Markdown commits (37 changed-file occurrences), the records describe bounded language proofs, fixed machine operations, migration, source readers, environment and release checks. Their first-parent deltas touched no product or test implementation. In particular Linux availability does not certify other platforms, and a recorded test run is not an independent rerun on current source.
 
 Thirty further commits touched only retained evidence (179 changed-file occurrences). Their file and digest inventories distinguish source reviews, acceptance records, test logs and input captures from production/test changes. No historical outcome was rerun or promoted by this classification.
+
+Of the remaining historical amendments, 51 touched Markdown only (54 changed-file occurrences), including issue ledgers and guides. The index records the actual paths, added/removed line counts, cited task or issue identifiers where present and per-path diff hashes. This is a record-level classification, not acceptance of the changes described in those documents.
