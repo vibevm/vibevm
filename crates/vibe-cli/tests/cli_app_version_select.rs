@@ -338,6 +338,40 @@ fn an_empty_drop_with_nothing_installed_leaves_drop_only_nothing_to_pick() {
     assert!(refusal.contains("22.23.5"), "{refusal}");
 }
 
+/// A real installation, not a fabricated index row, is the second availability
+/// ground. Neither policy may require a drop payload or mutate that installation
+/// merely to plan a partial version request.
+#[test]
+fn an_installed_version_is_selectable_with_an_empty_drop() {
+    let fixture = Fixture::new();
+    let package = fixture.registry.package("tool", "22.23.4", "tool",
+        "path_dirs=['bin']\n[[installer_options.steps]]\nid='copy'\ntitle='Copy'\nkind='copy'\nfrom='payload'\n");
+    fixture.registry.script(&package, "tool", "INSTALLED_TOOL");
+    let remap = fixture.remap();
+    ok(&fixture.registry.app(
+        &["--remap", remap.to_str().unwrap(), "install", "-g"],
+        "org.example/tool@=22.23.4",
+        &["--unattended", "--json"],
+    ));
+    let index = fixture.registry.settings().join("applications/index.json");
+    let before = fs::read(&index).unwrap();
+    assert!(fs::read_dir(fixture.drop_dir()).unwrap().next().is_none());
+    for policy in ["prefer-drop", "drop-only"] {
+        fixture.declare(Some(policy));
+        let (text, note) = fixture.planned("org.example/tool@22");
+        assert_eq!(resolved_version(&text), "22.23.4", "{text}");
+        assert!(note.contains("installed;"), "{policy}: {note}");
+        assert!(!note.contains("(in drop;"), "{policy}: {note}");
+        assert!(note.contains("22.23.5"), "{policy}: {note}");
+        assert_eq!(
+            fs::read(&index).unwrap(),
+            before,
+            "planning under {policy} changed inventory"
+        );
+        assert!(fs::read_dir(fixture.drop_dir()).unwrap().next().is_none());
+    }
+}
+
 /// A channel requirement is narrowed **within its own members**: `lts` is
 /// the `22` line here, so `prefer-drop` lands on the in-drop member of it
 /// rather than on the newest version overall.

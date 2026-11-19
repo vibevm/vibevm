@@ -26,6 +26,16 @@ pub enum PromptPart {
 
 #[derive(Debug, clap::Subcommand)]
 pub enum PromptCommand {
+    /// Explicitly write a private composed prefix; never sends an API request.
+    Compose {
+        #[arg(long, value_name = "REL")]
+        node: Option<String>,
+        #[arg(long, default_value = ".")]
+        path: PathBuf,
+        #[arg(long, value_name = "os=<name>")]
+        session_target: Option<String>,
+    },
+
     /// Regenerate the node's prefix, sidecar and agent lane explicitly,
     /// through the one boot transaction. Ends with one summary line naming
     /// what happened and where.

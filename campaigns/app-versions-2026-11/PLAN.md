@@ -1,13 +1,14 @@
 # Campaign: template packages and version management for every application
 
-**Status:** planned 2026-11-10; written against `main` at `7d495d137`. Campaign
-node `APP-VERSIONS`: starts after `CORP-ENV` closes, before `SYS-PROMPT`.
-**Phase 0 spikes S1, S2, S3 and S5 ran 2026-11-10 and phases P1, P5a, P2, P3
-P5b and P6 are implemented** — the answers and what they changed are in `LOG.md`,
-and the facts those phases deliver are `impl/done` in PROP-075. S4 and S6 are still
-open; S4 belongs with P5a and S6 with P7.
-Phase 0 (spikes) and Phases 5a / 6 may run while `CORP-ENV` finishes, because
-their files are disjoint from it.
+**Current follow-up — 2026-11-17:** implementation phases P1–P7f and the historical
+13-leg acceptance are recorded as delivered below. The original task remains active
+for current requirement/evidence reconciliation, not wholesale reimplementation.
+Current focused evidence includes54cases plus the public16-case selection retry.
+The authorized latest Linux whole-campaign retry passes13/13legs and differential
+18/18cases,76/76required pairs,zero exclusions. Prerequisites were fetched and
+verified without lock changes; earlier failed attempts remain recorded. Windows
+migration runtime evidence remains unverified. See `REVIEW-2026-11-17.md` for exact boundaries.
+The earlier planned/S4/S6 header was stale relative to this file's own closure report.
 Cold start: read this file, then `LOG.md` in this directory, then
 `spec://org.vibevm.core/vibevm/common/PROP-075#root`.
 
@@ -1506,3 +1507,15 @@ and all 52 required `(subcommand, flag)` pairs, rerunnable as
 `cargo xtask vibenvm-conform`. The per-phase records are `PROP-075`'s
 `#P1`…`#P7F-AS-BUILT` facts and `LOG.md`; what the campaign deliberately did not
 do is in its own entries rather than here.
+
+## Current technical acceptance — 2026-11-18
+
+The renewed owner-requested APP-VERSIONS completion is technically accepted after
+actual native Windows migration and the updated Linux13/13scenario,including
+18/18differential cases,76/76required pairs,zero exclusions and verdict0.
+Core `ab349255c` and Node candidate `f030ee3` fix the measured declared-PATH and
+interpreter defects. Exact source binding,tests,earlier failures and restored host
+PATH incident are recorded in REVIEW-2026-11-17.md and WINDOWS-MIGRATION-2026-11-18.md.
+The preceding Windows-blocked paragraphs are historical frontiers,not current blockers.
+Next execution is CORP-NATIVE-INSTALLER-01,including fresh three-platform binaries
+and the explicitly authorized local corporate kit/delta update. No external release.

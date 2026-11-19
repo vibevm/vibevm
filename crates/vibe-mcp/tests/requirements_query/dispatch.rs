@@ -93,6 +93,9 @@ fn one_call_returns_the_generated_root_and_the_bounded_text() {
 #[test]
 fn a_relations_call_runs_a_real_scan_and_reports_a_fresh_project_map() {
     let project = project_with_map();
+    let authority = project.path().join(".vibe/specmap-authority.json");
+    let before = std::fs::read(&authority).unwrap();
+    let modified = std::fs::metadata(&authority).unwrap().modified().unwrap();
     let response = call(project.path(), json!({ "relations": true }));
 
     assert_eq!(response["result"]["isError"], false);
@@ -107,7 +110,17 @@ fn a_relations_call_runs_a_real_scan_and_reports_a_fresh_project_map() {
     assert_eq!(structured["rows"][0]["address"], ADDRESS);
     // Nothing was written: a scan is a read.
     assert!(!project.path().join("specmap.json").exists());
-    assert!(!project.path().join(".vibe").exists());
+    assert_eq!(std::fs::read(&authority).unwrap(), before);
+    assert_eq!(
+        std::fs::metadata(&authority).unwrap().modified().unwrap(),
+        modified
+    );
+    assert_eq!(
+        std::fs::read_dir(project.path().join(".vibe"))
+            .unwrap()
+            .count(),
+        1
+    );
 }
 
 /// A preflight refusal over the wire: `isError: true`, the typed chain in
@@ -115,6 +128,9 @@ fn a_relations_call_runs_a_real_scan_and_reports_a_fresh_project_map() {
 #[test]
 fn an_unknown_member_refuses_over_the_wire_with_no_structured_content() {
     let project = project_with_map();
+    let authority = project.path().join(".vibe/specmap-authority.json");
+    let before = std::fs::read(&authority).unwrap();
+    let modified = std::fs::metadata(&authority).unwrap().modified().unwrap();
     for arguments in [json!({ "path": "." }), json!({ "limit": 0 })] {
         let response = call(project.path(), arguments.clone());
         assert!(response["error"].is_null(), "{response}");
@@ -129,6 +145,16 @@ fn an_unknown_member_refuses_over_the_wire_with_no_structured_content() {
                 .is_some_and(|text| text.contains("invalid arguments")),
             "{response}"
         );
-        assert!(!project.path().join(".vibe").exists());
+        assert_eq!(std::fs::read(&authority).unwrap(), before);
+        assert_eq!(
+            std::fs::metadata(&authority).unwrap().modified().unwrap(),
+            modified
+        );
+        assert_eq!(
+            std::fs::read_dir(project.path().join(".vibe"))
+                .unwrap()
+                .count(),
+            1
+        );
     }
 }

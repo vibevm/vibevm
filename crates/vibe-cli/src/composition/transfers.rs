@@ -59,10 +59,9 @@ fn attach_with_journal(
     let transfers = Transfers::new(journal, limit, verb);
     // Every clone of the invocation is journaled, whether or not the path
     // that makes it threads the observation (`PROP-068#git`).
-    vibe_registry::git_backend::transfers::observe_by_default(
-        vibe_core::progress::Progress::default().with_transfers(Some(transfers.clone())),
-    );
-    ctx.with_transfers(transfers)
+    let ctx = ctx.with_transfers(transfers);
+    vibe_registry::git_backend::transfers::observe_by_default(ctx.progress());
+    ctx
 }
 
 /// The command line's verb as the journal names it: the subcommand path

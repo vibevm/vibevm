@@ -11,7 +11,7 @@ specmark::scope!("spec://org.vibevm.core/vibevm/VIBEVM-SPEC#command-summary");
 
 use std::path::PathBuf;
 
-use clap::{Parser, Subcommand};
+use clap::{CommandFactory, FromArgMatches, Parser, Subcommand};
 
 mod agent;
 mod agentic;
@@ -48,6 +48,7 @@ mod term;
 mod tool;
 pub use tool::*;
 mod transfers;
+mod user;
 mod vars;
 mod vvm;
 mod workspace;
@@ -86,6 +87,7 @@ pub use specmap::*;
 pub use storage::*;
 pub use term::*;
 pub use transfers::*;
+pub use user::*;
 pub use vars::*;
 pub use vvm::*;
 pub use workspace::*;
@@ -273,6 +275,23 @@ pub struct Cli {
 
     #[command(subcommand)]
     pub command: Command,
+}
+
+impl Cli {
+    /// Preserve clap's explicit-path provenance before routing changes a destination.
+    pub(crate) fn parse_invocation() -> (Self, bool) {
+        let matches = Self::command().get_matches();
+        let explicit_path = matches.subcommand().is_some_and(|(_, sub)| {
+            sub.try_contains_id("path").unwrap_or(false)
+                && sub.value_source("path") == Some(clap::parser::ValueSource::CommandLine)
+        });
+        let mut cli = Self::from_arg_matches(&matches).unwrap_or_else(|error| error.exit());
+        if let Command::Install(args) = &mut cli.command {
+            args.explicit_path = explicit_path;
+            args.stop_requested = cli.stop_file.is_some();
+        }
+        (cli, explicit_path)
+    }
 }
 
 /// The renderer family `--progress-format` selects.

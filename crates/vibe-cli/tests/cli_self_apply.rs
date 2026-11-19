@@ -1767,3 +1767,54 @@ fn artifact_drops_may_start_at_the_readers_own_home() {
 fn json_plain(output: &Output) -> Value {
     serde_json::from_str(&ok(output)).unwrap()
 }
+
+#[test]
+fn settings_home_apply_show_remove_and_changed_value_are_safe() {
+    let machine = Machine::new();
+    machine.import_active();
+    let profile = write_profile(
+        machine.base.path(),
+        &format!(
+            "schema = 1\n[self]\nsettings_dir = '{}'\n[path]\nfix = 'never'\n",
+            machine.user.settings.display()
+        ),
+    );
+    let first = machine.apply(&profile, &[]);
+    assert!(first["next_steps"].as_array().unwrap().iter().any(|v| {
+        v.as_str()
+            .unwrap_or("")
+            .contains("persistent VIBE_SETTINGS")
+    }));
+    let rc_path = machine.home.path().join(".bashrc");
+    let rc = fs::read(&rc_path).unwrap();
+    let second = machine.apply(&profile, &[]);
+    assert_eq!(second["changed"], false);
+    assert_eq!(fs::read(&rc_path).unwrap(), rc);
+    let show = json(&machine.run(&["--json", "self", "apply", "--show"]));
+    assert!(
+        show["next_steps"]
+            .as_array()
+            .unwrap()
+            .iter()
+            .any(|v| v.as_str().unwrap_or("").contains("matches profile"))
+    );
+    let removed = json(&machine.run(&["--json", "self", "apply", "--remove"]));
+    assert_eq!(removed["changed"], true);
+    assert!(
+        !fs::read_to_string(&rc_path)
+            .unwrap()
+            .contains("VIBE_SETTINGS")
+    );
+    assert!(
+        machine.user.settings.is_dir(),
+        "settings directory itself survives"
+    );
+    machine.apply(&profile, &[]);
+    let edited = fs::read_to_string(&rc_path).unwrap().replace(
+        &machine.user.settings.display().to_string(),
+        "/user-changed-home",
+    );
+    fs::write(&rc_path, &edited).unwrap();
+    json(&machine.run(&["--json", "self", "apply", "--remove"]));
+    assert_eq!(fs::read_to_string(&rc_path).unwrap(), edited);
+}

@@ -20,8 +20,12 @@ specmark::scope!("spec://org.vibevm.core/vibevm/VIBEVM-SPEC#install-workflow-in-
 use specmark::spec;
 
 mod args;
+mod authority;
+pub use authority::refresh_from_source as refresh_specmap_authority;
 mod inputs;
 mod lease;
+mod native_world;
+use native_world::{NativeRunScope, regenerate_native_world};
 mod outcome;
 mod ready;
 mod resume;
@@ -58,59 +62,6 @@ pub use scratch::RunScratch;
 pub use selection::{PreparedSelection, ProvenSelection, SelectedManifest};
 
 use outcome::fresh_run;
-
-/// The run-scoped facts one native-world regeneration reads: the trace, the
-/// invocation's identity, the mutation lease and the cancellable progress.
-struct NativeRunScope<'a> {
-    trace: Option<&'a TraceRun>,
-    metadata: &'a RunMetadata,
-    lease: &'a LifecycleLease,
-    progress: &'a vibe_core::progress::Progress,
-}
-
-fn regenerate_native_world(
-    project_root: &std::path::Path,
-    workspace: &vibe_workspace::Workspace,
-    resolution: &[vibe_workspace::install::ResolvedDep],
-    spec_format: vibe_core::manifest::SpecFormat,
-    scope: NativeRunScope<'_>,
-) -> Result<(Vec<String>, outcome::NativeInstallContext)> {
-    let NativeRunScope {
-        trace,
-        metadata,
-        lease,
-        progress,
-    } = scope;
-    progress.checkpoint()?;
-    vibe_install::configuration_admission::resolved_packages(resolution)?;
-    let (world, lowering, sidecar) =
-        crate::world::prepare_owner_runtime_inputs(project_root, workspace, resolution)?;
-    let platform = vibe_lifecycle::native::NativePlatform::current()?;
-    let run = vibe_workspace::extension_world::OwnerRuntimeRunFacts {
-        run_id: metadata.run_id.clone(),
-        state_root: lease.root().join(".vibe"),
-        platform: platform.key().to_owned(),
-        offline: metadata.offline,
-        created_at: metadata.started.clone(),
-    };
-    let mut make_provider = |policies| {
-        Ok(
-            vibe_lifecycle::native::ArtifactCompilerNativeProvider::new(platform, policies)
-                .with_cancellation(progress.cancellation().clone()),
-        )
-    };
-    let (nodes, carriage) = vibe_workspace::install::regenerate_boot_from_traced_native(
-        workspace,
-        resolution,
-        world,
-        spec_format,
-        trace,
-        lowering,
-        run,
-        &mut make_provider,
-    )?;
-    Ok((nodes, outcome::NativeInstallContext::new(carriage, sidecar)))
-}
 
 /// Everything one install execution needs that its caller already decided.
 ///
@@ -189,8 +140,33 @@ pub fn execute_prepared(
     // context, which is exactly what this boundary exists to refuse.
     after_durable_world: &mut dyn AfterDurableWorld,
 ) -> Result<InstallRun> {
+    execute_prepared_with_selected_roots(execution, after_durable_world, &[])
+}
+
+/// Continue this ordinary install with source-owned top-level selections from routing preflight.
+pub fn execute_prepared_with_selected_roots(
+    execution: InstallExecution<'_>,
+    after_durable_world: &mut dyn AfterDurableWorld,
+    selected_roots: &[vibe_resolver::RetainedSourceCandidate],
+) -> Result<InstallRun> {
     let scratch = RunScratch::fresh(&execution.lease, &execution.metadata, false);
-    let result = execute_owned(execution, after_durable_world);
+    let emit_machine_failure = execution.observer.emit_machine_failure();
+    let result = execute_owned(execution, after_durable_world, selected_roots).and_then(|run| {
+        if run.parked.is_none()
+            && let Err(error) = vibe_workspace::specmap_authority::verify_current(&run.project_root)
+        {
+            return Err(crate::failure::carry(crate::failure::MeasuredFailure {
+                original: error.into(),
+                evidence: crate::failure::Measurement::InstallBarrier {
+                    progress: Box::new(run.progress),
+                    reports: run.slot_reports,
+                    packages_resolved: run.packages_resolved,
+                },
+                emit_machine_failure,
+            }));
+        }
+        Ok(run)
+    });
     scratch.settle(result.as_ref().is_err_and(|error| {
         !matches!(
             error.downcast_ref::<vibe_install::Error>(),
@@ -203,6 +179,7 @@ pub fn execute_prepared(
 fn execute_owned(
     execution: InstallExecution<'_>,
     after_durable_world: &mut dyn AfterDurableWorld,
+    selected_roots: &[vibe_resolver::RetainedSourceCandidate],
 ) -> Result<InstallRun> {
     let InstallExecution {
         args,
@@ -342,7 +319,9 @@ fn execute_owned(
     // boot artifacts of the empty world and report the fresh shape.
     if args.packages.is_empty()
         && workspace.iter_nodes().all(|(_, node)| {
-            node.requires.packages.is_empty() && node.requires.git_packages.is_empty()
+            node.requires.is_empty()
+                && node.requires_any.is_empty()
+                && node.conditional_deps.is_empty()
         })
         && lockfile_snapshot.meta.root_dependencies.is_empty()
         && (lockfile_snapshot.meta.schema_version < vibe_core::manifest::CURRENT_SCHEMA_VERSION
@@ -375,6 +354,11 @@ fn execute_owned(
         progress.checkpoint()?;
         boot_task.set_progress(nodes.len() as u64, Some(nodes.len() as u64), "nodes");
         boot_task.finish();
+        let empty_roots = workspace
+            .iter_nodes()
+            .map(|(node, _)| (node.to_owned(), Vec::new()))
+            .collect();
+        vibe_workspace::specmap_authority::publish(&workspace, &project_root, &empty_roots)?;
         lifecycle_run.native = Some(native);
         let after = after_durable_world
             .take()
@@ -447,17 +431,18 @@ fn execute_owned(
         // The compatibility wrapper would re-read the selected `vibe.toml` — the
         // value a `--git` delta just changed in memory — and re-discover a tree
         // different from the one whose source delta is being admitted.
-        let plan = vibe_install::plan_prepared_without_publication(
+        let plan = vibe_install::plan_prepared_with_selected_roots(
             resolver.as_ref(),
             &project_root,
             &mut manifest,
             &mut workspace,
             InstallRequest {
                 roots: cli_roots,
-                ..request
+                ..request.clone()
             },
             spec_format,
             observer.plan_events(),
+            selected_roots,
         )?;
         (plan, Some(resolver))
     };
@@ -468,6 +453,14 @@ fn execute_owned(
             // regeneration (cheap, self-healing — §2.4).
             progress.checkpoint()?;
             observer.narrate(InstallNarration::FreshLock);
+            let roots = vibe_install::project_fresh_node_roots(
+                &project_root,
+                &manifest,
+                &workspace,
+                &request,
+                &lockfile_snapshot,
+                spec_format,
+            )?;
             progress.cancellation().publishing();
             let boot_task = progress.task("Regenerating boot artifacts from the fresh lock");
             // The one workspace snapshot this command owns. Nothing between
@@ -502,6 +495,7 @@ fn execute_owned(
             progress.checkpoint()?;
             boot_task.set_progress(nodes.len() as u64, Some(nodes.len() as u64), "nodes");
             boot_task.finish();
+            vibe_workspace::specmap_authority::publish(&workspace, &project_root, &roots)?;
             lifecycle_run.native = Some(native);
             let after = after_durable_world
                 .take()

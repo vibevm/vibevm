@@ -137,11 +137,11 @@ pub(crate) fn explicit_version_moves(
         .collect()
 }
 
-impl PackageSourceFactory for CliPackageSourceFactory<'_> {
-    fn build(
+impl CliPackageSourceFactory<'_> {
+    pub(crate) fn build_source(
         &self,
         input: PackageSourceBuild<'_>,
-    ) -> Result<Box<dyn vibe_orchestrator::ports::PackageSource>> {
+    ) -> Result<RegistryPackageSource> {
         let options = package_source_options(self.args);
         let resolver = vibe_package_source::build_install_resolver_with_sources(
             vibe_package_source::InstallResolverRequest {
@@ -184,10 +184,18 @@ impl PackageSourceFactory for CliPackageSourceFactory<'_> {
             resolver
         };
         let source = RegistryPackageSource::new(resolver, Box::new(CliQualifier));
-        Ok(Box::new(if input.recommends {
+        Ok(if input.recommends {
             source
         } else {
             source.without_recommends()
-        }))
+        })
+    }
+}
+impl PackageSourceFactory for CliPackageSourceFactory<'_> {
+    fn build(
+        &self,
+        input: PackageSourceBuild<'_>,
+    ) -> Result<Box<dyn vibe_orchestrator::ports::PackageSource>> {
+        Ok(Box::new(self.build_source(input)?))
     }
 }

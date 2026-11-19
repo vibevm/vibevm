@@ -151,15 +151,32 @@ pub struct RegistryPackageSource {
     /// cannot bring back what the first solve declined
     /// (`PROP-077#NO-RECOMMENDS-FLAG`).
     recommends: bool,
+    continuation: Option<Box<Continuation>>,
 }
 
+struct Continuation {
+    original: RegistryPackageSource,
+    roots: Vec<vibe_registry::source_candidates::RetainedSourceCandidate>,
+}
 impl RegistryPackageSource {
+    /// Keep the original acquisition owner while ordinary execution policy
+    /// admits root tokens and resolves all locked/transitive requirements.
+    pub fn with_selected_continuation(
+        mut self,
+        original: RegistryPackageSource,
+        roots: Vec<vibe_registry::source_candidates::RetainedSourceCandidate>,
+    ) -> Self {
+        self.continuation = Some(Box::new(Continuation { original, roots }));
+        self
+    }
+
     /// Compose the shared resolver with the surface's qualifier.
     pub fn new(resolver: InstallResolver, qualifier: Box<dyn PackageQualifier>) -> Self {
         Self {
             resolver,
             qualifier,
             recommends: true,
+            continuation: None,
         }
     }
 
@@ -188,7 +205,27 @@ impl InstallSource for RegistryPackageSource {
         &self,
         request: &vibe_resolver::SourceSolveRequest<'_>,
     ) -> Result<vibe_resolver::SourceResolvedGraph, vibe_resolver::SolveError> {
-        self.resolver.solve_metadata(request)
+        if let Some(continuation) = &self.continuation {
+            let selected = continuation
+                .roots
+                .iter()
+                .map(|root| crate::cells::readmit_top_level_cell(&self.resolver, root))
+                .collect::<Result<Vec<_>, _>>()?;
+            let translated = vibe_resolver::SourceSolveRequest {
+                selected_roots: &selected,
+                roots: request.roots,
+                held_roots: request.held_roots,
+                authoritative_locked: request.authoritative_locked,
+                activated: request.activated,
+                limits: request.limits,
+                configuration: request.configuration,
+                blocked: request.blocked,
+                recommends: request.recommends,
+            };
+            self.resolver.solve_metadata(&translated)
+        } else {
+            self.resolver.solve_metadata(request)
+        }
     }
     fn acquire_candidate_for_install(
         &self,
@@ -198,6 +235,21 @@ impl InstallSource for RegistryPackageSource {
         slot: &Path,
         progress: &vibe_core::progress::Progress,
     ) -> Result<vibe_registry::PackageAcquisition, RegistryError> {
+        if let Some(continuation) = &self.continuation
+            && let Some(root) = continuation
+                .roots
+                .iter()
+                .find(|root| root.same_selected_source(candidate))
+        {
+            let acquired = continuation.original.acquire_candidate_for_install(
+                root,
+                store_root,
+                expected_hash,
+                slot,
+                progress,
+            )?;
+            return candidate.verify_continued_acquisition(acquired);
+        }
         self.resolver.acquire_candidate_for_install(
             candidate,
             store_root,

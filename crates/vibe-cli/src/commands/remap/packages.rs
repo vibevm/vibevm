@@ -42,9 +42,6 @@ pub(crate) struct Installed {
 /// `vibe cache add` uses, because a remap package is fetched like any
 /// other package and an operator with no project still has to be able to
 /// install one.
-fn resolver(args: &InstallArgs, offline: bool) -> Result<InstallResolver> {
-    resolver_with_locked(args, offline, &[])
-}
 fn resolver_with_locked(
     args: &InstallArgs,
     offline: bool,
@@ -85,6 +82,9 @@ fn inert_args() -> InstallArgs {
         source_policy: Default::default(),
         packages: Vec::new(),
         global: true,
+        user_project: false,
+        explicit_path: false,
+        stop_requested: false,
         agent: None,
         server: None,
         platform: None,
@@ -133,40 +133,44 @@ fn inert_args() -> InstallArgs {
 /// cannot answer — no registry, an unresolvable coordinate, a malformed
 /// manifest — answers `None`, so the existing application path produces
 /// its own error exactly as before rather than this one guessing.
-#[specmark::spec(documents = "spec://org.vibevm.core/vibevm/common/PROP-066#package")]
-pub(crate) fn claims(args: &InstallArgs, offline: bool) -> Option<Vec<PackageRef>> {
-    if args.packages.is_empty() {
-        return None;
-    }
-    let resolver = resolver(args, offline).ok()?;
-    let mut refs = Vec::with_capacity(args.packages.len());
-    for raw in &args.packages {
-        let pkgref = PackageRef::parse(raw).ok()?;
-        let manifest = resolver.manifest_of(&pkgref).ok()?;
-        if manifest.package.as_ref().map(|meta| meta.kind) != Some(PackageKind::Remap) {
-            return None;
-        }
-        refs.push(pkgref);
-    }
-    Some(refs)
-}
+mod selection;
+pub(crate) use selection::{Selection, claims_with_progress};
 
 /// Install one or more remap packages into the user home as offers.
 #[specmark::spec(documents = "spec://org.vibevm.core/vibevm/common/PROP-066#package")]
-pub(crate) fn install(
-    ctx: &output::Context,
-    args: &InstallArgs,
-    refs: &[PackageRef],
-    offline: bool,
-) -> Result<()> {
-    let resolver = resolver(args, offline)?;
+pub(crate) fn install(ctx: &output::Context, selection: Selection) -> Result<()> {
     let store_root = vibe_registry::store_root().context("resolving the machine store root")?;
     let mut home = RemapHome::open()?;
     let mut installed = Vec::new();
     {
         let _lock = home.lock()?;
-        for pkgref in refs {
-            installed.push(adopt(&resolver, &store_root, &mut home, pkgref, None)?);
+        for candidate in &selection.candidates {
+            if candidate
+                .manifest()
+                .require_package()?
+                .materialization
+                .is_in_place()
+            {
+                bail!("remap offers require a cached package, not an in-place checkout");
+            }
+            let acquired = selection.resolver.acquire_candidate_for_install(
+                candidate,
+                &store_root,
+                None,
+                &store_root.join("remap-acquisition"),
+                &ctx.progress(),
+            )?;
+            let vibe_registry::PackageAcquisition::Cached(cached) = acquired else {
+                bail!("remap offers require an acquired package tree");
+            };
+            let reference = PackageRef::parse(&format!(
+                "{}/{}@={}",
+                candidate.group(),
+                candidate.name(),
+                candidate.version()
+            ))?;
+            let offer = checked_offer(&cached, &reference)?;
+            installed.push(adopt_cached(&mut home, &cached, offer, None)?);
         }
         home.save()?;
     }
@@ -197,6 +201,13 @@ fn fetch_offer(
     let cached = resolver
         .resolve_and_fetch(pkgref, store_root, None)
         .with_context(|| format!("fetching the remap package `{}`", pkgref.qualified_name()))?;
+    let offer = checked_offer(&cached, pkgref)?;
+    Ok((cached, offer))
+}
+fn checked_offer(
+    cached: &vibe_registry::CachedPackage,
+    pkgref: &PackageRef,
+) -> Result<RemapPackage> {
     let meta = cached.package_meta();
     if meta.kind != PackageKind::Remap {
         bail!(
@@ -216,8 +227,8 @@ fn fetch_offer(
             )
         })?;
     // This is actual canonical acquisition state, not report-only source evidence.
-    source_binding(&cached).locked_package()?;
-    Ok((cached, offer))
+    source_binding(cached).locked_package()?;
+    Ok(offer)
 }
 fn source_binding(cached: &vibe_registry::CachedPackage) -> vibe_core::manifest::LockedRemap {
     use vibe_core::manifest::{LockedRemap, LockedRemapSource};
@@ -533,3 +544,7 @@ pub(crate) fn owning_workspace(selected: &Path) -> Result<vibe_workspace::Worksp
 
 mod preview;
 pub(crate) use preview::preview_project_requirements;
+
+#[cfg(test)]
+#[path = "packages/selection_tests.rs"]
+mod selection_tests;

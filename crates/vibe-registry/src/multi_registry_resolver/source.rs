@@ -158,6 +158,7 @@ impl MonorepoRegistrySource {
                     &self.refname,
                     &cache,
                     Arc::clone(&self.backend),
+                    self.freshness_secs,
                 )
                 .map_err(explain)?
             } else {

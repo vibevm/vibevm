@@ -19,6 +19,9 @@ mod launch;
 /// configures which program a developer's own coding session starts.
 #[path = "agent/launchers.rs"]
 pub(crate) mod launchers;
+/// Publication and native runtime glue for Hermes/Pi launch carriers.
+#[path = "agent/native.rs"]
+mod native;
 /// Resolving a launcher's program the way the operating system starts one:
 /// on Windows through `PATHEXT`, so an npm-installed `claude.cmd` is found.
 /// Public to the crate because the Codex version probe starts the very same

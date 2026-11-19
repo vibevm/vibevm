@@ -72,6 +72,6 @@ handler = { kind = "script", base = "tooling/post-install/build-tools" }
 needs = [
   "command:cargo",
   "command:rustfmt",
-  "command:clippy",
+  "command:cargo-clippy",
   "command:cargo-nextest",
 ]

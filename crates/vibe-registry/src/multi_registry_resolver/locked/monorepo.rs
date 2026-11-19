@@ -60,14 +60,18 @@ impl MultiRegistryResolver {
         }
         let cache = self.cache_root.join("monorepo-locked");
         if self.backend.native_materialisation_for(&physical)? {
+            // Freshness 0, exactly as the ordinary clone below: a locked
+            // row names its own revision, so the endpoint is asked whenever
+            // the reference is a name — and not at all when, as usually,
+            // it is already an object id.
             let opened = GitMonorepoRegistry::open_native(
                 &physical,
                 &[],
                 reference,
                 &cache,
                 Arc::clone(&self.backend),
+                0,
             )?;
-            self.monorepo_snapshots.keep(opened.snapshot());
             return Ok(opened);
         }
         // Freshness 0: an existing clone is always brought to `reference`.

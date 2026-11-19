@@ -312,6 +312,19 @@ sunset = "none"
 
 # The agent hook registry views (PROP-064 `#presets`): `vibe agent list
 # --json` and `vibe agent presets --json`.
+# The personal user project observation (PROP-074 `#USER-PROJECT-ROOT-REPORT`):
+# `vibe user init --json` (one report on stdout) and the `user_project` member
+# a typed `vibe user init/status` refusal stamps onto the stderr error
+# envelope. Rebuildable by re-running the verb; read by scripts that provision
+# a per-user project, hence `many`.
+[format.cli-user-project-report]
+epoch = 1
+schema = "schemas/user_project_report.jtd.json"
+recoverable = true
+foreign_parsers = "many"
+corpus = "none"
+sunset = "none"
+
 [format.cli-agent-list]
 epoch = 1
 schema = "schemas/agent_list.jtd.json"
@@ -2134,5 +2147,49 @@ epoch = 1
 schema = "schemas/dl_report.jtd.json"
 recoverable = true
 foreign_parsers = "many"
+corpus = "none"
+sunset = "none"
+
+[format.cli-user-override-report]
+epoch = 1
+schema = "schemas/user_override_report.jtd.json"
+recoverable = true
+foreign_parsers = "many"
+corpus = "none"
+sunset = "none"
+
+# Private local binding metadata; no remotes or credentials.
+[format.user-override-bindings]
+epoch = 2
+schema = "none"
+recoverable = false
+foreign_parsers = "ours"
+unknown_fields = "deny"
+corpus = "none"
+sunset = "none"
+
+[format.cli-layered-tree]
+epoch = 2
+schema = "crates/vibe-cli/resources/layered-tree.schema.v2.json"
+recoverable = true
+foreign_parsers = "many"
+corpus = "none"
+sunset = "none"
+
+[format.cli-prompt-compose]
+epoch = 1
+schema = "schemas/prompt_compose.jtd.json"
+recoverable = true
+foreign_parsers = "many"
+corpus = "none"
+sunset = "none"
+
+# Private derived authority from ordinary install; canonical neutral DTO.
+[format.specmap-authority]
+epoch = 1
+schema = "vibevm/vibepacks/org.vibevm.ai-native/core-ai-native/v1.0.0/schemas/specmap_authority.jtd.json"
+recoverable = true
+foreign_parsers = "ours"
+unknown_fields = "deny"
 corpus = "none"
 sunset = "none"

@@ -55,9 +55,9 @@ pub use install::{
     InstallDisposition, InstallExecution, InstallInputs, InstallPolicy, InstallRun,
     InstallRunContext, PreparedSelection, ProvenSelection, ResumeOutcome, ResumeRequest,
     ResumedInstall, RunScratch, SelectedManifest, WorldCallbackOutcome, WorldCallbackSummary,
-    acquire_lease, execute_prepared, generated_by, lease_root, own_resume, prefixed,
-    provisional_world, resolve_project_root, resolve_spec_format, resume_slot_continuation,
-    selected_node_manifest,
+    acquire_lease, execute_prepared, execute_prepared_with_selected_roots, generated_by,
+    lease_root, own_resume, prefixed, provisional_world, refresh_specmap_authority,
+    resolve_project_root, resolve_spec_format, resume_slot_continuation, selected_node_manifest,
 };
 pub use phase::{PhaseOutcome, PhaseRun, run_phases};
 pub use plan::{planned_contribution, provider_and_version, tier_name};

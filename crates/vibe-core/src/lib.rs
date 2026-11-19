@@ -43,6 +43,8 @@ pub mod timestamp;
 pub mod toml_preserve;
 pub mod trust;
 pub mod user_config;
+/// The personal user project's root admission and report vocabulary (PROP-074).
+pub mod user_project;
 pub mod values;
 pub mod version_select;
 pub mod visibility;

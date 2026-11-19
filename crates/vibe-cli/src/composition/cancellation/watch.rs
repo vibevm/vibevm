@@ -116,6 +116,17 @@ impl Watch {
         self.shared.stopping() && !token.acknowledged()
     }
 
+    pub(super) fn handoff(mut self, token: &CancellationToken) -> bool {
+        // Stop the watcher first, but retain the source until its registrations
+        // have been explicitly relinquished to the next operation owner.
+        let mut source = self.source.take();
+        self.shut_down();
+        if let Some(source) = &mut source {
+            source.handoff();
+        }
+        self.shared.stopping() && !token.acknowledged()
+    }
+
     fn shut_down(&mut self) {
         // An open question is answered before the run reports: the
         // terminal comes back out of raw mode, and the answer is honoured.
@@ -207,7 +218,7 @@ impl Owner {
         let asked = std::thread::Builder::new()
             .name("vibe-stop-question".to_owned())
             .spawn(move || {
-                let result = ctx.suspend_progress(|| {
+                let result = ctx.with_terminal_released(|| {
                     crate::output::prompts::confirm(question::QUESTION, false)
                 });
                 let _ = answers.send(question::answer(&result));

@@ -15,6 +15,40 @@ pub(crate) fn run(
     root_offline: bool,
     seed_default_registry: bool,
 ) -> Result<()> {
+    run_with_selected(
+        ctx,
+        args,
+        embedded_root,
+        root_offline,
+        seed_default_registry,
+        None,
+    )
+}
+pub(crate) fn run_selected(
+    ctx: &output::Context,
+    args: InstallArgs,
+    embedded_root: Option<PathBuf>,
+    root_offline: bool,
+    seed_default_registry: bool,
+    selected: super::SelectedRouting,
+) -> Result<()> {
+    run_with_selected(
+        ctx,
+        args,
+        embedded_root,
+        root_offline,
+        seed_default_registry,
+        Some(selected),
+    )
+}
+fn run_with_selected(
+    ctx: &output::Context,
+    args: InstallArgs,
+    embedded_root: Option<PathBuf>,
+    root_offline: bool,
+    seed_default_registry: bool,
+    selected: Option<super::SelectedRouting>,
+) -> Result<()> {
     let scratch = tempfile::Builder::new()
         .prefix("vibe-preview-")
         .tempdir()
@@ -26,6 +60,7 @@ pub(crate) fn run(
         root_offline,
         seed_default_registry,
         scratch.path(),
+        selected,
     );
     // The metadata/source handles are dropped by prepare before cleanup. Never
     // report a successful preview while its owned temporary state remains.
@@ -74,6 +109,7 @@ fn prepare(
     root_offline: bool,
     seed_default_registry: bool,
     scratch: &std::path::Path,
+    routing: Option<super::SelectedRouting>,
 ) -> Result<InstallPlan> {
     ctx.progress().checkpoint()?;
     crate::commands::app::home::refuse_library(args.library.as_deref())?;
@@ -127,7 +163,7 @@ fn prepare(
         !args.packages.is_empty(),
         &locked,
     ) {
-        let source = vibe_package_source::build_install_resolver_with_operation(
+        let resolver = vibe_package_source::build_install_resolver_with_operation(
             vibe_package_source::InstallResolverRequest {
                 options: &options,
                 manifest: &manifest,
@@ -149,12 +185,24 @@ fn prepare(
             args,
             &locked.packages,
         ));
+        let ordinary = vibe_package_source::RegistryPackageSource::new(
+            resolver,
+            Box::new(super::CliQualifier),
+        );
+        let selected_roots = routing
+            .as_ref()
+            .map(|r| r.roots.clone())
+            .unwrap_or_default();
+        let source = match routing {
+            Some(selected) => ordinary.with_selected_continuation(selected.source, selected.roots),
+            None => ordinary,
+        };
         let roots = args
             .packages
             .iter()
             .map(|raw| {
                 let parsed = PackageRef::parse(raw).with_context(|| format!("parsing `{raw}`"))?;
-                crate::commands::short_name::qualify(&source, &parsed, &locked)
+                crate::commands::short_name::qualify(source.resolver(), &parsed, &locked)
             })
             .collect::<Result<Vec<_>>>()?;
         let request = vibe_install::InstallRequest {
@@ -176,7 +224,7 @@ fn prepare(
             .as_ref()
             .ok_or(vibe_install::Error::PreviewStorageRequired)?;
         let retained_store = storage.acquisition_root.join("retained-configuration");
-        let preview = vibe_install::preview_prepared(
+        let preview = vibe_install::preview_prepared_with_selected_roots(
             &source,
             &root,
             &mut manifest,
@@ -189,6 +237,7 @@ fn prepare(
             request,
             format,
             &observer,
+            &selected_roots,
         )?;
         preview
             .package_sources()

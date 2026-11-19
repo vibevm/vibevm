@@ -9,6 +9,8 @@ use std::fs;
 #[path = "materialisation/witness.rs"]
 mod witness;
 pub(super) use witness::{Tree, copy, tree};
+#[path = "materialisation/verdict.rs"]
+mod verdict;
 
 /// An operation-owned verified tree, with its original context still retained.
 /// This value has no publication method: the workspace must capture undo before
@@ -183,16 +185,31 @@ impl NativeState {
             None,
             None,
         )?;
-        context.run(
-            &["fsck", "--full", "--no-reflogs", "--no-dangling"],
-            Some(objects),
-            None,
-        )?;
-        context.run(
-            &["fsck", "--full", "--no-reflogs", "--no-dangling"],
-            Some(&git),
-            None,
-        )?;
+        // A store this preparation created walks in full. A warm store this
+        // capability already created and has only ever refreshed under
+        // `transfer.fsckObjects`/`fetch.fsckObjects` has had every one of its
+        // objects checked at receipt, and the checkout below inflates each
+        // object it writes through Git's own loose-object and packfile
+        // checksums — so the O(repository) walk is paid once, at creation,
+        // and on a cache that fails its cheap integrity probe
+        // (PROP-073 `#NATIVE-PREPARATION`).
+        if owned.fsck_required {
+            context.run(
+                &["fsck", "--full", "--no-reflogs", "--no-dangling"],
+                Some(objects),
+                None,
+            )?;
+            context.run(
+                &["fsck", "--full", "--no-reflogs", "--no-dangling"],
+                Some(&git),
+                None,
+            )?;
+        }
+        if owned.durable_cache && owned.fsck_required {
+            // Publish reuse authority only after the initial full walk
+            // completed, never after clone alone or an interrupted stage.
+            super::object_cache::mark(objects, &owned.serving_endpoint)?;
+        }
         let attrs = temporary.path().join("attributes");
         let mut external = captured.system_attributes.clone();
         external.push(b'\n');
@@ -334,56 +351,71 @@ impl NativeState {
                         .map_err(|_| unsupported("non-UTF-8 checkout path"))?,
                 );
             }
-            for paths in paths.chunks(64) {
-                let mut args: Vec<&str> = vec!["check-attr"];
-                if attr_source {
-                    args.push(&source_option);
-                }
-                args.extend(["--all", "-z", "--"]);
-                args.extend(paths.iter().copied());
-                let result = run(&args)?;
-                let fields: Vec<_> = result
-                    .stdout
-                    .split(|b| *b == 0)
-                    .filter(|s| !s.is_empty())
-                    .collect();
-                if fields.len() % 3 != 0
-                    || fields.as_chunks::<3>().0.iter().any(|row| match row[1] {
-                        b"filter" => row[2] != b"unset",
-                        b"working-tree-encoding" | b"ident" => row[2] != b"unset",
-                        _ => false,
-                    })
-                {
-                    return Err(unsupported(
-                        "payload has an unsupported filter, ident or working-tree-encoding transformation",
-                    ));
-                }
-                for row in fields
-                    .as_chunks::<3>()
-                    .0
+            // One child for the whole tree: the paths go down `--stdin`,
+            // NUL-separated exactly as `-z` writes them back, so a tree of
+            // five thousand files is one answer instead of eighty-six.
+            let mut args: Vec<&str> = vec!["check-attr"];
+            if attr_source {
+                args.push(&source_option);
+            }
+            args.extend(["--all", "-z", "--stdin"]);
+            let argv: Vec<_> = prefix
+                .iter()
+                .map(String::as_str)
+                .chain(args.iter().copied())
+                .collect();
+            let result = context.probe_paths(&argv, &git, &paths)?;
+            let fields: Vec<_> = result
+                .stdout
+                .split(|b| *b == 0)
+                .filter(|s| !s.is_empty())
+                .collect();
+            if fields.len() % 3 != 0
+                || fields.as_chunks::<3>().0.iter().any(|row| match row[1] {
+                    b"filter" => row[2] != b"unset",
+                    b"working-tree-encoding" | b"ident" => row[2] != b"unset",
+                    _ => false,
+                })
+            {
+                return Err(unsupported(
+                    "payload has an unsupported filter, ident or working-tree-encoding transformation",
+                ));
+            }
+            for row in fields
+                .as_chunks::<3>()
+                .0
+                .iter()
+                .filter(|row| row[1] == b"filter" && row[2] == b"unset")
+            {
+                let path = std::str::from_utf8(row[0])
+                    .map_err(|_| unsupported("invalid filter probe path"))?;
+                let path_option = format!("--path={path}");
+                let object = format!("{}:{path}", owned.revision.commit);
+                let argv: Vec<_> = prefix
                     .iter()
-                    .filter(|row| row[1] == b"filter" && row[2] == b"unset")
-                {
-                    let path = std::str::from_utf8(row[0])
-                        .map_err(|_| unsupported("invalid filter probe path"))?;
-                    let path_option = format!("--path={path}");
-                    let object = format!("{}:{path}", owned.revision.commit);
-                    let argv: Vec<_> = prefix
-                        .iter()
-                        .map(String::as_str)
-                        .chain(["cat-file", "--filters", &path_option, &object])
-                        .collect();
-                    if !context.filter_probe(&argv, &git)? {
-                        return Err(unsupported(
-                            "payload selects a reserved external filter driver",
-                        ));
-                    }
+                    .map(String::as_str)
+                    .chain(["cat-file", "--filters", &path_option, &object])
+                    .collect();
+                if !context.filter_probe(&argv, &git)? {
+                    return Err(unsupported(
+                        "payload selects a reserved external filter driver",
+                    ));
                 }
             }
             Ok(())
         };
-        if attr_source {
+        // The verdict is a pure function of the tree, the attribute inputs
+        // the probe child is given and the Git that answers: a tree this
+        // process has already admitted under exactly those inputs is not
+        // probed again (PROP-073 `#NATIVE-MATERIALISATION`). Anything else —
+        // another commit, an edited `~/.config/git/attributes`, a different
+        // `core.autocrlf`, a replaced Git — is a different key and a fresh
+        // probe.
+        let verdict = self.verdict_key(owned, &captured, bytes, attr_source);
+        let remembered = self.admitted(&verdict)?;
+        if attr_source && !remembered {
             probe()?;
+            self.remember_admitted(verdict)?;
         }
         // Only now: the probe above had to read the payload's own attributes,
         // and this override would have answered in their place.
@@ -399,7 +431,7 @@ impl NativeState {
             write(&["reset", "--hard", &owned.revision.commit])?;
             write(&["clean", "-dfx"])?;
         }
-        if !attr_source {
+        if !attr_source && !remembered {
             // The probe reads the payload's own attributes, not the
             // byte-exact override a data tree keeps.
             fs::write(git.join("info/attributes"), &captured.info_attributes).map_err(io)?;
@@ -408,6 +440,7 @@ impl NativeState {
                 fs::write(git.join("info/attributes"), verbatim::ATTRIBUTES).map_err(io)?;
             }
             answer?;
+            self.remember_admitted(verdict)?;
         }
         if owned.revision.reference.starts_with("refs/") {
             run(&[

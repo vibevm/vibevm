@@ -32,6 +32,11 @@ impl Manifest {
     /// Enforce the role rules: `[project]` ⊕ `[package]`; at least one role
     /// section present; package-role sections require `[package]`.
     pub fn validate(&self) -> Result<()> {
+        if let Some(layers) = &self.layers {
+            layers
+                .validate()
+                .map_err(|reason| Error::InvalidManifest { reason })?;
+        }
         let has_project = self.project.is_some();
         let has_package = self.package.is_some();
         let has_workspace = self.workspace.is_some();

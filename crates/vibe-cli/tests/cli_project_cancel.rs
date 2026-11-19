@@ -651,7 +651,7 @@ mod attended {
     use super::*;
 
     const DRIVER: &str = r#"
-import os, pty, select, sys, time
+import os, pty, select, sys, time, signal
 ready, go, answer, transcript = sys.argv[1:5]
 argv = sys.argv[5:]
 pid, fd = pty.fork()
@@ -659,6 +659,7 @@ if pid == 0:
     os.environ["TERM"] = "xterm"
     os.execvp(argv[0], argv)
 seen = b""
+status = None
 def pump(seconds):
     global seen
     end = time.time() + seconds
@@ -673,12 +674,53 @@ def pump(seconds):
                 return False
             seen += chunk
     return True
+def descendants(parent):
+    rows = {}
+    for entry in os.listdir("/proc"):
+        if not entry.isdigit():
+            continue
+        try:
+            data = open("/proc/" + entry + "/stat").read()
+            fields = data[data.rfind(")")+2:].split()
+            rows[int(entry)] = (int(fields[1]), int(fields[2]))
+        except (OSError, ValueError):
+            pass
+    selected = []
+    frontier = [parent]
+    while frontier:
+        owner = frontier.pop()
+        children = [child for child, info in rows.items() if info[0] == owner]
+        selected.extend(children)
+        frontier.extend(children)
+    return rows, selected
+def fail(what):
+    # Never signal a PID that waitpid already reaped. Supervised hooks have
+    # their own groups: capture descendants while the parent identity is live.
+    if status is None:
+        rows, children = descendants(pid)
+        for child in reversed(children):
+            try:
+                if rows[child][1] == child:
+                    os.killpg(child, signal.SIGKILL)
+                else:
+                    os.kill(child, signal.SIGKILL)
+            except ProcessLookupError:
+                pass
+        try:
+            os.kill(pid, signal.SIGKILL)
+        except ProcessLookupError:
+            pass
+        try:
+            os.waitpid(pid, 0)
+        except ChildProcessError:
+            pass
+    open(transcript, "wb").write(seen)
+    sys.exit(what)
 def until(check, what):
     end = time.time() + 120
     while not check():
         if time.time() > end:
-            open(transcript, "wb").write(seen)
-            sys.exit("timed out waiting for " + what)
+            fail("timed out waiting for " + what)
         pump(0.05)
 until(lambda: os.path.exists(ready), "the hook")
 os.write(fd, b"\x03")
@@ -694,8 +736,12 @@ while status is None and time.time() < end:
     done, code = os.waitpid(pid, os.WNOHANG)
     if done:
         status = code
+if status is None:
+    fail("vibe did not exit within deadline")
+drain_end = time.time() + 3
 while pump(0.2):
-    pass
+    if time.time() > drain_end:
+        fail("timed out draining PTY; test is HANG, not skipped")
 open(transcript, "wb").write(seen)
 if status is None:
     sys.exit("vibe did not exit")

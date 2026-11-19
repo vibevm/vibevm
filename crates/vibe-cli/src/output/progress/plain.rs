@@ -144,7 +144,7 @@ impl PlainRenderer {
         if headline.command {
             return;
         }
-        self.line(&row(collapsed(&headline, width, end, elapsed, logs)));
+        self.line(&row(collapsed(&headline, id, width, end, elapsed, logs)));
     }
 
     /// One dim running line, `<headline> · still running · 30s`, per silent

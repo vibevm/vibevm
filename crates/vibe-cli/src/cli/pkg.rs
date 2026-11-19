@@ -16,6 +16,10 @@ pub use discovery::{OutdatedArgs, SearchArgs};
 
 #[derive(Debug, clap::Args)]
 pub struct ListArgs {
+    /// List the personal specification project's packages.
+    #[arg(short = 'g', long = "global", conflicts_with = "path")]
+    pub global: bool,
+
     /// Filter by package kind (flow, feat, stack, tool, mcp, lang, doc, app, remap).
     #[arg(long)]
     pub kind: Option<String>,
@@ -92,9 +96,21 @@ pub struct InstallArgs {
     /// constraint on) `vibe.toml` `[requires].packages`.
     pub packages: Vec<String>,
 
-    /// Install a user application or an `mcp:` package under the Vibe settings root.
+    /// Install an application, MCP service, or personal specification dependency.
+    /// Automatic personal routing currently requires an empty source context;
+    /// for an existing personal project use `install -g --user-project`.
     #[arg(short = 'g', long = "global")]
     pub global: bool,
+
+    /// Operate on the personal specification project rather than an application or MCP store.
+    #[arg(long, requires = "global", conflicts_with = "path")]
+    pub user_project: bool,
+
+    #[arg(skip)]
+    pub(crate) explicit_path: bool,
+
+    #[arg(skip)]
+    pub(crate) stop_requested: bool,
 
     /// Target coding agent for a global MCP package. Without this flag an
     /// interactive terminal offers all detected agents by default. For a
@@ -371,6 +387,10 @@ pub struct UpdateArgs {
     #[arg(short = 'g', long = "global")]
     pub global: bool,
 
+    /// Operate on the personal specification project rather than an application or MCP store.
+    #[arg(long, requires = "global", conflicts_with = "path")]
+    pub user_project: bool,
+
     /// Select an application platform or distribution ID (for example `ubuntu`).
     #[arg(long, value_name = "PLATFORM")]
     pub platform: Option<String>,
@@ -530,6 +550,10 @@ pub struct UninstallArgs {
     /// Uninstall one user application without mutating a project.
     #[arg(short = 'g', long = "global")]
     pub global: bool,
+
+    /// Operate on the personal specification project rather than an application or MCP store.
+    #[arg(long, requires = "global", conflicts_with = "path")]
+    pub user_project: bool,
 
     /// Target agent registration for a global MCP package; `all` removes all owned registrations.
     #[arg(long, requires = "global")]

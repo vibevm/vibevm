@@ -78,6 +78,12 @@ pub(super) fn walk_controlled(
                     message: format!("read_dir entry: {e}"),
                 })?;
                 let path = entry.path();
+                // Personal composed boot is never a filesystem-copy payload.
+                // Decide lexically before metadata/read/descent, including symlinks
+                // and nested project nodes. Faithful Git history is a separate route.
+                if path.ends_with(vibe_core::layout::current_boot_dir().join("local")) {
+                    continue;
+                }
                 stack.push(path.clone());
                 if path.is_file() {
                     out.push(path);

@@ -56,13 +56,16 @@ pub struct Contribution {
     pub finished: Option<String>,
 
     /// This contribution's log, relative to the record directory
-    /// (`logs/<id>.log`). Absent when the run produced no bytes for it, or when
-    /// its child wrote straight to the terminal.
+    /// (`logs/<id>.log`). An observed contribution reserves this file before
+    /// execution, including an empty log. Absent when evidence storage was
+    /// unavailable or an unobserved legacy row produced no captured bytes.
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub log: Option<String>,
 
-    /// True when the engine's stream capture bound was reached, so the log
-    /// holds the first megabyte of that stream and not all of it.
+    /// True when the persistent log is incomplete or unavailable: for example
+    /// a failed write, interrupted observation, or a capped legacy capture.
+    /// Bounded stdout/stderr report previews do not make a fully streamed log
+    /// truncated.
     #[serde(rename = "logTruncated")]
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub log_truncated: Option<bool>,

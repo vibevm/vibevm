@@ -16,6 +16,27 @@ pub(crate) mod remap;
 pub(crate) mod templates;
 pub(crate) mod transfers;
 
+/// Route installed global operations before startup, preserving ordinary errors.
+pub(crate) fn select_installed_destination(
+    cli: &mut crate::cli::Cli,
+    explicit_path: bool,
+) -> std::result::Result<(), std::process::ExitCode> {
+    if let Err(error) =
+        commands::personal::select_installed_destination(&mut cli.command, explicit_path)
+    {
+        let ctx = output::Context::from_flags(
+            cli.quiet,
+            cli.json,
+            cli.invoked_by.as_deref(),
+            cli.unattended,
+            cli.agent_mode,
+        );
+        ctx.error_with_suffix(&error, None);
+        return Err(crate::exit_code::as_exit_code(&error));
+    }
+    Ok(())
+}
+
 pub(crate) fn run_vars(
     args: VarsArgs,
     self_location: Option<&commands::vvm::SelfLocation>,
@@ -171,7 +192,7 @@ mod tests;
 /// file-existence check regardless.
 /// The no-publication project route, selected before startup side effects.
 pub(crate) fn project_preview(cmd: &crate::cli::Command) -> bool {
-    matches!(cmd, crate::cli::Command::Install(args) if args.plan_only && !args.global)
+    matches!(cmd, crate::cli::Command::Install(args) if args.plan_only)
 }
 
 /// `--no-recommends` answers one question — may vibe install things I did

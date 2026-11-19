@@ -96,7 +96,6 @@ pub use format::{STATIC_FILE, STATIC_XML_FILE, resolve_static_path, static_file,
 /// The managed redirect block (PROP-012) — `<vibevm>` in `CLAUDE.md` /
 /// `AGENTS.md` / `GEMINI.md`, moved out of this cell along its seam.
 mod redirect;
-pub(crate) use redirect::project_managed_block;
 pub(crate) use redirect::write_redirect_blocks_with_transaction as write_redirect_blocks_in_transaction;
 pub use redirect::{
     BLOCK_CLOSE, BLOCK_OPEN, BlockLocation, CodexBudget, NEUTRALISED_BODY, PROJECT_DOC_MAX_BYTES,
@@ -105,6 +104,7 @@ pub use redirect::{
     router_node_id, write_redirect_blocks, write_redirect_blocks_for,
     write_redirect_blocks_with_spec_format,
 };
+pub(crate) use redirect::{DEPENDENCY_OWNERSHIP, project_managed_block};
 
 /// `schema` version of the generated `INDEX.md` manifest (PROP-009 §2.3).
 pub const INDEX_SCHEMA: u32 = 1;

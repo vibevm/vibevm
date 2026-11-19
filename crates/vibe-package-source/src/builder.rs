@@ -139,6 +139,7 @@ fn declared_source_available(
     !effective.registries.is_empty()
         || options.has_git_source_flag
         || !manifest.requires.git_packages.is_empty()
+        || !manifest.requires.path_packages.is_empty()
         || (offline && !vibe_registry::store::list_all().is_empty())
 }
 

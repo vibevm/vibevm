@@ -1,0 +1,120 @@
+{
+  "metadata": {
+    "description": "Version 1 observation of one `vibe user init` / `vibe user status` run (PROP-074 #USER-PROJECT-ROOT-REPORT): the root, whether it is absent, initialized or unavailable, this invocation's outcome, effects and publication, and \u2014 on a refusal \u2014 the stable reason and the remedy. Root is the admitted absolute path and is null when settings are missing or relative.",
+    "spec": {
+      "implements": "spec://org.vibevm.core/vibevm/common/PROP-074#USER-PROJECT-ROOT-REPORT"
+    },
+    "rustOptions": {
+      "package": "vibe_wire::user_project_report"
+    },
+    "x-rust-type": "UserProjectReport",
+    "x-wire-order": [
+      "protocol",
+      "ok",
+      "command",
+      "root",
+      "state",
+      "outcome",
+      "effects",
+      "publication",
+      "reason",
+      "remedy"
+    ]
+  },
+  "properties": {
+    "protocol": {
+      "enum": [
+        "vibe-user-project/1"
+      ],
+      "metadata": {
+        "x-rust-type": "UserProjectProtocol",
+        "x-vocabulary": "closed"
+      }
+    },
+    "ok": {
+      "type": "boolean"
+    },
+    "command": {
+      "ref": "command"
+    },
+    "root": {
+      "ref": "path"
+    },
+    "state": {
+      "ref": "state"
+    },
+    "outcome": {
+      "ref": "outcome"
+    },
+    "effects": {
+      "ref": "effects"
+    },
+    "publication": {
+      "ref": "publication"
+    },
+    "reason": {
+      "ref": "path"
+    },
+    "remedy": {
+      "ref": "path"
+    }
+  },
+  "definitions": {
+    "path": {
+      "type": "string",
+      "nullable": true
+    },
+    "command": {
+      "enum": [
+        "user:init",
+        "user:status"
+      ],
+      "metadata": {
+        "x-vocabulary": "closed"
+      }
+    },
+    "state": {
+      "enum": [
+        "absent",
+        "initialized",
+        "unavailable"
+      ],
+      "metadata": {
+        "x-vocabulary": "closed"
+      }
+    },
+    "outcome": {
+      "enum": [
+        "created",
+        "already-initialized",
+        "observed",
+        "refused",
+        "incomplete"
+      ],
+      "metadata": {
+        "x-vocabulary": "closed"
+      }
+    },
+    "effects": {
+      "enum": [
+        "none",
+        "changed",
+        "unknown"
+      ],
+      "metadata": {
+        "x-vocabulary": "closed"
+      }
+    },
+    "publication": {
+      "enum": [
+        "not-started",
+        "restored",
+        "committed",
+        "recovery-required"
+      ],
+      "metadata": {
+        "x-vocabulary": "closed"
+      }
+    }
+  }
+}

@@ -118,6 +118,7 @@ pub(super) fn acquire_prepared_metadata<S: InstallSource + ?Sized>(
         .map(|(key, metadata)| (key.clone(), metadata.observations.clone()))
         .collect();
     let planned = PlannedInstall {
+        node_roots: closure.node_roots,
         weak: closure.weak,
         project_root,
         request,

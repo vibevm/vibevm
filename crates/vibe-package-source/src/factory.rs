@@ -38,6 +38,10 @@ pub(super) fn open_multi_from(
             .with_metadata_store_root(metadata)
             .with_strict_auth(options.auth_required)
             .with_git_packages(manifest.requires.git_packages.clone())
+            .with_path_packages(vibe_install::workspace_path_sources(
+                project_root,
+                manifest,
+            )?)
             .with_project_overrides(manifest.overrides.clone())
             .with_offline(offline)
             .with_locked_packages(locked.to_vec())

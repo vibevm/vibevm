@@ -569,3 +569,28 @@ fn a_skipped_and_a_failed_step_collapse_to_their_glyphs_and_metadata() {
     );
     assert!(after.contains("✗ build  Build · 0s · exit 1"), "{after:?}");
 }
+
+#[test]
+fn identical_display_labels_keep_distinct_task_log_evidence() {
+    let root = tempfile::tempdir().unwrap();
+    let first = root.path().join("first.log");
+    let second = root.path().join("second.log");
+    std::fs::write(&first, "FIRST-ONLY\n").unwrap();
+    std::fs::write(&second, "SECOND-ONLY\n").unwrap();
+    let writer = SharedWriter::default();
+    let renderer = ProgressRenderer::plain(Box::new(writer.clone()), false);
+    let progress = Progress::new(renderer.clone());
+    let a = progress.task("build (script)  Same");
+    let b = progress.task("build (script)  Same");
+    renderer.note_task_log(a.id(), &first);
+    renderer.note_task_log(b.id(), &second);
+    a.fail("failed");
+    let after_a = writer.text();
+    assert!(after_a.contains("FIRST-ONLY"));
+    assert!(!after_a.contains("SECOND-ONLY"));
+    b.fail("failed");
+    assert!(writer.text().contains("SECOND-ONLY"));
+}
+
+#[path = "tests_terminal.rs"]
+mod terminal_prompt_tests;

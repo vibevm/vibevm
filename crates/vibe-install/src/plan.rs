@@ -66,8 +66,10 @@ pub enum Plan {
 /// A confirmed-pending resolution — everything [`apply`](crate::apply)
 /// needs, carried by value so the apply phase cannot observe state
 /// the plan did not produce.
+pub type NodeRootProjection = std::collections::BTreeMap<String, Vec<PackageRef>>;
 #[derive(Debug)]
 pub struct PlannedInstall {
+    pub(crate) node_roots: std::collections::BTreeMap<String, Vec<PackageRef>>,
     pub(crate) project_root: PathBuf,
     pub(crate) request: InstallRequest,
     pub(crate) manifest: Manifest,
@@ -201,6 +203,30 @@ pub fn plan_prepared_without_publication<S: InstallSource + ?Sized>(
     spec_format: SpecFormat,
     observer: &dyn PlanObserver,
 ) -> Result<Plan> {
+    plan_prepared_with_selected_roots(
+        source,
+        project_root,
+        manifest,
+        workspace,
+        request,
+        spec_format,
+        observer,
+        &[],
+    )
+}
+
+/// Continue ordinary planning with exact top-level candidates selected by this source owner.
+#[allow(clippy::too_many_arguments)]
+pub fn plan_prepared_with_selected_roots<S: InstallSource + ?Sized>(
+    source: &S,
+    project_root: &Path,
+    manifest: &mut Manifest,
+    workspace: &mut Workspace,
+    request: InstallRequest,
+    spec_format: SpecFormat,
+    observer: &dyn PlanObserver,
+    selected_roots: &[vibe_registry::source_candidates::RetainedSourceCandidate],
+) -> Result<Plan> {
     let before = manifest.clone();
     let previous_workspace = workspace.clone();
     let result = match prepare_metadata_plan(
@@ -212,6 +238,7 @@ pub fn plan_prepared_without_publication<S: InstallSource + ?Sized>(
         spec_format,
         observer,
         PlanningPurpose::Apply,
+        selected_roots,
     )? {
         None => Ok(Plan::Fresh),
         Some(prepared) => {
@@ -255,6 +282,7 @@ fn prepare_metadata_plan<S: InstallSource + ?Sized>(
     spec_format: SpecFormat,
     observer: &dyn PlanObserver,
     purpose: PlanningPurpose<'_>,
+    selected_roots: &[vibe_registry::source_candidates::RetainedSourceCandidate],
 ) -> Result<Option<PreparedMetadata>> {
     let selected = roots::selected_node(workspace, project_root)?;
     crate::configuration_admission::workspace_inputs_for_install(
@@ -325,6 +353,7 @@ fn prepare_metadata_plan<S: InstallSource + ?Sized>(
         let roots = requirements.authored();
         let root_count = requirements.package_count();
         let root_edges = requirements.source_edges();
+        let root_owners = requirements.node_owners();
 
         // ##EMPTY-REQUIRES-IS-A-NO-OP (PROP-011, the 2026-08-24 ruling): zero
         // dependencies is a fresh project, not an error — regenerate the boot
@@ -390,10 +419,12 @@ fn prepare_metadata_plan<S: InstallSource + ?Sized>(
         let closure = metadata::resolve_metadata_closure(
             source,
             metadata::MetadataPlanningInput {
+                selected_roots,
                 workspace,
                 root_manifest: manifest,
                 roots: &roots,
                 root_edges: &root_edges,
+                root_owners: &root_owners,
                 held_roots: &solve_roots,
                 lockfile: &lockfile,
                 root_features: &request.features,
@@ -486,6 +517,7 @@ mod metadata;
 mod preview;
 pub use preview::{
     InstallPreview, PreviewSourceStorage, preview_has_requirements, preview_prepared,
+    preview_prepared_with_selected_roots,
 };
 
 /// The acquisition half of planning — fetch/defer helpers and the
@@ -503,6 +535,6 @@ pub use weak::{RecommendationOutcome, RecommendationRow, SuggestionRow, WeakDepe
 mod configured;
 
 mod fresh;
-pub use fresh::freshness_prepared;
+pub use fresh::{freshness_prepared, project_fresh_node_roots};
 
 mod report;

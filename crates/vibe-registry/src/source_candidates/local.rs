@@ -25,17 +25,9 @@ impl LocalRegistry {
                 root: self.root().into(),
             },
         };
-        let source_dir = self
-            .root()
-            .join(group.as_str())
-            .join(name)
-            .join(format!("v{version}"));
-        if !source_dir.is_dir() {
-            return Err(RegistryError::UnknownPackage {
-                group: group.clone(),
-                name: name.into(),
-            });
-        }
+        let reference = vibe_core::PackageRef::parse(&format!("{group}/{name}@={version}"))?;
+        let selected = self.resolve(&reference)?;
+        let source_dir = selected.source_dir;
         let manifest = Manifest::read(source_dir.join(Manifest::FILENAME))?;
         let source_url = crate::local_registry::source_uri_for_local(&source_dir);
         let mut evidence = crate::binding_source_evidence(&binding);
@@ -142,6 +134,43 @@ impl LocalRegistry {
         Ok(SourceCandidateInventory {
             candidates,
             observations,
+        })
+    }
+
+    /// Preserve the existing local application's source-tree execution posture
+    /// without reselecting a version or warming the immutable package store.
+    pub fn retained_source_tree(
+        &self,
+        candidate: &RetainedSourceCandidate,
+    ) -> Result<ResolvedPackage, RegistryError> {
+        let resolution = candidate.resolution_for(&self.candidate_owner)?;
+        let selected = resolution.resolved.clone();
+        let root = selected
+            .source_dir
+            .canonicalize()
+            .map_err(|source| RegistryError::Io {
+                path: selected.source_dir.clone(),
+                source,
+            })?;
+        if !root.starts_with(
+            self.root()
+                .canonicalize()
+                .map_err(|source| RegistryError::Io {
+                    path: self.root().into(),
+                    source,
+                })?,
+        ) && !crate::templates::is_rendered_tree(&root)
+        {
+            return Err(RegistryError::MalformedMeta {
+                path: root,
+                reason: "selected local tree escaped its registry".into(),
+            });
+        }
+        let current = Manifest::read(root.join(Manifest::FILENAME))?;
+        candidate.validate_manifest(&current)?;
+        Ok(ResolvedPackage {
+            source_dir: root,
+            ..selected
         })
     }
 

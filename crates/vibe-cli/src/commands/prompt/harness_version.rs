@@ -120,6 +120,12 @@ pub(crate) fn gate(
         // helper sample and prove the sentence against that very package
         // (`#SYS-QWEN`).
         HarnessKind::Qwen => return qwen(launcher, request),
+        HarnessKind::Hermes | HarnessKind::Pi => {
+            anyhow::bail!(
+                "{} native bootstrap has not yet passed runtime admission",
+                kind.as_str()
+            );
+        }
         HarnessKind::Codex => {}
     }
     let name = launcher.map_or(kind.as_str(), |launcher| launcher.name.as_str());

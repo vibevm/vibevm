@@ -459,3 +459,76 @@ fn search_outside_a_project_reads_the_machine_registries() {
         "{report}"
     );
 }
+
+#[test]
+fn offline_local_monorepo_refuses_network_gitlink_before_contact() {
+    use std::io::Read;
+    use std::sync::{
+        Arc,
+        atomic::{AtomicUsize, Ordering},
+    };
+    let site = Site::new();
+    let listener = std::net::TcpListener::bind("127.0.0.1:0").unwrap();
+    listener.set_nonblocking(true).unwrap();
+    let address = listener.local_addr().unwrap();
+    let contacts = Arc::new(AtomicUsize::new(0));
+    let done = Arc::new(std::sync::atomic::AtomicBool::new(false));
+    let count = contacts.clone();
+    let stop = done.clone();
+    let server = std::thread::spawn(move || {
+        while !stop.load(Ordering::Relaxed) {
+            if let Ok((mut stream, _)) = listener.accept() {
+                count.fetch_add(1, Ordering::Relaxed);
+                stream
+                    .set_read_timeout(Some(std::time::Duration::from_millis(50)))
+                    .unwrap();
+                let mut bytes = [0; 1024];
+                let _ = stream.read(&mut bytes);
+            } else {
+                std::thread::sleep(std::time::Duration::from_millis(5));
+            }
+        }
+    });
+    let work = site.path("work");
+    let head = site.git(Some(&work), &["rev-parse", "HEAD"]);
+    fs::write(
+        work.join(".gitmodules"),
+        format!("[submodule \"child\"]\npath=child\nurl=https://{address}/child.git\n"),
+    )
+    .unwrap();
+    site.git(Some(&work), &["add", ".gitmodules"]);
+    site.git(
+        Some(&work),
+        &[
+            "update-index",
+            "--add",
+            "--cacheinfo",
+            &format!("160000,{head},child"),
+        ],
+    );
+    site.git(Some(&work), &["commit", "-qm", "network child"]);
+    site.git(
+        Some(&work),
+        &["push", site.path("mono.git").to_str().unwrap(), "main"],
+    );
+    site.user_registries(&format!("file://{}", site.path("mono.git").display()));
+    let project = site.project("network-child-offline", "");
+    let result = site.vibe(&project, &["--offline", "--unattended", "install"]);
+    done.store(true, Ordering::Relaxed);
+    server.join().unwrap();
+    assert!(
+        !result.status.success(),
+        "network child must not be acquired offline"
+    );
+    let said = String::from_utf8_lossy(&result.stderr);
+    assert!(
+        said.contains("offline") && said.contains("network repository"),
+        "wrong refusal: {said}"
+    );
+    assert_eq!(
+        contacts.load(Ordering::Relaxed),
+        0,
+        "offline local parent contacted its remote child"
+    );
+    assert!(!project.join("vibe.lock").exists());
+}

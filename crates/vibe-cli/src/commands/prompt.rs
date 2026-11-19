@@ -26,18 +26,39 @@ mod adapter;
 mod build;
 mod capture;
 mod check;
+mod compose;
 mod flags;
 mod harness_version;
+mod local_artifact;
 mod path;
+mod personal;
+mod personal_launch;
 mod prepare;
 mod qwen_identity;
 mod resolve;
 mod supplied_base;
 
 pub(crate) use build::summary_line;
-pub(crate) use flags::{Undeliverable, compose as compose_flags, opted_in};
+pub(crate) use flags::{Undeliverable, compose_for_launch as compose_launch_flags, opted_in};
 pub(crate) use qwen_identity::inherited_carrier_to_scrub;
 pub(crate) use resolve::{Selected, select};
+
+/// Prepare the existing selected-node native lane, including fresh personal layers.
+pub(crate) fn native_launch_lane(
+    ctx: &output::Context,
+    selected: &Selected,
+) -> Result<std::path::PathBuf> {
+    let tracked = selected.tracked();
+    let answer =
+        vibe_workspace::system_prompt::check_node_prompt(&selected.request(&tracked, None))?;
+    if let Some((path, _)) = personal_launch::compose_native(ctx, selected, &answer)? {
+        return Ok(path);
+    }
+    if !answer.verdict.is_equal() {
+        anyhow::bail!("native launch requires a current prepared project lane");
+    }
+    Ok(answer.lane.path)
+}
 
 /// Run one regeneration and end it with the system-prompt summary line.
 ///
@@ -62,6 +83,15 @@ pub(crate) fn reporting_the_prompt<T>(
 pub fn run(ctx: &output::Context, args: PromptArgs) -> Result<()> {
     match args.command {
         PromptCommand::Build { node, path } => build::run(ctx, &select(&path, node.as_deref())?),
+        PromptCommand::Compose {
+            node,
+            path,
+            session_target,
+        } => compose::run(
+            ctx,
+            &select(&path, node.as_deref())?,
+            session_target.as_deref(),
+        ),
         PromptCommand::Check {
             node,
             path,

@@ -250,8 +250,15 @@ fn a_changed_recipe_pin_is_stale_and_names_the_recipe() {
          [system_prompt]\nrecipe = 1\n",
     )
     .unwrap();
-    // Recipe 1 is the current one, so pinning it changes nothing.
-    assert_eq!(node.check().verdict, CheckVerdict::Equal);
+    let CheckVerdict::Stale(reasons) = node.check().verdict else {
+        panic!("pinning historical recipe 1 differs from the current default");
+    };
+    assert!(reasons.iter().any(|reason| reason.contains("recipe")));
+    assert!(
+        reasons
+            .iter()
+            .any(|reason| reason.contains("sidecar witnesses 2"))
+    );
 }
 
 #[test]

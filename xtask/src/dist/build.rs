@@ -94,6 +94,7 @@ pub(crate) fn run(repo_root: &Path, options: &BuildOptions) -> Result<()> {
     println!("dist build: {}", asset_path.display());
     println!("dist build: {}", bootstrap_path.display());
     println!("dist build: {}", fragment_path.display());
+    output::write_native_installer(&out_dir, &target, &binaries)?;
     Ok(())
 }
 
@@ -298,6 +299,8 @@ fn build_binaries(
         "vibe-cli",
         "-p",
         "vibe-index",
+        "-p",
+        "vibe-bootstrap",
         "--bins",
     ]);
     let output = command
@@ -327,7 +330,10 @@ fn cargo_command(snapshot: &SourceSnapshot, target_dir: &Path) -> Command {
     command
         .current_dir(&snapshot.root)
         .env("CARGO_TARGET_DIR", target_dir)
-        .env("CARGO_INCREMENTAL", "0")
+        .env(
+            "CARGO_INCREMENTAL",
+            std::env::var_os("CARGO_INCREMENTAL").unwrap_or_else(|| "0".into()),
+        )
         .env("SOURCE_DATE_EPOCH", &snapshot.identity.source_date_epoch)
         .env("CARGO_ENCODED_RUSTFLAGS", encoded)
         .env_remove("RUSTFLAGS");
@@ -371,7 +377,7 @@ fn select_binaries(stdout: &[u8]) -> Result<BTreeMap<String, PathBuf>> {
         if !target.kind.iter().any(|kind| kind == "bin")
             || !matches!(
                 target.name.as_str(),
-                COMPONENT_VIBE | COMPONENT_INDEX | COMPONENT_PROXY
+                COMPONENT_VIBE | COMPONENT_INDEX | COMPONENT_PROXY | "vibe-installer"
             )
         {
             continue;

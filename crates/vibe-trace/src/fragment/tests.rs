@@ -75,6 +75,13 @@ fn slot_with_map(root: &Path) -> std::path::PathBuf {
          pub fn f(x: u32) -> u32 {\n    x + 1\n}\n",
     )
     .unwrap();
+    let workspace = vibe_workspace::Workspace::load(&slot).unwrap();
+    vibe_workspace::specmap_authority::publish(
+        &workspace,
+        &slot,
+        &std::collections::BTreeMap::from([(".".into(), Vec::new())]),
+    )
+    .unwrap();
     let cfg = Config::load(&slot).unwrap().unwrap_or_default();
     let map = specmap_core::index::build(&slot, &cfg);
     fs::write(

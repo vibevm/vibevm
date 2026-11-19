@@ -44,6 +44,15 @@ fn slot(root: &std::path::Path, with_map: bool) -> std::path::PathBuf {
         "#[spec(implements = \"spec://org.demo/demo/D#req-r\", r = 1)]\npub fn f() {}\n",
     )
     .unwrap();
+    if with_map {
+        let workspace = vibe_workspace::Workspace::load(&slot).unwrap();
+        vibe_workspace::specmap_authority::publish(
+            &workspace,
+            &slot,
+            &std::collections::BTreeMap::from([(".".into(), Vec::new())]),
+        )
+        .unwrap();
+    }
     slot
 }
 

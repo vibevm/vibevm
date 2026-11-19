@@ -91,73 +91,9 @@ impl ShellGit {
             .map(PathBuf::from)
             .unwrap_or_else(|| PathBuf::from("git"))
     }
-
-    fn admit_native(&self) -> Result<(), GitError> {
-        if self.native.is_some() {
-            return Err(native_admission::unavailable());
-        }
-        if self.admission.is_some() {
-            return Err(crate::ContactRefusal::NativeTransportUnavailable.into());
-        }
-        Ok(())
-    }
-
-    fn run(&self, args: &[&str], cwd: Option<&Path>) -> Result<Output, GitError> {
-        self.admit_native()?;
-        let mut cmd = Command::new(&self.binary);
-        // apply_common_env may push `-c <key>=<value>` flags that must
-        // come BEFORE the subcommand — push the env / global-flag
-        // layer first, then the actual git subcommand args.
-        apply_common_env(&mut cmd, self.force_anonymous);
-        env::apply_network(&mut cmd, &self.binary, args, cwd)?;
-        cmd.args(args);
-        if let Some(d) = cwd {
-            cmd.current_dir(d);
-        }
-
-        tracing::debug!(target: "vibe_registry::git", argv = ?render_argv(&self.binary, args), cwd = ?cwd, "running git");
-
-        let output = controlled::output(
-            &mut cmd,
-            super::transfers::current()
-                .progress
-                .unwrap_or_default()
-                .cancellation(),
-        )
-        .map_err(|e| controlled::git_error(e, render_argv(&self.binary, args)))?;
-        if output.status.success() {
-            return Ok(output);
-        }
-        Err(classify_failure(args, &output))
-    }
-
-    /// Like [`Self::run`] but returns the raw [`Output`] on non-zero exit
-    /// without classifying it. Used by callers that need to look at
-    /// stdout / stderr together (e.g. `fetch_file_at_ref` distinguishing
-    /// "ref missing" from "file missing in ref" from "archive
-    /// unsupported").
-    fn run_raw(&self, args: &[&str], cwd: Option<&Path>) -> Result<Output, GitError> {
-        self.admit_native()?;
-        let mut cmd = Command::new(&self.binary);
-        apply_common_env(&mut cmd, self.force_anonymous);
-        env::apply_network(&mut cmd, &self.binary, args, cwd)?;
-        cmd.args(args);
-        if let Some(d) = cwd {
-            cmd.current_dir(d);
-        }
-
-        tracing::debug!(target: "vibe_registry::git", argv = ?render_argv(&self.binary, args), cwd = ?cwd, "running git (raw)");
-
-        controlled::output(
-            &mut cmd,
-            super::transfers::current()
-                .progress
-                .unwrap_or_default()
-                .cancellation(),
-        )
-        .map_err(|e| controlled::git_error(e, render_argv(&self.binary, args)))
-    }
 }
+
+mod command;
 
 impl GitBackend for ShellGit {
     fn prepared_serving_endpoint(&self, objects: &Path) -> Result<Option<String>, GitError> {
@@ -230,6 +166,38 @@ impl GitBackend for ShellGit {
             objects,
             native_admission::SourceAddress::WarmOrigin,
         )
+    }
+    fn prepare_cached_native_source(
+        &self,
+        url: &str,
+        reference: &str,
+        namespace: Option<&str>,
+        objects: &Path,
+    ) -> Result<Option<native_admission::NativeSource>, GitError> {
+        native_admission::acquire_cached_source(self, url, reference, namespace, objects)
+    }
+    fn native_advertised_tip(
+        &self,
+        url: &str,
+        reference: &str,
+    ) -> Result<Option<(String, String)>, GitError> {
+        self.native
+            .as_ref()
+            .map(|native| {
+                native.advertised(
+                    url,
+                    reference,
+                    self.force_anonymous,
+                    self.native_registry_auth,
+                )
+            })
+            .transpose()
+    }
+    fn native_admission_inputs(&self) -> Result<Option<[u8; 32]>, GitError> {
+        self.native
+            .as_ref()
+            .map(|native| native.admission_inputs())
+            .transpose()
     }
     fn prepare_pinned_native_source(
         &self,
@@ -437,6 +405,8 @@ impl GitBackend for ShellGit {
                 objects: &objects,
                 destination: &temporary.path().join("unused-slot"),
                 anonymous: self.force_anonymous,
+                cache: false,
+                namespace: None,
             })?;
             return native.file(&objects, &revision.commit, &path.replace('\\', "/"));
         }

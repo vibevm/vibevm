@@ -74,6 +74,7 @@ impl FormatId {
         FormatId::CliInstallPlan,
         FormatId::CliInstallPlanV1,
         FormatId::CliInstallReport,
+        FormatId::CliLayeredTree,
         FormatId::CliLifecyclePlan,
         FormatId::CliLifecycleReport,
         FormatId::CliListReport,
@@ -83,6 +84,7 @@ impl FormatId {
         FormatId::CliPromptBuild,
         FormatId::CliPromptCapture,
         FormatId::CliPromptCheck,
+        FormatId::CliPromptCompose,
         FormatId::CliPromptFlags,
         FormatId::CliPromptPath,
         FormatId::CliPromptPrepare,
@@ -103,6 +105,8 @@ impl FormatId {
         FormatId::CliTransfersListing,
         FormatId::CliUninstallReport,
         FormatId::CliUpdateReport,
+        FormatId::CliUserOverrideReport,
+        FormatId::CliUserProjectReport,
         FormatId::CompilerIr,
         FormatId::CompilerIrV1,
         FormatId::CompilerTraceIndex,
@@ -206,7 +210,9 @@ impl FormatId {
         FormatId::ScrapeTransactionOwner,
         FormatId::ScrapeVerificationHealthEvidence,
         FormatId::SlotRecord,
+        FormatId::SpecmapAuthority,
         FormatId::StandaloneSkillReceipt,
+        FormatId::UserOverrideBindings,
     ];
 
     /// The registry id, verbatim (e.g. `cli-init-report`).
@@ -281,6 +287,7 @@ impl FormatId {
             FormatId::CliInstallPlan => "cli-install-plan",
             FormatId::CliInstallPlanV1 => "cli-install-plan-v1",
             FormatId::CliInstallReport => "cli-install-report",
+            FormatId::CliLayeredTree => "cli-layered-tree",
             FormatId::CliLifecyclePlan => "cli-lifecycle-plan",
             FormatId::CliLifecycleReport => "cli-lifecycle-report",
             FormatId::CliListReport => "cli-list-report",
@@ -290,6 +297,7 @@ impl FormatId {
             FormatId::CliPromptBuild => "cli-prompt-build",
             FormatId::CliPromptCapture => "cli-prompt-capture",
             FormatId::CliPromptCheck => "cli-prompt-check",
+            FormatId::CliPromptCompose => "cli-prompt-compose",
             FormatId::CliPromptFlags => "cli-prompt-flags",
             FormatId::CliPromptPath => "cli-prompt-path",
             FormatId::CliPromptPrepare => "cli-prompt-prepare",
@@ -310,6 +318,8 @@ impl FormatId {
             FormatId::CliTransfersListing => "cli-transfers-listing",
             FormatId::CliUninstallReport => "cli-uninstall-report",
             FormatId::CliUpdateReport => "cli-update-report",
+            FormatId::CliUserOverrideReport => "cli-user-override-report",
+            FormatId::CliUserProjectReport => "cli-user-project-report",
             FormatId::CompilerIr => "compiler-ir",
             FormatId::CompilerIrV1 => "compiler-ir-v1",
             FormatId::CompilerTraceIndex => "compiler-trace-index",
@@ -413,7 +423,9 @@ impl FormatId {
             FormatId::ScrapeTransactionOwner => "scrape-transaction-owner",
             FormatId::ScrapeVerificationHealthEvidence => "scrape-verification-health-evidence",
             FormatId::SlotRecord => "slot-record",
+            FormatId::SpecmapAuthority => "specmap-authority",
             FormatId::StandaloneSkillReceipt => "standalone-skill-receipt",
+            FormatId::UserOverrideBindings => "user-override-bindings",
         }
     }
 
@@ -489,6 +501,7 @@ impl FormatId {
             FormatId::CliInstallPlan => 2,
             FormatId::CliInstallPlanV1 => 1,
             FormatId::CliInstallReport => 1,
+            FormatId::CliLayeredTree => 2,
             FormatId::CliLifecyclePlan => 1,
             FormatId::CliLifecycleReport => 1,
             FormatId::CliListReport => 1,
@@ -498,6 +511,7 @@ impl FormatId {
             FormatId::CliPromptBuild => 1,
             FormatId::CliPromptCapture => 1,
             FormatId::CliPromptCheck => 1,
+            FormatId::CliPromptCompose => 1,
             FormatId::CliPromptFlags => 1,
             FormatId::CliPromptPath => 1,
             FormatId::CliPromptPrepare => 1,
@@ -518,6 +532,8 @@ impl FormatId {
             FormatId::CliTransfersListing => 1,
             FormatId::CliUninstallReport => 1,
             FormatId::CliUpdateReport => 1,
+            FormatId::CliUserOverrideReport => 1,
+            FormatId::CliUserProjectReport => 1,
             FormatId::CompilerIr => 2,
             FormatId::CompilerIrV1 => 1,
             FormatId::CompilerTraceIndex => 1,
@@ -621,7 +637,9 @@ impl FormatId {
             FormatId::ScrapeTransactionOwner => 3,
             FormatId::ScrapeVerificationHealthEvidence => 2,
             FormatId::SlotRecord => 1,
+            FormatId::SpecmapAuthority => 1,
             FormatId::StandaloneSkillReceipt => 1,
+            FormatId::UserOverrideBindings => 2,
         }
     }
 
@@ -697,6 +715,7 @@ impl FormatId {
             FormatId::CliInstallPlan => true,
             FormatId::CliInstallPlanV1 => true,
             FormatId::CliInstallReport => true,
+            FormatId::CliLayeredTree => true,
             FormatId::CliLifecyclePlan => true,
             FormatId::CliLifecycleReport => true,
             FormatId::CliListReport => true,
@@ -706,6 +725,7 @@ impl FormatId {
             FormatId::CliPromptBuild => true,
             FormatId::CliPromptCapture => true,
             FormatId::CliPromptCheck => true,
+            FormatId::CliPromptCompose => true,
             FormatId::CliPromptFlags => true,
             FormatId::CliPromptPath => true,
             FormatId::CliPromptPrepare => true,
@@ -726,6 +746,8 @@ impl FormatId {
             FormatId::CliTransfersListing => true,
             FormatId::CliUninstallReport => true,
             FormatId::CliUpdateReport => true,
+            FormatId::CliUserOverrideReport => true,
+            FormatId::CliUserProjectReport => true,
             FormatId::CompilerIr => true,
             FormatId::CompilerIrV1 => true,
             FormatId::CompilerTraceIndex => true,
@@ -829,7 +851,9 @@ impl FormatId {
             FormatId::ScrapeTransactionOwner => false,
             FormatId::ScrapeVerificationHealthEvidence => false,
             FormatId::SlotRecord => true,
+            FormatId::SpecmapAuthority => true,
             FormatId::StandaloneSkillReceipt => false,
+            FormatId::UserOverrideBindings => false,
         }
     }
 
@@ -905,6 +929,7 @@ impl FormatId {
             FormatId::CliInstallPlan => ForeignParsers::Many,
             FormatId::CliInstallPlanV1 => ForeignParsers::Many,
             FormatId::CliInstallReport => ForeignParsers::Many,
+            FormatId::CliLayeredTree => ForeignParsers::Many,
             FormatId::CliLifecyclePlan => ForeignParsers::Many,
             FormatId::CliLifecycleReport => ForeignParsers::Many,
             FormatId::CliListReport => ForeignParsers::Many,
@@ -914,6 +939,7 @@ impl FormatId {
             FormatId::CliPromptBuild => ForeignParsers::Many,
             FormatId::CliPromptCapture => ForeignParsers::Many,
             FormatId::CliPromptCheck => ForeignParsers::Many,
+            FormatId::CliPromptCompose => ForeignParsers::Many,
             FormatId::CliPromptFlags => ForeignParsers::Many,
             FormatId::CliPromptPath => ForeignParsers::Many,
             FormatId::CliPromptPrepare => ForeignParsers::Many,
@@ -934,6 +960,8 @@ impl FormatId {
             FormatId::CliTransfersListing => ForeignParsers::Many,
             FormatId::CliUninstallReport => ForeignParsers::Many,
             FormatId::CliUpdateReport => ForeignParsers::Many,
+            FormatId::CliUserOverrideReport => ForeignParsers::Many,
+            FormatId::CliUserProjectReport => ForeignParsers::Many,
             FormatId::CompilerIr => ForeignParsers::None,
             FormatId::CompilerIrV1 => ForeignParsers::None,
             FormatId::CompilerTraceIndex => ForeignParsers::Many,
@@ -1037,7 +1065,9 @@ impl FormatId {
             FormatId::ScrapeTransactionOwner => ForeignParsers::None,
             FormatId::ScrapeVerificationHealthEvidence => ForeignParsers::None,
             FormatId::SlotRecord => ForeignParsers::None,
+            FormatId::SpecmapAuthority => ForeignParsers::Ours,
             FormatId::StandaloneSkillReceipt => ForeignParsers::None,
+            FormatId::UserOverrideBindings => ForeignParsers::Ours,
         }
     }
 
@@ -1113,6 +1143,7 @@ impl FormatId {
             FormatId::CliInstallPlan => UnknownFields::Allow,
             FormatId::CliInstallPlanV1 => UnknownFields::Allow,
             FormatId::CliInstallReport => UnknownFields::Allow,
+            FormatId::CliLayeredTree => UnknownFields::Allow,
             FormatId::CliLifecyclePlan => UnknownFields::Allow,
             FormatId::CliLifecycleReport => UnknownFields::Allow,
             FormatId::CliListReport => UnknownFields::Allow,
@@ -1122,6 +1153,7 @@ impl FormatId {
             FormatId::CliPromptBuild => UnknownFields::Allow,
             FormatId::CliPromptCapture => UnknownFields::Allow,
             FormatId::CliPromptCheck => UnknownFields::Allow,
+            FormatId::CliPromptCompose => UnknownFields::Allow,
             FormatId::CliPromptFlags => UnknownFields::Allow,
             FormatId::CliPromptPath => UnknownFields::Allow,
             FormatId::CliPromptPrepare => UnknownFields::Allow,
@@ -1142,6 +1174,8 @@ impl FormatId {
             FormatId::CliTransfersListing => UnknownFields::Allow,
             FormatId::CliUninstallReport => UnknownFields::Allow,
             FormatId::CliUpdateReport => UnknownFields::Allow,
+            FormatId::CliUserOverrideReport => UnknownFields::Allow,
+            FormatId::CliUserProjectReport => UnknownFields::Allow,
             FormatId::CompilerIr => UnknownFields::Deny,
             FormatId::CompilerIrV1 => UnknownFields::Deny,
             FormatId::CompilerTraceIndex => UnknownFields::Allow,
@@ -1245,7 +1279,9 @@ impl FormatId {
             FormatId::ScrapeTransactionOwner => UnknownFields::Deny,
             FormatId::ScrapeVerificationHealthEvidence => UnknownFields::Deny,
             FormatId::SlotRecord => UnknownFields::Deny,
+            FormatId::SpecmapAuthority => UnknownFields::Deny,
             FormatId::StandaloneSkillReceipt => UnknownFields::Deny,
+            FormatId::UserOverrideBindings => UnknownFields::Deny,
         }
     }
 }

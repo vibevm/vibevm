@@ -28,8 +28,8 @@ vibe-wire.workspace = true
 vibe-workspace.workspace = true
 
 [dev-dependencies]
-serde_json.workspace = true
 tempfile.workspace = true
+serde_json.workspace = true
 thiserror.workspace = true
 vibe-registry.workspace = true
 vibe-native-loader-fixture = { path = "../vibe-native-loader/tests/fixtures/native-plugin" }

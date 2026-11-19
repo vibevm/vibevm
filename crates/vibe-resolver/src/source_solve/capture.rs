@@ -42,7 +42,15 @@ impl Universe {
         };
         let mut keys = HashMap::<CandidateKey, String>::new();
         while let Some((group, name)) = queue.pop_front() {
-            let inventory = match provider.source_inventory(
+            let selected: Vec<_> = request
+                .selected_roots
+                .iter()
+                .filter(|candidate| candidate.group() == &group && candidate.name() == name)
+                .collect();
+            if selected.len() > 1 {
+                return Err(invalid("duplicate selected top-level coordinate"));
+            }
+            let mut inventory = match provider.source_inventory(
                 &group,
                 &name,
                 CandidateInventoryScope::AllAllowed,
@@ -64,6 +72,21 @@ impl Universe {
                 }
                 Err(error) => return Err(error.into()),
             };
+            if let Some(candidate) = selected.first() {
+                inventory.candidates.retain(|record| {
+                    record.candidate.same_owner(candidate)
+                        && CandidateKey::of(&record.candidate) == CandidateKey::of(candidate)
+                        && record.candidate.metadata_digest() == candidate.metadata_digest()
+                });
+                if inventory.candidates.is_empty() {
+                    return Err(invalid(
+                        "selected top-level source is no longer admitted by this operation",
+                    ));
+                }
+                for record in &mut inventory.candidates {
+                    record.candidate = (*candidate).clone();
+                }
+            }
             if inventory.observations.iter().any(|row| {
                 matches!(
                     row.observation,

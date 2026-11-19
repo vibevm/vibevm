@@ -41,7 +41,9 @@ mod error;
 mod events;
 mod fetched;
 mod lifecycle;
+mod path_sources;
 mod plan;
+pub use path_sources::workspace_path_sources;
 mod record;
 mod slot_verify;
 mod source_admission;
@@ -64,10 +66,11 @@ pub use lifecycle::{
     SlotLifecyclePlanEntry, SlotLifecycleReport,
 };
 pub use plan::{
-    InstallPreview, InstallRequest, Plan, PlannedInstall, PreviewSourceStorage,
+    InstallPreview, InstallRequest, NodeRootProjection, Plan, PlannedInstall, PreviewSourceStorage,
     RecommendationOutcome, RecommendationRow, SuggestionRow, WeakDependencyReport,
-    freshness_prepared, plan, plan_prepared_with_spec_format, plan_prepared_without_publication,
-    plan_with_spec_format, preview_has_requirements, preview_prepared,
+    freshness_prepared, plan, plan_prepared_with_selected_roots, plan_prepared_with_spec_format,
+    plan_prepared_without_publication, plan_with_spec_format, preview_has_requirements,
+    preview_prepared, preview_prepared_with_selected_roots, project_fresh_node_roots,
 };
 pub use record::{
     exact_pinned_pkgref, finalize_pkgref_for_manifest, merge_manifest_requires,

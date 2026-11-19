@@ -20,8 +20,10 @@ pub use capture::NativeConfigSelection;
 pub use operation_inputs::{SshConfigurationProvider, TlsTrust, TlsTrustProvider};
 mod materialisation;
 pub use materialisation::NativeMaterialisation;
+mod cache_observation;
 mod gitlinks;
 mod metadata;
+mod object_cache;
 mod preparation;
 mod relocation;
 pub(super) use context::AdmittedCommand;
@@ -82,6 +84,23 @@ impl GitInstallation {
     ) -> Self {
         self.platform = platform::platform_variables(environment, cfg!(windows));
         self
+    }
+    /// What identifies this installation for a remembered decision: the
+    /// executable's path and the size and modification time of the file
+    /// itself, so an upgraded or replaced Git is a different installation
+    /// and nothing a previous one answered is reused.
+    pub(super) fn witness(&self) -> Vec<u8> {
+        let mut bytes = self.executable.as_os_str().as_encoded_bytes().to_vec();
+        bytes.push(0);
+        if let Ok(metadata) = std::fs::metadata(&self.executable) {
+            bytes.extend_from_slice(&metadata.len().to_le_bytes());
+            if let Ok(modified) = metadata.modified()
+                && let Ok(since) = modified.duration_since(std::time::UNIX_EPOCH)
+            {
+                bytes.extend_from_slice(&since.as_nanos().to_le_bytes());
+            }
+        }
+        bytes
     }
     /// Give an already cleared child this installation's search path,
     /// helper directory and platform variables.
@@ -202,6 +221,11 @@ impl NativeGitAdmission {
         self.selection = Some(selection);
         self
     }
+    /// What identifies the selected Git for a remembered decision
+    /// ([`GitInstallation::witness`]).
+    pub(super) fn installation_witness(&self) -> Vec<u8> {
+        self.installation.witness()
+    }
 }
 pub(super) fn unsupported(reason: &'static str) -> GitError {
     GitError::NativeContext { reason }
@@ -224,6 +248,58 @@ fn text(bytes: Vec<u8>) -> Result<String, GitError> {
 }
 fn full_oid(s: &str) -> bool {
     matches!(s.len(), 40 | 64) && s.bytes().all(|c| c.is_ascii_hexdigit())
+}
+
+/// The namespace `reference` names in an `ls-remote` advertisement, and the
+/// object id advertised there: a tag before a branch, exactly as
+/// `refs/tags/<r>`, `refs/heads/<r>`, `<r>` are tried. A reference already
+/// spelled `refs/...` or as an object id is taken verbatim, and an object id
+/// is its own tip.
+///
+/// Reading the advertisement is how a namespace is chosen without
+/// interpreting arbitrary remote stderr as absence or as a redirect
+/// instruction; the id comes back with it because the same line carries
+/// both, and a durable cache compares exactly that id.
+///
+/// ```
+/// # use vibe_registry::git_backend::shell::native_admission::advertised_tip;
+/// let refs = "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\trefs/heads/main\n\
+///             bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb\trefs/tags/v1\n";
+/// assert_eq!(
+///     advertised_tip(refs, "main"),
+///     Some(("a".repeat(40), "refs/heads/main".to_owned())),
+/// );
+/// // A tag outranks a branch of the same spelling, as the fetch order does.
+/// assert_eq!(
+///     advertised_tip(refs, "v1"),
+///     Some(("b".repeat(40), "refs/tags/v1".to_owned())),
+/// );
+/// assert_eq!(advertised_tip(refs, "absent"), None);
+/// // An object id needs no advertisement to be its own tip.
+/// assert_eq!(
+///     advertised_tip("", &"c".repeat(40)),
+///     Some(("c".repeat(40), "c".repeat(40))),
+/// );
+/// ```
+pub fn advertised_tip(refs: &str, reference: &str) -> Option<(String, String)> {
+    if full_oid(reference) {
+        return Some((reference.to_owned(), reference.to_owned()));
+    }
+    let candidates = if reference.starts_with("refs/") {
+        vec![reference.to_owned()]
+    } else {
+        vec![
+            format!("refs/tags/{reference}"),
+            format!("refs/heads/{reference}"),
+            reference.to_owned(),
+        ]
+    };
+    candidates.into_iter().find_map(|candidate| {
+        refs.lines()
+            .filter_map(|line| line.split_once('\t'))
+            .find(|(_, name)| *name == candidate)
+            .map(|(oid, _)| (oid.trim().to_owned(), candidate))
+    })
 }
 
 // Neither credentials nor SSH trust/key material have a Debug surface.
@@ -254,6 +330,18 @@ pub(super) struct Preparation<'a> {
     pub objects: &'a Path,
     pub destination: &'a Path,
     pub anonymous: bool,
+    /// Whether `objects` is a **durable** store of this capability's own,
+    /// which a later preparation may refresh instead of cloning afresh
+    /// (the registry object cache, PROP-073 `#NATIVE-PREPARATION`). The
+    /// default `false` keeps the strict rule every other caller depends
+    /// on: the object path must be absent, and the whole repository is
+    /// cloned into it.
+    pub cache: bool,
+    /// A ref namespace (`refs/heads/main`) an owner already read from the
+    /// endpoint's advertisement **through this same admitted context**, so
+    /// the one `ls-remote` that chooses it is not paid twice in a run that
+    /// has already asked. `None` asks.
+    pub namespace: Option<&'a str>,
 }
 #[derive(Debug, Clone)]
 struct OwnedRepository {
@@ -268,6 +356,11 @@ struct OwnedRepository {
     children: Vec<gitlinks::Child>,
     gitlink: bool,
     child_layout: Option<capture::ManagedChild>,
+    /// Whether staging must walk every object (`fsck --full`): true for a
+    /// store this preparation created, false for a durable store it only
+    /// refreshed, whose objects were all checked at receipt.
+    fsck_required: bool,
+    durable_cache: bool,
 }
 
 /// Acquired native objects whose final destination has not yet been selected.
@@ -321,6 +414,10 @@ impl NativeSource {
 pub(super) struct NativeState {
     pub(super) profile: Arc<NativeGitAdmission>,
     owned: Mutex<HashMap<PathBuf, OwnedRepository>>,
+    /// Staging verdicts this capability already reached, keyed by the tree
+    /// and the attribute inputs the probe reads
+    /// (`materialisation::NativeState::verdict_key`).
+    admitted: Mutex<std::collections::HashSet<[u8; 32]>>,
 }
 impl NativeState {
     pub(in crate::git_backend::shell) fn acquire(
@@ -348,6 +445,7 @@ impl NativeState {
         Self {
             profile,
             owned: Mutex::new(HashMap::new()),
+            admitted: Mutex::new(std::collections::HashSet::new()),
         }
     }
     pub(super) fn preflight(&self) -> Result<(), GitError> {
@@ -493,4 +591,4 @@ mod mixed_gitlink_tests;
 mod status_tests;
 
 mod acquisition;
-pub(super) use acquisition::acquire_source;
+pub(super) use acquisition::{acquire_cached_source, acquire_source};

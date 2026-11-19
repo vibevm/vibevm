@@ -16,14 +16,18 @@ mod watch;
 
 pub(crate) fn supported(command: &Command) -> bool {
     match command {
-        Command::Install(args) => !args.global,
-        Command::Update(args) => !args.global,
+        Command::Install(args) => !args.global || args.user_project,
+        Command::Update(args) => !args.global || args.user_project,
         Command::Registry(args) => matches!(&args.command, RegistrySubcommand::Publish(_)),
         // PROP-068 `#dl`: a download is an operation a stop removes.
         Command::Dl(_) => true,
         // PROP-068 `#proxy-tool`: `serve` runs until it is stopped, and
         // `exec` lives as long as the child it lent px to.
         Command::Tool(_) => true,
+        // PROP-074 `#USER-PROJECT-ROOT-GRAMMAR`: init is a finite operation a
+        // stop may interrupt; status is read-only and accepts the same input
+        // so the grammar does not fork.
+        Command::User(_) => true,
         _ => false,
     }
 }
@@ -34,7 +38,7 @@ pub(crate) struct StopInput {
 }
 
 impl StopInput {
-    fn none() -> Self {
+    pub(crate) fn none() -> Self {
         Self { watch: None }
     }
 
@@ -42,6 +46,31 @@ impl StopInput {
     /// is answered first, and later signals take their default action. A
     /// stop the person confirmed after the last checkpoint is said so,
     /// rather than left looking honoured.
+    /// End metadata-only classification before a legacy destination executes.
+    pub(crate) fn bind_legacy(
+        &mut self,
+        ctx: &crate::output::Context,
+        network: &mut vibe_net::NetworkGuard,
+    ) -> anyhow::Result<crate::output::Context> {
+        let token = ctx.progress().cancellation().clone();
+        token.checkpoint()?;
+        if let Some(watch) = std::mem::replace(self, Self::none()).watch
+            && watch.handoff(&token)
+        {
+            ctx.diagnostic("classification ended before the requested stop took effect");
+        }
+        token.checkpoint()?;
+        let progress = ctx.progress().with_cancellation(CancellationToken::new());
+        vibe_registry::git_backend::transfers::observe_by_default(progress.clone());
+        let mut legacy = ctx.with_progress_scope(progress.clone());
+        if let Some(transfers) = ctx.transfers() {
+            legacy =
+                legacy.with_transfers(transfers.with_cancellation(progress.cancellation().clone()));
+        }
+        network.bind_execution(progress.cancellation())?;
+        Ok(legacy)
+    }
+
     pub(crate) fn settle(self, ctx: &crate::output::Context, token: &CancellationToken) {
         let Some(watch) = self.watch else {
             return;
@@ -94,13 +123,32 @@ pub(crate) fn for_command(
     command: &Command,
     stop: Option<PathBuf>,
 ) -> anyhow::Result<(crate::output::Context, CancellationToken, StopInput)> {
-    if supported(command) {
+    // Inferred global installs get a cancellable metadata-only classification.
+    // Their destination owner must refuse legacy stop modes before acquisition.
+    let inferred = matches!(command, Command::Install(args) if args.global && !args.user_project && !args.packages.iter().any(|p| p.starts_with("mcp:")));
+    if supported(command) || inferred {
         return Ok(attach(ctx, stop));
     }
     if stop.is_some() {
         anyhow::bail!(
-            "--stop-file is supported only for project install/update, registry publish and dl"
+            "--stop-file is supported only for project install/update, registry publish, dl, \
+             tool and user init/status"
         );
     }
     Ok((ctx.clone(), CancellationToken::new(), StopInput::none()))
+}
+
+#[cfg(test)]
+#[path = "cancellation/tests.rs"]
+mod tests;
+
+pub(crate) fn preflight(
+    ctx: &crate::output::Context,
+    token: &CancellationToken,
+    stop: &mut StopInput,
+    preview: bool,
+) -> Option<std::process::ExitCode> {
+    let error = token.checkpoint().err()?;
+    std::mem::replace(stop, StopInput::none()).settle(ctx, token);
+    Some(super::finish(ctx, token, Err(error.into()), preview))
 }

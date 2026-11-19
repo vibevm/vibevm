@@ -3,7 +3,7 @@
   "layer": "project",
   "node": ".",
   "node_id": "org.vibevm.core/demo",
-  "recipe": 1,
+  "recipe": 2,
   "entrypoint": "AGENTS.md",
   "lane": "static-xml",
   "lane_form": "verbatim",
@@ -33,8 +33,8 @@
       "len": 18
     }
   ],
-  "prefix_sha256": "4ad9f8cb9cda5f267aaed1ae089c12f65689d1dedbb66a563a04b66f0aab2349",
-  "prefix_len": 1211,
+  "prefix_sha256": "bdb17cf6571a3a54e8f4fdf013f12f2fd2f1673ad8a6b24adb8780b668b0495a",
+  "prefix_len": 1332,
   "segments": [
     {
       "id": "project.template",
@@ -45,12 +45,12 @@
     {
       "id": "project.entrypoint",
       "offset": 105,
-      "len": 1046,
+      "len": 1167,
       "cache_boundary": true
     },
     {
       "id": "project.lane",
-      "offset": 1193,
+      "offset": 1314,
       "len": 18,
       "cache_boundary": true
     }

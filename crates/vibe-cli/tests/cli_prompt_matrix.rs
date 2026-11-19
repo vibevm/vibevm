@@ -129,6 +129,15 @@ fn both_launch_adapters_deliver_the_classic_boot_and_the_same_bytes() {
         "the two adapters deliver the same bytes"
     );
     assert_eq!(world::split_lane(&codex_bytes), expected);
+    // Source-only AGENT-LANE is deliberately not a second router. Native launch
+    // also retains the ordinary instruction entrypoint for this policy.
+    for filename in ["AGENTS.md", "CLAUDE.md", "GEMINI.md"] {
+        let instructions = fs::read_to_string(world.root.join(filename)).unwrap();
+        assert!(
+            instructions
+                .contains("Edit sources, not materializations. Never hand-edit `vibedeps`; change its canonical inputs and let Vibe regenerate it.")
+        );
+    }
 }
 
 /// `read` delivery: the router alone names the same files, in the same
@@ -139,6 +148,7 @@ fn read_delivery_points_at_the_same_files_the_classic_boot_reads() {
     let world = World::build(&Recipe::default());
     let classic = world.classic();
     let entrypoint = String::from_utf8(classic.entrypoint.clone()).unwrap();
+    assert!(entrypoint.contains("Edit sources, not materializations. Never hand-edit `vibedeps`; change its canonical inputs and let Vibe regenerate it."));
     let (lane_rel, _) = classic.lane.as_ref().expect("a static lane");
     let index_rel = world::relative(&world.root, &world.boot(vibe_core::layout::INDEX_MD));
     assert!(
@@ -154,6 +164,69 @@ fn read_delivery_points_at_the_same_files_the_classic_boot_reads() {
             row.path
         );
     }
+}
+
+#[test]
+fn ownership_policy_is_published_without_dependencies_or_opt_in_and_is_idempotent() {
+    let temp = tempfile::tempdir().unwrap();
+    let user = common::UserScratch::new();
+    fs::write(
+        temp.path().join("vibe.toml"),
+        "[project]\nname='bare'\ngroup='org.test'\nversion='1.0.0'\n",
+    )
+    .unwrap();
+    for filename in ["AGENTS.md", "CLAUDE.md", "GEMINI.md"] {
+        fs::write(temp.path().join(filename), "AUTHORED\r\n").unwrap();
+    }
+    let install = || {
+        user.vibe()
+            .current_dir(temp.path())
+            .args(["install", "--offline", "--assume-yes"])
+            .assert()
+            .success();
+    };
+    install();
+    let before = ["AGENTS.md", "CLAUDE.md", "GEMINI.md"].map(|filename| {
+        let path = temp.path().join(filename);
+        let bytes = fs::read(&path).unwrap();
+        let text = String::from_utf8(bytes.clone()).unwrap();
+        assert!(text.contains("Edit sources, not materializations. Never hand-edit `vibedeps`; change its canonical inputs and let Vibe regenerate it."));
+        assert!(text.ends_with("AUTHORED\r\n"));
+        (
+            path.clone(),
+            bytes,
+            fs::metadata(path).unwrap().modified().unwrap(),
+        )
+    });
+    install();
+    for (path, bytes, modified) in before {
+        assert_eq!(fs::read(&path).unwrap(), bytes);
+        assert_eq!(fs::metadata(path).unwrap().modified().unwrap(), modified);
+    }
+    assert!(
+        !temp
+            .path()
+            .join(common::boot_dir())
+            .join(vibe_core::layout::SYSTEM_MD)
+            .exists()
+    );
+}
+
+#[test]
+fn composed_policy_survives_explicit_recipe_one_publication() {
+    let world = World::build(&Recipe {
+        manifest_extra: "\n[system_prompt]\nrecipe=1\n".to_owned(),
+        ..Recipe::default()
+    });
+    let system = String::from_utf8(world.artifact(vibe_core::layout::SYSTEM_MD)).unwrap();
+    assert!(system.contains("transport contract, recipe 1."));
+    assert_eq!(
+        system
+            .matches("Edit sources, not materializations. Never hand-edit `vibedeps`; change its canonical inputs and let Vibe regenerate it.")
+            .count(),
+        1
+    );
+    world.prompt("check").assert().success();
 }
 
 // ---------------------------------------------------------------------------
@@ -704,4 +777,64 @@ impl Shims {
             .arg(launcher);
         command
     }
+}
+
+#[cfg(unix)]
+#[test]
+fn personal_launch_in_selected_member_keeps_workspace_relative_markers() {
+    let world = World::build(&Recipe {
+        member: true,
+        ..Recipe::default()
+    });
+    world
+        .user
+        .vibe()
+        .args(["user", "init", "--json"])
+        .assert()
+        .success();
+    let personal = world.user.settings.join("user-project");
+    world
+        .user
+        .vibe()
+        .args(["install", "-g", "--user-project", "--offline", "--json"])
+        .assert()
+        .success();
+    fs::write(
+        personal.join(common::boot_rel("preferences.md")),
+        "member-personal-marker\n",
+    )
+    .unwrap();
+    world
+        .user
+        .vibe()
+        .args(["install", "-g", "--user-project", "--offline", "--json"])
+        .assert()
+        .success();
+    let shims = Shims::beside(&world);
+    let member = world.root.join(world::MEMBER_REL);
+    shims
+        .agent(&world, "claude")
+        .current_dir(&member)
+        .assert()
+        .success();
+    let argv = shims.argv();
+    let slot = argv
+        .windows(2)
+        .find(|pair| pair[0] == "--append-system-prompt-file")
+        .map(|pair| PathBuf::from(&pair[1]))
+        .expect("actual selected member slot");
+    assert_eq!(
+        slot.parent().unwrap(),
+        member.join(common::boot_dir()).join("local")
+    );
+    let text = fs::read_to_string(slot).unwrap();
+    assert!(text.contains("MEMBER-OWN-BYTES"));
+    assert!(text.contains("member-personal-marker"));
+    assert!(text.contains(&format!(
+        "{}/{}",
+        world::MEMBER_REL,
+        common::boot_rel("00-member.md")
+    )));
+    assert!(!text.contains("pkg/member/pkg/member/"));
+    assert!(!text.contains("MEMBER-TEMPLATE-CANARY"));
 }

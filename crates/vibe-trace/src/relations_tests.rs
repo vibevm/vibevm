@@ -85,6 +85,15 @@ fn host_tree(root: &Path, ns: &str) -> String {
         format!("#[verifies(\"spec://{ns}/D#req-r\")]\nfn t() {{}}\n"),
     )
     .unwrap();
+    if root.join("vibe.toml").exists() {
+        let workspace = vibe_workspace::Workspace::load(root).unwrap();
+        vibe_workspace::specmap_authority::publish(
+            &workspace,
+            root,
+            &std::collections::BTreeMap::from([(".".into(), Vec::new())]),
+        )
+        .unwrap();
+    }
     format!("spec://{ns}/D#req-r")
 }
 

@@ -585,3 +585,8 @@ mod explicit;
 mod monorepo;
 pub use explicit::LockedUpdateAvailability;
 mod reference;
+
+#[cfg(test)]
+mod continuation_tests;
+
+mod continuation;

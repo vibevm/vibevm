@@ -207,10 +207,10 @@ fn the_same_key_with_different_decisions_refuses() -> Result<()> {
     Ok(())
 }
 
-/// The real vocabulary home retains104 baseline canonical sites plus15 later
-/// compiler/source-display/activation sites,19 public portable sites and3 required-nullable
-/// fields in the full-import work owners. The original53 plus configuration51
-/// remain unchanged. This walks definitions, not public app-work schemas;
+/// The real vocabulary home retains104 historical canonical sites plus one
+/// template-discovery scalar,16 compiler/source-display/activation sites,
+/// 19 public portable sites and3 full-import required-nullable fields.
+/// The original53 plus configuration51 remain unchanged. This walks definitions, not public app-work schemas;
 /// repeated compatible keys count at each declared site.
 #[test]
 fn the_real_vocabulary_home_walks_to_its_sites() -> Result<()> {
@@ -250,10 +250,36 @@ fn the_real_vocabulary_home_walks_to_its_sites() -> Result<()> {
         .filter(|(name, _)| !later.contains(&name.as_str()))
         .map(|(k, v)| (k.clone(), v.clone()))
         .collect::<serde_json::Map<_, _>>();
+    // Template discovery added version_entry.template after this historical
+    // census (4e2860880). Pin the exact false-defaulted site separately;
+    // channels is a collection and belongs to the empty-policy pass.
     assert_eq!(
-        shapes(json!({"definitions":baseline}))?.sites,
+        home["version_entry"]["optionalProperties"]["template"]["type"],
+        "boolean"
+    );
+    assert_eq!(
+        home["version_entry"]["optionalProperties"]["template"]["metadata"]["x-default"],
+        false
+    );
+    assert_eq!(
+        home["version_entry"]["optionalProperties"]["channels"]["elements"]["type"],
+        "string"
+    );
+    let mut historical_baseline = baseline.clone();
+    historical_baseline.get_mut("version_entry").unwrap()["optionalProperties"]
+        .as_object_mut()
+        .unwrap()
+        .remove("template")
+        .expect("the one later scalar site");
+    assert_eq!(
+        shapes(json!({"definitions":historical_baseline}))?.sites,
         104,
         "the original pre-portable census is unchanged"
+    );
+    assert_eq!(
+        shapes(json!({"definitions":baseline}))?.sites,
+        105,
+        "historical104 plus exactly one template-discovery scalar site"
     );
     // Epoch-2 contributes one required-nullable embed and two pending views.
     // Source evidence contributes nine optional display fields; hosting two.
@@ -304,12 +330,12 @@ fn the_real_vocabulary_home_walks_to_its_sites() -> Result<()> {
     }
     assert_eq!(
         shapes(json!({"definitions":old}))?.sites,
-        120,
-        "baseline104 plus compiler3, source evidence9, hosting2, activation actor1 and release-source row1"
+        121,
+        "baseline104 plus template1, compiler3, source evidence9, hosting2, activation actor1 and release-source row1"
     );
     assert_eq!(
         shapes(json!({"definitions":public_and_old}))?.sites,
-        139,
+        140,
         "public portable vocabulary still adds exactly19 transformation sites"
     );
     for (owner, fields) in [
@@ -328,7 +354,7 @@ fn the_real_vocabulary_home_walks_to_its_sites() -> Result<()> {
     }
     let doc_shapes = shapes(json!({ "definitions": home }))?;
     assert_eq!(
-        doc_shapes.sites, 142,
+        doc_shapes.sites, 143,
         "the real shared home includes every promoted optional site"
     );
     Ok(())

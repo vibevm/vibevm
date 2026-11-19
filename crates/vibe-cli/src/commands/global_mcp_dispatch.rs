@@ -38,7 +38,12 @@ pub(crate) fn run_install(
     embedded_root: Option<PathBuf>,
     offline: bool,
     seed_default_registry: bool,
+    stop_input: &mut crate::composition::cancellation::StopInput,
+    network: &mut vibe_net::NetworkGuard,
 ) -> Result<()> {
+    if args.user_project {
+        return super::personal::install(ctx, args, embedded_root, offline, seed_default_registry);
+    }
     if !args.global {
         refuse_configuration_input(&args.steps.choice, "workspace package acquisition")?;
         refuse_version_file_write(&args, "a project install")?;
@@ -77,10 +82,24 @@ pub(crate) fn run_install(
         // writes `vibe install -g org.corp/intranet` without knowing it;
         // a probe that cannot answer falls through, so the application
         // path keeps producing its own errors exactly as before.
-        if let Some(refs) = remap::claims_install(&args, offline) {
+        ctx.progress().checkpoint()?;
+        if let Some(selection) =
+            remap::claims_install_with_progress(&args, offline, &ctx.progress())
+        {
+            if args.stop_requested {
+                bail!(
+                    "--stop-file is not supported for global remap installation; no offer was installed"
+                );
+            }
+            if args.plan_only {
+                bail!(
+                    "--plan-only is not supported for global remap offers; no offer was installed"
+                );
+            }
             refuse_configuration_input(&args.steps.choice, "remap package acquisition")?;
             refuse_version_file_write(&args, "a remap package")?;
-            return remap::install_packages(ctx, &args, &refs, offline);
+            let legacy = stop_input.bind_legacy(ctx, network)?;
+            return remap::install_packages(&legacy, selection);
         }
         if args.plan_only {
             refuse_version_file_write(
@@ -88,7 +107,21 @@ pub(crate) fn run_install(
                 "a plan: --plan-only resolves a version and installs none",
             )?;
         }
-        return application::install(ctx, args, embedded_root, offline);
+        return super::personal::automatic_install(
+            ctx,
+            args,
+            embedded_root,
+            offline,
+            stop_input,
+            network,
+        );
+    }
+    if args
+        .packages
+        .iter()
+        .any(|package| !package.starts_with("mcp:"))
+    {
+        bail!("request mixes MCP service and other destinations; split the commands");
     }
     refuse_configuration_input(&args.steps.choice, "MCP package acquisition")?;
     refuse_version_file_write(&args, "a global MCP package")?;
@@ -181,6 +214,9 @@ pub(crate) fn run_uninstall(
     args: UninstallArgs,
     offline: bool,
 ) -> Result<()> {
+    if args.user_project {
+        return super::personal::uninstall(ctx, args);
+    }
     if !args.global {
         if let Some(root) = application_home::project_at(&args.path)? {
             return application_project::uninstall(ctx, args, offline, &root);
@@ -252,6 +288,9 @@ pub(crate) fn run_update(
     embedded_root: Option<PathBuf>,
     offline: bool,
 ) -> Result<()> {
+    if args.user_project {
+        return super::personal::update(ctx, args, embedded_root, offline);
+    }
     if !args.global {
         if let Some(root) = application_home::project_at(&args.path)? {
             refuse_configuration_input(&args.steps.choice, "workspace package update")?;

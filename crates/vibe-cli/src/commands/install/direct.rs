@@ -47,7 +47,7 @@ use crate::output;
 use super::confirm::{ConfirmationScope, UserProjectAction};
 use super::{
     InstallDisposition, InstallDraft, InstallExecution, InstallRun, PreparedSelection,
-    SelectedManifest, acquire_lease, execute_prepared, resolve_project_root,
+    SelectedManifest, acquire_lease, resolve_project_root,
 };
 
 /// Everything `vibe install` reads before it may compile.
@@ -162,6 +162,49 @@ pub(crate) fn run_user_project(
     )
 }
 
+pub(crate) struct SelectedRouting {
+    pub source: vibe_package_source::RegistryPackageSource,
+    pub roots: Vec<vibe_registry::source_candidates::RetainedSourceCandidate>,
+}
+struct SelectedSource<'a> {
+    original: std::sync::Mutex<Option<vibe_package_source::RegistryPackageSource>>,
+    roots: Vec<vibe_registry::source_candidates::RetainedSourceCandidate>,
+    ordinary: &'a super::CliPackageSourceFactory<'a>,
+}
+impl vibe_orchestrator::ports::PackageSourceFactory for SelectedSource<'_> {
+    fn build(
+        &self,
+        input: vibe_orchestrator::ports::PackageSourceBuild<'_>,
+    ) -> Result<Box<dyn vibe_orchestrator::ports::PackageSource>> {
+        let source = self
+            .original
+            .lock()
+            .map_err(|_| anyhow::anyhow!("routing source unavailable"))?
+            .take()
+            .ok_or_else(|| anyhow::anyhow!("routing source was already consumed"))?;
+        let ordinary = self.ordinary.build_source(input)?;
+        Ok(Box::new(
+            ordinary.with_selected_continuation(source, self.roots.clone()),
+        ))
+    }
+}
+pub(crate) fn run_selected(
+    ctx: &output::Context,
+    args: InstallArgs,
+    embedded_root: Option<PathBuf>,
+    root_offline: bool,
+    selected: SelectedRouting,
+) -> Result<()> {
+    run_with_scope_selected(
+        ctx,
+        args,
+        embedded_root,
+        root_offline,
+        ConfirmationScope::Project,
+        Some(selected),
+    )
+}
+
 fn run_with_scope(
     ctx: &output::Context,
     args: InstallArgs,
@@ -169,9 +212,36 @@ fn run_with_scope(
     root_offline: bool,
     scope: ConfirmationScope<'_>,
 ) -> Result<()> {
+    run_with_scope_selected(ctx, args, embedded_root, root_offline, scope, None)
+}
+fn run_with_scope_selected(
+    ctx: &output::Context,
+    args: InstallArgs,
+    embedded_root: Option<PathBuf>,
+    root_offline: bool,
+    scope: ConfirmationScope<'_>,
+    selected: Option<SelectedRouting>,
+) -> Result<()> {
     let overall = ctx.progress().task("Installing packages");
     let scoped = ctx.with_progress_scope(overall.progress());
-    let result = run_observed(&scoped, args, embedded_root, root_offline, &overall, scope);
+    let display = crate::commands::app::display::StepDisplay::open(&scoped, &args.steps);
+    let mut args = args;
+    args.steps.log = Some(match display.log_mode() {
+        crate::commands::app::display::LogMode::Live => crate::cli::AppLogArg::Live,
+        crate::commands::app::display::LogMode::Tail => crate::cli::AppLogArg::Tail,
+        crate::commands::app::display::LogMode::Quiet => crate::cli::AppLogArg::Quiet,
+    });
+    let result = display.around(&scoped, || {
+        run_observed(
+            &scoped,
+            args,
+            embedded_root,
+            root_offline,
+            &overall,
+            scope,
+            selected,
+        )
+    });
     if result.is_err() {
         overall.fail("package installation failed");
     }
@@ -185,6 +255,7 @@ fn run_observed(
     root_offline: bool,
     overall: &vibe_core::progress::ProgressTask,
     scope: ConfirmationScope<'_>,
+    selected: Option<SelectedRouting>,
 ) -> Result<()> {
     let PreparedInstall {
         lease,
@@ -208,6 +279,7 @@ fn run_observed(
             selection,
             metadata,
             scope,
+            selected,
         },
         trace.recorder(),
     );
@@ -236,6 +308,7 @@ struct Execution<'a> {
     selection: PreparedSelection,
     metadata: RunMetadata,
     scope: ConfirmationScope<'a>,
+    selected: Option<SelectedRouting>,
 }
 
 /// The one boundary: everything after `prepare` and before `finalize`.
@@ -256,13 +329,20 @@ fn execute_after_open(
         selection,
         metadata,
         scope,
+        selected,
     } = execution;
     // The failure draft below names the same root the execution used, taken
     // from the bundle rather than re-resolved: two canonicalisations are two
     // answers to "which node did this command act on".
     let failed_root = selection.root().to_path_buf();
     let confirm_gate = super::CliConfirmGate::with_scope(ctx, args.assume_yes, &failed_root, scope);
-    let install_observer = super::CliInstallObserver::new(ctx, None).with_progress(ctx.progress());
+    let install_observer = super::CliInstallObserver::new(ctx, None)
+        .with_progress(ctx.progress())
+        .with_log_mode(crate::commands::app::display::log_mode(
+            args.steps.log,
+            output::env_app_log().as_deref(),
+            ctx.has_interactive_progress(),
+        ));
     // `vibe update -g mcp:<pkg>` is an explicit version update of the held
     // user-project root: it selects a newer version at the locked endpoint
     // (PROP-073 `#LOCKED-SOURCE`), never a source reset. Every other route
@@ -295,7 +375,23 @@ fn execute_after_open(
     // command's whole rendering context.
     let mut world_stage =
         crate::commands::lifecycle::DirectInstallWorld::new(&run_observer, &agent);
-    let outcome = execute_prepared(
+    let (selected_source, selected_roots) = match selected {
+        Some(selected) => (
+            Some(SelectedSource {
+                original: std::sync::Mutex::new(Some(selected.source)),
+                roots: selected.roots.clone(),
+                ordinary: &sources,
+            }),
+            selected.roots,
+        ),
+        None => (None, Vec::new()),
+    };
+    let source_factory: &dyn vibe_orchestrator::ports::PackageSourceFactory = match &selected_source
+    {
+        Some(source) => source,
+        None => &sources,
+    };
+    let outcome = vibe_orchestrator::execute_prepared_with_selected_roots(
         InstallExecution {
             args: args.inputs(),
             environment: &environment,
@@ -304,13 +400,14 @@ fn execute_after_open(
             manifest_mutation: &manifest_mutation,
             selection,
             metadata,
-            sources: &sources,
+            sources: source_factory,
             confirm_gate: &confirm_gate,
             observer: &install_observer,
             agent: agent.clone(),
             trace,
         },
         &mut world_stage,
+        &selected_roots,
     );
     match outcome {
         Ok(run) => classify_success(run),

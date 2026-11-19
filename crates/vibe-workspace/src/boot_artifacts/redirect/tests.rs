@@ -40,6 +40,29 @@ fn boot(entries: Vec<BootEntry>) -> EffectiveBoot {
 }
 
 #[test]
+fn ownership_rule_is_shared_by_lane_and_no_lane_routers() {
+    for hash in [None, Some("0123456789ab".to_owned())] {
+        let facts = RouterFacts {
+            node_id: "org.test/consumer".to_owned(),
+            static_hash12: hash,
+            spec_format: SpecFormat::Markdown,
+        };
+        let body = render_router(&facts);
+        assert_eq!(body.matches(DEPENDENCY_OWNERSHIP).count(), 1);
+        assert!(body.find("quiet clause").unwrap() < body.find(DEPENDENCY_OWNERSHIP).unwrap());
+        assert!(
+            body.find(DEPENDENCY_OWNERSHIP).unwrap()
+                < body.find("# Optional personal boot").unwrap()
+        );
+        let authored = "AUTHORED\r\nSUFFIX\r\n";
+        let first = project_managed_block(Some(authored), &facts).unwrap();
+        let second = project_managed_block(Some(&first), &facts).unwrap();
+        assert_eq!(first, second);
+        assert!(first.ends_with(authored));
+    }
+}
+
+#[test]
 fn render_redirect_points_at_the_boot_files() {
     // The no-facts form: a directory with no declared identity and no lane
     // digest at hand. It names INDEX, says plainly that there is no static

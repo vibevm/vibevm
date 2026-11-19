@@ -9,8 +9,12 @@ use serde_json::Value;
 
 /// The first application error of the chain, if any.
 pub(crate) fn app_error(err: &anyhow::Error) -> Option<&vibe_app::AppError> {
-    err.chain()
-        .find_map(|cause| cause.downcast_ref::<vibe_app::AppError>())
+    // anyhow context can itself carry the typed application envelope while
+    // retaining the original registry/provider error underneath it.
+    err.downcast_ref::<vibe_app::AppError>().or_else(|| {
+        err.chain()
+            .find_map(|cause| cause.downcast_ref::<vibe_app::AppError>())
+    })
 }
 
 /// `code`, and `step` / `work` when the application error names them.
@@ -70,6 +74,22 @@ fn stamp_lock_hash_mismatch(payload: &mut Value, err: &anyhow::Error) {
     map.insert("source_hash".into(), Value::String(mismatch.actual.clone()));
 }
 
+/// The personal user project observation (`vibe-user-project/1`, PROP-074
+/// `#USER-PROJECT-ROOT-REPORT-TRANSPORT`): a typed refusal carries its whole
+/// report, which is stamped here for the envelope to read.
+fn stamp_user_project(payload: &mut Value, err: &anyhow::Error) {
+    let found = err
+        .chain()
+        .find_map(|cause| cause.downcast_ref::<vibe_core::user_project::UserProjectRefusal>());
+    let (Some(refusal), Value::Object(map)) = (found, payload) else {
+        return;
+    };
+    let wire = crate::commands::user::wire(refusal.report());
+    if let Ok(value) = serde_json::to_value(wire) {
+        map.insert("user_project".into(), value);
+    }
+}
+
 /// When the anyhow chain carries a known structured error variant,
 /// surface its fields as machine-readable extras alongside the
 /// stringified `error` field. Today the only well-known variant is
@@ -82,6 +102,7 @@ pub(super) fn stamp_structured_error(payload: &mut Value, err: &anyhow::Error) {
     stamp_app_error(payload, err);
     stamp_lock_hash_mismatch(payload, err);
     stamp_source_policy(payload, err);
+    stamp_user_project(payload, err);
     // Walk the anyhow chain looking for a known structured error
     // variant. Today the only match is
     // `DepProviderError::AggregateNotFound` (registry walk
@@ -242,6 +263,37 @@ mod tests {
         let mut payload = serde_json::json!({});
         stamp_structured_error(&mut payload, &error);
         payload
+    }
+
+    #[test]
+    fn a_typed_user_project_refusal_carries_its_report() {
+        let refusal = vibe_core::user_project::UserProjectRefusal::new(
+            vibe_core::user_project::Report::refused(
+                vibe_core::user_project::Command::Init,
+                None,
+                "the user settings root is unresolved",
+                "set VIBE_SETTINGS to an absolute path",
+            ),
+        );
+        let error = anyhow::Error::new(refusal).context("wrapped by the surface");
+        let payload = stamped(error);
+        let report = &payload["user_project"];
+        assert_eq!(report["protocol"], vibe_core::user_project::PROTOCOL);
+        assert_eq!(report["command"], "user:init");
+        assert_eq!(report["state"], "unavailable");
+        assert!(report["root"].is_null());
+        assert_eq!(report["protocol"], "vibe-user-project/1");
+        assert_eq!(report["reason"], "the user settings root is unresolved");
+        assert!(report["remedy"].is_string());
+        assert!(report.get("error").is_none());
+        assert!(report.get("observed_state").is_none());
+        assert_eq!(report["ok"], false);
+    }
+
+    #[test]
+    fn a_plain_error_stamps_no_user_project_member() {
+        let payload = stamped(anyhow::anyhow!("unrelated"));
+        assert!(payload.get("user_project").is_none());
     }
 
     #[test]

@@ -38,8 +38,8 @@ pub use notes::{
 
 /// The closed set of harness kinds this version has a flag dialect for.
 ///
-/// **Membership is not a launch tier**, and each of these four happens to
-/// have one. A kind is here when vibe knows its dialect well enough to
+/// **Membership is not a launch tier**: established carriers have launch
+/// delivery; native Hermes/Pi registration remains separately admitted. A kind is here when vibe knows its dialect well enough to
 /// answer "what does a launch of this pass" — and for the two harnesses
 /// whose only subagent-safe slot *replaces* rather than adds, that answer
 /// required vibe to supply the replaced text itself: OpenCode's whole base
@@ -55,7 +55,7 @@ pub use notes::{
 /// assert_eq!(HarnessKind::parse("qwen"), Some(HarnessKind::Qwen));
 /// assert_eq!(HarnessKind::parse("gemini"), None);
 /// assert_eq!(HarnessKind::Codex.as_str(), "codex");
-/// assert_eq!(HarnessKind::ALL.len(), 4, "the set is closed at four");
+/// assert_eq!(HarnessKind::ALL.len(), 6, "the set is closed at six");
 /// ```
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum HarnessKind {
@@ -73,15 +73,21 @@ pub enum HarnessKind {
     /// Code's own identity sentence for this launch and then the lane
     /// (`#SYS-QWEN`).
     Qwen,
+    /// Hermes Agent — admitted native session bootstrap.
+    Hermes,
+    /// Pi Coding Agent — admitted native runtime bootstrap.
+    Pi,
 }
 
 impl HarnessKind {
     /// Every kind, in the order a refusal lists them.
-    pub const ALL: [HarnessKind; 4] = [
+    pub const ALL: [HarnessKind; 6] = [
         HarnessKind::Claude,
         HarnessKind::Codex,
         HarnessKind::OpenCode,
         HarnessKind::Qwen,
+        HarnessKind::Hermes,
+        HarnessKind::Pi,
     ];
 
     /// The kind's own name, which is also the manifest's harness key.
@@ -91,6 +97,8 @@ impl HarnessKind {
             HarnessKind::Codex => "codex",
             HarnessKind::OpenCode => "opencode",
             HarnessKind::Qwen => "qwen",
+            HarnessKind::Hermes => "hermes",
+            HarnessKind::Pi => "pi",
         }
     }
 
@@ -132,6 +140,9 @@ impl HarnessKind {
             // saying what was not delivered beats refusing to start their
             // session (`#SYS-QWEN`, `#SYS-SOFT-LAUNCH`).
             HarnessKind::Qwen => &[],
+            // Native argument admission belongs to the version-bound bootstrap;
+            // this registry alone does not admit a native launch carrier.
+            HarnessKind::Hermes | HarnessKind::Pi => &[],
         }
     }
 
@@ -152,7 +163,11 @@ impl HarnessKind {
             // exactly why its carrier replaces one *sentence* and samples
             // that sentence from the installed program instead
             // (`#SYS-QWEN`).
-            HarnessKind::Claude | HarnessKind::Codex | HarnessKind::Qwen => None,
+            HarnessKind::Claude
+            | HarnessKind::Codex
+            | HarnessKind::Qwen
+            | HarnessKind::Hermes
+            | HarnessKind::Pi => None,
         }
     }
 
@@ -358,6 +373,13 @@ pub fn launch_flags(
         // all.** Qwen Code reads the variable on its own prompt path, so
         // nothing has to be passed to make it reachable — which is why this
         // kind's `conflicting_flags` is empty even under `launch`.
+        HarnessKind::Hermes | HarnessKind::Pi => LaunchFlags {
+            notes: vec![format!(
+                "{} requires an admitted native bootstrap; no prefix carrier was composed",
+                kind.as_str()
+            )],
+            ..LaunchFlags::default()
+        },
         HarnessKind::Qwen => match inputs.qwen {
             Some(carrier) => LaunchFlags {
                 flags: Vec::new(),

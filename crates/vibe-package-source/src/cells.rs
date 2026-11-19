@@ -329,6 +329,10 @@ pub(crate) fn metadata_manifest_cell(
     }
 }
 
+#[path = "cells_selection.rs"]
+mod top_level;
+pub(crate) use top_level::{readmit_top_level_cell, select_top_level_cell};
+
 /// The masked re-solve through the selected provider and solver cells —
 /// the `InstallSource::solve_masked` construction site (R-001). The same
 /// selection the ordinary solve made, wrapped in the visibility mask.
@@ -479,6 +483,28 @@ pub(crate) fn solve_metadata_cell(
             )
         }
     }
+}
+
+// Typed construction helpers keep the canonical R-001 constructor boundary in
+// this file when top-level source-admission logic is factored out of line.
+fn local_provider(owner: &LocalRegistry) -> LocalRegistryDepProvider<'_> {
+    LocalRegistryDepProvider::new(owner)
+}
+fn multi_provider(owner: &MultiRegistryResolver) -> MultiRegistryDepProvider<'_> {
+    MultiRegistryDepProvider::new(owner)
+}
+fn local_composite_provider(
+    providers: Vec<LocalRegistryDepProvider<'_>>,
+) -> LocalCompositeDepProvider<'_> {
+    LocalCompositeDepProvider::new(providers)
+}
+fn embedded_provider<'a>(
+    locals: LocalCompositeDepProvider<'a>,
+    declared: Option<MultiRegistryDepProvider<'a>>,
+    precedence: EmbeddedPrecedence,
+    short_circuit: bool,
+) -> EmbeddedDepProvider<'a> {
+    EmbeddedDepProvider::new(locals, declared, precedence, short_circuit)
 }
 
 #[cfg(test)]

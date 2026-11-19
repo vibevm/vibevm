@@ -22,6 +22,7 @@ mod input;
 /// so it is crate-visible.
 pub(crate) mod keymap_bridge;
 mod keyscript;
+pub(super) mod layers;
 mod menu;
 mod modal;
 /// `pub(crate)` — the model-plane projection is read by the `vibe aiui state`

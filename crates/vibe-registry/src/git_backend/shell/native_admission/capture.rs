@@ -1,6 +1,7 @@
 //! Fixed metadata readers preserve selected configuration meaning without execution.
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-073#NATIVE-MATERIALISATION");
 use super::*;
+mod probe;
 use std::collections::BTreeMap;
 use std::ffi::OsString;
 use std::process::{Command, Stdio};

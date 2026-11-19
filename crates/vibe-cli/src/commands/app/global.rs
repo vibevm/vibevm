@@ -199,11 +199,39 @@ pub(crate) fn render_plan(ctx: &output::Context, plan: &Plan) -> Result<()> {
     Ok(())
 }
 
-pub fn install(
+/// Apply the existing application-only version-file/drop policy before acquisition.
+pub(crate) fn install_reference(
+    ctx: &output::Context,
+    args: &InstallArgs,
+    embedded: Option<&Path>,
+    spelling: &str,
+    offline: bool,
+) -> Result<String> {
+    let settings = settings_root()?;
+    let operation = source_operation(args.source_policy.declaration())?;
+    let spelling = super::version_file::install_spelling(ctx, &settings, spelling);
+    match super::version_select::narrow(
+        &settings,
+        args.registry.as_deref(),
+        embedded,
+        &spelling,
+        offline,
+        &operation,
+    )? {
+        super::version_select::Narrowed::AsWritten => Ok(spelling),
+        super::version_select::Narrowed::Pinned { spelling, note } => {
+            ctx.diagnostic(&note);
+            Ok(spelling)
+        }
+    }
+}
+
+pub(crate) fn install_with_selected(
     ctx: &output::Context,
     args: InstallArgs,
     embedded_root: Option<PathBuf>,
     root_offline: bool,
+    selected: Option<ResolvedPackage>,
 ) -> Result<()> {
     if args.packages.len() != 1 {
         bail!("global install requires exactly one fully qualified application package");
@@ -240,33 +268,38 @@ pub fn install(
     // before anything downstream — the version file below reads a
     // qualified coordinate, and nothing is ever recorded bare
     // (PROP-029 `#ADDR-SHORT-NAMES`).
-    let qualified = super::short_name::from_registries(
-        ctx,
-        "vibe install -g",
-        &super::short_name::Sources {
-            home: &settings,
-            settings: &settings,
-            inputs: super::short_name::inputs(
+    let resolved = match selected {
+        Some(resolved) => resolved,
+        None => {
+            let qualified = super::short_name::from_registries(
+                ctx,
+                "vibe install -g",
+                &super::short_name::Sources {
+                    home: &settings,
+                    settings: &settings,
+                    inputs: super::short_name::inputs(
+                        args.registry.as_deref(),
+                        embedded_root.as_deref(),
+                        offline,
+                        &source_operation,
+                    ),
+                },
+                &args.packages[0],
+            )?;
+            // With no version named, the nearest declared version file decides, as
+            // `#VERSION-FILE-FORMATS`' precedence puts it directly below an explicit
+            // requirement, and the install says which file did.
+            let spelling = super::version_file::install_spelling(ctx, &settings, &qualified);
+            resolve_package_with_operation(
+                &settings,
                 args.registry.as_deref(),
                 embedded_root.as_deref(),
+                &spelling,
                 offline,
                 &source_operation,
-            ),
-        },
-        &args.packages[0],
-    )?;
-    // With no version named, the nearest declared version file decides, as
-    // `#VERSION-FILE-FORMATS`' precedence puts it directly below an explicit
-    // requirement, and the install says which file did.
-    let spelling = super::version_file::install_spelling(ctx, &settings, &qualified);
-    let resolved = resolve_package_with_operation(
-        &settings,
-        args.registry.as_deref(),
-        embedded_root.as_deref(),
-        &spelling,
-        offline,
-        &source_operation,
-    )?;
+            )?
+        }
+    };
     let choice = InstallChoice {
         platform: args.platform,
         arch: args.arch,

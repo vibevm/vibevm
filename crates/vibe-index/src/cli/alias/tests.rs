@@ -121,6 +121,8 @@ fn remove_takes_the_row_and_the_catalog_file_with_it() {
 fn removing_an_alias_that_is_not_there_is_refused() {
     let tmp = tempfile::tempdir().expect("tempdir");
     let data = registry(tmp.path());
+    let journal_before = replay(&default_dir(&data)).expect("replay before refusal");
+    let aliases_before = std::fs::read(crate::aliases::path(&data)).ok();
     let error = run(Args {
         data_dir: data.clone(),
         action: Action::Remove {
@@ -128,7 +130,23 @@ fn removing_an_alias_that_is_not_there_is_refused() {
         },
     })
     .expect_err("must refuse");
-    assert!(error.to_string().contains("no alias `ghost`"), "{error}");
+    assert!(matches!(error, Error::InvalidInput(_)), "{error}");
+    assert!(
+        error.to_string().contains("no short name `ghost`"),
+        "{error}"
+    );
+    assert!(
+        error.to_string().contains("list` shows the ones it does"),
+        "{error}"
+    );
+    assert_eq!(
+        format!("{:?}", replay(&default_dir(&data)).unwrap()),
+        format!("{journal_before:?}")
+    );
+    assert_eq!(
+        std::fs::read(crate::aliases::path(&data)).ok(),
+        aliases_before
+    );
 }
 
 #[test]

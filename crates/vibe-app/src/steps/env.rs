@@ -27,6 +27,8 @@ use super::template;
 pub(crate) struct StepPaths {
     pub option: Vec<Exposure>,
     pub steps: BTreeMap<String, Vec<Exposure>>,
+    /// Declared payload directories of the selected installation, not the slot default.
+    pub selected_dirs: Vec<PathBuf>,
 }
 
 impl StepPaths {
@@ -45,7 +47,7 @@ impl StepPaths {
             .chain(self.steps.get(step).into_iter().flatten())
             .collect();
         let mut env = base.to_vec();
-        if exposures.is_empty() {
+        if exposures.is_empty() && self.selected_dirs.is_empty() {
             return env;
         }
         let mut front: Vec<PathBuf> = Vec::new();
@@ -54,6 +56,11 @@ impl StepPaths {
                 if !front.contains(dir) {
                     front.push(dir.clone());
                 }
+            }
+        }
+        for dir in &self.selected_dirs {
+            if !front.contains(dir) {
+                front.push(dir.clone());
             }
         }
         let rest: Vec<PathBuf> = inherited

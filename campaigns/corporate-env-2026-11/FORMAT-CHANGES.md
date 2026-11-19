@@ -485,3 +485,36 @@ Status: **in development** (uncommitted, 2026-11-11). Spec: PROP-073 `#SOURCE-PO
 - **Other surfaces.** `vibe search` skips a disabled registry (saying so once before it searches), refuses `--registry <name>` naming one, and refuses outright when the policy disables every configured registry. `vibe registry sync` and `vibe registry sync -g` do not refresh a disabled registry — refreshing is contacting — and report it as skipped beside the existing `enabled = false` rows.
 - **`-v` detail.** The resolution walk's progress detail now carries the endpoint as well as the alias: `checking remote registry <name> (<url>) for <group>/<name>`, `checking local registry <name> (<url>)`, `checking monorepo registry <name> (<url>)`. The skip note `registry <name> (<host>) skipped: excluded by site policy` is emitted once per run under the task `Applying the effective source policy`, and at `info` on the `vibe_registry::source_policy` tracing target.
 - **Library API:** new `vibe_core::manifest::EffectiveSourcePolicy::{excluded_by, excludes_endpoint, excluded_hostings}`; new `vibe_registry::multi_registry_resolver::{DisabledRegistry, disabled_registry, effective_primary, DISABLED_BY_POLICY_MARK}` and `MultiRegistryResolver::disabled_registries`.
+
+
+## CORP-FMT-045 — `[self] settings_dir` and persistent `VIBE_SETTINGS`
+
+Status: implementation under native qualification, 2026-11-15; private corporate 1.0.12 rebuild, not a public release.
+
+- Optional path in strict `SelfConfig`, user config and schema-1 site profile. Absent serialization is unchanged. Old strict readers refuse the new key: update the executable before applying such a profile.
+- Settings home is independent of install root and release source; user config layers it independently over site. Absolute paths and own-home `~` expansion are admitted; control characters and relative paths refuse.
+- Apply persists `VIBE_SETTINGS` through existing HKCU API or the shell managed block. Windows case/separator/trailing-separator equivalents are already set without another write. No settings migration, deletion or process-environment mutation occurs inside vibe.
+- Installer must select/export the directory before its first vibe invocation. Already moved settings win for no-argument uninstall when they contain the applied profile. Migration offers copy-only of absent config/registry files with consent.
+- Apply/show/doctor report current-process and requested/persisted homes separately. Doctor repair requires its existing consent. Remove withdraws only a matching profile value; a user-changed variable survives. Existing report next_steps/doctor diagnostic data carry the observations; no new persisted profile receipt epoch.
+- Tests: core validation/layering, registry memory seam, POSIX literal quoting/foreign bytes, real CLI apply/reapply/show/remove and changed-value retention.
+
+## CORP-FMT-046 — durable controlled-registry cache and pre-plan progress
+
+Status: implementation under native qualification, 2026-11-15.
+
+- Private derived cache schema 2; unknown/old cache state is regenerated online, refused offline. URL and reference keys isolate mutable branch snapshots from locked object revisions.
+- Full initial object fsck precedes durable reuse marker; fetch checks received objects. Batched NUL stdin attribute admission replaces per-64-path processes without removing filter/ident/encoding refusals.
+- Immutable snapshot generations preserve live readers across refresh. Cancellable exclusive cache lock covers validation and publication; state publication is atomic. Superseded generations remain until explicit cache cleanup, not deleted by age under readers.
+- Warm reuse checks serving-route eligibility, current admission, tree digest and captured conversion inputs. TTL avoids remote contact; refresh asks regardless of age; offline miss/damage refuses before acquisition.
+- Visible invocation observer now survives inert inner resolver scopes. Registry/cache stages, object verification and git transfer tasks precede app plan. Verbose details carry cache outcomes and transfer stages; quiet/JSON/no-progress retain their existing renderer controls.
+- Linux real mirror proof under strace: cold new layout 52 git child processes/39.61s, unchanged repeat 4/4.07s with zero clone/fetch/fsck/check-attr. Not a Windows/macOS timing claim.
+
+## CORP-FMT-047 — safe binary-instance removal and installer ownership
+
+Status: implementation under native qualification, 2026-11-15.
+
+- Whole binary-instance self removal preflights payload integrity and extra files before pointer mutation. Added or modified files refuse removal and retain inventory. Legacy insufficient evidence is a refusal, not deletion by directory name.
+- ZIP placement records outer README/LICENSE byte hashes in existing placement-manifest syntax; platform manifest still authenticates components and source archive, not publisher identity.
+- Corporate scripts delete named files and empty directories only, preserve shared opt/bin/apps/paths/drop and PATH when foreign tools remain, and never terminate processes merely because they run under opt.
+- Drop/archive legacy matching is byte-exact, never path+size. Missing comparison capability retains uncertain files. A failed native self removal stops script before deleting store metadata or shims.
+- Tests include same-size modified archive member, foreign shared files, relocated settings and no-profile uninstall on Linux and Windows sandbox. Full old-install upgrade proof remains a delivery gate.

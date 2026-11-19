@@ -1,7 +1,7 @@
 [meta]
-generated_by = "vibe 1.0.0"
-generated_at = "2026-09-10T18:33:25Z"
-schema_version = 6
+generated_by = "vibe 1.0.12"
+generated_at = "2026-11-18T23:06:36Z"
+schema_version = 7
 root_dependencies = ["stack:org.vibevm.ai-native/typescript-ai-native@^1.0.0"]
 
 [[package]]
@@ -9,7 +9,8 @@ kind = "stack"
 name = "typescript-ai-native"
 group = "org.vibevm.ai-native"
 version = "1.0.0"
-source_url = "file:///C:/Users/olegc/git/v/vibevm/vibevm/vibepacks/org.vibevm.ai-native/typescript-ai-native/v1.0.0"
+authors = ["Oleg Chirukhin"]
+source_url = "file:///data/git/vibevm/vibevm/vibepacks/org.vibevm.ai-native/typescript-ai-native/v1.0.0"
 content_hash = "sha256:73a11945f4baea9418f801e12b1bf87a466db2a138f9975fbfa28c3f8c24a33b"
 files_written = []
 dependencies = [
@@ -24,8 +25,9 @@ kind = "flow"
 name = "core-ai-native"
 group = "org.vibevm.ai-native"
 version = "1.0.0"
-source_url = "file:///C:/Users/olegc/git/v/vibevm/vibevm/vibepacks/org.vibevm.ai-native/core-ai-native/v1.0.0"
-content_hash = "sha256:c869ddb0f62bb842440243ab9fb5dee82e61555b27defd0fef860bd102031655"
+authors = ["Oleg Chirukhin"]
+source_url = "file:///data/git/vibevm/vibevm/vibepacks/org.vibevm.ai-native/core-ai-native/v1.0.0"
+content_hash = "sha256:e614101b83382462b7a8676c767aaa5abaf83203080d10412ce5849fdd077283"
 files_written = []
 admitted_by = "public-chain"
 source_kind = "registry"
@@ -35,8 +37,9 @@ kind = "lang"
 name = "typescript-ai-native-lang"
 group = "org.vibevm.ai-native"
 version = "1.0.0"
-source_url = "file:///C:/Users/olegc/git/v/vibevm/vibevm/vibepacks/org.vibevm.ai-native/typescript-ai-native-lang/v1.0.0"
-content_hash = "sha256:69ad6e857182be47fbcf086889633ef3b0f384a73c904153a8cfa7ce6556fd52"
+authors = ["Oleg Chirukhin"]
+source_url = "file:///data/git/vibevm/vibevm/vibepacks/org.vibevm.ai-native/typescript-ai-native-lang/v1.0.0"
+content_hash = "sha256:ddffcfdc4f13ef84346e2a48b0f799c679aaf16119b149e3def4aa9510b4dd66"
 files_written = []
 dependencies = ["flow:org.vibevm.ai-native/core-ai-native@=1.0.0"]
 admitted_by = "public-chain"
@@ -47,8 +50,9 @@ kind = "mcp"
 name = "typescript-ai-native-mcp"
 group = "org.vibevm.ai-native"
 version = "1.0.0"
-source_url = "file:///C:/Users/olegc/git/v/vibevm/vibevm/vibepacks/org.vibevm.ai-native/typescript-ai-native-mcp/v1.0.0"
-content_hash = "sha256:9072ca207ffe04f4a8a420b5d91a50d6e887381b815776022fb99a459467dad1"
+authors = ["Oleg Chirukhin"]
+source_url = "file:///data/git/vibevm/vibevm/vibepacks/org.vibevm.ai-native/typescript-ai-native-mcp/v1.0.0"
+content_hash = "sha256:4bf227e11439238afeaba27bfe97e836cf69991fe6d4dcc38c16e592d5cb7e93"
 files_written = []
 dependencies = ["lang:org.vibevm.ai-native/typescript-ai-native-lang@=1.0.0"]
 admitted_by = "public-chain"

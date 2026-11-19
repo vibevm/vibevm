@@ -41,11 +41,17 @@ pub mod extension_world;
 pub mod freshness;
 pub mod hooks;
 pub mod install;
+/// Validated explicit layer relations shared by boot and views.
+pub mod layer_relations;
 pub mod materialization;
 pub mod publish;
+/// Derived selected-node authority for standalone AI-native consumers.
+pub mod specmap_authority;
 /// The cache-stable system-prompt prefix (PROP-076).
 pub mod system_prompt;
 pub mod tools;
+/// The personal user project's observation and initialization (PROP-074).
+pub mod user_project;
 pub mod vibedeps;
 
 mod authored;

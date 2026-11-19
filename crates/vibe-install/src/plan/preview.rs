@@ -16,9 +16,14 @@ pub struct PreviewSourceStorage<'a> {
 /// Candidate observations remain held by the source owner for this invocation.
 #[derive(Debug)]
 pub struct InstallPreview {
+    node_roots: std::collections::BTreeMap<String, Vec<PackageRef>>,
     selected: Vec<vibe_resolver::CandidateMetadata>,
 }
 impl InstallPreview {
+    /// Exact requiring-node roots from this metadata-only solve.
+    pub fn node_roots(&self) -> &std::collections::BTreeMap<String, Vec<PackageRef>> {
+        &self.node_roots
+    }
     /// Reasons retained by the selected metadata, not a new registry probe.
     ///
     /// ```no_run
@@ -95,6 +100,34 @@ pub fn preview_prepared<S: InstallSource + ?Sized>(
     spec_format: SpecFormat,
     observer: &dyn PlanObserver,
 ) -> Result<InstallPreview> {
+    preview_prepared_with_selected_roots(
+        source,
+        project_root,
+        manifest,
+        workspace,
+        lockfile,
+        storage,
+        request,
+        spec_format,
+        observer,
+        &[],
+    )
+}
+
+/// Read-only preview with routing's original source-owned top-level selections.
+#[allow(clippy::too_many_arguments)]
+pub fn preview_prepared_with_selected_roots<S: InstallSource + ?Sized>(
+    source: &S,
+    project_root: &Path,
+    manifest: &mut Manifest,
+    workspace: &mut Workspace,
+    lockfile: &Lockfile,
+    storage: PreviewSourceStorage<'_>,
+    request: InstallRequest,
+    spec_format: SpecFormat,
+    observer: &dyn PlanObserver,
+    selected_roots: &[vibe_registry::source_candidates::RetainedSourceCandidate],
+) -> Result<InstallPreview> {
     if !storage.acquisition_store.is_absolute() {
         return Err(crate::Error::PreviewStorageRequired);
     }
@@ -107,6 +140,7 @@ pub fn preview_prepared<S: InstallSource + ?Sized>(
         spec_format,
         observer,
         PlanningPurpose::Preview(lockfile, storage),
+        selected_roots,
     )?;
     let Some(prepared) = prepared else {
         return Err(vibe_registry::RegistryError::MalformedMeta {
@@ -131,7 +165,10 @@ pub fn preview_prepared<S: InstallSource + ?Sized>(
                 })
         })
         .collect::<Result<Vec<_>>>()?;
-    Ok(InstallPreview { selected: packages })
+    Ok(InstallPreview {
+        selected: packages,
+        node_roots: prepared.closure.node_roots,
+    })
 }
 
 /// Whether the package closure needs a provider; remap offers have a separate owner.

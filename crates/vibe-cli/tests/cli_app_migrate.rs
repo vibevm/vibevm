@@ -536,3 +536,52 @@ fn an_unknown_slot_and_an_uninstalled_version_refuse_before_any_effect() {
             .is_none_or(|rows| rows.is_empty())
     );
 }
+
+#[test]
+fn migration_uses_declared_payload_root_without_public_command_proxies() {
+    let r = AppRegistry::new();
+    for version in ["1.0.0", "2.0.0"] {
+        let root = stateful(&r, version, &[("state", "Carried state", true)]);
+        let manifest = root.join("vibe.toml");
+        let text = fs::read_to_string(&manifest).unwrap();
+        assert!(text.contains("path_dirs = ['bin']"));
+        let text = text.replace("path_dirs = ['bin']", "path_dirs = ['.']");
+        let launcher = text.find("[[installer_options.launchers]]").unwrap();
+        let next = text[launcher..]
+            .find("\n[[")
+            .map(|i| launcher + i)
+            .unwrap_or(text.len());
+        let mut text = text;
+        text.replace_range(launcher..next, "");
+        fs::write(manifest, text).unwrap();
+        let script = root.join("payload/st");
+        fs::create_dir_all(script.parent().unwrap()).unwrap();
+        fs::write(&script, format!("#!/bin/sh\necho st-{version}\n")).unwrap();
+        use std::os::unix::fs::PermissionsExt;
+        fs::set_permissions(&script, fs::Permissions::from_mode(0o755)).unwrap();
+        migration_script(&root, "state-export.sh", EXPORT);
+        migration_script(&root, "state-import.sh", IMPORT);
+        install(&r, version);
+    }
+    let before = r.index()["slots"]["stateful"]["default"].clone();
+    for version in ["1.0.0", "2.0.0"] {
+        assert_eq!(
+            r.index()["installations"][format!("org.example/stateful@{version}")]["publicCommands"],
+            serde_json::json!([])
+        );
+    }
+    let document = json(&migrate(&r, "1.0.0", "2.0.0", &["--all", "--json"]));
+    assert_eq!(document["ok"], true, "{document:#}");
+    let work = PathBuf::from(document["work"].as_str().unwrap());
+    assert!(
+        fs::read_to_string(work.join("export.facts"))
+            .unwrap()
+            .contains("who=st-1.0.0")
+    );
+    assert!(
+        fs::read_to_string(r.home().join("imported"))
+            .unwrap()
+            .contains("who=st-2.0.0")
+    );
+    assert_eq!(r.index()["slots"]["stateful"]["default"], before);
+}

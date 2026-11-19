@@ -69,13 +69,27 @@ const PRESETS: &[Preset] = &[
         interactive: &["{prompt}"],
         unattended: &["-p", "{prompt}"],
     },
+    Preset {
+        name: "hermes",
+        harness: "Hermes Agent",
+        command: "hermes",
+        interactive: &["chat", "--query", "{prompt}"],
+        unattended: &["--oneshot", "{prompt}"],
+    },
+    Preset {
+        name: "pi",
+        harness: "Pi Coding Agent",
+        command: "pi",
+        interactive: &["{prompt}"],
+        unattended: &["--print", "{prompt}"],
+    },
 ];
 
 /// Every built-in preset, in a stable order.
 ///
 /// ```
 /// let names: Vec<&str> = vibe_app::agent_presets().iter().map(|p| p.name).collect();
-/// assert_eq!(names, ["claude-code", "codex", "opencode", "qwen-code", "gemini", "cursor"]);
+/// assert_eq!(names, ["claude-code", "codex", "opencode", "qwen-code", "gemini", "cursor", "hermes", "pi"]);
 /// ```
 pub fn presets() -> &'static [Preset] {
     PRESETS

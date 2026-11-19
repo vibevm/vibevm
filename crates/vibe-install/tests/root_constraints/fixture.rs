@@ -103,6 +103,7 @@ impl InstallSource for Source {
         crate::retained::solve(
             &self.registry,
             &vibe_resolver::SourceSolveRequest {
+                selected_roots: request.selected_roots,
                 roots: request.roots,
                 held_roots: request.held_roots,
                 authoritative_locked: &[],

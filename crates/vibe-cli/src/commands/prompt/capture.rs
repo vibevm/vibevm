@@ -55,12 +55,13 @@ pub(crate) fn run(ctx: &output::Context, selected: &Selected, request: Request<'
     let check = selected.request(&tracked, None);
     let answer = check_node_prompt(&check)?;
     let prepared = prepare_request(&check, &answer, target)?;
-    let envelope = RequestEnvelope::build(
+    let mut envelope = RequestEnvelope::build(
         &prepared,
         &answer.system.path,
         &selected.workspace.root,
         request.task,
     )?;
+    super::personal::append(ctx, &mut envelope, target, &selected.node_dir);
     let read = request.usage.map(read_usage).transpose()?;
     let cache = read.as_ref().and_then(Read::diagnostics);
 

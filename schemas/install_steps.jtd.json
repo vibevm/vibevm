@@ -96,14 +96,14 @@
           "type": "string",
           "metadata": {
             "x-default": null,
-            "description": "This contribution's log, relative to the record directory (`logs/<id>.log`). Absent when the run produced no bytes for it, or when its child wrote straight to the terminal."
+            "description": "This contribution's log, relative to the record directory (`logs/<id>.log`). An observed contribution reserves this file before execution, including an empty log. Absent when evidence storage was unavailable or an unobserved legacy row produced no captured bytes."
           }
         },
         "logTruncated": {
           "type": "boolean",
           "metadata": {
             "x-default": null,
-            "description": "True when the engine's stream capture bound was reached, so the log holds the first megabyte of that stream and not all of it."
+            "description": "True when the persistent log is incomplete or unavailable: for example a failed write, interrupted observation, or a capped legacy capture. Bounded stdout/stderr report previews do not make a fully streamed log truncated."
           }
         }
       }

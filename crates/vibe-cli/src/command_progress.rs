@@ -6,8 +6,8 @@ use crate::cli::{
     AgentCommand, AgenticSubcommand, AiuiSubcommand, BinCmd, CacheSubcommand, Command, DocCommand,
     DocShellCommand, ExtensionsCommand, McpSubcommand, PrefsSubcommand, ProgressFormat,
     ProgressSubcommand, PromptCommand, RegistryRemoveTarget, RegistrySubcommand, ScrapeCommand,
-    ScrapeContractCommand, ShowSubcommand, SkillSubcommand, StorageCommand, VvmSubcommand,
-    WorkspaceSubcommand,
+    ScrapeContractCommand, ShowSubcommand, SkillSubcommand, StorageCommand, UserCommand,
+    VvmSubcommand, WorkspaceSubcommand,
 };
 use crate::commands::facts::FactsSubcommand;
 use crate::commands::refactor::RefactorCommand;
@@ -75,6 +75,7 @@ pub(crate) const TOP_LEVEL_COMMANDS: &[&str] = &[
     "undeploy",
     "uninstall",
     "update",
+    "user",
     "validate",
     "vars",
     "verify",
@@ -305,6 +306,7 @@ pub(crate) fn policy(command: &Command, terminal_attached: bool) -> CommandPolic
         // read-only verbs open a bounded set of files and print.
         Command::Prompt(args) => match &args.command {
             PromptCommand::Build { .. } => FiniteFallback("Command prompt build"),
+            PromptCommand::Compose { .. } => FiniteFallback("Command prompt compose"),
             PromptCommand::Check { .. }
             | PromptCommand::Prepare { .. }
             | PromptCommand::Capture { .. }
@@ -458,6 +460,13 @@ pub(crate) fn policy(command: &Command, terminal_attached: bool) -> CommandPolic
             | ProgressSubcommand::Resume(_)
             | ProgressSubcommand::Gate(_)
             | ProgressSubcommand::Seal(_) => FiniteFallback("Command progress"),
+        },
+        Command::User(args) => match args.command {
+            UserCommand::Init => FiniteFallback("Command user init"),
+            UserCommand::Status => FastMetadata,
+            UserCommand::Override(_) | UserCommand::Enable { .. } | UserCommand::Disable { .. } => {
+                FastMetadata
+            }
         },
         Command::Version => SilentMetadata,
     }

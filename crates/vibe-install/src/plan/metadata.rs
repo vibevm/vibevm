@@ -22,10 +22,12 @@ use vibe_resolver::{
 use vibe_workspace::Workspace;
 
 pub(super) struct MetadataPlanningInput<'a> {
+    pub selected_roots: &'a [vibe_registry::source_candidates::RetainedSourceCandidate],
     pub workspace: &'a Workspace,
     pub root_manifest: &'a Manifest,
     pub roots: &'a [PackageRef],
     pub root_edges: &'a [RootRequirement],
+    pub root_owners: &'a [(vibe_resolver::source_candidates::EdgeId, String)],
     pub held_roots: &'a [PackageRef],
     pub lockfile: &'a Lockfile,
     pub root_features: &'a FeatureRequest,
@@ -40,6 +42,7 @@ pub(super) struct MetadataPlanningInput<'a> {
 
 #[derive(Debug)]
 pub(super) struct MetadataClosure {
+    pub node_roots: BTreeMap<String, Vec<PackageRef>>,
     pub graph: ResolvedGraph,
     pub selected: BTreeMap<(Group, String), CandidateMetadata>,
     pub feature_expansions: BTreeMap<(Group, String), FeatureExpansion>,
@@ -206,7 +209,12 @@ pub(super) fn resolve_metadata_closure<S: InstallSource + ?Sized>(
                     });
                 }
             }
+            let mut node_roots = project_node_roots(&solved, input.root_edges, input.root_owners)?;
+            for (node, _) in input.workspace.iter_nodes() {
+                node_roots.entry(node.into()).or_default();
+            }
             return Ok(MetadataClosure {
+                node_roots,
                 graph: solved.graph,
                 selected: solved.selected,
                 feature_expansions,
@@ -255,6 +263,7 @@ fn solve_visible<S: InstallSource + ?Sized>(
     for iteration in 1..=MAX_VISIBILITY_PASSES {
         input.observer.progress().checkpoint()?;
         let request = SourceSolveRequest {
+            selected_roots: input.selected_roots,
             roots: input.root_edges,
             held_roots: held,
             activated,
@@ -278,6 +287,7 @@ fn solve_visible<S: InstallSource + ?Sized>(
                 *held = input.roots.to_vec();
                 source
                     .solve_metadata(&SourceSolveRequest {
+                        selected_roots: input.selected_roots,
                         roots: input.root_edges,
                         held_roots: held,
                         activated,
@@ -431,4 +441,118 @@ fn explain_held_failure<S: InstallSource + ?Sized>(
         }
     }
     error.into()
+}
+
+/// Project only actual original root occurrences selected by this solve.
+fn project_node_roots(
+    solved: &SourceResolvedGraph,
+    roots: &[RootRequirement],
+    owners: &[(vibe_resolver::source_candidates::EdgeId, String)],
+) -> Result<BTreeMap<String, Vec<PackageRef>>> {
+    // Preserve the ordinary typed kind refusal before provenance projection can
+    // turn an incompatible original occurrence into a generic missing witness.
+    for root in roots {
+        // A singleton declaration asserts one kind. Unchosen disjunctive
+        // alternatives must not veto the accepted occurrence's witness.
+        if root.requirement.alternatives.len() != 1 {
+            continue;
+        }
+        for alternative in &root.requirement.alternatives {
+            let reference = &alternative.reference;
+            if let (Some(requested), Some(group)) = (reference.kind, reference.group.as_ref())
+                && let Some(metadata) = solved
+                    .selected
+                    .get(&(group.clone(), reference.name.to_string()))
+            {
+                let actual = metadata.candidate.manifest().require_package()?.kind;
+                if actual != requested {
+                    return Err(Error::Solve(vibe_resolver::SolveError::KindMismatch {
+                        package: reference.qualified_name(),
+                        requested,
+                        actual,
+                    }));
+                }
+            }
+        }
+    }
+    let mut out = BTreeMap::<String, Vec<PackageRef>>::new();
+    for (id, node) in owners {
+        let rows = out.entry(node.clone()).or_default();
+        let matches: Vec<_> = solved
+            .active_edges
+            .iter()
+            .filter(|edge| &edge.id == id)
+            .collect();
+        if matches.len() > 1 {
+            return Err(missing("duplicate active root witness"));
+        }
+        let selected = matches.first().and_then(|edge| {
+            let metadata = solved
+                .selected
+                .get(&(edge.target.group.clone(), edge.target.name.clone()))?;
+            (metadata.key() == edge.target)
+                .then(|| solved.graph.find(&edge.target.group, &edge.target.name))
+                .flatten()
+        });
+        // The existing legacy cell has no witness table. Its root is admitted
+        // only by the original occurrence and an actually selected matching
+        // kind/version, never by another lock row or newest catalog entry.
+        let selected = selected.or_else(|| {
+            if !solved.active_edges.is_empty() {
+                return None;
+            }
+            let root = roots.iter().find(|root| &root.id == id)?;
+            root.requirement
+                .alternatives
+                .iter()
+                .find_map(|alternative| {
+                    let reference = &alternative.reference;
+                    let row = solved
+                        .graph
+                        .find(reference.group.as_ref()?, reference.name.as_str())?;
+                    (reference.version.matches(&row.version)
+                        && reference.kind.is_none_or(|kind| {
+                            solved
+                                .selected
+                                .get(&(row.group.clone(), row.name.clone()))
+                                .and_then(|m| m.candidate.manifest().package.as_ref())
+                                .is_some_and(|p| p.kind == kind)
+                        }))
+                    .then_some(row)
+                })
+        });
+        if selected.is_none()
+            && roots.iter().any(|root| {
+                &root.id == id
+                    && matches!(
+                        root.requirement.activation,
+                        RequirementActivation::Mandatory
+                    )
+            })
+        {
+            return Err(missing(
+                "mandatory original root occurrence has no selected witness",
+            ));
+        }
+        if let Some(row) = selected {
+            let reference = PackageRef::parse(&format!(
+                "{}:{}/{}@={}",
+                solved
+                    .selected
+                    .get(&(row.group.clone(), row.name.clone()))
+                    .ok_or_else(|| missing("selected root metadata"))?
+                    .candidate
+                    .manifest()
+                    .require_package()?
+                    .kind,
+                row.group,
+                row.name,
+                row.version
+            ))?;
+            if !rows.contains(&reference) {
+                rows.push(reference);
+            }
+        }
+    }
+    Ok(out)
 }

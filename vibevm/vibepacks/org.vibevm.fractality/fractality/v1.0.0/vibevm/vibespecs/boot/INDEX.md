@@ -25,6 +25,10 @@ path = "vibevm/vibedeps/org.vibevm.ai-native.rust-ai-native-lang/1.0.0/vibevm/vi
 kind = "static"
 
 [[entry]]
+path = "vibevm/vibedeps/org.vibevm.fractality.delegation-rules/1.0.0/vibevm/vibespecs/boot/77-flow-delegation-rules.xml"
+kind = "static"
+
+[[entry]]
 path = "vibevm/vibedeps/org.vibevm.world.addressable-specs/1.0.0/vibevm/vibespecs/boot/15-flow-addressable-specs.xml"
 kind = "static"
 

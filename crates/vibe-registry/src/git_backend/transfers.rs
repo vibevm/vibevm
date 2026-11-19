@@ -54,6 +54,18 @@ pub fn observed<T>(
     work: impl FnOnce() -> T,
 ) -> T {
     let previous = current();
+    let inherited = progress.map(|progress| {
+        if !progress.has_observer() {
+            previous
+                .progress
+                .as_ref()
+                .filter(|parent| parent.has_observer())
+                .unwrap_or(progress)
+        } else {
+            progress
+        }
+    });
+    let progress = inherited;
     // A handle without the invocation's transfers (a resolver nobody gave
     // the observation) still journals through the ones around it.
     let progress = progress.map(|progress| match progress.transfers() {
@@ -128,6 +140,20 @@ pub fn invocation_control() -> vibe_core::cancellation::CancellationToken {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn inert_inner_scope_keeps_the_invocations_visible_observer() {
+        struct Observer;
+        impl vibe_core::progress::ProgressObserver for Observer {
+            fn observe(&self, _: vibe_core::progress::ProgressEvent) {}
+        }
+        let visible = Progress::new(std::sync::Arc::new(Observer));
+        observed(Some(&visible), None, None, || {
+            observed(Some(&Progress::default()), None, None, || {
+                assert!(current().progress.unwrap().has_observer());
+            });
+        });
+    }
 
     #[test]
     fn an_inner_observation_inherits_what_it_does_not_name_and_restores_it() {

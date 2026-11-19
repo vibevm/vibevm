@@ -11,6 +11,8 @@ homepage.workspace = true
 description = "Workspace discovery and the multi-package member model for vibevm"
 
 [dependencies]
+# Shared canonical authority DTO only; the neutral engine has no host edge.
+specmap-core.workspace = true
 command-group = "=5.0.1"
 specmark.workspace = true
 # The PROP-045 projection dispatch: an XML-materialised boot snippet enters

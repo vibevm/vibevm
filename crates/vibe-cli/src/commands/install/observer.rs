@@ -33,6 +33,7 @@ pub(crate) struct CliInstallObserver<'a> {
     /// the install's own summary stays suppressed.
     lifecycle_output: Option<&'a output::Context>,
     plan_events: CtxObserver<'a>,
+    log_mode: Option<crate::commands::app::display::LogMode>,
 }
 
 impl<'a> CliInstallObserver<'a> {
@@ -44,7 +45,13 @@ impl<'a> CliInstallObserver<'a> {
             ctx,
             lifecycle_output,
             plan_events: CtxObserver::new(ctx),
+            log_mode: None,
         }
+    }
+
+    pub(crate) fn with_log_mode(mut self, mode: crate::commands::app::display::LogMode) -> Self {
+        self.log_mode = Some(mode);
+        self
     }
 
     pub(crate) fn with_progress(mut self, progress: vibe_core::progress::Progress) -> Self {
@@ -106,6 +113,13 @@ impl InstallObserver for CliInstallObserver<'_> {
     ) -> Arc<dyn vibe_install::SlotLifecycleObserver> {
         Arc::new(
             LifecycleSlotObserver::new(self.lifecycle_output.unwrap_or(self.ctx), metadata.clone())
+                .with_log_mode(self.log_mode.unwrap_or_else(|| {
+                    crate::commands::app::display::log_mode(
+                        None,
+                        output::env_app_log().as_deref(),
+                        self.ctx.has_interactive_progress(),
+                    )
+                }))
                 .with_panel(self.plan_events.progress_handle())
                 .writing_evidence(),
         )
@@ -134,10 +148,13 @@ pub(crate) struct LifecycleSlotObserver {
     /// behaviour applies.
     progress: vibe_core::progress::Progress,
     /// The open panel row of each running contribution, by execution key.
-    rows: std::sync::Mutex<std::collections::BTreeMap<String, vibe_core::progress::ProgressTask>>,
+    rows: std::sync::Mutex<
+        std::collections::BTreeMap<String, Arc<vibe_core::progress::ProgressTask>>,
+    >,
     /// The run's step evidence, absent when no settings home could be
     /// resolved to write it under.
     evidence: Option<evidence::StepEvidence>,
+    log_mode: crate::commands::app::display::LogMode,
 }
 
 impl LifecycleSlotObserver {
@@ -148,7 +165,13 @@ impl LifecycleSlotObserver {
             progress: vibe_core::progress::Progress::default(),
             rows: std::sync::Mutex::new(std::collections::BTreeMap::new()),
             evidence: None,
+            log_mode: crate::commands::app::display::LogMode::Live,
         }
+    }
+
+    fn with_log_mode(mut self, mode: crate::commands::app::display::LogMode) -> Self {
+        self.log_mode = mode;
+        self
     }
 
     /// Draw this run's contributions on the given panel.
@@ -173,7 +196,7 @@ impl LifecycleSlotObserver {
     fn label(entry: &vibe_install::SlotLifecyclePlanEntry) -> String {
         let id = entry.id.as_str();
         match entry.title.as_deref() {
-            Some(title) => format!("{id} ({}) {title}", entry.handler),
+            Some(title) => format!("{id} ({})  {title}", entry.handler),
             None => format!("{id} ({})", entry.handler),
         }
     }
@@ -222,9 +245,39 @@ impl vibe_install::SlotLifecycleObserver for LifecycleSlotObserver {
         if row.id().get() != 0
             && let Ok(mut rows) = self.rows.lock()
         {
-            rows.insert(entry.key.clone(), row);
+            rows.insert(entry.key.clone(), Arc::new(row));
         }
         Ok(())
+    }
+
+    fn output_observer(
+        &self,
+        entry: &vibe_install::SlotLifecyclePlanEntry,
+    ) -> Option<Arc<dyn vibe_lifecycle::process::ProcessOutputObserver>> {
+        // These are the handlers executed by this process runner. Agent/native
+        // backends retain their own protocol and observation owners.
+        if !matches!(entry.handler.as_str(), "script" | "binary") {
+            return None;
+        }
+        let task = self
+            .rows
+            .lock()
+            .ok()
+            .and_then(|rows| rows.get(&entry.key).cloned())
+            .unwrap_or_else(|| Arc::new(vibe_core::progress::Progress::default().task("output")));
+        let evidence = self.evidence.as_ref()?;
+        let sink = evidence.stream(entry, task.clone(), self.ctx.clone(), self.log_mode);
+        if let Some(path) = evidence.stream_path(&entry.key) {
+            self.ctx.note_task_log(task.id(), &path);
+            if self.log_mode == crate::commands::app::display::LogMode::Quiet
+                && !self.ctx.is_json()
+                && !self.ctx.is_quiet()
+            {
+                self.ctx
+                    .step(&format!("log of `{}`: {}", entry.key, path.display()));
+            }
+        }
+        sink
     }
 
     fn outcome(

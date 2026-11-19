@@ -152,6 +152,39 @@ fn home_dir() -> Option<PathBuf> {
     None
 }
 
+/// The personal specification project root: `<settings-dir>/user-project`
+/// (PROP-074 `#USER-PROJECT-ROOT-PATH`).
+///
+/// The pure derivation of [`user_project_root`] — no filesystem, no
+/// environment. `<settings-dir>` stays exactly what the selected settings
+/// authority returned; the personal-root admission rule
+/// (`#USER-PROJECT-ROOT-ADMISSION`) is applied by the operation, not here,
+/// so the global resolver keeps its treatment of relative overrides.
+///
+/// ```
+/// use vibe_core::settings::user_project_root_from;
+/// use std::path::PathBuf;
+///
+/// let root = user_project_root_from(Some(PathBuf::from("/opt/vibe")));
+/// assert_eq!(root, Some(PathBuf::from("/opt/vibe/user-project")));
+/// assert_eq!(user_project_root_from(None), None);
+/// ```
+pub fn user_project_root_from(settings: Option<PathBuf>) -> Option<PathBuf> {
+    Some(settings?.join(USER_PROJECT_DIR))
+}
+
+/// [`user_project_root_from`] over the selected settings directory.
+pub fn user_project_root() -> Option<PathBuf> {
+    user_project_root_from(settings_dir())
+}
+
+/// The directory name of the personal specification project below a
+/// settings root. The MCP service project `vibe install -g mcp:…`
+/// materialises is a different root, `<settings-dir>/mcp/user-project`
+/// (PROP-027); nothing migrates between them implicitly
+/// (PROP-074 `#USER-PROJECT-ROOT-DECISION`).
+pub const USER_PROJECT_DIR: &str = "user-project";
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -210,6 +243,7 @@ mod tests {
             aiui_dir(),
             site_profile_path(),
             site_receipt_path(),
+            user_project_root(),
         ]
         .into_iter()
         .map(|p| p.expect("home dir present in test env"))
@@ -217,7 +251,7 @@ mod tests {
         paths.extend(crate::user_config::config_file_candidates());
 
         assert!(
-            paths.len() > 8,
+            paths.len() > 9,
             "the user-config candidates dropped out of this loop — \
              the gate no longer reaches `user_config`"
         );
@@ -229,6 +263,52 @@ mod tests {
                 root.display()
             );
         }
+    }
+
+    #[test]
+    #[verifies("spec://org.vibevm.core/vibevm/common/PROP-074#USER-PROJECT-ROOT-PATH")]
+    fn user_project_root_hangs_off_the_settings_dir() {
+        // The personal project sits one directory below whatever settings
+        // authority resolved — never a repository, never the cwd.
+        assert_eq!(
+            user_project_root_from(Some(PathBuf::from("/opt/vibe"))),
+            Some(PathBuf::from("/opt/vibe/user-project"))
+        );
+        assert_eq!(user_project_root_from(None), None);
+    }
+
+    #[test]
+    fn the_personal_root_never_collides_with_the_service_project() {
+        // The MCP service project is `<settings>/mcp/user-project` — an
+        // existing literal in the installer. Compare against it without
+        // growing an MCP accessor here.
+        let settings = PathBuf::from("/home/u/.vibe");
+        let personal = user_project_root_from(Some(settings.clone())).unwrap();
+        let service = settings.join("mcp").join("user-project");
+        assert_ne!(personal, service);
+        assert!(!personal.starts_with(&service));
+        assert!(!service.starts_with(&personal));
+    }
+
+    #[test]
+    fn a_relative_settings_value_is_kept_without_resolution() {
+        // Admission of the absolute form belongs to the operation
+        // (`#USER-PROJECT-ROOT-ADMISSION`); the pure derivation must not
+        // quietly resolve a relative value against the cwd.
+        assert_eq!(
+            user_project_root_from(Some(PathBuf::from("rel/settings"))),
+            Some(PathBuf::from("rel/settings/user-project"))
+        );
+    }
+
+    #[test]
+    fn the_personal_root_joins_the_settings_dir_gate() {
+        // `every_accessor_is_rooted_in_the_one_settings_dir` must reach the
+        // new path, or a second home can survive `$VIBE_SETTINGS`.
+        let root = settings_dir().expect("home dir present in test env");
+        let personal = user_project_root().expect("home dir present in test env");
+        assert!(personal.starts_with(&root));
+        assert!(personal.ends_with("user-project"));
     }
 
     #[test]

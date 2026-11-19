@@ -126,6 +126,10 @@ impl StepDisplay {
         self.panelled.then_some(self as &dyn vibe_app::StepPanel)
     }
 
+    pub(crate) fn log_mode(&self) -> LogMode {
+        self.mode
+    }
+
     /// `--log quiet` keeps child output out of both streams; the run log
     /// still gets every byte.
     pub(crate) fn quiet_children(&self) -> bool {
@@ -149,7 +153,9 @@ impl StepDisplay {
             let _held = ctx.hold_progress();
             return run();
         };
-        let _open = Open::hold(self, PanelSession::open(panel, ctx.reads_terminal_keys()));
+        let session = PanelSession::open(panel, ctx.reads_terminal_keys());
+        ctx.register_terminal_panel(session.clone());
+        let _open = Open::hold(self, session);
         run()
     }
 
@@ -303,6 +309,8 @@ pub(crate) struct PanelSession {
     reads_keys: bool,
     /// How deep the release nests, so the panel comes back exactly once.
     released: Mutex<usize>,
+    closed: std::sync::atomic::AtomicBool,
+    terminal_transition: Mutex<()>,
 }
 
 impl PanelSession {
@@ -312,13 +320,15 @@ impl PanelSession {
             keys: Mutex::new(None),
             reads_keys,
             released: Mutex::new(0),
+            closed: std::sync::atomic::AtomicBool::new(false),
+            terminal_transition: Mutex::new(()),
         });
         session.start_keys();
         session
     }
 
     fn start_keys(&self) {
-        if !self.reads_keys {
+        if self.closed.load(std::sync::atomic::Ordering::SeqCst) || !self.reads_keys {
             return;
         }
         if let Ok(mut keys) = self.keys.lock()
@@ -339,6 +349,10 @@ impl PanelSession {
     /// Give the terminal away: stop reading keys, restore its mode and
     /// stop drawing.
     fn release(&self) {
+        let _transition = self
+            .terminal_transition
+            .lock()
+            .unwrap_or_else(std::sync::PoisonError::into_inner);
         let first = match self.released.lock() {
             Ok(mut depth) => {
                 *depth = depth.saturating_add(1);
@@ -354,6 +368,10 @@ impl PanelSession {
 
     /// Take the terminal back.
     fn reclaim(&self) {
+        let _transition = self
+            .terminal_transition
+            .lock()
+            .unwrap_or_else(std::sync::PoisonError::into_inner);
         let last = match self.released.lock() {
             Ok(mut depth) => {
                 *depth = depth.saturating_sub(1);
@@ -361,15 +379,29 @@ impl PanelSession {
             }
             Err(_) => false,
         };
-        if last {
+        if last && !self.closed.load(std::sync::atomic::Ordering::SeqCst) {
             self.panel.show();
             self.start_keys();
         }
     }
 
     fn close(&self) {
+        let _transition = self
+            .terminal_transition
+            .lock()
+            .unwrap_or_else(std::sync::PoisonError::into_inner);
+        self.closed.store(true, std::sync::atomic::Ordering::SeqCst);
         self.stop_keys();
         self.panel.close();
+    }
+}
+
+impl crate::output::TerminalPanel for PanelSession {
+    fn release(&self) {
+        PanelSession::release(self);
+    }
+    fn reclaim(&self) {
+        PanelSession::reclaim(self);
     }
 }
 

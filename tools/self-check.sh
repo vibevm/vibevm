@@ -112,8 +112,19 @@ run_step "vibe check --path . --quiet" \
 # did on 2026-10-31) passes every step above and dies on `vibe --version`
 # over there. Start the binary under the Windows limit here, on a subshell
 # whose ulimit does not leak into the steps that follow.
+check_small_stack() {
+  local metadata binary python
+  case "${OSTYPE:-}" in
+    msys*|cygwin*|win32*) python=python ;;
+    *) python=python3 ;;
+  esac
+  metadata=$(cargo metadata --no-deps --format-version 1) || return $?
+  binary=$(printf '%s' "$metadata" | "$python" -I -c \
+    'import json, os, sys; print(os.path.join(json.load(sys.stdin)["target_directory"], "debug", "vibe.exe" if os.name == "nt" else "vibe"))') || return $?
+  bash -c 'ulimit -s 1024 && exec "$1" --version' self-check "$binary"
+}
 run_step "vibe --version under a 1 MiB stack" \
-  bash -c 'ulimit -s 1024 && exec target/debug/vibe --version' || OVERALL=$?
+  check_small_stack || OVERALL=$?
 run_step "cargo xtask conform check" \
   cargo xtask conform check || OVERALL=$?
 run_step "cargo xtask check-codegen" \

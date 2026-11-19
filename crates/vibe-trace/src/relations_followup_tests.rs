@@ -250,6 +250,13 @@ fn the_real_query_attaches_a_real_edge_to_a_real_fact_row() {
         "#[verifies(\"spec://org.example/demo/D#RULE\")]\nfn t() {}\n",
     )
     .unwrap();
+    let workspace = vibe_workspace::Workspace::load(root.path()).unwrap();
+    vibe_workspace::specmap_authority::publish(
+        &workspace,
+        root.path(),
+        &std::collections::BTreeMap::from([(".".into(), Vec::new())]),
+    )
+    .unwrap();
     let address = "spec://org.example/demo/D#RULE".to_string();
 
     let context = QueryContext {

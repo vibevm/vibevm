@@ -12,10 +12,28 @@ use vibe_core::cancellation::CancellationToken;
 /// ```
 pub struct ControlledProcessRunner {
     cancellation: CancellationToken,
+    observer: Option<Arc<dyn ProcessOutputObserver>>,
 }
 impl ControlledProcessRunner {
     pub fn new(cancellation: CancellationToken) -> Self {
-        Self { cancellation }
+        Self {
+            cancellation,
+            observer: None,
+        }
+    }
+    /// Attach best-effort diagnostics owned by this invocation.
+    /// ```
+    /// let runner = vibe_lifecycle::process::ControlledProcessRunner::new(
+    ///     vibe_core::cancellation::CancellationToken::new()).with_output_observer(None);
+    /// let _: &dyn vibe_lifecycle::process::ProcessRunner = &runner;
+    /// ```
+    #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-065#ordinary-plan")]
+    pub fn with_output_observer(
+        mut self,
+        observer: Option<Arc<dyn ProcessOutputObserver>>,
+    ) -> Self {
+        self.observer = observer;
+        self
     }
 }
 impl ProcessRunner for ControlledProcessRunner {
@@ -27,7 +45,7 @@ impl ProcessRunner for ControlledProcessRunner {
 
     fn run(&self, spec: &ProcessSpec) -> Result<ProcessOutput, ProcessError> {
         if !self.cancellation.has_control() {
-            return SystemProcessRunner.run(spec);
+            return SystemProcessRunner.run_observed(spec, self.observer.clone());
         }
         self.cancellation
             .checkpoint()
@@ -52,9 +70,15 @@ impl ProcessRunner for ControlledProcessRunner {
         let (stderr, mut stderr_capture) =
             stream_stdio(spec.stderr, &spec.scratch, "stderr").map_err(spawn_error)?;
         command.stdout(stdout).stderr(stderr);
+        let mut observation = Observation::new(
+            self.observer.clone(),
+            spec,
+            stdout_capture.as_ref(),
+            stderr_capture.as_ref(),
+        );
         let mut child = spawn_retrying_busy(BUSY_ATTEMPTS, BUSY_PAUSE, || command.group_spawn())
             .map_err(|error| spawn_error(error.to_string()))?;
-        let writer = match (spec.stdin.as_ref(), child.inner().stdin.take()) {
+        let mut writer = match (spec.stdin.as_ref(), child.inner().stdin.take()) {
             (Some(bytes), Some(mut pipe)) => {
                 let bytes = bytes.clone();
                 Some(std::thread::spawn(move || {
@@ -66,6 +90,9 @@ impl ProcessRunner for ControlledProcessRunner {
         };
         let mut stopped = false;
         let status = loop {
+            if let Some(observation) = &mut observation {
+                observation.poll();
+            }
             if self.cancellation.checkpoint().is_err() {
                 stopped = true;
                 child.kill().map_err(|error| {
@@ -74,6 +101,20 @@ impl ProcessRunner for ControlledProcessRunner {
                 break child
                     .wait()
                     .map_err(|error| ProcessError::Wait(error.to_string()))?;
+            }
+            if writer.as_ref().is_some_and(|writer| writer.is_finished())
+                && let Some(writer) = writer.take()
+            {
+                match writer.join() {
+                    Ok(Ok(())) => {}
+                    result => {
+                        let _ = child.kill();
+                        let _ = child.wait();
+                        return Err(ProcessError::Stdin(format!(
+                            "stdin writer failed: {result:?}"
+                        )));
+                    }
+                }
             }
             if let Some(status) = child
                 .try_wait()
@@ -92,6 +133,10 @@ impl ProcessRunner for ControlledProcessRunner {
                 written.map_err(|error| ProcessError::Stdin(error.to_string()))?;
             }
         }
+        if let Some(observation) = &mut observation {
+            observation.reaped();
+        }
+        drop(observation);
         let retain = stopped || !status.success();
         let (stdout, stdout_truncated) = read_capped(spec.stdout, stdout_capture.as_mut(), retain)?;
         let (stderr, stderr_truncated) = read_capped(spec.stderr, stderr_capture.as_mut(), retain)?;

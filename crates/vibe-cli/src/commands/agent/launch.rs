@@ -135,6 +135,38 @@ pub(crate) fn run(ctx: &output::Context, argv: Vec<String>) -> Result<()> {
         return exec(&command, &[], &scrub(launcher.kind));
     }
 
+    if matches!(launcher.kind, HarnessKind::Pi | HarnessKind::Hermes)
+        && launcher.kind.delivery(&selected.manifest)
+            == vibe_core::manifest::HarnessDelivery::Launch
+    {
+        let prefix = prompt::native_launch_lane(ctx, &selected)?;
+        let (program, standing) = launcher
+            .command
+            .split_first()
+            .context("empty native Pi launcher")?;
+        let program = super::program::locate(program)?;
+        let mut arguments = standing.to_vec();
+        arguments.extend(rest);
+        let prepared = if launcher.kind == HarnessKind::Hermes {
+            super::native::prepare_hermes(
+                settings.path(),
+                &program,
+                &prefix,
+                &selected.node_dir,
+                &arguments,
+            )?
+        } else {
+            super::native::prepare_pi(
+                settings.path(),
+                &program,
+                &prefix,
+                &selected.node_dir,
+                &arguments,
+            )?
+        };
+        return exec(&prepared.command, &[], &[]);
+    }
+
     // **The host mismatch, as a note and nothing more.** `vibe agent`
     // starts a session on *this* machine, so it is the one launch surface
     // that can see what `vibe prompt check` would say about it — and a
@@ -166,19 +198,20 @@ pub(crate) fn run(ctx: &output::Context, argv: Vec<String>) -> Result<()> {
     // prints — `vibe agent` has already asked the opt-in question — so an
     // error here is a reason nobody foresaw, and a reason nobody foresaw is
     // still not a reason to leave a developer without a session.
-    let composed = match prompt::compose_flags(&selected, launcher.kind, Some(&launcher), &rest) {
-        Ok(composed) => composed,
-        Err(error) => {
-            return soft(
-                &launcher,
-                &rest,
-                &prompt::Undeliverable::hard(
-                    format!("the launch flags could not be composed ({error:#})"),
-                    format!("run `{}`", build_remedy(&selected.node_rel)),
-                ),
-            );
-        }
-    };
+    let composed =
+        match prompt::compose_launch_flags(ctx, &selected, launcher.kind, Some(&launcher), &rest) {
+            Ok(composed) => composed,
+            Err(error) => {
+                return soft(
+                    &launcher,
+                    &rest,
+                    &prompt::Undeliverable::hard(
+                        format!("the launch flags could not be composed ({error:#})"),
+                        format!("run `{}`", build_remedy(&selected.node_rel)),
+                    ),
+                );
+            }
+        };
     if let Some(undeliverable) = &composed.undeliverable {
         return soft(&launcher, &rest, undeliverable);
     }

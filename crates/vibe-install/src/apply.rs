@@ -8,6 +8,19 @@ use std::collections::BTreeSet;
 use std::path::Path;
 use std::sync::Arc;
 
+use crate::InstallSource;
+use crate::error::{Error, Result};
+use crate::fetched::Fetched;
+use crate::lifecycle::{
+    InstallProgress, InstallSlotLifecycle, NoSlotLifecycleObserver, SlotLifecycleObserver,
+    SlotLifecycleReport,
+};
+use crate::plan::PlannedInstall;
+use crate::record::{
+    exact_pinned_pkgref, finalize_pkgref_for_manifest, merge_manifest_requires,
+    record_app_requirements, replace_root_dependencies,
+};
+use crate::slot_verify::RegistrySlotVerifier;
 use vibe_core::PackageRef;
 use vibe_core::manifest::{Manifest, SpecFormat};
 use vibe_core::user_config::SlotIntegrity;
@@ -22,21 +35,6 @@ use vibe_workspace::install::{
     run_post_install_slot_lifecycle,
 };
 use vibe_workspace::vibedeps;
-
-use crate::InstallSource;
-use crate::error::{Error, Result};
-use crate::fetched::Fetched;
-use crate::lifecycle::{
-    InstallProgress, InstallSlotLifecycle, NoSlotLifecycleObserver, SlotLifecycleObserver,
-    SlotLifecycleReport,
-};
-use crate::plan::PlannedInstall;
-use crate::record::{
-    exact_pinned_pkgref, finalize_pkgref_for_manifest, merge_manifest_requires,
-    record_app_requirements, replace_root_dependencies,
-};
-use crate::slot_verify::RegistrySlotVerifier;
-
 mod deferred;
 mod file_guard;
 mod lock;
@@ -92,9 +90,9 @@ pub struct ApplyReport {
 /// post-durability world needs exactly that snapshot: the pre-apply one it
 /// passed in does not yet contain the requirements this apply just recorded.
 pub struct PreparedApplyReport {
+    pub node_roots: crate::plan::NodeRootProjection,
     pub report: ApplyReport,
     pub workspace: Workspace,
-    /// Present only on the native-aware production sibling.
     pub native: Option<vibe_workspace::install::NativeInstallCarriage>,
 }
 
@@ -385,6 +383,7 @@ fn apply_metadata_checked<S: InstallSource + ?Sized>(
     files: &mut MetadataFiles,
 ) -> Result<PreparedApplyReport> {
     let PlannedInstall {
+        node_roots,
         project_root,
         request: _,
         manifest,
@@ -587,6 +586,7 @@ fn apply_metadata_checked<S: InstallSource + ?Sized>(
     };
 
     Ok(PreparedApplyReport {
+        node_roots,
         workspace,
         native,
         report: ApplyReport {

@@ -236,6 +236,26 @@ pub(crate) fn compose(
     launcher: Option<&launchers::Launcher>,
     launch_args: &[String],
 ) -> Result<Composed> {
+    compose_with_personal(selected, kind, launcher, launch_args, None)
+}
+
+pub(crate) fn compose_for_launch(
+    ctx: &output::Context,
+    selected: &Selected,
+    kind: HarnessKind,
+    launcher: Option<&launchers::Launcher>,
+    launch_args: &[String],
+) -> Result<Composed> {
+    compose_with_personal(selected, kind, launcher, launch_args, Some(ctx))
+}
+
+fn compose_with_personal(
+    selected: &Selected,
+    kind: HarnessKind,
+    launcher: Option<&launchers::Launcher>,
+    launch_args: &[String],
+    personal: Option<&output::Context>,
+) -> Result<Composed> {
     let tracked = selected.tracked();
     let request = selected.request(&tracked, None);
     let answer = check_node_prompt(&request)?;
@@ -271,6 +291,12 @@ pub(crate) fn compose(
             undeliverable: None,
         });
     }
+    if matches!(kind, HarnessKind::Hermes | HarnessKind::Pi) {
+        bail!(
+            "{} native launch carrier has not yet been admitted; use explicit read delivery until the native bootstrap is available",
+            kind.as_str()
+        );
+    }
     if !answer.lane.present {
         return Ok(Composed {
             flags: LaunchFlags::default(),
@@ -280,7 +306,26 @@ pub(crate) fn compose(
             )),
         });
     }
-    let bytes = std::fs::read_to_string(&answer.lane.path)?;
+    let local = if answer.verdict.is_equal() {
+        personal.and_then(|ctx| {
+            match super::personal_launch::compose(ctx, selected, &answer) {
+                Ok(local) => local,
+                Err(_) => {
+                    ctx.diagnostic("personal launch boot skipped: local composition is unavailable; project boot remains active");
+                    None
+                }
+            }
+        })
+    } else {
+        None
+    };
+    let (lane_path, bytes) = match local {
+        Some(local) => local,
+        None => (
+            answer.lane.path.clone(),
+            std::fs::read_to_string(&answer.lane.path)?,
+        ),
+    };
     let limit = selected.manifest.system_prompt.as_ref().map_or(
         vibe_workspace::boot_artifacts::PROJECT_DOC_MAX_BYTES,
         |section| section.codex_doc_max_bytes(),
@@ -302,7 +347,7 @@ pub(crate) fn compose(
         &super::harness_version::GateRequest {
             settings: &settings,
             project_root: &selected.workspace.root,
-            lane: &answer.lane.path,
+            lane: &lane_path,
             launch_args,
         },
     )?;
@@ -324,7 +369,7 @@ pub(crate) fn compose(
         delivery,
         &LaunchInputs {
             node_id: &node_id,
-            lane: &answer.lane.path,
+            lane: &lane_path,
             lane_bytes: &bytes,
             codex_limit: limit,
             supplied: supplied.as_ref().map(|composed| &composed.document),

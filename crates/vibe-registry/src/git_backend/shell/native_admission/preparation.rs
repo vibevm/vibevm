@@ -24,6 +24,8 @@ impl NativeState {
             objects,
             destination,
             anonymous,
+            cache,
+            namespace,
         } = request;
         if supplied_remote.is_some() {
             gitlinks::reject_raw_url_credentials(address)?;
@@ -83,12 +85,20 @@ impl NativeState {
                 reporter.native_registry_auth,
             )?
         };
+        if crate::templates::active()
+            .is_some_and(|layer| layer.posture() == crate::templates::Posture::Offline)
+            && !matches!(remote, AdmittedRemote::Local { .. })
+        {
+            return Err(unsupported(
+                "offline native preparation cannot contact a network repository, including a local repository's child",
+            ));
+        }
         let logical_origin = if supplied {
             address.to_owned()
         } else {
             remote.address().to_owned()
         };
-        if !objects.is_absolute() || objects.exists() {
+        if !objects.is_absolute() {
             return Err(unsupported(
                 "preparation requires an absent absolute owned object path",
             ));
@@ -112,50 +122,61 @@ impl NativeState {
         let dest = objects
             .to_str()
             .ok_or_else(|| unsupported("object path is not UTF-8"))?;
-        // No reuse alternates: the captured source owns its bytes independently.
-        // Clone learns SHA-1 versus SHA-256 without guessing object format.
-        context.transfer(
-            reporter,
-            &[
-                "clone",
-                "--bare",
-                "--no-tags",
-                "--no-recurse-submodules",
-                "--template=",
-                "--",
-                remote.address(),
-                dest,
-            ],
-            None,
-            &remote,
-            objects,
-        )?;
-        let candidates = if reference.starts_with("refs/") || full_oid(reference) {
-            vec![reference.to_owned()]
-        } else {
-            vec![
-                format!("refs/tags/{reference}"),
-                format!("refs/heads/{reference}"),
-                reference.to_owned(),
-            ]
-        };
+        // A durable store this capability created for exactly this endpoint
+        // is refreshed, not re-cloned; anything else at that path — a store
+        // of another remote, another object format, another cache format, a
+        // store with alternates, one with no marker at all — is not reused
+        // but discarded, and the clone below re-creates it with its full
+        // `fsck` (PROP-073 `#NATIVE-PREPARATION`).
+        let warm = cache && object_cache::reusable(objects, remote.address())?;
+        if !warm && objects.exists() {
+            if !cache {
+                return Err(unsupported(
+                    "preparation requires an absent absolute owned object path",
+                ));
+            }
+            tracing::info!(target: "vibe_registry::git", path = %objects.display(), "discarding an unusable owned object cache");
+            std::fs::remove_dir_all(objects).map_err(io)?;
+        }
+        if !warm {
+            // No reuse alternates: the captured source owns its bytes independently.
+            // Clone learns SHA-1 versus SHA-256 without guessing object format.
+            context.transfer(
+                reporter,
+                &[
+                    "clone",
+                    "--bare",
+                    "--no-tags",
+                    "--no-recurse-submodules",
+                    "--template=",
+                    "--",
+                    remote.address(),
+                    dest,
+                ],
+                None,
+                &remote,
+                objects,
+            )?;
+        }
         // Advertised refs choose a namespace without interpreting arbitrary
         // remote stderr as absence or as a redirect instruction.
-        let advertised =
-            context.run(&["ls-remote", "--", remote.address()], None, Some(&remote))?;
-        let refs = text(advertised.stdout)?;
-        let name = candidates
-            .into_iter()
-            .find(|candidate| {
-                full_oid(candidate)
-                    || refs
-                        .lines()
-                        .any(|line| line.split_once('\t').is_some_and(|(_, r)| r == candidate))
-            })
-            .ok_or_else(|| GitError::RefNotFound {
-                url: remote.address().to_owned(),
-                refname: reference.into(),
-            })?;
+        let name = if full_oid(reference) {
+            reference.to_owned()
+        } else if let Some(namespace) = namespace {
+            // Read from this endpoint's advertisement, through this same
+            // admitted context, by the owner that is about to fetch it.
+            namespace.to_owned()
+        } else {
+            let advertised =
+                context.run(&["ls-remote", "--", remote.address()], None, Some(&remote))?;
+            let refs = text(advertised.stdout)?;
+            advertised_tip(&refs, reference)
+                .ok_or_else(|| GitError::RefNotFound {
+                    url: remote.address().to_owned(),
+                    refname: reference.into(),
+                })?
+                .1
+        };
         context.transfer(
             reporter,
             &[
@@ -282,6 +303,8 @@ impl NativeState {
                         children,
                         gitlink: !package,
                         child_layout,
+                        fsck_required: !warm,
+                        durable_cache: cache,
                     },
                 );
             Ok(revision)

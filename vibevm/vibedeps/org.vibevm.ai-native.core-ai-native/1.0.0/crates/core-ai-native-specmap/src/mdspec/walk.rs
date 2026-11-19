@@ -92,16 +92,24 @@ fn pair_collision_warning(md: &str, xml: &str) -> Warning {
 /// `SpecExcludes`]).
 pub fn scan_spec_tree(root: &Path, cfg: &Config) -> (Vec<SpecUnit>, Vec<Warning>) {
     let mut units = Vec::new();
+    if crate::authority::validate(root, cfg).is_err() {
+        return (units, Vec::new());
+    }
     let mut warnings = Vec::new();
     let (mut excludes, bad_globs) = excludes::SpecExcludes::compile(&cfg.spec_exclude);
     // Bad globs are discovered before any walk, so they lead the warnings.
     warnings.extend(bad_globs);
     let mut sources: Vec<(String, PathBuf)> = Vec::new();
+    let private = crate::local_layers::LocalLayers::current(root);
     for spec_root_rel in &cfg.spec_roots {
         let spec_root = root.join(spec_root_rel);
+        if !matches!(private.layer(&spec_root), Ok(None)) {
+            continue;
+        }
         for entry in WalkDir::new(&spec_root)
             .sort_by_file_name()
             .into_iter()
+            .filter_entry(|entry| matches!(private.layer(entry.path()), Ok(None)))
             .filter_map(Result::ok)
         {
             if !entry.file_type().is_file() {
@@ -125,6 +133,9 @@ pub fn scan_spec_tree(root: &Path, cfg: &Config) -> (Vec<SpecUnit>, Vec<Warning>
     let mut root_sources: Vec<(String, PathBuf)> = Vec::new();
     for name in &cfg.root_spec_docs {
         let path = root.join(name);
+        if !matches!(private.layer(&path), Ok(None)) {
+            continue;
+        }
         if !path.exists() {
             continue;
         }
@@ -216,8 +227,15 @@ pub fn scan_spec_tree(root: &Path, cfg: &Config) -> (Vec<SpecUnit>, Vec<Warning>
 /// skipped — the same loud law, the walk's own idiom.
 pub fn scan_external_units(root: &Path, cfg: &Config) -> Vec<SpecUnit> {
     let mut units = Vec::new();
+    if crate::authority::validate(root, cfg).is_err() {
+        return units;
+    }
+    let private = crate::local_layers::LocalLayers::current(root);
     for ext in &cfg.external_specs {
         let base = root.join(&ext.root);
+        if !matches!(private.layer(&base), Ok(None)) {
+            continue;
+        }
         if !base.is_dir() {
             eprintln!(
                 "specmap: external spec root `{}` (namespace `{}`) not found — \
@@ -230,6 +248,7 @@ pub fn scan_external_units(root: &Path, cfg: &Config) -> Vec<SpecUnit> {
         for entry in WalkDir::new(&base)
             .sort_by_file_name()
             .into_iter()
+            .filter_entry(|entry| matches!(private.layer(entry.path()), Ok(None)))
             .filter_map(Result::ok)
         {
             if !entry.file_type().is_file() {

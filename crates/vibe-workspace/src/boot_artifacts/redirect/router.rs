@@ -207,7 +207,38 @@ any position. A delivered file sits between two lines:
 
 {precedence}
 
-Boot is pure file-reading — there is nothing to execute."
+{dependency_ownership}
+
+# Optional personal boot — read last
+
+After complete project INDEX/live, use exposed nonempty VIBE_SETTINGS else HOME/.vibe
+(Windows USERPROFILE/.vibe only without HOME). Unknown/relative/../symlink/alias
+root/ancestor: diagnose+skip; no guessing, commands or env dumps.
+
+Personal: settings/user-project, not mcp/user-project. Validate vibe.toml;
+read vibevm/vibespecs/boot/STATIC.xml or STATIC.md then INDEX.md with conditions.
+Two STATICs, unsafe/absent/broken/stale inputs: skip whole layer, keep project.
+No nested instruction entrypoints, prose-private expansion or boot mutations.
+
+Read settings/override-bindings.toml schema1/2 before personal. Match known
+Git common-dir+node or non-Git root, never names/remotes. schema2 user_controls
+user_enabled=false skips personal only; absent=true. Invalid mapping: skip optional.
+Enabled binding's 32-alphanumeric id selects project-overrides/id after personal;
+same STATIC/INDEX rules. Disabled skips override; no bind/repair.
+
+Same-project complete vibe:lane-begin/end personal:/override: pairs count as read;
+partial/project pairs do not.
+[layers] schema1: validate targets/relations by declaring owner/version and
+own/locked spec anchors. replace requires lower owner's own overridable preference;
+supplement is additive. Unsafe/missing/protected/competing: skip optional layer.
+Highest permitted layer wins: name target/source and read its exact unit;
+keep prefix bytes. Disabled grants nothing. Safety/attribution/commit discipline
+and unmarked rules bind; no prose inference.
+
+{memory}
+Boot is pure file-reading — there is nothing to execute.",
+        dependency_ownership = super::DEPENDENCY_OWNERSHIP,
+        memory = vibe_core::user_project::memory::INSTRUCTIONS.trim_end()
     )
 }
 

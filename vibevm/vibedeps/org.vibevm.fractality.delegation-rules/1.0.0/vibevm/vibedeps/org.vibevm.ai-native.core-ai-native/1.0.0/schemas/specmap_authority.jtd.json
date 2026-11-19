@@ -1,0 +1,80 @@
+{
+  "metadata": {
+    "description": "Host-produced selected-node specification authority. Input hashes bind final ordinary manifest/lock state; no credential or authored content is carried.",
+    "rustOptions": {
+      "package": "core_ai_native_specmap::generated::specmap_authority"
+    },
+    "x-rust-type": "SpecmapAuthority"
+  },
+  "properties": {
+    "schema": {
+      "type": "uint32"
+    },
+    "workspace_root": {
+      "type": "string"
+    },
+    "selected_node": {
+      "type": "string"
+    },
+    "self_coordinate": {
+      "type": "string"
+    },
+    "inputs": {
+      "elements": {
+        "ref": "input"
+      }
+    },
+    "dependencies": {
+      "elements": {
+        "ref": "dependency"
+      }
+    },
+    "self_namespace": {
+      "type": "string"
+    },
+    "node_roots": {
+      "values": {
+        "elements": {
+          "type": "string"
+        }
+      }
+    }
+  },
+  "definitions": {
+    "input": {
+      "properties": {
+        "root": {
+          "type": "string"
+        },
+        "path": {
+          "type": "string"
+        },
+        "sha256": {
+          "type": "string",
+          "nullable": true
+        }
+      },
+      "additionalProperties": false
+    },
+    "dependency": {
+      "properties": {
+        "coordinate": {
+          "type": "string"
+        },
+        "version": {
+          "type": "string"
+        },
+        "root": {
+          "type": "string"
+        },
+        "spec_roots": {
+          "elements": {
+            "type": "string"
+          }
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false
+}

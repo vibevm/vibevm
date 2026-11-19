@@ -12,7 +12,7 @@ format = "normal"
 authors = ["Oleg Chirukhin"]
 license = "UPL-1.0"
 description = "Multi-contributor campaign stewardship with advisory parallel analysis, targeted verification, recovery, and deterministic goals"
-keywords = ["planning", "campaigns", "multi-user", "parallel", "goal", "verification", "continuation", "recovery", "handoff", "agents"]
+keywords = ["planning", "campaigns", "multi-user", "parallel", "goal", "verification", "continuation", "recovery", "handoff", "agents", "viewer"]
 
 [compatibility]
 min_vibe_version = "0.1.0"
@@ -45,3 +45,8 @@ description = "Render or refresh the deterministic local campaign goal from the 
 name = "steward-parallel"
 path = "vibevm/vibespecs/skills/steward-parallel"
 description = "Inspect ready work, review backlog and declared or bound parallel conflicts without launching jobs or changing the plan"
+
+[[skill]]
+name = "steward-tree"
+path = "vibevm/vibespecs/skills/steward-tree"
+description = "Render any conformant plan as a static offline HTML tree with display buckets, per-parent leaf counts, dependencies and the validator's verdict"

@@ -1,7 +1,7 @@
 [meta]
-generated_by = "vibe 1.0.0"
-generated_at = "2026-09-10T18:33:22Z"
-schema_version = 6
+generated_by = "vibe 1.0.12"
+generated_at = "2026-11-18T23:17:44Z"
+schema_version = 7
 root_dependencies = ["stack:org.vibevm.ai-native/rust-ai-native@^1.0.0"]
 
 [[package]]
@@ -9,7 +9,8 @@ kind = "stack"
 name = "rust-ai-native"
 group = "org.vibevm.ai-native"
 version = "1.0.0"
-source_url = "file:///C:/Users/olegc/git/v/vibevm/vibevm/vibepacks/org.vibevm.ai-native/rust-ai-native/v1.0.0"
+authors = ["Oleg Chirukhin"]
+source_url = "file:///data/git/vibevm/vibevm/vibepacks/org.vibevm.ai-native/rust-ai-native/v1.0.0"
 content_hash = "sha256:e3a7b08775a375909f14ab1ecf02f5fc7e2f98f21b36b15dcd1d79a42d239b0b"
 files_written = []
 dependencies = [
@@ -24,8 +25,9 @@ kind = "flow"
 name = "core-ai-native"
 group = "org.vibevm.ai-native"
 version = "1.0.0"
-source_url = "file:///C:/Users/olegc/git/v/vibevm/vibevm/vibepacks/org.vibevm.ai-native/core-ai-native/v1.0.0"
-content_hash = "sha256:c869ddb0f62bb842440243ab9fb5dee82e61555b27defd0fef860bd102031655"
+authors = ["Oleg Chirukhin"]
+source_url = "file:///data/git/vibevm/vibevm/vibepacks/org.vibevm.ai-native/core-ai-native/v1.0.0"
+content_hash = "sha256:e614101b83382462b7a8676c767aaa5abaf83203080d10412ce5849fdd077283"
 files_written = []
 admitted_by = "public-chain"
 source_kind = "registry"
@@ -35,8 +37,9 @@ kind = "lang"
 name = "rust-ai-native-lang"
 group = "org.vibevm.ai-native"
 version = "1.0.0"
-source_url = "file:///C:/Users/olegc/git/v/vibevm/vibevm/vibepacks/org.vibevm.ai-native/rust-ai-native-lang/v1.0.0"
-content_hash = "sha256:ddfe01d8b1b7c2694ef6409276873c10b6f51fe98c14faf774dbaadde0aa8ab4"
+authors = ["Oleg Chirukhin"]
+source_url = "file:///data/git/vibevm/vibevm/vibepacks/org.vibevm.ai-native/rust-ai-native-lang/v1.0.0"
+content_hash = "sha256:f94933e6812c294d36920a7700723ad79d38d6ca37f07148a28d3aaf162c4b28"
 files_written = []
 dependencies = ["flow:org.vibevm.ai-native/core-ai-native@=1.0.0"]
 admitted_by = "public-chain"
@@ -47,8 +50,9 @@ kind = "mcp"
 name = "rust-ai-native-mcp"
 group = "org.vibevm.ai-native"
 version = "1.0.0"
-source_url = "file:///C:/Users/olegc/git/v/vibevm/vibevm/vibepacks/org.vibevm.ai-native/rust-ai-native-mcp/v1.0.0"
-content_hash = "sha256:dc5547b64d48e3c83ecd5e661fa43a9110eff078797136c244befa2c15d3484e"
+authors = ["Oleg Chirukhin"]
+source_url = "file:///data/git/vibevm/vibevm/vibepacks/org.vibevm.ai-native/rust-ai-native-mcp/v1.0.0"
+content_hash = "sha256:6451c9a822ea2b6de3c38b479807591792ce4927406d6a8fd2d9c5a1c26e1923"
 files_written = []
 dependencies = ["lang:org.vibevm.ai-native/rust-ai-native-lang@=1.0.0"]
 admitted_by = "public-chain"

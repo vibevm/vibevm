@@ -21,6 +21,7 @@ pub(super) const EVIDENCE: usize = 30;
 #[derive(Default)]
 pub(super) struct StepLogs {
     logs: Mutex<BTreeMap<String, PathBuf>>,
+    tasks: Mutex<BTreeMap<vibe_core::progress::TaskId, PathBuf>>,
     rows: AtomicUsize,
     last: Mutex<Option<PathBuf>>,
 }
@@ -35,7 +36,21 @@ impl StepLogs {
         }
     }
 
-    fn of(&self, step: &str) -> Option<PathBuf> {
+    pub(super) fn note_task(&self, id: vibe_core::progress::TaskId, log: &Path) {
+        if let Ok(mut tasks) = self.tasks.lock() {
+            tasks.insert(id, log.to_owned());
+        }
+    }
+
+    fn of(&self, id: vibe_core::progress::TaskId, step: &str) -> Option<PathBuf> {
+        if let Some(path) = self
+            .tasks
+            .lock()
+            .ok()
+            .and_then(|mut tasks| tasks.remove(&id))
+        {
+            return Some(path);
+        }
         self.logs
             .lock()
             .ok()
@@ -123,6 +138,7 @@ pub(super) enum End {
 /// failure, the evidence kept from its log.
 pub(super) fn collapsed(
     headline: &Headline,
+    task_id: vibe_core::progress::TaskId,
     name_width: usize,
     end: &End,
     elapsed: Duration,
@@ -131,12 +147,12 @@ pub(super) fn collapsed(
     if headline.depth == 0 {
         logs.rows.fetch_add(1, Ordering::Relaxed);
     }
-    let log = logs.of(&headline.name);
-    let lines = log.as_deref().map(read_lines).unwrap_or_default();
+    let log = logs.of(task_id, &headline.name);
+    let (count, lines) = log.as_deref().map(read_lines).unwrap_or_default();
     let counted = |meta: &mut Vec<Meta>| {
-        if !lines.is_empty() {
-            let unit = if lines.len() == 1 { "line" } else { "lines" };
-            meta.push(Meta::Count(format!("{} {unit}", lines.len())));
+        if count > 0 {
+            let unit = if count == 1 { "line" } else { "lines" };
+            meta.push(Meta::Count(format!("{count} {unit}")));
         }
     };
     let text = headline.text(name_width);
@@ -219,8 +235,66 @@ fn exit_status(message: &str) -> Option<i32> {
     None
 }
 
-fn read_lines(path: &Path) -> Vec<String> {
-    std::fs::read_to_string(path)
-        .map(|text| text.lines().map(str::to_owned).collect())
-        .unwrap_or_default()
+fn read_lines(path: &Path) -> (usize, Vec<String>) {
+    use std::io::Read;
+    let Ok(mut file) = std::fs::File::open(path) else {
+        return (0, Vec::new());
+    };
+    let mut tail = std::collections::VecDeque::new();
+    let mut line = Vec::new();
+    let mut bytes = [0u8; 16384];
+    let mut count = 0;
+    let mut pending = false;
+    while let Ok(n) = file.read(&mut bytes) {
+        if n == 0 {
+            break;
+        }
+        for &b in &bytes[..n] {
+            if b == b'\n' {
+                count += 1;
+                tail.push_back(String::from_utf8_lossy(&line).into_owned());
+                if tail.len() > EVIDENCE {
+                    tail.pop_front();
+                }
+                line.clear();
+                pending = false;
+            } else {
+                pending = true;
+                if line.len() < 4096 {
+                    line.push(b);
+                }
+            }
+        }
+    }
+    if pending {
+        count += 1;
+        tail.push_back(String::from_utf8_lossy(&line).into_owned());
+        if tail.len() > EVIDENCE {
+            tail.pop_front();
+        }
+    }
+    (count, tail.into_iter().collect())
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    #[test]
+    fn log_tail_memory_is_bounded_for_long_invalid_lines() {
+        use std::io::Write;
+        let root = tempfile::tempdir().unwrap();
+        let path = root.path().join("huge.log");
+        let mut file = std::fs::File::create(&path).unwrap();
+        for _ in 0..40 {
+            file.write_all(&vec![255; 100000]).unwrap();
+            file.write_all(b"\n").unwrap();
+        }
+        file.write_all(b"FINAL").unwrap();
+        drop(file);
+        let (count, tail) = read_lines(&path);
+        assert_eq!(count, 41);
+        assert_eq!(tail.len(), EVIDENCE);
+        assert_eq!(tail.last().unwrap(), "FINAL");
+        assert!(tail.iter().all(|line| line.len() <= 4096 * 3));
+    }
 }

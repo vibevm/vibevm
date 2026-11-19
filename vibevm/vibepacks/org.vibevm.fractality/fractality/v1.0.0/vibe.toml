@@ -26,6 +26,7 @@ requires_kinds = []
 # fractality is itself a specspace of the host; it dogfoods the specspace
 # grammar it lives under (boot snippet slot 11 → target resolution + registry).
 "flow:org.vibevm.world/wal-specspaces" = { version = "^1.0.0", access = "private" }
+"flow:org.vibevm.fractality/delegation-rules" = { version = "^1.0.0", access = "private" }
 
 # The boss-side integration (IGNITION Phase 6): the boot snippet a
 # consuming boss loads at session start (slot 75 — outside the redbook

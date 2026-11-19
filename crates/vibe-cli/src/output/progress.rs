@@ -210,6 +210,10 @@ impl ProgressRenderer {
         self.logs.note(step, log);
     }
 
+    pub(super) fn note_task_log(&self, id: TaskId, log: &std::path::Path) {
+        self.logs.note_task(id, log);
+    }
+
     /// How many finished blocks this run drew and where its run record is.
     pub(super) fn run_summary(&self) -> (usize, Option<std::path::PathBuf>) {
         self.logs.summary()
@@ -425,7 +429,7 @@ impl InteractiveRenderer {
         if task.headline.command {
             return;
         }
-        let text = row(collapsed(&task.headline, width, end, elapsed, logs));
+        let text = row(collapsed(&task.headline, id, width, end, elapsed, logs));
         if !self.stderr {
             let _ = self.multi.println(text);
             return;

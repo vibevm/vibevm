@@ -409,12 +409,17 @@ impl UserConfig {
         // source still inherits the site's install root.
         if self.self_source.release_is_default() && self.artifacts.vibe.is_none() {
             let install_root = self.self_source.install_root.take();
+            let settings_dir = self.self_source.settings_dir.take();
             self.self_source = site.self_source.clone();
             self.self_source.install_root = install_root;
+            self.self_source.settings_dir = settings_dir;
             self.artifacts.vibe = site.artifacts.vibe.clone();
         }
         if self.self_source.install_root.is_none() {
             self.self_source.install_root = site.self_source.install_root.clone();
+        }
+        if self.self_source.settings_dir.is_none() {
+            self.self_source.settings_dir = site.self_source.settings_dir.clone();
         }
         if self.artifacts.packages.is_none() {
             self.artifacts.packages = site.artifacts.packages.clone();

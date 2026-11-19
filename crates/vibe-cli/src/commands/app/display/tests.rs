@@ -78,3 +78,24 @@ fn a_flat_display_draws_no_panel_and_keeps_the_live_stream() {
     assert!(flat.panel().is_none());
     assert!(!flat.quiet_children());
 }
+
+#[test]
+fn closing_actual_panel_session_prevents_outstanding_release_from_restarting_it() {
+    let ctx = crate::output::Context::from_flags(
+        false,
+        false,
+        None,
+        false,
+        crate::cli::AgentModeArg::Auto,
+    )
+    .with_progress(false, crate::output::ProgressMode::Interactive);
+    // A renderer handle is enough: this case must never enter terminal raw mode.
+    let panel = crate::output::ProgressPanel::for_test(&ctx);
+    let session = super::PanelSession::open(panel, false);
+    session.release();
+    session.close();
+    session.reclaim();
+    assert!(session.closed.load(std::sync::atomic::Ordering::SeqCst));
+    assert!(session.keys.lock().unwrap().is_none());
+    assert_eq!(*session.released.lock().unwrap(), 0);
+}

@@ -378,7 +378,51 @@ fn execute_after_open(
         selected_project_root: execution.selection.root().to_path_buf(),
         forced: execution.args.force,
     };
-    match run_inner(ctx, execution, trace) {
+    // Validate retained planner provenance before lifecycle work. Plain
+    // reinstall remains source-free and never invokes a resolver for authority.
+    let retained = match specmap_core::authority::context(&identity.selected_project_root) {
+        Ok(value) => value,
+        Err(_) => {
+            ctx.diagnostic("specification authority is missing/stale; boot repair remains source-free; run vibe install to refresh AI-native authority");
+            None
+        }
+    };
+    let result = run_inner(ctx, execution, trace).and_then(|mut draft| {
+        if draft.delegation.is_none()
+            && let Some(context) = retained
+        {
+            let refresh = (|| -> Result<()> {
+                let roots = context
+                    .nodeRoots
+                    .into_iter()
+                    .map(|(node, roots)| {
+                        Ok((
+                            node,
+                            roots
+                                .iter()
+                                .map(|raw| vibe_core::PackageRef::parse(raw))
+                                .collect::<std::result::Result<Vec<_>, _>>()?,
+                        ))
+                    })
+                    .collect::<Result<std::collections::BTreeMap<_, _>>>()?;
+                let workspace = Workspace::discover(&identity.selected_project_root)?;
+                vibe_workspace::specmap_authority::publish(
+                    &workspace,
+                    &identity.selected_project_root,
+                    &roots,
+                )?;
+                Ok(())
+            })();
+            if let Err(error) = refresh {
+                draft.ok = false;
+                return Err(compile_trace::carry_measured(error, || {
+                    RegisteredReportDraft::Reinstall(Box::new(draft))
+                }));
+            }
+        }
+        Ok(draft)
+    });
+    match result {
         Ok(draft) => {
             let parked = draft.delegation.is_some();
             let draft = RegisteredReportDraft::Reinstall(Box::new(draft));

@@ -34,3 +34,28 @@ pub(super) fn run_visible(command: &mut Command, label: &str) -> Result<()> {
     }
     Ok(())
 }
+
+pub(super) fn write_native_installer(
+    out_dir: &std::path::Path,
+    target: &str,
+    binaries: &std::collections::BTreeMap<String, std::path::PathBuf>,
+) -> anyhow::Result<()> {
+    let installer = binaries
+        .get("vibe-installer")
+        .context("Cargo emitted no native installer")?;
+    let suffix = if target.contains("windows") {
+        ".exe"
+    } else {
+        ""
+    };
+    let installer_path = out_dir.join(format!("vibe-installer-{target}{suffix}"));
+    let installer_bytes = fs::read(installer)?;
+    write_output(&installer_path, &installer_bytes)?;
+    #[cfg(unix)]
+    {
+        use std::os::unix::fs::PermissionsExt;
+        fs::set_permissions(&installer_path, fs::Permissions::from_mode(0o755))?;
+    }
+    println!("dist build: {}", installer_path.display());
+    Ok(())
+}

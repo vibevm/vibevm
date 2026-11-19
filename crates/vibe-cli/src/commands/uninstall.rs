@@ -204,6 +204,8 @@ pub fn run(ctx: &output::Context, args: UninstallArgs) -> Result<()> {
     let package = format!("{group}/{}", pkgref.name);
     let adoption_facts =
         handle_adoption_facts(ctx, &project_root, &package, interactive, args.assume_yes)?;
+    let final_workspace = Workspace::discover(&project_root)?;
+    vibe_workspace::specmap_authority::publish(&final_workspace, &project_root, &plan.node_roots)?;
     emit_report(
         ctx,
         group,

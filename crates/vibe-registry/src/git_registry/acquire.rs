@@ -46,14 +46,31 @@ pub(super) fn clone_first_reachable(
     })
 }
 
-/// Capture `refname` of `url` natively into `work` and copy its verified
-/// tree to `work/tree`; returns the tree and the commit.
+/// What one native capture produced: the verified tree, and the identities
+/// a durable snapshot records so a later run can decide whether to reuse it.
+pub(super) struct Captured {
+    pub tree: PathBuf,
+    pub commit: String,
+    pub object: String,
+    pub refname: String,
+}
+
+/// Capture `refname` of `url` natively into `work`, copying its verified
+/// tree to `work/tree`.
+///
+/// `durable` names the directory as one the capability keeps: the bare
+/// object store is then cloned on first use and **fetched** afterwards, with
+/// every received object checked at receipt, instead of the whole repository
+/// being cloned afresh (PROP-073 `#NATIVE-PREPARATION`). An ordinary
+/// temporary capture passes `false` and behaves exactly as before.
 pub(super) fn native_snapshot(
     backend: &dyn GitBackend,
     url: &str,
     refname: &str,
     work: &Path,
-) -> Result<(PathBuf, String), RegistryError> {
+    durable: bool,
+    namespace: Option<&str>,
+) -> Result<Captured, RegistryError> {
     fs::create_dir_all(work).map_err(|source| RegistryError::Io {
         path: work.to_path_buf(),
         source,
@@ -64,9 +81,13 @@ pub(super) fn native_snapshot(
             operation: "monorepo snapshot under the controlled transport",
         })
     };
-    let token = backend
-        .prepare_native_source(strip_git_plus_prefix(url), refname, None, &objects)?
-        .ok_or_else(unavailable)?;
+    let address = strip_git_plus_prefix(url);
+    let token = if durable {
+        backend.prepare_cached_native_source(address, refname, namespace, &objects)?
+    } else {
+        backend.prepare_native_source(address, refname, None, &objects)?
+    }
+    .ok_or_else(unavailable)?;
     // The bound destination stays absent: the verified tree is copied to
     // a sibling, exactly as a cache candidate is.
     let revision = token.bind(&work.join("bound"))?;
@@ -81,7 +102,22 @@ pub(super) fn native_snapshot(
             crate::git_backend::PayloadBytes::Verbatim,
         )?
         .ok_or_else(unavailable)?;
-    let tree = work.join("tree");
+    // Publish a new immutable generation. Existing registry readers retain
+    // their selected tree even when another process refreshes the cache.
+    let generation = tempfile::Builder::new()
+        .prefix("snapshot-")
+        .tempdir_in(work)
+        .map_err(|source| RegistryError::Io {
+            path: work.to_path_buf(),
+            source,
+        })?;
+    let tree = generation.path().join("tree");
     staged.copy_for_cache(&tree)?;
-    Ok((tree, revision.commit.clone()))
+    let _retained_generation = generation.keep();
+    Ok(Captured {
+        tree,
+        commit: revision.commit.clone(),
+        object: revision.object.clone(),
+        refname: revision.reference.clone(),
+    })
 }

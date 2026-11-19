@@ -1,0 +1,15 @@
+{
+  "metadata": {
+    "description": "Explicit private layered prefix artifact for caller consumption; no provider request.",
+    "rustOptions": {"package": "vibe_wire::prompt_compose"},
+    "x-rust-type": "PromptComposeReport"
+  },
+  "properties": {
+    "command": {"type": "string"},
+    "node": {"type": "string"},
+    "path": {"type": "string"},
+    "sha256": {"type": "string"},
+    "len": {"type": "uint32"},
+    "local": {"type": "boolean"}
+  }
+}

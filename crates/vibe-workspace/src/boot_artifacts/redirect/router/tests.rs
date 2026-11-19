@@ -58,6 +58,35 @@ any position. A delivered file sits between two lines:
 The boot order — this file, `vibevm/vibespecs/boot/STATIC.xml`, the INDEX files — is an order of
 precedence, not of position. A lane delivered before this file has been read.
 
+Edit sources, not materializations. Never hand-edit `vibedeps`; change its canonical inputs and let Vibe regenerate it.
+
+# Optional personal boot — read last
+
+After complete project INDEX/live, use exposed nonempty VIBE_SETTINGS else HOME/.vibe
+(Windows USERPROFILE/.vibe only without HOME). Unknown/relative/../symlink/alias
+root/ancestor: diagnose+skip; no guessing, commands or env dumps.
+
+Personal: settings/user-project, not mcp/user-project. Validate vibe.toml;
+read vibevm/vibespecs/boot/STATIC.xml or STATIC.md then INDEX.md with conditions.
+Two STATICs, unsafe/absent/broken/stale inputs: skip whole layer, keep project.
+No nested instruction entrypoints, prose-private expansion or boot mutations.
+
+Read settings/override-bindings.toml schema1/2 before personal. Match known
+Git common-dir+node or non-Git root, never names/remotes. schema2 user_controls
+user_enabled=false skips personal only; absent=true. Invalid mapping: skip optional.
+Enabled binding's 32-alphanumeric id selects project-overrides/id after personal;
+same STATIC/INDEX rules. Disabled skips override; no bind/repair.
+
+Same-project complete vibe:lane-begin/end personal:/override: pairs count as read;
+partial/project pairs do not.
+[layers] schema1: validate targets/relations by declaring owner/version and
+own/locked spec anchors. replace requires lower owner's own overridable preference;
+supplement is additive. Unsafe/missing/protected/competing: skip optional layer.
+Highest permitted layer wins: name target/source and read its exact unit;
+keep prefix bytes. Disabled grants nothing. Safety/attribution/commit discipline
+and unmarked rules bind; no prose inference.
+
+Personal memory: when authorized to remember a user preference, working style, machine fact or cross-project convention, write an ordinary authored record under the personal project's vibevm/vibespecs, not harness auto-memory. A fact collaborators need belongs in the project's repository. Never store credentials. An explicit durable opt-out in the loaded user snippet selects the user's other memory mechanism; respect it. A record must be boot-indexed or explicitly linked from the authored user boot snippet to reach a later session; arbitrary records are not auto-loaded. Boot never writes records or edits INDEX. An absent/unavailable personal root requires explicit user init/action before a memory write, not silent harness fallback.
 Boot is pure file-reading — there is nothing to execute."
     );
 }
@@ -97,7 +126,11 @@ fn a_node_with_no_lane_keeps_the_rule_shape_and_states_there_is_no_id() {
         assert!(body.contains(rule), "rule {rule:?} is missing: {body}");
     }
     assert!(body.contains("publishes no static lane"));
-    assert!(!body.contains("STATIC.xml"), "there is no lane to name");
+    let project = body.split("# Optional personal boot").next().unwrap();
+    assert!(
+        !project.contains("STATIC.xml"),
+        "there is no project lane to name"
+    );
     assert!(!body.contains("expected id of"));
 }
 
@@ -107,14 +140,24 @@ fn a_node_with_no_lane_keeps_the_rule_shape_and_states_there_is_no_id() {
 fn the_named_lane_follows_the_target_format() {
     let xml = render_router(&facts("org.x/y", Some("aaaaaaaaaaaa"), SpecFormat::Xml));
     assert!(xml.contains("vibevm/vibespecs/boot/STATIC.xml"));
-    assert!(!xml.contains("STATIC.md"));
+    assert!(
+        !xml.split("# Optional personal boot")
+            .next()
+            .unwrap()
+            .contains("STATIC.md")
+    );
     let md = render_router(&facts(
         "org.x/y",
         Some("aaaaaaaaaaaa"),
         SpecFormat::Markdown,
     ));
     assert!(md.contains("vibevm/vibespecs/boot/STATIC.md"));
-    assert!(!md.contains("STATIC.xml"));
+    assert!(
+        !md.split("# Optional personal boot")
+            .next()
+            .unwrap()
+            .contains("STATIC.xml")
+    );
 }
 
 /// The expected id follows the lane and nothing else, which is what keeps
@@ -221,7 +264,8 @@ fn the_rendered_block_is_small_against_the_instruction_file_budget() {
     ));
     println!("router block: {} bytes", block.len());
     assert!(
-        block.len() < 4 * 1024,
+        // Retain the original router budget plus exactly the new universal policy.
+        block.len() < 4 * 1024 + super::super::DEPENDENCY_OWNERSHIP.len() + 2,
         "the block itself must leave an entrypoint most of its 32 KiB: {} bytes",
         block.len()
     );
