@@ -14,7 +14,7 @@ export async function runNativePi({packageDir, carrierPath, prefixPath, cwd, arg
   if(parsed.help||parsed.version||parsed.listModels||parsed.export){const {main}=await native('main.js');return main(args);}
   // Do not silently reinterpret native flags while their complete bootstrap mapping
   // is still being integrated. Values (notably apiKey) never enter diagnostics.
-  const pending=['resume','fork','models','systemPrompt','projectTrustOverride','fileArgs'];
+  const pending=['resume','fork','models','systemPrompt'];
   const refused=pending.filter(key=>Array.isArray(parsed[key])?parsed[key].length>0:parsed[key]!==undefined&&parsed[key]!==false);
   if(refused.length) throw new Error('Vibe Pi adapter has not admitted these native option families: '+refused.join(', '));
   const appMode=parsed.mode==='rpc'?'rpc':parsed.mode==='json'?'json':parsed.print||!process.stdin.isTTY||!process.stdout.isTTY?'print':'interactive';
@@ -24,7 +24,8 @@ export async function runNativePi({packageDir, carrierPath, prefixPath, cwd, arg
     stdinContent=input.trim()||undefined;
   }
   const {buildInitialMessage}=await native('cli/initial-message.js');
-  const {initialMessage,initialImages}=buildInitialMessage({parsed,stdinContent});
+  const files=parsed.fileArgs.length?await (await native('cli/file-processor.js')).processFileArguments(parsed.fileArgs,{autoResizeImages:false}):{};
+  const {initialMessage,initialImages}=buildInitialMessage({parsed,stdinContent,fileText:files.text,fileImages:files.images});
   const {admitPrefix,createSessionCarrier}=await import(pathToFileURL(carrierPath).href);
   const prefix=admitPrefix(prefixPath); // Before runtime/session effects or compaction.
   if(parsed.offline){process.env.PI_OFFLINE='1';process.env.PI_SKIP_VERSION_CHECK='1';}
@@ -32,9 +33,10 @@ export async function runNativePi({packageDir, carrierPath, prefixPath, cwd, arg
   const {ProjectTrustStore,hasTrustRequiringProjectResources}=await native('core/trust-manager.js');
   const agentDir=getAgentDir();
   const trustStore=new ProjectTrustStore(agentDir);
-  if(hasTrustRequiringProjectResources(cwd)&&trustStore.get(cwd)!==true){
-    throw new Error('Pi project resources require native trust admission; approve this project with plain pi before launching the Vibe carrier');
-  }
+  const {resolveProjectTrusted}=await native('core/project-trust.js');
+  const {createProjectTrustContext}=await native('cli/project-trust.js');
+  const {builtInExtensions}=await native('extensions/index.js');
+  const projectTrustByCwd=new Map();
   const {SettingsManager}=await native('core/settings-manager.js');
   const {createSessionManager}=await native('main.js');
   const settings=SettingsManager.create(cwd,agentDir);
@@ -42,24 +44,34 @@ export async function runNativePi({packageDir, carrierPath, prefixPath, cwd, arg
   const {createAgentSessionRuntime,createAgentSessionServices,createAgentSessionFromServices}=await native('core/agent-session-runtime.js');
   const {resolveCliModel}=await native('core/model-resolver.js');
   const carriers=new Set();
-  const createRuntime=async({cwd:nextCwd,agentDir:nextAgentDir,sessionManager,sessionStartEvent})=>{
-    // Runtime replacement is native; revalidate scope/trust before resource loading.
+  const createRuntime=async({cwd:nextCwd,agentDir:nextAgentDir,sessionManager,sessionStartEvent,projectTrustContext})=>{
+    // Runtime replacement is native; revalidate scope before resource loading.
     if(resolve(nextCwd)!==resolve(cwd)) throw new Error('Pi changed project cwd; relaunch Vibe in the selected project to re-admit its boot');
-    if(hasTrustRequiringProjectResources(nextCwd)&&trustStore.get(nextCwd)!==true) throw new Error('Pi project trust changed; native trust admission is required');
+    const cachedTrust=projectTrustByCwd.get(nextCwd);
+    const hasResources=hasTrustRequiringProjectResources(nextCwd);
+    const needsTrust=parsed.projectTrustOverride===undefined&&cachedTrust===undefined&&hasResources;
+    const projectTrusted=needsTrust?false:(cachedTrust??parsed.projectTrustOverride??trustStore.get(nextCwd)??!hasResources);
+    const runtimeSettings=SettingsManager.create(nextCwd,nextAgentDir,{projectTrusted});
+    const trustDiagnostics=[];
+    const reloadOptions=needsTrust?{resolveProjectTrust:async({extensionsResult})=>{
+      const trusted=await resolveProjectTrusted({cwd:nextCwd,trustStore,trustOverride:parsed.projectTrustOverride,defaultProjectTrust:settings.getDefaultProjectTrust(),extensionsResult,projectTrustContext:projectTrustContext??createProjectTrustContext({cwd:nextCwd,mode:appMode,settingsManager:settings,hasUI:sessionStartEvent===undefined&&appMode==='interactive'}),onExtensionError:()=>trustDiagnostics.push({type:'warning',message:'Native Pi project trust extension reported an error'})});
+      projectTrustByCwd.set(nextCwd,trusted);return trusted;
+    }}:undefined;
     const holder={session:null};
     const carrier=createSessionCarrier({sessionId:sessionManager.getSessionId(),prefix,getSession:()=>holder.session});
     let services;
     let created;
     try {
-    services=await createAgentSessionServices({cwd:nextCwd,agentDir:nextAgentDir,extensionFlagValues:parsed.unknownFlags,resourceLoaderOptions:{extensionFactories:[carrier.extension],additionalExtensionPaths:parsed.extensions,additionalSkillPaths:parsed.skills,additionalPromptTemplatePaths:parsed.promptTemplates,additionalThemePaths:parsed.themes,noExtensions:parsed.noExtensions,disabledBuiltinExtensions:parsed.noMcp?['mcp']:undefined,noSkills:parsed.noSkills,noPromptTemplates:parsed.noPromptTemplates,noThemes:parsed.noThemes,noContextFiles:parsed.noContextFiles,appendSystemPrompt:parsed.appendSystemPrompt}});
-    if(services.diagnostics.some(d=>d.type==='error')) throw new Error('Native Pi resource or extension argument admission failed');
+    services=await createAgentSessionServices({cwd:nextCwd,agentDir:nextAgentDir,settingsManager:runtimeSettings,resourceLoaderReloadOptions:reloadOptions,extensionFlagValues:parsed.unknownFlags,resourceLoaderOptions:{extensionFactories:[...builtInExtensions,carrier.extension],additionalExtensionPaths:parsed.extensions,additionalSkillPaths:parsed.skills,additionalPromptTemplatePaths:parsed.promptTemplates,additionalThemePaths:parsed.themes,noExtensions:parsed.noExtensions,disabledBuiltinExtensions:parsed.noMcp?['mcp']:undefined,noSkills:parsed.noSkills,noPromptTemplates:parsed.noPromptTemplates,noThemes:parsed.noThemes,noContextFiles:parsed.noContextFiles,appendSystemPrompt:parsed.appendSystemPrompt}});
+    if(services.diagnostics.some(d=>d.type==='error')||services.resourceLoader.getExtensions().errors.length) throw new Error('Native Pi resource or extension argument admission failed');
+    if(parsed.provider&&!parsed.model) throw new Error('Native Pi --provider requires --model');
     const selected=resolveCliModel({cliProvider:parsed.provider,cliModel:parsed.model,cliThinking:parsed.thinking,inlineApiKey:parsed.apiKey!==undefined,modelRuntime:services.modelRuntime});
     if(selected.error) throw new Error('Native Pi model selection failed; check the provider/model arguments');
     if(selected.warning) console.error('Native Pi model selection reported a warning; verify the selected model');
     if(parsed.apiKey){if(!selected.model)throw new Error('Native --api-key requires an admitted model');await services.modelRuntime.setRuntimeApiKey(selected.model.provider,parsed.apiKey);}
     created=await createAgentSessionFromServices({services,sessionManager,sessionStartEvent,model:selected.model,thinkingLevel:parsed.thinking??selected.thinkingLevel,tools:parsed.tools,excludeTools:parsed.excludeTools,noTools:parsed.noTools?'all':parsed.noBuiltinTools?'builtin':undefined});
     holder.session=created.session;carrier.attach();carriers.add(carrier);
-    return {...created,services,diagnostics:services.diagnostics};
+    return {...created,services,diagnostics:[...trustDiagnostics,...services.diagnostics]};
     } catch(error) {
       carrier.detach();
       if(created?.session) await created.session.dispose();
