@@ -16,6 +16,17 @@ Each step consumes the preceding result. The architect owns briefs and acceptanc
 | 50 | `NST-HERMES-INTEGRATION` | Deliver the [existing Hermes journey](NST-HERMES-INTEGRATION-01.md) through the first real adapter, with native CLI kept separate. Verify same-conversation resume and two viewers, declared instruction scope, draft and approval preservation; distinguish absent evidence and unavailable guarantees. |
 | 60 | `IDE-MVP-ACCEPTANCE` | Demonstrate the full failed-check → scenario → spec → operation result → unsent draft journey in real terminals. Verify entry points and pipes independently, reconcile every target matrix row, document supported platforms and limits, and record the post-repair IDE acceptance independently. |
 
+## ZenMode: conversation or plan
+
+ZenMode is a required MVP experience, not a theme or a shortcut for hiding sidebars. It has exactly two primary screens, one visible at a time:
+
+- **Chat.** A single vertical conversation and its composer. Use Claude Code as the reference for visual restraint. Keep messages and the current reply readable without permanent inspectors or tool panels. Tool details are available on demand; a pending approval is visible and never implicitly granted. The view uses the selected conversation, not Hermes-specific UI state.
+- **Plan dashboard.** Open the authoritative task tree at the current work, with its parent stage and product goal visible. Make it possible to answer “Where are we in the plan, what is running, and what is waiting or blocked?” without expanding every branch. Distinguish the user's selection from actual running work; allow parallel active branches and an honest idle state. This is the campaign plan, not the package tree or an agent process list.
+
+Provide one discoverable keyboard action to switch screens. Switching or leaving ZenMode preserves the unsent draft, conversation position, pending approvals, selected task, expanded branches and scroll. A background update must not move the reader away from the branch they are inspecting. Changing views must not send a message, run a task or change plan status. Full workbench tools remain available outside this mode; do not add a third primary Zen screen.
+
+Acceptance: in a real terminal, type half a message, switch to the dashboard, locate an active check and name the stage and goal it serves. While viewing another branch, let the check finish. Verify its status updates without stealing focus; switch back to the intact draft. Check readability in narrow and wide terminal captures and verify state preservation structurally. Include these journeys in IDE-UX-MATRIX and IDE-MVP-ACCEPTANCE.
+
 ## Visual review in VibeFrame
 
 Keep `IDE-VIBEINK` first. As a work item of `IDE-UX-MATRIX`, bring the independent `vibevm/vibevm-term` project into VibeVM's `vibepacks` development layout with one authoritative source and preserved history and license. Terminal specifications stay in that project. Modernize its layout, root and package `vibe.toml` manifests and declared dependencies against a pinned build of the then-current unreleased VibeVM; regenerate derived dependencies normally. Verify a clean project resolves, installs and launches VibeFrame before claiming migration. Do not copy terminal sources into host publications by default.
