@@ -143,3 +143,5 @@ Three remaining Rust test-only changes exercise cold partial installation, defer
 Another 90 revisions touched only original campaign seed/registry/task inputs (271 changed-file occurrences). Parsed first-parent comparisons identify the changed keys and task-file IDs in the index. They describe historical planning, not the present roadmap or executed product changes.
 
 12 further commits changed only the historical campaign evidence tree (1246 changed-file occurrences). Embedded patches, inputs, scripts and logs were classified as retained artifacts; their presence does not establish acceptance or execution in the target. Per-file diffs are fingerprinted for later claim-specific inspection.
+
+Eleven remaining campaign-only revisions (39 changed-file occurrences) update rulings, evidence, task bindings or historical campaign tooling. Python tooling changes are distinguished from record-only changes; no current-product effect or historical test execution is inferred.
