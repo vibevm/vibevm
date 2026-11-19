@@ -103,6 +103,12 @@ Read NATIVE-PI-MODEL-SELECTION-20261119.md and independently verified asset SHA2
 
 Next implementation priority is Hermes executable bootstrap, rather than extending this completed Pi atom indefinitely. In the final argument disposition, distinguish an intentional replacing-system-prompt/carrier collision from an unimplemented ordinary capability: an actionable collision refusal can be valid while native read delivery remains available. Resume/fork and other ordinary lifecycle requirements remain explicitly open.
 
+## Hermes actual Vibe dispatch — preliminary terminal witness
+
+Architect read `control/hermes-vibe-dispatch-locate.log`: actual Vibe dispatch reached native Hermes, accepted `/exit` and terminated0 without timeout or native refusal. This establishes a product-path startup/normal-exit transition, unlike the earlier direct-native CLI proof. Reusing the existing `program::locate` fixes the bare executable-name resolution at the native installation boundary; no new resolver is introduced.
+
+Exact candidate hashes, cancellation evidence and final focused gates await the coherent builder packet. Separately reported product-carrier native assembly/cache tests do not prove a CLI-submitted model turn. Full submitted-turn delivery, worker isolation, platform layouts and session selectors remain explicit obligations. Do not rerun the accepted normal-exit scenario merely to fill another receipt, and do not write the owner-facing Hermes completion report before the actual delivered scope is reviewed.
+
 ## Remaining finite proof
 
 Inspect the actual instance-bound carrier and native Pi extension/file path against the existing packet. Require exact source/runtime binding, complete prefix byte/ordering/once-only evidence, preserved base/resources, changed personal-tail behavior, worker/child exclusion and truthful resume behavior. Distinguish constructed payload from attempted SDK/network delivery. No new generic middleware, permission rounds or speculative proof campaign is requested.
