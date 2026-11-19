@@ -4,7 +4,7 @@ Date2026-11-19. Owner directive: «Поставь всё это (включая 
 
 ## Placement and authority
 
-**Current schedule (owner amendment, 2026-11-19):** `NST-DOMAIN-CONSOLIDATION → NST-AI-NATIVE-GLOBAL-REPAIR → NST acceptance → VIBEVM-IDE-MVP (separate roadmap item)`. This supersedes the earlier adjacency wording below, not the scope of consolidation. Deliver its accepted owner/caller map to global repair and retain it for the subsequent workbench and Hermes integration. See `VIBEVM-IDE-MVP-01.md`.
+**Current schedule (owner amendment, 2026-11-19):** `NST-DOMAIN-CONSOLIDATION → NST-AI-NATIVE-GLOBAL-REPAIR → NST acceptance → ARCHITECTURE-REMAINDER → VIBEVM-IDE-MVP (separate roadmap items)`. This supersedes the earlier adjacency wording below, not the scope of consolidation. Deliver its accepted owner/caller map to global repair and retain it for the subsequent workbench and Hermes integration. See `VIBEVM-IDE-MVP-01.md`.
 
 Latest owner placement clarification2026-11-19: «лучше даже не после SYS-PROMPT а перед NST-AI-NATIVE-GLOBAL-REPAIR». Create ONE actual node `NST-DOMAIN-CONSOLIDATION` under NST, initially planned, immediately BEFORE `NST-AI-NATIVE-GLOBAL-REPAIR`, after the preceding functional NST work. It depends on the applicable existing functional prerequisites; the global-repair parent additionally depends on this consolidation. Do not create a dependency back from consolidation into global repair. This preserves the original222-task historical denominator, accepted work and the SYS→CORP-ENV→remaining NST route. It neither blocks current SYS/CORP delivery nor begins refactoring now. The existing seven global-repair children remain unchanged, including initial ideal synchronization inside that later task.
 
