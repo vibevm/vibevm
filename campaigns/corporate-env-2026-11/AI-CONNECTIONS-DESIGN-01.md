@@ -9,7 +9,7 @@ Root: `<effective user settings>/secrets/ai`. Resolve through the existing user-
 Store logical connection IDs separately from immutable secret-bearing revisions:
 
 - `index.toml`: schema, store revision, optional default connection ID, connection-ID → revision reference, harness → binding mode.
-- `connections/<opaque-id>/<opaque-revision>/config.toml`: schema, `api_kind = "openai-chat-completions"`, endpoint, optional public model preference. No embedded credential URL, unknown provider inference or raw key.
+- `connections/<opaque-id>/<opaque-revision>/config.toml`: schema, `api_kind = "openai-chat-completions"`, endpoint and required `default_model` for a usable configured connection (owner clarification2026-11-19). No embedded credential URL, unknown provider inference or raw key.
 - `connections/<opaque-id>/<opaque-revision>/credential`: the protected key, never rendered or exposed through normal show/export.
 
 All files remain within the protected root, including metadata. Names are generated opaque IDs, not arbitrary user paths. Human labels are metadata and do not decide path/authority. Config and credential refer to the same revision directory. Default references a logical ID; updating that connection changes its selected revision. No duplicate `default` secret copy.
@@ -42,7 +42,7 @@ Missing agent binding means native/unmanaged, not automatic opt-in or guessed in
 
 Acquire the existing applicable user-scoped mutation lock or a narrowly owned AI-store lock, with consistent ordering. Admit paths with no-follow capabilities and user-only permissions/ACL before writing any secret. Validate protocol/endpoint/key shape without a network test. A connection check requiring a request is separately consented, not an automatic wizard effect.
 
-For add/update, write a new revision config and credential with exclusive creation, then atomically publish one validated index selecting that revision. Never mutate an active revision in place. Failure before index publication leaves the old working selection; failure after publication cannot expose a mismatched endpoint/key pair. Record no secret in recovery journal. Refuse foreign existing paths and symlink/reparse aliases rather than repairing them.
+For add/update, write a new revision config (endpoint/API kind/default model) and credential with exclusive creation, then atomically publish one validated index selecting that revision. The wizard treats endpoint, key and default model as one reusable connection; status shows endpoint/model and credential presence only. Explicit per-invocation model choices override this default through native owners, and individual agent model overrides are not erased by a default update. Never mutate an active revision in place. Failure before index publication leaves the old working selection; failure after publication cannot expose a mismatched endpoint/key pair. Record no secret in recovery journal. Refuse foreign existing paths and symlink/reparse aliases rather than repairing them.
 
 Readers load one index snapshot and its admitted revision; retention must keep that revision available until the reader has copied the required values. Do not race launch with eager deletion. Replacement makes old revisions unreachable but does not promise secure erasure; a bounded cleanup owner can remove old revisions only when no active reader needs them. Do not let general application cleanup traverse this store. Uninstalling/updating an agent or Vibe must not silently erase the credential inventory.
 
