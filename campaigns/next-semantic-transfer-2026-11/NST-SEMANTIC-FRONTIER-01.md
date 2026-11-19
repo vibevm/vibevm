@@ -123,3 +123,5 @@ Four single-file code amendments distinguish captured inventory from physical co
 Nine single-file test-labeled changes were inspected by actual content. One only retargets a specification annotation, one switches a fixture, and one adds only a historical race report; the others add assertions around decoding, replay, domain isolation or multi-client operation behavior. No current-product run is inferred.
 
 The three migration JTD declarations in `aa48a5f98d13` and two preview catalogue fixtures in `db29ee46f531` establish format inputs, not execution of the reader or a production migration.
+
+Four M-13-D records in `529ee8eb7853` document the numerical edit perimeter, slot moves, and inheritance guards. A retained report does not grant subtree writes or establish a migration run.
