@@ -77,6 +77,10 @@ pub(super) fn remove_selected_in(
         for name in &names {
             if config.exists() {
                 match agent.config_format() {
+                    ConfigFormat::Yaml => {
+                        let rendered = activation::render_projection(agent, config, name, None)?;
+                        batch.write(config, rendered.as_bytes())?;
+                    }
                     ConfigFormat::Json => {
                         let mut stripped = strip_json_entry(config, agent.mcp_section_key(), name)?;
                         vibe_mcp::pkg_servers::unmark_managed(&mut stripped, name);

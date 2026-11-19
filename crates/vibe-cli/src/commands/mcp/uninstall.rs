@@ -65,7 +65,7 @@ pub(super) fn run_uninstall(ctx: &output::Context, args: McpUninstallArgs) -> Re
     // files and drops the vibevm block from MCP configs), so the
     // confirm step here matters more than for install / upgrade.
     let (preview_results, preview_skill) =
-        walk_uninstall(&agents, scope, project_root.as_deref(), what, true)?;
+        walk_uninstall(ctx, &agents, scope, project_root.as_deref(), what, true)?;
     let needs_change = preview_results.iter().any(|r| r.status == "would-remove")
         || preview_skill.iter().any(|r| r.status == "would-remove");
 
@@ -101,7 +101,7 @@ pub(super) fn run_uninstall(ctx: &output::Context, args: McpUninstallArgs) -> Re
     let (results, skill_results) = if args.dry_run || !needs_change {
         (preview_results, preview_skill)
     } else {
-        walk_uninstall(&agents, scope, project_root.as_deref(), what, false)?
+        walk_uninstall(ctx, &agents, scope, project_root.as_deref(), what, false)?
     };
 
     let report = UninstallReport {
@@ -169,7 +169,9 @@ fn run_selected_uninstall(ctx: &output::Context, args: McpUninstallArgs) -> Resu
     let mut destinations = Vec::new();
     for agent in agents {
         for concrete in scope.expand() {
-            if let Some(config) = agent.config_path(concrete, project.as_deref())? {
+            if let Some(config) =
+                agent.config_path_with_dirs(concrete, project.as_deref(), &ctx.agent_user_dirs)?
+            {
                 destinations.push((agent, concrete, config));
             }
         }
@@ -247,6 +249,7 @@ fn run_selected_uninstall(ctx: &output::Context, args: McpUninstallArgs) -> Resu
 /// `walk_upgrade`: invoked twice from `run_uninstall`, once
 /// dry-run, once apply.
 fn walk_uninstall(
+    ctx: &output::Context,
     agents: &[Agent],
     scope: Scope,
     project_root: Option<&Path>,
@@ -261,7 +264,11 @@ fn walk_uninstall(
                 continue;
             }
             if what.includes_mcp() {
-                let path = agent.config_path(concrete_scope, project_root)?;
+                let path = agent.config_path_with_dirs(
+                    concrete_scope,
+                    project_root,
+                    &ctx.agent_user_dirs,
+                )?;
                 if let Some(path) = path {
                     let outcome = uninstall_mcp_entry(*agent, concrete_scope, &path, dry_run)?;
                     results.push(outcome);

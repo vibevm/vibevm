@@ -92,6 +92,25 @@ pub(crate) struct McpRuntime {
 }
 
 pub fn run(ctx: &output::Context, args: McpArgs, runtime: McpRuntime) -> Result<()> {
+    let mut resolved = ctx.clone();
+    if !matches!(args.command, McpSubcommand::Serve(_))
+        && !resolved.agent_user_dirs.native.contains_key(&Agent::Hermes)
+    {
+        let settings = crate::commands::app::global::settings_root()?;
+        let configuration = vibe_app::AgentsConfig::load(&settings)?;
+        let launcher =
+            crate::commands::agent::launchers::resolve(&settings, &configuration, "hermes")?;
+        if launcher.kind == vibe_workspace::system_prompt::HarnessKind::Hermes
+            && launcher.command.len() == 1
+        {
+            if let Ok(program) = crate::commands::agent::program::locate(&launcher.command[0]) {
+                if let Ok(home) = crate::commands::agent::native::hermes_profile_home(&program) {
+                    resolved.agent_user_dirs.native.insert(Agent::Hermes, home);
+                }
+            }
+        }
+    }
+    let ctx = &resolved;
     match args.command {
         McpSubcommand::Enable(sub) => activation::run(ctx, sub, true),
         McpSubcommand::Disable(sub) => activation::run(ctx, sub, false),

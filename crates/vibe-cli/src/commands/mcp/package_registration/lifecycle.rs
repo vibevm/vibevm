@@ -9,6 +9,9 @@ pub(in crate::commands::mcp) fn user_agent_configs_for_package(
     let coordinate = normalized_coordinate(package)?;
     let mut found = Vec::new();
     for agent in Agent::ALL.iter().copied() {
+        if agent == Agent::Hermes && !dirs.native.contains_key(&agent) {
+            continue;
+        }
         let Some(config) = agent.config_path_with_dirs(Scope::User, None, dirs)? else {
             continue;
         };
@@ -67,6 +70,20 @@ pub(in crate::commands::mcp) fn user_registration_statuses(
             }
             let value = match agent.config_format() {
                 ConfigFormat::Json => read_json(&config)?,
+                ConfigFormat::Yaml => {
+                    let mut entries = serde_json::Map::new();
+                    for name in receipt.entries.keys() {
+                        if let Some(value) = current_entry(agent, &config, name)? {
+                            entries.insert(name.clone(), value);
+                        }
+                    }
+                    let mut document = serde_json::Map::new();
+                    document.insert(
+                        agent.mcp_section_key().into(),
+                        serde_json::Value::Object(entries),
+                    );
+                    serde_json::Value::Object(document)
+                }
                 ConfigFormat::Toml => serde_json::to_value(read_toml(&config)?)?,
             };
             Ok(Some(value))

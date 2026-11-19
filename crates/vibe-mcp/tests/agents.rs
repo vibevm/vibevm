@@ -9,14 +9,18 @@ use vibe_mcp::agents::{Agent, ConfigPayload, Scope, What, detect_agents};
 fn json_payload(agent: Agent, windows: bool) -> serde_json::Value {
     match agent.build_mcp_entry_for(windows) {
         ConfigPayload::Json(v) => v,
-        ConfigPayload::Toml(_) => panic!("expected JSON for {}", agent.as_str()),
+        ConfigPayload::Toml(_) | ConfigPayload::Yaml(_) => {
+            panic!("expected JSON for {}", agent.as_str())
+        }
     }
 }
 
 fn toml_payload(agent: Agent, windows: bool) -> toml::Value {
     match agent.build_mcp_entry_for(windows) {
         ConfigPayload::Toml(v) => v,
-        ConfigPayload::Json(_) => panic!("expected TOML for {}", agent.as_str()),
+        ConfigPayload::Json(_) | ConfigPayload::Yaml(_) => {
+            panic!("expected TOML for {}", agent.as_str())
+        }
     }
 }
 
@@ -226,8 +230,18 @@ fn config_path_claude_desktop_has_no_project_surface() {
 #[test]
 fn config_path_user_resolves_for_all_agents() {
     for &a in Agent::ALL {
-        let p = a.config_path(Scope::User, None).unwrap();
-        assert!(p.is_some(), "user-scope path missing for {}", a.as_str());
+        if a == Agent::Hermes {
+            let mut dirs = vibe_mcp::agents::AgentUserDirectories::default();
+            let profile = std::env::temp_dir().join("synthetic-hermes-profile");
+            dirs.native.insert(a, profile.clone());
+            assert_eq!(
+                a.config_path_with_dirs(Scope::User, None, &dirs).unwrap(),
+                Some(profile.join("config.yaml"))
+            );
+        } else {
+            let p = a.config_path(Scope::User, None).unwrap();
+            assert!(p.is_some(), "user-scope path missing for {}", a.as_str());
+        }
     }
 }
 
@@ -337,7 +351,7 @@ fn no_agent_entry_carries_a_path_arg() {
     // `--path` was dropped so a committed `.mcp.json` stays portable.
     for &agent in Agent::ALL {
         let flat: Vec<String> = match agent.build_mcp_entry_for(false) {
-            ConfigPayload::Json(v) => {
+            ConfigPayload::Json(v) | ConfigPayload::Yaml(v) => {
                 if let Some(arr) = v["command"].as_array() {
                     // OpenCode: `command` is the whole argv array.
                     arr.iter()

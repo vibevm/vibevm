@@ -178,12 +178,16 @@ fn snapshot(path: PathBuf) -> Result<Snapshot> {
 
 fn payload_json(payload: &ConfigPayload) -> Result<serde_json::Value> {
     match payload {
-        ConfigPayload::Json(v) => Ok(v.clone()),
+        ConfigPayload::Json(v) | ConfigPayload::Yaml(v) => Ok(v.clone()),
         ConfigPayload::Toml(v) => Ok(serde_json::to_value(v)?),
     }
 }
 
-fn current_entry(agent: Agent, config: &Path, name: &str) -> Result<Option<serde_json::Value>> {
+pub(super) fn current_entry(
+    agent: Agent,
+    config: &Path,
+    name: &str,
+) -> Result<Option<serde_json::Value>> {
     if !checked_file_exists(config)? {
         return Ok(None);
     }
@@ -193,6 +197,7 @@ fn current_entry(agent: Agent, config: &Path, name: &str) -> Result<Option<serde
             .get(section)
             .and_then(|v| v.get(name))
             .cloned()),
+        ConfigFormat::Yaml => native_yaml(config, name, None).map(|result| result.0),
         ConfigFormat::Toml => Ok(read_toml(config)?
             .get(section)
             .and_then(toml::Value::as_table)
@@ -447,3 +452,37 @@ use register::register_one;
 pub(super) use register::{RegistrationPolicy, register, register_with_dirs};
 pub(super) use remove::remove_all_managed;
 use remove::remove_selected;
+
+fn native_yaml(
+    config: &Path,
+    name: &str,
+    desired: Option<Option<&serde_json::Value>>,
+) -> Result<(Option<serde_json::Value>, String)> {
+    let home = config
+        .parent()
+        .ok_or_else(|| anyhow::anyhow!("Hermes config has no profile home"))?;
+    let settings = crate::commands::app::global::settings_root()?;
+    let configuration = vibe_app::AgentsConfig::load(&settings)?;
+    let launcher = crate::commands::agent::launchers::resolve(&settings, &configuration, "hermes")?;
+    let (program, standing) = launcher
+        .command
+        .split_first()
+        .ok_or_else(|| anyhow::anyhow!("empty selected Hermes launcher"))?;
+    if launcher.kind != vibe_workspace::system_prompt::HarnessKind::Hermes {
+        bail!("selected Hermes launcher has a different native identity");
+    }
+    if !standing.is_empty() {
+        bail!(
+            "Hermes MCP rendering requires an admitted direct native launcher; standing wrapper arguments are not interpreted"
+        );
+    }
+    let program = crate::commands::agent::program::locate(program)?;
+    crate::commands::agent::native::project_yaml(
+        settings.path(),
+        &program,
+        home,
+        config,
+        name,
+        desired,
+    )
+}

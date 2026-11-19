@@ -88,6 +88,7 @@ pub fn entry_payload(agent: Agent, command: &str, args: &[String]) -> ConfigPayl
             "command": command,
             "args": args,
         })),
+        Agent::Hermes => ConfigPayload::Yaml(serde_json::json!({"command":command,"args":args})),
         Agent::OpenCode => {
             let mut argv = vec![command.to_string()];
             argv.extend(args.iter().cloned());
@@ -118,6 +119,7 @@ pub fn entry_payload(agent: Agent, command: &str, args: &[String]) -> ConfigPayl
 /// authentication remains owned by the client and its user.
 pub fn remote_entry_payload(agent: Agent, url: &str) -> anyhow::Result<ConfigPayload> {
     Ok(match agent {
+        Agent::Hermes => ConfigPayload::Yaml(serde_json::json!({"url":url})),
         Agent::ClaudeCode => ConfigPayload::Json(serde_json::json!({
             "type": "http",
             "url": url,

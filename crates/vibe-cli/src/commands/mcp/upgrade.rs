@@ -68,7 +68,7 @@ pub(super) fn run_upgrade(ctx: &output::Context, args: McpUpgradeArgs) -> Result
     // when the operator approves AND the original invocation is
     // not `--dry-run`.
     let (preview_results, preview_skill) =
-        walk_upgrade(&agents, scope, project_root.as_deref(), what, true)?;
+        walk_upgrade(ctx, &agents, scope, project_root.as_deref(), what, true)?;
     let needs_change = preview_results
         .iter()
         .any(|r| matches!(r.status, "would-update" | "would-adopt"))
@@ -111,7 +111,7 @@ pub(super) fn run_upgrade(ctx: &output::Context, args: McpUpgradeArgs) -> Result
     let (results, skill_results) = if args.dry_run || !needs_change {
         (preview_results, preview_skill)
     } else {
-        walk_upgrade(&agents, scope, project_root.as_deref(), what, false)?
+        walk_upgrade(ctx, &agents, scope, project_root.as_deref(), what, false)?
     };
 
     let report = UpgradeReport {
@@ -170,6 +170,7 @@ pub(super) fn run_upgrade(ctx: &output::Context, args: McpUpgradeArgs) -> Result
 /// `--yes` / `--unattended` / `--auto` / `--json` actually gate a
 /// confirmation prompt.
 fn walk_upgrade(
+    ctx: &output::Context,
     agents: &[Agent],
     scope: Scope,
     project_root: Option<&Path>,
@@ -184,7 +185,11 @@ fn walk_upgrade(
                 continue;
             }
             if what.includes_mcp() {
-                let path = agent.config_path(concrete_scope, project_root)?;
+                let path = agent.config_path_with_dirs(
+                    concrete_scope,
+                    project_root,
+                    &ctx.agent_user_dirs,
+                )?;
                 if let Some(path) = path {
                     let outcome = upgrade_mcp_entry(*agent, concrete_scope, &path, dry_run)?;
                     results.push(outcome);
@@ -242,6 +247,9 @@ fn upgrade_mcp_entry(
             .get(section)
             .and_then(|v| v.get(SERVER_NAME))
             .is_some(),
+        (ConfigPayload::Yaml(_), ConfigFormat::Yaml) => {
+            package_registration::current_entry(agent, config_path, SERVER_NAME)?.is_some()
+        }
         (ConfigPayload::Toml(_), ConfigFormat::Toml) => read_toml(config_path)?
             .get(section)
             .and_then(|v| v.as_table())

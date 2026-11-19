@@ -132,7 +132,7 @@ pub const SKILL_NAME: &str = "vibevm";
 /// ```
 /// use vibe_agent_projection::agents::Agent;
 /// assert_eq!(Agent::ClaudeCode.as_str(), "claude");
-/// assert_eq!(Agent::parse_filter("all").unwrap().len(), 7);
+/// assert_eq!(Agent::parse_filter("all").unwrap().len(), 8);
 /// // Codex configures via TOML; the others via JSON.
 /// assert!(Agent::Codex.supports_project_scope());
 /// ```
@@ -145,6 +145,7 @@ pub enum Agent {
     Codex,
     QwenCode,
     Pi,
+    Hermes,
 }
 
 /// User directories supplied by the caller when resolving agent config paths.
@@ -194,6 +195,7 @@ impl AgentUserDirectories {
 pub enum ConfigFormat {
     Json,
     Toml,
+    Yaml,
 }
 
 /// A per-server config block, in whichever format the target agent uses.
@@ -207,6 +209,7 @@ pub enum ConfigFormat {
 pub enum ConfigPayload {
     Json(JsonValue),
     Toml(toml::Value),
+    Yaml(JsonValue),
 }
 
 impl Agent {
@@ -218,6 +221,7 @@ impl Agent {
         Agent::Codex,
         Agent::QwenCode,
         Agent::Pi,
+        Agent::Hermes,
     ];
 
     pub fn as_str(self) -> &'static str {
@@ -229,6 +233,7 @@ impl Agent {
             Agent::Codex => "codex",
             Agent::QwenCode => "qwen-code",
             Agent::Pi => "pi",
+            Agent::Hermes => "hermes",
         }
     }
 
@@ -242,9 +247,10 @@ impl Agent {
             "codex" => Ok(vec![Agent::Codex]),
             "qwen" | "qwen-code" => Ok(vec![Agent::QwenCode]),
             "pi" => Ok(vec![Agent::Pi]),
+            "hermes" => Ok(vec![Agent::Hermes]),
             other => bail!(
                 "unknown --agent value `{other}` (expected one of `all`, \
-                 `claude`, `claude-desktop`, `cursor`, `opencode`, `codex`, `qwen-code`, `pi`)"
+                 `claude`, `claude-desktop`, `cursor`, `opencode`, `codex`, `qwen-code`, `pi`, `hermes`)"
             ),
         }
     }
@@ -252,6 +258,7 @@ impl Agent {
     pub fn config_format(self) -> ConfigFormat {
         match self {
             Agent::Codex => ConfigFormat::Toml,
+            Agent::Hermes => ConfigFormat::Yaml,
             _ => ConfigFormat::Json,
         }
     }
@@ -259,7 +266,7 @@ impl Agent {
     pub fn mcp_section_key(self) -> &'static str {
         match self {
             Agent::OpenCode => "mcp",
-            Agent::Codex => "mcp_servers",
+            Agent::Codex | Agent::Hermes => "mcp_servers",
             _ => "mcpServers",
         }
     }
@@ -274,7 +281,7 @@ impl Agent {
             | Agent::QwenCode
             | Agent::Codex
             | Agent::Pi => true,
-            Agent::ClaudeCodeDesktop => false,
+            Agent::ClaudeCodeDesktop | Agent::Hermes => false,
         }
     }
 
@@ -282,9 +289,12 @@ impl Agent {
     /// and Claude Desktop are JSON-config-only.
     pub fn supports_skill(self) -> bool {
         match self {
-            Agent::ClaudeCode | Agent::OpenCode | Agent::Codex | Agent::QwenCode | Agent::Pi => {
-                true
-            }
+            Agent::ClaudeCode
+            | Agent::OpenCode
+            | Agent::Codex
+            | Agent::QwenCode
+            | Agent::Pi
+            | Agent::Hermes => true,
             Agent::ClaudeCodeDesktop | Agent::Cursor => false,
         }
     }
@@ -349,6 +359,9 @@ impl Agent {
                 "command": argv,
                 "enabled": true,
             })),
+            Agent::Hermes => {
+                ConfigPayload::Yaml(serde_json::json!({"command": command, "args": args}))
+            }
             Agent::Codex => {
                 let mut tbl = toml::value::Table::new();
                 tbl.insert("command".into(), toml::Value::String(command));
@@ -370,6 +383,7 @@ impl Agent {
             Agent::OpenCode => &[".opencode", "opencode.json", "opencode.jsonc", "AGENTS.md"],
             Agent::QwenCode => &[".qwen", "QWEN.md"],
             Agent::Pi => &[".pi"],
+            Agent::Hermes => &[],
             Agent::ClaudeCodeDesktop | Agent::Codex => &[],
         }
     }
@@ -384,6 +398,7 @@ impl Agent {
     fn host_marker(self) -> Option<PathBuf> {
         match self {
             Agent::ClaudeCode => dirs::home_dir().map(|h| h.join(".claude")),
+            Agent::Hermes => None, // Presence requires caller-resolved native profile, never guessed HOME.
             _ => self
                 .config_path(Scope::User, None)
                 .ok()

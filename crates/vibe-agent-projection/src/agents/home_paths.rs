@@ -66,7 +66,7 @@ impl Agent {
             // Same XDG-on-every-OS contract as the ambient sibling — see
             // `Agent::config_path`'s comment for the empirical record.
             Agent::OpenCode => Some(Self::opencode_user_skills_root_from_home(home)),
-            Agent::ClaudeCodeDesktop | Agent::Cursor => None,
+            Agent::ClaudeCodeDesktop | Agent::Cursor | Agent::Hermes => None,
         }
     }
 
