@@ -89,3 +89,7 @@ Use `research/old113-transfer-crosswalk.json` for individual criterion-level cor
 ### NST-SOURCE acceptance boundary
 
 Accept the source classification of the 222 historical task records, not their implementation on the target. At prototype revision `7fe6376ccef7f321302a8f18610fcb0c9cc2686f`, every row cites at least one existing Git path, all 144 implemented/partial rows cite evidence beyond the task/seed/manifest, and every partial, planned-only or unknown row records the specific missing evidence or behavior. The scoped source audits and `research/reconciliation-report.md` explain where narrower source outcomes differ from Zap acceptance. Keep the six unknown classifications (including the four external bridge records) as justified limits. The independent origin checks above refine the two census rows without treating audit artifacts as product delivery. This disposition is not acceptance of the separate NST-HISTORY atom or of target runtime behavior.
+
+### Historical preview amendments
+
+Four previously inventory-only changes were read against their first parents: `2387e346fea` (dependency direction), `c279d6410c8` (opaque identity), `8f2810868d8` (documentation capture versus retrieval), and `d4d8af1e69d` (local read boundary). Each changed contract now has a scoped finding and diff digest in `commit-index.json`. They specify behavior; none is a product execution receipt.
