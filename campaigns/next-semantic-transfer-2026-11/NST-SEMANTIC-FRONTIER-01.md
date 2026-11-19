@@ -111,3 +111,5 @@ Task packet review: 25 task-JSON-only commits amended 15 distinct original tasks
 Eight specmap-only commits were compared as complete parent/child JSON: three changed only the spec-unit collection; five changed spec units, code items and edges. The exact counts are recorded per commit. No source or specification was edited in those commits and a projected edge is not evidence that its behavior ran.
 
 Five release-impact-only commits changed 18 records. All 43 distinct commit subjects named by those records exist locally. The index records their change identities and diff hashes separately from the product and publication evidence they describe.
+
+Ten preview-transition commits changed only 36 release JSON files. All 24 explicit top-level commit/tree pairs matched Git. No product execution or publication was inferred from these records.
