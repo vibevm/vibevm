@@ -97,6 +97,12 @@ Read NATIVE-PI-TRUST-FILES-20261119.md and inspected the actual entrypoint diff 
 
 Accept this bounded source-import follow-up. It is not a rebuilt Vibe binary result, interactive trust-dialogue proof or full lifecycle/worker coverage. Keep the earlier `.mjs` discovery fixture failure distinct from corrected `.js` results. Session/scoped-model mapping and the already named full-parity obligations remain the next implementation scope, without another trust-test matrix.
 
+## Pi scoped/default/saved model follow-up accepted
+
+Read NATIVE-PI-MODEL-SELECTION-20261119.md and independently verified asset SHA256 `0fc620a016abd57e88093ebc5079cf72188e9e1744568c0af8d910b83e358e1c` and terminal log SHA256 `d8e7abb4e38e1c885809cab1f7655454c5fe6c0fed70ab514f2fc927dcb0bea7`. All five actual native capture outcomes match: first scoped=one, default-in-scope=two, default-only=two, explicit=one and persisted-history model=two. Accept native source-import model mapping/restoration within that scope, not rebuilt production dispatch or full session/worker/compaction parity. No separate model-state store was introduced.
+
+Next implementation priority is Hermes executable bootstrap, rather than extending this completed Pi atom indefinitely. In the final argument disposition, distinguish an intentional replacing-system-prompt/carrier collision from an unimplemented ordinary capability: an actionable collision refusal can be valid while native read delivery remains available. Resume/fork and other ordinary lifecycle requirements remain explicitly open.
+
 ## Remaining finite proof
 
 Inspect the actual instance-bound carrier and native Pi extension/file path against the existing packet. Require exact source/runtime binding, complete prefix byte/ordering/once-only evidence, preserved base/resources, changed personal-tail behavior, worker/child exclusion and truthful resume behavior. Distinguish constructed payload from attempted SDK/network delivery. No new generic middleware, permission rounds or speculative proof campaign is requested.
