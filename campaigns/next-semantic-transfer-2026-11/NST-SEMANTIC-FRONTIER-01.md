@@ -187,3 +187,5 @@ Six historical migration revisions separate the planning report and journal sche
 At `7c034cf75b`, all 104 present endpoints of the 81 listed migration paths agree with Git at `b486af778` and `149bcea52`; absent endpoints were checked as well. All 48 package rows are identical between captures. The operator guide matches its digest. The corrected contribution report contains 278 checked claims, not 278 newly executed cases. Native macOS and Windows were not qualified by this inspection.
 
 For M-08-C.1/C.2, the retained before/after source maps agree and all 104/13 file sizes and hashes match the respective pinned source commits. Both manifests explicitly separate historical work acceptance from runtime acceptance. For M-05-C.1 all 45 listed archive artifacts match their retained lengths and hashes. No rerun or current acceptance follows.
+
+The entity-view account at `cc21c4d50b` has 79 listed paths; both endpoint presences were independently checked and all 91 present blobs matched their Git IDs and SHA-256. This binds the historical pure-model/projection scope, not live resource access or durable cursors.
