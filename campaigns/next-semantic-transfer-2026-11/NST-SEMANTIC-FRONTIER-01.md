@@ -159,3 +159,5 @@ Seven publication changes distinguish preparation and identity, smoke readiness,
 Eight lifecycle revisions were checked for narrowly scoped admission, target OS, physical effect uncertainty, missing recovery input, stopped-phase reports and replay identity. A completed report is not proof that uncertain physical effects completed.
 
 Ten small revisions were checked for annotation binding, mirror configuration, worker disclosure, schema provenance, CLI guidance and target policy. A mirror ref configuration or changed spec revision is not evidence of a push or executed migration.
+
+Eight environment revisions distinguish exact captured configuration and target identity from legacy observations and bounded layout reports. Native execution or final publication is not inferred from those records.
