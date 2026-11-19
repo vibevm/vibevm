@@ -97,3 +97,5 @@ Four previously inventory-only changes were read against their first parents: `2
 Five historical Zap backlog amendments (`31314cdbb`, `c7e550ba6`, `96336d860`, `ff83fe2bd`, `865d4d8d9`) record import costs, inactive acceptance, incomplete obligation routing, uncertain recovery and limits on work dispatch. None of the five diffs implements a product change or grants authority. See the per-commit evidence in the index.
 
 Historical local-smoke and host-guard records (`095187156`, `115b946de`, `2659c42b3`) distinguish a launched Linux process from preparation, an explicit skip and a foreign target. These records are not cross-platform acceptance for a later candidate.
+
+Five preview amendments distinguish documentation byte coverage, tool readiness, temporary routing, inherited exclusions and affected-source review from semantic acceptance (`2cfdabd30ee6`, `a81a91fe9606`, `e32abf8e68a6`, `6488f4fd5af7`, `b9e913919be4`).
