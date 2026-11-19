@@ -34,7 +34,11 @@ Pass the appropriate native proxy environment/config only to the owned agent inv
 
 Acceptance: actual final native transport uses the selected proxy for each agent, not merely presence of HTTP_PROXY in an argv recorder; synthetic local endpoint/proxy sentinels prove route/no-direct/bypass behavior without real keys. Proxy-unavailable/auth errors, child/cancel/cleanup, aliases and direct non-Vibe invocation isolation are covered with existing platform gates. No persistent agent-native config rewrite merely to route a Vibe launch.
 
-## 3 — CORP-AI-CONNECTIONS: lightweight local inventory
+## 3 — CORP-AI-CONNECTIONS: generic local keyring and AI specialization
+
+Owner amendments2026-11-19: build one generic local secret/key inventory, not an AI-only store or CLI. Every secret has a unique stable opaque ID used by references from different Vibe consumers; rotation preserves logical identity and advances revision, labels/paths/values do not define identity, and deletion never silently reassigns references. The generic root is `<effective user settings>/secrets/`; AI connection metadata/bindings live under `ai` and reference generic items, not duplicated credential files. `vibe secrets` owns core CRUD/metadata/reference resolution; `vibe ai` owns endpoint/default model/native agent bindings. The existing stable plan ID is retained with this expanded title/scope; do not add a sixth top-level stage.
+
+The owner explicitly trusts the local machine and defers encrypted vaults to the distant future. Current storage is plaintext at rest with filesystem ownership/permissions, no-follow and atomicity. No encryption, master password, unlock flow or keystore backend is required now; document the limitation honestly. No secret values in normal output, logs, argv, profiles, drops or repositories. Superseded AI-only physical layouts/exclusions below must not be implemented literally; [AI-CONNECTIONS-DESIGN-01.md](AI-CONNECTIONS-DESIGN-01.md) carries the current generic-reference amendment.
 
 ### Storage decision
 
