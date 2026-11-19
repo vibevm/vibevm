@@ -32,12 +32,12 @@ pub(crate) fn effective_binding(
     let mut group_states = std::collections::BTreeMap::new();
     for target in &binding.targets {
         let enabled = desired_enabled(binding.activation.get(target.agent.as_str()));
-        if let Some(previous) = group_states.insert(target.path.clone(), enabled) {
-            if previous != enabled {
-                bail!(
-                    "shared skill target has conflicting alias activation intents; select the complete shared group"
-                );
-            }
+        if let Some(previous) = group_states.insert(target.path.clone(), enabled)
+            && previous != enabled
+        {
+            bail!(
+                "shared skill target has conflicting alias activation intents; select the complete shared group"
+            );
         }
     }
     binding

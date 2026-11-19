@@ -198,14 +198,16 @@ fn install_skill_with(
         )?
     } else {
         vibe_agent_projection::pkgskill::install_managed_skill_snapshot_with_dirs(
-            agent,
-            scope,
-            project_root,
+            vibe_agent_projection::pkgskill::SkillProjectionTarget {
+                agent,
+                scope,
+                project: project_root,
+                dirs,
+            },
             Some("org.vibevm.core/vibevm"),
             "vibevm",
             &desired,
             dry_run,
-            dirs,
         )?
     };
     Ok(SkillInstallReport {
