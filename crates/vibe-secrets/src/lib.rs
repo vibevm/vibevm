@@ -8,7 +8,9 @@ use std::collections::BTreeMap;
 use std::path::{Path, PathBuf};
 use vibe_safefs::{Pinned, Project};
 mod id;
+mod mutations;
 pub use id::SecretId;
+pub use mutations::{Expected, MetadataSnapshot, ReferenceGuard, ReferenceInventory};
 
 const VALUE_LIMIT: usize = 1024 * 1024;
 const INDEX_LIMIT: usize = 4 * 1024 * 1024;
@@ -23,6 +25,10 @@ pub enum Error {
     NotFound,
     #[error("keyring revision changed; refresh metadata and retry")]
     Conflict,
+    #[error("keyring item has live consumer references")]
+    RefusedReferenced { consumers: Vec<String> },
+    #[error("complete protected reference inventory is unavailable")]
+    RefusedUnknown,
     #[error(
         "keyring publication failed; previous selected revision is retained unless the index publication completed"
     )]
@@ -233,7 +239,18 @@ impl Store {
             .checked_add(1)
             .ok_or(Error::Invalid)?;
         proposed.items.insert(id.clone(), metadata.clone());
-        let bytes = toml::to_string(&proposed).map_err(|_| Error::Invalid)?;
+        let bytes = Self::prepare_index(&proposed)?;
+        let leaf = open_revision(root, id, &metadata.current_revision, true)?;
+        project
+            .publish_new_in_with_mode(&leaf, "value", &value.0, Some(0o600))
+            .map_err(|_| Error::Publication)?;
+        leaf.verify_private_leaf("value", VALUE_LIMIT as u64)
+            .map_err(|_| Error::Unavailable)?;
+        Self::commit_index(project, root, index, proposed, &bytes)
+    }
+
+    fn prepare_index(proposed: &Index) -> Result<String, Error> {
+        let bytes = toml::to_string(proposed).map_err(|_| Error::Invalid)?;
         #[cfg(test)]
         let limit = INDEX_WRITE_LIMIT.with(|limit| limit.get());
         #[cfg(not(test))]
@@ -245,12 +262,16 @@ impl Store {
         if checked.schema != 1 || checked.store_revision != proposed.store_revision {
             return Err(Error::Invalid);
         }
-        let leaf = open_revision(root, id, &metadata.current_revision, true)?;
-        project
-            .publish_new_in_with_mode(&leaf, "value", &value.0, Some(0o600))
-            .map_err(|_| Error::Publication)?;
-        leaf.verify_private_leaf("value", VALUE_LIMIT as u64)
-            .map_err(|_| Error::Unavailable)?;
+        Ok(bytes)
+    }
+
+    fn commit_index(
+        project: &Project,
+        root: &Pinned,
+        index: &mut Index,
+        proposed: Index,
+        bytes: &str,
+    ) -> Result<(), Error> {
         #[cfg(test)]
         if FAIL_BEFORE_INDEX.with(|flag| flag.replace(false)) {
             return Err(Error::Publication);
