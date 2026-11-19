@@ -147,3 +147,5 @@ Another 90 revisions touched only original campaign seed/registry/task inputs (2
 Eleven remaining campaign-only revisions (39 changed-file occurrences) update rulings, evidence, task bindings or historical campaign tooling. Python tooling changes are distinguished from record-only changes; no current-product effect or historical test execution is inferred.
 
 Five inspected revisions distinguish mode-only source changes, wire vocabulary, codegen slot selection, report-duration limits and documentation about late errors. These are not five newly executed product journeys.
+
+`036497cb67` added generated migration request, journal and report types and registrations in six files. Its authored schemas were not changed in this commit; a generated reader is not evidence that a migration ran.
