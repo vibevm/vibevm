@@ -170,6 +170,13 @@ An **id**, the **`spec://…#ANCHOR`** it came from where one exists, a one-line
 
 ## P2 — the next wave drains from here {#p2}
 
+### OPEN — Hermes: обязательные инструкции на один запрос (техдолг / technical debt) {#hermes-required-prompt}
+
+**HERMES-REQUIRED-PROMPT.** На текущем Hermes optional plugin может потерять инструкции перед inference и вернуть обычный ответ. `--resume` сохраняет историю — это правильно; привязка персональных/временных инструкций ко всему разговору и гарантия их доставки конкретному запросу — отдельные свойства. Пока допускаем явно обозначенный **best effort**, не обещаем strict delivery. Канон и шаги миграции: [PROP-076, HERMES-REQUIRED-PROMPT и CLOSEOUT](vibevm/vibespecs/common/PROP-076-system-prompt-prefix.xml). Upstream: `NousResearch/hermes-agent`, PR локально подготовлен, номер добавить после подачи.
+
+**Если PR примут:** записать merge SHA и выпущенную версию → сверить фактический API → обновить поддержанную версию и клиент Vibe → проверять capability gateway и передавать требование на конкретную отправку → проверить в том числе сбой после сборки и `--resume` на той же истории → обновить документацию и убрать fallback только для подтверждённых версий. Не закрывать по одному факту merge. Если не примут или API изменят, оставить запись открытой.
+
+
 ### B-242 — `vibe validate` на голом дереве пакета пишет `.vibe/lifecycle.*` в само дерево пакета {#b-242}
 
 | | |
