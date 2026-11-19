@@ -1,0 +1,27 @@
+[package]
+name = "claude-code"
+group = "org.vibevm.agents"
+kind = "app"
+version = "2.1.328"
+[application]
+id = "claude-code"
+[[installer_options]]
+id = "linux-x64-native"
+name = "Official Claude Code native Linux x64"
+platform = "linux"
+platform_name = "Linux"
+arch = "x86_64"
+[installer_options.installation]
+type = "tar_gz"
+source = "https://registry.npmjs.org/@anthropic-ai/claude-code-linux-x64/-/claude-code-linux-x64-2.1.328.tgz"
+sha256 = "07720965fa82398410797c7086410d039c03582a3bce82e2674a7fa8fb93edcb"
+payload_root = "package"
+[[installer_options.launchers]]
+id = "main"
+name = "Claude Code"
+executable = "$app_root/claude"
+kind = "command"
+default = true
+[[installer_options.public_commands]]
+name = "claude"
+launcher = "main"
