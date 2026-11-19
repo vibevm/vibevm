@@ -43,7 +43,7 @@ Private `control/hermes-vibe-main-request-payload.log` records per-request nonse
 
 ## Full-size actual request follow-up
 
-Task `bm69tueaw` exit0 repeats the same native request oracle with exact310024-byte source core (canary plus310000 filler bytes). The complete source text is present unchanged in the main streaming system message; one prefix occurrence, native system content retained, user turn present, synthetic SSE response and `/exit` code0/no timeout. Binary identity is frozen inside the driver as `d648255cb2c903ef173f6ea62c590acfe8b02fe6f8f2865ff8a973e5edab8453`. Private `control/hermes-vibe-fullsize-request.log`; no product source changes. This closes full-size actual CLI delivery for this synthetic subject, not personal-tail freshness or cache-hit measurements.
+Task `bm69tueaw` exit0 repeats the same native request oracle with exact310025-byte source core (canary plus310000 filler bytes). The complete source text is present unchanged in the main streaming system message; one prefix occurrence, native system content retained, user turn present, synthetic SSE response and `/exit` code0/no timeout. Binary identity is frozen inside the driver as `d648255cb2c903ef173f6ea62c590acfe8b02fe6f8f2865ff8a973e5edab8453`. Private `control/hermes-vibe-fullsize-request.log`; no product source changes. This closes full-size actual CLI delivery for this synthetic subject, not personal-tail freshness or cache-hit measurements.
 
 ## Remaining finite obligations
 
