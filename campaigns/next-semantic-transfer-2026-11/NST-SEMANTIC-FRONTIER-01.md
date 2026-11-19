@@ -189,3 +189,5 @@ At `7c034cf75b`, all 104 present endpoints of the 81 listed migration paths agre
 For M-08-C.1/C.2, the retained before/after source maps agree and all 104/13 file sizes and hashes match the respective pinned source commits. Both manifests explicitly separate historical work acceptance from runtime acceptance. For M-05-C.1 all 45 listed archive artifacts match their retained lengths and hashes. No rerun or current acceptance follows.
 
 The entity-view account at `cc21c4d50b` has 79 listed paths; both endpoint presences were independently checked and all 91 present blobs matched their Git IDs and SHA-256. This binds the historical pure-model/projection scope, not live resource access or durable cursors.
+
+For six derivative and boot revisions, checked the saved-file digests in the retained manifests against the originating Git trees. Matched/listed entries: `8b096070cd` 19/19, `0c9bf19b47` 21/21, `76b60b2a36` 18/18, `dbbd0b5a5c` 33/33, `d8e437a20b` 30/30, `fe9caaa2cf` 60/60. External raw files and the product code changes in those revisions were not qualified by this archive check.
