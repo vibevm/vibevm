@@ -3374,3 +3374,7 @@ it. Severity **P3**.
 | @fact:B313-SEVERITY **severity** | P2 — an `--offline` run may still make a network contact. It is the posture's own guarantee that is weak, not an integrity check: everything the capture does is admitted and verified exactly as online. |
 | @fact:B313-DISPOSITION **disposition** | fixed in candidate 2026-11-15 for the controlled cache: `open_with_posture` refuses absent/damaged snapshots offline before clone/fetch/ls-remote. Actual counting-Git regression covers miss, warm reuse, damage and refresh. Ordinary transport behavior is unchanged. |
 | @fact:B313-FILED **filed by** | PROP-073 `#NATIVE-REGISTRY-CACHE-DECISION`, 2026-11-13. |
+
+### Node installation with an existing external PATH provider
+
+P3, open and nonblocking. An operator reported that `vibe install -g node` failed with an external Node.js on PATH and worked after removing that PATH entry; no conflicting `node` was present in `opt/bin`. In a synthetic Linux comparison both installations succeeded and the external executable remained unchanged. This does not establish the cause or a fix. Do not recommend removing the external runtime. Reopen on a distinguishing result from the official Node template and runtime, capturing the install exit/diagnostic separately from which command a newly activated shell resolves. Preserve the earlier provider and its files. Contract: `PROP-059#PATH-PROVIDER-COEXISTENCE`.
