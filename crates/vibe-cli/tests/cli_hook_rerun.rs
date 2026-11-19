@@ -211,13 +211,10 @@ fn lifecycle_suppresses_hook_subprocess_streams_in_json_and_quiet_modes() {
     }
 }
 
-/// Direct install's quiet surface and a lifecycle prerequisite deliberately
-/// use different stream policies today: direct install inherits slot process
-/// stdout, while the composed lifecycle's quiet child nulls it. A later shared
-/// observer extraction must carry both policies rather than silently choosing
-/// one for both call sites.
+/// Quiet direct installs retain full hook logs without raw terminal output.
+/// The captured JSON and composed lifecycle policies remain independently tested.
 #[test]
-fn direct_install_quiet_keeps_the_existing_slot_stream_policy() {
+fn direct_install_quiet_keeps_full_logs_without_raw_child_output() {
     if !git_available() {
         eprintln!("skipping direct-install quiet stream e2e: git not on PATH");
         return;
@@ -251,9 +248,23 @@ fn direct_install_quiet_keeps_the_existing_slot_stream_policy() {
         String::from_utf8_lossy(&output.stderr)
     );
     let stdout = String::from_utf8_lossy(&output.stdout);
+    assert_eq!(stdout.lines().count(), 1, "quiet summary only: {stdout}");
+    assert!(!stdout.contains(MARKER), "quiet stdout: {stdout}");
     assert!(
-        stdout.lines().any(|line| line == MARKER),
-        "direct quiet install still inherits slot stdout: {stdout}"
+        !String::from_utf8_lossy(&output.stderr).contains(MARKER),
+        "quiet stderr must not contain raw hook output"
+    );
+    let logs = user
+        .settings
+        .join("cache/install-steps/org.vibevm/hooked/0.1.0");
+    let run = fs::read_dir(logs).unwrap().next().unwrap().unwrap().path();
+    let mut retained = String::new();
+    for log in fs::read_dir(run.join("logs")).unwrap() {
+        retained.push_str(&fs::read_to_string(log.unwrap().path()).unwrap());
+    }
+    assert!(
+        retained.lines().any(|line| line == MARKER),
+        "full raw hook log must retain output"
     );
     let slot = project
         .path()
