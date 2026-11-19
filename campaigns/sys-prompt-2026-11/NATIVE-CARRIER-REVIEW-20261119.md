@@ -43,6 +43,16 @@ Independently read PI-NATIVE-EXTENSION-SEAM-RESULT.json and actual factory761f18
 
 Actual Hermes CLI at the pinned version uses GatewayAgent transport, not the local AIAgent construction path. The accepted instance proof is not CLI parity. Next bounded feasibility target is a genuinely invocation-owned native gateway/session context whose supported factory constructs a real native instance and attaches the carrier for that exact session. No shared-gateway/global class/factory patch, second agent loop or reduced UI is accepted. Return a precise native API gap if per-session injection cannot be established; do not manufacture parity from the earlier SDK proof.
 
+## Actual native gateway/client ingress milestone
+
+Independently read `/data/git/vibevm-native-carrier-20261119/HERMES-NATIVE-CLIENT-INGRESS-RESULT.json` and verified all ten referenced log SHA256 values against their actual bytes. Reviewed receipt SHA256: `439923c04a00dcdb4bfe0f12f8805cab225c1406cb7a432fb0db82daea464ad3` (subsequent append changes this witness).
+
+Actual native `GatewayRunner`, session authority, API listener, lazy web application initialization, own-process URL builder and `connect_gateway` execute in the synthetic isolated runtime. Successful logs establish session.list, session.create/info, then actual native threaded `GatewayConnection` and `GatewayAgent` binding to the created CLI session; positive markers and exit0 independently checked. Private synthetic URL credentials were not printed/persisted according to the receipt; this review does not reproduce them or independently audit all sandbox capabilities.
+
+Accept this as native client/session/CLI-adapter feasibility only. It is NOT whole interactive CLI invocation, prefixed agent construction, worker/fork/resume, complete resource parity or a provider turn. Native missing Nous auth and absent snowballstemmer warnings remain recorded; do not claim tool-search/resource completeness. Preserve failed provisioning/auth-mode attempts separately: a missing-fastapi403 is not an authentication-negative result. Builder additionally supplied a distinct complete-runtime missing/invalid-credential403 negative receipt; its referenced log hash was verified, without broadening the positive milestone.
+
+Next finite verification: actual supported CLI entrypoint through that same invocation-owned endpoint, without prompt/model submission or admission changes. Session-specific gateway factory/carrier implementation still needs the approved coding lane. Builder explicitly confirmed that the coding-lane timeout blocker is unresolved; no successful coding receipt or new substitute-lane authorization exists. Independent runtime verification does not authorize product patches.
+
 ## Remaining finite proof
 
 Inspect the actual instance-bound carrier and native Pi extension/file path against the existing packet. Require exact source/runtime binding, complete prefix byte/ordering/once-only evidence, preserved base/resources, changed personal-tail behavior, worker/child exclusion and truthful resume behavior. Distinguish constructed payload from attempted SDK/network delivery. No new generic middleware, permission rounds or speculative proof campaign is requested.
