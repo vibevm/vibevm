@@ -66,14 +66,41 @@ pub(crate) fn run(ctx: &output::Context, argv: Vec<String>) -> Result<()> {
     let config = AgentsConfig::load(&settings).map_err(AppError::from)?;
     let launcher = launchers::resolve(&settings, &config, &name)?;
 
+    let mut native_arguments = launcher.command.iter().skip(1).cloned().collect::<Vec<_>>();
+    native_arguments.extend(rest.iter().cloned());
+    let native_selection = if launcher.kind == HarnessKind::Hermes
+        && super::native::hermes_selected::requested(&native_arguments)
+    {
+        let program =
+            super::program::locate(launcher.command.first().context("empty Hermes launcher")?)?;
+        Some(super::native::hermes_selected::Selection::start(
+            settings.path(),
+            &program,
+            &std::env::current_dir()?,
+            &native_arguments,
+        )?)
+    } else {
+        None
+    };
+    let effective_cwd = native_selection
+        .as_ref()
+        .map(|selection| selection.cwd().to_path_buf())
+        .unwrap_or_else(|| PathBuf::from("."));
+
     // **The workspace is opened after the launcher is resolved, and a
     // directory that is not a project is a soft launch.** `vibe agent` is a
     // launcher before it is a delivery mechanism, so it has to work in a
     // scratch directory too; refusing there would be the same defect P9
     // found in the opted-out branch, one directory wider.
-    let selected = match prompt::select(&PathBuf::from("."), None) {
+    let selected = match prompt::select(&effective_cwd, None) {
         Ok(selected) => selected,
         Err(error) => {
+            if let Some(selection) = native_selection {
+                eprintln!(
+                    "warning: selected Hermes project prefix unavailable; native read delivery only ({error})"
+                );
+                std::process::exit(selection.launch(None)?);
+            }
             return soft(
                 &launcher,
                 &rest,
@@ -95,6 +122,12 @@ pub(crate) fn run(ctx: &output::Context, argv: Vec<String>) -> Result<()> {
     // this one's; delivering it would put bytes in the slot that are not
     // this project's boot lane, which is worse than delivering none.
     if let Err(error) = built {
+        if let Some(selection) = native_selection {
+            eprintln!(
+                "warning: selected Hermes project prefix could not be built; native read delivery only ({error})"
+            );
+            std::process::exit(selection.launch(None)?);
+        }
         return soft(
             &launcher,
             &rest,
@@ -113,6 +146,12 @@ pub(crate) fn run(ctx: &output::Context, argv: Vec<String>) -> Result<()> {
     let opted_in = match prompt::opted_in(&selected) {
         Ok(opted_in) => opted_in,
         Err(error) => {
+            if let Some(selection) = native_selection {
+                eprintln!(
+                    "warning: selected Hermes project prefix unavailable; native read delivery only ({error})"
+                );
+                std::process::exit(selection.launch(None)?);
+            }
             return soft(
                 &launcher,
                 &rest,
@@ -124,6 +163,9 @@ pub(crate) fn run(ctx: &output::Context, argv: Vec<String>) -> Result<()> {
         }
     };
     if !opted_in {
+        if let Some(selection) = native_selection {
+            std::process::exit(selection.launch(None)?);
+        }
         if !ctx.is_quiet() {
             eprintln!(
                 "note: this project has not opted in to a system prompt — starting `{name}` \
@@ -133,6 +175,17 @@ pub(crate) fn run(ctx: &output::Context, argv: Vec<String>) -> Result<()> {
         let mut command: Vec<String> = launcher.command.clone();
         command.extend(rest);
         return exec(&command, &[], &scrub(launcher.kind));
+    }
+
+    if let Some(selection) = native_selection {
+        let prefix = if launcher.kind.delivery(&selected.manifest)
+            == vibe_core::manifest::HarnessDelivery::Launch
+        {
+            Some(prompt::native_launch_lane(ctx, &selected)?)
+        } else {
+            None
+        };
+        std::process::exit(selection.launch(prefix.as_deref())?);
     }
 
     if matches!(launcher.kind, HarnessKind::Pi | HarnessKind::Hermes)
