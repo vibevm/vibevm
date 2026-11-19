@@ -54,7 +54,7 @@ export function createSessionCarrier({ sessionId, prefix, getSession }) {
     detach();
     boundRunner = runner;
     unsubscribe = runner.onError(error => {
-      if (error.extensionPath === extensionPath && error.event === 'before_agent_start') {
+      if (error.extensionPath === extensionPath && (error.event === 'before_agent_start' || error.event === 'session_before_compact')) {
         currentSession();
         throw new CarrierAdmissionError('Vibe carrier rejected this turn; no bootless submission is permitted', error);
       }
@@ -63,6 +63,10 @@ export function createSessionCarrier({ sessionId, prefix, getSession }) {
   const factory = api => {
     api.on('session_start', attach);
     api.on('session_shutdown', detach);
+    // Native compaction can precede before_agent_start on restored history.
+    // Admit the same exact session/extension before its summarization boundary;
+    // keep Pi's own compaction prompt and summary generator unchanged.
+    api.on('session_before_compact', () => { attach(); });
     const beforeStart = (event, context) => {
       if (context.sessionManager.getSessionId() !== sessionId) return;
       currentSession();

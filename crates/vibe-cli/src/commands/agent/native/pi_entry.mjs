@@ -14,9 +14,7 @@ export async function runNativePi({packageDir, carrierPath, prefixPath, cwd, arg
   if(parsed.help||parsed.version||parsed.listModels||parsed.export){const {main}=await native('main.js');return main(args);}
   // Do not silently reinterpret native flags while their complete bootstrap mapping
   // is still being integrated. Values (notably apiKey) never enter diagnostics.
-  const pending=['resume','fork','systemPrompt'];
-  const refused=pending.filter(key=>Array.isArray(parsed[key])?parsed[key].length>0:parsed[key]!==undefined&&parsed[key]!==false);
-  if(refused.length) throw new Error('Vibe Pi adapter has not admitted these native option families: '+refused.join(', '));
+  if(parsed.systemPrompt!==undefined) throw new Error('Pi --system-prompt replaces the native base and conflicts with Vibe launch delivery; use read delivery for native prompt replacement');
   const appMode=parsed.mode==='rpc'?'rpc':parsed.mode==='json'?'json':parsed.print||!process.stdin.isTTY||!process.stdout.isTTY?'print':'interactive';
   let stdinContent;
   if(appMode!=='rpc'&&!process.stdin.isTTY){
