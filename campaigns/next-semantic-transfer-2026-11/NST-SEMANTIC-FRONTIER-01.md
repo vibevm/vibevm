@@ -139,3 +139,5 @@ Eleven remaining XML-only changes were compared by named fact text and first-par
 Three remaining Rust test-only changes exercise cold partial installation, deferred TCP session stop, and simulated draft replacement. Their assertions were inspected; no live publishing or current-product execution was inferred.
 
 `65d631fd88` introduced the machine-operation census contract and its projected map, not executable operations. Inspecting a registration must not invoke its handler.
+
+Another 90 revisions touched only original campaign seed/registry/task inputs (271 changed-file occurrences). Parsed first-parent comparisons identify the changed keys and task-file IDs in the index. They describe historical planning, not the present roadmap or executed product changes.
