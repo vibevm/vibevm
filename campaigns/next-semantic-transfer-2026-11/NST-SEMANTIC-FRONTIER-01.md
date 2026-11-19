@@ -127,3 +127,5 @@ The three migration JTD declarations in `aa48a5f98d13` and two preview catalogue
 Four M-13-D records in `529ee8eb7853` document the numerical edit perimeter, slot moves, and inheritance guards. A retained report does not grant subtree writes or establish a migration run.
 
 Four publication amendments distinguish subject preparation, pure approval, repeated observation and required pre-effect baseline from a live remote write (`8ef1fd0ba0db`, `a65993704180`, `bd40c8d7b85a`, `9c5810bb04bc`).
+
+Across 31 evidence-only Markdown commits (37 changed-file occurrences), the records describe bounded language proofs, fixed machine operations, migration, source readers, environment and release checks. Their first-parent deltas touched no product or test implementation. In particular Linux availability does not certify other platforms, and a recorded test run is not an independent rerun on current source.
