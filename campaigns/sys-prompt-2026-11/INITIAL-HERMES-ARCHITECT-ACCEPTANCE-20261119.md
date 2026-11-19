@@ -1,0 +1,7 @@
+# Initial Hermes support: architect's acceptance boundary
+
+Accepted on 2026-11-19: the previously reviewed Linux owned launch and explicit READY history transport at product revision `dfc544f918015315e6469ba4f28e5ab437387e2b` have a coherent host integration gate. This is not acceptance of SYS-PROMPT as a whole or of NST.
+
+Independent check: the original three-document candidate SHA-256 was `3d32ef7b615f2704c6cb1317d4ea9aa429e82e03bd7afb04c256b40d4a0a7c28`. All three document hashes and raw `committed-host-self-check.log` hash `9e1ad92556b017d3bf8330fa27b3dc3e5cfbf4883b2c0bab1a9239f712fceec9` matched. The raw terminal log records all eight steps passing and final exit zero; no rerun was needed. The audit's closing gate-owed paragraph and platform inventory's in-flight baseline paragraph were stale; correct the documents without rerunning the gate or changing product source.
+
+READY joins a known history on the existing local owner without adding project instructions. Cold unattended startup, ordinary interactive CLI/TUI and interactive worktrees, replacement-owner restart and unqualified platforms are not accepted as passed. Required prompt delivery and witnessed READY placement remain open. The deferred integration uses the consolidated domain owners and shared terminal workbench. Neither this host gate nor a synthetic model response proves real-agent USER-PROJECT adoption or a cost saving.

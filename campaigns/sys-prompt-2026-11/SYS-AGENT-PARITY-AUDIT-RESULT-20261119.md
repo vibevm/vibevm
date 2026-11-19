@@ -1,4 +1,14 @@
-# Six-harness SYS parity audit — evidence-bound frontier
+# SYS parity audit — current five-agent scope and historical six-harness evidence
+
+## Current acceptance scope
+
+Owner amendment, 2026-11-19, architect contract `69720c823`: judge **Claude Code, Codex, OpenCode, Qwen Code (`qwen`) and Pi only**. Hermes is excluded from this task's matrix, tests, repairs, denominator and exit decision. The dated six-harness inventory below is retained as historical evidence, not the current acceptance checklist. The product's supported-agent inventory and six-agent CORP package scope are unchanged.
+
+For the current five-agent decision, reuse the Claude, Codex, OpenCode, Qwen Code and Pi rows below and their exact version-bound receipts. Shared physical skill ownership and Pi native argv identity defects were repaired and independently accepted; Pi native picker/history/finite dispatch repair `14b5ef40010073d8ecb2d67ce333b98319422641` is included. Shared regression results remain 15 workspace, 16 CLI and 20 harness tests; these are not native/provider proofs. The committed host gate `b8r5wyddg` passed all eight steps at `dfc544f918015315e6469ba4f28e5ab437387e2b`. No new product defect is established by the remaining explicitly unqualified version/platform/resume combinations; absence of a defect is not proof those combinations passed. Independent architect judgment was recorded in `9e4bc539a`, `FIVE-AGENT-AUDIT-DISPOSITION-20261119.md`: the five-agent audit is accepted as an evidence review, not universal native equivalence. The architect independently checked the five rows, original nonempty 15/16/20 terminal summaries and pinned host gate; scope narrowing alone was not acceptance.
+
+Hermes-only H1–H3 and the Hermes portion of H4 below do not block this audit. Their living destination is `../next-semantic-transfer-2026-11/NST-HERMES-INTEGRATION-01.md#hermes-integration-backlog`, under `VIBEVM-IDE-MVP`. Pi's broader unqualified layouts remain explicitly unqualified rather than inheriting Hermes deferral or a platform PASS. USER-PROJECT real-agent adoption remains a separate mandatory NST exit criterion, not a prerequisite for this audit or CORP.
+
+## Historical six-harness evidence — retained, not the current denominator
 
 2026-11-19; reconciled to accepted transport/history commit `dfc544f918015315e6469ba4f28e5ab437387e2b`, including earlier accepted Pi picker/cwd/dispatch repair `14b5ef40010073d8ecb2d67ce333b98319422641` and the historical host gate at `ef69b21c29948ab41eeb063b343bab4780871e3d`. Execution of existing SYS-AGENT-PARITY-AUDIT-01, not a new feature campaign, full parity claim or SYS closure. Canonical identities are Claude, Codex, OpenCode, Qwen Code (`qwen`), Hermes and Pi. Projection additionally supports Desktop/Cursor destinations and app presets additionally list Gemini/Cursor; these are not extra SYS harness identities.
 
