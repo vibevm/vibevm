@@ -119,7 +119,7 @@ pub use package::{
     DigestSource, DocMaxBytes, DocumentationDecl, DocumentsDecl, EmbeddedSourceAuth,
     EmbeddedSourceDecl, EmbeddedSourceKind, EntrypointChoice, EntrypointFile, FeaturesTable,
     GitPackageDep, GitRefKind, GlossaryDecl, HarnessDelivery, HarnessTable, HooksDecl, HostChoice,
-    LaneForm, LinkType, MCP_ARG_VARS, Materialization, McpServerDecl, MediaDecl,
+    LaneForm, LinkType, MCP_ARG_VARS, Materialization, McpServerDecl, MediaDecl, NativeHarness,
     NavigationChapterDecl, NavigationDecl, NavigationSectionDecl, Obsoletes, OpenCodeHarness,
     OverrideEntry, OverrideTable, OverrideTarget, PackageFormat, PackageMeta, PathPackageDep,
     PrereleasePolicy, Provides, PublishPosture, QwenHarness, Recommends, Requires, RequiresAny,

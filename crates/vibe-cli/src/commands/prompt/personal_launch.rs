@@ -12,8 +12,27 @@ pub(super) fn compose(
     selected: &Selected,
     answer: &PromptCheck,
 ) -> Result<Option<(PathBuf, String)>> {
+    compose_inner(ctx, selected, answer, false)
+}
+
+/// Native bootstrap always observes current project continuation, even without
+/// a personal layer; reuse the same witnessed composition owner.
+pub(super) fn compose_native(
+    ctx: &output::Context,
+    selected: &Selected,
+    answer: &PromptCheck,
+) -> Result<Option<(PathBuf, String)>> {
+    compose_inner(ctx, selected, answer, true)
+}
+
+fn compose_inner(
+    ctx: &output::Context,
+    selected: &Selected,
+    answer: &PromptCheck,
+    require_fresh_project: bool,
+) -> Result<Option<(PathBuf, String)>> {
     let personal = super::personal::layered_blocks(ctx, TargetOs::current(), &selected.node_dir);
-    if personal.is_empty() {
+    if personal.is_empty() && !require_fresh_project {
         return Ok(None);
     }
     let tracked = selected.tracked();

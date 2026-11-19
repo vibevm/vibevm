@@ -176,6 +176,10 @@ pub fn qwen_closed_slots() -> String {
 pub(super) fn no_slot_note(kind: HarnessKind, lane: &Path) -> Option<String> {
     match kind {
         HarnessKind::Claude | HarnessKind::Codex => None,
+        HarnessKind::Hermes | HarnessKind::Pi => Some(format!(
+            "{} uses an admitted native session bootstrap, not an inline prompt flag; the agent reads its project boot until that carrier is available",
+            kind.as_str()
+        )),
         HarnessKind::OpenCode => Some(format!(
             "{}. The carrier is never a flag: the document travels in the environment and names \
              `{}` inside it, so under `launch` the flags are only the ones that make it \

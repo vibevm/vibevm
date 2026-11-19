@@ -136,29 +136,12 @@ pub fn one_block_shape(declared: &[(&str, BlockShape)]) -> Result<BlockShape, St
 
 /// C1's shape half over one node's own manifest.
 pub fn manifest_block_shape(manifest: &Manifest) -> Result<BlockShape, String> {
-    let shapes: Vec<(&str, BlockShape)> = HARNESS_NAMES
-        .iter()
-        .map(|name| {
-            (
-                *name,
-                BlockShape::of(
-                    manifest
-                        .system_prompt
-                        .as_ref()
-                        .map_or(HarnessDelivery::Launch, |section| {
-                            section.harness.delivery(name)
-                        }),
-                ),
-            )
-        })
+    let shapes: Vec<(&str, BlockShape)> = super::HarnessKind::ALL
+        .into_iter()
+        .map(|kind| (kind.as_str(), BlockShape::of(kind.delivery(manifest))))
         .collect();
     one_block_shape(&shapes)
 }
-
-/// The harness names `[system_prompt.harness.<name>]` admits. Spelled here
-/// rather than derived from the table's fields so a new harness is a
-/// deliberate addition to the constraint sweep too.
-const HARNESS_NAMES: [&str; 2] = ["claude", "codex"];
 
 /// The constraints a node's files can violate, as rendered findings in
 /// constraint order.

@@ -41,6 +41,30 @@ fn the_table_round_trips_through_the_wire_and_back() {
 }
 
 #[test]
+fn native_harness_declarations_round_trip_and_refuse_unknown_keys() {
+    let text = "[project]\nname='native'\nversion='1.0.0'\n[system_prompt.harness.hermes]\ndelivery='launch'\n[system_prompt.harness.pi]\ndelivery='read'\n";
+    let parsed = Manifest::parse_str(text).unwrap();
+    let section = parsed.system_prompt.as_ref().unwrap();
+    assert_eq!(section.harness.delivery("hermes"), HarnessDelivery::Launch);
+    assert_eq!(section.harness.delivery("pi"), HarnessDelivery::Read);
+    let written = toml::to_string(&parsed).unwrap();
+    assert_eq!(
+        Manifest::parse_str(&written).unwrap().system_prompt,
+        parsed.system_prompt
+    );
+    assert_eq!(
+        HarnessTable::default().delivery("hermes"),
+        HarnessDelivery::Read
+    );
+    assert_eq!(
+        HarnessTable::default().delivery("pi"),
+        HarnessDelivery::Read
+    );
+    assert!(parse("[harness.hermes]\nunknown=true\n").is_err());
+    assert!(parse("[harness.pi]\ndelivery='import'\n").is_err());
+}
+
+#[test]
 fn an_empty_table_is_an_explicit_opt_in_with_every_default() {
     let section = parse("").unwrap();
     assert!(section.is_empty());

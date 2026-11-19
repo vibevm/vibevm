@@ -505,9 +505,11 @@ pub(crate) fn note(composed: &Composed) -> String {
 fn carrier_slot_name(kind: HarnessKind) -> &'static str {
     match kind {
         HarnessKind::OpenCode => "an OpenCode agent's `system`",
-        HarnessKind::Claude | HarnessKind::Codex | HarnessKind::Qwen => {
-            "this harness's instruction slot"
-        }
+        HarnessKind::Claude
+        | HarnessKind::Codex
+        | HarnessKind::Qwen
+        | HarnessKind::Hermes
+        | HarnessKind::Pi => "this harness's instruction slot",
     }
 }
 

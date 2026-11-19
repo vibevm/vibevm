@@ -291,6 +291,12 @@ fn compose_with_personal(
             undeliverable: None,
         });
     }
+    if matches!(kind, HarnessKind::Hermes | HarnessKind::Pi) {
+        bail!(
+            "{} native launch carrier has not yet been admitted; use explicit read delivery until the native bootstrap is available",
+            kind.as_str()
+        );
+    }
     if !answer.lane.present {
         return Ok(Composed {
             flags: LaunchFlags::default(),

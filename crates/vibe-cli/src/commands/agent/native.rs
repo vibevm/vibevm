@@ -1,0 +1,131 @@
+//! Immutable agent-native assets published by the Rust launcher.
+//!
+//! The selected agent supplies its own runtime. Ordinary Vibe remains a Rust
+//! binary; helpers never run from project-authored paths or overwrite an asset
+//! another invocation may still consume.
+
+specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-076#SYS-HARNESS-EXECUTABLE");
+
+use std::path::{Path, PathBuf};
+
+use anyhow::{Context, Result, bail};
+use sha2::{Digest, Sha256};
+use vibe_safefs::Project;
+
+#[path = "native/pi_runtime.rs"]
+mod pi_runtime;
+
+/// Pi's agent-native carrier; runtime/mode orchestration remains native.
+const PI_HELPER: &[u8] = include_bytes!("native/pi_bootstrap.mjs");
+const PI_ENTRY: &[u8] = include_bytes!("native/pi_entry.mjs");
+
+/// Publish the supported Pi carrier from the binary, never a project file.
+pub(super) fn publish_pi(settings: &Path) -> Result<PathBuf> {
+    publish_asset(settings, "pi", "mjs", PI_HELPER)
+}
+
+/// The admitted runtime and immutable helpers for a native Pi invocation.
+pub(super) struct PiLaunch {
+    pub(super) command: Vec<String>,
+}
+
+pub(super) fn prepare_pi(
+    settings: &Path,
+    program: &Path,
+    prefix: &Path,
+    cwd: &Path,
+    args: &[String],
+) -> Result<PiLaunch> {
+    let runtime = pi_runtime::discover(program)?;
+    let carrier = publish_pi(settings)?;
+    let entry = publish_asset(settings, "pi", "mjs", PI_ENTRY)?;
+    let mut command = vec![
+        runtime.node.display().to_string(),
+        entry.display().to_string(),
+        runtime.package.display().to_string(),
+        carrier.display().to_string(),
+        prefix.display().to_string(),
+        cwd.display().to_string(),
+    ];
+    command.extend_from_slice(args);
+    Ok(PiLaunch { command })
+}
+
+/// Publish one embedded helper under an already admitted settings root.
+/// The whole digest is the immutable name; existing mismatched bytes refuse.
+pub(super) fn publish_asset(
+    settings: &Path,
+    family: &str,
+    extension: &str,
+    bytes: &[u8],
+) -> Result<PathBuf> {
+    if !matches!(family, "hermes" | "pi") || !matches!(extension, "py" | "mjs") {
+        bail!("unknown native helper family or extension");
+    }
+    let project = Project::open(settings).context("opening native helper settings root")?;
+    let directory = project.dir(&["agent", "native", family], true)?;
+    let digest = format!("{:x}", Sha256::digest(bytes));
+    let name = format!("bootstrap-{digest}.{extension}");
+    match project.read_file_bounded_in(&directory, &name, bytes.len())? {
+        Some(existing) if existing == bytes => return Ok(directory.path().join(name)),
+        Some(_) => bail!("native helper content-addressed path contains foreign bytes"),
+        None => {}
+    }
+    let _lock = project.lock("native-helper-publication.lock")?;
+    // A concurrent publisher may have won before our lock; verify, never replace.
+    if let Some(existing) = project.read_file_bounded_in(&directory, &name, bytes.len())? {
+        if existing != bytes {
+            bail!("native helper publication collided with foreign bytes");
+        }
+    } else {
+        project
+            .publish_new_in_with_mode(&directory, &name, bytes, native_asset_mode())
+            .map_err(anyhow::Error::new)?;
+    }
+    Ok(directory.path().join(name))
+}
+
+fn native_asset_mode() -> Option<u32> {
+    #[cfg(unix)]
+    {
+        Some(0o600)
+    }
+    #[cfg(not(unix))]
+    {
+        None
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn assets_are_immutable_and_idempotent() {
+        let temp = tempfile::tempdir().unwrap();
+        let path = publish_asset(temp.path(), "pi", "mjs", b"native helper").unwrap();
+        let modified = std::fs::metadata(&path).unwrap().modified().unwrap();
+        assert_eq!(
+            publish_asset(temp.path(), "pi", "mjs", b"native helper").unwrap(),
+            path
+        );
+        assert_eq!(
+            std::fs::metadata(&path).unwrap().modified().unwrap(),
+            modified
+        );
+        std::fs::write(&path, b"foreign").unwrap();
+        assert!(publish_asset(temp.path(), "pi", "mjs", b"native helper").is_err());
+        assert_eq!(std::fs::read(path).unwrap(), b"foreign");
+    }
+
+    #[cfg(unix)]
+    #[test]
+    fn symlinked_helper_directory_is_refused() {
+        let temp = tempfile::tempdir().unwrap();
+        let external = tempfile::tempdir().unwrap();
+        std::fs::create_dir_all(temp.path().join("agent")).unwrap();
+        std::os::unix::fs::symlink(external.path(), temp.path().join("agent/native")).unwrap();
+        assert!(publish_asset(temp.path(), "hermes", "py", b"helper").is_err());
+        assert_eq!(std::fs::read_dir(external.path()).unwrap().count(), 0);
+    }
+}

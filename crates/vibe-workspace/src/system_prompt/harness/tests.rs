@@ -59,6 +59,32 @@ fn carrier_document() -> CarrierDocument {
 }
 
 #[test]
+fn native_kinds_are_registered_once_and_default_to_read_until_admitted() {
+    for (name, kind) in [("hermes", HarnessKind::Hermes), ("pi", HarnessKind::Pi)] {
+        assert_eq!(HarnessKind::parse(name), Some(kind));
+        assert_eq!(
+            HarnessKind::ALL
+                .iter()
+                .filter(|candidate| **candidate == kind)
+                .count(),
+            1
+        );
+        assert_eq!(
+            HarnessTable::default().delivery(name),
+            HarnessDelivery::Read
+        );
+        let interim = flags(kind, HarnessDelivery::Launch);
+        assert!(interim.flags.is_empty() && interim.env.is_empty());
+        assert!(
+            interim
+                .notes
+                .iter()
+                .any(|note| note.contains("requires an admitted native bootstrap"))
+        );
+    }
+}
+
+#[test]
 fn claude_takes_exactly_one_file_flag_and_the_exclude_flag() {
     let answer = flags(HarnessKind::Claude, HarnessDelivery::Launch);
     assert_eq!(
@@ -435,7 +461,11 @@ fn a_node_with_no_system_prompt_table_takes_each_kinds_own_default() {
     for kind in HarnessKind::ALL {
         assert_eq!(
             kind.delivery(&manifest),
-            HarnessDelivery::Launch,
+            if matches!(kind, HarnessKind::Hermes | HarnessKind::Pi) {
+                HarnessDelivery::Read
+            } else {
+                HarnessDelivery::Launch
+            },
             "{kind:?}"
         );
     }

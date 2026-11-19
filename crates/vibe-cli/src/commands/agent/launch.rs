@@ -135,6 +135,28 @@ pub(crate) fn run(ctx: &output::Context, argv: Vec<String>) -> Result<()> {
         return exec(&command, &[], &scrub(launcher.kind));
     }
 
+    if launcher.kind == HarnessKind::Pi
+        && launcher.kind.delivery(&selected.manifest)
+            == vibe_core::manifest::HarnessDelivery::Launch
+    {
+        let prefix = prompt::native_launch_lane(ctx, &selected)?;
+        let (program, standing) = launcher
+            .command
+            .split_first()
+            .context("empty native Pi launcher")?;
+        let program = super::program::resolve(program)?;
+        let mut arguments = standing.to_vec();
+        arguments.extend(rest);
+        let prepared = super::native::prepare_pi(
+            settings.path(),
+            &program,
+            &prefix,
+            &selected.node_dir,
+            &arguments,
+        )?;
+        return exec(&prepared.command, &[], &[]);
+    }
+
     // **The host mismatch, as a note and nothing more.** `vibe agent`
     // starts a session on *this* machine, so it is the one launch surface
     // that can see what `vibe prompt check` would say about it — and a

@@ -43,6 +43,23 @@ pub(crate) use flags::{Undeliverable, compose_for_launch as compose_launch_flags
 pub(crate) use qwen_identity::inherited_carrier_to_scrub;
 pub(crate) use resolve::{Selected, select};
 
+/// Prepare the existing selected-node native lane, including fresh personal layers.
+pub(crate) fn native_launch_lane(
+    ctx: &output::Context,
+    selected: &Selected,
+) -> Result<std::path::PathBuf> {
+    let tracked = selected.tracked();
+    let answer =
+        vibe_workspace::system_prompt::check_node_prompt(&selected.request(&tracked, None))?;
+    if let Some((path, _)) = personal_launch::compose_native(ctx, selected, &answer)? {
+        return Ok(path);
+    }
+    if !answer.verdict.is_equal() {
+        anyhow::bail!("native launch requires a current prepared project lane");
+    }
+    Ok(answer.lane.path)
+}
+
 /// Run one regeneration and end it with the system-prompt summary line.
 ///
 /// `vibe install` and `vibe reinstall` publish an opted-in node's prefix

@@ -48,6 +48,12 @@ pub struct HarnessTable {
     /// `[system_prompt.harness.qwen]`.
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub qwen: Option<QwenHarness>,
+    /// `[system_prompt.harness.hermes]` — native session carrier settings.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub hermes: Option<NativeHarness>,
+    /// `[system_prompt.harness.pi]` — native session carrier settings.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub pi: Option<NativeHarness>,
 }
 
 impl HarnessTable {
@@ -101,6 +107,8 @@ impl HarnessTable {
                 .as_ref()
                 .and_then(|opencode| opencode.delivery),
             "qwen" => self.qwen.as_ref().and_then(|qwen| qwen.delivery),
+            "hermes" => self.hermes.as_ref().and_then(|native| native.delivery),
+            "pi" => self.pi.as_ref().and_then(|native| native.delivery),
             _ => None,
         };
         declared.unwrap_or(match harness {
@@ -202,6 +210,27 @@ pub struct OpenCodeHarness {
 #[serde(deny_unknown_fields)]
 pub struct QwenHarness {
     /// How the lane reaches this harness. Absent means `launch`.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub delivery: Option<HarnessDelivery>,
+}
+
+/// Native session-carrier delivery settings shared by Hermes and Pi.
+///
+/// Read remains the safe interim default until the native bootstrap is admitted;
+/// an explicit launch request is never silently treated as implemented support.
+///
+/// ```
+/// use vibe_core::manifest::{HarnessDelivery, NativeHarness};
+///
+/// let declared: NativeHarness = toml::from_str("delivery = \"launch\"\n")?;
+/// assert_eq!(declared.delivery, Some(HarnessDelivery::Launch));
+/// assert_eq!(NativeHarness::default().delivery, None);
+/// # Ok::<(), toml::de::Error>(())
+/// ```
+#[derive(Debug, Clone, Default, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct NativeHarness {
+    /// Explicit native carrier delivery policy.
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub delivery: Option<HarnessDelivery>,
 }
