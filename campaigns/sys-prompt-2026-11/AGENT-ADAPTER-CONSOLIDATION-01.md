@@ -4,7 +4,7 @@ Date2026-11-19. Owner decision: finish current functionality through existing ow
 
 ## Plan identity and ordering
 
-Stable proposed node `AGENT-ADAPTER-CONSOLIDATION`, a separate bounded refactoring stage after functional agent delivery. Integrate it into the existing NST global-repair REPAIR phase before FINAL-GATES, with actual dependencies on the completed supported-agent functionality. Do not make current SYS-PROMPT or CORP-ENV depend on it, do not add a new campaign, and preserve original task accounting. Builder updates the authoritative source plan before task-tree refresh; architect owns detailed refactor design/review at that stage.
+Stable node `AGENT-ADAPTER-CONSOLIDATION` is a child of the separately owner-requested `NST-DOMAIN-CONSOLIDATION` stage, immediately before `NST-AI-NATIVE-GLOBAL-REPAIR` after preceding functional NST delivery. This supersedes its initial proposed location inside global-repair REPAIR; do not duplicate execution under both places. Governing inventory/route: `campaigns/next-semantic-transfer-2026-11/NST-DOMAIN-CONSOLIDATION-01.md`. Do not make current SYS-PROMPT or CORP-ENV depend on this refactor, do not add a new campaign, and preserve original task accounting. Builder updates the authoritative source plan before task-tree refresh; architect owns detailed refactor design/review at that stage.
 
 ## Intent
 
