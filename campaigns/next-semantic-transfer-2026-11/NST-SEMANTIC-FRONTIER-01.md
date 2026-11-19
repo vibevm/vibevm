@@ -119,3 +119,5 @@ Five combined manifest/task changes amended the permissible paths or notes of M-
 Six historical reviews separate accepted design from available lifecycle/source behavior. In the M14 release-impact recount (32 → at least 34 → at least 33 product changes), all seven paths of `e68c64679` are environment-C1 evidence. Its retention should not inflate product-change coverage.
 
 Four single-file code amendments distinguish captured inventory from physical completeness, plan reservation size from payload size, test-only publication owners from release routes, and root comparison from dispatch. See `87023f56ac0e`, `c570f59e2f4d`, `696542ece2b4`, `ef8816a77129` in the evidence index.
+
+Nine single-file test-labeled changes were inspected by actual content. One only retargets a specification annotation, one switches a fixture, and one adds only a historical race report; the others add assertions around decoding, replay, domain isolation or multi-client operation behavior. No current-product run is inferred.
