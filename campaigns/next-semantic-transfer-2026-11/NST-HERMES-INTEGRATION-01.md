@@ -18,6 +18,10 @@ The core acceptance journey is the native local conversation from project launch
 
 Integration candidates, **not four automatic mandates**: reconnect a conversation to an actual Vibe operation and report its verified outcome without re-execution; promote a learned procedure to a reviewed versioned skill; explain a discrepancy using the governing specification and observed project state; notify a conversation of an operation outcome without model polling or implicit consent to retry. Prioritize the first concrete journey that benefits from the consolidated owners. Retain only selected, tested additions; document a disposition for the others. Before global repair, hand over the accepted behavior, remaining debt and reproducible provider-free evidence.
 
+## User-facing command split
+
+`vibe hermes` is the entry to the original project TUI. `vibe agent hermes [args]` remains the native-facing Hermes command line, not an alias for that TUI. The native-facing route should behave like ordinary Hermes where supported, including native `--cli`/`--tui`, resume, finite queries, pipes and exit codes. Help and examples must distinguish the two surfaces. Verify that bare `vibe hermes` enters the integrated UI, that native arguments after `vibe agent hermes` do not enter it, and that neither invocation silently changes the chosen conversation or instruction scope. See `PROP-076#HERMES-ENTRYPOINTS`. This fixes the entry points, not the renderer or layout; no placeholder command is required before the deferred node.
+
 ## Original terminal client: research, feature matrix, implementation
 
 Owner direction, superseding the earlier overlay-first proposal: design a new Vibe/Hermes terminal frontend, not a fork or skin of `ui-tui`. Preserve the backend authorities; do not preselect a toolkit, panel layout, key binding or base client. This work lives entirely in `NST-HERMES-INTEGRATION` after consolidation. Canon: `PROP-076#HERMES-TUI-ORIGINAL-DESIGN` and `#HERMES-TUI-PROJECT-TREE`.
