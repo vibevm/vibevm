@@ -30,6 +30,10 @@ For each distinct harness, record governing contract, implementation/source pin,
 
 This is a matrix of existing obligations and concrete discovered risks, not permission to generate every combination or demand a paid live run for every row. Reuse unchanged valid historical C8/C9, Qwen/OpenCode and native platform receipts within their exact version/source/scope; classify stale evidence and code-only assertions precisely. Existing accepted behavior is not reopened just because another agent required a different carrier.
 
+## Concrete shared inventory finding
+
+During native product registration review, `crates/vibe-workspace/src/system_prompt/constraints.rs::HARNESS_NAMES` still listed only Claude/Codex, while the actual HarnessKind inventory also includes OpenCode/Qwen and is being extended for Hermes/Pi. Builder was instructed to derive constraint enumeration from the owning HarnessKind inventory, or retain an explicit parity assertion if sharing is impossible. Reconcile this actual shared checker gap within the current registration atom and reuse its evidence here; do not create duplicate Qwen identities or reopen unrelated native proofs. This is a code-bound finding, not evidence that the repair is already complete.
+
 ## Execution and repair
 
 Architect reviews the completed Hermes/Pi delivery and selects transferable issues and meaningful end-to-end cases. Builder maps actual current adapter/shared owners and executes targeted provider-free/native tests first. Repairs must address a named obligation/user impact, not copy Hermes-specific gateway logic into every harness or create a general middleware framework.
