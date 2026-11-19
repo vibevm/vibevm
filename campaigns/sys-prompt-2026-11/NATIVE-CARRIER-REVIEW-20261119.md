@@ -85,6 +85,12 @@ PI-ACTUAL-LARGE-REQUEST-RESULT.json records actual Vibe entrypoint task bqih7ps1
 
 The later actual-entrypoint refusal task bvbj06otp reports exit1 with the named carrier refusal, executed native test-extension milestones and no fresh provider capture. Architect independently verified the milestone SHA256 `3e6de3a9d0610b9a0b72f9feefa86d859c5d1a4abb1c0d4c72d89bee0d1b0c36` and its two actual loaded/before-start lines. Terminal log SHA256 `a6b0ccb786f2960f780e16e4e3b5809ad8a7c643dadea660c01612eead445423` is producer-reported pending exact log-path verification. Together with the actual positive captures this supplies the intended fresh-session refusal oracle, not a pre-compaction, worker or full-argv proof. Earlier uninstrumented timeouts remain RED; absence of output alone was not accepted as zero submissions.
 
+## Intermediate Pi product milestone disposition
+
+Read builder `NATIVE-PI-PRODUCT-CANDIDATE-20261119.md` as a coherent intermediate candidate, not full parity. Architectural clearance covers the reviewed shared typed registration, inventory-derived constraints, immutable assets, actual Pi dispatch, large native request, fresh personal continuation and instrumented fresh-session refusal. Final scoped integration must bind exact source/candidate hashes and terminal gates and include native assets, not just tracked Rust files.
+
+Full Pi/Hermes acceptance remains open: native option families currently refused, saved model/session selection, trust prompting, actual user command loop, workers/resources, replacement/resume/fork and pre-compaction admission require finite implementation/disposition under the existing mandate. Hermes product bootstrap is not delivered by its CLI/factory feasibility proofs. These are existing completion obligations, not new prerequisites created by review. Builder proceeds through existing native owners without another architecture approval cycle; exact unsupported API gaps return for decision. Preserve current milestone evidence and do not rerun unchanged large-prefix positives by ritual.
+
 ## Remaining finite proof
 
 Inspect the actual instance-bound carrier and native Pi extension/file path against the existing packet. Require exact source/runtime binding, complete prefix byte/ordering/once-only evidence, preserved base/resources, changed personal-tail behavior, worker/child exclusion and truthful resume behavior. Distinguish constructed payload from attempted SDK/network delivery. No new generic middleware, permission rounds or speculative proof campaign is requested.
