@@ -4,6 +4,10 @@ Owner direction, 2026-11-19, up to, but not including, IDE MVP. Neither architec
 
 For each slice the architect specifies the user outcome, governing spec and source baseline, allowed writes, implementation sequence, positive and negative checks, and stopping condition. Builder chooses routine reversible details at the existing domain owner; a design ambiguity goes to the architect with evidence and a recommendation, not to an owner approval dialog. On failure preserve the evidence, diagnose against the promised outcome and fix the narrow cause. Hand over the exact diff/commit, actual test results and explicit unrun cases. Architect checks both design and evidence. While independent work remains, a pending review or one externally blocked item is not a campaign-wide pause. Keep the source plan ahead of its dashboard. Send milestone, actionable blocker and decision reports rather than repeated idle messages.
 
+## Owner-attended checks
+
+An NST task may be accepted without checks that require the owner's personal attention, such as pressing Ctrl+C in a physical terminal. Record the precise scenario as **not run — owner-attended check waived**; do not wait for the owner or count it as a passing observation. Continue checks that can run autonomously. An observed automated failure remains a finding until independently resolved; this waiver does not change permissions or authorize simulated consent.
+
 ## Current package slice and next independent slice
 
 1. Finish the already-running focused test for the root-level synthetic OpenCode layout. Require selected package/receipt, `vibe app run` and the installed public command to preserve a spaced argument, clean uninstall, and no new receipt after digest rejection. Capture terminal result. Do not treat this as real OpenCode qualification.
