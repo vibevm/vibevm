@@ -52,6 +52,8 @@ pub type FeatureChooser<'a> =
 #[derive(Clone, Copy)]
 #[spec(documents = "spec://org.vibevm.core/vibevm/common/PROP-065#conditions")]
 pub struct HostFacts<'a> {
+    /// Fixed isolated system interpreter observation, only invoked for opted-in options.
+    pub system_python: Option<crate::SystemPythonProbe<'a>>,
     /// Whether a command name is found on PATH.
     pub command_present: &'a dyn Fn(&str) -> bool,
     /// Whether an environment variable is set.
@@ -73,6 +75,7 @@ impl Default for HostFacts<'static> {
     /// path is taken as given.
     fn default() -> Self {
         Self {
+            system_python: None,
             command_present: &absent,
             env_present: &absent,
             resolve_path: &as_given,

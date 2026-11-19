@@ -17,6 +17,7 @@ mod site;
 mod step_validation;
 mod steps;
 mod sugar;
+mod system_python;
 mod template;
 mod template_validation;
 mod validation;
@@ -46,6 +47,7 @@ pub use steps::{
     StepPhase,
 };
 pub use sugar::{result_of, steps_of};
+pub use system_python::SystemPythonDecl;
 pub use template::{StepVar, expand_step_template};
 pub use version_file::{
     KeyedComment, KeyedExtra, KeyedSeparator, KeyedSyntax, TOOL_VERSIONS_FILE, VersionFileDecl,
@@ -307,6 +309,9 @@ pub struct PublicCommandDecl {
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
 pub struct InstallerOptionDecl {
+    /// Optional fixed system interpreter capability, observed before effects.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub system_python: Option<SystemPythonDecl>,
     /// Reviewed npm metadata bound to an existing acquisition input.
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub npm_runtime: Option<NpmRuntimeDecl>,

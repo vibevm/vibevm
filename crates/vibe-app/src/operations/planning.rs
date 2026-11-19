@@ -108,6 +108,12 @@ pub(super) fn prepare_option(
         prepared,
     } = continuation;
     let owner = resolved.package.key();
+    if let Some(required) = &option.system_python {
+        ctx.facts.system_python
+            .ok_or_else(|| crate::StepError::RuntimeRemediationRefused { key: owner.clone(), reason: "system Python observation unavailable; install a compatible system CPython 3.14 and retry".into() })?()
+            .and_then(|observed| observed.admit(required))
+            .map_err(|reason| crate::StepError::RuntimeRemediationRefused { key: owner.clone(), reason })?;
+    }
     let requirements = |spelling: &str, scope, step: Option<&str>| {
         if let Some(operation) = pending {
             let binding = operation

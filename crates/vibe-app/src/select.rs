@@ -415,6 +415,7 @@ mod tests {
 
     fn option(id: &str, platform: &str, arch: &str) -> InstallerOptionDecl {
         InstallerOptionDecl {
+            system_python: None,
             npm_runtime: None,
             id: id.into(),
             name: format!("Installer {id}"),

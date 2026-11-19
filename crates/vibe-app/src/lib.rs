@@ -48,6 +48,8 @@ mod installer;
 mod launch;
 mod migrate;
 mod npm_runtime;
+mod system_python;
+pub use system_python::{SystemPythonObservation, SystemPythonProbe};
 mod operations;
 pub use npm_runtime::{verify_npm_runtime_archive, verify_npm_runtime_archive_interruptible};
 pub use operations::pending::command as resume_command;

@@ -1,0 +1,47 @@
+[package]
+name = "hermes"
+group = "org.vibevm.agents"
+kind = "app"
+version = "0.23.2"
+
+[application]
+id = "hermes"
+
+[[installer_options]]
+id = "linux-x64-core-cp314"
+name = "Vibe-built Hermes core CLI — system CPython 3.14, offline drop"
+platform = "linux"
+platform_name = "Linux"
+arch = "x86_64"
+
+[installer_options.system_python]
+implementation = "cpython"
+major = 3
+minor = 14
+soabi = "cpython-314-x86_64-linux-gnu"
+
+[installer_options.installation]
+type = "source_build"
+
+[[installer_options.installation.sources]]
+name = "payload"
+drop = "packages"
+file = "hermes-v0.23.2-linux-x86_64-cp314-vibevm.tar.gz"
+sha256 = "844e678e0b1cb1773d0e06b6f30d2c06acc54939e2e9402d71a26bb74c012ddf"
+size = 140175971
+extract = true
+
+[installer_options.installation.recipe]
+script = "place-payload.sh"
+interpreter = "posix_sh"
+
+[[installer_options.launchers]]
+id = "main"
+name = "Hermes core CLI"
+executable = "$app_bin/hermes"
+kind = "command"
+default = true
+
+[[installer_options.public_commands]]
+name = "hermes"
+launcher = "main"

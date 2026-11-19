@@ -14,6 +14,7 @@ use vibe_app::{
 mod node_remediation;
 #[path = "global/observation.rs"]
 mod observation;
+mod system_python;
 pub(crate) use observation::Observation;
 
 /// Where one command's package comes from: the effective source policy,
@@ -63,6 +64,7 @@ pub(super) fn attended(ctx: &output::Context) -> bool {
 /// PATH and environment facts for step conditions and needs.
 pub(crate) fn host_facts() -> HostFacts<'static> {
     HostFacts {
+        system_python: Some(&system_python::observe),
         command_present: &super::facts::command_on_path,
         env_present: &super::facts::env_set,
         resolve_path: &super::facts::absolute_path,

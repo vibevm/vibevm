@@ -140,6 +140,11 @@ impl InstallerOptionDecl {
                 ));
             }
         }
+        if let Some(python) = &self.system_python {
+            python
+                .validate(&self.platform, &self.arch)
+                .map_err(|reason| FieldError::new(at.field("system_python"), reason))?;
+        }
         self.validate_steps(at, template)?;
         if let Some(runtime) = &self.npm_runtime {
             runtime

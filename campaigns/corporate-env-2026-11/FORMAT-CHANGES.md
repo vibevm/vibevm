@@ -531,3 +531,11 @@ Status: implementation candidate, 2026-11-19; no completed Node-remediation clai
 - No existing report epoch is changed by the declaration alone; common manifest serde and ordinary validation own it. Any future report projection must preserve the binding rather than silently imply remediation is available.
 
 - Superseding owner large-package rule: stream compressed SHA-256 and decoded tar with checked u64 counters and bounded resident metadata memory; no fixed package-size ceiling. Fully drain gzip and authenticate before metadata confers authority. Operation interruption and explicit resource budgets refuse without provider effects, distinct from a successful verification.
+
+## CORP-FMT-049 — optional system Python capability
+
+Status: implementation candidate, 2026-11-19; native installation qualification pending.
+
+- Selected application installer options may declare `system_python = { implementation, major, minor, soabi }`. No executable/script field. Initial target: CPython 3.14 Linux x64 with exact SOABI. Existing platform/arch fields remain authoritative.
+- Host observation uses fixed isolated arguments and complete typed output before target acquisition/effects. Missing/incompatible interpreters refuse; no automatic Python install or system package writes. Options without the field do not probe.
+- Strict older readers reject the new field; use a compatible Vibe before selecting this option. No installed-state wire epoch changes from the declaration alone.

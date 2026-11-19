@@ -12,6 +12,8 @@ use vibe_wire::generated::shared as w;
 #[cfg(test)]
 mod deferral_tests;
 mod remediation;
+#[cfg(test)]
+mod system_python_tests;
 pub use remediation::{
     InstallPreparation, NodeRemediation, continue_after_node, install_preparing_node,
 };
