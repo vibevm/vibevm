@@ -160,20 +160,28 @@ pub(super) fn run_status(ctx: &output::Context, args: McpStatusArgs) -> Result<(
             // a path for this scope. install_skill with dry_run=true
             // reuses the decide-then-(don't-)apply logic and emits
             // would-create / would-update / unchanged.
-            if agent.supports_skill() && agent.skill_path(scope, project_root.as_deref())?.is_some()
+            if agent.supports_skill()
+                && agent
+                    .skills_root_with_dirs(scope, project_root.as_deref(), &ctx.agent_user_dirs)?
+                    .is_some()
             {
                 // Read-only: an unreceipted legacy SKILL.md is a per-row
                 // conflict, never an abort of the whole status report.
-                let outcome = match vibe_mcp::install::refresh_skill(
+                let outcome = match vibe_mcp::install::refresh_skill_with_dirs(
                     agent,
                     scope,
                     project_root.as_deref(),
                     true,
+                    &ctx.agent_user_dirs,
                 ) {
                     Ok(outcome) => outcome,
-                    Err(error) if is_unreceipted_builtin_refusal(&error) => {
-                        unreceipted_skill_row(agent, scope, project_root.as_deref(), "conflict")?
-                    }
+                    Err(error) if is_unreceipted_builtin_refusal(&error) => unreceipted_skill_row(
+                        ctx,
+                        agent,
+                        scope,
+                        project_root.as_deref(),
+                        "conflict",
+                    )?,
                     Err(error) => return Err(error),
                 };
                 skill_results.push(outcome);

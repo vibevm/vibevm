@@ -57,7 +57,13 @@ pub(super) fn run_uninstall(ctx: &output::Context, args: McpUninstallArgs) -> Re
     let agents: Vec<Agent> = if let Some(filter) = &args.agent {
         Agent::parse_filter(filter)?
     } else {
-        Agent::ALL.to_vec()
+        Agent::ALL
+            .iter()
+            .copied()
+            .filter(|agent| {
+                *agent != Agent::Hermes || ctx.agent_user_dirs.native.contains_key(agent)
+            })
+            .collect()
     };
 
     // Two-pass walk + apply-confirm. Uninstall is the most
@@ -286,7 +292,7 @@ fn walk_uninstall(
                 }
             }
             if what.includes_skill() {
-                let outcome = uninstall_skill(*agent, concrete_scope, project_root, dry_run)?;
+                let outcome = uninstall_skill(ctx, *agent, concrete_scope, project_root, dry_run)?;
                 if let Some(o) = outcome {
                     skill_results.push(o);
                 }
@@ -329,20 +335,22 @@ fn uninstall_managed_entries(
 }
 
 fn uninstall_skill(
+    ctx: &output::Context,
     agent: Agent,
     scope: Scope,
     project_root: Option<&Path>,
     dry_run: bool,
 ) -> Result<Option<SkillInstallReport>> {
-    let Some(path) = agent.skill_path(scope, project_root)? else {
+    let Some(path) = agent.skill_path_with_dirs(scope, project_root, &ctx.agent_user_dirs)? else {
         return Ok(None);
     };
-    let row = vibe_agent_projection::pkgskill::uninstall_package_skill(
+    let row = vibe_agent_projection::pkgskill::uninstall_package_skill_with_dirs(
         agent,
         scope,
         project_root,
         "vibevm",
         dry_run,
+        &ctx.agent_user_dirs,
     )?;
     Ok(Some(SkillInstallReport {
         agent: row.agent,

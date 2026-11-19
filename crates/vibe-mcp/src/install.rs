@@ -107,7 +107,14 @@ pub fn install_skill_adopting(
     adoption: vibe_agent_projection::activation::BuiltinAdoption,
     dry_run: bool,
 ) -> Result<SkillInstallReport> {
-    install_skill_with(agent, scope, project_root, dry_run, Some(adoption))
+    install_skill_adopting_with_dirs(
+        agent,
+        scope,
+        project_root,
+        adoption,
+        dry_run,
+        &crate::agents::AgentUserDirectories::ambient(),
+    )
 }
 
 /// Refresh or observe existing ownership without adopting unreceipted files.
@@ -118,7 +125,38 @@ pub fn refresh_skill(
     project_root: Option<&Path>,
     dry_run: bool,
 ) -> Result<SkillInstallReport> {
-    install_skill_with(agent, scope, project_root, dry_run, None)
+    refresh_skill_with_dirs(
+        agent,
+        scope,
+        project_root,
+        dry_run,
+        &crate::agents::AgentUserDirectories::ambient(),
+    )
+}
+
+/// Register builtin skills using explicit operation directories.
+#[spec(documents = "spec://org.vibevm.core/vibevm/common/PROP-073#MANAGED-ACTIVATION")]
+pub fn install_skill_adopting_with_dirs(
+    agent: Agent,
+    scope: Scope,
+    project_root: Option<&Path>,
+    adoption: vibe_agent_projection::activation::BuiltinAdoption,
+    dry_run: bool,
+    dirs: &crate::agents::AgentUserDirectories,
+) -> Result<SkillInstallReport> {
+    install_skill_with(agent, scope, project_root, dry_run, Some(adoption), dirs)
+}
+
+/// Refresh existing skills using explicit operation directories.
+#[spec(documents = "spec://org.vibevm.core/vibevm/common/PROP-073#MANAGED-ACTIVATION")]
+pub fn refresh_skill_with_dirs(
+    agent: Agent,
+    scope: Scope,
+    project_root: Option<&Path>,
+    dry_run: bool,
+    dirs: &crate::agents::AgentUserDirectories,
+) -> Result<SkillInstallReport> {
+    install_skill_with(agent, scope, project_root, dry_run, None, dirs)
 }
 
 fn install_skill_with(
@@ -127,11 +165,12 @@ fn install_skill_with(
     project_root: Option<&Path>,
     dry_run: bool,
     adoption: Option<vibe_agent_projection::activation::BuiltinAdoption>,
+    dirs: &crate::agents::AgentUserDirectories,
 ) -> Result<SkillInstallReport> {
     let agent_str = agent.as_str().to_string();
     let scope_str = scope.as_str();
 
-    let Some(path) = agent.skill_path(scope, project_root)? else {
+    let Some(path) = agent.skill_path_with_dirs(scope, project_root, dirs)? else {
         return Ok(SkillInstallReport {
             agent: agent_str,
             scope: scope_str,
@@ -148,16 +187,17 @@ fn install_skill_with(
     let desired =
         std::collections::BTreeMap::from([("SKILL.md".into(), SKILL_TEMPLATE.as_bytes().to_vec())]);
     let row = if let Some(adoption) = adoption {
-        vibe_agent_projection::pkgskill::adopt_builtin_skill_snapshot(
+        vibe_agent_projection::pkgskill::adopt_builtin_skill_snapshot_with_dirs(
             agent,
             scope,
             project_root,
             &desired,
             adoption,
             dry_run,
+            dirs,
         )?
     } else {
-        vibe_agent_projection::pkgskill::install_managed_skill_snapshot(
+        vibe_agent_projection::pkgskill::install_managed_skill_snapshot_with_dirs(
             agent,
             scope,
             project_root,
@@ -165,6 +205,7 @@ fn install_skill_with(
             "vibevm",
             &desired,
             dry_run,
+            dirs,
         )?
     };
     Ok(SkillInstallReport {
@@ -194,6 +235,101 @@ pub fn decide_skill_action(path: &Path, body: &str) -> Result<&'static str> {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn hermes_profile_skill_lifecycle_keeps_existing_receipt_owner() {
+        use crate::agents::AgentUserDirectories;
+        use vibe_agent_projection::{activation::BuiltinAdoption, pkgskill};
+        let sandbox = tempfile::tempdir().unwrap();
+        let profile = sandbox.path().join("selected-profile");
+        let mut dirs = AgentUserDirectories::default();
+        dirs.native.insert(Agent::Hermes, profile.clone());
+        let install = || {
+            install_skill_adopting_with_dirs(
+                Agent::Hermes,
+                Scope::User,
+                None,
+                BuiltinAdoption::explicit("vibe mcp install"),
+                false,
+                &dirs,
+            )
+            .unwrap()
+        };
+        assert_eq!(install().status, "created");
+        let entry = profile.join("skills/vibevm/SKILL.md");
+        assert_eq!(fs::read_to_string(&entry).unwrap(), SKILL_TEMPLATE);
+        assert_eq!(install().status, "unchanged");
+        assert_eq!(
+            pkgskill::managed_skill_status_with_dirs(
+                Agent::Hermes,
+                Scope::User,
+                None,
+                "org.vibevm.core/vibevm",
+                "vibevm",
+                &dirs
+            )
+            .unwrap()
+            .observed,
+            "enabled"
+        );
+        let neighbor = profile.join("skills/vibevm/operator.txt");
+        fs::write(&neighbor, "foreign neighbor").unwrap();
+        assert_eq!(
+            refresh_skill_with_dirs(Agent::Hermes, Scope::User, None, false, &dirs)
+                .unwrap()
+                .status,
+            "unchanged"
+        );
+        pkgskill::uninstall_package_skill_with_dirs(
+            Agent::Hermes,
+            Scope::User,
+            None,
+            "vibevm",
+            false,
+            &dirs,
+        )
+        .unwrap();
+        assert!(!entry.exists());
+        assert_eq!(fs::read_to_string(neighbor).unwrap(), "foreign neighbor");
+        assert_eq!(
+            pkgskill::managed_skill_status_with_dirs(
+                Agent::Hermes,
+                Scope::User,
+                None,
+                "org.vibevm.core/vibevm",
+                "vibevm",
+                &dirs
+            )
+            .unwrap()
+            .observed,
+            "foreign"
+        );
+        assert!(
+            refresh_skill_with_dirs(
+                Agent::Hermes,
+                Scope::User,
+                None,
+                true,
+                &AgentUserDirectories::default()
+            )
+            .is_err()
+        );
+        dirs.native.insert(Agent::Hermes, "relative-profile".into());
+        assert!(refresh_skill_with_dirs(Agent::Hermes, Scope::User, None, false, &dirs).is_err());
+        assert!(!sandbox.path().join(".hermes").exists());
+        assert_eq!(
+            refresh_skill_with_dirs(
+                Agent::Cursor,
+                Scope::User,
+                None,
+                true,
+                &AgentUserDirectories::default()
+            )
+            .unwrap()
+            .status,
+            "skipped"
+        );
+    }
 
     #[test]
     fn install_skill_creates_under_project() {

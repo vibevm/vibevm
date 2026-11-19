@@ -25,13 +25,29 @@ fn paths(
     project: Option<&Path>,
     name: &str,
 ) -> anyhow::Result<(PathBuf, PathBuf)> {
+    paths_with_dirs(
+        agent,
+        scope,
+        project,
+        name,
+        &crate::agents::AgentUserDirectories::ambient(),
+    )
+}
+
+fn paths_with_dirs(
+    agent: Agent,
+    scope: Scope,
+    project: Option<&Path>,
+    name: &str,
+    dirs: &crate::agents::AgentUserDirectories,
+) -> anyhow::Result<(PathBuf, PathBuf)> {
     anyhow::ensure!(
         vibe_core::manifest::SkillDecl::valid_name(name),
         "invalid skill name"
     );
     anyhow::ensure!(scope != Scope::Both, "expand activation scopes first");
     let root = agent
-        .skills_root(scope, project)?
+        .skills_root_with_dirs(scope, project, dirs)?
         .ok_or_else(|| anyhow::anyhow!("agent has no skill loader for this scope"))?;
     receipt::ensure_no_follow_walk(
         project.filter(|_| scope == Scope::Project).unwrap_or(&root),
@@ -57,7 +73,27 @@ pub fn managed_skill_status(
     provider: &str,
     name: &str,
 ) -> anyhow::Result<SkillActivationStatus> {
-    let (target, path) = paths(agent, scope, project, name)?;
+    managed_skill_status_with_dirs(
+        agent,
+        scope,
+        project,
+        provider,
+        name,
+        &crate::agents::AgentUserDirectories::ambient(),
+    )
+}
+
+/// Observe skill ownership in an injected directory context.
+#[spec(documents = "spec://org.vibevm.core/vibevm/common/PROP-073#MANAGED-ACTIVATION")]
+pub fn managed_skill_status_with_dirs(
+    agent: Agent,
+    scope: Scope,
+    project: Option<&Path>,
+    provider: &str,
+    name: &str,
+    dirs: &crate::agents::AgentUserDirectories,
+) -> anyhow::Result<SkillActivationStatus> {
+    let (target, path) = paths_with_dirs(agent, scope, project, name, dirs)?;
     let prior = read_standalone_receipt(&path, name)?;
     if let Some(prior) = &prior {
         owns_provider(prior, provider)?;
@@ -159,6 +195,30 @@ pub fn install_managed_skill_snapshot(
     desired: &BTreeMap<String, Vec<u8>>,
     dry_run: bool,
 ) -> Result<PackageSkillReport, PackageSkillError> {
+    install_managed_skill_snapshot_with_dirs(
+        agent,
+        scope,
+        project,
+        provider,
+        name,
+        desired,
+        dry_run,
+        &crate::agents::AgentUserDirectories::ambient(),
+    )
+}
+
+/// Reconcile a skill using only caller-injected user/native directories.
+#[spec(documents = "spec://org.vibevm.core/vibevm/common/PROP-073#MANAGED-ACTIVATION")]
+pub fn install_managed_skill_snapshot_with_dirs(
+    agent: Agent,
+    scope: Scope,
+    project: Option<&Path>,
+    provider: Option<&str>,
+    name: &str,
+    desired: &BTreeMap<String, Vec<u8>>,
+    dry_run: bool,
+    dirs: &crate::agents::AgentUserDirectories,
+) -> Result<PackageSkillReport, PackageSkillError> {
     if let Some(project_root) = project.filter(|_| scope == Scope::Project) {
         let intent = receipt::project_intent_for_target(project_root, name, agent, provider)
             .map_err(|e| PackageSkillError::UnsafePath {
@@ -179,7 +239,7 @@ pub fn install_managed_skill_snapshot(
         }
     }
     let root = agent
-        .skills_root(scope, project)
+        .skills_root_with_dirs(scope, project, dirs)
         .map_err(|e| PackageSkillError::SkillsRoot {
             detail: e.to_string(),
         })?;
@@ -302,7 +362,29 @@ pub fn adopt_builtin_skill_snapshot(
     adoption: crate::activation::BuiltinAdoption,
     dry_run: bool,
 ) -> anyhow::Result<PackageSkillReport> {
-    let (target, path) = paths(agent, scope, project, "vibevm")?;
+    adopt_builtin_skill_snapshot_with_dirs(
+        agent,
+        scope,
+        project,
+        desired,
+        adoption,
+        dry_run,
+        &crate::agents::AgentUserDirectories::ambient(),
+    )
+}
+
+/// Adopt the builtin skill under an explicitly resolved native/user directory context.
+#[spec(documents = "spec://org.vibevm.core/vibevm/common/PROP-073#MANAGED-ACTIVATION")]
+pub fn adopt_builtin_skill_snapshot_with_dirs(
+    agent: Agent,
+    scope: Scope,
+    project: Option<&Path>,
+    desired: &BTreeMap<String, Vec<u8>>,
+    adoption: crate::activation::BuiltinAdoption,
+    dry_run: bool,
+    dirs: &crate::agents::AgentUserDirectories,
+) -> anyhow::Result<PackageSkillReport> {
+    let (target, path) = paths_with_dirs(agent, scope, project, "vibevm", dirs)?;
     let prior = read_standalone_receipt(&path, "vibevm")?;
     let current = snapshot_dir(&target)?;
     if let (None, Some(current)) = (&prior, &current) {
@@ -359,7 +441,7 @@ pub fn adopt_builtin_skill_snapshot(
             note: Some(note),
         });
     }
-    Ok(install_managed_skill_snapshot(
+    Ok(install_managed_skill_snapshot_with_dirs(
         agent,
         scope,
         project,
@@ -367,6 +449,7 @@ pub fn adopt_builtin_skill_snapshot(
         "vibevm",
         desired,
         dry_run,
+        dirs,
     )?)
 }
 
