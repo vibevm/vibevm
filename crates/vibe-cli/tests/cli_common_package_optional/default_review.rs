@@ -9192,3 +9192,117 @@ fn feature_default_seeds_are_not_inferred_from_implied_closure() {
     f.install_ok();
     assert_eq!(super::workspace::semantic_snapshot(&f.project), before);
 }
+
+#[test]
+fn optional_public_bool_without_default_actual_boundary_and_required_control() {
+    for world in ["omitted", "false", "true", "wrong-type", "required-control"] {
+        let f = Fixture::new(false);
+        let source = f.registry.join(GROUP).join(DRIVER).join("v1.0.0/vibe.toml");
+        let required = world == "required-control";
+        write(
+            &source,
+            package_header(DRIVER)
+                + &format!(
+                    "\n[requires.packages]\n'org.vibevm/oracle-base'='=1.0.0'\n[configuration]\n[[configuration.parameters]]\nid='verbose'\nname='Verbose'\ntype='bool'\nrequired={required}\n"
+                ),
+        );
+        let parameters = match world {
+            "omitted" => "",
+            "true" => ",parameters={verbose=true}",
+            "wrong-type" => ",parameters={verbose='not-bool'}",
+            _ => ",parameters={verbose=false}",
+        };
+        write(
+            &f.project.join("vibe.toml"),
+            format!(
+                "[project]\nname='optional-bool-qualification'\nversion='0.1.0'\n[requires.packages.'{GROUP}/{DRIVER}']\nversion='=1.0.0'\nlink='static-transitive'\nconfiguration={{policy='require-selection',default_features=false{parameters}}}\n[[registry]]\nname='fixture'\nurl='file://{}'\n",
+                f.registry.display()
+            ),
+        );
+        let original = Manifest::read(f.project.join("vibe.toml"))
+            .unwrap()
+            .requires
+            .configurations[&coordinate(DRIVER)]
+            .clone();
+        assert_eq!(
+            original.parameters.contains_key("verbose"),
+            world != "omitted"
+        );
+        let definition = Manifest::read(&source).unwrap().configuration.unwrap();
+        assert!(definition.parameters[0].default.is_none());
+        let normalized = definition.normalize_input(&original, "./vibe.toml");
+        match world {
+            "omitted" => assert!(!normalized.unwrap().parameters.contains_key("verbose")),
+            "wrong-type" => assert!(normalized.is_err()),
+            _ => assert_eq!(
+                normalized.unwrap().parameters["verbose"],
+                vibe_core::manifest::ParameterValue::Bool(world == "true")
+            ),
+        }
+        let before = super::workspace::semantic_snapshot(&f.project);
+        let out = f.install();
+        let diagnostic = String::from_utf8_lossy(&out.stdout).to_string()
+            + &String::from_utf8_lossy(&out.stderr);
+        println!(
+            "optional-bool world={world} accepted={} diagnostic={diagnostic}",
+            out.status.success()
+        );
+        if required {
+            assert!(out.status.success(), "{diagnostic}");
+            let lock = f.lock();
+            assert_eq!(lock.meta.schema_version, 8);
+            assert_eq!(
+                lock.configurations[&coordinate(DRIVER)].consumers["./vibe.toml"],
+                original
+            );
+            assert_eq!(
+                lock.configurations[&coordinate(DRIVER)].consumers["./vibe.toml"].parameters["verbose"],
+                vibe_core::manifest::ParameterValue::Bool(false)
+            );
+            assert!(f.slot(BASE).exists() && !f.slot(EXTRA).exists());
+            assert_eq!(f.hooks().get(BASE).copied(), Some(1));
+            let shown = f
+                .user
+                .vibe()
+                .args([
+                    "show",
+                    "configuration-data",
+                    "--path",
+                    f.project.to_str().unwrap(),
+                    "--json",
+                ])
+                .output()
+                .unwrap();
+            assert!(shown.status.success());
+            let report: serde_json::Value = serde_json::from_slice(&shown.stdout).unwrap();
+            assert_eq!(
+                report["packages"][0]["parameters"],
+                serde_json::json!({"verbose":false})
+            );
+            let before = super::workspace::semantic_snapshot(&f.project);
+            f.install_ok();
+            assert_eq!(super::workspace::semantic_snapshot(&f.project), before);
+        } else {
+            assert!(
+                !out.status.success(),
+                "optional unexpectedly accepted {world}"
+            );
+            if world == "wrong-type" {
+                assert!(
+                    diagnostic.contains("boolean") || diagnostic.contains("bool"),
+                    "{diagnostic}"
+                );
+            } else {
+                assert!(
+                    diagnostic.contains("only explicitly supplied required public bool"),
+                    "{diagnostic}"
+                );
+            }
+            assert_eq!(super::workspace::semantic_snapshot(&f.project), before);
+            assert!(
+                !f.project.join("vibe.lock").exists() && !f.project.join("effects.log").exists()
+            );
+            assert!(!f.slot(DRIVER).exists() && !f.slot(BASE).exists());
+        }
+    }
+}
