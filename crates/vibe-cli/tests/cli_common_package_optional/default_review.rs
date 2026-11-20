@@ -6168,19 +6168,22 @@ fn integer_profile_preset_override_and_explicit_public_boundary() {
         );
         assert_eq!(original.profile.is_some(), world != "explicit");
         assert_eq!(original.parameters.contains_key("count"), world != "preset");
-        let before = super::workspace::semantic_snapshot(&f.project);
         let out = f.install();
-        // The current ordinary scalar owner rejects all non-bool profiles,
-        // even when the authored value overrides the selected preset.
         assert!(
-            !out.status.success(),
-            "qualification must be revised if the actual boundary changes"
+            out.status.success(),
+            "{}",
+            String::from_utf8_lossy(&out.stderr)
         );
-        assert!(String::from_utf8_lossy(&out.stderr).contains("only one explicit required public integer without defaults, profiles or automatic choices is connected"));
-        assert_eq!(super::workspace::semantic_snapshot(&f.project), before);
-        assert!(!f.project.join("vibe.lock").exists());
-        assert!(!f.slot(DRIVER).exists());
-        assert!(!f.project.join("effects.log").exists());
+        let lock = f.lock();
+        let record = &lock.configurations[&coordinate(DRIVER)];
+        assert_eq!(lock.meta.schema_version, 8);
+        assert_eq!(record.consumers["./vibe.toml"], original);
+        assert!(record.automatic_basis.is_none());
+        assert!(record.closure_fallback_basis.is_none());
+        assert!(f.slot(BASE).exists());
+        assert!(!f.slot(EXTRA).exists());
+        assert_eq!(f.hooks().get(BASE), Some(&1));
+        let before = super::workspace::semantic_snapshot(&f.project);
         let show = f
             .user
             .vibe()
@@ -6193,12 +6196,18 @@ fn integer_profile_preset_override_and_explicit_public_boundary() {
             ])
             .output()
             .unwrap();
-        assert!(!show.status.success());
+        assert!(show.status.success());
+        let shown: serde_json::Value = serde_json::from_slice(&show.stdout).unwrap();
+        assert_eq!(
+            shown["packages"][0]["parameters"]["count"],
+            if world == "preset" { -1 } else { 0 }
+        );
         assert_eq!(super::workspace::semantic_snapshot(&f.project), before);
-        assert!(!f.install().status.success());
+        fs::rename(&f.registry, f.root.join("registry-unavailable")).unwrap();
+        f.install_ok();
         assert_eq!(super::workspace::semantic_snapshot(&f.project), before);
         println!(
-            "integer-profile world={world} normalized={} actual-install=refused show=no-history repeat=refused",
+            "integer-profile world={world} normalized={} actual-install=success show=typed cold=unchanged",
             if world == "preset" { -1 } else { 0 }
         );
     }
@@ -6211,6 +6220,147 @@ fn integer_profile_preset_override_and_explicit_public_boundary() {
         super::workspace::semantic_snapshot(&control.project),
         before
     );
+}
+
+#[test]
+fn integer_profile_effective_consumer_merge_prior_and_preset_drift() {
+    for world in ["agree", "conflict", "unselected-missing", "prior", "drift"] {
+        let f = integer_fixture(0);
+        let source = f.registry.join(GROUP).join(DRIVER).join("v1.0.0/vibe.toml");
+        write(
+            &source,
+            fs::read_to_string(&source).unwrap()
+                + "\n[[configuration.profiles]]\nid='counted'\nname='Counted'\nparameters.count=-1\n",
+        );
+        let request = f.project.join("vibe.toml");
+        let text = fs::read_to_string(&request).unwrap();
+        if matches!(world, "agree" | "conflict") {
+            let registry = text.split("[[registry]]").nth(1).unwrap();
+            write(
+                &request,
+                format!(
+                    "[project]\nname='profile-integer-workspace'\nversion='0.1.0'\n[workspace]\nmembers=['left','right']\n[[registry]]{registry}"
+                ),
+            );
+            for (member, profile, value) in [
+                ("left", true, None),
+                (
+                    "right",
+                    false,
+                    Some(if world == "conflict" { 0 } else { -1 }),
+                ),
+            ] {
+                let intent = format!(
+                    "configuration={{policy='require-selection',default_features=false,{}selections={{extra={{intent='exact',members=['disabled']}}}}{}}}",
+                    if profile { "profile='counted'," } else { "" },
+                    value
+                        .map(|v| format!(",parameters={{count={v}}}"))
+                        .unwrap_or_default()
+                );
+                write(
+                    &f.project.join(member).join("vibe.toml"),
+                    format!(
+                        "[project]\nname='{member}'\nversion='0.1.0'\n[requires.packages.'{GROUP}/{DRIVER}']\nversion='=1.0.0'\nlink='static-transitive'\n{intent}\n"
+                    ),
+                );
+            }
+        } else {
+            let text = if world == "unselected-missing" {
+                text.replace(",parameters={count=0}", "")
+            } else {
+                text.replace(",parameters={count=0}", "").replace(
+                    "default_features=false,",
+                    "default_features=false,profile='counted',",
+                )
+            };
+            write(&request, text);
+        }
+        let before = super::workspace::semantic_snapshot(&f.project);
+        let out = f.install();
+        if matches!(world, "conflict" | "unselected-missing") {
+            assert!(!out.status.success());
+            assert_eq!(super::workspace::semantic_snapshot(&f.project), before);
+            let error = String::from_utf8_lossy(&out.stderr);
+            assert!(
+                error.contains(if world == "conflict" {
+                    "conflicting explicit public integer"
+                } else {
+                    "missing required public parameter"
+                }),
+                "{error}"
+            );
+            continue;
+        }
+        assert!(
+            out.status.success(),
+            "{world} {}",
+            String::from_utf8_lossy(&out.stderr)
+        );
+        let lock = f.lock();
+        let record = &lock.configurations[&coordinate(DRIVER)];
+        assert_eq!(lock.meta.schema_version, 8);
+        assert_eq!(
+            record
+                .selected_parameters(vibe_core::PackageKind::Flow)
+                .unwrap()["count"],
+            vibe_core::manifest::ParameterValue::Integer(-1)
+        );
+        if world == "agree" {
+            assert_eq!(record.consumers.len(), 2);
+            assert!(record.consumers["left/vibe.toml"].parameters.is_empty());
+            assert_eq!(
+                record.consumers["right/vibe.toml"].parameters["count"],
+                vibe_core::manifest::ParameterValue::Integer(-1)
+            );
+        }
+        let before = super::workspace::semantic_snapshot(&f.project);
+        f.install_ok();
+        assert_eq!(super::workspace::semantic_snapshot(&f.project), before);
+        if world == "prior" {
+            let old = std::env::var_os("NST_OPTIONAL_BOOL_OLD_CLI").unwrap();
+            for command in ["reader", "writer"] {
+                let mut cmd = std::process::Command::new(&old);
+                cmd.env_clear()
+                    .env("HOME", f.root.join("home"))
+                    .env("VIBE_SETTINGS", &f.user.settings)
+                    .env("PATH", "/usr/bin:/bin")
+                    .env("VIBE_NO_DEFAULT_REGISTRY", "1");
+                if command == "reader" {
+                    cmd.args(["show", "configuration-data"]);
+                } else {
+                    cmd.args(["install", "--offline", "--assume-yes"]);
+                }
+                let out = cmd
+                    .args(["--path", f.project.to_str().unwrap(), "--json"])
+                    .output()
+                    .unwrap();
+                assert!(!out.status.success());
+                assert_eq!(super::workspace::semantic_snapshot(&f.project), before);
+            }
+        }
+        if world == "drift" {
+            let next = f.registry.join(GROUP).join(DRIVER).join("v1.1.0");
+            write(
+                &next.join("vibe.toml"),
+                fs::read_to_string(&source)
+                    .unwrap()
+                    .replace("version='1.0.0'", "version='1.1.0'")
+                    .replace("parameters.count=-1", "parameters.count=1"),
+            );
+            write(&next.join("boot/rules.md"), "CHANGED_INTEGER_PRESET\n");
+            write(
+                &request,
+                fs::read_to_string(&request)
+                    .unwrap()
+                    .replace("version='=1.0.0'", "version='=1.1.0'"),
+            );
+            let before = super::workspace::semantic_snapshot(&f.project);
+            assert!(!update(&f).status.success());
+            assert_eq!(super::workspace::semantic_snapshot(&f.project), before);
+            assert!(!f.static_boot().contains("CHANGED_INTEGER_PRESET"));
+        }
+        println!("integer-profile extra-world={world} effective=-1 originals=retained");
+    }
 }
 
 #[test]

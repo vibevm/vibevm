@@ -376,11 +376,22 @@ impl PackageConfiguration {
                             "public path must_exist=true requires a separately specified planning-host base and check for this consumer",
                         ));
                     }
+                    let integer_profile = parameter.kind == crate::manifest::ParameterType::Integer
+                        && parameter.min.is_some()
+                        && parameter.max.is_some()
+                        && definition.profiles.len() == 1
+                        && definition.profiles[0].parameters.len() == 1
+                        && definition.profiles[0]
+                            .parameters
+                            .contains_key(&parameter.id)
+                        && definition.profiles[0].selections.is_empty()
+                        && definition.profiles[0].features.is_empty()
+                        && forwarded.is_empty();
                     if kind != crate::PackageKind::Flow
                         || parameter.secret
                         || !parameter.required
                         || parameter.default.is_some()
-                        || !definition.profiles.is_empty()
+                        || (!definition.profiles.is_empty() && !integer_profile)
                         || definition.parameters.len() != 1
                         || !automatic_choices.is_empty()
                         || !automatic_choice_sets.is_empty()
