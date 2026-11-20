@@ -283,3 +283,5 @@ Four historical reviews distinguish specification hashes, parsing and manifest-l
 Six migration source revisions distinguish pure plans, presence-aware transport, diagnostic reports and context-bound application. A seventh routing revision distinguishes checked reference coverage from acceptance of changes. No migration was executed by this historical review.
 
 Ten source revisions separate injected roots, local page validation, frame decoding, session negotiation, planner exchange and run reservation from authority to perform effects. Named paths are individually indexed; historical tests were not rerun.
+
+Seven historical bound-deployment changes were inspected from root admission and physical role locking to the first host-only builtin call. Preparation, partial infrastructure creation and possible publication have distinct evidence; no deploy was run.
