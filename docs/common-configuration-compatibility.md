@@ -84,8 +84,16 @@ The strict selections-only request evaluates one verified **local-owned offer**.
 | Guarded gate on↔off rebind | Only the admitted unchanged exact-root/source/version/content/definition/input scope is supported; live source bytes are checked against the old pin. Simultaneous gate+default/source changes refuse |
 | Automatic member-set default renewal | The separate v2 review described below admits only a graph-preserving declared-set replacement. Scalar v1 acknowledgement does not authorize it; dependency membership/edge changes still refuse |
 | Feature/guarded default renewal | These wider renewals remain unsupported by either scalar v1 or member-set v2 acknowledgement. `--assume-yes` is not a replacement review token |
-| Ordinary lexical Path | Supported `must_exist=false` retains spelling, without cwd expansion or host-readiness claims; `must_exist=true` still needs a separate planning-host contract |
+| Ordinary lexical Path | `must_exist=false` remains lexical, with no target-readiness claim. The bounded install-only `must_exist=true` route below checks relative file/directory metadata at the declaring root; it is not universal Path support |
 | Secret answer in ordinary authored/serialized input | Do not persist or hash it into public history. Tested diagnostics refuse/redact; this is not a general ordinary ephemeral-secret delivery pipeline |
+
+### Install-only host Path checks
+
+Accepted source `4c61f9906` adds one `must_exist=true` slice: a compulsory exact named-local-registry copy Flow, one standalone declaring-root consumer and one required public authored relative Path, without profiles/defaults, automatic choice, submitted input or forwarding. The base is the directory of that actual consumer's `vibe.toml` (the selected project root in this slice), **not** process cwd, registry or HOME. Nested consumers, absolute/traversal paths, symlinks/reparse points, special entries and unsupported platforms refuse; no fallback changes the answer or follows a link.
+
+Install checks only regular-file/directory presence and type through existing no-follow metadata/directory capabilities, without reading file contents or enumerating directory contents. It retains the original lexical string at epoch8, not an absolute host realization or perpetual readiness receipt. Checks repeat before effects and on cold/Fresh install before boot writes; a removed target or rebound parent refuses while preserving existing package state. Read-only `show configuration-data` may still report the historical lexical value after disappearance: **show does not assert current host readiness**. This recheck is not same-inode authentication for regular→regular replacement or atomic protection against hostile changes after observation.
+
+Update/reinstall and other effectful routes lacking the same install-owned gate explicitly refuse these records. `must_exist=false` behavior and separate app path realization remain unchanged. Actual old65e53d97 reader/writer refuse the new host-required records without state loss; an unchanged epoch number alone does not establish old-client support. Evidence: [ordinary host Path](../campaigns/next-semantic-transfer-2026-11/research/ordinary-host-path-first-20261120.md), FMT-102.
 
 ### Separate scalar v1 and member-set v2 review
 
