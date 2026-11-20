@@ -862,7 +862,13 @@ When `vibe update --all` (or a bare `vibe update`) re-resolves every declared ro
 
 The declared outputs of an `agent` lifecycle step that COMPLETED earlier in a stoppable `vibe install`/`vibe update` now join that operation's pre-commit rollback instead of being marked as unowned local effects. If a later stop (for example during a second agent step's request, or at a later checkpoint) rolls the operation back before its lock is published, each such output is compared against the receipt of what the step wrote and put back (the previous bytes and mode, or removed when it was absent; directories the step created are removed while empty), together with the slots, boot files and metadata, and `vibe-project-cancellation/1` reports `publication: "restored"` where it reported `recovery-required` before. An output that something else replaced in the meantime is foreign state: it is left untouched, named in the report's `error`, and `publication` is `recovery-required`. Outputs of a step that completed after the operation committed, and outputs kept by a park or an ordinary (non-stop) failure, are unchanged. `external_effects.llm` is unchanged: a completed paid request stays `completed` or `unknown` as before. No schema change. Contract: `spec://org.vibevm.core/vibevm/common/PROP-073#OPERATION-EFFECTS-LAW`.
 
+## Current common-configuration status reconciliation — 2026-11-20
+
+FMT-076–105 below now carry exact accepted implementation pins and before/after meaning. Their original candidate language and recorded failures remain chronological evidence, not current pending status. Acceptance is bounded to the operation described, never all parameter combinations or platforms. Ordinary install/show/update/repair is supported only where each entry admits it; explicit maintenance refusals remain limits. Doc FMT-096 is request-local read data; Remap FMT-097 is offered-policy preview, not install or activation. These ordinary additions do not grant new selected-app/global `vibe install -g` authority. Existing application format changes and their maintenance/portable histories remain governed by their earlier entries and the compatibility guide. Software release numbering is separate: these are Unreleased accepted commits, not a declared public release or a new epoch for unrelated data. [Operator compatibility and actual old-client outcomes](../../docs/common-configuration-compatibility.md).
+
 ## FMT-076 — ordinary package automatic-choice basis (lock12)
+
+**Current disposition — accepted bounded implementation**, `c830cd4b57f58d6e33414da3cb7ec7b475b121ba` (Unreleased; acceptance scope is the linked operation, not all types/platforms). Before → after: effective-only/explicit history → actual omitted scalar-default basis12; later default extensions do not retroactively widen this slice.
 
 Approved narrow design, implementation candidate 2026-11-20. Optional typed `PackageConfiguration.automatic_basis` carries `definition_fingerprint` using the existing configuration semantic recipe and `consumer_choices` (actual consumer → group → selected member). Original consumer input retains omission; no stored consent or replacement explicit answer is fabricated. Only omitted exactly-one declared choice defaults under explicit use-declared-defaults are admitted; feature-default, profile, parameter and closure reliance remain unsupported.
 
@@ -870,11 +876,15 @@ A lock containing this basis requires minimum epoch12; basis in7–11 and missin
 
 ## FMT-077 — exact ordinary update review proposal/response v1
 
+**Current disposition — accepted bounded implementation**, `a21caaefbbf623254feab285e6a223b39a3d0d56` (Unreleased; acceptance scope is the linked operation, not all types/platforms). Before → after: changed scalar reliance refusal → exact source/project-bound review1; later member-set2 is separate.
+
 Approved bounded design, implementation candidate 2026-11-20. Update-only `--package-configuration-review` accepts exactly `package-default-review/1:sha256:` plus64 lowercase hex characters. Required/stale review preserves empty stdout and stderr `ok:false,error`, adding typed `code` and schema1 `proposal` with review_id, package/from_version/to_version, consumer/group/from_member/to_member and added/removed dependency coordinates. Both exit1; malformed response is usage2. No generated success-report, app or MCP changes.
 
 The domain-separated length-framed identity binds workspace/selected node, complete captured prior lock, original typed consumer intent, exact verified fetched source/content/versions, old/current semantic fingerprints, choices and dependency effects. Ordered maps, counts and explicit options prevent concatenation ambiguity. Proposal IDs identify subjects, not credentials or proof of reading; assume-yes is never acceptance. Missing/stale/inapplicable response refuses before project effects, and membership changes retain the existing reconciliation refusal even after acknowledgment. No durable consent store or authored review key.
 
 ## FMT-078 — derived selected package configuration data
+
+**Current disposition — accepted bounded implementation**, `95d1b2db088480a89bcf681d1876b539e152147f` (Unreleased; acceptance scope is the linked operation, not all types/platforms). Before → after: selected feature names only → validated public config-value projection, not arbitrary file writes.
 
 Approved narrow design, implementation candidate 2026-11-20. `show configuration-data [--path PROJECT] --json` emits vibe-package-configuration-data/1 with ok and deterministic packages rows {package,version,values}. Include every retained configured record, including an empty values map. Typed false is distinct from absent. Values are explicitly authored public data selected by ConfigValue effects, never parameter/secret/environment/path expansion or execution.
 
@@ -882,9 +892,13 @@ Projection derives from the same admitted lock snapshot's historical definition/
 
 ## FMT-079 — explicitly named parameterless package profile
 
+**Current disposition — accepted bounded implementation**, `9cbd5edabbb0104f318600081fc1011736f206cf` (Unreleased; acceptance scope is the linked operation, not all types/platforms). Before → after: profile syntax-only → explicit parameterless original plus cold replay.
+
 Approved bounded design, implementation candidate 2026-11-20. Ordinary package evaluation may normalize an explicitly named parameterless profile through the existing owner while retaining original profile input and historical definition, not synthesizing explicit answers or group-default receipts. No implicit default profile or parameter consumption. Historical named-profile meaning is compared separately from automatic_basis on update; changed semantic meaning refuses before effects, including assume-yes and review-preview mode. Presentation is excluded by the existing semantic fingerprint. Minimum prior writer epoch is conditional on actual old reader AND writer refusal with durable state unchanged; unsafe compatibility stops for epoch13 decision. No new persistence owner.
 
 ## FMT-080 — explicit public boolean package parameters
+
+**Current disposition — accepted bounded implementation**, `174978ac57f2ba3730a9b34b18647a2f45a931b4` (Unreleased; acceptance scope is the linked operation, not all types/platforms). Before → after: bool syntax-only → explicit required public bool originals/effective projection.
 
 Approved bounded design, implementation candidate 2026-11-20. Required nonsecret bool without default is admitted only when every actual consumer explicitly supplies the same typed bool; false differs from omission, conflicts/missing/invalid refuse before effects. No optional defaults, private/path/profile parameters or environment/argv/hook injection. Original per-consumer input and historical definition remain the sole persistence; selected public parameters derive and validate on read.
 
@@ -892,11 +906,15 @@ Approved bounded design, implementation candidate 2026-11-20. Required nonsecret
 
 ## FMT-081 — source-admitted configured lazy-pull member witness
 
+**Current disposition — accepted bounded implementation**, `acf046cbaf1f260370c7ce51c4f0350d9533c03f` (Unreleased; acceptance scope is the linked operation, not all types/platforms). Before → after: unbound lazy member read → captured selected source witness13 and existing read owner.
+
 Approved narrow contract NST-SUBSKILL-PINNED-READ-01, implementation candidate 2026-11-20. Minimum lock epoch13 only for configured lazy-pull source_witness; unrelated/legacy state keeps its lowest lossless epoch. A strict LockedSubskill.source_witness binds package_content_hash and declaration/member {path,byte_len,sha256}. Paths are canonical package-relative; declaration <=64KiB and one UTF-8 member <=1MiB inclusively. Original selections remain in the existing configuration record. Required selected rows, independent source witnesses and enclosing package pins must agree exactly; missing/extra/forged rows refuse, never legacy fallback.
 
 Only a retained operator-selected local source owner may mint the initial bounded declaration/member observation, before cache acquisition, and fetched bytes must match. This is not supplier authentication or proof from the ambiguous historical tree digest. Existing locks/cache never manufacture historical witnesses. Read returns the same held checked member bytes, no source hydration or partial success; legacy delivery behavior unchanged. Old reader, writer and registered MCP transport must refuse actual emitted epoch13 state without returning bytes or changing state. No new store, hash recipe, eager boot or agent execution.
 
 ## FMT-082 — separate candidate-owned forwarded inputs
+
+**Current disposition — accepted bounded implementation**, `b3a4c3e72b780066ec8599a2f0f2aa145294d305` (Unreleased; acceptance scope is the linked operation, not all types/platforms). Before → after: no ordinary forward record → exact candidate-owned strong input14; later weak support separately recorded.
 
 Approved bounded contract NST-PACKAGE-FORWARD-FIRST-01, implementation candidate 2026-11-20. PackageConfiguration.forwarded_inputs is omitted when empty, otherwise requires minimum lock epoch14; unrelated/default/subskill locks retain their previous lowest lossless epochs. Each strict row retains source_group/source_name/source_version/source_content_hash, selected source_feature, original declaration_index and exact target PackageRef, target_feature and strength=strong. Authored consumers remain separate; no synthetic workspace path, even transiently.
 
@@ -904,11 +922,15 @@ Only compulsory exact-version uniquely admitted ordinary local parent/target can
 
 ## FMT-083 — required public boolean default reliance
 
+**Current disposition — accepted bounded implementation**, `570b7c77ba99dceb7861bb8e889110ade35b290e` (Unreleased; acceptance scope is the linked operation, not all types/platforms). Before → after: required missing bool refusal → selected declaration default with original omission retained.
+
 Approved narrow contract NST-PACKAGE-BOOLEAN-DEFAULT-FIRST-01, implementation candidate 2026-11-20. One required public bool may carry a literal bool default. Effective evaluation resolves omission per actual consumer; original input keeps omission and explicit false/true unchanged. Effective answers must agree across all actual consumers. Existing retained definition plus original parameter maps identify reliance without a new persisted result, field or epoch. Public parameters projection validates history and derives the same effective answer; no consumer is not an omitted answer.
 
 No optional/private/path/profile or forwarding parameter expansion. Existing conservative parameter-history update guard refuses changed meaning before effects, even for an explicit control; explicit input is not rewritten into default reliance. Actual prior reader and install writer must refuse newly admitted default-bearing records unchanged before acceptance. Historical qualification receipts remain valid for their old runtime. No new consent route or update renewal is introduced.
 
 ## FMT-084 — named profile and consumer-owned explicit boolean
+
+**Current disposition — accepted bounded implementation**, `946cb4e8d235f37141cc81e380c1696b5c6f75d4` (Unreleased; acceptance scope is the linked operation, not all types/platforms). Before → after: profile/nonempty scalar refusal → explicit feature profile plus independent public bool.
 
 Approved bounded NST-PACKAGE-PROFILE-BOOLEAN-FIRST-01, implementation candidate 2026-11-20. An explicitly named parameterless profile may choose features while the same actual consumer explicitly supplies one required public bool without default. Retain original profile ID, original parameter map and original empty selections where authored; no profile parameter preset, automatic basis surrogate or flattened answer. Existing lock definition/consumer input is sufficient, conditional on actual prior reader+writer refusal unchanged. No new field or epoch.
 
@@ -916,11 +938,15 @@ Profile bool defaults/private input/presets/forwarding remain refused; missing/w
 
 ## FMT-085 — selected profile public boolean preset
 
+**Current disposition — accepted bounded implementation**, `e6186f974f4e06bee96b7cb6d10f14f4e62e2e8c` (Unreleased; acceptance scope is the linked operation, not all types/platforms). Before → after: profile preset refused → selected bool preset/override via existing normalization.
+
 Approved bounded NST-PACKAGE-PROFILE-PRESET-FIRST-01, implementation candidate 2026-11-20. One required public bool without declaration default may be supplied by the explicitly selected profile. Existing normalization applies selected preset then explicit consumer override, including false; effective admission, agreement and projection consume that same normalized map. Original profile and consumer omission/equal/opposite explicit maps remain independent of the resulting value. An unselected profile supplies nothing.
 
 Retained definition and original input remain the lossless representation; no new field/epoch unless actual prior reader/writer behavior demands it. Changed profile meaning still refuses update before effects; no renewal consent or parameter forwarding/private/default expansion. Actual old readers/installers and full regression must qualify acceptance; historical refusal receipts remain historical.
 
 ## FMT-086 — source-bound ordinary read-only configuration preview (candidate)
+
+**Current disposition — accepted bounded implementation**, `4191f9b28b00bf5f1b275413ad2d361e66ee4410` (Unreleased; acceptance scope is the linked operation, not all types/platforms). Before → after: no ordinary cold public source-bound preview → read-only bool CLI/MCP contract1.
 
 Two new ordinary-only transient epoch1 wire families, ordinary-configuration-preview-request/result, are registered with explicit unknown_fields=deny and generated from canonical JTD. Request is {package,input?}; input is required selections:string-map plus parameters:bool-map, not an app envelope. Result protocol vibe-ordinary-configuration-preview/1 carries package/version, source registry/content_hash, typed choice/parameter description and unanswered questions; answered results separately retain original maps and derived features/public bools. Empty collections are emitted, optional original/resolved are omitted when absent, finite enums are closed. Older commands/tools do not implement these new surfaces; no existing manifest, lock epoch or installed show/query result is reinterpreted.
 
@@ -936,17 +962,23 @@ FMT-086 generation repair: the existing FormatId emitter now emits a long string
 
 ## FMT-087 — checked guarded-leaf retirement custody in update report (candidate)
 
+**Current disposition — accepted bounded implementation**, `15ca6fefab008bffb8154ba640326f95e6b8cd37` (Unreleased; acceptance scope is the linked operation, not all types/platforms). Before → after: guarded graph retirement refused → one checked leaf custody/update-report extension, not arbitrary deletion.
+
 Approved bounded guarded-update contracts. Existing cli-update-report epoch1 gains optional omitted-empty retained_backups rows {slot,path,state}; slot is workspace-relative, path is lossless recovery location, states closed published_backup_retained/restored_container_retained. No new report family/lock/manifest epoch. Current registry is foreign_parsers=many with permissive historical generated reader; pre-public/open regime remains unchanged. Exact prior generated reader6136d6df4 tests old JSON unchanged and accepts-but-drops the new recovery instruction: this does not imply prior semantic custody support. New readers preserve confirmed rows; empty is omitted, not null/[]. Unknown custody states refuse.
 
 Successful publication intentionally retains verified old slot backup; restored_container_retained accompanies the original pre-commit error and only confirmed restored slot, including mixed rollback where another inverse fails. Uncertain/conflicted backup is not fabricated as confirmed; error retains recovery information. Existing update:closure-diff plus update output stream is preserved, no extra sidecar. The first Linux checked operation never recursively cleans retained containers. Source/slot ownership and no-replace semantics are runtime bounds, not a new stored witness/hash format. Canonical schemas/codegen own generated types; final exact runtime/generation/independent acceptance pending.
 
 ## FMT-088 — owner-local one-hop weak forwarding (candidate)
 
+**Current disposition — accepted bounded implementation**, `c81d7d6cc7cf6cbec09b1bf1230b0fa3345fd148` (Unreleased; acceptance scope is the linked operation, not all types/platforms). Before → after: weak selected effect refused → one-hop declaring-parent weak request with retained strength14.
+
 Approved NST-ORDINARY-WEAK-FORWARD-FIRST-01 and minimum-representation amendment. An active declaring-parent edge contributes the existing candidate-owned forwarded_inputs row with its original strength=weak; epoch14 already carries that vocabulary. A selected weak request on an inactive optional declaration contributes neither dependency nor incoming row, even if another workspace root selects the target. Retained original definition/consumer inputs remain unchanged; dormant records retain their existing minimum (epoch8 in the qualified worlds). No new schema field, family, epoch or target-presence surrogate.
 
 Actual accepted pre-weak CLI d333e4f9 from the 15ca6fefa product baseline was exercised as show features reader and offline install writer on separate fresh active, selected-dormant and independent-root projects. All six explicitly refuse the retained selected weak effect during package configuration admission, preserving lock/slots/boot/hooks; both operations succeed unchanged when the weak feature is unselected. This is safe explicit refusal, not prior weak semantic support or universal historical compatibility. No new writer is accepted merely from enum deserialization. Candidate public regression74 passes; exact source/lower evidence and independent acceptance are recorded separately.
 
 ## FMT-089 — lossless zero-or-more automatic member-set basis (candidate)
+
+**Current disposition — accepted bounded implementation**, `b31e8a49929ac53810d3d76ecc11f5b574d36fcf` (Unreleased; acceptance scope is the linked operation, not all types/platforms). Before → after: non-scalar default loss/refusal → lossless declared member-set basis15.
 
 Approved NST-ZERO-OR-MORE-DEFAULT-FIRST-01. Existing AutomaticBasis gains optional omitted-empty consumer_choice_sets: consumer→group→canonical ordered member list. The old consumer_choices string map remains unchanged for exactly-one. A present group→[] is historical reliance on an explicitly declared empty default, not absent reliance/default. Original omitted consumer answers remain omitted; explicit empty or matching answers create no automatic receipt. Only one unguarded zero-or-more group without parameters/profiles is newly admitted; no implicit feature defaults or guarded-default expansion.
 
@@ -956,11 +988,15 @@ Cold evaluator reconstruction validates exact reliance projection/fingerprint an
 
 ## FMT-090 — remaining ordinary automatic choice cardinalities (candidate)
 
+**Current disposition — accepted bounded implementation**, `0df1c92b40912751404fd7728d0610b3026dd1a3` (Unreleased; acceptance scope is the linked operation, not all types/platforms). Before → after: remaining cardinalities refused → bounded zero-or-one/one-or-more using existing set15.
+
 Approved NST-ORDINARY-REMAINING-GROUP-DEFAULTS-FIRST-01 after separate ten-world qualification. Zero-or-one and one-or-more declared-default reliance now uses the existing canonical consumer_choice_sets history and conditional epoch15, including singleton and valid optional empty sets. No new field, schema, wire family or epoch. Historical exactly-one scalar bytes/epoch12 and accepted zero-or-more state remain unchanged. Explicit matching or empty answers create no automatic record; mandatory omitted/explicit-empty questions and optional overflow conflicts remain distinct.
 
 Actual prior4302f2e5 show features/install, on separate optional singleton/optional empty/mandatory pair worlds, must fail closed without changing lock, slots, boot or hooks. Prior pre-set and existing scalar/zero-or-more controls remain independently exercised. Cold reconstruction rejects missing, extra, wrong consumer/member, stale and cardinality-invalid histories. Source observation does not retain an unselected candidate's default; update drift still refuses without scalar token authority. Exact final executable/source receipts and independent acceptance required; no general guarded/profile/source/renewal/kind expansion.
 
 ## FMT-091 — explicit required public integer delivery (candidate)
+
+**Current disposition — accepted bounded implementation**, `cbfd4d3549777900c0acff09276ab085a85d4c21` (Unreleased; acceptance scope is the linked operation, not all types/platforms). Before → after: integer consumer refused → required bounded exact signed integer at existing8.
 
 Approved NST-ORDINARY-PUBLIC-INTEGER-FIRST-01. One ordinary flow public required integer without default/profile/automatic choice is admitted from shared typed normalization and inclusive bounds. Original consumer inputs retain Integer values including zero and negatives; agreement compares actual typed values. Existing parameter projection emits JSON numbers, never feature/config-effect values or dependency activation. Missing names the required parameter; text/bool coercion is not added. Historical boolean/default/preset branches remain unchanged; unsupported integer modes remain closed.
 
@@ -968,17 +1004,23 @@ Existing definition and original input representation retains minimum epoch8 wit
 
 ## FMT-092 — explicit public string and declared choice values (candidate)
 
+**Current disposition — accepted bounded implementation**, `a6add9f72f1b549e493a04012143070cf903da96` (Unreleased; acceptance scope is the linked operation, not all types/platforms). Before → after: text/choice consumer refused → literal public values and typed equality at existing8.
+
 Approved NST-ORDINARY-PUBLIC-TEXT-CHOICE-FIRST-01. One required public Flow string/choice without default/profile/automatic reliance uses existing typed parameter normalization, equality and projection. Literal empty/surrounding whitespace remain unchanged; declared choice values are not display labels. Missing is distinct; unknown/wrong types refuse before effects. Parameter values do not become features/config-effect data or dependency authority. Existing bool/default/preset and integer diagnostics remain.
 
 Existing original Text values/definition carry lossless epoch8; no new field/wire/epoch/preview/UI. Actual pre-extensionaaa9ba1a show/install on separate empty/spaced string and choice-value records must explicitly refuse without changing lock/slots/boot/hooks or establish exact semantic preservation. Cold replay/equal consumers and whitespace-sensitive conflicts, changed allowed values forced exact update versus legal fallback are qualified. No path/secret/interpolation/source/forwarding expansion. Exact executable receipts and independent source acceptance required.
 
 ## FMT-093 — public lexical Path without host readiness (candidate)
 
+**Current disposition — accepted bounded implementation**, `a0515d9a769bc2a3c9cf70a51fd87c70d16e62b9` (Unreleased; acceptance scope is the linked operation, not all types/platforms). Before → after: Path consumer refused → lexical spelling only/must_exist=false at8.
+
 Approved NST-ORDINARY-PUBLIC-PATH-LEXICAL-FIRST-01. One required non-secret Flow Path without default/profile/automatic reliance and must_exist=false retains exact lexical Text spelling through original inputs, typed declaration, equality and parameter JSON. No joining to cwd/project, expansion, canonicalization, target IO, absolute realization or file-read/materialization authority. must_exist=true remains explicitly unsupported until a separate planning-host base/check contract exists, even for present targets.
 
 Existing definition/original record remains lossless epoch8 with no new field/wire/epoch. Actual pre-path3e92d4e2 show/install must safely refuse unchanged or prove preservation; cold replay after target disappearance and real spelling equality/conflict do not equate relative spellings through filesystem identity. Existing bool/int/string/choice remain distinct and green. No host-readiness claim from unchanged sentinels or generic install success. Exact executable evidence and independent source acceptance required.
 
 ## FMT-094 — submitted root history reader, writer deliberately withheld (Stage A candidate)
+
+**Current disposition — accepted bounded implementation**, `e4d6f8aa0e90f9c5919cc7226a749ec1e650496e` (Unreleased; acceptance scope is the linked operation, not all types/platforms). Before → after: no submitted origin reader → bounded strict submitted16 reader with generic writer disabled. Reader-only Stage A is historical; Stage B at `d31f6a42e` supplies the private install-owned writer without enabling the generic lock writer.
 
 Approved NST-ORDINARY-INSTALL-SUBMITTED-HISTORY-01 and exact-source amendment. PackageConfiguration gains optional omitted-empty strict submitted_inputs keyed only by actual ./vibe.toml in the first standalone exact-root slice. consumers remains authored-only. Submitted original carries exact requirement, versioned project witness and original expected_source {registry,content_hash}; lock row is the separately observed actual source, never its own expected witness. Ephemeral effective-consumer projection exists only for evaluation, then origins and derived state are checked separately. No PTY keystrokes, input-file path, home path or raw envelope persists.
 
@@ -988,6 +1030,8 @@ Actual pre-submission5c46aec5 show/install must refuse a full handcrafted record
 
 ## FMT-095 — ordinary submitted answers reach existing install (Stage B candidate)
 
+**Current disposition — accepted bounded implementation**, `d31f6a42e61015cf3fa8e1bdb75adf74c2a2f380` (Unreleased; acceptance scope is the linked operation, not all types/platforms). Before → after: preview not executable install input → separate confirmed source-bound ordinary submitted install16.
+
 Approved ordinary-install-answers contract and verified-publication amendment. New strict generated ordinary-install-answers epoch1 envelope is {protocol,package,project_witness,source:{registry,content_hash},input:{selections,parameters}}; every object/false value is required, unknown/null/foreign protocol refuse. It is not app configuration input or apply permission. Read-only preview result gains optional project_witness disclosed to construct this ordinary document; absent field keeps historical serialization, raw generated Option alone still does not enforce nonnull optional policy. CLI --ordinary-answers/--ordinary-interactive are separate; MCP remains read-only.
 
 Both answer forms use the same typed questions and normalizer; one ephemeral real-root input enters the existing solve/acquire/apply. Private plan-bound verified-submission proof compares original root/project/source with actual fetched full bytes and is rechecked after explicit apply yes before effects. It is consumed only by existing transaction lock publication, emitting submitted origin at16; generic Lockfile::write/render still refuses submitted state. No manifest rewrite/temp manifest/synthetic consumer, new database or second solver. Pure decoration helper grants no validation/publication authority. Historical wrappers use None and preserve prior semantics.
@@ -996,11 +1040,15 @@ JSON/unattended is not apply consent: explicit --assume-yes or positive attended
 
 ## FMT-096 — source-bound request-local Doc data
 
+**Current disposition — accepted bounded implementation**, `728623e72a5d4aee9f5a901b7564eea91408142a` (Unreleased; acceptance scope is the linked operation, not all types/platforms). Before → after: Doc common data unavailable → request-local captured-source selected_values, no install.
+
 Dedicated strict read-doc-request epoch1 JTD: required address, optional format/lang, optional nonnull input with selections group→{intent:exact,members:[member]}. Unknown/null/wrong types refuse with static value-free schema diagnostics, not ignored fields or caller-bearing serde chains. One admitted public unguarded exactly-one group, no parameters/profiles/defaults/executable effects in this slice; lang+input explicitly unsupported. Existing no-input read response/source/language behavior remains unchanged. An answered response adds selected_values via the existing typed JSON data projection, never changing page body/provenance or persisting input.
 
 Existing document capture owner selects and retains candidate inventory, actual manifest/page guard and identities once. Exact pin selects one version; unversioned answered request requires one version; competing identities, wrong coordinate/kind/version and source drift refuse before partial page/values. Answered reads support in-tree only, without re-resolution/fallback or a client apply witness. No install/boot/hooks/cache/consent authority or lock epoch change. Raw canonical codegen and actual registered MCP/cold read/state-preservation evidence remain the acceptance gates; kernel-only choice evaluation is not sufficient.
 
 ## FMT-097 — read-only local-owned Remap offer preview
+
+**Current disposition — accepted bounded implementation**, `9a8e1b0ed567af0c85ae12f04b1e2f658457d5fb` (Unreleased; acceptance scope is the linked operation, not all types/platforms). Before → after: Remap common data unavailable → local-owned offered-policy data preview, no consent/activation.
 
 Dedicated strict remap-preview-input epoch1 selections-only group→{intent:exact,members:[member]}; dedicated remap-preview-result epoch1 carries protocol/package/version/source{kind:local-owned-offer,content_hash}/selected_values. Local owned offer identity and verified actual full tree bytes are the provenance, never original supplier authentication or a recovered source URI. installed.json, lock schema and consent/provider formats remain unchanged.
 
@@ -1008,11 +1056,15 @@ Preview requires explicit offline posture, one recorded offer and actual owned t
 
 ## FMT-098 — guarded singleton active selection versus dormant reason
 
+**Current disposition — accepted bounded implementation**, `a1ebcf6b8e91f39dabfc6384156a1deb42ef227e` (Unreleased; acceptance scope is the linked operation, not all types/platforms). Before → after: guarded defaults refused → active scalar12 versus dormant reason17 and exact gate transition.
+
 AutomaticBasis gains optional omitted-empty consumer_dormant_choices: actual consumer→canonical sorted unique guarded group IDs. This is historical omitted-policy/definition reliance, not a selected member. Active guarded singleton default remains existing scalar consumer_choices; original authored omission remains omitted. No scalar/set/dormant overlap or forged/missing/duplicate reason may pass reconstruction. Existing semantic fingerprint binds both active and dormant history; changed default/guard meaning refuses before effects, not renewed by assume-yes or a legacy scalar review token. Shared app consumer_reliance is unchanged.
 
 Nonempty dormant reasons require conditional schema17; active scalar retains12 subject to actual old-reader/writer safety, explicit no-reliance8 and existing unguarded/set/forward/subskill/submitted floors unchanged. Scope is one exact local Flow, one independent explicit gate and one guarded exactly-one singleton default; no parameter/profile/member-guard/multi-cardinality extension. Kernel activity/default use are the selection authority. Actual prior2acac864 reader and writer on separate copies plus cold/tamper/default/guard drift and on/off/on are required before exact-source acceptance.
 
 ## FMT-099 — declared feature-default reliance before closure
+
+**Current disposition — accepted bounded implementation**, `09ddeae780d28e5dbeff245a58041c14e1b36a0c` (Unreleased; acceptance scope is the linked operation, not all types/platforms). Before → after: feature defaults refused → canonical declared seeds18 before closure, including empty set.
 
 AutomaticBasis gains optional omitted-empty `consumer_feature_defaults`, actual consumer→canonical sorted unique declared default feature IDs before closure. A present consumer→[] retains empty-default reliance; it is not absence. Existing original `default_features=true` semantics covers typed omission and explicit true without a lexical-presence claim. Authored features retain only explicit additions; no choice/group is fabricated. Existing definition fingerprint and independently recomputed complete record reject missing/extra/duplicate/mismatched seeds even if additions select the same effective member.
 
@@ -1020,11 +1072,15 @@ A nonempty consumer map requires conditional schema18, including empty rows. Exp
 
 ## FMT-100 — optional public bool absence is not a merge vote
 
+**Current disposition — accepted bounded implementation**, `cbab09865b906f5d65898bba7b7dd98d2aa029d5` (Unreleased; acceptance scope is the linked operation, not all types/platforms). Before → after: optional bool refused/absence conflated → absence-neutral public consumer merge at8.
+
 One ordinary exact local Flow optional public bool without default/profile/groups/member guards/forwarding is newly admitted. Original absent key remains absent; false/true remain typed booleans. Merge ignores absent consumers and requires all present values agree before effects, retaining each actual consumer original. Public parameter view uses the agreed present value or omits the key when all are absent; it never substitutes false or asks a question.
 
 Existing definitions/original inputs losslessly carry this at epoch8; no new field/epoch is invented. Actual prior65e53d97 show/install must safely refuse or preserve exact meaning, including absent and false. Cold/replay, changed requiredness and two-consumer conflict required before acceptance. Required/default/profile/secret and actual app-installer semantics unchanged.
 
 ## FMT-101 — graph-preserving automatic member-set review v2
+
+**Current disposition — accepted bounded implementation**, `c65f2f4146bbb916cfeed16db67d8a80d356588b` (Unreleased; acceptance scope is the linked operation, not all types/platforms). Before → after: set default drift refused → graph-preserving exact member-set review2, scalar1 unchanged.
 
 Implementation candidate under `NST-MULTI-SET-REVIEW-FIRST-01.md`, not release or acceptance. Separate closed `vibe-package-member-set-review/2` proposal in the existing update error carrier: schema2, actual package/consumer/group, exact old/new versions/content pins, canonical `from_members`/`to_members` and explicit acknowledgement. Domain-separated `package-member-set-review/2:sha256:` tokens bind exact project/root, prior lock, original intent, both histories and selected graph. Existing scalar v1 proposal/token bytes remain unchanged; v1/v2 responses are not interchangeable. No lock epoch or consent database change.
 
@@ -1032,11 +1088,15 @@ One standalone exact local Flow root, one genuinely omitted consumer/group and u
 
 ## FMT-102 — install-owned relative Path existence, not persisted readiness
 
+**Current disposition — accepted bounded implementation**, `4c61f9906985824dd0c77af315356d3528363cdb` (Unreleased; acceptance scope is the linked operation, not all types/platforms). Before → after: must_exist=true refused → install-only declaring-root metadata proof/rechecks, retained8 not readiness. Update/reinstall remain explicit unsupported operation limits, not newly accepted host readiness.
+
 Implementation candidate under `NST-ORDINARY-PATH-HOST-FIRST-01.md`, not acceptance. One compulsory exact named-local-registry copy Flow, standalone declaring-root consumer and one authored required public Path with must_exist=true, without profiles/defaults/submitted/forwarded/automatic choice. The declaring vibe.toml directory is the explicit new host base; older lexical-only contracts did not choose one. Relative lexical original remains epoch8 public data, with no absolute realization, new lock field or continuing host-readiness receipt.
 
 Pure core/history/show can represent the bounded record without IO. Effectful default admission refuses it; install alone carries a private root/lexical/parent-bound metadata PathCheck minted after actual source admission, rechecked before staging/hooks and on Fresh before boot writes. Existing SafeFS metadata/no-follow capabilities observe regular file or directory presence/type without content reads or directory enumeration. Absolute/traversal/links/special entries and rebound parents refuse. No same-inode promise for regular-to-regular replacement or atomic hostile-race immunity. Update/reinstall without the same admitted gate remain explicit refusals; no arbitrary host IO port or app-path semantic change. Old-client reader/writer refusal, unchanged lexical false, cold disappearance, source/materialization and pre-effect controls must be verified before acceptance. Evidence: `research/ordinary-host-path-first-20261120.md`.
 
 ## FMT-103 — actual instance-level closure fallback basis
+
+**Current disposition — accepted bounded implementation**, `c5b810223e0bd276323c067a90451070dccc7c6b` (Unreleased; acceptance scope is the linked operation, not all types/platforms). Before → after: closure fallback refused → actual instance GroupDefault provenance19 only when relied upon.
 
 Implementation candidate under `NST-ORDINARY-CLOSURE-FALLBACK-FIRST-01.md`. Optional strict `PackageConfiguration.closure_fallback_basis = {definition_fingerprint, groups: group→member}` records only actual kernel GroupDefault reliance at selected-instance scope, using existing InstanceReliance::Closure meaning. None is omitted; present empty/missing/injected/wrong group/member/fingerprint history refuses full independent record reconstruction. No consumer choice or answer is manufactured; the same member selected explicitly or by ordinary requires creates no fallback basis.
 
@@ -1044,11 +1104,15 @@ Actual basis requires conditional epoch19; explicit/ordinary derived records and
 
 ## FMT-104 — bounded public integer profile preset without new history shape
 
+**Current disposition — accepted bounded implementation**, `de6b55ce8eeb00dac42d2a3275d1a2a7d0881cb6` (Unreleased; acceptance scope is the linked operation, not all types/platforms). Before → after: non-bool profile refused → bounded integer preset/override effective merge at existing8.
+
 Implementation candidate after integer-profile qualification. One exact local Flow with a single required bounded public integer without parameter default may declare one named profile containing only that parameter preset, no profile feature/group additions. Existing normalization supplies a preset only when the profile is explicitly selected; an explicit integer overrides it. Unselected profile with explicit input works; unselected and unanswered stays missing. Existing independent per-consumer normalization and effective-integer equality/conflict retains each original profile/parameter map rather than copying presets into authored answers.
 
 Existing lossless epoch8 definition/original representation and public parameter projection suffice; no new field, minimum epoch, automatic-default basis or implicit consent. Existing profile semantic-fingerprint drift guard refuses a forced changed preset before effects. Other scalar/default/secret/profile combinations remain their prior bounds; selected-app behavior is unchanged. Actual prior reader/writer, real workspace agreement/conflict, public typed show and cold replay required before acceptance. Evidence: `research/integer-profile-first-20261120.md`.
 
 ## FMT-105 — separate integer/profile surface v2 and conditional submitted epoch20
+
+**Current disposition — accepted bounded implementation**, `e2ff9e30416d6781fb35b75167542405a7efa692` (Unreleased; acceptance scope is the linked operation, not all types/platforms). Before → after: integer/profile external preview refused → separate generated v2 preview/answers + selected submitted original20; v1 bool unchanged. Final public132/core1048, actual schema19 reader/writer refusal and lower-epoch tamper are recorded in the accepted surface-v2 report.
 
 Unaccepted implementation candidate. Existing closed ordinary bool preview/install-answer v1 schemas and routes remain unchanged. New separately registered `vibe-ordinary-integer-preview/2` request/result and `vibe-ordinary-integer-install-answers/2` use generated exact signed integer bindings. Description exposes this bounded parameter's bounds, selected profile/preset and choice members; typed original profile/optional explicit override is separate from effective values. CLI `show configuration-preview-v2` and read-only registered MCP `configuration_preview_v2` reuse the same source admission and normalizer. No MCP writer.
 
