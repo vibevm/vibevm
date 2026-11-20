@@ -234,7 +234,14 @@ impl PackageConfiguration {
                     || parameter.kind != crate::manifest::ParameterType::Bool
                     || !parameter.required
                     || (parameter.default.is_some() && definition.parameters.len() != 1)
-                    || input.profile.is_some()
+                    || (input.profile.is_some()
+                        && (definition.parameters.len() != 1
+                            || parameter.default.is_some()
+                            || definition
+                                .profiles
+                                .iter()
+                                .find(|profile| Some(&profile.id) == input.profile.as_ref())
+                                .is_none_or(|profile| !profile.parameters.is_empty())))
                 {
                     return Err(unsupported(
                         "only explicitly supplied required public bool parameters without defaults are connected",

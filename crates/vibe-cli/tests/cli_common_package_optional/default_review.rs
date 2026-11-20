@@ -2248,6 +2248,7 @@ fn boolean_default_change_refuses_update_without_turning_explicit_answer_into_re
 fn named_profile_and_explicit_boolean_composition_has_four_distinct_public_worlds() {
     for world in [
         "profile-false",
+        "profile-true",
         "profile-missing",
         "profile-only",
         "boolean-only",
@@ -2265,6 +2266,9 @@ fn named_profile_and_explicit_boolean_composition_has_four_distinct_public_world
         let configuration = match world {
             "profile-false" => {
                 "configuration={policy='require-selection',default_features=false,profile='with-extra',parameters={verbose=false}}"
+            }
+            "profile-true" => {
+                "configuration={policy='require-selection',default_features=false,profile='with-extra',parameters={verbose=true}}"
             }
             "profile-missing" | "profile-only" => {
                 "configuration={policy='require-selection',default_features=false,profile='with-extra'}"
@@ -2298,7 +2302,7 @@ fn named_profile_and_explicit_boolean_composition_has_four_distinct_public_world
             .unwrap();
         assert_eq!(
             normalized.parameters.contains_key("verbose"),
-            matches!(world, "profile-false" | "boolean-only")
+            matches!(world, "profile-false" | "profile-true" | "boolean-only")
         );
         let out = f.install();
         let diagnostic = format!(
@@ -2306,11 +2310,15 @@ fn named_profile_and_explicit_boolean_composition_has_four_distinct_public_world
             String::from_utf8_lossy(&out.stdout),
             String::from_utf8_lossy(&out.stderr)
         );
-        if matches!(world, "profile-false" | "profile-missing") {
+        if world == "profile-missing" {
             assert!(!out.status.success());
-            assert!(diagnostic.contains("only explicitly supplied required public bool parameters without defaults are connected"),"{diagnostic}");
+            assert!(
+                diagnostic.contains("missing required public parameter `verbose`"),
+                "{diagnostic}"
+            );
             assert!(!f.project.join("vibe.lock").exists());
             assert!(!f.slot(DRIVER).exists());
+            assert!(!f.slot(BASE).exists());
             assert!(!f.slot(EXTRA).exists());
             assert!(!f.project.join("effects.log").exists());
             for (path, before) in boot_before {
@@ -2333,7 +2341,7 @@ fn named_profile_and_explicit_boolean_composition_has_four_distinct_public_world
             assert_eq!(record.consumers.values().next().unwrap(), input);
             assert_eq!(
                 record.consumers.values().next().unwrap().profile.as_deref(),
-                if world == "profile-only" {
+                if world != "boolean-only" {
                     Some("with-extra")
                 } else {
                     None
@@ -2353,8 +2361,11 @@ fn named_profile_and_explicit_boolean_composition_has_four_distinct_public_world
                 .unwrap();
             assert!(show.status.success());
             let report: serde_json::Value = serde_json::from_slice(&show.stdout).unwrap();
-            if world == "boolean-only" {
-                assert_eq!(report["packages"][0]["parameters"]["verbose"], false);
+            if world != "profile-only" {
+                assert_eq!(
+                    report["packages"][0]["parameters"]["verbose"],
+                    world == "profile-true"
+                );
             } else {
                 assert!(report["packages"][0].get("parameters").is_none());
             }
@@ -2365,6 +2376,142 @@ fn named_profile_and_explicit_boolean_composition_has_four_distinct_public_world
             assert_eq!(fs::read(f.project.join("vibe.lock")).unwrap(), before);
             assert_eq!(f.static_boot(), boot);
             assert_eq!(f.hooks(), hooks);
+        }
+        assert_eq!(fs::read(&request).unwrap(), authored);
+    }
+}
+
+fn profile_boolean_fixture() -> Fixture {
+    let f = Fixture::new(true);
+    let source = f.registry.join(GROUP).join(DRIVER).join("v1.0.0/vibe.toml");
+    write(
+        &source,
+        fs::read_to_string(&source).unwrap()
+            + "\n[[configuration.parameters]]\nid='verbose'\nname='Verbose'\ntype='bool'\nrequired=true\n[[configuration.profiles]]\nid='with-extra'\nname='With extra'\nselections.extra={intent='exact',members=['enabled']}\n",
+    );
+    let request = f.project.join("vibe.toml");
+    write(&request,fs::read_to_string(&request).unwrap().replace("configuration={policy='require-selection',default_features=false,selections={extra={intent='exact',members=['enabled']}}}","configuration={policy='require-selection',default_features=false,profile='with-extra',parameters={verbose=false}}"));
+    f
+}
+#[test]
+fn profile_boolean_old_reader_writer_and_profile_drift_refuse_unchanged() {
+    let f = profile_boolean_fixture();
+    f.install_ok();
+    let before = fs::read(f.project.join("vibe.lock")).unwrap();
+    let boot = f.static_boot();
+    let hooks = f.hooks();
+    let slot = fs::read(f.slot(DRIVER).join("vibe.toml")).unwrap();
+    let record = &f.lock().configurations[&coordinate(DRIVER)];
+    assert!(record.automatic_basis.is_none());
+    assert!(
+        record
+            .consumers
+            .values()
+            .all(|input| input.profile.as_deref() == Some("with-extra")
+                && input.selections.is_empty())
+    );
+    if let Some(old) = std::env::var_os("NST_PROFILE_BOOL_OLD_CLI") {
+        for args in [
+            vec![
+                "show",
+                "features",
+                "--path",
+                f.project.to_str().unwrap(),
+                "--json",
+            ],
+            vec![
+                "install",
+                "--path",
+                f.project.to_str().unwrap(),
+                "--offline",
+                "--assume-yes",
+                "--json",
+            ],
+        ] {
+            let out = std::process::Command::new(&old)
+                .env_clear()
+                .env("HOME", f.root.join("home"))
+                .env("VIBE_SETTINGS", &f.user.settings)
+                .env("PATH", "/usr/bin:/bin")
+                .args(args)
+                .output()
+                .unwrap();
+            assert!(!out.status.success());
+            assert_eq!(fs::read(f.project.join("vibe.lock")).unwrap(), before);
+            assert_eq!(fs::read(f.slot(DRIVER).join("vibe.toml")).unwrap(), slot);
+            assert_eq!(f.static_boot(), boot);
+            assert_eq!(f.hooks(), hooks);
+        }
+    }
+    let source = f.registry.join(GROUP).join(DRIVER).join("v1.0.0");
+    let new = f.registry.join(GROUP).join(DRIVER).join("v1.1.0");
+    write(
+        &new.join("vibe.toml"),
+        fs::read_to_string(source.join("vibe.toml"))
+            .unwrap()
+            .replace("version='1.0.0'", "version='1.1.0'")
+            .replace(
+                "selections.extra={intent='exact',members=['enabled']}",
+                "selections.extra={intent='exact',members=['disabled']}",
+            ),
+    );
+    write(
+        &new.join("boot/rules.md"),
+        fs::read(source.join("boot/rules.md")).unwrap(),
+    );
+    assert!(!update(&f).status.success());
+    assert_eq!(fs::read(f.project.join("vibe.lock")).unwrap(), before);
+    assert_eq!(fs::read(f.slot(DRIVER).join("vibe.toml")).unwrap(), slot);
+    assert_eq!(f.static_boot(), boot);
+    assert_eq!(f.hooks(), hooks);
+}
+#[test]
+fn profile_boolean_unknown_wrong_type_preset_and_default_refuse_before_effects() {
+    for mutation in ["unknown", "wrong-type", "preset", "default", "private"] {
+        let f = profile_boolean_fixture();
+        let source = f.registry.join(GROUP).join(DRIVER).join("v1.0.0/vibe.toml");
+        let request = f.project.join("vibe.toml");
+        match mutation {
+            "unknown" => write(
+                &request,
+                fs::read_to_string(&request)
+                    .unwrap()
+                    .replace("profile='with-extra'", "profile='unknown'"),
+            ),
+            "wrong-type" => write(
+                &request,
+                fs::read_to_string(&request)
+                    .unwrap()
+                    .replace("verbose=false", "verbose='wrong'"),
+            ),
+            "preset" => write(
+                &source,
+                fs::read_to_string(&source).unwrap() + "parameters.verbose=true\n",
+            ),
+            "default" => write(
+                &source,
+                fs::read_to_string(&source)
+                    .unwrap()
+                    .replace("required=true", "required=true\ndefault=true"),
+            ),
+            "private" => write(
+                &source,
+                fs::read_to_string(&source)
+                    .unwrap()
+                    .replace("required=true", "required=true\nsecret=true"),
+            ),
+            _ => unreachable!(),
+        }
+        let authored = fs::read(&request).unwrap();
+        let out = f.install();
+        assert!(!out.status.success(), "{mutation}");
+        assert!(!f.project.join("vibe.lock").exists());
+        for name in [DRIVER, BASE, EXTRA] {
+            assert!(!f.slot(name).exists());
+        }
+        assert!(!f.project.join("effects.log").exists());
+        for relative in [common::static_md_rel(), common::static_xml_rel()] {
+            assert!(!f.project.join(relative).exists());
         }
         assert_eq!(fs::read(&request).unwrap(), authored);
     }

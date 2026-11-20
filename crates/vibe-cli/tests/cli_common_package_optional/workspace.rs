@@ -423,3 +423,45 @@ fn boolean_default_effective_answers_merge_without_rewriting_original_consumers(
         }
     }
 }
+
+#[test]
+fn named_profile_explicit_boolean_actual_consumers_agree_or_refuse_atomically() {
+    for right in [false, true] {
+        let f = workspace_fixture();
+        let source = f.registry.join(GROUP).join(DRIVER).join("v1.0.0/vibe.toml");
+        write(
+            &source,
+            fs::read_to_string(&source).unwrap()
+                + "\n[[configuration.parameters]]\nid='verbose'\nname='Verbose'\ntype='bool'\nrequired=true\n[[configuration.profiles]]\nid='both'\nname='Both'\nselections.components={intent='additive',members=['alpha','beta']}\n",
+        );
+        for (member, answer) in [("left", false), ("right", right)] {
+            let path = f.project.join(member).join("vibe.toml");
+            write(
+                &path,
+                format!(
+                    "[project]\nname='{member}'\nversion='0.1.0'\n[requires.packages.'{GROUP}/{DRIVER}']\nversion='^1'\nlink='static-transitive'\nconfiguration={{policy='require-selection',default_features=false,profile='both',parameters={{verbose={answer}}}}}\n"
+                ),
+            );
+        }
+        let originals = authored_consumers(&f);
+        let before = semantic_snapshot(&f.project);
+        let out = f.install();
+        if right {
+            assert!(!out.status.success());
+            assert_eq!(semantic_snapshot(&f.project), before);
+        } else {
+            assert!(
+                out.status.success(),
+                "{}",
+                String::from_utf8_lossy(&out.stderr)
+            );
+            assert_eq!(
+                f.lock().configurations[&coordinate(DRIVER)].consumers,
+                originals
+            );
+            let before = semantic_snapshot(&f.project);
+            f.install_ok();
+            assert_eq!(semantic_snapshot(&f.project), before);
+        }
+    }
+}
