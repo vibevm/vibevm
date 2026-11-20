@@ -94,10 +94,11 @@ impl ConfigurationSnapshot {
                         .collect();
                     PackageConfiguration::evaluate(&original, &inputs).and_then(|record| {
                         if let Some(previous) = self.previous.get(&package) {
-                            if previous
-                                .consumers
-                                .values()
-                                .any(|input| input.profile.is_some())
+                            if !previous.definition.parameters.is_empty()
+                                || previous
+                                    .consumers
+                                    .values()
+                                    .any(|input| input.profile.is_some())
                             {
                                 let old =
                                     previous.definition.semantic_fingerprint().map_err(|_| {

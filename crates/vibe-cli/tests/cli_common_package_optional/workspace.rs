@@ -314,3 +314,62 @@ fn incompatible_exact_workspace_inputs_name_both_consumers_and_leave_the_world_u
         "conflict changed authored manifests, lock, slots, generated boot/launchers or hook evidence"
     );
 }
+
+#[test]
+fn explicit_public_boolean_requires_equal_answers_from_every_actual_consumer() {
+    for right in [Some(false), Some(true), None] {
+        let f = workspace_fixture();
+        let source = f.registry.join(GROUP).join(DRIVER).join("v1.0.0/vibe.toml");
+        write(
+            &source,
+            fs::read_to_string(&source).unwrap()
+                + "\n[[configuration.parameters]]\nid='verbose'\nname='Verbose'\ntype='bool'\nrequired=true\n",
+        );
+        for (member, answer) in [("left", Some(false)), ("right", right)] {
+            if let Some(answer) = answer {
+                let path = f.project.join(member).join("vibe.toml");
+                let mut text = fs::read_to_string(&path).unwrap();
+                let end = text.rfind('}').unwrap();
+                text.insert_str(end, &format!(",parameters={{verbose={answer}}}"));
+                write(&path, text);
+            }
+        }
+        let originals = authored_consumers(&f);
+        let out = f.install();
+        let diagnostic = format!(
+            "{}{}",
+            String::from_utf8_lossy(&out.stdout),
+            String::from_utf8_lossy(&out.stderr)
+        );
+        if right == Some(false) {
+            assert!(out.status.success(), "{diagnostic}");
+            assert_eq!(
+                f.lock().configurations[&coordinate(DRIVER)].consumers,
+                originals
+            );
+            let before = fs::read(f.project.join("vibe.lock")).unwrap();
+            let hooks = f.hooks();
+            f.install_ok();
+            assert_eq!(fs::read(f.project.join("vibe.lock")).unwrap(), before);
+            assert_eq!(f.hooks(), hooks);
+        } else {
+            assert!(!out.status.success());
+            if right.is_some() {
+                assert!(
+                    diagnostic.contains("conflicting explicit public boolean parameter `verbose`"),
+                    "{diagnostic}"
+                );
+            } else {
+                assert!(
+                    diagnostic.contains("right/vibe.toml")
+                        && diagnostic.contains("missing required public parameter `verbose`"),
+                    "{diagnostic}"
+                );
+            }
+            assert!(!f.project.join("vibe.lock").exists());
+            assert!(!f.slot(DRIVER).exists());
+            assert!(!f.project.join("effects.log").exists());
+        }
+        assert_eq!(authored_consumers(&f), originals);
+    }
+}

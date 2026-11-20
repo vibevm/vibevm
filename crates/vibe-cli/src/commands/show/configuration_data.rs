@@ -10,6 +10,8 @@ struct Row {
     package: String,
     version: String,
     values: BTreeMap<String, ParameterValue>,
+    #[serde(skip_serializing_if = "BTreeMap::is_empty")]
+    parameters: BTreeMap<String, ParameterValue>,
 }
 #[derive(Serialize)]
 struct Report {
@@ -39,6 +41,7 @@ pub(super) fn run(ctx: &output::Context, args: ShowFeaturesArgs) -> Result<()> {
             package: key.clone(),
             version: row.version.to_string(),
             values: record.selected_data(row.kind)?,
+            parameters: record.selected_parameters(row.kind)?,
         });
     }
     let report = Report {

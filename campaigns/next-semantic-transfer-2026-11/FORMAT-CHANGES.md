@@ -883,3 +883,9 @@ Projection derives from the same admitted lock snapshot's historical definition/
 ## FMT-079 — explicitly named parameterless package profile
 
 Approved bounded design, implementation candidate 2026-11-20. Ordinary package evaluation may normalize an explicitly named parameterless profile through the existing owner while retaining original profile input and historical definition, not synthesizing explicit answers or group-default receipts. No implicit default profile or parameter consumption. Historical named-profile meaning is compared separately from automatic_basis on update; changed semantic meaning refuses before effects, including assume-yes and review-preview mode. Presentation is excluded by the existing semantic fingerprint. Minimum prior writer epoch is conditional on actual old reader AND writer refusal with durable state unchanged; unsafe compatibility stops for epoch13 decision. No new persistence owner.
+
+## FMT-080 — explicit public boolean package parameters
+
+Approved bounded design, implementation candidate 2026-11-20. Required nonsecret bool without default is admitted only when every actual consumer explicitly supplies the same typed bool; false differs from omission, conflicts/missing/invalid refuse before effects. No optional defaults, private/path/profile parameters or environment/argv/hook injection. Original per-consumer input and historical definition remain the sole persistence; selected public parameters derive and validate on read.
+
+`show configuration-data` adds optional `parameters` typed map separate from `values`, omitted when empty, preserving prior output. Changed relied-on parameter semantic definition refuses update before effects, no review renewal. Existing minimum lock epoch requires actual pre-change reader and install-writer refusal unchanged; unsafe compatibility stops for separate epoch decision. No new parameter result store or wire field in lock.

@@ -135,6 +135,7 @@ impl PackageConfiguration {
         if consumers.is_empty() {
             return Err(unsupported("no actual incoming configuration declaration"));
         }
+        let mut public_parameters: BTreeMap<String, bool> = BTreeMap::new();
         let mut automatic_choices = BTreeMap::new();
         let mut ordinary = BTreeSet::new();
         let mut choices = Vec::new();
@@ -192,10 +193,43 @@ impl PackageConfiguration {
             if !selected_defaults.is_empty() {
                 automatic_choices.insert(consumer.clone(), selected_defaults);
             }
-            if !definition.parameters.is_empty() {
-                return Err(unsupported(
-                    "typed package parameter consumption is not connected",
-                ));
+            for parameter in &definition.parameters {
+                if parameter.secret
+                    || parameter.kind != crate::manifest::ParameterType::Bool
+                    || !parameter.required
+                    || parameter.default.is_some()
+                    || input.profile.is_some()
+                {
+                    return Err(unsupported(
+                        "only explicitly supplied required public bool parameters without defaults are connected",
+                    ));
+                }
+                let Some(crate::manifest::ParameterValue::Bool(value)) =
+                    input.parameters.get(&parameter.id)
+                else {
+                    return Err(PackageConfigurationError::Incompatible {
+                        package: package.clone(),
+                        consumers: vec![consumer.clone()],
+                        reason: format!(
+                            "consumer `{consumer}` is missing required public parameter `{}`",
+                            parameter.id
+                        ),
+                    });
+                };
+                if public_parameters
+                    .get(&parameter.id)
+                    .is_some_and(|previous| previous != value)
+                {
+                    return Err(PackageConfigurationError::Incompatible {
+                        package: package.clone(),
+                        consumers: consumers.keys().cloned().collect(),
+                        reason: format!(
+                            "conflicting explicit public boolean parameter `{}`",
+                            parameter.id
+                        ),
+                    });
+                }
+                public_parameters.insert(parameter.id.clone(), *value);
             }
             if let FeatureBase::Selected(base) = normalized.features.base {
                 ordinary.extend(base);
@@ -359,6 +393,27 @@ impl PackageConfiguration {
                     values.insert(name.clone(), value.clone());
                 }
             }
+        }
+        Ok(values)
+    }
+
+    /// Validated public bool projection, separate from selected effect data.
+    pub fn selected_parameters(
+        &self,
+        kind: crate::PackageKind,
+    ) -> Result<BTreeMap<String, crate::manifest::ParameterValue>, PackageConfigurationError> {
+        self.selected_data(kind)?;
+        let mut values = BTreeMap::new();
+        for parameter in &self.definition.parameters {
+            let value = self
+                .consumers
+                .values()
+                .next()
+                .and_then(|input| input.parameters.get(&parameter.id))
+                .ok_or_else(|| PackageConfigurationError::ReplayMismatch {
+                    package: "retained package".into(),
+                })?;
+            values.insert(parameter.id.clone(), value.clone());
         }
         Ok(values)
     }
