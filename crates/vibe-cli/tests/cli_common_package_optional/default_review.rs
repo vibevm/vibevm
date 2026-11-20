@@ -2516,3 +2516,115 @@ fn profile_boolean_unknown_wrong_type_preset_and_default_refuse_before_effects()
         assert_eq!(fs::read(&request).unwrap(), authored);
     }
 }
+
+#[test]
+fn profile_boolean_preset_omitted_equal_opposite_and_explicit_control_are_separate() {
+    for (preset, answer) in [
+        (true, None),
+        (true, Some(true)),
+        (true, Some(false)),
+        (false, Some(false)),
+    ] {
+        let f = profile_boolean_fixture();
+        let source = f.registry.join(GROUP).join(DRIVER).join("v1.0.0/vibe.toml");
+        if preset {
+            write(
+                &source,
+                fs::read_to_string(&source).unwrap() + "parameters.verbose=true\n",
+            );
+        }
+        let request = f.project.join("vibe.toml");
+        let text = fs::read_to_string(&request).unwrap();
+        write(
+            &request,
+            match answer {
+                None => text.replace(",parameters={verbose=false}", ""),
+                Some(value) => text.replace("verbose=false", &format!("verbose={value}")),
+            },
+        );
+        let authored = fs::read(&request).unwrap();
+        let source_bytes = fs::read(&source).unwrap();
+        let boot_before: Vec<_> = [common::static_md_rel(), common::static_xml_rel()]
+            .into_iter()
+            .map(|p| {
+                let path = f.project.join(p);
+                let before = if path.exists() {
+                    Some(fs::read(&path).unwrap())
+                } else {
+                    None
+                };
+                (path, before)
+            })
+            .collect();
+        let package = Manifest::read(&source).unwrap();
+        let consumer = Manifest::read(&request).unwrap();
+        let definition = package.configuration.as_ref().unwrap();
+        let input = consumer.requires.configurations.values().next().unwrap();
+        assert_eq!(
+            definition.profiles[0].parameters.contains_key("verbose"),
+            preset
+        );
+        assert_eq!(input.parameters.contains_key("verbose"), answer.is_some());
+        let normalized = definition.normalize_input(input, "./vibe.toml").unwrap();
+        assert_eq!(
+            normalized.parameters["verbose"],
+            vibe_core::manifest::ParameterValue::Bool(answer.unwrap_or(true))
+        );
+        let out = f.install();
+        let diagnostic = format!(
+            "{}{}",
+            String::from_utf8_lossy(&out.stdout),
+            String::from_utf8_lossy(&out.stderr)
+        );
+        if preset {
+            assert!(!out.status.success());
+            assert!(diagnostic.contains("only explicitly supplied required public bool parameters without defaults are connected"),"{diagnostic}");
+            assert!(!f.project.join("vibe.lock").exists());
+            for name in [DRIVER, BASE, EXTRA] {
+                assert!(!f.slot(name).exists());
+            }
+            assert!(!f.project.join("effects.log").exists());
+            for (path, before) in boot_before {
+                assert_eq!(
+                    if path.exists() {
+                        Some(fs::read(path).unwrap())
+                    } else {
+                        None
+                    },
+                    before
+                );
+            }
+        } else {
+            assert!(out.status.success(), "{diagnostic}");
+            let lock = f.lock();
+            let record = &lock.configurations[&coordinate(DRIVER)];
+            assert_eq!(record.consumers.values().next().unwrap(), input);
+            assert!(f.slot(EXTRA).exists());
+            assert!(f.static_boot().contains(EXTRA_MARKER));
+            let show = f
+                .user
+                .vibe()
+                .args([
+                    "show",
+                    "configuration-data",
+                    "--path",
+                    f.project.to_str().unwrap(),
+                    "--json",
+                ])
+                .output()
+                .unwrap();
+            assert!(show.status.success());
+            let report: serde_json::Value = serde_json::from_slice(&show.stdout).unwrap();
+            assert_eq!(report["packages"][0]["parameters"]["verbose"], false);
+            let before = fs::read(f.project.join("vibe.lock")).unwrap();
+            let boot = f.static_boot();
+            let hooks = f.hooks();
+            f.install_ok();
+            assert_eq!(fs::read(f.project.join("vibe.lock")).unwrap(), before);
+            assert_eq!(f.static_boot(), boot);
+            assert_eq!(f.hooks(), hooks);
+        }
+        assert_eq!(fs::read(&request).unwrap(), authored);
+        assert_eq!(fs::read(&source).unwrap(), source_bytes);
+    }
+}
