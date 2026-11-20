@@ -295,3 +295,5 @@ Nineteen cold-attach and publication revisions distinguish run and payload metad
 Twenty-six release and package-Git changes were reviewed at named paths: bounded observation, private call selection, historical terminal sealing, local byte custody, Gitlink inspection and object provenance have distinct owners. No hosted release or push ran.
 
 Nineteen bounded source reviews distinguish declared or retained evidence from dispatched work, including populated-link store proofs, per-profile approval, and the reused-main no-effect route. There was no remote publication.
+
+Thirty-five historical dispositions cover direct and populated Git tests, tool dependencies, fixed-owner observation/control and machine surface composition. Their individually named evidence distinguishes source, fixture and runtime; no current operation was accepted by this historical pass.
