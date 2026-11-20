@@ -679,3 +679,71 @@ fn config_data_unknown_and_duplicate_keys_refuse_before_publication() {
         assert!(!f.project.join("effects.log").exists());
     }
 }
+
+#[test]
+fn named_parameterless_profile_normalizes_but_public_route_refuses_while_explicit_control_applies()
+{
+    for profile in [Some("with-extra"), Some("unknown"), None] {
+        let f = Fixture::new(true);
+        let source = f.registry.join(GROUP).join(DRIVER).join("v1.0.0/vibe.toml");
+        let text = fs::read_to_string(&source).unwrap()
+            + "\n[[configuration.profiles]]\nid='with-extra'\nname='With extra'\nselections.extra={intent='exact',members=['enabled']}\n";
+        write(&source, &text);
+        let request = f.project.join("vibe.toml");
+        let explicit = fs::read_to_string(&request).unwrap();
+        if let Some(profile) = profile {
+            let replacement = format!(
+                "configuration={{policy='require-selection',default_features=false,profile='{profile}'}}"
+            );
+            let original = "configuration={policy='require-selection',default_features=false,selections={extra={intent='exact',members=['enabled']}}}";
+            assert!(explicit.contains(original));
+            write(&request, explicit.replace(original, &replacement));
+        }
+        let authored = fs::read(&request).unwrap();
+        let manifest = Manifest::read(&request).unwrap();
+        let definition = Manifest::read(&source).unwrap().configuration.unwrap();
+        let input = manifest.requires.configurations.values().next().unwrap();
+        let normalized = definition.normalize_input(input, "./vibe.toml");
+        if profile == Some("with-extra") {
+            let normalized = normalized.unwrap();
+            assert!(
+                matches!(&normalized.choices.answers["extra"].selection,vibe_core::configuration::Selection::Explicit(values) if values==&vec!["enabled".to_owned()])
+            );
+            assert!(input.selections.is_empty());
+        } else if profile == Some("unknown") {
+            assert!(normalized.is_err());
+        }
+        let output = f.install();
+        let diagnostic = format!(
+            "{}{}",
+            String::from_utf8_lossy(&output.stdout),
+            String::from_utf8_lossy(&output.stderr)
+        );
+        match profile {
+            Some("with-extra") => {
+                assert!(!output.status.success());
+                assert!(
+                    diagnostic.contains("automatic/default/profile basis is not connected"),
+                    "{diagnostic}"
+                );
+            }
+            Some(_) => {
+                assert!(!output.status.success());
+                assert!(diagnostic.contains("unknown profile"), "{diagnostic}");
+            }
+            None => {
+                assert!(output.status.success(), "{diagnostic}");
+                assert!(f.slot(EXTRA).exists());
+                let before = fs::read(f.project.join("vibe.lock")).unwrap();
+                f.install_ok();
+                assert_eq!(fs::read(f.project.join("vibe.lock")).unwrap(), before);
+            }
+        }
+        assert_eq!(fs::read(&request).unwrap(), authored);
+        if profile.is_some() {
+            assert!(!f.project.join("vibe.lock").exists());
+            assert!(!f.slot(DRIVER).exists());
+            assert!(!f.project.join("effects.log").exists());
+        }
+    }
+}
