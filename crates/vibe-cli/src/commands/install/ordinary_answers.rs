@@ -43,6 +43,54 @@ pub(crate) fn prepare(ctx: &output::Context, args: &mut InstallArgs) -> Result<(
     );
     let requirement = manifest.requires.packages[0].clone();
     let package = requirement.qualified_name();
+    if let Some(path) = &args.ordinary_answers {
+        let absolute = std::path::absolute(path)?;
+        let parent = absolute
+            .parent()
+            .ok_or_else(|| anyhow!("ordinary answers parent absent"))?;
+        let name = absolute
+            .file_name()
+            .and_then(|s| s.to_str())
+            .ok_or_else(|| anyhow!("ordinary answers name invalid"))?;
+        let scope = vibe_safefs::Project::open(parent)?;
+        let content = scope
+            .read_file_snapshot_bounded(name, 64 * 1024)?
+            .ok_or_else(|| anyhow!("ordinary answers missing"))?;
+        let value: serde_json::Value = serde_json::from_slice(&content.bytes)
+            .map_err(|_| anyhow!("ordinary install answers: invalid shape; expected protocol/package/project_witness strings, source registry/content_hash strings, input.selections string map and input.parameters boolean map"))?;
+        if value.get("protocol").and_then(|p| p.as_str())
+            == Some("vibe-ordinary-integer-install-answers/2")
+        {
+            let envelope: vibe_wire::generated::ordinary_integer_install_answers::OrdinaryIntegerInstallAnswers = serde_json::from_slice(&content.bytes)
+                .map_err(|_|anyhow!("integer install answers v2 invalid shape; values omitted"))?;
+            let input = vibe_wire::generated::ordinary_integer_preview_request::Input {
+                profile: envelope.input.profile.clone(),
+                selections: envelope.input.selections.clone(),
+                parameters: envelope.input.parameters.clone(),
+            };
+            let result = vibe_package_source::configuration_preview::integer::preview(&root,
+                &vibe_wire::generated::ordinary_integer_preview_request::OrdinaryIntegerPreviewRequest {
+                    protocol:"vibe-ordinary-integer-preview/2".into(),package:package.clone(),input:Some(input.clone()),
+                })?;
+            ensure!(
+                envelope.package == package
+                    && envelope.project_witness == result.project_witness
+                    && envelope.source.registry == result.source.registry
+                    && envelope.source.content_hash == result.source.content_hash,
+                "integer submitted project/source changed"
+            );
+            args.parsed_ordinary_submission = Some(vibe_core::manifest::SubmittedInput {
+                original: vibe_package_source::configuration_preview::integer::original(&input),
+                requirement,
+                project_witness: envelope.project_witness,
+                expected_source: vibe_core::manifest::SubmittedSource {
+                    registry: envelope.source.registry,
+                    content_hash: vibe_core::ContentHash::parse(&envelope.source.content_hash)?,
+                },
+            });
+            return Ok(());
+        }
+    }
     let request = OrdinaryConfigurationPreviewRequest {
         package: package.clone(),
         input: None,

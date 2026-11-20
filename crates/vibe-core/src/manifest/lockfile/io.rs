@@ -44,6 +44,7 @@ impl Lockfile {
                 | DORMANT_CHOICE_BASIS_SCHEMA_VERSION
                 | FEATURE_DEFAULT_BASIS_SCHEMA_VERSION
                 | CLOSURE_FALLBACK_BASIS_SCHEMA_VERSION
+                | INTEGER_PROFILE_SUBMITTED_SCHEMA_VERSION
         ) {
             return Err(crate::error::Error::UnsupportedLockfile {
                 found: lockfile.meta.schema_version,

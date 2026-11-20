@@ -16,6 +16,7 @@ use vibe_wire::generated::ordinary_configuration_preview_result as wire;
 
 /// Bound both adapters before parsing or returning an answer document.
 pub const MAX_INPUT_BYTES: usize = 64 * 1024;
+pub mod integer;
 
 fn unsupported(package: &str, reason: &str) -> PackageConfigurationError {
     PackageConfigurationError::Unsupported {
@@ -235,11 +236,27 @@ pub fn configuration_preview(
     trusted_root: &std::path::Path,
     request: &OrdinaryConfigurationPreviewRequest,
 ) -> anyhow::Result<wire::OrdinaryConfigurationPreviewResult> {
+    let (mut result, witness) = observe(
+        trusted_root,
+        &request.package,
+        serde_json::to_vec(request)?.len(),
+        |manifest, source| evaluate(manifest, request, source),
+    )?;
+    result.project_witness = Some(witness);
+    Ok(result)
+}
+
+pub(super) fn observe<T>(
+    trusted_root: &std::path::Path,
+    package: &str,
+    request_bytes: usize,
+    evaluate: impl FnOnce(&Manifest, wire::Source) -> Result<T, PackageConfigurationError>,
+) -> anyhow::Result<(T, String)> {
     use anyhow::{anyhow, bail};
     use std::path::Component;
     use vibe_core::manifest::RegistryType;
-    let refuse = |reason: &str| anyhow::Error::new(unsupported(&request.package, reason));
-    if serde_json::to_vec(request)?.len() > MAX_INPUT_BYTES {
+    let refuse = |reason: &str| anyhow::Error::new(unsupported(package, reason));
+    if request_bytes > MAX_INPUT_BYTES {
         return Err(refuse("preview answers exceed the bounded input limit"));
     }
     // This is the same suppression condition used by the actual CLI host's
@@ -318,14 +335,11 @@ pub fn configuration_preview(
             reference
                 .group
                 .as_ref()
-                .is_some_and(|group| format!("{group}/{}", reference.name) == request.package)
+                .is_some_and(|group| format!("{group}/{}", reference.name) == package)
         })
         .ok_or_else(|| refuse("package is not an exact selected project requirement"))?;
-    if manifest.requires.optional.get(&request.package) == Some(&true)
-        || manifest
-            .requires
-            .configurations
-            .contains_key(&request.package)
+    if manifest.requires.optional.get(package) == Some(&true)
+        || manifest.requires.configurations.contains_key(package)
     {
         return Err(refuse(
             "preview requires a compulsory unanswered project root",
@@ -352,7 +366,7 @@ pub fn configuration_preview(
             "preview supports unauthenticated local directory registry only",
         ));
     }
-    if let Some(pin) = manifest.requires.registry_pins.get(&request.package)
+    if let Some(pin) = manifest.requires.registry_pins.get(package)
         && pin.as_str() != registry.name
     {
         return Err(refuse("project requirement names a different registry"));
@@ -390,9 +404,8 @@ pub fn configuration_preview(
             .map_err(|error| {
                 refuse(&format!("local source unavailable or unsupported: {error}"))
             })?;
-    let mut result = evaluate(
+    let result = evaluate(
         &observation.manifest,
-        request,
         wire::Source {
             registry: registry.name.clone(),
             content_hash: observation.content_hash,
@@ -404,9 +417,7 @@ pub fn configuration_preview(
     if after != snapshot {
         bail!("selected project changed during configuration preview");
     }
-    result.project_witness = Some(
-        vibe_core::manifest::submitted_project_witness(trusted_root, &snapshot.bytes)
-            .map_err(anyhow::Error::msg)?,
-    );
-    Ok(result)
+    let witness = vibe_core::manifest::submitted_project_witness(trusted_root, &snapshot.bytes)
+        .map_err(anyhow::Error::msg)?;
+    Ok((result, witness))
 }

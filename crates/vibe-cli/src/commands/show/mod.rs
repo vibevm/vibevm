@@ -41,6 +41,7 @@ use crate::output;
 pub fn run(ctx: &output::Context, args: ShowArgs, offline: bool) -> Result<()> {
     match args.command {
         ShowSubcommand::ConfigurationPreview(sub) => configuration_preview::run(ctx, sub),
+        ShowSubcommand::ConfigurationPreviewV2(sub) => configuration_preview::run_integer(ctx, sub),
         ShowSubcommand::ConfigurationData(sub) => configuration_data::run(ctx, sub),
         ShowSubcommand::Effective(sub) => effective::run_effective(ctx, sub),
         ShowSubcommand::Config(sub) => config::run_config(ctx, sub),

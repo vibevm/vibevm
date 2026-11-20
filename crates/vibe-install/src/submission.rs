@@ -191,7 +191,13 @@ impl VerifiedSubmission {
         {
             return Err(invalid("submitted publication differs from verified plan"));
         }
-        lock.meta.schema_version = 16;
+        lock.meta.schema_version = if self.input.original.profile.is_some()
+            && vibe_core::manifest::integer_profile_shape(&record.definition)
+        {
+            20
+        } else {
+            16
+        };
         lock.validate_configurations()?;
         let text = toml::to_string_pretty(lock).map_err(|e| invalid(e.to_string()))?;
         Ok(vibe_core::manifest::decorate_toml(&text, previous))

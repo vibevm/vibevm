@@ -1,0 +1,163 @@
+{
+  "metadata": {
+    "x-wire-order": [
+      "protocol",
+      "package",
+      "version",
+      "source",
+      "project_witness",
+      "definition",
+      "original",
+      "effective"
+    ]
+  },
+  "properties": {
+    "protocol": {
+      "type": "string"
+    },
+    "package": {
+      "type": "string"
+    },
+    "version": {
+      "type": "string"
+    },
+    "source": {
+      "ref": "source"
+    },
+    "project_witness": {
+      "type": "string"
+    },
+    "definition": {
+      "ref": "description"
+    }
+  },
+  "optionalProperties": {
+    "original": {
+      "ref": "input",
+      "metadata": {
+        "x-default": null
+      }
+    },
+    "effective": {
+      "values": {
+        "ref": "integer"
+      },
+      "metadata": {
+        "x-empty": "preserve"
+      }
+    }
+  },
+  "definitions": {
+    "integer": {
+      "type": "float64",
+      "metadata": {
+        "description": "An exact signed integer, narrowed to i64 by the existing generator convention.",
+        "x-rust-type": "i64"
+      }
+    },
+    "input": {
+      "metadata": {
+        "x-wire-order": [
+          "selections",
+          "parameters",
+          "profile"
+        ]
+      },
+      "properties": {
+        "selections": {
+          "values": {
+            "type": "string"
+          },
+          "metadata": {
+            "x-empty": "emit"
+          }
+        },
+        "parameters": {
+          "values": {
+            "ref": "integer"
+          },
+          "metadata": {
+            "x-empty": "emit"
+          }
+        }
+      },
+      "optionalProperties": {
+        "profile": {
+          "type": "string",
+          "metadata": {
+            "x-default": null
+          }
+        }
+      }
+    },
+    "source": {
+      "metadata": {
+        "x-wire-order": [
+          "registry",
+          "content_hash"
+        ]
+      },
+      "properties": {
+        "registry": {
+          "type": "string"
+        },
+        "content_hash": {
+          "type": "string"
+        }
+      }
+    },
+    "description": {
+      "metadata": {
+        "x-wire-order": [
+          "parameter",
+          "name",
+          "min",
+          "max",
+          "profile",
+          "profile_name",
+          "preset",
+          "group",
+          "group_name",
+          "members"
+        ]
+      },
+      "properties": {
+        "parameter": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "min": {
+          "ref": "integer"
+        },
+        "max": {
+          "ref": "integer"
+        },
+        "profile": {
+          "type": "string"
+        },
+        "profile_name": {
+          "type": "string"
+        },
+        "preset": {
+          "ref": "integer"
+        },
+        "group": {
+          "type": "string"
+        },
+        "group_name": {
+          "type": "string"
+        },
+        "members": {
+          "elements": {
+            "type": "string"
+          },
+          "metadata": {
+            "x-empty": "emit"
+          }
+        }
+      }
+    }
+  }
+}

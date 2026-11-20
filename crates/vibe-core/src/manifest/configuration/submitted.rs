@@ -110,9 +110,14 @@ impl PackageConfiguration {
             {
                 return Err(bad("invalid submitted project witness"));
             }
-            submitted_shape(&self.definition, &self.declarations).map_err(&bad)?;
+            let integer_profile = integer_profile_shape(&self.definition);
+            if !integer_profile {
+                submitted_shape(&self.definition, &self.declarations).map_err(&bad)?;
+            }
             let original = &input.original;
-            if original.profile.is_some()
+            if (original.profile.is_some() && !integer_profile)
+                || (integer_profile
+                    && original.profile.as_deref() != Some(self.definition.profiles[0].id.as_str()))
                 || original.default_features
                 || !original.features.is_empty()
                 || original.policy != crate::configuration::ChoicePolicy::RequireSelection
@@ -185,4 +190,55 @@ fn submitted_shape(
         return Err("submitted definition is outside preview scope");
     }
     Ok(())
+}
+
+/// Exact public integer/preset vertical, not permission for arbitrary profiles.
+pub fn integer_profile_shape(definition: &ConfigurationDecl) -> bool {
+    use super::{ConfigurationFeatureVisibility, ConfigurationGroupDecl};
+    if definition.parameters.len() != 1
+        || definition.profiles.len() != 1
+        || definition.groups.len() != 1
+    {
+        return false;
+    }
+    let p = &definition.parameters[0];
+    let profile = &definition.profiles[0];
+    let ConfigurationGroupDecl::Choice {
+        cardinality: crate::configuration::Cardinality::ExactlyOne,
+        defaults: None,
+        guards,
+        members,
+        ..
+    } = &definition.groups[0]
+    else {
+        return false;
+    };
+    p.kind == crate::manifest::ParameterType::Integer
+        && p.required
+        && !p.secret
+        && p.default.is_none()
+        && p.min.is_some()
+        && p.max.is_some()
+        && profile.parameters.len() == 1
+        && profile.parameters.contains_key(&p.id)
+        && profile.features.is_empty()
+        && profile.selections.is_empty()
+        && guards.is_empty()
+        && definition.features.len() == members.len()
+        && definition.features.iter().all(|f| {
+            f.visibility == ConfigurationFeatureVisibility::Public
+                && f.parent.is_none()
+                && !f.required
+                && !f.default
+                && f.requires.is_empty()
+                && f.guards.is_empty()
+                && members.contains(&f.id)
+                && f.effects.iter().all(|e| {
+                    !matches!(
+                        e,
+                        super::ConfigurationEffect::Forward { .. }
+                            | super::ConfigurationEffect::Subskill { .. }
+                    )
+                })
+        })
 }

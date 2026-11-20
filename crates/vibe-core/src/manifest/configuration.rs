@@ -19,7 +19,9 @@ pub use package::{
     PackageConfigurationError,
 };
 mod submitted;
-pub use submitted::{SubmittedInput, SubmittedSource, submitted_project_witness};
+pub use submitted::{
+    SubmittedInput, SubmittedSource, integer_profile_shape, submitted_project_witness,
+};
 mod semantic;
 mod validate;
 mod vocabulary;

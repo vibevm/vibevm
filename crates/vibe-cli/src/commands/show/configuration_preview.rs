@@ -141,3 +141,48 @@ pub(crate) fn collect_answers(
         parameters,
     })
 }
+
+pub(super) fn run_integer(ctx: &output::Context, args: ShowConfigurationPreviewArgs) -> Result<()> {
+    use vibe_wire::generated::ordinary_integer_preview_request::{
+        Input, OrdinaryIntegerPreviewRequest,
+    };
+    if args.interactive {
+        bail!(
+            "integer preview v2 currently accepts explicit typed input files, not interactive answer collection"
+        );
+    }
+    let root = std::path::absolute(&args.path)?;
+    let input = args
+        .input
+        .map(|p| -> Result<Input> {
+            let absolute = std::path::absolute(p)?;
+            let parent = absolute
+                .parent()
+                .ok_or_else(|| anyhow!("integer input parent absent"))?;
+            let name = absolute
+                .file_name()
+                .and_then(|s| s.to_str())
+                .ok_or_else(|| anyhow!("integer input name invalid"))?;
+            let scope = vibe_safefs::Project::open(parent)?;
+            let bytes = scope
+                .read_file_snapshot_bounded(name, MAX_INPUT_BYTES)?
+                .ok_or_else(|| anyhow!("integer input missing"))?;
+            serde_json::from_slice(&bytes.bytes)
+                .map_err(|_| anyhow!("integer preview input invalid; raw values omitted"))
+        })
+        .transpose()?;
+    let result = vibe_package_source::configuration_preview::integer::preview(
+        &root,
+        &OrdinaryIntegerPreviewRequest {
+            protocol: "vibe-ordinary-integer-preview/2".into(),
+            package: args.package,
+            input,
+        },
+    )?;
+    if ctx.is_json() {
+        ctx.emit_json(&result)?;
+    } else {
+        println!("{}", serde_json::to_string_pretty(&result)?);
+    }
+    Ok(())
+}

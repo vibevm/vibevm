@@ -355,6 +355,7 @@ pub(crate) fn policy(command: &Command, terminal_attached: bool) -> CommandPolic
         Command::Friends(_) => FiniteFallback("Command friends"),
         Command::Show(args) => match &args.command {
             ShowSubcommand::ConfigurationPreview(_)
+            | ShowSubcommand::ConfigurationPreviewV2(_)
             | ShowSubcommand::ConfigurationData(_)
             | ShowSubcommand::Effective(_)
             | ShowSubcommand::Config(_)

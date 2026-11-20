@@ -63,7 +63,7 @@ pub use configuration::{
     ConfigurationGuard, ConfigurationIntentDecl, ConfigurationProfileDecl, ConfigurationSelection,
     ForwardStrength, ForwardedInput, NormalizedConfigurationInput, PackageConfiguration,
     PackageConfigurationError, SubmittedInput, SubmittedSource, evaluate_request_local_data,
-    submitted_project_witness,
+    integer_profile_shape, submitted_project_witness,
 };
 pub use consumer::{ConsumerNode, NodeRole};
 pub use declarant_path::{

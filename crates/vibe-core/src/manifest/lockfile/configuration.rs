@@ -137,6 +137,17 @@ impl Lockfile {
                 ));
             }
             if !record.submitted_inputs.is_empty() {
+                if record
+                    .submitted_inputs
+                    .values()
+                    .any(|i| i.original.profile.is_some())
+                    && super::super::integer_profile_shape(&record.definition)
+                    && self.meta.schema_version < INTEGER_PROFILE_SUBMITTED_SCHEMA_VERSION
+                {
+                    return Err(invalid(
+                        "submitted integer profile requires schema20".into(),
+                    ));
+                }
                 if self.meta.schema_version < SUBMITTED_INPUT_SCHEMA_VERSION
                     || row.kind != PackageKind::Flow
                     || row.registry.is_none()
@@ -413,6 +424,7 @@ impl Lockfile {
                 | DORMANT_CHOICE_BASIS_SCHEMA_VERSION
                 | FEATURE_DEFAULT_BASIS_SCHEMA_VERSION
                 | CLOSURE_FALLBACK_BASIS_SCHEMA_VERSION
+                | INTEGER_PROFILE_SUBMITTED_SCHEMA_VERSION
         ) {
             return Err(crate::Error::UnsupportedLockfile {
                 found: self.meta.schema_version,

@@ -29,6 +29,8 @@ pub use output::ToolOutput;
 /// they are: this registry file sits at its size ceiling.
 pub mod configuration_preview;
 pub use configuration_preview::ConfigurationPreviewMcpTool;
+mod configuration_preview_integer;
+use configuration_preview_integer::IntegerPreviewMcpTool;
 pub mod read_doc;
 pub use read_doc::ReadDocMcpTool;
 
@@ -70,6 +72,7 @@ pub fn default_tools() -> Vec<Box<dyn McpTool>> {
         Box::new(ManifestMigrationOperationMcpTool),
         Box::new(QueryPackageMcpTool),
         Box::new(ConfigurationPreviewMcpTool),
+        Box::new(IntegerPreviewMcpTool),
         Box::new(ReadSubskillMcpTool),
         Box::new(MaterialiseSubskillMcpTool),
         Box::new(AgenticExplainMcpTool),

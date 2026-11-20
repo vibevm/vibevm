@@ -6213,6 +6213,308 @@ fn integer_fixture(value: i64) -> Fixture {
 }
 
 #[test]
+fn integer_profile_surface_parity_missing_preview_qualification() {
+    let f = preview_fixture();
+    let nested = f.registry.clone();
+    assert!(nested.starts_with(&f.project));
+    let source = f.registry.join(GROUP).join(DRIVER).join("v1.0.0/vibe.toml");
+    write(
+        &source,
+        fs::read_to_string(&source).unwrap().replace(
+            "id='verbose'\nname='Verbose'\ntype='bool'\nrequired=true",
+            "id='count'\nname='Count'\ntype='integer'\nrequired=true\nmin=-2\nmax=3",
+        ) + "\n[[configuration.profiles]]\nid='counted'\nname='Counted'\nparameters.count=-1\n",
+    );
+    let request = f.project.join("vibe.toml");
+    let unanswered = fs::read_to_string(&request).unwrap();
+    let authored = unanswered.replace("link='static-transitive'", "link='static-transitive'\nconfiguration={policy='require-selection',default_features=false,profile='counted',selections={extra={intent='exact',members=['disabled']}},parameters={count=0}}");
+    let before = super::workspace::semantic_snapshot(&f.project);
+    for json in [false, true] {
+        let mut cmd = f.user.vibe();
+        cmd.args([
+            "show",
+            "configuration-preview",
+            &coordinate(DRIVER),
+            "--path",
+            f.project.to_str().unwrap(),
+        ]);
+        if json {
+            cmd.arg("--json");
+        }
+        let out = cmd.output().unwrap();
+        assert!(
+            !out.status.success(),
+            "profile preview unexpectedly supported"
+        );
+        assert!(String::from_utf8_lossy(&out.stderr).contains("preview requires one visible exactly-one choice and one required public bool without defaults or profiles"));
+        assert_eq!(super::workspace::semantic_snapshot(&f.project), before);
+    }
+    let mcp = preview_mcp(&f, serde_json::json!({"package":coordinate(DRIVER)}));
+    assert!(
+        mcp["result"]["isError"] == true || mcp.get("error").is_some(),
+        "{mcp}"
+    );
+    assert!(
+        mcp.to_string()
+            .contains("preview requires one visible exactly-one choice"),
+        "{mcp}"
+    );
+    assert_eq!(super::workspace::semantic_snapshot(&f.project), before);
+    assert!(!f.project.join("vibe.lock").exists());
+    let invalid_input = f.root.join("integer-profile-input.json");
+    write(
+        &invalid_input,
+        br#"{"selections":{"extra":"disabled"},"parameters":{"count":0},"profile":"counted"}"#,
+    );
+    let wire_refusal = preview_cli(&f, Some(&invalid_input));
+    assert!(!wire_refusal.status.success());
+    assert!(
+        String::from_utf8_lossy(&wire_refusal.stderr)
+            .contains("ordinary preview input: invalid shape")
+    );
+    assert_eq!(super::workspace::semantic_snapshot(&f.project), before);
+    write(&request, &authored);
+    let definition = Manifest::read(&source).unwrap().configuration.unwrap();
+    let original =
+        Manifest::read(&request).unwrap().requires.configurations[&coordinate(DRIVER)].clone();
+    let normalized = definition
+        .normalize_input(&original, "./vibe.toml")
+        .unwrap();
+    assert_eq!(
+        normalized.parameters["count"],
+        vibe_core::manifest::ParameterValue::Integer(0)
+    );
+    f.install_ok();
+    let record = &f.lock().configurations[&coordinate(DRIVER)];
+    assert_eq!(record.consumers["./vibe.toml"], original);
+    assert_eq!(
+        record
+            .selected_parameters(vibe_core::PackageKind::Flow)
+            .unwrap()["count"],
+        vibe_core::manifest::ParameterValue::Integer(0)
+    );
+    assert_eq!(fs::read_to_string(&request).unwrap(), authored);
+}
+
+#[test]
+fn integer_profile_v2_describe_preview_confirmed_install_parity() {
+    for override_value in [None, Some(0)] {
+        let f = preview_fixture();
+        let source = f.registry.join(GROUP).join(DRIVER).join("v1.0.0/vibe.toml");
+        write(
+            &source,
+            fs::read_to_string(&source).unwrap().replace(
+                "id='verbose'\nname='Verbose'\ntype='bool'\nrequired=true",
+                "id='count'\nname='Count'\ntype='integer'\nrequired=true\nmin=-2\nmax=3",
+            ) + "\n[[configuration.profiles]]\nid='counted'\nname='Counted'\nparameters.count=-1\n",
+        );
+        let before = super::workspace::semantic_snapshot(&f.project);
+        let run = |input: Option<&Path>, json: bool| {
+            let mut c = f.user.vibe();
+            c.args([
+                "show",
+                "configuration-preview-v2",
+                &coordinate(DRIVER),
+                "--path",
+                f.project.to_str().unwrap(),
+            ]);
+            if let Some(p) = input {
+                c.args(["--input", p.to_str().unwrap()]);
+            }
+            if json {
+                c.arg("--json");
+            }
+            c.output().unwrap()
+        };
+        let described = run(None, true);
+        assert!(
+            described.status.success(),
+            "{}",
+            String::from_utf8_lossy(&described.stderr)
+        );
+        let description: serde_json::Value = serde_json::from_slice(&described.stdout).unwrap();
+        let d = &description["definition"];
+        assert_eq!(d["preset"], -1);
+        assert_eq!(d["min"], -2);
+        assert_eq!(d["max"], 3);
+        let parameter = d["parameter"].as_str().unwrap();
+        let profile = d["profile"].as_str().unwrap();
+        let group = d["group"].as_str().unwrap();
+        let member = d["members"]
+            .as_array()
+            .unwrap()
+            .iter()
+            .find(|m| m.as_str() == Some("disabled"))
+            .unwrap()
+            .clone();
+        let parameters = override_value
+            .map(|v| serde_json::json!({parameter:v}))
+            .unwrap_or_else(|| serde_json::json!({}));
+        let answers = serde_json::json!({"profile":profile,"selections":{group:member},"parameters":parameters});
+        let path = f.root.join("v2-input.json");
+        write(&path, serde_json::to_vec(&answers).unwrap());
+        let console = run(Some(&path), false);
+        assert!(
+            console.status.success(),
+            "{}",
+            String::from_utf8_lossy(&console.stderr)
+        );
+        let evaluated: serde_json::Value = serde_json::from_slice(&console.stdout).unwrap();
+        let structured = run(Some(&path), true);
+        assert!(structured.status.success());
+        assert_eq!(
+            serde_json::from_slice::<serde_json::Value>(&structured.stdout).unwrap(),
+            evaluated
+        );
+        assert_eq!(evaluated["original"], answers);
+        assert_eq!(
+            evaluated["effective"][parameter],
+            override_value.unwrap_or(-1)
+        );
+        let script=serde_json::json!({"jsonrpc":"2.0","id":1,"method":"tools/call","params":{"name":"configuration_preview_v2","arguments":{"protocol":"vibe-ordinary-integer-preview/2","package":coordinate(DRIVER),"input":answers}}}).to_string()+"\n";
+        let out = f
+            .user
+            .vibe()
+            .args([
+                "--offline",
+                "mcp",
+                "serve",
+                "--path",
+                f.project.to_str().unwrap(),
+            ])
+            .write_stdin(script)
+            .output()
+            .unwrap();
+        assert!(out.status.success());
+        let mcp = String::from_utf8(out.stdout)
+            .unwrap()
+            .lines()
+            .map(|s| serde_json::from_str::<serde_json::Value>(s).unwrap())
+            .find(|v| v["id"] == 1)
+            .unwrap();
+        assert_eq!(mcp["result"]["structuredContent"], evaluated, "{mcp}");
+        assert_eq!(super::workspace::semantic_snapshot(&f.project), before);
+        let envelope = serde_json::json!({"protocol":"vibe-ordinary-integer-install-answers/2","package":coordinate(DRIVER),"source":evaluated["source"],"project_witness":evaluated["project_witness"],"input":answers});
+        let file = f.root.join("v2-install.json");
+        write(&file, serde_json::to_vec(&envelope).unwrap());
+        let unconfirmed = f
+            .user
+            .vibe()
+            .args([
+                "install",
+                "--path",
+                f.project.to_str().unwrap(),
+                "--offline",
+                "--ordinary-answers",
+                file.to_str().unwrap(),
+                "--json",
+            ])
+            .output()
+            .unwrap();
+        assert!(!unconfirmed.status.success());
+        assert_eq!(super::workspace::semantic_snapshot(&f.project), before);
+        let mut stale = envelope.clone();
+        stale["project_witness"] = serde_json::json!("ordinary-submitted-project/1:sha256:stale");
+        write(&file, serde_json::to_vec(&stale).unwrap());
+        let refused = f
+            .user
+            .vibe()
+            .args([
+                "install",
+                "--path",
+                f.project.to_str().unwrap(),
+                "--offline",
+                "--assume-yes",
+                "--ordinary-answers",
+                file.to_str().unwrap(),
+                "--json",
+            ])
+            .output()
+            .unwrap();
+        assert!(!refused.status.success());
+        assert_eq!(super::workspace::semantic_snapshot(&f.project), before);
+        write(&file, serde_json::to_vec(&envelope).unwrap());
+        let out = f
+            .user
+            .vibe()
+            .args([
+                "install",
+                "--path",
+                f.project.to_str().unwrap(),
+                "--offline",
+                "--assume-yes",
+                "--ordinary-answers",
+                file.to_str().unwrap(),
+                "--json",
+            ])
+            .output()
+            .unwrap();
+        assert!(
+            out.status.success(),
+            "{}",
+            String::from_utf8_lossy(&out.stderr)
+        );
+        let lock = f.lock();
+        assert_eq!(lock.meta.schema_version, 20);
+        let record = &lock.configurations[&coordinate(DRIVER)];
+        assert!(record.consumers.is_empty());
+        let original = &record.submitted_inputs["./vibe.toml"].original;
+        assert_eq!(original.profile.as_deref(), Some(profile));
+        assert_eq!(
+            original.parameters.contains_key(parameter),
+            override_value.is_some()
+        );
+        assert_eq!(
+            record
+                .selected_parameters(vibe_core::PackageKind::Flow)
+                .unwrap()[parameter],
+            vibe_core::manifest::ParameterValue::Integer(override_value.unwrap_or(-1))
+        );
+        let locked = fs::read(f.project.join("vibe.lock")).unwrap();
+        for epoch in [16, 19] {
+            let mut bad = lock.clone();
+            bad.meta.schema_version = epoch;
+            fs::write(f.project.join("vibe.lock"), toml::to_string(&bad).unwrap()).unwrap();
+            assert!(Lockfile::read(f.project.join("vibe.lock")).is_err());
+        }
+        fs::write(f.project.join("vibe.lock"), &locked).unwrap();
+        let prior = std::env::var_os("NST_INTEGER_V2_OLD_CLI").unwrap();
+        for op in ["reader", "writer"] {
+            let mut c = std::process::Command::new(&prior);
+            c.env_clear()
+                .env("HOME", f.root.join("home"))
+                .env("VIBE_SETTINGS", &f.user.settings)
+                .env("PATH", "/usr/bin:/bin")
+                .env("VIBE_NO_DEFAULT_REGISTRY", "1");
+            if op == "reader" {
+                c.args(["show", "features"]);
+            } else {
+                c.args(["install", "--offline", "--assume-yes"]);
+            }
+            let out = c
+                .args(["--path", f.project.to_str().unwrap(), "--json"])
+                .output()
+                .unwrap();
+            assert!(!out.status.success());
+            assert_eq!(fs::read(f.project.join("vibe.lock")).unwrap(), locked);
+        }
+        fs::rename(&f.registry, f.root.join("registry-unavailable")).unwrap();
+        let before = super::workspace::semantic_snapshot(&f.project);
+        f.install_ok();
+        let after = super::workspace::semantic_snapshot(&f.project);
+        assert!(
+            after == before,
+            "cold replay changed paths: {:?}",
+            before
+                .keys()
+                .chain(after.keys())
+                .filter(|p| before.get(*p) != after.get(*p))
+                .collect::<BTreeSet<_>>()
+        );
+    }
+}
+
+#[test]
 fn integer_profile_preset_override_and_explicit_public_boundary() {
     for world in ["preset", "override", "explicit"] {
         let f = integer_fixture(0);

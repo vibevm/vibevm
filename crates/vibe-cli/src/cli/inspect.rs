@@ -20,6 +20,8 @@ pub struct ShowArgs {
 pub enum ShowSubcommand {
     /// Describe or evaluate an uninstalled ordinary package without effects.
     ConfigurationPreview(ShowConfigurationPreviewArgs),
+    /// Version-two bounded public integer/profile preview; old bool route unchanged.
+    ConfigurationPreviewV2(ShowConfigurationPreviewArgs),
     /// Read selected public package data from admitted retained configuration.
     ConfigurationData(ShowFeaturesArgs),
     /// Print the effective spec — every boot-lane file plus every

@@ -16,7 +16,7 @@ Reads do not automatically migrate locks. The writer chooses the lowest epoch th
 
 ## Conditional project-lock epochs
 
-Current project reader admits epochs7–19, subject to full structural/semantic validation. This is not the application index version, a wire protocol version or a software release number. Ordinary legacy-only state retains7; common explicit configuration typically needs8. Epochs9–11 belong to earlier remap/template history and are not redefined here.
+Current project reader admits epochs7–20, subject to full structural/semantic validation. This is not the application index version, a wire protocol version or a software release number. Ordinary legacy-only state retains7; common explicit configuration typically needs8. Epochs9–11 belong to earlier remap/template history and are not redefined here.
 
 | Minimum epoch | History that requires it | Preserve this meaning |
 |---|---|---|
@@ -28,6 +28,7 @@ Current project reader admits epochs7–19, subject to full structural/semantic 
 | 17 | Nonempty `consumer_dormant_choices` map | Inactive guarded default reliance is a reason-only group ID, not a selected member |
 | 18 | Nonempty `consumer_feature_defaults` map | Canonical declared default seeds **before closure**, including a present consumer→[] empty-reliance row |
 | 19 | Actual `closure_fallback_basis` | Selected-instance group→fallback member plus definition fingerprint, derived only from actual kernel `GroupDefault`; not a consumer answer or choice-set receipt |
+| 20 | Submitted selected public integer/profile original | Selected preset identity and optional exact signed override remain distinct from effective values; preset omission is not a synthesized authored answer |
 
 Active guarded singleton default selection still uses scalar12. An explicit no-reliance answer is not automatically promoted to17/18. Optional public bool without a default uses existing8: absent key is not false; present false/true remain booleans. In the admitted multi-consumer bool slice, absence does not vote, and conflicting present values refuse before effects.
 
@@ -53,6 +54,8 @@ Lazy witness13 and forwarding14 also have actual pre-extension reader/writer ref
 ### Ordinary configuration
 
 `vibe show configuration-preview PACKAGE --path PROJECT --json` is source-bound inspection. The admitted first slice uses one exact local Flow, exactly-one answers and a public bool. It does not install, approve a plan, or authorize an MCP writer. Interactive preview is also read-only.
+
+The separate bounded integer/profile route is `show configuration-preview-v2`; registered read-only MCP `configuration_preview_v2` uses `vibe-ordinary-integer-preview/2`. Its structured description supplies parameter bounds, named preset and choice members. A selected preset with no override retains an absent parameter key and effective preset value; explicit integer0 overrides it without becoming false. The separate `vibe-ordinary-integer-install-answers/2` envelope binds the same project/source and still needs ordinary installation confirmation. Old bool v1 contracts remain closed and unchanged. Preview does not write a lock; only the actual submitted selected integer/profile history requires20, while authored-only history remains8 and submitted bool16. Old schema19 clients refuse20 without rewriting; never lower the epoch by editing the file.
 
 Actual external/console installation uses separate flags:
 
