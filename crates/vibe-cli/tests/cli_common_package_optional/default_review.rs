@@ -4721,6 +4721,102 @@ fn zero_or_more_unselected_version_leaves_no_basis_and_changed_defaults_refuse_u
 }
 
 #[test]
+fn multi_member_defaults_exact_version_drift_and_explicit_equal_answer() {
+    for explicit in [false, true] {
+        let f = multi_default_fixture("[\"enabled\",\"disabled\"]");
+        let request = f.project.join("vibe.toml");
+        let mut authored = fs::read_to_string(&request)
+            .unwrap()
+            .replace("version='^1'", "version='=1.0.0'");
+        if explicit {
+            authored = authored.replace(
+                "configuration={policy='use-declared-defaults',default_features=false}",
+                "configuration={policy='require-selection',default_features=false,selections={extra={intent='exact',members=['disabled','enabled']}}}",
+            );
+        }
+        write(&request, &authored);
+        f.install_ok();
+        let old = f.lock();
+        let original = old.configurations[&coordinate(DRIVER)].clone();
+        assert_eq!(original.automatic_basis.is_none(), explicit);
+        if !explicit {
+            assert_eq!(
+                original
+                    .automatic_basis
+                    .as_ref()
+                    .unwrap()
+                    .consumer_choice_sets["./vibe.toml"]["extra"],
+                vec!["disabled", "enabled"]
+            );
+            assert!(original.consumers["./vibe.toml"].selections.is_empty());
+        }
+        assert!(f.slot(EXTRA).exists());
+        // A separate CLI process with the registry unavailable must replay held bytes.
+        let hidden = f.root.join("registry-unavailable");
+        fs::rename(&f.registry, &hidden).unwrap();
+        let before = super::workspace::semantic_snapshot(&f.project);
+        f.install_ok();
+        assert_eq!(super::workspace::semantic_snapshot(&f.project), before);
+        fs::rename(&hidden, &f.registry).unwrap();
+        let prior = f.registry.join(GROUP).join(DRIVER).join("v1.0.0");
+        let next = f.registry.join(GROUP).join(DRIVER).join("v1.1.0");
+        write(
+            &next.join("vibe.toml"),
+            fs::read_to_string(prior.join("vibe.toml"))
+                .unwrap()
+                .replace("version='1.0.0'", "version='1.1.0'")
+                .replace(
+                    "defaults = [\"enabled\",\"disabled\"]",
+                    "defaults = [\"disabled\"]",
+                ),
+        );
+        write(&next.join("boot/rules.md"), "NEW_EXACT_SET_VERSION\n");
+        write(&next.join("unused-source.txt"), UNUSED);
+        let changed = authored.replace("version='=1.0.0'", "version='=1.1.0'");
+        assert_ne!(changed, authored);
+        write(&request, &changed);
+        let before = super::workspace::semantic_snapshot(&f.project);
+        let out = update(&f);
+        let diagnostic = format!(
+            "{}{}",
+            String::from_utf8_lossy(&out.stdout),
+            String::from_utf8_lossy(&out.stderr)
+        );
+        assert_eq!(out.status.success(), explicit, "{diagnostic}");
+        if explicit {
+            let next = f.lock();
+            assert_eq!(
+                next.find(&GROUP.parse().unwrap(), DRIVER)
+                    .unwrap()
+                    .version
+                    .to_string(),
+                "1.1.0"
+            );
+            let record = &next.configurations[&coordinate(DRIVER)];
+            assert_eq!(record.consumers, original.consumers);
+            assert!(record.automatic_basis.is_none());
+            assert_eq!(record.features, original.features);
+            assert!(f.slot(EXTRA).exists());
+            assert!(f.static_boot().contains("NEW_EXACT_SET_VERSION"));
+        } else {
+            assert!(
+                diagnostic.contains("multi-member automatic default renewal is not connected"),
+                "{diagnostic}"
+            );
+            assert!(!diagnostic.contains("package-default-review/1:sha256:"));
+            assert_eq!(super::workspace::semantic_snapshot(&f.project), before);
+            assert_eq!(f.lock().configurations[&coordinate(DRIVER)], original);
+            assert!(!f.static_boot().contains("NEW_EXACT_SET_VERSION"));
+        }
+        assert_eq!(fs::read_to_string(&request).unwrap(), changed);
+        println!(
+            "multi-set explicit={explicit} cold=registry-unavailable exact-next=1.1.0 success={} originals-preserved=true",
+            out.status.success()
+        );
+    }
+}
+
+#[test]
 fn zero_or_more_prior_reader_writer_refuse_new_basis_and_preserve_scalar_bytes() {
     let old = std::env::var_os("NST_MULTI_OLD_CLI")
         .expect("mandatory multi-default prior CLI must be explicitly mounted");
