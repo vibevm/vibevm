@@ -1,0 +1,7 @@
+# Independent offline distribution qualification
+
+Identify the existing application drop, manifest selection, digest verification and owned install/remove paths. Use only an original, locally generated synthetic payload in an isolated disposable drop. No third-party binaries, private corp/corp-update input, redistribution, remote requests, release, sign or push. Do not copy any vendor artifact into Git or claim a distribution grant from a successful test.
+
+Through the real public CLI, exercise offline install from the prepared drop, invoke the synthetic public version command, repeat without duplication, remove preserving a foreign neighbor, and refuse a corrupted digest or missing input without materializing a target. Record exact binary/source/fixture hashes and before/after index, launcher and slot disposition. Use the actual supported drop discovery grammar rather than inventing a URL or a new package manager. If the documented drop cannot be selected, return the first observed failure, exact nearest owner and unchanged state. Do not weaken verification. Initial writes: focused fixture/test and corporate research receipt only.
+
+Keep separate rows for a reproducible local carrier, each actual harness's supplier qualification, each platform, offline inclusion policy and permission to distribute. A synthetic positive settles only the carrier workflow. No change to the existing Linux Hermes public-install limitation, native credential delivery, agent launch, source publication, or frozen successor stages.
