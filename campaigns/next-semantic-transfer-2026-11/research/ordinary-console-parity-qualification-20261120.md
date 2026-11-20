@@ -1,0 +1,21 @@
+# Ordinary console versus serialized answers — qualification candidate
+
+Accepted product boundary: source-bound preview commit4191f9b28b00bf5f1b275413ad2d361e66ee4410. Separate qualification brief59545df330738d9479dcb2cb45a667755a9b691f integrated as feac745c9. Test/report only: no console wizard, answer collector, source resolver or install behavior is implemented here.
+
+## Actual ordinary entry
+
+The primary journey is `vibe install --offline --path PROJECT` in a real isolated PTY, without --assume-yes, --json, preanswered requires input or bytes written to the terminal. The existing ordinary configuration fixture supplies a compulsory exact local flow with one exactly-one choice and one required public bool without defaults; the registry is nested inside the trusted project. The existing pty-runner.c is reused with a finite15-second process-group timeout. Timeout is not capability evidence. No provider, user account, app-installer route, owner participation or automatic approval is used.
+
+Actual first CLI refusal is `this operation does not yet evaluate common configuration for package ...`, with PROP-069#AUTHORED-SCOPES; exit1 before a configuration question or apply confirmation. This is not the lower resolver's different missing-consumer diagnostic. `vibe-install::configuration_admission::manifest_named` produces Error::ConfigurationUnsupported when the selected package still has a common definition without an admitted record. The library/kernel and serialized preview capability do not themselves connect an interactive collector to this install journey.
+
+Printed preview questions are not interactive collection. `tree --console` is an installed-graph inspection TUI, not an acquisition/configuration action. A failed ordinary install cannot be reclassified as user cancellation or false answer. The no-input fixture never scrapes printed JSON into a synthetic response.
+
+## State and separate control
+
+Complete project/settings/actual registry-cache/search-cache snapshots are captured. Actual install refusal creates precisely `.vibe/` plus an empty `.vibe/lifecycle.lock`; no blanket `.vibe` exclusion is used. The test explicitly extracts those two infrastructure entries and compares all other project entries unchanged. No vibe.lock, slots, generated boot, hooks or authored answer mutation occurs. This install infrastructure exception does not grant an effect to a future read-only interactive preview.
+
+After that actual refusal, a separately supplied serialized `{selections:{extra:disabled},parameters:{verbose:false}}` goes through accepted CLI preview and registered actual stdio MCP. Original maps and false are retained, semantic values and source witness match, and the post-install complete state must remain unchanged. No selected answer or source equivalence is inferred from the failed console path: no console answer/result exists to compare.
+
+## Evidence status
+
+First r1 failed before CLI because cc resolved through an unmounted /etc/alternatives; the fixture now supports conventional CC and the isolated runner supplies the exact read-only /usr compiler. No host toolchain/configuration change. The first actual r2 reached the expected public refusal, then failed an overstrong no-infrastructure-change assertion; raw transcript and full mismatch remain retained. The corrected test admits only the exact observed lease delta, not all .vibe content. Corrected r3 actual runtime passed1 in enforced filesystem/process/network isolation (console-qualification-public-r3.log), with strict fixture lint/format/diff checks passing. CLI SHA3a0fd609e02fb9d4bf3c780074d289d64531acac7215fb71d753f3284d790c27 comes from unchanged accepted product source; test build regenerated the executable, so it is pinned independently rather than inheriting the earlier preview binary receipt. The transcript confirms exit1 before any configuration collection, the exact two-entry infrastructure delta, and separate CLI/MCP serialized false control with source hash sha256:7427f240adc1bc1d4d1bc2e1ac8acaea9d839f6afe32b25473a40882a37aadbb. Final exact test/report receipt and independent acceptance remain pending. Console answer collection remains absent at this boundary; no parent status or NST closure is claimed.

@@ -3316,3 +3316,115 @@ fn ordinary_preview_refuses_effective_remap_layers_without_source_or_cache_chang
         );
     }
 }
+
+#[test]
+fn ordinary_console_pty_unanswered_input_is_distinct_from_serialized_preview() {
+    let f = preview_fixture();
+    let scope = f.root.join("pty-control");
+    fs::create_dir_all(&scope).unwrap();
+    let source=include_str!("../common/pty-runner.c")
+        .replace("#include <errno.h>","#include <errno.h>\n#include <poll.h>\n#include <signal.h>\n#include <time.h>")
+        .replace("    char buffer[4096];", "    time_t started = time(NULL);\n    char buffer[4096];")
+        .replace("        ssize_t length = read(master, buffer, sizeof(buffer));", "        if (time(NULL) - started > 15) { kill(-child, SIGKILL); waitpid(child, NULL, 0); return 131; }\n        struct pollfd ready = { .fd = master, .events = POLLIN };\n        if (poll(&ready, 1, 1000) == 0) continue;\n        ssize_t length = read(master, buffer, sizeof(buffer));");
+    let c = scope.join("runner.c");
+    let runner = scope.join("runner");
+    write(&c, source);
+    let compiler = std::env::var_os("CC").unwrap_or_else(|| "cc".into());
+    let build = std::process::Command::new(compiler)
+        .args(["-O0", "-o"])
+        .arg(&runner)
+        .arg(&c)
+        .arg("-lutil")
+        .output()
+        .unwrap();
+    assert!(
+        build.status.success(),
+        "{}",
+        String::from_utf8_lossy(&build.stderr)
+    );
+    let project = preview_scratch_snapshot(&f.project);
+    let settings = preview_scratch_snapshot(&f.user.settings);
+    let cache = preview_scratch_snapshot(&f.user.cache);
+    let search = preview_scratch_snapshot(&f.user.search_cache);
+    let output = std::process::Command::new(&runner)
+        .arg(env!("CARGO_BIN_EXE_vibe"))
+        .args([
+            "install",
+            "--offline",
+            "--path",
+            f.project.to_str().unwrap(),
+        ])
+        .current_dir(&f.project)
+        .env_clear()
+        .env("PATH", "/usr/bin:/bin")
+        .env("HOME", f.root.join("home"))
+        .env("TERM", "xterm")
+        .env("VIBE_SETTINGS", &f.user.settings)
+        .env("VIBE_REGISTRY_CACHE", &f.user.cache)
+        .env("VIBEVM_SEARCH_CACHE_DIR", &f.user.search_cache)
+        .env("VIBE_NO_DEFAULT_REGISTRY", "1")
+        .output()
+        .unwrap();
+    let transcript = String::from_utf8_lossy(&output.stdout);
+    println!(
+        "ordinary cold PTY status={} transcript={transcript}",
+        output.status
+    );
+    assert!(!output.status.success());
+    assert_ne!(
+        output.status.code(),
+        Some(131),
+        "PTY timed out instead of reaching actual refusal"
+    );
+    assert!(
+        transcript.contains("this operation does not yet evaluate common configuration"),
+        "{transcript}"
+    );
+    assert!(
+        transcript.contains("PROP-069#AUTHORED-SCOPES"),
+        "{transcript}"
+    );
+    let mut after_install = preview_scratch_snapshot(&f.project).unwrap();
+    assert_eq!(
+        after_install.remove(Path::new(".vibe")),
+        Some(super::workspace::Entry::Directory)
+    );
+    assert!(
+        matches!(after_install.remove(Path::new(".vibe/lifecycle.lock")), Some(super::workspace::Entry::File(_, bytes)) if bytes.is_empty())
+    );
+    assert_eq!(
+        Some(after_install),
+        project,
+        "only exact lease infrastructure may differ"
+    );
+    let project = preview_scratch_snapshot(&f.project);
+    println!(
+        "install refusal infrastructure delta: .vibe directory plus empty .vibe/lifecycle.lock; all other project bytes unchanged"
+    );
+    assert_eq!(preview_scratch_snapshot(&f.user.settings), settings);
+    assert_eq!(preview_scratch_snapshot(&f.user.cache), cache);
+    assert_eq!(preview_scratch_snapshot(&f.user.search_cache), search);
+    let input = f.root.join("serialized.json");
+    let answers =
+        serde_json::json!({"selections":{"extra":"disabled"},"parameters":{"verbose":false}});
+    write(&input, serde_json::to_vec(&answers).unwrap());
+    let control = preview_cli(&f, Some(&input));
+    assert!(
+        control.status.success(),
+        "{}",
+        String::from_utf8_lossy(&control.stderr)
+    );
+    let result: serde_json::Value = serde_json::from_slice(&control.stdout).unwrap();
+    let mcp = preview_mcp(
+        &f,
+        serde_json::json!({"package":coordinate(DRIVER),"input":answers}),
+    );
+    assert_eq!(mcp["result"]["structuredContent"], result);
+    assert_eq!(result["original"], answers);
+    assert_eq!(result["resolved"]["parameters"]["verbose"], false);
+    println!("separate serialized control={result}");
+    assert_eq!(preview_scratch_snapshot(&f.project), project);
+    assert_eq!(preview_scratch_snapshot(&f.user.settings), settings);
+    assert_eq!(preview_scratch_snapshot(&f.user.cache), cache);
+    assert_eq!(preview_scratch_snapshot(&f.user.search_cache), search);
+}
