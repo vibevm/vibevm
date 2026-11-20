@@ -252,3 +252,108 @@ fn qwen_windows_uses_existing_archive_copy_and_owned_bootstrap_not_shell() {
     );
     assert_eq!(selected.public_commands[0].name, "qwen");
 }
+
+#[test]
+fn opencode_and_claude_native_options_bind_actual_four_archive_layouts() {
+    for (text, platform, arch, id, digest, root, executable, command) in [
+        (
+            include_str!("../../../vibevm/vibepacks/org.vibevm.agents/opencode/v1.19.6/vibe.toml"),
+            "macos",
+            "aarch64",
+            "macos-arm64-standalone",
+            "c0be3f34dde2fdcb31b25120f303c6ed5b69b828f16e5e0fbecff21a882adda1",
+            None,
+            "$app_root/opencode",
+            "opencode",
+        ),
+        (
+            include_str!("../../../vibevm/vibepacks/org.vibevm.agents/opencode/v1.19.6/vibe.toml"),
+            "windows",
+            "x86_64",
+            "windows-x64-standalone",
+            "fa31c9ec0bac7611ab12699ef8e2fc4c173fb95ac977b09b189b255b8f559bcc",
+            None,
+            "$app_root/opencode.exe",
+            "opencode",
+        ),
+        (
+            include_str!(
+                "../../../vibevm/vibepacks/org.vibevm.agents/claude-code/v2.1.328/vibe.toml"
+            ),
+            "macos",
+            "aarch64",
+            "macos-arm64-native",
+            "df0047f7602ca25c4ad59e9ad885e818e39fa691daa8852229f8f79a7cc3afcf",
+            Some(std::path::Path::new("package")),
+            "$app_root/claude",
+            "claude",
+        ),
+        (
+            include_str!(
+                "../../../vibevm/vibepacks/org.vibevm.agents/claude-code/v2.1.328/vibe.toml"
+            ),
+            "windows",
+            "x86_64",
+            "windows-x64-native",
+            "d4ea3de7e128b751a3ecc0198e699df31d1269ffd1064f89703145b90d74a8c7",
+            Some(std::path::Path::new("package")),
+            "$app_root/claude.exe",
+            "claude",
+        ),
+    ] {
+        let manifest = Manifest::parse_str(text).unwrap();
+        assert_eq!(manifest.installer_options.len(), 3);
+        let choice = InstallChoice {
+            platform: Some(platform.into()),
+            arch: Some(arch.into()),
+            installer: None,
+        };
+        let selected = select_option(&manifest.installer_options, &choice, None).unwrap();
+        assert_eq!(selected.id, id);
+        let (source, sha256, payload_root) = match selected.installation.unwrap() {
+            InstallerMethod::Zip {
+                source,
+                sha256,
+                payload_root,
+            }
+            | InstallerMethod::TarGz {
+                source,
+                sha256,
+                payload_root,
+            } => (source, sha256, payload_root),
+            _ => panic!("expected exact supplier archive"),
+        };
+        assert!(source.starts_with(if command == "claude" {
+            "https://registry.npmjs.org/@anthropic-ai/claude-code-"
+        } else {
+            "https://github.com/anomalyco/opencode/releases/download/v1.19.6/"
+        }));
+        assert_eq!(sha256, digest);
+        assert_eq!(payload_root.as_deref(), root);
+        assert_eq!(selected.launchers[0].executable, executable);
+        assert!(selected.launchers[0].args.is_empty());
+        assert_eq!(selected.public_commands[0].name, command);
+        assert!(
+            select_option(
+                &manifest.installer_options,
+                &InstallChoice {
+                    arch: Some("riscv64".into()),
+                    ..choice.clone()
+                },
+                None
+            )
+            .is_err()
+        );
+        assert!(
+            select_option(
+                &manifest.installer_options,
+                &InstallChoice {
+                    installer: Some("linux-x64-native".into()),
+                    ..choice
+                },
+                None
+            )
+            .is_err()
+        );
+    }
+}

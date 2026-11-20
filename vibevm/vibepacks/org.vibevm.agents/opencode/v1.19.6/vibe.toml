@@ -24,3 +24,43 @@ default = true
 [[installer_options.public_commands]]
 name = "opencode"
 launcher = "main"
+
+[[installer_options]]
+id = "macos-arm64-standalone"
+name = "Official OpenCode macos aarch64 native CLI"
+platform = "macos"
+platform_name = "macOS"
+arch = "aarch64"
+[installer_options.installation]
+type = "zip"
+source = "https://github.com/anomalyco/opencode/releases/download/v1.19.6/opencode-darwin-arm64.zip"
+sha256 = "c0be3f34dde2fdcb31b25120f303c6ed5b69b828f16e5e0fbecff21a882adda1"
+[[installer_options.launchers]]
+id = "main"
+name = "OpenCode"
+executable = "$app_root/opencode"
+kind = "command"
+default = true
+[[installer_options.public_commands]]
+name = "opencode"
+launcher = "main"
+
+[[installer_options]]
+id = "windows-x64-standalone"
+name = "Official OpenCode windows x86_64 native CLI"
+platform = "windows"
+platform_name = "Windows"
+arch = "x86_64"
+[installer_options.installation]
+type = "zip"
+source = "https://github.com/anomalyco/opencode/releases/download/v1.19.6/opencode-windows-x64.zip"
+sha256 = "fa31c9ec0bac7611ab12699ef8e2fc4c173fb95ac977b09b189b255b8f559bcc"
+[[installer_options.launchers]]
+id = "main"
+name = "OpenCode"
+executable = "$app_root/opencode.exe"
+kind = "command"
+default = true
+[[installer_options.public_commands]]
+name = "opencode"
+launcher = "main"
