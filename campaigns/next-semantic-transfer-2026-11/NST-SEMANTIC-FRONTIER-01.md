@@ -281,3 +281,5 @@ Three source changes distinguish unique durable reservation, fixed internal entr
 Four historical reviews distinguish specification hashes, parsing and manifest-local collision checks, selected-world provenance, and validated planner publication. Both specification hashes in the source receipt reproduced; no extension ran during this review.
 
 Six migration source revisions distinguish pure plans, presence-aware transport, diagnostic reports and context-bound application. A seventh routing revision distinguishes checked reference coverage from acceptance of changes. No migration was executed by this historical review.
+
+Ten source revisions separate injected roots, local page validation, frame decoding, session negotiation, planner exchange and run reservation from authority to perform effects. Named paths are individually indexed; historical tests were not rerun.
