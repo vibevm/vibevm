@@ -13,6 +13,8 @@ pub enum SecretsCommand {
     List,
     /// Observe one item without reading its value.
     Details { id: String },
+    /// Observe coordinated consumer IDs only; this never authorizes removal.
+    References { id: String },
     /// Create a new opaque item; stdin bytes are preserved exactly.
     Create {
         #[arg(long)]

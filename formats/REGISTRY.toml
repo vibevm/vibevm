@@ -2293,3 +2293,12 @@ foreign_parsers = "many"
 unknown_fields = "deny"
 corpus = "none"
 sunset = "none"
+
+[format.secrets-references]
+epoch = 1
+schema = "schemas/secrets_references.schema.json"
+recoverable = false
+foreign_parsers = "many"
+unknown_fields = "deny"
+corpus = "formats/corpora/secrets-references/e1"
+sunset = "none"

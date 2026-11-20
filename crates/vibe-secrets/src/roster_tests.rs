@@ -55,6 +55,7 @@ fn incomplete_genesis_and_legacy_never_gain_empty_attestation() {
         let before = std::fs::read(secrets.join("index.toml")).unwrap();
         let index: Index = toml::from_str(std::str::from_utf8(&before).unwrap()).unwrap();
         assert_eq!(index.schema, 1);
+        assert_eq!(store.references(&id), Err(Error::RefusedUnknown));
         assert_eq!(
             store.remove_coordinated(&id, &expected(&store, &id)),
             Err(Error::RefusedUnknown)
@@ -86,6 +87,7 @@ fn unknown_participant_and_protocol_refuse_without_index_change() {
         std::fs::read(root.join("index.toml")).unwrap(),
         bytes.as_bytes()
     );
+    assert_eq!(store.references(&id), Err(Error::RefusedUnknown));
     index.reference_protocol = Some(2);
     let bytes = toml::to_string(&index).unwrap();
     project
@@ -95,6 +97,7 @@ fn unknown_participant_and_protocol_refuse_without_index_change() {
         store.remove_coordinated(&id, &exp),
         Err(Error::RefusedUnknown)
     );
+    assert!(store.references(&id).is_err());
     assert_eq!(
         std::fs::read(root.join("index.toml")).unwrap(),
         bytes.as_bytes()
@@ -198,4 +201,37 @@ fn independent_process_binding_and_delete_have_one_winner() {
     assert_ne!(deleted, bound);
     assert!(!bound || store.details(&id).is_ok());
     assert_eq!(dir.path().join("secrets/test-binding").exists(), bound);
+}
+
+#[test]
+fn references_preview_uses_coordinated_inventory_and_never_grants_removal() {
+    let dir = root();
+    let store = Store::at_settings(dir.path()).unwrap();
+    let free = store.create("api-key", "Free", value()).unwrap();
+    let used = store.create("api-key", "Used", value()).unwrap();
+    let before = std::fs::read(dir.path().join("secrets/index.toml")).unwrap();
+    assert_eq!(store.references(&free).unwrap(), Vec::<String>::new());
+    assert_eq!(
+        store.references(&SecretId::generate().unwrap()),
+        Err(Error::NotFound)
+    );
+    assert_eq!(
+        std::fs::read(dir.path().join("secrets/index.toml")).unwrap(),
+        before
+    );
+    let connection = store
+        .create_reference("ai", &used, b"synthetic metadata")
+        .unwrap();
+    let before = std::fs::read(dir.path().join("secrets/index.toml")).unwrap();
+    let consumers = store.references(&used).unwrap();
+    assert_eq!(consumers, vec![format!("ai:{}", connection.as_str())]);
+    assert_eq!(
+        store.remove_coordinated(&used, &expected(&store, &used)),
+        Err(Error::RefusedReferenced { consumers })
+    );
+    assert_eq!(
+        std::fs::read(dir.path().join("secrets/index.toml")).unwrap(),
+        before
+    );
+    assert!(store.references(&free).unwrap().is_empty());
 }

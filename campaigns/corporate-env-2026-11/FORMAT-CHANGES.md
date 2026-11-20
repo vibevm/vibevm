@@ -1,5 +1,9 @@
 # Corporate-env campaign: format and behaviour changes
 
+## CORP-FMT-063 — informational coordinated secret-reference report
+
+Implementation candidate, 2026-11-20. New `vibe secrets references ID` reads the same protected reference inventory used by logical removal, then confirms the item exists under the store lock. Successful closed report `vibe-secrets-references/1` contains only protocol/ok/stable item ID/sorted unique consumer IDs. A free existing ID returns an empty list; absent ID is not-found. Legacy/unknown protocol, unknown participant or incomplete/unavailable inventory refuses, never empty success. No secret value/digest/value path/auth metadata or authorization token is returned. The preview grants no deletion authority; remove reacquires its own guard and rechecks. Existing metadata report and storage/index epochs remain unchanged. New report schema/registry/golden fixture are separate from persistence. Ordinary lock coordination follows the existing owner; no broad no-filesystem-effects claim for malformed stores.
+
 ## CORP-FMT-062 — explicit protected file input for generic keyring CRUD
 
 Unix implementation candidate, 2026-11-20. Existing `secrets create` and `rotate` admit `--value-file PATH`, mutually exclusive with `--value-stdin`. Reuse the existing SafeFS held private reader: current-user directory0700, single-link regular file0600, no-follow, bounded same-handle read with before/after protection checks. FIFO/special/link/unsafe parent/mode/oversized/empty inputs refuse before mutation without printing contents, digest or underlying input-path diagnostics. File bytes including final newline use the same existing ProtectedValue/Store create/rotate owner; IDs remain stable across rotation. No chmod repair, arbitrary FD selector, value export, schema/index change or Windows ACL claim. Existing stdin/hidden input remains unchanged; metadata reads stay masked.

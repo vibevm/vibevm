@@ -75,6 +75,25 @@ impl ReferenceGuard for Guard {
     }
 }
 impl Store {
+    /// Read the same coordinated consumer roster used by removal. This grants
+    /// no removal authority: the mutator acquires and validates a new guard.
+    pub fn references(&self, id: &SecretId) -> Result<Vec<String>, Error> {
+        let inventory = Inventory(self);
+        let guard = inventory.acquire()?;
+        let (project, root) = self.open(false)?.ok_or(Error::NotFound)?;
+        let _lock = root
+            .private_lock("store.lock")
+            .map_err(|_| Error::Unavailable)?;
+        let index = Self::load(&project, &root)?;
+        if !index.items.contains_key(id) {
+            return Err(Error::NotFound);
+        }
+        let mut consumers = guard.consumers(id)?;
+        consumers.sort();
+        consumers.dedup();
+        Ok(consumers)
+    }
+
     /// Trusted built-in composition. Only a witnessed schema2/protocol1 empty
     /// durable roster authorizes no references; v1/unknown owners refuse.
     pub fn remove_coordinated(

@@ -1548,3 +1548,104 @@ fn setup_from_alias_reuses_preview_owner_and_never_installs_or_launches_wrapper(
     assert_eq!(fs::read(&key).unwrap(), keys);
     assert!(!f.0.path().join("applications").exists());
 }
+
+#[cfg(unix)]
+#[test]
+fn secret_references_preview_matches_removal_inventory_without_mutation() {
+    let f = F::new();
+    let secret = f.json(
+        &[
+            "secrets",
+            "create",
+            "--kind",
+            "api-key",
+            "--label",
+            "Synthetic",
+            "--value-stdin",
+        ],
+        Some(VALUE.as_bytes()),
+    );
+    let id = secret["items"][0]["id"].as_str().unwrap();
+    let before = fs::read(f.0.path().join("secrets/index.toml")).unwrap();
+    let free = f.json(&["secrets", "references", id], None);
+    assert_eq!(free["consumers"], serde_json::json!([]));
+    assert_eq!(
+        fs::read(f.0.path().join("secrets/index.toml")).unwrap(),
+        before
+    );
+    let added = f.json(
+        &[
+            "ai",
+            "connections",
+            "add",
+            "--label",
+            "Synthetic",
+            "--endpoint",
+            "http://127.0.0.1:32123/v1",
+            "--api-kind",
+            "openai-chat-completions",
+            "--default-model",
+            "synthetic",
+            "--secret-ref",
+            id,
+        ],
+        None,
+    );
+    let cid = added["items"].as_object().unwrap().keys().next().unwrap();
+    let key = f.0.path().join("secrets/index.toml");
+    let ai = f.0.path().join("secrets/ai/index.toml");
+    let before = fs::read(&key).unwrap();
+    let ai_before = fs::read(&ai).unwrap();
+    let used = f.json(&["secrets", "references", id], None);
+    assert_eq!(used["id"], id);
+    assert_eq!(used["consumers"], serde_json::json!([format!("ai:{cid}")]));
+    assert_eq!(used.as_object().unwrap().len(), 4);
+    let schema: serde_json::Value = serde_json::from_str(include_str!(
+        "../../../schemas/secrets_references.schema.json"
+    ))
+    .unwrap();
+    let validator = jsonschema::validator_for(&schema).unwrap();
+    assert!(validator.is_valid(&used));
+    let golden: serde_json::Value = serde_json::from_str(include_str!(
+        "../../../formats/corpora/secrets-references/e1/free.json"
+    ))
+    .unwrap();
+    assert!(validator.is_valid(&golden));
+    let mut invalid = used.clone();
+    invalid["value"] = serde_json::json!("not-an-admitted-field");
+    assert!(!validator.is_valid(&invalid));
+    assert_eq!(fs::read(&key).unwrap(), before);
+    assert_eq!(fs::read(&ai).unwrap(), ai_before);
+    let current = f.json(&["secrets", "details", id], None);
+    assert!(
+        !f.run(
+            &[
+                "secrets",
+                "remove",
+                id,
+                "--expect-store",
+                &current["store_revision"].to_string(),
+                "--expect-current",
+                current["items"][0]["current_revision"].as_str().unwrap(),
+                "--yes"
+            ],
+            None
+        )
+        .status
+        .success()
+    );
+    assert!(
+        !f.run(
+            &[
+                "secrets",
+                "references",
+                "00000000-0000-4000-8000-000000000000"
+            ],
+            None
+        )
+        .status
+        .success()
+    );
+    assert_eq!(fs::read(&key).unwrap(), before);
+    assert_eq!(fs::read(&ai).unwrap(), ai_before);
+}

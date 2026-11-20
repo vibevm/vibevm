@@ -234,6 +234,7 @@ pub enum FormatId {
     ScrapeTransactionJournal,
     ScrapeTransactionOwner,
     ScrapeVerificationHealthEvidence,
+    SecretsReferences,
     SlotRecord,
     SpecmapAuthority,
     StandaloneSkillReceipt,

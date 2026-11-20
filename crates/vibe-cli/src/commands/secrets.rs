@@ -116,6 +116,17 @@ fn execute(
     match command {
         SecretsCommand::List => render(ctx, store.snapshot()?, None),
         SecretsCommand::Details { id: raw } => render(ctx, store.snapshot()?, Some(&id(raw)?)),
+        SecretsCommand::References { id: raw } => {
+            let id = id(raw)?;
+            let consumers = store.references(&id)?;
+            let report = serde_json::json!({"protocol":"vibe-secrets-references/1","ok":true,"id":id.as_str(),"consumers":consumers});
+            if ctx.is_json() {
+                ctx.emit_json(&report)?;
+            } else {
+                println!("{}", serde_json::to_string_pretty(&report)?);
+            }
+            Ok(())
+        }
         SecretsCommand::Create {
             kind,
             label,
