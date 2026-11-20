@@ -13,6 +13,8 @@ pub struct ReferenceRow {
 #[serde(deny_unknown_fields)]
 pub struct ReferenceIndex {
     #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub bindings: Option<BTreeMap<String, ReferenceBinding>>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
     pub selection: Option<ReferenceSelection>,
     pub schema: u32,
     pub store_revision: u64,
@@ -25,6 +27,13 @@ pub enum ReferenceSelection {
     Selected { connection: SecretId },
 }
 
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq)]
+#[serde(tag = "mode", rename_all = "kebab-case", deny_unknown_fields)]
+pub enum ReferenceBinding {
+    InheritDefault,
+    Connection { connection: SecretId },
+}
+
 #[derive(Debug, Clone)]
 pub struct ReferenceSnapshot {
     pub index: ReferenceIndex,
@@ -34,6 +43,7 @@ pub struct ReferenceSnapshot {
 impl Default for ReferenceIndex {
     fn default() -> Self {
         Self {
+            bindings: None,
             selection: None,
             schema: 1,
             store_revision: 0,
@@ -82,10 +92,27 @@ pub(super) fn read(root: &Pinned) -> Result<ReferenceSnapshot, Error> {
     let index: ReferenceIndex =
         toml::from_str(std::str::from_utf8(&bytes).map_err(|_| Error::RefusedUnknown)?)
             .map_err(|_| Error::RefusedUnknown)?;
-    match (index.schema, &index.selection) {
-        (1, None) | (2, Some(ReferenceSelection::None)) => {}
-        (2, Some(ReferenceSelection::Selected { connection }))
+    match (index.schema, &index.selection, &index.bindings) {
+        (1, None, None) | (2, Some(ReferenceSelection::None), None) => {}
+        (2, Some(ReferenceSelection::Selected { connection }), None)
             if index.items.contains_key(connection) => {}
+        (3, Some(selection), Some(bindings)) => {
+            if let ReferenceSelection::Selected { connection } = selection
+                && !index.items.contains_key(connection)
+            {
+                return Err(Error::RefusedUnknown);
+            }
+            for (harness, binding) in bindings {
+                if !matches!(harness.as_str(), "pi" | "qwen") {
+                    return Err(Error::RefusedUnknown);
+                }
+                if let ReferenceBinding::Connection { connection } = binding
+                    && !index.items.contains_key(connection)
+                {
+                    return Err(Error::RefusedUnknown);
+                }
+            }
+        }
         _ => return Err(Error::RefusedUnknown),
     }
     let mut metadata = BTreeMap::new();
@@ -289,6 +316,9 @@ impl Store {
                 consumers: vec!["ai:default".into()],
             });
         }
+        if snapshot.index.bindings.as_ref().is_some_and(|bindings|bindings.values().any(|binding|matches!(binding, ReferenceBinding::Connection {connection} if connection==id))) {
+            return Err(Error::RefusedReferenced { consumers: vec!["ai:binding".into()] });
+        }
         snapshot.index.items.remove(id);
         snapshot.index.store_revision = snapshot
             .index
@@ -362,13 +392,108 @@ impl Store {
         if current == selected {
             return Ok(snapshot.index);
         }
-        snapshot.index.schema = 2;
+        snapshot.index.schema = snapshot.index.schema.max(2);
         snapshot.index.selection = Some(match selected {
             Some(id) => ReferenceSelection::Selected {
                 connection: id.clone(),
             },
             None => ReferenceSelection::None,
         });
+        snapshot.index.store_revision = snapshot
+            .index
+            .store_revision
+            .checked_add(1)
+            .ok_or(Error::Invalid)?;
+        let bytes = encode(&snapshot.index)?;
+        project
+            .write_atomic_in_with_mode(&dir, "index.toml", bytes.as_bytes(), Some(0o600))
+            .map_err(|_| Error::Publication)?;
+        Ok(snapshot.index)
+    }
+    /// Trusted canonical metadata binding action; absence resets only this row.
+    pub fn bind_reference(
+        &self,
+        participant: &str,
+        harness: &str,
+        binding: Option<ReferenceBinding>,
+        expected: u64,
+    ) -> Result<ReferenceIndex, Error> {
+        owner(participant)?;
+        if !matches!(
+            harness,
+            "claude" | "codex" | "opencode" | "qwen" | "hermes" | "pi"
+        ) {
+            return Err(Error::Invalid);
+        }
+        if binding.is_some() && !matches!(harness, "pi" | "qwen") {
+            return Err(Error::Invalid);
+        }
+        let Some((project, root)) = self.open(false)? else {
+            if binding.is_none() && expected == 0 {
+                return Ok(ReferenceIndex::default());
+            }
+            return Err(Error::NotFound);
+        };
+        let _inventory = root
+            .private_lock("inventory.lock")
+            .map_err(|_| Error::Unavailable)?;
+        let _lock = root
+            .private_lock("store.lock")
+            .map_err(|_| Error::Unavailable)?;
+        let store = Self::load(&project, &root)?;
+        if store.schema != 2 || store.reference_protocol != Some(1) {
+            return Err(Error::RefusedUnknown);
+        }
+        let registered = store
+            .participants
+            .as_ref()
+            .is_some_and(|p| p.iter().any(|p| p == participant));
+        if !registered {
+            if binding.is_none()
+                && expected == 0
+                && root
+                    .private_child(participant, false)
+                    .map_err(|_| Error::RefusedUnknown)?
+                    .is_none()
+            {
+                return Ok(ReferenceIndex::default());
+            }
+            return Err(Error::RefusedUnknown);
+        }
+        let dir = root
+            .private_child(participant, false)
+            .map_err(|_| Error::RefusedUnknown)?
+            .ok_or(Error::RefusedUnknown)?;
+        let mut snapshot = read(&dir)?;
+        if snapshot.index.store_revision != expected {
+            return Err(Error::Conflict);
+        }
+        if let Some(ReferenceBinding::Connection { connection }) = &binding
+            && !snapshot.index.items.contains_key(connection)
+        {
+            return Err(Error::NotFound);
+        }
+        let current = snapshot
+            .index
+            .bindings
+            .as_ref()
+            .and_then(|map| map.get(harness));
+        if current == binding.as_ref() {
+            return Ok(snapshot.index);
+        }
+        snapshot.index.schema = 3;
+        if snapshot.index.selection.is_none() {
+            snapshot.index.selection = Some(ReferenceSelection::None);
+        }
+        let map = snapshot.index.bindings.get_or_insert_with(BTreeMap::new);
+        match binding {
+            Some(value) => {
+                map.insert(harness.into(), value);
+            }
+            None => {
+                map.remove(harness);
+            }
+        }
         snapshot.index.store_revision = snapshot
             .index
             .store_revision

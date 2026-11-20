@@ -147,3 +147,110 @@ impl Store {
         Ok(selection(self.0.select_reference("ai", None, expected)?))
     }
 }
+
+/// Metadata compatibility only; never an authentication or native launch grant.
+#[derive(Debug, Clone, Serialize, PartialEq, Eq)]
+#[serde(tag = "state", rename_all = "kebab-case")]
+pub enum MetadataCapability {
+    Compatible {
+        protocol: &'static str,
+        scope: &'static str,
+        evidence: &'static str,
+    },
+    Unsupported,
+    Unknown,
+}
+pub fn metadata_capability(harness: &str) -> MetadataCapability {
+    match harness {
+        "pi" => MetadataCapability::Compatible {
+            protocol: "openai-chat-completions",
+            scope: "stored-selection-only",
+            evidence: "Pi 1.5.2 Linux proxy fixture",
+        },
+        "qwen" => MetadataCapability::Compatible {
+            protocol: "openai-chat-completions",
+            scope: "stored-selection-only",
+            evidence: "Qwen 0.27.2 Linux proxy fixture",
+        },
+        "claude" => MetadataCapability::Unsupported,
+        _ => MetadataCapability::Unknown,
+    }
+}
+#[derive(Debug, Serialize)]
+pub struct BindingObservation {
+    pub harness: String,
+    pub store_revision: u64,
+    pub mode: String,
+    pub connection: Option<SecretId>,
+    pub resolution: String,
+    pub capability: MetadataCapability,
+}
+impl Store {
+    pub fn binding(&self, harness: &str) -> Result<BindingObservation, Error> {
+        if !matches!(
+            harness,
+            "claude" | "codex" | "opencode" | "qwen" | "hermes" | "pi"
+        ) {
+            return Err(Error::Invalid);
+        }
+        let snapshot = self.0.reference_snapshot("ai")?;
+        for bytes in snapshot.metadata.values() {
+            let metadata: Metadata =
+                toml::from_str(std::str::from_utf8(bytes).map_err(|_| Error::Metadata)?)
+                    .map_err(|_| Error::Metadata)?;
+            metadata.validate()?;
+        }
+        let binding = snapshot
+            .index
+            .bindings
+            .as_ref()
+            .and_then(|map| map.get(harness));
+        let (mode, connection) = match binding {
+            None => ("native", None),
+            Some(vibe_secrets::ReferenceBinding::InheritDefault) => (
+                "inherit-default",
+                match &snapshot.index.selection {
+                    Some(vibe_secrets::ReferenceSelection::Selected { connection }) => {
+                        Some(connection.clone())
+                    }
+                    _ => None,
+                },
+            ),
+            Some(vibe_secrets::ReferenceBinding::Connection { connection }) => {
+                ("connection", Some(connection.clone()))
+            }
+        };
+        Ok(BindingObservation {
+            harness: harness.into(),
+            store_revision: snapshot.index.store_revision,
+            mode: mode.into(),
+            resolution: if mode == "native" {
+                "unmanaged"
+            } else if connection.is_some() {
+                "metadata-only"
+            } else {
+                "unavailable: select a default connection"
+            }
+            .into(),
+            connection,
+            capability: metadata_capability(harness),
+        })
+    }
+    pub fn set_binding(
+        &self,
+        harness: &str,
+        binding: Option<vibe_secrets::ReferenceBinding>,
+        expected: u64,
+    ) -> Result<BindingObservation, Error> {
+        if binding.is_some()
+            && !matches!(
+                metadata_capability(harness),
+                MetadataCapability::Compatible { .. }
+            )
+        {
+            return Err(Error::Invalid);
+        }
+        self.0.bind_reference("ai", harness, binding, expected)?;
+        self.binding(harness)
+    }
+}

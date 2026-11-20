@@ -1,7 +1,10 @@
 //! Local connection metadata only; never launches a provider or resolves a key.
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-000#TS-KEYRING-CONSUMER");
 use crate::{
-    cli::{AiArgs, AiCommand, ConnectionCommand, ConnectionDefaultCommand},
+    cli::{
+        AiArgs, AiBindingCommand, AiBindingMode, AiCommand, ConnectionCommand,
+        ConnectionDefaultCommand,
+    },
     output,
 };
 use anyhow::{Result, bail};
@@ -13,7 +16,52 @@ fn parse_id(raw: String) -> Result<SecretId> {
 pub fn run(ctx: &output::Context, args: AiArgs, cancel: &CancellationToken) -> Result<()> {
     let settings = super::secrets::admitted_settings()?;
     let store = vibe_connections::Store::at_settings(&settings)?;
-    let AiCommand::Connections { command } = args.command;
+    let command = match args.command {
+        AiCommand::Connections { command } => command,
+        AiCommand::Bindings { command } => {
+            let (name, action) = match command {
+                AiBindingCommand::Show { harness } => (harness, None),
+                AiBindingCommand::Set {
+                    harness,
+                    mode,
+                    connection,
+                    expect_store,
+                } => (harness, Some((mode, connection, expect_store))),
+            };
+            // Existing user alias resolution owns identity/executable separation;
+            // no launcher is executed or credential config inspected.
+            let settings_root = vibe_app::SettingsRoot::new(&settings);
+            let config = vibe_app::AgentsConfig::load(&settings_root)?;
+            let launcher = super::agent::launchers::resolve(&settings_root, &config, &name)?;
+            let harness = launcher.kind.as_str();
+            cancel.checkpoint()?;
+            let result = if let Some((mode, connection, expected)) = action {
+                let binding = match (mode, connection) {
+                    (AiBindingMode::Native, None) => None,
+                    (AiBindingMode::InheritDefault, None) => {
+                        Some(vibe_secrets::ReferenceBinding::InheritDefault)
+                    }
+                    (AiBindingMode::Connection, Some(id)) => {
+                        Some(vibe_secrets::ReferenceBinding::Connection {
+                            connection: parse_id(id)?,
+                        })
+                    }
+                    _ => bail!("binding mode requires exactly its applicable connection argument"),
+                };
+                store.set_binding(harness, binding, expected)?
+            } else {
+                store.binding(harness)?
+            };
+            let report =
+                serde_json::json!({"protocol":"vibe-ai-binding/1","ok":true,"binding":result});
+            if ctx.is_json() {
+                ctx.emit_json(&report)?;
+            } else {
+                println!("{}", serde_json::to_string_pretty(&report)?);
+            }
+            return Ok(());
+        }
+    };
     cancel.checkpoint()?;
     let selected = match command {
         ConnectionCommand::Default { command } => {

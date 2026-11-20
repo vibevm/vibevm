@@ -7,6 +7,10 @@ pub struct AiArgs {
 }
 #[derive(Debug, clap::Subcommand)]
 pub enum AiCommand {
+    Bindings {
+        #[command(subcommand)]
+        command: AiBindingCommand,
+    },
     Connections {
         #[command(subcommand)]
         command: ConnectionCommand,
@@ -60,4 +64,26 @@ pub enum ConnectionDefaultCommand {
         #[arg(long)]
         yes: bool,
     },
+}
+
+#[derive(Debug, clap::Subcommand)]
+pub enum AiBindingCommand {
+    Show {
+        harness: String,
+    },
+    Set {
+        harness: String,
+        #[arg(long, value_enum)]
+        mode: AiBindingMode,
+        #[arg(long)]
+        connection: Option<String>,
+        #[arg(long)]
+        expect_store: u64,
+    },
+}
+#[derive(Debug, Clone, Copy, clap::ValueEnum)]
+pub enum AiBindingMode {
+    Native,
+    InheritDefault,
+    Connection,
 }

@@ -626,7 +626,7 @@ fn v2_missing_unknown_or_dangling_selection_refuses_without_rewrite() {
 
 #[cfg(unix)]
 #[test]
-fn per_agent_binding_has_no_public_route_and_default_does_not_fabricate_modes() {
+fn default_selection_does_not_fabricate_per_agent_modes() {
     let f = F::new();
     let secret = f.json(
         &[
@@ -678,9 +678,9 @@ fn per_agent_binding_has_no_public_route_and_default_does_not_fabricate_modes() 
     let parsed: toml::Value = toml::from_str(std::str::from_utf8(&ai).unwrap()).unwrap();
     assert!(parsed.get("agents").is_none());
     assert!(parsed.get("bindings").is_none());
-    let result = f.run(&["ai", "connections", "bindings", "show", "pi"], None);
-    assert_eq!(result.status.code(), Some(2));
-    assert!(String::from_utf8_lossy(&result.stderr).contains("unrecognized subcommand"));
+    let result = f.json(&["ai", "bindings", "show", "pi"], None);
+    assert_eq!(result["binding"]["mode"], "native");
+    assert_eq!(result["binding"]["resolution"], "unmanaged");
     assert_eq!(
         fs::read(f.0.path().join("secrets/ai/index.toml")).unwrap(),
         ai
@@ -690,4 +690,408 @@ fn per_agent_binding_has_no_public_route_and_default_does_not_fabricate_modes() 
         key
     );
     assert!(!f.0.path().join("agents.toml").exists());
+}
+
+#[cfg(unix)]
+#[test]
+fn canonical_binding_modes_resolve_inheritance_explicit_and_native_without_launch() {
+    let f = F::new();
+    assert_eq!(
+        f.json(&["ai", "bindings", "show", "pi"], None)["binding"]["mode"],
+        "native"
+    );
+    assert!(!f.0.path().join("secrets").exists());
+    let secret = f.json(
+        &[
+            "secrets",
+            "create",
+            "--kind",
+            "api-key",
+            "--label",
+            "Synthetic",
+            "--value-stdin",
+        ],
+        Some(VALUE.as_bytes()),
+    );
+    let id = secret["items"][0]["id"].as_str().unwrap();
+    let add = |label: &str| {
+        f.json(
+            &[
+                "ai",
+                "connections",
+                "add",
+                "--label",
+                label,
+                "--endpoint",
+                "http://127.0.0.1:32123/v1",
+                "--api-kind",
+                "openai-chat-completions",
+                "--default-model",
+                "synthetic",
+                "--secret-ref",
+                id,
+            ],
+            None,
+        )
+    };
+    let a = add("A");
+    let aid = a["items"]
+        .as_object()
+        .unwrap()
+        .keys()
+        .next()
+        .unwrap()
+        .clone();
+    let b = add("B");
+    let bid = b["items"]
+        .as_object()
+        .unwrap()
+        .keys()
+        .next()
+        .unwrap()
+        .clone();
+    let brev = b["items"][&bid]["current_revision"].as_str().unwrap();
+    let version = b["store_revision"].as_u64().unwrap().to_string();
+    let inherited = f.json(
+        &[
+            "ai",
+            "bindings",
+            "set",
+            "pi",
+            "--mode",
+            "inherit-default",
+            "--expect-store",
+            &version,
+        ],
+        None,
+    );
+    assert!(inherited["binding"]["connection"].is_null());
+    assert!(
+        inherited["binding"]["resolution"]
+            .as_str()
+            .unwrap()
+            .starts_with("unavailable")
+    );
+    let version = inherited["binding"]["store_revision"]
+        .as_u64()
+        .unwrap()
+        .to_string();
+    let selected = f.json(
+        &[
+            "ai",
+            "connections",
+            "default",
+            "set",
+            &aid,
+            "--expect-store",
+            &version,
+        ],
+        None,
+    );
+    let version = selected["store_revision"].as_u64().unwrap().to_string();
+    assert_eq!(
+        f.json(&["ai", "bindings", "show", "pi"], None)["binding"]["connection"],
+        aid
+    );
+    let explicit = f.json(
+        &[
+            "ai",
+            "bindings",
+            "set",
+            "qwen",
+            "--mode",
+            "connection",
+            "--connection",
+            &bid,
+            "--expect-store",
+            &version,
+        ],
+        None,
+    );
+    let version = explicit["binding"]["store_revision"]
+        .as_u64()
+        .unwrap()
+        .to_string();
+    let selected = f.json(
+        &[
+            "ai",
+            "connections",
+            "default",
+            "set",
+            &bid,
+            "--expect-store",
+            &version,
+        ],
+        None,
+    );
+    let version = selected["store_revision"].as_u64().unwrap().to_string();
+    assert_eq!(
+        f.json(&["ai", "bindings", "show", "pi"], None)["binding"]["connection"],
+        bid
+    );
+    assert_eq!(
+        f.json(&["ai", "bindings", "show", "qwen"], None)["binding"]["connection"],
+        bid
+    );
+    let cleared = f.json(
+        &[
+            "ai",
+            "connections",
+            "default",
+            "clear",
+            "--expect-store",
+            &version,
+            "--yes",
+        ],
+        None,
+    );
+    let version = cleared["store_revision"].as_u64().unwrap().to_string();
+    assert!(f.json(&["ai", "bindings", "show", "pi"], None)["binding"]["connection"].is_null());
+    assert_eq!(
+        f.json(&["ai", "bindings", "show", "qwen"], None)["binding"]["connection"],
+        bid
+    );
+    let path = f.0.path().join("secrets/ai/index.toml");
+    let before = fs::read(&path).unwrap();
+    assert!(
+        !f.run(
+            &[
+                "ai",
+                "connections",
+                "remove",
+                &bid,
+                "--expect-store",
+                &version,
+                "--expect-current",
+                brev,
+                "--yes"
+            ],
+            None
+        )
+        .status
+        .success()
+    );
+    assert_eq!(fs::read(&path).unwrap(), before);
+    assert!(
+        !f.run(
+            &[
+                "ai",
+                "bindings",
+                "set",
+                "claude",
+                "--mode",
+                "inherit-default",
+                "--expect-store",
+                &version
+            ],
+            None
+        )
+        .status
+        .success()
+    );
+    assert_eq!(fs::read(&path).unwrap(), before);
+    assert!(
+        !f.run(
+            &[
+                "ai",
+                "bindings",
+                "set",
+                "pi",
+                "--mode",
+                "native",
+                "--expect-store",
+                "0"
+            ],
+            None
+        )
+        .status
+        .success()
+    );
+    assert_eq!(fs::read(&path).unwrap(), before);
+    fs::write(
+        f.0.path().join("agents.toml"),
+        "[launchers.helper]\nkind='qwen'\ncommand=['never-executed']\n",
+    )
+    .unwrap();
+    assert_eq!(
+        f.json(&["ai", "bindings", "show", "helper"], None)["binding"]["harness"],
+        "qwen"
+    );
+    let native = f.json(
+        &[
+            "ai",
+            "bindings",
+            "set",
+            "helper",
+            "--mode",
+            "native",
+            "--expect-store",
+            &version,
+        ],
+        None,
+    );
+    assert_eq!(native["binding"]["mode"], "native");
+    assert_eq!(
+        f.json(&["ai", "bindings", "show", "pi"], None)["binding"]["mode"],
+        "inherit-default"
+    );
+}
+
+#[cfg(unix)]
+#[test]
+fn malformed_binding_maps_and_unknown_managed_identities_fail_closed() {
+    let f = F::new();
+    let native = f.json(
+        &[
+            "ai",
+            "bindings",
+            "set",
+            "claude",
+            "--mode",
+            "native",
+            "--expect-store",
+            "0",
+        ],
+        None,
+    );
+    assert_eq!(native["binding"]["mode"], "native");
+    assert!(!f.0.path().join("secrets").exists());
+    let secret = f.json(
+        &[
+            "secrets",
+            "create",
+            "--kind",
+            "api-key",
+            "--label",
+            "Synthetic",
+            "--value-stdin",
+        ],
+        Some(VALUE.as_bytes()),
+    );
+    let id = secret["items"][0]["id"].as_str().unwrap();
+    let a = f.json(
+        &[
+            "ai",
+            "connections",
+            "add",
+            "--label",
+            "Synthetic",
+            "--endpoint",
+            "http://127.0.0.1:32123/v1",
+            "--api-kind",
+            "openai-chat-completions",
+            "--default-model",
+            "synthetic",
+            "--secret-ref",
+            id,
+        ],
+        None,
+    );
+    let (cid, _) = a["items"].as_object().unwrap().iter().next().unwrap();
+    let version = a["store_revision"].as_u64().unwrap().to_string();
+    let selected = f.json(
+        &[
+            "ai",
+            "bindings",
+            "set",
+            "pi",
+            "--mode",
+            "connection",
+            "--connection",
+            cid,
+            "--expect-store",
+            &version,
+        ],
+        None,
+    );
+    let version = selected["binding"]["store_revision"]
+        .as_u64()
+        .unwrap()
+        .to_string();
+    let path = f.0.path().join("secrets/ai/index.toml");
+    let original = fs::read_to_string(&path).unwrap();
+    assert_eq!(
+        f.json(
+            &[
+                "ai",
+                "bindings",
+                "set",
+                "pi",
+                "--mode",
+                "connection",
+                "--connection",
+                cid,
+                "--expect-store",
+                &version
+            ],
+            None
+        ),
+        selected
+    );
+    assert_eq!(fs::read_to_string(&path).unwrap(), original);
+    for harness in ["codex", "opencode", "hermes", "claude", "not-a-harness"] {
+        assert!(
+            !f.run(
+                &[
+                    "ai",
+                    "bindings",
+                    "set",
+                    harness,
+                    "--mode",
+                    "inherit-default",
+                    "--expect-store",
+                    &version
+                ],
+                None
+            )
+            .status
+            .success()
+        );
+        assert_eq!(fs::read_to_string(&path).unwrap(), original);
+    }
+    for mode in [0, 1, 2, 3] {
+        let mut index: toml::Value = toml::from_str(&original).unwrap();
+        if mode == 0 {
+            index.as_table_mut().unwrap().remove("bindings");
+        }
+        if mode == 1 {
+            index["bindings"]["pi"]["mode"] = toml::Value::String("future".into());
+        }
+        if mode == 2 {
+            index["bindings"]["pi"]["connection"] =
+                toml::Value::String("11111111-1111-4111-8111-111111111111".into());
+        }
+        if mode == 3 {
+            let row = index["bindings"]["pi"].clone();
+            index["bindings"]
+                .as_table_mut()
+                .unwrap()
+                .insert("unknown".into(), row);
+        }
+        let bytes = toml::to_string(&index).unwrap();
+        fs::write(&path, &bytes).unwrap();
+        assert!(
+            !f.run(&["ai", "bindings", "show", "pi"], None)
+                .status
+                .success()
+        );
+        assert!(
+            !f.run(
+                &[
+                    "ai",
+                    "bindings",
+                    "set",
+                    "pi",
+                    "--mode",
+                    "native",
+                    "--expect-store",
+                    &version
+                ],
+                None
+            )
+            .status
+            .success()
+        );
+        assert_eq!(fs::read(&path).unwrap(), bytes.as_bytes());
+    }
 }

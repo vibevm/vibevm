@@ -1,0 +1,17 @@
+# Canonical per-harness connection metadata — candidate
+
+Baseline accepted default selection `afa25ba2a`, negative qualification `c1954c24e`; implementation decisions integrated `16748252c` and `53de642eb` source equivalent. FMT-054 records schema compatibility before activation. No native agent execution, authentication or network.
+
+Canonical identities come from existing HarnessKind and user aliases resolve through the existing launcher registry; alias names never persist as binding keys or replace executable overrides. Stored metadata-only admission is separately typed: Pi1.5.2 and Qwen0.27.2 Linux scoped Chat Completions fixtures permit stored-selection-only compatibility. Claude is unsupported in this adapter; Codex/OpenCode/Hermes remain unknown for this exact capability. Native is available to all canonical identities. This matrix does not claim native authentication delivery or general OpenAI compatibility.
+
+Existing AI index remains the one atomic owner. First actual nonnative binding writes schema3 with mandatory bindings map and explicit selection; prior schema1/2 behavior survives until transition. Absence is native. Strict inherited-default and explicit-connection rows use canonical identities and live IDs. Missing/unknown/dangling records refuse; native reset removes only its row and retains schema3 with an empty map. Inventory/store lock and expected revision rules remain unchanged. Selected or explicitly bound connection removal refuses, never reassigns. No raw secrets, command paths or native credential config enter rows.
+
+Public `ai bindings show|set` renders mode separately from effective metadata resolution. A missing inherited default is unavailable, not ambient fallback. Changing default affects only inherited resolution; explicit remains on its connection ID. Show does not initialize storage. Native reset of an absent row is a no-op even for schema1/2. This adapter only observes local metadata and does not alter agent launch behavior.
+
+## Evidence
+
+Private root `/data/git/vibevm-keyring-storage-20261120T0100Z`. Exact pre-change8441134eb79cc5373e205b2c0c4f6fe517303d444ba68f5dec1fdf666a7f49d1 binary retained before rebuilding. `binding-compat-r1.log` proves unknown map/schema3 list/default-set refusal unchanged with restored control. `binding-emitted-compat-r2.log` uses actual new emitted schema3: old list/default-set/connection-remove exit1 preserve both indexes; native reset retains schema3 explicit empty map.
+
+`harness-metadata-tests-r2.log`7 PASS covers existing connection controls plus real separate-process Pi inheritance, Qwen explicit ID, no-default unavailable, default switches/clear, native reset, stale revision, bound removal, unsupported managed Claude, and alias collapse with a never-executed wrapper. Added final controls test missing map, unknown mode/identity, dangling connection, unknown-managed capability refusal, absent-native no-op and identical-selection byte preservation. Final logs/manifests bind those controls and strict lint before acceptance.
+
+Qualification's missing-route receipt remains historical; only its current test oracle changes for the newly implemented surface. No capability is inferred from executable names or package installation. Windows ACL, native environment delivery, provider/model requests, setup wizard, distribution and NST closure remain outside this atom. Final independent exact-source acceptance is required before commit.
