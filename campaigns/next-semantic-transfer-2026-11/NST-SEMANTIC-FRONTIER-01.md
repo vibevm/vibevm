@@ -297,3 +297,5 @@ Twenty-six release and package-Git changes were reviewed at named paths: bounded
 Nineteen bounded source reviews distinguish declared or retained evidence from dispatched work, including populated-link store proofs, per-profile approval, and the reused-main no-effect route. There was no remote publication.
 
 Thirty-five historical dispositions cover direct and populated Git tests, tool dependencies, fixed-owner observation/control and machine surface composition. Their individually named evidence distinguishes source, fixture and runtime; no current operation was accepted by this historical pass.
+
+The final 35 inventory-only rows received bounded source dispositions covering fixed Cargo/package/Deploy/Install owners and boot observation. At this boundary all 1056 original revisions have named evidence; none is classified by inventory alone. This does not certify unreviewed paths, semantic transfer, product behavior, native windows testing, or NST exit.
