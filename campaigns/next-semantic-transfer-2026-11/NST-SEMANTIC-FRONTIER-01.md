@@ -245,3 +245,5 @@ Five historical ownership, planning and prerequisite records were checked. The s
 At `e73b73881d`, the entity inventory grows to 35 model identities without admitting a model. At `cc4e68b583`, retiring the staging law preserves the publication hold: both referenced PROP file hashes match the named acceptance revision `df5f7af9a`. Neither record proves target execution.
 
 Two generated declarations were reviewed: the Zap bridge selects a branch and installer, not an installed binary; the migration request rejects unknown fields, but its integer type does not enforce epoch one. Neither projection was treated as an executed operation.
+
+Four historical changes distinguish fixture failure from helper failure, a typed answer from effect authority, current-source collection from source-less Gitlink proof, and reuse of Ready from unconditional trust in a stored marker. Only the named evidence was reviewed; no Git publication or test rerun is implied.
