@@ -1,0 +1,5 @@
+# Observe failure at submitted lock publication
+
+Use one disposable isolated synthetic project with explicit ordinary answers and consent. Discriminate successful control from a failure at the existing record_lock -> proof.encode -> files.lock.publish point, not preview, solve, metadata preparation or a later provenance write. Verify evidence that this precise point was reached and that the fault was absent in the matched control. No production fault switch, permission expansion or external runner. Prefer an existing deterministic test seam or test-only in-crate injection if an OS fault cannot isolate publication safely. Explicitly distinguish an injected failure at entry from an actual failed filesystem operation.
+
+Compare the actual lock, root manifest, slots, boot, provenance, lifecycle report and hook effects before and after. Do not claim external side effects rolled back; distinguish framework-owned rollback from an already executed synthetic hook. If actual partial state remains, retain evidence and assign its first owner rather than weakening the oracle. No parent promotion.
