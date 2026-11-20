@@ -18,6 +18,8 @@ pub struct ShowArgs {
 
 #[derive(Debug, Subcommand)]
 pub enum ShowSubcommand {
+    /// Read selected public package data from admitted retained configuration.
+    ConfigurationData(ShowFeaturesArgs),
     /// Print the effective spec — every boot-lane file plus every
     /// installed package's `files_written`, concatenated with
     /// `spec://` provenance headers in stable order.

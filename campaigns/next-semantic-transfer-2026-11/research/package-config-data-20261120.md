@@ -1,0 +1,15 @@
+# Selected public package configuration data — candidate
+
+Baseline matrix `cb0c9651a`, finite packet `14cffadc7`. Exact previous refusal retained in nine-kind qualification. FMT-078 records read-only public wire/compatibility before activation; no additional state field/store.
+
+`PackageConfiguration::evaluate_parts` now admits selected ConfigValue only when it names a declared authored config_values entry. No parameters, secrets, environment/path expansion, subskill or forwarding are activated. The new selected_data(actual locked kind) method re-evaluates the retained definition/declarations/original consumers and requires exact record equality before deriving selected public typed values. There is no effective-value serialization duplicate; false remains false, and unselected data is absent.
+
+Existing Show owner gains only `show configuration-data --path PROJECT --json`: protocol vibe-package-configuration-data/1 with deterministic package/version/values rows. Every configured record appears even with an empty map. Show config retains its unrelated project/env semantics. The command reads one admitted lock snapshot, uses workspace discovery only to detect missing/changed consumer history, and never replans against live package sources or writes lock/slots. Missing lock/history or corrupt retained records refuse rather than infer current meaning. This is public authored data, not a raw-secret output channel.
+
+## Evidence boundary
+
+Private root `/data/git/vibevm-keyring-storage-20261120T0100Z`. `config-data-test-r2.log` focused PASS establishes selected false vs empty map, unchanged unrelated optional dependency selection/hook behavior, fresh-process byte-identical inspection and no lock/slot rewrite. Changing only live source presentation label does not replace retained data. Clearing retained configuration produces refusal. The test supplies exact old CLI bf5621a1243e7274eb310df0142dff9ee0f3488bdefb99f335c028373492c3f5 and checks old show-features reader refuses selected ConfigValue without rewrite.
+
+Old reader refusal is not old writer proof: final r3 fixture separately invokes that pre-change public install writer against the newly produced lock and compares lock bytes, slot manifest and hook counts on refusal. Unknown keys and duplicate incompatible authored values are separate fresh-public-install negatives. `config-data-full-r3.log`22 PASS includes those actual old reader/install-writer refusals with byte-identical lock/slot and unchanged hook log, plus existing explicit/default/update/proposal controls. Core lib/tests and CLI bin/fixture strict lint, formatting and diff checks passed. The private candidate manifest binds exact new/old binaries and source; no minimum-epoch compatibility conclusion is inferred merely from parsing source.
+
+Old explicit/default/update/proposal controls remain in the same fixture. This increment does not deliver arbitrary config-file writes, merged parameter values, forwarding/subskill consumers, doc/remap install behavior, broad per-kind runtime or NST completion. No providers, publication, foreign data or real user settings were accessed. AR/IDE unchanged.

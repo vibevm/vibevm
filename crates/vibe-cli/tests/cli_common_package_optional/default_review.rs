@@ -542,42 +542,140 @@ fn review_candidate_drift_and_membership_change_cannot_reuse_authority() {
 }
 
 #[test]
-fn selected_config_value_is_admitted_data_but_public_package_effect_route_refuses_before_install() {
-    let fixture = Fixture::new(false);
-    let path = fixture
-        .registry
-        .join(GROUP)
-        .join(DRIVER)
-        .join("v1.0.0/vibe.toml");
-    let text=fs::read_to_string(&path).unwrap().replace("id = \"disabled\"\nname = \"No extra\"","id = \"disabled\"\nname = \"No extra\"\neffects = [{ kind = \"config-value\", name = \"verbose\" }]");
-    let text = text + "\n[configuration.config_values]\nverbose = true\n";
-    let parsed = Manifest::parse_str(&text).unwrap();
-    assert!(
-        parsed
-            .configuration
-            .as_ref()
-            .unwrap()
-            .config_values
-            .contains_key("verbose")
-    );
-    write(&path, text);
-    let authored = fs::read(fixture.project.join("vibe.toml")).unwrap();
-    let output = fixture.install();
-    let diagnostic = format!(
-        "{}{}",
-        String::from_utf8_lossy(&output.stdout),
-        String::from_utf8_lossy(&output.stderr)
-    );
-    assert!(!output.status.success(), "{diagnostic}");
-    assert!(
-        diagnostic.contains("config-value inspection/replay consumer is not connected"),
-        "{diagnostic}"
-    );
-    assert_eq!(
-        fs::read(fixture.project.join("vibe.toml")).unwrap(),
-        authored
-    );
-    assert!(!fixture.project.join("vibe.lock").exists());
-    assert!(!fixture.slot(DRIVER).exists());
-    assert!(!fixture.project.join("effects.log").exists());
+fn selected_config_data_false_is_distinct_from_absent_and_cold_inspection_is_read_only() {
+    for enabled in [false, true] {
+        let fixture = Fixture::new(enabled);
+        let path = fixture
+            .registry
+            .join(GROUP)
+            .join(DRIVER)
+            .join("v1.0.0/vibe.toml");
+        let text = fs::read_to_string(&path).unwrap().replace("id = \"disabled\"\nname = \"No extra\"", "id = \"disabled\"\nname = \"No extra\"\neffects = [{ kind = \"config-value\", name = \"verbose\" }]");
+        let text = text + "\n[configuration.config_values]\nverbose = false\n";
+        Manifest::parse_str(&text).unwrap();
+        write(&path, text);
+        fixture.install_ok();
+        let before = fs::read(fixture.project.join("vibe.lock")).unwrap();
+        let slot = fs::read(fixture.slot(DRIVER).join("vibe.toml")).unwrap();
+        let hooks = fixture.hooks();
+        let inspect = || {
+            fixture
+                .user
+                .vibe()
+                .current_dir(&fixture.project)
+                .args([
+                    "show",
+                    "configuration-data",
+                    "--path",
+                    fixture.project.to_str().unwrap(),
+                    "--json",
+                ])
+                .output()
+                .unwrap()
+        };
+        let output = inspect();
+        assert!(
+            output.status.success(),
+            "{}",
+            String::from_utf8_lossy(&output.stderr)
+        );
+        let report: serde_json::Value = serde_json::from_slice(&output.stdout).unwrap();
+        assert_eq!(report["protocol"], "vibe-package-configuration-data/1");
+        let values = &report["packages"][0]["values"];
+        if enabled {
+            assert_eq!(values, &serde_json::json!({}));
+        } else {
+            assert_eq!(values["verbose"], false);
+        }
+        assert_eq!(fixture.slot(EXTRA).exists(), enabled);
+        // Presentation-only live source edits must not replace historical data.
+        write(
+            &path,
+            fs::read_to_string(&path)
+                .unwrap()
+                .replace("No extra", "Renamed presentation only"),
+        );
+        let cold = inspect();
+        assert!(cold.status.success());
+        assert_eq!(cold.stdout, output.stdout);
+        assert_eq!(fs::read(fixture.project.join("vibe.lock")).unwrap(), before);
+        assert_eq!(
+            fs::read(fixture.slot(DRIVER).join("vibe.toml")).unwrap(),
+            slot
+        );
+        assert_eq!(fixture.hooks(), hooks);
+        if let Some(old) = std::env::var_os("NST_CONFIG_DATA_OLD_CLI") {
+            let result = std::process::Command::new(&old)
+                .env_clear()
+                .env("HOME", fixture.root.join("home"))
+                .env("VIBE_SETTINGS", &fixture.user.settings)
+                .env("PATH", "/usr/bin:/bin")
+                .args([
+                    "show",
+                    "features",
+                    "--path",
+                    fixture.project.to_str().unwrap(),
+                    "--json",
+                ])
+                .output()
+                .unwrap();
+            if !enabled {
+                assert!(!result.status.success());
+                assert_eq!(fs::read(fixture.project.join("vibe.lock")).unwrap(), before);
+                let writer = std::process::Command::new(&old)
+                    .env_clear()
+                    .env("HOME", fixture.root.join("home"))
+                    .env("VIBE_SETTINGS", &fixture.user.settings)
+                    .env("PATH", "/usr/bin:/bin")
+                    .args([
+                        "install",
+                        "--path",
+                        fixture.project.to_str().unwrap(),
+                        "--offline",
+                        "--assume-yes",
+                        "--json",
+                    ])
+                    .output()
+                    .unwrap();
+                assert!(!writer.status.success());
+                assert_eq!(fs::read(fixture.project.join("vibe.lock")).unwrap(), before);
+                assert_eq!(
+                    fs::read(fixture.slot(DRIVER).join("vibe.toml")).unwrap(),
+                    slot
+                );
+                assert_eq!(fixture.hooks(), hooks);
+            }
+        }
+        // Missing retained record must never be derived from the live manifest.
+        let mut lock = fixture.lock();
+        lock.configurations.clear();
+        write(
+            &fixture.project.join("vibe.lock"),
+            toml::to_string(&lock).unwrap(),
+        );
+        let missing = inspect();
+        assert!(!missing.status.success());
+    }
+}
+
+#[test]
+fn config_data_unknown_and_duplicate_keys_refuse_before_publication() {
+    for unknown in [false, true] {
+        let f = Fixture::new(false);
+        let path = f.registry.join(GROUP).join(DRIVER).join("v1.0.0/vibe.toml");
+        let text=fs::read_to_string(&path).unwrap().replace("id = \"disabled\"\nname = \"No extra\"","id = \"disabled\"\nname = \"No extra\"\neffects = [{ kind = \"config-value\", name = \"verbose\" }]");
+        let text = if unknown {
+            text + "\n[configuration.config_values]\nother = true\n"
+        } else {
+            text + "\n[configuration.config_values]\nverbose = true\nverbose = false\n"
+        };
+        write(&path, text);
+        let authored = fs::read(f.project.join("vibe.toml")).unwrap();
+        let out = f.install();
+        assert!(!out.status.success());
+        assert_eq!(fs::read(f.project.join("vibe.toml")).unwrap(), authored);
+        assert!(!f.project.join("vibe.lock").exists());
+        assert!(!f.slot(DRIVER).exists());
+        assert!(!f.project.join("effects.log").exists());
+    }
 }

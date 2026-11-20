@@ -272,10 +272,10 @@ impl PackageConfiguration {
                     ConfigurationEffect::Subskill { .. } => {
                         return Err(unsupported("selected subskill loading is not connected"));
                     }
-                    ConfigurationEffect::ConfigValue { .. } => {
-                        return Err(unsupported(
-                            "selected package config-value inspection/replay consumer is not connected",
-                        ));
+                    ConfigurationEffect::ConfigValue { name } => {
+                        if !definition.config_values.contains_key(name) {
+                            return Err(invalid("selected config value is not declared".into()));
+                        }
                     }
                 }
             }
@@ -318,6 +318,44 @@ impl PackageConfiguration {
             active_dependencies: active.into_iter().collect(),
             dependency_causes: causes,
         })
+    }
+
+    /// Derive selected public authored data from an admitted historical record.
+    /// No parameter, path, environment or secret input is expanded.
+    pub fn selected_data(
+        &self,
+        kind: crate::PackageKind,
+    ) -> Result<BTreeMap<String, crate::manifest::ParameterValue>, PackageConfigurationError> {
+        let evaluated = Self::evaluate_parts(
+            "retained package".into(),
+            kind,
+            &self.definition,
+            &self.declarations,
+            &self.consumers,
+        )?;
+        if &evaluated != self {
+            return Err(PackageConfigurationError::ReplayMismatch {
+                package: "retained package".into(),
+            });
+        }
+        let mut values = BTreeMap::new();
+        for feature in &self.definition.features {
+            if !self.features.contains(&feature.id) {
+                continue;
+            }
+            for effect in &feature.effects {
+                if let ConfigurationEffect::ConfigValue { name } = effect {
+                    let value = self.definition.config_values.get(name).ok_or_else(|| {
+                        PackageConfigurationError::Invalid {
+                            package: "retained package".into(),
+                            reason: "unknown config data key".into(),
+                        }
+                    })?;
+                    values.insert(name.clone(), value.clone());
+                }
+            }
+        }
+        Ok(values)
     }
 
     /// Validate durable derived fields against the retained original request and
