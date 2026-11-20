@@ -9634,3 +9634,120 @@ fn integrated_forward_subskill_and_config_data_share_one_actual_selection() {
         );
     }
 }
+
+#[test]
+fn actual_dependency_conflict_backtracks_without_default_or_effect_leakage() {
+    const SHARED: &str = "oracle-shared-conflict";
+    const NEW_EFFECT: &str = "oracle-new-candidate-effect";
+    for conflict in [true, false] {
+        let f = Fixture::new(false);
+        leaf(&f.registry, SHARED, "SHARED_ONE_MARKER");
+        leaf(&f.registry, NEW_EFFECT, "REJECTED_NEW_EFFECT_MARKER");
+        let shared2 = f.registry.join(GROUP).join(SHARED).join("v2.0.0");
+        let shared1 = f.registry.join(GROUP).join(SHARED).join("v1.0.0");
+        write(
+            &shared2.join("vibe.toml"),
+            fs::read_to_string(shared1.join("vibe.toml"))
+                .unwrap()
+                .replace("version='1.0.0'", "version='2.0.0'"),
+        );
+        write(&shared2.join("boot/rules.md"), "SHARED_TWO_MARKER\n");
+        write(&shared2.join("payload.txt"), "SHARED_TWO_BYTES\n");
+        write(
+            &shared2.join("hooks/record.sh"),
+            format!("set -eu\nprintf '%s\\n' '{SHARED}' >> \"$VIBE_PROJECT_ROOT/effects.log\"\n"),
+        );
+        for (version, shared, selected, marker) in [
+            ("1.0.0", "=1.0.0", "old", "EARLY_SELECTED_MARKER"),
+            ("1.1.0", "=2.0.0", "new", "NEW_CANDIDATE_MARKER"),
+        ] {
+            let source = f
+                .registry
+                .join(GROUP)
+                .join(DRIVER)
+                .join(format!("v{version}"));
+            let text = package_header(DRIVER)
+                .replace("version='1.0.0'", &format!("version='{version}'"))
+                + &format!(
+                    "\n[requires.packages]\n'{GROUP}/{SHARED}'='{shared}'\n'{GROUP}/{EXTRA}'={{version='=1.0.0',optional=true}}\n'{GROUP}/{NEW_EFFECT}'={{version='=1.0.0',optional=true}}\n[[configuration.features]]\nid='old'\nname='Earlier default'\neffects=[{{kind='dependency',target='{GROUP}/{EXTRA}'}}]\n[[configuration.features]]\nid='new'\nname='New default'\neffects=[{{kind='dependency',target='{GROUP}/{NEW_EFFECT}'}}]\n[[configuration.groups]]\nmode='choice'\nid='mode'\nname='Selected default'\ncardinality='exactly-one'\nmembers=['old','new']\ndefaults=['{selected}']\n"
+                );
+            write(&source.join("vibe.toml"), text);
+            write(&source.join("boot/rules.md"), format!("{marker}\n"));
+            write(&source.join("payload.txt"), format!("DRIVER_{version}\n"));
+        }
+        let root_shared = if conflict { "=1.0.0" } else { "=2.0.0" };
+        write(
+            &f.project.join("vibe.toml"),
+            format!(
+                "[project]\nname='actual-backtracking'\nversion='0.1.0'\n[requires.packages.'{GROUP}/{DRIVER}']\nversion='^1'\nlink='static-transitive'\nconfiguration={{policy='use-declared-defaults',default_features=false}}\n[requires.packages.'{GROUP}/{SHARED}']\nversion='{root_shared}'\nlink='static-transitive'\n[[registry]]\nname='fixture'\nurl='file://{}'\n",
+                f.registry.display()
+            ),
+        );
+        let request = Manifest::read(f.project.join("vibe.toml")).unwrap();
+        assert!(
+            request
+                .requires
+                .packages
+                .iter()
+                .find(|p| p.name.as_str() == DRIVER)
+                .unwrap()
+                .version
+                .matches(&"1.1.0".parse().unwrap()),
+            "newer is in actual root range"
+        );
+        f.install_ok();
+        let lock = f.lock();
+        let driver = lock.find(&GROUP.parse().unwrap(), DRIVER).unwrap();
+        assert_eq!(
+            driver.version.to_string(),
+            if conflict { "1.0.0" } else { "1.1.0" }
+        );
+        let selected = if conflict { "old" } else { "new" };
+        let record = &lock.configurations[&coordinate(DRIVER)];
+        assert_eq!(
+            record.automatic_basis.as_ref().unwrap().consumer_choices["./vibe.toml"]["mode"],
+            selected
+        );
+        assert_eq!(record.features, vec![selected.to_owned()]);
+        let exact = f
+            .registry
+            .join(GROUP)
+            .join(DRIVER)
+            .join(format!("v{}", driver.version));
+        assert_eq!(
+            driver.content_hash.as_str(),
+            vibe_registry::compute_content_hash(&exact).unwrap()
+        );
+        assert_eq!(f.slot(EXTRA).exists(), conflict);
+        let new_slot = f
+            .project
+            .join("vibevm/vibedeps")
+            .join(format!("{GROUP}.{NEW_EFFECT}/1.0.0"));
+        assert_eq!(new_slot.exists(), !conflict);
+        let boot = f.static_boot();
+        assert_eq!(boot.contains("EARLY_SELECTED_MARKER"), conflict);
+        assert_eq!(boot.contains("NEW_CANDIDATE_MARKER"), !conflict);
+        assert_eq!(boot.contains("REJECTED_NEW_EFFECT_MARKER"), !conflict);
+        assert_eq!(
+            f.hooks().get(EXTRA).copied().unwrap_or(0),
+            usize::from(conflict)
+        );
+        assert_eq!(
+            f.hooks().get(NEW_EFFECT).copied().unwrap_or(0),
+            usize::from(!conflict)
+        );
+        assert_eq!(f.hooks().get(SHARED).copied(), Some(1));
+        assert!(
+            !f.project
+                .join("vibevm/vibedeps")
+                .join(format!(
+                    "{GROUP}.{DRIVER}/{}",
+                    if conflict { "1.1.0" } else { "1.0.0" }
+                ))
+                .exists()
+        );
+        let before = super::workspace::semantic_snapshot(&f.project);
+        f.install_ok();
+        assert_eq!(super::workspace::semantic_snapshot(&f.project), before);
+    }
+}
