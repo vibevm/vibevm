@@ -68,6 +68,74 @@ impl InstallSource for NoResolution {
         panic!("apply must retain its preparation")
     }
 }
+#[test]
+fn host_path_disappearance_after_prepared_candidate_refuses_apply_before_effects() {
+    let temp = tempfile::tempdir().unwrap();
+    let root = temp.path().join("project");
+    fs::create_dir(&root).unwrap();
+    let authored = "[project]\nname='host-path'\nversion='1.0.0'\n[requires.packages.'org.test/host-path']\nversion='=1.0.0'\nconfiguration={policy='require-selection',default_features=false,parameters={target='target'}}\n";
+    fs::write(root.join("vibe.toml"), authored).unwrap();
+    fs::write(root.join("target"), b"not read by metadata proof").unwrap();
+    let manifest = Manifest::parse_str(authored).unwrap();
+    let workspace = Workspace::discover(&root).unwrap();
+    let package=Manifest::parse_str("[package]\ngroup='org.test'\nname='host-path'\nkind='flow'\nversion='1.0.0'\n[[configuration.parameters]]\nid='target'\nname='Target'\ntype='path'\nrequired=true\nmust_exist=true\n").unwrap();
+    let consumers = std::collections::BTreeMap::from([(
+        "./vibe.toml".into(),
+        manifest.requires.configurations["org.test/host-path"].clone(),
+    )]);
+    let record = vibe_core::manifest::PackageConfiguration::evaluate(&package, &consumers).unwrap();
+    let path_checks = crate::configuration_admission::host_path::capture(
+        &workspace,
+        &root,
+        &manifest,
+        [("org.test/host-path", &record)],
+    )
+    .unwrap();
+    let planned = PlannedInstall {
+        path_checks,
+        submitted: None,
+        node_roots: Default::default(),
+        project_root: root.clone(),
+        request: crate::InstallRequest {
+            roots: vec![],
+            features: FeatureRequest::default(),
+            language: None,
+            exact: false,
+            generated_by: "fixture".into(),
+            offline: true,
+            no_recommends: false,
+        },
+        manifest,
+        lockfile: Lockfile::empty("fixture", "not-published"),
+        language_chain: vec![],
+        fetched: vec![],
+        resolution: vec![],
+        workspace,
+        progress: Default::default(),
+        source_candidates: Default::default(),
+        weak: Default::default(),
+    };
+    fs::remove_file(root.join("target")).unwrap();
+    let error = apply(
+        &NoResolution,
+        planned,
+        SlotIntegrity::Verify,
+        &HookPolicy {
+            trust: TrustPolicy::EMPTY,
+            allow_hooks: false,
+        },
+    )
+    .unwrap_err();
+    assert!(error.to_string().contains("PathCheck"));
+    assert_eq!(
+        fs::read_to_string(root.join("vibe.toml")).unwrap(),
+        authored
+    );
+    assert!(!root.join("vibe.lock").exists());
+    assert!(!root.join("vibevm").exists());
+    assert!(!root.join("effects.log").exists());
+}
+
 struct Server(std::process::Child);
 impl Drop for Server {
     fn drop(&mut self) {
@@ -199,6 +267,7 @@ fn exercise(filter: bool) {
     }];
     let planned = PlannedInstall {
         submitted: None,
+        path_checks: vec![],
         node_roots: Default::default(),
         project_root: project.clone(),
         request: crate::InstallRequest {

@@ -491,7 +491,13 @@ fn execute_owned(
             // resolves nothing and copies nothing — so a re-read could only
             // ever differ by racing another process, which is exactly the
             // difference a single snapshot exists to refuse.
-            vibe_install::configuration_admission::resolved_packages(&resolution)?;
+            vibe_install::configuration_admission::host_path::resolved_for_install(
+                &workspace,
+                &project_root,
+                &manifest,
+                &resolution,
+                Some(&lockfile_snapshot),
+            )?;
             if manifest != authored_before {
                 vibe_install::publish_admitted_manifest(
                     &project_root,

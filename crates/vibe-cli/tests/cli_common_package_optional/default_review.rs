@@ -6575,6 +6575,197 @@ fn lexical_path_fixture(value: &str) -> Fixture {
 }
 
 #[test]
+fn host_required_path_install_cold_metadata_and_other_routes() {
+    for world in [
+        "file",
+        "directory",
+        "cwd-only",
+        "missing",
+        "absolute",
+        "traversal",
+        "terminal-link",
+        "ancestor-link",
+        "in-place",
+        "cold-source-kind",
+        "disappear",
+    ] {
+        let f = lexical_path_fixture("target path");
+        let source = f.registry.join(GROUP).join(DRIVER).join("v1.0.0/vibe.toml");
+        let mut text = fs::read_to_string(&source).unwrap();
+        let start = text.find("[[configuration.features]]").unwrap();
+        let parameter = text.find("[[configuration.parameters]]").unwrap();
+        text.replace_range(start..parameter, "");
+        text = text.replace("must_exist=false", "must_exist=true");
+        if !text.contains("must_exist=true") {
+            text += "\nmust_exist=true\n";
+        }
+        if world == "in-place" {
+            text = text.replace("kind='flow'", "kind='flow'\nmaterialization='in-place'");
+        }
+        write(&source, text);
+        let request = f.project.join("vibe.toml");
+        let text = fs::read_to_string(&request).unwrap().replace(
+            "selections={extra={intent='exact',members=['disabled']}},",
+            "",
+        );
+        write(&request, text);
+        let target = f.project.join("target path");
+        let cwd = f.root.join("different-cwd");
+        fs::create_dir(&cwd).unwrap();
+        write(&cwd.join("target path"), "CWD_ONLY_SENTINEL\n");
+        match world {
+            "directory" => fs::create_dir(&target).unwrap(),
+            "file" | "disappear" | "in-place" | "cold-source-kind" => {
+                write(&target, "TARGET_CONTENT_NOT_A_READ_GRANT\n")
+            }
+            "terminal-link" => {
+                std::os::unix::fs::symlink(cwd.join("target path"), &target).unwrap()
+            }
+            "ancestor-link" => {
+                std::os::unix::fs::symlink(&cwd, f.project.join("alias")).unwrap();
+                write(
+                    &request,
+                    fs::read_to_string(&request)
+                        .unwrap()
+                        .replace("target path", "alias/target path"),
+                );
+            }
+            "absolute" => write(
+                &request,
+                fs::read_to_string(&request)
+                    .unwrap()
+                    .replace("target path", &cwd.join("target path").to_string_lossy()),
+            ),
+            "traversal" => write(
+                &request,
+                fs::read_to_string(&request)
+                    .unwrap()
+                    .replace("target path", "../different-cwd/target path"),
+            ),
+            _ => {}
+        }
+        let before = super::workspace::semantic_snapshot(&f.project);
+        let out = f
+            .user
+            .vibe()
+            .current_dir(&cwd)
+            .args([
+                "install",
+                "--path",
+                f.project.to_str().unwrap(),
+                "--offline",
+                "--assume-yes",
+                "--json",
+            ])
+            .output()
+            .unwrap();
+        let success = matches!(
+            world,
+            "file" | "directory" | "disappear" | "cold-source-kind"
+        );
+        assert_eq!(
+            out.status.success(),
+            success,
+            "world={world} {}{}",
+            String::from_utf8_lossy(&out.stdout),
+            String::from_utf8_lossy(&out.stderr)
+        );
+        if !success {
+            assert_eq!(super::workspace::semantic_snapshot(&f.project), before);
+            continue;
+        }
+        let lock = f.lock();
+        assert_eq!(lock.meta.schema_version, 8);
+        assert_eq!(
+            lock.configurations[&coordinate(DRIVER)].consumers["./vibe.toml"].parameters["text"],
+            vibe_core::manifest::ParameterValue::Text("target path".into())
+        );
+        let before = super::workspace::semantic_snapshot(&f.project);
+        let prior =
+            std::env::var_os("NST_OPTIONAL_BOOL_OLD_CLI").expect("explicit pre-host-path client");
+        for command in ["show", "install"] {
+            let mut cmd = std::process::Command::new(&prior);
+            cmd.env_clear()
+                .env("HOME", f.root.join("home"))
+                .env("VIBE_SETTINGS", &f.user.settings)
+                .env("PATH", "/usr/bin:/bin")
+                .env("VIBE_NO_DEFAULT_REGISTRY", "1");
+            if command == "show" {
+                cmd.args(["show", "configuration-data"]);
+            } else {
+                cmd.args(["install", "--offline", "--assume-yes"]);
+            }
+            let out = cmd
+                .args(["--path", f.project.to_str().unwrap(), "--json"])
+                .output()
+                .unwrap();
+            assert!(
+                !out.status.success(),
+                "prior must not silently claim host readiness"
+            );
+            assert_eq!(super::workspace::semantic_snapshot(&f.project), before);
+        }
+        for args in [vec!["update", "--all"], vec!["reinstall"]] {
+            let out = f
+                .user
+                .vibe()
+                .args(args)
+                .args([
+                    "--path",
+                    f.project.to_str().unwrap(),
+                    "--offline",
+                    "--assume-yes",
+                    "--json",
+                ])
+                .output()
+                .unwrap();
+            assert!(!out.status.success());
+            assert_eq!(super::workspace::semantic_snapshot(&f.project), before);
+        }
+        if world == "disappear" {
+            fs::remove_file(&target).unwrap();
+        }
+        if world == "cold-source-kind" {
+            let mut lock = f.lock();
+            lock.packages
+                .iter_mut()
+                .find(|p| p.name.as_str() == DRIVER)
+                .unwrap()
+                .source_kind = Some(vibe_core::manifest::SourceKind::Git);
+            write(
+                &f.project.join("vibe.lock"),
+                toml::to_string(&lock).unwrap(),
+            );
+            assert!(target.is_file());
+        }
+        let before = super::workspace::semantic_snapshot(&f.project);
+        let out = f.install();
+        assert_eq!(
+            out.status.success(),
+            !matches!(world, "disappear" | "cold-source-kind")
+        );
+        assert_eq!(super::workspace::semantic_snapshot(&f.project), before);
+        let shown = f
+            .user
+            .vibe()
+            .args([
+                "show",
+                "configuration-data",
+                "--path",
+                f.project.to_str().unwrap(),
+                "--json",
+            ])
+            .output()
+            .unwrap();
+        assert!(shown.status.success(), "history show is not readiness");
+        println!(
+            "host-path world={world} install=true cold={} history-show=true",
+            out.status.success()
+        );
+    }
+}
+
+#[test]
 fn lexical_path_spelling_consumers_and_target_disappearance() {
     for world in ["disappears", "equal", "different-spelling"] {
         let f = lexical_path_fixture("target path");

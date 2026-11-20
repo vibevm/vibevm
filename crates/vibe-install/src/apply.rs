@@ -382,9 +382,13 @@ fn apply_metadata_checked<S: InstallSource + ?Sized>(
     workspace: Workspace,
     files: &mut MetadataFiles,
 ) -> Result<PreparedApplyReport> {
+    for check in &planned.path_checks {
+        check.recheck()?;
+    }
     let PlannedInstall {
         node_roots,
         submitted,
+        path_checks: _path_checks,
         project_root,
         request: _,
         manifest,

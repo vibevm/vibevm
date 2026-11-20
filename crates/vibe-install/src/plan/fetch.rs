@@ -84,7 +84,7 @@ pub(super) fn fetch_selected_node<S: InstallSource + ?Sized>(
         }
     }
     super::configured::admit_configured_acquisition(&cached, metadata)?;
-    crate::configuration_admission::admitted_package(
+    crate::configuration_admission::install_candidate(
         format!("{}/{}", node.group, node.name),
         &cached.manifest,
         metadata.configuration.as_ref(),

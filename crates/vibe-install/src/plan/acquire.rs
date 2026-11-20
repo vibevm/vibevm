@@ -117,8 +117,53 @@ pub(super) fn acquire_prepared_metadata<S: InstallSource + ?Sized>(
         .iter()
         .map(|(key, metadata)| (key.clone(), metadata.observations.clone()))
         .collect();
+    let path_records = fetched
+        .iter()
+        .filter_map(|f| {
+            f.configuration.as_ref().map(|record| {
+                (
+                    format!("{}/{}", f.cached.resolved.group, f.cached.resolved.name),
+                    record,
+                )
+            })
+        })
+        .collect::<Vec<_>>();
+    for f in &fetched {
+        if f.configuration
+            .as_ref()
+            .is_some_and(|r| !r.host_path_targets().is_empty())
+            && (!f.cached.source_uri.starts_with("file://")
+                || f.cached.registry_name.is_none()
+                || f.cached.source_kind() != Some(vibe_core::manifest::SourceKind::Registry)
+                || f.cached.package_meta().kind != vibe_core::PackageKind::Flow
+                || f.cached.package_meta().materialization
+                    != vibe_core::manifest::Materialization::Copy
+                || !manifest.requires.packages.iter().any(|r| {
+                    r.qualified_name()
+                        == format!("{}/{}", f.cached.resolved.group, f.cached.resolved.name)
+                        && r.version.matches(&f.cached.resolved.version)
+                })
+                || f.cached.is_git_source
+                || f.cached.is_path_source
+                || f.cached.overridden
+                || f.cached.via_redirect.is_some()
+                || f.cached.template.is_some()
+                || f.in_place.is_some())
+        {
+            return Err(crate::configuration_admission::host_path::unsupported());
+        }
+    }
+    let path_checks = crate::configuration_admission::host_path::capture(
+        &workspace,
+        &project_root,
+        &manifest,
+        path_records
+            .iter()
+            .map(|(key, record)| (key.as_str(), *record)),
+    )?;
     let planned = PlannedInstall {
         submitted: None,
+        path_checks,
         node_roots: closure.node_roots,
         weak: closure.weak,
         project_root,

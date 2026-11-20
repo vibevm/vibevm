@@ -25,7 +25,33 @@ pub(super) fn regenerate_native_world(
         progress,
     } = scope;
     progress.checkpoint()?;
-    vibe_install::configuration_admission::resolved_packages(resolution)?;
+    let manifest = workspace
+        .iter_nodes()
+        .find(|(rel, _)| {
+            workspace
+                .node_rel_of(project_root)
+                .is_some_and(|node| node.as_str() == *rel)
+        })
+        .map(|(_, manifest)| manifest)
+        .ok_or_else(|| anyhow::anyhow!("install host consumer missing"))?;
+    let lock = if resolution.iter().any(|p| {
+        p.configuration
+            .as_ref()
+            .is_some_and(|r| !r.host_path_targets().is_empty())
+    }) {
+        Some(vibe_core::manifest::Lockfile::read(
+            workspace.lockfile_path(),
+        )?)
+    } else {
+        None
+    };
+    vibe_install::configuration_admission::host_path::resolved_for_install(
+        workspace,
+        project_root,
+        manifest,
+        resolution,
+        lock.as_ref(),
+    )?;
     let (world, lowering, sidecar) =
         crate::world::prepare_owner_runtime_inputs(project_root, workspace, resolution)?;
     let platform = vibe_lifecycle::native::NativePlatform::current()?;

@@ -6,6 +6,10 @@ use std::path::Path;
 use vibe_core::{PackageRef, manifest::Manifest};
 use vibe_workspace::Workspace;
 
+pub mod host_path;
+#[cfg(all(test, unix))]
+mod host_path_tests;
+
 /// Admit every real workspace consumer and the raw selected snapshot before
 /// source edits, migration, freshness, solving or boot publication. A workspace
 /// package's own interface declaration is not its dependency configuration.
@@ -82,17 +86,33 @@ pub fn resolved_packages(packages: &[vibe_workspace::install::ResolvedDep]) -> R
 
 pub(crate) fn planned(planned: &crate::PlannedInstall) -> Result<()> {
     workspace_inputs_for_install(&planned.workspace, &planned.project_root, &planned.manifest)?;
-    resolved_packages(&planned.resolution)?;
+    for check in &planned.path_checks {
+        check.recheck()?;
+    }
+    host_path::resolved_checked(
+        &planned.workspace,
+        &planned.project_root,
+        &planned.manifest,
+        &planned.resolution,
+    )?;
+    let needs = planned
+        .resolution
+        .iter()
+        .filter_map(|p| p.configuration.as_ref())
+        .any(|r| !r.host_path_targets().is_empty());
+    if needs && planned.path_checks.is_empty() {
+        return Err(host_path::unsupported());
+    }
     for fetched in &planned.fetched {
         let package = format!(
             "{}/{}",
             fetched.cached.resolved.group, fetched.cached.resolved.name
         );
-        admitted_package(
-            package.clone(),
-            &fetched.cached.manifest,
-            fetched.configuration.as_ref(),
-        )?;
+        if let Some(record) = &fetched.configuration {
+            record.validate(&fetched.cached.manifest)?;
+        } else {
+            manifest_named(package.clone(), &fetched.cached.manifest)?;
+        }
         if let Some(prepared) = &fetched.in_place {
             admitted_package(package, prepared.manifest(), fetched.configuration.as_ref())?;
         }
@@ -179,11 +199,11 @@ pub(crate) fn locked_packages(
                 })?;
             }
         }
-        admitted_package(
-            format!("{}/{}", package.group, package.name),
-            &manifest,
-            configuration.as_ref(),
-        )?;
+        if let Some(record) = &configuration {
+            record.validate(&manifest)?;
+        } else {
+            manifest_named(format!("{}/{}", package.group, package.name), &manifest)?;
+        }
     }
     Ok(())
 }
@@ -238,6 +258,22 @@ pub fn workspace_inputs_for_install(
     Ok(())
 }
 
+/// Install's intermediate candidate check is representability only; the private
+/// final plan must mint host proof from actual acquisition before it can apply.
+pub(crate) fn install_candidate(
+    package: String,
+    manifest: &Manifest,
+    configuration: Option<&vibe_core::manifest::PackageConfiguration>,
+) -> Result<()> {
+    match configuration {
+        Some(record) => {
+            record.validate(manifest)?;
+            Ok(())
+        }
+        None => manifest_named(package, manifest),
+    }
+}
+
 pub(crate) fn admitted_package(
     package: String,
     manifest: &Manifest,
@@ -246,6 +282,9 @@ pub(crate) fn admitted_package(
     match configuration {
         Some(record) => {
             record.validate(manifest)?;
+            if !record.host_path_targets().is_empty() {
+                return Err(host_path::unsupported());
+            }
             Ok(())
         }
         None => manifest_named(package, manifest),
@@ -263,6 +302,13 @@ pub fn locked_workspace(
 ) -> Result<()> {
     workspace_inputs_for_install(workspace, selected_root, raw_selected)?;
     lock.validate_configurations()?;
+    if lock
+        .configurations
+        .values()
+        .any(|record| !record.host_path_targets().is_empty())
+    {
+        return Err(host_path::unsupported());
+    }
     if let vibe_workspace::freshness::Freshness::Stale(reason) =
         vibe_workspace::freshness::configuration_freshness(workspace, lock)
     {

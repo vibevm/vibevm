@@ -105,5 +105,17 @@ pub fn freshness_prepared(
     }
     requirements.check_locked_kinds(lock)?;
     crate::configuration_admission::locked_packages(workspace, lock)?;
+    crate::configuration_admission::host_path::check_locked_sources(lock)?;
+    let checks = crate::configuration_admission::host_path::capture(
+        workspace,
+        project_root,
+        manifest,
+        lock.configurations
+            .iter()
+            .map(|(key, record)| (key.as_str(), record)),
+    )?;
+    for check in checks {
+        check.recheck()?;
+    }
     Ok(Freshness::Fresh)
 }

@@ -97,6 +97,24 @@ pub enum PackageConfigurationError {
 }
 
 impl PackageConfiguration {
+    /// Pure lexical targets requiring an operation-owned host existence check.
+    /// This grants no IO or readiness and is safe for history inspection.
+    pub fn host_path_targets(&self) -> Vec<&str> {
+        self.definition
+            .parameters
+            .iter()
+            .filter(|p| p.kind == crate::manifest::ParameterType::Path && p.must_exist)
+            .flat_map(|p| {
+                self.consumers
+                    .values()
+                    .filter_map(move |input| match input.parameters.get(&p.id) {
+                        Some(super::ParameterValue::Text(value)) => Some(value.as_str()),
+                        _ => None,
+                    })
+            })
+            .collect()
+    }
+
     /// Evaluate actual incoming declarations through the shared core once.
     /// No filesystem/source lookup, implicit profile/default approval or effects.
     #[specmark::spec(
@@ -333,11 +351,18 @@ impl PackageConfiguration {
                         | crate::manifest::ParameterType::Choice
                         | crate::manifest::ParameterType::Path
                 ) {
+                    // Representability only. Effectful owners must supply a
+                    // fresh host observation; lock/show never claim readiness.
                     if parameter.kind == crate::manifest::ParameterType::Path
                         && parameter.must_exist
+                        && (consumers.len() != 1
+                            || !consumers.contains_key("./vibe.toml")
+                            || !forwarded.is_empty()
+                            || !definition.groups.is_empty()
+                            || !definition.features.is_empty())
                     {
                         return Err(unsupported(
-                            "public path must_exist=true requires a separately specified planning-host base and check",
+                            "public path must_exist=true requires a separately specified planning-host base and check for this consumer",
                         ));
                     }
                     if kind != crate::PackageKind::Flow

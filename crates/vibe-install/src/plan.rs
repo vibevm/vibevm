@@ -73,6 +73,7 @@ pub struct PlannedInstall {
     pub(crate) project_root: PathBuf,
     pub(crate) request: InstallRequest,
     pub(crate) submitted: Option<crate::submission::VerifiedSubmission>,
+    pub(crate) path_checks: Vec<crate::configuration_admission::host_path::PathCheck>,
     pub(crate) manifest: Manifest,
     pub(crate) lockfile: Lockfile,
     pub(crate) language_chain: Vec<String>,
@@ -538,7 +539,7 @@ fn prepare_metadata_plan<S: InstallSource + ?Sized>(
                     coordinate: format!("{}/{}", package.group, package.name),
                 });
             }
-            crate::configuration_admission::admitted_package(
+            crate::configuration_admission::install_candidate(
                 format!("{}/{}", package.group, package.name),
                 selected.candidate.manifest(),
                 selected.configuration.as_ref(),
