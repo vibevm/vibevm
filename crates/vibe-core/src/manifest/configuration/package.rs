@@ -175,7 +175,7 @@ impl PackageConfiguration {
             ));
         }
         let mut public_parameters: BTreeMap<String, bool> = BTreeMap::new();
-        let mut public_integers: BTreeMap<String, i64> = BTreeMap::new();
+        let mut public_scalars: BTreeMap<String, crate::manifest::ParameterValue> = BTreeMap::new();
         let mut automatic_choices = BTreeMap::new();
         let mut automatic_choice_sets = BTreeMap::new();
         let mut ordinary = BTreeSet::new();
@@ -262,7 +262,12 @@ impl PackageConfiguration {
                 automatic_choice_sets.insert(consumer.clone(), selected_default_sets);
             }
             for parameter in &definition.parameters {
-                if parameter.kind == crate::manifest::ParameterType::Integer {
+                if matches!(
+                    parameter.kind,
+                    crate::manifest::ParameterType::Integer
+                        | crate::manifest::ParameterType::String
+                        | crate::manifest::ParameterType::Choice
+                ) {
                     if kind != crate::PackageKind::Flow
                         || parameter.secret
                         || !parameter.required
@@ -272,13 +277,16 @@ impl PackageConfiguration {
                         || !automatic_choices.is_empty()
                         || !automatic_choice_sets.is_empty()
                     {
-                        return Err(unsupported(
-                            "only one explicit required public integer without defaults, profiles or automatic choices is connected",
-                        ));
+                        return Err(unsupported(match parameter.kind {
+                            crate::manifest::ParameterType::Integer => {
+                                "only one explicit required public integer without defaults, profiles or automatic choices is connected"
+                            }
+                            _ => {
+                                "only one explicit required public string or choice without defaults, profiles or automatic choices is connected"
+                            }
+                        }));
                     }
-                    let Some(crate::manifest::ParameterValue::Integer(value)) =
-                        normalized.parameters.get(&parameter.id)
-                    else {
+                    let Some(value) = normalized.parameters.get(&parameter.id) else {
                         return Err(PackageConfigurationError::Incompatible {
                             package: package.clone(),
                             consumers: vec![consumer.clone()],
@@ -288,7 +296,7 @@ impl PackageConfiguration {
                             ),
                         });
                     };
-                    if public_integers
+                    if public_scalars
                         .get(&parameter.id)
                         .is_some_and(|previous| previous != value)
                     {
@@ -296,12 +304,17 @@ impl PackageConfiguration {
                             package: package.clone(),
                             consumers: consumers.keys().cloned().collect(),
                             reason: format!(
-                                "conflicting explicit public integer parameter `{}`",
+                                "conflicting explicit public {} parameter `{}`",
+                                match parameter.kind {
+                                    crate::manifest::ParameterType::Integer => "integer",
+                                    crate::manifest::ParameterType::String => "string",
+                                    _ => "choice",
+                                },
                                 parameter.id
                             ),
                         });
                     }
-                    public_integers.insert(parameter.id.clone(), *value);
+                    public_scalars.insert(parameter.id.clone(), value.clone());
                     continue;
                 }
                 if parameter.secret

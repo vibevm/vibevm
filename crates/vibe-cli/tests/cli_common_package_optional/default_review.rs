@@ -5744,27 +5744,69 @@ fn public_text_and_choice_parameters_literal_values_qualification() {
                 "text kind={kind} world={world} status={} diagnostic={diagnostic}",
                 out.status
             );
-            assert!(!out.status.success(), "{diagnostic}");
-            if valid {
-                assert!(diagnostic.contains("only explicitly supplied required public bool parameters without defaults are connected"),"{diagnostic}");
+            if valid && *world != "missing" {
+                assert!(out.status.success(), "{diagnostic}");
+                let lock = f.lock();
+                let record = &lock.configurations[&coordinate(DRIVER)];
+                assert_eq!(record.consumers.values().next().unwrap(), &original);
+                assert_eq!(
+                    record
+                        .selected_parameters(vibe_core::PackageKind::Flow)
+                        .unwrap()["text"],
+                    original.parameters["text"]
+                );
+                assert!(
+                    record
+                        .selected_data(vibe_core::PackageKind::Flow)
+                        .unwrap()
+                        .is_empty()
+                );
+                assert!(record.automatic_basis.is_none());
+                assert_eq!(lock.meta.schema_version, 8);
+                let shown = f
+                    .user
+                    .vibe()
+                    .args([
+                        "show",
+                        "configuration-data",
+                        "--path",
+                        f.project.to_str().unwrap(),
+                        "--json",
+                    ])
+                    .output()
+                    .unwrap();
+                assert!(shown.status.success());
+                let report: serde_json::Value = serde_json::from_slice(&shown.stdout).unwrap();
+                let vibe_core::manifest::ParameterValue::Text(value) = &original.parameters["text"]
+                else {
+                    panic!("wrong original type")
+                };
+                assert_eq!(
+                    report["packages"][0]["parameters"]["text"],
+                    serde_json::json!(value)
+                );
+                assert!(f.slot(DRIVER).exists());
+                assert!(f.static_boot().contains(DRIVER_MARKER));
+                assert!(f.hooks().get(BASE).copied().unwrap_or(0) > 0);
+                let installed = super::workspace::semantic_snapshot(&f.project);
+                f.install_ok();
+                assert_eq!(super::workspace::semantic_snapshot(&f.project), installed);
             } else {
+                assert!(!out.status.success(), "{diagnostic}");
                 let reason = match *world {
+                    "missing" => "missing required public parameter `text`",
                     "wrong-type" => "not a string value",
                     "unknown" => "`other` is not one of alpha, beta",
                     "label" => "`Friendly Alpha` is not one of alpha, beta",
                     _ => unreachable!(),
                 };
-                assert!(
-                    diagnostic.contains("configuration.parameters.text")
-                        && diagnostic.contains(reason),
-                    "{diagnostic}"
-                );
-            }
-            assert_eq!(super::workspace::semantic_snapshot(&f.project), before);
-            assert!(!f.project.join("vibe.lock").exists());
-            assert!(!f.project.join("effects.log").exists());
-            for name in [DRIVER, BASE, EXTRA] {
-                assert!(!f.slot(name).exists());
+                assert!(diagnostic.contains(reason), "{diagnostic}");
+                assert_eq!(super::workspace::semantic_snapshot(&f.project), before);
+                assert!(!f.project.join("vibe.lock").exists());
+                assert!(!f.project.join("effects.log").exists());
+                for name in [DRIVER, BASE, EXTRA] {
+                    assert!(!f.slot(name).exists());
+                }
             }
             assert_eq!(fs::read(&request).unwrap(), authored);
             assert_eq!(preview_scratch_snapshot(&f.registry), registry);
@@ -5788,4 +5830,202 @@ fn public_text_and_choice_parameters_literal_values_qualification() {
     let before = super::workspace::semantic_snapshot(&f.project);
     f.install_ok();
     assert_eq!(super::workspace::semantic_snapshot(&f.project), before);
+}
+
+fn text_choice_fixture(kind: &str, value: &str) -> Fixture {
+    let f = Fixture::new(false);
+    let source = f.registry.join(GROUP).join(DRIVER).join("v1.0.0/vibe.toml");
+    let choices = if kind == "choice" {
+        "choices=[{value='alpha',name='Friendly Alpha'},{value='beta',name='Friendly Beta'}]\n"
+    } else {
+        ""
+    };
+    write(
+        &source,
+        fs::read_to_string(&source).unwrap()
+            + &format!(
+                "\n[[configuration.parameters]]\nid='text'\nname='Text'\ntype='{kind}'\nrequired=true\n{choices}"
+            ),
+    );
+    let request = f.project.join("vibe.toml");
+    write(&request,fs::read_to_string(&request).unwrap().replace("version='^1'","version='=1.0.0'").replace("selections={extra={intent='exact',members=['disabled']}}}",&format!("selections={{extra={{intent='exact',members=['disabled']}}}},parameters={{text='{value}'}}}}")));
+    f
+}
+
+#[test]
+fn text_choice_equal_and_whitespace_or_value_conflicting_real_consumers() {
+    for kind in ["string", "choice"] {
+        for conflict in [false, true] {
+            let first = if kind == "string" {
+                " literal "
+            } else {
+                "alpha"
+            };
+            let f = text_choice_fixture(kind, first);
+            let root = f.project.join("vibe.toml");
+            let text = fs::read_to_string(&root).unwrap();
+            let registry = text.split("[[registry]]").nth(1).unwrap();
+            write(
+                &root,
+                format!(
+                    "[project]\nname='text-workspace'\nversion='0.1.0'\n[workspace]\nmembers=['left','right']\n[[registry]]{registry}"
+                ),
+            );
+            for (member, value) in [
+                ("left", first),
+                (
+                    "right",
+                    if conflict {
+                        if kind == "string" { "literal" } else { "beta" }
+                    } else {
+                        first
+                    },
+                ),
+            ] {
+                write(
+                    &f.project.join(member).join("vibe.toml"),
+                    format!(
+                        "[project]\nname='{member}'\nversion='0.1.0'\n[requires.packages.'{GROUP}/{DRIVER}']\nversion='=1.0.0'\nlink='static-transitive'\nconfiguration={{policy='require-selection',default_features=false,selections={{extra={{intent='exact',members=['disabled']}}}},parameters={{text='{value}'}}}}\n"
+                    ),
+                );
+            }
+            let before = super::workspace::semantic_snapshot(&f.project);
+            let out = f.install();
+            let diagnostic = format!(
+                "{}{}",
+                String::from_utf8_lossy(&out.stdout),
+                String::from_utf8_lossy(&out.stderr)
+            );
+            if conflict {
+                assert!(!out.status.success());
+                assert!(
+                    diagnostic.contains(&format!(
+                        "conflicting explicit public {kind} parameter `text`"
+                    )),
+                    "{diagnostic}"
+                );
+                assert_eq!(super::workspace::semantic_snapshot(&f.project), before);
+            } else {
+                assert!(out.status.success(), "{diagnostic}");
+                let lock = f.lock();
+                assert_eq!(lock.configurations[&coordinate(DRIVER)].consumers.len(), 2);
+                let before = super::workspace::semantic_snapshot(&f.project);
+                f.install_ok();
+                assert_eq!(super::workspace::semantic_snapshot(&f.project), before);
+            }
+        }
+    }
+}
+
+#[test]
+fn text_choice_actual_prior_reader_writer_refuse_without_loss() {
+    let old =
+        std::env::var_os("NST_TEXT_OLD_CLI").expect("mandatory explicitly mounted pre-text CLI");
+    for (kind, value) in [
+        ("string", ""),
+        ("string", " literal "),
+        ("choice", "alpha"),
+        ("choice", "beta"),
+    ] {
+        for operation in ["reader", "writer"] {
+            let f = text_choice_fixture(kind, value);
+            f.install_ok();
+            let before = super::workspace::semantic_snapshot(&f.project);
+            let args = if operation == "reader" {
+                vec![
+                    "show",
+                    "configuration-data",
+                    "--path",
+                    f.project.to_str().unwrap(),
+                    "--json",
+                ]
+            } else {
+                vec![
+                    "install",
+                    "--path",
+                    f.project.to_str().unwrap(),
+                    "--offline",
+                    "--assume-yes",
+                    "--json",
+                ]
+            };
+            let out = std::process::Command::new(&old)
+                .env_clear()
+                .env("HOME", f.root.join("home"))
+                .env("VIBE_SETTINGS", &f.user.settings)
+                .env("VIBE_NO_DEFAULT_REGISTRY", "1")
+                .env("PATH", "/usr/bin:/bin")
+                .args(args)
+                .output()
+                .unwrap();
+            let diagnostic = format!(
+                "{}{}",
+                String::from_utf8_lossy(&out.stdout),
+                String::from_utf8_lossy(&out.stderr)
+            );
+            println!(
+                "prior text {kind} value={value:?} {operation} status={} diagnostic={diagnostic}",
+                out.status
+            );
+            assert!(!out.status.success());
+            assert!(diagnostic.contains("only explicitly supplied required public bool parameters without defaults are connected"),"{diagnostic}");
+            assert_eq!(super::workspace::semantic_snapshot(&f.project), before);
+        }
+    }
+}
+
+#[test]
+fn choice_new_allowed_values_forced_update_refuses_but_valid_fallback_survives() {
+    for exact_new in [false, true] {
+        let f = text_choice_fixture("choice", "alpha");
+        let old = f.registry.join(GROUP).join(DRIVER).join("v1.0.0");
+        let next = f.registry.join(GROUP).join(DRIVER).join("v1.1.0");
+        write(
+            &next.join("vibe.toml"),
+            fs::read_to_string(old.join("vibe.toml"))
+                .unwrap()
+                .replace("version='1.0.0'", "version='1.1.0'")
+                .replace("{value='alpha',name='Friendly Alpha'},", ""),
+        );
+        write(&next.join("boot/rules.md"), "UNSELECTED_CHOICE_VALUES\n");
+        f.install_ok();
+        assert!(!f.static_boot().contains("UNSELECTED_CHOICE_VALUES"));
+        let request = f.project.join("vibe.toml");
+        write(
+            &request,
+            fs::read_to_string(&request).unwrap().replace(
+                "version='=1.0.0'",
+                if exact_new {
+                    "version='=1.1.0'"
+                } else {
+                    "version='^1'"
+                },
+            ),
+        );
+        let before = super::workspace::semantic_snapshot(&f.project);
+        let out = update(&f);
+        let diagnostic = format!(
+            "{}{}",
+            String::from_utf8_lossy(&out.stdout),
+            String::from_utf8_lossy(&out.stderr)
+        );
+        if exact_new {
+            assert!(!out.status.success());
+            assert!(
+                diagnostic.contains("`alpha` is not one of beta"),
+                "{diagnostic}"
+            );
+        } else {
+            assert!(out.status.success(), "{diagnostic}");
+            assert_eq!(
+                f.lock()
+                    .find(&GROUP.parse().unwrap(), DRIVER)
+                    .unwrap()
+                    .version
+                    .to_string(),
+                "1.0.0"
+            );
+        }
+        assert_eq!(super::workspace::semantic_snapshot(&f.project), before);
+    }
 }
