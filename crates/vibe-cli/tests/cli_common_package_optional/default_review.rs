@@ -3706,25 +3706,9 @@ fn ordinary_dormant_guard_switch_retains_authored_choice_or_names_public_boundar
                 .any(|projection| projection.dormant.contains(&"selected".to_string())),
             retain
         );
-        // Update is independently qualified; its refusal must not mutate the
-        // incumbent graph or stand in for the separate install journey below.
-        let before = super::workspace::semantic_snapshot(&f.project);
-        let off = update(&f);
-        let diagnostic = format!(
-            "{}{}",
-            String::from_utf8_lossy(&off.stdout),
-            String::from_utf8_lossy(&off.stderr)
-        );
-        println!(
-            "guard off update retain={retain} status={} {diagnostic}",
-            off.status
-        );
-        assert!(!off.status.success());
-        assert!(
-            diagnostic.contains("explicit graph membership reconciliation before effects"),
-            "{diagnostic}"
-        );
-        assert_eq!(super::workspace::semantic_snapshot(&f.project), before);
+        // The historical update refusal is retained in the qualification
+        // receipt. Keep this install-only control independent of the newly
+        // supported checked-update tests below.
         // Ordinary install on the existing project is its own admitted public
         // reconfiguration route, not an implementation bypass of update.
         let off = f.install();
@@ -3802,4 +3786,241 @@ fn ordinary_dormant_guard_switch_retains_authored_choice_or_names_public_boundar
             assert!(!f.static_boot().contains(EXTRA_MARKER));
         }
     }
+}
+
+#[test]
+fn guarded_leaf_update_retires_proved_slot_retains_backup_and_reactivates() {
+    let f = dormant_guard_fixture();
+    f.install_ok();
+    let active = f.lock();
+    let source_hash = active
+        .packages
+        .iter()
+        .find(|row| row.name.as_str() == EXTRA)
+        .unwrap()
+        .content_hash
+        .clone();
+    set_guard_input(&f, false, true);
+    let off = update(&f);
+    let text = format!(
+        "{}{}",
+        String::from_utf8_lossy(&off.stdout),
+        String::from_utf8_lossy(&off.stderr)
+    );
+    assert!(off.status.success(), "{text}");
+    let report: serde_json::Value = serde_json::Deserializer::from_slice(&off.stdout)
+        .into_iter::<serde_json::Value>()
+        .map(Result::unwrap)
+        .find(|row| row["command"] == "update")
+        .unwrap();
+    println!("guarded leaf off report={report}");
+    assert_eq!(report["ok"], true);
+    let backup = &report["retained_backups"][0];
+    assert_eq!(backup["state"], "published_backup_retained");
+    assert_eq!(
+        backup["slot"],
+        f.slot(EXTRA)
+            .strip_prefix(&f.project)
+            .unwrap()
+            .to_str()
+            .unwrap()
+    );
+    let backup = PathBuf::from(backup["path"].as_str().unwrap());
+    assert!(backup.join("slot/payload.txt").exists());
+    assert!(!f.slot(EXTRA).exists());
+    assert!(!f.static_boot().contains(EXTRA_MARKER));
+    assert!(
+        !f.lock()
+            .packages
+            .iter()
+            .any(|row| row.name.as_str() == EXTRA)
+    );
+    let before = super::workspace::semantic_snapshot(&f.project);
+    let hooks = f.hooks();
+    let replay = update(&f);
+    assert!(
+        replay.status.success(),
+        "{}{}",
+        String::from_utf8_lossy(&replay.stdout),
+        String::from_utf8_lossy(&replay.stderr)
+    );
+    let replay: serde_json::Value = serde_json::Deserializer::from_slice(&replay.stdout)
+        .into_iter::<serde_json::Value>()
+        .map(Result::unwrap)
+        .find(|row| row["command"] == "update")
+        .unwrap();
+    assert!(replay.get("retained_backups").is_none());
+    assert_eq!(super::workspace::semantic_snapshot(&f.project), before);
+    assert_eq!(f.hooks(), hooks);
+    set_guard_input(&f, true, true);
+    let on = update(&f);
+    assert!(
+        on.status.success(),
+        "{}{}",
+        String::from_utf8_lossy(&on.stdout),
+        String::from_utf8_lossy(&on.stderr)
+    );
+    assert!(f.slot(EXTRA).exists());
+    assert!(f.static_boot().contains(EXTRA_MARKER));
+    assert_eq!(
+        f.lock()
+            .packages
+            .iter()
+            .find(|row| row.name.as_str() == EXTRA)
+            .unwrap()
+            .content_hash,
+        source_hash
+    );
+    assert!(backup.join("slot/payload.txt").exists());
+}
+
+#[test]
+fn guarded_leaf_update_foreign_slots_refuse_and_other_root_keeps_the_leaf() {
+    for mutation in ["edited", "extra-file", "empty-directory"] {
+        let f = dormant_guard_fixture();
+        f.install_ok();
+        set_guard_input(&f, false, true);
+        match mutation {
+            "edited" => write(&f.slot(EXTRA).join("payload.txt"), "edited"),
+            "extra-file" => write(&f.slot(EXTRA).join("foreign"), "foreign"),
+            _ => fs::create_dir(f.slot(EXTRA).join("foreign-empty")).unwrap(),
+        }
+        let before = super::workspace::semantic_snapshot(&f.project);
+        let out = update(&f);
+        assert!(!out.status.success(), "{mutation}");
+        assert_eq!(
+            super::workspace::semantic_snapshot(&f.project),
+            before,
+            "{mutation}"
+        );
+    }
+    let f = dormant_guard_fixture();
+    let path = f.project.join("vibe.toml");
+    write(
+        &path,
+        fs::read_to_string(&path).unwrap().replace(
+            "[[registry]]",
+            &format!("[requires.packages.'{GROUP}/{EXTRA}']\nversion='=1.0.0'\nlink='static-transitive'\n[[registry]]"),
+        ),
+    );
+    f.install_ok();
+    let hooks = f.hooks();
+    set_guard_input(&f, false, true);
+    write(
+        &path,
+        fs::read_to_string(&path).unwrap().replace(
+            "[[registry]]",
+            &format!("[requires.packages.'{GROUP}/{EXTRA}']\nversion='=1.0.0'\nlink='static-transitive'\n[[registry]]"),
+        ),
+    );
+    let out = update(&f);
+    assert!(
+        out.status.success(),
+        "{}{}",
+        String::from_utf8_lossy(&out.stdout),
+        String::from_utf8_lossy(&out.stderr)
+    );
+    assert!(f.slot(EXTRA).exists());
+    assert!(f.static_boot().contains(EXTRA_MARKER));
+    assert_eq!(
+        f.hooks(),
+        hooks,
+        "retained root does not reinstall the unchanged leaf hook"
+    );
+    let reports = serde_json::Deserializer::from_slice(&out.stdout)
+        .into_iter::<serde_json::Value>()
+        .map(Result::unwrap)
+        .collect::<Vec<_>>();
+    assert!(
+        reports
+            .iter()
+            .find(|row| row["command"] == "update")
+            .unwrap()
+            .get("retained_backups")
+            .is_none()
+    );
+}
+
+#[test]
+fn guarded_leaf_update_equal_bytes_changed_registry_refuses_before_effects() {
+    let f = dormant_guard_fixture();
+    f.install_ok();
+    set_guard_input(&f, false, true);
+    let other = f.root.join("other-registry");
+    fs::rename(&f.registry, &other).unwrap();
+    let request = f.project.join("vibe.toml");
+    write(
+        &request,
+        fs::read_to_string(&request)
+            .unwrap()
+            .replace(f.registry.to_str().unwrap(), other.to_str().unwrap()),
+    );
+    let before = super::workspace::semantic_snapshot(&f.project);
+    let out = f
+        .user
+        .vibe()
+        .args([
+            "update",
+            "--all",
+            "--offline",
+            "--assume-yes",
+            "--reselect-source",
+            "--json",
+            "--path",
+            f.project.to_str().unwrap(),
+        ])
+        .output()
+        .unwrap();
+    assert!(!out.status.success());
+    assert_eq!(super::workspace::semantic_snapshot(&f.project), before);
+}
+
+#[test]
+fn guarded_leaf_update_removed_answer_and_ordinary_version_movement_remain_distinct() {
+    let f = dormant_guard_fixture();
+    f.install_ok();
+    set_guard_input(&f, false, false);
+    let off = update(&f);
+    assert!(
+        off.status.success(),
+        "{}{}",
+        String::from_utf8_lossy(&off.stdout),
+        String::from_utf8_lossy(&off.stderr)
+    );
+    assert!(!f.slot(EXTRA).exists());
+    set_guard_input(&f, true, false);
+    let before = super::workspace::semantic_snapshot(&f.project);
+    assert!(!update(&f).status.success());
+    assert_eq!(super::workspace::semantic_snapshot(&f.project), before);
+    let f = Fixture::new(false);
+    f.install_ok();
+    let old = f.registry.join(GROUP).join(DRIVER).join("v1.0.0");
+    let new = f.registry.join(GROUP).join(DRIVER).join("v1.1.0");
+    write(
+        &new.join("vibe.toml"),
+        fs::read_to_string(old.join("vibe.toml"))
+            .unwrap()
+            .replace("version='1.0.0'", "version='1.1.0'"),
+    );
+    write(
+        &new.join("boot/rules.md"),
+        fs::read(old.join("boot/rules.md")).unwrap(),
+    );
+    let out = update(&f);
+    assert!(
+        out.status.success(),
+        "{}{}",
+        String::from_utf8_lossy(&out.stdout),
+        String::from_utf8_lossy(&out.stderr)
+    );
+    assert_eq!(
+        f.lock()
+            .packages
+            .iter()
+            .find(|row| row.name.as_str() == DRIVER)
+            .unwrap()
+            .version
+            .to_string(),
+        "1.1.0"
+    );
 }

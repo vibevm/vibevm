@@ -52,6 +52,7 @@ pub(super) struct ScopedApply<'a> {
     pub(super) original_inputs:
         Option<&'a vibe_resolver::configuration::PackageConfigurationInputs>,
     pub(super) lifecycle: &'a InstallSlotLifecycle,
+    pub(super) checked_removal: Option<vibe_workspace::install::CheckedRemovalPlan>,
     pub(super) measured: &'a mut Measured,
     pub(super) identity: &'a UpdateIdentity,
     pub(super) project_root: &'a Path,
@@ -85,6 +86,7 @@ pub(super) fn apply(ctx: &output::Context, inputs: ScopedApply<'_>) -> Result<Up
     let ScopedApply {
         original_inputs,
         lifecycle,
+        checked_removal,
         measured,
         identity,
         project_root,
@@ -133,12 +135,27 @@ pub(super) fn apply(ctx: &output::Context, inputs: ScopedApply<'_>) -> Result<Up
     let cancellation = &token;
     cancellation.checkpoint()?;
     cancellation.publishing();
+    let retired_slot = checked_removal
+        .as_ref()
+        .map(|plan| plan.slot_relative())
+        .transpose()?;
     let mut undo = Undo {
+        retired_slot: retired_slot.clone(),
         rollback: InstallRollback::new(&workspace.root).with_cancellation(cancellation.clone()),
         lifecycle,
         cancellation,
         materialised: Vec::new(),
     };
+
+    if let Some(plan) = checked_removal {
+        if let Err(error) = undo.rollback.remove_checked(plan) {
+            return Err(undo.restore(measured, error.into()));
+        }
+        if let Some(slot) = &retired_slot {
+            measured.record_pruned(slot.clone());
+        }
+        lifecycle.record_pruned(measured.pruned().to_vec());
+    }
 
     // Remove every superseded slot, recording each real removal as it happens.
     // The transfer into the run is unconditional and comes BEFORE the `?`: a
@@ -265,7 +282,19 @@ pub(super) fn apply(ctx: &output::Context, inputs: ScopedApply<'_>) -> Result<Up
         recording.fail("lockfile recording failed");
         return Err(undo.restore(measured, error.into()));
     }
-    // The lock is durable: the update is committed, and its undo log goes.
+    // Publication is committed. Retained backup custody is an explicit success
+    // state, never permission to roll back the published lock or rerun hooks.
+    let retained_backups = match undo.rollback.retain_checked_retirements() {
+        Ok(backups) => backups.into_iter().map(|backup| vibe_wire::generated::update_report::RetainedBackup {
+            slot: retired_slot.clone().unwrap_or_default(),
+            path: backup.path.to_str().expect("lossless retirement path admitted before move").to_owned(),
+            state: match backup.state {
+                vibe_workspace::install::RetirementBackupState::PublishedBackupRetained => vibe_wire::generated::update_report::RetainedBackupState::PublishedBackupRetained,
+                vibe_workspace::install::RetirementBackupState::RestoredContainerRetained => vibe_wire::generated::update_report::RetainedBackupState::RestoredContainerRetained,
+            },
+        }).collect::<Vec<_>>(),
+        Err(reason) => { drop(undo); cancellation.committed(); anyhow::bail!("update published; retirement custody is uncertain: {reason}"); }
+    };
     drop(undo);
     cancellation.committed();
     recording.finish();
@@ -333,20 +362,23 @@ pub(super) fn apply(ctx: &output::Context, inputs: ScopedApply<'_>) -> Result<Up
     // truthfulness floor for failures; a completed command's bytes are
     // characterised, and widening them here would change what an old consumer
     // reads from a green run.
-    Ok(UpdateDraft::completed(
+    let mut draft = UpdateDraft::completed(
         identity,
         resolved,
         measured.bumps().to_vec(),
         lifecycle.progress(),
         rows,
         None,
-    ))
+    );
+    draft.retained_backups = retained_backups;
+    Ok(draft)
 }
 
 /// The scoped update's uncommitted slot changes: the prune and the subtree
 /// materialisation, recorded in one [`InstallRollback`]. Dropping it is the
 /// commit; [`Undo::restore`] puts the previous tree back.
 struct Undo<'a> {
+    retired_slot: Option<String>,
     rollback: InstallRollback,
     lifecycle: &'a InstallSlotLifecycle,
     cancellation: &'a vibe_core::cancellation::CancellationToken,
@@ -362,7 +394,19 @@ impl Undo<'_> {
     /// backup in the error.
     fn restore(mut self, measured: &mut Measured, error: anyhow::Error) -> anyhow::Error {
         let observer: &dyn vibe_workspace::install::SlotLifecycle = self.lifecycle;
-        match self.rollback.restore(Some(observer), &self.materialised) {
+        let restored = self.rollback.restore(Some(observer), &self.materialised);
+        measured.retained_backups.extend(self.rollback.retained_retirement_backups().iter().map(|backup| vibe_wire::generated::update_report::RetainedBackup {
+            slot: self.retired_slot.clone().unwrap_or_default(),
+            path: backup.path.to_str().expect("lossless path admitted before move").to_owned(),
+            state: vibe_wire::generated::update_report::RetainedBackupState::RestoredContainerRetained,
+        }));
+        if !self.rollback.retained_retirement_backups().is_empty() {
+            if let Some(slot) = &self.retired_slot {
+                measured.restore_one_pruned(slot);
+            }
+            self.lifecycle.record_pruned(measured.pruned().to_vec());
+        }
+        match restored {
             Ok(()) => {
                 measured.restore_pruned();
                 self.lifecycle.record_pruned(Vec::new());

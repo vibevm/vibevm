@@ -7,7 +7,9 @@
     "rustOptions": {
       "package": "vibe_wire::update_report"
     },
-    "x-vocabularies": ["compile_trace_report"]
+    "x-vocabularies": [
+      "compile_trace_report"
+    ]
   },
   "properties": {
     "ok": {
@@ -137,6 +139,15 @@
         "x-default": null,
         "description": "The shared compile-trace member (PROP-054 `##OBS-TRACE`, R3.4): present exactly when this command ran with compile tracing enabled; disabled old JSON omits it and remains readable."
       }
+    },
+    "retained_backups": {
+      "elements": {
+        "ref": "retained_backup"
+      },
+      "metadata": {
+        "x-empty": "omit",
+        "description": "Verified retired slot backups intentionally retained after publication or restoration; absent when no checked retirement occurred."
+      }
     }
   },
   "definitions": {
@@ -237,6 +248,32 @@
             "x-default": null
           }
         }
+      }
+    },
+    "retained_backup": {
+      "properties": {
+        "slot": {
+          "type": "string"
+        },
+        "path": {
+          "type": "string"
+        },
+        "state": {
+          "enum": [
+            "published_backup_retained",
+            "restored_container_retained"
+          ],
+          "metadata": {
+            "x-vocabulary": "closed"
+          }
+        }
+      },
+      "metadata": {
+        "x-wire-order": [
+          "slot",
+          "path",
+          "state"
+        ]
       }
     }
   }

@@ -39,6 +39,7 @@ pub(crate) struct UpdateDraft {
     pub(crate) bumps: Vec<String>,
     pub(crate) progress: InstallProgress,
     pub(crate) rows: Vec<SlotLifecycleReport>,
+    pub(crate) retained_backups: Vec<vibe_wire::generated::update_report::RetainedBackup>,
     /// Already validated by [`crate::commands::lifecycle::check_delegation`]
     /// before the draft was built — a malformed handoff is a failed exit, not
     /// a rendering refusal.
@@ -88,6 +89,7 @@ impl UpdateDraft {
             bumps,
             progress,
             rows,
+            retained_backups: Vec::new(),
             delegation: delegation.map(handoff_member),
         }
     }
@@ -116,6 +118,7 @@ impl UpdateDraft {
             bumps,
             progress,
             rows,
+            retained_backups: Vec::new(),
             delegation: None,
         }
     }
@@ -147,6 +150,7 @@ impl UpdateDraft {
             contributions: self.rows.iter().map(contribution_row).collect(),
             delegation: self.delegation,
             trace,
+            retained_backups: self.retained_backups,
         }
     }
 
@@ -168,6 +172,13 @@ impl UpdateDraft {
             // on its runtime status, which is what the registered format exists
             // to prevent. Both scopes have always emitted it.
             return ctx.emit_json(&report);
+        }
+        for backup in &report.retained_backups {
+            let outcome = match backup.state {
+                vibe_wire::generated::update_report::RetainedBackupState::PublishedBackupRetained => "update published; backup retained",
+                vibe_wire::generated::update_report::RetainedBackupState::RestoredContainerRetained => "update not published; slot restored; container retained",
+            };
+            ctx.summary(&format!("{outcome} for {} at {}", backup.slot, backup.path));
         }
         if !ok {
             // A failed update's account on the terminal is its error; it has

@@ -48,6 +48,7 @@ pub(super) struct Measured {
     /// a fact about the resolution, and stays true whether or not the stale
     /// slot could then be deleted.
     bumps: Vec<String>,
+    pub(super) retained_backups: Vec<vibe_wire::generated::update_report::RetainedBackup>,
 }
 
 impl Measured {
@@ -85,6 +86,9 @@ impl Measured {
     /// them is a path this run deleted any more.
     pub(super) fn restore_pruned(&mut self) {
         self.pruned.clear();
+    }
+    pub(super) fn restore_one_pruned(&mut self, slot: &str) {
+        self.pruned.retain(|path| path != slot);
     }
 
     pub(super) fn bumps(&self) -> &[String] {

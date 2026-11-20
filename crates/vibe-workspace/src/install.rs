@@ -44,6 +44,10 @@ mod prune;
 use prune::prune_stale_slots;
 
 mod checked_placement;
+mod checked_removal;
+pub use checked_removal::{
+    CheckedRemovalPlan, PreparedRetirementSlot, RetainedRetirementBackup, RetirementBackupState,
+};
 mod placement;
 use placement::{copy_mode_for, is_in_place, required_source_hash};
 

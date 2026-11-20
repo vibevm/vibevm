@@ -86,6 +86,36 @@ pub enum InstallResolver {
 }
 
 impl InstallResolver {
+    /// Freeze an independently verified old local source for checked retirement.
+    pub fn prepare_exact_retirement_source(
+        &self,
+        old: &vibe_core::manifest::LockedPackage,
+    ) -> anyhow::Result<vibe_registry::local_preview::PreparedRetirementSource> {
+        use vibe_registry::multi_registry_resolver::RegistrySource;
+        let from_multi = |multi: &MultiRegistryResolver| -> anyhow::Result<_> {
+            let alias = old.registry.as_deref().ok_or_else(|| {
+                anyhow::anyhow!("retirement requires the retained registry alias")
+            })?;
+            let sources = multi.sources()?;
+            let mut matching = sources.iter().filter(|source| source.name() == alias);
+            let Some(RegistrySource::Local(local)) = matching.next() else {
+                anyhow::bail!("retirement source owner is not an admitted local registry");
+            };
+            if matching.next().is_some() {
+                anyhow::bail!("retirement registry alias is ambiguous");
+            }
+            local.registry.prepare_exact_retirement_source(old)
+        };
+        match self {
+            Self::Local(local, _) => local.prepare_exact_retirement_source(old),
+            Self::LockedLocal { local, .. } => local.prepare_exact_retirement_source(old),
+            Self::Multi(multi, _) => from_multi(multi),
+            Self::Embedded { .. } => anyhow::bail!(
+                "retirement source equivalence for composite embedded sources is not established"
+            ),
+        }
+    }
+
     /// The selected local owner retains its source-tree execution semantics.
     /// None means this route uses ordinary immutable acquisition instead.
     pub fn retained_local_tree(

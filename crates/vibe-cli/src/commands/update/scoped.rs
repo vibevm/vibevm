@@ -29,6 +29,7 @@
 specmark::scope!("spec://org.vibevm.core/vibevm/VIBEVM-SPEC#command-summary");
 
 mod apply;
+mod guarded_leaf;
 mod measured;
 mod noop;
 mod roots;
@@ -421,30 +422,27 @@ fn run(
             args.package_configuration_review.as_deref(),
         )?;
     }
-    if configured_all {
-        let previous: std::collections::BTreeSet<_> = old_lock
-            .packages
-            .iter()
-            .map(|row| (row.group.clone(), row.name.to_string()))
-            .collect();
-        let selected: std::collections::BTreeSet<_> = graph
-            .iter()
-            .map(|row| (row.group.clone(), row.name.clone()))
-            .collect();
-        if previous != selected {
-            bail!(
-                "configured whole-workspace update requires explicit graph membership reconciliation before effects"
-            );
-        }
-    }
+    let mut reconciliation = if configured_all {
+        Some(guarded_leaf::prepare(
+            workspace,
+            &old_lock,
+            &updated,
+            resolver.source,
+            configured_all,
+            spec_format,
+        )?)
+    } else {
+        None
+    };
+    let planning_base = reconciliation.as_ref().map_or(&lockfile, |plan| &plan.base);
 
     // Every package this run re-resolved, counted before anything is consumed:
     // a failure draft must be able to say how big the run was even when the
     // set itself was moved into the staging below.
     let resolved = updated.len() + pending_in_place.len();
-    let full_world = stage::preflight_world(workspace, &lockfile, &updated, &pending_in_place)?;
+    let full_world = stage::preflight_world(workspace, planning_base, &updated, &pending_in_place)?;
     let (planned_lock, records) =
-        stage::prepare_records(record_capture, &lockfile, &updated, &pending_in_place)?;
+        stage::prepare_records(record_capture, planning_base, &updated, &pending_in_place)?;
     // A no-op `--all` stops here, before the confirmation and before region 2:
     // no slot or lock byte would move, so only boot is regenerated (change-only)
     // and the report is `unchanged`.
@@ -517,6 +515,7 @@ fn run(
         ctx,
         apply::ScopedApply {
             lifecycle: &staged.lifecycle,
+            checked_removal: reconciliation.as_mut().and_then(|plan| plan.removal.take()),
             measured: &mut measured,
             identity: &identity,
             project_root: &project_root,
@@ -541,18 +540,22 @@ fn run(
         },
     );
     outcome.map_err(|error| {
-        carry_measured(error, || {
-            RegisteredReportDraft::Update(Box::new(UpdateDraft::failed(
+        let build = || {
+            let mut draft = UpdateDraft::failed(
                 &identity,
                 resolved,
                 measured.bumps().to_vec(),
-                // JOINED: the lifecycle owns the prune prefix and whatever the
-                // materialise pass reached; the in-place fetches are only known
-                // here. One `take_reports`, because a second returns nothing.
                 measured.joined(staged.lifecycle.progress()),
                 staged.lifecycle.take_reports().unwrap_or_default(),
-            )))
-        })
+            );
+            draft.retained_backups = measured.retained_backups.clone();
+            RegisteredReportDraft::Update(Box::new(draft))
+        };
+        if measured.retained_backups.is_empty() {
+            carry_measured(error, build)
+        } else {
+            compile_trace::carry(build(), error, true)
+        }
     })
 }
 

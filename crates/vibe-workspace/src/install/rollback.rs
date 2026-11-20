@@ -46,6 +46,7 @@ use crate::WorkspaceError;
 
 #[derive(Debug)]
 enum Step {
+    CheckedRemoval(super::checked_removal::CheckedRemoval),
     CheckedPlacement {
         path: PathBuf,
         stashed: Option<PathBuf>,
@@ -85,6 +86,7 @@ pub struct InstallRollback {
     /// outputs) join this log: undone with it when a stop rolls the operation
     /// back — see [`Self::with_cancellation`].
     cancellation: Option<vibe_core::cancellation::CancellationToken>,
+    retained_retirements: Vec<super::checked_removal::RetainedRetirementBackup>,
 }
 
 impl InstallRollback {
@@ -173,6 +175,7 @@ impl InstallRollback {
             stash: None,
             steps: Vec::new(),
             cancellation: None,
+            retained_retirements: Vec::new(),
         }
     }
 
@@ -218,6 +221,47 @@ impl InstallRollback {
     /// slot is stashed, so the replacement finds nothing to delete.
     pub(crate) fn before_replace(&mut self, slot: &Path) -> Result<(), WorkspaceError> {
         self.move_aside(slot)
+    }
+
+    /// Retire only a completely admitted physical slot. The separate step
+    /// preserves uncertain backup state even before registration succeeds.
+    pub fn remove_checked(
+        &mut self,
+        plan: super::CheckedRemovalPlan,
+    ) -> Result<(), WorkspaceError> {
+        let step = super::checked_removal::CheckedRemoval::execute(plan, &self.stash_parent)?;
+        self.steps.push(Step::CheckedRemoval(step));
+        Ok(())
+    }
+
+    /// After durable publication, retain verified backups explicitly. Failure
+    /// is custody uncertainty, never permission to restore a committed lock.
+    pub fn retain_checked_retirements(
+        &mut self,
+    ) -> Result<Vec<super::checked_removal::RetainedRetirementBackup>, String> {
+        let mut retained = Vec::new();
+        let mut errors = Vec::new();
+        for step in std::mem::take(&mut self.steps) {
+            match step {
+                Step::CheckedRemoval(step) => match step.discard() {
+                    Ok(backup) => self.retained_retirements.push(backup),
+                    Err(error) => errors.push(error),
+                },
+                other => retained.push(other),
+            }
+        }
+        self.steps = retained;
+        if errors.is_empty() {
+            Ok(self.retained_retirements.clone())
+        } else {
+            Err(errors.join("; "))
+        }
+    }
+
+    pub fn retained_retirement_backups(
+        &self,
+    ) -> &[super::checked_removal::RetainedRetirementBackup] {
+        &self.retained_retirements
     }
 
     /// Remove `dir` by stashing it, so undo can put it back.
@@ -346,8 +390,18 @@ impl InstallRollback {
             first_error = Some(error);
         }
         for step in std::mem::take(&mut self.steps).into_iter().rev() {
-            if let Err(error) = undo_step(step) {
-                first_error.get_or_insert(error);
+            match step {
+                Step::CheckedRemoval(step) => match step.restore() {
+                    Ok(backup) => self.retained_retirements.push(backup),
+                    Err(error) => {
+                        first_error.get_or_insert(error);
+                    }
+                },
+                other => {
+                    if let Err(error) = undo_step(other) {
+                        first_error.get_or_insert(error);
+                    }
+                }
             }
         }
         if let Some(observer) = observer {
@@ -369,6 +423,7 @@ impl InstallRollback {
 
 fn undo_step(step: Step) -> Result<(), String> {
     match step {
+        Step::CheckedRemoval(step) => step.restore().map(|_| ()),
         Step::BootArtifacts(images) => images.restore(),
         Step::CheckedIgnore(ignore) => ignore.undo(),
         Step::CheckedPlacement {

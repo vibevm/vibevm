@@ -78,6 +78,11 @@ pub struct UpdateReport {
     #[serde(default)]
     pub hooks: Vec<UpdateHookReport>,
 
+    /// Verified retired slot backups intentionally retained after publication
+    /// or restoration; absent when no checked retirement occurred.
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub retained_backups: Vec<RetainedBackup>,
+
     /// The shared compile-trace member (PROP-054 `##OBS-TRACE`, R3.4): present
     /// exactly when this command ran with compile tracing enabled; disabled old
     /// JSON omits it and remains readable.
@@ -88,6 +93,24 @@ pub struct UpdateReport {
 pub use crate::generated::shared::CompileTraceReport;
 
 pub use crate::generated::shared::Duration;
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+pub enum RetainedBackupState {
+    #[serde(rename = "published_backup_retained")]
+    PublishedBackupRetained,
+
+    #[serde(rename = "restored_container_retained")]
+    RestoredContainerRetained,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+pub struct RetainedBackup {
+    pub slot: String,
+
+    pub path: String,
+
+    pub state: RetainedBackupState,
+}
 
 pub use crate::generated::shared::TimingRow;
 

@@ -176,6 +176,7 @@ impl std::error::Error for RenameError {
 }
 
 include!("transaction/operations.rs");
+mod linux_retirement;
 
 #[cfg(any(test, feature = "inject-failures"))]
 mod rename_hook {

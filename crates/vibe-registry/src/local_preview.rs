@@ -94,6 +94,131 @@ fn capture(project: &Project, components: &[&str]) -> Result<Snapshot> {
     Ok(snapshot)
 }
 
+/// Frozen source bytes for a narrowly admitted exact old local lock row.
+/// Private fields ensure callers cannot bless a live slot as its own source.
+pub struct PreparedRetirementSource {
+    row: vibe_core::manifest::LockedPackage,
+    source: Project,
+    snapshot: Snapshot,
+    frozen: tempfile::TempDir,
+}
+impl PreparedRetirementSource {
+    pub fn package(&self) -> &vibe_core::manifest::LockedPackage {
+        &self.row
+    }
+    pub fn frozen_tree(&self) -> &std::path::Path {
+        self.frozen.path()
+    }
+    pub fn recheck(&self) -> Result<()> {
+        let current = capture(&self.source, &[])?;
+        if current != self.snapshot {
+            bail!("exact retirement source changed after admission");
+        }
+        if crate::compute_content_hash(self.frozen.path())? != self.row.content_hash.as_str() {
+            bail!("frozen retirement source no longer matches the exact old pin");
+        }
+        Ok(())
+    }
+}
+
+/// Source ownership comes from the actual retained local registry, not a
+/// request-owned arbitrary tree. Freeze exactly the bytes checked against the
+/// old lock; the workspace remains independent of registry hash machinery.
+impl crate::LocalRegistry {
+    pub fn prepare_exact_retirement_source(
+        &self,
+        old: &vibe_core::manifest::LockedPackage,
+    ) -> Result<PreparedRetirementSource> {
+        use vibe_core::manifest::{Materialization, SourceKind};
+        if old.materialization != Materialization::Copy
+            || old.overridden
+            || old.via_override.is_some()
+            || old.via_redirect.is_some()
+            || old.template.is_some()
+            || !old.embedded_sources.is_empty()
+            || !matches!(
+                old.source_kind,
+                None | Some(SourceKind::Registry) | Some(SourceKind::Local)
+            )
+        {
+            bail!("retirement supports only an exact ordinary local plain-copy source");
+        }
+        let expected = self
+            .root()
+            .join(old.group.as_str())
+            .join(old.name.as_str())
+            .join(format!("v{}", old.version));
+        if crate::localdir_path(old.source_url.as_str())? != expected {
+            bail!("retirement source binding differs from retained local owner");
+        }
+        let root = Project::open(self.root())?;
+        let version = format!("v{}", old.version);
+        let components = [old.group.as_str(), old.name.as_str(), version.as_str()];
+        let snapshot = capture(&root, &components)?;
+        let manifest = snapshot
+            .files
+            .get(Manifest::FILENAME)
+            .ok_or_else(|| anyhow!("retirement source manifest missing"))?;
+        let manifest = Manifest::parse_str(std::str::from_utf8(&manifest.bytes)?)?;
+        let metadata = manifest.require_package()?;
+        if metadata.group != old.group
+            || metadata.name != old.name
+            || metadata.version != old.version
+            || metadata.kind != old.kind
+            || metadata.materialization != Materialization::Copy
+            || manifest.template.is_some()
+            || metadata.has_explicit_source_policy()
+        {
+            bail!("retirement source coordinate or plain-copy policy differs from old lock");
+        }
+        let hash = hash_snapshot(&snapshot);
+        if hash != old.content_hash.as_str() {
+            bail!("retirement source content differs from old immutable pin");
+        }
+        let frozen = tempfile::Builder::new()
+            .prefix("vibe-retirement-source-")
+            .tempdir()?;
+        let frozen_project = Project::open(frozen.path())?;
+        for (path, file) in &snapshot.files {
+            frozen_project.write_atomic_with_mode(path, &file.bytes, file.unix_mode)?;
+        }
+        if capture(&root, &components)? != snapshot {
+            bail!("retirement source changed while freezing");
+        }
+        let source = Project::open(&expected)?;
+        let snapshot = capture(&source, &[])?;
+        if hash_snapshot(&snapshot) != old.content_hash.as_str() {
+            bail!("retirement source changed after freeze");
+        }
+        let prepared = PreparedRetirementSource {
+            row: old.clone(),
+            source,
+            snapshot,
+            frozen,
+        };
+        prepared.recheck()?;
+        Ok(prepared)
+    }
+}
+
+fn hash_snapshot(snapshot: &Snapshot) -> String {
+    let mut hasher = Sha256::new();
+    let entries = snapshot
+        .files
+        .iter()
+        .map(|(path, file)| (path.clone(), file))
+        .collect();
+    for (path, file) in
+        crate::hash_recipe::order_entries(crate::hash_recipe::RecipeId::Legacy0, entries)
+    {
+        hasher.update(path.as_bytes());
+        hasher.update([0]);
+        hasher.update(&file.bytes);
+        hasher.update([0]);
+    }
+    format!("sha256:{:x}", hasher.finalize())
+}
+
 /// Observe the ordinary `<registry>/<group>/<name>/v<exact>/` layout only.
 /// Every traversal starts from `project`, not an ambient absolute pathname.
 /// Two complete bounded observations must agree, including child identities.
