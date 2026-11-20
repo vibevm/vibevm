@@ -2,6 +2,7 @@
 //! owned by the verified distribution's native `vibe self apply` implementation.
 pub mod file_verify;
 pub mod kit;
+mod optional_setup;
 pub mod regular;
 pub mod source_extract;
 

@@ -34,6 +34,9 @@ pub struct Args {
     /// Keep persistent user PATH unchanged (default: activate user PATH automatically).
     #[arg(long)]
     pub no_path: bool,
+    /// Offer metadata-only configuration of existing AI connections after installation.
+    #[arg(long)]
+    pub configure_ai: bool,
     #[arg(long)]
     pub unattended: bool,
     #[arg(long)]
@@ -387,6 +390,21 @@ pub fn run(args: Args) -> Result<()> {
         "Apply profile and activate verified distribution",
     )?;
     report.stage("Installation complete")?;
+    if args.configure_ai
+        && let Some(component) = verified.manifest.components.iter().find(|component| {
+            component.name
+                == vibe_wire::behaviour::release_manifest::DistributionComponentName::Vibe
+        })
+    {
+        crate::optional_setup::after_install(
+            &executable,
+            component,
+            &kit,
+            destination.as_deref(),
+            settings.as_deref(),
+            args.unattended,
+        );
+    }
     Ok(())
 }
 

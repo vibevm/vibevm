@@ -382,8 +382,15 @@ pub(super) fn run_which_cmd(ctx: &output::Context, env: &VvmEnv, args: VvmWhichA
     let (path, selector) = read_stage(ctx, "Resolving installed component", |task| {
         task.detail(format!("component: {}", args.component));
         let store = env.store()?;
-        let running = running_identity(&store)?;
+        let running = if args.active {
+            None
+        } else {
+            running_identity(&store)?
+        };
         let active = store.active()?;
+        if args.active && active.is_none() {
+            return Err(VvmError::NoActiveVersion.into());
+        }
         which_resolution(
             &store,
             running.as_ref(),
@@ -516,6 +523,14 @@ mod tests {
             which_resolution(&store, Some(&running), Some(&active), "vibe", None).unwrap();
         assert!(selfloc::same_location(which_vibe, &executable));
         assert!(selector.is_none(), "source executions invent no local #N");
+        let (installed, selector) =
+            which_resolution(&store, None, Some(&active), "vibe", None).unwrap();
+        assert_eq!(
+            installed,
+            store.binary_path(&active.version_id(), active.instance)
+        );
+        assert_eq!(selector, Some(active.selector().to_string()));
+        assert!(which_resolution(&store, None, None, "vibe", None).is_err());
         let (which_source, _) =
             which_resolution(&store, Some(&running), Some(&active), "source", None).unwrap();
         assert!(selfloc::same_location(which_source, &worktree));

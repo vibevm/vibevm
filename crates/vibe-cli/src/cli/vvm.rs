@@ -315,6 +315,9 @@ pub struct VvmReleasesArgs {
 
 #[derive(Debug, clap::Args)]
 pub struct VvmWhichArgs {
+    /// Locate the active installed instance, not the running source executable.
+    #[arg(long)]
+    pub active: bool,
     /// Instance member to locate: vibe | vibe-index | source.
     #[arg(default_value = "vibe")]
     pub component: String,
