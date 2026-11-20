@@ -223,3 +223,5 @@ Six historical validator/schema changes distinguish optional capture and path de
 Seven historical preview-tool changes distinguish verified capture bytes, scoped contribution records, draft assembly rollback and later independent release proof. Reading the original tests and guides did not execute them or publish a release.
 
 Bound deployment and checkout documentation source checks are separate: a copied receipt does not confer another instance’s identity and a directory declaration is not proof of a complete source census. Scope is limited to the two historical paths in the index.
+
+Inspected named test-source assertions in 18 historical machine-operation revisions; each index row binds the actual changed assertion and its first-parent diff. Shared run identity, refusal without effects and partial or uncertain physical outcomes remain distinct observations. This is not a rerun of the process fixtures.
