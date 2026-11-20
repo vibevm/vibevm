@@ -247,3 +247,5 @@ At `e73b73881d`, the entity inventory grows to 35 model identities without admit
 Two generated declarations were reviewed: the Zap bridge selects a branch and installer, not an installed binary; the migration request rejects unknown fields, but its integer type does not enforce epoch one. Neither projection was treated as an executed operation.
 
 Four historical changes distinguish fixture failure from helper failure, a typed answer from effect authority, current-source collection from source-less Gitlink proof, and reuse of Ready from unconditional trust in a stored marker. Only the named evidence was reviewed; no Git publication or test rerun is implied.
+
+At `49a9ffe3d4`, initialization requires domain result/error epochs as well as the session envelope. At `72cf492f83`, refusing a stale submission reference does not erase the prior run or establish absence of effects. Both implementation changes and regression assertions were inspected, not re-executed.
