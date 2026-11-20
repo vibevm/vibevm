@@ -1,5 +1,9 @@
 # Corporate-env campaign: format and behaviour changes
 
+## CORP-FMT-065 — attended mixed metadata setup with explicit compatibility skip
+
+Implementation candidate, 2026-11-21. The existing attended setup multiselect offers Pi, Qwen and Claude. Selecting Claude explicitly skips only connection metadata setup, explains absent native OpenAI compatibility/future separate work and preserves native authentication; it is not installation failure. Supported Pi/Qwen targets alone enter the unchanged atomic planner. Before default-No consent, display selected alias/preset targets, old/proposed rows and unselected binding metadata that will remain unchanged. Claude-only selection completes informationally without writing. Existing typed `--agent` mixed/unsupported requests retain strict refusal, with no new flag, schema, preview protocol or storage migration. No agent installation, native credential injection or provider request is implied.
+
 ## CORP-FMT-064 — interactive removal previews coordinated consumers
 
 Implementation candidate, 2026-11-20. Existing keyring Remove action first asks the accepted reference owner. Used items show only consumer IDs and refuse; unknown/unavailable inventory has a distinct refusal. Free items show informational absence, then existing interruptible Keep(default)/Remove selection; Escape/Ctrl-C keep the item. Confirmed removal uses existing expected tokens and `remove_coordinated`, reacquiring inventory/store protection rather than trusting the preview. No storage/index/report epoch or value access changes; immutable private bytes remain after logical removal as before.

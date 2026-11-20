@@ -42,11 +42,11 @@ pub(super) fn run(
         bail!("setup requires explicit --agent selection outside an attended terminal");
     }
     if interactive && !alias_entry {
-        let choices = crate::output::prompts::named(&["pi", "qwen"]);
+        let choices = crate::output::prompts::named(&["pi", "qwen", "claude"]);
         let Some(selected) = crate::output::prompts::choose_many(
             "Configure existing connection metadata only",
             &choices,
-            &[false, false],
+            &[false, false, false],
         )?
         else {
             return Ok(());
@@ -76,6 +76,12 @@ pub(super) fn run(
     let mut aliases = BTreeMap::new();
     for name in agents {
         let launcher = super::super::agent::launchers::resolve(&root, &config, &name)?;
+        if interactive && !alias_entry && launcher.kind.as_str() == "claude" {
+            println!(
+                "Claude connection setup skipped: native OpenAI API compatibility is unavailable; future compatibility work is separate. Native authentication is preserved; this is not an installation failure."
+            );
+            continue;
+        }
         if aliases
             .insert(name, launcher.kind.as_str().to_owned())
             .is_some()
@@ -83,10 +89,27 @@ pub(super) fn run(
             bail!("duplicate setup agent selection");
         }
     }
+    if aliases.is_empty() {
+        println!("No supported connection targets selected; metadata unchanged.");
+        return Ok(());
+    }
     cancel.checkpoint()?;
     let preview = store.setup_preview(&aliases, mode)?;
     let mut apply = response;
     if interactive {
+        let unchanged = vibe_workspace::system_prompt::HarnessKind::ALL
+            .into_iter()
+            .filter(|kind| !aliases.values().any(|id| id == kind.as_str()))
+            .map(|kind| store.binding(kind.as_str()))
+            .collect::<std::result::Result<Vec<_>, _>>()?;
+        println!(
+            "Selected metadata targets: {}",
+            serde_json::to_string(&aliases)?
+        );
+        println!(
+            "Unselected bindings preserved: {}",
+            serde_json::to_string(&unchanged)?
+        );
         if alias_entry {
             println!(
                 "Selected launcher alias and preset: {}",
