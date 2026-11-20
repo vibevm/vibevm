@@ -1,0 +1,5 @@
+# Keep unclassified ordinary answers out of public decoder errors
+
+Following the observed rejection-path disclosure in b8d543b82, replace raw decoder errors at the ordinary CLI preview, ordinary install envelope and registered configuration preview boundaries with closed, useful, value-free reason classes. Neither the response nor an attached error source may include caller-controlled input, unknown keys, values or digests. Preserve strict grammar, absent/null distinctions, useful static field context and successful public values. Reuse the ordinary wire owner; do not add secret delivery, change the app submission contract or relax admission.
+
+Run the original qualification without filtering the previously failing case or its successors, plus actual registered MCP calls and dedicated decoder error/source-chain checks. Include safe positive controls. Scan framework-owned outputs and state with synthetic markers only; do not print their values or digests on failure. Keep the original failing qualification commit and distinguish witnessed repair from general secret transport support. Return scope, final binary hashes, complete regression and verified manifest.
