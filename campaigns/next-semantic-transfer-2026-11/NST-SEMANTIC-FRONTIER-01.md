@@ -277,3 +277,5 @@ Historical state readers distinguish the named deployment child from the directo
 Three historical revalidation paths were checked: canonical composition bytes after proof, saved witness bytes across fresh checking, and host-selected generation before deployment commit. None establishes future pathname stability or new execution.
 
 Three source changes distinguish unique durable reservation, fixed internal entry compilation, and inspection of the winning peer run. None of those observations alone is public operation acceptance.
+
+Four historical reviews distinguish specification hashes, parsing and manifest-local collision checks, selected-world provenance, and validated planner publication. Both specification hashes in the source receipt reproduced; no extension ran during this review.
