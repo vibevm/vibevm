@@ -40,3 +40,5 @@ pub mod requirements_report;
 pub(crate) mod scalars;
 pub mod verification_evidence;
 pub mod vocabularies;
+
+pub mod read_doc;

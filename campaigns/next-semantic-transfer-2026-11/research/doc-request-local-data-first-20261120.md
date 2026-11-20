@@ -1,0 +1,25 @@
+# Source-bound request-local Doc data — candidate
+
+Contract `NST-DOC-REQUEST-LOCAL-DATA-FIRST-01`, architect `e30230730bf46bad4c271dfbc61b7a6a45525b31`. Prior accepted qualification `9f03d1b3f` established actual silent ignore, not public configuration consumption. This delivery targets only actual registered read_doc, one uniquely selected in-tree Doc and one public unguarded exactly-one group with data-only effects. Remap remains unchanged.
+
+## Public request
+
+```json
+{"address":"spec://org.example/manual/guide","input":{"selections":{"mode":{"intent":"exact","members":["on"]}}}}
+```
+
+Dedicated canonical JTD request, closed objects/vocabularies; optional input is absent-or-object, never null. Exactly one declared group and one member are admitted. Format md/xml and absent language follow prior behavior; lang+input explicitly refuses this first slice. Unknown fields, null and wrong types return static value-free schema errors, with no serde chain. No client expected witness: one synchronous guarded read, no later apply or persistence.
+
+No-input response retains old fields/source/language selection and page projection. Answered response adds only `selected_values` using existing typed ParameterValue JSON projection. Page body, address, language and provenance are not rewritten by the choice. Values are not manifest changes, lock history, consent or executable permission.
+
+## One capture, no name re-resolution
+
+Existing SpecSources/CapturedDocument owner captures the in-tree candidate inventory at initial selection: an exact pinned version selects its one identity; unversioned input requires a single version. Duplicate/mismatched/ambiguous candidates refuse before page/values response. No checkout/lock/store fallback is granted to answered requests. Bounded inventory128 entries, no-follow candidate directories and retained identities are rechecked alongside the existing policy manifest/page guard before response. Canonical registry/store entry layout remains the physical version-root owner.
+
+The held policy's actual manifest supplies the definition; no alternate name lookup or fresh manifest is spliced into the rendered page. Kind, coordinate and version are cross-checked. Shared evaluator computes request-local typed values; no independent choice solver. Rechecks are cooperative source-drift detection, not an atomic guarantee against unrestricted hostile same-user mutation.
+
+## Verification chronology
+
+Canonical generator r1–r4 refused missing explicit schema metadata (empty collection policy, absent optional default, closed vocabulary); sources corrected, generation r5 passed. No generated files hand-edited. CLI check/build passed. First actual registered on/off/no-input gate passed, separately returning typed values while page/provenance remain identical. Nine initial source/shape worlds passed: malformed/unknown/null, extra members, lang+input, competing versions and mismatched source refuse with no partial structured page/values; exact older pin returns the older page. The initially named duplicate-identity fixture was actually an invalid semver directory and is renamed accordingly in the final fixture; it is not credited as a valid duplicate-identity proof. Held capture tests cover definition/page/inventory/root identity drift. Source review additionally retained original legacy page SourceObservation and compares bytes plus file identity only on answered reads, including a same-byte replacement negative and a materialized-record refusal. Identity-hardened public suite passed109/109 with zero filtered (CLI `08b7913e7b4d7ef9ac4392d88e1fe7340f24ff5f6a3845caffa6733446460bde`, fixture `4958966f6f3ef6361eb8065ad03bacb87a40690bf249435b1b683c4a48726673`). Final source additionally has test-only materialized-marker drift and a redundant-closure lint correction, so final exact-pair runtime must be repeated rather than inheriting these receipts. Lower strict lint r1 retained RED on the new redundant closure; corrected without semantic change. Final exact pair CLI `d228f43f75e2de2308243f347a2116c83bfb1ddc3e87a195682ffafadf3b0024` / fixture `d9225d20d9901b3889188689c666d9f18522d57ce6a93f7bb645305445a9e19c` passed109/109 again (`doc-data-public-all-r2.log`). Final held-capture test passed six drift subjects, final Doc reader10 and actual app-dispatch4 passed; existing MCP read_doc4/wire1 passed earlier and final wire1 and strict public-fixture lint passed. Affected Doc/MCP/wire all-target strict lint passed r2. Raw canonical reproducibility passed for all245 generated wire files byte-for-byte before any fmt normalization (`doc-data-codegen-proof-r1.json`); separate workspace fmt-check and scoped diff-check passed. Independent exact-source acceptance remains pending.
+
+No package install, boot/hooks, service, target probe, cache/settings/consent mutation or hidden secret input is introduced. Exact final artifacts and independent acceptance pending. NST/parents remain open; mandatory USER-PROJECT real-agent and submitted-writer fault injection remain UNVERIFIED; unrelated broad-bin enum lint limitation remains separate.

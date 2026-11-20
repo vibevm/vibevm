@@ -29,12 +29,13 @@ pub struct CapturedDocument {
     pub(crate) media: String,
     pub(crate) bytes: Vec<u8>,
     guard: Guard,
+    choice_inventory: Option<ChoiceInventory>,
 }
 
 #[derive(Debug)]
 enum Guard {
     Authored(PackagePolicyObservation, CitedNativeSource),
-    Legacy(PackagePolicyObservation),
+    Legacy(PackagePolicyObservation, vibe_safefs::SourceObservation),
     Installed {
         resolver: FileResolver,
         group: String,
@@ -52,6 +53,9 @@ impl CapturedDocument {
     }
     /// Recheck retained source selection after parsing or rendering.
     pub fn recheck(&self) -> Result<(), String> {
+        if let Some(inventory) = &self.choice_inventory {
+            inventory.recheck()?;
+        }
         match &self.guard {
             Guard::Authored(policy, source) => {
                 reject_materialized(policy)?;
@@ -59,7 +63,22 @@ impl CapturedDocument {
                     .recheck_cited_native(source)
                     .map_err(|e| e.to_string())
             }
-            Guard::Legacy(policy) => policy.recheck_unchanged().map_err(|e| e.to_string()),
+            Guard::Legacy(policy, observed) => {
+                policy.recheck_unchanged().map_err(|e| e.to_string())?;
+                if self.choice_inventory.is_some() {
+                    reject_materialized(policy)?;
+                    let current = policy
+                        .read_source_observation(&self.relative)
+                        .map_err(|e| e.to_string())?;
+                    if current.as_ref().is_none_or(|current| {
+                        current.bytes() != self.bytes.as_slice()
+                            || current.identity() != observed.identity()
+                    }) {
+                        return Err(refused("answered Doc page changed"));
+                    }
+                }
+                Ok(())
+            }
             Guard::Installed {
                 resolver,
                 group,
@@ -267,6 +286,7 @@ impl SpecSources {
                 interpretation: source.interpretation,
                 media: source.media.clone(),
                 bytes: source.observation.bytes().to_vec(),
+                choice_inventory: None,
                 guard: Guard::Authored(policy, source),
             };
             captured.recheck()?;
@@ -283,10 +303,11 @@ impl SpecSources {
         let relative = fwd(path
             .strip_prefix(&instance.root)
             .map_err(|e| e.to_string())?);
-        let bytes = policy
-            .read_source_bytes(&relative)
+        let observed = policy
+            .read_source_observation(&relative)
             .map_err(|e| e.to_string())?
             .ok_or_else(|| refused("legacy document missing"))?;
+        let bytes = observed.bytes().to_vec();
         let interpretation = if policy
             .package()
             .is_some_and(|p| p.kind == vibe_core::PackageKind::Doc)
@@ -309,7 +330,8 @@ impl SpecSources {
             interpretation,
             media,
             bytes,
-            guard: Guard::Legacy(policy),
+            choice_inventory: None,
+            guard: Guard::Legacy(policy, observed),
         };
         captured.recheck()?;
         Ok(Some(captured))
@@ -401,6 +423,7 @@ impl SpecSources {
             interpretation,
             media: row.media.clone(),
             bytes,
+            choice_inventory: None,
             guard: Guard::Installed {
                 resolver,
                 group: expected.group.to_string(),
@@ -412,5 +435,216 @@ impl SpecSources {
         };
         captured.recheck()?;
         Ok(Some(captured))
+    }
+}
+
+/// Finite candidate inventory held only by answered in-tree reads.
+#[derive(Debug)]
+struct ChoiceInventory {
+    project: Project,
+    names: Vec<String>,
+    identities: Vec<(String, vibe_safefs::FileIdentity)>,
+}
+impl ChoiceInventory {
+    fn recheck(&self) -> Result<(), String> {
+        let rebound = Project::open(self.project.root_path()).map_err(|e| e.to_string())?;
+        if rebound.root_identity().map_err(|e| e.to_string())?
+            != self.project.root_identity().map_err(|e| e.to_string())?
+        {
+            return Err(refused("Doc candidate directory changed"));
+        }
+        let root = self.project.root_dir().map_err(|e| e.to_string())?;
+        let mut names = self
+            .project
+            .child_names_bounded(&root, 128)
+            .map_err(|e| e.to_string())?;
+        names.sort();
+        if names != self.names {
+            return Err(refused("Doc candidate inventory changed"));
+        }
+        for (name, expected) in &self.identities {
+            let child = root.open_child(name).map_err(|e| e.to_string())?;
+            if child.identity().map_err(|e| e.to_string())? != *expected {
+                return Err(refused("Doc candidate identity changed"));
+            }
+        }
+        Ok(())
+    }
+}
+impl CapturedDocument {
+    pub(crate) fn choice_manifest(&self) -> Result<&Manifest, String> {
+        if self.source != Source::InTree || self.choice_inventory.is_none() {
+            return Err(refused(
+                "answered Doc requires a unique captured in-tree source",
+            ));
+        }
+        let policy = match &self.guard {
+            Guard::Authored(policy, _) | Guard::Legacy(policy, _) => policy,
+            _ => return Err(refused("answered installed Doc unsupported")),
+        };
+        self.recheck()?;
+        reject_materialized(policy)?;
+        policy
+            .manifest()
+            .ok_or_else(|| refused("captured Doc manifest missing"))
+    }
+}
+impl SpecSources {
+    /// Capture the page and candidate inventory in the SAME lookup. No fallback
+    /// to checkout/store/lock is allowed for request-local Doc configuration.
+    pub(crate) fn capture_document_with_choice(
+        &self,
+        address: &SpecAddress,
+    ) -> Result<Option<CapturedDocument>, String> {
+        let Authority::Package {
+            group,
+            name,
+            version,
+        } = &address.authority
+        else {
+            return Err(refused("Doc choice address must name package"));
+        };
+        if self
+            .checkout
+            .as_ref()
+            .is_some_and(|(coord, _)| coord.group.as_deref() == Some(group) && coord.name == *name)
+        {
+            return Err(refused("answered checkout Doc unsupported"));
+        }
+        let registry = self
+            .in_tree
+            .as_ref()
+            .ok_or_else(|| refused("answered Doc requires in-tree source"))?;
+        // Preserve the existing registry layout owner, while holding the exact
+        // package directory and bounded names for ambiguity/recheck evidence.
+        let parsed = Group::parse(group).map_err(|_| refused("invalid Doc coordinate"))?;
+        let package_root = registry.join(parsed.as_str()).join(name);
+        let project = Project::open(&package_root).map_err(refused)?;
+        let root = project.root_dir().map_err(|e| e.to_string())?;
+        let mut names = project
+            .child_names_bounded(&root, 128)
+            .map_err(|e| e.to_string())?;
+        names.sort();
+        let mut candidates = Vec::new();
+        let mut identities = Vec::new();
+        for child in &names {
+            let Some(raw) = child.strip_prefix('v') else {
+                continue;
+            };
+            let parsed = semver::Version::parse(raw)
+                .map_err(|_| refused("invalid Doc version directory"))?;
+            let held = root
+                .open_child(child)
+                .map_err(|_| refused("Doc candidate must be no-follow directory"))?;
+            identities.push((child.clone(), held.identity().map_err(|e| e.to_string())?));
+            if version
+                .as_ref()
+                .is_none_or(|wanted| wanted.trim_start_matches('=') == parsed.to_string())
+            {
+                candidates.push(parsed);
+            }
+        }
+        if candidates.len() != 1 {
+            return Err(refused(
+                "answered Doc requires exactly one matching source identity",
+            ));
+        }
+        let selected = candidates.remove(0);
+        let inventory = ChoiceInventory {
+            project,
+            names,
+            identities,
+        };
+        inventory.recheck()?;
+        let mut captured = self
+            .capture_authored(
+                address,
+                Instance {
+                    source: Source::InTree,
+                    version: selected.to_string(),
+                    root: store::entry_dir(registry, &parsed, name, &selected),
+                },
+            )?
+            .ok_or_else(|| refused("selected Doc page missing"))?;
+        let manifest = match &captured.guard {
+            Guard::Authored(policy, _) | Guard::Legacy(policy, _) => policy.manifest(),
+            _ => None,
+        }
+        .ok_or_else(|| refused("selected Doc manifest missing"))?;
+        let meta = manifest
+            .require_package()
+            .map_err(|_| refused("selected Doc package metadata missing"))?;
+        if meta.kind != vibe_core::PackageKind::Doc
+            || meta.group != parsed
+            || meta.name.as_str() != name
+            || meta.version != selected
+        {
+            return Err(refused("selected Doc coordinate/version/kind mismatch"));
+        }
+        captured.choice_inventory = Some(inventory);
+        captured.recheck()?;
+        Ok(Some(captured))
+    }
+}
+
+#[cfg(test)]
+mod choice_tests {
+    use super::*;
+    #[test]
+    fn answered_doc_capture_refuses_definition_page_and_inventory_drift() {
+        for mutation in [
+            "definition",
+            "page",
+            "same-byte-page",
+            "materialized",
+            "inventory",
+            "identity",
+        ] {
+            let temp = tempfile::tempdir().unwrap();
+            let registry = temp.path().join("packages");
+            let root = registry.join("org.example/manual/v1.0.0");
+            std::fs::create_dir_all(root.join("vibevm/vibespecs")).unwrap();
+            std::fs::write(root.join("vibe.toml"),"[package]\ngroup='org.example'\nname='manual'\nkind='doc'\nversion='1.0.0'\ntitle='Manual'\nabstract='Synthetic manual.'\n[[documents]]\npackage='org.example/subject'\nversion='*'\n").unwrap();
+            std::fs::write(
+                root.join("vibevm/vibespecs/guide.xml"),
+                "<spec xmlns='https://vibevm.org/spec/1'><title id='root'>Manual</title></spec>",
+            )
+            .unwrap();
+            let sources = SpecSources::new().with_in_tree(&registry);
+            let address = SpecAddress::parse("spec://org.example/manual/guide").unwrap();
+            let captured = sources
+                .capture_document_with_choice(&address)
+                .unwrap()
+                .unwrap();
+            match mutation {
+                "definition" => std::fs::write(root.join("vibe.toml"), "[broken").unwrap(),
+                "page" => {
+                    std::fs::write(root.join("vibevm/vibespecs/guide.xml"), "changed").unwrap()
+                }
+                "same-byte-page" => {
+                    let page = root.join("vibevm/vibespecs/guide.xml");
+                    let bytes = std::fs::read(&page).unwrap();
+                    std::fs::rename(&page, temp.path().join("retained-page")).unwrap();
+                    std::fs::write(&page, bytes).unwrap();
+                }
+                "materialized" => {
+                    std::fs::write(
+                        root.join(vibe_core::layout::SLOT_RECORD_FILENAME),
+                        "synthetic",
+                    )
+                    .unwrap();
+                }
+                "inventory" => std::fs::create_dir(root.parent().unwrap().join("v2.0.0")).unwrap(),
+                "identity" => {
+                    std::fs::rename(&root, temp.path().join("retained")).unwrap();
+                    std::fs::create_dir(&root).unwrap();
+                }
+                _ => unreachable!(),
+            }
+            assert!(
+                captured.recheck().is_err(),
+                "answered capture missed {mutation} drift"
+            );
+        }
     }
 }

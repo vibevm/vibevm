@@ -215,6 +215,7 @@ pub enum FormatId {
     PackageSkillReceipt,
     PackageSkillReceiptV1,
     PackageSkillReceiptV2,
+    ReadDocRequest,
     RemapBundle,
     RemapConsent,
     RemapProviders,

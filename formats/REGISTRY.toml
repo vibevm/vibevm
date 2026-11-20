@@ -2229,3 +2229,12 @@ foreign_parsers = "many"
 unknown_fields = "deny"
 corpus = "none"
 sunset = "none"
+
+[format.read-doc-request]
+epoch = 1
+schema = "schemas/read_doc_request.jtd.json"
+recoverable = false
+foreign_parsers = "many"
+corpus = "none"
+sunset = "none"
+unknown_fields = "deny"

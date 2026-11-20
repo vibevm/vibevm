@@ -7760,7 +7760,7 @@ fn read_consent_kernel_choice(
 }
 
 #[test]
-fn registered_doc_read_data_choice_is_not_a_public_choice_input() {
+fn registered_doc_read_data_choice_returns_source_bound_values() {
     let f = Fixture::new(false);
     // This subject uses no package installation; the Doc is authored in-tree.
     let docs = f.project.join("vibevm/vibepacks/org.example/manual/v1.0.0");
@@ -7808,7 +7808,7 @@ fn registered_doc_read_data_choice_is_not_a_public_choice_input() {
     assert!(
         descriptor["inputSchema"]["properties"]
             .get("input")
-            .is_none()
+            .is_some()
     );
     let manifest = Manifest::read(&source).unwrap();
     assert!(read_consent_kernel_choice(&manifest, false).is_empty());
@@ -7822,7 +7822,7 @@ fn registered_doc_read_data_choice_is_not_a_public_choice_input() {
         let mut args =
             serde_json::json!({"address":"spec://org.example/manual/guide","format":"md"});
         if let Some(on) = on {
-            args["input"] = serde_json::json!({"selections":{"mode":if on {"on"} else {"off"}},"parameters":{}});
+            args["input"] = serde_json::json!({"selections":{"mode":{"intent":"exact","members":[if on {"on"} else {"off"}]}}});
         }
         let script=serde_json::json!({"jsonrpc":"2.0","id":1,"method":"tools/call","params":{"name":"read_doc","arguments":args}}).to_string()+"\n";
         let out = f
@@ -7849,6 +7849,15 @@ fn registered_doc_read_data_choice_is_not_a_public_choice_input() {
     let base = call(None);
     assert_ne!(base["result"]["isError"], true, "valid Doc read refused");
     let content = &base["result"]["structuredContent"];
+    assert!(
+        content.get("selected_values").is_none(),
+        "no-input Doc response acquired new field"
+    );
+    assert_eq!(
+        call(None),
+        base,
+        "fresh-process no-input Doc response changed"
+    );
     assert_eq!(content["source"], "in-tree");
     assert_eq!(content["format"], "md");
     assert!(
@@ -7859,12 +7868,27 @@ fn registered_doc_read_data_choice_is_not_a_public_choice_input() {
     );
     for on in [false, true] {
         let attempted = call(Some(on));
+        assert_ne!(attempted["result"]["isError"], true, "answered Doc refused");
+        let mut actual = attempted["result"]["structuredContent"].clone();
+        let values = actual
+            .as_object_mut()
+            .unwrap()
+            .remove("selected_values")
+            .expect("selected Doc values missing");
         assert_eq!(
-            attempted, base,
-            "read_doc behavior changed: reclassify explicit refusal versus choice consumption"
+            values,
+            if on {
+                serde_json::json!({"selected":true})
+            } else {
+                serde_json::json!({})
+            }
+        );
+        assert_eq!(
+            actual, base["result"]["structuredContent"],
+            "Doc page/provenance changed under request-local choice"
         );
         println!(
-            "doc registered choice={on} kernel-data-changed=true public-extra-input=ignored page/provenance=unchanged"
+            "doc registered choice={on} kernel-data-changed=true public-input=consumed selected-values=separate page/provenance=unchanged"
         );
     }
     assert_eq!(preview_scratch_snapshot(&f.project), before);
@@ -7994,6 +8018,123 @@ fn offline_remap_read_and_explicit_consent_do_not_consume_common_choice() {
         );
         println!(
             "remap choice={on} kernel-data-present={on} list/explain=read-only offer=seeded explicit-acceptance=active explicit-rejection=inactive common-input=unsupported"
+        );
+    }
+}
+
+#[test]
+fn registered_doc_request_local_data_refuses_invalid_and_ambiguous_sources() {
+    for world in [
+        "unknown",
+        "null",
+        "wrong-type",
+        "extra-member",
+        "lang",
+        "two-versions",
+        "pinned-old",
+        "mismatched-name",
+        "invalid-version-directory",
+    ] {
+        let f = Fixture::new(false);
+        let docs = f.project.join("vibevm/vibepacks/org.example/manual/v1.0.0");
+        let manifest = format!(
+            "[package]\ngroup='org.example'\nname='manual'\nversion='1.0.0'\nkind='doc'\ntitle='Manual'\nabstract='Synthetic valid manual source.'\n[[documents]]\npackage='org.example/subject'\nversion='*'\n{}",
+            read_consent_data_definition()
+        );
+        write(&docs.join("vibe.toml"), &manifest);
+        write(
+            &docs.join("vibevm/vibespecs/guide.xml"),
+            "<spec xmlns='https://vibevm.org/spec/1'><title id='root'>Manual</title><p>DOC_BOUND_PAGE</p></spec>",
+        );
+        let mut args = serde_json::json!({"address":"spec://org.example/manual/guide","input":{"selections":{"mode":{"intent":"exact","members":["on"]}}}});
+        match world {
+            "unknown" => args["foreign"] = true.into(),
+            "null" => args["input"] = serde_json::Value::Null,
+            "wrong-type" => args["input"]["selections"]["mode"]["members"] = true.into(),
+            "extra-member" => {
+                args["input"]["selections"]["mode"]["members"] = serde_json::json!(["off", "on"])
+            }
+            "lang" => args["lang"] = "en".into(),
+            "two-versions" | "pinned-old" => {
+                let newer = docs.parent().unwrap().join("v2.0.0");
+                write(
+                    &newer.join("vibe.toml"),
+                    manifest.replace("version='1.0.0'", "version='2.0.0'"),
+                );
+                write(
+                    &newer.join("vibevm/vibespecs/guide.xml"),
+                    "<spec xmlns='https://vibevm.org/spec/1'><title id='root'>Newer</title><p>OTHER_PAGE</p></spec>",
+                );
+                if world == "pinned-old" {
+                    args["address"] = "spec://org.example/manual@=1.0.0/guide".into();
+                }
+            }
+            "mismatched-name" => write(
+                &docs.join("vibe.toml"),
+                manifest.replace("name='manual'", "name='different'"),
+            ),
+            "invalid-version-directory" => {
+                let duplicate = docs.parent().unwrap().join("v01.0.0");
+                write(&duplicate.join("vibe.toml"), &manifest);
+            }
+            _ => {}
+        }
+        let before = preview_scratch_snapshot(&f.project);
+        let home = preview_scratch_snapshot(f.user.settings.parent().unwrap());
+        let script=serde_json::json!({"jsonrpc":"2.0","id":1,"method":"tools/call","params":{"name":"read_doc","arguments":args}}).to_string()+"\n";
+        let out = f
+            .user
+            .vibe()
+            .args([
+                "--offline",
+                "mcp",
+                "serve",
+                "--path",
+                f.project.to_str().unwrap(),
+            ])
+            .write_stdin(script)
+            .output()
+            .unwrap();
+        assert!(out.status.success());
+        let row = String::from_utf8(out.stdout)
+            .unwrap()
+            .lines()
+            .map(|line| serde_json::from_str::<serde_json::Value>(line).unwrap())
+            .find(|r| r["id"] == 1)
+            .unwrap();
+        if world == "pinned-old" {
+            assert_ne!(
+                row["result"]["isError"], true,
+                "exact pin failed to select actual older Doc"
+            );
+            assert!(
+                row["result"]["structuredContent"]["page"]
+                    .as_str()
+                    .unwrap()
+                    .contains("DOC_BOUND_PAGE")
+            );
+            assert_eq!(
+                row["result"]["structuredContent"]["selected_values"]["selected"],
+                true
+            );
+        } else {
+            assert!(
+                row.get("error").is_some() || row["result"]["isError"] == true,
+                "Doc refusal missing: {world}"
+            );
+            assert!(
+                row["result"].get("structuredContent").is_none(),
+                "Doc refusal returned partial values/page"
+            );
+        }
+        assert_eq!(preview_scratch_snapshot(&f.project), before);
+        assert_eq!(
+            preview_scratch_snapshot(f.user.settings.parent().unwrap()),
+            home
+        );
+        println!(
+            "Doc source world={world} admitted={} state=unchanged",
+            world == "pinned-old"
         );
     }
 }

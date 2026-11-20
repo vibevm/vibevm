@@ -56,6 +56,10 @@ impl McpTool for ReadDocMcpTool {
                         "enum": ["md", "xml"],
                         "description": "`md` substitutes each cited rule's current text; `xml` keeps the addresses. Default: `md`."
                     },
+                    "input": {
+                        "type":"object", "additionalProperties":false, "required":["selections"],
+                        "properties":{"selections":{"type":"object","additionalProperties":{"type":"object","additionalProperties":false,"required":["intent","members"],"properties":{"intent":{"enum":["exact"]},"members":{"type":"array","items":{"type":"string"},"minItems":1,"maxItems":1}}}}}
+                    },
                     "lang": {
                         "type": "string",
                         "description": "BCP-47 tag of the language you want. Falls back to the source language and says so."
@@ -68,32 +72,34 @@ impl McpTool for ReadDocMcpTool {
     }
 
     fn run(&self, args: &Value, ctx: &ServerContext) -> Result<ToolOutput, ToolError> {
-        let address = args
-            .get("address")
-            .and_then(|v| v.as_str())
-            .ok_or_else(|| ToolError::InvalidArguments("`address` must be a string".into()))?;
-        let format = match args.get("format").and_then(|v| v.as_str()) {
-            None | Some("md") => Format::Md,
-            Some("xml") => Format::Xml,
-            Some(other) => {
-                return Err(ToolError::InvalidArguments(format!(
-                    "`format` is `md` or `xml`, not `{other}` — the island (HTML) is for a \
-                     reader with a browser, and a page's projections are what an agent reads"
-                )));
-            }
+        use vibe_wire::generated::read_doc_request::ReadDocRequestFormat;
+        let request = vibe_wire::behaviour::read_doc::parse(args.clone())
+            .map_err(|error| ToolError::InvalidArguments(error.to_string()))?;
+        let format = match request.format {
+            None | Some(ReadDocRequestFormat::Md) => Format::Md,
+            Some(ReadDocRequestFormat::Xml) => Format::Xml,
         };
-        let lang = args.get("lang").and_then(|v| v.as_str());
-
         let sources = world(ctx);
-        let page = vibe_doc::agent::read_page(address, format, lang, &sources)
-            .map_err(|e| ToolError::NotFound(e.to_string()))?;
-        Ok(ToolOutput::ok(json!({
+        let page = vibe_doc::agent::read_page_with_input(
+            &request.address,
+            format,
+            request.lang.as_deref(),
+            &sources,
+            request.input.as_ref(),
+        )
+        .map_err(|e| ToolError::NotFound(e.to_string()))?;
+        let mut result = json!({
             "address": page.address,
             "format": format.as_str(),
             "lang": page.lang,
             "source": page.source.as_str(),
             "page": page.text,
-        })))
+        });
+        if let Some(values) = page.selected_values {
+            result["selected_values"] = serde_json::to_value(values)
+                .map_err(|_| ToolError::Internal("Doc typed data projection failed".into()))?;
+        }
+        Ok(ToolOutput::ok(result))
     }
 }
 

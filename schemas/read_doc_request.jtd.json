@@ -1,0 +1,13 @@
+{
+  "metadata": {"description": "Strict read_doc request; optional request-local exact public Doc choice.", "x-wire-order": ["address", "format", "lang", "input"]},
+  "properties": {"address": {"type": "string"}},
+  "optionalProperties": {
+    "format": {"enum": ["md", "xml"], "metadata": {"x-default": null, "x-vocabulary": "closed"}},
+    "lang": {"type": "string", "metadata": {"x-default": null}},
+    "input": {"ref": "input", "metadata": {"x-default": null}}
+  },
+  "definitions": {
+    "input": {"properties": {"selections": {"values": {"ref": "selection"}, "metadata": {"x-empty": "emit"}}}},
+    "selection": {"metadata": {"x-wire-order": ["intent", "members"]}, "properties": {"intent": {"enum": ["exact"], "metadata": {"x-vocabulary": "closed"}}, "members": {"elements": {"type": "string"}, "metadata": {"x-empty": "emit"}}}}
+  }
+}

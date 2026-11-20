@@ -106,6 +106,7 @@ pub mod prompt_flags;
 pub mod prompt_path;
 pub mod prompt_prepare;
 pub mod prompt_request_capture;
+pub mod read_doc_request;
 pub mod registry_layout_publish_report;
 pub mod registry_mirror_report;
 pub mod registry_publish_report;

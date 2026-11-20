@@ -51,6 +51,8 @@ pub struct FetchedPage {
     pub source: Source,
     /// The projection.
     pub text: String,
+    /// Present only for an answered, source-bound Doc read.
+    pub selected_values: Option<BTreeMap<String, vibe_core::manifest::ParameterValue>>,
 }
 
 /// Read the page `address` names, in `format`.
@@ -83,7 +85,39 @@ pub fn read_page(
     lang: Option<&str>,
     sources: &SpecSources,
 ) -> Result<FetchedPage> {
+    read_page_with_input(address, format, lang, sources, None)
+}
+
+/// Request-local data from the SAME captured page source. None retains the
+/// incumbent source/language behavior and never synthesizes selected values.
+pub fn read_page_with_input(
+    address: &str,
+    format: Format,
+    lang: Option<&str>,
+    sources: &SpecSources,
+    input: Option<&vibe_wire::generated::read_doc_request::Input>,
+) -> Result<FetchedPage> {
     let asked = parse(address)?;
+    if let Some(input) = input {
+        if lang.is_some() {
+            return Err(DocError::Page {
+                path: Default::default(),
+                message: "read_doc input with lang is unsupported".into(),
+            });
+        }
+        let captured = sources
+            .capture_document_with_choice(&asked)
+            .map_err(|message| DocError::Page {
+                path: Default::default(),
+                message,
+            })?
+            .ok_or_else(|| DocError::Page {
+                path: Default::default(),
+                message: "answered Doc unavailable".into(),
+            })?;
+        let values = request_data(&captured, input)?;
+        return fetch(address, &asked, format, sources, captured, Some(values));
+    }
     // The adaptation first when a language was asked for. A miss is not
     // a failure: it is the state the site calls a fallback, and the
     // answer says which language came back.
@@ -100,7 +134,7 @@ pub fn read_page(
                     message,
                 })?
     {
-        return fetch(&adapted, &parsed, format, sources, captured);
+        return fetch(&adapted, &parsed, format, sources, captured, None);
     }
     let captured = sources
         .capture_document(&asked)
@@ -119,7 +153,7 @@ pub fn read_page(
                 sources.description()
             ),
         })?;
-    fetch(address, &asked, format, sources, captured)
+    fetch(address, &asked, format, sources, captured, None)
 }
 
 /// Parse an address and drop its anchor: this returns a whole page, and
@@ -164,6 +198,7 @@ fn fetch(
     format: Format,
     sources: &SpecSources,
     located: crate::citations::sources::CapturedDocument,
+    selected_values: Option<BTreeMap<String, vibe_core::manifest::ParameterValue>>,
 ) -> Result<FetchedPage> {
     if located.interpretation != vibe_core::manifest::SourceInterpretation::VibeDoc {
         return Err(DocError::Page {
@@ -234,6 +269,7 @@ fn fetch(
         lang: located.lang,
         source: located.source,
         text,
+        selected_values,
     })
 }
 
@@ -260,3 +296,87 @@ fn borrowed_by(
 
 #[cfg(test)]
 mod tests;
+
+fn request_data(
+    captured: &crate::citations::sources::CapturedDocument,
+    input: &vibe_wire::generated::read_doc_request::Input,
+) -> Result<BTreeMap<String, vibe_core::manifest::ParameterValue>> {
+    use vibe_core::manifest::{
+        ConfigurationEffect, ConfigurationFeatureVisibility, ConfigurationGroupDecl,
+        ConfigurationIntentDecl, ConfigurationSelection, PackageConfiguration,
+    };
+    let invalid = || {
+        DocError::Page{path:Default::default(),message:"read_doc input: unsupported definition or invalid exact choice; expected one public unguarded exactly-one group with data-only effects".into()}
+    };
+    let manifest = captured
+        .choice_manifest()
+        .map_err(|message| DocError::Page {
+            path: Default::default(),
+            message,
+        })?;
+    let definition = manifest.configuration.as_ref().ok_or_else(invalid)?;
+    let [
+        ConfigurationGroupDecl::Choice {
+            id,
+            members,
+            guards,
+            cardinality,
+            defaults,
+            ..
+        },
+    ] = definition.groups.as_slice()
+    else {
+        return Err(invalid());
+    };
+    if *cardinality != vibe_core::configuration::Cardinality::ExactlyOne
+        || !guards.is_empty()
+        || defaults.is_some()
+        || !definition.parameters.is_empty()
+        || !definition.profiles.is_empty()
+        || input.selections.len() != 1
+    {
+        return Err(invalid());
+    }
+    let answer = input.selections.get(id).ok_or_else(invalid)?;
+    if answer.members.len() != 1
+        || !members.contains(&answer.members[0])
+        || definition.features.len() != members.len()
+        || definition.features.iter().any(|f| {
+            f.visibility != ConfigurationFeatureVisibility::Public
+                || !members.contains(&f.id)
+                || f.parent.is_some()
+                || f.required
+                || f.default
+                || !f.requires.is_empty()
+                || !f.guards.is_empty()
+                || f.effects
+                    .iter()
+                    .any(|e| !matches!(e, ConfigurationEffect::ConfigValue { .. }))
+        })
+    {
+        return Err(invalid());
+    }
+    let original = ConfigurationIntentDecl {
+        policy: vibe_core::configuration::ChoicePolicy::RequireSelection,
+        profile: None,
+        features: vec![],
+        default_features: false,
+        selections: BTreeMap::from([(
+            id.clone(),
+            ConfigurationSelection {
+                intent: vibe_core::configuration::MergeIntent::Exact,
+                members: Some(answer.members.clone()),
+            },
+        )]),
+        parameters: BTreeMap::new(),
+    };
+    // An operation-local consumer is not authored or persisted project history.
+    let record = PackageConfiguration::evaluate(
+        manifest,
+        &BTreeMap::from([("read_doc request".into(), original)]),
+    )
+    .map_err(|_| invalid())?;
+    record
+        .selected_data(vibe_core::PackageKind::Doc)
+        .map_err(|_| invalid())
+}
