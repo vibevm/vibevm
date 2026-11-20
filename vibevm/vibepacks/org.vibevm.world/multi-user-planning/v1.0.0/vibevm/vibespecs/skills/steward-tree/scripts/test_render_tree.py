@@ -239,6 +239,25 @@ class TreeViewerTests(unittest.TestCase):
 
     # ---- navigation surfaces ----------------------------------------------
 
+    def test_inline_card_and_document_scroll_preserve_generic_navigation(self):
+        _, payload, html = self.render(plan(node("A", reason="Synthetic reason")))
+        self.assertNotIn('<aside id="detail"', html)
+        self.assertIn('class="node-card"', html)
+        self.assertIn('ROWS[selected].after(aside)', html)
+        self.assertIn('detailOpen = false', html)
+        self.assertIn('chip.dataset.bucket = b', html)
+        self.assertNotIn('aside{position:sticky', html)
+        self.assertNotIn('grid-template-columns:minmax(0,1fr) minmax(280px,22rem)', html)
+        self.assertNotIn('.chips{display:none}', html)
+        self.assertIn('event.target !== row', html)
+        self.assertIn('document.getElementById("q").value = ""', html)
+        self.assertEqual(self.nodes_of(payload)["A"]["extra"]["reason"], "Synthetic reason")
+        for language in tree.LANGS:
+            for key in ("ui.closeDetail", "ui.ownState", "ui.descendants", "ui.reason"):
+                self.assertIn(key, payload["strings"][language])
+        self.assertNotIn('src="http', html)
+        self.assertIn('role="tree"', html)
+
     def test_dependencies_are_typed_edges_rather_than_one_hardcoded_field(self):
         _, payload, _ = self.render(plan(node("A", state="accepted"),
                                          node("B", depends=["A"], order=20)))

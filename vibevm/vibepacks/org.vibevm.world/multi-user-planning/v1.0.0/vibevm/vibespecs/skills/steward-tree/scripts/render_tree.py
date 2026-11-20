@@ -122,6 +122,10 @@ STRINGS: dict[str, dict[str, str]] = {
         "ui.theme": "Тема",
         "ui.lang": "Язык",
         "ui.detail": "Узел",
+        "ui.closeDetail": "Свернуть карточку",
+        "ui.ownState": "Состояние самого узла",
+        "ui.descendants": "Конечные потомки — отдельный итог",
+        "ui.reason": "Причина / пояснение",
         "ui.nothingSelected": "Выберите узел в дереве.",
         "ui.acceptance": "Критерии приёмки",
         "ui.evidence": "Доказательства",
@@ -180,6 +184,10 @@ STRINGS: dict[str, dict[str, str]] = {
         "ui.theme": "Theme",
         "ui.lang": "Language",
         "ui.detail": "Node",
+        "ui.closeDetail": "Collapse card",
+        "ui.ownState": "Node own state",
+        "ui.descendants": "Terminal descendants — separate aggregate",
+        "ui.reason": "Reason / explanation",
         "ui.nothingSelected": "Select a node in the tree.",
         "ui.acceptance": "Acceptance",
         "ui.evidence": "Evidence",
@@ -713,11 +721,10 @@ input{width:100%}
 .totals{display:flex;flex-wrap:wrap;gap:6px;margin:10px 16px 0}
 .legend{display:inline-flex;align-items:center;gap:6px;padding:3px 9px;border:1px solid var(--line);
   border-radius:999px;font-size:12.5px;background:var(--panel)}
-main{display:grid;grid-template-columns:minmax(0,1fr) minmax(280px,22rem);gap:16px;padding:12px 16px 32px;align-items:start}
-@media (max-width:900px){main{grid-template-columns:minmax(0,1fr)}}
+main{display:block;padding:12px 16px 32px;max-width:1200px;margin:0 auto}
 .tree{min-width:0}
-.row{display:flex;align-items:baseline;gap:7px;padding:3px 6px 3px calc(6px + var(--depth) * 15px);
-  border-radius:6px;cursor:default;scroll-margin:70px}
+.row{display:flex;flex-wrap:wrap;align-items:baseline;gap:7px;padding:9px 8px 9px calc(8px + min(var(--depth),12) * 15px);
+  border-radius:6px;cursor:pointer;scroll-margin:90px;min-height:44px}
 .row[hidden]{display:none}
 .row:hover{background:var(--panel)}
 .row[aria-selected="true"]{background:var(--panel);box-shadow:inset 0 0 0 1px var(--accent)}
@@ -729,24 +736,30 @@ main{display:grid;grid-template-columns:minmax(0,1fr) minmax(280px,22rem);gap:16
 .row.parent .title{font-weight:600}
 .nid{color:var(--muted);font:12px/1.4 ui-monospace,SFMono-Regular,Menlo,monospace;flex:0 0 auto}
 .kind{color:var(--muted);font-size:11.5px;text-transform:lowercase;flex:0 0 auto}
-.state{color:var(--bucket);font-size:12px;flex:0 0 auto;white-space:nowrap}
+.state{color:var(--fg);font-size:12px;flex:0 0 auto;white-space:normal;border:1px solid var(--line);border-radius:4px;padding:1px 5px}
 .cur{color:var(--b-active);border:1px solid currentColor;border-radius:999px;font-size:10.5px;padding:0 5px;flex:0 0 auto}
-.chips{display:flex;gap:4px;margin-left:auto;flex:0 0 auto}
-.chip{font-size:11px;color:var(--bg);background:var(--bucket);border-radius:999px;padding:0 6px;min-width:18px;text-align:center}
+.chips{display:flex;flex-wrap:wrap;gap:4px;flex:1 0 100%;padding-left:25px;color:var(--muted)}
+.chip{font-size:11.5px;color:var(--fg);background:var(--panel);border:1px solid var(--line);border-radius:4px;padding:1px 6px;text-align:center}
 @media (max-width:620px){
-  .chips{display:none}
+  main{padding:10px 8px 24px}
+  .row{padding-left:calc(6px + min(var(--depth),4) * 10px)}
+  .title{flex:1 1 65%}
+  .nid{overflow-wrap:anywhere;flex-shrink:1}
+  .chips{padding-left:0}
   .kind{display:none}
 }
-aside{position:sticky;top:64px;border:1px solid var(--line);border-radius:var(--radius);
-  background:var(--panel);padding:12px;min-width:0}
-@media (max-width:900px){aside{position:static}}
-aside h2{font-size:14px;margin:0 0 8px}
-aside h3{font-size:12px;margin:12px 0 4px;color:var(--muted);text-transform:uppercase;letter-spacing:.04em}
-aside ul{margin:0;padding-left:18px}
-aside li{overflow-wrap:anywhere;margin:2px 0}
-aside dl{margin:0;display:grid;grid-template-columns:auto minmax(0,1fr);gap:2px 8px;font-size:13px}
-aside dt{color:var(--muted)}
-aside dd{margin:0;overflow-wrap:anywhere}
+.node-card{position:static;border:1px solid var(--line);border-left:3px solid var(--accent);border-radius:var(--radius);
+  background:var(--panel);padding:16px;margin:8px 0 16px;min-width:0;overflow-wrap:anywhere}
+.node-card[hidden]{display:none}
+.card-close{float:right;margin:0 0 8px 12px}
+@media (forced-colors:active){.row[aria-selected="true"]{outline:2px solid Highlight}.dot{border:1px solid CanvasText}}
+ .node-card h2{font-size:14px;margin:0 0 8px}
+ .node-card h3{font-size:12px;margin:12px 0 4px;color:var(--muted);text-transform:uppercase;letter-spacing:.04em}
+ .node-card ul{margin:0;padding-left:18px}
+ .node-card li{overflow-wrap:anywhere;margin:2px 0}
+ .node-card dl{margin:0;display:grid;grid-template-columns:auto minmax(0,1fr);gap:2px 8px;font-size:13px}
+ .node-card dt{color:var(--muted)}
+ .node-card dd{margin:0;overflow-wrap:anywhere}
 .link{background:none;border:0;padding:0;color:var(--accent);text-decoration:underline;cursor:pointer;
   font:12px/1.5 ui-monospace,SFMono-Regular,Menlo,monospace}
 .muted{color:var(--muted)}
@@ -771,7 +784,7 @@ aside dd{margin:0;overflow-wrap:anywhere}
 <div class="totals" id="totals"></div>
 <main>
   <div class="tree" id="tree" role="tree" aria-labelledby="app-title"></div>
-  <aside id="detail" aria-live="polite"></aside>
+  <section id="detail" class="node-card" aria-live="polite" aria-label="@@TITLE@@" hidden></section>
 </main>
 <script type="application/json" id="plan-data">@@DATA@@</script>
 <script>
@@ -786,7 +799,7 @@ aside dd{margin:0;overflow-wrap:anywhere}
     });
   });
 
-  var lang = DATA.lang, theme = "auto", selected = null, query = "";
+  var lang = DATA.lang, theme = "auto", selected = null, query = "", detailOpen = false;
   var open = {};
   DATA.nodes.forEach(function(n){ open[n.id] = !!n.open; });
 
@@ -837,13 +850,14 @@ aside dd{margin:0;overflow-wrap:anywhere}
       DATA.buckets.forEach(function(b){
         var value = (n.counts || {})[b];
         if (!value || !n.children.length) return;
-        var chip = el("span", "chip", value);
+        var chip = el("span", "chip", bucketLabel(b) + ": " + value);
+        chip.dataset.bucket = b;
         chip.style.setProperty("--bucket", "var(--b-" + b + ")");
         chip.title = bucketLabel(b);
         chips.appendChild(chip);
       });
       row.appendChild(chips);
-      row.addEventListener("click", function(){ select(n.id, false); });
+      row.addEventListener("click", function(){ select(n.id, false, true); });
       ROWS[n.id] = row;
       tree.appendChild(row);
     });
@@ -857,7 +871,8 @@ aside dd{margin:0;overflow-wrap:anywhere}
       var cur = row.querySelector(".cur");
       if (cur) cur.textContent = t("ui.current");
       Array.prototype.forEach.call(row.querySelectorAll(".chip"), function(chip, index){
-        chip.title = bucketLabel(visibleBuckets(n)[index]);
+        chip.title = bucketLabel(chip.dataset.bucket);
+        chip.textContent = bucketLabel(chip.dataset.bucket) + ": " + n.counts[chip.dataset.bucket];
       });
     });
   }
@@ -900,6 +915,7 @@ aside dd{margin:0;overflow-wrap:anywhere}
       else noHits.textContent = t("ui.noMatches");
     } else if (noHits){ noHits.remove(); }
     rove();
+    detail();
   }
 
   function visibleRows(){
@@ -921,8 +937,10 @@ aside dd{margin:0;overflow-wrap:anywhere}
   function remember(id){
     try{ history.replaceState(null, "", "#" + encodeURIComponent(id)); }catch(e){}
   }
-  function select(id, scroll){
+  function select(id, scroll, toggle){
     if (!NODES[id]) return;
+    detailOpen = toggle && selected === id ? !detailOpen : true;
+    if (scroll){ query = ""; document.getElementById("q").value = ""; }
     remember(id);
     if (selected && ROWS[selected]) ROWS[selected].setAttribute("aria-selected", "false");
     selected = id;
@@ -939,7 +957,7 @@ aside dd{margin:0;overflow-wrap:anywhere}
   tree.addEventListener("keydown", function(event){
     var rows = visibleRows();
     var row = event.target.closest ? event.target.closest(".row") : null;
-    if (!row) return;
+    if (!row || event.target !== row) return;
     var index = rows.indexOf(row), id = row.dataset.id, node = NODES[id];
     var keys = {ArrowDown: 1, ArrowUp: -1};
     if (event.key in keys){
@@ -953,7 +971,7 @@ aside dd{margin:0;overflow-wrap:anywhere}
     } else if (event.key === "ArrowLeft"){
       if (node.children.length && open[id] && !query){ open[id] = false; paint(); }
       else if (node.path.length){ select(node.path[node.path.length - 1], false); }
-    } else if (event.key === "Enter" || event.key === " "){ select(id, false);
+    } else if (event.key === "Enter" || event.key === " "){ select(id, false, true);
     } else { return; }
     event.preventDefault();
   });
@@ -974,13 +992,18 @@ aside dd{margin:0;overflow-wrap:anywhere}
   function linkTo(parent, id, suffix){
     var button = el("button", "link", id);
     button.type = "button";
-    button.addEventListener("click", function(){ select(id, true); });
+    button.addEventListener("click", function(){
+      query = ""; document.getElementById("q").value = ""; select(id, true);
+    });
     parent.appendChild(button);
     if (suffix) parent.appendChild(el("span", null, " " + suffix));
   }
 
   function detail(){
     aside.textContent = "";
+    aside.hidden = !detailOpen || !selected || !ROWS[selected] || ROWS[selected].hidden;
+    if (aside.hidden) return;
+    ROWS[selected].after(aside);
     if (!selected || !NODES[selected]){
       aside.appendChild(el("h2", null, t("ui.plan")));
       var dl = el("dl");
@@ -998,7 +1021,14 @@ aside dd{margin:0;overflow-wrap:anywhere}
       return;
     }
     var n = NODES[selected];
+    var close = el("button", "card-close", t("ui.closeDetail"));
+    close.type = "button";
+    close.addEventListener("click", function(event){
+      event.stopPropagation(); detailOpen = false; detail(); ROWS[selected].focus({preventScroll:true});
+    });
+    aside.appendChild(close);
     aside.appendChild(el("h2", null, n.title));
+    aside.appendChild(el("p", "muted", t("ui.ownState") + ": " + bucketLabel(n.bucket)));
     var dl = el("dl");
     function pair(label, value){
       dl.appendChild(el("dt", null, label));
@@ -1022,7 +1052,7 @@ aside dd{margin:0;overflow-wrap:anywhere}
       aside.appendChild(p);
     }
     if (n.children.length){
-      aside.appendChild(el("h3", null, t("ui.counts")));
+      aside.appendChild(el("h3", null, t("ui.descendants")));
       var box = el("p");
       visibleBuckets(n).forEach(function(b){
         var tag = el("span", "legend", n.counts[b] + " · " + bucketLabel(b));
@@ -1032,6 +1062,8 @@ aside dd{margin:0;overflow-wrap:anywhere}
       });
       aside.appendChild(box);
     }
+    var reason = (n.extra || {}).reason || (n.extra || {}).rationale || (n.extra || {}).blocked_reason;
+    if (reason){ aside.appendChild(el("h3", null, t("ui.reason"))); aside.appendChild(el("p", "pre", stringify(reason))); }
     list(aside, t("ui.acceptance"), n.acceptance, function(li, item){ li.textContent = item; });
     list(aside, t("ui.evidence"), n.evidence, function(li, item){ li.textContent = item; });
     list(aside, t("ui.mandates"), n.mandates, function(li, id){
