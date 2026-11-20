@@ -8292,3 +8292,166 @@ fn remap_preview_local_owned_offer_keeps_choice_separate_from_consent() {
         }
     }
 }
+
+#[test]
+fn guarded_automatic_defaults_actual_public_qualification() {
+    for guarded in [true, false] {
+        for gate in [false, true] {
+            for world in [
+                "omitted-defaults",
+                "omitted-required",
+                "matching",
+                "contrary",
+            ] {
+                let f = Fixture::new(false);
+                let source = f.registry.join(GROUP).join(DRIVER).join("v1.0.0/vibe.toml");
+                let guard = if guarded {
+                    "guards=[{member='gate-on'}]\n"
+                } else {
+                    ""
+                };
+                write(
+                    &source,
+                    package_header(DRIVER)
+                        + &format!(
+                            "\n[requires.packages]\n'org.vibevm/oracle-base'='=1.0.0'\n'org.vibevm/oracle-extra'={{version='=1.0.0',optional=true}}\n[[configuration.features]]\nid='gate-off'\nname='Gate off'\n[[configuration.features]]\nid='gate-on'\nname='Gate on'\n[[configuration.features]]\nid='child-off'\nname='Child off'\n[[configuration.features]]\nid='child-on'\nname='Child on'\neffects=[{{kind='dependency',target='org.vibevm/oracle-extra'}}]\n[[configuration.groups]]\nmode='choice'\nid='gate'\nname='Gate'\ncardinality='exactly-one'\nmembers=['gate-off','gate-on']\n[[configuration.groups]]\nmode='choice'\nid='child'\nname='Child'\ncardinality='exactly-one'\nmembers=['child-off','child-on']\ndefaults=['child-on']\n{guard}"
+                        ),
+                );
+                let policy = if world == "omitted-required" {
+                    "require-selection"
+                } else {
+                    "use-declared-defaults"
+                };
+                let child = match world {
+                    "matching" => ",child={intent='exact',members=['child-on']}",
+                    "contrary" => ",child={intent='exact',members=['child-off']}",
+                    _ => "",
+                };
+                write(
+                    &f.project.join("vibe.toml"),
+                    format!(
+                        "[project]\nname='guarded-default'\nversion='0.1.0'\n[requires.packages.'{GROUP}/{DRIVER}']\nversion='=1.0.0'\nlink='static-transitive'\nconfiguration={{policy='{policy}',default_features=false,selections={{gate={{intent='exact',members=['{}']}}{child}}}}}\n[[registry]]\nname='fixture'\nurl='file://{}'\n",
+                        if gate { "gate-on" } else { "gate-off" },
+                        f.registry.display()
+                    ),
+                );
+                let manifest = Manifest::read(&source).unwrap();
+                let root = Manifest::read(f.project.join("vibe.toml")).unwrap();
+                let original = &root.requires.configurations[&coordinate(DRIVER)];
+                let definition = manifest.configuration.as_ref().unwrap();
+                let normalized = definition.normalize_input(original, "./vibe.toml").unwrap();
+                let evaluated = definition
+                    .compile_choices()
+                    .unwrap()
+                    .evaluate(&normalized.features, &[normalized.choices]);
+                let active = !guarded || gate;
+                let child_control = evaluated.controls.iter().find(|c| c.id == "child").unwrap();
+                assert_eq!(child_control.active, active);
+                let omitted = world.starts_with("omitted");
+                assert_eq!(original.selections.contains_key("child"), !omitted);
+                let default_used = active && world == "omitted-defaults";
+                assert_eq!(
+                    evaluated.defaults.iter().any(|d| d.group == "child"),
+                    default_used
+                );
+                assert_eq!(
+                    evaluated.questions.iter().any(|q| q.group == "child"),
+                    active && world == "omitted-required"
+                );
+                let before = super::workspace::semantic_snapshot(&f.project);
+                let out = f.install();
+                let diagnostic = String::from_utf8_lossy(&out.stdout).to_string()
+                    + &String::from_utf8_lossy(&out.stderr);
+                let expected_success = !(guarded && world == "omitted-defaults")
+                    && !(active && world == "omitted-required");
+                println!(
+                    "guarded-default guarded={guarded} gate={gate} world={world} active={active} default-used={default_used} install-success={} diagnostic={diagnostic}",
+                    out.status.success()
+                );
+                assert_eq!(
+                    out.status.success(),
+                    expected_success,
+                    "observed boundary differs guarded={guarded} gate={gate} world={world}"
+                );
+                if !out.status.success() {
+                    assert!(super::workspace::semantic_snapshot(&f.project) == before);
+                    assert!(!f.project.join("vibe.lock").exists());
+                    assert!(!f.project.join("effects.log").exists());
+                    assert!(
+                        diagnostic.contains(if guarded && world == "omitted-defaults" {
+                            "only unguarded exactly-one single-member defaults are connected"
+                        } else {
+                            "requires configuration answers"
+                        })
+                    );
+                    continue;
+                }
+                let extra = active && world != "contrary";
+                let lock = f.lock();
+                let record = &lock.configurations[&coordinate(DRIVER)];
+                assert_eq!(record.consumers["./vibe.toml"], *original);
+                if default_used {
+                    let basis = record
+                        .automatic_basis
+                        .as_ref()
+                        .expect("actual default reliance missing");
+                    assert_eq!(basis.consumer_choices["./vibe.toml"]["child"], "child-on");
+                    assert_eq!(lock.meta.schema_version, 12);
+                } else {
+                    assert!(
+                        record.automatic_basis.is_none(),
+                        "explicit/dormant input invented automatic reliance"
+                    );
+                    assert_eq!(lock.meta.schema_version, 8);
+                }
+                assert_eq!(record.features.contains(&"child-on".to_owned()), extra);
+                assert_eq!(f.slot(EXTRA).exists(), extra);
+                assert_eq!(f.static_boot().contains(EXTRA_MARKER), extra);
+                assert_eq!(
+                    f.hooks().get(EXTRA).copied().unwrap_or(0),
+                    usize::from(extra)
+                );
+                assert_eq!(f.hooks().get(BASE).copied(), Some(1));
+                let row = lock
+                    .packages
+                    .iter()
+                    .find(|p| p.name.as_str() == DRIVER)
+                    .unwrap();
+                assert_eq!(
+                    row.dependencies.iter().any(|p| p.name.as_str() == EXTRA),
+                    extra
+                );
+                let show = f
+                    .user
+                    .vibe()
+                    .args([
+                        "show",
+                        "configuration-data",
+                        "--path",
+                        f.project.to_str().unwrap(),
+                        "--json",
+                    ])
+                    .output()
+                    .unwrap();
+                assert!(show.status.success());
+                let shown: serde_json::Value = serde_json::from_slice(&show.stdout).unwrap();
+                assert!(
+                    shown["packages"]
+                        .as_array()
+                        .unwrap()
+                        .iter()
+                        .any(|p| p["package"] == coordinate(DRIVER))
+                );
+                let before = super::workspace::semantic_snapshot(&f.project);
+                let bytes = fs::read(f.project.join("vibe.lock")).unwrap();
+                f.install_ok();
+                assert_eq!(super::workspace::semantic_snapshot(&f.project), before);
+                assert_eq!(fs::read(f.project.join("vibe.lock")).unwrap(), bytes);
+                println!(
+                    "guarded-default accepted guarded={guarded} gate={gate} world={world} cold=unchanged dormant-original={}",
+                    !active && !omitted
+                );
+            }
+        }
+    }
+}
