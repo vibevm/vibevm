@@ -235,3 +235,5 @@ At `79d3441e92` the MCP adapter formats already captured bytes. Its selection fi
 Twelve historical MCP process-test revisions were checked at the level of the changed assertions: retained run identity and single effect counters are distinct from transport success, and a missing report is not a fresh run. Per-file assertions and diff hashes are indexed. No process test was rerun by this source review.
 
 Three historical distribution checks separate exact staged bundle/executable identity and an actually executed host probe from an unavailable or skipped smoke. This review inspected the source; it did not rerun a native release panel.
+
+Fourteen historical test revisions were reviewed at their named source paths. Among the discriminators: an unvalidated diagnostic is not a published result, equal content is not ownership, and a missing reverse mapping is not source provenance. No corresponding runtime suite was rerun in this historical review.
