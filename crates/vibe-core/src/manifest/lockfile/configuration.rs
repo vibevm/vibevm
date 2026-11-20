@@ -57,6 +57,13 @@ impl Lockfile {
             }
         }
         for (key, record) in &self.configurations {
+            if !record.forwarded_inputs.is_empty()
+                && self.meta.schema_version < FORWARDED_INPUT_SCHEMA_VERSION
+            {
+                return Err(invalid(
+                    "candidate-owned forwarding requires schema14".into(),
+                ));
+            }
             if record.automatic_basis.is_some()
                 && self.meta.schema_version < AUTOMATIC_BASIS_SCHEMA_VERSION
             {
@@ -79,6 +86,7 @@ impl Lockfile {
                 &record.definition,
                 &record.declarations,
                 &record.consumers,
+                &record.forwarded_inputs,
             )
             .map_err(|error| invalid(error.to_string()))?;
             if &evaluated != record {
@@ -156,6 +164,135 @@ impl Lockfile {
                 }
             }
         }
+        self.validate_forwarded_inputs()?;
+        self.validate_forwarded_completeness()?;
+        Ok(())
+    }
+
+    fn validate_forwarded_inputs(&self) -> Result<()> {
+        let invalid = |reason: &str| crate::Error::InvalidLockfile {
+            reason: reason.into(),
+        };
+        for (key, record) in &self.configurations {
+            for input in &record.forwarded_inputs {
+                let parent = self
+                    .find(&input.source_group, input.source_name.as_str())
+                    .ok_or_else(|| invalid("forwarded source package is missing"))?;
+                let target = self
+                    .packages
+                    .iter()
+                    .find(|row| format!("{}/{}", row.group, row.name) == *key)
+                    .ok_or_else(|| invalid("forwarded target package is missing"))?;
+                if parent.version != input.source_version
+                    || parent.content_hash != input.source_content_hash
+                    || input.target.qualified_name() != *key
+                    || !input.target.version.is_exact_pin()
+                    || !input.target.version.matches(&target.version)
+                    || input.target.kind.is_some_and(|kind| kind != target.kind)
+                    || input.strength != crate::manifest::ForwardStrength::Strong
+                {
+                    return Err(invalid("forwarded source/target identity disagrees"));
+                }
+                let parent_key = format!("{}/{}", parent.group, parent.name);
+                let parent_record = self
+                    .configurations
+                    .get(&parent_key)
+                    .ok_or_else(|| invalid("forwarded source configuration is missing"))?;
+                if parent_record.consumers.is_empty()
+                    || !parent_record.forwarded_inputs.is_empty()
+                    || !parent_record.features.contains(&input.source_feature)
+                    || parent_record
+                        .declarations
+                        .packages
+                        .get(input.declaration_index)
+                        != Some(&input.target)
+                    || !parent
+                        .dependencies
+                        .iter()
+                        .any(|edge| edge.qualified_name() == *key)
+                {
+                    return Err(invalid(
+                        "forwarded source declaration or selected feature disagrees",
+                    ));
+                }
+                let active_effect=parent_record.definition.features.iter().filter(|feature|feature.id==input.source_feature)
+                    .flat_map(|feature| &feature.effects).any(|effect|matches!(effect,
+                        crate::manifest::ConfigurationEffect::Forward {target,feature,strength}
+                        if crate::PackageRef::parse(target).is_ok_and(|reference|reference.qualified_name()==*key)
+                            && feature==&input.target_feature && strength==&input.strength));
+                if !active_effect {
+                    return Err(invalid("forwarded request has no active source effect"));
+                }
+                if self.packages.iter().any(|row| {
+                    row != parent
+                        && row
+                            .dependencies
+                            .iter()
+                            .any(|edge| edge.qualified_name() == *key)
+                }) {
+                    return Err(invalid(
+                        "forwarded target has an unaccounted package consumer",
+                    ));
+                }
+            }
+        }
+        Ok(())
+    }
+
+    fn validate_forwarded_completeness(&self) -> Result<()> {
+        let invalid = |reason: &str| crate::Error::InvalidLockfile {
+            reason: reason.into(),
+        };
+        for (parent_key, record) in &self.configurations {
+            let parent = self
+                .packages
+                .iter()
+                .find(|row| format!("{}/{}", row.group, row.name) == *parent_key)
+                .ok_or_else(|| invalid("forwarded source row missing"))?;
+            for source in record
+                .definition
+                .features
+                .iter()
+                .filter(|feature| record.features.contains(&feature.id))
+            {
+                for effect in &source.effects {
+                    let crate::manifest::ConfigurationEffect::Forward {
+                        target,
+                        feature,
+                        strength,
+                    } = effect
+                    else {
+                        continue;
+                    };
+                    let target_key = crate::PackageRef::parse(target)
+                        .map_err(|_| invalid("invalid forwarded target"))?
+                        .qualified_name();
+                    let target_record = self
+                        .configurations
+                        .get(&target_key)
+                        .ok_or_else(|| invalid("active forward target record missing"))?;
+                    let matches = target_record
+                        .forwarded_inputs
+                        .iter()
+                        .filter(|input| {
+                            input.source_group == parent.group
+                                && input.source_name == parent.name
+                                && input.source_version == parent.version
+                                && input.source_content_hash == parent.content_hash
+                                && input.source_feature == source.id
+                                && input.target.qualified_name() == target_key
+                                && input.target_feature == *feature
+                                && input.strength == *strength
+                        })
+                        .count();
+                    if matches != 1 {
+                        return Err(invalid(
+                            "active forward requires exactly one retained incoming request",
+                        ));
+                    }
+                }
+            }
+        }
         Ok(())
     }
 
@@ -169,6 +306,7 @@ impl Lockfile {
                 | DIGESTLESS_TEMPLATE_SCHEMA_VERSION
                 | AUTOMATIC_BASIS_SCHEMA_VERSION
                 | SUBSKILL_WITNESS_SCHEMA_VERSION
+                | FORWARDED_INPUT_SCHEMA_VERSION
         ) {
             return Err(crate::Error::UnsupportedLockfile {
                 found: self.meta.schema_version,
@@ -180,7 +318,13 @@ impl Lockfile {
         // rule the 7 → 8 → 9 steps already followed: a project with no
         // template package and no channel requirement writes exactly the
         // bytes it wrote before PROP-075 (AV-FMT-002).
-        value.meta.schema_version = if value.packages.iter().any(|package| {
+        value.meta.schema_version = if value
+            .configurations
+            .values()
+            .any(|record| !record.forwarded_inputs.is_empty())
+        {
+            FORWARDED_INPUT_SCHEMA_VERSION
+        } else if value.packages.iter().any(|package| {
             package
                 .subskills_active
                 .iter()

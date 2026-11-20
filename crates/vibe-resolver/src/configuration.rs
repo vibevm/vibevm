@@ -33,6 +33,7 @@ struct Candidate {
 #[specmark::spec(documents = "spec://org.vibevm.core/vibevm/common/PROP-069#CANDIDATE-BOUNDARY")]
 pub struct ConfigurationSnapshot {
     inputs: PackageConfigurationInputs,
+    forwarded: BTreeMap<String, Vec<vibe_core::manifest::ForwardedInput>>,
     previous: BTreeMap<String, PackageConfiguration>,
     review_preview: bool,
     versions: RefCell<BTreeMap<(Group, String), VersionObservation>>,
@@ -56,6 +57,43 @@ impl ConfigurationSnapshot {
                     .get(&edge.qualified_name())
                     .is_some_and(|inputs| inputs.values().any(Option::is_some))
                 {
+                    let admitted_context =
+                        self.forwarded
+                            .get(&edge.qualified_name())
+                            .is_some_and(|inputs| {
+                                inputs.iter().any(|input| {
+                                    input.source_group == parent.group
+                                        && input.source_name.as_str() == parent.name
+                                        && input.source_version == parent.version
+                                })
+                            });
+                    let admitted = admitted_context
+                        || edge
+                            .group
+                            .as_ref()
+                            .and_then(|group| graph.find(group, edge.name.as_str()))
+                            .and_then(|target| {
+                                self.candidates
+                                    .borrow()
+                                    .get(&(
+                                        target.group.clone(),
+                                        target.name.clone(),
+                                        target.version.clone(),
+                                    ))
+                                    .cloned()
+                            })
+                            .and_then(|candidate| candidate.evaluated.ok().flatten())
+                            .is_some_and(|record| {
+                                record.forwarded_inputs.iter().any(|input| {
+                                    input.source_group == parent.group
+                                        && input.source_name.as_str() == parent.name
+                                        && input.source_version == parent.version
+                                        && input.target.qualified_name() == edge.qualified_name()
+                                })
+                            });
+                    if admitted {
+                        continue;
+                    }
                     return Err(DepProviderError::Configuration(
                         PackageConfigurationError::Unsupported {
                             package: edge.qualified_name(),
@@ -72,7 +110,16 @@ impl ConfigurationSnapshot {
     }
     fn evaluate_candidate(&self, group: &Group, name: &str, original: Manifest) -> Candidate {
         let package = format!("{group}/{name}");
-        let supplied = self.inputs.get(&package);
+        let forwarded = self
+            .forwarded
+            .get(&package)
+            .map(Vec::as_slice)
+            .unwrap_or(&[]);
+        let empty = BTreeMap::new();
+        let supplied = self
+            .inputs
+            .get(&package)
+            .or_else(|| (!forwarded.is_empty()).then_some(&empty));
         let unsupported = |reason: &str| PackageConfigurationError::Unsupported {
             package: package.clone(),
             reason: reason.into(),
@@ -92,57 +139,57 @@ impl ConfigurationSnapshot {
                             input.clone().map(|i| (consumer.clone(), i))
                         })
                         .collect();
-                    PackageConfiguration::evaluate(&original, &inputs).and_then(|record| {
-                        if let Some(previous) = self.previous.get(&package) {
-                            if !previous.definition.parameters.is_empty()
-                                || previous
-                                    .consumers
-                                    .values()
-                                    .any(|input| input.profile.is_some())
-                            {
-                                let old =
-                                    previous.definition.semantic_fingerprint().map_err(|_| {
-                                        PackageConfigurationError::ReplayMismatch {
-                                            package: package.clone(),
-                                        }
-                                    })?;
-                                let current =
-                                    record.definition.semantic_fingerprint().map_err(|_| {
-                                        PackageConfigurationError::ReplayMismatch {
-                                            package: package.clone(),
-                                        }
-                                    })?;
-                                if previous.consumers != record.consumers
-                                    || old != current
-                                    || previous.declarations != record.declarations
+                    PackageConfiguration::evaluate_with_forwarded(&original, &inputs, forwarded)
+                        .and_then(|record| {
+                            if let Some(previous) = self.previous.get(&package) {
+                                if !previous.definition.parameters.is_empty()
+                                    || previous
+                                        .consumers
+                                        .values()
+                                        .any(|input| input.profile.is_some())
                                 {
-                                    return Err(PackageConfigurationError::ReplayMismatch {
-                                        package: package.clone(),
-                                    });
+                                    let old = previous.definition.semantic_fingerprint().map_err(
+                                        |_| PackageConfigurationError::ReplayMismatch {
+                                            package: package.clone(),
+                                        },
+                                    )?;
+                                    let current = record
+                                        .definition
+                                        .semantic_fingerprint()
+                                        .map_err(|_| PackageConfigurationError::ReplayMismatch {
+                                            package: package.clone(),
+                                        })?;
+                                    if previous.consumers != record.consumers
+                                        || old != current
+                                        || previous.declarations != record.declarations
+                                    {
+                                        return Err(PackageConfigurationError::ReplayMismatch {
+                                            package: package.clone(),
+                                        });
+                                    }
                                 }
-                            }
 
-                            if previous.automatic_basis.is_some() {
-                                // Prior is admitted historical data, not reconstructed
-                                // from this replacement candidate. Explicit takeover is
-                                // deliberately outside this first slice.
-                                if previous.consumers != record.consumers
-                                    || (!self.review_preview
-                                        && (previous.automatic_basis != record.automatic_basis
-                                            || previous.declarations != record.declarations))
-                                {
+                                if previous.automatic_basis.is_some() {
+                                    // Prior is admitted historical data, not reconstructed
+                                    // from this replacement candidate. Explicit takeover is
+                                    // deliberately outside this first slice.
+                                    if previous.consumers != record.consumers
+                                        || (!self.review_preview
+                                            && (previous.automatic_basis != record.automatic_basis
+                                                || previous.declarations != record.declarations))
+                                    {
+                                        return Err(PackageConfigurationError::ReplayMismatch {
+                                            package: package.clone(),
+                                        });
+                                    }
+                                } else if record.automatic_basis.is_some() {
                                     return Err(PackageConfigurationError::ReplayMismatch {
                                         package: package.clone(),
                                     });
                                 }
-                            } else if record.automatic_basis.is_some() {
-                                return Err(PackageConfigurationError::ReplayMismatch {
-                                    package: package.clone(),
-                                });
                             }
-                        }
-                        Ok(Some(record))
-                    })
+                            Ok(Some(record))
+                        })
                 }
             }
         } else if supplied.is_some_and(|inputs| inputs.values().any(Option::is_some)) {
@@ -255,6 +302,7 @@ impl ConfigurationSnapshot {
     ) -> Self {
         Self {
             inputs,
+            forwarded: BTreeMap::new(),
             previous,
             review_preview: false,
             versions: RefCell::new(BTreeMap::new()),
@@ -263,6 +311,53 @@ impl ConfigurationSnapshot {
             source_candidates: RefCell::new(std::collections::HashMap::new()),
         }
     }
+    /// A separate immutable input-set context, with wholly cold evaluation caches.
+    pub(crate) fn with_forwarded_context(
+        &self,
+        forwarded: BTreeMap<String, Vec<vibe_core::manifest::ForwardedInput>>,
+    ) -> Self {
+        let mut context = Self::with_history(self.inputs.clone(), self.previous.clone());
+        context.forwarded = forwarded;
+        context.review_preview = self.review_preview;
+        context
+    }
+    pub(crate) fn authored_inputs(
+        &self,
+        package: &str,
+    ) -> Option<BTreeMap<String, ConfigurationIntentDecl>> {
+        let inputs = self.inputs.get(package)?;
+        if inputs.values().any(Option::is_none) {
+            return None;
+        }
+        Some(
+            inputs
+                .iter()
+                .filter_map(|(consumer, input)| {
+                    input.clone().map(|input| (consumer.clone(), input))
+                })
+                .collect(),
+        )
+    }
+
+    pub(crate) fn retain_selected_context(&self, solved: &crate::SourceResolvedGraph) {
+        // Export final observations only; never recycle an alternate input-set evaluation.
+        for metadata in solved.selected.values() {
+            let evaluated = Ok(metadata.configuration.clone());
+            self.candidates.borrow_mut().insert(
+                (
+                    metadata.candidate.group().clone(),
+                    metadata.candidate.name().into(),
+                    metadata.candidate.version().clone(),
+                ),
+                Candidate {
+                    original: metadata.candidate.manifest().clone(),
+                    evaluated,
+                    view: Ok(metadata.view.clone()),
+                },
+            );
+        }
+    }
+
     /// Non-executable candidate exploration for the governed update review gate.
     /// Callers MUST verify immutable fetched content and obtain exact authority
     /// before effects; ordinary install snapshots never enable this mode.

@@ -38,6 +38,8 @@ pub enum ConfigurationAdmission {
 /// Exact acquired metadata and its evaluated dependency view remain separate.
 #[derive(Debug, Clone)]
 pub struct CandidateMetadata {
+    /// Exact local content observed for compulsory forwarding, rechecked at fetch.
+    pub forwarding_content_pin: Option<vibe_core::ContentHash>,
     pub configuration_admission: ConfigurationAdmission,
     pub observations: Vec<vibe_registry::source_candidates::SourceCandidateObservation>,
     pub configuration_error: Option<vibe_core::manifest::PackageConfigurationError>,

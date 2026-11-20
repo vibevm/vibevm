@@ -16,6 +16,9 @@ pub struct PackageConfiguration {
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub automatic_basis: Option<AutomaticBasis>,
     pub consumers: BTreeMap<String, ConfigurationIntentDecl>,
+    /// Candidate-owned incoming requests, never synthetic workspace consumers.
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub forwarded_inputs: Vec<ForwardedInput>,
     pub definition: ConfigurationDecl,
     pub declarations: Requires,
     pub features: Vec<String>,
@@ -23,6 +26,21 @@ pub struct PackageConfiguration {
     /// Empty causes mean an ordinary mandatory declaration; selected features
     /// are recorded even when they also name that mandatory declaration.
     pub dependency_causes: BTreeMap<String, Vec<String>>,
+}
+
+/// One exact selected source-owned declaration requesting a target feature.
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct ForwardedInput {
+    pub source_group: crate::Group,
+    pub source_name: crate::PackageName,
+    pub source_version: semver::Version,
+    pub source_content_hash: crate::ContentHash,
+    pub source_feature: String,
+    pub declaration_index: usize,
+    pub target: crate::PackageRef,
+    pub target_feature: String,
+    pub strength: super::ForwardStrength,
 }
 
 /// Historical automatic selection, not a consent receipt or authored answer.
@@ -76,6 +94,15 @@ impl PackageConfiguration {
         manifest: &Manifest,
         consumers: &BTreeMap<String, ConfigurationIntentDecl>,
     ) -> Result<Self, PackageConfigurationError> {
+        Self::evaluate_with_forwarded(manifest, consumers, &[])
+    }
+
+    /// Evaluate separately typed candidate-owned requests without inventing user input.
+    pub fn evaluate_with_forwarded(
+        manifest: &Manifest,
+        consumers: &BTreeMap<String, ConfigurationIntentDecl>,
+        forwarded: &[ForwardedInput],
+    ) -> Result<Self, PackageConfigurationError> {
         let metadata =
             manifest
                 .require_package()
@@ -103,6 +130,7 @@ impl PackageConfiguration {
             definition,
             &manifest.requires,
             consumers,
+            forwarded,
         )
     }
 
@@ -112,6 +140,7 @@ impl PackageConfiguration {
         definition: &ConfigurationDecl,
         requires: &Requires,
         consumers: &BTreeMap<String, ConfigurationIntentDecl>,
+        forwarded: &[ForwardedInput],
     ) -> Result<Self, PackageConfigurationError> {
         let unsupported = |reason: &str| PackageConfigurationError::Unsupported {
             package: package.clone(),
@@ -132,8 +161,15 @@ impl PackageConfiguration {
         requires
             .validate_configuration_metadata()
             .map_err(invalid)?;
-        if consumers.is_empty() {
+        if consumers.is_empty() && forwarded.is_empty() {
             return Err(unsupported("no actual incoming configuration declaration"));
+        }
+        if !forwarded.is_empty()
+            && (!definition.parameters.is_empty() || !definition.profiles.is_empty())
+        {
+            return Err(unsupported(
+                "profile or parameter forwarding is not connected",
+            ));
         }
         let mut public_parameters: BTreeMap<String, bool> = BTreeMap::new();
         let mut automatic_choices = BTreeMap::new();
@@ -237,6 +273,35 @@ impl PackageConfiguration {
             ordinary.extend(normalized.features.additions);
             choices.push(normalized.choices);
         }
+        let mut forwarded_features = BTreeSet::new();
+        for request in forwarded {
+            if request.strength != super::ForwardStrength::Strong
+                || !request.target.version.is_exact_pin()
+                || request.target.qualified_name() != package
+                || !forwarded_features.insert(request.target_feature.clone())
+            {
+                return Err(invalid(
+                    "invalid or duplicate candidate-owned forwarded request".into(),
+                ));
+            }
+            let original = ConfigurationIntentDecl {
+                policy: crate::configuration::ChoicePolicy::RequireSelection,
+                profile: None,
+                features: vec![request.target_feature.clone()],
+                default_features: false,
+                selections: BTreeMap::new(),
+                parameters: BTreeMap::new(),
+            };
+            // This is a typed candidate-owned input, never inserted in consumers.
+            let normalized = definition
+                .normalize_input(&original, "candidate-owned forwarding")
+                .map_err(|error| invalid(error.to_string()))?;
+            if let FeatureBase::Selected(base) = normalized.features.base {
+                ordinary.extend(base);
+            }
+            ordinary.extend(normalized.features.additions);
+            choices.push(normalized.choices);
+        }
         let model = definition
             .compile_choices()
             .map_err(|e| invalid(format!("{}: {}", e.field, e.message)))?;
@@ -303,10 +368,31 @@ impl PackageConfiguration {
                             entries.push(feature.id.clone());
                         }
                     }
-                    ConfigurationEffect::Forward { .. } => {
-                        return Err(unsupported(
-                            "selected cross-package forwarding requires candidate-conditioned incoming consumers",
-                        ));
+                    ConfigurationEffect::Forward {
+                        target, strength, ..
+                    } => {
+                        let declaration = requires
+                            .packages
+                            .iter()
+                            .find(|edge| edge.qualified_name() == *target);
+                        if *strength != super::ForwardStrength::Strong
+                            || !forwarded.is_empty()
+                            || declaration.is_none_or(|edge| !edge.version.is_exact_pin())
+                        {
+                            return Err(unsupported(
+                                "selected cross-package forwarding requires candidate-conditioned incoming consumers; only exact compulsory strong edges are connected",
+                            ));
+                        }
+                        let key = declaration
+                            .ok_or_else(|| {
+                                invalid("forwarded dependency declaration is missing".into())
+                            })?
+                            .qualified_name();
+                        active.insert(key.clone());
+                        let entries = causes.entry(key).or_default();
+                        if !entries.contains(&feature.id) {
+                            entries.push(feature.id.clone());
+                        }
                     }
                     ConfigurationEffect::Subskill { path } => {
                         if !path.starts_with("subskills/") || path.rsplit_once('/').is_none() {
@@ -357,6 +443,7 @@ impl PackageConfiguration {
         Ok(Self {
             automatic_basis,
             consumers: consumers.clone(),
+            forwarded_inputs: forwarded.to_vec(),
             definition: definition.clone(),
             declarations: requires.clone(),
             features: features.selected.clone(),
@@ -372,11 +459,15 @@ impl PackageConfiguration {
         kind: crate::PackageKind,
     ) -> Result<BTreeMap<String, crate::manifest::ParameterValue>, PackageConfigurationError> {
         let evaluated = Self::evaluate_parts(
-            "retained package".into(),
+            self.forwarded_inputs
+                .first()
+                .map(|input| input.target.qualified_name())
+                .unwrap_or_else(|| "retained package".into()),
             kind,
             &self.definition,
             &self.declarations,
             &self.consumers,
+            &self.forwarded_inputs,
         )?;
         if &evaluated != self {
             return Err(PackageConfigurationError::ReplayMismatch {
@@ -442,7 +533,8 @@ impl PackageConfiguration {
     /// the actual pinned manifest; never infer a request from effective features.
     #[specmark::spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-069#RECONFIGURATION")]
     pub fn validate(&self, manifest: &Manifest) -> Result<(), PackageConfigurationError> {
-        let actual = Self::evaluate(manifest, &self.consumers)?;
+        let actual =
+            Self::evaluate_with_forwarded(manifest, &self.consumers, &self.forwarded_inputs)?;
         if &actual != self {
             let package = manifest
                 .package

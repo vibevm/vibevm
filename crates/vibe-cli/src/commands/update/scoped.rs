@@ -194,6 +194,15 @@ fn run(
     }
     let prior_lock_bytes = std::fs::read(workspace.root.join(Lockfile::FILENAME))?;
     let mut lockfile = super::inputs::captured_lockfile(&prior_lock_bytes)?;
+    if lockfile
+        .configurations
+        .values()
+        .any(|record| !record.forwarded_inputs.is_empty())
+    {
+        bail!(
+            "forwarded package update requires separately admitted source/target renewal before effects"
+        );
+    }
     // PROP-050 ##VERIFY-LOCK-DIFF — the scoped update's own pre-apply
     // snapshot: the lock as loaded (before the entry replacements below
     // mutate it in place) and the boot lanes' byte sizes. Diffed against

@@ -7,6 +7,9 @@ use std::collections::BTreeMap;
 /// Other freshness checks (versions/slots/source posture) remain separate.
 #[specmark::spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-069#RECONFIGURATION")]
 pub fn configuration_freshness(workspace: &Workspace, lock: &Lockfile) -> Freshness {
+    if lock.validate_configurations().is_err() {
+        return Freshness::Stale("retained configuration provenance is invalid".into());
+    }
     let mut current: BTreeMap<
         String,
         BTreeMap<String, Option<vibe_core::manifest::ConfigurationIntentDecl>>,
@@ -29,6 +32,12 @@ pub fn configuration_freshness(workspace: &Workspace, lock: &Lockfile) -> Freshn
     }
     for (key, record) in &lock.configurations {
         let Some(consumers) = current.get(key) else {
+            if record.consumers.is_empty()
+                && !record.forwarded_inputs.is_empty()
+                && lock.meta.schema_version >= vibe_core::manifest::FORWARDED_INPUT_SCHEMA_VERSION
+            {
+                continue;
+            }
             return Freshness::Stale(format!(
                 "`{key}` configuration no longer has its recorded workspace consumers"
             ));

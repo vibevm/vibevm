@@ -35,6 +35,26 @@ pub(super) fn prepare(
                 .and_then(|group| requires.declared_registry(group, reference.name.as_str()))
                 .cloned()
         })?;
+    if let Some(record) = &configuration {
+        for edge in &mut original_edges {
+            if matches!(edge.site, crate::source_edges::RequirementSite::Requires(_)) {
+                let reference = edge.alternatives.first().ok_or_else(|| {
+                    DepProviderError::Other("configured original edge missing".into())
+                })?;
+                let index = record
+                    .declarations
+                    .packages
+                    .iter()
+                    .position(|original| original == &reference.reference)
+                    .ok_or_else(|| {
+                        DepProviderError::Other(
+                            "configured edge lost original declaration identity".into(),
+                        )
+                    })?;
+                edge.site = crate::source_edges::RequirementSite::Requires(index);
+            }
+        }
+    }
     let owner = format!("{}/{}", candidate.group(), candidate.name());
     let targets = request
         .blocked
@@ -57,7 +77,33 @@ pub(super) fn prepare(
     }
     original_edges.retain(|edge| !edge.alternatives.is_empty());
     crate::mask_manifest_edges(&mut view, &targets);
+    let forwarding = configuration.as_ref().is_some_and(|record| {
+        !record.forwarded_inputs.is_empty()
+            || record
+                .definition
+                .features
+                .iter()
+                .filter(|feature| record.features.contains(&feature.id))
+                .any(|feature| {
+                    feature.effects.iter().any(|effect| {
+                        matches!(
+                            effect,
+                            vibe_core::manifest::ConfigurationEffect::Forward { .. }
+                        )
+                    })
+                })
+    });
+    let forwarding_content_pin = if forwarding {
+        Some(
+            candidate
+                .observe_local_content_pin()
+                .map_err(crate::source_candidates::source_registry_error)?,
+        )
+    } else {
+        None
+    };
     Ok(CandidateMetadata {
+        forwarding_content_pin,
         candidate,
         view,
         original_edges,

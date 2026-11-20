@@ -11,7 +11,9 @@ pub mod basis;
 mod intent;
 mod lower;
 mod package;
-pub use package::{AutomaticBasis, PackageConfiguration, PackageConfigurationError};
+pub use package::{
+    AutomaticBasis, ForwardedInput, PackageConfiguration, PackageConfigurationError,
+};
 mod semantic;
 mod validate;
 mod vocabulary;

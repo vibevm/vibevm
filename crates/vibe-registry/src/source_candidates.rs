@@ -58,6 +58,32 @@ impl RetainedSourceCandidate {
     pub fn source_evidence(&self) -> &SourceEvidence {
         &self.0.evidence
     }
+    /// Observe content only at an already-retained ordinary local registry route.
+    /// This is operator-selected source evidence, not supplier authentication.
+    pub fn observe_local_content_pin(&self) -> Result<vibe_core::ContentHash, RegistryError> {
+        let resolution = &self.0.resolution;
+        if resolution.locked.is_some()
+            || resolution.direct.is_some()
+            || resolution.from_store
+            || resolution.overridden
+            || resolution.is_git_source
+            || resolution.is_path_source
+            || resolution.via_redirect.is_some()
+            || !resolution.source_url.starts_with("file://")
+        {
+            return Err(RegistryError::MalformedMeta {
+                path: resolution.resolved.source_dir.clone(),
+                reason: "forwarding requires a fresh retained ordinary local source".into(),
+            });
+        }
+        self.validate_manifest(&Manifest::read(
+            resolution.resolved.source_dir.join(Manifest::FILENAME),
+        )?)?;
+        Ok(vibe_core::ContentHash::from_validated(
+            crate::compute_content_hash(&resolution.resolved.source_dir)?,
+        ))
+    }
+
     /// Whether both observations were minted by the same original source owner.
     pub fn same_owner(&self, other: &Self) -> bool {
         Arc::ptr_eq(&self.0.owner, &other.0.owner)

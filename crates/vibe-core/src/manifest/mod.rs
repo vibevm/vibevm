@@ -61,7 +61,7 @@ pub use configuration::{
     AutomaticBasis, ConfigurationDecl, ConfigurationEffect, ConfigurationFeatureDecl,
     ConfigurationFeatureVisibility, ConfigurationGroupDecl, ConfigurationGuard,
     ConfigurationIntentDecl, ConfigurationProfileDecl, ConfigurationSelection, ForwardStrength,
-    NormalizedConfigurationInput, PackageConfiguration, PackageConfigurationError,
+    ForwardedInput, NormalizedConfigurationInput, PackageConfiguration, PackageConfigurationError,
 };
 pub use consumer::{ConsumerNode, NodeRole};
 pub use declarant_path::{
@@ -79,9 +79,9 @@ pub use extension::{
 };
 pub use field_path::{FieldError, FieldPath};
 pub use lockfile::{
-    CONFIGURATION_SCHEMA_VERSION, CURRENT_SCHEMA_VERSION, LEGACY_SCHEMA_VERSION,
-    LockedEmbeddedSource, LockedPackage, LockedRemap, LockedRemapSource, LockedRemapSourceError,
-    LockedRequirer, LockedSubskill, LockedTemplate, Lockfile, LockfileMeta,
+    CONFIGURATION_SCHEMA_VERSION, CURRENT_SCHEMA_VERSION, FORWARDED_INPUT_SCHEMA_VERSION,
+    LEGACY_SCHEMA_VERSION, LockedEmbeddedSource, LockedPackage, LockedRemap, LockedRemapSource,
+    LockedRemapSourceError, LockedRequirer, LockedSubskill, LockedTemplate, Lockfile, LockfileMeta,
     REMAP_SOURCE_SCHEMA_VERSION, SUBSKILL_WITNESS_SCHEMA_VERSION, SourceKind, SubskillFileWitness,
     SubskillSourceWitness, TEMPLATE_SCHEMA_VERSION, TemplateRenderChanged, VirtualCapabilityRecord,
     differing_digest_fields,

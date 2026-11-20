@@ -11,6 +11,7 @@ use vibe_registry::source_candidates::SourceChoiceMode;
 mod capture;
 mod decisions;
 mod edges;
+mod forwarding;
 mod legacy;
 mod metadata;
 mod model;
@@ -94,6 +95,35 @@ pub(crate) fn solve<P: SourceCandidateProvider>(
     provider: &P,
     request: &SourceSolveRequest<'_>,
 ) -> Result<SourceResolvedGraph, SolveError> {
+    if let Some(preseed) = forwarding::prepare(provider, request)? {
+        let snapshot = request
+            .configuration
+            .ok_or_else(|| invalid("forwarding requires original input snapshot"))?;
+        let context = snapshot.with_forwarded_context(preseed.inputs.clone());
+        let bound = SourceSolveRequest {
+            selected_roots: request.selected_roots,
+            roots: request.roots,
+            held_roots: request.held_roots,
+            authoritative_locked: request.authoritative_locked,
+            activated: request.activated,
+            limits: request.limits,
+            configuration: Some(&context),
+            blocked: request.blocked,
+            recommends: false,
+        };
+        let solved = solve_once(provider, &bound, true)?;
+        preseed.validate(&solved)?;
+        snapshot.retain_selected_context(&solved);
+        return Ok(solved);
+    }
+    solve_once(provider, request, false)
+}
+
+fn solve_once<P: SourceCandidateProvider>(
+    provider: &P,
+    request: &SourceSolveRequest<'_>,
+    forwarding: bool,
+) -> Result<SourceResolvedGraph, SolveError> {
     for candidate in request.selected_roots {
         if !request.roots.iter().any(|root| {
             matches!(
@@ -119,7 +149,8 @@ pub(crate) fn solve<P: SourceCandidateProvider>(
                 .flat_map(|activation| &activation.edge.alternatives),
         )
         .any(|choice| choice.registry_pin.is_some());
-    if !explicit_pin
+    if !forwarding
+        && !explicit_pin
         && request.selected_roots.is_empty()
         && provider.source_choice_mode() != SourceChoiceMode::CandidateRequired
         && let Some(graph) = legacy::solve(provider, request, legacy::LegacyCell::Resolvo)?

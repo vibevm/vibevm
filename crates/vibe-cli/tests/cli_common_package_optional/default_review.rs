@@ -1661,3 +1661,293 @@ fn selected_package_forwarding_refuses_while_dormant_and_direct_target_controls_
         assert_eq!(fs::read(&request).unwrap(), authored);
     }
 }
+
+fn exact_forward_fixture() -> Fixture {
+    let f = Fixture::new(true);
+    let driver = f.registry.join(GROUP).join(DRIVER).join("v1.0.0/vibe.toml");
+    write(&driver,fs::read_to_string(&driver).unwrap().replace("version = \"^1\", optional = true","version = \"=1.0.0\", optional = true").replace(
+        "effects = [{ kind = \"dependency\", target = \"org.vibevm/oracle-extra\" }]",
+        "effects = [{ kind = \"forward\", target = \"org.vibevm/oracle-extra\", feature = \"forwarded\", strength = \"strong\" }]",
+    ));
+    let target = f.registry.join(GROUP).join(EXTRA).join("v1.0.0/vibe.toml");
+    write(
+        &target,
+        fs::read_to_string(&target).unwrap()
+            + "\n[configuration.config_values]\nforwarded=true\n[[configuration.features]]\nid='forwarded'\nname='Forwarded target feature'\neffects=[{kind='config-value',name='forwarded'}]\n",
+    );
+    let request = f.project.join("vibe.toml");
+    write(
+        &request,
+        fs::read_to_string(&request)
+            .unwrap()
+            .replace("version='^1'", "version='=1.0.0'"),
+    );
+    f
+}
+
+#[test]
+fn compulsory_exact_forwarding_retains_package_owned_input_and_cold_replays() {
+    let f = exact_forward_fixture();
+    let request = f.project.join("vibe.toml");
+    let original = fs::read(&request).unwrap();
+    f.install_ok();
+    let lock = f.lock();
+    assert_eq!(lock.meta.schema_version, 14);
+    let parent = &lock.configurations[&coordinate(DRIVER)];
+    let child = &lock.configurations[&coordinate(EXTRA)];
+    assert_eq!(parent.consumers.len(), 1);
+    assert!(parent.forwarded_inputs.is_empty());
+    assert!(child.consumers.is_empty());
+    assert_eq!(child.forwarded_inputs.len(), 1);
+    assert_eq!(child.forwarded_inputs[0].source_name.as_str(), DRIVER);
+    assert_eq!(
+        child.selected_data(vibe_core::PackageKind::Flow).unwrap()["forwarded"],
+        vibe_core::manifest::ParameterValue::Bool(true)
+    );
+    assert!(f.static_boot().contains(EXTRA_MARKER));
+    let before = fs::read(f.project.join("vibe.lock")).unwrap();
+    let boot = f.static_boot();
+    let hooks = f.hooks();
+    f.install_ok();
+    assert_eq!(fs::read(f.project.join("vibe.lock")).unwrap(), before);
+    assert_eq!(f.static_boot(), boot);
+    assert_eq!(f.hooks(), hooks);
+    assert_eq!(fs::read(&request).unwrap(), original);
+}
+
+#[test]
+fn compulsory_forwarding_tampered_provenance_and_update_refuse_unchanged() {
+    for mutation in [
+        "removed",
+        "wrong-index",
+        "wrong-parent",
+        "wrong-pin",
+        "duplicate",
+        "old-epoch",
+    ] {
+        let f = exact_forward_fixture();
+        f.install_ok();
+        let path = f.project.join("vibe.lock");
+        let boot = f.static_boot();
+        let hooks = f.hooks();
+        assert!(!update(&f).status.success());
+        let mut lock = f.lock();
+        let child = lock.configurations.get_mut(&coordinate(EXTRA)).unwrap();
+        match mutation {
+            "removed" => child.forwarded_inputs.clear(),
+            "wrong-index" => child.forwarded_inputs[0].declaration_index = 999,
+            "wrong-parent" => child.forwarded_inputs[0].source_name = "other".parse().unwrap(),
+            "wrong-pin" => {
+                child.forwarded_inputs[0].source_content_hash =
+                    vibe_core::ContentHash::parse("sha256:aa").unwrap()
+            }
+            "duplicate" => child
+                .forwarded_inputs
+                .push(child.forwarded_inputs[0].clone()),
+            "old-epoch" => lock.meta.schema_version = 13,
+            _ => unreachable!(),
+        }
+        write(&path, toml::to_string(&lock).unwrap());
+        let before = fs::read(&path).unwrap();
+        assert!(Lockfile::read(&path).is_err(), "{mutation}");
+        assert!(!f.install().status.success(), "{mutation}");
+        assert_eq!(fs::read(&path).unwrap(), before);
+        assert_eq!(f.static_boot(), boot);
+        assert_eq!(f.hooks(), hooks);
+    }
+}
+
+#[test]
+fn compulsory_forwarding_unsupported_ranges_weak_and_recursive_refuse_before_effects() {
+    for mutation in [
+        "parent-range",
+        "target-range",
+        "weak",
+        "recursive",
+        "unknown",
+        "wrong-kind",
+    ] {
+        let f = exact_forward_fixture();
+        let driver = f.registry.join(GROUP).join(DRIVER).join("v1.0.0/vibe.toml");
+        let target = f.registry.join(GROUP).join(EXTRA).join("v1.0.0/vibe.toml");
+        match mutation {
+            "parent-range" => {
+                let p = f.project.join("vibe.toml");
+                write(
+                    &p,
+                    fs::read_to_string(&p)
+                        .unwrap()
+                        .replace("version='=1.0.0'", "version='^1'"),
+                );
+            }
+            "target-range" => write(
+                &driver,
+                fs::read_to_string(&driver)
+                    .unwrap()
+                    .replace("version = \"=1.0.0\"", "version = \"^1\""),
+            ),
+            "weak" => write(
+                &driver,
+                fs::read_to_string(&driver)
+                    .unwrap()
+                    .replace("strength = \"strong\"", "strength = \"weak\""),
+            ),
+            "unknown" => write(
+                &driver,
+                fs::read_to_string(&driver)
+                    .unwrap()
+                    .replace("feature = \"forwarded\"", "feature = \"unknown\""),
+            ),
+            "wrong-kind" => write(
+                &driver,
+                fs::read_to_string(&driver).unwrap().replace(
+                    "\"org.vibevm/oracle-extra\" =",
+                    "\"app:org.vibevm/oracle-extra\" =",
+                ),
+            ),
+            "recursive" => write(
+                &target,
+                fs::read_to_string(&target).unwrap()
+                    + "\n[requires.packages]\n'org.vibevm/oracle-base'='=1.0.0'\n[[configuration.features]]\nid='recursive'\nname='Recursive'\neffects=[{kind='forward',target='org.vibevm/oracle-base',feature='other',strength='strong'}]\n",
+            ),
+            _ => unreachable!(),
+        }
+        let authored = fs::read(f.project.join("vibe.toml")).unwrap();
+        let out = f.install();
+        assert!(
+            !out.status.success(),
+            "{mutation}: {}",
+            String::from_utf8_lossy(&out.stderr)
+        );
+        assert!(!f.project.join("vibe.lock").exists());
+        assert!(!f.slot(DRIVER).exists());
+        assert!(!f.slot(EXTRA).exists());
+        assert!(!f.project.join("effects.log").exists());
+        assert_eq!(fs::read(f.project.join("vibe.toml")).unwrap(), authored);
+    }
+}
+
+#[test]
+fn compulsory_forwarding_prior_reader_and_install_writer_refuse_without_mutation() {
+    let Some(old) = std::env::var_os("NST_FORWARD_OLD_CLI") else {
+        return;
+    };
+    let f = exact_forward_fixture();
+    f.install_ok();
+    let before = fs::read(f.project.join("vibe.lock")).unwrap();
+    let boot = f.static_boot();
+    let hooks = f.hooks();
+    for args in [
+        vec![
+            "show",
+            "features",
+            "--path",
+            f.project.to_str().unwrap(),
+            "--json",
+        ],
+        vec![
+            "install",
+            "--path",
+            f.project.to_str().unwrap(),
+            "--offline",
+            "--assume-yes",
+            "--json",
+        ],
+    ] {
+        let out = std::process::Command::new(&old)
+            .env_clear()
+            .env("HOME", f.root.join("home"))
+            .env("VIBE_SETTINGS", &f.user.settings)
+            .env("PATH", "/usr/bin:/bin")
+            .args(args)
+            .output()
+            .unwrap();
+        assert!(!out.status.success());
+        assert_eq!(fs::read(f.project.join("vibe.lock")).unwrap(), before);
+        assert_eq!(f.static_boot(), boot);
+        assert_eq!(f.hooks(), hooks);
+    }
+}
+
+#[test]
+fn compulsory_forwarding_merges_direct_consumer_and_rejects_conflict_before_effects() {
+    for compatible in [false, true] {
+        let f = exact_forward_fixture();
+        let target = f.registry.join(GROUP).join(EXTRA).join("v1.0.0/vibe.toml");
+        write(
+            &target,
+            fs::read_to_string(&target).unwrap()
+                + "\n[[configuration.features]]\nid='other'\nname='Other target feature'\n[[configuration.groups]]\nmode='choice'\nid='mode'\nname='Mode'\ncardinality='exactly-one'\nmembers=['forwarded','other']\n",
+        );
+        let request = f.project.join("vibe.toml");
+        write(
+            &request,
+            fs::read_to_string(&request).unwrap()
+                + &format!(
+                    "\n[requires.packages.'{GROUP}/{EXTRA}']\nversion='=1.0.0'\nlink='static-transitive'\nconfiguration={{policy='require-selection',default_features=false,selections={{mode={{intent='exact',members=['{}']}}}}}}\n",
+                    if compatible { "forwarded" } else { "other" }
+                ),
+        );
+        let authored = fs::read(&request).unwrap();
+        let out = f.install();
+        if compatible {
+            assert!(
+                out.status.success(),
+                "{}",
+                String::from_utf8_lossy(&out.stderr)
+            );
+            let mut lock = f.lock();
+            let record = &lock.configurations[&coordinate(EXTRA)];
+            assert_eq!(record.consumers.len(), 1);
+            assert_eq!(record.forwarded_inputs.len(), 1);
+            let before = fs::read(f.project.join("vibe.lock")).unwrap();
+            let hooks = f.hooks();
+            f.install_ok();
+            assert_eq!(fs::read(f.project.join("vibe.lock")).unwrap(), before);
+            assert_eq!(f.hooks(), hooks);
+            // Removing the row must refuse even though direct intent selects the same feature.
+            lock.configurations
+                .get_mut(&coordinate(EXTRA))
+                .unwrap()
+                .forwarded_inputs
+                .clear();
+            let path = f.project.join("vibe.lock");
+            write(&path, toml::to_string(&lock).unwrap());
+            assert!(Lockfile::read(&path).is_err());
+            assert!(!f.install().status.success());
+        } else {
+            assert!(!out.status.success());
+            assert!(!f.project.join("vibe.lock").exists());
+            assert!(!f.slot(DRIVER).exists());
+            assert!(!f.slot(EXTRA).exists());
+            assert!(!f.project.join("effects.log").exists());
+        }
+        assert_eq!(fs::read(&request).unwrap(), authored);
+    }
+}
+
+#[test]
+fn unselected_source_candidate_does_not_forward_into_target() {
+    let f = Fixture::new(false);
+    let old = f.registry.join(GROUP).join(DRIVER).join("v1.0.0");
+    let alternate = f.registry.join(GROUP).join(DRIVER).join("v1.1.0");
+    write(&alternate.join("vibe.toml"),fs::read_to_string(old.join("vibe.toml")).unwrap().replace("version='1.0.0'","version='1.1.0'").replace("name = \"No extra\"","name = \"No extra\"\neffects=[{kind='forward',target='org.vibevm/oracle-extra',feature='unknown',strength='strong'}]"));
+    write(&alternate.join("boot/rules.md"), "UNSELECTED_PARENT_BODY\n");
+    let request = f.project.join("vibe.toml");
+    write(
+        &request,
+        fs::read_to_string(&request)
+            .unwrap()
+            .replace("version='^1'", "version='=1.0.0'"),
+    );
+    f.install_ok();
+    assert!(!f.slot(EXTRA).exists());
+    assert!(!f.static_boot().contains("UNSELECTED_PARENT_BODY"));
+    assert_eq!(f.lock().configurations.len(), 1);
+    assert!(
+        f.lock()
+            .configurations
+            .values()
+            .all(|record| record.forwarded_inputs.is_empty())
+    );
+}

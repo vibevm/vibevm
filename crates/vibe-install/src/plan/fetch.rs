@@ -66,6 +66,23 @@ pub(super) fn fetch_selected_node<S: InstallSource + ?Sized>(
     if &cached.manifest != selected.manifest() {
         return Err(super::configured::manifest_drift(&cached.cache_dir).into());
     }
+    if let Some(pin) = &metadata.forwarding_content_pin {
+        let recipe = if pin.as_str().starts_with("sha256-tree/1:") {
+            vibe_registry::RecipeId::Tree1
+        } else {
+            vibe_registry::RecipeId::Legacy0
+        };
+        if cached.content_hash != pin.as_str()
+            || vibe_registry::compute_content_hash_with(recipe, &cached.cache_dir)? != pin.as_str()
+            || selected.observe_local_content_pin()? != *pin
+        {
+            return Err(RegistryError::MalformedMeta {
+                path: cached.cache_dir.clone(),
+                reason: "forwarding source content changed after compulsory admission".into(),
+            }
+            .into());
+        }
+    }
     super::configured::admit_configured_acquisition(&cached, metadata)?;
     crate::configuration_admission::admitted_package(
         format!("{}/{}", node.group, node.name),
