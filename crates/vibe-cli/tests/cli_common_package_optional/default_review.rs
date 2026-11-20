@@ -540,3 +540,44 @@ fn review_candidate_drift_and_membership_change_cannot_reuse_authority() {
     assert_eq!(g.hooks(), hooks);
     assert!(!g.slot(EXTRA).exists());
 }
+
+#[test]
+fn selected_config_value_is_admitted_data_but_public_package_effect_route_refuses_before_install() {
+    let fixture = Fixture::new(false);
+    let path = fixture
+        .registry
+        .join(GROUP)
+        .join(DRIVER)
+        .join("v1.0.0/vibe.toml");
+    let text=fs::read_to_string(&path).unwrap().replace("id = \"disabled\"\nname = \"No extra\"","id = \"disabled\"\nname = \"No extra\"\neffects = [{ kind = \"config-value\", name = \"verbose\" }]");
+    let text = text + "\n[configuration.config_values]\nverbose = true\n";
+    let parsed = Manifest::parse_str(&text).unwrap();
+    assert!(
+        parsed
+            .configuration
+            .as_ref()
+            .unwrap()
+            .config_values
+            .contains_key("verbose")
+    );
+    write(&path, text);
+    let authored = fs::read(fixture.project.join("vibe.toml")).unwrap();
+    let output = fixture.install();
+    let diagnostic = format!(
+        "{}{}",
+        String::from_utf8_lossy(&output.stdout),
+        String::from_utf8_lossy(&output.stderr)
+    );
+    assert!(!output.status.success(), "{diagnostic}");
+    assert!(
+        diagnostic.contains("config-value inspection/replay consumer is not connected"),
+        "{diagnostic}"
+    );
+    assert_eq!(
+        fs::read(fixture.project.join("vibe.toml")).unwrap(),
+        authored
+    );
+    assert!(!fixture.project.join("vibe.lock").exists());
+    assert!(!fixture.slot(DRIVER).exists());
+    assert!(!fixture.project.join("effects.log").exists());
+}
