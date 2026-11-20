@@ -265,3 +265,5 @@ Two historical held-root changes separate same-path copied records from the orig
 Three reviewed revisions distinguish observing the current published release from predicting a fallback, hashing an asset from owning it, and preserving invalid planner evidence from publishing a structured report. No external service was called.
 
 Two historical operation contracts separate discovery and transport from authority. The corresponding file-publication review distinguishes matching content from proof of the originating object. No target execution is claimed.
+
+Three lifecycle revisions separate manifest/lock observations from an installed-world snapshot, identity proposal from reservation, and recovery-only inspection from new Deploy authority. Named source changes were inspected, not executed.
