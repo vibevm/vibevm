@@ -275,3 +275,5 @@ Historical init and lifecycle changes distinguish an authored dialect from a fal
 Historical state readers distinguish the named deployment child from the directory actually held, and a matching lifecycle header from a terminal result. No deployment or replay was run.
 
 Three historical revalidation paths were checked: canonical composition bytes after proof, saved witness bytes across fresh checking, and host-selected generation before deployment commit. None establishes future pathname stability or new execution.
+
+Three source changes distinguish unique durable reservation, fixed internal entry compilation, and inspection of the winning peer run. None of those observations alone is public operation acceptance.
