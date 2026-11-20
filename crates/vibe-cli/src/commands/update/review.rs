@@ -215,6 +215,11 @@ pub(super) fn gate(
         .automatic_basis
         .as_ref()
         .ok_or_else(|| anyhow::anyhow!("removed automatic basis is not reviewable"))?;
+    if !old_basis.consumer_feature_defaults.is_empty()
+        || !new_basis.consumer_feature_defaults.is_empty()
+    {
+        bail!("feature-default renewal is not connected; choice review tokens cannot authorize it");
+    }
     if !old_basis.consumer_dormant_choices.is_empty() || !new_basis.consumer_dormant_choices.is_empty()
         || old.definition.groups.iter().chain(&new.definition.groups).any(|g|matches!(g,vibe_core::manifest::ConfigurationGroupDecl::Choice{guards,..} if !guards.is_empty())) {
         bail!("guarded automatic default renewal is not connected; legacy scalar review tokens cannot authorize it");

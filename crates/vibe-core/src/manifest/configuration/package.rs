@@ -58,6 +58,9 @@ pub struct AutomaticBasis {
     /// Historical omitted-policy binding for inactive guarded choices, not members.
     #[serde(default, skip_serializing_if = "BTreeMap::is_empty")]
     pub consumer_dormant_choices: BTreeMap<String, Vec<String>>,
+    /// Declared feature-default seeds before closure; an empty row retains reliance.
+    #[serde(default, skip_serializing_if = "BTreeMap::is_empty")]
+    pub consumer_feature_defaults: BTreeMap<String, Vec<String>>,
 }
 
 /// Configuration admission has not produced an executable package selection.
@@ -185,6 +188,7 @@ impl PackageConfiguration {
         let mut automatic_choices = BTreeMap::new();
         let mut automatic_choice_sets = BTreeMap::new();
         let mut automatic_dormant_choices = BTreeMap::new();
+        let mut automatic_feature_defaults = BTreeMap::new();
         let mut guarded_reliance = Vec::new();
         let mut ordinary = BTreeSet::new();
         let mut choices = Vec::new();
@@ -200,9 +204,30 @@ impl PackageConfiguration {
                 }
             })?;
             if input.default_features && input.profile.is_none() {
-                return Err(unsupported(
-                    "automatic/default/profile basis is not connected on this package operation; supply explicit no-default input",
-                ));
+                if kind != crate::PackageKind::Flow
+                    || consumers.len() != 1
+                    || !forwarded.is_empty()
+                    || !definition.groups.is_empty()
+                    || !definition.profiles.is_empty()
+                    || !definition.parameters.is_empty()
+                    || definition.features.iter().any(|feature| {
+                        !feature.guards.is_empty()
+                            || feature.visibility != super::ConfigurationFeatureVisibility::Public
+                    })
+                {
+                    return Err(unsupported(
+                        "feature defaults require one public ordinary Flow without groups, profiles, parameters or forwarding",
+                    ));
+                }
+                let declared = definition
+                    .features
+                    .iter()
+                    .filter(|feature| feature.default)
+                    .map(|feature| feature.id.clone())
+                    .collect::<BTreeSet<_>>()
+                    .into_iter()
+                    .collect();
+                automatic_feature_defaults.insert(consumer.clone(), declared);
             }
             let reasons = super::basis::consumer_reliance(
                 definition,
@@ -216,6 +241,9 @@ impl PackageConfiguration {
             let mut selected_defaults = BTreeMap::new();
             let mut selected_default_sets = BTreeMap::new();
             for reason in reasons {
+                if reason == super::basis::ConsumerReliance::FeatureDefaults {
+                    continue; // Already bound to declared seeds, never effective closure.
+                }
                 if reason == super::basis::ConsumerReliance::Profile {
                     // Profile reliance is retained by original profile input and
                     // historical definition, never a fabricated default choice.
@@ -461,10 +489,22 @@ impl PackageConfiguration {
             .map_err(|e| invalid(format!("{}: {}", e.field, e.message)))?;
         // Across consumers there is no last-writer feature replacement. All
         // direct seeds are simultaneous base requirements before core closure.
+        let feature_base = if automatic_feature_defaults.is_empty() {
+            FeatureBase::Selected(ordinary.iter().cloned().collect())
+        } else {
+            // Narrow single-consumer default admission keeps kernel default
+            // activation; authored additions are still explicit additions.
+            FeatureBase::Defaults
+        };
+        let explicit_additions = if automatic_feature_defaults.is_empty() {
+            vec![]
+        } else {
+            ordinary.into_iter().collect()
+        };
         let evaluation = model.evaluate(
             &FeatureInput {
-                base: FeatureBase::Selected(ordinary.into_iter().collect()),
-                additions: vec![],
+                base: feature_base,
+                additions: explicit_additions,
                 disabled: vec![],
             },
             &choices,
@@ -641,6 +681,7 @@ impl PackageConfiguration {
         let automatic_basis = if automatic_choices.is_empty()
             && automatic_choice_sets.is_empty()
             && automatic_dormant_choices.is_empty()
+            && automatic_feature_defaults.is_empty()
         {
             None
         } else {
@@ -651,6 +692,7 @@ impl PackageConfiguration {
                 consumer_choices: automatic_choices,
                 consumer_choice_sets: automatic_choice_sets,
                 consumer_dormant_choices: automatic_dormant_choices,
+                consumer_feature_defaults: automatic_feature_defaults,
             })
         };
         Ok(Self {

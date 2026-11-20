@@ -8860,32 +8860,37 @@ fn implicit_feature_default_originals_kernel_and_public_install_boundary() {
             evaluation.defaults.is_empty(),
             "feature default is not a choice DefaultUse"
         );
-        let before = super::workspace::semantic_snapshot(&f.project);
         let output = f.install();
         let diagnostic = String::from_utf8_lossy(&output.stdout).to_string()
             + &String::from_utf8_lossy(&output.stderr);
-        let accepted = matches!(world, "false" | "explicit-addition");
         println!(
             "implicit-feature world={world} kernel-extra={extra} accepted={} diagnostic={diagnostic}",
             output.status.success()
         );
-        assert_eq!(output.status.success(), accepted, "{world}: {diagnostic}");
-        if !accepted {
-            assert!(
-                diagnostic.contains("automatic/default/profile basis is not connected"),
-                "{diagnostic}"
-            );
-            assert_eq!(super::workspace::semantic_snapshot(&f.project), before);
-            assert!(!f.project.join("vibe.lock").exists());
-            assert!(!f.project.join("effects.log").exists());
-            assert!(!f.slot(DRIVER).exists() && !f.slot(EXTRA).exists());
-            continue;
-        }
+        assert!(output.status.success(), "{world}: {diagnostic}");
         let lock = f.lock();
         let record = &lock.configurations[&coordinate(DRIVER)];
         assert_eq!(record.consumers["./vibe.toml"], original);
-        assert!(record.automatic_basis.is_none());
-        assert_eq!(lock.meta.schema_version, 8);
+        if original.default_features {
+            let basis = record
+                .automatic_basis
+                .as_ref()
+                .expect("feature reliance missing");
+            assert_eq!(
+                basis.consumer_feature_defaults["./vibe.toml"],
+                vec!["enabled".to_owned()]
+            );
+            assert!(
+                basis.consumer_choices.is_empty()
+                    && basis.consumer_choice_sets.is_empty()
+                    && basis.consumer_dormant_choices.is_empty()
+            );
+            assert_eq!(lock.meta.schema_version, 18);
+            assert!(record.consumers["./vibe.toml"].features.is_empty());
+        } else {
+            assert!(record.automatic_basis.is_none());
+            assert_eq!(lock.meta.schema_version, 8);
+        }
         assert_eq!(record.features.contains(&"enabled".into()), extra);
         assert_eq!(
             lock.packages.iter().any(|p| p.name.as_str() == EXTRA),
@@ -8942,4 +8947,248 @@ fn implicit_feature_default_originals_kernel_and_public_install_boundary() {
             "cold {world}"
         );
     }
+}
+
+fn feature_default_fixture(defaults: bool, base: bool, addition: bool) -> Fixture {
+    let f = Fixture::new(false);
+    let source = f.registry.join(GROUP).join(DRIVER).join("v1.0.0/vibe.toml");
+    write(
+        &source,
+        package_header(DRIVER)
+            + &format!(
+                "\n[requires.packages]\n'org.vibevm/oracle-base'='=1.0.0'\n'org.vibevm/oracle-extra'={{version='=1.0.0',optional=true}}\n[[configuration.features]]\nid='enabled'\nname='Default seed'\ndefault={defaults}\neffects=[{{kind='dependency',target='org.vibevm/oracle-extra'}}]\n[[configuration.features]]\nid='other'\nname='Other seed'\n"
+            ),
+    );
+    write(
+        &f.project.join("vibe.toml"),
+        format!(
+            "[project]\nname='feature-default-first'\nversion='0.1.0'\n[requires.packages.'{GROUP}/{DRIVER}']\nversion='=1.0.0'\nlink='static-transitive'\nconfiguration={{policy='require-selection',default_features={base},features={}}}\n[[registry]]\nname='fixture'\nurl='file://{}'\n",
+            if addition { "['enabled']" } else { "[]" },
+            f.registry.display()
+        ),
+    );
+    f
+}
+
+#[test]
+fn feature_defaults_empty_equal_addition_prior_clients_and_history_tamper() {
+    let old = std::env::var("NST_FEATURE_DEFAULT_OLD_CLI").expect("actual prior client required");
+    for defaults in [false, true] {
+        for addition in [false, true] {
+            let f = feature_default_fixture(defaults, true, addition);
+            f.install_ok();
+            let lock = f.lock();
+            let record = &lock.configurations[&coordinate(DRIVER)];
+            assert_eq!(
+                record
+                    .automatic_basis
+                    .as_ref()
+                    .unwrap()
+                    .consumer_feature_defaults["./vibe.toml"],
+                if defaults {
+                    vec!["enabled".to_owned()]
+                } else {
+                    vec![]
+                }
+            );
+            assert_eq!(
+                record.consumers["./vibe.toml"].features,
+                if addition {
+                    vec!["enabled".to_owned()]
+                } else {
+                    vec![]
+                }
+            );
+            assert_eq!(lock.meta.schema_version, 18);
+            assert_eq!(f.slot(EXTRA).exists(), defaults || addition);
+            let before = super::workspace::semantic_snapshot(&f.project);
+            f.install_ok();
+            assert_eq!(super::workspace::semantic_snapshot(&f.project), before);
+        }
+        for base in [false, true] {
+            for operation in ["show", "install"] {
+                let f = feature_default_fixture(defaults, base, true);
+                f.install_ok();
+                let before = super::workspace::semantic_snapshot(&f.project);
+                let mut cmd = std::process::Command::new(&old);
+                cmd.env_clear()
+                    .env("HOME", f.root.join("home"))
+                    .env("VIBE_SETTINGS", &f.user.settings)
+                    .env("VIBE_REGISTRY_CACHE", &f.user.cache)
+                    .env("VIBEVM_SEARCH_CACHE_DIR", &f.user.search_cache)
+                    .env("VIBE_NO_DEFAULT_REGISTRY", "1")
+                    .env("PATH", "/usr/bin:/bin");
+                if operation == "show" {
+                    cmd.args([
+                        "show",
+                        "features",
+                        "--json",
+                        "--path",
+                        f.project.to_str().unwrap(),
+                    ]);
+                } else {
+                    cmd.args([
+                        "install",
+                        "--offline",
+                        "--assume-yes",
+                        "--json",
+                        "--path",
+                        f.project.to_str().unwrap(),
+                    ]);
+                }
+                let out = cmd.output().unwrap();
+                assert_eq!(
+                    out.status.success(),
+                    !base,
+                    "prior defaults={defaults} base={base} op={operation}: {}{}",
+                    String::from_utf8_lossy(&out.stdout),
+                    String::from_utf8_lossy(&out.stderr)
+                );
+                assert_eq!(super::workspace::semantic_snapshot(&f.project), before);
+            }
+        }
+        for mutation in [
+            "missing",
+            "wrong",
+            "extra-consumer",
+            "duplicate",
+            "fingerprint",
+            "epoch",
+        ] {
+            let f = feature_default_fixture(defaults, true, true); // effective set equal even with forged seeds
+            f.install_ok();
+            let path = f.project.join("vibe.lock");
+            let mut lock: toml::Value =
+                toml::from_str(&fs::read_to_string(&path).unwrap()).unwrap();
+            let basis = &mut lock["configurations"][coordinate(DRIVER)]["automatic_basis"];
+            match mutation {
+                "missing" => {
+                    basis
+                        .as_table_mut()
+                        .unwrap()
+                        .remove("consumer_feature_defaults");
+                }
+                "wrong" => {
+                    basis["consumer_feature_defaults"]["./vibe.toml"] =
+                        toml::Value::Array(vec!["other".into()])
+                }
+                "extra-consumer" => {
+                    basis["consumer_feature_defaults"]
+                        .as_table_mut()
+                        .unwrap()
+                        .insert("./foreign.toml".into(), toml::Value::Array(vec![]));
+                }
+                "duplicate" => {
+                    basis["consumer_feature_defaults"]["./vibe.toml"] =
+                        toml::Value::Array(vec!["enabled".into(), "enabled".into()])
+                }
+                "fingerprint" => basis["definition_fingerprint"] = "wrong".into(),
+                "epoch" => lock["meta"]["schema_version"] = 17.into(),
+                _ => unreachable!(),
+            }
+            write(&path, toml::to_string_pretty(&lock).unwrap());
+            let before = super::workspace::semantic_snapshot(&f.project);
+            assert!(
+                !f.install().status.success(),
+                "tamper {mutation} defaults={defaults}"
+            );
+            assert_eq!(super::workspace::semantic_snapshot(&f.project), before);
+        }
+    }
+}
+
+#[test]
+fn feature_defaults_definition_drift_cannot_renew_with_choice_token() {
+    let reviewed = review_fixture();
+    let shown = update(&reviewed);
+    let proposal: serde_json::Value = serde_json::from_slice(&shown.stderr).unwrap();
+    let token = proposal["proposal"]["review_id"].as_str().unwrap();
+    for defaults in [false, true] {
+        for change in ["default", "definition"] {
+            let f = feature_default_fixture(defaults, true, true);
+            f.install_ok();
+            let source = f.registry.join(GROUP).join(DRIVER).join("v1.0.0/vibe.toml");
+            let original = fs::read_to_string(&source).unwrap();
+            let changed = if change == "default" {
+                original.replace(
+                    &format!("default={defaults}"),
+                    &format!("default={}", !defaults),
+                )
+            } else {
+                original.replace("id='other'", "id='different'")
+            };
+            assert_ne!(original, changed);
+            write(&source, changed);
+            let before = super::workspace::semantic_snapshot(&f.project);
+            let out = respond(&f, token);
+            assert!(!out.status.success(), "choice token renewed {change}");
+            assert_eq!(super::workspace::semantic_snapshot(&f.project), before);
+        }
+    }
+}
+
+#[test]
+fn feature_defaults_nonselected_version_cannot_supply_selected_seeds() {
+    let f = feature_default_fixture(true, true, false);
+    let old = f.registry.join(GROUP).join(DRIVER).join("v1.0.0");
+    let next = f.registry.join(GROUP).join(DRIVER).join("v1.1.0");
+    let text = fs::read_to_string(old.join("vibe.toml"))
+        .unwrap()
+        .replace("version='1.0.0'", "version='1.1.0'")
+        .replace("default=true", "default=false");
+    write(&next.join("vibe.toml"), text);
+    write(&next.join("boot/rules.md"), "UNSELECTED_FEATURE_DEFAULT\n");
+    f.install_ok();
+    let lock = f.lock();
+    assert_eq!(
+        lock.find(&GROUP.parse().unwrap(), DRIVER)
+            .unwrap()
+            .version
+            .to_string(),
+        "1.0.0"
+    );
+    assert_eq!(
+        lock.configurations[&coordinate(DRIVER)]
+            .automatic_basis
+            .as_ref()
+            .unwrap()
+            .consumer_feature_defaults["./vibe.toml"],
+        vec!["enabled".to_owned()]
+    );
+    assert!(f.slot(EXTRA).exists());
+    assert!(!f.static_boot().contains("UNSELECTED_FEATURE_DEFAULT"));
+    let before = super::workspace::semantic_snapshot(&f.project);
+    f.install_ok();
+    assert_eq!(super::workspace::semantic_snapshot(&f.project), before);
+}
+
+#[test]
+fn feature_default_seeds_are_not_inferred_from_implied_closure() {
+    let f = feature_default_fixture(true, true, false);
+    let source = f.registry.join(GROUP).join(DRIVER).join("v1.0.0/vibe.toml");
+    let original = fs::read_to_string(&source).unwrap();
+    let changed = original.replace(
+        "name='Default seed'",
+        "name='Default seed'\nrequires=['other']",
+    );
+    assert_ne!(original, changed);
+    write(&source, changed);
+    f.install_ok();
+    let lock = f.lock();
+    let record = &lock.configurations[&coordinate(DRIVER)];
+    assert!(
+        record.features.contains(&"enabled".into()) && record.features.contains(&"other".into())
+    );
+    assert_eq!(
+        record
+            .automatic_basis
+            .as_ref()
+            .unwrap()
+            .consumer_feature_defaults["./vibe.toml"],
+        vec!["enabled".to_owned()]
+    );
+    assert!(record.consumers["./vibe.toml"].features.is_empty());
+    let before = super::workspace::semantic_snapshot(&f.project);
+    f.install_ok();
+    assert_eq!(super::workspace::semantic_snapshot(&f.project), before);
 }

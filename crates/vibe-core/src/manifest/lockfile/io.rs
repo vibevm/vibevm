@@ -42,6 +42,7 @@ impl Lockfile {
                 | MULTI_CHOICE_BASIS_SCHEMA_VERSION
                 | SUBMITTED_INPUT_SCHEMA_VERSION
                 | DORMANT_CHOICE_BASIS_SCHEMA_VERSION
+                | FEATURE_DEFAULT_BASIS_SCHEMA_VERSION
         ) {
             return Err(crate::error::Error::UnsupportedLockfile {
                 found: lockfile.meta.schema_version,
