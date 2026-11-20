@@ -2,6 +2,86 @@
 use super::*;
 
 #[test]
+fn ordinary_internal_feature_direct_refusal_and_public_implication() {
+    for direct in [true, false] {
+        let f = Fixture::new(false);
+        let source = f.registry.join(GROUP).join(DRIVER).join("v1.0.0/vibe.toml");
+        let original = fs::read_to_string(&source).unwrap();
+        let prefix = original.split("[[configuration.features]]").next().unwrap();
+        let definition = format!(
+            "{prefix}[[configuration.features]]\nid='public-entry'\nname='Public entry'\nrequires=['internal-backing']\n\n[[configuration.features]]\nid='internal-backing'\nname='Internal backing'\nvisibility='internal'\neffects=[{{kind='dependency',target='org.vibevm/oracle-extra'}}]\n"
+        );
+        Manifest::parse_str(&definition).unwrap();
+        write(&source, &definition);
+        let selected = if direct {
+            "internal-backing"
+        } else {
+            "public-entry"
+        };
+        let request = f.project.join("vibe.toml");
+        let authored = fs::read_to_string(&request)
+            .unwrap()
+            .replace("version='^1'", "version='=1.0.0'")
+            .replace(
+                "configuration={policy='require-selection',default_features=false,selections={extra={intent='exact',members=['disabled']}}}",
+                &format!("configuration={{policy='require-selection',default_features=false,features=['{selected}']}}"),
+            );
+        Manifest::parse_str(&authored).unwrap();
+        write(&request, &authored);
+        let before = super::workspace::semantic_snapshot(&f.project);
+        let out = f.install();
+        if direct {
+            assert!(
+                !out.status.success(),
+                "direct internal selection must refuse"
+            );
+            assert!(
+                String::from_utf8_lossy(&out.stderr)
+                    .contains("internal feature `internal-backing` cannot be requested directly")
+            );
+            assert_eq!(super::workspace::semantic_snapshot(&f.project), before);
+            assert!(!f.project.join("vibe.lock").exists());
+            assert!(!f.project.join("effects.log").exists());
+            for name in [DRIVER, BASE, EXTRA] {
+                assert!(!f.slot(name).exists());
+            }
+        } else {
+            assert!(
+                out.status.success(),
+                "{}",
+                String::from_utf8_lossy(&out.stderr)
+            );
+            let lock = f.lock();
+            let record = &lock.configurations[&coordinate(DRIVER)];
+            assert_eq!(
+                record.consumers["./vibe.toml"].features,
+                vec!["public-entry"]
+            );
+            assert!(record.features.contains(&"internal-backing".into()));
+            let backing = record
+                .definition
+                .features
+                .iter()
+                .find(|feature| feature.id == "internal-backing")
+                .unwrap();
+            assert_eq!(
+                backing.visibility,
+                vibe_core::manifest::ConfigurationFeatureVisibility::Internal
+            );
+            assert!(f.slot(EXTRA).exists());
+            assert!(f.static_boot().contains(EXTRA_MARKER));
+            assert_eq!(f.hooks().get(EXTRA), Some(&1));
+            let before = super::workspace::semantic_snapshot(&f.project);
+            fs::rename(&f.registry, f.root.join("registry-unavailable")).unwrap();
+            f.install_ok();
+            assert_eq!(super::workspace::semantic_snapshot(&f.project), before);
+            assert_eq!(f.hooks().get(EXTRA), Some(&1));
+        }
+        assert_eq!(fs::read_to_string(&request).unwrap(), authored);
+    }
+}
+
+#[test]
 fn ordinary_closure_fallback_actual_install_boundary_and_requires_precedence() {
     for reversed in [false, true] {
         for world in [
