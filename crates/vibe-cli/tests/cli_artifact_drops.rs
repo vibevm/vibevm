@@ -451,3 +451,113 @@ fn an_excluded_origin_behind_a_drop_miss_is_fixed_by_filling_the_drop() {
         "the fix no longer points away from the drop: {stderr}"
     );
 }
+
+#[test]
+fn synthetic_offline_drop_public_version_repeat_remove_and_integrity_refusal() {
+    let payload = b"#!/bin/sh\nprintf '%s\\n' 'SYNTHETIC_DROP_VERSION_1.0.0'\n";
+    let digest = sha(payload);
+    let fixture = Fixture::new(&format!(
+        "drop = \"packages\"\nfile = \"synthetic-tool.sh\"\nsha256 = \"{digest}\""
+    ));
+    let package = fixture.registry.join("org.example/dropped/v1.0.0");
+    let manifest = package.join("vibe.toml");
+    let mut text = fs::read_to_string(&manifest).unwrap();
+    text.push_str(
+        "\n[[installer_options.public_commands]]\nname='synthetic-drop-version'\nlauncher='main'\n",
+    );
+    fs::write(&manifest, text).unwrap();
+    fixture.configure_drop();
+    let dropped = fixture.place("org.example/dropped/1.0.0/synthetic-tool.sh", payload);
+    let foreign = fixture.user.settings.join("foreign-neighbor");
+    fs::write(&foreign, b"KEEP").unwrap();
+    let install = fixture.install(&["--offline", "--json"]);
+    assert!(install.status.success(), "{}", self::text(&install));
+    let report: serde_json::Value = serde_json::from_slice(&install.stdout).unwrap();
+    let root = PathBuf::from(report["appRoot"].as_str().unwrap());
+    let index = fixture.user.settings.join("applications/index.json");
+    let before: serde_json::Value = serde_json::from_slice(&fs::read(&index).unwrap()).unwrap();
+    assert_eq!(before["installations"].as_object().unwrap().len(), 1);
+    let proxy = fixture.user.settings.join("opt/bin/synthetic-drop-version");
+    let output = fixture
+        .user
+        .vibe()
+        .arg("app")
+        .args(["run", "org.example/dropped", "main", "--", "--version"])
+        .output()
+        .unwrap();
+    assert!(output.status.success(), "{}", self::text(&output));
+    assert_eq!(
+        String::from_utf8_lossy(&output.stdout).trim(),
+        "SYNTHETIC_DROP_VERSION_1.0.0"
+    );
+    assert!(proxy.is_file());
+    let output = std::process::Command::new(&proxy)
+        .env_clear()
+        .env("VIBE_SETTINGS", &fixture.user.settings)
+        .env("HOME", fixture.root.path())
+        .env("PATH", "/usr/bin:/bin")
+        .arg("--version")
+        .output()
+        .unwrap();
+    assert!(output.status.success(), "{}", self::text(&output));
+    assert_eq!(
+        String::from_utf8_lossy(&output.stdout).trim(),
+        "SYNTHETIC_DROP_VERSION_1.0.0"
+    );
+    let repeated = fixture.install(&["--offline", "--json"]);
+    assert!(repeated.status.success(), "{}", self::text(&repeated));
+    let after: serde_json::Value = serde_json::from_slice(&fs::read(&index).unwrap()).unwrap();
+    assert_eq!(after["installations"].as_object().unwrap().len(), 1);
+    let removed = fixture.vibe(&["uninstall", "-g", "org.example/dropped", "--json"]);
+    assert!(removed.status.success(), "{}", self::text(&removed));
+    assert!(!root.exists());
+    assert!(!proxy.exists());
+    assert_eq!(fs::read(&foreign).unwrap(), b"KEEP");
+    let empty: serde_json::Value = serde_json::from_slice(&fs::read(&index).unwrap()).unwrap();
+    assert_eq!(empty["installations"], serde_json::json!({}));
+    assert_eq!(fs::read(&dropped).unwrap(), payload);
+    // Fresh settings/cache for each negative: a previously authenticated cache
+    // is not evidence that acquisition consulted a newly corrupted drop.
+    for corrupt in [false, true] {
+        let negative = Fixture::new(&format!(
+            "drop = \"packages\"\nfile = \"synthetic-tool.sh\"\nsha256 = \"{digest}\""
+        ));
+        negative.configure_drop();
+        if corrupt {
+            negative.place("org.example/dropped/1.0.0/synthetic-tool.sh", b"CORRUPTED");
+        }
+        let output = negative.install(&["--offline"]);
+        assert!(!output.status.success(), "{}", self::text(&output));
+        let expected = if corrupt {
+            "does not match its declared sha256"
+        } else {
+            "holds no `synthetic-tool.sh`"
+        };
+        assert!(
+            self::text(&output).contains(expected),
+            "{}",
+            self::text(&output)
+        );
+        assert!(
+            !negative
+                .user
+                .settings
+                .join("opt/bin/synthetic-drop-version")
+                .exists()
+        );
+        assert!(
+            !walk(&negative.user.settings)
+                .iter()
+                .any(|path| path.ends_with("bin/dropped"))
+        );
+        let index = negative.user.settings.join("applications/index.json");
+        if index.exists() {
+            let value: serde_json::Value =
+                serde_json::from_slice(&fs::read(index).unwrap()).unwrap();
+            assert_eq!(value["installations"], serde_json::json!({}));
+        }
+    }
+    assert!(!root.exists());
+    assert!(!proxy.exists());
+    assert_eq!(fs::read(&foreign).unwrap(), b"KEEP");
+}
