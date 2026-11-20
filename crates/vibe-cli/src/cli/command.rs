@@ -21,7 +21,7 @@ pub enum Command {
     Validate(LifecycleArgs),
 
     /// Install one or more packages into the current project.
-    Install(InstallArgs),
+    Install(Box<InstallArgs>),
 
     /// Run the default lifecycle through generated-source production.
     Generate(LifecycleArgs),

@@ -237,7 +237,7 @@ fn run() -> ExitCode {
             Command::Validate(args) => run_lifecycle(vibe_lifecycle::Phase::Validate, args),
             Command::Install(args) => commands::global_mcp_dispatch::run_install(
                 &ctx,
-                args,
+                *args,
                 discover_embedded_root(),
                 cli.offline,
                 read_env_opt("VIBE_NO_DEFAULT_REGISTRY").is_none(),

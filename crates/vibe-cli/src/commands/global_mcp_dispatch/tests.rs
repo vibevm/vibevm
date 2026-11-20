@@ -116,7 +116,7 @@ impl Harness {
             ),
             Command::Install(args) => run_install(
                 &ctx,
-                args,
+                *args,
                 None,
                 true,
                 false,
