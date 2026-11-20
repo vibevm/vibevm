@@ -221,3 +221,5 @@ At 19 introduction commits, 42 wire schemas were parsed: 144 ref occurrences res
 Six historical validator/schema changes distinguish optional capture and path declarations from proof. Source validators constrain pending versus captured states, stage membership, unique identities and canonical values; the review did not run a release or authenticate live source bytes.
 
 Seven historical preview-tool changes distinguish verified capture bytes, scoped contribution records, draft assembly rollback and later independent release proof. Reading the original tests and guides did not execute them or publish a release.
+
+Bound deployment and checkout documentation source checks are separate: a copied receipt does not confer another instance’s identity and a directory declaration is not proof of a complete source census. Scope is limited to the two historical paths in the index.
