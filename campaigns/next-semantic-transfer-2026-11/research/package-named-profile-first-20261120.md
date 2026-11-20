@@ -1,0 +1,13 @@
+# Explicit parameterless package profile — candidate
+
+Baseline qualification `c1b925e5c`, implementation contract `06adcef18`. FMT-079 records bounded semantic admission and compatibility gate before acceptance. No implicit default profile, parameters, forwarding or new solver/state owner.
+
+The existing normalization selects an explicitly named profile and overlays authored selections. Package admission now permits that parameterless profile while retaining original consumer.profile and historical definition exactly. F18 Profile reliance is not inserted into automatic_basis.consumer_choices, which remains solely the existing group-default proof. No synthetic explicit selection or profile default-group surrogate is stored. Unknown names still fail normalization, and unconnected package parameters/closure/foreign effects remain refused.
+
+Resolver snapshot compares historical named-profile consumer input, configuration semantic fingerprint and dependency declarations independently of automatic_basis. A changed relied-on profile refuses before effects, even in the ordinary review-preview path; exact profile-change acknowledgment is outside this atom. Presentation labels are excluded by the existing semantic fingerprint. No history is inferred from the replacement candidate.
+
+## Actual gates
+
+Private root `/data/git/vibevm-keyring-storage-20261120T0100Z`. Public fixture compares known named profile, unknown name and equivalent explicit member; requires actual optional dependency, preserved original named input/empty authored selections, no fake automatic basis and cold byte-identical lock/hooks. Separate 1.0→1.1 public update worlds distinguish changed profile preset refusal from presentation-only success. Prior accepted a6ec35fc6b99f853073e0efbd5beaf7feebd1cba262772a9b8e4608302c3448d binary is retained; actual reader and install writer both refuse newly persisted named-profile records with unchanged lock bytes and hook state. `profile-first-tests-r2.log`11 focused PASS and `profile-first-full-r2.log`24 full public fixture PASS establish those observations, actual materialization/cold replay, unknown name refusal, semantic preset drift refusal and presentation-only version1.1 success. Core/resolver lib/tests and CLI bin/fixture strict lint, format and diff checks passed. The private candidate manifest binds exact source/new/old binaries; no epoch13 field or profile surrogate is introduced.
+
+The original unsupported-profile qualification remains historical evidence. New gate outcomes do not count as nine-kind coverage, app profile commissioning or USER-PROJECT adoption. No providers, credentials, network, publication, AR or IDE changes are involved. Final exact-source independent acceptance is required before commit.

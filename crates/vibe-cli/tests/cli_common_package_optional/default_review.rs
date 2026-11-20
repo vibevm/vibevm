@@ -681,8 +681,7 @@ fn config_data_unknown_and_duplicate_keys_refuse_before_publication() {
 }
 
 #[test]
-fn named_parameterless_profile_normalizes_but_public_route_refuses_while_explicit_control_applies()
-{
+fn named_parameterless_profile_preserves_original_and_cold_replay_matches_explicit_control() {
     for profile in [Some("with-extra"), Some("unknown"), None] {
         let f = Fixture::new(true);
         let source = f.registry.join(GROUP).join(DRIVER).join("v1.0.0/vibe.toml");
@@ -721,11 +720,57 @@ fn named_parameterless_profile_normalizes_but_public_route_refuses_while_explici
         );
         match profile {
             Some("with-extra") => {
-                assert!(!output.status.success());
+                assert!(output.status.success(), "{diagnostic}");
+                assert!(f.slot(EXTRA).exists());
+                let lock = f.lock();
+                let record = &lock.configurations[&coordinate(DRIVER)];
                 assert!(
-                    diagnostic.contains("automatic/default/profile basis is not connected"),
-                    "{diagnostic}"
+                    record
+                        .consumers
+                        .values()
+                        .all(|input| input.profile.as_deref() == Some("with-extra")
+                            && input.selections.is_empty())
                 );
+                assert!(
+                    record.automatic_basis.is_none(),
+                    "profile is not a default-group receipt"
+                );
+                let before = fs::read(f.project.join("vibe.lock")).unwrap();
+                let hooks = f.hooks();
+                f.install_ok();
+                assert_eq!(fs::read(f.project.join("vibe.lock")).unwrap(), before);
+                assert_eq!(f.hooks(), hooks);
+                if let Some(old) = std::env::var_os("NST_PROFILE_OLD_CLI") {
+                    for args in [
+                        vec![
+                            "show",
+                            "features",
+                            "--path",
+                            f.project.to_str().unwrap(),
+                            "--json",
+                        ],
+                        vec![
+                            "install",
+                            "--path",
+                            f.project.to_str().unwrap(),
+                            "--offline",
+                            "--assume-yes",
+                            "--json",
+                        ],
+                    ] {
+                        let result = std::process::Command::new(&old)
+                            .env_clear()
+                            .env("HOME", f.root.join("home"))
+                            .env("VIBE_SETTINGS", &f.user.settings)
+                            .env("PATH", "/usr/bin:/bin")
+                            .args(args)
+                            .output()
+                            .unwrap();
+                        assert!(!result.status.success());
+                        assert_eq!(fs::read(f.project.join("vibe.lock")).unwrap(), before);
+                        assert_eq!(f.hooks(), hooks);
+                    }
+                }
             }
             Some(_) => {
                 assert!(!output.status.success());
@@ -740,10 +785,67 @@ fn named_parameterless_profile_normalizes_but_public_route_refuses_while_explici
             }
         }
         assert_eq!(fs::read(&request).unwrap(), authored);
-        if profile.is_some() {
+        if profile == Some("unknown") {
             assert!(!f.project.join("vibe.lock").exists());
             assert!(!f.slot(DRIVER).exists());
             assert!(!f.project.join("effects.log").exists());
+        }
+    }
+}
+
+#[test]
+fn named_profile_meaning_drift_refuses_update_but_presentation_change_does_not() {
+    for changed in [false, true] {
+        let f = Fixture::new(true);
+        let source = f.registry.join(GROUP).join(DRIVER).join("v1.0.0/vibe.toml");
+        let text = fs::read_to_string(&source).unwrap()
+            + "\n[[configuration.profiles]]\nid='with-extra'\nname='With extra'\nselections.extra={intent='exact',members=['enabled']}\n";
+        write(&source, text);
+        let path = f.project.join("vibe.toml");
+        let text=fs::read_to_string(&path).unwrap().replace("configuration={policy='require-selection',default_features=false,selections={extra={intent='exact',members=['enabled']}}}","configuration={policy='require-selection',default_features=false,profile='with-extra'}");
+        write(&path, text);
+        f.install_ok();
+        let lock = fs::read(f.project.join("vibe.lock")).unwrap();
+        let boot = f.static_boot();
+        let hooks = f.hooks();
+        let new = f.registry.join(GROUP).join(DRIVER).join("v1.1.0");
+        let mut text = fs::read_to_string(&source)
+            .unwrap()
+            .replace("version='1.0.0'", "version='1.1.0'")
+            .replace("name='With extra'", "name='Presentation changed'");
+        if changed {
+            text = text.replace(
+                "selections.extra={intent='exact',members=['enabled']}",
+                "selections.extra={intent='exact',members=['disabled']}",
+            );
+        }
+        write(&new.join("vibe.toml"), text);
+        write(
+            &new.join("boot/rules.md"),
+            fs::read(source.parent().unwrap().join("boot/rules.md")).unwrap(),
+        );
+        let out = update(&f);
+        if changed {
+            assert!(!out.status.success());
+            assert!(String::from_utf8_lossy(&out.stderr).contains("retained configuration"));
+            assert_eq!(fs::read(f.project.join("vibe.lock")).unwrap(), lock);
+            assert_eq!(f.static_boot(), boot);
+            assert_eq!(f.hooks(), hooks);
+        } else {
+            assert!(
+                out.status.success(),
+                "{}",
+                String::from_utf8_lossy(&out.stderr)
+            );
+            assert_eq!(
+                f.lock()
+                    .find(&GROUP.parse().unwrap(), DRIVER)
+                    .unwrap()
+                    .version
+                    .to_string(),
+                "1.1.0"
+            );
+            assert!(f.slot(EXTRA).exists());
         }
     }
 }

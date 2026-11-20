@@ -94,6 +94,33 @@ impl ConfigurationSnapshot {
                         .collect();
                     PackageConfiguration::evaluate(&original, &inputs).and_then(|record| {
                         if let Some(previous) = self.previous.get(&package) {
+                            if previous
+                                .consumers
+                                .values()
+                                .any(|input| input.profile.is_some())
+                            {
+                                let old =
+                                    previous.definition.semantic_fingerprint().map_err(|_| {
+                                        PackageConfigurationError::ReplayMismatch {
+                                            package: package.clone(),
+                                        }
+                                    })?;
+                                let current =
+                                    record.definition.semantic_fingerprint().map_err(|_| {
+                                        PackageConfigurationError::ReplayMismatch {
+                                            package: package.clone(),
+                                        }
+                                    })?;
+                                if previous.consumers != record.consumers
+                                    || old != current
+                                    || previous.declarations != record.declarations
+                                {
+                                    return Err(PackageConfigurationError::ReplayMismatch {
+                                        package: package.clone(),
+                                    });
+                                }
+                            }
+
                             if previous.automatic_basis.is_some() {
                                 // Prior is admitted historical data, not reconstructed
                                 // from this replacement candidate. Explicit takeover is

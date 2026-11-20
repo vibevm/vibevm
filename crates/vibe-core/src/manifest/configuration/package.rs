@@ -149,7 +149,7 @@ impl PackageConfiguration {
                     reason: format!("{}: {}", e.field, e.message),
                 }
             })?;
-            if input.default_features || input.profile.is_some() {
+            if input.default_features && input.profile.is_none() {
                 return Err(unsupported(
                     "automatic/default/profile basis is not connected on this package operation; supply explicit no-default input",
                 ));
@@ -165,6 +165,11 @@ impl PackageConfiguration {
             );
             let mut selected_defaults = BTreeMap::new();
             for reason in reasons {
+                if reason == super::basis::ConsumerReliance::Profile {
+                    // Profile reliance is retained by original profile input and
+                    // historical definition, never a fabricated default choice.
+                    continue;
+                }
                 let super::basis::ConsumerReliance::Choice(group_id) = reason else {
                     return Err(unsupported(
                         "only omitted exactly-one choice defaults are connected",
