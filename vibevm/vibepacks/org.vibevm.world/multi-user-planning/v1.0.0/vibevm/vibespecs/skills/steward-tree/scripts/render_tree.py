@@ -125,6 +125,10 @@ STRINGS: dict[str, dict[str, str]] = {
         "ui.closeDetail": "Свернуть карточку",
         "ui.ownState": "Состояние самого узла",
         "ui.descendants": "Конечные потомки — отдельный итог",
+        "ui.filterAll": "Все",
+        "ui.filterUnfinished": "Не сделано",
+        "ui.filterActive": "В работе",
+        "ui.filterLabel": "Фильтр состояния",
         "ui.reason": "Причина / пояснение",
         "ui.nothingSelected": "Выберите узел в дереве.",
         "ui.acceptance": "Критерии приёмки",
@@ -187,6 +191,10 @@ STRINGS: dict[str, dict[str, str]] = {
         "ui.closeDetail": "Collapse card",
         "ui.ownState": "Node own state",
         "ui.descendants": "Terminal descendants — separate aggregate",
+        "ui.filterAll": "All",
+        "ui.filterUnfinished": "Unfinished",
+        "ui.filterActive": "In progress",
+        "ui.filterLabel": "State filter",
         "ui.reason": "Reason / explanation",
         "ui.nothingSelected": "Select a node in the tree.",
         "ui.acceptance": "Acceptance",
@@ -702,6 +710,8 @@ body{background:var(--bg);color:var(--fg);font:15px/1.45 system-ui,-apple-system
 header{position:sticky;top:0;z-index:5;background:var(--bg);border-bottom:1px solid var(--line);padding:10px 16px}
 .bar{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
 h1{font-size:16px;margin:0 8px 0 0;font-weight:650}
+.filters{display:flex;flex-wrap:wrap;gap:4px}
+.filters button[aria-pressed="true"]{font-weight:700;background:var(--hit)}
 .meta{color:var(--muted);font-size:12.5px;display:flex;flex-wrap:wrap;gap:4px 12px}
 .grow{flex:1 1 180px;min-width:140px}
 button,input{font:inherit;color:inherit;background:var(--panel);border:1px solid var(--line);
@@ -721,9 +731,9 @@ input{width:100%}
 .totals{display:flex;flex-wrap:wrap;gap:6px;margin:10px 16px 0}
 .legend{display:inline-flex;align-items:center;gap:6px;padding:3px 9px;border:1px solid var(--line);
   border-radius:999px;font-size:12.5px;background:var(--panel)}
-main{display:block;padding:12px 16px 32px;max-width:1200px;margin:0 auto}
+main{display:block;padding:12px 16px 32px;width:100%;margin:0}
 .tree{min-width:0}
-.row{display:flex;flex-wrap:wrap;align-items:baseline;gap:7px;padding:9px 8px 9px calc(8px + min(var(--depth),12) * 15px);
+.row{display:flex;flex-wrap:nowrap;align-items:center;gap:7px;white-space:nowrap;height:44px;padding:9px 8px 9px calc(8px + min(var(--depth),12) * 15px);
   border-radius:6px;cursor:pointer;scroll-margin:90px;min-height:44px}
 .row[hidden]{display:none}
 .row:hover{background:var(--panel)}
@@ -732,25 +742,31 @@ main{display:block;padding:12px 16px 32px;max-width:1200px;margin:0 auto}
 .twisty{flex:0 0 18px;width:18px;padding:0;border:0;background:none;color:var(--muted);text-align:center;line-height:1.3}
 .twisty[hidden]{visibility:hidden;display:inline-block}
 .dot{flex:0 0 9px;width:9px;height:9px;border-radius:50%;background:var(--bucket);align-self:center}
-.title{flex:0 1 auto;min-width:0;overflow-wrap:anywhere;font-weight:450}
+.title{flex:1 1 0;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-weight:450}
 .row.parent .title{font-weight:600}
 .nid{color:var(--muted);font:12px/1.4 ui-monospace,SFMono-Regular,Menlo,monospace;flex:0 0 auto}
 .kind{color:var(--muted);font-size:11.5px;text-transform:lowercase;flex:0 0 auto}
-.state{color:var(--fg);font-size:12px;flex:0 0 auto;white-space:normal;border:1px solid var(--line);border-radius:4px;padding:1px 5px}
+.state{color:var(--fg);font-size:12px;flex:0 0 auto;white-space:nowrap;border:1px solid var(--line);border-radius:4px;padding:1px 5px}
 .cur{color:var(--b-active);border:1px solid currentColor;border-radius:999px;font-size:10.5px;padding:0 5px;flex:0 0 auto}
-.chips{display:flex;flex-wrap:wrap;gap:4px;flex:1 0 100%;padding-left:25px;color:var(--muted)}
-.chip{font-size:11.5px;color:var(--fg);background:var(--panel);border:1px solid var(--line);border-radius:4px;padding:1px 6px;text-align:center}
+.chips{display:flex;flex-wrap:nowrap;flex:0 0 auto;justify-content:flex-end;gap:4px;margin-left:auto;color:var(--muted)}
+.chip{display:inline-flex;align-items:center;gap:4px;font-size:11.5px;color:var(--fg);background:var(--panel);border:1px solid var(--bucket);border-radius:999px;padding:1px 6px;text-align:center}
+.chip::before{content:"";width:6px;height:6px;border-radius:50%;background:var(--bucket)}
 @media (max-width:620px){
   main{padding:10px 8px 24px}
   .row{padding-left:calc(6px + min(var(--depth),4) * 10px)}
-  .title{flex:1 1 65%}
-  .nid{overflow-wrap:anywhere;flex-shrink:1}
+  .title{flex:1 1 0}
+  .nid{display:none}
   .chips{padding-left:0}
-  .kind{display:none}
+  .kind,.cur{display:none}
+  .state{font-size:10px;max-width:74px;overflow:hidden;text-overflow:ellipsis}
+  .row{gap:4px}
+  .chip{font-size:10px;padding:1px 4px;gap:2px}
+  .chip::before{width:4px;height:4px}
 }
-.node-card{position:static;border:1px solid var(--line);border-left:3px solid var(--accent);border-radius:var(--radius);
-  background:var(--panel);padding:16px;margin:8px 0 16px;min-width:0;overflow-wrap:anywhere}
+.node-card{position:fixed;right:0;top:0;bottom:0;z-index:20;width:min(32rem,100vw);max-width:100%;overflow-y:auto;border:1px solid var(--line);border-left:3px solid var(--accent);
+  background:var(--panel);padding:16px;margin:0;min-width:0;overflow-wrap:anywhere;box-shadow:-8px 0 28px #0003}
 .node-card[hidden]{display:none}
+@media (min-width:900px){body.detail-open main{padding-right:calc(min(32rem,100vw) + 16px)}}
 .card-close{float:right;margin:0 0 8px 12px}
 @media (forced-colors:active){.row[aria-selected="true"]{outline:2px solid Highlight}.dot{border:1px solid CanvasText}}
  .node-card h2{font-size:14px;margin:0 0 8px}
@@ -772,6 +788,7 @@ main{display:block;padding:12px 16px 32px;max-width:1200px;margin:0 auto}
   <div class="bar">
     <h1 id="app-title">@@TITLE@@</h1>
     <span class="grow"><label class="sr" for="q" id="q-label"></label><input id="q" type="search" autocomplete="off"></span>
+    <div id="filters" class="filters" role="group"><button type="button" data-filter="all" aria-pressed="true"></button><button type="button" data-filter="unfinished" aria-pressed="false"></button><button type="button" data-filter="active" aria-pressed="false"></button></div>
     <button id="expand" type="button"></button>
     <button id="collapse" type="button"></button>
     <button id="current" type="button"></button>
@@ -784,7 +801,7 @@ main{display:block;padding:12px 16px 32px;max-width:1200px;margin:0 auto}
 <div class="totals" id="totals"></div>
 <main>
   <div class="tree" id="tree" role="tree" aria-labelledby="app-title"></div>
-  <section id="detail" class="node-card" aria-live="polite" aria-label="@@TITLE@@" hidden></section>
+  <section id="detail" class="node-card" role="dialog" tabindex="-1" aria-live="polite" aria-label="@@TITLE@@" hidden></section>
 </main>
 <script type="application/json" id="plan-data">@@DATA@@</script>
 <script>
@@ -799,7 +816,7 @@ main{display:block;padding:12px 16px 32px;max-width:1200px;margin:0 auto}
     });
   });
 
-  var lang = DATA.lang, theme = "auto", selected = null, query = "", detailOpen = false;
+  var lang = DATA.lang, theme = "auto", selected = null, query = "", detailOpen = false, stateFilter = "all";
   var open = {};
   DATA.nodes.forEach(function(n){ open[n.id] = !!n.open; });
 
@@ -841,19 +858,20 @@ main{display:block;padding:12px 16px 32px;max-width:1200px;margin:0 auto}
       });
       row.appendChild(twisty);
       row.appendChild(el("span", "dot"));
-      row.appendChild(el("span", "title", n.title));
+      var title = el("span", "title", n.title); title.title = n.title; row.appendChild(title);
       row.appendChild(el("span", "nid", n.id));
       row.appendChild(el("span", "kind", kindLabel(n.kind)));
-      row.appendChild(el("span", "state", bucketLabel(n.bucket)));
+      var state = el("span", "state", bucketLabel(n.bucket)); state.title = bucketLabel(n.bucket); row.appendChild(state);
       if (n.id === DATA.plan.current_node) row.appendChild(el("span", "cur", t("ui.current")));
       var chips = el("span", "chips");
       DATA.buckets.forEach(function(b){
         var value = (n.counts || {})[b];
         if (!value || !n.children.length) return;
-        var chip = el("span", "chip", bucketLabel(b) + ": " + value);
+        var chip = el("span", "chip", String(value));
         chip.dataset.bucket = b;
         chip.style.setProperty("--bucket", "var(--b-" + b + ")");
-        chip.title = bucketLabel(b);
+        chip.title = bucketLabel(b) + ": " + value;
+        chip.setAttribute("aria-label", t("ui.descendants") + " — " + chip.title);
         chips.appendChild(chip);
       });
       row.appendChild(chips);
@@ -868,11 +886,13 @@ main{display:block;padding:12px 16px 32px;max-width:1200px;margin:0 auto}
       var row = ROWS[n.id];
       row.querySelector(".kind").textContent = kindLabel(n.kind);
       row.querySelector(".state").textContent = bucketLabel(n.bucket);
+      row.querySelector(".state").title = bucketLabel(n.bucket);
       var cur = row.querySelector(".cur");
       if (cur) cur.textContent = t("ui.current");
       Array.prototype.forEach.call(row.querySelectorAll(".chip"), function(chip, index){
-        chip.title = bucketLabel(chip.dataset.bucket);
-        chip.textContent = bucketLabel(chip.dataset.bucket) + ": " + n.counts[chip.dataset.bucket];
+        chip.title = bucketLabel(chip.dataset.bucket) + ": " + n.counts[chip.dataset.bucket];
+        chip.setAttribute("aria-label", t("ui.descendants") + " — " + chip.title);
+        chip.textContent = String(n.counts[chip.dataset.bucket]);
       });
     });
   }
@@ -881,13 +901,13 @@ main{display:block;padding:12px 16px 32px;max-width:1200px;margin:0 auto}
   }
 
   function matches(n){
-    if (!query) return false;
-    return (n.id + " " + n.title).toLowerCase().indexOf(query) >= 0;
+    var stateMatch = stateFilter === "all" || (stateFilter === "active" ? n.state === "active" : ["accepted", "dropped", "superseded"].indexOf(n.state) < 0);
+    return stateMatch && (!query || (n.id + " " + n.title).toLowerCase().indexOf(query) >= 0);
   }
 
   function paint(){
     var show = {}, hits = 0;
-    if (query){
+    if (query || stateFilter !== "all"){
       DATA.nodes.forEach(function(n){
         if (!matches(n)) return;
         hits += 1;
@@ -904,13 +924,13 @@ main{display:block;padding:12px 16px 32px;max-width:1200px;margin:0 auto}
       row.hidden = !show[n.id];
       row.classList.toggle("match", query ? matches(n) : false);
       if (n.children.length){
-        var expanded = query ? n.children.some(function(c){ return show[c]; }) : !!open[n.id];
+        var expanded = (query || stateFilter !== "all") ? n.children.some(function(c){ return show[c]; }) : !!open[n.id];
         row.setAttribute("aria-expanded", expanded ? "true" : "false");
         row.querySelector(".twisty").textContent = expanded ? "▾" : "▸";
       }
     });
     var noHits = document.getElementById("nohits");
-    if (query && hits === 0){
+    if ((query || stateFilter !== "all") && hits === 0){
       if (!noHits){ noHits = el("p", "muted", t("ui.noMatches")); noHits.id = "nohits"; tree.appendChild(noHits); }
       else noHits.textContent = t("ui.noMatches");
     } else if (noHits){ noHits.remove(); }
@@ -940,7 +960,7 @@ main{display:block;padding:12px 16px 32px;max-width:1200px;margin:0 auto}
   function select(id, scroll, toggle){
     if (!NODES[id]) return;
     detailOpen = toggle && selected === id ? !detailOpen : true;
-    if (scroll){ query = ""; document.getElementById("q").value = ""; }
+    if (scroll){ query = ""; stateFilter = "all"; document.getElementById("q").value = ""; filterLabels(); }
     remember(id);
     if (selected && ROWS[selected]) ROWS[selected].setAttribute("aria-selected", "false");
     selected = id;
@@ -952,6 +972,7 @@ main{display:block;padding:12px 16px 32px;max-width:1200px;margin:0 auto}
     if (scroll) row.scrollIntoView({block: "center"});
     row.focus({preventScroll: !scroll});
     detail();
+    if (detailOpen && (toggle || scroll)) aside.querySelector(".card-close").focus({preventScroll:true});
   }
 
   tree.addEventListener("keydown", function(event){
@@ -1002,8 +1023,8 @@ main{display:block;padding:12px 16px 32px;max-width:1200px;margin:0 auto}
   function detail(){
     aside.textContent = "";
     aside.hidden = !detailOpen || !selected || !ROWS[selected] || ROWS[selected].hidden;
+    document.body.classList.toggle("detail-open", !aside.hidden);
     if (aside.hidden) return;
-    ROWS[selected].after(aside);
     if (!selected || !NODES[selected]){
       aside.appendChild(el("h2", null, t("ui.plan")));
       var dl = el("dl");
@@ -1154,7 +1175,19 @@ main{display:block;padding:12px 16px 32px;max-width:1200px;margin:0 auto}
       if (item) host.appendChild(el("span", null, item));
     });
   }
+  function filterLabels(){
+    document.getElementById("filters").setAttribute("aria-label", t("ui.filterLabel"));
+    document.querySelectorAll("[data-filter]").forEach(function(button){
+      var key = button.dataset.filter;
+      button.textContent = t(key === "all" ? "ui.filterAll" : key === "active" ? "ui.filterActive" : "ui.filterUnfinished");
+      button.setAttribute("aria-pressed", key === stateFilter ? "true" : "false");
+    });
+  }
+  document.querySelectorAll("[data-filter]").forEach(function(button){
+    button.addEventListener("click", function(){ stateFilter = button.dataset.filter; filterLabels(); paint(); });
+  });
   function chrome(){
+    filterLabels();
     document.getElementById("app-title").textContent = t("app.title");
     document.title = t("app.title") + " — " + DATA.plan.plan_id;
     var q = document.getElementById("q");
@@ -1199,6 +1232,11 @@ main{display:block;padding:12px 16px 32px;max-width:1200px;margin:0 auto}
     chrome();
   });
   document.addEventListener("keydown", function(event){
+    if (event.key === "Escape" && detailOpen){
+      event.preventDefault(); detailOpen = false; detail();
+      if (selected && ROWS[selected]) ROWS[selected].focus({preventScroll:true});
+      return;
+    }
     if (event.key === "/" && event.target.tagName !== "INPUT"){
       event.preventDefault();
       document.getElementById("q").focus();

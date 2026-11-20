@@ -64,7 +64,23 @@ invents a readiness for them. @status:impl/done
 @fact:TREE-SKILL-UI One page, no build step: search by id or title, expand and
 collapse, a jump to `current_node`, light/dark/auto theme, a Russian/English
 string table selectable in the page, keyboard navigation over an ARIA tree, and
-a layout that works at phone width. A node id in the URL fragment opens that
+a layout that works at phone width. The tree uses the full document width with no
+permanent reserved detail column. Details open in a separate closable fixed right
+panel, never inserted into the tree; on desktop only while open, the tree uses all
+remaining space to its left so badges are not obscured. Mobile uses an overlay.
+Every task stays one nowrap row, titles ellipsize with full tooltip/details and
+compact numeric status badges remain right-aligned. Escape closes the panel and
+restores focus to its node.
+Compact right-aligned colored count badges use the payload's leaf-descendant
+buckets, with accessible status/count labels, not a recomputed history or progress.
+Document scrolling, offline file access and mobile-width overlay remain supported.
+The keyboard-accessible All / Unfinished / In progress control defaults to All.
+Unfinished excludes only accepted/dropped/superseded (candidate, blocked and deferred
+remain); In progress matches the node's own active state. Search intersects that
+filter. Only matches and their ancestor context appear, with matching branches
+expanded and unrelated siblings omitted; All restores ordinary expansion. Counts
+always describe the full payload branch, not the filtered subset.
+A node id in the URL fragment opens that
 node, so a review can point at one node instead of describing where to click. Plan text is data and never markup: titles,
 acceptance and evidence are injected as text, so a plan cannot script the page.
 @status:impl/done

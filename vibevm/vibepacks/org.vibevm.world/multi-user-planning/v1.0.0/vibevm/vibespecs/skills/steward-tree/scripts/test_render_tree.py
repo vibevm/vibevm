@@ -239,11 +239,26 @@ class TreeViewerTests(unittest.TestCase):
 
     # ---- navigation surfaces ----------------------------------------------
 
-    def test_inline_card_and_document_scroll_preserve_generic_navigation(self):
+    def test_overlay_details_and_document_scroll_preserve_generic_navigation(self):
         _, payload, html = self.render(plan(node("A", reason="Synthetic reason")))
         self.assertNotIn('<aside id="detail"', html)
         self.assertIn('class="node-card"', html)
-        self.assertIn('ROWS[selected].after(aside)', html)
+        self.assertNotIn('ROWS[selected].after(aside)', html)
+        self.assertIn('.node-card{position:fixed;right:0', html)
+        self.assertIn('role="dialog"', html)
+        self.assertIn('data-filter="unfinished"', html)
+        self.assertIn('data-filter="active"', html)
+        self.assertIn('["accepted", "dropped", "superseded"].indexOf(n.state)', html)
+        self.assertIn('n.state === "active"', html)
+        self.assertIn('query || stateFilter !== "all"', html)
+        self.assertIn('event.key === "Escape" && detailOpen', html)
+        self.assertIn('chip.setAttribute("aria-label"', html)
+        self.assertIn('el("span", "chip", String(value))', html)
+        self.assertIn('width:100%;margin:0', html)
+        self.assertIn('flex-wrap:nowrap;align-items:center', html)
+        self.assertIn('text-overflow:ellipsis;white-space:nowrap', html)
+        self.assertIn('body.detail-open main', html)
+        self.assertIn('title.title = n.title', html)
         self.assertIn('detailOpen = false', html)
         self.assertIn('chip.dataset.bucket = b', html)
         self.assertNotIn('aside{position:sticky', html)
