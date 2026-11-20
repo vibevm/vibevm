@@ -326,6 +326,18 @@ impl VersionStore {
         }
     }
 
+    pub(crate) fn require_no_pending_activation(&self) -> Result<(), StoreError> {
+        let path = self.activation_journal_path();
+        if self.read_text_file(&path, 64 * 1024)?.is_some() {
+            return Err(StoreError::ParseState {
+                path,
+                detail: "pending activation requires ordinary recovery, not upgrade validation"
+                    .into(),
+            });
+        }
+        Ok(())
+    }
+
     fn read_activation_journal(&self) -> Result<Option<ActivationJournal>, StoreError> {
         let path = self.activation_journal_path();
         let Some(text) = self.read_text_file(&path, 64 * 1024)? else {

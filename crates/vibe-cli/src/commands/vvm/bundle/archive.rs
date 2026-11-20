@@ -33,7 +33,7 @@ use file_verify::{
     copy_and_hash_bounded, copy_bounded, hash_regular_exact, open_hashed_regular_exact,
     read_regular_bounded,
 };
-pub(in crate::commands::vvm) use unpacked::{UnpackedRequest, import_unpacked};
+pub(in crate::commands::vvm) use unpacked::{UnpackedRequest, import_unpacked, verify_unpacked};
 
 use super::super::model::{InstallRecord, Kind, Origin, Profile, VersionId};
 use super::super::placer;

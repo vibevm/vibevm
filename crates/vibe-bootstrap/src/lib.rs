@@ -5,6 +5,7 @@ pub mod kit;
 mod optional_setup;
 pub mod regular;
 pub mod source_extract;
+mod upgrade;
 
 use anyhow::{Context, Result, bail};
 use file_verify::{copy_and_hash_bounded, open_hashed_regular_exact};

@@ -106,7 +106,9 @@ pub(in crate::commands::vvm) fn import_unpacked(
 
 /// Read the manifest and check every member it names against the bytes
 /// in the directory, before anything is allocated or copied.
-fn verify_unpacked(request: &UnpackedRequest<'_>) -> Result<(BundleDistributionManifest, Vec<u8>)> {
+pub(in crate::commands::vvm) fn verify_unpacked(
+    request: &UnpackedRequest<'_>,
+) -> Result<(BundleDistributionManifest, Vec<u8>)> {
     let manifest_path = request.dir.join(DISTRIBUTION_MANIFEST_FILENAME);
     let bytes = read_regular_bounded(&manifest_path, DISTRIBUTION_MANIFEST_MAX_BYTES)
         .with_context(|| refusal(&manifest_path, "cannot be read as a bounded regular file"))?;

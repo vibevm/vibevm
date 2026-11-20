@@ -168,6 +168,14 @@ pub struct VvmImportArgs {
     #[arg(long)]
     pub no_profile: bool,
 
+    /// Guard an explicit newer full-distribution upgrade against this exact active instance.
+    #[arg(long, requires_all = ["activate", "no_profile"])]
+    pub expect_active: Option<String>,
+
+    /// Check guarded upgrade eligibility without importing or activating.
+    #[arg(long, requires = "expect_active")]
+    pub dry_run: bool,
+
     /// Compatibility flag; distinct payloads now always become a fresh
     /// immutable local #N while the mutable tag keeps the same version label.
     #[arg(long)]

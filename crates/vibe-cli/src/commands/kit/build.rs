@@ -115,7 +115,7 @@ pub(super) fn run(ctx: &output::Context, file: &Path, out: &Path) -> Result<()> 
     )
     .map_err(|_| anyhow!("kit staged profile invalid; contents omitted"))?;
     stage.publish_new_in(&stage_root, "SHA256SUMS.txt", sums.as_bytes())?;
-    stage.publish_new_in(&stage_root, "INSTALL.md", b"# Local kit\n\nRun the named native installer with --kit pointing to this directory.\nUse --dry-run first; --no-path preserves user PATH.\nThe installer is checksum-pinned by the explicit recipe, not separately authenticated.\n")?;
+    stage.publish_new_in(&stage_root, "INSTALL.md", b"# Local kit\n\nRun the named native installer with --kit pointing to this directory.\nUse --dry-run first; --no-path preserves user PATH.\nFor an existing installation, explicitly request --upgrade --destination PATH --no-path.\nUpgrade dry-run checks the exact active instance and requires a strictly newer verified release.\nOrdinary rerun is not an upgrade; unattended alone grants no replacement consent.\nThe installer is checksum-pinned by the explicit recipe, not separately authenticated.\n")?;
     let names = [
         &bundle_name,
         &installer_name,

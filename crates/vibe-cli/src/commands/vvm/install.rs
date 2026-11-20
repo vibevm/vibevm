@@ -43,6 +43,18 @@ impl Drop for InstallLock {
 }
 
 impl InstallLock {
+    /// Existing-store validation only: never create lock/state or recover activation.
+    pub(crate) fn acquire_validation(store: &VersionStore) -> Result<InstallLock> {
+        let path = store.data_dir().join(".install.lock");
+        store.guard_mutation_path(&path)?;
+        let (file, _) = super::store::open_regular_no_follow(&path)?;
+        file.try_lock()
+            .map_err(|_| anyhow::anyhow!("upgrade validation lock unavailable or busy"))?;
+        let lock = InstallLock { _file: file };
+        store.require_no_pending_activation()?;
+        Ok(lock)
+    }
+
     pub(crate) fn acquire(store: &VersionStore) -> Result<InstallLock> {
         let dir = store.data_dir();
         store.guard_mutation_path(&dir)?;

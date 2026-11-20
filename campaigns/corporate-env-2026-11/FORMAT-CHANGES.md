@@ -1,5 +1,9 @@
 # Corporate-env campaign: format and behaviour changes
 
+## CORP-FMT-059 — explicitly guarded newer full-distribution upgrade
+
+Unaccepted repair candidate, 2026-11-20. Native installer `--upgrade` requires explicit destination/no-path and is never implied by unattended. It reuses verified kit bytes and the existing full-distribution import/activation owner; ordinary self apply/rerun remain unchanged. `self import --expect-active SELECTOR --use --no-profile` admits only exact intact active instance plus strictly newer verified unpacked distribution, no force/downgrade/environment update. `--dry-run` requires guarded mode, opens an existing validation lock without create/recovery and refuses pending activation; no instance reservation. Existing JSON/import/current/which formats and state epochs unchanged. Post-apply active/payload validation precedes upgrade success. Old clients do not support the new explicit flags; no guessed release number or fallback on unknown flags. Previous native exit0-with-A failure retained; generic upgrade/parent/platform acceptance not inferred.
+
 ## CORP-FMT-058 — explicit Linux kit build to absent output
 
 Unaccepted implementation candidate, 2026-11-20. `vibe kit build --file RECIPE --out NEW_DIR` reuses recipe v1 unchanged, explicit prebuilt local artifacts and existing bundle/profile verification; stage SHA256SUMS describes copied bytes. Linux publication requires existing current-user-owned0700 output parent, private exclusive stage and same-parent checked no-replace move, with complete names/bytes/identity re-observation; insecure parent is never chmod-repaired. Installer is author-trusted and hash-pinned, not role/provenance-authenticated or executed by producer. No download/build-from-source/install/publication or new JSON report. Initial Windows-only owner failure is retained; no unsupported-FS fallback to replacing rename. Upgrade and aggregate ACCEPT remain unqualified.

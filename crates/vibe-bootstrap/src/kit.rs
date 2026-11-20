@@ -37,6 +37,10 @@ pub struct Args {
     /// Offer metadata-only configuration of existing AI connections after installation.
     #[arg(long)]
     pub configure_ai: bool,
+    /// Explicitly upgrade an existing installation to this strictly newer verified kit.
+    /// Requires --destination and --no-path; unattended alone never upgrades.
+    #[arg(long, requires_all = ["destination", "no_path"], conflicts_with = "configure_ai")]
+    pub upgrade: bool,
     #[arg(long)]
     pub unattended: bool,
     #[arg(long)]
@@ -376,6 +380,23 @@ pub fn run(args: Args) -> Result<()> {
         .arg("--dry-run");
     add_path(&mut preflight);
     report.child(&mut preflight, "Preflight site profile (no publication)")?;
+    if args.upgrade {
+        crate::upgrade::run(
+            &verified,
+            &kit,
+            destination
+                .as_deref()
+                .context("explicit upgrade destination absent")?,
+            settings.as_deref(),
+            args.dry_run,
+        )?;
+        report.stage(if args.dry_run {
+            "Upgrade dry run complete; installation unchanged"
+        } else {
+            "Explicit newer kit upgrade complete; active payload verified"
+        })?;
+        return Ok(());
+    }
     if args.dry_run {
         report.stage("Dry run complete; installation unchanged")?;
         return Ok(());

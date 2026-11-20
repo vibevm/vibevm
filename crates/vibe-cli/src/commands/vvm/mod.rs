@@ -230,8 +230,48 @@ fn observed(
 
 fn run_import_cmd(ctx: &output::Context, env: &VvmEnv, args: VvmImportArgs) -> Result<()> {
     let store = env.store()?;
-    let _lock = install::InstallLock::acquire(&store)?;
+    let _lock = if args.expect_active.is_some() {
+        install::InstallLock::acquire_validation(&store)?
+    } else {
+        install::InstallLock::acquire(&store)?
+    };
     let profile = model::Profile::parse(&args.profile)?;
+    if let Some(expected) = &args.expect_active {
+        anyhow::ensure!(
+            args.activate && args.no_profile && !args.replace_candidate && !args.yes,
+            "guarded upgrade requires activation, preserved profile, and no force/environment update"
+        );
+        let active = store
+            .active()?
+            .ok_or_else(|| anyhow::anyhow!("guarded upgrade requires an active installation"))?;
+        anyhow::ensure!(
+            active.selector().to_string() == *expected && active.kind == model::Kind::Tag,
+            "active installation changed; refresh the upgrade subject"
+        );
+        ensure_activatable(&store, &active)?;
+        let before = semver::Version::parse(&active.id)?;
+        let after = semver::Version::parse(&args.tag)?;
+        anyhow::ensure!(
+            after > before,
+            "guarded upgrade requires a strictly newer version; downgrade/reinstall refused"
+        );
+        let dir = args
+            .path
+            .parent()
+            .ok_or_else(|| anyhow::anyhow!("upgrade release directory absent"))?;
+        bundle::archive::verify_unpacked(&bundle::archive::UnpackedRequest {
+            dir,
+            executable: &args.path,
+            tag: &args.tag,
+            commit: args.commit.as_deref(),
+        })?;
+        if args.dry_run {
+            ctx.summary(
+                "Guarded newer full-distribution upgrade validated; installation unchanged.",
+            );
+            return Ok(());
+        }
+    }
     let now = chrono::Utc::now().to_rfc3339();
     let req = import::ImportRequest {
         executable: &args.path,
@@ -253,6 +293,13 @@ fn run_import_cmd(ctx: &output::Context, env: &VvmEnv, args: VvmImportArgs) -> R
             ensure_activatable(&store, &outcome.record)?;
             activation::activate_import_record(ctx, env, &store, &outcome.record, &args)
         })?;
+        if args.expect_active.is_some() {
+            anyhow::ensure!(
+                store.active()?.as_ref() == Some(&outcome.record),
+                "guarded upgrade active instance verification failed"
+            );
+            ensure_activatable(&store, &outcome.record)?;
+        }
         activation::activation_trailer(ctx, &store, &outcome.record, "self:import");
     }
     Ok(())
