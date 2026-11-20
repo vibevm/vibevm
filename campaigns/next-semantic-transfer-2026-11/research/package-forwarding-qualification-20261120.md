@@ -1,0 +1,17 @@
+# Ordinary package forwarding — test-only qualification candidate
+
+Baseline bounded lazy-pull delivery `acf046cba`. Architect-assigned test-only atom: selected forwarding, dormant forwarding and directly configured target dependency control. No new solver, product effect consumer or inference.
+
+The synthetic source is `org.vibevm/oracle-driver`; its selected enabled feature activates its existing optional `org.vibevm/oracle-extra` dependency and strongly forwards the named `forwarded` feature to that target. The target declares a common public feature selecting inert authored config-value data. The dormant world leaves both effects dormant. The independent direct control removes the driver and configures the target from the actual project requires declaration; it is not mislabelled as package-to-package forwarding.
+
+## Existing owners and first handoff
+
+ConfigurationEffect::Forward and scope validation belong to vibe-core manifest/configuration; normalize_input owns original project input normalization. PackageConfiguration::evaluate_parts currently refuses selected cross-package forwarding with the precise candidate-conditioned incoming-consumers diagnosis before project effects. The existing resolver ConfigurationSnapshot groups fixed original workspace input by target package identity and caches candidate-bound evaluation. Its refuse_unmerged_incoming_edges refuses an incoming package dependency edge into a configured target, rather than silently losing that source consumer. PlanningSource preserves the same configured source snapshot through solve/fetch; it does not introduce a forwarding consumer.
+
+The original source consumer is the actual project's requires edge to the driver. A future forwarded target consumer would be the selected driver candidate's dependency edge plus selected forwarding provenance, not a forged second project path or a copied effective feature vector. The direct control has only the actual project-to-target input. No such source-candidate-to-target-input bridge is implemented by this qualification.
+
+## Evidence boundary
+
+The public fixture requires exact selected refusal, unchanged authored request/launchers and absent lock/source slot/target slot/hooks. Dormant installation and direct-target configuration must actually succeed; the latter retains the named target feature and derives its typed true value, while generated boot contains the target marker. Cold replay preserves lock/boot/hooks. `forwarding-qualification-test-r1.log` records one actual focused PASS across all three worlds in a credential-free filesystem/process/network sandbox. Selected forwarding receives the precise unsupported handoff diagnosis with no lock/slots/hooks or authored/launcher mutation. Dormant and direct-target controls install and cold-replay byte-identical lock/boot/hooks; direct control retains the actual target feature and typed true value. `forwarding-qualification-clippy-r1.log` records strict fixture lint PASS; formatting and diff checks PASS. Actual executable is retained SHA-256 `f1faff8e37adfd6e9c43fe4ef7922e79d4022d16b537c5492ea25bf3f2400973`; the private manifest binds exact source/binary before independent acceptance.
+
+A normalization result, populated forwarding expansion or direct-target positive is not evidence of package forwarding. Selected downstream resolution/materialization remain NOT REACHED after the existing evaluator refusal. No agent/provider/native dispatch, USER-PROJECT adoption or broad NST completion is claimed. REMAINDER/AR/IDE unchanged.

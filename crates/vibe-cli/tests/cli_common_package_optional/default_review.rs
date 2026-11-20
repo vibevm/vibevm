@@ -1577,3 +1577,87 @@ fn declared_lazy_pull_missing_historical_witness_cannot_be_rebuilt_from_cache() 
     assert_eq!(f.static_boot(), boot);
     assert_eq!(f.hooks(), hooks);
 }
+
+#[test]
+fn selected_package_forwarding_refuses_while_dormant_and_direct_target_controls_work() {
+    for world in ["selected", "dormant", "direct"] {
+        let f = Fixture::new(world == "selected");
+        let driver = f.registry.join(GROUP).join(DRIVER).join("v1.0.0/vibe.toml");
+        write(&driver,fs::read_to_string(&driver).unwrap().replace(
+            "effects = [{ kind = \"dependency\", target = \"org.vibevm/oracle-extra\" }]",
+            "effects = [{ kind = \"dependency\", target = \"org.vibevm/oracle-extra\" }, { kind = \"forward\", target = \"org.vibevm/oracle-extra\", feature = \"forwarded\", strength = \"strong\" }]",
+        ));
+        let target = f.registry.join(GROUP).join(EXTRA).join("v1.0.0/vibe.toml");
+        write(
+            &target,
+            fs::read_to_string(&target).unwrap()
+                + "\n[configuration.config_values]\nforwarded=true\n[[configuration.features]]\nid='forwarded'\nname='Forwarded target feature'\neffects=[{kind='config-value',name='forwarded'}]\n",
+        );
+        let request = f.project.join("vibe.toml");
+        if world == "direct" {
+            let authored = format!(
+                "[project]\nname='direct-target-control'\nversion='0.1.0'\n[requires.packages.'{GROUP}/{EXTRA}']\nversion='^1'\nlink='static-transitive'\nconfiguration={{policy='require-selection',default_features=false,features=['forwarded']}}\n[[registry]]\nname='fixture'\nurl='file://{}'\n",
+                f.registry.display()
+            );
+            write(&request, authored);
+        }
+        let authored = fs::read(&request).unwrap();
+        let launchers: Vec<_> = ["AGENTS.md", "CLAUDE.md", "GEMINI.md"]
+            .into_iter()
+            .map(|p| (p, fs::read(f.project.join(p)).unwrap()))
+            .collect();
+        let out = f.install();
+        if world == "selected" {
+            let diagnostic = format!(
+                "{}{}",
+                String::from_utf8_lossy(&out.stdout),
+                String::from_utf8_lossy(&out.stderr)
+            );
+            assert!(!out.status.success());
+            assert!(diagnostic.contains("selected cross-package forwarding requires candidate-conditioned incoming consumers"),"{diagnostic}");
+            assert!(!f.project.join("vibe.lock").exists());
+            assert!(!f.slot(DRIVER).exists());
+            assert!(!f.slot(EXTRA).exists());
+            assert!(!f.project.join("effects.log").exists());
+            for (p, before) in launchers {
+                assert_eq!(fs::read(f.project.join(p)).unwrap(), before);
+            }
+        } else {
+            assert!(
+                out.status.success(),
+                "{}",
+                String::from_utf8_lossy(&out.stderr)
+            );
+            let lock = f.lock();
+            let coordinate = coordinate(if world == "direct" { EXTRA } else { DRIVER });
+            let record = &lock.configurations[&coordinate];
+            assert_eq!(record.consumers.len(), 1);
+            assert!(
+                record
+                    .consumers
+                    .keys()
+                    .all(|key| key.ends_with("vibe.toml"))
+            );
+            if world == "direct" {
+                assert_eq!(record.features, vec!["forwarded"]);
+                assert_eq!(
+                    record.selected_data(vibe_core::PackageKind::Flow).unwrap()["forwarded"],
+                    vibe_core::manifest::ParameterValue::Bool(true)
+                );
+                assert!(f.static_boot().contains(EXTRA_MARKER));
+                assert!(!f.slot(DRIVER).exists());
+            } else {
+                assert!(!f.slot(EXTRA).exists());
+                assert!(!f.static_boot().contains(EXTRA_MARKER));
+            }
+            let before = fs::read(f.project.join("vibe.lock")).unwrap();
+            let boot = f.static_boot();
+            let hooks = f.hooks();
+            f.install_ok();
+            assert_eq!(fs::read(f.project.join("vibe.lock")).unwrap(), before);
+            assert_eq!(f.static_boot(), boot);
+            assert_eq!(f.hooks(), hooks);
+        }
+        assert_eq!(fs::read(&request).unwrap(), authored);
+    }
+}
