@@ -225,3 +225,5 @@ Seven historical preview-tool changes distinguish verified capture bytes, scoped
 Bound deployment and checkout documentation source checks are separate: a copied receipt does not confer another instance’s identity and a directory declaration is not proof of a complete source census. Scope is limited to the two historical paths in the index.
 
 Inspected named test-source assertions in 18 historical machine-operation revisions; each index row binds the actual changed assertion and its first-parent diff. Shared run identity, refusal without effects and partial or uncertain physical outcomes remain distinct observations. This is not a rerun of the process fixtures.
+
+Five historical test changes distinguish lease-reopen and journal identity, retained parked tasks and source-bound validation. A refusal before task publication is not equivalent to a completed agent invocation. Scope is original test source only.
