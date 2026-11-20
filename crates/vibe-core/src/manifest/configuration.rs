@@ -10,6 +10,7 @@ use std::collections::BTreeMap;
 pub mod basis;
 mod request_local;
 pub use request_local::evaluate_request_local_data;
+mod guarded_transition;
 mod intent;
 mod lower;
 mod package;

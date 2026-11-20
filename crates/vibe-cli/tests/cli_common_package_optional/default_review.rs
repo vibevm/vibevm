@@ -8362,8 +8362,7 @@ fn guarded_automatic_defaults_actual_public_qualification() {
                 let out = f.install();
                 let diagnostic = String::from_utf8_lossy(&out.stdout).to_string()
                     + &String::from_utf8_lossy(&out.stderr);
-                let expected_success = !(guarded && world == "omitted-defaults")
-                    && !(active && world == "omitted-required");
+                let expected_success = !(active && world == "omitted-required");
                 println!(
                     "guarded-default guarded={guarded} gate={gate} world={world} active={active} default-used={default_used} install-success={} diagnostic={diagnostic}",
                     out.status.success()
@@ -8377,20 +8376,27 @@ fn guarded_automatic_defaults_actual_public_qualification() {
                     assert!(super::workspace::semantic_snapshot(&f.project) == before);
                     assert!(!f.project.join("vibe.lock").exists());
                     assert!(!f.project.join("effects.log").exists());
-                    assert!(
-                        diagnostic.contains(if guarded && world == "omitted-defaults" {
-                            "only unguarded exactly-one single-member defaults are connected"
-                        } else {
-                            "requires configuration answers"
-                        })
-                    );
+                    assert!(diagnostic.contains("requires configuration answers"));
                     continue;
                 }
                 let extra = active && world != "contrary";
                 let lock = f.lock();
                 let record = &lock.configurations[&coordinate(DRIVER)];
                 assert_eq!(record.consumers["./vibe.toml"], *original);
-                if default_used {
+                if guarded && !gate && world == "omitted-defaults" {
+                    let basis = record
+                        .automatic_basis
+                        .as_ref()
+                        .expect("dormant reason missing");
+                    assert_eq!(
+                        basis.consumer_dormant_choices["./vibe.toml"],
+                        vec!["child".to_owned()]
+                    );
+                    assert!(
+                        basis.consumer_choices.is_empty() && basis.consumer_choice_sets.is_empty()
+                    );
+                    assert_eq!(lock.meta.schema_version, 17);
+                } else if default_used {
                     let basis = record
                         .automatic_basis
                         .as_ref()
@@ -8453,5 +8459,351 @@ fn guarded_automatic_defaults_actual_public_qualification() {
                 );
             }
         }
+    }
+}
+
+fn guarded_singleton_default_fixture(on: bool) -> Fixture {
+    let f = dormant_guard_fixture();
+    let source = f.registry.join(GROUP).join(DRIVER).join("v1.0.0/vibe.toml");
+    write(
+        &source,
+        fs::read_to_string(&source).unwrap().replace(
+            "members=['selected']",
+            "members=['selected','alternate']\ndefaults=['selected']",
+        ) + "\n[[configuration.features]]\nid='alternate'\nname='Alternate valid singleton'\n",
+    );
+    set_guard_input(&f, on, false);
+    let path = f.project.join("vibe.toml");
+    write(
+        &path,
+        fs::read_to_string(&path).unwrap().replace(
+            "policy='require-selection'",
+            "policy='use-declared-defaults'",
+        ),
+    );
+    f
+}
+#[test]
+fn guarded_defaults_actual_prior_reader_writer_and_tampered_basis_refuse() {
+    let old = std::env::var("NST_GUARDED_DEFAULT_OLD_CLI").expect("actual prior client required");
+    for on in [false, true] {
+        for (guarded, operation) in [
+            (true, "show"),
+            (true, "install"),
+            (false, "show"),
+            (false, "install"),
+        ] {
+            let f = guarded_singleton_default_fixture(on);
+            if !guarded {
+                let path = f.registry.join(GROUP).join(DRIVER).join("v1.0.0/vibe.toml");
+                write(
+                    &path,
+                    fs::read_to_string(&path)
+                        .unwrap()
+                        .replace("guards=[{member='on'}]", ""),
+                );
+            }
+            f.install_ok();
+            let before = super::workspace::semantic_snapshot(&f.project);
+            let mut cmd = std::process::Command::new(&old);
+            cmd.env_clear()
+                .env("HOME", f.root.join("home"))
+                .env("USERPROFILE", f.root.join("home"))
+                .env("VIBE_SETTINGS", &f.user.settings)
+                .env("VIBE_REGISTRY_CACHE", &f.user.cache)
+                .env("VIBEVM_SEARCH_CACHE_DIR", &f.user.search_cache)
+                .env("VIBE_NO_DEFAULT_REGISTRY", "1")
+                .env("PATH", "/usr/bin:/bin");
+            if operation == "show" {
+                cmd.args([
+                    "show",
+                    "features",
+                    "--json",
+                    "--path",
+                    f.project.to_str().unwrap(),
+                ]);
+            } else {
+                cmd.args([
+                    "install",
+                    "--offline",
+                    "--assume-yes",
+                    "--json",
+                    "--path",
+                    f.project.to_str().unwrap(),
+                ]);
+            }
+            let out = cmd.output().unwrap();
+            let diagnostic = String::from_utf8_lossy(&out.stdout).to_string()
+                + &String::from_utf8_lossy(&out.stderr);
+            println!(
+                "prior guarded={guarded} on={on} operation={operation} status={} diagnostic={diagnostic}",
+                out.status
+            );
+            assert!(
+                out.status.success() != guarded,
+                "prior compatibility disagrees with guarded={guarded}: {diagnostic}"
+            );
+            assert!(
+                super::workspace::semantic_snapshot(&f.project) == before,
+                "prior changed current guarded history/state"
+            );
+        }
+        for mutation in [
+            "missing",
+            "wrong",
+            "extra",
+            "duplicate",
+            "cross-map",
+            "fingerprint",
+            "epoch",
+        ] {
+            let f = guarded_singleton_default_fixture(on);
+            f.install_ok();
+            let path = f.project.join("vibe.lock");
+            let mut lock: toml::Value =
+                toml::from_str(&fs::read_to_string(&path).unwrap()).unwrap();
+            let basis = &mut lock["configurations"][coordinate(DRIVER)]["automatic_basis"];
+            match mutation {
+                "missing" => {
+                    basis.as_table_mut().unwrap().remove(if on {
+                        "consumer_choices"
+                    } else {
+                        "consumer_dormant_choices"
+                    });
+                }
+                "wrong" => {
+                    if on {
+                        basis["consumer_choices"]["./vibe.toml"]["detail"] = "on".into()
+                    } else {
+                        basis["consumer_dormant_choices"]["./vibe.toml"] =
+                            toml::Value::Array(vec!["switch".into()])
+                    }
+                }
+                "extra" => {
+                    basis.as_table_mut().unwrap().insert(
+                        "consumer_dormant_choices".into(),
+                        toml::Value::Table(toml::Table::from_iter([(
+                            "./vibe.toml".into(),
+                            toml::Value::Array(vec!["detail".into(), "unknown".into()]),
+                        )])),
+                    );
+                }
+                "duplicate" => {
+                    basis.as_table_mut().unwrap().insert(
+                        "consumer_dormant_choices".into(),
+                        toml::Value::Table(toml::Table::from_iter([(
+                            "./vibe.toml".into(),
+                            toml::Value::Array(vec!["detail".into(), "detail".into()]),
+                        )])),
+                    );
+                }
+                "cross-map" => {
+                    basis["consumer_choices"] = toml::Value::Table(toml::Table::from_iter([(
+                        "./vibe.toml".into(),
+                        toml::Value::Table(toml::Table::from_iter([(
+                            "detail".into(),
+                            "selected".into(),
+                        )])),
+                    )]));
+                    basis.as_table_mut().unwrap().insert(
+                        "consumer_dormant_choices".into(),
+                        toml::Value::Table(toml::Table::from_iter([(
+                            "./vibe.toml".into(),
+                            toml::Value::Array(vec!["detail".into()]),
+                        )])),
+                    );
+                }
+                "fingerprint" => basis["definition_fingerprint"] = "wrong".into(),
+                "epoch" => {
+                    if !on {
+                        lock["meta"]["schema_version"] = 16.into()
+                    } else {
+                        lock["meta"]["schema_version"] = 8.into()
+                    }
+                }
+                _ => unreachable!(),
+            }
+            write(&path, toml::to_string_pretty(&lock).unwrap());
+            let before = super::workspace::semantic_snapshot(&f.project);
+            assert!(
+                !f.install().status.success(),
+                "tampered guarded history admitted: on={on} {mutation}"
+            );
+            assert!(super::workspace::semantic_snapshot(&f.project) == before);
+        }
+    }
+}
+
+#[test]
+fn guarded_defaults_gate_only_on_off_on_and_combined_drift_refusal() {
+    let f = guarded_singleton_default_fixture(true);
+    let set = |f: &Fixture, on| {
+        set_guard_input(f, on, false);
+        let path = f.project.join("vibe.toml");
+        write(
+            &path,
+            fs::read_to_string(&path).unwrap().replace(
+                "policy='require-selection'",
+                "policy='use-declared-defaults'",
+            ),
+        );
+    };
+    let mut previous_hooks = 0;
+    for on in [true, false, true] {
+        set(&f, on);
+        f.install_ok();
+        let hooks = f.hooks().get(EXTRA).copied().unwrap_or(0);
+        if on {
+            assert!(
+                hooks > previous_hooks,
+                "active installation executes leaf hook"
+            );
+        } else {
+            assert_eq!(hooks, previous_hooks, "dormant group executes no leaf hook");
+        }
+        previous_hooks = hooks;
+        let lock = f.lock();
+        let record = &lock.configurations[&coordinate(DRIVER)];
+        assert!(
+            !record.consumers["./vibe.toml"]
+                .selections
+                .contains_key("detail")
+        );
+        assert_eq!(lock.packages.iter().any(|p| p.name.as_str() == EXTRA), on);
+        assert_eq!(f.slot(EXTRA).exists(), on);
+        assert_eq!(f.static_boot().contains(EXTRA_MARKER), on);
+        assert_eq!(record.features.contains(&"selected".into()), on);
+        assert_eq!(lock.meta.schema_version, if on { 12 } else { 17 });
+        let before = super::workspace::semantic_snapshot(&f.project);
+        f.install_ok();
+        assert_eq!(
+            super::workspace::semantic_snapshot(&f.project),
+            before,
+            "cold replay on={on}"
+        );
+    }
+    // Each singleton is valid in an independent actual fresh installation.
+    let alternate = guarded_singleton_default_fixture(true);
+    let source = alternate
+        .registry
+        .join(GROUP)
+        .join(DRIVER)
+        .join("v1.0.0/vibe.toml");
+    let original = fs::read_to_string(&source).unwrap();
+    let changed = original.replace("defaults=['selected']", "defaults=['alternate']");
+    assert_ne!(original, changed);
+    write(&source, changed);
+    alternate.install_ok();
+    assert!(
+        alternate.lock().configurations[&coordinate(DRIVER)]
+            .features
+            .contains(&"alternate".into())
+    );
+    assert!(!alternate.slot(EXTRA).exists());
+    // Unchanged history may replay its pinned store even if live source moves.
+    let replay = guarded_singleton_default_fixture(true);
+    replay.install_ok();
+    let source = replay
+        .registry
+        .join(GROUP)
+        .join(DRIVER)
+        .join("v1.0.0/vibe.toml");
+    write(
+        &source,
+        fs::read_to_string(&source)
+            .unwrap()
+            .replace("defaults=['selected']", "defaults=['alternate']"),
+    );
+    let before = super::workspace::semantic_snapshot(&replay.project);
+    replay.install_ok();
+    assert_eq!(
+        super::workspace::semantic_snapshot(&replay.project),
+        before,
+        "unchanged pinned replay does not rebind live source"
+    );
+    for mutation in [
+        "default",
+        "guard",
+        "payload",
+        "source",
+        "other-root",
+        "additional-input",
+    ] {
+        let f = guarded_singleton_default_fixture(true);
+        f.install_ok();
+        set(&f, false);
+        let source = f.registry.join(GROUP).join(DRIVER).join("v1.0.0");
+        let manifest = source.join("vibe.toml");
+        let request = f.project.join("vibe.toml");
+        match mutation {
+            "default" => {
+                let old = fs::read_to_string(&manifest).unwrap();
+                let changed = old.replace("defaults=['selected']", "defaults=['alternate']");
+                assert_ne!(changed, old, "negative must actually mutate source");
+                let parsed = Manifest::parse_str(&changed).unwrap();
+                let old_input = Manifest::read(f.project.join("vibe.toml"))
+                    .unwrap()
+                    .requires
+                    .configurations[&coordinate(DRIVER)]
+                    .clone();
+                let mut active = old_input;
+                active.selections.get_mut("switch").unwrap().members = Some(vec!["on".into()]);
+                let actual = vibe_core::manifest::PackageConfiguration::evaluate(
+                    &parsed,
+                    &BTreeMap::from([("./vibe.toml".into(), active)]),
+                )
+                .unwrap();
+                assert!(
+                    actual.features.contains(&"alternate".into()),
+                    "replacement is a valid active singleton"
+                );
+                write(&manifest, changed);
+            }
+            "guard" => write(
+                &manifest,
+                fs::read_to_string(&manifest)
+                    .unwrap()
+                    .replace("guards=[{member='on'}]", "guards=[{member='off'}]"),
+            ),
+            "payload" => write(&source.join("payload.txt"), "changed same-version bytes\n"),
+            "source" => {
+                let other = f.root.join("other-registry");
+                fs::rename(&f.registry, &other).unwrap();
+                write(
+                    &request,
+                    fs::read_to_string(&request)
+                        .unwrap()
+                        .replace(f.registry.to_str().unwrap(), other.to_str().unwrap()),
+                );
+            }
+            "other-root" => write(
+                &request,
+                fs::read_to_string(&request).unwrap().replace(
+                    "[[registry]]",
+                    &format!(
+                        "[requires.packages.'{GROUP}/{BASE}']\nversion='=1.0.0'\n[[registry]]"
+                    ),
+                ),
+            ),
+            "additional-input" => write(
+                &request,
+                fs::read_to_string(&request).unwrap().replace(
+                    "default_features=false",
+                    "default_features=false,features=['off']",
+                ),
+            ),
+            _ => unreachable!(),
+        }
+        let before = super::workspace::semantic_snapshot(&f.project);
+        let out = f.install();
+        assert!(
+            !out.status.success(),
+            "combined gate+{mutation} unexpectedly accepted"
+        );
+        assert_eq!(
+            super::workspace::semantic_snapshot(&f.project),
+            before,
+            "combined gate+{mutation} effects"
+        );
     }
 }

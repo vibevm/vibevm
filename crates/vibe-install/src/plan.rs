@@ -420,10 +420,20 @@ fn prepare_metadata_plan<S: InstallSource + ?Sized>(
         let planning_source = configured::PlanningSource {
             source,
             configuration: configured.then(|| {
-                vibe_resolver::configuration::ConfigurationSnapshot::with_history(
+                let snapshot = vibe_resolver::configuration::ConfigurationSnapshot::with_history(
                     inputs,
                     lockfile.configurations.clone(),
-                )
+                );
+                let roots = requirements.authored();
+                if request.roots.is_empty()
+                    && roots.len() == 1
+                    && roots == lockfile.meta.root_dependencies
+                    && roots[0].version.is_exact_pin()
+                {
+                    snapshot.with_guarded_locked_rows(&lockfile.packages)
+                } else {
+                    snapshot
+                }
             }),
         };
         let source = &planning_source;

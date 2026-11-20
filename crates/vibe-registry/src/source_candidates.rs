@@ -84,6 +84,83 @@ impl RetainedSourceCandidate {
         ))
     }
 
+    /// Exact local retained route/content agreement for a narrowly admitted
+    /// operation transition. This observes no alternate source and grants no write.
+    pub fn matches_locked_local_content(
+        &self,
+        row: &vibe_core::manifest::LockedPackage,
+    ) -> Result<bool, RegistryError> {
+        let r = &self.0.resolution;
+        if self.group() != &row.group
+            || self.name() != row.name.as_str()
+            || self.version() != &row.version
+            || r.registry_name != row.registry
+            || r.source_url != row.source_url.as_str()
+            || r.source_ref != row.source_ref
+            || r.overridden != row.overridden
+            || r.via_redirect != row.via_redirect
+            || row.resolved_commit.is_some()
+            || row.source_ref.is_some()
+            || row.overridden
+            || row.via_override.is_some()
+            || row.via_redirect.is_some()
+            || !row.source_url.as_str().starts_with("file://")
+            || row.materialization != vibe_core::manifest::Materialization::Copy
+            || row.source_kind != Some(vibe_core::manifest::SourceKind::Registry)
+        {
+            return Ok(false);
+        }
+        // Rebinding authored history is stronger than replaying retained bytes:
+        // inspect the exact live endpoint with the existing held no-follow proof.
+        let live = crate::multi_registry_resolver::local_path_from_url(row.source_url.as_str())?;
+        let proof = crate::local_preview::verify_pinned_payload(&live, row.content_hash.as_str())
+            .map_err(|_| RegistryError::MalformedMeta {
+            path: live.clone(),
+            reason: "guarded gate rebind requires unchanged live source bytes".into(),
+        })?;
+        let observed = Manifest::parse_str(
+            std::str::from_utf8(proof.manifest_bytes().map_err(|_| {
+                RegistryError::MalformedMeta {
+                    path: live.clone(),
+                    reason: "guarded live source manifest unavailable".into(),
+                }
+            })?)
+            .map_err(|_| RegistryError::MalformedMeta {
+                path: live.clone(),
+                reason: "guarded live source manifest encoding invalid".into(),
+            })?,
+        )?;
+        self.validate_manifest(&observed)?;
+        proof.recheck().map_err(|_| RegistryError::MalformedMeta {
+            path: live,
+            reason: "guarded live source changed during rebind".into(),
+        })?;
+        if let Some(held) = &r.locked {
+            // Retention already used the existing locked acquisition owner.
+            // Do not relax fresh-source observation for forwarding callers.
+            if held.source_row() != row
+                || self.binding() != &CanonicalSourceBinding::from_locked(row)
+                || !r.source_url.starts_with("file://")
+                || r.resolved.source_dir.as_os_str().is_empty()
+            {
+                return Ok(false);
+            }
+            self.validate_manifest(&Manifest::read(
+                r.resolved.source_dir.join(Manifest::FILENAME),
+            )?)?;
+            let recipe = if row.content_hash.as_str().starts_with("sha256-tree/1:") {
+                crate::RecipeId::Tree1
+            } else {
+                crate::RecipeId::Legacy0
+            };
+            return Ok(
+                crate::compute_content_hash_with(recipe, &r.resolved.source_dir)?
+                    == row.content_hash.as_str(),
+            );
+        }
+        Ok(self.observe_local_content_pin()? == row.content_hash)
+    }
+
     /// Whether both observations were minted by the same original source owner.
     pub fn same_owner(&self, other: &Self) -> bool {
         Arc::ptr_eq(&self.0.owner, &other.0.owner)

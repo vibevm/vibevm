@@ -55,6 +55,9 @@ pub struct AutomaticBasis {
     /// Lossless non-scalar choice reliance, including a declared optional empty set.
     #[serde(default, skip_serializing_if = "BTreeMap::is_empty")]
     pub consumer_choice_sets: BTreeMap<String, BTreeMap<String, Vec<String>>>,
+    /// Historical omitted-policy binding for inactive guarded choices, not members.
+    #[serde(default, skip_serializing_if = "BTreeMap::is_empty")]
+    pub consumer_dormant_choices: BTreeMap<String, Vec<String>>,
 }
 
 /// Configuration admission has not produced an executable package selection.
@@ -181,6 +184,8 @@ impl PackageConfiguration {
         let mut public_scalars: BTreeMap<String, crate::manifest::ParameterValue> = BTreeMap::new();
         let mut automatic_choices = BTreeMap::new();
         let mut automatic_choice_sets = BTreeMap::new();
+        let mut automatic_dormant_choices = BTreeMap::new();
+        let mut guarded_reliance = Vec::new();
         let mut ordinary = BTreeSet::new();
         let mut choices = Vec::new();
         for (consumer, input) in consumers {
@@ -251,7 +256,35 @@ impl PackageConfiguration {
                     selected_default_sets.insert(group_id, canonical);
                     continue;
                 }
-                if defaults.len() != 1 || !guards.is_empty() || !members.contains(&defaults[0]) {
+                if !guards.is_empty() {
+                    // Only the qualified one independent explicit gate / one
+                    // guarded singleton group. Kernel decides activity/default use.
+                    let allowed = kind == crate::PackageKind::Flow
+                        && consumers.len() == 1
+                        && forwarded.is_empty()
+                        && definition.parameters.is_empty()
+                        && definition.profiles.is_empty()
+                        && definition.groups.len() == 2
+                        && guards.len() == 1
+                        && matches!(&guards[0], super::ConfigurationGuard::Member(gate_member)
+                            if definition.groups.iter().any(|group| matches!(group,
+                                super::ConfigurationGroupDecl::Choice{id,members,guards,cardinality,..}
+                                if id != &group_id && guards.is_empty()
+                                    && *cardinality==crate::configuration::Cardinality::ExactlyOne
+                                    && members.contains(gate_member)
+                                    && input.selections.get(id).is_some_and(|answer| answer.intent == super::MergeIntent::Exact)
+                                    && normalized.choices.answers.get(id).is_some_and(|answer|
+                                        matches!(&answer.selection, crate::configuration::Selection::Explicit(members) if members.len()==1)))))
+                        && definition.features.iter().all(|f| f.guards.is_empty());
+                    if !allowed || defaults.len() != 1 || !members.contains(&defaults[0]) {
+                        return Err(unsupported(
+                            "guarded singleton defaults require one independent explicit gate",
+                        ));
+                    }
+                    guarded_reliance.push((consumer.clone(), group_id));
+                    continue;
+                }
+                if defaults.len() != 1 || !members.contains(&defaults[0]) {
                     return Err(unsupported(
                         "only unguarded exactly-one single-member defaults are connected",
                     ));
@@ -455,6 +488,44 @@ impl PackageConfiguration {
                 ),
             });
         };
+        for (consumer, group) in guarded_reliance {
+            let control = evaluation
+                .controls
+                .iter()
+                .find(|c| c.id == group)
+                .ok_or_else(|| invalid("guarded choice activity missing".into()))?;
+            if control.active {
+                let used = evaluation
+                    .defaults
+                    .iter()
+                    .filter(|d| d.consumer == consumer && d.group == group)
+                    .collect::<Vec<_>>();
+                let [used] = used.as_slice() else {
+                    return Err(invalid("guarded default use missing or duplicate".into()));
+                };
+                let [member] = used.declared.as_slice() else {
+                    return Err(invalid("guarded default is not singleton".into()));
+                };
+                if control.selection.as_ref() != Some(&vec![member.clone()]) {
+                    return Err(invalid(
+                        "guarded default selection disagrees with kernel".into(),
+                    ));
+                }
+                automatic_choices
+                    .entry(consumer)
+                    .or_insert_with(BTreeMap::new)
+                    .insert(group, member.clone());
+            } else {
+                automatic_dormant_choices
+                    .entry(consumer)
+                    .or_insert_with(Vec::new)
+                    .push(group);
+            }
+        }
+        for groups in automatic_dormant_choices.values_mut() {
+            groups.sort();
+            groups.dedup();
+        }
         if features
             .implied
             .iter()
@@ -567,7 +638,10 @@ impl PackageConfiguration {
                 "active transitive configuration requires candidate-conditioned incoming consumers",
             ));
         }
-        let automatic_basis = if automatic_choices.is_empty() && automatic_choice_sets.is_empty() {
+        let automatic_basis = if automatic_choices.is_empty()
+            && automatic_choice_sets.is_empty()
+            && automatic_dormant_choices.is_empty()
+        {
             None
         } else {
             Some(AutomaticBasis {
@@ -576,6 +650,7 @@ impl PackageConfiguration {
                     .map_err(|e| invalid(e.to_string()))?,
                 consumer_choices: automatic_choices,
                 consumer_choice_sets: automatic_choice_sets,
+                consumer_dormant_choices: automatic_dormant_choices,
             })
         };
         Ok(Self {

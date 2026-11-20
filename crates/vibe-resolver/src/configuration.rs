@@ -36,6 +36,9 @@ pub struct ConfigurationSnapshot {
     forwarded: BTreeMap<String, Vec<vibe_core::manifest::ForwardedInput>>,
     previous: BTreeMap<String, PackageConfiguration>,
     review_preview: bool,
+    guarded_locked: BTreeMap<String, vibe_core::manifest::LockedPackage>,
+    guarded_admitted:
+        RefCell<BTreeMap<Coordinate, vibe_registry::source_candidates::RetainedSourceCandidate>>,
     versions: RefCell<BTreeMap<(Group, String), VersionObservation>>,
     candidates: RefCell<BTreeMap<Coordinate, Candidate>>,
     source_errors: RefCell<BTreeMap<Coordinate, DepProviderError>>,
@@ -108,7 +111,13 @@ impl ConfigurationSnapshot {
         }
         Ok(())
     }
-    fn evaluate_candidate(&self, group: &Group, name: &str, original: Manifest) -> Candidate {
+    fn evaluate_candidate(
+        &self,
+        group: &Group,
+        name: &str,
+        original: Manifest,
+        guarded_source: bool,
+    ) -> Candidate {
         let package = format!("{group}/{name}");
         let forwarded = self
             .forwarded
@@ -169,6 +178,9 @@ impl ConfigurationSnapshot {
                                     }
                                 }
 
+                                if guarded_source && previous.is_guarded_gate_transition(&record) {
+                                    return Ok(Some(record));
+                                }
                                 if previous.automatic_basis.is_some() {
                                     // Prior is admitted historical data, not reconstructed
                                     // from this replacement candidate. Explicit takeover is
@@ -251,8 +263,53 @@ impl ConfigurationSnapshot {
             source.metadata_digest().to_owned(),
         );
         if !self.source_candidates.borrow().contains_key(&key) {
-            let candidate =
-                self.evaluate_candidate(source.group(), source.name(), source.manifest().clone());
+            let package = format!("{}/{}", source.group(), source.name());
+            // Unchanged replay must not gain a live-source dependency. Only
+            // an independently reconstructed gate transition asks for rebind.
+            let wants_transition = self.previous.get(&package).is_some_and(|old| {
+                self.inputs.get(&package).is_some_and(|inputs| {
+                    let inputs = inputs
+                        .iter()
+                        .filter_map(|(owner, input)| {
+                            input.clone().map(|input| (owner.clone(), input))
+                        })
+                        .collect();
+                    PackageConfiguration::evaluate(source.manifest(), &inputs)
+                        .is_ok_and(|next| old.is_guarded_gate_transition(&next))
+                })
+            });
+            let guarded_source = wants_transition
+                && self
+                    .guarded_locked
+                    .get(&package)
+                    .is_some_and(|row| source.matches_locked_local_content(row).unwrap_or(false));
+            let candidate = self.evaluate_candidate(
+                source.group(),
+                source.name(),
+                source.manifest().clone(),
+                guarded_source,
+            );
+            if guarded_source
+                && candidate
+                    .evaluated
+                    .as_ref()
+                    .ok()
+                    .and_then(|r| r.as_ref())
+                    .is_some_and(|next| {
+                        self.previous
+                            .get(&package)
+                            .is_some_and(|old| old.is_guarded_gate_transition(next))
+                    })
+            {
+                self.guarded_admitted.borrow_mut().insert(
+                    (
+                        source.group().clone(),
+                        source.name().into(),
+                        source.version().clone(),
+                    ),
+                    source.clone(),
+                );
+            }
             self.source_candidates
                 .borrow_mut()
                 .insert(key.clone(), candidate);
@@ -305,11 +362,55 @@ impl ConfigurationSnapshot {
             forwarded: BTreeMap::new(),
             previous,
             review_preview: false,
+            guarded_locked: BTreeMap::new(),
+            guarded_admitted: RefCell::new(BTreeMap::new()),
             versions: RefCell::new(BTreeMap::new()),
             candidates: RefCell::new(BTreeMap::new()),
             source_errors: RefCell::new(BTreeMap::new()),
             source_candidates: RefCell::new(std::collections::HashMap::new()),
         }
+    }
+    /// Opt-in from an unchanged single exact-root ordinary operation only.
+    pub fn with_guarded_locked_rows(mut self, rows: &[vibe_core::manifest::LockedPackage]) -> Self {
+        self.guarded_locked = rows
+            .iter()
+            .map(|r| (format!("{}/{}", r.group, r.name), r.clone()))
+            .collect();
+        self
+    }
+    /// Recheck the actual acquired route/hash after a gate-only transition.
+    pub fn check_guarded_acquisition(
+        &self,
+        cached: &vibe_registry::CachedPackage,
+    ) -> Result<(), PackageConfigurationError> {
+        let coordinate = (
+            cached.resolved.group.clone(),
+            cached.resolved.name.clone(),
+            cached.resolved.version.clone(),
+        );
+        let admitted = self.guarded_admitted.borrow();
+        let Some(source) = admitted.get(&coordinate) else {
+            return Ok(());
+        };
+        let package = format!("{}/{}", cached.resolved.group, cached.resolved.name);
+        let row = self.guarded_locked.get(&package).ok_or_else(|| {
+            PackageConfigurationError::ReplayMismatch {
+                package: package.clone(),
+            }
+        })?;
+        if !source.matches_locked_local_content(row).unwrap_or(false)
+            || cached.content_hash != row.content_hash.as_str()
+            || cached.source_uri != row.source_url.as_str()
+            || cached.registry_name != row.registry
+            || cached.source_ref != row.source_ref
+            || cached.resolved_commit != row.resolved_commit
+            || cached.overridden != row.overridden
+            || cached.via_redirect != row.via_redirect
+            || cached.source_kind() != row.source_kind
+        {
+            return Err(PackageConfigurationError::ReplayMismatch { package });
+        }
+        Ok(())
     }
     /// A separate immutable input-set context, with wholly cold evaluation caches.
     pub(crate) fn with_forwarded_context(
@@ -319,6 +420,7 @@ impl ConfigurationSnapshot {
         let mut context = Self::with_history(self.inputs.clone(), self.previous.clone());
         context.forwarded = forwarded;
         context.review_preview = self.review_preview;
+        context.guarded_locked = self.guarded_locked.clone();
         context
     }
     pub(crate) fn authored_inputs(
@@ -488,7 +590,9 @@ impl<P: VersionEnumerator> DepProvider for ConfiguredProvider<'_, P> {
                     return Err(error);
                 }
             };
-            let candidate = self.snapshot.evaluate_candidate(group, name, original);
+            let candidate = self
+                .snapshot
+                .evaluate_candidate(group, name, original, false);
             self.snapshot
                 .candidates
                 .borrow_mut()

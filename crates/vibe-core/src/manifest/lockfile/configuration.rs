@@ -60,6 +60,14 @@ impl Lockfile {
             if record
                 .automatic_basis
                 .as_ref()
+                .is_some_and(|b| !b.consumer_dormant_choices.is_empty())
+                && self.meta.schema_version < DORMANT_CHOICE_BASIS_SCHEMA_VERSION
+            {
+                return Err(invalid("dormant choice reliance requires schema17".into()));
+            }
+            if record
+                .automatic_basis
+                .as_ref()
                 .is_some_and(|basis| !basis.consumer_choice_sets.is_empty())
                 && self.meta.schema_version < MULTI_CHOICE_BASIS_SCHEMA_VERSION
             {
@@ -364,6 +372,7 @@ impl Lockfile {
                 | FORWARDED_INPUT_SCHEMA_VERSION
                 | MULTI_CHOICE_BASIS_SCHEMA_VERSION
                 | SUBMITTED_INPUT_SCHEMA_VERSION
+                | DORMANT_CHOICE_BASIS_SCHEMA_VERSION
         ) {
             return Err(crate::Error::UnsupportedLockfile {
                 found: self.meta.schema_version,
@@ -376,6 +385,13 @@ impl Lockfile {
         // template package and no channel requirement writes exactly the
         // bytes it wrote before PROP-075 (AV-FMT-002).
         value.meta.schema_version = if value.configurations.values().any(|record| {
+            record
+                .automatic_basis
+                .as_ref()
+                .is_some_and(|b| !b.consumer_dormant_choices.is_empty())
+        }) {
+            DORMANT_CHOICE_BASIS_SCHEMA_VERSION
+        } else if value.configurations.values().any(|record| {
             record
                 .automatic_basis
                 .as_ref()

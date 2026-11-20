@@ -32,6 +32,7 @@ impl<S: InstallSource + ?Sized> PlanningSource<'_, S> {
                 return Err(manifest_drift(&cached.cache_dir));
             }
             require_local_copy(&cached)?;
+            snapshot.check_guarded_acquisition(&cached)?;
         }
         Ok(cached)
     }
@@ -87,13 +88,21 @@ impl<S: InstallSource + ?Sized> InstallSource for PlanningSource<'_, S> {
                 candidate.name()
             )));
         }
-        self.source.acquire_candidate_for_install(
+        match self.source.acquire_candidate_for_install(
             candidate,
             store_root,
             expected_hash,
             slot,
             progress,
-        )
+        )? {
+            vibe_registry::PackageAcquisition::Cached(cached) => {
+                if let Some(snapshot) = &self.configuration {
+                    snapshot.check_guarded_acquisition(&cached)?;
+                }
+                Ok(vibe_registry::PackageAcquisition::Cached(cached))
+            }
+            acquired => Ok(acquired),
+        }
     }
 
     fn resolve_and_fetch(
