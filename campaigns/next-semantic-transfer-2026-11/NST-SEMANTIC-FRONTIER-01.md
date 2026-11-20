@@ -263,3 +263,5 @@ Three source reviews distinguish selected draft fields from approval, a matching
 Two historical held-root changes separate same-path copied records from the original directory and bound receipt enumeration from legacy traversal. This review read the implementations and regression assertions; it did not run them.
 
 Three reviewed revisions distinguish observing the current published release from predicting a fallback, hashing an asset from owning it, and preserving invalid planner evidence from publishing a structured report. No external service was called.
+
+Two historical operation contracts separate discovery and transport from authority. The corresponding file-publication review distinguishes matching content from proof of the originating object. No target execution is claimed.
