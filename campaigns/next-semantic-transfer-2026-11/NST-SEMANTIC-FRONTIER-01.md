@@ -249,3 +249,5 @@ Two generated declarations were reviewed: the Zap bridge selects a branch and in
 Four historical changes distinguish fixture failure from helper failure, a typed answer from effect authority, current-source collection from source-less Gitlink proof, and reuse of Ready from unconditional trust in a stored marker. Only the named evidence was reviewed; no Git publication or test rerun is implied.
 
 At `49a9ffe3d4`, initialization requires domain result/error epochs as well as the session envelope. At `72cf492f83`, refusing a stale submission reference does not erase the prior run or establish absence of effects. Both implementation changes and regression assertions were inspected, not re-executed.
+
+Two historical APIs separate known absent manifest epoch from unrecognized profile revision, and proposed run identity from durable reservation and scratch materialization. Neither code review is evidence of a new target execution.
