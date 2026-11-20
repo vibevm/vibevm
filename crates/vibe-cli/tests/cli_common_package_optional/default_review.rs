@@ -849,3 +849,71 @@ fn named_profile_meaning_drift_refuses_update_but_presentation_change_does_not()
         }
     }
 }
+
+#[test]
+fn public_boolean_parameter_false_omitted_and_wrong_type_have_distinct_normalization() {
+    for value in [
+        Some("false"),
+        None,
+        Some("'not-a-boolean'"),
+        Some("control"),
+    ] {
+        let f = Fixture::new(false);
+        let source = f.registry.join(GROUP).join(DRIVER).join("v1.0.0/vibe.toml");
+        if value != Some("control") {
+            write(
+                &source,
+                fs::read_to_string(&source).unwrap()
+                    + "\n[[configuration.parameters]]\nid='verbose'\nname='Verbose'\ntype='bool'\nrequired=true\n",
+            );
+        }
+        let request = f.project.join("vibe.toml");
+        if let Some(value) = value.filter(|v| *v != "control") {
+            let text=fs::read_to_string(&request).unwrap().replace("configuration={policy='require-selection',default_features=false,selections={extra={intent='exact',members=['disabled']}}}",&format!("configuration={{policy='require-selection',default_features=false,selections={{extra={{intent='exact',members=['disabled']}}}},parameters={{verbose={value}}}}}"));
+            write(&request, text);
+        }
+        let authored = fs::read(&request).unwrap();
+        let manifest = Manifest::read(&request).unwrap();
+        let definition = Manifest::read(&source).unwrap().configuration.unwrap();
+        let input = manifest.requires.configurations.values().next().unwrap();
+        let normalized = definition.normalize_input(input, "./vibe.toml");
+        match value {
+            Some("false") => assert_eq!(
+                normalized.unwrap().parameters["verbose"],
+                vibe_core::manifest::ParameterValue::Bool(false)
+            ),
+            None => assert!(!normalized.unwrap().parameters.contains_key("verbose")),
+            Some("control") => assert!(normalized.unwrap().parameters.is_empty()),
+            _ => assert!(normalized.is_err()),
+        }
+        let output = f.install();
+        let diagnostic = format!(
+            "{}{}",
+            String::from_utf8_lossy(&output.stdout),
+            String::from_utf8_lossy(&output.stderr)
+        );
+        if value == Some("control") {
+            assert!(output.status.success(), "{diagnostic}");
+            let before = fs::read(f.project.join("vibe.lock")).unwrap();
+            f.install_ok();
+            assert_eq!(fs::read(f.project.join("vibe.lock")).unwrap(), before);
+        } else {
+            assert!(!output.status.success());
+            if value == Some("'not-a-boolean'") {
+                assert!(
+                    diagnostic.contains("boolean") || diagnostic.contains("bool"),
+                    "{diagnostic}"
+                );
+            } else {
+                assert!(
+                    diagnostic.contains("typed package parameter consumption is not connected"),
+                    "{diagnostic}"
+                );
+            }
+            assert!(!f.project.join("vibe.lock").exists());
+            assert!(!f.slot(DRIVER).exists());
+            assert!(!f.project.join("effects.log").exists());
+        }
+        assert_eq!(fs::read(&request).unwrap(), authored);
+    }
+}

@@ -1,0 +1,9 @@
+# Public boolean package parameter — qualification candidate
+
+Baseline accepted named profile `9cbd5edab`; contract NST-PACKAGE-BOOLEAN-PARAMETER-01.md. Test-only ordinary local flow, not app installer or parameter implementation.
+
+Core ConfigurationDecl::normalize_input uses the existing ParameterDecl and typed ParameterValue owner. An explicitly supplied false can remain Bool(false), distinct from omitted required input; a wrong string is rejected during typed normalization. Ordinary PackageConfiguration::evaluate_parts still refuses any parameter definition because its runtime consumer is not connected. Missing required handling at a future actual parameter owner is not proven by this blanket refusal.
+
+Four independent public fixtures compare explicit false, omitted required boolean, invalid string and parameterless positive control. `boolean-qualification-test-r1.log` records one PASS across all four worlds: explicit false normalizes to Bool(false), omission stays absent, wrong string fails typed normalization, public valid parameter requests return the specific unconnected-consumer refusal, and wrong type retains a boolean diagnosis. Refusals leave authored bytes unchanged with no lock/driver slot/hooks. Parameterless control installs and replays byte-identical lock. Strict scoped lint, formatting and diff checks passed; the private manifest binds exact source/binary.
+
+The earliest intended gap is ordinary typed parameter consumption/retention, not parsing, a second solver or environment injection. No private values, defaults/profile expansion, path realization, forwarding, provider or network was added. Boolean install/retained value/parameter replay remains NOT REACHED if the existing guard refuses. Follow-on implementation needs its own exact merge, required-input and compatibility decision. No broad matrix/NST or USER-PROJECT acceptance is implied; AR/IDE unchanged.
