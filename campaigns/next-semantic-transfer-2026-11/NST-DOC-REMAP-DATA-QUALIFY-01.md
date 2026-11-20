@@ -1,0 +1,5 @@
+# Exercise request-local document data separately from remap consent
+
+Test/report only at eb370713f. Use valid, distinct, synthetic local Doc and Remap sources with a data-only choice, and typed on/off controls in the shared evaluator. Invoke actual registered read_doc and offline remap list/explain with absent answers; attempt the equivalent explicit input using the actual public argument boundary. Determine whether it is consumed, rejected or silently ignored. Compare results and observable state; distinguish source declaration from user selection. Do not invent a choice option to get a positive result. Record the exact first owner when a public port is missing.
+
+For remap also exercise explicit accept/reject in isolated synthetic settings; pre-consent offer is not activation, data evaluation cannot grant consent and reading/explaining cannot silently persist it. Never probe targets, run a service, install a package, or bootstrap a host. Keep caller-created fixtures distinct from newly generated files. Return exact fixtures/report, nonzero selectors, public transcripts and manifest; no product changes, no parent promotion.
