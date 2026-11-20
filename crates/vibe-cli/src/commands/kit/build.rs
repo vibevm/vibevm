@@ -56,8 +56,9 @@ pub(super) fn run(ctx: &output::Context, file: &Path, out: &Path) -> Result<()> 
         .inspect_child_state(&stage_name)?
         .ok_or_else(|| anyhow!("kit stage name disappeared"))?;
     let bundle_name = format!("vibevm-{}-{}.zip", recipe.kit.version, recipe.kit.target);
-    let installer_name = format!("vibe-installer-{}", recipe.kit.target);
-    let profile_name = "profile-linux-auto.toml";
+    let (installer_name, platform) = vibe_bootstrap::kit::kit_layout(&recipe.kit.target)?;
+    let profile_name = format!("profile-{platform}-auto.toml");
+    let profile_name = profile_name.as_str();
     let mut sums = String::new();
     for (input, target, mode) in [
         (&recipe.bundle, bundle_name.as_str(), Some(0o644)),

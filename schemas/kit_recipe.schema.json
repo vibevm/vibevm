@@ -11,7 +11,7 @@
       "required": ["name", "target", "version"],
       "properties": {
         "name": {"type": "string", "minLength": 1, "maxLength": 64, "pattern": "^[A-Za-z0-9_-]+$"},
-        "target": {"const": "x86_64-unknown-linux-gnu"},
+        "target": {"enum": ["x86_64-pc-windows-msvc", "x86_64-unknown-linux-musl", "x86_64-unknown-linux-gnu", "x86_64-apple-darwin", "aarch64-apple-darwin"]},
         "version": {"type": "string", "description": "Canonical SemVer, checked by the existing semver parser"}
       }
     },

@@ -113,8 +113,9 @@ impl Recipe {
             "invalid kit name"
         );
         ensure!(
-            self.kit.target == "x86_64-unknown-linux-gnu",
-            "unsupported kit target; first slice requires x86_64-unknown-linux-gnu"
+            vibe_wire::behaviour::release_manifest::SUPPORTED_DISTRIBUTION_TARGETS
+                .contains(&self.kit.target.as_str()),
+            "unsupported kit distribution target"
         );
         let version = semver::Version::parse(&self.kit.version)
             .map_err(|_| anyhow!("invalid kit version"))?;

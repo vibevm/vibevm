@@ -420,3 +420,153 @@ fn produced_kit_native_upgrade_preserves_existing_install_on_corrupt_input() {
         b"unrelated preserved"
     );
 }
+
+/// Linux producer host is distinct from the foreign kit consumer target.
+#[test]
+#[cfg(target_os = "linux")]
+fn kit_linux_host_produces_exact_historical_windows_and_macos_inputs() {
+    use std::os::unix::fs::PermissionsExt;
+    let retained = std::env::var_os("NST_KIT_HISTORICAL_INPUTS")
+        .expect("explicit admitted historical native inputs, not private corporate state");
+    for (platform, target, bundle_sha, installer_sha, suffix) in [
+        (
+            "windows",
+            "x86_64-pc-windows-msvc",
+            "14c6f989920e85db3e64676a755b35a940042e2321e3de6b04c7de6a2dbbb777",
+            "c9b2318b2065ae919d14e97d22bce3fc013cb3f1dc64479666aec9e9a5f0aad7",
+            ".exe",
+        ),
+        (
+            "macos",
+            "x86_64-apple-darwin",
+            "4b6cbb78c35767db74c4dfcf761c02a4389e3561fec6b9784955666cd453bdf8",
+            "7e7858e2487d40a52313a27bad43063b73cd776e08eb6602eb42deebbcc44b12",
+            "",
+        ),
+    ] {
+        let temp = tempfile::Builder::new()
+            .permissions(fs::Permissions::from_mode(0o700))
+            .tempdir()
+            .unwrap();
+        let root = temp.path();
+        let source = root.join("recipe");
+        fs::create_dir(&source).unwrap();
+        let bundle_name = format!("vibevm-1.0.12-{target}.zip");
+        let installer_name = format!("vibe-installer-{target}{suffix}");
+        for (name, hash) in [(&bundle_name, bundle_sha), (&installer_name, installer_sha)] {
+            let bytes = fs::read(Path::new(&retained).join(platform).join(name)).unwrap();
+            assert_eq!(digest(&bytes), hash);
+            fs::write(source.join(name), bytes).unwrap();
+        }
+        let profile = b"schema=1\nname='synthetic-cross-target'\n[path]\nfix='never'\n";
+        fs::write(source.join("profile.toml"), profile).unwrap();
+        let recipe = format!(
+            "schema_version=1\n[kit]\nname='cross-target'\ntarget='{target}'\nversion='1.0.12'\n[bundle]\npath='{bundle_name}'\nsha256='{bundle_sha}'\n[installer]\npath='{installer_name}'\nsha256='{installer_sha}'\n[site_profile]\npath='profile.toml'\nsha256='{}'\n",
+            digest(profile)
+        );
+        let file = source.join("vibe-kit.toml");
+        fs::write(&file, &recipe).unwrap();
+        let user = UserScratch::new();
+        let build = |out: &Path| {
+            command(
+                &user,
+                root,
+                &[
+                    "kit",
+                    "build",
+                    "--file",
+                    file.to_str().unwrap(),
+                    "--out",
+                    out.to_str().unwrap(),
+                ],
+            )
+        };
+        let prior = std::env::var_os("NST_KIT_PRIOR_CLI")
+            .expect("exact preserved Linux-only recipe reader");
+        for verb in ["validate", "build"] {
+            let cmd = user.vibe();
+            // Use the same isolated explicit settings, but the actual prior executable.
+            let mut old = std::process::Command::new(&prior);
+            old.envs(cmd.get_envs().filter_map(|(k, v)| v.map(|v| (k, v))));
+            old.current_dir(root)
+                .args(["kit", verb, "--file", file.to_str().unwrap()]);
+            let old_out = root.join("prior-output");
+            if verb == "build" {
+                old.args(["--out", old_out.to_str().unwrap()]);
+            }
+            bad(old.output().unwrap());
+            assert!(!old_out.exists());
+        }
+        let out = root.join("kit");
+        good(build(&out));
+        let names = [
+            &bundle_name,
+            &installer_name,
+            &format!("profile-{platform}-auto.toml"),
+            "SHA256SUMS.txt",
+            "INSTALL.md",
+        ];
+        let mut actual: Vec<_> = fs::read_dir(&out)
+            .unwrap()
+            .map(|e| e.unwrap().file_name().to_string_lossy().into_owned())
+            .collect();
+        let mut expected: Vec<_> = names.iter().map(|s| s.to_string()).collect();
+        actual.sort();
+        expected.sort();
+        assert_eq!(actual, expected);
+        let verified =
+            vibe_bootstrap::verify_bundle(&out.join(&bundle_name), bundle_sha, target).unwrap();
+        assert_eq!(
+            verified.manifest.source_commit,
+            "576e6a8623c10087c9ad5a0730754d6ba9d61be6"
+        );
+        assert_eq!(verified.manifest.target, target);
+        assert_eq!(verified.manifest.version, "1.0.12");
+        assert_eq!(
+            digest(&fs::read(out.join(&installer_name)).unwrap()),
+            installer_sha
+        );
+        let sums = fs::read_to_string(out.join("SHA256SUMS.txt")).unwrap();
+        for (name, hash) in vibe_bootstrap::kit::parse_checksums(&sums).unwrap() {
+            assert_eq!(digest(&fs::read(out.join(name)).unwrap()), hash);
+        }
+        let before = fs::read(out.join("SHA256SUMS.txt")).unwrap();
+        bad(build(&out));
+        assert_eq!(fs::read(out.join("SHA256SUMS.txt")).unwrap(), before);
+        for (label, changed) in [
+            (
+                "target",
+                recipe.replace(
+                    &format!("target='{target}'"),
+                    &format!(
+                        "target='{}'",
+                        if platform == "windows" {
+                            "x86_64-apple-darwin"
+                        } else {
+                            "x86_64-pc-windows-msvc"
+                        }
+                    ),
+                ),
+            ),
+            (
+                "unsupported",
+                recipe.replace(target, "riscv64-unknown-linux-gnu"),
+            ),
+            ("hash", recipe.replace(bundle_sha, &"0".repeat(64))),
+            (
+                "version",
+                recipe.replace("version='1.0.12'", "version='9.9.9'"),
+            ),
+        ] {
+            fs::write(&file, changed).unwrap();
+            let refused = root.join(label);
+            bad(build(&refused));
+            assert!(!refused.exists());
+        }
+        fs::write(&file, recipe).unwrap();
+        fs::write(source.join(&bundle_name), b"corrupt source").unwrap();
+        let refused = root.join("corrupt-source");
+        bad(build(&refused));
+        assert!(!refused.exists());
+    }
+}

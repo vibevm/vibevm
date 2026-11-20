@@ -10,6 +10,24 @@ use std::{
     time::Instant,
 };
 
+/// Existing native-consumer filenames for one admitted distribution target.
+/// This describes kit bytes, not the OS of the producer.
+pub fn kit_layout(target: &str) -> Result<(String, &'static str)> {
+    use vibe_wire::behaviour::release_manifest::SUPPORTED_DISTRIBUTION_TARGETS;
+    anyhow::ensure!(
+        SUPPORTED_DISTRIBUTION_TARGETS.contains(&target),
+        "unsupported kit distribution target"
+    );
+    let (suffix, platform) = if target == "x86_64-pc-windows-msvc" {
+        (".exe", "windows")
+    } else if target.ends_with("-apple-darwin") {
+        ("", "macos")
+    } else {
+        ("", "linux")
+    };
+    Ok((format!("vibe-installer-{target}{suffix}"), platform))
+}
+
 #[derive(Debug, Parser)]
 #[command(
     name = "vibe-installer",
@@ -183,12 +201,7 @@ pub fn run(args: Args) -> Result<()> {
     }
     eprintln!("Vibe · native local installer");
     report.stage("Validate local kit inputs")?;
-    let platform = match std::env::consts::OS {
-        "windows" => "windows",
-        "linux" => "linux",
-        "macos" => "macos",
-        _ => bail!("unsupported kit platform"),
-    };
+    let (_, platform) = kit_layout(crate::target()?)?;
     let profile = args
         .profile
         .clone()
@@ -523,6 +536,33 @@ fn safe_identifiers(text: &str) -> Vec<String> {
 #[cfg(test)]
 mod diagnostic_tests {
     use super::*;
+    #[test]
+    fn kit_layout_uses_distribution_targets_and_native_consumer_names() {
+        for target in vibe_wire::behaviour::release_manifest::SUPPORTED_DISTRIBUTION_TARGETS {
+            let (installer, platform) = kit_layout(target).unwrap();
+            let suffix = if target == "x86_64-pc-windows-msvc" {
+                ".exe"
+            } else {
+                ""
+            };
+            assert_eq!(installer, format!("vibe-installer-{target}{suffix}"));
+            assert_eq!(
+                platform,
+                if target.contains("windows") {
+                    "windows"
+                } else if target.contains("apple") {
+                    "macos"
+                } else {
+                    "linux"
+                }
+            );
+        }
+        assert_eq!(
+            kit_layout("x86_64-unknown-linux-gnu").unwrap(),
+            ("vibe-installer-x86_64-unknown-linux-gnu".into(), "linux")
+        );
+        assert!(kit_layout("riscv64-unknown-linux-gnu").is_err());
+    }
     #[test]
     fn error_details_keep_codes_not_private_values() {
         let text =

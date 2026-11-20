@@ -149,6 +149,32 @@ fn kit_recipe_schema_and_actual_reader_match_registered_corpus() {
             String::from_utf8_lossy(&out.stderr)
         );
     }
+    let template = include_str!("../../../formats/corpora/kit-recipe/e1/example.toml");
+    for target in vibe_wire::behaviour::release_manifest::SUPPORTED_DISTRIBUTION_TARGETS
+        .into_iter()
+        .chain(["riscv64-unknown-linux-gnu"])
+    {
+        let expected = target != "riscv64-unknown-linux-gnu";
+        let text = template.replace("x86_64-unknown-linux-gnu", target);
+        let data: toml::Value = toml::from_str(&text).unwrap();
+        assert_eq!(
+            validator.is_valid(&serde_json::to_value(data).unwrap()),
+            expected
+        );
+        fs::write(temp.path().join("vibe-kit.toml"), text).unwrap();
+        let out = command(
+            &user,
+            temp.path(),
+            &[
+                "kit",
+                "validate",
+                "--file",
+                "vibe-kit.toml",
+                "--structure-only",
+            ],
+        );
+        assert_eq!(out.status.success(), expected);
+    }
 }
 
 #[test]

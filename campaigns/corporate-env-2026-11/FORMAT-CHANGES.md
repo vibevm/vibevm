@@ -1,5 +1,11 @@
 # Corporate-env campaign: format and behaviour changes
 
+## CORP-FMT-060 — existing recipe v1 targets follow the distribution owner
+
+Implementation candidate, 2026-11-20. Recipe fields and meanings stay at schema_version1; `kit.target` admits the existing five `SUPPORTED_DISTRIBUTION_TARGETS` instead of only Linux GNU. Unknown targets refuse. Linux-host publication still uses the same0700/private-stage/no-replace owner; this is not native Windows/macOS producer support. The output names follow the selected consumer: Windows installer `.exe`, `profile-windows-auto.toml`; macOS `profile-macos-auto.toml`; Linux `profile-linux-auto.toml`. Distribution manifest/target/version/component/source verification remains the existing bootstrap owner. Installer bytes remain author-trusted/hash-pinned, never executed by the producer.
+
+Old Linux recipes retain meaning. The exact prior Linux-only CLI refuses a new foreign-target recipe during validate/build without publishing output: this is deliberate refusal, not new-to-old compatibility. No persisted record/index epoch, upgrade semantics or JSON report changes. Actual historical Windows x64/macOS Intel bundles qualify only Linux-host production of those subjects; other target runtime/native build/consume/upgrade and shipment claims remain unrun.
+
 ## CORP-FMT-059 — explicitly guarded newer full-distribution upgrade
 
 Unaccepted repair candidate, 2026-11-20. Native installer `--upgrade` requires explicit destination/no-path and is never implied by unattended. It reuses verified kit bytes and the existing full-distribution import/activation owner; ordinary self apply/rerun remain unchanged. `self import --expect-active SELECTOR --use --no-profile` admits only exact intact active instance plus strictly newer verified unpacked distribution, no force/downgrade/environment update. `--dry-run` requires guarded mode, opens an existing validation lock without create/recovery and refuses pending activation; no instance reservation. Existing JSON/import/current/which formats and state epochs unchanged. Post-apply active/payload validation precedes upgrade success. Old clients do not support the new explicit flags; no guessed release number or fallback on unknown flags. Previous native exit0-with-A failure retained; generic upgrade/parent/platform acceptance not inferred.
