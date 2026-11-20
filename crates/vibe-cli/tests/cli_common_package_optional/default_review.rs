@@ -4024,3 +4024,114 @@ fn guarded_leaf_update_removed_answer_and_ordinary_version_movement_remain_disti
         "1.1.0"
     );
 }
+
+#[test]
+fn weak_forwarding_declaring_parent_edge_four_worlds_and_strong_control() {
+    for world in [
+        "inactive",
+        "independent-root",
+        "activated-parent",
+        "mandatory-parent",
+    ] {
+        let f = exact_forward_fixture();
+        let driver = f.registry.join(GROUP).join(DRIVER).join("v1.0.0/vibe.toml");
+        let mut declaration = fs::read_to_string(&driver)
+            .unwrap()
+            .replace("strength = \"strong\"", "strength = \"weak\"");
+        if world == "activated-parent" {
+            declaration=declaration.replace("effects = [{ kind = \"forward\"", "effects = [{ kind = \"dependency\", target = \"org.vibevm/oracle-extra\" }, { kind = \"forward\"");
+        }
+        if world == "mandatory-parent" {
+            declaration = declaration.replace(
+                "version = \"=1.0.0\", optional = true",
+                "version = \"=1.0.0\"",
+            );
+        }
+        write(&driver, declaration);
+        if world == "independent-root" {
+            let request = f.project.join("vibe.toml");
+            write(&request,fs::read_to_string(&request).unwrap().replace("[[registry]]",&format!("[requires.packages.'{GROUP}/{EXTRA}']\nversion='=1.0.0'\nlink='static-transitive'\nconfiguration={{policy='require-selection',default_features=false}}\n[[registry]]")));
+        }
+        let consumer = Manifest::read(f.project.join("vibe.toml")).unwrap();
+        let parent = Manifest::read(&driver).unwrap();
+        let optional = parent.requires.optional.get(&coordinate(EXTRA)) == Some(&true);
+        assert_eq!(optional, world != "mandatory-parent");
+        assert_eq!(
+            consumer
+                .requires
+                .packages
+                .iter()
+                .any(|row| row.name.as_str() == EXTRA),
+            world == "independent-root"
+        );
+        let selected = parent
+            .configuration
+            .as_ref()
+            .unwrap()
+            .features
+            .iter()
+            .find(|feature| feature.id == "enabled")
+            .unwrap();
+        assert_eq!(selected.effects.iter().any(|effect|matches!(effect,vibe_core::manifest::ConfigurationEffect::Dependency{target} if target==&coordinate(EXTRA))),world=="activated-parent");
+        let before = super::workspace::semantic_snapshot(&f.project);
+        let source_before = preview_scratch_snapshot(&f.registry);
+        let out = f.install();
+        let diagnostic = format!(
+            "{}{}",
+            String::from_utf8_lossy(&out.stdout),
+            String::from_utf8_lossy(&out.stderr)
+        );
+        println!(
+            "weak world={world} status={} diagnostic={diagnostic}",
+            out.status
+        );
+        assert!(!out.status.success(), "{world}: {diagnostic}");
+        assert!(
+            diagnostic.contains("selected cross-package forwarding requires candidate-conditioned incoming consumers; only exact compulsory strong edges are connected"),
+            "{world}: {diagnostic}"
+        );
+        assert_eq!(
+            super::workspace::semantic_snapshot(&f.project),
+            before,
+            "{world}"
+        );
+        assert_eq!(
+            preview_scratch_snapshot(&f.registry),
+            source_before,
+            "{world}"
+        );
+        assert!(!f.project.join("vibe.lock").exists());
+        for name in [DRIVER, BASE, EXTRA] {
+            assert!(!f.slot(name).exists());
+        }
+        assert!(!f.project.join("effects.log").exists());
+        let infrastructure = preview_scratch_snapshot(&f.project.join(".vibe"));
+        println!(
+            "weak world={world} coordination paths={:?}",
+            infrastructure
+                .as_ref()
+                .map(|entries| entries.keys().collect::<Vec<_>>())
+        );
+    }
+    let f = exact_forward_fixture();
+    let request = fs::read(f.project.join("vibe.toml")).unwrap();
+    f.install_ok();
+    let lock = f.lock();
+    let parent = &lock.configurations[&coordinate(DRIVER)];
+    assert!(parent.active_dependencies.contains(&coordinate(EXTRA)));
+    let target = &lock.configurations[&coordinate(EXTRA)];
+    assert_eq!(target.forwarded_inputs.len(), 1);
+    assert_eq!(
+        target.selected_data(vibe_core::PackageKind::Flow).unwrap()["forwarded"],
+        vibe_core::manifest::ParameterValue::Bool(true)
+    );
+    assert!(f.slot(EXTRA).exists());
+    assert!(f.static_boot().contains(EXTRA_MARKER));
+    assert!(f.hooks().get(EXTRA).copied().unwrap_or(0) > 0);
+    let before = super::workspace::semantic_snapshot(&f.project);
+    let hooks = f.hooks();
+    f.install_ok();
+    assert_eq!(super::workspace::semantic_snapshot(&f.project), before);
+    assert_eq!(f.hooks(), hooks);
+    assert_eq!(fs::read(f.project.join("vibe.toml")).unwrap(), request);
+}
