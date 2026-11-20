@@ -465,3 +465,61 @@ fn named_profile_explicit_boolean_actual_consumers_agree_or_refuse_atomically() 
         }
     }
 }
+
+#[test]
+fn selected_profile_preset_actual_consumers_merge_effective_not_authored_values() {
+    for answer in [None, Some(true), Some(false)] {
+        let f = workspace_fixture();
+        let source = f.registry.join(GROUP).join(DRIVER).join("v1.0.0/vibe.toml");
+        write(
+            &source,
+            fs::read_to_string(&source).unwrap()
+                + "\n[[configuration.parameters]]\nid='verbose'\nname='Verbose'\ntype='bool'\nrequired=true\n[[configuration.profiles]]\nid='both'\nname='Both'\nselections.components={intent='additive',members=['alpha','beta']}\nparameters.verbose=true\n",
+        );
+        for member in ["left", "right"] {
+            let path = f.project.join(member).join("vibe.toml");
+            let parameters = if member == "right" {
+                answer
+                    .map(|value| format!(",parameters={{verbose={value}}}"))
+                    .unwrap_or_default()
+            } else {
+                String::new()
+            };
+            write(
+                &path,
+                format!(
+                    "[project]\nname='{member}'\nversion='0.1.0'\n[requires.packages.'{GROUP}/{DRIVER}']\nversion='^1'\nlink='static-transitive'\nconfiguration={{policy='require-selection',default_features=false,profile='both'{parameters}}}\n"
+                ),
+            );
+        }
+        let originals = authored_consumers(&f);
+        let before = semantic_snapshot(&f.project);
+        let out = f.install();
+        if answer == Some(false) {
+            assert!(!out.status.success());
+            assert!(
+                String::from_utf8_lossy(&out.stderr)
+                    .contains("conflicting effective public boolean parameter")
+            );
+            assert_eq!(semantic_snapshot(&f.project), before);
+        } else {
+            assert!(
+                out.status.success(),
+                "{}",
+                String::from_utf8_lossy(&out.stderr)
+            );
+            let lock = f.lock();
+            let record = &lock.configurations[&coordinate(DRIVER)];
+            assert_eq!(record.consumers, originals);
+            assert_eq!(
+                record
+                    .selected_parameters(vibe_core::PackageKind::Flow)
+                    .unwrap()["verbose"],
+                vibe_core::manifest::ParameterValue::Bool(true)
+            );
+            let before = semantic_snapshot(&f.project);
+            f.install_ok();
+            assert_eq!(semantic_snapshot(&f.project), before);
+        }
+    }
+}

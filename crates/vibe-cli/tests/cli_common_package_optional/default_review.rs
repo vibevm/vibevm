@@ -2467,7 +2467,7 @@ fn profile_boolean_old_reader_writer_and_profile_drift_refuse_unchanged() {
 }
 #[test]
 fn profile_boolean_unknown_wrong_type_preset_and_default_refuse_before_effects() {
-    for mutation in ["unknown", "wrong-type", "preset", "default", "private"] {
+    for mutation in ["unknown", "wrong-type", "default", "private"] {
         let f = profile_boolean_fixture();
         let source = f.registry.join(GROUP).join(DRIVER).join("v1.0.0/vibe.toml");
         let request = f.project.join("vibe.toml");
@@ -2483,10 +2483,6 @@ fn profile_boolean_unknown_wrong_type_preset_and_default_refuse_before_effects()
                 fs::read_to_string(&request)
                     .unwrap()
                     .replace("verbose=false", "verbose='wrong'"),
-            ),
-            "preset" => write(
-                &source,
-                fs::read_to_string(&source).unwrap() + "parameters.verbose=true\n",
             ),
             "default" => write(
                 &source,
@@ -2544,18 +2540,6 @@ fn profile_boolean_preset_omitted_equal_opposite_and_explicit_control_are_separa
         );
         let authored = fs::read(&request).unwrap();
         let source_bytes = fs::read(&source).unwrap();
-        let boot_before: Vec<_> = [common::static_md_rel(), common::static_xml_rel()]
-            .into_iter()
-            .map(|p| {
-                let path = f.project.join(p);
-                let before = if path.exists() {
-                    Some(fs::read(&path).unwrap())
-                } else {
-                    None
-                };
-                (path, before)
-            })
-            .collect();
         let package = Manifest::read(&source).unwrap();
         let consumer = Manifest::read(&request).unwrap();
         let definition = package.configuration.as_ref().unwrap();
@@ -2576,25 +2560,7 @@ fn profile_boolean_preset_omitted_equal_opposite_and_explicit_control_are_separa
             String::from_utf8_lossy(&out.stdout),
             String::from_utf8_lossy(&out.stderr)
         );
-        if preset {
-            assert!(!out.status.success());
-            assert!(diagnostic.contains("only explicitly supplied required public bool parameters without defaults are connected"),"{diagnostic}");
-            assert!(!f.project.join("vibe.lock").exists());
-            for name in [DRIVER, BASE, EXTRA] {
-                assert!(!f.slot(name).exists());
-            }
-            assert!(!f.project.join("effects.log").exists());
-            for (path, before) in boot_before {
-                assert_eq!(
-                    if path.exists() {
-                        Some(fs::read(path).unwrap())
-                    } else {
-                        None
-                    },
-                    before
-                );
-            }
-        } else {
+        {
             assert!(out.status.success(), "{diagnostic}");
             let lock = f.lock();
             let record = &lock.configurations[&coordinate(DRIVER)];
@@ -2615,7 +2581,10 @@ fn profile_boolean_preset_omitted_equal_opposite_and_explicit_control_are_separa
                 .unwrap();
             assert!(show.status.success());
             let report: serde_json::Value = serde_json::from_slice(&show.stdout).unwrap();
-            assert_eq!(report["packages"][0]["parameters"]["verbose"], false);
+            assert_eq!(
+                report["packages"][0]["parameters"]["verbose"],
+                answer.unwrap_or(true)
+            );
             let before = fs::read(f.project.join("vibe.lock")).unwrap();
             let boot = f.static_boot();
             let hooks = f.hooks();
@@ -2627,4 +2596,135 @@ fn profile_boolean_preset_omitted_equal_opposite_and_explicit_control_are_separa
         assert_eq!(fs::read(&request).unwrap(), authored);
         assert_eq!(fs::read(&source).unwrap(), source_bytes);
     }
+}
+
+#[test]
+fn profile_preset_false_override_old_clients_and_update_drift_are_lossless() {
+    for answer in [None, Some(false), Some(true)] {
+        let f = profile_boolean_fixture();
+        let source = f.registry.join(GROUP).join(DRIVER).join("v1.0.0/vibe.toml");
+        write(
+            &source,
+            fs::read_to_string(&source).unwrap() + "parameters.verbose=false\n",
+        );
+        let request = f.project.join("vibe.toml");
+        let text = fs::read_to_string(&request).unwrap();
+        write(
+            &request,
+            match answer {
+                None => text.replace(",parameters={verbose=false}", ""),
+                Some(value) => text.replace("verbose=false", &format!("verbose={value}")),
+            },
+        );
+        f.install_ok();
+        let before = fs::read(f.project.join("vibe.lock")).unwrap();
+        let boot = f.static_boot();
+        let hooks = f.hooks();
+        let slot = fs::read(f.slot(DRIVER).join("vibe.toml")).unwrap();
+        let lock = f.lock();
+        let record = &lock.configurations[&coordinate(DRIVER)];
+        assert_eq!(
+            record
+                .consumers
+                .values()
+                .next()
+                .unwrap()
+                .parameters
+                .contains_key("verbose"),
+            answer.is_some()
+        );
+        assert_eq!(
+            record
+                .selected_parameters(vibe_core::PackageKind::Flow)
+                .unwrap()["verbose"],
+            vibe_core::manifest::ParameterValue::Bool(answer.unwrap_or(false))
+        );
+        if let Some(old) = std::env::var_os("NST_PRESET_OLD_CLI") {
+            for args in [
+                vec![
+                    "show",
+                    "features",
+                    "--path",
+                    f.project.to_str().unwrap(),
+                    "--json",
+                ],
+                vec![
+                    "install",
+                    "--path",
+                    f.project.to_str().unwrap(),
+                    "--offline",
+                    "--assume-yes",
+                    "--json",
+                ],
+            ] {
+                let out = std::process::Command::new(&old)
+                    .env_clear()
+                    .env("HOME", f.root.join("home"))
+                    .env("VIBE_SETTINGS", &f.user.settings)
+                    .env("PATH", "/usr/bin:/bin")
+                    .args(args)
+                    .output()
+                    .unwrap();
+                assert!(!out.status.success());
+                assert_eq!(fs::read(f.project.join("vibe.lock")).unwrap(), before);
+                assert_eq!(fs::read(f.slot(DRIVER).join("vibe.toml")).unwrap(), slot);
+                assert_eq!(f.static_boot(), boot);
+                assert_eq!(f.hooks(), hooks);
+            }
+        }
+        f.install_ok();
+        assert_eq!(fs::read(f.project.join("vibe.lock")).unwrap(), before);
+        assert_eq!(f.static_boot(), boot);
+        assert_eq!(f.hooks(), hooks);
+        let new = f.registry.join(GROUP).join(DRIVER).join("v1.1.0");
+        write(
+            &new.join("vibe.toml"),
+            fs::read_to_string(&source)
+                .unwrap()
+                .replace("version='1.0.0'", "version='1.1.0'")
+                .replace("parameters.verbose=false", "parameters.verbose=true"),
+        );
+        write(
+            &new.join("boot/rules.md"),
+            fs::read(source.parent().unwrap().join("boot/rules.md")).unwrap(),
+        );
+        assert!(!update(&f).status.success());
+        assert_eq!(fs::read(f.project.join("vibe.lock")).unwrap(), before);
+        assert_eq!(fs::read(f.slot(DRIVER).join("vibe.toml")).unwrap(), slot);
+        assert_eq!(f.static_boot(), boot);
+        assert_eq!(f.hooks(), hooks);
+    }
+}
+#[test]
+fn unselected_profile_preset_cannot_supply_missing_required_boolean() {
+    let f = profile_boolean_fixture();
+    let source = f.registry.join(GROUP).join(DRIVER).join("v1.0.0/vibe.toml");
+    write(
+        &source,
+        fs::read_to_string(&source).unwrap()
+            + "\n[[configuration.profiles]]\nid='other'\nname='Other'\nparameters.verbose=true\n",
+    );
+    let request = f.project.join("vibe.toml");
+    write(
+        &request,
+        fs::read_to_string(&request)
+            .unwrap()
+            .replace(",parameters={verbose=false}", ""),
+    );
+    let before = fs::read(&request).unwrap();
+    let out = f.install();
+    assert!(!out.status.success());
+    assert!(
+        String::from_utf8_lossy(&out.stderr)
+            .contains("missing required public parameter `verbose`")
+    );
+    assert!(!f.project.join("vibe.lock").exists());
+    for name in [BASE, DRIVER, EXTRA] {
+        assert!(!f.slot(name).exists());
+    }
+    for relative in [common::static_md_rel(), common::static_xml_rel()] {
+        assert!(!f.project.join(relative).exists());
+    }
+    assert!(!f.project.join("effects.log").exists());
+    assert_eq!(fs::read(&request).unwrap(), before);
 }

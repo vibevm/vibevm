@@ -241,13 +241,15 @@ impl PackageConfiguration {
                                 .profiles
                                 .iter()
                                 .find(|profile| Some(&profile.id) == input.profile.as_ref())
-                                .is_none_or(|profile| !profile.parameters.is_empty())))
+                                .is_none_or(|profile| {
+                                    profile.parameters.keys().any(|id| id != &parameter.id)
+                                })))
                 {
                     return Err(unsupported(
                         "only explicitly supplied required public bool parameters without defaults are connected",
                     ));
                 }
-                let Some(crate::manifest::ParameterValue::Bool(value)) = input
+                let Some(crate::manifest::ParameterValue::Bool(value)) = normalized
                     .parameters
                     .get(&parameter.id)
                     .or(parameter.default.as_ref())
@@ -270,7 +272,11 @@ impl PackageConfiguration {
                         consumers: consumers.keys().cloned().collect(),
                         reason: format!(
                             "conflicting {}public boolean parameter `{}`",
-                            if parameter.default.is_none() {
+                            if parameter.default.is_none()
+                                && consumers
+                                    .values()
+                                    .all(|input| input.parameters.contains_key(&parameter.id))
+                            {
                                 "explicit "
                             } else {
                                 "effective "
@@ -535,7 +541,13 @@ impl PackageConfiguration {
                     package: "retained package".into(),
                 }
             })?;
-            let value = consumer
+            let normalized = self
+                .definition
+                .normalize_input(consumer, "retained package consumer")
+                .map_err(|_| PackageConfigurationError::ReplayMismatch {
+                    package: "retained package".into(),
+                })?;
+            let value = normalized
                 .parameters
                 .get(&parameter.id)
                 .or(parameter.default.as_ref())

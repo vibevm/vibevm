@@ -913,3 +913,9 @@ No optional/private/path/profile or forwarding parameter expansion. Existing con
 Approved bounded NST-PACKAGE-PROFILE-BOOLEAN-FIRST-01, implementation candidate 2026-11-20. An explicitly named parameterless profile may choose features while the same actual consumer explicitly supplies one required public bool without default. Retain original profile ID, original parameter map and original empty selections where authored; no profile parameter preset, automatic basis surrogate or flattened answer. Existing lock definition/consumer input is sufficient, conditional on actual prior reader+writer refusal unchanged. No new field or epoch.
 
 Profile bool defaults/private input/presets/forwarding remain refused; missing/wrong-type/unknown/conflicting inputs refuse before all slots including mandatory base, generated boot and hooks. Existing historical profile/parameter update guards remain unchanged; semantic drift is not automatically renewed.
+
+## FMT-085 — selected profile public boolean preset
+
+Approved bounded NST-PACKAGE-PROFILE-PRESET-FIRST-01, implementation candidate 2026-11-20. One required public bool without declaration default may be supplied by the explicitly selected profile. Existing normalization applies selected preset then explicit consumer override, including false; effective admission, agreement and projection consume that same normalized map. Original profile and consumer omission/equal/opposite explicit maps remain independent of the resulting value. An unselected profile supplies nothing.
+
+Retained definition and original input remain the lossless representation; no new field/epoch unless actual prior reader/writer behavior demands it. Changed profile meaning still refuses update before effects; no renewal consent or parameter forwarding/private/default expansion. Actual old readers/installers and full regression must qualify acceptance; historical refusal receipts remain historical.
