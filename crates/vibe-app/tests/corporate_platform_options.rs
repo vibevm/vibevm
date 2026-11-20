@@ -96,10 +96,7 @@ fn codex_and_qwen_exact_macos_options_preserve_linux_and_refuse_cross_target_ids
         ),
     ] {
         let manifest = Manifest::parse_str(text).unwrap();
-        assert_eq!(
-            manifest.installer_options.len(),
-            if name == "qwen" { 2 } else { 3 }
-        );
+        assert_eq!(manifest.installer_options.len(), 3);
         let choice = InstallChoice {
             platform: Some("macos".into()),
             arch: Some("aarch64".into()),
@@ -219,4 +216,39 @@ fn windows_pi_codex_options_use_actual_pe_layout() {
             assert!(select_option(&manifest.installer_options, &invalid, None).is_err());
         }
     }
+}
+
+#[test]
+fn qwen_windows_uses_existing_archive_copy_and_owned_bootstrap_not_shell() {
+    use vibe_core::manifest::StepKind;
+    let manifest = Manifest::parse_str(include_str!(
+        "../../../vibevm/vibepacks/org.vibevm.agents/qwen/v0.28.0/vibe.toml"
+    ))
+    .unwrap();
+    let selected = select_option(
+        &manifest.installer_options,
+        &InstallChoice {
+            platform: Some("windows".into()),
+            arch: Some("x86_64".into()),
+            installer: None,
+        },
+        None,
+    )
+    .unwrap();
+    assert_eq!(selected.id, "windows-x64-standalone");
+    assert!(selected.installation.is_none());
+    assert!(selected.result.as_ref().unwrap().is_owned());
+    assert_eq!(selected.steps.len(), 2);
+    assert!(
+        matches!(&selected.steps[0].kind, StepKind::Archive { sha256, payload_root: Some(root), size: Some(74339211), .. } if sha256 == "9a758331884870e1d6073cc24f5a2545543127df0b6fb91db6a2e8a97bfd25ed" && root == std::path::Path::new("qwen-code"))
+    );
+    assert!(
+        matches!(&selected.steps[1].kind, StepKind::Copy { from, to } if from == std::path::Path::new("qwen-standalone-bootstrap.cjs") && to == "vibe-qwen-standalone.cjs")
+    );
+    assert_eq!(selected.launchers[0].executable, "$app_root/node/node.exe");
+    assert_eq!(
+        selected.launchers[0].args,
+        ["$app_root/vibe-qwen-standalone.cjs"]
+    );
+    assert_eq!(selected.public_commands[0].name, "qwen");
 }
