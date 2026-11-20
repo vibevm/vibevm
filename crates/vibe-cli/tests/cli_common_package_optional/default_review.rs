@@ -8807,3 +8807,139 @@ fn guarded_defaults_gate_only_on_off_on_and_combined_drift_refusal() {
         );
     }
 }
+
+#[test]
+fn implicit_feature_default_originals_kernel_and_public_install_boundary() {
+    for world in ["omitted", "true", "false", "explicit-addition"] {
+        let f = Fixture::new(false);
+        let source = f.registry.join(GROUP).join(DRIVER).join("v1.0.0/vibe.toml");
+        write(
+            &source,
+            package_header(DRIVER)
+                + "\n[requires.packages]\n'org.vibevm/oracle-base'='=1.0.0'\n'org.vibevm/oracle-extra'={version='=1.0.0',optional=true}\n[[configuration.features]]\nid='enabled'\nname='Implicit default feature'\ndefault=true\neffects=[{kind='dependency',target='org.vibevm/oracle-extra'}]\n",
+        );
+        let input = match world {
+            "omitted" => "policy='require-selection'",
+            "true" => "policy='require-selection',default_features=true",
+            "false" => "policy='require-selection',default_features=false",
+            _ => "policy='require-selection',default_features=false,features=['enabled']",
+        };
+        write(
+            &f.project.join("vibe.toml"),
+            format!(
+                "[project]\nname='implicit-default-qualification'\nversion='0.1.0'\n[requires.packages.'{GROUP}/{DRIVER}']\nversion='=1.0.0'\nlink='static-transitive'\nconfiguration={{{input}}}\n[[registry]]\nname='fixture'\nurl='file://{}'\n",
+                f.registry.display()
+            ),
+        );
+        let actual_source = Manifest::read(&source).unwrap();
+        let original = Manifest::read(f.project.join("vibe.toml"))
+            .unwrap()
+            .requires
+            .configurations[&coordinate(DRIVER)]
+            .clone();
+        let definition = actual_source.configuration.as_ref().unwrap();
+        assert!(definition.groups.is_empty() && definition.profiles.is_empty());
+        assert_eq!(
+            original.default_features,
+            matches!(world, "omitted" | "true")
+        );
+        let normalized = definition
+            .normalize_input(&original, "./vibe.toml")
+            .unwrap();
+        let evaluation = definition
+            .compile_choices()
+            .unwrap()
+            .evaluate(&normalized.features, &[normalized.choices]);
+        let vibe_core::configuration::ChoiceOutcome::Resolved { features } = evaluation.outcome
+        else {
+            panic!("feature kernel must resolve")
+        };
+        let extra = world != "false";
+        assert_eq!(features.selected.contains(&"enabled".into()), extra);
+        assert!(
+            evaluation.defaults.is_empty(),
+            "feature default is not a choice DefaultUse"
+        );
+        let before = super::workspace::semantic_snapshot(&f.project);
+        let output = f.install();
+        let diagnostic = String::from_utf8_lossy(&output.stdout).to_string()
+            + &String::from_utf8_lossy(&output.stderr);
+        let accepted = matches!(world, "false" | "explicit-addition");
+        println!(
+            "implicit-feature world={world} kernel-extra={extra} accepted={} diagnostic={diagnostic}",
+            output.status.success()
+        );
+        assert_eq!(output.status.success(), accepted, "{world}: {diagnostic}");
+        if !accepted {
+            assert!(
+                diagnostic.contains("automatic/default/profile basis is not connected"),
+                "{diagnostic}"
+            );
+            assert_eq!(super::workspace::semantic_snapshot(&f.project), before);
+            assert!(!f.project.join("vibe.lock").exists());
+            assert!(!f.project.join("effects.log").exists());
+            assert!(!f.slot(DRIVER).exists() && !f.slot(EXTRA).exists());
+            continue;
+        }
+        let lock = f.lock();
+        let record = &lock.configurations[&coordinate(DRIVER)];
+        assert_eq!(record.consumers["./vibe.toml"], original);
+        assert!(record.automatic_basis.is_none());
+        assert_eq!(lock.meta.schema_version, 8);
+        assert_eq!(record.features.contains(&"enabled".into()), extra);
+        assert_eq!(
+            lock.packages.iter().any(|p| p.name.as_str() == EXTRA),
+            extra
+        );
+        assert_eq!(f.slot(EXTRA).exists(), extra);
+        assert_eq!(f.static_boot().contains(EXTRA_MARKER), extra);
+        assert_eq!(
+            f.hooks().get(EXTRA).copied().unwrap_or(0),
+            usize::from(extra)
+        );
+        assert_eq!(f.hooks().get(BASE).copied(), Some(1));
+        let row = lock
+            .packages
+            .iter()
+            .find(|p| p.name.as_str() == DRIVER)
+            .unwrap();
+        assert_eq!(row.registry.as_deref(), Some("fixture"));
+        assert_eq!(
+            row.content_hash.as_str(),
+            vibe_registry::compute_content_hash(source.parent().unwrap()).unwrap()
+        );
+        assert!(row.source_url.as_str().starts_with("file://"));
+        let shown = f
+            .user
+            .vibe()
+            .args([
+                "show",
+                "features",
+                "--path",
+                f.project.to_str().unwrap(),
+                "--json",
+            ])
+            .output()
+            .unwrap();
+        assert!(shown.status.success());
+        let shown: serde_json::Value = serde_json::from_slice(&shown.stdout).unwrap();
+        let packages = shown["packages"].as_array().unwrap();
+        let shown = packages.iter().find(|p| p["package"] == coordinate(DRIVER));
+        // Existing show features omits packages whose effective set is empty.
+        assert_eq!(
+            shown.is_some_and(|p| p["features"]
+                .as_array()
+                .unwrap()
+                .iter()
+                .any(|v| v == "enabled")),
+            extra
+        );
+        let before = super::workspace::semantic_snapshot(&f.project);
+        f.install_ok();
+        assert_eq!(
+            super::workspace::semantic_snapshot(&f.project),
+            before,
+            "cold {world}"
+        );
+    }
+}
