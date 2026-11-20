@@ -13,6 +13,7 @@ members = [
     "crates/vibe-app",
     "crates/vibe-settings",
     "crates/vibe-secrets",
+    "crates/vibe-connections",
     "crates/vibe-cli",
     "crates/vibe-core",
     "crates/vibe-doc",
@@ -55,6 +56,7 @@ default-members = [
     "crates/vibe-app",
     "crates/vibe-settings",
     "crates/vibe-secrets",
+    "crates/vibe-connections",
     "crates/vibe-cli",
     "crates/vibe-core",
     "crates/vibe-doc",
@@ -113,6 +115,7 @@ vibe-agent-projection = { path = "crates/vibe-agent-projection", version = "1.0.
 vibe-app = { path = "crates/vibe-app", version = "1.0.11" }
 vibe-settings = { path = "crates/vibe-settings", version = "1.0.11" }
 vibe-secrets = { path = "crates/vibe-secrets", version = "1.0.12" }
+vibe-connections = { path = "crates/vibe-connections", version = "1.0.12" }
 vibe-core = { path = "crates/vibe-core", version = "1.0.11" }
 # The PROP-057 documentation pipeline: the example runner and the
 # `derived` generators every documentation surface projects.

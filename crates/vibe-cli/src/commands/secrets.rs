@@ -10,23 +10,7 @@ use vibe_core::cancellation::CancellationToken;
 use vibe_secrets::{Expected, MetadataSnapshot, ProtectedValue, SecretId, Store};
 
 pub fn run(ctx: &output::Context, args: SecretsArgs, cancel: &CancellationToken) -> Result<()> {
-    let settings = vibe_core::user_project::selected_settings(vibe_core::settings::settings_dir())
-        .map_err(|_| anyhow::anyhow!("an absolute effective user settings root is required"))?;
-    for component in settings.components() {
-        match component {
-            std::path::Component::ParentDir | std::path::Component::CurDir => {
-                bail!("ambiguous settings root is unavailable")
-            }
-            std::path::Component::Normal(name)
-                if !name
-                    .to_str()
-                    .is_some_and(|s| vibe_safefs::ensure_safe_component(s).is_ok()) =>
-            {
-                bail!("unsupported settings root")
-            }
-            _ => {}
-        }
-    }
+    let settings = admitted_settings()?;
     let store = Store::at_settings(&settings)?;
     cancel.checkpoint()?;
     match args.command {
@@ -245,4 +229,25 @@ fn interactive(ctx: &output::Context, store: &Store, cancel: &CancellationToken)
             _ => unreachable!(),
         }
     }
+}
+
+pub(crate) fn admitted_settings() -> Result<std::path::PathBuf> {
+    let settings = vibe_core::user_project::selected_settings(vibe_core::settings::settings_dir())
+        .map_err(|_| anyhow::anyhow!("an absolute effective user settings root is required"))?;
+    for component in settings.components() {
+        match component {
+            std::path::Component::ParentDir | std::path::Component::CurDir => {
+                bail!("ambiguous settings root is unavailable")
+            }
+            std::path::Component::Normal(name)
+                if !name
+                    .to_str()
+                    .is_some_and(|s| vibe_safefs::ensure_safe_component(s).is_ok()) =>
+            {
+                bail!("unsupported settings root")
+            }
+            _ => {}
+        }
+    }
+    Ok(settings)
 }

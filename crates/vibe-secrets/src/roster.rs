@@ -26,7 +26,7 @@ fn safe_id(id: &str) -> bool {
 struct Inventory<'a>(&'a Store);
 struct Guard {
     _inventory: vibe_safefs::LockGuard,
-    participants: Vec<String>,
+    references: BTreeMap<SecretId, Vec<String>>,
 }
 impl ReferenceInventory for Inventory<'_> {
     fn acquire(&self) -> Result<Box<dyn ReferenceGuard + '_>, Error> {
@@ -42,24 +42,36 @@ impl ReferenceInventory for Inventory<'_> {
             return Err(Error::RefusedUnknown);
         }
         let participants = index.participants.ok_or(Error::RefusedUnknown)?;
-        // There are no admitted production consumer owners yet. A future owner
-        // must be implemented here before its durable participant can be read.
-        if !participants.is_empty() {
-            return Err(Error::RefusedUnknown);
+        let mut references: BTreeMap<SecretId, Vec<String>> = BTreeMap::new();
+        for participant in participants {
+            if participant != "ai" {
+                return Err(Error::RefusedUnknown);
+            }
+            let dir = root
+                .private_child("ai", false)
+                .map_err(|_| Error::RefusedUnknown)?
+                .ok_or(Error::RefusedUnknown)?;
+            let snapshot = crate::references::read(&dir)?;
+            for (connection, row) in snapshot.index.items {
+                if !index.items.contains_key(&row.secret_ref) {
+                    return Err(Error::RefusedUnknown);
+                }
+                references
+                    .entry(row.secret_ref)
+                    .or_default()
+                    .push(format!("ai:{}", connection.as_str()));
+            }
         }
         drop(lock);
         Ok(Box::new(Guard {
             _inventory: inventory,
-            participants,
+            references,
         }))
     }
 }
 impl ReferenceGuard for Guard {
-    fn consumers(&self, _: &SecretId) -> Result<Vec<String>, Error> {
-        if !self.participants.is_empty() {
-            return Err(Error::RefusedUnknown);
-        }
-        Ok(Vec::new())
+    fn consumers(&self, id: &SecretId) -> Result<Vec<String>, Error> {
+        Ok(self.references.get(id).cloned().unwrap_or_default())
     }
 }
 impl Store {

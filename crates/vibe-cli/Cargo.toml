@@ -26,6 +26,7 @@ features = ["rfd/xdg-portal"]
 vibe-bootstrap.workspace = true
 vibe-safefs.workspace = true
 vibe-secrets.workspace = true
+vibe-connections.workspace = true
 specmark.workspace = true
 # User applications (PROP-059): install, launch, storage libraries.
 vibe-app.workspace = true

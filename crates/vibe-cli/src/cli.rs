@@ -13,6 +13,8 @@ use std::path::PathBuf;
 
 use clap::{CommandFactory, FromArgMatches, Parser, Subcommand};
 
+mod ai;
+pub use ai::*;
 mod agent;
 mod agentic;
 mod aiui;

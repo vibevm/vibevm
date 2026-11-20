@@ -366,6 +366,7 @@ fn run() -> ExitCode {
             Command::Select(args) => commands::select::run(&ctx, args),
             Command::Specmap(args) => commands::specmap::run(&ctx, args),
             Command::Show(args) => commands::show::run(&ctx, args, cli.offline),
+            Command::Ai(args) => commands::ai::run(&ctx, args, &cancellation),
             Command::Secrets(args) => commands::secrets::run(&ctx, args, &cancellation),
             Command::Prefs(args) => commands::prefs::run(&ctx, args),
             Command::Tree(args) => commands::tree::run(&ctx, args),

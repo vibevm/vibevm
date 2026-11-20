@@ -27,6 +27,7 @@ pub(crate) fn resolve_project_root(path: &Path) -> Result<PathBuf> {
 
 pub mod agent;
 pub mod agentic;
+pub mod ai;
 pub mod aiui;
 pub mod app;
 pub mod artifacts;

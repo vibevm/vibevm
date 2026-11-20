@@ -1,0 +1,22 @@
+[package]
+name = "vibe-connections"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+authors.workspace = true
+license-file.workspace = true
+publish.workspace = true
+repository.workspace = true
+homepage.workspace = true
+description = "Reference-only local AI connection metadata"
+
+[dependencies]
+vibe-secrets.workspace = true
+serde.workspace = true
+toml.workspace = true
+url.workspace = true
+specmark.workspace = true
+thiserror.workspace = true
+
+[dev-dependencies]
+tempfile.workspace = true

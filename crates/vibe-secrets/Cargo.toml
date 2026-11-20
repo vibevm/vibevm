@@ -13,6 +13,7 @@ description = "Explicit user-private local secret revisions and redacted metadat
 [dependencies]
 getrandom.workspace = true
 serde.workspace = true
+sha2.workspace = true
 toml.workspace = true
 thiserror.workspace = true
 specmark.workspace = true
