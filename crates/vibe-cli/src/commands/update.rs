@@ -37,6 +37,7 @@ mod draft;
 mod inputs;
 pub(crate) mod lifecycle;
 mod prepare;
+pub(crate) mod review;
 mod scoped;
 mod whole;
 
@@ -101,6 +102,13 @@ pub fn run(
             all::AllRoute::Whole => None,
         }
     };
+    if execution.args.package_configuration_review.is_some()
+        && !matches!(&roots, Some(all::Roots::All(_)))
+    {
+        anyhow::bail!(
+            "package configuration review response requires an ordinary configured whole-workspace update"
+        );
+    }
     let exit = match roots {
         Some(roots) => {
             // The whole path's install core discards its own failed run's

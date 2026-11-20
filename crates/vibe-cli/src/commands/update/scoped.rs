@@ -58,7 +58,7 @@ use crate::output;
 use super::Execution;
 use super::all::Roots;
 use super::draft::{UpdateDraft, UpdateIdentity};
-use super::inputs::{install_args_from, load_lockfile};
+use super::inputs::install_args_from;
 
 use measured::Measured;
 use roots::{qualify_roots, source_only_roots};
@@ -66,7 +66,7 @@ use stage::{PendingInPlace, Stage, stage};
 
 /// One re-resolved package: what was fetched, what it requires, and — for an
 /// in-place node — whether the fetch really advanced the working tree.
-type Resolved = (
+pub(super) type Resolved = (
     CachedPackage,
     Vec<PackageRef>,
     Option<bool>,
@@ -189,7 +189,11 @@ fn run(
             &manifest,
         )?;
     }
-    let mut lockfile = load_lockfile(&workspace.root)?;
+    if args.package_configuration_review.is_some() && !configured_all {
+        bail!("package configuration review response is inapplicable to this update route");
+    }
+    let prior_lock_bytes = std::fs::read(workspace.root.join(Lockfile::FILENAME))?;
+    let mut lockfile = super::inputs::captured_lockfile(&prior_lock_bytes)?;
     // PROP-050 ##VERIFY-LOCK-DIFF — the scoped update's own pre-apply
     // snapshot: the lock as loaded (before the entry replacements below
     // mutate it in place) and the boot lanes' byte sizes. Diffed against
@@ -288,6 +292,7 @@ fn run(
                 inputs,
                 lockfile.configurations.clone(),
             )
+            .for_review_preview()
         }),
     };
 
@@ -314,23 +319,6 @@ fn run(
                 return Err(error);
             }
         };
-
-    if configured_all {
-        let previous: std::collections::BTreeSet<_> = old_lock
-            .packages
-            .iter()
-            .map(|row| (row.group.clone(), row.name.to_string()))
-            .collect();
-        let selected: std::collections::BTreeSet<_> = graph
-            .iter()
-            .map(|row| (row.group.clone(), row.name.clone()))
-            .collect();
-        if previous != selected {
-            bail!(
-                "configured whole-workspace update requires explicit graph membership reconciliation before effects"
-            );
-        }
-    }
 
     // Fetched payload lands in the machine-global store (PROP-010
     // §2.7) — no project cache directory exists to create.
@@ -406,6 +394,36 @@ fn run(
         fetching.set_progress((index + 1) as u64, Some(graph_len as u64), "packages");
     }
     fetching.finish();
+    if configured_all {
+        super::review::gate(
+            original_inputs
+                .as_ref()
+                .ok_or_else(|| anyhow::anyhow!("missing governed input snapshot"))?,
+            &workspace.root,
+            &project_root,
+            &prior_lock_bytes,
+            &old_lock,
+            &updated,
+            args.package_configuration_review.as_deref(),
+        )?;
+    }
+    if configured_all {
+        let previous: std::collections::BTreeSet<_> = old_lock
+            .packages
+            .iter()
+            .map(|row| (row.group.clone(), row.name.to_string()))
+            .collect();
+        let selected: std::collections::BTreeSet<_> = graph
+            .iter()
+            .map(|row| (row.group.clone(), row.name.clone()))
+            .collect();
+        if previous != selected {
+            bail!(
+                "configured whole-workspace update requires explicit graph membership reconciliation before effects"
+            );
+        }
+    }
+
     // Every package this run re-resolved, counted before anything is consumed:
     // a failure draft must be able to say how big the run was even when the
     // set itself was moved into the staging below.

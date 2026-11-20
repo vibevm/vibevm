@@ -135,3 +135,7 @@ fn affected_uninstall_refuses_but_unrelated_legacy_root_removal_preserves_config
     assert_eq!(fixture.lock().configurations, configuration);
     assert_eq!(fixture.hooks(), hooks);
 }
+
+pub(super) fn add_root_for_review(fixture: &Fixture, name: &str) {
+    add_root(fixture, name, Some(false));
+}

@@ -102,7 +102,7 @@ fn changed_relied_on_default_refuses_update_before_effects() {
     );
     assert!(!result.status.success(), "{diagnostic}");
     assert!(
-        diagnostic.contains("retained configuration"),
+        diagnostic.contains("package configuration review"),
         "{diagnostic}"
     );
     assert_eq!(fs::read(fixture.project.join("vibe.lock")).unwrap(), before);
@@ -287,7 +287,7 @@ fn explicit_unchanged_input_cannot_leave_unreachable_old_dependency_on_update() 
 }
 
 #[test]
-fn changed_default_response_is_only_a_refusal_not_a_completable_review() {
+fn changed_default_response_shows_exact_review_subject_without_implicit_acceptance() {
     let fixture = Fixture::new(false);
     configure(&fixture, false);
     fixture.install_ok();
@@ -315,13 +315,14 @@ fn changed_default_response_is_only_a_refusal_not_a_completable_review() {
     );
     let error: serde_json::Value = serde_json::from_slice(&result.stderr).unwrap();
     assert_eq!(error["ok"], false);
-    assert!(
-        error["error"]
-            .as_str()
-            .unwrap()
-            .contains("retained configuration")
+    assert_eq!(error["code"], "package_configuration_review_required");
+    assert_eq!(error["proposal"]["from_member"], "disabled");
+    assert_eq!(error["proposal"]["to_member"], "enabled");
+    assert_eq!(error["proposal"]["group"], "extra");
+    assert_eq!(
+        error["proposal"]["added_dependencies"],
+        serde_json::json!([coordinate(EXTRA)])
     );
-    assert!(error.get("proposal").is_none());
     assert!(error.get("expected_definition").is_none());
     assert_eq!(fs::read(fixture.project.join("vibe.lock")).unwrap(), before);
     assert_eq!(fixture.static_boot(), boot);
@@ -338,4 +339,204 @@ fn changed_default_response_is_only_a_refusal_not_a_completable_review() {
         )
         .unwrap();
     }
+}
+
+fn respond(f: &Fixture, review: &str) -> Output {
+    f.user
+        .vibe()
+        .current_dir(&f.project)
+        .env("HOME", f.root.join("home"))
+        .args([
+            "update",
+            "--all",
+            "--offline",
+            "--assume-yes",
+            "--json",
+            "--package-configuration-review",
+            review,
+            "--path",
+            f.project.to_str().unwrap(),
+        ])
+        .output()
+        .unwrap()
+}
+fn review_fixture() -> Fixture {
+    let f = Fixture::new(false);
+    configure(&f, false);
+    boundaries::add_root_for_review(&f, EXTRA);
+    f.install_ok();
+    let old = f.registry.join(GROUP).join(DRIVER).join("v1.0.0");
+    let new = f.registry.join(GROUP).join(DRIVER).join("v1.1.0");
+    write(
+        &new.join("vibe.toml"),
+        fs::read_to_string(old.join("vibe.toml"))
+            .unwrap()
+            .replace("version='1.0.0'", "version='1.1.0'")
+            .replace("defaults = [\"disabled\"]", "defaults = [\"enabled\"]")
+            + "\n[hooks]\npre-install='hooks/review-once'\n",
+    );
+    write(
+        &new.join("boot/rules.md"),
+        fs::read(old.join("boot/rules.md")).unwrap(),
+    );
+    write(
+        &new.join("hooks/review-once.sh"),
+        "set -eu\nprintf '%s\\n' 'review-driver' >> \"$VIBE_PROJECT_ROOT/effects.log\"\n",
+    );
+    f
+}
+#[test]
+fn exact_review_applies_once_and_wrong_workspace_or_prior_lock_is_stale() {
+    let f = review_fixture();
+    let path = f.project.join("vibe.lock");
+    let prior = fs::read(&path).unwrap();
+    let hooks = f.hooks();
+    let shown = update(&f);
+    assert_eq!(shown.status.code(), Some(1));
+    let proposal: serde_json::Value = serde_json::from_slice(&shown.stderr).unwrap();
+    let token = proposal["proposal"]["review_id"].as_str().unwrap();
+    assert_eq!(fs::read(&path).unwrap(), prior);
+    let other = review_fixture();
+    let before = fs::read(other.project.join("vibe.lock")).unwrap();
+    let stale = respond(&other, token);
+    assert_eq!(stale.status.code(), Some(1));
+    assert_eq!(
+        serde_json::from_slice::<serde_json::Value>(&stale.stderr).unwrap()["code"],
+        "package_configuration_review_stale"
+    );
+    assert_eq!(fs::read(other.project.join("vibe.lock")).unwrap(), before);
+    // The prior complete lock snapshot is part of the identity, including its
+    // preserved bytes; this synthetic comment cannot authorize a prior token.
+    let mut changed = prior.clone();
+    changed.extend_from_slice(b"\n# changed prior snapshot\n");
+    write(&path, &changed);
+    let stale = respond(&f, token);
+    assert_eq!(
+        serde_json::from_slice::<serde_json::Value>(&stale.stderr).unwrap()["code"],
+        "package_configuration_review_stale"
+    );
+    assert_eq!(fs::read(&path).unwrap(), changed);
+    write(&path, &prior);
+    let accepted = respond(&f, token);
+    assert!(
+        accepted.status.success(),
+        "{}{}",
+        String::from_utf8_lossy(&accepted.stdout),
+        String::from_utf8_lossy(&accepted.stderr)
+    );
+    assert_eq!(
+        f.lock()
+            .find(&GROUP.parse().unwrap(), DRIVER)
+            .unwrap()
+            .version
+            .to_string(),
+        "1.1.0"
+    );
+    assert!(f.slot(EXTRA).exists());
+    let lock = f.lock();
+    let record = &lock.configurations[&coordinate(DRIVER)];
+    let row = lock.find(&GROUP.parse().unwrap(), DRIVER).unwrap();
+    assert_eq!(row.features, record.features);
+    assert!(row.features.contains(&"enabled".to_owned()));
+    let mut edges: Vec<_> = row
+        .dependencies
+        .iter()
+        .map(|p| p.qualified_name())
+        .collect();
+    edges.sort();
+    assert_eq!(edges, record.active_dependencies);
+    assert_eq!(
+        record
+            .automatic_basis
+            .as_ref()
+            .unwrap()
+            .consumer_choices
+            .values()
+            .next()
+            .unwrap()["extra"],
+        "enabled"
+    );
+    let after = fs::read(&path).unwrap();
+    let hook_after = f.hooks();
+    assert_eq!(hook_after.get("review-driver"), Some(&1));
+    for (name, before) in &hooks {
+        assert_eq!(
+            hook_after[name], *before,
+            "unchanged leaf does not repeat {name}"
+        );
+    }
+    f.install_ok();
+    assert_eq!(fs::read(&path).unwrap(), after);
+    assert_eq!(f.hooks(), hook_after);
+    let stale = respond(&f, token);
+    assert!(!stale.status.success());
+    assert_eq!(
+        serde_json::from_slice::<serde_json::Value>(&stale.stderr).unwrap()["code"],
+        "package_configuration_review_stale"
+    );
+    assert_eq!(fs::read(&path).unwrap(), after);
+}
+
+#[test]
+fn review_candidate_drift_and_membership_change_cannot_reuse_authority() {
+    let f = review_fixture();
+    let path = f.project.join("vibe.lock");
+    let before = fs::read(&path).unwrap();
+    let boot = f.static_boot();
+    let hooks = f.hooks();
+    let shown = update(&f);
+    let proposal: serde_json::Value = serde_json::from_slice(&shown.stderr).unwrap();
+    let token = proposal["proposal"]["review_id"].as_str().unwrap();
+    let old = f.registry.join(GROUP).join(DRIVER).join("v1.1.0");
+    let new = f.registry.join(GROUP).join(DRIVER).join("v1.2.0");
+    write(
+        &new.join("vibe.toml"),
+        fs::read_to_string(old.join("vibe.toml"))
+            .unwrap()
+            .replace("version='1.1.0'", "version='1.2.0'"),
+    );
+    write(
+        &new.join("boot/rules.md"),
+        fs::read(old.join("boot/rules.md")).unwrap(),
+    );
+    let stale = respond(&f, token);
+    assert_eq!(stale.status.code(), Some(1));
+    let error: serde_json::Value = serde_json::from_slice(&stale.stderr).unwrap();
+    assert_eq!(error["code"], "package_configuration_review_stale");
+    assert_eq!(error["proposal"]["to_version"], "1.2.0");
+    assert_ne!(error["proposal"]["review_id"], token);
+    assert_eq!(fs::read(&path).unwrap(), before);
+    assert_eq!(f.static_boot(), boot);
+    assert_eq!(f.hooks(), hooks);
+    let malformed = respond(&f, "package-default-review/1:sha256:bad");
+    assert_eq!(malformed.status.code(), Some(2));
+    assert_eq!(fs::read(&path).unwrap(), before);
+
+    // Without the independent root, accepting the exact shown subject must
+    // still refuse unsupported package membership changes.
+    let g = Fixture::new(false);
+    configure(&g, false);
+    g.install_ok();
+    let source = g.registry.join(GROUP).join(DRIVER).join("v1.1.0");
+    write(
+        &source.join("vibe.toml"),
+        fs::read(old.join("vibe.toml")).unwrap(),
+    );
+    write(
+        &source.join("boot/rules.md"),
+        fs::read(old.join("boot/rules.md")).unwrap(),
+    );
+    let before = fs::read(g.project.join("vibe.lock")).unwrap();
+    let boot = g.static_boot();
+    let hooks = g.hooks();
+    let shown = update(&g);
+    let proposal: serde_json::Value = serde_json::from_slice(&shown.stderr).unwrap();
+    let token = proposal["proposal"]["review_id"].as_str().unwrap();
+    let refused = respond(&g, token);
+    assert!(!refused.status.success());
+    assert!(String::from_utf8_lossy(&refused.stderr).contains("graph membership reconciliation"));
+    assert_eq!(fs::read(g.project.join("vibe.lock")).unwrap(), before);
+    assert_eq!(g.static_boot(), boot);
+    assert_eq!(g.hooks(), hooks);
+    assert!(!g.slot(EXTRA).exists());
 }

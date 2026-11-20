@@ -103,7 +103,10 @@ pub(super) fn prepare_records(
             planned.configurations.remove(&key);
         }
         let old = planned.find(&cached.resolved.group, &cached.resolved.name);
-        let entry = super::super::inputs::locked_package(cached, deps, old, embedded);
+        let mut entry = super::super::inputs::locked_package(cached, deps, old, embedded);
+        if let Some(record) = configuration {
+            entry.features = record.features.clone();
+        }
         match planned
             .packages
             .iter()

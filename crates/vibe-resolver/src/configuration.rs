@@ -34,6 +34,7 @@ struct Candidate {
 pub struct ConfigurationSnapshot {
     inputs: PackageConfigurationInputs,
     previous: BTreeMap<String, PackageConfiguration>,
+    review_preview: bool,
     versions: RefCell<BTreeMap<(Group, String), VersionObservation>>,
     candidates: RefCell<BTreeMap<Coordinate, Candidate>>,
     source_errors: RefCell<BTreeMap<Coordinate, DepProviderError>>,
@@ -98,8 +99,9 @@ impl ConfigurationSnapshot {
                                 // from this replacement candidate. Explicit takeover is
                                 // deliberately outside this first slice.
                                 if previous.consumers != record.consumers
-                                    || previous.automatic_basis != record.automatic_basis
-                                    || previous.declarations != record.declarations
+                                    || (!self.review_preview
+                                        && (previous.automatic_basis != record.automatic_basis
+                                            || previous.declarations != record.declarations))
                                 {
                                     return Err(PackageConfigurationError::ReplayMismatch {
                                         package: package.clone(),
@@ -226,12 +228,21 @@ impl ConfigurationSnapshot {
         Self {
             inputs,
             previous,
+            review_preview: false,
             versions: RefCell::new(BTreeMap::new()),
             candidates: RefCell::new(BTreeMap::new()),
             source_errors: RefCell::new(BTreeMap::new()),
             source_candidates: RefCell::new(std::collections::HashMap::new()),
         }
     }
+    /// Non-executable candidate exploration for the governed update review gate.
+    /// Callers MUST verify immutable fetched content and obtain exact authority
+    /// before effects; ordinary install snapshots never enable this mode.
+    pub fn for_review_preview(mut self) -> Self {
+        self.review_preview = true;
+        self
+    }
+
     /// The same snapshot backs the provider callbacks and selected output. Only
     /// the existing resolvo engine performs version selection/backtracking.
     #[specmark::spec(

@@ -378,6 +378,9 @@ pub struct InstallArgs {
 
 #[derive(Debug, clap::Args)]
 pub struct UpdateArgs {
+    /// Explicitly acknowledge the exact ordinary package default proposal.
+    #[arg(long, value_parser = package_review_id)]
+    pub package_configuration_review: Option<String>,
     #[command(flatten)]
     pub source_policy: super::SourcePolicyArgs,
     /// Package references `<group>/<name>` to update. Each must be
@@ -601,4 +604,20 @@ pub struct UninstallArgs {
     /// package. Answers the question without a terminal.
     #[arg(long)]
     pub drop_remap: bool,
+}
+
+fn package_review_id(raw: &str) -> Result<String, String> {
+    let valid = raw
+        .strip_prefix("package-default-review/1:sha256:")
+        .is_some_and(|hex| {
+            hex.len() == 64
+                && hex
+                    .bytes()
+                    .all(|b| b.is_ascii_digit() || (b'a'..=b'f').contains(&b))
+        });
+    if valid {
+        Ok(raw.to_owned())
+    } else {
+        Err("expected a version1 package default review identifier".into())
+    }
 }

@@ -8,9 +8,7 @@
 
 specmark::scope!("spec://org.vibevm.core/vibevm/VIBEVM-SPEC#install-workflow-in-detail");
 
-use std::path::Path;
-
-use anyhow::{Result, bail};
+use anyhow::{Context, Result};
 use vibe_core::PackageRef;
 use vibe_core::manifest::{LockedPackage, Lockfile};
 use vibe_registry::CachedPackage;
@@ -144,14 +142,8 @@ pub(super) fn locked_package(
     row
 }
 
-pub(super) fn load_lockfile(root: &Path) -> Result<Lockfile> {
-    let path = root.join(Lockfile::FILENAME);
-    if path.exists() {
-        Ok(Lockfile::read(&path)?)
-    } else {
-        bail!(
-            "no `vibe.lock` in `{}` — nothing to update; run `vibe install` first",
-            root.display()
-        );
-    }
+pub(super) fn captured_lockfile(bytes: &[u8]) -> Result<Lockfile> {
+    Ok(Lockfile::parse_str(
+        std::str::from_utf8(bytes).context("captured lock is not UTF-8")?,
+    )?)
 }

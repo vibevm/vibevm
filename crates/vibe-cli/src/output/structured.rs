@@ -99,6 +99,24 @@ fn stamp_user_project(payload: &mut Value, err: &anyhow::Error) {
 /// can branch on `error_kind` and read `attempts` without parsing
 /// the prose.
 pub(super) fn stamp_structured_error(payload: &mut Value, err: &anyhow::Error) {
+    if let Some(review) = err.downcast_ref::<crate::commands::update::review::ReviewError>()
+        && let Value::Object(map) = payload
+    {
+        map.insert("code".into(), Value::String(review.code().into()));
+        if let Ok(proposal) = serde_json::to_value(&review.proposal) {
+            map.insert("proposal".into(), proposal);
+        }
+    }
+    if err
+        .downcast_ref::<crate::commands::update::review::InapplicableReview>()
+        .is_some()
+        && let Value::Object(map) = payload
+    {
+        map.insert(
+            "code".into(),
+            Value::String("package_configuration_review_stale".into()),
+        );
+    }
     stamp_app_error(payload, err);
     stamp_lock_hash_mismatch(payload, err);
     stamp_source_policy(payload, err);
