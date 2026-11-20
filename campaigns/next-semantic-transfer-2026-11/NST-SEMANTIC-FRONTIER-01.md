@@ -227,3 +227,5 @@ Bound deployment and checkout documentation source checks are separate: a copied
 Inspected named test-source assertions in 18 historical machine-operation revisions; each index row binds the actual changed assertion and its first-parent diff. Shared run identity, refusal without effects and partial or uncertain physical outcomes remain distinct observations. This is not a rerun of the process fixtures.
 
 Five historical test changes distinguish lease-reopen and journal identity, retained parked tasks and source-bound validation. A refusal before task publication is not equivalent to a completed agent invocation. Scope is original test source only.
+
+Four historical source tests distinguish cache-copy bytes from directory identity, post-fetch drift from safe application, and read-only recovery from authority to issue a new installation. None verifies the current selected subskill reader.
