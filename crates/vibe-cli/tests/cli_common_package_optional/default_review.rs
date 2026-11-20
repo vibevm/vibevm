@@ -6133,6 +6133,87 @@ fn integer_fixture(value: i64) -> Fixture {
 }
 
 #[test]
+fn integer_profile_preset_override_and_explicit_public_boundary() {
+    for world in ["preset", "override", "explicit"] {
+        let f = integer_fixture(0);
+        let source = f.registry.join(GROUP).join(DRIVER).join("v1.0.0/vibe.toml");
+        write(
+            &source,
+            fs::read_to_string(&source).unwrap()
+                + "\n[[configuration.profiles]]\nid='counted'\nname='Counted'\nparameters.count=-1\n",
+        );
+        let request = f.project.join("vibe.toml");
+        let original_text = fs::read_to_string(&request).unwrap();
+        let text = match world {
+            "preset" => original_text.replace(",parameters={count=0}", "").replace(
+                "default_features=false,",
+                "default_features=false,profile='counted',",
+            ),
+            "override" => original_text.replace(
+                "default_features=false,",
+                "default_features=false,profile='counted',",
+            ),
+            _ => original_text,
+        };
+        write(&request, &text);
+        let original =
+            Manifest::read(&request).unwrap().requires.configurations[&coordinate(DRIVER)].clone();
+        let definition = Manifest::read(&source).unwrap().configuration.unwrap();
+        let normalized = definition
+            .normalize_input(&original, "./vibe.toml")
+            .unwrap();
+        assert_eq!(
+            normalized.parameters["count"],
+            vibe_core::manifest::ParameterValue::Integer(if world == "preset" { -1 } else { 0 })
+        );
+        assert_eq!(original.profile.is_some(), world != "explicit");
+        assert_eq!(original.parameters.contains_key("count"), world != "preset");
+        let before = super::workspace::semantic_snapshot(&f.project);
+        let out = f.install();
+        // The current ordinary scalar owner rejects all non-bool profiles,
+        // even when the authored value overrides the selected preset.
+        assert!(
+            !out.status.success(),
+            "qualification must be revised if the actual boundary changes"
+        );
+        assert!(String::from_utf8_lossy(&out.stderr).contains("only one explicit required public integer without defaults, profiles or automatic choices is connected"));
+        assert_eq!(super::workspace::semantic_snapshot(&f.project), before);
+        assert!(!f.project.join("vibe.lock").exists());
+        assert!(!f.slot(DRIVER).exists());
+        assert!(!f.project.join("effects.log").exists());
+        let show = f
+            .user
+            .vibe()
+            .args([
+                "show",
+                "configuration-data",
+                "--path",
+                f.project.to_str().unwrap(),
+                "--json",
+            ])
+            .output()
+            .unwrap();
+        assert!(!show.status.success());
+        assert_eq!(super::workspace::semantic_snapshot(&f.project), before);
+        assert!(!f.install().status.success());
+        assert_eq!(super::workspace::semantic_snapshot(&f.project), before);
+        println!(
+            "integer-profile world={world} normalized={} actual-install=refused show=no-history repeat=refused",
+            if world == "preset" { -1 } else { 0 }
+        );
+    }
+    // Existing no-profile integer control omits the unrelated profile definition.
+    let control = integer_fixture(0);
+    control.install_ok();
+    let before = super::workspace::semantic_snapshot(&control.project);
+    control.install_ok();
+    assert_eq!(
+        super::workspace::semantic_snapshot(&control.project),
+        before
+    );
+}
+
+#[test]
 fn integer_real_consumer_agreement_and_conflict_preserve_originals() {
     for conflict in [false, true] {
         let f = integer_fixture(0);
