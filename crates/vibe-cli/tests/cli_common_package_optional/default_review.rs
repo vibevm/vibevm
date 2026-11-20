@@ -7471,3 +7471,148 @@ fn ordinary_feat_explicit_choice_public_install_show_and_cold_replay_qualificati
         }
     }
 }
+
+#[test]
+fn ordinary_remaining_kinds_install_show_and_cold_replay_qualification() {
+    for kind in ["stack", "tool", "mcp", "lang", "app"] {
+        for enabled in [false, true] {
+            let f = Fixture::new(enabled);
+            let source = f.registry.join(GROUP).join(DRIVER).join("v1.0.0/vibe.toml");
+            let mut text = fs::read_to_string(&source)
+                .unwrap()
+                .replace("kind='flow'", &format!("kind='{kind}'"));
+            if kind == "mcp" {
+                // Valid remote declaration only: no registration/server/tool launch.
+                text = text.replace("^1", "=1.0.0");
+                text.push_str("\n[[mcp_server]]\nname='synthetic-never-started'\nurl='https://example.invalid/mcp'\ntransport='streamable-http'\n");
+            }
+            if kind == "app" {
+                text.push_str("\n[application]\nid='synthetic-ordinary-app'\n");
+            }
+            write(&source, text);
+            let manifest = Manifest::read(&source).expect("kind-specific fixture must be valid");
+            assert_eq!(manifest.require_package().unwrap().kind.to_string(), kind);
+            let before = super::workspace::semantic_snapshot(&f.project);
+            let authored = fs::read(f.project.join("vibe.toml")).unwrap();
+            let out = f.install();
+            let diagnostic = String::from_utf8_lossy(&out.stdout).to_string()
+                + &String::from_utf8_lossy(&out.stderr);
+            println!(
+                "remaining kind={kind} enabled={enabled} install-success={} diagnostic={diagnostic}",
+                out.status.success()
+            );
+            let app_refusal = kind == "app";
+            if app_refusal {
+                assert!(
+                    !out.status.success() && diagnostic.contains("not_globally_installable"),
+                    "App first owner differs from qualified no-installer refusal"
+                );
+                assert!(
+                    super::workspace::semantic_snapshot(&f.project) != before,
+                    "expected observed package effects absent"
+                );
+            } else {
+                assert!(
+                    out.status.success(),
+                    "ordinary kind unexpectedly refused: {kind}"
+                );
+            }
+            let lock = f.lock();
+            let row = lock
+                .packages
+                .iter()
+                .find(|row| row.name.as_str() == DRIVER)
+                .unwrap();
+            assert_eq!(row.kind.to_string(), kind);
+            let installed = Manifest::read(f.slot(DRIVER).join("vibe.toml")).unwrap();
+            assert_eq!(installed.require_package().unwrap().kind.to_string(), kind);
+            let expected_edges = if enabled {
+                BTreeSet::from([coordinate(BASE), coordinate(EXTRA)])
+            } else {
+                BTreeSet::from([coordinate(BASE)])
+            };
+            assert_eq!(
+                row.dependencies
+                    .iter()
+                    .map(|edge| edge.qualified_name())
+                    .collect::<BTreeSet<_>>(),
+                expected_edges
+            );
+            let expected = if enabled {
+                BTreeSet::from([coordinate(DRIVER), coordinate(BASE), coordinate(EXTRA)])
+            } else {
+                BTreeSet::from([coordinate(DRIVER), coordinate(BASE)])
+            };
+            assert_eq!(
+                lock.packages
+                    .iter()
+                    .map(|p| format!("{}/{}", p.group, p.name))
+                    .collect::<BTreeSet<_>>(),
+                expected
+            );
+            assert_eq!(f.slot(EXTRA).exists(), enabled);
+            assert!(f.slot(DRIVER).join("payload.txt").exists());
+            assert!(f.slot(BASE).join("payload.txt").exists());
+            let record = &lock.configurations[&coordinate(DRIVER)];
+            let selected = if enabled { "enabled" } else { "disabled" };
+            assert_eq!(
+                record.consumers["./vibe.toml"].selections["extra"]
+                    .members
+                    .as_deref(),
+                Some(&[selected.to_owned()][..])
+            );
+            let data = f
+                .user
+                .vibe()
+                .args([
+                    "show",
+                    "configuration-data",
+                    "--path",
+                    f.project.to_str().unwrap(),
+                    "--json",
+                ])
+                .output()
+                .unwrap();
+            assert!(
+                data.status.success(),
+                "kind public inspection refused after successful install: {kind}"
+            );
+            let data: serde_json::Value = serde_json::from_slice(&data.stdout).unwrap();
+            assert!(
+                data["packages"]
+                    .as_array()
+                    .unwrap()
+                    .iter()
+                    .any(|p| p["package"] == coordinate(DRIVER))
+            );
+            let before_lock = fs::read(f.project.join("vibe.lock")).unwrap();
+            let before = super::workspace::semantic_snapshot(&f.project);
+            let hooks = f.hooks();
+            let boot = f.static_boot();
+            if app_refusal {
+                let replay = f.install();
+                let diagnostic = String::from_utf8_lossy(&replay.stdout).to_string()
+                    + &String::from_utf8_lossy(&replay.stderr);
+                assert!(
+                    !replay.status.success() && diagnostic.contains("not_globally_installable"),
+                    "App replay refusal class changed"
+                );
+            } else {
+                f.install_ok();
+            }
+            assert_eq!(fs::read(f.project.join("vibe.lock")).unwrap(), before_lock);
+            assert_eq!(super::workspace::semantic_snapshot(&f.project), before);
+            assert_eq!(f.hooks(), hooks);
+            assert_eq!(fs::read(f.project.join("vibe.toml")).unwrap(), authored);
+            println!(
+                "remaining kind={kind} enabled={enabled} whole-success={} package-state=published show=ok replay-package-state=unchanged boot-driver={} boot-base={} boot-extra={} hook-base={} hook-extra={}",
+                !app_refusal,
+                boot.contains(DRIVER_MARKER),
+                boot.contains(BASE_MARKER),
+                boot.contains(EXTRA_MARKER),
+                hooks.get(BASE).copied().unwrap_or(0),
+                hooks.get(EXTRA).copied().unwrap_or(0)
+            );
+        }
+    }
+}
