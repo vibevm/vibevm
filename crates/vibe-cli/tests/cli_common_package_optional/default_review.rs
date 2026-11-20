@@ -2243,3 +2243,129 @@ fn boolean_default_change_refuses_update_without_turning_explicit_answer_into_re
         );
     }
 }
+
+#[test]
+fn named_profile_and_explicit_boolean_composition_has_four_distinct_public_worlds() {
+    for world in [
+        "profile-false",
+        "profile-missing",
+        "profile-only",
+        "boolean-only",
+    ] {
+        let f = Fixture::new(true);
+        let source = f.registry.join(GROUP).join(DRIVER).join("v1.0.0/vibe.toml");
+        let mut text = fs::read_to_string(&source).unwrap()
+            + "\n[[configuration.profiles]]\nid='with-extra'\nname='With extra'\nselections.extra={intent='exact',members=['enabled']}\n";
+        if world != "profile-only" {
+            text.push_str("\n[[configuration.parameters]]\nid='verbose'\nname='Verbose'\ntype='bool'\nrequired=true\n");
+        }
+        write(&source, text);
+        let request = f.project.join("vibe.toml");
+        let old = fs::read_to_string(&request).unwrap();
+        let configuration = match world {
+            "profile-false" => {
+                "configuration={policy='require-selection',default_features=false,profile='with-extra',parameters={verbose=false}}"
+            }
+            "profile-missing" | "profile-only" => {
+                "configuration={policy='require-selection',default_features=false,profile='with-extra'}"
+            }
+            _ => {
+                "configuration={policy='require-selection',default_features=false,selections={extra={intent='exact',members=['enabled']}},parameters={verbose=false}}"
+            }
+        };
+        write(&request,old.replace("configuration={policy='require-selection',default_features=false,selections={extra={intent='exact',members=['enabled']}}}",configuration));
+        let authored = fs::read(&request).unwrap();
+        let boot_before: Vec<_> = [common::static_md_rel(), common::static_xml_rel()]
+            .into_iter()
+            .map(|p| {
+                let path = f.project.join(p);
+                let bytes = if path.exists() {
+                    Some(fs::read(&path).unwrap())
+                } else {
+                    None
+                };
+                (path, bytes)
+            })
+            .collect();
+        let package = Manifest::read(&source).unwrap();
+        let consumer = Manifest::read(&request).unwrap();
+        let input = consumer.requires.configurations.values().next().unwrap();
+        let normalized = package
+            .configuration
+            .as_ref()
+            .unwrap()
+            .normalize_input(input, "./vibe.toml")
+            .unwrap();
+        assert_eq!(
+            normalized.parameters.contains_key("verbose"),
+            matches!(world, "profile-false" | "boolean-only")
+        );
+        let out = f.install();
+        let diagnostic = format!(
+            "{}{}",
+            String::from_utf8_lossy(&out.stdout),
+            String::from_utf8_lossy(&out.stderr)
+        );
+        if matches!(world, "profile-false" | "profile-missing") {
+            assert!(!out.status.success());
+            assert!(diagnostic.contains("only explicitly supplied required public bool parameters without defaults are connected"),"{diagnostic}");
+            assert!(!f.project.join("vibe.lock").exists());
+            assert!(!f.slot(DRIVER).exists());
+            assert!(!f.slot(EXTRA).exists());
+            assert!(!f.project.join("effects.log").exists());
+            for (path, before) in boot_before {
+                assert_eq!(
+                    if path.exists() {
+                        Some(fs::read(path).unwrap())
+                    } else {
+                        None
+                    },
+                    before
+                );
+            }
+        } else {
+            assert!(out.status.success(), "{diagnostic}");
+            let lock = f.lock();
+            let record = &lock.configurations[&coordinate(DRIVER)];
+            assert!(record.features.contains(&"enabled".into()));
+            assert!(f.slot(EXTRA).exists());
+            assert!(f.static_boot().contains(EXTRA_MARKER));
+            assert_eq!(record.consumers.values().next().unwrap(), input);
+            assert_eq!(
+                record.consumers.values().next().unwrap().profile.as_deref(),
+                if world == "profile-only" {
+                    Some("with-extra")
+                } else {
+                    None
+                }
+            );
+            let show = f
+                .user
+                .vibe()
+                .args([
+                    "show",
+                    "configuration-data",
+                    "--path",
+                    f.project.to_str().unwrap(),
+                    "--json",
+                ])
+                .output()
+                .unwrap();
+            assert!(show.status.success());
+            let report: serde_json::Value = serde_json::from_slice(&show.stdout).unwrap();
+            if world == "boolean-only" {
+                assert_eq!(report["packages"][0]["parameters"]["verbose"], false);
+            } else {
+                assert!(report["packages"][0].get("parameters").is_none());
+            }
+            let before = fs::read(f.project.join("vibe.lock")).unwrap();
+            let boot = f.static_boot();
+            let hooks = f.hooks();
+            f.install_ok();
+            assert_eq!(fs::read(f.project.join("vibe.lock")).unwrap(), before);
+            assert_eq!(f.static_boot(), boot);
+            assert_eq!(f.hooks(), hooks);
+        }
+        assert_eq!(fs::read(&request).unwrap(), authored);
+    }
+}
