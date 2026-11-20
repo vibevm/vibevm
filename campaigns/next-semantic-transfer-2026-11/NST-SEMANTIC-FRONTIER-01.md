@@ -289,3 +289,5 @@ Seven historical bound-deployment changes were inspected from root admission and
 Thirteen historical lifecycle and acquisition changes distinguish input self-validation, physical re-observation, non-replayable stage records, bounded tree hashes and strict slot publication. Each named source change has a separate disposition; no installer or provider was run.
 
 Nine revisions distinguish a prepared journal, partial outputs and owner-published terminal reports. Fake publication tests are not evidence of a live adapter. No historical effect was re-executed.
+
+Nineteen cold-attach and publication revisions distinguish run and payload metadata, local staging, current approval, stream consumption and remote observation. Bounded per-file evidence is indexed separately; no release, transfer or native runtime result is inferred.
