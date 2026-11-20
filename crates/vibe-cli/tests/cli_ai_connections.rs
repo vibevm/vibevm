@@ -623,3 +623,71 @@ fn v2_missing_unknown_or_dangling_selection_refuses_without_rewrite() {
         assert_eq!(fs::read(&path).unwrap(), bytes.as_bytes());
     }
 }
+
+#[cfg(unix)]
+#[test]
+fn per_agent_binding_has_no_public_route_and_default_does_not_fabricate_modes() {
+    let f = F::new();
+    let secret = f.json(
+        &[
+            "secrets",
+            "create",
+            "--kind",
+            "api-key",
+            "--label",
+            "Synthetic",
+            "--value-stdin",
+        ],
+        Some(VALUE.as_bytes()),
+    );
+    let id = secret["items"][0]["id"].as_str().unwrap();
+    let added = f.json(
+        &[
+            "ai",
+            "connections",
+            "add",
+            "--label",
+            "Synthetic",
+            "--endpoint",
+            "http://127.0.0.1:32123/v1",
+            "--api-kind",
+            "openai-chat-completions",
+            "--default-model",
+            "synthetic",
+            "--secret-ref",
+            id,
+        ],
+        None,
+    );
+    let (cid, _) = added["items"].as_object().unwrap().iter().next().unwrap();
+    let version = added["store_revision"].as_u64().unwrap().to_string();
+    f.json(
+        &[
+            "ai",
+            "connections",
+            "default",
+            "set",
+            cid,
+            "--expect-store",
+            &version,
+        ],
+        None,
+    );
+    let ai = fs::read(f.0.path().join("secrets/ai/index.toml")).unwrap();
+    let key = fs::read(f.0.path().join("secrets/index.toml")).unwrap();
+    let parsed: toml::Value = toml::from_str(std::str::from_utf8(&ai).unwrap()).unwrap();
+    assert!(parsed.get("agents").is_none());
+    assert!(parsed.get("bindings").is_none());
+    let result = f.run(&["ai", "connections", "bindings", "show", "pi"], None);
+    assert_eq!(result.status.code(), Some(2));
+    assert!(String::from_utf8_lossy(&result.stderr).contains("unrecognized subcommand"));
+    assert_eq!(
+        fs::read(f.0.path().join("secrets/ai/index.toml")).unwrap(),
+        ai
+    );
+    assert_eq!(
+        fs::read(f.0.path().join("secrets/index.toml")).unwrap(),
+        key
+    );
+    assert!(!f.0.path().join("agents.toml").exists());
+}
