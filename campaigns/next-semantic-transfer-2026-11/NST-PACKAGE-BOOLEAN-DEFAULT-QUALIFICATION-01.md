@@ -1,0 +1,7 @@
+# Ordinary package boolean defaults: establish the public boundary
+
+After sealing the forwarding candidate, use a separate builder change based on the accepted public required-boolean fixture. Qualification only: no implementation, new lock epoch, policy relaxation, or change to the forwarding candidate. Use the existing public manifest syntax and the normal local offline install and show routes. If the authored default is rejected by the parser, preserve that first refusal and identify its owner; do not bypass it with an internal constructor.
+
+Use independent fresh projects against the same synthetic package: omit the parameter with authored default true, supply true explicitly, and supply false explicitly. Keep the historical no-default controls for missing and explicit false. Determine where each world actually normalizes, refuses, or publishes. On refusal compare project request, lock, package slots, boot and hook sentinel before and after. On success inspect the retained original inputs separately from effective public data, then cold replay and compare bytes. Identical effective booleans do not establish identical authored intent or consent. No parameterized profiles, secrets, private values, app installers, network, or implicit approval for default drift.
+
+Return the exact focused CLI selector, real nonzero case count, binary and source manifest, source owner of the first unsupported transition, and bounded report. No implementation acceptance from a passing test of refusal. Preserve unrelated work and the frozen successor stages.
