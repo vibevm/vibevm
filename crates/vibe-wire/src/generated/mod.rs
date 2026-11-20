@@ -117,6 +117,8 @@ pub mod remap_consent;
 pub mod remap_explanation;
 pub mod remap_listing;
 pub mod remap_offer;
+pub mod remap_preview_input;
+pub mod remap_preview_result;
 pub mod remap_providers;
 pub mod remap_test;
 pub mod requirements_report;

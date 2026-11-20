@@ -218,6 +218,8 @@ pub enum FormatId {
     ReadDocRequest,
     RemapBundle,
     RemapConsent,
+    RemapPreviewInput,
+    RemapPreviewResult,
     RemapProviders,
     RequirementsReport,
     ScrapeHealthResult,

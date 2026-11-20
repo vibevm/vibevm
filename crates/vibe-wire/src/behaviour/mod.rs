@@ -42,3 +42,5 @@ pub mod verification_evidence;
 pub mod vocabularies;
 
 pub mod read_doc;
+
+pub mod remap_preview;

@@ -301,82 +301,19 @@ fn request_data(
     captured: &crate::citations::sources::CapturedDocument,
     input: &vibe_wire::generated::read_doc_request::Input,
 ) -> Result<BTreeMap<String, vibe_core::manifest::ParameterValue>> {
-    use vibe_core::manifest::{
-        ConfigurationEffect, ConfigurationFeatureVisibility, ConfigurationGroupDecl,
-        ConfigurationIntentDecl, ConfigurationSelection, PackageConfiguration,
-    };
-    let invalid = || {
-        DocError::Page{path:Default::default(),message:"read_doc input: unsupported definition or invalid exact choice; expected one public unguarded exactly-one group with data-only effects".into()}
-    };
     let manifest = captured
         .choice_manifest()
         .map_err(|message| DocError::Page {
             path: Default::default(),
             message,
         })?;
-    let definition = manifest.configuration.as_ref().ok_or_else(invalid)?;
-    let [
-        ConfigurationGroupDecl::Choice {
-            id,
-            members,
-            guards,
-            cardinality,
-            defaults,
-            ..
-        },
-    ] = definition.groups.as_slice()
-    else {
-        return Err(invalid());
-    };
-    if *cardinality != vibe_core::configuration::Cardinality::ExactlyOne
-        || !guards.is_empty()
-        || defaults.is_some()
-        || !definition.parameters.is_empty()
-        || !definition.profiles.is_empty()
-        || input.selections.len() != 1
-    {
-        return Err(invalid());
-    }
-    let answer = input.selections.get(id).ok_or_else(invalid)?;
-    if answer.members.len() != 1
-        || !members.contains(&answer.members[0])
-        || definition.features.len() != members.len()
-        || definition.features.iter().any(|f| {
-            f.visibility != ConfigurationFeatureVisibility::Public
-                || !members.contains(&f.id)
-                || f.parent.is_some()
-                || f.required
-                || f.default
-                || !f.requires.is_empty()
-                || !f.guards.is_empty()
-                || f.effects
-                    .iter()
-                    .any(|e| !matches!(e, ConfigurationEffect::ConfigValue { .. }))
-        })
-    {
-        return Err(invalid());
-    }
-    let original = ConfigurationIntentDecl {
-        policy: vibe_core::configuration::ChoicePolicy::RequireSelection,
-        profile: None,
-        features: vec![],
-        default_features: false,
-        selections: BTreeMap::from([(
-            id.clone(),
-            ConfigurationSelection {
-                intent: vibe_core::configuration::MergeIntent::Exact,
-                members: Some(answer.members.clone()),
-            },
-        )]),
-        parameters: BTreeMap::new(),
-    };
-    // An operation-local consumer is not authored or persisted project history.
-    let record = PackageConfiguration::evaluate(
-        manifest,
-        &BTreeMap::from([("read_doc request".into(), original)]),
-    )
-    .map_err(|_| invalid())?;
-    record
-        .selected_data(vibe_core::PackageKind::Doc)
-        .map_err(|_| invalid())
+    let selections = input
+        .selections
+        .iter()
+        .map(|(id, answer)| (id.clone(), answer.members.clone()))
+        .collect();
+    vibe_core::manifest::evaluate_request_local_data(manifest, &selections).map_err(|_| DocError::Page {
+        path: Default::default(),
+        message: "read_doc input: unsupported definition or invalid exact choice; expected one public unguarded exactly-one group with data-only effects".into(),
+    })
 }

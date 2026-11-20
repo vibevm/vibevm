@@ -2238,3 +2238,21 @@ foreign_parsers = "many"
 corpus = "none"
 sunset = "none"
 unknown_fields = "deny"
+
+[format.remap-preview-input]
+epoch = 1
+schema = "schemas/remap_preview_input.jtd.json"
+recoverable = false
+foreign_parsers = "many"
+unknown_fields = "deny"
+corpus = "none"
+sunset = "none"
+
+[format.remap-preview-result]
+epoch = 1
+schema = "schemas/remap_preview_result.jtd.json"
+recoverable = true
+foreign_parsers = "many"
+unknown_fields = "deny"
+corpus = "none"
+sunset = "none"

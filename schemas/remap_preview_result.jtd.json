@@ -1,0 +1,5 @@
+{
+  "metadata":{"description":"Read-only local-owned-offer data, never consent or original supplier authentication.","x-wire-order":["protocol","package","version","source","selected_values"]},
+  "properties":{"protocol":{"type":"string"},"package":{"type":"string"},"version":{"type":"string"},"source":{"ref":"source"},"selected_values":{"values":{},"metadata":{"x-empty":"emit"}}},
+  "definitions":{"source":{"metadata":{"x-wire-order":["kind","content_hash"]},"properties":{"kind":{"enum":["local-owned-offer"],"metadata":{"x-vocabulary":"closed"}},"content_hash":{"type":"string"}}}}
+}

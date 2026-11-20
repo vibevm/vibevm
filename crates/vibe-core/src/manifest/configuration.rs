@@ -8,6 +8,8 @@ use serde::{Deserialize, Serialize};
 use std::collections::BTreeMap;
 
 pub mod basis;
+mod request_local;
+pub use request_local::evaluate_request_local_data;
 mod intent;
 mod lower;
 mod package;

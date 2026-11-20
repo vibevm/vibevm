@@ -25,6 +25,8 @@ pub enum RemapCommand {
     /// List the rows active for this invocation, by source, with the
     /// locally computed diagnostics of every target.
     List(RemapListArgs),
+    /// Evaluate data from one verified local owned offer without accepting it.
+    Preview(RemapPreviewArgs),
     /// Print the whole chain for one fetch: the declared origin, every
     /// matching row in winning order, the chosen target and the digest
     /// that will be checked.
@@ -149,4 +151,13 @@ pub struct RemapBindSourceArgs {
     /// Project or member whose owning workspace holds the remap lock.
     #[arg(long, default_value = ".")]
     pub path: std::path::PathBuf,
+}
+
+#[derive(Debug, Args)]
+pub struct RemapPreviewArgs {
+    pub package: String,
+    #[arg(long)]
+    pub input: std::path::PathBuf,
+    #[arg(long)]
+    pub json: bool,
 }

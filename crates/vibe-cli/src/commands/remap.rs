@@ -23,6 +23,7 @@ mod consent;
 mod diagnostics;
 mod home;
 pub(crate) mod packages;
+mod preview;
 mod probe;
 mod render;
 mod transport;
@@ -84,6 +85,7 @@ pub(crate) fn run(
     let locator = vibe_core::remap::active();
     match args.command {
         RemapCommand::List(list) => run_list(ctx, locator, list, offline),
+        RemapCommand::Preview(args) => preview::run(ctx, args, offline),
         RemapCommand::Explain(explain) => run_explain(ctx, locator, explain, offline),
         RemapCommand::Accept(packages) => verbs::run(ctx, verbs::Verb::Accept, packages),
         RemapCommand::Reject(packages) => verbs::run(ctx, verbs::Verb::Reject, packages),

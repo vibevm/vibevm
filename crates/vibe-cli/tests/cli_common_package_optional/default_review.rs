@@ -8138,3 +8138,157 @@ fn registered_doc_request_local_data_refuses_invalid_and_ambiguous_sources() {
         );
     }
 }
+
+#[test]
+fn remap_preview_local_owned_offer_keeps_choice_separate_from_consent() {
+    for world in [
+        "valid",
+        "stale-manifest",
+        "stale-payload",
+        "stale-index",
+        "missing-tree",
+        "duplicate-offer",
+        "symlink",
+        "invalid-input",
+    ] {
+        let f = Fixture::new(false);
+        let tree = vibe_core::remap::package_dir(&f.user.settings, "org.example/policy");
+        write(
+            &tree.join("vibe.toml"),
+            format!(
+                "[package]\ngroup='org.example'\nname='policy'\nversion='1.0.0'\nkind='remap'\n[[remap]]\nprefix='https://example.invalid/input/'\ndeny=true\nreason='Synthetic offer'\n{}",
+                read_consent_data_definition()
+            ),
+        );
+        write(&tree.join("payload.txt"), "original local offer bytes");
+        let manifest = Manifest::read(tree.join("vibe.toml")).unwrap();
+        let pin = vibe_registry::compute_content_hash(&tree).unwrap();
+        let offer = vibe_core::remap::offer_from_manifest(&manifest, &pin).unwrap();
+        let mut installed = vibe_core::remap::InstalledRemaps::default();
+        installed.upsert(vibe_core::remap::InstalledRemap {
+            package: offer,
+            registry: None,
+            installed: "2026-11-20T00:00:00Z".into(),
+        });
+        if world == "duplicate-offer" {
+            installed.packages.push(installed.packages[0].clone());
+        }
+        if world == "stale-index" {
+            installed.packages[0].package.section.description = Some("different index".into());
+        }
+        installed.store(&f.user.settings).unwrap();
+        match world {
+            "stale-manifest" => write(
+                &tree.join("vibe.toml"),
+                fs::read_to_string(tree.join("vibe.toml")).unwrap() + "\n# source changed\n",
+            ),
+            "stale-payload" => write(&tree.join("payload.txt"), "changed local bytes"),
+            "missing-tree" => {
+                fs::rename(&tree, f.root.join("retained-tree")).unwrap();
+            }
+            "symlink" => {
+                fs::remove_file(tree.join("payload.txt")).unwrap();
+                std::os::unix::fs::symlink(f.root.join("elsewhere"), tree.join("payload.txt"))
+                    .unwrap();
+            }
+            _ => {}
+        }
+        let input = f.root.join("preview-input.json");
+        let run = |args: &[&str]| {
+            f.user
+                .vibe()
+                .current_dir(&f.project)
+                .args(["--offline"])
+                .args(args)
+                .output()
+                .unwrap()
+        };
+        for state in ["offered", "accepted", "rejected"] {
+            if world != "valid" && state != "offered" {
+                continue;
+            }
+            if state != "offered" {
+                let verb = if state == "accepted" {
+                    "accept"
+                } else {
+                    "reject"
+                };
+                assert!(
+                    run(&["remap", verb, "org.example/policy", "--json"])
+                        .status
+                        .success()
+                );
+            }
+            for on in [false, true] {
+                write(
+                    &input,
+                    if world == "invalid-input" {
+                        b"{\"selections\":null}".to_vec()
+                    } else {
+                        serde_json::to_vec(&serde_json::json!({"selections":{"mode":{"intent":"exact","members":[if on{"on"}else{"off"}]}}})).unwrap()
+                    },
+                );
+                let project = preview_scratch_snapshot(&f.project);
+                let home = preview_scratch_snapshot(f.user.settings.parent().unwrap());
+                let listing = run(&["remap", "list", "--json"]);
+                assert!(listing.status.success());
+                let explain = run(&[
+                    "remap",
+                    "explain",
+                    "https://example.invalid/input/item",
+                    "--json",
+                ]);
+                assert!(explain.status.success());
+                let out = run(&[
+                    "remap",
+                    "preview",
+                    "org.example/policy",
+                    "--input",
+                    input.to_str().unwrap(),
+                    "--json",
+                ]);
+                if world == "valid" {
+                    assert!(out.status.success(), "valid preview refused");
+                    let value: serde_json::Value = serde_json::from_slice(&out.stdout).unwrap();
+                    assert_eq!(value["protocol"], "vibe-remap-preview/1");
+                    assert_eq!(value["source"]["kind"], "local-owned-offer");
+                    assert_eq!(value["source"]["content_hash"], pin);
+                    assert_eq!(
+                        value["selected_values"],
+                        if on {
+                            serde_json::json!({"selected":true})
+                        } else {
+                            serde_json::json!({})
+                        }
+                    );
+                    assert!(value["source"].get("source_url").is_none());
+                } else {
+                    assert!(
+                        !out.status.success(),
+                        "invalid local preview admitted: {world}"
+                    );
+                }
+                assert_eq!(run(&["remap", "list", "--json"]).stdout, listing.stdout);
+                assert_eq!(
+                    run(&[
+                        "remap",
+                        "explain",
+                        "https://example.invalid/input/item",
+                        "--json"
+                    ])
+                    .stdout,
+                    explain.stdout
+                );
+                assert_eq!(preview_scratch_snapshot(&f.project), project);
+                assert_eq!(
+                    preview_scratch_snapshot(f.user.settings.parent().unwrap()),
+                    home
+                );
+                println!(
+                    "remap preview world={world} state={state} on={on} admitted={} project/home/policy=unchanged",
+                    world == "valid"
+                );
+            }
+        }
+    }
+}

@@ -427,6 +427,14 @@ pub struct VerifiedPayload {
     expected: String,
 }
 impl VerifiedPayload {
+    /// Manifest bytes from the same full payload observation, not a second read.
+    pub fn manifest_bytes(&self) -> Result<&[u8]> {
+        self.snapshot
+            .files
+            .get(Manifest::FILENAME)
+            .map(|file| file.bytes.as_slice())
+            .ok_or_else(|| anyhow!("verified payload manifest missing"))
+    }
     pub fn recheck(&self) -> Result<()> {
         let rebound = Project::open(self.project.root_path())?;
         if rebound.root_identity()? != self.project.root_identity()? {

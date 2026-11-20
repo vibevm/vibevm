@@ -1,0 +1,5 @@
+{
+  "metadata":{"description":"Request-local public data choice for one local owned remap offer.","x-wire-order":["selections"]},
+  "properties":{"selections":{"values":{"ref":"selection"},"metadata":{"x-empty":"emit"}}},
+  "definitions":{"selection":{"metadata":{"x-wire-order":["intent","members"]},"properties":{"intent":{"enum":["exact"],"metadata":{"x-vocabulary":"closed"}},"members":{"elements":{"type":"string"},"metadata":{"x-empty":"emit"}}}}}
+}
