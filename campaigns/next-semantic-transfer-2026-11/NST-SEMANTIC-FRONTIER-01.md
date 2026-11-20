@@ -285,3 +285,5 @@ Six migration source revisions distinguish pure plans, presence-aware transport,
 Ten source revisions separate injected roots, local page validation, frame decoding, session negotiation, planner exchange and run reservation from authority to perform effects. Named paths are individually indexed; historical tests were not rerun.
 
 Seven historical bound-deployment changes were inspected from root admission and physical role locking to the first host-only builtin call. Preparation, partial infrastructure creation and possible publication have distinct evidence; no deploy was run.
+
+Thirteen historical lifecycle and acquisition changes distinguish input self-validation, physical re-observation, non-replayable stage records, bounded tree hashes and strict slot publication. Each named source change has a separate disposition; no installer or provider was run.
