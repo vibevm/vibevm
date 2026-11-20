@@ -267,3 +267,5 @@ Three reviewed revisions distinguish observing the current published release fro
 Two historical operation contracts separate discovery and transport from authority. The corresponding file-publication review distinguishes matching content from proof of the originating object. No target execution is claimed.
 
 Three lifecycle revisions separate manifest/lock observations from an installed-world snapshot, identity proposal from reservation, and recovery-only inspection from new Deploy authority. Named source changes were inspected, not executed.
+
+Historical reviews distinguish populated Git provenance from no-Gitlinks receipts, upload catalogue identity from payload bytes, and extension discovery from handler admission. No publication or provider execution was attempted.
