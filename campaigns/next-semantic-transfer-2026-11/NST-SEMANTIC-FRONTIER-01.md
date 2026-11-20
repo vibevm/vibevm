@@ -241,3 +241,5 @@ Fourteen historical test revisions were reviewed at their named source paths. Am
 Index integrity at `0d30e9ae3`: all 3179 stored first-parent diff fingerprints reproduced against Git (`--no-renames`, 3038 with three lines of context and the remaining 141 with zero). All 195 stored blob fingerprints matched. Nineteen observation-only entries have no diff digest. This check does not reclassify inventory-only commits or prove runtime behavior.
 
 Five historical ownership, planning and prerequisite records were checked. The specmap and raw log digests at `bd04990def` and the prerequisite task digest at `bca41b5cd8` match their Git blobs. They establish traceability, not completion of the planned runtime.
+
+At `e73b73881d`, the entity inventory grows to 35 model identities without admitting a model. At `cc4e68b583`, retiring the staging law preserves the publication hold: both referenced PROP file hashes match the named acceptance revision `df5f7af9a`. Neither record proves target execution.
