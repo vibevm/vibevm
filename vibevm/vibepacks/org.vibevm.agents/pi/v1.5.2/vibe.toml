@@ -25,3 +25,24 @@ default = true
 [[installer_options.public_commands]]
 name = "pi"
 launcher = "main"
+
+[[installer_options]]
+id = "macos-arm64-standalone"
+name = "Official Pi standalone macOS arm64"
+platform = "macos"
+platform_name = "macOS"
+arch = "aarch64"
+[installer_options.installation]
+type = "tar_gz"
+source = "https://github.com/earendil-works/pi/releases/download/v1.5.2/pi-darwin-arm64.tar.gz"
+sha256 = "56b5e194d485ced555667b8ba3276157a8272e9ecde9e001e428af80985bdd9b"
+payload_root = "pi"
+[[installer_options.launchers]]
+id = "main"
+name = "Pi"
+executable = "$app_root/pi"
+kind = "command"
+default = true
+[[installer_options.public_commands]]
+name = "pi"
+launcher = "main"
