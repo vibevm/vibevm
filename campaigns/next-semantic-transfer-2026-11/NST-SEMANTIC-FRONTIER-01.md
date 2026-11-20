@@ -231,3 +231,5 @@ Five historical test changes distinguish lease-reopen and journal identity, reta
 Four historical source tests distinguish cache-copy bytes from directory identity, post-fetch drift from safe application, and read-only recovery from authority to issue a new installation. None verifies the current selected subskill reader.
 
 At `79d3441e92` the MCP adapter formats already captured bytes. Its selection fixture asserts lazy-push and preserves unrelated skill bytes; this is not a test of the new lazy-pull cache reader after same-version replacement.
+
+Twelve historical MCP process-test revisions were checked at the level of the changed assertions: retained run identity and single effect counters are distinct from transport success, and a missing report is not a fresh run. Per-file assertions and diff hashes are indexed. No process test was rerun by this source review.
