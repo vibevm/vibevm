@@ -5294,3 +5294,138 @@ fn remaining_defaults_nonselected_candidate_and_update_drift_refuse() {
         }
     }
 }
+
+#[test]
+fn required_public_integer_bounds_zero_missing_and_bool_control_qualification() {
+    for world in [
+        "zero",
+        "minimum",
+        "maximum",
+        "outside",
+        "quoted",
+        "missing",
+        "bool-false",
+    ] {
+        let f = Fixture::new(false);
+        let source = f.registry.join(GROUP).join(DRIVER).join("v1.0.0/vibe.toml");
+        let parameter = if world == "bool-false" {
+            "\n[[configuration.parameters]]\nid='count'\nname='Count'\ntype='bool'\nrequired=true\n"
+        } else {
+            "\n[[configuration.parameters]]\nid='count'\nname='Count'\ntype='integer'\nrequired=true\nmin=-2\nmax=3\n"
+        };
+        write(&source, fs::read_to_string(&source).unwrap() + parameter);
+        let request = f.project.join("vibe.toml");
+        let value = match world {
+            "zero" => Some("0"),
+            "minimum" => Some("-2"),
+            "maximum" => Some("3"),
+            "outside" => Some("4"),
+            "quoted" => Some("'0'"),
+            "missing" => None,
+            "bool-false" => Some("false"),
+            _ => unreachable!(),
+        };
+        let mut text = fs::read_to_string(&request)
+            .unwrap()
+            .replace("version='^1'", "version='=1.0.0'");
+        if let Some(value) = value {
+            text=text.replace("selections={extra={intent='exact',members=['disabled']}}}",&format!("selections={{extra={{intent='exact',members=['disabled']}}}},parameters={{count={value}}}}}"));
+        }
+        write(&request, text);
+        let original =
+            Manifest::read(&request).unwrap().requires.configurations[&coordinate(DRIVER)].clone();
+        let definition = Manifest::read(&source).unwrap().configuration.unwrap();
+        let normalized = definition.normalize_input(&original, "./vibe.toml");
+        println!("integer world={world} original={original:?} normalized={normalized:?}");
+        match world {
+            "zero" | "minimum" | "maximum" => assert_eq!(
+                normalized.as_ref().unwrap().parameters["count"],
+                vibe_core::manifest::ParameterValue::Integer(match world {
+                    "minimum" => -2,
+                    "maximum" => 3,
+                    _ => 0,
+                })
+            ),
+            "bool-false" => assert_eq!(
+                normalized.as_ref().unwrap().parameters["count"],
+                vibe_core::manifest::ParameterValue::Bool(false)
+            ),
+            "missing" => assert!(
+                !normalized
+                    .as_ref()
+                    .unwrap()
+                    .parameters
+                    .contains_key("count")
+            ),
+            _ => assert!(normalized.is_err()),
+        }
+        let before = super::workspace::semantic_snapshot(&f.project);
+        let registry = preview_scratch_snapshot(&f.registry);
+        let authored = fs::read(&request).unwrap();
+        let out = f.install();
+        let diagnostic = format!(
+            "{}{}",
+            String::from_utf8_lossy(&out.stdout),
+            String::from_utf8_lossy(&out.stderr)
+        );
+        println!(
+            "integer world={world} status={} diagnostic={diagnostic}",
+            out.status
+        );
+        if world == "bool-false" {
+            assert!(out.status.success(), "{diagnostic}");
+            let lock = f.lock();
+            let record = &lock.configurations[&coordinate(DRIVER)];
+            assert_eq!(record.consumers.values().next().unwrap(), &original);
+            assert_eq!(
+                record
+                    .selected_parameters(vibe_core::PackageKind::Flow)
+                    .unwrap()["count"],
+                vibe_core::manifest::ParameterValue::Bool(false)
+            );
+            assert!(
+                record
+                    .selected_data(vibe_core::PackageKind::Flow)
+                    .unwrap()
+                    .is_empty()
+            );
+            assert!(f.slot(DRIVER).exists());
+            assert!(f.static_boot().contains(DRIVER_MARKER));
+            assert!(f.hooks().get(BASE).copied().unwrap_or(0) > 0);
+            let installed = super::workspace::semantic_snapshot(&f.project);
+            f.install_ok();
+            assert_eq!(super::workspace::semantic_snapshot(&f.project), installed);
+        } else {
+            assert!(!out.status.success(), "{diagnostic}");
+            if matches!(world, "zero" | "minimum" | "maximum" | "missing") {
+                assert!(diagnostic.contains("only explicitly supplied required public bool parameters without defaults are connected"),"{diagnostic}");
+            } else if world == "outside" {
+                assert!(
+                    diagnostic.contains("configuration.parameters.count")
+                        && diagnostic.contains("4 is outside -2..=3"),
+                    "{diagnostic}"
+                );
+            } else {
+                assert!(
+                    diagnostic.contains("configuration.parameters.count")
+                        && diagnostic.contains("not a integer value"),
+                    "{diagnostic}"
+                );
+            }
+            assert_eq!(super::workspace::semantic_snapshot(&f.project), before);
+            assert!(!f.project.join("vibe.lock").exists());
+            assert!(!f.project.join("effects.log").exists());
+            for name in [DRIVER, BASE, EXTRA] {
+                assert!(!f.slot(name).exists());
+            }
+        }
+        assert_eq!(fs::read(&request).unwrap(), authored);
+        assert_eq!(preview_scratch_snapshot(&f.registry), registry);
+        println!(
+            "integer world={world} coordination={:?}",
+            preview_scratch_snapshot(&f.project.join(".vibe"))
+                .as_ref()
+                .map(|entries| entries.keys().collect::<Vec<_>>())
+        );
+    }
+}
