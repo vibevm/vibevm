@@ -1,0 +1,205 @@
+{
+  "metadata": {
+    "x-wire-order": [
+      "protocol",
+      "package",
+      "version",
+      "source",
+      "description",
+      "questions",
+      "original",
+      "resolved"
+    ],
+    "description": "Read-only ordinary flow description and evaluation, never an install plan or apply authority."
+  },
+  "properties": {
+    "protocol": {
+      "type": "string"
+    },
+    "package": {
+      "type": "string"
+    },
+    "version": {
+      "type": "string"
+    },
+    "source": {
+      "ref": "source"
+    },
+    "description": {
+      "ref": "description"
+    },
+    "questions": {
+      "elements": {
+        "ref": "question"
+      },
+      "metadata": {
+        "x-empty": "emit"
+      }
+    }
+  },
+  "optionalProperties": {
+    "original": {
+      "ref": "input",
+      "metadata": {
+        "x-default": null
+      }
+    },
+    "resolved": {
+      "ref": "resolved",
+      "metadata": {
+        "x-default": null
+      }
+    }
+  },
+  "definitions": {
+    "input": {
+      "properties": {
+        "selections": {
+          "values": {
+            "type": "string"
+          },
+          "metadata": {
+            "x-empty": "emit"
+          }
+        },
+        "parameters": {
+          "values": {
+            "type": "boolean"
+          },
+          "metadata": {
+            "x-empty": "emit"
+          }
+        }
+      },
+      "metadata": {
+        "x-wire-order": [
+          "selections",
+          "parameters"
+        ]
+      }
+    },
+    "source": {
+      "properties": {
+        "registry": {
+          "type": "string"
+        },
+        "content_hash": {
+          "type": "string"
+        }
+      }
+    },
+    "description": {
+      "properties": {
+        "choices": {
+          "elements": {
+            "ref": "choice"
+          },
+          "metadata": {
+            "x-empty": "emit"
+          }
+        },
+        "parameters": {
+          "elements": {
+            "ref": "parameter"
+          },
+          "metadata": {
+            "x-empty": "emit"
+          }
+        }
+      }
+    },
+    "choice": {
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "members": {
+          "elements": {
+            "ref": "member"
+          },
+          "metadata": {
+            "x-empty": "emit"
+          }
+        }
+      }
+    },
+    "member": {
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        }
+      }
+    },
+    "parameter": {
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "required": {
+          "type": "boolean"
+        },
+        "type": {
+          "enum": [
+            "bool"
+          ],
+          "metadata": {
+            "x-vocabulary": "closed"
+          }
+        }
+      }
+    },
+    "question": {
+      "properties": {
+        "kind": {
+          "enum": [
+            "choice",
+            "parameter"
+          ],
+          "metadata": {
+            "x-vocabulary": "closed"
+          }
+        },
+        "id": {
+          "type": "string"
+        },
+        "members": {
+          "elements": {
+            "type": "string"
+          },
+          "metadata": {
+            "x-empty": "emit"
+          }
+        }
+      }
+    },
+    "resolved": {
+      "properties": {
+        "features": {
+          "elements": {
+            "type": "string"
+          },
+          "metadata": {
+            "x-empty": "emit"
+          }
+        },
+        "parameters": {
+          "values": {
+            "type": "boolean"
+          },
+          "metadata": {
+            "x-empty": "emit"
+          }
+        }
+      }
+    }
+  }
+}

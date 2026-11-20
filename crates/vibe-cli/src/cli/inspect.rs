@@ -18,6 +18,8 @@ pub struct ShowArgs {
 
 #[derive(Debug, Subcommand)]
 pub enum ShowSubcommand {
+    /// Describe or evaluate an uninstalled ordinary package without effects.
+    ConfigurationPreview(ShowConfigurationPreviewArgs),
     /// Read selected public package data from admitted retained configuration.
     ConfigurationData(ShowFeaturesArgs),
     /// Print the effective spec — every boot-lane file plus every
@@ -45,6 +47,17 @@ pub enum ShowSubcommand {
     /// Print the canonical on-disk root of an installed package or one of
     /// its authenticated embedded sources.
     SourcePath(ShowSourcePathArgs),
+}
+
+#[derive(Debug, clap::Args)]
+pub struct ShowConfigurationPreviewArgs {
+    /// Exact project requirement identity: group/name, never a source path.
+    pub package: String,
+    #[arg(long, default_value = ".")]
+    pub path: PathBuf,
+    /// Bounded ordinary JSON answers only; no app envelope.
+    #[arg(long)]
+    pub input: Option<PathBuf>,
 }
 
 #[derive(Debug, clap::Args)]

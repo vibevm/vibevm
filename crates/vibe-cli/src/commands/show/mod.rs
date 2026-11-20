@@ -23,6 +23,7 @@ specmark::scope!("spec://org.vibevm.core/vibevm/VIBEVM-SPEC#command-summary");
 
 mod config;
 mod configuration_data;
+mod configuration_preview;
 mod effective;
 mod features;
 mod purls;
@@ -39,6 +40,7 @@ use crate::output;
 
 pub fn run(ctx: &output::Context, args: ShowArgs, offline: bool) -> Result<()> {
     match args.command {
+        ShowSubcommand::ConfigurationPreview(sub) => configuration_preview::run(ctx, sub),
         ShowSubcommand::ConfigurationData(sub) => configuration_data::run(ctx, sub),
         ShowSubcommand::Effective(sub) => effective::run_effective(ctx, sub),
         ShowSubcommand::Config(sub) => config::run_config(ctx, sub),

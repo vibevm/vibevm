@@ -92,6 +92,8 @@ pub mod llm;
 pub mod mcp_registration_receipt;
 pub mod migration;
 pub mod native;
+pub mod ordinary_configuration_preview_request;
+pub mod ordinary_configuration_preview_result;
 pub mod package_skill;
 pub mod package_skill_receipt;
 pub mod progress_event;

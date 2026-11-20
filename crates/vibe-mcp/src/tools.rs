@@ -27,6 +27,8 @@ pub use output::ToolOutput;
 /// The documentation page reader (PROP-057 `##OBS-AUDIENCE-AGENT`),
 /// split out beside `explain`, `query` and `select` for the same reason
 /// they are: this registry file sits at its size ceiling.
+pub mod configuration_preview;
+pub use configuration_preview::ConfigurationPreviewMcpTool;
 pub mod read_doc;
 pub use read_doc::ReadDocMcpTool;
 
@@ -67,6 +69,7 @@ pub fn default_tools() -> Vec<Box<dyn McpTool>> {
         Box::new(PlanManifestMigrationMcpTool),
         Box::new(ManifestMigrationOperationMcpTool),
         Box::new(QueryPackageMcpTool),
+        Box::new(ConfigurationPreviewMcpTool),
         Box::new(ReadSubskillMcpTool),
         Box::new(MaterialiseSubskillMcpTool),
         Box::new(AgenticExplainMcpTool),

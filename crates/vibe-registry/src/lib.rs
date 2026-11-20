@@ -32,6 +32,7 @@ pub mod git_package_registry;
 pub mod git_registry;
 pub mod http_admission;
 pub mod index_client;
+pub mod local_preview;
 pub mod source_candidates;
 pub mod source_policy_provider;
 pub mod subskill_witness;

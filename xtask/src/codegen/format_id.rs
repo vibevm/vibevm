@@ -245,10 +245,7 @@ pub(super) fn emit_format_id(root: &Path, out_dir: &Path) -> Result<()> {
     out.push_str("    pub fn id(self) -> &'static str {\n");
     out.push_str("        match self {\n");
     for e in &entries {
-        out.push_str(&format!(
-            "            FormatId::{} => \"{}\",\n",
-            e.variant, e.id
-        ));
+        out.push_str(&id_match_arm(&e.variant, &e.id));
     }
     out.push_str("        }\n");
     out.push_str("    }\n\n");
@@ -319,4 +316,42 @@ pub(super) fn emit_format_id(root: &Path, out_dir: &Path) -> Result<()> {
     super::write::write_generated(&sub_out.join("properties.rs"), out)?;
     eprintln!("  - formats/REGISTRY.toml → {}/", sub_out.display());
     Ok(())
+}
+
+/// Keep the string-valued arm in rustfmt's default 100-column shape. This
+/// emitter already owns formatting; long new registry IDs must not make
+/// codegen and the separate format gate disagree.
+fn id_match_arm(variant: &str, id: &str) -> String {
+    let single = format!("            FormatId::{variant} => \"{id}\",\n");
+    if single.trim_end().len() <= 100 {
+        single
+    } else {
+        format!("            FormatId::{variant} => {{\n                \"{id}\"\n            }}\n")
+    }
+}
+
+#[cfg(test)]
+mod format_id_tests {
+    use super::id_match_arm;
+    #[test]
+    fn long_registry_id_uses_the_same_block_arm_as_rustfmt() {
+        assert_eq!(
+            id_match_arm(
+                "OrdinaryConfigurationPreviewRequest",
+                "ordinary-configuration-preview-request"
+            ),
+            "            FormatId::OrdinaryConfigurationPreviewRequest => {\n                \"ordinary-configuration-preview-request\"\n            }\n"
+        );
+        assert_eq!(
+            id_match_arm(
+                "OrdinaryConfigurationPreviewResult",
+                "ordinary-configuration-preview-result"
+            ),
+            "            FormatId::OrdinaryConfigurationPreviewResult => \"ordinary-configuration-preview-result\",\n"
+        );
+        assert_eq!(
+            id_match_arm("Short", "short"),
+            "            FormatId::Short => \"short\",\n"
+        );
+    }
 }

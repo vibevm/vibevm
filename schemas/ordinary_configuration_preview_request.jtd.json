@@ -1,0 +1,50 @@
+{
+  "metadata": {
+    "x-wire-order": [
+      "package",
+      "input"
+    ],
+    "description": "Read-only ordinary exact-local flow preview request; no source paths or app envelope."
+  },
+  "properties": {
+    "package": {
+      "type": "string"
+    }
+  },
+  "optionalProperties": {
+    "input": {
+      "ref": "input",
+      "metadata": {
+        "x-default": null
+      }
+    }
+  },
+  "definitions": {
+    "input": {
+      "properties": {
+        "selections": {
+          "values": {
+            "type": "string"
+          },
+          "metadata": {
+            "x-empty": "emit"
+          }
+        },
+        "parameters": {
+          "values": {
+            "type": "boolean"
+          },
+          "metadata": {
+            "x-empty": "emit"
+          }
+        }
+      },
+      "metadata": {
+        "x-wire-order": [
+          "selections",
+          "parameters"
+        ]
+      }
+    }
+  }
+}

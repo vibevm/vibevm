@@ -2835,7 +2835,9 @@ fn uninstalled_ordinary_configuration_existing_cli_and_mcp_do_not_describe_or_ev
         .map(|tool| tool["name"].as_str().unwrap())
         .collect();
     assert!(names.contains(&"query_package"));
-    assert!(!names.iter().any(|name| name.contains("configuration")));
+    // Historical absence receipt is retained in the qualification report;
+    // the new source-bound tool does not turn installed query into preview.
+    assert!(names.contains(&"configuration_preview"));
     let query = rows.iter().find(|row| row["id"] == 2).unwrap();
     assert!(query["result"]["isError"] == true || query.get("error").is_some());
     assert!(
@@ -2890,4 +2892,427 @@ fn uninstalled_ordinary_configuration_existing_cli_and_mcp_do_not_describe_or_ev
     assert!(data.status.success());
     let data: serde_json::Value = serde_json::from_slice(&data.stdout).unwrap();
     assert_eq!(data["packages"][0]["parameters"]["verbose"], false);
+}
+
+// Complete scratch-tree observation: absence differs from an empty root and
+// no `.vibe` entry is filtered as it is in project semantic snapshots.
+fn preview_scratch_snapshot(root: &Path) -> Option<BTreeMap<PathBuf, super::workspace::Entry>> {
+    use std::os::unix::fs::PermissionsExt;
+    fn walk(root: &Path, path: &Path, out: &mut BTreeMap<PathBuf, super::workspace::Entry>) {
+        use super::workspace::Entry;
+        let meta = fs::symlink_metadata(path).unwrap();
+        let entry = if meta.file_type().is_symlink() {
+            Entry::Symlink(fs::read_link(path).unwrap())
+        } else if meta.is_dir() {
+            Entry::Directory
+        } else {
+            Entry::File(meta.permissions().mode() & 0o777, fs::read(path).unwrap())
+        };
+        out.insert(path.strip_prefix(root).unwrap().to_owned(), entry);
+        if meta.is_dir() {
+            for child in fs::read_dir(path).unwrap() {
+                walk(root, &child.unwrap().path(), out);
+            }
+        }
+    }
+    match fs::symlink_metadata(root) {
+        Err(error) if error.kind() == std::io::ErrorKind::NotFound => None,
+        Err(error) => panic!("scratch root cannot be observed: {error}"),
+        Ok(_) => {
+            let mut out = BTreeMap::new();
+            walk(root, root, &mut out);
+            Some(out)
+        }
+    }
+}
+fn preview_fixture() -> Fixture {
+    let mut f = Fixture::new(false);
+    let registry = f.project.join("registry");
+    fs::rename(&f.registry, &registry).unwrap();
+    f.registry = registry;
+    let source = f.registry.join(GROUP).join(DRIVER).join("v1.0.0/vibe.toml");
+    let text = fs::read_to_string(&source).unwrap()
+        .replace("# This feature is never selected; base must remain a mandatory dependency.\n[[configuration.features]]\nid = \"mention-required\"\nname = \"Mention mandatory dependency\"\neffects = [{ kind = \"dependency\", target = \"org.vibevm/oracle-base\" }]\n", "")
+        .replace("defaults = [\"disabled\"]", "");
+    write(
+        &source,
+        text + "\n[[configuration.parameters]]\nid='verbose'\nname='Verbose'\ntype='bool'\nrequired=true\n",
+    );
+    write(
+        &f.project.join("vibe.toml"),
+        format!(
+            "[project]\nname='preview'\nversion='0.1.0'\n[requires.packages.'{GROUP}/{DRIVER}']\nversion='=1.0.0'\nlink='static-transitive'\n[[registry]]\nname='fixture'\nurl='file://{}'\n",
+            f.registry.display()
+        ),
+    );
+    f
+}
+fn preview_cli(f: &Fixture, input: Option<&Path>) -> Output {
+    let mut cmd = f.user.vibe();
+    cmd.args([
+        "show",
+        "configuration-preview",
+        &coordinate(DRIVER),
+        "--path",
+        f.project.to_str().unwrap(),
+        "--json",
+    ]);
+    if let Some(input) = input {
+        cmd.args(["--input", input.to_str().unwrap()]);
+    }
+    cmd.output().unwrap()
+}
+fn preview_mcp(f: &Fixture, arguments: serde_json::Value) -> serde_json::Value {
+    let script = serde_json::json!({"jsonrpc":"2.0","id":1,"method":"tools/call","params":{"name":"configuration_preview","arguments":arguments}}).to_string()+"\n";
+    let out = f
+        .user
+        .vibe()
+        .args([
+            "--offline",
+            "mcp",
+            "serve",
+            "--path",
+            f.project.to_str().unwrap(),
+        ])
+        .write_stdin(script)
+        .output()
+        .unwrap();
+    assert!(
+        out.status.success(),
+        "{}",
+        String::from_utf8_lossy(&out.stderr)
+    );
+    String::from_utf8(out.stdout)
+        .unwrap()
+        .lines()
+        .map(|line| serde_json::from_str::<serde_json::Value>(line).unwrap())
+        .find(|row| row["id"] == 1)
+        .unwrap()
+}
+#[test]
+fn ordinary_preview_cold_cli_and_registered_stdio_mcp_match_install_witness() {
+    let f = preview_fixture();
+    fs::remove_dir(&f.user.cache).unwrap();
+    fs::remove_dir(&f.user.search_cache).unwrap();
+    let before = super::workspace::semantic_snapshot(&f.project);
+    let cache_before = preview_scratch_snapshot(&f.user.cache);
+    let search_before = preview_scratch_snapshot(&f.user.search_cache);
+    let cli = preview_cli(&f, None);
+    assert!(
+        cli.status.success(),
+        "{}{}",
+        String::from_utf8_lossy(&cli.stdout),
+        String::from_utf8_lossy(&cli.stderr)
+    );
+    let described: serde_json::Value = serde_json::from_slice(&cli.stdout).unwrap();
+    assert_eq!(described["questions"].as_array().unwrap().len(), 2);
+    assert!(described.get("original").is_none() && described.get("resolved").is_none());
+    let mcp = preview_mcp(&f, serde_json::json!({"package":coordinate(DRIVER)}));
+    assert_eq!(mcp["result"]["structuredContent"], described, "{mcp}");
+    let answers =
+        serde_json::json!({"selections":{"extra":"disabled"},"parameters":{"verbose":false}});
+    let input = f.root.join("answers.json");
+    write(&input, serde_json::to_vec(&answers).unwrap());
+    let cli = preview_cli(&f, Some(&input));
+    assert!(
+        cli.status.success(),
+        "{}{}",
+        String::from_utf8_lossy(&cli.stdout),
+        String::from_utf8_lossy(&cli.stderr)
+    );
+    let evaluated: serde_json::Value = serde_json::from_slice(&cli.stdout).unwrap();
+    assert_eq!(evaluated["original"], answers);
+    assert_eq!(evaluated["resolved"]["parameters"]["verbose"], false);
+    assert_eq!(
+        evaluated["resolved"]["features"],
+        serde_json::json!(["disabled"])
+    );
+    assert_eq!(evaluated["questions"], serde_json::json!([]));
+    let mcp = preview_mcp(
+        &f,
+        serde_json::json!({"package":coordinate(DRIVER),"input":answers}),
+    );
+    assert_eq!(mcp["result"]["structuredContent"], evaluated, "{mcp}");
+    assert_eq!(super::workspace::semantic_snapshot(&f.project), before);
+    assert!(!f.user.settings.join("cache").exists());
+    assert_eq!(preview_scratch_snapshot(&f.user.cache), cache_before);
+    assert_eq!(
+        preview_scratch_snapshot(&f.user.search_cache),
+        search_before
+    );
+    let control = preview_fixture();
+    let request = control.project.join("vibe.toml");
+    write(&request, fs::read_to_string(&request).unwrap().replace("link='static-transitive'", "link='static-transitive'\nconfiguration={policy='require-selection',default_features=false,selections={extra={intent='exact',members=['disabled']}},parameters={verbose=false}}"));
+    control.install_ok();
+    let lock = control.lock();
+    let row = lock
+        .packages
+        .iter()
+        .find(|row| row.name.as_str() == DRIVER)
+        .unwrap();
+    assert_eq!(
+        evaluated["source"]["content_hash"],
+        row.content_hash.to_string()
+    );
+    assert_eq!(
+        lock.configurations[&coordinate(DRIVER)]
+            .selected_parameters(row.kind)
+            .unwrap()["verbose"],
+        vibe_core::manifest::ParameterValue::Bool(false)
+    );
+}
+#[test]
+fn ordinary_preview_refuses_invalid_answers_and_source_without_partial_effects() {
+    for input in [
+        serde_json::Value::Null,
+        serde_json::json!({"selections":{"unknown":"disabled"},"parameters":{"verbose":false}}),
+        serde_json::json!({"selections":{"extra":"unknown"},"parameters":{"verbose":false}}),
+        serde_json::json!({"selections":{"extra":"disabled"},"parameters":{"verbose":"false"}}),
+        serde_json::json!({"selections":{"extra":"disabled"},"parameters":{}}),
+        serde_json::json!({"protocol":"vibe-configuration-input/1","input":{}}),
+    ] {
+        let f = preview_fixture();
+        let before = super::workspace::semantic_snapshot(&f.project);
+        let cache_before = preview_scratch_snapshot(&f.user.cache);
+        let search_before = preview_scratch_snapshot(&f.user.search_cache);
+        let path = f.root.join("answers.json");
+        write(&path, serde_json::to_vec(&input).unwrap());
+        assert!(!preview_cli(&f, Some(&path)).status.success());
+        let mcp = preview_mcp(
+            &f,
+            serde_json::json!({"package":coordinate(DRIVER),"input":input}),
+        );
+        assert!(
+            mcp["result"]["isError"] == true || mcp.get("error").is_some(),
+            "{mcp}"
+        );
+        assert_eq!(super::workspace::semantic_snapshot(&f.project), before);
+        assert!(!f.user.settings.join("cache").exists());
+        assert_eq!(preview_scratch_snapshot(&f.user.cache), cache_before);
+        assert_eq!(
+            preview_scratch_snapshot(&f.user.search_cache),
+            search_before
+        );
+    }
+    for mutation in [
+        "external",
+        "unavailable",
+        "ambiguous",
+        "symlink",
+        "ambient",
+        "store",
+    ] {
+        let f = preview_fixture();
+        let manifest = f.project.join("vibe.toml");
+        match mutation {
+            "external" => {
+                let outside = f.root.join("outside");
+                fs::rename(&f.registry, &outside).unwrap();
+                write(
+                    &manifest,
+                    fs::read_to_string(&manifest)
+                        .unwrap()
+                        .replace(f.registry.to_str().unwrap(), outside.to_str().unwrap()),
+                );
+            }
+            "unavailable" => {
+                fs::rename(&f.registry, f.root.join("unavailable")).unwrap();
+            }
+            "ambiguous" => write(
+                &manifest,
+                fs::read_to_string(&manifest).unwrap()
+                    + "\n[[registry]]\nname='other'\nurl='file:///unavailable'\n",
+            ),
+            "symlink" => {
+                let held = f.registry.join(GROUP).join(DRIVER).join("v1.0.0/boot");
+                let outside = f.root.join("outside");
+                fs::rename(&held, &outside).unwrap();
+                std::os::unix::fs::symlink(&outside, &held).unwrap();
+            }
+            "ambient" => write(
+                &f.user.settings.join("registry.toml"),
+                "synthetic competing layer",
+            ),
+            "store" => fs::create_dir_all(f.user.settings.join("cache")).unwrap(),
+            _ => unreachable!(),
+        }
+        let before = super::workspace::semantic_snapshot(&f.project);
+        let cache_before = preview_scratch_snapshot(&f.user.cache);
+        let search_before = preview_scratch_snapshot(&f.user.search_cache);
+        assert!(!preview_cli(&f, None).status.success(), "{mutation}");
+        let mcp = preview_mcp(&f, serde_json::json!({"package":coordinate(DRIVER)}));
+        assert!(
+            mcp["result"]["isError"] == true || mcp.get("error").is_some(),
+            "{mutation}: {mcp}"
+        );
+        assert_eq!(preview_scratch_snapshot(&f.user.cache), cache_before);
+        assert_eq!(
+            preview_scratch_snapshot(&f.user.search_cache),
+            search_before
+        );
+        assert_eq!(
+            super::workspace::semantic_snapshot(&f.project),
+            before,
+            "{mutation}"
+        );
+    }
+}
+
+#[test]
+fn ordinary_preview_requires_explicit_host_mode_without_startup_seeding() {
+    for ci_only in [false, true] {
+        let f = preview_fixture();
+        let before = super::workspace::semantic_snapshot(&f.project);
+        let cache_before = preview_scratch_snapshot(&f.user.cache);
+        let search_before = preview_scratch_snapshot(&f.user.search_cache);
+        let settings = preview_scratch_snapshot(&f.user.settings);
+        let mut cli = f.user.vibe();
+        cli.env_remove("VIBE_NO_DEFAULT_REGISTRY").env_remove("CI");
+        if ci_only {
+            cli.env("CI", "1");
+        }
+        let out = cli
+            .args([
+                "show",
+                "configuration-preview",
+                &coordinate(DRIVER),
+                "--path",
+                f.project.to_str().unwrap(),
+                "--json",
+            ])
+            .output()
+            .unwrap();
+        assert!(!out.status.success());
+        let diagnostic = format!(
+            "{}{}",
+            String::from_utf8_lossy(&out.stdout),
+            String::from_utf8_lossy(&out.stderr)
+        );
+        assert!(
+            diagnostic.contains("isolated no-default-registry posture"),
+            "{diagnostic}"
+        );
+        let mut mcp = f.user.vibe();
+        mcp.env_remove("VIBE_NO_DEFAULT_REGISTRY").env_remove("CI");
+        if ci_only {
+            mcp.env("CI", "1");
+        }
+        let script=serde_json::json!({"jsonrpc":"2.0","id":1,"method":"tools/call","params":{"name":"configuration_preview","arguments":{"package":coordinate(DRIVER)}}}).to_string()+"\n";
+        let out = mcp
+            .args([
+                "--offline",
+                "mcp",
+                "serve",
+                "--path",
+                f.project.to_str().unwrap(),
+            ])
+            .write_stdin(script)
+            .output()
+            .unwrap();
+        assert!(out.status.success());
+        let diagnostic = String::from_utf8(out.stdout).unwrap();
+        assert!(
+            diagnostic.contains("isolated no-default-registry posture"),
+            "{diagnostic}"
+        );
+        assert_eq!(super::workspace::semantic_snapshot(&f.project), before);
+        assert_eq!(preview_scratch_snapshot(&f.user.settings), settings);
+        assert!(!f.user.settings.join("cache").exists());
+        assert_eq!(preview_scratch_snapshot(&f.user.cache), cache_before);
+        assert_eq!(
+            preview_scratch_snapshot(&f.user.search_cache),
+            search_before
+        );
+    }
+}
+
+#[test]
+fn ordinary_preview_refuses_effective_remap_layers_without_source_or_cache_changes() {
+    for mode in [
+        "user-settings",
+        "project-settings",
+        "argument",
+        "environment",
+    ] {
+        let f = preview_fixture();
+        let remap = "[[remap]]\nprefix='file:///'\ndeny=true\nreason='synthetic preview refusal'\n";
+        let remap_file = f.root.join("remap.toml");
+        write(&remap_file, remap);
+        match mode {
+            "user-settings" => write(&f.user.settings.join("settings.toml"), remap),
+            "project-settings" => write(&f.project.join(".vibe/settings.local.toml"), remap),
+            _ => {}
+        }
+        let project = preview_scratch_snapshot(&f.project);
+        let settings = preview_scratch_snapshot(&f.user.settings);
+        let cache = preview_scratch_snapshot(&f.user.cache);
+        let search = preview_scratch_snapshot(&f.user.search_cache);
+        let mut cli = f.user.vibe();
+        let mut mcp = f.user.vibe();
+        if mode == "argument" {
+            cli.args(["--remap", remap_file.to_str().unwrap()]);
+            mcp.args(["--remap", remap_file.to_str().unwrap()]);
+        }
+        if mode == "environment" {
+            cli.env("VIBE_REMAP", &remap_file);
+            mcp.env("VIBE_REMAP", &remap_file);
+        }
+        let out = cli
+            .args([
+                "show",
+                "configuration-preview",
+                &coordinate(DRIVER),
+                "--path",
+                f.project.to_str().unwrap(),
+                "--json",
+            ])
+            .output()
+            .unwrap();
+        assert!(!out.status.success(), "{mode}");
+        let diagnostic = format!(
+            "{}{}",
+            String::from_utf8_lossy(&out.stdout),
+            String::from_utf8_lossy(&out.stderr)
+        );
+        assert!(
+            diagnostic.contains("remap") || diagnostic.contains("ambient source layer"),
+            "{mode}: {diagnostic}"
+        );
+        let script=serde_json::json!({"jsonrpc":"2.0","id":1,"method":"tools/call","params":{"name":"configuration_preview","arguments":{"package":coordinate(DRIVER)}}}).to_string()+"\n";
+        let out = mcp
+            .args([
+                "--offline",
+                "mcp",
+                "serve",
+                "--path",
+                f.project.to_str().unwrap(),
+            ])
+            .write_stdin(script)
+            .output()
+            .unwrap();
+        assert!(
+            out.status.success(),
+            "{mode}: {}",
+            String::from_utf8_lossy(&out.stderr)
+        );
+        let response: serde_json::Value = String::from_utf8(out.stdout)
+            .unwrap()
+            .lines()
+            .map(|line| serde_json::from_str::<serde_json::Value>(line).unwrap())
+            .find(|row| row["id"] == 1)
+            .unwrap();
+        assert_eq!(response["result"]["isError"], true, "{mode}: {response}");
+        assert_eq!(preview_scratch_snapshot(&f.project), project, "{mode}");
+        assert_eq!(
+            preview_scratch_snapshot(&f.user.settings),
+            settings,
+            "{mode}"
+        );
+        assert_eq!(preview_scratch_snapshot(&f.user.cache), cache, "{mode}");
+        assert_eq!(
+            preview_scratch_snapshot(&f.user.search_cache),
+            search,
+            "{mode}"
+        );
+    }
 }

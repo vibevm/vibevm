@@ -122,6 +122,10 @@ pub enum ToolError {
         message: String,
     },
 
+    /// Ordinary configuration preview refused before effects.
+    #[error(transparent)]
+    ConfigurationPreview(Box<vibe_core::manifest::PackageConfigurationError>),
+
     #[error(
         "invalid arguments: {0} \
          (violates spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-015#tools; \

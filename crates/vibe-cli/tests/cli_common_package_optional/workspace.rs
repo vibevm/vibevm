@@ -215,12 +215,12 @@ fn assert_combined_world(fixture: &Fixture) {
 }
 
 #[derive(Debug, PartialEq, Eq)]
-enum Entry {
+pub(super) enum Entry {
     Directory,
     File(u32, Vec<u8>),
     Symlink(PathBuf),
 }
-fn semantic_snapshot(root: &Path) -> BTreeMap<PathBuf, Entry> {
+pub(super) fn semantic_snapshot(root: &Path) -> BTreeMap<PathBuf, Entry> {
     fn walk(root: &Path, path: &Path, output: &mut BTreeMap<PathBuf, Entry>) {
         let relative = path.strip_prefix(root).unwrap().to_owned();
         let metadata = fs::symlink_metadata(path).unwrap();

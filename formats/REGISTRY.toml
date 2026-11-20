@@ -2202,3 +2202,21 @@ recoverable = false
 foreign_parsers = "none"
 corpus = "formats/corpora/package-skills/e2"
 sunset = "none"
+
+[format.ordinary-configuration-preview-request]
+epoch = 1
+schema = "schemas/ordinary_configuration_preview_request.jtd.json"
+recoverable = true
+foreign_parsers = "many"
+unknown_fields = "deny"
+corpus = "none"
+sunset = "none"
+
+[format.ordinary-configuration-preview-result]
+epoch = 1
+schema = "schemas/ordinary_configuration_preview_result.jtd.json"
+recoverable = true
+foreign_parsers = "many"
+unknown_fields = "deny"
+corpus = "none"
+sunset = "none"

@@ -209,6 +209,8 @@ pub enum FormatId {
     NativePackageReply,
     NativePackageRequest,
     NativeReply,
+    OrdinaryConfigurationPreviewRequest,
+    OrdinaryConfigurationPreviewResult,
     PackageSkillReceipt,
     PackageSkillReceiptV1,
     PackageSkillReceiptV2,

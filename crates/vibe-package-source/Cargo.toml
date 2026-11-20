@@ -22,6 +22,10 @@ vibe-install.workspace = true
 vibe-orchestrator.workspace = true
 vibe-registry.workspace = true
 vibe-resolver.workspace = true
+# Read-only source-bound preview and its canonical generated wire.
+vibe-safefs.workspace = true
+vibe-wire.workspace = true
+serde_json.workspace = true
 
 [dev-dependencies]
 # The dependency exact-set RED parses this crate's own Cargo.toml.

@@ -29,6 +29,7 @@ specmark::scope!("spec://org.vibevm.core/vibevm/VIBEVM-SPEC#install-workflow-in-
 
 mod builder;
 pub(crate) mod cells;
+pub mod configuration_preview;
 mod factory;
 mod operation;
 mod options;

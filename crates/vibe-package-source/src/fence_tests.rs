@@ -34,6 +34,9 @@ fn the_composition_has_exactly_its_accepted_lower_dependencies() {
         "vibe-orchestrator",
         "vibe-registry",
         "vibe-resolver",
+        "vibe-safefs",
+        "vibe-wire",
+        "serde_json",
     ]);
     assert_eq!(
         actual, expected,

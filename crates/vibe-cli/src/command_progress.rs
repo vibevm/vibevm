@@ -353,7 +353,8 @@ pub(crate) fn policy(command: &Command, terminal_attached: bool) -> CommandPolic
         },
         Command::Friends(_) => FiniteFallback("Command friends"),
         Command::Show(args) => match &args.command {
-            ShowSubcommand::ConfigurationData(_)
+            ShowSubcommand::ConfigurationPreview(_)
+            | ShowSubcommand::ConfigurationData(_)
             | ShowSubcommand::Effective(_)
             | ShowSubcommand::Config(_)
             | ShowSubcommand::Features(_)
