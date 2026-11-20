@@ -257,3 +257,5 @@ Four historical revisions distinguish an inclusive stable-read bound from zero, 
 The stream contract at `ae083f59f9` distinguishes requested cancellation from a reached safe stop. At `775329bc64`, cold inspection preserves observed partial artifacts and known run identity when a previously ready operation has a damaged capsule. Historical source review only.
 
 Three historical changes distinguish a supplied projection occurrence ID from its observation, exact local Install permission from script approval, and read-only peer attachment from a new submission. The selected source and test changes were read, not executed.
+
+Three source reviews distinguish selected draft fields from approval, a matching outer hash from valid embedded bytes, and the absence of structured output from explicit JSON null. The corresponding historical regression assertions were inspected without executing them.
