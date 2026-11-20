@@ -291,3 +291,5 @@ Thirteen historical lifecycle and acquisition changes distinguish input self-val
 Nine revisions distinguish a prepared journal, partial outputs and owner-published terminal reports. Fake publication tests are not evidence of a live adapter. No historical effect was re-executed.
 
 Nineteen cold-attach and publication revisions distinguish run and payload metadata, local staging, current approval, stream consumption and remote observation. Bounded per-file evidence is indexed separately; no release, transfer or native runtime result is inferred.
+
+Twenty-six release and package-Git changes were reviewed at named paths: bounded observation, private call selection, historical terminal sealing, local byte custody, Gitlink inspection and object provenance have distinct owners. No hosted release or push ran.
