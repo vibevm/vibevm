@@ -15,6 +15,15 @@ pub enum KitCommand {
         #[arg(long, default_value = "vibe-kit.toml")]
         file: PathBuf,
     },
+    /// Produce a local kit in a new directory; never replace output.
+    /// Bundle is verified; installer is an author-trusted, hash-pinned input,
+    /// not authenticated for provenance or role and never run by this command.
+    Build {
+        #[arg(long)]
+        file: PathBuf,
+        #[arg(long)]
+        out: PathBuf,
+    },
     /// Validate recipe structure and, by default, actual pinned local inputs.
     Validate {
         #[arg(long)]

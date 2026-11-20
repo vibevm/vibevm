@@ -8,6 +8,8 @@ use serde::Deserialize;
 use std::path::{Component, Path};
 use vibe_safefs::{Pinned, Project};
 
+mod build;
+
 const TEMPLATE: &str = include_str!("kit/template.toml");
 const RECIPE_LIMIT: usize = 64 * 1024;
 const PROFILE_LIMIT: usize = 1024 * 1024;
@@ -38,9 +40,10 @@ struct Input {
 pub fn run(ctx: &output::Context, args: KitArgs) -> Result<()> {
     ensure!(
         !ctx.is_json(),
-        "kit init/validate do not expose a machine report protocol yet"
+        "kit commands do not expose a machine report protocol yet"
     );
     match args.command {
+        KitCommand::Build { file, out } => build::run(ctx, &file, &out)?,
         KitCommand::Init { file } => {
             let (project, name) = recipe_scope(&file)?;
             project.publish_new_in(&project.root_dir()?, &name, TEMPLATE.as_bytes())

@@ -1,4 +1,6 @@
 //! Self-service recipe creation from a non-project, with no private kit inputs.
+#[path = "cli_kit/build.rs"]
+mod build;
 mod common;
 use common::UserScratch;
 use sha2::{Digest, Sha256};
