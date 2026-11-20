@@ -57,6 +57,16 @@ impl Lockfile {
             }
         }
         for (key, record) in &self.configurations {
+            if record
+                .automatic_basis
+                .as_ref()
+                .is_some_and(|basis| !basis.consumer_choice_sets.is_empty())
+                && self.meta.schema_version < MULTI_CHOICE_BASIS_SCHEMA_VERSION
+            {
+                return Err(invalid(
+                    "multi-member default reliance requires schema15".into(),
+                ));
+            }
             if !record.forwarded_inputs.is_empty()
                 && self.meta.schema_version < FORWARDED_INPUT_SCHEMA_VERSION
             {
@@ -315,6 +325,7 @@ impl Lockfile {
                 | AUTOMATIC_BASIS_SCHEMA_VERSION
                 | SUBSKILL_WITNESS_SCHEMA_VERSION
                 | FORWARDED_INPUT_SCHEMA_VERSION
+                | MULTI_CHOICE_BASIS_SCHEMA_VERSION
         ) {
             return Err(crate::Error::UnsupportedLockfile {
                 found: self.meta.schema_version,
@@ -326,7 +337,14 @@ impl Lockfile {
         // rule the 7 → 8 → 9 steps already followed: a project with no
         // template package and no channel requirement writes exactly the
         // bytes it wrote before PROP-075 (AV-FMT-002).
-        value.meta.schema_version = if value
+        value.meta.schema_version = if value.configurations.values().any(|record| {
+            record
+                .automatic_basis
+                .as_ref()
+                .is_some_and(|basis| !basis.consumer_choice_sets.is_empty())
+        }) {
+            MULTI_CHOICE_BASIS_SCHEMA_VERSION
+        } else if value
             .configurations
             .values()
             .any(|record| !record.forwarded_inputs.is_empty())

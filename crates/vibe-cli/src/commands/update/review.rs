@@ -215,6 +215,11 @@ pub(super) fn gate(
         .automatic_basis
         .as_ref()
         .ok_or_else(|| anyhow::anyhow!("removed automatic basis is not reviewable"))?;
+    if !old_basis.consumer_choice_sets.is_empty() || !new_basis.consumer_choice_sets.is_empty() {
+        bail!(
+            "multi-member automatic default renewal is not connected; scalar review tokens cannot authorize it"
+        );
+    }
     let mut differences = Vec::new();
     for (consumer, groups) in &old_basis.consumer_choices {
         for (group, member) in groups {

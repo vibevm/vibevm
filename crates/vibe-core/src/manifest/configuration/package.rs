@@ -49,6 +49,9 @@ pub struct ForwardedInput {
 pub struct AutomaticBasis {
     pub definition_fingerprint: String,
     pub consumer_choices: BTreeMap<String, BTreeMap<String, String>>,
+    /// Lossless zero-or-more reliance, including a declared empty member set.
+    #[serde(default, skip_serializing_if = "BTreeMap::is_empty")]
+    pub consumer_choice_sets: BTreeMap<String, BTreeMap<String, Vec<String>>>,
 }
 
 /// Configuration admission has not produced an executable package selection.
@@ -173,6 +176,7 @@ impl PackageConfiguration {
         }
         let mut public_parameters: BTreeMap<String, bool> = BTreeMap::new();
         let mut automatic_choices = BTreeMap::new();
+        let mut automatic_choice_sets = BTreeMap::new();
         let mut ordinary = BTreeSet::new();
         let mut choices = Vec::new();
         for (consumer, input) in consumers {
@@ -201,6 +205,7 @@ impl PackageConfiguration {
                 super::basis::Authority::Reuse,
             );
             let mut selected_defaults = BTreeMap::new();
+            let mut selected_default_sets = BTreeMap::new();
             for reason in reasons {
                 if reason == super::basis::ConsumerReliance::Profile {
                     // Profile reliance is retained by original profile input and
@@ -215,6 +220,38 @@ impl PackageConfiguration {
                 let Some(super::ConfigurationGroupDecl::Choice { cardinality, defaults: Some(defaults), members, guards, .. }) = definition.groups.iter().find(|group| matches!(group, super::ConfigurationGroupDecl::Choice { id, .. } if id == &group_id)) else {
                     return Err(unsupported("automatic choice needs a declared exactly-one default"));
                 };
+                if *cardinality == crate::configuration::Cardinality::ZeroOrMore {
+                    let multi_groups = definition
+                        .groups
+                        .iter()
+                        .filter(|group| {
+                            matches!(
+                                group,
+                                super::ConfigurationGroupDecl::Choice {
+                                    cardinality: crate::configuration::Cardinality::ZeroOrMore,
+                                    ..
+                                }
+                            )
+                        })
+                        .count();
+                    if !guards.is_empty()
+                        || !definition.parameters.is_empty()
+                        || !definition.profiles.is_empty()
+                        || multi_groups != 1
+                    {
+                        return Err(unsupported(
+                            "only one unguarded zero-or-more default group without parameters or profiles is connected",
+                        ));
+                    }
+                    let canonical = defaults
+                        .iter()
+                        .cloned()
+                        .collect::<BTreeSet<_>>()
+                        .into_iter()
+                        .collect();
+                    selected_default_sets.insert(group_id, canonical);
+                    continue;
+                }
                 if *cardinality != crate::configuration::Cardinality::ExactlyOne
                     || defaults.len() != 1
                     || !guards.is_empty()
@@ -228,6 +265,9 @@ impl PackageConfiguration {
             }
             if !selected_defaults.is_empty() {
                 automatic_choices.insert(consumer.clone(), selected_defaults);
+            }
+            if !selected_default_sets.is_empty() {
+                automatic_choice_sets.insert(consumer.clone(), selected_default_sets);
             }
             for parameter in &definition.parameters {
                 if parameter.secret
@@ -465,7 +505,7 @@ impl PackageConfiguration {
                 "active transitive configuration requires candidate-conditioned incoming consumers",
             ));
         }
-        let automatic_basis = if automatic_choices.is_empty() {
+        let automatic_basis = if automatic_choices.is_empty() && automatic_choice_sets.is_empty() {
             None
         } else {
             Some(AutomaticBasis {
@@ -473,6 +513,7 @@ impl PackageConfiguration {
                     .semantic_fingerprint()
                     .map_err(|e| invalid(e.to_string()))?,
                 consumer_choices: automatic_choices,
+                consumer_choice_sets: automatic_choice_sets,
             })
         };
         Ok(Self {

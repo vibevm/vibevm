@@ -39,7 +39,9 @@ use super::{Materialization, read_toml, write_toml};
 /// Latest supported lock schema. Schema7 remains readable without inventing
 /// original requests; schema8 carries common package configuration. Ordinary
 /// legacy-only writes retain7. Rich locks cannot be regenerated as empty.
-pub const CURRENT_SCHEMA_VERSION: u32 = 14;
+pub const CURRENT_SCHEMA_VERSION: u32 = 15;
+/// Lossless zero-or-more automatic member-set reliance.
+pub const MULTI_CHOICE_BASIS_SCHEMA_VERSION: u32 = 15;
 /// Separately retained candidate-owned forwarded feature inputs.
 pub const FORWARDED_INPUT_SCHEMA_VERSION: u32 = 14;
 /// Independently source-admitted configured lazy-pull member witnesses.

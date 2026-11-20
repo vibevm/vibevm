@@ -40,7 +40,7 @@ fn new_fields_do_not_force_ordinary_legacy_or_configuration_epoch_changes() {
     // template record with no digest document. The point of this test is
     // that an ordinary lock is untouched by it, which the first
     // assertion above still measures.
-    assert_eq!(CURRENT_SCHEMA_VERSION, 14);
+    assert_eq!(CURRENT_SCHEMA_VERSION, 15);
 }
 #[test]
 fn explicit_binding_rejects_credentials_without_printing_them() {

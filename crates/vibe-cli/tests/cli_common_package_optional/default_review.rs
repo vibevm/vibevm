@@ -4478,8 +4478,6 @@ fn zero_or_more_defaults_omitted_empty_matching_and_require_selection_public_bou
             matches!(world, "omitted-default" | "explicit-match")
         );
         assert_eq!(!evaluated.defaults.is_empty(), world == "omitted-default");
-        let complete_before = preview_scratch_snapshot(&f.project).unwrap();
-        let before = super::workspace::semantic_snapshot(&f.project);
         let source_before = preview_scratch_snapshot(&f.registry);
         let out = f.install();
         let diagnostic = format!(
@@ -4491,48 +4489,25 @@ fn zero_or_more_defaults_omitted_empty_matching_and_require_selection_public_bou
             "zero-or-more world={world} status={} diagnostic={diagnostic}",
             out.status
         );
-        if world == "omitted-default" {
-            assert!(!out.status.success(), "{diagnostic}");
-            assert!(
-                diagnostic
-                    .contains("only unguarded exactly-one single-member defaults are connected"),
-                "{diagnostic}"
-            );
-            assert_eq!(super::workspace::semantic_snapshot(&f.project), before);
-            assert!(!f.project.join("vibe.lock").exists());
-            assert!(!f.slot(DRIVER).exists());
-            assert!(!f.slot(BASE).exists());
-            assert!(!f.slot(EXTRA).exists());
-            assert!(!f.project.join("effects.log").exists());
-            let mut complete_after = preview_scratch_snapshot(&f.project).unwrap();
-            let expected = preview_scratch_snapshot(&f.project.join(".vibe")).unwrap();
-            assert_eq!(
-                expected.len(),
-                2,
-                "unexpected refusal coordination: {expected:?}"
-            );
-            assert!(expected.contains_key(Path::new("")));
-            assert!(expected.contains_key(Path::new("lifecycle.lock")));
-            assert_eq!(
-                fs::read(f.project.join(".vibe/lifecycle.lock")).unwrap(),
-                Vec::<u8>::new()
-            );
-            assert!(complete_after.remove(Path::new(".vibe")).is_some());
-            assert!(
-                complete_after
-                    .remove(Path::new(".vibe/lifecycle.lock"))
-                    .is_some()
-            );
-            assert_eq!(complete_after, complete_before);
-        } else {
+        {
             assert!(out.status.success(), "{world}: {diagnostic}");
             let lock = f.lock();
             let record = &lock.configurations[&coordinate(DRIVER)];
             assert_eq!(record.consumers.len(), 1);
             assert_eq!(record.consumers.values().next().unwrap(), original);
-            assert!(record.automatic_basis.is_none());
-            assert_eq!(lock.meta.schema_version, 8);
-            let selected = world == "explicit-match";
+            if world == "omitted-default" {
+                let basis = record.automatic_basis.as_ref().unwrap();
+                assert!(basis.consumer_choices.is_empty());
+                assert_eq!(
+                    basis.consumer_choice_sets.values().next().unwrap()["extra"],
+                    vec!["enabled"]
+                );
+                assert_eq!(lock.meta.schema_version, 15);
+            } else {
+                assert!(record.automatic_basis.is_none());
+                assert_eq!(lock.meta.schema_version, 8);
+            }
+            let selected = matches!(world, "omitted-default" | "explicit-match");
             assert_eq!(record.features.contains(&"enabled".to_owned()), selected);
             assert_eq!(
                 record.active_dependencies.contains(&coordinate(EXTRA)),
@@ -4555,5 +4530,300 @@ fn zero_or_more_defaults_omitted_empty_matching_and_require_selection_public_bou
                 .as_ref()
                 .map(|entries| entries.keys().collect::<Vec<_>>())
         );
+    }
+}
+
+fn multi_default_fixture(defaults: &str) -> Fixture {
+    let f = Fixture::new(false);
+    configure(&f, true);
+    let path = f.registry.join(GROUP).join(DRIVER).join("v1.0.0/vibe.toml");
+    write(
+        &path,
+        fs::read_to_string(&path)
+            .unwrap()
+            .replace(
+                "cardinality = \"exactly-one\"",
+                "cardinality = \"zero-or-more\"",
+            )
+            .replace(
+                "defaults = [\"enabled\"]",
+                &format!("defaults = {defaults}"),
+            ),
+    );
+    f
+}
+
+#[test]
+fn zero_or_more_multi_default_basis_is_lossless_and_tamper_refuses() {
+    for mutation in [
+        "none",
+        "empty-declared",
+        "duplicate",
+        "missing",
+        "unknown",
+        "stale",
+        "old-epoch",
+    ] {
+        let f = multi_default_fixture(if mutation == "empty-declared" {
+            "[]"
+        } else {
+            "[\"enabled\",\"disabled\"]"
+        });
+        let original = fs::read(f.project.join("vibe.toml")).unwrap();
+        f.install_ok();
+        let mut lock = f.lock();
+        assert_eq!(lock.meta.schema_version, 15);
+        let record = lock.configurations.get_mut(&coordinate(DRIVER)).unwrap();
+        assert!(
+            record
+                .consumers
+                .values()
+                .all(|input| input.selections.is_empty())
+        );
+        let basis = record.automatic_basis.as_mut().unwrap();
+        assert!(basis.consumer_choices.is_empty());
+        let members = basis
+            .consumer_choice_sets
+            .values_mut()
+            .next()
+            .unwrap()
+            .get_mut("extra")
+            .unwrap();
+        assert_eq!(
+            *members,
+            if mutation == "empty-declared" {
+                Vec::<String>::new()
+            } else {
+                vec!["disabled".to_owned(), "enabled".to_owned()]
+            }
+        );
+        match mutation {
+            "duplicate" => members.push("enabled".into()),
+            "missing" => {
+                members.pop();
+            }
+            "unknown" => members.push("unknown".into()),
+            "stale" => basis.definition_fingerprint = "stale".into(),
+            "old-epoch" => lock.meta.schema_version = 14,
+            _ => {}
+        }
+        if matches!(mutation, "none" | "empty-declared") {
+            assert_eq!(f.slot(EXTRA).exists(), mutation == "none");
+            let before = super::workspace::semantic_snapshot(&f.project);
+            f.install_ok();
+            assert_eq!(super::workspace::semantic_snapshot(&f.project), before);
+        } else {
+            write(
+                &f.project.join("vibe.lock"),
+                toml::to_string(&lock).unwrap(),
+            );
+            let before = super::workspace::semantic_snapshot(&f.project);
+            assert!(
+                Lockfile::read(f.project.join("vibe.lock")).is_err(),
+                "{mutation}"
+            );
+            assert!(!f.install().status.success());
+            assert_eq!(super::workspace::semantic_snapshot(&f.project), before);
+        }
+        assert_eq!(fs::read(f.project.join("vibe.toml")).unwrap(), original);
+    }
+}
+
+#[test]
+fn zero_or_more_unselected_version_leaves_no_basis_and_changed_defaults_refuse_update() {
+    for changed in [false, true] {
+        let f = multi_default_fixture("[\"enabled\"]");
+        let old = f.registry.join(GROUP).join(DRIVER).join("v1.0.0");
+        let next = f.registry.join(GROUP).join(DRIVER).join("v1.1.0");
+        write(
+            &next.join("vibe.toml"),
+            fs::read_to_string(old.join("vibe.toml"))
+                .unwrap()
+                .replace("version='1.0.0'", "version='1.1.0'")
+                .replace("defaults = [\"enabled\"]", "defaults = [\"disabled\"]"),
+        );
+        write(&next.join("boot/rules.md"), "UNSELECTED_VERSION_MARKER\n");
+        let request = f.project.join("vibe.toml");
+        write(
+            &request,
+            fs::read_to_string(&request)
+                .unwrap()
+                .replace("version='^1'", "version='=1.0.0'"),
+        );
+        f.install_ok();
+        let lock = f.lock();
+        assert_eq!(
+            lock.find(&GROUP.parse().unwrap(), DRIVER)
+                .unwrap()
+                .version
+                .to_string(),
+            "1.0.0"
+        );
+        assert_eq!(
+            lock.configurations[&coordinate(DRIVER)]
+                .automatic_basis
+                .as_ref()
+                .unwrap()
+                .consumer_choice_sets
+                .values()
+                .next()
+                .unwrap()["extra"],
+            vec!["enabled"]
+        );
+        assert!(!f.static_boot().contains("UNSELECTED_VERSION_MARKER"));
+        assert!(f.slot(EXTRA).exists());
+        if changed {
+            write(
+                &request,
+                fs::read_to_string(&request)
+                    .unwrap()
+                    .replace("version='=1.0.0'", "version='^1'"),
+            );
+            let before = super::workspace::semantic_snapshot(&f.project);
+            let out = update(&f);
+            let diagnostic = format!(
+                "{}{}",
+                String::from_utf8_lossy(&out.stdout),
+                String::from_utf8_lossy(&out.stderr)
+            );
+            assert!(!out.status.success(), "{diagnostic}");
+            assert!(
+                diagnostic.contains("multi-member automatic default renewal is not connected"),
+                "{diagnostic}"
+            );
+            assert!(!diagnostic.contains("package-default-review/1:sha256:"));
+            assert_eq!(super::workspace::semantic_snapshot(&f.project), before);
+            let scalar = review_fixture();
+            let shown = update(&scalar);
+            let proposal: serde_json::Value = serde_json::from_slice(&shown.stderr).unwrap();
+            let token = proposal["proposal"]["review_id"].as_str().unwrap();
+            let rejected = respond(&f, token);
+            assert!(!rejected.status.success());
+            let diagnostic = format!(
+                "{}{}",
+                String::from_utf8_lossy(&rejected.stdout),
+                String::from_utf8_lossy(&rejected.stderr)
+            );
+            assert!(
+                diagnostic.contains("multi-member automatic default renewal is not connected"),
+                "{diagnostic}"
+            );
+            assert_eq!(super::workspace::semantic_snapshot(&f.project), before);
+        } else {
+            let before = super::workspace::semantic_snapshot(&f.project);
+            f.install_ok();
+            assert_eq!(super::workspace::semantic_snapshot(&f.project), before);
+        }
+    }
+}
+
+#[test]
+fn zero_or_more_prior_reader_writer_refuse_new_basis_and_preserve_scalar_bytes() {
+    let old = std::env::var_os("NST_MULTI_OLD_CLI")
+        .expect("mandatory multi-default prior CLI must be explicitly mounted");
+    for world in ["multi", "empty", "scalar"] {
+        for operation in ["reader", "writer"] {
+            let f = if world == "scalar" {
+                let f = Fixture::new(false);
+                configure(&f, true);
+                f
+            } else {
+                multi_default_fixture(if world == "empty" {
+                    "[]"
+                } else {
+                    "[\"enabled\",\"disabled\"]"
+                })
+            };
+            f.install_ok();
+            let lock = fs::read_to_string(f.project.join("vibe.lock")).unwrap();
+            if world == "scalar" {
+                assert!(!lock.contains("consumer_choice_sets"));
+                assert_eq!(f.lock().meta.schema_version, 12);
+            } else {
+                assert!(lock.contains("consumer_choice_sets"));
+                assert_eq!(f.lock().meta.schema_version, 15);
+            }
+            let before = super::workspace::semantic_snapshot(&f.project);
+            let args = if operation == "reader" {
+                vec![
+                    "show",
+                    "features",
+                    "--path",
+                    f.project.to_str().unwrap(),
+                    "--json",
+                ]
+            } else {
+                vec![
+                    "install",
+                    "--path",
+                    f.project.to_str().unwrap(),
+                    "--offline",
+                    "--assume-yes",
+                    "--json",
+                ]
+            };
+            let out = std::process::Command::new(&old)
+                .env_clear()
+                .env("HOME", f.root.join("home"))
+                .env("VIBE_SETTINGS", &f.user.settings)
+                .env("VIBE_NO_DEFAULT_REGISTRY", "1")
+                .env("PATH", "/usr/bin:/bin")
+                .args(args)
+                .output()
+                .unwrap();
+            let diagnostic = format!(
+                "{}{}",
+                String::from_utf8_lossy(&out.stdout),
+                String::from_utf8_lossy(&out.stderr)
+            );
+            println!(
+                "prior multi world={world} operation={operation} status={} diagnostic={diagnostic}",
+                out.status
+            );
+            if world == "scalar" {
+                assert!(out.status.success(), "{diagnostic}");
+            } else {
+                assert!(!out.status.success(), "{diagnostic}");
+                assert!(
+                    diagnostic.contains("consumer_choice_sets") || diagnostic.contains("schema"),
+                    "{diagnostic}"
+                );
+            }
+            assert_eq!(super::workspace::semantic_snapshot(&f.project), before);
+        }
+    }
+}
+
+#[test]
+fn zero_or_more_absent_default_and_guarded_automatic_remain_closed() {
+    for world in ["absent", "guarded"] {
+        let f = multi_default_fixture("[]");
+        let path = f.registry.join(GROUP).join(DRIVER).join("v1.0.0/vibe.toml");
+        let text = fs::read_to_string(&path).unwrap();
+        write(
+            &path,
+            if world == "absent" {
+                text.replace("defaults = []", "")
+            } else {
+                text + "\nguards=[{member='gate-on'}]\n[[configuration.features]]\nid='gate-on'\nname='Gate on'\n[[configuration.groups]]\nmode='choice'\nid='gate'\nname='Gate'\ncardinality='exactly-one'\nmembers=['gate-on']\ndefaults=['gate-on']\n"
+            },
+        );
+        let before = super::workspace::semantic_snapshot(&f.project);
+        let out = f.install();
+        let diagnostic = format!(
+            "{}{}",
+            String::from_utf8_lossy(&out.stdout),
+            String::from_utf8_lossy(&out.stderr)
+        );
+        assert!(!out.status.success(), "{world}: {diagnostic}");
+        assert!(
+            diagnostic.contains(if world == "absent" {
+                "automatic choice needs a declared exactly-one default"
+            } else {
+                "only one unguarded zero-or-more default group"
+            }),
+            "{world}: {diagnostic}"
+        );
+        assert_eq!(super::workspace::semantic_snapshot(&f.project), before);
     }
 }
