@@ -259,3 +259,5 @@ The stream contract at `ae083f59f9` distinguishes requested cancellation from a 
 Three historical changes distinguish a supplied projection occurrence ID from its observation, exact local Install permission from script approval, and read-only peer attachment from a new submission. The selected source and test changes were read, not executed.
 
 Three source reviews distinguish selected draft fields from approval, a matching outer hash from valid embedded bytes, and the absence of structured output from explicit JSON null. The corresponding historical regression assertions were inspected without executing them.
+
+Two historical held-root changes separate same-path copied records from the original directory and bound receipt enumeration from legacy traversal. This review read the implementations and regression assertions; it did not run them.
