@@ -7740,3 +7740,260 @@ fn project_app_missing_identity_refuses_without_package_publication() {
         assert!(!f.project.join("vibevm/vibeopt").exists());
     }
 }
+
+fn read_consent_data_definition() -> &'static str {
+    "\n[configuration.config_values]\nselected=true\n[[configuration.features]]\nid='off'\nname='Off'\n[[configuration.features]]\nid='on'\nname='On'\neffects=[{kind='config-value',name='selected'}]\n[[configuration.groups]]\nmode='choice'\nid='mode'\nname='Mode'\ncardinality='exactly-one'\nmembers=['off','on']\n"
+}
+fn read_consent_kernel_choice(
+    manifest: &Manifest,
+    on: bool,
+) -> BTreeMap<String, vibe_core::manifest::ParameterValue> {
+    let intent: vibe_core::manifest::ConfigurationIntentDecl = toml::from_str(&format!("policy='require-selection'\ndefault_features=false\nselections.mode={{intent='exact',members=['{}']}}\n",if on {"on"} else {"off"})).unwrap();
+    let record = vibe_core::manifest::PackageConfiguration::evaluate(
+        manifest,
+        &BTreeMap::from([("./vibe.toml".into(), intent)]),
+    )
+    .unwrap();
+    record
+        .selected_data(manifest.require_package().unwrap().kind)
+        .unwrap()
+}
+
+#[test]
+fn registered_doc_read_data_choice_is_not_a_public_choice_input() {
+    let f = Fixture::new(false);
+    // This subject uses no package installation; the Doc is authored in-tree.
+    let docs = f.project.join("vibevm/vibepacks/org.example/manual/v1.0.0");
+    let source = docs.join("vibe.toml");
+    write(
+        &source,
+        format!(
+            "[package]\ngroup='org.example'\nname='manual'\nversion='1.0.0'\nkind='doc'\ntitle='Manual'\nabstract='A valid synthetic documentation page.'\n[[documents]]\npackage='org.example/subject'\nversion='*'\n{}",
+            read_consent_data_definition()
+        ),
+    );
+    write(
+        &docs.join("vibevm/vibespecs/guide.xml"),
+        "<spec xmlns='https://vibevm.org/spec/1'><title id='root'>Manual</title><p>DOC_READ_SYNTHETIC_PAGE</p></spec>",
+    );
+    let listing_script =
+        serde_json::json!({"jsonrpc":"2.0","id":1,"method":"tools/list","params":{}}).to_string()
+            + "\n";
+    let listed = f
+        .user
+        .vibe()
+        .args([
+            "--offline",
+            "mcp",
+            "serve",
+            "--path",
+            f.project.to_str().unwrap(),
+        ])
+        .write_stdin(listing_script)
+        .output()
+        .unwrap();
+    assert!(listed.status.success());
+    let rows: Vec<serde_json::Value> = String::from_utf8(listed.stdout)
+        .unwrap()
+        .lines()
+        .map(|line| serde_json::from_str(line).unwrap())
+        .collect();
+    let descriptor = rows.iter().find(|r| r["id"] == 1).unwrap()["result"]["tools"]
+        .as_array()
+        .unwrap()
+        .iter()
+        .find(|tool| tool["name"] == "read_doc")
+        .unwrap();
+    assert_eq!(descriptor["inputSchema"]["additionalProperties"], false);
+    assert!(
+        descriptor["inputSchema"]["properties"]
+            .get("input")
+            .is_none()
+    );
+    let manifest = Manifest::read(&source).unwrap();
+    assert!(read_consent_kernel_choice(&manifest, false).is_empty());
+    assert_eq!(
+        read_consent_kernel_choice(&manifest, true)["selected"],
+        vibe_core::manifest::ParameterValue::Bool(true)
+    );
+    let before = preview_scratch_snapshot(&f.project);
+    let settings_before = preview_scratch_snapshot(f.user.settings.parent().unwrap());
+    let call = |on: Option<bool>| {
+        let mut args =
+            serde_json::json!({"address":"spec://org.example/manual/guide","format":"md"});
+        if let Some(on) = on {
+            args["input"] = serde_json::json!({"selections":{"mode":if on {"on"} else {"off"}},"parameters":{}});
+        }
+        let script=serde_json::json!({"jsonrpc":"2.0","id":1,"method":"tools/call","params":{"name":"read_doc","arguments":args}}).to_string()+"\n";
+        let out = f
+            .user
+            .vibe()
+            .args([
+                "--offline",
+                "mcp",
+                "serve",
+                "--path",
+                f.project.to_str().unwrap(),
+            ])
+            .write_stdin(script)
+            .output()
+            .unwrap();
+        assert!(out.status.success());
+        String::from_utf8(out.stdout)
+            .unwrap()
+            .lines()
+            .map(|line| serde_json::from_str::<serde_json::Value>(line).unwrap())
+            .find(|row| row["id"] == 1)
+            .unwrap()
+    };
+    let base = call(None);
+    assert_ne!(base["result"]["isError"], true, "valid Doc read refused");
+    let content = &base["result"]["structuredContent"];
+    assert_eq!(content["source"], "in-tree");
+    assert_eq!(content["format"], "md");
+    assert!(
+        content["page"]
+            .as_str()
+            .unwrap()
+            .contains("DOC_READ_SYNTHETIC_PAGE")
+    );
+    for on in [false, true] {
+        let attempted = call(Some(on));
+        assert_eq!(
+            attempted, base,
+            "read_doc behavior changed: reclassify explicit refusal versus choice consumption"
+        );
+        println!(
+            "doc registered choice={on} kernel-data-changed=true public-extra-input=ignored page/provenance=unchanged"
+        );
+    }
+    assert_eq!(preview_scratch_snapshot(&f.project), before);
+    assert_eq!(
+        preview_scratch_snapshot(f.user.settings.parent().unwrap()),
+        settings_before
+    );
+    assert!(!f.project.join("vibe.lock").exists());
+    assert!(!f.project.join("effects.log").exists());
+}
+
+#[test]
+fn offline_remap_read_and_explicit_consent_do_not_consume_common_choice() {
+    for on in [false, true] {
+        let f = Fixture::new(false);
+        let authored = f.root.join("authored-remap.toml");
+        write(
+            &authored,
+            format!(
+                "[package]\ngroup='org.example'\nname='policy'\nversion='1.0.0'\nkind='remap'\n[[remap]]\nprefix='https://example.invalid/input/'\ndeny=true\nreason='Synthetic deny offer'\n{}",
+                read_consent_data_definition()
+            ),
+        );
+        let manifest = Manifest::read(&authored).unwrap();
+        let selected = read_consent_kernel_choice(&manifest, on);
+        assert_eq!(selected.contains_key("selected"), on);
+        // Explicit typed fixture seed, not a claim of actual installation.
+        let offer = vibe_core::remap::offer_from_manifest(&manifest, "sha256:abc").unwrap();
+        let mut installed = vibe_core::remap::InstalledRemaps::default();
+        installed.upsert(vibe_core::remap::InstalledRemap {
+            package: offer,
+            registry: None,
+            installed: "2026-11-20T00:00:00Z".into(),
+        });
+        installed.store(&f.user.settings).unwrap();
+        let before_project = preview_scratch_snapshot(&f.project);
+        let before_home = preview_scratch_snapshot(f.user.settings.parent().unwrap());
+        let run = |args: &[&str]| {
+            f.user
+                .vibe()
+                .current_dir(&f.project)
+                .args(["--offline"])
+                .args(args)
+                .output()
+                .unwrap()
+        };
+        let list = run(&["remap", "list", "--json"]);
+        assert!(list.status.success());
+        let text = String::from_utf8(list.stdout).unwrap();
+        assert!(text.contains("offered"));
+        let explain = run(&[
+            "remap",
+            "explain",
+            "https://example.invalid/input/file",
+            "--json",
+        ]);
+        assert!(explain.status.success());
+        let before_explain: serde_json::Value = serde_json::from_slice(&explain.stdout).unwrap();
+        assert_eq!(
+            preview_scratch_snapshot(f.user.settings.parent().unwrap()),
+            before_home,
+            "read operation wrote consent or state"
+        );
+        let rejected_input = run(&[
+            "remap",
+            "list",
+            "--json",
+            "--ordinary-answers",
+            authored.to_str().unwrap(),
+        ]);
+        assert!(
+            !rejected_input.status.success(),
+            "read route unexpectedly accepts install choice grammar"
+        );
+        assert_eq!(
+            preview_scratch_snapshot(f.user.settings.parent().unwrap()),
+            before_home
+        );
+        let accept = run(&["remap", "accept", "org.example/policy", "--json"]);
+        assert!(accept.status.success());
+        let ledger = vibe_core::remap::ConsentLedger::load(&f.user.settings).unwrap();
+        assert_eq!(
+            ledger.state("org.example/policy", "sha256:abc"),
+            vibe_core::remap::OfferState::Accepted
+        );
+        let accepted_home = preview_scratch_snapshot(f.user.settings.parent().unwrap());
+        let list = run(&["remap", "list", "--json"]);
+        assert!(list.status.success());
+        assert!(String::from_utf8(list.stdout).unwrap().contains("accepted"));
+        let explain = run(&[
+            "remap",
+            "explain",
+            "https://example.invalid/input/file",
+            "--json",
+        ]);
+        assert!(explain.status.success());
+        let after_explain: serde_json::Value = serde_json::from_slice(&explain.stdout).unwrap();
+        assert_ne!(
+            before_explain, after_explain,
+            "explicit consent did not change active policy projection"
+        );
+        assert_eq!(
+            preview_scratch_snapshot(f.user.settings.parent().unwrap()),
+            accepted_home,
+            "read after acceptance mutated state"
+        );
+        assert_eq!(preview_scratch_snapshot(&f.project), before_project);
+        assert!(!f.project.join("vibe.lock").exists());
+        assert!(!f.project.join("effects.log").exists());
+        assert!(
+            !f.project
+                .join(vibe_core::layout::current_vibedeps_root())
+                .exists()
+        );
+        let reject = run(&["remap", "reject", "org.example/policy", "--json"]);
+        assert!(reject.status.success());
+        let ledger = vibe_core::remap::ConsentLedger::load(&f.user.settings).unwrap();
+        assert_eq!(
+            ledger.state("org.example/policy", "sha256:abc"),
+            vibe_core::remap::OfferState::Rejected
+        );
+        let rejected_home = preview_scratch_snapshot(f.user.settings.parent().unwrap());
+        assert!(run(&["remap", "list", "--json"]).status.success());
+        assert_eq!(
+            preview_scratch_snapshot(f.user.settings.parent().unwrap()),
+            rejected_home
+        );
+        println!(
+            "remap choice={on} kernel-data-present={on} list/explain=read-only offer=seeded explicit-acceptance=active explicit-rejection=inactive common-input=unsupported"
+        );
+    }
+}
