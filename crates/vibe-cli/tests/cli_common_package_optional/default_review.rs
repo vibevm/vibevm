@@ -3428,3 +3428,172 @@ fn ordinary_console_pty_unanswered_input_is_distinct_from_serialized_preview() {
     assert_eq!(preview_scratch_snapshot(&f.user.cache), cache);
     assert_eq!(preview_scratch_snapshot(&f.user.search_cache), search);
 }
+
+#[test]
+fn ordinary_interactive_preview_actual_pty_answers_cancel_interrupt_and_source_drift() {
+    for mode in ["false", "true", "cancel", "interrupt", "drift"] {
+        let f = preview_fixture();
+        let driver = f.root.join("interactive-driver.py");
+        write(&driver, include_str!("../common/ordinary-preview-pty.py"));
+        let source = f
+            .registry
+            .join(GROUP)
+            .join(DRIVER)
+            .join("v1.0.0/payload.txt");
+        let before = preview_scratch_snapshot(&f.project);
+        let settings = preview_scratch_snapshot(&f.user.settings);
+        let cache = preview_scratch_snapshot(&f.user.cache);
+        let search = preview_scratch_snapshot(&f.user.search_cache);
+        let out = std::process::Command::new("python3")
+            .args(["-I"])
+            .arg(&driver)
+            .arg(env!("CARGO_BIN_EXE_vibe"))
+            .arg(&f.project)
+            .arg(mode)
+            .arg(&source)
+            .env_clear()
+            .env("PATH", "/usr/bin:/bin")
+            .env("HOME", f.root.join("home"))
+            .env("TERM", "xterm")
+            .env("VIBE_SETTINGS", &f.user.settings)
+            .env("VIBE_REGISTRY_CACHE", &f.user.cache)
+            .env("VIBEVM_SEARCH_CACHE_DIR", &f.user.search_cache)
+            .env("VIBE_NO_DEFAULT_REGISTRY", "1")
+            .output()
+            .unwrap();
+        assert!(
+            out.status.success(),
+            "{mode}: {}",
+            String::from_utf8_lossy(&out.stderr)
+        );
+        let report: serde_json::Value = serde_json::from_slice(&out.stdout).unwrap();
+        println!("PTY {mode}: {report}");
+        let transcript = report["transcript"].as_str().unwrap();
+        assert_eq!(report["terminal_restored"], true, "{mode}: {report}");
+        assert_eq!(report["cursor_visible"], true, "{mode}: {report}");
+        if mode == "false" || mode == "true" {
+            assert_eq!(report["status"], 0, "{report}");
+            assert_eq!(report["terminal_restored"], true, "{report}");
+            let start = transcript
+                .find("{\n")
+                .or_else(|| transcript.find("{\r\n"))
+                .expect("actual result object");
+            let result: serde_json::Value = serde_json::from_str(&transcript[start..]).unwrap();
+            let answers = serde_json::json!({"selections":{"extra":"disabled"},"parameters":{"verbose":mode=="true"}});
+            assert_eq!(result["original"], answers);
+            let input = f.root.join("answers.json");
+            write(&input, serde_json::to_vec(&answers).unwrap());
+            let cli = preview_cli(&f, Some(&input));
+            assert!(cli.status.success());
+            assert_eq!(
+                serde_json::from_slice::<serde_json::Value>(&cli.stdout).unwrap(),
+                result
+            );
+            assert_eq!(
+                preview_mcp(
+                    &f,
+                    serde_json::json!({"package":coordinate(DRIVER),"input":answers})
+                )["result"]["structuredContent"],
+                result
+            );
+        } else {
+            assert_ne!(report["status"], 0, "{report}");
+            assert!(!transcript.contains("\"resolved\""), "{report}");
+            if mode == "cancel" {
+                assert_eq!(report["terminal_restored"], true, "{report}");
+            }
+            if mode == "drift" {
+                assert!(
+                    transcript.contains("source changed after questions"),
+                    "{report}"
+                );
+                let original = match before
+                    .as_ref()
+                    .unwrap()
+                    .get(&source.strip_prefix(&f.project).unwrap().to_path_buf())
+                    .unwrap()
+                {
+                    super::workspace::Entry::File(_, bytes) => bytes,
+                    _ => panic!("source file"),
+                };
+                write(&source, original);
+            }
+        }
+        assert_eq!(preview_scratch_snapshot(&f.project), before, "{mode}");
+        assert_eq!(
+            preview_scratch_snapshot(&f.user.settings),
+            settings,
+            "{mode}"
+        );
+        assert_eq!(preview_scratch_snapshot(&f.user.cache), cache, "{mode}");
+        assert_eq!(
+            preview_scratch_snapshot(&f.user.search_cache),
+            search,
+            "{mode}"
+        );
+    }
+}
+
+#[test]
+fn ordinary_interactive_preview_incompatible_flags_refuse_before_prompt_or_effects() {
+    for mode in [
+        "input",
+        "json",
+        "unattended",
+        "environment-unattended",
+        "nonterminal",
+    ] {
+        let f = preview_fixture();
+        let input = f.root.join("input.json");
+        write(&input, "null");
+        let project = preview_scratch_snapshot(&f.project);
+        let settings = preview_scratch_snapshot(&f.user.settings);
+        let cache = preview_scratch_snapshot(&f.user.cache);
+        let search = preview_scratch_snapshot(&f.user.search_cache);
+        let mut command = f.user.vibe();
+        command.args([
+            "show",
+            "configuration-preview",
+            &coordinate(DRIVER),
+            "--path",
+            f.project.to_str().unwrap(),
+            "--interactive",
+        ]);
+        match mode {
+            "input" => {
+                command.args(["--input", input.to_str().unwrap()]);
+            }
+            "json" => {
+                command.arg("--json");
+            }
+            "unattended" => {
+                command.arg("--unattended");
+            }
+            "environment-unattended" => {
+                command.env("VIBE_UNATTENDED", "1");
+            }
+            _ => {}
+        }
+        let out = command.output().unwrap();
+        assert!(!out.status.success(), "{mode}");
+        let text = format!(
+            "{}{}",
+            String::from_utf8_lossy(&out.stdout),
+            String::from_utf8_lossy(&out.stderr)
+        );
+        assert!(!text.contains("Extra support (extra)"), "{mode}: {text}");
+        assert!(!text.contains("\"resolved\""), "{mode}: {text}");
+        assert_eq!(preview_scratch_snapshot(&f.project), project, "{mode}");
+        assert_eq!(
+            preview_scratch_snapshot(&f.user.settings),
+            settings,
+            "{mode}"
+        );
+        assert_eq!(preview_scratch_snapshot(&f.user.cache), cache, "{mode}");
+        assert_eq!(
+            preview_scratch_snapshot(&f.user.search_cache),
+            search,
+            "{mode}"
+        );
+    }
+}

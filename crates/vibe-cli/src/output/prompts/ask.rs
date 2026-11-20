@@ -71,6 +71,59 @@ pub(crate) fn choose_opt(
     pick(prompt, choices, default, true)
 }
 
+/// A read-only answer collector whose interruption restores the terminal.
+/// Existing application/confirmation prompts retain their established policy.
+pub(crate) fn choose_opt_interruptible(
+    prompt: &str,
+    choices: &[Choice],
+    default: usize,
+) -> dialoguer::Result<Option<usize>> {
+    use console::{Key, Term};
+    if choices.is_empty() {
+        return Err(std::io::Error::other("answer choices are empty").into());
+    }
+    let term = Term::stderr();
+    let theme = super::prompt_theme();
+    space_before_question();
+    key_legend();
+    let mut label = String::new();
+    dialoguer::theme::Theme::format_prompt(&theme, &mut label, prompt)
+        .map_err(std::io::Error::other)?;
+    term.write_line(&label)?;
+    let mut selected = default.min(choices.len() - 1);
+    let mut drawn = false;
+    loop {
+        if drawn {
+            term.clear_last_lines(choices.len())?;
+        }
+        for (index, choice) in choices.iter().enumerate() {
+            term.write_line(&format!(
+                "{} {}",
+                if index == selected { "›" } else { " " },
+                choice.label()
+            ))?;
+        }
+        term.flush()?;
+        drawn = true;
+        // console restores the original termios before returning this key.
+        // Raw key mode returns CtrlC rather than raising SIGINT; no process
+        // signal handler is installed and this widget never hides the cursor.
+        match term.read_key_raw()? {
+            Key::ArrowDown | Key::Tab | Key::Char('j') => selected = (selected + 1) % choices.len(),
+            Key::ArrowUp | Key::BackTab | Key::Char('k') => {
+                selected = (selected + choices.len() - 1) % choices.len()
+            }
+            Key::Enter | Key::Char(' ') => {
+                term.clear_last_lines(choices.len())?;
+                answer(&theme, prompt, &choices[selected].label());
+                return Ok(Some(selected));
+            }
+            Key::Escape | Key::CtrlC | Key::Char('d') => return Ok(None),
+            _ => {}
+        }
+    }
+}
+
 /// Rows that are only names, as choices.
 pub(crate) fn named(names: &[&str]) -> Vec<Choice> {
     names

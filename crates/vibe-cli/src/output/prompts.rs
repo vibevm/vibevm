@@ -19,7 +19,10 @@ use super::language::{self, Glyph, GlyphSet, Kind, PromptGlyphs, Role, Stream, p
 
 mod ask;
 mod columns;
-pub(crate) use ask::{choose, choose_many, choose_opt, confirm, confirm_then, named, secret, text};
+pub(crate) use ask::{
+    choose, choose_many, choose_opt, choose_opt_interruptible, confirm, confirm_then, named,
+    secret, text,
+};
 pub(crate) use columns::{ItemStyles, column_items};
 
 /// A role's style for `dialoguer`, which writes to stderr.

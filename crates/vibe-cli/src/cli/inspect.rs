@@ -56,8 +56,11 @@ pub struct ShowConfigurationPreviewArgs {
     #[arg(long, default_value = ".")]
     pub path: PathBuf,
     /// Bounded ordinary JSON answers only; no app envelope.
-    #[arg(long)]
+    #[arg(long, conflicts_with = "interactive")]
     pub input: Option<PathBuf>,
+    /// Collect explicit answers in a terminal without installing anything.
+    #[arg(long, conflicts_with_all = ["input", "json", "unattended"])]
+    pub interactive: bool,
 }
 
 #[derive(Debug, clap::Args)]
