@@ -1,5 +1,112 @@
 //! Narrow ordinary defaults use shared policy; changed reliance stays closed.
 use super::*;
+
+#[test]
+fn ordinary_closure_fallback_actual_install_boundary_and_requires_precedence() {
+    for reversed in [false, true] {
+        for world in ["explicit", "requires", "fallback"] {
+            let f = Fixture::new(false);
+            let source = f.registry.join(GROUP).join(DRIVER).join("v1.0.0/vibe.toml");
+            let original_source = fs::read_to_string(&source).unwrap();
+            let prefix = original_source
+                .split("[[configuration.features]]")
+                .next()
+                .unwrap();
+            let declarations = [
+                "[[configuration.features]]\nid='enabled'\nname='Fallback member'\neffects=[{kind='dependency',target='org.vibevm/oracle-extra'}]\n",
+                "[[configuration.features]]\nid='disabled'\nname='Explicit or implied member'\n",
+                "[[configuration.features]]\nid='trigger'\nname='Trigger'\nrequires=['disabled']\n",
+            ];
+            let ordered = if reversed {
+                declarations.iter().rev().copied().collect::<String>()
+            } else {
+                declarations.concat()
+            };
+            let text = format!(
+                "{prefix}{ordered}\n[[configuration.groups]]\nmode='closure'\nid='extra'\nname='Closure support'\ncardinality='exactly-one'\nmembers=['enabled','disabled']\nfallback=['enabled']\n"
+            );
+            let manifest = Manifest::parse_str(&text).unwrap();
+            write(&source, &text);
+            let seeds = match world {
+                "explicit" => "['disabled']",
+                "requires" => "['trigger']",
+                _ => "[]",
+            };
+            let request = f.project.join("vibe.toml");
+            let input = format!(
+                "configuration={{policy='require-selection',default_features=false,features={seeds}}}"
+            );
+            let authored=fs::read_to_string(&request).unwrap().replace("version='^1'","version='=1.0.0'").replace("configuration={policy='require-selection',default_features=false,selections={extra={intent='exact',members=['disabled']}}}",&input);
+            write(&request, &authored);
+            let original = Manifest::read(&request).unwrap().requires.configurations
+                [&coordinate(DRIVER)]
+                .clone();
+            let definition = manifest.configuration.as_ref().unwrap();
+            let normalized = definition
+                .normalize_input(&original, "./vibe.toml")
+                .unwrap();
+            let evaluated = definition
+                .compile_choices()
+                .unwrap()
+                .evaluate(&normalized.features, &[normalized.choices]);
+            let vibe_core::configuration::ChoiceOutcome::Resolved { features } = evaluated.outcome
+            else {
+                panic!("kernel must resolve {world}")
+            };
+            let fallback = features.implied.iter().any(|i| {
+                matches!(
+                    i.reason,
+                    vibe_core::configuration::ImplicationReason::GroupDefault { .. }
+                )
+            });
+            assert_eq!(fallback, world == "fallback");
+            assert_eq!(
+                features.selected.contains(&"enabled".into()),
+                world == "fallback"
+            );
+            let before = super::workspace::semantic_snapshot(&f.project);
+            let out = f.install();
+            if world == "fallback" {
+                assert!(!out.status.success());
+                assert!(
+                    String::from_utf8_lossy(&out.stderr).contains(
+                        "closure fallback basis is not connected on this package operation"
+                    )
+                );
+                assert_eq!(super::workspace::semantic_snapshot(&f.project), before);
+                assert!(!f.project.join("vibe.lock").exists());
+                assert!(!f.slot(EXTRA).exists());
+                assert!(!f.project.join("effects.log").exists());
+            } else {
+                assert!(
+                    out.status.success(),
+                    "{}",
+                    String::from_utf8_lossy(&out.stderr)
+                );
+                let lock = f.lock();
+                let record = &lock.configurations[&coordinate(DRIVER)];
+                assert_eq!(record.consumers["./vibe.toml"], original);
+                assert!(record.automatic_basis.is_none());
+                assert!(record.features.contains(&"disabled".into()));
+                assert!(!record.features.contains(&"enabled".into()));
+                assert!(!lock.packages.iter().any(|p| p.name.as_str() == EXTRA));
+                assert!(!f.slot(EXTRA).exists());
+                assert!(!f.static_boot().contains(EXTRA_MARKER));
+                assert_eq!(f.hooks().get(EXTRA), None);
+                let before = super::workspace::semantic_snapshot(&f.project);
+                fs::rename(&f.registry, f.root.join("registry-unavailable")).unwrap();
+                f.install_ok();
+                assert_eq!(super::workspace::semantic_snapshot(&f.project), before);
+            }
+            assert_eq!(fs::read_to_string(&request).unwrap(), authored);
+            println!(
+                "closure-fallback world={world} reversed={reversed} kernel-fallback={fallback} public-success={}",
+                out.status.success()
+            );
+        }
+    }
+}
+
 fn configure(fixture: &Fixture, enabled: bool) {
     let path = fixture.project.join("vibe.toml");
     let original = fs::read_to_string(&path).unwrap();

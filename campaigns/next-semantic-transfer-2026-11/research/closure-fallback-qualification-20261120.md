@@ -1,0 +1,17 @@
+# Ordinary closure fallback: kernel versus actual install qualification
+
+Test/report candidate at `4adf82b3e92254dc0e114f82936e64e9854fa15e`; PROP-069#ACCEPTANCE, GROUP-MEANING and FEATURE-KERNEL. No product/schema/default-history change or fallback authorization.
+
+Existing kernel controls `ordinary_closure_finishes_before_fallback_under_declaration_permutations` and `ordinary_implications_and_closure_fallbacks_cannot_authorize_choice_members` establish different rules: ordinary implications finish before fallback, and neither ordinary implication nor closure fallback fabricates consumer-owned choice consent. This qualification uses a **closure** group, not a choice/default set, and does not duplicate those kernel algorithms.
+
+New exact public selector `default_review::ordinary_closure_fallback_actual_install_boundary_and_requires_precedence` uses one exact local Flow and three worlds, each under two feature-declaration orders:
+
+- Explicit `disabled` member: no fallback is needed.
+- Explicit `trigger` with `requires=['disabled']`: ordinary implication must satisfy the closure before fallback; fallback's `enabled` dependency must not leak.
+- No seed: one valid fallback `enabled` exists and would activate the optional EXTRA dependency.
+
+Each world compiles/evaluates the actual typed declaration first, inspecting selected members and GroupDefault reasons, then invokes ordinary public install. Positive controls compare original input, automatic basis, actual graph/slots/boot/hooks and registry-unavailable fresh-process cold replay. A fallback refusal must retain all package semantic state, publish no lock/EXTRA slot/hook log, and identify its actual first owner. Source and authored input remain unchanged. Declaration-order control proves equal semantics, not identical source content pins.
+
+Actual selector passed1/1 (six worlds,126 filtered). Under both declaration orders, explicit member and requires-derived member installed successfully, retained exact originals with no automatic basis, excluded fallback's EXTRA graph/slot/boot/hook effects and passed registry-unavailable cold replay. No-seed worlds resolved the legal fallback in the shared kernel, then actual public install refused with `closure fallback basis is not connected on this package operation`. First owner is `PackageConfiguration::evaluate_parts` in `crates/vibe-core/src/manifest/configuration/package.rs`, after shared evaluation detects `ImplicationReason::GroupDefault` and before selected dependency/effect publication. Both refusal worlds preserved the complete project semantic snapshot, with no lock, EXTRA slot or hook log. This is an unconnected ordinary fallback-history/effect consumer, not an absent kernel feature or a successful fallback installation.
+
+Build-only, strict affected fixture lint, rustfmt and diff checks passed. Runtime used the existing explicit-artifact bwrap runner with filesystem/PID/network isolation, cleared environment, synthetic HOME/settings and read-only exact artifact/system mounts. No full127-test suite or host gate was rerun for this test-only qualification. Exact source/artifact/evidence hashes are sealed in `closure-fallback-qualification-candidate-r1.json` under `/data/git/vibevm-keyring-storage-20261120T0100Z/`, alongside build/runtime/lint logs. Independent acceptance and the fallback implementation/representation decision remain separate. No parent promotion, USER-PROJECT, credentials, provider calls, external publication, REMAINDER or IDE work.
