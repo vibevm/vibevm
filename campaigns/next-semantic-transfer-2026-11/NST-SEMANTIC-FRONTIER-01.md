@@ -261,3 +261,5 @@ Three historical changes distinguish a supplied projection occurrence ID from it
 Three source reviews distinguish selected draft fields from approval, a matching outer hash from valid embedded bytes, and the absence of structured output from explicit JSON null. The corresponding historical regression assertions were inspected without executing them.
 
 Two historical held-root changes separate same-path copied records from the original directory and bound receipt enumeration from legacy traversal. This review read the implementations and regression assertions; it did not run them.
+
+Three reviewed revisions distinguish observing the current published release from predicting a fallback, hashing an asset from owning it, and preserving invalid planner evidence from publishing a structured report. No external service was called.
