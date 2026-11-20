@@ -16,7 +16,7 @@ Reads do not automatically migrate locks. The writer chooses the lowest epoch th
 
 ## Conditional project-lock epochs
 
-Current project reader admits epochs7–18, subject to full structural/semantic validation. This is not the application index version, a wire protocol version or a software release number. Ordinary legacy-only state retains7; common explicit configuration typically needs8. Epochs9–11 belong to earlier remap/template history and are not redefined here.
+Current project reader admits epochs7–19, subject to full structural/semantic validation. This is not the application index version, a wire protocol version or a software release number. Ordinary legacy-only state retains7; common explicit configuration typically needs8. Epochs9–11 belong to earlier remap/template history and are not redefined here.
 
 | Minimum epoch | History that requires it | Preserve this meaning |
 |---|---|---|
@@ -27,8 +27,11 @@ Current project reader admits epochs7–18, subject to full structural/semantic 
 | 16 | Operation-submitted ordinary originals | Submitted origin remains distinct from authored consumers; project/source witness is drift binding, not a signature or consent |
 | 17 | Nonempty `consumer_dormant_choices` map | Inactive guarded default reliance is a reason-only group ID, not a selected member |
 | 18 | Nonempty `consumer_feature_defaults` map | Canonical declared default seeds **before closure**, including a present consumer→[] empty-reliance row |
+| 19 | Actual `closure_fallback_basis` | Selected-instance group→fallback member plus definition fingerprint, derived only from actual kernel `GroupDefault`; not a consumer answer or choice-set receipt |
 
 Active guarded singleton default selection still uses scalar12. An explicit no-reliance answer is not automatically promoted to17/18. Optional public bool without a default uses existing8: absent key is not false; present false/true remain booleans. In the admitted multi-consumer bool slice, absence does not vote, and conflicting present values refuse before effects.
+
+Accepted source `c5b810223` admits one compulsory exact named-local-registry plain-copy Flow/root consumer with one unguarded exactly-one closure group and one declared fallback, without profile/parameter/feature-default/forwarding combinations. Ordinary explicit/requires closure runs first. Only an **actually applied fallback** creates instance-level basis19; selecting the same member explicitly or reaching it through `requires` retains the original input and existing8 with no fallback basis. Missing/injected/wrong reasons or lower-epoch forgery refuse. Unchanged registry-independent replay retains the accepted basis without repeating the optional leaf hook. Changed fallback meaning requires a separately admitted design: neither scalar v1 nor member-set v2 tokens authorize general closure-fallback renewal. Evidence: [instance-level closure fallback](../campaigns/next-semantic-transfer-2026-11/research/ordinary-closure-fallback-first-20261120.md), FMT-103.
 
 ### What old executables actually did
 
@@ -41,6 +44,7 @@ These are retained exact executable subjects, not compatibility claims for every
 | Dormant17 / active guarded12 | `2acac864` | dormant field parse refusal / active guarded semantic refusal; independent unguarded reader/writer controls succeeded unchanged |
 | Feature seeds18, including empty row | `858f4635` | old show/install refused unchanged; explicit false/no-reliance controls retained their prior meaning |
 | Optional bool8 | `65e53d97` | old show/install refused optional records unchanged, even though no new epoch/field was necessary |
+| Applied closure fallback19 | `65e53d97` | actual old show/install refused fallback history without state loss; explicit and requires-derived8 controls, including the same fallback member, round-tripped unchanged |
 
 Lazy witness13 and forwarding14 also have actual pre-extension reader/writer refusal receipts. Their exact test/evidence navigation is in the accepted reports and [format ledger](../campaigns/next-semantic-transfer-2026-11/FORMAT-CHANGES.md), FMT081–082/088. Compatibility is checked against actual data and executable behavior, not inferred from epoch or deserialization alone.
 
