@@ -1,0 +1,28 @@
+# Local kit recipe v1. These are DEMONSTRATION paths and placeholder hashes.
+# No input is downloaded, built, installed or read from HOME by init.
+# Edit paths relative to THIS recipe directory; use no absolute paths or '..'.
+# Replace every hash with the lowercase SHA-256 of the exact intended file.
+# Check syntax only: vibe kit validate --file vibe-kit.toml --structure-only
+# Check actual inputs: vibe kit validate --file vibe-kit.toml
+# Kit production is a separate build step, not performed by init/validate.
+schema_version = 1
+
+[kit]
+name = "example-kit"
+target = "x86_64-unknown-linux-gnu"
+version = "1.0.12"
+
+# Existing versioned dist bundle; no implicit cargo build or download.
+[bundle]
+path = "inputs/vibevm-1.0.12-x86_64-unknown-linux-gnu.zip"
+sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+
+# Existing native installer from the same reviewed distribution.
+[installer]
+path = "inputs/vibe-installer-x86_64-unknown-linux-gnu"
+sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+
+# Existing site-profile schema; no embedded keys, interpolation or policy copy.
+[site_profile]
+path = "inputs/site-profile.toml"
+sha256 = "0000000000000000000000000000000000000000000000000000000000000000"

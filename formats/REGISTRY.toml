@@ -2256,3 +2256,13 @@ foreign_parsers = "many"
 unknown_fields = "deny"
 corpus = "none"
 sunset = "none"
+
+# Authored local producer recipe, not an installed site profile or kit receipt.
+[format.kit-recipe]
+epoch = 1
+schema = "schemas/kit_recipe.schema.json"
+recoverable = false
+foreign_parsers = "many"
+unknown_fields = "deny"
+corpus = "formats/corpora/kit-recipe/e1"
+sunset = "none"

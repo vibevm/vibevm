@@ -1,5 +1,9 @@
 # Corporate-env campaign: format and behaviour changes
 
+## CORP-FMT-057 — local kit recipe v1 and explicit init/validate
+
+Implementation candidate, 2026-11-20, not yet independent acceptance. New authored `kit-recipe` epoch1 is strict TOML with `schema_version=1`, kit name/canonical target/version and explicit relative path/lowercase SHA-256 triples for bundle, installer and site profile. Registered JSON Schema describes the TOML data model; no existing persistence schema changes. `vibe kit init [--file PATH]` writes a commented demonstration template via existing no-replace SafeFS publication, without creating parents. `kit validate --file PATH --structure-only` admits structure only; default validation checks real pinned local inputs and existing SiteProfile semantics, not distribution compatibility or successful construction. No HOME discovery, interpolation, network, provider, install or publication. `kit build` is the next separately qualified producer, not implemented or credited by this first slice. No released-version number or migration invented; older CLI lacks this new command and recipe support.
+
 Append-only log of user-visible changes made by the campaign in `PLAN.md`, material for release notes. Entries are `CORP-FMT-NNN`; numbers are never reused.
 
 ## CORP-FMT-001 — Consented durable-PATH repair core; `self doctor --fix` error text (Phase 8)

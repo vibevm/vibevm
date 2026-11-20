@@ -1,0 +1,32 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Vibe local kit recipe v1 (TOML data model)",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "kit", "bundle", "installer", "site_profile"],
+  "properties": {
+    "schema_version": {"const": 1},
+    "kit": {
+      "type": "object", "additionalProperties": false,
+      "required": ["name", "target", "version"],
+      "properties": {
+        "name": {"type": "string", "minLength": 1, "maxLength": 64, "pattern": "^[A-Za-z0-9_-]+$"},
+        "target": {"const": "x86_64-unknown-linux-gnu"},
+        "version": {"type": "string", "description": "Canonical SemVer, checked by the existing semver parser"}
+      }
+    },
+    "bundle": {"$ref": "#/$defs/input"},
+    "installer": {"$ref": "#/$defs/input"},
+    "site_profile": {"$ref": "#/$defs/input"}
+  },
+  "$defs": {
+    "input": {
+      "type": "object", "additionalProperties": false,
+      "required": ["path", "sha256"],
+      "properties": {
+        "path": {"type": "string", "minLength": 1, "description": "Distinct recipe-directory-relative slash path; no absolute paths, empty/dot/parent components, backslashes, colon or controls"},
+        "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+      }
+    }
+  }
+}

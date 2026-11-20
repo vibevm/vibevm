@@ -8,6 +8,8 @@ pub enum Command {
     Ai(AiArgs),
     /// Manage protected local keyring metadata and values without disclosure.
     Secrets(SecretsArgs),
+    /// Create and validate an explicit local corporate-kit recipe without installing.
+    Kit(KitArgs),
     /// Scaffold a new vibevm project in the target directory.
     Init(InitArgs),
 

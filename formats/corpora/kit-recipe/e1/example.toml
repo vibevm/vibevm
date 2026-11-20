@@ -1,0 +1,15 @@
+# Structural example only; demonstration inputs are intentionally absent.
+schema_version = 1
+[kit]
+name = "example-kit"
+target = "x86_64-unknown-linux-gnu"
+version = "1.0.12"
+[bundle]
+path = "inputs/bundle.zip"
+sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+[installer]
+path = "inputs/installer"
+sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+[site_profile]
+path = "inputs/profile.toml"
+sha256 = "0000000000000000000000000000000000000000000000000000000000000000"

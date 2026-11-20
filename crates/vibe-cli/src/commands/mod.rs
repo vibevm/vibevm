@@ -55,6 +55,7 @@ pub(crate) mod global_mcp_dispatch;
 pub mod hook;
 pub mod init;
 pub mod install;
+pub mod kit;
 pub(crate) mod layer_selection;
 pub mod lifecycle;
 pub mod list;

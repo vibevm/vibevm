@@ -69,6 +69,27 @@ fn main() -> ExitCode {
 
 fn run() -> ExitCode {
     let (mut cli, explicit_path) = Cli::parse_invocation();
+    // Kit production is an explicit local-file operation. Do not discover an
+    // installed destination, promote user configuration, or enter network/remap
+    // composition merely to create or validate an authored recipe.
+    if let Command::Kit(args) = cli.command {
+        output::configure_language(false, !cli.plain && !cli.json && !cli.quiet);
+        let ctx = output::Context::from_flags(
+            cli.quiet,
+            cli.json,
+            cli.invoked_by.as_deref(),
+            cli.unattended,
+            cli.agent_mode,
+        )
+        .with_plain(cli.plain);
+        return match commands::kit::run(&ctx, args) {
+            Ok(()) => ExitCode::SUCCESS,
+            Err(error) => {
+                ctx.error_with_suffix(&error, None);
+                as_exit_code(&error)
+            }
+        };
+    }
     if let Err(exit) = composition::select_installed_destination(&mut cli, explicit_path) {
         return exit;
     }
@@ -386,6 +407,7 @@ fn run() -> ExitCode {
             },
             Command::Cache(args) => commands::cache::run(&ctx, args, cli.offline),
             Command::Workspace(args) => commands::workspace::run(&ctx, args),
+            Command::Kit(args) => commands::kit::run(&ctx, args),
             Command::Vvm(args) => {
                 let vvm_env = vvm_env();
                 commands::vvm::run(&ctx, args, vvm_env)

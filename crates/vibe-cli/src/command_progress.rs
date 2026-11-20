@@ -150,6 +150,7 @@ pub(crate) fn policy(command: &Command, terminal_attached: bool) -> CommandPolic
     };
 
     match command {
+        Command::Kit(_) => FiniteFallback("Command kit"),
         Command::Init(_) => FiniteFallback("Command init"),
         Command::List(_) => FiniteFallback("Command list"),
         Command::Extensions(args) => match &args.command {

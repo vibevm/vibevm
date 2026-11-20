@@ -26,6 +26,8 @@ mod explain;
 mod extensions;
 mod init;
 mod inspect;
+mod kit;
+pub use kit::*;
 mod lifecycle;
 mod mcp;
 mod pkg;

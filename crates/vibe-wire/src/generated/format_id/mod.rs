@@ -176,6 +176,7 @@ pub enum FormatId {
     IndexTemplates,
     InstallSteps,
     Journal,
+    KitRecipe,
     LifecycleContext,
     LifecycleReply,
     LifecycleState,
