@@ -4827,3 +4827,168 @@ fn zero_or_more_absent_default_and_guarded_automatic_remain_closed() {
         assert_eq!(super::workspace::semantic_snapshot(&f.project), before);
     }
 }
+
+#[test]
+fn remaining_choice_cardinalities_omitted_empty_one_two_public_qualification() {
+    for cardinality in ["zero-or-one", "one-or-more"] {
+        for world in [
+            "omitted-default",
+            "omitted-required",
+            "explicit-empty",
+            "explicit-one",
+            "explicit-two",
+        ] {
+            let f = Fixture::new(false);
+            let source = f.registry.join(GROUP).join(DRIVER).join("v1.0.0/vibe.toml");
+            let defaults = if cardinality == "zero-or-one" {
+                "[\"enabled\"]"
+            } else {
+                "[\"enabled\",\"disabled\"]"
+            };
+            let text = fs::read_to_string(&source)
+                .unwrap()
+                .replace(
+                    "cardinality = \"exactly-one\"",
+                    &format!("cardinality = \"{cardinality}\""),
+                )
+                .replace(
+                    "defaults = [\"disabled\"]",
+                    &format!("defaults = {defaults}"),
+                )
+                + "\n[configuration.config_values]\nenabled=true\ndisabled=false\n";
+            write(&source, text.replace("effects = [{ kind = \"dependency\", target = \"org.vibevm/oracle-extra\" }]", "effects = [{ kind = \"dependency\", target = \"org.vibevm/oracle-extra\" }, {kind='config-value',name='enabled'}]")
+                .replace("name = \"No extra\"", "name = \"No extra\"\neffects=[{kind='config-value',name='disabled'}]"));
+            let answer = match world {
+                "omitted-default" => "policy='use-declared-defaults',default_features=false",
+                "omitted-required" => "policy='require-selection',default_features=false",
+                "explicit-empty" => {
+                    "policy='require-selection',default_features=false,selections={extra={intent='exact',members=[]}}"
+                }
+                "explicit-one" => {
+                    "policy='require-selection',default_features=false,selections={extra={intent='exact',members=['enabled']}}"
+                }
+                "explicit-two" => {
+                    "policy='require-selection',default_features=false,selections={extra={intent='exact',members=['enabled','disabled']}}"
+                }
+                _ => unreachable!(),
+            };
+            let request = f.project.join("vibe.toml");
+            write(&request, fs::read_to_string(&request).unwrap().replace(
+                "configuration={policy='require-selection',default_features=false,selections={extra={intent='exact',members=['disabled']}}}", &format!("configuration={{{answer}}}")));
+            let original = Manifest::read(&request).unwrap().requires.configurations
+                [&coordinate(DRIVER)]
+                .clone();
+            let definition = Manifest::read(&source).unwrap().configuration.unwrap();
+            let normalized = definition
+                .normalize_input(&original, "./vibe.toml")
+                .unwrap();
+            if world.starts_with("omitted") {
+                assert!(!normalized.choices.answers.contains_key("extra"));
+            } else {
+                assert!(
+                    matches!(&normalized.choices.answers["extra"].selection, vibe_core::configuration::Selection::Explicit(values) if values.len() == match world {"explicit-empty"=>0,"explicit-one"=>1,_=>2})
+                );
+            }
+            let pure = definition
+                .compile_choices()
+                .unwrap()
+                .evaluate(&normalized.features, &[normalized.choices]);
+            println!("cardinality={cardinality} world={world} pure={pure:?}");
+            let kernel_resolves = world == "omitted-default"
+                || world == "explicit-one"
+                || (cardinality == "zero-or-one"
+                    && matches!(world, "omitted-required" | "explicit-empty"))
+                || (cardinality == "one-or-more" && world == "explicit-two");
+            assert_eq!(
+                matches!(
+                    pure.outcome,
+                    vibe_core::configuration::ChoiceOutcome::Resolved { .. }
+                ),
+                kernel_resolves
+            );
+            assert_eq!(!pure.defaults.is_empty(), world == "omitted-default");
+            assert_eq!(
+                !pure.questions.is_empty(),
+                cardinality == "one-or-more"
+                    && matches!(world, "omitted-required" | "explicit-empty")
+            );
+            let succeeds = world == "explicit-one"
+                || (cardinality == "zero-or-one"
+                    && matches!(world, "omitted-required" | "explicit-empty"))
+                || (cardinality == "one-or-more" && world == "explicit-two");
+            let before = super::workspace::semantic_snapshot(&f.project);
+            let source_before = preview_scratch_snapshot(&f.registry);
+            let authored = fs::read(&request).unwrap();
+            let out = f.install();
+            let diagnostic = format!(
+                "{}{}",
+                String::from_utf8_lossy(&out.stdout),
+                String::from_utf8_lossy(&out.stderr)
+            );
+            println!(
+                "cardinality={cardinality} world={world} status={} diagnostic={diagnostic}",
+                out.status
+            );
+            if succeeds {
+                assert!(out.status.success(), "{diagnostic}");
+                let lock = f.lock();
+                let record = &lock.configurations[&coordinate(DRIVER)];
+                assert_eq!(record.consumers.values().next().unwrap(), &original);
+                assert!(record.automatic_basis.is_none());
+                assert_eq!(lock.meta.schema_version, 8);
+                let selected = matches!(world, "explicit-one" | "explicit-two");
+                let data = record.selected_data(vibe_core::PackageKind::Flow).unwrap();
+                assert_eq!(data.contains_key("enabled"), selected);
+                assert_eq!(data.contains_key("disabled"), world == "explicit-two");
+                assert_eq!(
+                    record.active_dependencies.contains(&coordinate(EXTRA)),
+                    selected
+                );
+                assert_eq!(f.slot(EXTRA).exists(), selected);
+                assert_eq!(f.static_boot().contains(EXTRA_MARKER), selected);
+                assert_eq!(f.hooks().get(EXTRA).copied().unwrap_or(0) > 0, selected);
+                let installed = super::workspace::semantic_snapshot(&f.project);
+                f.install_ok();
+                assert_eq!(super::workspace::semantic_snapshot(&f.project), installed);
+            } else {
+                assert!(!out.status.success(), "{diagnostic}");
+                if world == "omitted-default" {
+                    assert!(
+                        diagnostic.contains(
+                            "only unguarded exactly-one single-member defaults are connected"
+                        ),
+                        "{diagnostic}"
+                    );
+                } else if cardinality == "one-or-more"
+                    && matches!(world, "omitted-required" | "explicit-empty")
+                {
+                    assert!(
+                        diagnostic.contains("requires configuration answers")
+                            && diagnostic.contains("OneOrMore"),
+                        "{diagnostic}"
+                    );
+                } else {
+                    assert!(
+                        diagnostic.contains("conflicts=[Cardinality")
+                            || diagnostic.contains("invalid answers=["),
+                        "{diagnostic}"
+                    );
+                }
+                assert_eq!(super::workspace::semantic_snapshot(&f.project), before);
+                assert!(!f.project.join("vibe.lock").exists());
+                assert!(!f.project.join("effects.log").exists());
+                for name in [DRIVER, BASE, EXTRA] {
+                    assert!(!f.slot(name).exists());
+                }
+            }
+            assert_eq!(fs::read(&request).unwrap(), authored);
+            assert_eq!(preview_scratch_snapshot(&f.registry), source_before);
+            println!(
+                "cardinality={cardinality} world={world} coordination={:?}",
+                preview_scratch_snapshot(&f.project.join(".vibe"))
+                    .as_ref()
+                    .map(|entries| entries.keys().collect::<Vec<_>>())
+            );
+        }
+    }
+}
