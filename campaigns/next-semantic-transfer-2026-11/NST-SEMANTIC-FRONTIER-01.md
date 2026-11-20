@@ -251,3 +251,5 @@ Four historical changes distinguish fixture failure from helper failure, a typed
 At `49a9ffe3d4`, initialization requires domain result/error epochs as well as the session envelope. At `72cf492f83`, refusing a stale submission reference does not erase the prior run or establish absence of effects. Both implementation changes and regression assertions were inspected, not re-executed.
 
 Two historical APIs separate known absent manifest epoch from unrecognized profile revision, and proposed run identity from durable reservation and scratch materialization. Neither code review is evidence of a new target execution.
+
+Four historical revisions distinguish an inclusive stable-read bound from zero, synchronization of the held directory from ambient reopening, explicit deployment target mode from an OS label, and session identity across restarts from a process-local counter. Named source and regression changes were reviewed, not rerun.
