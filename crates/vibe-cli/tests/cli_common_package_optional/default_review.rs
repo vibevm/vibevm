@@ -7324,3 +7324,150 @@ fn ordinary_decode_safe_errors_cover_cli_envelope_and_registered_mcp() {
         }
     }
 }
+
+#[test]
+fn ordinary_feat_explicit_choice_public_install_show_and_cold_replay_qualification() {
+    for kind in ["flow", "feat"] {
+        for enabled in [false, true] {
+            let f = Fixture::new(enabled);
+            let source = f.registry.join(GROUP).join(DRIVER).join("v1.0.0/vibe.toml");
+            if kind == "feat" {
+                write(
+                    &source,
+                    fs::read_to_string(&source)
+                        .unwrap()
+                        .replace("kind='flow'", "kind='feat'"),
+                );
+            }
+            let selected_manifest = Manifest::read(&source).unwrap();
+            assert_eq!(
+                selected_manifest.require_package().unwrap().kind,
+                if kind == "feat" {
+                    vibe_core::PackageKind::Feat
+                } else {
+                    vibe_core::PackageKind::Flow
+                }
+            );
+            let authored = fs::read(f.project.join("vibe.toml")).unwrap();
+            let out = f.install();
+            let diagnostic = String::from_utf8_lossy(&out.stdout).to_string()
+                + &String::from_utf8_lossy(&out.stderr);
+            println!(
+                "kind qualification kind={kind} enabled={enabled} install-success={} diagnostic={diagnostic}",
+                out.status.success()
+            );
+            assert!(
+                out.status.success(),
+                "kind qualification install refused: {kind}"
+            );
+            if kind == "flow" {
+                f.assert_world(enabled);
+            } else {
+                // Feat acceptance is its selected dependency/physical effect,
+                // not Flow's generated boot obligation.
+                let lock = f.lock();
+                let expected = if enabled {
+                    BTreeSet::from([coordinate(DRIVER), coordinate(BASE), coordinate(EXTRA)])
+                } else {
+                    BTreeSet::from([coordinate(DRIVER), coordinate(BASE)])
+                };
+                assert_eq!(
+                    lock.packages
+                        .iter()
+                        .map(|p| format!("{}/{}", p.group, p.name))
+                        .collect::<BTreeSet<_>>(),
+                    expected
+                );
+                assert_eq!(f.slot(EXTRA).exists(), enabled);
+                assert!(f.slot(DRIVER).join("payload.txt").is_file());
+                assert!(f.slot(BASE).join("payload.txt").is_file());
+                assert_eq!(
+                    f.hooks(),
+                    if enabled {
+                        BTreeMap::from([(BASE.into(), 1), (EXTRA.into(), 1)])
+                    } else {
+                        BTreeMap::from([(BASE.into(), 1)])
+                    }
+                );
+            }
+            let lock = f.lock();
+            let row = lock
+                .packages
+                .iter()
+                .find(|row| row.name.as_str() == DRIVER)
+                .unwrap();
+            assert_eq!(
+                row.kind,
+                if kind == "feat" {
+                    vibe_core::PackageKind::Feat
+                } else {
+                    vibe_core::PackageKind::Flow
+                }
+            );
+            let expected_edges = if enabled {
+                BTreeSet::from([coordinate(BASE), coordinate(EXTRA)])
+            } else {
+                BTreeSet::from([coordinate(BASE)])
+            };
+            assert_eq!(
+                row.dependencies
+                    .iter()
+                    .map(|edge| edge.qualified_name())
+                    .collect::<BTreeSet<_>>(),
+                expected_edges
+            );
+            let boot = f.static_boot();
+            println!(
+                "kind boot observation kind={kind} enabled={enabled} driver={} base={} extra={}",
+                boot.contains(DRIVER_MARKER),
+                boot.contains(BASE_MARKER),
+                boot.contains(EXTRA_MARKER)
+            );
+            let record = &lock.configurations[&coordinate(DRIVER)];
+            let selected = if enabled { "enabled" } else { "disabled" };
+            assert_eq!(
+                record.consumers["./vibe.toml"].selections["extra"]
+                    .members
+                    .as_deref(),
+                Some(&[selected.to_owned()][..])
+            );
+            assert!(record.submitted_inputs.is_empty());
+            let data = f
+                .user
+                .vibe()
+                .args([
+                    "show",
+                    "configuration-data",
+                    "--path",
+                    f.project.to_str().unwrap(),
+                    "--json",
+                ])
+                .output()
+                .unwrap();
+            assert!(
+                data.status.success(),
+                "kind configuration-data refused: {kind}"
+            );
+            let data: serde_json::Value = serde_json::from_slice(&data.stdout).unwrap();
+            assert!(
+                data["packages"]
+                    .as_array()
+                    .unwrap()
+                    .iter()
+                    .any(|p| p["package"] == coordinate(DRIVER)),
+                "configured package absent from public view"
+            );
+            let before_lock = fs::read(f.project.join("vibe.lock")).unwrap();
+            let before = super::workspace::semantic_snapshot(&f.project);
+            let hooks = f.hooks();
+            f.install_ok();
+            assert_eq!(fs::read(f.project.join("vibe.lock")).unwrap(), before_lock);
+            assert_eq!(super::workspace::semantic_snapshot(&f.project), before);
+            assert_eq!(f.hooks(), hooks);
+            assert_eq!(fs::read(f.project.join("vibe.toml")).unwrap(), authored);
+            println!(
+                "kind qualification kind={kind} enabled={enabled} show=ok cold-replay=unchanged originals=authored physical-graph=matched"
+            );
+        }
+    }
+}
