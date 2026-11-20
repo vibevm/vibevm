@@ -10,6 +10,9 @@ pub enum AiCommand {
     Setup {
         #[arg(long = "agent")]
         agents: Vec<String>,
+        /// Configure metadata for this user launcher alias; never install or retry it.
+        #[arg(long, conflicts_with = "agents")]
+        from_agent_alias: Option<String>,
         #[arg(long, value_enum)]
         mode: Option<AiBindingMode>,
         #[arg(long)]

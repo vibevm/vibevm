@@ -1,5 +1,11 @@
 # Corporate-env campaign: format and behaviour changes
 
+## CORP-FMT-061 — explicit alias-origin metadata setup
+
+Implementation candidate, 2026-11-20. `vibe ai setup --from-agent-alias NAME` is a Vibe-owned opt-in entry to the existing metadata planner, mutually exclusive with repeated `--agent`. It resolves the user's actual launcher alias to its canonical supported preset, never forwards executable/standing args/env, installs a missing wrapper or retries a launch. Attended no-mode entry shows alias-to-preset mapping and the existing preview/default-No consent. Noninteractive no-mode refuses; explicit mode/connection remains existing read-only preview until exact `--apply-preview` consent. Unknown/unsupported aliases and Claude's OpenAI-incompatible metadata operation refuse.
+
+Ordinary `vibe agent NAME` retains native argument passthrough and no-effect missing-program refusal. Missing Pi/Qwen launchers now add a concrete quoted metadata-setup recommendation, without canonical-executable fallback or implicit setup. No persisted index/protocol epoch changes; existing setup preview and atomic write owners remain authoritative. Native auth, wrapper installation, full onboarding and provider execution are not supplied by this entry.
+
 ## CORP-FMT-060 — existing recipe v1 targets follow the distribution owner
 
 Implementation candidate, 2026-11-20. Recipe fields and meanings stay at schema_version1; `kit.target` admits the existing five `SUPPORTED_DISTRIBUTION_TARGETS` instead of only Linux GNU. Unknown targets refuse. Linux-host publication still uses the same0700/private-stage/no-replace owner; this is not native Windows/macOS producer support. The output names follow the selected consumer: Windows installer `.exe`, `profile-windows-auto.toml`; macOS `profile-macos-auto.toml`; Linux `profile-linux-auto.toml`. Distribution manifest/target/version/component/source verification remains the existing bootstrap owner. Installer bytes remain author-trusted/hash-pinned, never executed by the producer.

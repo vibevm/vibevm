@@ -6,6 +6,7 @@ use vibe_core::cancellation::CancellationToken;
 
 pub(super) struct Request {
     pub agents: Vec<String>,
+    pub from_agent_alias: Option<String>,
     pub mode: Option<AiBindingMode>,
     pub connection: Option<String>,
     pub response: Option<String>,
@@ -20,6 +21,7 @@ pub(super) fn run(
 ) -> Result<()> {
     let Request {
         mut agents,
+        from_agent_alias,
         mode,
         connection,
         response,
@@ -28,11 +30,18 @@ pub(super) fn run(
         && !ctx.is_unattended()
         && std::io::stdin().is_terminal()
         && std::io::stderr().is_terminal();
-    let interactive = agents.is_empty();
-    if interactive {
-        if !attended {
-            bail!("setup requires explicit --agent selection outside an attended terminal");
+    let alias_entry = from_agent_alias.is_some();
+    if let Some(alias) = from_agent_alias {
+        if !agents.is_empty() {
+            bail!("alias setup conflicts with explicit agent selection");
         }
+        agents.push(alias);
+    }
+    let interactive = agents.is_empty() || (alias_entry && mode.is_none());
+    if interactive && !attended {
+        bail!("setup requires explicit --agent selection outside an attended terminal");
+    }
+    if interactive && !alias_entry {
         let choices = crate::output::prompts::named(&["pi", "qwen"]);
         let Some(selected) = crate::output::prompts::choose_many(
             "Configure existing connection metadata only",
@@ -78,6 +87,12 @@ pub(super) fn run(
     let preview = store.setup_preview(&aliases, mode)?;
     let mut apply = response;
     if interactive {
+        if alias_entry {
+            println!(
+                "Selected launcher alias and preset: {}",
+                serde_json::to_string(&aliases)?
+            );
+        }
         println!(
             "{}",
             serde_json::to_string_pretty(

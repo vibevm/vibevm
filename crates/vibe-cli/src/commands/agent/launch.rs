@@ -65,6 +65,23 @@ pub(crate) fn run(ctx: &output::Context, argv: Vec<String>) -> Result<()> {
     let settings = global::settings_root()?;
     let config = AgentsConfig::load(&settings).map_err(AppError::from)?;
     let launcher = launchers::resolve(&settings, &config, &name)?;
+    if matches!(launcher.kind, HarnessKind::Pi | HarnessKind::Qwen) {
+        let program = launcher.command.first().context("empty agent launcher")?;
+        if let Err(error) = super::program::locate(program).and_then(|path| {
+            if path.try_exists()? {
+                Ok(path)
+            } else {
+                bail!("selected launcher executable is missing")
+            }
+        }) {
+            // This is only a recommendation. Never install a wrapper, invoke setup,
+            // or replace the user's command with the canonical executable.
+            let alias = launcher.name.replace('\'', "'\"'\"'");
+            return Err(error).context(format!(
+                "selected launcher unavailable; optional metadata-only setup: vibe ai setup --from-agent-alias '{alias}' (does not install or retry the launcher)"
+            ));
+        }
+    }
 
     let mut native_arguments = launcher.command.iter().skip(1).cloned().collect::<Vec<_>>();
     native_arguments.extend(rest.iter().cloned());

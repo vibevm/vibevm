@@ -1424,3 +1424,127 @@ fn setup_subset_preserves_unselected_explicit_binding_and_stale_default_rejects(
         bid.as_str()
     );
 }
+
+#[cfg(unix)]
+#[test]
+fn setup_from_alias_reuses_preview_owner_and_never_installs_or_launches_wrapper() {
+    let f = F::new();
+    fs::write(f.0.path().join("agents.toml"), "[launchers.work-pi]\nkind='pi'\ncommand=['missing-work-pi','--standing-argument']\n[launchers.work-qwen]\nkind='qwen'\ncommand=['missing-work-qwen']\n[launchers.work-claude]\nkind='claude'\ncommand=['missing-work-claude']\n").unwrap();
+    let secret = f.json(
+        &[
+            "secrets",
+            "create",
+            "--kind",
+            "api-key",
+            "--label",
+            "Synthetic",
+            "--value-stdin",
+        ],
+        Some(VALUE.as_bytes()),
+    );
+    let sid = secret["items"][0]["id"].as_str().unwrap();
+    let added = f.json(
+        &[
+            "ai",
+            "connections",
+            "add",
+            "--label",
+            "Synthetic",
+            "--endpoint",
+            "http://127.0.0.1:32123/v1",
+            "--api-kind",
+            "openai-chat-completions",
+            "--default-model",
+            "synthetic",
+            "--secret-ref",
+            sid,
+        ],
+        None,
+    );
+    let cid = added["items"].as_object().unwrap().keys().next().unwrap();
+    let ai = f.0.path().join("secrets/ai/index.toml");
+    let key = f.0.path().join("secrets/index.toml");
+    let before = fs::read(&ai).unwrap();
+    let keys = fs::read(&key).unwrap();
+    assert!(
+        !f.run(
+            &[
+                "ai",
+                "setup",
+                "--from-agent-alias",
+                "work-pi",
+                "--unattended"
+            ],
+            None
+        )
+        .status
+        .success()
+    );
+    for alias in ["unknown-alias", "work-claude"] {
+        assert!(
+            !f.run(
+                &[
+                    "ai",
+                    "setup",
+                    "--from-agent-alias",
+                    alias,
+                    "--mode",
+                    "connection",
+                    "--connection",
+                    cid
+                ],
+                None
+            )
+            .status
+            .success()
+        );
+        assert_eq!(fs::read(&ai).unwrap(), before);
+    }
+    assert!(
+        !f.run(
+            &[
+                "ai",
+                "setup",
+                "--from-agent-alias",
+                "work-pi",
+                "--agent",
+                "qwen",
+                "--mode",
+                "connection",
+                "--connection",
+                cid
+            ],
+            None
+        )
+        .status
+        .success()
+    );
+    let args = [
+        "ai",
+        "setup",
+        "--from-agent-alias",
+        "work-pi",
+        "--mode",
+        "connection",
+        "--connection",
+        cid,
+    ];
+    let preview = f.json(&args, None);
+    assert_eq!(preview["applied"], false);
+    assert_eq!(fs::read(&ai).unwrap(), before);
+    let mut apply = args.to_vec();
+    apply.extend([
+        "--apply-preview",
+        preview["preview"]["preview_id"].as_str().unwrap(),
+    ]);
+    f.json(&apply, None);
+    let selected = f.json(&["ai", "bindings", "show", "work-pi"], None);
+    assert_eq!(selected["binding"]["harness"], "pi");
+    assert_eq!(selected["binding"]["connection"], cid.as_str());
+    assert_eq!(
+        f.json(&["ai", "bindings", "show", "work-qwen"], None)["binding"]["mode"],
+        "native"
+    );
+    assert_eq!(fs::read(&key).unwrap(), keys);
+    assert!(!f.0.path().join("applications").exists());
+}

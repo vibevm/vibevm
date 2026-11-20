@@ -19,6 +19,7 @@ pub fn run(ctx: &output::Context, args: AiArgs, cancel: &CancellationToken) -> R
     let command = match args.command {
         AiCommand::Setup {
             agents,
+            from_agent_alias,
             mode,
             connection,
             apply_preview,
@@ -29,6 +30,7 @@ pub fn run(ctx: &output::Context, args: AiArgs, cancel: &CancellationToken) -> R
                 &store,
                 setup::Request {
                     agents,
+                    from_agent_alias,
                     mode,
                     connection,
                     response: apply_preview,
