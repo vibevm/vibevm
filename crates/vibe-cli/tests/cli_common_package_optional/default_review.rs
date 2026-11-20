@@ -7009,7 +7009,7 @@ fn ordinary_secret_boundary_and_diagnostics_qualification() {
             );
         }
     }
-    for route in ["authored", "preview", "envelope"] {
+    for route in ["authored", "preview", "envelope", "mcp"] {
         for world in [
             "public-bool",
             "public-text",
@@ -7093,6 +7093,39 @@ fn ordinary_secret_boundary_and_diagnostics_qualification() {
                     write(&input, serde_json::to_vec(&serde_json::json!({"selections":{"extra":"disabled"},"parameters":parameters})).unwrap());
                     preview_cli(&f, Some(&input))
                 }
+                "mcp" => {
+                    use std::os::unix::process::ExitStatusExt;
+                    let script = serde_json::json!({"jsonrpc":"2.0","id":1,"method":"tools/call","params":{"name":"configuration_preview","arguments":{"package":coordinate(DRIVER),"input":{"selections":{"extra":"disabled"},"parameters":parameters}}}}).to_string()+"\n";
+                    let mut out = f
+                        .user
+                        .vibe()
+                        .args([
+                            "--offline",
+                            "mcp",
+                            "serve",
+                            "--path",
+                            f.project.to_str().unwrap(),
+                        ])
+                        .write_stdin(script)
+                        .output()
+                        .unwrap();
+                    assert!(
+                        out.status.success(),
+                        "MCP transport failed; details suppressed"
+                    );
+                    let rows: Vec<serde_json::Value> = String::from_utf8_lossy(&out.stdout)
+                        .lines()
+                        .map(|line| serde_json::from_str(line).expect("MCP response shape invalid"))
+                        .collect();
+                    let row = rows
+                        .iter()
+                        .find(|row| row["id"] == 1)
+                        .expect("MCP response missing");
+                    if row.get("error").is_some() || row["result"]["isError"] == true {
+                        out.status = std::process::ExitStatus::from_raw(1 << 8);
+                    }
+                    out
+                }
                 "envelope" => {
                     envelope["input"]["parameters"] = parameters.into();
                     write(&envelope_file, serde_json::to_vec(&envelope).unwrap());
@@ -7139,6 +7172,7 @@ fn ordinary_secret_boundary_and_diagnostics_qualification() {
                 assert!(
                     diagnostic.contains("public bool")
                         || diagnostic.contains("public string")
+                        || diagnostic.contains("invalid shape")
                         || diagnostic.contains("invalid type")
                         || diagnostic.contains("invalid value")
                         || diagnostic.contains("did not match any variant")
@@ -7167,7 +7201,7 @@ fn ordinary_secret_boundary_and_diagnostics_qualification() {
                 }
             } else {
                 assert!(out.status.success(), "public control failed: {route}");
-                if route != "preview" {
+                if route != "preview" && route != "mcp" {
                     assert!(f.project.join("vibe.lock").exists());
                 }
             }
@@ -7175,6 +7209,117 @@ fn ordinary_secret_boundary_and_diagnostics_qualification() {
                 "secret qualification route={route} world={world} success={} raw-and-digest-scan={}",
                 out.status.success(),
                 if secret { "clean" } else { "public-control" }
+            );
+        }
+    }
+}
+
+#[test]
+fn ordinary_decode_safe_errors_cover_cli_envelope_and_registered_mcp() {
+    use sha2::{Digest, Sha256};
+    for route in ["preview", "envelope", "mcp"] {
+        for world in ["unknown-key", "digest-key", "wrong-value", "malformed"] {
+            let f = preview_fixture();
+            let marker = format!(
+                "synthetic-boundary-{}",
+                f.root.file_name().unwrap().to_string_lossy()
+            );
+            let digest = format!("{:x}", Sha256::digest(marker.as_bytes()));
+            let mut input = serde_json::json!({"selections":{"extra":"disabled"},"parameters":{"verbose":false}});
+            match world {
+                "unknown-key" => input[&marker] = true.into(),
+                "digest-key" => input[&digest] = true.into(),
+                "wrong-value" => input["parameters"]["verbose"] = marker.clone().into(),
+                "malformed" => input = marker.clone().into(),
+                _ => unreachable!(),
+            }
+            let out = match route {
+                "preview" => {
+                    let file = f.root.join("bad-preview.json");
+                    let bytes = if world == "malformed" {
+                        format!("{{\"{marker}\"").into_bytes()
+                    } else {
+                        serde_json::to_vec(&input).unwrap()
+                    };
+                    write(&file, bytes);
+                    preview_cli(&f, Some(&file))
+                }
+                "envelope" => {
+                    let file = ordinary_answer_file(&f, "disabled", false);
+                    let mut envelope: serde_json::Value =
+                        serde_json::from_slice(&fs::read(&file).unwrap()).unwrap();
+                    envelope["input"] = input;
+                    let bytes = if world == "malformed" {
+                        format!("{{\"{marker}\"").into_bytes()
+                    } else {
+                        serde_json::to_vec(&envelope).unwrap()
+                    };
+                    write(&file, bytes);
+                    f.user
+                        .vibe()
+                        .args([
+                            "install",
+                            "--ordinary-answers",
+                            file.to_str().unwrap(),
+                            "--path",
+                            f.project.to_str().unwrap(),
+                            "--offline",
+                            "--assume-yes",
+                            "--json",
+                        ])
+                        .output()
+                        .unwrap()
+                }
+                "mcp" => {
+                    let script = serde_json::json!({"jsonrpc":"2.0","id":1,"method":"tools/call","params":{"name":"configuration_preview","arguments":{"package":coordinate(DRIVER),"input":input}}}).to_string()+"\n";
+                    f.user
+                        .vibe()
+                        .args([
+                            "--offline",
+                            "mcp",
+                            "serve",
+                            "--path",
+                            f.project.to_str().unwrap(),
+                        ])
+                        .write_stdin(script)
+                        .output()
+                        .unwrap()
+                }
+                _ => unreachable!(),
+            };
+            for bytes in [&out.stdout, &out.stderr] {
+                let text = String::from_utf8_lossy(bytes);
+                assert!(
+                    !text.contains(&marker) && !text.contains(&digest),
+                    "decode error disclosure: {route}/{world}; value suppressed"
+                );
+            }
+            let text = String::from_utf8_lossy(&out.stdout).to_string()
+                + &String::from_utf8_lossy(&out.stderr);
+            assert!(
+                text.contains("invalid shape") && text.contains("parameters boolean map"),
+                "safe diagnostic missing: {route}/{world}"
+            );
+            if route != "mcp" {
+                assert!(!out.status.success(), "invalid input unexpectedly admitted");
+            } else {
+                let rows: Vec<serde_json::Value> = String::from_utf8_lossy(&out.stdout)
+                    .lines()
+                    .map(|line| serde_json::from_str(line).expect("MCP response shape invalid"))
+                    .collect();
+                let row = rows
+                    .iter()
+                    .find(|row| row["id"] == 1)
+                    .expect("MCP response missing");
+                assert!(
+                    row.get("error").is_some() || row["result"]["isError"] == true,
+                    "MCP invalid argument response missing"
+                );
+            }
+            assert!(!f.project.join("vibe.lock").exists());
+            assert!(!f.project.join("effects.log").exists());
+            println!(
+                "safe decode route={route} world={world} class=invalid-shape schema=static raw-and-digest=clean"
             );
         }
     }

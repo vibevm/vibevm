@@ -1,8 +1,20 @@
 //! Ordinary preview admission around generated optional object fields.
-//! Serde's Option alone accepts null; the public nonnullable optional contract
-//! treats only absence as unanswered, never an explicitly null submission.
-use crate::generated::ordinary_configuration_preview_request::OrdinaryConfigurationPreviewRequest;
+//! Decode errors precede secret classification: never expose caller bytes or keys.
+use crate::generated::ordinary_configuration_preview_request::{
+    Input, OrdinaryConfigurationPreviewRequest,
+};
 use serde::de::Error as _;
+
+fn invalid_input() -> serde_json::Error {
+    serde_json::Error::custom(
+        "ordinary preview input: invalid shape; expected input.selections string map and input.parameters boolean map",
+    )
+}
+
+/// Strict generated decoding with a closed diagnostic, not a serde error chain.
+pub fn parse_input(bytes: &[u8]) -> Result<Input, serde_json::Error> {
+    serde_json::from_slice(bytes).map_err(|_| invalid_input())
+}
 
 pub fn parse_request(
     value: serde_json::Value,
@@ -12,5 +24,9 @@ pub fn parse_request(
             "present ordinary preview input must be an object, not null",
         ));
     }
-    serde_json::from_value(value)
+    serde_json::from_value(value).map_err(|_| {
+        serde_json::Error::custom(
+            "ordinary preview request: invalid shape; expected package string and optional input object with selections string map and parameters boolean map",
+        )
+    })
 }

@@ -38,7 +38,7 @@ pub(super) fn run(ctx: &output::Context, args: ShowConfigurationPreviewArgs) -> 
             let snapshot = scope
                 .read_file_snapshot_bounded(name, MAX_INPUT_BYTES)?
                 .ok_or_else(|| anyhow!("input file is unavailable"))?;
-            Ok(serde_json::from_slice(&snapshot.bytes)?)
+            Ok(vibe_wire::behaviour::ordinary_configuration_preview::parse_input(&snapshot.bytes)?)
         })
         .transpose()?;
     let result = configuration_preview(
