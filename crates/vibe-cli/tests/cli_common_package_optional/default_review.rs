@@ -4409,3 +4409,151 @@ fn weak_forwarding_dormant_forgery_and_wrong_declaration_refuse() {
         }
     }
 }
+
+#[test]
+fn zero_or_more_defaults_omitted_empty_matching_and_require_selection_public_boundary() {
+    for world in [
+        "omitted-default",
+        "explicit-empty",
+        "explicit-match",
+        "omitted-required",
+    ] {
+        let f = Fixture::new(false);
+        let source = f.registry.join(GROUP).join(DRIVER).join("v1.0.0/vibe.toml");
+        let text = fs::read_to_string(&source)
+            .unwrap()
+            .replace(
+                "cardinality = \"exactly-one\"",
+                "cardinality = \"zero-or-more\"",
+            )
+            .replace("defaults = [\"disabled\"]", "defaults = [\"enabled\"]");
+        write(&source, text);
+        let request = f.project.join("vibe.toml");
+        let input = match world {
+            "omitted-default" => {
+                "configuration={policy='use-declared-defaults',default_features=false}"
+            }
+            "explicit-empty" => {
+                "configuration={policy='use-declared-defaults',default_features=false,selections={extra={intent='exact',members=[]}}}"
+            }
+            "explicit-match" => {
+                "configuration={policy='use-declared-defaults',default_features=false,selections={extra={intent='exact',members=['enabled']}}}"
+            }
+            "omitted-required" => {
+                "configuration={policy='require-selection',default_features=false}"
+            }
+            _ => unreachable!(),
+        };
+        write(&request, fs::read_to_string(&request).unwrap().replace(
+            "configuration={policy='require-selection',default_features=false,selections={extra={intent='exact',members=['disabled']}}}", input));
+        let authored = fs::read(&request).unwrap();
+        let consumer = Manifest::read(&request).unwrap();
+        let original = &consumer.requires.configurations[&coordinate(DRIVER)];
+        assert!(!original.default_features);
+        let definition = Manifest::read(&source).unwrap().configuration.unwrap();
+        let normalized = definition.normalize_input(original, "./vibe.toml").unwrap();
+        match world {
+            "explicit-empty" => assert!(
+                matches!(&normalized.choices.answers["extra"].selection, vibe_core::configuration::Selection::Explicit(values) if values.is_empty())
+            ),
+            "explicit-match" => assert!(
+                matches!(&normalized.choices.answers["extra"].selection, vibe_core::configuration::Selection::Explicit(values) if values == &vec!["enabled".to_owned()])
+            ),
+            _ => assert!(!normalized.choices.answers.contains_key("extra")),
+        }
+        let evaluated = definition
+            .compile_choices()
+            .unwrap()
+            .evaluate(&normalized.features, &[normalized.choices]);
+        println!(
+            "zero-or-more world={world} pure outcome={:?}",
+            evaluated.outcome
+        );
+        let vibe_core::configuration::ChoiceOutcome::Resolved { features } = &evaluated.outcome
+        else {
+            panic!("{world}: unresolved pure outcome");
+        };
+        assert_eq!(
+            features.selected.contains(&"enabled".to_owned()),
+            matches!(world, "omitted-default" | "explicit-match")
+        );
+        assert_eq!(!evaluated.defaults.is_empty(), world == "omitted-default");
+        let complete_before = preview_scratch_snapshot(&f.project).unwrap();
+        let before = super::workspace::semantic_snapshot(&f.project);
+        let source_before = preview_scratch_snapshot(&f.registry);
+        let out = f.install();
+        let diagnostic = format!(
+            "{}{}",
+            String::from_utf8_lossy(&out.stdout),
+            String::from_utf8_lossy(&out.stderr)
+        );
+        println!(
+            "zero-or-more world={world} status={} diagnostic={diagnostic}",
+            out.status
+        );
+        if world == "omitted-default" {
+            assert!(!out.status.success(), "{diagnostic}");
+            assert!(
+                diagnostic
+                    .contains("only unguarded exactly-one single-member defaults are connected"),
+                "{diagnostic}"
+            );
+            assert_eq!(super::workspace::semantic_snapshot(&f.project), before);
+            assert!(!f.project.join("vibe.lock").exists());
+            assert!(!f.slot(DRIVER).exists());
+            assert!(!f.slot(BASE).exists());
+            assert!(!f.slot(EXTRA).exists());
+            assert!(!f.project.join("effects.log").exists());
+            let mut complete_after = preview_scratch_snapshot(&f.project).unwrap();
+            let expected = preview_scratch_snapshot(&f.project.join(".vibe")).unwrap();
+            assert_eq!(
+                expected.len(),
+                2,
+                "unexpected refusal coordination: {expected:?}"
+            );
+            assert!(expected.contains_key(Path::new("")));
+            assert!(expected.contains_key(Path::new("lifecycle.lock")));
+            assert_eq!(
+                fs::read(f.project.join(".vibe/lifecycle.lock")).unwrap(),
+                Vec::<u8>::new()
+            );
+            assert!(complete_after.remove(Path::new(".vibe")).is_some());
+            assert!(
+                complete_after
+                    .remove(Path::new(".vibe/lifecycle.lock"))
+                    .is_some()
+            );
+            assert_eq!(complete_after, complete_before);
+        } else {
+            assert!(out.status.success(), "{world}: {diagnostic}");
+            let lock = f.lock();
+            let record = &lock.configurations[&coordinate(DRIVER)];
+            assert_eq!(record.consumers.len(), 1);
+            assert_eq!(record.consumers.values().next().unwrap(), original);
+            assert!(record.automatic_basis.is_none());
+            assert_eq!(lock.meta.schema_version, 8);
+            let selected = world == "explicit-match";
+            assert_eq!(record.features.contains(&"enabled".to_owned()), selected);
+            assert_eq!(
+                record.active_dependencies.contains(&coordinate(EXTRA)),
+                selected
+            );
+            assert_eq!(f.slot(EXTRA).exists(), selected);
+            assert_eq!(f.static_boot().contains(EXTRA_MARKER), selected);
+            assert_eq!(f.hooks().get(EXTRA).copied().unwrap_or(0) > 0, selected);
+            let installed = super::workspace::semantic_snapshot(&f.project);
+            let hooks = f.hooks();
+            f.install_ok();
+            assert_eq!(super::workspace::semantic_snapshot(&f.project), installed);
+            assert_eq!(f.hooks(), hooks);
+        }
+        assert_eq!(fs::read(&request).unwrap(), authored);
+        assert_eq!(preview_scratch_snapshot(&f.registry), source_before);
+        println!(
+            "zero-or-more world={world} coordination paths={:?}",
+            preview_scratch_snapshot(&f.project.join(".vibe"))
+                .as_ref()
+                .map(|entries| entries.keys().collect::<Vec<_>>())
+        );
+    }
+}
