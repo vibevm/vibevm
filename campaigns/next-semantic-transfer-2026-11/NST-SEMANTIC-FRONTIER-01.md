@@ -243,3 +243,5 @@ Index integrity at `0d30e9ae3`: all 3179 stored first-parent diff fingerprints r
 Five historical ownership, planning and prerequisite records were checked. The specmap and raw log digests at `bd04990def` and the prerequisite task digest at `bca41b5cd8` match their Git blobs. They establish traceability, not completion of the planned runtime.
 
 At `e73b73881d`, the entity inventory grows to 35 model identities without admitting a model. At `cc4e68b583`, retiring the staging law preserves the publication hold: both referenced PROP file hashes match the named acceptance revision `df5f7af9a`. Neither record proves target execution.
+
+Two generated declarations were reviewed: the Zap bridge selects a branch and installer, not an installed binary; the migration request rejects unknown fields, but its integer type does not enforce epoch one. Neither projection was treated as an executed operation.
