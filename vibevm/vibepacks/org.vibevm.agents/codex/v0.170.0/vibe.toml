@@ -24,3 +24,23 @@ default = true
 [[installer_options.public_commands]]
 name = "codex"
 launcher = "main"
+
+[[installer_options]]
+id = "macos-arm64-standalone"
+name = "Official Codex macOS arm64 CLI"
+platform = "macos"
+platform_name = "macOS"
+arch = "aarch64"
+[installer_options.installation]
+type = "tar_gz"
+source = "https://github.com/openai/codex/releases/download/rust-v0.170.0/codex-aarch64-apple-darwin.tar.gz"
+sha256 = "7c9f21d5cbae4860d14b379fdcf709ff399ce874fd714b58783e1b4199c2b9a9"
+[[installer_options.launchers]]
+id = "main"
+name = "Codex"
+executable = "$app_root/codex-aarch64-apple-darwin"
+kind = "command"
+default = true
+[[installer_options.public_commands]]
+name = "codex"
+launcher = "main"

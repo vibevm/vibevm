@@ -72,3 +72,83 @@ fn pi_exact_supplier_platform_selection_preserves_linux_and_refuses_mismatch() {
         );
     }
 }
+
+#[test]
+fn codex_and_qwen_exact_macos_options_preserve_linux_and_refuse_cross_target_ids() {
+    for (text, name, source, digest, root, executable, linux_id) in [
+        (
+            include_str!("../../../vibevm/vibepacks/org.vibevm.agents/codex/v0.170.0/vibe.toml"),
+            "codex",
+            "https://github.com/openai/codex/releases/download/rust-v0.170.0/codex-aarch64-apple-darwin.tar.gz",
+            "7c9f21d5cbae4860d14b379fdcf709ff399ce874fd714b58783e1b4199c2b9a9",
+            None,
+            "$app_root/codex-aarch64-apple-darwin",
+            "linux-x64-musl",
+        ),
+        (
+            include_str!("../../../vibevm/vibepacks/org.vibevm.agents/qwen/v0.28.0/vibe.toml"),
+            "qwen",
+            "https://github.com/QwenLM/qwen-code/releases/download/v0.28.0/qwen-code-darwin-arm64.tar.gz",
+            "5355baa7b994da2641f9ed6bff6ac7b7d06cff2779635704b3aae26fdbfc412f",
+            Some(std::path::Path::new("qwen-code")),
+            "$app_bin/qwen",
+            "linux-x64-standalone",
+        ),
+    ] {
+        let manifest = Manifest::parse_str(text).unwrap();
+        assert_eq!(manifest.installer_options.len(), 2);
+        let choice = InstallChoice {
+            platform: Some("macos".into()),
+            arch: Some("aarch64".into()),
+            installer: None,
+        };
+        let selected = select_option(&manifest.installer_options, &choice, None).unwrap();
+        assert_eq!(selected.id, "macos-arm64-standalone");
+        let Some(InstallerMethod::TarGz {
+            source: actual,
+            sha256,
+            payload_root,
+        }) = selected.installation
+        else {
+            panic!("expected exact supplier tar.gz owner");
+        };
+        assert_eq!(actual, source);
+        assert_eq!(sha256, digest);
+        assert_eq!(payload_root.as_deref(), root);
+        assert_eq!(selected.launchers[0].executable, executable);
+        assert_eq!(selected.public_commands[0].name, name);
+        let linux = InstallChoice {
+            platform: Some("linux".into()),
+            arch: Some("x86_64".into()),
+            installer: None,
+        };
+        assert_eq!(
+            select_option(&manifest.installer_options, &linux, None)
+                .unwrap()
+                .id,
+            linux_id
+        );
+        for rejected in [
+            InstallChoice {
+                platform: Some("windows".into()),
+                arch: Some("x86_64".into()),
+                installer: None,
+            },
+            InstallChoice {
+                platform: Some("macos".into()),
+                arch: Some("x86_64".into()),
+                installer: None,
+            },
+            InstallChoice {
+                installer: Some(linux_id.into()),
+                ..choice
+            },
+            InstallChoice {
+                installer: Some("macos-arm64-standalone".into()),
+                ..linux
+            },
+        ] {
+            assert!(select_option(&manifest.installer_options, &rejected, None).is_err());
+        }
+    }
+}
