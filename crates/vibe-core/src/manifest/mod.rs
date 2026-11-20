@@ -62,6 +62,7 @@ pub use configuration::{
     ConfigurationFeatureVisibility, ConfigurationGroupDecl, ConfigurationGuard,
     ConfigurationIntentDecl, ConfigurationProfileDecl, ConfigurationSelection, ForwardStrength,
     ForwardedInput, NormalizedConfigurationInput, PackageConfiguration, PackageConfigurationError,
+    SubmittedInput, SubmittedSource, submitted_project_witness,
 };
 pub use consumer::{ConsumerNode, NodeRole};
 pub use declarant_path::{

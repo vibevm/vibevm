@@ -36,6 +36,7 @@ mod options;
 mod project_local;
 mod qualified;
 mod source;
+pub mod submitted_history;
 mod transport;
 
 pub use builder::{

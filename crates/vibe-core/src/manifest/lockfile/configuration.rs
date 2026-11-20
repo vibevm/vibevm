@@ -90,15 +90,41 @@ impl Lockfile {
                 )));
             }
             let row = rows[0];
-            let evaluated = PackageConfiguration::evaluate_parts(
-                key.clone(),
-                row.kind,
-                &record.definition,
-                &record.declarations,
-                &record.consumers,
-                &record.forwarded_inputs,
-            )
-            .map_err(|error| invalid(error.to_string()))?;
+            if !record.submitted_inputs.is_empty() {
+                if self.meta.schema_version < SUBMITTED_INPUT_SCHEMA_VERSION
+                    || row.kind != PackageKind::Flow
+                    || row.registry.is_none()
+                    || row.materialization.is_in_place()
+                    || row.via_override.is_some()
+                    || row.via_redirect.is_some()
+                    || row.template.is_some()
+                    || !row.embedded_sources.is_empty()
+                    || !matches!(
+                        row.source_kind,
+                        None | Some(SourceKind::Registry) | Some(SourceKind::Local)
+                    )
+                    || !row.source_url.as_str().starts_with("file://")
+                {
+                    return Err(invalid(
+                        "submitted history requires schema16 and a named local Flow source".into(),
+                    ));
+                }
+                for input in record.submitted_inputs.values() {
+                    if row.registry.as_deref() != Some(input.expected_source.registry.as_str())
+                        || row.content_hash != input.expected_source.content_hash
+                        || !input.requirement.version.matches(&row.version)
+                        || input.requirement.kind.is_some_and(|kind| kind != row.kind)
+                        || !self.meta.root_dependencies.contains(&input.requirement)
+                    {
+                        return Err(invalid(
+                            "submitted history does not match an actual exact locked root".into(),
+                        ));
+                    }
+                }
+            }
+            let evaluated = record
+                .replay_parts(key.clone(), row.kind)
+                .map_err(|error| invalid(error.to_string()))?;
             if &evaluated != record {
                 return Err(invalid(format!(
                     "configuration `{key}` derived state disagrees with original inputs"
@@ -315,6 +341,17 @@ impl Lockfile {
     }
 
     pub(crate) fn for_write(&self) -> Result<Self> {
+        // Stage A deliberately has no public writer for submitted history.
+        if self
+            .configurations
+            .values()
+            .any(|record| !record.submitted_inputs.is_empty())
+        {
+            return Err(crate::Error::InvalidLockfile {
+                reason: "submitted history writer is disabled pending installation admission"
+                    .into(),
+            });
+        }
         if !matches!(
             self.meta.schema_version,
             LEGACY_SCHEMA_VERSION
@@ -326,6 +363,7 @@ impl Lockfile {
                 | SUBSKILL_WITNESS_SCHEMA_VERSION
                 | FORWARDED_INPUT_SCHEMA_VERSION
                 | MULTI_CHOICE_BASIS_SCHEMA_VERSION
+                | SUBMITTED_INPUT_SCHEMA_VERSION
         ) {
             return Err(crate::Error::UnsupportedLockfile {
                 found: self.meta.schema_version,

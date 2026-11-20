@@ -16,6 +16,9 @@ pub struct PackageConfiguration {
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub automatic_basis: Option<AutomaticBasis>,
     pub consumers: BTreeMap<String, ConfigurationIntentDecl>,
+    /// Operation-submitted originals remain distinct from authored consumers.
+    #[serde(default, skip_serializing_if = "BTreeMap::is_empty")]
+    pub submitted_inputs: BTreeMap<String, super::SubmittedInput>,
     /// Candidate-owned incoming requests, never synthetic workspace consumers.
     #[serde(default, skip_serializing_if = "Vec::is_empty")]
     pub forwarded_inputs: Vec<ForwardedInput>,
@@ -578,6 +581,7 @@ impl PackageConfiguration {
         Ok(Self {
             automatic_basis,
             consumers: consumers.clone(),
+            submitted_inputs: BTreeMap::new(),
             forwarded_inputs: forwarded.to_vec(),
             definition: definition.clone(),
             declarations: requires.clone(),
@@ -593,16 +597,18 @@ impl PackageConfiguration {
         &self,
         kind: crate::PackageKind,
     ) -> Result<BTreeMap<String, crate::manifest::ParameterValue>, PackageConfigurationError> {
-        let evaluated = Self::evaluate_parts(
+        let evaluated = self.replay_parts(
             self.forwarded_inputs
                 .first()
                 .map(|input| input.target.qualified_name())
+                .or_else(|| {
+                    self.submitted_inputs
+                        .values()
+                        .next()
+                        .map(|input| input.requirement.qualified_name())
+                })
                 .unwrap_or_else(|| "retained package".into()),
             kind,
-            &self.definition,
-            &self.declarations,
-            &self.consumers,
-            &self.forwarded_inputs,
         )?;
         if &evaluated != self {
             return Err(PackageConfigurationError::ReplayMismatch {
@@ -651,11 +657,19 @@ impl PackageConfiguration {
         self.selected_data(kind)?;
         let mut values = BTreeMap::new();
         for parameter in &self.definition.parameters {
-            let consumer = self.consumers.values().next().ok_or_else(|| {
-                PackageConfigurationError::ReplayMismatch {
+            let consumer = self
+                .consumers
+                .values()
+                .next()
+                .or_else(|| {
+                    self.submitted_inputs
+                        .values()
+                        .next()
+                        .map(|input| &input.original)
+                })
+                .ok_or_else(|| PackageConfigurationError::ReplayMismatch {
                     package: "retained package".into(),
-                }
-            })?;
+                })?;
             let normalized = self
                 .definition
                 .normalize_input(consumer, "retained package consumer")
@@ -678,8 +692,28 @@ impl PackageConfiguration {
     /// the actual pinned manifest; never infer a request from effective features.
     #[specmark::spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-069#RECONFIGURATION")]
     pub fn validate(&self, manifest: &Manifest) -> Result<(), PackageConfigurationError> {
-        let actual =
-            Self::evaluate_with_forwarded(manifest, &self.consumers, &self.forwarded_inputs)?;
+        let metadata =
+            manifest
+                .require_package()
+                .map_err(|error| PackageConfigurationError::Invalid {
+                    package: "retained package".into(),
+                    reason: error.to_string(),
+                })?;
+        let actual = if self.submitted_inputs.is_empty() {
+            Self::evaluate_with_forwarded(manifest, &self.consumers, &self.forwarded_inputs)?
+        } else {
+            if manifest.configuration.as_ref() != Some(&self.definition)
+                || manifest.requires != self.declarations
+            {
+                return Err(PackageConfigurationError::ReplayMismatch {
+                    package: format!("{}/{}", metadata.group, metadata.name),
+                });
+            }
+            self.replay_parts(
+                format!("{}/{}", metadata.group, metadata.name),
+                metadata.kind,
+            )?
+        };
         if &actual != self {
             let package = manifest
                 .package

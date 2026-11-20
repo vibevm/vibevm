@@ -30,6 +30,7 @@ pub(super) fn run(ctx: &output::Context, args: ShowFeaturesArgs) -> Result<()> {
             "retained package configuration is missing or disagrees with current consumer input; install explicitly before inspection"
         );
     }
+    vibe_package_source::submitted_history::verify_submitted_inspection(&root, &lock)?;
     let mut packages = Vec::new();
     for (key, record) in &lock.configurations {
         let row = lock

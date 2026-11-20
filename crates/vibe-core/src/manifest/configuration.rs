@@ -14,6 +14,8 @@ mod package;
 pub use package::{
     AutomaticBasis, ForwardedInput, PackageConfiguration, PackageConfigurationError,
 };
+mod submitted;
+pub use submitted::{SubmittedInput, SubmittedSource, submitted_project_witness};
 mod semantic;
 mod validate;
 mod vocabulary;

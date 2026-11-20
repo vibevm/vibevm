@@ -6358,3 +6358,298 @@ fn lexical_path_actual_prior_reader_writer_refuse_without_loss() {
         }
     }
 }
+
+fn synthetic_submitted_history_fixture() -> Fixture {
+    let f = preview_fixture();
+    let request = f.project.join("vibe.toml");
+    let raw = fs::read_to_string(&request).unwrap();
+    write(&request,raw.replace("link='static-transitive'","link='static-transitive'\nconfiguration={policy='require-selection',default_features=false,selections={extra={intent='exact',members=['disabled']}},parameters={verbose=false}}"));
+    f.install_ok();
+    let mut lock = f.lock();
+    write(&request, &raw);
+    let witness = vibe_core::manifest::submitted_project_witness(
+        &f.project.canonicalize().unwrap(),
+        raw.as_bytes(),
+    )
+    .unwrap();
+    let row = lock
+        .packages
+        .iter()
+        .find(|row| row.name.as_str() == DRIVER)
+        .unwrap();
+    let expected_source = vibe_core::manifest::SubmittedSource {
+        registry: row.registry.clone().unwrap(),
+        content_hash: row.content_hash.clone(),
+    };
+    let record = lock.configurations.get_mut(&coordinate(DRIVER)).unwrap();
+    let original = record.consumers.remove("./vibe.toml").unwrap();
+    assert!(record.consumers.is_empty());
+    record.submitted_inputs.insert(
+        "./vibe.toml".into(),
+        vibe_core::manifest::SubmittedInput {
+            original,
+            requirement: Manifest::read(&request).unwrap().requires.packages[0].clone(),
+            project_witness: witness,
+            expected_source,
+        },
+    );
+    lock.meta.schema_version = 16;
+    // Stage A deliberately handcrafts reader data; no public submitted writer.
+    write(
+        &f.project.join("vibe.lock"),
+        toml::to_string(&lock).unwrap(),
+    );
+    f
+}
+
+#[test]
+fn submitted_history_stage_a_reader_freshness_and_writer_withheld() {
+    for mutation in [
+        "none",
+        "epoch",
+        "owner",
+        "overlap",
+        "removed",
+        "extra",
+        "requirement",
+        "project-edit",
+        "project-copy",
+        "authored",
+        "source-binding",
+        "graph",
+    ] {
+        let f = synthetic_submitted_history_fixture();
+        let mut lock = f.lock();
+        let record = lock.configurations.get_mut(&coordinate(DRIVER)).unwrap();
+        match mutation {
+            "epoch" => lock.meta.schema_version = 15,
+            "owner" => {
+                let value = record.submitted_inputs.pop_first().unwrap().1;
+                record.submitted_inputs.insert("./other.toml".into(), value);
+            }
+            "overlap" => {
+                record.consumers.insert(
+                    "./vibe.toml".into(),
+                    record.submitted_inputs["./vibe.toml"].original.clone(),
+                );
+            }
+            "removed" => record.submitted_inputs.clear(),
+            "extra" => {
+                record.submitted_inputs.insert(
+                    "./other.toml".into(),
+                    record.submitted_inputs["./vibe.toml"].clone(),
+                );
+            }
+            "requirement" => {
+                record
+                    .submitted_inputs
+                    .get_mut("./vibe.toml")
+                    .unwrap()
+                    .requirement
+                    .version = vibe_core::VersionSpec::parse("=2.0.0").unwrap()
+            }
+            "project-edit" => {
+                let p = f.project.join("vibe.toml");
+                write(&p, fs::read_to_string(&p).unwrap() + "\n# changed\n");
+            }
+            "authored" => {
+                let p = f.project.join("vibe.toml");
+                write(&p,fs::read_to_string(&p).unwrap().replace("link='static-transitive'","link='static-transitive'\nconfiguration={policy='require-selection',default_features=false,selections={extra={intent='exact',members=['disabled']}},parameters={verbose=false}}"));
+            }
+            "source-binding" => {
+                lock.packages
+                    .iter_mut()
+                    .find(|p| p.name.as_str() == DRIVER)
+                    .unwrap()
+                    .registry = Some("foreign".into())
+            }
+            "graph" => record.features.push("enabled".into()),
+            _ => {}
+        }
+        write(
+            &f.project.join("vibe.lock"),
+            toml::to_string(&lock).unwrap(),
+        );
+        let read = Lockfile::read(f.project.join("vibe.lock"));
+        if matches!(
+            mutation,
+            "epoch"
+                | "owner"
+                | "overlap"
+                | "removed"
+                | "extra"
+                | "requirement"
+                | "graph"
+                | "source-binding"
+        ) {
+            assert!(read.is_err(), "{mutation}");
+            continue;
+        }
+        let read = read.unwrap();
+        let original = &read.configurations[&coordinate(DRIVER)];
+        assert!(original.consumers.is_empty());
+        assert_eq!(original.submitted_inputs.len(), 1);
+        assert_eq!(
+            original
+                .selected_parameters(vibe_core::PackageKind::Flow)
+                .unwrap()["verbose"],
+            vibe_core::manifest::ParameterValue::Bool(false)
+        );
+        let target = f.root.join("writer-disabled.lock");
+        assert!(read.write(&target).is_err());
+        assert!(!target.exists());
+        let root = if mutation == "project-copy" {
+            let other = f.root.join("copied-project");
+            fs::create_dir_all(&other).unwrap();
+            write(
+                &other.join("vibe.toml"),
+                fs::read(f.project.join("vibe.toml")).unwrap(),
+            );
+            other
+        } else {
+            f.project.clone()
+        };
+        let workspace = vibe_workspace::Workspace::discover(&root).unwrap();
+        let fresh = vibe_workspace::freshness::configuration_freshness(&workspace, &read);
+        assert_eq!(
+            fresh.is_fresh(),
+            mutation == "none",
+            "{mutation}: {fresh:?}"
+        );
+    }
+}
+
+#[test]
+fn submitted_history_stage_a_real_prior_reader_writer_refuse_without_loss() {
+    let old = std::env::var_os("NST_SUBMITTED_OLD_CLI")
+        .expect("mandatory explicitly mounted pre-submission CLI");
+    for operation in ["reader", "writer"] {
+        let f = synthetic_submitted_history_fixture();
+        assert!(
+            f.lock().configurations[&coordinate(DRIVER)]
+                .consumers
+                .is_empty()
+        );
+        let before = super::workspace::semantic_snapshot(&f.project);
+        let args = if operation == "reader" {
+            vec![
+                "show",
+                "configuration-data",
+                "--path",
+                f.project.to_str().unwrap(),
+                "--json",
+            ]
+        } else {
+            vec![
+                "install",
+                "--path",
+                f.project.to_str().unwrap(),
+                "--offline",
+                "--assume-yes",
+                "--json",
+            ]
+        };
+        let out = std::process::Command::new(&old)
+            .env_clear()
+            .env("HOME", f.root.join("home"))
+            .env("VIBE_SETTINGS", &f.user.settings)
+            .env("VIBE_NO_DEFAULT_REGISTRY", "1")
+            .env("PATH", "/usr/bin:/bin")
+            .args(args)
+            .output()
+            .unwrap();
+        let diagnostic = format!(
+            "{}{}",
+            String::from_utf8_lossy(&out.stdout),
+            String::from_utf8_lossy(&out.stderr)
+        );
+        println!(
+            "prior submitted {operation} status={} diagnostic={diagnostic}",
+            out.status
+        );
+        assert!(!out.status.success());
+        assert!(diagnostic.contains("submitted_inputs"), "{diagnostic}");
+        assert_eq!(super::workspace::semantic_snapshot(&f.project), before);
+    }
+}
+
+#[test]
+fn submitted_history_stage_a_source_present_inspection_refuses_drift() {
+    for mutation in [
+        "none",
+        "same-prefix",
+        "source-bytes",
+        "lock-pin",
+        "missing-source",
+    ] {
+        let f = synthetic_submitted_history_fixture();
+        match mutation {
+            "same-prefix" => {
+                let mut lock = f.lock();
+                lock.packages
+                    .iter_mut()
+                    .find(|row| row.name.as_str() == DRIVER)
+                    .unwrap()
+                    .source_url = vibe_core::provenance::SourceUrl::new(format!(
+                    "file://{}/wrong-source",
+                    f.registry.display()
+                ));
+                write(
+                    &f.project.join("vibe.lock"),
+                    toml::to_string(&lock).unwrap(),
+                );
+            }
+            "source-bytes" => write(
+                &f.registry
+                    .join(GROUP)
+                    .join(DRIVER)
+                    .join("v1.0.0/payload-new.txt"),
+                "CHANGED_SAME_VERSION\n",
+            ),
+            "lock-pin" => {
+                let mut lock = f.lock();
+                lock.packages
+                    .iter_mut()
+                    .find(|row| row.name.as_str() == DRIVER)
+                    .unwrap()
+                    .content_hash = vibe_core::ContentHash::parse("sha256:aa").unwrap();
+                write(
+                    &f.project.join("vibe.lock"),
+                    toml::to_string(&lock).unwrap(),
+                );
+            }
+            "missing-source" => {
+                fs::rename(&f.registry, f.root.join("retained-registry-disabled")).unwrap();
+            }
+            _ => {}
+        }
+        let before = super::workspace::semantic_snapshot(&f.project);
+        let out = f
+            .user
+            .vibe()
+            .args([
+                "show",
+                "configuration-data",
+                "--path",
+                f.project.to_str().unwrap(),
+                "--json",
+            ])
+            .output()
+            .unwrap();
+        let diagnostic = format!(
+            "{}{}",
+            String::from_utf8_lossy(&out.stdout),
+            String::from_utf8_lossy(&out.stderr)
+        );
+        println!(
+            "submitted source {mutation} status={} diagnostic={diagnostic}",
+            out.status
+        );
+        assert_eq!(out.status.success(), mutation == "none", "{diagnostic}");
+        if mutation == "none" {
+            let result: serde_json::Value = serde_json::from_slice(&out.stdout).unwrap();
+            assert_eq!(result["packages"][0]["parameters"]["verbose"], false);
+        }
+        assert_eq!(super::workspace::semantic_snapshot(&f.project), before);
+    }
+}

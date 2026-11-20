@@ -42,6 +42,12 @@ pub fn configuration_freshness(workspace: &Workspace, lock: &Lockfile) -> Freshn
                 "`{key}` configuration no longer has its recorded workspace consumers"
             ));
         };
+        if !record.submitted_inputs.is_empty() {
+            if let Err(reason) = submitted_root_matches(workspace, lock, key, record, consumers) {
+                return Freshness::Stale(reason);
+            }
+            continue;
+        }
         let expected = record
             .consumers
             .iter()
@@ -52,4 +58,74 @@ pub fn configuration_freshness(workspace: &Workspace, lock: &Lockfile) -> Freshn
         }
     }
     Freshness::Fresh
+}
+
+fn submitted_root_matches(
+    workspace: &Workspace,
+    lock: &Lockfile,
+    key: &str,
+    record: &vibe_core::manifest::PackageConfiguration,
+    consumers: &BTreeMap<String, Option<vibe_core::manifest::ConfigurationIntentDecl>>,
+) -> Result<(), String> {
+    let bad = || "submitted configuration root/declaration/project/source changed".to_owned();
+    if !workspace.members.is_empty()
+        || workspace.root_manifest.workspace.is_some()
+        || record.submitted_inputs.len() != 1
+        || consumers.len() != 1
+        || consumers.get("./vibe.toml") != Some(&None)
+    {
+        return Err(bad());
+    }
+    let input = record.submitted_inputs.get("./vibe.toml").ok_or_else(bad)?;
+    let manifest = &workspace.root_manifest;
+    if manifest.requires.packages.len() != 1
+        || manifest.requires.packages[0] != input.requirement
+        || manifest
+            .requires
+            .optional
+            .get(key)
+            .copied()
+            .unwrap_or(false)
+        || !manifest.requires.configurations.is_empty()
+        || !manifest.requires.git_packages.is_empty()
+        || !manifest.requires.path_packages.is_empty()
+        || !manifest.overrides.is_empty()
+        || !manifest.source_policy.is_empty()
+        || !manifest.mirrors.is_empty()
+    {
+        return Err(bad());
+    }
+    let canonical = workspace.root.canonicalize().map_err(|_| bad())?;
+    if canonical != workspace.root {
+        return Err(bad());
+    }
+    let project = vibe_safefs::Project::open(&workspace.root).map_err(|_| bad())?;
+    let snapshot = project
+        .read_file_snapshot_bounded("vibe.toml", 64 * 1024)
+        .map_err(|_| bad())?
+        .ok_or_else(bad)?;
+    if vibe_core::manifest::submitted_project_witness(&canonical, &snapshot.bytes)?
+        != input.project_witness
+    {
+        return Err(bad());
+    }
+    let observed = vibe_core::manifest::Manifest::parse_str(
+        std::str::from_utf8(&snapshot.bytes).map_err(|_| bad())?,
+    )
+    .map_err(|_| bad())?;
+    if observed != *manifest {
+        return Err(bad());
+    }
+    let row = lock
+        .packages
+        .iter()
+        .find(|row| format!("{}/{}", row.group, row.name) == key)
+        .ok_or_else(bad)?;
+    if manifest.registries.len() != 1
+        || row.registry.as_deref() != Some(manifest.registries[0].name.as_str())
+        || !manifest.registries[0].url.starts_with("file://")
+    {
+        return Err(bad());
+    }
+    Ok(())
 }
