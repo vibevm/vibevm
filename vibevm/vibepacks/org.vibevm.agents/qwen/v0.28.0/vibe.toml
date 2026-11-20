@@ -79,3 +79,24 @@ default = true
 [[installer_options.public_commands]]
 name = "qwen"
 launcher = "main"
+
+[[installer_options]]
+id = "macos-x64-standalone"
+name = "Official qwen macOS Intel x64 CLI"
+platform = "macos"
+platform_name = "macOS"
+arch = "x86_64"
+[installer_options.installation]
+type = "tar_gz"
+source = "https://github.com/QwenLM/qwen-code/releases/download/v0.28.0/qwen-code-darwin-x64.tar.gz"
+sha256 = "21aa2ca8c740e4499586d8d70ff31aab967553e10af522d0b246f03344c09020"
+payload_root = "qwen-code"
+[[installer_options.launchers]]
+id = "main"
+name = "qwen"
+executable = "$app_bin/qwen"
+kind = "command"
+default = true
+[[installer_options.public_commands]]
+name = "qwen"
+launcher = "main"

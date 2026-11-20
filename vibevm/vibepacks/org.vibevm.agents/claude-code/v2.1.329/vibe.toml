@@ -1,0 +1,70 @@
+[package]
+name = "claude-code"
+group = "org.vibevm.agents"
+kind = "app"
+version = "2.1.329"
+[application]
+id = "claude-code"
+
+[[installer_options]]
+id = "linux-x64-native"
+name = "Official claude-code Linux x64 CLI"
+platform = "linux"
+platform_name = "Linux"
+arch = "x86_64"
+[installer_options.installation]
+type = "tar_gz"
+source = "https://registry.npmjs.org/@anthropic-ai/claude-code-linux-x64/-/claude-code-linux-x64-2.1.329.tgz"
+sha256 = "a74d6c8441a19b2d2f44c1f5735b37dc0a34b2d4f224f8333d08ce03cf2060bb"
+payload_root = "package"
+[[installer_options.launchers]]
+id = "main"
+name = "claude-code"
+executable = "$app_root/claude"
+kind = "command"
+default = true
+[[installer_options.public_commands]]
+name = "claude"
+launcher = "main"
+
+[[installer_options]]
+id = "macos-x64-native"
+name = "Official claude-code macOS Intel x64 CLI"
+platform = "macos"
+platform_name = "macOS Intel"
+arch = "x86_64"
+[installer_options.installation]
+type = "tar_gz"
+source = "https://registry.npmjs.org/@anthropic-ai/claude-code-darwin-x64/-/claude-code-darwin-x64-2.1.329.tgz"
+sha256 = "ea36a30eefe805fa05fcb6b8d84865ce6fd1d47b6aa8d9d019cd5ba829c28b33"
+payload_root = "package"
+[[installer_options.launchers]]
+id = "main"
+name = "claude-code"
+executable = "$app_root/claude"
+kind = "command"
+default = true
+[[installer_options.public_commands]]
+name = "claude"
+launcher = "main"
+
+[[installer_options]]
+id = "windows-x64-native"
+name = "Official claude-code Windows x64 CLI"
+platform = "windows"
+platform_name = "Windows"
+arch = "x86_64"
+[installer_options.installation]
+type = "tar_gz"
+source = "https://registry.npmjs.org/@anthropic-ai/claude-code-win32-x64/-/claude-code-win32-x64-2.1.329.tgz"
+sha256 = "e54e1378a9fc3478b4f8769ec8ab7c48a0d234a807c6853edb17a886cd905280"
+payload_root = "package"
+[[installer_options.launchers]]
+id = "main"
+name = "claude-code"
+executable = "$app_root/claude.exe"
+kind = "command"
+default = true
+[[installer_options.public_commands]]
+name = "claude"
+launcher = "main"

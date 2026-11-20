@@ -1,0 +1,69 @@
+[package]
+name = "pi"
+group = "org.vibevm.agents"
+kind = "app"
+version = "1.6.0"
+[application]
+id = "pi"
+
+[[installer_options]]
+id = "linux-x64-standalone"
+name = "Official pi Linux x64 CLI"
+platform = "linux"
+platform_name = "Linux"
+arch = "x86_64"
+[installer_options.installation]
+type = "tar_gz"
+source = "https://github.com/earendil-works/pi/releases/download/v1.6.0/pi-linux-x64.tar.gz"
+sha256 = "ef77dbe4379b3bdeb425a1e1b862fa3c915c255000dfe4965c98eee96a5765d1"
+payload_root = "pi"
+[[installer_options.launchers]]
+id = "main"
+name = "pi"
+executable = "$app_root/pi"
+kind = "command"
+default = true
+[[installer_options.public_commands]]
+name = "pi"
+launcher = "main"
+
+[[installer_options]]
+id = "macos-x64-standalone"
+name = "Official pi macOS Intel x64 CLI"
+platform = "macos"
+platform_name = "macOS Intel"
+arch = "x86_64"
+[installer_options.installation]
+type = "tar_gz"
+source = "https://github.com/earendil-works/pi/releases/download/v1.6.0/pi-darwin-x64.tar.gz"
+sha256 = "5b69cd87c3b00e74cce2d1499df3b7a1ec73632f11abf64696d110f0f4dc4192"
+payload_root = "pi"
+[[installer_options.launchers]]
+id = "main"
+name = "pi"
+executable = "$app_root/pi"
+kind = "command"
+default = true
+[[installer_options.public_commands]]
+name = "pi"
+launcher = "main"
+
+[[installer_options]]
+id = "windows-x64-standalone"
+name = "Official pi Windows x64 CLI"
+platform = "windows"
+platform_name = "Windows"
+arch = "x86_64"
+[installer_options.installation]
+type = "zip"
+source = "https://github.com/earendil-works/pi/releases/download/v1.6.0/pi-windows-x64.zip"
+sha256 = "f5defb6c403ee698f5b3f8886db473e55b78aac670a8ce03620a47f5f0aec57c"
+[[installer_options.launchers]]
+id = "main"
+name = "pi"
+executable = "$app_root/pi.exe"
+kind = "command"
+default = true
+[[installer_options.public_commands]]
+name = "pi"
+launcher = "main"
