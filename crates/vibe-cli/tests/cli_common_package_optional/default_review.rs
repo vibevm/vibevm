@@ -7504,13 +7504,20 @@ fn ordinary_remaining_kinds_install_show_and_cold_replay_qualification() {
             let app_refusal = kind == "app";
             if app_refusal {
                 assert!(
-                    !out.status.success() && diagnostic.contains("not_globally_installable"),
-                    "App first owner differs from qualified no-installer refusal"
+                    !out.status.success() && diagnostic.contains("not globally installable"),
+                    "App preflight refusal class changed"
                 );
                 assert!(
-                    super::workspace::semantic_snapshot(&f.project) != before,
-                    "expected observed package effects absent"
+                    super::workspace::semantic_snapshot(&f.project) == before,
+                    "App preflight changed package state"
                 );
+                assert!(!f.project.join("vibe.lock").exists());
+                assert!(!f.project.join("effects.log").exists());
+                assert!(!f.project.join("vibevm/vibeopt").exists());
+                println!(
+                    "remaining kind=app enabled={enabled} result=preflight-refused effects=absent"
+                );
+                continue;
             } else {
                 assert!(
                     out.status.success(),
@@ -7614,5 +7621,122 @@ fn ordinary_remaining_kinds_install_show_and_cold_replay_qualification() {
                 hooks.get(EXTRA).copied().unwrap_or(0)
             );
         }
+    }
+}
+
+#[test]
+fn project_app_preflight_preserves_fresh_and_historically_partial_worlds() {
+    let old = std::env::var("NST_APP_PREFLIGHT_OLD_CLI")
+        .expect("exact historical preflight CLI required");
+    for enabled in [false, true] {
+        for history in [false, true] {
+            for explicit in [false, true] {
+                let f = Fixture::new(enabled);
+                let source = f.registry.join(GROUP).join(DRIVER).join("v1.0.0/vibe.toml");
+                write(
+                    &source,
+                    fs::read_to_string(&source)
+                        .unwrap()
+                        .replace("kind='flow'", "kind='app'")
+                        + "\n[application]\nid='synthetic-preflight'\n",
+                );
+                if history {
+                    let out = std::process::Command::new(&old)
+                        .env_clear()
+                        .env("HOME", f.root.join("home"))
+                        .env("USERPROFILE", f.root.join("home"))
+                        .env("VIBE_SETTINGS", &f.user.settings)
+                        .env("VIBE_REGISTRY_CACHE", &f.user.cache)
+                        .env("VIBEVM_SEARCH_CACHE_DIR", &f.user.search_cache)
+                        .env("VIBE_NO_DEFAULT_REGISTRY", "1")
+                        .env("PATH", "/usr/bin:/bin")
+                        .current_dir(&f.project)
+                        .args([
+                            "install",
+                            "--offline",
+                            "--assume-yes",
+                            "--json",
+                            "--path",
+                            f.project.to_str().unwrap(),
+                        ])
+                        .output()
+                        .unwrap();
+                    assert!(!out.status.success(), "prior CLI unexpectedly succeeds");
+                    assert!(
+                        f.project.join("vibe.lock").exists(),
+                        "prior did not construct actual partial subject"
+                    );
+                    assert!(f.slot(DRIVER).exists());
+                }
+                let before = super::workspace::semantic_snapshot(&f.project);
+                let before_home = preview_scratch_snapshot(&f.project.join("vibevm/vibeopt"));
+                let mut cmd = f.user.vibe();
+                cmd.args([
+                    "install",
+                    "--offline",
+                    "--assume-yes",
+                    "--json",
+                    "--path",
+                    f.project.to_str().unwrap(),
+                ]);
+                if explicit {
+                    cmd.arg(format!("{GROUP}/{DRIVER}@=1.0.0"));
+                }
+                let out = cmd.output().unwrap();
+                let diagnostic = String::from_utf8_lossy(&out.stdout).to_string()
+                    + &String::from_utf8_lossy(&out.stderr);
+                assert!(
+                    !out.status.success() && diagnostic.contains("not globally installable"),
+                    "project app preflight refusal missing"
+                );
+                assert!(
+                    super::workspace::semantic_snapshot(&f.project) == before,
+                    "preflight changed lock/manifest/slot/boot/hook state"
+                );
+                assert_eq!(
+                    preview_scratch_snapshot(&f.project.join("vibevm/vibeopt")),
+                    before_home
+                );
+                println!(
+                    "app preflight enabled={enabled} historical={history} explicit={explicit} refused=true package-state=unchanged app-home=unchanged"
+                );
+            }
+        }
+    }
+}
+
+#[test]
+fn project_app_missing_identity_refuses_without_package_publication() {
+    for explicit in [false, true] {
+        let f = Fixture::new(false);
+        let source = f.registry.join(GROUP).join(DRIVER).join("v1.0.0/vibe.toml");
+        write(
+            &source,
+            fs::read_to_string(&source)
+                .unwrap()
+                .replace("kind='flow'", "kind='app'"),
+        );
+        let before = super::workspace::semantic_snapshot(&f.project);
+        let mut cmd = f.user.vibe();
+        cmd.args([
+            "install",
+            "--offline",
+            "--assume-yes",
+            "--json",
+            "--path",
+            f.project.to_str().unwrap(),
+        ]);
+        if explicit {
+            cmd.arg(format!("{GROUP}/{DRIVER}@=1.0.0"));
+        }
+        let out = cmd.output().unwrap();
+        let diagnostic = String::from_utf8_lossy(&out.stdout).to_string()
+            + &String::from_utf8_lossy(&out.stderr);
+        assert!(!out.status.success() && diagnostic.contains("declares no [application]"));
+        assert!(
+            super::workspace::semantic_snapshot(&f.project) == before,
+            "malformed App published package state"
+        );
+        assert!(!f.project.join("vibevm/vibeopt").exists());
     }
 }

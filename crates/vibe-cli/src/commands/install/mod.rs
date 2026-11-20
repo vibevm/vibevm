@@ -45,7 +45,9 @@ pub(crate) use closure_diff::{emit_closure_diff, lane_sizes};
 pub(crate) use confirm::CliConfirmGate;
 use confirm::UserProjectAction;
 use direct::run_user_project;
-pub(crate) use direct::{SelectedRouting, run as run_direct, run_selected};
+pub(crate) use direct::{
+    SelectedRouting, run as run_direct, run_project_applications, run_selected,
+};
 pub(crate) use draft::InstallDraft;
 pub(crate) use global_mcp::{
     preflight_uninstall as preflight_global_mcp_uninstall, run as run_global_mcp,

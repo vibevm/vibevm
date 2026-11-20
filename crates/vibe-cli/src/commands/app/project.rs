@@ -86,7 +86,7 @@ pub(crate) fn install(
         Vec::new()
     };
     let source_policy = args.source_policy.declaration();
-    install::run_direct(ctx, args, embedded_root, root_offline)?;
+    install::run_project_applications(ctx, args, embedded_root, root_offline)?;
     let Some(root) = home::project_at(&path)? else {
         return Ok(());
     };
@@ -279,8 +279,7 @@ fn install_pending(
         |package: &&LockedPackage| !index.installations.contains_key(&coordinate(package).key());
     let pending: Vec<&LockedPackage> = locked
         .iter()
-        .filter(|package| !requirement_only(package, &roots))
-        .filter(missing)
+        .filter(|package| needs_materialisation(package, &roots, &index))
         .collect();
     if pending.is_empty() {
         return Ok(());
@@ -563,4 +562,69 @@ pub(super) fn resolve_saved_requirement(
         })
         .ok_or_else(|| fail("project lock has no matching application dependency".into()))?;
     from_slot(root, row).map_err(|e| fail(format!("project slot cannot be read: {e:#}")).into())
+}
+
+/// One pending predicate for both actual materialization and its preflight.
+fn needs_materialisation(package: &LockedPackage, roots: &[PackageRef], index: &Index) -> bool {
+    !requirement_only(package, roots)
+        && !index.installations.contains_key(&coordinate(package).key())
+}
+
+/// Judge only the selected operation's acquired/locked manifests, never a
+/// registry neighbour or a second resolution. No app-home mutation is allowed.
+pub(crate) fn admit_selected(
+    root: &Path,
+    packages: &[LockedPackage],
+    roots: &[PackageRef],
+    selected: &[vibe_workspace::install::ResolvedDep],
+) -> Result<()> {
+    if !packages.iter().any(|p| p.kind == PackageKind::App) {
+        return Ok(());
+    }
+    let settings = SettingsRoot::project(root, &global::settings_root()?);
+    let index = Index::load(&settings)?;
+    for row in packages
+        .iter()
+        .filter(|row| row.kind == PackageKind::App && needs_materialisation(row, roots, &index))
+    {
+        let manifest = &selected
+            .iter()
+            .find(|p| {
+                p.group == row.group && p.name == row.name.as_str() && p.version == row.version
+            })
+            .context("selected project app manifest absent from admission world")?
+            .manifest;
+        if manifest.require_package()?.kind != row.kind {
+            bail!("selected project app kind differs from admission row");
+        }
+        if manifest.application.is_none() {
+            bail!(
+                "project app admission: selected package `{}` declares no [application]",
+                coordinate(row).key()
+            );
+        }
+        if manifest.installer_options.is_empty() {
+            return Err(vibe_app::ResolveError::NotGloballyInstallable {
+                package: coordinate(row).key(),
+            }
+            .into());
+        }
+    }
+    Ok(())
+}
+
+#[cfg(test)]
+mod admission_tests {
+    use super::*;
+    #[test]
+    fn transitive_requirement_only_is_not_independently_materialised() {
+        let mut row: LockedPackage = toml::from_str("kind='app'\nname='engine'\ngroup='org.example'\nversion='1.0.0'\nsource_url='file:///synthetic'\ncontent_hash='sha256:abc'\n").unwrap();
+        row.required_by.push(vibe_core::manifest::LockedRequirer {
+            package: PackageRef::parse("org.example/parent@=1.0.0").unwrap(),
+            scope: vibe_core::manifest::RequirementScope::Build,
+        });
+        assert!(!needs_materialisation(&row, &[], &Index::default()));
+        let root = PackageRef::parse("org.example/engine@=1.0.0").unwrap();
+        assert!(needs_materialisation(&row, &[root], &Index::default()));
+    }
 }

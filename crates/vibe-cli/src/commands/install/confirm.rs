@@ -13,6 +13,8 @@ use crate::output;
 #[derive(Clone, Copy)]
 pub(crate) enum ConfirmationScope<'a> {
     Project,
+    /// Selected only by the dispatcher that actually materializes project apps.
+    ProjectApplications,
     UserProject {
         notice: &'a output::Context,
         action: UserProjectAction,
@@ -81,14 +83,29 @@ impl<'a> CliConfirmGate<'a> {
     }
 
     fn requires_confirmation(&self) -> bool {
-        matches!(self.scope, ConfirmationScope::Project)
-            && !self.assume_yes
+        matches!(
+            self.scope,
+            ConfirmationScope::Project | ConfirmationScope::ProjectApplications
+        ) && !self.assume_yes
             && !self.ctx.is_unattended()
             && !self.ctx.is_json()
     }
 }
 
 impl ConfirmGate for CliConfirmGate<'_> {
+    fn admit_selected_packages(
+        &self,
+        root: &Path,
+        packages: &[vibe_core::manifest::LockedPackage],
+        roots: &[vibe_core::PackageRef],
+        selected: &[vibe_workspace::install::ResolvedDep],
+    ) -> Result<()> {
+        if matches!(self.scope, ConfirmationScope::ProjectApplications) {
+            crate::commands::app::project::admit_selected(root, packages, roots, selected)?;
+        }
+        Ok(())
+    }
+
     fn slot_judgment(&self) -> Result<vibe_install::SlotJudgmentContext> {
         super::trust::judgment(self.ctx, self.assume_yes)
     }
@@ -145,6 +162,30 @@ mod tests {
     use super::*;
     use crate::cli::AgentModeArg;
     use rust_ai_native_env_audit::EnvGuard;
+
+    #[test]
+    fn personal_project_scope_does_not_enable_application_admission() {
+        let root = tempfile::tempdir().unwrap();
+        let ctx = output::Context::from_flags(false, true, None, true, AgentModeArg::Cli);
+        // Project scope alone is also used by personal installation. If this
+        // accidentally dispatches app policy, the absent selected world fails.
+        let gate = CliConfirmGate::new(&ctx, true, root.path());
+        let row: vibe_core::manifest::LockedPackage = toml::from_str("kind='app'\nname='no-options'\ngroup='org.example'\nversion='1.0.0'\nsource_url='file:///synthetic'\ncontent_hash='sha256:abc'\n").unwrap();
+        gate.admit_selected_packages(root.path(), std::slice::from_ref(&row), &[], &[])
+            .unwrap();
+        let active = CliConfirmGate::with_scope(
+            &ctx,
+            true,
+            root.path(),
+            ConfirmationScope::ProjectApplications,
+        );
+        assert!(
+            active
+                .admit_selected_packages(root.path(), &[row], &[], &[])
+                .is_err()
+        );
+        assert!(!root.path().join("vibevm/vibeopt").exists());
+    }
 
     #[test]
     #[specmark::verifies("spec://org.vibevm.core/vibevm/common/PROP-060#INSTALL-DESTINATION")]

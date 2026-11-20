@@ -476,6 +476,14 @@ fn execute_owned(
                 &lockfile_snapshot,
                 spec_format,
             )?;
+            let resolution = provisional_world(&workspace, &lockfile_snapshot, &[])
+                .context("projecting the exact fresh admission world")?;
+            confirm_gate.admit_selected_packages(
+                &project_root,
+                &lockfile_snapshot.packages,
+                &lockfile_snapshot.meta.root_dependencies,
+                &resolution,
+            )?;
             progress.cancellation().publishing();
             let boot_task = progress.task("Regenerating boot artifacts from the fresh lock");
             // The one workspace snapshot this command owns. Nothing between
@@ -483,8 +491,6 @@ fn execute_owned(
             // resolves nothing and copies nothing — so a re-read could only
             // ever differ by racing another process, which is exactly the
             // difference a single snapshot exists to refuse.
-            let resolution = provisional_world(&workspace, &lockfile_snapshot, &[])
-                .context("projecting the exact fresh install world")?;
             vibe_install::configuration_admission::resolved_packages(&resolution)?;
             if manifest != authored_before {
                 vibe_install::publish_admitted_manifest(
@@ -561,6 +567,13 @@ fn execute_owned(
         // function stays the shape of the DECISION (empty / fresh / ready)
         // rather than of the largest branch.
         Plan::Ready(planned) => {
+            let (packages, roots) = planned.admission_rows();
+            confirm_gate.admit_selected_packages(
+                &project_root,
+                &packages,
+                &roots,
+                &planned.resolution,
+            )?;
             let resolver = resolver
                 .as_ref()
                 .context("a Ready install has no prepared source")?;

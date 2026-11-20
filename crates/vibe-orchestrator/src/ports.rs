@@ -199,6 +199,18 @@ pub trait InstallObserver: Send + Sync {
 /// fn takes(_: &dyn ConfirmGate) {}
 /// ```
 pub trait ConfirmGate: Send + Sync {
+    /// Read-only same-plan admission, before Ready publication or Fresh boot.
+    /// Default no-op: only a surface that actually materializes project apps opts in.
+    fn admit_selected_packages(
+        &self,
+        _root: &Path,
+        _packages: &[LockedPackage],
+        _roots: &[vibe_core::PackageRef],
+        _selected: &[vibe_workspace::install::ResolvedDep],
+    ) -> Result<()> {
+        Ok(())
+    }
+
     /// Approve materialising `packages` package(s), or refuse typed.
     fn confirm_install(&self, packages: usize) -> Result<()>;
 

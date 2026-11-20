@@ -143,6 +143,22 @@ pub(crate) fn run(
     )
 }
 
+/// Opt-in only from the actual post-install project application dispatcher.
+pub(crate) fn run_project_applications(
+    ctx: &output::Context,
+    args: InstallArgs,
+    embedded_root: Option<PathBuf>,
+    root_offline: bool,
+) -> Result<()> {
+    run_with_scope(
+        ctx,
+        args,
+        embedded_root,
+        root_offline,
+        ConfirmationScope::ProjectApplications,
+    )
+}
+
 pub(crate) fn run_user_project(
     ctx: &output::Context,
     args: InstallArgs,

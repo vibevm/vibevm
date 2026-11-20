@@ -56,3 +56,46 @@ impl PlannedInstall {
             .map(Vec::as_slice)
     }
 }
+
+impl PlannedInstall {
+    /// Immutable prospective rows from this plan's acquired manifests and root
+    /// witnesses. No discovery, solving, publication or writer permission.
+    pub fn admission_rows(
+        &self,
+    ) -> (
+        Vec<vibe_core::manifest::LockedPackage>,
+        Vec<vibe_core::PackageRef>,
+    ) {
+        let mut lock = self.lockfile.clone();
+        let language = self
+            .language_chain
+            .first()
+            .map(String::as_str)
+            .filter(|l| *l != "en");
+        lock.packages = self
+            .fetched
+            .iter()
+            .map(|f| {
+                let resolved = self
+                    .resolution
+                    .iter()
+                    .find(|row| {
+                        row.group == f.cached.resolved.group && row.name == f.cached.resolved.name
+                    })
+                    .expect("same acquired plan coordinate");
+                crate::record::locked_package_from_fetched(f, resolved, language)
+            })
+            .collect();
+        crate::record::record_app_requirements(&mut lock, &self.fetched);
+        let mut roots = Vec::new();
+        for root in self.node_roots.values().flatten() {
+            if !roots
+                .iter()
+                .any(|r: &vibe_core::PackageRef| r.group == root.group && r.name == root.name)
+            {
+                roots.push(root.clone());
+            }
+        }
+        (lock.packages, roots)
+    }
+}
