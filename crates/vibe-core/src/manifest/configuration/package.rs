@@ -295,8 +295,7 @@ impl PackageConfiguration {
         }
         let mut forwarded_features = BTreeSet::new();
         for request in forwarded {
-            if request.strength != super::ForwardStrength::Strong
-                || !request.target.version.is_exact_pin()
+            if !request.target.version.is_exact_pin()
                 || request.target.qualified_name() != package
                 || !forwarded_features.insert(request.target_feature.clone())
             {
@@ -372,22 +371,34 @@ impl PackageConfiguration {
             .iter()
             .map(|key| (key.clone(), Vec::new()))
             .collect::<BTreeMap<_, _>>();
+        // Independent activation is complete before any forward is considered.
+        // Weak requests cannot activate themselves, even indirectly through
+        // declaration order or another package's workspace-root presence.
+        for feature in &definition.features {
+            if !features.selected.contains(&feature.id) {
+                continue;
+            }
+            for effect in &feature.effects {
+                if let ConfigurationEffect::Dependency { target } = effect {
+                    let (_, group, name) = crate::manifest::package::parse_pkgref_key(target)
+                        .map_err(|e| invalid(e.to_string()))?;
+                    let key = format!("{group}/{name}");
+                    active.insert(key.clone());
+                    let entries = causes.entry(key).or_default();
+                    if !entries.contains(&feature.id) {
+                        entries.push(feature.id.clone());
+                    }
+                }
+            }
+        }
+        let independently_active = active.clone();
         for feature in &definition.features {
             if !features.selected.contains(&feature.id) {
                 continue;
             }
             for effect in &feature.effects {
                 match effect {
-                    ConfigurationEffect::Dependency { target } => {
-                        let (_, group, name) = crate::manifest::package::parse_pkgref_key(target)
-                            .map_err(|e| invalid(e.to_string()))?;
-                        let key = format!("{group}/{name}");
-                        active.insert(key.clone());
-                        let entries = causes.entry(key).or_default();
-                        if !entries.contains(&feature.id) {
-                            entries.push(feature.id.clone());
-                        }
-                    }
+                    ConfigurationEffect::Dependency { .. } => {}
                     ConfigurationEffect::Forward {
                         target, strength, ..
                     } => {
@@ -395,8 +406,7 @@ impl PackageConfiguration {
                             .packages
                             .iter()
                             .find(|edge| edge.qualified_name() == *target);
-                        if *strength != super::ForwardStrength::Strong
-                            || !forwarded.is_empty()
+                        if !forwarded.is_empty()
                             || declaration.is_none_or(|edge| !edge.version.is_exact_pin())
                         {
                             return Err(unsupported(
@@ -408,6 +418,11 @@ impl PackageConfiguration {
                                 invalid("forwarded dependency declaration is missing".into())
                             })?
                             .qualified_name();
+                        if *strength == super::ForwardStrength::Weak
+                            && !independently_active.contains(&key)
+                        {
+                            continue;
+                        }
                         active.insert(key.clone());
                         let entries = causes.entry(key).or_default();
                         if !entries.contains(&feature.id) {

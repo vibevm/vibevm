@@ -161,9 +161,6 @@ pub(super) fn prepare<P: SourceCandidateProvider>(
             ));
         }
         for (source_feature, target, target_feature, strength) in selected {
-            if strength != ForwardStrength::Strong {
-                return Err(invalid("weak forwarding is not connected"));
-            }
             let index = parent_record
                 .declarations
                 .packages
@@ -171,6 +168,13 @@ pub(super) fn prepare<P: SourceCandidateProvider>(
                 .position(|edge| edge.qualified_name() == target)
                 .ok_or_else(|| invalid("forwarded declaration missing"))?;
             let edge = &parent_record.declarations.packages[index];
+            if strength == ForwardStrength::Weak
+                && !parent_record.active_dependencies.contains(&target)
+            {
+                // A dormant request grants no target observation or feature
+                // validation, even if another workspace root selects it.
+                continue;
+            }
             let (child, child_pin) = unique(provider, edge, request)?;
             if child.group() == parent.group() && child.name() == parent.name() {
                 return Err(invalid("cyclic forwarding is not connected"));

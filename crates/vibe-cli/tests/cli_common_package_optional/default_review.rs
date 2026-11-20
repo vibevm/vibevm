@@ -1757,11 +1757,10 @@ fn compulsory_forwarding_tampered_provenance_and_update_refuse_unchanged() {
 }
 
 #[test]
-fn compulsory_forwarding_unsupported_ranges_weak_and_recursive_refuse_before_effects() {
+fn compulsory_forwarding_unsupported_ranges_and_recursive_refuse_before_effects() {
     for mutation in [
         "parent-range",
         "target-range",
-        "weak",
         "recursive",
         "unknown",
         "wrong-kind",
@@ -1784,12 +1783,6 @@ fn compulsory_forwarding_unsupported_ranges_weak_and_recursive_refuse_before_eff
                 fs::read_to_string(&driver)
                     .unwrap()
                     .replace("version = \"=1.0.0\"", "version = \"^1\""),
-            ),
-            "weak" => write(
-                &driver,
-                fs::read_to_string(&driver)
-                    .unwrap()
-                    .replace("strength = \"strong\"", "strength = \"weak\""),
             ),
             "unknown" => write(
                 &driver,
@@ -4030,6 +4023,7 @@ fn weak_forwarding_declaring_parent_edge_four_worlds_and_strong_control() {
     for world in [
         "inactive",
         "independent-root",
+        "absent-payload",
         "activated-parent",
         "mandatory-parent",
     ] {
@@ -4052,6 +4046,10 @@ fn weak_forwarding_declaring_parent_edge_four_worlds_and_strong_control() {
             let request = f.project.join("vibe.toml");
             write(&request,fs::read_to_string(&request).unwrap().replace("[[registry]]",&format!("[requires.packages.'{GROUP}/{EXTRA}']\nversion='=1.0.0'\nlink='static-transitive'\nconfiguration={{policy='require-selection',default_features=false}}\n[[registry]]")));
         }
+        if world == "absent-payload" {
+            fs::remove_dir_all(f.registry.join(GROUP).join(EXTRA)).unwrap();
+        }
+        let authored = fs::read(f.project.join("vibe.toml")).unwrap();
         let consumer = Manifest::read(f.project.join("vibe.toml")).unwrap();
         let parent = Manifest::read(&driver).unwrap();
         let optional = parent.requires.optional.get(&coordinate(EXTRA)) == Some(&true);
@@ -4073,7 +4071,6 @@ fn weak_forwarding_declaring_parent_edge_four_worlds_and_strong_control() {
             .find(|feature| feature.id == "enabled")
             .unwrap();
         assert_eq!(selected.effects.iter().any(|effect|matches!(effect,vibe_core::manifest::ConfigurationEffect::Dependency{target} if target==&coordinate(EXTRA))),world=="activated-parent");
-        let before = super::workspace::semantic_snapshot(&f.project);
         let source_before = preview_scratch_snapshot(&f.registry);
         let out = f.install();
         let diagnostic = format!(
@@ -4085,26 +4082,57 @@ fn weak_forwarding_declaring_parent_edge_four_worlds_and_strong_control() {
             "weak world={world} status={} diagnostic={diagnostic}",
             out.status
         );
-        assert!(!out.status.success(), "{world}: {diagnostic}");
-        assert!(
-            diagnostic.contains("selected cross-package forwarding requires candidate-conditioned incoming consumers; only exact compulsory strong edges are connected"),
-            "{world}: {diagnostic}"
-        );
+        assert!(out.status.success(), "{world}: {diagnostic}");
+        let lock = f.lock();
+        let active = matches!(world, "activated-parent" | "mandatory-parent");
+        let present = active || world == "independent-root";
+        let parent = &lock.configurations[&coordinate(DRIVER)];
         assert_eq!(
-            super::workspace::semantic_snapshot(&f.project),
-            before,
-            "{world}"
+            parent.active_dependencies.contains(&coordinate(EXTRA)),
+            active
         );
+        assert_eq!(lock.meta.schema_version, if active { 14 } else { 8 });
+        if present {
+            let target = &lock.configurations[&coordinate(EXTRA)];
+            assert_eq!(target.forwarded_inputs.len(), usize::from(active));
+            assert_eq!(
+                target
+                    .selected_data(vibe_core::PackageKind::Flow)
+                    .unwrap()
+                    .contains_key("forwarded"),
+                active
+            );
+            if active {
+                assert_eq!(
+                    target.forwarded_inputs[0].strength,
+                    vibe_core::manifest::ForwardStrength::Weak
+                );
+                assert_eq!(
+                    target.selected_data(vibe_core::PackageKind::Flow).unwrap()["forwarded"],
+                    vibe_core::manifest::ParameterValue::Bool(true)
+                );
+            }
+        } else {
+            assert!(!lock.configurations.contains_key(&coordinate(EXTRA)));
+        }
+        assert_eq!(f.slot(EXTRA).exists(), present);
+        assert_eq!(f.static_boot().contains(EXTRA_MARKER), present);
+        assert_eq!(f.hooks().get(EXTRA).copied().unwrap_or(0) > 0, present);
         assert_eq!(
             preview_scratch_snapshot(&f.registry),
             source_before,
             "{world}"
         );
-        assert!(!f.project.join("vibe.lock").exists());
-        for name in [DRIVER, BASE, EXTRA] {
-            assert!(!f.slot(name).exists());
-        }
-        assert!(!f.project.join("effects.log").exists());
+        let before = super::workspace::semantic_snapshot(&f.project);
+        let hooks = f.hooks();
+        f.install_ok();
+        assert_eq!(
+            super::workspace::semantic_snapshot(&f.project),
+            before,
+            "{world}"
+        );
+        assert_eq!(f.hooks(), hooks);
+        assert_eq!(fs::read(f.project.join("vibe.toml")).unwrap(), authored);
         let infrastructure = preview_scratch_snapshot(&f.project.join(".vibe"));
         println!(
             "weak world={world} coordination paths={:?}",
@@ -4134,4 +4162,250 @@ fn weak_forwarding_declaring_parent_edge_four_worlds_and_strong_control() {
     assert_eq!(super::workspace::semantic_snapshot(&f.project), before);
     assert_eq!(f.hooks(), hooks);
     assert_eq!(fs::read(f.project.join("vibe.toml")).unwrap(), request);
+}
+
+#[test]
+fn weak_forwarding_unknown_active_target_and_tampered_lock_refuse() {
+    for mutation in ["unknown-feature", "removed-input", "wrong-strength"] {
+        let f = exact_forward_fixture();
+        let driver = f.registry.join(GROUP).join(DRIVER).join("v1.0.0/vibe.toml");
+        let text = fs::read_to_string(&driver)
+            .unwrap()
+            .replace("strength = \"strong\"", "strength = \"weak\"")
+            .replace(
+                "version = \"=1.0.0\", optional = true",
+                "version = \"=1.0.0\"",
+            );
+        write(
+            &driver,
+            if mutation == "unknown-feature" {
+                text.replace("feature = \"forwarded\"", "feature = \"unknown\"")
+            } else {
+                text
+            },
+        );
+        if mutation == "unknown-feature" {
+            let before = super::workspace::semantic_snapshot(&f.project);
+            let out = f.install();
+            assert!(!out.status.success());
+            assert_eq!(super::workspace::semantic_snapshot(&f.project), before);
+            continue;
+        }
+        // Direct selection independently supplies the effective feature: deleting
+        // provenance must still fail rather than silently reproduce the value.
+        let request = f.project.join("vibe.toml");
+        write(
+            &request,
+            fs::read_to_string(&request).unwrap()
+                + &format!(
+                    "\n[requires.packages.'{GROUP}/{EXTRA}']\nversion='=1.0.0'\nlink='static-transitive'\nconfiguration={{policy='require-selection',default_features=false,features=['forwarded']}}\n"
+                ),
+        );
+        f.install_ok();
+        let mut lock = f.lock();
+        let target = lock.configurations.get_mut(&coordinate(EXTRA)).unwrap();
+        match mutation {
+            "removed-input" => target.forwarded_inputs.clear(),
+            "wrong-strength" => {
+                target.forwarded_inputs[0].strength = vibe_core::manifest::ForwardStrength::Strong
+            }
+            _ => unreachable!(),
+        }
+        write(
+            &f.project.join("vibe.lock"),
+            toml::to_string(&lock).unwrap(),
+        );
+        let before = super::workspace::semantic_snapshot(&f.project);
+        assert!(
+            Lockfile::read(f.project.join("vibe.lock")).is_err(),
+            "{mutation}"
+        );
+        assert!(!f.install().status.success(), "{mutation}");
+        assert_eq!(super::workspace::semantic_snapshot(&f.project), before);
+    }
+}
+
+#[test]
+fn weak_forwarding_prior_reader_writer_preserve_active_dormant_and_unselected() {
+    let old = std::env::var_os("NST_WEAK_OLD_CLI")
+        .expect("mandatory prior reader/writer gate requires an explicitly mounted pre-weak CLI");
+    for world in ["active", "dormant", "independent-root", "unselected"] {
+        for operation in ["reader", "writer"] {
+            let f = exact_forward_fixture();
+            let driver = f.registry.join(GROUP).join(DRIVER).join("v1.0.0/vibe.toml");
+            let mut text = fs::read_to_string(&driver)
+                .unwrap()
+                .replace("strength = \"strong\"", "strength = \"weak\"");
+            if world == "active" {
+                text = text.replace(
+                    "version = \"=1.0.0\", optional = true",
+                    "version = \"=1.0.0\"",
+                );
+            }
+            write(&driver, text);
+            let request = f.project.join("vibe.toml");
+            if world == "unselected" {
+                write(
+                    &request,
+                    fs::read_to_string(&request)
+                        .unwrap()
+                        .replace("members=['enabled']", "members=['disabled']"),
+                );
+            }
+            if world == "independent-root" {
+                write(
+                    &request,
+                    fs::read_to_string(&request).unwrap()
+                        + &format!(
+                            "\n[requires.packages.'{GROUP}/{EXTRA}']\nversion='=1.0.0'\nlink='static-transitive'\nconfiguration={{policy='require-selection',default_features=false}}\n"
+                        ),
+                );
+            }
+            f.install_ok();
+            let before = super::workspace::semantic_snapshot(&f.project);
+            let args = if operation == "reader" {
+                vec![
+                    "show",
+                    "features",
+                    "--path",
+                    f.project.to_str().unwrap(),
+                    "--json",
+                ]
+            } else {
+                vec![
+                    "install",
+                    "--path",
+                    f.project.to_str().unwrap(),
+                    "--offline",
+                    "--assume-yes",
+                    "--json",
+                ]
+            };
+            let out = std::process::Command::new(&old)
+                .env_clear()
+                .env("HOME", f.root.join("home"))
+                .env("VIBE_SETTINGS", &f.user.settings)
+                .env("PATH", "/usr/bin:/bin")
+                .env("VIBE_NO_DEFAULT_REGISTRY", "1")
+                .args(args)
+                .output()
+                .unwrap();
+            let diagnostic = format!(
+                "{}{}",
+                String::from_utf8_lossy(&out.stdout),
+                String::from_utf8_lossy(&out.stderr)
+            );
+            println!(
+                "prior weak world={world} operation={operation} status={} diagnostic={diagnostic}",
+                out.status
+            );
+            if world == "unselected" {
+                assert!(out.status.success(), "{diagnostic}");
+            } else {
+                assert!(!out.status.success(), "{world}/{operation}: {diagnostic}");
+                assert!(diagnostic.contains("selected cross-package forwarding requires candidate-conditioned incoming consumers") || diagnostic.contains("invalid or duplicate candidate-owned forwarded request"), "{world}/{operation}: {diagnostic}");
+            }
+            assert_eq!(
+                super::workspace::semantic_snapshot(&f.project),
+                before,
+                "{world}/{operation}"
+            );
+        }
+    }
+}
+
+#[test]
+fn weak_forwarding_dormant_forgery_and_wrong_declaration_refuse() {
+    for mutation in [
+        "forged",
+        "wrong-declaration",
+        "dormant-unknown-feature",
+        "activation-after-forward",
+    ] {
+        let f = exact_forward_fixture();
+        let driver = f.registry.join(GROUP).join(DRIVER).join("v1.0.0/vibe.toml");
+        let mut text = fs::read_to_string(&driver)
+            .unwrap()
+            .replace("strength = \"strong\"", "strength = \"weak\"");
+        if mutation == "wrong-declaration" {
+            text = text.replace(
+                "target = \"org.vibevm/oracle-extra\"",
+                "target = \"org.vibevm/not-declared\"",
+            );
+        } else if mutation == "dormant-unknown-feature" {
+            text = text.replace("feature = \"forwarded\"", "feature = \"does-not-exist\"");
+        } else if mutation == "activation-after-forward" {
+            text = text.replace("strength = \"weak\" }", "strength = \"weak\" }, { kind = \"dependency\", target = \"org.vibevm/oracle-extra\" }");
+        }
+        write(&driver, text);
+        if mutation == "wrong-declaration" {
+            let before = super::workspace::semantic_snapshot(&f.project);
+            let out = f.install();
+            let diagnostic = format!(
+                "{}{}",
+                String::from_utf8_lossy(&out.stdout),
+                String::from_utf8_lossy(&out.stderr)
+            );
+            assert!(!out.status.success(), "{diagnostic}");
+            assert!(diagnostic.contains("not-declared"), "{diagnostic}");
+            assert_eq!(super::workspace::semantic_snapshot(&f.project), before);
+            continue;
+        }
+        if mutation == "forged" {
+            let request = f.project.join("vibe.toml");
+            write(
+                &request,
+                fs::read_to_string(&request).unwrap()
+                    + &format!(
+                        "\n[requires.packages.'{GROUP}/{EXTRA}']\nversion='=1.0.0'\nlink='static-transitive'\nconfiguration={{policy='require-selection',default_features=false,features=['forwarded']}}\n"
+                    ),
+            );
+        }
+        f.install_ok();
+        let mut lock = f.lock();
+        if mutation == "forged" {
+            let parent = lock.find(&GROUP.parse().unwrap(), DRIVER).unwrap();
+            let record = &lock.configurations[&coordinate(DRIVER)];
+            assert!(!record.active_dependencies.contains(&coordinate(EXTRA)));
+            let index = record
+                .declarations
+                .packages
+                .iter()
+                .position(|edge| edge.qualified_name() == coordinate(EXTRA))
+                .unwrap();
+            let input = vibe_core::manifest::ForwardedInput {
+                source_group: parent.group.clone(),
+                source_name: parent.name.clone(),
+                source_version: parent.version.clone(),
+                source_content_hash: parent.content_hash.clone(),
+                source_feature: "enabled".into(),
+                declaration_index: index,
+                target: record.declarations.packages[index].clone(),
+                target_feature: "forwarded".into(),
+                strength: vibe_core::manifest::ForwardStrength::Weak,
+            };
+            lock.configurations
+                .get_mut(&coordinate(EXTRA))
+                .unwrap()
+                .forwarded_inputs
+                .push(input);
+            lock.meta.schema_version = 14;
+            write(
+                &f.project.join("vibe.lock"),
+                toml::to_string(&lock).unwrap(),
+            );
+            let before = super::workspace::semantic_snapshot(&f.project);
+            assert!(Lockfile::read(f.project.join("vibe.lock")).is_err());
+            assert!(!f.install().status.success());
+            assert_eq!(super::workspace::semantic_snapshot(&f.project), before);
+        } else {
+            assert_eq!(
+                f.slot(EXTRA).exists(),
+                mutation == "activation-after-forward"
+            );
+            let before = super::workspace::semantic_snapshot(&f.project);
+            f.install_ok();
+            assert_eq!(super::workspace::semantic_snapshot(&f.project), before);
+        }
+    }
 }

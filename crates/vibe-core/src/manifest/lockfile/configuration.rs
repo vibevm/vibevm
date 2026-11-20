@@ -189,7 +189,6 @@ impl Lockfile {
                     || !input.target.version.is_exact_pin()
                     || !input.target.version.matches(&target.version)
                     || input.target.kind.is_some_and(|kind| kind != target.kind)
-                    || input.strength != crate::manifest::ForwardStrength::Strong
                 {
                     return Err(invalid("forwarded source/target identity disagrees"));
                 }
@@ -201,6 +200,7 @@ impl Lockfile {
                 if parent_record.consumers.is_empty()
                     || !parent_record.forwarded_inputs.is_empty()
                     || !parent_record.features.contains(&input.source_feature)
+                    || !parent_record.active_dependencies.contains(key)
                     || parent_record
                         .declarations
                         .packages
@@ -267,6 +267,14 @@ impl Lockfile {
                     let target_key = crate::PackageRef::parse(target)
                         .map_err(|_| invalid("invalid forwarded target"))?
                         .qualified_name();
+                    if *strength == crate::manifest::ForwardStrength::Weak
+                        && !record.active_dependencies.contains(&target_key)
+                    {
+                        // The incoming-direction check rejects any forged
+                        // contribution; completeness must not require a dormant
+                        // target to exist merely to prove its absence.
+                        continue;
+                    }
                     let target_record = self
                         .configurations
                         .get(&target_key)
