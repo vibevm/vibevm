@@ -233,15 +233,17 @@ impl PackageConfiguration {
                 if parameter.secret
                     || parameter.kind != crate::manifest::ParameterType::Bool
                     || !parameter.required
-                    || parameter.default.is_some()
+                    || (parameter.default.is_some() && definition.parameters.len() != 1)
                     || input.profile.is_some()
                 {
                     return Err(unsupported(
                         "only explicitly supplied required public bool parameters without defaults are connected",
                     ));
                 }
-                let Some(crate::manifest::ParameterValue::Bool(value)) =
-                    input.parameters.get(&parameter.id)
+                let Some(crate::manifest::ParameterValue::Bool(value)) = input
+                    .parameters
+                    .get(&parameter.id)
+                    .or(parameter.default.as_ref())
                 else {
                     return Err(PackageConfigurationError::Incompatible {
                         package: package.clone(),
@@ -260,7 +262,12 @@ impl PackageConfiguration {
                         package: package.clone(),
                         consumers: consumers.keys().cloned().collect(),
                         reason: format!(
-                            "conflicting explicit public boolean parameter `{}`",
+                            "conflicting {}public boolean parameter `{}`",
+                            if parameter.default.is_none() {
+                                "explicit "
+                            } else {
+                                "effective "
+                            },
                             parameter.id
                         ),
                     });
@@ -516,11 +523,15 @@ impl PackageConfiguration {
         self.selected_data(kind)?;
         let mut values = BTreeMap::new();
         for parameter in &self.definition.parameters {
-            let value = self
-                .consumers
-                .values()
-                .next()
-                .and_then(|input| input.parameters.get(&parameter.id))
+            let consumer = self.consumers.values().next().ok_or_else(|| {
+                PackageConfigurationError::ReplayMismatch {
+                    package: "retained package".into(),
+                }
+            })?;
+            let value = consumer
+                .parameters
+                .get(&parameter.id)
+                .or(parameter.default.as_ref())
                 .ok_or_else(|| PackageConfigurationError::ReplayMismatch {
                     package: "retained package".into(),
                 })?;

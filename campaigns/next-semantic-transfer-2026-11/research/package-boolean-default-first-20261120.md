@@ -1,0 +1,17 @@
+# Required public boolean default — implementation candidate
+
+Accepted qualification `b063266fa`; implementation contract integrated `88480a5cf`. FMT-083 records the narrow semantics before acceptance. No new lock field, epoch, result store or parser vocabulary.
+
+The existing ordinary evaluator admits one required public bool with a literal bool default. Each actual consumer's effective answer is explicit typed input first, otherwise the declared default; original omission remains absent in the retained consumer map. Effective answers must agree. Diagnostic wording distinguishes effective default/explicit disagreement from the historical all-explicit conflict. Unsupported optional/private/path/profile/forwarded parameters remain refused.
+
+The existing selected_parameters projection first validates the complete historical record and requires an actual consumer before deriving its effective value. Absence of the consumer is never treated as an omitted answer. Historical retained definition and original consumer parameter maps distinguish reliance without a duplicated persisted result. No hooks, environment, argv or app-install effects are added.
+
+The existing conservative parameter-history guard still refuses changed parameter meaning before effects. Both omitted reliance and explicit matching input worlds refuse changed-default update in this slice; the explicit control remains explicit in history and is not rewritten as reliance. This is a bounded unsupported update-renewal result, not new review consent or a claim that explicit answers depend on defaults.
+
+## Actual runtime boundary
+
+Private evidence root `/data/git/vibevm-keyring-storage-20261120T0100Z`. `boolean-default-first-full-r2.log` records all49 public fixture tests PASS. Default=true omitted/explicit true/explicit false worlds now install, preserve original input, expose correct effective parameters through public inspection and cold-replay lock/boot/hooks unchanged. Default=false omitted/explicit false/explicit true worlds independently prove override in both directions. The actual prior accepted c2e3f1868b00fca56e238e7399974150f5a1c6ff1292908b49cc7446fe80304d reader and install writer refuse new default-bearing records with lock, slot manifest, boot and hook state unchanged.
+
+Actual workspace consumers compare omitted+omitted, omitted+explicit matching and omitted+explicit conflicting answers while retaining their original maps; conflict preserves the complete semantic project snapshot. A target-only forwarded package with bool default refuses before lock/slots/generated boot/hooks, not a phantom default projection. Changed-default update worlds (omitted versus explicit) preserve lock/slot/boot/hooks. Historical no-default missing/false/wrong-type and defaults/profile/config-data/subskill/forwarding/proposal/missing-history controls remain in the full fixture. The earlier qualification's unsupported receipts remain historical evidence; only superseded assertions changed.
+
+Runtime executable SHA-256 `d73e07db011c01b9843c36cdfb93d94e60c516fd4d9c0f7c4b91b25c581b627a`; fixture SHA-256 `ef85ece1ad0a3521ad0b74606c149ccf0cb403564161326c15d9c0de31faa1c9`. Core and CLI/bin/fixture strict lint PASS; format/diff checks and exact source manifest bind the final handover before independent acceptance. No model, provider, network or real private input was used. UP adoption remains UNRUN; no other NST node or frozen REMAINDER/AR/IDE stage closes.

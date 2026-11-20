@@ -373,3 +373,53 @@ fn explicit_public_boolean_requires_equal_answers_from_every_actual_consumer() {
         assert_eq!(authored_consumers(&f), originals);
     }
 }
+
+#[test]
+fn boolean_default_effective_answers_merge_without_rewriting_original_consumers() {
+    for right in [None, Some(true), Some(false)] {
+        let f = workspace_fixture();
+        let source = f.registry.join(GROUP).join(DRIVER).join("v1.0.0/vibe.toml");
+        write(
+            &source,
+            fs::read_to_string(&source).unwrap()
+                + "\n[[configuration.parameters]]\nid='verbose'\nname='Verbose'\ntype='bool'\nrequired=true\ndefault=true\n",
+        );
+        if let Some(answer) = right {
+            let path = f.project.join("right/vibe.toml");
+            let mut text = fs::read_to_string(&path).unwrap();
+            let end = text.rfind('}').unwrap();
+            text.insert_str(end, &format!(",parameters={{verbose={answer}}}"));
+            write(&path, text);
+        }
+        let originals = authored_consumers(&f);
+        let before = semantic_snapshot(&f.project);
+        let out = f.install();
+        if right == Some(false) {
+            assert!(!out.status.success());
+            let diagnostic = String::from_utf8_lossy(&out.stderr);
+            assert!(
+                diagnostic.contains("conflicting effective public boolean parameter"),
+                "{diagnostic}"
+            );
+            assert_eq!(semantic_snapshot(&f.project), before);
+        } else {
+            assert!(
+                out.status.success(),
+                "{}",
+                String::from_utf8_lossy(&out.stderr)
+            );
+            let lock = f.lock();
+            let record = &lock.configurations[&coordinate(DRIVER)];
+            assert_eq!(record.consumers, originals);
+            assert_eq!(
+                record
+                    .selected_parameters(vibe_core::PackageKind::Flow)
+                    .unwrap()["verbose"],
+                vibe_core::manifest::ParameterValue::Bool(true)
+            );
+            let before = semantic_snapshot(&f.project);
+            f.install_ok();
+            assert_eq!(semantic_snapshot(&f.project), before);
+        }
+    }
+}

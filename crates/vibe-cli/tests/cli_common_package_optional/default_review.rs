@@ -1037,7 +1037,6 @@ fn public_boolean_semantic_drift_refuses_update_before_effects() {
 fn public_boolean_does_not_admit_other_parameter_modes_or_unknown_inputs() {
     for (declaration, answer) in [
         ("type='bool'\nrequired=false", "verbose=false"),
-        ("type='bool'\nrequired=true\ndefault=false", "verbose=false"),
         ("type='bool'\nrequired=true\nsecret=true", "verbose=false"),
         ("type='integer'\nrequired=true", "verbose=1"),
         ("type='path'\nrequired=true", "verbose='/synthetic'"),
@@ -2022,16 +2021,12 @@ fn boolean_default_omitted_true_false_and_no_default_controls_have_distinct_publ
             String::from_utf8_lossy(&out.stdout),
             String::from_utf8_lossy(&out.stderr)
         );
-        if has_default || answer.is_none() {
+        if !has_default && answer.is_none() {
             assert!(!out.status.success(), "{diagnostic}");
-            if has_default {
-                assert!(diagnostic.contains("only explicitly supplied required public bool parameters without defaults are connected"),"{diagnostic}");
-            } else {
-                assert!(
-                    diagnostic.contains("missing required public parameter `verbose`"),
-                    "{diagnostic}"
-                );
-            }
+            assert!(
+                diagnostic.contains("missing required public parameter `verbose`"),
+                "{diagnostic}"
+            );
             assert!(!f.project.join("vibe.lock").exists());
             assert!(!f.slot(DRIVER).exists());
             assert!(!f.slot(BASE).exists());
@@ -2058,8 +2053,8 @@ fn boolean_default_omitted_true_false_and_no_default_controls_have_distinct_publ
                 lock.configurations[&coordinate(DRIVER)]
                     .consumers
                     .values()
-                    .all(|original| original.parameters["verbose"]
-                        == vibe_core::manifest::ParameterValue::Bool(false))
+                    .all(|original| original.parameters.get("verbose")
+                        == input.parameters.get("verbose"))
             );
             let show = f
                 .user
@@ -2075,12 +2070,176 @@ fn boolean_default_omitted_true_false_and_no_default_controls_have_distinct_publ
                 .unwrap();
             assert!(show.status.success());
             let report: serde_json::Value = serde_json::from_slice(&show.stdout).unwrap();
-            assert_eq!(report["packages"][0]["parameters"]["verbose"], false);
+            assert_eq!(
+                report["packages"][0]["parameters"]["verbose"],
+                answer.unwrap_or(true)
+            );
             f.install_ok();
             assert_eq!(fs::read(f.project.join("vibe.lock")).unwrap(), before);
             assert_eq!(f.static_boot(), boot);
             assert_eq!(f.hooks(), hooks);
         }
         assert_eq!(fs::read(&request).unwrap(), authored);
+    }
+}
+
+#[test]
+fn boolean_default_false_and_explicit_true_are_distinct_and_old_clients_refuse() {
+    for answer in [None, Some(false), Some(true)] {
+        let f = Fixture::new(false);
+        let source = f.registry.join(GROUP).join(DRIVER).join("v1.0.0/vibe.toml");
+        write(
+            &source,
+            fs::read_to_string(&source).unwrap()
+                + "\n[[configuration.parameters]]\nid='verbose'\nname='Verbose'\ntype='bool'\nrequired=true\ndefault=false\n",
+        );
+        let request = f.project.join("vibe.toml");
+        if let Some(answer) = answer {
+            write(
+                &request,
+                fs::read_to_string(&request).unwrap().replace(
+                    "members=['disabled']}}}",
+                    &format!("members=['disabled']}}}},parameters={{verbose={answer}}}}}"),
+                ),
+            );
+        }
+        f.install_ok();
+        let before = fs::read(f.project.join("vibe.lock")).unwrap();
+        let boot = f.static_boot();
+        let hooks = f.hooks();
+        let slot = fs::read(f.slot(DRIVER).join("vibe.toml")).unwrap();
+        let lock = f.lock();
+        let record = &lock.configurations[&coordinate(DRIVER)];
+        assert_eq!(
+            record
+                .selected_parameters(vibe_core::PackageKind::Flow)
+                .unwrap()["verbose"],
+            vibe_core::manifest::ParameterValue::Bool(answer.unwrap_or(false))
+        );
+        assert_eq!(
+            record
+                .consumers
+                .values()
+                .next()
+                .unwrap()
+                .parameters
+                .contains_key("verbose"),
+            answer.is_some()
+        );
+        if let Some(old) = std::env::var_os("NST_BOOL_DEFAULT_OLD_CLI") {
+            for args in [
+                vec![
+                    "show",
+                    "features",
+                    "--path",
+                    f.project.to_str().unwrap(),
+                    "--json",
+                ],
+                vec![
+                    "install",
+                    "--path",
+                    f.project.to_str().unwrap(),
+                    "--offline",
+                    "--assume-yes",
+                    "--json",
+                ],
+            ] {
+                let out = std::process::Command::new(&old)
+                    .env_clear()
+                    .env("HOME", f.root.join("home"))
+                    .env("VIBE_SETTINGS", &f.user.settings)
+                    .env("PATH", "/usr/bin:/bin")
+                    .args(args)
+                    .output()
+                    .unwrap();
+                assert!(!out.status.success());
+                assert_eq!(fs::read(f.project.join("vibe.lock")).unwrap(), before);
+                assert_eq!(fs::read(f.slot(DRIVER).join("vibe.toml")).unwrap(), slot);
+                assert_eq!(f.static_boot(), boot);
+                assert_eq!(f.hooks(), hooks);
+            }
+        }
+        f.install_ok();
+        assert_eq!(fs::read(f.project.join("vibe.lock")).unwrap(), before);
+        assert_eq!(f.static_boot(), boot);
+        assert_eq!(f.hooks(), hooks);
+    }
+}
+
+#[test]
+fn boolean_default_does_not_grant_parameter_forwarding() {
+    let f = exact_forward_fixture();
+    let target = f.registry.join(GROUP).join(EXTRA).join("v1.0.0/vibe.toml");
+    write(
+        &target,
+        fs::read_to_string(&target).unwrap()
+            + "\n[[configuration.parameters]]\nid='verbose'\nname='Verbose'\ntype='bool'\nrequired=true\ndefault=true\n",
+    );
+    let request = fs::read(f.project.join("vibe.toml")).unwrap();
+    assert!(!f.install().status.success());
+    assert!(!f.project.join("vibe.lock").exists());
+    assert!(!f.slot(DRIVER).exists());
+    assert!(!f.slot(EXTRA).exists());
+    assert!(!f.project.join("effects.log").exists());
+    assert_eq!(fs::read(f.project.join("vibe.toml")).unwrap(), request);
+    for relative in [common::static_md_rel(), common::static_xml_rel()] {
+        assert!(!f.project.join(relative).exists());
+    }
+}
+
+#[test]
+fn boolean_default_change_refuses_update_without_turning_explicit_answer_into_reliance() {
+    for explicit in [false, true] {
+        let f = Fixture::new(false);
+        let source = f.registry.join(GROUP).join(DRIVER).join("v1.0.0/vibe.toml");
+        write(
+            &source,
+            fs::read_to_string(&source).unwrap()
+                + "\n[[configuration.parameters]]\nid='verbose'\nname='Verbose'\ntype='bool'\nrequired=true\ndefault=true\n",
+        );
+        if explicit {
+            let request = f.project.join("vibe.toml");
+            write(
+                &request,
+                fs::read_to_string(&request).unwrap().replace(
+                    "members=['disabled']}}}",
+                    "members=['disabled']}},parameters={verbose=true}}",
+                ),
+            );
+        }
+        f.install_ok();
+        let before = fs::read(f.project.join("vibe.lock")).unwrap();
+        let boot = f.static_boot();
+        let hooks = f.hooks();
+        let slot = fs::read(f.slot(DRIVER).join("vibe.toml")).unwrap();
+        let new = f.registry.join(GROUP).join(DRIVER).join("v1.1.0");
+        write(
+            &new.join("vibe.toml"),
+            fs::read_to_string(&source)
+                .unwrap()
+                .replace("version='1.0.0'", "version='1.1.0'")
+                .replace("default=true", "default=false"),
+        );
+        write(
+            &new.join("boot/rules.md"),
+            fs::read(source.parent().unwrap().join("boot/rules.md")).unwrap(),
+        );
+        let out = update(&f);
+        assert!(!out.status.success());
+        assert_eq!(fs::read(f.project.join("vibe.lock")).unwrap(), before);
+        assert_eq!(fs::read(f.slot(DRIVER).join("vibe.toml")).unwrap(), slot);
+        assert_eq!(f.static_boot(), boot);
+        assert_eq!(f.hooks(), hooks);
+        let record = &f.lock().configurations[&coordinate(DRIVER)];
+        assert_eq!(
+            record
+                .consumers
+                .values()
+                .next()
+                .unwrap()
+                .parameters
+                .contains_key("verbose"),
+            explicit
+        );
     }
 }
