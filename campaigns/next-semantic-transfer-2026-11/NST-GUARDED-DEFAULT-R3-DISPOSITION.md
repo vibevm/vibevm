@@ -1,0 +1,5 @@
+# Guarded default implementation: r3 not accepted
+
+The accepted qualification is 186938f3814ea5f3df5211233fe53977cb274dac. The later implementation has not passed acceptance. The actual r3 selector stopped at `combined gate+default unexpectedly accepted`; the remaining mutations in that loop cannot be credited. Reproduction evidence: `guarded-default-first-transition-public-r3.log` in the existing private evidence root. The successful on/off/on and old-client/tamper controls do not supersede this failure.
+
+For resumption, start from a valid guarded group with two declared members and one default. Change only the declared default to the other member at the same version, assert different source bytes and valid parsed definitions, and independently switch the gate. Compare current live-source bytes to the retained selection during gate rebind, not a stored hash against its own cached payload. Keep the unchanged cold replay case separate. Preserve the original r3 evidence, and do not change product acceptance or remove shared build resources while this candidate is parked.
