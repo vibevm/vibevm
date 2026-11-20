@@ -271,3 +271,5 @@ Three lifecycle revisions separate manifest/lock observations from an installed-
 Historical reviews distinguish populated Git provenance from no-Gitlinks receipts, upload catalogue identity from payload bytes, and extension discovery from handler admission. No publication or provider execution was attempted.
 
 Historical init and lifecycle changes distinguish an authored dialect from a fallback and a replay disposition from mere correlation with an existing run. Neither source review reran the old fixtures.
+
+Historical state readers distinguish the named deployment child from the directory actually held, and a matching lifecycle header from a terminal result. No deployment or replay was run.
