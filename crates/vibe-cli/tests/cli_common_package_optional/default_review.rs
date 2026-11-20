@@ -3597,3 +3597,209 @@ fn ordinary_interactive_preview_incompatible_flags_refuse_before_prompt_or_effec
         );
     }
 }
+
+fn dormant_guard_fixture() -> Fixture {
+    let f = Fixture::new(true);
+    let source = f.registry.join(GROUP).join(DRIVER).join("v1.0.0/vibe.toml");
+    write(
+        &source,
+        package_header(DRIVER)
+            + r#"
+[requires.packages]
+"org.vibevm/oracle-base"="^1"
+"org.vibevm/oracle-extra"={version="^1",optional=true}
+[[configuration.features]]
+id='on'
+name='Guard on'
+[[configuration.features]]
+id='off'
+name='Guard off'
+[[configuration.features]]
+id='selected'
+name='Remembered selection'
+effects=[{kind='dependency',target='org.vibevm/oracle-extra'}]
+[[configuration.groups]]
+mode='choice'
+id='switch'
+name='Switch'
+cardinality='exactly-one'
+members=['on','off']
+[[configuration.groups]]
+mode='choice'
+id='detail'
+name='Guarded detail'
+cardinality='exactly-one'
+members=['selected']
+guards=[{member='on'}]
+"#,
+    );
+    set_guard_input(&f, true, true);
+    f
+}
+fn set_guard_input(f: &Fixture, on: bool, retain: bool) {
+    let detail = if retain {
+        ",detail={intent='exact',members=['selected']}"
+    } else {
+        ""
+    };
+    write(
+        &f.project.join("vibe.toml"),
+        format!(
+            "[project]\nname='guard-retention'\nversion='0.1.0'\n[requires.packages.'{GROUP}/{DRIVER}']\nversion='=1.0.0'\nlink='static-transitive'\nconfiguration={{policy='require-selection',default_features=false,selections={{switch={{intent='exact',members=['{}']}}{detail}}}}}\n[[registry]]\nname='fixture'\nurl='file://{}'\n",
+            if on { "on" } else { "off" },
+            f.registry.display()
+        ),
+    );
+}
+#[test]
+fn ordinary_dormant_guard_switch_retains_authored_choice_or_names_public_boundary() {
+    for retain in [true, false] {
+        let f = dormant_guard_fixture();
+        let source =
+            Manifest::read(f.registry.join(GROUP).join(DRIVER).join("v1.0.0/vibe.toml")).unwrap();
+        let definition = source.configuration.as_ref().unwrap();
+        f.install_ok();
+        let initial = f.lock();
+        let initial_input = Manifest::read(f.project.join("vibe.toml"))
+            .unwrap()
+            .requires
+            .configurations[&coordinate(DRIVER)]
+            .clone();
+        assert_eq!(
+            initial.configurations[&coordinate(DRIVER)]
+                .consumers
+                .values()
+                .next()
+                .unwrap(),
+            &initial_input
+        );
+        assert!(initial.packages.iter().any(|p| p.name.as_str() == EXTRA));
+        assert!(f.slot(EXTRA).exists());
+        assert!(f.static_boot().contains(EXTRA_MARKER));
+        let hooks_active = f.hooks();
+        assert!(hooks_active.get(EXTRA).copied().unwrap_or(0) > 0);
+        set_guard_input(&f, false, retain);
+        let off_authored = Manifest::read(f.project.join("vibe.toml"))
+            .unwrap()
+            .requires
+            .configurations[&coordinate(DRIVER)]
+            .clone();
+        assert_eq!(off_authored.selections.contains_key("detail"), retain);
+        let normalized = definition
+            .normalize_input(&off_authored, "./vibe.toml")
+            .unwrap();
+        assert_eq!(normalized.choices.answers.contains_key("detail"), retain);
+        let evaluated = definition
+            .compile_choices()
+            .unwrap()
+            .evaluate(&normalized.features, &[normalized.choices]);
+        let detail = evaluated
+            .controls
+            .iter()
+            .find(|control| control.id == "detail")
+            .unwrap();
+        assert!(!detail.active);
+        assert_eq!(
+            detail
+                .projections
+                .iter()
+                .any(|projection| projection.dormant.contains(&"selected".to_string())),
+            retain
+        );
+        // Update is independently qualified; its refusal must not mutate the
+        // incumbent graph or stand in for the separate install journey below.
+        let before = super::workspace::semantic_snapshot(&f.project);
+        let off = update(&f);
+        let diagnostic = format!(
+            "{}{}",
+            String::from_utf8_lossy(&off.stdout),
+            String::from_utf8_lossy(&off.stderr)
+        );
+        println!(
+            "guard off update retain={retain} status={} {diagnostic}",
+            off.status
+        );
+        assert!(!off.status.success());
+        assert!(
+            diagnostic.contains("explicit graph membership reconciliation before effects"),
+            "{diagnostic}"
+        );
+        assert_eq!(super::workspace::semantic_snapshot(&f.project), before);
+        // Ordinary install on the existing project is its own admitted public
+        // reconfiguration route, not an implementation bypass of update.
+        let off = f.install();
+        assert!(
+            off.status.success(),
+            "{}{}",
+            String::from_utf8_lossy(&off.stdout),
+            String::from_utf8_lossy(&off.stderr)
+        );
+        let dormant = f.lock();
+        let record = &dormant.configurations[&coordinate(DRIVER)];
+        assert_eq!(record.consumers.values().next().unwrap(), &off_authored);
+        assert!(!record.features.contains(&"selected".to_string()));
+        assert!(!dormant.packages.iter().any(|p| p.name.as_str() == EXTRA));
+        assert!(!f.slot(EXTRA).exists());
+        assert!(!f.static_boot().contains(EXTRA_MARKER));
+        assert_eq!(f.hooks().get(EXTRA), hooks_active.get(EXTRA));
+        let before = super::workspace::semantic_snapshot(&f.project);
+        f.install_ok();
+        assert_eq!(
+            super::workspace::semantic_snapshot(&f.project),
+            before,
+            "off replay"
+        );
+        // Source declaration/effect remains present while inactive; only its
+        // effective graph/boot/hook contribution disappears.
+        assert!(
+            fs::read_to_string(f.slot(DRIVER).join("vibe.toml"))
+                .unwrap()
+                .contains("Remembered selection")
+        );
+        set_guard_input(&f, true, retain);
+        let before = super::workspace::semantic_snapshot(&f.project);
+        let back = f.install();
+        let diagnostic = format!(
+            "{}{}",
+            String::from_utf8_lossy(&back.stdout),
+            String::from_utf8_lossy(&back.stderr)
+        );
+        println!(
+            "guard back install retain={retain} status={} {diagnostic}",
+            back.status
+        );
+        if retain {
+            assert!(back.status.success(), "{diagnostic}");
+            let lock = f.lock();
+            assert!(lock.packages.iter().any(|p| p.name.as_str() == EXTRA));
+            assert!(f.slot(EXTRA).exists());
+            assert!(f.static_boot().contains(EXTRA_MARKER));
+            assert!(f.hooks().get(EXTRA) > hooks_active.get(EXTRA));
+            assert!(
+                lock.configurations[&coordinate(DRIVER)]
+                    .consumers
+                    .values()
+                    .all(|input| input.selections.contains_key("detail"))
+            );
+            let before = super::workspace::semantic_snapshot(&f.project);
+            f.install_ok();
+            assert_eq!(
+                super::workspace::semantic_snapshot(&f.project),
+                before,
+                "back replay"
+            );
+        } else {
+            assert!(
+                !back.status.success(),
+                "omission cannot revive remembered intent"
+            );
+            assert!(
+                diagnostic.contains("configuration") || diagnostic.contains("selection"),
+                "{diagnostic}"
+            );
+            assert_eq!(super::workspace::semantic_snapshot(&f.project), before);
+            assert!(!f.slot(EXTRA).exists());
+            assert!(!f.static_boot().contains(EXTRA_MARKER));
+        }
+    }
+}
