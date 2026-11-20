@@ -2728,3 +2728,166 @@ fn unselected_profile_preset_cannot_supply_missing_required_boolean() {
     assert!(!f.project.join("effects.log").exists());
     assert_eq!(fs::read(&request).unwrap(), before);
 }
+
+#[test]
+fn uninstalled_ordinary_configuration_existing_cli_and_mcp_do_not_describe_or_evaluate() {
+    let f = Fixture::new(false);
+    let source = f.registry.join(GROUP).join(DRIVER).join("v1.0.0/vibe.toml");
+    write(
+        &source,
+        fs::read_to_string(&source).unwrap()
+            + "\n[[configuration.parameters]]\nid='verbose'\nname='Verbose'\ntype='bool'\nrequired=true\n",
+    );
+    let request = f.project.join("vibe.toml");
+    write(
+        &request,
+        fs::read_to_string(&request)
+            .unwrap()
+            .replace("version='^1'", "version='=1.0.0'"),
+    );
+    let authored = fs::read(&request).unwrap();
+    let source_before = fs::read(&source).unwrap();
+    let help = f.user.vibe().args(["--help"]).output().unwrap();
+    assert!(help.status.success());
+    let grammar = String::from_utf8_lossy(&help.stdout);
+    assert!(grammar.contains("show") && grammar.contains("install"));
+    let install_help = f.user.vibe().args(["install", "--help"]).output().unwrap();
+    assert!(install_help.status.success());
+    assert!(String::from_utf8_lossy(&install_help.stdout).contains("--configuration-input"));
+    let submission = serde_json::json!({"protocol":"vibe-configuration-input/1","input":{"intent":{"policy":"require-selection","defaultFeatures":false,"features":[],"selections":{"extra":{"intent":"exact","members":["disabled"]}},"parameters":{"verbose":{"kind":"bool","value":false}}},"disabledFeatures":[]}});
+    let bytes = serde_json::to_vec(&submission).unwrap();
+    vibe_app::configuration::parse_submission(&bytes)
+        .expect("valid existing generated external input");
+    let submitted = f.root.join("submitted.json");
+    write(&submitted, &bytes);
+    let trial = f
+        .user
+        .vibe()
+        .args([
+            "install",
+            "--offline",
+            "--assume-yes",
+            "--json",
+            "--path",
+            f.project.to_str().unwrap(),
+            "--configuration-input",
+            submitted.to_str().unwrap(),
+        ])
+        .output()
+        .unwrap();
+    assert!(!trial.status.success());
+    let scope_diagnostic = format!(
+        "{}{}",
+        String::from_utf8_lossy(&trial.stdout),
+        String::from_utf8_lossy(&trial.stderr)
+    );
+    assert!(
+        scope_diagnostic.contains("belongs to a selected app installer"),
+        "{scope_diagnostic}"
+    );
+    assert_eq!(fs::read(&submitted).unwrap(), bytes);
+    println!("ordinary external submission scope refusal: {scope_diagnostic}");
+    let show = f
+        .user
+        .vibe()
+        .args([
+            "show",
+            "configuration-data",
+            "--path",
+            f.project.to_str().unwrap(),
+            "--json",
+        ])
+        .output()
+        .unwrap();
+    assert!(!show.status.success());
+    let show_diagnostic = format!(
+        "{}{}",
+        String::from_utf8_lossy(&show.stdout),
+        String::from_utf8_lossy(&show.stderr)
+    );
+    assert!(show_diagnostic.contains("vibe.lock"), "{show_diagnostic}");
+    println!("cold retained-data refusal: {show_diagnostic}");
+    let script=[serde_json::json!({"jsonrpc":"2.0","id":1,"method":"tools/list","params":{}}).to_string(),serde_json::json!({"jsonrpc":"2.0","id":2,"method":"tools/call","params":{"name":"query_package","arguments":{"name":coordinate(DRIVER)}}}).to_string()].join("\n")+"\n";
+    let transport = f
+        .user
+        .vibe()
+        .args([
+            "--offline",
+            "mcp",
+            "serve",
+            "--path",
+            f.project.to_str().unwrap(),
+        ])
+        .write_stdin(script)
+        .output()
+        .unwrap();
+    assert!(transport.status.success());
+    let rows: Vec<serde_json::Value> = String::from_utf8(transport.stdout)
+        .unwrap()
+        .lines()
+        .map(|line| serde_json::from_str(line).unwrap())
+        .collect();
+    let tools = rows.iter().find(|row| row["id"] == 1).unwrap()["result"]["tools"]
+        .as_array()
+        .unwrap();
+    let names: Vec<_> = tools
+        .iter()
+        .map(|tool| tool["name"].as_str().unwrap())
+        .collect();
+    assert!(names.contains(&"query_package"));
+    assert!(!names.iter().any(|name| name.contains("configuration")));
+    let query = rows.iter().find(|row| row["id"] == 2).unwrap();
+    assert!(query["result"]["isError"] == true || query.get("error").is_some());
+    assert!(
+        query.to_string().contains("lockfile") || query.to_string().contains("vibe.lock"),
+        "{query}"
+    );
+    assert!(!query.to_string().contains("invalid arguments"), "{query}");
+    println!(
+        "registered tools: {}",
+        serde_json::to_string(&names).unwrap()
+    );
+    println!("cold registered query_package refusal: {query}");
+    assert_eq!(fs::read(&request).unwrap(), authored);
+    assert_eq!(fs::read(&source).unwrap(), source_before);
+    assert!(!f.project.join("vibe.lock").exists());
+    for name in [BASE, DRIVER, EXTRA] {
+        assert!(!f.slot(name).exists());
+    }
+    for relative in [common::static_md_rel(), common::static_xml_rel()] {
+        assert!(!f.project.join(relative).exists());
+    }
+    assert!(!f.project.join("effects.log").exists());
+    // Separate control: the same definition is installable after authored answers.
+    let control = Fixture::new(false);
+    let target = control
+        .registry
+        .join(GROUP)
+        .join(DRIVER)
+        .join("v1.0.0/vibe.toml");
+    write(&target, source_before);
+    let request = control.project.join("vibe.toml");
+    write(
+        &request,
+        fs::read_to_string(&request).unwrap().replace(
+            "members=['disabled']}}}",
+            "members=['disabled']}},parameters={verbose=false}}",
+        ),
+    );
+    control.install_ok();
+    let data = control
+        .user
+        .vibe()
+        .args([
+            "show",
+            "configuration-data",
+            "--path",
+            control.project.to_str().unwrap(),
+            "--json",
+        ])
+        .output()
+        .unwrap();
+    assert!(data.status.success());
+    let data: serde_json::Value = serde_json::from_slice(&data.stdout).unwrap();
+    assert_eq!(data["packages"][0]["parameters"]["verbose"], false);
+}
