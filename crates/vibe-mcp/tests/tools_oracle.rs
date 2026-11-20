@@ -439,6 +439,18 @@ fn materialise_subskill_cell_copies_lazy_pull_content() {
     )
     .unwrap();
 
+    let read = ReadSubskillMcpTool
+        .run(
+            &json!({ "package": "org.vibevm/wal", "subskill_path": "sqlx/v08" }),
+            &ctx,
+        )
+        .unwrap();
+    assert!(
+        read["content"]
+            .as_str()
+            .unwrap()
+            .contains("sqlx 0.8.x specific notes")
+    );
     let out = MaterialiseSubskillMcpTool
         .run(
             &json!({ "package": "org.vibevm/wal", "subskill_path": "sqlx/v08" }),

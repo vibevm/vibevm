@@ -231,7 +231,7 @@ fn empty_lockfile_has_v7_defaults() {
     let lf = Lockfile::empty("vibe 0.1.0-dev", "2026-05-21T00:00:00Z");
     assert_eq!(lf.meta.schema_version, LEGACY_SCHEMA_VERSION);
     assert_eq!(LEGACY_SCHEMA_VERSION, 7);
-    assert_eq!(CURRENT_SCHEMA_VERSION, 12);
+    assert_eq!(CURRENT_SCHEMA_VERSION, 13);
     assert!(lf.meta.solver.is_none());
     assert!(lf.packages.is_empty());
 
@@ -483,9 +483,8 @@ fn nine_still_reads_and_the_epoch_above_the_newest_refuses() {
             "schema{schema} must read"
         );
     }
-    let error =
-        Lockfile::parse_str(&lock_text(DIGESTLESS_TEMPLATE_SCHEMA_VERSION + 1, "")).unwrap_err();
-    assert!(error.to_string().contains("12"), "{error}");
+    let error = Lockfile::parse_str(&lock_text(CURRENT_SCHEMA_VERSION + 1, "")).unwrap_err();
+    assert!(error.to_string().contains("14"), "{error}");
 }
 
 /// The digest-less template record: round-tripped, writing epoch11, and

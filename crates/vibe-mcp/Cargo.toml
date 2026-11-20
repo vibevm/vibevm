@@ -13,6 +13,8 @@ description = "Model Context Protocol server for vibevm — exposes installed pa
 [dependencies]
 specmark.workspace = true
 vibe-core.workspace = true
+# Shared source-admitted configured lazy-pull reader; no network acquisition.
+vibe-registry.workspace = true
 vibe-workspace.workspace = true
 # The moved agent/package-skill projection (R7.4 §5): `vibe_mcp::{agents,
 # pkgskill}` are compatibility re-exports of its public items, and the

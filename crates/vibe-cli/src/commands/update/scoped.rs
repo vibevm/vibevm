@@ -377,6 +377,11 @@ fn run(
         };
         let configuration = resolver.configuration_for_node(node)?;
         if let Some(record) = &configuration {
+            if !record.selected_subskill_paths().is_empty() {
+                bail!(
+                    "configured subskill update requires fresh source-admission evidence before effects; automatic witness renewal is not connected"
+                );
+            }
             record.validate(&cached.manifest)?;
         } else {
             vibe_install::configuration_admission::package_manifest(&pkgref, &cached.manifest)?;

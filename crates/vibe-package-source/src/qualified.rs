@@ -227,6 +227,13 @@ impl InstallSource for RegistryPackageSource {
             self.resolver.solve_metadata(request)
         }
     }
+    fn capture_subskill_source(
+        &self,
+        candidate: &vibe_registry::source_candidates::RetainedSourceCandidate,
+        paths: &BTreeSet<String>,
+    ) -> Result<vibe_registry::subskill_witness::LocalSubskillAdmission, RegistryError> {
+        self.resolver.capture_subskill_source(candidate, paths)
+    }
     fn acquire_candidate_for_install(
         &self,
         candidate: &vibe_registry::source_candidates::RetainedSourceCandidate,

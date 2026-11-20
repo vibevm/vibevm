@@ -180,6 +180,22 @@ pub trait InstallSource {
         .into())
     }
 
+    /// Source-owner-only observation; cache-only routes cannot mint membership.
+    fn capture_subskill_source(
+        &self,
+        candidate: &vibe_registry::source_candidates::RetainedSourceCandidate,
+        _paths: &BTreeSet<String>,
+    ) -> Result<vibe_registry::subskill_witness::LocalSubskillAdmission, RegistryError> {
+        Err(RegistryError::MalformedMeta {
+            path: Path::new("selected source").into(),
+            reason: format!(
+                "fresh local source admission unavailable for {}/{}",
+                candidate.group(),
+                candidate.name()
+            ),
+        })
+    }
+
     /// Acquire exactly the operation-owned candidate retained by metadata solve.
     fn acquire_candidate_for_install(
         &self,

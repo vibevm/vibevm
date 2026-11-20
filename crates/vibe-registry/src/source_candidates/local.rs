@@ -174,6 +174,24 @@ impl LocalRegistry {
         })
     }
 
+    /// Observe selected members only through this retained local source owner.
+    pub fn capture_subskill_source(
+        &self,
+        candidate: &RetainedSourceCandidate,
+        paths: &std::collections::BTreeSet<String>,
+    ) -> Result<crate::subskill_witness::LocalSubskillAdmission, RegistryError> {
+        let selected = self.retained_source_tree(candidate)?;
+        crate::subskill_witness::LocalSubskillAdmission::capture(
+            &selected.source_dir,
+            candidate.manifest(),
+            paths,
+        )
+        .map_err(|error| RegistryError::MalformedMeta {
+            path: selected.source_dir,
+            reason: format!("{error:#}"),
+        })
+    }
+
     /// Acquire the exact retained directory selection, never resolve another version/root.
     pub fn fetch_candidate_for_install(
         &self,

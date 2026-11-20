@@ -49,6 +49,50 @@ impl MultiRegistryResolver {
         self.retain_resolution(resolution, None)
     }
 
+    /// Capture member identities only from this operation's actual fresh local registry.
+    pub fn capture_subskill_source(
+        &self,
+        candidate: &RetainedSourceCandidate,
+        paths: &std::collections::BTreeSet<String>,
+    ) -> Result<crate::subskill_witness::LocalSubskillAdmission, RegistryError> {
+        let resolution = candidate.resolution_for(&self.candidate_owner)?;
+        if resolution.locked.is_some()
+            || resolution.direct.is_some()
+            || resolution.from_store
+            || resolution.overridden
+            || resolution.is_git_source
+            || resolution.is_path_source
+            || resolution.via_redirect.is_some()
+        {
+            return Err(invalid_selection(
+                resolution,
+                "subskill witness requires fresh local registry source admission",
+            ));
+        }
+        let name = resolution.registry_name.as_deref().ok_or_else(|| {
+            invalid_selection(resolution, "selected local registry alias is missing")
+        })?;
+        let registry = self
+            .sources()?
+            .iter()
+            .find(|source| source.name() == name)
+            .ok_or_else(|| {
+                invalid_selection(resolution, "selected local registry is unavailable")
+            })?;
+        if !matches!(registry, RegistrySource::Local(_)) {
+            return Err(invalid_selection(
+                resolution,
+                "subskill source mode is not connected",
+            ));
+        }
+        crate::subskill_witness::LocalSubskillAdmission::capture(
+            &resolution.resolved.source_dir,
+            candidate.manifest(),
+            paths,
+        )
+        .map_err(|error| invalid_selection(resolution, &format!("{error:#}")))
+    }
+
     /// Consume only this owner's retained route; never solve a URL/version again.
     pub fn fetch_candidate_for_install(
         &self,

@@ -40,6 +40,19 @@ pub(super) fn fetch_selected_node<S: InstallSource + ?Sized>(
         .find(&node.group, &node.name)
         .filter(|record| record.version == node.version)
         .map(|record| record.content_hash.as_str());
+    let paths = metadata
+        .configuration
+        .as_ref()
+        .map(|record| record.selected_subskill_paths())
+        .unwrap_or_default();
+    let admission = if paths.is_empty() {
+        None
+    } else {
+        if lockfile.find(&node.group, &node.name).is_some() {
+            return Err(RegistryError::MalformedMeta { path: workspace_root.into(), reason: "configured subskill acquisition cannot manufacture historical source evidence; use the admitted fresh replay or a new source selection".into() }.into());
+        }
+        Some(source.capture_subskill_source(selected, &paths)?)
+    };
     let slot = vibedeps::in_place_slot_abs_path(workspace_root, &node.group, &node.name);
     let (cached, in_place) = match source
         .acquire_candidate_for_install(selected, store_root, expected, &slot, progress)?
@@ -61,7 +74,16 @@ pub(super) fn fetch_selected_node<S: InstallSource + ?Sized>(
     )?;
     let embedded_sources =
         vibe_registry::lock_embedded_sources_with(&cached.manifest.embedded_sources, offline)?;
+    let configured_subskills = admission
+        .map(|admission| admission.finish(&cached))
+        .transpose()
+        .map_err(|error| RegistryError::MalformedMeta {
+            path: cached.cache_dir.clone(),
+            reason: format!("{error:#}"),
+        })?
+        .unwrap_or_default();
     Ok(Fetched {
+        configured_subskills,
         cached,
         feature_expansion: features.clone(),
         meta: NodeInstallMeta {

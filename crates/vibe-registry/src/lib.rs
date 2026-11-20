@@ -34,6 +34,7 @@ pub mod http_admission;
 pub mod index_client;
 pub mod source_candidates;
 pub mod source_policy_provider;
+pub mod subskill_witness;
 pub mod templates;
 pub use http_admission::{ContactRefusal, HttpAdmission};
 mod local_registry;

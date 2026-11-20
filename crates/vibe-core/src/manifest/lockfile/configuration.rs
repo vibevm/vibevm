@@ -15,6 +15,47 @@ impl Lockfile {
                 "schema7 cannot carry rich package configuration".into(),
             ));
         }
+        for package in &self.packages {
+            let key = format!("{}/{}", package.group, package.name);
+            let record = self.configurations.get(&key);
+            let selected = record
+                .map(PackageConfiguration::selected_subskill_paths)
+                .unwrap_or_default();
+            if record.is_some() && selected.len() != package.subskills_active.len() {
+                return Err(invalid(format!(
+                    "configuration `{key}` selected subskill rows disagree"
+                )));
+            }
+            let mut members = BTreeSet::new();
+            for subskill in &package.subskills_active {
+                if let Some(witness) = &subskill.source_witness {
+                    if self.meta.schema_version < SUBSKILL_WITNESS_SCHEMA_VERSION {
+                        return Err(invalid(
+                            "configured subskill witness requires schema13".into(),
+                        ));
+                    }
+                    subskill
+                        .validate_source_witness(&package.content_hash)
+                        .map_err(invalid)?;
+                    if !selected.contains(&witness.member.path)
+                        || !members.insert(witness.member.path.clone())
+                    {
+                        return Err(invalid(format!(
+                            "configuration `{key}` has an extra or duplicate subskill witness"
+                        )));
+                    }
+                } else if record.is_some() {
+                    return Err(invalid(format!(
+                        "configuration `{key}` subskill witness is missing"
+                    )));
+                }
+            }
+            if members != selected {
+                return Err(invalid(format!(
+                    "configuration `{key}` selected subskill witness is missing"
+                )));
+            }
+        }
         for (key, record) in &self.configurations {
             if record.automatic_basis.is_some()
                 && self.meta.schema_version < AUTOMATIC_BASIS_SCHEMA_VERSION
@@ -127,6 +168,7 @@ impl Lockfile {
                 | TEMPLATE_SCHEMA_VERSION
                 | DIGESTLESS_TEMPLATE_SCHEMA_VERSION
                 | AUTOMATIC_BASIS_SCHEMA_VERSION
+                | SUBSKILL_WITNESS_SCHEMA_VERSION
         ) {
             return Err(crate::Error::UnsupportedLockfile {
                 found: self.meta.schema_version,
@@ -138,7 +180,14 @@ impl Lockfile {
         // rule the 7 → 8 → 9 steps already followed: a project with no
         // template package and no channel requirement writes exactly the
         // bytes it wrote before PROP-075 (AV-FMT-002).
-        value.meta.schema_version = if value
+        value.meta.schema_version = if value.packages.iter().any(|package| {
+            package
+                .subskills_active
+                .iter()
+                .any(|subskill| subskill.source_witness.is_some())
+        }) {
+            SUBSKILL_WITNESS_SCHEMA_VERSION
+        } else if value
             .configurations
             .values()
             .any(|record| record.automatic_basis.is_some())

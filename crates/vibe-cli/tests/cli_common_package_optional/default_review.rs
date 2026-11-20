@@ -1197,3 +1197,383 @@ fn selected_subskill_refusal_is_distinct_from_dormant_captured_bytes_and_boot() 
         assert_eq!(fs::read(f.project.join("vibe.toml")).unwrap(), authored);
     }
 }
+
+fn declared_subskill(f: &Fixture, selected: bool, body: &str) {
+    let source = f.registry.join(GROUP).join(DRIVER).join("v1.0.0");
+    let manifest = source.join("vibe.toml");
+    write(&manifest, fs::read_to_string(&manifest).unwrap().replace(
+        "effects = [{ kind = \"dependency\", target = \"org.vibevm/oracle-extra\" }]",
+        "effects = [{ kind = \"dependency\", target = \"org.vibevm/oracle-extra\" }, { kind = \"subskill\", path = \"subskills/audit/SKILL.md\" }]",
+    ));
+    write(
+        &source.join("subskills/audit/vibe-subskill.toml"),
+        "[subskill]\npath='audit'\ndelivery='lazy-pull'\ndescription='Synthetic audit guidance'\n[content]\nfiles_written=['SKILL.md']\n",
+    );
+    write(&source.join("subskills/audit/SKILL.md"), body);
+    assert_eq!(
+        selected,
+        fs::read_to_string(f.project.join("vibe.toml"))
+            .unwrap()
+            .contains("members=['enabled']")
+    );
+}
+fn read_subskill(f: &Fixture) -> serde_json::Value {
+    use vibe_mcp::tools::{McpTool, ReadSubskillMcpTool};
+    let context =
+        vibe_mcp::ServerContext::with_store_root(&f.project, f.user.settings.join("cache"));
+    match ReadSubskillMcpTool.run(
+        &serde_json::json!({"package":coordinate(DRIVER),"subskill_path":"audit"}),
+        &context,
+    ) {
+        Ok(result) => result.structured().clone(),
+        Err(error) => serde_json::json!({"refused":error.to_string()}),
+    }
+}
+#[test]
+fn declared_selected_lazy_pull_has_actual_read_and_cold_replay_but_no_boot_injection() {
+    for selected in [false, true] {
+        let f = Fixture::new(selected);
+        declared_subskill(&f, selected, "ORACLE_DECLARED_LAZY_PULL\n");
+        f.install_ok();
+        let before = fs::read(f.project.join("vibe.lock")).unwrap();
+        let boot = f.static_boot();
+        let hooks = f.hooks();
+        let lock = f.lock();
+        assert_eq!(lock.meta.schema_version, if selected { 13 } else { 8 });
+        let row = lock.find(&GROUP.parse().unwrap(), DRIVER).unwrap();
+        assert_eq!(row.subskills_active.len(), usize::from(selected));
+        let discovery = f
+            .user
+            .vibe()
+            .args([
+                "show",
+                "subskills",
+                "--path",
+                f.project.to_str().unwrap(),
+                "--json",
+            ])
+            .output()
+            .unwrap();
+        assert!(discovery.status.success());
+        let discovered: serde_json::Value = serde_json::from_slice(&discovery.stdout).unwrap();
+        assert_eq!(discovered["total"], usize::from(selected));
+        let read = read_subskill(&f);
+        if selected {
+            assert!(
+                read["content"]
+                    .as_str()
+                    .unwrap()
+                    .contains("ORACLE_DECLARED_LAZY_PULL"),
+                "{read}"
+            );
+            assert!(row.subskills_active[0].source_witness.is_some());
+            let transport = f.user.vibe().args(["--offline","mcp","serve","--path",f.project.to_str().unwrap()]).write_stdin(serde_json::json!({"jsonrpc":"2.0","id":1,"method":"tools/call","params":{"name":"read_subskill","arguments":{"package":coordinate(DRIVER),"subskill_path":"audit"}}}).to_string()+"\n").output().unwrap();
+            assert!(transport.status.success());
+            assert!(
+                String::from_utf8_lossy(&transport.stdout).contains("ORACLE_DECLARED_LAZY_PULL")
+            );
+        } else {
+            assert!(read.get("refused").is_some());
+        }
+        assert!(!boot.contains("ORACLE_DECLARED_LAZY_PULL"));
+        f.install_ok();
+        assert_eq!(fs::read(f.project.join("vibe.lock")).unwrap(), before);
+        assert_eq!(f.static_boot(), boot);
+        assert_eq!(f.hooks(), hooks);
+    }
+}
+
+#[test]
+fn declared_lazy_pull_drift_missing_and_materialisation_refuse_without_writes() {
+    use vibe_mcp::tools::{MaterialiseSubskillMcpTool, McpTool};
+    for mutation in [
+        "missing",
+        "member",
+        "declaration",
+        "forged-row",
+        "no-witness",
+    ] {
+        let f = Fixture::new(true);
+        declared_subskill(&f, true, "ORIGINAL_SELECTED_MEMBER\n");
+        f.install_ok();
+        let lock_path = f.project.join("vibe.lock");
+        let before = fs::read(&lock_path).unwrap();
+        let boot = f.static_boot();
+        let hooks = f.hooks();
+        let context =
+            vibe_mcp::ServerContext::with_store_root(&f.project, f.user.settings.join("cache"));
+        for force in [false, true] {
+            assert!(MaterialiseSubskillMcpTool.run(&serde_json::json!({"package":coordinate(DRIVER),"subskill_path":"audit","force":force}),&context).is_err());
+            assert!(!f.project.join("SKILL.md").exists());
+        }
+        let cache = f
+            .user
+            .settings
+            .join("cache")
+            .join(GROUP)
+            .join(DRIVER)
+            .join("v1.0.0/subskills/audit");
+        match mutation {
+            "missing" => {
+                fs::rename(cache.join("SKILL.md"), cache.join("preserved-member.md")).unwrap();
+            }
+            "member" => write(&cache.join("SKILL.md"), "REPLACEMENT_MUST_NOT_LEAK"),
+            "declaration" => write(
+                &cache.join("vibe-subskill.toml"),
+                "[subskill]\npath='other'\n",
+            ),
+            _ => {
+                let mut lock = f.lock();
+                let row = lock
+                    .packages
+                    .iter_mut()
+                    .find(|p| p.name.as_str() == DRIVER)
+                    .unwrap();
+                if mutation == "forged-row" {
+                    row.subskills_active.clear();
+                } else {
+                    row.subskills_active[0].source_witness = None;
+                }
+                write(&lock_path, toml::to_string(&lock).unwrap());
+            }
+        }
+        let read = read_subskill(&f);
+        assert!(read.get("refused").is_some(), "{mutation}: {read}");
+        assert!(!read.to_string().contains("REPLACEMENT_MUST_NOT_LEAK"));
+        if matches!(mutation, "missing" | "member" | "declaration") {
+            assert_eq!(fs::read(&lock_path).unwrap(), before);
+        }
+        assert_eq!(f.static_boot(), boot);
+        assert_eq!(f.hooks(), hooks);
+    }
+}
+
+#[test]
+fn declared_lazy_pull_invalid_declaration_refuses_before_project_effects() {
+    for declaration in [
+        "[subskill]\npath='other'\ndelivery='lazy-pull'\ndescription='x'\n[content]\nfiles_written=['SKILL.md']",
+        "[subskill]\npath='audit'\ndelivery='eager'\n[content]\nfiles_written=['SKILL.md']",
+        "[subskill]\npath='audit'\ndelivery='lazy-pull'\ndescription='x'\n[content]\nfiles_written=['SKILL.md','other.md']",
+        "[subskill]\npath='audit'\ndelivery='lazy-pull'\ndescription='x'\n[content]\nfiles_written=['../escape']",
+    ] {
+        let f = Fixture::new(true);
+        declared_subskill(&f, true, "INERT\n");
+        write(
+            &f.registry
+                .join(GROUP)
+                .join(DRIVER)
+                .join("v1.0.0/subskills/audit/vibe-subskill.toml"),
+            declaration,
+        );
+        let authored = fs::read(f.project.join("vibe.toml")).unwrap();
+        assert!(!f.install().status.success());
+        assert!(!f.project.join("vibe.lock").exists());
+        assert!(!f.slot(DRIVER).exists());
+        assert!(!f.project.join("effects.log").exists());
+        assert_eq!(fs::read(f.project.join("vibe.toml")).unwrap(), authored);
+    }
+}
+
+#[test]
+fn declared_lazy_pull_prior_binary_refuses_reader_writer_and_registered_mcp() {
+    let Some(old) = std::env::var_os("NST_SUBSKILL_OLD_CLI") else {
+        return;
+    };
+    let f = Fixture::new(true);
+    declared_subskill(&f, true, "PINNED_MEMBER_NEVER_FOR_OLD_READER\n");
+    f.install_ok();
+    let before = fs::read(f.project.join("vibe.lock")).unwrap();
+    let boot = f.static_boot();
+    let hooks = f.hooks();
+    let script=serde_json::json!({"jsonrpc":"2.0","id":1,"method":"tools/call","params":{"name":"read_subskill","arguments":{"package":coordinate(DRIVER),"subskill_path":"audit"}}}).to_string()+"\n";
+    for args in [
+        vec![
+            "show",
+            "subskills",
+            "--path",
+            f.project.to_str().unwrap(),
+            "--json",
+        ],
+        vec![
+            "install",
+            "--offline",
+            "--assume-yes",
+            "--json",
+            "--path",
+            f.project.to_str().unwrap(),
+        ],
+        vec!["mcp", "serve", "--path", f.project.to_str().unwrap()],
+    ] {
+        use std::io::Write;
+        let mcp = args[0] == "mcp";
+        let mut child = std::process::Command::new(&old)
+            .env_clear()
+            .env("HOME", f.root.join("home"))
+            .env("VIBE_SETTINGS", &f.user.settings)
+            .env("PATH", "/usr/bin:/bin")
+            .args(args)
+            .stdin(std::process::Stdio::piped())
+            .stdout(std::process::Stdio::piped())
+            .stderr(std::process::Stdio::piped())
+            .spawn()
+            .unwrap();
+        if mcp {
+            child
+                .stdin
+                .as_mut()
+                .unwrap()
+                .write_all(script.as_bytes())
+                .unwrap();
+        }
+        drop(child.stdin.take());
+        let out = child.wait_with_output().unwrap();
+        let diagnostic = format!(
+            "{}{}",
+            String::from_utf8_lossy(&out.stdout),
+            String::from_utf8_lossy(&out.stderr)
+        );
+        assert!(!diagnostic.contains("PINNED_MEMBER_NEVER_FOR_OLD_READER"));
+        if mcp {
+            assert!(
+                diagnostic.contains("schema") || diagnostic.contains("unknown field"),
+                "{diagnostic}"
+            );
+        } else {
+            assert!(!out.status.success(), "{diagnostic}");
+        }
+        assert_eq!(fs::read(f.project.join("vibe.lock")).unwrap(), before);
+        assert_eq!(f.static_boot(), boot);
+        assert_eq!(f.hooks(), hooks);
+    }
+}
+
+#[test]
+fn declared_lazy_pull_two_projects_cannot_read_replaced_same_version_cache() {
+    let a = Fixture::new(true);
+    declared_subskill(&a, true, "PROJECT_A_PINNED\n");
+    a.install_ok();
+    assert!(
+        read_subskill(&a)["content"]
+            .as_str()
+            .unwrap()
+            .contains("PROJECT_A_PINNED")
+    );
+    let a_lock = fs::read(a.project.join("vibe.lock")).unwrap();
+    let a_boot = a.static_boot();
+    let a_hooks = a.hooks();
+    let b = Fixture::new(true);
+    declared_subskill(&b, true, "PROJECT_B_REPLACEMENT\n");
+    // Share only the isolated settings/cache, not project source or lock authority.
+    let out = a
+        .user
+        .vibe()
+        .current_dir(&b.project)
+        .env("HOME", b.root.join("home"))
+        .args([
+            "install",
+            "--offline",
+            "--assume-yes",
+            "--json",
+            "--path",
+            b.project.to_str().unwrap(),
+        ])
+        .output()
+        .unwrap();
+    assert!(
+        out.status.success(),
+        "{}",
+        String::from_utf8_lossy(&out.stderr)
+    );
+    let a_read = read_subskill(&a);
+    assert!(a_read.get("refused").is_some(), "{a_read}");
+    assert!(!a_read.to_string().contains("PROJECT_B_REPLACEMENT"));
+    use vibe_mcp::tools::{McpTool, ReadSubskillMcpTool};
+    let context =
+        vibe_mcp::ServerContext::with_store_root(&b.project, a.user.settings.join("cache"));
+    let b_read = ReadSubskillMcpTool
+        .run(
+            &serde_json::json!({"package":coordinate(DRIVER),"subskill_path":"audit"}),
+            &context,
+        )
+        .unwrap();
+    assert!(
+        b_read["content"]
+            .as_str()
+            .unwrap()
+            .contains("PROJECT_B_REPLACEMENT")
+    );
+    assert_eq!(fs::read(a.project.join("vibe.lock")).unwrap(), a_lock);
+    assert_eq!(a.static_boot(), a_boot);
+    assert_eq!(a.hooks(), a_hooks);
+}
+
+#[test]
+fn declared_lazy_pull_selected_file_limits_are_inclusive_and_not_package_limits() {
+    for (member_len, declaration_len, accepted) in [
+        (1024 * 1024, 64 * 1024, true),
+        (1024 * 1024 + 1, 128, false),
+        (64, 64 * 1024 + 1, false),
+    ] {
+        let f = Fixture::new(true);
+        declared_subskill(&f, true, &"X".repeat(member_len));
+        let root = f.registry.join(GROUP).join(DRIVER).join("v1.0.0");
+        let path = root.join("subskills/audit/vibe-subskill.toml");
+        let mut text = fs::read_to_string(&path).unwrap();
+        // Pad a valid declaration with a comment, never truncate its semantic bytes.
+        let target = declaration_len.max(text.len() + 2);
+        text.push_str("\n#");
+        text.extend(std::iter::repeat_n('x', target - text.len()));
+        write(&path, text);
+        write(
+            &root.join("unrelated-large.bin"),
+            vec![0_u8; 2 * 1024 * 1024],
+        );
+        let out = f.install();
+        assert_eq!(
+            out.status.success(),
+            accepted,
+            "{}",
+            String::from_utf8_lossy(&out.stderr)
+        );
+        if accepted {
+            assert!(read_subskill(&f)["content"].as_str().unwrap().len() >= member_len);
+        } else {
+            assert!(!f.project.join("vibe.lock").exists());
+            assert!(!f.slot(DRIVER).exists());
+            assert!(!f.project.join("effects.log").exists());
+        }
+    }
+}
+
+#[test]
+fn declared_lazy_pull_missing_historical_witness_cannot_be_rebuilt_from_cache() {
+    let f = Fixture::new(true);
+    declared_subskill(&f, true, "ORIGINAL_AUTHORITY\n");
+    f.install_ok();
+    let accepted_lock = fs::read(f.project.join("vibe.lock")).unwrap();
+    let accepted_boot = f.static_boot();
+    let accepted_hooks = f.hooks();
+    assert!(!update(&f).status.success());
+    assert_eq!(
+        fs::read(f.project.join("vibe.lock")).unwrap(),
+        accepted_lock
+    );
+    assert_eq!(f.static_boot(), accepted_boot);
+    assert_eq!(f.hooks(), accepted_hooks);
+    let mut lock = f.lock();
+    lock.packages
+        .iter_mut()
+        .find(|p| p.name.as_str() == DRIVER)
+        .unwrap()
+        .subskills_active[0]
+        .source_witness = None;
+    let path = f.project.join("vibe.lock");
+    write(&path, toml::to_string(&lock).unwrap());
+    let before = fs::read(&path).unwrap();
+    let boot = f.static_boot();
+    let hooks = f.hooks();
+    assert!(!f.install().status.success());
+    assert_eq!(fs::read(&path).unwrap(), before);
+    assert_eq!(f.static_boot(), boot);
+    assert_eq!(f.hooks(), hooks);
+}

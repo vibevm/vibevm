@@ -161,6 +161,21 @@ pub(crate) fn locked_packages(
         };
         let manifest = Manifest::read(slot.join(Manifest::FILENAME))?;
         let configuration = lock.configuration_for(package, &manifest)?;
+        if configuration
+            .as_ref()
+            .is_some_and(|record| !record.selected_subskill_paths().is_empty())
+        {
+            let store = vibe_registry::store_root()?;
+            for subskill in &package.subskills_active {
+                vibe_registry::subskill_witness::read_configured_subskill(
+                    &store, package, subskill,
+                )
+                .map_err(|error| vibe_registry::RegistryError::MalformedMeta {
+                    path: slot.clone(),
+                    reason: format!("{error:#}"),
+                })?;
+            }
+        }
         admitted_package(
             format!("{}/{}", package.group, package.name),
             &manifest,
@@ -273,11 +288,7 @@ pub(crate) fn retained_before_planning<S: crate::InstallSource + ?Sized>(
     workspace: &Workspace,
     lock: &vibe_core::manifest::Lockfile,
 ) -> Result<()> {
-    if !matches!(
-        lock.meta.schema_version,
-        vibe_core::manifest::CONFIGURATION_SCHEMA_VERSION
-            | vibe_core::manifest::CURRENT_SCHEMA_VERSION
-    ) {
+    if lock.meta.schema_version < vibe_core::manifest::CONFIGURATION_SCHEMA_VERSION {
         return Ok(());
     }
     let store = vibe_registry::store::store_root()?;
@@ -309,11 +320,7 @@ fn retained_with_stores<S: crate::InstallSource + ?Sized>(
     read_store: Option<&Path>,
     acquisition_store: &Path,
 ) -> Result<()> {
-    if !matches!(
-        lock.meta.schema_version,
-        vibe_core::manifest::CONFIGURATION_SCHEMA_VERSION
-            | vibe_core::manifest::CURRENT_SCHEMA_VERSION
-    ) {
+    if lock.meta.schema_version < vibe_core::manifest::CONFIGURATION_SCHEMA_VERSION {
         return Ok(());
     }
     for package in &lock.packages {

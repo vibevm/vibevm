@@ -308,8 +308,14 @@ impl PackageConfiguration {
                             "selected cross-package forwarding requires candidate-conditioned incoming consumers",
                         ));
                     }
-                    ConfigurationEffect::Subskill { .. } => {
-                        return Err(unsupported("selected subskill loading is not connected"));
+                    ConfigurationEffect::Subskill { path } => {
+                        if !path.starts_with("subskills/") || path.rsplit_once('/').is_none() {
+                            return Err(unsupported(
+                                "selected subskill loading is not connected for bare files; declaration-backed subskills/ member required",
+                            ));
+                        }
+                        // This is selection only. Source admission supplies the
+                        // independent declaration/member witness before apply.
                     }
                     ConfigurationEffect::ConfigValue { name } => {
                         if !definition.config_values.contains_key(name) {
@@ -395,6 +401,20 @@ impl PackageConfiguration {
             }
         }
         Ok(values)
+    }
+
+    /// Selected source members, not an admission of delivery or cache bytes.
+    pub fn selected_subskill_paths(&self) -> BTreeSet<String> {
+        self.definition
+            .features
+            .iter()
+            .filter(|feature| self.features.contains(&feature.id))
+            .flat_map(|feature| &feature.effects)
+            .filter_map(|effect| match effect {
+                ConfigurationEffect::Subskill { path } => Some(path.clone()),
+                _ => None,
+            })
+            .collect()
     }
 
     /// Validated public bool projection, separate from selected effect data.

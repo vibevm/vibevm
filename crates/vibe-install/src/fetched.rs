@@ -40,6 +40,8 @@ pub struct Fetched {
     /// was fetched normally; Some binds deferred checkout to admitted bytes.
     pub in_place: Option<vibe_registry::PreparedInPlace>,
     pub configuration: Option<vibe_core::manifest::PackageConfiguration>,
+    /// Fresh source-admitted delivery rows, never synthesized from cache.
+    pub configured_subskills: Vec<vibe_core::manifest::LockedSubskill>,
 }
 
 /// Load the workspace lockfile, or an empty one stamped with the

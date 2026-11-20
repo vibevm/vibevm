@@ -317,7 +317,7 @@ pub(crate) fn locked_package_from_fetched(
             .iter()
             .cloned()
             .collect(),
-        subskills_active: Vec::new(),
+        subskills_active: f.configured_subskills.clone(),
         describes: c.package_meta().describes.as_ref().map(|p| p.to_string()),
         language: language.map(str::to_string),
         // Record the package's declared materialization so destructive ops
@@ -435,6 +435,7 @@ mod tests {
             embedded_sources: vec![],
             in_place: None,
             configuration: None,
+            configured_subskills: Vec::new(),
         };
         for kind in [
             None,

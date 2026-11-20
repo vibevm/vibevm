@@ -222,6 +222,7 @@ fn exercise(filter: bool) {
             embedded_sources: vec![],
             in_place: Some(prepared),
             configuration: None,
+            configured_subskills: Vec::new(),
         }],
         resolution,
         workspace: Workspace::load(&project).unwrap(),

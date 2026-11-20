@@ -33,6 +33,7 @@ fn fixture(
         embedded_sources: vec![],
         in_place: None,
         configuration: None,
+        configured_subskills: Vec::new(),
     };
     Ok((temp, lock, fetched))
 }

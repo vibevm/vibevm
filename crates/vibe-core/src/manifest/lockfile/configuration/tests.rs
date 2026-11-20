@@ -220,6 +220,6 @@ fn automatic_basis_requires_twelve_and_validates_historical_omission() {
         .definition_fingerprint = "invalid".into();
     assert!(read(&fingerprint).is_err());
     let mut future = written;
-    future.meta.schema_version = 13;
+    future.meta.schema_version = CURRENT_SCHEMA_VERSION + 1;
     assert!(read(&future).is_err());
 }

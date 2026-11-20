@@ -284,6 +284,29 @@ impl McpTool for ReadSubskillMcpTool {
                 ))
             })?;
 
+        if sub.source_witness.is_some() || lockfile.configurations.contains_key(package) {
+            let bytes = vibe_registry::subskill_witness::read_configured_subskill(
+                &ctx.store_root,
+                entry,
+                sub,
+            )
+            .map_err(|error| {
+                ToolError::Internal(format!(
+                    "configured subskill verification refused: {error:#}"
+                ))
+            })?;
+            let text = String::from_utf8(bytes)
+                .map_err(|_| ToolError::Internal("configured subskill is not UTF-8".into()))?;
+            let path = machine_json_path(&sub.cache_files[0]);
+            let content = format!(
+                "--- {path}\n{text}{}\n",
+                if text.ends_with('\n') { "" } else { "\n" }
+            );
+            return Ok(ToolOutput::ok(
+                json!({ "package": package, "subskill_path": sub.path, "delivery": sub.delivery, "describes": sub.describes, "paths": [path], "content": content }),
+            ));
+        }
+
         // Per PROP-003 §2.5.0: eager / lazy-push subskills read from the
         // project tree; lazy-pull subskills never touch it and read from
         // the machine-global package store. The lockfile carries
@@ -422,6 +445,12 @@ impl McpTool for MaterialiseSubskillMcpTool {
                     "subskill `{subskill_path}` is not active on `{package}`"
                 ))
             })?;
+        if sub.source_witness.is_some() || lockfile.configurations.contains_key(package) {
+            return Err(ToolError::InvalidArguments(
+                "configured lazy-pull selection grants read-only delivery, not materialisation"
+                    .into(),
+            ));
+        }
         if sub.delivery != "lazy-pull" {
             return Ok(ToolOutput::ok(json!({
                 "package": package,

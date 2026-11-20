@@ -15,6 +15,8 @@ tokio.workspace = true
 command-group = "=5.0.1"
 specmark.workspace = true
 vibe-core.workspace = true
+# Held bounded local-source and configured lazy-pull member observations.
+vibe-safefs.workspace = true
 vibe-net.workspace = true
 # The pure renderer of PROP-075: TOML text in, TOML text out. Fetching,
 # caching, offline policy and store materialisation are this crate's
