@@ -1,6 +1,8 @@
-# `vibe.lock` — schema reference
+# `vibe.lock` — historical schema5 reference
 
-Authoritative reference for the `vibe.lock` file at the root of every vibevm project. The lockfile is the source of truth for what is installed; `vibe list` reads it, `vibe uninstall` reads it to find the `vibedeps/` slot to remove, `vibe reinstall` recomputes the materialised state from it, `vibe registry sync` walks it to refresh per-package clones. **It is committed to git.**
+> **Historical, not the current lock contract.** This page describes schema5 and retired layouts. Current NST project readers admit validated epochs7–18 with conditional writers. For upgrades, actual old-client outcomes and recovery preserving original choices, read [Common configuration compatibility](../docs/common-configuration-compatibility.md). Do not delete a rich lock or strip unfamiliar fields to follow this page's old regeneration advice.
+
+Historical reference for the `vibe.lock` file at the root of every vibevm project. The lockfile is the source of truth for what is installed; `vibe list` reads it, `vibe uninstall` reads it to find the `vibedeps/` slot to remove, `vibe reinstall` recomputes the materialised state from it, `vibe registry sync` walks it to refresh per-package clones. **It is committed to git.**
 
 The file is TOML 1.0. Schema is defined by [`crates/vibe-core/src/manifest/lockfile.rs`](../crates/vibe-core/src/manifest/lockfile.rs); spec text in [`VIBEVM-SPEC.md` §7.4](../VIBEVM-SPEC.md). Identity model in [`PROP-002 §2.1`](../spec/modules/vibe-registry/PROP-002-decentralized-registry.md#identity).
 
@@ -26,7 +28,7 @@ Every key is `deny_unknown_fields` — a stray field is a hard parse error, surf
 | --- | --- | --- | --- |
 | `generated_by` | string | yes | Identity of the writer. Production: `vibe <version>`. Tests / fixtures: anything; checked only as a debugging breadcrumb, never parsed for behaviour. |
 | `generated_at` | string | yes | RFC-3339 UTC timestamp at the moment the lockfile was written. Updated on every successful `register_installed` / `unregister_installed` call. |
-| `schema_version` | uint | yes | Lockfile-format major version. Must be `5` — `Lockfile::read` rejects any other value. Earlier schema versions (1–4) are not read; the fix for an old lockfile is always to regenerate it with `vibe install`. vibevm is pre-release, so there is no on-disk migration path. |
+| `schema_version` | uint | yes | Historical schema5 version field. This row is not current reader/writer policy; see [current conditional epochs and preservation-first recovery](../docs/common-configuration-compatibility.md). Do not regenerate rich history merely to satisfy an older reader. |
 | `solver` | string | no | Identity of the depsolver that produced this lockfile, e.g. `"resolvo-0.x"` or `"naive-1"`. Lets a future re-resolve compare-and-replay deterministically. Absent for pre-resolver Phase-A installs (the install pipeline didn't drive a solver). |
 | `root_dependencies` | array of pkgref strings | no | Packages the user directly asked for (`vibe install <pkgref>` arguments), distinct from transitives the solver pulled in. Drives `vibe uninstall` semantics: removing a root drops its entry; removing a pure transitive is rejected. Empty (absent) when no `vibe install` has run yet, or when every install was via legacy paths that didn't track roots. |
 
@@ -65,7 +67,7 @@ The TOML serializer emits fields in declaration order — `[meta]` first with it
 
 ## Schema versioning
 
-`Lockfile::read` accepts only `schema_version = 5`. An older lockfile (schema 1–4) is **rejected** — there is no read-path migration. The fix is always to regenerate: delete `vibe.lock` (or just run `vibe install`) and let the resolver write a fresh v5 file. vibevm is pre-release, so no on-disk migration path is provided and none is needed.
+For the historical schema5 implementation described here, earlier schemas1–4 were rejected without migration. **That historical reset procedure must not be applied to current rich configuration history.** Current conditional epochs, strict refusal and preservation-first recovery are documented in [Common configuration compatibility](../docs/common-configuration-compatibility.md). In particular, submitted originals and source/member witnesses may exist only in retained history; do not delete or hand-downgrade them.
 
 ## Tooling examples
 

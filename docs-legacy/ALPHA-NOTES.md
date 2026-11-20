@@ -10,7 +10,9 @@ While `public = false`, breaking changes are free and unmigrated. Manifests, loc
 
 ## Recovery after a breaking update
 
-Start with the normal refresh:
+**Current rich configuration exception:** before any update/reset, read [Common configuration compatibility](../docs/common-configuration-compatibility.md). A rich `vibe.lock` can retain submitted original answers and independent source/member witnesses that a fresh resolve cannot reconstruct. Preserve the consumer manifests, exact lock and required pinned payload/evidence; use a compatible client. Do not strip fields, lower epochs or delete rich history to bypass an old reader's refusal. The older generic reset examples below apply only after independently establishing that no such original/history or resume dependency would be lost; they are not an NST migration procedure.
+
+For an admitted compatible client and preserved inputs, the normal refresh is:
 
 ```bash
 vibe update --all

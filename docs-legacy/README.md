@@ -31,6 +31,7 @@ Every page above was checked against the 1.0.0 binary's live `--help` output. Fo
 
 ## Focused operator guides
 
+- [Common configuration compatibility](../docs/common-configuration-compatibility.md) — current NST conditional lock epochs12–18, actual old-client refusals, read-only/apply boundaries and preservation-first recovery.
 - [`version-syntax.md`](version-syntax.md) — package constraints and exact pins.
 - [`git-source-dependencies.md`](git-source-dependencies.md) — direct git package declarations.
 - [`registry-auth.md`](registry-auth.md) — private-registry authentication modes.
