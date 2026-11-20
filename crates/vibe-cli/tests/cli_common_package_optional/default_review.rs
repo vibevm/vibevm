@@ -6029,3 +6029,175 @@ fn choice_new_allowed_values_forced_update_refuses_but_valid_fallback_survives()
         assert_eq!(super::workspace::semantic_snapshot(&f.project), before);
     }
 }
+
+#[test]
+fn public_path_lexical_and_host_boundary_qualification() {
+    for world in [
+        "missing",
+        "empty",
+        "wrong-type",
+        "relative",
+        "absolute",
+        "present-required",
+        "absent-required",
+        "present-optional",
+        "absent-optional",
+        "string-control",
+    ] {
+        for alternate_cwd in [false, true] {
+            if alternate_cwd && world != "relative" {
+                continue;
+            }
+            let f = Fixture::new(false);
+            let source = f.registry.join(GROUP).join(DRIVER).join("v1.0.0/vibe.toml");
+            let kind = if world == "string-control" {
+                "string"
+            } else {
+                "path"
+            };
+            let required = world.ends_with("required");
+            let must_exist = if required {
+                "must_exist=true\n"
+            } else if kind == "path" {
+                "must_exist=false\n"
+            } else {
+                ""
+            };
+            write(
+                &source,
+                fs::read_to_string(&source).unwrap()
+                    + &format!(
+                        "\n[[configuration.parameters]]\nid='location'\nname='Location'\ntype='{kind}'\nrequired=true\n{must_exist}"
+                    ),
+            );
+            write(
+                &f.project.join("present path"),
+                "SYNTHETIC_PATH_TARGET_NEVER_READ\n",
+            );
+            let absolute = f.project.join("present path");
+            let value = match world {
+                "missing" => None,
+                "empty" => Some("''".to_owned()),
+                "wrong-type" => Some("0".to_owned()),
+                "absolute" => Some(format!("'{}'", absolute.display())),
+                "present-required" | "present-optional" => Some("'present path'".to_owned()),
+                "absent-required" | "absent-optional" => Some("'absent path'".to_owned()),
+                _ => Some("'relative path with spaces'".to_owned()),
+            };
+            let request = f.project.join("vibe.toml");
+            let mut text = fs::read_to_string(&request)
+                .unwrap()
+                .replace("version='^1'", "version='=1.0.0'");
+            if let Some(value) = &value {
+                text=text.replace("selections={extra={intent='exact',members=['disabled']}}}",&format!("selections={{extra={{intent='exact',members=['disabled']}}}},parameters={{location={value}}}}}"));
+            }
+            write(&request, text);
+            let original = Manifest::read(&request).unwrap().requires.configurations
+                [&coordinate(DRIVER)]
+                .clone();
+            let definition = Manifest::read(&source).unwrap().configuration.unwrap();
+            let normalized = definition.normalize_input(&original, "./vibe.toml");
+            assert_eq!(normalized.is_ok(), !matches!(world, "empty" | "wrong-type"));
+            if let Ok(normalized) = &normalized {
+                if world == "missing" {
+                    assert!(!normalized.parameters.contains_key("location"));
+                } else {
+                    assert_eq!(
+                        normalized.parameters["location"],
+                        original.parameters["location"]
+                    );
+                }
+            }
+            println!(
+                "path world={world} alternate_cwd={alternate_cwd} original={original:?} normalized={normalized:?}"
+            );
+            let other = f.root.join("different-cwd");
+            fs::create_dir_all(&other).unwrap();
+            write(
+                &other.join("relative path with spaces"),
+                "DIFFERENT_CWD_SENTINEL\n",
+            );
+            let before = super::workspace::semantic_snapshot(&f.project);
+            let registry = preview_scratch_snapshot(&f.registry);
+            let other_before = preview_scratch_snapshot(&other);
+            let authored = fs::read(&request).unwrap();
+            let cwd = if alternate_cwd { &other } else { &f.project };
+            let out = f
+                .user
+                .vibe()
+                .current_dir(cwd)
+                .env("HOME", f.root.join("home"))
+                .args([
+                    "install",
+                    "--path",
+                    f.project.to_str().unwrap(),
+                    "--offline",
+                    "--assume-yes",
+                    "--json",
+                ])
+                .output()
+                .unwrap();
+            let diagnostic = format!(
+                "{}{}",
+                String::from_utf8_lossy(&out.stdout),
+                String::from_utf8_lossy(&out.stderr)
+            );
+            println!(
+                "path world={world} alternate_cwd={alternate_cwd} status={} diagnostic={diagnostic}",
+                out.status
+            );
+            if world == "string-control" {
+                assert!(out.status.success(), "{diagnostic}");
+                let lock = f.lock();
+                let record = &lock.configurations[&coordinate(DRIVER)];
+                assert_eq!(
+                    record
+                        .selected_parameters(vibe_core::PackageKind::Flow)
+                        .unwrap()["location"],
+                    original.parameters["location"]
+                );
+                assert!(
+                    record
+                        .selected_data(vibe_core::PackageKind::Flow)
+                        .unwrap()
+                        .is_empty()
+                );
+                assert!(f.slot(DRIVER).exists());
+                assert!(f.static_boot().contains(DRIVER_MARKER));
+                let before = super::workspace::semantic_snapshot(&f.project);
+                f.install_ok();
+                assert_eq!(super::workspace::semantic_snapshot(&f.project), before);
+            } else {
+                assert!(!out.status.success(), "{diagnostic}");
+                if matches!(world, "empty" | "wrong-type") {
+                    assert!(
+                        diagnostic.contains("configuration.parameters.location")
+                            && diagnostic.contains(if world == "empty" {
+                                "a path must be nonempty"
+                            } else {
+                                "not a path value"
+                            }),
+                        "{diagnostic}"
+                    );
+                } else {
+                    assert!(diagnostic.contains("only explicitly supplied required public bool parameters without defaults are connected"),"{diagnostic}");
+                }
+                assert_eq!(super::workspace::semantic_snapshot(&f.project), before);
+                assert!(!f.project.join("vibe.lock").exists());
+                assert!(!f.project.join("effects.log").exists());
+                for name in [DRIVER, BASE, EXTRA] {
+                    assert!(!f.slot(name).exists());
+                }
+            }
+            assert_eq!(fs::read(&request).unwrap(), authored);
+            assert_eq!(preview_scratch_snapshot(&f.registry), registry);
+            assert_eq!(preview_scratch_snapshot(&other), other_before);
+            println!(
+                "path world={world} coordination={:?}",
+                preview_scratch_snapshot(&f.project.join(".vibe"))
+                    .as_ref()
+                    .map(|entries| entries.keys().collect::<Vec<_>>())
+            );
+        }
+    }
+}
