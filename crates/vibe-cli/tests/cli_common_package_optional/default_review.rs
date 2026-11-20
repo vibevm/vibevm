@@ -9507,3 +9507,130 @@ fn optional_bool_actual_prior_reader_writer_and_definition_drift() {
         assert_eq!(super::workspace::semantic_snapshot(&f.project), before);
     }
 }
+
+#[test]
+fn integrated_forward_subskill_and_config_data_share_one_actual_selection() {
+    const BODY: &str = "INERT_INTEGRATED_SUBSKILL_BODY\n";
+    for selected in [false, true] {
+        let f = exact_forward_fixture();
+        let request = f.project.join("vibe.toml");
+        if !selected {
+            write(
+                &request,
+                fs::read_to_string(&request)
+                    .unwrap()
+                    .replace("members=['enabled']", "members=['disabled']"),
+            );
+        }
+        let source = f.registry.join(GROUP).join(DRIVER).join("v1.0.0");
+        let manifest = source.join("vibe.toml");
+        let original = fs::read_to_string(&manifest).unwrap();
+        let needle = "effects = [{ kind = \"forward\", target = \"org.vibevm/oracle-extra\", feature = \"forwarded\", strength = \"strong\" }]";
+        let combined = "effects = [{ kind = \"forward\", target = \"org.vibevm/oracle-extra\", feature = \"forwarded\", strength = \"strong\" }, {kind='subskill',path='subskills/audit/SKILL.md'}, {kind='config-value',name='integrated'}]";
+        assert!(
+            original.contains(needle),
+            "fixture exact effect replacement required"
+        );
+        write(
+            &manifest,
+            original.replace(needle, combined)
+                + "\n[configuration.config_values]\nintegrated=false\n",
+        );
+        write(
+            &source.join("subskills/audit/vibe-subskill.toml"),
+            "[subskill]\npath='audit'\ndelivery='lazy-pull'\ndescription='Inert integration control'\n[content]\nfiles_written=['SKILL.md']\n",
+        );
+        write(&source.join("subskills/audit/SKILL.md"), BODY);
+        let authored = fs::read(&request).unwrap();
+        f.install_ok();
+        let lock = f.lock();
+        let parent = &lock.configurations[&coordinate(DRIVER)];
+        let row = lock.find(&GROUP.parse().unwrap(), DRIVER).unwrap();
+        assert!(parent.forwarded_inputs.is_empty());
+        assert_eq!(parent.consumers.len(), 1);
+        assert_eq!(f.slot(EXTRA).exists(), selected);
+        assert_eq!(f.static_boot().contains(EXTRA_MARKER), selected);
+        assert!(!f.static_boot().contains(BODY.trim()));
+        assert_eq!(f.hooks().get(BASE).copied(), Some(1));
+        assert_eq!(
+            f.hooks().get(EXTRA).copied().unwrap_or(0),
+            usize::from(selected)
+        );
+        assert_eq!(row.subskills_active.len(), usize::from(selected));
+        assert_eq!(
+            parent
+                .selected_data(vibe_core::PackageKind::Flow)
+                .unwrap()
+                .get("integrated"),
+            selected.then_some(&vibe_core::manifest::ParameterValue::Bool(false))
+        );
+        if selected {
+            let child = &lock.configurations[&coordinate(EXTRA)];
+            assert!(child.consumers.is_empty());
+            assert_eq!(child.forwarded_inputs.len(), 1);
+            let forwarded = &child.forwarded_inputs[0];
+            assert_eq!(forwarded.source_name.as_str(), DRIVER);
+            assert_eq!(forwarded.source_feature, "enabled");
+            assert_eq!(forwarded.source_content_hash, row.content_hash);
+            assert_eq!(forwarded.target_feature, "forwarded");
+            assert_eq!(
+                child.selected_data(vibe_core::PackageKind::Flow).unwrap()["forwarded"],
+                vibe_core::manifest::ParameterValue::Bool(true)
+            );
+            let witness = row.subskills_active[0].source_witness.as_ref().unwrap();
+            assert_eq!(witness.package_content_hash, row.content_hash);
+            assert_eq!(witness.member.path, "subskills/audit/SKILL.md");
+            assert!(
+                read_subskill(&f)["content"]
+                    .as_str()
+                    .unwrap()
+                    .contains(BODY.trim())
+            );
+        } else {
+            assert!(!lock.configurations.contains_key(&coordinate(EXTRA)));
+            assert!(read_subskill(&f).get("refused").is_some());
+            assert!(!f.project.join("subskills/audit/SKILL.md").exists());
+        }
+        let before = super::workspace::semantic_snapshot(&f.project);
+        let show = f
+            .user
+            .vibe()
+            .args([
+                "show",
+                "configuration-data",
+                "--path",
+                f.project.to_str().unwrap(),
+                "--json",
+            ])
+            .output()
+            .unwrap();
+        assert!(show.status.success());
+        let report: serde_json::Value = serde_json::from_slice(&show.stdout).unwrap();
+        let parent = report["packages"]
+            .as_array()
+            .unwrap()
+            .iter()
+            .find(|p| p["package"] == coordinate(DRIVER))
+            .unwrap();
+        assert_eq!(
+            parent["values"].get("integrated"),
+            selected.then_some(&serde_json::Value::Bool(false))
+        );
+        let transport=f.user.vibe().args(["--offline","mcp","serve","--path",f.project.to_str().unwrap()]).write_stdin(serde_json::json!({"jsonrpc":"2.0","id":1,"method":"tools/call","params":{"name":"read_subskill","arguments":{"package":coordinate(DRIVER),"subskill_path":"audit"}}}).to_string()+"\n").output().unwrap();
+        assert!(transport.status.success());
+        assert_eq!(
+            String::from_utf8_lossy(&transport.stdout).contains(BODY.trim()),
+            selected
+        );
+        f.install_ok();
+        assert_eq!(super::workspace::semantic_snapshot(&f.project), before);
+        assert_eq!(fs::read(&request).unwrap(), authored);
+        assert_eq!(
+            read_subskill(&f)
+                .get("content")
+                .and_then(serde_json::Value::as_str)
+                .is_some(),
+            selected
+        );
+    }
+}
