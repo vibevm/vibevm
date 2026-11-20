@@ -273,3 +273,5 @@ Historical reviews distinguish populated Git provenance from no-Gitlinks receipt
 Historical init and lifecycle changes distinguish an authored dialect from a fallback and a replay disposition from mere correlation with an existing run. Neither source review reran the old fixtures.
 
 Historical state readers distinguish the named deployment child from the directory actually held, and a matching lifecycle header from a terminal result. No deployment or replay was run.
+
+Three historical revalidation paths were checked: canonical composition bytes after proof, saved witness bytes across fresh checking, and host-selected generation before deployment commit. None establishes future pathname stability or new execution.
