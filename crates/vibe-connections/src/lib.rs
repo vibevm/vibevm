@@ -260,3 +260,5 @@ impl Store {
 
 mod setup;
 pub use setup::{SetupPreview, SetupRow};
+mod default_scope;
+pub use default_scope::{DefaultScope, DefaultScopePreview, DefaultScopeRow};

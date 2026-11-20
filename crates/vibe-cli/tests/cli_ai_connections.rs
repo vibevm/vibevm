@@ -1649,3 +1649,209 @@ fn secret_references_preview_matches_removal_inventory_without_mutation() {
     assert_eq!(fs::read(&key).unwrap(), before);
     assert_eq!(fs::read(&ai).unwrap(), ai_before);
 }
+
+#[cfg(unix)]
+#[test]
+fn default_scope_updates_once_preserves_native_and_rejects_stale_subject() {
+    let f = F::new();
+    let secret = f.json(
+        &[
+            "secrets",
+            "create",
+            "--kind",
+            "api-key",
+            "--label",
+            "Synthetic",
+            "--value-stdin",
+        ],
+        Some(VALUE.as_bytes()),
+    );
+    let sid = secret["items"][0]["id"].as_str().unwrap();
+    let add = |label: &str| {
+        f.json(
+            &[
+                "ai",
+                "connections",
+                "add",
+                "--label",
+                label,
+                "--endpoint",
+                "http://127.0.0.1:32123/v1",
+                "--api-kind",
+                "openai-chat-completions",
+                "--default-model",
+                "synthetic",
+                "--secret-ref",
+                sid,
+            ],
+            None,
+        )
+    };
+    let a = add("A");
+    let aid = a["items"].as_object().unwrap().keys().next().unwrap();
+    let b = add("B");
+    let bid = b["items"]
+        .as_object()
+        .unwrap()
+        .keys()
+        .find(|id| *id != aid)
+        .unwrap();
+    let selected = f.json(
+        &[
+            "ai",
+            "connections",
+            "default",
+            "set",
+            aid,
+            "--expect-store",
+            &b["store_revision"].to_string(),
+        ],
+        None,
+    );
+    let pi = f.json(
+        &[
+            "ai",
+            "bindings",
+            "set",
+            "pi",
+            "--mode",
+            "inherit-default",
+            "--expect-store",
+            &selected["store_revision"].to_string(),
+        ],
+        None,
+    );
+    f.json(
+        &[
+            "ai",
+            "bindings",
+            "set",
+            "qwen",
+            "--mode",
+            "connection",
+            "--connection",
+            aid,
+            "--expect-store",
+            &pi["binding"]["store_revision"].to_string(),
+        ],
+        None,
+    );
+    let path = f.0.path().join("secrets/ai/index.toml");
+    let keys = fs::read(f.0.path().join("secrets/index.toml")).unwrap();
+    let preview = |scope: &str| {
+        f.json(
+            &["ai", "setup", "--set-default", bid, "--scope", scope],
+            None,
+        )
+    };
+    let before = fs::read(&path).unwrap();
+    let stale = preview("managed-overrides");
+    let p = preview("default-only");
+    let schema: serde_json::Value = serde_json::from_str(include_str!(
+        "../../../schemas/ai_default_scope_result.schema.json"
+    ))
+    .unwrap();
+    let validator = jsonschema::validator_for(&schema).unwrap();
+    assert!(validator.is_valid(&p));
+    let golden: serde_json::Value = serde_json::from_str(include_str!(
+        "../../../formats/corpora/ai-default-scope-result/e1/preview.json"
+    ))
+    .unwrap();
+    assert!(validator.is_valid(&golden));
+    let mut extra = p.clone();
+    extra["value"] = serde_json::json!("forbidden");
+    assert!(!validator.is_valid(&extra));
+    assert_eq!(fs::read(&path).unwrap(), before);
+    let applied = f.json(
+        &[
+            "ai",
+            "setup",
+            "--set-default",
+            bid,
+            "--scope",
+            "default-only",
+            "--apply-preview",
+            p["preview"]["preview_id"].as_str().unwrap(),
+        ],
+        None,
+    );
+    assert_eq!(
+        f.json(&["ai", "bindings", "show", "pi"], None)["binding"]["connection"],
+        bid.as_str()
+    );
+    assert_eq!(
+        f.json(&["ai", "bindings", "show", "qwen"], None)["binding"]["connection"],
+        aid.as_str()
+    );
+    let current = fs::read(&path).unwrap();
+    assert!(
+        !f.run(
+            &[
+                "ai",
+                "setup",
+                "--set-default",
+                bid,
+                "--scope",
+                "managed-overrides",
+                "--apply-preview",
+                stale["preview"]["preview_id"].as_str().unwrap()
+            ],
+            None
+        )
+        .status
+        .success()
+    );
+    assert_eq!(fs::read(&path).unwrap(), current);
+    let p = preview("managed-overrides");
+    let all = f.json(
+        &[
+            "ai",
+            "setup",
+            "--set-default",
+            bid,
+            "--scope",
+            "managed-overrides",
+            "--apply-preview",
+            p["preview"]["preview_id"].as_str().unwrap(),
+        ],
+        None,
+    );
+    assert_eq!(
+        all["store_revision"].as_u64().unwrap(),
+        applied["store_revision"].as_u64().unwrap() + 1
+    );
+    assert_eq!(
+        f.json(&["ai", "bindings", "show", "qwen"], None)["binding"]["mode"],
+        "inherit-default"
+    );
+    assert_eq!(
+        f.json(&["ai", "bindings", "show", "claude"], None)["binding"]["mode"],
+        "native"
+    );
+    let before = fs::read(&path).unwrap();
+    let p = preview("managed-overrides");
+    let repeat = f.json(
+        &[
+            "ai",
+            "setup",
+            "--set-default",
+            bid,
+            "--scope",
+            "managed-overrides",
+            "--apply-preview",
+            p["preview"]["preview_id"].as_str().unwrap(),
+        ],
+        None,
+    );
+    assert_eq!(repeat["store_revision"], all["store_revision"]);
+    assert_eq!(fs::read(&path).unwrap(), before);
+    assert_eq!(
+        fs::read(f.0.path().join("secrets/index.toml")).unwrap(),
+        keys
+    );
+    assert!(
+        !f.run(&["ai", "setup", "--set-default", bid], None)
+            .status
+            .success()
+    );
+}

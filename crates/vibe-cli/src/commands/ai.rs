@@ -22,8 +22,30 @@ pub fn run(ctx: &output::Context, args: AiArgs, cancel: &CancellationToken) -> R
             from_agent_alias,
             mode,
             connection,
+            set_default,
+            scope,
             apply_preview,
         } => {
+            if let Some(target) = set_default {
+                let scope = match scope
+                    .ok_or_else(|| anyhow::anyhow!("explicit default scope required"))?
+                {
+                    crate::cli::AiDefaultScope::DefaultOnly => {
+                        vibe_connections::DefaultScope::DefaultOnly
+                    }
+                    crate::cli::AiDefaultScope::ManagedOverrides => {
+                        vibe_connections::DefaultScope::ManagedOverrides
+                    }
+                };
+                return setup::default_scope(
+                    ctx,
+                    &store,
+                    &parse_id(target)?,
+                    scope,
+                    apply_preview,
+                    cancel,
+                );
+            }
             return setup::run(
                 ctx,
                 &settings,

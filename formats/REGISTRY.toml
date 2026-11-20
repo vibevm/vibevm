@@ -2302,3 +2302,12 @@ foreign_parsers = "many"
 unknown_fields = "deny"
 corpus = "formats/corpora/secrets-references/e1"
 sunset = "none"
+
+[format.ai-default-scope-result]
+epoch = 1
+schema = "schemas/ai_default_scope_result.schema.json"
+recoverable = false
+foreign_parsers = "many"
+unknown_fields = "deny"
+corpus = "formats/corpora/ai-default-scope-result/e1"
+sunset = "none"

@@ -1,5 +1,11 @@
 # Corporate-env campaign: format and behaviour changes
 
+## CORP-FMT-066 — explicit atomic default scope
+
+Implementation candidate, 2026-11-21. `ai setup --set-default ID --scope default-only|managed-overrides` requires an explicit scope and conflicts with agent/alias/mode/connection setup. Separate closed `vibe-ai-default-scope-result/1` contains before/after default and canonical binding rows, plus a distinct `ai-default-scope/1:sha256:...` subject. Old setup tokens do not authorize it. Preview binds lossless settings root, exact AI index, target/scope and before/after rows; apply rechecks the snapshot under inventory then store lock and publishes one index/revision iff changed.
+
+Default-only preserves explicit bindings; inherited Pi observes the new default. Managed-overrides converts only existing supported managed binding rows to inherit-default, never creates rows for native/unmanaged/unsupported agents. Keep/Escape/stale/invalid inputs preserve state; fresh no-op retains revision. Current AI index schema2/3 already represents selection/bindings losslessly, so no persistent epoch/migration. No credentials, provider calls or native auth changes. New report schema/registry/golden are distinct from persistence; deferred adapter preparation remains excluded from committed owner projections.
+
 ## CORP-FMT-065 — attended mixed metadata setup with explicit compatibility skip
 
 Implementation candidate, 2026-11-21. The existing attended setup multiselect offers Pi, Qwen and Claude. Selecting Claude explicitly skips only connection metadata setup, explains absent native OpenAI compatibility/future separate work and preserves native authentication; it is not installation failure. Supported Pi/Qwen targets alone enter the unchanged atomic planner. Before default-No consent, display selected alias/preset targets, old/proposed rows and unselected binding metadata that will remain unchanged. Claude-only selection completes informationally without writing. Existing typed `--agent` mixed/unsupported requests retain strict refusal, with no new flag, schema, preview protocol or storage migration. No agent installation, native credential injection or provider request is implied.

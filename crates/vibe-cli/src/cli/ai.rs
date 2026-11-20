@@ -17,6 +17,10 @@ pub enum AiCommand {
         mode: Option<AiBindingMode>,
         #[arg(long)]
         connection: Option<String>,
+        #[arg(long, requires = "scope", conflicts_with_all = ["agents", "from_agent_alias", "mode", "connection"])]
+        set_default: Option<String>,
+        #[arg(long, value_enum, requires = "set_default")]
+        scope: Option<AiDefaultScope>,
         #[arg(long,value_parser=setup_preview_id)]
         apply_preview: Option<String>,
     },
@@ -101,12 +105,22 @@ pub enum AiBindingMode {
     Connection,
 }
 
+#[derive(Debug, Clone, Copy, clap::ValueEnum)]
+pub enum AiDefaultScope {
+    DefaultOnly,
+    ManagedOverrides,
+}
+
 fn setup_preview_id(raw: &str) -> Result<String, String> {
-    if raw.strip_prefix("ai-setup/1:sha256:").is_some_and(|h| {
-        h.len() == 64
-            && h.bytes()
-                .all(|b| b.is_ascii_digit() || (b'a'..=b'f').contains(&b))
-    }) {
+    if raw
+        .strip_prefix("ai-setup/1:sha256:")
+        .or_else(|| raw.strip_prefix("ai-default-scope/1:sha256:"))
+        .is_some_and(|h| {
+            h.len() == 64
+                && h.bytes()
+                    .all(|b| b.is_ascii_digit() || (b'a'..=b'f').contains(&b))
+        })
+    {
         Ok(raw.into())
     } else {
         Err("expected a version1 AI setup preview identifier".into())

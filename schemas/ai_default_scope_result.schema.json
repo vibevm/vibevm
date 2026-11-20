@@ -1,0 +1,108 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "protocol",
+    "ok",
+    "applied",
+    "store_revision",
+    "preview"
+  ],
+  "properties": {
+    "protocol": {
+      "const": "vibe-ai-default-scope-result/1"
+    },
+    "ok": {
+      "const": true
+    },
+    "applied": {
+      "type": "boolean"
+    },
+    "store_revision": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "preview": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "protocol",
+        "preview_id",
+        "scope",
+        "old_default",
+        "proposed_default",
+        "rows"
+      ],
+      "properties": {
+        "protocol": {
+          "const": "vibe-ai-default-scope/1"
+        },
+        "preview_id": {
+          "type": "string",
+          "pattern": "^ai-default-scope/1:sha256:[0-9a-f]{64}$"
+        },
+        "scope": {
+          "enum": [
+            "default-only",
+            "managed-overrides"
+          ]
+        },
+        "old_default": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "proposed_default": {
+          "type": "string"
+        },
+        "rows": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "harness",
+              "old_mode",
+              "old_connection",
+              "proposed_mode",
+              "proposed_connection"
+            ],
+            "properties": {
+              "harness": {
+                "type": "string"
+              },
+              "old_mode": {
+                "enum": [
+                  "native",
+                  "inherit-default",
+                  "connection"
+                ]
+              },
+              "old_connection": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "proposed_mode": {
+                "enum": [
+                  "native",
+                  "inherit-default",
+                  "connection"
+                ]
+              },
+              "proposed_connection": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

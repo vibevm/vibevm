@@ -144,3 +144,49 @@ pub(super) fn run(
     }
     Ok(())
 }
+
+pub(super) fn default_scope(
+    ctx: &output::Context,
+    store: &vibe_connections::Store,
+    target: &vibe_secrets::SecretId,
+    scope: vibe_connections::DefaultScope,
+    response: Option<String>,
+    cancel: &CancellationToken,
+) -> Result<()> {
+    cancel.checkpoint()?;
+    let preview = store.default_scope_preview(target, scope)?;
+    let attended = !ctx.is_json()
+        && !ctx.is_unattended()
+        && std::io::stdin().is_terminal()
+        && std::io::stderr().is_terminal();
+    let mut response = response;
+    if attended && response.is_none() {
+        println!("{}", serde_json::to_string_pretty(&preview)?);
+        let choices = crate::output::prompts::named(&[
+            "Keep current default and bindings",
+            "Apply exactly this default scope",
+        ]);
+        if crate::output::prompts::choose_opt_interruptible(
+            "Review default and managed overrides — Escape keeps state",
+            &choices,
+            0,
+        )? != Some(1)
+        {
+            return Ok(());
+        }
+        response = Some(preview.preview_id.clone());
+    }
+    cancel.checkpoint()?;
+    let (applied, revision) = if let Some(response) = response {
+        (true, store.apply_default_scope(&preview, &response)?)
+    } else {
+        (false, store.list()?.store_revision)
+    };
+    let report = serde_json::json!({"protocol":"vibe-ai-default-scope-result/1","ok":true,"applied":applied,"store_revision":revision,"preview":preview});
+    if ctx.is_json() {
+        ctx.emit_json(&report)?;
+    } else {
+        println!("{}", serde_json::to_string_pretty(&report)?);
+    }
+    Ok(())
+}

@@ -5,6 +5,7 @@ use super::{ForeignParsers, FormatId, UnknownFields};
 impl FormatId {
     /// Every variant, in registry (sorted-id) order.
     pub const ALL: &[FormatId] = &[
+        FormatId::AiDefaultScopeResult,
         FormatId::ApplicationAgentHook,
         FormatId::ApplicationAgentHookResult,
         FormatId::ApplicationImportInput,
@@ -230,6 +231,7 @@ impl FormatId {
     /// The registry id, verbatim (e.g. `cli-init-report`).
     pub fn id(self) -> &'static str {
         match self {
+            FormatId::AiDefaultScopeResult => "ai-default-scope-result",
             FormatId::ApplicationAgentHook => "application-agent-hook",
             FormatId::ApplicationAgentHookResult => "application-agent-hook-result",
             FormatId::ApplicationImportInput => "application-import-input",
@@ -458,6 +460,7 @@ impl FormatId {
     /// The epoch this format lives in (PROP-044 §4.6 `##M-EPOCHS`).
     pub fn epoch(self) -> u32 {
         match self {
+            FormatId::AiDefaultScopeResult => 1,
             FormatId::ApplicationAgentHook => 1,
             FormatId::ApplicationAgentHookResult => 1,
             FormatId::ApplicationImportInput => 1,
@@ -684,6 +687,7 @@ impl FormatId {
     /// Whether the format is rebuildable without a human (PROP-044 §5).
     pub fn recoverable(self) -> bool {
         match self {
+            FormatId::AiDefaultScopeResult => false,
             FormatId::ApplicationAgentHook => true,
             FormatId::ApplicationAgentHookResult => true,
             FormatId::ApplicationImportInput => false,
@@ -910,6 +914,7 @@ impl FormatId {
     /// How many independent parsers read this format (PROP-044 §5).
     pub fn foreign_parsers(self) -> ForeignParsers {
         match self {
+            FormatId::AiDefaultScopeResult => ForeignParsers::Many,
             FormatId::ApplicationAgentHook => ForeignParsers::Many,
             FormatId::ApplicationAgentHookResult => ForeignParsers::Many,
             FormatId::ApplicationImportInput => ForeignParsers::Many,
@@ -1136,6 +1141,7 @@ impl FormatId {
     /// Policy for undeclared object members, independent of parser count.
     pub fn unknown_fields(self) -> UnknownFields {
         match self {
+            FormatId::AiDefaultScopeResult => UnknownFields::Deny,
             FormatId::ApplicationAgentHook => UnknownFields::Allow,
             FormatId::ApplicationAgentHookResult => UnknownFields::Allow,
             FormatId::ApplicationImportInput => UnknownFields::Deny,
