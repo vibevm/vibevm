@@ -4820,7 +4820,7 @@ fn zero_or_more_absent_default_and_guarded_automatic_remain_closed() {
             diagnostic.contains(if world == "absent" {
                 "automatic choice needs a declared exactly-one default"
             } else {
-                "only one unguarded zero-or-more default group"
+                "only one unguarded non-scalar choice default group"
             }),
             "{world}: {diagnostic}"
         );
@@ -4912,7 +4912,8 @@ fn remaining_choice_cardinalities_omitted_empty_one_two_public_qualification() {
                 cardinality == "one-or-more"
                     && matches!(world, "omitted-required" | "explicit-empty")
             );
-            let succeeds = world == "explicit-one"
+            let succeeds = world == "omitted-default"
+                || world == "explicit-one"
                 || (cardinality == "zero-or-one"
                     && matches!(world, "omitted-required" | "explicit-empty"))
                 || (cardinality == "one-or-more" && world == "explicit-two");
@@ -4934,12 +4935,31 @@ fn remaining_choice_cardinalities_omitted_empty_one_two_public_qualification() {
                 let lock = f.lock();
                 let record = &lock.configurations[&coordinate(DRIVER)];
                 assert_eq!(record.consumers.values().next().unwrap(), &original);
-                assert!(record.automatic_basis.is_none());
-                assert_eq!(lock.meta.schema_version, 8);
-                let selected = matches!(world, "explicit-one" | "explicit-two");
+                if world == "omitted-default" {
+                    let basis = record.automatic_basis.as_ref().unwrap();
+                    assert!(basis.consumer_choices.is_empty());
+                    let expected = if cardinality == "one-or-more" {
+                        vec!["disabled", "enabled"]
+                    } else {
+                        vec!["enabled"]
+                    };
+                    assert_eq!(
+                        basis.consumer_choice_sets.values().next().unwrap()["extra"],
+                        expected
+                    );
+                    assert_eq!(lock.meta.schema_version, 15);
+                } else {
+                    assert!(record.automatic_basis.is_none());
+                    assert_eq!(lock.meta.schema_version, 8);
+                }
+                let selected = matches!(world, "omitted-default" | "explicit-one" | "explicit-two");
                 let data = record.selected_data(vibe_core::PackageKind::Flow).unwrap();
                 assert_eq!(data.contains_key("enabled"), selected);
-                assert_eq!(data.contains_key("disabled"), world == "explicit-two");
+                assert_eq!(
+                    data.contains_key("disabled"),
+                    world == "explicit-two"
+                        || (world == "omitted-default" && cardinality == "one-or-more")
+                );
                 assert_eq!(
                     record.active_dependencies.contains(&coordinate(EXTRA)),
                     selected
@@ -4989,6 +5009,288 @@ fn remaining_choice_cardinalities_omitted_empty_one_two_public_qualification() {
                     .as_ref()
                     .map(|entries| entries.keys().collect::<Vec<_>>())
             );
+        }
+    }
+}
+
+fn remaining_default_fixture(cardinality: &str, defaults: &str) -> Fixture {
+    let f = multi_default_fixture(defaults);
+    let source = f.registry.join(GROUP).join(DRIVER).join("v1.0.0/vibe.toml");
+    write(
+        &source,
+        fs::read_to_string(&source).unwrap().replace(
+            "cardinality = \"zero-or-more\"",
+            &format!("cardinality = \"{cardinality}\""),
+        ),
+    );
+    let request = f.project.join("vibe.toml");
+    write(
+        &request,
+        fs::read_to_string(&request)
+            .unwrap()
+            .replace("version='^1'", "version='=1.0.0'"),
+    );
+    f
+}
+
+#[test]
+fn remaining_defaults_optional_empty_absent_matching_and_tamper() {
+    for cardinality in ["zero-or-one", "one-or-more"] {
+        for world in [
+            "normal",
+            "empty",
+            "absent",
+            "matching",
+            "missing",
+            "extra",
+            "wrong-consumer",
+            "wrong-members",
+            "stale",
+        ] {
+            let defaults = if world == "empty" {
+                "[]"
+            } else if cardinality == "zero-or-one" {
+                "[\"enabled\"]"
+            } else {
+                "[\"enabled\",\"disabled\"]"
+            };
+            let f = remaining_default_fixture(cardinality, defaults);
+            let source = f.registry.join(GROUP).join(DRIVER).join("v1.0.0/vibe.toml");
+            if world == "absent" {
+                write(
+                    &source,
+                    fs::read_to_string(&source)
+                        .unwrap()
+                        .replace(&format!("defaults = {defaults}"), ""),
+                );
+            }
+            if world == "matching" {
+                let request = f.project.join("vibe.toml");
+                let members = if cardinality == "zero-or-one" {
+                    "['enabled']"
+                } else {
+                    "['enabled','disabled']"
+                };
+                write(&request,fs::read_to_string(&request).unwrap().replace("configuration={policy='use-declared-defaults',default_features=false}",&format!("configuration={{policy='use-declared-defaults',default_features=false,selections={{extra={{intent='exact',members={members}}}}}}}")));
+            }
+            let authored = fs::read(f.project.join("vibe.toml")).unwrap();
+            let before = super::workspace::semantic_snapshot(&f.project);
+            let out = f.install();
+            if world == "absent" || (world == "empty" && cardinality == "one-or-more") {
+                assert!(!out.status.success());
+                assert_eq!(super::workspace::semantic_snapshot(&f.project), before);
+                continue;
+            }
+            assert!(
+                out.status.success(),
+                "{cardinality}/{world}: {}",
+                String::from_utf8_lossy(&out.stderr)
+            );
+            let mut lock = f.lock();
+            let record = lock.configurations.get_mut(&coordinate(DRIVER)).unwrap();
+            if world == "matching" {
+                assert!(record.automatic_basis.is_none());
+                assert_eq!(lock.meta.schema_version, 8);
+            } else {
+                let basis = record.automatic_basis.as_mut().unwrap();
+                match world {
+                    "missing" => {
+                        basis.consumer_choice_sets.clear();
+                    }
+                    "extra" => {
+                        basis
+                            .consumer_choice_sets
+                            .values_mut()
+                            .next()
+                            .unwrap()
+                            .insert("not-a-group".into(), vec![]);
+                    }
+                    "wrong-consumer" => {
+                        let value = basis.consumer_choice_sets.pop_first().unwrap().1;
+                        basis
+                            .consumer_choice_sets
+                            .insert("./foreign.toml".into(), value);
+                    }
+                    "wrong-members" => {
+                        basis
+                            .consumer_choice_sets
+                            .values_mut()
+                            .next()
+                            .unwrap()
+                            .insert(
+                                "extra".into(),
+                                vec!["disabled".into(), "enabled".into(), "unknown".into()],
+                            );
+                    }
+                    "stale" => basis.definition_fingerprint = "stale".into(),
+                    _ => {}
+                }
+            }
+            if matches!(
+                world,
+                "missing" | "extra" | "wrong-consumer" | "wrong-members" | "stale"
+            ) {
+                write(
+                    &f.project.join("vibe.lock"),
+                    toml::to_string(&lock).unwrap(),
+                );
+                let before = super::workspace::semantic_snapshot(&f.project);
+                assert!(Lockfile::read(f.project.join("vibe.lock")).is_err());
+                assert!(!f.install().status.success());
+                assert_eq!(super::workspace::semantic_snapshot(&f.project), before);
+            } else {
+                assert_eq!(f.slot(EXTRA).exists(), world != "empty");
+                let before = super::workspace::semantic_snapshot(&f.project);
+                f.install_ok();
+                assert_eq!(super::workspace::semantic_snapshot(&f.project), before);
+            }
+            assert_eq!(fs::read(f.project.join("vibe.toml")).unwrap(), authored);
+        }
+    }
+}
+
+#[test]
+fn remaining_defaults_prior_reader_writer_refuse_without_loss() {
+    let old = std::env::var_os("NST_REMAINING_OLD_CLI")
+        .expect("mandatory explicitly mounted pre-extension CLI");
+    for cardinality in ["zero-or-one", "one-or-more"] {
+        for empty in [false, true] {
+            if empty && cardinality == "one-or-more" {
+                continue;
+            }
+            for operation in ["reader", "writer"] {
+                let defaults = if empty {
+                    "[]"
+                } else if cardinality == "zero-or-one" {
+                    "[\"enabled\"]"
+                } else {
+                    "[\"enabled\",\"disabled\"]"
+                };
+                let f = remaining_default_fixture(cardinality, defaults);
+                f.install_ok();
+                let before = super::workspace::semantic_snapshot(&f.project);
+                let args = if operation == "reader" {
+                    vec![
+                        "show",
+                        "features",
+                        "--path",
+                        f.project.to_str().unwrap(),
+                        "--json",
+                    ]
+                } else {
+                    vec![
+                        "install",
+                        "--path",
+                        f.project.to_str().unwrap(),
+                        "--offline",
+                        "--assume-yes",
+                        "--json",
+                    ]
+                };
+                let out = std::process::Command::new(&old)
+                    .env_clear()
+                    .env("HOME", f.root.join("home"))
+                    .env("VIBE_SETTINGS", &f.user.settings)
+                    .env("VIBE_NO_DEFAULT_REGISTRY", "1")
+                    .env("PATH", "/usr/bin:/bin")
+                    .args(args)
+                    .output()
+                    .unwrap();
+                let diagnostic = format!(
+                    "{}{}",
+                    String::from_utf8_lossy(&out.stdout),
+                    String::from_utf8_lossy(&out.stderr)
+                );
+                println!(
+                    "prior remaining {cardinality} empty={empty} {operation} status={} diagnostic={diagnostic}",
+                    out.status
+                );
+                assert!(!out.status.success(), "{diagnostic}");
+                assert!(
+                    diagnostic.contains(
+                        "only unguarded exactly-one single-member defaults are connected"
+                    ),
+                    "{diagnostic}"
+                );
+                assert_eq!(super::workspace::semantic_snapshot(&f.project), before);
+            }
+        }
+    }
+}
+
+#[test]
+fn remaining_defaults_nonselected_candidate_and_update_drift_refuse() {
+    for cardinality in ["zero-or-one", "one-or-more"] {
+        let f = remaining_default_fixture(
+            cardinality,
+            if cardinality == "zero-or-one" {
+                "[\"enabled\"]"
+            } else {
+                "[\"enabled\",\"disabled\"]"
+            },
+        );
+        let old = f.registry.join(GROUP).join(DRIVER).join("v1.0.0");
+        let next = f.registry.join(GROUP).join(DRIVER).join("v1.1.0");
+        let text = fs::read_to_string(old.join("vibe.toml"))
+            .unwrap()
+            .replace("version='1.0.0'", "version='1.1.0'");
+        let text = if cardinality == "zero-or-one" {
+            text.replace("defaults = [\"enabled\"]", "defaults = [\"disabled\"]")
+        } else {
+            text.replace(
+                "defaults = [\"enabled\",\"disabled\"]",
+                "defaults = [\"disabled\"]",
+            )
+        };
+        write(&next.join("vibe.toml"), text);
+        write(
+            &next.join("boot/rules.md"),
+            "UNSELECTED_DEFAULT_CANDIDATE\n",
+        );
+        f.install_ok();
+        let lock = f.lock();
+        assert_eq!(
+            lock.find(&GROUP.parse().unwrap(), DRIVER)
+                .unwrap()
+                .version
+                .to_string(),
+            "1.0.0"
+        );
+        assert!(!f.static_boot().contains("UNSELECTED_DEFAULT_CANDIDATE"));
+        assert!(f.slot(EXTRA).exists());
+        let before = super::workspace::semantic_snapshot(&f.project);
+        f.install_ok();
+        assert_eq!(super::workspace::semantic_snapshot(&f.project), before);
+        let request = f.project.join("vibe.toml");
+        write(
+            &request,
+            fs::read_to_string(&request)
+                .unwrap()
+                .replace("version='=1.0.0'", "version='^1'"),
+        );
+        let before = super::workspace::semantic_snapshot(&f.project);
+        let scalar = review_fixture();
+        let shown = update(&scalar);
+        let proposal: serde_json::Value = serde_json::from_slice(&shown.stderr).unwrap();
+        let token = proposal["proposal"]["review_id"].as_str().unwrap();
+        for response in [None, Some(token)] {
+            let out = if let Some(token) = response {
+                respond(&f, token)
+            } else {
+                update(&f)
+            };
+            let diagnostic = format!(
+                "{}{}",
+                String::from_utf8_lossy(&out.stdout),
+                String::from_utf8_lossy(&out.stderr)
+            );
+            assert!(!out.status.success());
+            assert!(
+                diagnostic.contains("multi-member automatic default renewal is not connected"),
+                "{diagnostic}"
+            );
+            assert!(!diagnostic.contains("package-default-review/1:sha256:"));
+            assert_eq!(super::workspace::semantic_snapshot(&f.project), before);
         }
     }
 }

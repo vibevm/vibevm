@@ -49,7 +49,7 @@ pub struct ForwardedInput {
 pub struct AutomaticBasis {
     pub definition_fingerprint: String,
     pub consumer_choices: BTreeMap<String, BTreeMap<String, String>>,
-    /// Lossless zero-or-more reliance, including a declared empty member set.
+    /// Lossless non-scalar choice reliance, including a declared optional empty set.
     #[serde(default, skip_serializing_if = "BTreeMap::is_empty")]
     pub consumer_choice_sets: BTreeMap<String, BTreeMap<String, Vec<String>>>,
 }
@@ -220,18 +220,13 @@ impl PackageConfiguration {
                 let Some(super::ConfigurationGroupDecl::Choice { cardinality, defaults: Some(defaults), members, guards, .. }) = definition.groups.iter().find(|group| matches!(group, super::ConfigurationGroupDecl::Choice { id, .. } if id == &group_id)) else {
                     return Err(unsupported("automatic choice needs a declared exactly-one default"));
                 };
-                if *cardinality == crate::configuration::Cardinality::ZeroOrMore {
+                if *cardinality != crate::configuration::Cardinality::ExactlyOne {
                     let multi_groups = definition
                         .groups
                         .iter()
                         .filter(|group| {
-                            matches!(
-                                group,
-                                super::ConfigurationGroupDecl::Choice {
-                                    cardinality: crate::configuration::Cardinality::ZeroOrMore,
-                                    ..
-                                }
-                            )
+                            matches!(group, super::ConfigurationGroupDecl::Choice { cardinality, .. }
+                                if *cardinality != crate::configuration::Cardinality::ExactlyOne)
                         })
                         .count();
                     if !guards.is_empty()
@@ -240,7 +235,7 @@ impl PackageConfiguration {
                         || multi_groups != 1
                     {
                         return Err(unsupported(
-                            "only one unguarded zero-or-more default group without parameters or profiles is connected",
+                            "only one unguarded non-scalar choice default group without parameters or profiles is connected",
                         ));
                     }
                     let canonical = defaults
@@ -252,11 +247,7 @@ impl PackageConfiguration {
                     selected_default_sets.insert(group_id, canonical);
                     continue;
                 }
-                if *cardinality != crate::configuration::Cardinality::ExactlyOne
-                    || defaults.len() != 1
-                    || !guards.is_empty()
-                    || !members.contains(&defaults[0])
-                {
+                if defaults.len() != 1 || !guards.is_empty() || !members.contains(&defaults[0]) {
                     return Err(unsupported(
                         "only unguarded exactly-one single-member defaults are connected",
                     ));
