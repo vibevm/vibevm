@@ -1039,7 +1039,10 @@ fn public_boolean_does_not_admit_other_parameter_modes_or_unknown_inputs() {
         ("type='bool'\nrequired=false", "verbose=false"),
         ("type='bool'\nrequired=true\nsecret=true", "verbose=false"),
         ("type='integer'\nrequired=false", "verbose=1"),
-        ("type='path'\nrequired=true", "verbose='/synthetic'"),
+        (
+            "type='path'\nrequired=true\nmust_exist=true",
+            "verbose='/synthetic'",
+        ),
         ("type='bool'\nrequired=true", "unknown=false"),
     ] {
         let f = Fixture::new(false);
@@ -6146,7 +6149,9 @@ fn public_path_lexical_and_host_boundary_qualification() {
                 "path world={world} alternate_cwd={alternate_cwd} status={} diagnostic={diagnostic}",
                 out.status
             );
-            if world == "string-control" {
+            if world == "string-control"
+                || (!required && !matches!(world, "missing" | "empty" | "wrong-type"))
+            {
                 assert!(out.status.success(), "{diagnostic}");
                 let lock = f.lock();
                 let record = &lock.configurations[&coordinate(DRIVER)];
@@ -6161,6 +6166,31 @@ fn public_path_lexical_and_host_boundary_qualification() {
                         .selected_data(vibe_core::PackageKind::Flow)
                         .unwrap()
                         .is_empty()
+                );
+                assert_eq!(lock.meta.schema_version, 8);
+                assert!(record.automatic_basis.is_none());
+                let shown = f
+                    .user
+                    .vibe()
+                    .args([
+                        "show",
+                        "configuration-data",
+                        "--path",
+                        f.project.to_str().unwrap(),
+                        "--json",
+                    ])
+                    .output()
+                    .unwrap();
+                assert!(shown.status.success());
+                let report: serde_json::Value = serde_json::from_slice(&shown.stdout).unwrap();
+                let vibe_core::manifest::ParameterValue::Text(value) =
+                    &original.parameters["location"]
+                else {
+                    panic!("not text")
+                };
+                assert_eq!(
+                    report["packages"][0]["parameters"]["location"],
+                    serde_json::json!(value)
                 );
                 assert!(f.slot(DRIVER).exists());
                 assert!(f.static_boot().contains(DRIVER_MARKER));
@@ -6179,8 +6209,13 @@ fn public_path_lexical_and_host_boundary_qualification() {
                             }),
                         "{diagnostic}"
                     );
+                } else if world == "missing" {
+                    assert!(
+                        diagnostic.contains("missing required public parameter `location`"),
+                        "{diagnostic}"
+                    );
                 } else {
-                    assert!(diagnostic.contains("only explicitly supplied required public bool parameters without defaults are connected"),"{diagnostic}");
+                    assert!(diagnostic.contains("public path must_exist=true requires a separately specified planning-host base and check"),"{diagnostic}");
                 }
                 assert_eq!(super::workspace::semantic_snapshot(&f.project), before);
                 assert!(!f.project.join("vibe.lock").exists());
@@ -6198,6 +6233,128 @@ fn public_path_lexical_and_host_boundary_qualification() {
                     .as_ref()
                     .map(|entries| entries.keys().collect::<Vec<_>>())
             );
+        }
+    }
+}
+
+fn lexical_path_fixture(value: &str) -> Fixture {
+    text_choice_fixture("path", value)
+}
+
+#[test]
+fn lexical_path_spelling_consumers_and_target_disappearance() {
+    for world in ["disappears", "equal", "different-spelling"] {
+        let f = lexical_path_fixture("target path");
+        let target = f.project.join("target path");
+        write(&target, "SYNTHETIC_REFERENCE_CONTENT\n");
+        if world != "disappears" {
+            let request = f.project.join("vibe.toml");
+            let text = fs::read_to_string(&request).unwrap();
+            let registry = text.split("[[registry]]").nth(1).unwrap();
+            write(
+                &request,
+                format!(
+                    "[project]\nname='lexical-workspace'\nversion='0.1.0'\n[workspace]\nmembers=['left','right']\n[[registry]]{registry}"
+                ),
+            );
+            for (member, value) in [
+                ("left", "target path"),
+                (
+                    "right",
+                    if world == "equal" {
+                        "target path"
+                    } else {
+                        "./target path"
+                    },
+                ),
+            ] {
+                write(
+                    &f.project.join(member).join("vibe.toml"),
+                    format!(
+                        "[project]\nname='{member}'\nversion='0.1.0'\n[requires.packages.'{GROUP}/{DRIVER}']\nversion='=1.0.0'\nlink='static-transitive'\nconfiguration={{policy='require-selection',default_features=false,selections={{extra={{intent='exact',members=['disabled']}}}},parameters={{text='{value}'}}}}\n"
+                    ),
+                );
+            }
+        }
+        let before = super::workspace::semantic_snapshot(&f.project);
+        let out = f.install();
+        let diagnostic = format!(
+            "{}{}",
+            String::from_utf8_lossy(&out.stdout),
+            String::from_utf8_lossy(&out.stderr)
+        );
+        if world == "different-spelling" {
+            assert!(!out.status.success());
+            assert!(
+                diagnostic.contains("conflicting explicit public path parameter `text`"),
+                "{diagnostic}"
+            );
+            assert_eq!(super::workspace::semantic_snapshot(&f.project), before);
+        } else {
+            assert!(out.status.success(), "{diagnostic}");
+            assert_eq!(fs::read(&target).unwrap(), b"SYNTHETIC_REFERENCE_CONTENT\n");
+            if world == "disappears" {
+                fs::remove_file(&target).unwrap();
+            }
+            let before = super::workspace::semantic_snapshot(&f.project);
+            f.install_ok();
+            assert_eq!(super::workspace::semantic_snapshot(&f.project), before);
+        }
+    }
+}
+
+#[test]
+fn lexical_path_actual_prior_reader_writer_refuse_without_loss() {
+    let old =
+        std::env::var_os("NST_PATH_OLD_CLI").expect("mandatory explicitly mounted pre-path CLI");
+    for value in [
+        "relative path",
+        "/synthetic/absolute path",
+        "~/literal/$NOT_EXPANDED",
+    ] {
+        for operation in ["reader", "writer"] {
+            let f = lexical_path_fixture(value);
+            f.install_ok();
+            let before = super::workspace::semantic_snapshot(&f.project);
+            let args = if operation == "reader" {
+                vec![
+                    "show",
+                    "configuration-data",
+                    "--path",
+                    f.project.to_str().unwrap(),
+                    "--json",
+                ]
+            } else {
+                vec![
+                    "install",
+                    "--path",
+                    f.project.to_str().unwrap(),
+                    "--offline",
+                    "--assume-yes",
+                    "--json",
+                ]
+            };
+            let out = std::process::Command::new(&old)
+                .env_clear()
+                .env("HOME", f.root.join("home"))
+                .env("VIBE_SETTINGS", &f.user.settings)
+                .env("VIBE_NO_DEFAULT_REGISTRY", "1")
+                .env("PATH", "/usr/bin:/bin")
+                .args(args)
+                .output()
+                .unwrap();
+            let diagnostic = format!(
+                "{}{}",
+                String::from_utf8_lossy(&out.stdout),
+                String::from_utf8_lossy(&out.stderr)
+            );
+            println!(
+                "prior path={value:?} {operation} status={} diagnostic={diagnostic}",
+                out.status
+            );
+            assert!(!out.status.success());
+            assert!(diagnostic.contains("only explicitly supplied required public bool parameters without defaults are connected"),"{diagnostic}");
+            assert_eq!(super::workspace::semantic_snapshot(&f.project), before);
         }
     }
 }

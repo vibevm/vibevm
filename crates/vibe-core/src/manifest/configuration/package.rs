@@ -267,7 +267,15 @@ impl PackageConfiguration {
                     crate::manifest::ParameterType::Integer
                         | crate::manifest::ParameterType::String
                         | crate::manifest::ParameterType::Choice
+                        | crate::manifest::ParameterType::Path
                 ) {
+                    if parameter.kind == crate::manifest::ParameterType::Path
+                        && parameter.must_exist
+                    {
+                        return Err(unsupported(
+                            "public path must_exist=true requires a separately specified planning-host base and check",
+                        ));
+                    }
                     if kind != crate::PackageKind::Flow
                         || parameter.secret
                         || !parameter.required
@@ -280,6 +288,9 @@ impl PackageConfiguration {
                         return Err(unsupported(match parameter.kind {
                             crate::manifest::ParameterType::Integer => {
                                 "only one explicit required public integer without defaults, profiles or automatic choices is connected"
+                            }
+                            crate::manifest::ParameterType::Path => {
+                                "only one explicit required public lexical path without defaults, profiles or automatic choices is connected"
                             }
                             _ => {
                                 "only one explicit required public string or choice without defaults, profiles or automatic choices is connected"
@@ -308,6 +319,7 @@ impl PackageConfiguration {
                                 match parameter.kind {
                                     crate::manifest::ParameterType::Integer => "integer",
                                     crate::manifest::ParameterType::String => "string",
+                                    crate::manifest::ParameterType::Path => "path",
                                     _ => "choice",
                                 },
                                 parameter.id
