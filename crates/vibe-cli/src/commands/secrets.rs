@@ -21,8 +21,38 @@ pub fn run(ctx: &output::Context, args: SecretsArgs, cancel: &CancellationToken)
 fn id(raw: String) -> Result<SecretId> {
     SecretId::try_from(raw).map_err(Into::into)
 }
-fn input(ctx: &output::Context, stdin: bool, cancel: &CancellationToken) -> Result<ProtectedValue> {
-    let bytes = if stdin {
+fn input(
+    ctx: &output::Context,
+    stdin: bool,
+    file: Option<&std::path::Path>,
+    cancel: &CancellationToken,
+) -> Result<ProtectedValue> {
+    if stdin && file.is_some() {
+        bail!("protected input sources conflict");
+    }
+    let bytes = if let Some(file) = file {
+        let read = || -> Result<Vec<u8>> {
+            use std::path::Component;
+            if file.components().any(|c| matches!(c, Component::ParentDir)) {
+                bail!("ambiguous input path");
+            }
+            let absolute = std::path::absolute(file)?;
+            let name = absolute
+                .file_name()
+                .and_then(|n| n.to_str())
+                .ok_or_else(|| anyhow::anyhow!("invalid input name"))?;
+            let parent = absolute
+                .parent()
+                .ok_or_else(|| anyhow::anyhow!("missing input parent"))?;
+            let project = vibe_safefs::Project::open(parent)?;
+            project
+                .root_dir()?
+                .read_private_metadata(name, 1024 * 1024)?
+                .ok_or_else(|| anyhow::anyhow!("missing input file"))
+        };
+        read()
+            .map_err(|_| anyhow::anyhow!("protected input file unavailable, unsafe or oversized"))?
+    } else if stdin {
         if std::io::stdin().is_terminal() {
             bail!("--value-stdin requires non-terminal input");
         }
@@ -90,8 +120,9 @@ fn execute(
             kind,
             label,
             value_stdin,
+            value_file,
         } => {
-            let value = input(ctx, value_stdin, cancel)?;
+            let value = input(ctx, value_stdin, value_file.as_deref(), cancel)?;
             cancel.checkpoint()?;
             let created = store.create(&kind, &label, value)?;
             render(ctx, store.snapshot()?, Some(&created))
@@ -114,10 +145,11 @@ fn execute(
             id: raw,
             expect_current,
             value_stdin,
+            value_file,
         } => {
             let id = id(raw)?;
             let revision = id_value(expect_current)?;
-            let value = input(ctx, value_stdin, cancel)?;
+            let value = input(ctx, value_stdin, value_file.as_deref(), cancel)?;
             cancel.checkpoint()?;
             store.rotate(&id, &revision, value)?;
             render(ctx, store.snapshot()?, Some(&id))
@@ -175,6 +207,7 @@ fn interactive(ctx: &output::Context, store: &Store, cancel: &CancellationToken)
                     kind,
                     label,
                     value_stdin: false,
+                    value_file: None,
                 },
                 cancel,
             )?;
@@ -208,7 +241,7 @@ fn interactive(ctx: &output::Context, store: &Store, cancel: &CancellationToken)
                 )?;
             }
             2 => {
-                let value = input(ctx, false, cancel)?;
+                let value = input(ctx, false, None, cancel)?;
                 cancel.checkpoint()?;
                 store.rotate(selected, &expected.current_revision, value)?;
                 render(ctx, store.snapshot()?, Some(selected))?;

@@ -1,5 +1,9 @@
 # Corporate-env campaign: format and behaviour changes
 
+## CORP-FMT-062 — explicit protected file input for generic keyring CRUD
+
+Unix implementation candidate, 2026-11-20. Existing `secrets create` and `rotate` admit `--value-file PATH`, mutually exclusive with `--value-stdin`. Reuse the existing SafeFS held private reader: current-user directory0700, single-link regular file0600, no-follow, bounded same-handle read with before/after protection checks. FIFO/special/link/unsafe parent/mode/oversized/empty inputs refuse before mutation without printing contents, digest or underlying input-path diagnostics. File bytes including final newline use the same existing ProtectedValue/Store create/rotate owner; IDs remain stable across rotation. No chmod repair, arbitrary FD selector, value export, schema/index change or Windows ACL claim. Existing stdin/hidden input remains unchanged; metadata reads stay masked.
+
 ## CORP-FMT-061 — explicit alias-origin metadata setup
 
 Implementation candidate, 2026-11-20. `vibe ai setup --from-agent-alias NAME` is a Vibe-owned opt-in entry to the existing metadata planner, mutually exclusive with repeated `--agent`. It resolves the user's actual launcher alias to its canonical supported preset, never forwards executable/standing args/env, installs a missing wrapper or retries a launch. Attended no-mode entry shows alias-to-preset mapping and the existing preview/default-No consent. Noninteractive no-mode refuses; explicit mode/connection remains existing read-only preview until exact `--apply-preview` consent. Unknown/unsupported aliases and Claude's OpenAI-incompatible metadata operation refuse.

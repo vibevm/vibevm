@@ -272,3 +272,209 @@ fn parser_redaction_follows_root_command_not_global_operand_or_other_position() 
     assert!(!String::from_utf8_lossy(&output.stderr).contains(SENTINEL));
     assert!(String::from_utf8_lossy(&output.stderr).contains("invalid secrets invocation"));
 }
+
+#[cfg(unix)]
+#[test]
+fn protected_file_input_create_rotate_and_unsafe_refusals_preserve_state() {
+    use std::os::unix::fs::{PermissionsExt, symlink};
+    use std::time::{Duration, Instant};
+    let f = Fixture::new();
+    let inputs = f.0.path().join("inputs");
+    fs::create_dir(&inputs).unwrap();
+    fs::set_permissions(&inputs, fs::Permissions::from_mode(0o700)).unwrap();
+    let file = inputs.join("value");
+    let first = format!("{SENTINEL}\n");
+    fs::write(&file, first.as_bytes()).unwrap();
+    fs::set_permissions(&file, fs::Permissions::from_mode(0o600)).unwrap();
+    let created = f.json(
+        &[
+            "create",
+            "--kind",
+            "api-key",
+            "--label",
+            "Synthetic file",
+            "--value-file",
+            file.to_str().unwrap(),
+            "--json",
+        ],
+        None,
+    );
+    let id = created["items"][0]["id"].as_str().unwrap();
+    let rev = created["items"][0]["current_revision"].as_str().unwrap();
+    let selected_value = |revision: &str| {
+        f.0.path()
+            .join("secrets/items")
+            .join(id)
+            .join(revision)
+            .join("value")
+    };
+    assert!(fs::read(selected_value(rev)).unwrap() == first.as_bytes());
+    fs::write(&file, format!("{SENTINEL}-rotated\n")).unwrap();
+    let rotated = f.json(
+        &[
+            "rotate",
+            id,
+            "--expect-current",
+            rev,
+            "--value-file",
+            file.to_str().unwrap(),
+            "--json",
+        ],
+        None,
+    );
+    assert_eq!(rotated["items"][0]["id"], id);
+    let next = rotated["items"][0]["current_revision"].as_str().unwrap();
+    assert_ne!(next, rev);
+    assert!(fs::read(selected_value(next)).unwrap() == format!("{SENTINEL}-rotated\n").as_bytes());
+    assert_eq!(f.json(&["details", id, "--json"], None), rotated);
+    let before = fs::read(f.0.path().join("secrets/index.toml")).unwrap();
+    let link = inputs.join("link");
+    symlink(&file, &link).unwrap();
+    let directory = inputs.join("directory");
+    fs::create_dir(&directory).unwrap();
+    let fifo = inputs.join("fifo");
+    assert!(
+        Command::new("/usr/bin/mkfifo")
+            .arg(&fifo)
+            .status()
+            .unwrap()
+            .success()
+    );
+    for path in [&link, &directory, &fifo] {
+        let start = Instant::now();
+        assert!(
+            !f.run(
+                &[
+                    "rotate",
+                    id,
+                    "--expect-current",
+                    next,
+                    "--value-file",
+                    path.to_str().unwrap(),
+                    "--json"
+                ],
+                None
+            )
+            .status
+            .success()
+        );
+        assert!(start.elapsed() < Duration::from_secs(5));
+        assert_eq!(
+            fs::read(f.0.path().join("secrets/index.toml")).unwrap(),
+            before
+        );
+    }
+    for mode in [0o644, 0o666] {
+        fs::set_permissions(&file, fs::Permissions::from_mode(mode)).unwrap();
+        assert!(
+            !f.run(
+                &[
+                    "rotate",
+                    id,
+                    "--expect-current",
+                    next,
+                    "--value-file",
+                    file.to_str().unwrap(),
+                    "--json"
+                ],
+                None
+            )
+            .status
+            .success()
+        );
+        assert_eq!(
+            fs::read(f.0.path().join("secrets/index.toml")).unwrap(),
+            before
+        );
+    }
+    fs::set_permissions(&file, fs::Permissions::from_mode(0o600)).unwrap();
+    fs::set_permissions(&inputs, fs::Permissions::from_mode(0o755)).unwrap();
+    assert!(
+        !f.run(
+            &[
+                "rotate",
+                id,
+                "--expect-current",
+                next,
+                "--value-file",
+                file.to_str().unwrap(),
+                "--json"
+            ],
+            None
+        )
+        .status
+        .success()
+    );
+    assert_eq!(
+        fs::read(f.0.path().join("secrets/index.toml")).unwrap(),
+        before
+    );
+    fs::set_permissions(&inputs, fs::Permissions::from_mode(0o700)).unwrap();
+    let hardlink = inputs.join("hardlink");
+    fs::hard_link(&file, &hardlink).unwrap();
+    assert!(
+        !f.run(
+            &[
+                "rotate",
+                id,
+                "--expect-current",
+                next,
+                "--value-file",
+                hardlink.to_str().unwrap(),
+                "--json"
+            ],
+            None
+        )
+        .status
+        .success()
+    );
+    assert_eq!(
+        fs::read(f.0.path().join("secrets/index.toml")).unwrap(),
+        before
+    );
+    fs::remove_file(&hardlink).unwrap();
+    for bytes in [Vec::new(), vec![b'x'; 1024 * 1024 + 1]] {
+        fs::write(&file, bytes).unwrap();
+        assert!(
+            !f.run(
+                &[
+                    "rotate",
+                    id,
+                    "--expect-current",
+                    next,
+                    "--value-file",
+                    file.to_str().unwrap(),
+                    "--json"
+                ],
+                None
+            )
+            .status
+            .success()
+        );
+        assert_eq!(
+            fs::read(f.0.path().join("secrets/index.toml")).unwrap(),
+            before
+        );
+    }
+    assert!(
+        !f.run(
+            &[
+                "rotate",
+                id,
+                "--expect-current",
+                next,
+                "--value-stdin",
+                "--value-file",
+                file.to_str().unwrap(),
+                "--json"
+            ],
+            Some(SENTINEL.as_bytes())
+        )
+        .status
+        .success()
+    );
+    assert_eq!(
+        fs::read(f.0.path().join("secrets/index.toml")).unwrap(),
+        before
+    );
+}

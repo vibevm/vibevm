@@ -19,8 +19,11 @@ pub enum SecretsCommand {
         kind: String,
         #[arg(long)]
         label: String,
-        #[arg(long)]
+        #[arg(long, conflicts_with = "value_file")]
         value_stdin: bool,
+        /// Read exact bytes from an owned 0600 file in an owned 0700 directory.
+        #[arg(long, conflicts_with = "value_stdin")]
+        value_file: Option<std::path::PathBuf>,
     },
     /// Change only a label using the observed snapshot tokens.
     Edit {
@@ -37,8 +40,11 @@ pub enum SecretsCommand {
         id: String,
         #[arg(long)]
         expect_current: String,
-        #[arg(long)]
+        #[arg(long, conflicts_with = "value_file")]
         value_stdin: bool,
+        /// Read exact bytes from an owned 0600 file in an owned 0700 directory.
+        #[arg(long, conflicts_with = "value_stdin")]
+        value_file: Option<std::path::PathBuf>,
     },
     /// Logical removal; unknown references refuse, even with --yes.
     Remove {
