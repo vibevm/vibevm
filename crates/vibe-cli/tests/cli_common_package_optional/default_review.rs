@@ -1038,7 +1038,7 @@ fn public_boolean_does_not_admit_other_parameter_modes_or_unknown_inputs() {
     for (declaration, answer) in [
         ("type='bool'\nrequired=false", "verbose=false"),
         ("type='bool'\nrequired=true\nsecret=true", "verbose=false"),
-        ("type='integer'\nrequired=true", "verbose=1"),
+        ("type='integer'\nrequired=false", "verbose=1"),
         ("type='path'\nrequired=true", "verbose='/synthetic'"),
         ("type='bool'\nrequired=true", "unknown=false"),
     ] {
@@ -5372,7 +5372,7 @@ fn required_public_integer_bounds_zero_missing_and_bool_control_qualification() 
             "integer world={world} status={} diagnostic={diagnostic}",
             out.status
         );
-        if world == "bool-false" {
+        if matches!(world, "bool-false" | "zero" | "minimum" | "maximum") {
             assert!(out.status.success(), "{diagnostic}");
             let lock = f.lock();
             let record = &lock.configurations[&coordinate(DRIVER)];
@@ -5381,7 +5381,43 @@ fn required_public_integer_bounds_zero_missing_and_bool_control_qualification() 
                 record
                     .selected_parameters(vibe_core::PackageKind::Flow)
                     .unwrap()["count"],
-                vibe_core::manifest::ParameterValue::Bool(false)
+                if world == "bool-false" {
+                    vibe_core::manifest::ParameterValue::Bool(false)
+                } else {
+                    vibe_core::manifest::ParameterValue::Integer(match world {
+                        "minimum" => -2,
+                        "maximum" => 3,
+                        _ => 0,
+                    })
+                }
+            );
+            assert!(record.automatic_basis.is_none());
+            assert_eq!(lock.meta.schema_version, 8);
+            let shown = f
+                .user
+                .vibe()
+                .args([
+                    "show",
+                    "configuration-data",
+                    "--path",
+                    f.project.to_str().unwrap(),
+                    "--json",
+                ])
+                .output()
+                .unwrap();
+            assert!(shown.status.success());
+            let report: serde_json::Value = serde_json::from_slice(&shown.stdout).unwrap();
+            assert_eq!(
+                report["packages"][0]["parameters"]["count"],
+                if world == "bool-false" {
+                    serde_json::json!(false)
+                } else {
+                    serde_json::json!(match world {
+                        "minimum" => -2,
+                        "maximum" => 3,
+                        _ => 0,
+                    })
+                }
             );
             assert!(
                 record
@@ -5397,8 +5433,11 @@ fn required_public_integer_bounds_zero_missing_and_bool_control_qualification() 
             assert_eq!(super::workspace::semantic_snapshot(&f.project), installed);
         } else {
             assert!(!out.status.success(), "{diagnostic}");
-            if matches!(world, "zero" | "minimum" | "maximum" | "missing") {
-                assert!(diagnostic.contains("only explicitly supplied required public bool parameters without defaults are connected"),"{diagnostic}");
+            if world == "missing" {
+                assert!(
+                    diagnostic.contains("missing required public parameter `count`"),
+                    "{diagnostic}"
+                );
             } else if world == "outside" {
                 assert!(
                     diagnostic.contains("configuration.parameters.count")
@@ -5427,5 +5466,197 @@ fn required_public_integer_bounds_zero_missing_and_bool_control_qualification() 
                 .as_ref()
                 .map(|entries| entries.keys().collect::<Vec<_>>())
         );
+    }
+}
+
+fn integer_fixture(value: i64) -> Fixture {
+    let f = Fixture::new(false);
+    let source = f.registry.join(GROUP).join(DRIVER).join("v1.0.0/vibe.toml");
+    write(
+        &source,
+        fs::read_to_string(&source).unwrap()
+            + "\n[[configuration.parameters]]\nid='count'\nname='Count'\ntype='integer'\nrequired=true\nmin=-2\nmax=3\n",
+    );
+    let request = f.project.join("vibe.toml");
+    write(&request,fs::read_to_string(&request).unwrap().replace("version='^1'","version='=1.0.0'").replace("selections={extra={intent='exact',members=['disabled']}}}",&format!("selections={{extra={{intent='exact',members=['disabled']}}}},parameters={{count={value}}}}}")));
+    f
+}
+
+#[test]
+fn integer_real_consumer_agreement_and_conflict_preserve_originals() {
+    for conflict in [false, true] {
+        let f = integer_fixture(0);
+        let root = f.project.join("vibe.toml");
+        let text = fs::read_to_string(&root).unwrap();
+        let registry = text.split("[[registry]]").nth(1).unwrap();
+        write(
+            &root,
+            format!(
+                "[project]\nname='integer-workspace'\nversion='0.1.0'\n[workspace]\nmembers=['left','right']\n[[registry]]{registry}"
+            ),
+        );
+        for (member, value) in [("left", 0), ("right", if conflict { 3 } else { 0 })] {
+            write(
+                &f.project.join(member).join("vibe.toml"),
+                format!(
+                    "[project]\nname='{member}'\nversion='0.1.0'\n[requires.packages.'{GROUP}/{DRIVER}']\nversion='=1.0.0'\nlink='static-transitive'\nconfiguration={{policy='require-selection',default_features=false,selections={{extra={{intent='exact',members=['disabled']}}}},parameters={{count={value}}}}}\n"
+                ),
+            );
+        }
+        let before = super::workspace::semantic_snapshot(&f.project);
+        let out = f.install();
+        let diagnostic = format!(
+            "{}{}",
+            String::from_utf8_lossy(&out.stdout),
+            String::from_utf8_lossy(&out.stderr)
+        );
+        if conflict {
+            assert!(!out.status.success());
+            assert!(
+                diagnostic.contains("conflicting explicit public integer parameter `count`"),
+                "{diagnostic}"
+            );
+            assert_eq!(super::workspace::semantic_snapshot(&f.project), before);
+        } else {
+            assert!(out.status.success(), "{diagnostic}");
+            let lock = f.lock();
+            let record = &lock.configurations[&coordinate(DRIVER)];
+            assert_eq!(record.consumers.len(), 2);
+            assert!(
+                record
+                    .consumers
+                    .values()
+                    .all(|input| input.parameters["count"]
+                        == vibe_core::manifest::ParameterValue::Integer(0))
+            );
+            assert_eq!(
+                record
+                    .selected_parameters(vibe_core::PackageKind::Flow)
+                    .unwrap()["count"],
+                vibe_core::manifest::ParameterValue::Integer(0)
+            );
+            let before = super::workspace::semantic_snapshot(&f.project);
+            f.install_ok();
+            assert_eq!(super::workspace::semantic_snapshot(&f.project), before);
+        }
+    }
+}
+
+#[test]
+fn integer_old_reader_writer_refuse_exact_prior_without_loss() {
+    let old = std::env::var_os("NST_INTEGER_OLD_CLI")
+        .expect("mandatory explicitly mounted pre-integer CLI");
+    for value in [-2, 0, 3] {
+        for operation in ["reader", "writer"] {
+            let f = integer_fixture(value);
+            f.install_ok();
+            let before = super::workspace::semantic_snapshot(&f.project);
+            let args = if operation == "reader" {
+                vec![
+                    "show",
+                    "configuration-data",
+                    "--path",
+                    f.project.to_str().unwrap(),
+                    "--json",
+                ]
+            } else {
+                vec![
+                    "install",
+                    "--path",
+                    f.project.to_str().unwrap(),
+                    "--offline",
+                    "--assume-yes",
+                    "--json",
+                ]
+            };
+            let out = std::process::Command::new(&old)
+                .env_clear()
+                .env("HOME", f.root.join("home"))
+                .env("VIBE_SETTINGS", &f.user.settings)
+                .env("VIBE_NO_DEFAULT_REGISTRY", "1")
+                .env("PATH", "/usr/bin:/bin")
+                .args(args)
+                .output()
+                .unwrap();
+            let diagnostic = format!(
+                "{}{}",
+                String::from_utf8_lossy(&out.stdout),
+                String::from_utf8_lossy(&out.stderr)
+            );
+            println!(
+                "prior integer={value} {operation} status={} diagnostic={diagnostic}",
+                out.status
+            );
+            assert!(!out.status.success());
+            assert!(diagnostic.contains("only explicitly supplied required public bool parameters without defaults are connected"),"{diagnostic}");
+            assert_eq!(super::workspace::semantic_snapshot(&f.project), before);
+        }
+    }
+}
+
+#[test]
+fn integer_unselected_bounds_and_maintenance_invalidating_value_refuse() {
+    for exact_new in [false, true] {
+        let f = integer_fixture(-2);
+        let old = f.registry.join(GROUP).join(DRIVER).join("v1.0.0");
+        let next = f.registry.join(GROUP).join(DRIVER).join("v1.1.0");
+        write(
+            &next.join("vibe.toml"),
+            fs::read_to_string(old.join("vibe.toml"))
+                .unwrap()
+                .replace("version='1.0.0'", "version='1.1.0'")
+                .replace("min=-2", "min=0"),
+        );
+        write(&next.join("boot/rules.md"), "UNSELECTED_INTEGER_BOUNDS\n");
+        f.install_ok();
+        assert_eq!(
+            f.lock()
+                .find(&GROUP.parse().unwrap(), DRIVER)
+                .unwrap()
+                .version
+                .to_string(),
+            "1.0.0"
+        );
+        assert!(!f.static_boot().contains("UNSELECTED_INTEGER_BOUNDS"));
+        let request = f.project.join("vibe.toml");
+        write(
+            &request,
+            fs::read_to_string(&request).unwrap().replace(
+                "version='=1.0.0'",
+                if exact_new {
+                    "version='=1.1.0'"
+                } else {
+                    "version='^1'"
+                },
+            ),
+        );
+        let before = super::workspace::semantic_snapshot(&f.project);
+        let out = update(&f);
+        let diagnostic = format!(
+            "{}{}",
+            String::from_utf8_lossy(&out.stdout),
+            String::from_utf8_lossy(&out.stderr)
+        );
+        if exact_new {
+            assert!(!out.status.success(), "{diagnostic}");
+            assert!(diagnostic.contains("-2 is outside 0..=3"), "{diagnostic}");
+        } else {
+            assert!(out.status.success(), "{diagnostic}");
+            assert_eq!(
+                f.lock()
+                    .find(&GROUP.parse().unwrap(), DRIVER)
+                    .unwrap()
+                    .version
+                    .to_string(),
+                "1.0.0"
+            );
+            assert_eq!(
+                f.lock().configurations[&coordinate(DRIVER)]
+                    .selected_parameters(vibe_core::PackageKind::Flow)
+                    .unwrap()["count"],
+                vibe_core::manifest::ParameterValue::Integer(-2)
+            );
+        }
+        assert_eq!(super::workspace::semantic_snapshot(&f.project), before);
     }
 }
