@@ -17,6 +17,25 @@ pub fn run(ctx: &output::Context, args: AiArgs, cancel: &CancellationToken) -> R
     let settings = super::secrets::admitted_settings()?;
     let store = vibe_connections::Store::at_settings(&settings)?;
     let command = match args.command {
+        AiCommand::Setup {
+            agents,
+            mode,
+            connection,
+            apply_preview,
+        } => {
+            return setup::run(
+                ctx,
+                &settings,
+                &store,
+                setup::Request {
+                    agents,
+                    mode,
+                    connection,
+                    response: apply_preview,
+                },
+                cancel,
+            );
+        }
         AiCommand::Connections { command } => command,
         AiCommand::Bindings { command } => {
             let (name, action) = match command {
@@ -142,3 +161,5 @@ pub fn run(ctx: &output::Context, args: AiArgs, cancel: &CancellationToken) -> R
     }
     Ok(())
 }
+
+mod setup;

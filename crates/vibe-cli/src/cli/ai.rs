@@ -7,6 +7,16 @@ pub struct AiArgs {
 }
 #[derive(Debug, clap::Subcommand)]
 pub enum AiCommand {
+    Setup {
+        #[arg(long = "agent")]
+        agents: Vec<String>,
+        #[arg(long, value_enum)]
+        mode: Option<AiBindingMode>,
+        #[arg(long)]
+        connection: Option<String>,
+        #[arg(long,value_parser=setup_preview_id)]
+        apply_preview: Option<String>,
+    },
     Bindings {
         #[command(subcommand)]
         command: AiBindingCommand,
@@ -86,4 +96,16 @@ pub enum AiBindingMode {
     Native,
     InheritDefault,
     Connection,
+}
+
+fn setup_preview_id(raw: &str) -> Result<String, String> {
+    if raw.strip_prefix("ai-setup/1:sha256:").is_some_and(|h| {
+        h.len() == 64
+            && h.bytes()
+                .all(|b| b.is_ascii_digit() || (b'a'..=b'f').contains(&b))
+    }) {
+        Ok(raw.into())
+    } else {
+        Err("expected a version1 AI setup preview identifier".into())
+    }
 }

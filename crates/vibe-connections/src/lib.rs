@@ -66,10 +66,13 @@ pub struct Snapshot {
     pub store_revision: u64,
     pub items: BTreeMap<SecretId, Connection>,
 }
-pub struct Store(vibe_secrets::Store);
+pub struct Store(vibe_secrets::Store, std::path::PathBuf);
 impl Store {
     pub fn at_settings(settings: &Path) -> Result<Self, Error> {
-        Ok(Self(vibe_secrets::Store::at_settings(settings)?))
+        Ok(Self(
+            vibe_secrets::Store::at_settings(settings)?,
+            settings.to_path_buf(),
+        ))
     }
     pub fn list(&self) -> Result<Snapshot, Error> {
         let snapshot = self.0.reference_snapshot("ai")?;
@@ -254,3 +257,6 @@ impl Store {
         self.binding(harness)
     }
 }
+
+mod setup;
+pub use setup::{SetupPreview, SetupRow};

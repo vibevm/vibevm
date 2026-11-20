@@ -1098,7 +1098,7 @@ fn malformed_binding_maps_and_unknown_managed_identities_fail_closed() {
 
 #[cfg(unix)]
 #[test]
-fn coherent_setup_route_is_missing_and_does_not_mutate_existing_bindings() {
+fn malformed_setup_selection_does_not_mutate_existing_bindings() {
     let f = F::new();
     let secret = f.json(
         &[
@@ -1155,7 +1155,7 @@ fn coherent_setup_route_is_missing_and_does_not_mutate_existing_bindings() {
         None,
     );
     assert_eq!(out.status.code(), Some(2));
-    assert!(String::from_utf8_lossy(&out.stderr).contains("unrecognized subcommand"));
+    assert!(String::from_utf8_lossy(&out.stderr).contains("unexpected argument"));
     assert_eq!(
         fs::read(f.0.path().join("secrets/ai/index.toml")).unwrap(),
         ai
@@ -1173,4 +1173,254 @@ fn coherent_setup_route_is_missing_and_does_not_mutate_existing_bindings() {
         "native"
     );
     assert!(!f.0.path().join("apps").exists());
+}
+
+#[cfg(unix)]
+#[test]
+fn setup_preview_apply_is_one_revision_and_stale_or_bad_last_row_never_partially_writes() {
+    let f = F::new();
+    let secret = f.json(
+        &[
+            "secrets",
+            "create",
+            "--kind",
+            "api-key",
+            "--label",
+            "Synthetic",
+            "--value-stdin",
+        ],
+        Some(VALUE.as_bytes()),
+    );
+    let id = secret["items"][0]["id"].as_str().unwrap();
+    let a = f.json(
+        &[
+            "ai",
+            "connections",
+            "add",
+            "--label",
+            "A",
+            "--endpoint",
+            "http://127.0.0.1:32123/v1",
+            "--api-kind",
+            "openai-chat-completions",
+            "--default-model",
+            "synthetic",
+            "--secret-ref",
+            id,
+        ],
+        None,
+    );
+    let (cid, _) = a["items"].as_object().unwrap().iter().next().unwrap();
+    let args = [
+        "ai",
+        "setup",
+        "--agent",
+        "pi",
+        "--agent",
+        "qwen",
+        "--mode",
+        "connection",
+        "--connection",
+        cid,
+    ];
+    let ai = f.0.path().join("secrets/ai/index.toml");
+    let key = f.0.path().join("secrets/index.toml");
+    let before = fs::read(&ai).unwrap();
+    let keybefore = fs::read(&key).unwrap();
+    let preview = f.json(&args, None);
+    assert_eq!(preview["applied"], false);
+    assert_eq!(preview["preview"]["rows"].as_array().unwrap().len(), 2);
+    assert_eq!(fs::read(&ai).unwrap(), before);
+    let token = preview["preview"]["preview_id"].as_str().unwrap();
+    let bad = f.run(
+        &[
+            "ai",
+            "setup",
+            "--agent",
+            "pi",
+            "--agent",
+            "claude",
+            "--mode",
+            "connection",
+            "--connection",
+            cid,
+        ],
+        None,
+    );
+    assert!(!bad.status.success());
+    assert_eq!(fs::read(&ai).unwrap(), before);
+    assert_eq!(fs::read(&key).unwrap(), keybefore);
+    let mut apply = args.to_vec();
+    apply.extend(["--apply-preview", token]);
+    let result = f.json(&apply, None);
+    assert_eq!(result["applied"], true);
+    assert_eq!(
+        result["store_revision"].as_u64().unwrap(),
+        preview["store_revision"].as_u64().unwrap() + 1
+    );
+    for harness in ["pi", "qwen"] {
+        assert_eq!(
+            f.json(&["ai", "bindings", "show", harness], None)["binding"]["connection"],
+            cid.as_str()
+        );
+    }
+    assert_eq!(
+        f.json(&["ai", "bindings", "show", "claude"], None)["binding"]["mode"],
+        "native"
+    );
+    let after = fs::read(&ai).unwrap();
+    assert!(!f.run(&apply, None).status.success());
+    assert_eq!(fs::read(&ai).unwrap(), after);
+    let fresh = f.json(&args, None);
+    let mut noop = args.to_vec();
+    noop.extend([
+        "--apply-preview",
+        fresh["preview"]["preview_id"].as_str().unwrap(),
+    ]);
+    let result = f.json(&noop, None);
+    assert_eq!(result["store_revision"], fresh["store_revision"]);
+    assert_eq!(fs::read(&ai).unwrap(), after);
+    assert_eq!(fs::read(&key).unwrap(), keybefore);
+    // The captured alias subject cannot silently become a different agent set.
+    fs::write(
+        f.0.path().join("agents.toml"),
+        "[launchers.helper]\nkind='pi'\ncommand=['never-executed']\n",
+    )
+    .unwrap();
+    let request = [
+        "ai",
+        "setup",
+        "--agent",
+        "helper",
+        "--mode",
+        "connection",
+        "--connection",
+        cid,
+    ];
+    let shown = f.json(&request, None);
+    fs::write(
+        f.0.path().join("agents.toml"),
+        "[launchers.helper]\nkind='qwen'\ncommand=['never-executed']\n",
+    )
+    .unwrap();
+    let mut changed = request.to_vec();
+    changed.extend([
+        "--apply-preview",
+        shown["preview"]["preview_id"].as_str().unwrap(),
+    ]);
+    assert!(!f.run(&changed, None).status.success());
+    assert_eq!(fs::read(&ai).unwrap(), after);
+}
+
+#[cfg(unix)]
+#[test]
+fn setup_subset_preserves_unselected_explicit_binding_and_stale_default_rejects() {
+    let f = F::new();
+    let secret = f.json(
+        &[
+            "secrets",
+            "create",
+            "--kind",
+            "api-key",
+            "--label",
+            "Synthetic",
+            "--value-stdin",
+        ],
+        Some(VALUE.as_bytes()),
+    );
+    let id = secret["items"][0]["id"].as_str().unwrap();
+    let add = |label: &str| {
+        f.json(
+            &[
+                "ai",
+                "connections",
+                "add",
+                "--label",
+                label,
+                "--endpoint",
+                "http://127.0.0.1:32123/v1",
+                "--api-kind",
+                "openai-chat-completions",
+                "--default-model",
+                "synthetic",
+                "--secret-ref",
+                id,
+            ],
+            None,
+        )
+    };
+    let a = add("A");
+    let aid = a["items"].as_object().unwrap().keys().next().unwrap();
+    let b = add("B");
+    let bid = b["items"].as_object().unwrap().keys().next().unwrap();
+    let version = b["store_revision"].as_u64().unwrap().to_string();
+    let explicit = f.json(
+        &[
+            "ai",
+            "bindings",
+            "set",
+            "qwen",
+            "--mode",
+            "connection",
+            "--connection",
+            bid,
+            "--expect-store",
+            &version,
+        ],
+        None,
+    );
+    let version = explicit["binding"]["store_revision"]
+        .as_u64()
+        .unwrap()
+        .to_string();
+    let selected = f.json(
+        &[
+            "ai",
+            "connections",
+            "default",
+            "set",
+            aid,
+            "--expect-store",
+            &version,
+        ],
+        None,
+    );
+    let version = selected["store_revision"].as_u64().unwrap().to_string();
+    let args = ["ai", "setup", "--agent", "pi", "--mode", "inherit-default"];
+    let preview = f.json(&args, None);
+    f.json(
+        &[
+            "ai",
+            "connections",
+            "default",
+            "set",
+            bid,
+            "--expect-store",
+            &version,
+        ],
+        None,
+    );
+    let path = f.0.path().join("secrets/ai/index.toml");
+    let before = fs::read(&path).unwrap();
+    let mut stale = args.to_vec();
+    stale.extend([
+        "--apply-preview",
+        preview["preview"]["preview_id"].as_str().unwrap(),
+    ]);
+    assert!(!f.run(&stale, None).status.success());
+    assert_eq!(fs::read(&path).unwrap(), before);
+    let fresh = f.json(&args, None);
+    let mut apply = args.to_vec();
+    apply.extend([
+        "--apply-preview",
+        fresh["preview"]["preview_id"].as_str().unwrap(),
+    ]);
+    f.json(&apply, None);
+    let qwen = f.json(&["ai", "bindings", "show", "qwen"], None);
+    assert_eq!(qwen["binding"]["mode"], "connection");
+    assert_eq!(qwen["binding"]["connection"], bid.as_str());
+    assert_eq!(
+        f.json(&["ai", "bindings", "show", "pi"], None)["binding"]["connection"],
+        bid.as_str()
+    );
 }

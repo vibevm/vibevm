@@ -13,6 +13,7 @@ description = "Reference-only local AI connection metadata"
 [dependencies]
 vibe-secrets.workspace = true
 serde.workspace = true
+sha2.workspace = true
 toml.workspace = true
 url.workspace = true
 specmark.workspace = true
