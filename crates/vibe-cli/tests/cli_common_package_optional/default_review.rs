@@ -1111,3 +1111,89 @@ fn public_parameter_and_config_value_keep_independent_same_named_values() {
     assert_eq!(report["packages"][0]["parameters"]["verbose"], false);
     assert_eq!(fs::read(f.project.join("vibe.lock")).unwrap(), before);
 }
+
+#[test]
+fn selected_subskill_refusal_is_distinct_from_dormant_captured_bytes_and_boot() {
+    const SKILL: &str = "# Synthetic audit\nORACLE_SELECTED_SUBSKILL_BODY\n";
+    for selection in [Some(false), Some(true), None] {
+        let selected = selection == Some(true);
+        let f = Fixture::new(selected);
+        let source = f.registry.join(GROUP).join(DRIVER).join("v1.0.0/vibe.toml");
+        let text = fs::read_to_string(&source).unwrap().replace(
+            "effects = [{ kind = \"dependency\", target = \"org.vibevm/oracle-extra\" }]",
+            "effects = [{ kind = \"dependency\", target = \"org.vibevm/oracle-extra\" }, { kind = \"subskill\", path = \"skills/audit/SKILL.md\" }]",
+        );
+        assert!(text.contains("kind = \"subskill\""));
+        if selection.is_some() {
+            write(&source, text);
+        }
+        write(
+            &source.parent().unwrap().join("skills/audit/SKILL.md"),
+            SKILL,
+        );
+        let authored = fs::read(f.project.join("vibe.toml")).unwrap();
+        let launchers: Vec<_> = ["AGENTS.md", "CLAUDE.md", "GEMINI.md"]
+            .iter()
+            .map(|p| (*p, fs::read(f.project.join(p)).unwrap()))
+            .collect();
+        let out = f.install();
+        if selected {
+            assert!(!out.status.success());
+            let diagnostic = format!(
+                "{}{}",
+                String::from_utf8_lossy(&out.stdout),
+                String::from_utf8_lossy(&out.stderr)
+            );
+            assert!(
+                diagnostic.contains("selected subskill loading is not connected"),
+                "{diagnostic}"
+            );
+            assert!(!f.project.join("vibe.lock").exists());
+            assert!(!f.slot(DRIVER).exists());
+            assert!(!f.project.join("effects.log").exists());
+            for (path, before) in launchers {
+                assert_eq!(fs::read(f.project.join(path)).unwrap(), before);
+            }
+        } else {
+            assert!(
+                out.status.success(),
+                "{}",
+                String::from_utf8_lossy(&out.stderr)
+            );
+            assert_eq!(
+                fs::read_to_string(f.slot(DRIVER).join("skills/audit/SKILL.md")).unwrap(),
+                SKILL
+            );
+            let boot = f.static_boot();
+            assert!(boot.contains(DRIVER_MARKER));
+            assert!(!boot.contains("ORACLE_SELECTED_SUBSKILL_BODY"));
+            let lock = fs::read(f.project.join("vibe.lock")).unwrap();
+            let hooks = f.hooks();
+            let inspect = f
+                .user
+                .vibe()
+                .args([
+                    "show",
+                    "subskills",
+                    "--path",
+                    f.project.to_str().unwrap(),
+                    "--json",
+                ])
+                .output()
+                .unwrap();
+            assert!(inspect.status.success());
+            let report: serde_json::Value = serde_json::from_slice(&inspect.stdout).unwrap();
+            assert_eq!(report["total"], 0);
+            assert_eq!(report["packages"], serde_json::json!([]));
+            f.install_ok();
+            assert_eq!(fs::read(f.project.join("vibe.lock")).unwrap(), lock);
+            assert_eq!(f.static_boot(), boot);
+            assert_eq!(f.hooks(), hooks);
+            assert_eq!(
+                fs::read_to_string(f.slot(DRIVER).join("skills/audit/SKILL.md")).unwrap(),
+                SKILL
+            );
+        }
+        assert_eq!(fs::read(f.project.join("vibe.toml")).unwrap(), authored);
+    }
+}
