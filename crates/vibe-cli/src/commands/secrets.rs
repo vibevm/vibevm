@@ -258,14 +258,30 @@ fn interactive(ctx: &output::Context, store: &Store, cancel: &CancellationToken)
                 render(ctx, store.snapshot()?, Some(selected))?;
             }
             3 => {
-                if output::prompts::confirm(
-                    &format!(
-                        "Remove {} ({})? Private bytes remain; unknown references refuse",
-                        item.label,
-                        selected.as_str()
-                    ),
-                    false,
-                )? {
+                let consumers = match store.references(selected) {
+                    Ok(consumers) => consumers,
+                    Err(_) => {
+                        println!("Reference inventory unavailable or unknown; removal refused.");
+                        continue;
+                    }
+                };
+                if !consumers.is_empty() {
+                    println!(
+                        "Item is used; removal refused. Consumer IDs: {}",
+                        serde_json::to_string(&consumers)?
+                    );
+                    continue;
+                }
+                println!(
+                    "No registered consumers at this observation; removal rechecks under lock."
+                );
+                let choices = output::prompts::named(&["Keep item", "Remove item"]);
+                let prompt = format!(
+                    "Remove {} ({})? Private bytes remain; Escape keeps item",
+                    item.label,
+                    selected.as_str()
+                );
+                if output::prompts::choose_opt_interruptible(&prompt, &choices, 0)? == Some(1) {
                     cancel.checkpoint()?;
                     store.remove_coordinated(selected, &expected)?;
                 }

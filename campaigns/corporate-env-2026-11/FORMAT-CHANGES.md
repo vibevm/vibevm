@@ -1,5 +1,9 @@
 # Corporate-env campaign: format and behaviour changes
 
+## CORP-FMT-064 — interactive removal previews coordinated consumers
+
+Implementation candidate, 2026-11-20. Existing keyring Remove action first asks the accepted reference owner. Used items show only consumer IDs and refuse; unknown/unavailable inventory has a distinct refusal. Free items show informational absence, then existing interruptible Keep(default)/Remove selection; Escape/Ctrl-C keep the item. Confirmed removal uses existing expected tokens and `remove_coordinated`, reacquiring inventory/store protection rather than trusting the preview. No storage/index/report epoch or value access changes; immutable private bytes remain after logical removal as before.
+
 ## CORP-FMT-063 — informational coordinated secret-reference report
 
 Implementation candidate, 2026-11-20. New `vibe secrets references ID` reads the same protected reference inventory used by logical removal, then confirms the item exists under the store lock. Successful closed report `vibe-secrets-references/1` contains only protocol/ok/stable item ID/sorted unique consumer IDs. A free existing ID returns an empty list; absent ID is not-found. Legacy/unknown protocol, unknown participant or incomplete/unavailable inventory refuses, never empty success. No secret value/digest/value path/auth metadata or authorization token is returned. The preview grants no deletion authority; remove reacquires its own guard and rechecks. Existing metadata report and storage/index epochs remain unchanged. New report schema/registry/golden fixture are separate from persistence. Ordinary lock coordination follows the existing owner; no broad no-filesystem-effects claim for malformed stores.
