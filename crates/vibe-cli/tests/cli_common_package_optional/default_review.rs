@@ -1951,3 +1951,136 @@ fn unselected_source_candidate_does_not_forward_into_target() {
             .all(|record| record.forwarded_inputs.is_empty())
     );
 }
+
+#[test]
+fn boolean_default_omitted_true_false_and_no_default_controls_have_distinct_public_boundaries() {
+    for (has_default, answer) in [
+        (true, None),
+        (true, Some(true)),
+        (true, Some(false)),
+        (false, None),
+        (false, Some(false)),
+    ] {
+        let f = Fixture::new(false);
+        let source = f.registry.join(GROUP).join(DRIVER).join("v1.0.0/vibe.toml");
+        write(
+            &source,
+            fs::read_to_string(&source).unwrap()
+                + "\n[[configuration.parameters]]\nid='verbose'\nname='Verbose'\ntype='bool'\nrequired=true\n"
+                + if has_default { "default=true\n" } else { "" },
+        );
+        let request = f.project.join("vibe.toml");
+        if let Some(answer) = answer {
+            let original = fs::read_to_string(&request).unwrap();
+            write(
+                &request,
+                original.replace(
+                    "members=['disabled']}}}",
+                    &format!("members=['disabled']}}}},parameters={{verbose={answer}}}}}"),
+                ),
+            );
+        }
+        let authored = fs::read(&request).unwrap();
+        let static_before: Vec<_> = [common::static_xml_rel(), common::static_md_rel()]
+            .into_iter()
+            .map(|relative| {
+                let path = f.project.join(relative);
+                let before = if path.exists() {
+                    Some(fs::read(&path).unwrap())
+                } else {
+                    None
+                };
+                (path, before)
+            })
+            .collect();
+        let launchers: Vec<_> = ["AGENTS.md", "CLAUDE.md", "GEMINI.md"]
+            .into_iter()
+            .map(|p| (p, fs::read(f.project.join(p)).unwrap()))
+            .collect();
+        // Parse authored syntax first; no internal constructor can bypass a refusal.
+        let package = Manifest::read(&source).unwrap();
+        let consumer = Manifest::read(&request).unwrap();
+        let definition = package.configuration.unwrap();
+        let input = consumer.requires.configurations.values().next().unwrap();
+        assert_eq!(
+            input.parameters.get("verbose"),
+            answer.as_ref().map(|value| if *value {
+                &vibe_core::manifest::ParameterValue::Bool(true)
+            } else {
+                &vibe_core::manifest::ParameterValue::Bool(false)
+            })
+        );
+        let normalized = definition.normalize_input(input, "./vibe.toml").unwrap();
+        assert_eq!(
+            normalized.parameters.get("verbose"),
+            input.parameters.get("verbose"),
+            "normalization does not silently fill an omitted parameter default"
+        );
+        let out = f.install();
+        let diagnostic = format!(
+            "{}{}",
+            String::from_utf8_lossy(&out.stdout),
+            String::from_utf8_lossy(&out.stderr)
+        );
+        if has_default || answer.is_none() {
+            assert!(!out.status.success(), "{diagnostic}");
+            if has_default {
+                assert!(diagnostic.contains("only explicitly supplied required public bool parameters without defaults are connected"),"{diagnostic}");
+            } else {
+                assert!(
+                    diagnostic.contains("missing required public parameter `verbose`"),
+                    "{diagnostic}"
+                );
+            }
+            assert!(!f.project.join("vibe.lock").exists());
+            assert!(!f.slot(DRIVER).exists());
+            assert!(!f.slot(BASE).exists());
+            assert!(!f.slot(EXTRA).exists());
+            assert!(!f.project.join("effects.log").exists());
+            for (p, before) in launchers {
+                assert_eq!(fs::read(f.project.join(p)).unwrap(), before);
+            }
+            for (path, before) in static_before {
+                let after = if path.exists() {
+                    Some(fs::read(&path).unwrap())
+                } else {
+                    None
+                };
+                assert_eq!(after, before, "generated boot changed on refusal");
+            }
+        } else {
+            assert!(out.status.success(), "{diagnostic}");
+            let before = fs::read(f.project.join("vibe.lock")).unwrap();
+            let boot = f.static_boot();
+            let hooks = f.hooks();
+            let lock = f.lock();
+            assert!(
+                lock.configurations[&coordinate(DRIVER)]
+                    .consumers
+                    .values()
+                    .all(|original| original.parameters["verbose"]
+                        == vibe_core::manifest::ParameterValue::Bool(false))
+            );
+            let show = f
+                .user
+                .vibe()
+                .args([
+                    "show",
+                    "configuration-data",
+                    "--path",
+                    f.project.to_str().unwrap(),
+                    "--json",
+                ])
+                .output()
+                .unwrap();
+            assert!(show.status.success());
+            let report: serde_json::Value = serde_json::from_slice(&show.stdout).unwrap();
+            assert_eq!(report["packages"][0]["parameters"]["verbose"], false);
+            f.install_ok();
+            assert_eq!(fs::read(f.project.join("vibe.lock")).unwrap(), before);
+            assert_eq!(f.static_boot(), boot);
+            assert_eq!(f.hooks(), hooks);
+        }
+        assert_eq!(fs::read(&request).unwrap(), authored);
+    }
+}
