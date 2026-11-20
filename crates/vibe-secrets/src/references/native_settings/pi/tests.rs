@@ -92,10 +92,23 @@ fn confirmed_pi_sink_preserves_neighbors_and_refuses_stale_or_unsafe_subject() {
     ));
     assert_eq!(std::fs::read(&models).unwrap(), changed);
     std::fs::write(&models, &after).unwrap();
-    let auth_stale = store.preview_pi_native_settings(&home, &connection).unwrap();
-    std::fs::write(&auth, br#"{"vibevm":{"type":"api_key","key":"synthetic-shadow"}}"#).unwrap();
-    assert!(matches!(store.preview_pi_native_settings(&home, &connection), Err(Error::Invalid)));
-    assert!(store.apply_pi_native_settings(&auth_stale, auth_stale.preview_id()).is_err());
+    let auth_stale = store
+        .preview_pi_native_settings(&home, &connection)
+        .unwrap();
+    std::fs::write(
+        &auth,
+        br#"{"vibevm":{"type":"api_key","key":"synthetic-shadow"}}"#,
+    )
+    .unwrap();
+    assert!(matches!(
+        store.preview_pi_native_settings(&home, &connection),
+        Err(Error::Invalid)
+    ));
+    assert!(
+        store
+            .apply_pi_native_settings(&auth_stale, auth_stale.preview_id())
+            .is_err()
+    );
     assert_eq!(std::fs::read(&models).unwrap(), after);
     std::fs::write(&auth, oauth).unwrap();
     let old_target = store

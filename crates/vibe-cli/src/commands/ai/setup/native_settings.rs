@@ -10,15 +10,65 @@ pub(crate) fn run(
     response: Option<String>,
     cancel: &CancellationToken,
 ) -> Result<()> {
-    if agents != ["pi"] {
-        bail!(
-            "native settings currently require exactly --agent pi; other adapters are not yet available"
-        );
+    match agents.as_slice() {
+        [agent] if agent == "pi" => run_adapter(
+            ctx,
+            store,
+            connection,
+            response,
+            cancel,
+            vibe_connections::PiSettingsAdapter,
+            NativeTarget {
+                destination: "HOME/.pi/agent/models.json",
+                overrides: &["PI_CODING_AGENT_DIR"],
+            },
+        ),
+        [agent] if agent == "qwen" => run_adapter(
+            ctx,
+            store,
+            connection,
+            response,
+            cancel,
+            vibe_connections::QwenSettingsAdapter,
+            NativeTarget {
+                destination: "HOME/.qwen/settings.json",
+                overrides: &[
+                    "QWEN_HOME",
+                    "QWEN_CODE_SYSTEM_SETTINGS_PATH",
+                    "QWEN_CODE_SYSTEM_DEFAULTS_PATH",
+                ],
+            },
+        ),
+        _ => bail!("native settings require exactly one supported --agent pi or --agent qwen"),
     }
-    // A native directory override changes the target. Never silently ignore it.
-    if std::env::var_os("PI_CODING_AGENT_DIR").is_some() {
-        bail!("explicit Pi agent-directory override is not yet admitted for native settings");
+}
+struct NativeTarget {
+    destination: &'static str,
+    overrides: &'static [&'static str],
+}
+fn run_adapter<A: NativeSettingsAdapter>(
+    ctx: &output::Context,
+    store: &vibe_connections::Store,
+    connection: Option<String>,
+    response: Option<String>,
+    cancel: &CancellationToken,
+    adapter: A,
+    target: NativeTarget,
+) -> Result<()>
+where
+    A::Preview: vibe_connections::NativeSettingsPreview,
+{
+    let NativeTarget {
+        destination,
+        overrides,
+    } = target;
+    if overrides
+        .iter()
+        .any(|name| std::env::var_os(name).is_some())
+    {
+        bail!("native settings destination override is not yet admitted");
     }
+    use vibe_connections::NativeSettingsPreview;
     let home = super::super::super::app::facts::user_home()
         .ok_or_else(|| anyhow::anyhow!("native settings require an explicit effective HOME"))?;
     let id = vibe_secrets::SecretId::try_from(
@@ -27,9 +77,8 @@ pub(crate) fn run(
     )?;
     cancel.checkpoint()?;
     let metadata = store.details(&id)?.metadata;
-    let adapter = vibe_connections::PiSettingsAdapter;
     let preview = adapter.preview(store, &home, &id)?;
-    let summary = serde_json::json!({"agent":"pi","connection":id,"endpoint":metadata.endpoint,"model":metadata.default_model,"destination":"HOME/.pi/agent/models.json","preview_id":preview.preview_id()});
+    let summary = serde_json::json!({"agent":adapter.id(),"connection":id,"endpoint":metadata.endpoint,"model":metadata.default_model,"destination":destination,"preview_id":preview.preview_id()});
     let attended = !ctx.is_json()
         && !ctx.is_unattended()
         && std::io::stdin().is_terminal()
@@ -39,7 +88,7 @@ pub(crate) fn run(
         println!("{}", serde_json::to_string_pretty(&summary)?);
         let choices = crate::output::prompts::named(&[
             "Keep native settings unchanged",
-            "Write this connection into Pi native settings",
+            "Write this connection into selected agent native settings",
         ]);
         if crate::output::prompts::choose_opt_interruptible(
             "Explicit native settings write — Escape keeps state",

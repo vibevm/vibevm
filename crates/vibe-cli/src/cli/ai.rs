@@ -119,6 +119,7 @@ fn setup_preview_id(raw: &str) -> Result<String, String> {
         .strip_prefix("ai-setup/1:sha256:")
         .or_else(|| raw.strip_prefix("ai-default-scope/1:sha256:"))
         .or_else(|| raw.strip_prefix("pi-native-settings/1:sha256:"))
+        .or_else(|| raw.strip_prefix("qwen-native-settings/1:sha256:"))
         .is_some_and(|h| {
             h.len() == 64
                 && h.bytes()

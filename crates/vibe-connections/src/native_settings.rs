@@ -1,8 +1,22 @@
 //! Internal native-settings adapter composition; no raw credential surface.
 use super::*;
 
+pub trait NativeSettingsPreview {
+    fn preview_id(&self) -> &str;
+}
+impl NativeSettingsPreview for vibe_secrets::PiNativePreview {
+    fn preview_id(&self) -> &str {
+        self.preview_id()
+    }
+}
+impl NativeSettingsPreview for vibe_secrets::QwenNativePreview {
+    fn preview_id(&self) -> &str {
+        self.preview_id()
+    }
+}
+
 pub trait NativeSettingsAdapter {
-    type Preview;
+    type Preview: NativeSettingsPreview;
     fn id(&self) -> &'static str;
     fn supports(&self, api_kind: &str) -> bool;
     fn preview(
@@ -14,6 +28,9 @@ pub trait NativeSettingsAdapter {
     fn apply(&self, store: &Store, preview: &Self::Preview, confirmed: &str)
     -> Result<bool, Error>;
 }
+
+mod qwen;
+pub use qwen::QwenSettingsAdapter;
 
 /// Pi's concrete writer stays with the private keyring reader, not this facade.
 pub struct PiSettingsAdapter;

@@ -264,4 +264,4 @@ mod default_scope;
 pub use default_scope::{DefaultScope, DefaultScopePreview, DefaultScopeRow};
 
 mod native_settings;
-pub use native_settings::{NativeSettingsAdapter, PiSettingsAdapter};
+pub use native_settings::{NativeSettingsAdapter, NativeSettingsPreview, PiSettingsAdapter, QwenSettingsAdapter};

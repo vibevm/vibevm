@@ -6,10 +6,11 @@ use serde_json::{Value, json};
 mod tests;
 
 const PROVIDER: &str = "vibevm";
-const NATIVE_LIMIT: usize = 4 * 1024 * 1024;
+pub(super) const NATIVE_LIMIT: usize = 4 * 1024 * 1024;
 
 /// Opaque operation subject. Debug/serialization cannot expose native contents.
 pub struct PiNativePreview {
+    kind: super::Kind,
     home: PathBuf,
     settings_scope: PathBuf,
     connection: SecretId,
@@ -32,7 +33,7 @@ impl PiNativePreview {
     }
 }
 
-fn native(home: &Path) -> Result<(Project, Pinned), Error> {
+fn native(home: &Path, kind: super::Kind) -> Result<(Project, Pinned), Error> {
     if !home.is_absolute() || home.canonicalize().map_err(|_| Error::Unavailable)? != home {
         return Err(Error::Unavailable);
     }
@@ -41,21 +42,29 @@ fn native(home: &Path) -> Result<(Project, Pinned), Error> {
     home_dir
         .verify_user_owned_parent()
         .map_err(|_| Error::Unavailable)?;
-    let pi = home_dir
-        .private_child(".pi", false)
-        .map_err(|_| Error::Unavailable)?
-        .ok_or(Error::Unavailable)?;
-    let agent = pi
-        .private_child("agent", false)
-        .map_err(|_| Error::Unavailable)?
-        .ok_or(Error::Unavailable)?;
+    let agent = match kind {
+        super::Kind::Pi => home_dir
+            .private_child(".pi", false)
+            .map_err(|_| Error::Unavailable)?
+            .ok_or(Error::Unavailable)?
+            .private_child("agent", false)
+            .map_err(|_| Error::Unavailable)?
+            .ok_or(Error::Unavailable)?,
+        super::Kind::Qwen => home_dir
+            .private_child(".qwen", false)
+            .map_err(|_| Error::Unavailable)?
+            .ok_or(Error::Unavailable)?,
+    };
     Ok((project, agent))
 }
-fn config(dir: &Pinned) -> Result<Option<Vec<u8>>, Error> {
-    dir.read_private_metadata("models.json", NATIVE_LIMIT)
+fn config(dir: &Pinned, kind: super::Kind) -> Result<Option<Vec<u8>>, Error> {
+    dir.read_private_metadata(kind.file(), NATIVE_LIMIT)
         .map_err(|_| Error::Unavailable)
 }
-fn auth_witness(dir: &Pinned) -> Result<Option<String>, Error> {
+fn auth_witness(dir: &Pinned, kind: super::Kind) -> Result<Option<String>, Error> {
+    if kind == super::Kind::Qwen {
+        return Ok(None);
+    }
     let bytes = dir
         .read_private_metadata("auth.json", NATIVE_LIMIT)
         .map_err(|_| Error::Unavailable)?;
@@ -149,6 +158,14 @@ impl Store {
         home: &Path,
         connection: &SecretId,
     ) -> Result<PiNativePreview, Error> {
+        self.preview_native_settings(home, connection, super::Kind::Pi)
+    }
+    pub(super) fn preview_native_settings(
+        &self,
+        home: &Path,
+        connection: &SecretId,
+        kind: super::Kind,
+    ) -> Result<PiNativePreview, Error> {
         let settings_scope = self.root.canonicalize().map_err(|_| Error::Unavailable)?;
         if settings_scope != self.root {
             return Err(Error::Unavailable);
@@ -162,13 +179,18 @@ impl Store {
             .ok_or(Error::NotFound)?;
         let keys = self.snapshot()?;
         let item = keys.items.get(&row.secret_ref).ok_or(Error::NotFound)?;
-        let (_, dir) = native(home)?;
-        let bytes = config(&dir)?;
-        document(&bytes)?;
+        let (_, dir) = native(home, kind)?;
+        let bytes = config(&dir, kind)?;
+        match kind {
+            super::Kind::Pi => {
+                document(&bytes)?;
+            }
+            super::Kind::Qwen => super::qwen::validate(&bytes)?,
+        }
         let native_digest = witness(&bytes);
-        let auth_digest = auth_witness(&dir)?;
+        let auth_digest = auth_witness(&dir, kind)?;
         let mut hash = Sha256::new();
-        hash.update(b"vibevm.pi-native-settings/v1\0");
+        hash.update(kind.domain());
         #[cfg(unix)]
         {
             use std::os::unix::ffi::OsStrExt;
@@ -207,8 +229,13 @@ impl Store {
             &dir.identity().map_err(|_| Error::Unavailable)?,
             &mut IdentityHash(&mut hash),
         );
-        let token = format!("pi-native-settings/1:sha256:{:x}", hash.finalize());
+        let token = format!(
+            "{}-native-settings/1:sha256:{:x}",
+            kind.id(),
+            hash.finalize()
+        );
         Ok(PiNativePreview {
+            kind,
             home: home.into(),
             settings_scope,
             connection: connection.clone(),
@@ -228,6 +255,16 @@ impl Store {
     /// Confirmed concrete sink. No raw getter, callback, export or caller-chosen file/key path.
     /// Returns whether the single protected native file changed.
     pub fn apply_pi_native_settings(
+        &self,
+        preview: &PiNativePreview,
+        confirmed: &str,
+    ) -> Result<bool, Error> {
+        if preview.kind != super::Kind::Pi {
+            return Err(Error::Invalid);
+        }
+        self.apply_native_settings(preview, confirmed)
+    }
+    pub(super) fn apply_native_settings(
         &self,
         preview: &PiNativePreview,
         confirmed: &str,
@@ -269,18 +306,25 @@ impl Store {
             return Err(Error::Conflict);
         }
         let (endpoint, model) = endpoint_model(&snapshot, &preview.connection)?;
-        let (native_project, dir) = native(&preview.home)?;
+        let (native_project, dir) = native(&preview.home, preview.kind)?;
         if dir.identity().map_err(|_| Error::Unavailable)? != preview.native_identity {
             return Err(Error::Conflict);
         }
         let _native = dir
             .private_lock("vibevm-native-settings.lock")
             .map_err(|_| Error::Unavailable)?;
-        let before = config(&dir)?;
-        if witness(&before) != preview.native_digest || auth_witness(&dir)? != preview.auth_digest {
+        let before = config(&dir, preview.kind)?;
+        if witness(&before) != preview.native_digest
+            || auth_witness(&dir, preview.kind)? != preview.auth_digest
+        {
             return Err(Error::Conflict);
         }
-        let mut value = document(&before)?;
+        match preview.kind {
+            super::Kind::Pi => {
+                document(&before)?;
+            }
+            super::Kind::Qwen => super::qwen::validate(&before)?,
+        }
         // Resolve only after all operation, revision, target and protection checks.
         let revision = open_revision(&root, &preview.key, &item.current_revision, false)?;
         let secret = revision
@@ -291,60 +335,79 @@ impl Store {
         if secret.is_empty() || secret.chars().any(char::is_control) {
             return Err(Error::Invalid);
         }
-        let mut literal = String::new();
-        for c in secret.chars() {
-            match c {
-                '$' => literal.push_str("$$"),
-                '!' => literal.push_str("$!"),
-                _ => literal.push(c),
-            }
-        }
-        let providers = value
-            .as_object_mut()
-            .ok_or(Error::Invalid)?
-            .entry("providers")
-            .or_insert_with(|| json!({}))
-            .as_object_mut()
-            .ok_or(Error::Invalid)?;
-        let provider = providers
-            .entry(PROVIDER)
-            .or_insert_with(|| json!({}))
-            .as_object_mut()
-            .ok_or(Error::Invalid)?;
-        provider.insert("baseUrl".into(), json!(endpoint));
-        provider.insert("api".into(), json!("openai-completions"));
-        provider.insert("apiKey".into(), json!(literal));
-        let models = provider
-            .entry("models")
-            .or_insert_with(|| json!([]))
-            .as_array_mut()
-            .ok_or(Error::Invalid)?;
-        if let Some(selected) = models
-            .iter_mut()
-            .find(|m| m.get("id").and_then(Value::as_str) == Some(model.as_str()))
-        {
-            let selected = selected.as_object_mut().ok_or(Error::Invalid)?;
-            // A selected model's old endpoint/API overrides must not defeat the
-            // explicitly confirmed provider pairing. Other model fields survive.
-            selected.insert("baseUrl".into(), json!(endpoint));
-            selected.insert("api".into(), json!("openai-completions"));
-        } else {
-            models.push(json!({"id": model, "baseUrl": endpoint, "api": "openai-completions"}));
-        }
-        let previous = document(&before)?;
-        if value == previous {
+        let bytes = match preview.kind {
+            super::Kind::Pi => merge_pi(&before, &endpoint, &model, secret)?,
+            super::Kind::Qwen => super::qwen::merge(&before, &endpoint, &model, secret)?,
+        };
+        let Some(bytes) = bytes else {
             return Ok(false);
-        }
-        let bytes = serde_json::to_vec_pretty(&value).map_err(|_| Error::Invalid)?;
+        };
         if bytes.len() > NATIVE_LIMIT {
             return Err(Error::Invalid);
         }
-        if config(&dir)? != before || auth_witness(&dir)? != preview.auth_digest {
+        if config(&dir, preview.kind)? != before
+            || auth_witness(&dir, preview.kind)? != preview.auth_digest
+        {
             return Err(Error::Conflict);
         }
         native_project
-            .write_atomic_in_with_mode(&dir, "models.json", &bytes, Some(0o600))
+            .write_atomic_in_with_mode(&dir, preview.kind.file(), &bytes, Some(0o600))
             .map_err(|_| Error::Publication)?;
         Ok(true)
     }
+}
+
+fn merge_pi(
+    before: &Option<Vec<u8>>,
+    endpoint: &str,
+    model: &str,
+    secret: &str,
+) -> Result<Option<Vec<u8>>, Error> {
+    let mut value = document(before)?;
+    let mut literal = String::new();
+    for c in secret.chars() {
+        match c {
+            '$' => literal.push_str("$$"),
+            '!' => literal.push_str("$!"),
+            _ => literal.push(c),
+        }
+    }
+    let providers = value
+        .as_object_mut()
+        .ok_or(Error::Invalid)?
+        .entry("providers")
+        .or_insert_with(|| json!({}))
+        .as_object_mut()
+        .ok_or(Error::Invalid)?;
+    let provider = providers
+        .entry(PROVIDER)
+        .or_insert_with(|| json!({}))
+        .as_object_mut()
+        .ok_or(Error::Invalid)?;
+    provider.insert("baseUrl".into(), json!(endpoint));
+    provider.insert("api".into(), json!("openai-completions"));
+    provider.insert("apiKey".into(), json!(literal));
+    let models = provider
+        .entry("models")
+        .or_insert_with(|| json!([]))
+        .as_array_mut()
+        .ok_or(Error::Invalid)?;
+    if let Some(selected) = models
+        .iter_mut()
+        .find(|m| m.get("id").and_then(Value::as_str) == Some(model))
+    {
+        let selected = selected.as_object_mut().ok_or(Error::Invalid)?;
+        // A selected model's old endpoint/API overrides must not defeat the
+        // explicitly confirmed provider pairing. Other model fields survive.
+        selected.insert("baseUrl".into(), json!(endpoint));
+        selected.insert("api".into(), json!("openai-completions"));
+    } else {
+        models.push(json!({"id": model, "baseUrl": endpoint, "api": "openai-completions"}));
+    }
+    if value == document(before)? {
+        return Ok(None);
+    }
+    Ok(Some(
+        serde_json::to_vec_pretty(&value).map_err(|_| Error::Invalid)?,
+    ))
 }
