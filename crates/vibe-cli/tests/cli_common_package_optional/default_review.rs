@@ -6959,3 +6959,223 @@ fn ordinary_answer_file_invalid_null_stale_and_conflicting_subjects_refuse() {
         assert!(!f.project.join("effects.log").exists());
     }
 }
+
+// Qualification only: rejection does not establish ephemeral secret delivery.
+#[test]
+fn ordinary_secret_boundary_and_diagnostics_qualification() {
+    use sha2::{Digest, Sha256};
+    fn contains_canary(bytes: &[u8], canary: &str, digest: &str) -> bool {
+        bytes.windows(canary.len()).any(|w| w == canary.as_bytes())
+            || bytes.windows(digest.len()).any(|w| w == digest.as_bytes())
+    }
+    fn no_canary(bytes: &[u8], canary: &str, digest: &str, surface: &str) {
+        assert!(
+            !contains_canary(bytes, canary, digest),
+            "synthetic secret disclosure on {surface}; value suppressed"
+        );
+    }
+    fn scan(path: &Path, excluded: &[PathBuf], canary: &str, digest: &str, files: &mut usize) {
+        if excluded.iter().any(|p| path == p) {
+            return;
+        }
+        let meta = match fs::symlink_metadata(path) {
+            Ok(meta) => meta,
+            Err(error) if error.kind() == std::io::ErrorKind::NotFound => return,
+            Err(_) => panic!("framework scan cannot observe a state entry; details suppressed"),
+        };
+        if meta.file_type().is_symlink() {
+            use std::os::unix::ffi::OsStrExt;
+            *files += 1;
+            no_canary(
+                fs::read_link(path).unwrap().as_os_str().as_bytes(),
+                canary,
+                digest,
+                "framework symlink target",
+            );
+            return;
+        }
+        if meta.is_dir() {
+            for child in fs::read_dir(path).unwrap() {
+                scan(&child.unwrap().path(), excluded, canary, digest, files);
+            }
+        } else if meta.is_file() {
+            *files += 1;
+            // Do not print paths: even the diagnostic surface stays value-free.
+            no_canary(
+                &fs::read(path).unwrap(),
+                canary,
+                digest,
+                "persisted framework state",
+            );
+        }
+    }
+    for route in ["authored", "preview", "envelope"] {
+        for world in [
+            "public-bool",
+            "public-text",
+            "secret-bool-omitted",
+            "secret-bool-typed",
+            "secret-bool-wrong",
+            "secret-text-omitted",
+            "secret-text-typed",
+            "secret-text-wrong",
+        ] {
+            if world == "public-text" && route != "authored" {
+                continue; // The preview/envelope contract remains bool-only.
+            }
+            let f = preview_fixture();
+            let canary = format!(
+                "synthetic-private-answer-{}",
+                f.root.file_name().unwrap().to_string_lossy()
+            );
+            let digest = format!("{:x}", Sha256::digest(canary.as_bytes()));
+            assert!(
+                contains_canary(canary.as_bytes(), &canary, &digest),
+                "raw scanner self-test failed"
+            );
+            assert!(
+                contains_canary(digest.as_bytes(), &canary, &digest),
+                "digest scanner self-test failed"
+            );
+            assert!(
+                !contains_canary(b"safe synthetic control", &canary, &digest),
+                "scanner negative control failed"
+            );
+            let input = f.root.join("qualification-input.json");
+            // Obtain a real admitted envelope before changing the definition.
+            // A later secret refusal is not evidence that this old pin was admitted.
+            let envelope_file = ordinary_answer_file(&f, "disabled", false);
+            let mut envelope: serde_json::Value =
+                serde_json::from_slice(&fs::read(&envelope_file).unwrap()).unwrap();
+            let source = f.registry.join(GROUP).join(DRIVER).join("v1.0.0/vibe.toml");
+            let secret = world.starts_with("secret-");
+            let text = world.contains("text");
+            let mut definition = fs::read_to_string(&source).unwrap();
+            if text {
+                definition = definition.replace("type='bool'", "type='string'");
+            }
+            if secret {
+                definition = definition.replace("required=true", "required=true\nsecret=true");
+            }
+            write(&source, definition);
+            let answer = if world.ends_with("omitted") {
+                None
+            } else if world.ends_with("wrong") {
+                Some(if text {
+                    serde_json::json!([canary])
+                } else {
+                    serde_json::json!(canary)
+                })
+            } else if text {
+                Some(serde_json::json!(canary))
+            } else {
+                Some(serde_json::json!(false))
+            };
+            let mut parameters = serde_json::Map::new();
+            if let Some(value) = &answer {
+                parameters.insert("verbose".into(), value.clone());
+            }
+            let request = f.project.join("vibe.toml");
+            let out = match route {
+                "authored" => {
+                    let parameter = match &answer {
+                        None => String::new(),
+                        Some(serde_json::Value::Bool(_)) => ",parameters={verbose=false}".into(),
+                        Some(serde_json::Value::String(_)) => {
+                            format!(",parameters={{verbose='{canary}'}}")
+                        }
+                        Some(_) => format!(",parameters={{verbose=['{canary}']}}"),
+                    };
+                    write(&request, fs::read_to_string(&request).unwrap().replace("link='static-transitive'", &format!("link='static-transitive'\nconfiguration={{policy='require-selection',default_features=false,selections={{extra={{intent='exact',members=['disabled']}}}}{parameter}}}")));
+                    f.install()
+                }
+                "preview" => {
+                    write(&input, serde_json::to_vec(&serde_json::json!({"selections":{"extra":"disabled"},"parameters":parameters})).unwrap());
+                    preview_cli(&f, Some(&input))
+                }
+                "envelope" => {
+                    envelope["input"]["parameters"] = parameters.into();
+                    write(&envelope_file, serde_json::to_vec(&envelope).unwrap());
+                    f.user
+                        .vibe()
+                        .args([
+                            "install",
+                            "--ordinary-answers",
+                            envelope_file.to_str().unwrap(),
+                            "--path",
+                            f.project.to_str().unwrap(),
+                            "--offline",
+                            "--assume-yes",
+                            "--json",
+                        ])
+                        .output()
+                        .unwrap()
+                }
+                _ => unreachable!(),
+            };
+            // Never include the captured diagnostic, raw input or digest in a panic/log.
+            if secret {
+                no_canary(&out.stdout, &canary, &digest, "stdout");
+                no_canary(&out.stderr, &canary, &digest, "stderr");
+                let excluded = [
+                    request.clone(),
+                    input.clone(),
+                    envelope_file.clone(),
+                    f.registry.clone(),
+                ];
+                let mut scanned = 0;
+                scan(&f.root, &excluded, &canary, &digest, &mut scanned);
+                // Include settings, registry/store cache, search cache and coordination records.
+                scan(
+                    f.user.settings.parent().unwrap(),
+                    &[],
+                    &canary,
+                    &digest,
+                    &mut scanned,
+                );
+                assert!(scanned > 0, "framework scan unexpectedly empty");
+                let diagnostic = String::from_utf8_lossy(&out.stdout).to_string()
+                    + &String::from_utf8_lossy(&out.stderr);
+                assert!(
+                    diagnostic.contains("public bool")
+                        || diagnostic.contains("public string")
+                        || diagnostic.contains("invalid type")
+                        || diagnostic.contains("invalid value")
+                        || diagnostic.contains("did not match any variant")
+                        || diagnostic.contains("TOML parse error")
+                        || diagnostic
+                            .contains("secret parameter requires an ephemeral operation input"),
+                    "refusal lost safe reason class: {route}/{world}"
+                );
+                println!(
+                    "secret scan route={route} world={world} files-scanned={scanned} lock=absent hooks=absent slots=absent"
+                );
+                assert!(
+                    !out.status.success(),
+                    "secret world unexpectedly admitted: {route}/{world}"
+                );
+                assert!(
+                    !f.project.join("vibe.lock").exists(),
+                    "secret refusal published history"
+                );
+                assert!(
+                    !f.project.join("effects.log").exists(),
+                    "secret refusal ran hooks"
+                );
+                for name in [DRIVER, BASE, EXTRA] {
+                    assert!(!f.slot(name).exists(), "secret refusal published slot");
+                }
+            } else {
+                assert!(out.status.success(), "public control failed: {route}");
+                if route != "preview" {
+                    assert!(f.project.join("vibe.lock").exists());
+                }
+            }
+            println!(
+                "secret qualification route={route} world={world} success={} raw-and-digest-scan={}",
+                out.status.success(),
+                if secret { "clean" } else { "public-control" }
+            );
+        }
+    }
+}
