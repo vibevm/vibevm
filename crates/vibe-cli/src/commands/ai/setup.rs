@@ -3,6 +3,8 @@ use crate::{cli::AiBindingMode, output};
 use anyhow::{Result, bail};
 use std::{collections::BTreeMap, io::IsTerminal, path::Path};
 use vibe_core::cancellation::CancellationToken;
+mod native_settings;
+pub(super) use native_settings::run as native_settings;
 
 pub(super) struct Request {
     pub agents: Vec<String>,

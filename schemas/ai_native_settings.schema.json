@@ -1,0 +1,25 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["protocol", "ok", "applied", "changed", "preview"],
+  "properties": {
+    "protocol": {"const": "vibe-ai-native-settings/1"},
+    "ok": {"const": true},
+    "applied": {"type": "boolean"},
+    "changed": {"type": "boolean"},
+    "preview": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["agent", "connection", "endpoint", "model", "destination", "preview_id"],
+      "properties": {
+        "agent": {"const": "pi"},
+        "connection": {"type": "string"},
+        "endpoint": {"type": "string"},
+        "model": {"type": "string"},
+        "destination": {"const": "HOME/.pi/agent/models.json"},
+        "preview_id": {"type": "string", "pattern": "^pi-native-settings/1:sha256:[0-9a-f]{64}$"}
+      }
+    }
+  }
+}

@@ -1855,3 +1855,7 @@ fn default_scope_updates_once_preserves_native_and_rejects_stale_subject() {
             .success()
     );
 }
+
+#[cfg(unix)]
+#[path = "cli_ai_connections/native_settings.rs"]
+mod native_settings;

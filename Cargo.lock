@@ -5322,10 +5322,12 @@ dependencies = [
  "core-ai-native-specmark",
  "getrandom 0.3.4",
  "serde",
+ "serde_json",
  "sha2",
  "tempfile",
  "thiserror 2.0.18",
  "toml 0.9.12+spec-1.1.0",
+ "url",
  "vibe-safefs",
 ]
 

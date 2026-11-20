@@ -6,6 +6,7 @@ impl FormatId {
     /// Every variant, in registry (sorted-id) order.
     pub const ALL: &[FormatId] = &[
         FormatId::AiDefaultScopeResult,
+        FormatId::AiNativeSettings,
         FormatId::ApplicationAgentHook,
         FormatId::ApplicationAgentHookResult,
         FormatId::ApplicationImportInput,
@@ -232,6 +233,7 @@ impl FormatId {
     pub fn id(self) -> &'static str {
         match self {
             FormatId::AiDefaultScopeResult => "ai-default-scope-result",
+            FormatId::AiNativeSettings => "ai-native-settings",
             FormatId::ApplicationAgentHook => "application-agent-hook",
             FormatId::ApplicationAgentHookResult => "application-agent-hook-result",
             FormatId::ApplicationImportInput => "application-import-input",
@@ -461,6 +463,7 @@ impl FormatId {
     pub fn epoch(self) -> u32 {
         match self {
             FormatId::AiDefaultScopeResult => 1,
+            FormatId::AiNativeSettings => 1,
             FormatId::ApplicationAgentHook => 1,
             FormatId::ApplicationAgentHookResult => 1,
             FormatId::ApplicationImportInput => 1,
@@ -688,6 +691,7 @@ impl FormatId {
     pub fn recoverable(self) -> bool {
         match self {
             FormatId::AiDefaultScopeResult => false,
+            FormatId::AiNativeSettings => false,
             FormatId::ApplicationAgentHook => true,
             FormatId::ApplicationAgentHookResult => true,
             FormatId::ApplicationImportInput => false,
@@ -915,6 +919,7 @@ impl FormatId {
     pub fn foreign_parsers(self) -> ForeignParsers {
         match self {
             FormatId::AiDefaultScopeResult => ForeignParsers::Many,
+            FormatId::AiNativeSettings => ForeignParsers::Many,
             FormatId::ApplicationAgentHook => ForeignParsers::Many,
             FormatId::ApplicationAgentHookResult => ForeignParsers::Many,
             FormatId::ApplicationImportInput => ForeignParsers::Many,
@@ -1142,6 +1147,7 @@ impl FormatId {
     pub fn unknown_fields(self) -> UnknownFields {
         match self {
             FormatId::AiDefaultScopeResult => UnknownFields::Deny,
+            FormatId::AiNativeSettings => UnknownFields::Deny,
             FormatId::ApplicationAgentHook => UnknownFields::Allow,
             FormatId::ApplicationAgentHookResult => UnknownFields::Allow,
             FormatId::ApplicationImportInput => UnknownFields::Deny,

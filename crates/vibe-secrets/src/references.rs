@@ -3,6 +3,8 @@ use super::*;
 use sha2::{Digest, Sha256};
 const LIMIT: usize = 1024 * 1024;
 mod default_scope;
+mod native_settings;
+pub use native_settings::PiNativePreview;
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq)]
 #[serde(deny_unknown_fields)]
 pub struct ReferenceRow {

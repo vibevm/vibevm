@@ -20,6 +20,7 @@
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
 pub enum FormatId {
     AiDefaultScopeResult,
+    AiNativeSettings,
     ApplicationAgentHook,
     ApplicationAgentHookResult,
     ApplicationImportInput,

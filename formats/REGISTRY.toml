@@ -2311,3 +2311,12 @@ foreign_parsers = "many"
 unknown_fields = "deny"
 corpus = "formats/corpora/ai-default-scope-result/e1"
 sunset = "none"
+
+[format.ai-native-settings]
+epoch = 1
+schema = "schemas/ai_native_settings.schema.json"
+recoverable = false
+foreign_parsers = "many"
+unknown_fields = "deny"
+corpus = "formats/corpora/ai-native-settings/e1"
+sunset = "none"

@@ -20,12 +20,16 @@ pub fn run(ctx: &output::Context, args: AiArgs, cancel: &CancellationToken) -> R
         AiCommand::Setup {
             agents,
             from_agent_alias,
+            native_settings,
             mode,
             connection,
             set_default,
             scope,
             apply_preview,
         } => {
+            if native_settings {
+                return setup::native_settings(ctx, &store, agents, connection, apply_preview, cancel);
+            }
             if let Some(target) = set_default {
                 let scope = match scope
                     .ok_or_else(|| anyhow::anyhow!("explicit default scope required"))?

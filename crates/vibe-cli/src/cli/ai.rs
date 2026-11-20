@@ -13,6 +13,9 @@ pub enum AiCommand {
         /// Configure metadata for this user launcher alias; never install or retry it.
         #[arg(long, conflicts_with = "agents")]
         from_agent_alias: Option<String>,
+        /// Explicitly preview/apply persistent native settings, not metadata bindings.
+        #[arg(long, conflicts_with_all = ["mode", "set_default", "scope", "from_agent_alias"])]
+        native_settings: bool,
         #[arg(long, value_enum)]
         mode: Option<AiBindingMode>,
         #[arg(long)]
@@ -115,6 +118,7 @@ fn setup_preview_id(raw: &str) -> Result<String, String> {
     if raw
         .strip_prefix("ai-setup/1:sha256:")
         .or_else(|| raw.strip_prefix("ai-default-scope/1:sha256:"))
+        .or_else(|| raw.strip_prefix("pi-native-settings/1:sha256:"))
         .is_some_and(|h| {
             h.len() == 64
                 && h.bytes()
