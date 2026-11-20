@@ -255,3 +255,5 @@ Two historical APIs separate known absent manifest epoch from unrecognized profi
 Four historical revisions distinguish an inclusive stable-read bound from zero, synchronization of the held directory from ambient reopening, explicit deployment target mode from an OS label, and session identity across restarts from a process-local counter. Named source and regression changes were reviewed, not rerun.
 
 The stream contract at `ae083f59f9` distinguishes requested cancellation from a reached safe stop. At `775329bc64`, cold inspection preserves observed partial artifacts and known run identity when a previously ready operation has a damaged capsule. Historical source review only.
+
+Three historical changes distinguish a supplied projection occurrence ID from its observation, exact local Install permission from script approval, and read-only peer attachment from a new submission. The selected source and test changes were read, not executed.
