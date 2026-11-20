@@ -384,6 +384,7 @@ fn apply_metadata_checked<S: InstallSource + ?Sized>(
 ) -> Result<PreparedApplyReport> {
     let PlannedInstall {
         node_roots,
+        submitted,
         project_root,
         request: _,
         manifest,
@@ -549,6 +550,7 @@ fn apply_metadata_checked<S: InstallSource + ?Sized>(
                     lockfile_path: &lockfile_path,
                 },
                 files,
+                submitted,
             )
         })
         .and_then(|()| progress.checkpoint().map_err(Error::from));

@@ -146,6 +146,10 @@ pub fn check(workspace: &Workspace, lockfile: &Lockfile) -> Freshness {
             // `vibe update`. PROP-011 §2.6.
             if is_in_workspace_file_source(locked.source_url.as_str(), &workspace.root)
                 && !locked.materialization.is_in_place()
+                && !lockfile
+                    .configurations
+                    .values()
+                    .any(|record| !record.submitted_inputs.is_empty())
             {
                 return stale(format!(
                     "`{}/{}` resolves from an in-workspace file:// source (a mutable working \

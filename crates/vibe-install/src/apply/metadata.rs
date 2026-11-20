@@ -26,6 +26,9 @@ pub(super) fn apply_with_spec_format_and_slot_lifecycle<S: InstallSource + ?Size
     trace: Option<&vibe_workspace::compile_trace::TraceRun>,
     native: Option<NativeApplyPreparation<'_>>,
 ) -> Result<PreparedApplyReport> {
+    if let Some(proof) = &planned.submitted {
+        proof.recheck(&planned.manifest)?;
+    }
     crate::configuration_admission::planned(&planned)?;
     crate::source_admission::planned(&planned, spec_format)?;
     let before_manifest = planned.manifest.clone();

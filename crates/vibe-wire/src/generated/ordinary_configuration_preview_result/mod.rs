@@ -25,6 +25,9 @@ pub struct OrdinaryConfigurationPreviewResult {
 
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub resolved: Option<Resolved>,
+
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub project_witness: Option<String>,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]

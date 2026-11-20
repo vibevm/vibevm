@@ -47,6 +47,8 @@ pub use path_sources::workspace_path_sources;
 mod record;
 mod slot_verify;
 mod source_admission;
+mod submission;
+pub use submission::verify_submitted_replay;
 mod visibility_projection;
 
 pub use apply::{
@@ -70,8 +72,9 @@ pub use plan::{
     PreviewSourceStorage, RecommendationOutcome, RecommendationRow, SuggestionRow,
     WeakDependencyReport, configured_workspace_inputs, freshness_prepared, plan,
     plan_prepared_with_selected_roots, plan_prepared_with_spec_format,
-    plan_prepared_without_publication, plan_with_spec_format, preview_has_requirements,
-    preview_prepared, preview_prepared_with_selected_roots, project_fresh_node_roots,
+    plan_prepared_with_submission, plan_prepared_without_publication, plan_with_spec_format,
+    preview_has_requirements, preview_prepared, preview_prepared_with_selected_roots,
+    project_fresh_node_roots,
 };
 pub use record::{
     exact_pinned_pkgref, finalize_pkgref_for_manifest, merge_manifest_requires,

@@ -31,6 +31,7 @@ pub(crate) struct CliConfirmGate<'a> {
     assume_yes: bool,
     destination: PathBuf,
     scope: ConfirmationScope<'a>,
+    ordinary_explicit: bool,
 }
 
 impl<'a> CliConfirmGate<'a> {
@@ -51,7 +52,12 @@ impl<'a> CliConfirmGate<'a> {
                 root.join(vibe_core::layout::current_vibedeps_root()),
             ),
             scope,
+            ordinary_explicit: false,
         }
+    }
+    pub(crate) fn with_ordinary_explicit(mut self, enabled: bool) -> Self {
+        self.ordinary_explicit = enabled;
+        self
     }
 
     fn project_prompt(&self, packages: usize) -> String {
@@ -91,6 +97,26 @@ impl ConfirmGate for CliConfirmGate<'_> {
         if let ConfirmationScope::UserProject { notice, action } = self.scope {
             notice.step(&self.user_notice(packages, action));
             return Ok(());
+        }
+        if self.ordinary_explicit && !self.assume_yes {
+            if self.ctx.is_json() || self.ctx.is_unattended() || !console::user_attended() {
+                bail!(
+                    "ordinary submitted install requires explicit --assume-yes or attended apply confirmation"
+                );
+            }
+            let choices = crate::output::prompts::named(&["no", "yes"]);
+            let selected = self.ctx.with_terminal_released(|| {
+                crate::output::prompts::choose_opt_interruptible(
+                    &self.project_prompt(packages),
+                    &choices,
+                    0,
+                )
+            })?;
+            return if selected == Some(1) {
+                Ok(())
+            } else {
+                Err(InstallError::UserDeclined.into())
+            };
         }
         if !self.requires_confirmation() {
             return Ok(());

@@ -6653,3 +6653,309 @@ fn submitted_history_stage_a_source_present_inspection_refuses_drift() {
         assert_eq!(super::workspace::semantic_snapshot(&f.project), before);
     }
 }
+
+fn ordinary_answer_file(f: &Fixture, selected: &str, flag: bool) -> PathBuf {
+    let preview = preview_cli(f, None);
+    assert!(
+        preview.status.success(),
+        "{}",
+        String::from_utf8_lossy(&preview.stderr)
+    );
+    let shown: serde_json::Value = serde_json::from_slice(&preview.stdout).unwrap();
+    let file = f.root.join("ordinary-answers.json");
+    write(&file,serde_json::to_vec(&serde_json::json!({"protocol":"vibe-ordinary-install-answers/1","package":coordinate(DRIVER),"project_witness":shown["project_witness"],"source":shown["source"],"input":{"selections":{"extra":selected},"parameters":{"verbose":flag}}})).unwrap());
+    file
+}
+#[test]
+fn ordinary_answer_file_install_and_registry_independent_cold_replay() {
+    for world in ["off", "on", "corrupt-store", "missing-store", "no-consent"] {
+        let f = preview_fixture();
+        let selected = if world == "on" { "enabled" } else { "disabled" };
+        let file = ordinary_answer_file(&f, selected, world == "on");
+        let mut command = f.user.vibe();
+        command.args([
+            "install",
+            "--ordinary-answers",
+            file.to_str().unwrap(),
+            "--path",
+            f.project.to_str().unwrap(),
+            "--offline",
+            "--json",
+        ]);
+        if world != "no-consent" {
+            command.arg("--assume-yes");
+        }
+        let before = super::workspace::semantic_snapshot(&f.project);
+        let out = command.output().unwrap();
+        let diagnostic = format!(
+            "{}{}",
+            String::from_utf8_lossy(&out.stdout),
+            String::from_utf8_lossy(&out.stderr)
+        );
+        println!(
+            "ordinary file {world} status={} diagnostic={diagnostic}",
+            out.status
+        );
+        if world == "no-consent" {
+            assert!(!out.status.success());
+            assert_eq!(super::workspace::semantic_snapshot(&f.project), before);
+            continue;
+        }
+        assert!(out.status.success(), "{diagnostic}");
+        let lock = f.lock();
+        assert_eq!(lock.meta.schema_version, 16);
+        let record = &lock.configurations[&coordinate(DRIVER)];
+        assert!(record.consumers.is_empty());
+        assert_eq!(record.submitted_inputs.len(), 1);
+        assert_eq!(
+            record
+                .selected_parameters(vibe_core::PackageKind::Flow)
+                .unwrap()["verbose"],
+            vibe_core::manifest::ParameterValue::Bool(world == "on")
+        );
+        assert_eq!(f.slot(EXTRA).exists(), world == "on");
+        fs::remove_file(&file).unwrap();
+        fs::rename(&f.registry, f.root.join("retained-registry-unavailable")).unwrap();
+        let store = f
+            .user
+            .settings
+            .join("cache")
+            .join(GROUP)
+            .join(DRIVER)
+            .join("v1.0.0");
+        if world == "corrupt-store" {
+            write(
+                &store.join("unused-source.txt"),
+                "CORRUPTED_PAYLOAD_WITH_UNCHANGED_MANIFEST\n",
+            );
+        }
+        if world == "missing-store" {
+            fs::rename(&store, f.root.join("retained-store-disabled")).unwrap();
+        }
+        let before = super::workspace::semantic_snapshot(&f.project);
+        let replay = f.install();
+        let diagnostic = format!(
+            "{}{}",
+            String::from_utf8_lossy(&replay.stdout),
+            String::from_utf8_lossy(&replay.stderr)
+        );
+        println!(
+            "ordinary replay {world} status={} diagnostic={diagnostic}",
+            replay.status
+        );
+        assert_eq!(
+            replay.status.success(),
+            matches!(world, "on" | "off"),
+            "{diagnostic}"
+        );
+        assert_eq!(super::workspace::semantic_snapshot(&f.project), before);
+    }
+}
+
+#[test]
+fn ordinary_interactive_install_explicit_apply_cancel_and_post_plan_drift() {
+    for mode in ["false", "true", "cancel", "source-drift", "root-drift"] {
+        let f = preview_fixture();
+        let script = f.root.join("ordinary-install-pty.py");
+        write(&script, include_str!("../common/ordinary-install-pty.py"));
+        let source = f
+            .registry
+            .join(GROUP)
+            .join(DRIVER)
+            .join("v1.0.0/unused-source.txt");
+        let source_before = fs::read(&source).unwrap();
+        let root_before = fs::read(f.project.join("vibe.toml")).unwrap();
+        let before = super::workspace::semantic_snapshot(&f.project);
+        let output = std::process::Command::new("python3")
+            .args([
+                "-I",
+                script.to_str().unwrap(),
+                env!("CARGO_BIN_EXE_vibe"),
+                f.project.to_str().unwrap(),
+                mode,
+                source.to_str().unwrap(),
+            ])
+            .env_clear()
+            .env("PATH", "/usr/bin:/bin")
+            .env("HOME", f.root.join("home"))
+            .env("VIBE_SETTINGS", &f.user.settings)
+            .env("VIBE_REGISTRY_CACHE", &f.user.cache)
+            .env("VIBEVM_SEARCH_CACHE_DIR", &f.user.search_cache)
+            .env("VIBE_NO_DEFAULT_REGISTRY", "1")
+            .env("TERM", "xterm")
+            .output()
+            .unwrap();
+        assert!(
+            output.status.success(),
+            "{}",
+            String::from_utf8_lossy(&output.stderr)
+        );
+        let evidence: serde_json::Value = serde_json::from_slice(&output.stdout).unwrap();
+        println!("ordinary PTY {mode}={evidence}");
+        assert_eq!(evidence["terminal_restored"], true);
+        assert_eq!(evidence["cursor_visible"], true);
+        assert_eq!(evidence["stage"], 3);
+        if matches!(mode, "false" | "true") {
+            assert_eq!(evidence["status"], 0, "{evidence}");
+            let lock = f.lock();
+            assert!(
+                lock.configurations[&coordinate(DRIVER)]
+                    .consumers
+                    .is_empty()
+            );
+            assert_eq!(
+                lock.configurations[&coordinate(DRIVER)]
+                    .selected_parameters(vibe_core::PackageKind::Flow)
+                    .unwrap()["verbose"],
+                vibe_core::manifest::ParameterValue::Bool(mode == "true")
+            );
+            assert!(f.slot(DRIVER).exists());
+            assert!(f.static_boot().contains(DRIVER_MARKER));
+            assert!(!f.slot(EXTRA).exists());
+            assert!(f.hooks().get(BASE).copied().unwrap_or(0) > 0);
+            let control = preview_fixture();
+            let file = ordinary_answer_file(&control, "disabled", mode == "true");
+            let result = control
+                .user
+                .vibe()
+                .args([
+                    "install",
+                    "--ordinary-answers",
+                    file.to_str().unwrap(),
+                    "--path",
+                    control.project.to_str().unwrap(),
+                    "--offline",
+                    "--assume-yes",
+                    "--json",
+                ])
+                .output()
+                .unwrap();
+            assert!(
+                result.status.success(),
+                "{}",
+                String::from_utf8_lossy(&result.stderr)
+            );
+            let other = control.lock();
+            assert_eq!(graph(&lock), graph(&other));
+            assert_eq!(f.hooks(), control.hooks());
+            assert_eq!(
+                lock.configurations[&coordinate(DRIVER)].submitted_inputs["./vibe.toml"].original,
+                other.configurations[&coordinate(DRIVER)].submitted_inputs["./vibe.toml"].original
+            );
+            assert_eq!(
+                lock.configurations[&coordinate(DRIVER)].features,
+                other.configurations[&coordinate(DRIVER)].features
+            );
+            let installed = super::workspace::semantic_snapshot(&f.project);
+            fs::rename(&f.registry, f.root.join("retained-pty-registry-disabled")).unwrap();
+            f.install_ok();
+            // The registry is nested in this project: account only for the
+            // test-owned rename before comparing the replay's semantic world.
+            fs::rename(f.root.join("retained-pty-registry-disabled"), &f.registry).unwrap();
+            let replayed = super::workspace::semantic_snapshot(&f.project);
+            assert_eq!(replayed, installed);
+        } else {
+            assert_ne!(evidence["status"], 0, "{evidence}");
+            if mode == "source-drift" {
+                write(&source, &source_before);
+            }
+            if mode == "root-drift" {
+                write(&f.project.join("vibe.toml"), &root_before);
+            }
+            assert_eq!(super::workspace::semantic_snapshot(&f.project), before);
+            assert!(!f.project.join("vibe.lock").exists());
+            assert!(!f.project.join("effects.log").exists());
+        }
+    }
+}
+
+#[test]
+fn ordinary_answer_file_invalid_null_stale_and_conflicting_subjects_refuse() {
+    for world in [
+        "null",
+        "missing",
+        "unknown",
+        "false-missing",
+        "source-drift",
+        "root-drift",
+        "authored",
+        "cross-project",
+    ] {
+        let f = preview_fixture();
+        let file = ordinary_answer_file(&f, "disabled", false);
+        let mut envelope: serde_json::Value =
+            serde_json::from_slice(&fs::read(&file).unwrap()).unwrap();
+        match world {
+            "null" => envelope["input"] = serde_json::Value::Null,
+            "missing" => {
+                envelope.as_object_mut().unwrap().remove("input");
+            }
+            "unknown" => envelope["unexpected"] = true.into(),
+            "false-missing" => {
+                envelope["input"]["parameters"]
+                    .as_object_mut()
+                    .unwrap()
+                    .remove("verbose");
+            }
+            "source-drift" => {
+                let p = f
+                    .registry
+                    .join(GROUP)
+                    .join(DRIVER)
+                    .join("v1.0.0/unused-source.txt");
+                write(
+                    &p,
+                    fs::read(&p)
+                        .unwrap()
+                        .into_iter()
+                        .chain(b"CHANGED".iter().copied())
+                        .collect::<Vec<_>>(),
+                );
+            }
+            "root-drift" => {
+                let p = f.project.join("vibe.toml");
+                write(&p, fs::read_to_string(&p).unwrap() + "\n# changed root\n");
+            }
+            "authored" => {
+                let p = f.project.join("vibe.toml");
+                write(&p,fs::read_to_string(&p).unwrap().replace("link='static-transitive'","link='static-transitive'\nconfiguration={policy='require-selection',default_features=false,selections={extra={intent='exact',members=['disabled']}},parameters={verbose=false}}"));
+            }
+            "cross-project" => {
+                let other = preview_fixture();
+                let otherfile = ordinary_answer_file(&other, "disabled", false);
+                envelope = serde_json::from_slice(&fs::read(otherfile).unwrap()).unwrap();
+            }
+            _ => {}
+        }
+        write(&file, serde_json::to_vec(&envelope).unwrap());
+        let before = super::workspace::semantic_snapshot(&f.project);
+        let out = f
+            .user
+            .vibe()
+            .args([
+                "install",
+                "--ordinary-answers",
+                file.to_str().unwrap(),
+                "--path",
+                f.project.to_str().unwrap(),
+                "--offline",
+                "--assume-yes",
+                "--json",
+            ])
+            .output()
+            .unwrap();
+        let diagnostic = format!(
+            "{}{}",
+            String::from_utf8_lossy(&out.stdout),
+            String::from_utf8_lossy(&out.stderr)
+        );
+        println!(
+            "ordinary invalid {world} status={} diagnostic={diagnostic}",
+            out.status
+        );
+        assert!(!out.status.success(), "{diagnostic}");
+        assert_eq!(super::workspace::semantic_snapshot(&f.project), before);
+        assert!(!f.project.join("vibe.lock").exists());
+        assert!(!f.project.join("effects.log").exists());
+    }
+}

@@ -90,6 +90,9 @@ impl LifecycleArgs {
     /// admitting pkgrefs or any manifest-mutating install-only flag.
     pub(crate) fn install_args(&self) -> InstallArgs {
         InstallArgs {
+            ordinary_answers: None,
+            ordinary_interactive: false,
+            parsed_ordinary_submission: None,
             source_policy: Default::default(),
             packages: Vec::new(),
             global: false,

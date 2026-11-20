@@ -47,6 +47,7 @@ impl InstallArgs {
     /// the core only through the manifest-mutation port.
     pub(crate) fn inputs(&self) -> vibe_orchestrator::InstallInputs {
         vibe_orchestrator::InstallInputs {
+            ordinary_submission: self.parsed_ordinary_submission.clone(),
             packages: self.packages.clone(),
             features: self.features.clone(),
             no_default_features: self.no_default_features,
@@ -82,6 +83,14 @@ impl InstallArgs {
 
 #[derive(Debug, Clone, clap::Args)]
 pub struct InstallArgs {
+    /// Source-bound ordinary root answer document, not app configuration input.
+    #[arg(long, conflicts_with_all = ["ordinary_interactive", "global", "plan_only"])]
+    pub ordinary_answers: Option<PathBuf>,
+    /// Collect ordinary answers, then separately confirm application.
+    #[arg(long, conflicts_with_all = ["ordinary_answers", "global", "plan_only", "json", "unattended"])]
+    pub ordinary_interactive: bool,
+    #[arg(skip)]
+    pub(crate) parsed_ordinary_submission: Option<vibe_core::manifest::SubmittedInput>,
     #[command(flatten)]
     pub source_policy: super::SourcePolicyArgs,
     /// Zero or more package references, each `<group>/<name>[@<version>]`.

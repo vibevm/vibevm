@@ -20,6 +20,7 @@ pub(super) fn record_lock(
     lockfile: &mut Lockfile,
     inputs: LockInputs<'_>,
     files: &mut MetadataFiles,
+    submitted: Option<crate::submission::VerifiedSubmission>,
 ) -> Result<()> {
     let LockInputs {
         fetched,
@@ -93,7 +94,10 @@ pub(super) fn record_lock(
     };
     let lock_text = match lock_text {
         Some(original) => original,
-        None => lockfile.render_with_comments(files.lock.previous_text()?)?,
+        None => match submitted {
+            Some(proof) => proof.encode(lockfile, files.lock.previous_text()?)?,
+            None => lockfile.render_with_comments(files.lock.previous_text()?)?,
+        },
     };
     let provenance = crate::record::merge_fetch_provenance(
         fetched,

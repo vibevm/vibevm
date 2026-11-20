@@ -141,6 +141,7 @@ pub fn preview_prepared_with_selected_roots<S: InstallSource + ?Sized>(
         observer,
         PlanningPurpose::Preview(lockfile, storage),
         selected_roots,
+        None,
     )?;
     let Some(prepared) = prepared else {
         return Err(vibe_registry::RegistryError::MalformedMeta {

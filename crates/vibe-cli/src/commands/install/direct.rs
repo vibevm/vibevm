@@ -335,7 +335,8 @@ fn execute_after_open(
     // from the bundle rather than re-resolved: two canonicalisations are two
     // answers to "which node did this command act on".
     let failed_root = selection.root().to_path_buf();
-    let confirm_gate = super::CliConfirmGate::with_scope(ctx, args.assume_yes, &failed_root, scope);
+    let confirm_gate = super::CliConfirmGate::with_scope(ctx, args.assume_yes, &failed_root, scope)
+        .with_ordinary_explicit(args.parsed_ordinary_submission.is_some());
     let install_observer = super::CliInstallObserver::new(ctx, None)
         .with_progress(ctx.progress())
         .with_log_mode(crate::commands::app::display::log_mode(

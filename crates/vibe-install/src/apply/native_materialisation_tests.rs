@@ -198,6 +198,7 @@ fn exercise(filter: bool) {
         configuration: None,
     }];
     let planned = PlannedInstall {
+        submitted: None,
         node_roots: Default::default(),
         project_root: project.clone(),
         request: crate::InstallRequest {

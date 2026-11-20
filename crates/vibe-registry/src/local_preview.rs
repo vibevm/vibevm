@@ -18,7 +18,7 @@ const MAX_FILE: usize = 1024 * 1024;
 const MAX_TOTAL: usize = 8 * 1024 * 1024;
 const MAX_DEPTH: usize = 16;
 
-#[derive(PartialEq, Eq)]
+#[derive(Debug, PartialEq, Eq)]
 struct Snapshot {
     ancestors: Vec<FileIdentity>,
     directories: BTreeMap<String, FileIdentity>,
@@ -416,5 +416,76 @@ mod tests {
             std::os::unix::fs::symlink(temp.path().join("outside"), source.join("boot")).unwrap();
             assert!(observe_local_preview(&project, &["registry"], &reference).is_err());
         }
+    }
+}
+
+/// Bounded full-content proof from held no-follow bytes, never a store sidecar.
+#[derive(Debug)]
+pub struct VerifiedPayload {
+    project: Project,
+    snapshot: Snapshot,
+    expected: String,
+}
+impl VerifiedPayload {
+    pub fn recheck(&self) -> Result<()> {
+        let rebound = Project::open(self.project.root_path())?;
+        if rebound.root_identity()? != self.project.root_identity()? {
+            bail!("verified package payload pathname changed");
+        }
+        let current = capture(&self.project, &[])?;
+        if current != self.snapshot || hash_snapshot(&current) != self.expected {
+            bail!("verified package payload changed");
+        }
+        Ok(())
+    }
+}
+/// Verify a first-slice legacy-hash payload without fetching or trusting metadata.
+pub fn verify_pinned_payload(path: &std::path::Path, expected: &str) -> Result<VerifiedPayload> {
+    if !expected.starts_with("sha256:") {
+        bail!("submitted payload requires admitted legacy recipe");
+    }
+    let project = Project::open(path)?;
+    let snapshot = capture(&project, &[])?;
+    if hash_snapshot(&snapshot) != expected {
+        bail!("submitted pinned payload content differs from immutable expectation");
+    }
+    let proof = VerifiedPayload {
+        project,
+        snapshot,
+        expected: expected.into(),
+    };
+    proof.recheck()?;
+    Ok(proof)
+}
+
+#[cfg(test)]
+mod payload_tests {
+    use super::*;
+    #[test]
+    fn full_payload_proof_does_not_trust_sidecar_or_unchanged_manifest() {
+        let root = tempfile::tempdir().unwrap();
+        let path = root.path().join("payload");
+        std::fs::create_dir(&path).unwrap();
+        std::fs::write(path.join("vibe.toml"), "synthetic unchanged manifest").unwrap();
+        std::fs::write(path.join("data"), "original").unwrap();
+        let pin = crate::compute_content_hash(&path).unwrap();
+        let proof = verify_pinned_payload(&path, &pin).unwrap();
+        std::fs::write(root.path().join("payload.sha256"), &pin).unwrap();
+        std::fs::write(path.join("data"), "changed").unwrap();
+        assert!(proof.recheck().is_err());
+        assert!(verify_pinned_payload(&path, &pin).is_err());
+    }
+    #[test]
+    fn full_payload_proof_rejects_same_byte_pathname_replacement() {
+        let root = tempfile::tempdir().unwrap();
+        let path = root.path().join("payload");
+        std::fs::create_dir(&path).unwrap();
+        std::fs::write(path.join("data"), "original").unwrap();
+        let pin = crate::compute_content_hash(&path).unwrap();
+        let proof = verify_pinned_payload(&path, &pin).unwrap();
+        std::fs::rename(&path, root.path().join("retained")).unwrap();
+        std::fs::create_dir(&path).unwrap();
+        std::fs::write(path.join("data"), "original").unwrap();
+        assert!(proof.recheck().is_err());
     }
 }

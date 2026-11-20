@@ -11,7 +11,7 @@ fn request_preserves_false_and_refuses_foreign_shapes() {
     assert_eq!(serde_json::to_value(parsed).unwrap(), cold);
     let answered = json!({"package":"org.example/demo","input":{"selections":{"mode":"small"},"parameters":{"verbose":false}}});
     let parsed = parse_request(answered.clone()).unwrap();
-    assert_eq!(parsed.input.as_ref().unwrap().parameters["verbose"], false);
+    assert!(!parsed.input.as_ref().unwrap().parameters["verbose"]);
     assert_eq!(serde_json::to_value(parsed).unwrap(), answered);
     for invalid in [
         json!({"package":"org.example/demo","source":"/outside"}),

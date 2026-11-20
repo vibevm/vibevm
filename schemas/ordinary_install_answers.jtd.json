@@ -1,0 +1,14 @@
+{
+  "metadata": {"x-wire-order": ["protocol", "package", "project_witness", "source", "input"], "description": "Ordinary-only source-bound original answers, not apply permission."},
+  "properties": {
+    "protocol": {"type": "string"},
+    "package": {"type": "string"},
+    "project_witness": {"type": "string"},
+    "source": {"ref": "source"},
+    "input": {"ref": "input"}
+  },
+  "definitions": {
+    "source": {"metadata": {"x-wire-order": ["registry", "content_hash"]}, "properties": {"registry": {"type": "string"}, "content_hash": {"type": "string"}}},
+    "input": {"metadata": {"x-wire-order": ["selections", "parameters"]}, "properties": {"selections": {"values": {"type": "string"}, "metadata": {"x-empty": "emit"}}, "parameters": {"values": {"type": "boolean"}, "metadata": {"x-empty": "emit"}}}}
+  }
+}

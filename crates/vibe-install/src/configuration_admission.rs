@@ -133,6 +133,9 @@ pub(crate) fn planned(planned: &crate::PlannedInstall) -> Result<()> {
                 );
             }
         }
+        if planned.submitted.is_some() {
+            prospective.meta.root_dependencies = planned.manifest.requires.packages.clone();
+        }
         prospective.validate_configurations()?;
     }
     Ok(())

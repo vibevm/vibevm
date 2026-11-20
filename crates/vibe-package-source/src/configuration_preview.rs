@@ -175,6 +175,7 @@ pub(crate) fn evaluate(
         .transpose()?;
     Ok(wire::OrdinaryConfigurationPreviewResult {
         protocol: "vibe-ordinary-configuration-preview/1".into(),
+        project_witness: None,
         package: package.clone(),
         version: metadata.version.to_string(),
         source,
@@ -389,7 +390,7 @@ pub fn configuration_preview(
             .map_err(|error| {
                 refuse(&format!("local source unavailable or unsupported: {error}"))
             })?;
-    let result = evaluate(
+    let mut result = evaluate(
         &observation.manifest,
         request,
         wire::Source {
@@ -403,5 +404,9 @@ pub fn configuration_preview(
     if after != snapshot {
         bail!("selected project changed during configuration preview");
     }
+    result.project_witness = Some(
+        vibe_core::manifest::submitted_project_witness(trusted_root, &snapshot.bytes)
+            .map_err(anyhow::Error::msg)?,
+    );
     Ok(result)
 }

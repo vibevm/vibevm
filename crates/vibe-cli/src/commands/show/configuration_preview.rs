@@ -57,8 +57,6 @@ pub(super) fn run(ctx: &output::Context, args: ShowConfigurationPreviewArgs) -> 
 }
 
 fn interactive(root: &std::path::Path, package: String) -> Result<()> {
-    use crate::output::prompts;
-    use std::collections::BTreeMap;
     let description = configuration_preview(
         root,
         &OrdinaryConfigurationPreviewRequest {
@@ -66,6 +64,31 @@ fn interactive(root: &std::path::Path, package: String) -> Result<()> {
             input: None,
         },
     )?;
+    let input = collect_answers(&description)?;
+    let result = configuration_preview(
+        root,
+        &OrdinaryConfigurationPreviewRequest {
+            package,
+            input: Some(input),
+        },
+    )?;
+    if result.source != description.source
+        || result.version != description.version
+        || result.description != description.description
+    {
+        bail!(
+            "configuration preview source changed after questions were shown; no answers applied"
+        );
+    }
+    println!("{}", serde_json::to_string_pretty(&result)?);
+    Ok(())
+}
+
+pub(crate) fn collect_answers(
+    description:&vibe_wire::generated::ordinary_configuration_preview_result::OrdinaryConfigurationPreviewResult,
+) -> Result<Input> {
+    use crate::output::prompts;
+    use std::collections::BTreeMap;
     // The service owns admissible shape and question semantics; this adapter
     // only renders its typed rows and retains actual terminal selections.
     let mut selections = BTreeMap::new();
@@ -113,24 +136,8 @@ fn interactive(root: &std::path::Path, package: String) -> Result<()> {
             }
         }
     }
-    let result = configuration_preview(
-        root,
-        &OrdinaryConfigurationPreviewRequest {
-            package,
-            input: Some(Input {
-                selections,
-                parameters,
-            }),
-        },
-    )?;
-    if result.source != description.source
-        || result.version != description.version
-        || result.description != description.description
-    {
-        bail!(
-            "configuration preview source changed after questions were shown; no answers applied"
-        );
-    }
-    println!("{}", serde_json::to_string_pretty(&result)?);
-    Ok(())
+    Ok(Input {
+        selections,
+        parameters,
+    })
 }

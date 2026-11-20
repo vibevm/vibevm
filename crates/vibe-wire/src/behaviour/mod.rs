@@ -31,6 +31,7 @@ pub mod native_deploy;
 pub mod native_mechanism;
 pub mod native_package;
 pub mod ordinary_configuration_preview;
+pub mod ordinary_install_answers;
 pub mod projections;
 pub mod records;
 pub mod release_manifest;

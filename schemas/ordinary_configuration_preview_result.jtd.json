@@ -8,7 +8,8 @@
       "description",
       "questions",
       "original",
-      "resolved"
+      "resolved",
+      "project_witness"
     ],
     "description": "Read-only ordinary flow description and evaluation, never an install plan or apply authority."
   },
@@ -46,6 +47,12 @@
     },
     "resolved": {
       "ref": "resolved",
+      "metadata": {
+        "x-default": null
+      }
+    },
+    "project_witness": {
+      "type": "string",
       "metadata": {
         "x-default": null
       }

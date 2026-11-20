@@ -33,6 +33,8 @@ mod events;
 mod evidence;
 mod global_mcp;
 mod observer;
+mod ordinary_answers;
+pub(crate) use ordinary_answers::prepare as prepare_ordinary_answers;
 mod preview;
 pub(crate) mod trust;
 pub(crate) use preview::{run as run_preview, run_selected as run_preview_selected};

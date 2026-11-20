@@ -186,7 +186,9 @@ pub(crate) fn render_toml<T: Serialize>(value: &T, existing: Option<&str>) -> Re
     Ok(decorate_toml(&rendered, existing))
 }
 
-fn decorate_toml(rendered: &str, existing: Option<&str>) -> String {
+/// Copy decoration onto already serialized TOML; no validation, epoch selection
+/// or publication authority is granted by this pure helper.
+pub fn decorate_toml(rendered: &str, existing: Option<&str>) -> String {
     match existing {
         Some(existing) => merge_preserving_comments(existing, rendered),
         None => rendered.to_owned(),

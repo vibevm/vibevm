@@ -72,6 +72,7 @@ pub struct PlannedInstall {
     pub(crate) node_roots: std::collections::BTreeMap<String, Vec<PackageRef>>,
     pub(crate) project_root: PathBuf,
     pub(crate) request: InstallRequest,
+    pub(crate) submitted: Option<crate::submission::VerifiedSubmission>,
     pub(crate) manifest: Manifest,
     pub(crate) lockfile: Lockfile,
     pub(crate) language_chain: Vec<String>,
@@ -227,6 +228,54 @@ pub fn plan_prepared_with_selected_roots<S: InstallSource + ?Sized>(
     observer: &dyn PlanObserver,
     selected_roots: &[vibe_registry::source_candidates::RetainedSourceCandidate],
 ) -> Result<Plan> {
+    plan_impl(
+        source,
+        project_root,
+        manifest,
+        workspace,
+        request,
+        spec_format,
+        observer,
+        selected_roots,
+        None,
+    )
+}
+
+#[allow(clippy::too_many_arguments)]
+pub fn plan_prepared_with_submission<S: InstallSource + ?Sized>(
+    source: &S,
+    root: &Path,
+    manifest: &mut Manifest,
+    workspace: &mut Workspace,
+    request: InstallRequest,
+    format: SpecFormat,
+    observer: &dyn PlanObserver,
+    submission: vibe_core::manifest::SubmittedInput,
+) -> Result<Plan> {
+    plan_impl(
+        source,
+        root,
+        manifest,
+        workspace,
+        request,
+        format,
+        observer,
+        &[],
+        Some(submission),
+    )
+}
+#[allow(clippy::too_many_arguments)]
+fn plan_impl<S: InstallSource + ?Sized>(
+    source: &S,
+    project_root: &Path,
+    manifest: &mut Manifest,
+    workspace: &mut Workspace,
+    request: InstallRequest,
+    spec_format: SpecFormat,
+    observer: &dyn PlanObserver,
+    selected_roots: &[vibe_registry::source_candidates::RetainedSourceCandidate],
+    submission: Option<vibe_core::manifest::SubmittedInput>,
+) -> Result<Plan> {
     let before = manifest.clone();
     let previous_workspace = workspace.clone();
     let result = match prepare_metadata_plan(
@@ -239,10 +288,18 @@ pub fn plan_prepared_with_selected_roots<S: InstallSource + ?Sized>(
         observer,
         PlanningPurpose::Apply,
         selected_roots,
+        submission.as_ref(),
     )? {
         None => Ok(Plan::Fresh),
         Some(prepared) => {
-            acquire_prepared_metadata(source, prepared).map(|plan| Plan::Ready(Box::new(plan)))
+            let mut plan = acquire_prepared_metadata(source, prepared)?;
+            if let Some(input) = submission {
+                plan.submitted = Some(crate::submission::VerifiedSubmission::mint(
+                    &mut plan, input,
+                )?);
+            }
+            crate::configuration_admission::planned(&plan)?;
+            Ok(Plan::Ready(Box::new(plan)))
         }
     };
     if result.is_err() {
@@ -283,6 +340,7 @@ fn prepare_metadata_plan<S: InstallSource + ?Sized>(
     observer: &dyn PlanObserver,
     purpose: PlanningPurpose<'_>,
     selected_roots: &[vibe_registry::source_candidates::RetainedSourceCandidate],
+    submission: Option<&vibe_core::manifest::SubmittedInput>,
 ) -> Result<Option<PreparedMetadata>> {
     let selected = roots::selected_node(workspace, project_root)?;
     crate::configuration_admission::workspace_inputs_for_install(
@@ -333,7 +391,22 @@ fn prepare_metadata_plan<S: InstallSource + ?Sized>(
             workspace.advance_authored_selected(project_root, &before_migration, manifest)?;
         }
         let requirements = roots::RootRequirements::collect(workspace, &selected, &request.roots)?;
-        let inputs = requirements.configuration_inputs();
+        let mut inputs = requirements.configuration_inputs();
+        if let Some(input) = submission {
+            crate::submission::check_root(project_root, manifest, input)?;
+            let owners = inputs
+                .get_mut(&input.requirement.qualified_name())
+                .ok_or_else(|| vibe_core::Error::InvalidLockfile {
+                    reason: "submitted root missing from planning".into(),
+                })?;
+            if owners.len() != 1 || owners.get("./vibe.toml") != Some(&None) {
+                return Err(vibe_core::Error::InvalidLockfile {
+                    reason: "submitted input conflicts with authored root".into(),
+                }
+                .into());
+            }
+            owners.insert("./vibe.toml".into(), Some(input.original.clone()));
+        }
         let configured = inputs
             .values()
             .any(|consumers| consumers.values().any(Option::is_some));

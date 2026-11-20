@@ -31,6 +31,8 @@ use vibe_core::user_config::SlotIntegrity;
 #[derive(Debug, Clone, Default)]
 #[spec(documents = "spec://org.vibevm.core/vibevm/VIBEVM-SPEC#install-workflow-in-detail")]
 pub struct InstallInputs {
+    /// Explicit ordinary root submission; None preserves authored behavior.
+    pub ordinary_submission: Option<vibe_core::manifest::SubmittedInput>,
     /// Zero or more surface-supplied package references, unparsed.
     pub packages: Vec<String>,
     /// Explicitly requested features.

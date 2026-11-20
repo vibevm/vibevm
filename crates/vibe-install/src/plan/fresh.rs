@@ -92,6 +92,7 @@ pub fn freshness_prepared(
     {
         return Err(configured::mixed_flags());
     }
+    crate::submission::verify_submitted_replay(project_root, manifest, lock)?;
     let freshness = vibe_workspace::freshness::check(workspace, lock);
     if !freshness.is_fresh() {
         return Ok(freshness);

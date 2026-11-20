@@ -387,7 +387,8 @@ fn execute_owned(
 
     // Source-free Fresh admission precedes expensive/possibly unavailable
     // registry construction. Both results enter the SAME Fresh/Ready owner below.
-    let source_free_fresh = args.packages.is_empty()
+    let source_free_fresh = args.ordinary_submission.is_none()
+        && args.packages.is_empty()
         && vibe_install::freshness_prepared(
             &project_root,
             &manifest,
@@ -431,19 +432,33 @@ fn execute_owned(
         // The compatibility wrapper would re-read the selected `vibe.toml` — the
         // value a `--git` delta just changed in memory — and re-discover a tree
         // different from the one whose source delta is being admitted.
-        let plan = vibe_install::plan_prepared_with_selected_roots(
-            resolver.as_ref(),
-            &project_root,
-            &mut manifest,
-            &mut workspace,
-            InstallRequest {
-                roots: cli_roots,
-                ..request.clone()
-            },
-            spec_format,
-            observer.plan_events(),
-            selected_roots,
-        )?;
+        let request = InstallRequest {
+            roots: cli_roots,
+            ..request.clone()
+        };
+        let plan = if let Some(submission) = args.ordinary_submission.clone() {
+            vibe_install::plan_prepared_with_submission(
+                resolver.as_ref(),
+                &project_root,
+                &mut manifest,
+                &mut workspace,
+                request,
+                spec_format,
+                observer.plan_events(),
+                submission,
+            )?
+        } else {
+            vibe_install::plan_prepared_with_selected_roots(
+                resolver.as_ref(),
+                &project_root,
+                &mut manifest,
+                &mut workspace,
+                request,
+                spec_format,
+                observer.plan_events(),
+                selected_roots,
+            )?
+        };
         (plan, Some(resolver))
     };
     progress.checkpoint()?;

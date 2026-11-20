@@ -34,13 +34,14 @@ fn refuse_version_file_write(args: &InstallArgs, what: &str) -> Result<()> {
 
 pub(crate) fn run_install(
     ctx: &output::Context,
-    args: InstallArgs,
+    mut args: InstallArgs,
     embedded_root: Option<PathBuf>,
     offline: bool,
     seed_default_registry: bool,
     stop_input: &mut crate::composition::cancellation::StopInput,
     network: &mut vibe_net::NetworkGuard,
 ) -> Result<()> {
+    install::prepare_ordinary_answers(ctx, &mut args)?;
     if args.on_missing_command.is_some()
         && (!args.global
             || args.user_project

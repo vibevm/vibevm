@@ -1,0 +1,145 @@
+//! Ordinary-only answer intake; source-bound preview is not apply permission.
+use crate::{cli::InstallArgs, output};
+use anyhow::{Result, anyhow, bail, ensure};
+use vibe_wire::generated::{
+    ordinary_configuration_preview_request::{Input, OrdinaryConfigurationPreviewRequest},
+    ordinary_install_answers::OrdinaryInstallAnswers,
+};
+
+pub(crate) fn prepare(ctx: &output::Context, args: &mut InstallArgs) -> Result<()> {
+    if args.ordinary_answers.is_none() && !args.ordinary_interactive {
+        return Ok(());
+    }
+    ensure!(
+        !args.global && args.packages.is_empty() && !args.plan_only && args.registry.is_none(),
+        "ordinary answers require the existing standalone root and declared registry"
+    );
+    ensure!(
+        args.features.is_empty() && !args.no_default_features && !args.all_features,
+        "ordinary answers cannot mix legacy feature flags"
+    );
+    if args.ordinary_interactive
+        && (ctx.is_unattended() || ctx.is_json() || !console::user_attended())
+    {
+        bail!("ordinary interactive answers require an attended terminal");
+    }
+    if !args.ordinary_interactive
+        && !args.assume_yes
+        && (ctx.is_unattended() || ctx.is_json() || !console::user_attended())
+    {
+        bail!(
+            "ordinary submitted install requires explicit --assume-yes or attended apply confirmation"
+        );
+    }
+    let root = super::resolve_project_root(&args.path)?;
+    let project = vibe_safefs::Project::open(&root)?;
+    let bytes = project
+        .read_file_snapshot_bounded("vibe.toml", 64 * 1024)?
+        .ok_or_else(|| anyhow!("ordinary project manifest unavailable"))?;
+    let manifest = vibe_core::manifest::Manifest::parse_str(std::str::from_utf8(&bytes.bytes)?)?;
+    ensure!(
+        manifest.requires.packages.len() == 1,
+        "ordinary answers require one actual root declaration"
+    );
+    let requirement = manifest.requires.packages[0].clone();
+    let package = requirement.qualified_name();
+    let request = OrdinaryConfigurationPreviewRequest {
+        package: package.clone(),
+        input: None,
+    };
+    let description =
+        vibe_package_source::configuration_preview::configuration_preview(&root, &request)?;
+    let envelope = if args.ordinary_interactive {
+        let input = crate::commands::show::configuration_preview::collect_answers(&description)?;
+        OrdinaryInstallAnswers {
+            protocol: "vibe-ordinary-install-answers/1".into(),
+            package: package.clone(),
+            project_witness: description
+                .project_witness
+                .clone()
+                .ok_or_else(|| anyhow!("preview project witness absent"))?,
+            source: vibe_wire::generated::ordinary_install_answers::Source {
+                registry: description.source.registry.clone(),
+                content_hash: description.source.content_hash.clone(),
+            },
+            input: vibe_wire::generated::ordinary_install_answers::Input {
+                selections: input.selections,
+                parameters: input.parameters,
+            },
+        }
+    } else {
+        let path = std::path::absolute(args.ordinary_answers.as_ref().unwrap())?;
+        let parent = path
+            .parent()
+            .ok_or_else(|| anyhow!("answer file has no parent"))?;
+        let name = path
+            .file_name()
+            .and_then(|s| s.to_str())
+            .ok_or_else(|| anyhow!("answer filename invalid"))?;
+        let scope = vibe_safefs::Project::open(parent)?;
+        let content = scope
+            .read_file_snapshot_bounded(name, 64 * 1024)?
+            .ok_or_else(|| anyhow!("answer file unavailable"))?;
+        vibe_wire::behaviour::ordinary_install_answers::parse(&content.bytes)?
+    };
+    ensure!(
+        envelope.protocol == "vibe-ordinary-install-answers/1"
+            && envelope.package == package
+            && Some(&envelope.project_witness) == description.project_witness.as_ref()
+            && envelope.source.registry == description.source.registry
+            && envelope.source.content_hash == description.source.content_hash,
+        "ordinary answer subject/project/source changed"
+    );
+    let result = vibe_package_source::configuration_preview::configuration_preview(
+        &root,
+        &OrdinaryConfigurationPreviewRequest {
+            package: package.clone(),
+            input: Some(Input {
+                selections: envelope.input.selections.clone(),
+                parameters: envelope.input.parameters.clone(),
+            }),
+        },
+    )?;
+    ensure!(
+        result.source == description.source
+            && result.version == description.version
+            && result.project_witness == description.project_witness,
+        "ordinary source or project changed during answer collection"
+    );
+    let original = vibe_core::manifest::ConfigurationIntentDecl {
+        policy: vibe_core::configuration::ChoicePolicy::RequireSelection,
+        profile: None,
+        features: Vec::new(),
+        default_features: false,
+        selections: envelope
+            .input
+            .selections
+            .into_iter()
+            .map(|(id, member)| {
+                (
+                    id,
+                    vibe_core::manifest::ConfigurationSelection {
+                        intent: vibe_core::configuration::MergeIntent::Exact,
+                        members: Some(vec![member]),
+                    },
+                )
+            })
+            .collect(),
+        parameters: envelope
+            .input
+            .parameters
+            .into_iter()
+            .map(|(id, value)| (id, vibe_core::manifest::ParameterValue::Bool(value)))
+            .collect(),
+    };
+    args.parsed_ordinary_submission = Some(vibe_core::manifest::SubmittedInput {
+        original,
+        requirement,
+        project_witness: envelope.project_witness,
+        expected_source: vibe_core::manifest::SubmittedSource {
+            registry: envelope.source.registry,
+            content_hash: vibe_core::ContentHash::parse(&envelope.source.content_hash)?,
+        },
+    });
+    Ok(())
+}
