@@ -393,9 +393,26 @@ impl PackageConfiguration {
                     public_scalars.insert(parameter.id.clone(), value.clone());
                     continue;
                 }
+                let optional_bool = !parameter.required
+                    && !parameter.secret
+                    && parameter.kind == crate::manifest::ParameterType::Bool
+                    && parameter.default.is_none()
+                    && kind == crate::PackageKind::Flow
+                    && definition.parameters.len() == 1
+                    && definition.profiles.is_empty()
+                    && definition.groups.is_empty()
+                    && definition
+                        .features
+                        .iter()
+                        .all(|feature| feature.guards.is_empty())
+                    && forwarded.is_empty()
+                    && consumers.values().all(|input| input.profile.is_none());
+                if optional_bool && !normalized.parameters.contains_key(&parameter.id) {
+                    continue; // Absence does not vote, and is never false.
+                }
                 if parameter.secret
                     || parameter.kind != crate::manifest::ParameterType::Bool
-                    || !parameter.required
+                    || (!parameter.required && !optional_bool)
                     || (parameter.default.is_some() && definition.parameters.len() != 1)
                     || (input.profile.is_some()
                         && (definition.parameters.len() != 1
@@ -774,6 +791,17 @@ impl PackageConfiguration {
         self.selected_data(kind)?;
         let mut values = BTreeMap::new();
         for parameter in &self.definition.parameters {
+            if !parameter.required && parameter.default.is_none() {
+                // Admission/replay above already proved all present values agree.
+                if let Some(value) = self
+                    .consumers
+                    .values()
+                    .find_map(|input| input.parameters.get(&parameter.id))
+                {
+                    values.insert(parameter.id.clone(), value.clone());
+                }
+                continue;
+            }
             let consumer = self
                 .consumers
                 .values()

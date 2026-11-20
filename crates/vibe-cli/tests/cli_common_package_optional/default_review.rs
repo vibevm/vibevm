@@ -9247,7 +9247,7 @@ fn optional_public_bool_without_default_actual_boundary_and_required_control() {
             "optional-bool world={world} accepted={} diagnostic={diagnostic}",
             out.status.success()
         );
-        if required {
+        if world != "wrong-type" {
             assert!(out.status.success(), "{diagnostic}");
             let lock = f.lock();
             assert_eq!(lock.meta.schema_version, 8);
@@ -9255,10 +9255,18 @@ fn optional_public_bool_without_default_actual_boundary_and_required_control() {
                 lock.configurations[&coordinate(DRIVER)].consumers["./vibe.toml"],
                 original
             );
-            assert_eq!(
-                lock.configurations[&coordinate(DRIVER)].consumers["./vibe.toml"].parameters["verbose"],
-                vibe_core::manifest::ParameterValue::Bool(false)
-            );
+            if world == "omitted" {
+                assert!(
+                    !lock.configurations[&coordinate(DRIVER)].consumers["./vibe.toml"]
+                        .parameters
+                        .contains_key("verbose")
+                );
+            } else {
+                assert_eq!(
+                    lock.configurations[&coordinate(DRIVER)].consumers["./vibe.toml"].parameters["verbose"],
+                    vibe_core::manifest::ParameterValue::Bool(world == "true")
+                );
+            }
             assert!(f.slot(BASE).exists() && !f.slot(EXTRA).exists());
             assert_eq!(f.hooks().get(BASE).copied(), Some(1));
             let shown = f
@@ -9275,10 +9283,14 @@ fn optional_public_bool_without_default_actual_boundary_and_required_control() {
                 .unwrap();
             assert!(shown.status.success());
             let report: serde_json::Value = serde_json::from_slice(&shown.stdout).unwrap();
-            assert_eq!(
-                report["packages"][0]["parameters"],
-                serde_json::json!({"verbose":false})
-            );
+            if world == "omitted" {
+                assert!(report["packages"][0].get("parameters").is_none());
+            } else {
+                assert_eq!(
+                    report["packages"][0]["parameters"],
+                    serde_json::json!({"verbose":world=="true"})
+                );
+            }
             let before = super::workspace::semantic_snapshot(&f.project);
             f.install_ok();
             assert_eq!(super::workspace::semantic_snapshot(&f.project), before);
@@ -9304,5 +9316,194 @@ fn optional_public_bool_without_default_actual_boundary_and_required_control() {
             );
             assert!(!f.slot(DRIVER).exists() && !f.slot(BASE).exists());
         }
+    }
+}
+
+fn optional_bool_fixture() -> Fixture {
+    let f = Fixture::new(false);
+    write(
+        &f.registry.join(GROUP).join(DRIVER).join("v1.0.0/vibe.toml"),
+        package_header(DRIVER)
+            + "\n[requires.packages]\n'org.vibevm/oracle-base'='=1.0.0'\n[configuration]\n[[configuration.parameters]]\nid='verbose'\nname='Verbose'\ntype='bool'\nrequired=false\n",
+    );
+    f
+}
+fn optional_bool_request(f: &Fixture, value: Option<bool>) -> String {
+    format!(
+        "[project]\nname='optional-bool'\nversion='0.1.0'\n[requires.packages.'{GROUP}/{DRIVER}']\nversion='=1.0.0'\nlink='static-transitive'\nconfiguration={{policy='require-selection',default_features=false{}}}\n[[registry]]\nname='fixture'\nurl='file://{}'\n",
+        value
+            .map(|v| format!(",parameters={{verbose={v}}}"))
+            .unwrap_or_default(),
+        f.registry.display()
+    )
+}
+#[test]
+fn optional_bool_two_consumers_absence_agreement_conflict_and_cold() {
+    for (left, right) in [
+        (None, None),
+        (None, Some(false)),
+        (Some(true), None),
+        (Some(false), Some(false)),
+        (Some(false), Some(true)),
+    ] {
+        let f = optional_bool_fixture();
+        write(
+            &f.project.join("vibe.toml"),
+            format!(
+                "[project]\nname='optional-bool-workspace'\nversion='0.1.0'\n[workspace]\nmembers=['left','right']\n[[registry]]\nname='fixture'\nurl='file://{}'\n",
+                f.registry.display()
+            ),
+        );
+        for (member, value) in [("left", left), ("right", right)] {
+            write(
+                &f.project.join(member).join("vibe.toml"),
+                optional_bool_request(&f, value),
+            );
+        }
+        let before = super::workspace::semantic_snapshot(&f.project);
+        let out = f.install();
+        let conflict = left.is_some() && right.is_some() && left != right;
+        assert_eq!(
+            out.status.success(),
+            !conflict,
+            "left={left:?} right={right:?}: {}{}",
+            String::from_utf8_lossy(&out.stdout),
+            String::from_utf8_lossy(&out.stderr)
+        );
+        if conflict {
+            assert!(
+                String::from_utf8_lossy(&out.stderr)
+                    .contains("conflicting explicit public boolean")
+            );
+            assert_eq!(super::workspace::semantic_snapshot(&f.project), before);
+            continue;
+        }
+        let lock = f.lock();
+        let record = &lock.configurations[&coordinate(DRIVER)];
+        assert_eq!(record.consumers.len(), 2);
+        for (member, value) in [("left", left), ("right", right)] {
+            let input = &record.consumers[&format!("{member}/vibe.toml")];
+            assert_eq!(
+                input.parameters.get("verbose"),
+                value.as_ref().map(|v| if *v {
+                    &vibe_core::manifest::ParameterValue::Bool(true)
+                } else {
+                    &vibe_core::manifest::ParameterValue::Bool(false)
+                })
+            );
+        }
+        let expected = left.or(right);
+        let data = record
+            .selected_parameters(vibe_core::PackageKind::Flow)
+            .unwrap();
+        assert_eq!(
+            data.get("verbose"),
+            expected
+                .map(vibe_core::manifest::ParameterValue::Bool)
+                .as_ref()
+        );
+        let shown = f
+            .user
+            .vibe()
+            .args([
+                "show",
+                "configuration-data",
+                "--path",
+                f.project.to_str().unwrap(),
+                "--json",
+            ])
+            .output()
+            .unwrap();
+        assert!(shown.status.success());
+        let report: serde_json::Value = serde_json::from_slice(&shown.stdout).unwrap();
+        if let Some(value) = expected {
+            assert_eq!(report["packages"][0]["parameters"]["verbose"], value);
+        } else {
+            assert!(report["packages"][0].get("parameters").is_none());
+        }
+        assert_eq!(lock.meta.schema_version, 8);
+        assert!(f.slot(BASE).exists() && !f.slot(EXTRA).exists());
+        let before = super::workspace::semantic_snapshot(&f.project);
+        f.install_ok();
+        assert_eq!(super::workspace::semantic_snapshot(&f.project), before);
+    }
+}
+#[test]
+fn optional_bool_actual_prior_reader_writer_and_definition_drift() {
+    let old = std::env::var("NST_OPTIONAL_BOOL_OLD_CLI").expect("actual prior client required");
+    for value in [None, Some(false), Some(true)] {
+        for operation in ["show", "install"] {
+            let f = optional_bool_fixture();
+            write(
+                &f.project.join("vibe.toml"),
+                optional_bool_request(&f, value),
+            );
+            f.install_ok();
+            let before = super::workspace::semantic_snapshot(&f.project);
+            let mut cmd = std::process::Command::new(&old);
+            cmd.env_clear()
+                .env("HOME", f.root.join("home"))
+                .env("VIBE_SETTINGS", &f.user.settings)
+                .env("VIBE_REGISTRY_CACHE", &f.user.cache)
+                .env("VIBEVM_SEARCH_CACHE_DIR", &f.user.search_cache)
+                .env("VIBE_NO_DEFAULT_REGISTRY", "1")
+                .env("PATH", "/usr/bin:/bin");
+            if operation == "show" {
+                cmd.args([
+                    "show",
+                    "configuration-data",
+                    "--path",
+                    f.project.to_str().unwrap(),
+                    "--json",
+                ]);
+            } else {
+                cmd.args([
+                    "install",
+                    "--offline",
+                    "--assume-yes",
+                    "--path",
+                    f.project.to_str().unwrap(),
+                    "--json",
+                ]);
+            }
+            let out = cmd.output().unwrap();
+            assert!(
+                !out.status.success(),
+                "prior silently accepted optional history"
+            );
+            assert_eq!(super::workspace::semantic_snapshot(&f.project), before);
+        }
+        let f = optional_bool_fixture();
+        write(
+            &f.project.join("vibe.toml"),
+            optional_bool_request(&f, value),
+        );
+        f.install_ok();
+        let source = f.registry.join(GROUP).join(DRIVER).join("v1.0.0/vibe.toml");
+        let next = f.registry.join(GROUP).join(DRIVER).join("v1.1.0");
+        write(
+            &next.join("vibe.toml"),
+            fs::read_to_string(&source)
+                .unwrap()
+                .replace("version='1.0.0'", "version='1.1.0'")
+                .replace("required=false", "required=true"),
+        );
+        write(&next.join("boot/rules.md"), "CHANGED_REQUIRED_DEFINITION\n");
+        let request = f.project.join("vibe.toml");
+        write(
+            &request,
+            fs::read_to_string(&request)
+                .unwrap()
+                .replace("version='=1.0.0'", "version='=1.1.0'"),
+        );
+        let before = super::workspace::semantic_snapshot(&f.project);
+        let out = update(&f);
+        assert!(
+            !out.status.success(),
+            "definition changed optional meaning value={value:?}: {}{}",
+            String::from_utf8_lossy(&out.stdout),
+            String::from_utf8_lossy(&out.stderr)
+        );
+        assert_eq!(super::workspace::semantic_snapshot(&f.project), before);
     }
 }
