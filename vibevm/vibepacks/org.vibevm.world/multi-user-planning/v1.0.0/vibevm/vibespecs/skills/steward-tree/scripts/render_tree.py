@@ -819,6 +819,10 @@ main{display:block;padding:12px 16px 32px;width:100%;margin:0}
   var lang = DATA.lang, theme = "auto", selected = null, query = "", detailOpen = false, stateFilter = "all";
   var open = {};
   DATA.nodes.forEach(function(n){ open[n.id] = !!n.open; });
+  var filteredOpen = {}, filterSignature = null, filteredContext = {};
+  function filtering(){ return !!query || stateFilter !== "all"; }
+  function expandedNode(id){ return filtering() ? filteredOpen[id] !== false : !!open[id]; }
+  function setExpanded(id, value){ if (filtering()) filteredOpen[id] = value; else open[id] = value; }
 
   function store(key, value){ try{ localStorage.setItem("steward-tree:" + key, value); }catch(e){} }
   function load(key){ try{ return localStorage.getItem("steward-tree:" + key); }catch(e){ return null; } }
@@ -853,7 +857,7 @@ main{display:block;padding:12px 16px 32px;width:100%;margin:0}
       if (!n.children.length) twisty.hidden = true;
       twisty.addEventListener("click", function(event){
         event.stopPropagation();
-        open[n.id] = !open[n.id];
+        setExpanded(n.id, !expandedNode(n.id));
         paint();
       });
       row.appendChild(twisty);
@@ -907,12 +911,19 @@ main{display:block;padding:12px 16px 32px;width:100%;margin:0}
 
   function paint(){
     var show = {}, hits = 0;
-    if (query || stateFilter !== "all"){
+    var signature = stateFilter + "\0" + query;
+    if (signature !== filterSignature){ filteredOpen = {}; filterSignature = signature; }
+    filteredContext = {};
+    if (filtering()){
       DATA.nodes.forEach(function(n){
         if (!matches(n)) return;
         hits += 1;
         show[n.id] = true;
         n.path.forEach(function(id){ show[id] = true; });
+      });
+      filteredContext = Object.assign({}, show);
+      DATA.nodes.forEach(function(n){
+        show[n.id] = !!filteredContext[n.id] && n.path.every(function(id){ return filteredOpen[id] !== false; });
       });
     } else {
       DATA.nodes.forEach(function(n){
@@ -924,7 +935,7 @@ main{display:block;padding:12px 16px 32px;width:100%;margin:0}
       row.hidden = !show[n.id];
       row.classList.toggle("match", query ? matches(n) : false);
       if (n.children.length){
-        var expanded = (query || stateFilter !== "all") ? n.children.some(function(c){ return show[c]; }) : !!open[n.id];
+        var expanded = expandedNode(n.id);
         row.setAttribute("aria-expanded", expanded ? "true" : "false");
         row.querySelector(".twisty").textContent = expanded ? "▾" : "▸";
       }
@@ -951,7 +962,7 @@ main{display:block;padding:12px 16px 32px;width:100%;margin:0}
   function reveal(id){
     var node = NODES[id];
     if (!node) return;
-    node.path.forEach(function(ancestor){ open[ancestor] = true; });
+    node.path.forEach(function(ancestor){ setExpanded(ancestor, true); });
   }
 
   function remember(id){
@@ -987,10 +998,13 @@ main{display:block;padding:12px 16px 32px;width:100%;margin:0}
     } else if (event.key === "Home" && rows.length){ select(rows[0].dataset.id, false);
     } else if (event.key === "End" && rows.length){ select(rows[rows.length - 1].dataset.id, false);
     } else if (event.key === "ArrowRight"){
-      if (node.children.length && !open[id]){ open[id] = true; paint(); }
-      else if (node.children.length){ select(node.children[0], false); }
+      if (node.children.length && !expandedNode(id)){ setExpanded(id, true); paint(); }
+      else if (node.children.length){
+        var child = node.children.find(function(c){ return !ROWS[c].hidden; });
+        if (child) select(child, false);
+      }
     } else if (event.key === "ArrowLeft"){
-      if (node.children.length && open[id] && !query){ open[id] = false; paint(); }
+      if (node.children.length && expandedNode(id)){ setExpanded(id, false); paint(); }
       else if (node.path.length){ select(node.path[node.path.length - 1], false); }
     } else if (event.key === "Enter" || event.key === " "){ select(id, false, true);
     } else { return; }
@@ -1211,11 +1225,11 @@ main{display:block;padding:12px 16px 32px;width:100%;margin:0}
     paint();
   });
   document.getElementById("expand").addEventListener("click", function(){
-    DATA.nodes.forEach(function(n){ open[n.id] = true; });
+    DATA.nodes.forEach(function(n){ setExpanded(n.id, true); });
     paint();
   });
   document.getElementById("collapse").addEventListener("click", function(){
-    DATA.nodes.forEach(function(n){ open[n.id] = n.depth === 0; });
+    DATA.nodes.forEach(function(n){ setExpanded(n.id, n.depth === 0); });
     paint();
   });
   document.getElementById("current").addEventListener("click", function(){

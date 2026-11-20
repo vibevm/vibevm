@@ -78,7 +78,10 @@ The keyboard-accessible All / Unfinished / In progress control defaults to All.
 Unfinished excludes only accepted/dropped/superseded (candidate, blocked and deferred
 remain); In progress matches the node's own active state. Search intersects that
 filter. Only matches and their ancestor context appear, with matching branches
-expanded and unrelated siblings omitted; All restores ordinary expansion. Counts
+initially expanded and unrelated siblings omitted. Filtered branches can then be
+collapsed/reopened by twisty or ArrowLeft/ArrowRight; reopening reveals only
+matching descendant/context rows. This filtered expansion is separate, so All
+restores ordinary expansion. Search has the same collapsible behavior. Counts
 always describe the full payload branch, not the filtered subset.
 A node id in the URL fragment opens that
 node, so a review can point at one node instead of describing where to click. Plan text is data and never markup: titles,
