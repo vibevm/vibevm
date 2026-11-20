@@ -13,7 +13,7 @@ mod references;
 mod roster;
 pub use id::SecretId;
 pub use mutations::{Expected, MetadataSnapshot, ReferenceGuard, ReferenceInventory};
-pub use references::{ReferenceIndex, ReferenceRow, ReferenceSnapshot};
+pub use references::{ReferenceIndex, ReferenceRow, ReferenceSelection, ReferenceSnapshot};
 
 const VALUE_LIMIT: usize = 1024 * 1024;
 const INDEX_LIMIT: usize = 4 * 1024 * 1024;

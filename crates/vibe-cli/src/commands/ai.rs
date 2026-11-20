@@ -1,7 +1,7 @@
 //! Local connection metadata only; never launches a provider or resolves a key.
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-000#TS-KEYRING-CONSUMER");
 use crate::{
-    cli::{AiArgs, AiCommand, ConnectionCommand},
+    cli::{AiArgs, AiCommand, ConnectionCommand, ConnectionDefaultCommand},
     output,
 };
 use anyhow::{Result, bail};
@@ -16,6 +16,27 @@ pub fn run(ctx: &output::Context, args: AiArgs, cancel: &CancellationToken) -> R
     let AiCommand::Connections { command } = args.command;
     cancel.checkpoint()?;
     let selected = match command {
+        ConnectionCommand::Default { command } => {
+            let selection = match command {
+                ConnectionDefaultCommand::Show => store.default_selection()?,
+                ConnectionDefaultCommand::Set { id, expect_store } => {
+                    store.set_default(&parse_id(id)?, expect_store)?
+                }
+                ConnectionDefaultCommand::Clear { expect_store, yes } => {
+                    if !yes {
+                        bail!("clearing default connection requires explicit --yes");
+                    }
+                    store.clear_default(expect_store)?
+                }
+            };
+            let report = serde_json::json!({"protocol":"vibe-ai-default/1","ok":true,"store_revision":selection.store_revision,"connection":selection.connection});
+            if ctx.is_json() {
+                ctx.emit_json(&report)?;
+            } else {
+                println!("{}", serde_json::to_string_pretty(&report)?);
+            }
+            return Ok(());
+        }
         ConnectionCommand::List => None,
         ConnectionCommand::Details { id: raw } => Some(parse_id(raw)?),
         ConnectionCommand::Add {

@@ -313,3 +313,313 @@ fn corrupted_metadata_and_missing_registered_index_fail_closed() {
         );
     }
 }
+
+#[cfg(unix)]
+#[test]
+fn default_selection_is_metadata_only_revision_checked_and_blocks_selected_removal() {
+    let f = F::new();
+    let shown = f.json(&["ai", "connections", "default", "show"], None);
+    assert!(shown["connection"].is_null());
+    assert_eq!(shown["store_revision"], 0);
+    assert!(!f.0.path().join("secrets").exists());
+    let secret = f.json(
+        &[
+            "secrets",
+            "create",
+            "--kind",
+            "api-key",
+            "--label",
+            "Synthetic",
+            "--value-stdin",
+        ],
+        Some(VALUE.as_bytes()),
+    );
+    let secret_id = secret["items"][0]["id"].as_str().unwrap();
+    let add = |label: &str| {
+        f.json(
+            &[
+                "ai",
+                "connections",
+                "add",
+                "--label",
+                label,
+                "--endpoint",
+                "http://127.0.0.1:32123/v1",
+                "--api-kind",
+                "openai-chat-completions",
+                "--default-model",
+                "synthetic",
+                "--secret-ref",
+                secret_id,
+            ],
+            None,
+        )
+    };
+    let a = add("A");
+    let aid = a["items"]
+        .as_object()
+        .unwrap()
+        .keys()
+        .next()
+        .unwrap()
+        .clone();
+    let b = add("B");
+    let bid = b["items"]
+        .as_object()
+        .unwrap()
+        .keys()
+        .next()
+        .unwrap()
+        .clone();
+    let brev = b["items"][&bid]["current_revision"].as_str().unwrap();
+    let path = f.0.path().join("secrets/ai/index.toml");
+    let original = fs::read(&path).unwrap();
+    let version = b["store_revision"].as_u64().unwrap().to_string();
+    let cleared = f.json(
+        &[
+            "ai",
+            "connections",
+            "default",
+            "clear",
+            "--expect-store",
+            &version,
+            "--yes",
+        ],
+        None,
+    );
+    assert_eq!(cleared["store_revision"], b["store_revision"]);
+    assert_eq!(fs::read(&path).unwrap(), original);
+    let selected = f.json(
+        &[
+            "ai",
+            "connections",
+            "default",
+            "set",
+            &aid,
+            "--expect-store",
+            &version,
+        ],
+        None,
+    );
+    assert_eq!(selected["connection"], aid);
+    assert_eq!(
+        f.json(&["ai", "connections", "default", "show"], None),
+        selected
+    );
+    let ver = selected["store_revision"].as_u64().unwrap().to_string();
+    let before = fs::read(&path).unwrap();
+    assert!(String::from_utf8_lossy(&before).contains("schema = 2"));
+    assert_eq!(
+        f.json(
+            &[
+                "ai",
+                "connections",
+                "default",
+                "set",
+                &aid,
+                "--expect-store",
+                &ver
+            ],
+            None
+        ),
+        selected
+    );
+    assert_eq!(fs::read(&path).unwrap(), before);
+    assert!(
+        !f.run(
+            &[
+                "ai",
+                "connections",
+                "default",
+                "set",
+                &bid,
+                "--expect-store",
+                &version
+            ],
+            None
+        )
+        .status
+        .success()
+    );
+    assert_eq!(fs::read(&path).unwrap(), before);
+    let selected_b = f.json(
+        &[
+            "ai",
+            "connections",
+            "default",
+            "set",
+            &bid,
+            "--expect-store",
+            &ver,
+        ],
+        None,
+    );
+    assert_eq!(selected_b["connection"], bid);
+    let ver = selected_b["store_revision"].as_u64().unwrap().to_string();
+    let before = fs::read(&path).unwrap();
+    assert!(
+        !f.run(
+            &[
+                "ai",
+                "connections",
+                "remove",
+                &bid,
+                "--expect-store",
+                &ver,
+                "--expect-current",
+                brev,
+                "--yes"
+            ],
+            None
+        )
+        .status
+        .success()
+    );
+    assert_eq!(fs::read(&path).unwrap(), before);
+    assert!(
+        !f.run(
+            &[
+                "ai",
+                "connections",
+                "default",
+                "clear",
+                "--expect-store",
+                &ver
+            ],
+            None
+        )
+        .status
+        .success()
+    );
+    assert_eq!(fs::read(&path).unwrap(), before);
+    let cleared = f.json(
+        &[
+            "ai",
+            "connections",
+            "default",
+            "clear",
+            "--expect-store",
+            &ver,
+            "--yes",
+        ],
+        None,
+    );
+    assert!(cleared["connection"].is_null());
+    assert_eq!(
+        f.json(&["ai", "connections", "default", "show"], None),
+        cleared
+    );
+    let ver = cleared["store_revision"].as_u64().unwrap().to_string();
+    f.json(
+        &[
+            "ai",
+            "connections",
+            "remove",
+            &bid,
+            "--expect-store",
+            &ver,
+            "--expect-current",
+            brev,
+            "--yes",
+        ],
+        None,
+    );
+    let listing = f.json(&["ai", "connections", "list"], None);
+    assert!(listing["items"].get(&aid).is_some());
+    assert!(listing["items"].get(&bid).is_none());
+    assert!(
+        f.json(&["secrets", "details", secret_id], None)["items"][0]["value_present"]
+            .as_bool()
+            .unwrap()
+    );
+}
+
+#[cfg(unix)]
+#[test]
+fn v2_missing_unknown_or_dangling_selection_refuses_without_rewrite() {
+    let f = F::new();
+    let secret = f.json(
+        &[
+            "secrets",
+            "create",
+            "--kind",
+            "api-key",
+            "--label",
+            "Synthetic",
+            "--value-stdin",
+        ],
+        Some(VALUE.as_bytes()),
+    );
+    let id = secret["items"][0]["id"].as_str().unwrap();
+    let added = f.json(
+        &[
+            "ai",
+            "connections",
+            "add",
+            "--label",
+            "Synthetic",
+            "--endpoint",
+            "http://127.0.0.1:32123/v1",
+            "--api-kind",
+            "openai-chat-completions",
+            "--default-model",
+            "synthetic",
+            "--secret-ref",
+            id,
+        ],
+        None,
+    );
+    let (cid, _) = added["items"].as_object().unwrap().iter().next().unwrap();
+    let version = added["store_revision"].as_u64().unwrap().to_string();
+    f.json(
+        &[
+            "ai",
+            "connections",
+            "default",
+            "set",
+            cid,
+            "--expect-store",
+            &version,
+        ],
+        None,
+    );
+    let path = f.0.path().join("secrets/ai/index.toml");
+    let original = fs::read_to_string(&path).unwrap();
+    for mode in [0, 1, 2] {
+        let mut index: toml::Value = toml::from_str(&original).unwrap();
+        if mode == 0 {
+            index.as_table_mut().unwrap().remove("selection");
+        }
+        if mode == 1 {
+            index["selection"]["state"] = toml::Value::String("future".into());
+        }
+        if mode == 2 {
+            index["selection"]["connection"] =
+                toml::Value::String("11111111-1111-4111-8111-111111111111".into());
+        }
+        let bytes = toml::to_string(&index).unwrap();
+        fs::write(&path, &bytes).unwrap();
+        assert!(
+            !f.run(&["ai", "connections", "default", "show"], None)
+                .status
+                .success()
+        );
+        assert!(
+            !f.run(
+                &[
+                    "ai",
+                    "connections",
+                    "default",
+                    "clear",
+                    "--expect-store",
+                    "2",
+                    "--yes"
+                ],
+                None
+            )
+            .status
+            .success()
+        );
+        assert_eq!(fs::read(&path).unwrap(), bytes.as_bytes());
+    }
+}

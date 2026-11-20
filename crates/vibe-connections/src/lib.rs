@@ -109,3 +109,41 @@ impl Store {
         Ok(self.0.remove_reference("ai", id, expected)?)
     }
 }
+
+#[derive(Debug, Serialize)]
+pub struct DefaultSelection {
+    pub store_revision: u64,
+    pub connection: Option<SecretId>,
+}
+fn selection(index: vibe_secrets::ReferenceIndex) -> DefaultSelection {
+    DefaultSelection {
+        store_revision: index.store_revision,
+        connection: match index.selection {
+            Some(vibe_secrets::ReferenceSelection::Selected { connection }) => Some(connection),
+            _ => None,
+        },
+    }
+}
+impl Store {
+    pub fn default_selection(&self) -> Result<DefaultSelection, Error> {
+        let snapshot = self.0.reference_snapshot("ai")?;
+        // Validate exactly the metadata snapshot whose selection is returned.
+        for bytes in snapshot.metadata.values() {
+            let metadata: Metadata =
+                toml::from_str(std::str::from_utf8(bytes).map_err(|_| Error::Metadata)?)
+                    .map_err(|_| Error::Metadata)?;
+            metadata.validate()?;
+        }
+        Ok(selection(snapshot.index))
+    }
+    pub fn set_default(&self, id: &SecretId, expected: u64) -> Result<DefaultSelection, Error> {
+        Ok(selection(self.0.select_reference(
+            "ai",
+            Some(id),
+            expected,
+        )?))
+    }
+    pub fn clear_default(&self, expected: u64) -> Result<DefaultSelection, Error> {
+        Ok(selection(self.0.select_reference("ai", None, expected)?))
+    }
+}

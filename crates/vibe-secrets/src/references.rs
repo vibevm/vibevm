@@ -12,10 +12,19 @@ pub struct ReferenceRow {
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq)]
 #[serde(deny_unknown_fields)]
 pub struct ReferenceIndex {
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub selection: Option<ReferenceSelection>,
     pub schema: u32,
     pub store_revision: u64,
     pub items: BTreeMap<SecretId, ReferenceRow>,
 }
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq)]
+#[serde(tag = "state", rename_all = "kebab-case", deny_unknown_fields)]
+pub enum ReferenceSelection {
+    None,
+    Selected { connection: SecretId },
+}
+
 #[derive(Debug, Clone)]
 pub struct ReferenceSnapshot {
     pub index: ReferenceIndex,
@@ -25,6 +34,7 @@ pub struct ReferenceSnapshot {
 impl Default for ReferenceIndex {
     fn default() -> Self {
         Self {
+            selection: None,
             schema: 1,
             store_revision: 0,
             items: BTreeMap::new(),
@@ -72,8 +82,11 @@ pub(super) fn read(root: &Pinned) -> Result<ReferenceSnapshot, Error> {
     let index: ReferenceIndex =
         toml::from_str(std::str::from_utf8(&bytes).map_err(|_| Error::RefusedUnknown)?)
             .map_err(|_| Error::RefusedUnknown)?;
-    if index.schema != 1 {
-        return Err(Error::RefusedUnknown);
+    match (index.schema, &index.selection) {
+        (1, None) | (2, Some(ReferenceSelection::None)) => {}
+        (2, Some(ReferenceSelection::Selected { connection }))
+            if index.items.contains_key(connection) => {}
+        _ => return Err(Error::RefusedUnknown),
     }
     let mut metadata = BTreeMap::new();
     let mut total = 0usize;
@@ -270,6 +283,12 @@ impl Store {
         {
             return Err(Error::Conflict);
         }
+        if matches!(&snapshot.index.selection, Some(ReferenceSelection::Selected { connection }) if connection == id)
+        {
+            return Err(Error::RefusedReferenced {
+                consumers: vec!["ai:default".into()],
+            });
+        }
         snapshot.index.items.remove(id);
         snapshot.index.store_revision = snapshot
             .index
@@ -281,5 +300,84 @@ impl Store {
             .write_atomic_in_with_mode(&dir, "index.toml", bytes.as_bytes(), Some(0o600))
             .map_err(|_| Error::Publication)?;
         Ok(())
+    }
+    /// Select only metadata; never opts a harness into managed authentication.
+    pub fn select_reference(
+        &self,
+        participant: &str,
+        selected: Option<&SecretId>,
+        expected_store: u64,
+    ) -> Result<ReferenceIndex, Error> {
+        owner(participant)?;
+        let Some((project, root)) = self.open(false)? else {
+            if expected_store == 0 && selected.is_none() {
+                return Ok(ReferenceIndex::default());
+            }
+            return Err(Error::NotFound);
+        };
+        let _inventory = root
+            .private_lock("inventory.lock")
+            .map_err(|_| Error::Unavailable)?;
+        let _lock = root
+            .private_lock("store.lock")
+            .map_err(|_| Error::Unavailable)?;
+        let store = Self::load(&project, &root)?;
+        if store.schema != 2 || store.reference_protocol != Some(1) {
+            return Err(Error::RefusedUnknown);
+        }
+        let registered = store
+            .participants
+            .as_ref()
+            .is_some_and(|p| p.iter().any(|p| p == participant));
+        if !registered {
+            if root
+                .private_child(participant, false)
+                .map_err(|_| Error::RefusedUnknown)?
+                .is_some()
+            {
+                return Err(Error::RefusedUnknown);
+            }
+            if expected_store == 0 && selected.is_none() {
+                return Ok(ReferenceIndex::default());
+            }
+            return Err(Error::NotFound);
+        }
+        let dir = root
+            .private_child(participant, false)
+            .map_err(|_| Error::RefusedUnknown)?
+            .ok_or(Error::RefusedUnknown)?;
+        let mut snapshot = read(&dir)?;
+        if snapshot.index.store_revision != expected_store {
+            return Err(Error::Conflict);
+        }
+        if let Some(id) = selected
+            && !snapshot.index.items.contains_key(id)
+        {
+            return Err(Error::NotFound);
+        }
+        let current = match &snapshot.index.selection {
+            Some(ReferenceSelection::Selected { connection }) => Some(connection),
+            _ => None,
+        };
+        if current == selected {
+            return Ok(snapshot.index);
+        }
+        snapshot.index.schema = 2;
+        snapshot.index.selection = Some(match selected {
+            Some(id) => ReferenceSelection::Selected {
+                connection: id.clone(),
+            },
+            None => ReferenceSelection::None,
+        });
+        snapshot.index.store_revision = snapshot
+            .index
+            .store_revision
+            .checked_add(1)
+            .ok_or(Error::Invalid)?;
+        let bytes = encode(&snapshot.index)?;
+        project
+            .write_atomic_in_with_mode(&dir, "index.toml", bytes.as_bytes(), Some(0o600))
+            .map_err(|_| Error::Publication)?;
+        Ok(snapshot.index)
     }
 }

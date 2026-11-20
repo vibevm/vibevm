@@ -14,6 +14,11 @@ pub enum AiCommand {
 }
 #[derive(Debug, clap::Subcommand)]
 pub enum ConnectionCommand {
+    /// Select metadata only; does not activate any harness.
+    Default {
+        #[command(subcommand)]
+        command: ConnectionDefaultCommand,
+    },
     List,
     Details {
         id: String,
@@ -36,6 +41,22 @@ pub enum ConnectionCommand {
         expect_store: u64,
         #[arg(long)]
         expect_current: String,
+        #[arg(long)]
+        yes: bool,
+    },
+}
+
+#[derive(Debug, clap::Subcommand)]
+pub enum ConnectionDefaultCommand {
+    Show,
+    Set {
+        id: String,
+        #[arg(long)]
+        expect_store: u64,
+    },
+    Clear {
+        #[arg(long)]
+        expect_store: u64,
         #[arg(long)]
         yes: bool,
     },
