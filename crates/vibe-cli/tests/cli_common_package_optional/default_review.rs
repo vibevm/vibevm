@@ -4816,6 +4816,243 @@ fn multi_member_defaults_exact_version_drift_and_explicit_equal_answer() {
     }
 }
 
+fn set_review_fixture(explicit: bool) -> Fixture {
+    let f = multi_default_fixture("[\"enabled\",\"disabled\"]");
+    let source = f.registry.join(GROUP).join(DRIVER).join("v1.0.0/vibe.toml");
+    let text = fs::read_to_string(&source).unwrap().replace(
+        "effects = [{ kind = \"dependency\", target = \"org.vibevm/oracle-extra\" }]",
+        "effects = [{kind='config-value',name='enabled'}]",
+    );
+    write(
+        &source,
+        text + "\n[configuration.config_values]\nenabled=true\n",
+    );
+    let request = f.project.join("vibe.toml");
+    let mut text = fs::read_to_string(&request)
+        .unwrap()
+        .replace("version='^1'", "version='=1.0.0'");
+    if explicit {
+        text = text.replace("configuration={policy='use-declared-defaults',default_features=false}", "configuration={policy='require-selection',default_features=false,selections={extra={intent='exact',members=['disabled','enabled']}}}");
+    }
+    write(&request, text);
+    f.install_ok();
+    let next = f.registry.join(GROUP).join(DRIVER).join("v1.1.0");
+    write(
+        &next.join("vibe.toml"),
+        fs::read_to_string(&source)
+            .unwrap()
+            .replace("version='1.0.0'", "version='1.1.0'")
+            .replace(
+                "defaults = [\"enabled\",\"disabled\"]",
+                "defaults = [\"disabled\"]",
+            ),
+    );
+    write(&next.join("boot/rules.md"), "SET_REVIEW_NEW_VERSION\n");
+    write(&next.join("unused-source.txt"), UNUSED);
+    write(
+        &request,
+        fs::read_to_string(&request)
+            .unwrap()
+            .replace("version='=1.0.0'", "version='=1.1.0'"),
+    );
+    f
+}
+
+#[test]
+fn member_set_v2_review_actual_preview_apply_and_refusals() {
+    for world in [
+        "apply",
+        "explicit",
+        "forged",
+        "cross-project",
+        "payload-drift",
+        "definition-drift",
+        "scalar",
+        "reverse-scalar",
+        "malformed",
+        "prior-drift",
+        "graph-drift",
+    ] {
+        let f = set_review_fixture(world == "explicit");
+        let old = f.lock();
+        let original = old.configurations[&coordinate(DRIVER)].consumers.clone();
+        let values = |f: &Fixture| {
+            let out = f
+                .user
+                .vibe()
+                .args([
+                    "show",
+                    "configuration-data",
+                    "--path",
+                    f.project.to_str().unwrap(),
+                    "--json",
+                ])
+                .output()
+                .unwrap();
+            assert!(
+                out.status.success(),
+                "{}",
+                String::from_utf8_lossy(&out.stderr)
+            );
+            let data: serde_json::Value = serde_json::from_slice(&out.stdout).unwrap();
+            data["packages"]
+                .as_array()
+                .unwrap()
+                .iter()
+                .find(|p| p["package"] == coordinate(DRIVER))
+                .expect("actual selected driver config-data row")["values"]
+                .clone()
+        };
+        assert_eq!(values(&f)["enabled"], true);
+        let hooks = f.hooks();
+        let before = super::workspace::semantic_snapshot(&f.project);
+        let out = update(&f);
+        if world == "explicit" {
+            assert!(
+                out.status.success(),
+                "{}",
+                String::from_utf8_lossy(&out.stderr)
+            );
+            assert!(
+                f.lock().configurations[&coordinate(DRIVER)]
+                    .automatic_basis
+                    .is_none()
+            );
+            assert_eq!(
+                f.lock().configurations[&coordinate(DRIVER)].consumers,
+                original
+            );
+            assert_eq!(values(&f)["enabled"], true);
+            assert_eq!(f.hooks(), hooks);
+            continue;
+        }
+        assert!(!out.status.success());
+        assert_eq!(super::workspace::semantic_snapshot(&f.project), before);
+        let shown: serde_json::Value = serde_json::from_slice(&out.stderr).unwrap();
+        let proposal = &shown["proposal"];
+        assert_eq!(proposal["schema"], 2);
+        assert_eq!(proposal["protocol"], "vibe-package-member-set-review/2");
+        assert_eq!(proposal["consumer"], "./vibe.toml");
+        assert_eq!(proposal["group"], "extra");
+        assert_eq!(proposal["from_version"], "1.0.0");
+        assert_eq!(proposal["to_version"], "1.1.0");
+        assert_eq!(proposal["acknowledgement"], proposal["review_id"]);
+        assert_ne!(proposal["from_content_pin"], proposal["to_content_pin"]);
+        assert_eq!(
+            proposal["from_members"],
+            serde_json::json!(["disabled", "enabled"])
+        );
+        assert_eq!(proposal["to_members"], serde_json::json!(["disabled"]));
+        let mut token = proposal["review_id"].as_str().unwrap().to_owned();
+        assert!(token.starts_with("package-member-set-review/2:sha256:"));
+        if world == "reverse-scalar" {
+            let scalar = review_fixture();
+            let before = super::workspace::semantic_snapshot(&scalar.project);
+            assert!(!respond(&scalar, &token).status.success());
+            assert_eq!(super::workspace::semantic_snapshot(&scalar.project), before);
+            continue;
+        }
+        match world {
+            "malformed" => token = "package-member-set-review/2:sha256:bad".into(),
+            "prior-drift" => {
+                let lock = f.project.join("vibe.lock");
+                write(
+                    &lock,
+                    fs::read_to_string(&lock).unwrap() + "\n# changed retained subject\n",
+                );
+            }
+            "forged" => token = format!("package-member-set-review/2:sha256:{}", "0".repeat(64)),
+            "cross-project" => {
+                let other = set_review_fixture(false);
+                let out = update(&other);
+                let p: serde_json::Value = serde_json::from_slice(&out.stderr).unwrap();
+                token = p["proposal"]["review_id"].as_str().unwrap().to_owned();
+            }
+            "payload-drift" => write(
+                &f.registry
+                    .join(GROUP)
+                    .join(DRIVER)
+                    .join("v1.1.0/unused-source.txt"),
+                "CHANGED_AFTER_PREVIEW\n",
+            ),
+            "definition-drift" => {
+                let path = f.registry.join(GROUP).join(DRIVER).join("v1.1.0/vibe.toml");
+                write(
+                    &path,
+                    fs::read_to_string(&path)
+                        .unwrap()
+                        .replace("enabled=true", "enabled=false"),
+                );
+            }
+            "scalar" => {
+                let scalar = review_fixture();
+                let out = update(&scalar);
+                let p: serde_json::Value = serde_json::from_slice(&out.stderr).unwrap();
+                token = p["proposal"]["review_id"].as_str().unwrap().to_owned();
+            }
+            "graph-drift" => {
+                let path = f.registry.join(GROUP).join(DRIVER).join("v1.1.0/vibe.toml");
+                write(
+                    &path,
+                    fs::read_to_string(&path)
+                        .unwrap()
+                        .replace("optional = true", "optional = false"),
+                );
+            }
+            _ => {}
+        }
+        let refusal_before = if world == "prior-drift" {
+            super::workspace::semantic_snapshot(&f.project)
+        } else {
+            before
+        };
+        let out = respond(&f, &token);
+        assert_eq!(
+            out.status.success(),
+            world == "apply",
+            "world={world} {}{}",
+            String::from_utf8_lossy(&out.stdout),
+            String::from_utf8_lossy(&out.stderr)
+        );
+        if world == "apply" {
+            let lock = f.lock();
+            let record = &lock.configurations[&coordinate(DRIVER)];
+            assert_eq!(record.consumers, original);
+            assert_eq!(
+                record
+                    .automatic_basis
+                    .as_ref()
+                    .unwrap()
+                    .consumer_choice_sets["./vibe.toml"]["extra"],
+                vec!["disabled"]
+            );
+            assert_eq!(
+                lock.find(&GROUP.parse().unwrap(), DRIVER)
+                    .unwrap()
+                    .version
+                    .to_string(),
+                "1.1.0"
+            );
+            assert!(!f.slot(EXTRA).exists());
+            assert_eq!(values(&f), serde_json::json!({}));
+            assert_eq!(f.hooks(), hooks);
+            assert!(f.static_boot().contains("SET_REVIEW_NEW_VERSION"));
+            let after = super::workspace::semantic_snapshot(&f.project);
+            assert!(!respond(&f, &token).status.success());
+            assert_eq!(super::workspace::semantic_snapshot(&f.project), after);
+            fs::rename(&f.registry, f.root.join("registry-unavailable")).unwrap();
+            f.install_ok();
+            assert_eq!(super::workspace::semantic_snapshot(&f.project), after);
+        } else {
+            assert_eq!(
+                super::workspace::semantic_snapshot(&f.project),
+                refusal_before
+            );
+        }
+        println!("set-review-v2 world={world} actual-status={}", out.status);
+    }
+}
+
 #[test]
 fn zero_or_more_prior_reader_writer_refuse_new_basis_and_preserve_scalar_bytes() {
     let old = std::env::var_os("NST_MULTI_OLD_CLI")

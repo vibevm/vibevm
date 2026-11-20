@@ -447,6 +447,26 @@ impl VerifiedPayload {
         Ok(())
     }
 }
+/// Verify actual local endpoint bytes using the registry's canonical URL parser.
+/// The returned proof retains the no-follow observation for a pre-publication recheck.
+pub fn verify_local_payload_url(source: &str, expected: &str) -> Result<VerifiedPayload> {
+    if !source.starts_with("file://") {
+        bail!("local payload proof requires a plain file source");
+    }
+    let path = crate::multi_registry_resolver::local_path_from_url(source)?;
+    verify_pinned_payload(&path, expected)
+}
+
+/// Compare versioned local endpoints without treating a changed registry as renewal.
+pub fn same_local_version_owner(before: &str, after: &str) -> Result<bool> {
+    if !before.starts_with("file://") || !after.starts_with("file://") {
+        return Ok(false);
+    }
+    let before = crate::multi_registry_resolver::local_path_from_url(before)?;
+    let after = crate::multi_registry_resolver::local_path_from_url(after)?;
+    Ok(before.parent() == after.parent() && before.parent().is_some())
+}
+
 /// Verify a first-slice legacy-hash payload without fetching or trusting metadata.
 pub fn verify_pinned_payload(path: &std::path::Path, expected: &str) -> Result<VerifiedPayload> {
     if !expected.starts_with("sha256:") {

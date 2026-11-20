@@ -618,6 +618,7 @@ pub struct UninstallArgs {
 fn package_review_id(raw: &str) -> Result<String, String> {
     let valid = raw
         .strip_prefix("package-default-review/1:sha256:")
+        .or_else(|| raw.strip_prefix("package-member-set-review/2:sha256:"))
         .is_some_and(|hex| {
             hex.len() == 64
                 && hex
@@ -627,6 +628,6 @@ fn package_review_id(raw: &str) -> Result<String, String> {
     if valid {
         Ok(raw.to_owned())
     } else {
-        Err("expected a version1 package default review identifier".into())
+        Err("expected a scalar version1 or member-set version2 package review identifier".into())
     }
 }

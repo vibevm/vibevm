@@ -107,6 +107,24 @@ pub(super) fn stamp_structured_error(payload: &mut Value, err: &anyhow::Error) {
             map.insert("proposal".into(), proposal);
         }
     }
+    if let Some(review) = err.downcast_ref::<crate::commands::update::review::set::ReviewError>()
+        && let Value::Object(map) = payload
+    {
+        map.insert(
+            "code".into(),
+            Value::String(
+                if review.stale {
+                    "package_configuration_review_stale"
+                } else {
+                    "package_configuration_review_required"
+                }
+                .into(),
+            ),
+        );
+        if let Ok(proposal) = serde_json::to_value(&review.proposal) {
+            map.insert("proposal".into(), proposal);
+        }
+    }
     if err
         .downcast_ref::<crate::commands::update::review::InapplicableReview>()
         .is_some()

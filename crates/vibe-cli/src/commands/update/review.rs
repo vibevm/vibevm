@@ -6,6 +6,8 @@ use sha2::{Digest, Sha256};
 use std::collections::BTreeMap;
 use vibe_core::manifest::{ConfigurationIntentDecl, Lockfile, PackageConfiguration};
 
+pub(crate) mod set;
+
 #[derive(Debug, Clone, Serialize)]
 pub(crate) struct Proposal {
     pub schema: u32,
@@ -175,15 +177,39 @@ impl Binding {
     }
 }
 
+pub(super) struct Subject<'a> {
+    pub workspace: &'a std::path::Path,
+    pub selected: &'a std::path::Path,
+    pub manifest: &'a vibe_core::manifest::Manifest,
+}
+
 pub(super) fn gate(
     originals: &vibe_resolver::configuration::PackageConfigurationInputs,
-    workspace: &std::path::Path,
-    selected: &std::path::Path,
+    subject: Subject<'_>,
     prior_bytes: &[u8],
     prior: &Lockfile,
     updated: &[super::scoped::Resolved],
     response: Option<&str>,
 ) -> Result<()> {
+    let Subject {
+        workspace,
+        selected,
+        manifest,
+    } = subject;
+    if set::applies(prior, updated) {
+        return set::gate(
+            originals,
+            Subject {
+                workspace,
+                selected,
+                manifest,
+            },
+            prior_bytes,
+            prior,
+            updated,
+            response,
+        );
+    }
     let mut changed = Vec::new();
     for (cached, _, _, _, record) in updated {
         let key = format!("{}/{}", cached.resolved.group, cached.resolved.name);

@@ -414,8 +414,11 @@ fn run(
             original_inputs
                 .as_ref()
                 .ok_or_else(|| anyhow::anyhow!("missing governed input snapshot"))?,
-            &workspace.root,
-            &project_root,
+            super::review::Subject {
+                workspace: &workspace.root,
+                selected: &project_root,
+                manifest: &manifest,
+            },
             &prior_lock_bytes,
             &old_lock,
             &updated,
@@ -473,6 +476,24 @@ fn run(
     }
 
     records.validate_before_publication()?;
+    // The set response is not a retained source capability. Re-observe the exact
+    // live and held payloads at the last pre-effect boundary after confirmation.
+    if configured_all && super::review::set::applies(&old_lock, &updated) {
+        super::review::gate(
+            original_inputs
+                .as_ref()
+                .ok_or_else(|| anyhow::anyhow!("missing governed input snapshot"))?,
+            super::review::Subject {
+                workspace: &workspace.root,
+                selected: &project_root,
+                manifest: &manifest,
+            },
+            &prior_lock_bytes,
+            &old_lock,
+            &updated,
+            args.package_configuration_review.as_deref(),
+        )?;
+    }
 
     // ---- region 2: the first project semantic mutation ----------------------------
     let mut measured = Measured::default();
