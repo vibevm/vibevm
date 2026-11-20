@@ -1095,3 +1095,82 @@ fn malformed_binding_maps_and_unknown_managed_identities_fail_closed() {
         assert_eq!(fs::read(&path).unwrap(), bytes.as_bytes());
     }
 }
+
+#[cfg(unix)]
+#[test]
+fn coherent_setup_route_is_missing_and_does_not_mutate_existing_bindings() {
+    let f = F::new();
+    let secret = f.json(
+        &[
+            "secrets",
+            "create",
+            "--kind",
+            "api-key",
+            "--label",
+            "Synthetic",
+            "--value-stdin",
+        ],
+        Some(VALUE.as_bytes()),
+    );
+    let id = secret["items"][0]["id"].as_str().unwrap();
+    let a = f.json(
+        &[
+            "ai",
+            "connections",
+            "add",
+            "--label",
+            "Synthetic",
+            "--endpoint",
+            "http://127.0.0.1:32123/v1",
+            "--api-kind",
+            "openai-chat-completions",
+            "--default-model",
+            "synthetic",
+            "--secret-ref",
+            id,
+        ],
+        None,
+    );
+    let (cid, _) = a["items"].as_object().unwrap().iter().next().unwrap();
+    let version = a["store_revision"].as_u64().unwrap().to_string();
+    f.json(
+        &[
+            "ai",
+            "bindings",
+            "set",
+            "qwen",
+            "--mode",
+            "connection",
+            "--connection",
+            cid,
+            "--expect-store",
+            &version,
+        ],
+        None,
+    );
+    let ai = fs::read(f.0.path().join("secrets/ai/index.toml")).unwrap();
+    let key = fs::read(f.0.path().join("secrets/index.toml")).unwrap();
+    let out = f.run(
+        &["ai", "setup", "--agents", "pi,qwen", "--connection", cid],
+        None,
+    );
+    assert_eq!(out.status.code(), Some(2));
+    assert!(String::from_utf8_lossy(&out.stderr).contains("unrecognized subcommand"));
+    assert_eq!(
+        fs::read(f.0.path().join("secrets/ai/index.toml")).unwrap(),
+        ai
+    );
+    assert_eq!(
+        fs::read(f.0.path().join("secrets/index.toml")).unwrap(),
+        key
+    );
+    assert_eq!(
+        f.json(&["ai", "bindings", "show", "qwen"], None)["binding"]["connection"],
+        cid.as_str()
+    );
+    assert_eq!(
+        f.json(&["ai", "bindings", "show", "claude"], None)["binding"]["mode"],
+        "native"
+    );
+    assert!(!f.0.path().join("apps").exists());
+}
