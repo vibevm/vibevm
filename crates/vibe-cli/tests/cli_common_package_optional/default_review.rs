@@ -5660,3 +5660,132 @@ fn integer_unselected_bounds_and_maintenance_invalidating_value_refuse() {
         assert_eq!(super::workspace::semantic_snapshot(&f.project), before);
     }
 }
+
+#[test]
+fn public_text_and_choice_parameters_literal_values_qualification() {
+    for kind in ["string", "choice"] {
+        let worlds: &[&str] = if kind == "string" {
+            &["missing", "empty", "spaced", "wrong-type"]
+        } else {
+            &["missing", "alpha", "beta", "unknown", "label"]
+        };
+        for world in worlds {
+            let f = Fixture::new(false);
+            let source = f.registry.join(GROUP).join(DRIVER).join("v1.0.0/vibe.toml");
+            let choices = if kind == "choice" {
+                "choices=[{value='alpha',name='Friendly Alpha'},{value='beta',name='Friendly Beta'}]\n"
+            } else {
+                ""
+            };
+            write(
+                &source,
+                fs::read_to_string(&source).unwrap()
+                    + &format!(
+                        "\n[[configuration.parameters]]\nid='text'\nname='Text'\ntype='{kind}'\nrequired=true\n{choices}"
+                    ),
+            );
+            let value = match *world {
+                "missing" => None,
+                "empty" => Some("''"),
+                "spaced" => Some("'  literal value  '"),
+                "wrong-type" => Some("0"),
+                "alpha" => Some("'alpha'"),
+                "beta" => Some("'beta'"),
+                "unknown" => Some("'other'"),
+                "label" => Some("'Friendly Alpha'"),
+                _ => unreachable!(),
+            };
+            let request = f.project.join("vibe.toml");
+            let mut text = fs::read_to_string(&request)
+                .unwrap()
+                .replace("version='^1'", "version='=1.0.0'");
+            if let Some(value) = value {
+                text=text.replace("selections={extra={intent='exact',members=['disabled']}}}",&format!("selections={{extra={{intent='exact',members=['disabled']}}}},parameters={{text={value}}}}}"));
+            }
+            write(&request, text);
+            let original = Manifest::read(&request).unwrap().requires.configurations
+                [&coordinate(DRIVER)]
+                .clone();
+            let definition = Manifest::read(&source).unwrap().configuration.unwrap();
+            let normalized = definition.normalize_input(&original, "./vibe.toml");
+            let valid = !matches!(*world, "wrong-type" | "unknown" | "label");
+            assert_eq!(normalized.is_ok(), valid);
+            if valid {
+                if *world == "missing" {
+                    assert!(!normalized.as_ref().unwrap().parameters.contains_key("text"));
+                } else {
+                    assert_eq!(
+                        normalized.as_ref().unwrap().parameters["text"],
+                        vibe_core::manifest::ParameterValue::Text(
+                            match *world {
+                                "empty" => "",
+                                "spaced" => "  literal value  ",
+                                "alpha" => "alpha",
+                                _ => "beta",
+                            }
+                            .into()
+                        )
+                    );
+                }
+            }
+            println!(
+                "text kind={kind} world={world} original={original:?} normalized={normalized:?}"
+            );
+            let before = super::workspace::semantic_snapshot(&f.project);
+            let registry = preview_scratch_snapshot(&f.registry);
+            let authored = fs::read(&request).unwrap();
+            let out = f.install();
+            let diagnostic = format!(
+                "{}{}",
+                String::from_utf8_lossy(&out.stdout),
+                String::from_utf8_lossy(&out.stderr)
+            );
+            println!(
+                "text kind={kind} world={world} status={} diagnostic={diagnostic}",
+                out.status
+            );
+            assert!(!out.status.success(), "{diagnostic}");
+            if valid {
+                assert!(diagnostic.contains("only explicitly supplied required public bool parameters without defaults are connected"),"{diagnostic}");
+            } else {
+                let reason = match *world {
+                    "wrong-type" => "not a string value",
+                    "unknown" => "`other` is not one of alpha, beta",
+                    "label" => "`Friendly Alpha` is not one of alpha, beta",
+                    _ => unreachable!(),
+                };
+                assert!(
+                    diagnostic.contains("configuration.parameters.text")
+                        && diagnostic.contains(reason),
+                    "{diagnostic}"
+                );
+            }
+            assert_eq!(super::workspace::semantic_snapshot(&f.project), before);
+            assert!(!f.project.join("vibe.lock").exists());
+            assert!(!f.project.join("effects.log").exists());
+            for name in [DRIVER, BASE, EXTRA] {
+                assert!(!f.slot(name).exists());
+            }
+            assert_eq!(fs::read(&request).unwrap(), authored);
+            assert_eq!(preview_scratch_snapshot(&f.registry), registry);
+            println!(
+                "text kind={kind} world={world} coordination={:?}",
+                preview_scratch_snapshot(&f.project.join(".vibe"))
+                    .as_ref()
+                    .map(|entries| entries.keys().collect::<Vec<_>>())
+            );
+        }
+    }
+    let f = integer_fixture(0);
+    f.install_ok();
+    let lock = f.lock();
+    assert_eq!(
+        lock.configurations[&coordinate(DRIVER)]
+            .selected_parameters(vibe_core::PackageKind::Flow)
+            .unwrap()["count"],
+        vibe_core::manifest::ParameterValue::Integer(0)
+    );
+    let before = super::workspace::semantic_snapshot(&f.project);
+    f.install_ok();
+    assert_eq!(super::workspace::semantic_snapshot(&f.project), before);
+}
