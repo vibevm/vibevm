@@ -3,7 +3,7 @@
 Жанр: руководство ручной приёмки и форма протокола, не новый implementation plan.
 Дата: 2026-11-18. Статус: сценарии подготовлены; создание документа не означает их выполнения.
 
-**Current disposition (2026-11-20):** The later owner waiver in `NST-AUTONOMOUS-EXECUTION.md` governs owner-attended checks. The dated table below is a historical/manual route, not a request to repeat waived checks. A waiver never changes an observed automated failure into a pass. The scheduled blind USER-PROJECT adoption trial is separate: it remains UNRUN for lack of verified isolated runner access, not waived and not a negative behavioral result. See `UP-ADOPTION-RUNNER-BLOCKER-20261120.md` in the user-project campaign.
+**Current disposition (2026-11-20, direct owner clarification):** Skip any check that requires manual participation. Record `SKIPPED / owner exception` and whether it actually ran; do not count it as runtime PASS. This includes the blind USER-PROJECT adoption trial on this machine because provisioning its dedicated runner would require owner intervention. It is not a blocker. The historical rows below do not request new manual runs. This does not waive observed automated failures, permit using host credentials, or grant access to a provider.
 
 ## 1. Зачем нужен этот документ
 
@@ -13,7 +13,7 @@
 
 ### Real-agent adoption is a separate NST exit check
 
-`UP-AGENT-ADOPTION` is planned, not passed. This is an isolated real-agent behavioral trial, not a new owner-attended Windows requirement. Use the [blind writing, fresh-session recall and cross-project control](../user-project-2026-11/UP-AGENT-ADOPTION-01.md#blind-baseline-script-supervisor-only). Neither a manual UI observation nor a mechanical storage test proves that an agent chose the correct destination without prompting. Record the actual outcome in the adoption task, not twice.
+`UP-AGENT-ADOPTION`: SKIPPED by owner direction / NOT RUN, not a remaining NST exit dependency. The historical blind protocol and runner blocker record what was and was not observed; no real-agent behavioral result is inferred. Do not request runner provisioning for the waived check.
 
 ### Решение владельца о Windows
 
