@@ -196,6 +196,24 @@ pub(super) fn gate(
         selected,
         manifest,
     } = subject;
+    if updated.iter().any(|(cached, _, _, _, next)| {
+        let key = format!("{}/{}", cached.resolved.group, cached.resolved.name);
+        prior
+            .configurations
+            .get(&key)
+            .is_some_and(|old| old.closure_fallback_basis.is_some())
+            && next.as_ref().is_none_or(|new| {
+                prior.configurations.get(&key).is_none_or(|old| {
+                    old.closure_fallback_basis != new.closure_fallback_basis
+                        || old.declarations != new.declarations
+                        || old.consumers != new.consumers
+                })
+            })
+    }) {
+        bail!(
+            "closure fallback renewal is not connected; scalar and member-set review tokens cannot authorize it"
+        );
+    }
     if set::applies(prior, updated) {
         return set::gate(
             originals,

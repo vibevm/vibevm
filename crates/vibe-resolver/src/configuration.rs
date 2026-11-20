@@ -151,6 +151,17 @@ impl ConfigurationSnapshot {
                     PackageConfiguration::evaluate_with_forwarded(&original, &inputs, forwarded)
                         .and_then(|record| {
                             if let Some(previous) = self.previous.get(&package) {
+                                if (previous.closure_fallback_basis.is_some()
+                                    || record.closure_fallback_basis.is_some())
+                                    && (previous.closure_fallback_basis
+                                        != record.closure_fallback_basis
+                                        || previous.consumers != record.consumers
+                                        || previous.declarations != record.declarations)
+                                {
+                                    return Err(PackageConfigurationError::ReplayMismatch {
+                                        package: package.clone(),
+                                    });
+                                }
                                 if !previous.definition.parameters.is_empty()
                                     || previous
                                         .consumers

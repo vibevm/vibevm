@@ -15,6 +15,9 @@ use std::collections::{BTreeMap, BTreeSet};
 pub struct PackageConfiguration {
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub automatic_basis: Option<AutomaticBasis>,
+    /// Actual kernel fallback reliance belongs to the selected instance.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub closure_fallback_basis: Option<ClosureFallbackBasis>,
     pub consumers: BTreeMap<String, ConfigurationIntentDecl>,
     /// Operation-submitted originals remain distinct from authored consumers.
     #[serde(default, skip_serializing_if = "BTreeMap::is_empty")]
@@ -29,6 +32,14 @@ pub struct PackageConfiguration {
     /// Empty causes mean an ordinary mandatory declaration; selected features
     /// are recorded even when they also name that mandatory declaration.
     pub dependency_causes: BTreeMap<String, Vec<String>>,
+}
+
+/// Instance-level observed closure fallback, never a consumer answer or consent.
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct ClosureFallbackBasis {
+    pub definition_fingerprint: String,
+    pub groups: BTreeMap<String, String>,
 }
 
 /// One exact selected source-owned declaration requesting a target feature.
@@ -608,15 +619,96 @@ impl PackageConfiguration {
             groups.sort();
             groups.dedup();
         }
-        if features
-            .implied
-            .iter()
-            .any(|i| matches!(i.reason, ImplicationReason::GroupDefault { .. }))
-        {
-            return Err(unsupported(
-                "closure fallback basis is not connected on this package operation",
-            ));
-        }
+        let instance_reliance = super::basis::instance_reliance(
+            definition,
+            &[],
+            Some(features),
+            &BTreeSet::new(),
+            super::basis::Authority::Reuse,
+        );
+        let closure_fallback_basis = if instance_reliance.is_empty() {
+            None
+        } else {
+            let allowed = kind == crate::PackageKind::Flow
+                && consumers.len() == 1
+                && consumers.contains_key("./vibe.toml")
+                && forwarded.is_empty()
+                && definition.parameters.is_empty()
+                && definition.profiles.is_empty()
+                && definition.groups.len() == 1
+                && definition.features.iter().all(|f| {
+                    !f.default
+                        && f.guards.is_empty()
+                        && f.effects.iter().all(|effect| {
+                            matches!(
+                                effect,
+                                ConfigurationEffect::Dependency { .. }
+                                    | ConfigurationEffect::ConfigValue { .. }
+                            )
+                        })
+                })
+                && consumers.values().all(|i| {
+                    i.policy == crate::configuration::ChoicePolicy::RequireSelection
+                        && !i.default_features
+                        && i.profile.is_none()
+                        && i.selections.is_empty()
+                        && i.parameters.is_empty()
+                })
+                && automatic_choices.is_empty()
+                && automatic_choice_sets.is_empty()
+                && automatic_dormant_choices.is_empty()
+                && automatic_feature_defaults.is_empty();
+            if !allowed {
+                return Err(unsupported(
+                    "closure fallback basis is not connected on this package operation",
+                ));
+            }
+            let super::ConfigurationGroupDecl::Closure {
+                id,
+                members,
+                cardinality,
+                fallback: Some(fallback),
+                ..
+            } = &definition.groups[0]
+            else {
+                return Err(unsupported(
+                    "closure fallback basis requires one exactly-one singleton fallback",
+                ));
+            };
+            if *cardinality != crate::configuration::Cardinality::ExactlyOne
+                || fallback.len() != 1
+                || !members.contains(&fallback[0])
+                || instance_reliance
+                    != BTreeSet::from([super::basis::InstanceReliance::Closure(id.clone())])
+            {
+                return Err(unsupported(
+                    "closure fallback basis requires one exactly-one singleton fallback",
+                ));
+            }
+            let reasons = features
+                .implied
+                .iter()
+                .filter_map(|i| match &i.reason {
+                    ImplicationReason::GroupDefault { group } => {
+                        Some((group.clone(), i.feature.clone()))
+                    }
+                    _ => None,
+                })
+                .collect::<Vec<_>>();
+            if reasons != vec![(id.clone(), fallback[0].clone())]
+                || !features.selected.contains(&fallback[0])
+            {
+                return Err(invalid(
+                    "closure fallback reason disagrees with kernel selection".into(),
+                ));
+            }
+            Some(ClosureFallbackBasis {
+                definition_fingerprint: definition
+                    .semantic_fingerprint()
+                    .map_err(|e| invalid(e.to_string()))?,
+                groups: reasons.into_iter().collect(),
+            })
+        };
         let mut active = requires
             .iter_pkgrefs()
             .filter_map(|(group, name)| group.map(|g| format!("{g}/{name}")))
@@ -739,6 +831,7 @@ impl PackageConfiguration {
         };
         Ok(Self {
             automatic_basis,
+            closure_fallback_basis,
             consumers: consumers.clone(),
             submitted_inputs: BTreeMap::new(),
             forwarded_inputs: forwarded.to_vec(),

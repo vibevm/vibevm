@@ -58,11 +58,12 @@ pub use artifact::{
 pub use compile::CompileSection;
 pub use configuration::basis as configuration_basis;
 pub use configuration::{
-    AutomaticBasis, ConfigurationDecl, ConfigurationEffect, ConfigurationFeatureDecl,
-    ConfigurationFeatureVisibility, ConfigurationGroupDecl, ConfigurationGuard,
-    ConfigurationIntentDecl, ConfigurationProfileDecl, ConfigurationSelection, ForwardStrength,
-    ForwardedInput, NormalizedConfigurationInput, PackageConfiguration, PackageConfigurationError,
-    SubmittedInput, SubmittedSource, evaluate_request_local_data, submitted_project_witness,
+    AutomaticBasis, ClosureFallbackBasis, ConfigurationDecl, ConfigurationEffect,
+    ConfigurationFeatureDecl, ConfigurationFeatureVisibility, ConfigurationGroupDecl,
+    ConfigurationGuard, ConfigurationIntentDecl, ConfigurationProfileDecl, ConfigurationSelection,
+    ForwardStrength, ForwardedInput, NormalizedConfigurationInput, PackageConfiguration,
+    PackageConfigurationError, SubmittedInput, SubmittedSource, evaluate_request_local_data,
+    submitted_project_witness,
 };
 pub use consumer::{ConsumerNode, NodeRole};
 pub use declarant_path::{

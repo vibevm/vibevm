@@ -110,6 +110,22 @@ pub(crate) fn planned(planned: &crate::PlannedInstall) -> Result<()> {
         );
         if let Some(record) = &fetched.configuration {
             record.validate(&fetched.cached.manifest)?;
+            if record.closure_fallback_basis.is_some()
+                && (!planned.workspace.is_standalone()
+                    || planned.workspace.root != planned.project_root
+                    || planned.manifest.requires.packages.len() != 1
+                    || !planned.manifest.requires.packages[0].version.is_exact_pin()
+                    || fetched.in_place.is_some())
+            {
+                return Err(
+                    vibe_core::manifest::PackageConfigurationError::Unsupported {
+                        package: package.clone(),
+                        reason: "closure fallback requires one standalone exact copy Flow root"
+                            .into(),
+                    }
+                    .into(),
+                );
+            }
         } else {
             manifest_named(package.clone(), &fetched.cached.manifest)?;
         }
@@ -153,7 +169,12 @@ pub(crate) fn planned(planned: &crate::PlannedInstall) -> Result<()> {
                 );
             }
         }
-        if planned.submitted.is_some() {
+        if planned.submitted.is_some()
+            || prospective
+                .configurations
+                .values()
+                .any(|r| r.closure_fallback_basis.is_some())
+        {
             prospective.meta.root_dependencies = planned.manifest.requires.packages.clone();
         }
         prospective.validate_configurations()?;

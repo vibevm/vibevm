@@ -57,6 +57,13 @@ impl Lockfile {
             }
         }
         for (key, record) in &self.configurations {
+            if record.closure_fallback_basis.is_some()
+                && self.meta.schema_version < CLOSURE_FALLBACK_BASIS_SCHEMA_VERSION
+            {
+                return Err(invalid(
+                    "closure fallback reliance requires schema19".into(),
+                ));
+            }
             if record
                 .automatic_basis
                 .as_ref()
@@ -106,6 +113,29 @@ impl Lockfile {
                 )));
             }
             let row = rows[0];
+            if record.closure_fallback_basis.is_some()
+                && (row.kind != PackageKind::Flow
+                    || row.registry.is_none()
+                    || row.materialization != Materialization::Copy
+                    || row.source_kind != Some(SourceKind::Registry)
+                    || !row.source_url.as_str().starts_with("file://")
+                    || row.overridden
+                    || row.via_override.is_some()
+                    || row.via_redirect.is_some()
+                    || row.template.is_some()
+                    || !row.embedded_sources.is_empty()
+                    || self.meta.root_dependencies.len() != 1
+                    || !self.meta.root_dependencies.iter().any(|root| {
+                        root.group.as_ref() == Some(&row.group)
+                            && root.name == row.name
+                            && root.version.is_exact_pin()
+                            && root.version.matches(&row.version)
+                    }))
+            {
+                return Err(invalid(
+                    "closure fallback history requires one exact named local copy Flow root".into(),
+                ));
+            }
             if !record.submitted_inputs.is_empty() {
                 if self.meta.schema_version < SUBMITTED_INPUT_SCHEMA_VERSION
                     || row.kind != PackageKind::Flow
@@ -382,6 +412,7 @@ impl Lockfile {
                 | SUBMITTED_INPUT_SCHEMA_VERSION
                 | DORMANT_CHOICE_BASIS_SCHEMA_VERSION
                 | FEATURE_DEFAULT_BASIS_SCHEMA_VERSION
+                | CLOSURE_FALLBACK_BASIS_SCHEMA_VERSION
         ) {
             return Err(crate::Error::UnsupportedLockfile {
                 found: self.meta.schema_version,
@@ -393,7 +424,13 @@ impl Lockfile {
         // rule the 7 → 8 → 9 steps already followed: a project with no
         // template package and no channel requirement writes exactly the
         // bytes it wrote before PROP-075 (AV-FMT-002).
-        value.meta.schema_version = if value.configurations.values().any(|record| {
+        value.meta.schema_version = if value
+            .configurations
+            .values()
+            .any(|record| record.closure_fallback_basis.is_some())
+        {
+            CLOSURE_FALLBACK_BASIS_SCHEMA_VERSION
+        } else if value.configurations.values().any(|record| {
             record
                 .automatic_basis
                 .as_ref()
