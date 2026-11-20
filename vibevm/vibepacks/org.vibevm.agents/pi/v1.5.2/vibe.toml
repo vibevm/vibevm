@@ -46,3 +46,23 @@ default = true
 [[installer_options.public_commands]]
 name = "pi"
 launcher = "main"
+
+[[installer_options]]
+id = "windows-x64-standalone"
+name = "Official Pi Windows x64 CLI"
+platform = "windows"
+platform_name = "Windows"
+arch = "x86_64"
+[installer_options.installation]
+type = "zip"
+source = "https://github.com/earendil-works/pi/releases/download/v1.5.2/pi-windows-x64.zip"
+sha256 = "e6adb8cb8c84eca14391ad24b363de9d2be98a89ca3ba3fdee1fa4de32b7f2e8"
+[[installer_options.launchers]]
+id = "main"
+name = "Pi"
+executable = "$app_root/pi.exe"
+kind = "command"
+default = true
+[[installer_options.public_commands]]
+name = "pi"
+launcher = "main"

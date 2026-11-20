@@ -8,7 +8,7 @@ fn pi_exact_supplier_platform_selection_preserves_linux_and_refuses_mismatch() {
         "../../../vibevm/vibepacks/org.vibevm.agents/pi/v1.5.2/vibe.toml"
     ))
     .unwrap();
-    assert_eq!(manifest.installer_options.len(), 2);
+    assert_eq!(manifest.installer_options.len(), 3);
     for (platform, arch, id, asset, digest) in [
         (
             "macos",
@@ -53,7 +53,7 @@ fn pi_exact_supplier_platform_selection_preserves_linux_and_refuses_mismatch() {
         assert_eq!(selected.public_commands[0].launcher, "main");
     }
     for (platform, arch, installer) in [
-        ("windows", "x86_64", None),
+        ("windows", "aarch64", None),
         ("macos", "x86_64", None),
         ("macos", "aarch64", Some("linux-x64-standalone")),
         ("linux", "x86_64", Some("macos-arm64-standalone")),
@@ -96,7 +96,10 @@ fn codex_and_qwen_exact_macos_options_preserve_linux_and_refuse_cross_target_ids
         ),
     ] {
         let manifest = Manifest::parse_str(text).unwrap();
-        assert_eq!(manifest.installer_options.len(), 2);
+        assert_eq!(
+            manifest.installer_options.len(),
+            if name == "qwen" { 2 } else { 3 }
+        );
         let choice = InstallChoice {
             platform: Some("macos".into()),
             arch: Some("aarch64".into()),
@@ -131,7 +134,7 @@ fn codex_and_qwen_exact_macos_options_preserve_linux_and_refuse_cross_target_ids
         for rejected in [
             InstallChoice {
                 platform: Some("windows".into()),
-                arch: Some("x86_64".into()),
+                arch: Some("aarch64".into()),
                 installer: None,
             },
             InstallChoice {
@@ -149,6 +152,71 @@ fn codex_and_qwen_exact_macos_options_preserve_linux_and_refuse_cross_target_ids
             },
         ] {
             assert!(select_option(&manifest.installer_options, &rejected, None).is_err());
+        }
+    }
+}
+
+#[test]
+fn windows_pi_codex_options_use_actual_pe_layout() {
+    for (text, name, kind, digest, root, executable, args) in [
+        (
+            include_str!("../../../vibevm/vibepacks/org.vibevm.agents/pi/v1.5.2/vibe.toml"),
+            "pi",
+            "zip",
+            "e6adb8cb8c84eca14391ad24b363de9d2be98a89ca3ba3fdee1fa4de32b7f2e8",
+            None,
+            "$app_root/pi.exe",
+            Vec::<String>::new(),
+        ),
+        (
+            include_str!("../../../vibevm/vibepacks/org.vibevm.agents/codex/v0.170.0/vibe.toml"),
+            "codex",
+            "tar_gz",
+            "f32cad4e92e17f5ba1a4836f0bacca3950457cb204a4274dcb75fec99fbd82cd",
+            None,
+            "$app_root/codex-x86_64-pc-windows-msvc.exe",
+            Vec::new(),
+        ),
+    ] {
+        let manifest = Manifest::parse_str(text).unwrap();
+        let choice = InstallChoice {
+            platform: Some("windows".into()),
+            arch: Some("x86_64".into()),
+            installer: None,
+        };
+        let selected = select_option(&manifest.installer_options, &choice, None).unwrap();
+        assert_eq!(selected.id, "windows-x64-standalone");
+        let method = selected.installation.unwrap();
+        assert_eq!(method.kind(), kind);
+        let (actual_digest, actual_root) = match method {
+            InstallerMethod::Zip {
+                sha256,
+                payload_root,
+                ..
+            }
+            | InstallerMethod::TarGz {
+                sha256,
+                payload_root,
+                ..
+            } => (sha256, payload_root),
+            _ => panic!("expected verified archive, never execute an installer"),
+        };
+        assert_eq!(actual_digest, digest);
+        assert_eq!(actual_root.as_deref(), root);
+        assert_eq!(selected.launchers[0].executable, executable);
+        assert_eq!(selected.launchers[0].args, args);
+        assert_eq!(selected.public_commands[0].name, name);
+        for invalid in [
+            InstallChoice {
+                arch: Some("aarch64".into()),
+                ..choice.clone()
+            },
+            InstallChoice {
+                installer: Some("macos-arm64-standalone".into()),
+                ..choice
+            },
+        ] {
+            assert!(select_option(&manifest.installer_options, &invalid, None).is_err());
         }
     }
 }
