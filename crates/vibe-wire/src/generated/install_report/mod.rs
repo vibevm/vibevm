@@ -56,8 +56,10 @@ pub struct InstallReport {
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub delegation: Option<InstallDelegation>,
 
-    /// Install-hook reports (PROP-020 §2.1), pre-install first then post-
-    /// install, so a skipped or flagged hook is never silent.
+    /// Retired and always empty, so never emitted: the package `[hooks]` table
+    /// it reported was removed (PROP-020 `#LEGACY-HOOKS-REMOVED`). An install
+    /// script's outcome is its `contributions` row. The member stays so a
+    /// document written before the removal still parses.
     #[serde(default, skip_serializing_if = "Vec::is_empty")]
     pub hooks: Vec<InstallHookReport>,
 

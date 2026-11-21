@@ -62,7 +62,8 @@ pub enum HandlerError {
     #[error(
         "extension `{key}` cannot select a usable script for `{base}` \
          (governed by spec://org.vibevm.core/vibevm/common/PROP-054#H-SCRIPT; \
-          fix: ship a supported PROP-020 script variant or install its interpreter)"
+          fix: ship the `.sh` or `.ps1` variant PROP-054#H-SCRIPT selects for this host, \
+          or install its interpreter)"
     )]
     NoInterpreter { key: String, base: String },
     #[error(

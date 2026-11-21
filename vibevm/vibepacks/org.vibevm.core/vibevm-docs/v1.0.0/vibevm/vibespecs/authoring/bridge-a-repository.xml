@@ -15,7 +15,7 @@
     <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-021#NOT-A-PACKAGE"/>
   </what-happens>
   <three-classes title="Three ways to hold the upstream">
-    <p>Vendored: you copied the upstream tree into the package and committed it. This is the cheapest bridge, plain files and the flag, with [hooks](../glossary/index.xml#hook) if the layout needs shaping. Submodule-backed: your workspace references the upstream through a git submodule, which a direct git install preserves live and which publication flattens into ordinary files. Reference-backed: the package repository holds only your metadata and adapters, and `[[embedded_source]]` names the upstream address, an immutable commit, the source-tree hash and the licence; installation fetches that exact source.</p>
+    <p>Vendored: you copied the upstream tree into the package and committed it. This is the cheapest bridge, plain files and the flag, with [install scripts](../glossary/index.xml#hook) if the layout needs shaping. Submodule-backed: your workspace references the upstream through a git submodule, which a direct git install preserves live and which publication flattens into ordinary files. Reference-backed: the package repository holds only your metadata and adapters, and `[[embedded_source]]` names the upstream address, an immutable commit, the source-tree hash and the licence; installation fetches that exact source.</p>
     <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-023#CLASS-VENDORED"/>
     <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-023#CLASS-SUBMODULE"/>
     <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-023#CLASS-REFERENCE"/>

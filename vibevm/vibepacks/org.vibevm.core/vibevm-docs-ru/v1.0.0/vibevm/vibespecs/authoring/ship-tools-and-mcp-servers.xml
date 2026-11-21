@@ -41,15 +41,19 @@
     <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-027#SERVER-IS-BINARY"/>
     <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-027#ARGS-CLOSED-SET"/>
   </servers>
-  <hooks title="Установочные хуки">
-    <p>Пакет может выполнить скрипт при установке. `[hooks]` называет базовый путь без расширения, а пакет поставляет `&lt;base&gt;.sh`, `&lt;base&gt;.ps1` или оба; раннер выбирает подходящий хосту. `pre-install` выполняется, как только папка пакета готова, и до того, как vibe ею воспользуется; `post-install` выполняется после того, как установка стала долговечной, с записанным локом и перегенерированными стартовыми файлами. Рабочая папка — собственная папка пакета в дереве зависимостей, а окружение называет группу, имя, версию, вид и папку пакета и который из двух моментов сейчас. Правки [хука](../glossary/index.xml#hook) в файлах, которыми владеет vibe, эфемерны: переустановка или обновление восстанавливает эти байты и выполняет хук снова.</p>
-    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-020#BASE-PATH-VALUE"/>
-    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-020#SCRIPT-FORMS"/>
-    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-020#PHASE-PRE-INSTALL"/>
-    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-020#PHASE-POST-INSTALL"/>
-    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-020#CWD-IS-SLOT"/>
-    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-020#HOOK-ENV"/>
-    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-020#EFFECTS-EPHEMERAL"/>
+  <hooks title="Установочные скрипты">
+    <p>Пакет может выполнить скрипт при установке. Он объявляет скрипт как [вклад](../glossary/index.xml#contribution) `[[extension]]` с обработчиком `script` в одной из двух точек: `slot:pre-install` выполняется, как только папка пакета готова, и до того, как vibe ею воспользуется; `slot:post-install` выполняется после того, как установка стала долговечной, с записанным локом и перегенерированными стартовыми файлами. `base` — путь без расширения, а пакет поставляет `&lt;base&gt;.sh`, `&lt;base&gt;.ps1` или оба; vibe выбирает подходящий хосту. Вклад в этих точках отвечает за каждый пакет установки, пока `applies_to` его не сузит, поэтому пакет, который готовит только себя, называет там себя.</p>
+    <fence lang="toml">[[extension]]
+id = "prepare"
+point = "slot:pre-install"
+handler = { kind = "script", base = "hooks/prepare" }
+applies_to = { packages = ["org.example/spec-kit"] }</fence>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-054#POINT-GRAMMAR"/>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-054#H-SCRIPT"/>
+    <p>Рабочая папка — папка устанавливаемого пакета в дереве зависимостей, а окружение называет группу, имя, версию, вид и папку этого пакета и который из двух моментов сейчас. Правки [установочного скрипта](../glossary/index.xml#hook) в файлах, которыми владеет vibe, эфемерны: переустановка или обновление восстанавливает эти байты и выполняет скрипт снова, а установка, которая ничего не меняет, его не запускает. Скрипт зависимости выполняется без вопроса, только если её группа доверенная; иначе установка в терминале спрашивает один раз на пакет, а автоматическая отказывает, если не задан `--assume-yes`. Прежняя таблица `[hooks]` упразднена: манифест, который её всё ещё содержит, отвергается, и отказ называет эту замену.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-020#MODERN-SLOT-EXECUTION"/>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-065#ordinary-trust"/>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-020#LEGACY-HOOKS-REMOVED"/>
   </hooks>
   <edge-cases title="Особые случаи и правила">
     <p>Артефакт инструмента принадлежит ровно той версии, что установлена; после обновления старому артефакту не доверяют, и следующий `vibe bin exec` сначала собирает новую версию.</p>

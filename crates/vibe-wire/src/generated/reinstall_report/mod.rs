@@ -55,8 +55,11 @@ pub struct ReinstallReport {
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub delegation: Option<ReinstallDelegation>,
 
-    /// Install-hook reports for this run. Emitted even when empty: the pre-R7.3
-    /// document carried this member unconditionally and consumers key on it.
+    /// Retired and always an empty array: the package `[hooks]` table it
+    /// reported was removed (PROP-020 `#LEGACY-HOOKS-REMOVED`), and an install
+    /// script's outcome is its `contributions` row. Still emitted, because the
+    /// pre-R7.3 document carried this member unconditionally and consumers key
+    /// on it.
     #[serde(default)]
     pub hooks: Vec<ReinstallHookReport>,
 

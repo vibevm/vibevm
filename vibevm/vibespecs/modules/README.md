@@ -92,8 +92,10 @@
     absent → create. Corrects the destructive whole-file overwrite
     shipped in PROP-009 Phase 4. **Status: IMPLEMENTED (M1.18 Phase 7).** @status:doc/done
 - @fact:idx-prop-020 [PROP-020: Install hooks](vibe-workspace/PROP-020-install-hooks.xml)
-    — `[hooks]` in a package manifest, the pre/post phases, the
-    interpreter selection, the trust gate and the hook environment.
+    — the retirement of the package `[hooks]` table: a manifest carrying it
+    is refused, and install scripts are explicit `[[extension]]`
+    contributions at `slot:pre-install` / `slot:post-install` (PROP-054).
+    The earlier facts stay addressable as void tombstones.
     **Status: IMPLEMENTED.** @status:doc/done
 - @fact:idx-prop-022 [PROP-022: Materialization modes](vibe-workspace/PROP-022-materialization-modes.xml)
     — snapshot (default) vs in-place materialization as a property of any

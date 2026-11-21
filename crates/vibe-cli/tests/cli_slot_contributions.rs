@@ -4,7 +4,9 @@
 //! Covers the slot artifact reaching a later phase envelope across a world
 //! reload, a host slot declaration keeping its own target context / state /
 //! scratch, and a typed soft post-install failure preserving streams while a
-//! later target still runs. The sugar half is `cli_hook_lifecycle.rs`.
+//! later target still runs. A package's own install scripts — timing,
+//! rollback and the refusal of the retired `[hooks]` table — are
+//! `cli_hook_lifecycle.rs`.
 
 mod common;
 

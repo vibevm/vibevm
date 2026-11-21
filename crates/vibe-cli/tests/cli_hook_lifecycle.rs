@@ -8,7 +8,9 @@
 
 mod common;
 
+use std::collections::BTreeMap;
 use std::fs;
+use std::path::Path;
 
 use vibe_wire::generated::lifecycle_state::ExecutionRecordStatus;
 
@@ -186,8 +188,42 @@ fn post_nonzero_is_flagged_after_the_install_is_durable() {
     );
 }
 
+/// Every entry under `root` by relative path: a file with its bytes, a
+/// directory with none. The lifecycle lease file and the `.vibe` directory
+/// that holds it are left out: taking the project lease is not a write of
+/// the install, and a refused run still takes it.
+fn project_tree(root: &Path) -> BTreeMap<String, Option<Vec<u8>>> {
+    fn walk(root: &Path, dir: &Path, tree: &mut BTreeMap<String, Option<Vec<u8>>>) {
+        for entry in fs::read_dir(dir).unwrap() {
+            let path = entry.unwrap().path();
+            let relative = path
+                .strip_prefix(root)
+                .unwrap()
+                .to_string_lossy()
+                .replace('\\', "/");
+            if relative == ".vibe/lifecycle.lock" {
+                continue;
+            }
+            if path.is_dir() {
+                if relative != ".vibe" {
+                    tree.insert(relative, None);
+                }
+                walk(root, &path, tree);
+            } else {
+                tree.insert(relative, Some(fs::read(&path).unwrap()));
+            }
+        }
+    }
+    let mut tree = BTreeMap::new();
+    walk(root, root, &mut tree);
+    tree
+}
+
 /// The retired `[hooks]` table is refused by name while the package is still
-/// being read: nothing is materialised and the lock stays as it was.
+/// being read. The project tree is compared entry by entry, so a slot that
+/// was materialised and then rolled back would not pass for a refusal that
+/// never wrote: a rollback leaves the run's records behind, a refusal leaves
+/// nothing.
 #[test]
 fn a_package_still_declaring_the_retired_hooks_table_is_refused_before_any_write() {
     let (_outer, user, project, registry) = setup(Fixture::Timing);
@@ -199,7 +235,11 @@ fn a_package_still_declaring_the_retired_hooks_table_is_refused_before_any_write
     let mut body = fs::read_to_string(&manifest).unwrap();
     body.push_str("\n[hooks]\npre-install = \"hooks/pre\"\n");
     fs::write(&manifest, body).unwrap();
-    let lock_before = fs::read(project.path().join("vibe.lock")).unwrap();
+    let tree_before = project_tree(project.path());
+    assert!(
+        tree_before.contains_key("vibe.lock"),
+        "the fixture project starts with a lockfile to keep unchanged",
+    );
 
     let output = install(&user, project.path(), &registry);
 
@@ -209,15 +249,19 @@ fn a_package_still_declaring_the_retired_hooks_table_is_refused_before_any_write
         stderr.contains("[hooks]") && stderr.contains("[[extension]]"),
         "the refusal must name the retired table and its replacement: {stderr}"
     );
+    let docs = documents(&output.stdout);
     assert!(
-        !project
-            .path()
-            .join(common::slot_dir("org.example.hooked", "0.1.0"))
-            .exists(),
-        "a refused manifest must not reach materialisation",
+        docs.iter().all(|doc| doc["command"] != "lifecycle:plan"),
+        "a refused manifest must not reach the slot plan: {docs:?}",
     );
+    let tree_after = project_tree(project.path());
     assert_eq!(
-        fs::read(project.path().join("vibe.lock")).unwrap(),
-        lock_before,
+        tree_after.keys().collect::<Vec<_>>(),
+        tree_before.keys().collect::<Vec<_>>(),
+        "a refused manifest must not create or remove any project entry",
+    );
+    assert!(
+        tree_after == tree_before,
+        "a refused manifest must leave every project file byte-identical",
     );
 }

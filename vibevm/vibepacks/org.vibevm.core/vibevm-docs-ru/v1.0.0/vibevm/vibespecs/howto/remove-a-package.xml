@@ -29,7 +29,7 @@
     <p>Удаление пакета, который нужен другому установленному пакету, оставляет общую зависимость на месте; удаляются только пакеты, которые больше никому не нужны.</p>
     <p>Машинное хранилище сохраняет байты пакета после удаления. Переустановка позже не требует сети; `vibe cache clean --package` освобождает место, если вы хотите убрать пакет с машины совсем.</p>
     <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-010#CACHE-ACCRETIVE"/>
-    <p>Удаление пакета не отменяет того, что сделал его установочный скрипт, если он был: последствия [хука](../glossary/index.xml#hook) не отслеживаются, и это намеренно.</p>
-    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-020#EFFECTS-EPHEMERAL"/>
+    <p>Удаление пакета не отменяет того, что сделал его установочный скрипт, если он был: последствия [установочного скрипта](../glossary/index.xml#hook) не отслеживаются, и это намеренно.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-020#MODERN-SLOT-EXECUTION"/>
   </edge-cases>
 </spec>

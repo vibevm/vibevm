@@ -82,8 +82,8 @@
       <tr><td>`[[skill]]`</td><td>`name`, `path`, `description`, optional target `agents`: a [skill](../glossary/index.xml#skill) an agent may install</td><td>every kind</td></tr>
       <tr><td>`[[binary]]`</td><td>`name` and `crate`: a tool vibe builds on install and runs through `vibe bin exec`</td><td>code-bearing kinds; not `doc`</td></tr>
       <tr><td>`[[mcp_server]]`</td><td>`name`, `binary`, `args`: a server registered into agents</td><td>`mcp` only</td></tr>
-      <tr><td>`[hooks]`</td><td>`pre-install` and `post-install` script base paths</td><td>packages</td></tr>
       <tr><td>`[[extension]]`</td><td>`id`, `point`, `handler`, optional selector and config: a contribution to the lifecycle</td><td>packages and projects</td></tr>
+      <tr><td>`[[extension]]` at `slot:pre-install` or `slot:post-install`</td><td>a `script` handler with its `base` path, and `applies_to` naming the package: an install script, which replaces the retired `[hooks]` table</td><td>packages and projects</td></tr>
       <tr><td>`[[command]]`</td><td>`id`, optional description and a typed script handler: an explicit `vibe run` entry</td><td>projects/workspace hosts only</td></tr>
       <tr><td>`[[embedded_source]]`</td><td>an immutable external source a package refers to without vendoring it</td><td>bridge packages</td></tr>
     </table>
@@ -97,8 +97,8 @@
     <rule ref="spec://org.vibevm.core/vibevm/common/PROP-018#SKILL-EXTERNAL-LAWS"/>
     <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-025#BINARY-TABLE"/>
     <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-027#TABLE-ONLY-IN-KIND"/>
-    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-020#HOOKS-TABLE"/>
     <rule ref="spec://org.vibevm.core/vibevm/common/PROP-054#CONTRIB-GRAMMAR"/>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-054#POINT-GRAMMAR"/>
   </deliveries>
   <documentation-tables title="Documentation and its subjects">
     <table>

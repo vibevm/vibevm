@@ -52,7 +52,7 @@
   <edge-cases title="Edge cases and rules">
     <p>`--repo-url` pushes straight to an existing git repository with your local git credentials and loads no publish token; use it for hosts without an API adapter.</p>
     <p>The token is never sent to a package's install script and never printed, even in machine-readable output; if a command prints it, that is a bug to report.</p>
-    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-020#TOKEN-NEVER-IN-ENV"/>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-000#TS-BOUNDARIES"/>
     <p>A documentation package is published the same way; what differs is how it is consumed, by `vibe cache add` and the site rather than by `vibe install`.</p>
   </edge-cases>
 </spec>

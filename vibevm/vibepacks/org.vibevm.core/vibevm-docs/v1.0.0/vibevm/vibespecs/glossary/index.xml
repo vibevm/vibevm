@@ -95,8 +95,8 @@
     <rule ref="spec://org.vibevm.core/vibevm/common/PROP-054#HANDLER-KINDS"/>
   </handler>
   <hook title="hook">
-    <p>A package's `pre-install` or `post-install` script, run in the package's slot; installing the package is the consent to run it, and its effects are not tracked.</p>
-    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-020#WHAT-HOOKS-ARE"/>
+    <p>An install script: an `[[extension]]` contribution with a `script` handler at `slot:pre-install` or `slot:post-install`, scoped to its package with `applies_to` and run in the slot of the package being installed. A dependency's script runs unasked only from a trusted group, and what it does outside the files vibe records is not tracked.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-054#POINT-GRAMMAR"/>
   </hook>
   <index-registry title="index (of a registry)">
     <p>A repository beside a registry's packages that records every published version's summary and fingerprint; a cache that speeds search and cold installs and is never the truth.</p>

@@ -41,6 +41,12 @@ impl InterpreterProbe for BashProbe {
         program == "bash"
     }
 }
+struct NoInterpreterProbe;
+impl InterpreterProbe for NoInterpreterProbe {
+    fn has(&self, _: &str) -> bool {
+        false
+    }
+}
 struct FakeBinary(PathBuf);
 impl BinaryBackend for FakeBinary {
     fn resolve_or_build(
@@ -284,6 +290,55 @@ fn script_nonzero_wins_over_valid_reply() {
         .unwrap_err()
         .to_string();
     assert!(error.contains("exited nonzero"), "{error}");
+}
+
+#[test]
+fn declared_script_without_a_usable_interpreter_is_refused_and_never_spawned() {
+    let dir = tempfile::tempdir().unwrap();
+    fs::create_dir_all(dir.path().join("hooks")).unwrap();
+    fs::write(dir.path().join("hooks/run.sh"), "exit 0").unwrap();
+    let row = row(
+        dir.path(),
+        ExtensionHandler::Script {
+            base: "hooks/run".into(),
+        },
+    );
+    let (mut session, context) = prepared(dir.path(), &row);
+    let runner = FakeRunner {
+        output: ProcessOutput {
+            code: Some(0),
+            ..Default::default()
+        },
+        reply: None,
+        seen: Mutex::new(Vec::new()),
+    };
+    let runtime = HandlerRuntime {
+        process: &runner,
+        binary: &NoBinaryBackend,
+        native: &NoNativeBackend,
+        package_binding: &super::NoPackageBindingBackend,
+        agent: &crate::NoAgentBackend,
+        probe: &NoInterpreterProbe,
+        streams: StreamMode::Capture,
+    };
+    let error = session
+        .dispatch_prepared_with(&row, context, &runtime)
+        .unwrap_err();
+    let crate::DispatchError::Handler { error, .. } = error else {
+        panic!("unexpected script failure variant");
+    };
+    let HandlerError::NoInterpreter { base, .. } = error.as_ref() else {
+        panic!("unexpected typed handler failure: {error}");
+    };
+    assert_eq!(Path::new(base), Path::new("hooks/run"));
+    assert!(
+        error.to_string().contains("PROP-054#H-SCRIPT"),
+        "the refusal names its governing rule: {error}"
+    );
+    assert!(
+        runner.seen.lock().unwrap().is_empty(),
+        "a script with no interpreter must not be spawned"
+    );
 }
 
 #[test]

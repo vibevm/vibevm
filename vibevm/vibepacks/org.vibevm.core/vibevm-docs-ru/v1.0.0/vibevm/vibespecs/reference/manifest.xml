@@ -82,8 +82,8 @@
       <tr><td>`[[skill]]`</td><td>`name`, `path`, `description`, необязательные целевые `agents`: [навык](../glossary/index.xml#skill), который агент может установить</td><td>все виды</td></tr>
       <tr><td>`[[binary]]`</td><td>`name` и `crate`: инструмент, который vibe собирает при установке и запускает через `vibe bin exec`</td><td>виды с кодом; не `doc`</td></tr>
       <tr><td>`[[mcp_server]]`</td><td>`name`, `binary`, `args`: сервер, регистрируемый у агентов</td><td>только `mcp`</td></tr>
-      <tr><td>`[hooks]`</td><td>базовые пути скриптов `pre-install` и `post-install`</td><td>пакеты</td></tr>
       <tr><td>`[[extension]]`</td><td>`id`, `point`, `handler`, необязательные селектор и config: вклад в жизненный цикл</td><td>пакеты и проекты</td></tr>
+      <tr><td>`[[extension]]` в `slot:pre-install` или `slot:post-install`</td><td>обработчик `script` с путём `base` и `applies_to`, называющий пакет: установочный скрипт, заменяющий упразднённую таблицу `[hooks]`</td><td>пакеты и проекты</td></tr>
       <tr><td>`[[command]]`</td><td>`id`, необязательное описание и типизированный обработчик-скрипт: явная точка входа `vibe run`</td><td>только проекты и корни workspace</td></tr>
       <tr><td>`[[embedded_source]]`</td><td>неизменяемый внешний источник, на который пакет ссылается, не вендоря его</td><td>пакеты-мосты</td></tr>
     </table>
@@ -97,8 +97,8 @@
     <rule ref="spec://org.vibevm.core/vibevm/common/PROP-018#SKILL-EXTERNAL-LAWS"/>
     <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-025#BINARY-TABLE"/>
     <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-027#TABLE-ONLY-IN-KIND"/>
-    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-020#HOOKS-TABLE"/>
     <rule ref="spec://org.vibevm.core/vibevm/common/PROP-054#CONTRIB-GRAMMAR"/>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-054#POINT-GRAMMAR"/>
   </deliveries>
   <documentation-tables title="Документация и её предметы">
     <table>

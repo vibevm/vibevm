@@ -95,8 +95,8 @@
     <rule ref="spec://org.vibevm.core/vibevm/common/PROP-054#HANDLER-KINDS"/>
   </handler>
   <hook title="хук">
-    <p>Скрипт пакета `pre-install` или `post-install` (*hook*), выполняемый в слоте пакета; установка пакета и есть согласие его запустить, а его последствия не отслеживаются.</p>
-    <rule ref="spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-020#WHAT-HOOKS-ARE"/>
+    <p>Установочный скрипт (*hook*): вклад `[[extension]]` с обработчиком `script` в точке `slot:pre-install` или `slot:post-install`, ограниченный своим пакетом через `applies_to` и выполняемый в слоте устанавливаемого пакета. Скрипт зависимости выполняется без вопроса только из доверенной группы, а то, что он делает за пределами файлов, которые записывает vibe, не отслеживается.</p>
+    <rule ref="spec://org.vibevm.core/vibevm/common/PROP-054#POINT-GRAMMAR"/>
   </hook>
   <index-registry title="индекс (реестра)">
     <p>Репозиторий рядом с пакетами реестра, где записаны сводка и отпечаток каждой опубликованной версии (*index*); кэш, который ускоряет поиск и холодные установки и никогда не служит истиной.</p>

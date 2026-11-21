@@ -304,7 +304,7 @@ fn prepared(case: Case) -> (tempfile::TempDir, Source, Box<vibe_install::Planned
 fn assert_hook_failure(error: &vibe_install::Error) {
     let (message, _) = slot_apply::slot_failure(error);
     assert!(
-        message.contains(&format!("{FAILURE_EXIT}")),
+        message.contains(&format!("exited nonzero (Some({FAILURE_EXIT}))")),
         "the script's own exit status must survive: {message}"
     );
     assert!(error.to_string().contains("pre-install"), "{error}");
