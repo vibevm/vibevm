@@ -29,8 +29,10 @@ impl Metadata {
                 return Err(Error::Invalid);
             }
         }
-        if !matches!(self.api_kind.as_str(), "openai-chat-completions" | "openai-responses" | "anthropic-messages-bearer")
-            || self.endpoint.len() > 4096
+        if !matches!(
+            self.api_kind.as_str(),
+            "openai-chat-completions" | "openai-responses" | "anthropic-messages-bearer"
+        ) || self.endpoint.len() > 4096
             || self.endpoint.chars().any(char::is_control)
         {
             return Err(Error::Invalid);
@@ -167,9 +169,14 @@ pub enum MetadataCapability {
 fn metadata_supports(harness: &str, api_kind: &str) -> bool {
     matches!(metadata_capability(harness), MetadataCapability::Compatible { protocol, .. } if protocol == api_kind)
 }
-fn snapshot_metadata(snapshot: &vibe_secrets::ReferenceSnapshot, id: &SecretId) -> Result<Metadata, Error> {
+fn snapshot_metadata(
+    snapshot: &vibe_secrets::ReferenceSnapshot,
+    id: &SecretId,
+) -> Result<Metadata, Error> {
     let bytes = snapshot.metadata.get(id).ok_or(Error::Metadata)?;
-    let metadata: Metadata = toml::from_str(std::str::from_utf8(bytes).map_err(|_| Error::Metadata)?).map_err(|_| Error::Metadata)?;
+    let metadata: Metadata =
+        toml::from_str(std::str::from_utf8(bytes).map_err(|_| Error::Metadata)?)
+            .map_err(|_| Error::Metadata)?;
     metadata.validate()?;
     Ok(metadata)
 }
@@ -236,7 +243,10 @@ impl Store {
             mode: mode.into(),
             resolution: if mode == "native" {
                 "unmanaged"
-            } else if connection.as_ref().is_some_and(|id| snapshot_metadata(&snapshot, id).is_ok_and(|m| !metadata_supports(harness, &m.api_kind))) {
+            } else if connection.as_ref().is_some_and(|id| {
+                snapshot_metadata(&snapshot, id)
+                    .is_ok_and(|m| !metadata_supports(harness, &m.api_kind))
+            }) {
                 "unavailable: incompatible connection API"
             } else if connection.is_some() {
                 "metadata-only"
@@ -254,16 +264,23 @@ impl Store {
         binding: Option<vibe_secrets::ReferenceBinding>,
         expected: u64,
     ) -> Result<BindingObservation, Error> {
-        if binding.is_some() && !vibe_secrets::reference_binding_supported(harness)
-        {
+        if binding.is_some() && !vibe_secrets::reference_binding_supported(harness) {
             return Err(Error::Invalid);
         }
         if let Some(binding) = &binding {
             let target = match binding {
-                vibe_secrets::ReferenceBinding::Connection { connection } => Some(connection.clone()),
-                vibe_secrets::ReferenceBinding::InheritDefault => self.default_selection()?.connection,
+                vibe_secrets::ReferenceBinding::Connection { connection } => {
+                    Some(connection.clone())
+                }
+                vibe_secrets::ReferenceBinding::InheritDefault => {
+                    self.default_selection()?.connection
+                }
             };
-            if let Some(target) = target && !metadata_supports(harness, &self.details(&target)?.metadata.api_kind) { return Err(Error::Invalid); }
+            if let Some(target) = target
+                && !metadata_supports(harness, &self.details(&target)?.metadata.api_kind)
+            {
+                return Err(Error::Invalid);
+            }
         }
         self.0.bind_reference("ai", harness, binding, expected)?;
         self.binding(harness)
@@ -275,4 +292,7 @@ pub use setup::{SetupPreview, SetupRow};
 mod default_scope;
 pub use default_scope::{DefaultScope, DefaultScopePreview, DefaultScopeRow};
 mod native_settings;
-pub use native_settings::{ClaudeSettingsAdapter, CodexSettingsAdapter, HermesSettingsAdapter, OpenCodeSettingsAdapter, NativeSettingsAdapter, NativeSettingsPreview, PiSettingsAdapter, QwenSettingsAdapter};
+pub use native_settings::{
+    ClaudeSettingsAdapter, CodexSettingsAdapter, HermesSettingsAdapter, NativeSettingsAdapter,
+    NativeSettingsPreview, OpenCodeSettingsAdapter, PiSettingsAdapter, QwenSettingsAdapter,
+};

@@ -2,15 +2,21 @@
 use super::*;
 use sha2::{Digest, Sha256};
 const LIMIT: usize = 1024 * 1024;
-mod default_scope;
 mod compatibility;
+mod default_scope;
 mod native_settings;
-pub use native_settings::{ClaudeNativePreview, CodexNativePreview, HermesNativePreview, OpenCodeNativePreview, PiNativePreview, QwenNativePreview};
+pub use native_settings::{
+    ClaudeNativePreview, CodexNativePreview, HermesNativePreview, OpenCodeNativePreview,
+    PiNativePreview, QwenNativePreview,
+};
 
 /// Canonical harness IDs admitted by the existing AI reference binding grammar.
 /// No alias resolution, launcher selection or native execution authority.
 pub fn known_reference_harness(harness: &str) -> bool {
-    matches!(harness, "claude" | "codex" | "opencode" | "qwen" | "hermes" | "pi")
+    matches!(
+        harness,
+        "claude" | "codex" | "opencode" | "qwen" | "hermes" | "pi"
+    )
 }
 
 /// Whether this canonical harness may retain an AI reference binding.
@@ -418,7 +424,9 @@ impl Store {
         }
         snapshot.index.schema = snapshot.index.schema.max(2);
         snapshot.index.selection = Some(match selected {
-            Some(id) => ReferenceSelection::Selected { connection: id.clone() },
+            Some(id) => ReferenceSelection::Selected {
+                connection: id.clone(),
+            },
             None => ReferenceSelection::None,
         });
         compatibility::all(&snapshot)?;
@@ -493,7 +501,9 @@ impl Store {
         {
             return Err(Error::NotFound);
         }
-        if let Some(binding) = &binding { compatibility::binding_api(&snapshot, harness, binding)?; }
+        if let Some(binding) = &binding {
+            compatibility::binding_api(&snapshot, harness, binding)?;
+        }
         let current = snapshot
             .index
             .bindings
@@ -535,11 +545,7 @@ impl Store {
         expected_digest: &str,
     ) -> Result<ReferenceIndex, Error> {
         owner(participant)?;
-        if edits.is_empty()
-            || edits
-                .keys()
-                .any(|name| !reference_binding_supported(name))
-        {
+        if edits.is_empty() || edits.keys().any(|name| !reference_binding_supported(name)) {
             return Err(Error::Invalid);
         }
         let (project, root) = self.open(false)?.ok_or(Error::NotFound)?;
@@ -630,7 +636,9 @@ mod tests {
                 ProtectedValue::new(b"SYNTHETIC".to_vec()).unwrap(),
             )
             .unwrap();
-        let connection = store.create_reference("ai", &key, b"api_kind = 'openai-chat-completions'\n").unwrap();
+        let connection = store
+            .create_reference("ai", &key, b"api_kind = 'openai-chat-completions'\n")
+            .unwrap();
         let snapshot = store.reference_snapshot("ai").unwrap();
         let path = dir.path().join("secrets/ai/index.toml");
         let before = std::fs::read(&path).unwrap();
