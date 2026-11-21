@@ -69,7 +69,8 @@ output is allowed after the fence; further repository/plan mutation is not.</CRE
   concrete atoms; expose only a linear projection to a UI. A three-item UI list
   is never the authoritative plan.</PLAN-IS-HIERARCHICAL>
       <NO-SILENT-LOSS fact="true" status="impl/done">Every owner requirement and
-  discovered obligation has a stable node or an explicit disposition. Never
+  discovered obligation has a stable node or an explicit disposition; once the
+  completion list is frozen, one backlog line is that disposition. Never
   stop merely because the visible projection ended; close parents bottom-up
   only after their descendants and exit evidence close.</NO-SILENT-LOSS>
       <EXECUTION-WINDOW fact="true" status="impl/done">Respect current owner
@@ -80,10 +81,23 @@ output is allowed after the fence; further repository/plan mutation is not.</CRE
   understanding after checking revision and relevant input changes. Parallelism
   must fit integration and review capacity. Canon:
   @spec://org.vibevm.world/multi-user-planning/flows/multi-user-planning/campaign-execution#root.</EXECUTION-WINDOW>
+      <PRODUCT-OUTCOME-FIRST-POINTER fact="true" status="spec/done">Plan and review
+  for complete product use, finished user journeys and a coherent user experience,
+  not recursive perfection of local plan nodes. Expand detail only for a named
+  obligation or concrete consequential risk, with finite evidence and a stopping
+  condition. Canon:
+  @spec://org.vibevm.world/multi-user-planning/flows/multi-user-planning/campaign-execution#PRODUCT-OUTCOME-FIRST.</PRODUCT-OUTCOME-FIRST-POINTER>
       <REPLAN-AND-BACKSCAN fact="true" status="impl/done">Replan when evidence,
   owner input, gates, architecture or resources change. At each milestone and
   before handoff, backscan the original mandate, current tree, plan and accepted
   evidence for omissions and contradictions.</REPLAN-AND-BACKSCAN>
+      <CAMPAIGNS-END fact="true" status="impl/done">A campaign ends on a
+  frozen completion list: every entry closed as accepted, dropped (owner waiver)
+  or deferred (backlog). Only the owner adds an entry; findings become backlog
+  lines. An owner waiver closes the requirement and its parents without a
+  substitute check. When blocked on an outside action, say so once and stop. Keep
+  the plan readable in one pass; history lives in Git. Canon:
+  @spec://org.vibevm.world/multi-user-planning/flows/multi-user-planning/campaign-execution#COMPLETION-LIST-IS-FROZEN.</CAMPAIGNS-END>
     </facts>
   </planning>
   <parallel title="Parallel work without a second plan">

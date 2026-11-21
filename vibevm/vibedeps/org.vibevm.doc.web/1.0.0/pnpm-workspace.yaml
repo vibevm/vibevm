@@ -1,0 +1,19 @@
+# The two halves of the site (PROP-057 `##STACK-WORKSPACE`): `design`
+# publishes the tokens, the themes, the fonts and the shell components as
+# source; `site` consumes them through `workspace:*` and owns the routes.
+# There is no third package and no built library between them — the Qwik
+# optimizer reads `design`'s `.tsx` directly.
+packages:
+  - design
+  - site
+
+# pnpm refuses an install whose ignored build scripts were never ruled on
+# (`ERR_PNPM_IGNORED_BUILDS`, A0.10 §6), so both transitive script-bearing
+# packages are ruled on here, and both are refused
+# (`##STACK-BUILD-HYGIENE`): `sharp` optimizes images this site does not
+# process — its pictures arrive from the documentation pipeline — and
+# `@parcel/watcher` only makes a dev watcher faster. Two `false`s buy a
+# reproducible install with no native compilation in it.
+allowBuilds:
+  "@parcel/watcher": false
+  sharp: false

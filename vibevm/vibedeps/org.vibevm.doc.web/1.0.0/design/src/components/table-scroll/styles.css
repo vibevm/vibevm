@@ -1,0 +1,31 @@
+.table-scroll {
+  overflow-x: auto;
+  margin: 0 0 1.3rem;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-md);
+  background: var(--bg-raise);
+}
+
+.table-scroll > table {
+  margin: 0;
+  min-width: 100%;
+}
+
+.table-scroll:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+/* The breakout: step out of the reading column to the window's width,
+   centred, and come back to the column's padding inside. `100vw` counts
+   the scrollbar on Windows, which the body's `overflow-x: clip` trims. */
+.breakout {
+  width: 100vw;
+  max-width: 100vw;
+  margin-left: calc(50% - 50vw);
+  margin-right: calc(50% - 50vw);
+  border-left: none;
+  border-right: none;
+  border-radius: 0;
+  padding: 0 max(1.25rem, calc(50vw - var(--measure) / 2));
+}

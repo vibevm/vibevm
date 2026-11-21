@@ -1,0 +1,35 @@
+.footnotes {
+  margin-top: 3rem;
+  padding-top: 1.2rem;
+  border-top: 1px solid var(--line);
+  font-size: 0.88rem;
+  color: var(--text-2);
+}
+
+.footnotes__title {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-3);
+  margin: 0 0 0.7rem;
+}
+
+.footnotes ol {
+  padding-left: 1.2rem;
+  margin: 0;
+}
+
+.footnotes li {
+  margin-bottom: 0.5rem;
+}
+
+.footnotes .fn-backref {
+  margin-left: 0.3rem;
+  color: var(--text-3);
+  text-decoration: none;
+}
+
+.footnotes .fn-backref:hover {
+  color: var(--accent);
+}

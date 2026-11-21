@@ -1,8 +1,8 @@
 schema = 1
-source_hash = "sha256:d63946fc7b7b27e5693ddf06a2b8f3c678f6f681d214da22ae8988d8eb68cda6"
+source_hash = "sha256:fe8aa4d3e1b8cbbb5cd82e3a2103cffe421a5a417979b2e71dcd943f5cf40e35"
 spec_format = "xml"
 converter_recipe = "specdoc/4"
-derived_hash = "sha256:78a0d30f23c0d3a4d4b02eebf560137a6f831f7e03a477816d171e05b1dfa9a8"
+derived_hash = "sha256:6fca1053b33f97b8dda411b09d3940c1b656b98c357d08c40ad4ca04d486bf42"
 
 [[file]]
 path = "AGENTS.md"
@@ -3045,12 +3045,6 @@ path = "vibevm/vibedeps/org.vibevm.world.git-practices/1.0.0/vibe.toml"
 sha256 = "ac8bb8c95299cbc66fd203b10c492e9e07644ece09b5116a7126b2ffb0bde7c0"
 disposition = "copied"
 source = "vibevm/vibedeps/org.vibevm.world.git-practices/1.0.0/vibe.toml"
-
-[[file]]
-path = "vibevm/vibedeps/org.vibevm.world.git-practices/1.0.0/vibevm/vibespecs/boot/.vibe-boot-artifacts.lock"
-sha256 = "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
-disposition = "copied"
-source = "vibevm/vibedeps/org.vibevm.world.git-practices/1.0.0/vibevm/vibespecs/boot/.vibe-boot-artifacts.lock"
 
 [[file]]
 path = "vibevm/vibedeps/org.vibevm.world.git-practices/1.0.0/vibevm/vibespecs/boot/INDEX.md"

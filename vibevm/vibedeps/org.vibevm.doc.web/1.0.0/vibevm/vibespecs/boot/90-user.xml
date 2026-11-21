@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spec xmlns="https://vibevm.org/spec/1">
+  <title>Package owner notes</title>
+  <p>This file is reserved for package-specific owner guidance.</p>
+</spec>

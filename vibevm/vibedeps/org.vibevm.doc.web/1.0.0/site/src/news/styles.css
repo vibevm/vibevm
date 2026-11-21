@@ -1,0 +1,179 @@
+/* `/news-and-support/` — the channels page.
+   ---------------------------------------------------------------------
+   A list of destinations in the family's language: the display face for
+   the heading, the mono face for the labels, cards on the raised ground
+   with a hairline around them, and the site's one accent for the address
+   a card leads to. Every colour is a semantic token and none of them is
+   new (PROP-057 `##STACK-DESIGN-FLOOR`): the page introduces no hue of
+   its own, because it is not one of the product arguments — it is the
+   site's front desk, and a front desk wears the house's own colours.
+
+   The one shape worth naming is the card. It is a grid of four rows
+   rather than four elements in a row, so that the platform label, the
+   name, the line and the address stand at the same four heights in every
+   card of a group however long any of the four happens to be in either
+   language — «Канал в Telegram» is a third longer than «Reddit», and a
+   row of cards whose names sat at different heights would read as a row
+   of accidents. The address is pushed to the foot by the `1fr` above it,
+   which is what keeps it on the card's bottom edge when its neighbour's
+   line wraps to two. */
+
+.ns-page {
+  padding-block: clamp(40px, 7vh, 88px) clamp(56px, 10vh, 112px);
+}
+
+/* --- The heading and the one line under it ---------------------------- */
+
+.ns-title {
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: clamp(38px, 6vw, 64px);
+  line-height: 1.05;
+  letter-spacing: -0.024em;
+  color: var(--text);
+  text-wrap: balance;
+}
+
+.ns-lede {
+  margin: 20px 0 0;
+  font-size: 17px;
+  line-height: 1.66;
+  color: var(--text-2);
+  /* The measure of a line a reader finishes, not of the window: the
+     column is 1100px wide and holds cards three across, and one sentence
+     spanning all of it would be read twice. */
+  max-width: 36rem;
+}
+
+/* --- A group ---------------------------------------------------------- */
+
+.ns-group {
+  margin-top: clamp(36px, 6vh, 64px);
+}
+
+/* The group heading is the section's name and not a second headline: the
+   mono face at the size the site labels things, over the same short rule
+   the essay's headings stand under. It marks a boundary rather than
+   claiming the page. */
+.ns-h {
+  margin: 0 0 18px;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--text-2);
+}
+
+.ns-h::before {
+  content: "";
+  display: block;
+  width: 36px;
+  height: 2px;
+  margin-bottom: 14px;
+  background: var(--accent);
+}
+
+/* --- The cards -------------------------------------------------------- */
+
+/* A list, and it says so: five destinations are five items, and a reader
+   using a screen reader is told how many are in each group before walking
+   them. The bullets go; the semantics stay. */
+.ns-cards {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  /* Three across where there is room, and never narrower than a card that
+     can hold «Сообщество VibeVM на Reddit» on two lines. `auto-fill` and
+     not `auto-fit`, which is the whole difference between a page of cards
+     and a page of banners: `auto-fit` collapses the tracks a group does
+     not fill and stretches what is left over them, so a group of two
+     would be two half-page cards and the group of one a card the width of
+     the column. Keeping the empty track keeps every card the same size in
+     every group, and lets a group of two end where it ends. */
+  grid-template-columns: repeat(auto-fill, minmax(16rem, 1fr));
+  gap: 16px;
+}
+
+.ns-card {
+  height: 100%;
+  display: grid;
+  grid-template-rows: auto auto 1fr auto;
+  gap: 6px;
+  padding: 20px 22px 18px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-md);
+  background: var(--bg-raise);
+  transition:
+    border-color 0.2s ease,
+    background 0.2s ease,
+    transform var(--speed) ease;
+}
+
+.ns-card:hover {
+  border-color: var(--line-strong);
+  background: var(--bg-sink);
+  transform: translateY(-2px);
+}
+
+/* The ring follows the card rather than the global 3px: a 2px outline
+   offset from a 10px corner reads as a rectangle drawn over a card unless
+   it is given the card's own radius. */
+.ns-card:focus-visible {
+  border-radius: var(--radius-md);
+}
+
+/* The platform, as a word. No logo enters this tree — see `i18n.ts` — so
+   this label is the whole of «which app opens this», and it is set in the
+   mono face and the faint ink the site labels everything else in. */
+.ns-card__platform {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--text-3);
+}
+
+.ns-card__name {
+  font-family: var(--font-display);
+  font-size: 19px;
+  font-weight: 600;
+  line-height: 1.2;
+  color: var(--text);
+}
+
+.ns-card__body {
+  font-size: 13.5px;
+  line-height: 1.6;
+  color: var(--text-2);
+}
+
+/* Where the card goes, in the form a reader could read out loud. The
+   accent, because it is the one thing on the card that IS the link — and
+   the card is the link, so the colour is where a reader looks for it. */
+.ns-card__at {
+  margin-top: 8px;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--accent);
+  /* An address is one unbreakable string: without a minimum of zero the
+     grid grows to its width and the page scrolls sideways on a phone.
+     What scrolls, if anything ever must, is this line. */
+  min-width: 0;
+  overflow-x: auto;
+  white-space: nowrap;
+}
+
+.ns-card:hover .ns-card__at {
+  color: var(--accent-hover);
+}
+
+/* --- Motion safety ---------------------------------------------------- */
+
+@media (prefers-reduced-motion: reduce) {
+  .ns-card:hover {
+    transform: none;
+  }
+}

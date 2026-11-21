@@ -81,8 +81,10 @@ CONTINUITY_TEXT = (
     "is authorized, continue across accepted intermediate atoms until the requested "
     "boundary, completion, an owner-only decision, external blocker, conflicting "
     "live writer or explicit formal handoff. Context loss or worker termination "
-    "is not completion. Declare completion only when every completion proof is "
-    "satisfied."
+    "is not completion. The goal is complete when every node of the route is "
+    "terminal: accepted, dropped, deferred or superseded. A check the owner waived "
+    "is dropped, not open. When no open node can move without an outside action, "
+    "state what is needed once and stop."
 )
 CLAUDE_CONTINUITY = (
     "Current owner scope wins, including status/planning-only and stop. On cold "
@@ -99,8 +101,10 @@ CLAUDE_CONTINUITY = (
     "the named alternative proof. During authorized execution continue across intermediate atoms "
     "until the requested boundary, completion, owner-only decision, external "
     "blocker, conflicting live writer or explicit formal handoff. Process ending "
-    "is not completion; the goal is met only when the selected node is accepted "
-    "with all required descendants/gates and owner inspection."
+    "is not completion; the goal is met when the selected node and every "
+    "descendant are terminal: accepted, dropped, deferred or superseded. Checks "
+    "the owner waived are dropped, not open. If blocked on an outside action, "
+    "state it once and stop."
 )
 
 
@@ -445,8 +449,10 @@ def build_condition(selected: dict[str, Any], subtree: list[dict[str, Any]], rev
     base = collapse_ws(
         f"Within current owner-authorized scope, complete campaign [{selected['id']}] "
         f"{selected['title']} exactly as the current "
-        f"stewardship plan.toml revision {revision} defines, including every non-terminal "
-        "descendant and every completion proof recorded in GOAL.md."
+        f"stewardship plan.toml revision {revision} defines. Nodes added later do not "
+        "extend this condition. It is satisfied when the selected node and all its "
+        "descendants at that revision are terminal, or when the latest message names "
+        "an outside action that every open node awaits."
     )
     continuity = collapse_ws(CLAUDE_CONTINUITY)
     mandatory = base + " " + continuity
@@ -576,7 +582,7 @@ def render(snapshot: dict[str, Any]) -> tuple[bytes, bytes | None, dict[str, Any
 
     closure = list(selected["acceptance"])
     for node in subtree:
-        if node["kind"] == "gate" and node["state"] != "accepted":
+        if node["kind"] == "gate" and node["state"] not in ROUTE_TERMINAL_STATES:
             closure.extend(node["acceptance"])
     closure = unique_texts(closure)
     lines.extend(["", "## Completion proof"])

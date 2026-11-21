@@ -48,6 +48,7 @@
   BOUNDARY-REFRESH-THE-STATUS-LINE → org-vibevm-world-%2Dcampaign-plans-%2DBOUNDARY-REFRESH-THE-STATUS-LINE (org.vibevm.world/campaign-plans)
   BOUNDARY-RUN-THE-FULL-GATE-PANEL → org-vibevm-world-%2Dcampaign-plans-%2DBOUNDARY-RUN-THE-FULL-GATE-PANEL (org.vibevm.world/campaign-plans)
   BOUNDARY-WRITE-THE-COMMIT-MAP-ENTRY → org-vibevm-world-%2Dcampaign-plans-%2DBOUNDARY-WRITE-THE-COMMIT-MAP-ENTRY (org.vibevm.world/campaign-plans)
+  CAMPAIGNS-END → org-vibevm-world-%2Dmulti-user-planning-%2DCAMPAIGNS-END (org.vibevm.world/multi-user-planning)
   CASE-THE-USER-EDITED-CODE-DIRECTLY → org-vibevm-world-%2Dsync-from-code-%2DCASE-THE-USER-EDITED-CODE-DIRECTLY (org.vibevm.world/sync-from-code)
   CASE-THE-USER-GAVE-AN-IMPERATIVE-CHAT-COMMAND → org-vibevm-world-%2Dsync-from-code-%2DCASE-THE-USER-GAVE-AN-IMPERATIVE-CHAT-COMMAND (org.vibevm.world/sync-from-code)
   CASUAL-CONTINUATION → org-vibevm-world-%2Dmulti-user-planning-%2DCASUAL-CONTINUATION (org.vibevm.world/multi-user-planning)
@@ -265,6 +266,7 @@
   POINTER-THE-PROTOCOL → org-vibevm-world-%2Daddressable-specs-%2DPOINTER-THE-PROTOCOL (org.vibevm.world/addressable-specs)
   POINTER-THE-SPEC-TREE-LAYOUT → org-vibevm-world-%2Daddressable-specs-%2DPOINTER-THE-SPEC-TREE-LAYOUT (org.vibevm.world/addressable-specs)
   PRINT-THE-SOURCE-NEVER-THE-VALUE → org-vibevm-world-%2Dsecrets-hygiene-%2DPRINT-THE-SOURCE-NEVER-THE-VALUE (org.vibevm.world/secrets-hygiene)
+  PRODUCT-OUTCOME-FIRST-POINTER → org-vibevm-world-%2Dmulti-user-planning-%2DPRODUCT-OUTCOME-FIRST-POINTER (org.vibevm.world/multi-user-planning)
   PROFILE-QUALITY-FLOOR → org-vibevm-world-%2Dmulti-user-planning-%2DPROFILE-QUALITY-FLOOR (org.vibevm.world/multi-user-planning)
   PROJECT-BUILDS-A-TOOL-THAT-MANAGES-ITSELF → org-vibevm-world-%2Dtool-design-lessons-%2DPROJECT-BUILDS-A-TOOL-THAT-MANAGES-ITSELF (org.vibevm.world/tool-design-lessons)
   PROJECT-DOCUMENTS-ARE-GENRE-TYPED → org-vibevm-world-%2Dspec-genres-%2DPROJECT-DOCUMENTS-ARE-GENRE-TYPED (org.vibevm.world/spec-genres)
@@ -1441,7 +1443,8 @@ output is allowed after the fence; further repository/plan mutation is not.</org
   concrete atoms; expose only a linear projection to a UI. A three-item UI list
   is never the authoritative plan.</org-vibevm-world--multi-user-planning--PLAN-IS-HIERARCHICAL>
       <org-vibevm-world--multi-user-planning--NO-SILENT-LOSS fact="true" status="impl/done">Every owner requirement and
-  discovered obligation has a stable node or an explicit disposition. Never
+  discovered obligation has a stable node or an explicit disposition; once the
+  completion list is frozen, one backlog line is that disposition. Never
   stop merely because the visible projection ended; close parents bottom-up
   only after their descendants and exit evidence close.</org-vibevm-world--multi-user-planning--NO-SILENT-LOSS>
       <org-vibevm-world--multi-user-planning--EXECUTION-WINDOW fact="true" status="impl/done">Respect current owner
@@ -1452,10 +1455,23 @@ output is allowed after the fence; further repository/plan mutation is not.</org
   understanding after checking revision and relevant input changes. Parallelism
   must fit integration and review capacity. Canon:
   @spec://org.vibevm.world/multi-user-planning/flows/multi-user-planning/campaign-execution#root.</org-vibevm-world--multi-user-planning--EXECUTION-WINDOW>
+      <org-vibevm-world--multi-user-planning--PRODUCT-OUTCOME-FIRST-POINTER fact="true" status="spec/done">Plan and review
+  for complete product use, finished user journeys and a coherent user experience,
+  not recursive perfection of local plan nodes. Expand detail only for a named
+  obligation or concrete consequential risk, with finite evidence and a stopping
+  condition. Canon:
+  @spec://org.vibevm.world/multi-user-planning/flows/multi-user-planning/campaign-execution#PRODUCT-OUTCOME-FIRST.</org-vibevm-world--multi-user-planning--PRODUCT-OUTCOME-FIRST-POINTER>
       <org-vibevm-world--multi-user-planning--REPLAN-AND-BACKSCAN fact="true" status="impl/done">Replan when evidence,
   owner input, gates, architecture or resources change. At each milestone and
   before handoff, backscan the original mandate, current tree, plan and accepted
   evidence for omissions and contradictions.</org-vibevm-world--multi-user-planning--REPLAN-AND-BACKSCAN>
+      <org-vibevm-world--multi-user-planning--CAMPAIGNS-END fact="true" status="impl/done">A campaign ends on a
+  frozen completion list: every entry closed as accepted, dropped (owner waiver)
+  or deferred (backlog). Only the owner adds an entry; findings become backlog
+  lines. An owner waiver closes the requirement and its parents without a
+  substitute check. When blocked on an outside action, say so once and stop. Keep
+  the plan readable in one pass; history lives in Git. Canon:
+  @spec://org.vibevm.world/multi-user-planning/flows/multi-user-planning/campaign-execution#COMPLETION-LIST-IS-FROZEN.</org-vibevm-world--multi-user-planning--CAMPAIGNS-END>
     </facts>
   </org-vibevm-world--multi-user-planning--planning>
   <org-vibevm-world--multi-user-planning--parallel title="Parallel work without a second plan">

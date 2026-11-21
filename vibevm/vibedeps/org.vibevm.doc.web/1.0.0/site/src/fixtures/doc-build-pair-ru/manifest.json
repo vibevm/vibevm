@@ -1,0 +1,68 @@
+{
+  "schema_version": 1,
+  "package": {
+    "group": "com.example.docs",
+    "name": "pair-ru",
+    "version": "0.1.0",
+    "publisher": "com.example.docs",
+    "title": "Пара",
+    "description": "Два экземпляра страниц, один из них намеренно расходится.",
+    "abstract": "Что покрывает: две страницы — зеркало источника, во второй намеренное расхождение.\nДля кого: для того, кто меняет проверку переводов.\nЧто предполагает известным: ничего.\nЧего не покрывает: всё остальное.",
+    "lang": "ru",
+    "status": "community",
+    "subjects": [
+      {
+        "package": "com.example/subject",
+        "version": "^1.0",
+        "status": "community"
+      }
+    ],
+    "translation": {
+      "package": "com.example.docs/pair",
+      "version": "^0.1",
+      "status": "official"
+    },
+    "audiences": [
+      "user"
+    ],
+    "media": {
+      "icon": "media/0b49378201a06859.svg",
+      "banner": "media/b42a86813100e785.svg",
+      "preview": "media/5c2ffd1deb2018c2.png"
+    },
+    "rendered_at": "2026-09-12T16:54:22.714456Z"
+  },
+  "pages": [
+    {
+      "path": "guide/two.xml",
+      "title": "Вторая",
+      "genre": "concept",
+      "audiences": [
+        "user"
+      ],
+      "anchors": [
+        "root",
+        "LEAD-TWO",
+        "TAIL-TWO"
+      ],
+      "summary": "Вторая страница пары, у которой средний блок — список.",
+      "reading_time_min": 1
+    },
+    {
+      "path": "guide/one.xml",
+      "title": "Первая",
+      "genre": "concept",
+      "audiences": [
+        "user"
+      ],
+      "anchors": [
+        "root",
+        "LEAD-ONE",
+        "why",
+        "WHY-ONE"
+      ],
+      "summary": "Первая страница пары, которую перевод зеркалит блок в блок.",
+      "reading_time_min": 1
+    }
+  ]
+}

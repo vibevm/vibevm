@@ -1,0 +1,63 @@
+/* The three states of the theme, in two forms: a row of words for the
+   reading panel, which has a heading over it and room for them, and a
+   pill of three marks for a header, which has neither. Both are the same
+   three buttons and the same `is-current`, so the behaviour that marks
+   one of them does not know which form it is looking at. */
+
+.theme-switch {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+}
+
+.theme-switch__button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.16rem 0.55rem;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-pill);
+  background: none;
+  color: var(--text-2);
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  cursor: pointer;
+  transition:
+    border-color var(--speed) ease,
+    color var(--speed) ease,
+    background var(--speed) ease;
+}
+
+.theme-switch__button:hover {
+  border-color: var(--line-strong);
+  color: var(--text);
+}
+
+.theme-switch__button[aria-pressed="true"],
+.theme-switch__button.is-current {
+  background: var(--accent-soft);
+  border-color: var(--accent);
+  color: var(--text);
+}
+
+/* The header's form: one pill holding three marks, so the group reads as
+   one control at the size a header leaves for it. The buttons lose their
+   own outlines to the shared one and keep their own hit area. */
+.theme-switch--marks {
+  gap: 0;
+  padding: 2px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-pill);
+}
+
+.theme-switch--marks .theme-switch__button {
+  width: 26px;
+  height: 22px;
+  padding: 0;
+  border-color: transparent;
+}
+
+.theme-switch--marks .theme-switch__button[aria-pressed="true"],
+.theme-switch--marks .theme-switch__button.is-current {
+  color: var(--accent);
+}

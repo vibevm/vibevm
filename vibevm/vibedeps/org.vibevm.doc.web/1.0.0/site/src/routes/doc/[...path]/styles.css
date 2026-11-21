@@ -1,0 +1,140 @@
+/* The documentation address's own layout, and the small things a package
+   page needs that no component owns. The strip of controls above a page
+   is the site's `doc-bar`, which the catalogue and the local reader
+   wear too. Everything with a colour in it reads a token; the audit
+   gates the tokens, not this file. */
+
+.doc-view {
+  display: block;
+}
+
+/* The two sticky columns. The class is put on by the behaviour rather
+   than by a media query, because the decision needs two widths and only
+   one of them is the window's: a reader who widens the reading column
+   past the limit has taken the room, and both lists fold above the text.
+
+   Left is the MANUAL and right is the PAGE — where in the documentation
+   the reader is, and where in the document. They are placed by column
+   rather than by their order in the markup, so the source order can stay
+   what it has to be when the page folds: both lists above the text, the
+   manual's first.
+
+   The columns are `minmax` rather than fixed so that the text keeps the
+   room it has left at the narrow end of the range, where the window is
+   barely wider than the threshold. */
+.doc-view--page.has-sidebar {
+  display: grid;
+  grid-template-columns:
+    minmax(150px, 200px)
+    minmax(0, 1fr)
+    minmax(140px, 190px);
+  gap: 0 2rem;
+  align-items: start;
+  max-width: 1320px;
+  margin: 0 auto;
+  padding: 0 1.25rem;
+}
+
+.doc-view--page.has-sidebar > .contents {
+  grid-column: 1;
+  grid-row: 1;
+  padding-top: 2.5rem;
+}
+
+.doc-view--page.has-sidebar > .prose {
+  grid-column: 2;
+  grid-row: 1;
+  padding-left: 0;
+  padding-right: 0;
+  margin: 0;
+}
+
+.doc-view--page.has-sidebar > .toc {
+  grid-column: 3;
+  grid-row: 1;
+  padding-top: 2.5rem;
+}
+
+/* Folded, both lists stand above the text as blocks of their own, and
+   they take the reading column's own gutter. They did not need one while
+   they were faint labels; a control with a box on it would have started
+   at the screen's edge, as the one thing on the page not lined up with
+   the text it belongs to. */
+.doc-view--page:not(.has-sidebar) > .contents {
+  padding: 1.5rem 1.25rem 0;
+}
+
+.doc-view--page:not(.has-sidebar) > .toc {
+  padding: 0 1.25rem;
+}
+
+.doc-view__unaddressed {
+  padding: 1rem;
+  border: 1px dashed var(--line-strong);
+  border-radius: var(--radius-md);
+  color: var(--text-2);
+}
+
+/* Where to begin, beside the machine index at the head of a package's
+   page. It is the same pill as the one next to it and the accent is the
+   whole difference: one of the two is what a person came for. */
+.doc-package__start {
+  padding: 0.2rem 0.65rem;
+  border: 1px solid var(--accent);
+  border-radius: var(--radius-pill);
+  background: var(--accent-soft);
+  font-size: 0.78rem;
+  color: var(--text);
+  transition:
+    border-color var(--speed) ease,
+    color var(--speed) ease;
+}
+
+.doc-package__start:hover {
+  border-color: var(--accent-hover);
+  color: var(--accent);
+}
+
+/* A chapter of the learning path, over the cards of its pages. It spans
+   the shelf's whole row so that the cards under it flow in the shelf's
+   own grid — the heading starts a row and the pages fill it, rather than
+   each chapter becoming a grid of its own width. The heading is the
+   column's heading in the column's own shape, so a reader meets one
+   spelling of a chapter on both. */
+.doc-chapter {
+  grid-column: 1 / -1;
+  margin: 0.9rem 0 0;
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-3);
+}
+
+.doc-chapter:first-child {
+  margin-top: 0;
+}
+
+.doc-chapter__number {
+  margin-right: 0.45em;
+  color: var(--accent);
+  font-variant-numeric: tabular-nums;
+}
+
+.doc-package__llms {
+  padding: 0.2rem 0.65rem;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-pill);
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  color: var(--text-2);
+  transition:
+    border-color var(--speed) ease,
+    color var(--speed) ease;
+}
+
+.doc-package__llms:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}

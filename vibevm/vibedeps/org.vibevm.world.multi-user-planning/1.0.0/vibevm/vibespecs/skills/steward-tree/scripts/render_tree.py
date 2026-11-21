@@ -122,6 +122,14 @@ STRINGS: dict[str, dict[str, str]] = {
         "ui.theme": "Тема",
         "ui.lang": "Язык",
         "ui.detail": "Узел",
+        "ui.closeDetail": "Свернуть карточку",
+        "ui.ownState": "Состояние самого узла",
+        "ui.descendants": "Конечные потомки — отдельный итог",
+        "ui.filterAll": "Все",
+        "ui.filterUnfinished": "Не сделано",
+        "ui.filterActive": "В работе",
+        "ui.filterLabel": "Фильтр состояния",
+        "ui.reason": "Причина / пояснение",
         "ui.nothingSelected": "Выберите узел в дереве.",
         "ui.acceptance": "Критерии приёмки",
         "ui.evidence": "Доказательства",
@@ -180,6 +188,14 @@ STRINGS: dict[str, dict[str, str]] = {
         "ui.theme": "Theme",
         "ui.lang": "Language",
         "ui.detail": "Node",
+        "ui.closeDetail": "Collapse card",
+        "ui.ownState": "Node own state",
+        "ui.descendants": "Terminal descendants — separate aggregate",
+        "ui.filterAll": "All",
+        "ui.filterUnfinished": "Unfinished",
+        "ui.filterActive": "In progress",
+        "ui.filterLabel": "State filter",
+        "ui.reason": "Reason / explanation",
         "ui.nothingSelected": "Select a node in the tree.",
         "ui.acceptance": "Acceptance",
         "ui.evidence": "Evidence",
@@ -694,6 +710,8 @@ body{background:var(--bg);color:var(--fg);font:15px/1.45 system-ui,-apple-system
 header{position:sticky;top:0;z-index:5;background:var(--bg);border-bottom:1px solid var(--line);padding:10px 16px}
 .bar{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
 h1{font-size:16px;margin:0 8px 0 0;font-weight:650}
+.filters{display:flex;flex-wrap:wrap;gap:4px}
+.filters button[aria-pressed="true"]{font-weight:700;background:var(--hit)}
 .meta{color:var(--muted);font-size:12.5px;display:flex;flex-wrap:wrap;gap:4px 12px}
 .grow{flex:1 1 180px;min-width:140px}
 button,input{font:inherit;color:inherit;background:var(--panel);border:1px solid var(--line);
@@ -713,11 +731,10 @@ input{width:100%}
 .totals{display:flex;flex-wrap:wrap;gap:6px;margin:10px 16px 0}
 .legend{display:inline-flex;align-items:center;gap:6px;padding:3px 9px;border:1px solid var(--line);
   border-radius:999px;font-size:12.5px;background:var(--panel)}
-main{display:grid;grid-template-columns:minmax(0,1fr) minmax(280px,22rem);gap:16px;padding:12px 16px 32px;align-items:start}
-@media (max-width:900px){main{grid-template-columns:minmax(0,1fr)}}
+main{display:block;padding:12px 16px 32px;width:100%;margin:0}
 .tree{min-width:0}
-.row{display:flex;align-items:baseline;gap:7px;padding:3px 6px 3px calc(6px + var(--depth) * 15px);
-  border-radius:6px;cursor:default;scroll-margin:70px}
+.row{display:flex;flex-wrap:nowrap;align-items:center;gap:7px;white-space:nowrap;height:44px;padding:9px 8px 9px calc(8px + min(var(--depth),12) * 15px);
+  border-radius:6px;cursor:pointer;scroll-margin:90px;min-height:44px}
 .row[hidden]{display:none}
 .row:hover{background:var(--panel)}
 .row[aria-selected="true"]{background:var(--panel);box-shadow:inset 0 0 0 1px var(--accent)}
@@ -725,28 +742,40 @@ main{display:grid;grid-template-columns:minmax(0,1fr) minmax(280px,22rem);gap:16
 .twisty{flex:0 0 18px;width:18px;padding:0;border:0;background:none;color:var(--muted);text-align:center;line-height:1.3}
 .twisty[hidden]{visibility:hidden;display:inline-block}
 .dot{flex:0 0 9px;width:9px;height:9px;border-radius:50%;background:var(--bucket);align-self:center}
-.title{flex:0 1 auto;min-width:0;overflow-wrap:anywhere;font-weight:450}
+.title{flex:1 1 0;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-weight:450}
 .row.parent .title{font-weight:600}
 .nid{color:var(--muted);font:12px/1.4 ui-monospace,SFMono-Regular,Menlo,monospace;flex:0 0 auto}
 .kind{color:var(--muted);font-size:11.5px;text-transform:lowercase;flex:0 0 auto}
-.state{color:var(--bucket);font-size:12px;flex:0 0 auto;white-space:nowrap}
+.state{color:var(--fg);font-size:12px;flex:0 0 auto;white-space:nowrap;border:1px solid var(--line);border-radius:4px;padding:1px 5px}
 .cur{color:var(--b-active);border:1px solid currentColor;border-radius:999px;font-size:10.5px;padding:0 5px;flex:0 0 auto}
-.chips{display:flex;gap:4px;margin-left:auto;flex:0 0 auto}
-.chip{font-size:11px;color:var(--bg);background:var(--bucket);border-radius:999px;padding:0 6px;min-width:18px;text-align:center}
+.chips{display:flex;flex-wrap:nowrap;flex:0 0 auto;justify-content:flex-end;gap:4px;margin-left:auto;color:var(--muted)}
+.chip{display:inline-flex;align-items:center;gap:4px;font-size:11.5px;color:var(--fg);background:var(--panel);border:1px solid var(--bucket);border-radius:999px;padding:1px 6px;text-align:center}
+.chip::before{content:"";width:6px;height:6px;border-radius:50%;background:var(--bucket)}
 @media (max-width:620px){
-  .chips{display:none}
-  .kind{display:none}
+  main{padding:10px 8px 24px}
+  .row{padding-left:calc(6px + min(var(--depth),4) * 10px)}
+  .title{flex:1 1 0}
+  .nid{display:none}
+  .chips{padding-left:0}
+  .kind,.cur{display:none}
+  .state{font-size:10px;max-width:74px;overflow:hidden;text-overflow:ellipsis}
+  .row{gap:4px}
+  .chip{font-size:10px;padding:1px 4px;gap:2px}
+  .chip::before{width:4px;height:4px}
 }
-aside{position:sticky;top:64px;border:1px solid var(--line);border-radius:var(--radius);
-  background:var(--panel);padding:12px;min-width:0}
-@media (max-width:900px){aside{position:static}}
-aside h2{font-size:14px;margin:0 0 8px}
-aside h3{font-size:12px;margin:12px 0 4px;color:var(--muted);text-transform:uppercase;letter-spacing:.04em}
-aside ul{margin:0;padding-left:18px}
-aside li{overflow-wrap:anywhere;margin:2px 0}
-aside dl{margin:0;display:grid;grid-template-columns:auto minmax(0,1fr);gap:2px 8px;font-size:13px}
-aside dt{color:var(--muted)}
-aside dd{margin:0;overflow-wrap:anywhere}
+.node-card{position:fixed;right:0;top:0;bottom:0;z-index:20;width:min(32rem,100vw);max-width:100%;overflow-y:auto;border:1px solid var(--line);border-left:3px solid var(--accent);
+  background:var(--panel);padding:16px;margin:0;min-width:0;overflow-wrap:anywhere;box-shadow:-8px 0 28px #0003}
+.node-card[hidden]{display:none}
+@media (min-width:900px){body.detail-open main{padding-right:calc(min(32rem,100vw) + 16px)}}
+.card-close{float:right;margin:0 0 8px 12px}
+@media (forced-colors:active){.row[aria-selected="true"]{outline:2px solid Highlight}.dot{border:1px solid CanvasText}}
+ .node-card h2{font-size:14px;margin:0 0 8px}
+ .node-card h3{font-size:12px;margin:12px 0 4px;color:var(--muted);text-transform:uppercase;letter-spacing:.04em}
+ .node-card ul{margin:0;padding-left:18px}
+ .node-card li{overflow-wrap:anywhere;margin:2px 0}
+ .node-card dl{margin:0;display:grid;grid-template-columns:auto minmax(0,1fr);gap:2px 8px;font-size:13px}
+ .node-card dt{color:var(--muted)}
+ .node-card dd{margin:0;overflow-wrap:anywhere}
 .link{background:none;border:0;padding:0;color:var(--accent);text-decoration:underline;cursor:pointer;
   font:12px/1.5 ui-monospace,SFMono-Regular,Menlo,monospace}
 .muted{color:var(--muted)}
@@ -759,6 +788,7 @@ aside dd{margin:0;overflow-wrap:anywhere}
   <div class="bar">
     <h1 id="app-title">@@TITLE@@</h1>
     <span class="grow"><label class="sr" for="q" id="q-label"></label><input id="q" type="search" autocomplete="off"></span>
+    <div id="filters" class="filters" role="group"><button type="button" data-filter="all" aria-pressed="true"></button><button type="button" data-filter="unfinished" aria-pressed="false"></button><button type="button" data-filter="active" aria-pressed="false"></button></div>
     <button id="expand" type="button"></button>
     <button id="collapse" type="button"></button>
     <button id="current" type="button"></button>
@@ -771,7 +801,7 @@ aside dd{margin:0;overflow-wrap:anywhere}
 <div class="totals" id="totals"></div>
 <main>
   <div class="tree" id="tree" role="tree" aria-labelledby="app-title"></div>
-  <aside id="detail" aria-live="polite"></aside>
+  <section id="detail" class="node-card" role="dialog" tabindex="-1" aria-live="polite" aria-label="@@TITLE@@" hidden></section>
 </main>
 <script type="application/json" id="plan-data">@@DATA@@</script>
 <script>
@@ -786,9 +816,13 @@ aside dd{margin:0;overflow-wrap:anywhere}
     });
   });
 
-  var lang = DATA.lang, theme = "auto", selected = null, query = "";
+  var lang = DATA.lang, theme = "auto", selected = null, query = "", detailOpen = false, stateFilter = "all";
   var open = {};
   DATA.nodes.forEach(function(n){ open[n.id] = !!n.open; });
+  var filteredOpen = {}, filterSignature = null, filteredContext = {};
+  function filtering(){ return !!query || stateFilter !== "all"; }
+  function expandedNode(id){ return filtering() ? filteredOpen[id] !== false : !!open[id]; }
+  function setExpanded(id, value){ if (filtering()) filteredOpen[id] = value; else open[id] = value; }
 
   function store(key, value){ try{ localStorage.setItem("steward-tree:" + key, value); }catch(e){} }
   function load(key){ try{ return localStorage.getItem("steward-tree:" + key); }catch(e){ return null; } }
@@ -823,27 +857,29 @@ aside dd{margin:0;overflow-wrap:anywhere}
       if (!n.children.length) twisty.hidden = true;
       twisty.addEventListener("click", function(event){
         event.stopPropagation();
-        open[n.id] = !open[n.id];
+        setExpanded(n.id, !expandedNode(n.id));
         paint();
       });
       row.appendChild(twisty);
       row.appendChild(el("span", "dot"));
-      row.appendChild(el("span", "title", n.title));
+      var title = el("span", "title", n.title); title.title = n.title; row.appendChild(title);
       row.appendChild(el("span", "nid", n.id));
       row.appendChild(el("span", "kind", kindLabel(n.kind)));
-      row.appendChild(el("span", "state", bucketLabel(n.bucket)));
+      var state = el("span", "state", bucketLabel(n.bucket)); state.title = bucketLabel(n.bucket); row.appendChild(state);
       if (n.id === DATA.plan.current_node) row.appendChild(el("span", "cur", t("ui.current")));
       var chips = el("span", "chips");
       DATA.buckets.forEach(function(b){
         var value = (n.counts || {})[b];
         if (!value || !n.children.length) return;
-        var chip = el("span", "chip", value);
+        var chip = el("span", "chip", String(value));
+        chip.dataset.bucket = b;
         chip.style.setProperty("--bucket", "var(--b-" + b + ")");
-        chip.title = bucketLabel(b);
+        chip.title = bucketLabel(b) + ": " + value;
+        chip.setAttribute("aria-label", t("ui.descendants") + " — " + chip.title);
         chips.appendChild(chip);
       });
       row.appendChild(chips);
-      row.addEventListener("click", function(){ select(n.id, false); });
+      row.addEventListener("click", function(){ select(n.id, false, true); });
       ROWS[n.id] = row;
       tree.appendChild(row);
     });
@@ -854,10 +890,13 @@ aside dd{margin:0;overflow-wrap:anywhere}
       var row = ROWS[n.id];
       row.querySelector(".kind").textContent = kindLabel(n.kind);
       row.querySelector(".state").textContent = bucketLabel(n.bucket);
+      row.querySelector(".state").title = bucketLabel(n.bucket);
       var cur = row.querySelector(".cur");
       if (cur) cur.textContent = t("ui.current");
       Array.prototype.forEach.call(row.querySelectorAll(".chip"), function(chip, index){
-        chip.title = bucketLabel(visibleBuckets(n)[index]);
+        chip.title = bucketLabel(chip.dataset.bucket) + ": " + n.counts[chip.dataset.bucket];
+        chip.setAttribute("aria-label", t("ui.descendants") + " — " + chip.title);
+        chip.textContent = String(n.counts[chip.dataset.bucket]);
       });
     });
   }
@@ -866,18 +905,25 @@ aside dd{margin:0;overflow-wrap:anywhere}
   }
 
   function matches(n){
-    if (!query) return false;
-    return (n.id + " " + n.title).toLowerCase().indexOf(query) >= 0;
+    var stateMatch = stateFilter === "all" || (stateFilter === "active" ? n.state === "active" : ["accepted", "dropped", "superseded"].indexOf(n.state) < 0);
+    return stateMatch && (!query || (n.id + " " + n.title).toLowerCase().indexOf(query) >= 0);
   }
 
   function paint(){
     var show = {}, hits = 0;
-    if (query){
+    var signature = stateFilter + "\0" + query;
+    if (signature !== filterSignature){ filteredOpen = {}; filterSignature = signature; }
+    filteredContext = {};
+    if (filtering()){
       DATA.nodes.forEach(function(n){
         if (!matches(n)) return;
         hits += 1;
         show[n.id] = true;
         n.path.forEach(function(id){ show[id] = true; });
+      });
+      filteredContext = Object.assign({}, show);
+      DATA.nodes.forEach(function(n){
+        show[n.id] = !!filteredContext[n.id] && n.path.every(function(id){ return filteredOpen[id] !== false; });
       });
     } else {
       DATA.nodes.forEach(function(n){
@@ -889,17 +935,18 @@ aside dd{margin:0;overflow-wrap:anywhere}
       row.hidden = !show[n.id];
       row.classList.toggle("match", query ? matches(n) : false);
       if (n.children.length){
-        var expanded = query ? n.children.some(function(c){ return show[c]; }) : !!open[n.id];
+        var expanded = expandedNode(n.id);
         row.setAttribute("aria-expanded", expanded ? "true" : "false");
         row.querySelector(".twisty").textContent = expanded ? "▾" : "▸";
       }
     });
     var noHits = document.getElementById("nohits");
-    if (query && hits === 0){
+    if ((query || stateFilter !== "all") && hits === 0){
       if (!noHits){ noHits = el("p", "muted", t("ui.noMatches")); noHits.id = "nohits"; tree.appendChild(noHits); }
       else noHits.textContent = t("ui.noMatches");
     } else if (noHits){ noHits.remove(); }
     rove();
+    detail();
   }
 
   function visibleRows(){
@@ -915,14 +962,16 @@ aside dd{margin:0;overflow-wrap:anywhere}
   function reveal(id){
     var node = NODES[id];
     if (!node) return;
-    node.path.forEach(function(ancestor){ open[ancestor] = true; });
+    node.path.forEach(function(ancestor){ setExpanded(ancestor, true); });
   }
 
   function remember(id){
     try{ history.replaceState(null, "", "#" + encodeURIComponent(id)); }catch(e){}
   }
-  function select(id, scroll){
+  function select(id, scroll, toggle){
     if (!NODES[id]) return;
+    detailOpen = toggle && selected === id ? !detailOpen : true;
+    if (scroll){ query = ""; stateFilter = "all"; document.getElementById("q").value = ""; filterLabels(); }
     remember(id);
     if (selected && ROWS[selected]) ROWS[selected].setAttribute("aria-selected", "false");
     selected = id;
@@ -934,12 +983,13 @@ aside dd{margin:0;overflow-wrap:anywhere}
     if (scroll) row.scrollIntoView({block: "center"});
     row.focus({preventScroll: !scroll});
     detail();
+    if (detailOpen && (toggle || scroll)) aside.querySelector(".card-close").focus({preventScroll:true});
   }
 
   tree.addEventListener("keydown", function(event){
     var rows = visibleRows();
     var row = event.target.closest ? event.target.closest(".row") : null;
-    if (!row) return;
+    if (!row || event.target !== row) return;
     var index = rows.indexOf(row), id = row.dataset.id, node = NODES[id];
     var keys = {ArrowDown: 1, ArrowUp: -1};
     if (event.key in keys){
@@ -948,12 +998,15 @@ aside dd{margin:0;overflow-wrap:anywhere}
     } else if (event.key === "Home" && rows.length){ select(rows[0].dataset.id, false);
     } else if (event.key === "End" && rows.length){ select(rows[rows.length - 1].dataset.id, false);
     } else if (event.key === "ArrowRight"){
-      if (node.children.length && !open[id]){ open[id] = true; paint(); }
-      else if (node.children.length){ select(node.children[0], false); }
+      if (node.children.length && !expandedNode(id)){ setExpanded(id, true); paint(); }
+      else if (node.children.length){
+        var child = node.children.find(function(c){ return !ROWS[c].hidden; });
+        if (child) select(child, false);
+      }
     } else if (event.key === "ArrowLeft"){
-      if (node.children.length && open[id] && !query){ open[id] = false; paint(); }
+      if (node.children.length && expandedNode(id)){ setExpanded(id, false); paint(); }
       else if (node.path.length){ select(node.path[node.path.length - 1], false); }
-    } else if (event.key === "Enter" || event.key === " "){ select(id, false);
+    } else if (event.key === "Enter" || event.key === " "){ select(id, false, true);
     } else { return; }
     event.preventDefault();
   });
@@ -974,13 +1027,18 @@ aside dd{margin:0;overflow-wrap:anywhere}
   function linkTo(parent, id, suffix){
     var button = el("button", "link", id);
     button.type = "button";
-    button.addEventListener("click", function(){ select(id, true); });
+    button.addEventListener("click", function(){
+      query = ""; document.getElementById("q").value = ""; select(id, true);
+    });
     parent.appendChild(button);
     if (suffix) parent.appendChild(el("span", null, " " + suffix));
   }
 
   function detail(){
     aside.textContent = "";
+    aside.hidden = !detailOpen || !selected || !ROWS[selected] || ROWS[selected].hidden;
+    document.body.classList.toggle("detail-open", !aside.hidden);
+    if (aside.hidden) return;
     if (!selected || !NODES[selected]){
       aside.appendChild(el("h2", null, t("ui.plan")));
       var dl = el("dl");
@@ -998,7 +1056,14 @@ aside dd{margin:0;overflow-wrap:anywhere}
       return;
     }
     var n = NODES[selected];
+    var close = el("button", "card-close", t("ui.closeDetail"));
+    close.type = "button";
+    close.addEventListener("click", function(event){
+      event.stopPropagation(); detailOpen = false; detail(); ROWS[selected].focus({preventScroll:true});
+    });
+    aside.appendChild(close);
     aside.appendChild(el("h2", null, n.title));
+    aside.appendChild(el("p", "muted", t("ui.ownState") + ": " + bucketLabel(n.bucket)));
     var dl = el("dl");
     function pair(label, value){
       dl.appendChild(el("dt", null, label));
@@ -1022,7 +1087,7 @@ aside dd{margin:0;overflow-wrap:anywhere}
       aside.appendChild(p);
     }
     if (n.children.length){
-      aside.appendChild(el("h3", null, t("ui.counts")));
+      aside.appendChild(el("h3", null, t("ui.descendants")));
       var box = el("p");
       visibleBuckets(n).forEach(function(b){
         var tag = el("span", "legend", n.counts[b] + " · " + bucketLabel(b));
@@ -1032,6 +1097,8 @@ aside dd{margin:0;overflow-wrap:anywhere}
       });
       aside.appendChild(box);
     }
+    var reason = (n.extra || {}).reason || (n.extra || {}).rationale || (n.extra || {}).blocked_reason;
+    if (reason){ aside.appendChild(el("h3", null, t("ui.reason"))); aside.appendChild(el("p", "pre", stringify(reason))); }
     list(aside, t("ui.acceptance"), n.acceptance, function(li, item){ li.textContent = item; });
     list(aside, t("ui.evidence"), n.evidence, function(li, item){ li.textContent = item; });
     list(aside, t("ui.mandates"), n.mandates, function(li, id){
@@ -1122,7 +1189,19 @@ aside dd{margin:0;overflow-wrap:anywhere}
       if (item) host.appendChild(el("span", null, item));
     });
   }
+  function filterLabels(){
+    document.getElementById("filters").setAttribute("aria-label", t("ui.filterLabel"));
+    document.querySelectorAll("[data-filter]").forEach(function(button){
+      var key = button.dataset.filter;
+      button.textContent = t(key === "all" ? "ui.filterAll" : key === "active" ? "ui.filterActive" : "ui.filterUnfinished");
+      button.setAttribute("aria-pressed", key === stateFilter ? "true" : "false");
+    });
+  }
+  document.querySelectorAll("[data-filter]").forEach(function(button){
+    button.addEventListener("click", function(){ stateFilter = button.dataset.filter; filterLabels(); paint(); });
+  });
   function chrome(){
+    filterLabels();
     document.getElementById("app-title").textContent = t("app.title");
     document.title = t("app.title") + " — " + DATA.plan.plan_id;
     var q = document.getElementById("q");
@@ -1146,11 +1225,11 @@ aside dd{margin:0;overflow-wrap:anywhere}
     paint();
   });
   document.getElementById("expand").addEventListener("click", function(){
-    DATA.nodes.forEach(function(n){ open[n.id] = true; });
+    DATA.nodes.forEach(function(n){ setExpanded(n.id, true); });
     paint();
   });
   document.getElementById("collapse").addEventListener("click", function(){
-    DATA.nodes.forEach(function(n){ open[n.id] = n.depth === 0; });
+    DATA.nodes.forEach(function(n){ setExpanded(n.id, n.depth === 0); });
     paint();
   });
   document.getElementById("current").addEventListener("click", function(){
@@ -1167,6 +1246,11 @@ aside dd{margin:0;overflow-wrap:anywhere}
     chrome();
   });
   document.addEventListener("keydown", function(event){
+    if (event.key === "Escape" && detailOpen){
+      event.preventDefault(); detailOpen = false; detail();
+      if (selected && ROWS[selected]) ROWS[selected].focus({preventScroll:true});
+      return;
+    }
     if (event.key === "/" && event.target.tagName !== "INPUT"){
       event.preventDefault();
       document.getElementById("q").focus();

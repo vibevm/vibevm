@@ -1,0 +1,82 @@
+.lightbox {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  display: flex;
+  justify-content: center;
+  overflow-y: auto;
+  overflow-x: hidden;
+  overscroll-behavior: contain;
+  /* The ground is the theme's sink at full strength rather than a
+     translucent black: the page behind it should be gone, not dimmed,
+     and a token keeps the overlay in the same two themes as everything
+     else. */
+  background: var(--bg-sink);
+}
+
+.lightbox__content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  max-width: calc(100vw - 2.5rem);
+  margin: auto;
+  padding: 1.25rem 0;
+}
+
+.lightbox__image {
+  display: block;
+  width: auto;
+  height: auto;
+  max-width: calc(100vw - 2.5rem);
+  max-height: calc(100vh - 7.5rem);
+  object-fit: contain;
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-mega);
+}
+
+.lightbox__table {
+  max-width: calc(100vw - 2.5rem);
+  max-height: calc(100vh - 7.5rem);
+  overflow: auto;
+  padding: 0.5rem 0.75rem;
+  background: var(--bg-raise);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-mega);
+}
+
+.lightbox__table table {
+  width: auto;
+  border-collapse: collapse;
+  white-space: nowrap;
+  font-size: 0.9rem;
+}
+
+.lightbox__table th,
+.lightbox__table td {
+  border-bottom: 1px solid var(--line);
+  padding: 0.4rem 0.7rem;
+  text-align: left;
+}
+
+.lightbox__close {
+  flex: none;
+  width: 2.8rem;
+  height: 2.8rem;
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius-pill);
+  background: var(--bg-raise);
+  color: var(--text);
+  font-size: 1.4rem;
+  line-height: 1;
+  cursor: pointer;
+  transition:
+    border-color var(--speed) ease,
+    color var(--speed) ease;
+}
+
+.lightbox__close:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
