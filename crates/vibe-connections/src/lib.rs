@@ -200,7 +200,7 @@ pub struct BindingObservation {
 }
 impl Store {
     pub fn binding(&self, harness: &str) -> Result<BindingObservation, Error> {
-        if !matches!(harness, "claude" | "codex" | "opencode" | "qwen" | "hermes" | "pi") {
+        if !vibe_secrets::known_reference_harness(harness) {
             return Err(Error::Invalid);
         }
         let snapshot = self.0.reference_snapshot("ai")?;
@@ -254,7 +254,7 @@ impl Store {
         binding: Option<vibe_secrets::ReferenceBinding>,
         expected: u64,
     ) -> Result<BindingObservation, Error> {
-        if binding.is_some() && !matches!(metadata_capability(harness), MetadataCapability::Compatible { .. })
+        if binding.is_some() && !vibe_secrets::reference_binding_supported(harness)
         {
             return Err(Error::Invalid);
         }
