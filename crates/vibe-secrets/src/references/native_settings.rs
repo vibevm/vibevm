@@ -13,6 +13,7 @@ enum Kind {
     Codex,
     OpenCode,
     Hermes,
+    Claude,
 }
 impl Kind {
     fn id(self) -> &'static str {
@@ -22,6 +23,7 @@ impl Kind {
             Self::Codex => "codex",
             Self::OpenCode => "opencode",
             Self::Hermes => "hermes",
+            Self::Claude => "claude",
         }
     }
     fn file(self) -> &'static str {
@@ -31,6 +33,7 @@ impl Kind {
             Self::Codex => "config.toml",
             Self::OpenCode => "opencode.json",
             Self::Hermes => "config.yaml",
+            Self::Claude => "settings.json",
         }
     }
     fn domain(self) -> &'static [u8] {
@@ -40,6 +43,7 @@ impl Kind {
             Self::Codex => b"vibevm.codex-native-settings/v1\0",
             Self::OpenCode => b"vibevm.opencode-native-settings/v1\0",
             Self::Hermes => b"vibevm.hermes-native-settings/v1\0",
+            Self::Claude => b"vibevm.claude-native-settings/v1\0",
         }
     }
 }
@@ -52,3 +56,6 @@ pub use opencode::OpenCodeNativePreview;
 
 mod hermes;
 pub use hermes::HermesNativePreview;
+
+mod claude;
+pub use claude::ClaudeNativePreview;

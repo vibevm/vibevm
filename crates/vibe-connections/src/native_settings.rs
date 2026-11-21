@@ -88,3 +88,11 @@ impl NativeSettingsPreview for vibe_secrets::HermesNativePreview {
 }
 mod hermes;
 pub use hermes::HermesSettingsAdapter;
+
+impl NativeSettingsPreview for vibe_secrets::ClaudeNativePreview {
+    fn preview_id(&self) -> &str {
+        self.preview_id()
+    }
+}
+mod claude;
+pub use claude::ClaudeSettingsAdapter;

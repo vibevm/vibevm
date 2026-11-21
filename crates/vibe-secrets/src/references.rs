@@ -5,7 +5,7 @@ const LIMIT: usize = 1024 * 1024;
 mod default_scope;
 mod compatibility;
 mod native_settings;
-pub use native_settings::{CodexNativePreview, HermesNativePreview, OpenCodeNativePreview, PiNativePreview, QwenNativePreview};
+pub use native_settings::{ClaudeNativePreview, CodexNativePreview, HermesNativePreview, OpenCodeNativePreview, PiNativePreview, QwenNativePreview};
 
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq)]
 #[serde(deny_unknown_fields)]

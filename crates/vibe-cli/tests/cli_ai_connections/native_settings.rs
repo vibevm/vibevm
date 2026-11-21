@@ -474,3 +474,117 @@ fn hermes_public_yaml_apply_preserves_comments_and_refuses_command_shadow() {
         assert_eq!(fs::read(&path).unwrap(), bad);
     }
 }
+
+#[test]
+fn claude_public_native_bearer_preserves_oauth_and_refuses_openai() {
+    let f = F::new();
+    let dir = f.0.path().join(".claude");
+    fs::create_dir(&dir).unwrap();
+    fs::set_permissions(&dir, fs::Permissions::from_mode(0o700)).unwrap();
+    let path = dir.join("settings.json");
+    let initial = br#"{"env":{"OTHER":"keep"},"foreign":true}"#;
+    fs::write(&path, initial).unwrap();
+    fs::set_permissions(&path, fs::Permissions::from_mode(0o600)).unwrap();
+    let oauth = dir.join(".credentials.json");
+    fs::write(&oauth, b"synthetic-oauth-untouched").unwrap();
+    let key = f.json(
+        &[
+            "secrets",
+            "create",
+            "--kind",
+            "api-key",
+            "--label",
+            "Synthetic",
+            "--value-stdin",
+        ],
+        Some(VALUE.as_bytes()),
+    );
+    let id = key["items"][0]["id"].as_str().unwrap();
+    let add = |kind: &str| {
+        f.json(
+            &[
+                "ai",
+                "connections",
+                "add",
+                "--label",
+                kind,
+                "--endpoint",
+                "http://127.0.0.1:9",
+                "--api-kind",
+                kind,
+                "--default-model",
+                "synthetic-native",
+                "--secret-ref",
+                id,
+            ],
+            None,
+        )
+    };
+    let bearer = add("anthropic-messages-bearer");
+    let bid = bearer["items"].as_object().unwrap().keys().next().unwrap();
+    let chat = add("openai-chat-completions");
+    let cid = chat["items"]
+        .as_object()
+        .unwrap()
+        .iter()
+        .find(|(_, v)| v["metadata"]["api_kind"] == "openai-chat-completions")
+        .unwrap()
+        .0;
+    let responses = add("openai-responses");
+    let rid = responses["items"]
+        .as_object()
+        .unwrap()
+        .iter()
+        .find(|(_, v)| v["metadata"]["api_kind"] == "openai-responses")
+        .unwrap()
+        .0;
+    for incompatible in [cid, rid] {
+        assert!(
+            !f.run(
+                &[
+                    "ai",
+                    "setup",
+                    "--native-settings",
+                    "--agent",
+                    "claude",
+                    "--connection",
+                    incompatible
+                ],
+                None
+            )
+            .status
+            .success()
+        );
+        assert_eq!(fs::read(&path).unwrap(), initial);
+    }
+    let args = [
+        "ai",
+        "setup",
+        "--native-settings",
+        "--agent",
+        "claude",
+        "--connection",
+        bid,
+    ];
+    let p = f.json(&args, None);
+    assert_eq!(fs::read(&path).unwrap(), initial);
+    let mut apply = args.to_vec();
+    apply.extend([
+        "--apply-preview",
+        p["preview"]["preview_id"].as_str().unwrap(),
+    ]);
+    assert_eq!(f.json(&apply, None)["changed"], true);
+    let after = fs::read(&path).unwrap();
+    let v: serde_json::Value = serde_json::from_slice(&after).unwrap();
+    assert_eq!(v["env"]["OTHER"], "keep");
+    assert_eq!(v["foreign"], true);
+    assert_eq!(fs::read(&oauth).unwrap(), b"synthetic-oauth-untouched");
+    let p = f.json(&args, None);
+    let mut noop = args.to_vec();
+    noop.extend([
+        "--apply-preview",
+        p["preview"]["preview_id"].as_str().unwrap(),
+    ]);
+    assert_eq!(f.json(&noop, None)["changed"], false);
+    assert_eq!(fs::read(&path).unwrap(), after);
+}

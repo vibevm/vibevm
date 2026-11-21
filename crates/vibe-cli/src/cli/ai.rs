@@ -123,6 +123,7 @@ fn setup_preview_id(raw: &str) -> Result<String, String> {
         .or_else(|| raw.strip_prefix("codex-native-settings/1:sha256:"))
         .or_else(|| raw.strip_prefix("opencode-native-settings/1:sha256:"))
         .or_else(|| raw.strip_prefix("hermes-native-settings/1:sha256:"))
+        .or_else(|| raw.strip_prefix("claude-native-settings/1:sha256:"))
         .is_some_and(|h| {
             h.len() == 64
                 && h.bytes()

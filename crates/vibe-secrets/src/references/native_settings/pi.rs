@@ -50,6 +50,10 @@ fn native(home: &Path, kind: super::Kind) -> Result<(Project, Pinned), Error> {
             .private_child("agent", false)
             .map_err(|_| Error::Unavailable)?
             .ok_or(Error::Unavailable)?,
+        super::Kind::Claude => home_dir
+            .private_child(".claude", false)
+            .map_err(|_| Error::Unavailable)?
+            .ok_or(Error::Unavailable)?,
         super::Kind::Hermes => home_dir
             .private_child(".hermes", false)
             .map_err(|_| Error::Unavailable)?
@@ -109,7 +113,9 @@ fn endpoint_model(
     let metadata: toml::Value =
         toml::from_str(std::str::from_utf8(bytes).map_err(|_| Error::Invalid)?)
             .map_err(|_| Error::Invalid)?;
-    let required = if kind == super::Kind::Codex {
+    let required = if kind == super::Kind::Claude {
+        "anthropic-messages-bearer"
+    } else if kind == super::Kind::Codex {
         "openai-responses"
     } else {
         "openai-chat-completions"
@@ -216,6 +222,7 @@ impl Store {
             super::Kind::Codex => super::codex::validate(&bytes)?,
             super::Kind::OpenCode => super::opencode::validate(&bytes)?,
             super::Kind::Hermes => super::hermes::validate(&bytes)?,
+            super::Kind::Claude => super::claude::validate(&bytes)?,
         }
         let native_digest = witness(&bytes);
         let auth_digest = auth_witness(&dir, kind)?;
@@ -357,6 +364,7 @@ impl Store {
             super::Kind::Codex => super::codex::validate(&before)?,
             super::Kind::OpenCode => super::opencode::validate(&before)?,
             super::Kind::Hermes => super::hermes::validate(&before)?,
+            super::Kind::Claude => super::claude::validate(&before)?,
         }
         // Resolve only after all operation, revision, target and protection checks.
         let revision = open_revision(&root, &preview.key, &item.current_revision, false)?;
@@ -374,6 +382,7 @@ impl Store {
             super::Kind::Codex => super::codex::merge(&before, &endpoint, &model, secret)?,
             super::Kind::OpenCode => super::opencode::merge(&before, &endpoint, &model, secret)?,
             super::Kind::Hermes => super::hermes::merge(&before, &endpoint, &model, secret)?,
+            super::Kind::Claude => super::claude::merge(&before, &endpoint, &model, secret)?,
         };
         let Some(bytes) = bytes else {
             return Ok(false);

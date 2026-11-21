@@ -40,7 +40,8 @@
             "qwen",
             "codex",
             "opencode",
-            "hermes"
+            "hermes",
+            "claude"
           ]
         },
         "connection": {
@@ -58,12 +59,13 @@
             "HOME/.qwen/settings.json",
             "HOME/.codex/config.toml",
             "HOME/.config/opencode/opencode.json",
-            "HOME/.hermes/config.yaml"
+            "HOME/.hermes/config.yaml",
+            "HOME/.claude/settings.json"
           ]
         },
         "preview_id": {
           "type": "string",
-          "pattern": "^(pi|qwen|codex|opencode|hermes)-native-settings/1:sha256:[0-9a-f]{64}$"
+          "pattern": "^(pi|qwen|codex|opencode|hermes|claude)-native-settings/1:sha256:[0-9a-f]{64}$"
         }
       }
     }

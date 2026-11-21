@@ -80,8 +80,20 @@ pub(crate) fn run(
                 overrides: &["HERMES_HOME", "HERMES_CONFIG_FILE"],
             },
         ),
+        [agent] if agent == "claude" => run_adapter(
+            ctx,
+            store,
+            connection,
+            response,
+            cancel,
+            vibe_connections::ClaudeSettingsAdapter,
+            NativeTarget {
+                destination: "HOME/.claude/settings.json",
+                overrides: &["CLAUDE_CONFIG_DIR"],
+            },
+        ),
         _ => bail!(
-            "native settings require exactly one supported --agent pi, qwen, codex, opencode or hermes"
+            "native settings require exactly one supported --agent pi, qwen, codex, opencode, hermes or claude"
         ),
     }
 }

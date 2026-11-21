@@ -29,7 +29,7 @@ impl Metadata {
                 return Err(Error::Invalid);
             }
         }
-        if !matches!(self.api_kind.as_str(), "openai-chat-completions" | "openai-responses")
+        if !matches!(self.api_kind.as_str(), "openai-chat-completions" | "openai-responses" | "anthropic-messages-bearer")
             || self.endpoint.len() > 4096
             || self.endpoint.chars().any(char::is_control)
         {
@@ -275,4 +275,4 @@ pub use setup::{SetupPreview, SetupRow};
 mod default_scope;
 pub use default_scope::{DefaultScope, DefaultScopePreview, DefaultScopeRow};
 mod native_settings;
-pub use native_settings::{CodexSettingsAdapter, HermesSettingsAdapter, OpenCodeSettingsAdapter, NativeSettingsAdapter, NativeSettingsPreview, PiSettingsAdapter, QwenSettingsAdapter};
+pub use native_settings::{ClaudeSettingsAdapter, CodexSettingsAdapter, HermesSettingsAdapter, OpenCodeSettingsAdapter, NativeSettingsAdapter, NativeSettingsPreview, PiSettingsAdapter, QwenSettingsAdapter};
