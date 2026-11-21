@@ -28,7 +28,6 @@ use vibe_lifecycle::process::StreamMode;
 use vibe_lifecycle::{LifecycleLease, LifecycleRunHandle, RunMetadata};
 use vibe_resolver::{DepProviderError, ResolvedNode};
 use vibe_workspace::Workspace;
-use vibe_workspace::hooks::{HookOutput, HookPolicy, HookReport};
 use vibe_workspace::install::{
     InstallOutcome, ResolvedDep, SlotLifecycleMode,
     apply_resolution_with_spec_format_and_slot_lifecycle_traced_placements,
@@ -56,17 +55,11 @@ pub use publication::{publish_admitted_manifest, publish_empty_legacy_lock};
 /// What [`apply`] did — the caller renders it.
 #[derive(Debug)]
 pub struct ApplyReport {
-    /// Materialised / skipped / pruned slots, the regenerated nodes, and
-    /// the `pre-install` hook reports — straight from the workspace
-    /// orchestrator.
+    /// Materialised / skipped / pruned slots and the regenerated nodes —
+    /// straight from the workspace orchestrator.
     pub outcome: InstallOutcome,
-    /// `post-install` hook reports (PROP-020 §2.1), gathered after the
-    /// lockfile was written. Empty when no payload-changing package declares a
-    /// `post-install` hook; the CLI renders them with the pre-install
-    /// reports carried on `outcome.hook_reports`.
-    pub post_install_reports: Vec<HookReport>,
-    /// Legacy `[hooks]` translated to `slot:` contributions and executed by
-    /// the lifecycle handler engine. Empty only on compatibility entry points.
+    /// The `slot:` contributions the lifecycle handler engine executed.
+    /// Empty on the entry points that run no slot lifecycle.
     pub lifecycle_reports: Vec<SlotLifecycleReport>,
     /// The same canonical run used by slot callbacks; the caller rebinds it
     /// to the durable world before dispatching normal phase contributions.
@@ -105,64 +98,40 @@ pub struct PreparedApplyReport {
 /// phase needs it to perform the deferred incremental `in-place` updates
 /// the plan held back from re-cloning (PROP-022 §2.4) — every other
 /// package is already fetched into `planned`.
+///
+/// No slot lifecycle runs on this entry point: it materialises, regenerates
+/// boot and records the lock, and a package's `slot:` contributions stay
+/// unexecuted. The install command applies through
+/// [`apply_with_spec_format_and_lifecycle_observed`] instead.
 pub fn apply<S: InstallSource + ?Sized>(
     source: &S,
     planned: PlannedInstall,
     slot_integrity: SlotIntegrity,
-    hooks: &HookPolicy,
 ) -> Result<ApplyReport> {
-    apply_with_spec_format(source, planned, slot_integrity, SpecFormat::Mixed, hooks)
+    apply_with_spec_format(source, planned, slot_integrity, SpecFormat::Mixed)
 }
 
-/// Apply a confirmed plan using the effective PROP-045 representation.
+/// Apply a confirmed plan using the effective PROP-045 representation, with
+/// no slot lifecycle — see [`apply`].
 pub fn apply_with_spec_format<S: InstallSource + ?Sized>(
     source: &S,
     planned: PlannedInstall,
     slot_integrity: SlotIntegrity,
     spec_format: SpecFormat,
-    hooks: &HookPolicy,
-) -> Result<ApplyReport> {
-    apply_with_spec_format_and_hook_output(
-        source,
-        planned,
-        slot_integrity,
-        spec_format,
-        hooks,
-        HookOutput::Inherit,
-    )
-}
-
-/// Apply with an explicit hook-subprocess stream policy. The existing public
-/// entry points remain byte-compatible and inherit hook streams.
-pub fn apply_with_spec_format_and_hook_output<S: InstallSource + ?Sized>(
-    source: &S,
-    planned: PlannedInstall,
-    slot_integrity: SlotIntegrity,
-    spec_format: SpecFormat,
-    hooks: &HookPolicy,
-    hook_output: HookOutput,
 ) -> Result<ApplyReport> {
     apply_with_spec_format_and_slot_lifecycle(
         source,
         planned,
         slot_integrity,
         spec_format,
-        SlotLifecycleMode::LegacyHooks {
-            policy: hooks,
-            output: hook_output,
-        },
+        SlotLifecycleMode::None,
         None,
         None,
         None,
     )
-    // The legacy entry points predate the post-apply tree and have no use for
-    // it; dropping it here keeps their signatures byte-identical.
     .map(|prepared| prepared.report)
 }
 
-/// Apply through the canonical lifecycle handler engine. `[hooks]` is sugar
-/// for one `slot:` script contribution per declared phase; install itself is
-/// consent, so this path has no [`HookPolicy`] or prompt surface.
 /// The caller-supplied seams the slot lifecycle runs through: narration, and
 /// the agent backend a slot-scoped `agent` contribution executes on.
 ///
@@ -459,9 +428,9 @@ fn apply_metadata_checked<S: InstallSource + ?Sized>(
         &native_placements,
     )?;
 
-    // 8. Apply: materialise each package into vibedeps/, run each freshly
-    //    populated slot's pre-install hook (PROP-020 §2.1), and regenerate
-    //    every node's boot artifacts. Under `slot_integrity = verify` a
+    // 8. Apply: materialise each package into vibedeps/, raise each freshly
+    //    populated slot's pre-install event, and regenerate every node's boot
+    //    artifacts. Under `slot_integrity = verify` a
     //    present slot is spot-checked through the registry-hash seam
     //    (PROP-011 §2.3/§5.2): a hash match accepts it without the copy,
     //    a divergence re-materialises it and warns — the fetched set the
@@ -575,10 +544,9 @@ fn apply_metadata_checked<S: InstallSource + ?Sized>(
     progress.cancellation().committed();
     record_task.finish();
 
-    // 11. PROP-020 §2.1 — post-install hooks run once the package is durable
-    //     (lockfile written, boot regenerated). A non-zero exit is surfaced
-    //     as a flagged report, not fatal; a missing interpreter is a hard
-    //     error. Only slots whose materialised payload changed run their hook.
+    // 11. Post-install slot events are raised once the package is durable
+    //     (lockfile written, boot regenerated), and only for slots whose
+    //     materialised payload changed.
     // The apply is complete: whatever a later post-install row does, the
     // record of what this install changed is final and is handed to the
     // observer BEFORE the callbacks that could stop the run.
@@ -586,10 +554,9 @@ fn apply_metadata_checked<S: InstallSource + ?Sized>(
         observer.record_complete(InstallProgress::complete(&outcome));
     }
     progress.checkpoint()?;
-    let post_install_reports = match outcome.take_post_install_plan() {
-        Some(plan) => run_post_install_slot_lifecycle(plan, lifecycle)?,
-        None => Vec::new(),
-    };
+    if let Some(plan) = outcome.take_post_install_plan() {
+        run_post_install_slot_lifecycle(plan, lifecycle)?;
+    }
 
     Ok(PreparedApplyReport {
         node_roots,
@@ -598,7 +565,6 @@ fn apply_metadata_checked<S: InstallSource + ?Sized>(
         report: ApplyReport {
             progress: InstallProgress::complete(&outcome),
             outcome,
-            post_install_reports,
             lifecycle_reports: Vec::new(),
             lifecycle_run: None,
         },

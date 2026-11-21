@@ -50,9 +50,9 @@ use super::i18n::I18nDecl;
 use super::mechanism::{MechanismDecl, MechanismRoutes};
 use super::package::{
     ApplicationDecl, BinaryDecl, BootSnippet, Compatibility, ConditionalTarget, ConflictsList,
-    DocumentationDecl, DocumentsDecl, EmbeddedSourceDecl, FeaturesTable, GlossaryDecl, HooksDecl,
-    LinkType, ManifestWire, McpServerDecl, MediaDecl, NavigationDecl, Obsoletes, OverrideTable,
-    PackageMeta, Provides, Recommends, Requires, RequiresAny, SkillDecl, Suggests, TranslatesDecl,
+    DocumentationDecl, DocumentsDecl, EmbeddedSourceDecl, FeaturesTable, GlossaryDecl, LinkType,
+    ManifestWire, McpServerDecl, MediaDecl, NavigationDecl, Obsoletes, OverrideTable, PackageMeta,
+    Provides, Recommends, Requires, RequiresAny, SkillDecl, Suggests, TranslatesDecl,
     VisibilityMeta,
 };
 use super::project::{
@@ -215,11 +215,6 @@ pub struct Manifest {
     /// no glossary, and no path means one by convention.
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub glossary: Option<GlossaryDecl>,
-
-    /// `[hooks]` — pre/post-install scripts this package runs in its slot
-    /// (PROP-020). Universal, not bridge-only (package-role).
-    #[serde(default, skip_serializing_if = "HooksDecl::is_empty")]
-    pub hooks: HooksDecl,
 
     /// `[[extension]]` — ordered lifecycle/compiler contributions declared by
     /// either a project or a package (PROP-054 §3.2).

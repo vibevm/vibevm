@@ -54,7 +54,7 @@ mod visibility_projection;
 pub use apply::{
     ApplyReport, LockPublication, PreparedApplyReport, ProjectRecordCapture,
     ProjectRecordPublication, SlotLifecycleSeams, apply, apply_with_spec_format,
-    apply_with_spec_format_and_hook_output, apply_with_spec_format_and_lifecycle_observed,
+    apply_with_spec_format_and_lifecycle_observed,
     apply_with_spec_format_and_lifecycle_observed_traced,
     apply_with_spec_format_and_lifecycle_observed_traced_prepared, publish_admitted_manifest,
     publish_empty_legacy_lock,

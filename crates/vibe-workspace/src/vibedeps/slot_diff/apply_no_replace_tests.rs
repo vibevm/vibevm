@@ -57,7 +57,6 @@ mod cases {
             SlotIntegrity::TrustPresence,
             SpecFormat::Mixed,
             None,
-            None,
         )
     }
     #[test]

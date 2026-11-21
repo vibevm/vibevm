@@ -1,4 +1,4 @@
-//! Install adapter for legacy `[hooks]` sugar over the lifecycle handler engine.
+//! Install adapter that runs `slot:` contributions through the lifecycle handler engine.
 
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-054#H-SCRIPT");
 
@@ -17,10 +17,10 @@ use vibe_lifecycle::{
     LifecycleRunHandle, MechanismRegistry,
 };
 use vibe_wire::generated::lifecycle_state::{ExecutionRecordStatus, SlotTargetRecord};
-use vibe_workspace::hooks::SystemProbe;
 use vibe_workspace::install::{
     ResolvedDep, SlotLifecycle, SlotLifecycleContext, SlotLifecycleTarget,
 };
+use vibe_workspace::interpreter::SystemProbe;
 
 use crate::error::{Error, Result};
 
@@ -38,7 +38,7 @@ pub use plan::{
 };
 pub use progress::InstallProgress;
 
-/// One legacy hook after translation into and execution by the lifecycle engine.
+/// One `slot:` contribution after execution by the lifecycle engine.
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct SlotLifecycleReport {
     pub key: String,

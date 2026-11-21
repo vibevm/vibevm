@@ -1,44 +1,11 @@
-//! Full-resolution apply with an explicit hook-subprocess stream policy.
+//! Full-resolution apply under one dependency-slot lifecycle mode.
 
 specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-009#install");
 
 use super::*;
-use crate::hooks::ConfiguredHookRunner;
 use crate::install::bootgen::regenerate_boot_from_traced;
 
-/// Additive execution-policy seam for callers that must contain hook streams.
-/// Existing install-family APIs preserve inherited subprocess I/O by routing
-/// through [`HookOutput::Inherit`].
-pub fn apply_resolution_with_spec_format_and_hook_output(
-    workspace: &Workspace,
-    resolution: &[ResolvedDep],
-    slot_integrity: SlotIntegrity,
-    spec_format: SpecFormat,
-    slot_verifier: Option<&dyn SlotVerifier>,
-    hooks: Option<&HookPolicy>,
-    hook_output: HookOutput,
-) -> Result<InstallOutcome, WorkspaceError> {
-    let lifecycle = match hooks {
-        Some(policy) => SlotLifecycleMode::LegacyHooks {
-            policy,
-            output: hook_output,
-        },
-        None => SlotLifecycleMode::None,
-    };
-    apply_resolution_with_spec_format_and_slot_lifecycle(
-        workspace,
-        resolution,
-        slot_integrity,
-        spec_format,
-        slot_verifier,
-        lifecycle,
-    )
-}
-
 /// Apply a full resolution under exactly one dependency-slot lifecycle mode.
-///
-/// The mode is neutral to lifecycle implementation and structurally prevents
-/// legacy `[hooks]` execution from being combined with a lifecycle callback.
 pub fn apply_resolution_with_spec_format_and_slot_lifecycle(
     workspace: &Workspace,
     resolution: &[ResolvedDep],
@@ -97,61 +64,6 @@ pub fn apply_resolution_with_spec_format_and_slot_lifecycle_traced_placements(
     trace: Option<&crate::compile_trace::TraceRun>,
     placements: &[&dyn PreparedSlotPlacement],
 ) -> Result<InstallOutcome, WorkspaceError> {
-    match lifecycle {
-        SlotLifecycleMode::None => apply_with_materialise_lifecycle(
-            workspace,
-            resolution,
-            slot_integrity,
-            spec_format,
-            slot_verifier,
-            MaterialiseLifecycle::None,
-            trace,
-            placements,
-        ),
-        SlotLifecycleMode::Callback(callback) => apply_with_materialise_lifecycle(
-            workspace,
-            resolution,
-            slot_integrity,
-            spec_format,
-            slot_verifier,
-            MaterialiseLifecycle::Callback(callback),
-            trace,
-            placements,
-        ),
-        SlotLifecycleMode::LegacyHooks { policy, output } => {
-            let runner = ConfiguredHookRunner::new(output);
-            apply_with_materialise_lifecycle(
-                workspace,
-                resolution,
-                slot_integrity,
-                spec_format,
-                slot_verifier,
-                MaterialiseLifecycle::LegacyHooks {
-                    policy,
-                    probe: &SystemProbe,
-                    runner: &runner,
-                },
-                trace,
-                placements,
-            )
-        }
-    }
-}
-
-#[expect(
-    clippy::too_many_arguments,
-    reason = "the materialisation owner forwards the same apply inputs and checked placements while borrowing the selected lifecycle runner"
-)]
-fn apply_with_materialise_lifecycle(
-    workspace: &Workspace,
-    resolution: &[ResolvedDep],
-    slot_integrity: SlotIntegrity,
-    spec_format: SpecFormat,
-    slot_verifier: Option<&dyn SlotVerifier>,
-    lifecycle: MaterialiseLifecycle<'_>,
-    trace: Option<&crate::compile_trace::TraceRun>,
-    placements: &[&dyn PreparedSlotPlacement],
-) -> Result<InstallOutcome, WorkspaceError> {
     // A malformed instruction block aborts before any mutation.
     source_admission::validate_source_admission(workspace, resolution, spec_format)?;
     validate_redirect_blocks(workspace, resolution)?;
@@ -163,7 +75,6 @@ fn apply_with_materialise_lifecycle(
         skipped,
         integrity_warnings,
         post_install_deps,
-        hook_reports,
     } = match materialise_resolution_with_prepared(
         &workspace.root,
         resolution,
@@ -215,7 +126,6 @@ fn apply_with_materialise_lifecycle(
         pruned,
         nodes_regenerated,
         post_install_plan: PostInstallPlan::new(&workspace.root, post_install_deps),
-        hook_reports,
         rollback: Some(rollback),
     })
 }
@@ -364,45 +274,25 @@ where
     source_admission::validate_source_admission(workspace, resolution, spec_format)?;
     validate_redirect_blocks(workspace, resolution)?;
     let mut rollback = InstallRollback::new(&workspace.root);
-    let observer = match &lifecycle {
-        SlotLifecycleMode::Callback(callback) => Some(*callback),
-        SlotLifecycleMode::None | SlotLifecycleMode::LegacyHooks { .. } => None,
-    };
-    let mut materialise = |lifecycle| {
-        materialise_resolution_with_prepared(
-            &workspace.root,
-            resolution,
-            MaterialiseOptions {
-                slot_integrity,
-                spec_format,
-                slot_verifier,
-                lifecycle,
-                progress: progress.clone(),
-                rollback: Some(&mut rollback),
-            },
-            placements,
-        )
-    };
+    let observer = lifecycle.callback();
     let Materialised {
         materialised,
         skipped,
         integrity_warnings,
         post_install_deps,
-        hook_reports,
-    } = match match lifecycle {
-        SlotLifecycleMode::None => materialise(MaterialiseLifecycle::None),
-        SlotLifecycleMode::Callback(callback) => {
-            materialise(MaterialiseLifecycle::Callback(callback))
-        }
-        SlotLifecycleMode::LegacyHooks { policy, output } => {
-            let runner = ConfiguredHookRunner::new(output);
-            materialise(MaterialiseLifecycle::LegacyHooks {
-                policy,
-                probe: &SystemProbe,
-                runner: &runner,
-            })
-        }
-    } {
+    } = match materialise_resolution_with_prepared(
+        &workspace.root,
+        resolution,
+        MaterialiseOptions {
+            slot_integrity,
+            spec_format,
+            slot_verifier,
+            lifecycle,
+            progress: progress.clone(),
+            rollback: Some(&mut rollback),
+        },
+        placements,
+    ) {
         Ok(result) => result,
         Err(error) if !placements.is_empty() => {
             return Err(rollback.undo(
@@ -451,7 +341,6 @@ where
             pruned,
             nodes_regenerated,
             post_install_plan: PostInstallPlan::new(&workspace.root, post_install_deps),
-            hook_reports,
             rollback: Some(rollback),
         },
         carriage,

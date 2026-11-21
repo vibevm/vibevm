@@ -195,7 +195,12 @@ fn checkpoint_package(registry: &Path, name: &str, sabotage: bool) {
     fs::write(
         package.join("vibe.toml"),
         format!(
-            "[package]\ngroup='org.checkpoint'\nname='{name}'\nkind='tool'\nversion='0.1.0'\n\n[hooks]\npost-install='hooks/post'\n"
+            "[package]\ngroup='org.checkpoint'\nname='{name}'\nkind='tool'\nversion='0.1.0'\n{}",
+            common::slot_script(
+                &format!("org.checkpoint/{name}"),
+                "post-install",
+                "hooks/post"
+            )
         ),
     )
     .unwrap();

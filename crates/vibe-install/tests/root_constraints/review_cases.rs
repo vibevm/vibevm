@@ -5,22 +5,11 @@ specmark::scope!(
 
 use super::fixture::*;
 use vibe_core::manifest::{Lockfile, Manifest};
-use vibe_core::trust::TrustPolicy;
 use vibe_core::user_config::SlotIntegrity;
 use vibe_install::{Plan, PlannedInstall};
-use vibe_workspace::hooks::HookPolicy;
 
 fn apply(source: &Source, plan: Box<PlannedInstall>) -> Result<(), vibe_install::Error> {
-    vibe_install::apply(
-        source,
-        *plan,
-        SlotIntegrity::Verify,
-        &HookPolicy {
-            trust: TrustPolicy::EMPTY,
-            allow_hooks: false,
-        },
-    )
-    .map(|_| ())
+    vibe_install::apply(source, *plan, SlotIntegrity::Verify).map(|_| ())
 }
 
 #[test]
@@ -149,10 +138,6 @@ fn changed_sibling_common_input_refuses_apply_before_selected_publication() {
         &f.source,
         *planned,
         vibe_core::user_config::SlotIntegrity::Verify,
-        &vibe_workspace::hooks::HookPolicy {
-            trust: TrustPolicy::EMPTY,
-            allow_hooks: false,
-        },
     )
     .unwrap_err();
     assert!(
@@ -182,10 +167,6 @@ fn programmatic_resolution_common_definition_refuses_before_apply_effects() {
         &f.source,
         *planned,
         vibe_core::user_config::SlotIntegrity::Verify,
-        &vibe_workspace::hooks::HookPolicy {
-            trust: TrustPolicy::EMPTY,
-            allow_hooks: false,
-        },
     )
     .unwrap_err();
     assert!(matches!(

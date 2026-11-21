@@ -123,7 +123,6 @@ mod tests {
             SlotIntegrity::TrustPresence,
             spec_format,
             Some(&SourceHash),
-            None,
         )
         .expect("G3 disposable fixture must be readable and install successfully");
         for (root, expected) in sources.iter().zip(before) {
@@ -229,7 +228,6 @@ mod tests {
             SlotIntegrity::TrustPresence,
             SpecFormat::Xml,
             Some(&SourceHash),
-            None,
         )
         .unwrap();
         let unit_rel = deps_slot_specs("org.vibevm.parent/1.0.0", "boot/STATIC.xml");
@@ -305,7 +303,6 @@ mod tests {
             SlotIntegrity::TrustPresence,
             SpecFormat::Xml,
             Some(&SourceHash),
-            None,
         )
         .unwrap();
 
@@ -425,7 +422,6 @@ mod tests {
             SlotIntegrity::TrustPresence,
             SpecFormat::Xml,
             Some(&SourceHash),
-            None,
         )
         .unwrap();
         assert!(root.path().join(boot_rel("INDEX.md")).is_file());
@@ -473,7 +469,6 @@ mod tests {
             SlotIntegrity::TrustPresence,
             SpecFormat::Xml,
             Some(&SourceHash),
-            None,
         )
         .unwrap();
         let index = fs::read_to_string(member.join(boot_rel("INDEX.md"))).unwrap();
@@ -509,7 +504,6 @@ mod tests {
             SlotIntegrity::TrustPresence,
             SpecFormat::Xml,
             Some(&SourceHash),
-            None,
         )
         .unwrap();
         assert!(member.join(boot_rel("INDEX.md")).is_file());

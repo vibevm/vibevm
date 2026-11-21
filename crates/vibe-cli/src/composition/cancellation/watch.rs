@@ -9,9 +9,7 @@
 //! builds — are spawned by `command-group` as leaders of process groups of
 //! their own, so the terminal's Ctrl-C reaches vibe and not them, and a
 //! confirmed stop reaps their whole group at the waiting loop's next
-//! checkpoint. A legacy hook runner that still spawns into vibe's own group
-//! receives the same Ctrl-C; a hook that dies of it fails its step, and the
-//! operation rolls back as a failure instead of reporting a continuation.
+//! checkpoint.
 
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-073#PROJECT-COOPERATIVE-STOP");
 

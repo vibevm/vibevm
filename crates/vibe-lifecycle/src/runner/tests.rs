@@ -20,7 +20,7 @@ use crate::execution::HandlerExecution;
 use crate::handlers::{HandlerRuntime, NoPackageBindingBackend};
 use crate::process::{StreamMode, SystemProcessRunner};
 use crate::{RunMetadata, select_run_identity};
-use vibe_workspace::hooks::SystemProbe;
+use vibe_workspace::interpreter::SystemProbe;
 
 /// The sticky-trace half of the hosted branch — the one seam that needs
 /// an explicit metadata value rather than this file's `(run_id, force)`

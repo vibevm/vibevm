@@ -39,8 +39,8 @@ pub mod cargo_build;
 pub mod compile_trace;
 pub mod extension_world;
 pub mod freshness;
-pub mod hooks;
 pub mod install;
+pub mod interpreter;
 /// Validated explicit layer relations shared by boot and views.
 pub mod layer_relations;
 pub mod materialization;

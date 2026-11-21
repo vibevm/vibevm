@@ -21,7 +21,7 @@ use crate::execution::HandlerExecution;
 use crate::handlers::{HandlerRuntime, NoBinaryBackend, NoPackageBindingBackend};
 use crate::process::{StreamMode, SystemProcessRunner};
 use crate::{ExecutionReuse, LifecycleLease, LifecycleRun, RunMetadata};
-use vibe_workspace::hooks::SystemProbe;
+use vibe_workspace::interpreter::SystemProbe;
 
 const RUN_ID: &str = "00112233445566778899aabbccddeeff";
 const KEY: &str = "org.demo/tools#produce";

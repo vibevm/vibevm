@@ -7,14 +7,14 @@ use specmark::spec;
 use vibe_core::manifest::Manifest;
 use vibe_core::{Group, PackageKind};
 
-use super::hooks_run::run_pre_install_hook;
-use super::{ResolvedDep, is_in_place};
-use crate::hooks::{HookOutput, HookPolicy, HookReport, HookRunner, InterpreterProbe};
+use super::{PostInstallPlan, ResolvedDep, is_in_place};
 use crate::{WorkspaceError, vibedeps};
 
 /// Exact provider/slot context at the pre- and post-install timing points.
 #[derive(Debug, Clone, Copy)]
-#[spec(documents = "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-020#phases")]
+#[spec(
+    documents = "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-020#MODERN-SLOT-EXECUTION"
+)]
 pub struct SlotLifecycleContext<'a> {
     pub group: &'a Group,
     pub name: &'a str,
@@ -46,7 +46,9 @@ pub struct SlotLifecycleTarget {
 ///     fn post_install(&self, _: SlotLifecycleContext<'_>) -> Result<(), String> { Ok(()) }
 /// }
 /// ```
-#[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-020#phases")]
+#[spec(
+    implements = "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-020#MODERN-SLOT-EXECUTION"
+)]
 pub trait SlotLifecycle {
     fn targets_ready(&self, _targets: &[SlotLifecycleTarget]) -> Result<(), String> {
         Ok(())
@@ -69,19 +71,12 @@ pub trait SlotLifecycle {
     fn post_install(&self, context: SlotLifecycleContext<'_>) -> Result<(), String>;
 }
 
-/// The exclusive slot-lifecycle execution mode for one install pass.
-///
-/// This sum type deliberately has no representation for legacy hooks and a
-/// lifecycle callback together. Existing callers use `LegacyHooks`; future
-/// lifecycle orchestration uses `Callback` without depending on hook policy.
+/// The slot-lifecycle execution mode for one install pass: no slot events at
+/// all, or exactly one callback that owns both timing points.
 #[derive(Clone, Copy)]
 #[spec(documents = "spec://org.vibevm.core/vibevm/common/PROP-054#H-SCRIPT")]
 pub enum SlotLifecycleMode<'a> {
     None,
-    LegacyHooks {
-        policy: &'a HookPolicy,
-        output: HookOutput,
-    },
     Callback(&'a dyn SlotLifecycle),
 }
 
@@ -89,72 +84,85 @@ impl fmt::Debug for SlotLifecycleMode<'_> {
     fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
         match self {
             Self::None => formatter.write_str("None"),
-            Self::LegacyHooks { output, .. } => formatter
-                .debug_struct("LegacyHooks")
-                .field("output", output)
-                .finish_non_exhaustive(),
             Self::Callback(_) => formatter.write_str("Callback(..)"),
         }
     }
 }
 
-pub(super) enum MaterialiseLifecycle<'a> {
-    None,
-    LegacyHooks {
-        policy: &'a HookPolicy,
-        probe: &'a dyn InterpreterProbe,
-        runner: &'a dyn HookRunner,
-    },
-    Callback(&'a dyn SlotLifecycle),
-}
-
-impl<'a> MaterialiseLifecycle<'a> {
+impl<'a> SlotLifecycleMode<'a> {
     /// The callback observer, which must hear about a slot an undo removes.
     pub(super) fn callback(&self) -> Option<&'a dyn SlotLifecycle> {
         match self {
             Self::Callback(callback) => Some(*callback),
-            Self::None | Self::LegacyHooks { .. } => None,
+            Self::None => None,
         }
     }
 }
 
-pub(super) fn run_pre_slot_lifecycle(
-    lifecycle: &MaterialiseLifecycle<'_>,
+/// The slot a lifecycle callback runs against — the unversioned in-place
+/// working tree, or the versioned copy slot. A versioned slot is detached
+/// from the shared store first: a callback may rewrite any recorded file,
+/// and a retained hardlink would carry that write into another slot.
+fn callback_slot(
     dep: &ResolvedDep,
     workspace_root: &Path,
-) -> Result<Option<HookReport>, WorkspaceError> {
-    match lifecycle {
-        MaterialiseLifecycle::None => Ok(None),
-        MaterialiseLifecycle::LegacyHooks {
-            policy,
-            probe,
-            runner,
-        } => run_pre_install_hook(dep, workspace_root, policy, *probe, *runner),
-        MaterialiseLifecycle::Callback(callback) => {
-            let slot = if is_in_place(dep) {
-                vibedeps::in_place_slot_abs_path(workspace_root, &dep.group, &dep.name)
-            } else {
-                vibedeps::slot_abs_path(workspace_root, &dep.group, &dep.name, &dep.version)
-            };
-            if !is_in_place(dep) {
-                vibedeps::detach_recorded_hardlinks(&slot)?;
-            }
-            callback
-                .pre_install(context_with_slot(dep, &slot))
-                .map_err(|reason| WorkspaceError::SlotLifecycle {
-                    phase: "pre-install",
-                    package: format!("{}/{}", dep.group, dep.name),
-                    reason,
-                })?;
-            Ok(None)
-        }
+) -> Result<std::path::PathBuf, WorkspaceError> {
+    if is_in_place(dep) {
+        return Ok(vibedeps::in_place_slot_abs_path(
+            workspace_root,
+            &dep.group,
+            &dep.name,
+        ));
     }
+    let slot = vibedeps::slot_abs_path(workspace_root, &dep.group, &dep.name, &dep.version);
+    vibedeps::detach_recorded_hardlinks(&slot)?;
+    Ok(slot)
 }
 
-/// Ordered rollback-capable pre plan. Callback events wait for every provider
-/// slot; legacy hooks retain their inline timing.
+fn run_pre_slot_lifecycle(
+    callback: &dyn SlotLifecycle,
+    dep: &ResolvedDep,
+    workspace_root: &Path,
+) -> Result<(), WorkspaceError> {
+    let slot = callback_slot(dep, workspace_root)?;
+    callback
+        .pre_install(context_with_slot(dep, &slot))
+        .map_err(|reason| WorkspaceError::SlotLifecycle {
+            phase: "pre-install",
+            package: format!("{}/{}", dep.group, dep.name),
+            reason,
+        })
+}
+
+/// Consume one install-produced post plan under the pass's slot lifecycle
+/// mode, after the caller has made the install durable. The opaque plan owns
+/// the exact eligible dependency subset and its workspace; this seam accepts
+/// neither separately.
+pub fn run_post_install_slot_lifecycle(
+    plan: PostInstallPlan,
+    lifecycle: SlotLifecycleMode<'_>,
+) -> Result<(), WorkspaceError> {
+    let SlotLifecycleMode::Callback(callback) = lifecycle else {
+        return Ok(());
+    };
+    let (workspace_root, eligible_deps) = plan.into_parts();
+    for dep in &eligible_deps {
+        let slot = callback_slot(dep, &workspace_root)?;
+        callback
+            .post_install(context_with_slot(dep, &slot))
+            .map_err(|reason| WorkspaceError::SlotLifecycle {
+                phase: "post-install",
+                package: format!("{}/{}", dep.group, dep.name),
+                reason,
+            })?;
+    }
+    Ok(())
+}
+
+/// Ordered rollback-capable pre plan: callback events wait until every
+/// provider slot of the pass is in place.
 pub(super) struct PreInstallPlan<'a, 'l> {
-    lifecycle: &'a MaterialiseLifecycle<'l>,
+    lifecycle: &'a SlotLifecycleMode<'l>,
     workspace_root: &'a Path,
     deferred: Vec<ResolvedDep>,
     checked: Vec<std::path::PathBuf>,
@@ -162,7 +170,7 @@ pub(super) struct PreInstallPlan<'a, 'l> {
 
 impl<'a, 'l> PreInstallPlan<'a, 'l> {
     pub(super) fn new_checked(
-        lifecycle: &'a MaterialiseLifecycle<'l>,
+        lifecycle: &'a SlotLifecycleMode<'l>,
         workspace_root: &'a Path,
         checked: Vec<std::path::PathBuf>,
     ) -> Self {
@@ -174,24 +182,11 @@ impl<'a, 'l> PreInstallPlan<'a, 'l> {
         }
     }
 
-    pub(super) fn run_or_defer(
-        &mut self,
-        dep: &ResolvedDep,
-        reports: &mut Vec<HookReport>,
-    ) -> Result<(), WorkspaceError> {
-        if matches!(self.lifecycle, MaterialiseLifecycle::Callback(_)) {
+    /// Queue the pre-install event of a slot whose payload this pass changed.
+    pub(super) fn defer(&mut self, dep: &ResolvedDep) {
+        if self.lifecycle.callback().is_some() {
             self.deferred.push(dep.clone());
-        } else {
-            match run_pre_slot_lifecycle(self.lifecycle, dep, self.workspace_root) {
-                Ok(Some(report)) => reports.push(report),
-                Ok(None) => {}
-                Err(error) => {
-                    self.rollback(dep);
-                    return Err(error);
-                }
-            }
         }
-        Ok(())
     }
 
     pub(super) fn dispatch(
@@ -199,29 +194,30 @@ impl<'a, 'l> PreInstallPlan<'a, 'l> {
         materialised: &[String],
         skipped: &[String],
     ) -> Result<(), WorkspaceError> {
-        if let MaterialiseLifecycle::Callback(callback) = self.lifecycle {
-            // The observer learns what really changed BEFORE any deferred row
-            // can stop the pass.
-            callback.materialised(materialised, skipped);
-            let targets = self
-                .deferred
-                .iter()
-                .map(|dep| SlotLifecycleTarget {
-                    group: dep.group.clone(),
-                    name: dep.name.clone(),
-                    version: dep.version.clone(),
-                })
-                .collect::<Vec<_>>();
-            callback
-                .targets_ready(&targets)
-                .map_err(|reason| WorkspaceError::SlotLifecycle {
-                    phase: "pre-install-plan",
-                    package: "<exact-payload-event-set>".into(),
-                    reason,
-                })?;
-        }
+        let Some(callback) = self.lifecycle.callback() else {
+            return Ok(());
+        };
+        // The observer learns what really changed BEFORE any deferred row
+        // can stop the pass.
+        callback.materialised(materialised, skipped);
+        let targets = self
+            .deferred
+            .iter()
+            .map(|dep| SlotLifecycleTarget {
+                group: dep.group.clone(),
+                name: dep.name.clone(),
+                version: dep.version.clone(),
+            })
+            .collect::<Vec<_>>();
+        callback
+            .targets_ready(&targets)
+            .map_err(|reason| WorkspaceError::SlotLifecycle {
+                phase: "pre-install-plan",
+                package: "<exact-payload-event-set>".into(),
+                reason,
+            })?;
         for dep in &self.deferred {
-            if let Err(error) = run_pre_slot_lifecycle(self.lifecycle, dep, self.workspace_root) {
+            if let Err(error) = run_pre_slot_lifecycle(callback, dep, self.workspace_root) {
                 self.rollback(dep);
                 return Err(error);
             }
@@ -247,7 +243,7 @@ impl<'a, 'l> PreInstallPlan<'a, 'l> {
         prune_empty_slot_parents(self.workspace_root, &slot);
         // The slot is gone again: an observer that already recorded it as
         // materialised must not keep reporting a change the tree no longer has.
-        if let MaterialiseLifecycle::Callback(callback) = self.lifecycle {
+        if let Some(callback) = self.lifecycle.callback() {
             callback.rolled_back(&slot);
         }
     }
@@ -266,10 +262,7 @@ fn prune_empty_slot_parents(workspace_root: &std::path::Path, slot_rel: &str) {
     }
 }
 
-pub(super) fn context_with_slot<'a>(
-    dep: &'a ResolvedDep,
-    slot: &'a Path,
-) -> SlotLifecycleContext<'a> {
+fn context_with_slot<'a>(dep: &'a ResolvedDep, slot: &'a Path) -> SlotLifecycleContext<'a> {
     SlotLifecycleContext {
         group: &dep.group,
         name: &dep.name,

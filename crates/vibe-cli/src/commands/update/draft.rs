@@ -25,7 +25,7 @@ use vibe_wire::generated::update_report::{
 };
 
 use crate::cli::UpdateArgs;
-use crate::commands::install::{HookReportPresentation, LifecycleHookView};
+use crate::commands::install::LifecycleHookView;
 use crate::output;
 
 /// Everything the one update document reports, owned.
@@ -216,7 +216,7 @@ impl UpdateDraft {
             quiet,
             count,
             bumps: bumps.len(),
-            hooks: &HookReportPresentation::quiet_suffix(&hooks),
+            hooks: &hooks.quiet_suffix(),
             quiet_suffix,
         }) {
             Some(Closing::Quiet(line)) => ctx.summary(&line),

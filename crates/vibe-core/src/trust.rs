@@ -4,8 +4,8 @@
 //!
 //! Three planes used to answer this question, and two of them carried their
 //! own list: an agent step read `trusted_groups` of `<settings>/agents.toml`
-//! by exact string, and a `[hooks]` entry read `vibe-workspace`'s own
-//! `DEFAULT_ALLOWED_GROUPS` constant. The owner's decision of 2026-11-10
+//! by exact string, and the since-retired `[hooks]` runner read
+//! `vibe-workspace`'s own `DEFAULT_ALLOWED_GROUPS` constant. The owner's decision of 2026-11-10
 //! makes everything under `org.vibevm.*` trusted by default and the
 //! mechanism configurable, which only one list can be: this module is it,
 //! and every consumer reads a [`TrustPolicy`] resolved here.
@@ -63,8 +63,8 @@ pub enum TrustLayer {
     Site,
     /// `trusted_groups` / `untrusted_groups` of `<settings>/agents.toml`.
     User,
-    /// Granted for this run alone — an operator who answered the question,
-    /// or `--allow-hooks`. Never written to a file.
+    /// Granted for this run alone — an operator who answered the question.
+    /// Never written to a file.
     Run,
 }
 
@@ -375,8 +375,8 @@ impl TrustPolicy {
     }
 
     /// Trust one group for this run alone — the operator answered the
-    /// question, or `--allow-hooks` was passed. A validated [`Group`] is a
-    /// valid exact entry, so this cannot fail.
+    /// question. A validated [`Group`] is a valid exact entry, so this
+    /// cannot fail.
     ///
     /// ```
     /// use vibe_core::trust::{TrustLayer, TrustPolicy};

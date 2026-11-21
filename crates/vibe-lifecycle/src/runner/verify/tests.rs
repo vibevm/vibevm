@@ -30,7 +30,7 @@ use crate::{
     ExecutableContribution, ExecutionReuse, ExtensionRegistryRow, LifecycleLease, LifecycleRun,
     RunMetadata,
 };
-use vibe_workspace::hooks::SystemProbe;
+use vibe_workspace::interpreter::SystemProbe;
 
 const RUN_ID: &str = "00112233445566778899aabbccddeeff";
 const SECOND_RUN: &str = "ffeeddccbbaa99887766554433221100";

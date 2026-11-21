@@ -3,11 +3,9 @@ use std::path::Path;
 use specmark::spec;
 use vibe_core::PackageName;
 use vibe_core::lifecycle::{ExtensionPoint, SlotPoint};
-use vibe_core::manifest::{ExtensionDecl, ExtensionHandler};
 use vibe_lifecycle::{
     DependencyExtensionSource, DependencyProviderId, ExtensionProvider, ExtensionWorld,
-    HandlerExecution, HostExtensionSource, SelectorSubject, SlotTarget, SyntheticHookIdentity,
-    collect_extensions,
+    HandlerExecution, HostExtensionSource, SelectorSubject, SlotTarget, collect_extensions,
 };
 use vibe_workspace::install::ResolvedDep;
 
@@ -279,36 +277,17 @@ fn append_target_plan(
         target_dep.group.clone(),
         PackageName::parse(&target_dep.name)?,
     );
-    let mut event_world = installed.to_vec();
-    let target_source = event_world
-        .iter_mut()
+    let target_source = installed
+        .iter()
         .find(|source| source.provider.id == target_id)
         .ok_or_else(|| {
             Error::Lifecycle(format!(
                 "planned slot target `{target_id}` is absent from provisional world"
             ))
         })?;
-    if let Some(base) = match point {
-        SlotPoint::PreInstall => target_dep.manifest.hooks.pre_install.clone(),
-        SlotPoint::PostInstall => target_dep.manifest.hooks.post_install.clone(),
-    } {
-        target_source.declarations.push(ExtensionDecl {
-            id: SyntheticHookIdentity::from(point).id().into(),
-            point: ExtensionPoint::Slot(point),
-            handler: ExtensionHandler::Script { base },
-            config: None,
-            auto: None,
-            inputs: None,
-            applies_to: None,
-            compiler_internals: None,
-            pass: None,
-            when: None,
-            judgment: None,
-        });
-    }
     let target = slot_target(target_dep, &target_source.provider.root);
     let registry = collect_extensions(ExtensionWorld {
-        installed: event_world,
+        installed: installed.to_vec(),
         host: host.clone(),
         effective_stack: None,
     })

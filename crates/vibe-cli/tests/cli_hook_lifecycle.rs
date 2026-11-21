@@ -1,10 +1,10 @@
-//! `[hooks]` compatibility sugar at the production install boundary.
+//! A package's own install scripts at the production install boundary.
 //!
-//! The sugar half of the family: `pre-install` / `post-install` timing, a
+//! The timing half of the family: `pre-install` / `post-install` order, a
 //! pre-install failure rolling the slot back, and a non-zero post-install
-//! flagged after the install is already durable. The explicit-slot half —
-//! contributions declared without sugar — is `cli_slot_contributions.rs`;
-//! both drive the same engine through the shared fixture.
+//! flagged after the install is already durable. The wider slot surface —
+//! one row answering for several targets, artifacts reaching a later phase —
+//! is `cli_slot_contributions.rs`; both use the shared fixture.
 
 mod common;
 
@@ -17,7 +17,7 @@ use common::hook_slot::{
 };
 
 #[test]
-fn hook_sugar_runs_once_at_pre_and_post_install_timing() {
+fn own_slot_scripts_run_once_at_pre_and_post_install_timing() {
     let (_outer, user, project, registry) = setup(Fixture::Timing);
     let output = install(&user, project.path(), &registry);
     assert!(
@@ -70,10 +70,7 @@ fn hook_sugar_runs_once_at_pre_and_post_install_timing() {
         .iter()
         .find(|row| row["point"] == "slot:pre-install")
         .unwrap();
-    assert_eq!(
-        planned["reference"],
-        "org.example/hooked#@vibe/hooks/pre-install"
-    );
+    assert_eq!(planned["reference"], "org.example/hooked#pre-install");
     assert_eq!(planned["slot_target"]["name"], "hooked");
     assert!(
         plan_index < outcome_index,
@@ -86,17 +83,17 @@ fn hook_sugar_runs_once_at_pre_and_post_install_timing() {
     assert_eq!(
         hooks.len(),
         2,
-        "pre/post sugar must each execute exactly once"
+        "the pre and post scripts must each execute exactly once"
     );
     assert_eq!(hooks[0]["point"], "slot:pre-install");
     assert_eq!(hooks[1]["point"], "slot:post-install");
     let state = lifecycle_state(project.path());
     assert_eq!(
-        state.execution[&state_key("@vibe/hooks/pre-install")].status,
+        state.execution[&state_key("pre-install")].status,
         ExecutionRecordStatus::Ok,
     );
     assert_eq!(
-        state.execution[&state_key("@vibe/hooks/post-install")].status,
+        state.execution[&state_key("post-install")].status,
         ExecutionRecordStatus::Ok,
     );
 
@@ -130,7 +127,7 @@ fn pre_failure_aborts_and_rolls_back_the_slot() {
         "failed pre hook must not register the package in the lockfile",
     );
     assert_eq!(
-        lifecycle_state(project.path()).execution[&state_key("@vibe/hooks/pre-install")].status,
+        lifecycle_state(project.path()).execution[&state_key("pre-install")].status,
         ExecutionRecordStatus::Fail,
     );
     let docs = documents(&output.stdout);
@@ -184,7 +181,43 @@ fn post_nonzero_is_flagged_after_the_install_is_durable() {
     assert!(hooks[0]["stdout"].as_str().unwrap().contains("SOFT-STDOUT"));
     assert!(hooks[0]["stderr"].as_str().unwrap().contains("SOFT-STDERR"));
     assert_eq!(
-        lifecycle_state(project.path()).execution[&state_key("@vibe/hooks/post-install")].status,
+        lifecycle_state(project.path()).execution[&state_key("post-install")].status,
         ExecutionRecordStatus::Fail,
+    );
+}
+
+/// The retired `[hooks]` table is refused by name while the package is still
+/// being read: nothing is materialised and the lock stays as it was.
+#[test]
+fn a_package_still_declaring_the_retired_hooks_table_is_refused_before_any_write() {
+    let (_outer, user, project, registry) = setup(Fixture::Timing);
+    let manifest = registry
+        .join("org.example")
+        .join("hooked")
+        .join("v0.1.0")
+        .join("vibe.toml");
+    let mut body = fs::read_to_string(&manifest).unwrap();
+    body.push_str("\n[hooks]\npre-install = \"hooks/pre\"\n");
+    fs::write(&manifest, body).unwrap();
+    let lock_before = fs::read(project.path().join("vibe.lock")).unwrap();
+
+    let output = install(&user, project.path(), &registry);
+
+    assert!(!output.status.success());
+    let stderr = String::from_utf8_lossy(&output.stderr);
+    assert!(
+        stderr.contains("[hooks]") && stderr.contains("[[extension]]"),
+        "the refusal must name the retired table and its replacement: {stderr}"
+    );
+    assert!(
+        !project
+            .path()
+            .join(common::slot_dir("org.example.hooked", "0.1.0"))
+            .exists(),
+        "a refused manifest must not reach materialisation",
+    );
+    assert_eq!(
+        fs::read(project.path().join("vibe.lock")).unwrap(),
+        lock_before,
     );
 }

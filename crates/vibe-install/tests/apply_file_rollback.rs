@@ -1,4 +1,4 @@
-//! Actual apply rollback ownership probes through the ordinary pre-install hook.
+//! Actual apply rollback ownership probes through an ordinary pre-install slot script.
 #![cfg(unix)]
 specmark::scope!("spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-007#APPLY-FILE-UNDO");
 use serde_json::{Value, json};
@@ -7,16 +7,16 @@ use std::fs;
 use std::os::unix::fs::{MetadataExt, symlink};
 use std::path::{Path, PathBuf};
 use vibe_core::manifest::{CURRENT_SCHEMA_VERSION, Manifest};
-use vibe_core::trust::TrustPolicy;
 use vibe_core::user_config::SlotIntegrity;
 use vibe_core::{Group, PackageRef};
 use vibe_install::{InstallRequest, InstallSource, NullObserver, Plan};
 use vibe_registry::{CachedPackage, InPlaceMaterialised, RegistryError, ResolvedPackage};
 use vibe_resolver::{FeatureRequest, ResolvedGraph, ResolvedNode, SolveError};
-use vibe_workspace::hooks::HookPolicy;
 
 #[path = "support/retained.rs"]
 mod retained;
+#[path = "support/slot_apply.rs"]
+mod slot_apply;
 const BEFORE: &str = "[project]\nname='rollback-probe'\nversion='0.1.0'\n";
 const FAILURE_EXIT: i32 = 37;
 const PACKAGE: &str = "[package]\ngroup='org.vibevm'\nname='giant'\nversion='1.0.0'\nkind='feat'\n";
@@ -241,12 +241,6 @@ fn write(root: &Path, name: impl AsRef<Path>, body: &str) {
 fn shell_quote(value: &str) -> String {
     format!("'{}'", value.replace('\'', "'\"'\"'"))
 }
-fn hook_policy() -> HookPolicy {
-    HookPolicy {
-        trust: TrustPolicy::trusting(["org.vibevm"]).unwrap(),
-        allow_hooks: false,
-    }
-}
 fn prepared(case: Case) -> (tempfile::TempDir, Source, Box<vibe_install::PlannedInstall>) {
     let temp = tempfile::tempdir().unwrap();
     let root = temp.path();
@@ -260,7 +254,15 @@ fn prepared(case: Case) -> (tempfile::TempDir, Source, Box<vibe_install::Planned
     );
     write(root, "hook-fixture-marker", "exact rollback fixture");
     let cache = tempfile::tempdir().unwrap();
-    let declaration = format!("{PACKAGE}\n[hooks]\npre-install='hooks/interleave'\n");
+    let declaration = format!(
+        "{PACKAGE}{}",
+        slot_apply::script_row(
+            "org.vibevm/giant",
+            "interleave",
+            "pre-install",
+            "hooks/interleave"
+        )
+    );
     let package = cache.path().join(GIANT_DIR);
     write(&package, "vibe.toml", &declaration);
     write(&package, "payload.txt", "actual cached copy source");
@@ -300,44 +302,24 @@ fn prepared(case: Case) -> (tempfile::TempDir, Source, Box<vibe_install::Planned
     (temp, source, planned)
 }
 fn assert_hook_failure(error: &vibe_install::Error) {
-    fn workspace_code(error: &vibe_workspace::WorkspaceError) -> Option<i32> {
-        match error {
-            vibe_workspace::WorkspaceError::Hook(
-                vibe_workspace::hooks::HookError::PreInstallFailed { code, .. },
-            ) => Some(*code),
-            vibe_workspace::WorkspaceError::InstallRollback { primary, .. } => {
-                workspace_code(primary)
-            }
-            _ => None,
-        }
-    }
-    fn code(error: &vibe_install::Error) -> Option<i32> {
-        match error {
-            vibe_install::Error::Workspace(error) => workspace_code(error),
-            vibe_install::Error::RollbackFailed { primary, .. } => code(primary),
-            vibe_install::Error::SlotFailed { source, .. } => code(source),
-            _ => None,
-        }
-    }
-    assert_eq!(
-        code(error),
-        Some(FAILURE_EXIT),
-        "original typed hook failure must survive: {error}"
+    let (message, _) = slot_apply::slot_failure(error);
+    assert!(
+        message.contains(&format!("{FAILURE_EXIT}")),
+        "the script's own exit status must survive: {message}"
     );
-    assert!(error.to_string().contains("pre-install"));
-    assert!(error.to_string().contains(&format!("exit {FAILURE_EXIT}")));
+    assert!(error.to_string().contains("pre-install"), "{error}");
 }
 fn probe(case: Case) {
     let (temp, source, planned) = prepared(case);
     let root = temp.path();
     let lock = fs::read_to_string(root.join("vibe.lock")).unwrap();
-    let error = match vibe_install::apply(&source, *planned, SlotIntegrity::Verify, &hook_policy())
-    {
-        Ok(_) => panic!("actual pre-install hook error must fail actual apply"),
+    let error = match slot_apply::apply(&source, root, *planned, SlotIntegrity::Verify) {
+        Ok(_) => panic!("actual pre-install script error must fail actual apply"),
         Err(error) => error,
     };
     assert_eq!(source.calls(), 1);
     assert_hook_failure(&error);
+    let error = slot_apply::inner_failure(error);
     assert_eq!(
         matches!(error, vibe_install::Error::RollbackFailed { .. }),
         !matches!(case, Case::Unchanged),

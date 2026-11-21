@@ -11,7 +11,6 @@ use std::path::{Path, PathBuf};
 use semver::Version;
 use tempfile::TempDir;
 use vibe_core::manifest::{Lockfile, Manifest};
-use vibe_core::trust::TrustPolicy;
 use vibe_core::user_config::SlotIntegrity;
 use vibe_core::{Group, PackageRef};
 use vibe_install::{FilteringDepProvider, InstallRequest, InstallSource, NullObserver, Plan};
@@ -20,7 +19,6 @@ use vibe_resolver::{
     DepProvider, DepProviderError, DepSolver, FeatureRequest, ResolvedGraph, ResolvoDepSolver,
     SolveError, VersionEnumerator,
 };
-use vibe_workspace::hooks::HookPolicy;
 
 pub const GROUP: &str = "org.constraints";
 
@@ -283,16 +281,7 @@ impl Fixture {
         let Plan::Ready(plan) = plan else {
             panic!("fixture requires a real apply")
         };
-        vibe_install::apply(
-            &self.source,
-            *plan,
-            SlotIntegrity::Verify,
-            &HookPolicy {
-                trust: TrustPolicy::EMPTY,
-                allow_hooks: false,
-            },
-        )
-        .unwrap();
+        vibe_install::apply(&self.source, *plan, SlotIntegrity::Verify).unwrap();
         self.lock()
     }
 

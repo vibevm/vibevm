@@ -13,6 +13,12 @@ use thiserror::Error;
 
 pub type Result<T, E = Error> = std::result::Result<T, E>;
 
+/// What the manifest wire says when it meets the retired `[hooks]` table.
+/// serde carries a conversion refusal only as text, so the wire emits this
+/// exact sentence and [`Error::parse_toml`] turns it back into
+/// [`Error::RetiredHooksTable`].
+pub(crate) const RETIRED_HOOKS_TABLE: &str = "the package [hooks] table is retired";
+
 /// A TOML diagnostic detached from the parsed source bytes.
 ///
 /// `toml::de::Error` retains the complete input and echoes its source line in
@@ -271,6 +277,20 @@ pub enum Error {
         fix: String,
     },
 
+    /// A manifest still carries the retired package `[hooks]` table. The
+    /// grammar and its runner are gone; the refusal names what replaced them
+    /// so the author can move each script instead of guessing.
+    #[error(
+        "`{path}` declares a `[hooks]` table, which is no longer part of the manifest grammar \
+         (violates spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-020#LEGACY-HOOKS-REMOVED; \
+          fix: delete `[hooks]` and declare each script as an `[[extension]]` contribution with \
+          `point = \"slot:pre-install\"` or `point = \"slot:post-install\"`, \
+          `handler = {{ kind = \"script\", base = \"<script path without extension>\" }}` and \
+          `applies_to = {{ packages = [\"<group>/<name>\"] }}` naming this package, so the script \
+          still runs for its own slot only)"
+    )]
+    RetiredHooksTable { path: PathBuf },
+
     #[error(
         "failed to serialize TOML \
          (violates spec://org.vibevm.core/vibevm/VIBEVM-SPEC#manifest-schema; \
@@ -315,6 +335,9 @@ impl Error {
     /// rejection the parser already describes. Only `message()` and numeric
     /// position survive; the original source-bearing error is dropped.
     pub(crate) fn parse_toml(path: PathBuf, source: toml::de::Error, input: &str) -> Self {
+        if source.message().contains(RETIRED_HOOKS_TABLE) {
+            return Error::RetiredHooksTable { path };
+        }
         let missing_field = source.message().contains("missing field");
         let diagnostic = SafeTomlParseError::new(source, input);
         let fix = if missing_field {

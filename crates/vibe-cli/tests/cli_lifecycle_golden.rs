@@ -454,7 +454,11 @@ fn install_barrier_document_stream_is_pinned_in_full() {
     fs::create_dir_all(package.join("hooks")).unwrap();
     fs::write(
         package.join("vibe.toml"),
-        "[package]\ngroup='org.goldenpkg'\nname='hooked'\nkind='tool'\nversion='0.1.0'\n\n[hooks]\npre-install='hooks/pre'\npost-install='hooks/post'\n",
+        format!(
+            "[package]\ngroup='org.goldenpkg'\nname='hooked'\nkind='tool'\nversion='0.1.0'\n{}{}",
+            common::slot_script("org.goldenpkg/hooked", "pre-install", "hooks/pre"),
+            common::slot_script("org.goldenpkg/hooked", "post-install", "hooks/post")
+        ),
     )
     .unwrap();
     fs::write(package.join("hooks/pre.sh"), "printf 'PRE-RAN\\n'\n").unwrap();
@@ -523,8 +527,8 @@ config = { message = "GOLDEN-INSTALL" }
         r#"[
 {"command":"install:plan","packages":[{"package":"org.goldenpkg/hooked","version":"0.1.0","source_evidence":{"source_url":"<fixture-source>","source_kind":"registry","acquisition":"directory","store_reused":false},"source_candidates":[{"decision":"selected","observation":"available","source_evidence":{"source_url":"<fixture-registry>","source_kind":"registry"},"versions":["0.1.0"]}]}],"hostings":[]},
 {"chain":["validate","install"],"command":"lifecycle:plan","contributions":[
- {"handler":"script","key":"org.goldenpkg/hooked#@vibe/hooks/pre-install@slot(org.goldenpkg/hooked@0.1.0)","phase":"install","point":"slot:pre-install","provider":"org.goldenpkg/hooked","tier":"dependency","reference":"org.goldenpkg/hooked#@vibe/hooks/pre-install","slot_target":{"group":"org.goldenpkg","kind":"tool","name":"hooked","root":"<project>/vibevm/vibedeps/org.goldenpkg.hooked/0.1.0","version":"0.1.0"},"version":"0.1.0"},
- {"handler":"script","key":"org.goldenpkg/hooked#@vibe/hooks/post-install@slot(org.goldenpkg/hooked@0.1.0)","phase":"install","point":"slot:post-install","provider":"org.goldenpkg/hooked","tier":"dependency","reference":"org.goldenpkg/hooked#@vibe/hooks/post-install","slot_target":{"group":"org.goldenpkg","kind":"tool","name":"hooked","root":"<project>/vibevm/vibedeps/org.goldenpkg.hooked/0.1.0","version":"0.1.0"},"version":"0.1.0"}],
+ {"handler":"script","key":"org.goldenpkg/hooked#pre-install@slot(org.goldenpkg/hooked@0.1.0)","phase":"install","point":"slot:pre-install","provider":"org.goldenpkg/hooked","tier":"dependency","reference":"org.goldenpkg/hooked#pre-install","slot_target":{"group":"org.goldenpkg","kind":"tool","name":"hooked","root":"<project>/vibevm/vibedeps/org.goldenpkg.hooked/0.1.0","version":"0.1.0"},"version":"0.1.0"},
+ {"handler":"script","key":"org.goldenpkg/hooked#post-install@slot(org.goldenpkg/hooked@0.1.0)","phase":"install","point":"slot:post-install","provider":"org.goldenpkg/hooked","tier":"dependency","reference":"org.goldenpkg/hooked#post-install","slot_target":{"group":"org.goldenpkg","kind":"tool","name":"hooked","root":"<project>/vibevm/vibedeps/org.goldenpkg.hooked/0.1.0","version":"0.1.0"},"version":"0.1.0"}],
  "notices":[],"requested":"install"},
 {"chain":["validate","install"],"command":"lifecycle:plan","contributions":[
  {"handler":"builtin","key":"org.golden/golden#greet-install","phase":"install","point":"phase:install","provider":"org.golden/golden","tier":"host-declaration","version":"0.1.0"}],
@@ -532,8 +536,8 @@ config = { message = "GOLDEN-INSTALL" }
 {"command":"install:closure-diff","added":["org.goldenpkg/hooked@0.1.0 (root-edge)"],"removed":[],"changed":[],"lanes":[]},
 {"command":"install","complete":true,"materialised":["vibevm/vibedeps/org.goldenpkg.hooked/0.1.0"],"nodes_regenerated":["."],"ok":true,
  "project":"<project>","pruned":[],"skipped":[],"unchanged":false,"contributions":[
- {"handler":"script","key":"org.goldenpkg/hooked#@vibe/hooks/pre-install@slot(org.goldenpkg/hooked@0.1.0)","phase":"install","point":"slot:pre-install","provider":"org.goldenpkg/hooked","status":"ok","tier":"dependency","reference":"org.goldenpkg/hooked#@vibe/hooks/pre-install","slot_target":{"group":"org.goldenpkg","kind":"tool","name":"hooked","root":"<project>/vibevm/vibedeps/org.goldenpkg.hooked/0.1.0","version":"0.1.0"},"stdout":"PRE-RAN\n","version":"0.1.0"},
- {"handler":"script","key":"org.goldenpkg/hooked#@vibe/hooks/post-install@slot(org.goldenpkg/hooked@0.1.0)","phase":"install","point":"slot:post-install","provider":"org.goldenpkg/hooked","status":"ok","tier":"dependency","reference":"org.goldenpkg/hooked#@vibe/hooks/post-install","slot_target":{"group":"org.goldenpkg","kind":"tool","name":"hooked","root":"<project>/vibevm/vibedeps/org.goldenpkg.hooked/0.1.0","version":"0.1.0"},"stdout":"POST-RAN\n","version":"0.1.0"},
+ {"handler":"script","key":"org.goldenpkg/hooked#pre-install@slot(org.goldenpkg/hooked@0.1.0)","phase":"install","point":"slot:pre-install","provider":"org.goldenpkg/hooked","status":"ok","tier":"dependency","reference":"org.goldenpkg/hooked#pre-install","slot_target":{"group":"org.goldenpkg","kind":"tool","name":"hooked","root":"<project>/vibevm/vibedeps/org.goldenpkg.hooked/0.1.0","version":"0.1.0"},"stdout":"PRE-RAN\n","version":"0.1.0"},
+ {"handler":"script","key":"org.goldenpkg/hooked#post-install@slot(org.goldenpkg/hooked@0.1.0)","phase":"install","point":"slot:post-install","provider":"org.goldenpkg/hooked","status":"ok","tier":"dependency","reference":"org.goldenpkg/hooked#post-install","slot_target":{"group":"org.goldenpkg","kind":"tool","name":"hooked","root":"<project>/vibevm/vibedeps/org.goldenpkg.hooked/0.1.0","version":"0.1.0"},"stdout":"POST-RAN\n","version":"0.1.0"},
  {"handler":"builtin","key":"org.golden/golden#greet-install","phase":"install","point":"phase:install","provider":"org.golden/golden","status":"ok","tier":"host-declaration","message":"GOLDEN-INSTALL","version":"0.1.0"}]}]"#,
     );
     // Compare the actual locator to the fixture's source, rather than removing it.

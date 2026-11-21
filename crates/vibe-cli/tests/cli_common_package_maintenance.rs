@@ -121,9 +121,9 @@ impl Fixture {
             ""
         };
         let hooks = if hook {
-            "\n[hooks]\npre-install='hooks/canary'\n"
+            common::slot_script("org.example/maintenance", "pre-install", "hooks/canary")
         } else {
-            ""
+            String::new()
         };
         let text = format!(
             "[package]\ngroup='org.example'\nname='maintenance'\nkind='flow'\nversion='{version}'\n[boot_snippet]\nsource='boot/rules.md'\ncategory='flow'\n{hooks}{configuration}"

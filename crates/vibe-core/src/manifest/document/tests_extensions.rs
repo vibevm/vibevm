@@ -597,3 +597,39 @@ fn programmatic_declarations_revalidate_before_validation_and_serialization() {
     let serialization = toml::to_string_pretty(&manifest).unwrap_err().to_string();
     assert!(serialization.contains("field `auto`"), "{serialization}");
 }
+
+/// The retired `[hooks]` table is refused by name, never read and never
+/// silently dropped: the author is told which declaration replaces it.
+#[test]
+#[verifies("spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-020#LEGACY-HOOKS-REMOVED")]
+fn a_retired_hooks_table_is_refused_naming_slot_contributions() {
+    for table in [
+        "[hooks]\npre-install = \"hooks/prepare\"\n",
+        "[hooks]\npost-install = \"hooks/finalise\"\n",
+        "[hooks]\n",
+    ] {
+        let error = Manifest::parse_str(&format!("{PACKAGE}\n{table}")).unwrap_err();
+        assert!(
+            matches!(error, Error::RetiredHooksTable { .. }),
+            "{table:?} -> {error}"
+        );
+        let message = error.to_string();
+        assert!(message.contains("[[extension]]"), "{message}");
+        assert!(message.contains("slot:pre-install"), "{message}");
+        assert!(message.contains("slot:post-install"), "{message}");
+        assert!(message.contains("applies_to"), "{message}");
+    }
+
+    let dir = tempdir().unwrap();
+    let path = dir.path().join("vibe.toml");
+    fs::write(
+        &path,
+        format!("{PACKAGE}\n[hooks]\npre-install = \"hooks/prepare\"\n"),
+    )
+    .unwrap();
+    let error = Manifest::read(&path).unwrap_err();
+    assert!(
+        matches!(&error, Error::RetiredHooksTable { path: named } if named == &path),
+        "{error}"
+    );
+}

@@ -1,34 +1,16 @@
 #[cfg(test)]
 mod cases {
-    use vibe_core::trust::TrustPolicy;
-
-    use crate::hooks::{HookInvocation, HookPolicy, HookRunner, InterpreterProbe};
     use crate::install::{
-        MaterialiseLifecycle, MaterialiseOptions, materialise_resolution_with_spec_format,
+        MaterialiseOptions, SlotLifecycleMode, materialise_resolution_with_spec_format,
         test_helpers::*,
     };
     use std::{
-        cell::Cell,
         collections::BTreeMap,
         fs,
         path::{Path, PathBuf},
     };
     use vibe_core::{manifest::SpecFormat, user_config::SlotIntegrity};
 
-    struct Probe;
-    impl InterpreterProbe for Probe {
-        fn has(&self, _: &str) -> bool {
-            true
-        }
-    }
-    #[derive(Default)]
-    struct Spy(Cell<usize>);
-    impl HookRunner for Spy {
-        fn run(&self, _: &HookInvocation, _: &Path, _: &[(String, String)]) -> Result<i32, String> {
-            self.0.set(self.0.get() + 1);
-            Ok(0)
-        }
-    }
     fn snapshot(root: &Path) -> BTreeMap<PathBuf, Option<Vec<u8>>> {
         fn walk(root: &Path, directory: &Path, out: &mut BTreeMap<PathBuf, Option<Vec<u8>>>) {
             for entry in fs::read_dir(directory).unwrap() {
@@ -66,13 +48,8 @@ mod cases {
             "ancestor-output",
         ] {
             let root = tempfile::tempdir().unwrap();
-            let (legacy, _legacy) = dep_with_boot(
-                "legacy-hook",
-                "1.0.0",
-                "[hooks]\npre-install='hooks/prepare'\n",
-                "hooks/prepare.sh",
-                "#!/bin/sh\nexit 0\n",
-            );
+            let (earlier, _earlier) =
+                dep_with_boot("earlier", "1.0.0", "", "scripts/prepare.sh", "exit 0\n");
             let (rows, primary, second, target) = match scenario {
                 "valid" => (
                     row("spec/a.md", "text/markdown", "vibe-spec"),
@@ -115,23 +92,15 @@ mod cases {
                 write(source.path(), path, body);
             }
             let before = snapshot(root.path());
-            let spy = Spy::default();
-            let policy = HookPolicy {
-                trust: TrustPolicy::trusting(["org.vibevm"]).unwrap(),
-                allow_hooks: false,
-            };
+            let spy = PreInstallCount::of("earlier");
             let result = materialise_resolution_with_spec_format(
                 root.path(),
-                &[legacy, bad],
+                &[earlier, bad],
                 MaterialiseOptions {
                     slot_integrity: SlotIntegrity::TrustPresence,
                     spec_format: target,
                     slot_verifier: None,
-                    lifecycle: MaterialiseLifecycle::LegacyHooks {
-                        policy: &policy,
-                        probe: &Probe,
-                        runner: &spy,
-                    },
+                    lifecycle: SlotLifecycleMode::Callback(&spy),
                     progress: Default::default(),
                     rollback: None,
                 },
@@ -139,17 +108,17 @@ mod cases {
             if scenario == "valid" {
                 assert!(result.is_ok());
                 assert_eq!(
-                    spy.0.get(),
+                    spy.get(),
                     1,
-                    "positive control must execute the earlier hook"
+                    "positive control must raise the earlier slot event"
                 );
                 continue;
             }
             assert!(result.is_err(), "{scenario}");
             assert_eq!(
-                spy.0.get(),
+                spy.get(),
                 0,
-                "earlier hook ran before {scenario} preflight"
+                "earlier slot event raised before {scenario} preflight"
             );
             assert_eq!(
                 snapshot(root.path()),

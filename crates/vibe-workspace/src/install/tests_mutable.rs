@@ -66,7 +66,6 @@ fn unchanged_mutable_source_skips_when_the_record_hash_matches() {
         &workspace,
         std::slice::from_ref(&dep),
         SlotIntegrity::TrustPresence,
-        None,
     )
     .unwrap();
     let slot = slot(&workspace, &dep);
@@ -77,7 +76,6 @@ fn unchanged_mutable_source_skips_when_the_record_hash_matches() {
         &workspace,
         std::slice::from_ref(&dep),
         SlotIntegrity::TrustPresence,
-        None,
     )
     .unwrap();
 
@@ -107,7 +105,6 @@ fn changed_mutable_source_reconciles_only_changed_payload() {
         &workspace,
         std::slice::from_ref(&dep),
         SlotIntegrity::TrustPresence,
-        None,
     )
     .unwrap();
     let slot = slot(&workspace, &dep);
@@ -126,7 +123,6 @@ fn changed_mutable_source_reconciles_only_changed_payload() {
         &workspace,
         std::slice::from_ref(&dep),
         SlotIntegrity::TrustPresence,
-        None,
     )
     .unwrap();
 
@@ -160,7 +156,6 @@ fn verify_accepts_an_unchanged_mutable_source_only_after_payload_verification() 
         &workspace,
         std::slice::from_ref(&dep),
         SlotIntegrity::TrustPresence,
-        None,
     )
     .unwrap();
 
@@ -169,7 +164,6 @@ fn verify_accepts_an_unchanged_mutable_source_only_after_payload_verification() 
         std::slice::from_ref(&dep),
         SlotIntegrity::Verify,
         Some(&StubVerifier(SlotCheck::Verified)),
-        None,
     )
     .unwrap();
 
@@ -185,7 +179,6 @@ fn verify_heals_payload_drift_even_when_mutable_source_hash_is_unchanged() {
         &workspace,
         std::slice::from_ref(&dep),
         SlotIntegrity::TrustPresence,
-        None,
     )
     .unwrap();
     let payload = slot(&workspace, &dep).join("boot/wal.md");
@@ -199,7 +192,6 @@ fn verify_heals_payload_drift_even_when_mutable_source_hash_is_unchanged() {
             expected: "sha256:recorded".to_string(),
             actual: "sha256:drifted".to_string(),
         })),
-        None,
     )
     .unwrap();
 

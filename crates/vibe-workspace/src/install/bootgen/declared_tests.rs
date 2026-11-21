@@ -76,7 +76,6 @@ mod cases {
             vibe_core::user_config::SlotIntegrity::Verify,
             format,
             None,
-            None,
         )
         .unwrap();
     }

@@ -132,7 +132,6 @@ fn installed(activated: bool) -> (TempDir, TempDir) {
         SlotIntegrity::TrustPresence,
         SpecFormat::Xml,
         None,
-        None,
     )
     .expect("the install applies");
     publish_lock(ws_dir.path());
@@ -289,7 +288,6 @@ fn installed_member(activated: bool) -> (TempDir, TempDir) {
         &[dependency],
         SlotIntegrity::TrustPresence,
         SpecFormat::Xml,
-        None,
         None,
     )
     .expect("the install applies");

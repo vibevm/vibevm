@@ -7,7 +7,6 @@ use std::path::{Path, PathBuf};
 
 use tempfile::TempDir;
 use vibe_core::manifest::{Lockfile, Manifest};
-use vibe_core::trust::TrustPolicy;
 use vibe_core::user_config::SlotIntegrity;
 use vibe_core::{Group, PackageRef};
 use vibe_install::{
@@ -18,7 +17,6 @@ use vibe_resolver::{
     DepProvider, DepProviderError, DepSolver, FeatureRequest, ResolvedGraph, ResolvedNode,
     ResolvoDepSolver, SolveError, VersionEnumerator,
 };
-use vibe_workspace::hooks::HookPolicy;
 use vibe_workspace::install::ResolvedDep;
 
 #[path = "support/retained.rs"]
@@ -365,17 +363,7 @@ impl Fixture {
     fn plan_and_apply(&self) -> (Vec<ResolvedDep>, Lockfile) {
         let planned = self.ready();
         let resolution = planned.resolution.clone();
-        let policy = HookPolicy {
-            trust: TrustPolicy::trusting([GROUP]).unwrap(),
-            allow_hooks: false,
-        };
-        vibe_install::apply(
-            &self.source,
-            *planned,
-            SlotIntegrity::TrustPresence,
-            &policy,
-        )
-        .unwrap();
+        vibe_install::apply(&self.source, *planned, SlotIntegrity::TrustPresence).unwrap();
         let lock = Lockfile::read(self.root.join(Lockfile::FILENAME)).unwrap();
         (resolution, lock)
     }

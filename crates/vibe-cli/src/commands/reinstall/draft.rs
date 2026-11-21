@@ -23,7 +23,7 @@ use vibe_wire::generated::reinstall_report::{
 };
 use vibe_wire::generated::shared::CompileTraceReport;
 
-use crate::commands::install::{HookReportPresentation, LifecycleHookView};
+use crate::commands::install::LifecycleHookView;
 use crate::output;
 
 /// Which invocation this document belongs to.
@@ -167,7 +167,7 @@ impl ReinstallDraft {
             let hooks = LifecycleHookView::new(&rows);
             ctx.summary(&format!(
                 "vibe reinstall: boot artifacts regenerated for {nodes} node{plural}{}{quiet_suffix}",
-                HookReportPresentation::quiet_suffix(&hooks),
+                hooks.quiet_suffix(),
             ));
             return Ok(());
         }
