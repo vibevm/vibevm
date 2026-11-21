@@ -75,7 +75,7 @@ fn pi_exact_supplier_platform_selection_preserves_linux_and_refuses_mismatch() {
 
 #[test]
 fn codex_and_qwen_exact_macos_options_preserve_linux_and_refuse_cross_target_ids() {
-    for (text, name, source, digest, root, executable, linux_id) in [
+    for (text, name, source, digest, root, executable, linux_id, macos_x64) in [
         (
             include_str!("../../../vibevm/vibepacks/org.vibevm.agents/codex/v0.170.0/vibe.toml"),
             "codex",
@@ -84,6 +84,7 @@ fn codex_and_qwen_exact_macos_options_preserve_linux_and_refuse_cross_target_ids
             None,
             "$app_root/codex-aarch64-apple-darwin",
             "linux-x64-musl",
+            None,
         ),
         (
             include_str!("../../../vibevm/vibepacks/org.vibevm.agents/qwen/v0.28.0/vibe.toml"),
@@ -93,10 +94,23 @@ fn codex_and_qwen_exact_macos_options_preserve_linux_and_refuse_cross_target_ids
             Some(std::path::Path::new("qwen-code")),
             "$app_bin/qwen",
             "linux-x64-standalone",
+            Some((
+                "https://github.com/QwenLM/qwen-code/releases/download/v0.28.0/qwen-code-darwin-x64.tar.gz",
+                "21aa2ca8c740e4499586d8d70ff31aab967553e10af522d0b246f03344c09020",
+            )),
         ),
     ] {
         let manifest = Manifest::parse_str(text).unwrap();
-        assert_eq!(manifest.installer_options.len(), 3);
+        let mut expected_ids = vec![linux_id, "macos-arm64-standalone", "windows-x64-standalone"];
+        if macos_x64.is_some() {
+            expected_ids.push("macos-x64-standalone");
+        }
+        let actual_ids: Vec<&str> = manifest
+            .installer_options
+            .iter()
+            .map(|option| option.id.as_str())
+            .collect();
+        assert_eq!(actual_ids, expected_ids);
         let choice = InstallChoice {
             platform: Some("macos".into()),
             arch: Some("aarch64".into()),
@@ -128,26 +142,60 @@ fn codex_and_qwen_exact_macos_options_preserve_linux_and_refuse_cross_target_ids
                 .id,
             linux_id
         );
-        for rejected in [
+        let intel = InstallChoice {
+            platform: Some("macos".into()),
+            arch: Some("x86_64".into()),
+            installer: None,
+        };
+        let mut rejected = vec![
             InstallChoice {
                 platform: Some("windows".into()),
                 arch: Some("aarch64".into()),
                 installer: None,
             },
             InstallChoice {
-                platform: Some("macos".into()),
-                arch: Some("x86_64".into()),
-                installer: None,
-            },
-            InstallChoice {
                 installer: Some(linux_id.into()),
-                ..choice
+                ..choice.clone()
             },
             InstallChoice {
                 installer: Some("macos-arm64-standalone".into()),
-                ..linux
+                ..linux.clone()
             },
-        ] {
+            InstallChoice {
+                installer: Some("macos-arm64-standalone".into()),
+                ..intel.clone()
+            },
+        ];
+        if let Some((intel_source, intel_digest)) = macos_x64 {
+            let selected = select_option(&manifest.installer_options, &intel, None).unwrap();
+            assert_eq!(selected.id, "macos-x64-standalone");
+            let Some(InstallerMethod::TarGz {
+                source: actual,
+                sha256,
+                payload_root,
+            }) = selected.installation
+            else {
+                panic!("expected exact supplier tar.gz owner");
+            };
+            assert_eq!(actual, intel_source);
+            assert_eq!(sha256, intel_digest);
+            assert_eq!(payload_root.as_deref(), root);
+            assert_eq!(selected.launchers[0].executable, executable);
+            assert_eq!(selected.public_commands[0].name, name);
+            rejected.extend([
+                InstallChoice {
+                    installer: Some("macos-x64-standalone".into()),
+                    ..choice
+                },
+                InstallChoice {
+                    installer: Some("macos-x64-standalone".into()),
+                    ..linux
+                },
+            ]);
+        } else {
+            rejected.push(intel);
+        }
+        for rejected in rejected {
             assert!(select_option(&manifest.installer_options, &rejected, None).is_err());
         }
     }
