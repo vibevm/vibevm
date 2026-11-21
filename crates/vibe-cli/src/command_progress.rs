@@ -19,6 +19,7 @@ use vibe_core::progress::{Progress, ProgressTask};
 pub(crate) const TOP_LEVEL_COMMANDS: &[&str] = &[
     "agent",
     "agentic",
+    "ai",
     "aiui",
     "app",
     "artifacts",
@@ -42,6 +43,7 @@ pub(crate) const TOP_LEVEL_COMMANDS: &[&str] = &[
     "hook",
     "init",
     "install",
+    "kit",
     "list",
     "mcp",
     "outdated",
@@ -58,6 +60,7 @@ pub(crate) const TOP_LEVEL_COMMANDS: &[&str] = &[
     "run",
     "scrape",
     "search",
+    "secrets",
     "select",
     "self",
     "shell",

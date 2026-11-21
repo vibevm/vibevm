@@ -130,6 +130,10 @@ fn fast_metadata_is_silent_while_passthrough_commands_allow_plain_stages() {
         // PROP-074 `#USER-PROJECT-ROOT-GRAMMAR`: one directory chain and
         // one file at most — no phase worth a progress root.
         &["vibe", "user", "status"][..],
+        // Local metadata stores whose answer is the whole output; a keyring
+        // value may arrive on stdin, so nothing may draw beside either.
+        &["vibe", "ai", "connections", "list"][..],
+        &["vibe", "secrets", "list"][..],
     ] {
         let policy = parsed_policy(argv, true);
         assert_eq!(policy.progress_mode(true, false), ProgressMode::Disabled);
@@ -211,6 +215,7 @@ fn finite_fallback_is_plain_and_uses_only_typed_safe_names() {
         &["vibe", "friends", "org.example/package"][..],
         &["vibe", "tools"][..],
         &["vibe", "bin", "list"][..],
+        &["vibe", "kit", "init"][..],
     ] {
         assert!(
             matches!(parsed_policy(argv, true), CommandPolicy::FiniteFallback(_)),

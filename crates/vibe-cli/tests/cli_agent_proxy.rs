@@ -2,6 +2,7 @@
 #![cfg(target_os = "linux")]
 mod common;
 use common::UserScratch;
+use std::os::unix::fs::PermissionsExt;
 use std::path::Path;
 use std::time::{Duration, Instant};
 
@@ -59,6 +60,30 @@ fn pi_managed_route_preserves_arguments_status_and_reaps_px_on_spawn_failure() {
         "[launchers.pi]\nkind='pi'\ncommand=['/no-such-owned-pi']\n",
     )
     .unwrap();
+    let missing = user
+        .vibe()
+        .current_dir(root.path())
+        .env("FAKE_PX_LOG", &log)
+        .args(["agent", "pi"])
+        .output()
+        .unwrap();
+    assert!(!missing.status.success());
+    // A launcher whose executable is absent is refused before any route is
+    // selected, so it contributes no px start to the count asserted below.
+    assert!(String::from_utf8_lossy(&missing.stderr).contains("selected launcher unavailable"));
+    // A launcher that is present but cannot be started passes that check and
+    // fails at spawn, after the managed px is up: the px must still be reaped.
+    let unspawnable = root.path().join("owned-pi");
+    std::fs::write(&unspawnable, "").unwrap();
+    std::fs::set_permissions(&unspawnable, std::fs::Permissions::from_mode(0o644)).unwrap();
+    std::fs::write(
+        user.settings.join("agents.toml"),
+        format!(
+            "[launchers.pi]\nkind='pi'\ncommand=['{}']\n",
+            unspawnable.display()
+        ),
+    )
+    .unwrap();
     let refused = user
         .vibe()
         .current_dir(root.path())
@@ -67,6 +92,12 @@ fn pi_managed_route_preserves_arguments_status_and_reaps_px_on_spawn_failure() {
         .output()
         .unwrap();
     assert!(!refused.status.success());
+    assert!(
+        String::from_utf8_lossy(&refused.stderr)
+            .contains("starting agent with the selected managed proxy"),
+        "{}",
+        String::from_utf8_lossy(&refused.stderr)
+    );
     // A configured corporate route must never silently become unproxied
     // execution for an adapter outside this first qualified identity.
     std::fs::write(
