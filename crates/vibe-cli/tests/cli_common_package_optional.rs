@@ -440,3 +440,5 @@ mod workspace;
 
 #[path = "cli_common_package_optional/default_review.rs"]
 mod default_review;
+#[path = "cli_common_package_optional/guarded_gate_drift.rs"]
+mod guarded_gate_drift;
