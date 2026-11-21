@@ -15,7 +15,11 @@ impl NativeSettingsAdapter for QwenSettingsAdapter {
         home: &Path,
         connection: &SecretId,
     ) -> Result<Self::Preview, Error> {
-        store.details(connection)?.metadata.validate()?;
+        let metadata = store.details(connection)?.metadata;
+        metadata.validate()?;
+        if !self.supports(&metadata.api_kind) {
+            return Err(Error::Invalid);
+        }
         Ok(store.0.preview_qwen_native_settings(home, connection)?)
     }
     fn apply(

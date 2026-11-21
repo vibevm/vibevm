@@ -69,10 +69,7 @@ impl Store {
         let mut identities = std::collections::BTreeSet::new();
         for harness in aliases.values() {
             if !identities.insert(harness)
-                || !matches!(
-                    metadata_capability(harness),
-                    MetadataCapability::Compatible { .. }
-                )
+                || !matches!(metadata_capability(harness), MetadataCapability::Compatible { .. })
             {
                 return Err(Error::Invalid);
             }
@@ -96,6 +93,8 @@ impl Store {
                     .map_err(|_| Error::Metadata)?;
             metadata.validate()?;
         }
+        let selected_metadata = snapshot_metadata(&snapshot, &target)?;
+        if identities.iter().any(|harness| !metadata_supports(harness, &selected_metadata.api_kind)) { return Err(Error::Invalid); }
         let canonical = self.1.canonicalize().map_err(|_| Error::Invalid)?;
         if canonical != self.1 {
             return Err(Error::Invalid);

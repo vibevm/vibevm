@@ -39,7 +39,19 @@ pub(crate) fn run(
                 ],
             },
         ),
-        _ => bail!("native settings require exactly one supported --agent pi or --agent qwen"),
+        [agent] if agent == "codex" => run_adapter(
+            ctx,
+            store,
+            connection,
+            response,
+            cancel,
+            vibe_connections::CodexSettingsAdapter,
+            NativeTarget {
+                destination: "HOME/.codex/config.toml",
+                overrides: &["CODEX_HOME"],
+            },
+        ),
+        _ => bail!("native settings require exactly one supported --agent pi, qwen or codex"),
     }
 }
 struct NativeTarget {

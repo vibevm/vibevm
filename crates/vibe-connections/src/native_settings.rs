@@ -15,6 +15,14 @@ impl NativeSettingsPreview for vibe_secrets::QwenNativePreview {
     }
 }
 
+impl NativeSettingsPreview for vibe_secrets::CodexNativePreview {
+    fn preview_id(&self) -> &str {
+        self.preview_id()
+    }
+}
+mod codex;
+pub use codex::CodexSettingsAdapter;
+
 pub trait NativeSettingsAdapter {
     type Preview: NativeSettingsPreview;
     fn id(&self) -> &'static str;
@@ -48,7 +56,11 @@ impl NativeSettingsAdapter for PiSettingsAdapter {
         home: &Path,
         connection: &SecretId,
     ) -> Result<Self::Preview, Error> {
-        store.details(connection)?.metadata.validate()?;
+        let metadata = store.details(connection)?.metadata;
+        metadata.validate()?;
+        if !self.supports(&metadata.api_kind) {
+            return Err(Error::Invalid);
+        }
         Ok(store.0.preview_pi_native_settings(home, connection)?)
     }
     fn apply(

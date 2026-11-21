@@ -37,7 +37,8 @@
         "agent": {
           "enum": [
             "pi",
-            "qwen"
+            "qwen",
+            "codex"
           ]
         },
         "connection": {
@@ -52,12 +53,13 @@
         "destination": {
           "enum": [
             "HOME/.pi/agent/models.json",
-            "HOME/.qwen/settings.json"
+            "HOME/.qwen/settings.json",
+            "HOME/.codex/config.toml"
           ]
         },
         "preview_id": {
           "type": "string",
-          "pattern": "^(pi|qwen)-native-settings/1:sha256:[0-9a-f]{64}$"
+          "pattern": "^(pi|qwen|codex)-native-settings/1:sha256:[0-9a-f]{64}$"
         }
       }
     }

@@ -51,6 +51,12 @@ impl Store {
                 }
             }
         }
+        let checked = ReferenceSnapshot {
+            index: proposed.clone(),
+            index_sha256: snapshot.index_sha256,
+            metadata: snapshot.metadata,
+        };
+        compatibility::all(&checked)?;
         if proposed == original {
             return Ok(original);
         }

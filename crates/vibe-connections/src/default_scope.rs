@@ -82,6 +82,12 @@ impl Store {
             } else {
                 old_connection.clone()
             };
+            if let Some(id) = &proposed_connection {
+                let metadata = snapshot_metadata(&snapshot, id)?;
+                if !metadata_supports(harness, &metadata.api_kind) {
+                    return Err(Error::Invalid);
+                }
+            }
             rows.push(DefaultScopeRow {
                 harness: harness.into(),
                 old_mode: old_mode.into(),

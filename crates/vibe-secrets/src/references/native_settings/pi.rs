@@ -50,6 +50,10 @@ fn native(home: &Path, kind: super::Kind) -> Result<(Project, Pinned), Error> {
             .private_child("agent", false)
             .map_err(|_| Error::Unavailable)?
             .ok_or(Error::Unavailable)?,
+        super::Kind::Codex => home_dir
+            .private_child(".codex", false)
+            .map_err(|_| Error::Unavailable)?
+            .ok_or(Error::Unavailable)?,
         super::Kind::Qwen => home_dir
             .private_child(".qwen", false)
             .map_err(|_| Error::Unavailable)?
@@ -62,7 +66,7 @@ fn config(dir: &Pinned, kind: super::Kind) -> Result<Option<Vec<u8>>, Error> {
         .map_err(|_| Error::Unavailable)
 }
 fn auth_witness(dir: &Pinned, kind: super::Kind) -> Result<Option<String>, Error> {
-    if kind == super::Kind::Qwen {
+    if kind != super::Kind::Pi {
         return Ok(None);
     }
     let bytes = dir
@@ -82,12 +86,21 @@ fn auth_witness(dir: &Pinned, kind: super::Kind) -> Result<Option<String>, Error
 fn witness(bytes: &Option<Vec<u8>>) -> Option<String> {
     bytes.as_ref().map(|b| digest(b))
 }
-fn endpoint_model(snapshot: &ReferenceSnapshot, id: &SecretId) -> Result<(String, String), Error> {
+fn endpoint_model(
+    snapshot: &ReferenceSnapshot,
+    id: &SecretId,
+    kind: super::Kind,
+) -> Result<(String, String), Error> {
     let bytes = snapshot.metadata.get(id).ok_or(Error::NotFound)?;
     let metadata: toml::Value =
         toml::from_str(std::str::from_utf8(bytes).map_err(|_| Error::Invalid)?)
             .map_err(|_| Error::Invalid)?;
-    if metadata.get("api_kind").and_then(toml::Value::as_str) != Some("openai-chat-completions") {
+    let required = if kind == super::Kind::Codex {
+        "openai-responses"
+    } else {
+        "openai-chat-completions"
+    };
+    if metadata.get("api_kind").and_then(toml::Value::as_str) != Some(required) {
         return Err(Error::Invalid);
     }
     let endpoint = metadata
@@ -171,7 +184,7 @@ impl Store {
             return Err(Error::Unavailable);
         }
         let snapshot = self.reference_snapshot("ai")?;
-        endpoint_model(&snapshot, connection)?;
+        endpoint_model(&snapshot, connection, kind)?;
         let row = snapshot
             .index
             .items
@@ -186,6 +199,7 @@ impl Store {
                 document(&bytes)?;
             }
             super::Kind::Qwen => super::qwen::validate(&bytes)?,
+            super::Kind::Codex => super::codex::validate(&bytes)?,
         }
         let native_digest = witness(&bytes);
         let auth_digest = auth_witness(&dir, kind)?;
@@ -305,7 +319,7 @@ impl Store {
         {
             return Err(Error::Conflict);
         }
-        let (endpoint, model) = endpoint_model(&snapshot, &preview.connection)?;
+        let (endpoint, model) = endpoint_model(&snapshot, &preview.connection, preview.kind)?;
         let (native_project, dir) = native(&preview.home, preview.kind)?;
         if dir.identity().map_err(|_| Error::Unavailable)? != preview.native_identity {
             return Err(Error::Conflict);
@@ -324,6 +338,7 @@ impl Store {
                 document(&before)?;
             }
             super::Kind::Qwen => super::qwen::validate(&before)?,
+            super::Kind::Codex => super::codex::validate(&before)?,
         }
         // Resolve only after all operation, revision, target and protection checks.
         let revision = open_revision(&root, &preview.key, &item.current_revision, false)?;
@@ -338,6 +353,7 @@ impl Store {
         let bytes = match preview.kind {
             super::Kind::Pi => merge_pi(&before, &endpoint, &model, secret)?,
             super::Kind::Qwen => super::qwen::merge(&before, &endpoint, &model, secret)?,
+            super::Kind::Codex => super::codex::merge(&before, &endpoint, &model, secret)?,
         };
         let Some(bytes) = bytes else {
             return Ok(false);

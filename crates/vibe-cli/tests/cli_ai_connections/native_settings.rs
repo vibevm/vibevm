@@ -192,3 +192,111 @@ fn explicit_native_qwen_preserves_comments_and_refuses_shadowing_or_trailing_com
         assert_eq!(fs::read(&path).unwrap(), unsafe_input);
     }
 }
+
+#[test]
+fn codex_explicit_native_responses_preserves_toml_and_refuses_chat() {
+    let f = F::new();
+    let dir = f.0.path().join(".codex");
+    fs::create_dir(&dir).unwrap();
+    fs::set_permissions(&dir, fs::Permissions::from_mode(0o700)).unwrap();
+    let path = dir.join("config.toml");
+    fs::write(
+        &path,
+        b"# keep\nmodel='old'\n[model_providers.neighbor]\nname='keep'\n",
+    )
+    .unwrap();
+    fs::set_permissions(&path, fs::Permissions::from_mode(0o600)).unwrap();
+    let secret = f.json(
+        &[
+            "secrets",
+            "create",
+            "--kind",
+            "api-key",
+            "--label",
+            "Synthetic",
+            "--value-stdin",
+        ],
+        Some(VALUE.as_bytes()),
+    );
+    let key = secret["items"][0]["id"].as_str().unwrap();
+    let add = |kind: &str| {
+        f.json(
+            &[
+                "ai",
+                "connections",
+                "add",
+                "--label",
+                kind,
+                "--endpoint",
+                "http://127.0.0.1:9/v1",
+                "--api-kind",
+                kind,
+                "--default-model",
+                "sentinel",
+                "--secret-ref",
+                key,
+            ],
+            None,
+        )
+    };
+    let responses = add("openai-responses");
+    let rid = responses["items"]
+        .as_object()
+        .unwrap()
+        .keys()
+        .next()
+        .unwrap();
+    let chat = add("openai-chat-completions");
+    let cid = chat["items"]
+        .as_object()
+        .unwrap()
+        .iter()
+        .find(|(_, v)| v["metadata"]["api_kind"] == "openai-chat-completions")
+        .unwrap()
+        .0;
+    let before = fs::read(&path).unwrap();
+    assert!(
+        !f.run(
+            &[
+                "ai",
+                "setup",
+                "--native-settings",
+                "--agent",
+                "codex",
+                "--connection",
+                cid
+            ],
+            None
+        )
+        .status
+        .success()
+    );
+    assert_eq!(fs::read(&path).unwrap(), before);
+    let args = [
+        "ai",
+        "setup",
+        "--native-settings",
+        "--agent",
+        "codex",
+        "--connection",
+        rid,
+    ];
+    let p = f.json(&args, None);
+    assert_eq!(fs::read(&path).unwrap(), before);
+    let mut apply = args.to_vec();
+    apply.extend([
+        "--apply-preview",
+        p["preview"]["preview_id"].as_str().unwrap(),
+    ]);
+    assert_eq!(f.json(&apply, None)["changed"], true);
+    let after = fs::read(&path).unwrap();
+    assert!(after.starts_with(b"# keep"));
+    let p = f.json(&args, None);
+    let mut noop = args.to_vec();
+    noop.extend([
+        "--apply-preview",
+        p["preview"]["preview_id"].as_str().unwrap(),
+    ]);
+    assert_eq!(f.json(&noop, None)["changed"], false);
+    assert_eq!(fs::read(&path).unwrap(), after);
+}

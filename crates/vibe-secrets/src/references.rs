@@ -3,8 +3,10 @@ use super::*;
 use sha2::{Digest, Sha256};
 const LIMIT: usize = 1024 * 1024;
 mod default_scope;
+mod compatibility;
 mod native_settings;
-pub use native_settings::{PiNativePreview, QwenNativePreview};
+pub use native_settings::{CodexNativePreview, PiNativePreview, QwenNativePreview};
+
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq)]
 #[serde(deny_unknown_fields)]
 pub struct ReferenceRow {
@@ -404,11 +406,10 @@ impl Store {
         }
         snapshot.index.schema = snapshot.index.schema.max(2);
         snapshot.index.selection = Some(match selected {
-            Some(id) => ReferenceSelection::Selected {
-                connection: id.clone(),
-            },
+            Some(id) => ReferenceSelection::Selected { connection: id.clone() },
             None => ReferenceSelection::None,
         });
+        compatibility::all(&snapshot)?;
         snapshot.index.store_revision = snapshot
             .index
             .store_revision
@@ -429,10 +430,7 @@ impl Store {
         expected: u64,
     ) -> Result<ReferenceIndex, Error> {
         owner(participant)?;
-        if !matches!(
-            harness,
-            "claude" | "codex" | "opencode" | "qwen" | "hermes" | "pi"
-        ) {
+        if !matches!(harness, "claude" | "codex" | "opencode" | "qwen" | "hermes" | "pi") {
             return Err(Error::Invalid);
         }
         if binding.is_some() && !matches!(harness, "pi" | "qwen") {
@@ -483,6 +481,7 @@ impl Store {
         {
             return Err(Error::NotFound);
         }
+        if let Some(binding) = &binding { compatibility::binding_api(&snapshot, harness, binding)?; }
         let current = snapshot
             .index
             .bindings
@@ -556,7 +555,7 @@ impl Store {
         if snapshot.index_sha256 != expected_digest {
             return Err(Error::Conflict);
         }
-        for binding in edits.values() {
+        for (harness, binding) in edits {
             let id = match binding {
                 ReferenceBinding::Connection { connection } => connection,
                 ReferenceBinding::InheritDefault => match &snapshot.index.selection {
@@ -568,6 +567,7 @@ impl Store {
             if !store.items.contains_key(&row.secret_ref) {
                 return Err(Error::RefusedUnknown);
             }
+            compatibility::binding_api(&snapshot, harness, binding)?;
         }
         let mut proposed = snapshot.index;
         let changed = edits
@@ -618,7 +618,7 @@ mod tests {
                 ProtectedValue::new(b"SYNTHETIC".to_vec()).unwrap(),
             )
             .unwrap();
-        let connection = store.create_reference("ai", &key, b"metadata").unwrap();
+        let connection = store.create_reference("ai", &key, b"api_kind = 'openai-chat-completions'\n").unwrap();
         let snapshot = store.reference_snapshot("ai").unwrap();
         let path = dir.path().join("secrets/ai/index.toml");
         let before = std::fs::read(&path).unwrap();

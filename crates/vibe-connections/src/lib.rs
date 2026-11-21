@@ -29,7 +29,7 @@ impl Metadata {
                 return Err(Error::Invalid);
             }
         }
-        if self.api_kind != "openai-chat-completions"
+        if !matches!(self.api_kind.as_str(), "openai-chat-completions" | "openai-responses")
             || self.endpoint.len() > 4096
             || self.endpoint.chars().any(char::is_control)
         {
@@ -140,6 +140,7 @@ impl Store {
         Ok(selection(snapshot.index))
     }
     pub fn set_default(&self, id: &SecretId, expected: u64) -> Result<DefaultSelection, Error> {
+        self.default_scope_preview(id, DefaultScope::DefaultOnly)?;
         Ok(selection(self.0.select_reference(
             "ai",
             Some(id),
@@ -162,6 +163,15 @@ pub enum MetadataCapability {
     },
     Unsupported,
     Unknown,
+}
+fn metadata_supports(harness: &str, api_kind: &str) -> bool {
+    matches!(metadata_capability(harness), MetadataCapability::Compatible { protocol, .. } if protocol == api_kind)
+}
+fn snapshot_metadata(snapshot: &vibe_secrets::ReferenceSnapshot, id: &SecretId) -> Result<Metadata, Error> {
+    let bytes = snapshot.metadata.get(id).ok_or(Error::Metadata)?;
+    let metadata: Metadata = toml::from_str(std::str::from_utf8(bytes).map_err(|_| Error::Metadata)?).map_err(|_| Error::Metadata)?;
+    metadata.validate()?;
+    Ok(metadata)
 }
 pub fn metadata_capability(harness: &str) -> MetadataCapability {
     match harness {
@@ -190,10 +200,7 @@ pub struct BindingObservation {
 }
 impl Store {
     pub fn binding(&self, harness: &str) -> Result<BindingObservation, Error> {
-        if !matches!(
-            harness,
-            "claude" | "codex" | "opencode" | "qwen" | "hermes" | "pi"
-        ) {
+        if !matches!(harness, "claude" | "codex" | "opencode" | "qwen" | "hermes" | "pi") {
             return Err(Error::Invalid);
         }
         let snapshot = self.0.reference_snapshot("ai")?;
@@ -229,6 +236,8 @@ impl Store {
             mode: mode.into(),
             resolution: if mode == "native" {
                 "unmanaged"
+            } else if connection.as_ref().is_some_and(|id| snapshot_metadata(&snapshot, id).is_ok_and(|m| !metadata_supports(harness, &m.api_kind))) {
+                "unavailable: incompatible connection API"
             } else if connection.is_some() {
                 "metadata-only"
             } else {
@@ -245,13 +254,16 @@ impl Store {
         binding: Option<vibe_secrets::ReferenceBinding>,
         expected: u64,
     ) -> Result<BindingObservation, Error> {
-        if binding.is_some()
-            && !matches!(
-                metadata_capability(harness),
-                MetadataCapability::Compatible { .. }
-            )
+        if binding.is_some() && !matches!(metadata_capability(harness), MetadataCapability::Compatible { .. })
         {
             return Err(Error::Invalid);
+        }
+        if let Some(binding) = &binding {
+            let target = match binding {
+                vibe_secrets::ReferenceBinding::Connection { connection } => Some(connection.clone()),
+                vibe_secrets::ReferenceBinding::InheritDefault => self.default_selection()?.connection,
+            };
+            if let Some(target) = target && !metadata_supports(harness, &self.details(&target)?.metadata.api_kind) { return Err(Error::Invalid); }
         }
         self.0.bind_reference("ai", harness, binding, expected)?;
         self.binding(harness)
@@ -262,6 +274,5 @@ mod setup;
 pub use setup::{SetupPreview, SetupRow};
 mod default_scope;
 pub use default_scope::{DefaultScope, DefaultScopePreview, DefaultScopeRow};
-
 mod native_settings;
-pub use native_settings::{NativeSettingsAdapter, NativeSettingsPreview, PiSettingsAdapter, QwenSettingsAdapter};
+pub use native_settings::{CodexSettingsAdapter, NativeSettingsAdapter, NativeSettingsPreview, PiSettingsAdapter, QwenSettingsAdapter};
