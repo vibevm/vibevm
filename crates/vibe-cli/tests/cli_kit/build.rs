@@ -1,4 +1,11 @@
 //! Producer output is the actual bootstrap consumer subject, never a hand kit.
+//!
+//! The native consumer and historical-input cases read retained artifacts that
+//! live outside the repository, so they are `#[ignore]`d and run with
+//! `cargo test -- --ignored` once these are set: `NST_KIT_INSTALLER` (native
+//! installer), `NST_KIT_OLD_CLI` (1.0.11 `vibe`), `NST_KIT_PRIOR_CLI` (prior
+//! recipe-reading `vibe`) and `NST_KIT_HISTORICAL_INPUTS` (directory of admitted
+//! Windows and macOS bundles and installers).
 use super::*;
 use std::io::{Cursor, Write};
 use vibe_wire::behaviour::release_manifest::{
@@ -68,6 +75,7 @@ fn versioned_bundle(cli: &[u8], version: &str, index: &[u8]) -> Vec<u8> {
     ])
 }
 #[test]
+#[ignore = "needs NST_KIT_INSTALLER: retained historical native installer outside the repository"]
 #[cfg(target_os = "linux")]
 fn kit_producer_publishes_and_native_consumer_installs_exact_output() {
     use std::os::unix::fs::PermissionsExt;
@@ -217,6 +225,7 @@ fn kit_producer_publishes_and_native_consumer_installs_exact_output() {
 }
 
 #[test]
+#[ignore = "needs NST_KIT_OLD_CLI and NST_KIT_INSTALLER: retained historical 1.0.11 vibe CLI and native installer outside the repository"]
 #[cfg(target_os = "linux")]
 fn produced_kit_native_upgrade_preserves_existing_install_on_corrupt_input() {
     use std::os::unix::fs::PermissionsExt;
@@ -423,6 +432,7 @@ fn produced_kit_native_upgrade_preserves_existing_install_on_corrupt_input() {
 
 /// Linux producer host is distinct from the foreign kit consumer target.
 #[test]
+#[ignore = "needs NST_KIT_HISTORICAL_INPUTS and NST_KIT_PRIOR_CLI: retained historical native kit inputs and vibe CLI outside the repository"]
 #[cfg(target_os = "linux")]
 fn kit_linux_host_produces_exact_historical_windows_and_macos_inputs() {
     use std::os::unix::fs::PermissionsExt;

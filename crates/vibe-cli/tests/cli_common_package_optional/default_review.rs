@@ -1,4 +1,13 @@
 //! Narrow ordinary defaults use shared policy; changed reliance stays closed.
+//!
+//! The prior reader/writer gates run an actual historical `vibe` binary that is
+//! retained outside the repository, so they are `#[ignore]`d and run with
+//! `cargo test -- --ignored` once each variable names its exact executable:
+//! `NST_APP_PREFLIGHT_OLD_CLI`, `NST_FEATURE_DEFAULT_OLD_CLI`,
+//! `NST_GUARDED_DEFAULT_OLD_CLI`, `NST_INTEGER_OLD_CLI`, `NST_INTEGER_V2_OLD_CLI`,
+//! `NST_MULTI_OLD_CLI`, `NST_OPTIONAL_BOOL_OLD_CLI`, `NST_PATH_OLD_CLI`,
+//! `NST_REMAINING_OLD_CLI`, `NST_SUBMITTED_OLD_CLI`, `NST_TEXT_OLD_CLI` and
+//! `NST_WEAK_OLD_CLI`.
 use super::*;
 
 #[test]
@@ -82,6 +91,7 @@ fn ordinary_internal_feature_direct_refusal_and_public_implication() {
 }
 
 #[test]
+#[ignore = "needs NST_OPTIONAL_BOOL_OLD_CLI: retained historical vibe CLI outside the repository"]
 fn ordinary_closure_fallback_actual_install_boundary_and_requires_precedence() {
     for reversed in [false, true] {
         for world in [
@@ -4623,6 +4633,7 @@ fn weak_forwarding_unknown_active_target_and_tampered_lock_refuse() {
 }
 
 #[test]
+#[ignore = "needs NST_WEAK_OLD_CLI: retained historical vibe CLI outside the repository"]
 fn weak_forwarding_prior_reader_writer_preserve_active_dormant_and_unselected() {
     let old = std::env::var_os("NST_WEAK_OLD_CLI")
         .expect("mandatory prior reader/writer gate requires an explicitly mounted pre-weak CLI");
@@ -5448,6 +5459,7 @@ fn member_set_v2_review_actual_preview_apply_and_refusals() {
 }
 
 #[test]
+#[ignore = "needs NST_MULTI_OLD_CLI: retained historical vibe CLI outside the repository"]
 fn zero_or_more_prior_reader_writer_refuse_new_basis_and_preserve_scalar_bytes() {
     let old = std::env::var_os("NST_MULTI_OLD_CLI")
         .expect("mandatory multi-default prior CLI must be explicitly mounted");
@@ -5880,6 +5892,7 @@ fn remaining_defaults_optional_empty_absent_matching_and_tamper() {
 }
 
 #[test]
+#[ignore = "needs NST_REMAINING_OLD_CLI: retained historical vibe CLI outside the repository"]
 fn remaining_defaults_prior_reader_writer_refuse_without_loss() {
     let old = std::env::var_os("NST_REMAINING_OLD_CLI")
         .expect("mandatory explicitly mounted pre-extension CLI");
@@ -6297,6 +6310,7 @@ fn integer_profile_surface_parity_missing_preview_qualification() {
 }
 
 #[test]
+#[ignore = "needs NST_INTEGER_V2_OLD_CLI: retained historical vibe CLI outside the repository"]
 fn integer_profile_v2_describe_preview_confirmed_install_parity() {
     for override_value in [None, Some(0)] {
         let f = preview_fixture();
@@ -6605,6 +6619,7 @@ fn integer_profile_preset_override_and_explicit_public_boundary() {
 }
 
 #[test]
+#[ignore = "needs NST_OPTIONAL_BOOL_OLD_CLI: retained historical vibe CLI outside the repository"]
 fn integer_profile_effective_consumer_merge_prior_and_preset_drift() {
     for world in ["agree", "conflict", "unselected-missing", "prior", "drift"] {
         let f = integer_fixture(0);
@@ -6806,6 +6821,7 @@ fn integer_real_consumer_agreement_and_conflict_preserve_originals() {
 }
 
 #[test]
+#[ignore = "needs NST_INTEGER_OLD_CLI: retained historical vibe CLI outside the repository"]
 fn integer_old_reader_writer_refuse_exact_prior_without_loss() {
     let old = std::env::var_os("NST_INTEGER_OLD_CLI")
         .expect("mandatory explicitly mounted pre-integer CLI");
@@ -7181,6 +7197,7 @@ fn text_choice_equal_and_whitespace_or_value_conflicting_real_consumers() {
 }
 
 #[test]
+#[ignore = "needs NST_TEXT_OLD_CLI: retained historical vibe CLI outside the repository"]
 fn text_choice_actual_prior_reader_writer_refuse_without_loss() {
     let old =
         std::env::var_os("NST_TEXT_OLD_CLI").expect("mandatory explicitly mounted pre-text CLI");
@@ -7502,6 +7519,7 @@ fn lexical_path_fixture(value: &str) -> Fixture {
 }
 
 #[test]
+#[ignore = "needs NST_OPTIONAL_BOOL_OLD_CLI: retained historical vibe CLI outside the repository"]
 fn host_required_path_install_cold_metadata_and_other_routes() {
     for world in [
         "file",
@@ -7755,6 +7773,7 @@ fn lexical_path_spelling_consumers_and_target_disappearance() {
 }
 
 #[test]
+#[ignore = "needs NST_PATH_OLD_CLI: retained historical vibe CLI outside the repository"]
 fn lexical_path_actual_prior_reader_writer_refuse_without_loss() {
     let old =
         std::env::var_os("NST_PATH_OLD_CLI").expect("mandatory explicitly mounted pre-path CLI");
@@ -7971,6 +7990,7 @@ fn submitted_history_stage_a_reader_freshness_and_writer_withheld() {
 }
 
 #[test]
+#[ignore = "needs NST_SUBMITTED_OLD_CLI: retained historical vibe CLI outside the repository"]
 fn submitted_history_stage_a_real_prior_reader_writer_refuse_without_loss() {
     let old = std::env::var_os("NST_SUBMITTED_OLD_CLI")
         .expect("mandatory explicitly mounted pre-submission CLI");
@@ -9076,6 +9096,7 @@ fn ordinary_remaining_kinds_install_show_and_cold_replay_qualification() {
 }
 
 #[test]
+#[ignore = "needs NST_APP_PREFLIGHT_OLD_CLI: retained historical vibe CLI outside the repository"]
 fn project_app_preflight_preserves_fresh_and_historically_partial_worlds() {
     let old = std::env::var("NST_APP_PREFLIGHT_OLD_CLI")
         .expect("exact historical preflight CLI required");
@@ -9935,6 +9956,7 @@ fn guarded_singleton_default_fixture(on: bool) -> Fixture {
     f
 }
 #[test]
+#[ignore = "needs NST_GUARDED_DEFAULT_OLD_CLI: retained historical vibe CLI outside the repository"]
 fn guarded_defaults_actual_prior_reader_writer_and_tampered_basis_refuse() {
     let old = std::env::var("NST_GUARDED_DEFAULT_OLD_CLI").expect("actual prior client required");
     for on in [false, true] {
@@ -10422,6 +10444,7 @@ fn feature_default_fixture(defaults: bool, base: bool, addition: bool) -> Fixtur
 }
 
 #[test]
+#[ignore = "needs NST_FEATURE_DEFAULT_OLD_CLI: retained historical vibe CLI outside the repository"]
 fn feature_defaults_empty_equal_addition_prior_clients_and_history_tamper() {
     let old = std::env::var("NST_FEATURE_DEFAULT_OLD_CLI").expect("actual prior client required");
     for defaults in [false, true] {
@@ -10880,6 +10903,7 @@ fn optional_bool_two_consumers_absence_agreement_conflict_and_cold() {
     }
 }
 #[test]
+#[ignore = "needs NST_OPTIONAL_BOOL_OLD_CLI: retained historical vibe CLI outside the repository"]
 fn optional_bool_actual_prior_reader_writer_and_definition_drift() {
     let old = std::env::var("NST_OPTIONAL_BOOL_OLD_CLI").expect("actual prior client required");
     for value in [None, Some(false), Some(true)] {
