@@ -30,10 +30,6 @@ use vibe_core::manifest::Manifest;
 use vibe_core::manifest::SpecFormat;
 use vibe_core::user_config::SlotIntegrity;
 
-use crate::hooks::{
-    HookContext, HookError, HookOutput, HookPhase, HookPolicy, HookReport, HookRunner,
-    InterpreterProbe, Platform, SystemHookRunner, SystemProbe, run_package_hook,
-};
 use crate::{Workspace, WorkspaceError, vibedeps};
 
 /// Stale-slot pruning — removing every dependency slot the current
@@ -51,17 +47,13 @@ pub use checked_removal::{
 mod placement;
 use placement::{copy_mode_for, is_in_place, required_source_hash};
 
-mod hook_output;
-mod hooks_run;
+mod lifecycle_apply;
 pub mod model;
 mod rollback;
 mod slot_lifecycle;
 mod subtree;
 pub use rollback::InstallRollback;
-pub use subtree::{
-    materialise_subtree, materialise_subtree_with_spec_format,
-    materialise_subtree_with_spec_format_and_slot_lifecycle,
-};
+pub use subtree::{SubtreeOutcome, materialise_subtree_with_spec_format_and_slot_lifecycle};
 
 pub(crate) mod bootgen;
 /// B-006 (lane dedup) — de-substitute covered unit-STATIC entries. Public so
@@ -74,8 +66,7 @@ use bootgen::validate_redirect_blocks;
 pub use model::{InstallOutcome, PostInstallPlan, ResolvedDep, SlotCheck, SlotVerifier};
 pub use placement::PreparedSlotPlacement;
 
-pub use hook_output::{
-    apply_resolution_with_spec_format_and_hook_output,
+pub use lifecycle_apply::{
     apply_resolution_with_spec_format_and_slot_lifecycle,
     apply_resolution_with_spec_format_and_slot_lifecycle_traced,
     apply_resolution_with_spec_format_and_slot_lifecycle_traced_native,
@@ -83,13 +74,10 @@ pub use hook_output::{
     apply_resolution_with_spec_format_and_slot_lifecycle_traced_native_progress_placements,
     apply_resolution_with_spec_format_and_slot_lifecycle_traced_placements,
 };
-use hooks_run::SubtreeOutcome;
-pub use hooks_run::{
-    run_post_install_hooks, run_post_install_hooks_with_output, run_post_install_slot_lifecycle,
-};
-use slot_lifecycle::{MaterialiseLifecycle, PreInstallPlan};
+use slot_lifecycle::PreInstallPlan;
 pub use slot_lifecycle::{
     SlotLifecycle, SlotLifecycleContext, SlotLifecycleMode, SlotLifecycleTarget,
+    run_post_install_slot_lifecycle,
 };
 
 #[cfg(test)]
@@ -131,11 +119,14 @@ pub use native::{
 /// here is the shipped always-rematerialise discipline — exactly what
 /// `vibe reinstall --force` (reconcile slots from a fresh fetch) and
 /// `vibe update` ask for.
+///
+/// No slot lifecycle runs here: this is the materialise-and-regenerate core.
+/// A caller that owns slot contributions takes
+/// [`apply_resolution_with_spec_format_and_slot_lifecycle`] instead.
 pub fn apply_resolution(
     workspace: &Workspace,
     resolution: &[ResolvedDep],
     slot_integrity: SlotIntegrity,
-    hooks: Option<&HookPolicy>,
 ) -> Result<InstallOutcome, WorkspaceError> {
     apply_resolution_with_spec_format(
         workspace,
@@ -143,7 +134,6 @@ pub fn apply_resolution(
         slot_integrity,
         SpecFormat::Mixed,
         None,
-        hooks,
     )
 }
 
@@ -165,7 +155,6 @@ pub fn apply_resolution_with(
     resolution: &[ResolvedDep],
     slot_integrity: SlotIntegrity,
     slot_verifier: Option<&dyn SlotVerifier>,
-    hooks: Option<&HookPolicy>,
 ) -> Result<InstallOutcome, WorkspaceError> {
     apply_resolution_with_spec_format(
         workspace,
@@ -173,90 +162,56 @@ pub fn apply_resolution_with(
         slot_integrity,
         SpecFormat::Mixed,
         slot_verifier,
-        hooks,
     )
 }
 
 /// Apply a resolution with the effective PROP-045 spec representation.
-/// Legacy entry points above remain source-identical by selecting `mixed`.
+/// The entry points above select `mixed`.
 pub fn apply_resolution_with_spec_format(
     workspace: &Workspace,
     resolution: &[ResolvedDep],
     slot_integrity: SlotIntegrity,
     spec_format: SpecFormat,
     slot_verifier: Option<&dyn SlotVerifier>,
-    hooks: Option<&HookPolicy>,
 ) -> Result<InstallOutcome, WorkspaceError> {
-    apply_resolution_with_spec_format_and_hook_output(
+    apply_resolution_with_spec_format_and_slot_lifecycle(
         workspace,
         resolution,
         slot_integrity,
         spec_format,
         slot_verifier,
-        hooks,
-        HookOutput::Inherit,
+        SlotLifecycleMode::None,
     )
 }
 
-/// Internal materialisation, integrity, and hook-scheduling bookkeeping.
-/// Public outcome reporting stays separate from hook eligibility.
+/// Internal materialisation, integrity, and slot-event bookkeeping. Public
+/// outcome reporting stays separate from slot-event eligibility.
 #[derive(Debug)]
 struct Materialised {
     materialised: Vec<String>,
     skipped: Vec<String>,
     integrity_warnings: Vec<String>,
     post_install_deps: Vec<ResolvedDep>,
-    hook_reports: Vec<HookReport>,
 }
 
 struct MaterialiseOptions<'a> {
     slot_integrity: SlotIntegrity,
     spec_format: SpecFormat,
     slot_verifier: Option<&'a dyn SlotVerifier>,
-    lifecycle: MaterialiseLifecycle<'a>,
+    lifecycle: SlotLifecycleMode<'a>,
     progress: vibe_core::progress::Progress,
     /// The apply's undo log, when the caller can still undo the slots it
     /// places; a scoped update hands in the log its prune already wrote to.
     rollback: Option<&'a mut InstallRollback>,
 }
 
-#[cfg(test)]
-fn materialise_resolution(
-    workspace_root: &Path,
-    resolution: &[ResolvedDep],
-    slot_integrity: SlotIntegrity,
-    slot_verifier: Option<&dyn SlotVerifier>,
-    hooks: Option<&HookPolicy>,
-    probe: &dyn InterpreterProbe,
-    runner: &dyn HookRunner,
-) -> Result<Materialised, WorkspaceError> {
-    materialise_resolution_with_spec_format(
-        workspace_root,
-        resolution,
-        MaterialiseOptions {
-            slot_integrity,
-            spec_format: SpecFormat::Mixed,
-            slot_verifier,
-            lifecycle: match hooks {
-                Some(policy) => MaterialiseLifecycle::LegacyHooks {
-                    policy,
-                    probe,
-                    runner,
-                },
-                None => MaterialiseLifecycle::None,
-            },
-            progress: vibe_core::progress::Progress::default(),
-            rollback: None,
-        },
-    )
-}
-
-/// Materialise a resolution and run `pre-install` after a nonempty payload
-/// diff (PROP-009 §2.7, PROP-020 §2.1). Injectable seams cover hook execution
-/// and the PROP-011 integrity check. Identity-current slots may be skipped;
-/// verification divergence reconciles and warns. Reconciliation reporting is
-/// independent: identity-only work is materialised but runs no hook. A failed
-/// `pre-install` removes the offending slot and aborts (PROP-020 §2.5).
+/// Materialise a resolution and raise the pre-install event of every slot
+/// with a nonempty payload diff (PROP-009 §2.7, PROP-020
+/// `#MODERN-SLOT-EXECUTION`). The lifecycle mode and the PROP-011 integrity
+/// check are injected. Identity-current slots may be skipped; verification
+/// divergence reconciles and warns. Reconciliation reporting is independent:
+/// identity-only work is materialised but raises no slot event. A failed
+/// pre-install callback removes the offending slot and aborts.
 fn materialise_resolution_with_spec_format(
     workspace_root: &Path,
     resolution: &[ResolvedDep],
@@ -285,7 +240,6 @@ fn materialise_resolution_with_prepared(
     let mut skipped = Vec::new();
     let mut integrity_warnings = Vec::new();
     let mut post_install_deps = Vec::new();
-    let mut hook_reports = Vec::new();
     let mut pre_install = PreInstallPlan::new_checked(
         &lifecycle,
         workspace_root,
@@ -342,7 +296,7 @@ fn materialise_resolution_with_prepared(
                 undo.ignore_checked(workspace_root, &rel)?;
                 if checked.changed() {
                     post_install_deps.push(dep.clone());
-                    pre_install.run_or_defer(dep, &mut hook_reports)?;
+                    pre_install.defer(dep);
                     materialised.push(rel);
                 } else {
                     skipped.push(rel);
@@ -354,7 +308,7 @@ fn materialise_resolution_with_prepared(
             // incremental in-place update (PROP-022 §2.4), `git fetch`-ed onto
             // the existing `.git` rather than re-cloned — signalled by the
             // dep's `content_dir` BEING the slot. Then there is no clone to
-            // move; the slot is already current and we only run the hook.
+            // move; the slot is already current and only its slot event remains.
             let already_placed = dep.content_dir == slot_abs;
             if !already_placed
                 && vibedeps::is_in_place_slot(workspace_root, &dep.group, &dep.name)
@@ -408,7 +362,7 @@ fn materialise_resolution_with_prepared(
             }
             // In-place keeps its git-native reset/eligibility semantics.
             post_install_deps.push(dep.clone());
-            pre_install.run_or_defer(dep, &mut hook_reports)?;
+            pre_install.defer(dep);
             materialised.push(rel);
             package_task.finish();
             task.set_progress(
@@ -499,7 +453,7 @@ fn materialise_resolution_with_prepared(
         )?;
         if materialise_report.payload_changed() {
             post_install_deps.push(dep.clone());
-            pre_install.run_or_defer(dep, &mut hook_reports)?;
+            pre_install.defer(dep);
         }
         materialised.push(slot);
         package_task.finish();
@@ -516,7 +470,6 @@ fn materialise_resolution_with_prepared(
         skipped,
         integrity_warnings,
         post_install_deps,
-        hook_reports,
     })
 }
 
@@ -545,12 +498,16 @@ mod tests_target_gate;
 mod test_helpers;
 
 #[cfg(test)]
-#[path = "install/tests_hooks.rs"]
-mod tests_hooks;
-
-#[cfg(test)]
 #[path = "install/tests_analyze_parity.rs"]
 mod tests_analyze_parity;
+
+#[cfg(test)]
+#[path = "install/tests_in_place.rs"]
+mod tests_in_place;
+
+#[cfg(test)]
+#[path = "install/tests_slot_payload_events.rs"]
+mod tests_slot_payload_events;
 
 #[cfg(test)]
 #[path = "install/tests_epoch_world.rs"]

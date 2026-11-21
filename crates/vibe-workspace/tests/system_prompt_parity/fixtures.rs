@@ -59,7 +59,6 @@ impl Fixture {
             SlotIntegrity::TrustPresence,
             self.format,
             None,
-            None,
         )
         .expect("the fixture regenerates");
     }

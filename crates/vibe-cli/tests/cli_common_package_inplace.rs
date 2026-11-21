@@ -101,9 +101,9 @@ fn publish(repo: &Path, name: &str, version: &str, common: bool) -> String {
         ""
     };
     let hook = if version == "1.0.0" {
-        ""
+        String::new()
     } else {
-        "\n[hooks]\npre-install='hooks/canary'\n"
+        common::slot_script(&format!("org.vibevm/{name}"), "pre-install", "hooks/canary")
     };
     let manifest = format!(
         "[package]\ngroup='org.vibevm'\nname='{name}'\nkind='flow'\nversion='{version}'\nmaterialization='in-place'\n[boot_snippet]\nsource='boot/rules.md'\ncategory='flow'\n{hook}{configuration}"

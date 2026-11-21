@@ -6,7 +6,7 @@ use std::path::{Path, PathBuf};
 
 use anyhow::{Context, Result, bail};
 use vibe_core::manifest::{Manifest, RunCommandDecl, RunCommandHandler};
-use vibe_workspace::hooks::{Platform, SystemProbe, select_invocation};
+use vibe_workspace::interpreter::{Platform, SystemProbe, select_invocation};
 
 use crate::cli::RunArgs;
 use crate::output;

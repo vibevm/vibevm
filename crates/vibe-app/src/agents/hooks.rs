@@ -56,7 +56,7 @@ pub struct AgentHooks<'a> {
     /// base list vibe ships, the site profile's `[trust]` table and the
     /// user's `agents.toml`, with either file's `untrusted_groups`
     /// overriding all of it. One mechanism, shared with a dependency's
-    /// `slot:` contributions and with `[hooks]`.
+    /// `slot:` contributions.
     pub trust: &'a TrustPolicy,
     /// Prompts and answers are shown here.
     pub notify: Option<&'a dyn Fn(&AgentNotice<'_>)>,

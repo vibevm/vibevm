@@ -8,7 +8,7 @@ use vibe_core::lifecycle::{ExtensionPoint, SlotPoint};
 use vibe_core::manifest::ExtensionHandler;
 use vibe_wire::generated::lifecycle::e1::context::Context;
 use vibe_wire::generated::lifecycle::e1::reply::{Reply, ReplyStatus};
-use vibe_workspace::hooks::{InterpreterProbe, Platform, select_invocation};
+use vibe_workspace::interpreter::{InterpreterProbe, Platform, select_invocation};
 
 use crate::agent::{AgentBackend, AgentError, PreparedAgent};
 use crate::process::{

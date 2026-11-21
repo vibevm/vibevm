@@ -12,7 +12,6 @@ use vibe_core::manifest::{LockedEmbeddedSource, Manifest, SpecFormat};
 use vibe_core::{ContentHash, Group, PackageKind};
 
 use crate::WorkspaceError;
-use crate::hooks::HookReport;
 
 /// A resolved, fetched dependency ready to materialise — the minimum the
 /// install orchestrator needs, decoupled from the registry's richer
@@ -155,14 +154,13 @@ pub trait SlotVerifier {
     }
 }
 
-/// One-shot authority to run exactly the post-install hooks selected by one
-/// materialisation pass.
+/// One-shot authority to raise exactly the post-install events selected by
+/// one materialisation pass.
 ///
 /// The plan binds the workspace root to owned clones of the eligible resolved
 /// dependencies. It has no public constructor or fields and is consumed by
-/// [`super::run_post_install_slot_lifecycle`] (or its legacy-hook wrapper), so
-/// a caller cannot combine slot labels from one install with a different
-/// resolution or workspace.
+/// [`super::run_post_install_slot_lifecycle`], so a caller cannot combine slot
+/// labels from one install with a different resolution or workspace.
 #[derive(Debug)]
 pub struct PostInstallPlan {
     workspace_root: PathBuf,
@@ -251,13 +249,6 @@ pub struct InstallOutcome {
     /// One-shot post-install authority, deliberately excluded from the public
     /// reporting surface.
     pub(super) post_install_plan: Option<PostInstallPlan>,
-    /// Structured reports from the `pre-install` hooks that ran this install
-    /// (PROP-020 §2.1) — one per payload-changing package that declares a
-    /// `pre-install` script. Empty when no package declares hooks or hook
-    /// running was not requested (`hooks = None`). Each report is `ran` /
-    /// `skipped-needs-consent`; the CLI renders them so a skipped hook is
-    /// surfaced, never silent.
-    pub hook_reports: Vec<HookReport>,
     /// The undo log of this apply's slot changes, held until the caller has
     /// made the install durable. `None` once committed or undone.
     pub(super) rollback: Option<super::InstallRollback>,
@@ -286,7 +277,7 @@ impl InstallOutcome {
     ///
     /// `None` means either no dependency changed eligible payload or the plan
     /// was already taken. The returned value is consumed by
-    /// [`super::run_post_install_slot_lifecycle`] or the legacy hook wrapper.
+    /// [`super::run_post_install_slot_lifecycle`].
     pub fn take_post_install_plan(&mut self) -> Option<PostInstallPlan> {
         self.post_install_plan.take()
     }

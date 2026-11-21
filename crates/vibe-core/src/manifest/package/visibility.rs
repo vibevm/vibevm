@@ -20,9 +20,9 @@ use crate::manifest::project::{
 
 use super::{
     BinaryDecl, BootSnippet, Compatibility, ConditionalTarget, ConflictsList, DocumentationDecl,
-    DocumentsDecl, EmbeddedSourceDecl, FeaturesTable, GlossaryDecl, HooksDecl, McpServerDecl,
-    MediaDecl, NavigationDecl, Obsoletes, PackageMeta, Provides, Recommends, Requires, RequiresAny,
-    SkillDecl, Suggests, TranslatesDecl,
+    DocumentsDecl, EmbeddedSourceDecl, FeaturesTable, GlossaryDecl, McpServerDecl, MediaDecl,
+    NavigationDecl, Obsoletes, PackageMeta, Provides, Recommends, Requires, RequiresAny, SkillDecl,
+    Suggests, TranslatesDecl,
 };
 
 /// Per-edge seepage level: how far the target travels toward consumers.
@@ -363,8 +363,13 @@ pub(crate) struct ManifestWire {
     /// publishes a translation (PROP-057 `##LOC-NO-TRANSLATIONS-TABLE`).
     #[serde(default, skip_serializing_if = "Option::is_none")]
     translations: Option<toml::Value>,
-    #[serde(default, skip_serializing_if = "HooksDecl::is_empty")]
-    hooks: HooksDecl,
+    /// `[hooks]` — **retired, and read only so the refusal can name the
+    /// replacement.** Install-time scripts are explicit `[[extension]]`
+    /// contributions at `slot:pre-install` / `slot:post-install`; without
+    /// this reader the table would be refused as an anonymous unknown key
+    /// (PROP-020 `#LEGACY-HOOKS-REMOVED`).
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    hooks: Option<toml::Value>,
     #[serde(default, rename = "extension", skip_serializing_if = "Vec::is_empty")]
     extensions: Vec<ExtensionDeclWire>,
     #[serde(default, rename = "command", skip_serializing_if = "Vec::is_empty")]

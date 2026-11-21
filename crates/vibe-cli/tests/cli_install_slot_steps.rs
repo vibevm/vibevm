@@ -4,8 +4,7 @@
 //! them runs.
 //!
 //! PROP-065 `#conditions`, `#needs`, `#ordinary-plan`, `#ordinary-trust`.
-//! The sugar half of the same engine is `cli_hook_lifecycle.rs`, and it is
-//! deliberately left alone: `[hooks]` keeps the behaviour it has.
+//! The unjudged timing half of the same engine is `cli_hook_lifecycle.rs`.
 
 mod common;
 

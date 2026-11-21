@@ -150,7 +150,6 @@ fn installed(activated: bool) -> (TempDir, Vec<TempDir>) {
         SlotIntegrity::TrustPresence,
         SpecFormat::Xml,
         None,
-        None,
     )
     .expect("the install applies");
     publish_lock(ws_dir.path());

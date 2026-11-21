@@ -52,7 +52,12 @@ pub(super) fn publish(info: &serde_json::Value, name: &str, script: &str, broken
     );
     git(work, &["reset", "--hard", "v1.0.0"]);
     let mut body = fs::read_to_string(work.join("vibe.toml")).unwrap();
-    body.push_str("\n[hooks]\npre-install='hooks/native-test'\n");
+    body.push_str(&slot_apply::script_row(
+        &format!("org.vibevm/{name}"),
+        "native-test",
+        "pre-install",
+        "hooks/native-test",
+    ));
     if broken_boot {
         body = body.replace(
             "materialization='in-place'",
@@ -91,7 +96,7 @@ pub(super) fn publish(info: &serde_json::Value, name: &str, script: &str, broken
 fn case(cut: &str) {
     let (_server, info, mut f) = fixture(false);
     f.source.names = vec!["giant".into(), "second".into()];
-    vibe_install::apply(&f.source, *ready(&f), SlotIntegrity::Verify, &policy()).unwrap();
+    vibe_install::apply(&f.source, *ready(&f), SlotIntegrity::Verify).unwrap();
     let second = f.slot.with_file_name("org.vibevm.second");
     for (name, slot) in [("giant", &f.slot), ("second", &second)] {
         write(slot, ".git/sentinel", name);
@@ -131,7 +136,7 @@ fn case(cut: &str) {
     let before = snapshot(&f.project);
     let old_first = snapshot(&f.slot);
     let old_second = snapshot(&second);
-    let result = vibe_install::apply(&f.source, *plan, SlotIntegrity::Verify, &policy());
+    let result = slot_apply::apply(&f.source, &f.project, *plan, SlotIntegrity::Verify);
     // The fixture owns the chmod fault. Permission rollback is not an install claim.
     if cut == "lock" {
         use std::os::unix::fs::PermissionsExt;
@@ -139,6 +144,7 @@ fn case(cut: &str) {
     }
     let error = result.unwrap_err();
     let message = error.to_string();
+    slot_apply::discard_run_record(&f.project);
     assert_eq!(
         fs::read_to_string(&observed).unwrap(),
         "giant\nsecond\n",

@@ -17,6 +17,18 @@
 use std::fs;
 use std::path::{Path, PathBuf};
 
+/// One script a package runs at a slot point of its own installation: the
+/// explicit `[[extension]]` row, scoped to `owner` (`group/name`) so it does
+/// not also answer for the other packages of the install. `point` is
+/// `pre-install` or `post-install`, and doubles as the row's id.
+pub fn slot_script(owner: &str, point: &str, base: &str) -> String {
+    format!(
+        "\n[[extension]]\nid = \"{point}\"\npoint = \"slot:{point}\"\n\
+         handler = {{ kind = \"script\", base = \"{base}\" }}\n\
+         applies_to = {{ packages = [\"{owner}\"] }}\n"
+    )
+}
+
 /// The loopback provider oracle the create-phase e2e binaries share.
 pub mod agent_provider;
 /// Local application registries of the PROP-065 lifecycle fixtures.

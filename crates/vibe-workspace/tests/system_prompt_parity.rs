@@ -497,7 +497,6 @@ fn both_static_spellings_propagate_the_refusal() {
         vibe_core::user_config::SlotIntegrity::TrustPresence,
         fixture.format,
         None,
-        None,
     )
     .expect_err("two spellings is a refusal");
     let message = error.to_string();

@@ -78,10 +78,9 @@ pub(super) fn apply(
 
     confirm_gate.confirm_install(planned.resolution.len())?;
 
-    // PROP-054 ##INSTALL-IS-CONSENT: `[hooks]` is translated to
-    // `slot:` contributions and runs through the lifecycle handler
-    // engine. The install confirmation above is the sole trust
-    // decision; there is no hook-specific prompt or allow flag.
+    // PROP-054 ##INSTALL-IS-CONSENT: `slot:` contributions run through
+    // the lifecycle handler engine. The install confirmation above is the
+    // sole trust decision; there is no slot-specific prompt or allow flag.
     let slot_observer = observer.slot_observer(&lifecycle_run.metadata);
     let platform = vibe_lifecycle::native::NativePlatform::current()?;
     let runtime_run = vibe_workspace::extension_world::OwnerRuntimeRunFacts {
@@ -305,17 +304,9 @@ fn finish_ready(tail: ReadyTail<'_>, mut run: InstallRun) -> InstallRun {
     }
     run.packages_resolved = tail.packages_resolved;
     run.weak = tail.weak;
-    // The APPLY's progress and hooks, on both paths: what this invocation made
-    // durable does not change because it also finished someone else's park.
+    // The APPLY's progress, on both paths: what this invocation made durable
+    // does not change because it also finished someone else's park.
     run.progress = tail.applied.progress.clone();
-    run.hooks = tail
-        .applied
-        .outcome
-        .hook_reports
-        .iter()
-        .chain(&tail.applied.post_install_reports)
-        .cloned()
-        .collect();
     run
 }
 

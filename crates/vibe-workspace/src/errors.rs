@@ -395,15 +395,6 @@ pub enum WorkspaceError {
     )]
     SystemPromptCompose { what: String, reason: String },
 
-    /// A package's install hook (PROP-020) failed: no usable interpreter, a
-    /// spawn error, an untrusted run, or a `pre-install` non-zero exit. The
-    /// wrapped hook error already carries its own Class-F `(violates …;
-    /// fix: …)` tail, so this delegates its display transparently. For a
-    /// `pre-install` failure the materialised slot is rolled back before
-    /// this surfaces (PROP-020 §2.5).
-    #[error(transparent)]
-    Hook(#[from] crate::hooks::HookError),
-
     #[error(
         "slot lifecycle {phase} callback for `{package}` failed: {reason} \
          (violates spec://org.vibevm.core/vibevm/common/PROP-054#POINT-GRAMMAR; \

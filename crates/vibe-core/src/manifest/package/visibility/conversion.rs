@@ -15,6 +15,9 @@ impl TryFrom<ManifestWire> for Manifest {
                     .to_string(),
             );
         }
+        if wire.hooks.is_some() {
+            return Err(crate::error::RETIRED_HOOKS_TABLE.to_string());
+        }
         if let Some(meta) = &wire.visibility {
             validate_visibility(meta)?;
         }
@@ -86,7 +89,6 @@ impl TryFrom<ManifestWire> for Manifest {
             media: wire.media,
             navigation: wire.navigation,
             glossary: wire.glossary,
-            hooks: wire.hooks,
             extensions,
             run_commands: wire.run_commands,
             extension_controls: wire.extension_controls.into(),
@@ -187,7 +189,7 @@ impl TryFrom<Manifest> for ManifestWire {
             navigation: manifest.navigation,
             glossary: manifest.glossary,
             translations: None,
-            hooks: manifest.hooks,
+            hooks: None,
             extensions,
             run_commands: manifest.run_commands,
             extension_controls: manifest.extension_controls.into(),

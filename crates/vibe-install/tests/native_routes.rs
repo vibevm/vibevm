@@ -8,7 +8,6 @@ use std::{
     process::{Command, Stdio},
     sync::Arc,
 };
-use vibe_core::trust::TrustPolicy;
 use vibe_core::{
     PackageRef,
     manifest::{Lockfile, Manifest},
@@ -278,16 +277,7 @@ fn denied_primary_allowed_mirror_completes_public_plan_and_install() {
     );
     let log = Path::new(info["root"].as_str().unwrap()).join("a.log");
     let contacts = fs::read(&log).unwrap();
-    let report = vibe_install::apply(
-        &source,
-        *planned,
-        SlotIntegrity::Verify,
-        &vibe_workspace::hooks::HookPolicy {
-            trust: TrustPolicy::EMPTY,
-            allow_hooks: false,
-        },
-    )
-    .unwrap();
+    let report = vibe_install::apply(&source, *planned, SlotIntegrity::Verify).unwrap();
     assert_eq!(report.outcome.materialised.len(), 1);
     assert_eq!(fs::read(log).unwrap(), contacts);
     let slot = project
@@ -315,6 +305,8 @@ fn denied_primary_allowed_mirror_completes_public_plan_and_install() {
 
 #[path = "native_routes/recursive.rs"]
 mod recursive;
+#[path = "support/slot_apply.rs"]
+mod slot_apply;
 
 #[path = "native_routes/direct.rs"]
 mod direct;

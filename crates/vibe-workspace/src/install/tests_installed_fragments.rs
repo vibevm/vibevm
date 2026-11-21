@@ -54,7 +54,7 @@ when = "installed:org.vibevm/not-installed"
     let (guard, _guard_pkg) = dep_with_boot("guard", "1.0.0", "", "unused.md", "unused");
 
     let ws = Workspace::load(ws_dir.path()).unwrap();
-    apply_resolution(&ws, &[carrier, guard], SlotIntegrity::TrustPresence, None).unwrap();
+    apply_resolution(&ws, &[carrier, guard], SlotIntegrity::TrustPresence).unwrap();
 
     let static_lane = fs::read_to_string(ws_dir.path().join(boot_rel("STATIC.md"))).unwrap();
     let index = fs::read_to_string(ws_dir.path().join(boot_rel("INDEX.md"))).unwrap();

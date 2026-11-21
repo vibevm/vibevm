@@ -107,8 +107,8 @@ fn edit(
 fn list(ctx: &output::Context, settings: &SettingsRoot, config: &AgentsConfig) -> Result<()> {
     let external = crate::commands::app::agents::external_registration()?;
     // The ONE effective trust, resolved from the base list vibe ships, the
-    // applied site profile and this file — the same value an agent step, a
-    // dependency's `slot:` contribution and a `[hooks]` entry read.
+    // applied site profile and this file — the same value an agent step and
+    // a dependency's `slot:` contribution read.
     let trust = vibe_app::effective_trust(settings, Some(config)).map_err(AppError::from)?;
     let mut listing = vibe_app::agent_list(settings, config, external.as_ref(), &trust);
     // The launcher rows are resolved here, not in the registry: merging the

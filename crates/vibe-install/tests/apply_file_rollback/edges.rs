@@ -5,7 +5,9 @@ fn apply(
     source: &Source,
     planned: Box<vibe_install::PlannedInstall>,
 ) -> Result<(), vibe_install::Error> {
-    vibe_install::apply(source, *planned, SlotIntegrity::Verify, &hook_policy()).map(|_| ())
+    slot_apply::apply(source, &source.root, *planned, SlotIntegrity::Verify)
+        .map(|_| ())
+        .map_err(slot_apply::inner_failure)
 }
 
 #[test]
@@ -92,7 +94,9 @@ fn same_byte_replacement_during_verification_is_a_conflict_not_our_receipt() {
         fs::rename(replacement, &path).unwrap();
         *record.lock().unwrap() = Some((bytes, identity(&path)));
     })));
-    let error = apply(&source, planned).unwrap_err();
+    // The one-shot verification hook must meet the manifest publication first,
+    // so this probe applies without a slot run and its own state writes.
+    let error = vibe_install::apply(&source, *planned, SlotIntegrity::Verify).unwrap_err();
     vibe_safefs::arm_before_publish_verify(None);
     assert!(matches!(error, vibe_install::Error::RollbackFailed { .. }));
     assert_eq!(source.calls(), 0);

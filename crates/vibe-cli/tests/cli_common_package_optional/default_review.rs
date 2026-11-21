@@ -777,7 +777,11 @@ fn review_fixture() -> Fixture {
             .unwrap()
             .replace("version='1.0.0'", "version='1.1.0'")
             .replace("defaults = [\"disabled\"]", "defaults = [\"enabled\"]")
-            + "\n[hooks]\npre-install='hooks/review-once'\n",
+            + &crate::common::slot_script(
+                &format!("{GROUP}/{DRIVER}"),
+                "pre-install",
+                "hooks/review-once",
+            ),
     );
     write(
         &new.join("boot/rules.md"),

@@ -9,9 +9,9 @@ fn package(registry: &Path, name: &str, hooked: bool) {
     let root = registry.join("org.phantom").join(name).join("v0.1.0");
     fs::create_dir_all(root.join("hooks")).unwrap();
     let hooks = if hooked {
-        "\n[hooks]\npost-install='hooks/post'\n"
+        common::slot_script(&format!("org.phantom/{name}"), "post-install", "hooks/post")
     } else {
-        ""
+        String::new()
     };
     fs::write(
         root.join("vibe.toml"),

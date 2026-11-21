@@ -1,7 +1,6 @@
 //! Actual fresh-source apply reaches lock + nonempty provenance publication.
 use super::*;
 use std::os::unix::fs::PermissionsExt;
-use vibe_core::trust::TrustPolicy;
 use vibe_registry::ResolvedPackage;
 
 pub(super) struct MirrorSource {
@@ -151,16 +150,7 @@ fn apply(
     source: &MirrorSource,
     planned: Box<vibe_install::PlannedInstall>,
 ) -> Result<(), vibe_install::Error> {
-    vibe_install::apply(
-        source,
-        *planned,
-        SlotIntegrity::Verify,
-        &HookPolicy {
-            trust: TrustPolicy::EMPTY,
-            allow_hooks: false,
-        },
-    )
-    .map(|_| ())
+    vibe_install::apply(source, *planned, SlotIntegrity::Verify).map(|_| ())
 }
 
 fn fail_provenance_once() {

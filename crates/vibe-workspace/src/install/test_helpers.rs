@@ -1,6 +1,6 @@
-//! Shared test scaffolding for the install cell's two test modules
-//! (`tests` and `tests_hooks`), out-of-line so each stays under the
-//! file-length budget. `pub(super)` so both sibling modules reach it;
+//! Shared test scaffolding for the install cell's test modules, out-of-line
+//! so each stays under the file-length budget. `pub(super)` so every sibling
+//! module reaches it;
 //! `#[cfg(test)]` so the file-grain conform frontend scopes the `unwrap`s
 //! as test code (the out-of-line idiom `install/tests.rs` documents).
 
@@ -99,4 +99,40 @@ pub(super) fn dep_with_requires(
         .map(|n| (Group::parse("org.vibevm").unwrap(), (*n).to_string()))
         .collect();
     (dep, tmp)
+}
+
+/// A slot lifecycle that counts the pre-install events of one package, so a
+/// test can assert that a refusal stopped the pass before any slot event.
+#[cfg(test)]
+pub(super) struct PreInstallCount {
+    package: &'static str,
+    seen: std::cell::Cell<usize>,
+}
+
+#[cfg(test)]
+impl PreInstallCount {
+    pub(super) fn of(package: &'static str) -> Self {
+        Self {
+            package,
+            seen: std::cell::Cell::new(0),
+        }
+    }
+
+    pub(super) fn get(&self) -> usize {
+        self.seen.get()
+    }
+}
+
+#[cfg(test)]
+impl SlotLifecycle for PreInstallCount {
+    fn pre_install(&self, context: SlotLifecycleContext<'_>) -> Result<(), String> {
+        if context.name == self.package {
+            self.seen.set(self.seen.get() + 1);
+        }
+        Ok(())
+    }
+
+    fn post_install(&self, _context: SlotLifecycleContext<'_>) -> Result<(), String> {
+        Ok(())
+    }
 }

@@ -25,11 +25,10 @@ use vibe_wire::generated::install_report::{
     InstallRecommendationOutcome, InstallReport, InstallSuggestion,
 };
 use vibe_wire::generated::shared::CompileTraceReport;
-use vibe_workspace::hooks::HookReport;
 
 use crate::output;
 
-use super::report::{self, HookReportView};
+use super::report;
 use super::{InstallRun, WorldCallbackSummary};
 
 /// Everything the one install document reports, owned.
@@ -38,7 +37,6 @@ pub(crate) struct InstallDraft {
     pub(crate) ok: bool,
     pub(crate) project_root: PathBuf,
     pub(crate) progress: InstallProgress,
-    pub(crate) hooks: Vec<HookReport>,
     pub(crate) contributions: Vec<InstallContributionReport>,
     pub(crate) notices: Vec<String>,
     pub(crate) delegation: Option<InstallDelegation>,
@@ -62,7 +60,6 @@ impl InstallDraft {
             ok: true,
             project_root: run.project_root,
             progress: run.progress,
-            hooks: run.hooks,
             contributions,
             notices: run.notices,
             delegation: run.parked.as_ref().map(report::handoff_member),
@@ -74,8 +71,8 @@ impl InstallDraft {
     /// The draft a FAILED install carries: `ok: false`, the rows and progress
     /// the engine really measured, and nothing invented to fill the rest.
     ///
-    /// Hooks and notices are empty because a run that stopped at a slot row
-    /// never produced them — a report that listed them would be describing a
+    /// Notices are empty because a run that stopped at a slot row never
+    /// produced them — a report that listed them would be describing a
     /// run that did not happen.
     pub(crate) fn failed(
         project_root: &Path,
@@ -87,7 +84,6 @@ impl InstallDraft {
             project_root: project_root.to_path_buf(),
             contributions: report::contribution_rows(&slot_reports),
             progress,
-            hooks: Vec::new(),
             notices: Vec::new(),
             delegation: None,
             world_summary: WorldCallbackSummary::default(),
@@ -106,7 +102,6 @@ impl InstallDraft {
     /// command's success — or dropping it as uninteresting — is the one lie a
     /// cold reader cannot detect.
     pub(crate) fn into_report(self, trace: Option<CompileTraceReport>) -> InstallReport {
-        let hooks = HookReportView::new(&self.hooks, &[]);
         InstallReport {
             ok: self.ok,
             command: "install".into(),
@@ -123,7 +118,9 @@ impl InstallDraft {
             nodes_regenerated: self.progress.nodes_regenerated.clone(),
             contributions: self.contributions,
             notices: self.notices,
-            hooks: hooks.typed(),
+            // The registered format still names this member; the slot rows
+            // it used to carry travel as `contributions`.
+            hooks: Vec::new(),
             delegation: self.delegation,
             recommended: recommendation_rows(&self.weak),
             suggested: suggestion_rows(&self.weak),
@@ -139,10 +136,8 @@ impl InstallDraft {
     ) -> Result<()> {
         let ok = self.ok;
         let progress = self.progress.clone();
-        let hooks_owned = self.hooks.clone();
         let world_summary = self.world_summary;
         let report = self.into_report(trace);
-        let hooks = HookReportView::new(&hooks_owned, &[]);
         if ctx.is_json() {
             return ctx.emit_json(&report);
         }
@@ -167,7 +162,7 @@ impl InstallDraft {
             return Ok(());
         }
         render_weak_lines(ctx, &report);
-        report::render_human_progress(ctx, &progress, &hooks, world_summary, quiet_suffix);
+        report::render_human_progress(ctx, &progress, world_summary, quiet_suffix);
         Ok(())
     }
 }
@@ -291,7 +286,6 @@ mod refusal_tests {
             ok: true,
             project_root: PathBuf::from("/p"),
             progress: InstallProgress::fresh(vec![".".into()]),
-            hooks: Vec::new(),
             contributions: Vec::new(),
             notices: Vec::new(),
             delegation: None,

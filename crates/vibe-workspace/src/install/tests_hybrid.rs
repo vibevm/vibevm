@@ -94,7 +94,7 @@ fn copy_materialisation_requires_a_fetched_source_hash() {
         workspace.path()
     })
     .unwrap();
-    let error = apply_resolution(&ws, &[dep], SlotIntegrity::Verify, None).unwrap_err();
+    let error = apply_resolution(&ws, &[dep], SlotIntegrity::Verify).unwrap_err();
     assert!(
         error
             .to_string()
@@ -136,7 +136,7 @@ fn dynamic_dep_statically_links_its_child_into_a_per_unit_static_md() {
     );
 
     let ws = Workspace::load(ws_dir.path()).unwrap();
-    apply_resolution(&ws, &[parent, child], SlotIntegrity::TrustPresence, None).unwrap();
+    apply_resolution(&ws, &[parent, child], SlotIntegrity::TrustPresence).unwrap();
 
     // parent's per-unit STATIC.md compiles the whole zone — child then parent.
     let parent_static = fs::read_to_string(
@@ -223,7 +223,7 @@ fn a_package_shared_by_two_units_is_hoisted_to_the_root() {
     );
 
     let ws = Workspace::load(ws_dir.path()).unwrap();
-    apply_resolution(&ws, &[a, e, shared], SlotIntegrity::TrustPresence, None).unwrap();
+    apply_resolution(&ws, &[a, e, shared], SlotIntegrity::TrustPresence).unwrap();
 
     // The shared text is hoisted to the global root STATIC.md — exactly once,
     // with a shared-by hint naming the consumers.
@@ -291,7 +291,6 @@ fn an_unchanged_reinstall_skips_a_package_via_its_fingerprint() {
         &ws,
         &[parent.clone(), child.clone()],
         SlotIntegrity::TrustPresence,
-        None,
     )
     .unwrap();
 
@@ -313,7 +312,7 @@ fn an_unchanged_reinstall_skips_a_package_via_its_fingerprint() {
         format!("{index_text}\n# SKIP-PROOF-MARKER\n"),
     )
     .unwrap();
-    apply_resolution(&ws, &[parent, child], SlotIntegrity::TrustPresence, None).unwrap();
+    apply_resolution(&ws, &[parent, child], SlotIntegrity::TrustPresence).unwrap();
     let after = fs::read_to_string(&parent_index).unwrap();
     assert!(
         after.contains("# SKIP-PROOF-MARKER"),
@@ -359,7 +358,7 @@ fn a_changed_static_child_forces_the_parent_to_regenerate() {
     );
 
     let ws = Workspace::load(ws_dir.path()).unwrap();
-    apply_resolution(&ws, &[parent, child_v1], SlotIntegrity::TrustPresence, None).unwrap();
+    apply_resolution(&ws, &[parent, child_v1], SlotIntegrity::TrustPresence).unwrap();
     let parent_static_path = ws_dir
         .path()
         .join(deps_slot_specs("org.vibevm.parent/1.0.0", "boot/STATIC.md"));
@@ -380,13 +379,7 @@ fn a_changed_static_child_forces_the_parent_to_regenerate() {
         "boot/child.md",
         "# child TWO",
     );
-    apply_resolution(
-        &ws,
-        &[parent2, child_v2],
-        SlotIntegrity::TrustPresence,
-        None,
-    )
-    .unwrap();
+    apply_resolution(&ws, &[parent2, child_v2], SlotIntegrity::TrustPresence).unwrap();
 
     let parent_static = fs::read_to_string(&parent_static_path).unwrap();
     assert!(
@@ -444,7 +437,7 @@ fn switching_a_child_from_dynamic_to_static_regenerates_the_parent() {
     let ws = Workspace::load(ws_dir.path()).unwrap();
     let (p_dyn, _pd) = parent_of("\"^1.0\"");
     let (c1, _c1) = child();
-    apply_resolution(&ws, &[p_dyn, c1], SlotIntegrity::TrustPresence, None).unwrap();
+    apply_resolution(&ws, &[p_dyn, c1], SlotIntegrity::TrustPresence).unwrap();
     assert!(
         !parent_static_path.exists(),
         "a dynamic child leaves the parent with no STATIC.md"
@@ -454,7 +447,7 @@ fn switching_a_child_from_dynamic_to_static_regenerates_the_parent() {
     // and now carries the child.
     let (p_stat, _ps) = parent_of("{ version = \"^1.0\", link = \"static\" }");
     let (c2, _c2) = child();
-    apply_resolution(&ws, &[p_stat, c2], SlotIntegrity::TrustPresence, None).unwrap();
+    apply_resolution(&ws, &[p_stat, c2], SlotIntegrity::TrustPresence).unwrap();
     let parent_static = fs::read_to_string(&parent_static_path).unwrap();
     assert!(
         parent_static.contains("# child boot"),
@@ -494,7 +487,7 @@ fn verify_boot_graph_detects_a_stale_artifact() {
 
     let ws = Workspace::load(ws_dir.path()).unwrap();
     let resolution = vec![parent, child];
-    apply_resolution(&ws, &resolution, SlotIntegrity::TrustPresence, None).unwrap();
+    apply_resolution(&ws, &resolution, SlotIntegrity::TrustPresence).unwrap();
     publish_resolution_lock(ws_dir.path(), &resolution);
 
     // A freshly generated graph is consistent.
@@ -561,7 +554,6 @@ fn the_dynamic_static_case_follows_the_target_format() {
             SlotIntegrity::TrustPresence,
             spec_format,
             Some(&SourceHash),
-            None,
         )
         .unwrap();
         let parent_static = fs::read_to_string(

@@ -91,7 +91,7 @@ impl Manifest {
     /// until someone decides it belongs in the offer — the safe direction
     /// for a kind whose whole point is carrying nothing executable.
     fn first_forbidden_in_a_remap_package(&self) -> Option<&'static str> {
-        let declared: [(&'static str, bool); 29] = [
+        let declared: [(&'static str, bool); 28] = [
             ("[project]", self.project.is_some()),
             ("[application]", self.application.is_some()),
             ("[[installer_options]]", !self.installer_options.is_empty()),
@@ -112,7 +112,6 @@ impl Manifest {
             ("[translates]", self.translates.is_some()),
             ("[navigation]", self.navigation.is_some()),
             ("[glossary]", self.glossary.is_some()),
-            ("[hooks]", !self.hooks.is_empty()),
             ("[[extension]]", !self.extensions.is_empty()),
             ("[[command]]", !self.run_commands.is_empty()),
             ("[[mechanism]]", !self.mechanism_decls.is_empty()),

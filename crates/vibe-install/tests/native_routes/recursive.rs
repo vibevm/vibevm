@@ -2,7 +2,6 @@
 use super::*;
 use std::collections::BTreeMap;
 use std::os::unix::fs::PermissionsExt;
-use vibe_core::trust::TrustPolicy;
 
 fn git(info: &serde_json::Value, cwd: &Path, args: &[&str]) -> String {
     let output = Command::new("/usr/bin/git")
@@ -207,17 +206,7 @@ fn recovery(cut: &str) {
         .unwrap(),
         store: root.path().join("store"),
     };
-    let policy = vibe_workspace::hooks::HookPolicy {
-        trust: TrustPolicy::trusting(["org.fixture"]).unwrap(),
-        allow_hooks: false,
-    };
-    vibe_install::apply(
-        &source,
-        *ready(&source, &project),
-        SlotIntegrity::Verify,
-        &policy,
-    )
-    .unwrap();
+    vibe_install::apply(&source, *ready(&source, &project), SlotIntegrity::Verify).unwrap();
     let slot = project
         .join(vibe_core::layout::current_vibedeps_root())
         .join("org.fixture.demo");
@@ -250,7 +239,12 @@ fn recovery(cut: &str) {
     if cut == "boot" {
         package.push_str("format='normal'\n");
     }
-    package.push_str("\n[hooks]\npre-install='hooks/failure'\n");
+    package.push_str(&slot_apply::script_row(
+        "org.fixture/demo",
+        "failure",
+        "pre-install",
+        "hooks/failure",
+    ));
     if cut == "boot" {
         package.push_str("\n[boot_snippet]\nsource='vibevm/vibespecs/boot/broken.md'\n");
         write(
@@ -277,11 +271,12 @@ fn recovery(cut: &str) {
     let old_slot = snapshot(&slot);
     let plan = ready(&source, &project);
     assert_eq!(snapshot(&project), before);
-    let result = vibe_install::apply(&source, *plan, SlotIntegrity::Verify, &policy);
+    let result = slot_apply::apply(&source, &project, *plan, SlotIntegrity::Verify);
     if cut == "lock" {
         fs::set_permissions(&project, fs::Permissions::from_mode(0o755)).unwrap();
     }
     let message = result.unwrap_err().to_string();
+    slot_apply::discard_run_record(&project);
     assert_eq!(
         fs::read_to_string(observed).unwrap(),
         "published",

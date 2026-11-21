@@ -87,10 +87,8 @@ version = "{version}"
 [boot_snippet]
 source = "boot/10-hooked.md"
 category = "flow"
-
-[hooks]
-post-install = "hooks/count"
-"#
+{}"#,
+            common::slot_script(&format!("{group}/hooked"), "post-install", "hooks/count")
         );
         fs::write(source.join("vibe.toml"), manifest).unwrap();
         fs::write(source.join("payload.txt"), payload).unwrap();

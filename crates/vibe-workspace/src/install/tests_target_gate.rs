@@ -79,7 +79,7 @@ when = "target:macos"
 
 fn regenerate(ws_dir: &Path, resolution: Vec<ResolvedDep>) -> (String, String) {
     let ws = Workspace::load(ws_dir).unwrap();
-    apply_resolution(&ws, &resolution, SlotIntegrity::TrustPresence, None).unwrap();
+    apply_resolution(&ws, &resolution, SlotIntegrity::TrustPresence).unwrap();
     (
         fs::read_to_string(ws_dir.join(boot_rel("STATIC.md"))).unwrap(),
         fs::read_to_string(ws_dir.join(boot_rel("INDEX.md"))).unwrap(),

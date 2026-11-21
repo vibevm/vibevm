@@ -4,7 +4,6 @@
 use super::*;
 use std::os::unix::fs::MetadataExt;
 use vibe_core::lock_provenance::{LockProvenance, provenance_path};
-use vibe_core::trust::TrustPolicy;
 
 #[test]
 #[specmark::spec(verifies = "spec://org.vibevm.core/vibevm/common/PROP-066#provenance")]
@@ -78,16 +77,12 @@ fn in_place_mirror_audit_survives_recording_noop_and_failed_apply() {
         .unwrap(),
         store: root.path().join("store"),
     };
-    let policy = vibe_workspace::hooks::HookPolicy {
-        trust: TrustPolicy::trusting(["org.fixture"]).unwrap(),
-        allow_hooks: false,
-    };
     let plan = ready(&source, &project);
     let (_, _, _, evidence) = plan.package_sources().next().unwrap();
     assert_eq!(evidence.source_url.as_deref(), Some(canonical.as_str()));
     assert_eq!(evidence.fetched_from.as_deref(), Some(actual.as_str()));
     assert_eq!(evidence.resolved_commit.as_deref(), Some(wanted.as_str()));
-    let report = vibe_install::apply(&source, *plan, SlotIntegrity::Verify, &policy).unwrap();
+    let report = vibe_install::apply(&source, *plan, SlotIntegrity::Verify).unwrap();
     assert_eq!(report.outcome.materialised.len(), 1);
     let lock_path = project.join("vibe.lock");
     let sidecar = provenance_path(&lock_path);
@@ -113,7 +108,7 @@ fn in_place_mirror_audit_survives_recording_noop_and_failed_apply() {
     let noop = ready(&source, &project);
     let (_, _, _, evidence) = noop.package_sources().next().unwrap();
     assert_eq!(evidence.fetched_from.as_deref(), Some(actual.as_str()));
-    let report = vibe_install::apply(&source, *noop, SlotIntegrity::Verify, &policy).unwrap();
+    let report = vibe_install::apply(&source, *noop, SlotIntegrity::Verify).unwrap();
     assert_eq!(report.outcome.skipped.len(), 1);
     assert_eq!(fs::read(&sidecar).unwrap(), audit_bytes);
     assert_eq!(fs::metadata(&sidecar).unwrap().ino(), audit_inode);
@@ -128,7 +123,15 @@ fn in_place_mirror_audit_survives_recording_noop_and_failed_apply() {
     write(
         work,
         "vibe.toml",
-        &format!("{package}\n[hooks]\npre-install='hooks/failure'\n"),
+        &format!(
+            "{package}{}",
+            slot_apply::script_row(
+                "org.fixture/demo",
+                "failure",
+                "pre-install",
+                "hooks/failure"
+            )
+        ),
     );
     write(
         work,
@@ -139,8 +142,9 @@ fn in_place_mirror_audit_survives_recording_noop_and_failed_apply() {
     publish(&info);
     let failing = ready(&source, &project);
     let before = snapshot(&project);
-    let error = vibe_install::apply(&source, *failing, SlotIntegrity::Verify, &policy).unwrap_err();
-    assert!(error.to_string().contains("37"), "{error}");
+    let error = slot_apply::apply(&source, &project, *failing, SlotIntegrity::Verify).unwrap_err();
+    slot_apply::discard_run_record(&project);
+    assert!(slot_apply::slot_failure(&error).0.contains("37"), "{error}");
     assert_eq!(fs::read_to_string(observed).unwrap(), "ran");
     assert_eq!(snapshot(&project), before);
     assert_eq!(fs::read(&sidecar).unwrap(), audit_bytes);

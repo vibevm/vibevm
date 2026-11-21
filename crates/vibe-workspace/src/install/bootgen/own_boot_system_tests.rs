@@ -60,7 +60,6 @@ fn regenerate(root: &Path) {
         vibe_core::user_config::SlotIntegrity::Verify,
         SpecFormat::Xml,
         None,
-        None,
     )
     .unwrap();
 }

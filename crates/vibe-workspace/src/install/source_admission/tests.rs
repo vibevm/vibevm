@@ -1,5 +1,4 @@
 use super::*;
-use vibe_core::trust::TrustPolicy;
 #[cfg(test)]
 mod cases {
     use super::*;
@@ -54,7 +53,6 @@ mod cases {
             vibe_core::user_config::SlotIntegrity::TrustPresence,
             SpecFormat::Mixed,
             None,
-            None,
         )
         .unwrap_err();
         assert!(error.to_string().contains("classified boot"));
@@ -72,7 +70,6 @@ mod cases {
                 &[dep],
                 vibe_core::user_config::SlotIntegrity::TrustPresence,
                 SpecFormat::Mixed,
-                None,
                 None
             )
             .unwrap_err()
@@ -101,7 +98,6 @@ mod cases {
                     &[dep],
                     vibe_core::user_config::SlotIntegrity::TrustPresence,
                     SpecFormat::Mixed,
-                    None,
                     None
                 )
                 .unwrap_err()
@@ -133,7 +129,6 @@ mod cases {
             vibe_core::user_config::SlotIntegrity::TrustPresence,
             SpecFormat::Mixed,
             None,
-            None,
         )
         .unwrap();
         assert_eq!(outcome.materialised.len(), 2);
@@ -164,7 +159,6 @@ mod cases {
             vibe_core::user_config::SlotIntegrity::TrustPresence,
             SpecFormat::Mixed,
             None,
-            None,
         )
         .unwrap();
         let before = inventory(root.path());
@@ -182,7 +176,6 @@ mod cases {
                 &[dep],
                 vibe_core::user_config::SlotIntegrity::TrustPresence,
                 SpecFormat::Mixed,
-                None,
                 None
             )
             .unwrap_err()
@@ -191,56 +184,31 @@ mod cases {
         );
         assert_eq!(inventory(root.path()), before);
     }
-    struct Probe;
-    impl crate::hooks::InterpreterProbe for Probe {
-        fn has(&self, _: &str) -> bool {
-            true
-        }
-    }
-    #[derive(Default)]
-    struct HookSpy(std::cell::Cell<usize>);
-    impl crate::hooks::HookRunner for HookSpy {
-        fn run(
-            &self,
-            _: &crate::hooks::HookInvocation,
-            _: &Path,
-            _: &[(String, String)],
-        ) -> Result<i32, String> {
-            self.0.set(self.0.get() + 1);
-            Ok(0)
-        }
-    }
-    fn input_before_earlier_hook(rows: &str, expected: Option<&str>) {
+    fn input_before_earlier_slot_event(rows: &str, expected: Option<&str>) {
         let (root, _ws) = workspace();
-        let (legacy, _legacy) = dep_with_boot(
-            "legacy-hook",
-            "1.0.0",
-            "[hooks]\npre-install='hooks/prepare'\n",
-            "hooks/prepare.sh",
-            "#!/bin/sh\nexit 0\n",
-        );
+        let (earlier, _earlier) =
+            dep_with_boot("earlier", "1.0.0", "", "scripts/prepare.sh", "exit 0\n");
         let (bad, _bad) = dep_with_boot("declared", "1.0.0", rows, "payload.txt", "PAYLOAD");
         let before = inventory(root.path());
-        let spy = HookSpy::default();
-        let policy = crate::hooks::HookPolicy {
-            trust: TrustPolicy::trusting(["org.vibevm"]).unwrap(),
-            allow_hooks: false,
-        };
-        let outcome = crate::install::materialise_resolution(
+        let spy = PreInstallCount::of("earlier");
+        let outcome = crate::install::materialise_resolution_with_spec_format(
             root.path(),
-            &[legacy, bad],
-            vibe_core::user_config::SlotIntegrity::TrustPresence,
-            None,
-            Some(&policy),
-            &Probe,
-            &spy,
+            &[earlier, bad],
+            crate::install::MaterialiseOptions {
+                slot_integrity: vibe_core::user_config::SlotIntegrity::TrustPresence,
+                spec_format: SpecFormat::Mixed,
+                slot_verifier: None,
+                lifecycle: crate::install::SlotLifecycleMode::Callback(&spy),
+                progress: Default::default(),
+                rollback: None,
+            },
         );
         let Some(expected) = expected else {
             assert_eq!(outcome.unwrap().materialised.len(), 2);
             assert_eq!(
-                spy.0.get(),
+                spy.get(),
                 1,
-                "supported finite inventory must allow normal hook execution"
+                "supported finite inventory must allow the normal slot event"
             );
             assert_eq!(
                 fs::read(
@@ -260,9 +228,9 @@ mod cases {
         let error = outcome.unwrap_err();
         assert!(error.to_string().contains(expected), "{error}");
         assert_eq!(
-            spy.0.get(),
+            spy.get(),
             0,
-            "earlier hook executed before later input admission"
+            "earlier slot event raised before later input admission"
         );
         assert_eq!(
             inventory(root.path()),
@@ -272,21 +240,21 @@ mod cases {
     }
     #[test]
     fn source_admission_missing_input_precedes_earlier_hook() {
-        input_before_earlier_hook(
+        input_before_earlier_slot_event(
             "[[package.sources]]\nfile='missing.md'\nmedia='text/markdown'\ninterpretation='vibe-spec'\nrole='spec'\nloading='scan'\n",
             Some("missing"),
         );
     }
     #[test]
     fn source_admission_zero_match_directory_default_allows_normal_hook_order() {
-        input_before_earlier_hook(
+        input_before_earlier_slot_event(
             "[[package.sources]]\ndirectory='docs'\nmedia='text/markdown'\ninterpretation='vibe-spec'\nrole='spec'\nloading='scan'\n",
             None,
         );
     }
     #[test]
     fn source_admission_conflicting_input_precedes_earlier_hook() {
-        input_before_earlier_hook(
+        input_before_earlier_slot_event(
             "[[package.sources]]\nfile='payload.txt'\nmedia='text/markdown'\ninterpretation='vibe-spec'\nrole='spec'\nloading='scan'\n[[package.sources]]\nfile='payload.txt'\nmedia='text/markdown'\ninterpretation='commonmark'\nrole='documentation'\nloading='scan'\n",
             Some("conflict"),
         );

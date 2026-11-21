@@ -526,7 +526,8 @@ fn runtime<'a>(
 ) -> HandlerRuntime<'a> {
     static BINARY_INHERIT: WorkspaceBinaryBackend = WorkspaceBinaryBackend { quiet: false };
     static BINARY_QUIET: WorkspaceBinaryBackend = WorkspaceBinaryBackend { quiet: true };
-    static PROBE: vibe_workspace::hooks::SystemProbe = vibe_workspace::hooks::SystemProbe;
+    static PROBE: vibe_workspace::interpreter::SystemProbe =
+        vibe_workspace::interpreter::SystemProbe;
     HandlerRuntime {
         process,
         binary: if observer.binary_quiet() {

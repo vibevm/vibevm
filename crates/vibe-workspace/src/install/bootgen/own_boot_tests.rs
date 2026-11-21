@@ -47,7 +47,6 @@ fn grouped_and_ungrouped_install_enroll_only_immediate_native_scan() {
             vibe_core::user_config::SlotIntegrity::Verify,
             SpecFormat::Xml,
             None,
-            None,
         )
         .unwrap();
         let index: toml::Value = toml::from_str(
@@ -185,7 +184,6 @@ fn later_selected_invalid_missing_and_ambiguous_nodes_refuse_before_package_effe
                 &[dep],
                 vibe_core::user_config::SlotIntegrity::Verify,
                 SpecFormat::Mixed,
-                None,
                 None
             )
             .is_err(),

@@ -23,13 +23,11 @@ use std::sync::{Arc, Mutex};
 use tempfile::TempDir;
 use vibe_core::manifest::{Manifest, SpecFormat};
 use vibe_core::progress::{Progress, ProgressEvent, ProgressEventKind, ProgressObserver};
-use vibe_core::trust::TrustPolicy;
 use vibe_core::user_config::SlotIntegrity;
 use vibe_core::{ContentHash, Group, PackageRef};
 use vibe_install::{InstallRequest, InstallSource, NullObserver, Plan, PlanEvent, PlanObserver};
 use vibe_registry::{CachedPackage, RegistryError, ResolvedPackage, compute_content_hash};
 use vibe_resolver::{FeatureRequest, ResolvedGraph, ResolvedNode, SolveError};
-use vibe_workspace::hooks::HookPolicy;
 use vibe_workspace::install::{ResolvedDep, SlotCheck, SlotVerifier};
 
 mod fetched {
@@ -286,13 +284,6 @@ fn request() -> InstallRequest {
     }
 }
 
-fn policy() -> HookPolicy {
-    HookPolicy {
-        trust: TrustPolicy::trusting(["org.vibevm"]).unwrap(),
-        allow_hooks: false,
-    }
-}
-
 fn run_install(
     source: &FixtureSource,
     project: &Path,
@@ -304,7 +295,7 @@ fn run_install(
         Plan::Ready(p) => p,
         Plan::Fresh => panic!("explicit-root install must produce a real resolution, not Fresh"),
     };
-    vibe_install::apply(source, *planned, integrity, &policy()).expect("apply succeeds")
+    vibe_install::apply(source, *planned, integrity).expect("apply succeeds")
 }
 
 fn run_install_format(
@@ -320,7 +311,7 @@ fn run_install_format(
         Plan::Ready(p) => p,
         Plan::Fresh => panic!("explicit-root install must produce a real resolution, not Fresh"),
     };
-    vibe_install::apply_with_spec_format(source, *planned, integrity, spec_format, &policy())
+    vibe_install::apply_with_spec_format(source, *planned, integrity, spec_format)
         .expect("apply succeeds")
 }
 
@@ -379,7 +370,7 @@ fn observed_install_reports_fetch_apply_and_record_in_order() {
         Plan::Ready(planned) => planned,
         Plan::Fresh => panic!("explicit install must resolve"),
     };
-    vibe_install::apply(&source, *planned, SlotIntegrity::TrustPresence, &policy()).unwrap();
+    vibe_install::apply(&source, *planned, SlotIntegrity::TrustPresence).unwrap();
 
     let events = log.0.lock().unwrap();
     let started = events
@@ -548,7 +539,7 @@ fn verify_surfaces_a_malformed_record_without_touching_the_slot() {
         Plan::Ready(planned) => planned,
         Plan::Fresh => panic!("explicit-root install must produce a real resolution, not Fresh"),
     };
-    let error = vibe_install::apply(&source, *planned, SlotIntegrity::Verify, &policy())
+    let error = vibe_install::apply(&source, *planned, SlotIntegrity::Verify)
         .expect_err("a present malformed record is never treated as a legacy missing record");
 
     assert!(

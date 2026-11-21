@@ -409,8 +409,10 @@ fn a_later_phase_failure_keeps_the_prerequisite_rows_before_its_own() {
     fs::create_dir_all(package.join("hooks")).unwrap();
     fs::write(
         package.join("vibe.toml"),
-        "[package]\ngroup='org.pre'\nname='ok'\nkind='tool'\nversion='0.1.0'\n\n\
-         [hooks]\npost-install='hooks/ok'\n",
+        format!(
+            "[package]\ngroup='org.pre'\nname='ok'\nkind='tool'\nversion='0.1.0'\n{}",
+            common::slot_script("org.pre/ok", "post-install", "hooks/ok")
+        ),
     )
     .unwrap();
     fs::write(package.join("hooks/ok.sh"), "printf PRE-OK\n").unwrap();

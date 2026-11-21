@@ -54,8 +54,8 @@ pub(crate) use global_mcp::{
     uninstall as run_global_mcp_uninstall, update as run_global_mcp_update, user_project_root,
 };
 pub(crate) use observer::{CliInstallObserver, CliRegistryEnvironment, LifecycleSlotObserver};
+pub(crate) use report::LifecycleHookView;
 pub(crate) use report::candidate_rows as source_candidate_rows;
-pub(crate) use report::{HookReportPresentation, LifecycleHookView};
 pub(crate) use resolver::{
     CliGitSourceMutation, CliPackageSourceFactory, CliQualifier, InstallResolver,
     any_package_source, build_install_resolver, build_install_resolver_deferred,

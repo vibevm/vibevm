@@ -13,7 +13,6 @@ use std::sync::Arc;
 
 use tempfile::TempDir;
 use vibe_core::manifest::{Lockfile, Manifest, NamingConvention};
-use vibe_core::trust::TrustPolicy;
 use vibe_core::user_config::SlotIntegrity;
 use vibe_core::{Group, PackageRef};
 use vibe_install::{InstallRequest, InstallSource, NullObserver, Plan};
@@ -22,10 +21,11 @@ use vibe_registry::{
     ShellGit,
 };
 use vibe_resolver::{FeatureRequest, ResolvedGraph, ResolvedNode, SolveError};
-use vibe_workspace::hooks::HookPolicy;
 
 #[path = "support/retained.rs"]
 mod retained;
+#[path = "support/slot_apply.rs"]
+mod slot_apply;
 
 #[derive(Debug, Clone)]
 struct PreparedObservation {
@@ -386,7 +386,19 @@ impl Fixture {
             &self.upstream,
             "vibe.toml",
             &format!(
-                "[package]\ngroup='org.vibevm'\nname='giant'\nkind='feat'\nversion='{version}'\nmaterialization='in-place'\n\n[hooks]\npre-install='hooks/prepare'\npost-install='hooks/finalise'\n{extra}"
+                "[package]\ngroup='org.vibevm'\nname='giant'\nkind='feat'\nversion='{version}'\nmaterialization='in-place'\n{}{}{extra}",
+                slot_apply::script_row(
+                    "org.vibevm/giant",
+                    "prepare",
+                    "pre-install",
+                    "hooks/prepare"
+                ),
+                slot_apply::script_row(
+                    "org.vibevm/giant",
+                    "finalise",
+                    "post-install",
+                    "hooks/finalise"
+                ),
             ),
         );
         write(&self.upstream, "SENTINEL", "tracked source must survive\n");
@@ -499,12 +511,6 @@ impl Fixture {
         assert_eq!(git(&self.slot, &["rev-parse", "HEAD"]), expected.commit);
     }
 }
-fn policy() -> HookPolicy {
-    HookPolicy {
-        trust: TrustPolicy::trusting(["org.vibevm"]).unwrap(),
-        allow_hooks: false,
-    }
-}
 
 #[test]
 #[specmark::spec(verifies = "spec://org.vibevm.core/vibevm/common/PROP-069#PACKAGE-ADMISSION")]
@@ -523,12 +529,11 @@ fn general_install_defers_in_place_instead_of_recloning() {
     assert_eq!(first.content_hash, original.content_hash);
     assert_eq!(git(&f.slot, &["rev-parse", "HEAD"]), first_commit);
     f.assert_no_reclone();
-    let applied = vibe_install::apply(&f.source, *plan, SlotIntegrity::Verify, &policy()).unwrap();
-    assert!(applied.outcome.hook_reports.is_empty());
-    assert!(applied.post_install_reports.is_empty());
+    let applied = slot_apply::apply(&f.source, &f.project, *plan, SlotIntegrity::Verify).unwrap();
+    assert!(applied.lifecycle_reports.is_empty());
     assert!(
         !f.slot.join("hook.log").exists(),
-        "actual no-op suppresses both hook phases"
+        "actual no-op raises neither slot event"
     );
     f.assert_provenance(&first);
     f.assert_no_reclone();
@@ -545,9 +550,15 @@ fn general_install_defers_in_place_instead_of_recloning() {
         first_commit,
         "prepare must not checkout the new revision"
     );
-    let applied = vibe_install::apply(&f.source, *plan, SlotIntegrity::Verify, &policy()).unwrap();
-    assert_eq!(applied.outcome.hook_reports.len(), 1);
-    assert_eq!(applied.post_install_reports.len(), 1);
+    let applied = slot_apply::apply(&f.source, &f.project, *plan, SlotIntegrity::Verify).unwrap();
+    assert_eq!(
+        applied
+            .lifecycle_reports
+            .iter()
+            .map(|report| (report.point.as_str(), report.status.as_str()))
+            .collect::<Vec<_>>(),
+        [("slot:pre-install", "ok"), ("slot:post-install", "ok")]
+    );
     assert_eq!(
         fs::read_to_string(f.slot.join("hook.log"))
             .unwrap()
@@ -603,7 +614,7 @@ fn held_project_observation_and_next_lock_use_current_preparation_alias() {
     plan.resolution[0].name = original_name;
     assert_eq!(f.source.prepared.borrow().len(), prepared_count);
     assert_eq!(worktree(&f.project), before);
-    vibe_install::apply(&f.source, *plan, SlotIntegrity::Verify, &policy()).unwrap();
+    vibe_install::apply(&f.source, *plan, SlotIntegrity::Verify).unwrap();
     let written = Lockfile::read(&lock_path).unwrap();
     assert_eq!(written.packages[0].registry.as_deref(), Some("fixture"));
     f.assert_provenance(f.source.prepared.borrow().last().unwrap());
@@ -703,9 +714,8 @@ fn selected_legacy_target_can_replace_an_old_common_definition() {
     f.seed();
     f.publish("1.1.0", "");
     let plan = f.ready();
-    let applied = vibe_install::apply(&f.source, *plan, SlotIntegrity::Verify, &policy()).unwrap();
-    assert_eq!(applied.outcome.hook_reports.len(), 1);
-    assert_eq!(applied.post_install_reports.len(), 1);
+    let applied = slot_apply::apply(&f.source, &f.project, *plan, SlotIntegrity::Verify).unwrap();
+    assert_eq!(applied.lifecycle_reports.len(), 2);
     assert!(
         Manifest::read(f.slot.join("vibe.toml"))
             .unwrap()

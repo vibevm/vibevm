@@ -57,7 +57,7 @@ fn leaf(registry: &Path, name: &str, marker: &str) {
     let path = package(
         registry,
         name,
-        "\n[hooks]\npre-install='hooks/record'\n",
+        &common::slot_script(&format!("{GROUP}/{name}"), "pre-install", "hooks/record"),
         marker,
     );
     write(

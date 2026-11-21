@@ -39,7 +39,6 @@ mod deps;
 mod documentation;
 mod embedded_source;
 mod features;
-mod hooks;
 mod mcp_server;
 mod meta;
 mod skill;
@@ -63,7 +62,6 @@ pub(crate) use documentation::{
 };
 pub use embedded_source::{EmbeddedSourceAuth, EmbeddedSourceDecl, EmbeddedSourceKind};
 pub use features::FeaturesTable;
-pub use hooks::HooksDecl;
 pub use mcp_server::{MCP_ARG_VARS, McpServerDecl};
 pub use meta::PackageMeta;
 pub use skill::{SkillDecl, SkillResourceDecl};

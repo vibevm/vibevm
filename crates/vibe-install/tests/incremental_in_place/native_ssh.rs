@@ -102,8 +102,7 @@ fn public_ssh_key_and_agent_fresh_warm_update_and_noop_use_retained_source() {
             Some("v1.0.0")
         );
         let before = ssh_contacts(&info);
-        let result =
-            vibe_install::apply(&f.source, *plan, SlotIntegrity::Verify, &policy()).unwrap();
+        let result = vibe_install::apply(&f.source, *plan, SlotIntegrity::Verify).unwrap();
         assert_eq!(result.outcome.materialised.len(), 1);
         assert_eq!(ssh_contacts(&info), before);
         assert_eq!(
@@ -137,8 +136,7 @@ fn public_ssh_key_and_agent_fresh_warm_update_and_noop_use_retained_source() {
             Some("v1.1.0")
         );
         let before = ssh_contacts(&info);
-        let result =
-            vibe_install::apply(&f.source, *plan, SlotIntegrity::Verify, &policy()).unwrap();
+        let result = vibe_install::apply(&f.source, *plan, SlotIntegrity::Verify).unwrap();
         assert_eq!(result.outcome.materialised.len(), 1);
         assert_eq!(ssh_contacts(&info), before);
         assert_eq!(
@@ -157,8 +155,7 @@ fn public_ssh_key_and_agent_fresh_warm_update_and_noop_use_retained_source() {
         let plan = f.ready();
         let before = ssh_contacts(&info);
         let inode = fs::metadata(&f.slot).unwrap().ino();
-        let result =
-            vibe_install::apply(&f.source, *plan, SlotIntegrity::Verify, &policy()).unwrap();
+        let result = vibe_install::apply(&f.source, *plan, SlotIntegrity::Verify).unwrap();
         assert_eq!(result.outcome.skipped.len(), 1);
         assert_eq!(fs::metadata(&f.slot).unwrap().ino(), inode);
         assert_eq!(ssh_contacts(&info), before);
@@ -181,13 +178,18 @@ fn public_ssh_hook_failure_restores_original_slot_and_metadata() {
             .as_deref(),
         Some("v1.0.0")
     );
-    vibe_install::apply(&f.source, *initial, SlotIntegrity::Verify, &policy()).unwrap();
+    vibe_install::apply(&f.source, *initial, SlotIntegrity::Verify).unwrap();
     write(&f.slot, ".git/sentinel", "rollback metadata");
     write(&f.slot, "untracked.tmp", "old actor bytes");
     let work = Path::new(info["root"].as_str().unwrap()).join("work");
     git(&work, &["reset", "--hard", "v1.1.0"]);
     let mut manifest = fs::read_to_string(work.join("vibe.toml")).unwrap();
-    manifest.push_str("\n[hooks]\npre-install='hooks/ssh-failure'\n");
+    manifest.push_str(&slot_apply::script_row(
+        "org.vibevm/giant",
+        "ssh-failure",
+        "pre-install",
+        "hooks/ssh-failure",
+    ));
     write(&work, "vibe.toml", &manifest);
     let marker = f._temp.path().join("hook-executed");
     write(
@@ -222,9 +224,9 @@ fn public_ssh_hook_failure_restores_original_slot_and_metadata() {
     );
     let before = failures::snapshot(&f.project);
     let contacts = ssh_contacts(&info);
-    let error =
-        vibe_install::apply(&f.source, *plan, SlotIntegrity::Verify, &policy()).unwrap_err();
-    assert!(error.to_string().contains("37"), "{error}");
+    let error = slot_apply::apply(&f.source, &f.project, *plan, SlotIntegrity::Verify).unwrap_err();
+    slot_apply::discard_run_record(&f.project);
+    assert!(slot_apply::slot_failure(&error).0.contains("37"), "{error}");
     assert_eq!(fs::read_to_string(&marker).unwrap(), "observed");
     assert_eq!(failures::snapshot(&f.project), before);
     assert_eq!(ssh_contacts(&info), contacts);

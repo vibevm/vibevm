@@ -153,7 +153,6 @@ fn the_old_wrappers_write_no_trace_and_preserve_freshness() {
         SlotIntegrity::TrustPresence,
         SpecFormat::Mixed,
         None,
-        None,
     )
     .expect("the untraced install succeeds");
     assert!(
@@ -170,7 +169,6 @@ fn the_old_wrappers_write_no_trace_and_preserve_freshness() {
         &resolution,
         SlotIntegrity::TrustPresence,
         SpecFormat::Mixed,
-        None,
         None,
     )
     .expect("the second untraced install succeeds");

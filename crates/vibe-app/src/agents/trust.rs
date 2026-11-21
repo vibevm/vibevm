@@ -6,8 +6,7 @@
 //! that turns the files into it: the base list vibe ships, then the
 //! `[trust]` table of the applied site profile, then `trusted_groups` /
 //! `untrusted_groups` of `<settings>/agents.toml`. Every consumer — an
-//! agent step, a dependency's `slot:` contribution, a `[hooks]` entry and
-//! `vibe agent list` — reads the value this returns and no second list.
+//! agent step, a dependency's `slot:` contribution and `vibe agent list` — reads the value this returns and no second list.
 
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-065#ordinary-trust");
 

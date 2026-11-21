@@ -87,7 +87,7 @@ fn consumer(planning: &str) -> ConsumerChoices {
 fn ordinary_roundtrip_retains_all_data_and_evaluates_dormant_answers() {
     let text = header("flow")
         + rich()
-        + "\n[hooks]\npost-install='hooks/done'\n[compatibility]\nmin_vibe_version='1.0.0'\n";
+        + "\n[[extension]]\nid='done'\npoint='slot:post-install'\nhandler={kind='script',base='hooks/done'}\n[compatibility]\nmin_vibe_version='1.0.0'\n";
     let manifest = Manifest::parse_str(&text).unwrap();
     let rendered = toml::to_string(&manifest).unwrap();
     let back = Manifest::parse_str(&rendered).unwrap();

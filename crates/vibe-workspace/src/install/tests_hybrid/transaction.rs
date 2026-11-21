@@ -60,7 +60,6 @@ fn a_per_unit_backend_refusal_leaves_the_units_artifacts_byte_exact() {
         SlotIntegrity::TrustPresence,
         SpecFormat::Xml,
         Some(&SourceHash),
-        None,
     )
     .unwrap();
 
@@ -93,7 +92,6 @@ fn a_per_unit_backend_refusal_leaves_the_units_artifacts_byte_exact() {
         SlotIntegrity::TrustPresence,
         SpecFormat::Xml,
         Some(&SourceHash),
-        None,
     )
     .unwrap_err();
     assert!(
@@ -146,7 +144,6 @@ fn an_unchanged_reinstall_preserves_unit_bytes_and_mtimes() {
         &ws,
         &[parent.clone(), child.clone()],
         SlotIntegrity::TrustPresence,
-        None,
     )
     .unwrap();
 
@@ -172,7 +169,7 @@ fn an_unchanged_reinstall_preserves_unit_bytes_and_mtimes() {
     let index_mtime = fs::metadata(&parent_index).unwrap().modified().unwrap();
     let static_mtime = fs::metadata(&parent_static).unwrap().modified().unwrap();
 
-    apply_resolution(&ws, &[parent, child], SlotIntegrity::TrustPresence, None).unwrap();
+    apply_resolution(&ws, &[parent, child], SlotIntegrity::TrustPresence).unwrap();
 
     assert_eq!(fs::read(&parent_index).unwrap(), index_before);
     assert_eq!(fs::read(&parent_static).unwrap(), static_before);
@@ -282,7 +279,6 @@ fn an_unchanged_node_recompile_is_byte_and_mtime_identical_through_the_transacti
         &ws,
         &[parent.clone(), child.clone()],
         SlotIntegrity::TrustPresence,
-        None,
     )
     .unwrap();
 
@@ -302,7 +298,7 @@ fn an_unchanged_node_recompile_is_byte_and_mtime_identical_through_the_transacti
     let index_mtime = fs::metadata(&node_index).unwrap().modified().unwrap();
     let static_mtime = fs::metadata(&node_static).unwrap().modified().unwrap();
 
-    apply_resolution(&ws, &[parent, child], SlotIntegrity::TrustPresence, None).unwrap();
+    apply_resolution(&ws, &[parent, child], SlotIntegrity::TrustPresence).unwrap();
 
     assert_eq!(fs::read(&node_index).unwrap(), index_before);
     assert_eq!(fs::read(&node_static).unwrap(), static_before);

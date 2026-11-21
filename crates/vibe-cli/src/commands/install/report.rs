@@ -6,103 +6,23 @@ specmark::scope!("spec://org.vibevm.core/vibevm/VIBEVM-SPEC#install-workflow-in-
 
 use vibe_install::SlotLifecycleReport;
 use vibe_wire::generated::install_report::{
-    InstallContributionReport, InstallDelegation, InstallHookReport, InstallSlotTarget,
+    InstallContributionReport, InstallDelegation, InstallSlotTarget,
 };
-use vibe_workspace::hooks::HookReport;
 
 use crate::output;
 use crate::output::language::{Cell, List, Role, Row};
 
 use super::WorldCallbackSummary;
 
-/// One rendering policy for install-hook reports across every install-family
-/// command. The view borrows the pre/post slices so callers retain the typed
-/// reports without cloning or flattening away phase ordering.
-pub(crate) struct HookReportView<'a> {
-    reports: Vec<&'a HookReport>,
-}
-
-pub(crate) trait HookReportPresentation {
-    fn quiet_suffix(&self) -> String;
-}
-
-impl<'a> HookReportView<'a> {
-    pub(crate) fn new(pre_install: &'a [HookReport], post_install: &'a [HookReport]) -> Self {
-        Self {
-            reports: pre_install.iter().chain(post_install).collect(),
-        }
-    }
-
-    /// The typed rows the one install document carries. Generated wire, not
-    /// an ad-hoc object: the hook record is part of the registered format.
-    pub(crate) fn typed(&self) -> Vec<InstallHookReport> {
-        self.reports
-            .iter()
-            .map(|report| InstallHookReport {
-                phase: report.phase.to_string(),
-                status: report.status.to_string(),
-                note: report.note.clone(),
-            })
-            .collect()
-    }
-
-    pub(crate) fn flagged_count(&self) -> usize {
-        self.reports
-            .iter()
-            .filter(|report| !matches!(report.status, "not-declared" | "ran"))
-            .count()
-    }
-
-    pub(crate) fn quiet_suffix(&self) -> String {
-        let flagged: Vec<String> = self
-            .reports
-            .iter()
-            .filter(|report| !matches!(report.status, "not-declared" | "ran"))
-            .map(|report| match report.note.as_deref() {
-                Some(note) => format!("{}: {} — {note}", report.phase, report.status),
-                None => format!("{}: {}", report.phase, report.status),
-            })
-            .collect();
-        let count = self.flagged_count();
-        if count == 0 {
-            String::new()
-        } else {
-            format!(
-                ", {count} hook report{} flagged ({})",
-                if count == 1 { "" } else { "s" },
-                flagged.join("; "),
-            )
-        }
-    }
-
-    pub(crate) fn render_human(&self, ctx: &output::Context) {
-        for report in &self.reports {
-            let note = report
-                .note
-                .as_deref()
-                .map(|note| format!(" — {note}"))
-                .unwrap_or_default();
-            match report.status {
-                "not-declared" => {}
-                "ran" => ctx.step(&format!("{} hook ran", report.phase)),
-                "skipped-needs-consent" => ctx.step(&format!(
-                    "{} hook skipped (consent withheld){note}",
-                    report.phase
-                )),
-                "post-install-failed" => ctx.step(&format!("{} hook failed{note}", report.phase)),
-                status => ctx.step(&format!("{} hook reported `{status}`{note}", report.phase)),
-            }
-        }
-    }
-}
-
+/// The quiet-summary account of slot rows that failed without stopping the
+/// command, shared by the install-family commands that report them.
 pub(crate) struct LifecycleHookView<'a>(&'a [SlotLifecycleReport]);
 
 impl LifecycleHookView<'_> {
     pub(crate) const fn new(reports: &[SlotLifecycleReport]) -> LifecycleHookView<'_> {
         LifecycleHookView(reports)
     }
-    fn quiet_suffix(&self) -> String {
+    pub(crate) fn quiet_suffix(&self) -> String {
         let flagged = self.0.iter().filter(|report| report.flagged).count();
         if flagged == 0 {
             String::new()
@@ -112,18 +32,6 @@ impl LifecycleHookView<'_> {
                 if flagged == 1 { "" } else { "s" },
             )
         }
-    }
-}
-
-impl HookReportPresentation for HookReportView<'_> {
-    fn quiet_suffix(&self) -> String {
-        HookReportView::quiet_suffix(self)
-    }
-}
-
-impl HookReportPresentation for LifecycleHookView<'_> {
-    fn quiet_suffix(&self) -> String {
-        LifecycleHookView::quiet_suffix(self)
     }
 }
 
@@ -226,7 +134,6 @@ pub(crate) fn contribution_rows(reports: &[SlotLifecycleReport]) -> Vec<InstallC
 pub(super) fn render_human_progress(
     ctx: &output::Context,
     progress: &vibe_install::InstallProgress,
-    hooks: &HookReportView<'_>,
     world_summary: WorldCallbackSummary,
     trace_suffix: &str,
 ) {
@@ -250,13 +157,11 @@ pub(super) fn render_human_progress(
     let plural = if count == 1 { "" } else { "s" };
     if ctx.is_quiet() {
         ctx.summary(&format!(
-            "vibe install: {count} package{plural} materialised{}{}{trace_suffix}",
-            hooks.quiet_suffix(),
+            "vibe install: {count} package{plural} materialised{}{trace_suffix}",
             ritual_suffix(world_summary),
         ));
         return;
     }
-    hooks.render_human(ctx);
     // The trailer is the last block (PROP-067 `#trailer`): what the run did,
     // then the slots it left alone, then how long it took.
     let mut what = format!(

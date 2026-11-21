@@ -1,4 +1,4 @@
-//! Shared fixture for the `[hooks]`-sugar / explicit-slot install e2e.
+//! Shared fixture for the slot-contribution install e2e.
 //!
 //! One published `org.example/hooked` package whose contribution shape is
 //! chosen by [`Fixture`], plus the readers every case in the family needs: the
@@ -48,26 +48,14 @@ pub fn registry(root: &Path, fixture: Fixture) -> PathBuf {
         .join("v0.1.0");
     fs::create_dir_all(package.join("hooks")).unwrap();
     fs::create_dir_all(package.join("boot")).unwrap();
+    let own = |point: &str, base: &str| super::slot_script("org.example/hooked", point, base);
+    let own_pre_and_post = own("pre-install", "hooks/pre") + &own("post-install", "hooks/post");
+    let own_failing_pre = own("pre-install", "hooks/fail");
+    let own_failing_post = own("post-install", "hooks/fail");
     let hooks = match fixture {
-        Fixture::Timing => {
-            r#"
-[hooks]
-pre-install = "hooks/pre"
-post-install = "hooks/post"
-"#
-        }
-        Fixture::PreFail => {
-            r#"
-[hooks]
-pre-install = "hooks/fail"
-"#
-        }
-        Fixture::PostFail => {
-            r#"
-[hooks]
-post-install = "hooks/fail"
-"#
-        }
+        Fixture::Timing => own_pre_and_post.as_str(),
+        Fixture::PreFail => own_failing_pre.as_str(),
+        Fixture::PostFail => own_failing_post.as_str(),
         Fixture::JudgmentSkip => {
             r#"
 [[extension]]
@@ -259,7 +247,12 @@ pub fn post_package(registry: &Path, name: &str, fail: bool) {
     fs::write(
         package.join("vibe.toml"),
         format!(
-            "[package]\ngroup='org.continue'\nname='{name}'\nkind='tool'\nversion='0.1.0'\n\n[hooks]\npost-install='hooks/post'\n"
+            "[package]\ngroup='org.continue'\nname='{name}'\nkind='tool'\nversion='0.1.0'\n{}",
+            super::slot_script(
+                &format!("org.continue/{name}"),
+                "post-install",
+                "hooks/post"
+            )
         ),
     )
     .unwrap();

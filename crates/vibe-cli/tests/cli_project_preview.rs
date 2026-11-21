@@ -343,7 +343,12 @@ fn preview_does_not_dispatch_hooks_or_compile_boot() {
         "This hook must never be dispatched by a preview.\n",
     )
     .unwrap();
-    fs::write(&manifest_path, format!("{manifest}\n[boot_snippet]\nsource='{snippet}'\nlink='static'\n[hooks]\npre-install='hooks/canary'\n")).unwrap();
+    let canary = common::slot_script("org.example/root", "pre-install", "hooks/canary");
+    fs::write(
+        &manifest_path,
+        format!("{manifest}\n[boot_snippet]\nsource='{snippet}'\nlink='static'\n{canary}"),
+    )
+    .unwrap();
     let before = fixture.snapshot();
     let docs = fixture.invoke(true, true);
     assert_eq!(plan(&docs)["preview_complete"], true);

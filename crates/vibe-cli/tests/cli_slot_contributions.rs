@@ -1,6 +1,5 @@
-//! Explicit `slot:` contributions at the production install boundary — the
-//! same always-run engine the `[hooks]` sugar desugars into, driven WITHOUT
-//! any sugar.
+//! `slot:` contributions at the production install boundary, beyond a
+//! package's own install scripts.
 //!
 //! Covers the slot artifact reaching a later phase envelope across a world
 //! reload, a host slot declaration keeping its own target context / state /
@@ -13,8 +12,7 @@ use std::fs;
 
 use common::UserScratch;
 use common::hook_slot::{
-    Fixture, documents, install, lifecycle_state, plain_package, post_package, setup,
-    slot_outcomes, state_key,
+    Fixture, documents, install, lifecycle_state, plain_package, post_package, setup, slot_outcomes,
 };
 
 #[test]
@@ -99,36 +97,27 @@ handler = { kind = "script", base = "scripts/observe" }
 }
 
 #[test]
-fn explicit_slot_contribution_uses_the_same_always_run_engine_without_sugar() {
+fn slot_contribution_reports_its_authored_key_reference_and_target() {
     let (_outer, user, project, registry) = setup(Fixture::Timing);
-    let package = registry.join("org.example").join("hooked").join("v0.1.0");
-    let manifest = package.join("vibe.toml");
-    let body = fs::read_to_string(&manifest).unwrap().replace(
-        "[hooks]\npre-install = \"hooks/pre\"\npost-install = \"hooks/post\"\n",
-        r#"[[extension]]
-id = "explicit-pre"
-point = "slot:pre-install"
-handler = { kind = "script", base = "hooks/pre" }
-"#,
-    );
-    fs::write(manifest, body).unwrap();
     let output = install(&user, project.path(), &registry);
     assert!(output.status.success());
     let docs = documents(&output.stdout);
     let hooks = slot_outcomes(&docs);
-    assert_eq!(hooks.len(), 1);
+    assert_eq!(hooks.len(), 2);
     assert_eq!(
         hooks[0]["key"],
-        "org.example/hooked#explicit-pre@slot(org.example/hooked@0.1.0)"
+        "org.example/hooked#pre-install@slot(org.example/hooked@0.1.0)"
     );
-    assert_eq!(hooks[0]["reference"], "org.example/hooked#explicit-pre");
+    assert_eq!(hooks[0]["reference"], "org.example/hooked#pre-install");
     assert_eq!(hooks[0]["slot_target"]["name"], "hooked");
     assert_eq!(hooks[0]["point"], "slot:pre-install");
     assert_eq!(hooks[0]["status"], "ok");
     assert!(
-        !lifecycle_state(project.path())
+        lifecycle_state(project.path())
             .execution
-            .contains_key(&state_key("@vibe/hooks/pre-install"))
+            .keys()
+            .all(|key| !key.contains("@vibe/")),
+        "an authored contribution records under its own id, never a reserved one"
     );
 }
 

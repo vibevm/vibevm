@@ -6,7 +6,6 @@ use std::os::unix::fs::MetadataExt;
 use std::path::PathBuf;
 use std::process::{Command, Stdio};
 use vibe_core::manifest::{Lockfile, NamingConvention};
-use vibe_core::trust::TrustPolicy;
 use vibe_registry::git_backend::shell::native_admission::{
     GitInstallation, NativeConfigSelection, NativeGitAdmission, TlsTrust,
 };
@@ -116,16 +115,7 @@ fn host_path_disappearance_after_prepared_candidate_refuses_apply_before_effects
         weak: Default::default(),
     };
     fs::remove_file(root.join("target")).unwrap();
-    let error = apply(
-        &NoResolution,
-        planned,
-        SlotIntegrity::Verify,
-        &HookPolicy {
-            trust: TrustPolicy::EMPTY,
-            allow_hooks: false,
-        },
-    )
-    .unwrap_err();
+    let error = apply(&NoResolution, planned, SlotIntegrity::Verify).unwrap_err();
     assert!(error.to_string().contains("PathCheck"));
     assert_eq!(
         fs::read_to_string(root.join("vibe.toml")).unwrap(),
@@ -305,15 +295,7 @@ fn exercise(filter: bool) {
     let ino = original.metadata().unwrap().ino();
     let before_contacts =
         fs::read(Path::new(info["root"].as_str().unwrap()).join("a.log")).unwrap();
-    let result = apply(
-        &NoResolution,
-        planned,
-        SlotIntegrity::Verify,
-        &HookPolicy {
-            trust: TrustPolicy::EMPTY,
-            allow_hooks: false,
-        },
-    );
+    let result = apply(&NoResolution, planned, SlotIntegrity::Verify);
     assert_eq!(
         fs::read(Path::new(info["root"].as_str().unwrap()).join("a.log")).unwrap(),
         before_contacts,

@@ -28,7 +28,7 @@ fn observed_materialise(
             slot_integrity: SlotIntegrity::TrustPresence,
             spec_format: SpecFormat::Mixed,
             slot_verifier: None,
-            lifecycle: MaterialiseLifecycle::None,
+            lifecycle: SlotLifecycleMode::None,
             progress: Progress::new(log),
             rollback: None,
         },
@@ -92,7 +92,6 @@ fn apply_resolution_materialises_and_regenerates_a_standalone_project() {
         &ws,
         std::slice::from_ref(&dep),
         SlotIntegrity::TrustPresence,
-        None,
     )
     .unwrap();
 
@@ -134,7 +133,7 @@ fn apply_resolution_with_no_dependencies_still_writes_index() {
     );
     write(ws_dir.path(), boot_rel("00-core.md"), "# core");
     let ws = Workspace::load(ws_dir.path()).unwrap();
-    let mut outcome = apply_resolution(&ws, &[], SlotIntegrity::TrustPresence, None).unwrap();
+    let mut outcome = apply_resolution(&ws, &[], SlotIntegrity::TrustPresence).unwrap();
     assert!(outcome.materialised.is_empty());
     assert_eq!(outcome.nodes_regenerated, vec!["."]);
     assert!(outcome.take_post_install_plan().is_none());
@@ -165,7 +164,6 @@ fn apply_resolution_inline_dependency_produces_inline_md() {
         &ws,
         std::slice::from_ref(&dep),
         SlotIntegrity::TrustPresence,
-        None,
     )
     .unwrap();
 
@@ -198,7 +196,6 @@ fn apply_resolution_renders_when_from_a_boot_snippet() {
         &ws,
         std::slice::from_ref(&dep),
         SlotIntegrity::TrustPresence,
-        None,
     )
     .unwrap();
 
@@ -241,7 +238,7 @@ fn apply_resolution_skips_a_dependency_outside_the_node_requires() {
     );
 
     let ws = Workspace::load(ws_dir.path()).unwrap();
-    apply_resolution(&ws, &[wal, extra], SlotIntegrity::TrustPresence, None).unwrap();
+    apply_resolution(&ws, &[wal, extra], SlotIntegrity::TrustPresence).unwrap();
 
     let index = fs::read_to_string(ws_dir.path().join(boot_rel("INDEX.md"))).unwrap();
     assert!(
@@ -281,7 +278,6 @@ fn apply_resolution_prunes_a_stale_slot_on_version_bump() {
         &ws,
         std::slice::from_ref(&wal_v1),
         SlotIntegrity::TrustPresence,
-        None,
     )
     .unwrap();
     assert!(
@@ -303,7 +299,6 @@ fn apply_resolution_prunes_a_stale_slot_on_version_bump() {
         &ws,
         std::slice::from_ref(&wal_v2),
         SlotIntegrity::TrustPresence,
-        None,
     )
     .unwrap();
     assert!(
@@ -348,7 +343,6 @@ fn apply_resolution_skips_a_present_slot_under_trust_presence() {
         &ws,
         std::slice::from_ref(&dep),
         SlotIntegrity::TrustPresence,
-        None,
     )
     .unwrap();
     assert_eq!(first.materialised, vec![deps_rel("org.vibevm.wal/0.3.0")]);
@@ -366,7 +360,6 @@ fn apply_resolution_skips_a_present_slot_under_trust_presence() {
         &ws,
         std::slice::from_ref(&dep),
         SlotIntegrity::TrustPresence,
-        None,
     )
     .unwrap();
     assert!(
@@ -399,7 +392,7 @@ fn apply_resolution_rematerialises_a_present_slot_under_verify() {
     );
     let ws = Workspace::load(ws_dir.path()).unwrap();
 
-    apply_resolution(&ws, std::slice::from_ref(&dep), SlotIntegrity::Verify, None).unwrap();
+    apply_resolution(&ws, std::slice::from_ref(&dep), SlotIntegrity::Verify).unwrap();
     let sentinel = ws_dir
         .path()
         .join(deps_rel("org.vibevm.wal/0.3.0/SENTINEL"));
@@ -407,8 +400,7 @@ fn apply_resolution_rematerialises_a_present_slot_under_verify() {
 
     // Second apply under Verify reports a materialisation pass, but the
     // unrecorded sentinel remains outside materialiser ownership.
-    let second =
-        apply_resolution(&ws, std::slice::from_ref(&dep), SlotIntegrity::Verify, None).unwrap();
+    let second = apply_resolution(&ws, std::slice::from_ref(&dep), SlotIntegrity::Verify).unwrap();
     assert_eq!(second.materialised, vec![deps_rel("org.vibevm.wal/0.3.0")]);
     assert!(second.skipped.is_empty());
     assert!(sentinel.is_file());
@@ -469,7 +461,6 @@ fn verified_slot_fixture() -> (Workspace, ResolvedDep, TempDir, TempDir, PathBuf
         &ws,
         std::slice::from_ref(&dep),
         SlotIntegrity::TrustPresence,
-        None,
     )
     .unwrap();
     let sentinel = ws_dir
@@ -489,7 +480,6 @@ fn verify_accepts_a_hash_matching_slot_without_copying() {
         std::slice::from_ref(&dep),
         SlotIntegrity::Verify,
         Some(&verifier),
-        None,
     )
     .unwrap();
     assert!(
@@ -517,7 +507,6 @@ fn verify_rematerialises_a_diverged_slot_and_warns_with_both_hashes() {
         std::slice::from_ref(&dep),
         SlotIntegrity::Verify,
         Some(&verifier),
-        None,
     )
     .unwrap();
     assert_eq!(outcome.materialised, vec![deps_rel("org.vibevm.wal/0.3.0")]);
@@ -553,7 +542,6 @@ fn verify_falls_back_to_rematerialising_an_unverifiable_slot_silently() {
         std::slice::from_ref(&dep),
         SlotIntegrity::Verify,
         Some(&verifier),
-        None,
     )
     .unwrap();
     assert_eq!(outcome.materialised, vec![deps_rel("org.vibevm.wal/0.3.0")]);
@@ -576,7 +564,6 @@ fn trust_presence_never_consults_the_slot_verifier() {
         std::slice::from_ref(&dep),
         SlotIntegrity::TrustPresence,
         Some(&UntouchedVerifier),
-        None,
     )
     .unwrap();
     assert_eq!(outcome.skipped, vec![deps_rel("org.vibevm.wal/0.3.0")]);

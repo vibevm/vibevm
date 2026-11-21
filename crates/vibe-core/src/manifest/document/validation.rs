@@ -81,7 +81,6 @@ impl Manifest {
                 (!self.skills.is_empty(), "[[skill]]"),
                 (!self.binaries.is_empty(), "[[binary]]"),
                 (!self.mcp_servers.is_empty(), "[[mcp_server]]"),
-                (!self.hooks.is_empty(), "[hooks]"),
                 (!self.compatibility.is_empty(), "[compatibility]"),
                 (self.configuration.is_some(), "[configuration]"),
                 (!self.features.is_empty(), "[features]"),

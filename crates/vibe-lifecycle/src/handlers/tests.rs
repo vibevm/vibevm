@@ -8,7 +8,7 @@ use vibe_wire::generated::lifecycle::e1::context::{
     Artifact, Context, Project, RunAgentMode, World,
 };
 use vibe_wire::generated::lifecycle::e1::reply::{Reply, ReplyArtifact, ReplyStatus};
-use vibe_workspace::hooks::InterpreterProbe;
+use vibe_workspace::interpreter::InterpreterProbe;
 
 use super::*;
 use crate::process::{ProcessError, ProcessOutput, allocate_run_id};

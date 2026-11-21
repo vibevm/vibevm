@@ -3,7 +3,6 @@
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-073#NATIVE-ROUTES");
 use super::*;
 use vibe_core::manifest::SourceKind;
-use vibe_core::trust::TrustPolicy;
 
 fn git(info: &serde_json::Value, cwd: &Path, args: &[&str]) -> String {
     let result = Command::new("/usr/bin/git")
@@ -208,16 +207,7 @@ fn direct_git_and_override_complete_copy_and_inplace_public_plan_apply() {
         };
         let contacts = f.contacts("a");
         f.move_tag();
-        let result = vibe_install::apply(
-            &source,
-            *plan,
-            SlotIntegrity::Verify,
-            &vibe_workspace::hooks::HookPolicy {
-                trust: TrustPolicy::EMPTY,
-                allow_hooks: false,
-            },
-        )
-        .unwrap();
+        let result = vibe_install::apply(&source, *plan, SlotIntegrity::Verify).unwrap();
         assert_eq!(result.outcome.materialised.len(), 1);
         assert_eq!(
             f.contacts("a"),

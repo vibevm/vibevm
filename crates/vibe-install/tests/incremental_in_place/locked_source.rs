@@ -7,7 +7,7 @@ use super::*;
 #[specmark::spec(verifies = "spec://org.vibevm.core/vibevm/common/PROP-073#LOCKED-SOURCE-LAW")]
 fn locked_native_update_retains_refs_config_and_never_fetches_live_old_origin() {
     let (_server, info, f) = fixture(false);
-    vibe_install::apply(&f.source, *f.ready(), SlotIntegrity::Verify, &policy()).unwrap();
+    vibe_install::apply(&f.source, *f.ready(), SlotIntegrity::Verify).unwrap();
     let lock = Lockfile::read(f.project.join("vibe.lock")).unwrap();
     let previous = git(&f.slot, &["rev-parse", "HEAD"]);
     git(

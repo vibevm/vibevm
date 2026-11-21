@@ -337,26 +337,6 @@ version = "0.1.0"
 }
 
 #[test]
-fn hooks_parse_both_phases() {
-    let h: HooksDecl = toml::from_str(
-        r#"pre-install = "hooks/prepare"
-post-install = "hooks/finalise"
-"#,
-    )
-    .unwrap();
-    assert_eq!(
-        h.pre_install.as_deref().and_then(|p| p.to_str()),
-        Some("hooks/prepare")
-    );
-    assert_eq!(
-        h.post_install.as_deref().and_then(|p| p.to_str()),
-        Some("hooks/finalise")
-    );
-    assert!(!h.is_empty());
-    assert!(HooksDecl::default().is_empty());
-}
-
-#[test]
 fn skill_decl_parses_include() {
     let s: SkillDecl = toml::from_str(
         r#"name = "vim"

@@ -26,8 +26,8 @@ fn failing_package(registry: &std::path::Path, point: &str, sentinel: &str) {
     std::fs::write(
         package.join("vibe.toml"),
         format!(
-            "[package]\ngroup='org.fail'\nname='hooked'\nkind='tool'\nversion='0.1.0'\n\n\
-             [hooks]\n{point}='hooks/fail'\n"
+            "[package]\ngroup='org.fail'\nname='hooked'\nkind='tool'\nversion='0.1.0'\n{}",
+            common::slot_script("org.fail/hooked", point, "hooks/fail")
         ),
     )
     .unwrap();

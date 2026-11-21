@@ -150,7 +150,6 @@ fn the_analyzed_lane_is_byte_equal_to_the_written_one_with_hoisting_and_members(
         SlotIntegrity::TrustPresence,
         SpecFormat::Xml,
         None,
-        None,
     )
     .expect("the install applies");
     publish_resolution_lock(ws_dir.path(), &resolution);

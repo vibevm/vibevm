@@ -116,8 +116,6 @@ pub struct InstallRun {
     /// the runs that changed the least. Zero on the fresh fast path, which
     /// resolves nothing at all.
     pub packages_resolved: usize,
-    /// The hook reports this apply produced.
-    pub hooks: Vec<vibe_workspace::hooks::HookReport>,
     /// The slot-lifecycle rows this apply produced.
     pub slot_reports: Vec<SlotLifecycleReport>,
     /// The phase-ritual rows the post-durability callback produced.
@@ -150,7 +148,6 @@ impl InstallRun {
             disposition,
             progress: vibe_install::InstallProgress::default(),
             packages_resolved: 0,
-            hooks: Vec::new(),
             slot_reports: Vec::new(),
             contributions: Vec::new(),
             notices: Vec::new(),

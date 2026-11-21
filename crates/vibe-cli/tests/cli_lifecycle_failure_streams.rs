@@ -15,7 +15,10 @@ fn post_fail_reply_keeps_bounded_script_streams_in_generated_outcome() {
     fs::create_dir_all(package.join("hooks")).unwrap();
     fs::write(
         package.join("vibe.toml"),
-        "[package]\ngroup='org.reply'\nname='failed'\nkind='tool'\nversion='0.1.0'\n\n[hooks]\npost-install='hooks/post'\n",
+        format!(
+            "[package]\ngroup='org.reply'\nname='failed'\nkind='tool'\nversion='0.1.0'\n{}",
+            common::slot_script("org.reply/failed", "post-install", "hooks/post")
+        ),
     )
     .unwrap();
     fs::write(
