@@ -275,4 +275,4 @@ pub use setup::{SetupPreview, SetupRow};
 mod default_scope;
 pub use default_scope::{DefaultScope, DefaultScopePreview, DefaultScopeRow};
 mod native_settings;
-pub use native_settings::{CodexSettingsAdapter, OpenCodeSettingsAdapter, NativeSettingsAdapter, NativeSettingsPreview, PiSettingsAdapter, QwenSettingsAdapter};
+pub use native_settings::{CodexSettingsAdapter, HermesSettingsAdapter, OpenCodeSettingsAdapter, NativeSettingsAdapter, NativeSettingsPreview, PiSettingsAdapter, QwenSettingsAdapter};

@@ -14,7 +14,7 @@ mod roster;
 pub use id::SecretId;
 pub use mutations::{Expected, MetadataSnapshot, ReferenceGuard, ReferenceInventory};
 pub use references::{
-    CodexNativePreview, OpenCodeNativePreview, PiNativePreview, QwenNativePreview, ReferenceBinding, ReferenceIndex, ReferenceRow, ReferenceSelection, ReferenceSnapshot,
+    CodexNativePreview, HermesNativePreview, OpenCodeNativePreview, PiNativePreview, QwenNativePreview, ReferenceBinding, ReferenceIndex, ReferenceRow, ReferenceSelection, ReferenceSnapshot,
 };
 
 const VALUE_LIMIT: usize = 1024 * 1024;

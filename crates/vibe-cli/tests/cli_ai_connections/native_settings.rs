@@ -395,3 +395,82 @@ fn opencode_public_native_keeps_model_comments_and_refuses_file_substitution() {
     assert!(!f.run(&refused, None).status.success());
     assert_eq!(fs::read(path).unwrap(), after);
 }
+
+#[test]
+fn hermes_public_yaml_apply_preserves_comments_and_refuses_command_shadow() {
+    let f = F::new();
+    let dir = f.0.path().join(".hermes");
+    fs::create_dir(&dir).unwrap();
+    fs::set_permissions(&dir, fs::Permissions::from_mode(0o700)).unwrap();
+    let path = dir.join("config.yaml");
+    let before=b"# keep\n_config_version: 12\nmodel:\n  provider: old # inline\n  default: old\nneighbor:\n  enabled: true\n";
+    fs::write(&path, before).unwrap();
+    fs::set_permissions(&path, fs::Permissions::from_mode(0o600)).unwrap();
+    let key = f.json(
+        &[
+            "secrets",
+            "create",
+            "--kind",
+            "api-key",
+            "--label",
+            "Synthetic",
+            "--value-stdin",
+        ],
+        Some(VALUE.as_bytes()),
+    );
+    let id = key["items"][0]["id"].as_str().unwrap();
+    let added = f.json(
+        &[
+            "ai",
+            "connections",
+            "add",
+            "--label",
+            "Synthetic",
+            "--endpoint",
+            "http://127.0.0.1:9/v1",
+            "--api-kind",
+            "openai-chat-completions",
+            "--default-model",
+            "sentinel",
+            "--secret-ref",
+            id,
+        ],
+        None,
+    );
+    let connection = added["items"].as_object().unwrap().keys().next().unwrap();
+    let args = [
+        "ai",
+        "setup",
+        "--native-settings",
+        "--agent",
+        "hermes",
+        "--connection",
+        connection,
+    ];
+    let p = f.json(&args, None);
+    assert_eq!(fs::read(&path).unwrap(), before);
+    let mut apply = args.to_vec();
+    apply.extend([
+        "--apply-preview",
+        p["preview"]["preview_id"].as_str().unwrap(),
+    ]);
+    assert_eq!(f.json(&apply, None)["changed"], true);
+    let after = fs::read(&path).unwrap();
+    assert!(after.windows(8).any(|x| x == b"# inline"));
+    let p = f.json(&args, None);
+    let mut noop = args.to_vec();
+    noop.extend([
+        "--apply-preview",
+        p["preview"]["preview_id"].as_str().unwrap(),
+    ]);
+    assert_eq!(f.json(&noop, None)["changed"], false);
+    assert_eq!(fs::read(&path).unwrap(), after);
+    for bad in [
+        b"providers:\n  vibevm:\n    key_cmd: synthetic-command\n".as_slice(),
+        b"model: &alias\n  default: sentinel\n",
+    ] {
+        fs::write(&path, bad).unwrap();
+        assert!(!f.run(&args, None).status.success());
+        assert_eq!(fs::read(&path).unwrap(), bad);
+    }
+}

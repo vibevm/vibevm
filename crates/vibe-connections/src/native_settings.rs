@@ -80,3 +80,11 @@ impl NativeSettingsPreview for vibe_secrets::OpenCodeNativePreview {
 }
 mod opencode;
 pub use opencode::OpenCodeSettingsAdapter;
+
+impl NativeSettingsPreview for vibe_secrets::HermesNativePreview {
+    fn preview_id(&self) -> &str {
+        self.preview_id()
+    }
+}
+mod hermes;
+pub use hermes::HermesSettingsAdapter;

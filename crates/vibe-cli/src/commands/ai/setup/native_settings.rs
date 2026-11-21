@@ -68,8 +68,20 @@ pub(crate) fn run(
                 ],
             },
         ),
+        [agent] if agent == "hermes" => run_adapter(
+            ctx,
+            store,
+            connection,
+            response,
+            cancel,
+            vibe_connections::HermesSettingsAdapter,
+            NativeTarget {
+                destination: "HOME/.hermes/config.yaml",
+                overrides: &["HERMES_HOME", "HERMES_CONFIG_FILE"],
+            },
+        ),
         _ => bail!(
-            "native settings require exactly one supported --agent pi, qwen, codex or opencode"
+            "native settings require exactly one supported --agent pi, qwen, codex, opencode or hermes"
         ),
     }
 }
