@@ -6,7 +6,7 @@ The accepted mixed Pi/Qwen/Claude attended fixture at `setup-mixed-pty-r1` prove
 
 The architect supplied the finite next contract: retain metadata-only behavior unless an explicit safe-default attended native-write opt-in is selected; reuse the same composition for repeated explicit `--agent` with `--native-settings`; one existing connection, no global-default mutation; preserve single-agent protocol/token/result. A distinct ordered set preview binds the selected list, connection, classifications and individual opaque native previews. Reobserve every row before the first write. Apply compatible targets sequentially through their incumbent guarded adapters. Report partial failure honestly, stop remaining writes and do not promise multi-file atomicity or rollback. An incompatible Claude/OpenAI selection preserves native OAuth and skips only that row.
 
-## Candidate implementation — not accepted yet
+## Implementation
 
 The CLI setup subtree composes the existing six concrete adapters. It introduces no raw credential getter, transport, callback receiving secret values, import, credential pool or alternate private-storage owner. Vendor destination override refusals remain in effect. Selection order is retained and duplicate agent names refuse. Each vendor's own adapter supplies protocol compatibility.
 
@@ -25,4 +25,10 @@ Evidence root: `/data/git/vibevm-keyring-storage-20261120T0100Z/`. The immutable
 
 Earlier RED runtime attempts remain retained. The first terminal fixture sent `y` plus Enter; the leftover Enter accepted an empty next multi-select. It was corrected to the prompt's single-key response. The next fixture assumed errors were stdout; inspection confirmed the existing structured error owner emits stderr, so the final fixture requires empty stdout and parses the entire stderr as one JSON. Neither correction changed product code or the immutable tested binary. No provider calls or private deployment inputs are involved.
 
-Independent source/blob acceptance remains pending. This document does not claim replacement delivery, foreign-platform acceptance or complete CORP/NST closure.
+## Accepted revision and installed-release smoke
+
+The architect independently accepted the behavior and all fourteen exact Git blobs in `7f17492d9dca36dff5d857435bd820a5f4c84d0f`. A separate clean detached clone at that revision was built by the normal Linux distribution producer, task `b348dax4k`, exit0. `/data/research/vibevm/vibevm-linux-dist-7f17492d9-4ymardlt/VERIFIED-OUTPUTS.json`, SHA-256 `8cc40889235ce53d4b92f85d4fe37eb6a054c5c7d9c4141824e828d63cda0b64`, verifies the complete fragment/bundle/component/source/notices agreement and clean clone identity.
+
+Actual public kit build and native installation followed by one mixed attended onboarding on the installed CLI passed in filesystem/PID/network isolation, task `bewzfnmtg`, exit0. `/data/research/vibevm/cold-native-set-7f17-q8cti9l8/release-receipt.json`, SHA-256 `1e3a9e413a1b1b6ba9810f4e1efce6f506d353114842c5ebbfbdefd56ba07366`, proves the resolved installed payload SHA-256 `e8207d01b1bcb0da13420727388b2c75d3fab652913593557da9b1ee5525d36d` and size match the release component; the separate shim SHA-256 remains `dc4cc8616f31a32138311067b5a96e3b56f62d12600e82639f80bd8cf9075d1c`. Its sibling `onboarding/receipt.json`, SHA-256 `bd55cb1a90ef58abe16475e017c3bbdfbc6652f2e1f36acf44656624db195070`, records the successful actual installed onboarding. The reused fixture verifies both agents' synthetic keys, endpoints and models, preserved Claude OAuth, unset global default and restored terminal state. No provider call or private deployment input is involved.
+
+This is not a new foreign-platform acceptance or complete CORP/NST closure. Windows private storage remains fail-closed and native ACL verification is UNRUN, not waived; no qualified isolated Windows test entrypoint was available. macOS Intel native release/installer/cold setup and foreign Hermes archive builds remain separate conditions. Private corporate-kit replacement is a separate architect-owned delivery action; this builder did not access it.
