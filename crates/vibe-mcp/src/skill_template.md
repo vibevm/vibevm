@@ -130,6 +130,21 @@ Tools:
   source_url, source_ref, resolved_commit, files_written, features,
   subskills_active (with delivery + describes), top-level describes
   PURL, language.
+- **`configuration_preview(package, input?)`** — describe one ordinary
+  flow's configuration (one exactly-one choice plus one required boolean)
+  for a compulsory `<group>/<name>` requirement of this project, read from
+  its own local-directory registry. Without `input` it returns the
+  description and the open questions; with `input` (`selections`: group →
+  member, `parameters`: id → boolean) it also returns the resolved features
+  and parameters. Read-only: it installs, solves and authorises nothing,
+  and refuses any definition or project shape outside that narrow slice.
+- **`configuration_preview_v2(protocol, package, input?)`** — the same
+  read-only preview for a flow declaring one bounded integer parameter, one
+  parameter preset and one choice. `protocol` is always
+  `vibe-ordinary-integer-preview/2`. It returns the bounds, the preset and
+  the choice members; with `input` (`profile` naming the declared preset,
+  `selections`, integer `parameters`) it also returns the effective integer
+  values.
 - **`read_subskill(package, subskill_path)`** — returns the textual
   content of an active subskill's files. For `lazy-pull` deliveries,
   reads from the package cache; for `eager` / `lazy-push`, reads
