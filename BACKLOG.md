@@ -3364,3 +3364,25 @@ it. Severity **P3**.
 | @fact:B313-SEVERITY **severity** | P2 — an `--offline` run may still make a network contact. It is the posture's own guarantee that is weak, not an integrity check: everything the capture does is admitted and verified exactly as online. |
 | @fact:B313-DISPOSITION **disposition** | fixed in candidate 2026-11-15 for the controlled cache: `open_with_posture` refuses absent/damaged snapshots offline before clone/fetch/ls-remote. Actual counting-Git regression covers miss, warm reuse, damage and refresh. Ordinary transport behavior is unchanged. |
 | @fact:B313-FILED **filed by** | PROP-073 `#NATIVE-REGISTRY-CACHE-DECISION`, 2026-11-13. |
+
+
+## 2026-11-22 · NST domain consolidation — remedies found and not selected
+
+Source: [`campaigns/next-semantic-transfer-2026-11/NST-DOMAIN-CONSOLIDATION-DISPOSITIONS.md`](campaigns/next-semantic-transfer-2026-11/NST-DOMAIN-CONSOLIDATION-DISPOSITIONS.md); row numbers refer to its table. Sizes are S / M / L.
+
+- **P2 · NST consolidation: `vibe uninstall` takes no lifecycle lease (row 15).** `crates/vibe-cli/src/commands/uninstall.rs::run` moves slots and rewrites `vibe.lock` and `vibe.toml` without `vibe_orchestrator::acquire_lease`, so it can run beside an install in the same workspace. Take the lease at the top and hold it through the report. Size S.
+- **P2 · NST consolidation: uninstall is a second plan and transaction outside the install owner (row 5).** `uninstall/plan.rs` and `uninstall/transaction.rs` publish the lock by `fs::write` plus a plain `fs::rename`, with no flush, instead of `vibe-install`'s `FileGuard`. Move removal behind `vibe-install` and `vibe-orchestrator`; first step is publishing through `vibe-safefs`. Size M-L (first step S-M).
+- **P2 · NST consolidation: the agent-lane source order is assembled three times (row 11).** `vibe-workspace/src/system_prompt/publish.rs::compose_lane`, `vibe-cli/src/commands/prompt/compose.rs` and `prompt/personal_launch.rs` each build the ordered `LaneSource` list. One builder in `vibe-workspace::system_prompt`, with byte comparison of the published artifacts. Size M.
+- **P2 · NST consolidation: the guarded-leaf update check re-evaluates a stored configuration itself (row 2).** Move `update/scoped/guarded_leaf.rs::{selected_guard_cause, guard_activity}` onto `PackageConfiguration` with the owner's feature-base selection. Size S-M.
+- **P2 · NST consolidation: the application configuration evaluator has no parity check against the package owner (row 2).** `vibe-app/src/configuration/evaluate.rs` is compared only with the frozen `evaluate/legacy_basis_oracle.rs`. Add the parity test, then retire the oracle. Size M.
+- **P2 · NST consolidation: the CLI resolves the home directory with `dirs::home_dir()` (row 4).** On Windows this ignores `HOME`, so the settings directory and the install root can disagree. Export one resolver from `vibe_core::settings` and route the CLI sites through it; behaviour change, needs a decision. Size M.
+- **P2 · NST consolidation: no single harness-id vocabulary (row 1).** Workspace, projection, app presets, secrets, lifecycle clients and specdoc each spell the agent list. One vocabulary with a per-agent capability row, or parity tests where a crate cannot depend on it. Size L.
+- **P3 · NST consolidation: temp-plus-rename is hand-written in ten places outside `vibe-safefs` (row 6).** `progress-core` cache, `vibe-core` remap consent, `vibe-index` persistence, `vibe-app` settings, `vibe-settings` persist, `vibe-registry` search cache and four `vibe-cli` `vvm` writers differ in flushing and temporary names. One primitive in a leaf every crate can reach. Size M.
+- **P3 · NST consolidation: `vibe-cli/src/commands/vvm/site/apply.rs::write_atomic` renames without flushing the file (row 6).** Size S.
+- **P3 · NST consolidation: MCP registration ownership lives in the CLI rather than beside `pkgskill::receipt` (row 6).** Size M-L.
+- **P3 · NST consolidation: four PATH resolvers and the proxy binary disagree on extension and executable-bit policy (row 8).** One pure search with an explicit policy. Size M.
+- **P3 · NST consolidation: four prompts bypass `output/prompts` (row 13).** `app/wizard.rs`, `scrape.rs`, `refactor/convert_source.rs` and `global_mcp_choices.rs` skip the shared theme and interruption handling; review tests that pipe answers on stdin first. Size S-M.
+- **P3 · NST consolidation: the prefs and tree search overlays are copy-adapted (row 18).** One generic action provider in `vibe-actions::search` and one renderer; needs visual regression. Size M.
+- **P3 · NST consolidation: three step drivers build `StepContext` by hand (row 9).** A constructor for the shared fields in `vibe-app/src/steps`. Size S.
+- **P3 · NST consolidation: `commands/app/project.rs` repeats the index-lookup half of `needs_materialisation` in a local closure (row 7).** Size S.
+- **P3 · NST consolidation: the L2/L3 preference roots are derived twice, from the repository root and from the working directory (row 17).** Size S.
