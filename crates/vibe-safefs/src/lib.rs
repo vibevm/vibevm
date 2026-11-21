@@ -31,6 +31,9 @@ mod component;
 mod file;
 mod identity_hook;
 mod private;
+// Policy candidate only: no shipped Windows admission until native held-handle proof.
+#[cfg(test)]
+mod private_acl_policy;
 mod project;
 mod proof;
 mod publish;
