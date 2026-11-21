@@ -19,7 +19,7 @@ pub struct PiNativePreview {
     expected: Expected,
     native_digest: Option<String>,
     auth_digest: Option<String>,
-    native_identity: vibe_safefs::FileIdentity,
+    target_witness: String,
     token: String,
 }
 impl std::fmt::Debug for PiNativePreview {
@@ -33,49 +33,6 @@ impl PiNativePreview {
     }
 }
 
-fn native(home: &Path, kind: super::Kind) -> Result<(Project, Pinned), Error> {
-    if !home.is_absolute() || home.canonicalize().map_err(|_| Error::Unavailable)? != home {
-        return Err(Error::Unavailable);
-    }
-    let project = Project::open(home).map_err(|_| Error::Unavailable)?;
-    let home_dir = project.root_dir().map_err(|_| Error::Unavailable)?;
-    home_dir
-        .verify_user_owned_parent()
-        .map_err(|_| Error::Unavailable)?;
-    let agent = match kind {
-        super::Kind::Pi => home_dir
-            .private_child(".pi", false)
-            .map_err(|_| Error::Unavailable)?
-            .ok_or(Error::Unavailable)?
-            .private_child("agent", false)
-            .map_err(|_| Error::Unavailable)?
-            .ok_or(Error::Unavailable)?,
-        super::Kind::Claude => home_dir
-            .private_child(".claude", false)
-            .map_err(|_| Error::Unavailable)?
-            .ok_or(Error::Unavailable)?,
-        super::Kind::Hermes => home_dir
-            .private_child(".hermes", false)
-            .map_err(|_| Error::Unavailable)?
-            .ok_or(Error::Unavailable)?,
-        super::Kind::OpenCode => home_dir
-            .private_child(".config", false)
-            .map_err(|_| Error::Unavailable)?
-            .ok_or(Error::Unavailable)?
-            .private_child("opencode", false)
-            .map_err(|_| Error::Unavailable)?
-            .ok_or(Error::Unavailable)?,
-        super::Kind::Codex => home_dir
-            .private_child(".codex", false)
-            .map_err(|_| Error::Unavailable)?
-            .ok_or(Error::Unavailable)?,
-        super::Kind::Qwen => home_dir
-            .private_child(".qwen", false)
-            .map_err(|_| Error::Unavailable)?
-            .ok_or(Error::Unavailable)?,
-    };
-    Ok((project, agent))
-}
 fn config(dir: &Pinned, kind: super::Kind) -> Result<Option<Vec<u8>>, Error> {
     dir.read_private_metadata(kind.file(), NATIVE_LIMIT)
         .map_err(|_| Error::Unavailable)
@@ -212,8 +169,11 @@ impl Store {
             .ok_or(Error::NotFound)?;
         let keys = self.snapshot()?;
         let item = keys.items.get(&row.secret_ref).ok_or(Error::NotFound)?;
-        let (_, dir) = native(home, kind)?;
-        let bytes = config(&dir, kind)?;
+        let target = super::target::observe(home, kind)?;
+        let bytes = match target.directory() {
+            Some(dir) => config(dir, kind)?,
+            None => None,
+        };
         match kind {
             super::Kind::Pi => {
                 document(&bytes)?;
@@ -225,7 +185,10 @@ impl Store {
             super::Kind::Claude => super::claude::validate(&bytes)?,
         }
         let native_digest = witness(&bytes);
-        let auth_digest = auth_witness(&dir, kind)?;
+        let auth_digest = match target.directory() {
+            Some(dir) => auth_witness(dir, kind)?,
+            None => None,
+        };
         let mut hash = Sha256::new();
         hash.update(kind.domain());
         #[cfg(unix)]
@@ -250,22 +213,7 @@ impl Store {
             hash.update(text.as_bytes());
         }
         hash.update(keys.store_revision.to_be_bytes());
-        // FileIdentity exposes Hash while retaining its opaque representation.
-        // Feed it into the operation digest, not Debug text or ambient stat.
-        struct IdentityHash<'a>(&'a mut Sha256);
-        impl std::hash::Hasher for IdentityHash<'_> {
-            fn finish(&self) -> u64 {
-                0
-            }
-            fn write(&mut self, bytes: &[u8]) {
-                self.0.update((bytes.len() as u64).to_be_bytes());
-                self.0.update(bytes);
-            }
-        }
-        std::hash::Hash::hash(
-            &dir.identity().map_err(|_| Error::Unavailable)?,
-            &mut IdentityHash(&mut hash),
-        );
+        hash.update(target.witness.as_bytes());
         let token = format!(
             "{}-native-settings/1:sha256:{:x}",
             kind.id(),
@@ -284,7 +232,7 @@ impl Store {
             },
             native_digest,
             auth_digest,
-            native_identity: dir.identity().map_err(|_| Error::Unavailable)?,
+            target_witness: target.witness,
             token,
         })
     }
@@ -343,17 +291,26 @@ impl Store {
             return Err(Error::Conflict);
         }
         let (endpoint, model) = endpoint_model(&snapshot, &preview.connection, preview.kind)?;
-        let (native_project, dir) = native(&preview.home, preview.kind)?;
-        if dir.identity().map_err(|_| Error::Unavailable)? != preview.native_identity {
+        let target = super::target::observe(&preview.home, preview.kind)?;
+        if target.witness != preview.target_witness {
             return Err(Error::Conflict);
         }
-        let _native = dir
-            .private_lock("vibevm-native-settings.lock")
-            .map_err(|_| Error::Unavailable)?;
-        let before = config(&dir, preview.kind)?;
-        if witness(&before) != preview.native_digest
-            || auth_witness(&dir, preview.kind)? != preview.auth_digest
-        {
+        let _native = target
+            .directory()
+            .map(|dir| {
+                dir.private_lock("vibevm-native-settings.lock")
+                    .map_err(|_| Error::Unavailable)
+            })
+            .transpose()?;
+        let before = match target.directory() {
+            Some(dir) => config(dir, preview.kind)?,
+            None => None,
+        };
+        let auth = match target.directory() {
+            Some(dir) => auth_witness(dir, preview.kind)?,
+            None => None,
+        };
+        if witness(&before) != preview.native_digest || auth != preview.auth_digest {
             return Err(Error::Conflict);
         }
         match preview.kind {
@@ -390,14 +347,38 @@ impl Store {
         if bytes.len() > NATIVE_LIMIT {
             return Err(Error::Invalid);
         }
-        if config(&dir, preview.kind)? != before
+        let checked = super::target::observe(&preview.home, preview.kind)?;
+        if checked.witness != preview.target_witness {
+            return Err(Error::Conflict);
+        }
+        if let Some(dir) = checked.directory()
+            && (config(dir, preview.kind)? != before
+                || auth_witness(dir, preview.kind)? != preview.auth_digest)
+        {
+            return Err(Error::Conflict);
+        }
+        // Keep the existing-directory native lock through publication.
+        // Existing Vibe writers remain serialized by the keyring locks. A
+        // newly appeared component is refused by exclusive private creation.
+        let (native_project, dir) = checked.create()?;
+        let visible = super::target::observe(&preview.home, preview.kind)?;
+        let visible_dir = visible.directory().ok_or(Error::Conflict)?;
+        if visible_dir.identity().map_err(|_| Error::Unavailable)?
+            != dir.identity().map_err(|_| Error::Unavailable)?
+            || config(&dir, preview.kind)? != before
             || auth_witness(&dir, preview.kind)? != preview.auth_digest
         {
             return Err(Error::Conflict);
         }
-        native_project
-            .write_atomic_in_with_mode(&dir, preview.kind.file(), &bytes, Some(0o600))
-            .map_err(|_| Error::Publication)?;
+        if before.is_none() {
+            native_project
+                .publish_new_in_with_mode(&dir, preview.kind.file(), &bytes, Some(0o600))
+                .map_err(|_| Error::Publication)?;
+        } else {
+            native_project
+                .write_atomic_in_with_mode(&dir, preview.kind.file(), &bytes, Some(0o600))
+                .map_err(|_| Error::Publication)?;
+        }
         Ok(true)
     }
 }

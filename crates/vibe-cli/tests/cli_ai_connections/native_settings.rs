@@ -588,3 +588,87 @@ fn claude_public_native_bearer_preserves_oauth_and_refuses_openai() {
     assert_eq!(f.json(&noop, None)["changed"], false);
     assert_eq!(fs::read(&path).unwrap(), after);
 }
+
+#[test]
+fn first_native_pi_preview_has_no_effects_and_confirmed_apply_creates_private_path() {
+    let f = F::new();
+    let key = f.json(
+        &[
+            "secrets",
+            "create",
+            "--kind",
+            "api-key",
+            "--label",
+            "Synthetic",
+            "--value-stdin",
+        ],
+        Some(VALUE.as_bytes()),
+    );
+    let id = key["items"][0]["id"].as_str().unwrap();
+    let added = f.json(
+        &[
+            "ai",
+            "connections",
+            "add",
+            "--label",
+            "Synthetic",
+            "--endpoint",
+            "http://127.0.0.1:9/v1",
+            "--api-kind",
+            "openai-chat-completions",
+            "--default-model",
+            "synthetic",
+            "--secret-ref",
+            id,
+        ],
+        None,
+    );
+    let connection = added["items"].as_object().unwrap().keys().next().unwrap();
+    let args = [
+        "ai",
+        "setup",
+        "--native-settings",
+        "--agent",
+        "pi",
+        "--connection",
+        connection,
+    ];
+    let p = f.json(&args, None);
+    assert!(!f.0.path().join(".pi").exists());
+    let mut wrong = args.to_vec();
+    wrong.extend(["--apply-preview","pi-native-settings/1:sha256:0000000000000000000000000000000000000000000000000000000000000000"]);
+    assert!(!f.run(&wrong, None).status.success());
+    assert!(!f.0.path().join(".pi").exists());
+    let mut apply = args.to_vec();
+    apply.extend([
+        "--apply-preview",
+        p["preview"]["preview_id"].as_str().unwrap(),
+    ]);
+    assert_eq!(f.json(&apply, None)["changed"], true);
+    for (relative, mode) in [
+        (".pi", 0o700),
+        (".pi/agent", 0o700),
+        (".pi/agent/models.json", 0o600),
+    ] {
+        assert_eq!(
+            fs::metadata(f.0.path().join(relative))
+                .unwrap()
+                .permissions()
+                .mode()
+                & 0o7777,
+            mode
+        );
+    }
+    let after = fs::read(f.0.path().join(".pi/agent/models.json")).unwrap();
+    let p = f.json(&args, None);
+    let mut noop = args.to_vec();
+    noop.extend([
+        "--apply-preview",
+        p["preview"]["preview_id"].as_str().unwrap(),
+    ]);
+    assert_eq!(f.json(&noop, None)["changed"], false);
+    assert_eq!(
+        fs::read(f.0.path().join(".pi/agent/models.json")).unwrap(),
+        after
+    );
+}

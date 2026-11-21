@@ -2,6 +2,7 @@
 use super::*;
 mod jsonc;
 mod pi;
+mod target;
 mod yaml_mapping;
 pub use pi::PiNativePreview;
 mod qwen;
