@@ -19,7 +19,7 @@ fn zip(rows: &[(&str, &[u8])]) -> Vec<u8> {
 fn bundle(cli: &[u8]) -> Vec<u8> {
     versioned_bundle(cli, env!("CARGO_PKG_VERSION"), b"synthetic index")
 }
-fn versioned_bundle(cli: &[u8], version: &str, index: &[u8]) -> Vec<u8> {
+pub(super) fn versioned_bundle(cli: &[u8], version: &str, index: &[u8]) -> Vec<u8> {
     let source = zip(&[
         ("Cargo.toml", b"[workspace]\n"),
         ("crates/vibe-cli/src/main.rs", b"fn main() {}"),

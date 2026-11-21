@@ -2,6 +2,9 @@
 #[path = "cli_kit/build.rs"]
 mod build;
 mod common;
+#[cfg(all(target_os = "linux", target_arch = "x86_64", target_env = "gnu"))]
+#[path = "cli_kit/upgrade_shim.rs"]
+mod upgrade_shim;
 use common::UserScratch;
 use sha2::{Digest, Sha256};
 use std::{fs, path::Path, process::Output};
