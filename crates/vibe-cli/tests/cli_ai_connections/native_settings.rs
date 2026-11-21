@@ -300,3 +300,98 @@ fn codex_explicit_native_responses_preserves_toml_and_refuses_chat() {
     assert_eq!(f.json(&noop, None)["changed"], false);
     assert_eq!(fs::read(&path).unwrap(), after);
 }
+
+#[test]
+fn opencode_public_native_keeps_model_comments_and_refuses_file_substitution() {
+    let f = F::new();
+    let config = f.0.path().join(".config");
+    let dir = config.join("opencode");
+    fs::create_dir_all(&dir).unwrap();
+    for p in [&config, &dir] {
+        fs::set_permissions(p, fs::Permissions::from_mode(0o700)).unwrap();
+    }
+    let path = dir.join("opencode.json");
+    let before=b"{// keep\n\"model\":{/* model */\"providerID\":\"old\",\"model\":\"old\"},\"providers\":{\"neighbor\":{\"name\":\"keep\"}}}";
+    fs::write(&path, before).unwrap();
+    fs::set_permissions(&path, fs::Permissions::from_mode(0o600)).unwrap();
+    let key = f.json(
+        &[
+            "secrets",
+            "create",
+            "--kind",
+            "api-key",
+            "--label",
+            "Synthetic",
+            "--value-stdin",
+        ],
+        Some(VALUE.as_bytes()),
+    );
+    let id = key["items"][0]["id"].as_str().unwrap();
+    let added = f.json(
+        &[
+            "ai",
+            "connections",
+            "add",
+            "--label",
+            "Synthetic",
+            "--endpoint",
+            "http://127.0.0.1:9/v1",
+            "--api-kind",
+            "openai-chat-completions",
+            "--default-model",
+            "synthetic",
+            "--secret-ref",
+            id,
+        ],
+        None,
+    );
+    let connection = added["items"].as_object().unwrap().keys().next().unwrap();
+    let args = [
+        "ai",
+        "setup",
+        "--native-settings",
+        "--agent",
+        "opencode",
+        "--connection",
+        connection,
+    ];
+    let p = f.json(&args, None);
+    assert_eq!(fs::read(&path).unwrap(), before);
+    let mut apply = args.to_vec();
+    apply.extend([
+        "--apply-preview",
+        p["preview"]["preview_id"].as_str().unwrap(),
+    ]);
+    assert_eq!(f.json(&apply, None)["changed"], true);
+    let after = fs::read(&path).unwrap();
+    assert!(after.windows(11).any(|x| x == b"/* model */"));
+    assert!(after.windows(7).any(|x| x == b"// keep"));
+    let p = f.json(&args, None);
+    let mut noop = args.to_vec();
+    noop.extend([
+        "--apply-preview",
+        p["preview"]["preview_id"].as_str().unwrap(),
+    ]);
+    assert_eq!(f.json(&noop, None)["changed"], false);
+    let current = f.json(&["secrets", "details", id], None);
+    let rev = current["items"][0]["current_revision"].as_str().unwrap();
+    f.json(
+        &[
+            "secrets",
+            "rotate",
+            id,
+            "--expect-current",
+            rev,
+            "--value-stdin",
+        ],
+        Some(b"{file:synthetic}"),
+    );
+    let p = f.json(&args, None);
+    let mut refused = args.to_vec();
+    refused.extend([
+        "--apply-preview",
+        p["preview"]["preview_id"].as_str().unwrap(),
+    ]);
+    assert!(!f.run(&refused, None).status.success());
+    assert_eq!(fs::read(path).unwrap(), after);
+}

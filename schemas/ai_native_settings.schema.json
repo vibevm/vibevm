@@ -38,7 +38,8 @@
           "enum": [
             "pi",
             "qwen",
-            "codex"
+            "codex",
+            "opencode"
           ]
         },
         "connection": {
@@ -54,12 +55,13 @@
           "enum": [
             "HOME/.pi/agent/models.json",
             "HOME/.qwen/settings.json",
-            "HOME/.codex/config.toml"
+            "HOME/.codex/config.toml",
+            "HOME/.config/opencode/opencode.json"
           ]
         },
         "preview_id": {
           "type": "string",
-          "pattern": "^(pi|qwen|codex)-native-settings/1:sha256:[0-9a-f]{64}$"
+          "pattern": "^(pi|qwen|codex|opencode)-native-settings/1:sha256:[0-9a-f]{64}$"
         }
       }
     }

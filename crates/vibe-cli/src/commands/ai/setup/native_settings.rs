@@ -51,7 +51,26 @@ pub(crate) fn run(
                 overrides: &["CODEX_HOME"],
             },
         ),
-        _ => bail!("native settings require exactly one supported --agent pi, qwen or codex"),
+        [agent] if agent == "opencode" => run_adapter(
+            ctx,
+            store,
+            connection,
+            response,
+            cancel,
+            vibe_connections::OpenCodeSettingsAdapter,
+            NativeTarget {
+                destination: "HOME/.config/opencode/opencode.json",
+                overrides: &[
+                    "XDG_CONFIG_HOME",
+                    "OPENCODE_CONFIG",
+                    "OPENCODE_CONFIG_CONTENT",
+                    "OPENCODE_CONFIG_DIR",
+                ],
+            },
+        ),
+        _ => bail!(
+            "native settings require exactly one supported --agent pi, qwen, codex or opencode"
+        ),
     }
 }
 struct NativeTarget {

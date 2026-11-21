@@ -103,7 +103,13 @@ mod tests {
     use super::*;
     #[test]
     fn codex_native_toml_keeps_comments_neighbors_and_noop() {
-        assert!(validate(&Some(b"[model_providers.vibevm.env_http_headers]\nAuthorization='SYNTHETIC_ENV'\n".to_vec())).is_err());
+        assert!(
+            validate(&Some(
+                b"[model_providers.vibevm.env_http_headers]\nAuthorization='SYNTHETIC_ENV'\n"
+                    .to_vec()
+            ))
+            .is_err()
+        );
         let before =
             Some(b"# keep\nmodel = 'old'\n[model_providers.neighbor]\nname = 'keep'\n".to_vec());
         let output = merge(

@@ -72,3 +72,11 @@ impl NativeSettingsAdapter for PiSettingsAdapter {
         Ok(store.0.apply_pi_native_settings(preview, confirmed)?)
     }
 }
+
+impl NativeSettingsPreview for vibe_secrets::OpenCodeNativePreview {
+    fn preview_id(&self) -> &str {
+        self.preview_id()
+    }
+}
+mod opencode;
+pub use opencode::OpenCodeSettingsAdapter;

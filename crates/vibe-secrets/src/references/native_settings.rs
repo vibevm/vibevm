@@ -10,6 +10,7 @@ enum Kind {
     Pi,
     Qwen,
     Codex,
+    OpenCode,
 }
 impl Kind {
     fn id(self) -> &'static str {
@@ -17,6 +18,7 @@ impl Kind {
             Self::Pi => "pi",
             Self::Qwen => "qwen",
             Self::Codex => "codex",
+            Self::OpenCode => "opencode",
         }
     }
     fn file(self) -> &'static str {
@@ -24,6 +26,7 @@ impl Kind {
             Self::Pi => "models.json",
             Self::Qwen => "settings.json",
             Self::Codex => "config.toml",
+            Self::OpenCode => "opencode.json",
         }
     }
     fn domain(self) -> &'static [u8] {
@@ -31,9 +34,13 @@ impl Kind {
             Self::Pi => b"vibevm.pi-native-settings/v1\0",
             Self::Qwen => b"vibevm.qwen-native-settings/v1\0",
             Self::Codex => b"vibevm.codex-native-settings/v1\0",
+            Self::OpenCode => b"vibevm.opencode-native-settings/v1\0",
         }
     }
 }
 
 mod codex;
 pub use codex::CodexNativePreview;
+
+mod opencode;
+pub use opencode::OpenCodeNativePreview;
