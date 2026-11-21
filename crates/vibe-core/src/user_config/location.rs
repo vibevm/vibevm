@@ -109,21 +109,10 @@ pub(super) fn former_config_path() -> Option<PathBuf> {
     {
         return Some(PathBuf::from(appdata).join("vibe").join("config.toml"));
     }
-    Some(home_dir()?.join(".config").join("vibe").join("config.toml"))
-}
-
-/// Best-effort home-directory detection. Reads `HOME` on Unix and
-/// `USERPROFILE` on Windows (or `HOME` as a fallback for Git Bash
-/// / WSL shells that set both). Avoids pulling in the `dirs` crate
-/// for one lookup.
-fn home_dir() -> Option<PathBuf> {
-    if let Some(h) = std::env::var_os("HOME").filter(|s| !s.is_empty()) {
-        return Some(PathBuf::from(h));
-    }
-    if cfg!(windows)
-        && let Some(p) = std::env::var_os("USERPROFILE").filter(|s| !s.is_empty())
-    {
-        return Some(PathBuf::from(p));
-    }
-    None
+    Some(
+        crate::settings::home_dir()?
+            .join(".config")
+            .join("vibe")
+            .join("config.toml"),
+    )
 }

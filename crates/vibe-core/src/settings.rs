@@ -139,8 +139,8 @@ fn env_override() -> Option<PathBuf> {
 /// Best-effort home directory: `HOME`, then `USERPROFILE` on Windows (for
 /// native shells that set only the latter). One resolver for the whole
 /// workspace so every settings path agrees; avoids the `dirs` crate for a
-/// single lookup, matching [`crate::user_config`].
-fn home_dir() -> Option<PathBuf> {
+/// single lookup. [`crate::user_config`] reads home through this same function.
+pub(crate) fn home_dir() -> Option<PathBuf> {
     if let Some(h) = std::env::var_os("HOME").filter(|s| !s.is_empty()) {
         return Some(PathBuf::from(h));
     }

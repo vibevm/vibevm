@@ -57,7 +57,7 @@ impl Store {
             _ => None,
         };
         let mut rows = Vec::new();
-        for harness in ["claude", "codex", "opencode", "qwen", "hermes", "pi"] {
+        for harness in vibe_secrets::REFERENCE_HARNESSES {
             let binding = snapshot
                 .index
                 .bindings
@@ -72,10 +72,7 @@ impl Store {
             };
             let replace = scope == DefaultScope::ManagedOverrides
                 && binding.is_some()
-                && matches!(
-                    metadata_capability(harness),
-                    MetadataCapability::Compatible { .. }
-                );
+                && vibe_secrets::reference_binding_supported(harness);
             let proposed_mode = if replace { "inherit-default" } else { old_mode };
             let proposed_connection = if proposed_mode == "inherit-default" {
                 Some(target.clone())

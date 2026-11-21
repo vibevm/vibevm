@@ -24,10 +24,7 @@ pub(crate) fn run(
             response,
             cancel,
             vibe_connections::PiSettingsAdapter,
-            NativeTarget {
-                destination: "HOME/.pi/agent/models.json",
-                overrides: &["PI_CODING_AGENT_DIR"],
-            },
+            target(agent)?,
         ),
         [agent] if agent == "qwen" => run_adapter(
             ctx,
@@ -36,14 +33,7 @@ pub(crate) fn run(
             response,
             cancel,
             vibe_connections::QwenSettingsAdapter,
-            NativeTarget {
-                destination: "HOME/.qwen/settings.json",
-                overrides: &[
-                    "QWEN_HOME",
-                    "QWEN_CODE_SYSTEM_SETTINGS_PATH",
-                    "QWEN_CODE_SYSTEM_DEFAULTS_PATH",
-                ],
-            },
+            target(agent)?,
         ),
         [agent] if agent == "codex" => run_adapter(
             ctx,
@@ -52,10 +42,7 @@ pub(crate) fn run(
             response,
             cancel,
             vibe_connections::CodexSettingsAdapter,
-            NativeTarget {
-                destination: "HOME/.codex/config.toml",
-                overrides: &["CODEX_HOME"],
-            },
+            target(agent)?,
         ),
         [agent] if agent == "opencode" => run_adapter(
             ctx,
@@ -64,15 +51,7 @@ pub(crate) fn run(
             response,
             cancel,
             vibe_connections::OpenCodeSettingsAdapter,
-            NativeTarget {
-                destination: "HOME/.config/opencode/opencode.json",
-                overrides: &[
-                    "XDG_CONFIG_HOME",
-                    "OPENCODE_CONFIG",
-                    "OPENCODE_CONFIG_CONTENT",
-                    "OPENCODE_CONFIG_DIR",
-                ],
-            },
+            target(agent)?,
         ),
         [agent] if agent == "hermes" => run_adapter(
             ctx,
@@ -81,10 +60,7 @@ pub(crate) fn run(
             response,
             cancel,
             vibe_connections::HermesSettingsAdapter,
-            NativeTarget {
-                destination: "HOME/.hermes/config.yaml",
-                overrides: &["HERMES_HOME", "HERMES_CONFIG_FILE"],
-            },
+            target(agent)?,
         ),
         [agent] if agent == "claude" => run_adapter(
             ctx,
@@ -93,10 +69,7 @@ pub(crate) fn run(
             response,
             cancel,
             vibe_connections::ClaudeSettingsAdapter,
-            NativeTarget {
-                destination: "HOME/.claude/settings.json",
-                overrides: &["CLAUDE_CONFIG_DIR"],
-            },
+            target(agent)?,
         ),
         _ => bail!(
             "native settings require exactly one supported --agent pi, qwen, codex, opencode, hermes or claude"

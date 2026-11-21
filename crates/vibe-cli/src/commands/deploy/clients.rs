@@ -162,7 +162,7 @@ fn executable_extensions() -> Vec<String> {
     }
     let raw = std::env::var_os("PATHEXT")
         .map(|value| value.to_string_lossy().into_owned())
-        .unwrap_or_else(|| ".COM;.EXE;.BAT;.CMD".to_owned());
+        .unwrap_or_else(|| crate::commands::tool::which::DEFAULT_PATHEXT.to_owned());
     raw.split(';')
         .map(str::trim)
         .filter(|entry| !entry.is_empty())

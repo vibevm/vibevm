@@ -46,7 +46,7 @@ impl Store {
         });
         if replace_managed && let Some(bindings) = proposed.bindings.as_mut() {
             for (harness, binding) in bindings {
-                if matches!(harness.as_str(), "pi" | "qwen") {
+                if reference_binding_supported(harness) {
                     *binding = ReferenceBinding::InheritDefault;
                 }
             }

@@ -25,31 +25,23 @@
 //! for on `PATH` — the same rule `commands/tool/which.rs` applies to
 //! `vibe tool px exec <command>` and `vibe-app`'s `command:NAME`
 //! launchers. The three resolvers stay separate — each sits on its own
-//! spec address and its own crate seam — and must stay in agreement.
+//! spec address and its own crate seam — and must stay in agreement; the
+//! bare-name rule and the default extension list are read from
+//! `commands/tool/which.rs` so those two cannot drift inside this crate.
 
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-076#SYS-HARNESS-EXECUTABLE");
 
 use std::ffi::OsStr;
-use std::path::{Path, PathBuf};
+use std::path::PathBuf;
 
 use anyhow::{Result, anyhow};
 
-/// The extensions Windows starts a program by when the environment names
-/// none. Windows' own documented fallback, spelled once.
-pub(crate) const DEFAULT_PATHEXT: &str = ".COM;.EXE;.BAT;.CMD";
+use crate::commands::tool::which::{DEFAULT_PATHEXT, is_bare};
 
 /// The one extension vibe refuses to start even when `PATHEXT` lists it:
 /// a PowerShell script needs a host process, and picking one would start a
 /// program the user never named.
 const NOT_STARTED: &str = ".ps1";
-
-/// Whether `program` is a bare name rather than a path. A path is run as
-/// written and never looked for on `PATH`.
-fn is_bare(program: &str) -> bool {
-    !program.contains('/')
-        && !program.contains('\\')
-        && Path::new(program).components().count() == 1
-}
 
 /// The extensions to try, in the order `PATHEXT` gives them.
 ///
@@ -228,6 +220,7 @@ fn locate_in(program: &str, path: Option<&OsStr>) -> std::result::Result<PathBuf
 #[cfg(test)]
 mod tests {
     use std::ffi::OsString;
+    use std::path::Path;
 
     use super::*;
 

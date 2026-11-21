@@ -11,13 +11,14 @@ pub use native_settings::{
     PiNativePreview, QwenNativePreview,
 };
 
-/// Canonical harness IDs admitted by the existing AI reference binding grammar.
+/// Canonical harness IDs admitted by the existing AI reference binding grammar,
+/// in the order every per-harness listing reports them.
+pub const REFERENCE_HARNESSES: [&str; 6] = ["claude", "codex", "opencode", "qwen", "hermes", "pi"];
+
+/// Whether `harness` is one of [`REFERENCE_HARNESSES`].
 /// No alias resolution, launcher selection or native execution authority.
 pub fn known_reference_harness(harness: &str) -> bool {
-    matches!(
-        harness,
-        "claude" | "codex" | "opencode" | "qwen" | "hermes" | "pi"
-    )
+    REFERENCE_HARNESSES.contains(&harness)
 }
 
 /// Whether this canonical harness may retain an AI reference binding.
