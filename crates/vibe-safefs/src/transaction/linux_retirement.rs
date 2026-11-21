@@ -21,7 +21,7 @@ impl Pinned {
         }
         #[cfg(target_os = "linux")]
         {
-            use std::{ffi::CString, os::fd::AsRawFd};
+            use std::ffi::CString;
             crate::ensure_safe_component(source_name).map_err(RenameError::Failed)?;
             crate::ensure_safe_component(destination_name).map_err(RenameError::Failed)?;
             if expected.kind != EntryStateKind::Directory {
@@ -53,20 +53,7 @@ impl Pinned {
                 CString::new(source_name).map_err(|error| RenameError::Failed(error.into()))?;
             let new = CString::new(destination_name)
                 .map_err(|error| RenameError::Failed(error.into()))?;
-            #[allow(unsafe_code)]
-            // SAFETY: both retained directory descriptors and NUL-terminated
-            // single components remain live for this synchronous syscall.
-            let status = unsafe {
-                libc::renameat2(
-                    self.dir.as_raw_fd(),
-                    old.as_ptr(),
-                    destination.dir.as_raw_fd(),
-                    new.as_ptr(),
-                    libc::RENAME_NOREPLACE,
-                )
-            };
-            if status != 0 {
-                let error = std::io::Error::last_os_error();
+            if let Err(error) = rename_noreplace(self, &old, destination, &new) {
                 return Err(match error.raw_os_error() {
                     Some(libc::EEXIST) | Some(libc::ENOTEMPTY) => RenameError::Occupied {
                         path: destination.join(destination_name),
@@ -89,6 +76,40 @@ impl Pinned {
             }
             Ok(())
         }
+    }
+}
+
+/// One `renameat2(RENAME_NOREPLACE)` between two held parents; the kernel
+/// refuses an occupied destination instead of replacing it.
+#[cfg(target_os = "linux")]
+#[specmark::spec(
+    deviates = "spec://core-ai-native/mechanisms/ENGINE-CONFORM-v0.1#rules",
+    reason = "neither the standard library nor cap-std offers a descriptor-relative rename that refuses an occupied destination atomically; renameat2 with RENAME_NOREPLACE is the only primitive that keeps both retained parents and never replaces an entry"
+)]
+#[allow(unsafe_code)]
+fn rename_noreplace(
+    source_parent: &Pinned,
+    source_name: &std::ffi::CStr,
+    destination_parent: &Pinned,
+    destination_name: &std::ffi::CStr,
+) -> std::io::Result<()> {
+    use std::os::fd::AsRawFd;
+    // SAFETY: both retained directory descriptors and both NUL-terminated
+    // single components are borrowed for the whole of this synchronous
+    // syscall, which neither stores the pointers nor writes through them.
+    let status = unsafe {
+        libc::renameat2(
+            source_parent.dir.as_raw_fd(),
+            source_name.as_ptr(),
+            destination_parent.dir.as_raw_fd(),
+            destination_name.as_ptr(),
+            libc::RENAME_NOREPLACE,
+        )
+    };
+    if status == 0 {
+        Ok(())
+    } else {
+        Err(std::io::Error::last_os_error())
     }
 }
 

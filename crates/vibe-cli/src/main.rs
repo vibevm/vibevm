@@ -6,12 +6,9 @@
 
 specmark::scope!("spec://org.vibevm.core/vibevm/VIBEVM-SPEC#cli-surface");
 
-use std::collections::BTreeSet;
 use std::io::IsTerminal;
 use std::path::PathBuf;
 use std::process::ExitCode;
-use std::sync::OnceLock;
-use vibe_core::user_config::UserConfig;
 mod cli;
 mod command_progress;
 mod commands;
@@ -24,24 +21,10 @@ mod registry;
 mod shell_syntax;
 
 use cli::{Cli, Command};
-use env_allowlist::partition_env_promotions;
 use exit_code::as_exit_code;
 
-/// Names of environment variables that were promoted from the
-/// user-level config at startup (i.e. the live env was unset and
-/// the user-config carried a default that we wrote into the
-/// process env). `vibe show config` reads this set so it can
-/// distinguish "operator-set live env" from "promoted from user-
-/// config" without re-loading the file mid-run. Empty when no
-/// promotions happened.
-static PROMOTED_FROM_USER_CONFIG: OnceLock<BTreeSet<String>> = OnceLock::new();
-
-/// Public read-only accessor consumed by `vibe show config`. Returns
-/// an empty set if `promote_user_config_env` has not yet run (e.g.
-/// embedded test harnesses).
-pub(crate) fn promoted_env_names() -> &'static BTreeSet<String> {
-    PROMOTED_FROM_USER_CONFIG.get_or_init(BTreeSet::new)
-}
+// `vibe show config` reads the promoted names through the crate root.
+pub(crate) use composition::promoted_env_names;
 
 fn main() -> ExitCode {
     // The hidden native helper mode precedes every ordinary boot step.
@@ -99,7 +82,7 @@ fn run() -> ExitCode {
     {
         return exit;
     }
-    let transfer_config = promote_user_config_env();
+    let transfer_config = composition::promote_user_config_env();
     composition::init_tracing();
     // VVM: derive the running version from the binary's own path, and warn
     // when the inherited $VIBEVM_HOME is stale (PROP-019 §2.5).
@@ -477,145 +460,6 @@ fn run() -> ExitCode {
     composition::network::finish(&ctx, network, result.is_err());
     command_activity.complete(result.is_ok());
     composition::finish(&ctx, &cancellation, result, preview_only)
-}
-
-/// Read `<settings-dir>/config.toml` (per `vibe-core::user_config`)
-/// and promote its `[env]` entries into the process environment. This
-/// makes the user-config layer actually load-bearing per
-/// `VIBEVM-SPEC.md` §9.5: subsequent consumers
-/// (`vibe-registry::default_cache_root`, the tracing init, the
-/// publish-token loader) read whatever is in the process env without
-/// caring who put it there.
-///
-/// # What may be promoted
-///
-/// Only names beginning `VIBE_` or `VIBEVM_`
-/// ([`crate::env_allowlist::PROMOTABLE_ENV_PREFIXES`]). Every other name in the table is
-/// ignored, and the rejected set is reported once, by name.
-///
-/// The table used to accept any name at all. That made one per-user
-/// file — which no invocation opts into, and which *every* subcommand
-/// reads before dispatch — able to set `DATABASE_URL`, `AWS_*`,
-/// `KUBECONFIG` or `PATH` for vibe and for everything vibe spawns. The
-/// concrete failure mode is a test run that forgot to isolate
-/// `$VIBE_SETTINGS`, inheriting the operator's real config and reaching
-/// a production database. An allowlist bounds the blast radius to
-/// vibevm's own namespace: the feature keeps doing the job it was built
-/// for — defaulting `VIBE_REGISTRY_CACHE`, `VIBE_LOG` — and can no
-/// longer reach anything outside vibevm. Widening the list later is one
-/// entry; resurrecting a capability that was deleted is an argument, so
-/// this is the reversible half.
-///
-/// Matching is case-sensitive against those exact uppercase prefixes.
-/// vibevm's variables are uppercase by convention, so the only thing
-/// case-folding would buy is admitting more names — and on Windows,
-/// where the environment compares names case-insensitively, refusing
-/// `vibe_thing` costs an operator a rename while refusing
-/// `database_url` is the whole point.
-///
-/// Two of vibevm's own variables fall outside the list, and should:
-/// `VIBETERM` / `VIBEFRAME` are markers a vibe desktop terminal sets in
-/// the PTY it spawns (`commands::tree::host`), so a config file
-/// claiming one would be lying to `vibe tree` about where it is
-/// running. The one shape that could legitimately want a name outside
-/// the namespace is a manifest that overrides `token_env` on a
-/// `[[registry]]` / `[redirect]` block: the defaults
-/// (`VIBEVM_REGISTRY_TOKEN_<HOST>`, `VIBEVM_TARGET_TOKEN_<HOST>`) are
-/// admitted, an arbitrary override is not. No such configuration exists
-/// in this repository, and a token's home is
-/// `~/.vibe/<host>.publish.token` (PROP-000 §20) rather than a config
-/// file either way — but that is the edge to widen the list for, if it
-/// ever shows up.
-///
-/// # What wins
-///
-/// 1. **The live environment.** A name already set when vibe starts is
-///    left exactly as the operator set it — it was in the process env
-///    by the time we observe it via `std::env::var_os`, so the
-///    `is_some` guard is the whole mechanism. An `[env]` entry is a
-///    default, never an override.
-/// 2. **The `[env]` value**, for an allowlisted name that is unset.
-/// 3. **The built-in default**, for everything else.
-///
-/// The allowlist is consulted *before* the live environment, so a
-/// refused name is reported whether or not the operator also exports
-/// it: the verdict is a property of the name, and a diagnostic that
-/// came and went with the ambient environment would be worse than none.
-///
-/// # What is never printed
-///
-/// The value. A refused name is named; its value is not, at any
-/// verbosity. `[env]` is a plausible place for someone to have parked a
-/// credential, and the discipline `vibe-publish`'s `Token` applies to
-/// publish tokens applies here for the same reason. Reporting is not
-/// optional either — a silently dropped variable is a debugging
-/// nightmare — so the rule is exactly: once, by name, never the value.
-///
-/// A malformed user-config file is reported via `eprintln!` and the
-/// promotion silently continues with whatever fields parsed —
-/// failing the entire CLI invocation because of an inert config
-/// layer would be the wrong UX. `vibe show config` is the
-/// authoritative path for surfacing that the layer is broken;
-/// every other command just runs.
-#[specmark::spec(
-    deviates = "spec://core-ai-native/mechanisms/ENGINE-CONFORM-v0.1#rules",
-    reason = "unsafe-gate: startup env promotion runs at the top of main, \
-              before the dispatcher, on the one working thread while the \
-              main thread only waits in `join` — set_var's race is with \
-              concurrent readers, and none can be observing yet; \
-              the env-audit crate is test infrastructure and a mutate-anytime \
-              safe production API would advertise soundness it cannot prove"
-)]
-fn promote_user_config_env() -> vibe_core::user_config::TransferConfig {
-    let cfg = match UserConfig::load() {
-        Ok(c) => c,
-        Err(e) => {
-            eprintln!(
-                "{}",
-                output::language::warning(&format!("user-level config could not be read: {e}"))
-            );
-            let _ = PROMOTED_FROM_USER_CONFIG.set(BTreeSet::new());
-            return Default::default();
-        }
-    };
-    let (admitted, rejected) = partition_env_promotions(&cfg.env);
-    if !rejected.is_empty() {
-        // Once, by name, never the value.
-        eprintln!(
-            "{}",
-            output::language::warning(&format!(
-                "user config [env] may only set VIBE_* / VIBEVM_* names; ignored: {}",
-                rejected.join(", ")
-            ))
-        );
-    }
-    // PROP-068 `#proxy`: `[proxy]` is the route; its names promote as below.
-    let proxy = composition::network::install_route(&cfg.proxy, &cfg.tls, read_env_opt);
-    let mut promoted: BTreeSet<String> = BTreeSet::new();
-    for (name, value) in admitted
-        .into_iter()
-        .chain(proxy.iter().map(|(name, value)| (*name, &value[..])))
-    {
-        if std::env::var_os(name).is_some() {
-            // Live env wins — leave it alone.
-            continue;
-        }
-        // SAFETY: vibe runs on one working thread (`main` only waits
-        // for it). Promotion happens at the very top of `run`, before
-        // the dispatcher selects a subcommand and well before any
-        // further thread is spawned (rayon, reqwest's tokio internals
-        // when present, etc.). The Rust 1.85+ `unsafe` marker on `set_var` exists
-        // to flag mid-execution multi-threaded mutation, which we
-        // are not doing here. No other thread can be observing the
-        // environment variables at this point.
-        #[allow(unsafe_code)]
-        unsafe {
-            std::env::set_var(name, value);
-        }
-        promoted.insert(name.to_string());
-    }
-    let _ = PROMOTED_FROM_USER_CONFIG.set(promoted);
-    cfg.transfer
 }
 
 /// Read a nonempty environment override at the composition root, as required

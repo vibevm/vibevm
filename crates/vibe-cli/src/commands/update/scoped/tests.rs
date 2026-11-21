@@ -9,8 +9,10 @@
 
 use std::path::Path;
 
+use vibe_core::Group;
 use vibe_core::manifest::Manifest;
 use vibe_registry::ResolvedPackage;
+use vibe_workspace::install::InstallRollback;
 
 use super::*;
 

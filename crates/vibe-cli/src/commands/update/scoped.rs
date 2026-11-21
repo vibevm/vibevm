@@ -32,23 +32,22 @@ mod apply;
 mod guarded_leaf;
 mod measured;
 mod noop;
+mod prune;
 mod roots;
 mod stage;
 #[cfg(test)]
 mod tests;
 
-use std::collections::HashMap;
 use std::path::Path;
 
 use anyhow::{Context, Result, bail};
+use vibe_core::PackageRef;
 use vibe_core::manifest::{Lockfile, Manifest};
 use vibe_core::user_config::SlotIntegrity;
-use vibe_core::{Group, PackageRef};
 use vibe_install::{InstallProgress, InstallSource};
 use vibe_registry::CachedPackage;
 use vibe_workspace::Workspace;
 use vibe_workspace::compile_trace::TraceRun;
-use vibe_workspace::install::{InstallRollback, ResolvedDep, SlotCheck, SlotVerifier};
 use vibe_workspace::vibedeps;
 
 use crate::commands::compile_trace::{self, CommandExit, RegisteredReportDraft, carry_measured};
@@ -62,8 +61,9 @@ use super::draft::{UpdateDraft, UpdateIdentity};
 use super::inputs::install_args_from;
 
 use measured::Measured;
+use prune::prune_superseded;
 use roots::{qualify_roots, source_only_roots};
-use stage::{PendingInPlace, Stage, stage};
+use stage::{PendingInPlace, SourceHashes, Stage, stage};
 
 /// One re-resolved package: what was fetched, what it requires, and — for an
 /// in-place node — whether the fetch really advanced the working tree.
@@ -74,20 +74,6 @@ pub(super) type Resolved = (
     Vec<vibe_core::manifest::LockedEmbeddedSource>,
     Option<vibe_core::manifest::PackageConfiguration>,
 );
-
-pub(super) struct SourceHashes(HashMap<(Group, String), String>);
-
-impl SlotVerifier for SourceHashes {
-    fn source_hash<'a>(&'a self, dep: &ResolvedDep) -> Option<&'a str> {
-        self.0
-            .get(&(dep.group.clone(), dep.name.clone()))
-            .map(String::as_str)
-    }
-
-    fn verify_slot(&self, _dep: &ResolvedDep, _slot_abs: &Path) -> SlotCheck {
-        SlotCheck::Unverifiable
-    }
-}
 
 /// The one boundary: everything after `prepare` and before `finalize`.
 pub(super) fn execute_after_open(
@@ -600,68 +586,6 @@ fn confirm(ctx: &output::Context, args: &crate::cli::UpdateArgs, total: usize) -
         )
     })
     .context("reading user confirmation")
-}
-
-/// Remove any superseded *versioned* slot so a bump leaves no stale slot (an
-/// in-place slot is unversioned — nothing to prune), and record the bumps.
-///
-/// Both facts are written into `measured` AS THEY HAPPEN, and that is the whole
-/// contract: a removal that fails at package N must leave the N−1 slots this
-/// run really deleted in the accumulator, and therefore in the failed report.
-/// An all-or-nothing helper returning `Result<Vec<String>>` would drop its
-/// partial vector on the way out and report a tree it had already changed as
-/// untouched.
-///
-/// A bump is recorded before its removal is attempted: it is a fact about the
-/// resolution, and stays true whether or not the stale slot could be deleted.
-/// `pruned` conversely names only removals that REALLY removed something — a
-/// slot already absent, or an unversioned in-place one, deleted nothing.
-///
-/// Each removal moves the slot aside into `rollback` (same volume, a rename)
-/// rather than deleting it, so a later failure or acknowledged stop before the
-/// lock is published can put the superseded slot back.
-fn prune_superseded(
-    workspace: &Workspace,
-    lockfile: &Lockfile,
-    updated: &[Resolved],
-    measured: &mut Measured,
-    rollback: &mut InstallRollback,
-) -> Result<()> {
-    for (cached, _, _, _, _) in updated {
-        let name = &cached.resolved.name;
-        let Some(old_v) = lockfile
-            .find(&cached.resolved.group, name)
-            .map(|o| o.version.clone())
-            .filter(|v| *v != cached.resolved.version)
-        else {
-            continue;
-        };
-        measured.record_bump(format!(
-            "{}/{} {} -> {}",
-            cached.resolved.group, name, old_v, cached.resolved.version
-        ));
-        if !cached.package_meta().materialization.is_in_place() {
-            let group = &cached.package_meta().group;
-            let slot = vibedeps::slot_abs_path(&workspace.root, group, name, &old_v);
-            if slot.exists() {
-                // A slot is a directory. Moving aside whatever else sits at
-                // its path would succeed where the delete it replaces refused.
-                if !slot.is_dir() {
-                    return Err(vibe_workspace::WorkspaceError::Io {
-                        path: slot,
-                        reason: "the superseded slot path is not a directory".into(),
-                    })
-                    .context("removing the superseded vibedeps/ slot");
-                }
-                rollback
-                    .remove(&slot)
-                    .context("removing the superseded vibedeps/ slot")?;
-                measured.record_pruned(vibedeps::slot_rel_path(group, name, &old_v));
-            }
-        }
-    }
-    measured.sort_pruned();
-    Ok(())
 }
 
 /// `Verify` re-materialises every named slot from the fresh fetch — the scoped

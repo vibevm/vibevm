@@ -434,6 +434,7 @@ pub(crate) fn prepare_install(
                     && let Ok(vibe_core::manifest::Need::Command(command)) =
                         vibe_core::manifest::Need::try_from(need.clone())
                     && (command == "npm" || command == "node")
+                    && let Some(witnessed) = witnessed_source.clone()
                 {
                     return Ok(PreparedInstall::NeedsNode(Box::new(
                         PreparedSelection::capture(
@@ -448,9 +449,7 @@ pub(crate) fn prepare_install(
                                 license,
                             },
                             command,
-                            witnessed_source
-                                .clone()
-                                .expect("explicit remediation witness"),
+                            witnessed,
                         )?,
                     )));
                 }

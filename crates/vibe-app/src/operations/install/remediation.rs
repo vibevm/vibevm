@@ -1,13 +1,61 @@
 //! Opt-in top-level handoff. Tokens stay opaque and never enter error reports.
 use super::*;
 
+/// What a top-level install attempt came to: a finished operation, or one
+/// held selection that waits for a Node provider the caller may supply.
+///
+/// ```no_run
+/// # fn install(
+/// #     ctx: &vibe_app::OperationContext<'_>,
+/// #     resolved: &vibe_app::ResolvedPackage,
+/// #     request: &vibe_app::InstallRequest,
+/// # ) -> Result<vibe_app::Outcome, vibe_app::AppError> {
+/// use vibe_app::{InstallPreparation, continue_after_node, install_preparing_node};
+///
+/// match install_preparing_node(ctx, resolved, request)? {
+///     InstallPreparation::Completed(outcome) => Ok(outcome),
+///     // No lock is held here: the caller installs a provider (or drops the
+///     // token to decline), then spends the token on exactly one continuation.
+///     InstallPreparation::NeedsNode(token) => continue_after_node(ctx, resolved, *token),
+/// }
+/// # }
+/// ```
 pub enum InstallPreparation {
     Completed(Outcome),
     NeedsNode(Box<NodeRemediation>),
 }
 
+/// The held selection of an install that stopped at a missing `npm`/`node`.
+/// It names what the provider must satisfy and keeps the answers opaque.
+///
+/// ```no_run
+/// # fn provider_requirement(
+/// #     ctx: &vibe_app::OperationContext<'_>,
+/// #     resolved: &vibe_app::ResolvedPackage,
+/// #     token: &vibe_app::NodeRemediation,
+/// # ) -> Result<semver::Version, vibe_app::AppError> {
+/// // Check the declared npm metadata against the digest-verified input
+/// // before any provider is installed on its behalf.
+/// token.verify_runtime_input(ctx, resolved)?;
+/// let binding = token.runtime();
+/// println!(
+///     "option `{}` lacks `{}`; `{}` needs Node {}",
+///     token.option_id(),
+///     token.missing_command(),
+///     binding.package,
+///     binding.node_range,
+/// );
+/// let minimum = binding.minimum_node().map_err(|reason| vibe_app::ResolveError::Manifest {
+///     package: resolved.package.key(),
+///     reason,
+/// })?;
+/// # Ok(minimum)
+/// # }
+/// ```
 pub struct NodeRemediation {
     prepared: crate::steps::PreparedSelection,
+    /// The option's npm binding, captured when the planner admitted the handoff.
+    runtime: vibe_core::manifest::NpmRuntimeDecl,
     request: InstallRequest,
     settings: crate::SettingsRoot,
     prior: Option<crate::Installation>,
@@ -22,11 +70,7 @@ impl std::fmt::Debug for NodeRemediation {
 }
 impl NodeRemediation {
     pub fn runtime(&self) -> &vibe_core::manifest::NpmRuntimeDecl {
-        self.prepared
-            .option
-            .npm_runtime
-            .as_ref()
-            .expect("planner admitted runtime binding")
+        &self.runtime
     }
     pub fn option_id(&self) -> &str {
         &self.prepared.option.id
@@ -218,8 +262,16 @@ pub fn install_preparing_node(
             ))
         }
         crate::steps::PreparedInstall::NeedsNode(prepared) => {
+            let runtime = prepared.option.npm_runtime.clone().ok_or_else(|| {
+                crate::ResolveError::Manifest {
+                    package: resolved.package.key(),
+                    reason: "runtime remediation was prepared without an npm_runtime binding"
+                        .into(),
+                }
+            })?;
             Ok(InstallPreparation::NeedsNode(Box::new(NodeRemediation {
                 prepared: *prepared,
+                runtime,
                 request: request.clone(),
                 settings: ctx.settings.clone(),
                 prior,

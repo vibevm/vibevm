@@ -60,6 +60,19 @@ pub struct LockedSubskill {
 }
 
 /// Exact bounded file identity observed by the admitted source owner.
+///
+/// ```
+/// use vibe_core::manifest::SubskillFileWitness;
+///
+/// let digest = "ab".repeat(32);
+/// let row = format!("path = 'subskills/stack/rust/GUIDE.md'\nbyte_len = 2048\nsha256 = '{digest}'");
+/// let witness: SubskillFileWitness = toml::from_str(&row)?;
+/// assert_eq!(witness.byte_len, 2048);
+/// assert_eq!(toml::from_str::<SubskillFileWitness>(&toml::to_string(&witness)?)?, witness);
+/// // The row is closed: an unknown key is a refusal, not a silently dropped fact.
+/// assert!(toml::from_str::<SubskillFileWitness>(&format!("{row}\nmode = 420")).is_err());
+/// # Ok::<(), Box<dyn std::error::Error>>(())
+/// ```
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
 pub struct SubskillFileWitness {
@@ -69,6 +82,35 @@ pub struct SubskillFileWitness {
 }
 
 /// Source-admitted membership, independent of the historical tree recipe.
+///
+/// ```
+/// use vibe_core::ContentHash;
+/// use vibe_core::manifest::{LockedSubskill, SubskillFileWitness, SubskillSourceWitness};
+///
+/// let pin = ContentHash::parse("sha256:e3b0c44298fc1c14")?;
+/// let file = |name: &str, byte_len| SubskillFileWitness {
+///     path: format!("subskills/stack/rust/{name}"),
+///     byte_len,
+///     sha256: "ab".repeat(32),
+/// };
+/// let subskill = LockedSubskill {
+///     path: "stack/rust".into(),
+///     delivery: "lazy-pull".into(),
+///     describes: None,
+///     files_written: vec![],
+///     cache_files: vec!["GUIDE.md".into()],
+///     source_witness: Some(SubskillSourceWitness {
+///         package_content_hash: pin.clone(),
+///         declaration: file("vibe-subskill.toml", 120),
+///         member: file("GUIDE.md", 2048),
+///     }),
+/// };
+/// assert!(subskill.validate_source_witness(&pin).is_ok());
+/// // The witness binds one package pin; another selected source is refused.
+/// let other = ContentHash::parse("sha256:0000000000000000")?;
+/// assert!(subskill.validate_source_witness(&other).is_err());
+/// # Ok::<(), Box<dyn std::error::Error>>(())
+/// ```
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
 pub struct SubskillSourceWitness {

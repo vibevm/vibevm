@@ -55,6 +55,12 @@ pub(crate) fn search_path() -> Option<std::ffi::OsString> {
     std::env::var_os("PATH")
 }
 
+/// The caller's `PATHEXT`, the Windows half of the same command search
+/// [`search_path`] is the directory half of, read exactly here.
+pub(crate) fn search_extensions() -> Option<std::ffi::OsString> {
+    std::env::var_os("PATHEXT")
+}
+
 /// The user's home directory holding the shell startup files an env step's
 /// managed block goes into (PROP-065 `#env-step`): `HOME`, or
 /// `USERPROFILE` on Windows.

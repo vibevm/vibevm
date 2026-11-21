@@ -8,14 +8,17 @@ use std::path::{Path, PathBuf};
 use anyhow::{Context, Result, bail};
 use vibe_app::{
     FeatureRequest, HostFacts, InstallChoice, InstallRequest, OperationContext, Plan,
-    RemoveRequest, ResolvedPackage, SettingsRoot, Start,
+    ResolvedPackage, SettingsRoot, Start,
 };
 
 mod node_remediation;
 #[path = "global/observation.rs"]
 mod observation;
+mod removal;
 mod system_python;
 pub(crate) use observation::Observation;
+pub(crate) use removal::remove_request;
+pub use removal::uninstall;
 
 /// Where one command's package comes from: the effective source policy,
 /// the registry chain, and the resolver requirements are solved through.
@@ -28,9 +31,9 @@ pub(crate) use sources::{
 
 use super::agents::{AgentSetup, report_parked};
 use super::display::{StepDisplay, asking};
-use super::report::{render, render_removal, render_written};
+use super::report::{render, render_written};
 use super::wizard::{chooser, feature_chooser, license_prompt, parameter_prompt};
-use crate::cli::{AppChoiceArgs, AppStepArgs, InstallArgs, UninstallArgs, UpdateArgs};
+use crate::cli::{AppChoiceArgs, AppStepArgs, InstallArgs, UpdateArgs};
 use crate::output;
 
 /// The current user's settings root, resolved once at this boundary, with
@@ -569,38 +572,4 @@ pub(crate) fn update_one(
         report_parked(ctx, vibe_app::update(&operation, resolved, &request))
     });
     display.report(ctx, outcome).map_err(Into::into)
-}
-
-/// The tree-removal flags of `uninstall` (PROP-065 `#uninstall-tree`).
-pub(crate) fn remove_request(args: &UninstallArgs) -> RemoveRequest {
-    RemoveRequest {
-        force: args.force,
-        cascade: args.cascade,
-        autoremove: args.autoremove,
-        plan_only: args.plan_only,
-    }
-}
-
-pub fn uninstall(ctx: &output::Context, args: UninstallArgs, root_offline: bool) -> Result<()> {
-    if args.path != Path::new(".") {
-        bail!("global uninstall received project-only --path");
-    }
-    let settings = settings_root()?;
-    // An uninstall acts only on installed state, so the home's inventory is
-    // the whole source of the short name and the answer never leaves this
-    // machine (PROP-008 `#INSTALLED-STATE-RESOLVES-LOCALLY`).
-    let package = super::short_name::installed(ctx, "vibe uninstall -g", &settings, &args.package)?;
-    vibe_app::qualified_ref(&package)?;
-    let proxy_image = proxy_image()?;
-    let flat = StepDisplay::flat();
-    let observe = Observation::new(ctx, true, &flat)?;
-    let removal = flat.around(ctx, || {
-        let operation = OperationContext {
-            chooser: None,
-            feature_chooser: None,
-            ..operation(ctx, &settings, root_offline, &proxy_image, None, &observe)
-        };
-        vibe_app::uninstall(&operation, &package, &remove_request(&args))
-    })?;
-    render_removal(ctx, &removal)
 }

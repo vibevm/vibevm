@@ -3,13 +3,23 @@ specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-000#TS-USER-KEYRING"
 use crate::{LockGuard, Pinned};
 use anyhow::{Result, bail};
 
+/// The effective user every private-storage ownership check compares against.
+#[cfg(unix)]
+#[specmark::spec(
+    deviates = "spec://core-ai-native/mechanisms/ENGINE-CONFORM-v0.1#rules",
+    reason = "the standard library exposes no effective-user query, and private storage must be owned by exactly that user; geteuid is the one infallible, argument-free libc read of it"
+)]
+#[allow(unsafe_code)]
+fn effective_uid() -> u32 {
+    // SAFETY: geteuid takes no arguments, touches no caller memory, cannot
+    // fail and has no side effects.
+    unsafe { libc::geteuid() }
+}
+
 #[cfg(unix)]
 fn owner(metadata: &std::fs::Metadata, mode: u32) -> Result<()> {
     use std::os::unix::fs::{MetadataExt, PermissionsExt};
-    // SAFETY: geteuid has no arguments, memory access or side effects.
-    #[allow(unsafe_code)]
-    let uid = unsafe { libc::geteuid() };
-    if metadata.uid() != uid || metadata.permissions().mode() & 0o7777 != mode {
+    if metadata.uid() != effective_uid() || metadata.permissions().mode() & 0o7777 != mode {
         bail!("private storage requires current-user ownership and exact private mode");
     }
     Ok(())
@@ -38,10 +48,7 @@ impl Pinned {
         {
             use std::os::unix::fs::{MetadataExt, PermissionsExt};
             let metadata = self.dir.try_clone()?.into_std_file().metadata()?;
-            #[allow(unsafe_code)]
-            // SAFETY: geteuid reads the process effective identity only.
-            let uid = unsafe { libc::geteuid() };
-            if metadata.uid() != uid || metadata.permissions().mode() & 0o022 != 0 {
+            if metadata.uid() != effective_uid() || metadata.permissions().mode() & 0o022 != 0 {
                 bail!(
                     "private storage parent must be current-user owned and not group/world writable"
                 );

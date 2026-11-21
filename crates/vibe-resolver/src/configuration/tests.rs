@@ -1,5 +1,6 @@
 //! Actual resolvo candidate selection, distinct from configuration projection tests.
 use super::*;
+use crate::DepProvider;
 
 struct Sources(BTreeMap<(String, semver::Version), Manifest>);
 impl DepProvider for Sources {

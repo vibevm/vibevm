@@ -26,6 +26,9 @@ use crate::cli::{InstallArgs, UninstallArgs, UpdateArgs};
 use crate::commands::{install, uninstall as project_uninstall, update as project_update};
 use crate::output;
 
+mod saved;
+pub(super) use saved::{read_saved_source, resolve_saved_requirement};
+
 /// The group whose installers run without explicit consent, as for
 /// `vibe bin build` (PROP-025 `#security`).
 const ALLOW_LISTED_GROUP: &str = "org.vibevm";
@@ -509,59 +512,6 @@ fn from_slot(root: &Path, package: &LockedPackage) -> Result<ResolvedPackage> {
             .into(),
     );
     Ok(resolved)
-}
-
-/// Re-admit an exact saved slot through the current project lock and existing slot owner.
-pub(super) fn read_saved_source(
-    route: &vibe_wire::generated::shared::ApplicationPendingSource,
-    coordinate: &PackageCoordinate,
-) -> std::result::Result<ResolvedPackage, vibe_app::AppError> {
-    let failed = |reason: String| vibe_app::ResolveError::Registry {
-        spelling: coordinate.key(),
-        reason,
-    };
-    let project = route
-        .project
-        .as_ref()
-        .map(PathBuf::from)
-        .filter(|p| p.is_absolute())
-        .ok_or_else(|| failed("retained project source has no absolute project root".into()))?;
-    let root = crate::commands::resolve_project_root(&project)
-        .map_err(|e| failed(format!("saved project is unavailable: {e:#}")))?;
-    let rows = app_dependencies(&root)
-        .map_err(|e| failed(format!("saved project lock is unavailable: {e:#}")))?;
-    let row = rows
-        .iter()
-        .find(|row| self::coordinate(row) == *coordinate)
-        .ok_or_else(|| {
-            failed(
-                "the current project lock no longer binds this exact application coordinate".into(),
-            )
-        })?;
-    from_slot(&root, row)
-        .map_err(|e| failed(format!("saved slot cannot be admitted: {e:#}")).into())
-}
-
-pub(super) fn resolve_saved_requirement(
-    root: &Path,
-    spelling: &str,
-) -> std::result::Result<ResolvedPackage, vibe_app::AppError> {
-    let requested = vibe_app::qualified_ref(spelling)?;
-    let fail = |reason| vibe_app::ResolveError::Registry {
-        spelling: spelling.into(),
-        reason,
-    };
-    let rows =
-        app_dependencies(root).map_err(|e| fail(format!("project lock cannot be read: {e:#}")))?;
-    let row = rows
-        .iter()
-        .find(|p| {
-            requested.group.as_ref() == Some(&p.group)
-                && requested.name == p.name
-                && requested.version.matches(&p.version)
-        })
-        .ok_or_else(|| fail("project lock has no matching application dependency".into()))?;
-    from_slot(root, row).map_err(|e| fail(format!("project slot cannot be read: {e:#}")).into())
 }
 
 /// One pending predicate for both actual materialization and its preflight.

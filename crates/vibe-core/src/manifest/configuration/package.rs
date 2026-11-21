@@ -1,11 +1,17 @@
 //! Replayable package selections for real incoming workspace declarations.
 //! The initial operation adapter accepts explicit, non-automatic inputs. Domain
 //! effects beyond dependency activation remain explicit unsupported outcomes.
-use super::{ConfigurationDecl, ConfigurationEffect, ConfigurationIntentDecl};
-use crate::configuration::{ChoiceOutcome, FeatureBase, FeatureInput, ImplicationReason};
+use super::{ConfigurationDecl, ConfigurationIntentDecl};
+use crate::configuration::{ChoiceOutcome, FeatureBase, FeatureInput};
 use crate::manifest::{FieldPath, Manifest, Requires};
 use serde::{Deserialize, Serialize};
-use std::collections::{BTreeMap, BTreeSet};
+use std::collections::BTreeMap;
+
+mod activation;
+mod admission;
+mod parameters;
+mod reliance;
+mod retained;
 
 /// Original declarations and their separately evaluated dependency selection.
 /// This belongs to the existing project lock, not a global configuration store.
@@ -35,6 +41,30 @@ pub struct PackageConfiguration {
 }
 
 /// Instance-level observed closure fallback, never a consumer answer or consent.
+///
+/// ```
+/// use std::collections::BTreeMap;
+/// use vibe_core::manifest::{ConfigurationIntentDecl, Manifest, PackageConfiguration};
+///
+/// let manifest = Manifest::parse_str(
+///     "[package]\ngroup='org.test'\nname='owner'\nkind='flow'\nversion='1.0.0'\n\
+///      [[configuration.features]]\nid='plain'\nname='Plain'\n\
+///      [[configuration.features]]\nid='rich'\nname='Rich'\n\
+///      [[configuration.groups]]\nmode='closure'\nid='output'\nname='Output'\n\
+///      cardinality='exactly-one'\nmembers=['plain','rich']\nfallback=['plain']",
+/// )?;
+/// let silent: ConfigurationIntentDecl =
+///     toml::from_str("policy='require-selection'\ndefault_features=false")?;
+/// let record = PackageConfiguration::evaluate(
+///     &manifest,
+///     &BTreeMap::from([("./vibe.toml".to_string(), silent)]),
+/// )?;
+/// // Nobody answered `output`; the kernel fell back, and the record says so.
+/// let basis = record.closure_fallback_basis.expect("observed fallback");
+/// assert_eq!(basis.groups, BTreeMap::from([("output".into(), "plain".into())]));
+/// assert_eq!(record.features, ["plain"]);
+/// # Ok::<(), Box<dyn std::error::Error>>(())
+/// ```
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
 pub struct ClosureFallbackBasis {
@@ -43,6 +73,35 @@ pub struct ClosureFallbackBasis {
 }
 
 /// One exact selected source-owned declaration requesting a target feature.
+///
+/// ```
+/// use std::collections::BTreeMap;
+/// use vibe_core::manifest::{ForwardStrength, ForwardedInput, Manifest, PackageConfiguration};
+/// use vibe_core::{ContentHash, PackageRef};
+///
+/// let target = Manifest::parse_str(
+///     "[package]\ngroup='org.test'\nname='target'\nkind='flow'\nversion='1.0.0'\n\
+///      [[configuration.features]]\nid='tracing'\nname='Tracing'",
+/// )?;
+/// let request = ForwardedInput {
+///     source_group: "org.test".parse()?,
+///     source_name: "parent".parse()?,
+///     source_version: semver::Version::new(2, 0, 0),
+///     source_content_hash: ContentHash::parse("sha256:e3b0c44298fc1c14")?,
+///     source_feature: "observability".into(),
+///     declaration_index: 0,
+///     target: PackageRef::parse("flow:org.test/target@=1.0.0")?,
+///     target_feature: "tracing".into(),
+///     strength: ForwardStrength::Strong,
+/// };
+/// // The parent's request selects the feature without becoming a consumer.
+/// let record =
+///     PackageConfiguration::evaluate_with_forwarded(&target, &BTreeMap::new(), &[request])?;
+/// assert_eq!(record.features, ["tracing"]);
+/// assert!(record.consumers.is_empty());
+/// assert_eq!(record.forwarded_inputs[0].source_feature, "observability");
+/// # Ok::<(), Box<dyn std::error::Error>>(())
+/// ```
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
 pub struct ForwardedInput {
@@ -58,6 +117,29 @@ pub struct ForwardedInput {
 }
 
 /// Historical automatic selection, not a consent receipt or authored answer.
+///
+/// ```
+/// use std::collections::BTreeMap;
+/// use vibe_core::manifest::{ConfigurationIntentDecl, Manifest, PackageConfiguration};
+///
+/// let manifest = Manifest::parse_str(
+///     "[package]\ngroup='org.test'\nname='owner'\nkind='flow'\nversion='1.0.0'\n\
+///      [[configuration.features]]\nid='compact'\nname='Compact'\n\
+///      [[configuration.groups]]\nmode='choice'\nid='layout'\nname='Layout'\n\
+///      cardinality='exactly-one'\nmembers=['compact']\ndefaults=['compact']",
+/// )?;
+/// let omitted: ConfigurationIntentDecl =
+///     toml::from_str("policy='use-declared-defaults'\ndefault_features=false")?;
+/// let record = PackageConfiguration::evaluate(
+///     &manifest,
+///     &BTreeMap::from([("./vibe.toml".to_string(), omitted)]),
+/// )?;
+/// // The consumer answered nothing, so its reliance on the default is kept.
+/// let basis = record.automatic_basis.expect("default reliance");
+/// assert_eq!(basis.consumer_choices["./vibe.toml"]["layout"], "compact");
+/// assert!(record.consumers["./vibe.toml"].selections.is_empty());
+/// # Ok::<(), Box<dyn std::error::Error>>(())
+/// ```
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
 pub struct AutomaticBasis {
@@ -183,13 +265,13 @@ impl PackageConfiguration {
         consumers: &BTreeMap<String, ConfigurationIntentDecl>,
         forwarded: &[ForwardedInput],
     ) -> Result<Self, PackageConfigurationError> {
-        let unsupported = |reason: &str| PackageConfigurationError::Unsupported {
-            package: package.clone(),
-            reason: reason.into(),
-        };
-        let invalid = |reason: String| PackageConfigurationError::Invalid {
-            package: package.clone(),
-            reason,
+        let scope = Scope {
+            package: &package,
+            kind,
+            definition,
+            requires,
+            consumers,
+            forwarded,
         };
         definition
             .validate_scope(
@@ -198,369 +280,37 @@ impl PackageConfiguration {
                 false,
                 &FieldPath::root().table("configuration"),
             )
-            .map_err(|e| invalid(format!("{}: {}", e.field, e.message)))?;
+            .map_err(|e| scope.invalid(format!("{}: {}", e.field, e.message)))?;
         requires
             .validate_configuration_metadata()
-            .map_err(invalid)?;
+            .map_err(|reason| scope.invalid(reason))?;
         if consumers.is_empty() && forwarded.is_empty() {
-            return Err(unsupported("no actual incoming configuration declaration"));
+            return Err(scope.unsupported("no actual incoming configuration declaration"));
         }
         if !forwarded.is_empty()
             && (!definition.parameters.is_empty() || !definition.profiles.is_empty())
         {
-            return Err(unsupported(
-                "profile or parameter forwarding is not connected",
-            ));
+            return Err(scope.unsupported("profile or parameter forwarding is not connected"));
         }
-        let mut public_parameters: BTreeMap<String, bool> = BTreeMap::new();
-        let mut public_scalars: BTreeMap<String, crate::manifest::ParameterValue> = BTreeMap::new();
-        let mut automatic_choices = BTreeMap::new();
-        let mut automatic_choice_sets = BTreeMap::new();
-        let mut automatic_dormant_choices = BTreeMap::new();
-        let mut automatic_feature_defaults = BTreeMap::new();
-        let mut guarded_reliance = Vec::new();
-        let mut ordinary = BTreeSet::new();
-        let mut choices = Vec::new();
-        for (consumer, input) in consumers {
-            input
-                .validate_shape_at(&FieldPath::root().table("configuration"))
-                .map_err(|e| invalid(format!("{consumer}: {}: {}", e.field, e.message)))?;
-            let normalized = definition.normalize_input(input, consumer).map_err(|e| {
-                PackageConfigurationError::Incompatible {
-                    package: package.clone(),
-                    consumers: vec![consumer.clone()],
-                    reason: format!("{}: {}", e.field, e.message),
-                }
-            })?;
-            if input.default_features && input.profile.is_none() {
-                if kind != crate::PackageKind::Flow
-                    || consumers.len() != 1
-                    || !forwarded.is_empty()
-                    || !definition.groups.is_empty()
-                    || !definition.profiles.is_empty()
-                    || !definition.parameters.is_empty()
-                    || definition.features.iter().any(|feature| {
-                        !feature.guards.is_empty()
-                            || feature.visibility != super::ConfigurationFeatureVisibility::Public
-                    })
-                {
-                    return Err(unsupported(
-                        "feature defaults require one public ordinary Flow without groups, profiles, parameters or forwarding",
-                    ));
-                }
-                let declared = definition
-                    .features
-                    .iter()
-                    .filter(|feature| feature.default)
-                    .map(|feature| feature.id.clone())
-                    .collect::<BTreeSet<_>>()
-                    .into_iter()
-                    .collect();
-                automatic_feature_defaults.insert(consumer.clone(), declared);
-            }
-            let reasons = super::basis::consumer_reliance(
-                definition,
-                super::basis::ConsumerInput {
-                    original: input,
-                    normalized: &normalized,
-                },
-                &BTreeSet::new(),
-                super::basis::Authority::Reuse,
-            );
-            let mut selected_defaults = BTreeMap::new();
-            let mut selected_default_sets = BTreeMap::new();
-            for reason in reasons {
-                if reason == super::basis::ConsumerReliance::FeatureDefaults {
-                    continue; // Already bound to declared seeds, never effective closure.
-                }
-                if reason == super::basis::ConsumerReliance::Profile {
-                    // Profile reliance is retained by original profile input and
-                    // historical definition, never a fabricated default choice.
-                    continue;
-                }
-                let super::basis::ConsumerReliance::Choice(group_id) = reason else {
-                    return Err(unsupported(
-                        "only omitted exactly-one choice defaults are connected",
-                    ));
-                };
-                let Some(super::ConfigurationGroupDecl::Choice { cardinality, defaults: Some(defaults), members, guards, .. }) = definition.groups.iter().find(|group| matches!(group, super::ConfigurationGroupDecl::Choice { id, .. } if id == &group_id)) else {
-                    return Err(unsupported("automatic choice needs a declared exactly-one default"));
-                };
-                if *cardinality != crate::configuration::Cardinality::ExactlyOne {
-                    let multi_groups = definition
-                        .groups
-                        .iter()
-                        .filter(|group| {
-                            matches!(group, super::ConfigurationGroupDecl::Choice { cardinality, .. }
-                                if *cardinality != crate::configuration::Cardinality::ExactlyOne)
-                        })
-                        .count();
-                    if !guards.is_empty()
-                        || !definition.parameters.is_empty()
-                        || !definition.profiles.is_empty()
-                        || multi_groups != 1
-                    {
-                        return Err(unsupported(
-                            "only one unguarded non-scalar choice default group without parameters or profiles is connected",
-                        ));
-                    }
-                    let canonical = defaults
-                        .iter()
-                        .cloned()
-                        .collect::<BTreeSet<_>>()
-                        .into_iter()
-                        .collect();
-                    selected_default_sets.insert(group_id, canonical);
-                    continue;
-                }
-                if !guards.is_empty() {
-                    // Only the qualified one independent explicit gate / one
-                    // guarded singleton group. Kernel decides activity/default use.
-                    let allowed = kind == crate::PackageKind::Flow
-                        && consumers.len() == 1
-                        && forwarded.is_empty()
-                        && definition.parameters.is_empty()
-                        && definition.profiles.is_empty()
-                        && definition.groups.len() == 2
-                        && guards.len() == 1
-                        && matches!(&guards[0], super::ConfigurationGuard::Member(gate_member)
-                            if definition.groups.iter().any(|group| matches!(group,
-                                super::ConfigurationGroupDecl::Choice{id,members,guards,cardinality,..}
-                                if id != &group_id && guards.is_empty()
-                                    && *cardinality==crate::configuration::Cardinality::ExactlyOne
-                                    && members.contains(gate_member)
-                                    && input.selections.get(id).is_some_and(|answer| answer.intent == super::MergeIntent::Exact)
-                                    && normalized.choices.answers.get(id).is_some_and(|answer|
-                                        matches!(&answer.selection, crate::configuration::Selection::Explicit(members) if members.len()==1)))))
-                        && definition.features.iter().all(|f| f.guards.is_empty());
-                    if !allowed || defaults.len() != 1 || !members.contains(&defaults[0]) {
-                        return Err(unsupported(
-                            "guarded singleton defaults require one independent explicit gate",
-                        ));
-                    }
-                    guarded_reliance.push((consumer.clone(), group_id));
-                    continue;
-                }
-                if defaults.len() != 1 || !members.contains(&defaults[0]) {
-                    return Err(unsupported(
-                        "only unguarded exactly-one single-member defaults are connected",
-                    ));
-                }
-                selected_defaults.insert(group_id, defaults[0].clone());
-            }
-            if !selected_defaults.is_empty() {
-                automatic_choices.insert(consumer.clone(), selected_defaults);
-            }
-            if !selected_default_sets.is_empty() {
-                automatic_choice_sets.insert(consumer.clone(), selected_default_sets);
-            }
-            for parameter in &definition.parameters {
-                if matches!(
-                    parameter.kind,
-                    crate::manifest::ParameterType::Integer
-                        | crate::manifest::ParameterType::String
-                        | crate::manifest::ParameterType::Choice
-                        | crate::manifest::ParameterType::Path
-                ) {
-                    // Representability only. Effectful owners must supply a
-                    // fresh host observation; lock/show never claim readiness.
-                    if parameter.kind == crate::manifest::ParameterType::Path
-                        && parameter.must_exist
-                        && (consumers.len() != 1
-                            || !consumers.contains_key("./vibe.toml")
-                            || !forwarded.is_empty()
-                            || !definition.groups.is_empty()
-                            || !definition.features.is_empty())
-                    {
-                        return Err(unsupported(
-                            "public path must_exist=true requires a separately specified planning-host base and check for this consumer",
-                        ));
-                    }
-                    let integer_profile = parameter.kind == crate::manifest::ParameterType::Integer
-                        && parameter.min.is_some()
-                        && parameter.max.is_some()
-                        && definition.profiles.len() == 1
-                        && definition.profiles[0].parameters.len() == 1
-                        && definition.profiles[0]
-                            .parameters
-                            .contains_key(&parameter.id)
-                        && definition.profiles[0].selections.is_empty()
-                        && definition.profiles[0].features.is_empty()
-                        && forwarded.is_empty();
-                    if kind != crate::PackageKind::Flow
-                        || parameter.secret
-                        || !parameter.required
-                        || parameter.default.is_some()
-                        || (!definition.profiles.is_empty() && !integer_profile)
-                        || definition.parameters.len() != 1
-                        || !automatic_choices.is_empty()
-                        || !automatic_choice_sets.is_empty()
-                    {
-                        return Err(unsupported(match parameter.kind {
-                            crate::manifest::ParameterType::Integer => {
-                                "only one explicit required public integer without defaults, profiles or automatic choices is connected"
-                            }
-                            crate::manifest::ParameterType::Path => {
-                                "only one explicit required public lexical path without defaults, profiles or automatic choices is connected"
-                            }
-                            _ => {
-                                "only one explicit required public string or choice without defaults, profiles or automatic choices is connected"
-                            }
-                        }));
-                    }
-                    let Some(value) = normalized.parameters.get(&parameter.id) else {
-                        return Err(PackageConfigurationError::Incompatible {
-                            package: package.clone(),
-                            consumers: vec![consumer.clone()],
-                            reason: format!(
-                                "consumer `{consumer}` is missing required public parameter `{}`",
-                                parameter.id
-                            ),
-                        });
-                    };
-                    if public_scalars
-                        .get(&parameter.id)
-                        .is_some_and(|previous| previous != value)
-                    {
-                        return Err(PackageConfigurationError::Incompatible {
-                            package: package.clone(),
-                            consumers: consumers.keys().cloned().collect(),
-                            reason: format!(
-                                "conflicting explicit public {} parameter `{}`",
-                                match parameter.kind {
-                                    crate::manifest::ParameterType::Integer => "integer",
-                                    crate::manifest::ParameterType::String => "string",
-                                    crate::manifest::ParameterType::Path => "path",
-                                    _ => "choice",
-                                },
-                                parameter.id
-                            ),
-                        });
-                    }
-                    public_scalars.insert(parameter.id.clone(), value.clone());
-                    continue;
-                }
-                let optional_bool = !parameter.required
-                    && !parameter.secret
-                    && parameter.kind == crate::manifest::ParameterType::Bool
-                    && parameter.default.is_none()
-                    && kind == crate::PackageKind::Flow
-                    && definition.parameters.len() == 1
-                    && definition.profiles.is_empty()
-                    && definition.groups.is_empty()
-                    && definition
-                        .features
-                        .iter()
-                        .all(|feature| feature.guards.is_empty())
-                    && forwarded.is_empty()
-                    && consumers.values().all(|input| input.profile.is_none());
-                if optional_bool && !normalized.parameters.contains_key(&parameter.id) {
-                    continue; // Absence does not vote, and is never false.
-                }
-                if parameter.secret
-                    || parameter.kind != crate::manifest::ParameterType::Bool
-                    || (!parameter.required && !optional_bool)
-                    || (parameter.default.is_some() && definition.parameters.len() != 1)
-                    || (input.profile.is_some()
-                        && (definition.parameters.len() != 1
-                            || parameter.default.is_some()
-                            || definition
-                                .profiles
-                                .iter()
-                                .find(|profile| Some(&profile.id) == input.profile.as_ref())
-                                .is_none_or(|profile| {
-                                    profile.parameters.keys().any(|id| id != &parameter.id)
-                                })))
-                {
-                    return Err(unsupported(
-                        "only explicitly supplied required public bool parameters without defaults are connected",
-                    ));
-                }
-                let Some(crate::manifest::ParameterValue::Bool(value)) = normalized
-                    .parameters
-                    .get(&parameter.id)
-                    .or(parameter.default.as_ref())
-                else {
-                    return Err(PackageConfigurationError::Incompatible {
-                        package: package.clone(),
-                        consumers: vec![consumer.clone()],
-                        reason: format!(
-                            "consumer `{consumer}` is missing required public parameter `{}`",
-                            parameter.id
-                        ),
-                    });
-                };
-                if public_parameters
-                    .get(&parameter.id)
-                    .is_some_and(|previous| previous != value)
-                {
-                    return Err(PackageConfigurationError::Incompatible {
-                        package: package.clone(),
-                        consumers: consumers.keys().cloned().collect(),
-                        reason: format!(
-                            "conflicting {}public boolean parameter `{}`",
-                            if parameter.default.is_none()
-                                && consumers
-                                    .values()
-                                    .all(|input| input.parameters.contains_key(&parameter.id))
-                            {
-                                "explicit "
-                            } else {
-                                "effective "
-                            },
-                            parameter.id
-                        ),
-                    });
-                }
-                public_parameters.insert(parameter.id.clone(), *value);
-            }
-            if let FeatureBase::Selected(base) = normalized.features.base {
-                ordinary.extend(base);
-            }
-            ordinary.extend(normalized.features.additions);
-            choices.push(normalized.choices);
-        }
-        let mut forwarded_features = BTreeSet::new();
-        for request in forwarded {
-            if !request.target.version.is_exact_pin()
-                || request.target.qualified_name() != package
-                || !forwarded_features.insert(request.target_feature.clone())
-            {
-                return Err(invalid(
-                    "invalid or duplicate candidate-owned forwarded request".into(),
-                ));
-            }
-            let original = ConfigurationIntentDecl {
-                policy: crate::configuration::ChoicePolicy::RequireSelection,
-                profile: None,
-                features: vec![request.target_feature.clone()],
-                default_features: false,
-                selections: BTreeMap::new(),
-                parameters: BTreeMap::new(),
-            };
-            // This is a typed candidate-owned input, never inserted in consumers.
-            let normalized = definition
-                .normalize_input(&original, "candidate-owned forwarding")
-                .map_err(|error| invalid(error.to_string()))?;
-            if let FeatureBase::Selected(base) = normalized.features.base {
-                ordinary.extend(base);
-            }
-            ordinary.extend(normalized.features.additions);
-            choices.push(normalized.choices);
-        }
+        let admission::Admitted {
+            mut automatic,
+            guarded_reliance,
+            ordinary,
+            choices,
+        } = admission::admit(&scope)?;
         let model = definition
             .compile_choices()
-            .map_err(|e| invalid(format!("{}: {}", e.field, e.message)))?;
+            .map_err(|e| scope.invalid(format!("{}: {}", e.field, e.message)))?;
         // Across consumers there is no last-writer feature replacement. All
         // direct seeds are simultaneous base requirements before core closure.
-        let feature_base = if automatic_feature_defaults.is_empty() {
+        let feature_base = if automatic.feature_defaults.is_empty() {
             FeatureBase::Selected(ordinary.iter().cloned().collect())
         } else {
             // Narrow single-consumer default admission keeps kernel default
             // activation; authored additions are still explicit additions.
             FeatureBase::Defaults
         };
-        let explicit_additions = if automatic_feature_defaults.is_empty() {
+        let explicit_additions = if automatic.feature_defaults.is_empty() {
             vec![]
         } else {
             ordinary.into_iter().collect()
@@ -592,254 +342,10 @@ impl PackageConfiguration {
                 ),
             });
         };
-        for (consumer, group) in guarded_reliance {
-            let control = evaluation
-                .controls
-                .iter()
-                .find(|c| c.id == group)
-                .ok_or_else(|| invalid("guarded choice activity missing".into()))?;
-            if control.active {
-                let used = evaluation
-                    .defaults
-                    .iter()
-                    .filter(|d| d.consumer == consumer && d.group == group)
-                    .collect::<Vec<_>>();
-                let [used] = used.as_slice() else {
-                    return Err(invalid("guarded default use missing or duplicate".into()));
-                };
-                let [member] = used.declared.as_slice() else {
-                    return Err(invalid("guarded default is not singleton".into()));
-                };
-                if control.selection.as_ref() != Some(&vec![member.clone()]) {
-                    return Err(invalid(
-                        "guarded default selection disagrees with kernel".into(),
-                    ));
-                }
-                automatic_choices
-                    .entry(consumer)
-                    .or_insert_with(BTreeMap::new)
-                    .insert(group, member.clone());
-            } else {
-                automatic_dormant_choices
-                    .entry(consumer)
-                    .or_insert_with(Vec::new)
-                    .push(group);
-            }
-        }
-        for groups in automatic_dormant_choices.values_mut() {
-            groups.sort();
-            groups.dedup();
-        }
-        let instance_reliance = super::basis::instance_reliance(
-            definition,
-            &[],
-            Some(features),
-            &BTreeSet::new(),
-            super::basis::Authority::Reuse,
-        );
-        let closure_fallback_basis = if instance_reliance.is_empty() {
-            None
-        } else {
-            let allowed = kind == crate::PackageKind::Flow
-                && consumers.len() == 1
-                && consumers.contains_key("./vibe.toml")
-                && forwarded.is_empty()
-                && definition.parameters.is_empty()
-                && definition.profiles.is_empty()
-                && definition.groups.len() == 1
-                && definition.features.iter().all(|f| {
-                    !f.default
-                        && f.guards.is_empty()
-                        && f.effects.iter().all(|effect| {
-                            matches!(
-                                effect,
-                                ConfigurationEffect::Dependency { .. }
-                                    | ConfigurationEffect::ConfigValue { .. }
-                            )
-                        })
-                })
-                && consumers.values().all(|i| {
-                    i.policy == crate::configuration::ChoicePolicy::RequireSelection
-                        && !i.default_features
-                        && i.profile.is_none()
-                        && i.selections.is_empty()
-                        && i.parameters.is_empty()
-                })
-                && automatic_choices.is_empty()
-                && automatic_choice_sets.is_empty()
-                && automatic_dormant_choices.is_empty()
-                && automatic_feature_defaults.is_empty();
-            if !allowed {
-                return Err(unsupported(
-                    "closure fallback basis is not connected on this package operation",
-                ));
-            }
-            let super::ConfigurationGroupDecl::Closure {
-                id,
-                members,
-                cardinality,
-                fallback: Some(fallback),
-                ..
-            } = &definition.groups[0]
-            else {
-                return Err(unsupported(
-                    "closure fallback basis requires one exactly-one singleton fallback",
-                ));
-            };
-            if *cardinality != crate::configuration::Cardinality::ExactlyOne
-                || fallback.len() != 1
-                || !members.contains(&fallback[0])
-                || instance_reliance
-                    != BTreeSet::from([super::basis::InstanceReliance::Closure(id.clone())])
-            {
-                return Err(unsupported(
-                    "closure fallback basis requires one exactly-one singleton fallback",
-                ));
-            }
-            let reasons = features
-                .implied
-                .iter()
-                .filter_map(|i| match &i.reason {
-                    ImplicationReason::GroupDefault { group } => {
-                        Some((group.clone(), i.feature.clone()))
-                    }
-                    _ => None,
-                })
-                .collect::<Vec<_>>();
-            if reasons != vec![(id.clone(), fallback[0].clone())]
-                || !features.selected.contains(&fallback[0])
-            {
-                return Err(invalid(
-                    "closure fallback reason disagrees with kernel selection".into(),
-                ));
-            }
-            Some(ClosureFallbackBasis {
-                definition_fingerprint: definition
-                    .semantic_fingerprint()
-                    .map_err(|e| invalid(e.to_string()))?,
-                groups: reasons.into_iter().collect(),
-            })
-        };
-        let mut active = requires
-            .iter_pkgrefs()
-            .filter_map(|(group, name)| group.map(|g| format!("{g}/{name}")))
-            .filter(|key| !requires.optional.get(key).copied().unwrap_or(false))
-            .collect::<BTreeSet<_>>();
-        let mut causes = active
-            .iter()
-            .map(|key| (key.clone(), Vec::new()))
-            .collect::<BTreeMap<_, _>>();
-        // Independent activation is complete before any forward is considered.
-        // Weak requests cannot activate themselves, even indirectly through
-        // declaration order or another package's workspace-root presence.
-        for feature in &definition.features {
-            if !features.selected.contains(&feature.id) {
-                continue;
-            }
-            for effect in &feature.effects {
-                if let ConfigurationEffect::Dependency { target } = effect {
-                    let (_, group, name) = crate::manifest::package::parse_pkgref_key(target)
-                        .map_err(|e| invalid(e.to_string()))?;
-                    let key = format!("{group}/{name}");
-                    active.insert(key.clone());
-                    let entries = causes.entry(key).or_default();
-                    if !entries.contains(&feature.id) {
-                        entries.push(feature.id.clone());
-                    }
-                }
-            }
-        }
-        let independently_active = active.clone();
-        for feature in &definition.features {
-            if !features.selected.contains(&feature.id) {
-                continue;
-            }
-            for effect in &feature.effects {
-                match effect {
-                    ConfigurationEffect::Dependency { .. } => {}
-                    ConfigurationEffect::Forward {
-                        target, strength, ..
-                    } => {
-                        let declaration = requires
-                            .packages
-                            .iter()
-                            .find(|edge| edge.qualified_name() == *target);
-                        if !forwarded.is_empty()
-                            || declaration.is_none_or(|edge| !edge.version.is_exact_pin())
-                        {
-                            return Err(unsupported(
-                                "selected cross-package forwarding requires candidate-conditioned incoming consumers; only exact compulsory strong edges are connected",
-                            ));
-                        }
-                        let key = declaration
-                            .ok_or_else(|| {
-                                invalid("forwarded dependency declaration is missing".into())
-                            })?
-                            .qualified_name();
-                        if *strength == super::ForwardStrength::Weak
-                            && !independently_active.contains(&key)
-                        {
-                            continue;
-                        }
-                        active.insert(key.clone());
-                        let entries = causes.entry(key).or_default();
-                        if !entries.contains(&feature.id) {
-                            entries.push(feature.id.clone());
-                        }
-                    }
-                    ConfigurationEffect::Subskill { path } => {
-                        if !path.starts_with("subskills/") || path.rsplit_once('/').is_none() {
-                            return Err(unsupported(
-                                "selected subskill loading is not connected for bare files; declaration-backed subskills/ member required",
-                            ));
-                        }
-                        // This is selection only. Source admission supplies the
-                        // independent declaration/member witness before apply.
-                    }
-                    ConfigurationEffect::ConfigValue { name } => {
-                        if !definition.config_values.contains_key(name) {
-                            return Err(invalid("selected config value is not declared".into()));
-                        }
-                    }
-                }
-            }
-        }
-        let registry: BTreeSet<_> = requires
-            .packages
-            .iter()
-            .map(|p| p.qualified_name())
-            .collect();
-        if active.iter().any(|key| !registry.contains(key)) {
-            return Err(unsupported(
-                "an active declaration uses a non-registry source",
-            ));
-        }
-        if requires
-            .configurations
-            .keys()
-            .any(|key| active.contains(key))
-        {
-            return Err(unsupported(
-                "active transitive configuration requires candidate-conditioned incoming consumers",
-            ));
-        }
-        let automatic_basis = if automatic_choices.is_empty()
-            && automatic_choice_sets.is_empty()
-            && automatic_dormant_choices.is_empty()
-            && automatic_feature_defaults.is_empty()
-        {
-            None
-        } else {
-            Some(AutomaticBasis {
-                definition_fingerprint: definition
-                    .semantic_fingerprint()
-                    .map_err(|e| invalid(e.to_string()))?,
-                consumer_choices: automatic_choices,
-                consumer_choice_sets: automatic_choice_sets,
-                consumer_dormant_choices: automatic_dormant_choices,
-                consumer_feature_defaults: automatic_feature_defaults,
-            })
-        };
+        automatic.settle_guarded(&scope, &evaluation, guarded_reliance)?;
+        let closure_fallback_basis = reliance::closure_fallback(&scope, features, &automatic)?;
+        let activation::Activation { active, causes } = activation::activate(&scope, features)?;
+        let automatic_basis = automatic.into_basis(&scope)?;
         Ok(Self {
             automatic_basis,
             closure_fallback_basis,
@@ -853,182 +359,30 @@ impl PackageConfiguration {
             dependency_causes: causes,
         })
     }
+}
 
-    /// Derive selected public authored data from an admitted historical record.
-    /// No parameter, path, environment or secret input is expanded.
-    pub fn selected_data(
-        &self,
-        kind: crate::PackageKind,
-    ) -> Result<BTreeMap<String, crate::manifest::ParameterValue>, PackageConfigurationError> {
-        let evaluated = self.replay_parts(
-            self.forwarded_inputs
-                .first()
-                .map(|input| input.target.qualified_name())
-                .or_else(|| {
-                    self.submitted_inputs
-                        .values()
-                        .next()
-                        .map(|input| input.requirement.qualified_name())
-                })
-                .unwrap_or_else(|| "retained package".into()),
-            kind,
-        )?;
-        if &evaluated != self {
-            return Err(PackageConfigurationError::ReplayMismatch {
-                package: "retained package".into(),
-            });
+/// The borrowed facts of one evaluation; every phase reads the same instance.
+struct Scope<'a> {
+    package: &'a str,
+    kind: crate::PackageKind,
+    definition: &'a ConfigurationDecl,
+    requires: &'a Requires,
+    consumers: &'a BTreeMap<String, ConfigurationIntentDecl>,
+    forwarded: &'a [ForwardedInput],
+}
+
+impl Scope<'_> {
+    fn unsupported(&self, reason: &str) -> PackageConfigurationError {
+        PackageConfigurationError::Unsupported {
+            package: self.package.to_owned(),
+            reason: reason.into(),
         }
-        let mut values = BTreeMap::new();
-        for feature in &self.definition.features {
-            if !self.features.contains(&feature.id) {
-                continue;
-            }
-            for effect in &feature.effects {
-                if let ConfigurationEffect::ConfigValue { name } = effect {
-                    let value = self.definition.config_values.get(name).ok_or_else(|| {
-                        PackageConfigurationError::Invalid {
-                            package: "retained package".into(),
-                            reason: "unknown config data key".into(),
-                        }
-                    })?;
-                    values.insert(name.clone(), value.clone());
-                }
-            }
-        }
-        Ok(values)
     }
 
-    /// Selected source members, not an admission of delivery or cache bytes.
-    pub fn selected_subskill_paths(&self) -> BTreeSet<String> {
-        self.definition
-            .features
-            .iter()
-            .filter(|feature| self.features.contains(&feature.id))
-            .flat_map(|feature| &feature.effects)
-            .filter_map(|effect| match effect {
-                ConfigurationEffect::Subskill { path } => Some(path.clone()),
-                _ => None,
-            })
-            .collect()
-    }
-
-    /// Validated public bool projection, separate from selected effect data.
-    pub fn selected_parameters(
-        &self,
-        kind: crate::PackageKind,
-    ) -> Result<BTreeMap<String, crate::manifest::ParameterValue>, PackageConfigurationError> {
-        self.selected_data(kind)?;
-        let mut values = BTreeMap::new();
-        for parameter in &self.definition.parameters {
-            if !parameter.required && parameter.default.is_none() {
-                // Admission/replay above already proved all present values agree.
-                if let Some(value) = self
-                    .consumers
-                    .values()
-                    .find_map(|input| input.parameters.get(&parameter.id))
-                {
-                    values.insert(parameter.id.clone(), value.clone());
-                }
-                continue;
-            }
-            let consumer = self
-                .consumers
-                .values()
-                .next()
-                .or_else(|| {
-                    self.submitted_inputs
-                        .values()
-                        .next()
-                        .map(|input| &input.original)
-                })
-                .ok_or_else(|| PackageConfigurationError::ReplayMismatch {
-                    package: "retained package".into(),
-                })?;
-            let normalized = self
-                .definition
-                .normalize_input(consumer, "retained package consumer")
-                .map_err(|_| PackageConfigurationError::ReplayMismatch {
-                    package: "retained package".into(),
-                })?;
-            let value = normalized
-                .parameters
-                .get(&parameter.id)
-                .or(parameter.default.as_ref())
-                .ok_or_else(|| PackageConfigurationError::ReplayMismatch {
-                    package: "retained package".into(),
-                })?;
-            values.insert(parameter.id.clone(), value.clone());
+    fn invalid(&self, reason: String) -> PackageConfigurationError {
+        PackageConfigurationError::Invalid {
+            package: self.package.to_owned(),
+            reason,
         }
-        Ok(values)
-    }
-
-    /// Validate durable derived fields against the retained original request and
-    /// the actual pinned manifest; never infer a request from effective features.
-    #[specmark::spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-069#RECONFIGURATION")]
-    pub fn validate(&self, manifest: &Manifest) -> Result<(), PackageConfigurationError> {
-        let metadata =
-            manifest
-                .require_package()
-                .map_err(|error| PackageConfigurationError::Invalid {
-                    package: "retained package".into(),
-                    reason: error.to_string(),
-                })?;
-        let actual = if self.submitted_inputs.is_empty() {
-            Self::evaluate_with_forwarded(manifest, &self.consumers, &self.forwarded_inputs)?
-        } else {
-            if manifest.configuration.as_ref() != Some(&self.definition)
-                || manifest.requires != self.declarations
-            {
-                return Err(PackageConfigurationError::ReplayMismatch {
-                    package: format!("{}/{}", metadata.group, metadata.name),
-                });
-            }
-            self.replay_parts(
-                format!("{}/{}", metadata.group, metadata.name),
-                metadata.kind,
-            )?
-        };
-        if &actual != self {
-            let package = manifest
-                .package
-                .as_ref()
-                .map(|p| format!("{}/{}", p.group, p.name))
-                .unwrap_or_default();
-            return Err(PackageConfigurationError::ReplayMismatch { package });
-        }
-        Ok(())
-    }
-
-    /// Internal resolver/visibility dependency view; source bytes and the record's
-    /// full declarations remain intact. Only active declaration metadata survives.
-    #[specmark::spec(
-        implements = "spec://org.vibevm.core/vibevm/common/PROP-069#DORMANT-SOURCE-BOUNDARY"
-    )]
-    pub fn project(&self, manifest: &Manifest) -> Result<Manifest, PackageConfigurationError> {
-        self.validate(manifest)?;
-        let active: BTreeSet<_> = self.active_dependencies.iter().cloned().collect();
-        let mut view = manifest.clone();
-        view.requires
-            .packages
-            .retain(|p| active.contains(&p.qualified_name()));
-        view.requires
-            .git_packages
-            .retain(|p| active.contains(&format!("{}/{}", p.group, p.name)));
-        view.requires
-            .path_packages
-            .retain(|p| active.contains(&format!("{}/{}", p.group, p.name)));
-        view.requires
-            .var_packages
-            .retain(|p| active.contains(&format!("{}/{}", p.group, p.name)));
-        view.requires.links.retain(|key, _| active.contains(key));
-        view.requires.accesses.retain(|key, _| active.contains(key));
-        view.requires
-            .friend_flags
-            .retain(|key, _| active.contains(key));
-        view.requires.excludes.retain(|key, _| active.contains(key));
-        view.requires.optional.clear();
-        view.requires.configurations.clear();
-        view.configuration = None;
-        Ok(view)
     }
 }

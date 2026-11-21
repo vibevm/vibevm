@@ -60,12 +60,23 @@ impl PlannedInstall {
 impl PlannedInstall {
     /// Immutable prospective rows from this plan's acquired manifests and root
     /// witnesses. No discovery, solving, publication or writer permission.
+    ///
+    /// A plan whose acquired packages and resolution rows no longer name the
+    /// same coordinates is refused here, before any row is presented.
+    ///
+    /// ```no_run
+    /// # fn admit(plan: &vibe_install::PlannedInstall) -> Result<(), vibe_install::Error> {
+    /// let (packages, roots) = plan.admission_rows()?;
+    /// assert!(roots.len() <= packages.len());
+    /// # Ok(())
+    /// # }
+    /// ```
     pub fn admission_rows(
         &self,
-    ) -> (
+    ) -> crate::error::Result<(
         Vec<vibe_core::manifest::LockedPackage>,
         Vec<vibe_core::PackageRef>,
-    ) {
+    )> {
         let mut lock = self.lockfile.clone();
         let language = self
             .language_chain
@@ -82,10 +93,22 @@ impl PlannedInstall {
                     .find(|row| {
                         row.group == f.cached.resolved.group && row.name == f.cached.resolved.name
                     })
-                    .expect("same acquired plan coordinate");
-                crate::record::locked_package_from_fetched(f, resolved, language)
+                    .ok_or_else(|| {
+                        crate::Error::Solve(
+                            vibe_resolver::DepProviderError::Other(format!(
+                                "acquired package `{}/{}` has no matching resolution row \
+                                 (violates spec://org.vibevm.core/vibevm/common/PROP-050#resolver; \
+                                  fix: report the mismatched Fetched/ResolvedDep sets in vibe-install)",
+                                f.cached.resolved.group, f.cached.resolved.name
+                            ))
+                            .into(),
+                        )
+                    })?;
+                Ok(crate::record::locked_package_from_fetched(
+                    f, resolved, language,
+                ))
             })
-            .collect();
+            .collect::<crate::error::Result<_>>()?;
         crate::record::record_app_requirements(&mut lock, &self.fetched);
         let mut roots = Vec::new();
         for root in self.node_roots.values().flatten() {
@@ -96,6 +119,6 @@ impl PlannedInstall {
                 roots.push(root.clone());
             }
         }
-        (lock.packages, roots)
+        Ok((lock.packages, roots))
     }
 }

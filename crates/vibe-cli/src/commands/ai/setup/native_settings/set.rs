@@ -94,7 +94,7 @@ fn plan(store: &Store, home: &Path, agents: &[String], id: &SecretId) -> Result<
         let overridden = target
             .overrides
             .iter()
-            .any(|v| std::env::var_os(v).is_some());
+            .any(|name| crate::commands::app::facts::env_set(name));
         let native = if compatible && !overridden {
             match agent.as_str() {
                 "pi" => observe(PiSettingsAdapter, store, home, id, Preview::Pi),

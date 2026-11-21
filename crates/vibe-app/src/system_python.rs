@@ -6,6 +6,35 @@ use serde::{Deserialize, Serialize};
 use vibe_core::manifest::SystemPythonDecl;
 
 /// Complete result of the host's fixed isolated probe. Never version prose.
+///
+/// ```
+/// use vibe_app::SystemPythonObservation;
+/// use vibe_core::manifest::SystemPythonDecl;
+///
+/// let required = SystemPythonDecl {
+///     implementation: "cpython".into(),
+///     major: 3,
+///     minor: 14,
+///     soabi: "cpython-314-x86_64-linux-gnu".into(),
+/// };
+/// let root = std::env::temp_dir();
+/// let observed = SystemPythonObservation {
+///     executable: root.join("bin").join("python3.14"),
+///     implementation: "cpython".into(),
+///     major: 3,
+///     minor: 14,
+///     soabi: required.soabi.clone(),
+///     prefix: root.clone(),
+///     base_prefix: root.clone(),
+/// };
+/// assert!(observed.admit(&required).is_ok());
+/// // A virtual environment is not the system interpreter, whatever its ABI.
+/// let virtual_env = SystemPythonObservation { prefix: root.join("venv"), ..observed.clone() };
+/// assert!(virtual_env.admit(&required).is_err());
+/// // Neither is a compatible-looking interpreter of another minor version.
+/// let older = SystemPythonObservation { minor: 13, ..observed };
+/// assert!(older.admit(&required).is_err());
+/// ```
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
 pub struct SystemPythonObservation {

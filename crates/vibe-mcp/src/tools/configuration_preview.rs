@@ -7,6 +7,16 @@ use vibe_package_source::configuration_preview::{MAX_INPUT_BYTES, configuration_
 use vibe_wire::behaviour::ordinary_configuration_preview::parse_request;
 
 /// Read-only inline answers; the host, not the caller, supplies project scope.
+///
+/// ```
+/// use vibe_mcp::tools::{ConfigurationPreviewMcpTool, McpTool};
+///
+/// // The request names one package; the project root is never an argument.
+/// let descriptor = ConfigurationPreviewMcpTool.descriptor();
+/// assert_eq!(descriptor.name, "configuration_preview");
+/// assert_eq!(descriptor.input_schema["required"][0], "package");
+/// assert!(descriptor.input_schema["properties"].get("path").is_none());
+/// ```
 #[cell(seam = "McpTool", variant = "configuration_preview")]
 pub struct ConfigurationPreviewMcpTool;
 impl McpTool for ConfigurationPreviewMcpTool {

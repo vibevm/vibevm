@@ -8,6 +8,32 @@ use sha2::{Digest, Sha256};
 use std::path::Path;
 
 /// Durable original, attributed to an existing root, not authored input.
+///
+/// ```
+/// use vibe_core::manifest::{
+///     ConfigurationIntentDecl, SubmittedInput, SubmittedSource, submitted_project_witness,
+/// };
+/// use vibe_core::{ContentHash, PackageRef};
+///
+/// let root = std::env::temp_dir().join("submitted-project");
+/// let manifest = b"[requires.packages]\n'org.test/flow' = '=1.0.0'\n";
+/// let submitted = SubmittedInput {
+///     original: toml::from_str(
+///         "policy='require-selection'\n[selections.layout]\nintent='exact'\nmembers=['compact']",
+///     )?,
+///     requirement: PackageRef::parse("flow:org.test/flow@=1.0.0")?,
+///     project_witness: submitted_project_witness(&root, manifest)?,
+///     expected_source: SubmittedSource {
+///         registry: "main".into(),
+///         content_hash: ContentHash::parse("sha256:e3b0c44298fc1c14")?,
+///     },
+/// };
+/// let original: &ConfigurationIntentDecl = &submitted.original;
+/// assert_eq!(original.selections["layout"].members, Some(vec!["compact".to_string()]));
+/// // The witness binds the exact project bytes the answers were given for.
+/// assert_ne!(submitted.project_witness, submitted_project_witness(&root, b"")?);
+/// # Ok::<(), Box<dyn std::error::Error>>(())
+/// ```
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
 pub struct SubmittedInput {
@@ -18,6 +44,22 @@ pub struct SubmittedInput {
 }
 
 /// Original preview expectation, not the subsequently selected lock row.
+///
+/// ```
+/// use vibe_core::ContentHash;
+/// use vibe_core::manifest::SubmittedSource;
+///
+/// let expected = SubmittedSource {
+///     registry: "main".into(),
+///     content_hash: ContentHash::parse("sha256:e3b0c44298fc1c14")?,
+/// };
+/// let stored = toml::to_string(&expected)?;
+/// assert_eq!(toml::from_str::<SubmittedSource>(&stored)?, expected);
+/// // A later selection of other bytes is drift from what was previewed.
+/// let selected = ContentHash::parse("sha256:0000000000000000")?;
+/// assert_ne!(expected.content_hash, selected);
+/// # Ok::<(), Box<dyn std::error::Error>>(())
+/// ```
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
 pub struct SubmittedSource {

@@ -190,7 +190,7 @@ fn no_public_execution_entry_takes_a_manifest_and_a_workspace_separately() {
     let src = std::path::Path::new(env!("CARGO_MANIFEST_DIR")).join("src");
     let mut offenders = Vec::new();
     for (file, carrier) in [
-        ("install/mod.rs", "InstallExecution"),
+        ("install/execution.rs", "InstallExecution"),
         ("phase.rs", "PhaseRun"),
         ("prelude.rs", "RunPrelude"),
     ] {

@@ -250,7 +250,7 @@ pub(super) fn run_config(ctx: &output::Context, args: ShowConfigArgs) -> Result<
     // After startup promotion, the live env contains both
     // operator-set and user-config-defaulted values. To keep
     // provenance honest, we cross-reference the names that
-    // `main::promote_user_config_env` actually wrote — anything in
+    // `composition::promote_user_config_env` actually wrote — anything in
     // that set is sourced from user-config; anything else with a
     // live value is operator-set.
     let promoted = crate::promoted_env_names();

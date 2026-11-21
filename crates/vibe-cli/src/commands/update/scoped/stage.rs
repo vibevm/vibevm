@@ -15,15 +15,31 @@ use vibe_install::InstallSlotLifecycle;
 use vibe_lifecycle::{LifecycleLease, RunMetadata};
 use vibe_registry::{CachedPackage, ResolvedPackage};
 use vibe_workspace::Workspace;
-use vibe_workspace::install::ResolvedDep;
+use vibe_workspace::install::{ResolvedDep, SlotCheck, SlotVerifier};
 use vibe_workspace::vibedeps;
 
 use crate::commands::install::LifecycleSlotObserver;
 use crate::output;
 
 use super::super::lifecycle;
+use super::Resolved;
 use super::measured::Measured;
-use super::{Resolved, SourceHashes};
+
+/// The source hash each staged dependency was fetched at, by identity: what
+/// the apply verifies a re-materialised slot against.
+pub(super) struct SourceHashes(std::collections::HashMap<(Group, String), String>);
+
+impl SlotVerifier for SourceHashes {
+    fn source_hash<'a>(&'a self, dep: &ResolvedDep) -> Option<&'a str> {
+        self.0
+            .get(&(dep.group.clone(), dep.name.clone()))
+            .map(String::as_str)
+    }
+
+    fn verify_slot(&self, _dep: &ResolvedDep, _slot_abs: &Path) -> SlotCheck {
+        SlotCheck::Unverifiable
+    }
+}
 
 /// A subtree node the scoped update will refresh **in place** rather than
 /// re-fetch: the lockfile already records it as `in-place` (PROP-022 §2.4) and

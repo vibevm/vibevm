@@ -6,6 +6,9 @@ use vibe_app::{CommandSearch, InstallPreparation, Location, NodeRemediation, Sto
 
 pub(super) struct RuntimePath {
     pub path: OsString,
+    /// The caller's `PATHEXT` the provider was verified under, so the
+    /// target's own command lookups search exactly as the verification did.
+    pub pathext: Option<OsString>,
 }
 
 pub(super) fn prepare_provider(
@@ -117,9 +120,10 @@ pub(super) fn prepare_provider(
     if path.to_str().is_none() {
         bail!("scoped runtime PATH cannot be represented losslessly for target steps");
     }
+    let pathext = crate::commands::app::facts::search_extensions();
     let search = CommandSearch {
         path: Some(path.clone()),
-        pathext: std::env::var_os("PATHEXT"),
+        pathext: pathext.clone(),
         exclude: None,
     };
     let canonical_root = std::fs::canonicalize(&root)?;
@@ -187,7 +191,7 @@ pub(super) fn prepare_provider(
     } else {
         bail!("selected npm launcher has no witnessed script identity");
     }
-    Ok(RuntimePath { path })
+    Ok(RuntimePath { path, pathext })
 }
 
 pub(super) fn run(
@@ -204,7 +208,7 @@ pub(super) fn run(
             let runtime = prepare_provider(ctx, packages, operation, target, &token, assume_yes)?;
             let search = CommandSearch {
                 path: Some(runtime.path.clone()),
-                pathext: std::env::var_os("PATHEXT"),
+                pathext: runtime.pathext.clone(),
                 exclude: None,
             };
             let present = |name: &str| search.locate(name).is_ok();
