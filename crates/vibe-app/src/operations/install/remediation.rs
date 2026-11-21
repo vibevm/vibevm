@@ -52,10 +52,12 @@ impl NodeRemediation {
         }
         let binding = self.runtime();
         let steps = vibe_core::manifest::steps_of(&self.prepared.option);
-        let step = steps
-            .iter()
-            .find(|s| s.id == binding.step)
-            .expect("validated binding step");
+        let step = steps.iter().find(|s| s.id == binding.step).ok_or_else(|| {
+            crate::ResolveError::Manifest {
+                package: resolved.package.key(),
+                reason: "runtime binding names no declared step".into(),
+            }
+        })?;
         let temporary =
             tempfile::tempdir_in(ctx.settings.path()).map_err(|source| crate::StateError::Io {
                 action: "creating runtime metadata scratch",
@@ -77,7 +79,10 @@ impl NodeRemediation {
                 let source = sources
                     .iter()
                     .find(|s| Some(&s.name) == binding.input.as_ref())
-                    .expect("validated source name");
+                    .ok_or_else(|| crate::ResolveError::Manifest {
+                        package: key.clone(),
+                        reason: "runtime binding names no declared source".into(),
+                    })?;
                 let artifact = Artifact::new(ArtifactKind::AppInput)
                     .with_package(&key)
                     .with_step(&step.id);

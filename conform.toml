@@ -86,6 +86,8 @@ gated = [
     "vibe-orchestrator",
     "vibe-package-source",
     "vibe-trace",
+    "vibe-secrets",
+    "vibe-connections",
 ]
 
 # Crates whose whole public TYPE surface is gated for compiled doctests (the

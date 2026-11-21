@@ -50,7 +50,9 @@ pub(super) fn prepare_provider(
         .as_ref()
         .map(|(_, key)| key.clone())
         .or_else(|| provider.as_ref().map(|p| p.package.key()))
-        .expect("selected provider");
+        .ok_or_else(|| {
+            anyhow::anyhow!("no Node supplier was selected; target was not installed")
+        })?;
     if !assume_yes {
         if !attended(ctx) {
             bail!(

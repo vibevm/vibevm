@@ -22,27 +22,81 @@ pub use references::{
 const VALUE_LIMIT: usize = 1024 * 1024;
 const INDEX_LIMIT: usize = 4 * 1024 * 1024;
 
+/// The keyring layer's one error enum. Every message is fixed text naming
+/// the violated rule and a fix; none carries a path, an identifier or a value.
+///
+/// ```
+/// use vibe_secrets::{Error, SecretId};
+///
+/// // An identifier is a canonical random id, never a path fragment.
+/// let error = SecretId::try_from("../foreign".to_owned()).unwrap_err();
+/// assert_eq!(error, Error::Invalid);
+/// assert!(error.to_string().contains("TS-USER-KEYRING"));
+/// assert!(!error.to_string().contains("foreign"));
+/// ```
 #[derive(Debug, thiserror::Error, PartialEq, Eq)]
+#[specmark::spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-000#TS-USER-KEYRING")]
 pub enum Error {
-    #[error("private keyring storage is unavailable or failed protection checks")]
+    #[error(
+        "private keyring storage is unavailable or failed protection checks \
+         (violates spec://org.vibevm.core/vibevm/common/PROP-000#TS-USER-KEYRING; \
+          fix: make the user settings directory and its `secrets/` tree real directories that \
+           only the current user owns and can access)"
+    )]
     Unavailable,
-    #[error("invalid keyring identifier, metadata or bounded value")]
+    #[error(
+        "invalid keyring identifier, metadata or bounded value \
+         (violates spec://org.vibevm.core/vibevm/common/PROP-000#TS-USER-KEYRING; \
+          fix: pass a canonical item id, a nonempty bounded kind and label without control \
+           characters, and a value within the size limit)"
+    )]
     Invalid,
-    #[error("keyring item not found")]
+    #[error(
+        "keyring item not found \
+         (violates spec://org.vibevm.core/vibevm/common/PROP-000#TS-USER-KEYRING; \
+          fix: list the keyring and use the id of an item that exists)"
+    )]
     NotFound,
-    #[error("keyring revision changed; refresh metadata and retry")]
+    #[error(
+        "keyring revision changed; refresh metadata and retry \
+         (violates spec://org.vibevm.core/vibevm/common/PROP-000#TS-USER-KEYRING; \
+          fix: read the current revisions again and repeat the change against them)"
+    )]
     Conflict,
-    #[error("keyring item has live consumer references")]
+    #[error(
+        "keyring item has live consumer references \
+         (violates spec://org.vibevm.core/vibevm/common/PROP-000#TS-USER-KEYRING; \
+          fix: remove or rebind every consumer that refers to the item, then remove it)"
+    )]
     RefusedReferenced { consumers: Vec<String> },
-    #[error("complete protected reference inventory is unavailable")]
+    #[error(
+        "complete protected reference inventory is unavailable \
+         (violates spec://org.vibevm.core/vibevm/common/PROP-000#TS-USER-KEYRING; \
+          fix: restore the registered consumers' reference stores so the whole inventory \
+           can be read, then retry)"
+    )]
     RefusedUnknown,
     #[error(
-        "keyring publication failed; previous selected revision is retained unless the index publication completed"
+        "keyring publication failed; previous selected revision is retained unless the \
+         index publication completed \
+         (violates spec://org.vibevm.core/vibevm/common/PROP-000#TS-USER-KEYRING; \
+          fix: list the keyring to see which revision is selected, then retry the change)"
     )]
     Publication,
 }
 
 /// Owned explicit input. No serialization, raw-value accessor or derived Debug.
+///
+/// ```
+/// use vibe_secrets::{Error, ProtectedValue};
+///
+/// let value = ProtectedValue::new(b"synthetic".to_vec())?;
+/// // The bytes go in and never come back out, not even through Debug.
+/// assert_eq!(format!("{value:?}"), "ProtectedValue([REDACTED])");
+/// // A value is bounded; an oversized one is refused before it is stored.
+/// assert_eq!(ProtectedValue::new(vec![0; 1024 * 1024 + 1]).unwrap_err(), Error::Invalid);
+/// # Ok::<(), Error>(())
+/// ```
 pub struct ProtectedValue(Vec<u8>);
 impl ProtectedValue {
     pub fn new(bytes: Vec<u8>) -> Result<Self, Error> {
@@ -58,6 +112,28 @@ impl std::fmt::Debug for ProtectedValue {
     }
 }
 
+/// What the keyring says about one item without reading it: its selected
+/// revision, its kind and its human label.
+///
+/// ```
+/// # #[cfg(unix)]
+/// # fn main() -> Result<(), Box<dyn std::error::Error>> {
+/// # use std::os::unix::fs::PermissionsExt;
+/// # let settings = tempfile::tempdir()?;
+/// # std::fs::set_permissions(settings.path(), std::fs::Permissions::from_mode(0o700))?;
+/// use vibe_secrets::{ProtectedValue, Store};
+///
+/// let store = Store::at_settings(settings.path())?;
+/// let id = store.create("api-key", "Synthetic account", ProtectedValue::new(b"synthetic".to_vec())?)?;
+/// let item = store.details(&id)?;
+/// assert_eq!((item.kind.as_str(), item.label.as_str()), ("api-key", "Synthetic account"));
+/// // The revision is an identity of its own, unrelated to the item id.
+/// assert_ne!(item.current_revision, id);
+/// # Ok(())
+/// # }
+/// # #[cfg(not(unix))]
+/// # fn main() {}
+/// ```
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq)]
 #[serde(deny_unknown_fields)]
 pub struct ItemMetadata {
@@ -90,6 +166,40 @@ impl Default for Index {
 }
 
 /// Root is injected by a trusted composition boundary, never inferred from cwd.
+///
+/// ```
+/// use std::path::Path;
+/// use vibe_secrets::{Error, Store};
+///
+/// assert_eq!(Store::at_settings(Path::new("relative/settings")).unwrap_err(), Error::Invalid);
+/// ```
+///
+/// ```
+/// # #[cfg(unix)]
+/// # fn main() -> Result<(), Box<dyn std::error::Error>> {
+/// # use std::os::unix::fs::PermissionsExt;
+/// # let settings = tempfile::tempdir()?;
+/// # std::fs::set_permissions(settings.path(), std::fs::Permissions::from_mode(0o700))?;
+/// use vibe_secrets::{ProtectedValue, Store};
+///
+/// let store = Store::at_settings(settings.path())?;
+/// // Listing an absent keyring answers empty and creates nothing.
+/// assert!(store.list()?.is_empty());
+/// assert!(!settings.path().join("secrets").exists());
+///
+/// let id = store.create("api-key", "Synthetic account", ProtectedValue::new(b"first".to_vec())?)?;
+/// let first = store.details(&id)?.current_revision;
+/// // Rotation selects a new revision under the same logical identity.
+/// let second = store.rotate(&id, &first, ProtectedValue::new(b"second".to_vec())?)?;
+/// assert_ne!(first, second);
+/// assert_eq!(store.details(&id)?.current_revision, second);
+/// // A stale revision token is refused instead of overwriting.
+/// assert!(store.rotate(&id, &first, ProtectedValue::new(b"third".to_vec())?).is_err());
+/// # Ok(())
+/// # }
+/// # #[cfg(not(unix))]
+/// # fn main() {}
+/// ```
 #[derive(Debug)]
 pub struct Store {
     root: PathBuf,

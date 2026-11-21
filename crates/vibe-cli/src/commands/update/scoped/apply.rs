@@ -287,7 +287,7 @@ pub(super) fn apply(ctx: &output::Context, inputs: ScopedApply<'_>) -> Result<Up
     let retained_backups = match undo.rollback.retain_checked_retirements() {
         Ok(backups) => backups.into_iter().map(|backup| vibe_wire::generated::update_report::RetainedBackup {
             slot: retired_slot.clone().unwrap_or_default(),
-            path: backup.path.to_str().expect("lossless retirement path admitted before move").to_owned(),
+            path: backup.path.to_string_lossy().into_owned(),
             state: match backup.state {
                 vibe_workspace::install::RetirementBackupState::PublishedBackupRetained => vibe_wire::generated::update_report::RetainedBackupState::PublishedBackupRetained,
                 vibe_workspace::install::RetirementBackupState::RestoredContainerRetained => vibe_wire::generated::update_report::RetainedBackupState::RestoredContainerRetained,
@@ -397,7 +397,7 @@ impl Undo<'_> {
         let restored = self.rollback.restore(Some(observer), &self.materialised);
         measured.retained_backups.extend(self.rollback.retained_retirement_backups().iter().map(|backup| vibe_wire::generated::update_report::RetainedBackup {
             slot: self.retired_slot.clone().unwrap_or_default(),
-            path: backup.path.to_str().expect("lossless path admitted before move").to_owned(),
+            path: backup.path.to_string_lossy().into_owned(),
             state: vibe_wire::generated::update_report::RetainedBackupState::RestoredContainerRetained,
         }));
         if !self.rollback.retained_retirement_backups().is_empty() {

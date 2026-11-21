@@ -1,6 +1,20 @@
 //! Internal native-settings adapter composition; no raw credential surface.
 use super::*;
 
+/// A prepared native-settings change. Its id is what the operator confirms;
+/// applying requires presenting that same id back.
+///
+/// ```
+/// use vibe_connections::NativeSettingsPreview;
+///
+/// struct Prepared(String);
+/// impl NativeSettingsPreview for Prepared {
+///     fn preview_id(&self) -> &str {
+///         &self.0
+///     }
+/// }
+/// assert_eq!(Prepared("sha256:synthetic".into()).preview_id(), "sha256:synthetic");
+/// ```
 pub trait NativeSettingsPreview {
     fn preview_id(&self) -> &str;
 }
@@ -23,6 +37,21 @@ impl NativeSettingsPreview for vibe_secrets::CodexNativePreview {
 mod codex;
 pub use codex::CodexSettingsAdapter;
 
+/// One harness's native settings writer: it previews a change for a stored
+/// connection and applies exactly the preview the operator confirmed.
+///
+/// ```
+/// use vibe_connections::{ClaudeSettingsAdapter, NativeSettingsAdapter, PiSettingsAdapter};
+///
+/// fn admits(adapter: &impl NativeSettingsAdapter, api_kind: &str) -> bool {
+///     adapter.supports(api_kind)
+/// }
+/// assert_eq!(PiSettingsAdapter.id(), "pi");
+/// assert!(admits(&PiSettingsAdapter, "openai-chat-completions"));
+/// // An adapter refuses every protocol it has no verified writer for.
+/// assert!(!admits(&PiSettingsAdapter, "anthropic-messages-bearer"));
+/// assert!(admits(&ClaudeSettingsAdapter, "anthropic-messages-bearer"));
+/// ```
 pub trait NativeSettingsAdapter {
     type Preview: NativeSettingsPreview;
     fn id(&self) -> &'static str;

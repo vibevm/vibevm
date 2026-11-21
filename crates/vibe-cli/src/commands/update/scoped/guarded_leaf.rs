@@ -58,7 +58,11 @@ fn guarded_target(record: &PackageConfiguration) -> Option<String> {
             }
         }
     }
-    (targets.len() == 1).then(|| targets.into_iter().next().unwrap())
+    let mut targets = targets.into_iter();
+    match (targets.next(), targets.next()) {
+        (Some(only), None) => Some(only),
+        _ => None,
+    }
 }
 
 fn same_source(old: &LockedPackage, cached: &CachedPackage) -> bool {
@@ -159,7 +163,9 @@ pub(super) fn prepare(
     {
         return Err(denied());
     }
-    let (root_key, prior) = old.configurations.iter().next().unwrap();
+    let Some((root_key, prior)) = old.configurations.iter().next() else {
+        return Err(denied());
+    };
     let Some((cached, _, _, _, Some(next))) = updated.iter().find(|(cached, ..)| {
         format!("{}/{}", cached.resolved.group, cached.resolved.name) == *root_key
     }) else {

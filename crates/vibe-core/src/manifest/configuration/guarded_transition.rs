@@ -53,7 +53,9 @@ impl PackageConfiguration {
             _ => None,
         });
         let Some(gate) = gate else { return false };
-        let (consumer, old) = self.consumers.first_key_value().unwrap();
+        let Some((consumer, old)) = self.consumers.first_key_value() else {
+            return false;
+        };
         let Some(new) = next.consumers.get(consumer) else {
             return false;
         };

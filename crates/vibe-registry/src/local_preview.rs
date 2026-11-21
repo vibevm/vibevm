@@ -235,17 +235,12 @@ pub fn observe_local_preview(
     let [comparator] = requirement.comparators.as_slice() else {
         bail!("local preview requires one exact comparator");
     };
-    if comparator.op != semver::Op::Exact
-        || comparator.minor.is_none()
-        || comparator.patch.is_none()
-    {
+    let (semver::Op::Exact, Some(minor), Some(patch)) =
+        (comparator.op, comparator.minor, comparator.patch)
+    else {
         bail!("local preview requires a complete exact version");
-    }
-    let mut version = semver::Version::new(
-        comparator.major,
-        comparator.minor.unwrap(),
-        comparator.patch.unwrap(),
-    );
+    };
+    let mut version = semver::Version::new(comparator.major, minor, patch);
     version.pre = comparator.pre.clone();
     let group = reference
         .group

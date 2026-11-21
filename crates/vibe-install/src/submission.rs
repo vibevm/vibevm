@@ -122,7 +122,7 @@ impl VerifiedSubmission {
                     .find(|f| {
                         f.cached.resolved.group == row.group && f.cached.resolved.name == row.name
                     })
-                    .unwrap()
+                    .ok_or_else(|| invalid("submitted target not fetched"))?
                     .configuration
                     .clone();
             }
@@ -142,10 +142,12 @@ impl VerifiedSubmission {
                     .find(|row| {
                         row.group == f.cached.resolved.group && row.name == f.cached.resolved.name
                     })
-                    .expect("same plan coordinate");
-                crate::record::locked_package_from_fetched(f, resolved, language)
+                    .ok_or_else(|| invalid("fetched package has no resolved plan row"))?;
+                Ok(crate::record::locked_package_from_fetched(
+                    f, resolved, language,
+                ))
             })
-            .collect();
+            .collect::<Result<_>>()?;
         let configurations = planned
             .fetched
             .iter()

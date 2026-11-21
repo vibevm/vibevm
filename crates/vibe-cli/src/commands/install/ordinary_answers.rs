@@ -116,7 +116,11 @@ pub(crate) fn prepare(ctx: &output::Context, args: &mut InstallArgs) -> Result<(
             },
         }
     } else {
-        let path = std::path::absolute(args.ordinary_answers.as_ref().unwrap())?;
+        let answers = args
+            .ordinary_answers
+            .as_ref()
+            .ok_or_else(|| anyhow!("ordinary install answers: no answer file was given"))?;
+        let path = std::path::absolute(answers)?;
         let parent = path
             .parent()
             .ok_or_else(|| anyhow!("answer file has no parent"))?;

@@ -5,15 +5,65 @@ use serde::{Deserialize, Serialize};
 use std::{collections::BTreeMap, path::Path};
 use vibe_secrets::{Expected, SecretId};
 
+/// The connection-metadata layer's one error enum. Every message is fixed
+/// text: it names the violated rule and a fix, never an endpoint or a value.
+///
+/// ```
+/// use vibe_connections::{Error, Metadata};
+///
+/// // Plain http is admitted only towards a loopback address.
+/// let metadata = Metadata {
+///     label: "Synthetic".into(),
+///     endpoint: "http://provider.invalid/v1".into(),
+///     api_kind: "openai-chat-completions".into(),
+///     default_model: "synthetic".into(),
+/// };
+/// let error = metadata.validate().unwrap_err();
+/// assert!(matches!(error, Error::Invalid));
+/// assert!(error.to_string().contains("TS-KEYRING-CONSUMER"));
+/// assert!(!error.to_string().contains("provider.invalid"));
+/// ```
 #[derive(Debug, thiserror::Error)]
+#[specmark::spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-000#TS-KEYRING-CONSUMER")]
 pub enum Error {
-    #[error("invalid nonsecret connection metadata")]
+    #[error(
+        "invalid nonsecret connection metadata \
+         (violates spec://org.vibevm.core/vibevm/common/PROP-000#TS-KEYRING-CONSUMER; \
+          fix: give a bounded label and model, a supported API kind and harness, and an \
+          https or loopback http endpoint without credentials, query or fragment)"
+    )]
     Invalid,
-    #[error("connection metadata serialization failed")]
+    #[error(
+        "connection metadata serialization failed \
+         (violates spec://org.vibevm.core/vibevm/common/PROP-000#TS-KEYRING-CONSUMER; \
+          fix: remove the connection whose stored nonsecret metadata is missing or \
+          unreadable and add it again)"
+    )]
     Metadata,
     #[error(transparent)]
     Store(#[from] vibe_secrets::Error),
 }
+/// The nonsecret description of one AI connection. The credential is not
+/// here: a connection points at a keyring item by reference.
+///
+/// ```
+/// use vibe_connections::Metadata;
+///
+/// let metadata = Metadata {
+///     label: "Local gateway".into(),
+///     endpoint: "http://127.0.0.1:8080/v1".into(),
+///     api_kind: "openai-chat-completions".into(),
+///     default_model: "synthetic".into(),
+/// };
+/// assert!(metadata.validate().is_ok());
+///
+/// // Credentials never travel inside the endpoint.
+/// let leaking = Metadata {
+///     endpoint: "https://user:password@provider.invalid/v1".into(),
+///     ..metadata
+/// };
+/// assert!(leaking.validate().is_err());
+/// ```
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq)]
 #[serde(deny_unknown_fields)]
 pub struct Metadata {
@@ -57,17 +107,127 @@ impl Metadata {
         Ok(())
     }
 }
+/// One stored connection: its metadata, its own revision and the keyring
+/// item it refers to. It never carries the referenced value.
+///
+/// ```
+/// # #[cfg(unix)]
+/// # fn main() -> Result<(), Box<dyn std::error::Error>> {
+/// # use std::os::unix::fs::PermissionsExt;
+/// # let settings = tempfile::tempdir()?;
+/// # std::fs::set_permissions(settings.path(), std::fs::Permissions::from_mode(0o700))?;
+/// use vibe_connections::{Metadata, Store};
+/// use vibe_secrets::ProtectedValue;
+///
+/// let keyring = vibe_secrets::Store::at_settings(settings.path())?;
+/// let secret = keyring.create("api-key", "Synthetic", ProtectedValue::new(b"synthetic".to_vec())?)?;
+/// let store = Store::at_settings(settings.path())?;
+/// let id = store.add(
+///     Metadata {
+///         label: "Local gateway".into(),
+///         endpoint: "http://127.0.0.1:8080/v1".into(),
+///         api_kind: "openai-chat-completions".into(),
+///         default_model: "synthetic".into(),
+///     },
+///     &secret,
+/// )?;
+/// let connection = store.details(&id)?;
+/// assert_eq!(connection.secret_ref, secret);
+/// assert_eq!(connection.metadata.label, "Local gateway");
+/// # Ok(())
+/// # }
+/// # #[cfg(not(unix))]
+/// # fn main() {}
+/// ```
 #[derive(Debug, Clone, Serialize)]
 pub struct Connection {
     pub current_revision: SecretId,
     pub secret_ref: SecretId,
     pub metadata: Metadata,
 }
+/// Every stored connection together with the store revision they were read
+/// at; that revision is the token a later mutation must present.
+///
+/// ```
+/// # #[cfg(unix)]
+/// # fn main() -> Result<(), Box<dyn std::error::Error>> {
+/// # use std::os::unix::fs::PermissionsExt;
+/// # let settings = tempfile::tempdir()?;
+/// # std::fs::set_permissions(settings.path(), std::fs::Permissions::from_mode(0o700))?;
+/// use vibe_connections::{Metadata, Store};
+/// use vibe_secrets::ProtectedValue;
+///
+/// let keyring = vibe_secrets::Store::at_settings(settings.path())?;
+/// let secret = keyring.create("api-key", "Synthetic", ProtectedValue::new(b"synthetic".to_vec())?)?;
+/// let store = Store::at_settings(settings.path())?;
+/// let id = store.add(
+///     Metadata {
+///         label: "Local gateway".into(),
+///         endpoint: "http://127.0.0.1:8080/v1".into(),
+///         api_kind: "openai-chat-completions".into(),
+///         default_model: "synthetic".into(),
+///     },
+///     &secret,
+/// )?;
+/// let snapshot = store.list()?;
+/// assert_eq!(snapshot.items.len(), 1);
+/// assert!(snapshot.items.contains_key(&id));
+/// // The token observed with the rows guards the next mutation.
+/// let selected = store.set_default(&id, snapshot.store_revision)?;
+/// assert!(selected.store_revision > snapshot.store_revision);
+/// # Ok(())
+/// # }
+/// # #[cfg(not(unix))]
+/// # fn main() {}
+/// ```
 #[derive(Debug, Serialize)]
 pub struct Snapshot {
     pub store_revision: u64,
     pub items: BTreeMap<SecretId, Connection>,
 }
+/// The connection store under one explicitly given settings directory. It
+/// owns nonsecret metadata only and reads no keyring value.
+///
+/// ```
+/// use std::path::Path;
+/// use vibe_connections::{Error, Store};
+///
+/// // The settings root is injected and absolute, never inferred.
+/// assert!(matches!(
+///     Store::at_settings(Path::new("relative/settings")),
+///     Err(Error::Store(vibe_secrets::Error::Invalid))
+/// ));
+/// ```
+///
+/// ```
+/// # #[cfg(unix)]
+/// # fn main() -> Result<(), Box<dyn std::error::Error>> {
+/// # use std::os::unix::fs::PermissionsExt;
+/// # let settings = tempfile::tempdir()?;
+/// # std::fs::set_permissions(settings.path(), std::fs::Permissions::from_mode(0o700))?;
+/// use vibe_connections::{Metadata, Store};
+/// use vibe_secrets::ProtectedValue;
+///
+/// let keyring = vibe_secrets::Store::at_settings(settings.path())?;
+/// let secret = keyring.create("api-key", "Synthetic", ProtectedValue::new(b"synthetic".to_vec())?)?;
+/// let store = Store::at_settings(settings.path())?;
+/// let id = store.add(
+///     Metadata {
+///         label: "Local gateway".into(),
+///         endpoint: "http://127.0.0.1:8080/v1".into(),
+///         api_kind: "openai-chat-completions".into(),
+///         default_model: "synthetic".into(),
+///     },
+///     &secret,
+/// )?;
+/// assert_eq!(store.details(&id)?.metadata.default_model, "synthetic");
+/// // Reading never publishes: the keyring item is still the only value.
+/// assert_eq!(keyring.list()?.len(), 1);
+/// # Ok(())
+/// # }
+/// # #[cfg(not(unix))]
+/// # fn main() {}
+/// ```
 pub struct Store(vibe_secrets::Store, std::path::PathBuf);
 impl Store {
     pub fn at_settings(settings: &Path) -> Result<Self, Error> {
@@ -115,6 +275,41 @@ impl Store {
     }
 }
 
+/// The default connection, if one is selected, and the store revision the
+/// answer was read at.
+///
+/// ```
+/// # #[cfg(unix)]
+/// # fn main() -> Result<(), Box<dyn std::error::Error>> {
+/// # use std::os::unix::fs::PermissionsExt;
+/// # let settings = tempfile::tempdir()?;
+/// # std::fs::set_permissions(settings.path(), std::fs::Permissions::from_mode(0o700))?;
+/// use vibe_connections::{Metadata, Store};
+/// use vibe_secrets::ProtectedValue;
+///
+/// let keyring = vibe_secrets::Store::at_settings(settings.path())?;
+/// let secret = keyring.create("api-key", "Synthetic", ProtectedValue::new(b"synthetic".to_vec())?)?;
+/// let store = Store::at_settings(settings.path())?;
+/// let id = store.add(
+///     Metadata {
+///         label: "Local gateway".into(),
+///         endpoint: "http://127.0.0.1:8080/v1".into(),
+///         api_kind: "openai-chat-completions".into(),
+///         default_model: "synthetic".into(),
+///     },
+///     &secret,
+/// )?;
+/// assert_eq!(store.default_selection()?.connection, None);
+/// let revision = store.list()?.store_revision;
+/// let selected = store.set_default(&id, revision)?;
+/// assert_eq!(selected.connection, Some(id));
+/// let cleared = store.clear_default(selected.store_revision)?;
+/// assert_eq!(cleared.connection, None);
+/// # Ok(())
+/// # }
+/// # #[cfg(not(unix))]
+/// # fn main() {}
+/// ```
 #[derive(Debug, Serialize)]
 pub struct DefaultSelection {
     pub store_revision: u64,
@@ -155,6 +350,19 @@ impl Store {
 }
 
 /// Metadata compatibility only; never an authentication or native launch grant.
+///
+/// ```
+/// use vibe_connections::{MetadataCapability, metadata_capability};
+///
+/// match metadata_capability("pi") {
+///     MetadataCapability::Compatible { protocol, scope, .. } => {
+///         assert_eq!(protocol, "openai-chat-completions");
+///         assert_eq!(scope, "stored-selection-only");
+///     }
+///     other => panic!("pi has recorded evidence, got {other:?}"),
+/// }
+/// assert_eq!(metadata_capability("claude"), MetadataCapability::Unsupported);
+/// ```
 #[derive(Debug, Clone, Serialize, PartialEq, Eq)]
 #[serde(tag = "state", rename_all = "kebab-case")]
 pub enum MetadataCapability {
@@ -180,6 +388,18 @@ fn snapshot_metadata(
     metadata.validate()?;
     Ok(metadata)
 }
+/// What stored connection metadata is known to be compatible with, per
+/// harness. A harness without recorded evidence is `Unknown`, not refused.
+///
+/// ```
+/// use vibe_connections::{MetadataCapability, metadata_capability};
+///
+/// assert!(matches!(
+///     metadata_capability("qwen"),
+///     MetadataCapability::Compatible { protocol: "openai-chat-completions", .. }
+/// ));
+/// assert_eq!(metadata_capability("unheard-of"), MetadataCapability::Unknown);
+/// ```
 pub fn metadata_capability(harness: &str) -> MetadataCapability {
     match harness {
         "pi" => MetadataCapability::Compatible {
@@ -196,6 +416,47 @@ pub fn metadata_capability(harness: &str) -> MetadataCapability {
         _ => MetadataCapability::Unknown,
     }
 }
+/// How one harness is bound to a connection right now. `resolution` says
+/// whether the binding is usable; it grants nothing by itself.
+///
+/// ```
+/// # #[cfg(unix)]
+/// # fn main() -> Result<(), Box<dyn std::error::Error>> {
+/// # use std::os::unix::fs::PermissionsExt;
+/// # let settings = tempfile::tempdir()?;
+/// # std::fs::set_permissions(settings.path(), std::fs::Permissions::from_mode(0o700))?;
+/// use vibe_connections::{Metadata, Store};
+/// use vibe_secrets::ProtectedValue;
+///
+/// let keyring = vibe_secrets::Store::at_settings(settings.path())?;
+/// let secret = keyring.create("api-key", "Synthetic", ProtectedValue::new(b"synthetic".to_vec())?)?;
+/// let store = Store::at_settings(settings.path())?;
+/// let id = store.add(
+///     Metadata {
+///         label: "Local gateway".into(),
+///         endpoint: "http://127.0.0.1:8080/v1".into(),
+///         api_kind: "openai-chat-completions".into(),
+///         default_model: "synthetic".into(),
+///     },
+///     &secret,
+/// )?;
+/// // Unbound, a harness keeps its own native configuration.
+/// let native = store.binding("pi")?;
+/// assert_eq!((native.mode.as_str(), native.resolution.as_str()), ("native", "unmanaged"));
+///
+/// let bound = store.set_binding(
+///     "pi",
+///     Some(vibe_secrets::ReferenceBinding::Connection { connection: id.clone() }),
+///     native.store_revision,
+/// )?;
+/// assert_eq!(bound.mode, "connection");
+/// assert_eq!(bound.connection, Some(id));
+/// assert_eq!(bound.resolution, "metadata-only");
+/// # Ok(())
+/// # }
+/// # #[cfg(not(unix))]
+/// # fn main() {}
+/// ```
 #[derive(Debug, Serialize)]
 pub struct BindingObservation {
     pub harness: String,

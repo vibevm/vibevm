@@ -20,12 +20,54 @@ pub struct Expected {
 /// inserting a binding. No callback may reenter Store while its lock is held.
 /// An explicitly attested empty roster is valid; missing inventory is unknown.
 /// Implementations must not discover consumers by scanning HOME or the filesystem.
+///
+/// ```
+/// use vibe_secrets::{Error, ReferenceGuard, ReferenceInventory, SecretId};
+///
+/// /// A roster attested by the composition root: one consumer, one item.
+/// struct Attested(SecretId);
+/// impl ReferenceInventory for Attested {
+///     fn acquire(&self) -> Result<Box<dyn ReferenceGuard + '_>, Error> {
+///         Ok(Box::new(Held(&self.0)))
+///     }
+/// }
+/// struct Held<'a>(&'a SecretId);
+/// impl ReferenceGuard for Held<'_> {
+///     fn consumers(&self, id: &SecretId) -> Result<Vec<String>, Error> {
+///         Ok(if id == self.0 { vec!["ai".to_owned()] } else { Vec::new() })
+///     }
+/// }
+///
+/// let referenced = SecretId::try_from("0a0a0a0a-0a0a-4a0a-8a0a-0a0a0a0a0a0a".to_owned())?;
+/// let unreferenced = SecretId::try_from("0b0b0b0b-0b0b-4b0b-8b0b-0b0b0b0b0b0b".to_owned())?;
+/// let inventory = Attested(referenced.clone());
+/// let guard = inventory.acquire()?;
+/// assert_eq!(guard.consumers(&referenced)?, ["ai"]);
+/// assert!(guard.consumers(&unreferenced)?.is_empty());
+/// # Ok::<(), Error>(())
+/// ```
 pub trait ReferenceInventory {
     fn acquire(&self) -> Result<Box<dyn ReferenceGuard + '_>, Error>;
 }
 
 /// Protection stays live until this guard is dropped, including after publication.
 /// Query returns only registered nonsecret consumer IDs, never paths or values.
+///
+/// ```
+/// use vibe_secrets::{Error, ReferenceGuard, SecretId};
+///
+/// /// An explicitly attested empty roster: known, and naming no consumer.
+/// struct NoConsumers;
+/// impl ReferenceGuard for NoConsumers {
+///     fn consumers(&self, _id: &SecretId) -> Result<Vec<String>, Error> {
+///         Ok(Vec::new())
+///     }
+/// }
+///
+/// let id = SecretId::try_from("0a0a0a0a-0a0a-4a0a-8a0a-0a0a0a0a0a0a".to_owned())?;
+/// assert!(NoConsumers.consumers(&id)?.is_empty());
+/// # Ok::<(), Error>(())
+/// ```
 pub trait ReferenceGuard {
     fn consumers(&self, id: &SecretId) -> Result<Vec<String>, Error>;
 }

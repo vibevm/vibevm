@@ -107,8 +107,12 @@ pub fn preview(
                 definition: result::Description {
                     parameter: p.id.clone(),
                     name: p.name.clone(),
-                    min: p.min.unwrap(),
-                    max: p.max.unwrap(),
+                    min: p
+                        .min
+                        .ok_or_else(|| fail("integer preview parameter has no lower bound"))?,
+                    max: p
+                        .max
+                        .ok_or_else(|| fail("integer preview parameter has no upper bound"))?,
                     profile: profile.id.clone(),
                     profile_name: profile.name.clone(),
                     preset: *preset,

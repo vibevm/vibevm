@@ -90,7 +90,9 @@ impl PackageConfiguration {
                     "submitted history requires one standalone root and no authored or forwarded input",
                 ));
             }
-            let (owner, input) = self.submitted_inputs.first_key_value().unwrap();
+            let Some((owner, input)) = self.submitted_inputs.first_key_value() else {
+                return Err(bad("submitted history carries no root input"));
+            };
             if owner != "./vibe.toml"
                 || input.requirement.qualified_name() != package
                 || !input.requirement.version.is_exact_pin()
