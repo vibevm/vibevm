@@ -1,0 +1,29 @@
+{
+  "protocol": "vibe-ai-native-settings-set/1",
+  "ok": true,
+  "applied": false,
+  "preview_id": "ai-native-settings-set/1:sha256:0000000000000000000000000000000000000000000000000000000000000000",
+  "preview": {
+    "connection": "synthetic",
+    "endpoint": "https://example.invalid/v1",
+    "model": "synthetic",
+    "rows": [
+      {
+        "agent": "pi",
+        "destination": "HOME/.pi/agent/models.json",
+        "classification": "ready",
+        "preview_id": "pi-native-settings/1:sha256:1111111111111111111111111111111111111111111111111111111111111111",
+        "outcome": "not-attempted"
+      },
+      {
+        "agent": "claude",
+        "destination": "HOME/.claude/settings.json",
+        "classification": "incompatible",
+        "preview_id": null,
+        "outcome": "not-attempted"
+      }
+    ]
+  },
+  "confirmed": false,
+  "changed": false
+}

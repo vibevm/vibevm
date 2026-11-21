@@ -1,0 +1,110 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "protocol",
+    "ok",
+    "applied",
+    "preview_id",
+    "preview",
+    "confirmed",
+    "changed"
+  ],
+  "properties": {
+    "protocol": {
+      "const": "vibe-ai-native-settings-set/1"
+    },
+    "ok": {
+      "type": "boolean"
+    },
+    "applied": {
+      "type": "boolean"
+    },
+    "preview_id": {
+      "type": "string",
+      "pattern": "^ai-native-settings-set/1:sha256:[0-9a-f]{64}$"
+    },
+    "preview": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "connection",
+        "endpoint",
+        "model",
+        "rows"
+      ],
+      "properties": {
+        "connection": {
+          "type": "string"
+        },
+        "endpoint": {
+          "type": "string"
+        },
+        "model": {
+          "type": "string"
+        },
+        "rows": {
+          "type": "array",
+          "minItems": 2,
+          "maxItems": 6,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "agent",
+              "destination",
+              "classification",
+              "preview_id",
+              "outcome"
+            ],
+            "properties": {
+              "agent": {
+                "enum": [
+                  "pi",
+                  "qwen",
+                  "codex",
+                  "opencode",
+                  "hermes",
+                  "claude"
+                ]
+              },
+              "destination": {
+                "type": "string"
+              },
+              "classification": {
+                "enum": [
+                  "ready",
+                  "incompatible",
+                  "refused"
+                ]
+              },
+              "preview_id": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "pattern": "^(pi|qwen|codex|opencode|hermes|claude)-native-settings/1:sha256:[0-9a-f]{64}$"
+              },
+              "outcome": {
+                "enum": [
+                  "not-attempted",
+                  "skipped",
+                  "applied",
+                  "noop",
+                  "failed"
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    "confirmed": {
+      "type": "boolean"
+    },
+    "changed": {
+      "type": "boolean"
+    }
+  }
+}

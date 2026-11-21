@@ -1,6 +1,9 @@
 //! Explicit persistent native setup, distinct from metadata binding setup.
 use super::*;
 use vibe_connections::NativeSettingsAdapter;
+mod set;
+pub(crate) use set::NativeSettingsSetFailure;
+pub(super) use set::attended;
 
 pub(crate) fn run(
     ctx: &output::Context,
@@ -10,6 +13,9 @@ pub(crate) fn run(
     response: Option<String>,
     cancel: &CancellationToken,
 ) -> Result<()> {
+    if agents.len() > 1 {
+        return set::run(ctx, store, agents, connection, response, cancel);
+    }
     match agents.as_slice() {
         [agent] if agent == "pi" => run_adapter(
             ctx,
@@ -168,4 +174,43 @@ where
         println!("{}", serde_json::to_string_pretty(&report)?);
     }
     Ok(())
+}
+
+fn target(agent: &str) -> Result<NativeTarget> {
+    Ok(match agent {
+        "pi" => NativeTarget {
+            destination: "HOME/.pi/agent/models.json",
+            overrides: &["PI_CODING_AGENT_DIR"],
+        },
+        "qwen" => NativeTarget {
+            destination: "HOME/.qwen/settings.json",
+            overrides: &[
+                "QWEN_HOME",
+                "QWEN_CODE_SYSTEM_SETTINGS_PATH",
+                "QWEN_CODE_SYSTEM_DEFAULTS_PATH",
+            ],
+        },
+        "codex" => NativeTarget {
+            destination: "HOME/.codex/config.toml",
+            overrides: &["CODEX_HOME"],
+        },
+        "opencode" => NativeTarget {
+            destination: "HOME/.config/opencode/opencode.json",
+            overrides: &[
+                "XDG_CONFIG_HOME",
+                "OPENCODE_CONFIG",
+                "OPENCODE_CONFIG_CONTENT",
+                "OPENCODE_CONFIG_DIR",
+            ],
+        },
+        "hermes" => NativeTarget {
+            destination: "HOME/.hermes/config.yaml",
+            overrides: &["HERMES_HOME", "HERMES_CONFIG_FILE"],
+        },
+        "claude" => NativeTarget {
+            destination: "HOME/.claude/settings.json",
+            overrides: &["CLAUDE_CONFIG_DIR"],
+        },
+        _ => bail!("unsupported native settings agent"),
+    })
 }

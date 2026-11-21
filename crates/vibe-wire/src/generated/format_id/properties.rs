@@ -7,6 +7,7 @@ impl FormatId {
     pub const ALL: &[FormatId] = &[
         FormatId::AiDefaultScopeResult,
         FormatId::AiNativeSettings,
+        FormatId::AiNativeSettingsSet,
         FormatId::ApplicationAgentHook,
         FormatId::ApplicationAgentHookResult,
         FormatId::ApplicationImportInput,
@@ -234,6 +235,7 @@ impl FormatId {
         match self {
             FormatId::AiDefaultScopeResult => "ai-default-scope-result",
             FormatId::AiNativeSettings => "ai-native-settings",
+            FormatId::AiNativeSettingsSet => "ai-native-settings-set",
             FormatId::ApplicationAgentHook => "application-agent-hook",
             FormatId::ApplicationAgentHookResult => "application-agent-hook-result",
             FormatId::ApplicationImportInput => "application-import-input",
@@ -464,6 +466,7 @@ impl FormatId {
         match self {
             FormatId::AiDefaultScopeResult => 1,
             FormatId::AiNativeSettings => 1,
+            FormatId::AiNativeSettingsSet => 1,
             FormatId::ApplicationAgentHook => 1,
             FormatId::ApplicationAgentHookResult => 1,
             FormatId::ApplicationImportInput => 1,
@@ -692,6 +695,7 @@ impl FormatId {
         match self {
             FormatId::AiDefaultScopeResult => false,
             FormatId::AiNativeSettings => false,
+            FormatId::AiNativeSettingsSet => false,
             FormatId::ApplicationAgentHook => true,
             FormatId::ApplicationAgentHookResult => true,
             FormatId::ApplicationImportInput => false,
@@ -920,6 +924,7 @@ impl FormatId {
         match self {
             FormatId::AiDefaultScopeResult => ForeignParsers::Many,
             FormatId::AiNativeSettings => ForeignParsers::Many,
+            FormatId::AiNativeSettingsSet => ForeignParsers::Many,
             FormatId::ApplicationAgentHook => ForeignParsers::Many,
             FormatId::ApplicationAgentHookResult => ForeignParsers::Many,
             FormatId::ApplicationImportInput => ForeignParsers::Many,
@@ -1148,6 +1153,7 @@ impl FormatId {
         match self {
             FormatId::AiDefaultScopeResult => UnknownFields::Deny,
             FormatId::AiNativeSettings => UnknownFields::Deny,
+            FormatId::AiNativeSettingsSet => UnknownFields::Deny,
             FormatId::ApplicationAgentHook => UnknownFields::Allow,
             FormatId::ApplicationAgentHookResult => UnknownFields::Allow,
             FormatId::ApplicationImportInput => UnknownFields::Deny,

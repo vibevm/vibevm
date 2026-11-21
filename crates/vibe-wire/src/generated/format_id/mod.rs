@@ -21,6 +21,7 @@
 pub enum FormatId {
     AiDefaultScopeResult,
     AiNativeSettings,
+    AiNativeSettingsSet,
     ApplicationAgentHook,
     ApplicationAgentHookResult,
     ApplicationImportInput,

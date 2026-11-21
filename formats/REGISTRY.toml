@@ -2320,3 +2320,12 @@ foreign_parsers = "many"
 unknown_fields = "deny"
 corpus = "formats/corpora/ai-native-settings/e1"
 sunset = "none"
+
+[format.ai-native-settings-set]
+epoch = 1
+schema = "schemas/ai_native_settings_set.schema.json"
+recoverable = false
+foreign_parsers = "many"
+unknown_fields = "deny"
+corpus = "formats/corpora/ai-native-settings-set/e1"
+sunset = "none"

@@ -28,7 +28,14 @@ pub fn run(ctx: &output::Context, args: AiArgs, cancel: &CancellationToken) -> R
             apply_preview,
         } => {
             if native_settings {
-                return setup::native_settings(ctx, &store, agents, connection, apply_preview, cancel);
+                return setup::native_settings(
+                    ctx,
+                    &store,
+                    agents,
+                    connection,
+                    apply_preview,
+                    cancel,
+                );
             }
             if let Some(target) = set_default {
                 let scope = match scope
@@ -191,3 +198,5 @@ pub fn run(ctx: &output::Context, args: AiArgs, cancel: &CancellationToken) -> R
 }
 
 mod setup;
+
+pub(crate) use setup::NativeSettingsSetFailure;

@@ -672,3 +672,131 @@ fn first_native_pi_preview_has_no_effects_and_confirmed_apply_creates_private_pa
         after
     );
 }
+
+#[test]
+fn native_set_preview_stale_and_apply_preserve_incompatible_oauth() {
+    let f = F::new();
+    let home = f.0.path();
+    let claude = home.join(".claude");
+    fs::create_dir(&claude).unwrap();
+    fs::set_permissions(&claude, fs::Permissions::from_mode(0o700)).unwrap();
+    let oauth = claude.join(".credentials.json");
+    fs::write(&oauth, br#"{"oauth":"synthetic-preserved"}"#).unwrap();
+    fs::set_permissions(&oauth, fs::Permissions::from_mode(0o600)).unwrap();
+    let original = fs::read(&oauth).unwrap();
+    let secret = f.json(
+        &[
+            "secrets",
+            "create",
+            "--kind",
+            "api-key",
+            "--label",
+            "Synthetic",
+            "--value-stdin",
+        ],
+        Some(VALUE.as_bytes()),
+    );
+    let added = f.json(
+        &[
+            "ai",
+            "connections",
+            "add",
+            "--label",
+            "Synthetic",
+            "--endpoint",
+            "http://127.0.0.1:9/v1",
+            "--api-kind",
+            "openai-chat-completions",
+            "--default-model",
+            "synthetic",
+            "--secret-ref",
+            secret["items"][0]["id"].as_str().unwrap(),
+        ],
+        None,
+    );
+    let id = added["items"].as_object().unwrap().keys().next().unwrap();
+    let request = [
+        "ai",
+        "setup",
+        "--native-settings",
+        "--agent",
+        "pi",
+        "--agent",
+        "qwen",
+        "--agent",
+        "claude",
+        "--connection",
+        id,
+    ];
+    let preview = f.json(&request, None);
+    assert_eq!(preview["confirmed"], false);
+    assert_eq!(preview["applied"], false);
+    assert_eq!(
+        preview["preview"]["rows"][2]["classification"],
+        "incompatible"
+    );
+    assert!(!home.join(".pi").exists() && !home.join(".qwen").exists());
+    assert_eq!(fs::read(&oauth).unwrap(), original);
+    let schema: serde_json::Value = serde_json::from_str(include_str!(
+        "../../../../schemas/ai_native_settings_set.schema.json"
+    ))
+    .unwrap();
+    assert!(
+        jsonschema::validator_for(&schema)
+            .unwrap()
+            .is_valid(&preview)
+    );
+    let mut apply = request.to_vec();
+    apply.extend(["--apply-preview", preview["preview_id"].as_str().unwrap()]);
+    // Appearance after preview invalidates the whole set before either sink.
+    fs::create_dir(home.join(".qwen")).unwrap();
+    fs::set_permissions(home.join(".qwen"), fs::Permissions::from_mode(0o700)).unwrap();
+    assert!(!f.run(&apply, None).status.success());
+    assert!(!home.join(".pi").exists() && !home.join(".qwen/settings.json").exists());
+    let preview = f.json(&request, None);
+    let mut apply = request.to_vec();
+    apply.extend(["--apply-preview", preview["preview_id"].as_str().unwrap()]);
+    let result = f.json(&apply, None);
+    assert_eq!(result["confirmed"], true);
+    assert_eq!(result["applied"], true);
+    assert_eq!(result["preview"]["rows"][0]["outcome"], "applied");
+    assert_eq!(result["preview"]["rows"][1]["outcome"], "applied");
+    assert_eq!(result["preview"]["rows"][2]["outcome"], "skipped");
+    let pi: serde_json::Value =
+        serde_json::from_slice(&fs::read(home.join(".pi/agent/models.json")).unwrap()).unwrap();
+    assert!(
+        pi["providers"]["vibevm"]["apiKey"].as_str() == Some(VALUE),
+        "synthetic key mismatch"
+    );
+    assert_eq!(
+        pi["providers"]["vibevm"]["baseUrl"],
+        "http://127.0.0.1:9/v1"
+    );
+    assert_eq!(pi["providers"]["vibevm"]["models"][0]["id"], "synthetic");
+    let qwen: serde_json::Value =
+        serde_json::from_slice(&fs::read(home.join(".qwen/settings.json")).unwrap()).unwrap();
+    assert!(
+        qwen["security"]["auth"]["apiKey"].as_str() == Some(VALUE),
+        "synthetic key mismatch"
+    );
+    assert_eq!(fs::read(&oauth).unwrap(), original);
+    assert!(!claude.join("settings.json").exists());
+    assert!(
+        !f.run(
+            &[
+                "ai",
+                "setup",
+                "--native-settings",
+                "--agent",
+                "pi",
+                "--agent",
+                "pi",
+                "--connection",
+                id
+            ],
+            None
+        )
+        .status
+        .success()
+    );
+}

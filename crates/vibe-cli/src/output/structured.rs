@@ -99,6 +99,11 @@ fn stamp_user_project(payload: &mut Value, err: &anyhow::Error) {
 /// can branch on `error_kind` and read `attempts` without parsing
 /// the prose.
 pub(super) fn stamp_structured_error(payload: &mut Value, err: &anyhow::Error) {
+    if let Some(failure) = err.downcast_ref::<crate::commands::ai::NativeSettingsSetFailure>()
+        && let Value::Object(map) = payload
+    {
+        map.insert("native_settings_set".into(), failure.0.clone());
+    }
     if let Some(review) = err.downcast_ref::<crate::commands::update::review::ReviewError>()
         && let Value::Object(map) = payload
     {

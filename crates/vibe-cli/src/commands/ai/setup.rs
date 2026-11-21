@@ -4,6 +4,7 @@ use anyhow::{Result, bail};
 use std::{collections::BTreeMap, io::IsTerminal, path::Path};
 use vibe_core::cancellation::CancellationToken;
 mod native_settings;
+pub(crate) use native_settings::NativeSettingsSetFailure;
 pub(super) use native_settings::run as native_settings;
 
 pub(super) struct Request {
@@ -32,6 +33,19 @@ pub(super) fn run(
         && !ctx.is_unattended()
         && std::io::stdin().is_terminal()
         && std::io::stderr().is_terminal();
+    if attended
+        && agents.is_empty()
+        && from_agent_alias.is_none()
+        && mode.is_none()
+        && connection.is_none()
+        && response.is_none()
+        && crate::output::prompts::confirm(
+            "Write a connection into selected agents' native settings? Otherwise continue metadata only",
+            false,
+        )?
+    {
+        return native_settings::attended(ctx, store, cancel);
+    }
     let alias_entry = from_agent_alias.is_some();
     if let Some(alias) = from_agent_alias {
         if !agents.is_empty() {
