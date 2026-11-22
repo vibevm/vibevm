@@ -195,7 +195,38 @@ collaborators share.
 | `vibe prompt capture [--json] [--with-text] [--task <text>] [--usage <file>]` | the request envelope an API runner sends: which band in which role, in what order |
 | `vibe prompt path [--part lane\|system] [--json]` | the absolute path of a generated artifact |
 | `vibe prompt flags --harness <kind-or-launcher>` | ready-to-paste launch flags — flags only, never a program; a harness whose carrier is an environment variable gets its assignments first, one line each, and the flags last |
+| `vibe prompt types [--node <rel>] [--path <dir>] [--check] [--json]` | write generated Claude subagent types, or check their freshness without writing |
 | `vibe agent <launcher> [--] [args…]` | compose the lane, check the mode constraints, and start the harness with it |
+
+### Generated Claude subagent types
+
+For an opted-in node, `vibe prompt types` writes two definitions under
+`.claude/agents/`. `vibe-worker` carries a fixed full-context worker preface
+followed by the same composed lane bytes the parent launch uses.
+`vibe-executor` carries only `rules/worker.md` from the locked installed
+`org.vibevm.world/working-rules` package, never the project lane. If that package
+body is unavailable, the report says so rather than substituting project boot.
+Executor packets still need `##subagent-quiet-clause`: the type body does not
+prevent Claude Code from supplying its own project memory.
+
+`vibe agent claude` refreshes these definitions before exec. A soft launch or
+an opted-out launch with a selected node withdraws only the vibe-generated
+lane-bodied worker definition, so an older lane does not remain active.
+The executor definition and ignore file stay. Authored files without vibe's
+generated marker are never overwritten or removed; launch reports a warning
+and continues if types cannot be refreshed.
+
+The generated `.claude/agents/.gitignore` ignores itself and `/vibe-*.md` only
+inside that directory. Vibe never edits the repository root `.gitignore` for
+these types, and refuses publication if the nested ignore file is foreign.
+`vibe prompt types --json` emits the `vibe-prompt-types/1` report.
+`--check` writes nothing and exits non-zero for stale, missing or foreign type
+files; current and unavailable outcomes alone succeed.
+
+Claude Code discovers types at session startup: definitions written during an
+existing session take effect in the **next session**. Do not combine
+`--worker-prefix` with either generated type: it would deliver the lane twice
+to `vibe-worker`, and would give `vibe-executor` the lane it must not receive.
 
 Generation also happens inside `vibe install`, `vibe reinstall` and the
 format-change and staged-publication paths, for every node that has opted

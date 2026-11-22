@@ -5,12 +5,34 @@ specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-076#SYS-WORKER-TYPES
 use std::path::Path;
 
 use vibe_workspace::system_prompt::HarnessKind;
-use vibe_workspace::system_prompt::agent_types::{AgentTypeStatus, SyncMode};
+use vibe_workspace::system_prompt::agent_types::{
+    AgentTypeStatus, SyncMode, builtin_agent_types, withdraw_lane_types,
+};
 
 use crate::commands::prompt;
 use crate::output;
 
 const NO_LANE: &str = "this launch passes no lane file, so there is no worker type";
+
+pub(super) fn withdraw(ctx: &output::Context, kind: HarnessKind, selected: &prompt::Selected) {
+    if kind != HarnessKind::Claude {
+        return;
+    }
+    match withdraw_lane_types(&selected.node_dir, &builtin_agent_types()) {
+        Ok(outcomes) => {
+            for outcome in outcomes {
+                if outcome.status == AgentTypeStatus::Removed && !ctx.is_quiet() {
+                    eprintln!("note: subagent type `{}` removed", outcome.file);
+                }
+            }
+        }
+        Err(error) => {
+            eprintln!(
+                "warning: subagent types were not refreshed ({error:#}); the session starts without fresh vibe types"
+            );
+        }
+    }
+}
 
 pub(super) fn refresh(
     ctx: &output::Context,

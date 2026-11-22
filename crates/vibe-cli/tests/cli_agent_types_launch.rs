@@ -102,6 +102,58 @@ impl Machine {
 }
 
 #[test]
+fn opted_out_launch_removes_the_generated_worker_type() {
+    let machine = Machine::new();
+    fs::remove_file(
+        machine
+            .project
+            .path()
+            .join(vibe_core::layout::current_boot_dir())
+            .join("SYSTEM-TEMPLATE.md"),
+    )
+    .unwrap();
+    let agents = machine.project.path().join(".claude/agents");
+    fs::create_dir_all(&agents).unwrap();
+    let worker = agents.join("vibe-worker.md");
+    fs::write(
+        &worker,
+        vibe_workspace::system_prompt::agent_types::render_claude_agent_type(
+            &vibe_workspace::system_prompt::agent_types::builtin_agent_types()[0],
+            b"OLD LANE\n",
+        ),
+    )
+    .unwrap();
+
+    machine.agent(&["claude", "-p", "hi"]).assert().success();
+    assert!(!worker.exists());
+    assert_eq!(machine.argv().unwrap(), ["--no-telemetry", "-p", "hi"]);
+}
+
+#[test]
+fn failed_build_soft_launch_removes_the_generated_worker_type() {
+    let machine = Machine::new();
+    machine.agent(&["claude", "-p", "hi"]).assert().success();
+    let worker = machine.project.path().join(".claude/agents/vibe-worker.md");
+    assert!(worker.exists());
+
+    let template = machine
+        .project
+        .path()
+        .join(vibe_core::layout::current_boot_dir())
+        .join("SYSTEM-TEMPLATE.md");
+    fs::remove_file(&template).unwrap();
+    fs::create_dir(&template).unwrap();
+
+    machine
+        .agent(&["claude", "-p", "hi"])
+        .assert()
+        .success()
+        .stderr(predicate::str::contains("could not be built"));
+    assert!(!worker.exists());
+    assert_eq!(machine.argv().unwrap(), ["--no-telemetry", "-p", "hi"]);
+}
+
+#[test]
 fn claude_launch_writes_the_worker_type_before_exec() {
     let machine = Machine::new();
     machine

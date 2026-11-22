@@ -1,4 +1,4 @@
-//! Ownership-guarded publication and read-only freshness checks for agent types.
+//! Ownership-guarded publication, withdrawal, and freshness checks for agent types.
 
 use std::path::{Path, PathBuf};
 
@@ -72,6 +72,45 @@ pub enum AgentTypesError {
     ForeignIgnoreFile { path: PathBuf },
     #[error("I/O error on `{}`: {reason}", .path.display())]
     Io { path: PathBuf, reason: String },
+}
+
+/// Withdraw owned lane-bodied types when this launch delivers no project lane.
+/// Absent and foreign files are left alone, as are package-bodied types and
+/// the directory-local ignore file. No directories or files are created.
+#[specmark::spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-076#SYS-WORKER-TYPES")]
+pub fn withdraw_lane_types(
+    node_dir: &Path,
+    specs: &[AgentTypeSpec],
+) -> Result<Vec<AgentTypeOutcome>, AgentTypesError> {
+    let io = |relative: &str, reason: String| AgentTypesError::Io {
+        path: node_dir.join(relative),
+        reason,
+    };
+    let project =
+        vibe_safefs::Project::open(node_dir).map_err(|error| io("", format!("{error:#}")))?;
+    let mut outcomes = Vec::new();
+    for spec in specs {
+        if !matches!(spec.body, AgentTypeBody::ProjectLane) {
+            continue;
+        }
+        let file = spec.file();
+        let existing = project
+            .read_file(&file)
+            .map_err(|error| io(&file, format!("{error:#}")))?;
+        if existing.as_deref().is_some_and(is_generated_agent_type)
+            && project
+                .remove_file(&file)
+                .map_err(|error| io(&file, format!("{error:#}")))?
+        {
+            outcomes.push(AgentTypeOutcome {
+                name: spec.type_name(),
+                file,
+                status: AgentTypeStatus::Removed,
+                reason: Some("this launch delivers no lane".to_owned()),
+            });
+        }
+    }
+    Ok(outcomes)
 }
 
 /// Resolve and inspect all declared types before validating the ignore guard,

@@ -22004,8 +22004,8 @@
       "item_kind": "fn",
       "line": 62,
       "symbol": "vibe_cli::commands::agent::launch::run",
-      "end_line": 352,
-      "fingerprint": "tok1:a71b5c40a47bc5165f20b6d0b6c2e0a2e08d0ff196dcb84fe2460271279ade76"
+      "end_line": 357,
+      "fingerprint": "tok1:585cd3714ef5e204f1c0e2fc0e4ac8b29bca0d89e06a7d56e17168d639b176bc"
     },
     {
       "crate_name": "vibe-cli",
@@ -22020,9 +22020,9 @@
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/commands/agent/launch.rs",
       "item_kind": "fn",
-      "line": 447,
+      "line": 452,
       "symbol": "vibe_cli::commands::agent::launch::write_profile",
-      "end_line": 474,
+      "end_line": 479,
       "fingerprint": "tok1:5749ab5f3499199b6f9d25aa78df112206b51f63a9a7df2d79de886dca8bb49e"
     },
     {
@@ -81996,10 +81996,19 @@
       "crate_name": "vibe-workspace",
       "file": "crates/vibe-workspace/src/system_prompt/agent_types/sync.rs",
       "item_kind": "fn",
-      "line": 77,
+      "line": 116,
       "symbol": "vibe_workspace::system_prompt::agent_types::sync::sync_agent_types",
-      "end_line": 188,
+      "end_line": 227,
       "fingerprint": "tok1:76265ea92aa91a420dacefe05ff9e03b6c9301b08ed1d6daf7a2dbee27f50ea6"
+    },
+    {
+      "crate_name": "vibe-workspace",
+      "file": "crates/vibe-workspace/src/system_prompt/agent_types/sync.rs",
+      "item_kind": "fn",
+      "line": 77,
+      "symbol": "vibe_workspace::system_prompt::agent_types::sync::withdraw_lane_types",
+      "end_line": 114,
+      "fingerprint": "tok1:2b200ee73f065e3c3dff74748f6cf735d3eb8877ec6cd02a1e84d1fcd41414cb"
     },
     {
       "crate_name": "vibe-workspace",
@@ -94553,7 +94562,7 @@
     {
       "file": "crates/vibe-cli/src/commands/agent/launch.rs",
       "from_symbol": "vibe_cli::commands::agent::launch::write_profile",
-      "line": 453,
+      "line": 458,
       "provenance": "authored",
       "uri": "spec://core-ai-native/mechanisms/ENGINE-CONFORM-v0.1#rules",
       "verb": "deviates",
@@ -149082,7 +149091,15 @@
     {
       "file": "crates/vibe-workspace/src/system_prompt/agent_types/sync.rs",
       "from_symbol": "vibe_workspace::system_prompt::agent_types::sync::sync_agent_types",
-      "line": 79,
+      "line": 118,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-076#SYS-WORKER-TYPES",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-workspace/src/system_prompt/agent_types/sync.rs",
+      "from_symbol": "vibe_workspace::system_prompt::agent_types::sync::withdraw_lane_types",
+      "line": 80,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-076#SYS-WORKER-TYPES",
       "verb": "implements"

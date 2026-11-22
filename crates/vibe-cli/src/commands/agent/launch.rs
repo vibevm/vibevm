@@ -175,6 +175,7 @@ pub(crate) fn run(ctx: &output::Context, argv: Vec<String>) -> Result<()> {
             );
             std::process::exit(selection.launch(None)?);
         }
+        agent_types::withdraw(ctx, launcher.kind, &selected);
         return soft(
             &launcher,
             &rest,
@@ -199,6 +200,7 @@ pub(crate) fn run(ctx: &output::Context, argv: Vec<String>) -> Result<()> {
                 );
                 std::process::exit(selection.launch(None)?);
             }
+            agent_types::withdraw(ctx, launcher.kind, &selected);
             return soft(
                 &launcher,
                 &rest,
@@ -221,6 +223,7 @@ pub(crate) fn run(ctx: &output::Context, argv: Vec<String>) -> Result<()> {
         }
         let mut command: Vec<String> = launcher.command.clone();
         command.extend(rest);
+        agent_types::withdraw(ctx, launcher.kind, &selected);
         return exec(launcher.kind, &command, &[], &scrub(launcher.kind));
     }
 
@@ -302,6 +305,7 @@ pub(crate) fn run(ctx: &output::Context, argv: Vec<String>) -> Result<()> {
         match prompt::compose_launch_flags(ctx, &selected, launcher.kind, Some(&launcher), &rest) {
             Ok(composed) => composed,
             Err(error) => {
+                agent_types::withdraw(ctx, launcher.kind, &selected);
                 return soft(
                     &launcher,
                     &rest,
@@ -313,6 +317,7 @@ pub(crate) fn run(ctx: &output::Context, argv: Vec<String>) -> Result<()> {
             }
         };
     if let Some(undeliverable) = &composed.undeliverable {
+        agent_types::withdraw(ctx, launcher.kind, &selected);
         return soft(&launcher, &rest, undeliverable);
     }
     let lane = composed.lane.clone();

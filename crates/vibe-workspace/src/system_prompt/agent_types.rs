@@ -191,7 +191,10 @@ mod sources_tests;
 #[path = "agent_types/sync.rs"]
 mod sync;
 
-pub use sync::{AgentTypeOutcome, AgentTypeStatus, AgentTypesError, SyncMode, sync_agent_types};
+pub use sync::{
+    AgentTypeOutcome, AgentTypeStatus, AgentTypesError, SyncMode, sync_agent_types,
+    withdraw_lane_types,
+};
 
 #[cfg(test)]
 #[path = "agent_types/sync_tests.rs"]
