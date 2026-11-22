@@ -33,6 +33,12 @@ pub enum Error {
     )]
     Io { path: PathBuf, message: String },
 
+    /// Git could not say which files it versions in a package directory
+    /// inside a worktree (PROP-024 `#SHIPPABLE-TREE-DEF`); the content hash
+    /// is refused rather than taken over ignored files.
+    #[error(transparent)]
+    GitSource(#[from] vibe_core::git_source::GitSourceError),
+
     /// On-disk index files do not satisfy the schema invariants.
     #[error(
         "malformed index: {0} \

@@ -22,6 +22,11 @@ enum Reader {
 /// The readers that are not transfers, one line of why each.
 const EXEMPT: &[(&str, Reader, &str)] = &[
     (
+        "vibe-core/src/git_source/fixture.rs",
+        Reader::Git,
+        "test fixture behind the git-fixture feature: init and local clone of temporary repositories, never a download",
+    ),
+    (
         "vibe-net/src/doctor.rs",
         Reader::Http,
         "the network diagnosis (PROP-068#proxy-doctor): a HEAD of the target and the PAC file, never a download",

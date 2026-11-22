@@ -62,6 +62,7 @@ flate2 = { version = "1", default-features = false, features = ["zlib-rs"] }
 vibe-wire = { workspace = true }
 
 [dev-dependencies]
+vibe-core = { workspace = true, features = ["git-fixture"] }
 assert_cmd = { workspace = true }
 predicates = { workspace = true }
 # Linking this isolates the test process's per-user settings home before the

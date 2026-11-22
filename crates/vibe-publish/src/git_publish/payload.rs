@@ -9,7 +9,15 @@ pub(super) fn copy_dir(src: &Path, dst: &Path) -> Result<(), PublishError> {
         &vibe_core::cancellation::CancellationToken::default(),
     )
 }
+/// Copy a package source into a publish payload.
+///
+/// When `src` lies inside a Git worktree only the files Git would version
+/// there are copied — the same view the content hash sent to the index is
+/// taken over, so a consumer's fetched tree hashes as the index says, and
+/// interpreter caches or boot lock files never leave the author's checkout
+/// (PROP-024 `#SHIPPABLE-TREE-DEF`).
 #[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#publish")]
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-024#SHIPPABLE-TREE-DEF")]
 pub(crate) fn copy_dir_controlled(
     src: &Path,
     dst: &Path,
@@ -22,7 +30,8 @@ pub(crate) fn copy_dir_controlled(
         path: dst.to_path_buf(),
         message: format!("create_dir_all: {e}"),
     })?;
-    for entry in walk_controlled(src, cancellation)? {
+    let view = vibe_core::git_source::GitSourceView::of(src)?;
+    for entry in walk_controlled(src, view.as_ref(), cancellation)? {
         cancellation
             .checkpoint()
             .map_err(|error| PublishError::Git(error.to_string()))?;
@@ -61,6 +70,7 @@ pub(crate) fn copy_dir_controlled(
 
 pub(super) fn walk_controlled(
     root: &Path,
+    view: Option<&vibe_core::git_source::GitSourceView>,
     cancellation: &vibe_core::cancellation::CancellationToken,
 ) -> Result<Vec<std::path::PathBuf>, PublishError> {
     let mut out = Vec::new();
@@ -84,6 +94,14 @@ pub(super) fn walk_controlled(
                 // Decide lexically before metadata/read/descent, including symlinks
                 // and nested project nodes. Faithful Git history is a separate route.
                 if path.ends_with(vibe_core::layout::current_boot_dir().join("local")) {
+                    continue;
+                }
+                // Inside a worktree, prune what Git would not version before
+                // descending, so an ignored cache is never even entered.
+                if let Some(view) = view
+                    && let Ok(relative) = path.strip_prefix(root)
+                    && !view.admits(relative, path.is_dir())
+                {
                     continue;
                 }
                 stack.push(path.clone());

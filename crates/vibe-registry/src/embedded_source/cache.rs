@@ -126,7 +126,8 @@ pub(super) fn verify_entry(
     }
     let tree = entry.join(TREE_DIR);
     require_link_free_tree(&tree)?;
-    let actual_hash = compute_content_hash_with(RecipeId::Tree1, &tree)?;
+    // The cached tree is a copy of the verified checkout, hashed as one.
+    let actual_hash = crate::compute_copy_content_hash_with(RecipeId::Tree1, &tree)?;
     if actual_hash != expected_hash.as_str() {
         return Err(EmbeddedSourceError::HashMismatch {
             url: url.to_string(),

@@ -33,6 +33,7 @@ vibe-index.workspace = true
 vibe-wire.workspace = true
 
 [dev-dependencies]
+vibe-core = { workspace = true, features = ["git-fixture"] }
 rust-ai-native-env-audit.workspace = true
 tempfile.workspace = true
 walkdir.workspace = true

@@ -254,6 +254,12 @@ pub enum PublishError {
     )]
     Io { path: PathBuf, message: String },
 
+    /// Git could not say which files it versions in a package source that
+    /// lies inside a worktree (PROP-024 `#SHIPPABLE-TREE-DEF`); the payload
+    /// is refused rather than published with ignored files.
+    #[error(transparent)]
+    GitSource(#[from] vibe_core::git_source::GitSourceError),
+
     #[error(
         "publish refused: scope violation — adapter for `{host}` is scoped to organization \
          `{expected_org}` but the request targeted `{attempted_org}`. The publish utility never \

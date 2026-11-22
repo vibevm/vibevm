@@ -55,6 +55,7 @@ libc.workspace = true
 winapi-util.workspace = true
 
 [dev-dependencies]
+vibe-core = { workspace = true, features = ["git-fixture"] }
 proptest.workspace = true
 vibe-spec = { workspace = true, features = ["test-support"] }
 # The two publication faults the trace REDs inject are compiled out of every

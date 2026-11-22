@@ -36240,6 +36240,33 @@
     },
     {
       "crate_name": "vibe-core",
+      "file": "crates/vibe-core/src/git_source.rs",
+      "item_kind": "mod",
+      "line": 21,
+      "symbol": "vibe_core::git_source",
+      "end_line": 21,
+      "fingerprint": "tok1:8197f033a6053a09d4fbb65918e5fd74c31072454155cf9e129d2a3fdfd3d4c7"
+    },
+    {
+      "crate_name": "vibe-core",
+      "file": "crates/vibe-core/src/git_source.rs",
+      "item_kind": "fn",
+      "line": 154,
+      "symbol": "vibe_core::git_source::GitSourceView::of",
+      "end_line": 224,
+      "fingerprint": "tok1:577d83396c7368c4797e6b8af9a121190d26d7fcab629784694d7fcb6bb5b61f"
+    },
+    {
+      "crate_name": "vibe-core",
+      "file": "crates/vibe-core/src/git_source/fixture.rs",
+      "item_kind": "mod",
+      "line": 15,
+      "symbol": "vibe_core::git_source::fixture",
+      "end_line": 15,
+      "fingerprint": "tok1:8197f033a6053a09d4fbb65918e5fd74c31072454155cf9e129d2a3fdfd3d4c7"
+    },
+    {
+      "crate_name": "vibe-core",
       "file": "crates/vibe-core/src/global_registry.rs",
       "item_kind": "mod",
       "line": 13,
@@ -49994,10 +50021,10 @@
       "crate_name": "vibe-index",
       "file": "crates/vibe-index/src/content_hash.rs",
       "item_kind": "fn",
-      "line": 58,
+      "line": 70,
       "symbol": "vibe_index::content_hash::compute_content_hash_with",
-      "end_line": 113,
-      "fingerprint": "tok1:a6160de324999f5aac39f8815f13453723b9ad9973137c5c6c337c373c264bc8"
+      "end_line": 130,
+      "fingerprint": "tok1:d45110ebc00a445c0967cea26b72456789498c40071d656366103e7d4df26593"
     },
     {
       "crate_name": "vibe-index",
@@ -50014,8 +50041,8 @@
       "item_kind": "enum",
       "line": 17,
       "symbol": "vibe_index::error::Error",
-      "end_line": 80,
-      "fingerprint": "tok1:2f99682f52ee11a069854d82a76763334d64c9c35d241ffef1982d05f13daaa5"
+      "end_line": 86,
+      "fingerprint": "tok1:a4522b18598e339b9e9fa5f2c1b5ac7346175890bedfd7e675db65018dfede0c"
     },
     {
       "crate_name": "vibe-index",
@@ -62731,8 +62758,8 @@
       "item_kind": "enum",
       "line": 119,
       "symbol": "vibe_publish::PublishError",
-      "end_line": 321,
-      "fingerprint": "tok1:a6d445d4770548e4f63b2ba7ca202b58b51c7a27b769b80bcecb6b714130d65c"
+      "end_line": 327,
+      "fingerprint": "tok1:1e6fbfb9e57e4342d5e73371c36f2fa0e466e839374525ab6d21a318b96e3360"
     },
     {
       "crate_name": "vibe-publish",
@@ -62747,9 +62774,9 @@
       "crate_name": "vibe-publish",
       "file": "crates/vibe-publish/src/lib.rs",
       "item_kind": "fn",
-      "line": 375,
+      "line": 381,
       "symbol": "vibe_publish::creator_for_url",
-      "end_line": 415,
+      "end_line": 421,
       "fingerprint": "tok1:1b99d763ca4a0486908416e6e088f79284113fc4cc1c58d897c87b57b2753f0d"
     },
     {
@@ -62765,9 +62792,9 @@
       "crate_name": "vibe-publish",
       "file": "crates/vibe-publish/src/lib.rs",
       "item_kind": "fn",
-      "line": 323,
+      "line": 329,
       "symbol": "vibe_publish::extract_host_segment",
-      "end_line": 373,
+      "end_line": 379,
       "fingerprint": "tok1:8fb1d5499f6a0e5edc6cc0395d1930972640dae2cf6558527553528b9503bdec"
     },
     {
@@ -62812,8 +62839,8 @@
       "item_kind": "fn",
       "line": 12,
       "symbol": "vibe_publish::git_publish::payload::copy_dir_controlled",
-      "end_line": 60,
-      "fingerprint": "tok1:28596c150a65c226ac405e89e748e85f684bfab80553cdc5469a3e2abc9bf87e"
+      "end_line": 69,
+      "fingerprint": "tok1:ac7e24a14742f6fdd0f5e39025234f14464637610d0829359638a235dec8b351"
     },
     {
       "crate_name": "vibe-publish",
@@ -63424,8 +63451,8 @@
       "item_kind": "enum",
       "line": 17,
       "symbol": "vibe_registry::error::RegistryError",
-      "end_line": 344,
-      "fingerprint": "tok1:da6bf72d308a9cd90a251c632f2ae0e77e97de08194da4fa87b3275eda8f93d2"
+      "end_line": 350,
+      "fingerprint": "tok1:950cbc045df61660d2a63ef9fc56c58aac486e9df860dc76bfc7540e9c2810a4"
     },
     {
       "crate_name": "vibe-registry",
@@ -66941,72 +66968,72 @@
       "crate_name": "vibe-registry",
       "file": "crates/vibe-registry/src/local_preview.rs",
       "item_kind": "fn",
-      "line": 113,
+      "line": 129,
       "symbol": "vibe_registry::local_preview::PreparedRetirementSource::recheck",
-      "end_line": 123,
-      "fingerprint": "tok1:b991b602a16235232cd5529ce0eb06af3c2f55ad28e6e22d20eb0ded193624dd"
+      "end_line": 142,
+      "fingerprint": "tok1:c9b63b3696fe98d4f0c11e4c4d2e27829c0520f3c2375a5777184e0971821fb3"
     },
     {
       "crate_name": "vibe-registry",
       "file": "crates/vibe-registry/src/local_preview.rs",
       "item_kind": "fn",
-      "line": 429,
+      "line": 466,
       "symbol": "vibe_registry::local_preview::VerifiedPayload::manifest_bytes",
-      "end_line": 437,
+      "end_line": 474,
       "fingerprint": "tok1:da7ebb16ee3c5ed4be447d33fc302ee8bf994caf5a0722ce0cbebb526221ede8"
     },
     {
       "crate_name": "vibe-registry",
       "file": "crates/vibe-registry/src/local_preview.rs",
       "item_kind": "fn",
-      "line": 438,
+      "line": 475,
       "symbol": "vibe_registry::local_preview::VerifiedPayload::recheck",
-      "end_line": 449,
+      "end_line": 486,
       "fingerprint": "tok1:4a55b756d6c961dd8352121491e25298d0ea38195b4dfe31e4833cdccec52b84"
     },
     {
       "crate_name": "vibe-registry",
       "file": "crates/vibe-registry/src/local_preview.rs",
       "item_kind": "fn",
-      "line": 130,
+      "line": 149,
       "symbol": "vibe_registry::local_preview::crate::LocalRegistry::prepare_exact_retirement_source",
-      "end_line": 204,
+      "end_line": 223,
       "fingerprint": "tok1:4eb8ee6cea026582c53c98e90856f18011fa65fbdfc34e73df6c2dce1cb60b77"
     },
     {
       "crate_name": "vibe-registry",
       "file": "crates/vibe-registry/src/local_preview.rs",
       "item_kind": "fn",
-      "line": 225,
+      "line": 244,
       "symbol": "vibe_registry::local_preview::observe_local_preview",
-      "end_line": 325,
+      "end_line": 344,
       "fingerprint": "tok1:2104b8801b82bbe08e3743d420f2b699b93eb993141c130bdb7d68a74e4e0750"
     },
     {
       "crate_name": "vibe-registry",
       "file": "crates/vibe-registry/src/local_preview.rs",
       "item_kind": "fn",
-      "line": 462,
+      "line": 499,
       "symbol": "vibe_registry::local_preview::same_local_version_owner",
-      "end_line": 471,
+      "end_line": 508,
       "fingerprint": "tok1:277682c861ae8d47244ae27e5c912dea96b1d40f8dcb2299de12a1d6a8c411be"
     },
     {
       "crate_name": "vibe-registry",
       "file": "crates/vibe-registry/src/local_preview.rs",
       "item_kind": "fn",
-      "line": 451,
+      "line": 488,
       "symbol": "vibe_registry::local_preview::verify_local_payload_url",
-      "end_line": 460,
+      "end_line": 497,
       "fingerprint": "tok1:3f71eb8a413b4378b88d298dc80027ba0a8d68b6c815b54e93a4ce1c93ada467"
     },
     {
       "crate_name": "vibe-registry",
       "file": "crates/vibe-registry/src/local_preview.rs",
       "item_kind": "fn",
-      "line": 473,
+      "line": 510,
       "symbol": "vibe_registry::local_preview::verify_pinned_payload",
-      "end_line": 491,
+      "end_line": 528,
       "fingerprint": "tok1:2efa35d7bde10dd46228ee3f25be987a8bb07d6c9e10925994270a660c29b00d"
     },
     {
@@ -67962,6 +67989,15 @@
       "symbol": "vibe_registry::shippable",
       "end_line": 7,
       "fingerprint": "tok1:8197f033a6053a09d4fbb65918e5fd74c31072454155cf9e129d2a3fdfd3d4c7"
+    },
+    {
+      "crate_name": "vibe-registry",
+      "file": "crates/vibe-registry/src/shippable.rs",
+      "item_kind": "fn",
+      "line": 32,
+      "symbol": "vibe_registry::shippable::shippable_entries",
+      "end_line": 49,
+      "fingerprint": "tok1:b07622481c0d3772ddfaacbdb133a72366f47200eebabd97a0dd0b8e00c0e529"
     },
     {
       "crate_name": "vibe-registry",
@@ -79138,8 +79174,8 @@
       "item_kind": "enum",
       "line": 16,
       "symbol": "vibe_workspace::errors::WorkspaceError",
-      "end_line": 408,
-      "fingerprint": "tok1:562a87e0425775f818de62b180b7d866536e44014d53c780494151e15b756e3b"
+      "end_line": 414,
+      "fingerprint": "tok1:140eae19d67fd26aa9a982593f7d2e3fd65cd5a81ff885dd2c1a296128236274"
     },
     {
       "crate_name": "vibe-workspace",
@@ -82628,9 +82664,9 @@
       "crate_name": "vibe-workspace",
       "file": "crates/vibe-workspace/src/vibedeps/derived.rs",
       "item_kind": "fn",
-      "line": 471,
+      "line": 481,
       "symbol": "vibe_workspace::vibedeps::derived::is_generated_boot_artifact",
-      "end_line": 483,
+      "end_line": 493,
       "fingerprint": "tok1:767364105f91a49726aa1e0a3c59f2208df84da6b9e9d70f98edbc9399505dc0"
     },
     {
@@ -82639,8 +82675,8 @@
       "item_kind": "fn",
       "line": 5,
       "symbol": "vibe_workspace::vibedeps::derived::materialise::materialise_with_spec_format_report",
-      "end_line": 156,
-      "fingerprint": "tok1:0639a9bb6ade61b82b32d1ef724d268e2c8ee11fb59bdc2292a4124abe49a71c"
+      "end_line": 157,
+      "fingerprint": "tok1:42572d3cb97dc0b42f3220641ba46fa23aab8cc2cd000b92083bc13a7a436398"
     },
     {
       "crate_name": "vibe-workspace",
@@ -82763,10 +82799,10 @@
       "crate_name": "vibe-workspace",
       "file": "crates/vibe-workspace/src/vibedeps/slot_diff.rs",
       "item_kind": "fn",
-      "line": 515,
+      "line": 519,
       "symbol": "vibe_workspace::vibedeps::slot_diff::collect_source_files",
-      "end_line": 566,
-      "fingerprint": "tok1:cbf82a3a1e071ba2721aef0685743b1d4c73f1f6741326c8d8a5e2116edeb68a"
+      "end_line": 577,
+      "fingerprint": "tok1:abfddeb42338ad7fb0620a5440491bdc5656f69747f942b4569754356f9c4f06"
     },
     {
       "crate_name": "vibe-workspace",
@@ -107083,6 +107119,30 @@
       "verb": "implements"
     },
     {
+      "file": "crates/vibe-core/src/git_source.rs",
+      "from_symbol": "vibe_core::git_source",
+      "line": 21,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-024#shippable-tree",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-core/src/git_source.rs",
+      "from_symbol": "vibe_core::git_source::GitSourceView::of",
+      "line": 165,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-024#SHIPPABLE-TREE-DEF",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-core/src/git_source/fixture.rs",
+      "from_symbol": "vibe_core::git_source::fixture",
+      "line": 15,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-024#shippable-tree",
+      "verb": "implements"
+    },
+    {
       "file": "crates/vibe-core/src/global_registry.rs",
       "from_symbol": "vibe_core::global_registry",
       "line": 13,
@@ -119488,7 +119548,15 @@
     {
       "file": "crates/vibe-index/src/content_hash.rs",
       "from_symbol": "vibe_index::content_hash::compute_content_hash_with",
-      "line": 66,
+      "line": 80,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-024#SHIPPABLE-TREE-DEF",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-index/src/content_hash.rs",
+      "from_symbol": "vibe_index::content_hash::compute_content_hash_with",
+      "line": 79,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#PROV-CONTENT-HASH",
       "verb": "implements"
@@ -131115,7 +131183,7 @@
     {
       "file": "crates/vibe-publish/src/lib.rs",
       "from_symbol": "vibe_publish::creator_for_url",
-      "line": 395,
+      "line": 401,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#PUB-ADAPTER-SELECTION",
       "verb": "implements"
@@ -131131,7 +131199,7 @@
     {
       "file": "crates/vibe-publish/src/lib.rs",
       "from_symbol": "vibe_publish::extract_host_segment",
-      "line": 342,
+      "line": 348,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#PUB-ADAPTER-SELECTION",
       "verb": "implements"
@@ -131171,7 +131239,15 @@
     {
       "file": "crates/vibe-publish/src/git_publish/payload.rs",
       "from_symbol": "vibe_publish::git_publish::payload::copy_dir_controlled",
-      "line": 12,
+      "line": 20,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-024#SHIPPABLE-TREE-DEF",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-publish/src/git_publish/payload.rs",
+      "from_symbol": "vibe_publish::git_publish::payload::copy_dir_controlled",
+      "line": 19,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#publish",
       "verb": "implements"
@@ -134868,7 +134944,7 @@
     {
       "file": "crates/vibe-registry/src/local_preview.rs",
       "from_symbol": "vibe_registry::local_preview::PreparedRetirementSource::recheck",
-      "line": 113,
+      "line": 129,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-069#DESCRIBE-EVALUATE-PLAN",
       "verb": "implements"
@@ -134876,7 +134952,7 @@
     {
       "file": "crates/vibe-registry/src/local_preview.rs",
       "from_symbol": "vibe_registry::local_preview::VerifiedPayload::manifest_bytes",
-      "line": 430,
+      "line": 467,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-069#DESCRIBE-EVALUATE-PLAN",
       "verb": "implements"
@@ -134884,7 +134960,7 @@
     {
       "file": "crates/vibe-registry/src/local_preview.rs",
       "from_symbol": "vibe_registry::local_preview::VerifiedPayload::recheck",
-      "line": 438,
+      "line": 475,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-069#DESCRIBE-EVALUATE-PLAN",
       "verb": "implements"
@@ -134892,7 +134968,7 @@
     {
       "file": "crates/vibe-registry/src/local_preview.rs",
       "from_symbol": "vibe_registry::local_preview::crate::LocalRegistry::prepare_exact_retirement_source",
-      "line": 130,
+      "line": 149,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-069#DESCRIBE-EVALUATE-PLAN",
       "verb": "implements"
@@ -134900,7 +134976,7 @@
     {
       "file": "crates/vibe-registry/src/local_preview.rs",
       "from_symbol": "vibe_registry::local_preview::observe_local_preview",
-      "line": 230,
+      "line": 249,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-069#DESCRIBE-EVALUATE-PLAN",
       "verb": "implements"
@@ -134908,7 +134984,7 @@
     {
       "file": "crates/vibe-registry/src/local_preview.rs",
       "from_symbol": "vibe_registry::local_preview::same_local_version_owner",
-      "line": 463,
+      "line": 500,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-069#DESCRIBE-EVALUATE-PLAN",
       "verb": "implements"
@@ -134916,7 +134992,7 @@
     {
       "file": "crates/vibe-registry/src/local_preview.rs",
       "from_symbol": "vibe_registry::local_preview::verify_local_payload_url",
-      "line": 453,
+      "line": 490,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-069#DESCRIBE-EVALUATE-PLAN",
       "verb": "implements"
@@ -134924,7 +135000,7 @@
     {
       "file": "crates/vibe-registry/src/local_preview.rs",
       "from_symbol": "vibe_registry::local_preview::verify_pinned_payload",
-      "line": 474,
+      "line": 511,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-069#DESCRIBE-EVALUATE-PLAN",
       "verb": "implements"
@@ -135775,6 +135851,14 @@
       "line": 7,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-024#shippable-tree",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-registry/src/shippable.rs",
+      "from_symbol": "vibe_registry::shippable::shippable_entries",
+      "line": 42,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-024#SHIPPABLE-TREE-DEF",
       "verb": "implements"
     },
     {
@@ -149201,7 +149285,7 @@
     {
       "file": "crates/vibe-workspace/src/vibedeps/derived.rs",
       "from_symbol": "vibe_workspace::vibedeps::derived::is_generated_boot_artifact",
-      "line": 475,
+      "line": 485,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-035#FORMAT-SIMPLE",
       "verb": "implements"
@@ -149321,7 +149405,7 @@
     {
       "file": "crates/vibe-workspace/src/vibedeps/slot_diff.rs",
       "from_symbol": "vibe_workspace::vibedeps::slot_diff::collect_source_files",
-      "line": 515,
+      "line": 519,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-035#FORMAT-SIMPLE",
       "verb": "implements"
@@ -157796,7 +157880,7 @@
     },
     {
       "anchor": "root",
-      "content_hash": "sha256:0eb6c4d97f340aaf5683339cedf82f9877027e28bae44b88042bde9c0bbc3bd0",
+      "content_hash": "sha256:92f6c7e32b0ad82d231deae3807258f7ff83c68718572ddcb559bcbb81e69dba",
       "doc_path": "common/PROP-024",
       "file": "vibevm/vibespecs/common/PROP-024-code-bearing-packages.xml",
       "heading": "PROP-024 — Code-bearing packages (a package is a project)",
@@ -157967,7 +158051,7 @@
     },
     {
       "anchor": "decisions",
-      "content_hash": "sha256:6cffe417c8f5b3f9b766c5231b556c43c682ff28848105dbb18a20bf272f29da",
+      "content_hash": "sha256:f94c99fa73fa066087937322b6050b37d16a8be03ace5db051ce46e7115e6378",
       "doc_path": "common/PROP-024",
       "file": "vibevm/vibespecs/common/PROP-024-code-bearing-packages.xml",
       "heading": "2. Decisions",
@@ -158068,7 +158152,7 @@
     },
     {
       "anchor": "shippable-tree",
-      "content_hash": "sha256:1c81f1c952b5f74e4032d598e3cb06483633306fe03ce42984b1add23fe8c239",
+      "content_hash": "sha256:5ec21362cba4d77f2fd81d077c32daecca10c3a493bf936364629aa3e02781a7",
       "doc_path": "common/PROP-024",
       "file": "vibevm/vibespecs/common/PROP-024-code-bearing-packages.xml",
       "heading": "2.2 The shippable tree excludes build output",
@@ -158088,10 +158172,10 @@
     },
     {
       "anchor": "SHIPPABLE-TREE-DEF",
-      "content_hash": "sha256:3ea33bd604409008c5286568faef49a294e60370189dfc4ac22e9543af453f1d",
+      "content_hash": "sha256:5344f3aa4cd20a34c0e7348968ac3337fc119ad3f3ac8ae48131107765289356",
       "doc_path": "common/PROP-024",
       "file": "vibevm/vibespecs/common/PROP-024-code-bearing-packages.xml",
-      "heading": "**Decision.** A package's **shippable tree** is its directory minus a\nbuild-output denylist: <status stage=\"spec\" state=\"done\" action=\"continue\" actionstage=\"doc\" audience=\"author\"/>",
+      "heading": "**Decision.** A package's **shippable tree** is its directory minus a\nbuild-output denylist. When that directory lies inside a Git worktree, the\ndirectory is first narrowed to the files Git would version there — tracked\nfiles plus untracked files no ignore rule matches — so files Git ignores\nnever enter a local source's identity, store copy or slot. The denylist: <status stage=\"spec\" state=\"done\" action=\"continue\" actionstage=\"doc\" audience=\"author\"/>",
       "line": 107,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-024#SHIPPABLE-TREE-DEF"
     },
@@ -158101,7 +158185,7 @@
       "doc_path": "common/PROP-024",
       "file": "vibevm/vibespecs/common/PROP-024-code-bearing-packages.xml",
       "heading": "plus any glob listed in an optional `.vibeignore` at the package root. @status:spec/done",
-      "line": 111,
+      "line": 114,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-024#VIBEIGNORE-EXTENDS"
     },
     {
@@ -158110,8 +158194,62 @@
       "doc_path": "common/PROP-024",
       "file": "vibevm/vibespecs/common/PROP-024-code-bearing-packages.xml",
       "heading": "The `content_hash` (PROP-002 §2.1), the snapshot copy (PROP-022 §2.2), and the\n  verbatim materialised slot (PROP-009 §2.1) all operate over the **shippable\n  tree**, never the raw directory. @status:spec/done",
-      "line": 112,
+      "line": 115,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-024#SHIPPABLE-CONSUMERS"
+    },
+    {
+      "anchor": "GIT-VIEW-ABSENT",
+      "content_hash": "sha256:e76cfcca379b44dc7d2623d5789019f8e3ddd7983dc739715dd32c49f3c3e056",
+      "doc_path": "common/PROP-024",
+      "file": "vibevm/vibespecs/common/PROP-024-code-bearing-packages.xml",
+      "heading": "**Where Git has no say, the walk is plain.** A directory with no\n  repository marker in it or above it, a host with no `git` executable, and a\n  directory Git ignores as a whole (a store or cache entry below an ignored\n  directory) have no Git view: the shippable tree is the directory minus the\n  denylist. @status:spec/done",
+      "line": 120,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-024#GIT-VIEW-ABSENT"
+    },
+    {
+      "anchor": "GIT-VIEW-FAILURE-REFUSES",
+      "content_hash": "sha256:ea18776f27d479cc1364660400cf4e7172c5c882f8d8db9715e717c3fd740318",
+      "doc_path": "common/PROP-024",
+      "file": "vibevm/vibespecs/common/PROP-024-code-bearing-packages.xml",
+      "heading": "**A failing `git` refuses, never falls back.** When the directory lies\n  inside a worktree and `git` cannot be run there or cannot list what it\n  versions (an unsafe-ownership refusal, a broken repository), the hash, copy or\n  slot is refused with an error. A plain walk in its place would count ignored\n  files and record an identity no other checkout of the same commit has. @status:spec/done",
+      "line": 125,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-024#GIT-VIEW-FAILURE-REFUSES"
+    },
+    {
+      "anchor": "GIT-VIEW-REGULAR-FILES",
+      "content_hash": "sha256:ff49cd5bcb32a7efd602540f529c2596ba5ced17b8e2a3f6b7252ecb3b5b74fd",
+      "doc_path": "common/PROP-024",
+      "file": "vibevm/vibespecs/common/PROP-024-code-bearing-packages.xml",
+      "heading": "**The view admits regular files present on disk, and nothing else.**\n  Symlinks, submodules and nested repositories (Git lists a link or a\n  directory, not files), and tracked files deleted from the worktree are not\n  part of the shippable tree. A directory holding no admitted file is neither\n  walked nor copied, so an empty directory does not ship. @status:spec/done",
+      "line": 130,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-024#GIT-VIEW-REGULAR-FILES"
+    },
+    {
+      "anchor": "GIT-VIEW-NAME-FOLD",
+      "content_hash": "sha256:a14d4fb0843a68eeeb6d4e2c8c9a775ef0ecd088a77fdf8e12683608ad6bfb8c",
+      "doc_path": "common/PROP-024",
+      "file": "vibevm/vibespecs/common/PROP-024-code-bearing-packages.xml",
+      "heading": "**Names compare the way the repository says Git and the filesystem\n  do.** Git prints a name as its index records it; a walker sees the spelling\n  on disk. Under `core.ignorecase` names compare case-folded, and under\n  `core.precomposeunicode` (on by default on macOS) both sides compose to NFC,\n  so a case-only rename or a decomposed name on disk never drops a file. @status:spec/done",
+      "line": 135,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-024#GIT-VIEW-NAME-FOLD"
+    },
+    {
+      "anchor": "GIT-VIEW-COPIES-PLAIN",
+      "content_hash": "sha256:88452438f65f08fda27dcc08bdff253b3d2fde1122811e789d6ee2945fca52a1",
+      "doc_path": "common/PROP-024",
+      "file": "vibevm/vibespecs/common/PROP-024-code-bearing-packages.xml",
+      "heading": "**A copy is hashed as a copy.** A tree that already is a copy of a\n  shippable tree — a store entry, a cached checkout, a materialised slot, a\n  frozen retirement source — holds exactly its source's admitted files and is\n  hashed with the denylist alone. Narrowing it again would consult whatever\n  worktree it sits in, where the package's own `.gitignore` can match a file\n  its source tracked. @status:spec/done",
+      "line": 140,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-024#GIT-VIEW-COPIES-PLAIN"
+    },
+    {
+      "anchor": "GIT-VIEW-PUBLISH",
+      "content_hash": "sha256:f432cbea3be1ab29111df02453710193c40cb03a336cef0291d125ddb9b6c2a0",
+      "doc_path": "common/PROP-024",
+      "file": "vibevm/vibespecs/common/PROP-024-code-bearing-packages.xml",
+      "heading": "**Publishing copies through the same view.** A publish payload taken\n  from a source inside a worktree holds only the files Git versions there, so a\n  consumer's fetched tree hashes as the `content_hash` the index received from\n  that source. @status:spec/done",
+      "line": 146,
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-024#GIT-VIEW-PUBLISH"
     },
     {
       "anchor": "WHY-SOURCE-IDENTITY",
@@ -158119,7 +158257,7 @@
       "doc_path": "common/PROP-024",
       "file": "vibevm/vibespecs/common/PROP-024-code-bearing-packages.xml",
       "heading": "**Why.** Identity is the *source*, never build artifacts: build output is\n  non-deterministic (timestamps, host paths, incremental state) and may be\n  gigabytes — hashing or copying it would make identity unstable and\n  materialisation ruinous, the exact failure PROP-022 §1.1 names for \"big in file\n  count\". @status:spec/done",
-      "line": 117,
+      "line": 152,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-024#WHY-SOURCE-IDENTITY"
     },
     {
@@ -158128,7 +158266,7 @@
       "doc_path": "common/PROP-024",
       "file": "vibevm/vibespecs/common/PROP-024-code-bearing-packages.xml",
       "heading": "A package's source — what its author commits — is precisely what is\n  hashed, copied, and vendored. @status:spec/done",
-      "line": 122,
+      "line": 157,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-024#SOURCE-IS-SHIPPED"
     },
     {
@@ -158137,7 +158275,7 @@
       "doc_path": "common/PROP-024",
       "file": "vibevm/vibespecs/common/PROP-024-code-bearing-packages.xml",
       "heading": "For a reference-backed bridge, the package source is only its\n  maintainer-authored manifest and adapters. A declared external embedded tree\n  is independently authenticated and cached; it is not part of the package\n  shippable tree or package `content_hash`, and it is never published as if the\n  bridge maintainer authored it. @status:impl/done",
-      "line": 124,
+      "line": 159,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-024#REFERENCE-BRIDGE-SOURCE-BOUNDARY"
     },
     {
@@ -158146,7 +158284,7 @@
       "doc_path": "common/PROP-024",
       "file": "vibevm/vibespecs/common/PROP-024-code-bearing-packages.xml",
       "heading": "**\"Verbatim\" is preserved for the source.** PROP-009 §2.1 / `VIBEVM-SPEC.md`\n  §13.1 guarantee no path rewriting and no per-file write list — a human reading\n  the package directory sees exactly what materialises. @status:spec/done",
-      "line": 131,
+      "line": 166,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-024#VERBATIM-PRESERVED"
     },
     {
@@ -158155,7 +158293,7 @@
       "doc_path": "common/PROP-024",
       "file": "vibevm/vibespecs/common/PROP-024-code-bearing-packages.xml",
       "heading": "That guarantee holds unchanged for the shippable tree: build output was never\n  part of the authored tree (it is gitignored in the package's own repository\n  too). @status:spec/done",
-      "line": 134,
+      "line": 169,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-024#VERBATIM-HOLDS-SHIPPABLE"
     },
     {
@@ -158164,7 +158302,7 @@
       "doc_path": "common/PROP-024",
       "file": "vibevm/vibespecs/common/PROP-024-code-bearing-packages.xml",
       "heading": "The denylist formalises \"what was never source\", it does not introduce\n  selection. @status:spec/done",
-      "line": 137,
+      "line": 172,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-024#DENYLIST-NOT-SELECTION"
     },
     {
@@ -158173,7 +158311,7 @@
       "doc_path": "common/PROP-024",
       "file": "vibevm/vibespecs/common/PROP-024-code-bearing-packages.xml",
       "heading": "**Considered and rejected:** **hashing and copying build output too** — rejected: non-deterministic and potentially gigabytes, the file-count/byte-count failure PROP-022 §1.1 exists to avoid (`##REJ-HASH-BUILD-OUTPUT`); **a per-file `[ship]` / `[files]` allow-list in the manifest** — rejected: it resurrects the per-file write list PROP-009 §2.6 retired, and a denylist keeps *\"what ships\" == \"the source\"*, preserving the verbatim guarantee (`##REJ-ALLOW-LIST`, `##VERBATIM-PRESERVED`). @status:spec/done",
-      "line": 139,
+      "line": 174,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-024#shippable-rejected"
     },
     {
@@ -158182,7 +158320,7 @@
       "doc_path": "common/PROP-024",
       "file": "vibevm/vibespecs/common/PROP-024-code-bearing-packages.xml",
       "heading": "**Revisit when:** a package ships in a language whose build output the four-name denylist does not cover and `.vibeignore` alone cannot carry — Python (`__pycache__/`, `.venv/`), JVM (`build/`), Go (`vendor/`) are the near candidates. **The fired state is mechanically observable and already asserted:** a package whose `content_hash` differs between a clean and a built checkout, which is exactly what `##ACC-HASH-EXCLUDES` tests. Observation point: that acceptance check, run over the published package set. @status:spec/done",
-      "line": 140,
+      "line": 175,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-024#shippable-revisit"
     },
     {
@@ -158191,7 +158329,7 @@
       "doc_path": "common/PROP-024",
       "file": "vibevm/vibespecs/common/PROP-024-code-bearing-packages.xml",
       "heading": "2.3 Code materialises, then builds consumer-side into a gitignored target",
-      "line": 143,
+      "line": 178,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-024#build",
       "kind": "req",
       "revision": 1
@@ -158202,7 +158340,7 @@
       "doc_path": "common/PROP-024",
       "file": "vibevm/vibespecs/common/PROP-024-code-bearing-packages.xml",
       "heading": "`req r1` @status:spec/done",
-      "line": 144,
+      "line": 179,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-024#req-build"
     },
     {
@@ -158211,7 +158349,7 @@
       "doc_path": "common/PROP-024",
       "file": "vibevm/vibespecs/common/PROP-024-code-bearing-packages.xml",
       "heading": "**Decision.** `vibe install` materialises the shippable tree — including code —\n  into the `vibedeps/` slot, as today. @status:spec/done",
-      "line": 146,
+      "line": 181,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-024#MATERIALISE-AS-TODAY"
     },
     {
@@ -158220,7 +158358,7 @@
       "doc_path": "common/PROP-024",
       "file": "vibevm/vibespecs/common/PROP-024-code-bearing-packages.xml",
       "heading": "**Original hook-placement rule, retained as history.** Turning source into a runnable tool is consumer-side and build output never enters the source hash. Its stronger “never write inside the committed slot” clause is superseded by `##BUILD-MECHANISM-SUCCESSOR`: provider-root `target/` is legal because the shippable tree and slot record own neither it nor its bytes. @status:spec/done",
-      "line": 148,
+      "line": 183,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-024#BUILD-CONSUMER-SIDE"
     },
     {
@@ -158229,7 +158367,7 @@
       "doc_path": "common/PROP-024",
       "file": "vibevm/vibespecs/common/PROP-024-code-bearing-packages.xml",
       "heading": "The original generic path remains available: a code-bearing tool package may build via a **`post-install` hook**\n  ([PROP-020](../modules/vibe-workspace/PROP-020-install-hooks.xml)) whose build\n  output is directed to a **gitignored** location (e.g.\n  `<project-root>/.vibe/<pkg>-target/`), never the slot. To let a hook address\n  that location, the hook runner gains a `VIBE_PROJECT_ROOT` environment\n  variable (the workspace absolute root) alongside the existing\n  `VIBE_PACKAGE_DIR` (the slot) — a small [PROP-020 §2.2](../modules/vibe-workspace/PROP-020-install-hooks.xml#script-selection)\n  addition. @status:spec/done",
-      "line": 151,
+      "line": 186,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-024#HOOK-BUILD"
     },
     {
@@ -158238,7 +158376,7 @@
       "doc_path": "common/PROP-024",
       "file": "vibevm/vibespecs/common/PROP-024-code-bearing-packages.xml",
       "heading": "A **language-native consumer** (vibevm itself is a Rust consumer) MAY instead\n  reference the shipped crates directly through its own toolchain (§2.4) and\n  skip the build hook entirely — the hook is the path for a consumer that wants\n  a ready binary without driving the language's build system itself. @status:spec/done",
-      "line": 159,
+      "line": 194,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-024#NATIVE-CONSUMER-SKIP"
     },
     {
@@ -158247,7 +158385,7 @@
       "doc_path": "common/PROP-024",
       "file": "vibevm/vibespecs/common/PROP-024-code-bearing-packages.xml",
       "heading": "**Lifecycle successor.** Declared build targets are selected through the shared mechanism registry and recorded artifact DAG. The builtin `build:cargo` provider runs under the exact package/provider root, consumes `cargo metadata` plus `cargo build --message-format=json-render-diagnostics`, selects only the declared contained compiler artifact from Cargo's messages, and persists provider/config/platform/toolchain/output identity in the shared artifact record. Native extensions and compatibility-lowered `[[binary]]` targets may therefore build into the provider's own gitignored `target/`; that output remains outside the shippable tree and `.vibe-slot.toml` footprint. Package-supplied native Build and Package providers now use separate versioned four-operation wires and safe ABI-1 macros, one all-role prepared carriage, engine-owned staging/records and exact provider-fresh rollback; a real installed package with two ABI-isolated cdylibs displaces both Cargo and static-file defaults, writes the build A2 record and consumes it through Package with no builtin fallback. Evidence: `a22da2a3`, `1baac652`, `332f8e28`, `06f8f465`, then M-007 `00cabac8`, `93df9d28`, `e9388559`, `2193e6e7`, `fe0eb9df`, `0ca2b781`, `123ac504`, `68ce9078`, `55cfbf94`. This lifecycle execution does not redefine dependency materialisation: bare `vibe install` still materialises package content and is not a build/package mechanism invocation. @status:impl/done",
-      "line": 163,
+      "line": 198,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-024#BUILD-MECHANISM-SUCCESSOR"
     },
     {
@@ -158256,7 +158394,7 @@
       "doc_path": "common/PROP-024",
       "file": "vibevm/vibespecs/common/PROP-024-code-bearing-packages.xml",
       "heading": "The record-aware reset successor does not own build output: whether a hook writes outside the slot or Cargo writes the provider-root `target/` inside it, the path is outside `.vibe-slot.toml`. Same-slot refresh preserves it and unchanged source mtimes let the build system remain incremental; a version change selects a different current slot. Hook-created unrecorded state retains PROP-020's explicit idempotence boundary. @status:impl/done",
-      "line": 165,
+      "line": 200,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-024#HOOK-RESET-UNAFFECTED"
     },
     {
@@ -158265,7 +158403,7 @@
       "doc_path": "common/PROP-024",
       "file": "vibevm/vibespecs/common/PROP-024-code-bearing-packages.xml",
       "heading": "2.4 Consuming shipped code — external-path-dep, no nested workspace",
-      "line": 167,
+      "line": 202,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-024#consume",
       "kind": "req",
       "revision": 1
@@ -158276,7 +158414,7 @@
       "doc_path": "common/PROP-024",
       "file": "vibevm/vibespecs/common/PROP-024-code-bearing-packages.xml",
       "heading": "`req r1` @status:spec/done",
-      "line": 168,
+      "line": 203,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-024#req-consume"
     },
     {
@@ -158285,7 +158423,7 @@
       "doc_path": "common/PROP-024",
       "file": "vibevm/vibespecs/common/PROP-024-code-bearing-packages.xml",
       "heading": "**Decision.** A code-bearing package carries its **own** workspace manifest\n  (for Rust, a root `Cargo.toml` with `[workspace]`) — it is a standalone,\n  independently-buildable project. <status stage=\"spec\" state=\"done\" action=\"continue\" actionstage=\"doc\" audience=\"author\"/>",
-      "line": 170,
+      "line": 205,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-024#OWN-WORKSPACE"
     },
     {
@@ -158294,7 +158432,7 @@
       "doc_path": "common/PROP-024",
       "file": "vibevm/vibespecs/common/PROP-024-code-bearing-packages.xml",
       "heading": "A language-native consumer that needs a shipped\n  crate — a proc-macro that compiles *into* the consumer's own code (the\n  `specmark` case), or a binary it invokes (the `conform`/`specmap` case) —\n  references it **by path into the materialised slot**: <status stage=\"spec\" state=\"done\" action=\"continue\" actionstage=\"doc\" audience=\"user\"/>",
-      "line": 173,
+      "line": 208,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-024#PATH-DEP-LAW"
     },
     {
@@ -158303,7 +158441,7 @@
       "doc_path": "common/PROP-024",
       "file": "vibevm/vibespecs/common/PROP-024-code-bearing-packages.xml",
       "heading": "The consumer **excludes** `vibevm/vibedeps/` (and, for a self-hosting repo, the\n  in-repo `vibevm/vibepacks/` source) from its `[workspace]`, so the slot's crates\n  belong to the *package's* workspace, not the consumer's — Cargo forbids a\n  directory living in two workspaces, and this is the standard resolution for a\n  repo that contains a sub-project with its own workspace. <status stage=\"spec\" state=\"done\" action=\"continue\" actionstage=\"doc\" audience=\"user\"/>",
-      "line": 185,
+      "line": 220,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-024#WORKSPACE-EXCLUDE"
     },
     {
@@ -158312,7 +158450,7 @@
       "doc_path": "common/PROP-024",
       "file": "vibevm/vibespecs/common/PROP-024-code-bearing-packages.xml",
       "heading": "The slot path is version-qualified; pinning it once in\n  `[workspace.dependencies]` means a package version bump touches a single line. @status:spec/done",
-      "line": 190,
+      "line": 225,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-024#PIN-ONCE"
     },
     {
@@ -158321,7 +158459,7 @@
       "doc_path": "common/PROP-024",
       "file": "vibevm/vibespecs/common/PROP-024-code-bearing-packages.xml",
       "heading": "A binary tool (`conform`, `specmap`) is run from the package's workspace —\n`cargo run --manifest-path vibedeps/<slot>/Cargo.toml --bin conform -- …` with\n`CARGO_TARGET_DIR` pointed at a gitignored dir (§2.3) — so building it pollutes\nneither the slot nor the consumer's own `target/`. @status:spec/done",
-      "line": 193,
+      "line": 228,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-024#BINARY-RUN-FORM"
     },
     {
@@ -158330,7 +158468,7 @@
       "doc_path": "common/PROP-024",
       "file": "vibevm/vibespecs/common/PROP-024-code-bearing-packages.xml",
       "heading": "**Spike before the irreversible move.** Cross-workspace path-deps and the\n  `exclude` topology are validated empirically on the target host (Windows, where\n  `canonicalize()` adds a `\\\\?\\` prefix and Cargo path handling has sharp edges)\n  *before* any crate is physically relocated. @status:spec/done",
-      "line": 198,
+      "line": 233,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-024#SPIKE-FIRST"
     },
     {
@@ -158339,7 +158477,7 @@
       "doc_path": "common/PROP-024",
       "file": "vibevm/vibespecs/common/PROP-024-code-bearing-packages.xml",
       "heading": "The fallback, if cross-workspace path-deps prove unworkable on a host, is §4's\n  rejected-but-retained alternative (the consumer adds the slot crates as its\n  own workspace members) — chosen only on evidence. @status:spec/done",
-      "line": 202,
+      "line": 237,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-024#SPIKE-FALLBACK"
     },
     {
@@ -158348,7 +158486,7 @@
       "doc_path": "common/PROP-024",
       "file": "vibevm/vibespecs/common/PROP-024-code-bearing-packages.xml",
       "heading": "**Why:** an external constraint, not a preference — *\"Cargo forbids a directory living in two workspaces, and this is the standard resolution for a repo that contains a sub-project with its own workspace\"* (`##WORKSPACE-EXCLUDE`). Giving the package its own workspace is what makes it *\"a standalone, independently-buildable project\"* (`##OWN-WORKSPACE`) and keeps a version bump to one pinned line (`##PIN-ONCE`). @status:spec/done",
-      "line": 205,
+      "line": 240,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-024#own-workspace-why"
     },
     {
@@ -158357,7 +158495,7 @@
       "doc_path": "common/PROP-024",
       "file": "vibevm/vibespecs/common/PROP-024-code-bearing-packages.xml",
       "heading": "**Considered and rejected:** **the consumer adding the slot crates as its own workspace members** (no package workspace, no cross-workspace path-dep) — *considered*, and rejected as the **primary** model because it denies the package standalone-buildability and couples the consumer's workspace membership to generated `vibedeps/` state (`##REJ-CONSUMER-MEMBERS`). **Retained, not discarded**: it is the §2.4 fallback, *\"chosen only on evidence\"* (`##SPIKE-FALLBACK`). @status:spec/done",
-      "line": 206,
+      "line": 241,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-024#own-workspace-rejected"
     },
     {
@@ -158366,7 +158504,7 @@
       "doc_path": "common/PROP-024",
       "file": "vibevm/vibespecs/common/PROP-024-code-bearing-packages.xml",
       "heading": "**Revisit when:** cross-workspace path-deps prove unworkable on a supported host — the condition `##SPIKE-FALLBACK` already names, here given its observation point: a clean-checkout `cargo build` failing to resolve `vibedeps/<slot>/crates/<crate>` on any of the three platforms of PROP-000 §11 `##PLATFORMS-TRIO`, Windows first (`##SPIKE-FIRST`). The fired state has a landing place already specified, so reopening is a switch, not a redesign. @status:spec/done",
-      "line": 207,
+      "line": 242,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-024#own-workspace-revisit"
     },
     {
@@ -158375,7 +158513,7 @@
       "doc_path": "common/PROP-024",
       "file": "vibevm/vibespecs/common/PROP-024-code-bearing-packages.xml",
       "heading": "2.5 Self-hosting bootstrap — the toolchain is vendored",
-      "line": 210,
+      "line": 245,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-024#bootstrap",
       "kind": "req",
       "revision": 1
@@ -158386,7 +158524,7 @@
       "doc_path": "common/PROP-024",
       "file": "vibevm/vibespecs/common/PROP-024-code-bearing-packages.xml",
       "heading": "`req r1` @status:spec/done",
-      "line": 211,
+      "line": 246,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-024#req-bootstrap"
     },
     {
@@ -158395,7 +158533,7 @@
       "doc_path": "common/PROP-024",
       "file": "vibevm/vibespecs/common/PROP-024-code-bearing-packages.xml",
       "heading": "**Decision.** vibevm consumes its own discipline toolchain from the **committed**\n  `vibedeps/` slot. @status:spec/done",
-      "line": 213,
+      "line": 248,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-024#SELF-HOST-VENDORED"
     },
     {
@@ -158404,7 +158542,7 @@
       "doc_path": "common/PROP-024",
       "file": "vibevm/vibespecs/common/PROP-024-code-bearing-packages.xml",
       "heading": "Because `vibedeps/` is committed (PROP-009 §2.1), a fresh clone\n  builds from a clean checkout **with no prior `vibe install`** — the path-dep\n  target (`vibevm/vibedeps/org.vibevm.ai-native.rust-ai-native-lang/1.0.0/crates/vendor/core-ai-native-specmark`, …) already exists\n  in the tree. @status:spec/done",
-      "line": 215,
+      "line": 250,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-024#CLEAN-CLONE-BUILDS"
     },
     {
@@ -158413,7 +158551,7 @@
       "doc_path": "common/PROP-024",
       "file": "vibevm/vibespecs/common/PROP-024-code-bearing-packages.xml",
       "heading": "There is no chicken-and-egg: the toolchain a build needs is vendored\n  beside the code that needs it. @status:spec/done",
-      "line": 219,
+      "line": 254,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-024#NO-CHICKEN-EGG"
     },
     {
@@ -158422,7 +158560,7 @@
       "doc_path": "common/PROP-024",
       "file": "vibevm/vibespecs/common/PROP-024-code-bearing-packages.xml",
       "heading": "**Why:** committing the slot is what makes a fresh clone build *\"from a clean checkout with no prior `vibe install`\"* — the path-dep target already exists in the tree (`##CLEAN-CLONE-BUILDS`), so there is no chicken-and-egg between the toolchain a build needs and the build that would fetch it (`##NO-CHICKEN-EGG`). Acceptance already asserts it: `##ACC-CLEAN-CLONE`. @status:spec/done",
-      "line": 221,
+      "line": 256,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-024#bootstrap-why"
     },
     {
@@ -158431,7 +158569,7 @@
       "doc_path": "common/PROP-024",
       "file": "vibevm/vibespecs/common/PROP-024-code-bearing-packages.xml",
       "heading": "**Considered and rejected:** **`materialization = \"in-place\"` for the tool packages** — rejected: `in-place` slots are `.gitignore`d and unversioned (PROP-022 §2.4/§2.7), and the toolchain must be vendored and versioned so a clone is buildable offline (`##REJ-IN-PLACE`). **Publishing the tool crates to crates.io and depending on the published versions** — **deferred, not rejected**: *\"the installed package is the distribution\"*, and crates.io publication is *\"an optional later convenience for non-vibe Rust consumers, not a requirement of this model\"* (`##REJ-CRATES-IO`). @status:spec/done",
-      "line": 222,
+      "line": 257,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-024#bootstrap-rejected"
     },
     {
@@ -158440,7 +158578,7 @@
       "doc_path": "common/PROP-024",
       "file": "vibevm/vibespecs/common/PROP-024-code-bearing-packages.xml",
       "heading": "**Revisit when:** the committed slot's cost outgrows its guarantee — `git count-objects -vH` and the slot's on-disk size showing a clean clone expensive enough to outweigh the offline-buildability it buys (numeric threshold unset — owner 2026-08-01; event-shaped until set) — **or** the deferred demand arrives: a Rust consumer outside the vibe ecosystem needs `conform` / `specmap` without installing a vibe package, recorded in the `F-NNN` findings ledger so the signal has a place to be observed (`##REJ-CRATES-IO`). @status:spec/done",
-      "line": 223,
+      "line": 258,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-024#bootstrap-revisit"
     },
     {
@@ -158449,7 +158587,7 @@
       "doc_path": "common/PROP-024",
       "file": "vibevm/vibespecs/common/PROP-024-code-bearing-packages.xml",
       "heading": "The development loop stays ergonomic: editing the in-repo package source under\n`vibevm/vibepacks/org.vibevm.ai-native/rust-ai-native/…` re-materialises the slot automatically on\nthe next `vibe install` (PROP-011 §2.6 — in-workspace `file://` sources are\nmutable), so the consumed `vibedeps/` copy tracks the edited source without a\nmanual `rm -rf`. @status:spec/done",
-      "line": 225,
+      "line": 260,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-024#DEV-LOOP-MUTABLE"
     },
     {
@@ -158458,7 +158596,7 @@
       "doc_path": "common/PROP-024",
       "file": "vibevm/vibespecs/common/PROP-024-code-bearing-packages.xml",
       "heading": "2.6 Placement follows the layer model; the engine split is a follow-up",
-      "line": 231,
+      "line": 266,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-024#placement",
       "kind": "req",
       "revision": 1
@@ -158469,7 +158607,7 @@
       "doc_path": "common/PROP-024",
       "file": "vibevm/vibespecs/common/PROP-024-code-bearing-packages.xml",
       "heading": "`req r1` @status:spec/done",
-      "line": 232,
+      "line": 267,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-024#req-placement"
     },
     {
@@ -158478,7 +158616,7 @@
       "doc_path": "common/PROP-024",
       "file": "vibevm/vibespecs/common/PROP-024-code-bearing-packages.xml",
       "heading": "**Decision.** The discipline's tools are code and obey the four-layer model:\nL4 (implemented checkers) ships in the package whose language they check. @status:spec/done",
-      "line": 233,
+      "line": 268,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-024#PLACEMENT-LAW"
     },
     {
@@ -158487,7 +158625,7 @@
       "doc_path": "common/PROP-024",
       "file": "vibevm/vibespecs/common/PROP-024-code-bearing-packages.xml",
       "heading": "For **this pass**, the **entire Rust discipline toolchain** — the conform\n  engine (`conform-core`), its Rust frontend (`conform-frontend-rust`), the\n  Rust traceability macros (`specmark`, `specmark-grammar`), the traceability\n  engine (`specmap-core`), and the designated audit crate (`env-audit`) — ships\n  in `stack:org.vibevm.ai-native/rust-ai-native-lang`. Its centre of gravity is Rust, and\n  shipping the toolchain whole avoids carving language-neutral cores out under\n  time pressure. @status:spec/done",
-      "line": 236,
+      "line": 271,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-024#THIS-PASS-WHOLE-TOOLCHAIN"
     },
     {
@@ -158496,7 +158634,7 @@
       "doc_path": "common/PROP-024",
       "file": "vibevm/vibespecs/common/PROP-024-code-bearing-packages.xml",
       "heading": "**The condition fired.** `flow:org.vibevm.ai-native/core-ai-native` was to stay\n  **prompt-only** (manifesto, card format, scaffold catalog, RAID, appendix) until a\n  second language actually needed the shared engine. The TypeScript pilot shipped, so\n  core-ai-native now **authors the neutral engines** (conform / specmap / specmark / mcp\n  cores), which each `-lang` and `-mcp` package vendors byte-identically. @status:impl/done",
-      "line": 243,
+      "line": 278,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-024#CORE-STAYS-PROMPT-ONLY"
     },
     {
@@ -158505,7 +158643,7 @@
       "doc_path": "common/PROP-024",
       "file": "vibevm/vibespecs/common/PROP-024-code-bearing-packages.xml",
       "heading": "**Deferred (documented):** the language-neutral conform engine (`conform-core`)\n  is a genuine L1 artifact — a future `conform-frontend-typescript` would reuse\n  it unchanged. Extracting `conform-core` up into `discipline-core` is a clean\n  follow-up, taken when the first non-Rust pilot needs it (YAGNI until then).\n  Likewise the neutral half of `specmap-core` (markdown parse, index, ledger,\n  test-gate) versus its Rust `rscan` frontend. The end state is symmetric; the\n  ordering is driven by real second-language demand, not built speculatively.\n  **Executed** — the TypeScript pilot was that demand, and the neutral halves now live\n  in core-ai-native, vendored into each family by `cargo xtask sync-engines`. @status:impl/done",
-      "line": 248,
+      "line": 283,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-024#DEFERRED-ENGINE-SPLIT"
     },
     {
@@ -158514,7 +158652,7 @@
       "doc_path": "common/PROP-024",
       "file": "vibevm/vibespecs/common/PROP-024-code-bearing-packages.xml",
       "heading": "**Why:** the toolchain's *\"centre of gravity is Rust, and shipping the toolchain whole avoids carving language-neutral cores out under time pressure\"* (`##THIS-PASS-WHOLE-TOOLCHAIN`); the layer model then decides placement rather than convenience — L4 ships with the language it checks. Recorded the same session the decision was taken (§7 `##HIST-DRAFT-1`, 2026-06-27). @status:spec/done",
-      "line": 257,
+      "line": 292,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-024#placement-why"
     },
     {
@@ -158523,7 +158661,7 @@
       "doc_path": "common/PROP-024",
       "file": "vibevm/vibespecs/common/PROP-024-code-bearing-packages.xml",
       "heading": "**Considered and rejected:** **extracting the language-neutral cores (`conform-core`, the neutral half of `specmap-core`) up into core-ai-native in the same pass** — **deferred, not rejected**, with its condition stated: *\"taken when the first non-Rust pilot needs it (YAGNI until then)\"* (`##DEFERRED-ENGINE-SPLIT`). **The deferral has since been honoured**: the TypeScript pilot was that demand, the condition fired, and the neutral engines now live in core-ai-native, vendored by `cargo xtask sync-engines` (`##CORE-STAYS-PROMPT-ONLY`). @status:spec/done",
-      "line": 258,
+      "line": 293,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-024#placement-rejected"
     },
     {
@@ -158532,7 +158670,7 @@
       "doc_path": "common/PROP-024",
       "file": "vibevm/vibespecs/common/PROP-024-code-bearing-packages.xml",
       "heading": "**Revisit when:** *(a successor trigger — the previous one fired with the TypeScript pilot and is spent)* a **third** language family arrives and the neutral engines do not cover it — observed as `cargo xtask sync-engines` being unable to vendor a core byte-identically into the new `-lang` package, or a third family needing a core the two existing ones do not share. Observation point: the `sync-engines` task and the set of `*-ai-native-lang` / `*-ai-native-mcp` packages. @status:spec/done",
-      "line": 259,
+      "line": 294,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-024#placement-revisit"
     },
     {
@@ -158541,7 +158679,7 @@
       "doc_path": "common/PROP-024",
       "file": "vibevm/vibespecs/common/PROP-024-code-bearing-packages.xml",
       "heading": "3. Manifest / schema surface",
-      "line": 263,
+      "line": 298,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-024#surface"
     },
     {
@@ -158550,7 +158688,7 @@
       "doc_path": "common/PROP-024",
       "file": "vibevm/vibespecs/common/PROP-024-code-bearing-packages.xml",
       "heading": "**`[project]` and `[package]` are\n  equipotent consumer nodes (owner law, 2026-08-23, near-verbatim: «и\n  project, и package могут быть потребительской единицей — в репозитории,\n  где разрабатывается пакет, корневой vibe.toml имеет тип package, и всё\n  там обязано работать точно так же; сам маркер — косметическое свойство\n  для человека или UI; разошлись по возможностям — дефект, один и тот же\n  код обслуживает обе роли»).** One grammar, one file, the role declared\n  by its XOR section — and every consumer operation (install, lockfile,\n  boot-lane generation, `installed:` resolution, `vibe facts`,\n  `spec_format`, tree/show) reads the role-blind\n  `Manifest::consumer_node()` view and never matches on the role.\n  `[package]` gains `spec_format` so a package-rooted dev checkout pins\n  its materialisation like a project. Role-SPECIFIC surfaces stay lawful\n  where the role is the subject (publish ships packages; a package's\n  `[requires]` is a consumer contract, a project's is its own install\n  set). Landed with twin tests (spec_format resolution and the facts\n  host coordinate answered identically from either role) after the\n  divergence audit: bootgen's self coordinate, the facts host reader,\n  spec_format resolution, the tree model and the workspace-origin name\n  all went through the one view. @status:impl/done",
-      "line": 265,
+      "line": 300,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-024#MANIFEST-ROLES-ARE-EQUIPOTENT"
     },
     {
@@ -158559,7 +158697,7 @@
       "doc_path": "common/PROP-024",
       "file": "vibevm/vibespecs/common/PROP-024-code-bearing-packages.xml",
       "heading": "**No new required manifest field.** `[boot_snippet].source` becomes\n  `spec/`-relative (a value change, not a schema change). `[package].materialization`\n  stays `snapshot` for a vendored code-bearing package. @status:spec/done",
-      "line": 285,
+      "line": 320,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-024#SURF-NO-NEW-FIELD"
     },
     {
@@ -158568,7 +158706,7 @@
       "doc_path": "common/PROP-024",
       "file": "vibevm/vibespecs/common/PROP-024-code-bearing-packages.xml",
       "heading": "**Optional `.vibeignore`** at the package root — newline-delimited globs added\n  to the §2.2 build-output denylist. <status stage=\"spec\" state=\"done\" action=\"continue\" actionstage=\"doc\" audience=\"author\"/>",
-      "line": 288,
+      "line": 323,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-024#SURF-VIBEIGNORE"
     },
     {
@@ -158577,7 +158715,7 @@
       "doc_path": "common/PROP-024",
       "file": "vibevm/vibespecs/common/PROP-024-code-bearing-packages.xml",
       "heading": "**An explicit `[[extension]]` contribution at `slot:post-install`** (PROP-054 `#POINT-GRAMMAR`,\n  `#H-SCRIPT`) is the build lever; **`VIBE_PROJECT_ROOT`** is in the script environment (§2.3).\n  The `[hooks]` table that once spelled this is retired (PROP-020 `#LEGACY-HOOKS-REMOVED`). @status:spec/done",
-      "line": 290,
+      "line": 325,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-024#SURF-HOOKS"
     },
     {
@@ -158586,7 +158724,7 @@
       "doc_path": "common/PROP-024",
       "file": "vibevm/vibespecs/common/PROP-024-code-bearing-packages.xml",
       "heading": "**Original code-bearing-package law:** package identity remains `content_hash`\n  over the shippable tree (§2.2). Reference-backed bridges extend the lock with\n  separately nested embedded-source pins; those pins authenticate projected\n  upstream bytes but do not become part of package identity. @status:impl/done",
-      "line": 293,
+      "line": 328,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-024#SURF-LOCK-UNAFFECTED"
     },
     {
@@ -158595,7 +158733,7 @@
       "doc_path": "common/PROP-024",
       "file": "vibevm/vibespecs/common/PROP-024-code-bearing-packages.xml",
       "heading": "4. Rejected / deferred alternatives",
-      "line": 299,
+      "line": 334,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-024#rejected"
     },
     {
@@ -158604,7 +158742,7 @@
       "doc_path": "common/PROP-024",
       "file": "vibevm/vibespecs/common/PROP-024-code-bearing-packages.xml",
       "heading": "**Hash and copy build output too** — rejected: non-deterministic and\n  potentially gigabytes; it is the file-count/byte-count failure PROP-022 §1.1\n  exists to avoid. Identity is source (§2.2). @status:spec/done",
-      "line": 301,
+      "line": 336,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-024#REJ-HASH-BUILD-OUTPUT"
     },
     {
@@ -158613,7 +158751,7 @@
       "doc_path": "common/PROP-024",
       "file": "vibevm/vibespecs/common/PROP-024-code-bearing-packages.xml",
       "heading": "**Consumer adds the slot crates as its own workspace members** (no package\n  workspace, no cross-workspace path-dep) — *considered*; rejected as the\n  primary model because it denies the package standalone-buildability (a package\n  would not be a project) and couples the consumer's workspace membership to\n  generated `vibedeps/` state. **Retained as the §2.4 fallback** if\n  cross-workspace path-deps prove unworkable on a host — a decision made on spike\n  evidence, not by default. @status:spec/done",
-      "line": 304,
+      "line": 339,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-024#REJ-CONSUMER-MEMBERS"
     },
     {
@@ -158622,7 +158760,7 @@
       "doc_path": "common/PROP-024",
       "file": "vibevm/vibespecs/common/PROP-024-code-bearing-packages.xml",
       "heading": "**`materialization = \"in-place\"` for tool packages** — rejected: `in-place`\n  slots are `.gitignore`d and unversioned (PROP-022 §2.4/§2.7); the discipline\n  toolchain must be **vendored and versioned** so a clone is buildable offline\n  (§2.5). Snapshot-minus-build-output is the right mode. @status:spec/done",
-      "line": 311,
+      "line": 346,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-024#REJ-IN-PLACE"
     },
     {
@@ -158631,7 +158769,7 @@
       "doc_path": "common/PROP-024",
       "file": "vibevm/vibespecs/common/PROP-024-code-bearing-packages.xml",
       "heading": "**Publish the tool crates to crates.io and depend on the published versions** —\n  deferred: the installed package *is* the distribution, so the consumer depends\n  on the slot, not a registry crate. crates.io publication is an optional later\n  convenience for non-vibe Rust consumers, not a requirement of this model. @status:spec/done",
-      "line": 315,
+      "line": 350,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-024#REJ-CRATES-IO"
     },
     {
@@ -158640,7 +158778,7 @@
       "doc_path": "common/PROP-024",
       "file": "vibevm/vibespecs/common/PROP-024-code-bearing-packages.xml",
       "heading": "**A per-file `[ship]`/`[files]` allow-list in the manifest** — rejected: it\n  resurrects the per-file write list PROP-009 §2.6 retired. A denylist of build\n  output (§2.2) keeps \"what ships\" == \"the source\", preserving the verbatim\n  guarantee. @status:spec/done",
-      "line": 319,
+      "line": 354,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-024#REJ-ALLOW-LIST"
     },
     {
@@ -158649,7 +158787,7 @@
       "doc_path": "common/PROP-024",
       "file": "vibevm/vibespecs/common/PROP-024-code-bearing-packages.xml",
       "heading": "5. Out of scope",
-      "line": 325,
+      "line": 360,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-024#out-of-scope"
     },
     {
@@ -158658,7 +158796,7 @@
       "doc_path": "common/PROP-024",
       "file": "vibevm/vibespecs/common/PROP-024-code-bearing-packages.xml",
       "heading": "**Auto-detecting the build system / language** of a code-bearing package —\n  the package declares a hook or explicit artifact/mechanism target; vibevm\n  does not infer `cargo` vs `npm`. The commissioned builtin is selected only by\n  the declared `build:cargo` target. @status:spec/done",
-      "line": 327,
+      "line": 362,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-024#OOS-AUTODETECT"
     },
     {
@@ -158667,7 +158805,7 @@
       "doc_path": "common/PROP-024",
       "file": "vibevm/vibespecs/common/PROP-024-code-bearing-packages.xml",
       "heading": "**Sandboxing the build hook** — inherits PROP-020 §4's posture (hooks run with\n  the user's privileges; package installation is the consent and execution is\n  made observable through exact provider/target evidence). @status:spec/done",
-      "line": 331,
+      "line": 366,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-024#OOS-SANDBOX"
     },
     {
@@ -158676,7 +158814,7 @@
       "doc_path": "common/PROP-024",
       "file": "vibevm/vibespecs/common/PROP-024-code-bearing-packages.xml",
       "heading": "**Out of scope when written; since delivered.** TypeScript shipped no\n  implemented tool to relocate, so its cards kept `specified` checker statuses until a\n  TS pilot existed (§2.6 deferral). The `typescript-ai-native` family shipped with its\n  floor, conform and specmap engines — the deferral is closed. @status:impl/done",
-      "line": 334,
+      "line": 369,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-024#OOS-TS-CHECKER"
     },
     {
@@ -158685,7 +158823,7 @@
       "doc_path": "common/PROP-024",
       "file": "vibevm/vibespecs/common/PROP-024-code-bearing-packages.xml",
       "heading": "6. Acceptance",
-      "line": 340,
+      "line": 375,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-024#acceptance"
     },
     {
@@ -158694,7 +158832,7 @@
       "doc_path": "common/PROP-024",
       "file": "vibevm/vibespecs/common/PROP-024-code-bearing-packages.xml",
       "heading": "A package may carry code at its root and prompt content under `spec/`;\n  `vibe check` passes on it as a project (`vibevm/vibespecs/boot/` markdown-only). @status:spec/done",
-      "line": 342,
+      "line": 377,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-024#ACC-SHAPE"
     },
     {
@@ -158703,7 +158841,7 @@
       "doc_path": "common/PROP-024",
       "file": "vibevm/vibespecs/common/PROP-024-code-bearing-packages.xml",
       "heading": "`content_hash`, the snapshot copy, and the materialised slot exclude `.git/`,\n  `.vibe/`, `target/`, `node_modules/`, and `.vibeignore` globs; identical\n  source produces an identical hash regardless of build state. @status:spec/done",
-      "line": 344,
+      "line": 379,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-024#ACC-HASH-EXCLUDES"
     },
     {
@@ -158712,7 +158850,7 @@
       "doc_path": "common/PROP-024",
       "file": "vibevm/vibespecs/common/PROP-024-code-bearing-packages.xml",
       "heading": "`[boot_snippet].source` resolves `spec/`-relative; the generated `INDEX.md`\n  names `vibedeps/<slot>/spec/boot/<file>`. @status:spec/done",
-      "line": 347,
+      "line": 382,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-024#ACC-BOOT-RESOLVES"
     },
     {
@@ -158721,7 +158859,7 @@
       "doc_path": "common/PROP-024",
       "file": "vibevm/vibespecs/common/PROP-024-code-bearing-packages.xml",
       "heading": "vibevm builds from a clean checkout, consuming its discipline toolchain (incl.\n  the `specmark` proc-macro the product crates compile against) from the\n  committed `vibedeps/` slot, with no prior `vibe install`. @status:spec/done",
-      "line": 349,
+      "line": 384,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-024#ACC-CLEAN-CLONE"
     },
     {
@@ -158730,7 +158868,7 @@
       "doc_path": "common/PROP-024",
       "file": "vibevm/vibespecs/common/PROP-024-code-bearing-packages.xml",
       "heading": "An external Rust project can install `stack:org.vibevm.ai-native/rust-ai-native-lang` and run\n  `conform` / `specmap` against its own code. @status:spec/done",
-      "line": 352,
+      "line": 387,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-024#ACC-EXTERNAL-CONSUMER"
     },
     {
@@ -158739,7 +158877,7 @@
       "doc_path": "common/PROP-024",
       "file": "vibevm/vibespecs/common/PROP-024-code-bearing-packages.xml",
       "heading": "Full `self-check.sh` green; conform 0/0/0; specmap clean. @status:spec/done",
-      "line": 354,
+      "line": 389,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-024#ACC-FLOOR-GREEN"
     },
     {
@@ -158748,7 +158886,7 @@
       "doc_path": "common/PROP-024",
       "file": "vibevm/vibespecs/common/PROP-024-code-bearing-packages.xml",
       "heading": "7. Version history",
-      "line": 357,
+      "line": 392,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-024#history"
     },
     {
@@ -158757,7 +158895,7 @@
       "doc_path": "common/PROP-024",
       "file": "vibevm/vibespecs/common/PROP-024-code-bearing-packages.xml",
       "heading": "**2026-06-27 — draft 1.** Owner-directed: make the discipline self-sufficient\n  by letting packages ship runnable code (`spec/` for prompts, the root for\n  code), then relocate the Rust toolchain (conform + specmap/specmark) out of the\n  vibevm workspace and into `stack:org.vibevm.ai-native/rust-ai-native-lang`. The frozen\n  `VIBEVM-SPEC.md` sanction was granted the same session (§0). Decisions taken in\n  the owner session: the prompt directory is `spec/` (singular, project-identical,\n  not `specs/`); the full traceability stack moves alongside conform; conform is\n  productised to run on an arbitrary external project (config-driven, not\n  vibevm-hardcoded); `conform-core` ships in the Rust stack now with the L1\n  engine-extraction deferred (§2.6). @status:spec/done",
-      "line": 359,
+      "line": 394,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-024#HIST-DRAFT-1"
     },
     {
@@ -158766,7 +158904,7 @@
       "doc_path": "common/PROP-024",
       "file": "vibevm/vibespecs/common/PROP-024-code-bearing-packages.xml",
       "heading": "**2026-11-02.** `#INIT-ROOT-ROLE`: nothing is written before the scaffold's manifest validates, in both forms; `vibe init --kind mcp` and `--kind remap` write the placeholder rows their validators require. @status:spec/done",
-      "line": 369,
+      "line": 404,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-024#HIST-INIT-KINDS"
     },
     {
@@ -158775,7 +158913,7 @@
       "doc_path": "common/PROP-024",
       "file": "vibevm/vibespecs/common/PROP-024-code-bearing-packages.xml",
       "heading": "**2026-11-03.** `#INIT-ROOT-ROLE`: the closing hint names `vibe install <group>/<name>` and the trailer names a package a package (B-202); the nested form honours `--link`, and the forms without a boot snippet refuse it (B-211); `--translates` is parsed as a coordinate and refused before any write when it is not one, and the title is escaped in the README and the XML page (B-229). @status:spec/done",
-      "line": 370,
+      "line": 405,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-024#HIST-INIT-HINT-LINK"
     },
     {
@@ -158784,7 +158922,7 @@
       "doc_path": "common/PROP-024",
       "file": "vibevm/vibespecs/common/PROP-024-code-bearing-packages.xml",
       "heading": "Root declaration selection",
-      "line": 373,
+      "line": 408,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-024#initialization"
     },
     {
@@ -158793,7 +158931,7 @@
       "doc_path": "common/PROP-024",
       "file": "vibevm/vibespecs/common/PROP-024-code-bearing-packages.xml",
       "heading": "Owner request, 2026-10-02: ordinary interactive vibe init offers project or package as mutually exclusive root declarations in the same project-shaped target. Before any interactive field entry, init explains the coordinate org.acme/package-name and the meaning of group and name. New interactive roots collect a valid reverse-DNS group first, the name second, and only then select project/package and gather remaining metadata. Supplied flags skip their matching questions without changing this order. Noninteractive project initialization may omit its group; package initialization requires one. Internal single hyphens are valid in package names (for example package-name); core package-name edge/double-hyphen restrictions remain unchanged. The explicit --type project|package and --group flags provide the same role and namespace choice without a terminal. No explicit role in noninteractive mode preserves the project default. Existing init package and init group forms retain their nested-package/group behavior. All field dialogs suspend progress indefinitely. The selected package kind and supplied metadata must reach the created manifest. Invalid identities and conflicting role requests are rejected before scaffold or user-settings writes; reinitialization preserves existing authored files and does not silently convert roles. Nothing is written before validation: in the root form and the nested form alike, the manifest the scaffold will write is parsed and validated as `vibe check` would before the first directory or file is created, the nested form's project container included, so a refusal of any kind leaves the target as it was, absent or untouched. A kind whose validator demands a row gets a placeholder row that passes it, the same in both forms. `--kind mcp` writes one `[[binary]]` and one `[[mcp_server]]`, both named after the package, the server naming the binary (a local stdio server, so no `transport` and no `url`), and the binary's placeholder crate at `crates/<name>/` (`Cargo.toml` with its own empty `[workspace]` and a `src/main.rs` that exits). `--kind remap` writes one `[[remap]]` row with the `prefix` key, which needs no digest: the `https://` host of the package's own group (`org.example` is `example.org`) rewritten to `https://mirror.<host>/`, with a `reason` saying it is an example; the nested form writes no `[boot_snippet]` and no boot lane for it, because a `remap` package may carry neither (PROP-066 `#package`). `--link static|dynamic` sets the nested package's `[boot_snippet].link`, `dynamic` when absent, in a new project container and an existing one alike; a root declaration and a `doc` or `remap` package write no boot snippet, so each refuses the flag before any write. `--translates` is parsed by the package-reference parser `vibe install` uses and must be a bare `<group>/<name>`, without a kind or a version; any other value is refused before any write, and the title derived from it is escaped for Markdown in the README and for XML in the example page. Every form closes with the install hint in the coordinate syntax the resolver takes, `vibe install <group>/<name>` with the example `org.vibevm.world/wal`, and its trailer names the result a project or a package. @status:impl/done",
-      "line": 374,
+      "line": 409,
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-024#INIT-ROOT-ROLE"
     },
     {

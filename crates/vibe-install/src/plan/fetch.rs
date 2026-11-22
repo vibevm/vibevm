@@ -73,7 +73,8 @@ pub(super) fn fetch_selected_node<S: InstallSource + ?Sized>(
             vibe_registry::RecipeId::Legacy0
         };
         if cached.content_hash != pin.as_str()
-            || vibe_registry::compute_content_hash_with(recipe, &cached.cache_dir)? != pin.as_str()
+            || vibe_registry::compute_copy_content_hash_with(recipe, &cached.cache_dir)?
+                != pin.as_str()
             || selected.observe_local_content_pin()? != *pin
         {
             return Err(RegistryError::MalformedMeta {

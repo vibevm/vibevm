@@ -36,6 +36,12 @@ use crate::extension_world::ExtensionWorldError;
 #[derive(Debug, Error)]
 #[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-007#nesting")]
 pub enum WorkspaceError {
+    /// Git could not say which files it versions in a dependency source
+    /// inside a worktree (PROP-024 `#SHIPPABLE-TREE-DEF`); the slot is not
+    /// built over ignored files instead.
+    #[error(transparent)]
+    GitSource(#[from] vibe_core::git_source::GitSourceError),
+
     /// No `vibe.toml` exists at or above the starting directory.
     #[error(
         "no `vibe.toml` found at or above `{}` \

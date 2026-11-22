@@ -4794,6 +4794,7 @@ version = "1.0.12"
 dependencies = [
  "anyhow",
  "core-ai-native-specmark",
+ "icu_normalizer",
  "indexmap",
  "libc",
  "progress-core",
@@ -4806,6 +4807,7 @@ dependencies = [
  "toml 0.9.12+spec-1.1.0",
  "toml_edit 0.23.10+spec-1.0.0",
  "tracing",
+ "unicode-casefold",
  "url",
 ]
 

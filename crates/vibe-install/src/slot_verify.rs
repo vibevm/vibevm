@@ -21,7 +21,7 @@ use std::path::Path;
 
 use vibe_core::manifest::SpecFormat;
 use vibe_core::{ContentHash, Group};
-use vibe_registry::{RecipeId, compute_content_hash, compute_content_hash_with};
+use vibe_registry::{RecipeId, compute_copy_content_hash_with};
 use vibe_workspace::install::{ResolvedDep, SlotCheck, SlotVerifier};
 
 use crate::fetched::Fetched;
@@ -80,9 +80,9 @@ impl RegistrySlotVerifier {
             return SlotCheck::Unverifiable;
         };
         let computed = if expected.starts_with(RecipeId::Tree1.label()) {
-            compute_content_hash_with(RecipeId::Tree1, slot_abs)
+            compute_copy_content_hash_with(RecipeId::Tree1, slot_abs)
         } else {
-            compute_content_hash(slot_abs)
+            compute_copy_content_hash_with(RecipeId::Legacy0, slot_abs)
         };
         match computed {
             Ok(actual) if actual == *expected => SlotCheck::Verified,

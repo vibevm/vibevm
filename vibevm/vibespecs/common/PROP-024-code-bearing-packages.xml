@@ -105,13 +105,48 @@ package's content under `spec/`.</RETIRES-FLAT-LAYOUT></p>
     <shippable-tree title="2.2 The shippable tree excludes build output">
       <p><req-shippable-tree fact="true" status="spec/done">`req r1`</req-shippable-tree></p>
       <p><SHIPPABLE-TREE-DEF fact="true" status="spec/done" action="continue" actionstage="doc" audience="author">**Decision.** A package's **shippable tree** is its directory minus a
-build-output denylist:</SHIPPABLE-TREE-DEF></p>
+build-output denylist. When that directory lies inside a Git worktree, the
+directory is first narrowed to the files Git would version there — tracked
+files plus untracked files no ignore rule matches — so files Git ignores
+never enter a local source's identity, store copy or slot. The denylist:</SHIPPABLE-TREE-DEF></p>
       <fence>.git/        .vibe/        target/        node_modules/</fence>
       <facts ordered="false">
         <VIBEIGNORE-EXTENDS fact="true" status="spec/done">plus any glob listed in an optional `.vibeignore` at the package root.</VIBEIGNORE-EXTENDS>
         <SHIPPABLE-CONSUMERS fact="true" status="spec/done">The `content_hash` (PROP-002 §2.1), the snapshot copy (PROP-022 §2.2), and the
   verbatim materialised slot (PROP-009 §2.1) all operate over the **shippable
   tree**, never the raw directory.</SHIPPABLE-CONSUMERS>
+      </facts>
+      <facts ordered="false">
+        <GIT-VIEW-ABSENT fact="true" status="spec/done">**Where Git has no say, the walk is plain.** A directory with no
+  repository marker in it or above it, a host with no `git` executable, and a
+  directory Git ignores as a whole (a store or cache entry below an ignored
+  directory) have no Git view: the shippable tree is the directory minus the
+  denylist.</GIT-VIEW-ABSENT>
+        <GIT-VIEW-FAILURE-REFUSES fact="true" status="spec/done">**A failing `git` refuses, never falls back.** When the directory lies
+  inside a worktree and `git` cannot be run there or cannot list what it
+  versions (an unsafe-ownership refusal, a broken repository), the hash, copy or
+  slot is refused with an error. A plain walk in its place would count ignored
+  files and record an identity no other checkout of the same commit has.</GIT-VIEW-FAILURE-REFUSES>
+        <GIT-VIEW-REGULAR-FILES fact="true" status="spec/done">**The view admits regular files present on disk, and nothing else.**
+  Symlinks, submodules and nested repositories (Git lists a link or a
+  directory, not files), and tracked files deleted from the worktree are not
+  part of the shippable tree. A directory holding no admitted file is neither
+  walked nor copied, so an empty directory does not ship.</GIT-VIEW-REGULAR-FILES>
+        <GIT-VIEW-NAME-FOLD fact="true" status="spec/done">**Names compare the way the repository says Git and the filesystem
+  do.** Git prints a name as its index records it; a walker sees the spelling
+  on disk. Under `core.ignorecase` names compare case-folded, and under
+  `core.precomposeunicode` (on by default on macOS) both sides compose to NFC,
+  so a case-only rename or a decomposed name on disk never drops a file.</GIT-VIEW-NAME-FOLD>
+        <GIT-VIEW-COPIES-PLAIN fact="true" status="spec/done">**A copy is hashed as a copy.** A tree that already is a copy of a
+  shippable tree — a store entry, a cached checkout, a materialised slot, a
+  frozen retirement source — holds exactly its source's admitted files and is
+  hashed with the denylist alone. Narrowing it again would consult whatever
+  worktree it sits in, where the package's own `.gitignore` can match a file
+  its source tracked.</GIT-VIEW-COPIES-PLAIN>
+        <GIT-VIEW-PUBLISH fact="true" status="spec/done">**Publishing copies through the same view.** A publish payload taken
+  from a source inside a worktree holds only the files Git versions there, so a
+  consumer's fetched tree hashes as the `content_hash` the index received from
+  that source.</GIT-VIEW-PUBLISH>
       </facts>
       <facts ordered="false">
         <WHY-SOURCE-IDENTITY fact="true" status="spec/done">**Why.** Identity is the *source*, never build artifacts: build output is

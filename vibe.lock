@@ -1,6 +1,6 @@
 [meta]
 generated_by = "vibe 1.0.0"
-generated_at = "2026-11-22T10:32:31Z"
+generated_at = "2026-11-22T11:06:10Z"
 schema_version = 7
 root_dependencies = [
     "stack:org.vibevm.ai-native/rust-ai-native@^1.0.0",
@@ -212,7 +212,7 @@ group = "org.vibevm.fractality"
 version = "1.0.0"
 authors = ["Oleg Chirukhin"]
 source_url = "file:///data/git/vibevm/vibevm/vibepacks/org.vibevm.fractality/delegation-rules/v1.0.0"
-content_hash = "sha256:24c800c09a444df61fbfbf591e10421afe907f33452fd24b807305b0ce23d4c5"
+content_hash = "sha256:fe8aa4d3e1b8cbbb5cd82e3a2103cffe421a5a417979b2e71dcd943f5cf40e35"
 files_written = []
 admitted_by = "public-chain"
 source_kind = "local"

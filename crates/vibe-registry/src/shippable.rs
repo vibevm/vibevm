@@ -10,6 +10,8 @@ use std::fs;
 use std::path::{Path, PathBuf};
 
 use sha2::{Digest, Sha256};
+use specmark::spec;
+use vibe_core::git_source::GitSourceView;
 use walkdir::WalkDir;
 
 use crate::RegistryError;
@@ -27,16 +29,52 @@ fn is_shippable(entry: &walkdir::DirEntry, excludes: &[&str]) -> bool {
         .unwrap_or(true)
 }
 
+/// Every entry of `pkg_dir`'s shippable tree — the one enumeration the
+/// content hash and the store copy share, so the two cannot disagree on
+/// which files a package is.
+///
+/// When `pkg_dir` lies inside a Git worktree the walk is narrowed to what
+/// Git would version there ([`GitSourceView`]): files Git ignores never
+/// enter the identity, and two clones of one commit hash alike whatever was
+/// built or run in either. Outside a worktree, or without a `git`
+/// executable, the walk is the plain denylist walk. `excludes` applies on
+/// top in both cases.
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-024#SHIPPABLE-TREE-DEF")]
+pub(crate) fn shippable_entries(
+    pkg_dir: &Path,
+    excludes: &[&str],
+) -> Result<Vec<walkdir::DirEntry>, RegistryError> {
+    let view = GitSourceView::of(pkg_dir)?;
+    Ok(entries_within(pkg_dir, excludes, view.as_ref()))
+}
+
+/// The denylist walk of `dir`, narrowed to `view` when there is one.
+fn entries_within(
+    dir: &Path,
+    excludes: &[&str],
+    view: Option<&GitSourceView>,
+) -> Vec<walkdir::DirEntry> {
+    WalkDir::new(dir)
+        .into_iter()
+        .filter_entry(|e| is_shippable(e, excludes) && git_admits(view, dir, e))
+        .filter_map(|e| e.ok())
+        .collect()
+}
+
+fn git_admits(view: Option<&GitSourceView>, root: &Path, entry: &walkdir::DirEntry) -> bool {
+    let Some(view) = view else {
+        return true;
+    };
+    let rel = entry.path().strip_prefix(root).unwrap_or(entry.path());
+    view.admits(rel, entry.file_type().is_dir())
+}
+
 pub(crate) fn copy_dir_recursive(src: &Path, dst: &Path) -> Result<(), RegistryError> {
     fs::create_dir_all(dst).map_err(|source| RegistryError::Io {
         path: dst.to_path_buf(),
         source,
     })?;
-    for entry in WalkDir::new(src)
-        .into_iter()
-        .filter_entry(|e| is_shippable(e, LEGACY0_EXCLUDES))
-        .filter_map(|e| e.ok())
-    {
+    for entry in shippable_entries(src, LEGACY0_EXCLUDES)? {
         let rel = entry.path().strip_prefix(src).unwrap_or(entry.path());
         let target = dst.join(rel);
         if entry.file_type().is_dir() {
@@ -70,7 +108,9 @@ pub(crate) fn copy_dir_recursive(src: &Path, dst: &Path) -> Result<(), RegistryE
 /// in the wire label. [`compute_content_hash`] (recipe 0, this crate's
 /// default) delegates here.
 ///
-/// Reads every file under `pkg_dir`:
+/// Reads every file of the shippable tree: when `pkg_dir` lies in a Git
+/// worktree, only files Git would version (tracked, or untracked and not
+/// ignored); a `git` failure there is an error, never a silent full walk.
 ///
 /// ```no_run
 /// use std::path::Path;
@@ -83,6 +123,31 @@ pub fn compute_content_hash_with(
     recipe: RecipeId,
     pkg_dir: &Path,
 ) -> Result<String, RegistryError> {
+    let view = GitSourceView::of(pkg_dir)?;
+    hash_tree(recipe, pkg_dir, view.as_ref())
+}
+
+/// The content hash of a tree that is already a copy of a source's
+/// shippable tree — a store entry, a cached checkout, a materialised slot —
+/// checked against the hash its source was given.
+///
+/// A copy holds exactly the files its source's Git view admitted, so it is
+/// walked with the denylist alone. Narrowing it again would consult whatever
+/// worktree the copy happens to sit in, where the package's own `.gitignore`
+/// can match a file the source tracked, and the copy would be rejected for a
+/// file it rightly holds (PROP-024 `#SHIPPABLE-TREE-DEF`).
+pub fn compute_copy_content_hash_with(
+    recipe: RecipeId,
+    copy_dir: &Path,
+) -> Result<String, RegistryError> {
+    hash_tree(recipe, copy_dir, None)
+}
+
+fn hash_tree(
+    recipe: RecipeId,
+    pkg_dir: &Path,
+    view: Option<&GitSourceView>,
+) -> Result<String, RegistryError> {
     let excludes: Vec<&str> = match recipe {
         RecipeId::Legacy0 => LEGACY0_EXCLUDES.to_vec(),
         RecipeId::Tree1 => crate::hash_recipe::recipe1_excludes(),
@@ -93,10 +158,8 @@ pub fn compute_content_hash_with(
     // makes non-UTF-8 a hard error — two distinct invalid names would
     // otherwise collide to one hash (PROP-044 §4.7).
     let mut entries: Vec<(String, PathBuf)> = Vec::new();
-    for entry in WalkDir::new(pkg_dir)
+    for entry in entries_within(pkg_dir, &excludes, view)
         .into_iter()
-        .filter_entry(|e| is_shippable(e, &excludes))
-        .filter_map(|e| e.ok())
         .filter(|e| e.file_type().is_file())
     {
         let path = entry.path().to_path_buf();
@@ -160,6 +223,7 @@ pub fn compute_portable_content_hash(pkg_dir: &Path) -> Result<String, RegistryE
 mod shippable_tree_tests {
     use super::*;
     use tempfile::tempdir;
+    use vibe_core::git_source::fixture::{FixtureGit, outside_any_worktree};
 
     /// `copy_dir_recursive` and `compute_content_hash` both skip build output,
     /// so neither the materialised slot nor the content hash carries `target/`
@@ -186,6 +250,172 @@ mod shippable_tree_tests {
             compute_content_hash(src.path()).unwrap(),
             compute_content_hash(clean.path()).unwrap(),
             "build output must not affect the content hash"
+        );
+    }
+
+    const PACKAGE: &str = "registry/org.example/demo/v1.0.0";
+
+    /// A committed repository holding one local-registry package whose
+    /// `.gitignore` covers interpreter caches and boot lock files — the two
+    /// kinds of debris observed counted into a recorded identity.
+    fn committed_repo(git: &FixtureGit) -> tempfile::TempDir {
+        let root = tempdir().unwrap();
+        git.init(root.path());
+        fs::write(
+            root.path().join(".gitignore"),
+            "__pycache__/\n**/.vibe-boot-*\n",
+        )
+        .unwrap();
+        let pkg = root.path().join(PACKAGE);
+        fs::create_dir_all(pkg.join("skills/a/scripts")).unwrap();
+        fs::create_dir_all(pkg.join("boot")).unwrap();
+        fs::write(pkg.join("vibe.toml"), b"x").unwrap();
+        fs::write(pkg.join("skills/a/scripts/run.py"), b"print()").unwrap();
+        fs::write(pkg.join("boot/rules.md"), b"rules").unwrap();
+        git.commit_all(root.path(), "fixture");
+        root
+    }
+
+    fn add_ignored_debris(pkg: &Path) {
+        fs::create_dir_all(pkg.join("skills/a/scripts/__pycache__")).unwrap();
+        fs::create_dir_all(pkg.join("boot")).unwrap();
+        fs::write(
+            pkg.join("skills/a/scripts/__pycache__/run.cpython-314.pyc"),
+            b"BYTECODE",
+        )
+        .unwrap();
+        fs::write(pkg.join("boot/.vibe-boot-artifacts.lock"), b"").unwrap();
+    }
+
+    fn copied_files(src: &Path) -> Vec<String> {
+        let dst = tempdir().unwrap();
+        copy_dir_recursive(src, dst.path()).unwrap();
+        let mut files: Vec<String> = WalkDir::new(dst.path())
+            .into_iter()
+            .filter_map(|e| e.ok())
+            .filter(|e| e.file_type().is_file())
+            .map(|e| {
+                e.path()
+                    .strip_prefix(dst.path())
+                    .unwrap()
+                    .to_string_lossy()
+                    .replace('\\', "/")
+            })
+            .collect();
+        files.sort();
+        files
+    }
+
+    /// Files Git ignores never enter a local source's identity: neither the
+    /// store copy nor the hash sees them, and adding or removing them leaves
+    /// the hash unchanged (PROP-024 `#SHIPPABLE-TREE-DEF`).
+    #[test]
+    fn ignored_files_stay_out_of_copy_and_hash() {
+        let git = FixtureGit::new();
+        let repo = committed_repo(&git);
+        let pkg = repo.path().join(PACKAGE);
+        let clean = compute_content_hash(&pkg).unwrap();
+        let clean_tree1 = compute_portable_content_hash(&pkg).unwrap();
+
+        add_ignored_debris(&pkg);
+        assert_eq!(compute_content_hash(&pkg).unwrap(), clean);
+        assert_eq!(compute_portable_content_hash(&pkg).unwrap(), clean_tree1);
+        assert_eq!(
+            copied_files(&pkg),
+            ["boot/rules.md", "skills/a/scripts/run.py", "vibe.toml"]
+        );
+
+        fs::remove_file(pkg.join("boot/.vibe-boot-artifacts.lock")).unwrap();
+        fs::remove_dir_all(pkg.join("skills/a/scripts/__pycache__")).unwrap();
+        assert_eq!(compute_content_hash(&pkg).unwrap(), clean);
+    }
+
+    /// An untracked file no ignore rule matches is source Git would version
+    /// on the next commit, so it is part of the identity.
+    #[test]
+    fn untracked_unignored_file_is_part_of_the_source() {
+        let git = FixtureGit::new();
+        let repo = committed_repo(&git);
+        let pkg = repo.path().join(PACKAGE);
+        let before = compute_content_hash(&pkg).unwrap();
+        fs::write(pkg.join("notes.md"), b"new").unwrap();
+        assert_ne!(compute_content_hash(&pkg).unwrap(), before);
+        assert!(copied_files(&pkg).contains(&"notes.md".to_string()));
+    }
+
+    /// Outside any Git worktree the walk is unchanged: only the denylist
+    /// applies, so a `__pycache__` file is still copied and hashed.
+    #[test]
+    fn source_outside_git_keeps_the_plain_walk() {
+        let src = tempdir().unwrap();
+        if !outside_any_worktree(src.path()) {
+            return;
+        }
+        fs::write(src.path().join("vibe.toml"), b"x").unwrap();
+        let clean = compute_content_hash(src.path()).unwrap();
+        add_ignored_debris(src.path());
+        assert_ne!(compute_content_hash(src.path()).unwrap(), clean);
+        assert_eq!(
+            copied_files(src.path()),
+            [
+                "boot/.vibe-boot-artifacts.lock",
+                "skills/a/scripts/__pycache__/run.cpython-314.pyc",
+                "vibe.toml"
+            ]
+        );
+    }
+
+    /// Two clones of one commit record one identity, whatever debris the
+    /// running of a package's tests left in either.
+    #[test]
+    fn two_clones_of_one_commit_hash_alike() {
+        let git = FixtureGit::new();
+        let origin = committed_repo(&git);
+        let clones = tempdir().unwrap();
+        for name in ["one", "two"] {
+            git.clone(origin.path(), &clones.path().join(name));
+        }
+        let one = clones.path().join("one").join(PACKAGE);
+        let two = clones.path().join("two").join(PACKAGE);
+        add_ignored_debris(&two);
+        assert_eq!(
+            compute_content_hash(&one).unwrap(),
+            compute_content_hash(&two).unwrap()
+        );
+        assert_eq!(copied_files(&one), copied_files(&two));
+    }
+
+    /// A copy is hashed as the copy it is. A package may ship its own
+    /// `.gitignore` matching a file its author force-added; once copied into
+    /// an untracked spot of some other worktree, that file is untracked and
+    /// ignored there. The copy still holds exactly its source's files, and
+    /// the copy hash agrees with the source hash.
+    #[test]
+    fn a_copy_hashes_like_its_source_wherever_it_lies() {
+        let git = FixtureGit::new();
+        let repo = committed_repo(&git);
+        let pkg = repo.path().join(PACKAGE);
+        fs::write(pkg.join(".gitignore"), b"*.generated\n").unwrap();
+        fs::write(pkg.join("table.generated"), b"authored on purpose").unwrap();
+        git.run(repo.path(), &["add", "-f", "."]);
+        git.run(repo.path(), &["commit", "-q", "-m", "force-added table"]);
+        let source_hash = compute_content_hash(&pkg).unwrap();
+        let source_tree1 = compute_portable_content_hash(&pkg).unwrap();
+
+        let host = tempdir().unwrap();
+        git.init(host.path());
+        let copy = host.path().join("cache/demo");
+        copy_dir_recursive(&pkg, &copy).unwrap();
+        assert!(copy.join("table.generated").is_file());
+        // Narrowed by the host worktree, the copy would lose the file.
+        assert_ne!(compute_content_hash(&copy).unwrap(), source_hash);
+        assert_eq!(
+            compute_copy_content_hash_with(RecipeId::Legacy0, &copy).unwrap(),
+            source_hash
+        );
+        assert_eq!(
+            compute_copy_content_hash_with(RecipeId::Tree1, &copy).unwrap(),
+            source_tree1
         );
     }
 }

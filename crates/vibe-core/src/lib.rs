@@ -22,6 +22,7 @@ pub mod configuration;
 pub mod content_hash;
 pub mod download_headers;
 pub mod error;
+pub mod git_source;
 pub mod global_registry;
 pub mod host_owner;
 pub mod index_checkout;

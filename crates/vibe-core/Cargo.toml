@@ -28,6 +28,17 @@ indexmap.workspace = true
 sha2.workspace = true
 tracing.workspace = true
 url.workspace = true
+# Git's view of a package source compares names the way the repository's
+# `core.ignorecase` / `core.precomposeunicode` say Git and the filesystem
+# do: NFC composition and full case folding (PROP-024 `#SHIPPABLE-TREE-DEF`).
+icu_normalizer.workspace = true
+unicode-casefold.workspace = true
+# Only for the `git-fixture` feature's isolated test `git`.
+tempfile = { workspace = true, optional = true }
+
+[features]
+# The hermetic `git` fixture (`git_source::fixture`) for other crates' tests.
+git-fixture = ["dep:tempfile"]
 
 [dev-dependencies]
 tempfile.workspace = true

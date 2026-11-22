@@ -11,6 +11,7 @@ use vibe_safefs::SourceObservation;
 
 use sha2::{Digest, Sha256};
 use vibe_core::ContentHash;
+use vibe_core::git_source::GitSourceView;
 
 use super::{
     CopyMode, SLOT_RECORD_FILENAME, SlotRecord, io_err, read_slot_record, sha256_file,
@@ -128,8 +129,11 @@ pub(super) fn prepare_source_tree(
     mode: CopyMode,
     policy: &super::source_policy::SourcePolicy,
 ) -> Result<Vec<PreparedSlotFile>, WorkspaceError> {
+    // A source inside a Git worktree (a path dependency) contributes only
+    // what Git would version, the file set its content hash covers.
+    let view = GitSourceView::of(root)?;
     let mut files = Vec::new();
-    collect_source_files(root, root, mode, policy, &mut files)?;
+    collect_source_files(root, root, view.as_ref(), mode, policy, &mut files)?;
     sort_prepared_files(&mut files);
     Ok(files)
 }
@@ -518,6 +522,7 @@ fn write_record_last(slot: &Path, record: &SlotRecord) -> Result<(), WorkspaceEr
 fn collect_source_files(
     directory: &Path,
     root: &Path,
+    view: Option<&GitSourceView>,
     mode: CopyMode,
     policy: &super::source_policy::SourcePolicy,
     files: &mut Vec<PreparedSlotFile>,
@@ -532,8 +537,14 @@ fn collect_source_files(
             continue;
         }
         let file_type = entry.file_type().map_err(|error| io_err(&source, error))?;
+        if let Some(view) = view
+            && let Ok(relative) = source.strip_prefix(root)
+            && !view.admits(relative, file_type.is_dir())
+        {
+            continue;
+        }
         if file_type.is_dir() {
-            collect_source_files(&source, root, mode, policy, files)?;
+            collect_source_files(&source, root, view, mode, policy, files)?;
         } else if file_type.is_file() {
             let relative = source
                 .strip_prefix(root)

@@ -201,3 +201,64 @@ fn captured_record_bytes_use_the_same_reader_without_reopening_path() {
         .is_err()
     );
 }
+
+/// A path dependency inside a Git worktree is materialised as the files Git
+/// would version: ignored debris never reaches the slot or its `[[file]]`
+/// rows, in either walk (PROP-024 `#SHIPPABLE-TREE-DEF`).
+#[test]
+fn source_in_a_git_worktree_leaves_ignored_files_out_of_the_slot() {
+    let repo = TempDir::new().unwrap();
+    let git = vibe_core::git_source::fixture::FixtureGit::new();
+    git.init(repo.path());
+    write(repo.path(), ".gitignore", "__pycache__/\n**/.vibe-boot-*\n");
+    let source = repo.path().join("pkg");
+    write(&source, "README.md", "# Package\n");
+    write(&source, "skills/a/run.py", "print()\n");
+    git.commit_all(repo.path(), "fixture");
+    write(
+        &source,
+        "skills/a/__pycache__/run.cpython-314.pyc",
+        "BYTECODE",
+    );
+    write(&source, "skills/.vibe-boot-artifacts.lock", "");
+    let source_hash = ContentHash::parse(
+        "sha256:1111111111111111111111111111111111111111111111111111111111111111",
+    )
+    .unwrap();
+
+    for (name, format) in [
+        ("mixed", SpecFormat::Mixed),
+        ("markdown", SpecFormat::Markdown),
+    ] {
+        let workspace = TempDir::new().unwrap();
+        let footprint = materialise_with_spec_format(
+            workspace.path(),
+            &group("org.example"),
+            name,
+            &version("1.0.0"),
+            &source,
+            CopyMode::Copy,
+            format,
+            &source_hash,
+        )
+        .unwrap();
+        assert_eq!(
+            footprint,
+            vec![PathBuf::from("README.md"), PathBuf::from("skills/a/run.py")],
+            "{name} slot"
+        );
+        let slot = slot_abs_path(
+            workspace.path(),
+            &group("org.example"),
+            name,
+            &version("1.0.0"),
+        );
+        let recorded: Vec<String> = read_slot_record(&slot)
+            .unwrap()
+            .files
+            .iter()
+            .map(|file| file.path.clone())
+            .collect();
+        assert_eq!(recorded, ["README.md", "skills/a/run.py"], "{name} record");
+    }
+}

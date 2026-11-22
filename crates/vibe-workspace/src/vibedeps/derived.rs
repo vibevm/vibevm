@@ -282,9 +282,13 @@ pub fn compute_derived_hash(slot: &Path) -> Result<String, String> {
     Ok(format!("sha256:{hex}"))
 }
 
+/// Walk a transformed slot's source. A source inside a Git worktree (a path
+/// dependency) contributes only what Git would version there — the file set
+/// its content hash covers (PROP-024 `#SHIPPABLE-TREE-DEF`).
 fn collect_files(
     dir: &Path,
     root: &Path,
+    view: Option<&vibe_core::git_source::GitSourceView>,
     out: &mut Vec<(PathBuf, PathBuf)>,
 ) -> Result<(), WorkspaceError> {
     for entry in fs::read_dir(dir).map_err(|e| io_err(dir, e))? {
@@ -297,8 +301,14 @@ fn collect_files(
             continue;
         }
         let kind = entry.file_type().map_err(|e| io_err(&path, e))?;
+        if let Some(view) = view
+            && let Ok(relative) = path.strip_prefix(root)
+            && !view.admits(relative, kind.is_dir())
+        {
+            continue;
+        }
         if kind.is_dir() {
-            collect_files(&path, root, out)?;
+            collect_files(&path, root, view, out)?;
         } else if kind.is_file() {
             let rel = path
                 .strip_prefix(root)

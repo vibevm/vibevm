@@ -83,7 +83,8 @@ pub(crate) fn materialise_with_spec_format_report(
     }
     super::super::refuse_reserved_source_record(content_src)?;
     let mut sources = Vec::new();
-    collect_files(content_src, content_src, &mut sources)?;
+    let view = vibe_core::git_source::GitSourceView::of(content_src)?;
+    collect_files(content_src, content_src, view.as_ref(), &mut sources)?;
     sources.sort_by(|a, b| a.0.cmp(&b.0));
 
     let mut outputs = BTreeSet::new();

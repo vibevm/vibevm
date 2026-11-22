@@ -38,5 +38,6 @@ glob.workspace = true
 libc.workspace = true
 
 [dev-dependencies]
+vibe-core = { workspace = true, features = ["git-fixture"] }
 axum.workspace = true
 tokio.workspace = true

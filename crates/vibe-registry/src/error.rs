@@ -274,6 +274,12 @@ pub enum RegistryError {
         source: std::io::Error,
     },
 
+    /// Git could not say which files it versions in a package source that
+    /// lies inside a worktree (PROP-024 `#SHIPPABLE-TREE-DEF`); the hash is
+    /// refused rather than taken over ignored files.
+    #[error(transparent)]
+    GitSource(#[from] vibe_core::git_source::GitSourceError),
+
     /// An `in-place` materialization (PROP-022 §2.4) was requested against a
     /// registry with no git backend — the local-directory registry
     /// (`--registry <path>`, the M0 shape). In-place needs a real git source

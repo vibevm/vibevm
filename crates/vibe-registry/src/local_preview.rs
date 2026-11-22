@@ -4,6 +4,7 @@ use anyhow::{Result, anyhow, bail};
 use sha2::{Digest, Sha256};
 use specmark::spec;
 use std::collections::BTreeMap;
+use vibe_core::git_source::GitSourceView;
 use vibe_core::{PackageRef, VersionSpec, manifest::Manifest};
 use vibe_safefs::{FileIdentity, Pinned, Project, StableFileSnapshot};
 
@@ -32,6 +33,7 @@ fn walk(
     directory: &Pinned,
     prefix: &str,
     depth: usize,
+    view: Option<&GitSourceView>,
     out: &mut Snapshot,
 ) -> Result<()> {
     if depth > MAX_DEPTH || out.directories.len() + out.files.len() >= MAX_ENTRIES {
@@ -44,6 +46,19 @@ fn walk(
         if crate::hash_recipe::LEGACY0_EXCLUDES.contains(&name.as_str()) {
             continue;
         }
+        let relative = if prefix.is_empty() {
+            name.clone()
+        } else {
+            format!("{prefix}/{name}")
+        };
+        // The same Git view the install hash narrows to, so a preview never
+        // counts a file the installed identity leaves out.
+        if view.is_some_and(|view| {
+            let path = std::path::Path::new(&relative);
+            !view.admits_file(path) && !view.admits_dir(path)
+        }) {
+            continue;
+        }
         // Restrict to portable UTF-8 names so the frozen legacy recipe's
         // normalisation cannot alias two distinct observed members.
         if name.contains('\\') || name.chars().any(char::is_control) {
@@ -52,13 +67,8 @@ fn walk(
         if out.directories.len() + out.files.len() >= MAX_ENTRIES {
             bail!("local preview source exceeds bounded entry limit");
         }
-        let relative = if prefix.is_empty() {
-            name.clone()
-        } else {
-            format!("{prefix}/{name}")
-        };
         match directory.open_child(&name) {
-            Ok(child) => walk(project, &child, &relative, depth + 1, out)?,
+            Ok(child) => walk(project, &child, &relative, depth + 1, view, out)?,
             Err(_) => {
                 // Directory open failure is not absence: only a checked
                 // regular single-link file read can establish the other case.
@@ -91,7 +101,13 @@ fn capture(project: &Project, components: &[&str]) -> Result<Snapshot> {
         directory = directory.open_child(component)?;
         snapshot.ancestors.push(directory.identity()?);
     }
-    walk(project, &directory, "", 0, &mut snapshot)?;
+    let source = components
+        .iter()
+        .fold(project.root_path().to_path_buf(), |path, component| {
+            path.join(component)
+        });
+    let view = GitSourceView::of(&source)?;
+    walk(project, &directory, "", 0, view.as_ref(), &mut snapshot)?;
     Ok(snapshot)
 }
 
@@ -116,7 +132,10 @@ impl PreparedRetirementSource {
         if current != self.snapshot {
             bail!("exact retirement source changed after admission");
         }
-        if crate::compute_content_hash(self.frozen.path())? != self.row.content_hash.as_str() {
+        // The frozen tree is a copy of the admitted source, hashed as one.
+        let frozen =
+            crate::compute_copy_content_hash_with(crate::RecipeId::Legacy0, self.frozen.path())?;
+        if frozen != self.row.content_hash.as_str() {
             bail!("frozen retirement source no longer matches the exact old pin");
         }
         Ok(())
@@ -366,6 +385,24 @@ mod tests {
             crate::compute_content_hash(&temp.path().join("registry/org.example/demo/v1.0.0"))
                 .unwrap()
         );
+    }
+    /// The preview narrows to the same Git view as the install hash, so a
+    /// source inside a worktree previews the hash it will install with,
+    /// ignored debris or not (PROP-024 `#SHIPPABLE-TREE-DEF`).
+    #[test]
+    fn preview_hash_leaves_out_files_git_ignores() {
+        let (temp, project, reference) = fixture();
+        let git = vibe_core::git_source::fixture::FixtureGit::new();
+        git.init(temp.path());
+        std::fs::write(temp.path().join(".gitignore"), "__pycache__/\n").unwrap();
+        git.commit_all(temp.path(), "fixture");
+        let source = temp.path().join("registry/org.example/demo/v1.0.0");
+        let clean = crate::compute_content_hash(&source).unwrap();
+        std::fs::create_dir_all(source.join("boot/__pycache__")).unwrap();
+        std::fs::write(source.join("boot/__pycache__/x.pyc"), "debris").unwrap();
+        let result = observe_local_preview(&project, &["registry"], &reference).unwrap();
+        assert_eq!(result.content_hash, clean);
+        assert_eq!(crate::compute_content_hash(&source).unwrap(), clean);
     }
     #[test]
     fn source_names_cannot_replace_ancestor_observations() {

@@ -21,6 +21,7 @@ use specmark::spec;
 use std::path::{Path, PathBuf};
 
 use sha2::{Digest, Sha256};
+use vibe_core::git_source::GitSourceView;
 use walkdir::WalkDir;
 
 use crate::error::{Error, Result};
@@ -38,6 +39,17 @@ fn is_shippable(entry: &walkdir::DirEntry, excludes: &[&str]) -> bool {
         .to_str()
         .map(|name| !excludes.contains(&name))
         .unwrap_or(true)
+}
+
+/// Whether the walked entry survives Git's view of the package directory —
+/// the same narrowing `vibe-registry`'s `shippable_entries` applies, so the
+/// two ports keep one file set (PROP-024 `#SHIPPABLE-TREE-DEF`).
+fn git_admits(view: Option<&GitSourceView>, root: &Path, entry: &walkdir::DirEntry) -> bool {
+    let Some(view) = view else {
+        return true;
+    };
+    let rel = entry.path().strip_prefix(root).unwrap_or(entry.path());
+    view.admits(rel, entry.file_type().is_dir())
 }
 
 fn admit_relative_path(recipe: RecipeId, rel: &Path, path: &Path) -> Result<String> {
@@ -62,8 +74,10 @@ fn admit_relative_path(recipe: RecipeId, rel: &Path, path: &Path) -> Result<Stri
 /// `normalised_path || 0x00 || file_bytes || 0x00`, identical across recipes;
 /// the two recipes differ only in the ORDER of those files (recipe 1
 /// normalises separators before ordering, recipe 0 orders the platform path
-/// first) and in the wire label stamped on the final hex.
+/// first) and in the wire label stamped on the final hex. When `pkg_dir`
+/// lies in a Git worktree, only files Git would version are hashed.
 #[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-index/PROP-005#PROV-CONTENT-HASH")]
+#[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-024#SHIPPABLE-TREE-DEF")]
 pub fn compute_content_hash_with(recipe: RecipeId, pkg_dir: &Path) -> Result<String> {
     let excludes: Vec<&str> = match recipe {
         RecipeId::Legacy0 => LEGACY0_EXCLUDES.to_vec(),
@@ -75,10 +89,13 @@ pub fn compute_content_hash_with(recipe: RecipeId, pkg_dir: &Path) -> Result<Str
     // makes non-UTF-8 a hard error — two distinct invalid names would
     // otherwise collide to one hash, so an unverifiable answer would look
     // valid (PROP-044 §4.7: every derived value says how it was made).
+    // Inside a Git worktree the shippable tree is narrowed to what Git
+    // would version there; ignored files never reach the hash.
+    let view = GitSourceView::of(pkg_dir)?;
     let mut entries: Vec<(String, PathBuf)> = Vec::new();
     for entry in WalkDir::new(pkg_dir)
         .into_iter()
-        .filter_entry(|e| is_shippable(e, &excludes))
+        .filter_entry(|e| is_shippable(e, &excludes) && git_admits(view.as_ref(), pkg_dir, e))
         .filter_map(|e| e.ok())
         .filter(|e| e.file_type().is_file())
     {
@@ -242,6 +259,27 @@ mod tests {
             compute_content_hash(dirty.path()).unwrap(),
             "build output must not affect the content hash"
         );
+    }
+
+    /// Inside a Git worktree, files Git ignores stay out of the hash — the
+    /// same narrowing `vibe-registry` applies, so the ports keep one file
+    /// set (PROP-024 `#SHIPPABLE-TREE-DEF`).
+    #[test]
+    fn files_git_ignores_are_excluded_from_the_hash() {
+        let repo = tempdir().unwrap();
+        let git = vibe_core::git_source::fixture::FixtureGit::new();
+        git.init(repo.path());
+        fs::write(repo.path().join(".gitignore"), "__pycache__/\n").unwrap();
+        let pkg = repo.path().join("pkg");
+        fs::create_dir_all(&pkg).unwrap();
+        fs::write(pkg.join("vibe.toml"), b"name = 'x'\n").unwrap();
+        git.commit_all(repo.path(), "fixture");
+        let clean = compute_content_hash(&pkg).unwrap();
+        fs::create_dir_all(pkg.join("__pycache__")).unwrap();
+        fs::write(pkg.join("__pycache__/x.pyc"), b"BYTECODE").unwrap();
+        assert_eq!(compute_content_hash(&pkg).unwrap(), clean);
+        fs::write(pkg.join("notes.md"), b"new").unwrap();
+        assert_ne!(compute_content_hash(&pkg).unwrap(), clean);
     }
 
     #[test]
