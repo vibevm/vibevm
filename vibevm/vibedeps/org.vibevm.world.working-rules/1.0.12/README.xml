@@ -19,7 +19,7 @@ the pages are kept separate on purpose.</EACH-ROLE-READS-ONE-PAGE></p>
     <CONTENT-LEAD-BOUNDED fact="true" status="impl/done">`lead-bounded.md` — the whole working rules of a bounded lead.</CONTENT-LEAD-BOUNDED>
     <CONTENT-WORKER fact="true" status="impl/done">`worker.md` and `packet.template.md` — the whole instruction surface of
   an executor, and the packet a lead writes for it.</CONTENT-WORKER>
-    <CONTENT-DECOMPOSING fact="true" status="impl/done">`decomposing.md` — how an open lead prepares a completion list that a bounded lead can execute without spiralling, with the traps a skeptic finds.</CONTENT-DECOMPOSING>
+    <CONTENT-DECOMPOSING fact="true" status="impl/done">`decomposing.md` — how an open lead prepares a completion list that a bounded lead can execute without spiralling: the scout, decompose, skeptic and revise procedure, and the traps a skeptic finds.</CONTENT-DECOMPOSING>
     <CONTENT-RUNS fact="true" status="impl/done">`runs.md` — the optional contract for managed execution resources.</CONTENT-RUNS>
     <CONTENT-TEMPLATES fact="true" status="impl/done">`project.template.md` and `local.template.md` — inactive templates for
   the two project-owned files.</CONTENT-TEMPLATES>

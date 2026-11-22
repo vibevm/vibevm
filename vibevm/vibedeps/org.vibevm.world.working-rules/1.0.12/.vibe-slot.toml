@@ -1,8 +1,8 @@
 schema = 1
-source_hash = "sha256:403c8e02aba52b2719f1c34a7543fa19e801a37d0ddefc2c897c40e736d79142"
+source_hash = "sha256:fe12c8f1e033bda69dcccb363434724429e7f83774bd2780e8eab94f2f828079"
 spec_format = "xml"
 converter_recipe = "specdoc/4"
-derived_hash = "sha256:346d12e9fe86bedb299655cd0def254e58cf99ee46a07b2357d299bb3a451436"
+derived_hash = "sha256:c04513b966446d6ee3e2f719167a4b473340e38c8d7d7d84995bc4151ef1f1b8"
 
 [[file]]
 path = "LICENSE.md"
@@ -12,13 +12,13 @@ source = "LICENSE.md"
 
 [[file]]
 path = "README.xml"
-sha256 = "920cf4a4f5027e5c0e3eae305013657000aeadca9e2175c1c3bdcc22ede0287a"
+sha256 = "16905d36bfd0fd41babd004a0e919455470df54e29d02f7efeecb2da34a313cb"
 disposition = "converted"
 source = "README.md"
 
 [[file]]
 path = "rules/decomposing.md"
-sha256 = "33580056fd69a78a32e194bc848dff79da92cd8b1b21ac747f3a6368d3c25615"
+sha256 = "6db1f65e4dea0bcaf8e190f5e7063bd69232dd1ea62281e68eda83bc99bae6dc"
 disposition = "copied"
 source = "rules/decomposing.md"
 
