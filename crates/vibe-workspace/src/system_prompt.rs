@@ -101,7 +101,7 @@ pub use harness::{
     CODEX_VERIFIED_VERSION, CarrierVerdict, CodexProfile, EnvAssignment, HarnessKind, LaunchFlags,
     LaunchInputs, OPENCODE_MEASURED_VERSION, QWEN_MEASURED_VERSION, codex_carrier_verdict,
     launch_flags, opencode_carrier_description, qwen_carrier_description, qwen_closed_slots,
-    reported_version,
+    reported_version, worker_prefix_flags,
 };
 pub use lane::{ComposedLane, LaneSegment, LaneSource, compose_agent_lane};
 pub use markers::{

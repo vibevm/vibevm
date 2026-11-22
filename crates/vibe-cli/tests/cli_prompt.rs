@@ -378,6 +378,68 @@ fn flags_print_flags_only_and_never_a_program_or_lane_bytes() {
 }
 
 #[test]
+fn flags_with_workers_add_the_subagent_flag_naming_the_same_lane() {
+    let project = Project::opted_in();
+    project.prompt("build").assert().success();
+    let output = project
+        .prompt("flags")
+        .args(["--harness", "claude", "--workers", "--json"])
+        .assert()
+        .success()
+        .get_output()
+        .stdout
+        .clone();
+    let report: serde_json::Value = serde_json::from_slice(&output).unwrap();
+    let flags: Vec<String> = report["flags"]
+        .as_array()
+        .unwrap()
+        .iter()
+        .map(|flag| flag.as_str().unwrap().to_owned())
+        .collect();
+    let lane = project.boot("AGENT-LANE.md").display().to_string();
+    assert_eq!(
+        flags,
+        [
+            "--append-system-prompt-file".to_owned(),
+            lane.clone(),
+            "--exclude-dynamic-system-prompt-sections".to_owned(),
+            "--append-subagent-system-prompt-file".to_owned(),
+            lane,
+        ]
+    );
+}
+
+#[test]
+fn flags_with_workers_for_codex_print_no_worker_flag_and_say_so() {
+    let project = Project::opted_in();
+    project.prompt("build").assert().success();
+    let output = project
+        .prompt("flags")
+        .args(["--harness", "codex", "--json"])
+        .assert()
+        .success()
+        .get_output()
+        .stdout
+        .clone();
+    let usual: serde_json::Value = serde_json::from_slice(&output).unwrap();
+    let output = project
+        .prompt("flags")
+        .args(["--harness", "codex", "--workers", "--json"])
+        .assert()
+        .success()
+        .get_output()
+        .stdout
+        .clone();
+    let workers: serde_json::Value = serde_json::from_slice(&output).unwrap();
+    assert_eq!(usual["flags"], workers["flags"]);
+    assert!(workers["notes"].as_array().unwrap().iter().any(|note| {
+        note.as_str()
+            .unwrap()
+            .contains("has no flag that appends a file to its subagents' system prompt")
+    }));
+}
+
+#[test]
 fn an_unknown_harness_is_a_refusal_listing_the_launchers() {
     let project = Project::opted_in();
     project.prompt("build").assert().success();

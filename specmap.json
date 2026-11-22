@@ -25757,10 +25757,10 @@
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/commands/prompt/flags.rs",
       "item_kind": "fn",
-      "line": 33,
+      "line": 35,
       "symbol": "vibe_cli::commands::prompt::flags::run",
-      "end_line": 120,
-      "fingerprint": "tok1:ff43c10113aff5ffef3d01dfa8fc942b223e42a101b169960cf675b6069b9f2c"
+      "end_line": 148,
+      "fingerprint": "tok1:f2485a9f4de5d42f8f1711ff6ae61e270678677d5755fda8b277f2bce3f5f147"
     },
     {
       "crate_name": "vibe-cli",
@@ -25894,8 +25894,8 @@
       "item_kind": "fn",
       "line": 84,
       "symbol": "vibe_cli::commands::prompt::run",
-      "end_line": 137,
-      "fingerprint": "tok1:738ff71f8f86bfd1227578b5c4a5156308d3ed81407f0c664866917c5ab0cf8f"
+      "end_line": 138,
+      "fingerprint": "tok1:2bc3fb1560d411c7b228fca53c8c628830ad0903f8a4eb868f7d2edb2d8e720a"
     },
     {
       "crate_name": "vibe-cli",
@@ -81935,54 +81935,54 @@
       "crate_name": "vibe-workspace",
       "file": "crates/vibe-workspace/src/system_prompt/harness.rs",
       "item_kind": "fn",
-      "line": 94,
+      "line": 97,
       "symbol": "vibe_workspace::system_prompt::harness::HarnessKind::as_str",
-      "end_line": 105,
+      "end_line": 108,
       "fingerprint": "tok1:11f823f872966376bf5e5d8004eb4bbc6d34eba08a0620f2e84ae4548bf8f838"
     },
     {
       "crate_name": "vibe-workspace",
       "file": "crates/vibe-workspace/src/system_prompt/harness.rs",
       "item_kind": "fn",
-      "line": 152,
+      "line": 155,
       "symbol": "vibe_workspace::system_prompt::harness::HarnessKind::base_package",
-      "end_line": 176,
+      "end_line": 179,
       "fingerprint": "tok1:4bd6cb328d7325af80f8e072bd21f62a821cf802b67020b502f5e4b6f8695366"
     },
     {
       "crate_name": "vibe-workspace",
       "file": "crates/vibe-workspace/src/system_prompt/harness.rs",
       "item_kind": "fn",
-      "line": 115,
+      "line": 118,
       "symbol": "vibe_workspace::system_prompt::harness::HarnessKind::conflicting_flags",
-      "end_line": 150,
+      "end_line": 153,
       "fingerprint": "tok1:0a4de2a454072f1b16bcf849e21d707433d2f66ee0d0289489daef6db5cf4784"
     },
     {
       "crate_name": "vibe-workspace",
       "file": "crates/vibe-workspace/src/system_prompt/harness.rs",
       "item_kind": "fn",
-      "line": 178,
+      "line": 181,
       "symbol": "vibe_workspace::system_prompt::harness::HarnessKind::delivery",
-      "end_line": 191,
+      "end_line": 194,
       "fingerprint": "tok1:169f6c6c368810c248b5734cf7fc8df49dbe9c3cdf8c7e910d3fb465c77b8c6d"
     },
     {
       "crate_name": "vibe-workspace",
       "file": "crates/vibe-workspace/src/system_prompt/harness.rs",
       "item_kind": "fn",
-      "line": 481,
+      "line": 484,
       "symbol": "vibe_workspace::system_prompt::harness::codex_carrier_verdict",
-      "end_line": 508,
+      "end_line": 511,
       "fingerprint": "tok1:67aafc4932aaa6f326afe39fe5748dd9518b6a9cb9cba5b2fcc529d5bf40454c"
     },
     {
       "crate_name": "vibe-workspace",
       "file": "crates/vibe-workspace/src/system_prompt/harness.rs",
       "item_kind": "fn",
-      "line": 279,
+      "line": 282,
       "symbol": "vibe_workspace::system_prompt::harness::launch_flags",
-      "end_line": 411,
+      "end_line": 414,
       "fingerprint": "tok1:58ebec99b051190c2e47d71b1e0b6eadd04693a4ba4b831352a074fb7c2fe9bd"
     },
     {
@@ -82020,6 +82020,24 @@
       "symbol": "vibe_workspace::system_prompt::harness::tests",
       "end_line": 5,
       "fingerprint": "tok1:576e8ea11cef3206f6bee9c8d0af8b181e96fc2f9d12dc8e9ec315fac276b8b4"
+    },
+    {
+      "crate_name": "vibe-workspace",
+      "file": "crates/vibe-workspace/src/system_prompt/harness/workers.rs",
+      "item_kind": "mod",
+      "line": 5,
+      "symbol": "vibe_workspace::system_prompt::harness::workers",
+      "end_line": 5,
+      "fingerprint": "tok1:dfd8ecdc204d7e2fffeb951efdf428d40db723a97be70cdc6313967ca9104fd9"
+    },
+    {
+      "crate_name": "vibe-workspace",
+      "file": "crates/vibe-workspace/src/system_prompt/harness/workers.rs",
+      "item_kind": "fn",
+      "line": 13,
+      "symbol": "vibe_workspace::system_prompt::harness::workers::worker_prefix_flags",
+      "end_line": 30,
+      "fingerprint": "tok1:b953b820cfe70a7947aad462a4dd2ed4369261cb064c6295441dd6b35fae410b"
     },
     {
       "crate_name": "vibe-workspace",
@@ -97550,7 +97568,7 @@
     {
       "file": "crates/vibe-cli/src/commands/prompt/flags.rs",
       "from_symbol": "vibe_cli::commands::prompt::flags::run",
-      "line": 33,
+      "line": 35,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-076#SYS-HARNESS-EXECUTABLE",
       "verb": "implements"
@@ -148679,7 +148697,7 @@
     {
       "file": "crates/vibe-workspace/src/system_prompt/harness.rs",
       "from_symbol": "vibe_workspace::system_prompt::harness::HarnessKind::as_str",
-      "line": 95,
+      "line": 98,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-076#SYS-HARNESS-DELIVERY",
       "verb": "implements"
@@ -148687,7 +148705,7 @@
     {
       "file": "crates/vibe-workspace/src/system_prompt/harness.rs",
       "from_symbol": "vibe_workspace::system_prompt::harness::HarnessKind::base_package",
-      "line": 160,
+      "line": 163,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-076#SYS-SUPPLIED-BASE",
       "verb": "implements"
@@ -148695,7 +148713,7 @@
     {
       "file": "crates/vibe-workspace/src/system_prompt/harness.rs",
       "from_symbol": "vibe_workspace::system_prompt::harness::HarnessKind::conflicting_flags",
-      "line": 118,
+      "line": 121,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-076#SYS-HARNESS-DELIVERY",
       "verb": "implements"
@@ -148703,7 +148721,7 @@
     {
       "file": "crates/vibe-workspace/src/system_prompt/harness.rs",
       "from_symbol": "vibe_workspace::system_prompt::harness::HarnessKind::delivery",
-      "line": 185,
+      "line": 188,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-076#SYS-HARNESS-DELIVERY",
       "verb": "implements"
@@ -148711,7 +148729,7 @@
     {
       "file": "crates/vibe-workspace/src/system_prompt/harness.rs",
       "from_symbol": "vibe_workspace::system_prompt::harness::codex_carrier_verdict",
-      "line": 496,
+      "line": 499,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-076#SYS-CODEX-PROFILE-TOP-LEVEL",
       "verb": "implements"
@@ -148719,7 +148737,7 @@
     {
       "file": "crates/vibe-workspace/src/system_prompt/harness.rs",
       "from_symbol": "vibe_workspace::system_prompt::harness::launch_flags",
-      "line": 284,
+      "line": 287,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-076#SYS-HARNESS-DELIVERY",
       "verb": "implements"
@@ -148756,6 +148774,22 @@
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-076#SYS-HARNESS-DELIVERY",
       "verb": "implements",
       "pinned_r": 1
+    },
+    {
+      "file": "crates/vibe-workspace/src/system_prompt/harness/workers.rs",
+      "from_symbol": "vibe_workspace::system_prompt::harness::workers",
+      "line": 5,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-076#SYS-WORKER-PREFIX-DELIVERY",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-workspace/src/system_prompt/harness/workers.rs",
+      "from_symbol": "vibe_workspace::system_prompt::harness::workers::worker_prefix_flags",
+      "line": 17,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-076#SYS-WORKER-PREFIX-DELIVERY",
+      "verb": "implements"
     },
     {
       "file": "crates/vibe-workspace/src/system_prompt/lane.rs",

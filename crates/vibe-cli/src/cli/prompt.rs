@@ -127,5 +127,10 @@ pub enum PromptCommand {
         node: Option<String>,
         #[arg(long, default_value = ".")]
         path: PathBuf,
+        /// Also print the flag that appends the same lane file to every
+        /// subagent the launch starts (Claude Code only, print mode only);
+        /// a harness without such a flag gets a note and no flag.
+        #[arg(long)]
+        workers: bool,
     },
 }

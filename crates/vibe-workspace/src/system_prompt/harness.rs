@@ -36,6 +36,9 @@ pub use notes::{
     OPENCODE_MEASURED_VERSION, QWEN_MEASURED_VERSION, opencode_carrier_description,
     qwen_carrier_description, qwen_closed_slots,
 };
+#[path = "harness/workers.rs"]
+mod workers;
+pub use workers::worker_prefix_flags;
 
 /// The closed set of harness kinds this version has a flag dialect for.
 ///

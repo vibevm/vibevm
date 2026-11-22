@@ -132,6 +132,7 @@ pub fn run(ctx: &output::Context, args: PromptArgs) -> Result<()> {
             harness,
             node,
             path,
-        } => flags::run(ctx, &select(&path, node.as_deref())?, &harness),
+            workers,
+        } => flags::run(ctx, &select(&path, node.as_deref())?, &harness, workers),
     }
 }

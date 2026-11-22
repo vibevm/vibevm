@@ -12,13 +12,15 @@
 
 specmark::scope!("spec://org.vibevm.core/vibevm/common/PROP-076#SYS-HARNESS-EXECUTABLE");
 
+use std::path::PathBuf;
+
 use anyhow::{Result, bail};
 use specmark::spec;
 use vibe_app::{AgentsConfig, AppError};
 use vibe_core::manifest::HarnessDelivery;
 use vibe_wire::generated::prompt_flags as wire;
 use vibe_workspace::system_prompt::{
-    HarnessKind, LaunchFlags, LaunchInputs, check_node_prompt, launch_flags,
+    HarnessKind, LaunchFlags, LaunchInputs, check_node_prompt, launch_flags, worker_prefix_flags,
 };
 
 use crate::commands::agent::launchers;
@@ -31,7 +33,12 @@ use super::Selected;
 pub(crate) const PROTOCOL: &str = "vibe-prompt-flags/1";
 
 #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-076#SYS-HARNESS-EXECUTABLE")]
-pub(crate) fn run(ctx: &output::Context, selected: &Selected, harness: &str) -> Result<()> {
+pub(crate) fn run(
+    ctx: &output::Context,
+    selected: &Selected,
+    harness: &str,
+    workers: bool,
+) -> Result<()> {
     let (kind, launcher) = resolve_kind(selected, harness)?;
     // **No launch arguments, because there is no launch.** A kind whose
     // base depends on the model then learns it from the harness's own
@@ -39,6 +46,7 @@ pub(crate) fn run(ctx: &output::Context, selected: &Selected, harness: &str) -> 
     // do too; the note below says so, because a reader who goes on to pass
     // `-m` is being shown an assignment for a different model.
     let composed = compose(selected, kind, launcher.as_ref(), &[])?;
+    let lane = composed.lane.clone();
     // **A command whose job is to print refuses what it may not print.**
     // `vibe agent` starts the harness anyway on exactly these reasons, with
     // no slot flag and one loud warning; here there is no session to save,
@@ -77,6 +85,26 @@ pub(crate) fn run(ctx: &output::Context, selected: &Selected, harness: &str) -> 
              launcher exists"
                 .to_owned(),
         );
+    }
+    if workers {
+        match lane.as_deref().map(|lane| worker_prefix_flags(kind, lane)) {
+            Some(extra) if !extra.is_empty() => {
+                composed.flags.extend(extra);
+                composed.notes.push(
+                    "`--append-subagent-system-prompt-file` appends this same lane file to every \
+                     subagent of the session, and Claude Code reads it only in print mode (`-p`)"
+                        .to_owned(),
+                );
+            }
+            Some(_) => composed.notes.push(format!(
+                "`--workers`: kind `{}` has no flag that appends a file to its subagents' system \
+                 prompt, so no worker flag is printed",
+                kind.as_str()
+            )),
+            None => composed.notes.push(
+                "`--workers`: this launch passes no lane, so no worker flag is printed".to_owned(),
+            ),
+        }
     }
     let report = wire::PromptFlagsReport {
         protocol: PROTOCOL.to_owned(),
@@ -210,6 +238,11 @@ pub(crate) struct Composed {
     /// Why the lane must not be delivered, when it must not. `None` is a
     /// lane this build is willing to put in the slot.
     pub(crate) undeliverable: Option<Undeliverable>,
+    /// The lane file the flags name, when they name one. `vibe prompt flags
+    /// --workers` and `vibe agent --worker-prefix` hand this same path to a
+    /// harness's subagents, so the workers' prefix is never a second
+    /// composition (`#SYS-WORKER-PREFIX-DELIVERY`).
+    pub(crate) lane: Option<PathBuf>,
 }
 
 /// Compose the flags for one kind over this node's current artifacts.
@@ -291,6 +324,7 @@ fn compose_with_personal(
                 },
             ),
             undeliverable: None,
+            lane: None,
         });
     }
     if matches!(kind, HarnessKind::Hermes | HarnessKind::Pi) {
@@ -306,6 +340,7 @@ fn compose_with_personal(
                 format!("`{}` has not been generated", answer.lane.path.display()),
                 format!("run `{}`", answer.remedy()),
             )),
+            lane: None,
         });
     }
     let local = if answer.verdict.is_equal() {
@@ -363,6 +398,7 @@ fn compose_with_personal(
             return Ok(Composed {
                 flags: LaunchFlags::default(),
                 undeliverable: Some(undeliverable),
+                lane: None,
             });
         }
     };
@@ -392,6 +428,7 @@ fn compose_with_personal(
     Ok(Composed {
         flags,
         undeliverable,
+        lane: Some(lane_path),
     })
 }
 

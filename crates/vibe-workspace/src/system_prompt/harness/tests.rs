@@ -109,6 +109,29 @@ fn claude_takes_exactly_one_file_flag_and_the_exclude_flag() {
 }
 
 #[test]
+fn worker_prefix_claude_appends_the_same_lane_file_to_every_subagent() {
+    let workers = worker_prefix_flags(HarnessKind::Claude, Path::new(LANE_PATH));
+    assert_eq!(workers, ["--append-subagent-system-prompt-file", LANE_PATH]);
+    // The same file the parent launch names: no second composition.
+    let parent = flags(HarnessKind::Claude, HarnessDelivery::Launch);
+    assert_eq!(parent.flags[1], workers[1]);
+}
+
+#[test]
+fn worker_prefix_is_empty_for_every_kind_without_a_subagent_flag() {
+    for kind in HarnessKind::ALL
+        .into_iter()
+        .filter(|kind| *kind != HarnessKind::Claude)
+    {
+        assert!(
+            worker_prefix_flags(kind, Path::new(LANE_PATH)).is_empty(),
+            "{}",
+            kind.as_str()
+        );
+    }
+}
+
+#[test]
 fn codex_takes_the_profile_and_the_declared_doc_limit() {
     let answer = launch_flags(
         HarnessKind::Codex,
