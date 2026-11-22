@@ -141,8 +141,7 @@ and qwen (M); bridge skills whose scripts actually run (M).
 
 ### ADV-RELEASE: release safety (owner's word: CI edits)
 
-Smoke the installed bootstrap on all targets (S); Linux aarch64 release target
-(S); refuse to replace a published release by accident (S); build provenance
+Smoke the installed bootstrap on all targets (S); refuse to replace a published release by accident (S); build provenance
 attestations (S); deep Windows project roots (S).
 
 ### Not in the base, kept for later
@@ -199,6 +198,12 @@ The owner agreed with every recommendation:
 Platform-stage recommendations stay working assumptions until that stage
 starts. The Library is built by a separate agent; coordination is in
 `LIBRARY-COORDINATION.md`.
+
+## ARM moved out (owner, 2026-11-22)
+
+There is no ARM hardware now. ARM releases for everything vibevm ships are a
+separate campaign, RELEASE-ARM; the aarch64 entries moved there. The aarch64
+decision below still describes how that campaign should roll out.
 
 ## Planner decisions taken while the owner was away (2026-11-22)
 

@@ -141,6 +141,11 @@ not optional. The recurring traps, with the fix for each:
     raised a question only the owner or the planner could answer. Answer them
     before hand-off and write each answer into the plan; an entry whose
     question is open waits as `blocked` with the question in its note.
+33. **Repository gates that focused checks never run.** A focused check proves
+    the behaviour, not the repository's structural gates (in vibevm:
+    `conform`, which wants a spec edge and a doctest on every new public item
+    and a 600-line file budget). Name those requirements in the entry, or the
+    first full gate after the list fails on entries already accepted.
 
 ## After hand-off
 
