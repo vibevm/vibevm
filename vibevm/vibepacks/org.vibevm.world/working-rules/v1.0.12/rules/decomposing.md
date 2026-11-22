@@ -24,6 +24,63 @@ These are the observed causes. Each rule below removes one of them.
 - **Too much context.** Long rules, the whole plan, the boot lane. The lead
   treats every sentence as an obligation.
 
+## The procedure: scout, decompose, skeptic, revise
+
+Run it with independent helpers (subagents or workers), not in your own head:
+an author cannot see the gaps in its own entries. Each step is a separate
+helper with a fresh context, and each returns structured data, not prose.
+
+1. **Scout** (one helper per area, read-only). Input: the area, the old plan
+   items for it, the code. Output per item: what is true today with evidence
+   (a file path, a test name, a command), what is missing, the user value, the
+   owning module. Old status labels are claims; the code is the fact.
+2. **Recover intent** (one helper per area, read-only). Input: the scout's
+   records plus the original intent of each item. Output: the intent restated
+   for today's architecture, grouped into capabilities, with a disposition for
+   every item (in a capability, already served by named code, owned elsewhere,
+   no user-visible intent). Skip this step when nothing is historical.
+3. **Decompose** (one helper per capability). Input: the capability record,
+   this page, the bounded lead's page and the packet template. Output: entries
+   in the five-line form plus test, files to read, steps, pre-made decisions,
+   the tempting overreach, and any question only the owner or you can answer.
+4. **Skeptic** (one fresh helper per capability). It plays the weak model
+   receiving the entries cold, with only each entry, the files it names and
+   the bounded lead's and executor's pages. It verifies every code fact and
+   returns a list of problems, each with a kind (open decision, check that
+   cannot fail or already passes, write area too small, too big, hidden
+   prerequisite, invitation to scope creep, wrong code fact, vague outcome)
+   and a concrete fix. Give it the known traps (rules 19-33) as a checklist.
+5. **Revise** (one helper per capability, skipped when the skeptic found
+   nothing). Input: the entries and the problems. It checks each problem in
+   the code, fixes the real ones, keeps an entry unchanged where the skeptic
+   was wrong and says why.
+6. **You decide** the questions that came up, write each answer into the plan,
+   apply mechanical fixes across all entries (checks through the zero-test
+   wrapper, no machine paths, dependencies resolved to real ids), and only
+   then hand the list over.
+
+Run the steps as a pipeline: a capability's skeptic starts as soon as its
+decomposition is done, without waiting for the others. Keep the helpers'
+results in files beside the plan so the next planner can reuse them.
+
+Measured on vibevm, 2026-11-22: the skeptic found problems in every one of
+35 capabilities (3 to 10 each); after revision the bounded lead closed all 19
+entries of two goals with no rework and no failed check.
+
+Prompt skeleton for the skeptic, to adapt:
+
+```
+You are a skeptical reviewer playing a weaker executor model that receives
+these entries cold, with only each entry, the files it names, <bounded lead
+page> and <executor page>. Find every place where it would loop, guess,
+overreach or fail: open decisions, checks that cannot fail before or cannot
+pass after, checks already passing, write areas too small for the steps,
+entries too big, hidden prerequisites, wording that invites completing a
+structure, wrong code facts (verify each against the code). Known traps:
+<rules 19-33>. Return problems with kind, detail and a concrete fix.
+Entries: <entries>
+```
+
 ## Before you write any entry
 
 1. **Inventory against the code, not against the old plan.** For every
@@ -80,7 +137,7 @@ These are the observed causes. Each rule below removes one of them.
     reads the entry, the packet template and the files it names, nothing
     else. If an entry needs the design document to make sense, move the
     needed sentence into the entry.
-16. **Pass the work through a skeptic before hand-off.** Have someone else try
+16. **Pass the work through a skeptic before hand-off** (the procedure above, steps 4-5). Have someone else try
     each entry cold: is any decision left open? Can the check fail before and
     pass after? Is the write area enough? Fix what they find. Do not hand off
     an entry that failed this.
