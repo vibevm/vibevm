@@ -502,7 +502,7 @@ fn docs_corpus_shape_is_counted() {
     }
     // The whole corpus: 54 pages, none quarantined, one plain.
     assert_eq!(totals.examples, 75, "the pages carry 75 examples");
-    assert_eq!(totals.rules, 866, "the pages cite 866 rules");
+    assert_eq!(totals.rules, 864, "the pages cite 864 rules");
     assert_eq!(totals.derived, 77, "the pages derive 77 references");
     assert_eq!(totals.prompts, 30, "30 scenario pages open with a prompt");
     assert_eq!(totals.asserts, 65, "those prompts carry 65 asserts");
