@@ -17,6 +17,7 @@ standing synchronization permissions; never infer grants from this template.
 - Completion list: REPLACE_WITH_PATH_OF_THE_LIST_FILE_OR_EXTENSION_PAGE
 - Full gate: REPLACE_WITH_ONE_COMMAND
 - Executors for a bounded lead: REPLACE_WITH_HOW_ONE_FRESH_EXECUTOR_IS_STARTED_PER_PACKET
+  (name the subagent type, for example `vibe-executor`, when the project generates types)
 - Task worktrees: REPLACE_WITH_DIRECTORY_FOR_PACKET_WORKTREES
 - Publication: REPLACE_WITH_none_OR_THE_PROJECT_POLICY_GRANT_THAT_APPLIES
 - Owner instructions in force: REPLACE_WITH_DATED_VERBATIM_QUOTES_OR_NONE

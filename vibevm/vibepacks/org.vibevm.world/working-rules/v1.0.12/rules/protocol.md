@@ -245,7 +245,9 @@ exclusions, checks, reporting requirements and the selected context mode:
   exact accepted snapshot and completion of required reads, not just file presence.
   Do not attach a quiet clause that forbids the boot this mode requires.
   A worker that needs full project context is started through the project's
-  launcher; nobody assembles a system prompt by hand.
+  launcher; nobody assembles a system prompt by hand. When the project
+  generates subagent types, such a worker is started with the type
+  `vibe-worker`, and a packet executor with `vibe-executor`.
 
 The project sets mode-selection criteria. Without such authorization use bounded
 context. Full boot expands context, not permissions: every worker remains explicitly
