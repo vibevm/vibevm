@@ -8,6 +8,9 @@ Format roughly follows [Keep a Changelog](https://keepachangelog.com/), grouped 
 
 ## [Unreleased]
 
+## [1.0.12] — 2026-11-23
+
+- **Every vibevm-owned package now follows the vibevm version and is published as 1.0.12.** The packages under `vibevm/vibepacks/` moved from 1.0.0 to 1.0.12, including exact pins between them; a project that asks for `^1.0.0` resolves to 1.0.12. Agent packages keep their upstream products' versions. The vibevm repository itself is opted in to the composed system prompt.
 - **Claude launches now prepare generated subagent types for the next session.** `vibe-worker` carries the parent's composed boot lane with a fixed worker preface; `vibe-executor` carries only the locked installed working-rules executor page. `vibe prompt types` writes them explicitly, `--json` reports their statuses, and `--check` reports stale, missing or foreign definitions without writing and exits non-zero for those states. Definitions live under `.claude/agents/`, with a nested self-ignoring `.gitignore`; authored files are preserved. Claude launch refreshes them before exec, while soft and opted-out launches withdraw the generated lane-bodied worker type rather than leave an old lane active. Existing sessions see new definitions only at their next startup. Executor packets still carry `##subagent-quiet-clause`, and neither generated type should be combined with `--worker-prefix`.
 
 **Upgrade notes.**
