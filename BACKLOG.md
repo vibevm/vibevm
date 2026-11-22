@@ -3386,3 +3386,18 @@ Source: [`campaigns/next-semantic-transfer-2026-11/NST-DOMAIN-CONSOLIDATION-DISP
 - **P3 · NST consolidation: three step drivers build `StepContext` by hand (row 9).** A constructor for the shared fields in `vibe-app/src/steps`. Size S.
 - **P3 · NST consolidation: `commands/app/project.rs` repeats the index-lookup half of `needs_materialisation` in a local closure (row 7).** Size S.
 - **P3 · NST consolidation: the L2/L3 preference roots are derived twice, from the repository root and from the working directory (row 17).** Size S.
+
+
+## 2026-11-22 · NST closure — findings left for a later wave
+
+Source: [`campaigns/next-semantic-transfer-2026-11/NST-FINAL-REPORT.md`](campaigns/next-semantic-transfer-2026-11/NST-FINAL-REPORT.md).
+
+- **P2 · NST closure: kit production has no spec unit.** `vibe-bootstrap` and `vibe-cli/src/cli/kit.rs` were built from a campaign brief; nineteen public items cannot be tagged and `cargo xtask specmap --check` reports them, together with `vibe_install::plan::configured::PlanningSource`, as twenty orphans. Write the PROP, then tag. Size M.
+- **P2 · NST closure: eighteen tests need retained historical binaries.** They are ignored by default and name their `NST_*` variable. Four of them (`ordinary_closure_fallback_actual_install_boundary_and_requires_precedence`, `integer_profile_v2_describe_preview_confirmed_install_parity`, `integer_profile_effective_consumer_merge_prior_and_preset_drift`, `host_required_path_install_cold_metadata_and_other_routes`) also hold assertions that need no binary; split those halves out so they run. Size S.
+- **P2 · NST closure: eight prior-client checks pass without running.** In `cli_common_package_optional/default_review.rs` the reads of `NST_SUBSKILL_OLD_CLI`, `NST_FORWARD_OLD_CLI`, `NST_CONFIG_DATA_OLD_CLI`, `NST_PROFILE_OLD_CLI`, `NST_BOOLEAN_OLD_CLI`, `NST_BOOL_DEFAULT_OLD_CLI`, `NST_PROFILE_BOOL_OLD_CLI` and `NST_PRESET_OLD_CLI` return early when unset, so the test is green without its prior-client half. Make them ignored-with-reason like the others. Size S.
+- **P3 · NST closure: 107 important functions changed since 1.0.0 carry no function-level marker.** 64 sit in files with no governing anchor (mostly `vibe-spec`, `vibe-wire`, `vibe-bootstrap`), 39 in files at the 600-line budget. Size M.
+- **P3 · NST closure: `cargo doc -D warnings` fails for `vibe-install` and `vibe-workspace`.** About ten broken or private intra-doc links (`lifecycle.rs` `PARKED_SENTINEL`, `boot_artifacts.rs`, `install/model.rs`, `publish.rs`, `compile_trace.rs`). Size S.
+- **P3 · NST closure: the docs surface snapshot `vibevm-docs/v1.0.0/maintenance/surface/1.0.0.json` still names `[hooks]` and the removed report rows.** Refresh at the next documentation release. Size S.
+- **P3 · NST closure: `vibe.lock` records machine paths.** Its `source_url` rows name the checkout the tool ran in; moving the branch to another directory needs `vibe update --sources-only --offline --registry <repo>/vibevm/vibepacks`. Size S.
+- **P3 · NST closure: `ManifestWire` keeps a `hooks` reader so the refusal can be typed,** which makes `vibe doc surface` list `hooks` as a known key. Size S.
+- **P3 · NST closure: three campaign documents differ between the architect and builder trees and were not merged** (`PRIOR-APP-STEPS-COMPLETE-01.md`, `CORP-AGENTS-01.md`, `CORP-KIT-BUILDER-FIRST-01.md`). Size S.
