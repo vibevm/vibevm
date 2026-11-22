@@ -51,6 +51,8 @@ use crate::output;
 
 use super::launchers;
 
+#[path = "launch/agent_types.rs"]
+mod agent_types;
 #[path = "launch/route.rs"]
 mod route;
 #[path = "launch/worker_prefix.rs"]
@@ -334,6 +336,7 @@ pub(crate) fn run(ctx: &output::Context, argv: Vec<String>) -> Result<()> {
     if let Some(profile) = &composed.profile {
         write_profile(profile)?;
     }
+    agent_types::refresh(ctx, launcher.kind, &selected, lane.as_deref());
     let mut command: Vec<String> = launcher.command.clone();
     command.extend(composed.flags.iter().cloned());
     if worker_prefix && let Some(lane) = &lane {

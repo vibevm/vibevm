@@ -21982,6 +21982,15 @@
     },
     {
       "crate_name": "vibe-cli",
+      "file": "crates/vibe-cli/src/commands/agent/launch/agent_types.rs",
+      "item_kind": "mod",
+      "line": 3,
+      "symbol": "vibe_cli::commands::agent::launch::agent_types",
+      "end_line": 3,
+      "fingerprint": "tok1:4543db4ecf71743183719aae7234db96f1580b947f256c2aa3409e9b850fdefa"
+    },
+    {
+      "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/commands/agent/launch/route.rs",
       "item_kind": "mod",
       "line": 9,
@@ -21993,10 +22002,10 @@
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/commands/agent/launch.rs",
       "item_kind": "fn",
-      "line": 60,
+      "line": 62,
       "symbol": "vibe_cli::commands::agent::launch::run",
-      "end_line": 349,
-      "fingerprint": "tok1:180238cdb19e5782dc9c22d19357e01dfc5df085e3d1721c9b8fd01defb729c2"
+      "end_line": 352,
+      "fingerprint": "tok1:a71b5c40a47bc5165f20b6d0b6c2e0a2e08d0ff196dcb84fe2460271279ade76"
     },
     {
       "crate_name": "vibe-cli",
@@ -22011,9 +22020,9 @@
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/commands/agent/launch.rs",
       "item_kind": "fn",
-      "line": 444,
+      "line": 447,
       "symbol": "vibe_cli::commands::agent::launch::write_profile",
-      "end_line": 471,
+      "end_line": 474,
       "fingerprint": "tok1:5749ab5f3499199b6f9d25aa78df112206b51f63a9a7df2d79de886dca8bb49e"
     },
     {
@@ -94510,6 +94519,14 @@
       "verb": "implements"
     },
     {
+      "file": "crates/vibe-cli/src/commands/agent/launch/agent_types.rs",
+      "from_symbol": "vibe_cli::commands::agent::launch::agent_types",
+      "line": 3,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-076#SYS-WORKER-TYPES",
+      "verb": "implements"
+    },
+    {
       "file": "crates/vibe-cli/src/commands/agent/launch/route.rs",
       "from_symbol": "vibe_cli::commands::agent::launch::route",
       "line": 9,
@@ -94520,7 +94537,7 @@
     {
       "file": "crates/vibe-cli/src/commands/agent/launch.rs",
       "from_symbol": "vibe_cli::commands::agent::launch::run",
-      "line": 60,
+      "line": 62,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-076#SYS-SOFT-LAUNCH",
       "verb": "implements"
@@ -94536,7 +94553,7 @@
     {
       "file": "crates/vibe-cli/src/commands/agent/launch.rs",
       "from_symbol": "vibe_cli::commands::agent::launch::write_profile",
-      "line": 450,
+      "line": 453,
       "provenance": "authored",
       "uri": "spec://core-ai-native/mechanisms/ENGINE-CONFORM-v0.1#rules",
       "verb": "deviates",
