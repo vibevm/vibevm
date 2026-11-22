@@ -9,6 +9,7 @@ Packet:  P-<number>
 Tree:    <absolute path of the worktree the executor works in>
 Branch:  <branch already checked out there>
 Budget:  <minutes of wall clock, e.g. 40>
+Type:    <subagent type the executor is started with, e.g. vibe-executor; "default" when the project generates none>
 
 Goal:    <one sentence: what is true after this packet that is not true now>
 

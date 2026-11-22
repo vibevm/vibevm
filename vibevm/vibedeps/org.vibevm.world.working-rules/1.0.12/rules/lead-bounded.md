@@ -92,7 +92,11 @@ policy, the boot lane or old plans to look for more rules.
 16. Give implementation to executors, launched as "Current mode" says. Write
     each packet from `packet.template.md` beside this page: exact files inside the
     entry's `Write` area, steps without choices, the entry's check, the commit
-    message. One packet, one fresh session.
+    message. One packet, one fresh session. When the project generates
+    subagent types (a type named `vibe-executor` is in your list of subagent
+    types), start every executor with that type; give a worker that needs the
+    full project context, and has no packet, the type `vibe-worker`. Never
+    start an executor as `vibe-worker`.
 17. When an executor reports `DONE`, run the check yourself and read the diff
     once. A defect is something wrong in a named file with a finite fix; send
     it back once. Taste is not a defect.

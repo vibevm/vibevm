@@ -1,8 +1,8 @@
 schema = 1
-source_hash = "sha256:fe12c8f1e033bda69dcccb363434724429e7f83774bd2780e8eab94f2f828079"
+source_hash = "sha256:0ea8089a1f1751a0bece272c2dbfe8acc6a7319d38a638766fcc7371f23f4bc1"
 spec_format = "xml"
 converter_recipe = "specdoc/4"
-derived_hash = "sha256:c04513b966446d6ee3e2f719167a4b473340e38c8d7d7d84995bc4151ef1f1b8"
+derived_hash = "sha256:f4774662469b950671c0201e4d6cc751e9233c608fdebc612683622c36193a52"
 
 [[file]]
 path = "LICENSE.md"
@@ -24,19 +24,19 @@ source = "rules/decomposing.md"
 
 [[file]]
 path = "rules/lead-bounded.md"
-sha256 = "61d61cd20e763a9c9cb695e04a24f4567dd0403fa73ffcbf4fae8e17aae1dc7a"
+sha256 = "70f745683b40d25cfc28aa4b733339b965122d53d5677e9eae1aaec3d7e23387"
 disposition = "copied"
 source = "rules/lead-bounded.md"
 
 [[file]]
 path = "rules/local.template.md"
-sha256 = "8b4dcb645d8f0ece64f0d3ffc6029f1875efd84cd4b6bf9b76e36382e7e2e9d3"
+sha256 = "682bd3446a60474ff3ad131378dc9a2fe6be2645482069bc83cc7fb0fc52e7bf"
 disposition = "copied"
 source = "rules/local.template.md"
 
 [[file]]
 path = "rules/packet.template.md"
-sha256 = "82b4ceaf44d479312dbbbb3770303a29a936ac25d59d6b16ec9fe0f6c2656d68"
+sha256 = "81c7b5a385b7cb7285c3da98110b7861866ebcea8a2a49d2645f0699f2ebd745"
 disposition = "copied"
 source = "rules/packet.template.md"
 
@@ -48,7 +48,7 @@ source = "rules/project.template.md"
 
 [[file]]
 path = "rules/protocol.md"
-sha256 = "b1f707275634c0951182588590503409222ce023ef3ef0087977944571718bc9"
+sha256 = "b8cb490d5182eb12f6e25173ed0f89cb0d5a37397b96352329d44e00dbf7d89f"
 disposition = "copied"
 source = "rules/protocol.md"
 
