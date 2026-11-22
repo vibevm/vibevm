@@ -246,8 +246,13 @@ fn interactive(ctx: &output::Context, store: &Store, cancel: &CancellationToken)
             .iter()
             .nth(picked - 1)
             .ok_or(vibe_secrets::Error::NotFound)?;
-        let actions =
-            output::prompts::named(&["Details", "Edit label", "Rotate value", "Remove item"]);
+        let actions = output::prompts::named(&[
+            "Details",
+            "Edit label",
+            "Rotate value",
+            "Remove item",
+            "Show references",
+        ]);
         let Some(action) =
             output::prompts::choose_opt("Item action — Escape returns", &actions, 0)?
         else {
@@ -303,6 +308,10 @@ fn interactive(ctx: &output::Context, store: &Store, cancel: &CancellationToken)
                     store.remove_coordinated(selected, &expected)?;
                 }
             }
+            4 => match store.references(selected) {
+                Ok(consumers) => println!("{}", human::references(selected.as_str(), &consumers)),
+                Err(_) => println!("Reference inventory unavailable or unknown."),
+            },
             _ => unreachable!(),
         }
     }
