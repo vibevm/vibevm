@@ -524,3 +524,40 @@ fn settings_home_validates_expands_and_layers_independently() {
     let plain = SiteProfile::parse("schema = 1\n", "site.toml").unwrap();
     assert!(!toml::to_string(&plain).unwrap().contains("settings_dir"));
 }
+
+#[test]
+#[verifies("spec://org.vibevm.core/vibevm/common/PROP-019#site-profile")]
+fn ai_table_carries_hint_and_endpoint_and_refuses_bad_values() {
+    let profile = SiteProfile::parse(
+        "schema = 1\n[ai]\nkey_hint_label = 'Example AI Hub'\n\
+         key_hint_url = 'https://ai-hub.example.com/keys'\n\
+         default_endpoint = 'http://127.0.0.1:32125/v1'\n",
+        "corp.toml",
+    )
+    .unwrap();
+    assert_eq!(profile.ai.key_hint_label.as_deref(), Some("Example AI Hub"));
+    assert_eq!(
+        profile.ai.key_hint_url.as_deref(),
+        Some("https://ai-hub.example.com/keys")
+    );
+    assert_eq!(
+        profile.ai.default_endpoint.as_deref(),
+        Some("http://127.0.0.1:32125/v1")
+    );
+    assert_eq!(corp().ai, AiHints::default());
+    assert!(!toml::to_string(&corp()).unwrap().contains("[ai]"));
+    assert!(
+        refused("schema = 1\n[ai]\nkey_hint_url = 'https://ai-hub.example.com/keys'\n")
+            .contains("ai.key_hint_url")
+    );
+    assert!(refused("schema = 1\n[ai]\nkey_hint_label = ' '\n").contains("ai.key_hint_label"));
+    assert!(
+        refused("schema = 1\n[ai]\ndefault_endpoint = 'http://ai.example.com/v1'\n")
+            .contains("ai.default_endpoint")
+    );
+    assert!(
+        refused("schema = 1\n[ai]\ndefault_endpoint = 'https://user:pw@ai.example.com/v1'\n")
+            .contains("ai.default_endpoint")
+    );
+    assert!(SiteProfile::parse("schema = 1\n[ai]\nkey = 'x'\n", "corp.toml").is_err());
+}

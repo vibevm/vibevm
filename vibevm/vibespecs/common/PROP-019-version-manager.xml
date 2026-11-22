@@ -903,7 +903,9 @@ TOML **site profile** (`schema = 1`), and every developer runs `vibe self apply
 `[[mirror]]`, `[[override]]`, `[[remap]]`, `[source_policy]`, `[artifacts]`
 (`vibe`, `packages`), `[self]`, `[proxy]`, `[tls]`, `[net] offline`, `[path] fix =
 "ask" | "always" | "never"`, `[versions] select` (PROP-075 `#VERSIONS-SELECT`, the installation's
-version-selection policy) and `[trust]`; any other key is refused. It is stored verbatim as
+version-selection policy), `[trust]` and `[ai]` (`key_hint_label`, `key_hint_url` and
+`default_endpoint`: where a developer gets an API key and the endpoint `vibe ai setup` proposes
+for a new connection, never a key); any other key is refused. It is stored verbatim as
 its own layer, `&lt;settings-dir&gt;/site-profile.toml`, never merged into the
 user's files: every owner reads it **below** the user's own `registry.toml` /
 `config.toml` / `settings.toml` and **above** the built-in defaults.</SITE-PROFILE-LEAD></p>

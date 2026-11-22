@@ -1,5 +1,9 @@
 # Corporate-env campaign: format and behaviour changes
 
+## CORP-FMT-067 — site profile `[ai]` hint and default endpoint
+
+The site profile (`schema = 1`) accepts an optional `[ai]` table with `key_hint_label`, `key_hint_url` and `default_endpoint`. A profile without `[ai]` serializes unchanged. An older vibe refuses a profile carrying `[ai]` as an unknown key, so update the binary before applying such a profile. `key_hint_url` requires `key_hint_label`; `default_endpoint` follows the connection endpoint rules (https, or http on a loopback address, with no credentials, query or fragment). The table never carries a key.
+
 ## CORP-FMT-066 — explicit atomic default scope
 
 Implementation candidate, 2026-11-21. `ai setup --set-default ID --scope default-only|managed-overrides` requires an explicit scope and conflicts with agent/alias/mode/connection setup. Separate closed `vibe-ai-default-scope-result/1` contains before/after default and canonical binding rows, plus a distinct `ai-default-scope/1:sha256:...` subject. Old setup tokens do not authorize it. Preview binds lossless settings root, exact AI index, target/scope and before/after rows; apply rechecks the snapshot under inventory then store lock and publishes one index/revision iff changed.

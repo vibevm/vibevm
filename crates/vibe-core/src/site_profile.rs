@@ -161,6 +161,9 @@ pub struct SiteProfile {
     /// out of the box for a whole installation.
     #[serde(default, skip_serializing_if = "TrustLists::is_empty")]
     pub trust: TrustLists,
+    /// `[ai]` — the optional API-key hint and default AI endpoint (`ai.rs`).
+    #[serde(default, skip_serializing_if = "AiHints::is_empty")]
+    pub ai: AiHints,
 }
 
 fn is_default_path(section: &PathSection) -> bool {
@@ -200,7 +203,7 @@ pub enum SiteProfileError {
          (violates spec://org.vibevm.core/vibevm/common/PROP-019#site-profile; \
           fix: repair the TOML at the reported location — the tables are \
           schema, name, [[registry]], [[mirror]], [[override]], [[remap]], \
-          [source_policy], [artifacts], [self], [proxy], [net], [path], [trust])"
+          [source_policy], [artifacts], [self], [proxy], [net], [path], [trust], [ai])"
     )]
     Parse {
         origin: String,
@@ -385,7 +388,7 @@ impl SiteProfile {
                 })?;
             }
         }
-        Ok(())
+        self.ai.validate(origin)
     }
 
     /// The profile's `[[remap]]` rows as one local-layer source labelled
@@ -582,10 +585,13 @@ impl SiteReceipt {
     }
 }
 
+#[path = "site_profile/ai.rs"]
+mod ai;
 #[path = "site_profile/home_paths.rs"]
 mod home_paths;
 #[path = "site_profile/windows_paths.rs"]
 mod windows_paths;
+pub use ai::AiHints;
 pub use windows_paths::{is_absolute_anywhere, is_windows_absolute, starts_at_home};
 
 #[cfg(test)]
