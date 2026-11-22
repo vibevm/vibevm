@@ -1,0 +1,15 @@
+# Configured Hermes worktree query — bounded architectural acceptance
+
+2026-11-19. Base `4391c12c8f596e43eb01fafe57f5390d3b8341af`.
+
+Accepted manifest `/data/git/vibevm-native-carrier-20261119/HERMES-CONFIG-WORKTREE-CANDIDATE.json`, SHA256 `95d6e04e1aa167fdfcdea0e5926e8e322ea5a881c204181dda6ff3fe59934467`. Independently verified digest and all seven current file hashes: four product files and three documents. Committed blobs/publication require separate verification.
+
+Reviewed the product diff: caller-only argv reaches native profile selection before main import; admitted finite-query policy is read once inside the existing held Selection before Rust project selection. Native worktree creation consumes explicit OR configured policy once. Both false and true cases use the selected gateway-query frontend, avoiding later classic configuration rereads. This intentionally changes the false-case frontend route; it does not establish general classic dispatch equivalence. Unsupported flags are checked before worktree effects. No second probe/helper, config copy into Rust, new receipt schema or native global mutation.
+
+Inspected actual `control/hermes-config-worktree-proof.py` assertions: false query-file/quiet output and no tree; unsupported negative option/verbose refuse without added requests or tree; true configured query creates exactly one retained tree, selected generated boot artifact and matching cwd/prefix in the actual synthetic request. Final native log binds binary `bcf981fbb27087785f49ad54874933ea277e1d4007db417e6e5c36ca595c93c7`. Native read-only/classic config comparison covers synthetic false/true only, not all managed/environment combinations.
+
+Final CLI 16 PASS, conform 0 new / 141 existing and repeated-cancel ownership PASS logs inspected. Scoped read-only diff check independently clean. Formatting/build are producer evidence; architect did not build/write in the peer checkout. Native fixture is isolated synthetic execution, not a real provider or cache-saving measurement.
+
+Accept finite query/query-file configuration worktree behavior only. Quiet flag detection alone is not a promise of complete queryless/interactive config-default handling. Classic/TUI frontend, unattended oneshot, shared gateway, workers, platforms and final parity remain open. No SYS-PROMPT/CORP-ENV/NST closure follows.
+
+Builder instructed to commit exactly seven accepted paths and update authoritative source plan before dashboard. Next bounded qualification: actual main tool call invokes one native child for Hermes; Pi explicitly loads its pinned shipped example subagent extension (not a builtin/default capability). Reuse admitted isolated filesystem/process/network boundary, synthetic HOME/config and environment allowlist; no operator credentials or real provider. Evidence must distinguish actual main prefix presence, child prefix exclusion, native child identity/response and isolation sentinels. Absence of prefix or an environment filter alone is not complete worker isolation. No full-size/cache/MCP replay or new Cartesian matrix is required.
