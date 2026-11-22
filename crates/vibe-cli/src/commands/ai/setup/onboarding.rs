@@ -17,12 +17,13 @@ const SKIPPED: &str = "AI setup skipped; connections and bindings unchanged.";
 
 /// With no default connection, offer (default No) to create one and select it.
 pub(super) fn ensure_default(
+    ctx: &output::Context,
     settings: &Path,
     store: &vibe_connections::Store,
     cancel: &CancellationToken,
 ) -> Result<Next> {
-    if store.default_selection()?.connection.is_some() {
-        return Ok(Next::Continue);
+    if let Some(current) = store.default_selection()?.connection {
+        return reuse_or_replace(ctx, settings, store, &current, cancel);
     }
     println!("No default AI connection exists.");
     if !output::prompts::confirm("Create a default AI connection now?", false)? {
@@ -40,6 +41,59 @@ pub(super) fn ensure_default(
         id.as_str(),
         metadata.endpoint
     );
+    Ok(Next::Continue)
+}
+
+/// Show the default (never its key) and keep it, or replace it with a new
+/// connection under an explicit scope reviewed by the default-scope preview.
+fn reuse_or_replace(
+    ctx: &output::Context,
+    settings: &Path,
+    store: &vibe_connections::Store,
+    current: &SecretId,
+    cancel: &CancellationToken,
+) -> Result<Next> {
+    let metadata = store.details(current)?.metadata;
+    println!(
+        "Default AI connection: {} — {} — {}",
+        metadata.label,
+        current.as_str(),
+        metadata.endpoint
+    );
+    if output::prompts::confirm("Reuse this default connection?", true)? {
+        return Ok(Next::Continue);
+    }
+    if !output::prompts::confirm(
+        "Replace the default connection? Agents that inherit the default will use the new connection",
+        false,
+    )? {
+        println!("Default connection unchanged.");
+        return Ok(Next::Continue);
+    }
+    let Some((id, _)) = create(settings, store, cancel)? else {
+        println!("{SKIPPED}");
+        return Ok(Next::Stop);
+    };
+    let scopes = [
+        "Change only the default connection",
+        "Replace all Vibe-managed agent overrides with this connection",
+    ];
+    let scope = match output::prompts::choose_opt_interruptible(
+        "Default update scope",
+        &output::prompts::named(&scopes),
+        0,
+    )? {
+        Some(0) => vibe_connections::DefaultScope::DefaultOnly,
+        Some(_) => vibe_connections::DefaultScope::ManagedOverrides,
+        None => {
+            println!(
+                "Default unchanged; new connection {} kept as a non-default connection.",
+                id.as_str()
+            );
+            return Ok(Next::Continue);
+        }
+    };
+    super::default_scope(ctx, store, &id, scope, None, cancel)?;
     Ok(Next::Continue)
 }
 

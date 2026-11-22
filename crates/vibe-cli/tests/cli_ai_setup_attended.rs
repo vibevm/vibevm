@@ -222,3 +222,165 @@ fn attended_setup_without_default_declined_writes_nothing() {
         serde_json::json!([])
     );
 }
+
+fn seed_default(w: &World) -> String {
+    let secret = w.json(
+        &[
+            "secrets",
+            "create",
+            "--kind",
+            "api-key",
+            "--label",
+            "Old",
+            "--value-stdin",
+        ],
+        Some(b"SYNTHETIC_OLD_KEY_NEVER_OUTPUT"),
+    );
+    let sid = secret["items"][0]["id"].as_str().unwrap().to_owned();
+    let added = w.json(
+        &[
+            "ai",
+            "connections",
+            "add",
+            "--label",
+            "Old",
+            "--endpoint",
+            "http://127.0.0.1:32123/v1",
+            "--api-kind",
+            "openai-chat-completions",
+            "--default-model",
+            "synthetic",
+            "--secret-ref",
+            &sid,
+        ],
+        None,
+    );
+    let id = added["items"]
+        .as_object()
+        .unwrap()
+        .keys()
+        .next()
+        .unwrap()
+        .clone();
+    let revision =
+        |w: &World| w.json(&["ai", "connections", "list"], None)["store_revision"].to_string();
+    w.json(
+        &[
+            "ai",
+            "connections",
+            "default",
+            "set",
+            &id,
+            "--expect-store",
+            &revision(w),
+        ],
+        None,
+    );
+    w.json(
+        &[
+            "ai",
+            "bindings",
+            "set",
+            "qwen",
+            "--mode",
+            "connection",
+            "--connection",
+            &id,
+            "--expect-store",
+            &revision(w),
+        ],
+        None,
+    );
+    w.json(
+        &[
+            "ai",
+            "bindings",
+            "set",
+            "pi",
+            "--mode",
+            "inherit-default",
+            "--expect-store",
+            &revision(w),
+        ],
+        None,
+    );
+    id
+}
+
+#[test]
+fn attended_setup_with_default_reuses_it_without_writes() {
+    let w = World::new();
+    let old = seed_default(&w);
+    let before = w.json(&["ai", "connections", "list"], None)["store_revision"].clone();
+    let report = w.setup(&[
+        ("Install AI agent packages now?", "n"),
+        ("Reuse this default connection?", "\r"),
+        ("native settings", "n"),
+        ("Configure existing connection", "\u{1b}"),
+    ]);
+    let transcript = report["transcript"].as_str().unwrap();
+    assert_eq!(report["status"], 0, "{transcript}");
+    assert_eq!(report["sent"], 4, "{transcript}");
+    assert!(
+        transcript.contains("Default AI connection: Old"),
+        "{transcript}"
+    );
+    assert_eq!(
+        w.json(&["ai", "connections", "list"], None)["store_revision"],
+        before
+    );
+    assert_eq!(
+        w.json(&["ai", "connections", "default", "show"], None)["connection"],
+        old.as_str()
+    );
+    assert_eq!(
+        w.json(&["secrets", "list"], None)["items"]
+            .as_array()
+            .unwrap()
+            .len(),
+        1
+    );
+}
+
+#[test]
+fn attended_setup_with_default_replaced_default_only_keeps_explicit_qwen() {
+    let w = World::new();
+    let old = seed_default(&w);
+    let report = w.setup(&[
+        ("Install AI agent packages now?", "n"),
+        ("Reuse this default connection?", "n"),
+        ("Replace the default connection?", "y"),
+        ("Connection label", "New\r"),
+        ("Endpoint URL", "http://127.0.0.1:32124/v1\r"),
+        ("API kind", "\r"),
+        ("Default model", "synthetic\r"),
+        (
+            "API key (hidden)",
+            "SYNTHETIC_REPLACEMENT_KEY_NEVER_OUTPUT\r",
+        ),
+        ("Default update scope", "\r"),
+        ("Review default and managed overrides", "\u{1b}[B\r"),
+        ("native settings", "n"),
+        ("Configure existing connection", "\u{1b}"),
+    ]);
+    let transcript = report["transcript"].as_str().unwrap();
+    assert_eq!(report["status"], 0, "{transcript}");
+    assert_eq!(report["sent"], 12, "{transcript}");
+    assert!(!transcript.contains("SYNTHETIC_REPLACEMENT_KEY_NEVER_OUTPUT"));
+    let new = w.json(&["ai", "connections", "default", "show"], None)["connection"]
+        .as_str()
+        .unwrap()
+        .to_owned();
+    assert_ne!(new, old);
+    assert_eq!(
+        w.json(&["ai", "connections", "list"], None)["items"][&new]["metadata"]["label"],
+        "New"
+    );
+    let qwen = w.json(&["ai", "bindings", "show", "qwen"], None);
+    assert_eq!(qwen["binding"]["mode"], "connection");
+    assert_eq!(qwen["binding"]["connection"], old.as_str());
+    assert_eq!(
+        w.json(&["ai", "bindings", "show", "pi"], None)["binding"]["mode"],
+        "inherit-default"
+    );
+}

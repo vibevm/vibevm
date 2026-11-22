@@ -44,7 +44,7 @@ pub(super) fn run(
     if bare {
         install::offer(cancel)?;
         if matches!(
-            onboarding::ensure_default(settings, store, cancel)?,
+            onboarding::ensure_default(ctx, settings, store, cancel)?,
             onboarding::Next::Stop
         ) {
             return Ok(());
