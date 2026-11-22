@@ -10,6 +10,8 @@ use std::io::{IsTerminal, Read};
 use vibe_core::cancellation::CancellationToken;
 use vibe_secrets::{Expected, MetadataSnapshot, ProtectedValue, SecretId, Store};
 
+mod human;
+
 #[spec(implements = "spec://org.vibevm.core/vibevm/common/PROP-000#TS-USER-KEYRING")]
 pub fn run(ctx: &output::Context, args: SecretsArgs, cancel: &CancellationToken) -> Result<()> {
     let settings = admitted_settings()?;
@@ -105,7 +107,20 @@ fn render(
         ctx.emit_json(&report)?;
     } else {
         // Only metadata enters rendering; value bytes never reach this function.
-        println!("{}", serde_json::to_string_pretty(&report)?);
+        let tuples: Vec<(String, String, String, String)> = snapshot
+            .items
+            .iter()
+            .filter(|(id, _)| selected.is_none_or(|s| s == *id))
+            .map(|(id, item)| {
+                (
+                    id.as_str().to_owned(),
+                    item.label.clone(),
+                    item.kind.clone(),
+                    item.current_revision.as_str().to_owned(),
+                )
+            })
+            .collect();
+        println!("{}", human::items(snapshot.store_revision, &tuples));
     }
     Ok(())
 }
@@ -125,7 +140,7 @@ fn execute(
             if ctx.is_json() {
                 ctx.emit_json(&report)?;
             } else {
-                println!("{}", serde_json::to_string_pretty(&report)?);
+                println!("{}", human::references(id.as_str(), &consumers));
             }
             Ok(())
         }
