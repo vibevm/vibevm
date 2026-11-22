@@ -1,8 +1,8 @@
 schema = 1
-source_hash = "sha256:3b57f8a449a3139b95f63a8f71a0b9c5ef1183c1ed6035f8835c4b12ee53dd8f"
+source_hash = "sha256:b896384e12623ee17a5e09697e8735f90184cae2052e0b0f1b5e9245da97407d"
 spec_format = "xml"
 converter_recipe = "specdoc/4"
-derived_hash = "sha256:aaad65b653181a31bc821de96673a2a48cff1bd5a537c55829ee16f0784b5ef3"
+derived_hash = "sha256:bca3b50b7cbe51bee405f6a15ac6d42487c2c419be4c9482d915cc394d4f71c0"
 
 [[file]]
 path = "LICENSE.md"
@@ -161,12 +161,6 @@ disposition = "copied"
 source = "vibevm/vibespecs/skills/steward-common/scripts/.gitignore"
 
 [[file]]
-path = "vibevm/vibespecs/skills/steward-common/scripts/__pycache__/test_steward_home.cpython-314.pyc"
-sha256 = "a90bbe23e3f79b2deaca07b119f168c4c740fe36db2dfb3cceba9f96528e1b27"
-disposition = "copied"
-source = "vibevm/vibespecs/skills/steward-common/scripts/__pycache__/test_steward_home.cpython-314.pyc"
-
-[[file]]
 path = "vibevm/vibespecs/skills/steward-common/scripts/bind_context.py"
 sha256 = "5d9a44fcddc5f3b7dc3da47b35eccc07c9987377aa406b7da9b822dba7765ad5"
 disposition = "copied"
@@ -203,18 +197,6 @@ disposition = "copied"
 source = "vibevm/vibespecs/skills/steward-goal/scripts/.gitignore"
 
 [[file]]
-path = "vibevm/vibespecs/skills/steward-goal/scripts/__pycache__/render_goal.cpython-314.pyc"
-sha256 = "0c75551ec539ea8866684844b43ce302ac84c21d0315c89cde5af0cb80cced34"
-disposition = "copied"
-source = "vibevm/vibespecs/skills/steward-goal/scripts/__pycache__/render_goal.cpython-314.pyc"
-
-[[file]]
-path = "vibevm/vibespecs/skills/steward-goal/scripts/__pycache__/test_render_goal.cpython-314.pyc"
-sha256 = "a7b70faee1a27d5db5d6ced695d540bdfcc0744f164cccc2c4195ce3de5d0520"
-disposition = "copied"
-source = "vibevm/vibespecs/skills/steward-goal/scripts/__pycache__/test_render_goal.cpython-314.pyc"
-
-[[file]]
 path = "vibevm/vibespecs/skills/steward-goal/scripts/render_goal.py"
 sha256 = "58b09aaf95e7f72b158a422a537c7ad5ec208b49980a3d636755c1cc7a3ff1ea"
 disposition = "copied"
@@ -237,18 +219,6 @@ path = "vibevm/vibespecs/skills/steward-parallel/SKILL.xml"
 sha256 = "f863650f7345c04f92d624099d6598c9681657f1402583b87a443d66abefc493"
 disposition = "converted"
 source = "vibevm/vibespecs/skills/steward-parallel/SKILL.md"
-
-[[file]]
-path = "vibevm/vibespecs/skills/steward-parallel/scripts/__pycache__/parallel_frontier.cpython-314.pyc"
-sha256 = "5a43f6a2e8c2e17b568ab885aa737beee527d0522537998ef7a21cf5db91fcbc"
-disposition = "copied"
-source = "vibevm/vibespecs/skills/steward-parallel/scripts/__pycache__/parallel_frontier.cpython-314.pyc"
-
-[[file]]
-path = "vibevm/vibespecs/skills/steward-parallel/scripts/__pycache__/test_parallel_frontier.cpython-314.pyc"
-sha256 = "9101c765c03ba512c2497b33728c7725f68836b26ba3d7a706f0aa3c28c0b84b"
-disposition = "copied"
-source = "vibevm/vibespecs/skills/steward-parallel/scripts/__pycache__/test_parallel_frontier.cpython-314.pyc"
 
 [[file]]
 path = "vibevm/vibespecs/skills/steward-parallel/scripts/parallel_frontier.py"
@@ -297,18 +267,6 @@ path = "vibevm/vibespecs/skills/steward-tree/scripts/.gitignore"
 sha256 = "862263fa1f46c20f0d1e4dac5ffcc75abd55c08211b2c3864c5f8764b9d87793"
 disposition = "copied"
 source = "vibevm/vibespecs/skills/steward-tree/scripts/.gitignore"
-
-[[file]]
-path = "vibevm/vibespecs/skills/steward-tree/scripts/__pycache__/render_tree.cpython-314.pyc"
-sha256 = "8442fdf5559034551b14a9fb6324fed5c6447d9f793f00327d4d2f0857970ea7"
-disposition = "copied"
-source = "vibevm/vibespecs/skills/steward-tree/scripts/__pycache__/render_tree.cpython-314.pyc"
-
-[[file]]
-path = "vibevm/vibespecs/skills/steward-tree/scripts/__pycache__/test_render_tree.cpython-314.pyc"
-sha256 = "1a7f9ebbb240c118ac30404e73857884d5ab599a2998c71a8c41836f2456c16b"
-disposition = "copied"
-source = "vibevm/vibespecs/skills/steward-tree/scripts/__pycache__/test_render_tree.cpython-314.pyc"
 
 [[file]]
 path = "vibevm/vibespecs/skills/steward-tree/scripts/render_tree.py"
