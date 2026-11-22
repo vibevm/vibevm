@@ -35745,6 +35745,15 @@
     },
     {
       "crate_name": "vibe-core",
+      "file": "crates/vibe-core/src/agent_ids.rs",
+      "item_kind": "mod",
+      "line": 3,
+      "symbol": "vibe_core::agent_ids",
+      "end_line": 3,
+      "fingerprint": "tok1:7331ce534221d26866bf1f4d67f9c1f9e163ac6bf381a8d7c9762d3dae9a9ac2"
+    },
+    {
+      "crate_name": "vibe-core",
       "file": "crates/vibe-core/src/cancellation.rs",
       "item_kind": "mod",
       "line": 2,
@@ -106676,6 +106685,14 @@
       "line": 15,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#capability",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-core/src/agent_ids.rs",
+      "from_symbol": "vibe_core::agent_ids",
+      "line": 3,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-015#AGENT-VOCABULARY",
       "verb": "implements"
     },
     {
@@ -204465,7 +204482,7 @@
     },
     {
       "anchor": "root",
-      "content_hash": "sha256:cbf21090d79ec4a384af75c296c99ab2ba583f44b58c4b342d85e78c063ffadd",
+      "content_hash": "sha256:ebf019790217780f57b4c40932dc2ec2c0a92e382d29b083cc3b21b459359680",
       "doc_path": "modules/vibe-mcp/PROP-015",
       "file": "vibevm/vibespecs/modules/vibe-mcp/PROP-015-mcp-integration.xml",
       "heading": "PROP-015 — MCP server and agent integration",
@@ -204555,7 +204572,7 @@
     },
     {
       "anchor": "decisions",
-      "content_hash": "sha256:c1b06420ee2ae11019019bdf6332a4490098aa2d223c81eb04a357fbd560b204",
+      "content_hash": "sha256:9358c953a95aedfe0244bf0f37466fbce18a01cd6c287029f022f1641433eec9",
       "doc_path": "modules/vibe-mcp/PROP-015",
       "file": "vibevm/vibespecs/modules/vibe-mcp/PROP-015-mcp-integration.xml",
       "heading": "2. Decisions",
@@ -205006,7 +205023,7 @@
     },
     {
       "anchor": "agent-detection",
-      "content_hash": "sha256:9d647af94d8f407d0b0a08faff5d8e695254f4ed61413b17bb4849df4fdc3db1",
+      "content_hash": "sha256:5d89f8ec6031897245ef67a61d7b7556b7af6343638484b859dcf5cabc065904",
       "doc_path": "modules/vibe-mcp/PROP-015",
       "file": "vibevm/vibespecs/modules/vibe-mcp/PROP-015-mcp-integration.xml",
       "heading": "2.4 Agent detection",
@@ -205052,12 +205069,21 @@
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-015#AGENT-DETECTION-DEFAULT"
     },
     {
+      "anchor": "AGENT-VOCABULARY",
+      "content_hash": "sha256:fd734db600b0222cf1e9b5ff86201346b97b31810ec72d4ccfd5bae399deb5fb",
+      "doc_path": "modules/vibe-mcp/PROP-015",
+      "file": "vibevm/vibespecs/modules/vibe-mcp/PROP-015-mcp-integration.xml",
+      "heading": "`vibe_core::agent_ids` owns agent identity. One row per agent names the key each surface stores for it: the launch harness key (`qwen`), the MCP and skill projection key (`qwen-code`), the app preset name (`claude-code`), the specdoc `when` key, and whether the agent may keep an AI reference binding. Surfaces keep their stored keys and their own listing order. @status:impl/done",
+      "line": 240,
+      "uri": "spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-015#AGENT-VOCABULARY"
+    },
+    {
       "anchor": "agent-config",
       "content_hash": "sha256:93940b7828a98d4a0ec2a69da33fc2d794acfd781e80f006020bd3e962be1bc9",
       "doc_path": "modules/vibe-mcp/PROP-015",
       "file": "vibevm/vibespecs/modules/vibe-mcp/PROP-015-mcp-integration.xml",
       "heading": "2.5 Per-agent configuration",
-      "line": 242,
+      "line": 243,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-015#agent-config",
       "kind": "req",
       "revision": 2
@@ -205068,7 +205094,7 @@
       "doc_path": "modules/vibe-mcp/PROP-015",
       "file": "vibevm/vibespecs/modules/vibe-mcp/PROP-015-mcp-integration.xml",
       "heading": "`req r2` @status:impl/done",
-      "line": 243,
+      "line": 244,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-015#req-agent-config"
     },
     {
@@ -205077,7 +205103,7 @@
       "doc_path": "modules/vibe-mcp/PROP-015",
       "file": "vibevm/vibespecs/modules/vibe-mcp/PROP-015-mcp-integration.xml",
       "heading": "**Decision.** Each agent declares its config shape, and the writer is\nagent-aware but format-generic: @status:impl/done",
-      "line": 244,
+      "line": 245,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-015#CONFIG-SHAPE-DECL"
     },
     {
@@ -205086,7 +205112,7 @@
       "doc_path": "modules/vibe-mcp/PROP-015",
       "file": "vibevm/vibespecs/modules/vibe-mcp/PROP-015-mcp-integration.xml",
       "heading": "**Format** — JSON or TOML per agent (Codex is TOML-only). @status:impl/done",
-      "line": 247,
+      "line": 248,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-015#CONFIG-FORMAT"
     },
     {
@@ -205095,7 +205121,7 @@
       "doc_path": "modules/vibe-mcp/PROP-015",
       "file": "vibevm/vibespecs/modules/vibe-mcp/PROP-015-mcp-integration.xml",
       "heading": "**Section key** — the agent's MCP-servers table name (`mcpServers`,\n  `mcp`, `mcp_servers`). @status:impl/done",
-      "line": 248,
+      "line": 249,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-015#CONFIG-SECTION-KEY"
     },
     {
@@ -205104,7 +205130,7 @@
       "doc_path": "modules/vibe-mcp/PROP-015",
       "file": "vibevm/vibespecs/modules/vibe-mcp/PROP-015-mcp-integration.xml",
       "heading": "**Scope** — project (`.<agent>/…` in the repo) and/or user (the host\n  config dir). Some agents are user-only (Claude Code Desktop, Codex). @status:impl/done",
-      "line": 250,
+      "line": 251,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-015#CONFIG-SCOPE"
     },
     {
@@ -205113,7 +205139,7 @@
       "doc_path": "modules/vibe-mcp/PROP-015",
       "file": "vibevm/vibespecs/modules/vibe-mcp/PROP-015-mcp-integration.xml",
       "heading": "**Config path** — resolved per (agent, scope), cross-platform. The\n  path must be the file the agent actually reads for MCP *discovery*,\n  not merely a settings file it happens to own. For Claude Code that is\n  `<project>/.mcp.json` (project) and the top-level `mcpServers` of\n  `~/.claude.json` (user) — **never `settings.json`**, which only\n  *gates* `.mcp.json` servers (`enabledMcpjsonServers`) and does not\n  define them. <status stage=\"impl\" state=\"done\" action=\"continue\" actionstage=\"doc\" audience=\"user\"/>",
-      "line": 252,
+      "line": 253,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-015#CONFIG-PATH"
     },
     {
@@ -205122,7 +205148,7 @@
       "doc_path": "modules/vibe-mcp/PROP-015",
       "file": "vibevm/vibespecs/modules/vibe-mcp/PROP-015-mcp-integration.xml",
       "heading": "**Merge discipline** — installing upserts vibevm's one entry under the\n  section key and **preserves every foreign key, and their order**: the\n  JSON writer round-trips order-preserving (`serde_json/preserve_order`),\n  so a merge into a large `~/.claude.json` appends rather than\n  re-alphabetising the operator's whole file. Uninstalling strips only\n  vibevm's entry and leaves the rest. The operator's other MCP servers\n  and unrelated config survive every operation. <status stage=\"impl\" state=\"done\" action=\"continue\" actionstage=\"doc\" audience=\"user\"/>",
-      "line": 259,
+      "line": 260,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-015#CONFIG-MERGE"
     },
     {
@@ -205131,7 +205157,7 @@
       "doc_path": "modules/vibe-mcp/PROP-015",
       "file": "vibevm/vibespecs/modules/vibe-mcp/PROP-015-mcp-integration.xml",
       "heading": "The vibevm entry is **scope-independent**: `vibe mcp serve` with no\n  `--path`, resolving its project root from the launcher's CWD (an MCP\n  client sets CWD to the project directory for a project-scope server),\n  so one shape serves every scope and a committed `.mcp.json` stays\n  portable. @status:impl/done",
-      "line": 268,
+      "line": 269,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-015#CONFIG-SCOPE-INDEPENDENT"
     },
     {
@@ -205140,7 +205166,7 @@
       "doc_path": "modules/vibe-mcp/PROP-015",
       "file": "vibevm/vibespecs/modules/vibe-mcp/PROP-015-mcp-integration.xml",
       "heading": "On Windows the launcher is wrapped as `cmd /c vibe …` because\n  `vibe` is a `vibe.cmd` shim that an MCP client's bare process-spawn\n  cannot exec directly. @status:impl/done",
-      "line": 273,
+      "line": 274,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-015#CONFIG-WINDOWS-SHIM"
     },
     {
@@ -205149,7 +205175,7 @@
       "doc_path": "modules/vibe-mcp/PROP-015",
       "file": "vibevm/vibespecs/modules/vibe-mcp/PROP-015-mcp-integration.xml",
       "heading": "2.6 Skill materialisation",
-      "line": 278,
+      "line": 279,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-015#skill",
       "kind": "req",
       "revision": 3
@@ -205160,7 +205186,7 @@
       "doc_path": "modules/vibe-mcp/PROP-015",
       "file": "vibevm/vibespecs/modules/vibe-mcp/PROP-015-mcp-integration.xml",
       "heading": "`req r3` @status:impl/done",
-      "line": 279,
+      "line": 280,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-015#req-skill"
     },
     {
@@ -205169,7 +205195,7 @@
       "doc_path": "modules/vibe-mcp/PROP-015",
       "file": "vibevm/vibespecs/modules/vibe-mcp/PROP-015-mcp-integration.xml",
       "heading": "**Decision.** For agents that support a skill manifest (Claude Code,\nOpenCode, Codex, Qwen Code — not the JSON-config-only Cursor / Claude Code Desktop),\n`vibe mcp install` also writes a `SKILL.md` describing how to use vibevm\nthrough the MCP tools. <status stage=\"impl\" state=\"done\" action=\"continue\" actionstage=\"doc\" audience=\"user\"/>",
-      "line": 280,
+      "line": 281,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-015#SKILL-MANIFEST"
     },
     {
@@ -205178,7 +205204,7 @@
       "doc_path": "modules/vibe-mcp/PROP-015",
       "file": "vibevm/vibespecs/modules/vibe-mcp/PROP-015-mcp-integration.xml",
       "heading": "The skill body is **data, not code** — a vendored\n  template (`include_str!`) rendered into each agent's skill directory\n  (`.<agent>/skills/vibevm/SKILL.md`). @status:impl/done",
-      "line": 285,
+      "line": 286,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-015#SKILL-BODY-DATA"
     },
     {
@@ -205187,7 +205213,7 @@
       "doc_path": "modules/vibe-mcp/PROP-015",
       "file": "vibevm/vibespecs/modules/vibe-mcp/PROP-015-mcp-integration.xml",
       "heading": "Writing is idempotent under receipt ownership: unchanged owned content is retained, an owned package update reconciles its managed files, and foreign modifications refuse instead of being overwritten. Explicit disabled intent prevents reinstall or upgrade from recreating the projection. Explicit registration alone may adopt an identical canonical builtin with a reported new ownership decision; status, disable and automatic refresh cannot infer ownership from equal bytes. The shared contract is [PROP-073#MANAGED-ACTIVATION](../../common/PROP-073-source-decisions-and-operation-effects.xml#MANAGED-ACTIVATION). @status:impl/done",
-      "line": 288,
+      "line": 289,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-015#SKILL-IDEMPOTENT"
     },
     {
@@ -205196,7 +205222,7 @@
       "doc_path": "modules/vibe-mcp/PROP-015",
       "file": "vibevm/vibespecs/modules/vibe-mcp/PROP-015-mcp-integration.xml",
       "heading": "2.7 The integration lifecycle",
-      "line": 291,
+      "line": 292,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-015#lifecycle",
       "kind": "req",
       "revision": 2
@@ -205207,7 +205233,7 @@
       "doc_path": "modules/vibe-mcp/PROP-015",
       "file": "vibevm/vibespecs/modules/vibe-mcp/PROP-015-mcp-integration.xml",
       "heading": "`req r2` @status:impl/done",
-      "line": 292,
+      "line": 293,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-015#req-lifecycle"
     },
     {
@@ -205216,7 +205242,7 @@
       "doc_path": "modules/vibe-mcp/PROP-015",
       "file": "vibevm/vibespecs/modules/vibe-mcp/PROP-015-mcp-integration.xml",
       "heading": "**Decision.** The agent-integration command family is a coherent\nlifecycle over the (agent × scope) matrix. Install, upgrade and uninstall retain their preview and confirmation policies; explicit enable/disable follow the managed-activation contract below. Dry-run does not write: <status stage=\"impl\" state=\"done\" action=\"continue\" actionstage=\"doc\" audience=\"user\"/>",
-      "line": 293,
+      "line": 294,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-015#LIFECYCLE-MATRIX"
     },
     {
@@ -205225,7 +205251,7 @@
       "doc_path": "modules/vibe-mcp/PROP-015",
       "file": "vibevm/vibespecs/modules/vibe-mcp/PROP-015-mcp-integration.xml",
       "heading": "**`install`** — detect (or accept a filter), preview, confirm, write\n  MCP entries and skills. @status:impl/done",
-      "line": 296,
+      "line": 297,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-015#VERB-INSTALL"
     },
     {
@@ -205234,7 +205260,7 @@
       "doc_path": "modules/vibe-mcp/PROP-015",
       "file": "vibevm/vibespecs/modules/vibe-mcp/PROP-015-mcp-integration.xml",
       "heading": "**`status`** — read-only: what would install / upgrade / uninstall do. @status:impl/done",
-      "line": 298,
+      "line": 299,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-015#VERB-STATUS"
     },
     {
@@ -205243,7 +205269,7 @@
       "doc_path": "modules/vibe-mcp/PROP-015",
       "file": "vibevm/vibespecs/modules/vibe-mcp/PROP-015-mcp-integration.xml",
       "heading": "**`upgrade`** — refresh stale MCP blocks and `SKILL.md` files in place. @status:impl/done",
-      "line": 299,
+      "line": 300,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-015#VERB-UPGRADE"
     },
     {
@@ -205252,7 +205278,7 @@
       "doc_path": "modules/vibe-mcp/PROP-015",
       "file": "vibevm/vibespecs/modules/vibe-mcp/PROP-015-mcp-integration.xml",
       "heading": "**`uninstall`** — strip vibevm's MCP entries and skill files, preserving\n  foreign config. @status:impl/done",
-      "line": 300,
+      "line": 301,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-015#VERB-UNINSTALL"
     },
     {
@@ -205261,7 +205287,7 @@
       "doc_path": "modules/vibe-mcp/PROP-015",
       "file": "vibevm/vibespecs/modules/vibe-mcp/PROP-015-mcp-integration.xml",
       "heading": "Per-(agent, scope) outcomes are reported as structured records\n(`AgentInstallReport` / `SkillInstallReport`) the CLI renders or emits as\nJSON. @status:impl/done",
-      "line": 303,
+      "line": 304,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-015#LIFECYCLE-REPORTS"
     },
     {
@@ -205270,7 +205296,7 @@
       "doc_path": "modules/vibe-mcp/PROP-015",
       "file": "vibevm/vibespecs/modules/vibe-mcp/PROP-015-mcp-integration.xml",
       "heading": "Per-entry enable/disable retains installed packages and a durable desired state in existing ownership records. Install and upgrade honor that state; explicit uninstall removes managed ownership under its own contract. Status and mutation JSON distinguish desired state, actual projection and caller-asserted provenance. Conflict is not successful disable. Multiple selections admit all owners before intent writes and retain admitted intents before projection reconciliation, following PROP-073#MANAGED-ACTIVATION. Dry-run remains read-only. Native disabled representations are adapter-qualified; otherwise only owned projections are retracted. @status:impl/done",
-      "line": 306,
+      "line": 307,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-015#LIFECYCLE-ACTIVATION"
     },
     {
@@ -205279,7 +205305,7 @@
       "doc_path": "modules/vibe-mcp/PROP-015",
       "file": "vibevm/vibespecs/modules/vibe-mcp/PROP-015-mcp-integration.xml",
       "heading": "2.8 Selective skill projection",
-      "line": 308,
+      "line": 309,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-015#skill-include",
       "kind": "req",
       "revision": 1
@@ -205290,7 +205316,7 @@
       "doc_path": "modules/vibe-mcp/PROP-015",
       "file": "vibevm/vibespecs/modules/vibe-mcp/PROP-015-mcp-integration.xml",
       "heading": "`req r1` @status:impl/done",
-      "line": 309,
+      "line": 310,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-015#req-skill-include"
     },
     {
@@ -205299,7 +205325,7 @@
       "doc_path": "modules/vibe-mcp/PROP-015",
       "file": "vibevm/vibespecs/modules/vibe-mcp/PROP-015-mcp-integration.xml",
       "heading": "**Decision.** `SkillDecl` gains an optional `include` — a list of glob\npatterns relative to the skill's `path`. @status:impl/done",
-      "line": 310,
+      "line": 311,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-015#INCLUDE-DECL"
     },
     {
@@ -205308,7 +205334,7 @@
       "doc_path": "modules/vibe-mcp/PROP-015",
       "file": "vibevm/vibespecs/modules/vibe-mcp/PROP-015-mcp-integration.xml",
       "heading": "When present, only matching files are\n  projected into the agent's skill directory, preserving their relative\n  structure; when absent or empty, the whole `path` tree is projected — the\n  existing §2.6 behaviour, unchanged. <status stage=\"impl\" state=\"done\" action=\"continue\" actionstage=\"doc\" audience=\"author\"/>",
-      "line": 313,
+      "line": 314,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-015#INCLUDE-SELECTIVE"
     },
     {
@@ -205317,7 +205343,7 @@
       "doc_path": "modules/vibe-mcp/PROP-015",
       "file": "vibevm/vibespecs/modules/vibe-mcp/PROP-015-mcp-integration.xml",
       "heading": "Selection composes with the\n  already-working nested `path`: a skill can point at a subdirectory **and** pick\n  specific files out of it. @status:impl/done",
-      "line": 317,
+      "line": 318,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-015#INCLUDE-COMPOSES"
     },
     {
@@ -205326,7 +205352,7 @@
       "doc_path": "modules/vibe-mcp/PROP-015",
       "file": "vibevm/vibespecs/modules/vibe-mcp/PROP-015-mcp-integration.xml",
       "heading": "This is available to any skill but is load-bearing for bridge packages\n  ([PROP-023](../vibe-registry/PROP-023-bridge-packages.xml)): a bridged upstream\n  tree is full of unrelated files, and the maintainer projects just the\n  `SKILL.md` and whatever it references without vendoring the noise. @status:impl/done",
-      "line": 320,
+      "line": 321,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-015#INCLUDE-BRIDGE-USE"
     },
     {
@@ -205335,7 +205361,7 @@
       "doc_path": "modules/vibe-mcp/PROP-015",
       "file": "vibevm/vibespecs/modules/vibe-mcp/PROP-015-mcp-integration.xml",
       "heading": "Glob\n  matching is deterministic; a pattern that matches nothing is a\n  declared-but-empty selection (surfaced, not a silent no-op). @status:impl/done",
-      "line": 324,
+      "line": 325,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-015#INCLUDE-DETERMINISTIC"
     },
     {
@@ -205344,7 +205370,7 @@
       "doc_path": "modules/vibe-mcp/PROP-015",
       "file": "vibevm/vibespecs/modules/vibe-mcp/PROP-015-mcp-integration.xml",
       "heading": "3. Out of scope",
-      "line": 334,
+      "line": 335,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-015#out-of-scope"
     },
     {
@@ -205353,7 +205379,7 @@
       "doc_path": "modules/vibe-mcp/PROP-015",
       "file": "vibevm/vibespecs/modules/vibe-mcp/PROP-015-mcp-integration.xml",
       "heading": "**No new wire formats or lockfile changes.** The server reads the\n  existing lockfile schema; the tools surface existing fields. @status:spec/done",
-      "line": 336,
+      "line": 337,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-015#OOS-NO-WIRE-CHANGES"
     },
     {
@@ -205362,7 +205388,7 @@
       "doc_path": "modules/vibe-mcp/PROP-015",
       "file": "vibevm/vibespecs/modules/vibe-mcp/PROP-015-mcp-integration.xml",
       "heading": "**No agent-specific behaviour beyond config shape.** The integration\n  knows each agent's *file format and paths*, not its runtime semantics. @status:spec/done",
-      "line": 338,
+      "line": 339,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-015#OOS-AGENT-SEMANTICS"
     },
     {
@@ -205371,7 +205397,7 @@
       "doc_path": "modules/vibe-mcp/PROP-015",
       "file": "vibevm/vibespecs/modules/vibe-mcp/PROP-015-mcp-integration.xml",
       "heading": "**HTTP / SSE transports.** Stdio is the shipped transport; the\n  `Transport` trait leaves room without committing to more today. @status:spec/done",
-      "line": 340,
+      "line": 341,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-015#OOS-HTTP-SSE"
     },
     {
@@ -205380,7 +205406,7 @@
       "doc_path": "modules/vibe-mcp/PROP-015",
       "file": "vibevm/vibespecs/modules/vibe-mcp/PROP-015-mcp-integration.xml",
       "heading": "**LLM-provider tools.** PROP-003 §F virtual-capability emission waits on\n  a real `vibe-llm` (`VIBEVM-SPEC.md` §10.4). @status:spec/done",
-      "line": 342,
+      "line": 343,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-015#OOS-LLM-TOOLS"
     },
     {
@@ -205389,7 +205415,7 @@
       "doc_path": "modules/vibe-mcp/PROP-015",
       "file": "vibevm/vibespecs/modules/vibe-mcp/PROP-015-mcp-integration.xml",
       "heading": "4. Acceptance",
-      "line": 346,
+      "line": 347,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-015#acceptance"
     },
     {
@@ -205398,7 +205424,7 @@
       "doc_path": "modules/vibe-mcp/PROP-015",
       "file": "vibevm/vibespecs/modules/vibe-mcp/PROP-015-mcp-integration.xml",
       "heading": "The server answers `initialize` / `tools/list` / `tools/call` over a\n  `MemoryTransport` round-trip; each tool has a behavioural oracle. @status:impl/done",
-      "line": 348,
+      "line": 349,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-015#ACC-SERVER-ROUNDTRIP"
     },
     {
@@ -205407,7 +205433,7 @@
       "doc_path": "modules/vibe-mcp/PROP-015",
       "file": "vibevm/vibespecs/modules/vibe-mcp/PROP-015-mcp-integration.xml",
       "heading": "`query_package` / `read_subskill` / `materialise_subskill` each behave\n  per §2.2 against a lockfile fixture (found / not-found / invalid-pkgref;\n  the delivery-mode split; the force / no-overwrite contract). @status:impl/done",
-      "line": 350,
+      "line": 351,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-015#ACC-TOOL-CONTRACTS"
     },
     {
@@ -205416,7 +205442,7 @@
       "doc_path": "modules/vibe-mcp/PROP-015",
       "file": "vibevm/vibespecs/modules/vibe-mcp/PROP-015-mcp-integration.xml",
       "heading": "`vibe mcp install` writes the expected entry under each agent's section\n  key, preserves foreign keys, and is idempotent; `uninstall` is its\n  inverse; `status` writes nothing. @status:impl/done",
-      "line": 353,
+      "line": 354,
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-015#ACC-INSTALL-LIFECYCLE"
     },
     {

@@ -237,6 +237,7 @@ Qwen Code).</AGENT-SET></p>
         <AGENT-DETECTION-DEFAULT fact="true" status="impl/done">Detection drives the default
   target set for `vibe mcp install`; the operator can always override with
   an explicit agent filter.</AGENT-DETECTION-DEFAULT>
+        <AGENT-VOCABULARY fact="true" status="impl/done">`vibe_core::agent_ids` owns agent identity. One row per agent names the key each surface stores for it: the launch harness key (`qwen`), the MCP and skill projection key (`qwen-code`), the app preset name (`claude-code`), the specdoc `when` key, and whether the agent may keep an AI reference binding. Surfaces keep their stored keys and their own listing order.</AGENT-VOCABULARY>
       </facts>
     </agent-detection>
     <agent-config title="2.5 Per-agent configuration">
