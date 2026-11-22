@@ -1,0 +1,1123 @@
+[
+ {
+  "key": "control",
+  "result": {
+   "summary": "How the Library drives vibe today: it runs the user's own `vibe` (never by bare name), checks only `vibe --version` against two numbers it keeps itself (1.0.1 for everything, 1.0.8 for applications), passes `--json --unattended --invoked-by vibevm-app --agent-mode agent` (adding `--progress-format json` for application steps), and reads stdout reports and stderr event lines (crates/core/src/vibe/*.rs in vibevm-app-r138). Its report types follow recordings of vibe 1.0.11, not vibe's schemas, because, in its own words, \"the two differ\".\nMost of what the app asked for in VIBE-NEEDS-2026-11 is already in vibe main (1.0.12). That covers: project `install --plan-only`, choosing sources by policy (`--prefer-hosting`/`--exclude-hosting`), the installed application's source, `mcp`/`skill enable|disable`, `--stop-file` cancel for project install/update/publish, disk-written counts in transfer events, and `self import --no-profile`. The app does not know any of this, and B-232/B-254 still read \"open\".\nWhat is really missing, and what Part 1 needs:\n(1) The app cannot ask a given vibe what it supports. It can only compare version numbers, and those fail on branch builds.\n(2) Exit code 2 means two things: a mistyped command (clap prints plain text even under --json) and a typed refusal. The app's project reader treats every exit 2 as its own mistyped command. Most project errors carry no `code`.\n(3) Application installs cannot be cancelled on Windows. The app starts vibe without a console, so Ctrl-C/Ctrl-Break cannot reach it, and `--stop-file` is refused for `install -g` (commands/personal.rs:278) and for the other application verbs.\n(4) If the app restarts during a project operation, the outcome is lost. The app marks it \"what it did is not known\" (operations/park.rs). vibe keeps no record of an operation that someone else started, and a \"project busy\" refusal does not say who holds the project.\n(5) No test checks vibe's --json output against the registered schemas, so schema drift goes unnoticed.\nADV-CONTROL fixes these without a daemon or a new protocol: the CLI plus JSON stays the transport. The same contract is the one the Part 3 cluster will use, run over ssh on another node. Start with telling the Library what already exists (S), then capability discovery, stable codes and app-verb stop. Then the operation records and a conformance suite.",
+   "capabilities": [
+    {
+     "name": "Tell the Library what vibe already delivered",
+     "part": "1-control",
+     "user_story": "The Library team reads one handoff note and learns which of its eight asks already exist in vibe 1.0.12, with the exact flags and JSON fields. They can then switch on 'Will be installed from', 'Take it from here', preferred hosting, the agent-entry switch and Cancel for project install/update without waiting on vibe.",
+     "todays_form": "Implemented in main and not announced: SourcePolicyArgs (crates/vibe-cli/src/cli/source_policy.rs: --prefer-hosting, --exclude-hosting, --no-hosting-preference), InstallArgs.plan_only for projects (cli/pkg.rs:197), installed source evidence (vibe-needs-02-acceptance-audit: met), mcp/skill Enable/Disable (cli/mcp.rs:21, cli/skill.rs:23, schemas/agent_activation_report.jtd.json), the global --stop-file (cli.rs:113, composition/cancellation.rs supported()), disk-written fields in transfer events (crates/vibe-wire/tests/transfer_disk_observation.rs), and self import --no-profile (cli/vvm.rs:169). B-232 and B-254 dispositions in BACKLOG.md are stale.",
+     "size": "S (docs + BACKLOG dispositions, no code)",
+     "priority": "now",
+     "replaces_or_extends": "Closes B-232, B-254 and app VIBE-NEEDS entries 1-5, 7, 8; the research vibe-needs-*.md audits are the evidence",
+     "prerequisites": [],
+     "design_decisions": [
+      "Where the note lives: a vibe-side file next to the research (campaigns/advanced-architecture-2026-11/) plus a pointer filed in the app's BACKLOG by the app's own session. vibe never edits the closed app repository.",
+      "Each entry gives the exact command line, the first vibe version that has it, and one recorded JSON sample from a test fixture. No prose promises.",
+      "Remaining gaps are listed by name and linked to the ADV-CONTROL capabilities below (need 6 init flags, app-verb stop)."
+     ],
+     "acceptance": "B-232/B-254 dispositions read done with commit references. The note lists all 8 app needs as done, partial or open, each with evidence paths that exist in main.",
+     "product_question": ""
+    },
+    {
+     "name": "A client asks vibe what it supports",
+     "part": "1-control",
+     "user_story": "The Library runs `vibe capabilities --json` once per located executable. It gets the version, commit, the full command and flag tree, every report format with its epoch, and a closed list of named features (project-plan-only, source-policy, stop-file:project, stop-file:app, activation, operation-records...). It enables buttons by feature instead of by version number, so a branch build or a newer vibe works without an app release.",
+     "todays_form": "Nothing at runtime. The app hard-codes MINIMUM_VIBE_VERSION=1.0.1 and 1.0.8 (vibevm-app crates/core/src/vibe/locate.rs). The data already exists: vibe_doc::surface::record walks the clap tree, schema members and format registry (crates/vibe-doc/src/surface.rs), and FormatId::ALL with epochs is generated in crates/vibe-wire/src/generated/format_id/properties.rs.",
+     "size": "M",
+     "priority": "now",
+     "replaces_or_extends": "Revives M-16-B.1 (operation/capability contracts) and the handshake half of M-16-B.3, in a narrow form: a document, not a session protocol",
+     "prerequisites": [],
+     "design_decisions": [
+      "Verb: top-level `vibe capabilities`, not under `vibe self`. `self` reads the version-manager store and prints stale-home warnings. This one must run with no project, no network and no home writes.",
+      "Shape: protocol `vibe-capabilities/1` registered in formats/REGISTRY.toml. Fields: version, commit, platform; commands[{path, flags[]}] built from the same walk vibe-doc uses (no second walker); formats[{id, epoch}] from FormatId::ALL; features[] closed strings; error_codes[] once 'stable codes' lands.",
+      "The features table is hand-kept in one const. A test asserts each feature's backing flag or verb exists in the clap tree. stop-file support is derived from composition::cancellation::supported(), so the refusal and the advertisement cannot disagree.",
+      "Old vibe answers exit 2 (unknown subcommand). The client then falls back to its version table, so nothing breaks."
+     ],
+     "acceptance": "`vibe capabilities --json` validates against its JTD. Its commands and formats equal the vibe-doc surface for the same build. A test fails when a feature names a flag that does not parse.",
+     "product_question": ""
+    },
+    {
+     "name": "Every machine failure carries a stable code and its remedy",
+     "part": "1-control",
+     "user_story": "When vibe refuses under --json, the Library gets `{ok:false, code, refusal:true|false, remedy:{args:[...]}}` on stderr. 'consent_required' tells it to ask the person and re-run with `--accept-remap X` or `--accept-license`. 'project-busy' tells it to queue. 'usage' means its own flag table is wrong. It never has to guess from exit 2 or read prose.",
+     "todays_form": "clap errors print plain text with exit 2 even under --json (cli.rs parse_invocation: error.exit(); checked with the installed binary). Typed refusals also exit 2 (exit_code.rs: remap consent, app ErrorClass::Refusal). `code` is stamped only for vibe_app::AppError and a few cases (output/structured.rs). LifecycleLeaseError::Busy, offline-unavailable, source-policy-excluded and kind mismatch have no code. The app's project reader maps every exit 2 to 'Usage' (vibevm-app crates/core/src/vibe/reading.rs).",
+     "size": "M",
+     "priority": "now",
+     "replaces_or_extends": "Revives M-16-C.4 (typed input and admission, no TTY/prose decisions in machine mode)",
+     "prerequisites": [],
+     "design_decisions": [
+      "Exit codes are not changed: scripts depend on them. Only fields are added.",
+      "Under --json a clap parse error is emitted as the envelope with code 'usage' (exit 2 kept). --help and --version stay plain.",
+      "`refusal: true` means no effect happened. It is set from the same classification as_exit_code already uses, never inferred twice.",
+      "Codes are kebab or snake strings, following the existing app codes in crates/vibe-app/src/codes.rs. The catalog lives in one table, and an untyped error gets 'unclassified', never omitted. The catalog appears in `vibe capabilities`.",
+      "`remedy.args` only for refusals whose fix is a flag (consent, license, offline, ambiguous package with the candidate list); prose stays in `error`."
+     ],
+     "acceptance": "Under --json, a mistyped flag, a busy project, unanswered remap consent, an unaccepted license, offline-unavailable, an excluded hosting and an ambiguous short name each produce a JSON envelope with a distinct code. Each has a CLI test asserting the code and the exit code.",
+     "product_question": ""
+    },
+    {
+     "name": "Stop an application operation from any client on every platform",
+     "part": "1-control",
+     "user_story": "The person presses Cancel in the Library on Windows during an application install. The Library creates the stop file it passed with `--stop-file`. vibe stops at the next checkpoint exactly as an unanswered Ctrl-C does: the step is recorded as interrupted, the work is kept, and a later Resume continues it with `--resume`.",
+     "todays_form": "--stop-file is supported for project install/update, registry publish, dl, tool and user. It is explicitly refused for `install -g` of an application (crates/vibe-cli/src/commands/personal.rs:278), and through supported() for uninstall -g, update -g, app modify and app import. The app starts vibe with CREATE_NO_WINDOW (vibevm-app run.rs), so console control events cannot reach it, and its Windows signal() returns false (stream.rs:191). The app interrupt owner (commands/app/interrupt, PROP-065 #cancellation) already handles SIGINT/Ctrl-Break.",
+     "size": "M",
+     "priority": "now",
+     "replaces_or_extends": "Revives M-16-C.3 (cooperative controls) for the CLI. The MCP half stays in ADV-READ",
+     "prerequisites": [],
+     "design_decisions": [
+      "The stop file feeds the existing app interrupt owner's flag. No second cancellation path.",
+      "Semantics equal an unanswered SIGINT: stop at once at the next checkpoint, with no question.",
+      "Covers install -g, update -g, uninstall -g, app modify and app import. supported() becomes the single table, also read by `vibe capabilities`.",
+      "The outcome is the existing interrupted envelope (step, work, resume) plus `stopped_by: stop-file`."
+     ],
+     "acceptance": "On Linux and in a Windows CI job: an application install with a slow fake step, stopped by creating the stop file, exits with the interrupted code, keeps its work directory, and `install -g ... --resume` finishes it.",
+     "product_question": ""
+    },
+    {
+     "name": "Operations outlive the client that started them",
+     "part": "1-control",
+     "user_story": "The Library starts `vibe install --operation 01J... --json --progress-format json` and then restarts, or crashes. On the next start it runs `vibe operations show 01J... --json` and sees running (pid), finished (with the final report), failed (with the envelope) or stopped. It can tail the event lines it missed. A second client that gets 'project-busy' is told which operation holds the project.",
+     "todays_form": "The app marks such operations 'what it did is not known' (vibevm-app crates/core/src/operations/park.rs recovered()). Only application runs have a retained record (`vibe app runs`, `app work`, `--resume`). LifecycleLease (crates/vibe-lifecycle/src/lease.rs) holds an OS lock with no holder record. The transfer journal (crates/vibe-core/src/progress/transfer/journal.rs) already keeps per-process records with liveness: the pattern to reuse.",
+     "size": "L",
+     "priority": "next",
+     "replaces_or_extends": "Revives M-16-C.1/C.2 (retained truthful outcome across client exit, EOF and crash) in a narrow form: an outcome record, not a pre-effect submission journal. Domain recovery (deploy intent, app steps) stays as is.",
+     "prerequisites": [
+      "Every machine failure carries a stable code and its remedy"
+     ],
+     "design_decisions": [
+      "Opt-in global flag `--operation <id>`. The client supplies the id (ULID) so its own journal correlates. With no flag, nothing is recorded.",
+      "Store: $VIBE_SETTINGS/operations/<id>.json (pid, argv with secrets redacted, project root or home, invoked_by, started, stop file, state) plus <id>.events.jsonl when --progress-format json. The final report or envelope and the exit code are written at the end.",
+      "No daemon. Liveness reuses the transfer-journal pid check. Retention: the last 200 records or 30 days, pruned at record start.",
+      "When the parent goes away the operation keeps running to completion; it is not cancelled. Writes to a closed stdout/stderr must never abort it: replace eprintln!/println! on the report path with error-ignoring writes, then verify.",
+      "The lease Busy refusal reads the holder from the record when one exists (code project-busy, holder.operation)."
+     ],
+     "acceptance": "A test starts a project install with --operation, kills the reading parent mid-run, and the install still completes. `operations show` returns the final report. A concurrent install refuses with project-busy naming that id. Records validate against a registered format.",
+     "product_question": "When the controlling app quits mid-operation, should vibe finish or stop? Recommendation: finish and keep the record. A half-applied stop is worse than a completed install the person can undo, and Part 3 remote nodes need the same rule."
+    },
+    {
+     "name": "A checked contract for driving vibe from an application",
+     "part": "1-control",
+     "user_story": "An application developer (the Library, a future OS control panel, a vibecoder's own tool) reads one page 'Driving vibe from an application': locate, capabilities, flags, the stdout/stderr split, event lines, codes, stop, operations. Every report the page names is validated against its schema in vibe's own CI, so the Library's recordings stop drifting from the schemas.",
+     "todays_form": "The app documents vibe's behaviour itself from recordings (RUNTIME-GUIDE.md, reports.rs: 'the shapes follow recordings ... not the schemas ... the two differ'). formats/REGISTRY.toml registers 134 schemas but only 45 corpora, and among crates/vibe-cli/tests only install_steps_wire.rs checks output against a JTD.",
+     "size": "L",
+     "priority": "next",
+     "replaces_or_extends": "Revives M-17-D.2 (published client contract), M-17-C.2 (long jobs, cancellation, restart through an independent client) and M-17-A.2 (no supported operation hidden from machine use) as one conformance suite",
+     "prerequisites": [
+      "A client asks vibe what it supports",
+      "Every machine failure carries a stable code and its remedy",
+      "Stop an application operation from any client on every platform"
+     ],
+     "design_decisions": [
+      "The conformance test spawns the built binary as a client does (vibe-cli integration test, temp VIBE_SETTINGS), runs the verbs the Library uses (the list in vibevm-app invocation.rs/app_invocation.rs/catalog_client.rs/move_client.rs), and validates each stdout document and stderr event against its FormatId schema.",
+      "The fixtures are generated in vibe's own tests. The closed app's recordings are not copied (the owner's ruling of 2026-11-07: the app is closed and vibe is open).",
+      "A sweep over every leaf command asserts that --json yields JSON or the 'usage' envelope, never silent human text. Commands without JSON support are listed explicitly in capabilities.",
+      "The page lives in the vibevm-docs package and derives its flag and format lists from the surface snapshot."
+     ],
+     "acceptance": "The suite runs in self-check. Each Library verb's output validates against its schema. Deliberately changing a report field fails the suite.",
+     "product_question": ""
+    },
+    {
+     "name": "Scaffold an application package from the wizard's answers",
+     "part": "1-control",
+     "user_story": "The Library's creation wizard asks for an application's id, platforms and install method. It passes them as `vibe init --kind app --app-id x --platform linux --arch x86_64 --install-way prebuilt` and lists the files written from the JSON answer. The app no longer edits the [application] tables itself.",
+     "todays_form": "`init --kind app` writes a minimal host-only scaffold (crates/vibe-cli/src/commands/init/app.rs; vibe-needs-entrypoints-audit Need 6). InitArgs (cli/init.rs) has no app-id/platform/arch/install-method flags. The init report already lists outcomes[{path,action}].",
+     "size": "M",
+     "priority": "next",
+     "replaces_or_extends": "App VIBE-NEEDS entry 6 (remaining part)",
+     "prerequisites": [],
+     "design_decisions": [
+      "The flags map onto the existing InstallerOptionDecl/StepKind and vibe-app select.rs platform names. No wizard-only vocabulary.",
+      "The prebuilt method writes an honest placeholder source and hash that `vibe check` reports as a to-do; it never invents a checksum.",
+      "The private host_platform mapper in init/app.rs converges on vibe_app::select's detected_platform/arch."
+     ],
+     "acceptance": "Each install method scaffolds a package that `vibe check` and `vibe app plan` accept as written (prebuilt with its placeholder warning). Re-running init keeps the files.",
+     "product_question": ""
+    },
+    {
+     "name": "Drive vibe on another node with the same contract",
+     "part": "3-os",
+     "user_story": "From one node's control app, the person installs a package on node B. The app runs `ssh B vibe install ... --json --progress-format json --operation <id> --stop-on-stdin-close`, shows the same progress, and reconnects after a network drop with `ssh B vibe operations show <id>`.",
+     "todays_form": "The client side does not exist. vibe already follows the 'stdin closes means stop' model for `transfers watch` (vibevm-app follow.rs). Every other piece comes from the ADV-CONTROL capabilities above.",
+     "size": "M",
+     "priority": "later",
+     "replaces_or_extends": "New; foundation for the Part 3 cluster OS. Builds on M-16-C.3/C.1 revivals",
+     "prerequisites": [
+      "Stop an application operation from any client on every platform",
+      "Operations outlive the client that started them"
+     ],
+     "design_decisions": [
+      "Transport is ssh running the same CLI. No node daemon until a measured fan-out need appears.",
+      "Opt-in `--stop-on-stdin-close` makes a deliberate disconnect a cooperative stop. Without it, the operation finishes and is recorded, as on the desktop.",
+      "Node identity and inventory (which vibe, which packages) come from `vibe capabilities` and the existing list/tree JSON per node."
+     ],
+     "acceptance": "A two-container test installs a package on B from A over ssh, drops the connection, and reads the finished outcome on reconnect.",
+     "product_question": "For the cluster OS: ssh + CLI first, or a node agent service from day one? Recommendation: ssh + CLI first. It reuses everything above. A service is justified only by concurrent multi-node fan-out or push events."
+    }
+   ],
+   "rescoring": [
+    {
+     "item": "M-16-B.1",
+     "change": "revive",
+     "reason": "Beyond the MCP argument strictness it was folded into: Part 1 needs a runtime capability document. Becomes 'A client asks vibe what it supports'."
+    },
+    {
+     "item": "M-16-B.3",
+     "change": "revive",
+     "reason": "The handshake half is a Part 1 need (a client must learn what a vibe supports). It is delivered as the capabilities document. The framed session stays with the IDE campaign."
+    },
+    {
+     "item": "M-16-C.1",
+     "change": "revive",
+     "reason": "'Already served' holds only for application runs and deploy. The Library loses project operation outcomes on restart (park.rs 'not known'). Narrow form: 'Operations outlive the client that started them'."
+    },
+    {
+     "item": "M-16-C.2",
+     "change": "revive",
+     "reason": "Same as C.1: a retained truthful outcome across client exit or crash, for project operations. Merged into the operation record capability."
+    },
+    {
+     "item": "M-16-C.2.1",
+     "change": "keep",
+     "reason": "Application and lifecycle runs already keep work and resume (`app runs`, `--resume`)."
+    },
+    {
+     "item": "M-16-C.3",
+     "change": "revive",
+     "reason": "The CLI stop exists for project operations but not for application verbs, and on Windows the app cannot signal vibe at all. Becomes 'Stop an application operation from any client'."
+    },
+    {
+     "item": "M-16-C.4",
+     "change": "revive",
+     "reason": "Machine mode still reports refusals as prose, and exit 2 means two things. Becomes 'Every machine failure carries a stable code and its remedy'."
+    },
+    {
+     "item": "M-16-D.1",
+     "change": "keep",
+     "reason": "Unsaved-buffer analysis is an editor need. The Library never edits buffers. Stays with VIBEVM-IDE-MVP."
+    },
+    {
+     "item": "M-16-D.2",
+     "change": "keep",
+     "reason": "Editor positions: IDE only."
+    },
+    {
+     "item": "M-16-D.3",
+     "change": "keep",
+     "reason": "Editor fencing: IDE only."
+    },
+    {
+     "item": "M-17-A.2",
+     "change": "revive",
+     "reason": "'Global --json' is not proven per command. A sweep over leaf commands goes into the contract conformance suite."
+    },
+    {
+     "item": "M-17-C.2",
+     "change": "revive",
+     "reason": "Long-job, stop and restart behaviour seen by an independent client is exactly Part 1's acceptance. Part of the conformance suite."
+    },
+    {
+     "item": "M-17-C.3",
+     "change": "keep",
+     "reason": "External HOME and image actions belong to Part 2 (environments)."
+    },
+    {
+     "item": "M-17-D.2",
+     "change": "revive",
+     "reason": "The Library documents vibe itself from recordings that drift from vibe's schemas. vibe must publish and check the client contract."
+    },
+    {
+     "item": "Long lifecycle runs over MCP report progress and can be stopped",
+     "change": "keep",
+     "reason": "Serves agents over MCP, not the Library (which uses the CLI). Keep in ADV-READ, behind ADV-CONTROL for Part 1 value."
+    },
+    {
+     "item": "Agents read the package tree over MCP",
+     "change": "keep",
+     "reason": "The Library already reads `vibe tree --json`. No Part 1 gain, but it is still useful for agents."
+    },
+    {
+     "item": "Smoke the installed bootstrap on every release target",
+     "change": "promote",
+     "reason": "The Library bundles vibe and imports it on first start (`self import --use`) on all platforms. A broken bootstrap breaks the app's first run."
+    },
+    {
+     "item": "B-232",
+     "change": "drop",
+     "reason": "Delivered in main: project --plan-only, per-requirement source pins and preferred/excluded hosting (source_policy.rs, commit 863fbbf37). Close the item and announce it to the Library."
+    },
+    {
+     "item": "B-254",
+     "change": "drop",
+     "reason": "Delivered: installed source evidence in app list/describe (vibe-needs-02-acceptance-audit: fully met). Close the item and announce it."
+    }
+   ],
+   "risks": [
+    "The capabilities document could become a second source of truth beside clap. It must be generated from the same tree walk as vibe-doc's surface, with only the feature table hand-kept and that table checked by a test.",
+    "Writes to a closed stdout/stderr after the app dies: the progress writer ignores errors (output/machine.rs:152), but the error envelope uses eprintln! (output/lines.rs:173) and can panic with EPIPE after effects are done. This needs a test before the operation-record capability can claim its outcome is truthful.",
+    "Non-JSON stderr noise under --json (for example the stale VIBEVM_HOME warning seen from the installed 1.0.11) is treated by the app as child output. Keep it tolerated, or route warnings through the event stream.",
+    "Exit codes must not change: shell scripts and CI use them. Codes and refusal flags are additive only.",
+    "The open/closed boundary: conformance fixtures must be generated inside vibe. Copying the closed app's recordings into the open repository goes against the owner's 2026-11-07 ruling.",
+    "The app is still written against 1.0.11 and its own version gates. Until it adopts capabilities, every new vibe feature stays invisible to the Library. The S handoff note is the cheap mitigation and should go first.",
+    "Operation records in $VIBE_SETTINGS must respect the trial homes the app creates with VIBE_SETTINGS, and secrets must never land in recorded argv."
+   ]
+  }
+ },
+ {
+  "key": "images-os",
+  "result": {
+   "summary": "Main recommendation: when vibe installs into a rootfs, container or remote node, it should not try to work out from the host where each file lands. Instead it should run the same static vibe binary inside that target, with the target's own home. Today's planner, steps, rollback and JSON contracts then work unchanged.\nThis removes most of the M-14 identity work: host versus target paths, hooks that would run on the host, launcher flavour, and destination labels.\nIt also gives the desktop Library app cluster control almost for free. One global flag, `--on <target>`, forwards any command and relays its `--json` envelope and its `--progress-format json` stream, which are the same channels the app already reads.\nSix things must be fixed early:\n(1) Target identity: a named target is an executor kind, an address, a scope and a platform. A path string is never permission to write.\n(2) One executor abstraction: local, rootfs (bwrap or chroot), container (docker or podman), and ssh using the system OpenSSH client.\n(3) A third home scope, system, at /var/lib/vibe, beside the existing user and project homes. Its PATH entries go in /etc/profile.d.\n(4) The vibe binary placed into a target comes from the existing release manifest, checked by digest. A linux aarch64 target must be added; it is missing today and ARM AI nodes need it.\n(5) Pacman owns /usr, the kernel, drivers and CUDA. Vibe owns /var/lib/vibe and /etc/vibe. Vibe calls pacman only while building an image, never on a running system.\n(6) Signing: packages today are protected only by sha256 pins and group trust. A signature scheme is needed before root installs on nodes run unattended.\nDocker images are built from a generated build directory of about 5 lines whose real work is `vibe app import` running inside the build. Linux and OS images are built by driving mkosi (Arch) rather than writing our own image builder.\nOS updates and rollback come from systemd-sysupdate with A/B partitions and boot counting, behind `vibe os` commands with JSON output. This follows the SteamOS model: the OS image and vibe apps are two separate update domains.\nThe stage-1 ADV-TARGETS slice (labelled host-side planning plus a bound builtin) should be replaced by this path.\nOrder: answers without a terminal, `--on ssh`, named targets, system scope, image build, rootfs and mkosi, Arch packaging, fan-out across nodes, reconciling the app set at boot, A/B OS, signing.",
+   "capabilities": [
+    {
+     "name": "Every app operation runs without a terminal, given its answers",
+     "part": "1-control",
+     "user_story": "The Library app, a CI job or a remote node runs `vibe app install|import|modify|remove --json` with no terminal. If something would need a question, vibe refuses before any change with typed `needs-input`, listing each missing answer (option, feature, parameter, license, secret) and its flag or file key. It never hangs on a prompt.",
+     "todays_form": "Mostly present: AppChoiceArgs on plan and install, `app import --target-input/--secret-input/--accept-license/--skip-installed/--dry-run/--resume` (crates/vibe-cli/src/cli/app_portable.rs), the optional prompts in OperationContext (crates/vibe-app/src/operations/mod.rs). The gap is an audit that each prompt's None branch gives one typed refusal with an exact remedy, plus a test.",
+     "size": "M",
+     "priority": "now",
+     "replaces_or_extends": "Extends PROP-065 #parameters/#license/#features and PROP-059 #portable-set. Prerequisite for everything remote or image-based.",
+     "prerequisites": [],
+     "design_decisions": [
+      "Missing answers produce error code `needs-input`, with `missing:[{kind,id,flag,file_key}]` in the JSON envelope. Exit code 2, as the existing exit-code table uses for usage errors (check PROP-065 #exit-codes and reuse it, do not add a new one).",
+      "A terminal is never inferred from the environment. Questions are asked only when stdin is a TTY and neither `--json` nor `--progress-format json` is set.",
+      "No new answer format: `--target-input` (the vibe-apps import answers) is the only answers file."
+     ],
+     "acceptance": "A test harness runs install, import, modify and remove of fixture apps with stdin=/dev/null for each prompt kind. Each run either completes with the answers supplied or exits with `needs-input`, naming exactly that answer, and leaves the home digest unchanged.",
+     "product_question": ""
+    },
+    {
+     "name": "Run any vibe command on another machine: `--on ssh:<dest>`",
+     "part": "3-os",
+     "user_story": "`vibe --on ssh:gpu1 app install ollama --json` runs the vibe installed on gpu1 over the user's own SSH setup. It prints the remote result envelope on stdout and the remote progress lines on stderr, exactly as a local run would. The Library app manages a node by adding one flag. With a local terminal, ssh -t is used so remote questions work by hand.",
+     "todays_form": "New: one module in crates/vibe-cli (a global flag on `Cli` in cli.rs, handled in main.rs before dispatch). Machine channels already exist: `--json` envelopes from vibe-wire, and `--progress-format json` from output/machine.rs, PROP-065 #events and PROP-060 #MACHINE-STREAM. The transport is the OpenSSH client run as a subprocess (no Rust SSH library).",
+     "size": "M",
+     "priority": "now",
+     "replaces_or_extends": "New. Its user intent replaces the remote and executor part of M-15-K.1/K.2 and the node-install goal of Part 3.",
+     "prerequisites": [
+      "Every app operation runs without a terminal, given its answers"
+     ],
+     "design_decisions": [
+      "Forwarding is by argv: the original argv minus `--on`, and the remote command is `vibe` (override with `--remote-vibe <path>`). Each argument is shell-quoted for POSIX sh. Commands that read local files (import FILE, --registry DIR, --target-input) refuse at first with `on-needs-local-file`. File upload is a later slice.",
+      "Handshake: `vibe version --json` runs on the remote first. Refuse `remote-incompatible` when the remote's supported wire protocol tags (vibe-apps/1, vibe-progress-event/1, the envelope version) do not cover what this command emits.",
+      "No daemon, no agent and no open port. SSH keys, ssh-agent, known_hosts and ProxyJump are all OpenSSH's job. Privilege: `ssh:<dest>?sudo` runs `sudo -n vibe …`, and a failed sudo maps to `remote-privilege-denied`.",
+      "The exit code is the remote's. A transport failure exits 255 with `remote-transport`, kept separate from vibe errors.",
+      "Cancellation: Ctrl-C sends SIGINT through the ssh -t session. Without a terminal, the local process kills ssh, and the remote vibe relies on its existing resumable work (PROP-065 #cancellation and --resume)."
+     ],
+     "acceptance": "An integration test (ignored by default) against `ssh localhost` with an isolated VIBE_SETTINGS: `vibe --on ssh:localhost app list --json` matches the local output byte for byte. A remote install streams vibe-progress-event/1 lines. A remote with an older protocol refuses `remote-incompatible` before running anything.",
+     "product_question": ""
+    },
+    {
+     "name": "Named targets: `vibe target add|list|check|remove`",
+     "part": "general",
+     "user_story": "A user registers `gpu1` (ssh), `img-root` (a rootfs directory) and `build` (docker or podman), and then writes `--on gpu1`. `vibe target check gpu1 --json` reports reachability, the remote vibe version, the platform triple, privilege (user, sudo or root) and the free space of the target's vibe home. The Library lists targets from the same file.",
+     "todays_form": "New small file `<settings>/targets.toml`, read and written through the existing settings owner (crates/vibe-settings or crates/vibe-app/src/settings.rs) and the edit-preserving TOML editing already used for config.toml. Platform tokens reuse SUPPORTED_DISTRIBUTION_TARGETS (crates/vibe-wire/src/behaviour/release_manifest.rs:81).",
+     "size": "M",
+     "priority": "now",
+     "replaces_or_extends": "Replaces the target-identity intent of M-14-A.1/A.2/C.2 (no prototype EnvironmentDefinition or TargetInstanceId types).",
+     "prerequisites": [
+      "Run any vibe command on another machine: `--on ssh:<dest>`"
+     ],
+     "design_decisions": [
+      "A target's identity is `{name, executor: local|rootfs|container|ssh, address, scope: user|system, platform}`. The name is the key, and the path or host string is only an address. Before any mutating forward, `check` records the remote's machine-id (/etc/machine-id) or the rootfs marker. A mismatch refuses `target-identity-changed`, which replaces path-based authority.",
+      "Inline `--on ssh:host` and `--on rootfs:dir` work without registration, and a registered name is resolved first.",
+      "Groups (`[group.gpu] members=[…]`) live in the same file, for fan-out."
+     ],
+     "acceptance": "In a temp settings home, add, list and remove round-trip and other content of targets.toml is kept. After the remote machine-id changes, `--on t app install x` refuses `target-identity-changed` before running remotely.",
+     "product_question": ""
+    },
+    {
+     "name": "System scope home: `/var/lib/vibe` beside the user and project homes",
+     "part": "3-os",
+     "user_story": "On a Linux machine, `sudo vibe app install -g --system ripgrep` installs for every user. The payload goes under /var/lib/vibe, commands under /var/lib/vibe/bin, PATH is set from /etc/profile.d/vibe.sh, and `vibe app list --system` shows it. Without root it refuses with `system-scope-needs-root`. The same command inside a container build or over `--on node?sudo` sets up a node for all users.",
+     "todays_form": "Extends SettingsRoot (crates/vibe-app/src/settings.rs), which already has `new` (user) and `project` constructors and a `project: bool` field. Add a third constructor and a scope enum in place of the bool. Add a `SystemProfileEnvironment` implementing the `UserEnvironment` trait (crates/vibe-app/src/environment.rs:53) that writes /etc/profile.d/vibe.sh and vibe.fish. Storage libraries (storage/) and Location::Owned{library,directory} (index.rs:169) are already root-relative, so the layout is reused as-is.",
+     "size": "L",
+     "priority": "now",
+     "replaces_or_extends": "New scope. Its root is exactly the home that an image build and a node install fill. It extends PROP-059 #project-scope with a third scope.",
+     "prerequisites": [
+      "Every app operation runs without a terminal, given its answers"
+     ],
+     "design_decisions": [
+      "Layout: state, index and libraries in /var/lib/vibe, proxies and links in /var/lib/vibe/bin, config in /etc/vibe/config.toml, cache in /var/cache/vibe. A root override `VIBE_SYSTEM_ROOT` (or `--system-root`) is used only for tests and image staging. It never changes the paths written into profile.d: those are always the runtime paths.",
+      "The system scope is Linux-only at first. Windows and macOS refuse `system-scope-unsupported`.",
+      "Desktop entries go to /usr/local/share/applications. Agent configs (PROP-064) are not written in system scope at first and are labelled skipped in the plan.",
+      "The user home keeps precedence over system on PATH: user profile lines come after the system profile.d, so user lines win.",
+      "Recipe and shell steps run as root with HOME=/root, and the plan states this. Per-package `system = false` options refuse in system scope with `option-not-system-capable`."
+     ],
+     "acceptance": "In a temp root with VIBE_SYSTEM_ROOT and a fake-root test hook: an install writes only under the root, profile.d/vibe.sh adds <runtime>/var/lib/vibe/bin, and remove returns the root to its exact prior digest. Without root and without the test hook it refuses `system-scope-needs-root`.",
+     "product_question": "Is a machine-wide (system) vibe home part of the product, or should a node only ever have per-user vibe homes? Recommendation: yes, system scope. A cluster node and an OS image need apps for all users and services, and SteamOS and Flatpak both have a system installation."
+    },
+    {
+     "name": "Build a Docker/OCI image from a vibe app set",
+     "part": "2-images",
+     "user_story": "`vibe image build image.toml --tag me/agent-box:1` builds a container from a base image plus a vibe-apps set, with per-stage progress in the Library. `--plan-only --out ctx/` writes the reviewable build context. `vibe image inspect me/agent-box:1` lists the apps, versions and options from labels and the image record. `vibe image rollback me/agent-box` re-tags the previous build.",
+     "todays_form": "The definition reuses the vibe-apps/1 set (crates/vibe-app/src/portable.rs) via `app export`. Installation inside the build is `vibe app import --system --target-input … --json` running inside the build container, so the planner and steps are unchanged. The executor is docker buildx or podman build, found on PATH. The image record reuses the lifecycle build-record shape (crates/vibe-lifecycle/src/mechanism/build/record.rs).",
+     "size": "L",
+     "priority": "next",
+     "replaces_or_extends": "Replaces and promotes 'Build, export and replace a container image from a vibe app set' (M-15-G.1/G.2/G.3/K.2/F.2/I.1/I.3/J.2), simplified to a thin generated build context.",
+     "prerequisites": [
+      "System scope home: `/var/lib/vibe` beside the user and project homes",
+      "Every app operation runs without a terminal, given its answers"
+     ],
+     "design_decisions": [
+      "image.toml (`vibe-image/1`): `base` (pinned by digest), `apps` (a path to a vibe-apps/1 file), `answers`, `native` (later), `labels`, `user`. It is a file at first, not a package kind.",
+      "The generated Containerfile does four things: FROM base@digest; COPY the linux-musl vibe binary for the base architecture (fetched from the release manifest and checked by digest); COPY the set and answers; RUN vibe app import with a BuildKit cache mount for /var/cache/vibe. All logic stays in vibe and the file is only a wrapper.",
+      "The progress line format comes from inside the RUN (BuildKit `--progress=rawjson` is parsed and turned into vibe-progress-event/1 tasks).",
+      "Labels: `org.vibevm.apps=sha256:<set>`, `org.vibevm.image=<record n>`. Records live in `<user home>/images/<tag>/<n>.toml`.",
+      "No push, no registry login, no new store. `export --oci` is `docker save` or `podman save`."
+     ],
+     "acceptance": "On Linux with docker: an image from a two-app set of archive apps runs `docker run --user 1000 <tag> <cmd> --version`. `vibe image inspect` lists both apps. Rollback restores the previous image id. Without docker, every subcommand except --plan-only refuses `executor-unavailable`.",
+     "product_question": ""
+    },
+    {
+     "name": "Install into a local rootfs directory: `--on rootfs:<dir>`",
+     "part": "2-images",
+     "user_story": "A user with an Arch rootfs from pacstrap or mkosi runs `vibe --on rootfs:./root app import tools.vibe-apps --system`. Vibe runs itself inside the root with bwrap (no root needed) or chroot (as root), the host cache bound read-only. The result is a directory ready to pack as an image or boot with nspawn.",
+     "todays_form": "The same forwarding as `--on ssh`, with a different executor: bwrap or chroot with /proc, /dev, a resolv.conf copy, the host cache bind, and the vibe binary bound read-only at /usr/local/bin/vibe. The rootfs marker is `<root>/etc/vibe/target.toml`.",
+     "size": "M",
+     "priority": "next",
+     "replaces_or_extends": "Replaces 'Plan apps into a separate root filesystem, refusing when no executor is available' (M-15-K.1/F.1/B.1/A.2) and makes host-side labelled planning unnecessary.",
+     "prerequisites": [
+      "Named targets: `vibe target add|list|check|remove`",
+      "System scope home: `/var/lib/vibe` beside the user and project homes"
+     ],
+     "design_decisions": [
+      "Refuse a root whose canonical path is `/`, the host settings home or an ancestor of it (`target-aliases-host`). A root without /etc/os-release refuses `rootfs-not-a-system`.",
+      "Cross-architecture use needs qemu-user binfmt. Check reports it, and refuses `rootfs-arch-unrunnable` when missing.",
+      "Linux hosts only. On Windows and macOS a rootfs goes through the container executor."
+     ],
+     "acceptance": "In a minimal Arch or Alpine rootfs (a fixture tarball), import of an archive app gives /var/lib/vibe and profile.d inside the root, and the host ~/.vibe digest is unchanged. A root of `/` is refused.",
+     "product_question": ""
+    },
+    {
+     "name": "Linux system images through mkosi (Arch base)",
+     "part": "2-images",
+     "user_story": "`vibe image build os.toml --format directory|disk|uki` produces a bootable Arch system with the chosen pacman packages and vibe apps preinstalled in the system scope. It runs on a laptop, a VM or bare metal, and the Library shows the same build progress as for Docker images.",
+     "todays_form": "New `image` executor variant `mkosi`. Vibe writes mkosi.conf (Distribution=arch, Packages=native list, a postinst script that runs `vibe app import --system` in the image) and drives the `mkosi` CLI. The rootfs install uses the same import path as above.",
+     "size": "L",
+     "priority": "later",
+     "replaces_or_extends": "Revives the rootfs part of M-15-F.1 and the base of M-15-E, without a home-grown image builder.",
+     "prerequisites": [
+      "Install into a local rootfs directory: `--on rootfs:<dir>`",
+      "Build a Docker/OCI image from a vibe app set"
+     ],
+     "design_decisions": [
+      "Reuse mkosi rather than pacstrap scripts, because it gives directory, disk, UKI and sysext outputs and sysupdate-ready partitions.",
+      "The same vibe-image/1 file as Docker images, with `format` and `native = [\"linux\", \"nvidia-open\", …]`. The pacman repository is pinned by an Arch Linux Archive date, never 'latest'.",
+      "Native packages are installed only at build time. The first slice builds `--format directory` and boots it with systemd-nspawn in a test."
+     ],
+     "acceptance": "On an Arch host with mkosi: a directory image boots in nspawn, `vibe app list --system --json` lists the preinstalled apps, and `pacman -Q` lists the native packages at their pinned versions.",
+     "product_question": ""
+    },
+    {
+     "name": "Vibe on Arch: where pacman's ownership ends and vibe's begins",
+     "part": "3-os",
+     "user_story": "On an Arch system vibe installs as an ordinary pacman package (`vibe-bin`). vibe and pacman never write each other's files. A vibe package that needs a system library declares it as `native:arch/<pkg>`. The plan shows whether it is satisfied (`pacman -Q`) and, if not, refuses with the exact `pacman -S` remedy; on a writable system it never installs the package itself.",
+     "todays_form": "PKGBUILD added to distribution/ next to the existing release scripts. Native needs extend the existing step `needs` and conditions vocabulary (PROP-065), with purl `pkg:alpm/arch/<name>` (crates/vibe-core/src/manifest/purl.rs already models foreign package types).",
+     "size": "M",
+     "priority": "later",
+     "replaces_or_extends": "Replaces 'Install distro packages into a target rootfs through its native package manager' (M-15-E.1/E.2/E.3) and promotes it from 'no' to build-time-only.",
+     "prerequisites": [
+      "System scope home: `/var/lib/vibe` beside the user and project homes"
+     ],
+     "design_decisions": [
+      "Pacman owns /usr, /etc (except /etc/vibe and /etc/profile.d/vibe*), /boot, the kernel, drivers, CUDA and systemd. Vibe owns /var/lib/vibe, /var/cache/vibe and /etc/vibe. A vibe step that writes into a pacman-owned path is refused (`path-owned-by-system-pm`), checked through `pacman -Qo` at plan time in system scope.",
+      "Vibe packages are not converted into Arch packages: that would lose options, features, rollback and the Library model, and needs two databases. Only vibe itself is a pacman package.",
+      "Native packages are installed by vibe only while building an image (mkosi, Containerfile). On a running system vibe reports and refuses, and never runs pacman -S.",
+      "libalpm is not linked. `pacman -Q`/`-Qo` run as subprocesses are enough and avoid ABI coupling."
+     ],
+     "acceptance": "In an Arch container: a fixture with a met native need installs. One with an unmet need refuses with `needs-native` and the remedy `pacman -S jq`. A step writing to /usr/bin refuses before any change.",
+     "product_question": "Should vibe packages ever be published as real Arch packages (an AUR or repo export)? Recommendation: no. Ship only vibe itself as a pacman package, and keep vibe packages in vibe's own database."
+    },
+    {
+     "name": "Install on many nodes at once: `--on group:<name>`",
+     "part": "3-os",
+     "user_story": "`vibe --on group:gpu app import ai-stack.vibe-apps --system --json` installs on every node of the group in parallel. One result lists each node's own outcome (ok, failed with error code, unreachable). A failed node does not stop the others, and `--resume` retries only the failed nodes. The Library shows one row per node.",
+     "todays_form": "Builds on `--on ssh` and the targets file. The per-node streams are the existing vibe-progress-event/1, with the node name as the parent task id.",
+     "size": "M",
+     "priority": "next",
+     "replaces_or_extends": "New. It carries Part 3's 'install on other nodes from one node'.",
+     "prerequisites": [
+      "Run any vibe command on another machine: `--on ssh:<dest>`",
+      "Named targets: `vibe target add|list|check|remove`"
+     ],
+     "design_decisions": [
+      "Envelope `vibe-fanout/1`: `{nodes:[{name, exit, envelope|error}]}`. The process exits 0 only when every node exits 0.",
+      "`--parallel N` defaults to 8. No orchestration engine and no ordering between nodes. Rolling or canary order is a later flag `--batch N --stop-on-failure`.",
+      "Only commands that change nothing or are idempotent may fan out at first (app list, import, install, update, remove, os status), set by an allow-list in code."
+     ],
+     "acceptance": "Against three `ssh localhost` targets with separate VIBE_SETTINGS, one of them made unreachable: two succeed, one reports `remote-transport`, the exit code is non-zero, and `--resume` contacts only the failed one.",
+     "product_question": ""
+    },
+    {
+     "name": "Send downloads to offline nodes",
+     "part": "3-os",
+     "user_story": "An air-gapped GPU node installs the same set: the head node fetches every declared input once and copies the files the plan needs, by content hash, into the node's cache. The node then installs with `--offline`.",
+     "todays_form": "Reuses the digest-addressed app-sources cache (`SettingsRoot::app_sources_cache`), the plan's declared inputs (installer/declared_input.rs Locator), `--offline`, and the ssh transport (scp or `ssh cat >`).",
+     "size": "M",
+     "priority": "later",
+     "replaces_or_extends": "Extends M-15-B.2/I.4 (already-served offline supply) to remote nodes.",
+     "prerequisites": [
+      "Install on many nodes at once: `--on group:<name>`"
+     ],
+     "design_decisions": [
+      "Only sha256-pinned inputs are copied. The node re-checks the digest on arrival and the copy is never trusted on its own.",
+      "Uploads are idempotent: inputs whose digest is already present on the remote are skipped."
+     ],
+     "acceptance": "A node with networking blocked installs a two-app set after `--push-inputs`. A corrupted copied file is refused by digest.",
+     "product_question": ""
+    },
+    {
+     "name": "Install the app set an OS image declares when the system starts",
+     "part": "3-os",
+     "user_story": "The OS image includes `/usr/share/vibe/system.vibe-apps`. At boot, a systemd unit makes the system home contain at least that set: it adds what is missing and leaves user additions alone. A new OS image can bring new default apps without baking them into the read-only /usr.",
+     "todays_form": "`vibe app import --system --skip-installed --json` already gives an install that is safe to repeat. Add a systemd unit file shipped in the vibe PKGBUILD, and log to the journal.",
+     "size": "S",
+     "priority": "later",
+     "replaces_or_extends": "New (the SteamOS-style split between preinstalled apps and the user layer).",
+     "prerequisites": [
+      "System scope home: `/var/lib/vibe` beside the user and project homes",
+      "Vibe on Arch: where pacman's ownership ends and vibe's begins"
+     ],
+     "design_decisions": [
+      "Never remove apps on reconcile. Removal stays an explicit user or Library action.",
+      "It runs with --offline when no network is present, and a missing input leaves the boot healthy and reports 'pending'."
+     ],
+     "acceptance": "In an nspawn-booted image, the unit installs the declared set on the first boot and does nothing on the second. An app the user added survives.",
+     "product_question": ""
+    },
+    {
+     "name": "Atomic OS updates and rollback: `vibe os status|update|rollback`",
+     "part": "3-os",
+     "user_story": "On the vibe OS, the Library's System page and `vibe os status --json` show the running image version, the other A/B slot, pending updates and boot health. `vibe os update` downloads and stages the next image. A failed boot falls back automatically. `vibe os rollback` makes the previous image the default. The same commands work across the cluster with `--on group:all`.",
+     "todays_form": "Vibe does not implement the update mechanism. It wraps systemd-sysupdate/updatectl, bootctl and systemd-boot boot counting with typed JSON envelopes. Images come from the mkosi capability with A/B usr partitions and UKIs (the ParticleOS layout, itself Arch-based).",
+     "size": "L",
+     "priority": "later",
+     "replaces_or_extends": "New. It sits above M-15-C.1/D.1, which stay app-level only.",
+     "prerequisites": [
+      "Linux system images through mkosi (Arch base)",
+      "Signatures on registry indexes and images"
+     ],
+     "design_decisions": [
+      "Two update domains: the OS image (pacman content and the vibe binary) is A/B and rolls back as a whole, while the vibe system and user homes on /var and /home keep their own per-app rollback (`vibe app rollback`). This matches SteamOS's split.",
+      "First slice: `vibe os status --json` only, read-only, parsing `updatectl`/`bootctl status --json`.",
+      "Update sources are signed SHA256SUMS on an HTTPS directory, which is sysupdate's native format."
+     ],
+     "acceptance": "In a QEMU VM: update to v2, reboot into v2, inject a failing boot, and the machine falls back to v1. `vibe os status --json` reports each state correctly.",
+     "product_question": "Should the OS be immutable (read-only /usr, A/B images, pacman not usable at runtime, like SteamOS) or a normal mutable Arch with btrfs snapshots? Recommendation: immutable A/B for the shipped OS, with a developer mode that unlocks pacman. A cluster needs identical, revertible nodes."
+    },
+    {
+     "name": "Signatures on registry indexes and images",
+     "part": "general",
+     "user_story": "Before a node installs as root without supervision, vibe checks that the registry index (and, later, each image record and OS update) is signed by a key the node trusts. An unsigned or wrongly signed index refuses with `signature-invalid` and names the key.",
+     "todays_form": "Today there are only sha256 pins in manifests, commit pins in vibe.lock and group trust for hooks (vibe_core::trust, PROP-064 #trust-entries). No signature code exists in any crate. The index writer is crates/vibe-index and its reader is in vibe-registry.",
+     "size": "L",
+     "priority": "next",
+     "replaces_or_extends": "New. It is the trust base for M-07-E.x attestations and for any OS update.",
+     "prerequisites": [],
+     "design_decisions": [
+      "Scheme: SSH signatures (sshsig, ed25519). Publishers reuse the keys they already sign git commits and ssh with, verification works offline, and `ssh-keygen -Y verify` works as an independent check.",
+      "Trusted keys live in `[trust] keys=[…]` in the existing trust table, next to trusted_groups. The vibevm key ships built in, the same way the org.vibevm.* group does.",
+      "Enforcement is enabled in system scope and in `--on` runs that change something. In user scope it warns at first, then is enforced after one release."
+     ],
+     "acceptance": "A test registry signed by key A: install passes with A trusted. A one-byte index change gives `signature-invalid`. An untrusted key A gives `signature-untrusted` in system scope and a warning in user scope.",
+     "product_question": "Which signature scheme do publishers adopt? Recommendation: SSH ed25519 signatures. They need no new tools or PKI, and owners already have such keys."
+    },
+    {
+     "name": "Release vibe for aarch64 Linux",
+     "part": "general",
+     "user_story": "ARM AI hardware (GH200, DGX Spark, Jetson, Graviton nodes) can run vibe: the bootstrap and the image and node commands find an `aarch64-unknown-linux-musl` build in every release.",
+     "todays_form": "SUPPORTED_DISTRIBUTION_TARGETS (crates/vibe-wire/src/behaviour/release_manifest.rs:81) lists five targets and none is Linux ARM. The fix is one more release job and one more entry in that list.",
+     "size": "S",
+     "priority": "now",
+     "replaces_or_extends": "Extends M-07-B.1 (release smoke on every target).",
+     "prerequisites": [
+      "The owner's approval for the CI edit (Rule 4)"
+     ],
+     "design_decisions": [
+      "Use musl static, the same as x86_64, so one binary can be injected into any rootfs or container.",
+      "Smoke it under qemu-user in CI, or on a native ARM runner if one is available."
+     ],
+     "acceptance": "The draft release has the aarch64 musl bundle. The aggregate manifest validates with six targets. The bootstrap smoke passes under qemu-aarch64.",
+     "product_question": ""
+    }
+   ],
+   "rescoring": [
+    {
+     "item": "Plan an application for another target root without touching the host (M-14-A.1/A.2/B.1/B.2/C.1/C.2)",
+     "change": "drop",
+     "reason": "When vibe runs inside the target, host-side destination labels and target-path translation are no longer needed. Its useful parts move elsewhere: target identity to named targets with a machine-id or marker check, alias refusal to the rootfs executor, and 'absent means host' stays the default."
+    },
+    {
+     "item": "Install a builtin into a bound user-profile root (M-14-C.3)",
+     "change": "drop",
+     "reason": "A bound foreign user-profile root is not on the image, OS or cluster path. Inside a target it is an ordinary install."
+    },
+    {
+     "item": "Plan apps into a separate root filesystem, refusing when no executor is available (M-15-K.1/F.1/B.1/A.2)",
+     "change": "keep",
+     "reason": "Kept as `--on rootfs:<dir>` plus `vibe target check`. vibe-apps/1 stays the definition, and the refusal without an executor stays."
+    },
+    {
+     "item": "Build, export and replace a container image from a vibe app set (M-15-G.*, K.2, I.1, I.3, J.2)",
+     "change": "promote",
+     "reason": "Part 2 is now a stated owner goal. Simplified to a generated build directory that runs vibe inside the build."
+    },
+    {
+     "item": "Install distro packages into a target rootfs through its native package manager (M-15-E.1/E.2/E.3)",
+     "change": "promote",
+     "reason": "The Arch-based OS is approved. Narrowed to pacman at image-build time only, plus checks and refusals for native needs at runtime."
+    },
+    {
+     "item": "Agents discover and call services running in a Vibe-built environment (M-15-H.1/H.2/H.3)",
+     "change": "keep",
+     "reason": "Kept as later. It becomes relevant for the AI cluster (node services as MCP tools) once fan-out and system scope ship."
+    },
+    {
+     "item": "M-15-C.1 Nix-style store and generations",
+     "change": "keep",
+     "reason": "Still already served at app level. OS-level atomicity comes from A/B images (sysupdate), not from a vibe store."
+    },
+    {
+     "item": "M-15-I.2 reproducible image comparison",
+     "change": "keep",
+     "reason": "Still no user intent. Identical nodes are guaranteed by one signed image digest, not by bit-for-bit rebuilds."
+    },
+    {
+     "item": "ADV-TARGETS milestone in PLAN.md",
+     "change": "revive",
+     "reason": "Rewrite it as ADV-IMAGES and ADV-CLUSTER: the terminal-free contract, `--on ssh`, targets, system scope and aarch64 now; image build, rootfs, fan-out and signing next; mkosi, Arch, reconcile and `vibe os` later."
+    },
+    {
+     "item": "M-07-B.1 Smoke the installed bootstrap on every release target",
+     "change": "promote",
+     "reason": "Images and nodes inject the released musl binary, so a broken bundle for one platform now breaks clusters, not only downloads."
+    }
+   ],
+   "risks": [
+    "The approach depends on running the same vibe inside the target. Version differences between the host vibe and the vibe in the target must be refused by the wire handshake, not tolerated.",
+    "Without signatures, any `--on group --system` install runs registry content as root on every node.",
+    "bwrap needs unprivileged user namespaces, which some distributions disable. chroot needs root. The check must report this clearly.",
+    "Docker Desktop on Windows and macOS: builds work through a Linux musl vibe inside the container, but bind-mount and cache semantics differ.",
+    "mkosi, systemd-sysupdate and UKI are fast-moving tools; pin their versions in the image definition.",
+    "Scope creep into writing our own image builder, orchestrator or daemon. Each of these is ruled out until a measured need exists.",
+    "Two update domains (OS image vs vibe homes) need clear documentation, or users will expect an OS rollback to also undo their apps.",
+    "Recipes and shell steps written for user scope may assume HOME or user paths. In system scope they run as root, so packages must opt in or be labelled in the plan."
+   ]
+  }
+ },
+ {
+  "key": "rescore",
+  "result": {
+   "summary": "I re-scored all 41 stage-1 capabilities and the 117 IDs not in any capability, looking through the three-part goal (Library control, Docker/Linux images, the cluster AI OS).\n1. The stage-1 plan was built around agent instructions. Under the new direction, the parts that matter most are external control (Part 1) and targets other than HOME (Parts 2 and 3).\n2. Promoted:\n   - The whole M-14/M-15 target chain (caps 30, 31, 33, 34, 35, 36). The B-233 question is now answered: yes, with pacman first.\n   - Strict MCP arguments, MCP progress and cancel, and uninstall of configured packages. The Library needs every button to work and every long run to be watchable and stoppable.\n   - Release bootstrap smoke and provenance attestations, because an OS needs supply-chain trust.\n   - Live checks against real agent clients and the open client map, because an OS for AI must ship and accept many agent clients.\n3. Demoted: the authored-change workflow (caps 6, 7, 9, 10, 11), boot delta preview, package rename and compile traces. None of them moves the Library, image or OS goals forward. Show/check of a change stays possible later; the write and close verbs drop.\n4. Revived from no-user-intent, already-served and belongs-elsewhere:\n   - Environment generations and rollback (M-15-C.1), rebuilt on `vibe app export` and import, not as a Nix store.\n   - Build closure records and reproducibility (M-15-A.1, I.2) as part of images.\n   - Egress and permission declarations (M-15-K.3).\n   - Retry with an operation id (M-16-C.1), plus a long-lived session for remote nodes (M-16-B.3).\n   - A census of what can be controlled from outside, and coverage of `--json` on every command (M-16-A.1, M-17-A.2).\n   - Peer mirrors for a cluster (M-15-B.2, I.4).\n   - Target ABI selection (M-15-C.3) and target-bound lifecycle identity (M-03-B.1).\n5. Seven revived items get their own capability below. The detailed control milestone and the image/OS ladder are left to the other reviewers, as asked.\n6. Main open owner choices: whether vibe drives pacman itself, whether egress is enforced or only declared, and whether cluster control runs over ssh or through a node daemon.\n7. I edited nothing. Evidence comes from capabilities.json, the vibe crates, and how /fast/git/vibevm-app-r138 calls `vibe app … --json` and reads `vibe-progress-event/1`.",
+   "capabilities": [
+    {
+     "name": "Environment generations: list, diff and switch a whole app set",
+     "part": "3-os",
+     "user_story": "An AI-OS user installs three agent apps from the Library and one breaks the node. In the Library (or `vibe app generation list --json`) they see numbered generations with timestamps and diffs, and switch back to generation 41 in one action. On the OS this is the boot-menu rollback target.",
+     "todays_form": "Per-app `vibe app rollback`, side-by-side versions, and whole-set `vibe app export`/`import` (crates/vibe-cli/src/commands/app/export.rs, crates/vibe-app/src/export). No record of past whole-set states.",
+     "size": "L (first slice M: record + list)",
+     "priority": "next",
+     "replaces_or_extends": "Revives M-15-C.1 (store/generations), rejected earlier as a Nix-style redesign; also M-15-D.1. Built on the existing export document, not a new store.",
+     "prerequisites": [
+      "App export document stable and versioned (exists)"
+     ],
+     "design_decisions": [
+      "A generation is the export document of the installed set, written after every successful mutating app operation under the app storage root. No content-addressed store.",
+      "Payloads stay in the existing storage. `vibe storage gc` must treat payloads referenced by the last N generations as live (N configurable, default 5).",
+      "Switch = `vibe app import` of the generation with a mandatory plan step (`--plan-only` first). It reuses the import planner; no second planner.",
+      "Slice order: record+list (M), diff (S), switch (M), retention in gc (S).",
+      "Project-level vibe.lock is out of scope; only the global app set."
+     ],
+     "acceptance": "Install A, install B, remove A: `generation list --json` shows 3 entries; `generation diff 1 3` names A removed and B added; `generation switch 2 --plan-only` shows reinstall of A, and without --plan-only it restores A with B kept. gc does not delete A's payload while generation 2 exists.",
+     "product_question": "Retention default and whether OS boot entries map 1:1 to generations. Recommendation: keep 5 by default; on the OS each generation gets a boot entry only for system-set changes."
+    },
+    {
+     "name": "Operation id on mutating app commands (retry without duplicate effects)",
+     "part": "1-control",
+     "user_story": "The Library sends `vibe app install pkg --operation-id <uuid> --json`; its process is killed mid-run. On retry with the same id, vibe either resumes the parked operation or reports the finished result, and never installs twice. The same id works when a remote node relays the request.",
+     "todays_form": "crates/vibe-app/src/operations/pending.rs keeps pending operations with ids (valid_operation) and `vibe app resume`; the id is generated by vibe, not supplied by the caller.",
+     "size": "M",
+     "priority": "now",
+     "replaces_or_extends": "Revives M-16-C.1 (submission journal), previously rejected because no external client existed. The Library is that client.",
+     "prerequisites": [],
+     "design_decisions": [
+      "The caller-supplied id is optional. Without it, today's behaviour is kept.",
+      "Dedupe through the existing pending-operation record; no new journal.",
+      "Same id with different arguments is refused with a typed error code (`operation-id-conflict`).",
+      "The result for a finished id is kept as long as the run record (existing `vibe app runs`)."
+     ],
+     "acceptance": "Kill vibe after the first progress event, rerun with the same id: one payload in storage, one run record, exit 0. Same id with another package: nonzero and `operation-id-conflict` in JSON.",
+     "product_question": ""
+    },
+    {
+     "name": "Apps declare permissions (network egress, GPU, host paths), shown before install",
+     "part": "3-os",
+     "user_story": "Before installing an agent app, the Library shows 'needs network: api.anthropic.com; GPU; reads ~/projects'. `vibe app describe --json` carries the same block. Enforcement on the OS comes later.",
+     "todays_form": "No permission declaration. Egress proof exists only as CORP-ENV's closed-network acceptance.",
+     "size": "M (declare+show); enforcement XL later",
+     "priority": "later",
+     "replaces_or_extends": "Revives M-15-K.3 (egress) and, loosely, the M-10-B.2 grant idea, retargeted at apps.",
+     "prerequisites": [
+      "Wire schema change (formats/breaks note)"
+     ],
+     "design_decisions": [
+      "Add an optional `[permissions]` table to the app manifest: `network = [hosts]`, `gpu = bool`, `paths = [...]`. A JTD schema in schemas/ generates the vibe-wire types.",
+      "Display only in slice 1. An app with no table shows 'undeclared', not 'none'.",
+      "Enforcement (nftables, landlock, bubblewrap) is an OS-image component, not part of the vibe core install path."
+     ],
+     "acceptance": "A fixture app with [permissions] shows them in `vibe app describe --json` and in the plan text. An app without the table shows `undeclared`. Unknown keys are refused.",
+     "product_question": "Declared-only or enforced on the OS? Recommendation: declare now, enforce in Part 3 only for apps installed system-wide."
+    },
+    {
+     "name": "A node serves its package cache as a mirror for peer nodes",
+     "part": "3-os",
+     "user_story": "On a 4-node AI cluster, node A has downloaded the packages. Nodes B to D install the same set from A over the LAN, digest-checked, without internet.",
+     "todays_form": "`vibe registry vendor`, `vibe registry config mirror`, localdir registries, digest-checked declared inputs (installer/declared_input.rs), CORP-ENV offline proof.",
+     "size": "M",
+     "priority": "later",
+     "replaces_or_extends": "Revives M-15-B.2 and M-15-I.4 (replaceable sources, OCI host) for cluster use.",
+     "prerequisites": [
+      "Target-root slices (caps 30/33) for OS install paths"
+     ],
+     "design_decisions": [
+      "No new server first. Slice 1 is a vendored directory exported over the OS's existing file sharing or ssh, configured as a mirror on peers.",
+      "If an HTTP server is later needed, reuse the loopback-only pattern of vibe-doc-server, with an explicit bind flag. Never on by default.",
+      "Digests come from the lock and the registry index, never trusted from the peer."
+     ],
+     "acceptance": "Two HOMEs: vendor on A, mirror on B with network disabled; `vibe app install` on B succeeds offline. A tampered payload on A is refused on B.",
+     "product_question": ""
+    },
+    {
+     "name": "Requirements conditioned on host facts (arch, GPU vendor)",
+     "part": "3-os",
+     "user_story": "An inference app package requires the CUDA runtime on NVIDIA nodes, ROCm on AMD and CPU-only otherwise. Installing on any cluster node selects the right one; the Library shows which was chosen and why.",
+     "todays_form": "The [configuration] kernel with groups, fallbacks and typed effects (crates/vibe-core/src/configuration, vibe-resolver/src/configuration.rs), selected by user input only. Platform tokens: SUPPORTED_DISTRIBUTION_TARGETS (vibe-wire release_manifest.rs).",
+     "size": "L",
+     "priority": "later",
+     "replaces_or_extends": "Re-scopes cap 16 (conditional/alternative requirements) and M-05-B.1 (parameter forwarding) to hardware facts.",
+     "prerequisites": [
+      "Uninstall configured package (cap 13)",
+      "Target binding (cap 30) so the facts are the target's, not the host's"
+     ],
+     "design_decisions": [
+      "Host facts feed configuration defaults; they are not a second solver. A fact selects a configuration choice, and the user or Library can override it.",
+      "The fact vocabulary is closed and versioned (arch, os, gpu.vendor). Arch tokens reuse SUPPORTED_DISTRIBUTION_TARGETS.",
+      "Facts are recorded in vibe.lock / the app record so a replay is exact."
+     ],
+     "acceptance": "A fixture with gpu.vendor=nvidia injected selects the cuda group; with none it selects cpu; the lock records the fact; `configuration-preview --json` shows the defaulted choice and its reason.",
+     "product_question": "Probe GPU in vibe, or receive facts from the OS? Recommendation: vibe probes only arch/os; GPU facts come from an OS-provided file or flag."
+    },
+    {
+     "name": "Package publisher signatures verified at install and shown in the Library",
+     "part": "3-os",
+     "user_story": "The Library marks a package 'signed by org.vibevm' or 'unsigned', and the OS refuses unsigned system packages by policy.",
+     "todays_form": "Digest verification against lock and index only. Release bundles may get GitHub attestations (cap 20). No package-level signatures (grep finds none in vibe-registry/vibe-install/vibe-app).",
+     "size": "L",
+     "priority": "later",
+     "replaces_or_extends": "Extends cap 20 / M-07-C.1 from vibe's own releases to packages. Revives the provenance theme of M-15-A.1.",
+     "prerequisites": [
+      "cap 20 release attestations (trust root for vibe itself)"
+     ],
+     "design_decisions": [
+      "Sign the published package archive digest with an existing format (minisign or sigstore bundle). Do not invent one.",
+      "Keys are trusted per registry, in registry config.",
+      "Default policy warns. The OS image sets 'require' for system packages."
+     ],
+     "acceptance": "A signed fixture package shows `signature: verified(<key>)` in install --json; tampering with the signature refuses; unsigned under the require policy refuses before any slot.",
+     "product_question": "minisign (simple, offline) or sigstore (keyless, needs network)? Recommendation: minisign first, because air-gapped clusters are a target."
+    },
+    {
+     "name": "Machine-control coverage check: every mutating command has --json, progress events and error codes",
+     "part": "1-control",
+     "user_story": "The Library team gets a generated list of which vibe commands are fully drivable (JSON result, vibe-progress-event/1 stream, stable error code, plan-only). self-check fails when a new mutating command lacks them.",
+     "todays_form": "Global --json (crates/vibe-cli/src/cli/app.rs), the progress protocol in crates/vibe-cli/src/output/machine.rs, vibe-actions (PROP-039) action registry, MCP tools/list. No coverage check.",
+     "size": "M",
+     "priority": "now",
+     "replaces_or_extends": "Revives M-16-A.1 (action census) and M-17-A.2 (machine-drivable admin ops), dismissed earlier because no external client existed.",
+     "prerequisites": [],
+     "design_decisions": [
+      "The census is a test over the clap command tree, not a document. It uses an allowlist with reasons for exceptions.",
+      "'Mutating' is marked on the clap variant, or derived from the vibe-actions capability where an action exists.",
+      "The detailed contract (which commands the Library needs first) belongs to the Part 1 milestone reviewer."
+     ],
+     "acceptance": "`cargo test -p vibe-cli machine_coverage` lists every subcommand with four booleans; adding a mutating command without --json fails the test.",
+     "product_question": ""
+    }
+   ],
+   "rescoring": [
+    {
+     "item": "Install warns when a spec document could not be converted",
+     "change": "keep",
+     "reason": "Real defect; the warnings must be in --json so the Library can show them."
+    },
+    {
+     "item": "Read one spec section by its spec:// address",
+     "change": "keep",
+     "reason": "Agents on the AI OS read package specs over MCP; cheap, decided."
+    },
+    {
+     "item": "Preview the boot change before installing",
+     "change": "demote",
+     "reason": "Niche to the agent-instruction lane, and the scratch-apply side-effect risk is high; the Library needs app plans, not boot deltas."
+    },
+    {
+     "item": "Exact boot sizes and honest unreadable lanes in vibe tree",
+     "change": "keep",
+     "reason": "S bug fix; neutral to the direction."
+    },
+    {
+     "item": "Install from deep Windows project roots, verified natively",
+     "change": "keep",
+     "reason": "The Library runs on Windows desktops; a clean refusal matters for Part 1."
+    },
+    {
+     "item": "Inspect an authored change and its origin drift",
+     "change": "demote",
+     "reason": "Authoring workflow; does not serve the Library, images or the OS. Read-only slice only, after Parts 1 and 2."
+    },
+    {
+     "item": "Start a change from a package feature and re-base it",
+     "change": "demote",
+     "reason": "Depends on the demoted change workflow."
+    },
+    {
+     "item": "Make a tracked local copy of a dependency file or tree",
+     "change": "demote",
+     "reason": "Later revival candidate as pacnew-style three-way merge for OS config files; not now."
+    },
+    {
+     "item": "Show and check an authored change against today's project",
+     "change": "demote",
+     "reason": "Same deliverable as cap 6; plan once, later."
+    },
+    {
+     "item": "Create a change and record questions and answers from the CLI",
+     "change": "drop",
+     "reason": "Agents author files; vibe reads. No Library/OS value."
+    },
+    {
+     "item": "Close a change with retained evidence, waivers and later re-check",
+     "change": "drop",
+     "reason": "Risk of a second verdict store; no direction value."
+    },
+    {
+     "item": "Verify a create step that edits an existing source file",
+     "change": "keep",
+     "reason": "Stays owned by M-11-D; neutral."
+    },
+    {
+     "item": "Uninstall a configured package",
+     "change": "promote",
+     "reason": "The Library's Uninstall button must work on every package; today vibe refuses."
+    },
+    {
+     "item": "Legacy feature flags are applied and replayed",
+     "change": "keep",
+     "reason": "Silent-ignore bug, S."
+    },
+    {
+     "item": "Redbook continuity as a package choice",
+     "change": "demote",
+     "reason": "Configuration needs a first real user, but an app with GUI-visible choices (e.g. a GPU variant) is a better one for the Library than Redbook."
+    },
+    {
+     "item": "Configured packages with conditional or alternative requirements",
+     "change": "promote",
+     "reason": "Re-scoped to hardware/arch-conditioned choices for cluster nodes (see new capability); later."
+    },
+    {
+     "item": "Migrate legacy [features] to [configuration]",
+     "change": "drop",
+     "reason": "No package needs it."
+    },
+    {
+     "item": "Smoke the installed bootstrap on every release target",
+     "change": "promote",
+     "reason": "The Library and OS images bootstrap vibe on every target; a broken bundle breaks all three parts."
+    },
+    {
+     "item": "Refuse to replace a published release by accident",
+     "change": "keep",
+     "reason": "Cheap safety; bundle with the CI ask."
+    },
+    {
+     "item": "Verifiable producer provenance for release bundles",
+     "change": "promote",
+     "reason": "Root of trust for an OS that ships vibe as its package manager; prerequisite for package signatures."
+    },
+    {
+     "item": "Publish dry-run and publish docs tell the truth",
+     "change": "keep",
+     "reason": "Publisher UX; neutral."
+    },
+    {
+     "item": "Documented examples are checked on every self-check",
+     "change": "keep",
+     "reason": "Cheap gate."
+    },
+    {
+     "item": "Each release states what changed",
+     "change": "keep",
+     "reason": "The Library can show what changed between versions; S."
+    },
+    {
+     "item": "Live check of vibe deploy and skill install against real agent clients",
+     "change": "promote",
+     "reason": "The OS for AI developers ships several agent clients; deploy must be proven against real ones."
+    },
+    {
+     "item": "Bridge skills that actually run: reference closure warning and executable scripts",
+     "change": "keep",
+     "reason": "Exec bits matter on Linux/OS; keep M."
+    },
+    {
+     "item": "Add a new agent client to deploy without a core release",
+     "change": "promote",
+     "reason": "An AI OS must take new agent clients as package data; push AGENT-ADAPTER-CONSOLIDATION to schedule it, without building it here."
+    },
+    {
+     "item": "Detect the stack of an existing project in vibe init",
+     "change": "demote",
+     "reason": "Helps vibecoders onboard but does not serve Parts 1 to 3; later."
+    },
+    {
+     "item": "Lifecycle verify says when a producer rewrote its own input",
+     "change": "drop",
+     "reason": "Build only if the check finds a producer; no direction value."
+    },
+    {
+     "item": "Plain one-command manifest migration for people",
+     "change": "drop",
+     "reason": "Only if legacy manifests are found; otherwise drop."
+    },
+    {
+     "item": "Plan an application for another target root without touching the host",
+     "change": "promote",
+     "reason": "Hinge of Parts 2 and 3; the owner direction answers B-233 yes. Merge with cap 33 as one slice."
+    },
+    {
+     "item": "Install a builtin into a bound user-profile root",
+     "change": "promote",
+     "reason": "The first real write into a non-HOME root; required before any image."
+    },
+    {
+     "item": "`vibe bin` runs the newest build, not whichever debug build exists",
+     "change": "keep",
+     "reason": "S bug."
+    },
+    {
+     "item": "Plan apps into a separate root filesystem, refusing when no executor is available",
+     "change": "promote",
+     "reason": "Part 2 entry point; same binding as cap 30."
+    },
+    {
+     "item": "Build, export and replace a container image from a vibe app set",
+     "change": "promote",
+     "reason": "Part 2 core deliverable; ladder owned by the image reviewer."
+    },
+    {
+     "item": "Install distro packages into a target rootfs through its native package manager",
+     "change": "promote",
+     "reason": "Part 3 is Arch-based, so a pacman backend is mandatory; the product question is answered (pacman first)."
+    },
+    {
+     "item": "Agents discover and call services running in a Vibe-built environment",
+     "change": "promote",
+     "reason": "Cluster OS for AI: agents must find services on nodes; Part 3, coordinate with CORP-ENV."
+    },
+    {
+     "item": "MCP tools refuse arguments their schema forbids",
+     "change": "promote",
+     "reason": "Every external controller (Library, agents on nodes) needs a strict contract; prerequisite for new tools."
+    },
+    {
+     "item": "Long lifecycle runs over MCP report progress and can be stopped",
+     "change": "promote",
+     "reason": "External control requires progress and cancel; same semantics as the CLI vibe-progress-event/1 the Library already consumes."
+    },
+    {
+     "item": "Rename a package across the project",
+     "change": "demote",
+     "reason": "Authoring convenience; no direction value."
+    },
+    {
+     "item": "Agents read the package tree over MCP",
+     "change": "keep",
+     "reason": "Agents on the OS inspect what is installed; after strict args."
+    },
+    {
+     "item": "Inspect retained compile traces without blocking",
+     "change": "demote",
+     "reason": "No consumer in the three parts."
+    },
+    {
+     "item": "M-15-C.1",
+     "change": "revive",
+     "reason": "Generations and rollback of the whole app set: the OS's update safety net. New capability, built on export/import."
+    },
+    {
+     "item": "M-15-D.1",
+     "change": "revive",
+     "reason": "Folded into generations: resume plus rollback of whole-set operations."
+    },
+    {
+     "item": "M-15-A.1",
+     "change": "revive",
+     "reason": "An image build needs an input/toolchain/executor closure record (SBOM-like) for OS provenance. Belongs to the image ladder."
+    },
+    {
+     "item": "M-15-I.2",
+     "change": "revive",
+     "reason": "Reproducible image digests matter for a cluster OS; an acceptance test inside the image ladder, not a separate gate."
+    },
+    {
+     "item": "M-15-K.3",
+     "change": "revive",
+     "reason": "Egress control for agent apps on an AI OS; as app permission declarations (new capability), enforcement in the OS."
+    },
+    {
+     "item": "M-15-I.4",
+     "change": "revive",
+     "reason": "Air-gapped clusters: OCI host offline plus peer mirror (new capability)."
+    },
+    {
+     "item": "M-15-B.2",
+     "change": "revive",
+     "reason": "One node serves its cache to others: the basis of 'install on other nodes from one node'."
+    },
+    {
+     "item": "M-15-C.3",
+     "change": "revive",
+     "reason": "Target ABI/arch selection (x86_64/aarch64 nodes) inside the rootfs slice flags."
+    },
+    {
+     "item": "M-15-D.2",
+     "change": "keep",
+     "reason": "Image GC stays inside the image capability; generations change gc liveness."
+    },
+    {
+     "item": "M-15-J.1",
+     "change": "drop",
+     "reason": "An aggregate parity gate is still bookkeeping."
+    },
+    {
+     "item": "M-03-B.1",
+     "change": "revive",
+     "reason": "Lifecycle reuse must key on the target, or a rootfs build reuses host results."
+    },
+    {
+     "item": "M-17-C.3",
+     "change": "revive",
+     "reason": "External HOME/Docker journeys become Part 2 acceptance journeys."
+    },
+    {
+     "item": "M-16-A.1",
+     "change": "revive",
+     "reason": "A census of what an external app can drive; becomes the machine-control coverage test."
+    },
+    {
+     "item": "M-17-A.2",
+     "change": "revive",
+     "reason": "'Everything drivable by an external app' is now a rule; coverage of --json and progress per command."
+    },
+    {
+     "item": "M-17-A.4",
+     "change": "revive",
+     "reason": "OS components shipped as extensions must expose operations the Library can list; later in Part 1."
+    },
+    {
+     "item": "M-16-C.1",
+     "change": "revive",
+     "reason": "Caller-supplied operation id for retry without duplicate effects (Library crashes, remote relays)."
+    },
+    {
+     "item": "M-16-B.3",
+     "change": "revive",
+     "reason": "A cluster needs a long-lived node session instead of process-per-command; Part 3 decision (ssh vs daemon) for the OS reviewer."
+    },
+    {
+     "item": "M-16-C.2.4",
+     "change": "keep",
+     "reason": "Still owned by M-07 publication."
+    },
+    {
+     "item": "M-08-C.1",
+     "change": "revive",
+     "reason": "Open client map: the AI OS must accept new agent clients without a core release; push AGENT-ADAPTER-CONSOLIDATION."
+    },
+    {
+     "item": "M-08-C.2",
+     "change": "revive",
+     "reason": "Grants for package-defined destinations follow C.1; needed for OS-installed agent clients."
+    },
+    {
+     "item": "M-07-C.1",
+     "change": "promote",
+     "reason": "Provenance, extended to package signatures for the OS (new capability)."
+    },
+    {
+     "item": "M-05-E.4",
+     "change": "keep",
+     "reason": "Already served (configuration_preview over MCP and --json); the Library's configuration GUI must use it. Verify completeness in the Part 1 milestone."
+    },
+    {
+     "item": "M-05-B.1",
+     "change": "revive",
+     "reason": "Parameter forwarding has a requester under host-fact-conditioned choices (GPU/arch)."
+    },
+    {
+     "item": "M-10-B.2",
+     "change": "drop",
+     "reason": "Grants for derived copies stay unneeded; the permission idea moves to app permissions."
+    },
+    {
+     "item": "M-13-B.1",
+     "change": "keep",
+     "reason": "Release-policy ruling; fold into the owner's 2.0.0 version decision, not an executor task."
+    },
+    {
+     "item": "M-06-C.2",
+     "change": "keep",
+     "reason": "IDE-owned; not a Library need."
+    },
+    {
+     "item": "M-12-C.1",
+     "change": "keep",
+     "reason": "Planning packages; unrelated."
+    },
+    {
+     "item": "M-16-B.2",
+     "change": "keep",
+     "reason": "IDE only."
+    },
+    {
+     "item": "M-16-D.1",
+     "change": "keep",
+     "reason": "IDE only."
+    },
+    {
+     "item": "M-09-B.1",
+     "change": "keep",
+     "reason": "External repositories; owner word."
+    },
+    {
+     "item": "other no-user-intent IDs (M-02-A.2, M-03-D.1, M-03-E.2, M-05-G.1, M-06-F.2, M-07-E.1, M-10-A.2, M-11-D.1, M-12-A.1, M-13-A.1, M-13-A.2, M-16-A.2, M-09-E.2, NEXT-PREVIEW-BASE.1, NEXT-PREVIEW-BIND.1, NEXT-PREVIEW-DOCS.1, NEXT-PREVIEW-RELEASE.3)",
+     "change": "drop",
+     "reason": "Proof bookkeeping or internal ontology; the OS direction gives none of them a user."
+    }
+   ],
+   "risks": [
+    "The target chain (caps 30, 31, 33, 34, 35) will tempt a second planner or a new store. The binding must be injected into the existing vibe-app paths/settings/storage once, and shared by rootfs, image and OS.",
+    "Generations could grow into a Nix-style store. Keep them as export documents plus gc liveness.",
+    "The Library drives vibe through CLI --json and vibe-progress-event/1 (vibevm-app-r138 crates/core). MCP progress/cancel must reuse the same event semantics, or two control protocols will diverge.",
+    "A pacman backend is XL with distro-specific failure modes. Arch only, inside a target rootfs only, never on the host.",
+    "Cluster control (ssh relay vs node daemon) is an unmade architecture choice that operation ids and the peer mirror both depend on. Decide it before Part 3 slices start.",
+    "Demoting the change workflow leaves PROP-071's reader without a consumer for longer. Accept that, or mark the format experimental.",
+    "Several promoted items touch CI (bootstrap smoke, attestations): they are Rule 4 ask-first and need one bundled owner approval.",
+    "I verified no build: there is no built vibe binary in target/. Code facts come from source greps and the research files."
+   ]
+  }
+ }
+]
