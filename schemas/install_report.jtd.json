@@ -79,15 +79,6 @@
         "description": "Present exactly when a hosted `agent` contribution parked this install. The install stopped there and `ok` stays true \u2014 a park is a durable handoff, not a failure \u2014 while `complete` records whether the apply had finished first."
       }
     },
-    "hooks": {
-      "elements": {
-        "ref": "install_hook_report"
-      },
-      "metadata": {
-        "x-empty": "omit",
-        "description": "Retired and always empty, so never emitted: the package `[hooks]` table it reported was removed (PROP-020 `#LEGACY-HOOKS-REMOVED`). An install script's outcome is its `contributions` row. The member stays so a document written before the removal still parses."
-      }
-    },
     "contributions": {
       "elements": {
         "ref": "install_contribution_report"
@@ -227,24 +218,6 @@
         },
         "root": {
           "type": "string"
-        }
-      }
-    },
-    "install_hook_report": {
-      "properties": {
-        "phase": {
-          "type": "string"
-        },
-        "status": {
-          "type": "string"
-        }
-      },
-      "optionalProperties": {
-        "note": {
-          "type": "string",
-          "metadata": {
-            "x-default": null
-          }
         }
       }
     },

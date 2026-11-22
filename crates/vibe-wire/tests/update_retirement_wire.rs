@@ -10,13 +10,20 @@ use vibe_wire::generated::update_report::UpdateReport;
 fn legacy() -> serde_json::Value {
     json!({"ok":true,"command":"update","project":"/synthetic/project","scope":"all","packages":[],"packages_resolved":1,"version_bumps":[],"materialised":[],"skipped":[],"pruned":[],"nodes_regenerated":[],"complete":true,"unchanged":true,"hooks":[]})
 }
+fn without_hooks(mut v: serde_json::Value) -> serde_json::Value {
+    v.as_object_mut().unwrap().remove("hooks");
+    v
+}
 #[test]
 fn old_json_is_byte_value_stable_without_retirement_field() {
     let value = legacy();
     let before: old::UpdateReport = serde_json::from_value(value.clone()).unwrap();
     let after: UpdateReport = serde_json::from_value(value.clone()).unwrap();
     assert_eq!(serde_json::to_value(before).unwrap(), value);
-    assert_eq!(serde_json::to_value(after).unwrap(), value);
+    assert_eq!(
+        serde_json::to_value(after).unwrap(),
+        without_hooks(value.clone())
+    );
 }
 #[test]
 fn old_reader_accepts_but_does_not_understand_retained_custody() {
@@ -24,7 +31,10 @@ fn old_reader_accepts_but_does_not_understand_retained_custody() {
         let mut value = legacy();
         value["retained_backups"] = json!([{"slot":"vibevm/vibedeps/org.example.leaf/1.0.0","path":"/synthetic/backup","state":state}]);
         let current: UpdateReport = serde_json::from_value(value.clone()).unwrap();
-        assert_eq!(serde_json::to_value(current).unwrap(), value);
+        assert_eq!(
+            serde_json::to_value(current).unwrap(),
+            without_hooks(value.clone())
+        );
         let prior: old::UpdateReport = serde_json::from_value(value).unwrap();
         assert!(
             serde_json::to_value(prior)

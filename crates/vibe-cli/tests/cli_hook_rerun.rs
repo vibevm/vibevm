@@ -493,7 +493,7 @@ fn scoped_update_surfaces_a_flagged_post_hook_in_every_output_mode() {
         .collect::<Result<_, _>>()
         .unwrap();
     assert_eq!(reports.last().unwrap()["command"], "update");
-    assert_eq!(reports.last().unwrap()["hooks"], serde_json::json!([]));
+    assert!(reports.last().unwrap().get("hooks").is_none());
     // The per-row `lifecycle` echo was removed so a parked run can emit one
     // document; the same rows now travel as typed `contributions` on the
     // outermost command's own registered root.

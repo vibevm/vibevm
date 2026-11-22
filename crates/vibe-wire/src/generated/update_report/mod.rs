@@ -73,14 +73,6 @@ pub struct UpdateReport {
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub delegation: Option<UpdateDelegation>,
 
-    /// Retired and always an empty array: the package `[hooks]` table it
-    /// reported was removed (PROP-020 `#LEGACY-HOOKS-REMOVED`), and an install
-    /// script's outcome is its `contributions` row. Still emitted, because the
-    /// pre-R7.3 document carried this member unconditionally and consumers key
-    /// on it.
-    #[serde(default)]
-    pub hooks: Vec<UpdateHookReport>,
-
     /// Verified retired slot backups intentionally retained after publication
     /// or restoration; absent when no checked retirement occurred.
     #[serde(default, skip_serializing_if = "Vec::is_empty")]
@@ -161,14 +153,4 @@ pub struct UpdateDelegation {
     pub run_id: String,
 
     pub tasks: Vec<String>,
-}
-
-#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
-pub struct UpdateHookReport {
-    pub phase: String,
-
-    pub status: String,
-
-    #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub note: Option<String>,
 }

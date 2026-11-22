@@ -120,7 +120,6 @@ impl ReinstallDraft {
             skipped: self.progress.skipped,
             pruned: self.progress.pruned,
             nodes_regenerated: self.progress.nodes_regenerated,
-            hooks: Vec::new(),
             contributions: self.rows.iter().map(contribution_row).collect(),
             delegation: self.delegation,
             trace,

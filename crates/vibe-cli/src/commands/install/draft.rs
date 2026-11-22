@@ -118,9 +118,6 @@ impl InstallDraft {
             nodes_regenerated: self.progress.nodes_regenerated.clone(),
             contributions: self.contributions,
             notices: self.notices,
-            // The registered format still names this member; the slot rows
-            // it used to carry travel as `contributions`.
-            hooks: Vec::new(),
             delegation: self.delegation,
             recommended: recommendation_rows(&self.weak),
             suggested: suggestion_rows(&self.weak),

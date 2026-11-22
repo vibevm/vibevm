@@ -271,7 +271,7 @@ fn scoped_update_uses_full_lock_world_and_unchanged_activated_provider() {
     );
     assert_eq!(slot_rows[0]["provider"], "org.world/provider");
     assert_eq!(slot_rows[0]["tier"], "host-activation");
-    assert_eq!(update_root["hooks"], serde_json::json!([]));
+    assert!(update_root.get("hooks").is_none());
 
     // ---- the SCOPED shape and the exact bump --------------------------
     assert_eq!(update_root["scope"], "scoped", "{update_root:#?}");

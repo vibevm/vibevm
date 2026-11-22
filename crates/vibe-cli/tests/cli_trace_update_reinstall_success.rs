@@ -316,7 +316,6 @@ fn a_successful_forced_reinstall_keeps_its_exact_old_field_surface() {
         "skipped": [],
         "pruned": [],
         "nodes_regenerated": ["."],
-        "hooks": [],
     });
     assert_eq!(
         off, expected,

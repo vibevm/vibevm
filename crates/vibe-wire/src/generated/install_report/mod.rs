@@ -56,13 +56,6 @@ pub struct InstallReport {
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub delegation: Option<InstallDelegation>,
 
-    /// Retired and always empty, so never emitted: the package `[hooks]` table
-    /// it reported was removed (PROP-020 `#LEGACY-HOOKS-REMOVED`). An install
-    /// script's outcome is its `contributions` row. The member stays so a
-    /// document written before the removal still parses.
-    #[serde(default, skip_serializing_if = "Vec::is_empty")]
-    pub hooks: Vec<InstallHookReport>,
-
     /// Lifecycle notices raised while planning the ritual this command ran —
     /// an ignored auto-compile row, a selector that matched nothing. Surfaced
     /// on the outermost command's own report so a notice is never lost with the
@@ -157,16 +150,6 @@ pub struct InstallDelegation {
 
     /// Ordered project-relative outbox task files awaiting the hosting agent.
     pub tasks: Vec<String>,
-}
-
-#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
-pub struct InstallHookReport {
-    pub phase: String,
-
-    pub status: String,
-
-    #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub note: Option<String>,
 }
 
 /// One `[recommends]` reference the solve reached: the recommended coordinate,

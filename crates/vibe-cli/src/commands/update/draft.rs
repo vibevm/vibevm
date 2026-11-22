@@ -143,10 +143,8 @@ impl UpdateDraft {
             skipped: self.progress.skipped,
             pruned: self.progress.pruned,
             nodes_regenerated: self.progress.nodes_regenerated,
-            // Emitted even when empty: the pre-R7.3 document carried these
-            // members unconditionally, and the per-row echo that used to expose
-            // slot rows is gone, so this is now their only home.
-            hooks: Vec::new(),
+            // The slot rows travel as `contributions`: the per-row echo that
+            // used to expose them is gone, so this is their only home.
             contributions: self.rows.iter().map(contribution_row).collect(),
             delegation: self.delegation,
             trace,

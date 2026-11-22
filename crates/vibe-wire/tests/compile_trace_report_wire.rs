@@ -111,7 +111,7 @@ fn old_documents() -> Vec<(&'static str, serde_json::Value)> {
         base
     };
     vec![
-        // The install root omits empty `hooks`/`notices` (`x-empty:
+        // The install root omits empty `notices` (`x-empty:
         // "omit"`) — the old writer's exact bytes.
         ("install", merge("install", serde_json::json!({}))),
         (
@@ -123,16 +123,12 @@ fn old_documents() -> Vec<(&'static str, serde_json::Value)> {
                     "packages": [],
                     "packages_resolved": 1,
                     "version_bumps": [],
-                    "hooks": [],
                 }),
             ),
         ),
         (
             "reinstall",
-            merge(
-                "reinstall",
-                serde_json::json!({"forced": false, "hooks": []}),
-            ),
+            merge("reinstall", serde_json::json!({"forced": false})),
         ),
         (
             "lifecycle",

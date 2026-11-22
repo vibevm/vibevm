@@ -114,7 +114,6 @@ fn the_weak_members_are_rows_with_closed_outcomes_and_vanish_when_empty() {
         nodes_regenerated: Vec::new(),
         contributions: Vec::new(),
         notices: Vec::new(),
-        hooks: Vec::new(),
         recommended: Vec::new(),
         suggested: Vec::new(),
         trace: None,
@@ -202,7 +201,6 @@ fn a_partial_park_records_what_it_changed_and_says_it_did_not_finish() {
         nodes_regenerated: Vec::new(),
         contributions: Vec::new(),
         notices: Vec::new(),
-        hooks: Vec::new(),
         recommended: Vec::new(),
         suggested: Vec::new(),
         trace: None,
@@ -290,7 +288,6 @@ fn a_parked_update_report_never_impersonates_install() {
         "packages": ["org.demo/tools"],
         "packages_resolved": 1,
         "version_bumps": [],
-        "hooks": [],
         "delegation": {
             "run_id": "00112233445566778899aabbccddeeff",
             "tasks": [".vibe/agentic/outbox/00112233445566778899aabbccddeeff/task-k.md"],
@@ -317,7 +314,6 @@ fn a_parked_reinstall_report_owns_its_command_and_resume() {
         "command": "reinstall",
         "project": "C:/work/demo",
         "forced": true,
-        "hooks": [],
         "delegation": {
             "run_id": "00112233445566778899aabbccddeeff",
             "tasks": [".vibe/agentic/outbox/00112233445566778899aabbccddeeff/task-k.md"],

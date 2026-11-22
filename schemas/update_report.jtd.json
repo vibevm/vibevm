@@ -115,15 +115,6 @@
         "description": "Present exactly when a hosted `agent` contribution parked this update. `ok` stays true; `resume` is the update command, never `vibe install`."
       }
     },
-    "hooks": {
-      "elements": {
-        "ref": "update_hook_report"
-      },
-      "metadata": {
-        "x-empty": "emit",
-        "description": "Retired and always an empty array: the package `[hooks]` table it reported was removed (PROP-020 `#LEGACY-HOOKS-REMOVED`), and an install script's outcome is its `contributions` row. Still emitted, because the pre-R7.3 document carried this member unconditionally and consumers key on it."
-      }
-    },
     "contributions": {
       "elements": {
         "ref": "update_contribution_report"
@@ -166,24 +157,6 @@
         },
         "resume": {
           "type": "string"
-        }
-      }
-    },
-    "update_hook_report": {
-      "properties": {
-        "phase": {
-          "type": "string"
-        },
-        "status": {
-          "type": "string"
-        }
-      },
-      "optionalProperties": {
-        "note": {
-          "type": "string",
-          "metadata": {
-            "x-default": null
-          }
         }
       }
     },
