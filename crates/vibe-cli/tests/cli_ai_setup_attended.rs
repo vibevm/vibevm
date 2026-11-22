@@ -201,6 +201,46 @@ fn attended_setup_without_default_creates_and_selects_connection() {
 }
 
 #[test]
+fn attended_setup_shows_profile_key_hint_and_proposes_profile_endpoint() {
+    let w = World::new();
+    fs::write(
+        w.path("settings/site-profile.toml"),
+        "schema = 1\n\n[ai]\nkey_hint_label = \"Example AI Hub\"\nkey_hint_url = \"https://ai-hub.example.com/keys\"\ndefault_endpoint = \"http://127.0.0.1:32125/v1\"\n",
+    )
+    .unwrap();
+    let report = w.setup(&[
+        ("Install AI agent packages now?", "n"),
+        ("Create a default AI connection now?", "y"),
+        ("Connection label", "\r"),
+        ("Endpoint URL", "\r"),
+        ("API kind", "\r"),
+        ("Default model", "synthetic\r"),
+        ("API key (hidden)", "SYNTHETIC_PROFILE_KEY_NEVER_OUTPUT\r"),
+        ("native settings", "n"),
+        ("Configure existing connection", "\u{1b}"),
+    ]);
+    let transcript = report["transcript"].as_str().unwrap();
+    assert_eq!(report["status"], 0, "{transcript}");
+    assert_eq!(report["sent"], 9, "{transcript}");
+    assert!(
+        transcript.contains("Get an API key: Example AI Hub (https://ai-hub.example.com/keys)"),
+        "{transcript}"
+    );
+    assert!(!transcript.contains("SYNTHETIC_PROFILE_KEY_NEVER_OUTPUT"));
+    let connections = w.json(&["ai", "connections", "list"], None);
+    let (_, connection) = connections["items"]
+        .as_object()
+        .unwrap()
+        .iter()
+        .next()
+        .unwrap();
+    assert_eq!(
+        connection["metadata"]["endpoint"],
+        "http://127.0.0.1:32125/v1"
+    );
+}
+
+#[test]
 fn attended_setup_without_default_declined_writes_nothing() {
     let w = World::new();
     let report = w.setup(&[

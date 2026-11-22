@@ -104,8 +104,15 @@ fn create(
     store: &vibe_connections::Store,
     cancel: &CancellationToken,
 ) -> Result<Option<(SecretId, vibe_connections::Metadata)>> {
+    let hints = vibe_core::site_profile::installed()?
+        .map(|site| site.profile.ai)
+        .unwrap_or_default();
     let label = output::prompts::text("Connection label", "Default", false)?;
-    let endpoint = output::prompts::text("Endpoint URL", "", false)?;
+    let endpoint = output::prompts::text(
+        "Endpoint URL",
+        hints.default_endpoint.as_deref().unwrap_or(""),
+        false,
+    )?;
     let kinds = ["openai-chat-completions", "openai-responses"];
     let Some(kind) =
         output::prompts::choose_opt_interruptible("API kind", &output::prompts::named(&kinds), 0)?
@@ -123,6 +130,12 @@ fn create(
         bail!("connection metadata is invalid; nothing was written");
     }
     cancel.checkpoint()?;
+    if let Some(hint) = &hints.key_hint_label {
+        match &hints.key_hint_url {
+            Some(url) => println!("Get an API key: {hint} ({url})"),
+            None => println!("Get an API key: {hint}"),
+        }
+    }
     let key = output::prompts::secret("API key (hidden)")
         .map_err(|_| anyhow!("protected input cancelled or unavailable; nothing was written"))?;
     let value = vibe_secrets::ProtectedValue::new(key.into_bytes())?;
