@@ -1,5 +1,9 @@
 # Corporate-env campaign: format and behaviour changes
 
+## CORP-FMT-068 — first-install AI setup question
+
+An attended native installation (stdin, stdout and stderr are terminals, no `--unattended`) without `--configure-ai` asks once on stderr after `Installation complete`: "Would you like to configure an AI agent now? You can run `vibe ai setup` later. [y/N]". Only `y` or `yes` (any case) continues into the same optional setup route and `vibe-installer-optional-setup/1` summary as `--configure-ai`; any other answer, an empty line or a read failure skips with the previous output. Nonterminal and unattended runs never ask, and `--configure-ai` never asks. This amends CORP-FMT-056's no-prompt rule for attended runs without the flag.
+
 ## CORP-FMT-067 — site profile `[ai]` hint and default endpoint
 
 The site profile (`schema = 1`) accepts an optional `[ai]` table with `key_hint_label`, `key_hint_url` and `default_endpoint`. A profile without `[ai]` serializes unchanged. An older vibe refuses a profile carrying `[ai]` as an unknown key, so update the binary before applying such a profile. `key_hint_url` requires `key_hint_label`; `default_endpoint` follows the connection endpoint rules (https, or http on a loopback address, with no credentials, query or fragment). The table never carries a key.

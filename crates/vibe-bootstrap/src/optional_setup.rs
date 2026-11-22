@@ -19,6 +19,31 @@ enum Status {
     Failed,
 }
 
+/// Whether an answer to the first-install question continues into optional
+/// setup: only an explicit `y` or `yes` does; anything else skips.
+pub(crate) fn accepted(answer: &str) -> bool {
+    matches!(answer.trim().to_ascii_lowercase().as_str(), "y" | "yes")
+}
+
+/// Whether optional setup runs: always with `--configure-ai` (never asks),
+/// otherwise only on an attended run whose single question is answered yes.
+pub(crate) fn wants_setup(configure_ai: bool, attended: bool, ask: impl FnOnce() -> bool) -> bool {
+    configure_ai || (attended && ask())
+}
+
+/// Ask once on the attended terminal (default skip); a read failure skips.
+pub(crate) fn offer() -> bool {
+    use std::io::Write;
+    let mut stderr = std::io::stderr();
+    let _ = write!(
+        stderr,
+        "Would you like to configure an AI agent now? You can run `vibe ai setup` later. [y/N] "
+    );
+    let _ = stderr.flush();
+    let mut answer = String::new();
+    std::io::stdin().read_line(&mut answer).is_ok() && accepted(&answer)
+}
+
 /// Optional failure is reported separately and never reverses mandatory success.
 pub(crate) fn after_install(
     staged: &Path,
@@ -137,6 +162,32 @@ mod tests {
     use super::*;
     use std::os::unix::fs::PermissionsExt;
     use vibe_wire::behaviour::release_manifest::DistributionComponentName;
+
+    #[test]
+    fn first_install_question_accepts_only_explicit_yes() {
+        for answer in ["y", "Y", " yes \n", "YES"] {
+            assert!(accepted(answer), "{answer:?}");
+        }
+        for answer in ["", "\n", "n", "no", "maybe", "yess"] {
+            assert!(!accepted(answer), "{answer:?}");
+        }
+        let cases = [
+            (false, false, true, false, 0),
+            (true, false, false, true, 0),
+            (true, true, false, true, 0),
+            (false, true, false, false, 1),
+            (false, true, true, true, 1),
+        ];
+        for (flag, attended, answer, expected, asks) in cases {
+            let mut count = 0;
+            let result = wants_setup(flag, attended, || {
+                count += 1;
+                answer
+            });
+            assert_eq!(result, expected, "{flag} {attended} {answer}");
+            assert_eq!(count, asks, "{flag} {attended} {answer}");
+        }
+    }
 
     #[test]
     fn mismatched_installed_digest_refuses_before_setup_child() {

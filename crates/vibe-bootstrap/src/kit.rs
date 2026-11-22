@@ -424,7 +424,11 @@ pub fn run(args: Args) -> Result<()> {
         "Apply profile and activate verified distribution",
     )?;
     report.stage("Installation complete")?;
-    if args.configure_ai
+    let attended = !args.unattended
+        && io::stdin().is_terminal()
+        && io::stdout().is_terminal()
+        && io::stderr().is_terminal();
+    if crate::optional_setup::wants_setup(args.configure_ai, attended, crate::optional_setup::offer)
         && let Some(component) = verified.manifest.components.iter().find(|component| {
             component.name
                 == vibe_wire::behaviour::release_manifest::DistributionComponentName::Vibe
