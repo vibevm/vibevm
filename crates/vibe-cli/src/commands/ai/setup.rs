@@ -5,6 +5,7 @@ use std::{collections::BTreeMap, io::IsTerminal, path::Path};
 use vibe_core::cancellation::CancellationToken;
 mod install;
 mod native_settings;
+mod onboarding;
 pub(crate) use native_settings::NativeSettingsSetFailure;
 pub(super) use native_settings::run as native_settings;
 
@@ -42,6 +43,12 @@ pub(super) fn run(
         && response.is_none();
     if bare {
         install::offer(cancel)?;
+        if matches!(
+            onboarding::ensure_default(settings, store, cancel)?,
+            onboarding::Next::Stop
+        ) {
+            return Ok(());
+        }
         if crate::output::prompts::confirm(
             "Write a connection into selected agents' native settings? Otherwise continue metadata only",
             false,

@@ -129,12 +129,11 @@ fn attended_setup_installs_selected_agent_packages_with_independent_outcomes() {
         ("Select agent packages to install", " \u{1b}[B \r"),
         ("Platform", "\r"),
         ("Architecture", "\r"),
-        ("native settings", "n"),
-        ("Configure existing connection", "\u{1b}"),
+        ("Create a default AI connection now?", "n"),
     ]);
     let transcript = report["transcript"].as_str().unwrap();
     assert_eq!(report["status"], 0, "{transcript}");
-    assert_eq!(report["sent"], 6, "{transcript}");
+    assert_eq!(report["sent"], 5, "{transcript}");
     assert!(
         transcript.contains("Agent package pi: installed"),
         "{transcript}"
@@ -150,5 +149,76 @@ fn attended_setup_installs_selected_agent_packages_with_independent_outcomes() {
             .unwrap()
             .iter()
             .any(|row| row["key"] == "org.vibevm.agents/pi@1.0.0")
+    );
+}
+
+const KEY: &str = "SYNTHETIC_ONBOARDING_KEY_NEVER_OUTPUT";
+
+#[test]
+fn attended_setup_without_default_creates_and_selects_connection() {
+    let w = World::new();
+    let key_line = format!("{KEY}\r");
+    let report = w.setup(&[
+        ("Install AI agent packages now?", "n"),
+        ("Create a default AI connection now?", "y"),
+        ("Connection label", "\r"),
+        ("Endpoint URL", "http://127.0.0.1:32123/v1\r"),
+        ("API kind", "\r"),
+        ("Default model", "synthetic\r"),
+        ("API key (hidden)", key_line.as_str()),
+        ("native settings", "n"),
+        ("Configure existing connection", "\u{1b}"),
+    ]);
+    let transcript = report["transcript"].as_str().unwrap();
+    assert_eq!(report["status"], 0, "{transcript}");
+    assert_eq!(report["sent"], 9, "{transcript}");
+    assert!(
+        transcript.contains("Default AI connection created: Default"),
+        "{transcript}"
+    );
+    assert!(!transcript.contains(KEY));
+    let connections = w.json(&["ai", "connections", "list"], None);
+    let items = connections["items"].as_object().unwrap();
+    assert_eq!(items.len(), 1);
+    let (id, connection) = items.iter().next().unwrap();
+    assert_eq!(connection["metadata"]["label"], "Default");
+    assert_eq!(
+        connection["metadata"]["endpoint"],
+        "http://127.0.0.1:32123/v1"
+    );
+    assert_eq!(
+        connection["metadata"]["api_kind"],
+        "openai-chat-completions"
+    );
+    assert_eq!(connection["metadata"]["default_model"], "synthetic");
+    assert_eq!(
+        w.json(&["ai", "connections", "default", "show"], None)["connection"],
+        id.as_str()
+    );
+    let secrets = w.json(&["secrets", "list"], None);
+    assert_eq!(secrets["items"].as_array().unwrap().len(), 1);
+    assert_eq!(secrets["items"][0]["kind"], "api-key");
+}
+
+#[test]
+fn attended_setup_without_default_declined_writes_nothing() {
+    let w = World::new();
+    let report = w.setup(&[
+        ("Install AI agent packages now?", "n"),
+        ("Create a default AI connection now?", "n"),
+    ]);
+    let transcript = report["transcript"].as_str().unwrap();
+    assert_eq!(report["status"], 0, "{transcript}");
+    assert!(
+        transcript.contains("AI setup skipped; connections and bindings unchanged."),
+        "{transcript}"
+    );
+    assert_eq!(
+        w.json(&["ai", "connections", "list"], None)["items"],
+        serde_json::json!({})
+    );
+    assert_eq!(
+        w.json(&["secrets", "list"], None)["items"],
+        serde_json::json!([])
     );
 }
