@@ -34,6 +34,18 @@ Boot is pure file-reading — there is nothing to execute.
 
 # vibevm — read this first
 
+## Working arrangement — ordinary by default, split by choice
+
+Read `WORKING-RULES.md` at this repository root. If `WORKING-RULES.local.md`
+exists, read it as local collaboration configuration as well. Without that file,
+use ordinary development: no second checkout, agent or role binding is required.
+`WORKING-RULES.local.example.md` is an inactive opt-in template; the common guide
+contains setup and exclusion checks. Local configuration may narrow ownership
+and permissions, never relax project contracts or safety requirements. The
+existing boot still applies. For a split-mode delegated task, its packet must
+name the common rules and applicable local configuration, and bind the role,
+checkout and allowed writes without making a quiet worker load the full lane.
+
 Every session in this repository begins by reading this file, then the boot lane in the order the generated block at the top of this file prescribes (the generated static lane `vibevm/vibespecs/boot/STATIC.xml` — or `STATIC.md` in a Markdown-lane project — first and in full, then every file `vibevm/vibespecs/boot/INDEX.md` names), then any relevant PROP/FEAT documents under `vibevm/vibespecs/common/` and `vibevm/vibespecs/modules/` for the task at hand. An owner-facing central session additionally resolves its exact user-local context under `~/.vibe/steward/` as the installed multi-user-planning flow prescribes; a worker packet never claims that context. Only after that, start work.
 
 **A task carrying `##subagent-quiet-clause` does not run that sequence.** A delegated worker, a review-only agent or a consulted subagent reads exactly the files its packet names — including whichever standing rules bind that particular task, named file by file — and its packet is the rest of its instruction surface. Selecting those files is the packet author's job, not the worker's: a worker that needs a rule its packet did not name reports a packet defect rather than reading the lane itself. The full lane costs roughly 145k tokens before such a session reaches its first instruction, and nearly all of it governs decisions a worker never makes.

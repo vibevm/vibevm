@@ -77,7 +77,25 @@ require the applicable credential-isolation/provider authority; no auth-store re
 secret environment dumps or external publication follow from this task. Report exact
 human-only inputs when actually needed,not a speculative prerequisite ladder.
 
+## Owner disposition — physical Windows manual checks
+
+Owner decision2026-11-18 — verbatim:
+
+> там какие-то Windows проверки требуют моего ручного вмешательства с нажатием ctrl+C на физической машине, давай примем задачи внутри NST без них
+
+Accept the affected tasks inside NST without requiring the owner's physical-machine
+Windows manual checks, including attended `l`/fold/live/Ctrl+C and actual Windows
+Terminal assertions that require that manual participation. These checks remain
+NOT RUN / UNVERIFIED with an explicit owner acceptance exception; do not relabel
+them PASS or repeatedly request the prepared manual script. Preserve automated
+native Windows proof and actual defect/final-gate requirements. This disposition
+does not automatically waive unrelated macOS GUI, removable-volume or real-agent
+assertions. Reflect the exact affected claims and remaining dispositions in the
+authoritative multi-user-planning source before refreshing the visible task tree.
+
 ## Completion and tree
+
+Later owner boundary2026-11-18: finish PRIOR-APP-STEPS and then STOP, because server maintenance is next. Do not automatically start SYS-PROMPT Hermes/Pi support, NST repair or any other campaign task. Preserve them as planned work awaiting a subsequent owner instruction. This boundary does not authorize server maintenance itself. Record it in the authoritative multi-user-planning source plan before refreshing and verifying the task-tree projection.
 
 Review coherent commits and original remaining acceptance claims with architect.
 Update the existing PRIOR subtree by actual results,not by blanket acceptance of
