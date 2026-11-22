@@ -12095,81 +12095,81 @@
       "crate_name": "vibe-agent-projection",
       "file": "crates/vibe-agent-projection/src/agents.rs",
       "item_kind": "fn",
-      "line": 233,
+      "line": 254,
       "symbol": "vibe_agent_projection::agents::Agent::as_str",
-      "end_line": 245,
+      "end_line": 266,
       "fingerprint": "tok1:469646df827ffae1f66ef55fbb718752120d4767a20391d1a6fb0519fb92fbb2"
     },
     {
       "crate_name": "vibe-agent-projection",
       "file": "crates/vibe-agent-projection/src/agents.rs",
       "item_kind": "fn",
-      "line": 334,
+      "line": 355,
       "symbol": "vibe_agent_projection::agents::Agent::build_mcp_entry_for",
-      "end_line": 394,
+      "end_line": 415,
       "fingerprint": "tok1:418906fbb485e8f6274331d77705a2cf41c36c7c2f427f0abf2e28fb70b1c8d1"
     },
     {
       "crate_name": "vibe-agent-projection",
       "file": "crates/vibe-agent-projection/src/agents.rs",
       "item_kind": "fn",
-      "line": 268,
+      "line": 289,
       "symbol": "vibe_agent_projection::agents::Agent::config_format",
-      "end_line": 275,
+      "end_line": 296,
       "fingerprint": "tok1:318a58fc558c21b7cfea8006216a0cc105ad9e16ae47cf09a6f7512eb26421a1"
     },
     {
       "crate_name": "vibe-agent-projection",
       "file": "crates/vibe-agent-projection/src/agents.rs",
       "item_kind": "fn",
-      "line": 437,
+      "line": 458,
       "symbol": "vibe_agent_projection::agents::Agent::is_present",
-      "end_line": 448,
+      "end_line": 469,
       "fingerprint": "tok1:b4f507a25d327cc9c4d17cde64ba2575c9632c2c89facc36a9510448ef01704a"
     },
     {
       "crate_name": "vibe-agent-projection",
       "file": "crates/vibe-agent-projection/src/agents.rs",
       "item_kind": "fn",
-      "line": 277,
+      "line": 298,
       "symbol": "vibe_agent_projection::agents::Agent::mcp_section_key",
-      "end_line": 286,
+      "end_line": 307,
       "fingerprint": "tok1:91f464c2762c8aa85e8f3d2343ed5342afa9abcdc1b1bd18b426af7908897dac"
     },
     {
       "crate_name": "vibe-agent-projection",
       "file": "crates/vibe-agent-projection/src/agents.rs",
       "item_kind": "fn",
-      "line": 247,
+      "line": 268,
       "symbol": "vibe_agent_projection::agents::Agent::parse_filter",
-      "end_line": 266,
-      "fingerprint": "tok1:daec11cd50c3ceb970ae72629bd1fff60d016018afa977d7332cbae6c2a991ae"
+      "end_line": 287,
+      "fingerprint": "tok1:8ef61e572d46a28304d8bae48dba721de534b3d260d9691a6d9647af4f2cc929"
     },
     {
       "crate_name": "vibe-agent-projection",
       "file": "crates/vibe-agent-projection/src/agents.rs",
       "item_kind": "fn",
-      "line": 396,
+      "line": 417,
       "symbol": "vibe_agent_projection::agents::Agent::presence_markers",
-      "end_line": 409,
+      "end_line": 430,
       "fingerprint": "tok1:841dd8640711def8a64b3f8cf7448a754150279b309dd309c59fbe056a65d9c2"
     },
     {
       "crate_name": "vibe-agent-projection",
       "file": "crates/vibe-agent-projection/src/agents.rs",
       "item_kind": "fn",
-      "line": 288,
+      "line": 309,
       "symbol": "vibe_agent_projection::agents::Agent::supports_project_scope",
-      "end_line": 301,
+      "end_line": 322,
       "fingerprint": "tok1:4b83cbf4a815a78d9b4ec154df5b8e552467dc2948a494791d808c10b80261e4"
     },
     {
       "crate_name": "vibe-agent-projection",
       "file": "crates/vibe-agent-projection/src/agents.rs",
       "item_kind": "fn",
-      "line": 303,
+      "line": 324,
       "symbol": "vibe_agent_projection::agents::Agent::supports_skill",
-      "end_line": 316,
+      "end_line": 337,
       "fingerprint": "tok1:7b49437b42cfde5b707162f53ec0e0b0e7b2b45334d8cf1715e8ea8efcdd1f3e"
     },
     {
@@ -12257,9 +12257,9 @@
       "crate_name": "vibe-agent-projection",
       "file": "crates/vibe-agent-projection/src/agents.rs",
       "item_kind": "fn",
-      "line": 451,
+      "line": 472,
       "symbol": "vibe_agent_projection::agents::detect_agents",
-      "end_line": 461,
+      "end_line": 482,
       "fingerprint": "tok1:6e215c645e52009cc72098ae3e54ca4d7f3b0f6c5788c119ef2bd855228f37da"
     },
     {
@@ -85210,7 +85210,7 @@
     {
       "file": "crates/vibe-agent-projection/src/agents.rs",
       "from_symbol": "vibe_agent_projection::agents::Agent::as_str",
-      "line": 233,
+      "line": 254,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-015#AGENT-SET",
       "verb": "implements"
@@ -85218,7 +85218,7 @@
     {
       "file": "crates/vibe-agent-projection/src/agents.rs",
       "from_symbol": "vibe_agent_projection::agents::Agent::build_mcp_entry_for",
-      "line": 347,
+      "line": 368,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-015#CONFIG-WINDOWS-SHIM",
       "verb": "implements"
@@ -85226,7 +85226,7 @@
     {
       "file": "crates/vibe-agent-projection/src/agents.rs",
       "from_symbol": "vibe_agent_projection::agents::Agent::config_format",
-      "line": 268,
+      "line": 289,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-015#CONFIG-FORMAT",
       "verb": "implements"
@@ -85234,7 +85234,7 @@
     {
       "file": "crates/vibe-agent-projection/src/agents.rs",
       "from_symbol": "vibe_agent_projection::agents::Agent::is_present",
-      "line": 438,
+      "line": 459,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-015#AGENT-PRESENCE",
       "verb": "implements"
@@ -85242,7 +85242,7 @@
     {
       "file": "crates/vibe-agent-projection/src/agents.rs",
       "from_symbol": "vibe_agent_projection::agents::Agent::mcp_section_key",
-      "line": 277,
+      "line": 298,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-015#CONFIG-SECTION-KEY",
       "verb": "implements"
@@ -85250,7 +85250,7 @@
     {
       "file": "crates/vibe-agent-projection/src/agents.rs",
       "from_symbol": "vibe_agent_projection::agents::Agent::parse_filter",
-      "line": 247,
+      "line": 268,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-015#AGENT-DETECTION-DEFAULT",
       "verb": "implements"
@@ -85258,7 +85258,7 @@
     {
       "file": "crates/vibe-agent-projection/src/agents.rs",
       "from_symbol": "vibe_agent_projection::agents::Agent::presence_markers",
-      "line": 398,
+      "line": 419,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-015#AGENT-PRESENCE",
       "verb": "implements"
@@ -85266,7 +85266,7 @@
     {
       "file": "crates/vibe-agent-projection/src/agents.rs",
       "from_symbol": "vibe_agent_projection::agents::Agent::supports_project_scope",
-      "line": 290,
+      "line": 311,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-015#CONFIG-SCOPE",
       "verb": "implements"
@@ -85274,7 +85274,7 @@
     {
       "file": "crates/vibe-agent-projection/src/agents.rs",
       "from_symbol": "vibe_agent_projection::agents::Agent::supports_skill",
-      "line": 305,
+      "line": 326,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-015#SKILL-MANIFEST",
       "verb": "implements"
@@ -85354,7 +85354,7 @@
     {
       "file": "crates/vibe-agent-projection/src/agents.rs",
       "from_symbol": "vibe_agent_projection::agents::detect_agents",
-      "line": 454,
+      "line": 475,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-015#agent-detection",
       "verb": "implements"

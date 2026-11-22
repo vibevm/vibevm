@@ -230,6 +230,27 @@ impl Agent {
         Agent::Hermes,
     ];
 
+    /// Return this agent's canonical identity.
+    pub fn id(self) -> vibe_core::agent_ids::AgentId {
+        use vibe_core::agent_ids::AgentId;
+
+        match self {
+            Agent::ClaudeCode => AgentId::Claude,
+            Agent::ClaudeCodeDesktop => AgentId::ClaudeDesktop,
+            Agent::Cursor => AgentId::Cursor,
+            Agent::OpenCode => AgentId::OpenCode,
+            Agent::Codex => AgentId::Codex,
+            Agent::QwenCode => AgentId::Qwen,
+            Agent::Pi => AgentId::Pi,
+            Agent::Hermes => AgentId::Hermes,
+        }
+    }
+
+    /// Find the projection agent with the given canonical identity.
+    pub fn from_id(id: vibe_core::agent_ids::AgentId) -> Option<Agent> {
+        Agent::ALL.iter().copied().find(|agent| agent.id() == id)
+    }
+
     #[spec(implements = "spec://org.vibevm.core/vibevm/modules/vibe-mcp/PROP-015#AGENT-SET")]
     pub fn as_str(self) -> &'static str {
         match self {
@@ -250,18 +271,18 @@ impl Agent {
     pub fn parse_filter(filter: &str) -> Result<Vec<Agent>> {
         match filter {
             "all" => Ok(Agent::ALL.to_vec()),
-            "claude" | "claude-code" => Ok(vec![Agent::ClaudeCode]),
-            "claude-desktop" | "claude-code-desktop" => Ok(vec![Agent::ClaudeCodeDesktop]),
-            "cursor" => Ok(vec![Agent::Cursor]),
-            "opencode" => Ok(vec![Agent::OpenCode]),
-            "codex" => Ok(vec![Agent::Codex]),
-            "qwen" | "qwen-code" => Ok(vec![Agent::QwenCode]),
-            "pi" => Ok(vec![Agent::Pi]),
-            "hermes" => Ok(vec![Agent::Hermes]),
-            other => bail!(
-                "unknown --agent value `{other}` (expected one of `all`, \
-                 `claude`, `claude-desktop`, `cursor`, `opencode`, `codex`, `qwen-code`, `pi`, `hermes`)"
-            ),
+            "claude-code" => Ok(vec![Agent::ClaudeCode]),
+            "claude-code-desktop" => Ok(vec![Agent::ClaudeCodeDesktop]),
+            "qwen" => Ok(vec![Agent::QwenCode]),
+            other => match vibe_core::agent_ids::AgentId::from_projection(other)
+                .and_then(Agent::from_id)
+            {
+                Some(agent) => Ok(vec![agent]),
+                None => bail!(
+                    "unknown --agent value `{other}` (expected one of `all`, \
+                     `claude`, `claude-desktop`, `cursor`, `opencode`, `codex`, `qwen-code`, `pi`, `hermes`)"
+                ),
+            },
         }
     }
 
@@ -466,3 +487,5 @@ pub fn detect_agents(project_root: Option<&Path>) -> Vec<Agent> {
 // surfaces above.
 mod ambient_paths;
 mod home_paths;
+#[cfg(test)]
+mod vocabulary_tests;
