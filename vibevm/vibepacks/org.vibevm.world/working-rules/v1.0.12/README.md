@@ -21,6 +21,7 @@ the pages are kept separate on purpose. @status:impl/done
 - @fact:CONTENT-LEAD-BOUNDED `lead-bounded.md` — the whole working rules of a bounded lead. @status:impl/done
 - @fact:CONTENT-WORKER `worker.md` and `packet.template.md` — the whole instruction surface of
   an executor, and the packet a lead writes for it. @status:impl/done
+- @fact:CONTENT-DECOMPOSING `decomposing.md` — how an open lead prepares a completion list that a bounded lead can execute without spiralling, with the traps a skeptic finds. @status:impl/done
 - @fact:CONTENT-RUNS `runs.md` — the optional contract for managed execution resources. @status:impl/done
 - @fact:CONTENT-TEMPLATES `project.template.md` and `local.template.md` — inactive templates for
   the two project-owned files. @status:impl/done
