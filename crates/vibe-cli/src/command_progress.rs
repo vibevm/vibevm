@@ -313,6 +313,7 @@ pub(crate) fn policy(command: &Command, terminal_attached: bool) -> CommandPolic
         Command::Prompt(args) => match &args.command {
             PromptCommand::Build { .. } => FiniteFallback("Command prompt build"),
             PromptCommand::Compose { .. } => FiniteFallback("Command prompt compose"),
+            PromptCommand::Types { .. } => FiniteFallback("Command prompt types"),
             PromptCommand::Check { .. }
             | PromptCommand::Prepare { .. }
             | PromptCommand::Capture { .. }

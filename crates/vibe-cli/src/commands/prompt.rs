@@ -38,11 +38,13 @@ mod prepare;
 mod qwen_identity;
 mod resolve;
 mod supplied_base;
+mod types;
 
 pub(crate) use build::summary_line;
 pub(crate) use flags::{Undeliverable, compose_for_launch as compose_launch_flags, opted_in};
 pub(crate) use qwen_identity::inherited_carrier_to_scrub;
 pub(crate) use resolve::{Selected, select};
+pub(crate) use types::refresh_agent_types;
 
 /// Prepare the existing selected-node native lane, including fresh personal layers.
 pub(crate) fn native_launch_lane(
@@ -134,5 +136,8 @@ pub fn run(ctx: &output::Context, args: PromptArgs) -> Result<()> {
             path,
             workers,
         } => flags::run(ctx, &select(&path, node.as_deref())?, &harness, workers),
+        PromptCommand::Types { node, path, check } => {
+            types::run(ctx, &select(&path, node.as_deref())?, check)
+        }
     }
 }

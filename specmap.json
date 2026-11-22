@@ -21941,8 +21941,8 @@
       "item_kind": "fn",
       "line": 146,
       "symbol": "vibe_cli::command_progress::policy",
-      "end_line": 483,
-      "fingerprint": "tok1:c9948a9c4c83d362931e2ac5e45ddd614629f43657980391d1976933f89ffd5e"
+      "end_line": 484,
+      "fingerprint": "tok1:826d4b668027642a0c65d5fe3cb492acdbe8c656136a35266164dae3df64f7d9"
     },
     {
       "crate_name": "vibe-cli",
@@ -25917,10 +25917,10 @@
       "crate_name": "vibe-cli",
       "file": "crates/vibe-cli/src/commands/prompt.rs",
       "item_kind": "fn",
-      "line": 84,
+      "line": 86,
       "symbol": "vibe_cli::commands::prompt::run",
-      "end_line": 138,
-      "fingerprint": "tok1:2bc3fb1560d411c7b228fca53c8c628830ad0903f8a4eb868f7d2edb2d8e720a"
+      "end_line": 143,
+      "fingerprint": "tok1:136d2599491b23a0132a3730d150d7ea8d5437c9d6b9ecfb2c29a9ee35aa2420"
     },
     {
       "crate_name": "vibe-cli",
@@ -25966,6 +25966,33 @@
       "symbol": "vibe_cli::commands::prompt::supplied_base::tests",
       "end_line": 5,
       "fingerprint": "tok1:f53913b1f3eca255d1dd31f7a67be3b2b81456fbcd02af9e477e707187fcaf7d"
+    },
+    {
+      "crate_name": "vibe-cli",
+      "file": "crates/vibe-cli/src/commands/prompt/types.rs",
+      "item_kind": "mod",
+      "line": 3,
+      "symbol": "vibe_cli::commands::prompt::types",
+      "end_line": 3,
+      "fingerprint": "tok1:4543db4ecf71743183719aae7234db96f1580b947f256c2aa3409e9b850fdefa"
+    },
+    {
+      "crate_name": "vibe-cli",
+      "file": "crates/vibe-cli/src/commands/prompt/types.rs",
+      "item_kind": "fn",
+      "line": 23,
+      "symbol": "vibe_cli::commands::prompt::types::refresh_agent_types",
+      "end_line": 53,
+      "fingerprint": "tok1:209c47ec7263250f96691e70275df8a037beb7169df8c20e93cba1d5bb28f950"
+    },
+    {
+      "crate_name": "vibe-cli",
+      "file": "crates/vibe-cli/src/commands/prompt/types.rs",
+      "item_kind": "fn",
+      "line": 55,
+      "symbol": "vibe_cli::commands::prompt::types::run",
+      "end_line": 113,
+      "fingerprint": "tok1:767b4570edc17e380d76a1af951dd797e787b4ad5f8aea8107ddfb51637d1f0d"
     },
     {
       "crate_name": "vibe-cli",
@@ -98009,7 +98036,7 @@
     {
       "file": "crates/vibe-cli/src/commands/prompt.rs",
       "from_symbol": "vibe_cli::commands::prompt::run",
-      "line": 84,
+      "line": 86,
       "provenance": "authored",
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-076#SYS-OPERATIONS-SURFACE",
       "verb": "implements"
@@ -98055,6 +98082,30 @@
       "uri": "spec://org.vibevm.core/vibevm/common/PROP-076#SYS-SUPPLIED-BASE",
       "verb": "implements",
       "pinned_r": 1
+    },
+    {
+      "file": "crates/vibe-cli/src/commands/prompt/types.rs",
+      "from_symbol": "vibe_cli::commands::prompt::types",
+      "line": 3,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-076#SYS-WORKER-TYPES",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-cli/src/commands/prompt/types.rs",
+      "from_symbol": "vibe_cli::commands::prompt::types::refresh_agent_types",
+      "line": 23,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-076#SYS-WORKER-TYPES",
+      "verb": "implements"
+    },
+    {
+      "file": "crates/vibe-cli/src/commands/prompt/types.rs",
+      "from_symbol": "vibe_cli::commands::prompt::types::run",
+      "line": 55,
+      "provenance": "authored",
+      "uri": "spec://org.vibevm.core/vibevm/common/PROP-076#SYS-WORKER-TYPES",
+      "verb": "implements"
     },
     {
       "file": "crates/vibe-cli/src/commands/query.rs",
