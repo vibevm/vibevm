@@ -124,6 +124,23 @@ not optional. The recurring traps, with the fix for each:
 27. **State words.** Do not use `blocked`, `deferred` or `accepted` for data
     inside an entry. They collide with the list's states.
 28. **Machine paths.** No absolute paths or machine settings in checks.
+29. **Generated files need project state that task worktrees lack.** A
+    regenerated map or index (in vibevm: `specmap.json`, which needs a
+    gitignored authority file written by an install) cannot be rebuilt in an
+    isolated worktree. Plan it as a lead step on the main tree after the
+    executor's commit is applied, not as an executor step.
+30. **Isolated worktrees start from the remote default branch,** not from the
+    local branch the lead works on. The first step of every packet
+    fast-forwards the worktree to the lead's branch, or the brief is missing.
+31. **Compatibility with released clients.** When an entry changes a document
+    that already released versions read (a release manifest, a registry
+    record), check how the old reader reacts. A strict old reader turns an
+    additive change into a break; the tolerant reader ships one release
+    earlier.
+32. **Questions still come up.** In the second round, 11 of 18 capabilities
+    raised a question only the owner or the planner could answer. Answer them
+    before hand-off and write each answer into the plan; an entry whose
+    question is open waits as `blocked` with the question in its note.
 
 ## After hand-off
 
